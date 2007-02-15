@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'chatwidget.ui'
 #
-# Created: Sat Feb 10 21:41:27 2007
+# Created: Thu Feb 15 17:50:44 2007
 #      by: PyQt4 UI code generator 4.0.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -32,7 +32,7 @@ class Ui_chatwidget(object):
         self.hboxlayout.addWidget(self.line)
 
         self.smileys = QtGui.QToolButton(chatwidget)
-        self.smileys.setIcon(QtGui.QIcon("images/smileys/biggrin.gif"))
+        self.smileys.setIcon(QtGui.QIcon("images/smileys/biggrin.png"))
         self.smileys.setCheckable(True)
         self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.smileys.setObjectName("smileys")

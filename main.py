@@ -22,7 +22,6 @@ except:
 	print "PyQt4 is not installed."
 	
 from jabber import *
-from Numeric import zeros
 import sys,os,time,random
 from configobj import ConfigObj
 
@@ -432,7 +431,7 @@ class chatWindow(QtGui.QMainWindow):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
 		self.ui=Ui_chat()
 		self.ui.setupUi(self)
-		self.ui.tabCloseButton=QtGui.QPushButton(QtGui.QIcon("images/icons/close.gif"),"",self.ui.chatTab)
+		self.ui.tabCloseButton=QtGui.QPushButton(QtGui.QIcon("images/icons/close.png"),"",self.ui.chatTab)
 		self.ui.chatTab.setCornerWidget(self.ui.tabCloseButton)
 		app.connect(self.ui.tabCloseButton, QtCore.SIGNAL("clicked ()"),self.removeTab)
 		self.ui.chatTab.removeTab(0)

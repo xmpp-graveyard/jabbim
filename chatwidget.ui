@@ -43,7 +43,7 @@
         <string>...</string>
        </property>
        <property name="icon" >
-        <iconset>images/smileys/biggrin.gif</iconset>
+        <iconset>images/smileys/biggrin.png</iconset>
        </property>
        <property name="checkable" >
         <bool>true</bool>

@@ -329,6 +329,8 @@ class Jabber:
 		self.conn.sendInitPresence()
 		
 
+		#self.discovery=xmpp.features.discoverInfo(self.conn,"icq.netlab.cz")
+		#print self.discovery
 		if self.connected:
 			self.GoOn(self.conn)
 			return 2
