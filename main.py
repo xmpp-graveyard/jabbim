@@ -284,7 +284,6 @@ class mainWindow(QtGui.QMainWindow):
 			e=None
 		if e!=None:
 			self.jabberCommandHandler(e)
-
 		try:
 			e = jab.err.get(timeout = 0)
 			self.jabberErrorHandler(e)
@@ -456,13 +455,13 @@ class rosterWidget(QtGui.QTreeWidget):
 		#self.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
 		self.headerItem().setText(0,QtGui.QApplication.translate("roster", "Roster", None, QtGui.QApplication.UnicodeUTF8))
 		self.headerItem().setText(1,QtGui.QApplication.translate("roster", "id", None, QtGui.QApplication.UnicodeUTF8))
-		short=QtGui.QShortcut("F2",self)
-		app.connect(short, QtCore.SIGNAL("activated ()"),self.itemEdit)
 		app.connect(self, QtCore.SIGNAL("itemChanged ( QTreeWidgetItem *, int )"),self.itemChange)
 		self.edit=0
 		self.setAcceptDrops(True)
 		self.dragStartPosition=None
 		self.setSelectionMode(QtGui.QAbstractItemView.ContiguousSelection)
+		self.setEditTriggers(QtGui.QAbstractItemView.EditKeyPressed)
+		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
 
 	def isUser(self,jid):
 		for k,v in MainWindow.groups.iteritems():
@@ -532,7 +531,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		return item
 
 	def itemChange(self,item,column):
-		if item==self.currentItem() and self.edit==item:
+		if item==self.currentItem():
 			jid=item.data(32,0)
 			jid=str(jid.toString())
 			parent=item.parent()
@@ -542,9 +541,9 @@ class rosterWidget(QtGui.QTreeWidget):
 				groups=[unicode(parent.text(0))]
 			jab.roster.setItem(jid,unicode(item.text(0)),groups)
 
-	def itemEdit(self):
-		self.edit=self.currentItem()
-		self.editItem(self.currentItem(),0)
+	#def itemEdit(self):
+		#self.edit=self.currentItem()
+		#self.editItem(self.currentItem(),0)
 
 	def buildContactMenu(self,jid,group):
 		contactMenu=QtGui.QMenu(self)
@@ -609,8 +608,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		mimeData=QtCore.QMimeData()
 		mimeData.setText(data)
 		self.drag.setMimeData(mimeData)
-		self.dropAction = self.drag.start(QtCore.Qt.CopyAction | QtCore.Qt.MoveAction)
-
+		self.dropAction = self.drag.start(QtCore.Qt.CopyAction)
 
 	def dropMimeData(self,parent, index, data, action ):
 		jid=str(data.text())
@@ -618,7 +616,9 @@ class rosterWidget(QtGui.QTreeWidget):
 		if self.isGroupItem(parent):
 			name=unicode(self.getUsers(jid)[0].text(0))
 			self.changeGroup(jid,name,"+",unicode(parent.text(0)))
-		return True
+			return True
+		else:
+			return False
 
 	def changeGroup(self,jid,name,action,group):
 		if action=="+":
@@ -671,17 +671,29 @@ class rosterWidget(QtGui.QTreeWidget):
 			group=unicode(items[1].toString())[1:]
 			print "roster_change_group_action",jid,group
 			self.changeGroup(jid,name,action,group)
+
+	def contextMenuEvent (self,event):
+		item=self.itemFromIndex(self.indexAt(QtCore.QPoint(event.x(),event.y())))
+		group=item.parent()
+		data=item.data(32,0)
+		data=data.toString()
+		if self.isUser(data):
+			contactMenu=self.buildContactMenu(str(data),group)
+			contactMenu.move(event.globalX(),event.globalY())
+			contactMenu.show()
 			
-	def mouseReleaseEvent(self,event):
-		if event.button()==QtCore.Qt.RightButton:
-			item=self.itemFromIndex(self.indexAt(QtCore.QPoint(event.x(),event.y())))
-			group=item.parent()
-			data=item.data(32,0)
-			data=data.toString()
-			if self.isUser(data):
-				contactMenu=self.buildContactMenu(str(data),group)
-				contactMenu.show()
-				contactMenu.move(event.globalX(),event.globalY())
+
+			
+	#def mouseReleaseEvent(self,event):
+		#if event.button()==QtCore.Qt.RightButton:
+			#item=self.itemFromIndex(self.indexAt(QtCore.QPoint(event.x(),event.y())))
+			#group=item.parent()
+			#data=item.data(32,0)
+			#data=data.toString()
+			#if self.isUser(data):
+				#contactMenu=self.buildContactMenu(str(data),group)
+				#contactMenu.show()
+				#contactMenu.move(event.globalX(),event.globalY())
 
 
 class loginWindow(QtGui.QDialog):

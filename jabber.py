@@ -238,7 +238,7 @@ class Jabber:
 		##print nick
 
 	def iqHandle(self, conn, iq):
-		#print "iq", unicode(iq)
+		print "iq", unicode(iq)
 		#print iq.getChildren()
 		a = iq.getPayload()
 		for x in a:
