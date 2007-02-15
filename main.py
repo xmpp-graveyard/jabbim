@@ -442,6 +442,8 @@ class chatWindow(QtGui.QMainWindow):
 
 	def removeTab(self):
 		self.ui.chatTab.removeTab(self.ui.chatTab.currentIndex())
+		if int(self.ui.chatTab.count())==0:
+			self.close()
 
 class rosterWidget(QtGui.QTreeWidget):
 	def __init__(self,parent=None):
