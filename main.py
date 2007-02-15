@@ -53,6 +53,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.timer.start(50)
 		self.homeDir=self.getHomeDir()
 		self.loadConfig()
+		self.loadSkin()
 		self.loadStatus()
 		self.users={}
 		self.groups={}
@@ -61,6 +62,10 @@ class mainWindow(QtGui.QMainWindow):
 		self.chat=chatWindow(parent=self)
 		self.ui.gridlayout.setMargin(1)
 		self.ui.gridlayout.setSpacing(1)
+
+	def loadSkin(self):
+		# loads config and repairs config file
+		self.skin=ConfigObj('skins/default.conf',encoding='UTF8')
 
 	def addContact(self,bool):
 		contact=addContactWindow()
@@ -212,10 +217,15 @@ class mainWindow(QtGui.QMainWindow):
 			jab.setStatus()
 		elif e[0] == "chat_message":
 			jid=str(e[1])
+			if len(self.ui.roster.getUsers(jid))!=0:
+				user=self.ui.roster.getUsers(jid)[0].text(0)
+			else:
+				user=jid
+			message=self.skin["message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
 			for i in range(self.chat.ui.chatTab.count()):
 				w=self.chat.ui.chatTab.widget(i)
 				if str(w.jid)==jid:
-					w.chat.textEditWrite(unicode(e[3]))
+					w.chat.textEditWrite(message)
 					return
 			self.chat.show()
 			tab=QtGui.QWidget(self.chat)
@@ -224,7 +234,7 @@ class mainWindow(QtGui.QMainWindow):
 			tab.chat=chatWidget(self,jid,tab)
 			layout.addWidget(tab.chat)
 			self.chat.ui.chatTab.addTab(tab,str(jid))
-			tab.chat.textEditWrite(unicode(e[3]))
+			tab.chat.textEditWrite(message)
 		elif e[0] == "subscribe":
 			jab.roster.Authorize(str(e[1]))
 		elif e[0] == "nick_update":
@@ -346,7 +356,7 @@ class chatWidget(QtGui.QWidget):
 		# emoticons
 		for k,v in self.smileys.iteritems():
 			text=text.replace(k,'<img src="images/smileys/'+v+'"/>')
-		self.ui.textEdit.insertHtml(text+"<br>")
+		self.ui.textEdit.insertHtml(text)
 		cur=self.ui.textEdit.textCursor()
 		cur.movePosition(QtGui.QTextCursor.End)
 		self.ui.textEdit.setTextCursor(cur)
@@ -363,8 +373,10 @@ class chatWidget(QtGui.QWidget):
 		# sends message
 		if len(unicode(self.ui.line.text()))!=0:
 			jab.sendToConf(str(self.jid),unicode(self.ui.line.text()))
-			self.textEditWrite(unicode(self.ui.line.text()))
+			message=MainWindow.skin["my_message"].replace("[time]",MainWindow.now()).replace("[user]",jab.user).replace("[message]",unicode(self.ui.line.text()))
+			self.textEditWrite(message)
 			self.ui.line.clear()
+			MainWindow.loadSkin()
 
 	def tabPressed(self):
 		# nick completion
@@ -424,6 +436,11 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.chatTab.setCornerWidget(self.ui.tabCloseButton)
 		app.connect(self.ui.tabCloseButton, QtCore.SIGNAL("clicked ()"),self.removeTab)
 		self.ui.chatTab.removeTab(0)
+
+	def closeEvent(self,e):
+		for index in range(self.ui.chatTab.count()):
+			self.ui.chatTab.removeTab(0)
+
 	def removeTab(self):
 		self.ui.chatTab.removeTab(self.ui.chatTab.currentIndex())
 
