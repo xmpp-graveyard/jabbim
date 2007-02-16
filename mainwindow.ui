@@ -49,9 +49,12 @@
        </spacer>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton" >
+       <widget class="QToolButton" name="groupchat" >
         <property name="text" >
-         <string>Groups</string>
+         <string>Group Chat</string>
+        </property>
+        <property name="popupMode" >
+         <enum>QToolButton::InstantPopup</enum>
         </property>
        </widget>
       </item>

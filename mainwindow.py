@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Tue Feb 13 21:01:53 2007
+# Created: Fri Feb 16 18:57:12 2007
 #      by: PyQt4 UI code generator 4.0.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -35,9 +35,10 @@ class Ui_mainWindow(object):
         spacerItem = QtGui.QSpacerItem(121,25,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.hboxlayout.addItem(spacerItem)
 
-        self.toolButton = QtGui.QToolButton(self.centralwidget)
-        self.toolButton.setObjectName("toolButton")
-        self.hboxlayout.addWidget(self.toolButton)
+        self.groupchat = QtGui.QToolButton(self.centralwidget)
+        self.groupchat.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.groupchat.setObjectName("groupchat")
+        self.hboxlayout.addWidget(self.groupchat)
         self.gridlayout.addLayout(self.hboxlayout,0,0,1,1)
 
         self.hboxlayout1 = QtGui.QHBoxLayout()
@@ -96,7 +97,7 @@ class Ui_mainWindow(object):
     def retranslateUi(self, mainWindow):
         mainWindow.setWindowTitle(QtGui.QApplication.translate("mainWindow", "PyJim", None, QtGui.QApplication.UnicodeUTF8))
         self.addContact.setText(QtGui.QApplication.translate("mainWindow", "Add Contact", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolButton.setText(QtGui.QApplication.translate("mainWindow", "Groups", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupchat.setText(QtGui.QApplication.translate("mainWindow", "Group Chat", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setText(QtGui.QApplication.translate("mainWindow", "Show Offline", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setText(QtGui.QApplication.translate("mainWindow", "Online", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAction.setTitle(QtGui.QApplication.translate("mainWindow", "Action", None, QtGui.QApplication.UnicodeUTF8))

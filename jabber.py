@@ -66,8 +66,8 @@ class Jabber:
 		return "%02d:%02d:%02d" % (h,m,s)
 	
 	# this function allows to join conference
-	def getIntoRoom(self, room):
-		p = xmpp.Presence(to='%s/%s'%(room, self.usernick))
+	def getIntoRoom(self, room,nick):
+		p = xmpp.Presence(to='%s/%s'%(room, nick))
 		self.conn.send(p)
 		self.confNames.append(room)
 		self.conf.append([])
@@ -143,6 +143,10 @@ class Jabber:
 			if typ=="chat":
 				jid = str(user).rsplit("/")[0]
 				self.inc.put(["chat_message", jid,user,text])
+			elif typ=="groupchat":
+				jid = str(user).rsplit("/")[0]
+				user=str(user).rsplit("/")[1]
+				self.inc.put(["groupchat_message", jid,user,text])
 
 			# this implements /me IRC style messages
 			
@@ -202,7 +206,7 @@ class Jabber:
 		if prType=="subscribe":
 			self.inc.put(["subscribe", jid])
 		else:
-			self.inc.put(["nick_update", jid,pres])
+			self.inc.put(["nick_update",jid,pres,nick])
 		#if Conf in self.confNames:
 			#index = self.confNames.index(Conf)
 			
@@ -255,6 +259,10 @@ class Jabber:
 			except:
 				pass
 		#pass
+
+	def groupchatSend(self, room, text):
+		a = xmpp.protocol.Message(room,text,"groupchat")
+		self.conn.send(a)
 
 	# this allows us to send message into conferency
 	def sendToConf(self, room, text):
