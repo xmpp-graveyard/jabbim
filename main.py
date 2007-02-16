@@ -58,6 +58,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.groups={}
 		self.groups["Unknown"]={"item":self.ui.roster,"users":{}}
 		self.ui.roster.hideColumn (1)
+		self.ui.roster.hideColumn (2)
 		self.chat=chatWindow(parent=self)
 		self.ui.gridlayout.setMargin(1)
 		self.ui.gridlayout.setSpacing(1)
@@ -112,7 +113,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.offline=True
 
 	def contactClicked(self,item,column):
-		if self.groups.has_key(unicode(item.text(0))):
+		if self.ui.roster.isGroupItem(item):
 			return
 		data=item.data(32,0)
 		data=str(data.toString())
@@ -130,7 +131,7 @@ class mainWindow(QtGui.QMainWindow):
 		layout=QtGui.QHBoxLayout(tab)
 		tab.chat=chatWidget(self,data,tab)
 		layout.addWidget(tab.chat)
-		self.chat.ui.chatTab.addTab(tab,unicode(item.text(0)))
+		self.chat.ui.chatTab.addTab(tab,unicode(item.text(2)))
 
 	def statusChanged(self,action):
 		data=action.data()
@@ -217,7 +218,7 @@ class mainWindow(QtGui.QMainWindow):
 		elif e[0] == "chat_message":
 			jid=str(e[1])
 			if len(self.ui.roster.getUsers(jid))!=0:
-				user=self.ui.roster.getUsers(jid)[0].text(0)
+				user=self.ui.roster.getUsers(jid)[0].text(2)
 			else:
 				user=jid
 			message=self.skin["message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
@@ -244,11 +245,21 @@ class mainWindow(QtGui.QMainWindow):
 					if str(e[2].getType())!="unavailable":
 						if str(e[2].getShow())!="None":
 							user.setIcon(0,self.statuses[str(e[2].getShow())])
-							user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(0)))
+							user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
 						else:
 							user.setIcon(0,self.statuses["online"])
-							user.setText(1,self.nickSort["online"]+unicode(user.text(0)))
+							user.setText(1,self.nickSort["online"]+unicode(user.text(2)))
+						user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>Jabber ID: </b>'+str(jid)+'')
+						if unicode(e[2].getStatus())=="None":
+							user.setText(0,unicode(self.getUsers(jid)[0].text(2)))
+						else:
+							text=[word for word in unicode(e[2].getStatus()).split('\n') if word != ''][0]
+							user.setText(0,unicode(self.getUsers(jid)[0].text(2))+"\n"+text)
 						self.ui.roster.setItemHidden(user,False)
+				for k,v in MainWindow.groups.iteritems():
+					if k!="Unknown":
+						online,offline,count=self.ui.roster.getStats(unicode(k))
+						self.groups[k]["item"].setText(0,unicode(self.groups[k]["item"].text(2))+" ("+str(online)+"/"+str(count)+")")
 				self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		elif e[0] == "roster_update":
 			print "roster update"
@@ -448,26 +459,38 @@ class rosterWidget(QtGui.QTreeWidget):
 	def __init__(self,parent=None):
 		apply(QtGui.QTreeWidget.__init__,(self,parent))
 		self.setAlternatingRowColors(True)
-		self.setIconSize(QtCore.QSize(16,16))
+		self.setIconSize(QtCore.QSize(28,28))
 		self.setRootIsDecorated(False)
 		self.setObjectName("roster")
 		self.setDragEnabled(True)
 		#self.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
 		self.headerItem().setText(0,QtGui.QApplication.translate("roster", "Roster", None, QtGui.QApplication.UnicodeUTF8))
 		self.headerItem().setText(1,QtGui.QApplication.translate("roster", "id", None, QtGui.QApplication.UnicodeUTF8))
-		app.connect(self, QtCore.SIGNAL("itemChanged ( QTreeWidgetItem *, int )"),self.itemChange)
+		self.headerItem().setText(2,QtGui.QApplication.translate("roster", "name", None, QtGui.QApplication.UnicodeUTF8))
+		#app.connect(self, QtCore.SIGNAL("itemChanged ( QTreeWidgetItem *, int )"),self.itemChange)
 		self.edit=0
 		self.setAcceptDrops(True)
 		self.dragStartPosition=None
 		self.setSelectionMode(QtGui.QAbstractItemView.ContiguousSelection)
-		self.setEditTriggers(QtGui.QAbstractItemView.EditKeyPressed)
+		self.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
 		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
+
 
 	def isUser(self,jid):
 		for k,v in MainWindow.groups.iteritems():
 			if MainWindow.groups[k]["users"].has_key(str(jid)):
 				return True
 		return False
+
+	def getStats(self,group):
+		offline=0
+		online=0
+		for k,user in MainWindow.groups[unicode(group)]["users"].iteritems():
+			if int(str(user.text(1))[0])==9:
+				offline+=1
+			else:
+				online+=1
+		return online,offline,online+offline
 
 	def isGroupItem(self,item):
 		for k,v in MainWindow.groups.iteritems():
@@ -493,9 +516,9 @@ class rosterWidget(QtGui.QTreeWidget):
 			parent.takeChild(index)
 			if int(parent.childCount())==0:
 				self.takeTopLevelItem(self.indexOfTopLevelItem(parent))
-			del MainWindow.groups[unicode(parent.text(0))]["users"][str(jid)]
-			if len(MainWindow.groups[unicode(parent.text(0))]["users"])==0:
-				del MainWindow.groups[unicode(parent.text(0))]
+			del MainWindow.groups[unicode(parent.text(2))]["users"][str(jid)]
+			if len(MainWindow.groups[unicode(parent.text(2))]["users"])==0:
+				del MainWindow.groups[unicode(parent.text(2))]
 
 	def getGroups(self,jid):
 		groups=[]
@@ -508,6 +531,8 @@ class rosterWidget(QtGui.QTreeWidget):
 		item=QtGui.QTreeWidgetItem(self)
 		item.setText(0,name)
 		item.setText(1,"0"+unicode(name).lower())
+		item.setText(2,name)
+		item.setIcon(0,QtGui.QIcon("images/status/muc_inactive.png"))
 		item.setBackgroundColor(0,QtGui.QColor(102,102,102))
 		#self.groups[g].setFlags(self.users[str(item)].flags()|QtCore.Qt.ItemIsDragEnabled)
 		item.setTextColor(0,QtGui.QColor(255,255,255))
@@ -523,6 +548,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			name=jid
 		item.setText(0,unicode(name))
 		item.setText(1,"9"+unicode(name).lower())
+		item.setText(2,unicode(name))
 		item.setData(32,0,QtCore.QVariant(jid))
 		item.setIcon(0,icon)
 		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)
@@ -538,7 +564,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			if parent==None:
 				groups=[]
 			else:
-				groups=[unicode(parent.text(0))]
+				groups=[unicode(parent.text(2))]
 			jab.roster.setItem(jid,unicode(item.text(0)),groups)
 
 	#def itemEdit(self):
@@ -552,7 +578,7 @@ class rosterWidget(QtGui.QTreeWidget):
 
 		if group!=None:
 			action=contactMenu.addAction(self.tr("Delete from group"))
-			action.setData(QtCore.QVariant([unicode(jid),u"-"+group.text(0)]))
+			action.setData(QtCore.QVariant([unicode(jid),u"-"+group.text(2)]))
 			action.setObjectName("check_group")
 		elif len(self.getGroups(str(jid)))>1:
 			action=contactMenu.addAction(self.tr("Delete from group"))
@@ -614,8 +640,8 @@ class rosterWidget(QtGui.QTreeWidget):
 		jid=str(data.text())
 		print parent,data.text()
 		if self.isGroupItem(parent):
-			name=unicode(self.getUsers(jid)[0].text(0))
-			self.changeGroup(jid,name,"+",unicode(parent.text(0)))
+			name=unicode(self.getUsers(jid)[0].text(2))
+			self.changeGroup(jid,name,"+",unicode(parent.text(2)))
 			return True
 		else:
 			return False
@@ -650,7 +676,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		elif cmd=="new_group":
 			jid=action.data()
 			jid=str(jid.toString())
-			name=unicode(self.getUsers(jid)[0].text(0))
+			name=unicode(self.getUsers(jid)[0].text(2))
 			print "roster_new_group_action",jid,name
 			group,b=QtGui.QInputDialog.getText(self,self.tr("New group"),"Add user to new group", QtGui.QLineEdit.Normal, "")
 			group=unicode(group)
@@ -666,7 +692,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			items=action.data()
 			items=items.toList()
 			jid=str(items[0].toString())
-			name=unicode(self.getUsers(jid)[0].text(0))
+			name=unicode(self.getUsers(jid)[0].text(2))
 			action=unicode(items[1].toString())[0]
 			group=unicode(items[1].toString())[1:]
 			print "roster_change_group_action",jid,group
