@@ -271,7 +271,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			jid=str(jid.toString())
 			name=unicode(self.getUsers(jid)[0].text(2))
 			print "roster_new_group_action",jid,name
-			group,b=QtGui.QInputDialog.getText(self,self.tr("New group"),"Add user to new group", QtGui.QLineEdit.Normal, "")
+			group,b=QtGui.QInputDialog.getText(self,self.tr("New group"),self.tr("Add user to new group"), QtGui.QLineEdit.Normal, "")
 			group=unicode(group)
 			if b==True:
 				self.main.groups[group]={"item":self.addGroup(group),"users":{}}

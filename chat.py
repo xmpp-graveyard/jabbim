@@ -15,11 +15,13 @@ class chatWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
+
 		#short=QtGui.QShortcut("tab",self.ui.line)
 		#QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
 		self.loadSmileys()
 		self.jid=jid
 		self.name_id=-1 # for tabPressed
+
 
 	def loadSmileys(self):
 		# loads smileys.conf and makes buttons

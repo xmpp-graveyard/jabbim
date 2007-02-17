@@ -22,7 +22,7 @@ class loginWindow(QtGui.QDialog):
 		password=unicode(self.ui.password.text())
 		if len(jid)!=0 and len(jid.split("@"))==2 and len(unicode(self.ui.password.text()))!=0:
 			if jid!=self.main.config['jid'] or (password!=self.main.config['passwd'] and self.main.config['savePasswd']=="True") or self.main.config['savePasswd']!=str(self.ui.savePassword.isChecked()):
-				ret=QtGui.QMessageBox.question(self,self.tr("Login information"), self.tr("Save actual login information?"),3,4)
+				ret=QtGui.QMessageBox.question(self,self.tr("Login information"), self.tr("Save current login information?"),3,4)
 				if ret==3:
 					self.main.config['savePasswd']=self.ui.savePassword.isChecked()
 					if self.ui.savePassword.isChecked()==True:

@@ -17,7 +17,11 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.tabCloseButton=QtGui.QPushButton(QtGui.QIcon("images/icons/close.png"),"",self.ui.chatTab)
 		self.ui.chatTab.setCornerWidget(self.ui.tabCloseButton)
 		QtCore.QObject.connect(self.ui.tabCloseButton, QtCore.SIGNAL("clicked ()"),self.removeTab)
+		QtCore.QObject.connect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
 		self.ui.chatTab.removeTab(0)
+		
+	def changeTab(self,index):
+		self.ui.chatTab.setTabIcon(index,QtGui.QIcon())
 
 	def addGroupChatTab(self,room,nickname):
 		tab=QtGui.QWidget(self.ui.chatTab)
