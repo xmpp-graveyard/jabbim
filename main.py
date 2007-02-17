@@ -372,32 +372,39 @@ class mainWindow(QtGui.QMainWindow):
 				self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 			# Pokud je jid groupchat
 			elif self.isGroupChat(jid):
-				nick=unicode(e[3])
-				# Nalezeni spravneho groupchatu
-				for i in range(self.chat.ui.chatTab.count()):
-					w=self.chat.ui.chatTab.widget(i)
-					if str(w.jid)==jid:
-						# Pokud je uzivatel jiz v mistnosti, nacteme jej od tam
-						if self.isGroupChatMember(jid,unicode(nick)):
+				if str(e[2].getType())!="unavailable":
+					nick=unicode(e[3])
+					# Nalezeni spravneho groupchatu
+					for i in range(self.chat.ui.chatTab.count()):
+						w=self.chat.ui.chatTab.widget(i)
+						if str(w.jid)==jid:
+							# Pokud je uzivatel jiz v mistnosti, nacteme jej od tam
+							if self.isGroupChatMember(jid,unicode(nick)):
+								user=self.getGroupChatMember(jid,unicode(nick))
+							# Pokud neni v mistnosti, vytvorime jej
+							else:
+								user=QtGui.QListWidgetItem(unicode(nick))
+								self.groupchat[jid].append(user)
+							# Nastaveni stavu
+							if str(e[2].getShow())!="None":
+								user.setIcon(self.statuses[str(e[2].getShow())])
+								#user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
+							else:
+								user.setIcon(self.statuses["online"])
+							# Tooltip
+							#user.setToolTip('<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>Jabber ID: </b>'+str(jid)+'')
+							# Pridani do seznamu uzivatelu v mistnosti
+							w.chat.ui.listWidget.addItem(user)
+							# serazeni
+							w.chat.ui.listWidget.sortItems()
+							return
+				elif str(e[2].getType())=="unavailable":
+					nick=unicode(e[3])
+					for i in range(self.chat.ui.chatTab.count()):
+						w=self.chat.ui.chatTab.widget(i)
+						if str(w.jid)==jid:
 							user=self.getGroupChatMember(jid,unicode(nick))
-						# Pokud neni v mistnosti, vytvorime jej
-						else:
-							user=QtGui.QListWidgetItem(unicode(nick))
-							self.groupchat[jid].append(user)
-						# Nastaveni stavu
-						if str(e[2].getShow())!="None":
-							user.setIcon(self.statuses[str(e[2].getShow())])
-							#user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
-						else:
-							user.setIcon(self.statuses["online"])
-						# Tooltip
-						#user.setToolTip('<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>Jabber ID: </b>'+str(jid)+'')
-						# Pridani do seznamu uzivatelu v mistnosti
-						w.chat.ui.listWidget.addItem(user)
-						# serazeni
-						w.chat.ui.listWidget.sortItems()
-						return
-		
+							w.chat.ui.listWidget.takeItem(int(w.chat.ui.listWidget.row(user)))
 		elif e[0] == "roster_update":
 			print "roster update"
 			items=e[1].getItems()
