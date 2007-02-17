@@ -11,6 +11,7 @@ class preferencesWindow(QtGui.QDialog):
 	def __init__(self,main,parent=None,page=0):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.main=main
+		self.bookmarks=self.main.bookmarks
 		self.setModal(False)
 		self.ui=Ui_preferences()
 		self.ui.setupUi(self)
@@ -28,7 +29,15 @@ class preferencesWindow(QtGui.QDialog):
 		self.ui.chatSkins.setCurrentIndex(0)
 		self.loadBookmarks()
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarkClicked)
+		QtCore.QObject.connect(self.ui.addBookmark, QtCore.SIGNAL("clicked()"),self.addBookmark)
+		QtCore.QObject.connect(self.ui.editBookmark, QtCore.SIGNAL("clicked()"),self.bookmarkClicked)
+		QtCore.QObject.connect(self.ui.removeBookmark, QtCore.SIGNAL("clicked()"),self.removeBookmark)
 		QtCore.QObject.connect(self.ui.chatSkins, QtCore.SIGNAL("activated ( const QString & )"),self.chatSkinsChanged)
+
+	def removeBookmark(self):
+		item=self.ui.bookmarks.currentItem()
+		self.ui.bookmarks.takeTopLevelItem(self.ui.bookmarks.indexOfTopLevelItem(item))
+		del self.bookmarks[unicode(item.text(0))]
 
 	def chatSkinPreviewtextEditWrite(self,text):
 		cur=self.ui.chatSkinPreview.textCursor()
@@ -48,20 +57,28 @@ class preferencesWindow(QtGui.QDialog):
 
 	def loadBookmarks(self):
 		self.ui.bookmarks.clear()
-		for room,nick in self.main.bookmarks.iteritems():
+		for room,nick in self.bookmarks.iteritems():
 			item=QtGui.QTreeWidgetItem(self.ui.bookmarks)
 			item.setText(0,room)
 			item.setText(1,nick)
 		self.ui.bookmarks.resizeColumnToContents(0)
 		self.ui.bookmarks.resizeColumnToContents(1)
-	
-	def bookmarkClicked(self,item,row):
+
+	def addBookmark(self):
+		edit=editBookmark(self.main,"","",self,False)
+		ret=edit.exec_()
+		if ret==1:
+			self.loadBookmarks()
+
+	def bookmarkClicked(self,item=None,row=None):
+		if item==None:
+			item=self.ui.bookmarks.currentItem()
+			if item==None:
+				return
 		edit=editBookmark(self.main,unicode(item.text(0)),unicode(item.text(1)),self)
 		ret=edit.exec_()
 		if ret==1:
 			self.loadBookmarks()
-			# we need to update groupchat bookmarks menu
-			self.main.buildGroupchatMenu()
 			
 	def accept(self):
 		jid=unicode(self.ui.jid.text())
@@ -71,13 +88,19 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.config['chat_skin']=unicode(self.ui.chatSkins.currentText())
 		self.main.config['jid']=jid
 		self.main.config.write()
+		# we need to update groupchat bookmarks menu
+		self.main.bookmarks=self.bookmarks
+		self.main.bookmarks.write()
+		self.main.buildGroupchatMenu()
 		self.done(1)
 		
 class editBookmark(QtGui.QDialog):
-	def __init__(self,main,room,nickname,parent=None):
+	def __init__(self,main,room,nickname,parent,edit=True):
 		apply(QtGui.QDialog.__init__,(self,parent))
+		self.parent=parent
 		self.room=room
 		self.main=main
+		self.edit=edit
 		self.setModal(True)
 		self.ui=Ui_editbookmark()
 		self.ui.setupUi(self)
@@ -88,14 +111,15 @@ class editBookmark(QtGui.QDialog):
 		room=unicode(self.ui.room.text())
 		nickname=unicode(self.ui.nickname.text())
 		if self.room==room:
-			self.main.bookmarks[room]=nickname
-			self.main.bookmarks.write()
+			self.parent.bookmarks[room]=nickname
+			self.parent.bookmarks.write()
 			self.done(1)
 		else:
-			if self.main.bookmarks.has_key(room):
+			if self.parent.bookmarks.has_key(room):
 				print "error"
 			else:
-				self.main.bookmarks[room]=nickname
-				self.main.bookmarks.write()
+				if self.edit==True:
+					del self.parent.bookmarks[self.room]
+				self.parent.bookmarks[room]=nickname
 				self.done(1)
 		
