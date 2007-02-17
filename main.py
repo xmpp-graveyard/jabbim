@@ -71,15 +71,14 @@ class mainWindow(QtGui.QMainWindow):
 
 	def loadSkin(self):
 		# loads config and repairs config file
-		self.skin=ConfigObj('skins/default.conf',encoding='UTF8')
+		self.skin=ConfigObj("skins/"+self.config["chat_skin"],encoding='UTF8')
 
 	def addContact(self,bool):
 		contact=addContactWindow(self,jab)
 		contact.exec_()
 
-	def loadGroupchat(self):
-		self.groupchatMenu=QtGui.QMenu(self.ui.groupchat)
-		
+	def buildGroupchatMenu(self):
+		self.groupchatMenu.clear()
 		action=self.groupchatMenu.addAction(self.tr("Join new groupchat"))
 		action.setData(QtCore.QVariant("new"))
 		
@@ -88,7 +87,13 @@ class mainWindow(QtGui.QMainWindow):
 		for k,v in self.bookmarks.iteritems():
 			action=self.groupchatMenu.addAction(unicode(k))
 			action.setData(QtCore.QVariant(v))
-		
+		self.groupchatMenu.addSeparator()
+		action=self.groupchatMenu.addAction(self.tr("Manage bookmarks"))
+		action.setData(QtCore.QVariant("manage"))
+
+	def loadGroupchat(self):
+		self.groupchatMenu=QtGui.QMenu(self.ui.groupchat)
+		self.buildGroupchatMenu()
 		self.ui.groupchat.setMenu(self.groupchatMenu)
 		app.connect(self.groupchatMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.groupchatChanged)
 
@@ -142,12 +147,16 @@ class mainWindow(QtGui.QMainWindow):
 			ret=newchat.exec_()
 			if ret==1:
 				self.chat.show()
+		elif data=="manage":
+			win=preferencesWindow(self,self,1)
+			win.show()
 		else:
 			room=unicode(action.text())
 			nickname=unicode(data)
 			jab.getIntoRoom(room,nickname)
 			self.groupchat.append(room)
 			self.chat.addGroupChatTab(room,nickname)
+
 	def statusChanged(self,action):
 		data=action.data()
 		data=data.toString()
@@ -168,7 +177,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def loadConfig(self):
 		# loads config and repairs config file
-		configs=["jid","passwd","savePasswd"]
+		configs={"jid":"","passwd":"","savePasswd":"","chat_skin":"default.conf"}
 		self.config=ConfigObj(self.homeDir+'/.jgames/config',encoding='UTF8')
 		if len(self.config)==0:
 			if not os.path.isdir(self.homeDir+'/.jgames'):
@@ -178,11 +187,11 @@ class mainWindow(QtGui.QMainWindow):
 				self.config[i]=""
 			self.config.write()
 		rewrite=False
-		for i in configs:
+		for k,v in configs.iteritems():
 			try:
-				self.config[i]
+				self.config[k]
 			except:
-				self.config[i]=""
+				self.config[k]=v
 				rewrite=True
 		if rewrite==True:
 			self.config.write()
