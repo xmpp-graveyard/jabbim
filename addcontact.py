@@ -27,7 +27,7 @@ class addContactWindow(QtGui.QDialog):
 				self.main.groups[group]={"item":self.main.ui.roster.addGroup(group),"users":{}}
 				self.main.groups[group]["users"][str(jid)]=self.main.ui.roster.addUser(jid,nickname,self.main.groups[group]["item"],self.main.offline,self.main.statuses["offline"])
 		else:
-			self.main.groups["Unknown"]["users"][str(jid)]=self.main.ui.roster.addUser(jid,nickname,None,self.main.offline,self.main.statuses["offline"])
+			self.main.groups["Unknown"]["users"][str(jid)]=self.main.ui.roster.addUser(jid,nickname,self.main.groups["Unknown"]["item"],self.main.offline,self.main.statuses["offline"])
 		self.jab.roster.setItem(jid,nickname,[group])
 		self.jab.roster.Subscribe(jid)
 		self.done(1)

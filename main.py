@@ -58,7 +58,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.groupchat={}
 		self.users={}
 		self.groups={}
-		self.groups["Unknown"]={"item":self.ui.roster,"users":{}}
+		self.groups["Unknown"]={"item":self.ui.roster.addGroup(self.tr("Unknown")),"users":{}}
 		self.chat=chatWindow(self,self,jab)
 		self.ui.gridlayout.setMargin(1)
 		self.ui.gridlayout.setSpacing(1)
@@ -225,6 +225,7 @@ class mainWindow(QtGui.QMainWindow):
 			for k,user in self.groups[group]["users"].iteritems():
 				if int(user.text(1)[0])==9:
 					self.ui.roster.setItemHidden(user, not bool)
+			self.ui.roster.hidden(not bool)
 
 	def now(self):
 		h,m,s=time.localtime()[3:6]
@@ -315,7 +316,7 @@ class mainWindow(QtGui.QMainWindow):
 							user.setText(0,unicode(self.ui.roster.getUsers(jid)[0].text(2))+"\n"+text)
 						self.ui.roster.setItemHidden(user,False)
 				for k,v in MainWindow.groups.iteritems():
-					if k!="Unknown":
+					
 						online,offline,count=self.ui.roster.getStats(unicode(k))
 						self.groups[k]["item"].setText(0,unicode(self.groups[k]["item"].text(2))+" ("+str(online)+"/"+str(count)+")")
 				self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
@@ -348,9 +349,9 @@ class mainWindow(QtGui.QMainWindow):
 				groups=e[1].getGroups(jid)
 				print groups
 				if groups==None or groups==[]:
-					groups=[]
-					name=e[1].getName(jid)
-					self.groups["Unknown"]["users"][str(jid)]=self.ui.roster.addUser(jid,name,None,self.offline,self.statuses["offline"])
+					groups=["Unknown"]
+					#name=e[1].getName(jid)
+					#self.groups["Unknown"]["users"][str(jid)]=self.ui.roster.addUser(jid,name,None,self.offline,self.statuses["offline"])
 				for group in groups:
 					if self.groups.has_key(group)==False:
 						self.groups[group]={"item":self.ui.roster.addGroup(group),"users":{}}

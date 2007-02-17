@@ -27,6 +27,13 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
 		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.contactClicked)
+		self.item=QtGui.QTreeWidgetItem(self)
+		self.item.setText(1,"999")
+		self.setItemHidden(self.item, True)
+
+	def hidden(self,bool):
+		self.setItemHidden(self.item, False)
+		self.setItemHidden(self.item, True)
 
 	def contactClicked(self,item,column):
 		if self.isGroupItem(item):
@@ -66,18 +73,13 @@ class rosterWidget(QtGui.QTreeWidget):
 
 	def delUser(self,jid,user):
 		parent=user.parent()
-		if parent==None:
-			index=self.indexOfTopLevelItem(user)
-			self.takeTopLevelItem(index)
-			del self.main.groups["Unknown"]["users"][str(jid)]
-		else:
-			index=parent.indexOfChild(user)
-			parent.takeChild(index)
-			if int(parent.childCount())==0:
-				self.takeTopLevelItem(self.indexOfTopLevelItem(parent))
-			del self.main.groups[unicode(parent.text(2))]["users"][str(jid)]
-			if len(self.main.groups[unicode(parent.text(2))]["users"])==0:
-				del self.main.groups[unicode(parent.text(2))]
+		index=parent.indexOfChild(user)
+		parent.takeChild(index)
+		if int(parent.childCount())==0:
+			self.takeTopLevelItem(self.indexOfTopLevelItem(parent))
+		del self.main.groups[unicode(parent.text(2))]["users"][str(jid)]
+		if len(self.main.groups[unicode(parent.text(2))]["users"])==0:
+			del self.main.groups[unicode(parent.text(2))]
 
 	def getGroups(self,jid):
 		groups=[]
@@ -135,14 +137,14 @@ class rosterWidget(QtGui.QTreeWidget):
 		contactMenu.addAction(self.tr("Chat"))
 		contactMenu.addSeparator()
 
-		if group!=None:
+		if group!=None and len(self.getGroups(str(jid)))>1:
 			action=contactMenu.addAction(self.tr("Delete from group"))
 			action.setData(QtCore.QVariant([unicode(jid),u"-"+group.text(2)]))
 			action.setObjectName("check_group")
-		elif len(self.getGroups(str(jid)))>1:
-			action=contactMenu.addAction(self.tr("Delete from group"))
-			action.setData(QtCore.QVariant([unicode(jid),u"-Unknown"]))
-			action.setObjectName("check_group")
+		#elif len(self.getGroups(str(jid)))>1:
+			#action=contactMenu.addAction(self.tr("Delete from group"))
+			#action.setData(QtCore.QVariant([unicode(jid),u"-Unknown"]))
+			#action.setObjectName("check_group")
 			
 		action=contactMenu.addAction(self.tr("Delete from roster"))
 		action.setData(QtCore.QVariant(jid))
@@ -209,10 +211,10 @@ class rosterWidget(QtGui.QTreeWidget):
 		if action=="+":
 			if not self.main.groups[group]["users"].has_key(str(jid)):
 				item=self.getUsers(jid)[0].clone()
-				if group!="Unknown":
-					self.main.groups[group]["item"].addChild(item)
-				else:
-					self.main.groups[group]["item"].addTopLevelItem(item)
+				#if group!="Unknown":
+					#self.main.groups[group]["item"].addChild(item)
+				#else:
+				self.main.groups[group]["item"].addChild(item)
 				self.main.groups[group]["users"][str(jid)]=item
 				self.jab.roster.setItem(jid,name,self.getGroups(jid)+[unicode(group)])
 		else:
