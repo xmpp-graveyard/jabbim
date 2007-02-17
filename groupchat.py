@@ -2,21 +2,21 @@ try:
 	from PyQt4 import QtCore, QtGui
 except:
 	print "PyQt4 is not installed."
-from chatwidget_ui import *
+from groupchatwidget_ui import *
 from configobj import ConfigObj
 
-class chatWidget(QtGui.QWidget):
+class groupChatWidget(QtGui.QWidget):
 	def __init__(self,main,jid,jab,parent=None):
 		apply(QtGui.QWidget.__init__,(self,parent))
 		self.jab=jab
-		self.ui=Ui_chatwidget()
+		self.ui=Ui_groupchatwidget()
 		self.ui.setupUi(self)
 		self.main=main
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
-		#short=QtGui.QShortcut("tab",self.ui.line)
-		#QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
+		short=QtGui.QShortcut("tab",self.ui.line)
+		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
 		self.loadSmileys()
 		self.jid=jid
 		self.name_id=-1 # for tabPressed
@@ -74,9 +74,7 @@ class chatWidget(QtGui.QWidget):
 	def sendButtonClicked(self):
 		# sends message
 		if len(unicode(self.ui.line.text()))!=0:
-			self.jab.sendToConf(str(self.jid),unicode(self.ui.line.text()))
-			message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",self.jab.user).replace("[message]",unicode(self.ui.line.text()))
-			self.textEditWrite(message)
+			self.jab.groupchatSend(str(self.jid),unicode(self.ui.line.text()))
 			self.ui.line.clear()
 
 	def tabPressed(self):

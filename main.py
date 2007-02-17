@@ -30,12 +30,9 @@ from login import *
 from preferences import *
 from roster import *
 from status import *
-from chat import *
-from chatwidget import *
-from groupchatwidget import *
+from chatwindow import *
 from joingroupchat import *
 from addcontact import *
-#from game import *
 
 #import games
 
@@ -46,7 +43,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.setupUi(self)
 		self.loadRoster()
 		# Signals
-		app.connect(self.ui.roster, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.contactClicked)
 		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
 		app.connect(self.ui.addContact, QtCore.SIGNAL("clicked(bool)"),self.addContact)
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
@@ -63,15 +59,13 @@ class mainWindow(QtGui.QMainWindow):
 		self.users={}
 		self.groups={}
 		self.groups["Unknown"]={"item":self.ui.roster,"users":{}}
-		self.ui.roster.hideColumn (1)
-		self.ui.roster.hideColumn (2)
-		self.chat=chatWindow(parent=self)
+		self.chat=chatWindow(self,self,jab)
 		self.ui.gridlayout.setMargin(1)
 		self.ui.gridlayout.setSpacing(1)
 
 	def preferencesClicked(self,bool):
 		# shows preferences
-		w=preferencesWindow(self)
+		w=preferencesWindow(self,self)
 		w.show()
 
 
@@ -80,7 +74,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.skin=ConfigObj('skins/default.conf',encoding='UTF8')
 
 	def addContact(self,bool):
-		contact=addContactWindow()
+		contact=addContactWindow(self,jab)
 		contact.exec_()
 
 	def loadGroupchat(self):
@@ -102,7 +96,7 @@ class mainWindow(QtGui.QMainWindow):
 		layout=QtGui.QHBoxLayout(self.ui.rosterWidget)
 		layout.setMargin(0)
 		layout.setSpacing(0)
-		self.ui.roster=rosterWidget(self.ui.rosterWidget)
+		self.ui.roster=rosterWidget(self.ui.rosterWidget,self,jab)
 		layout.addWidget(self.ui.roster)
 
 	def loadStatus(self):
@@ -139,53 +133,21 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
 		self.offline=True
 
-	def contactClicked(self,item,column):
-		if self.ui.roster.isGroupItem(item):
-			return
-		data=item.data(32,0)
-		data=str(data.toString())
-		for i in range(self.chat.ui.chatTab.count()):
-			w=self.chat.ui.chatTab.widget(i)
-			try:
-				if w.jid==data:
-					self.chat.show()
-					return
-			except:
-				pass
-		self.chat.show()
-		tab=QtGui.QWidget(self.chat)
-		tab.jid=data
-		tab.typ="chat"
-		layout=QtGui.QHBoxLayout(tab)
-		tab.chat=chatWidget(self,data,tab)
-		layout.addWidget(tab.chat)
-		self.chat.ui.chatTab.addTab(tab,unicode(item.text(2)))
 
 	def groupchatChanged(self,action):
 		data=action.data()
 		data=data.toString()
 		if data=="new":
-			newchat=joinGroupChatWindow()
+			newchat=joinGroupChatWindow(self,jab)
 			ret=newchat.exec_()
 			if ret==1:
 				self.chat.show()
 		else:
 			room=unicode(action.text())
 			nickname=unicode(data)
-			print "joining",room,nickname
 			jab.getIntoRoom(room,nickname)
-			tab=QtGui.QWidget(self.chat)
-			tab.jid=room
-			tab.name=unicode(nickname)
-			tab.typ="groupchat"
-			layout=QtGui.QHBoxLayout(tab)
-			tab.chat=groupChatWidget(self,room,tab)
-			layout.addWidget(tab.chat)
-			self.chat.ui.chatTab.addTab(tab,room)
 			self.groupchat.append(room)
-			self.chat.show()
-
-
+			self.chat.addGroupChatTab(room,nickname)
 	def statusChanged(self,action):
 		data=action.data()
 		data=data.toString()
@@ -259,20 +221,6 @@ class mainWindow(QtGui.QMainWindow):
 		h,m,s=time.localtime()[3:6]
 		return "%02d:%02d:%02d" % (h,m,s)
 
-
-	def isUser(self,jid):
-		for k,v in self.groups.iteritems():
-			if self.groups[k]["users"].has_key(str(jid)):
-				return True
-		return False
-
-	def getUsers(self,jid):
-		users=[]
-		for k,v in self.groups.iteritems():
-			if self.groups[k]["users"].has_key(jid):
-				users.append(self.groups[k]["users"][str(jid)])
-		return users
-
 	def jabberCommandHandler(self,e):
 		if e[0] == "con_ready":
 			MainWindow.show()
@@ -306,20 +254,20 @@ class mainWindow(QtGui.QMainWindow):
 					w.chat.textEditWrite(message)
 					return
 			self.chat.show()
-			tab=QtGui.QWidget(self.chat)
-			tab.jid=jid
-			layout=QtGui.QHBoxLayout(tab)
-			tab.chat=chatWidget(self,jid,tab)
-			layout.addWidget(tab.chat)
-			self.chat.ui.chatTab.addTab(tab,str(jid))
-			tab.chat.textEditWrite(message)
+			#tab=QtGui.QWidget(self.chat)
+			#tab.jid=jid
+			#layout=QtGui.QHBoxLayout(tab)
+			#tab.chat=chatWidget(self,jid,tab)
+			#layout.addWidget(tab.chat)
+			#self.chat.ui.chatTab.addTab(tab,str(jid))
+			self.chat.addChatTab(jid,unicode(user),message)
 		elif e[0] == "subscribe":
 			jab.roster.Authorize(str(e[1]))
 		elif e[0] == "nick_update":
 			jid=str(e[1])
 			#print "nick_update",jid
-			if self.isUser(jid):
-				for user in self.getUsers(jid):
+			if self.ui.roster.isUser(jid):
+				for user in self.ui.roster.getUsers(jid):
 					if str(e[2].getType())!="unavailable":
 						if str(e[2].getShow())!="None":
 							user.setIcon(0,self.statuses[str(e[2].getShow())])
@@ -329,10 +277,10 @@ class mainWindow(QtGui.QMainWindow):
 							user.setText(1,self.nickSort["online"]+unicode(user.text(2)))
 						user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>Jabber ID: </b>'+str(jid)+'')
 						if unicode(e[2].getStatus())=="None":
-							user.setText(0,unicode(self.getUsers(jid)[0].text(2)))
+							user.setText(0,unicode(self.ui.roster.getUsers(jid)[0].text(2)))
 						else:
 							text=[word for word in unicode(e[2].getStatus()).split('\n') if word != ''][0]
-							user.setText(0,unicode(self.getUsers(jid)[0].text(2))+"\n"+text)
+							user.setText(0,unicode(self.ui.roster.getUsers(jid)[0].text(2))+"\n"+text)
 						self.ui.roster.setItemHidden(user,False)
 				for k,v in MainWindow.groups.iteritems():
 					if k!="Unknown":
@@ -406,189 +354,6 @@ class mainWindow(QtGui.QMainWindow):
 	def jabberError(self,error):
 		QtGui.QMessageBox.warning(self,"Jabber Error",unicode(error),0,1)
 
-class groupChatWidget(QtGui.QWidget):
-	def __init__(self,main,jid,parent=None):
-		apply(QtGui.QWidget.__init__,(self,parent))
-		self.ui=Ui_groupchatwidget()
-		self.ui.setupUi(self)
-		self.main=main
-		app.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
-		app.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
-		app.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
-		short=QtGui.QShortcut("tab",self.ui.line)
-		app.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
-		self.loadSmileys()
-		self.jid=jid
-		self.name_id=-1 # for tabPressed
-
-	def loadSmileys(self):
-		# loads smileys.conf and makes buttons
-		self.smileys=ConfigObj("smileys.conf",encoding='UTF8')
-		self.s=QtGui.QFrame(self)
-		self.s.hide()
-		layout=QtGui.QGridLayout(self.s)
-		layout.setMargin(0)
-		layout.setSpacing(0)
-		added=[]
-		x=0
-		y=0
-		for k,v in self.smileys.iteritems():
-			if added.count(v)==0:
-				added.append(v)
-				button=QtGui.QToolButton(self)
-				action=QtGui.QAction(QtGui.QIcon("images/smileys/"+v),"",self.s)
-				action.setData(QtCore.QVariant(k))
-				button.setDefaultAction(action)
-				button.setToolTip(str(k))
-				app.connect(button, QtCore.SIGNAL("triggered ( QAction *)"),self.addEmoticon)
-				layout.addWidget(button,x,y)
-				y+=1
-				if y==5:
-					y=0
-					x+=1
-	
-	def smileysClicked(self,bool):
-		self.s.setGeometry ( self.ui.smileys.x()-60, self.ui.smileys.y()-120, 120, 120)
-		self.s.setShown(bool)
-	
-	def textEditWrite(self,text):
-		cur=self.ui.textEdit.textCursor()
-		cur.movePosition(QtGui.QTextCursor.End)
-		self.ui.textEdit.setTextCursor(cur)
-		# emoticons
-		for k,v in self.smileys.iteritems():
-			text=text.replace(k,'<img src="images/smileys/'+v+'"/>')
-		self.ui.textEdit.insertHtml(text)
-		cur=self.ui.textEdit.textCursor()
-		cur.movePosition(QtGui.QTextCursor.End)
-		self.ui.textEdit.setTextCursor(cur)
-	
-	def addEmoticon(self,action):
-		# add emoticon to the self.ui.line
-		data=action.data()
-		data=data.toString()
-		self.ui.line.insert(data)
-		self.ui.smileys.setChecked(False)
-		self.s.hide()
-	
-	def sendButtonClicked(self):
-		# sends message
-		if len(unicode(self.ui.line.text()))!=0:
-			jab.groupchatSend(str(self.jid),unicode(self.ui.line.text()))
-			self.ui.line.clear()
-
-	def tabPressed(self):
-		# nick completion
-		text=unicode(self.ui.line.text()).lower()
-		if len(text)==0:
-			return
-		text=text[0]
-		repeat=False
-		for i in range(self.ui.listWidget.count()):
-			if unicode(self.ui.listWidget.item(i).text()).lower()[:len(text)]==text and i>self.name_id:
-				self.ui.line.setText(self.ui.listWidget.item(i).text()+": ")
-				self.name_id=i
-				return
-			if unicode(self.ui.listWidget.item(i).text()).lower()[:len(text)]==text:
-				repeat=True
-		self.name_id=-1
-		if repeat==True:
-			self.tabPressed()
-
-
-class chatWidget(QtGui.QWidget):
-	def __init__(self,main,jid,parent=None):
-		apply(QtGui.QWidget.__init__,(self,parent))
-		self.ui=Ui_chatwidget()
-		self.ui.setupUi(self)
-		self.main=main
-		app.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
-		app.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
-		app.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
-		#short=QtGui.QShortcut("tab",self.ui.line)
-		#app.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
-		self.loadSmileys()
-		self.jid=jid
-		self.name_id=-1 # for tabPressed
-
-
-	def loadSmileys(self):
-		# loads smileys.conf and makes buttons
-		self.smileys=ConfigObj("smileys.conf",encoding='UTF8')
-		self.s=QtGui.QFrame(self)
-		self.s.hide()
-		layout=QtGui.QGridLayout(self.s)
-		layout.setMargin(0)
-		layout.setSpacing(0)
-		added=[]
-		x=0
-		y=0
-		for k,v in self.smileys.iteritems():
-			if added.count(v)==0:
-				added.append(v)
-				button=QtGui.QToolButton(self)
-				action=QtGui.QAction(QtGui.QIcon("images/smileys/"+v),"",self.s)
-				action.setData(QtCore.QVariant(k))
-				button.setDefaultAction(action)
-				button.setToolTip(str(k))
-				app.connect(button, QtCore.SIGNAL("triggered ( QAction *)"),self.addEmoticon)
-				layout.addWidget(button,x,y)
-				y+=1
-				if y==5:
-					y=0
-					x+=1
-	
-	def smileysClicked(self,bool):
-		self.s.setGeometry ( self.ui.smileys.x()-60, self.ui.smileys.y()-120, 120, 120)
-		self.s.setShown(bool)
-	
-	def textEditWrite(self,text):
-		cur=self.ui.textEdit.textCursor()
-		cur.movePosition(QtGui.QTextCursor.End)
-		self.ui.textEdit.setTextCursor(cur)
-		# emoticons
-		for k,v in self.smileys.iteritems():
-			text=text.replace(k,'<img src="images/smileys/'+v+'"/>')
-		self.ui.textEdit.insertHtml(text)
-		cur=self.ui.textEdit.textCursor()
-		cur.movePosition(QtGui.QTextCursor.End)
-		self.ui.textEdit.setTextCursor(cur)
-	
-	def addEmoticon(self,action):
-		# add emoticon to the self.ui.line
-		data=action.data()
-		data=data.toString()
-		self.ui.line.insert(data)
-		self.ui.smileys.setChecked(False)
-		self.s.hide()
-	
-	def sendButtonClicked(self):
-		# sends message
-		if len(unicode(self.ui.line.text()))!=0:
-			jab.sendToConf(str(self.jid),unicode(self.ui.line.text()))
-			message=MainWindow.skin["my_message"].replace("[time]",MainWindow.now()).replace("[user]",jab.user).replace("[message]",unicode(self.ui.line.text()))
-			self.textEditWrite(message)
-			self.ui.line.clear()
-
-	def tabPressed(self):
-		# nick completion
-		text=unicode(self.ui.line.text()).lower()
-		if len(text)==0:
-			return
-		text=text[0]
-		repeat=False
-		for i in range(self.ui.listWidget.count()):
-			if unicode(self.ui.listWidget.item(i).text()).lower()[:len(text)]==text and i>self.name_id:
-				self.ui.line.setText(self.ui.listWidget.item(i).text()+": ")
-				self.name_id=i
-				return
-			if unicode(self.ui.listWidget.item(i).text()).lower()[:len(text)]==text:
-				repeat=True
-		self.name_id=-1
-		if repeat==True:
-			self.tabPressed()
-
-
 class statusWindow(QtGui.QDialog):
 	def __init__(self,data,parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
@@ -619,421 +384,15 @@ class statusWindow(QtGui.QDialog):
 		jab.setStatus(self.data,unicode(self.ui.status.toPlainText ()))
 		self.done(1)
 
-class chatWindow(QtGui.QMainWindow):
-	def __init__(self,parent=None):
-		apply(QtGui.QMainWindow.__init__,(self,parent))
-		self.ui=Ui_chat()
-		self.ui.setupUi(self)
-		self.ui.tabCloseButton=QtGui.QPushButton(QtGui.QIcon("images/icons/close.png"),"",self.ui.chatTab)
-		self.ui.chatTab.setCornerWidget(self.ui.tabCloseButton)
-		app.connect(self.ui.tabCloseButton, QtCore.SIGNAL("clicked ()"),self.removeTab)
-		self.ui.chatTab.removeTab(0)
-
-	def closeEvent(self,e):
-		for index in range(self.ui.chatTab.count()):
-			w=self.ui.chatTab.widget(i)
-			if str(w.typ)=="groupchat":
-				print str(w.jid)
-				jab.getOffRoom(str(w.jid))
-			self.ui.chatTab.removeTab(0)
-
-	def removeTab(self):
-		w=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
-		if str(w.typ)=="groupchat":
-			print str(w.jid)
-			jab.getOffRoom(str(w.jid))
-		self.ui.chatTab.removeTab(self.ui.chatTab.currentIndex())
-		if int(self.ui.chatTab.count())==0:
-			self.close()
-
-class rosterWidget(QtGui.QTreeWidget):
-	def __init__(self,parent=None):
-		apply(QtGui.QTreeWidget.__init__,(self,parent))
-		self.setAlternatingRowColors(True)
-		self.setIconSize(QtCore.QSize(28,28))
-		self.setRootIsDecorated(False)
-		self.setObjectName("roster")
-		self.setDragEnabled(True)
-		#self.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
-		self.headerItem().setText(0,QtGui.QApplication.translate("roster", "Roster", None, QtGui.QApplication.UnicodeUTF8))
-		self.headerItem().setText(1,QtGui.QApplication.translate("roster", "id", None, QtGui.QApplication.UnicodeUTF8))
-		self.headerItem().setText(2,QtGui.QApplication.translate("roster", "name", None, QtGui.QApplication.UnicodeUTF8))
-		#app.connect(self, QtCore.SIGNAL("itemChanged ( QTreeWidgetItem *, int )"),self.itemChange)
-		self.edit=0
-		self.setAcceptDrops(True)
-		self.dragStartPosition=None
-		self.setSelectionMode(QtGui.QAbstractItemView.ContiguousSelection)
-		self.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
-		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
-
-
-	def isUser(self,jid):
-		for k,v in MainWindow.groups.iteritems():
-			if MainWindow.groups[k]["users"].has_key(str(jid)):
-				return True
-		return False
-
-	def getStats(self,group):
-		offline=0
-		online=0
-		for k,user in MainWindow.groups[unicode(group)]["users"].iteritems():
-			if int(str(user.text(1))[0])==9:
-				offline+=1
-			else:
-				online+=1
-		return online,offline,online+offline
-
-	def isGroupItem(self,item):
-		for k,v in MainWindow.groups.iteritems():
-			if MainWindow.groups[k]["item"]==item:
-				return True
-		return False
-
-	def getUsers(self,jid):
-		users=[]
-		for k,v in MainWindow.groups.iteritems():
-			if MainWindow.groups[k]["users"].has_key(jid):
-				users.append(MainWindow.groups[k]["users"][str(jid)])
-		return users
-
-	def delUser(self,jid,user):
-		parent=user.parent()
-		if parent==None:
-			index=self.indexOfTopLevelItem(user)
-			self.takeTopLevelItem(index)
-			del MainWindow.groups["Unknown"]["users"][str(jid)]
-		else:
-			index=parent.indexOfChild(user)
-			parent.takeChild(index)
-			if int(parent.childCount())==0:
-				self.takeTopLevelItem(self.indexOfTopLevelItem(parent))
-			del MainWindow.groups[unicode(parent.text(2))]["users"][str(jid)]
-			if len(MainWindow.groups[unicode(parent.text(2))]["users"])==0:
-				del MainWindow.groups[unicode(parent.text(2))]
-
-	def getGroups(self,jid):
-		groups=[]
-		for k,v in MainWindow.groups.iteritems():
-			if MainWindow.groups[k]["users"].has_key(jid):
-				groups.append(unicode(k))
-		return groups
-
-	def addGroup(self,name):
-		item=QtGui.QTreeWidgetItem(self)
-		item.setText(0,name)
-		item.setText(1,"0"+unicode(name).lower())
-		item.setText(2,name)
-		item.setIcon(0,QtGui.QIcon("images/status/muc_inactive.png"))
-		item.setBackgroundColor(0,QtGui.QColor(102,102,102))
-		#self.groups[g].setFlags(self.users[str(item)].flags()|QtCore.Qt.ItemIsDragEnabled)
-		item.setTextColor(0,QtGui.QColor(255,255,255))
-		#self.groups[g].setIcon(0,QtGui.QIcon("images/status/closed.png"))
-		return item
-
-	def addUser(self,jid,name,group,offline,icon):
-		if group==None:
-			item=QtGui.QTreeWidgetItem(self)
-		else:
-			item=QtGui.QTreeWidgetItem(group)
-		if name==None or len(name)==0:
-			name=jid
-		item.setText(0,unicode(name))
-		item.setText(1,"9"+unicode(name).lower())
-		item.setText(2,unicode(name))
-		item.setData(32,0,QtCore.QVariant(jid))
-		item.setIcon(0,icon)
-		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)
-		self.setItemHidden(item, offline)
-		self.sortItems (1,QtCore.Qt.AscendingOrder)
-		return item
-
-	def itemChange(self,item,column):
-		if item==self.currentItem():
-			jid=item.data(32,0)
-			jid=str(jid.toString())
-			parent=item.parent()
-			if parent==None:
-				groups=[]
-			else:
-				groups=[unicode(parent.text(2))]
-			jab.roster.setItem(jid,unicode(item.text(0)),groups)
-
-	#def itemEdit(self):
-		#self.edit=self.currentItem()
-		#self.editItem(self.currentItem(),0)
-
-	def buildContactMenu(self,jid,group):
-		contactMenu=QtGui.QMenu(self)
-		contactMenu.addAction(self.tr("Chat"))
-		contactMenu.addSeparator()
-
-		if group!=None:
-			action=contactMenu.addAction(self.tr("Delete from group"))
-			action.setData(QtCore.QVariant([unicode(jid),u"-"+group.text(2)]))
-			action.setObjectName("check_group")
-		elif len(self.getGroups(str(jid)))>1:
-			action=contactMenu.addAction(self.tr("Delete from group"))
-			action.setData(QtCore.QVariant([unicode(jid),u"-Unknown"]))
-			action.setObjectName("check_group")
-			
-		action=contactMenu.addAction(self.tr("Delete from roster"))
-		action.setData(QtCore.QVariant(jid))
-		action.setObjectName("delete_action")
-		contactMenu.addSeparator()
-		
-		group=contactMenu.addMenu (self.tr("Groups"))
-		
-		#action=group.addAction(self.tr("None"))
-		#action.setObjectName("no_group")
-		#contactMenu.addSeparator()
-
-		action=group.addAction(self.tr("New Group"))
-		action.setData(QtCore.QVariant(jid))
-		action.setObjectName("new_group")
-		group.addSeparator()
-
-		g=self.getGroups(str(jid))
-		for k,v in MainWindow.groups.iteritems():
-			action=group.addAction(unicode(k))
-			action.setObjectName("check_group")
-			action.setCheckable(True)
-			if k in g:
-				action.setChecked(True)
-				action.setData(QtCore.QVariant([unicode(jid),u"-"+unicode(k)]))
-			else:
-				action.setData(QtCore.QVariant([unicode(jid),u"+"+unicode(k)]))
-
-
-		
-		
-		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
-		return contactMenu
-
-	#def dropEvent(self,event):
-		#print "test"
-		#event.accept()
-
-
-	def mimeTypes(self):
-		return QtCore.QStringList("text/plain")
-
-	def startDrag(self,actions):
-		item=self.currentItem()
-		data=item.data(32,0)
-		data=str(data.toString())
-		self.drag=QtGui.QDrag(self)
-		mimeData=QtCore.QMimeData()
-		mimeData.setText(data)
-		self.drag.setMimeData(mimeData)
-		self.dropAction = self.drag.start(QtCore.Qt.CopyAction)
-
-	def dropMimeData(self,parent, index, data, action ):
-		jid=str(data.text())
-		print parent,data.text()
-		if self.isGroupItem(parent):
-			name=unicode(self.getUsers(jid)[0].text(2))
-			self.changeGroup(jid,name,"+",unicode(parent.text(2)))
-			return True
-		else:
-			return False
-
-	def changeGroup(self,jid,name,action,group):
-		if action=="+":
-			if not MainWindow.groups[group]["users"].has_key(str(jid)):
-				item=self.getUsers(jid)[0].clone()
-				if group!="Unknown":
-					MainWindow.groups[group]["item"].addChild(item)
-				else:
-					MainWindow.groups[group]["item"].addTopLevelItem(item)
-				MainWindow.groups[group]["users"][str(jid)]=item
-				jab.roster.setItem(jid,name,self.getGroups(jid)+[unicode(group)])
-		else:
-			user=MainWindow.groups[group]["users"][str(jid)]
-			self.delUser(jid,user)
-			groups=self.getGroups(jid)
-			print groups
-			jab.roster.setItem(jid,name,groups)
-		self.sortItems (1,QtCore.Qt.AscendingOrder)
-
-	def contactMenuTriggered(self,action):
-		cmd=action.objectName()
-		if cmd=="delete_action":
-			jid=action.data()
-			jid=str(jid.toString())
-			print "roster_delete_action",jid
-			for user in self.getUsers(jid):
-				self.delUser(jid,user)
-			jab.roster.delItem(jid)
-		elif cmd=="new_group":
-			jid=action.data()
-			jid=str(jid.toString())
-			name=unicode(self.getUsers(jid)[0].text(2))
-			print "roster_new_group_action",jid,name
-			group,b=QtGui.QInputDialog.getText(self,self.tr("New group"),"Add user to new group", QtGui.QLineEdit.Normal, "")
-			group=unicode(group)
-			if b==True:
-				MainWindow.groups[group]={"item":self.addGroup(group),"users":{}}
-				item=self.getUsers(jid)[0].clone()
-				MainWindow.groups[group]["item"].addChild(item)
-				MainWindow.groups[group]["users"][str(jid)]=item
-				
-				self.sortItems (1,QtCore.Qt.AscendingOrder)
-				jab.roster.setItem(jid,name,self.getGroups(jid)+[unicode(group)])
-		elif cmd=="check_group":
-			items=action.data()
-			items=items.toList()
-			jid=str(items[0].toString())
-			name=unicode(self.getUsers(jid)[0].text(2))
-			action=unicode(items[1].toString())[0]
-			group=unicode(items[1].toString())[1:]
-			print "roster_change_group_action",jid,group
-			self.changeGroup(jid,name,action,group)
-
-	def contextMenuEvent (self,event):
-		item=self.itemFromIndex(self.indexAt(QtCore.QPoint(event.x(),event.y())))
-		group=item.parent()
-		data=item.data(32,0)
-		data=data.toString()
-		if self.isUser(data):
-			contactMenu=self.buildContactMenu(str(data),group)
-			contactMenu.move(event.globalX(),event.globalY())
-			contactMenu.show()
-			
-
-			
-	#def mouseReleaseEvent(self,event):
-		#if event.button()==QtCore.Qt.RightButton:
-			#item=self.itemFromIndex(self.indexAt(QtCore.QPoint(event.x(),event.y())))
-			#group=item.parent()
-			#data=item.data(32,0)
-			#data=data.toString()
-			#if self.isUser(data):
-				#contactMenu=self.buildContactMenu(str(data),group)
-				#contactMenu.show()
-				#contactMenu.move(event.globalX(),event.globalY())
-
-
-class loginWindow(QtGui.QDialog):
-	def __init__(self,parent=None):
-		apply(QtGui.QDialog.__init__,(self,parent))
-		self.setModal(True)
-		self.ui=Ui_login()
-		self.ui.setupUi(self)
-		self.ui.password.setText(MainWindow.config['passwd'])
-		self.ui.jid.setText(MainWindow.config['jid'])
-		
-		if MainWindow.config['savePasswd']=="True":
-			self.ui.savePassword.setChecked(True)
-
-	def accept(self):
-		jid=unicode(self.ui.jid.text())
-		password=unicode(self.ui.password.text())
-		if len(jid)!=0 and len(jid.split("@"))==2 and len(unicode(self.ui.password.text()))!=0:
-			if jid!=MainWindow.config['jid'] or (password!=MainWindow.config['passwd'] and MainWindow.config['savePasswd']=="True") or MainWindow.config['savePasswd']!=str(self.ui.savePassword.isChecked()):
-				ret=QtGui.QMessageBox.question(self,self.tr("Login information"), self.tr("Save actual login information?"),3,4)
-				if ret==3:
-					MainWindow.config['savePasswd']=self.ui.savePassword.isChecked()
-					if self.ui.savePassword.isChecked()==True:
-						MainWindow.config['passwd']=password
-					else:
-						MainWindow.config['passwd']=""
-					MainWindow.config['jid']=jid
-					MainWindow.config.write()
-			jab.user=jid.split("@")[0]
-			jab.server=jid.split("@")[1]
-			jab.password=unicode(password)
-			jab.connect()
-			self.ui.connect.setEnabled(False)
-
-	def reject(self):
-		MainWindow.close()
-		self.close()
-
-class addContactWindow(QtGui.QDialog):
-	def __init__(self,parent=None):
-		apply(QtGui.QDialog.__init__,(self,parent))
-		self.setModal(True)
-		self.ui=Ui_addContact()
-		self.ui.setupUi(self)
-		for k,v in MainWindow.groups.iteritems():
-			self.ui.group.addItem(unicode(k))
-
-	def accept(self):
-		jid=unicode(self.ui.jid.text())
-		nickname=unicode(self.ui.nickname.text())
-		group=unicode(self.ui.group.currentText())
-		print "adding",jid,nickname,group
-		if len(group)!=0:
-			if MainWindow.groups.has_key(group):
-				MainWindow.groups[group]["users"][str(jid)]=MainWindow.ui.roster.addUser(jid,nickname,MainWindow.groups[group]["item"],MainWindow.offline,MainWindow.statuses["offline"])
-			else:
-				MainWindow.groups[group]={"item":MainWindow.ui.roster.addGroup(group),"users":{}}
-				MainWindow.groups[group]["users"][str(jid)]=MainWindow.ui.roster.addUser(jid,nickname,MainWindow.groups[group]["item"],MainWindow.offline,MainWindow.statuses["offline"])
-		else:
-			MainWindow.groups["Unknown"]["users"][str(jid)]=MainWindow.ui.roster.addUser(jid,nickname,None,MainWindow.offline,MainWindow.statuses["offline"])
-		jab.roster.setItem(jid,nickname,[group])
-		jab.roster.Subscribe(jid)
-		self.done(1)
-
-	def reject(self):
-		self.close()
-
-class joinGroupChatWindow(QtGui.QDialog):
-	def __init__(self,parent=None):
-		apply(QtGui.QDialog.__init__,(self,parent))
-		self.setModal(True)
-		self.ui=Ui_joingroupchat()
-		self.ui.setupUi(self)
-
-	def accept(self):
-		room=unicode(self.ui.room.text())
-		nickname=unicode(self.ui.nickname.text())
-		if self.ui.bookmark.isChecked() and not MainWindow.bookmarks.has_key(room):
-			MainWindow.bookmarks[room]=nickname
-			MainWindow.bookmarks.write()
-		print "joining",room,nickname
-		jab.getIntoRoom(room,nickname)
-		tab=QtGui.QWidget(MainWindow.chat)
-		tab.jid=room
-		tab.name=unicode(nickname)
-		tab.typ="groupchat"
-		layout=QtGui.QHBoxLayout(tab)
-		tab.chat=groupChatWidget(MainWindow,room,tab)
-		layout.addWidget(tab.chat)
-		MainWindow.chat.ui.chatTab.addTab(tab,room)
-		MainWindow.groupchat.append(room)
-		self.done(1)
-
-	def reject(self):
-		self.close()
-
-class preferencesWindow(QtGui.QDialog):
-	def __init__(self,parent=None):
-		apply(QtGui.QDialog.__init__,(self,parent))
-		self.setModal(False)
-		self.ui=Ui_preferences()
-		self.ui.setupUi(self)
-		self.ui.nickname.setText(MainWindow.config['nickname'])
-		self.ui.password.setText(MainWindow.config['passwd'])
-		self.ui.jid.setText(MainWindow.config['jid'])
-
-	def accept(self):
-		jid=unicode(self.ui.jid.text())
-		nickname=unicode(self.ui.nickname.text())
-		password=unicode(self.ui.password.text())
-		MainWindow.config['nickname']=nickname
-		MainWindow.config['passwd']=password
-		MainWindow.config['jid']=jid
-		MainWindow.config.write()
-		self.done(1)
 
 app = QtGui.QApplication(sys.argv)
-
-translator=QtCore.QTranslator()
-translator.load("locales/pyjim_"+str(QtCore.QLocale.system().name())[:2]+".qm")
-app.installTranslator(translator)
-MainWindow = mainWindow()
 jab = Jabber()
-login=loginWindow(MainWindow)
+translator=QtCore.QTranslator()
+translator.load("locales/jabbim_"+str(QtCore.QLocale.system().name())[:2]+".qm")
+app.installTranslator(translator)
+
+MainWindow = mainWindow()
+
+login=loginWindow(MainWindow,jab,MainWindow)
 ref=login.show()
 sys.exit(app.exec_())
