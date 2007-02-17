@@ -22,7 +22,7 @@ class joinGroupChatWindow(QtGui.QDialog):
 		print "joining",room,nickname
 		self.jab.getIntoRoom(room,nickname)
 		self.main.chat.addGroupChatTab(room,nickname)
-		self.main.groupchat.append(room)
+		self.main.groupchat[room]=[]
 		self.done(1)
 
 	def reject(self):

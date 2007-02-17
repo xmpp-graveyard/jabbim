@@ -55,7 +55,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.loadStatus()
 		self.loadBookmarks()
 		self.loadGroupchat()
-		self.groupchat=[]
+		self.groupchat={}
 		self.users={}
 		self.groups={}
 		self.groups["Unknown"]={"item":self.ui.roster,"users":{}}
@@ -154,7 +154,7 @@ class mainWindow(QtGui.QMainWindow):
 			room=unicode(action.text())
 			nickname=unicode(data)
 			jab.getIntoRoom(room,nickname)
-			self.groupchat.append(room)
+			self.groupchat[room]=[]
 			self.chat.addGroupChatTab(room,nickname)
 
 	def statusChanged(self,action):
@@ -230,6 +230,24 @@ class mainWindow(QtGui.QMainWindow):
 		h,m,s=time.localtime()[3:6]
 		return "%02d:%02d:%02d" % (h,m,s)
 
+	def isGroupChat(self,jid):
+		for k,v in self.groupchat.iteritems():
+			if k==jid:
+				return True
+		return False
+
+	def isGroupChatMember(self,chat,name):
+		for user in self.groupchat[chat]:
+			if unicode(user.text())==unicode(name):
+				return True
+		return False
+
+	def getGroupChatMember(self,chat,name):
+		for user in self.groupchat[chat]:
+			if unicode(user.text())==unicode(name):
+				return user
+		return None
+
 	def jabberCommandHandler(self,e):
 		if e[0] == "con_ready":
 			MainWindow.show()
@@ -301,12 +319,16 @@ class mainWindow(QtGui.QMainWindow):
 						online,offline,count=self.ui.roster.getStats(unicode(k))
 						self.groups[k]["item"].setText(0,unicode(self.groups[k]["item"].text(2))+" ("+str(online)+"/"+str(count)+")")
 				self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
-			elif jid in self.groupchat:
+			elif self.isGroupChat(jid):
 				nick=unicode(e[3])
 				for i in range(self.chat.ui.chatTab.count()):
 					w=self.chat.ui.chatTab.widget(i)
 					if str(w.jid)==jid:
-						user=QtGui.QListWidgetItem(unicode(nick))
+						if self.isGroupChatMember(jid,unicode(nick)):
+							user=self.getGroupChatMember(jid,unicode(nick))
+						else:
+							user=QtGui.QListWidgetItem(unicode(nick))
+							self.groupchat[jid].append(user)
 						if str(e[2].getShow())!="None":
 							user.setIcon(self.statuses[str(e[2].getShow())])
 							#user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
