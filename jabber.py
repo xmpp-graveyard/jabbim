@@ -328,11 +328,7 @@ class Jabber:
 		
 		if authres<>'sasl':
 			return 1
-		
-		self.conn.RegisterHandler('message', self.incoming)
-		self.conn.RegisterHandler('iq',self.iqHandle)
-		self.conn.RegisterHandler('presence',self.presenceHandle)
-		#conn.RegisterDisconnectHandler(self.off)
+
 		
 		
 		self.roster = self.conn.getRoster()
@@ -343,6 +339,12 @@ class Jabber:
 				ready = self.outc.get(timeout = 0)
 			except:
 				ready = False
+
+		self.conn.RegisterHandler('message', self.incoming)
+		self.conn.RegisterHandler('iq',self.iqHandle)
+		self.conn.RegisterHandler('presence',self.presenceHandle)
+		#conn.RegisterDisconnectHandler(self.off)
+
 				
 		self.conn.sendInitPresence()
 		
