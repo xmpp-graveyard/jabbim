@@ -56,7 +56,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.loadBookmarks()
 		self.loadGroupchat()
 		self.groupchat={}
-		self.users={}
+		#self.users={}
 		self.groups={}
 		self.groups["Unknown"]={"item":self.ui.roster.addGroup(self.tr("Unknown")),"users":{}}
 		self.chat=chatWindow(self,self,jab)
@@ -223,8 +223,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.offline=not bool
 		for group,v in self.groups.iteritems():
 			for k,user in self.groups[group]["users"].iteritems():
-				if int(user.text(1)[0])==9:
-					self.ui.roster.setItemHidden(user, not bool)
+				if int(user["item"].text(1)[0])==9:
+					self.ui.roster.setItemHidden(user["item"], not bool)
 			self.ui.roster.hidden(not bool)
 
 	def now(self):
@@ -287,7 +287,7 @@ class mainWindow(QtGui.QMainWindow):
 			message=self.skin["message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
 			for i in range(self.chat.ui.chatTab.count()):
 				w=self.chat.ui.chatTab.widget(i)
-				if str(w.jid)==jid:
+				if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
 					w.chat.textEditWrite(message)
 					return
 			self.chat.show()
@@ -300,8 +300,22 @@ class mainWindow(QtGui.QMainWindow):
 			jid=str(e[1])
 			#print "nick_update",jid
 			if self.ui.roster.isUser(jid):
-				for user in self.ui.roster.getUsers(jid):
+				for user,group in self.ui.roster.getUsers(jid,True).iteritems():
 					if str(e[2].getType())!="unavailable":
+						if not e[3] in self.groups[group]["users"][jid]["resources"]:
+							self.groups[group]["users"][jid]["resources"].append(e[3])
+							resources=self.groups[group]["users"][jid]["resources"]
+							if len(resources)>1:
+								res=[]
+								for i in range(user.childCount()):
+									w=user.child(i)
+									j=w.data(32,0)
+									j=str(j.toString())
+									res.append(j)
+								
+								for resource in resources:
+									if not jid+'/'+resource in res:
+										item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
 						if str(e[2].getShow())!="None":
 							user.setIcon(0,self.statuses[str(e[2].getShow())])
 							user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
@@ -315,8 +329,34 @@ class mainWindow(QtGui.QMainWindow):
 							text=[word for word in unicode(e[2].getStatus()).split('\n') if word != ''][0]
 							user.setText(0,unicode(self.ui.roster.getUsers(jid)[0].text(2))+"\n"+text)
 						self.ui.roster.setItemHidden(user,False)
+					elif str(e[2].getType())=="unavailable":
+						
+						try:
+							self.groups[group]["users"][jid]["resources"].remove(e[3])
+						except:
+							
+							print self.groups
+						if int(user.childCount())==2:
+							for i in range(user.childCount()):
+								user.takeChild(0)
+						else:
+							if int(user.childCount())==1:
+								user.setIcon(0,self.statuses["offline"])
+								user.setText(1,self.nickSort["offline"]+unicode(user.text(2)))
+								self.ui.roster.setItemHidden(user,self.offline)
+							for i in range(user.childCount()):
+								item=user.child(i)
+								j=item.data(32,0)
+								j=str(j.toString())
+								if str(j)==jid+"/"+e[3]:
+									user.takeChild(i)
+									break
+						
+						
+						
+							
+
 				for k,v in MainWindow.groups.iteritems():
-					
 						online,offline,count=self.ui.roster.getStats(unicode(k))
 						self.groups[k]["item"].setText(0,unicode(self.groups[k]["item"].text(2))+" ("+str(online)+"/"+str(count)+")")
 				self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
@@ -347,7 +387,6 @@ class mainWindow(QtGui.QMainWindow):
 			#self.groups={}
 			for jid in items:
 				groups=e[1].getGroups(jid)
-				print groups
 				if groups==None or groups==[]:
 					groups=["Unknown"]
 					#name=e[1].getName(jid)
@@ -356,7 +395,7 @@ class mainWindow(QtGui.QMainWindow):
 					if self.groups.has_key(group)==False:
 						self.groups[group]={"item":self.ui.roster.addGroup(group),"users":{}}
 					name=e[1].getName(jid)
-					self.groups[group]["users"][str(jid)]=self.ui.roster.addUser(jid,name,self.groups[group]["item"],self.offline,self.statuses["offline"])
+					self.groups[group]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,name,self.groups[group]["item"],self.offline,self.statuses["offline"]),"resources":[]}
 						
 			self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 				

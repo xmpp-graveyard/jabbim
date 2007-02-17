@@ -52,7 +52,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		offline=0
 		online=0
 		for k,user in self.main.groups[unicode(group)]["users"].iteritems():
-			if int(unicode(user.text(1))[0])==9:
+			if int(unicode(user["item"].text(1))[0])==9:
 				offline+=1
 			else:
 				online+=1
@@ -64,12 +64,23 @@ class rosterWidget(QtGui.QTreeWidget):
 				return True
 		return False
 
-	def getUsers(self,jid):
+	def getUsers(self,jid,group=False):
 		users=[]
+		groups={}
 		for k,v in self.main.groups.iteritems():
 			if self.main.groups[k]["users"].has_key(jid):
-				users.append(self.main.groups[k]["users"][str(jid)])
+				users.append(self.main.groups[k]["users"][str(jid)]["item"])
+				groups[self.main.groups[k]["users"][str(jid)]["item"]]=k
+		if group==True:
+			return groups
 		return users
+	
+
+	def getResources(self,jid):
+		for k,v in self.main.groups.iteritems():
+			if self.main.groups[k]["users"].has_key(jid):
+				return self.main.groups[k]["users"][str(jid)]["resources"]
+
 
 	def delUser(self,jid,user):
 		parent=user.parent()
@@ -114,6 +125,17 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setIcon(0,icon)
 		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)
 		self.setItemHidden(item, offline)
+		self.sortItems (1,QtCore.Qt.AscendingOrder)
+		return item
+
+	def addResource(self,jid,name,user):
+		item=QtGui.QTreeWidgetItem(user)
+		if name==None or len(name)==0:
+			name=jid
+		item.setText(0,unicode(name))
+		item.setText(1,"9"+unicode(name).lower())
+		item.setText(2,unicode(name))
+		item.setData(32,0,QtCore.QVariant(jid))
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
 		return item
 
@@ -215,11 +237,14 @@ class rosterWidget(QtGui.QTreeWidget):
 					#self.main.groups[group]["item"].addChild(item)
 				#else:
 				self.main.groups[group]["item"].addChild(item)
-				self.main.groups[group]["users"][str(jid)]=item
+				resources=list(self.getResources(str(jid)))
+				print resources
+				self.main.groups[group]["users"][str(jid)]={"item":item,"resources":resources}
+				#self.main.groups[group]["users"][str(jid)]["resources"]=
 				self.jab.roster.setItem(jid,name,self.getGroups(jid)+[unicode(group)])
 		else:
 			user=self.main.groups[group]["users"][str(jid)]
-			self.delUser(jid,user)
+			self.delUser(jid,user["item"])
 			groups=self.getGroups(jid)
 			print groups
 			self.jab.roster.setItem(jid,name,groups)
@@ -244,8 +269,9 @@ class rosterWidget(QtGui.QTreeWidget):
 			if b==True:
 				self.main.groups[group]={"item":self.addGroup(group),"users":{}}
 				item=self.getUsers(jid)[0].clone()
+				print list(self.getResources(str(jid)))
+				self.main.groups[group]["users"][str(jid)]={"item":item,"resources":list(self.getResources(str(jid)))}
 				self.main.groups[group]["item"].addChild(item)
-				self.main.groups[group]["users"][str(jid)]=item
 				
 				self.sortItems (1,QtCore.Qt.AscendingOrder)
 				self.jab.roster.setItem(jid,name,self.getGroups(jid)+[unicode(group)])

@@ -22,12 +22,12 @@ class addContactWindow(QtGui.QDialog):
 		print "adding",jid,nickname,group
 		if len(group)!=0:
 			if self.main.groups.has_key(group):
-				self.main.groups[group]["users"][str(jid)]=self.main.ui.roster.addUser(jid,nickname,self.main.groups[group]["item"],self.main.offline,self.main.statuses["offline"])
+				self.main.groups[group]["users"][str(jid)]={"item":self.main.ui.roster.addUser(jid,nickname,self.main.groups[group]["item"],self.main.offline,self.main.statuses["offline"]),"resources":[]}
 			else:
 				self.main.groups[group]={"item":self.main.ui.roster.addGroup(group),"users":{}}
-				self.main.groups[group]["users"][str(jid)]=self.main.ui.roster.addUser(jid,nickname,self.main.groups[group]["item"],self.main.offline,self.main.statuses["offline"])
+				self.main.groups[group]["users"][str(jid)]={"item":self.main.ui.roster.addUser(jid,nickname,self.main.groups[group]["item"],self.main.offline,self.main.statuses["offline"]),"resources":[]}
 		else:
-			self.main.groups["Unknown"]["users"][str(jid)]=self.main.ui.roster.addUser(jid,nickname,self.main.groups["Unknown"]["item"],self.main.offline,self.main.statuses["offline"])
+			self.main.groups["Unknown"]["users"][str(jid)]={"item":self.main.ui.roster.addUser(jid,nickname,self.main.groups["Unknown"]["item"],self.main.offline,self.main.statuses["offline"]),"resources":[]}
 		self.jab.roster.setItem(jid,nickname,[group])
 		self.jab.roster.Subscribe(jid)
 		self.done(1)
