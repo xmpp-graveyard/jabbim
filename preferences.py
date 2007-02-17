@@ -25,7 +25,7 @@ class preferencesWindow(QtGui.QDialog):
 					self.chatSkinsChanged(skin)
 				else:
 					self.ui.chatSkins.addItem(unicode(skin))
-					
+		self.ui.chatSkins.setCurrentIndex(0)
 		self.loadBookmarks()
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarkClicked)
 		QtCore.QObject.connect(self.ui.chatSkins, QtCore.SIGNAL("activated ( const QString & )"),self.chatSkinsChanged)
