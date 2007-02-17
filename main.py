@@ -236,6 +236,16 @@ class mainWindow(QtGui.QMainWindow):
 			login.done(1)
 			jab.setStatus()
 
+		elif e[0] == "groupchat_server_message":
+			jid=str(e[1])
+			text=unicode(e[2])
+			for i in range(self.chat.ui.chatTab.count()):
+				w=self.chat.ui.chatTab.widget(i)
+				if str(w.jid)==jid:
+					message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",unicode(text))
+					w.chat.textEditWrite(message)
+					return
+
 		elif e[0] == "groupchat_message":
 			jid=str(e[1])
 			user=unicode(e[2])
@@ -246,7 +256,6 @@ class mainWindow(QtGui.QMainWindow):
 						message=self.skin["my_message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
 					else:
 						message=self.skin["message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
-
 					w.chat.textEditWrite(message)
 					return
 

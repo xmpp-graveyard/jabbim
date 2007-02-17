@@ -138,15 +138,18 @@ class Jabber:
 			text=mess.getBody().replace("<","&lt;").replace(">","&gt;")
 			user=mess.getFrom()
 			nick=mess.getFrom().getResource()
-			
 			typ=mess.getType()
+			print user,typ
 			if typ=="chat":
 				jid = str(user).rsplit("/")[0]
 				self.inc.put(["chat_message", jid,user,text])
 			elif typ=="groupchat":
 				jid = str(user).rsplit("/")[0]
-				user=str(user).rsplit("/")[1]
-				self.inc.put(["groupchat_message", jid,user,text])
+				if len(str(user).rsplit("/"))==1:
+					self.inc.put(["groupchat_server_message", jid,text])
+				else:
+					user=str(user).rsplit("/")[1]
+					self.inc.put(["groupchat_message", jid,user,text])
 
 			# this implements /me IRC style messages
 			

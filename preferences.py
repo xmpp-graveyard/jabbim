@@ -54,6 +54,7 @@ class preferencesWindow(QtGui.QDialog):
 		self.ui.chatSkinPreview.clear()
 		self.chatSkinPreviewtextEditWrite(testConfig["message"].replace("[time]",self.main.now()).replace("[user]",self.tr("User")).replace("[message]",self.tr("This is test message.")))
 		self.chatSkinPreviewtextEditWrite(testConfig["my_message"].replace("[time]",self.main.now()).replace("[user]",self.tr("Me")).replace("[message]",self.tr("This is my test message.")))
+		self.chatSkinPreviewtextEditWrite(testConfig["status_message"].replace("[time]",self.main.now()).replace("[message]",self.tr("User has set the subject to: Subject")))
 
 	def loadBookmarks(self):
 		self.ui.bookmarks.clear()
