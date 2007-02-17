@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>246</width>
+    <width>295</width>
     <height>119</height>
    </rect>
   </property>
@@ -50,7 +50,7 @@
      <item>
       <widget class="QPushButton" name="pushButton" >
        <property name="text" >
-        <string>Save</string>
+        <string>Edit</string>
        </property>
       </widget>
      </item>

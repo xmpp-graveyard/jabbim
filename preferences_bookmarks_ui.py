@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'preferences_bookmarks.ui'
 #
-# Created: Sat Feb 17 06:14:49 2007
+# Created: Sat Feb 17 07:30:02 2007
 #      by: PyQt4 UI code generator 4.0.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_editbookmark(object):
     def setupUi(self, editbookmark):
         editbookmark.setObjectName("editbookmark")
-        editbookmark.resize(QtCore.QSize(QtCore.QRect(0,0,246,119).size()).expandedTo(editbookmark.minimumSizeHint()))
+        editbookmark.resize(QtCore.QSize(QtCore.QRect(0,0,295,119).size()).expandedTo(editbookmark.minimumSizeHint()))
 
         self.gridlayout = QtGui.QGridLayout(editbookmark)
         self.gridlayout.setMargin(9)
@@ -84,7 +84,7 @@ class Ui_editbookmark(object):
 
     def retranslateUi(self, editbookmark):
         editbookmark.setWindowTitle(QtGui.QApplication.translate("editbookmark", "Edit bookmark", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton.setText(QtGui.QApplication.translate("editbookmark", "Save", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton.setText(QtGui.QApplication.translate("editbookmark", "Edit", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_2.setText(QtGui.QApplication.translate("editbookmark", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("editbookmark", "Room:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("editbookmark", "Nickname:", None, QtGui.QApplication.UnicodeUTF8))
