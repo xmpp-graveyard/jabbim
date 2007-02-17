@@ -30,7 +30,7 @@ class Jabber:
 	server = "jabber.cz"
 	resource = "Pyjim"
 	password = "piskworker"
-	
+	ready=False
 	# info about server
 	gameAuth = "piskworker@jabber.cz/Gajim"
 	# this is used to determine if message comes from gameserver of it is form someone else
@@ -209,7 +209,7 @@ class Jabber:
 		print prType,jid,nick
 		if self.ready==False:
 			self.queue.append(["nick_update",jid,pres,nick])
-			print self.queue
+			#print self.queue
 			return
 		if self.ready==True:
 			for i in self.queue:
