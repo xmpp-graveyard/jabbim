@@ -52,7 +52,7 @@ class chatWindow(QtGui.QMainWindow):
 
 	def closeEvent(self,e):
 		for index in range(self.ui.chatTab.count()):
-			w=self.ui.chatTab.widget(i)
+			w=self.ui.chatTab.widget(0)
 			if str(w.typ)=="groupchat":
 				print str(w.jid)
 				self.jab.getOffRoom(str(w.jid))

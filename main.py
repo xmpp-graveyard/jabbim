@@ -254,15 +254,11 @@ class mainWindow(QtGui.QMainWindow):
 					w.chat.textEditWrite(message)
 					return
 			self.chat.show()
-			#tab=QtGui.QWidget(self.chat)
-			#tab.jid=jid
-			#layout=QtGui.QHBoxLayout(tab)
-			#tab.chat=chatWidget(self,jid,tab)
-			#layout.addWidget(tab.chat)
-			#self.chat.ui.chatTab.addTab(tab,str(jid))
 			self.chat.addChatTab(jid,unicode(user),message)
+		
 		elif e[0] == "subscribe":
 			jab.roster.Authorize(str(e[1]))
+		
 		elif e[0] == "nick_update":
 			jid=str(e[1])
 			#print "nick_update",jid
@@ -303,6 +299,7 @@ class mainWindow(QtGui.QMainWindow):
 						w.chat.ui.listWidget.addItem(user)
 						w.chat.ui.listWidget.sortItems()
 						return
+		
 		elif e[0] == "roster_update":
 			print "roster update"
 			items=e[1].getItems()
