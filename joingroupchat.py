@@ -19,6 +19,7 @@ class joinGroupChatWindow(QtGui.QDialog):
 		if self.ui.bookmark.isChecked() and not self.main.bookmarks.has_key(room):
 			self.main.bookmarks[room]=nickname
 			self.main.bookmarks.write()
+			self.main.buildGroupchatMenu()
 		print "joining",room,nickname
 		self.jab.getIntoRoom(room,nickname)
 		self.main.chat.addGroupChatTab(room,nickname)

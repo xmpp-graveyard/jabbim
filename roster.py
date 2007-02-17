@@ -45,7 +45,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		offline=0
 		online=0
 		for k,user in self.main.groups[unicode(group)]["users"].iteritems():
-			if int(str(user.text(1))[0])==9:
+			if int(unicode(user.text(1))[0])==9:
 				offline+=1
 			else:
 				online+=1
