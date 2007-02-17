@@ -337,6 +337,13 @@ class Jabber:
 		
 		self.roster = self.conn.getRoster()
 		self.inc.put(["roster_update", self.roster])
+		ready=False
+		while not ready:
+			try:
+				ready = self.outc.get(timeout = 0)
+			except:
+				ready = False
+				
 		self.conn.sendInitPresence()
 		
 

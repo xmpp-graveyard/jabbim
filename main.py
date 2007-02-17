@@ -62,6 +62,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.chat=chatWindow(self,self,jab)
 		self.ui.gridlayout.setMargin(1)
 		self.ui.gridlayout.setSpacing(1)
+		self.ready=False
 
 	def preferencesClicked(self,bool):
 		# shows preferences
@@ -168,21 +169,21 @@ class mainWindow(QtGui.QMainWindow):
 
 	def loadBookmarks(self):
 		# loads config and repairs config file
-		self.bookmarks=ConfigObj(self.homeDir+'/.jgames/bookmarks',encoding='UTF8')
+		self.bookmarks=ConfigObj(self.homeDir+'/.jabbim/bookmarks',encoding='UTF8')
 		if len(self.bookmarks)==0:
-			if not os.path.isdir(self.homeDir+'/.jgames'):
-				os.mkdir(self.homeDir+'/.jgames')
-			self.bookmarks=ConfigObj(self.homeDir+'/.jgames/bookmarks',encoding='UTF8')
+			if not os.path.isdir(self.homeDir+'/.jabbim'):
+				os.mkdir(self.homeDir+'/.jabbim')
+			self.bookmarks=ConfigObj(self.homeDir+'/.jabbim/bookmarks',encoding='UTF8')
 			self.bookmarks.write()
 
 	def loadConfig(self):
 		# loads config and repairs config file
 		configs={"jid":"","passwd":"","savePasswd":"","chat_skin":"default.conf"}
-		self.config=ConfigObj(self.homeDir+'/.jgames/config',encoding='UTF8')
+		self.config=ConfigObj(self.homeDir+'/.jabbim/config',encoding='UTF8')
 		if len(self.config)==0:
-			if not os.path.isdir(self.homeDir+'/.jgames'):
-				os.mkdir(self.homeDir+'/.jgames')
-			self.config=ConfigObj(self.homeDir+'/.jgames/config',encoding='UTF8')
+			if not os.path.isdir(self.homeDir+'/.jabbim'):
+				os.mkdir(self.homeDir+'/.jabbim')
+			self.config=ConfigObj(self.homeDir+'/.jabbim/config',encoding='UTF8')
 			for i in configs:
 				self.config[i]=""
 			self.config.write()
@@ -332,6 +333,10 @@ class mainWindow(QtGui.QMainWindow):
 						else:
 							user.setIcon(0,self.statuses["online"])
 							user.setText(1,self.nickSort["online"]+unicode(user.text(2)))
+						for i in range(self.chat.ui.chatTab.count()):
+							w=self.chat.ui.chatTab.widget(i)
+							if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
+								self.chat.ui.chatTab.setTabIcon(i,user.icon())
 						# Nastaveni tooltip
 						user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>'+self.tr("Jabber ID:")+' </b>'+str(jid)+'')
 						# Nastaveni stavove zpravy pod nick v rosteru. Pokud neni zprava nastavena, vytvori se jen nick bez zpravy.
@@ -366,6 +371,10 @@ class mainWindow(QtGui.QMainWindow):
 									if str(j)==jid+"/"+e[3]:
 										user.takeChild(i)
 										break
+							for i in range(self.chat.ui.chatTab.count()):
+								w=self.chat.ui.chatTab.widget(i)
+								if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
+									self.chat.ui.chatTab.setTabIcon(i,user.icon())
 				# aktualizace cisel skupin
 				self.ui.roster.refreshStats()
 				# serazeni polozek v rosteru
@@ -422,6 +431,7 @@ class mainWindow(QtGui.QMainWindow):
 					self.groups[group]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,name,self.groups[group]["item"],self.offline,self.statuses["offline"]),"resources":[]}
 						
 			self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
+			jab.outc.put(True)
 				
 
 	def tick(self):
