@@ -308,8 +308,7 @@ class mainWindow(QtGui.QMainWindow):
 							user.setIcon(0,self.statuses["online"])
 							user.setText(1,self.nickSort["online"]+unicode(user.text(2)))
 						user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>Jabber ID: </b>'+str(jid)+'')
-						print "STATUS",unicode(e[2].getStatus())
-						if unicode(e[2].getStatus())=="None":
+						if unicode(e[2].getStatus())=="None" or len(e[2].getStatus())==0:
 							user.setText(0,unicode(self.ui.roster.getUsers(jid)[0].text(2)))
 						else:
 							text=[word for word in unicode(e[2].getStatus()).split('\n') if word != ''][0]
