@@ -110,6 +110,11 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setTextColor(0,QtGui.QColor(255,255,255))
 		#self.groups[g].setIcon(0,QtGui.QIcon("images/status/closed.png"))
 		return item
+	
+	def refreshStats(self):
+		for k,v in self.main.groups.iteritems():
+			online,offline,count=self.getStats(unicode(k))
+			self.main.groups[k]["item"].setText(0,unicode(self.main.groups[k]["item"].text(2))+" ("+str(online)+"/"+str(count)+")")
 
 	def addUser(self,jid,name,group,offline,icon):
 		if group==None:
@@ -126,6 +131,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)
 		self.setItemHidden(item, offline)
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
+		self.refreshStats()
 		return item
 
 	def addResource(self,jid,name,user):
@@ -248,6 +254,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			groups=self.getGroups(jid)
 			print groups
 			self.jab.roster.setItem(jid,name,groups)
+		self.refreshStats()
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
 
 	def contactMenuTriggered(self,action):
@@ -284,6 +291,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			group=unicode(items[1].toString())[1:]
 			print "roster_change_group_action",jid,group
 			self.changeGroup(jid,name,action,group)
+		self.refreshStats()
 
 	def contextMenuEvent (self,event):
 		item=self.itemFromIndex(self.indexAt(QtCore.QPoint(event.x(),event.y())))
