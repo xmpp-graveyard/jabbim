@@ -35,6 +35,7 @@ class Jabber:
 	gameAuth = "piskworker@jabber.cz/Gajim"
 	# this is used to determine if message comes from gameserver of it is form someone else
 	gameServer = "games.jabbim.cz"
+	queue=[]
 	
 	# well, we will push communication throught these queeeee things
 	err = Queue()
@@ -206,10 +207,19 @@ class Jabber:
 		prType = pres.getType()
 		jid = pres.getFrom().getNode() + "@" + pres.getFrom().getDomain()
 		print prType,jid,nick
-		if prType=="subscribe":
-			self.inc.put(["subscribe", jid])
-		else:
-			self.inc.put(["nick_update",jid,pres,nick])
+		if self.ready==False:
+			self.queue.append(["nick_update",jid,pres,nick])
+			print self.queue
+			return
+		if self.ready==True:
+			for i in self.queue:
+				self.inc.put(i)
+			self.ready=None
+		if self.ready==None:
+			if prType=="subscribe":
+				self.inc.put(["subscribe", jid])
+			else:
+				self.inc.put(["nick_update",jid,pres,nick])
 		#if Conf in self.confNames:
 			#index = self.confNames.index(Conf)
 			
@@ -331,20 +341,20 @@ class Jabber:
 
 		
 		
-		self.roster = self.conn.getRoster()
-		self.inc.put(["roster_update", self.roster])
-		ready=False
-		while not ready:
-			try:
-				ready = self.outc.get(timeout = 0)
-			except:
-				ready = False
+
 
 		self.conn.RegisterHandler('message', self.incoming)
 		self.conn.RegisterHandler('iq',self.iqHandle)
 		self.conn.RegisterHandler('presence',self.presenceHandle)
 		#conn.RegisterDisconnectHandler(self.off)
-
+		self.roster = self.conn.getRoster()
+		self.inc.put(["roster_update", self.roster])
+		self.ready=False
+		while not self.ready:
+			try:
+				self.ready = self.outc.get(timeout = 0)
+			except:
+				self.ready = False
 				
 		self.conn.sendInitPresence()
 		
