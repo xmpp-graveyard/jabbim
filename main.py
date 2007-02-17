@@ -184,8 +184,8 @@ class mainWindow(QtGui.QMainWindow):
 			if not os.path.isdir(self.homeDir+'/.jabbim'):
 				os.mkdir(self.homeDir+'/.jabbim')
 			self.config=ConfigObj(self.homeDir+'/.jabbim/config',encoding='UTF8')
-			for i in configs:
-				self.config[i]=""
+			for k,v in configs.iteritems():
+				self.config[k]=v
 			self.config.write()
 		rewrite=False
 		for k,v in configs.iteritems():
