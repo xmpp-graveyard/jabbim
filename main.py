@@ -381,7 +381,7 @@ class mainWindow(QtGui.QMainWindow):
 					# Jedna se o odhlaseni
 					elif str(e[2].getType())=="unavailable":
 						# Pokud byl user predtim prihlaseny
-						print user.text(1)
+						print unicode(user.text(1))
 						if int(unicode(user.text(1))[0])!=9:
 							# Odebrani resource z databaze
 							try:
