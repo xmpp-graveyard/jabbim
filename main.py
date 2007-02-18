@@ -371,12 +371,15 @@ class mainWindow(QtGui.QMainWindow):
 						# Nastaveni tooltip
 						user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>'+self.tr("Jabber ID:")+' </b>'+str(jid)+'')
 						# Nastaveni stavove zpravy pod nick v rosteru. Pokud neni zprava nastavena, vytvori se jen nick bez zpravy.
-						print "STATUS",jid,unicode(e[2].getStatus())
+						
 						if unicode(e[2].getStatus())=="None" or len(e[2].getStatus())==0:
-							user.setText(0,unicode(self.ui.roster.getUsers(jid)[0].text(2)))
+							user.setText(0,unicode(user.text(2)))
 						else:
+							print "STATUS",jid,unicode(e[2].getStatus())
 							text=unicode(e[2].getStatus()).replace("\n"," | ")
-							user.setText(0,unicode(self.ui.roster.getUsers(jid)[0].text(2))+"\n"+text[:-2])
+							print "STATUS",jid,unicode(text)
+							user.setText(0,unicode(user.text(2))+"\n"+text[:-2])
+							print "STATUS",jid,unicode(user.text(0))
 						# Zobrazeni polozky v rosteru
 						self.ui.roster.setItemHidden(user,False)
 					# Jedna se o odhlaseni
