@@ -331,7 +331,12 @@ class mainWindow(QtGui.QMainWindow):
 			# Pokud je jid v rosteru:
 			if self.ui.roster.isUser(jid):
 				# Prochazeni vsech uzivatelu v rosteru, kteri maji shodne jid
-				for user,group in self.ui.roster.getUsers(jid,True).iteritems():
+				groups={}
+				for k,v in self.groups.iteritems():
+					if self.groups[k]["users"].has_key(jid):
+						groups[self.groups[k]["users"][str(jid)]["item"]]=k
+
+				for user,group in groups.iteritems():
 					# Pokud se nejedna o odhlaseni uzivatele
 					if str(e[2].getType())!="unavailable":
 						# Pridani resource k uzivateli, pokud uz tam neni
@@ -347,70 +352,70 @@ class mainWindow(QtGui.QMainWindow):
 							if len(resources)>1:
 								# Zjisteni jid+"/"+resource v rosteru
 								res=[]
-								for i in range(user.childCount()):
-									j=user.child(i)
+								for i in range(self.groups[group]["users"][str(jid)]["item"].childCount()):
+									j=self.groups[group]["users"][str(jid)]["item"].child(i)
 									j=j.data(32,0)
 									j=str(j.toString())
 									res.append(j)
 								for resource in resources:
 									# Pokud uz neni resource v rosteru, pridame ho
 									if not jid+'/'+resource in res and len(resource)!=0:
-										item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
+										item=self.ui.roster.addResource(jid+'/'+resource,unicode(self.groups[group]["users"][str(jid)]["item"].text(2))+" - "+resource,self.groups[group]["users"][str(jid)]["item"])
 						# Zmena stavu
 						self.setLog("status: "+unicode(e[2].getShow()),"black")
 						if str(e[2].getShow())!="None":
-							user.setIcon(0,self.statuses[str(e[2].getShow())])
-							user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
+							self.groups[group]["users"][str(jid)]["item"].setIcon(0,self.statuses[str(e[2].getShow())])
+							self.groups[group]["users"][str(jid)]["item"].setText(1,self.nickSort[str(e[2].getShow())]+unicode(self.groups[group]["users"][str(jid)]["item"].text(2)))
 						else:
-							user.setIcon(0,self.statuses["online"])
-							user.setText(1,self.nickSort["online"]+unicode(user.text(2)))
+							self.groups[group]["users"][str(jid)]["item"].setIcon(0,self.statuses["online"])
+							self.groups[group]["users"][str(jid)]["item"].setText(1,self.nickSort["online"]+unicode(self.groups[group]["users"][str(jid)]["item"].text(2)))
 						for i in range(self.chat.ui.chatTab.count()):
 							w=self.chat.ui.chatTab.widget(i)
 							if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
-								self.chat.ui.chatTab.setTabIcon(i,user.icon(0))
+								self.chat.ui.chatTab.setTabIcon(i,self.groups[group]["users"][str(jid)]["item"].icon(0))
 						# Nastaveni tooltip
-						user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>'+self.tr("Jabber ID:")+' </b>'+str(jid)+'')
+						self.groups[group]["users"][str(jid)]["item"].setToolTip(0,'<font color="blue"><b>'+unicode(self.groups[group]["users"][str(jid)]["item"].text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>'+self.tr("Jabber ID:")+' </b>'+str(jid)+'')
 						# Nastaveni stavove zpravy pod nick v rosteru. Pokud neni zprava nastavena, vytvori se jen nick bez zpravy.
 						
 						if unicode(e[2].getStatus())=="None" or len(e[2].getStatus())==0:
-							user.setText(0,unicode(user.text(2)))
+							self.groups[group]["users"][str(jid)]["item"].setText(0,unicode(self.groups[group]["users"][str(jid)]["item"].text(2)))
 						else:
 							text=unicode(e[2].getStatus()).replace("\n"," | ")
-							user.setText(0,unicode(user.text(2))+"\n"+unicode(text))
+							self.groups[group]["users"][str(jid)]["item"].setText(0,unicode(self.groups[group]["users"][str(jid)]["item"].text(2))+"\n"+unicode(text))
 						# Zobrazeni polozky v rosteru
-						self.ui.roster.setItemHidden(user,False)
+						self.ui.roster.setItemHidden(self.groups[group]["users"][str(jid)]["item"],False)
 					# Jedna se o odhlaseni
 					elif str(e[2].getType())=="unavailable":
 						# Pokud byl user predtim prihlaseny
-						print unicode(user.text(1))
-						if int(unicode(user.text(1))[0])!=9:
+						print unicode(self.groups[group]["users"][str(jid)]["item"].text(1))
+						if int(unicode(self.groups[group]["users"][str(jid)]["item"].text(1))[0])!=9:
 							# Odebrani resource z databaze
 							try:
 								self.groups[group]["users"][jid]["resources"].remove(e[3])
 							except:
 								print self.groups[group]["users"][jid]["resources"]
 							# pokud by po smazani zbyla jen jedina resource, smaze se z rosteru
-							if int(user.childCount())==2:
-								for i in range(user.childCount()):
-									user.takeChild(0)
+							if int(self.groups[group]["users"][str(jid)]["item"].childCount())==2:
+								for i in range(self.groups[group]["users"][str(jid)]["item"].childCount()):
+									self.groups[group]["users"][str(jid)]["item"].takeChild(0)
 							else:
 								# pokud po smazani nezbude ani jedna resource, je kontakt offline
-								if int(user.childCount())<=1:
-									user.setIcon(0,self.statuses["offline"])
-									user.setText(1,self.nickSort["offline"]+unicode(user.text(2)))
-									self.ui.roster.setItemHidden(user,self.offline)
+								if int(self.groups[group]["users"][str(jid)]["item"].childCount())<=1:
+									self.groups[group]["users"][str(jid)]["item"].setIcon(0,self.statuses["offline"])
+									self.groups[group]["users"][str(jid)]["item"].setText(1,self.nickSort["offline"]+unicode(self.groups[group]["users"][str(jid)]["item"].text(2)))
+									self.ui.roster.setItemHidden(self.groups[group]["users"][str(jid)]["item"],self.offline)
 								# smazani resource
-								for i in range(user.childCount()):
-									item=user.child(i)
+								for i in range(self.groups[group]["users"][str(jid)]["item"].childCount()):
+									item=self.groups[group]["users"][str(jid)]["item"].child(i)
 									j=item.data(32,0)
 									j=str(j.toString())
 									if str(j)==jid+"/"+e[3]:
-										user.takeChild(i)
+										self.groups[group]["users"][str(jid)]["item"].takeChild(i)
 										break
 							for i in range(self.chat.ui.chatTab.count()):
 								w=self.chat.ui.chatTab.widget(i)
 								if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
-									self.chat.ui.chatTab.setTabIcon(i,user.icon(0))
+									self.chat.ui.chatTab.setTabIcon(i,self.groups[group]["users"][str(jid)]["item"].icon(0))
 				# aktualizace cisel skupin
 				self.ui.roster.refreshStats()
 				# serazeni polozek v rosteru
