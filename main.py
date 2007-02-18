@@ -375,11 +375,8 @@ class mainWindow(QtGui.QMainWindow):
 						if unicode(e[2].getStatus())=="None" or len(e[2].getStatus())==0:
 							user.setText(0,unicode(user.text(2)))
 						else:
-							print "STATUS",jid,unicode(e[2].getStatus())
 							text=unicode(e[2].getStatus()).replace("\n"," | ")
-							print "STATUS",jid,unicode(text)
-							user.setText(0,unicode(user.text(2))+"\n"+text[:-2])
-							print "STATUS",jid,unicode(user.text(0))
+							user.setText(0,unicode(user.text(2))+"\n"+unicode(text))
 						# Zobrazeni polozky v rosteru
 						self.ui.roster.setItemHidden(user,False)
 					# Jedna se o odhlaseni
