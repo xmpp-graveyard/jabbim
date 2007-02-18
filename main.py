@@ -326,6 +326,10 @@ class mainWindow(QtGui.QMainWindow):
 							self.groups[group]["users"][jid]["resources"].append(e[3])
 							resources=self.groups[group]["users"][jid]["resources"]
 							self.setLog("resources: "+unicode(resources),"black")
+							try:
+								resources.remove('')
+							except:
+								pass
 							# Pokud je resourcu vic, pridavaji se polozky do rosteru
 							if len(resources)>1:
 								# Zjisteni jid+"/"+resource v rosteru
@@ -350,7 +354,7 @@ class mainWindow(QtGui.QMainWindow):
 						for i in range(self.chat.ui.chatTab.count()):
 							w=self.chat.ui.chatTab.widget(i)
 							if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
-								self.chat.ui.chatTab.setTabIcon(i,user.icon())
+								self.chat.ui.chatTab.setTabIcon(i,user.icon(0))
 						# Nastaveni tooltip
 						user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>'+self.tr("Jabber ID:")+' </b>'+str(jid)+'')
 						# Nastaveni stavove zpravy pod nick v rosteru. Pokud neni zprava nastavena, vytvori se jen nick bez zpravy.
@@ -367,8 +371,10 @@ class mainWindow(QtGui.QMainWindow):
 						print user.text(1)
 						if int(unicode(user.text(1))[0])!=9:
 							# Odebrani resource z databaze
-							self.groups[group]["users"][jid]["resources"].remove(e[3])
-							print self.groups[group]["users"][jid]["resources"]
+							try:
+								self.groups[group]["users"][jid]["resources"].remove(e[3])
+							except:
+								print self.groups[group]["users"][jid]["resources"]
 							# pokud by po smazani zbyla jen jedina resource, smaze se z rosteru
 							if int(user.childCount())==2:
 								for i in range(user.childCount()):
@@ -390,7 +396,7 @@ class mainWindow(QtGui.QMainWindow):
 							for i in range(self.chat.ui.chatTab.count()):
 								w=self.chat.ui.chatTab.widget(i)
 								if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
-									self.chat.ui.chatTab.setTabIcon(i,user.icon())
+									self.chat.ui.chatTab.setTabIcon(i,user.icon(0))
 				# aktualizace cisel skupin
 				self.ui.roster.refreshStats()
 				# serazeni polozek v rosteru
@@ -441,6 +447,7 @@ class mainWindow(QtGui.QMainWindow):
 			#self.groups={}
 			for jid in items:
 				try:
+					jid=str(jid).lower()
 					groups=e[1].getGroups(jid)
 					self.setLog("jid: "+jid+", grous:"+unicode(groups),"black")
 					if groups==None or groups==[]:

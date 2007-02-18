@@ -142,10 +142,10 @@ class Jabber:
 			typ=mess.getType()
 			print user,typ
 			if typ=="chat":
-				jid = str(user).rsplit("/")[0]
+				jid = str(str(user).rsplit("/")[0]).lower()
 				self.inc.put(["chat_message", jid,user,text,nick])
 			elif typ=="groupchat":
-				jid = str(user).rsplit("/")[0]
+				jid = str(str(user).rsplit("/")[0]).lower()
 				if len(str(user).rsplit("/"))==1:
 					self.inc.put(["groupchat_server_message", jid,text])
 				else:
@@ -206,6 +206,7 @@ class Jabber:
 		#print pres.getFrom().getNode(), pres.getFrom().getDomain()
 		prType = pres.getType()
 		jid = pres.getFrom().getNode() + "@" + pres.getFrom().getDomain()
+		jid=str(jid).lower()
 		print prType,jid,nick,self.ready
 		if self.ready==False:
 			self.queue.append(["nick_update",jid,pres,nick])
