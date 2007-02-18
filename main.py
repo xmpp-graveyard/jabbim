@@ -297,13 +297,22 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				user=jid
 			message=self.skin["message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
+			tab=None
+			tabIndex=0
 			for i in range(self.chat.ui.chatTab.count()):
 				w=self.chat.ui.chatTab.widget(i)
-				if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
-					if int(self.chat.ui.chatTab.currentIndex())!=i:
-						self.chat.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/status/message.png"))
-					w.chat.textEditWrite(message)
-					return
+				if str(w.jid)==jid+"/"+str(e[4]):
+					tab=w
+					tabIndex=i
+					break
+				if str(w.jid).rsplit("/")[0]==jid:
+					tab=w
+					tabIndex=i
+			if tab!=None:
+				if int(self.chat.ui.chatTab.currentIndex())!=i:
+					self.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/status/message.png"))
+				tab.chat.textEditWrite(message)
+				return
 			self.chat.show()
 			self.chat.addChatTab(jid,unicode(user),message)
 		
