@@ -375,8 +375,11 @@ class mainWindow(QtGui.QMainWindow):
 						if unicode(e[2].getStatus())=="None" or len(e[2].getStatus())==0:
 							user.setText(0,unicode(self.ui.roster.getUsers(jid)[0].text(2)))
 						else:
-							text=[word for word in unicode(e[2].getStatus()).split('\n') if word != ''][0]
-							user.setText(0,unicode(self.ui.roster.getUsers(jid)[0].text(2))+"\n"+text)
+							t=[word for word in unicode(e[2].getStatus()).split('\n') if word != '']
+							text=""
+							for i in t:
+								text+=i+" | "
+							user.setText(0,unicode(self.ui.roster.getUsers(jid)[0].text(2))+"\n"+text[:-2])
 						# Zobrazeni polozky v rosteru
 						self.ui.roster.setItemHidden(user,False)
 					# Jedna se o odhlaseni
