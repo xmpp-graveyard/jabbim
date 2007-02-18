@@ -371,6 +371,7 @@ class mainWindow(QtGui.QMainWindow):
 						# Nastaveni tooltip
 						user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>'+self.tr("Jabber ID:")+' </b>'+str(jid)+'')
 						# Nastaveni stavove zpravy pod nick v rosteru. Pokud neni zprava nastavena, vytvori se jen nick bez zpravy.
+						print "STATUS",jid,unicode(e[2].getStatus())
 						if unicode(e[2].getStatus())=="None" or len(e[2].getStatus())==0:
 							user.setText(0,unicode(self.ui.roster.getUsers(jid)[0].text(2)))
 						else:
