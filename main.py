@@ -63,6 +63,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.gridlayout.setMargin(1)
 		self.ui.gridlayout.setSpacing(1)
 		self.ready=False
+		self.log=QtGui.QTextEdit(None)
+		self.log.show()
 
 	def preferencesClicked(self,bool):
 		# shows preferences
@@ -250,6 +252,15 @@ class mainWindow(QtGui.QMainWindow):
 				return user
 		return None
 
+	def setLog(self,text,color):
+		cur=self.log.textCursor()
+		cur.movePosition(QtGui.QTextCursor.End)
+		self.log.setTextCursor(cur)
+		self.log.insertHtml('<font color="'+color+'">'+text+'</font><br/><br/>')
+		cur=self.log.textCursor()
+		cur.movePosition(QtGui.QTextCursor.End)
+		self.log.setTextCursor(cur)
+
 	def jabberCommandHandler(self,e):
 		if e[0] == "con_ready":
 			MainWindow.show()
@@ -300,8 +311,10 @@ class mainWindow(QtGui.QMainWindow):
 			jab.roster.Authorize(str(e[1]))
 		
 		elif e[0] == "nick_update":
+			self.setLog("Presence - start","red")
 			# Prisla presence
 			jid=str(e[1])
+			self.setLog("jid: "+jid,"blue")
 			# Pokud je jid v rosteru:
 			if self.ui.roster.isUser(jid):
 				# Prochazeni vsech uzivatelu v rosteru, kteri maji shodne jid
@@ -312,7 +325,7 @@ class mainWindow(QtGui.QMainWindow):
 						if not e[3] in self.groups[group]["users"][jid]["resources"]:
 							self.groups[group]["users"][jid]["resources"].append(e[3])
 							resources=self.groups[group]["users"][jid]["resources"]
-							print resources
+							self.setLog("resources: "+unicode(resources),"black")
 							# Pokud je resourcu vic, pridavaji se polozky do rosteru
 							if len(resources)>1:
 								# Zjisteni jid+"/"+resource v rosteru
@@ -327,6 +340,7 @@ class mainWindow(QtGui.QMainWindow):
 									if not jid+'/'+resource in res and len(resource)!=0:
 										item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
 						# Zmena stavu
+						self.setLog("status: "+unicode(e[2].getShow()),"black")
 						if str(e[2].getShow())!="None":
 							user.setIcon(0,self.statuses[str(e[2].getShow())])
 							user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
@@ -350,16 +364,18 @@ class mainWindow(QtGui.QMainWindow):
 					# Jedna se o odhlaseni
 					elif str(e[2].getType())=="unavailable":
 						# Pokud byl user predtim prihlaseny
+						print user.text(1)
 						if int(unicode(user.text(1))[0])!=9:
 							# Odebrani resource z databaze
 							self.groups[group]["users"][jid]["resources"].remove(e[3])
+							print self.groups[group]["users"][jid]["resources"]
 							# pokud by po smazani zbyla jen jedina resource, smaze se z rosteru
 							if int(user.childCount())==2:
 								for i in range(user.childCount()):
 									user.takeChild(0)
 							else:
 								# pokud po smazani nezbude ani jedna resource, je kontakt offline
-								if int(user.childCount())==1:
+								if int(user.childCount())<=1:
 									user.setIcon(0,self.statuses["offline"])
 									user.setText(1,self.nickSort["offline"]+unicode(user.text(2)))
 									self.ui.roster.setItemHidden(user,self.offline)
@@ -414,13 +430,19 @@ class mainWindow(QtGui.QMainWindow):
 						if str(w.jid)==jid:
 							user=self.getGroupChatMember(jid,unicode(nick))
 							w.chat.ui.listWidget.takeItem(int(w.chat.ui.listWidget.row(user)))
+			else:
+				self.setLog("jid in not in roster or groupchat: "+jid,"red")
+			self.setLog("Presence END","red")
 		elif e[0] == "roster_update":
-			print "roster update"
+			print " roster update"
+			self.setLog("start - roster update","red")
 			items=e[1].getItems()
+			self.setLog(unicode(items),"blue")
 			#self.groups={}
 			for jid in items:
 				try:
 					groups=e[1].getGroups(jid)
+					self.setLog("jid: "+jid+", grous:"+unicode(groups),"black")
 					if groups==None or groups==[]:
 						groups=["Unknown"]
 						#name=e[1].getName(jid)
@@ -431,8 +453,10 @@ class mainWindow(QtGui.QMainWindow):
 						name=e[1].getName(jid)
 						self.groups[group]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,name,self.groups[group]["item"],self.offline,self.statuses["offline"]),"resources":[]}
 				except:
-					print "ERROR:",unicode(jid),e
+					self.setLog("ERROR in parsing: "+jid,"red")
 			self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
+			self.setLog(unicode(self.groups),"green")
+			self.setLog("end - roster update","red")
 			jab.outc.put(True)
 				
 

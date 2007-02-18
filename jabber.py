@@ -206,14 +206,14 @@ class Jabber:
 		#print pres.getFrom().getNode(), pres.getFrom().getDomain()
 		prType = pres.getType()
 		jid = pres.getFrom().getNode() + "@" + pres.getFrom().getDomain()
-		print prType,jid,nick
+		print prType,jid,nick,self.ready
 		if self.ready==False:
 			self.queue.append(["nick_update",jid,pres,nick])
-			#print self.queue
 			return
 		if self.ready==True:
 			for i in self.queue:
 				self.inc.put(i)
+				print "from queue",i
 			self.ready=None
 		if self.ready==None:
 			if prType=="subscribe":
@@ -355,7 +355,7 @@ class Jabber:
 				self.ready = self.outc.get(timeout = 0)
 			except:
 				self.ready = False
-				
+
 		self.conn.sendInitPresence()
 		
 
