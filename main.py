@@ -64,7 +64,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.gridlayout.setSpacing(1)
 		self.ready=False
 		self.log=QtGui.QTextEdit(None)
-		self.log.show()
+		#self.log.show()
 
 	def preferencesClicked(self,bool):
 		# shows preferences
@@ -253,6 +253,7 @@ class mainWindow(QtGui.QMainWindow):
 		return None
 
 	def setLog(self,text,color):
+		return
 		cur=self.log.textCursor()
 		cur.movePosition(QtGui.QTextCursor.End)
 		self.log.setTextCursor(cur)
