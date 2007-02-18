@@ -21,7 +21,11 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.chatTab.removeTab(0)
 		
 	def changeTab(self,index):
-		self.ui.chatTab.setTabIcon(index,QtGui.QIcon())
+		try:
+			icon=self.main.ui.roster.getUsers(str(self.ui.chatTab.widget(index).jid))[0].icon(0)
+			self.ui.chatTab.setTabIcon(index,icon)
+		except:
+			pass
 
 	def addGroupChatTab(self,room,nickname):
 		tab=QtGui.QWidget(self.ui.chatTab)
@@ -34,7 +38,7 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.chatTab.addTab(tab,room)
 		self.show()
 
-	def addChatTab(self,jid,name,message=None):
+	def addChatTab(self,jid,name,icon,message=None):
 		for i in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(i)
 			try:
@@ -50,7 +54,7 @@ class chatWindow(QtGui.QMainWindow):
 		layout=QtGui.QHBoxLayout(tab)
 		tab.chat=chatWidget(self.main,jid,self.jab,tab)
 		layout.addWidget(tab.chat)
-		self.ui.chatTab.addTab(tab,unicode(name))
+		self.ui.chatTab.addTab(tab,icon,unicode(name))
 		if message!=None:
 			tab.chat.textEditWrite(message)
 

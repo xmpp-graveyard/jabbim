@@ -40,7 +40,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			return
 		data=item.data(32,0)
 		data=str(data.toString())
-		self.main.chat.addChatTab(data,unicode(item.text(2)))
+		self.main.chat.addChatTab(data,unicode(item.text(2)),item.icon(0))
 
 	def isUser(self,jid):
 		for k,v in self.main.groups.iteritems():

@@ -293,9 +293,13 @@ class mainWindow(QtGui.QMainWindow):
 		elif e[0] == "chat_message":
 			jid=str(e[1])
 			if len(self.ui.roster.getUsers(jid))!=0:
-				user=self.ui.roster.getUsers(jid)[0].text(2)
+				user=self.ui.roster.getUsers(jid)[0]
+				icon=user.icon(0)
+				user=user.text(2)
 			else:
+				icon=self.status["offline"]
 				user=jid
+				
 			message=self.skin["message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
 			tab=None
 			tabIndex=0
@@ -314,7 +318,7 @@ class mainWindow(QtGui.QMainWindow):
 				tab.chat.textEditWrite(message)
 				return
 			self.chat.show()
-			self.chat.addChatTab(jid,unicode(user),message)
+			self.chat.addChatTab(jid,unicode(user),icon,message)
 		
 		elif e[0] == "subscribe":
 			jab.roster.Authorize(str(e[1]))
