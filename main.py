@@ -20,7 +20,6 @@ try:
 	from PyQt4 import QtCore, QtGui
 except:
 	print "PyQt4 is not installed."
-	
 from jabber import *
 import sys,os,time,random
 from configobj import ConfigObj
@@ -375,10 +374,7 @@ class mainWindow(QtGui.QMainWindow):
 						if unicode(e[2].getStatus())=="None" or len(e[2].getStatus())==0:
 							user.setText(0,unicode(self.ui.roster.getUsers(jid)[0].text(2)))
 						else:
-							t=[word for word in unicode(e[2].getStatus()).split('\n') if word != '']
-							text=""
-							for i in t:
-								text+=i+" | "
+							text=unicode(e[2].getStatus()).replace("\n"," | ")
 							user.setText(0,unicode(self.ui.roster.getUsers(jid)[0].text(2))+"\n"+text[:-2])
 						# Zobrazeni polozky v rosteru
 						self.ui.roster.setItemHidden(user,False)
