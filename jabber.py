@@ -36,6 +36,7 @@ class Jabber:
 	# this is used to determine if message comes from gameserver of it is form someone else
 	gameServer = "games.jabbim.cz"
 	queue=[]
+	message_queue=[]
 	
 	# well, we will push communication throught these queeeee things
 	err = Queue()
@@ -134,7 +135,8 @@ class Jabber:
 		
 		# some nasty things can happen there, that's why whole funcion body is in try statement
 		# actually it can happen that text is something different than text (some un-slice-able object)
-		try:
+		if 1==1:
+		#try:
 			# Replacing html tags...
 			text=mess.getBody().replace("<","&lt;").replace(">","&gt;")
 			user=mess.getFrom()
@@ -143,14 +145,23 @@ class Jabber:
 			print user,typ
 			if typ=="chat":
 				jid = str(str(user).rsplit("/")[0]).lower()
-				self.inc.put(["chat_message", jid,user,text,nick])
+				self.message_queue.append(["chat_message", jid,user,text,nick])
 			elif typ=="groupchat":
 				jid = str(str(user).rsplit("/")[0]).lower()
 				if len(str(user).rsplit("/"))==1:
-					self.inc.put(["groupchat_server_message", jid,text])
+					self.message_queue.append(["groupchat_server_message", jid,text])
 				else:
 					user=str(user).rsplit("/")[1]
-					self.inc.put(["groupchat_message", jid,user,text])
+					self.message_queue.append(["groupchat_message", jid,user,text])
+			if self.ready==True:
+				for i in self.message_queue:
+					self.inc.put(i)
+					print "from message_queue"
+				self.message_queue=[]
+				self.ready=None
+			if self.ready==None:
+				if len(self.message_queue)!=0:
+					self.inc.put(self.message_queue.pop())
 
 			# this implements /me IRC style messages
 			
@@ -196,8 +207,8 @@ class Jabber:
 			##print self.conf
 			
 			#self.income.put([text, sender])
-		except:
-			print "exception allmost catched"
+		#except:
+			#print "exception allmost catched"
 
 	# this handles presnece stantzas
 	def presenceHandle(self, conn, pres):

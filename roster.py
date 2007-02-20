@@ -3,6 +3,18 @@ try:
 except:
 	print "PyQt4 is not installed."
 
+#class label(QtGui.QLabel):
+	#def __init__(self,parent,item):
+		#apply(QtGui.QLabel.__init__,(self,parent))
+		#self.parent=parent
+		#self.item=item
+
+	#def mouseReleaseEvent(self,e):
+		#for item in self.parent.selectedItems():
+			#self.parent.setItemSelected(item,False)
+		#self.parent.setItemSelected(self.item,True)
+		
+
 class rosterWidget(QtGui.QTreeWidget):
 	def __init__(self,parent,main,jab):
 		apply(QtGui.QTreeWidget.__init__,(self,parent))
@@ -23,13 +35,22 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.edit=0
 		self.setAcceptDrops(True)
 		self.dragStartPosition=None
-		self.setSelectionMode(QtGui.QAbstractItemView.ContiguousSelection)
+		#self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
 		self.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
 		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.contactClicked)
 		self.item=QtGui.QTreeWidgetItem(self)
 		self.item.setText(1,"999")
+		self.setAllColumnsShowFocus ( True )
 		self.setItemHidden(self.item, True)
+
+	#def drawRow(self,p, opt, idx):
+		#QtGui.QTreeWidget.drawRow(self,p, opt, idx)
+		#s = idx.sibling(idx.row(), 0)
+		#if s.isValid():
+			#rect = self.visualRect(s);
+			#text= s.data().toString()
+			#p.drawText(rect,0,unicode(text))
 
 	def hidden(self,bool):
 		self.setItemHidden(self.item, False)
@@ -124,14 +145,16 @@ class rosterWidget(QtGui.QTreeWidget):
 		if name==None or len(name)==0:
 			name=jid
 		#item.setText(0,unicode(name))
+		item.setText(0,unicode(name))
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
 		item.setData(32,0,QtCore.QVariant(jid))
 		item.setIcon(0,icon)
 		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)
-		item.label=QtGui.QLabel(unicode(name),self)
-		item.label.setTextFormat ( QtCore.Qt.RichText)
-		self.setItemWidget(item,0,item.label)
+		#item.label=label(self,item)
+		#item.label.setText(unicode(name))
+		#item.label.setTextFormat ( QtCore.Qt.RichText)
+		#self.setItemWidget(item,0,item.label)
 		self.setItemHidden(item, offline)
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.refreshStats()

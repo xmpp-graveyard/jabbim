@@ -64,12 +64,32 @@ class mainWindow(QtGui.QMainWindow):
 		self.ready=False
 		self.log=QtGui.QTextEdit(None)
 		#self.log.show()
+		
+		self.tray=QtGui.QSystemTrayIcon(QtGui.QIcon("images/status/online.png"))
+		menu=QtGui.QMenu(self)
+		menu.addMenu(self.statusMenu)
+		menu.addSeparator()
+		menu.addAction(self.tr("Close"),self.trayQuit)
+		
+		app.connect(self.tray,QtCore.SIGNAL("activated (QSystemTrayIcon::ActivationReason)"),self.trayActivated)
+		self.tray.setContextMenu(menu)
+		self.tray.show()
+
+	def trayQuit(self):
+		self.close()
+		self.tray.hide()
+
+	def trayActivated(self,reason):
+		if reason==QtGui.QSystemTrayIcon.Trigger:
+			if self.isHidden():
+				self.show()
+			else:
+				self.hide()
 
 	def preferencesClicked(self,bool):
 		# shows preferences
 		w=preferencesWindow(self,self)
 		w.show()
-
 
 	def loadSkin(self):
 		# loads config and repairs config file
@@ -125,16 +145,25 @@ class mainWindow(QtGui.QMainWindow):
 						"None":"9",
 						"offline":"9"
 						}
-		self.statusMenu=QtGui.QMenu(self.ui.statusButton)
-		action=self.statusMenu.addAction(self.statuses['online'],self.tr("Online"))
+		self.status={"online":self.tr("Online"),
+					"available":self.tr("Online"),
+					"chat":self.tr("Chatty"),
+					"away":self.tr("Away"),
+					"xa":self.tr("Extended away"),
+					"dnd":self.tr("DND"),
+					"None":self.tr("Online"),
+					"offline":self.tr("Offline")
+					}
+		self.statusMenu=QtGui.QMenu(self.tr("Status"),self.ui.statusButton)
+		action=self.statusMenu.addAction(self.statuses['online'],self.status["online"])
 		action.setData(QtCore.QVariant("online"))
-		action=self.statusMenu.addAction(self.statuses['chat'],self.tr("Chatty"))
+		action=self.statusMenu.addAction(self.statuses['chat'],self.status["chat"])
 		action.setData(QtCore.QVariant("chat"))
-		action=self.statusMenu.addAction(self.statuses['away'],self.tr("Away"))
+		action=self.statusMenu.addAction(self.statuses['away'],self.status["away"])
 		action.setData(QtCore.QVariant("away"))
-		action=self.statusMenu.addAction(self.statuses['xa'],self.tr("Extended away"))
+		action=self.statusMenu.addAction(self.statuses['xa'],self.status["xa"])
 		action.setData(QtCore.QVariant("xa"))
-		action=self.statusMenu.addAction(self.statuses['dnd'],self.tr("DND"))
+		action=self.statusMenu.addAction(self.statuses['dnd'],self.status["dnd"])
 		action.setData(QtCore.QVariant("dnd"))
 		self.ui.statusButton.setMenu(self.statusMenu)
 		app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
@@ -313,7 +342,7 @@ class mainWindow(QtGui.QMainWindow):
 					tab=w
 					tabIndex=i
 			if tab!=None:
-				if int(self.chat.ui.chatTab.currentIndex())!=i:
+				if int(self.chat.ui.chatTab.currentIndex())!=tabIndex:
 					self.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/status/message.png"))
 				tab.chat.textEditWrite(message)
 				return
@@ -358,6 +387,7 @@ class mainWindow(QtGui.QMainWindow):
 										item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
 						# Zmena stavu
 						self.setLog("status: "+unicode(e[2].getShow()),"black")
+						self.tray.showMessage(self.tr("User status"), self.tr("User ")+unicode(user.text(2))+self.tr(" is now ")+self.status[str(e[2].getShow())]+"\n"+unicode(e[2].getStatus()), QtGui.QSystemTrayIcon.Information, 5000)
 						if str(e[2].getShow())!="None":
 							user.setIcon(0,self.statuses[str(e[2].getShow())])
 							user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
@@ -371,12 +401,12 @@ class mainWindow(QtGui.QMainWindow):
 						# Nastaveni tooltip
 						user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>'+self.tr("Jabber ID:")+' </b>'+str(jid)+'')
 						# Nastaveni stavove zpravy pod nick v rosteru. Pokud neni zprava nastavena, vytvori se jen nick bez zpravy.
-						
-						if unicode(e[2].getStatus())=="None" or len(e[2].getStatus())==0:
-							user.label.setText(unicode(user.text(2)))
-						else:
-							text=[word for word in unicode(e[2].getStatus()).split('\n') if word != ''][0]
-							user.label.setText(unicode(self.ui.roster.getUsers(jid)[0].text(2))+'<br/><font size="-1"><i>'+text+"</i></font>")
+						user.setText(0,unicode(user.text(2)))
+						#if unicode(e[2].getStatus())=="None" or len(e[2].getStatus())==0:
+							#user.label.setText(unicode(user.text(2)))
+						#else:
+							#text=[word for word in unicode(e[2].getStatus()).split('\n') if word != ''][0]
+							#user.label.setText(unicode(self.ui.roster.getUsers(jid)[0].text(2))+'<br/><font size="-1"><i>'+text+"</i></font>")
 						# Zobrazeni polozky v rosteru
 						self.ui.roster.setItemHidden(user,False)
 					# Jedna se o odhlaseni
@@ -424,6 +454,7 @@ class mainWindow(QtGui.QMainWindow):
 						w=self.chat.ui.chatTab.widget(i)
 						if str(w.jid)==jid:
 							# Pokud je uzivatel jiz v mistnosti, nacteme jej od tam
+							print jid,e[2].getAffiliation()
 							if self.isGroupChatMember(jid,unicode(nick)):
 								user=self.getGroupChatMember(jid,unicode(nick))
 							# Pokud neni v mistnosti, vytvorime jej
@@ -544,6 +575,7 @@ class statusWindow(QtGui.QDialog):
 
 
 app = QtGui.QApplication(sys.argv)
+
 jab = Jabber()
 translator=QtCore.QTranslator()
 translator.load("locales/jabbim_"+str(QtCore.QLocale.system().name())[:2]+".qm")
