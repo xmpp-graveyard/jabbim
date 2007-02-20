@@ -130,6 +130,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setIcon(0,icon)
 		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)
 		item.label=QtGui.QLabel(unicode(name),self)
+		item.label.setTextFormat ( QtCore.Qt.RichText)
 		self.setItemWidget(item,0,item.label)
 		self.setItemHidden(item, offline)
 		self.sortItems (1,QtCore.Qt.AscendingOrder)

@@ -376,7 +376,7 @@ class mainWindow(QtGui.QMainWindow):
 							user.label.setText(unicode(user.text(2)))
 						else:
 							text=[word for word in unicode(e[2].getStatus()).split('\n') if word != ''][0]
-							user.label.setText(unicode(self.ui.roster.getUsers(jid)[0].text(2))+"\n"+text)
+							user.label.setText(unicode(self.ui.roster.getUsers(jid)[0].text(2))+'<br/><font size="-1"><i>'+text+"</i></font>")
 						# Zobrazeni polozky v rosteru
 						self.ui.roster.setItemHidden(user,False)
 					# Jedna se o odhlaseni
