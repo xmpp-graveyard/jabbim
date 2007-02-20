@@ -123,12 +123,14 @@ class rosterWidget(QtGui.QTreeWidget):
 			item=QtGui.QTreeWidgetItem(group)
 		if name==None or len(name)==0:
 			name=jid
-		item.setText(0,unicode(name))
+		#item.setText(0,unicode(name))
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
 		item.setData(32,0,QtCore.QVariant(jid))
 		item.setIcon(0,icon)
 		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)
+		item.label=QtGui.QLabel(unicode(name),self)
+		self.setItemWidget(item,0,item.label)
 		self.setItemHidden(item, offline)
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.refreshStats()
