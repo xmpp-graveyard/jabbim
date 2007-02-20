@@ -208,7 +208,13 @@ class mainWindow(QtGui.QMainWindow):
 
 	def loadConfig(self):
 		# loads config and repairs config file
-		configs={"jid":"","passwd":"","savePasswd":"","chat_skin":"default.conf"}
+		configs={"jid":"",
+				"passwd":"",
+				"savePasswd":"",
+				"chat_skin":"default.conf",
+				"tray_message_view_connect":"logged_in",
+				"tray_message_view_disconnect":"all",
+				}
 		self.config=ConfigObj(self.homeDir+'/.jabbim/config',encoding='UTF8')
 		if len(self.config)==0:
 			if not os.path.isdir(self.homeDir+'/.jabbim'):
@@ -386,8 +392,12 @@ class mainWindow(QtGui.QMainWindow):
 									if not jid+'/'+resource in res and len(resource)!=0:
 										item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
 						# Zmena stavu
-						self.setLog("status: "+unicode(e[2].getShow()),"black")
-						self.tray.showMessage(self.tr("User status"), self.tr("User ")+unicode(user.text(2))+self.tr(" is now ")+self.status[str(e[2].getShow())]+"\n"+unicode(e[2].getStatus()), QtGui.QSystemTrayIcon.Information, 5000)
+						if self.config["tray_message_view_connect"]=="all":
+							self.tray.showMessage(self.tr("User status"), self.tr("User ")+unicode(user.text(2))+self.tr(" is now ")+self.status[str(e[2].getShow())]+"\n"+unicode(e[2].getStatus()), QtGui.QSystemTrayIcon.Information, 5000)
+						elif self.config["tray_message_view_connect"]=="online" and str(e[2].getShow())=="None":
+							self.tray.showMessage(self.tr("User status"), self.tr("User ")+unicode(user.text(2))+self.tr(" is now ")+self.status[str(e[2].getShow())]+"\n"+unicode(e[2].getStatus()), QtGui.QSystemTrayIcon.Information, 5000)
+						elif self.config["tray_message_view_connect"]=="logged_in" and int(unicode(user.text(1)[0]))==9:
+							self.tray.showMessage(self.tr("User status"), self.tr("User ")+unicode(user.text(2))+self.tr(" is now ")+self.status[str(e[2].getShow())]+"\n"+unicode(e[2].getStatus()), QtGui.QSystemTrayIcon.Information, 5000)
 						if str(e[2].getShow())!="None":
 							user.setIcon(0,self.statuses[str(e[2].getShow())])
 							user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
