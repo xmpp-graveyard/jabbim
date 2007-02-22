@@ -152,8 +152,8 @@ class CommonClient:
         """ Make a tcp/ip connection, protect it with tls if possible and start XMPP stream.
             Returns None or 'tcp' or 'tls', depending on the result."""
         if not server: server=(self.Server,self.Port)
-        if proxy: connected=transports.HTTPPROXYsocket(proxy,server).PlugIn(self)
-        else: connected=transports.TCPsocket(server).PlugIn(self)
+        #if proxy: connected=transports.HTTPPROXYsocket(proxy,server).PlugIn(self)
+        connected=transports.TCPsocket(server,proxy).PlugIn(self)
         if not connected: return
         self._Server,self._Proxy=server,proxy
         self.connected='tcp'

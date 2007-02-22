@@ -5,12 +5,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>274</width>
+    <width>304</width>
     <height>135</height>
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>PyJim- Login</string>
+   <string>Jabbim - Login</string>
   </property>
   <layout class="QGridLayout" >
    <property name="margin" >
@@ -20,26 +20,23 @@
     <number>6</number>
    </property>
    <item row="2" column="0" >
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" >
-      <size>
-       <width>20</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="2" column="3" >
-    <widget class="QPushButton" name="close" >
+    <widget class="QPushButton" name="proxy" >
      <property name="text" >
-      <string>Close</string>
+      <string>Proxy configuration</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="0" colspan="4" >
+   <item row="1" column="3" colspan="2" >
+    <widget class="QCheckBox" name="savePassword" >
+     <property name="layoutDirection" >
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="text" >
+      <string>Save password</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="5" >
     <layout class="QHBoxLayout" >
      <property name="margin" >
       <number>0</number>
@@ -93,24 +90,7 @@
      </item>
     </layout>
    </item>
-   <item row="2" column="1" colspan="2" >
-    <widget class="QPushButton" name="connect" >
-     <property name="text" >
-      <string>Connect</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2" colspan="2" >
-    <widget class="QCheckBox" name="savePassword" >
-     <property name="layoutDirection" >
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text" >
-      <string>Save password</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="2" >
+   <item row="1" column="0" colspan="3" >
     <spacer>
      <property name="orientation" >
       <enum>Qt::Horizontal</enum>
@@ -118,6 +98,33 @@
      <property name="sizeHint" >
       <size>
        <width>121</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="2" colspan="2" >
+    <widget class="QPushButton" name="connect" >
+     <property name="text" >
+      <string>Connect</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4" >
+    <widget class="QPushButton" name="close" >
+     <property name="text" >
+      <string>Close</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>20</width>
        <height>20</height>
       </size>
      </property>
@@ -134,8 +141,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>70</x>
-     <y>100</y>
+     <x>279</x>
+     <y>270</y>
     </hint>
     <hint type="destinationlabel" >
      <x>107</x>
@@ -150,8 +157,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>192</x>
-     <y>104</y>
+     <x>202</x>
+     <y>270</y>
     </hint>
     <hint type="destinationlabel" >
      <x>133</x>

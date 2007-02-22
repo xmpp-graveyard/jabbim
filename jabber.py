@@ -30,6 +30,7 @@ class Jabber:
 	server = "jabber.cz"
 	resource = "Pyjim"
 	password = "piskworker"
+	proxy=None
 	ready=False
 	# info about server
 	gameAuth = "piskworker@jabber.cz/Gajim"
@@ -321,10 +322,11 @@ class Jabber:
 	def connect_thrd(self):
 		
 		user,server,password,resource=self.user,self.server,self.password,self.resource
+		proxy=self.proxy
 		
 		self.conn=xmpp.Client(server, debug=[])
 		
-		conres=self.conn.connect()
+		conres=self.conn.connect(proxy=proxy)
 		
 		self.connected = True
 		

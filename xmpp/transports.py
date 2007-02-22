@@ -31,6 +31,7 @@ import socket,select,base64,dispatcher
 from simplexml import ustr
 from client import PlugIn
 from protocol import *
+import socks
 
 class error:
     """An exception to be raised in case of low-level errors in methods of 'transports' module."""
@@ -45,23 +46,24 @@ class error:
 BUFLEN=1024
 class TCPsocket(PlugIn):
     """ This class defines direct TCP connection method. """
-    def __init__(self, server=None):
-        """ Cache connection point 'server'. 'server' is the tuple of (host, port)
-            absolutely the same as standart tcp socket uses. """
-        PlugIn.__init__(self)
-        self.DBG_LINE='socket'
-        self._exported_methods=[self.send,self.disconnect]
-        self._server = server
+    def __init__(self, server=None,proxy=None):
+		""" Cache connection point 'server'. 'server' is the tuple of (host, port)
+			absolutely the same as standart tcp socket uses. """
+		PlugIn.__init__(self)
+		self.DBG_LINE='socket'
+		self._exported_methods=[self.send,self.disconnect]
+		self._server = server
+		self._proxy = proxy
 
     def plugin(self, owner):
-        """ Fire up connection. Return non-empty string on success.
-            Also registers self.disconnected method in the owner's dispatcher.
-            Called internally. """
-        if not self._server: self._server=(self._owner.Server,5222)
-        if not self.connect(self._server): return
-        self._owner.Connection=self
-        self._owner.RegisterDisconnectHandler(self.disconnected)
-        return 'ok'
+		""" Fire up connection. Return non-empty string on success.
+			Also registers self.disconnected method in the owner's dispatcher.
+			Called internally. """
+		if not self._server: self._server=(self._owner.Server,5222)
+		if not self.connect(self._server): return
+		self._owner.Connection=self
+		self._owner.RegisterDisconnectHandler(self.disconnected)
+		return 'ok'
 
     def getHost(self):
         """ Return the 'host' value that is connection is [will be] made to."""
@@ -70,17 +72,29 @@ class TCPsocket(PlugIn):
         """ Return the 'port' value that is connection is [will be] made to."""
         return self._server[1]
 
-    def connect(self,server=None):
-        """ Try to connect. Returns non-empty string on success. """
-        try:
-            if not server: server=self._server
-            self._sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self._sock.connect(server)
-            self._send=self._sock.sendall
-            self._recv=self._sock.recv
-            self.DEBUG("Successfully connected to remote host %s"%`server`,'start')
-            return 'ok'
-        except: pass
+    def connect(self,server=None,proxy=None):
+		""" Try to connect. Returns non-empty string on success. """
+		#try:
+		if not server: server=self._server
+		proxy=self._proxy
+		if proxy!=None:
+			if proxy["type"]=="socks5":
+				self._sock = socks.socksocket(socket.AF_INET, socket.SOCK_STREAM)
+				self._sock.setproxy(socks.PROXY_TYPE_SOCKS5,proxy["server"],int(proxy["port"]),True,proxy["user"],proxy["passwd"])
+			elif proxy["type"]=="http":
+				self._sock = socks.socksocket(socket.AF_INET, socket.SOCK_STREAM)
+				self._sock.setproxy(socks.PROXY_TYPE_HTTP,proxy["server"],int(proxy["port"]),True,proxy["user"],proxy["passwd"])
+			elif proxy["type"]=="socks4":
+				self._sock = socks.socksocket(socket.AF_INET, socket.SOCK_STREAM)
+				self._sock.setproxy(socks.PROXY_TYPE_SOCKS4,proxy["server"],int(proxy["port"]),True,proxy["user"],proxy["passwd"])
+		else:
+			self._sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		self._sock.connect((str(server[0]),int(server[1])))
+		self._send=self._sock.sendall
+		self._recv=self._sock.recv
+		self.DEBUG("Successfully connected to remote host %s"%`server`,'start')
+		return 'ok'
+		#except: pass
 
     def plugout(self):
         """ Disconnect from the remote server and unregister self.disconnected method from

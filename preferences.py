@@ -18,6 +18,19 @@ class preferencesWindow(QtGui.QDialog):
 		self.ui.stackedWidget.setCurrentIndex(page)
 		self.ui.password.setText(self.main.config['passwd'])
 		self.ui.jid.setText(self.main.config['jid'])
+		if self.main.config["proxy_type"]=="none":
+			self.ui.proxy_type.setCurrentIndex(0)
+		elif self.main.config["proxy_type"]=="http":
+			self.ui.proxy_type.setCurrentIndex(1)
+		elif self.main.config["proxy_type"]=="socks4":
+			self.ui.proxy_type.setCurrentIndex(2)
+		elif self.main.config["proxy_type"]=="socks5":
+			self.ui.proxy_type.setCurrentIndex(3)
+		self.ui.proxy_server.setText(self.main.config['proxy_server'])
+		self.ui.proxy_port.setText(self.main.config['proxy_port'])
+		self.ui.proxy_username.setText(self.main.config['proxy_user'])
+		self.ui.proxy_password.setText(self.main.config['proxy_passwd'])
+		
 		skins=os.listdir("skins/")
 		for skin in skins:
 			if skin.endswith(".conf"):
@@ -88,6 +101,19 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.config['passwd']=password
 		self.main.config['chat_skin']=unicode(self.ui.chatSkins.currentText())
 		self.main.config['jid']=jid
+		index=int(self.ui.proxy_type.currentIndex())
+		if index==0:
+			self.main.config["proxy_type"]="none"
+		elif index==1:
+			self.main.config["proxy_type"]="http"
+		elif index==2:
+			self.main.config["proxy_type"]="socks4"
+		elif index==3:
+			self.main.config["proxy_type"]="socks5"
+		self.main.config['proxy_server']=unicode(self.ui.proxy_server.text())
+		self.main.config['proxy_port']=unicode(self.ui.proxy_port.text())
+		self.main.config['proxy_user']=unicode(self.ui.proxy_username.text())
+		self.main.config['proxy_passwd']=unicode(self.ui.proxy_password.text())
 		self.main.config.write()
 		# we need to update groupchat bookmarks menu
 		self.main.bookmarks=self.bookmarks

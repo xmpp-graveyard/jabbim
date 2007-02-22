@@ -3,6 +3,7 @@ try:
 except:
 	print "PyQt4 is not installed."
 from login_ui import *
+from preferences import *
 
 class loginWindow(QtGui.QDialog):
 	def __init__(self,main,jab,parent=None):
@@ -14,8 +15,13 @@ class loginWindow(QtGui.QDialog):
 		self.ui.setupUi(self)
 		self.ui.password.setText(self.main.config['passwd'])
 		self.ui.jid.setText(self.main.config['jid'])
+		QtCore.QObject.connect(self.ui.proxy, QtCore.SIGNAL("clicked ()"),self.proxySettings)
 		if self.main.config['savePasswd']=="True":
 			self.ui.savePassword.setChecked(True)
+
+	def proxySettings(self):
+		win=preferencesWindow(self.main,self,0)
+		win.show()
 
 	def accept(self):
 		jid=unicode(self.ui.jid.text())
@@ -34,6 +40,13 @@ class loginWindow(QtGui.QDialog):
 			self.jab.user=jid.split("@")[0]
 			self.jab.server=jid.split("@")[1]
 			self.jab.password=unicode(password)
+			if self.main.config["proxy_type"]!="none":
+				self.jab.proxy={"type":self.main.config["proxy_type"],
+								"server":self.main.config["proxy_server"],
+								"user":self.main.config["proxy_user"],
+								"passwd":self.main.config["proxy_passwd"],
+								"port":self.main.config["proxy_port"],
+								}
 			self.jab.connect()
 			self.ui.connect.setEnabled(False)
 

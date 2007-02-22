@@ -214,6 +214,11 @@ class mainWindow(QtGui.QMainWindow):
 				"chat_skin":"default.conf",
 				"tray_message_view_connect":"logged_in",
 				"tray_message_view_disconnect":"all",
+				"proxy_type":"none",
+				"proxy_server":"",
+				"proxy_port":"",
+				"proxy_user":"",
+				"proxy_passwd":"",
 				}
 		self.config=ConfigObj(self.homeDir+'/.jabbim/config',encoding='UTF8')
 		if len(self.config)==0:
