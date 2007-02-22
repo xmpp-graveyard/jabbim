@@ -219,6 +219,7 @@ class mainWindow(QtGui.QMainWindow):
 				"proxy_port":"",
 				"proxy_user":"",
 				"proxy_passwd":"",
+				"resource":"Jabbim"
 				}
 		self.config=ConfigObj(self.homeDir+'/.jabbim/config',encoding='UTF8')
 		if len(self.config)==0:

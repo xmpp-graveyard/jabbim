@@ -4,6 +4,7 @@ except:
 	print "PyQt4 is not installed."
 from login_ui import *
 from preferences import *
+import socket
 
 class loginWindow(QtGui.QDialog):
 	def __init__(self,main,jab,parent=None):
@@ -40,6 +41,10 @@ class loginWindow(QtGui.QDialog):
 			self.jab.user=jid.split("@")[0]
 			self.jab.server=jid.split("@")[1]
 			self.jab.password=unicode(password)
+			if self.main.config['resource']=="":
+				self.jab.resource=unicode(socket.gethostname())
+			else:
+				self.jab.resource=unicode(self.main.config["resource"])
 			if self.main.config["proxy_type"]!="none":
 				self.jab.proxy={"type":self.main.config["proxy_type"],
 								"server":self.main.config["proxy_server"],
