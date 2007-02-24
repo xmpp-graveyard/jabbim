@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Sat Feb 24 15:15:45 2007
+# Created: Sat Feb 24 15:54:26 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -23,28 +23,14 @@ class Ui_mainWindow(object):
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
 
+        self.rosterWidget = QtGui.QWidget(self.centralwidget)
+        self.rosterWidget.setObjectName("rosterWidget")
+        self.gridlayout.addWidget(self.rosterWidget,0,0,1,1)
+
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(6)
         self.hboxlayout.setObjectName("hboxlayout")
-
-        self.addContact = QtGui.QToolButton(self.centralwidget)
-        self.addContact.setObjectName("addContact")
-        self.hboxlayout.addWidget(self.addContact)
-
-        spacerItem = QtGui.QSpacerItem(121,25,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.hboxlayout.addItem(spacerItem)
-
-        self.groupchat = QtGui.QToolButton(self.centralwidget)
-        self.groupchat.setPopupMode(QtGui.QToolButton.InstantPopup)
-        self.groupchat.setObjectName("groupchat")
-        self.hboxlayout.addWidget(self.groupchat)
-        self.gridlayout.addLayout(self.hboxlayout,0,0,1,1)
-
-        self.hboxlayout1 = QtGui.QHBoxLayout()
-        self.hboxlayout1.setMargin(0)
-        self.hboxlayout1.setSpacing(6)
-        self.hboxlayout1.setObjectName("hboxlayout1")
 
         self.showOffline = QtGui.QToolButton(self.centralwidget)
         self.showOffline.setIcon(QtGui.QIcon("images/status/offline.png"))
@@ -52,22 +38,18 @@ class Ui_mainWindow(object):
         self.showOffline.setChecked(False)
         self.showOffline.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.showOffline.setObjectName("showOffline")
-        self.hboxlayout1.addWidget(self.showOffline)
+        self.hboxlayout.addWidget(self.showOffline)
 
-        spacerItem1 = QtGui.QSpacerItem(16,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.hboxlayout1.addItem(spacerItem1)
+        spacerItem = QtGui.QSpacerItem(16,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.hboxlayout.addItem(spacerItem)
 
         self.statusButton = QtGui.QToolButton(self.centralwidget)
         self.statusButton.setIcon(QtGui.QIcon("images/status/online.png"))
         self.statusButton.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.statusButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.statusButton.setObjectName("statusButton")
-        self.hboxlayout1.addWidget(self.statusButton)
-        self.gridlayout.addLayout(self.hboxlayout1,2,0,1,1)
-
-        self.rosterWidget = QtGui.QWidget(self.centralwidget)
-        self.rosterWidget.setObjectName("rosterWidget")
-        self.gridlayout.addWidget(self.rosterWidget,1,0,1,1)
+        self.hboxlayout.addWidget(self.statusButton)
+        self.gridlayout.addLayout(self.hboxlayout,1,0,1,1)
         mainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(mainWindow)
@@ -113,15 +95,12 @@ class Ui_mainWindow(object):
         self.menubar.addAction(self.menuAction.menuAction())
         self.menubar.addAction(self.menuPreferences.menuAction())
         self.toolBar.addAction(self.actionAdd_contact)
-        self.toolBar.addAction(self.actionGroup_Chat)
 
         self.retranslateUi(mainWindow)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
     def retranslateUi(self, mainWindow):
         mainWindow.setWindowTitle(QtGui.QApplication.translate("mainWindow", "Jabbim", None, QtGui.QApplication.UnicodeUTF8))
-        self.addContact.setText(QtGui.QApplication.translate("mainWindow", "Add Contact", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupchat.setText(QtGui.QApplication.translate("mainWindow", "Group Chat", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setText(QtGui.QApplication.translate("mainWindow", "Show Offline", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setText(QtGui.QApplication.translate("mainWindow", "Online", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPreferences.setTitle(QtGui.QApplication.translate("mainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))

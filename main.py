@@ -128,7 +128,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.loadRoster()
 		# Signals
 		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
-		app.connect(self.ui.addContact, QtCore.SIGNAL("clicked(bool)"),self.addContact)
+		#app.connect(self.ui.addContact, QtCore.SIGNAL("clicked(bool)"),self.addContact)
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
 		app.connect(self.ui.actionAdd_contact, QtCore.SIGNAL("triggered ( bool )"),self.addContact)
 		app.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered ( bool )"),self.trayQuit)
@@ -170,6 +170,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def trayQuit(self):
 		self.tray.hide()
+		self.timer.stop()
 		app.closeAllWindows()
 		jab.disconnect()
 
@@ -208,9 +209,13 @@ class mainWindow(QtGui.QMainWindow):
 		action.setData(QtCore.QVariant("manage"))
 
 	def loadGroupchat(self):
-		self.groupchatMenu=QtGui.QMenu(self.ui.groupchat)
+		self.groupchatMenu=QtGui.QMenu(self.tr("Group Chat"),self.ui.toolBar)
 		self.buildGroupchatMenu()
 		self.ui.actionGroup_Chat.setMenu(self.groupchatMenu)
+		self.ui.toolBar.addAction(self.groupchatMenu.menuAction())
+		actionRect = self.ui.toolBar.actionGeometry(self.groupchatMenu.menuAction())
+		toolButton = self.ui.toolBar.childAt(actionRect.center())
+		toolButton.setPopupMode(QtGui.QToolButton.InstantPopup)
 		app.connect(self.groupchatMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.groupchatChanged)
 
 	def loadRoster(self):
