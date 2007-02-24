@@ -29,6 +29,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.headerItem().setText(0,QtGui.QApplication.translate("roster", "Roster", None, QtGui.QApplication.UnicodeUTF8))
 		self.headerItem().setText(1,QtGui.QApplication.translate("roster", "id", None, QtGui.QApplication.UnicodeUTF8))
 		self.headerItem().setText(2,QtGui.QApplication.translate("roster", "name", None, QtGui.QApplication.UnicodeUTF8))
+		self.headerItem().setText(3,QtGui.QApplication.translate("roster", "", None, QtGui.QApplication.UnicodeUTF8))
 		self.hideColumn(1)
 		self.hideColumn(2)
 		#app.connect(self, QtCore.SIGNAL("itemChanged ( QTreeWidgetItem *, int )"),self.itemChange)
@@ -43,6 +44,8 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.item.setText(1,"999")
 		self.setAllColumnsShowFocus ( True )
 		self.setItemHidden(self.item, True)
+		self.header().hide()
+		self.setColumnWidth(3,32)
 
 	#def drawRow(self,p, opt, idx):
 		#QtGui.QTreeWidget.drawRow(self,p, opt, idx)
@@ -129,13 +132,18 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setBackgroundColor(0,QtGui.QColor(102,102,102))
 		#self.groups[g].setFlags(self.users[str(item)].flags()|QtCore.Qt.ItemIsDragEnabled)
 		item.setTextColor(0,QtGui.QColor(255,255,255))
+		item.setBackgroundColor(3,QtGui.QColor(102,102,102))
+		item.setTextColor(3,QtGui.QColor(255,255,255))
 		#self.groups[g].setIcon(0,QtGui.QIcon("images/status/closed.png"))
+		self.setColumnWidth(0,200)
 		return item
 	
 	def refreshStats(self):
 		for k,v in self.main.groups.iteritems():
 			online,offline,count=self.getStats(unicode(k))
 			self.main.groups[k]["item"].setText(0,unicode(self.main.groups[k]["item"].text(2))+" ("+str(online)+"/"+str(count)+")")
+		#self.resizeColumnToContents(0)
+
 
 	def addUser(self,jid,name,group,offline,icon):
 		if group==None:
@@ -189,8 +197,17 @@ class rosterWidget(QtGui.QTreeWidget):
 	def buildContactMenu(self,jid,group):
 		contactMenu=QtGui.QMenu(self)
 		contactMenu.addAction(self.tr("Chat"))
-		contactMenu.addSeparator()
+		
+		action=contactMenu.addAction(self.tr("vCard"))
+		action.setData(QtCore.QVariant(jid))
+		action.setObjectName("vcard")
 
+		action=contactMenu.addAction(self.tr("Get avatar"))
+		action.setData(QtCore.QVariant(jid))
+		action.setObjectName("avatar")
+
+		contactMenu.addSeparator()
+		
 		if group!=None and len(self.getGroups(str(jid)))>1:
 			action=contactMenu.addAction(self.tr("Delete from group"))
 			action.setData(QtCore.QVariant([unicode(jid),u"-"+group.text(2)]))
@@ -292,6 +309,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			for user in self.getUsers(jid):
 				self.delUser(jid,user)
 			self.jab.roster.delItem(jid)
+			self.refreshStats()
 		elif cmd=="new_group":
 			jid=action.data()
 			jid=str(jid.toString())
@@ -308,6 +326,7 @@ class rosterWidget(QtGui.QTreeWidget):
 				
 				self.sortItems (1,QtCore.Qt.AscendingOrder)
 				self.jab.roster.setItem(jid,name,self.getGroups(jid)+[unicode(group)])
+			self.refreshStats()
 		elif cmd=="check_group":
 			items=action.data()
 			items=items.toList()
@@ -317,7 +336,15 @@ class rosterWidget(QtGui.QTreeWidget):
 			group=unicode(items[1].toString())[1:]
 			print "roster_change_group_action",jid,group
 			self.changeGroup(jid,name,action,group)
-		self.refreshStats()
+			self.refreshStats()
+		elif cmd=="vcard":
+			jid=action.data()
+			jid=str(jid.toString())
+			self.jab.getVCard(jid)
+		elif cmd=="avatar":
+			jid=action.data()
+			jid=str(jid.toString())
+			self.jab.getAvatar(jid)
 
 	def contextMenuEvent (self,event):
 		item=self.itemFromIndex(self.indexAt(QtCore.QPoint(event.x(),event.y())))

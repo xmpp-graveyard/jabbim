@@ -1,0 +1,40 @@
+<ui version="4.0" >
+ <class>discovery</class>
+ <widget class="QDialog" name="discovery" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>622</width>
+    <height>427</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Jabbim - Discovery</string>
+  </property>
+  <layout class="QGridLayout" >
+   <property name="margin" >
+    <number>9</number>
+   </property>
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <item row="0" column="0" >
+    <widget class="QTreeWidget" name="services" >
+     <column>
+      <property name="text" >
+       <string>Name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text" >
+       <string>Jid</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

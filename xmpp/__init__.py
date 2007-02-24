@@ -26,6 +26,6 @@ and use only methods for access all values you should not have any problems.
 
 """
 
-import simplexml,protocol,debug,auth,transports,roster,dispatcher,features,browser,filetransfer,commands,si
+import simplexml,protocol,debug,auth,transports,roster,dispatcher,features,browser,filetransfer,commands,si,vcard
 from client import *
 from protocol import *

@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import threading, sys, time, sha, time
 import xmpp
+from xmpp.protocol import *
 from Queue import Queue
 
 # here we realize jabber communication via using interface provided by xmpp
@@ -42,6 +43,7 @@ class Jabber:
 	# well, we will push communication throught these queeeee things
 	err = Queue()
 	inc = Queue()
+	discoveryQueue = Queue()
 	outc = Queue()
 	
 	# here we store text from chatroom
@@ -67,6 +69,12 @@ class Jabber:
 	def now(self):
 		h,m,s=time.localtime()[3:6]
 		return "%02d:%02d:%02d" % (h,m,s)
+	
+	def getVCard(self,jid):
+		self.inc.put(["vcard_show",xmpp.vcard.getVcard(self.conn,jid)])
+	
+	def getAvatar(self,jid):
+		self.inc.put(["avatar_show",xmpp.vcard.getVcard(self.conn,jid),jid])
 	
 	# this function allows to join conference
 	def getIntoRoom(self, room,nick):
@@ -130,6 +138,42 @@ class Jabber:
 		for room in self.confNames:
 			presence.setTo(room + "/" + self.usernick)
 			self.conn.send(presence)
+
+	def disco(self,rep,jid,typ,node):
+		ret=[]
+		identities , features = [] , []
+		for i in rep:
+			if typ=="items":
+				if i.getName()=='agent' and i.getTag('name'): i.setAttr('name',i.getTagData('name'))
+				self.discoveryQueue.put([typ,i.attrs,str(jid),node])
+				#ret.append(i.attrs)
+			if typ=="info":
+				for i in rep:
+					if i.getName()=='identity': identities.append(i.attrs)
+					elif i.getName()=='feature': features.append(i.getAttr('var'))
+					elif i.getName()=='agent':
+						if i.getTag('name'): i.setAttr('name',i.getTagData('name'))
+						if i.getTag('description'): i.setAttr('name',i.getTagData('description'))
+						identities.append(i.attrs)
+						if i.getTag('groupchat'): features.append(NS_GROUPCHAT)
+						if i.getTag('register'): features.append(NS_REGISTER)
+						if i.getTag('search'): features.append(NS_SEARCH)
+				self.discoveryQueue.put([typ,identities,features,str(jid)])
+
+
+	def discoveryItems(self,server=None,node=None):
+		if server==None:
+			server=self.server
+		#info=xmpp.features.discoverInfo(self.conn,server)
+		print server,node
+		xmpp.features.discoverItems(self.conn,server,self.disco,node=node)
+
+
+	def discoveryInfo(self,server=None):
+		if server==None:
+			server=self.server
+		#info=xmpp.features.discoverInfo(self.conn,server)
+		xmpp.features.discoverInfo(self.conn,server,self.disco)
 
 	# main and only handler for incoming messages
 	def incoming(self, conn, mess):
@@ -372,9 +416,9 @@ class Jabber:
 
 		self.conn.sendInitPresence()
 		
+		#self.discovery=xmpp.features.discoverInfo(self.conn,server)
+		#print xmpp.features.getRegInfo(self.conn,"gg.jabbim.cz")
 
-		#self.discovery=xmpp.features.discoverInfo(self.conn,"icq.netlab.cz")
-		#print self.discovery
 		if self.connected:
 			self.GoOn(self.conn)
 			return 2

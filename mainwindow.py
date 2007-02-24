@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Fri Feb 16 18:57:12 2007
-#      by: PyQt4 UI code generator 4.0.1
+# Created: Thu Feb 22 20:03:51 2007
+#      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -74,11 +74,11 @@ class Ui_mainWindow(object):
         self.menubar.setGeometry(QtCore.QRect(0,0,229,28))
         self.menubar.setObjectName("menubar")
 
-        self.menuAction = QtGui.QMenu(self.menubar)
-        self.menuAction.setObjectName("menuAction")
-
         self.menuPreferences = QtGui.QMenu(self.menubar)
         self.menuPreferences.setObjectName("menuPreferences")
+
+        self.menuAction = QtGui.QMenu(self.menubar)
+        self.menuAction.setObjectName("menuAction")
         mainWindow.setMenuBar(self.menubar)
 
         self.statusbar = QtGui.QStatusBar(mainWindow)
@@ -87,7 +87,11 @@ class Ui_mainWindow(object):
 
         self.actionPreferences = QtGui.QAction(mainWindow)
         self.actionPreferences.setObjectName("actionPreferences")
+
+        self.actionService_discovery = QtGui.QAction(mainWindow)
+        self.actionService_discovery.setObjectName("actionService_discovery")
         self.menuPreferences.addAction(self.actionPreferences)
+        self.menuAction.addAction(self.actionService_discovery)
         self.menubar.addAction(self.menuAction.menuAction())
         self.menubar.addAction(self.menuPreferences.menuAction())
 
@@ -95,11 +99,13 @@ class Ui_mainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
     def retranslateUi(self, mainWindow):
-        mainWindow.setWindowTitle(QtGui.QApplication.translate("mainWindow", "PyJim", None, QtGui.QApplication.UnicodeUTF8))
+        mainWindow.setWindowTitle(QtGui.QApplication.translate("mainWindow", "Jabbim", None, QtGui.QApplication.UnicodeUTF8))
         self.addContact.setText(QtGui.QApplication.translate("mainWindow", "Add Contact", None, QtGui.QApplication.UnicodeUTF8))
         self.groupchat.setText(QtGui.QApplication.translate("mainWindow", "Group Chat", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setText(QtGui.QApplication.translate("mainWindow", "Show Offline", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setText(QtGui.QApplication.translate("mainWindow", "Online", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuAction.setTitle(QtGui.QApplication.translate("mainWindow", "Action", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPreferences.setTitle(QtGui.QApplication.translate("mainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuAction.setTitle(QtGui.QApplication.translate("mainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setText(QtGui.QApplication.translate("mainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionService_discovery.setText(QtGui.QApplication.translate("mainWindow", "Service discovery", None, QtGui.QApplication.UnicodeUTF8))
+

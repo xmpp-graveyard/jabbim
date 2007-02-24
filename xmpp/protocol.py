@@ -440,44 +440,48 @@ class Presence(Protocol):
         return self._muc_getItemAttr('status','code')
 
 class Iq(Protocol): 
-    """ XMPP Iq object - get/set dialog mechanism. """
-    def __init__(self, typ=None, queryNS=None, attrs={}, to=None, frm=None, payload=[], xmlns=NS_CLIENT, node=None):
-        """ Create Iq object. You can specify type, query namespace
-            any additional attributes, recipient of the iq, sender of the iq, any additional payload (f.e. jabber:x:data node) and namespace in one go.
-            Alternatively you can pass in the other XML object as the 'node' parameted to replicate it as an iq. """
-        Protocol.__init__(self, 'iq', to=to, typ=typ, attrs=attrs, frm=frm, xmlns=xmlns, node=node)
-        if payload: self.setQueryPayload(payload)
-        if queryNS: self.setQueryNS(queryNS)
-    def getQueryNS(self):
-        """ Return the namespace of the 'query' child element."""
-        tag=self.getTag('query')
-        if tag: return tag.getNamespace()
-    def getQuerynode(self):
-        """ Return the 'node' attribute value of the 'query' child element."""
-        return self.getTagAttr('query','node')
-    def getQueryPayload(self):
-        """ Return the 'query' child element payload."""
-        tag=self.getTag('query')
-        if tag: return tag.getPayload()
-    def getQueryChildren(self):
-        """ Return the 'query' child element child nodes."""
-        tag=self.getTag('query')
-        if tag: return tag.getChildren()
-    def setQueryNS(self,namespace):
-        """ Set the namespace of the 'query' child element."""
-        self.setTag('query').setNamespace(namespace)
-    def setQueryPayload(self,payload):
-        """ Set the 'query' child element payload."""
-        self.setTag('query').setPayload(payload)
-    def setQuerynode(self,node):
-        """ Set the 'node' attribute value of the 'query' child element."""
-        self.setTagAttr('query','node',node)
-    def buildReply(self,typ):
-        """ Builds and returns another Iq object of specified type.
-            The to, from and query child node of new Iq are pre-set as reply to this Iq. """
-        iq=Iq(typ,to=self.getFrom(),frm=self.getTo(),attrs={'id':self.getID()})
-        if self.getTag('query'): iq.setQueryNS(self.getQueryNS())
-        return iq
+	""" XMPP Iq object - get/set dialog mechanism. """
+	def __init__(self, typ=None, queryNS=None, attrs={}, to=None, frm=None, payload=[], xmlns=NS_CLIENT, node=None):
+		""" Create Iq object. You can specify type, query namespace
+			any additional attributes, recipient of the iq, sender of the iq, any additional payload (f.e. jabber:x:data node) and namespace in one go.
+			Alternatively you can pass in the other XML object as the 'node' parameted to replicate it as an iq. """
+		Protocol.__init__(self, 'iq', to=to, typ=typ, attrs=attrs, frm=frm, xmlns=xmlns, node=node)
+		if payload: self.setQueryPayload(payload)
+		if queryNS: self.setQueryNS(queryNS)
+	def getQueryNS(self):
+		""" Return the namespace of the 'query' child element."""
+		tag=self.getTag('query')
+		if tag: return tag.getNamespace()
+	def getVCardPayload(self):
+		""" Return the 'query' child element payload."""
+		tag=self.getTag('vCard')
+		if tag: return tag.getPayload()
+	def getVCardChildren(self):
+		""" Return the 'query' child element child nodes."""
+		tag=self.getTag('vCard')
+		if tag: return tag.getChildren()
+	def getQuerynode(self):
+		""" Return the 'node' attribute value of the 'query' child element."""
+		return self.getTagAttr('query','node')
+	def getQueryChildren(self):
+		""" Return the 'query' child element child nodes."""
+		tag=self.getTag('query')
+		if tag: return tag.getChildren()
+	def setQueryNS(self,namespace):
+		""" Set the namespace of the 'query' child element."""
+		self.setTag('query').setNamespace(namespace)
+	def setQueryPayload(self,payload):
+		""" Set the 'query' child element payload."""
+		self.setTag('query').setPayload(payload)
+	def setQuerynode(self,node):
+		""" Set the 'node' attribute value of the 'query' child element."""
+		self.setTagAttr('query','node',node)
+	def buildReply(self,typ):
+		""" Builds and returns another Iq object of specified type.
+			The to, from and query child node of new Iq are pre-set as reply to this Iq. """
+		iq=Iq(typ,to=self.getFrom(),frm=self.getTo(),attrs={'id':self.getID()})
+		if self.getTag('query'): iq.setQueryNS(self.getQueryNS())
+		return iq
 
 class ErrorNode(Node):
     """ XMPP-style error element.

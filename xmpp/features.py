@@ -26,52 +26,85 @@ All these methods takes 'disp' first argument that should be already connected
 
 from protocol import *
 
+
 ### DISCO ### http://jabber.org/protocol/disco ### JEP-0030 ####################
 ### Browse ### jabber:iq:browse ### JEP-0030 ###################################
 ### Agents ### jabber:iq:agents ### JEP-0030 ###################################
-def _discover(disp,ns,jid,node=None,fb2b=0,fb2a=1):
-    """ Try to obtain info from the remote object.
-        If remote object doesn't support disco fall back to browse (if fb2b is true)
-        and if it doesnt support browse (or fb2b is not true) fall back to agents protocol
-        (if gb2a is true). Returns obtained info. Used internally. """
-    iq=Iq(to=jid,typ='get',queryNS=ns)
-    if node: iq.setAttr('node',node)
-    rep=disp.SendAndWaitForResponse(iq)
-    if fb2b and not isResultNode(rep): rep=disp.SendAndWaitForResponse(Iq(to=jid,typ='get',queryNS=NS_BROWSE))   # Fallback to browse
-    if fb2a and not isResultNode(rep): rep=disp.SendAndWaitForResponse(Iq(to=jid,typ='get',queryNS=NS_AGENTS))   # Fallback to agents
-    if isResultNode(rep): return rep.getQueryPayload()
-    return []
 
-def discoverItems(disp,jid,node=None):
-    """ Query remote object about any items that it contains. Return items list. """
-    """ According to JEP-0030:
-        query MAY have node attribute
-        item: MUST HAVE jid attribute and MAY HAVE name, node, action attributes.
-        action attribute of item can be either of remove or update value."""
-    ret=[]
-    for i in _discover(disp,NS_DISCO_ITEMS,jid,node):
-        if i.getName()=='agent' and i.getTag('name'): i.setAttr('name',i.getTagData('name'))
-        ret.append(i.attrs)
-    return ret
+def _discover(disp,ns,jid,func,node=None,fb2b=0,fb2a=1):
+	""" Try to obtain info from the remote object.
+		If remote object doesn't support disco fall back to browse (if fb2b is true)
+		and if it doesnt support browse (or fb2b is not true) fall back to agents protocol
+		(if gb2a is true). Returns obtained info. Used internally. """
+	iq=Iq(to=jid,typ='get',queryNS=ns)
+	if node:
+		iq.setQuerynode(node)
+	print iq
+	rep=disp.SendAndCallForResponse(iq,_discover1,args={'disp':disp,'ns':ns,'jid':jid,'node':node,'fb2b':fb2b,'fb2a':fb2a,'func':func})
+	#if fb2b and not isResultNode(rep): rep=disp.SendAndWaitForResponse(Iq(to=jid,typ='get',queryNS=NS_BROWSE))   # Fallback to browse
+	#if fb2a and not isResultNode(rep): rep=disp.SendAndWaitForResponse(Iq(to=jid,typ='get',queryNS=NS_AGENTS))   # Fallback to agents
 
-def discoverInfo(disp,jid,node=None):
-    """ Query remote object about info that it publishes. Returns identities and features lists."""
-    """ According to JEP-0030:
-        query MAY have node attribute
-        identity: MUST HAVE category and name attributes and MAY HAVE type attribute.
-        feature: MUST HAVE var attribute"""
-    identities , features = [] , []
-    for i in _discover(disp,NS_DISCO_INFO,jid,node):
-        if i.getName()=='identity': identities.append(i.attrs)
-        elif i.getName()=='feature': features.append(i.getAttr('var'))
-        elif i.getName()=='agent':
-            if i.getTag('name'): i.setAttr('name',i.getTagData('name'))
-            if i.getTag('description'): i.setAttr('name',i.getTagData('description'))
-            identities.append(i.attrs)
-            if i.getTag('groupchat'): features.append(NS_GROUPCHAT)
-            if i.getTag('register'): features.append(NS_REGISTER)
-            if i.getTag('search'): features.append(NS_SEARCH)
-    return identities , features
+	#if isResultNode(rep): func(rep)
+	#return []
+
+def _discover1(i,rep,disp=None,ns=None,jid=None,node=None,fb2b=0,fb2a=1,func=None):
+	iq=Iq(to=jid,typ='get',queryNS=NS_BROWSE)
+	if node:
+		iq.setQuerynode(node)
+	if fb2b and not isResultNode(rep):
+		rep=disp.SendAndCallForResponse(iq,_discover2,args={'func':func,'jid':jid,'ns':ns,'node':node})   # Fallback to browse
+		return
+	iq=Iq(to=jid,typ='get',queryNS=NS_AGENTS)
+	if node:
+		iq.setQuerynode(node)
+	if fb2a and not isResultNode(rep):
+		rep=disp.SendAndCallForResponse(iq,_discover2,args={'func':func,'jid':jid,'ns':ns,'node':node})   # Fallback to agents
+		return
+	typ="items"
+	if ns==NS_DISCO_INFO:
+		typ="info"
+	if isResultNode(rep): func(rep.getQueryPayload(),jid,typ,node)
+	else: func([],jid,typ,node)
+def _discover2(i,rep,func=None,disp=None,ns=None,jid=None,node=None,fb2b=0,fb2a=1):
+	typ="items"
+	if ns==NS_DISCO_INFO:
+		typ="info"
+	if isResultNode(rep): func(rep.getQueryPayload(),jid,typ,node)
+	else: func([],jid,typ,node)
+
+
+def discoverItems(disp,jid,func,node=None):
+	""" Query remote object about any items that it contains. Return items list. """
+	""" According to JEP-0030:
+		query MAY have node attribute
+		item: MUST HAVE jid attribute and MAY HAVE name, node, action attributes.
+		action attribute of item can be either of remove or update value."""
+	_discover(disp,NS_DISCO_ITEMS,jid,func,node)
+	#ret=[]
+	#for i in _discover(disp,NS_DISCO_ITEMS,jid,func,node):
+		#if i.getName()=='agent' and i.getTag('name'): i.setAttr('name',i.getTagData('name'))
+		#ret.append(i.attrs)
+	#return ret
+
+def discoverInfo(disp,jid,func,node=None):
+	""" Query remote object about info that it publishes. Returns identities and features lists."""
+	""" According to JEP-0030:
+		query MAY have node attribute
+		identity: MUST HAVE category and name attributes and MAY HAVE type attribute.
+		feature: MUST HAVE var attribute"""
+	_discover(disp,NS_DISCO_INFO,jid,func,node)
+	#identities , features = [] , []
+	#for i in _discover(disp,NS_DISCO_INFO,jid,node):
+		#if i.getName()=='identity': identities.append(i.attrs)
+		#elif i.getName()=='feature': features.append(i.getAttr('var'))
+		#elif i.getName()=='agent':
+			#if i.getTag('name'): i.setAttr('name',i.getTagData('name'))
+			#if i.getTag('description'): i.setAttr('name',i.getTagData('description'))
+			#identities.append(i.attrs)
+			#if i.getTag('groupchat'): features.append(NS_GROUPCHAT)
+			#if i.getTag('register'): features.append(NS_REGISTER)
+			#if i.getTag('search'): features.append(NS_SEARCH)
+	#return identities , features
 
 ### Registration ### jabber:iq:register ### JEP-0077 ###########################
 def getRegInfo(disp,host,info={}):

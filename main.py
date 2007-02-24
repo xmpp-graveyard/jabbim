@@ -24,6 +24,7 @@ from jabber import *
 import sys,os,time,random
 from configobj import ConfigObj
 
+import base64
 from mainwindow import *
 from login import *
 from preferences import *
@@ -32,8 +33,92 @@ from status import *
 from chatwindow import *
 from joingroupchat import *
 from addcontact import *
+from discovery_ui import *
+from vcard_ui import *
 
 #import games
+
+class vcardWindow(QtGui.QDialog):
+	def __init__(self,parent=None,vcard=None,readonly=True):
+		apply(QtGui.QDialog.__init__,(self,parent))
+		self.setModal(False)
+		self.ui=Ui_vcard()
+		self.ui.setupUi(self)
+		#print vcard
+		for k,v in vcard.iteritems():
+			if k!="PHOTO":
+				print k,v
+			if k=="URL":
+				self.ui.website.setText(unicode(v))
+			elif k=="NICKNAME":
+				self.ui.nickname.setText(unicode(v))
+			elif k=="FN":
+				self.ui.fullname.setText(unicode(v))
+			elif k=="DESC":
+				self.ui.about.setText(unicode(v))
+			elif k=="EMAIL":
+				if v.has_key("USERID"):
+					self.ui.email.setText(unicode(v["USERID"]))
+			elif k=="TEL":
+				if v.has_key("NUMBER"):
+					self.ui.home.setText(unicode(v["NUMBER"]))
+			elif k=="BDAY":
+				self.ui.birthday.setText(unicode(v))
+			elif k=="N":
+				if v.has_key("GIVEN"):
+					self.ui.name.setText(unicode(v["GIVEN"]))
+				if v.has_key("FAMILLY"):
+					self.ui.famillyname.setText(unicode(v["FAMILLY"]))
+			elif k=="PHOTO":
+				if v.has_key("BINVAL"):
+					pixmap=QtGui.QPixmap()
+					image=base64.decodestring(str(v["BINVAL"]))
+					pixmap.loadFromData(image)
+					self.ui.photo.setPixmap(pixmap)
+class discoveryWindow(QtGui.QDialog):
+	def __init__(self,parent=None):
+		apply(QtGui.QDialog.__init__,(self,parent))
+		self.setModal(False)
+		self.ui=Ui_discovery()
+		self.ui.setupUi(self)
+		QtCore.QObject.connect(self.ui.services, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.clicked)
+		QtCore.QObject.connect(self.ui.services, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.menu)
+		self.ui.services.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+		self.items={}
+		self.nodes={}
+
+	def menu(self,pos):
+		item=self.ui.services.itemFromIndex(self.ui.services.indexAt(pos))
+		print item.features
+
+
+	def addItem(self,jid,name="",parent=None,node="",features=[]):
+		if parent==None:
+			parent=self.ui.services
+		if name=="":
+			name=jid
+		if node=="":
+			self.items[jid]=QtGui.QTreeWidgetItem(parent)
+			self.items[jid].setText(1,jid)
+			self.items[jid].setText(0,name)
+			self.items[jid].node=False
+			self.items[jid].features=[]
+		else:
+			if not self.nodes.has_key(jid+node):
+				self.nodes[jid+node]=QtGui.QTreeWidgetItem(parent)
+			self.nodes[jid+node].setText(0,name)
+			self.nodes[jid+node].setText(1,jid)
+			self.nodes[jid+node].node=node
+			self.nodes[jid+node].features=[]
+		self.ui.services.sortItems(0,QtCore.Qt.AscendingOrder)
+
+	def clicked(self,item,i):
+		if item.parent()==None and int(item.childCount())==0:
+			jab.discoveryItems(unicode(item.text(1)))
+		if item.node!=False and int(item.childCount())==0:
+			print item.node
+			jab.discoveryItems(unicode(item.text(1)),node=item.node)
+
 
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
@@ -45,6 +130,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
 		app.connect(self.ui.addContact, QtCore.SIGNAL("clicked(bool)"),self.addContact)
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
+		app.connect(self.ui.actionService_discovery, QtCore.SIGNAL("triggered ( bool )"),self.discovery)
 		self.timer=QtCore.QTimer()
 		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.tick)
 		self.timer.start(50)
@@ -74,6 +160,11 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.tray,QtCore.SIGNAL("activated (QSystemTrayIcon::ActivationReason)"),self.trayActivated)
 		self.tray.setContextMenu(menu)
 		self.tray.show()
+
+	def discovery(self):
+		self.disco=discoveryWindow(self)
+		self.disco.show()
+		jab.discoveryItems()
 
 	def trayQuit(self):
 		self.close()
@@ -308,6 +399,23 @@ class mainWindow(QtGui.QMainWindow):
 			login.done(1)
 			jab.setStatus()
 
+		elif e[0] == "avatar_show":
+			vcard=e[1]
+			jid=str(e[2])
+			if vcard.has_key("PHOTO"):
+				v=vcard["PHOTO"]
+				if v.has_key("BINVAL"):
+					pixmap=QtGui.QPixmap()
+					image=base64.decodestring(str(v["BINVAL"]))
+					pixmap.loadFromData(image)
+					for user,group in self.ui.roster.getUsers(jid,True).iteritems():
+						user.setIcon(3,QtGui.QIcon(pixmap))
+
+		elif e[0] == "vcard_show":
+			vcard=e[1]
+			self.vcard=vcardWindow(self,vcard)
+			self.vcard.show()
+			
 		elif e[0] == "groupchat_server_message":
 			jid=str(e[1])
 			text=unicode(e[2])
@@ -534,6 +642,40 @@ class mainWindow(QtGui.QMainWindow):
 		if lines!=None and len(lines)!=0:
 			for line in lines:
 				self.widget.textEditWrite(line)
+		try:
+			e=jab.discoveryQueue.get( timeout = 0 )
+		except:
+			e=None
+		if e!=None:
+			typ=e[0]
+			if typ=="items":
+				item=e[1]
+				jid=e[2]
+				parentNode=e[3]
+				if item.has_key("jid") and jid==jab.server:
+					self.disco.addItem(unicode(item["jid"]))
+					jab.discoveryInfo(item["jid"])
+				if jid!=jab.server:
+					name=""
+					if item.has_key("name"):
+						name=item["name"]
+					node=""
+					parent=self.disco.items[jid]
+					if self.disco.nodes.has_key(jid+str(parentNode)):
+						parent=self.disco.nodes[jid+str(parentNode)]
+					if item.has_key("node"):
+						node=item["node"]
+					self.disco.addItem(unicode(item["jid"]),unicode(name),parent,node=node)
+			else:
+				ident=e[1]
+				features=e[2]
+				jid=e[3]
+				#print "*",jid
+				for feature in features:
+					if not feature in self.disco.items[jid].features:
+						self.disco.items[jid].features.append(feature)
+				if self.disco.items.has_key(jid):
+					self.disco.items[jid].setText(0,ident[0]["name"])
 
 		# we must use try as forced reading of empty queue raises an error
 		try:
