@@ -7,9 +7,9 @@ def getVcard(disp,jid):
 	if not isResultNode(rep) or rep.getVCardPayload()==None or len(rep.getVCardPayload())==0:
 		return {}
 	vcard={}
-	#print unicode(rep)
 	for i in rep.getVCardPayload():
-		vcard=parse(vcard,i)
+		if not isinstance(i,unicode):
+			vcard=parse(vcard,i)
 	return vcard
 	
 def parse(vcard,i):
