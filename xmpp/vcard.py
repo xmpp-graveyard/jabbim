@@ -4,6 +4,8 @@ def getVcard(disp,jid):
 	iq=Iq(to=jid,typ='get',xmlns=None)
 	iq.addChild("vCard",{"xmlns":NS_VCARD})
 	rep=disp.SendAndWaitForResponse(iq)
+	if not isResultNode(rep) or rep.getVCardPayload()==None or len(rep.getVCardPayload())==0:
+		return {}
 	vcard={}
 	#print unicode(rep)
 	for i in rep.getVCardPayload():
