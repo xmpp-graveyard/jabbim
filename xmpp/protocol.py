@@ -452,6 +452,10 @@ class Iq(Protocol):
 		""" Return the namespace of the 'query' child element."""
 		tag=self.getTag('query')
 		if tag: return tag.getNamespace()
+	def getXPayload(self):
+		""" Return the 'query' child element payload."""
+		tag=self.getTag('x')
+		if tag: return tag.getPayload()
 	def getVCardPayload(self):
 		""" Return the 'query' child element payload."""
 		tag=self.getTag('vCard')

@@ -33,6 +33,7 @@ from status import *
 from chatwindow import *
 from joingroupchat import *
 from addcontact import *
+from discovery_register import *
 from discovery_ui import *
 from vcard_ui import *
 
@@ -75,6 +76,7 @@ class vcardWindow(QtGui.QDialog):
 					image=base64.decodestring(str(v["BINVAL"]))
 					pixmap.loadFromData(image)
 					self.ui.photo.setPixmap(pixmap)
+
 class discoveryWindow(QtGui.QDialog):
 	def __init__(self,parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
@@ -87,9 +89,25 @@ class discoveryWindow(QtGui.QDialog):
 		self.items={}
 		self.nodes={}
 
+	def menuTriggered(self,action):
+		cmd=action.objectName()
+		if cmd=="register":
+			jid=action.data()
+			jid=str(jid.toString())
+			jab.getRegInfo(jid)
+
 	def menu(self,pos):
 		item=self.ui.services.itemFromIndex(self.ui.services.indexAt(pos))
-		print item.features
+		jid=str(item.text(1))
+		menu=QtGui.QMenu(self.ui.services)
+		for feature in item.features:
+			if feature=="jabber:iq:register":
+				action=menu.addAction(self.tr("Register"))
+				action.setData(QtCore.QVariant(jid))
+				action.setObjectName("register")
+		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.menuTriggered)
+		menu.move(self.ui.services.mapToGlobal(pos))
+		menu.show()
 
 
 	def addItem(self,jid,name="",parent=None,node="",features=[]):
@@ -418,6 +436,12 @@ class mainWindow(QtGui.QMainWindow):
 					pixmap.loadFromData(image)
 					for user,group in self.ui.roster.getUsers(jid,True).iteritems():
 						user.setIcon(3,QtGui.QIcon(pixmap))
+
+		elif e[0] == "discovery_register":
+			form=e[1]
+			jid=e[2]
+			self.discovery_register=discoveryRegisterWindow(self,jab,form,jid)
+			self.discovery_register.show()
 
 		elif e[0] == "vcard_show":
 			vcard=e[1]

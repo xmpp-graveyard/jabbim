@@ -139,6 +139,11 @@ class Jabber:
 			presence.setTo(room + "/" + self.usernick)
 			self.conn.send(presence)
 
+	def register(self,host,info):
+		print xmpp.features.register(self.conn,host,info)
+	def getRegInfo(self,jid):
+		self.inc.put(["discovery_register",xmpp.features.getRegInfo(self.conn,jid),str(jid)])
+
 	def disco(self,rep,jid,typ,node):
 		ret=[]
 		identities , features = [] , []
