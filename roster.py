@@ -40,13 +40,23 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
 		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.contactClicked)
+		#QtCore.QObject.connect(self, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int )"),self.clicked)
 		self.item=QtGui.QTreeWidgetItem(self)
 		self.item.setText(1,"999")
 		self.setAllColumnsShowFocus ( True )
 		self.setItemHidden(self.item, True)
 		self.header().hide()
-		self.setColumnWidth(3,32)
+		
+	#def clicked(self,item,i):
+		#if i==3:
+			#label=QtGui.QLabel(self)
+			#label.setPixmap(item.icon(3).pixmap(500,500))
+			#label.show()
 
+	def resizeEvent(self,event):
+		QtGui.QTreeWidget.resizeEvent(self,event)
+		self.setColumnWidth(0,int(self.width())-38)
+		
 	#def drawRow(self,p, opt, idx):
 		#QtGui.QTreeWidget.drawRow(self,p, opt, idx)
 		#s = idx.sibling(idx.row(), 0)
@@ -135,7 +145,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setBackgroundColor(3,QtGui.QColor(102,102,102))
 		item.setTextColor(3,QtGui.QColor(255,255,255))
 		#self.groups[g].setIcon(0,QtGui.QIcon("images/status/closed.png"))
-		self.setColumnWidth(0,200)
+		#self.setColumnWidth(0,200)
 		return item
 	
 	def refreshStats(self):

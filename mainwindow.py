@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Thu Feb 22 20:03:51 2007
+# Created: Sat Feb 24 15:15:45 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -85,15 +85,35 @@ class Ui_mainWindow(object):
         self.statusbar.setObjectName("statusbar")
         mainWindow.setStatusBar(self.statusbar)
 
+        self.toolBar = QtGui.QToolBar(mainWindow)
+        self.toolBar.setOrientation(QtCore.Qt.Horizontal)
+        self.toolBar.setObjectName("toolBar")
+        mainWindow.addToolBar(self.toolBar)
+
         self.actionPreferences = QtGui.QAction(mainWindow)
         self.actionPreferences.setObjectName("actionPreferences")
 
         self.actionService_discovery = QtGui.QAction(mainWindow)
         self.actionService_discovery.setObjectName("actionService_discovery")
+
+        self.actionQuit = QtGui.QAction(mainWindow)
+        self.actionQuit.setObjectName("actionQuit")
+
+        self.actionAdd_contact = QtGui.QAction(mainWindow)
+        self.actionAdd_contact.setObjectName("actionAdd_contact")
+
+        self.actionGroup_Chat = QtGui.QAction(mainWindow)
+        self.actionGroup_Chat.setObjectName("actionGroup_Chat")
         self.menuPreferences.addAction(self.actionPreferences)
+        self.menuAction.addAction(self.actionAdd_contact)
+        self.menuAction.addAction(self.actionGroup_Chat)
         self.menuAction.addAction(self.actionService_discovery)
+        self.menuAction.addSeparator()
+        self.menuAction.addAction(self.actionQuit)
         self.menubar.addAction(self.menuAction.menuAction())
         self.menubar.addAction(self.menuPreferences.menuAction())
+        self.toolBar.addAction(self.actionAdd_contact)
+        self.toolBar.addAction(self.actionGroup_Chat)
 
         self.retranslateUi(mainWindow)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
@@ -108,4 +128,7 @@ class Ui_mainWindow(object):
         self.menuAction.setTitle(QtGui.QApplication.translate("mainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setText(QtGui.QApplication.translate("mainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.actionService_discovery.setText(QtGui.QApplication.translate("mainWindow", "Service discovery", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionQuit.setText(QtGui.QApplication.translate("mainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionAdd_contact.setText(QtGui.QApplication.translate("mainWindow", "Add contact", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionGroup_Chat.setText(QtGui.QApplication.translate("mainWindow", "Group Chat", None, QtGui.QApplication.UnicodeUTF8))
 

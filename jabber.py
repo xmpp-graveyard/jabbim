@@ -342,10 +342,12 @@ class Jabber:
 
 	# StepOn and GoOn ;)
 	def StepOn(self, conn):
-		
+		if not self.connected:
+			return 0
 		try:
 			self.conn.Process(1)
 		except KeyboardInterrupt: return 0
+		
 		return 1
 
 	def GoOn(self, conn):
@@ -359,7 +361,9 @@ class Jabber:
 		self.conn.disconnect()
 		self.connected = False
 		print "Disconecting."
-	
+
+	def off(self):
+		pass
 	
 	# this function is encapsulated in thread, because it would get main window stucked when connecting
 	# thread which encapsulates it is defined in connect(self)
@@ -404,7 +408,7 @@ class Jabber:
 		self.conn.RegisterHandler('message', self.incoming)
 		self.conn.RegisterHandler('iq',self.iqHandle)
 		self.conn.RegisterHandler('presence',self.presenceHandle)
-		#conn.RegisterDisconnectHandler(self.off)
+		self.conn.RegisterDisconnectHandler(self.off)
 		self.roster = self.conn.getRoster()
 		self.inc.put(["roster_update", self.roster])
 		self.ready=False

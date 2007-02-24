@@ -130,6 +130,8 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
 		app.connect(self.ui.addContact, QtCore.SIGNAL("clicked(bool)"),self.addContact)
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
+		app.connect(self.ui.actionAdd_contact, QtCore.SIGNAL("triggered ( bool )"),self.addContact)
+		app.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered ( bool )"),self.trayQuit)
 		app.connect(self.ui.actionService_discovery, QtCore.SIGNAL("triggered ( bool )"),self.discovery)
 		self.timer=QtCore.QTimer()
 		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.tick)
@@ -167,8 +169,9 @@ class mainWindow(QtGui.QMainWindow):
 		jab.discoveryItems()
 
 	def trayQuit(self):
-		self.close()
 		self.tray.hide()
+		app.closeAllWindows()
+		jab.disconnect()
 
 	def trayActivated(self,reason):
 		if reason==QtGui.QSystemTrayIcon.Trigger:
@@ -186,7 +189,7 @@ class mainWindow(QtGui.QMainWindow):
 		# loads config and repairs config file
 		self.skin=ConfigObj("skins/"+self.config["chat_skin"],encoding='UTF8')
 
-	def addContact(self,bool):
+	def addContact(self,bool=None):
 		contact=addContactWindow(self,jab)
 		contact.exec_()
 
@@ -207,7 +210,7 @@ class mainWindow(QtGui.QMainWindow):
 	def loadGroupchat(self):
 		self.groupchatMenu=QtGui.QMenu(self.ui.groupchat)
 		self.buildGroupchatMenu()
-		self.ui.groupchat.setMenu(self.groupchatMenu)
+		self.ui.actionGroup_Chat.setMenu(self.groupchatMenu)
 		app.connect(self.groupchatMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.groupchatChanged)
 
 	def loadRoster(self):
