@@ -16,19 +16,6 @@ class discoveryRegisterWindow(QtGui.QDialog):
 		self.layout=QtGui.QVBoxLayout(self)
 		self.layout.setMargin(1)
 		self.layout.setSpacing(1)
-		widget=QtGui.QWidget(self)
-		layout=QtGui.QHBoxLayout(widget)
-		layout.setMargin(1)
-		layout.setSpacing(1)
-		self.acp=QtGui.QPushButton(self.tr("OK"),widget)
-		self.rej=QtGui.QPushButton(self.tr("Cancel"),widget)
-		QtCore.QObject.connect(self.acp,QtCore.SIGNAL("clicked()"),self.accept)
-		QtCore.QObject.connect(self.rej,QtCore.SIGNAL("clicked()"),self.reject)
-		layout.addWidget(self.rej)
-		layout.addWidget(self.acp)
-		self.layout.addWidget(widget)
-		print self.jid
-
 		print unicode(self.form)
 		for i in self.form.getPayload():
 			print unicode(i.getName())
@@ -39,15 +26,51 @@ class discoveryRegisterWindow(QtGui.QDialog):
 			elif i.getName()=="field":
 				attrs=i.getAttrs()
 				print unicode(attrs)
-				lab=attrs["var"]
+				if attrs.has_key("var"):
+					lab=attrs["var"]
 				if attrs.has_key("label"):
 					lab=attrs["label"]
+
 				if attrs["type"]=="text-single":
-					self.addTextSingle(attrs["var"],lab)
+					values=[""]
+					for x in i.getChildren():
+						if x.getName()=="value":
+							if values[0]=="":
+								values=[]
+							values.append(x.getData())
+					self.addTextSingle(attrs["var"],lab,values[0])
 				elif attrs["type"]=="text-private":
-					self.addTextSingle(attrs["var"],lab,True)
+					values=[""]
+					for x in i.getChildren():
+						if x.getName()=="value":
+							if values[0]=="":
+								values=[]
+							values.append(x.getData())
+					self.addTextSingle(attrs["var"],lab,values[0],True)
+				elif attrs["type"]=="text-multi":
+					values=[""]
+					for x in i.getChildren():
+						if x.getName()=="value":
+							if values[0]=="":
+								values=[]
+							values.append(x.getData())
+					self.addTextMulti(attrs["var"],lab,values[0])
 				elif attrs["type"]=="boolean":
-					self.addBoolean(attrs["var"],lab)
+					values=[""]
+					for x in i.getChildren():
+						if x.getName()=="value":
+							if values[0]=="":
+								values=[]
+							values.append(x.getData())
+					self.addBoolean(attrs["var"],lab,values[0])
+				elif attrs["type"]=="fixed":
+					values=[""]
+					for x in i.getChildren():
+						if x.getName()=="value":
+							if values[0]=="":
+								values=[]
+							values.append(x.getData())
+					self.addFixed(values[0])
 				elif attrs["type"]=="list-single":
 					values={}
 					for x in i.getChildren():
@@ -56,6 +79,19 @@ class discoveryRegisterWindow(QtGui.QDialog):
 							value=x.getChildren()[0].getData()
 							values[label]=value
 					self.addlistSingle(attrs["var"],lab,values)
+
+		widget=QtGui.QWidget(self)
+		layout=QtGui.QHBoxLayout(widget)
+		layout.setMargin(1)
+		layout.setSpacing(1)
+		self.acp=QtGui.QPushButton(self.tr("OK"),widget)
+		self.rej=QtGui.QPushButton(self.tr("Cancel"),widget)
+		QtCore.QObject.connect(self.acp,QtCore.SIGNAL("clicked()"),self.accept)
+		QtCore.QObject.connect(self.rej,QtCore.SIGNAL("clicked()"),self.reject)
+		layout.addWidget(self.acp)
+		layout.addWidget(self.rej)
+		self.layout.addWidget(widget)
+		self.resize(1,1)
 
 	def accept(self):
 		info={}
@@ -72,13 +108,19 @@ class discoveryRegisterWindow(QtGui.QDialog):
 				info[k]=unicode(data)
 			elif v.typ=="lineedit":
 				info[k]=unicode(v.text())
+			elif v.typ=="textbrowser":
+				info[k]=unicode(v.toPlainText())
 		print unicode(info)
 		self.jab.register(self.jid,info)
 		self.done(1)
 
-	def addBoolean(self,var,label):
+	def addBoolean(self,var,label,value):
 		self.widgets[var]=QtGui.QCheckBox(label,self)
 		self.widgets[var].typ="checkbox"
+		if int(value)==1:
+			self.widgets[var].setChecked(True)
+		else:
+			self.widgets[var].setChecked(False)
 		self.layout.addWidget(self.widgets[var])
 
 	def addlistSingle(self,var,label,values):
@@ -98,7 +140,7 @@ class discoveryRegisterWindow(QtGui.QDialog):
 		layout.addWidget(self.widgets[var])
 		self.layout.addWidget(widget)
 
-	def addTextSingle(self,var,label,private=False):
+	def addTextSingle(self,var,label,value,private=False):
 		widget=QtGui.QWidget(self)
 		layout=QtGui.QHBoxLayout(widget)
 		layout.setMargin(1)
@@ -108,6 +150,7 @@ class discoveryRegisterWindow(QtGui.QDialog):
 		self.labels[-1].setText(unicode(label)+":")
 		self.widgets[var]=QtGui.QLineEdit(widget)
 		self.widgets[var].typ="lineedit"
+		self.widgets[var].setText(unicode(value))
 		if private==True:
 			self.widgets[var].setEchoMode(QtGui.QLineEdit.Password)
 
@@ -115,13 +158,42 @@ class discoveryRegisterWindow(QtGui.QDialog):
 		layout.addWidget(self.widgets[var])
 		self.layout.addWidget(widget)
 
-	def addTitle(self,text):
+	def addFixed(self,text):
 		self.labels.append(QtGui.QLabel(self))
-		self.labels[-1].setText("<h1>"+unicode(text)+"</h1>")
-		self.layout.addWidget(self.labels[-1])
+		#self.labels[-1].setReadOnly(True)
+		self.labels[-1].setText(unicode(text))
+		self.labels[-1].setAlignment(QtCore.Qt.AlignCenter)
+		self.labels[-1].setMaximumWidth(400)
+		self.layout.addWidget(self.labels[-1],QtCore.Qt.AlignCenter)
+
+	def addTitle(self,text):
+		#self.labels.append(QtGui.QLabel(self))
+		#self.labels[-1].setText("<h1>"+unicode(text)+"</h1>")
+		#self.layout.addWidget(self.labels[-1])
+		self.setWindowTitle(unicode(text))
+	
+	def addTextMulti(self,var,label,value):
+		widget=QtGui.QWidget(self)
+		layout=QtGui.QHBoxLayout(widget)
+		layout.setMargin(1)
+		layout.setSpacing(1)
+
+		self.labels.append(QtGui.QLabel(widget))
+		self.labels[-1].setText(unicode(label)+":")
+		self.widgets[var]=QtGui.QTextBrowser(widget)
+		self.widgets[var].typ="textbrowser"
+		self.widgets[var].setPlainText(unicode(value))
+		self.widgets[var].setReadOnly(False)
+
+		layout.addWidget(self.labels[-1])
+		layout.addWidget(self.widgets[var])
+		self.layout.addWidget(widget)
 		
 	def addInstructions(self,text):
 		self.labels.append(QtGui.QTextBrowser(self))
 		self.labels[-1].setReadOnly(True)
 		self.labels[-1].setText(unicode(text))
+		#self.labels[-1].setMinimumSize( 100, 40 )
+		#self.labels[-1].setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
+		#self.labels[-1].updateGeometry()
 		self.layout.addWidget(self.labels[-1])

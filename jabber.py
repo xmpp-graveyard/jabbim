@@ -170,7 +170,6 @@ class Jabber:
 		if server==None:
 			server=self.server
 		#info=xmpp.features.discoverInfo(self.conn,server)
-		print server,node
 		xmpp.features.discoverItems(self.conn,server,self.disco,node=node)
 
 
