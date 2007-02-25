@@ -26,59 +26,68 @@ class discoveryRegisterWindow(QtGui.QDialog):
 			elif i.getName()=="field":
 				attrs=i.getAttrs()
 				print unicode(attrs)
+				lab=None
 				if attrs.has_key("var"):
 					lab=attrs["var"]
-				if attrs.has_key("label"):
-					lab=attrs["label"]
-
-				if attrs["type"]=="text-single":
+				if lab=="key":
 					values=[""]
 					for x in i.getChildren():
 						if x.getName()=="value":
 							if values[0]=="":
 								values=[]
 							values.append(x.getData())
-					self.addTextSingle(attrs["var"],lab,values[0])
-				elif attrs["type"]=="text-private":
-					values=[""]
-					for x in i.getChildren():
-						if x.getName()=="value":
-							if values[0]=="":
-								values=[]
-							values.append(x.getData())
-					self.addTextSingle(attrs["var"],lab,values[0],True)
-				elif attrs["type"]=="text-multi":
-					values=[""]
-					for x in i.getChildren():
-						if x.getName()=="value":
-							if values[0]=="":
-								values=[]
-							values.append(x.getData())
-					self.addTextMulti(attrs["var"],lab,values[0])
-				elif attrs["type"]=="boolean":
-					values=[""]
-					for x in i.getChildren():
-						if x.getName()=="value":
-							if values[0]=="":
-								values=[]
-							values.append(x.getData())
-					self.addBoolean(attrs["var"],lab,values[0])
-				elif attrs["type"]=="fixed":
-					values=[""]
-					for x in i.getChildren():
-						if x.getName()=="value":
-							if values[0]=="":
-								values=[]
-							values.append(x.getData())
-					self.addFixed(values[0])
-				elif attrs["type"]=="list-single":
-					values={}
-					for x in i.getChildren():
-						if x.getName()=="option":
-							label=x.getAttr("label")
-							value=x.getChildren()[0].getData()
-							values[label]=value
-					self.addlistSingle(attrs["var"],lab,values)
+					self.addKey(values[0])
+				else:
+					if attrs.has_key("label"):
+						lab=attrs["label"]
+					if attrs["type"]=="text-single":
+						values=[""]
+						for x in i.getChildren():
+							if x.getName()=="value":
+								if values[0]=="":
+									values=[]
+								values.append(x.getData())
+						self.addTextSingle(attrs["var"],lab,values[0])
+					elif attrs["type"]=="text-private":
+						values=[""]
+						for x in i.getChildren():
+							if x.getName()=="value":
+								if values[0]=="":
+									values=[]
+								values.append(x.getData())
+						self.addTextSingle(attrs["var"],lab,values[0],True)
+					elif attrs["type"]=="text-multi":
+						values=[""]
+						for x in i.getChildren():
+							if x.getName()=="value":
+								if values[0]=="":
+									values=[]
+								values.append(x.getData())
+						self.addTextMulti(attrs["var"],lab,values[0])
+					elif attrs["type"]=="boolean":
+						values=[""]
+						for x in i.getChildren():
+							if x.getName()=="value":
+								if values[0]=="":
+									values=[]
+								values.append(x.getData())
+						self.addBoolean(attrs["var"],lab,values[0])
+					elif attrs["type"]=="fixed":
+						values=[""]
+						for x in i.getChildren():
+							if x.getName()=="value":
+								if values[0]=="":
+									values=[]
+								values.append(x.getData())
+						self.addFixed(values[0])
+					elif attrs["type"]=="list-single":
+						values={}
+						for x in i.getChildren():
+							if x.getName()=="option":
+								label=x.getAttr("label")
+								value=x.getChildren()[0].getData()
+								values[label]=value
+						self.addlistSingle(attrs["var"],lab,values)
 
 		widget=QtGui.QWidget(self)
 		layout=QtGui.QHBoxLayout(widget)
@@ -96,23 +105,29 @@ class discoveryRegisterWindow(QtGui.QDialog):
 	def accept(self):
 		info={}
 		for k,v in self.widgets.iteritems():
-			if v.typ=="checkbox":
-				bool=v.isChecked()
-				value=0
-				if bool==True:
-					value=1
-				info[k]=unicode(value)
-			elif v.typ=="combobox":
-				data=v.itemData(v.currentIndex())
-				data=data.toString()
-				info[k]=unicode(data)
-			elif v.typ=="lineedit":
-				info[k]=unicode(v.text())
-			elif v.typ=="textbrowser":
-				info[k]=unicode(v.toPlainText())
+			if k=="key":
+				info["key"]=unicode(v)
+			else:
+				if v.typ=="checkbox":
+					bool=v.isChecked()
+					value=0
+					if bool==True:
+						value=1
+					info[k]=unicode(value)
+				elif v.typ=="combobox":
+					data=v.itemData(v.currentIndex())
+					data=data.toString()
+					info[k]=unicode(data)
+				elif v.typ=="lineedit":
+					info[k]=unicode(v.text())
+				elif v.typ=="textbrowser":
+					info[k]=unicode(v.toPlainText())
 		print unicode(info)
 		self.jab.register(self.jid,info)
 		self.done(1)
+
+	def addKey(self,value):
+		self.widgets["key"]=unicode(value)
 
 	def addBoolean(self,var,label,value):
 		self.widgets[var]=QtGui.QCheckBox(label,self)

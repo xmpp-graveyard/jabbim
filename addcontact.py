@@ -5,13 +5,15 @@ except:
 from addcontact_ui import *
 
 class addContactWindow(QtGui.QDialog):
-	def __init__(self,main,jab,parent=None):
+	def __init__(self,main,jab,parent=None,jid="",nickname=""):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.main=main
 		self.jab=jab
 		self.setModal(True)
 		self.ui=Ui_addContact()
 		self.ui.setupUi(self)
+		self.ui.jid.setText(unicode(jid))
+		self.ui.nickname.setText(unicode(nickname))
 		for k,v in self.main.groups.iteritems():
 			self.ui.group.addItem(unicode(k))
 

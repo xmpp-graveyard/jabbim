@@ -277,8 +277,11 @@ class Jabber:
 				print "from queue",i
 			self.ready=None
 		if self.ready==None:
+			
 			if prType=="subscribe":
 				self.inc.put(["subscribe", jid])
+			elif prType=="subscribed":
+				self.inc.put(["subscribed", jid])
 			else:
 				self.inc.put(["nick_update",jid,pres,nick])
 		#if Conf in self.confNames:
