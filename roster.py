@@ -46,6 +46,8 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.setAllColumnsShowFocus ( True )
 		self.setItemHidden(self.item, True)
 		self.header().hide()
+		short=QtGui.QShortcut("f2",self)
+		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.editItem)
 		
 	#def clicked(self,item,i):
 		#if i==3:
@@ -189,20 +191,17 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
 		return item
 
-	def itemChange(self,item,column):
-		if item==self.currentItem():
-			jid=item.data(32,0)
-			jid=str(jid.toString())
-			parent=item.parent()
-			if parent==None:
-				groups=[]
-			else:
-				groups=[unicode(parent.text(2))]
-			self.jab.roster.setItem(jid,unicode(item.text(0)),groups)
-
-	#def itemEdit(self):
-		#self.edit=self.currentItem()
-		#self.editItem(self.currentItem(),0)
+	def editItem(self):
+		item=self.currentItem()
+		name,b=QtGui.QInputDialog.getText(self,self.tr("Edit contact"),self.tr("Enter new contact nickname"), QtGui.QLineEdit.Normal, "")
+		name=unicode(name)
+		jid=item.data(32,0)
+		jid=str(jid.toString())
+		if b==True:
+			self.jab.roster.setItem(jid,name,self.getGroups(jid))
+			for user in self.getUsers(jid):
+				user.setText(0,name)
+				user.setText(2,name)
 
 	def buildContactMenu(self,jid,group):
 		contactMenu=QtGui.QMenu(self)
