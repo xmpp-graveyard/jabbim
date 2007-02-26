@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Sat Feb 24 15:54:26 2007
+# Created: Mon Feb 26 21:29:44 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -62,10 +62,6 @@ class Ui_mainWindow(object):
         self.menuAction = QtGui.QMenu(self.menubar)
         self.menuAction.setObjectName("menuAction")
         mainWindow.setMenuBar(self.menubar)
-
-        self.statusbar = QtGui.QStatusBar(mainWindow)
-        self.statusbar.setObjectName("statusbar")
-        mainWindow.setStatusBar(self.statusbar)
 
         self.toolBar = QtGui.QToolBar(mainWindow)
         self.toolBar.setOrientation(QtCore.Qt.Horizontal)
