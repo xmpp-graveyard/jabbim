@@ -2,6 +2,7 @@ try:
 	from PyQt4 import QtCore, QtGui
 except:
 	print "PyQt4 is not installed."
+from palette import *
 
 #class label(QtGui.QLabel):
 	#def __init__(self,parent,item):
@@ -43,11 +44,12 @@ class rosterWidget(QtGui.QTreeWidget):
 		#QtCore.QObject.connect(self, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int )"),self.clicked)
 		self.item=QtGui.QTreeWidgetItem(self)
 		self.item.setText(1,"999")
-		self.setAllColumnsShowFocus ( True )
+		self.setAllColumnsShowFocus(True)
 		self.setItemHidden(self.item, True)
 		self.header().hide()
 		short=QtGui.QShortcut("f2",self)
-		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.editItem)
+		palette=loadPalette(self.main.palette["roster"])
+		self.setPalette(palette)
 		
 	#def clicked(self,item,i):
 		#if i==3:
@@ -141,11 +143,14 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(1,"0"+unicode(name).lower())
 		item.setText(2,name)
 		item.setIcon(0,QtGui.QIcon("images/status/muc_inactive.png"))
-		item.setBackgroundColor(0,QtGui.QColor(102,102,102))
-		#self.groups[g].setFlags(self.users[str(item)].flags()|QtCore.Qt.ItemIsDragEnabled)
-		item.setTextColor(0,QtGui.QColor(255,255,255))
-		item.setBackgroundColor(3,QtGui.QColor(102,102,102))
-		item.setTextColor(3,QtGui.QColor(255,255,255))
+		if self.main.palette["roster"].has_key("group"):
+			if len(self.main.palette["roster"]["group"])!=0:
+				item.setBackgroundColor(0,QtGui.QColor(self.main.palette["roster"]["group"]))
+				item.setBackgroundColor(3,QtGui.QColor(self.main.palette["roster"]["group"]))
+		if self.main.palette["roster"].has_key("groupText"):
+			if len(self.main.palette["roster"]["groupText"])!=0:
+				item.setTextColor(0,QtGui.QColor(self.main.palette["roster"]["groupText"]))
+				item.setTextColor(3,QtGui.QColor(self.main.palette["roster"]["groupText"]))
 		#self.groups[g].setIcon(0,QtGui.QIcon("images/status/closed.png"))
 		#self.setColumnWidth(0,200)
 		return item

@@ -36,7 +36,7 @@ from grouped_events import *
 from discovery_register import *
 from vcard import *
 from discovery_ui import *
-
+from palette import *
 
 class discoveryWindow(QtGui.QDialog):
 	def __init__(self,parent=None):
@@ -105,6 +105,9 @@ class mainWindow(QtGui.QMainWindow):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
 		self.ui=Ui_mainWindow()
 		self.ui.setupUi(self)
+		self.homeDir=self.getHomeDir()
+		self.loadConfig()
+		self.loadPaletteSkin()
 		self.loadRoster()
 		# Signals
 		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
@@ -116,8 +119,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.timer=QtCore.QTimer()
 		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.tick)
 		self.timer.start(50)
-		self.homeDir=self.getHomeDir()
-		self.loadConfig()
 		self.loadSkin()
 		self.loadStatus()
 		self.loadBookmarks()
@@ -166,6 +167,10 @@ class mainWindow(QtGui.QMainWindow):
 		# shows preferences
 		w=preferencesWindow(self,self)
 		w.show()
+
+	def loadPaletteSkin(self):
+		# loads config and repairs config file
+		self.palette=ConfigObj("palettes/"+self.config["palette"],encoding='UTF8')
 
 	def loadSkin(self):
 		# loads config and repairs config file
@@ -299,7 +304,8 @@ class mainWindow(QtGui.QMainWindow):
 				"proxy_port":"",
 				"proxy_user":"",
 				"proxy_passwd":"",
-				"resource":"Jabbim"
+				"resource":"Jabbim",
+				"palette":"default.conf"
 				}
 		self.config=ConfigObj(self.homeDir+'/.jabbim/config',encoding='UTF8')
 		if len(self.config)==0:
