@@ -31,6 +31,13 @@ class preferencesWindow(QtGui.QDialog):
 		self.ui.proxy_username.setText(self.main.config['proxy_user'])
 		self.ui.proxy_password.setText(self.main.config['proxy_passwd'])
 		
+		if self.main.config["tray_message_view_connect"]=="all":
+			self.ui.notificationAll.setChecked(True)
+		elif self.main.config["tray_message_view_connect"]=="online":
+			self.ui.notificationOnline.setChecked(True)
+		elif self.main.config["tray_message_view_connect"]=="logged_in":
+			self.ui.notificationLoggedIn.setChecked(True)
+		
 		skins=os.listdir("skins/")
 		for skin in skins:
 			if skin.endswith(".conf"):
@@ -114,6 +121,12 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.config['proxy_port']=unicode(self.ui.proxy_port.text())
 		self.main.config['proxy_user']=unicode(self.ui.proxy_username.text())
 		self.main.config['proxy_passwd']=unicode(self.ui.proxy_password.text())
+		if self.ui.notificationAll.isChecked()==True:
+			self.main.config["tray_message_view_connect"]="all"
+		if self.ui.notificationOnline.isChecked()==True:
+			self.main.config["tray_message_view_connect"]="online"
+		if self.ui.notificationLoggedIn.isChecked()==True:
+			self.main.config["tray_message_view_connect"]="logged_in"
 		self.main.config.write()
 		# we need to update groupchat bookmarks menu
 		self.main.bookmarks=self.bookmarks

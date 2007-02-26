@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'preferences.ui'
 #
-# Created: Wed Feb 21 16:01:24 2007
+# Created: Mon Feb 26 15:48:27 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_preferences(object):
     def setupUi(self, preferences):
         preferences.setObjectName("preferences")
-        preferences.resize(QtCore.QSize(QtCore.QRect(0,0,462,347).size()).expandedTo(preferences.minimumSizeHint()))
+        preferences.resize(QtCore.QSize(QtCore.QRect(0,0,566,407).size()).expandedTo(preferences.minimumSizeHint()))
         preferences.setWindowIcon(QtGui.QIcon("images/16x16/jgames.png"))
 
         self.gridlayout = QtGui.QGridLayout(preferences)
@@ -221,6 +221,68 @@ class Ui_preferences(object):
         self.chatSkinPreview.setObjectName("chatSkinPreview")
         self.gridlayout4.addWidget(self.chatSkinPreview,3,0,1,2)
         self.stackedWidget.addWidget(self.page_2)
+
+        self.page_3 = QtGui.QWidget()
+        self.page_3.setObjectName("page_3")
+
+        self.gridlayout5 = QtGui.QGridLayout(self.page_3)
+        self.gridlayout5.setMargin(9)
+        self.gridlayout5.setSpacing(6)
+        self.gridlayout5.setObjectName("gridlayout5")
+
+        self.tabWidget = QtGui.QTabWidget(self.page_3)
+        self.tabWidget.setObjectName("tabWidget")
+
+        self.tab = QtGui.QWidget()
+        self.tab.setObjectName("tab")
+
+        self.gridlayout6 = QtGui.QGridLayout(self.tab)
+        self.gridlayout6.setMargin(9)
+        self.gridlayout6.setSpacing(6)
+        self.gridlayout6.setObjectName("gridlayout6")
+
+        spacerItem3 = QtGui.QSpacerItem(20,131,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout6.addItem(spacerItem3,1,0,1,1)
+
+        self.groupBox_2 = QtGui.QGroupBox(self.tab)
+        self.groupBox_2.setObjectName("groupBox_2")
+
+        self.gridlayout7 = QtGui.QGridLayout(self.groupBox_2)
+        self.gridlayout7.setMargin(9)
+        self.gridlayout7.setSpacing(6)
+        self.gridlayout7.setObjectName("gridlayout7")
+
+        self.vboxlayout4 = QtGui.QVBoxLayout()
+        self.vboxlayout4.setMargin(0)
+        self.vboxlayout4.setSpacing(6)
+        self.vboxlayout4.setObjectName("vboxlayout4")
+
+        self.notificationAll = QtGui.QRadioButton(self.groupBox_2)
+        self.notificationAll.setObjectName("notificationAll")
+        self.vboxlayout4.addWidget(self.notificationAll)
+
+        self.notificationLoggedIn = QtGui.QRadioButton(self.groupBox_2)
+        self.notificationLoggedIn.setObjectName("notificationLoggedIn")
+        self.vboxlayout4.addWidget(self.notificationLoggedIn)
+
+        self.notificationOnline = QtGui.QRadioButton(self.groupBox_2)
+        self.notificationOnline.setObjectName("notificationOnline")
+        self.vboxlayout4.addWidget(self.notificationOnline)
+        self.gridlayout7.addLayout(self.vboxlayout4,0,0,1,1)
+        self.gridlayout6.addWidget(self.groupBox_2,0,0,1,1)
+        self.tabWidget.addTab(self.tab,"")
+        self.gridlayout5.addWidget(self.tabWidget,2,0,1,1)
+
+        self.label_11 = QtGui.QLabel(self.page_3)
+        self.label_11.setObjectName("label_11")
+        self.gridlayout5.addWidget(self.label_11,0,0,1,1)
+
+        self.line_5 = QtGui.QFrame(self.page_3)
+        self.line_5.setFrameShape(QtGui.QFrame.HLine)
+        self.line_5.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line_5.setObjectName("line_5")
+        self.gridlayout5.addWidget(self.line_5,1,0,1,1)
+        self.stackedWidget.addWidget(self.page_3)
         self.gridlayout.addWidget(self.stackedWidget,0,1,1,2)
 
         self.listWidget = QtGui.QListWidget(preferences)
@@ -242,11 +304,12 @@ class Ui_preferences(object):
         self.hboxlayout2.addWidget(self.cancelButton)
         self.gridlayout.addLayout(self.hboxlayout2,1,2,1,1)
 
-        spacerItem3 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem3,1,1,1,1)
+        spacerItem4 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem4,1,1,1,1)
 
         self.retranslateUi(preferences)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.cancelButton,QtCore.SIGNAL("clicked()"),preferences.reject)
         QtCore.QObject.connect(self.saveButton,QtCore.SIGNAL("clicked()"),preferences.accept)
         QtCore.QObject.connect(self.listWidget,QtCore.SIGNAL("currentRowChanged(int)"),self.stackedWidget.setCurrentIndex)
@@ -283,6 +346,15 @@ class Ui_preferences(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Chat skins</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox_2.setTitle(QtGui.QApplication.translate("preferences", "Tray messages", None, QtGui.QApplication.UnicodeUTF8))
+        self.notificationAll.setText(QtGui.QApplication.translate("preferences", "All - Show all status change.", None, QtGui.QApplication.UnicodeUTF8))
+        self.notificationLoggedIn.setText(QtGui.QApplication.translate("preferences", "Logged in - Show message only if user logs in.", None, QtGui.QApplication.UnicodeUTF8))
+        self.notificationOnline.setText(QtGui.QApplication.translate("preferences", "Online - Show message only if user gets Online.", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("preferences", "Status change", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_11.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        "p, li { white-space: pre-wrap; }\n"
+        "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
+        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Notification</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.listWidget.clear()
 
         item = QtGui.QListWidgetItem(self.listWidget)
@@ -293,6 +365,9 @@ class Ui_preferences(object):
 
         item2 = QtGui.QListWidgetItem(self.listWidget)
         item2.setText(QtGui.QApplication.translate("preferences", "Chat skins", None, QtGui.QApplication.UnicodeUTF8))
+
+        item3 = QtGui.QListWidgetItem(self.listWidget)
+        item3.setText(QtGui.QApplication.translate("preferences", "Notification", None, QtGui.QApplication.UnicodeUTF8))
         self.saveButton.setText(QtGui.QApplication.translate("preferences", "Save", None, QtGui.QApplication.UnicodeUTF8))
         self.cancelButton.setText(QtGui.QApplication.translate("preferences", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
 
