@@ -56,17 +56,30 @@ class discoveryWindow(QtGui.QDialog):
 			jid=action.data()
 			jid=str(jid.toString())
 			jab.getRegInfo(jid)
+		elif cmd=="add":
+			data=action.data()
+			data=data.toList()
+			jid=str(data[0].toString())
+			name=unicode(data[1].toString())
+			contact=addContactWindow(MainWindow,jab,self,jid,name)
+			contact.exec_()
 
 	def menu(self,pos):
 		item=self.ui.services.itemFromIndex(self.ui.services.indexAt(pos))
 		jid=str(item.text(1))
 		menu=QtGui.QMenu(self.ui.services)
-		for feature in item.features:
-			print feature
-			if feature=="jabber:iq:register":
-				action=menu.addAction(self.tr("Register / Unregister"))
-				action.setData(QtCore.QVariant(jid))
-				action.setObjectName("register")
+		if item.parent()==None:
+			for feature in item.features:
+				print feature
+				if feature=="jabber:iq:register":
+					action=menu.addAction(self.tr("Register / Unregister"))
+					action.setData(QtCore.QVariant(jid))
+					action.setObjectName("register")
+		else:
+			action=menu.addAction(self.tr("Add to roster"))
+			action.setData(QtCore.QVariant([unicode(jid),unicode(item.text(0))]))
+			action.setObjectName("add")
+
 		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.menuTriggered)
 		menu.move(self.ui.services.mapToGlobal(pos))
 		menu.show()
