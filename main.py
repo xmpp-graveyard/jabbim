@@ -305,7 +305,8 @@ class mainWindow(QtGui.QMainWindow):
 				"proxy_user":"",
 				"proxy_passwd":"",
 				"resource":"Jabbim",
-				"palette":"default.conf"
+				"palette":"default.conf",
+				"tray_message_view_new_message":"not_chat"
 				}
 		self.config=ConfigObj(self.homeDir+'/.jabbim/config',encoding='UTF8')
 		if len(self.config)==0:
@@ -463,11 +464,15 @@ class mainWindow(QtGui.QMainWindow):
 				if str(w.jid).rsplit("/")[0]==jid:
 					tab=w
 					tabIndex=i
+			if self.config["tray_message_view_new_message"]=="all":
+				self.tray.showMessage(self.tr("New message from ")+unicode(user), unicode(e[3]), QtGui.QSystemTrayIcon.Information, 5000)
 			if tab!=None:
 				if int(self.chat.ui.chatTab.currentIndex())!=tabIndex:
 					self.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/status/message.png"))
 				tab.chat.textEditWrite(message)
 				return
+			if self.config["tray_message_view_new_message"]=="not_chat":
+				self.tray.showMessage(self.tr("New message from ")+unicode(user), unicode(e[3]), QtGui.QSystemTrayIcon.Information, 5000)
 			self.chat.show()
 			self.chat.addChatTab(jid,unicode(user),icon,message)
 

@@ -38,6 +38,12 @@ class preferencesWindow(QtGui.QDialog):
 		elif self.main.config["tray_message_view_connect"]=="logged_in":
 			self.ui.notificationLoggedIn.setChecked(True)
 		
+		if self.main.config["tray_message_view_new_message"]=="all":
+			self.ui.notification_new_message_all.setChecked(True)
+		elif self.main.config["tray_message_view_new_message"]=="not_chat":
+			self.ui.notification_new_message_chat.setChecked(True)
+		
+		
 		skins=os.listdir("skins/")
 		for skin in skins:
 			if skin.endswith(".conf"):
@@ -127,6 +133,11 @@ class preferencesWindow(QtGui.QDialog):
 			self.main.config["tray_message_view_connect"]="online"
 		if self.ui.notificationLoggedIn.isChecked()==True:
 			self.main.config["tray_message_view_connect"]="logged_in"
+		if self.ui.notification_new_message_chat.isChecked()==True:
+			self.main.config["tray_message_view_new_message"]="not_chat"
+		if self.ui.notification_new_message_all.isChecked()==True:
+			self.main.config["tray_message_view_new_message"]="all"
+		
 		self.main.config.write()
 		# we need to update groupchat bookmarks menu
 		self.main.bookmarks=self.bookmarks

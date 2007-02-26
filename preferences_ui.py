@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'preferences.ui'
 #
-# Created: Mon Feb 26 15:48:27 2007
+# Created: Mon Feb 26 16:03:29 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -271,6 +271,41 @@ class Ui_preferences(object):
         self.gridlayout7.addLayout(self.vboxlayout4,0,0,1,1)
         self.gridlayout6.addWidget(self.groupBox_2,0,0,1,1)
         self.tabWidget.addTab(self.tab,"")
+
+        self.tab_2 = QtGui.QWidget()
+        self.tab_2.setObjectName("tab_2")
+
+        self.gridlayout8 = QtGui.QGridLayout(self.tab_2)
+        self.gridlayout8.setMargin(9)
+        self.gridlayout8.setSpacing(6)
+        self.gridlayout8.setObjectName("gridlayout8")
+
+        spacerItem4 = QtGui.QSpacerItem(20,171,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout8.addItem(spacerItem4,1,0,1,1)
+
+        self.groupBox_3 = QtGui.QGroupBox(self.tab_2)
+        self.groupBox_3.setObjectName("groupBox_3")
+
+        self.gridlayout9 = QtGui.QGridLayout(self.groupBox_3)
+        self.gridlayout9.setMargin(9)
+        self.gridlayout9.setSpacing(6)
+        self.gridlayout9.setObjectName("gridlayout9")
+
+        self.vboxlayout5 = QtGui.QVBoxLayout()
+        self.vboxlayout5.setMargin(0)
+        self.vboxlayout5.setSpacing(6)
+        self.vboxlayout5.setObjectName("vboxlayout5")
+
+        self.notification_new_message_all = QtGui.QRadioButton(self.groupBox_3)
+        self.notification_new_message_all.setObjectName("notification_new_message_all")
+        self.vboxlayout5.addWidget(self.notification_new_message_all)
+
+        self.notification_new_message_chat = QtGui.QRadioButton(self.groupBox_3)
+        self.notification_new_message_chat.setObjectName("notification_new_message_chat")
+        self.vboxlayout5.addWidget(self.notification_new_message_chat)
+        self.gridlayout9.addLayout(self.vboxlayout5,0,0,1,1)
+        self.gridlayout8.addWidget(self.groupBox_3,0,0,1,1)
+        self.tabWidget.addTab(self.tab_2,"")
         self.gridlayout5.addWidget(self.tabWidget,2,0,1,1)
 
         self.label_11 = QtGui.QLabel(self.page_3)
@@ -304,12 +339,12 @@ class Ui_preferences(object):
         self.hboxlayout2.addWidget(self.cancelButton)
         self.gridlayout.addLayout(self.hboxlayout2,1,2,1,1)
 
-        spacerItem4 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem4,1,1,1,1)
+        spacerItem5 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem5,1,1,1,1)
 
         self.retranslateUi(preferences)
         self.stackedWidget.setCurrentIndex(3)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QObject.connect(self.cancelButton,QtCore.SIGNAL("clicked()"),preferences.reject)
         QtCore.QObject.connect(self.saveButton,QtCore.SIGNAL("clicked()"),preferences.accept)
         QtCore.QObject.connect(self.listWidget,QtCore.SIGNAL("currentRowChanged(int)"),self.stackedWidget.setCurrentIndex)
@@ -351,6 +386,10 @@ class Ui_preferences(object):
         self.notificationLoggedIn.setText(QtGui.QApplication.translate("preferences", "Logged in - Show message only if user logs in.", None, QtGui.QApplication.UnicodeUTF8))
         self.notificationOnline.setText(QtGui.QApplication.translate("preferences", "Online - Show message only if user gets Online.", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("preferences", "Status change", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox_3.setTitle(QtGui.QApplication.translate("preferences", "Tray messages", None, QtGui.QApplication.UnicodeUTF8))
+        self.notification_new_message_all.setText(QtGui.QApplication.translate("preferences", "Show tray message for all new messages", None, QtGui.QApplication.UnicodeUTF8))
+        self.notification_new_message_chat.setText(QtGui.QApplication.translate("preferences", "Show tray message only for not opened chat", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("preferences", "New message", None, QtGui.QApplication.UnicodeUTF8))
         self.label_11.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"

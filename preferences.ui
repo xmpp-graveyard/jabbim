@@ -399,7 +399,7 @@ p, li { white-space: pre-wrap; }
        <item row="2" column="0" >
         <widget class="QTabWidget" name="tabWidget" >
          <property name="currentIndex" >
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="tab" >
           <attribute name="title" >
@@ -463,6 +463,71 @@ p, li { white-space: pre-wrap; }
                  <widget class="QRadioButton" name="notificationOnline" >
                   <property name="text" >
                    <string>Online - Show message only if user gets Online.</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tab_2" >
+          <attribute name="title" >
+           <string>New message</string>
+          </attribute>
+          <layout class="QGridLayout" >
+           <property name="margin" >
+            <number>9</number>
+           </property>
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <item row="1" column="0" >
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>20</width>
+               <height>171</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="0" column="0" >
+            <widget class="QGroupBox" name="groupBox_3" >
+             <property name="title" >
+              <string>Tray messages</string>
+             </property>
+             <layout class="QGridLayout" >
+              <property name="margin" >
+               <number>9</number>
+              </property>
+              <property name="spacing" >
+               <number>6</number>
+              </property>
+              <item row="0" column="0" >
+               <layout class="QVBoxLayout" >
+                <property name="margin" >
+                 <number>0</number>
+                </property>
+                <property name="spacing" >
+                 <number>6</number>
+                </property>
+                <item>
+                 <widget class="QRadioButton" name="notification_new_message_all" >
+                  <property name="text" >
+                   <string>Show tray message for all new messages</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="notification_new_message_chat" >
+                  <property name="text" >
+                   <string>Show tray message only for not opened chat</string>
                   </property>
                  </widget>
                 </item>
