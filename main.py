@@ -1,5 +1,5 @@
 """
-Piskvorky is jabber based game.
+Jabbim.
 Copyright (C) 2007 Jan Kaluza
 
 This program is free software; you can redistribute it and/or
@@ -64,7 +64,7 @@ class discoveryWindow(QtGui.QDialog):
 		for feature in item.features:
 			print feature
 			if feature=="jabber:iq:register":
-				action=menu.addAction(self.tr("Register"))
+				action=menu.addAction(self.tr("Register / Unregister"))
 				action.setData(QtCore.QVariant(jid))
 				action.setObjectName("register")
 		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.menuTriggered)

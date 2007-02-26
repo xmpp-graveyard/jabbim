@@ -139,6 +139,8 @@ class Jabber:
 			presence.setTo(room + "/" + self.usernick)
 			self.conn.send(presence)
 
+	def unregister(self,host):
+		print xmpp.features.unregister(self.conn,host)
 	def register(self,host,info):
 		print xmpp.features.register(self.conn,host,info)
 	def getRegInfo(self,jid):

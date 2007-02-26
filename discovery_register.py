@@ -17,6 +17,7 @@ class discoveryRegisterWindow(QtGui.QDialog):
 		self.layout.setMargin(1)
 		self.layout.setSpacing(1)
 		print unicode(self.form)
+		unreg=False
 		for i in self.form.getPayload():
 			print unicode(i.getName())
 			if i.getName()=="title":
@@ -37,6 +38,8 @@ class discoveryRegisterWindow(QtGui.QDialog):
 								values=[]
 							values.append(x.getData())
 					self.addKey(values[0])
+				elif lab=="registered":
+					unreg=True
 				else:
 					if attrs.has_key("label"):
 						lab=attrs["label"]
@@ -93,14 +96,22 @@ class discoveryRegisterWindow(QtGui.QDialog):
 		layout=QtGui.QHBoxLayout(widget)
 		layout.setMargin(1)
 		layout.setSpacing(1)
-		self.acp=QtGui.QPushButton(self.tr("OK"),widget)
+		self.acp=QtGui.QPushButton(self.tr("Register"),widget)
 		self.rej=QtGui.QPushButton(self.tr("Cancel"),widget)
 		QtCore.QObject.connect(self.acp,QtCore.SIGNAL("clicked()"),self.accept)
 		QtCore.QObject.connect(self.rej,QtCore.SIGNAL("clicked()"),self.reject)
+		
 		layout.addWidget(self.acp)
+		if unreg==True:
+			self.unreg=QtGui.QPushButton(self.tr("Unregister"),widget)
+			QtCore.QObject.connect(self.unreg,QtCore.SIGNAL("clicked()"),self.unregister)
+			layout.addWidget(self.unreg)
 		layout.addWidget(self.rej)
 		self.layout.addWidget(widget)
 		self.resize(1,1)
+
+	def unregister(self):
+		self.jab.unregister(self.jid)
 
 	def accept(self):
 		info={}
