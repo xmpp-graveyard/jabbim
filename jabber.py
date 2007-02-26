@@ -187,7 +187,13 @@ class Jabber:
 		if 1==1:
 		#try:
 			# Replacing html tags...
-			text=mess.getBody().replace("<","&lt;").replace(">","&gt;")
+			
+			text=mess.getBody()
+			if text!=None:
+				text=text.replace("<","&lt;").replace(">","&gt;")
+			subject=mess.getSubject()
+			if subject!=None:
+				subject=subject.replace("<","&lt;").replace(">","&gt;")
 			user=mess.getFrom()
 			nick=mess.getFrom().getResource()
 			typ=mess.getType()
@@ -198,7 +204,7 @@ class Jabber:
 			elif typ=="groupchat":
 				jid = str(str(user).rsplit("/")[0]).lower()
 				if len(str(user).rsplit("/"))==1:
-					self.message_queue.append(["groupchat_server_message", jid,text])
+					self.message_queue.append(["groupchat_server_message", jid,text,subject])
 				else:
 					user=str(user).rsplit("/")[1]
 					self.message_queue.append(["groupchat_message", jid,user,text])

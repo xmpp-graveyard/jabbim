@@ -424,6 +424,7 @@ class mainWindow(QtGui.QMainWindow):
 				w=self.chat.ui.chatTab.widget(i)
 				if str(w.jid)==jid:
 					message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",unicode(text))
+					w.chat.ui.info.setText(unicode(e[3]))
 					w.chat.textEditWrite(message)
 					return
 
