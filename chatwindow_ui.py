@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'chat.ui'
+# Form implementation generated from reading ui file 'chatwindow.ui'
 #
-# Created: Sat Feb 10 20:26:16 2007
-#      by: PyQt4 UI code generator 4.0.1
+# Created: Tue Feb 27 14:43:22 2007
+#      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -28,7 +28,7 @@ class Ui_chat(object):
 
         self.chat = QtGui.QWidget()
         self.chat.setObjectName("chat")
-        self.chatTab.addTab(self.chat, "")
+        self.chatTab.addTab(self.chat,"")
         self.gridlayout.addWidget(self.chatTab,0,0,1,1)
         chat.setCentralWidget(self.centralwidget)
 
@@ -37,13 +37,10 @@ class Ui_chat(object):
         self.menubar.setObjectName("menubar")
         chat.setMenuBar(self.menubar)
 
-        self.statusbar = QtGui.QStatusBar(chat)
-        self.statusbar.setObjectName("statusbar")
-        chat.setStatusBar(self.statusbar)
-
         self.retranslateUi(chat)
         QtCore.QMetaObject.connectSlotsByName(chat)
 
     def retranslateUi(self, chat):
         chat.setWindowTitle(QtGui.QApplication.translate("chat", "Chat", None, QtGui.QApplication.UnicodeUTF8))
         self.chatTab.setTabText(self.chatTab.indexOf(self.chat), QtGui.QApplication.translate("chat", "Chat", None, QtGui.QApplication.UnicodeUTF8))
+

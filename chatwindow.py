@@ -19,7 +19,8 @@ class chatWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.tabCloseButton, QtCore.SIGNAL("clicked ()"),self.removeTab)
 		QtCore.QObject.connect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
 		self.ui.chatTab.removeTab(0)
-		
+		self.ui.gridlayout.setMargin(1)
+		self.ui.gridlayout.setSpacing(1)
 	def changeTab(self,index):
 		try:
 			icon=self.main.ui.roster.getUsers(str(self.ui.chatTab.widget(index).jid))[0].icon(0)
@@ -33,6 +34,8 @@ class chatWindow(QtGui.QMainWindow):
 		tab.name=unicode(nickname)
 		tab.typ="groupchat"
 		layout=QtGui.QHBoxLayout(tab)
+		layout.setMargin(1)
+		layout.setSpacing(1)
 		tab.chat=groupChatWidget(self.main,room,self.jab,tab)
 		layout.addWidget(tab.chat)
 		self.ui.chatTab.addTab(tab,room)
@@ -53,6 +56,8 @@ class chatWindow(QtGui.QMainWindow):
 		tab.jid=jid
 		tab.typ="chat"
 		layout=QtGui.QHBoxLayout(tab)
+		layout.setMargin(1)
+		layout.setSpacing(1)
 		tab.chat=chatWidget(self.main,jid,self.jab,tab)
 		layout.addWidget(tab.chat)
 		self.ui.chatTab.addTab(tab,icon,unicode(name))

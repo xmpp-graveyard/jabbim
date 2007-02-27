@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'groupchatwidget.ui'
 #
-# Created: Tue Feb 27 14:30:55 2007
+# Created: Tue Feb 27 14:43:06 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -43,7 +43,7 @@ class Ui_groupchatwidget(object):
         self.vboxlayout.addWidget(self.info)
 
         self.info_big = QtGui.QTextBrowser(groupchatwidget)
-        self.info_big.setMaximumSize(QtCore.QSize(16777215,100))
+        self.info_big.setMaximumSize(QtCore.QSize(16777215,70))
         self.info_big.setObjectName("info_big")
         self.vboxlayout.addWidget(self.info_big)
         self.gridlayout1.addLayout(self.vboxlayout,0,0,2,1)
@@ -82,9 +82,8 @@ class Ui_groupchatwidget(object):
         self.gridlayout.addLayout(self.hboxlayout,2,0,1,2)
 
         self.retranslateUi(groupchatwidget)
-        QtCore.QObject.connect(self.toolButton,QtCore.SIGNAL("toggled(bool)"),self.info.setHidden)
         QtCore.QObject.connect(self.toolButton,QtCore.SIGNAL("toggled(bool)"),self.info_big.setShown)
-
+        QtCore.QObject.connect(self.toolButton,QtCore.SIGNAL("toggled(bool)"),self.info.setHidden)
         QtCore.QObject.connect(self.info,QtCore.SIGNAL("textChanged(QString)"),self.info_big.setText)
         QtCore.QMetaObject.connectSlotsByName(groupchatwidget)
 
