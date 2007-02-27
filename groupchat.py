@@ -17,6 +17,7 @@ class groupChatWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 		short=QtGui.QShortcut("tab",self.ui.line)
 		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
+		self.ui.info_big.hide()
 		self.loadSmileys()
 		self.jid=jid
 		self.name_id=-1 # for tabPressed

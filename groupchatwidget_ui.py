@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'groupchatwidget.ui'
 #
-# Created: Mon Feb 26 15:02:02 2007
+# Created: Tue Feb 27 14:30:55 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -21,21 +21,43 @@ class Ui_groupchatwidget(object):
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
 
-        self.info = QtGui.QLabel(groupchatwidget)
-        self.info.setMaximumSize(QtCore.QSize(16777215,37))
-        self.info.setWordWrap(True)
-        self.info.setObjectName("info")
-        self.gridlayout.addWidget(self.info,0,0,1,2)
+        self.gridlayout1 = QtGui.QGridLayout()
+        self.gridlayout1.setMargin(0)
+        self.gridlayout1.setSpacing(6)
+        self.gridlayout1.setObjectName("gridlayout1")
 
-        self.listWidget = QtGui.QListWidget(groupchatwidget)
-        self.listWidget.setMaximumSize(QtCore.QSize(130,16777215))
-        self.listWidget.setObjectName("listWidget")
-        self.gridlayout.addWidget(self.listWidget,1,1,1,1)
+        self.toolButton = QtGui.QToolButton(groupchatwidget)
+        self.toolButton.setCheckable(True)
+        self.toolButton.setArrowType(QtCore.Qt.DownArrow)
+        self.toolButton.setObjectName("toolButton")
+        self.gridlayout1.addWidget(self.toolButton,0,1,1,1)
+
+        self.vboxlayout = QtGui.QVBoxLayout()
+        self.vboxlayout.setMargin(0)
+        self.vboxlayout.setSpacing(0)
+        self.vboxlayout.setObjectName("vboxlayout")
+
+        self.info = QtGui.QLineEdit(groupchatwidget)
+        self.info.setReadOnly(True)
+        self.info.setObjectName("info")
+        self.vboxlayout.addWidget(self.info)
+
+        self.info_big = QtGui.QTextBrowser(groupchatwidget)
+        self.info_big.setMaximumSize(QtCore.QSize(16777215,100))
+        self.info_big.setObjectName("info_big")
+        self.vboxlayout.addWidget(self.info_big)
+        self.gridlayout1.addLayout(self.vboxlayout,0,0,2,1)
+        self.gridlayout.addLayout(self.gridlayout1,0,0,1,2)
 
         self.textEdit = QtGui.QTextEdit(groupchatwidget)
         self.textEdit.setReadOnly(True)
         self.textEdit.setObjectName("textEdit")
         self.gridlayout.addWidget(self.textEdit,1,0,1,1)
+
+        self.listWidget = QtGui.QListWidget(groupchatwidget)
+        self.listWidget.setMaximumSize(QtCore.QSize(130,16777215))
+        self.listWidget.setObjectName("listWidget")
+        self.gridlayout.addWidget(self.listWidget,1,1,1,1)
 
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setMargin(0)
@@ -60,10 +82,15 @@ class Ui_groupchatwidget(object):
         self.gridlayout.addLayout(self.hboxlayout,2,0,1,2)
 
         self.retranslateUi(groupchatwidget)
+        QtCore.QObject.connect(self.toolButton,QtCore.SIGNAL("toggled(bool)"),self.info.setHidden)
+        QtCore.QObject.connect(self.toolButton,QtCore.SIGNAL("toggled(bool)"),self.info_big.setShown)
+
+        QtCore.QObject.connect(self.info,QtCore.SIGNAL("textChanged(QString)"),self.info_big.setText)
         QtCore.QMetaObject.connectSlotsByName(groupchatwidget)
 
     def retranslateUi(self, groupchatwidget):
         groupchatwidget.setWindowTitle(QtGui.QApplication.translate("groupchatwidget", "Form", None, QtGui.QApplication.UnicodeUTF8))
+        self.toolButton.setText(QtGui.QApplication.translate("groupchatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.smileys.setText(QtGui.QApplication.translate("groupchatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.sendButton.setText(QtGui.QApplication.translate("groupchatwidget", "Send", None, QtGui.QApplication.UnicodeUTF8))
 
