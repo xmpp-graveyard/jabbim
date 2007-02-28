@@ -411,9 +411,9 @@ class mainWindow(QtGui.QMainWindow):
 			MainWindow.show()
 			login.done(1)
 			jab.setStatus()
-			self.bookmarks=jab.getBookmarks()
-			self.buildGroupchatMenu()
-			print self.bookmarks
+			self.bookmarks={}#jab.getBookmarks()
+#			self.buildGroupchatMenu()
+#			print self.bookmarks
 
 		elif e[0] == "avatar_show":
 			vcard=e[1]
