@@ -462,7 +462,9 @@ class mainWindow(QtGui.QMainWindow):
 			MainWindow.show()
 			login.done(1)
 			jab.setStatus()
-			self.bookmarks=jab.getBookmarks()
+			jab.getBookmarks()
+		elif e[0]=="bookmarks":
+			self.bookmarks=e[1]
 			self.buildGroupchatMenu()
 			print self.bookmarks
 

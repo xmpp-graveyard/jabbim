@@ -131,9 +131,40 @@ class Jabber:
 		rep=self.conn.SendAndWaitForResponse(iq)
 		print unicode(rep)
 
+	def bookmarksHandle(self,i,rep):
+		bookmarks={}
+		if isResultNode(rep):
+			print rep
+			for i in rep.getQueryPayload():
+				if i.getName()=="storage":
+					for x in i.getChildren():
+						if x.getName()=="conference":
+							attrs=x.getAttrs()
+							if attrs.has_key("jid"):
+								data={}
+								if attrs.has_key("name"):
+									data["name"]=attrs["name"]
+								else:
+									data["name"]=attrs["jid"]
+								if attrs.has_key("autojoin"):
+									data["autojoin"]=attrs["autojoin"]
+								else:
+									data["autojoin"]="0"
+								if x.getTag("nick")!=None:
+									data["nick"]=x.getTag("nick").getData()
+								else:
+									data["nick"]=""
+								if x.getTag("password")!=None:
+									data["password"]=x.getTag("password").getData()
+								else:
+									data["password"]=""
+								bookmarks[attrs["jid"]]=data
+		self.inc.put(["bookmarks", bookmarks])
+
+
 	def getBookmarks(self):
 		# get bookmarks (XEP-0049)
-		return xmpp.features.getBookmarks(self.conn)
+		xmpp.features.getBookmarks(self.conn,self.bookmarksHandle)
 
 	def setBookmarks(self,data):
 		# se bookmarks (XEP-0049)
@@ -257,7 +288,12 @@ class Jabber:
 		# Send normal message for jid
 		a = xmpp.protocol.Message(jid,text,"chat")
 		self.conn.send(a)
-	
+
+	def xmppPingReply(self, conn, iq):
+		iq = iq.buildReply('result')
+		self.conn.send(iq)
+		raise NodeProcessed
+		
 	# StepOn and GoOn ;)
 	def StepOn(self, conn):
 		if not self.connected:
@@ -317,6 +353,7 @@ class Jabber:
 		self.conn.RegisterHandler('iq',self.iqHandle)
 		self.conn.RegisterHandler('presence',self.presenceHandle)
 		self.conn.RegisterDisconnectHandler(self.off)
+		self.conn.RegisterHandler('iq', self.xmppPingReply, 'get', NS_XMPP_PING)
 		self.roster = self.conn.getRoster()
 		self.inc.put(["roster_update", self.roster])
 		self.ready=False

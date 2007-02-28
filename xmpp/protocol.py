@@ -68,6 +68,7 @@ NS_SI		= 'http://jabber.org/protocol/si'               #JEP-0095
 NS_PROFILE_FT	= 'http://jabber.org/protocol/si/profile/file-transfer' #JEP-0096
 NS_FEATURE_NEG	= 'http://jabber.org/protocol/feature-neg'
 NS_BYTESTREAMS  = 'http://jabber.org/protocol/bytestreams'      #JEP-0065
+NS_XMPP_PING	= 'urn:xmpp:ping'				#XEP-0199
 
 
 xmpp_stream_error_conditions="""
