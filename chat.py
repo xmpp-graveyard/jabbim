@@ -76,7 +76,7 @@ class chatWidget(QtGui.QWidget):
 	def sendButtonClicked(self):
 		# sends message
 		if len(unicode(self.ui.line.text()))!=0:
-			self.jab.sendToConf(str(self.jid),unicode(self.ui.line.text()))
+			self.jab.chatSend(str(self.jid),unicode(self.ui.line.text()))
 			message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",self.jab.user).replace("[message]",unicode(self.ui.line.text()))
 			self.textEditWrite(message)
 			self.ui.line.clear()

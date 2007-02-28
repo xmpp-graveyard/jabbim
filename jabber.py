@@ -24,73 +24,44 @@ from Queue import Queue
 
 # here we realize jabber communication via using interface provided by xmpp
 class Jabber:
-
-	# info about user
-	user = "piskworker"
-	usernick = "Tester"
-	server = "jabber.cz"
-	resource = "Pyjim"
-	password = "piskworker"
+	user = ""
+	server = ""
+	resource = "Jabbim"
+	password = ""
 	proxy=None
 	ready=False
-	# info about server
-	gameAuth = "piskworker@jabber.cz/Gajim"
-	# this is used to determine if message comes from gameserver of it is form someone else
-	gameServer = "games.jabbim.cz"
 	queue=[]
 	message_queue=[]
-	
-	# well, we will push communication throught these queeeee things
+	presence_queue=[]
 	err = Queue()
 	inc = Queue()
 	discoveryQueue = Queue()
 	outc = Queue()
-	
-	# here we store text from chatroom
 	conf = []
-	# and here store where we store those texts
 	confNames = []
-	# nicknames go here
 	confNicks = []
-	
-	# helper
 	linesRead = []
 
-	# do you have any certificate verificating your python knowledge?
-	# yes?
-	# and you are reading comment above __init__ like you see it first time in your live?
-	# then quickly return that certificate!
 	def __init__(self):
-		#self.MainWindow=MainWindow
-		#self.MainWindow.jabberErrorHandler(113)
 		pass
-	
 
-	def now(self):
-		h,m,s=time.localtime()[3:6]
-		return "%02d:%02d:%02d" % (h,m,s)
-	
 	def getVCard(self,jid):
+		# get vcard informations
 		self.inc.put(["vcard_show",xmpp.vcard.getVcard(self.conn,jid)])
 	
-	def getAvatar(self,jid):
-		self.inc.put(["avatar_show",xmpp.vcard.getVcard(self.conn,jid),jid])
-	
-	# this function allows to join conference
-	def getIntoRoom(self, room,nick):
+	def getIntoRoom(self,room,nick):
+		# join to conference
 		p = xmpp.Presence(to='%s/%s'%(room, nick))
 		self.conn.send(p)
 		self.confNames.append(room)
 		self.conf.append([])
 		self.confNicks.append([])
 		self.linesRead.append(0)
-		#print self.confNames
-		
-	def getOffRoom(self, room):
-		p = xmpp.Presence(to='%s/%s'%(room, self.usernick), typ="unavailable")
+
+	def getOffRoom(self,room,nick):
+		p = xmpp.Presence(to='%s/%s'%(room, nick), typ="unavailable")
 		p.setShow("offline")
 		self.conn.send(p)
-		
 		try:
 			Conf = self.confNames.index(room)
 			self.confNames.remove(room)
@@ -98,38 +69,7 @@ class Jabber:
 			self.confNicks[Conf] = Null
 		except:
 			pass
-		
-	#4 d3bug .. i mean fof debug
-	def printChat(self):
-		for i in self.conf:
-			for n in i:
-				print n
-				
-	# this returns new lines in particual chatroom
-	# argument room is full name of room eg. "programovani@conf.netlab.cz"
-	def newChatLines(self, room):
-		if room in self.confNames:
-			index = self.confNames.index(room)
-			a = self.conf[index][(self.linesRead[index]):]
-			self.linesRead[index] += len(a)
-			return a
 
-	# returns old lines...
-	def oldChatLines(self, room):
-		if room in self.confNames:
-			index = self.confNames.index(room)
-			a = self.conf[index][:(self.linesRead[index])]
-			return a
-	
-	# who is in particular room ?
-	def usersInRoom(self, room):
-		if room in self.confNames:
-			index = self.confNames.index(room)
-			a = self.confNicks[index]
-			return a
-		
-	# what the heck ya think will func named setStaus do?
-	# it will not make dinner for you!
 	def setStatus(self, status="online", text=""):
 		presence = xmpp.Presence()
 		presence.setStatus(text)
@@ -140,13 +80,19 @@ class Jabber:
 			self.conn.send(presence)
 
 	def unregister(self,host):
+		# unregister transport
 		print xmpp.features.unregister(self.conn,host)
+
 	def register(self,host,info):
+		# register transport
 		print xmpp.features.register(self.conn,host,info)
+
 	def getRegInfo(self,jid):
+		# get service discovery register information (register forms, instructions etc)
 		self.inc.put(["discovery_register",xmpp.features.getRegInfo(self.conn,jid),str(jid)])
 
 	def disco(self,rep,jid,typ,node):
+		# discovery info and items handler
 		ret=[]
 		identities , features = [] , []
 		for i in rep:
@@ -167,12 +113,31 @@ class Jabber:
 						if i.getTag('search'): features.append(NS_SEARCH)
 				self.discoveryQueue.put([typ,identities,features,str(jid)])
 
-
 	def discoveryItems(self,server=None,node=None):
+		# send discovery items request
 		if server==None:
 			server=self.server
-		#info=xmpp.features.discoverInfo(self.conn,server)
 		xmpp.features.discoverItems(self.conn,server,self.disco,node=node)
+
+	def discoveryInfo(self,server=None):
+		# send discovery info request
+		if server==None:
+			server=self.server
+		xmpp.features.discoverInfo(self.conn,server,self.disco)
+
+	def getGroupchatConfig(self,muc):
+		# get groupchat config form
+		iq=Iq(to=muc,typ='get',queryNS=NS_MUC_OWNER,xmlns=None)
+		rep=self.conn.SendAndWaitForResponse(iq)
+		print unicode(rep)
+
+	def getBookmarks(self):
+		# get bookmarks (XEP-0049)
+		return xmpp.features.getBookmarks(self.conn)
+
+	def setBookmarks(self,data):
+		# se bookmarks (XEP-0049)
+		return xmpp.features.setConference(self.conn,data)
 
 	def listGames(self, gameType):
 		iq = xmpp.protocol.Iq(
@@ -201,172 +166,68 @@ class Jabber:
 				pass
 		self.inc.put(["game_list", games])
 
-	def discoveryInfo(self,server=None):
-		if server==None:
-			server=self.server
-		#info=xmpp.features.discoverInfo(self.conn,server)
-		xmpp.features.discoverInfo(self.conn,server,self.disco)
-
-	def getConfig(self,muc):
-		iq=Iq(to=muc,typ='get',queryNS=NS_MUC_OWNER,xmlns=None)
-		rep=self.conn.SendAndWaitForResponse(iq)
-		print unicode(rep)
-#<iq from='crone1@shakespeare.lit/desktop'
-    #id='config1'
-    #to='darkcave@macbeth.shakespeare.lit'
-    #type='get'>
-  #<query xmlns='http://jabber.org/protocol/muc#owner'/>
-#</iq>
-
-	def getBookmarks(self):
-		return xmpp.features.getBookmarks(self.conn)
-
-	def setConference(self,data):
-		return xmpp.features.setConference(self.conn,data)
-	# main and only handler for incoming messages
 	def incoming(self, conn, mess):
-		
-		# some nasty things can happen there, that's why whole funcion body is in try statement
-		# actually it can happen that text is something different than text (some un-slice-able object)
+		# Incoming messages handler
 		if 1==1:
 		#try:
-			# Replacing html tags...
-			
-			text=mess.getBody()
+			text=mess.getBody() # get message text
 			if text!=None:
+				# replace html tags in message
 				text=text.replace("<","&lt;").replace(">","&gt;")
-			subject=mess.getSubject()
+			subject=mess.getSubject() # get message subject (for MUC subject for example)
 			if subject!=None:
+				# prelace html tags in subject
 				subject=subject.replace("<","&lt;").replace(">","&gt;")
-			user=mess.getFrom()
-			nick=mess.getFrom().getResource()
-			typ=mess.getType()
+			user=mess.getFrom() # get sender of message
+			resource=mess.getFrom().getResource() # get message resource
+			typ=mess.getType() # fet type of message
 			print user,typ
 			if typ=="chat":
+				# put chat message to the message_queue
 				jid = str(str(user).rsplit("/")[0]).lower()
-				self.message_queue.append(["chat_message", jid,user,text,nick])
+				self.message_queue.append(["chat_message", jid,user,text,resource])
 			elif typ=="groupchat":
+				# put groupchat message to the message_queue
 				jid = str(str(user).rsplit("/")[0]).lower()
 				if len(str(user).rsplit("/"))==1:
+					# no nickname => groupchat_server_message
 					self.message_queue.append(["groupchat_server_message", jid,text,subject])
 				else:
+					# normal groupchat_message
 					user=str(user).rsplit("/")[1]
 					self.message_queue.append(["groupchat_message", jid,user,text])
 			if self.ready==True:
-				for i in self.message_queue:
-					self.inc.put(i)
-					print "from message_queue"
-				self.message_queue=[]
-				self.ready=None
-			if self.ready==None:
+				# GUI is ready for messages, so we can send messages to GUI
 				if len(self.message_queue)!=0:
-					self.inc.put(self.message_queue.pop())
+					for i in self.message_queue:
+						self.inc.put(i)
+					self.message_queue=[]
 
-			# this implements /me IRC style messages
-			
-			#if len(text) > 3:
-				#if text[0:3] == "/me":
-					#text = "* %s %s" % (nick, text[4:])
-					#meStyleAct = True
-				#else:
-					#meStyleAct = False
-			#else:
-				#meStyleAct = False
-			
-			# this may look tricky. i'll shall explain:
-			# when message comes from conference, it has format of
-			# name@subdomain.server.tld/UserOfConference
-			# e.g. "programovani@conf.netlab.cz/Ricardo"
-			# so we have to split it and get just conf. name
-			
-			#if len(split) == 2:
-				#Conf = split[0]
-				#User = nick
-				
-				#if Conf in self.confNames:
-					#index = self.confNames.index(Conf)
-					#if not meStyleAct:
-						#color="black"
-						#if text.lower().find(self.usernick.lower())!=-1:
-							#color="red"
-						#if User==self.usernick:
-							#color="blue"
-						#self.conf[index].append(('[<font color="gray">'+self.now()+'</font>] <font color="'+color+'"><b>'+ User + '</b>: ' + text+'</font>'))
-					#else:
-						#self.conf[index].append(('[<font color="gray">'+self.now()+'</font>] ' + text))
-					
-			#if len(split) >= 1:
-				#split2 = split[0].rsplit("@")
-				#if len(split2) == 2:
-					#if split2[1] <> self.gameServer:
-						#pass
-						##print type(user)
-						##a = xmpp.protocol.Message(to = user, body = "I am sorry. This is auto sorry.")
-						##self.conn.send(a)
-			##print self.conf
-			
-			#self.income.put([text, sender])
-		#except:
-			#print "exception allmost catched"
 
-	# this handles presnece stantzas
 	def presenceHandle(self, conn, pres):
-		user = pres.getFrom()
-		nick = pres.getFrom().getResource()
-		#print pres.getFrom().getNode(), pres.getFrom().getDomain()
-		prType = pres.getType()
-		jid = pres.getFrom().getNode() + "@" + pres.getFrom().getDomain()
+		# presence handle
+		user = pres.getFrom() # get user
+		nick = pres.getFrom().getResource() # get nick (it's resource in MUC)
+		prType = pres.getType() # get type
+		jid = pres.getFrom().getNode() + "@" + pres.getFrom().getDomain() # get jid
 		jid=str(jid).lower()
 		print prType,jid,nick,self.ready
-		if self.ready==False:
-			self.queue.append(["nick_update",jid,pres,nick])
-			return
+
+		if prType=="subscribe":
+			# subscribe request
+			self.presence_queue.append(["subscribe", jid])
+		elif prType=="subscribed":
+			# subscribed information
+			self.presence_queue.append(["subscribed", jid])
+		else:
+			# normal presence
+			self.presence_queue.append(["nick_update",jid,pres,nick])
 		if self.ready==True:
-			for i in self.queue:
-				self.inc.put(i)
-				print "from queue",i
-			self.ready=None
-		if self.ready==None:
-			
-			if prType=="subscribe":
-				self.inc.put(["subscribe", jid])
-			elif prType=="subscribed":
-				self.inc.put(["subscribed", jid])
-			else:
-				self.inc.put(["nick_update",jid,pres,nick])
-		#if Conf in self.confNames:
-			#index = self.confNames.index(Conf)
-			
-			#listed = False
-			
-			#for record in self.confNicks[index]:
-				#if record[0] == nick:
-					#listed = True
-			
-			#if not listed:
-				#self.confNicks[index].append([nick, "unknown", "unknown"])
-			
-			##if not nick in self.confNicks[index]:
-			##	self.confNicks[index].append([nick, "unknown", "unknown"])
-				
-			
-			#for record in self.confNicks[index]:
-				#if record[0] == nick:
-					##print pres.getStatus(), pres.getShow()
-					#record[1] = pres.getStatus()
-					#record[2] = pres.getShow()
-					
-			
-			#if prType == "unavailable":
-				#for record in self.confNicks[index]:
-					#if record[0] == nick:
-						#self.confNicks[index].remove(record)
-			
-			#self.inc.put(["nick_update", Conf])
-				
-		##print pres.getShow()
-		##print pres.getStatus()
-		##print nick
+			# GUI is ready for presences, so we can send presences to GUI
+			if len(self.presence_queue)!=0:
+				for i in self.presence_queue:
+					self.inc.put(i)
+				self.presence_queue=[]
 
 	def iqHandle(self, conn, iq):
 		#print "iq", unicode(iq)
@@ -388,15 +249,15 @@ class Jabber:
 		#pass
 
 	def groupchatSend(self, room, text):
+		# Send message to the room
 		a = xmpp.protocol.Message(room,text,"groupchat")
 		self.conn.send(a)
 
-	# this allows us to send message into conferency
-	def sendToConf(self, room, text):
-		a = xmpp.protocol.Message(room,text,"chat")
+	def chatSend(self, jid, text):
+		# Send normal message for jid
+		a = xmpp.protocol.Message(jid,text,"chat")
 		self.conn.send(a)
-
-
+	
 	# StepOn and GoOn ;)
 	def StepOn(self, conn):
 		if not self.connected:
@@ -404,28 +265,23 @@ class Jabber:
 		try:
 			self.conn.Process(1)
 		except KeyboardInterrupt: return 0
-		
 		return 1
 
 	def GoOn(self, conn):
-		
 		while self.StepOn(self.conn): pass
 	
 	
-	# what should i say here ?
 	def disconnect(self):
-		
+		# disconnect
 		self.conn.disconnect()
 		self.connected = False
 		print "Disconecting."
 
 	def off(self):
+		# disconnect handler
 		pass
 	
-	# this function is encapsulated in thread, because it would get main window stucked when connecting
-	# thread which encapsulates it is defined in connect(self)
 	def connect_thrd(self):
-		
 		user,server,password,resource=self.user,self.server,self.password,self.resource
 		proxy=self.proxy
 		
@@ -456,10 +312,6 @@ class Jabber:
 		
 		if authres<>'sasl':
 			return 1
-
-		
-		
-
 
 		self.conn.RegisterHandler('message', self.incoming)
 		self.conn.RegisterHandler('iq',self.iqHandle)

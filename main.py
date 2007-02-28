@@ -39,7 +39,7 @@ from vcard import *
 from discovery_ui import *
 from palette import *
 
-import games
+#import games
 
 
 class discoveryWindow(QtGui.QDialog):
@@ -166,7 +166,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.tray.setContextMenu(menu)
 		self.tray.show()
 		self.events=groupedEventWindow(None,self,jab)
-		self.jgamesLoadPlugins()
+		#self.jgamesLoadPlugins()
 		self.gameServer="@games.jabbim.cz"
 
 	def jgamesClicked(self,action):
@@ -187,7 +187,7 @@ class mainWindow(QtGui.QMainWindow):
 					self.chat.addGroupChatTab(muc+self.gameServer,muc)
 					self.groupchat[muc+self.gameServer]=[]
 					jab.getIntoRoom(muc+self.gameServer,jab.user)
-					jab.getConfig(muc+self.gameServer)
+					jab.getGroupchatConfig(muc+self.gameServer)
 					#self.preparedGames.append([plugin.prepareGameWindow(name,self,jab,self.main.widgets[str(muc)].ui.gameFrame),plugin.config.id])
 					break
 
@@ -337,7 +337,7 @@ class mainWindow(QtGui.QMainWindow):
 			room=unicode(cmd)
 			nickname=unicode(lst[1].toString())
 			jab.getIntoRoom(room,nickname)
-			self.groupchat[room]=[]
+			self.groupchat[room]=[nickname,[]]
 			self.chat.addGroupChatTab(room,nickname)
 
 	def statusChanged(self,action):
@@ -436,7 +436,7 @@ class mainWindow(QtGui.QMainWindow):
 		return False
 
 	def isGroupChatMember(self,chat,name):
-		for user in self.groupchat[chat]:
+		for user in self.groupchat[chat][1]:
 			if unicode(user.text())==unicode(name):
 				return True
 		return False
@@ -692,7 +692,7 @@ class mainWindow(QtGui.QMainWindow):
 							# Pokud neni v mistnosti, vytvorime jej
 							else:
 								user=QtGui.QListWidgetItem(unicode(nick))
-								self.groupchat[jid].append(user)
+								self.groupchat[jid][1].append(user)
 							# Nastaveni stavu
 							if str(e[2].getShow())!="None":
 								user.setIcon(self.statuses[str(e[2].getShow())])

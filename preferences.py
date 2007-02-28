@@ -150,7 +150,7 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.config.write()
 		# we need to update groupchat bookmarks menu
 		self.main.bookmarks=self.bookmarks
-		self.jab.setConference(self.main.bookmarks)
+		self.jab.setBookmarks(self.main.bookmarks)
 		self.main.buildGroupchatMenu()
 		self.done(1)
 		
