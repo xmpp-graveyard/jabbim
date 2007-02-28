@@ -175,7 +175,7 @@ class mainWindow(QtGui.QMainWindow):
 		cmd=unicode(lst[0].toString())
 		if cmd=="game_list":
 			self.gameslist.show()
-			jab.listGames(int(lst[1].toString()))
+			self.gameslist.refreshList(int(lst[1].toString()))
 		else:
 			gameid=int(cmd)
 			for plugin in self.plugins:
