@@ -1,3 +1,4 @@
+
 try:
 	from PyQt4 import QtCore, QtGui
 except:
@@ -358,7 +359,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		elif cmd=="avatar":
 			jid=action.data()
 			jid=str(jid.toString())
-			self.jab.getAvatar(jid)
+			self.jab.getVCard(jid)
 
 	def contextMenuEvent (self,event):
 		item=self.itemFromIndex(self.indexAt(QtCore.QPoint(event.x(),event.y())))
@@ -369,8 +370,6 @@ class rosterWidget(QtGui.QTreeWidget):
 			contactMenu=self.buildContactMenu(str(data),group)
 			contactMenu.move(event.globalX(),event.globalY())
 			contactMenu.show()
-			
-
 			
 	#def mouseReleaseEvent(self,event):
 		#if event.button()==QtCore.Qt.RightButton:

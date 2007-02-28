@@ -115,7 +115,6 @@ class Dispatcher(PlugIn):
 		if self._owner.Connection.pending_data(timeout):
 			try: data=self._owner.Connection.receive()
 			except IOError: return
-			print len(data),type(data)
 			self.Stream.Parse(data)
 			if data: return len(data)
 		return '0'      # It means that nothing is received but link is alive.

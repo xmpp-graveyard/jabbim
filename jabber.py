@@ -285,7 +285,7 @@ class Jabber:
 		user,server,password,resource=self.user,self.server,self.password,self.resource
 		proxy=self.proxy
 		
-		self.conn=xmpp.Client(server, debug=[])
+		self.conn=xmpp.Client(server)
 		
 		conres=self.conn.connect(proxy=proxy)
 		
