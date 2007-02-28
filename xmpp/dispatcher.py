@@ -103,21 +103,25 @@ class Dispatcher(PlugIn):
             raise ValueError('Incorrect stream start: (%s,%s). Terminating.'%(tag,ns))
 
     def Process(self, timeout=0):
-        """ Check incoming stream for data waiting. If "timeout" is positive - block for as max. this time.
-            Returns:
-            1) length of processed data if some data were processed;
-            2) '0' string if no data were processed but link is alive;
-            3) 0 (zero) if underlying connection is closed.
-            Take note that in case of disconnection detect during Process() call
-            disconnect handlers are called automatically.
-        """
-        for handler in self._cycleHandlers: handler(self)
-        if self._owner.Connection.pending_data(timeout):
-            try: data=self._owner.Connection.receive()
-            except IOError: return
-            self.Stream.Parse(data)
-            if data: return len(data)
-        return '0'      # It means that nothing is received but link is alive.
+		""" Check incoming stream for data waiting. If "timeout" is positive - block for as max. this time.
+			Returns:
+			1) length of processed data if some data were processed;
+			2) '0' string if no data were processed but link is alive;
+			3) 0 (zero) if underlying connection is closed.
+			Take note that in case of disconnection detect during Process() call
+			disconnect handlers are called automatically.
+		"""
+		for handler in self._cycleHandlers: handler(self)
+		if self._owner.Connection.pending_data(timeout):
+			try: data=self._owner.Connection.receive()
+			except IOError: return
+			try:
+				self.Stream.Parse(data)
+			except:
+				print "not well-formed data... rejects"
+				return '0'
+			if data: return len(data)
+		return '0'      # It means that nothing is received but link is alive.
         
     def RegisterNamespace(self,xmlns,order='info'):
         """ Creates internal structures for newly registered namespace.
