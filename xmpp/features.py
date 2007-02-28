@@ -26,6 +26,51 @@ All these methods takes 'disp' first argument that should be already connected
 
 from protocol import *
 
+def getBookmarks(disp):
+	iq=Iq(to=None,typ='get',queryNS=NS_PRIVATE,xmlns=None)
+	iq.getTag("query").addChild("storage",{"xmlns":"storage:bookmarks"})
+	rep=disp.SendAndWaitForResponse(iq)
+	bookmarks={}
+	print rep
+	for i in rep.getQueryPayload():
+		if i.getName()=="storage":
+			for x in i.getChildren():
+				if x.getName()=="conference":
+					attrs=x.getAttrs()
+					bookmarks[attrs["jid"]]={"name":attrs["name"],"autojoin":attrs["autojoin"],"nick":x.getTag("nick").getData(),"password":x.getTag("password").getData()}
+	return bookmarks
+
+def setConference(disp,data):
+			#for k,v in self.bookmarks.iteritems():
+			#action=self.groupchatMenu.addAction(unicode(v["name"]))
+			#action.setData(QtCore.QVariant([unicode(k),unicode(v["nick"]),unicode(v["password"])]))
+	iq=Iq(to=None,typ='set',queryNS=NS_PRIVATE,xmlns=None)
+	iq.getTag("query").addChild("storage",{"xmlns":"storage:bookmarks"})
+	for k,v in data.iteritems():
+		iq.getTag("query").getTag("storage").addChild("conference",{"name":unicode(v["name"]),"autojoin":v["autojoin"],"jid":unicode(k)})
+		iq.getTag("query").getTag("storage").getTag("conference",{"name":unicode(v["name"]),"autojoin":v["autojoin"],"jid":unicode(k)}).addChild("nick")
+		iq.getTag("query").getTag("storage").getTag("conference",{"name":unicode(v["name"]),"autojoin":v["autojoin"],"jid":unicode(k)}).getTag("nick").setData(v["nick"])
+		iq.getTag("query").getTag("storage").getTag("conference",{"name":unicode(v["name"]),"autojoin":v["autojoin"],"jid":unicode(k)}).addChild("password")
+		iq.getTag("query").getTag("storage").getTag("conference",{"name":unicode(v["name"]),"autojoin":v["autojoin"],"jid":unicode(k)}).getTag("password").setData(v["password"])
+	print iq
+	rep=disp.SendAndWaitForResponse(iq)
+	print rep
+
+      #<conference name='Council of Oberon' 
+                  #autojoin='true'
+                  #jid='council@conference.underhill.org'>
+        #<nick>Puck</nick>
+        #<password>titania</password>
+      #</conference>
+
+#<iq type="set" id="1001">
+  #<query xmlns="jabber:iq:private">
+    #<exodus xmlns="exodus:prefs">
+      #<defaultnick>Hamlet</defaultnick>
+    #</exodus>
+  #</query>
+#</iq>
+
 
 ### DISCO ### http://jabber.org/protocol/disco ### JEP-0030 ####################
 ### Browse ### jabber:iq:browse ### JEP-0030 ###################################
@@ -39,7 +84,7 @@ def _discover(disp,ns,jid,func,node=None,fb2b=0,fb2a=1):
 	iq=Iq(to=jid,typ='get',queryNS=ns)
 	if node:
 		iq.setQuerynode(node)
-	print iq
+	#print iq
 	rep=disp.SendAndCallForResponse(iq,_discover1,args={'disp':disp,'ns':ns,'jid':jid,'node':node,'fb2b':fb2b,'fb2a':fb2a,'func':func})
 	#if fb2b and not isResultNode(rep): rep=disp.SendAndWaitForResponse(Iq(to=jid,typ='get',queryNS=NS_BROWSE))   # Fallback to browse
 	#if fb2a and not isResultNode(rep): rep=disp.SendAndWaitForResponse(Iq(to=jid,typ='get',queryNS=NS_AGENTS))   # Fallback to agents

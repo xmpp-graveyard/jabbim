@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>566</width>
+    <width>587</width>
     <height>407</height>
    </rect>
   </property>
@@ -25,7 +25,7 @@
    <item row="0" column="1" colspan="2" >
     <widget class="QStackedWidget" name="stackedWidget" >
      <property name="currentIndex" >
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="userPreferences" >
       <layout class="QGridLayout" >
@@ -294,7 +294,27 @@ p, li { white-space: pre-wrap; }
          </column>
          <column>
           <property name="text" >
+           <string>Server</string>
+          </property>
+         </column>
+         <column>
+          <property name="text" >
+           <string>Name</string>
+          </property>
+         </column>
+         <column>
+          <property name="text" >
            <string>Nickname</string>
+          </property>
+         </column>
+         <column>
+          <property name="text" >
+           <string>Password</string>
+          </property>
+         </column>
+         <column>
+          <property name="text" >
+           <string>Auto join</string>
           </property>
          </column>
         </widget>

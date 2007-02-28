@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'preferences.ui'
 #
-# Created: Mon Feb 26 16:03:29 2007
+# Created: Tue Feb 27 19:30:25 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_preferences(object):
     def setupUi(self, preferences):
         preferences.setObjectName("preferences")
-        preferences.resize(QtCore.QSize(QtCore.QRect(0,0,566,407).size()).expandedTo(preferences.minimumSizeHint()))
+        preferences.resize(QtCore.QSize(QtCore.QRect(0,0,587,407).size()).expandedTo(preferences.minimumSizeHint()))
         preferences.setWindowIcon(QtGui.QIcon("images/16x16/jgames.png"))
 
         self.gridlayout = QtGui.QGridLayout(preferences)
@@ -343,7 +343,7 @@ class Ui_preferences(object):
         self.gridlayout.addItem(spacerItem5,1,1,1,1)
 
         self.retranslateUi(preferences)
-        self.stackedWidget.setCurrentIndex(3)
+        self.stackedWidget.setCurrentIndex(0)
         self.tabWidget.setCurrentIndex(1)
         QtCore.QObject.connect(self.cancelButton,QtCore.SIGNAL("clicked()"),preferences.reject)
         QtCore.QObject.connect(self.saveButton,QtCore.SIGNAL("clicked()"),preferences.accept)
@@ -373,7 +373,11 @@ class Ui_preferences(object):
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Bookmarks</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.bookmarks.headerItem().setText(0,QtGui.QApplication.translate("preferences", "Room", None, QtGui.QApplication.UnicodeUTF8))
-        self.bookmarks.headerItem().setText(1,QtGui.QApplication.translate("preferences", "Nickname", None, QtGui.QApplication.UnicodeUTF8))
+        self.bookmarks.headerItem().setText(1,QtGui.QApplication.translate("preferences", "Server", None, QtGui.QApplication.UnicodeUTF8))
+        self.bookmarks.headerItem().setText(2,QtGui.QApplication.translate("preferences", "Name", None, QtGui.QApplication.UnicodeUTF8))
+        self.bookmarks.headerItem().setText(3,QtGui.QApplication.translate("preferences", "Nickname", None, QtGui.QApplication.UnicodeUTF8))
+        self.bookmarks.headerItem().setText(4,QtGui.QApplication.translate("preferences", "Password", None, QtGui.QApplication.UnicodeUTF8))
+        self.bookmarks.headerItem().setText(5,QtGui.QApplication.translate("preferences", "Auto join", None, QtGui.QApplication.UnicodeUTF8))
         self.removeBookmark.setText(QtGui.QApplication.translate("preferences", "Remove", None, QtGui.QApplication.UnicodeUTF8))
         self.editBookmark.setText(QtGui.QApplication.translate("preferences", "Edit", None, QtGui.QApplication.UnicodeUTF8))
         self.addBookmark.setText(QtGui.QApplication.translate("preferences", "Add", None, QtGui.QApplication.UnicodeUTF8))

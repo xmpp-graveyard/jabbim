@@ -456,6 +456,10 @@ class Iq(Protocol):
 		""" Return the 'query' child element payload."""
 		tag=self.getTag('x')
 		if tag: return tag.getPayload()
+	def getStoragePayload(self):
+		""" Return the 'query' child element payload."""
+		tag=self.getTag('vCard')
+		if tag: return tag.getPayload()
 	def getVCardPayload(self):
 		""" Return the 'query' child element payload."""
 		tag=self.getTag('vCard')

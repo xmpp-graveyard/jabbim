@@ -134,7 +134,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.timer.start(50)
 		self.loadSkin()
 		self.loadStatus()
-		self.loadBookmarks()
+		self.bookmarks={}
+		#self.loadBookmarks()
 		self.loadGroupchat()
 		self.groupchat={}
 		#self.users={}
@@ -168,6 +169,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.timer.stop()
 		app.closeAllWindows()
 		jab.disconnect()
+		sys.exit(0)
 
 	def trayActivated(self,reason):
 		if reason==QtGui.QSystemTrayIcon.Trigger:
@@ -178,7 +180,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def preferencesClicked(self,bool):
 		# shows preferences
-		w=preferencesWindow(self,self)
+		w=preferencesWindow(self,self,jab=jab)
 		w.show()
 
 	def loadPaletteSkin(self):
@@ -196,16 +198,15 @@ class mainWindow(QtGui.QMainWindow):
 	def buildGroupchatMenu(self):
 		self.groupchatMenu.clear()
 		action=self.groupchatMenu.addAction(self.tr("Join new groupchat"))
-		action.setData(QtCore.QVariant("new"))
-		
+		action.setData(QtCore.QVariant(["new"]))
+
 		self.groupchatMenu.addSeparator()
-		
 		for k,v in self.bookmarks.iteritems():
-			action=self.groupchatMenu.addAction(unicode(k))
-			action.setData(QtCore.QVariant(v))
+			action=self.groupchatMenu.addAction(unicode(v["name"]))
+			action.setData(QtCore.QVariant([unicode(k),unicode(v["nick"]),unicode(v["password"])]))
 		self.groupchatMenu.addSeparator()
 		action=self.groupchatMenu.addAction(self.tr("Manage bookmarks"))
-		action.setData(QtCore.QVariant("manage"))
+		action.setData(QtCore.QVariant(["manage"]))
 
 	def loadGroupchat(self):
 		self.groupchatMenu=QtGui.QMenu(self.tr("Group Chat"),self.ui.toolBar)
@@ -270,18 +271,20 @@ class mainWindow(QtGui.QMainWindow):
 
 	def groupchatChanged(self,action):
 		data=action.data()
-		data=data.toString()
-		if data=="new":
+		lst=data.toList()
+		cmd=unicode(lst[0].toString())
+		if cmd=="new":
 			newchat=joinGroupChatWindow(self,jab)
 			ret=newchat.exec_()
 			if ret==1:
 				self.chat.show()
-		elif data=="manage":
-			win=preferencesWindow(self,self,1)
+		elif cmd=="manage":
+			win=preferencesWindow(self,self,1,jab=jab)
 			win.show()
 		else:
-			room=unicode(action.text())
-			nickname=unicode(data)
+			#action.setData(QtCore.QVariant([unicode(k),unicode(v["nick"]),unicode(v["password"])]))
+			room=unicode(cmd)
+			nickname=unicode(lst[1].toString())
 			jab.getIntoRoom(room,nickname)
 			self.groupchat[room]=[]
 			self.chat.addGroupChatTab(room,nickname)
@@ -295,14 +298,15 @@ class mainWindow(QtGui.QMainWindow):
 		setstatus.exec_()
 
 
-	def loadBookmarks(self):
+	#def loadBookmarks(self):
 		# loads config and repairs config file
-		self.bookmarks=ConfigObj(self.homeDir+'/.jabbim/bookmarks',encoding='UTF8')
-		if len(self.bookmarks)==0:
-			if not os.path.isdir(self.homeDir+'/.jabbim'):
-				os.mkdir(self.homeDir+'/.jabbim')
-			self.bookmarks=ConfigObj(self.homeDir+'/.jabbim/bookmarks',encoding='UTF8')
-			self.bookmarks.write()
+		#self.bookmarks=ConfigObj(self.homeDir+'/.jabbim/bookmarks',encoding='UTF8')
+		#if len(self.bookmarks)==0:
+			#if not os.path.isdir(self.homeDir+'/.jabbim'):
+				#os.mkdir(self.homeDir+'/.jabbim')
+			#self.bookmarks=ConfigObj(self.homeDir+'/.jabbim/bookmarks',encoding='UTF8')
+			#self.bookmarks.write()
+
 
 	def loadConfig(self):
 		# loads config and repairs config file
@@ -407,6 +411,9 @@ class mainWindow(QtGui.QMainWindow):
 			MainWindow.show()
 			login.done(1)
 			jab.setStatus()
+			self.bookmarks=jab.getBookmarks()
+			self.buildGroupchatMenu()
+			print self.bookmarks
 
 		elif e[0] == "avatar_show":
 			vcard=e[1]

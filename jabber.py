@@ -181,6 +181,11 @@ class Jabber:
 		#info=xmpp.features.discoverInfo(self.conn,server)
 		xmpp.features.discoverInfo(self.conn,server,self.disco)
 
+	def getBookmarks(self):
+		return xmpp.features.getBookmarks(self.conn)
+
+	def setConference(self,data):
+		return xmpp.features.setConference(self.conn,data)
 	# main and only handler for incoming messages
 	def incoming(self, conn, mess):
 		
@@ -410,8 +415,7 @@ class Jabber:
 			self.connected = False
 			time.sleep(1) # maybe we actually don't need it here, but it looks hax0rz, don't ya think ?
 			sys.exit(1)
-		else:
-			self.inc.put(["con_ready"])
+
 		
 		if authres<>'sasl':
 			return 1
@@ -434,9 +438,10 @@ class Jabber:
 				self.ready = False
 
 		self.conn.sendInitPresence()
-		
+		self.inc.put(["con_ready"])
 		#self.discovery=xmpp.features.discoverInfo(self.conn,server)
-		#print xmpp.features.getRegInfo(self.conn,"gg.jabbim.cz")
+
+		#print xmpp.features.setConference(self.conn,"jabber@conf.netlab.cz","Jabber","false","HanzZik","")
 
 		if self.connected:
 			self.GoOn(self.conn)

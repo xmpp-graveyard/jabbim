@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'preferences_bookmarks.ui'
 #
-# Created: Sat Feb 17 07:30:02 2007
-#      by: PyQt4 UI code generator 4.0.1
+# Created: Tue Feb 27 20:21:48 2007
+#      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -13,7 +13,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_editbookmark(object):
     def setupUi(self, editbookmark):
         editbookmark.setObjectName("editbookmark")
-        editbookmark.resize(QtCore.QSize(QtCore.QRect(0,0,295,119).size()).expandedTo(editbookmark.minimumSizeHint()))
+        editbookmark.resize(QtCore.QSize(QtCore.QRect(0,0,295,209).size()).expandedTo(editbookmark.minimumSizeHint()))
 
         self.gridlayout = QtGui.QGridLayout(editbookmark)
         self.gridlayout.setMargin(9)
@@ -57,9 +57,21 @@ class Ui_editbookmark(object):
         self.label.setObjectName("label")
         self.vboxlayout.addWidget(self.label)
 
+        self.label_3 = QtGui.QLabel(editbookmark)
+        self.label_3.setObjectName("label_3")
+        self.vboxlayout.addWidget(self.label_3)
+
+        self.label_4 = QtGui.QLabel(editbookmark)
+        self.label_4.setObjectName("label_4")
+        self.vboxlayout.addWidget(self.label_4)
+
         self.label_2 = QtGui.QLabel(editbookmark)
         self.label_2.setObjectName("label_2")
         self.vboxlayout.addWidget(self.label_2)
+
+        self.label_5 = QtGui.QLabel(editbookmark)
+        self.label_5.setObjectName("label_5")
+        self.vboxlayout.addWidget(self.label_5)
         self.hboxlayout1.addLayout(self.vboxlayout)
 
         self.vboxlayout1 = QtGui.QVBoxLayout()
@@ -71,9 +83,21 @@ class Ui_editbookmark(object):
         self.room.setObjectName("room")
         self.vboxlayout1.addWidget(self.room)
 
+        self.server = QtGui.QLineEdit(editbookmark)
+        self.server.setObjectName("server")
+        self.vboxlayout1.addWidget(self.server)
+
+        self.name = QtGui.QLineEdit(editbookmark)
+        self.name.setObjectName("name")
+        self.vboxlayout1.addWidget(self.name)
+
         self.nickname = QtGui.QLineEdit(editbookmark)
         self.nickname.setObjectName("nickname")
         self.vboxlayout1.addWidget(self.nickname)
+
+        self.password = QtGui.QLineEdit(editbookmark)
+        self.password.setObjectName("password")
+        self.vboxlayout1.addWidget(self.password)
         self.hboxlayout1.addLayout(self.vboxlayout1)
         self.gridlayout.addLayout(self.hboxlayout1,0,0,1,2)
 
@@ -87,4 +111,8 @@ class Ui_editbookmark(object):
         self.pushButton.setText(QtGui.QApplication.translate("editbookmark", "Edit", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_2.setText(QtGui.QApplication.translate("editbookmark", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("editbookmark", "Room:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3.setText(QtGui.QApplication.translate("editbookmark", "Server:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_4.setText(QtGui.QApplication.translate("editbookmark", "Name:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("editbookmark", "Nickname:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_5.setText(QtGui.QApplication.translate("editbookmark", "Password:", None, QtGui.QApplication.UnicodeUTF8))
+

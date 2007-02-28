@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'joingroupchat.ui'
 #
-# Created: Fri Feb 16 21:15:38 2007
-#      by: PyQt4 UI code generator 4.0.1
+# Created: Wed Feb 28 05:43:17 2007
+#      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -13,7 +13,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_joingroupchat(object):
     def setupUi(self, joingroupchat):
         joingroupchat.setObjectName("joingroupchat")
-        joingroupchat.resize(QtCore.QSize(QtCore.QRect(0,0,285,146).size()).expandedTo(joingroupchat.minimumSizeHint()))
+        joingroupchat.resize(QtCore.QSize(QtCore.QRect(0,0,285,236).size()).expandedTo(joingroupchat.minimumSizeHint()))
 
         self.gridlayout = QtGui.QGridLayout(joingroupchat)
         self.gridlayout.setMargin(9)
@@ -51,9 +51,21 @@ class Ui_joingroupchat(object):
         self.label.setObjectName("label")
         self.vboxlayout.addWidget(self.label)
 
+        self.label_3 = QtGui.QLabel(joingroupchat)
+        self.label_3.setObjectName("label_3")
+        self.vboxlayout.addWidget(self.label_3)
+
+        self.label_4 = QtGui.QLabel(joingroupchat)
+        self.label_4.setObjectName("label_4")
+        self.vboxlayout.addWidget(self.label_4)
+
         self.label_2 = QtGui.QLabel(joingroupchat)
         self.label_2.setObjectName("label_2")
         self.vboxlayout.addWidget(self.label_2)
+
+        self.label_5 = QtGui.QLabel(joingroupchat)
+        self.label_5.setObjectName("label_5")
+        self.vboxlayout.addWidget(self.label_5)
         self.hboxlayout.addLayout(self.vboxlayout)
 
         self.vboxlayout1 = QtGui.QVBoxLayout()
@@ -65,9 +77,21 @@ class Ui_joingroupchat(object):
         self.room.setObjectName("room")
         self.vboxlayout1.addWidget(self.room)
 
+        self.server = QtGui.QLineEdit(joingroupchat)
+        self.server.setObjectName("server")
+        self.vboxlayout1.addWidget(self.server)
+
+        self.name = QtGui.QLineEdit(joingroupchat)
+        self.name.setObjectName("name")
+        self.vboxlayout1.addWidget(self.name)
+
         self.nickname = QtGui.QLineEdit(joingroupchat)
         self.nickname.setObjectName("nickname")
         self.vboxlayout1.addWidget(self.nickname)
+
+        self.password = QtGui.QLineEdit(joingroupchat)
+        self.password.setObjectName("password")
+        self.vboxlayout1.addWidget(self.password)
         self.hboxlayout.addLayout(self.vboxlayout1)
         self.gridlayout.addLayout(self.hboxlayout,0,0,1,2)
 
@@ -94,6 +118,10 @@ class Ui_joingroupchat(object):
         joingroupchat.setWindowTitle(QtGui.QApplication.translate("joingroupchat", "Join Group Chat", None, QtGui.QApplication.UnicodeUTF8))
         self.bookmark.setText(QtGui.QApplication.translate("joingroupchat", "Bookmark this room", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("joingroupchat", "Room:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3.setText(QtGui.QApplication.translate("joingroupchat", "Server:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_4.setText(QtGui.QApplication.translate("joingroupchat", "Conference name:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("joingroupchat", "Nickname:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_5.setText(QtGui.QApplication.translate("joingroupchat", "Password:", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("joingroupchat", "Join", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_2.setText(QtGui.QApplication.translate("joingroupchat", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
+
