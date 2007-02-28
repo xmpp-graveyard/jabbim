@@ -20,7 +20,7 @@ class joinGroupChatWindow(QtGui.QDialog):
 		nickname=unicode(self.ui.nickname.text())
 		password=unicode(self.ui.password.text())
 		if self.ui.bookmark.isChecked() and not self.main.bookmarks.has_key(room):
-			self.main.bookmarks[room+"@"+server]={"name":name,"nick":nickname,"autojoin":"false","password":password}
+			self.main.bookmarks[room+"@"+server]={"name":name,"nick":nickname,"autojoin":"0","password":password}
 			self.jab.setConference(self.main.bookmarks)
 			self.main.buildGroupchatMenu()
 		print "joining",room,nickname

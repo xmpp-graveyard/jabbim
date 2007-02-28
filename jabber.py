@@ -174,12 +174,49 @@ class Jabber:
 		#info=xmpp.features.discoverInfo(self.conn,server)
 		xmpp.features.discoverItems(self.conn,server,self.disco,node=node)
 
+	def listGames(self, gameType):
+		iq = xmpp.protocol.Iq(
+		to = self.gameServer,
+		attrs={"type":"get"},
+		node = """
+<iq>
+ <jgames xmlns="http://njs.netlab.cz/game">
+  <game action="list" type="%02d"/>
+ </jgames>
+</iq>
+		""" % (gameType)
+		)
+		rep=self.conn.SendAndWaitForResponse(iq)
+		games=[]
+		a = rep.getPayload()
+		for x in a:
+			try:
+				items=x.getChildren()
+				for item in items:
+					jid = item.getAttr("jid")
+					name = item.getAttr("name")
+					status = item.getAttr("status")
+					games.append([jid,name,status])
+			except:
+				pass
+		self.inc.put(["game_list", games])
 
 	def discoveryInfo(self,server=None):
 		if server==None:
 			server=self.server
 		#info=xmpp.features.discoverInfo(self.conn,server)
 		xmpp.features.discoverInfo(self.conn,server,self.disco)
+
+	def getConfig(self,muc):
+		iq=Iq(to=muc,typ='get',queryNS=NS_MUC_OWNER,xmlns=None)
+		rep=self.conn.SendAndWaitForResponse(iq)
+		print unicode(rep)
+#<iq from='crone1@shakespeare.lit/desktop'
+    #id='config1'
+    #to='darkcave@macbeth.shakespeare.lit'
+    #type='get'>
+  #<query xmlns='http://jabber.org/protocol/muc#owner'/>
+#</iq>
 
 	def getBookmarks(self):
 		return xmpp.features.getBookmarks(self.conn)

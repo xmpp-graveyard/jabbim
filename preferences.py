@@ -178,14 +178,14 @@ class editBookmark(QtGui.QDialog):
 		nickname=unicode(self.ui.nickname.text())
 		password=unicode(self.ui.password.text())
 		if self.room+"@"+self.server==room+"@"+server:
-			self.parent.bookmarks[room+"@"+server]={"name":name,"nick":nickname,"autojoin":"false","password":password}
+			self.parent.bookmarks[room+"@"+server]={"name":name,"nick":nickname,"autojoin":"0","password":password}
 			self.done(1)
 		else:
 			if self.parent.bookmarks.has_key(room):
 				print "error"
 			else:
 				if self.edit==True:
-					del self.parent.bookmarks[room+"@"+server]
-				self.parent.bookmarks[room+"@"+server]={"name":name,"nick":nickname,"autojoin":"false","password":password}
+					del self.parent.bookmarks[self.room+"@"+self.server]
+				self.parent.bookmarks[room+"@"+server]={"name":name,"nick":nickname,"autojoin":"0","password":password}
 				self.done(1)
 		

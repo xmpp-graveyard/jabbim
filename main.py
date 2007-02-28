@@ -31,12 +31,16 @@ from roster import *
 from status import *
 from chatwindow import *
 from joingroupchat import *
+from gameslist import *
 from addcontact import *
 from grouped_events import *
 from discovery_register import *
 from vcard import *
 from discovery_ui import *
 from palette import *
+
+import games
+
 
 class discoveryWindow(QtGui.QDialog):
 	def __init__(self,parent=None):
@@ -131,7 +135,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.actionService_discovery, QtCore.SIGNAL("triggered ( bool )"),self.discovery)
 		self.timer=QtCore.QTimer()
 		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.tick)
-		self.timer.start(50)
+		self.timer.start(20)
 		self.loadSkin()
 		self.loadStatus()
 		self.bookmarks={}
@@ -148,6 +152,10 @@ class mainWindow(QtGui.QMainWindow):
 		self.log=QtGui.QTextEdit(None)
 		#self.log.show()
 		
+		self.games=[]
+		self.gameslist=gamesListWindow(self,self,jab)
+		self.preparedGames=[]
+		
 		self.tray=QtGui.QSystemTrayIcon(QtGui.QIcon("images/status/online.png"))
 		menu=QtGui.QMenu(self)
 		menu.addMenu(self.statusMenu)
@@ -158,6 +166,48 @@ class mainWindow(QtGui.QMainWindow):
 		self.tray.setContextMenu(menu)
 		self.tray.show()
 		self.events=groupedEventWindow(None,self,jab)
+		self.jgamesLoadPlugins()
+		self.gameServer="@games.jabbim.cz"
+
+	def jgamesClicked(self,action):
+		data=action.data()
+		lst=data.toList()
+		cmd=unicode(lst[0].toString())
+		if cmd=="game_list":
+			self.gameslist.show()
+			jab.listGames(int(lst[1].toString()))
+		else:
+			gameid=int(cmd)
+			for plugin in self.plugins:
+				if plugin.config.id==gameid:
+					#self.preparedGames.append([plugin.prepareGameWindow(name,self,jab),plugin.config.id])
+					#self.preparedGames[-1][0].show()
+					#print self.preparedGames[-1]
+					muc=str("%02d%f%d"%(plugin.config.id,time.time(),random.randint(1000,9999))).replace('.','')
+					self.chat.addGroupChatTab(muc+self.gameServer,muc)
+					self.groupchat[muc+self.gameServer]=[]
+					jab.getIntoRoom(muc+self.gameServer,jab.user)
+					jab.getConfig(muc+self.gameServer)
+					#self.preparedGames.append([plugin.prepareGameWindow(name,self,jab,self.main.widgets[str(muc)].ui.gameFrame),plugin.config.id])
+					break
+
+	def jgamesLoadPlugins(self):
+		# loads plugins
+		temp=dir(games)
+		self.plugins=[]
+		for i in temp:
+			if not i.startswith("__"):
+				self.plugins.append(getattr(games,i))
+				print "Loading plugin",self.plugins[-1]
+		for plugin in self.plugins:
+			menu=QtGui.QMenu(unicode(plugin.config.name),self.ui.menuJGames)
+			action=menu.addAction(self.tr("New game"))
+			action.setData(QtCore.QVariant([unicode(plugin.config.id)]))
+			action=menu.addAction(self.tr("Game list"))
+			action.setData(QtCore.QVariant(["game_list",unicode(plugin.config.id)]))
+			self.ui.menuJGames.addMenu(menu)
+			app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.jgamesClicked)
+#			self.addGame(plugin.config.icon,plugin.config.name,plugin.config.id)
 
 	def discovery(self):
 		self.disco=discoveryWindow(self)
@@ -203,6 +253,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.groupchatMenu.addSeparator()
 		for k,v in self.bookmarks.iteritems():
 			action=self.groupchatMenu.addAction(unicode(v["name"]))
+
 			action.setData(QtCore.QVariant([unicode(k),unicode(v["nick"]),unicode(v["password"])]))
 		self.groupchatMenu.addSeparator()
 		action=self.groupchatMenu.addAction(self.tr("Manage bookmarks"))
@@ -411,9 +462,9 @@ class mainWindow(QtGui.QMainWindow):
 			MainWindow.show()
 			login.done(1)
 			jab.setStatus()
-			self.bookmarks={}#jab.getBookmarks()
-#			self.buildGroupchatMenu()
-#			print self.bookmarks
+			self.bookmarks=jab.getBookmarks()
+			self.buildGroupchatMenu()
+			print self.bookmarks
 
 		elif e[0] == "avatar_show":
 			vcard=e[1]
@@ -426,6 +477,22 @@ class mainWindow(QtGui.QMainWindow):
 					pixmap.loadFromData(image)
 					for user,group in self.ui.roster.getUsers(jid,True).iteritems():
 						user.setIcon(3,QtGui.QIcon(pixmap))
+
+		elif e[0] == "game_list":
+			self.gameslist.ui.treeWidget.clear()
+			for game in e[1]:
+				jid,name,status=game
+				item=QtGui.QTreeWidgetItem(self.gameslist.ui.treeWidget)
+				item.setText(0,name)
+				if status=="pre":
+					item.setText(2,self.tr("Yes"))
+				else:
+					item.setText(2,self.tr("No"))
+				item.setData(32,0,QtCore.QVariant(jid))
+				item.setData(32,1,QtCore.QVariant(jid))
+				item.setData(32,2,QtCore.QVariant(jid))
+			self.gameslist.ui.treeWidget.resizeColumnToContents(0)
+			self.gameslist.ui.treeWidget.resizeColumnToContents(2)
 
 		elif e[0] == "discovery_register":
 			form=e[1]
@@ -651,29 +718,21 @@ class mainWindow(QtGui.QMainWindow):
 			self.setLog("Presence END","red")
 		elif e[0] == "roster_update":
 			print " roster update"
-			self.setLog("start - roster update","red")
 			items=e[1].getItems()
-			self.setLog(unicode(items),"blue")
-			#self.groups={}
 			for jid in items:
 				try:
 					jid=str(jid).lower()
 					groups=e[1].getGroups(jid)
-					self.setLog("jid: "+jid+", grous:"+unicode(groups),"black")
 					if groups==None or groups==[]:
 						groups=["Unknown"]
-						#name=e[1].getName(jid)
-						#self.groups["Unknown"]["users"][str(jid)]=self.ui.roster.addUser(jid,name,None,self.offline,self.statuses["offline"])
 					for group in groups:
 						if self.groups.has_key(group)==False:
 							self.groups[group]={"item":self.ui.roster.addGroup(group),"users":{}}
 						name=e[1].getName(jid)
 						self.groups[group]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,name,self.groups[group]["item"],self.offline,self.statuses["offline"]),"resources":[]}
 				except:
-					self.setLog("ERROR in parsing: "+jid,"red")
-			self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
-			self.setLog(unicode(self.groups),"green")
-			self.setLog("end - roster update","red")
+					pass
+			self.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
 			jab.outc.put(True)
 				
 

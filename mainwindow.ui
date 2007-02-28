@@ -92,12 +92,6 @@
      <height>28</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuPreferences" >
-    <property name="title" >
-     <string>Preferences</string>
-    </property>
-    <addaction name="actionPreferences" />
-   </widget>
    <widget class="QMenu" name="menuAction" >
     <property name="title" >
      <string>Actions</string>
@@ -108,8 +102,20 @@
     <addaction name="separator" />
     <addaction name="actionQuit" />
    </widget>
+   <widget class="QMenu" name="menuPreferences" >
+    <property name="title" >
+     <string>Preferences</string>
+    </property>
+    <addaction name="actionPreferences" />
+   </widget>
+   <widget class="QMenu" name="menuJGames" >
+    <property name="title" >
+     <string>JGames</string>
+    </property>
+   </widget>
    <addaction name="menuAction" />
    <addaction name="menuPreferences" />
+   <addaction name="menuJGames" />
   </widget>
   <widget class="QToolBar" name="toolBar" >
    <property name="orientation" >
@@ -143,6 +149,11 @@
   <action name="actionGroup_Chat" >
    <property name="text" >
     <string>Group Chat</string>
+   </property>
+  </action>
+  <action name="actionTic_tac_toe" >
+   <property name="text" >
+    <string>Tic tac toe</string>
    </property>
   </action>
  </widget>

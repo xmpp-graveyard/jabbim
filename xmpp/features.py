@@ -31,13 +31,32 @@ def getBookmarks(disp):
 	iq.getTag("query").addChild("storage",{"xmlns":"storage:bookmarks"})
 	rep=disp.SendAndWaitForResponse(iq)
 	bookmarks={}
-	print rep
-	for i in rep.getQueryPayload():
-		if i.getName()=="storage":
-			for x in i.getChildren():
-				if x.getName()=="conference":
-					attrs=x.getAttrs()
-					bookmarks[attrs["jid"]]={"name":attrs["name"],"autojoin":attrs["autojoin"],"nick":x.getTag("nick").getData(),"password":x.getTag("password").getData()}
+	if isResultNode(rep):
+		print rep
+		for i in rep.getQueryPayload():
+			if i.getName()=="storage":
+				for x in i.getChildren():
+					if x.getName()=="conference":
+						attrs=x.getAttrs()
+						if attrs.has_key("jid"):
+							data={}
+							if attrs.has_key("name"):
+								data["name"]=attrs["name"]
+							else:
+								data["name"]=attrs["jid"]
+							if attrs.has_key("autojoin"):
+								data["autojoin"]=attrs["autojoin"]
+							else:
+								data["autojoin"]="0"
+							if x.getTag("nick")!=None:
+								data["nick"]=x.getTag("nick").getData()
+							else:
+								data["nick"]=""
+							if x.getTag("password")!=None:
+								data["password"]=x.getTag("password").getData()
+							else:
+								data["password"]=""
+							bookmarks[attrs["jid"]]=data
 	return bookmarks
 
 def setConference(disp,data):
