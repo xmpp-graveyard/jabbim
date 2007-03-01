@@ -150,11 +150,28 @@ class Jabber:
 			server=self.server
 		xmpp.features.discoverInfo(self.conn,server,self.disco)
 
+	def groupchatConfigHandler(self,i,rep,muc):
+		self.inc.put(["group_chat_config",rep,muc])
+
 	def getGroupchatConfig(self,muc):
 		# get groupchat config form
 		iq=Iq(to=muc,typ='get',queryNS=NS_MUC_OWNER,xmlns=None)
-		rep=self.conn.SendAndWaitForResponse(iq)
-		print unicode(rep)
+		print iq
+		self.conn.SendAndCallForResponse(iq,self.groupchatConfigHandler,args={"muc":muc})
+	
+	def setGroupchatConfig(self,host,info):
+		# get groupchat config form
+		#iq=Iq(to=muc,typ='get',queryNS=NS_MUC_OWNER,xmlns=None)
+		#self.conn.SendAndCallForResponse(iq,self.groupchatConfigHandler,args={"muc":muc})
+		iq=Iq(to=host,typ='set',queryNS=NS_MUC_OWNER,xmlns=None)
+		iq.getTag("query").addChild("x",{"xmlns":"jabber:x:data","type":"submit"})
+		if type(info)<>type({}): info=info.asDict()
+		for i in info.keys():
+			iq.getTag("query").getTag('x').addChild("field",{"var":i})
+			iq.getTag("query").getTag('x').getTag("field",{"var":i}).setTagData("value",info[i])
+		print unicode(iq)
+		resp=self.conn.send(iq)
+		#if isResultNode(resp): return 1
 
 	def bookmarksHandle(self,i,rep):
 		# getBookmarks request handler and parser (XEP-0048)
@@ -197,7 +214,7 @@ class Jabber:
 
 	def listGames(self, gameType):
 		iq = xmpp.protocol.Iq(
-		to = self.gameServer,
+		to = "games.jabbim.cz",
 		attrs={"type":"get"},
 		node = """
 <iq>
@@ -209,6 +226,8 @@ class Jabber:
 		)
 		rep=self.conn.SendAndWaitForResponse(iq)
 		games=[]
+		if not isResultNode(rep):
+			return
 		a = rep.getPayload()
 		for x in a:
 			try:

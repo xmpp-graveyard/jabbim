@@ -38,8 +38,9 @@ from discovery_register import *
 from vcard import *
 from discovery_ui import *
 from palette import *
+from dataforms import *
 
-#import games
+import games
 
 
 class discoveryWindow(QtGui.QDialog):
@@ -165,7 +166,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.tray.setContextMenu(menu)
 		self.tray.show()
 		self.events=groupedEventWindow(None,self,jab)
-		#self.jgamesLoadPlugins()
+		self.jgamesLoadPlugins()
 		self.gameServer="@games.jabbim.cz"
 
 	def jgamesClicked(self,action):
@@ -184,7 +185,7 @@ class mainWindow(QtGui.QMainWindow):
 					#print self.preparedGames[-1]
 					muc=str("%02d%f%d"%(plugin.config.id,time.time(),random.randint(1000,9999))).replace('.','')
 					self.chat.addGroupChatTab(muc+self.gameServer,muc)
-					self.groupchat[muc+self.gameServer]=[]
+					self.groupchat[muc+self.gameServer]=[jab.user,[]]
 					jab.getIntoRoom(muc+self.gameServer,jab.user)
 					jab.getGroupchatConfig(muc+self.gameServer)
 					#self.preparedGames.append([plugin.prepareGameWindow(name,self,jab,self.main.widgets[str(muc)].ui.gameFrame),plugin.config.id])
@@ -484,6 +485,12 @@ class mainWindow(QtGui.QMainWindow):
 				item.setData(32,2,QtCore.QVariant(jid))
 			self.gameslist.ui.treeWidget.resizeColumnToContents(0)
 			self.gameslist.ui.treeWidget.resizeColumnToContents(2)
+
+		elif e[0] == "group_chat_config":
+			form=e[1]
+			jid=e[2]
+			self.mucconfig=dataFormsWindow(self,jab,form,jid)
+			self.mucconfig.show()
 
 		elif e[0] == "discovery_register":
 			form=e[1]

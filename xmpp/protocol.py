@@ -456,7 +456,7 @@ class Iq(Protocol):
 		if tag: return tag.getNamespace()
 	def getXPayload(self):
 		""" Return the 'query' child element payload."""
-		tag=self.getTag('x')
+		tag=self.getTag('query').getTag("x")
 		if tag: return tag.getPayload()
 	def getStoragePayload(self):
 		""" Return the 'query' child element payload."""

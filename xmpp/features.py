@@ -158,6 +158,8 @@ def getRegInfo(disp,host,info={}):
         else: df.setField(i.getName()).setValue(i.getData())
     return df
 
+
+
 def register(disp,host,info):
     """ Perform registration on remote server with provided info.
         disp must be connected dispatcher instance.
