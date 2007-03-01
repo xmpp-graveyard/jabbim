@@ -6,6 +6,7 @@ except:
 from chatwindow_ui import *
 from chat import *
 from groupchat import *
+from gamechat import *
 
 class chatWindow(QtGui.QMainWindow):
 	def __init__(self,parent,main,jab):
@@ -27,6 +28,19 @@ class chatWindow(QtGui.QMainWindow):
 			self.ui.chatTab.setTabIcon(index,icon)
 		except:
 			pass
+
+	def addGameChatTab(self,room,nickname):
+		tab=QtGui.QWidget(self.ui.chatTab)
+		tab.jid=room
+		tab.name=unicode(nickname)
+		tab.typ="groupchat"
+		layout=QtGui.QHBoxLayout(tab)
+		layout.setMargin(1)
+		layout.setSpacing(1)
+		tab.chat=gameChatWidget(self.main,room,self.jab,tab)
+		layout.addWidget(tab.chat)
+		self.ui.chatTab.addTab(tab,room)
+		self.show()
 
 	def addGroupChatTab(self,room,nickname):
 		tab=QtGui.QWidget(self.ui.chatTab)

@@ -170,7 +170,11 @@ class Jabber:
 			iq.getTag("query").getTag('x').addChild("field",{"var":i})
 			iq.getTag("query").getTag('x').getTag("field",{"var":i}).setTagData("value",info[i])
 		print unicode(iq)
-		resp=self.conn.send(iq)
+		self.conn.send(iq)
+		try:
+			self.listGames(int(host[:2]))
+		except: pass
+		
 		#if isResultNode(resp): return 1
 
 	def bookmarksHandle(self,i,rep):

@@ -21,13 +21,11 @@ class gamesListWindow(QtGui.QMainWindow):
 		nickname=unicode(self.jab.user)
 		self.jab.getIntoRoom(room,nickname)
 		self.main.groupchat[room]=[nickname,[]]
-		self.main.chat.addGroupChatTab(room,nickname)
+		self.main.chat.addGameChatTab(room,nickname)
 
-	
 	def refreshList(self,typ=None):
 		if typ==None:
 			typ=self.typ
 		else:
 			self.typ=typ
 		self.jab.listGames(int(typ))
-		

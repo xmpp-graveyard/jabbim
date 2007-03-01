@@ -184,7 +184,7 @@ class mainWindow(QtGui.QMainWindow):
 					#self.preparedGames[-1][0].show()
 					#print self.preparedGames[-1]
 					muc=str("%02d%f%d"%(plugin.config.id,time.time(),random.randint(1000,9999))).replace('.','')
-					self.chat.addGroupChatTab(muc+self.gameServer,muc)
+					self.chat.addGameChatTab(muc+self.gameServer,muc)
 					self.groupchat[muc+self.gameServer]=[jab.user,[]]
 					jab.getIntoRoom(muc+self.gameServer,jab.user)
 					jab.getGroupchatConfig(muc+self.gameServer)
@@ -474,6 +474,10 @@ class mainWindow(QtGui.QMainWindow):
 			self.gameslist.ui.treeWidget.clear()
 			for game in e[1]:
 				jid,name,status=game
+				for i in range(self.chat.ui.chatTab.count()):
+					w=self.chat.ui.chatTab.widget(i)
+					if str(w.jid)==jid:
+						self.chat.ui.chatTab.setTabText(i,name)
 				item=QtGui.QTreeWidgetItem(self.gameslist.ui.treeWidget)
 				item.setText(0,name)
 				if status=="pre":
