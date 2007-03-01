@@ -95,13 +95,13 @@ class Jabber:
 		except:
 			pass
 
-	def setStatus(self, status="online", text=""):
+	def setStatus(self,rooms,status="online", text=""):
 		presence = xmpp.Presence()
 		presence.setStatus(text)
 		presence.setShow(status)
 		self.conn.send(presence)
-		for room in self.confNames:
-			presence.setTo(room + "/" + self.usernick)
+		for room,data in rooms.iteritems():
+			presence.setTo(room + "/" + data[0])
 			self.conn.send(presence)
 
 	def unregister(self,host):
@@ -346,7 +346,7 @@ class Jabber:
 		user,server,password,resource=self.user,self.server,self.password,self.resource
 		proxy=self.proxy
 		
-		self.conn=xmpp.Client(server)
+		self.conn=xmpp.Client(server,debug=[])
 		
 		conres=self.conn.connect(proxy=proxy)
 		

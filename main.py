@@ -442,7 +442,7 @@ class mainWindow(QtGui.QMainWindow):
 		return False
 
 	def getGroupChatMember(self,chat,name):
-		for user in self.groupchat[chat]:
+		for user in self.groupchat[chat][1]:
 			if unicode(user.text())==unicode(name):
 				return user
 		return None
@@ -461,7 +461,7 @@ class mainWindow(QtGui.QMainWindow):
 		if e[0] == "con_ready":
 			MainWindow.show()
 			login.done(1)
-			jab.setStatus()
+			jab.setStatus(self.groupchat)
 			jab.getBookmarks()
 		elif e[0]=="bookmarks":
 			self.bookmarks=e[1]
@@ -829,7 +829,7 @@ class statusWindow(QtGui.QDialog):
 		else:
 			self.accept()
 	def accept(self):
-		jab.setStatus(self.data,unicode(self.ui.status.toPlainText ()))
+		jab.setStatus(MainWindow.groupchat,self.data,unicode(self.ui.status.toPlainText ()))
 		self.done(1)
 
 
