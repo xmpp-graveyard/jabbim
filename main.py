@@ -149,7 +149,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.gridlayout.setMargin(1)
 		self.ui.gridlayout.setSpacing(1)
 		self.ready=False
-		self.log=QtGui.QTextEdit(None)
 		#self.log.show()
 		
 		self.games=[]
@@ -447,15 +446,6 @@ class mainWindow(QtGui.QMainWindow):
 				return user
 		return None
 
-	def setLog(self,text,color):
-		return
-		cur=self.log.textCursor()
-		cur.movePosition(QtGui.QTextCursor.End)
-		self.log.setTextCursor(cur)
-		self.log.insertHtml('<font color="'+color+'">'+text+'</font><br/><br/>')
-		cur=self.log.textCursor()
-		cur.movePosition(QtGui.QTextCursor.End)
-		self.log.setTextCursor(cur)
 
 	def jabberCommandHandler(self,e):
 		if e[0] == "con_ready":
@@ -582,10 +572,8 @@ class mainWindow(QtGui.QMainWindow):
 
 		
 		elif e[0] == "nick_update":
-			self.setLog("Presence - start","red")
 			# Prisla presence
 			jid=str(e[1])
-			self.setLog("jid: "+jid,"blue")
 			# Pokud je jid v rosteru:
 			if self.ui.roster.isUser(jid):
 				# Prochazeni vsech uzivatelu v rosteru, kteri maji shodne jid
@@ -596,7 +584,6 @@ class mainWindow(QtGui.QMainWindow):
 						if not e[3] in self.groups[group]["users"][jid]["resources"]:
 							self.groups[group]["users"][jid]["resources"].append(e[3])
 							resources=self.groups[group]["users"][jid]["resources"]
-							self.setLog("resources: "+unicode(resources),"black")
 							try:
 								resources.remove('')
 							except:
@@ -714,9 +701,7 @@ class mainWindow(QtGui.QMainWindow):
 						if str(w.jid)==jid:
 							user=self.getGroupChatMember(jid,unicode(nick))
 							w.chat.ui.listWidget.takeItem(int(w.chat.ui.listWidget.row(user)))
-			else:
-				self.setLog("jid in not in roster or groupchat: "+jid,"red")
-			self.setLog("Presence END","red")
+
 		elif e[0] == "roster_update":
 			print " roster update"
 			items=e[1].getItems()
