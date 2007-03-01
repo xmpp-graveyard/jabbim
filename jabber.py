@@ -224,7 +224,8 @@ class Jabber:
 </iq>
 		""" % (gameType)
 		)
-		rep=self.conn.SendAndWaitForResponse(iq)
+		self.conn.SendAndCallForResponse(iq,self.listGamesHandler)
+	def listGamesHandler(self,i,rep):
 		games=[]
 		if not isResultNode(rep):
 			return

@@ -4,10 +4,11 @@ except:
 	print "PyQt4 is not installed."
 
 class dataFormsWindow(QtGui.QDialog):
-	def __init__(self,main,jab,form,jid,parent=None):
+	def __init__(self,main,jab,form,jid,typ="muc#owner",parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.main=main
 		self.jab=jab
+		self.typ=typ
 		self.form=form
 		self.jid=jid
 		self.setModal(True)
@@ -135,7 +136,8 @@ class dataFormsWindow(QtGui.QDialog):
 				elif v.typ=="textbrowser":
 					info[k]=unicode(v.toPlainText())
 		print unicode(info)
-		self.jab.setGroupchatConfig(self.jid,info)
+		if self.typ=="muc#owner":
+			self.jab.setGroupchatConfig(self.jid,info)
 		self.done(1)
 
 	def addKey(self,value):
