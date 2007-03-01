@@ -32,9 +32,6 @@ def getBookmarks(disp,func):
 	disp.SendAndCallForResponse(iq,func)
 
 def setConference(disp,data):
-			#for k,v in self.bookmarks.iteritems():
-			#action=self.groupchatMenu.addAction(unicode(v["name"]))
-			#action.setData(QtCore.QVariant([unicode(k),unicode(v["nick"]),unicode(v["password"])]))
 	iq=Iq(to=None,typ='set',queryNS=NS_PRIVATE,xmlns=None)
 	iq.getTag("query").addChild("storage",{"xmlns":"storage:bookmarks"})
 	for k,v in data.iteritems():
@@ -44,8 +41,7 @@ def setConference(disp,data):
 		iq.getTag("query").getTag("storage").getTag("conference",{"name":unicode(v["name"]),"autojoin":v["autojoin"],"jid":unicode(k)}).addChild("password")
 		iq.getTag("query").getTag("storage").getTag("conference",{"name":unicode(v["name"]),"autojoin":v["autojoin"],"jid":unicode(k)}).getTag("password").setData(v["password"])
 	print iq
-	rep=disp.SendAndWaitForResponse(iq)
-	print rep
+	disp.send(iq)
 
       #<conference name='Council of Oberon' 
                   #autojoin='true'

@@ -45,9 +45,34 @@ class Jabber:
 	def __init__(self):
 		pass
 
-	def getVCard(self,jid):
+	def VCardHandler(self,i,rep,jid,onlyAvatar):
+		if not isResultNode(rep) or rep.getVCardPayload()==None or len(rep.getVCardPayload())==0:
+			if onlyAvatar==True:
+				self.inc.put(["avatar_show",{},jid])
+			else:
+				self.inc.put(["vcard_show",{}])
+			return
+		vcard={}
+		for i in rep.getVCardPayload():
+			if not isinstance(i,unicode):
+				vcard=self.parse(vcard,i)
+		if onlyAvatar==True:
+			self.inc.put(["avatar_show",vcard,jid])
+		else:
+			self.inc.put(["vcard_show",vcard])
+		
+	def parse(self,vcard,i):
+		if len(i.getChildren())==0:
+			vcard[i.getName()]=unicode(i.getData())
+		else:
+			test={}
+			for x in i.getChildren():
+				vcard[i.getName()]=self.parse(test,x)
+		return vcard
+
+	def getVCard(self,jid,onlyAvatar=False):
 		# get vcard informations
-		self.inc.put(["vcard_show",xmpp.vcard.getVcard(self.conn,jid)])
+		xmpp.vcard.getVcard(self.conn,jid,self.VCardHandler,onlyAvatar)
 	
 	def getIntoRoom(self,room,nick):
 		# join to conference
@@ -132,6 +157,7 @@ class Jabber:
 		print unicode(rep)
 
 	def bookmarksHandle(self,i,rep):
+		# getBookmarks request handler and parser (XEP-0048)
 		bookmarks={}
 		if isResultNode(rep):
 			print rep
@@ -161,13 +187,12 @@ class Jabber:
 								bookmarks[attrs["jid"]]=data
 		self.inc.put(["bookmarks", bookmarks])
 
-
 	def getBookmarks(self):
-		# get bookmarks (XEP-0049)
+		# get bookmarks (XEP-0048)
 		xmpp.features.getBookmarks(self.conn,self.bookmarksHandle)
 
 	def setBookmarks(self,data):
-		# se bookmarks (XEP-0049)
+		# se bookmarks (XEP-0048)
 		return xmpp.features.setConference(self.conn,data)
 
 	def listGames(self, gameType):

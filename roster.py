@@ -359,7 +359,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		elif cmd=="avatar":
 			jid=action.data()
 			jid=str(jid.toString())
-			self.jab.getVCard(jid)
+			self.jab.getVCard(jid,True)
 
 	def contextMenuEvent (self,event):
 		item=self.itemFromIndex(self.indexAt(QtCore.QPoint(event.x(),event.y())))

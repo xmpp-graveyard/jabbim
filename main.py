@@ -466,7 +466,6 @@ class mainWindow(QtGui.QMainWindow):
 		elif e[0]=="bookmarks":
 			self.bookmarks=e[1]
 			self.buildGroupchatMenu()
-			print self.bookmarks
 
 		elif e[0] == "avatar_show":
 			vcard=e[1]
