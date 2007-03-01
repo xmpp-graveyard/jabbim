@@ -161,24 +161,26 @@ def getRegInfo(disp,host,info={}):
 
 
 def register(disp,host,info):
-    """ Perform registration on remote server with provided info.
-        disp must be connected dispatcher instance.
-        Returns true or false depending on registration result.
-        If registration fails you can get additional info from the dispatcher's owner
-        attributes lastErrNode, lastErr and lastErrCode.
-    """
-    iq=Iq('set',NS_REGISTER,to=host)
-    if type(info)<>type({}): info=info.asDict()
-    for i in info.keys(): iq.setTag('query').setTagData(i,info[i])
-    resp=disp.SendAndWaitForResponse(iq)
-    if isResultNode(resp): return 1
+	""" Perform registration on remote server with provided info.
+		disp must be connected dispatcher instance.
+		Returns true or false depending on registration result.
+		If registration fails you can get additional info from the dispatcher's owner
+		attributes lastErrNode, lastErr and lastErrCode.
+	"""
+	iq=Iq('set',NS_REGISTER,to=host)
+	if type(info)<>type({}): info=info.asDict()
+	for i in info.keys(): iq.setTag('query').setTagData(i,info[i])
+	disp.send(iq)
+	#resp=disp.SendAndWaitForResponse(iq)
+	#if isResultNode(resp): return 1
 
 def unregister(disp,host):
-    """ Unregisters with host (permanently removes account).
-        disp must be connected and authorized dispatcher instance.
-        Returns true on success."""
-    resp=disp.SendAndWaitForResponse(Iq('set',NS_REGISTER,to=host,payload=[Node('remove')]))
-    if isResultNode(resp): return 1
+	""" Unregisters with host (permanently removes account).
+		disp must be connected and authorized dispatcher instance.
+		Returns true on success."""
+	disp.send(Iq('set',NS_REGISTER,to=host,payload=[Node('remove')]))
+	#resp=disp.SendAndWaitForResponse(Iq('set',NS_REGISTER,to=host,payload=[Node('remove')]))
+	#if isResultNode(resp): return 1
 
 def changePasswordTo(disp,newpassword,host=None):
     """ Changes password on specified or current (if not specified) server.
