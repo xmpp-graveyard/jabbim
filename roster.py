@@ -155,7 +155,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(0,name)
 		item.setText(1,"0"+unicode(name).lower())
 		item.setText(2,name)
-		item.setIcon(0,QtGui.QIcon("images/status/muc_inactive.png"))
+		item.setIcon(0,QtGui.QIcon("images/32x32/icons/group-closed.png"))
 		if self.main.palette["roster"].has_key("group"):
 			if len(self.main.palette["roster"]["group"])!=0:
 				item.setBackgroundColor(0,QtGui.QColor(self.main.palette["roster"]["group"]))

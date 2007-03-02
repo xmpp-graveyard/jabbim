@@ -121,22 +121,23 @@ class Jabber:
 		ret=[]
 		identities , features = [] , []
 		for i in rep:
-			if typ=="items":
-				if i.getName()=='agent' and i.getTag('name'): i.setAttr('name',i.getTagData('name'))
-				self.discoveryQueue.put([typ,i.attrs,str(jid),node])
-				#ret.append(i.attrs)
-			if typ=="info":
-				for i in rep:
-					if i.getName()=='identity': identities.append(i.attrs)
-					elif i.getName()=='feature': features.append(i.getAttr('var'))
-					elif i.getName()=='agent':
-						if i.getTag('name'): i.setAttr('name',i.getTagData('name'))
-						if i.getTag('description'): i.setAttr('name',i.getTagData('description'))
-						identities.append(i.attrs)
-						if i.getTag('groupchat'): features.append(NS_GROUPCHAT)
-						if i.getTag('register'): features.append(NS_REGISTER)
-						if i.getTag('search'): features.append(NS_SEARCH)
-				self.discoveryQueue.put([typ,identities,features,str(jid)])
+			if not isinstance(i,unicode):
+				if typ=="items":
+					if i.getName()=='agent' and i.getTag('name'): i.setAttr('name',i.getTagData('name'))
+					self.discoveryQueue.put([typ,i.attrs,str(jid),node])
+					#ret.append(i.attrs)
+				if typ=="info":
+					for i in rep:
+						if i.getName()=='identity': identities.append(i.attrs)
+						elif i.getName()=='feature': features.append(i.getAttr('var'))
+						elif i.getName()=='agent':
+							if i.getTag('name'): i.setAttr('name',i.getTagData('name'))
+							if i.getTag('description'): i.setAttr('name',i.getTagData('description'))
+							identities.append(i.attrs)
+							if i.getTag('groupchat'): features.append(NS_GROUPCHAT)
+							if i.getTag('register'): features.append(NS_REGISTER)
+							if i.getTag('search'): features.append(NS_SEARCH)
+					self.discoveryQueue.put([typ,identities,features,str(jid)])
 
 	def discoveryItems(self,server=None,node=None):
 		# send discovery items request
