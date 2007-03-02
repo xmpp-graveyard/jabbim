@@ -233,7 +233,10 @@ class rosterWidget(QtGui.QTreeWidget):
 
 	def buildContactMenu(self,jid,group):
 		contactMenu=QtGui.QMenu(self)
-		contactMenu.addAction(self.tr("Chat"))
+		action=contactMenu.addAction(self.tr("Chat"))
+		action.setData(QtCore.QVariant(jid))
+		action.setObjectName("chat")
+
 		
 		action=contactMenu.addAction(self.tr("vCard"))
 		action.setData(QtCore.QVariant(jid))
@@ -382,6 +385,11 @@ class rosterWidget(QtGui.QTreeWidget):
 			jid=action.data()
 			jid=str(jid.toString())
 			self.jab.getVCard(jid,True)
+		elif cmd=="chat":
+			jid=action.data()
+			jid=str(jid.toString())
+			user=self.getUsers(jid)[0]
+			self.contactClicked(user,0)
 
 	def contextMenuEvent (self,event):
 		item=self.itemFromIndex(self.indexAt(QtCore.QPoint(event.x(),event.y())))
