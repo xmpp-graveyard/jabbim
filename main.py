@@ -758,7 +758,7 @@ class mainWindow(QtGui.QMainWindow):
 						if self.groups.has_key(group)==False:
 							self.groups[group]={"item":self.ui.roster.addGroup(group),"users":{}}
 						name=e[1].getName(jid)
-						self.groups[group]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,name,self.groups[group]["item"],self.offline,self.statuses["offline"]),"resources":[]}
+						self.groups[group]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,name,self.groups[group]["item"],self.offline,self.getIcon(jid,"offline")),"resources":[]}
 				except:
 					pass
 			self.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
