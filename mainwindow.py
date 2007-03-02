@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Wed Feb 28 06:00:16 2007
+# Created: Thu Mar  1 21:33:38 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,6 +14,7 @@ class Ui_mainWindow(object):
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
         mainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,229,481).size()).expandedTo(mainWindow.minimumSizeHint()))
+        mainWindow.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.centralwidget = QtGui.QWidget(mainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -56,14 +57,14 @@ class Ui_mainWindow(object):
         self.menubar.setGeometry(QtCore.QRect(0,0,229,28))
         self.menubar.setObjectName("menubar")
 
-        self.menuAction = QtGui.QMenu(self.menubar)
-        self.menuAction.setObjectName("menuAction")
-
         self.menuPreferences = QtGui.QMenu(self.menubar)
         self.menuPreferences.setObjectName("menuPreferences")
 
         self.menuJGames = QtGui.QMenu(self.menubar)
         self.menuJGames.setObjectName("menuJGames")
+
+        self.menuAction = QtGui.QMenu(self.menubar)
+        self.menuAction.setObjectName("menuAction")
         mainWindow.setMenuBar(self.menubar)
 
         self.toolBar = QtGui.QToolBar(mainWindow)
@@ -88,12 +89,12 @@ class Ui_mainWindow(object):
 
         self.actionTic_tac_toe = QtGui.QAction(mainWindow)
         self.actionTic_tac_toe.setObjectName("actionTic_tac_toe")
+        self.menuPreferences.addAction(self.actionPreferences)
         self.menuAction.addAction(self.actionAdd_contact)
         self.menuAction.addAction(self.actionGroup_Chat)
         self.menuAction.addAction(self.actionService_discovery)
         self.menuAction.addSeparator()
         self.menuAction.addAction(self.actionQuit)
-        self.menuPreferences.addAction(self.actionPreferences)
         self.menubar.addAction(self.menuAction.menuAction())
         self.menubar.addAction(self.menuPreferences.menuAction())
         self.menubar.addAction(self.menuJGames.menuAction())
@@ -106,9 +107,9 @@ class Ui_mainWindow(object):
         mainWindow.setWindowTitle(QtGui.QApplication.translate("mainWindow", "Jabbim", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setText(QtGui.QApplication.translate("mainWindow", "Show Offline", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setText(QtGui.QApplication.translate("mainWindow", "Online", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuAction.setTitle(QtGui.QApplication.translate("mainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPreferences.setTitle(QtGui.QApplication.translate("mainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.menuJGames.setTitle(QtGui.QApplication.translate("mainWindow", "JGames", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuAction.setTitle(QtGui.QApplication.translate("mainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setText(QtGui.QApplication.translate("mainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.actionService_discovery.setText(QtGui.QApplication.translate("mainWindow", "Service discovery", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("mainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))

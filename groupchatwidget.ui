@@ -110,7 +110,7 @@
         <string>...</string>
        </property>
        <property name="icon" >
-        <iconset>images/smileys/biggrin.png</iconset>
+        <iconset>images/22x22/emotes/biggrin.png</iconset>
        </property>
        <property name="checkable" >
         <bool>true</bool>

@@ -41,7 +41,7 @@ class gameChatWidget(QtGui.QWidget):
 			if added.count(v)==0:
 				added.append(v)
 				button=QtGui.QToolButton(self)
-				action=QtGui.QAction(QtGui.QIcon("images/smileys/"+v),"",self.s)
+				action=QtGui.QAction(QtGui.QIcon("images/22x22/emotes/"+v),"",self.s)
 				action.setData(QtCore.QVariant(k))
 				button.setDefaultAction(action)
 				button.setToolTip(str(k))
@@ -53,7 +53,7 @@ class gameChatWidget(QtGui.QWidget):
 					x+=1
 	
 	def smileysClicked(self,bool):
-		self.s.setGeometry ( self.ui.smileys.x()-60, self.ui.smileys.y()-120, 120, 120)
+		self.s.setGeometry ( self.ui.smileys.x()-60, self.ui.smileys.y()-200, 120, 200)
 		self.s.setShown(bool)
 	
 	def textEditWrite(self,text):

@@ -113,7 +113,19 @@ class rosterWidget(QtGui.QTreeWidget):
 		if group==True:
 			return groups
 		return users
-	
+
+	def getServerUsers(self,jid,group=False):
+		users=[]
+		groups={}
+		for k,v in self.main.groups.iteritems():
+			for key in self.main.groups[k]["users"].keys():
+				if len(key.split("@"))>1:
+					if key.split("@")[1]==jid:
+						users.append(self.main.groups[k]["users"][key]["item"])
+						groups[self.main.groups[k]["users"][key]["item"]]=k
+		if group==True:
+			return groups
+		return users
 
 	def getResources(self,jid):
 		for k,v in self.main.groups.iteritems():

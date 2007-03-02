@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'gamechatwidget.ui'
 #
-# Created: Thu Mar  1 20:14:27 2007
+# Created: Fri Mar  2 21:55:52 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -70,7 +70,7 @@ class Ui_gamechatwidget(object):
         self.hboxlayout.addWidget(self.line)
 
         self.smileys = QtGui.QToolButton(gamechatwidget)
-        self.smileys.setIcon(QtGui.QIcon("images/smileys/biggrin.png"))
+        self.smileys.setIcon(QtGui.QIcon("images/22x22/emotes/biggrin.png"))
         self.smileys.setCheckable(True)
         self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.smileys.setObjectName("smileys")

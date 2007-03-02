@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'groupchatwidget.ui'
 #
-# Created: Tue Feb 27 14:43:06 2007
+# Created: Fri Mar  2 21:55:38 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -70,7 +70,7 @@ class Ui_groupchatwidget(object):
         self.hboxlayout.addWidget(self.line)
 
         self.smileys = QtGui.QToolButton(groupchatwidget)
-        self.smileys.setIcon(QtGui.QIcon("images/smileys/biggrin.png"))
+        self.smileys.setIcon(QtGui.QIcon("images/22x22/emotes/biggrin.png"))
         self.smileys.setCheckable(True)
         self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.smileys.setObjectName("smileys")

@@ -156,7 +156,7 @@ class Jabber:
 	def getGroupchatConfig(self,muc):
 		# get groupchat config form
 		iq=Iq(to=muc,typ='get',queryNS=NS_MUC_OWNER,xmlns=None)
-		print iq
+		print unicode(iq)
 		self.conn.SendAndCallForResponse(iq,self.groupchatConfigHandler,args={"muc":muc})
 	
 	def setGroupchatConfig(self,host,info):
@@ -181,7 +181,6 @@ class Jabber:
 		# getBookmarks request handler and parser (XEP-0048)
 		bookmarks={}
 		if isResultNode(rep):
-			print rep
 			for i in rep.getQueryPayload():
 				if i.getName()=="storage":
 					for x in i.getChildren():
@@ -261,7 +260,7 @@ class Jabber:
 			user=mess.getFrom() # get sender of message
 			resource=mess.getFrom().getResource() # get message resource
 			typ=mess.getType() # fet type of message
-			print user,typ
+			print unicode(user),typ
 			if typ=="chat":
 				# put chat message to the message_queue
 				jid = str(str(user).rsplit("/")[0]).lower()
@@ -403,6 +402,7 @@ class Jabber:
 		self.conn.RegisterHandler('presence',self.presenceHandle)
 		self.conn.RegisterDisconnectHandler(self.off)
 		self.conn.RegisterHandler('iq', self.xmppPingReply, 'get', NS_XMPP_PING)
+		#self.discoveryItems()
 		self.roster = self.conn.getRoster()
 		self.inc.put(["roster_update", self.roster])
 		self.ready=False

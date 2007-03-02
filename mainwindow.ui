@@ -12,6 +12,9 @@
   <property name="windowTitle" >
    <string>Jabbim</string>
   </property>
+  <property name="windowIcon" >
+   <iconset>images/16x16/apps/jabbim.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget" >
    <layout class="QGridLayout" >
     <property name="margin" >
@@ -92,6 +95,17 @@
      <height>28</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuJGames" >
+    <property name="title" >
+     <string>JGames</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuPreferences" >
+    <property name="title" >
+     <string>Preferences</string>
+    </property>
+    <addaction name="actionPreferences" />
+   </widget>
    <widget class="QMenu" name="menuAction" >
     <property name="title" >
      <string>Actions</string>
@@ -101,17 +115,6 @@
     <addaction name="actionService_discovery" />
     <addaction name="separator" />
     <addaction name="actionQuit" />
-   </widget>
-   <widget class="QMenu" name="menuPreferences" >
-    <property name="title" >
-     <string>Preferences</string>
-    </property>
-    <addaction name="actionPreferences" />
-   </widget>
-   <widget class="QMenu" name="menuJGames" >
-    <property name="title" >
-     <string>JGames</string>
-    </property>
    </widget>
    <addaction name="menuAction" />
    <addaction name="menuPreferences" />

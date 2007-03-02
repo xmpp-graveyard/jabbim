@@ -75,7 +75,6 @@ class discoveryWindow(QtGui.QDialog):
 		menu=QtGui.QMenu(self.ui.services)
 		if item.parent()==None:
 			for feature in item.features:
-				print feature
 				if feature=="jabber:iq:register":
 					action=menu.addAction(self.tr("Register / Unregister"))
 					action.setData(QtCore.QVariant(jid))
@@ -114,7 +113,6 @@ class discoveryWindow(QtGui.QDialog):
 		if item.parent()==None and int(item.childCount())==0:
 			jab.discoveryItems(unicode(item.text(1)))
 		if item.node!=False and int(item.childCount())==0:
-			print item.node
 			jab.discoveryItems(unicode(item.text(1)),node=item.node)
 
 
@@ -143,6 +141,7 @@ class mainWindow(QtGui.QMainWindow):
 		#self.loadBookmarks()
 		self.loadGroupchat()
 		self.groupchat={}
+		self.discoInfo={}
 		#self.users={}
 		self.groups={}
 		self.groups["Unknown"]={"item":self.ui.roster.addGroup(self.tr("Unknown")),"users":{}}
@@ -156,7 +155,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.gameslist=gamesListWindow(self,self,jab)
 		self.preparedGames=[]
 		
-		self.tray=QtGui.QSystemTrayIcon(QtGui.QIcon("images/status/online.png"))
+		self.tray=QtGui.QSystemTrayIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 		menu=QtGui.QMenu(self)
 		menu.addMenu(self.statusMenu)
 		menu.addSeparator()
@@ -168,6 +167,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.events=groupedEventWindow(None,self,jab)
 		self.jgamesLoadPlugins()
 		self.gameServer="@games.jabbim.cz"
+		self.disco=discoveryWindow(self)
 
 	def jgamesClicked(self,action):
 		data=action.data()
@@ -210,7 +210,6 @@ class mainWindow(QtGui.QMainWindow):
 #			self.addGame(plugin.config.icon,plugin.config.name,plugin.config.id)
 
 	def discovery(self):
-		self.disco=discoveryWindow(self)
 		self.disco.show()
 		jab.discoveryItems()
 
@@ -277,6 +276,7 @@ class mainWindow(QtGui.QMainWindow):
 		layout.addWidget(self.ui.roster)
 
 	def loadStatus(self):
+		self.statusPath="images/32x32/status/"
 		self.statuses={"online":QtGui.QIcon("images/status/online.png"),
 						"available":QtGui.QIcon("images/status/online.png"),
 						"offline":QtGui.QIcon("images/status/offline.png"),
@@ -294,6 +294,13 @@ class mainWindow(QtGui.QMainWindow):
 						"dnd":"5",
 						"None":"9",
 						"offline":"9"
+						}
+		self.iconSort={"1":"online",
+						"2":"chat",
+						"3":"away",
+						"4":"xa",
+						"5":"dnd",
+						"9":"offline"
 						}
 		self.status={"online":self.tr("Online"),
 					"available":self.tr("Online"),
@@ -447,6 +454,27 @@ class mainWindow(QtGui.QMainWindow):
 				return user
 		return None
 
+	def getIcon(self,jid,typ):
+		file=self.statusPath+self.getUserType(jid)+"-"+self.iconSort[self.nickSort[typ]]+".png"
+		if os.path.exists(file):
+			icon=QtGui.QIcon(file)
+		else:
+			print "File not exist",jid,typ,file
+			icon=QtGui.QIcon(self.statusPath+"jabber-"+self.iconSort[self.nickSort[typ]]+".png")
+		return icon
+
+	def getUserType(self,jid):
+		if len(jid.split("@"))!=1:
+			if self.discoInfo.has_key(jid.split("@")[1]):
+				typ=self.discoInfo[jid.split("@")[1]]
+				if typ=="pep" or typ=="im":
+					typ="jabber"
+				elif typ=="file":
+					typ="disk"
+				return typ
+		else:
+			print jid
+		return "jabber"
 
 	def jabberCommandHandler(self,e):
 		if e[0] == "con_ready":
@@ -620,17 +648,18 @@ class mainWindow(QtGui.QMainWindow):
 						elif self.config["tray_message_view_connect"]=="logged_in" and int(unicode(user.text(1)[0]))==9:
 							self.tray.showMessage(self.tr("User status"), self.tr("User ")+unicode(user.text(2))+self.tr(" is now ")+self.status[str(e[2].getShow())]+"\n"+unicode(e[2].getStatus()), QtGui.QSystemTrayIcon.Information, 5000)
 						if str(e[2].getShow())!="None":
-							user.setIcon(0,self.statuses[str(e[2].getShow())])
+							user.setIcon(0,self.getIcon(jid,str(e[2].getShow())))
+							#user.setIcon(0,self.statuses[str(e[2].getShow())])
 							user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
 						else:
-							user.setIcon(0,self.statuses["online"])
+							user.setIcon(0,self.getIcon(jid,"online"))
 							user.setText(1,self.nickSort["online"]+unicode(user.text(2)))
 						for i in range(self.chat.ui.chatTab.count()):
 							w=self.chat.ui.chatTab.widget(i)
 							if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
 								self.chat.ui.chatTab.setTabIcon(i,user.icon(0))
 						# Nastaveni tooltip
-						user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>'+self.tr("Jabber ID:")+' </b>'+str(jid)+'')
+						user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b> - '+str(e[2].getShow())+'</font><hr>'+unicode(e[2].getStatus())+'<br/><b>'+self.tr("Jabber ID:")+' </b>'+str(jid)+'')
 						# Nastaveni stavove zpravy pod nick v rosteru. Pokud neni zprava nastavena, vytvori se jen nick bez zpravy.
 						user.setText(0,unicode(user.text(2)))
 						#if unicode(e[2].getStatus())=="None" or len(e[2].getStatus())==0:
@@ -643,7 +672,6 @@ class mainWindow(QtGui.QMainWindow):
 					# Jedna se o odhlaseni
 					elif str(e[2].getType())=="unavailable":
 						# Pokud byl user predtim prihlaseny
-						print unicode(user.text(1))
 						if int(unicode(user.text(1))[0])!=9:
 							# Odebrani resource z databaze
 							try:
@@ -714,9 +742,12 @@ class mainWindow(QtGui.QMainWindow):
 							w.chat.ui.listWidget.takeItem(int(w.chat.ui.listWidget.row(user)))
 
 		elif e[0] == "roster_update":
-			print " roster update"
+			print "roster update"
 			items=e[1].getItems()
 			for jid in items:
+				if len(jid.split("@"))!=1:
+					if not self.discoInfo.has_key(jid.split("@")[1]):
+						jab.discoveryInfo(jid.split("@")[1])
 				try:
 					jid=str(jid).lower()
 					groups=e[1].getGroups(jid)
@@ -767,12 +798,21 @@ class mainWindow(QtGui.QMainWindow):
 				ident=e[1]
 				features=e[2]
 				jid=e[3]
-				#print "*",jid
-				for feature in features:
-					if not feature in self.disco.items[jid].features:
-						self.disco.items[jid].features.append(feature)
+				if not self.discoInfo.has_key(jid) and ident[0].has_key("type"):
+					self.discoInfo[jid]=ident[0]["type"]
+					users=self.ui.roster.getServerUsers(jid)
+					for user in users:
+						data=user.data(32,0)
+						data=str(data.toString())
+						#user.setIcon(0,QtGui.QIcon(self.statusPath+self.getUserType(data)+"-"+self.iconSort[unicode(user.text(1))[0]]+".png"))
+						user.setIcon(0,self.getIcon(data,self.iconSort[unicode(user.text(1))[0]]))
+
 				if self.disco.items.has_key(jid):
-					self.disco.items[jid].setText(0,ident[0]["name"])
+					for feature in features:
+						if not feature in self.disco.items[jid].features:
+							self.disco.items[jid].features.append(feature)
+					if self.disco.items.has_key(jid):
+						self.disco.items[jid].setText(0,ident[0]["name"])
 
 		# we must use try as forced reading of empty queue raises an error
 		try:
