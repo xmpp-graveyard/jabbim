@@ -23,6 +23,7 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.gridlayout.setMargin(1)
 		self.ui.gridlayout.setSpacing(1)
 	def changeTab(self,index):
+		self.ui.chatTab.widget(index).chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 		try:
 			icon=self.main.ui.roster.getUsers(str(self.ui.chatTab.widget(index).jid))[0].icon(0)
 			self.ui.chatTab.setTabIcon(index,icon)
