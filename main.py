@@ -460,6 +460,7 @@ class mainWindow(QtGui.QMainWindow):
 			icon=QtGui.QIcon(file)
 		else:
 			print "File not exist",jid,typ,file
+			print self.statusPath+"jabber-"+self.iconSort[self.nickSort[typ]]+".png"
 			icon=QtGui.QIcon(self.statusPath+"jabber-"+self.iconSort[self.nickSort[typ]]+".png")
 		return icon
 
