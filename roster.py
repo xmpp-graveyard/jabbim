@@ -42,6 +42,8 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
 		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.contactClicked)
+		QtCore.QObject.connect(self, QtCore.SIGNAL("itemExpanded ( QTreeWidgetItem * )"),self.expanded)
+		QtCore.QObject.connect(self, QtCore.SIGNAL("itemCollapsed ( QTreeWidgetItem * )"),self.collapsed)
 		#QtCore.QObject.connect(self, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int )"),self.clicked)
 		self.item=QtGui.QTreeWidgetItem(self)
 		self.item.setText(1,"999")
@@ -51,7 +53,15 @@ class rosterWidget(QtGui.QTreeWidget):
 		short=QtGui.QShortcut("f2",self)
 		palette=loadPalette(self.main.palette["roster"])
 		self.setPalette(palette)
-		
+
+	def expanded(self,item):
+		if item.parent()==None:
+			item.setIcon(0,QtGui.QIcon("images/32x32/icons/group-open.png"))
+
+	def collapsed(self,item):
+		if item.parent()==None:
+			item.setIcon(0,QtGui.QIcon("images/32x32/icons/group-closed.png"))
+
 	#def clicked(self,item,i):
 		#if i==3:
 			#label=QtGui.QLabel(self)
