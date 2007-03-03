@@ -284,6 +284,14 @@ class Jabber:
 						self.inc.put(i)
 					self.message_queue=[]
 
+	def getPresence(self):
+		if self.ready==True:
+			# GUI is ready for presences, so we can send presences to GUI
+			if len(self.presence_queue)!=0:
+				print "presence"
+				for i in self.presence_queue:
+					self.inc.put(i)
+				self.presence_queue=[]
 
 	def presenceHandle(self, conn, pres):
 		# presence handle

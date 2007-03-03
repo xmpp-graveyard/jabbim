@@ -26,8 +26,8 @@ class joinGroupChatWindow(QtGui.QDialog):
 			self.jab.setBookmarks(self.main.bookmarks)
 			self.main.buildGroupchatMenu()
 		print "joining",room,nickname
-		self.main.chat.addGroupChatTab(room,nickname)
-		self.main.groupchat[room]=[nickname,[]]
+		self.main.chat.addGroupChatTab(room+"@"+server,nickname)
+		self.main.groupchat[room+"@"+server]=[nickname,[]]
 		self.jab.getIntoRoom(room+"@"+server,nickname)
 		self.done(1)
 
