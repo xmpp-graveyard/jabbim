@@ -212,6 +212,7 @@ class mainWindow(QtGui.QMainWindow):
 			jab.discoveryItems(jid)
 
 	def groupchatClicked(self,item,i):
+		print "clicked"
 		if int(item.childCount())!=0:
 			for i in range(item.childCount()):
 				item.takeChild(0)

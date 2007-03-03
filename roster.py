@@ -70,7 +70,10 @@ class rosterWidget(QtGui.QTreeWidget):
 
 	def resizeEvent(self,event):
 		QtGui.QTreeWidget.resizeEvent(self,event)
-		self.setColumnWidth(0,int(self.width())-38)
+		if self.verticalScrollBar().isVisible():
+			self.setColumnWidth(0,int(self.width())-50)
+		else:
+			self.setColumnWidth(0,int(self.width())-38)
 		
 	#def drawRow(self,p, opt, idx):
 		#QtGui.QTreeWidget.drawRow(self,p, opt, idx)

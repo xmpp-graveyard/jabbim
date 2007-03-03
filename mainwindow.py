@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Sat Mar  3 06:13:29 2007
+# Created: Sat Mar  3 10:15:19 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -121,6 +121,7 @@ class Ui_mainWindow(object):
         self.gridlayout2.addItem(spacerItem2,0,0,1,1)
 
         self.groupchat = QtGui.QTreeWidget(self.tab_3)
+        self.groupchat.setAlternatingRowColors(True)
         self.groupchat.setObjectName("groupchat")
         self.gridlayout2.addWidget(self.groupchat,1,0,1,2)
 
