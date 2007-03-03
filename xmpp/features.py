@@ -63,7 +63,7 @@ def setConference(disp,data):
 ### Browse ### jabber:iq:browse ### JEP-0030 ###################################
 ### Agents ### jabber:iq:agents ### JEP-0030 ###################################
 
-def _discover(disp,ns,jid,func,node=None,fb2b=0,fb2a=1):
+def _discover(disp,ns,jid,func,back,node=None,fb2b=0,fb2a=1):
 	""" Try to obtain info from the remote object.
 		If remote object doesn't support disco fall back to browse (if fb2b is true)
 		and if it doesnt support browse (or fb2b is not true) fall back to agents protocol
@@ -72,46 +72,46 @@ def _discover(disp,ns,jid,func,node=None,fb2b=0,fb2a=1):
 	if node:
 		iq.setQuerynode(node)
 	#print iq
-	rep=disp.SendAndCallForResponse(iq,_discover1,args={'disp':disp,'ns':ns,'jid':jid,'node':node,'fb2b':fb2b,'fb2a':fb2a,'func':func})
+	rep=disp.SendAndCallForResponse(iq,_discover1,args={'disp':disp,'ns':ns,'jid':jid,'node':node,'fb2b':fb2b,'fb2a':fb2a,'func':func,'back':back})
 	#if fb2b and not isResultNode(rep): rep=disp.SendAndWaitForResponse(Iq(to=jid,typ='get',queryNS=NS_BROWSE))   # Fallback to browse
 	#if fb2a and not isResultNode(rep): rep=disp.SendAndWaitForResponse(Iq(to=jid,typ='get',queryNS=NS_AGENTS))   # Fallback to agents
 
 	#if isResultNode(rep): func(rep)
 	#return []
 
-def _discover1(i,rep,disp=None,ns=None,jid=None,node=None,fb2b=0,fb2a=1,func=None):
+def _discover1(i,rep,back,disp=None,ns=None,jid=None,node=None,fb2b=0,fb2a=1,func=None):
 	iq=Iq(to=jid,typ='get',queryNS=NS_BROWSE)
 	if node:
 		iq.setQuerynode(node)
 	if fb2b and not isResultNode(rep):
-		rep=disp.SendAndCallForResponse(iq,_discover2,args={'func':func,'jid':jid,'ns':ns,'node':node})   # Fallback to browse
+		rep=disp.SendAndCallForResponse(iq,_discover2,args={'func':func,'jid':jid,'ns':ns,'node':node,"back":back})   # Fallback to browse
 		return
 	iq=Iq(to=jid,typ='get',queryNS=NS_AGENTS)
 	if node:
 		iq.setQuerynode(node)
 	if fb2a and not isResultNode(rep):
-		rep=disp.SendAndCallForResponse(iq,_discover2,args={'func':func,'jid':jid,'ns':ns,'node':node})   # Fallback to agents
+		rep=disp.SendAndCallForResponse(iq,_discover2,args={'func':func,'jid':jid,'ns':ns,'node':node,"back":back})   # Fallback to agents
 		return
 	typ="items"
 	if ns==NS_DISCO_INFO:
 		typ="info"
-	if isResultNode(rep): func(rep.getQueryPayload(),jid,typ,node)
-	else: func([],jid,typ,node)
-def _discover2(i,rep,func=None,disp=None,ns=None,jid=None,node=None,fb2b=0,fb2a=1):
+	if isResultNode(rep): func(rep.getQueryPayload(),jid,typ,node,back)
+	else: func([],jid,typ,node,back)
+def _discover2(i,rep,back,func=None,disp=None,ns=None,jid=None,node=None,fb2b=0,fb2a=1):
 	typ="items"
 	if ns==NS_DISCO_INFO:
 		typ="info"
-	if isResultNode(rep): func(rep.getQueryPayload(),jid,typ,node)
-	else: func([],jid,typ,node)
+	if isResultNode(rep): func(rep.getQueryPayload(),jid,typ,node,back)
+	else: func([],jid,typ,node,back)
 
 
-def discoverItems(disp,jid,func,node=None):
+def discoverItems(disp,jid,func,node=None,back=None):
 	""" Query remote object about any items that it contains. Return items list. """
 	""" According to JEP-0030:
 		query MAY have node attribute
 		item: MUST HAVE jid attribute and MAY HAVE name, node, action attributes.
 		action attribute of item can be either of remove or update value."""
-	_discover(disp,NS_DISCO_ITEMS,jid,func,node)
+	_discover(disp,NS_DISCO_ITEMS,jid,func,back,node)
 	#ret=[]
 	#for i in _discover(disp,NS_DISCO_ITEMS,jid,func,node):
 		#if i.getName()=='agent' and i.getTag('name'): i.setAttr('name',i.getTagData('name'))

@@ -136,6 +136,9 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.addContact, QtCore.SIGNAL("clicked ()"),self.addContactMainWindow)
 		app.connect(self.ui.getGroupchatList, QtCore.SIGNAL("clicked ()"),self.getGroupchatList)
 		QtCore.QObject.connect(self.ui.groupchat, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.groupchatClicked)
+		QtCore.QObject.connect(self.ui.groupchat, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.groupchatContextMenu)
+		self.ui.groupchat.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+
 		self.timer=QtCore.QTimer()
 		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.tick)
 		self.timer.start(20)
@@ -175,6 +178,30 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.groupchat.header().hide()
 		self.ui.groupchat.hideColumn(1)
 
+	def groupchatContextMenuTriggered(self,action):
+		cmd=action.objectName()
+		if cmd=="join":
+			jid=action.data()
+			jid=str(jid.toString())
+			room=jid.split("@")[0]
+			server=jid.split("@")[1]
+			newchat=joinGroupChatWindow(self,jab,room=room,server=server)
+			ret=newchat.exec_()
+			if ret==1:
+				self.chat.show()
+
+	def groupchatContextMenu(self,pos):
+		item=self.ui.groupchat.itemFromIndex(self.ui.groupchat.indexAt(pos))
+		jid=str(item.text(1))
+		menu=QtGui.QMenu(self.ui.groupchat)
+		if item.parent()==None:
+			action=menu.addAction(self.tr("Join"))
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("join")
+		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.groupchatContextMenuTriggered)
+		menu.move(self.ui.groupchat.mapToGlobal(pos))
+		menu.show()
+
 	def getGroupchatList(self):
 		jid=""
 		for k,v in self.discoInfo.iteritems():
@@ -185,13 +212,10 @@ class mainWindow(QtGui.QMainWindow):
 			jab.discoveryItems(jid)
 
 	def groupchatClicked(self,item,i):
-		if item.parent()==None:
-			room=unicode(item.text(1)).split("@")[0]
-			server=unicode(item.text(1)).split("@")[1]
-			newchat=joinGroupChatWindow(self,jab,room=room,server=server)
-			ret=newchat.exec_()
-			if ret==1:
-				self.chat.show()
+		if int(item.childCount())!=0:
+			for i in range(item.childCount()):
+				item.takeChild(0)
+		jab.discoveryItems(unicode(item.text(1)),back="muc_items")
 
 	def jgamesClicked(self,action):
 		data=action.data()
@@ -381,9 +405,9 @@ class mainWindow(QtGui.QMainWindow):
 			#action.setData(QtCore.QVariant([unicode(k),unicode(v["nick"]),unicode(v["password"])]))
 			room=unicode(cmd)
 			nickname=unicode(lst[1].toString())
-			jab.getIntoRoom(room,nickname)
 			self.groupchat[room]=[nickname,[]]
 			self.chat.addGroupChatTab(room,nickname)
+			jab.getIntoRoom(room,nickname)
 
 	def statusChanged(self,action):
 		data=action.data()
@@ -817,55 +841,64 @@ class mainWindow(QtGui.QMainWindow):
 		except:
 			e=None
 		if e!=None:
-			typ=e[0]
-			if typ=="items":
-				item=e[1]
-				jid=e[2]
-				parentNode=e[3]
-				if item.has_key("jid") and jid==jab.server:
-					self.disco.addItem(unicode(item["jid"]))
-					jab.discoveryInfo(item["jid"])
-				if jid!=jab.server:
-					name=""
-					if item.has_key("name"):
-						name=item["name"]
-					node=""
-					if self.discoInfo.has_key(jid):
-						if self.discoInfo[jid]=="conf":
-							groupchat=QtGui.QTreeWidgetItem(self.ui.groupchat)
-							groupchat.setText(0,unicode(name))
-							groupchat.setText(1,unicode(item["jid"]))
-							self.ui.groupchat.sortItems(0,QtCore.Qt.AscendingOrder)
-					parent=self.disco.items[jid]
-					if self.disco.nodes.has_key(jid+str(parentNode)):
-						parent=self.disco.nodes[jid+str(parentNode)]
-					if item.has_key("node"):
-						node=item["node"]
-					self.disco.addItem(unicode(item["jid"]),unicode(name),parent,node=node)
-			else:
-				ident=e[1]
-				features=e[2]
+			if e[0]=="muc_items":
+				item=e[2]
 				jid=e[3]
-				if not self.discoInfo.has_key(jid) and ident[0].has_key("type"):
-					if "http://jabber.org/protocol/muc" in features and ident[0]["type"]=="text":
-						self.discoInfo[jid]="conf"
-						self.ui.getGroupchatList.setEnabled(True)
-					else:
-						self.discoInfo[jid]=ident[0]["type"]
-						users=self.ui.roster.getServerUsers(jid)
-						for user in users:
-							data=user.data(32,0)
-							data=str(data.toString())
-							#user.setIcon(0,QtGui.QIcon(self.statusPath+self.getUserType(data)+"-"+self.iconSort[unicode(user.text(1))[0]]+".png"))
-							user.setIcon(0,self.getIcon(data,self.iconSort[unicode(user.text(1))[0]]))
-					
-
-				if self.disco.items.has_key(jid):
-					for feature in features:
-						if not feature in self.disco.items[jid].features:
-							self.disco.items[jid].features.append(feature)
+				name=unicode(item["jid"]).split("/")[1]
+				for i in self.ui.groupchat.findItems(jid,QtCore.Qt.MatchExactly,1):
+					user=QtGui.QTreeWidgetItem(i)
+					user.setText(0,unicode(name))
+					user.setText(1,unicode(name))
+			elif e[0]==None:
+				typ=e[1]
+				if typ=="items":
+					item=e[2]
+					jid=e[3]
+					parentNode=e[4]
+					if item.has_key("jid") and jid==jab.server:
+						self.disco.addItem(unicode(item["jid"]))
+						jab.discoveryInfo(item["jid"])
+					if jid!=jab.server:
+						name=""
+						if item.has_key("name"):
+							name=item["name"]
+						node=""
+						if self.discoInfo.has_key(jid):
+							if self.discoInfo[jid]=="conf":
+								groupchat=QtGui.QTreeWidgetItem(self.ui.groupchat)
+								groupchat.setText(0,unicode(name))
+								groupchat.setText(1,unicode(item["jid"]))
+								self.ui.groupchat.sortItems(0,QtCore.Qt.AscendingOrder)
+						parent=self.disco.items[jid]
+						if self.disco.nodes.has_key(jid+str(parentNode)):
+							parent=self.disco.nodes[jid+str(parentNode)]
+						if item.has_key("node"):
+							node=item["node"]
+						self.disco.addItem(unicode(item["jid"]),unicode(name),parent,node=node)
+				else:
+					ident=e[2]
+					features=e[3]
+					jid=e[4]
+					if not self.discoInfo.has_key(jid) and ident[0].has_key("type"):
+						if "http://jabber.org/protocol/muc" in features and ident[0]["type"]=="text":
+							self.discoInfo[jid]="conf"
+							self.ui.getGroupchatList.setEnabled(True)
+						else:
+							self.discoInfo[jid]=ident[0]["type"]
+							users=self.ui.roster.getServerUsers(jid)
+							for user in users:
+								data=user.data(32,0)
+								data=str(data.toString())
+								#user.setIcon(0,QtGui.QIcon(self.statusPath+self.getUserType(data)+"-"+self.iconSort[unicode(user.text(1))[0]]+".png"))
+								user.setIcon(0,self.getIcon(data,self.iconSort[unicode(user.text(1))[0]]))
+						
+	
 					if self.disco.items.has_key(jid):
-						self.disco.items[jid].setText(0,ident[0]["name"])
+						for feature in features:
+							if not feature in self.disco.items[jid].features:
+								self.disco.items[jid].features.append(feature)
+						if self.disco.items.has_key(jid):
+							self.disco.items[jid].setText(0,ident[0]["name"])
 						
 
 		# we must use try as forced reading of empty queue raises an error

@@ -116,7 +116,7 @@ class Jabber:
 		# get service discovery register information (register forms, inunicodeuctions etc)
 		self.inc.put(["discovery_register",xmpp.features.getRegInfo(self.conn,jid),unicode(jid)])
 
-	def disco(self,rep,jid,typ,node):
+	def disco(self,rep,jid,typ,node,back):
 		# discovery info and items handler
 		ret=[]
 		identities , features = [] , []
@@ -124,7 +124,7 @@ class Jabber:
 			if not isinstance(i,unicode):
 				if typ=="items":
 					if i.getName()=='agent' and i.getTag('name'): i.setAttr('name',i.getTagData('name'))
-					self.discoveryQueue.put([typ,i.attrs,unicode(jid),node])
+					self.discoveryQueue.put([back,typ,i.attrs,unicode(jid),node])
 					#ret.append(i.attrs)
 				if typ=="info":
 					for i in rep:
@@ -138,15 +138,15 @@ class Jabber:
 								if i.getTag('groupchat'): features.append(NS_GROUPCHAT)
 								if i.getTag('register'): features.append(NS_REGISTER)
 								if i.getTag('search'): features.append(NS_SEARCH)
-					self.discoveryQueue.put([typ,identities,features,unicode(jid)])
+					self.discoveryQueue.put([back,typ,identities,features,unicode(jid)])
 
-	def discoveryItems(self,server=None,node=None):
+	def discoveryItems(self,server=None,node=None,back=None):
 		# send discovery items request
 		if server==None:
 			server=self.server
-		xmpp.features.discoverItems(self.conn,server,self.disco,node=node)
+		xmpp.features.discoverItems(self.conn,server,self.disco,node=node,back=back)
 
-	def discoveryInfo(self,server=None):
+	def discoveryInfo(self,server=None,back=None):
 		# send discovery info request
 		if server==None:
 			server=self.server
@@ -160,7 +160,7 @@ class Jabber:
 		iq=Iq(to=muc,typ='get',queryNS=NS_MUC_OWNER,xmlns=None)
 		print unicode(iq)
 		self.conn.SendAndCallForResponse(iq,self.groupchatConfigHandler,args={"muc":muc})
-	
+
 	def setGroupchatConfig(self,host,info):
 		# get groupchat config form
 		#iq=Iq(to=muc,typ='get',queryNS=NS_MUC_OWNER,xmlns=None)
