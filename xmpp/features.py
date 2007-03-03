@@ -72,7 +72,7 @@ def _discover(disp,ns,jid,func,back,node=None,fb2b=0,fb2a=1):
 	if node:
 		iq.setQuerynode(node)
 	#print iq
-	rep=disp.SendAndCallForResponse(iq,_discover1,args={'disp':disp,'ns':ns,'jid':jid,'node':node,'fb2b':fb2b,'fb2a':fb2a,'func':func,'back':back})
+	rep=disp.SendAndCallForResponse(iq,_discover1,args={'disp':disp,'ns':ns,'jid':jid,'node':node,'fb2b':fb2b,'fb2a':fb2a,'func':func,'back':back},myid="discovery")
 	#if fb2b and not isResultNode(rep): rep=disp.SendAndWaitForResponse(Iq(to=jid,typ='get',queryNS=NS_BROWSE))   # Fallback to browse
 	#if fb2a and not isResultNode(rep): rep=disp.SendAndWaitForResponse(Iq(to=jid,typ='get',queryNS=NS_AGENTS))   # Fallback to agents
 
@@ -84,13 +84,13 @@ def _discover1(i,rep,back,disp=None,ns=None,jid=None,node=None,fb2b=0,fb2a=1,fun
 	if node:
 		iq.setQuerynode(node)
 	if fb2b and not isResultNode(rep):
-		rep=disp.SendAndCallForResponse(iq,_discover2,args={'func':func,'jid':jid,'ns':ns,'node':node,"back":back})   # Fallback to browse
+		rep=disp.SendAndCallForResponse(iq,_discover2,args={'func':func,'jid':jid,'ns':ns,'node':node,"back":back},myid="discovery")   # Fallback to browse
 		return
 	iq=Iq(to=jid,typ='get',queryNS=NS_AGENTS)
 	if node:
 		iq.setQuerynode(node)
 	if fb2a and not isResultNode(rep):
-		rep=disp.SendAndCallForResponse(iq,_discover2,args={'func':func,'jid':jid,'ns':ns,'node':node,"back":back})   # Fallback to agents
+		rep=disp.SendAndCallForResponse(iq,_discover2,args={'func':func,'jid':jid,'ns':ns,'node':node,"back":back},myid="discovery")   # Fallback to agents
 		return
 	typ="items"
 	if ns==NS_DISCO_INFO:

@@ -136,8 +136,15 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.addContact, QtCore.SIGNAL("clicked ()"),self.addContactMainWindow)
 		app.connect(self.ui.getGroupchatList, QtCore.SIGNAL("clicked ()"),self.getGroupchatList)
 		QtCore.QObject.connect(self.ui.groupchat, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.groupchatClicked)
+		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
+		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
 		QtCore.QObject.connect(self.ui.groupchat, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.groupchatContextMenu)
 		self.ui.groupchat.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+		self.ui.bookmarks.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+
+		self.ui.tabWidget.setTabText(1,"")
+		self.ui.tabWidget.setTabText(2,"")
+		self.ui.tabWidget.setTabText(3,"")
 
 		self.timer=QtCore.QTimer()
 		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.tick)
@@ -177,6 +184,20 @@ class mainWindow(QtGui.QMainWindow):
 		self.disco=discoveryWindow(self)
 		self.ui.groupchat.header().hide()
 		self.ui.groupchat.hideColumn(1)
+		self.ui.bookmarks.header().hide()
+		self.ui.bookmarks.hideColumn(1)
+
+	def bookmarksContextMenu(self,pos):
+		item=self.ui.bookmarks.itemFromIndex(self.ui.bookmarks.indexAt(pos))
+		jid=str(item.text(1))
+		menu=QtGui.QMenu(self.ui.bookmarks)
+		if item.parent()==None:
+			action=menu.addAction(self.tr("Join"))
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("join")
+		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.groupchatContextMenuTriggered)
+		menu.move(self.ui.bookmarks.mapToGlobal(pos))
+		menu.show()
 
 	def groupchatContextMenuTriggered(self,action):
 		cmd=action.objectName()
@@ -187,8 +208,8 @@ class mainWindow(QtGui.QMainWindow):
 			server=jid.split("@")[1]
 			newchat=joinGroupChatWindow(self,jab,room=room,server=server)
 			ret=newchat.exec_()
-			if ret==1:
-				self.chat.show()
+			#if ret==1:
+				#self.chat.show()
 
 	def groupchatContextMenu(self,pos):
 		item=self.ui.groupchat.itemFromIndex(self.ui.groupchat.indexAt(pos))
@@ -212,11 +233,18 @@ class mainWindow(QtGui.QMainWindow):
 			jab.discoveryItems(jid)
 
 	def groupchatClicked(self,item,i):
-		print "clicked"
 		if int(item.childCount())!=0:
 			for i in range(item.childCount()):
 				item.takeChild(0)
 		jab.discoveryItems(unicode(item.text(1)),back="muc_items")
+
+	def bookmarksClicked(self,item,i):
+		if int(item.childCount())!=0:
+			for i in range(item.childCount()):
+				item.takeChild(0)
+		self.ui.bookmarks.setItemExpanded(item,True)
+		jab.discoveryItems(unicode(item.text(1)),back="bookmarks_items")
+
 
 	def jgamesClicked(self,action):
 		data=action.data()
@@ -233,10 +261,11 @@ class mainWindow(QtGui.QMainWindow):
 					#self.preparedGames[-1][0].show()
 					#print self.preparedGames[-1]
 					muc=str("%02d%f%d"%(plugin.config.id,time.time(),random.randint(1000,9999))).replace('.','')
-					self.chat.addGameChatTab(muc+self.gameServer,muc)
-					self.groupchat[muc+self.gameServer]=[jab.user,[]]
+					#self.chat.addGameChatTab(muc+self.gameServer,muc)
+					#self.groupchat[muc+self.gameServer]=[jab.user,[]]
+					self.groupchat[room]=[nickname,[]]
 					jab.getIntoRoom(muc+self.gameServer,jab.user)
-					jab.getGroupchatConfig(muc+self.gameServer)
+					#jab.getGroupchatConfig(muc+self.gameServer)
 					#self.preparedGames.append([plugin.prepareGameWindow(name,self,jab,self.main.widgets[str(muc)].ui.gameFrame),plugin.config.id])
 					break
 
@@ -307,6 +336,7 @@ class mainWindow(QtGui.QMainWindow):
 		contact.exec_()
 
 	def buildGroupchatMenu(self):
+		self.ui.bookmarks.clear()
 		self.groupchatMenu.clear()
 		action=self.groupchatMenu.addAction(self.tr("Join new groupchat"))
 		action.setData(QtCore.QVariant(["new"]))
@@ -314,8 +344,12 @@ class mainWindow(QtGui.QMainWindow):
 		self.groupchatMenu.addSeparator()
 		for k,v in self.bookmarks.iteritems():
 			action=self.groupchatMenu.addAction(unicode(v["name"]))
-
 			action.setData(QtCore.QVariant([unicode(k),unicode(v["nick"]),unicode(v["password"])]))
+			item=QtGui.QTreeWidgetItem(self.ui.bookmarks)
+			item.setText(0,unicode(v["name"]))
+			item.setText(1,unicode(k))
+			item.setData(0,32,QtCore.QVariant([unicode(k),unicode(v["nick"]),unicode(v["password"])]))
+			item.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
 		self.groupchatMenu.addSeparator()
 		action=self.groupchatMenu.addAction(self.tr("Manage bookmarks"))
 		action.setData(QtCore.QVariant(["manage"]))
@@ -339,7 +373,7 @@ class mainWindow(QtGui.QMainWindow):
 		layout.addWidget(self.ui.roster)
 
 	def loadStatus(self):
-		self.statusPath="images/32x32/status/"
+		self.statusPath="images/xxxxx/status/"
 		self.statuses={"online":QtGui.QIcon("images/status/online.png"),
 						"available":QtGui.QIcon("images/status/online.png"),
 						"offline":QtGui.QIcon("images/status/offline.png"),
@@ -397,8 +431,8 @@ class mainWindow(QtGui.QMainWindow):
 		if cmd=="new":
 			newchat=joinGroupChatWindow(self,jab)
 			ret=newchat.exec_()
-			if ret==1:
-				self.chat.show()
+			#if ret==1:
+				#self.chat.show()
 		elif cmd=="manage":
 			win=preferencesWindow(self,self,1,jab=jab)
 			win.show()
@@ -407,7 +441,6 @@ class mainWindow(QtGui.QMainWindow):
 			room=unicode(cmd)
 			nickname=unicode(lst[1].toString())
 			self.groupchat[room]=[nickname,[]]
-			self.chat.addGroupChatTab(room,nickname)
 			jab.getIntoRoom(room,nickname)
 
 	def statusChanged(self,action):
@@ -517,14 +550,19 @@ class mainWindow(QtGui.QMainWindow):
 				return user
 		return None
 
-	def getIcon(self,jid,typ):
-		file=self.statusPath+self.getUserType(jid)+"-"+self.iconSort[self.nickSort[typ]]+".png"
-		if os.path.exists(file):
-			icon=QtGui.QIcon(file)
+	def getIcon(self,jid=None,typ=None,size="32x32"):
+		path=self.statusPath.replace("xxxxx",size)
+		print path
+		if jid!=None:
+			file=path+self.getUserType(jid)+"-"+self.iconSort[self.nickSort[typ]]+".png"
+			if os.path.exists(file):
+				icon=QtGui.QIcon(file)
+			else:
+				print "File not exist",jid,typ,file
+				print path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png"
+				icon=QtGui.QIcon(path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png")
 		else:
-			print "File not exist",jid,typ,file
-			print self.statusPath+"jabber-"+self.iconSort[self.nickSort[typ]]+".png"
-			icon=QtGui.QIcon(self.statusPath+"jabber-"+self.iconSort[self.nickSort[typ]]+".png")
+			icon=QtGui.QIcon(path+"jabber-online.png")
 		return icon
 
 	def getUserType(self,jid):
@@ -546,9 +584,16 @@ class mainWindow(QtGui.QMainWindow):
 			login.done(1)
 			jab.setStatus(self.groupchat)
 			jab.getBookmarks()
+		
 		elif e[0]=="bookmarks":
 			self.bookmarks=e[1]
 			self.buildGroupchatMenu()
+
+		elif e[0]=="room_opened":
+			room=unicode(e[1])
+			nickname=unicode(e[2])
+			self.chat.addGroupChatTab(room,nickname)
+			jab.getLastQueue(room)
 
 		elif e[0] == "avatar_show":
 			vcard=e[1]
@@ -850,6 +895,16 @@ class mainWindow(QtGui.QMainWindow):
 					user=QtGui.QTreeWidgetItem(i)
 					user.setText(0,unicode(name))
 					user.setText(1,unicode(name))
+					user.setIcon(0,self.getIcon(size="16x16"))
+			elif e[0]=="bookmarks_items":
+				item=e[2]
+				jid=e[3]
+				name=unicode(item["jid"]).split("/")[1]
+				for i in self.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1):
+					user=QtGui.QTreeWidgetItem(i)
+					user.setText(0,unicode(name))
+					user.setText(1,unicode(name))
+					user.setIcon(0,self.getIcon(size="16x16"))
 			elif e[0]==None:
 				typ=e[1]
 				if typ=="items":
@@ -869,6 +924,7 @@ class mainWindow(QtGui.QMainWindow):
 								groupchat=QtGui.QTreeWidgetItem(self.ui.groupchat)
 								groupchat.setText(0,unicode(name))
 								groupchat.setText(1,unicode(item["jid"]))
+								groupchat.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
 								self.ui.groupchat.sortItems(0,QtCore.Qt.AscendingOrder)
 						parent=self.disco.items[jid]
 						if self.disco.nodes.has_key(jid+str(parentNode)):
@@ -921,6 +977,9 @@ class mainWindow(QtGui.QMainWindow):
 			login.ui.connect.setEnabled(True)
 		elif error == "auth":
 			self.jabberError(self.tr("Bad username or password."))
+			login.ui.connect.setEnabled(True)
+		elif error == "muc-409":
+			self.jabberError(self.tr("User with your nickname is already in groupchat."))
 			login.ui.connect.setEnabled(True)
 
 	def jabberError(self,error):

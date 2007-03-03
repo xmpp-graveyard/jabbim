@@ -222,64 +222,65 @@ class Dispatcher(PlugIn):
         if self._eventHandler: self._eventHandler(realm,event,data)
 
     def dispatch(self,stanza,session=None):
-        """ Main procedure that performs XMPP stanza recognition and calling apppropriate handlers for it.
-            Called internally. """
-        if not session: session=self
-        session.Stream._mini_dom=None
-        name=stanza.getName()
-
-        if name=='features': session.Stream.features=stanza
-
-        xmlns=stanza.getNamespace()
-        if not self.handlers.has_key(xmlns):
-            self.DEBUG("Unknown namespace: " + xmlns,'warn')
-            xmlns='unknown'
-        if not self.handlers[xmlns].has_key(name):
-            self.DEBUG("Unknown stanza: " + name,'warn')
-            name='unknown'
-        else:
-            self.DEBUG("Got %s stanza"%name, 'ok')
-
-        if stanza.__class__.__name__=='Node': stanza=self.handlers[xmlns][name][type](node=stanza)
-
-        typ=stanza.getType()
-        if not typ: typ=''
-        stanza.props=stanza.getProperties()
-        ID=stanza.getID()
-
-        session.DEBUG("Dispatching %s stanza with type->%s props->%s id->%s"%(name,typ,stanza.props,ID),'ok')
-
-        list=['default']                                                     # we will use all handlers:
-        if self.handlers[xmlns][name].has_key(typ): list.append(typ)                # from very common...
-        for prop in stanza.props:
-            if self.handlers[xmlns][name].has_key(prop): list.append(prop)
-            if typ and self.handlers[xmlns][name].has_key(typ+prop): list.append(typ+prop)  # ...to very particular
-
-        chain=self.handlers[xmlns]['default']['default']
-        for key in list:
-            if key: chain = chain + self.handlers[xmlns][name][key]
-
-        output=''
-        if session._expected.has_key(ID):
-            user=0
-            if type(session._expected[ID])==type(()):
-                cb,args=session._expected[ID]
-                session.DEBUG("Expected stanza arrived. Callback %s(%s) found!"%(cb,args),'ok')
-                try: cb(session,stanza,**args)
-                except Exception, typ:
-                    if typ.__class__.__name__<>'NodeProcessed': raise
-            else:
-                session.DEBUG("Expected stanza arrived!",'ok')
-                session._expected[ID]=stanza
-        else: user=1
-        for handler in chain:
-            if user or handler['system']:
-                try:
-                    handler['func'](session,stanza)
-                except Exception, typ:
-                    if typ.__class__.__name__<>'NodeProcessed': raise
-                    user=0
-        if user and self._defaultHandler: self._defaultHandler(session,stanza)
+		""" Main procedure that performs XMPP stanza recognition and calling apppropriate handlers for it.
+			Called internally. """
+		if not session: session=self
+		session.Stream._mini_dom=None
+		name=stanza.getName()
+	
+		if name=='features': session.Stream.features=stanza
+	
+		xmlns=stanza.getNamespace()
+		if not self.handlers.has_key(xmlns):
+			self.DEBUG("Unknown namespace: " + xmlns,'warn')
+			xmlns='unknown'
+		if not self.handlers[xmlns].has_key(name):
+			self.DEBUG("Unknown stanza: " + name,'warn')
+			name='unknown'
+		else:
+			self.DEBUG("Got %s stanza"%name, 'ok')
+	
+		if stanza.__class__.__name__=='Node': stanza=self.handlers[xmlns][name][type](node=stanza)
+	
+		typ=stanza.getType()
+		if not typ: typ=''
+		stanza.props=stanza.getProperties()
+		ID=stanza.getID()
+	
+		session.DEBUG("Dispatching %s stanza with type->%s props->%s id->%s"%(name,typ,stanza.props,ID),'ok')
+	
+		list=['default']                                                     # we will use all handlers:
+		if self.handlers[xmlns][name].has_key(typ): list.append(typ)                # from very common...
+		for prop in stanza.props:
+			if self.handlers[xmlns][name].has_key(prop): list.append(prop)
+			if typ and self.handlers[xmlns][name].has_key(typ+prop): list.append(typ+prop)  # ...to very particular
+	
+		chain=self.handlers[xmlns]['default']['default']
+		for key in list:
+			if key: chain = chain + self.handlers[xmlns][name][key]
+	
+		output=''
+		print ID
+		if session._expected.has_key(ID):
+			user=0
+			if type(session._expected[ID])==type(()):
+				cb,args=session._expected[ID]
+				session.DEBUG("Expected stanza arrived. Callback %s(%s) found!"%(cb,args),'ok')
+				try: cb(session,stanza,**args)
+				except Exception, typ:
+					if typ.__class__.__name__<>'NodeProcessed': raise
+			else:
+				session.DEBUG("Expected stanza arrived!",'ok')
+				session._expected[ID]=stanza
+		else: user=1
+		for handler in chain:
+			if user or handler['system']:
+				try:
+					handler['func'](session,stanza)
+				except Exception, typ:
+					if typ.__class__.__name__<>'NodeProcessed': raise
+					user=0
+		if user and self._defaultHandler: self._defaultHandler(session,stanza)
 
     def WaitForResponse(self, ID, timeout=DefaultTimeout):
         """ Block and wait until stanza with specific "id" attribute will come.
@@ -309,26 +310,26 @@ class Dispatcher(PlugIn):
         """ Put stanza on the wire and wait for recipient's response to it. """
         return self.WaitForResponse(self.send(stanza),timeout)
 
-    def SendAndCallForResponse(self, stanza, func, args={}):
+    def SendAndCallForResponse(self, stanza, func, args={},myid=""):
         """ Put stanza on the wire and call back when recipient replies.
             Additional callback arguments can be specified in args. """
-        self._expected[self.send(stanza)]=(func,args)
+        self._expected[self.send(stanza,myid=myid)]=(func,args)
 
-    def send(self,stanza):
-        """ Serialise stanza and put it on the wire. Assign an unique ID to it before send.
-            Returns assigned ID."""
-        if type(stanza) in [type(''), type(u'')]: return self._owner_send(stanza)
-        if not isinstance(stanza,Protocol): _ID=None
-        elif not stanza.getID():
-            global ID
-            ID+=1
-            _ID=`ID`
-            stanza.setID(_ID)
-        else: _ID=stanza.getID()
-        if self._owner._registered_name and not stanza.getAttr('from'): stanza.setAttr('from',self._owner._registered_name)
-        stanza.setParent(self._metastream)
-        self._owner_send(stanza)
-        return _ID
+    def send(self,stanza,myid=""):
+		""" Serialise stanza and put it on the wire. Assign an unique ID to it before send.
+			Returns assigned ID."""
+		if type(stanza) in [type(''), type(u'')]: return self._owner_send(stanza)
+		if not isinstance(stanza,Protocol): _ID=None
+		elif not stanza.getID():
+			global ID
+			ID+=1
+			_ID=myid+`ID`
+			stanza.setID(_ID)
+		else: _ID=stanza.getID()
+		if self._owner._registered_name and not stanza.getAttr('from'): stanza.setAttr('from',self._owner._registered_name)
+		stanza.setParent(self._metastream)
+		self._owner_send(stanza)
+		return _ID
 
     def disconnect(self):
         """ Send a stream terminator and and handle all incoming stanzas before stream closure. """

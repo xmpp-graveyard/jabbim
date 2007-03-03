@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Sat Mar  3 10:15:19 2007
+# Created: Sat Mar  3 19:15:47 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -53,17 +53,17 @@ class Ui_mainWindow(object):
         self.line.setFrameShape(QtGui.QFrame.HLine)
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
         self.line.setObjectName("line")
-        self.gridlayout1.addWidget(self.line,2,0,1,2)
+        self.gridlayout1.addWidget(self.line,3,0,2,2)
 
         spacerItem = QtGui.QSpacerItem(101,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout1.addItem(spacerItem,3,0,1,1)
+        self.gridlayout1.addItem(spacerItem,5,0,1,1)
 
         self.addContact = QtGui.QPushButton(self.tab_2)
         self.addContact.setObjectName("addContact")
-        self.gridlayout1.addWidget(self.addContact,3,1,1,1)
+        self.gridlayout1.addWidget(self.addContact,4,1,2,1)
 
-        spacerItem1 = QtGui.QSpacerItem(20,211,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout1.addItem(spacerItem1,1,0,1,2)
+        spacerItem1 = QtGui.QSpacerItem(20,181,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout1.addItem(spacerItem1,2,0,1,1)
 
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setMargin(0)
@@ -106,30 +106,57 @@ class Ui_mainWindow(object):
         self.group.setObjectName("group")
         self.vboxlayout2.addWidget(self.group)
         self.hboxlayout.addLayout(self.vboxlayout2)
-        self.gridlayout1.addLayout(self.hboxlayout,0,0,1,2)
-        self.tabWidget.addTab(self.tab_2,"")
+        self.gridlayout1.addLayout(self.hboxlayout,1,0,1,2)
+
+        self.label_4 = QtGui.QLabel(self.tab_2)
+        self.label_4.setObjectName("label_4")
+        self.gridlayout1.addWidget(self.label_4,0,0,1,1)
+        self.tabWidget.addTab(self.tab_2,QtGui.QIcon("images/16x16/actions/add-user.png"),"")
 
         self.tab_3 = QtGui.QWidget()
         self.tab_3.setObjectName("tab_3")
 
         self.gridlayout2 = QtGui.QGridLayout(self.tab_3)
-        self.gridlayout2.setMargin(0)
-        self.gridlayout2.setSpacing(0)
+        self.gridlayout2.setMargin(9)
+        self.gridlayout2.setSpacing(6)
         self.gridlayout2.setObjectName("gridlayout2")
-
-        spacerItem2 = QtGui.QSpacerItem(101,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout2.addItem(spacerItem2,0,0,1,1)
 
         self.groupchat = QtGui.QTreeWidget(self.tab_3)
         self.groupchat.setAlternatingRowColors(True)
         self.groupchat.setObjectName("groupchat")
         self.gridlayout2.addWidget(self.groupchat,1,0,1,2)
 
+        spacerItem2 = QtGui.QSpacerItem(61,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout2.addItem(spacerItem2,2,0,1,1)
+
         self.getGroupchatList = QtGui.QPushButton(self.tab_3)
         self.getGroupchatList.setEnabled(False)
+        self.getGroupchatList.setIcon(QtGui.QIcon("images/16x16/actions/reload.png"))
         self.getGroupchatList.setObjectName("getGroupchatList")
-        self.gridlayout2.addWidget(self.getGroupchatList,0,1,1,1)
-        self.tabWidget.addTab(self.tab_3,"")
+        self.gridlayout2.addWidget(self.getGroupchatList,2,1,1,1)
+
+        self.label_5 = QtGui.QLabel(self.tab_3)
+        self.label_5.setObjectName("label_5")
+        self.gridlayout2.addWidget(self.label_5,0,0,1,2)
+        self.tabWidget.addTab(self.tab_3,QtGui.QIcon("images/16x16/categories/muc.png"),"")
+
+        self.tab_4 = QtGui.QWidget()
+        self.tab_4.setObjectName("tab_4")
+
+        self.gridlayout3 = QtGui.QGridLayout(self.tab_4)
+        self.gridlayout3.setMargin(9)
+        self.gridlayout3.setSpacing(6)
+        self.gridlayout3.setObjectName("gridlayout3")
+
+        self.bookmarks = QtGui.QTreeWidget(self.tab_4)
+        self.bookmarks.setAlternatingRowColors(True)
+        self.bookmarks.setObjectName("bookmarks")
+        self.gridlayout3.addWidget(self.bookmarks,1,0,1,1)
+
+        self.label_6 = QtGui.QLabel(self.tab_4)
+        self.label_6.setObjectName("label_6")
+        self.gridlayout3.addWidget(self.label_6,0,0,1,1)
+        self.tabWidget.addTab(self.tab_4,QtGui.QIcon("images/16x16/categories/bookmarks.png"),"")
         self.gridlayout.addWidget(self.tabWidget,0,0,1,1)
 
         self.hboxlayout1 = QtGui.QHBoxLayout()
@@ -209,7 +236,7 @@ class Ui_mainWindow(object):
         self.toolBar.addAction(self.actionAdd_contact)
 
         self.retranslateUi(mainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
     def retranslateUi(self, mainWindow):
@@ -219,11 +246,29 @@ class Ui_mainWindow(object):
         self.label.setText(QtGui.QApplication.translate("mainWindow", "Jabber ID:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("mainWindow", "Nickname:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("mainWindow", "Group:", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("mainWindow", "Add contact", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_4.setText(QtGui.QApplication.translate("mainWindow", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        "p, li { white-space: pre-wrap; }\n"
+        "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
+        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Add contact</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("mainWindow", " ", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_2),QtGui.QApplication.translate("mainWindow", "Add contact", None, QtGui.QApplication.UnicodeUTF8))
         self.groupchat.headerItem().setText(0,QtGui.QApplication.translate("mainWindow", "Name", None, QtGui.QApplication.UnicodeUTF8))
         self.groupchat.headerItem().setText(1,QtGui.QApplication.translate("mainWindow", "Jid", None, QtGui.QApplication.UnicodeUTF8))
         self.getGroupchatList.setText(QtGui.QApplication.translate("mainWindow", "Get groupchat list", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QtGui.QApplication.translate("mainWindow", "Groupchat", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_5.setText(QtGui.QApplication.translate("mainWindow", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        "p, li { white-space: pre-wrap; }\n"
+        "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
+        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Browse groupchats</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QtGui.QApplication.translate("mainWindow", " ", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_3),QtGui.QApplication.translate("mainWindow", "Browse groupchats", None, QtGui.QApplication.UnicodeUTF8))
+        self.bookmarks.headerItem().setText(0,QtGui.QApplication.translate("mainWindow", "Name", None, QtGui.QApplication.UnicodeUTF8))
+        self.bookmarks.headerItem().setText(1,QtGui.QApplication.translate("mainWindow", "Jid", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_6.setText(QtGui.QApplication.translate("mainWindow", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        "p, li { white-space: pre-wrap; }\n"
+        "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
+        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Bookmarks</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QtGui.QApplication.translate("mainWindow", " ", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_4),QtGui.QApplication.translate("mainWindow", "Bookmarks", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setText(QtGui.QApplication.translate("mainWindow", "Show Offline", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setText(QtGui.QApplication.translate("mainWindow", "Online", None, QtGui.QApplication.UnicodeUTF8))
         self.menuJGames.setTitle(QtGui.QApplication.translate("mainWindow", "JGames", None, QtGui.QApplication.UnicodeUTF8))

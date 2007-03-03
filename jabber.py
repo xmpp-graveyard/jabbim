@@ -41,6 +41,7 @@ class Jabber:
 	confNames = []
 	confNicks = []
 	linesRead = []
+	lastQueue={}
 
 	def __init__(self):
 		pass
@@ -73,15 +74,42 @@ class Jabber:
 	def getVCard(self,jid,onlyAvatar=False):
 		# get vcard informations
 		xmpp.vcard.getVcard(self.conn,jid,self.VCardHandler,onlyAvatar)
+
+	def getLastQueue(self,jid):
+		if self.ready==True:
+			# GUI is ready for presences, so we can send presences to GUI
+			if self.lastQueue.has_key(jid):
+				if len(self.lastQueue[jid])!=0:
+					for i in self.lastQueue[jid]:
+						self.inc.put(i)
+			print "ready for deleting"
+			self.deleteLastQueue(jid)
+
+	def deleteLastQueue(self,jid):
+		del self.lastQueue[jid]
+		print "deleting last queue for",jid
+
+	def addLastQueue(self,jid):
+		print "adding last queue for",jid
+		self.lastQueue[jid]=[]
+
+	def getIntoRoomHandler(self,i,rep,room,nick):
+		if isErrorNode(rep):
+			code=str(rep.getErrorCode())
+			self.err.put("muc-"+code)
+			self.deleteLastQueue(room)
+		else:
+			self.confNames.append(room)
+			self.conf.append([])
+			self.confNicks.append([])
+			self.linesRead.append(0)
+			self.inc.put(["room_opened",room,nick])
 	
 	def getIntoRoom(self,room,nick):
 		# join to conference
+		self.addLastQueue(room)
 		p = xmpp.Presence(to='%s/%s'%(room, nick))
-		self.conn.send(p)
-		self.confNames.append(room)
-		self.conf.append([])
-		self.confNicks.append([])
-		self.linesRead.append(0)
+		self.conn.SendAndCallForResponse(p,self.getIntoRoomHandler,args={'room':room,'nick':nick},myid="getintoroom")
 
 	def getOffRoom(self,room,nick):
 		p = xmpp.Presence(to='%s/%s'%(room, nick), typ="unavailable")
@@ -159,7 +187,7 @@ class Jabber:
 		# get groupchat config form
 		iq=Iq(to=muc,typ='get',queryNS=NS_MUC_OWNER,xmlns=None)
 		print unicode(iq)
-		self.conn.SendAndCallForResponse(iq,self.groupchatConfigHandler,args={"muc":muc})
+		self.conn.SendAndCallForResponse(iq,self.groupchatConfigHandler,args={"muc":muc},myid="groupchatconfig")
 
 	def setGroupchatConfig(self,host,info):
 		# get groupchat config form
@@ -248,6 +276,7 @@ class Jabber:
 		self.inc.put(["game_list", games])
 
 	def incoming(self, conn, mess):
+		#print unicode(mess)
 		# Incoming messages handler
 		if 1==1:
 		#try:
@@ -262,7 +291,8 @@ class Jabber:
 			user=mess.getFrom() # get sender of message
 			resource=mess.getFrom().getResource() # get message resource
 			typ=mess.getType() # fet type of message
-			print unicode(user),typ
+			print unicode(user),typ,unicode(text)
+			new=True
 			if typ=="chat":
 				# put chat message to the message_queue
 				jid = unicode(unicode(user).rsplit("/")[0]).lower()
@@ -277,21 +307,17 @@ class Jabber:
 					# normal groupchat_message
 					user=unicode(user).rsplit("/")[1]
 					self.message_queue.append(["groupchat_message", jid,user,text])
-			if self.ready==True:
-				# GUI is ready for messages, so we can send messages to GUI
-				if len(self.message_queue)!=0:
-					for i in self.message_queue:
-						self.inc.put(i)
-					self.message_queue=[]
-
-	def getPresence(self):
-		if self.ready==True:
-			# GUI is ready for presences, so we can send presences to GUI
-			if len(self.presence_queue)!=0:
-				print "presence"
-				for i in self.presence_queue:
-					self.inc.put(i)
-				self.presence_queue=[]
+			else:
+				new=False
+			if self.lastQueue.has_key(jid) and new:
+				self.lastQueue[jid].append(self.presence_queue[-1])
+			else:
+				if self.ready==True:
+					# GUI is ready for messages, so we can send messages to GUI
+					if len(self.message_queue)!=0:
+						for i in self.message_queue:
+							self.inc.put(i)
+						self.message_queue=[]
 
 	def presenceHandle(self, conn, pres):
 		# presence handle
@@ -311,12 +337,15 @@ class Jabber:
 		else:
 			# normal presence
 			self.presence_queue.append(["nick_update",jid,pres,nick])
-		if self.ready==True:
-			# GUI is ready for presences, so we can send presences to GUI
-			if len(self.presence_queue)!=0:
-				for i in self.presence_queue:
-					self.inc.put(i)
-				self.presence_queue=[]
+		if self.lastQueue.has_key(jid):
+			self.lastQueue[jid].append(self.presence_queue[-1])
+		else:
+			if self.ready==True:
+				# GUI is ready for presences, so we can send presences to GUI
+				if len(self.presence_queue)!=0:
+					for i in self.presence_queue:
+						self.inc.put(i)
+					self.presence_queue=[]
 
 	def iqHandle(self, conn, iq):
 		#print "iq", unicode(iq)
