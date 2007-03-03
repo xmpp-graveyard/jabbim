@@ -404,7 +404,7 @@ class Jabber:
 		self.conn.RegisterHandler('presence',self.presenceHandle)
 		self.conn.RegisterDisconnectHandler(self.off)
 		self.conn.RegisterHandler('iq', self.xmppPingReply, 'get', NS_XMPP_PING)
-		#self.discoveryItems()
+		
 		self.roster = self.conn.getRoster()
 		self.inc.put(["roster_update", self.roster])
 		self.ready=False
@@ -415,6 +415,7 @@ class Jabber:
 				self.ready = False
 
 		self.conn.sendInitPresence()
+		self.discoveryItems()
 		self.inc.put(["con_ready"])
 		#self.discovery=xmpp.features.discoverInfo(self.conn,server)
 

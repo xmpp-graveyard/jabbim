@@ -5,13 +5,15 @@ except:
 from joingroupchat_ui import *
 
 class joinGroupChatWindow(QtGui.QDialog):
-	def __init__(self,main,jab,parent=None):
+	def __init__(self,main,jab,room="",server="",parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.setModal(True)
 		self.ui=Ui_joingroupchat()
 		self.ui.setupUi(self)
 		self.main=main
 		self.jab=jab
+		self.ui.room.setText(room)
+		self.ui.server.setText(server)
 
 	def accept(self):
 		room=unicode(self.ui.room.text())

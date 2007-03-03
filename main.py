@@ -131,7 +131,11 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
 		app.connect(self.ui.actionAdd_contact, QtCore.SIGNAL("triggered ( bool )"),self.addContact)
 		app.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered ( bool )"),self.trayQuit)
+		app.connect(self.ui.actionEvents, QtCore.SIGNAL("triggered ( bool )"),self.actionEvents)
 		app.connect(self.ui.actionService_discovery, QtCore.SIGNAL("triggered ( bool )"),self.discovery)
+		app.connect(self.ui.addContact, QtCore.SIGNAL("clicked ()"),self.addContactMainWindow)
+		app.connect(self.ui.getGroupchatList, QtCore.SIGNAL("clicked ()"),self.getGroupchatList)
+		QtCore.QObject.connect(self.ui.groupchat, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.groupchatClicked)
 		self.timer=QtCore.QTimer()
 		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.tick)
 		self.timer.start(20)
@@ -168,6 +172,26 @@ class mainWindow(QtGui.QMainWindow):
 		self.jgamesLoadPlugins()
 		self.gameServer="@games.jabbim.cz"
 		self.disco=discoveryWindow(self)
+		self.ui.groupchat.header().hide()
+		self.ui.groupchat.hideColumn(1)
+
+	def getGroupchatList(self):
+		jid=""
+		for k,v in self.discoInfo.iteritems():
+			if v=="conf":
+				jid=k
+		if jid!="":
+			self.ui.groupchat.clear()
+			jab.discoveryItems(jid)
+
+	def groupchatClicked(self,item,i):
+		if item.parent()==None:
+			room=unicode(item.text(1)).split("@")[0]
+			server=unicode(item.text(1)).split("@")[1]
+			newchat=joinGroupChatWindow(self,jab,room=room,server=server)
+			ret=newchat.exec_()
+			if ret==1:
+				self.chat.show()
 
 	def jgamesClicked(self,action):
 		data=action.data()
@@ -190,6 +214,9 @@ class mainWindow(QtGui.QMainWindow):
 					jab.getGroupchatConfig(muc+self.gameServer)
 					#self.preparedGames.append([plugin.prepareGameWindow(name,self,jab,self.main.widgets[str(muc)].ui.gameFrame),plugin.config.id])
 					break
+
+	def actionEvents(self,bool=None):
+		self.events.show()
 
 	def jgamesLoadPlugins(self):
 		# loads plugins
@@ -240,6 +267,16 @@ class mainWindow(QtGui.QMainWindow):
 		# loads config and repairs config file
 		self.skin=ConfigObj("skins/"+self.config["chat_skin"],encoding='UTF8')
 
+	def addContactMainWindow(self):
+		jid=unicode(self.ui.jid.text())
+		nickname=unicode(self.ui.nickname.text())
+		group=unicode(self.ui.group.currentText())
+		print "adding",jid,nickname,group
+		addContact(jid,nickname,group,self,jab)
+		self.ui.jid.setText("")
+		self.ui.nickname.setText("")
+
+
 	def addContact(self,bool=None):
 		contact=addContactWindow(self,jab)
 		contact.exec_()
@@ -260,6 +297,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def loadGroupchat(self):
 		self.groupchatMenu=QtGui.QMenu(self.tr("Group Chat"),self.ui.toolBar)
+		self.ui.toolBar.hide()
 		self.buildGroupchatMenu()
 		self.ui.actionGroup_Chat.setMenu(self.groupchatMenu)
 		self.ui.toolBar.addAction(self.groupchatMenu.menuAction())
@@ -603,13 +641,15 @@ class mainWindow(QtGui.QMainWindow):
 
 		elif e[0] == "subscribe":
 			jid=str(e[1])
-			if jid.startswith("@"):
-				jab.roster.Authorize(str(jid))
+			if not self.ui.roster.isUser(jid):
+				if jid.startswith("@"):
+					jab.roster.Authorize(str(jid))
+				else:
+					#if not self.ui.roster.isUser(jid):
+					self.events.show()
+					self.events.addEvent("subscribe",{"jid":str(jid)})
 			else:
-				#if not self.ui.roster.isUser(jid):
-				self.events.show()
-				self.events.addEvent("subscribe",{"jid":str(jid)})
-
+				jab.roster.Authorize(str(jid))
 		
 		elif e[0] == "nick_update":
 			# Prisla presence
@@ -763,7 +803,8 @@ class mainWindow(QtGui.QMainWindow):
 					pass
 			self.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
 			jab.outc.put(True)
-				
+			for k,v in self.groups.iteritems():
+				self.ui.group.addItem(unicode(k))
 
 	def tick(self):
 		# new chat lines handler
@@ -789,6 +830,12 @@ class mainWindow(QtGui.QMainWindow):
 					if item.has_key("name"):
 						name=item["name"]
 					node=""
+					if self.discoInfo.has_key(jid):
+						if self.discoInfo[jid]=="conf":
+							groupchat=QtGui.QTreeWidgetItem(self.ui.groupchat)
+							groupchat.setText(0,unicode(name))
+							groupchat.setText(1,unicode(item["jid"]))
+							self.ui.groupchat.sortItems(0,QtCore.Qt.AscendingOrder)
 					parent=self.disco.items[jid]
 					if self.disco.nodes.has_key(jid+str(parentNode)):
 						parent=self.disco.nodes[jid+str(parentNode)]
@@ -800,13 +847,18 @@ class mainWindow(QtGui.QMainWindow):
 				features=e[2]
 				jid=e[3]
 				if not self.discoInfo.has_key(jid) and ident[0].has_key("type"):
-					self.discoInfo[jid]=ident[0]["type"]
-					users=self.ui.roster.getServerUsers(jid)
-					for user in users:
-						data=user.data(32,0)
-						data=str(data.toString())
-						#user.setIcon(0,QtGui.QIcon(self.statusPath+self.getUserType(data)+"-"+self.iconSort[unicode(user.text(1))[0]]+".png"))
-						user.setIcon(0,self.getIcon(data,self.iconSort[unicode(user.text(1))[0]]))
+					if "http://jabber.org/protocol/muc" in features and ident[0]["type"]=="text":
+						self.discoInfo[jid]="conf"
+						self.ui.getGroupchatList.setEnabled(True)
+					else:
+						self.discoInfo[jid]=ident[0]["type"]
+						users=self.ui.roster.getServerUsers(jid)
+						for user in users:
+							data=user.data(32,0)
+							data=str(data.toString())
+							#user.setIcon(0,QtGui.QIcon(self.statusPath+self.getUserType(data)+"-"+self.iconSort[unicode(user.text(1))[0]]+".png"))
+							user.setIcon(0,self.getIcon(data,self.iconSort[unicode(user.text(1))[0]]))
+					
 
 				if self.disco.items.has_key(jid):
 					for feature in features:
@@ -814,6 +866,7 @@ class mainWindow(QtGui.QMainWindow):
 							self.disco.items[jid].features.append(feature)
 					if self.disco.items.has_key(jid):
 						self.disco.items[jid].setText(0,ident[0]["name"])
+						
 
 		# we must use try as forced reading of empty queue raises an error
 		try:
@@ -882,3 +935,4 @@ MainWindow = mainWindow()
 login=loginWindow(MainWindow,jab,MainWindow)
 ref=login.show()
 sys.exit(app.exec_())
+

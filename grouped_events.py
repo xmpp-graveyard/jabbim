@@ -11,11 +11,13 @@ class groupedEventWindow(QtGui.QMainWindow):
 		self.jab=jab
 		self.ui=Ui_groupedevents()
 		self.ui.setupUi(self)
-
+		self.subscriptionsText=self.tr("Authorization requests")
+		self.subscribedText=self.tr("Authorization informations")
+		
 		self.subscriptions=QtGui.QTreeWidgetItem(self.ui.events)
-		self.subscriptions.setText(0,self.tr("Subscriptions"))
+		self.subscriptions.setText(0,self.subscriptionsText + " (0)")
 		self.subscribed=QtGui.QTreeWidgetItem(self.ui.events)
-		self.subscribed.setText(0,self.tr("Subscribed"))
+		self.subscribed.setText(0,self.subscribedText + " (0)")
 
 		self.events={}
 		QtCore.QObject.connect(self.ui.events, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int )"),self.eventClicked)
@@ -71,7 +73,11 @@ class groupedEventWindow(QtGui.QMainWindow):
 			self.ui.stackedWidget.setCurrentIndex(0)
 		elif item.parent()==self.subscribed:
 			self.ui.stackedWidget.setCurrentIndex(1)
-		
+	
+	def refresh(self):
+		self.subscriptions.setText(0,self.subscriptionsText + " ("+str(self.subscriptions.childCount())+")")
+		self.subscribed.setText(0,self.subscribedText + " ("+str(self.subscribed.childCount())+")")
+	
 	def addEvent(self,typ,data):
 		self.ui.group.clear()
 		for k,v in self.main.groups.iteritems():
@@ -82,3 +88,4 @@ class groupedEventWindow(QtGui.QMainWindow):
 		elif typ=="subscribed":
 			self.events[data["jid"]]=QtGui.QTreeWidgetItem(self.subscribed)
 			self.events[data["jid"]].setText(0,data["jid"])
+		self.refresh()

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Thu Mar  1 21:33:38 2007
+# Created: Sat Mar  3 06:13:29 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_mainWindow(object):
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
-        mainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,229,481).size()).expandedTo(mainWindow.minimumSizeHint()))
+        mainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,235,510).size()).expandedTo(mainWindow.minimumSizeHint()))
         mainWindow.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.centralwidget = QtGui.QWidget(mainWindow)
@@ -24,14 +24,117 @@ class Ui_mainWindow(object):
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
 
-        self.rosterWidget = QtGui.QWidget(self.centralwidget)
+        self.tabWidget = QtGui.QTabWidget(self.centralwidget)
+        self.tabWidget.setTabPosition(QtGui.QTabWidget.North)
+        self.tabWidget.setObjectName("tabWidget")
+
+        self.tab = QtGui.QWidget()
+        self.tab.setObjectName("tab")
+
+        self.vboxlayout = QtGui.QVBoxLayout(self.tab)
+        self.vboxlayout.setMargin(0)
+        self.vboxlayout.setSpacing(0)
+        self.vboxlayout.setObjectName("vboxlayout")
+
+        self.rosterWidget = QtGui.QWidget(self.tab)
         self.rosterWidget.setObjectName("rosterWidget")
-        self.gridlayout.addWidget(self.rosterWidget,0,0,1,1)
+        self.vboxlayout.addWidget(self.rosterWidget)
+        self.tabWidget.addTab(self.tab,"")
+
+        self.tab_2 = QtGui.QWidget()
+        self.tab_2.setObjectName("tab_2")
+
+        self.gridlayout1 = QtGui.QGridLayout(self.tab_2)
+        self.gridlayout1.setMargin(9)
+        self.gridlayout1.setSpacing(6)
+        self.gridlayout1.setObjectName("gridlayout1")
+
+        self.line = QtGui.QFrame(self.tab_2)
+        self.line.setFrameShape(QtGui.QFrame.HLine)
+        self.line.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line.setObjectName("line")
+        self.gridlayout1.addWidget(self.line,2,0,1,2)
+
+        spacerItem = QtGui.QSpacerItem(101,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout1.addItem(spacerItem,3,0,1,1)
+
+        self.addContact = QtGui.QPushButton(self.tab_2)
+        self.addContact.setObjectName("addContact")
+        self.gridlayout1.addWidget(self.addContact,3,1,1,1)
+
+        spacerItem1 = QtGui.QSpacerItem(20,211,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout1.addItem(spacerItem1,1,0,1,2)
 
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(6)
         self.hboxlayout.setObjectName("hboxlayout")
+
+        self.vboxlayout1 = QtGui.QVBoxLayout()
+        self.vboxlayout1.setMargin(0)
+        self.vboxlayout1.setSpacing(6)
+        self.vboxlayout1.setObjectName("vboxlayout1")
+
+        self.label = QtGui.QLabel(self.tab_2)
+        self.label.setObjectName("label")
+        self.vboxlayout1.addWidget(self.label)
+
+        self.label_2 = QtGui.QLabel(self.tab_2)
+        self.label_2.setObjectName("label_2")
+        self.vboxlayout1.addWidget(self.label_2)
+
+        self.label_3 = QtGui.QLabel(self.tab_2)
+        self.label_3.setObjectName("label_3")
+        self.vboxlayout1.addWidget(self.label_3)
+        self.hboxlayout.addLayout(self.vboxlayout1)
+
+        self.vboxlayout2 = QtGui.QVBoxLayout()
+        self.vboxlayout2.setMargin(0)
+        self.vboxlayout2.setSpacing(6)
+        self.vboxlayout2.setObjectName("vboxlayout2")
+
+        self.jid = QtGui.QLineEdit(self.tab_2)
+        self.jid.setObjectName("jid")
+        self.vboxlayout2.addWidget(self.jid)
+
+        self.nickname = QtGui.QLineEdit(self.tab_2)
+        self.nickname.setObjectName("nickname")
+        self.vboxlayout2.addWidget(self.nickname)
+
+        self.group = QtGui.QComboBox(self.tab_2)
+        self.group.setEditable(True)
+        self.group.setObjectName("group")
+        self.vboxlayout2.addWidget(self.group)
+        self.hboxlayout.addLayout(self.vboxlayout2)
+        self.gridlayout1.addLayout(self.hboxlayout,0,0,1,2)
+        self.tabWidget.addTab(self.tab_2,"")
+
+        self.tab_3 = QtGui.QWidget()
+        self.tab_3.setObjectName("tab_3")
+
+        self.gridlayout2 = QtGui.QGridLayout(self.tab_3)
+        self.gridlayout2.setMargin(0)
+        self.gridlayout2.setSpacing(0)
+        self.gridlayout2.setObjectName("gridlayout2")
+
+        spacerItem2 = QtGui.QSpacerItem(101,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout2.addItem(spacerItem2,0,0,1,1)
+
+        self.groupchat = QtGui.QTreeWidget(self.tab_3)
+        self.groupchat.setObjectName("groupchat")
+        self.gridlayout2.addWidget(self.groupchat,1,0,1,2)
+
+        self.getGroupchatList = QtGui.QPushButton(self.tab_3)
+        self.getGroupchatList.setEnabled(False)
+        self.getGroupchatList.setObjectName("getGroupchatList")
+        self.gridlayout2.addWidget(self.getGroupchatList,0,1,1,1)
+        self.tabWidget.addTab(self.tab_3,"")
+        self.gridlayout.addWidget(self.tabWidget,0,0,1,1)
+
+        self.hboxlayout1 = QtGui.QHBoxLayout()
+        self.hboxlayout1.setMargin(0)
+        self.hboxlayout1.setSpacing(6)
+        self.hboxlayout1.setObjectName("hboxlayout1")
 
         self.showOffline = QtGui.QToolButton(self.centralwidget)
         self.showOffline.setIcon(QtGui.QIcon("images/status/offline.png"))
@@ -39,29 +142,29 @@ class Ui_mainWindow(object):
         self.showOffline.setChecked(False)
         self.showOffline.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.showOffline.setObjectName("showOffline")
-        self.hboxlayout.addWidget(self.showOffline)
+        self.hboxlayout1.addWidget(self.showOffline)
 
-        spacerItem = QtGui.QSpacerItem(16,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.hboxlayout.addItem(spacerItem)
+        spacerItem3 = QtGui.QSpacerItem(16,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.hboxlayout1.addItem(spacerItem3)
 
         self.statusButton = QtGui.QToolButton(self.centralwidget)
         self.statusButton.setIcon(QtGui.QIcon("images/status/online.png"))
         self.statusButton.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.statusButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.statusButton.setObjectName("statusButton")
-        self.hboxlayout.addWidget(self.statusButton)
-        self.gridlayout.addLayout(self.hboxlayout,1,0,1,1)
+        self.hboxlayout1.addWidget(self.statusButton)
+        self.gridlayout.addLayout(self.hboxlayout1,1,0,1,1)
         mainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(mainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0,0,229,28))
+        self.menubar.setGeometry(QtCore.QRect(0,0,235,28))
         self.menubar.setObjectName("menubar")
-
-        self.menuPreferences = QtGui.QMenu(self.menubar)
-        self.menuPreferences.setObjectName("menuPreferences")
 
         self.menuJGames = QtGui.QMenu(self.menubar)
         self.menuJGames.setObjectName("menuJGames")
+
+        self.menuPreferences = QtGui.QMenu(self.menubar)
+        self.menuPreferences.setObjectName("menuPreferences")
 
         self.menuAction = QtGui.QMenu(self.menubar)
         self.menuAction.setObjectName("menuAction")
@@ -89,10 +192,14 @@ class Ui_mainWindow(object):
 
         self.actionTic_tac_toe = QtGui.QAction(mainWindow)
         self.actionTic_tac_toe.setObjectName("actionTic_tac_toe")
+
+        self.actionEvents = QtGui.QAction(mainWindow)
+        self.actionEvents.setObjectName("actionEvents")
         self.menuPreferences.addAction(self.actionPreferences)
         self.menuAction.addAction(self.actionAdd_contact)
         self.menuAction.addAction(self.actionGroup_Chat)
         self.menuAction.addAction(self.actionService_discovery)
+        self.menuAction.addAction(self.actionEvents)
         self.menuAction.addSeparator()
         self.menuAction.addAction(self.actionQuit)
         self.menubar.addAction(self.menuAction.menuAction())
@@ -101,14 +208,25 @@ class Ui_mainWindow(object):
         self.toolBar.addAction(self.actionAdd_contact)
 
         self.retranslateUi(mainWindow)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
     def retranslateUi(self, mainWindow):
         mainWindow.setWindowTitle(QtGui.QApplication.translate("mainWindow", "Jabbim", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("mainWindow", "Roster", None, QtGui.QApplication.UnicodeUTF8))
+        self.addContact.setText(QtGui.QApplication.translate("mainWindow", "Add", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("mainWindow", "Jabber ID:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("mainWindow", "Nickname:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3.setText(QtGui.QApplication.translate("mainWindow", "Group:", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("mainWindow", "Add contact", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupchat.headerItem().setText(0,QtGui.QApplication.translate("mainWindow", "Name", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupchat.headerItem().setText(1,QtGui.QApplication.translate("mainWindow", "Jid", None, QtGui.QApplication.UnicodeUTF8))
+        self.getGroupchatList.setText(QtGui.QApplication.translate("mainWindow", "Get groupchat list", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QtGui.QApplication.translate("mainWindow", "Groupchat", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setText(QtGui.QApplication.translate("mainWindow", "Show Offline", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setText(QtGui.QApplication.translate("mainWindow", "Online", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuPreferences.setTitle(QtGui.QApplication.translate("mainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.menuJGames.setTitle(QtGui.QApplication.translate("mainWindow", "JGames", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuPreferences.setTitle(QtGui.QApplication.translate("mainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAction.setTitle(QtGui.QApplication.translate("mainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setText(QtGui.QApplication.translate("mainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.actionService_discovery.setText(QtGui.QApplication.translate("mainWindow", "Service discovery", None, QtGui.QApplication.UnicodeUTF8))
@@ -116,4 +234,5 @@ class Ui_mainWindow(object):
         self.actionAdd_contact.setText(QtGui.QApplication.translate("mainWindow", "Add contact", None, QtGui.QApplication.UnicodeUTF8))
         self.actionGroup_Chat.setText(QtGui.QApplication.translate("mainWindow", "Group Chat", None, QtGui.QApplication.UnicodeUTF8))
         self.actionTic_tac_toe.setText(QtGui.QApplication.translate("mainWindow", "Tic tac toe", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionEvents.setText(QtGui.QApplication.translate("mainWindow", "Events", None, QtGui.QApplication.UnicodeUTF8))
 
