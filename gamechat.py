@@ -41,7 +41,7 @@ class gameChatWidget(QtGui.QWidget):
 			if added.count(v)==0:
 				added.append(v)
 				button=QtGui.QToolButton(self)
-				action=QtGui.QAction(QtGui.QIcon("images/22x22/emotes/"+v),"",self.s)
+				action=QtGui.QAction(QtGui.QIcon("images/16x16/emotes/"+v),"",self.s)
 				action.setData(QtCore.QVariant(k))
 				button.setDefaultAction(action)
 				button.setToolTip(str(k))
@@ -62,7 +62,7 @@ class gameChatWidget(QtGui.QWidget):
 		self.ui.textEdit.setTextCursor(cur)
 		# emoticons
 		for k,v in self.smileys.iteritems():
-			text=text.replace(k,'<img src="images/smileys/'+v+'"/>')
+			text=text.replace(k,'<img src="images/16x16/emotes/'+v+'"/>')
 		self.ui.textEdit.insertHtml(text)
 		cur=self.ui.textEdit.textCursor()
 		cur.movePosition(QtGui.QTextCursor.End)

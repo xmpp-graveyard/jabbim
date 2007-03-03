@@ -2,12 +2,12 @@
 jabber.py is jabber backend for client side of jabber based game.
 Copyright (C) 2007 Richard Szlachta
 
-This program is free software; you can redistribute it and/or
+This program is free software; you can rediunicodeibute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
 of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
+This program is diunicodeibuted in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -113,8 +113,8 @@ class Jabber:
 		print xmpp.features.register(self.conn,host,info)
 
 	def getRegInfo(self,jid):
-		# get service discovery register information (register forms, instructions etc)
-		self.inc.put(["discovery_register",xmpp.features.getRegInfo(self.conn,jid),str(jid)])
+		# get service discovery register information (register forms, inunicodeuctions etc)
+		self.inc.put(["discovery_register",xmpp.features.getRegInfo(self.conn,jid),unicode(jid)])
 
 	def disco(self,rep,jid,typ,node):
 		# discovery info and items handler
@@ -124,7 +124,7 @@ class Jabber:
 			if not isinstance(i,unicode):
 				if typ=="items":
 					if i.getName()=='agent' and i.getTag('name'): i.setAttr('name',i.getTagData('name'))
-					self.discoveryQueue.put([typ,i.attrs,str(jid),node])
+					self.discoveryQueue.put([typ,i.attrs,unicode(jid),node])
 					#ret.append(i.attrs)
 				if typ=="info":
 					for i in rep:
@@ -138,7 +138,7 @@ class Jabber:
 								if i.getTag('groupchat'): features.append(NS_GROUPCHAT)
 								if i.getTag('register'): features.append(NS_REGISTER)
 								if i.getTag('search'): features.append(NS_SEARCH)
-					self.discoveryQueue.put([typ,identities,features,str(jid)])
+					self.discoveryQueue.put([typ,identities,features,unicode(jid)])
 
 	def discoveryItems(self,server=None,node=None):
 		# send discovery items request
@@ -265,17 +265,17 @@ class Jabber:
 			print unicode(user),typ
 			if typ=="chat":
 				# put chat message to the message_queue
-				jid = str(str(user).rsplit("/")[0]).lower()
+				jid = unicode(unicode(user).rsplit("/")[0]).lower()
 				self.message_queue.append(["chat_message", jid,user,text,resource])
 			elif typ=="groupchat":
 				# put groupchat message to the message_queue
-				jid = str(str(user).rsplit("/")[0]).lower()
-				if len(str(user).rsplit("/"))==1:
+				jid = unicode(unicode(user).rsplit("/")[0]).lower()
+				if len(unicode(user).rsplit("/"))==1:
 					# no nickname => groupchat_server_message
 					self.message_queue.append(["groupchat_server_message", jid,text,subject])
 				else:
 					# normal groupchat_message
-					user=str(user).rsplit("/")[1]
+					user=unicode(user).rsplit("/")[1]
 					self.message_queue.append(["groupchat_message", jid,user,text])
 			if self.ready==True:
 				# GUI is ready for messages, so we can send messages to GUI
@@ -291,7 +291,7 @@ class Jabber:
 		nick = pres.getFrom().getResource() # get nick (it's resource in MUC)
 		prType = pres.getType() # get type
 		jid = pres.getFrom().getNode() + "@" + pres.getFrom().getDomain() # get jid
-		jid=str(jid).lower()
+		jid=unicode(jid).lower()
 		print prType,jid,nick,self.ready
 
 		if prType=="subscribe":

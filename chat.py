@@ -4,6 +4,7 @@ except:
 	print "PyQt4 is not installed."
 from chatwidget_ui import *
 from configobj import ConfigObj
+from palette import *
 
 class chatWidget(QtGui.QWidget):
 	def __init__(self,main,jid,jab,parent=None):
@@ -21,7 +22,8 @@ class chatWidget(QtGui.QWidget):
 		self.loadSmileys()
 		self.jid=jid
 		self.name_id=-1 # for tabPressed
-
+		palette=loadPalette(self.main.palette["chatwidget"])
+		self.setPalette(palette)
 
 	def loadSmileys(self):
 		# loads smileys.conf and makes buttons
@@ -38,7 +40,7 @@ class chatWidget(QtGui.QWidget):
 			if added.count(v)==0:
 				added.append(v)
 				button=QtGui.QToolButton(self)
-				action=QtGui.QAction(QtGui.QIcon("images/22x22/emotes/"+v),"",self.s)
+				action=QtGui.QAction(QtGui.QIcon("images/16x16/emotes/"+v),"",self.s)
 				action.setData(QtCore.QVariant(k))
 				button.setDefaultAction(action)
 				button.setToolTip(str(k))
@@ -59,7 +61,7 @@ class chatWidget(QtGui.QWidget):
 		self.ui.textEdit.setTextCursor(cur)
 		# emoticons
 		for k,v in self.smileys.iteritems():
-			text=text.replace(k,'<img src="images/smileys/'+v+'"/>')
+			text=text.replace(k,'<img src="images/16x16/emotes/'+v+'"/>')
 		self.ui.textEdit.insertHtml(text)
 		cur=self.ui.textEdit.textCursor()
 		cur.movePosition(QtGui.QTextCursor.End)

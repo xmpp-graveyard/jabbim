@@ -7,6 +7,7 @@ from chatwindow_ui import *
 from chat import *
 from groupchat import *
 from gamechat import *
+from palette import *
 
 class chatWindow(QtGui.QMainWindow):
 	def __init__(self,parent,main,jab):
@@ -22,6 +23,9 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.chatTab.removeTab(0)
 		self.ui.gridlayout.setMargin(1)
 		self.ui.gridlayout.setSpacing(1)
+		palette=loadPalette(self.main.palette["chatwindow"])
+		self.setPalette(palette)
+
 	def changeTab(self,index):
 		self.ui.chatTab.widget(index).chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 		try:
