@@ -135,6 +135,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.actionService_discovery, QtCore.SIGNAL("triggered ( bool )"),self.discovery)
 		app.connect(self.ui.addContact, QtCore.SIGNAL("clicked ()"),self.addContactMainWindow)
 		app.connect(self.ui.getGroupchatList, QtCore.SIGNAL("clicked ()"),self.getGroupchatList)
+		app.connect(self.ui.manageBookmarks, QtCore.SIGNAL("clicked ()"),self.manageBookmarks)
 		QtCore.QObject.connect(self.ui.groupchat, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.groupchatClicked)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
@@ -186,6 +187,11 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.groupchat.hideColumn(1)
 		self.ui.bookmarks.header().hide()
 		self.ui.bookmarks.hideColumn(1)
+
+	def manageBookmarks(self):
+		win=preferencesWindow(self,self,1,jab=jab)
+		win.show()
+
 
 	def bookmarksContextMenu(self,pos):
 		item=self.ui.bookmarks.itemFromIndex(self.ui.bookmarks.indexAt(pos))
@@ -414,15 +420,15 @@ class mainWindow(QtGui.QMainWindow):
 					"offline":self.tr("Offline")
 					}
 		self.statusMenu=QtGui.QMenu(self.tr("Status"),self.ui.statusButton)
-		action=self.statusMenu.addAction(self.statuses['online'],self.status["online"])
+		action=self.statusMenu.addAction(self.getIcon(status="online",size="16x16"),self.status["online"])
 		action.setData(QtCore.QVariant("online"))
-		action=self.statusMenu.addAction(self.statuses['chat'],self.status["chat"])
+		action=self.statusMenu.addAction(self.getIcon(status="chat",size="16x16"),self.status["chat"])
 		action.setData(QtCore.QVariant("chat"))
-		action=self.statusMenu.addAction(self.statuses['away'],self.status["away"])
+		action=self.statusMenu.addAction(self.getIcon(status="away",size="16x16"),self.status["away"])
 		action.setData(QtCore.QVariant("away"))
-		action=self.statusMenu.addAction(self.statuses['xa'],self.status["xa"])
+		action=self.statusMenu.addAction(self.getIcon(status="xa",size="16x16"),self.status["xa"])
 		action.setData(QtCore.QVariant("xa"))
-		action=self.statusMenu.addAction(self.statuses['dnd'],self.status["dnd"])
+		action=self.statusMenu.addAction(self.getIcon(status="dnd",size="16x16"),self.status["dnd"])
 		action.setData(QtCore.QVariant("dnd"))
 		self.ui.statusButton.setMenu(self.statusMenu)
 		app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
@@ -452,7 +458,7 @@ class mainWindow(QtGui.QMainWindow):
 		data=action.data()
 		data=data.toString()
 		self.ui.statusButton.setText(unicode(action.text()))
-		self.ui.statusButton.setIcon(self.statuses[str(data)])
+		self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
 		setstatus=statusWindow(data)
 		setstatus.exec_()
 
@@ -555,7 +561,7 @@ class mainWindow(QtGui.QMainWindow):
 				return user
 		return None
 
-	def getIcon(self,jid=None,typ=None,size="32x32"):
+	def getIcon(self,jid=None,typ=None,size="32x32",status=None):
 		path=self.statusPath.replace("xxxxx",size)
 		print path
 		if jid!=None:
@@ -567,7 +573,10 @@ class mainWindow(QtGui.QMainWindow):
 				print path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png"
 				icon=QtGui.QIcon(path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png")
 		else:
-			icon=QtGui.QIcon(path+"jabber-online.png")
+			if status==None:
+				icon=QtGui.QIcon(path+"jabber-online.png")
+			else:
+				icon=QtGui.QIcon(path+"jabber-"+status+".png")
 		return icon
 
 	def getUserType(self,jid):
@@ -712,7 +721,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.events.show()
 			self.events.addEvent("subscribed",{"jid":str(jid)})
 			if not self.ui.roster.isUser(jid):
-				self.groups["Unknown"]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,jid,self.groups["Unknown"]["item"],self.offline,self.statuses["offline"]),"resources":[]}
+				self.groups["Unknown"]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,jid,self.groups["Unknown"]["item"],self.offline,self.getIcon(jid,"offline")),"resources":[]}
 
 		elif e[0] == "subscribe":
 			jid=str(e[1])
@@ -801,7 +810,7 @@ class mainWindow(QtGui.QMainWindow):
 							else:
 								# pokud po smazani nezbude ani jedna resource, je kontakt offline
 								if int(user.childCount())<=1:
-									user.setIcon(0,self.statuses["offline"])
+									user.setIcon(0,self.getIcon(jid,"offline"))
 									user.setText(1,self.nickSort["offline"]+unicode(user.text(2)))
 									self.ui.roster.setItemHidden(user,self.offline)
 								# smazani resource
@@ -838,10 +847,10 @@ class mainWindow(QtGui.QMainWindow):
 								self.groupchat[jid][1].append(user)
 							# Nastaveni stavu
 							if str(e[2].getShow())!="None":
-								user.setIcon(self.statuses[str(e[2].getShow())])
+								user.setIcon(self.getIcon(jid,str(e[2].getShow())))
 								#user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
 							else:
-								user.setIcon(self.statuses["online"])
+								user.setIcon(self.getIcon(jid,"online"))
 							# Tooltip
 							#user.setToolTip('<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>Jabber ID: </b>'+str(jid)+'')
 							# Pridani do seznamu uzivatelu v mistnosti

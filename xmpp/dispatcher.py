@@ -260,7 +260,6 @@ class Dispatcher(PlugIn):
 			if key: chain = chain + self.handlers[xmlns][name][key]
 	
 		output=''
-		print ID
 		if session._expected.has_key(ID):
 			user=0
 			if type(session._expected[ID])==type(()):

@@ -3,6 +3,7 @@ try:
 except:
 	print "PyQt4 is not installed."
 from grouped_events_ui import *
+from addcontact import *
 
 class groupedEventWindow(QtGui.QMainWindow):
 	def __init__(self,parent,main,jab):
@@ -44,17 +45,7 @@ class groupedEventWindow(QtGui.QMainWindow):
 				else:
 					nickname=unicode(self.ui.nickname.currentText())
 				group=unicode(self.ui.group.currentText())
-				print "adding",jid,nickname,group
-				if len(group)!=0:
-					if self.main.groups.has_key(group):
-						self.main.groups[group]["users"][str(jid)]={"item":self.main.ui.roster.addUser(jid,nickname,self.main.groups[group]["item"],self.main.offline,self.main.statuses["offline"]),"resources":[]}
-					else:
-						self.main.groups[group]={"item":self.main.ui.roster.addGroup(group),"users":{}}
-						self.main.groups[group]["users"][str(jid)]={"item":self.main.ui.roster.addUser(jid,nickname,self.main.groups[group]["item"],self.main.offline,self.main.statuses["offline"]),"resources":[]}
-				else:
-					self.main.groups["Unknown"]["users"][str(jid)]={"item":self.main.ui.roster.addUser(jid,nickname,self.main.groups["Unknown"]["item"],self.main.offline,self.main.statuses["offline"]),"resources":[]}
-				self.jab.roster.setItem(jid,nickname,[group])
-				self.jab.roster.Subscribe(jid)
+				addContact(jid,nickname,group,self.main,self.jab)
 				for x in range(self.subscriptions.childCount()):
 					if unicode(self.subscriptions.child(x).text(0))==jid:
 						toDel.append(x)

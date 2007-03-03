@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Sat Mar  3 19:15:47 2007
+# Created: Sat Mar  3 19:47:13 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -148,14 +148,21 @@ class Ui_mainWindow(object):
         self.gridlayout3.setSpacing(6)
         self.gridlayout3.setObjectName("gridlayout3")
 
+        spacerItem3 = QtGui.QSpacerItem(111,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout3.addItem(spacerItem3,2,0,1,1)
+
         self.bookmarks = QtGui.QTreeWidget(self.tab_4)
         self.bookmarks.setAlternatingRowColors(True)
         self.bookmarks.setObjectName("bookmarks")
-        self.gridlayout3.addWidget(self.bookmarks,1,0,1,1)
+        self.gridlayout3.addWidget(self.bookmarks,1,0,1,2)
 
         self.label_6 = QtGui.QLabel(self.tab_4)
         self.label_6.setObjectName("label_6")
-        self.gridlayout3.addWidget(self.label_6,0,0,1,1)
+        self.gridlayout3.addWidget(self.label_6,0,0,1,2)
+
+        self.manageBookmarks = QtGui.QPushButton(self.tab_4)
+        self.manageBookmarks.setObjectName("manageBookmarks")
+        self.gridlayout3.addWidget(self.manageBookmarks,2,1,1,1)
         self.tabWidget.addTab(self.tab_4,QtGui.QIcon("images/16x16/categories/bookmarks.png"),"")
         self.gridlayout.addWidget(self.tabWidget,0,0,1,1)
 
@@ -165,18 +172,18 @@ class Ui_mainWindow(object):
         self.hboxlayout1.setObjectName("hboxlayout1")
 
         self.showOffline = QtGui.QToolButton(self.centralwidget)
-        self.showOffline.setIcon(QtGui.QIcon("images/status/offline.png"))
+        self.showOffline.setIcon(QtGui.QIcon("images/16x16/status/jabber-offline.png"))
         self.showOffline.setCheckable(True)
         self.showOffline.setChecked(False)
         self.showOffline.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.showOffline.setObjectName("showOffline")
         self.hboxlayout1.addWidget(self.showOffline)
 
-        spacerItem3 = QtGui.QSpacerItem(16,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.hboxlayout1.addItem(spacerItem3)
+        spacerItem4 = QtGui.QSpacerItem(16,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.hboxlayout1.addItem(spacerItem4)
 
         self.statusButton = QtGui.QToolButton(self.centralwidget)
-        self.statusButton.setIcon(QtGui.QIcon("images/status/online.png"))
+        self.statusButton.setIcon(QtGui.QIcon("images/16x16/status/jabber-online.png"))
         self.statusButton.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.statusButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.statusButton.setObjectName("statusButton")
@@ -236,7 +243,7 @@ class Ui_mainWindow(object):
         self.toolBar.addAction(self.actionAdd_contact)
 
         self.retranslateUi(mainWindow)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
     def retranslateUi(self, mainWindow):
@@ -267,6 +274,7 @@ class Ui_mainWindow(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Bookmarks</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.manageBookmarks.setText(QtGui.QApplication.translate("mainWindow", "Manage bookmarks", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QtGui.QApplication.translate("mainWindow", " ", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_4),QtGui.QApplication.translate("mainWindow", "Bookmarks", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setText(QtGui.QApplication.translate("mainWindow", "Show Offline", None, QtGui.QApplication.UnicodeUTF8))
