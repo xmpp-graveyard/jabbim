@@ -193,8 +193,8 @@ class mainWindow(QtGui.QMainWindow):
 		menu=QtGui.QMenu(self.ui.bookmarks)
 		if item.parent()==None:
 			action=menu.addAction(self.tr("Join"))
-			action.setData(QtCore.QVariant(jid))
-			action.setObjectName("join")
+			action.setData(item.data(0,32))
+			action.setObjectName("join_bookmark")
 		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.groupchatContextMenuTriggered)
 		menu.move(self.ui.bookmarks.mapToGlobal(pos))
 		menu.show()
@@ -208,8 +208,13 @@ class mainWindow(QtGui.QMainWindow):
 			server=jid.split("@")[1]
 			newchat=joinGroupChatWindow(self,jab,room=room,server=server)
 			ret=newchat.exec_()
-			#if ret==1:
-				#self.chat.show()
+		elif cmd=="join_bookmark":
+			data=action.data()
+			lst=data.toList()
+			room=unicode(lst[0].toString())
+			nickname=unicode(lst[1].toString())
+			self.groupchat[room]=[nickname,[]]
+			jab.getIntoRoom(room,nickname)
 
 	def groupchatContextMenu(self,pos):
 		item=self.ui.groupchat.itemFromIndex(self.ui.groupchat.indexAt(pos))

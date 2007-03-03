@@ -310,7 +310,7 @@ class Jabber:
 			else:
 				new=False
 			if self.lastQueue.has_key(jid) and new:
-				self.lastQueue[jid].append(self.presence_queue[-1])
+				self.lastQueue[jid].append(self.message_queue[-1])
 			else:
 				if self.ready==True:
 					# GUI is ready for messages, so we can send messages to GUI
