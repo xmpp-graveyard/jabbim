@@ -291,7 +291,6 @@ class Jabber:
 			user=mess.getFrom() # get sender of message
 			resource=mess.getFrom().getResource() # get message resource
 			typ=mess.getType() # fet type of message
-			print unicode(user),typ,unicode(text)
 			new=True
 			if typ=="chat":
 				# put chat message to the message_queue
@@ -311,6 +310,7 @@ class Jabber:
 				new=False
 			if self.lastQueue.has_key(jid) and new:
 				self.lastQueue[jid].append(self.message_queue[-1])
+				del self.message_queue[-1]
 			else:
 				if self.ready==True:
 					# GUI is ready for messages, so we can send messages to GUI
@@ -339,6 +339,7 @@ class Jabber:
 			self.presence_queue.append(["nick_update",jid,pres,nick])
 		if self.lastQueue.has_key(jid):
 			self.lastQueue[jid].append(self.presence_queue[-1])
+			del self.presence_queue[-1]
 		else:
 			if self.ready==True:
 				# GUI is ready for presences, so we can send presences to GUI
