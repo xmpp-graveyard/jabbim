@@ -247,6 +247,7 @@ class mainWindow(QtGui.QMainWindow):
 		if int(item.childCount())!=0:
 			for i in range(item.childCount()):
 				item.takeChild(0)
+		self.ui.groupchat.setItemExpanded(item,True)
 		jab.discoveryItems(unicode(item.text(1)),back="muc_items")
 
 	def bookmarksClicked(self,item,i):
@@ -606,8 +607,9 @@ class mainWindow(QtGui.QMainWindow):
 		elif e[0]=="room_opened":
 			room=unicode(e[1])
 			nickname=unicode(e[2])
+			affiliation=unicode(e[3])
 			self.groupchat[room]=[nickname,[]]
-			self.chat.addGroupChatTab(room,nickname)
+			self.chat.addGroupChatTab(room,nickname,affiliation)
 			jab.getLastQueue(room)
 
 		elif e[0] == "avatar_show":
@@ -839,7 +841,7 @@ class mainWindow(QtGui.QMainWindow):
 						w=self.chat.ui.chatTab.widget(i)
 						if str(w.jid)==jid:
 							# aktualizace uzivatele v seznamu
-							w.chat.editUser(jid,nick,str(e[2].getShow()),e[2].getRole())
+							w.chat.editUser(jid,nick,str(e[2].getShow()),e[2].getRole(),e[2].getAffiliation())
 							return
 				elif str(e[2].getType())=="unavailable":
 					nick=unicode(e[3])

@@ -105,7 +105,7 @@ class Jabber:
 			self.confNicks.append([])
 			self.linesRead.append(0)
 			self.presenceHandle(self.conn,rep)
-			self.inc.put(["room_opened",room,nick])
+			self.inc.put(["room_opened",room,nick,rep.getAffiliation()])
 	
 	def getIntoRoom(self,room,nick):
 		# join to conference

@@ -21,14 +21,12 @@ class dataFormsWindow(QtGui.QDialog):
 		unreg=False
 		for i in self.form.getXPayload():
 			if not isinstance(i,unicode):
-				print unicode(i.getName())
 				if i.getName()=="title":
 					self.addTitle(i.getData())
 				elif i.getName()=="instructions":
 					self.addInstructions(i.getData())
 				elif i.getName()=="field":
 					attrs=i.getAttrs()
-					print unicode(attrs)
 					lab=None
 					if attrs.has_key("var"):
 						lab=attrs["var"]
@@ -93,6 +91,8 @@ class dataFormsWindow(QtGui.QDialog):
 									value=x.getChildren()[0].getData()
 									values[label]=value
 							self.addlistSingle(attrs["var"],lab,values)
+						else:
+							print unicode(attrs)
 
 		widget=QtGui.QWidget(self)
 		layout=QtGui.QHBoxLayout(widget)

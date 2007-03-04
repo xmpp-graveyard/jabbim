@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'groupchatwidget.ui'
 #
-# Created: Sun Mar  4 04:57:35 2007
+# Created: Sun Mar  4 09:23:33 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -20,6 +20,44 @@ class Ui_groupchatwidget(object):
         self.gridlayout.setMargin(9)
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
+
+        self.roomConfig = QtGui.QPushButton(groupchatwidget)
+        self.roomConfig.setObjectName("roomConfig")
+        self.gridlayout.addWidget(self.roomConfig,2,1,1,1)
+
+        self.users = QtGui.QTreeWidget(groupchatwidget)
+        self.users.setMaximumSize(QtCore.QSize(141,16777215))
+        self.users.setAlternatingRowColors(True)
+        self.users.setRootIsDecorated(False)
+        self.users.setObjectName("users")
+        self.gridlayout.addWidget(self.users,1,1,1,1)
+
+        self.textEdit = QtGui.QTextEdit(groupchatwidget)
+        self.textEdit.setReadOnly(True)
+        self.textEdit.setObjectName("textEdit")
+        self.gridlayout.addWidget(self.textEdit,1,0,2,1)
+
+        self.hboxlayout = QtGui.QHBoxLayout()
+        self.hboxlayout.setMargin(0)
+        self.hboxlayout.setSpacing(6)
+        self.hboxlayout.setObjectName("hboxlayout")
+
+        self.line = QtGui.QLineEdit(groupchatwidget)
+        self.line.setAcceptDrops(True)
+        self.line.setObjectName("line")
+        self.hboxlayout.addWidget(self.line)
+
+        self.smileys = QtGui.QToolButton(groupchatwidget)
+        self.smileys.setIcon(QtGui.QIcon("images/22x22/emotes/biggrin.png"))
+        self.smileys.setCheckable(True)
+        self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.smileys.setObjectName("smileys")
+        self.hboxlayout.addWidget(self.smileys)
+
+        self.sendButton = QtGui.QPushButton(groupchatwidget)
+        self.sendButton.setObjectName("sendButton")
+        self.hboxlayout.addWidget(self.sendButton)
+        self.gridlayout.addLayout(self.hboxlayout,3,0,1,2)
 
         self.gridlayout1 = QtGui.QGridLayout()
         self.gridlayout1.setMargin(0)
@@ -49,40 +87,6 @@ class Ui_groupchatwidget(object):
         self.gridlayout1.addLayout(self.vboxlayout,0,0,2,1)
         self.gridlayout.addLayout(self.gridlayout1,0,0,1,2)
 
-        self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setMargin(0)
-        self.hboxlayout.setSpacing(6)
-        self.hboxlayout.setObjectName("hboxlayout")
-
-        self.line = QtGui.QLineEdit(groupchatwidget)
-        self.line.setAcceptDrops(True)
-        self.line.setObjectName("line")
-        self.hboxlayout.addWidget(self.line)
-
-        self.smileys = QtGui.QToolButton(groupchatwidget)
-        self.smileys.setIcon(QtGui.QIcon("images/22x22/emotes/biggrin.png"))
-        self.smileys.setCheckable(True)
-        self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
-        self.smileys.setObjectName("smileys")
-        self.hboxlayout.addWidget(self.smileys)
-
-        self.sendButton = QtGui.QPushButton(groupchatwidget)
-        self.sendButton.setObjectName("sendButton")
-        self.hboxlayout.addWidget(self.sendButton)
-        self.gridlayout.addLayout(self.hboxlayout,2,0,1,2)
-
-        self.textEdit = QtGui.QTextEdit(groupchatwidget)
-        self.textEdit.setReadOnly(True)
-        self.textEdit.setObjectName("textEdit")
-        self.gridlayout.addWidget(self.textEdit,1,0,1,1)
-
-        self.users = QtGui.QTreeWidget(groupchatwidget)
-        self.users.setMaximumSize(QtCore.QSize(141,16777215))
-        self.users.setAlternatingRowColors(True)
-        self.users.setRootIsDecorated(False)
-        self.users.setObjectName("users")
-        self.gridlayout.addWidget(self.users,1,1,1,1)
-
         self.retranslateUi(groupchatwidget)
         QtCore.QObject.connect(self.toolButton,QtCore.SIGNAL("toggled(bool)"),self.info_big.setShown)
         QtCore.QObject.connect(self.toolButton,QtCore.SIGNAL("toggled(bool)"),self.info.setHidden)
@@ -91,9 +95,10 @@ class Ui_groupchatwidget(object):
 
     def retranslateUi(self, groupchatwidget):
         groupchatwidget.setWindowTitle(QtGui.QApplication.translate("groupchatwidget", "Form", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolButton.setText(QtGui.QApplication.translate("groupchatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
-        self.smileys.setText(QtGui.QApplication.translate("groupchatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
-        self.sendButton.setText(QtGui.QApplication.translate("groupchatwidget", "Send", None, QtGui.QApplication.UnicodeUTF8))
+        self.roomConfig.setText(QtGui.QApplication.translate("groupchatwidget", "Room configuration", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(0,QtGui.QApplication.translate("groupchatwidget", "user", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(1,QtGui.QApplication.translate("groupchatwidget", "jid", None, QtGui.QApplication.UnicodeUTF8))
+        self.smileys.setText(QtGui.QApplication.translate("groupchatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.sendButton.setText(QtGui.QApplication.translate("groupchatwidget", "Send", None, QtGui.QApplication.UnicodeUTF8))
+        self.toolButton.setText(QtGui.QApplication.translate("groupchatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
 

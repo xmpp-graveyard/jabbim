@@ -13,6 +13,7 @@ class groupChatWidget(QtGui.QWidget):
 		self.ui.setupUi(self)
 		self.main=main
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
+		QtCore.QObject.connect(self.ui.roomConfig, QtCore.SIGNAL("clicked ()"),self.roomConfigClicked)
 		QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 		short=QtGui.QShortcut("tab",self.ui.line)
@@ -27,6 +28,9 @@ class groupChatWidget(QtGui.QWidget):
 		self.addRole("visitor","Visitors")
 		self.ui.users.header().hide()
 		self.ui.users.hideColumn(1)
+
+	def roomConfigClicked(self):
+		self.jab.getGroupchatConfig(self.jid)
 
 	def deleteUser(self,jid,nick):
 		user=self.main.getGroupChatMember(jid,unicode(nick))
@@ -49,7 +53,7 @@ class groupChatWidget(QtGui.QWidget):
 			if int(v.childCount())>0:
 				self.ui.users.setItemHidden(v,False)
 
-	def editUser(self,jid,nick,status,role):
+	def editUser(self,jid,nick,status,role,affiliation=None):
 		print unicode(nick),role
 		if self.main.isGroupChatMember(jid,unicode(nick)):
 			user=self.main.getGroupChatMember(jid,unicode(nick))

@@ -48,7 +48,7 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 		self.show()
 
-	def addGroupChatTab(self,room,nickname):
+	def addGroupChatTab(self,room,nickname,affiliation=""):
 		tab=QtGui.QWidget(self.ui.chatTab)
 		tab.jid=room
 		tab.name=unicode(nickname)
@@ -57,6 +57,10 @@ class chatWindow(QtGui.QMainWindow):
 		layout.setMargin(1)
 		layout.setSpacing(1)
 		tab.chat=groupChatWidget(self.main,room,self.jab,tab)
+		if affiliation=="owner":
+			tab.chat.ui.roomConfig.show()
+		else:
+			tab.chat.ui.roomConfig.hide()
 		layout.addWidget(tab.chat)
 		self.ui.chatTab.addTab(tab,room)
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
