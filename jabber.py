@@ -182,6 +182,53 @@ class Jabber:
 			server=self.server
 		xmpp.features.discoverInfo(self.conn,server,self.disco)
 
+	def groupchatSetAdminListHandler(self,i,rep,jid,role,affiliation,toDel,items):
+		print unicode(rep)
+		print str(rep.getError())
+		if isErrorNode(rep):
+			code=str(rep.getErrorCode())
+			print unicode(rep)
+			print str(rep.getError())
+			self.err.put("muc_set_admin_list-"+code)
+		else:
+			self.inc.put(["group_chat_admin_list_setted",jid,role,affiliation,toDel,items])
+
+	def groupchatSetAdminList(self,jid,items,role=None,affiliation=None,toDel=None):
+		iq=Iq(to=jid,typ='set',queryNS=NS_MUC_ADMIN,xmlns=None)
+		for item in items:
+			if role!=None:
+				iq.getTag("query").addChild("item",{"jid":item,"role":role})
+			else:
+				iq.getTag("query").addChild("item",{"jid":item,"affiliation":affiliation})
+		if toDel!=None:
+			if role!=None:
+				iq.getTag("query").addChild("item",{"jid":toDel[0],"role":toDel[1]})
+			else:
+				iq.getTag("query").addChild("item",{"jid":toDel[0],"affiliation":toDel[1]})
+		#print unicode(iq)
+		self.conn.SendAndCallForResponse(iq,self.groupchatSetAdminListHandler,args={"jid":jid,'role':role,'affiliation':affiliation,'toDel':toDel,'items':items},myid="groupchatsetadminlist")
+
+	def groupchatAdminListHandler(self,i,rep,muc,role,affiliation):
+		if not isResultNode(rep):
+			return
+		items=[]
+		for i in rep.getQueryPayload():
+			if not isinstance(i,unicode):
+				if i.getName()=="item":
+					jid = i.getAttr("jid")
+					items.append(jid)
+		self.inc.put(["group_chat_admin_list",items,muc,role,affiliation])
+
+	def getGroupchatAdminList(self,muc,role=None,affiliation=None):
+		# get groupchat config form
+		iq=Iq(to=muc,typ='get',queryNS=NS_MUC_ADMIN,xmlns=None)
+		if role!=None:
+			iq.getTag("query").addChild("item",{"role":role})
+		else:
+			iq.getTag("query").addChild("item",{"affiliation":affiliation})
+		#print unicode(iq)
+		self.conn.SendAndCallForResponse(iq,self.groupchatAdminListHandler,args={"muc":muc,'role':role,'affiliation':affiliation},myid="groupchatadminlist")
+
 	def groupchatConfigHandler(self,i,rep,muc):
 		self.inc.put(["group_chat_config",rep,muc])
 

@@ -604,6 +604,60 @@ class mainWindow(QtGui.QMainWindow):
 			self.bookmarks=e[1]
 			self.buildGroupchatMenu()
 
+		elif e[0]=="group_chat_admin_list_setted":
+			#self.inc.put(["group_chat_admin_list_setted",jid,role,affiliation,toDel,items])
+			jid=e[1]
+			role=e[2]
+			affiliation=e[3]
+			toDel=e[4]
+			items=e[5]
+			if role==None:
+				role=affiliation
+			for i in range(self.chat.ui.chatTab.count()):
+				w=self.chat.ui.chatTab.widget(i)
+				if str(w.jid)==jid:
+					for item in items:
+						if role=="moderator":
+							w.chat.chatadmin.ui.moderatorlist.addItem(item)
+						elif role=="owner":
+							w.chat.chatadmin.ui.ownerlist.addItem(item)
+						elif role=="member":
+							w.chat.chatadmin.ui.memberlist.addItem(item)
+						elif role=="outcast":
+							w.chat.chatadmin.ui.banlist.addItem(item)
+					if toDel!=None:
+						if role=="moderator":
+							w.chat.chatadmin.ui.moderatorlist.takeItem(w.chat.chatadmin.ui.moderatorlist.row(w.chat.chatadmin.ui.moderatorlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
+						elif role=="owner":
+							w.chat.chatadmin.ui.ownerlist.takeItem(w.chat.chatadmin.ui.ownerlist.row(w.chat.chatadmin.ui.ownerlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
+						elif role=="member":
+							w.chat.chatadmin.ui.memberlist.takeItem(w.chat.chatadmin.ui.memberlist.row(w.chat.chatadmin.ui.memberlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
+						elif role=="outcast":
+							w.chat.chatadmin.ui.banlist.takeItem(w.chat.chatadmin.ui.banlist.row(w.chat.chatadmin.ui.banlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
+					return
+
+		elif e[0]=="group_chat_admin_list":
+			items=e[1]
+			jid=e[2]
+			role=e[3]
+			affiliation=e[4]
+			if role==None:
+				role=affiliation
+			for i in range(self.chat.ui.chatTab.count()):
+				w=self.chat.ui.chatTab.widget(i)
+				if str(w.jid)==jid:
+					print items
+					for item in items:
+						if role=="moderator":
+							w.chat.chatadmin.ui.moderatorlist.addItem(item)
+						elif role=="owner":
+							w.chat.chatadmin.ui.ownerlist.addItem(item)
+						elif role=="member":
+							w.chat.chatadmin.ui.memberlist.addItem(item)
+						elif role=="outcast":
+							w.chat.chatadmin.ui.banlist.addItem(item)
+					return
+
 		elif e[0]=="room_opened":
 			room=unicode(e[1])
 			nickname=unicode(e[2])

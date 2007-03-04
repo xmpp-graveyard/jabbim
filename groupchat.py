@@ -3,17 +3,20 @@ try:
 except:
 	print "PyQt4 is not installed."
 from groupchatwidget_ui import *
+from groupchatadmin import *
 from configobj import ConfigObj
 
 class groupChatWidget(QtGui.QWidget):
-	def __init__(self,main,jid,jab,parent=None):
+	def __init__(self,main,jid,jab,affiliation,parent=None):
 		apply(QtGui.QWidget.__init__,(self,parent))
 		self.jab=jab
 		self.ui=Ui_groupchatwidget()
 		self.ui.setupUi(self)
 		self.main=main
+		self.affiliation=affiliation
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.roomConfig, QtCore.SIGNAL("clicked ()"),self.roomConfigClicked)
+		QtCore.QObject.connect(self.ui.roomAdmin, QtCore.SIGNAL("clicked ()"),self.roomAdminClicked)
 		QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 		short=QtGui.QShortcut("tab",self.ui.line)
@@ -28,6 +31,15 @@ class groupChatWidget(QtGui.QWidget):
 		self.addRole("visitor","Visitors")
 		self.ui.users.header().hide()
 		self.ui.users.hideColumn(1)
+
+	def roomAdminClicked(self):
+		if self.affiliation=="owner":
+			self.chatadmin=groupchatAdminWindow(self,self.main,self.jab)
+			self.jab.getGroupchatAdminList(self.jid,role="moderator")
+			self.jab.getGroupchatAdminList(self.jid,affiliation="owner")
+			self.jab.getGroupchatAdminList(self.jid,affiliation="member")
+			self.jab.getGroupchatAdminList(self.jid,affiliation="outcast")
+			self.chatadmin.show()
 
 	def roomConfigClicked(self):
 		self.jab.getGroupchatConfig(self.jid)
@@ -67,10 +79,10 @@ class groupChatWidget(QtGui.QWidget):
 			self.main.groupchat[jid][1].append(user)
 		# Nastaveni stavu
 		if status!="None":
-			user.setIcon(0,self.main.getIcon(status=status))
+			user.setIcon(0,self.main.getIcon(status=status,size="16x16"))
 			#user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
 		else:
-			user.setIcon(0,self.main.getIcon(status="online"))
+			user.setIcon(0,self.main.getIcon(status="online",size="16x16"))
 		# Tooltip
 		#user.setToolTip('<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>Jabber ID: </b>'+str(jid)+'')
 		# serazeni

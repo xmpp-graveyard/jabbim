@@ -56,11 +56,11 @@ class chatWindow(QtGui.QMainWindow):
 		layout=QtGui.QHBoxLayout(tab)
 		layout.setMargin(1)
 		layout.setSpacing(1)
-		tab.chat=groupChatWidget(self.main,room,self.jab,tab)
+		tab.chat=groupChatWidget(self.main,room,self.jab,affiliation,tab)
 		if affiliation=="owner":
-			tab.chat.ui.roomConfig.show()
+			tab.chat.ui.admin.show()
 		else:
-			tab.chat.ui.roomConfig.hide()
+			tab.chat.ui.admin.hide()
 		layout.addWidget(tab.chat)
 		self.ui.chatTab.addTab(tab,room)
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
