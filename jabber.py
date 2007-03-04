@@ -22,8 +22,139 @@ import xmpp
 from xmpp.protocol import *
 from Queue import Queue
 
+class groupchat:
+
+	def groupchatSend(self, room, text):
+		# Send message to the room
+		a = xmpp.protocol.Message(room,text,"groupchat")
+		self.conn.send(a)
+
+	def getIntoRoom(self,room,nick):
+		# join to conference
+		self.addLastQueue(room) # keep incoming presences and messages to this room when we connecting
+		p = xmpp.Presence(to='%s/%s'%(room, nick))
+		self.conn.SendAndCallForResponse(p,self._getIntoRoomHandler,args={'room':room,'nick':nick},myid="getintoroom")
+
+	def _getIntoRoomHandler(self,i,rep,room,nick):
+		# join to conference handler
+		if isErrorNode(rep):
+			# we get error
+			code=str(rep.getErrorCode())
+			print str(rep.getError())
+			self.err.put("muc-"+code)
+			self.deleteLastQueue(room) # stop keeping messages
+		else:
+			# we are connected, so we can send information to the GUI
+			self.presenceHandle(self.conn,rep)
+			self.inc.put(["room_opened",room,nick,rep.getAffiliation()])
+
+	def getOffRoom(self,room,nick):
+		# get off room
+		p = xmpp.Presence(to='%s/%s'%(room, nick), typ="unavailable")
+		p.setShow("offline")
+		self.conn.send(p)
+
+	def groupchatSetAdminList(self,jid,items,role=None,affiliation=None,toDel=None):
+		# muc#admin support
+		# sets muc#admin lists
+		iq=Iq(to=jid,typ='set',queryNS=NS_MUC_ADMIN,xmlns=None)
+		for item in items:
+			if role!=None:
+				iq.getTag("query").addChild("item",{"jid":item,"role":role})
+			else:
+				iq.getTag("query").addChild("item",{"jid":item,"affiliation":affiliation})
+		# some item to delete. todel=[jid_to_del,role_or_affiliation_used_for_deleting]
+		if toDel!=None:
+			if role!=None:
+				iq.getTag("query").addChild("item",{"jid":toDel[0],"role":toDel[1]})
+			else:
+				iq.getTag("query").addChild("item",{"jid":toDel[0],"affiliation":toDel[1]})
+		self.conn.SendAndCallForResponse(iq,self._groupchatSetAdminListHandler,args={"jid":jid,'role':role,'affiliation':affiliation,'toDel':toDel,'items':items},myid="groupchatsetadminlist")
+
+	def _groupchatSetAdminListHandler(self,i,rep,jid,role,affiliation,toDel,items):
+		# sets muc#admin handler
+		if isErrorNode(rep):
+			# we get error
+			code=str(rep.getErrorCode())
+			print unicode(rep)
+			print str(rep.getError())
+			self.err.put("muc_set_admin_list-"+code)
+		else:
+			# items setted => send info to GUI
+			self.inc.put(["group_chat_admin_list_setted",jid,role,affiliation,toDel,items])
+
+	def getGroupchatConfig(self,muc):
+		# get groupchat config form (muc#owner)
+		iq=Iq(to=muc,typ='get',queryNS=NS_MUC_OWNER,xmlns=None)
+		self.conn.SendAndCallForResponse(iq,self._groupchatConfigHandler,args={"muc":muc},myid="groupchatconfig")
+
+	def _groupchatConfigHandler(self,i,rep,muc):
+		# sets muc#admin handler
+		if isErrorNode(rep):
+			# we get error
+			code=str(rep.getErrorCode())
+			print unicode(rep)
+			print str(rep.getError())
+			self.err.put("muc_config-"+code)
+		else:
+			# send form to GUI
+			self.inc.put(["group_chat_config",rep,muc])
+
+	def getGroupchatAdminList(self,muc,role=None,affiliation=None):
+		# get groupchat admin list (muc#admin)
+		iq=Iq(to=muc,typ='get',queryNS=NS_MUC_ADMIN,xmlns=None)
+		if role!=None:
+			iq.getTag("query").addChild("item",{"role":role})
+		else:
+			iq.getTag("query").addChild("item",{"affiliation":affiliation})
+		self.conn.SendAndCallForResponse(iq,self._getGroupchatAdminListHandler,args={"muc":muc,'role':role,'affiliation':affiliation},myid="groupchatadminlist")
+
+	def _getGroupchatAdminListHandler(self,i,rep,muc,role,affiliation):
+		# groupchat admin list handler
+		if not isResultNode(rep):
+			# we get error
+			code=str(rep.getErrorCode())
+			print unicode(rep)
+			print str(rep.getError())
+			self.err.put("groupchat_admin_list-"+code)
+		else:
+			# get jids and save them to the list items
+			items=[]
+			for i in rep.getQueryPayload():
+				if not isinstance(i,unicode):
+					if i.getName()=="item":
+						jid = i.getAttr("jid")
+						items.append(jid)
+			# inform GUI
+			self.inc.put(["group_chat_admin_list",items,muc,role,affiliation])
+
+	def setGroupchatConfig(self,host,info):
+		# set groupchat config
+		iq=Iq(to=host,typ='set',queryNS=NS_MUC_OWNER,xmlns=None)
+		# makes iq
+		iq.getTag("query").addChild("x",{"xmlns":"jabber:x:data","type":"submit"})
+		if type(info)<>type({}): info=info.asDict()
+		for i in info.keys():
+			iq.getTag("query").getTag('x').addChild("field",{"var":i})
+			iq.getTag("query").getTag('x').getTag("field",{"var":i}).setTagData("value",info[i])
+		#self.conn.send(iq)
+		self.conn.SendAndCallForResponse(iq,self._setGroupchatConfigHandler,myid="setgroupchatconfig")
+		# little hack for jgames
+		try:
+			self.listGames(int(host[:2]))
+		except: pass
+
+	def _setGroupchatConfigHandler(self,i,rep):
+		# set groupchat config handler
+		if not isResultNode(rep):
+			# we get error
+			code=str(rep.getErrorCode())
+			print unicode(rep)
+			print str(rep.getError())
+			self.err.put("groupchat_set_config-"+code)
+
 # here we realize jabber communication via using interface provided by xmpp
-class Jabber:
+class Jabber(groupchat):
 	user = ""
 	server = ""
 	resource = "Jabbim"
@@ -93,38 +224,6 @@ class Jabber:
 		print "adding last queue for",jid
 		self.lastQueue[jid]=[]
 
-	def getIntoRoomHandler(self,i,rep,room,nick):
-		if isErrorNode(rep):
-			code=str(rep.getErrorCode())
-			print str(rep.getError())
-			self.err.put("muc-"+code)
-			self.deleteLastQueue(room)
-		else:
-			self.confNames.append(room)
-			self.conf.append([])
-			self.confNicks.append([])
-			self.linesRead.append(0)
-			self.presenceHandle(self.conn,rep)
-			self.inc.put(["room_opened",room,nick,rep.getAffiliation()])
-	
-	def getIntoRoom(self,room,nick):
-		# join to conference
-		self.addLastQueue(room)
-		p = xmpp.Presence(to='%s/%s'%(room, nick))
-		self.conn.SendAndCallForResponse(p,self.getIntoRoomHandler,args={'room':room,'nick':nick},myid="getintoroom")
-
-	def getOffRoom(self,room,nick):
-		p = xmpp.Presence(to='%s/%s'%(room, nick), typ="unavailable")
-		p.setShow("offline")
-		self.conn.send(p)
-		try:
-			Conf = self.confNames.index(room)
-			self.confNames.remove(room)
-			self.conf[Conf] = Null
-			self.confNicks[Conf] = Null
-		except:
-			pass
-
 	def setStatus(self,rooms,status="online", text=""):
 		presence = xmpp.Presence()
 		presence.setStatus(text)
@@ -181,80 +280,6 @@ class Jabber:
 		if server==None:
 			server=self.server
 		xmpp.features.discoverInfo(self.conn,server,self.disco)
-
-	def groupchatSetAdminListHandler(self,i,rep,jid,role,affiliation,toDel,items):
-		print unicode(rep)
-		print str(rep.getError())
-		if isErrorNode(rep):
-			code=str(rep.getErrorCode())
-			print unicode(rep)
-			print str(rep.getError())
-			self.err.put("muc_set_admin_list-"+code)
-		else:
-			self.inc.put(["group_chat_admin_list_setted",jid,role,affiliation,toDel,items])
-
-	def groupchatSetAdminList(self,jid,items,role=None,affiliation=None,toDel=None):
-		iq=Iq(to=jid,typ='set',queryNS=NS_MUC_ADMIN,xmlns=None)
-		for item in items:
-			if role!=None:
-				iq.getTag("query").addChild("item",{"jid":item,"role":role})
-			else:
-				iq.getTag("query").addChild("item",{"jid":item,"affiliation":affiliation})
-		if toDel!=None:
-			if role!=None:
-				iq.getTag("query").addChild("item",{"jid":toDel[0],"role":toDel[1]})
-			else:
-				iq.getTag("query").addChild("item",{"jid":toDel[0],"affiliation":toDel[1]})
-		#print unicode(iq)
-		self.conn.SendAndCallForResponse(iq,self.groupchatSetAdminListHandler,args={"jid":jid,'role':role,'affiliation':affiliation,'toDel':toDel,'items':items},myid="groupchatsetadminlist")
-
-	def groupchatAdminListHandler(self,i,rep,muc,role,affiliation):
-		if not isResultNode(rep):
-			return
-		items=[]
-		for i in rep.getQueryPayload():
-			if not isinstance(i,unicode):
-				if i.getName()=="item":
-					jid = i.getAttr("jid")
-					items.append(jid)
-		self.inc.put(["group_chat_admin_list",items,muc,role,affiliation])
-
-	def getGroupchatAdminList(self,muc,role=None,affiliation=None):
-		# get groupchat config form
-		iq=Iq(to=muc,typ='get',queryNS=NS_MUC_ADMIN,xmlns=None)
-		if role!=None:
-			iq.getTag("query").addChild("item",{"role":role})
-		else:
-			iq.getTag("query").addChild("item",{"affiliation":affiliation})
-		#print unicode(iq)
-		self.conn.SendAndCallForResponse(iq,self.groupchatAdminListHandler,args={"muc":muc,'role':role,'affiliation':affiliation},myid="groupchatadminlist")
-
-	def groupchatConfigHandler(self,i,rep,muc):
-		self.inc.put(["group_chat_config",rep,muc])
-
-	def getGroupchatConfig(self,muc):
-		# get groupchat config form
-		iq=Iq(to=muc,typ='get',queryNS=NS_MUC_OWNER,xmlns=None)
-		#print unicode(iq)
-		self.conn.SendAndCallForResponse(iq,self.groupchatConfigHandler,args={"muc":muc},myid="groupchatconfig")
-
-	def setGroupchatConfig(self,host,info):
-		# get groupchat config form
-		#iq=Iq(to=muc,typ='get',queryNS=NS_MUC_OWNER,xmlns=None)
-		#self.conn.SendAndCallForResponse(iq,self.groupchatConfigHandler,args={"muc":muc})
-		iq=Iq(to=host,typ='set',queryNS=NS_MUC_OWNER,xmlns=None)
-		iq.getTag("query").addChild("x",{"xmlns":"jabber:x:data","type":"submit"})
-		if type(info)<>type({}): info=info.asDict()
-		for i in info.keys():
-			iq.getTag("query").getTag('x').addChild("field",{"var":i})
-			iq.getTag("query").getTag('x').getTag("field",{"var":i}).setTagData("value",info[i])
-		#print unicode(iq)
-		self.conn.send(iq)
-		try:
-			self.listGames(int(host[:2]))
-		except: pass
-		
-		#if isResultNode(resp): return 1
 
 	def bookmarksHandle(self,i,rep):
 		# getBookmarks request handler and parser (XEP-0048)
@@ -415,11 +440,6 @@ class Jabber:
 			except:
 				pass
 		#pass
-
-	def groupchatSend(self, room, text):
-		# Send message to the room
-		a = xmpp.protocol.Message(room,text,"groupchat")
-		self.conn.send(a)
 
 	def chatSend(self, jid, text):
 		# Send normal message for jid

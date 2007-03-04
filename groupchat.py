@@ -39,6 +39,7 @@ class groupChatWidget(QtGui.QWidget):
 			self.jab.getGroupchatAdminList(self.jid,affiliation="owner")
 			self.jab.getGroupchatAdminList(self.jid,affiliation="member")
 			self.jab.getGroupchatAdminList(self.jid,affiliation="outcast")
+			self.jab.getGroupchatAdminList(self.jid,affiliation="admin")
 			self.chatadmin.show()
 
 	def roomConfigClicked(self):

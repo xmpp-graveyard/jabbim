@@ -23,6 +23,8 @@ class groupchatAdminWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.deletemember, QtCore.SIGNAL("clicked ()"),self.deletemember)
 		QtCore.QObject.connect(self.ui.addban, QtCore.SIGNAL("clicked ()"),self.addban)
 		QtCore.QObject.connect(self.ui.deleteban, QtCore.SIGNAL("clicked ()"),self.deleteban)
+		QtCore.QObject.connect(self.ui.addadmin, QtCore.SIGNAL("clicked ()"),self.addadmin)
+		QtCore.QObject.connect(self.ui.deleteadmin, QtCore.SIGNAL("clicked ()"),self.deleteadmin)
 		#palette=loadPalette(self.main.palette["chatwindow"])
 		#self.setPalette(palette)
 		
@@ -99,3 +101,24 @@ class groupchatAdminWindow(QtGui.QDialog):
 			#item=self.ui.ownerlist.item(i)
 			#items.append(unicode(item.text()))
 		self.jab.groupchatSetAdminList(unicode(self.parent.jid),items,affiliation="outcast",toDel=[toDel,"none"])
+
+	def addadmin(self):
+		jid,b=QtGui.QInputDialog.getText(self,self.tr("Add admin"),self.tr("Enter Jabber ID of admin"), QtGui.QLineEdit.Normal, "")
+		jid=unicode(jid)
+		if b==True:
+			#self.ui.ownerlist.addItem(jid)
+			items=[jid]
+			#for i in range(self.ui.ownerlist.count()):
+				#item=self.ui.ownerlist.item(i)
+				#items.append(unicode(item.text()))
+			self.jab.groupchatSetAdminList(unicode(self.parent.jid),items,affiliation="admin")
+
+	def deleteadmin(self):
+		toDel=self.ui.adminlist.selectedItems()[0]
+		#self.ui.ownerlist.takeItem(self.ui.ownerlist.row(toDel))
+		toDel=unicode(toDel.text())
+		items=[]
+		#for i in range(self.ui.ownerlist.count()):
+			#item=self.ui.ownerlist.item(i)
+			#items.append(unicode(item.text()))
+		self.jab.groupchatSetAdminList(unicode(self.parent.jid),items,affiliation="admin",toDel=[toDel,"none"])

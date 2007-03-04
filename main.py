@@ -625,6 +625,8 @@ class mainWindow(QtGui.QMainWindow):
 							w.chat.chatadmin.ui.memberlist.addItem(item)
 						elif role=="outcast":
 							w.chat.chatadmin.ui.banlist.addItem(item)
+						elif role=="admin":
+							w.chat.chatadmin.ui.adminlist.addItem(item)
 					if toDel!=None:
 						if role=="moderator":
 							w.chat.chatadmin.ui.moderatorlist.takeItem(w.chat.chatadmin.ui.moderatorlist.row(w.chat.chatadmin.ui.moderatorlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
@@ -634,6 +636,8 @@ class mainWindow(QtGui.QMainWindow):
 							w.chat.chatadmin.ui.memberlist.takeItem(w.chat.chatadmin.ui.memberlist.row(w.chat.chatadmin.ui.memberlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
 						elif role=="outcast":
 							w.chat.chatadmin.ui.banlist.takeItem(w.chat.chatadmin.ui.banlist.row(w.chat.chatadmin.ui.banlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
+						elif role=="admin":
+							w.chat.chatadmin.ui.adminlist.takeItem(w.chat.chatadmin.ui.adminlist.row(w.chat.chatadmin.ui.adminlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
 					return
 
 		elif e[0]=="group_chat_admin_list":
@@ -656,6 +660,8 @@ class mainWindow(QtGui.QMainWindow):
 							w.chat.chatadmin.ui.memberlist.addItem(item)
 						elif role=="outcast":
 							w.chat.chatadmin.ui.banlist.addItem(item)
+						elif role=="admin":
+							w.chat.chatadmin.ui.adminlist.addItem(item)
 					return
 
 		elif e[0]=="room_opened":
