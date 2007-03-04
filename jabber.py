@@ -285,7 +285,7 @@ class Jabber:
 			text=mess.getBody() # get message text
 			if text!=None:
 				# replace html tags in message
-				text=text.replace("<","&lt;").replace(">","&gt;")
+				text=text.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
 			subject=mess.getSubject() # get message subject (for MUC subject for example)
 			if subject!=None:
 				# prelace html tags in subject
