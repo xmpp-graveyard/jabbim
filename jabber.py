@@ -96,6 +96,7 @@ class Jabber:
 	def getIntoRoomHandler(self,i,rep,room,nick):
 		if isErrorNode(rep):
 			code=str(rep.getErrorCode())
+			print str(rep.getError())
 			self.err.put("muc-"+code)
 			self.deleteLastQueue(room)
 		else:
@@ -103,6 +104,7 @@ class Jabber:
 			self.conf.append([])
 			self.confNicks.append([])
 			self.linesRead.append(0)
+			self.presenceHandle(self.conn,rep)
 			self.inc.put(["room_opened",room,nick])
 	
 	def getIntoRoom(self,room,nick):
@@ -186,7 +188,7 @@ class Jabber:
 	def getGroupchatConfig(self,muc):
 		# get groupchat config form
 		iq=Iq(to=muc,typ='get',queryNS=NS_MUC_OWNER,xmlns=None)
-		print unicode(iq)
+		#print unicode(iq)
 		self.conn.SendAndCallForResponse(iq,self.groupchatConfigHandler,args={"muc":muc},myid="groupchatconfig")
 
 	def setGroupchatConfig(self,host,info):
@@ -199,7 +201,7 @@ class Jabber:
 		for i in info.keys():
 			iq.getTag("query").getTag('x').addChild("field",{"var":i})
 			iq.getTag("query").getTag('x').getTag("field",{"var":i}).setTagData("value",info[i])
-		print unicode(iq)
+		#print unicode(iq)
 		self.conn.send(iq)
 		try:
 			self.listGames(int(host[:2]))
@@ -326,7 +328,7 @@ class Jabber:
 		prType = pres.getType() # get type
 		jid = pres.getFrom().getNode() + "@" + pres.getFrom().getDomain() # get jid
 		jid=unicode(jid).lower()
-		print prType,jid,nick,self.ready
+		#print prType,jid,nick,self.ready
 
 		if prType=="subscribe":
 			# subscribe request

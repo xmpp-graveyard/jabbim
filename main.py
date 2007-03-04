@@ -219,7 +219,7 @@ class mainWindow(QtGui.QMainWindow):
 			lst=data.toList()
 			room=unicode(lst[0].toString())
 			nickname=unicode(lst[1].toString())
-			self.groupchat[room]=[nickname,[]]
+			#self.groupchat[room]=[nickname,[]]
 			jab.getIntoRoom(room,nickname)
 
 	def groupchatContextMenu(self,pos):
@@ -551,13 +551,13 @@ class mainWindow(QtGui.QMainWindow):
 
 	def isGroupChatMember(self,chat,name):
 		for user in self.groupchat[chat][1]:
-			if unicode(user.text())==unicode(name):
+			if unicode(user.text(0))==unicode(name):
 				return True
 		return False
 
 	def getGroupChatMember(self,chat,name):
 		for user in self.groupchat[chat][1]:
-			if unicode(user.text())==unicode(name):
+			if unicode(user.text(0))==unicode(name):
 				return user
 		return None
 
@@ -606,6 +606,7 @@ class mainWindow(QtGui.QMainWindow):
 		elif e[0]=="room_opened":
 			room=unicode(e[1])
 			nickname=unicode(e[2])
+			self.groupchat[room]=[nickname,[]]
 			self.chat.addGroupChatTab(room,nickname)
 			jab.getLastQueue(room)
 
@@ -837,34 +838,16 @@ class mainWindow(QtGui.QMainWindow):
 					for i in range(self.chat.ui.chatTab.count()):
 						w=self.chat.ui.chatTab.widget(i)
 						if str(w.jid)==jid:
-							# Pokud je uzivatel jiz v mistnosti, nacteme jej od tam
-							print jid,e[2].getAffiliation()
-							if self.isGroupChatMember(jid,unicode(nick)):
-								user=self.getGroupChatMember(jid,unicode(nick))
-							# Pokud neni v mistnosti, vytvorime jej
-							else:
-								user=QtGui.QListWidgetItem(unicode(nick))
-								self.groupchat[jid][1].append(user)
-							# Nastaveni stavu
-							if str(e[2].getShow())!="None":
-								user.setIcon(self.getIcon(jid,str(e[2].getShow())))
-								#user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
-							else:
-								user.setIcon(self.getIcon(jid,"online"))
-							# Tooltip
-							#user.setToolTip('<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>Jabber ID: </b>'+str(jid)+'')
-							# Pridani do seznamu uzivatelu v mistnosti
-							w.chat.ui.listWidget.addItem(user)
-							# serazeni
-							w.chat.ui.listWidget.sortItems()
+							# aktualizace uzivatele v seznamu
+							w.chat.editUser(jid,nick,str(e[2].getShow()),e[2].getRole())
 							return
 				elif str(e[2].getType())=="unavailable":
 					nick=unicode(e[3])
 					for i in range(self.chat.ui.chatTab.count()):
 						w=self.chat.ui.chatTab.widget(i)
 						if str(w.jid)==jid:
-							user=self.getGroupChatMember(jid,unicode(nick))
-							w.chat.ui.listWidget.takeItem(int(w.chat.ui.listWidget.row(user)))
+							w.chat.deleteUser(jid,nick)
+							
 
 		elif e[0] == "roster_update":
 			print "roster update"
@@ -992,9 +975,18 @@ class mainWindow(QtGui.QMainWindow):
 		elif error == "auth":
 			self.jabberError(self.tr("Bad username or password."))
 			login.ui.connect.setEnabled(True)
+		elif error == "muc-401":
+			self.jabberError(self.tr("Password is required."))
+		elif error == "muc-404":
+			self.jabberError(self.tr("The room or server does not exist."))
+		elif error == "muc-405":
+			self.jabberError(self.tr("Room creation is restricted."))
+		elif error == "muc-407":
+			self.jabberError(self.tr("Your are not on the member list."))
 		elif error == "muc-409":
-			self.jabberError(self.tr("User with your nickname is already in groupchat."))
-			login.ui.connect.setEnabled(True)
+			self.jabberError(self.tr("Your nickname is in use or registered by another user."))
+		else:
+			self.jabberError(self.tr("Unknown error ")+unicode(error))
 
 	def jabberError(self,error):
 		QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(error),0,1)

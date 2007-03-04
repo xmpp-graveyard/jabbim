@@ -21,6 +21,57 @@ class groupChatWidget(QtGui.QWidget):
 		self.loadSmileys()
 		self.jid=jid
 		self.name_id=-1 # for tabPressed
+		self.roles={}
+		self.addRole("participant","Participants")
+		self.addRole("moderator","Moderators")
+		self.addRole("visitor","Visitors")
+		self.ui.users.header().hide()
+		self.ui.users.hideColumn(1)
+
+	def deleteUser(self,jid,nick):
+		user=self.main.getGroupChatMember(jid,unicode(nick))
+		parent=user.parent()
+		parent.takeChild(int(parent.indexOfChild(user)))
+		self.main.groupchat[jid][1].remove(user)
+		self.refreshStats()
+
+	def addRole(self,role,name):
+		self.roles[role]=QtGui.QTreeWidgetItem(self.ui.users)
+		self.roles[role].setText(0,unicode(name))
+		self.roles[role].setText(1,unicode(name))
+		self.ui.users.setItemExpanded(self.roles[role],True)
+		self.ui.users.setItemHidden(self.roles[role],True)
+
+
+	def refreshStats(self):
+		for k,v in self.roles.iteritems():
+			v.setText(0,unicode(v.text(1))+" ("+str(v.childCount())+")")
+			if int(v.childCount())>0:
+				self.ui.users.setItemHidden(v,False)
+
+	def editUser(self,jid,nick,status,role):
+		print unicode(nick),role
+		if self.main.isGroupChatMember(jid,unicode(nick)):
+			user=self.main.getGroupChatMember(jid,unicode(nick))
+		# Pokud neni v mistnosti, vytvorime jej
+		else:
+			if self.roles.has_key(role):
+				user=QtGui.QTreeWidgetItem(self.roles[role])
+			else:
+				user=QtGui.QTreeWidgetItem(self.ui.users)
+			user.setText(0,unicode(nick))
+			self.main.groupchat[jid][1].append(user)
+		# Nastaveni stavu
+		if status!="None":
+			user.setIcon(0,self.main.getIcon(status=status))
+			#user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
+		else:
+			user.setIcon(0,self.main.getIcon(status="online"))
+		# Tooltip
+		#user.setToolTip('<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>Jabber ID: </b>'+str(jid)+'')
+		# serazeni
+		self.ui.users.sortItems (0,QtCore.Qt.AscendingOrder)
+		self.refreshStats()
 
 	def loadSmileys(self):
 		# loads smileys.conf and makes buttons
@@ -95,3 +146,4 @@ class groupChatWidget(QtGui.QWidget):
 		self.name_id=-1
 		if repeat==True:
 			self.tabPressed()
+			
