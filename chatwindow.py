@@ -11,7 +11,7 @@ from palette import *
 
 class chatWindow(QtGui.QMainWindow):
 	def __init__(self,parent,main,jab):
-		apply(QtGui.QMainWindow.__init__,(self,parent))
+		apply(QtGui.QMainWindow.__init__,(self,None))
 		self.main=main
 		self.jab=jab
 		self.ui=Ui_chat()
@@ -45,6 +45,7 @@ class chatWindow(QtGui.QMainWindow):
 		tab.chat=gameChatWidget(self.main,room,self.jab,tab)
 		layout.addWidget(tab.chat)
 		self.ui.chatTab.addTab(tab,room)
+		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 		self.show()
 
 	def addGroupChatTab(self,room,nickname):
@@ -58,6 +59,7 @@ class chatWindow(QtGui.QMainWindow):
 		tab.chat=groupChatWidget(self.main,room,self.jab,tab)
 		layout.addWidget(tab.chat)
 		self.ui.chatTab.addTab(tab,room)
+		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 		self.show()
 
 	def addChatTab(self,jid,name,icon,message=None):
@@ -80,8 +82,10 @@ class chatWindow(QtGui.QMainWindow):
 		tab.chat=chatWidget(self.main,jid,self.jab,tab)
 		layout.addWidget(tab.chat)
 		self.ui.chatTab.addTab(tab,icon,unicode(name))
+		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 		if message!=None:
 			tab.chat.textEditWrite(message)
+		self.show()
 
 	def closeEvent(self,e):
 		for index in range(self.ui.chatTab.count()):

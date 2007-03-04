@@ -714,7 +714,7 @@ class mainWindow(QtGui.QMainWindow):
 				return
 			if self.config["tray_message_view_new_message"]=="not_chat":
 				self.tray.showMessage(self.tr("New message from ")+unicode(user), unicode(e[3]), QtGui.QSystemTrayIcon.Information, 5000)
-			self.chat.show()
+			#self.chat.show()
 			self.chat.addChatTab(jid,unicode(user),icon,message)
 
 		elif e[0] == "subscribed":
