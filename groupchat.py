@@ -67,7 +67,6 @@ class groupChatWidget(QtGui.QWidget):
 				self.ui.users.setItemHidden(v,False)
 
 	def editUser(self,jid,nick,status,role,affiliation=None):
-		print unicode(nick),role
 		if self.main.isGroupChatMember(jid,unicode(nick)):
 			user=self.main.getGroupChatMember(jid,unicode(nick))
 		# Pokud neni v mistnosti, vytvorime jej
@@ -153,12 +152,12 @@ class groupChatWidget(QtGui.QWidget):
 			return
 		text=text[0]
 		repeat=False
-		for i in range(self.ui.listWidget.count()):
-			if unicode(self.ui.listWidget.item(i).text()).lower()[:len(text)]==text and i>self.name_id:
-				self.ui.line.setText(self.ui.listWidget.item(i).text()+": ")
+		for i in range(len(self.main.groupchat[self.jid][1])):
+			if unicode(self.main.groupchat[self.jid][1][i].text(0)).lower()[:len(text)]==text and i>self.name_id:
+				self.ui.line.setText(self.main.groupchat[self.jid][1][i].text(0)+": ")
 				self.name_id=i
 				return
-			if unicode(self.ui.listWidget.item(i).text()).lower()[:len(text)]==text:
+			if unicode(self.main.groupchat[self.jid][1][i].text(0)).lower()[:len(text)]==text:
 				repeat=True
 		self.name_id=-1
 		if repeat==True:
