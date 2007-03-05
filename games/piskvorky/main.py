@@ -4,7 +4,7 @@ try:
 except:
 	print "PyQt4 is not installed."
 	
-from Numeric import zeros
+#from Numeric import zeros
 from piskvorky import *
 from preparegame import *
 
