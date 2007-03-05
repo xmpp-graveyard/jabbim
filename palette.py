@@ -8,16 +8,27 @@ def loadPalette(data):
 	if data.has_key("base"):
 		if len(data["base"])!=0:
 			palette.setColor(QtGui.QPalette.Base,QtGui.QColor(data["base"]))
-	elif data.has_key("alternateBase"):
+	if data.has_key("alternateBase"):
 		if len(data["alternateBase"])!=0:
 			palette.setColor(QtGui.QPalette.AlternateBase,QtGui.QColor(data["alternateBase"]))
-	elif data.has_key("text"):
+	if data.has_key("text"):
 		if len(data["text"])!=0:
 			palette.setColor(QtGui.QPalette.Text,QtGui.QColor(data["text"]))
-	elif data.has_key("highlight"):
+	if data.has_key("highlight"):
 		if len(data["highlight"])!=0:
 			palette.setColor(QtGui.QPalette.Highlight,QtGui.QColor(data["highlight"]))
-	elif data.has_key("highlightedText"):
+	if data.has_key("highlightedText"):
 		if len(data["highlightedText"])!=0:
 			palette.setColor(QtGui.QPalette.HighlightedText,QtGui.QColor(data["highlightedText"]))
+
+	if data.has_key("baseAlpha"):
+		if len(data["baseAlpha"])!=0:
+			color=palette.color(QtGui.QPalette.Base)
+			color.setAlpha(int(data["baseAlpha"]))
+			palette.setColor(QtGui.QPalette.Base,color)
+	if data.has_key("alternateBaseAlpha"):
+		if len(data["alternateBaseAlpha"])!=0:
+			color=palette.color(QtGui.QPalette.AlternateBase)
+			color.setAlpha(int(data["alternateBaseAlpha"]))
+			palette.setColor(QtGui.QPalette.AlternateBase,color)
 	return palette

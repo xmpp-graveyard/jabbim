@@ -153,8 +153,45 @@ class groupchat:
 			print str(rep.getError())
 			self.err.put("groupchat_set_config-"+code)
 
+class vcard:
+	
+	def getVCard(self,jid,onlyAvatar=False):
+		# get vcard informations
+		xmpp.vcard.getVcard(self.conn,jid,self._getVCardHandler,onlyAvatar)
+
+	def _getVCardHandler(self,i,rep,jid,onlyAvatar):
+		# getVCard handler
+		# if we get bad result, send to GUI empty vcard
+		if not isResultNode(rep) or rep.getVCardPayload()==None or len(rep.getVCardPayload())==0:
+			if onlyAvatar==True:
+				self.inc.put(["avatar_show",{},jid])
+			else:
+				self.inc.put(["vcard_show",{}])
+			return
+		vcard={}
+		# VCard parsing
+		for i in rep.getVCardPayload():
+			if not isinstance(i,unicode):
+				vcard=self.parse(vcard,i)
+		# send vcard to GUI
+		if onlyAvatar==True:
+			self.inc.put(["avatar_show",vcard,jid])
+		else:
+			self.inc.put(["vcard_show",vcard])
+
+	def parse(self,vcard,i):
+		# vcard parsing function
+		if len(i.getChildren())==0:
+			vcard[i.getName()]=unicode(i.getData())
+		else:
+			test={}
+			for x in i.getChildren():
+				vcard[i.getName()]=self.parse(test,x)
+		return vcard
+
+
 # here we realize jabber communication via using interface provided by xmpp
-class Jabber(groupchat):
+class Jabber(groupchat,vcard):
 	user = ""
 	server = ""
 	resource = "Jabbim"
@@ -176,35 +213,6 @@ class Jabber(groupchat):
 
 	def __init__(self):
 		pass
-
-	def VCardHandler(self,i,rep,jid,onlyAvatar):
-		if not isResultNode(rep) or rep.getVCardPayload()==None or len(rep.getVCardPayload())==0:
-			if onlyAvatar==True:
-				self.inc.put(["avatar_show",{},jid])
-			else:
-				self.inc.put(["vcard_show",{}])
-			return
-		vcard={}
-		for i in rep.getVCardPayload():
-			if not isinstance(i,unicode):
-				vcard=self.parse(vcard,i)
-		if onlyAvatar==True:
-			self.inc.put(["avatar_show",vcard,jid])
-		else:
-			self.inc.put(["vcard_show",vcard])
-		
-	def parse(self,vcard,i):
-		if len(i.getChildren())==0:
-			vcard[i.getName()]=unicode(i.getData())
-		else:
-			test={}
-			for x in i.getChildren():
-				vcard[i.getName()]=self.parse(test,x)
-		return vcard
-
-	def getVCard(self,jid,onlyAvatar=False):
-		# get vcard informations
-		xmpp.vcard.getVcard(self.conn,jid,self.VCardHandler,onlyAvatar)
 
 	def getLastQueue(self,jid):
 		if self.ready==True:
