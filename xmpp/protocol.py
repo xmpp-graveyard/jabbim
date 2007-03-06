@@ -44,6 +44,7 @@ NS_MESSAGE      ='message'                                      # jabberd2
 NS_MUC          ='http://jabber.org/protocol/muc'
 NS_MUC_OWNER    ='http://jabber.org/protocol/muc#owner'
 NS_MUC_ADMIN    ='http://jabber.org/protocol/muc#admin'
+NS_X_OOB        ='jabber:x:oob'
 NS_OFFLINE      ='http://www.jabber.org/jeps/jep-0030.html'     # JEP-0013   
 NS_PRESENCE     ='presence'                                     # jabberd2
 NS_PRIVACY      ='jabber:iq:privacy'

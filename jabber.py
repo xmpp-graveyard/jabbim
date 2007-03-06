@@ -31,9 +31,11 @@ class groupchat:
 
 	def getIntoRoom(self,room,nick):
 		# join to conference
-		self.addLastQueue(room) # keep incoming presences and messages to this room when we connecting
+		self.addStoreQueue(room,nick) # keep incoming presences and messages to this room when we connecting
 		p = xmpp.Presence(to='%s/%s'%(room, nick))
 		self.conn.SendAndCallForResponse(p,self._getIntoRoomHandler,args={'room':room,'nick':nick},myid="getintoroom")
+		# send message to GUI, because we are opened the room
+		self.inc.put(["room_opened",room,nick,""])
 
 	def _getIntoRoomHandler(self,i,rep,room,nick):
 		# join to conference handler
@@ -42,11 +44,11 @@ class groupchat:
 			code=str(rep.getErrorCode())
 			print str(rep.getError())
 			self.err.put("muc-"+code)
-			self.deleteLastQueue(room) # stop keeping messages
+			#self.deleteStoreQueue(room) # stop keeping messages
 		else:
-			# we are connected, so we can send information to the GUI
+			# we are connected
 			self.presenceHandle(self.conn,rep)
-			self.inc.put(["room_opened",room,nick,rep.getAffiliation()])
+			#self.inc.put(["room_opened",room,nick,rep.getAffiliation()])
 
 	def getOffRoom(self,room,nick):
 		# get off room
@@ -209,34 +211,39 @@ class Jabber(groupchat,vcard):
 	confNames = []
 	confNicks = []
 	linesRead = []
-	lastQueue={}
+	StoreQueue={}
 
 	def __init__(self):
 		pass
 
-	def getLastQueue(self,jid):
+	def getStoreQueue(self,jid):
+		# get store queue messages
 		if self.ready==True:
 			# GUI is ready for presences, so we can send presences to GUI
-			if self.lastQueue.has_key(jid):
-				if len(self.lastQueue[jid])!=0:
-					for i in self.lastQueue[jid]:
+			if self.StoreQueue.has_key(jid):
+				if len(self.StoreQueue[jid])!=0:
+					for i in self.StoreQueue[jid][1]:
 						self.inc.put(i)
 			print "ready for deleting"
-			self.deleteLastQueue(jid)
+			self.deleteStoreQueue(jid)
 
-	def deleteLastQueue(self,jid):
-		del self.lastQueue[jid]
-		print "deleting last queue for",jid
+	def deleteStoreQueue(self,jid):
+		# delete queue item
+		del self.StoreQueue[jid]
+		print "deleting store queue for",jid
 
-	def addLastQueue(self,jid):
-		print "adding last queue for",jid
-		self.lastQueue[jid]=[]
+	def addStoreQueue(self,jid,nick):
+		# add new item for queue
+		print "adding store queue for",jid
+		self.StoreQueue[jid]=[nick,[]]
 
 	def setStatus(self,rooms,status="online", text=""):
+		# set status and status message
 		presence = xmpp.Presence()
 		presence.setStatus(text)
 		presence.setShow(status)
 		self.conn.send(presence)
+		# we have to set status for opened room too
 		for room,data in rooms.iteritems():
 			presence.setTo(room + "/" + data[0])
 			self.conn.send(presence)
@@ -358,26 +365,40 @@ class Jabber(groupchat,vcard):
 		self.inc.put(["game_list", games])
 
 	def incoming(self, conn, mess):
-		#print unicode(mess)
 		# Incoming messages handler
-		if 1==1:
-		#try:
+		
+		if 1==1: # ok.. it's for my comfort, when i'm using try statement
 			text=mess.getBody() # get message text
 			if text!=None:
 				# replace html tags in message
 				text=text.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
 			subject=mess.getSubject() # get message subject (for MUC subject for example)
 			if subject!=None:
-				# prelace html tags in subject
+				# replace html tags in subject
 				subject=subject.replace("<","&lt;").replace(">","&gt;")
 			user=mess.getFrom() # get sender of message
+			timestamp=mess.getTimestamp() # get timestamp
 			resource=mess.getFrom().getResource() # get message resource
-			typ=mess.getType() # fet type of message
-			new=True
+			typ=mess.getType() # get type of message
+			new=True # temp variable
 			if typ=="chat":
 				# put chat message to the message_queue
 				jid = unicode(unicode(user).rsplit("/")[0]).lower()
 				self.message_queue.append(["chat_message", jid,user,text,resource])
+			elif typ=="headline":
+				# put headline message to the message_queue
+				jid = unicode(unicode(user).rsplit("/")[0]).lower()
+				urls=[] # urls in jabber:x:oob
+				descs=[] # descs in jabber:x:oob
+				for x in mess.getTags('x',namespace=NS_X_OOB):
+					# get url
+					urls.append(x.getTag("url").getData())
+					# get descs, if we have some
+					try:
+						descs.append(x.getTag("desc").getData())
+					except:
+						descs.append(u"None")
+				self.message_queue.append(["headline_message",jid,text,subject,urls,descs,timestamp])
 			elif typ=="groupchat":
 				# put groupchat message to the message_queue
 				jid = unicode(unicode(user).rsplit("/")[0]).lower()
@@ -389,9 +410,11 @@ class Jabber(groupchat,vcard):
 					user=unicode(user).rsplit("/")[1]
 					self.message_queue.append(["groupchat_message", jid,user,text])
 			else:
+				# unknown message type
 				new=False
-			if self.lastQueue.has_key(jid) and new:
-				self.lastQueue[jid].append(self.message_queue[-1])
+			# if jid is in StoreQueue, we store the message
+			if self.StoreQueue.has_key(jid) and new:
+				self.StoreQueue[jid][1].append(self.message_queue[-1])
 				del self.message_queue[-1]
 			else:
 				if self.ready==True:
@@ -408,7 +431,6 @@ class Jabber(groupchat,vcard):
 		prType = pres.getType() # get type
 		jid = pres.getFrom().getNode() + "@" + pres.getFrom().getDomain() # get jid
 		jid=unicode(jid).lower()
-		#print prType,jid,nick,self.ready
 
 		if prType=="subscribe":
 			# subscribe request
@@ -419,8 +441,9 @@ class Jabber(groupchat,vcard):
 		else:
 			# normal presence
 			self.presence_queue.append(["nick_update",jid,pres,nick])
-		if self.lastQueue.has_key(jid):
-			self.lastQueue[jid].append(self.presence_queue[-1])
+		# if jid is in StoreQueue, we store the presence
+		if self.StoreQueue.has_key(jid):
+			self.StoreQueue[jid][1].append(self.presence_queue[-1])
 			del self.presence_queue[-1]
 		else:
 			if self.ready==True:
@@ -450,7 +473,7 @@ class Jabber(groupchat,vcard):
 		#pass
 
 	def chatSend(self, jid, text):
-		# Send normal message for jid
+		# Send chat message for jid
 		a = xmpp.protocol.Message(jid,text,"chat")
 		self.conn.send(a)
 
@@ -474,7 +497,9 @@ class Jabber(groupchat,vcard):
 	
 	def disconnect(self):
 		# disconnect
-		self.conn.disconnect()
+		try:
+			self.conn.disconnect()
+		except: pass
 		self.connected = False
 		print "Disconecting."
 

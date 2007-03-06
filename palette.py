@@ -3,8 +3,7 @@ try:
 except:
 	print "PyQt4 is not installed."
 	
-def loadPalette(data):
-	palette=QtGui.QPalette()
+def loadPalette(palette,data):
 	if data.has_key("base"):
 		if len(data["base"])!=0:
 			palette.setColor(QtGui.QPalette.Base,QtGui.QColor(data["base"]))
@@ -20,15 +19,15 @@ def loadPalette(data):
 	if data.has_key("highlightedText"):
 		if len(data["highlightedText"])!=0:
 			palette.setColor(QtGui.QPalette.HighlightedText,QtGui.QColor(data["highlightedText"]))
-
 	if data.has_key("baseAlpha"):
 		if len(data["baseAlpha"])!=0:
-			color=palette.color(QtGui.QPalette.Base)
-			color.setAlpha(int(data["baseAlpha"]))
-			palette.setColor(QtGui.QPalette.Base,color)
+			#color=palette.color(QtGui.QPalette.Base)
+			#color.setAlpha(int(data["baseAlpha"]))
+			#palette.setColor(QtGui.QPalette.Base,color)
+			palette.setColor(QtGui.QPalette.Base,QtCore.Qt.transparent)
 	if data.has_key("alternateBaseAlpha"):
 		if len(data["alternateBaseAlpha"])!=0:
-			color=palette.color(QtGui.QPalette.AlternateBase)
-			color.setAlpha(int(data["alternateBaseAlpha"]))
-			palette.setColor(QtGui.QPalette.AlternateBase,color)
+			#color=palette.color(QtGui.QPalette.AlternateBase)
+			#color.setAlpha(int(data["alternateBaseAlpha"]))
+			palette.setColor(QtGui.QPalette.AlternateBase,QtCore.Qt.transparent)
 	return palette

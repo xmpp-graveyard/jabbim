@@ -7,6 +7,7 @@ from chatwindow_ui import *
 from chat import *
 from groupchat import *
 from gamechat import *
+from headlinewidget import *
 from palette import *
 
 class chatWindow(QtGui.QMainWindow):
@@ -23,16 +24,33 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.chatTab.removeTab(0)
 		self.ui.gridlayout.setMargin(1)
 		self.ui.gridlayout.setSpacing(1)
-		palette=loadPalette(self.main.palette["chatwindow"])
-		self.setPalette(palette)
+		#palette=self.palette()
+		#palette=loadPalette(palette,self.main.palette["chatwindow"])
+		#self.setPalette(palette)
 
 	def changeTab(self,index):
-		self.ui.chatTab.widget(index).chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		try:
+			self.ui.chatTab.widget(index).chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		except: pass
 		try:
 			icon=self.main.ui.roster.getUsers(str(self.ui.chatTab.widget(index).jid))[0].icon(0)
 			self.ui.chatTab.setTabIcon(index,icon)
 		except:
 			pass
+
+	def addHeadlineTab(self):
+		tab=QtGui.QWidget(self.ui.chatTab)
+		tab.jid=""
+		tab.name=self.tr("Headlines")
+		tab.typ="headline"
+		layout=QtGui.QHBoxLayout(tab)
+		layout.setMargin(1)
+		layout.setSpacing(1)
+		tab.chat=headlineWidget(self.main,self.jab,tab)
+		layout.addWidget(tab.chat)
+		self.ui.chatTab.addTab(tab,self.tr("Headlines"))
+		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
+		self.show()
 
 	def addGameChatTab(self,room,nickname):
 		tab=QtGui.QWidget(self.ui.chatTab)
@@ -57,10 +75,7 @@ class chatWindow(QtGui.QMainWindow):
 		layout.setMargin(1)
 		layout.setSpacing(1)
 		tab.chat=groupChatWidget(self.main,room,self.jab,affiliation,tab)
-		if affiliation=="owner":
-			tab.chat.ui.admin.show()
-		else:
-			tab.chat.ui.admin.hide()
+		tab.chat.ui.admin.hide()
 		layout.addWidget(tab.chat)
 		self.ui.chatTab.addTab(tab,room)
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))

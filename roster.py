@@ -41,9 +41,9 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.item.setText(1,"999")
 		self.setItemHidden(self.item, True)
 		# set color palette
-		palette=loadPalette(self.main.palette["roster"])
-		self.setPalette(palette)
-		
+		palette=self.viewport().palette()
+		palette=loadPalette(palette,self.main.palette["roster"])
+		#self.viewport().setPalette(palette)
 		self.pixmap=QtGui.QPixmap("images/texture.png")
 
 	def expanded(self,item):
@@ -282,7 +282,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		return QtCore.QStringList("text/plain")
 
 	def startDrag(self,actions):
-		# start dragging
+		# start dragging selected contact
 		item=self.currentItem()
 		data=item.data(32,0)
 		data=str(data.toString())
@@ -293,9 +293,8 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.dropAction = self.drag.start(QtCore.Qt.CopyAction)
 
 	def dropMimeData(self,parent, index, data, action ):
-		# drop data
+		# drop data => change group for dropped contact
 		jid=str(data.text())
-		print parent,data.text()
 		if self.isGroupItem(parent):
 			name=unicode(self.getUsers(jid)[0].text(2))
 			self.changeGroup(jid,name,"+",unicode(parent.text(2)))
@@ -304,62 +303,75 @@ class rosterWidget(QtGui.QTreeWidget):
 			return False
 	
 	def paintEvent(self,event):
+		# paintEvent handler
+		# paint roster background texture
 		viewport=self.viewport()
 		painter=QtGui.QPainter(viewport)
 		for x in range(int(int(viewport.width())//self.pixmap.width())+1):
 			for y in range(int(int(viewport.height())/self.pixmap.height())+1):
 				painter.drawPixmap(x*int(self.pixmap.width()),y*self.pixmap.height(),self.pixmap)
-		#painter.end()
 		QtGui.QTreeWidget.paintEvent(self,event)
 	
 	def changeGroup(self,jid,name,action,group):
+		# change group for contact
 		if action=="+":
+			# add contact to the group, if he isn't there
 			if not self.main.groups[group]["users"].has_key(str(jid)):
-				item=self.getUsers(jid)[0].clone()
-				#if group!="Unknown":
-					#self.main.groups[group]["item"].addChild(item)
-				#else:
-				self.main.groups[group]["item"].addChild(item)
+				item=self.getUsers(jid)[0].clone() # clone contact item
+				self.main.groups[group]["item"].addChild(item) # add item to the new group
+				# copy resources
 				resources=list(self.getResources(str(jid)))
-				print resources
 				self.main.groups[group]["users"][str(jid)]={"item":item,"resources":resources}
-				#self.main.groups[group]["users"][str(jid)]["resources"]=
+				# send jabber command
 				self.jab.roster.setItem(jid,name,self.getGroups(jid)+[unicode(group)])
 		else:
+			# delete contact
 			user=self.main.groups[group]["users"][str(jid)]
 			self.delUser(jid,user["item"])
 			groups=self.getGroups(jid)
-			print groups
+			# send jabber command
 			self.jab.roster.setItem(jid,name,groups)
+		# refresh group stats
 		self.refreshStats()
+		# sort items
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
 
 	def contactMenuTriggered(self,action):
+		# contact menu action handler
 		cmd=action.objectName()
 		if cmd=="delete_action":
+			# delete contact from roster
+			# get contact jid
 			jid=action.data()
 			jid=str(jid.toString())
 			print "roster_delete_action",jid
+			# delete user from groups
 			for user in self.getUsers(jid):
 				self.delUser(jid,user)
-			self.jab.roster.delItem(jid)
-			self.refreshStats()
+			self.jab.roster.delItem(jid) # send jabber command
+			self.refreshStats() # refresh group stats
 		elif cmd=="new_group":
+			# add contact to the new group
+			# get contact jid
 			jid=action.data()
 			jid=str(jid.toString())
-			name=unicode(self.getUsers(jid)[0].text(2))
+			name=unicode(self.getUsers(jid)[0].text(2)) # get contact name
 			print "roster_new_group_action",jid,name
+			# get new group name with QDialog
 			group,b=QtGui.QInputDialog.getText(self,self.tr("New group"),self.tr("Add user to new group"), QtGui.QLineEdit.Normal, "")
 			group=unicode(group)
-			if b==True:
-				self.main.groups[group]={"item":self.addGroup(group),"users":{}}
-				item=self.getUsers(jid)[0].clone()
-				print list(self.getResources(str(jid)))
+			# if user set new name of group
+			if b==True and len(group)!=0:
+				# add new group
+				self.main.groups[group]={"item":self.addGroup(group),"users":{}} 
+				item=self.getUsers(jid)[0].clone() # clone contact item
+				# add contact to the new group
 				self.main.groups[group]["users"][str(jid)]={"item":item,"resources":list(self.getResources(str(jid)))}
 				self.main.groups[group]["item"].addChild(item)
-				
-				self.sortItems (1,QtCore.Qt.AscendingOrder)
+				self.sortItems (1,QtCore.Qt.AscendingOrder) # sort items
+				# send jabber command
 				self.jab.roster.setItem(jid,name,self.getGroups(jid)+[unicode(group)])
+			# refresh stats
 			self.refreshStats()
 		elif cmd=="check_group":
 			items=action.data()
@@ -369,23 +381,29 @@ class rosterWidget(QtGui.QTreeWidget):
 			action=unicode(items[1].toString())[0]
 			group=unicode(items[1].toString())[1:]
 			print "roster_change_group_action",jid,group
+			# change group
 			self.changeGroup(jid,name,action,group)
+			# refresh stats
 			self.refreshStats()
 		elif cmd=="vcard":
+			# get vcard of selected contact
 			jid=action.data()
 			jid=str(jid.toString())
 			self.jab.getVCard(jid)
 		elif cmd=="avatar":
+			# get avatar of selected contact
 			jid=action.data()
 			jid=str(jid.toString())
 			self.jab.getVCard(jid,True)
 		elif cmd=="chat":
+			# chat with selected contact
 			jid=action.data()
 			jid=str(jid.toString())
 			user=self.getUsers(jid)[0]
 			self.contactClicked(user,0)
 
 	def contextMenuEvent (self,event):
+		# show contact context menu
 		item=self.itemFromIndex(self.indexAt(QtCore.QPoint(event.x(),event.y())))
 		group=item.parent()
 		data=item.data(32,0)
@@ -394,14 +412,3 @@ class rosterWidget(QtGui.QTreeWidget):
 			contactMenu=self.buildContactMenu(str(data),group)
 			contactMenu.move(event.globalX(),event.globalY())
 			contactMenu.show()
-			
-	#def mouseReleaseEvent(self,event):
-		#if event.button()==QtCore.Qt.RightButton:
-			#item=self.itemFromIndex(self.indexAt(QtCore.QPoint(event.x(),event.y())))
-			#group=item.parent()
-			#data=item.data(32,0)
-			#data=data.toString()
-			#if self.isUser(data):
-				#contactMenu=self.buildContactMenu(str(data),group)
-				#contactMenu.show()
-				#contactMenu.move(event.globalX(),event.globalY())

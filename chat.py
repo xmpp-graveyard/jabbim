@@ -22,8 +22,9 @@ class chatWidget(QtGui.QWidget):
 		self.loadSmileys()
 		self.jid=jid
 		self.name_id=-1 # for tabPressed
-		palette=loadPalette(self.main.palette["chatwidget"])
-		self.setPalette(palette)
+		#palette=self.palette()
+		#palette=loadPalette(palette,self.main.palette["chatwidget"])
+		#self.setPalette(palette)
 
 	def loadSmileys(self):
 		# loads smileys.conf and makes buttons

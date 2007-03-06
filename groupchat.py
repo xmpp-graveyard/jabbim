@@ -32,6 +32,11 @@ class groupChatWidget(QtGui.QWidget):
 		self.ui.users.header().hide()
 		self.ui.users.hideColumn(1)
 
+	def changeAffiliation(self,affiliation):
+		if affiliation=="owner":
+			self.ui.admin.show()
+		self.affiliation=affiliation
+
 	def roomAdminClicked(self):
 		if self.affiliation=="owner":
 			self.chatadmin=groupchatAdminWindow(self,self.main,self.jab)
