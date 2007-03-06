@@ -36,6 +36,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemExpanded ( QTreeWidgetItem * )"),self.expanded)
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemCollapsed ( QTreeWidgetItem * )"),self.collapsed)
 		short=QtGui.QShortcut("f2",self)
+		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.editItem)
 		# little hack for hidden items (we need some item at the end of roster)
 		self.item=QtGui.QTreeWidgetItem(self)
 		self.item.setText(1,"999")

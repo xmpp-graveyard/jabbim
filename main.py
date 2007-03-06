@@ -816,7 +816,7 @@ class mainWindow(QtGui.QMainWindow):
 				icon=self.status["offline"]
 				user=jid
 				
-			message=self.skin["message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
+			message=self.skin["message"].replace("[time]",self.now()).replace("[user]",unicode(user)).replace("[message]",unicode(e[3]))
 			tab=None
 			tabIndex=0
 			for i in range(self.chat.ui.chatTab.count()):
@@ -828,15 +828,19 @@ class mainWindow(QtGui.QMainWindow):
 				if str(w.jid).rsplit("/")[0]==jid:
 					tab=w
 					tabIndex=i
+			if len(unicode(e[3]))>40:
+				traytext=unicode(e[3])[40]+" ..."
+			else:
+				traytext=unicode(e[3])
 			if self.config["tray_message_view_new_message"]=="all":
-				self.tray.showMessage(self.tr("New message from ")+unicode(user), unicode(e[3])[40]+" ...", QtGui.QSystemTrayIcon.Information, 5000)
+				self.tray.showMessage(self.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 5000)
 			if tab!=None:
 				if int(self.chat.ui.chatTab.currentIndex())!=tabIndex:
 					self.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/status/message.png"))
 				tab.chat.textEditWrite(message)
 				return
 			if self.config["tray_message_view_new_message"]=="not_chat":
-				self.tray.showMessage(self.tr("New message from ")+unicode(user), unicode(e[3])[40]+" ...", QtGui.QSystemTrayIcon.Information, 5000)
+				self.tray.showMessage(self.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 5000)
 			#self.chat.show()
 			self.chat.addChatTab(jid,unicode(user),icon,message)
 
