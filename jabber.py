@@ -385,6 +385,10 @@ class Jabber(groupchat,vcard):
 				# put chat message to the message_queue
 				jid = unicode(unicode(user).rsplit("/")[0]).lower()
 				self.message_queue.append(["chat_message", jid,user,text,resource])
+			if typ=="normal":
+				# put chat message to the message_queue
+				jid = unicode(unicode(user).rsplit("/")[0]).lower()
+				self.message_queue.append(["chat_message", jid,user,text,resource])
 			elif typ=="headline":
 				# put headline message to the message_queue
 				jid = unicode(unicode(user).rsplit("/")[0]).lower()

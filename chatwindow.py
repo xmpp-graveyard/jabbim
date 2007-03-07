@@ -51,6 +51,7 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.chatTab.addTab(tab,self.tr("Headlines"))
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 		self.show()
+		return tab.chat
 
 	def addGameChatTab(self,room,nickname):
 		tab=QtGui.QWidget(self.ui.chatTab)

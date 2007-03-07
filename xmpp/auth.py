@@ -12,7 +12,7 @@
 ##   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ##   GNU General Public License for more details.
 
-# $Id: auth.py,v 1.30 2005/05/26 05:04:36 snakeru Exp $
+# $Id: auth.py,v 1.35 2006/01/18 19:26:43 normanr Exp $
 
 """
 Provides library with all Non-SASL and SASL authentication mechanisms.
@@ -22,7 +22,7 @@ Can be used both for client and transport authentication.
 from protocol import *
 from client import PlugIn
 import sha,base64,random,dispatcher
-
+import re
 import md5
 def HH(some): return md5.new(some).hexdigest()
 def H(some): return md5.new(some).digest()
@@ -173,11 +173,11 @@ class SASL(PlugIn):
         chal={}
         data=base64.decodestring(incoming_data)
         self.DEBUG('Got challenge:'+data,'ok')
-        for pair in data.split(','):
-            key,value=pair.split('=')
+        for pair in re.findall("[^,=]+=[^\"][^,]*|[^,=]+=\"[^\"]*?\"", data):
+            key,value=pair.split('=', 1)
             if value[:1]=='"' and value[-1:]=='"': value=value[1:-1]
             chal[key]=value
-        if chal.has_key('qop') and chal['qop']=='auth':
+        if chal.has_key('qop') and 'auth' in chal['qop'].split(','):
             resp={}
             resp['username']=self.username
             resp['realm']=self._owner.Server
@@ -188,7 +188,7 @@ class SASL(PlugIn):
             resp['cnonce']=cnonce
             resp['nc']=('00000001')
             resp['qop']='auth'
-            resp['digest-uri']='xmpp/'
+            resp['digest-uri']='xmpp/'+self._owner.Server
             A1=C([H(C([resp['username'],resp['realm'],self.password])),resp['nonce'],resp['cnonce']])
             A2=C(['AUTHENTICATE',resp['digest-uri']])
             response= HH(C([HH(A1),resp['nonce'],resp['nc'],resp['cnonce'],resp['qop'],HH(A2)]))
@@ -199,7 +199,7 @@ class SASL(PlugIn):
                 if key in ['nc','qop','response','charset']: sasl_data+="%s=%s,"%(key,resp[key])
                 else: sasl_data+='%s="%s",'%(key,resp[key])
 ########################################3333
-            node=Node('response',attrs={'xmlns':NS_SASL},payload=[base64.encodestring(sasl_data[:-1]).replace('\n','')])
+            node=Node('response',attrs={'xmlns':NS_SASL},payload=[base64.encodestring(sasl_data[:-1]).replace('\r','').replace('\n','')])
             self._owner.send(node.__str__())
         elif chal.has_key('rspauth'): self._owner.send(Node('response',attrs={'xmlns':NS_SASL}).__str__())
         else: 
@@ -256,6 +256,51 @@ class Bind(PlugIn):
                 self.DEBUG('Session open failed.','error')
                 self.session=0
         elif resp: self.DEBUG('Binding failed: %s.'%resp.getTag('error'),'error')
+        else:
+            self.DEBUG('Binding failed: timeout expired.','error')
+            return ''
+
+class ComponentBind(PlugIn):
+    """ ComponentBind some JID to the current connection to allow router know of our location."""
+    def __init__(self):
+        PlugIn.__init__(self)
+        self.DBG_LINE='bind'
+        self.bound=None
+        self.needsUnregister=None
+
+    def plugin(self,owner):
+        """ Start resource binding, if allowed at this time. Used internally. """
+        if self._owner.Dispatcher.Stream.features:
+            try: self.FeaturesHandler(self._owner.Dispatcher,self._owner.Dispatcher.Stream.features)
+            except NodeProcessed: pass
+        else:
+            self._owner.RegisterHandler('features',self.FeaturesHandler,xmlns=NS_STREAMS)
+            self.needsUnregister=1
+
+    def plugout(self):
+        """ Remove ComponentBind handler from owner's dispatcher. Used internally. """
+        if self.needsUnregister:
+            self._owner.UnregisterHandler('features',self.FeaturesHandler,xmlns=NS_STREAMS)
+
+    def FeaturesHandler(self,conn,feats):
+        """ Determine if server supports resource binding and set some internal attributes accordingly. """
+        if not feats.getTag('bind',namespace=NS_BIND):
+            self.bound='failure'
+            self.DEBUG('Server does not requested binding.','error')
+            return
+        if feats.getTag('session',namespace=NS_SESSION): self.session=1
+        else: self.session=-1
+        self.bound=[]
+
+    def Bind(self,domain=None):
+        """ Perform binding. Use provided domain name (if not provided). """
+        while self.bound is None and self._owner.Process(1): pass
+        resp=self._owner.SendAndWaitForResponse(Protocol('bind',attrs={'name':domain},xmlns=NS_COMPONENT_1))
+        if resp and resp.getAttr('error'):
+            self.DEBUG('Binding failed: %s.'%resp.getAttr('error'),'error')
+        elif resp:
+            self.DEBUG('Successfully bound.','ok')
+            return 'ok'
         else:
             self.DEBUG('Binding failed: timeout expired.','error')
             return ''

@@ -791,7 +791,8 @@ class mainWindow(QtGui.QMainWindow):
 				#yyyymmddThhmmss
 				tab.chat.addMessage(jid,subject,text,urls,descs,timestamp)
 				return
-			self.chat.addHeadlineTab()
+			tab=self.chat.addHeadlineTab()
+			tab.addMessage(jid,subject,text,urls,descs,timestamp)
 
 		elif e[0] == "groupchat_message":
 			jid=str(e[1])
