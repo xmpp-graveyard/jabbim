@@ -331,6 +331,9 @@ class mainWindow(QtGui.QMainWindow):
 	def discovery(self):
 		# show discovery window
 		self.disco.show()
+		self.disco.ui.services.clear()
+		self.disco.nodes={}
+		self.disco.items={}
 		jab.discoveryItems()
 
 	def trayQuit(self):
