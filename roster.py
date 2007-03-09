@@ -42,9 +42,9 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.item.setText(1,"999")
 		self.setItemHidden(self.item, True)
 		# set color palette
-		palette=self.viewport().palette()
+		palette=self.palette()
 		palette=loadPalette(palette,self.main.palette["roster"])
-		#self.viewport().setPalette(palette)
+		self.setPalette(palette)
 		self.pixmap=QtGui.QPixmap("images/texture.png")
 
 	def expanded(self,item):

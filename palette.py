@@ -27,7 +27,7 @@ def loadPalette(palette,data):
 			palette.setColor(QtGui.QPalette.Base,QtCore.Qt.transparent)
 	if data.has_key("alternateBaseAlpha"):
 		if len(data["alternateBaseAlpha"])!=0:
-			#color=palette.color(QtGui.QPalette.AlternateBase)
-			#color.setAlpha(int(data["alternateBaseAlpha"]))
-			palette.setColor(QtGui.QPalette.AlternateBase,QtCore.Qt.transparent)
+			color=palette.color(QtGui.QPalette.AlternateBase)
+			color.setAlpha(int(data["alternateBaseAlpha"]))
+			#palette.setColor(QtGui.QPalette.AlternateBase,QtCore.Qt.transparent)
 	return palette
