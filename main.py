@@ -39,6 +39,7 @@ from vcard import *
 from discovery_ui import *
 #from palette import *
 from dataforms import *
+import notification
 
 import games
 
@@ -832,21 +833,16 @@ class mainWindow(QtGui.QMainWindow):
 				if str(w.jid).rsplit("/")[0]==jid:
 					tab=w
 					tabIndex=i
-			if len(unicode(e[3]))>40:
-				traytext=unicode(e[3])[40]+" ..."
-			else:
-				traytext=unicode(e[3])
 			if self.config["tray_message_view_new_message"]=="all":
-				self.tray.showMessage(self.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 5000)
+				notification.onNewChatMessage(self,user,unicode(e[3]))
 			if tab!=None:
 				if int(self.chat.ui.chatTab.currentIndex())!=tabIndex:
 					self.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/status/message.png"))
 				tab.chat.textEditWrite(message)
-				return
-			if self.config["tray_message_view_new_message"]=="not_chat":
-				self.tray.showMessage(self.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 5000)
-			#self.chat.show()
-			self.chat.addChatTab(jid,unicode(user),icon,message)
+			else:
+				if self.config["tray_message_view_new_message"]=="not_chat":
+					notification.onNewChatMessage(self,user,unicode(e[3]))
+				self.chat.addChatTab(jid,unicode(user),icon,message)
 
 		elif e[0] == "subscribed":
 			jid=str(e[1])
@@ -898,12 +894,12 @@ class mainWindow(QtGui.QMainWindow):
 									if not jid+'/'+resource in res and len(resource)!=0:
 										item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
 						# Zmena stavu
-						if self.config["tray_message_view_connect"]=="all":
-							self.tray.showMessage(self.tr("User status"), self.tr("User ")+unicode(user.text(2))+self.tr(" is now ")+self.status[str(e[2].getShow())]+"\n"+unicode(e[2].getStatus()), QtGui.QSystemTrayIcon.Information, 5000)
-						elif self.config["tray_message_view_connect"]=="online" and str(e[2].getShow())=="None":
-							self.tray.showMessage(self.tr("User status"), self.tr("User ")+unicode(user.text(2))+self.tr(" is now ")+self.status[str(e[2].getShow())]+"\n"+unicode(e[2].getStatus()), QtGui.QSystemTrayIcon.Information, 5000)
-						elif self.config["tray_message_view_connect"]=="logged_in" and int(unicode(user.text(1)[0]))==9:
-							self.tray.showMessage(self.tr("User status"), self.tr("User ")+unicode(user.text(2))+self.tr(" is now ")+self.status[str(e[2].getShow())]+"\n"+unicode(e[2].getStatus()), QtGui.QSystemTrayIcon.Information, 5000)
+						#if self.config["tray_message_view_connect"]=="all":
+						notification.onRosterPresence(self,unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
+						#elif self.config["tray_message_view_connect"]=="online" and str(e[2].getShow())=="None":
+							#notification.onRosterPresence(self,unicode(user.text(2)),self.status[str(e[2].getShow())],unicode(e[2].getStatus()))
+						#elif self.config["tray_message_view_connect"]=="logged_in" and int(unicode(user.text(1)[0]))==9:
+							#notification.onRosterPresence(self,unicode(user.text(2)),self.status[str(e[2].getShow())],unicode(e[2].getStatus()))
 						if str(e[2].getShow())!="None":
 							user.setIcon(0,self.getIcon(jid,str(e[2].getShow())))
 							#user.setIcon(0,self.statuses[str(e[2].getShow())])
