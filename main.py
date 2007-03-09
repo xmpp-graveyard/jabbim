@@ -771,8 +771,10 @@ class mainWindow(QtGui.QMainWindow):
 				if str(w.jid)==jid:
 					message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",unicode(text))
 					w.chat.ui.info.setText(unicode(e[3]))
+					w.chat.ui.info.setCursorPosition(0)
 					w.chat.textEditWrite(message)
 					return
+
 		elif e[0] == "headline_message":
 			#self.message_queue.append(["headline_message",jid,text,subject,urls,descs])
 			jid=unicode(e[1])
@@ -1116,7 +1118,6 @@ class mainWindow(QtGui.QMainWindow):
 			self.jabberError(self.tr("Your nickname is in use or registered by another user."))
 		else:
 			self.jabberError(self.tr("Unknown error ")+unicode(error))
-
 	def jabberError(self,error):
 		QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(error),0,1)
 
