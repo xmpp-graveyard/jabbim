@@ -793,7 +793,7 @@ class mainWindow(QtGui.QMainWindow):
 					tabIndex=i
 			if tab!=None:
 				if int(self.chat.ui.chatTab.currentIndex())!=tabIndex:
-					self.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/status/message.png"))
+					self.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
 				#yyyymmddThhmmss
 				tab.chat.addMessage(jid,subject,text,urls,descs,timestamp)
 				return
@@ -839,7 +839,7 @@ class mainWindow(QtGui.QMainWindow):
 				notification.onNewChatMessage(self,user,unicode(e[3]))
 			if tab!=None:
 				if int(self.chat.ui.chatTab.currentIndex())!=tabIndex:
-					self.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/status/message.png"))
+					self.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
 				tab.chat.textEditWrite(message)
 			else:
 				if self.config["tray_message_view_new_message"]=="not_chat":

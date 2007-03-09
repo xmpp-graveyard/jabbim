@@ -78,7 +78,7 @@ class chatWindow(QtGui.QMainWindow):
 		tab.chat=groupChatWidget(self.main,room,self.jab,affiliation,tab)
 		tab.chat.ui.admin.hide()
 		layout.addWidget(tab.chat)
-		self.ui.chatTab.addTab(tab,room)
+		self.ui.chatTab.addTab(tab,QtGui.QIcon("images/16x16/categories/muc.png"),room)
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 		self.show()
 
