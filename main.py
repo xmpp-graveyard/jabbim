@@ -912,7 +912,10 @@ class mainWindow(QtGui.QMainWindow):
 						for i in range(self.chat.ui.chatTab.count()):
 							w=self.chat.ui.chatTab.widget(i)
 							if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
-								self.chat.ui.chatTab.setTabIcon(i,user.icon(0))
+								if str(e[2].getShow())!="None":
+									self.chat.ui.chatTab.setTabIcon(i,self.getIcon(jid,str(e[2].getShow()),size="16x16"))
+								else:
+									self.chat.ui.chatTab.setTabIcon(i,self.getIcon(jid,'online',size="16x16"))
 						# Nastaveni tooltip
 						user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b> - '+str(e[2].getShow())+'</font><hr>'+unicode(e[2].getStatus())+'<br/><b>'+self.tr("Jabber ID:")+' </b>'+str(jid)+'')
 						# Nastaveni stavove zpravy pod nick v rosteru. Pokud neni zprava nastavena, vytvori se jen nick bez zpravy.
@@ -954,7 +957,7 @@ class mainWindow(QtGui.QMainWindow):
 							for i in range(self.chat.ui.chatTab.count()):
 								w=self.chat.ui.chatTab.widget(i)
 								if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
-									self.chat.ui.chatTab.setTabIcon(i,user.icon(0))
+									self.chat.ui.chatTab.setTabIcon(i,self.getIcon(jid,'offline',size="16x16"))
 				# aktualizace cisel skupin
 				self.ui.roster.refreshStats()
 				# serazeni polozek v rosteru

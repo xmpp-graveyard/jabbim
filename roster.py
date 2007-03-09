@@ -76,7 +76,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			return
 		data=item.data(32,0) # get jid
 		data=str(data.toString())
-		self.main.chat.addChatTab(data,unicode(item.text(2)),item.icon(0))
+		self.main.chat.addChatTab(data,unicode(item.text(2)),self.main.getIcon(data,self.main.iconSort[unicode(item.text(1))[0]],size="16x16"))
 
 	def getStats(self,group):
 		# return stats (online,offline,all users) for group

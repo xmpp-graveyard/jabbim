@@ -33,7 +33,7 @@ class chatWindow(QtGui.QMainWindow):
 			self.ui.chatTab.widget(index).chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 		except: pass
 		try:
-			icon=self.main.ui.roster.getUsers(str(self.ui.chatTab.widget(index).jid))[0].icon(0)
+			icon=self.main.getIcon(data,self.main.iconSort[unicode(self.main.ui.roster.getUsers(str(self.ui.chatTab.widget(index).jid))[0].text(1))[0]],size="16x16")
 			self.ui.chatTab.setTabIcon(index,icon)
 		except:
 			pass
