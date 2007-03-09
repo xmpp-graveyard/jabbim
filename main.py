@@ -809,7 +809,10 @@ class mainWindow(QtGui.QMainWindow):
 					if unicode(w.name)==unicode(user):
 						message=self.skin["my_message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
 					else:
-						message=self.skin["message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
+						if unicode(e[3]).lower().find(unicode(w.name).lower())!=-1:
+							message=self.skin["message_for_me"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
+						else:
+							message=self.skin["message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
 					w.chat.textEditWrite(message)
 					return
 
@@ -1071,6 +1074,9 @@ class mainWindow(QtGui.QMainWindow):
 						if "http://jabber.org/protocol/muc" in features and ident[0]["type"]=="text":
 							self.discoInfo[jid]="conf"
 							self.ui.getGroupchatList.setEnabled(True)
+						elif ident[0]["type"]=="bytestreams" and ident[0]["category"]=="proxy":
+							jab.conn.S5B.addProxy(str(jid))
+							print "adding proxy"
 						else:
 							self.discoInfo[jid]=ident[0]["type"]
 							users=self.ui.roster.getServerUsers(jid)

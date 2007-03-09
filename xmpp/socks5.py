@@ -253,15 +253,19 @@ class SOCKSv5:
             return False
 
     def sendToProxy(self,key,fp,offset,length):
-        """Send the file to the proxy."""
-        if key not in self.sock.keys():
-            #socket doesn't exist
-            return False
-        success=sendData(self.sock[key],fp,offset,length)
-        if not success and self.s5b:
-            self.s5b.eventSendError(key)
-        elif success and self.s5b:
-            self.s5b.eventSendSuccess(key)
+		"""Send the file to the proxy."""
+		
+		if key not in self.sock.keys():
+			#socket doesn't exist
+			return False
+		print "sendtoproxy"
+		success=sendData(self.sock[key],fp,offset,length)
+		if not success and self.s5b:
+			print "False"
+			self.s5b.eventSendError(key)
+		elif success and self.s5b:
+			print "True"
+			self.s5b.eventSendSuccess(key)
 
     def sendRequest(self,key,req,addrType,addr,port):
         """Send a SOCKS5 request

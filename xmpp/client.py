@@ -83,7 +83,7 @@ class PlugIn:
         """ Feed a provided debug line to main instance's debug facility along with our ID string. """
         self._owner.DEBUG(self.DBG_LINE,text,severity)
 
-import transports,dispatcher,auth,roster
+import transports,dispatcher,auth,roster,filetransfer
 class CommonClient:
     """ Base for Client and Component classes."""
     def __init__(self,server,port=5222,debug=['always', 'nodebuilder']):
@@ -206,6 +206,13 @@ class Client(CommonClient):
             if self.Bind.Bind(resource):
                 self.connected+='+sasl'
                 return 'sasl'
+
+    def pluginFiletransfer(self):
+        """ Return the Roster instance, previously plugging it in and
+            requesting roster from server if needed. """
+        filetransfer.S5B().PlugIn(self)
+        filetransfer.SIFileTransfer().PlugIn(self)
+        #return self.Roster.getRoster()
 
     def getRoster(self):
         """ Return the Roster instance, previously plugging it in and

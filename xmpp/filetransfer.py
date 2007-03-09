@@ -263,25 +263,26 @@ class S5B(PlugIn):
         del self.SOCKS5
         
 
-    def addProxy(self,jid):
-        """Discover information about the proxy65 given in argument
-        and add it to the list of known streamhosts
-        Return False if the jid doesn't support bytestreams
-        """
-        #verify that the jid support bytestream
-        info=features.discoverInfo(self._owner,jid)
-        if info[1].count(NS_BYTESTREAMS)==0 or info[0][0]['category']!='proxy' or info[0][0]['type']!='bytestreams':
-            return False
-        self.DEBUG('%s is a proxy65'% jid,'info')
-        #Get ip and port
-        iq=Iq(typ='get',to=jid,queryNS=NS_BYTESTREAMS)
-        rec=self._owner.SendAndWaitForResponse(iq)
-        try:
-            for streamhost in rec.getQueryChildren():
-                self.addStreamHost(jid,'proxy',ip=streamhost.getAttr('host'),port=streamhost.getAttr('port'),zeroconf=streamhost.getAttr('zeroconf'))
-            return True
-        except:
-            return False
+    def addProxy(self,jid,verify=False):
+		"""Discover information about the proxy65 given in argument
+		and add it to the list of known streamhosts
+		Return False if the jid doesn't support bytestreams
+		"""
+		#verify that the jid support bytestream
+		if verify:
+			info=features.discoverInfo(self._owner,jid)
+			if info[1].count(NS_BYTESTREAMS)==0 or info[0][0]['category']!='proxy' or info[0][0]['type']!='bytestreams':
+				return False
+		self.DEBUG('%s is a proxy65'% jid,'info')
+		#Get ip and port
+		iq=Iq(typ='get',to=jid,queryNS=NS_BYTESTREAMS)
+		rec=self._owner.SendAndWaitForResponse(iq)
+		try:
+			for streamhost in rec.getQueryChildren():
+				self.addStreamHost(jid,'proxy',ip=streamhost.getAttr('host'),port=streamhost.getAttr('port'),zeroconf=streamhost.getAttr('zeroconf'))
+			return True
+		except:
+			return False
         
         
     def seekProxy(self,server=None):
@@ -346,11 +347,12 @@ class S5B(PlugIn):
         
 
     def proxyActivatedHandler(self,conn,iq,fil,key):
-        """Called when we received the activation ack from the proxy
-        Used internally"""
-        if iq and iq.getAttr('type')=='result' and iq.getTag('query').getAttr('sid')==fil['sid']:
-            self.SOCKS5.sendToProxy(key,fil['file'],fil['offset'],fil['length'])
-        raise NodeProcessed
+		"""Called when we received the activation ack from the proxy
+		Used internally"""
+		self.DEBUG('sending file offset','info')
+		if iq and isResultNode(iq) and int(iq.getTag('query').getAttr('sid'))==int(fil['sid']):
+			self.SOCKS5.sendToProxy(key,fil['file'],fil['offset'],fil['length'])
+		raise NodeProcessed
                     
     def StreamHostCB(self,conn,iq):
         """Called when we receive the list of streamhosts
@@ -426,6 +428,7 @@ class S5B(PlugIn):
         
     def OpenBytestream(self,sid,to,fp,offset,length):
         """Send the previously opened file fp to the JID designed by to with the Stream ID : sid"""
+        self.DEBUG('sending file','info')
         iq=Iq(typ='set',queryNS=NS_BYTESTREAMS,to=to)
         query=iq.getTag('query')
         query.setAttr('sid',sid)
@@ -443,10 +446,11 @@ class S5B(PlugIn):
         self.fileToSend[key]={'file':fp,'id':iq.getID(),'to':to,'offset':offset,'length':length,'sid':sid}
 
     def eventSendSuccess(self,key):
-        """raise an xmpppy event SEND_SUCCESS.
-        The data is the key of stream
-        Used internally (called by socks5.py"""
-        self._owner.Dispatcher.Event(NS_BYTESTREAMS,SEND_SUCCESS,key)
+		"""raise an xmpppy event SEND_SUCCESS.
+		The data is the key of stream
+		Used internally (called by socks5.py"""
+		print "event",key
+		self._owner.Dispatcher.Event(NS_BYTESTREAMS,SEND_SUCCESS,key)
 
     def eventSendError(self,key):
         """raise an xmpppy event SEND_ERROR.
@@ -600,6 +604,7 @@ class SIFileTransfer(si.SI):
             if length is None:
                 length=size-offset
             fp=open(file)
+            self.DEBUG('opening stream','info')
             self._owner.S5B.OpenBytestream(sid=sid,to=to,fp=fp,offset=offset,length=length)
 
             

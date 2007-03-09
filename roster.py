@@ -234,6 +234,12 @@ class rosterWidget(QtGui.QTreeWidget):
 		action=contactMenu.addAction(self.tr("Chat"))
 		action.setData(QtCore.QVariant(jid))
 		action.setObjectName("chat")
+		# send file
+		action=contactMenu.addAction(self.tr("Send file"))
+		action.setData(QtCore.QVariant(jid))
+		action.setObjectName("send_file")
+		# separator
+		contactMenu.addSeparator()
 		# vcard
 		action=contactMenu.addAction(self.tr("vCard"))
 		action.setData(QtCore.QVariant(jid))
@@ -402,6 +408,15 @@ class rosterWidget(QtGui.QTreeWidget):
 			jid=str(jid.toString())
 			user=self.getUsers(jid)[0]
 			self.contactClicked(user,0)
+		elif cmd=="send_file":
+			# chat with selected contact
+			jid=action.data()
+			jid=str(jid.toString())
+			file=QtGui.QFileDialog.getOpenFileName(self,"Choose file")
+			if len(file)!=0:
+				print file
+				self.jab.sendFile(jid,unicode(file))
+
 
 	def contextMenuEvent (self,event):
 		# show contact context menu

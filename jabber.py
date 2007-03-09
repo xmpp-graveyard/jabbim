@@ -1,3 +1,4 @@
+
 """
 jabber.py is jabber backend for client side of jabber based game.
 Copyright (C) 2007 Richard Szlachta
@@ -326,6 +327,10 @@ class Jabber(groupchat,vcard):
 								bookmarks[attrs["jid"]]=data
 		self.inc.put(["bookmarks", bookmarks])
 
+	def sendFile(self,to,file,desc=''):
+		#si=self.conn.SFileTransfer()
+		a=self.conn.SIFileTransfer.sendSIFile(to,file,desc)
+
 	def getBookmarks(self):
 		# get bookmarks (XEP-0048)
 		xmpp.features.getBookmarks(self.conn,self.bookmarksHandle)
@@ -381,11 +386,12 @@ class Jabber(groupchat,vcard):
 			resource=mess.getFrom().getResource() # get message resource
 			typ=mess.getType() # get type of message
 			new=True # temp variable
+			jid=""
 			if typ=="chat":
 				# put chat message to the message_queue
 				jid = unicode(unicode(user).rsplit("/")[0]).lower()
 				self.message_queue.append(["chat_message", jid,user,text,resource])
-			if typ=="normal":
+			elif typ=="normal":
 				# put chat message to the message_queue
 				jid = unicode(unicode(user).rsplit("/")[0]).lower()
 				self.message_queue.append(["chat_message", jid,user,text,resource])
@@ -416,6 +422,7 @@ class Jabber(groupchat,vcard):
 			else:
 				# unknown message type
 				new=False
+				print "Unknown chat type",unicode(typ)
 			# if jid is in StoreQueue, we store the message
 			if self.StoreQueue.has_key(jid) and new:
 				self.StoreQueue[jid][1].append(self.message_queue[-1])
@@ -544,11 +551,11 @@ class Jabber(groupchat,vcard):
 			return 1
 
 		self.conn.RegisterHandler('message', self.incoming)
-		self.conn.RegisterHandler('iq',self.iqHandle)
+		#self.conn.RegisterHandler('iq',self.iqHandle)
 		self.conn.RegisterHandler('presence',self.presenceHandle)
 		self.conn.RegisterDisconnectHandler(self.off)
 		self.conn.RegisterHandler('iq', self.xmppPingReply, 'get', NS_XMPP_PING)
-		
+		self.conn.pluginFiletransfer()
 		self.roster = self.conn.getRoster()
 		self.inc.put(["roster_update", self.roster])
 		self.ready=False

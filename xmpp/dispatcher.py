@@ -215,11 +215,12 @@ class Dispatcher(PlugIn):
         if handler in self._cycleHandlers: self._cycleHandlers.remove(handler)
 
     def Event(self,realm,event,data):
-        """ Raise some event. Takes three arguments:
-            1) "realm" - scope of event. Usually a namespace. 
-            2) "event" - the event itself. F.e. "SUCESSFULL SEND".
-            3) data that comes along with event. Depends on event."""
-        if self._eventHandler: self._eventHandler(realm,event,data)
+		""" Raise some event. Takes three arguments:
+			1) "realm" - scope of event. Usually a namespace. 
+			2) "event" - the event itself. F.e. "SUCESSFULL SEND".
+			3) data that comes along with event. Depends on event."""
+		if self._eventHandler: self._eventHandler(realm,event,data)
+		print "EVENT"
 
     def dispatch(self,stanza,session=None):
 		""" Main procedure that performs XMPP stanza recognition and calling apppropriate handlers for it.
