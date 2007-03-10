@@ -120,6 +120,7 @@ class discoveryWindow(QtGui.QDialog):
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
+		jab.main=self
 		self.ui=Ui_mainWindow()
 		self.ui.setupUi(self)
 		self.homeDir=self.getHomeDir() # get home dir
@@ -190,8 +191,8 @@ class mainWindow(QtGui.QMainWindow):
 
 		# timer config
 		self.timer=QtCore.QTimer()
-		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.tick)
-		self.timer.start(20)
+		#app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.tick)
+		#self.timer.start(20)
 
 		#self.chat.addHeadlineTab()
 
@@ -624,6 +625,88 @@ class mainWindow(QtGui.QMainWindow):
 			print jid
 		return "jabber"
 
+	def customEvent(self,event):
+		if event.typ=="inc":
+			self.jabberCommandHandler(event.data)
+		elif event.typ=="err":
+			self.jabberErrorHandler(event.data)
+		else:
+			e=event.data
+			if e[0]=="muc_items":
+				item=e[2]
+				jid=e[3]
+				name=unicode(item["jid"]).split("/")[1]
+				for i in self.ui.groupchat.findItems(jid,QtCore.Qt.MatchExactly,1):
+					user=QtGui.QTreeWidgetItem(i)
+					user.setText(0,unicode(name))
+					user.setText(1,unicode(name))
+					user.setIcon(0,self.getIcon(size="16x16"))
+			elif e[0]=="bookmarks_items":
+				item=e[2]
+				jid=e[3]
+				name=unicode(item["jid"]).split("/")[1]
+				for i in self.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1):
+					user=QtGui.QTreeWidgetItem(i)
+					user.setText(0,unicode(name))
+					user.setText(1,unicode(name))
+					user.setIcon(0,self.getIcon(size="16x16"))
+			elif e[0]==None:
+				typ=e[1]
+				if typ=="items":
+					item=e[2]
+					jid=e[3]
+					parentNode=e[4]
+					if item.has_key("jid") and jid==jab.server:
+						self.disco.addItem(unicode(item["jid"]))
+						jab.discoveryInfo(item["jid"])
+					if jid!=jab.server:
+						name=""
+						if item.has_key("name"):
+							name=item["name"]
+						node=""
+						if self.discoInfo.has_key(jid):
+							if self.discoInfo[jid]=="conf":
+								groupchat=QtGui.QTreeWidgetItem(self.ui.groupchat)
+								groupchat.setText(0,unicode(name))
+								groupchat.setText(1,unicode(item["jid"]))
+								groupchat.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
+								self.ui.groupchat.sortItems(0,QtCore.Qt.AscendingOrder)
+						parent=self.disco.items[jid]
+						if self.disco.nodes.has_key(jid+str(parentNode)):
+							parent=self.disco.nodes[jid+str(parentNode)]
+						if item.has_key("node"):
+							node=item["node"]
+						self.disco.addItem(unicode(item["jid"]),unicode(name),parent,node=node)
+				else:
+					ident=e[2]
+					features=e[3]
+					jid=e[4]
+					if not self.discoInfo.has_key(jid) and ident[0].has_key("type"):
+						if "http://jabber.org/protocol/muc" in features and ident[0]["type"]=="text":
+							self.discoInfo[jid]="conf"
+							self.ui.getGroupchatList.setEnabled(True)
+						elif ident[0]["type"]=="bytestreams" and ident[0]["category"]=="proxy":
+							jab.conn.S5B.addProxy(str(jid))
+							#jab.conn.S5B.addProxy(str('proxy.jabberfr.org'))
+							print "adding proxy",jid
+						else:
+							self.discoInfo[jid]=ident[0]["type"]
+							users=self.ui.roster.getServerUsers(jid)
+							for user in users:
+								data=user.data(32,0)
+								data=str(data.toString())
+								#user.setIcon(0,QtGui.QIcon(self.statusPath+self.getUserType(data)+"-"+self.iconSort[unicode(user.text(1))[0]]+".png"))
+								user.setIcon(0,self.getIcon(data,self.iconSort[unicode(user.text(1))[0]]))
+						
+	
+					if self.disco.items.has_key(jid):
+						for feature in features:
+							if not feature in self.disco.items[jid].features:
+								self.disco.items[jid].features.append(feature)
+						if self.disco.items.has_key(jid):
+							self.disco.items[jid].setText(0,ident[0]["name"])
+
+
 	def jabberCommandHandler(self,e):
 		# handler for all commands from jabber.py
 		if e[0] == "con_ready":
@@ -1036,11 +1119,6 @@ class mainWindow(QtGui.QMainWindow):
 				self.ui.group.addItem(unicode(k))
 
 	def tick(self):
-		# new chat lines handler
-		lines = None#jab.newChatLines(self.actualRoom)
-		if lines!=None and len(lines)!=0:
-			for line in lines:
-				self.widget.textEditWrite(line)
 		try:
 			e=jab.discoveryQueue.get( timeout = 0 )
 		except:
@@ -1189,7 +1267,7 @@ class statusWindow(QtGui.QDialog):
 
 app = QtGui.QApplication(sys.argv)
 
-jab = Jabber()
+jab = Jabber(app)
 translator=QtCore.QTranslator()
 translator.load("locales/jabbim_"+str(QtCore.QLocale.system().name())[:2]+".qm")
 app.installTranslator(translator)

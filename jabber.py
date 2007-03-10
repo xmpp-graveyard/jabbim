@@ -36,7 +36,9 @@ class groupchat:
 		p = xmpp.Presence(to='%s/%s'%(room, nick))
 		self.conn.SendAndCallForResponse(p,self._getIntoRoomHandler,args={'room':room,'nick':nick},myid="getintoroom")
 		# send message to GUI, because we are opened the room
-		self.inc.put(["room_opened",room,nick,""])
+		event=customEvent(["room_opened",room,nick,""])
+		self.app.postEvent(self.main,event)
+		#self.inc.put(["room_opened",room,nick,""])
 
 	def _getIntoRoomHandler(self,i,rep,room,nick):
 		# join to conference handler
@@ -44,7 +46,9 @@ class groupchat:
 			# we get error
 			code=str(rep.getErrorCode())
 			print str(rep.getError())
-			self.err.put("muc-"+code)
+			event=customEvent("muc-"+code,'err')
+			self.app.postEvent(self.main,event)
+			#self.err.put("muc-"+code)
 			#self.deleteStoreQueue(room) # stop keeping messages
 		else:
 			# we are connected
@@ -81,10 +85,14 @@ class groupchat:
 			code=str(rep.getErrorCode())
 			print unicode(rep)
 			print str(rep.getError())
-			self.err.put("muc_set_admin_list-"+code)
+			event=customEvent("muc_set_admin_list-"+code,'err')
+			self.app.postEvent(self.main,event)
+			#self.err.put("muc_set_admin_list-"+code)
 		else:
 			# items setted => send info to GUI
-			self.inc.put(["group_chat_admin_list_setted",jid,role,affiliation,toDel,items])
+			event=customEvent(["group_chat_admin_list_setted",jid,role,affiliation,toDel,items])
+			self.app.postEvent(self.main,event)
+			#self.inc.put(["group_chat_admin_list_setted",jid,role,affiliation,toDel,items])
 
 	def getGroupchatConfig(self,muc):
 		# get groupchat config form (muc#owner)
@@ -98,10 +106,14 @@ class groupchat:
 			code=str(rep.getErrorCode())
 			print unicode(rep)
 			print str(rep.getError())
-			self.err.put("muc_config-"+code)
+			event=customEvent("muc_config-"+code,'err')
+			self.app.postEvent(self.main,event)
+			#self.err.put("muc_config-"+code)
 		else:
 			# send form to GUI
-			self.inc.put(["group_chat_config",rep,muc])
+			event=customEvent(["group_chat_config",rep,muc])
+			self.app.postEvent(self.main,event)
+			#self.inc.put(["group_chat_config",rep,muc])
 
 	def getGroupchatAdminList(self,muc,role=None,affiliation=None):
 		# get groupchat admin list (muc#admin)
@@ -119,7 +131,9 @@ class groupchat:
 			code=str(rep.getErrorCode())
 			print unicode(rep)
 			print str(rep.getError())
-			self.err.put("groupchat_admin_list-"+code)
+			event=customEvent("groupchat_admin_list-"+code,'err')
+			self.app.postEvent(self.main,event)
+			#self.err.put("groupchat_admin_list-"+code)
 		else:
 			# get jids and save them to the list items
 			items=[]
@@ -129,7 +143,9 @@ class groupchat:
 						jid = i.getAttr("jid")
 						items.append(jid)
 			# inform GUI
-			self.inc.put(["group_chat_admin_list",items,muc,role,affiliation])
+			event=customEvent(["group_chat_admin_list",items,muc,role,affiliation])
+			self.app.postEvent(self.main,event)
+			#self.inc.put(["group_chat_admin_list",items,muc,role,affiliation])
 
 	def setGroupchatConfig(self,host,info):
 		# set groupchat config
@@ -154,7 +170,9 @@ class groupchat:
 			code=str(rep.getErrorCode())
 			print unicode(rep)
 			print str(rep.getError())
-			self.err.put("groupchat_set_config-"+code)
+			event=customEvent("groupchat_set_config-"+code,'err')
+			self.app.postEvent(self.main,event)
+			#self.err.put("groupchat_set_config-"+code)
 
 class vcard:
 	
@@ -167,9 +185,13 @@ class vcard:
 		# if we get bad result, send to GUI empty vcard
 		if not isResultNode(rep) or rep.getVCardPayload()==None or len(rep.getVCardPayload())==0:
 			if onlyAvatar==True:
-				self.inc.put(["avatar_show",{},jid])
+				event=customEvent(["avatar_show",{},jid])
+				self.app.postEvent(self.main,event)
+				#self.inc.put(["avatar_show",{},jid])
 			else:
-				self.inc.put(["vcard_show",{}])
+				event=customEvent(["vcard_show",{}])
+				self.app.postEvent(self.main,event)
+				#self.inc.put(["vcard_show",{}])
 			return
 		vcard={}
 		# VCard parsing
@@ -178,9 +200,13 @@ class vcard:
 				vcard=self.parse(vcard,i)
 		# send vcard to GUI
 		if onlyAvatar==True:
-			self.inc.put(["avatar_show",vcard,jid])
+			event=customEvent(["avatar_show",vcard,jid])
+			self.app.postEvent(self.main,event)
+			#self.inc.put(["avatar_show",vcard,jid])
 		else:
-			self.inc.put(["vcard_show",vcard])
+			event=customEvent(["vcard_show",vcard])
+			self.app.postEvent(self.main,event)
+			#self.inc.put(["vcard_show",vcard])
 
 	def parse(self,vcard,i):
 		# vcard parsing function
@@ -214,8 +240,8 @@ class Jabber(groupchat,vcard):
 	linesRead = []
 	StoreQueue={}
 
-	def __init__(self):
-		pass
+	def __init__(self,app):
+		self.app=app
 
 	def getStoreQueue(self,jid):
 		# get store queue messages
@@ -224,7 +250,9 @@ class Jabber(groupchat,vcard):
 			if self.StoreQueue.has_key(jid):
 				if len(self.StoreQueue[jid])!=0:
 					for i in self.StoreQueue[jid][1]:
-						self.inc.put(i)
+						event=customEvent(i)
+						self.app.postEvent(self.main,event)
+						#self.inc.put(i)
 			print "ready for deleting"
 			self.deleteStoreQueue(jid)
 
@@ -259,7 +287,9 @@ class Jabber(groupchat,vcard):
 
 	def getRegInfo(self,jid):
 		# get service discovery register information (register forms, inunicodeuctions etc)
-		self.inc.put(["discovery_register",xmpp.features.getRegInfo(self.conn,jid),unicode(jid)])
+		event=customEvent(["discovery_register",xmpp.features.getRegInfo(self.conn,jid),unicode(jid)])
+		self.app.postEvent(self.main,event)
+		#self.inc.put(["discovery_register",xmpp.features.getRegInfo(self.conn,jid),unicode(jid)])
 
 	def disco(self,rep,jid,typ,node,back):
 		# discovery info and items handler
@@ -269,7 +299,9 @@ class Jabber(groupchat,vcard):
 			if not isinstance(i,unicode):
 				if typ=="items":
 					if i.getName()=='agent' and i.getTag('name'): i.setAttr('name',i.getTagData('name'))
-					self.discoveryQueue.put([back,typ,i.attrs,unicode(jid),node])
+					event=customEvent([back,typ,i.attrs,unicode(jid),node],'discovery')
+					self.app.postEvent(self.main,event)
+					#self.discoveryQueue.put([back,typ,i.attrs,unicode(jid),node])
 					#ret.append(i.attrs)
 				if typ=="info":
 					for i in rep:
@@ -283,7 +315,9 @@ class Jabber(groupchat,vcard):
 								if i.getTag('groupchat'): features.append(NS_GROUPCHAT)
 								if i.getTag('register'): features.append(NS_REGISTER)
 								if i.getTag('search'): features.append(NS_SEARCH)
-					self.discoveryQueue.put([back,typ,identities,features,unicode(jid)])
+					event=customEvent([back,typ,identities,features,unicode(jid)],'discovery')
+					self.app.postEvent(self.main,event)
+					#self.discoveryQueue.put([back,typ,identities,features,unicode(jid)])
 
 	def discoveryItems(self,server=None,node=None,back=None):
 		# send discovery items request
@@ -325,7 +359,9 @@ class Jabber(groupchat,vcard):
 								else:
 									data["password"]=""
 								bookmarks[attrs["jid"]]=data
-		self.inc.put(["bookmarks", bookmarks])
+		event=customEvent(["bookmarks", bookmarks])
+		self.app.postEvent(self.main,event)
+		#self.inc.put(["bookmarks", bookmarks])
 
 	def sendFile(self,to,file,desc=''):
 		#si=self.conn.SFileTransfer()
@@ -432,7 +468,9 @@ class Jabber(groupchat,vcard):
 					# GUI is ready for messages, so we can send messages to GUI
 					if len(self.message_queue)!=0:
 						for i in self.message_queue:
-							self.inc.put(i)
+							event=customEvent(i)
+							self.app.postEvent(self.main,event)
+							#self.inc.put(i)
 						self.message_queue=[]
 
 	def presenceHandle(self, conn, pres):
@@ -461,7 +499,8 @@ class Jabber(groupchat,vcard):
 				# GUI is ready for presences, so we can send presences to GUI
 				if len(self.presence_queue)!=0:
 					for i in self.presence_queue:
-						self.inc.put(i)
+						event=customEvent(i)
+						self.app.postEvent(self.main,event)
 					self.presence_queue=[]
 
 	def iqHandle(self, conn, iq):
@@ -530,7 +569,8 @@ class Jabber(groupchat,vcard):
 		
 		if not conres:
 			self.connected = False
-			self.err.put("con")
+			event=customEvent("con",'err')
+			self.app.postEvent(self.main,event)
 			time.sleep(1) # maybe we actually don't need it here, but it looks hax0rz, don't ya think ?
 			sys.exit(1)
 			
@@ -541,7 +581,8 @@ class Jabber(groupchat,vcard):
 		authres = self.conn.auth(user,password,resource)
 		
 		if not authres:
-			self.err.put("auth")
+			event=customEvent("auth",'err')
+			self.app.postEvent(self.main,event)
 			self.connected = False
 			time.sleep(1) # maybe we actually don't need it here, but it looks hax0rz, don't ya think ?
 			sys.exit(1)
@@ -557,7 +598,9 @@ class Jabber(groupchat,vcard):
 		self.conn.RegisterHandler('iq', self.xmppPingReply, 'get', NS_XMPP_PING)
 		self.conn.pluginFiletransfer()
 		self.roster = self.conn.getRoster()
-		self.inc.put(["roster_update", self.roster])
+		event=customEvent(["roster_update", self.roster])
+		self.app.postEvent(self.main,event)
+		#self.inc.put(["roster_update", self.roster])
 		self.ready=False
 		while not self.ready:
 			try:
@@ -567,7 +610,9 @@ class Jabber(groupchat,vcard):
 
 		self.conn.sendInitPresence()
 		self.discoveryItems()
-		self.inc.put(["con_ready"])
+		event=customEvent(["con_ready"])
+		self.app.postEvent(self.main,event)
+		#self.inc.put(["con_ready"])
 		#self.discovery=xmpp.features.discoverInfo(self.conn,server)
 
 		#print xmpp.features.setConference(self.conn,"jabber@conf.netlab.cz","Jabber","false","HanzZik","")
@@ -585,3 +630,14 @@ class Jabber(groupchat,vcard):
 		# daemonized thread will be auto-killed when terminating application
 		v1.setDaemon(True)
 		v1.start()
+
+try:
+	from PyQt4 import QtCore, QtGui
+except:
+	print "PyQt4 is not installed."
+
+class customEvent(QtCore.QEvent):
+	def __init__(self,data,typ="inc"):
+		apply(QtCore.QEvent.__init__,(self,QtCore.QEvent.User))
+		self.data=data
+		self.typ=typ
