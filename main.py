@@ -530,6 +530,8 @@ class mainWindow(QtGui.QMainWindow):
 				rewrite=True
 		if rewrite==True:
 			self.config.write()
+		if not os.path.isdir(self.homeDir+'/.jabbim/avatars'):
+				os.mkdir(self.homeDir+'/.jabbim/avatars')
 
 	def getHomeDir(self):
 		# gets homedir on win32 or linux
@@ -722,6 +724,9 @@ class mainWindow(QtGui.QMainWindow):
 				if v.has_key("BINVAL"):
 					pixmap=QtGui.QPixmap()
 					image=base64.decodestring(str(v["BINVAL"]))
+					f=open(self.homeDir+'/.jabbim/avatars/'+jid,"w")
+					f.write(image)
+					f.close()
 					pixmap.loadFromData(image)
 					for user,group in self.ui.roster.getUsers(jid,True).iteritems():
 						user.setIcon(3,QtGui.QIcon(pixmap))
@@ -1003,6 +1008,13 @@ class mainWindow(QtGui.QMainWindow):
 							self.groups[group]={"item":self.ui.roster.addGroup(group),"users":{}}
 						name=e[1].getName(jid)
 						self.groups[group]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,name,self.groups[group]["item"],self.offline,self.getIcon(jid,"offline")),"resources":[]}
+						if os.path.isfile(self.homeDir+'/.jabbim/avatars/'+jid):
+							pixmap=QtGui.QPixmap()
+							f=open(self.homeDir+'/.jabbim/avatars/'+jid,"r")
+							image=f.read()
+							f.close()
+							pixmap.loadFromData(image)
+							self.groups[group]["users"][str(jid)]['item'].setIcon(3,QtGui.QIcon(pixmap))
 				except:
 					pass
 			self.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
@@ -1076,7 +1088,7 @@ class mainWindow(QtGui.QMainWindow):
 							self.ui.getGroupchatList.setEnabled(True)
 						elif ident[0]["type"]=="bytestreams" and ident[0]["category"]=="proxy":
 							jab.conn.S5B.addProxy(str(jid))
-							jab.conn.S5B.addProxy(str('proxy.jabber.org'))
+							#jab.conn.S5B.addProxy(str('proxy.jabber.org'))
 							print "adding proxy"
 						else:
 							self.discoInfo[jid]=ident[0]["type"]

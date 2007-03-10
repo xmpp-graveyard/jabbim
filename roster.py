@@ -284,6 +284,18 @@ class rosterWidget(QtGui.QTreeWidget):
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
 		return contactMenu
 
+	def buildGroupMenu(self,group):
+		# build contact menu
+		contactMenu=QtGui.QMenu(self)
+		# chat
+		action=contactMenu.addAction(self.tr("Get avatars"))
+		action.setData(QtCore.QVariant(group))
+		action.setObjectName("get_avatars")
+		# signal
+		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
+		return contactMenu
+
+
 	def mimeTypes(self):
 		# set mimetypes, which we accept
 		return QtCore.QStringList("text/plain")
@@ -402,6 +414,12 @@ class rosterWidget(QtGui.QTreeWidget):
 			jid=action.data()
 			jid=str(jid.toString())
 			self.jab.getVCard(jid,True)
+		elif cmd=="get_avatars":
+			# get avatars of users in selected group
+			group=action.data()
+			group=str(group.toString())
+			for jid,item in self.main.groups[group]["users"].iteritems():
+				self.jab.getVCard(jid,True)
 		elif cmd=="chat":
 			# chat with selected contact
 			jid=action.data()
@@ -415,7 +433,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			jid=jid+"/"+self.getResources(jid)[0]
 			file=QtGui.QFileDialog.getOpenFileName(self,"Choose file")
 			if len(file)!=0:
-				print file
+				print file,"to",jid
 				self.jab.sendFile(jid,unicode(file))
 
 
@@ -427,5 +445,9 @@ class rosterWidget(QtGui.QTreeWidget):
 		data=data.toString()
 		if self.isUser(data):
 			contactMenu=self.buildContactMenu(str(data),group)
+			contactMenu.move(event.globalX(),event.globalY())
+			contactMenu.show()
+		else:
+			contactMenu=self.buildGroupMenu(unicode(item.text(2)))
 			contactMenu.move(event.globalX(),event.globalY())
 			contactMenu.show()

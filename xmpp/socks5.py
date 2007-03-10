@@ -46,34 +46,35 @@ ERR_CMD_TYPE=0x07
 ERR_ADDR_TYPE=0x08
 
 def sendData(socket,fp,offset=None,length=None):
-    """Send data to a socket, the file is given by fp.
-    offset and length specifie the part of the file to send.
-    Return True if the file has been succesfully send, False otherwise.
-    """
-    if offset:
-        fp.seek(offset)
-    remaining=length
-    snd=None
-    while ((remaining!=0 or remaining==None) and snd!=''):
-        if remaining!=None and remaining<1024:
-            bufsize=remaining
-        else:
-            bufsize=1024
-        try:
-            snd=fp.read(bufsize)
-        except:
-            return False
-        if snd!='':
-            try:
-                socket.send(snd)
-            except socket.error:
-                snd=''
-        if remaining!=None:
-            remaining=remaining-len(snd)
-    if remaining!=0 and remaining!=None:
-        return False
-    else:
-        return True
+	"""Send data to a socket, the file is given by fp.
+	offset and length specifie the part of the file to send.
+	Return True if the file has been succesfully send, False otherwise.
+	"""
+	if offset:
+		fp.seek(offset)
+	remaining=length
+	snd=None
+	while ((remaining!=0 or remaining==None) and snd!=''):
+		if remaining!=None and remaining<1024:
+			bufsize=remaining
+		else:
+			bufsize=1024
+		try:
+			snd=fp.read(bufsize)
+		except:
+			return False
+		if snd!='':
+			try:
+				print "sending data",length,"remaining",remaining
+				socket.send(snd)
+			except socket.error:
+				snd=''
+		if remaining!=None:
+			remaining=remaining-len(snd)
+	if remaining!=0 and remaining!=None:
+		return False
+	else:
+		return True
 
 
 class SOCKSv5Handler(SocketServer.StreamRequestHandler):
