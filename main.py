@@ -788,7 +788,7 @@ class mainWindow(QtGui.QMainWindow):
 			urls=e[4]
 			descs=e[5]
 			timestamp=e[6]
-			timestamp="%s-%s-%s %s:%s:%s" % (timestamp[0:3],timestamp[4:6],timestamp[7:8],timestamp[9:11],timestamp[12:14],timestamp[15:17])
+			timestamp="%s-%s-%s %s:%s:%s" % (timestamp[0:4],timestamp[4:6],timestamp[6:8],timestamp[9:11],timestamp[12:14],timestamp[15:17])
 			tab=None
 			tabIndex=0
 			for i in range(self.chat.ui.chatTab.count()):
@@ -808,18 +808,31 @@ class mainWindow(QtGui.QMainWindow):
 		elif e[0] == "groupchat_message":
 			jid=str(e[1])
 			user=unicode(e[2])
+			timestamp=e[4]
 			for i in range(self.chat.ui.chatTab.count()):
 				w=self.chat.ui.chatTab.widget(i)
 				if str(w.jid)==jid:
-					if unicode(w.name)==unicode(user):
-						message=self.skin["my_message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
-					else:
-						if unicode(e[3]).lower().find(unicode(w.name).lower())!=-1:
-							message=self.skin["message_for_me"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
+					if timestamp==None or len(timestamp)==0:
+						if unicode(w.name)==unicode(user):
+							message=self.skin["my_message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
 						else:
-							message=self.skin["message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
-					w.chat.textEditWrite(message)
-					return
+							if unicode(e[3]).lower().find(unicode(w.name).lower())!=-1:
+								message=self.skin["message_for_me"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
+							else:
+								message=self.skin["message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
+						w.chat.textEditWrite(message)
+						return
+					else:
+						timestamp=unicode(timestamp)
+						timestamp="%s-%s-%s %s:%s:%s" % (timestamp[0:4],timestamp[4:6],timestamp[6:8],timestamp[9:11],timestamp[12:14],timestamp[15:17])
+						if unicode(w.name)==unicode(user):
+							message=self.skin["my_message_history"].replace("[time]",timestamp).replace("[user]",user).replace("[message]",unicode(e[3]))
+						else:
+							if unicode(e[3]).lower().find(unicode(w.name).lower())!=-1:
+								message=self.skin["message_for_me_history"].replace("[time]",timestamp).replace("[user]",user).replace("[message]",unicode(e[3]))
+							else:
+								message=self.skin["message_history"].replace("[time]",timestamp).replace("[user]",user).replace("[message]",unicode(e[3]))
+						w.chat.textEditWrite(message)
 
 		elif e[0] == "chat_message":
 			jid=str(e[1])

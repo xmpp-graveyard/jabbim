@@ -418,7 +418,7 @@ class Jabber(groupchat,vcard):
 				else:
 					# normal groupchat_message
 					user=unicode(user).rsplit("/")[1]
-					self.message_queue.append(["groupchat_message", jid,user,text])
+					self.message_queue.append(["groupchat_message", jid,user,text,timestamp])
 			else:
 				# unknown message type
 				new=False
