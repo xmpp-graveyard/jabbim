@@ -308,42 +308,43 @@ class S5B(PlugIn):
         self._fileDestination[key]={'path':path,'offset':offset,'length':length}
 
     def ConnectionAckCB(self,conn,iq):
-        """Handler for when the target acknowledges SOCKS5 connection
-        Used internally"""
-        try:
-            jidUsed=iq.getTag('query',namespace=NS_BYTESTREAMS).getTag('streamhost-used').getAttr('jid')
-        except:
-            jidUsed=None
-        key=None
-        for keyt in self.fileToSend.keys():
-            if self.fileToSend[keyt]['id']==iq.getID() and self.fileToSend[keyt]['to']==iq.getFrom():
-                key=keyt
-                del keyt
-                break
-        if key and jidUsed:
-            fil=self.fileToSend[key]
-            #Check if the stream used is local or is a proxy
-            stream=self.streamHosts[jidUsed]
-            if stream['type']=='self':
-                self.SOCKS5.activate(key,fil['file'],fil['offset'],fil['length'])
-            elif stream['type']=='proxy':
-                if self.SOCKS5.connectTo(key,stream['host'],int(stream['port'])):
-                    reply=self.SOCKS5.sendRequest(key,socks5.CMD_CONNECT,socks5.ADDR_DOMAINNAME,key,0)
-                    if reply is not None and reply==(key,0):
-                        iq=Iq(typ='set',to=jidUsed,queryNS=NS_BYTESTREAMS,payload=[Node('activate',payload=[fil['to']])])
-                        iq.getTag('query').setAttr('sid',fil['sid'])
-                        self._owner.SendAndCallForResponse(iq,self.proxyActivatedHandler,args={'fil':fil,'key':key})
-                    else:
-                        self.eventSendError(key)
-                else:
-                    self.eventSendError(key)
-                                 
-                    
-                
-            del self.fileToSend[key]
-        else:
-            self._owner.send(Error(iq,ERR_UNEXPECTED_REQUEST))
-        raise NodeProcessed
+		"""Handler for when the target acknowledges SOCKS5 connection
+		Used internally"""
+		print "ackcb"
+		try:
+			jidUsed=iq.getTag('query',namespace=NS_BYTESTREAMS).getTag('streamhost-used').getAttr('jid')
+		except:
+			jidUsed=None
+		key=None
+		for keyt in self.fileToSend.keys():
+			if self.fileToSend[keyt]['id']==iq.getID() and self.fileToSend[keyt]['to']==iq.getFrom():
+				key=keyt
+				del keyt
+				break
+		if key and jidUsed:
+			fil=self.fileToSend[key]
+			#Check if the stream used is local or is a proxy
+			stream=self.streamHosts[jidUsed]
+			if stream['type']=='self':
+				self.SOCKS5.activate(key,fil['file'],fil['offset'],fil['length'])
+			elif stream['type']=='proxy':
+				if self.SOCKS5.connectTo(key,stream['host'],int(stream['port'])):
+					reply=self.SOCKS5.sendRequest(key,socks5.CMD_CONNECT,socks5.ADDR_DOMAINNAME,key,0)
+					if reply is not None and reply==(key,0):
+						iq=Iq(typ='set',to=jidUsed,queryNS=NS_BYTESTREAMS,payload=[Node('activate',payload=[fil['to']])])
+						iq.getTag('query').setAttr('sid',fil['sid'])
+						self._owner.SendAndCallForResponse(iq,self.proxyActivatedHandler,args={'fil':fil,'key':key})
+					else:
+						self.eventSendError(key)
+				else:
+					self.eventSendError(key)
+									
+					
+				
+			del self.fileToSend[key]
+		else:
+			self._owner.send(Error(iq,ERR_UNEXPECTED_REQUEST))
+		raise NodeProcessed
         
 
     def proxyActivatedHandler(self,conn,iq,fil,key):

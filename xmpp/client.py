@@ -210,7 +210,7 @@ class Client(CommonClient):
     def pluginFiletransfer(self):
         """ Return the Roster instance, previously plugging it in and
             requesting roster from server if needed. """
-        filetransfer.S5B().PlugIn(self)
+        #filetransfer.S5B().PlugIn(self,"212.24.149.74")
         filetransfer.SIFileTransfer().PlugIn(self)
         #return self.Roster.getRoster()
 

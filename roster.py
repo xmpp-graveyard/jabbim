@@ -412,6 +412,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			# chat with selected contact
 			jid=action.data()
 			jid=str(jid.toString())
+			jid=jid+"/"+self.getResources(jid)[0]
 			file=QtGui.QFileDialog.getOpenFileName(self,"Choose file")
 			if len(file)!=0:
 				print file
