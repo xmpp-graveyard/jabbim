@@ -417,7 +417,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		elif cmd=="get_avatars":
 			# get avatars of users in selected group
 			group=action.data()
-			group=str(group.toString())
+			group=unicode(group.toString())
 			for jid,item in self.main.groups[group]["users"].iteritems():
 				self.jab.getVCard(jid,True)
 		elif cmd=="chat":
