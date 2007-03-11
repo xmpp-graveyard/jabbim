@@ -31,7 +31,7 @@ def getBookmarks(disp,func):
 	iq.getTag("query").addChild("storage",{"xmlns":"storage:bookmarks"})
 	disp.SendAndCallForResponse(iq,func)
 
-def setConference(disp,data):
+def setConference(disp,data,func):
 	iq=Iq(to=None,typ='set',queryNS=NS_PRIVATE,xmlns=None)
 	iq.getTag("query").addChild("storage",{"xmlns":"storage:bookmarks"})
 	for k,v in data.iteritems():
@@ -40,8 +40,7 @@ def setConference(disp,data):
 		iq.getTag("query").getTag("storage").getTag("conference",{"name":unicode(v["name"]),"autojoin":v["autojoin"],"jid":unicode(k)}).getTag("nick").setData(v["nick"])
 		iq.getTag("query").getTag("storage").getTag("conference",{"name":unicode(v["name"]),"autojoin":v["autojoin"],"jid":unicode(k)}).addChild("password")
 		iq.getTag("query").getTag("storage").getTag("conference",{"name":unicode(v["name"]),"autojoin":v["autojoin"],"jid":unicode(k)}).getTag("password").setData(v["password"])
-	print iq
-	disp.send(iq,myid="setbookmarks")
+	disp.SendAndCallForResponse(iq,func,myid="setbookmarks")
 
       #<conference name='Council of Oberon' 
                   #autojoin='true'

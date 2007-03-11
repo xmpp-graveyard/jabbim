@@ -393,8 +393,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.groupchatMenu.addSeparator()
 		for k,v in self.bookmarks.iteritems():
 			# add bookmark to the menu
-			action=self.groupchatMenu.addAction(unicode(v["name"]))
+			action=QtGui.QAction(unicode(v["name"]),self.groupchatMenu)
 			action.setData(QtCore.QVariant([unicode(k),unicode(v["nick"]),unicode(v["password"])]))
+			self.groupchatMenu.addAction(action)
 			# add bookmark to the bookmarks list
 			item=QtGui.QTreeWidgetItem(self.ui.bookmarks)
 			item.setText(0,unicode(v["name"]))
@@ -474,8 +475,8 @@ class mainWindow(QtGui.QMainWindow):
 		cmd=unicode(lst[0].toString()) # get command
 		if cmd=="new":
 			# join new groupchat
-			newchat=joinGroupChatWindow(self,jab)
-			ret=newchat.exec_()
+			newchat=joinGroupChatWindow(self,jab,parent=self)
+			newchat.exec_()
 		elif cmd=="manage":
 			# manage groupchats
 			win=preferencesWindow(self,self,1,jab=jab)
@@ -717,6 +718,9 @@ class mainWindow(QtGui.QMainWindow):
 			login.done(1) # close login window
 			jab.setStatus(self.groupchat) # set status
 			jab.getBookmarks() # get bookmarks
+	
+		elif e[0]=="private_data_set":
+			self.buildGroupchatMenu()
 
 		elif e[0]=="reconnect":
 			jab=Jabber(app)
@@ -796,10 +800,12 @@ class mainWindow(QtGui.QMainWindow):
 		elif e[0]=="room_opened":
 			# room is opened => add room tab and getStoreQueue
 			# e=[command,room,nickname,affiliation]
+			print "room is opened"
 			room=unicode(e[1])
 			nickname=unicode(e[2])
 			affiliation=unicode(e[3])
 			self.groupchat[room]=[nickname,[]] # initialize room storage
+			print "adding group chat tab"
 			self.chat.addGroupChatTab(room,nickname,affiliation) # add room tab
 			jab.getStoreQueue(room) # getStoreQueue
 

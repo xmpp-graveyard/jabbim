@@ -373,7 +373,24 @@ class Jabber(groupchat,vcard):
 
 	def setBookmarks(self,data):
 		# se bookmarks (XEP-0048)
-		return xmpp.features.setConference(self.conn,data)
+		xmpp.features.setConference(self.conn,data,self.setBookmarksHandle)
+
+	def setBookmarksHandle(self,conn,rep):
+		# se bookmarks (XEP-0048)
+		if isErrorNode(rep):
+			# we get error
+			code=str(rep.getErrorCode())
+			print str(rep.getError())
+			event=customEvent("setPrivateData-"+code,'err')
+			self.app.postEvent(self.main,event)
+			#self.err.put("muc-"+code)
+			#self.deleteStoreQueue(room) # stop keeping messages
+		else:
+			# we are connected
+			event=customEvent(["private_data_set"])
+			self.app.postEvent(self.main,event)
+			#self.inc.put(["room_opened",room,nick,rep.getAffiliation()])
+
 
 	def listGames(self, gameType):
 		iq = xmpp.protocol.Iq(
