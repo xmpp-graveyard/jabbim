@@ -730,6 +730,7 @@ class mainWindow(QtGui.QMainWindow):
 		elif e[0]=="bookmarks":
 			# we get bookmarks
 			# e=[command,bookmarks_list]
+			print "got bookmarks list",unicode(e[1])
 			self.bookmarks=e[1]
 			self.buildGroupchatMenu()
 

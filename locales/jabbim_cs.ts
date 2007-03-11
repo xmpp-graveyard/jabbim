@@ -1,328 +1,399 @@
-<!DOCTYPE TS><TS>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS><TS version="1.1" language="cs">
 <context>
     <name>addContact</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Add Contact</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat kontakt</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Zrušit</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Jabber ID:</source>
-        <translation type="unfinished"></translation>
+        <translation>Jabber ID:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Nickname:</source>
-        <translation type="unfinished"></translation>
+        <translation>Přezdívka:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>Skupina:</translation>
     </message>
 </context>
 <context>
     <name>chat</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Chat</translation>
     </message>
 </context>
 <context>
     <name>chatWindow</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Headlines</source>
-        <translation type="unfinished"></translation>
+        <translation>Oznámení</translation>
     </message>
 </context>
 <context>
     <name>chatwidget</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation>Formulář</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation>...</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Send</source>
-        <translation type="unfinished"></translation>
+        <translation>Odeslat</translation>
     </message>
 </context>
 <context>
     <name>dataFormsWindow</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Zrušit</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Unregister</source>
-        <translation type="unfinished"></translation>
+        <translation>Odregistrovat</translation>
     </message>
 </context>
 <context>
     <name>discovery</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Jabbim - Discovery</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Název</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Jid</source>
-        <translation type="unfinished"></translation>
+        <translation>JID</translation>
     </message>
 </context>
 <context>
     <name>discoveryRegisterWindow</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Register</source>
-        <translation type="unfinished"></translation>
+        <translation>Registrovat</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Zrušit</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Unregister</source>
-        <translation type="unfinished"></translation>
+        <translation>Odregistrovat</translation>
     </message>
 </context>
 <context>
     <name>discoveryWindow</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Register / Unregister</source>
-        <translation type="unfinished"></translation>
+        <translation>Registrovat / Odregistrovat</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Add to roster</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat do seznamu kontaktů</translation>
     </message>
 </context>
 <context>
     <name>editbookmark</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Edit bookmark</source>
-        <translation type="unfinished"></translation>
+        <translation>Upravit záložku</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Upravit</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Zrušit</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Room:</source>
-        <translation type="unfinished"></translation>
+        <translation>Místnost:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Server:</source>
-        <translation type="unfinished"></translation>
+        <translation>Server:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Název:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Nickname:</source>
-        <translation type="unfinished"></translation>
+        <translation>Přezdívka:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Password:</source>
-        <translation type="unfinished"></translation>
+        <translation>Heslo:</translation>
     </message>
 </context>
 <context>
     <name>gamechatwidget</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation>Formulář</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation>...</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Start Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Spustit hru</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Send</source>
-        <translation type="unfinished"></translation>
+        <translation>Odeslat</translation>
     </message>
 </context>
 <context>
     <name>gameslist</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Games list</source>
-        <translation type="unfinished"></translation>
+        <translation>Seznam her</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Refresh</source>
-        <translation type="unfinished"></translation>
+        <translation>Obnovit</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Název</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source># Players</source>
-        <translation type="unfinished"></translation>
+        <translation>Počet hráčů</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Otevřít</translation>
     </message>
 </context>
 <context>
     <name>groupchatAdminWindow</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Add moderator</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat moderátora</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Enter Jabber ID of new moderator</source>
-        <translation type="unfinished"></translation>
+        <translation>Zadejte Jabber ID nového moderátora</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Add owner</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat vlastníka</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Enter Jabber ID of new owner</source>
-        <translation type="unfinished"></translation>
+        <translation>Zadejte Jabber ID nového vlastníka</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Add member</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat člena</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Enter Jabber ID of new member</source>
-        <translation type="unfinished"></translation>
+        <translation>Zadejte Jabber ID nového člena</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Add new ban</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat vyloučeného</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Enter Jabber ID of new ban</source>
-        <translation type="unfinished"></translation>
+        <translation>Zadejte Jabber ID nového vyloučeného</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Add admin</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat správce</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Enter Jabber ID of admin</source>
-        <translation type="unfinished"></translation>
+        <translation>Zadejte Jabber ID nového správce</translation>
     </message>
 </context>
 <context>
     <name>groupchatadmin</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>Dialog</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Odstranit</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Ban list</source>
-        <translation type="unfinished"></translation>
+        <translation>Seznam vyloučených</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Member list</source>
-        <translation type="unfinished"></translation>
+        <translation>Seznam členů</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Owner list</source>
-        <translation type="unfinished"></translation>
+        <translation>Seznam vlastníků</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Admin list</source>
-        <translation type="unfinished"></translation>
+        <translation>Seznam správců</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Moderator list</source>
-        <translation type="unfinished"></translation>
+        <translation>Seznam moderátorů</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Zavřit</translation>
     </message>
 </context>
 <context>
     <name>groupchatwidget</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation>Formulář</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Room administration</source>
-        <translation type="unfinished"></translation>
+        <translation>Správa místnosti</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Room configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení místnosti</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>user</source>
-        <translation type="unfinished"></translation>
+        <translation>uživatel</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>jid</source>
-        <translation type="unfinished"></translation>
+        <translation>jid</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation>...</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Send</source>
-        <translation type="unfinished"></translation>
+        <translation>Odeslat</translation>
     </message>
 </context>
 <context>
     <name>groupedEventWindow</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Authorization requests</source>
-        <translation type="unfinished"></translation>
+        <translation>Požadavky na autorizaci</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Authorization informations</source>
-        <translation type="unfinished"></translation>
+        <translation>Informace o autorizacích</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Use Jabber ID as name</source>
-        <translation type="unfinished"></translation>
+        <translation>Používat Jabber ID jako jméno</translation>
     </message>
 </context>
 <context>
     <name>groupedevents</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Events</source>
-        <translation type="unfinished"></translation>
+        <translation>Události</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
@@ -330,879 +401,1103 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Selected users</source>
-        <translation type="unfinished"></translation>
+        <translation>Vybraní uživatelé</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Zrušit</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Authorize all selected users and add them to the roster.</source>
-        <translation type="unfinished"></translation>
+        <translation>Autorizovat vybrané uživatele a přidat je do seznamu kontaktů.</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Nickname:</source>
-        <translation type="unfinished"></translation>
+        <translation>Přezdívka:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>Skupina:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Subscribed&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Jabber ID</source>
-        <translation type="unfinished"></translation>
+        <translation>Jabber ID</translation>
     </message>
 </context>
 <context>
     <name>headlinewidget</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation>Formulář</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Subject</source>
-        <translation type="unfinished"></translation>
+        <translation>Předmět</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>From</source>
-        <translation type="unfinished"></translation>
+        <translation>Od</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Date</source>
-        <translation type="unfinished"></translation>
+        <translation>Datum</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Text</translation>
     </message>
 </context>
 <context>
     <name>joingroupchat</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Join Group Chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Vejít do konference</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Bookmark this room</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat tuto místnost do záložek</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Room:</source>
-        <translation type="unfinished"></translation>
+        <translation>Místnost:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Server:</source>
-        <translation type="unfinished"></translation>
+        <translation>Server:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Conference name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Název konference:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Nickname:</source>
-        <translation type="unfinished"></translation>
+        <translation>Přezdívka:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Password:</source>
-        <translation type="unfinished"></translation>
+        <translation>Heslo:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Join</source>
-        <translation type="unfinished"></translation>
+        <translation>Vejít</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Zrušit</translation>
     </message>
 </context>
 <context>
     <name>login</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Jabbim - Login</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Zavřít</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Připojit se</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Proxy configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení proxy</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Save password</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit heslo</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Jabber ID:</source>
-        <translation type="unfinished"></translation>
+        <translation>Jabber ID:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Password:</source>
-        <translation type="unfinished"></translation>
+        <translation>Heslo:</translation>
     </message>
 </context>
 <context>
     <name>loginWindow</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Login information</source>
-        <translation type="unfinished"></translation>
+        <translation>Přihlašovací údaje</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Save current login information?</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit tyto přihlašovací údaje?</translation>
     </message>
 </context>
 <context>
     <name>main</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>New message from </source>
-        <translation type="unfinished"></translation>
+        <translation> Nová zpráva od </translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>User status</source>
-        <translation type="unfinished"></translation>
+        <translation>Stav uživatele</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>User </source>
-        <translation type="unfinished"></translation>
+        <translation> Uživatel </translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source> is now </source>
-        <translation type="unfinished"></translation>
+        <translation> je právě </translation>
     </message>
 </context>
 <context>
     <name>mainWindow</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>Neznámý</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Zavřít</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Join</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat se</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>New game</source>
-        <translation type="unfinished"></translation>
+        <translation>Nová hra</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Game list</source>
-        <translation type="unfinished"></translation>
+        <translation>Seznam her</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Join new groupchat</source>
-        <translation type="unfinished"></translation>
+        <translation>Vejít do konference</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Manage bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>Spravovat záložky</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Group Chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Konference</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Online</source>
-        <translation type="unfinished"></translation>
+        <translation>Online</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Chatty</source>
-        <translation type="unfinished"></translation>
+        <translation>Povídavý</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Away</source>
-        <translation type="unfinished"></translation>
+        <translation>Pryč</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Extended away</source>
-        <translation type="unfinished"></translation>
+        <translation>Dlouho pryč</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>DND</source>
-        <translation type="unfinished"></translation>
+        <translation>Nerušit</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Offline</source>
-        <translation type="unfinished"></translation>
+        <translation>Offline</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Status</source>
-        <translation type="unfinished"></translation>
+        <translation>Stav</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Yes</source>
-        <translation type="unfinished"></translation>
+        <translation>Ano</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>No</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Jabber ID:</source>
-        <translation type="unfinished"></translation>
+        <translation>Jabber ID:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Totaly unable to connect to server.</source>
-        <translation type="unfinished"></translation>
+        <translation>Není vůbec možné se připojit k serveru.</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Bad username or password.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nesprávné uživatelské jméno nebo heslo.</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Password is required.</source>
-        <translation type="unfinished"></translation>
+        <translation>Musíte zadat heslo.</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>The room or server does not exist.</source>
-        <translation type="unfinished"></translation>
+        <translation>Místnost nebo server neexistuje.</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Room creation is restricted.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vytváření místností je omezeno.</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Your are not on the member list.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nejste členem.</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Your nickname is in use or registered by another user.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vaši přezdívku někdo používá nebo si ji zaregistroval.</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Unknown error </source>
-        <translation type="unfinished"></translation>
+        <translation> Neznámá chyba</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Chyba</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Jabbim</source>
-        <translation type="unfinished"></translation>
+        <translation>Jabbim</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Roster</source>
-        <translation type="unfinished"></translation>
+        <translation>Seznam kontaktů</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Nickname:</source>
-        <translation type="unfinished"></translation>
+        <translation>Přezdívka:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>Skupina:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;DejaVu Sans&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Add contact&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;DejaVu Sans&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Přidat kontakt&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <source> </source>
-        <translation type="unfinished"></translation>
+        <location filename="" line="7471221"/>
+        <source></source>
+        <translation></translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Add contact</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat kontakt</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Jméno</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Jid</source>
-        <translation type="unfinished"></translation>
+        <translation>Jid</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Get groupchat list</source>
-        <translation type="unfinished"></translation>
+        <translation>Získat seznam konferencí</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;DejaVu Sans&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Browse groupchats&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;DejaVu Sans&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Procházet konference&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Browse groupchats</source>
-        <translation type="unfinished"></translation>
+        <translation>Procházet konference</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;DejaVu Sans&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Bookmarks&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;DejaVu Sans&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Záložky&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>Záložky</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Show Offline</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit i offline</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>JGames</source>
-        <translation type="unfinished"></translation>
+        <translation>JGames</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Actions</source>
-        <translation type="unfinished"></translation>
+        <translation>Akce</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Service discovery</source>
-        <translation type="unfinished"></translation>
+        <translation>Služby serveru</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukončit</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Tic tac toe</source>
-        <translation type="unfinished"></translation>
+        <translation>Piškvorky</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Events</source>
-        <translation type="unfinished"></translation>
+        <translation>Události</translation>
     </message>
 </context>
 <context>
     <name>preferences</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Jabbim - Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>Jabbim - Nastavení</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Zrušit</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Připojení</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>Záložky</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Chat skins</source>
-        <translation type="unfinished"></translation>
+        <translation>Témata chatu</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Notification</source>
-        <translation type="unfinished"></translation>
+        <translation>Oznámení</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Proxy settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení proxy</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Proxy type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Typ proxy:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Server:</source>
-        <translation type="unfinished"></translation>
+        <translation>Server:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Port:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>User name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Uživatelské jméno:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Password:</source>
-        <translation type="unfinished"></translation>
+        <translation>Heslo:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation>Žádný</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>HTTP Proxy</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP Proxy</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>SOCKS4</source>
-        <translation type="unfinished"></translation>
+        <translation>SOCKS4</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>SOCKS5</source>
-        <translation type="unfinished"></translation>
+        <translation>SOCKS5</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Jabber ID:</source>
-        <translation type="unfinished"></translation>
+        <translation>Jabber ID:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Connection&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Připojení&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Bookmarks&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Záložky&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Room</source>
-        <translation type="unfinished"></translation>
+        <translation>Místnost</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Server</source>
-        <translation type="unfinished"></translation>
+        <translation>Server</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Název</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Nickname</source>
-        <translation type="unfinished"></translation>
+        <translation>Přezdívka</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Password</source>
-        <translation type="unfinished"></translation>
+        <translation>Heslo</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Auto join</source>
-        <translation type="unfinished"></translation>
+        <translation>Automaticky vejít</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Odstranit</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Upravit</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Chat skins&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Témata chatu&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Tray messages</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zprávy v systémové části panelu</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>All - Show all status change.</source>
-        <translation type="unfinished"></translation>
+        <translation>Všechno - Zobraz všechny změny stavu.</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Logged in - Show message only if user logs in.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Přihlášení - Zobrazit zprávu jen pokud se uživatel přihlásí.</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Online - Show message only if user gets Online.</source>
-        <translation type="unfinished"></translation>
+        <translation>Online - Zobrazit zprávu jen pokud bude uživatel online.</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Status change</source>
-        <translation type="unfinished"></translation>
+        <translation>Změna stavu</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Show tray message for all new messages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Show tray message only for not opened chat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>New message</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nová zpráva</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Notification&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Oznámení&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
     <name>preferencesWindow</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>User</source>
-        <translation type="unfinished"></translation>
+        <translation>Uživatel</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>This is test message.</source>
-        <translation type="unfinished"></translation>
+        <translation>Toto je testovací zpráva.</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Me</source>
-        <translation type="unfinished"></translation>
+        <translation>Já</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>This is my test message.</source>
-        <translation type="unfinished"></translation>
+        <translation>Toto je moje testovací zpráva.</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>User has set the subject to: Subject</source>
-        <translation type="unfinished"></translation>
+        <translation>Uživatel změnil téma na: Téma</translation>
     </message>
 </context>
 <context>
     <name>roster</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Roster</source>
-        <translation type="unfinished"></translation>
+        <translation>Seznam kontaktů</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>id</source>
-        <translation type="unfinished"></translation>
+        <translation>id</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>name</source>
-        <translation type="unfinished"></translation>
+        <translation>název</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source></source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
     <name>rosterWidget</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Edit contact</source>
-        <translation type="unfinished"></translation>
+        <translation>Upravit kontakt</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Enter new contact nickname</source>
-        <translation type="unfinished"></translation>
+        <translation>Zadejte novou přezdívku</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Chat</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Send file</source>
-        <translation type="unfinished"></translation>
+        <translation>Poslat soubor</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>vCard</source>
-        <translation type="unfinished"></translation>
+        <translation>Vizitka</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Get avatar</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Stáhnout avatar</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Delete from group</source>
-        <translation type="unfinished"></translation>
+        <translation>Odstranit ze skupiny</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Delete from roster</source>
-        <translation type="unfinished"></translation>
+        <translation>Vymazat ze seznamu kontaktů</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Skupiny</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>New Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Nová skupina</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Get avatars</source>
-        <translation type="unfinished"></translation>
+        <translation>Získat avatary</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>New group</source>
-        <translation type="unfinished"></translation>
+        <translation>Nová skupina</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Add user to new group</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat uživatele do nové skupiny</translation>
     </message>
 </context>
 <context>
     <name>status</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Set status message</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavit zprávu o stavu</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Set</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavit</translation>
     </message>
 </context>
 <context>
     <name>statusWindow</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>Window will be closed in </source>
-        <translation type="unfinished"></translation>
+        <translation> Okno bude zavřeno za</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source> seconds.</source>
-        <translation type="unfinished"></translation>
+        <translation> sekund.</translation>
     </message>
 </context>
 <context>
     <name>vcard</name>
     <message>
+        <location filename="" line="7471221"/>
         <source>User Information</source>
-        <translation type="unfinished"></translation>
+        <translation>Informace o uživateli</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Zavřít</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Jméno</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Full name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Celé jméno:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Familly name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Příjmení:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Jméno:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Middle name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Prostřední jméno:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Prefix:</source>
-        <translation type="unfinished"></translation>
+        <translation>Titul před:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Suffix:</source>
-        <translation type="unfinished"></translation>
+        <translation>Titul za:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Nickname:</source>
-        <translation type="unfinished"></translation>
+        <translation>Přezdívka:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Information</source>
-        <translation type="unfinished"></translation>
+        <translation>Informace</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Email:</source>
-        <translation type="unfinished"></translation>
+        <translation>Email:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Web site:</source>
-        <translation type="unfinished"></translation>
+        <translation>Web:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>JID:</source>
-        <translation type="unfinished"></translation>
+        <translation>JID:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>UID:</source>
-        <translation type="unfinished"></translation>
+        <translation>UID:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Personal</source>
-        <translation type="unfinished"></translation>
+        <translation>Osobní</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Telephone numbers</source>
-        <translation type="unfinished"></translation>
+        <translation>Telefonní čísla</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Preferred:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Preferovaný:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Home:</source>
-        <translation type="unfinished"></translation>
+        <translation>Domů:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Work:</source>
-        <translation type="unfinished"></translation>
+        <translation>Do práce:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Voice:</source>
-        <translation type="unfinished"></translation>
+        <translation>Hlas:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Fax:</source>
-        <translation type="unfinished"></translation>
+        <translation>Fax:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Pager:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pager:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Message recorder:</source>
-        <translation type="unfinished"></translation>
+        <translation>Záznamník:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Cell:</source>
-        <translation type="unfinished"></translation>
+        <translation>Mobil:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Video:</source>
-        <translation type="unfinished"></translation>
+        <translation>Video:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>BBS:</source>
-        <translation type="unfinished"></translation>
+        <translation>BBS:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Modem:</source>
-        <translation type="unfinished"></translation>
+        <translation>Modem:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>ISDN:</source>
-        <translation type="unfinished"></translation>
+        <translation>ISDN:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>PCS:</source>
-        <translation type="unfinished"></translation>
+        <translation>PCS:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Phones</source>
-        <translation type="unfinished"></translation>
+        <translation>Telefony</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Geographical position</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeměpisná pozice</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Latitude:</source>
-        <translation type="unfinished"></translation>
+        <translation>Šířka:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Logitude:</source>
-        <translation type="unfinished"></translation>
+        <translation>Délka:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Address</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresa</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Address:</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresa:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Address 2:</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresa 2:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>City:</source>
-        <translation type="unfinished"></translation>
+        <translation>Město:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>State:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Stát:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Postal code:</source>
-        <translation type="unfinished"></translation>
+        <translation>PSČ:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Country:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Země:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Location</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Poloha</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Details</source>
-        <translation type="unfinished"></translation>
+        <translation>Detaily</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Unit:</source>
-        <translation type="unfinished"></translation>
+        <translation>Útvat:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Title:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Funkce:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Role:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Role:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Organization</source>
-        <translation type="unfinished"></translation>
+        <translation>Organizace</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Birthday</source>
-        <translation type="unfinished"></translation>
+        <translation>Datum narození</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>Birthday:</source>
-        <translation type="unfinished"></translation>
+        <translation>Datum narození:</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>O mně</translation>
     </message>
     <message>
+        <location filename="" line="7471221"/>
         <source>No Photo</source>
-        <translation type="unfinished"></translation>
+        <translation>Nemá fotku</translation>
     </message>
 </context>
 </TS>
