@@ -143,7 +143,8 @@ class groupChatWidget(QtGui.QWidget):
 		self.ui.line.insert(data)
 		self.ui.smileys.setChecked(False)
 		self.s.hide()
-	
+		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+
 	def sendButtonClicked(self):
 		# sends message
 		if len(unicode(self.ui.line.text()))!=0:
