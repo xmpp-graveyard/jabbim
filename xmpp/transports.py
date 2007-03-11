@@ -234,11 +234,14 @@ class TLS(PlugIn):
         self.starttls=None
 
     def plugout(self,now=0):
-        """ Unregisters TLS handler's from owner's dispatcher. Take note that encription
-            can not be stopped once started. You can only break the connection and start over."""
-        self._owner.UnregisterHandler('features',self.FeaturesHandler,xmlns=NS_STREAMS)
-        self._owner.UnregisterHandlerOnce('proceed',self.StartTLSHandler,xmlns=NS_TLS)
-        self._owner.UnregisterHandlerOnce('failure',self.StartTLSHandler,xmlns=NS_TLS)
+		""" Unregisters TLS handler's from owner's dispatcher. Take note that encription
+			can not be stopped once started. You can only break the connection and start over."""
+		try: self._owner.UnregisterHandler('features',self.FeaturesHandler,xmlns=NS_STREAMS)
+		except: pass
+		try: self._owner.UnregisterHandlerOnce('proceed',self.StartTLSHandler,xmlns=NS_TLS)
+		except: pass
+		try: self._owner.UnregisterHandlerOnce('failure',self.StartTLSHandler,xmlns=NS_TLS)
+		except: pass
 
     def FeaturesHandler(self, conn, feats):
         """ Used to analyse server <features/> tag for TLS support.

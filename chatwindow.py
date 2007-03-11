@@ -9,6 +9,7 @@ from groupchat import *
 from gamechat import *
 from headlinewidget import *
 from palette import *
+import os
 
 class chatWindow(QtGui.QMainWindow):
 	def __init__(self,parent,main,jab):
@@ -102,6 +103,14 @@ class chatWindow(QtGui.QMainWindow):
 		layout.addWidget(tab.chat)
 		self.ui.chatTab.addTab(tab,icon,unicode(name))
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
+		if os.path.isfile(self.main.homeDir+'/.jabbim/avatars/'+jid):
+			pixmap=QtGui.QPixmap()
+			f=open(self.main.homeDir+'/.jabbim/avatars/'+jid,"r")
+			image=f.read()
+			f.close()
+			pixmap.loadFromData(image)
+			tab.chat.ui.avatar.setPixmap(pixmap.scaled(32,32,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
+		tab.chat.ui.label.setText("<h2>"+name+"<h2/>")
 		if message!=None:
 			tab.chat.textEditWrite(message)
 		self.show()

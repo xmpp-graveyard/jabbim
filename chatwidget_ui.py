@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'chatwidget.ui'
 #
-# Created: Fri Mar  2 21:55:12 2007
+# Created: Sun Mar 11 13:07:34 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,22 +26,15 @@ class Ui_chatwidget(object):
         self.hboxlayout.setSpacing(6)
         self.hboxlayout.setObjectName("hboxlayout")
 
-        self.line = QtGui.QLineEdit(chatwidget)
-        self.line.setAcceptDrops(True)
-        self.line.setObjectName("line")
-        self.hboxlayout.addWidget(self.line)
+        self.label = QtGui.QLabel(chatwidget)
+        self.label.setObjectName("label")
+        self.hboxlayout.addWidget(self.label)
 
-        self.smileys = QtGui.QToolButton(chatwidget)
-        self.smileys.setIcon(QtGui.QIcon("images/22x22/emotes/biggrin.png"))
-        self.smileys.setCheckable(True)
-        self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
-        self.smileys.setObjectName("smileys")
-        self.hboxlayout.addWidget(self.smileys)
-
-        self.sendButton = QtGui.QPushButton(chatwidget)
-        self.sendButton.setObjectName("sendButton")
-        self.hboxlayout.addWidget(self.sendButton)
-        self.gridlayout.addLayout(self.hboxlayout,1,0,1,1)
+        self.avatar = QtGui.QLabel(chatwidget)
+        self.avatar.setMaximumSize(QtCore.QSize(32,32))
+        self.avatar.setObjectName("avatar")
+        self.hboxlayout.addWidget(self.avatar)
+        self.gridlayout.addLayout(self.hboxlayout,0,0,1,1)
 
         self.hboxlayout1 = QtGui.QHBoxLayout()
         self.hboxlayout1.setMargin(0)
@@ -52,7 +45,29 @@ class Ui_chatwidget(object):
         self.textEdit.setReadOnly(True)
         self.textEdit.setObjectName("textEdit")
         self.hboxlayout1.addWidget(self.textEdit)
-        self.gridlayout.addLayout(self.hboxlayout1,0,0,1,1)
+        self.gridlayout.addLayout(self.hboxlayout1,1,0,1,1)
+
+        self.hboxlayout2 = QtGui.QHBoxLayout()
+        self.hboxlayout2.setMargin(0)
+        self.hboxlayout2.setSpacing(6)
+        self.hboxlayout2.setObjectName("hboxlayout2")
+
+        self.line = QtGui.QLineEdit(chatwidget)
+        self.line.setAcceptDrops(True)
+        self.line.setObjectName("line")
+        self.hboxlayout2.addWidget(self.line)
+
+        self.smileys = QtGui.QToolButton(chatwidget)
+        self.smileys.setIcon(QtGui.QIcon("images/22x22/emotes/biggrin.png"))
+        self.smileys.setCheckable(True)
+        self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.smileys.setObjectName("smileys")
+        self.hboxlayout2.addWidget(self.smileys)
+
+        self.sendButton = QtGui.QPushButton(chatwidget)
+        self.sendButton.setObjectName("sendButton")
+        self.hboxlayout2.addWidget(self.sendButton)
+        self.gridlayout.addLayout(self.hboxlayout2,2,0,1,1)
 
         self.retranslateUi(chatwidget)
         QtCore.QMetaObject.connectSlotsByName(chatwidget)
