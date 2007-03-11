@@ -83,7 +83,6 @@ class chatWindow(QtGui.QMainWindow):
 		self.show()
 
 	def addChatTab(self,jid,name,icon,message=None):
-		print jid,name,icon,unicode(message)
 		for i in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(i)
 			try:
