@@ -708,6 +708,7 @@ class mainWindow(QtGui.QMainWindow):
 
 
 	def jabberCommandHandler(self,e):
+		global jab
 		# handler for all commands from jabber.py
 		if e[0] == "con_ready":
 			# we are connected
@@ -716,6 +717,11 @@ class mainWindow(QtGui.QMainWindow):
 			login.done(1) # close login window
 			jab.setStatus(self.groupchat) # set status
 			jab.getBookmarks() # get bookmarks
+
+		elif e[0]=="reconnect":
+			jab=Jabber(app)
+			jab.main=self
+			jabberLogin(jab,e[1],e[2],e[3],e[4],e[5])
 
 		elif e[0]=="bookmarks":
 			# we get bookmarks
@@ -1102,15 +1108,16 @@ class mainWindow(QtGui.QMainWindow):
 					for group in groups:
 						if self.groups.has_key(group)==False:
 							self.groups[group]={"item":self.ui.roster.addGroup(group),"users":{}}
-						name=e[1].getName(jid)
-						self.groups[group]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,name,self.groups[group]["item"],self.offline,self.getIcon(jid,"offline")),"resources":[]}
-						if os.path.isfile(self.homeDir+'/.jabbim/avatars/'+jid):
-							pixmap=QtGui.QPixmap()
-							f=open(self.homeDir+'/.jabbim/avatars/'+jid,"r")
-							image=f.read()
-							f.close()
-							pixmap.loadFromData(image)
-							self.groups[group]["users"][str(jid)]['item'].setIcon(3,QtGui.QIcon(pixmap))
+						if not self.groups[group]["users"].has_key(jid):
+							name=e[1].getName(jid)
+							self.groups[group]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,name,self.groups[group]["item"],self.offline,self.getIcon(jid,"offline")),"resources":[]}
+							if os.path.isfile(self.homeDir+'/.jabbim/avatars/'+jid):
+								pixmap=QtGui.QPixmap()
+								f=open(self.homeDir+'/.jabbim/avatars/'+jid,"r")
+								image=f.read()
+								f.close()
+								pixmap.loadFromData(image)
+								self.groups[group]["users"][str(jid)]['item'].setIcon(3,QtGui.QIcon(pixmap))
 				except:
 					pass
 			self.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)

@@ -547,16 +547,20 @@ class Jabber(groupchat,vcard):
 	
 	def disconnect(self):
 		# disconnect
+		self.connected = "quit"
 		try:
 			self.conn.disconnect()
 		except: pass
-		self.connected = False
 		print "Disconecting."
 
 	def off(self):
 		# disconnect handler
-		pass
-	
+		if self.connected!="quit":
+			self.connected=False
+			#jabberLogin(self,user,server,password,resource,proxy)
+			event=customEvent(["reconnect",self.user,self.server,self.password,self.resource,self.proxy])
+			self.app.postEvent(self.main,event)
+
 	def connect_thrd(self):
 		user,server,password,resource=self.user,self.server,self.password,self.resource
 		proxy=self.proxy
@@ -616,11 +620,10 @@ class Jabber(groupchat,vcard):
 		#self.discovery=xmpp.features.discoverInfo(self.conn,server)
 
 		#print xmpp.features.setConference(self.conn,"jabber@conf.netlab.cz","Jabber","false","HanzZik","")
-
 		if self.connected:
 			self.GoOn(self.conn)
 			return 2
-	
+		print "finish"
 	
 	# see connect_thrd(self)
 	def connect(self):

@@ -74,27 +74,27 @@ class TCPsocket(PlugIn):
 
     def connect(self,server=None,proxy=None):
 		""" Try to connect. Returns non-empty string on success. """
-		#try:
-		if not server: server=self._server
-		proxy=self._proxy
-		if proxy!=None:
-			if proxy["type"]=="socks5":
-				self._sock = socks.socksocket(socket.AF_INET, socket.SOCK_STREAM)
-				self._sock.setproxy(socks.PROXY_TYPE_SOCKS5,proxy["server"],int(proxy["port"]),True,proxy["user"],proxy["passwd"])
-			elif proxy["type"]=="http":
-				self._sock = socks.socksocket(socket.AF_INET, socket.SOCK_STREAM)
-				self._sock.setproxy(socks.PROXY_TYPE_HTTP,proxy["server"],int(proxy["port"]),True,proxy["user"],proxy["passwd"])
-			elif proxy["type"]=="socks4":
-				self._sock = socks.socksocket(socket.AF_INET, socket.SOCK_STREAM)
-				self._sock.setproxy(socks.PROXY_TYPE_SOCKS4,proxy["server"],int(proxy["port"]),True,proxy["user"],proxy["passwd"])
-		else:
-			self._sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self._sock.connect((str(server[0]),int(server[1])))
-		self._send=self._sock.sendall
-		self._recv=self._sock.recv
-		self.DEBUG("Successfully connected to remote host %s"%`server`,'start')
-		return 'ok'
-		#except: pass
+		try:
+			if not server: server=self._server
+			proxy=self._proxy
+			if proxy!=None:
+				if proxy["type"]=="socks5":
+					self._sock = socks.socksocket(socket.AF_INET, socket.SOCK_STREAM)
+					self._sock.setproxy(socks.PROXY_TYPE_SOCKS5,proxy["server"],int(proxy["port"]),True,proxy["user"],proxy["passwd"])
+				elif proxy["type"]=="http":
+					self._sock = socks.socksocket(socket.AF_INET, socket.SOCK_STREAM)
+					self._sock.setproxy(socks.PROXY_TYPE_HTTP,proxy["server"],int(proxy["port"]),True,proxy["user"],proxy["passwd"])
+				elif proxy["type"]=="socks4":
+					self._sock = socks.socksocket(socket.AF_INET, socket.SOCK_STREAM)
+					self._sock.setproxy(socks.PROXY_TYPE_SOCKS4,proxy["server"],int(proxy["port"]),True,proxy["user"],proxy["passwd"])
+			else:
+				self._sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			self._sock.connect((str(server[0]),int(server[1])))
+			self._send=self._sock.sendall
+			self._recv=self._sock.recv
+			self.DEBUG("Successfully connected to remote host %s"%`server`,'start')
+			return 'ok'
+		except: pass
 
     def plugout(self):
         """ Disconnect from the remote server and unregister self.disconnected method from

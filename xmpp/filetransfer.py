@@ -276,15 +276,16 @@ class S5B(PlugIn):
 		self.DEBUG('%s is a proxy65'% jid,'info')
 		#Get ip and port
 		iq=Iq(typ='get',to=jid,queryNS=NS_BYTESTREAMS)
-		rec=self._owner.SendAndWaitForResponse(iq)
+		rec=self._owner.SendAndCallForResponse(iq,self._addProxy,args={"jid":jid})
+
+    def _addProxy(self,conn,rec,jid):
 		try:
 			for streamhost in rec.getQueryChildren():
 				self.addStreamHost(jid,'proxy',ip=streamhost.getAttr('host'),port=streamhost.getAttr('port'),zeroconf=streamhost.getAttr('zeroconf'))
 			return True
 		except:
 			return False
-        
-        
+
     def seekProxy(self,server=None):
         """Seek for bytestreams proxy on the server, if no server is specified, use the current server.
         Return True if we found at least one proxy."""

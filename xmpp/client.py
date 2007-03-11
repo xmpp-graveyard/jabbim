@@ -105,7 +105,7 @@ class CommonClient:
         self.debug_flags.append(self.DBG)
         self._owner=self
         self._registered_name=None
-        self.RegisterDisconnectHandler(self.DisconnectHandler)
+        #self.RegisterDisconnectHandler(self.DisconnectHandler)
         self.connected=''
 
     def RegisterDisconnectHandler(self,handler):

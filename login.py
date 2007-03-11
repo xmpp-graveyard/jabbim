@@ -38,23 +38,33 @@ class loginWindow(QtGui.QDialog):
 						self.main.config['passwd']=""
 					self.main.config['jid']=jid
 					self.main.config.write()
-			self.jab.user=jid.split("@")[0]
-			self.jab.server=jid.split("@")[1]
-			self.jab.password=unicode(password)
+			user=jid.split("@")[0]
+			server=jid.split("@")[1]
+			password=unicode(password)
 			if self.main.config['resource']=="":
-				self.jab.resource=unicode(socket.gethostname())
+				resource=unicode(socket.gethostname())
 			else:
-				self.jab.resource=unicode(self.main.config["resource"])
+				resource=unicode(self.main.config["resource"])
 			if self.main.config["proxy_type"]!="none":
-				self.jab.proxy={"type":self.main.config["proxy_type"],
+				proxy={"type":self.main.config["proxy_type"],
 								"server":self.main.config["proxy_server"],
 								"user":self.main.config["proxy_user"],
 								"passwd":self.main.config["proxy_passwd"],
 								"port":self.main.config["proxy_port"],
 								}
-			self.jab.connect()
+			else:
+				proxy=None
+			jabberLogin(self.jab,user,server,password,resource,proxy)
 			self.ui.connect.setEnabled(False)
 
 	def reject(self):
 		self.main.close()
 		self.close()
+
+def jabberLogin(jab,user,server,password,resource,proxy):
+	jab.user=user
+	jab.server=server
+	jab.password=password
+	jab.resource=resource
+	jab.proxy=proxy
+	jab.connect()

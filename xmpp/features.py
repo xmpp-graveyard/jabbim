@@ -41,7 +41,7 @@ def setConference(disp,data):
 		iq.getTag("query").getTag("storage").getTag("conference",{"name":unicode(v["name"]),"autojoin":v["autojoin"],"jid":unicode(k)}).addChild("password")
 		iq.getTag("query").getTag("storage").getTag("conference",{"name":unicode(v["name"]),"autojoin":v["autojoin"],"jid":unicode(k)}).getTag("password").setData(v["password"])
 	print iq
-	disp.send(iq)
+	disp.send(iq,myid="setbookmarks")
 
       #<conference name='Council of Oberon' 
                   #autojoin='true'
