@@ -586,7 +586,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="" line="7471221"/>
         <source>New message from </source>
-        <translation> Nová zpráva od </translation>
+        <translation>Nová zpráva od </translation>
     </message>
     <message>
         <location filename="" line="7471221"/>
@@ -596,7 +596,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="" line="7471221"/>
         <source>User </source>
-        <translation> Uživatel </translation>
+        <translation>Uživatel </translation>
     </message>
     <message>
         <location filename="" line="7471221"/>
@@ -749,7 +749,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="" line="7471221"/>
         <source>Roster</source>
-        <translation>Seznam kontaktů</translation>
+        <translation>Kontakty</translation>
     </message>
     <message>
         <location filename="" line="7471221"/>
