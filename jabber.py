@@ -588,12 +588,7 @@ class Jabber(groupchat,vcard):
 			except: pass
 			if not self.conn.connect(proxy=self.proxy): return
 			if not self.conn.auth(self.user,self.password,self.resource): return
-			self.conn.RegisterHandler('error',self.streamErrorHandler,xmlns=NS_STREAMS)
-			self.conn.RegisterHandler('message', self.incoming)
-			#self.conn.RegisterHandler('iq',self.iqHandle)
-			self.conn.RegisterHandler('presence',self.presenceHandle)
-			self.conn.RegisterDisconnectHandler(self.off)
-			self.conn.RegisterHandler('iq', self.xmppPingReply, 'get', NS_XMPP_PING)
+			self.conn.Dispatcher.restoreHandlers(self.handlerssave)
 			self.conn.pluginFiletransfer()
 			self.connected=True
 			self.alive=True
@@ -673,6 +668,7 @@ class Jabber(groupchat,vcard):
 		#self.inc.put(["con_ready"])
 		#self.discovery=xmpp.features.discoverInfo(self.conn,server)
 		#print xmpp.features.setConference(self.conn,"jabber@conf.netlab.cz","Jabber","false","HanzZik","")
+		self.handlerssave=self.conn.Dispatcher.dumpHandlers()
 		if self.connected:
 			self.GoOn(self.conn)
 			#if self.connected=="reconnect":
