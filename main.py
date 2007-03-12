@@ -191,8 +191,8 @@ class mainWindow(QtGui.QMainWindow):
 
 		# timer config
 		self.timer=QtCore.QTimer()
-		#app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.tick)
-		#self.timer.start(20)
+		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),jab.alive)
+		self.timer.start(10000)
 
 		#self.chat.addHeadlineTab()
 
@@ -723,9 +723,10 @@ class mainWindow(QtGui.QMainWindow):
 			self.buildGroupchatMenu()
 
 		elif e[0]=="reconnect":
-			jab=Jabber(app)
-			jab.main=self
-			jabberLogin(jab,e[1],e[2],e[3],e[4],e[5])
+			#jab=Jabber(app)
+			#jab.main=self
+			#jabberLogin(jab,e[1],e[2],e[3],e[4],e[5])
+			pass
 
 		elif e[0]=="bookmarks":
 			# we get bookmarks

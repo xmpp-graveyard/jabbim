@@ -150,16 +150,23 @@ class rosterWidget(QtGui.QTreeWidget):
 		parent.takeChild(index)
 		if int(parent.childCount())==0:
 			self.takeTopLevelItem(self.indexOfTopLevelItem(parent))
-		del self.main.groups[unicode(parent.text(2))]["users"][str(jid)]
-		if len(self.main.groups[unicode(parent.text(2))]["users"])==0:
-			del self.main.groups[unicode(parent.text(2))]
+		if parent==self.main.groups['Unknown']['item']:
+			group="Unknown"
+		else:
+			group=unicode(parent.text(2))
+		del self.main.groups[group]["users"][str(jid)]
+		if len(self.main.groups[group]["users"])==0:
+			del self.main.groups[group]
 
 	def getGroups(self,jid):
 		# get all groups where is JID jid
 		groups=[]
 		for k,v in self.main.groups.iteritems():
 			if self.main.groups[k]["users"].has_key(jid):
-				groups.append(unicode(k))
+				if v['item']==self.main.groups['Unknown']['item']:
+					groups.append("Unknown")
+				else:
+					groups.append(unicode(k))
 		return groups
 
 	def addGroup(self,name):
@@ -401,6 +408,11 @@ class rosterWidget(QtGui.QTreeWidget):
 			action=unicode(items[1].toString())[0]
 			group=unicode(items[1].toString())[1:]
 			print "roster_change_group_action",jid,group
+			if self.main.groups.has_key(group):
+				if self.main.groups[group]['item']==self.main.groups['Unknown']['item']:
+					group="Unknown"
+			else:
+				group="Unknown"
 			# change group
 			self.changeGroup(jid,name,action,group)
 			# refresh stats

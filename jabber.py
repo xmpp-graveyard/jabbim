@@ -22,7 +22,11 @@ import threading, sys, time, sha, time
 import xmpp
 from xmpp.protocol import *
 from Queue import Queue
-
+try:
+	# for timers and events
+	from PyQt4 import QtCore, QtGui
+except:
+	print "PyQt4 is not installed."
 class groupchat:
 
 	def groupchatSend(self, room, text):
@@ -553,11 +557,12 @@ class Jabber(groupchat,vcard):
 		
 	# StepOn and GoOn ;)
 	def StepOn(self, conn):
-		if not self.connected:
+		if self.connected==False:
 			return 0
 		try:
 			self.conn.Process(1)
 		except KeyboardInterrupt: return 0
+		except: time.sleep(1)
 		return 1
 
 	def GoOn(self, conn):
@@ -575,19 +580,48 @@ class Jabber(groupchat,vcard):
 	def off(self):
 		# disconnect handler
 		if self.connected!="quit":
-			self.connected=False
+			print "reconnecting"
+			self.connected="reconnect"
+			self.conn=xmpp.Client(self.server,debug=[])
 			#jabberLogin(self,user,server,password,resource,proxy)
-			event=customEvent(["reconnect",self.user,self.server,self.password,self.resource,self.proxy])
-			self.app.postEvent(self.main,event)
+			try: self.conn.Dispatcher.PlugOut()
+			except: pass
+			if not self.conn.connect(proxy=self.proxy): return
+			if not self.conn.auth(self.user,self.password,self.resource): return
+			self.conn.RegisterHandler('error',self.streamErrorHandler,xmlns=NS_STREAMS)
+			self.conn.RegisterHandler('message', self.incoming)
+			#self.conn.RegisterHandler('iq',self.iqHandle)
+			self.conn.RegisterHandler('presence',self.presenceHandle)
+			self.conn.RegisterDisconnectHandler(self.off)
+			self.conn.RegisterHandler('iq', self.xmppPingReply, 'get', NS_XMPP_PING)
+			self.conn.pluginFiletransfer()
+			self.connected=True
+			self.alive=True
+			print "connected"
+			#event=customEvent(["reconnect",self.user,self.server,self.password,self.resource,self.proxy])
+			#self.app.postEvent(self.main,event)
+
+	def streamErrorHandler(self,conn,error):
+		name,text='error',error.getData()
+		for tag in error.getChildren():
+			if tag.getNamespace()==NS_XMPP_STREAMS:
+				if tag.getName()=='text': text=tag.getData()
+				else: name=tag.getName()
+		if name=="conflict":
+			self.connected=False
+			print "conflict detect => turn off"
+		else:
+			print "STREAM ERROR",name,text
 
 	def connect_thrd(self):
+		print "start",self
 		user,server,password,resource=self.user,self.server,self.password,self.resource
 		proxy=self.proxy
 		
 		self.conn=xmpp.Client(server,debug=[])
 		
 		conres=self.conn.connect(proxy=proxy)
-		
+		self.alive=True
 		self.connected = True
 		
 		if not conres:
@@ -607,13 +641,14 @@ class Jabber(groupchat,vcard):
 			event=customEvent("auth",'err')
 			self.app.postEvent(self.main,event)
 			self.connected = False
+			self.alive=False
 			time.sleep(1) # maybe we actually don't need it here, but it looks hax0rz, don't ya think ?
 			sys.exit(1)
 
 		
 		if authres<>'sasl':
 			return 1
-
+		self.conn.RegisterHandler('error',self.streamErrorHandler,xmlns=NS_STREAMS)
 		self.conn.RegisterHandler('message', self.incoming)
 		#self.conn.RegisterHandler('iq',self.iqHandle)
 		self.conn.RegisterHandler('presence',self.presenceHandle)
@@ -637,13 +672,34 @@ class Jabber(groupchat,vcard):
 		self.app.postEvent(self.main,event)
 		#self.inc.put(["con_ready"])
 		#self.discovery=xmpp.features.discoverInfo(self.conn,server)
-
 		#print xmpp.features.setConference(self.conn,"jabber@conf.netlab.cz","Jabber","false","HanzZik","")
 		if self.connected:
 			self.GoOn(self.conn)
+			#if self.connected=="reconnect":
+				#print "new try"
+				#self.connect_thrd()
+			print "finish",self
 			return 2
-		print "finish"
+		
+
+	def alive(self):
+		print "connection test"
+		if self.alive:
+			self.alive=False
+			print "ping"
+			iq=Iq(to=self.server,typ='get',queryNS=NS_TIME,xmlns=None)
+			self.conn.SendAndCallForResponse(iq,self._alive,myid="connectiontest")
+		else:
+			#print self.connected
+			#if self.connected!=False:
+				#self.conn.disconnect()
+			#else:
+			self.off()
 	
+	def _alive(self,conn,iq):
+		print "pong"
+		self.alive=True
+
 	# see connect_thrd(self)
 	def connect(self):
 		
@@ -653,10 +709,6 @@ class Jabber(groupchat,vcard):
 		v1.setDaemon(True)
 		v1.start()
 
-try:
-	from PyQt4 import QtCore, QtGui
-except:
-	print "PyQt4 is not installed."
 
 class customEvent(QtCore.QEvent):
 	def __init__(self,data,typ="inc"):
