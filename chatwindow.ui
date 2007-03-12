@@ -23,15 +23,6 @@
     <property name="spacing" >
      <number>6</number>
     </property>
-    <item row="0" column="0" >
-     <widget class="QTabWidget" name="chatTab" >
-      <widget class="QWidget" name="chat" >
-       <attribute name="title" >
-        <string>Chat</string>
-       </attribute>
-      </widget>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar" >

@@ -43,9 +43,9 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.setItemHidden(self.item, True)
 		# set color palette
 		palette=self.palette()
-		palette=loadPalette(palette,self.main.palette["roster"])
+		palette,images=loadPalette(palette,self.main.palette["roster"])
 		self.setPalette(palette)
-		self.pixmap=QtGui.QPixmap("images/texture.png")
+		self.pixmap=images['bgImage']
 
 	def expanded(self,item):
 		# change icon if group item expanded
@@ -324,11 +324,12 @@ class rosterWidget(QtGui.QTreeWidget):
 	def paintEvent(self,event):
 		# paintEvent handler
 		# paint roster background texture
-		viewport=self.viewport()
-		painter=QtGui.QPainter(viewport)
-		for x in range(int(int(viewport.width())//self.pixmap.width())+1):
-			for y in range(int(int(viewport.height())/self.pixmap.height())+1):
-				painter.drawPixmap(x*int(self.pixmap.width()),y*self.pixmap.height(),self.pixmap)
+		if self.pixmap!=None:
+			viewport=self.viewport()
+			painter=QtGui.QPainter(viewport)
+			for x in range(int(int(viewport.width())//self.pixmap.width())+1):
+				for y in range(int(int(viewport.height())/self.pixmap.height())+1):
+					painter.drawPixmap(x*int(self.pixmap.width()),y*self.pixmap.height(),self.pixmap)
 		QtGui.QTreeWidget.paintEvent(self,event)
 	
 	def changeGroup(self,jid,name,action,group):

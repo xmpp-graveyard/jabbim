@@ -22,9 +22,20 @@ class chatWidget(QtGui.QWidget):
 		self.loadSmileys()
 		self.jid=jid
 		self.name_id=-1 # for tabPressed
-		#palette=self.palette()
-		#palette=loadPalette(palette,self.main.palette["chatwidget"])
-		#self.setPalette(palette)
+		palette=self.palette()
+		palette,images=loadPalette(palette,self.main.palette["chatwidget"])
+		self.setPalette(palette)
+		self.pixmap=images['bgImage']
+
+	def paintEvent(self,event):
+		# paintEvent handler
+		if self.pixmap!=None:
+			viewport=self
+			painter=QtGui.QPainter(viewport)
+			for x in range(int(int(viewport.width())//self.pixmap.width())+1):
+				for y in range(int(int(viewport.height())/self.pixmap.height())+1):
+					painter.drawPixmap(x*int(self.pixmap.width()),y*self.pixmap.height(),self.pixmap)
+		QtGui.QWidget.paintEvent(self,event)
 
 	def loadSmileys(self):
 		# loads smileys.conf and makes buttons
