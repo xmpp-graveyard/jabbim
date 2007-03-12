@@ -730,9 +730,9 @@ class mainWindow(QtGui.QMainWindow):
 		elif e[0]=="bookmarks":
 			# we get bookmarks
 			# e=[command,bookmarks_list]
-			print "got bookmarks list",unicode(e[1])
-			self.bookmarks=e[1]
-			self.buildGroupchatMenu()
+			if len(e[1])!=0:
+				self.bookmarks=e[1]
+				self.buildGroupchatMenu()
 
 		elif e[0]=="group_chat_admin_list_setted":
 			# user set muc#admin list in room
