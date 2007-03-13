@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Tue Mar 13 21:26:30 2007
+# Created: Tue Mar 13 21:39:26 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -210,74 +210,76 @@ class Ui_mainWindow(object):
         self.gridlayout6.setSpacing(6)
         self.gridlayout6.setObjectName("gridlayout6")
 
-        spacerItem5 = QtGui.QSpacerItem(20,191,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout6.addItem(spacerItem5,1,0,1,1)
+        self.label_7 = QtGui.QLabel(self.page_2)
+        self.label_7.setPixmap(QtGui.QPixmap("images/logo.png"))
+        self.label_7.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_7.setObjectName("label_7")
+        self.gridlayout6.addWidget(self.label_7,0,0,1,3)
 
-        self.hboxlayout2 = QtGui.QHBoxLayout()
-        self.hboxlayout2.setMargin(0)
-        self.hboxlayout2.setSpacing(6)
-        self.hboxlayout2.setObjectName("hboxlayout2")
+        spacerItem5 = QtGui.QSpacerItem(20,171,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout6.addItem(spacerItem5,2,1,1,1)
 
         self.vboxlayout2 = QtGui.QVBoxLayout()
         self.vboxlayout2.setMargin(0)
         self.vboxlayout2.setSpacing(6)
         self.vboxlayout2.setObjectName("vboxlayout2")
 
-        self.label_8 = QtGui.QLabel(self.page_2)
-        self.label_8.setObjectName("label_8")
-        self.vboxlayout2.addWidget(self.label_8)
-
-        self.label_9 = QtGui.QLabel(self.page_2)
-        self.label_9.setObjectName("label_9")
-        self.vboxlayout2.addWidget(self.label_9)
-        self.hboxlayout2.addLayout(self.vboxlayout2)
-
         self.vboxlayout3 = QtGui.QVBoxLayout()
         self.vboxlayout3.setMargin(0)
-        self.vboxlayout3.setSpacing(6)
+        self.vboxlayout3.setSpacing(0)
         self.vboxlayout3.setObjectName("vboxlayout3")
+
+        self.label_8 = QtGui.QLabel(self.page_2)
+        self.label_8.setObjectName("label_8")
+        self.vboxlayout3.addWidget(self.label_8)
 
         self.jid_2 = QtGui.QLineEdit(self.page_2)
         self.jid_2.setObjectName("jid_2")
         self.vboxlayout3.addWidget(self.jid_2)
+        self.vboxlayout2.addLayout(self.vboxlayout3)
+
+        self.vboxlayout4 = QtGui.QVBoxLayout()
+        self.vboxlayout4.setMargin(0)
+        self.vboxlayout4.setSpacing(0)
+        self.vboxlayout4.setObjectName("vboxlayout4")
+
+        self.label_9 = QtGui.QLabel(self.page_2)
+        self.label_9.setObjectName("label_9")
+        self.vboxlayout4.addWidget(self.label_9)
 
         self.password = QtGui.QLineEdit(self.page_2)
         self.password.setEchoMode(QtGui.QLineEdit.Password)
         self.password.setObjectName("password")
-        self.vboxlayout3.addWidget(self.password)
-        self.hboxlayout2.addLayout(self.vboxlayout3)
-        self.gridlayout6.addLayout(self.hboxlayout2,2,0,1,2)
-
-        spacerItem6 = QtGui.QSpacerItem(101,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout6.addItem(spacerItem6,3,0,1,1)
+        self.vboxlayout4.addWidget(self.password)
+        self.vboxlayout2.addLayout(self.vboxlayout4)
 
         self.savePassword = QtGui.QCheckBox(self.page_2)
         self.savePassword.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.savePassword.setObjectName("savePassword")
-        self.gridlayout6.addWidget(self.savePassword,3,1,1,1)
+        self.vboxlayout2.addWidget(self.savePassword)
 
-        self.hboxlayout3 = QtGui.QHBoxLayout()
-        self.hboxlayout3.setMargin(0)
-        self.hboxlayout3.setSpacing(6)
-        self.hboxlayout3.setObjectName("hboxlayout3")
+        self.hboxlayout2 = QtGui.QHBoxLayout()
+        self.hboxlayout2.setMargin(0)
+        self.hboxlayout2.setSpacing(6)
+        self.hboxlayout2.setObjectName("hboxlayout2")
 
-        self.proxy = QtGui.QPushButton(self.page_2)
-        self.proxy.setObjectName("proxy")
-        self.hboxlayout3.addWidget(self.proxy)
-
-        spacerItem7 = QtGui.QSpacerItem(20,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.hboxlayout3.addItem(spacerItem7)
+        spacerItem6 = QtGui.QSpacerItem(81,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.hboxlayout2.addItem(spacerItem6)
 
         self.connect = QtGui.QPushButton(self.page_2)
         self.connect.setObjectName("connect")
-        self.hboxlayout3.addWidget(self.connect)
-        self.gridlayout6.addLayout(self.hboxlayout3,4,0,1,2)
+        self.hboxlayout2.addWidget(self.connect)
 
-        self.label_7 = QtGui.QLabel(self.page_2)
-        self.label_7.setPixmap(QtGui.QPixmap("images/logo.png"))
-        self.label_7.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_7.setObjectName("label_7")
-        self.gridlayout6.addWidget(self.label_7,0,0,1,2)
+        spacerItem7 = QtGui.QSpacerItem(71,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.hboxlayout2.addItem(spacerItem7)
+        self.vboxlayout2.addLayout(self.hboxlayout2)
+        self.gridlayout6.addLayout(self.vboxlayout2,1,1,1,1)
+
+        spacerItem8 = QtGui.QSpacerItem(21,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout6.addItem(spacerItem8,1,0,1,1)
+
+        spacerItem9 = QtGui.QSpacerItem(21,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout6.addItem(spacerItem9,1,2,1,1)
         self.stackedWidget.addWidget(self.page_2)
         self.gridlayout.addWidget(self.stackedWidget,0,0,1,1)
         mainWindow.setCentralWidget(self.centralwidget)
@@ -374,7 +376,6 @@ class Ui_mainWindow(object):
         self.label_8.setText(QtGui.QApplication.translate("mainWindow", "Jabber ID:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_9.setText(QtGui.QApplication.translate("mainWindow", "Password:", None, QtGui.QApplication.UnicodeUTF8))
         self.savePassword.setText(QtGui.QApplication.translate("mainWindow", "Save password", None, QtGui.QApplication.UnicodeUTF8))
-        self.proxy.setText(QtGui.QApplication.translate("mainWindow", "Proxy configuration", None, QtGui.QApplication.UnicodeUTF8))
         self.connect.setText(QtGui.QApplication.translate("mainWindow", "Connect", None, QtGui.QApplication.UnicodeUTF8))
         self.menuJGames.setTitle(QtGui.QApplication.translate("mainWindow", "JGames", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPreferences.setTitle(QtGui.QApplication.translate("mainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
