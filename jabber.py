@@ -587,14 +587,15 @@ class Jabber(groupchat,vcard):
 			try: self.conn.Dispatcher.PlugOut()
 			except: pass
 			if not self.conn.connect(proxy=self.proxy): return
+			print "reauthing"
 			if not self.conn.auth(self.user,self.password,self.resource): return
 			self.conn.Dispatcher.restoreHandlers(self.handlerssave)
 			self.conn.pluginFiletransfer()
 			self.connected=True
 			self.alive=True
 			print "connected"
-			#event=customEvent(["reconnect",self.user,self.server,self.password,self.resource,self.proxy])
-			#self.app.postEvent(self.main,event)
+			event=customEvent(["reconnect",self.user,self.server,self.password,self.resource,self.proxy])
+			self.app.postEvent(self.main,event)
 
 	def streamErrorHandler(self,conn,error):
 		name,text='error',error.getData()
@@ -678,9 +679,8 @@ class Jabber(groupchat,vcard):
 			return 2
 		
 
-	def alive(self):
-		print "connection test"
-		if self.alive:
+	def isalive(self):
+		if self.alive==True:
 			self.alive=False
 			print "ping"
 			iq=Iq(to=self.server,typ='get',queryNS=NS_TIME,xmlns=None)
@@ -690,7 +690,19 @@ class Jabber(groupchat,vcard):
 			#if self.connected!=False:
 				#self.conn.disconnect()
 			#else:
-			self.off()
+			if self.alive==2:
+				print "disconnect"
+				self.connected=False
+				event=customEvent(["disconnected"])
+				self.app.postEvent(self.main,event)
+				#sys.exit(1)
+				#self.off()
+			elif self.alive==False:
+				print "second ping"
+				self.alive=2
+				iq=Iq(to=self.server,typ='get',queryNS=NS_TIME,xmlns=None)
+				self.conn.SendAndCallForResponse(iq,self._alive,myid="connectiontest")
+
 	
 	def _alive(self,conn,iq):
 		print "pong"

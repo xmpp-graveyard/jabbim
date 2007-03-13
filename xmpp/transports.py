@@ -89,6 +89,7 @@ class TCPsocket(PlugIn):
 					self._sock.setproxy(socks.PROXY_TYPE_SOCKS4,proxy["server"],int(proxy["port"]),True,proxy["user"],proxy["passwd"])
 			else:
 				self._sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+				#self._sock.setBlocking(True)
 			self._sock.connect((str(server[0]),int(server[1])))
 			self._send=self._sock.sendall
 			self._recv=self._sock.recv

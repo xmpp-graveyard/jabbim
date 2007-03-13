@@ -199,13 +199,13 @@ class Client(CommonClient):
                 return 'old_auth'
             return
         self.SASL.auth()
-        while self.SASL.startsasl=='in-process' and self.Process(): pass
+        while self.SASL.startsasl=='in-process' and self.Process(1): pass
         if self.SASL.startsasl=='success':
-            auth.Bind().PlugIn(self)
-            while self.Bind.bound is None: self.Process()
-            if self.Bind.Bind(resource):
-                self.connected+='+sasl'
-                return 'sasl'
+			auth.Bind().PlugIn(self)
+			while self.Bind.bound is None: self.Process(1)
+			if self.Bind.Bind(resource):
+				self.connected+='+sasl'
+				return 'sasl'
 
     def pluginFiletransfer(self):
         """ Return the Roster instance, previously plugging it in and

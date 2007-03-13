@@ -146,6 +146,7 @@ class chatWindow(QtGui.QMainWindow):
 		layout.setSpacing(1)
 		tab.chat=chatWidget(self.main,jid,self.jab,tab)
 		layout.addWidget(tab.chat)
+		print "adding new tab...", icon
 		self.ui.chatTab.addTab(tab,icon,unicode(name))
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 		if os.path.isfile(self.main.homeDir+'/.jabbim/avatars/'+jid):

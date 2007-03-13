@@ -63,7 +63,7 @@ class Dispatcher(PlugIn):
         self.RegisterProtocol('presence',Presence)
         self.RegisterProtocol('message',Message)
         self.RegisterDefaultHandler(self.returnStanzaHandler)
-        self.RegisterHandler('error',self.streamErrorHandler,xmlns=NS_STREAMS)
+        #self.RegisterHandler('error',self.streamErrorHandler,xmlns=NS_STREAMS)
 
     def plugin(self, owner):
         """ Plug the Dispatcher instance into Client class instance and send initial stream header. Used internally."""

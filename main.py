@@ -40,7 +40,7 @@ from discovery_ui import *
 #from palette import *
 from dataforms import *
 import notification
-
+import socket
 import games
 
 
@@ -191,10 +191,59 @@ class mainWindow(QtGui.QMainWindow):
 
 		# timer config
 		self.timer=QtCore.QTimer()
-		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),jab.alive)
-		self.timer.start(10000)
+		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),jab.isalive)
+		self.ui.password.setText(self.config['passwd'])
+		self.ui.jid_2.setText(self.config['jid'])
+		QtCore.QObject.connect(self.ui.proxy, QtCore.SIGNAL("clicked ()"),self.proxySettings)
+		QtCore.QObject.connect(self.ui.connect, QtCore.SIGNAL("clicked ()"),self.connectClicked)
+		if self.config['savePasswd']=="True":
+			self.ui.savePassword.setChecked(True)
 
-		#self.chat.addHeadlineTab()
+	def connectClicked(self):
+		jid=unicode(self.ui.jid_2.text())
+		password=unicode(self.ui.password.text())
+		if len(jid)!=0 and len(jid.split("@"))==2 and len(unicode(self.ui.password.text()))!=0:
+			if jid!=self.config['jid'] or (password!=self.config['passwd'] and self.config['savePasswd']=="True") or self.config['savePasswd']!=str(self.ui.savePassword.isChecked()):
+				ret=QtGui.QMessageBox.question(self,self.tr("Login information"), self.tr("Save current login information?"),3,4)
+				if ret==3:
+					self.config['savePasswd']=self.ui.savePassword.isChecked()
+					if self.ui.savePassword.isChecked()==True:
+						self.config['passwd']=password
+					else:
+						self.config['passwd']=""
+					self.config['jid']=jid
+					self.config.write()
+			user=jid.split("@")[0]
+			server=jid.split("@")[1]
+			password=unicode(password)
+			if self.config['resource']=="":
+				resource=unicode(socket.gethostname())
+			else:
+				resource=unicode(self.config["resource"])
+			if self.config["proxy_type"]!="none":
+				proxy={"type":self.config["proxy_type"],
+								"server":self.config["proxy_server"],
+								"user":self.config["proxy_user"],
+								"passwd":self.config["proxy_passwd"],
+								"port":self.config["proxy_port"],
+								}
+			else:
+				proxy=None
+			try:
+				connected=jab.connected
+			except:
+				connected=None
+			print connected
+			if connected==None or connected==False or connected=="quit":
+				print "connecting"
+				jabberLogin(jab,user,server,password,resource,proxy)
+			else:
+				jab.off()
+			self.ui.connect.setEnabled(False)
+
+	def proxySettings(self):
+		win=preferencesWindow(self.main,self,0)
+		win.show()
 
 	def manageBookmarks(self):
 		# open "manage bookmarks" window
@@ -464,6 +513,8 @@ class mainWindow(QtGui.QMainWindow):
 		action.setData(QtCore.QVariant("xa"))
 		action=self.statusMenu.addAction(self.getIcon(status="dnd",size="16x16"),self.status["dnd"])
 		action.setData(QtCore.QVariant("dnd"))
+		action=self.statusMenu.addAction(self.getIcon(status="offline",size="16x16"),self.status["offline"])
+		action.setData(QtCore.QVariant("offline"))
 		self.ui.statusButton.setMenu(self.statusMenu)
 		app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
 		self.offline=True
@@ -714,19 +765,34 @@ class mainWindow(QtGui.QMainWindow):
 		if e[0] == "con_ready":
 			# we are connected
 			# e=[command]
-			MainWindow.show() # show main window
-			login.done(1) # close login window
+			#MainWindow.show() # show main window
+			#login.done(1) # close login window
+			self.ui.stackedWidget.setCurrentIndex(0)
 			jab.setStatus(self.groupchat) # set status
 			jab.getBookmarks() # get bookmarks
-	
+			jab.isalive()
+			self.timer.start(10000)
+			self.ui.connect.setEnabled(True)
+			self.ui.statusButton.setText(unicode(self.status["online"]))
+			self.ui.statusButton.setIcon(self.getIcon(status="online",size="16x16"))
+
+		elif e[0]=="disconnected":
+			self.timer.stop()
+			if int(self.ui.stackedWidget.currentIndex())!=1:
+				self.ui.stackedWidget.setCurrentIndex(1)
+				self.ui.statusButton.setText(unicode(self.status["offline"]))
+				self.ui.statusButton.setIcon(self.getIcon(status="offline",size="16x16"))
+				self.ui.connect.setEnabled(True)
 		elif e[0]=="private_data_set":
 			self.buildGroupchatMenu()
 
 		elif e[0]=="reconnect":
-			#jab=Jabber(app)
-			#jab.main=self
-			#jabberLogin(jab,e[1],e[2],e[3],e[4],e[5])
-			pass
+			self.ui.connect.setEnabled(True)
+			self.ui.statusButton.setText(unicode(self.status["online"]))
+			self.ui.statusButton.setIcon(self.getIcon(status="online",size="16x16"))
+			self.ui.stackedWidget.setCurrentIndex(0)
+			jab.setStatus(self.groupchat) # set status
+			jab.isalive()
 
 		elif e[0]=="bookmarks":
 			# we get bookmarks
@@ -988,6 +1054,7 @@ class mainWindow(QtGui.QMainWindow):
 			jid=str(e[1])
 			# Pokud je jid v rosteru:
 			if self.ui.roster.isUser(jid):
+				print jid,str(e[2].getType())
 				# Prochazeni vsech uzivatelu v rosteru, kteri maji shodne jid
 				for user,group in self.ui.roster.getUsers(jid,True).iteritems():
 					# Pokud se nejedna o odhlaseni uzivatele
@@ -1230,10 +1297,10 @@ class mainWindow(QtGui.QMainWindow):
 	def jabberErrorHandler(self,error):
 		if error == "con":
 			self.jabberError(self.tr("Totaly unable to connect to server."))
-			login.ui.connect.setEnabled(True)
+			self.ui.connect.setEnabled(True)
 		elif error == "auth":
 			self.jabberError(self.tr("Bad username or password."))
-			login.ui.connect.setEnabled(True)
+			self.ui.connect.setEnabled(True)
 		elif error == "muc-401":
 			self.jabberError(self.tr("Password is required."))
 		elif error == "muc-404":
@@ -1276,7 +1343,13 @@ class statusWindow(QtGui.QDialog):
 		else:
 			self.accept()
 	def accept(self):
-		jab.setStatus(MainWindow.groupchat,self.data,unicode(self.ui.status.toPlainText ()))
+		if self.data=="offline":
+			#jab.setStatus(MainWindow.groupchat,"unavailable",unicode(self.ui.status.toPlainText ()))
+			jab.disconnect()
+			MainWindow.ui.stackedWidget.setCurrentIndex(1)
+			MainWindow.timer.stop()
+		else:
+			jab.setStatus(MainWindow.groupchat,self.data,unicode(self.ui.status.toPlainText ()))
 		self.done(1)
 
 
@@ -1288,8 +1361,8 @@ translator.load("locales/jabbim_"+str(QtCore.QLocale.system().name())[:2]+".qm")
 app.installTranslator(translator)
 
 MainWindow = mainWindow()
-
-login=loginWindow(MainWindow,jab,MainWindow)
-ref=login.show()
+MainWindow.show()
+#login=loginWindow(MainWindow,jab,MainWindow)
+#ref=login.show()
 sys.exit(app.exec_())
 
