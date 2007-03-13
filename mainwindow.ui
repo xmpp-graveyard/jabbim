@@ -504,7 +504,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <property name="sizeHint" >
                <size>
-                <width>81</width>
+                <width>71</width>
                 <height>20</height>
                </size>
               </property>

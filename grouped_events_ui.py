@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'grouped_events.ui'
 #
-# Created: Sun Feb 25 14:03:20 2007
+# Created: Mon Feb 26 18:17:35 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_groupedevents(object):
     def setupUi(self, groupedevents):
         groupedevents.setObjectName("groupedevents")
-        groupedevents.resize(QtCore.QSize(QtCore.QRect(0,0,521,408).size()).expandedTo(groupedevents.minimumSizeHint()))
+        groupedevents.resize(QtCore.QSize(QtCore.QRect(0,0,611,408).size()).expandedTo(groupedevents.minimumSizeHint()))
 
         self.centralwidget = QtGui.QWidget(groupedevents)
         self.centralwidget.setObjectName("centralwidget")

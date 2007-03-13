@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Tue Mar 13 21:39:26 2007
+# Created: Tue Mar 13 21:47:44 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -263,7 +263,7 @@ class Ui_mainWindow(object):
         self.hboxlayout2.setSpacing(6)
         self.hboxlayout2.setObjectName("hboxlayout2")
 
-        spacerItem6 = QtGui.QSpacerItem(81,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        spacerItem6 = QtGui.QSpacerItem(71,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.hboxlayout2.addItem(spacerItem6)
 
         self.connect = QtGui.QPushButton(self.page_2)
