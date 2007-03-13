@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Tue Mar 13 18:30:17 2007
+# Created: Tue Mar 13 21:26:30 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_mainWindow(object):
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
-        mainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,235,539).size()).expandedTo(mainWindow.minimumSizeHint()))
+        mainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,264,521).size()).expandedTo(mainWindow.minimumSizeHint()))
         mainWindow.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.centralwidget = QtGui.QWidget(mainWindow)
@@ -31,7 +31,7 @@ class Ui_mainWindow(object):
         self.page.setObjectName("page")
 
         self.gridlayout1 = QtGui.QGridLayout(self.page)
-        self.gridlayout1.setMargin(2)
+        self.gridlayout1.setMargin(0)
         self.gridlayout1.setSpacing(0)
         self.gridlayout1.setObjectName("gridlayout1")
 
@@ -46,6 +46,30 @@ class Ui_mainWindow(object):
         self.gridlayout2.setMargin(0)
         self.gridlayout2.setSpacing(0)
         self.gridlayout2.setObjectName("gridlayout2")
+
+        self.hboxlayout = QtGui.QHBoxLayout()
+        self.hboxlayout.setMargin(0)
+        self.hboxlayout.setSpacing(6)
+        self.hboxlayout.setObjectName("hboxlayout")
+
+        self.showOffline = QtGui.QToolButton(self.tab)
+        self.showOffline.setIcon(QtGui.QIcon("images/16x16/status/jabber-offline.png"))
+        self.showOffline.setCheckable(True)
+        self.showOffline.setChecked(False)
+        self.showOffline.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+        self.showOffline.setObjectName("showOffline")
+        self.hboxlayout.addWidget(self.showOffline)
+
+        spacerItem = QtGui.QSpacerItem(16,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.hboxlayout.addItem(spacerItem)
+
+        self.statusButton = QtGui.QToolButton(self.tab)
+        self.statusButton.setIcon(QtGui.QIcon("images/16x16/status/jabber-online.png"))
+        self.statusButton.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.statusButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+        self.statusButton.setObjectName("statusButton")
+        self.hboxlayout.addWidget(self.statusButton)
+        self.gridlayout2.addLayout(self.hboxlayout,1,0,1,1)
 
         self.rosterWidget = QtGui.QWidget(self.tab)
         self.rosterWidget.setObjectName("rosterWidget")
@@ -66,20 +90,20 @@ class Ui_mainWindow(object):
         self.line.setObjectName("line")
         self.gridlayout3.addWidget(self.line,3,0,2,2)
 
-        spacerItem = QtGui.QSpacerItem(101,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout3.addItem(spacerItem,5,0,1,1)
+        spacerItem1 = QtGui.QSpacerItem(101,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout3.addItem(spacerItem1,5,0,1,1)
 
         self.addContact = QtGui.QPushButton(self.tab_2)
         self.addContact.setObjectName("addContact")
         self.gridlayout3.addWidget(self.addContact,4,1,2,1)
 
-        spacerItem1 = QtGui.QSpacerItem(20,181,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout3.addItem(spacerItem1,2,0,1,1)
+        spacerItem2 = QtGui.QSpacerItem(20,181,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout3.addItem(spacerItem2,2,0,1,1)
 
-        self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setMargin(0)
-        self.hboxlayout.setSpacing(6)
-        self.hboxlayout.setObjectName("hboxlayout")
+        self.hboxlayout1 = QtGui.QHBoxLayout()
+        self.hboxlayout1.setMargin(0)
+        self.hboxlayout1.setSpacing(6)
+        self.hboxlayout1.setObjectName("hboxlayout1")
 
         self.vboxlayout = QtGui.QVBoxLayout()
         self.vboxlayout.setMargin(0)
@@ -97,7 +121,7 @@ class Ui_mainWindow(object):
         self.label_3 = QtGui.QLabel(self.tab_2)
         self.label_3.setObjectName("label_3")
         self.vboxlayout.addWidget(self.label_3)
-        self.hboxlayout.addLayout(self.vboxlayout)
+        self.hboxlayout1.addLayout(self.vboxlayout)
 
         self.vboxlayout1 = QtGui.QVBoxLayout()
         self.vboxlayout1.setMargin(0)
@@ -116,8 +140,8 @@ class Ui_mainWindow(object):
         self.group.setEditable(True)
         self.group.setObjectName("group")
         self.vboxlayout1.addWidget(self.group)
-        self.hboxlayout.addLayout(self.vboxlayout1)
-        self.gridlayout3.addLayout(self.hboxlayout,1,0,1,2)
+        self.hboxlayout1.addLayout(self.vboxlayout1)
+        self.gridlayout3.addLayout(self.hboxlayout1,1,0,1,2)
 
         self.label_4 = QtGui.QLabel(self.tab_2)
         self.label_4.setObjectName("label_4")
@@ -137,8 +161,8 @@ class Ui_mainWindow(object):
         self.groupchat.setObjectName("groupchat")
         self.gridlayout4.addWidget(self.groupchat,1,0,1,2)
 
-        spacerItem2 = QtGui.QSpacerItem(61,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout4.addItem(spacerItem2,2,0,1,1)
+        spacerItem3 = QtGui.QSpacerItem(61,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout4.addItem(spacerItem3,2,0,1,1)
 
         self.getGroupchatList = QtGui.QPushButton(self.tab_3)
         self.getGroupchatList.setEnabled(False)
@@ -159,8 +183,8 @@ class Ui_mainWindow(object):
         self.gridlayout5.setSpacing(6)
         self.gridlayout5.setObjectName("gridlayout5")
 
-        spacerItem3 = QtGui.QSpacerItem(111,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout5.addItem(spacerItem3,2,0,1,1)
+        spacerItem4 = QtGui.QSpacerItem(111,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout5.addItem(spacerItem4,2,0,1,1)
 
         self.bookmarks = QtGui.QTreeWidget(self.tab_4)
         self.bookmarks.setAlternatingRowColors(True)
@@ -182,37 +206,12 @@ class Ui_mainWindow(object):
         self.page_2.setObjectName("page_2")
 
         self.gridlayout6 = QtGui.QGridLayout(self.page_2)
-        self.gridlayout6.setMargin(2)
-        self.gridlayout6.setSpacing(2)
+        self.gridlayout6.setMargin(9)
+        self.gridlayout6.setSpacing(6)
         self.gridlayout6.setObjectName("gridlayout6")
 
-        spacerItem4 = QtGui.QSpacerItem(101,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout6.addItem(spacerItem4,2,0,1,1)
-
-        self.savePassword = QtGui.QCheckBox(self.page_2)
-        self.savePassword.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.savePassword.setObjectName("savePassword")
-        self.gridlayout6.addWidget(self.savePassword,2,1,1,1)
-
-        spacerItem5 = QtGui.QSpacerItem(20,161,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout6.addItem(spacerItem5,4,1,1,1)
-
-        self.hboxlayout1 = QtGui.QHBoxLayout()
-        self.hboxlayout1.setMargin(0)
-        self.hboxlayout1.setSpacing(6)
-        self.hboxlayout1.setObjectName("hboxlayout1")
-
-        self.proxy = QtGui.QPushButton(self.page_2)
-        self.proxy.setObjectName("proxy")
-        self.hboxlayout1.addWidget(self.proxy)
-
-        spacerItem6 = QtGui.QSpacerItem(20,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.hboxlayout1.addItem(spacerItem6)
-
-        self.connect = QtGui.QPushButton(self.page_2)
-        self.connect.setObjectName("connect")
-        self.hboxlayout1.addWidget(self.connect)
-        self.gridlayout6.addLayout(self.hboxlayout1,3,0,1,2)
+        spacerItem5 = QtGui.QSpacerItem(20,191,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout6.addItem(spacerItem5,1,0,1,1)
 
         self.hboxlayout2 = QtGui.QHBoxLayout()
         self.hboxlayout2.setMargin(0)
@@ -247,7 +246,32 @@ class Ui_mainWindow(object):
         self.password.setObjectName("password")
         self.vboxlayout3.addWidget(self.password)
         self.hboxlayout2.addLayout(self.vboxlayout3)
-        self.gridlayout6.addLayout(self.hboxlayout2,1,0,1,2)
+        self.gridlayout6.addLayout(self.hboxlayout2,2,0,1,2)
+
+        spacerItem6 = QtGui.QSpacerItem(101,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout6.addItem(spacerItem6,3,0,1,1)
+
+        self.savePassword = QtGui.QCheckBox(self.page_2)
+        self.savePassword.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.savePassword.setObjectName("savePassword")
+        self.gridlayout6.addWidget(self.savePassword,3,1,1,1)
+
+        self.hboxlayout3 = QtGui.QHBoxLayout()
+        self.hboxlayout3.setMargin(0)
+        self.hboxlayout3.setSpacing(6)
+        self.hboxlayout3.setObjectName("hboxlayout3")
+
+        self.proxy = QtGui.QPushButton(self.page_2)
+        self.proxy.setObjectName("proxy")
+        self.hboxlayout3.addWidget(self.proxy)
+
+        spacerItem7 = QtGui.QSpacerItem(20,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.hboxlayout3.addItem(spacerItem7)
+
+        self.connect = QtGui.QPushButton(self.page_2)
+        self.connect.setObjectName("connect")
+        self.hboxlayout3.addWidget(self.connect)
+        self.gridlayout6.addLayout(self.hboxlayout3,4,0,1,2)
 
         self.label_7 = QtGui.QLabel(self.page_2)
         self.label_7.setPixmap(QtGui.QPixmap("images/logo.png"))
@@ -256,34 +280,10 @@ class Ui_mainWindow(object):
         self.gridlayout6.addWidget(self.label_7,0,0,1,2)
         self.stackedWidget.addWidget(self.page_2)
         self.gridlayout.addWidget(self.stackedWidget,0,0,1,1)
-
-        self.hboxlayout3 = QtGui.QHBoxLayout()
-        self.hboxlayout3.setMargin(0)
-        self.hboxlayout3.setSpacing(6)
-        self.hboxlayout3.setObjectName("hboxlayout3")
-
-        self.showOffline = QtGui.QToolButton(self.centralwidget)
-        self.showOffline.setIcon(QtGui.QIcon("images/16x16/status/jabber-offline.png"))
-        self.showOffline.setCheckable(True)
-        self.showOffline.setChecked(False)
-        self.showOffline.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
-        self.showOffline.setObjectName("showOffline")
-        self.hboxlayout3.addWidget(self.showOffline)
-
-        spacerItem7 = QtGui.QSpacerItem(16,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.hboxlayout3.addItem(spacerItem7)
-
-        self.statusButton = QtGui.QToolButton(self.centralwidget)
-        self.statusButton.setIcon(QtGui.QIcon("images/16x16/status/jabber-online.png"))
-        self.statusButton.setPopupMode(QtGui.QToolButton.InstantPopup)
-        self.statusButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
-        self.statusButton.setObjectName("statusButton")
-        self.hboxlayout3.addWidget(self.statusButton)
-        self.gridlayout.addLayout(self.hboxlayout3,1,0,1,1)
         mainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(mainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0,0,235,28))
+        self.menubar.setGeometry(QtCore.QRect(0,0,264,28))
         self.menubar.setObjectName("menubar")
 
         self.menuJGames = QtGui.QMenu(self.menubar)
@@ -340,6 +340,8 @@ class Ui_mainWindow(object):
 
     def retranslateUi(self, mainWindow):
         mainWindow.setWindowTitle(QtGui.QApplication.translate("mainWindow", "Jabbim", None, QtGui.QApplication.UnicodeUTF8))
+        self.showOffline.setText(QtGui.QApplication.translate("mainWindow", "Show Offline", None, QtGui.QApplication.UnicodeUTF8))
+        self.statusButton.setText(QtGui.QApplication.translate("mainWindow", "Online", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("mainWindow", "Roster", None, QtGui.QApplication.UnicodeUTF8))
         self.addContact.setText(QtGui.QApplication.translate("mainWindow", "Add", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("mainWindow", "Jabber ID:", None, QtGui.QApplication.UnicodeUTF8))
@@ -369,13 +371,11 @@ class Ui_mainWindow(object):
         self.manageBookmarks.setText(QtGui.QApplication.translate("mainWindow", "Manage bookmarks", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QtGui.QApplication.translate("mainWindow", " ", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_4),QtGui.QApplication.translate("mainWindow", "Bookmarks", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_8.setText(QtGui.QApplication.translate("mainWindow", "Jabber ID:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_9.setText(QtGui.QApplication.translate("mainWindow", "Password:", None, QtGui.QApplication.UnicodeUTF8))
         self.savePassword.setText(QtGui.QApplication.translate("mainWindow", "Save password", None, QtGui.QApplication.UnicodeUTF8))
         self.proxy.setText(QtGui.QApplication.translate("mainWindow", "Proxy configuration", None, QtGui.QApplication.UnicodeUTF8))
         self.connect.setText(QtGui.QApplication.translate("mainWindow", "Connect", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_8.setText(QtGui.QApplication.translate("mainWindow", "Jabber ID:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_9.setText(QtGui.QApplication.translate("mainWindow", "Password:", None, QtGui.QApplication.UnicodeUTF8))
-        self.showOffline.setText(QtGui.QApplication.translate("mainWindow", "Show Offline", None, QtGui.QApplication.UnicodeUTF8))
-        self.statusButton.setText(QtGui.QApplication.translate("mainWindow", "Online", None, QtGui.QApplication.UnicodeUTF8))
         self.menuJGames.setTitle(QtGui.QApplication.translate("mainWindow", "JGames", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPreferences.setTitle(QtGui.QApplication.translate("mainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAction.setTitle(QtGui.QApplication.translate("mainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
