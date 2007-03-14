@@ -25,7 +25,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.edit=0 # temp variable for tabPressed()
 		# roster config and design informations
 		self.setAlternatingRowColors(True)
-		self.setIconSize(QtCore.QSize(28,28))
+		self.setIconSize(QtCore.QSize(22,22))
 		self.setRootIsDecorated(False)
 		self.setDragEnabled(True)
 		self.setAcceptDrops(True)
@@ -56,10 +56,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		palette,images=loadPalette(palette,self.main.palette["roster"])
 		self.setPalette(palette)
 		self.pixmap=images['bgImage']
-		self.addSubscription("test")
-		self.addSubscription("test")
-		self.addSubscription("test")
-
+	
 	def expanded(self,item):
 		# change icon if group item expanded
 		if item.parent()==None:
@@ -186,7 +183,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		# add new group to the roster and return group QTreeWidgetItem
 		item=QtGui.QTreeWidgetItem(self)
 		widget=subscriptionWidget(self)
-		widget.ui.text.setText(self.tr("User")+' <b>'+unicode(name)+'</b> '+self.tr("wants to add you to his/her roster. Add him/her?"))
+		widget.ui.text.setText(self.tr("User")+' <b>'+unicode(name)+'</b> '+self.tr("wants to add you to his/her roster. <b>Add him/her?</b>"))
 		item.setText(1,"0"+unicode(name).lower())
 		self.setItemWidget(item,0,widget)
 		widget2=QtGui.QWidget(self)
@@ -201,6 +198,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		widget.ui.vcard.setDefaultAction(action)
 		QtCore.QObject.connect(widget.ui.add, QtCore.SIGNAL("triggered ( QAction *)"),self.subscriptionAccepted)
 		QtCore.QObject.connect(widget.ui.delete, QtCore.SIGNAL("triggered ( QAction *)"),self.subscriptionRejected)
+		QtCore.QObject.connect(widget.ui.vcard, QtCore.SIGNAL("triggered ( QAction *)"),self.showVCard)
 		self.setItemWidget(item,3,widget2)
 		if self.main.palette["roster"].has_key("add"):
 			if len(self.main.palette["roster"]["add"])!=0:
@@ -213,6 +211,10 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
 		return item
 
+	def showVCard(self,action):
+		jid=unicode(action.item.text(1))[1:]
+		self.jab.getVCard(jid)
+		
 	def subscriptionAccepted(self,action):
 		jid=unicode(action.item.text(1))[1:]
 		self.takeTopLevelItem(self.indexOfTopLevelItem(action.item))
