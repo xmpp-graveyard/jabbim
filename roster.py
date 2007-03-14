@@ -56,6 +56,10 @@ class rosterWidget(QtGui.QTreeWidget):
 		palette,images=loadPalette(palette,self.main.palette["roster"])
 		self.setPalette(palette)
 		self.pixmap=images['bgImage']
+		self.addSubscription("test")
+		self.addSubscription("test")
+		self.addSubscribed("test")
+		self.addSubscribed("test")
 	
 	def expanded(self,item):
 		# change icon if group item expanded
@@ -178,6 +182,44 @@ class rosterWidget(QtGui.QTreeWidget):
 				else:
 					groups.append(unicode(k))
 		return groups
+
+	def addSubscribed(self,name):
+		# add new group to the roster and return group QTreeWidgetItem
+		item=QtGui.QTreeWidgetItem(self)
+		widget=QtGui.QWidget(self)
+		widget.setMinimumHeight(85)
+		gridlayout = QtGui.QGridLayout(widget)
+		spacerItem = QtGui.QSpacerItem(41,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+		gridlayout.addItem(spacerItem,1,1,1,1)
+		
+		ok = QtGui.QToolButton(widget)
+		gridlayout.addWidget(ok,1,0,1,1)
+		
+		text = QtGui.QLabel()
+		text.setWordWrap(True)
+		gridlayout.addWidget(text,0,0,1,2)
+		
+		text.setText(self.tr("User")+' <b>'+unicode(name)+'</b> '+self.tr("added you to his/her roster."))
+		item.setText(1,"0"+unicode(name).lower())
+		self.setItemWidget(item,0,widget)
+		
+		action=QtGui.QAction(self.tr("Ok"),widget)
+		action.item=item
+		ok.setDefaultAction(action)
+		QtCore.QObject.connect(ok, QtCore.SIGNAL("triggered ( QAction *)"),self.subscribedAccepted)
+		if self.main.palette["roster"].has_key("added"):
+			if len(self.main.palette["roster"]["added"])!=0:
+				color=QtGui.QColor(self.main.palette["roster"]["added"])
+				if self.main.palette["roster"].has_key("addedAlpha"):
+					if len(self.main.palette["roster"]["addedAlpha"])!=0:
+						color.setAlpha(int(self.main.palette["roster"]["addedAlpha"]))
+				item.setBackgroundColor(0,color)
+				item.setBackgroundColor(3,color)
+		self.sortItems (1,QtCore.Qt.AscendingOrder)
+		return item
+
+	def subscribedAccepted(self,action):
+		self.takeTopLevelItem(self.indexOfTopLevelItem(action.item))
 
 	def addSubscription(self,name):
 		# add new group to the roster and return group QTreeWidgetItem

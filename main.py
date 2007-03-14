@@ -1039,8 +1039,9 @@ class mainWindow(QtGui.QMainWindow):
 
 		elif e[0] == "subscribed":
 			jid=str(e[1])
-			self.events.show()
-			self.events.addEvent("subscribed",{"jid":str(jid)})
+			#self.events.show()
+			#self.events.addEvent("subscribed",{"jid":str(jid)})
+			self.ui.roster.addSubscribed(jid)
 			if not self.ui.roster.isUser(jid):
 				self.groups["Unknown"]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,jid,self.groups["Unknown"]["item"],self.offline,self.getIcon(jid,"offline")),"resources":[]}
 
