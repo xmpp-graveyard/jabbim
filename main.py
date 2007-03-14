@@ -1054,7 +1054,6 @@ class mainWindow(QtGui.QMainWindow):
 			jid=str(e[1])
 			# Pokud je jid v rosteru:
 			if self.ui.roster.isUser(jid):
-				print jid,str(e[2].getType())
 				# Prochazeni vsech uzivatelu v rosteru, kteri maji shodne jid
 				for user,group in self.ui.roster.getUsers(jid,True).iteritems():
 					# Pokud se nejedna o odhlaseni uzivatele
@@ -1199,100 +1198,6 @@ class mainWindow(QtGui.QMainWindow):
 			jab.outc.put(True)
 			for k,v in self.groups.iteritems():
 				self.ui.group.addItem(unicode(k))
-
-	def tick(self):
-		try:
-			e=jab.discoveryQueue.get( timeout = 0 )
-		except:
-			e=None
-		if e!=None:
-			if e[0]=="muc_items":
-				item=e[2]
-				jid=e[3]
-				name=unicode(item["jid"]).split("/")[1]
-				for i in self.ui.groupchat.findItems(jid,QtCore.Qt.MatchExactly,1):
-					user=QtGui.QTreeWidgetItem(i)
-					user.setText(0,unicode(name))
-					user.setText(1,unicode(name))
-					user.setIcon(0,self.getIcon(size="16x16"))
-			elif e[0]=="bookmarks_items":
-				item=e[2]
-				jid=e[3]
-				name=unicode(item["jid"]).split("/")[1]
-				for i in self.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1):
-					user=QtGui.QTreeWidgetItem(i)
-					user.setText(0,unicode(name))
-					user.setText(1,unicode(name))
-					user.setIcon(0,self.getIcon(size="16x16"))
-			elif e[0]==None:
-				typ=e[1]
-				if typ=="items":
-					item=e[2]
-					jid=e[3]
-					parentNode=e[4]
-					if item.has_key("jid") and jid==jab.server:
-						self.disco.addItem(unicode(item["jid"]))
-						jab.discoveryInfo(item["jid"])
-					if jid!=jab.server:
-						name=""
-						if item.has_key("name"):
-							name=item["name"]
-						node=""
-						if self.discoInfo.has_key(jid):
-							if self.discoInfo[jid]=="conf":
-								groupchat=QtGui.QTreeWidgetItem(self.ui.groupchat)
-								groupchat.setText(0,unicode(name))
-								groupchat.setText(1,unicode(item["jid"]))
-								groupchat.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
-								self.ui.groupchat.sortItems(0,QtCore.Qt.AscendingOrder)
-						parent=self.disco.items[jid]
-						if self.disco.nodes.has_key(jid+str(parentNode)):
-							parent=self.disco.nodes[jid+str(parentNode)]
-						if item.has_key("node"):
-							node=item["node"]
-						self.disco.addItem(unicode(item["jid"]),unicode(name),parent,node=node)
-				else:
-					ident=e[2]
-					features=e[3]
-					jid=e[4]
-					if not self.discoInfo.has_key(jid) and ident[0].has_key("type"):
-						if "http://jabber.org/protocol/muc" in features and ident[0]["type"]=="text":
-							self.discoInfo[jid]="conf"
-							self.ui.getGroupchatList.setEnabled(True)
-						elif ident[0]["type"]=="bytestreams" and ident[0]["category"]=="proxy":
-							jab.conn.S5B.addProxy(str(jid))
-							#jab.conn.S5B.addProxy(str('proxy.jabberfr.org'))
-							print "adding proxy",jid
-						else:
-							self.discoInfo[jid]=ident[0]["type"]
-							users=self.ui.roster.getServerUsers(jid)
-							for user in users:
-								data=user.data(32,0)
-								data=str(data.toString())
-								#user.setIcon(0,QtGui.QIcon(self.statusPath+self.getUserType(data)+"-"+self.iconSort[unicode(user.text(1))[0]]+".png"))
-								user.setIcon(0,self.getIcon(data,self.iconSort[unicode(user.text(1))[0]]))
-						
-	
-					if self.disco.items.has_key(jid):
-						for feature in features:
-							if not feature in self.disco.items[jid].features:
-								self.disco.items[jid].features.append(feature)
-						if self.disco.items.has_key(jid):
-							self.disco.items[jid].setText(0,ident[0]["name"])
-						
-
-		# we must use try as forced reading of empty queue raises an error
-		try:
-			e = jab.inc.get(timeout = 0)
-		except:
-			e=None
-		if e!=None:
-			self.jabberCommandHandler(e)
-		try:
-			e = jab.err.get(timeout = 0)
-			self.jabberErrorHandler(e)
-		except:
-			pass
 
 	def jabberErrorHandler(self,error):
 		if error == "con":

@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>396</width>
-    <height>492</height>
+    <width>479</width>
+    <height>474</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -19,6 +19,13 @@
    <property name="spacing" >
     <number>6</number>
    </property>
+   <item row="1" column="1" >
+    <widget class="QPushButton" name="pushButton" >
+     <property name="text" >
+      <string>Close</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="0" >
     <spacer>
      <property name="orientation" >
@@ -32,17 +39,10 @@
      </property>
     </spacer>
    </item>
-   <item row="1" column="1" >
-    <widget class="QPushButton" name="pushButton" >
-     <property name="text" >
-      <string>Close</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0" colspan="2" >
-    <widget class="QTabWidget" name="orgname" >
+    <widget class="QTabWidget" name="tab" >
      <property name="currentIndex" >
-      <number>4</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_2" >
       <attribute name="title" >
@@ -60,14 +60,27 @@
          <property name="title" >
           <string>Name</string>
          </property>
-         <layout class="QHBoxLayout" >
+         <layout class="QGridLayout" >
           <property name="margin" >
-           <number>6</number>
+           <number>9</number>
           </property>
           <property name="spacing" >
            <number>6</number>
           </property>
-          <item>
+          <item row="0" column="1" >
+           <widget class="QLabel" name="photo" >
+            <property name="maximumSize" >
+             <size>
+              <width>211</width>
+              <height>211</height>
+             </size>
+            </property>
+            <property name="text" >
+             <string>No Photo</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" >
            <layout class="QHBoxLayout" >
             <property name="margin" >
              <number>0</number>
@@ -81,52 +94,52 @@
                <number>0</number>
               </property>
               <property name="spacing" >
-               <number>6</number>
+               <number>0</number>
               </property>
               <item>
-               <widget class="QLabel" name="label" >
+               <widget class="QLabel" name="fullnamelabel" >
                 <property name="text" >
                  <string>Full name:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_2" >
+               <widget class="QLabel" name="famillynamelabel" >
                 <property name="text" >
                  <string>Familly name:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_4" >
+               <widget class="QLabel" name="namelabel" >
                 <property name="text" >
                  <string>Name:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_5" >
+               <widget class="QLabel" name="middlenamelabel" >
                 <property name="text" >
                  <string>Middle name:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_6" >
+               <widget class="QLabel" name="prefixlabel" >
                 <property name="text" >
                  <string>Prefix:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_7" >
+               <widget class="QLabel" name="suffixlabel" >
                 <property name="text" >
                  <string>Suffix:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_8" >
+               <widget class="QLabel" name="nicknamelabel" >
                 <property name="text" >
                  <string>Nickname:</string>
                 </property>
@@ -140,7 +153,7 @@
                <number>0</number>
               </property>
               <property name="spacing" >
-               <number>6</number>
+               <number>0</number>
               </property>
               <item>
                <widget class="QLineEdit" name="fullname" />
@@ -196,31 +209,31 @@
                <number>0</number>
               </property>
               <property name="spacing" >
-               <number>6</number>
+               <number>0</number>
               </property>
               <item>
-               <widget class="QLabel" name="label_10" >
+               <widget class="QLabel" name="emaillabel" >
                 <property name="text" >
                  <string>Email:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_9" >
+               <widget class="QLabel" name="websitelabel" >
                 <property name="text" >
                  <string>Web site:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_11" >
+               <widget class="QLabel" name="jidlabel" >
                 <property name="text" >
                  <string>JID:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_12" >
+               <widget class="QLabel" name="uidlabel" >
                 <property name="text" >
                  <string>UID:</string>
                 </property>
@@ -234,7 +247,7 @@
                <number>0</number>
               </property>
               <property name="spacing" >
-               <number>6</number>
+               <number>0</number>
               </property>
               <item>
                <widget class="QLineEdit" name="email" />
@@ -310,91 +323,91 @@
                <number>2</number>
               </property>
               <item>
-               <widget class="QLabel" name="label_25" >
+               <widget class="QLabel" name="preferredlabel" >
                 <property name="text" >
                  <string>Preferred:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_13" >
+               <widget class="QLabel" name="homelabel" >
                 <property name="text" >
                  <string>Home:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_14" >
+               <widget class="QLabel" name="worklabel" >
                 <property name="text" >
                  <string>Work:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_15" >
+               <widget class="QLabel" name="voicelabel" >
                 <property name="text" >
                  <string>Voice:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_16" >
+               <widget class="QLabel" name="faxlabel" >
                 <property name="text" >
                  <string>Fax:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_18" >
+               <widget class="QLabel" name="pagerlabel" >
                 <property name="text" >
                  <string>Pager:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_19" >
+               <widget class="QLabel" name="messagerecorderlabel" >
                 <property name="text" >
                  <string>Message recorder:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_20" >
+               <widget class="QLabel" name="celllabel" >
                 <property name="text" >
                  <string>Cell:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_21" >
+               <widget class="QLabel" name="videolabel" >
                 <property name="text" >
                  <string>Video:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_23" >
+               <widget class="QLabel" name="bbslabel" >
                 <property name="text" >
                  <string>BBS:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_22" >
+               <widget class="QLabel" name="modemlabel" >
                 <property name="text" >
                  <string>Modem:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_17" >
+               <widget class="QLabel" name="isdnlabel" >
                 <property name="text" >
                  <string>ISDN:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_24" >
+               <widget class="QLabel" name="pcslabel" >
                 <property name="text" >
                  <string>PCS:</string>
                 </property>
@@ -435,7 +448,7 @@
                <widget class="QLineEdit" name="cell" />
               </item>
               <item>
-               <widget class="QLineEdit" name="vide" />
+               <widget class="QLineEdit" name="video" />
               </item>
               <item>
                <widget class="QLineEdit" name="bbs" />
@@ -511,14 +524,14 @@
                <number>2</number>
               </property>
               <item>
-               <widget class="QLabel" name="label_32" >
+               <widget class="QLabel" name="latitudelabel" >
                 <property name="text" >
                  <string>Latitude:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_33" >
+               <widget class="QLabel" name="logitudelabel" >
                 <property name="text" >
                  <string>Logitude:</string>
                 </property>
@@ -576,42 +589,42 @@
                <number>2</number>
               </property>
               <item>
-               <widget class="QLabel" name="label_26" >
+               <widget class="QLabel" name="addresslabel" >
                 <property name="text" >
                  <string>Address:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_27" >
+               <widget class="QLabel" name="address2label" >
                 <property name="text" >
                  <string>Address 2:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_28" >
+               <widget class="QLabel" name="citylabel" >
                 <property name="text" >
                  <string>City:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_29" >
+               <widget class="QLabel" name="statelabel" >
                 <property name="text" >
                  <string>State:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_30" >
+               <widget class="QLabel" name="postalcodelabel" >
                 <property name="text" >
                  <string>Postal code:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_31" >
+               <widget class="QLabel" name="countrylabel" >
                 <property name="text" >
                  <string>Country:</string>
                 </property>
@@ -694,14 +707,14 @@
                <number>2</number>
               </property>
               <item>
-               <widget class="QLabel" name="label_34" >
+               <widget class="QLabel" name="orgnamelabel" >
                 <property name="text" >
                  <string>Name:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_35" >
+               <widget class="QLabel" name="orgunitlabel" >
                 <property name="text" >
                  <string>Unit:</string>
                 </property>
@@ -718,7 +731,7 @@
                <number>2</number>
               </property>
               <item>
-               <widget class="QLineEdit" name="lineEdit_36" />
+               <widget class="QLineEdit" name="orgname" />
               </item>
               <item>
                <widget class="QLineEdit" name="orgunit" />
@@ -759,14 +772,14 @@
                <number>2</number>
               </property>
               <item>
-               <widget class="QLabel" name="label_37" >
+               <widget class="QLabel" name="orgtitlelabel" >
                 <property name="text" >
                  <string>Title:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_36" >
+               <widget class="QLabel" name="orgrolelabel" >
                 <property name="text" >
                  <string>Role:</string>
                 </property>
@@ -822,6 +835,24 @@
         <number>6</number>
        </property>
        <item row="1" column="0" >
+        <widget class="QGroupBox" name="groupBox_33" >
+         <property name="title" >
+          <string>About</string>
+         </property>
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>6</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item row="0" column="0" >
+           <widget class="QTextEdit" name="about" />
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="0" >
         <widget class="QGroupBox" name="groupBox_32" >
          <property name="title" >
           <string>Birthday</string>
@@ -850,7 +881,7 @@
                <number>2</number>
               </property>
               <item>
-               <widget class="QLabel" name="label_38" >
+               <widget class="QLabel" name="birthdaylabel" >
                 <property name="text" >
                  <string>Birthday:</string>
                 </property>
@@ -874,31 +905,6 @@
            </layout>
           </item>
          </layout>
-        </widget>
-       </item>
-       <item row="2" column="0" >
-        <widget class="QGroupBox" name="groupBox_33" >
-         <property name="title" >
-          <string>About</string>
-         </property>
-         <layout class="QGridLayout" >
-          <property name="margin" >
-           <number>6</number>
-          </property>
-          <property name="spacing" >
-           <number>6</number>
-          </property>
-          <item row="0" column="0" >
-           <widget class="QTextEdit" name="about" />
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="0" column="0" >
-        <widget class="QLabel" name="photo" >
-         <property name="text" >
-          <string>No Photo</string>
-         </property>
         </widget>
        </item>
       </layout>
