@@ -100,7 +100,6 @@ class vcardWindow(QtGui.QDialog):
 			elif k=="DESC":
 				self.ui.about.setText(unicode(v))
 				self.ui.about.show()
-				self.ui.aboutlabel.show()
 			elif k=="EMAIL":
 				if v.has_key("USERID"):
 					self.ui.email.setText(unicode(v["USERID"]))
