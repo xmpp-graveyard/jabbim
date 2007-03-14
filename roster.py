@@ -4,6 +4,16 @@ try:
 except:
 	print "PyQt4 is not installed."
 from palette import *
+from subscription_ui import *
+from addcontact import *
+
+class subscriptionWidget(QtGui.QWidget):
+	def __init__(self,parent=None):
+		apply(QtGui.QWidget.__init__,(self,parent))
+		self.ui=Ui_subscriptionwidget()
+		self.ui.setupUi(self)
+		self.ui.gridlayout.setMargin(3)
+		self.ui.gridlayout.setSpacing(0)
 
 class rosterWidget(QtGui.QTreeWidget):
 	def __init__(self,parent,main,jab):
@@ -169,11 +179,61 @@ class rosterWidget(QtGui.QTreeWidget):
 					groups.append(unicode(k))
 		return groups
 
+	def addSubscription(self,name):
+		# add new group to the roster and return group QTreeWidgetItem
+		item=QtGui.QTreeWidgetItem(self)
+		widget=subscriptionWidget(self)
+		widget.ui.text.setText(self.tr("User")+' <b>'+unicode(name)+'</b> '+self.tr("wants to add you to his/her roster. Add him/her?"))
+		item.setText(1,"0"+unicode(name).lower())
+		self.setItemWidget(item,0,widget)
+		widget2=QtGui.QWidget(self)
+		layout=QtGui.QVBoxLayout(widget2)
+		add=QtGui.QToolButton(widget2)
+		action=QtGui.QAction("+",add)
+		action.item=item
+		add.setDefaultAction(action)
+		delete=QtGui.QToolButton(widget2)
+		action=QtGui.QAction("-",delete)
+		action.item=item
+		delete.setDefaultAction(action)
+		QtCore.QObject.connect(add, QtCore.SIGNAL("triggered ( QAction *)"),self.subscriptionAccepted)
+		QtCore.QObject.connect(delete, QtCore.SIGNAL("triggered ( QAction *)"),self.subscriptionRejected)
+		layout.addWidget(add)
+		layout.addWidget(delete)
+		layout.setMargin(0)
+		layout.setSpacing(0)
+		self.setItemWidget(item,3,widget2)
+		if self.main.palette["roster"].has_key("add"):
+			if len(self.main.palette["roster"]["add"])!=0:
+				color=QtGui.QColor(self.main.palette["roster"]["add"])
+				if self.main.palette["roster"].has_key("addAlpha"):
+					if len(self.main.palette["roster"]["addAlpha"])!=0:
+						color.setAlpha(int(self.main.palette["roster"]["addAlpha"]))
+				item.setBackgroundColor(0,color)
+				item.setBackgroundColor(3,color)
+		self.sortItems (1,QtCore.Qt.AscendingOrder)
+		return item
+
+	def subscriptionAccepted(self,action):
+		jid=unicode(action.item.text(1))[1:]
+		self.takeTopLevelItem(self.indexOfTopLevelItem(action.item))
+		win=addContactWindow(self.main,self.jab,self,jid,jid)
+		ret=win.exec_()
+		if ret:
+			self.jab.roster.Authorize(jid)
+		else:
+			self.jab.roster.Unauthorize(jid)
+
+	def subscriptionRejected(self,action):
+		jid=unicode(action.item.text(1))[1:]
+		self.takeTopLevelItem(self.indexOfTopLevelItem(action.item))
+		self.jab.roster.Unauthorize(jid)
+
 	def addGroup(self,name):
 		# add new group to the roster and return group QTreeWidgetItem
 		item=QtGui.QTreeWidgetItem(self)
 		item.setText(0,name)
-		item.setText(1,"0"+unicode(name).lower())
+		item.setText(1,"1"+unicode(name).lower())
 		item.setText(2,name)
 		item.setIcon(0,QtGui.QIcon("images/32x32/icons/group-closed.png"))
 		# Palette colors

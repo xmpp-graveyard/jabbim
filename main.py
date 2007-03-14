@@ -28,6 +28,7 @@ from mainwindow import *
 from login import *
 from preferences import *
 from roster import *
+#from subscription import *
 from status import *
 from chatwindow import *
 from joingroupchat import *
@@ -472,6 +473,11 @@ class mainWindow(QtGui.QMainWindow):
 		layout.setSpacing(0)
 		self.ui.roster=rosterWidget(self.ui.rosterWidget,self,jab)
 		layout.addWidget(self.ui.roster)
+		#layout2=QtGui.QHBoxLayout(self.ui.infoWidget)
+		#layout2.setMargin(0)
+		#layout2.setSpacing(0)
+		#self.ui.info=infoWidget(self.ui.infoWidget,self,jab)
+		#layout2.addWidget(self.ui.info)
 
 	def loadStatus(self):
 		# load status icons and images + make status menu + sorting rules
@@ -1041,12 +1047,13 @@ class mainWindow(QtGui.QMainWindow):
 		elif e[0] == "subscribe":
 			jid=str(e[1])
 			if not self.ui.roster.isUser(jid):
-				if jid.startswith("@"):
-					jab.roster.Authorize(str(jid))
-				else:
-					#if not self.ui.roster.isUser(jid):
-					self.events.show()
-					self.events.addEvent("subscribe",{"jid":str(jid)})
+				self.ui.roster.addSubscription(jid)
+				#if jid.startswith("@"):
+					#jab.roster.Authorize(str(jid))
+				#else:
+					##if not self.ui.roster.isUser(jid):
+					#self.events.show()
+					#self.events.addEvent("subscribe",{"jid":str(jid)})
 			else:
 				jab.roster.Authorize(str(jid))
 		
