@@ -482,8 +482,9 @@ class mainWindow(QtGui.QMainWindow):
 						"away":"3",
 						"xa":"4",
 						"dnd":"5",
-						"None":"9",
-						"offline":"9"
+						"None":"1",
+						"offline":"9",
+						"unavailable":"9"
 						}
 		self.iconSort={"1":"online",
 						"2":"chat",
@@ -1081,7 +1082,9 @@ class mainWindow(QtGui.QMainWindow):
 										item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
 						# Zmena stavu
 						#if self.config["tray_message_view_connect"]=="all":
-						notification.onRosterPresence(self,unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
+						print int(self.nickSort[str(e[2].getShow())]),int(unicode(user.text(1))[0])
+						if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]):
+							notification.onRosterPresence(self,unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
 						#elif self.config["tray_message_view_connect"]=="online" and str(e[2].getShow())=="None":
 							#notification.onRosterPresence(self,unicode(user.text(2)),self.status[str(e[2].getShow())],unicode(e[2].getStatus()))
 						#elif self.config["tray_message_view_connect"]=="logged_in" and int(unicode(user.text(1)[0]))==9:

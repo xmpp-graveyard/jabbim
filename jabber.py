@@ -497,7 +497,6 @@ class Jabber(groupchat,vcard):
 	def presenceHandle(self, conn, pres):
 		if isErrorNode(pres):
 			return
-		print unicode(pres)
 		# presence handle
 		user = pres.getFrom() # get user
 		nick = pres.getFrom().getResource() # get nick (it's resource in MUC)
