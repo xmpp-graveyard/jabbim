@@ -56,6 +56,9 @@ class rosterWidget(QtGui.QTreeWidget):
 		palette,images=loadPalette(palette,self.main.palette["roster"])
 		self.setPalette(palette)
 		self.pixmap=images['bgImage']
+		self.addSubscription("test")
+		self.addSubscription("test")
+		self.addSubscription("test")
 
 	def expanded(self,item):
 		# change icon if group item expanded
@@ -187,21 +190,17 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(1,"0"+unicode(name).lower())
 		self.setItemWidget(item,0,widget)
 		widget2=QtGui.QWidget(self)
-		layout=QtGui.QVBoxLayout(widget2)
-		add=QtGui.QToolButton(widget2)
-		action=QtGui.QAction("+",add)
+		action=QtGui.QAction(self.tr("Yes"),widget.ui.add)
 		action.item=item
-		add.setDefaultAction(action)
-		delete=QtGui.QToolButton(widget2)
-		action=QtGui.QAction("-",delete)
+		widget.ui.add.setDefaultAction(action)
+		action=QtGui.QAction(self.tr("No"),widget.ui.delete)
 		action.item=item
-		delete.setDefaultAction(action)
-		QtCore.QObject.connect(add, QtCore.SIGNAL("triggered ( QAction *)"),self.subscriptionAccepted)
-		QtCore.QObject.connect(delete, QtCore.SIGNAL("triggered ( QAction *)"),self.subscriptionRejected)
-		layout.addWidget(add)
-		layout.addWidget(delete)
-		layout.setMargin(0)
-		layout.setSpacing(0)
+		widget.ui.delete.setDefaultAction(action)
+		action=QtGui.QAction(self.tr("Get VCard"),widget.ui.vcard)
+		action.item=item
+		widget.ui.vcard.setDefaultAction(action)
+		QtCore.QObject.connect(widget.ui.add, QtCore.SIGNAL("triggered ( QAction *)"),self.subscriptionAccepted)
+		QtCore.QObject.connect(widget.ui.delete, QtCore.SIGNAL("triggered ( QAction *)"),self.subscriptionRejected)
 		self.setItemWidget(item,3,widget2)
 		if self.main.palette["roster"].has_key("add"):
 			if len(self.main.palette["roster"]["add"])!=0:
