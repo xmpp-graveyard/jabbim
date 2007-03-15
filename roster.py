@@ -619,8 +619,12 @@ class rosterWidget(QtGui.QTreeWidget):
 					else:
 						self.tooltip.ui.message.show()
 						self.tooltip.ui.message.setText(message.replace("\n","<br/>"))
-					self.tooltip.move(self.mapToGlobal(QtCore.QPoint(0,event.y()+20)))
 					self.tooltip.adjustSize()
+					if int(event.y())+20+int(self.tooltip.height())>int(self.height()):
+						self.tooltip.move(self.mapToGlobal(QtCore.QPoint(0,event.y()-10-int(self.tooltip.height()))))
+					else:
+						self.tooltip.move(self.mapToGlobal(QtCore.QPoint(0,event.y()+20)))
+					
 					self.tooltip.show()
 					self.timer.start(3000)
 		return QtGui.QTreeWidget.viewportEvent(self,event)
