@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'groupchatwidget.ui'
 #
-# Created: Thu Mar 15 14:25:22 2007
+# Created: Thu Mar 15 14:49:25 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -88,10 +88,6 @@ class Ui_groupchatwidget(object):
         self.textEdit.setOpenExternalLinks(True)
         self.textEdit.setObjectName("textEdit")
         self.gridlayout.addWidget(self.textEdit,1,0,2,1)
-
-        self.lineWidget = QtGui.QWidget(groupchatwidget)
-        self.lineWidget.setObjectName("lineWidget")
-        self.gridlayout.addWidget(self.lineWidget,3,0,1,1)
 
         self.retranslateUi(groupchatwidget)
         QtCore.QObject.connect(self.toolButton,QtCore.SIGNAL("toggled(bool)"),self.info_big.setShown)

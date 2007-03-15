@@ -27,11 +27,8 @@ class chatWidget(QtGui.QWidget):
 		self.jab=jab
 		self.ui=Ui_chatwidget()
 		self.ui.setupUi(self)
-		layout=QtGui.QHBoxLayout(self.ui.lineWidget)
-		layout.setMargin(0)
-		layout.setSpacing(0)
-		self.ui.line=lineEditWidget(self,self.ui.lineWidget)
-		layout.addWidget(self.ui.line)
+		self.ui.line=lineEditWidget(self,self)
+		self.ui.gridlayout.addWidget(self.ui.line,2,0,1,1)
 		self.main=main
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)

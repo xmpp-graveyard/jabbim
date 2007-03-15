@@ -29,11 +29,8 @@ class groupChatWidget(QtGui.QWidget):
 		self.main=main
 		self.affiliation=affiliation
 
-		layout=QtGui.QHBoxLayout(self.ui.lineWidget)
-		layout.setMargin(0)
-		layout.setSpacing(0)
-		self.ui.line=lineEditWidget(self,self.ui.lineWidget)
-		layout.addWidget(self.ui.line)
+		self.ui.line=lineEditWidget(self,self)
+		self.ui.gridlayout.addWidget(self.ui.line,3,0,1,1)
 
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.roomConfig, QtCore.SIGNAL("clicked ()"),self.roomConfigClicked)
