@@ -595,33 +595,34 @@ class rosterWidget(QtGui.QTreeWidget):
 	def viewportEvent(self,event):
 		if event.type()==QtCore.QEvent.ToolTip:# and self.tooltip.isHidden():
 			item=self.itemAt(int(event.x()),int(event.y()))
-			if item.parent()!=None:
-				data=item.data(32,0) # get jid
-				jid=str(data.toString())
-				data=item.data(32,4) # get jid
-				message=unicode(data.toString())
-				if os.path.isfile(self.main.homeDir+'/.jabbim/avatars/'+jid):
-					pixmap=QtGui.QPixmap()
-					f=open(self.main.homeDir+'/.jabbim/avatars/'+jid,"r")
-					image=f.read()
-					f.close()
-					pixmap.loadFromData(image)
-					if pixmap.isNull():
-						self.tooltip.ui.icon.hide()
+			if item!=None:
+				if item.parent()!=None:
+					data=item.data(32,0) # get jid
+					jid=str(data.toString())
+					data=item.data(32,4) # get jid
+					message=unicode(data.toString())
+					if os.path.isfile(self.main.homeDir+'/.jabbim/avatars/'+jid):
+						pixmap=QtGui.QPixmap()
+						f=open(self.main.homeDir+'/.jabbim/avatars/'+jid,"r")
+						image=f.read()
+						f.close()
+						pixmap.loadFromData(image)
+						if pixmap.isNull():
+							self.tooltip.ui.icon.hide()
+						else:
+							self.tooltip.ui.icon.show()
+							self.tooltip.ui.icon.setPixmap(pixmap.scaled(64,64,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
 					else:
-						self.tooltip.ui.icon.show()
-						self.tooltip.ui.icon.setPixmap(pixmap.scaled(64,64,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
-				else:
-					self.tooltip.ui.icon.hide()
-				self.tooltip.ui.jid.setText(jid)
-				self.tooltip.ui.status.setText(self.main.status[self.main.iconSort[unicode(item.text(1))[0]]])
-				if len(message)==0:
-					self.tooltip.ui.message.hide()
-				else:
-					self.tooltip.ui.message.show()
-					self.tooltip.ui.message.setText(message.replace("\n","<br/>"))
-				self.tooltip.move(self.mapToGlobal(QtCore.QPoint(0,event.y()+20)))
-				self.tooltip.adjustSize()
-				self.tooltip.show()
-				self.timer.start(3000)
+						self.tooltip.ui.icon.hide()
+					self.tooltip.ui.jid.setText(jid)
+					self.tooltip.ui.status.setText(self.main.status[self.main.iconSort[unicode(item.text(1))[0]]])
+					if len(message)==0:
+						self.tooltip.ui.message.hide()
+					else:
+						self.tooltip.ui.message.show()
+						self.tooltip.ui.message.setText(message.replace("\n","<br/>"))
+					self.tooltip.move(self.mapToGlobal(QtCore.QPoint(0,event.y()+20)))
+					self.tooltip.adjustSize()
+					self.tooltip.show()
+					self.timer.start(3000)
 		return QtGui.QTreeWidget.viewportEvent(self,event)
