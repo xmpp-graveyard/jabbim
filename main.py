@@ -1059,7 +1059,10 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				icon=self.status["offline"]
 				user=jid
-				
+			for word in unicode(e[3]).split(' '):
+				if word.find("http://")!=-1:
+					print word,'<a href="'+word+'">'+word+'</a>'
+					e[3]=e[3].replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
 			message=self.skin["message"].replace("[time]",self.now()).replace("[user]",unicode(user)).replace("[message]",unicode(e[3]))
 			tab=None
 			tabIndex=0

@@ -5,6 +5,7 @@ except:
 from chatwidget_ui import *
 from configobj import ConfigObj
 from palette import *
+import urllib
 
 class chatWidget(QtGui.QWidget):
 	def __init__(self,main,jid,jab,parent=None):
@@ -101,7 +102,12 @@ class chatWidget(QtGui.QWidget):
 		# sends message
 		if len(unicode(self.ui.line.toPlainText()))!=0:
 			self.jab.chatSend(str(self.jid),unicode(self.ui.line.toPlainText()))
-			message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",self.jab.user).replace("[message]",unicode(self.ui.line.toPlainText()))
+			text=unicode(self.ui.line.toPlainText())
+			for word in text.split(' '):
+				if word.find("http://")!=-1:
+					print word,'<a href="'+word+'">'+word+'</a>'
+					text=text.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
+			message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",self.jab.user).replace("[message]",text)
 			self.textEditWrite(message)
 			self.ui.line.clear()
 			self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)
