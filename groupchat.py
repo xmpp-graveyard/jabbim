@@ -18,6 +18,7 @@ class groupChatWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.roomConfig, QtCore.SIGNAL("clicked ()"),self.roomConfigClicked)
 		QtCore.QObject.connect(self.ui.roomAdmin, QtCore.SIGNAL("clicked ()"),self.roomAdminClicked)
 		QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
+		QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("textChanged ()"),self.lines)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 		short=QtGui.QShortcut("tab",self.ui.line)
 		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
@@ -31,6 +32,11 @@ class groupChatWidget(QtGui.QWidget):
 		self.addRole("visitor","Visitors")
 		self.ui.users.header().hide()
 		self.ui.users.hideColumn(1)
+		self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)
+
+	def lines(self):
+		if self.ui.line.verticalScrollBar().isVisible():
+			self.ui.line.setMaximumHeight(int(self.ui.line.maximumHeight())+int(self.ui.line.currentFont().pointSize())+10)
 
 	def changeAffiliation(self,affiliation):
 		if affiliation=="owner":
@@ -140,27 +146,28 @@ class groupChatWidget(QtGui.QWidget):
 		# add emoticon to the self.ui.line
 		data=action.data()
 		data=data.toString()
-		self.ui.line.insert(data)
+		self.ui.line.insertPlainText(data)
 		self.ui.smileys.setChecked(False)
 		self.s.hide()
 		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def sendButtonClicked(self):
 		# sends message
-		if len(unicode(self.ui.line.text()))!=0:
-			self.jab.groupchatSend(str(self.jid),unicode(self.ui.line.text()))
+		if len(unicode(self.ui.line.toPlainText()))!=0:
+			self.jab.groupchatSend(str(self.jid),unicode(self.ui.line.toPlainText()))
 			self.ui.line.clear()
+			self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)
 
 	def tabPressed(self):
 		# nick completion
-		text=unicode(self.ui.line.text()).lower()
+		text=unicode(self.ui.line.toPlainText()).lower()
 		if len(text)==0:
 			return
 		text=text[0]
 		repeat=False
 		for i in range(len(self.main.groupchat[self.jid][1])):
 			if unicode(self.main.groupchat[self.jid][1][i].text(0)).lower()[:len(text)]==text and i>self.name_id:
-				self.ui.line.setText(self.main.groupchat[self.jid][1][i].text(0)+": ")
+				self.ui.line.setPlainText(self.main.groupchat[self.jid][1][i].text(0)+": ")
 				self.name_id=i
 				return
 			if unicode(self.main.groupchat[self.jid][1][i].text(0)).lower()[:len(text)]==text:

@@ -15,6 +15,7 @@ class chatWidget(QtGui.QWidget):
 		self.main=main
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
+		QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("textChanged ()"),self.lines)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 
 		#short=QtGui.QShortcut("tab",self.ui.line)
@@ -26,6 +27,12 @@ class chatWidget(QtGui.QWidget):
 		palette,images=loadPalette(palette,self.main.palette["chatwidget"])
 		self.setPalette(palette)
 		self.pixmap=images['bgImage']
+		print self.ui.line.currentFont().pointSize()
+		self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)
+
+	def lines(self):
+		if self.ui.line.verticalScrollBar().isVisible():
+			self.ui.line.setMaximumHeight(int(self.ui.line.maximumHeight())+int(self.ui.line.currentFont().pointSize())+10)
 
 	def paintEvent(self,event):
 		# paintEvent handler
@@ -83,22 +90,25 @@ class chatWidget(QtGui.QWidget):
 		# add emoticon to the self.ui.line
 		data=action.data()
 		data=data.toString()
-		self.ui.line.insert(data)
+#		for k,v in self.smileys.iteritems():
+#			data=data.replace(k,' <img src="images/16x16/emotes/'+v+'"/>')
+		self.ui.line.insertPlainText(data)
 		self.ui.smileys.setChecked(False)
 		self.s.hide()
 		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 	
 	def sendButtonClicked(self):
 		# sends message
-		if len(unicode(self.ui.line.text()))!=0:
-			self.jab.chatSend(str(self.jid),unicode(self.ui.line.text()))
-			message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",self.jab.user).replace("[message]",unicode(self.ui.line.text()))
+		if len(unicode(self.ui.line.toPlainText()))!=0:
+			self.jab.chatSend(str(self.jid),unicode(self.ui.line.toPlainText()))
+			message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",self.jab.user).replace("[message]",unicode(self.ui.line.toPlainText()))
 			self.textEditWrite(message)
 			self.ui.line.clear()
+			self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)
 
 	def tabPressed(self):
 		# nick completion
-		text=unicode(self.ui.line.text()).lower()
+		text=unicode(self.ui.line.toPlainText()).lower()
 		if len(text)==0:
 			return
 		text=text[0]
