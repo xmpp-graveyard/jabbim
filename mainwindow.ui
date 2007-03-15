@@ -42,7 +42,7 @@
            <enum>QTabWidget::North</enum>
           </property>
           <property name="currentIndex" >
-           <number>0</number>
+           <number>3</number>
           </property>
           <widget class="QWidget" name="tab" >
            <attribute name="title" >
@@ -383,7 +383,7 @@ p, li { white-space: pre-wrap; }
             <item row="2" column="1" >
              <widget class="QPushButton" name="manageBookmarks" >
               <property name="text" >
-               <string>Manage bookmarks</string>
+               <string>New bookmark</string>
               </property>
              </widget>
             </item>

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'preferences.ui'
 #
-# Created: Thu Mar  1 21:45:34 2007
+# Created: Thu Mar 15 04:46:46 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -182,84 +182,44 @@ class Ui_preferences(object):
         self.gridlayout1.addWidget(self.label,0,0,1,1)
         self.stackedWidget.addWidget(self.userPreferences)
 
-        self.page = QtGui.QWidget()
-        self.page.setObjectName("page")
+        self.page_2 = QtGui.QWidget()
+        self.page_2.setObjectName("page_2")
 
-        self.gridlayout3 = QtGui.QGridLayout(self.page)
+        self.gridlayout3 = QtGui.QGridLayout(self.page_2)
         self.gridlayout3.setMargin(9)
         self.gridlayout3.setSpacing(6)
         self.gridlayout3.setObjectName("gridlayout3")
 
-        self.line_3 = QtGui.QFrame(self.page)
-        self.line_3.setFrameShape(QtGui.QFrame.HLine)
-        self.line_3.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line_3.setObjectName("line_3")
-        self.gridlayout3.addWidget(self.line_3,1,0,1,4)
-
-        self.label_4 = QtGui.QLabel(self.page)
-        self.label_4.setObjectName("label_4")
-        self.gridlayout3.addWidget(self.label_4,0,0,1,4)
-
-        self.bookmarks = QtGui.QTreeWidget(self.page)
-        self.bookmarks.setRootIsDecorated(False)
-        self.bookmarks.setSortingEnabled(True)
-        self.bookmarks.setObjectName("bookmarks")
-        self.gridlayout3.addWidget(self.bookmarks,2,0,1,4)
-
-        self.removeBookmark = QtGui.QPushButton(self.page)
-        self.removeBookmark.setObjectName("removeBookmark")
-        self.gridlayout3.addWidget(self.removeBookmark,3,3,1,1)
-
-        self.editBookmark = QtGui.QPushButton(self.page)
-        self.editBookmark.setObjectName("editBookmark")
-        self.gridlayout3.addWidget(self.editBookmark,3,2,1,1)
-
-        self.addBookmark = QtGui.QPushButton(self.page)
-        self.addBookmark.setObjectName("addBookmark")
-        self.gridlayout3.addWidget(self.addBookmark,3,1,1,1)
-
-        spacerItem2 = QtGui.QSpacerItem(71,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout3.addItem(spacerItem2,3,0,1,1)
-        self.stackedWidget.addWidget(self.page)
-
-        self.page_2 = QtGui.QWidget()
-        self.page_2.setObjectName("page_2")
-
-        self.gridlayout4 = QtGui.QGridLayout(self.page_2)
-        self.gridlayout4.setMargin(9)
-        self.gridlayout4.setSpacing(6)
-        self.gridlayout4.setObjectName("gridlayout4")
-
         self.chatSkins = QtGui.QComboBox(self.page_2)
         self.chatSkins.setMinimumSize(QtCore.QSize(130,0))
         self.chatSkins.setObjectName("chatSkins")
-        self.gridlayout4.addWidget(self.chatSkins,2,0,1,1)
+        self.gridlayout3.addWidget(self.chatSkins,2,0,1,1)
 
-        spacerItem3 = QtGui.QSpacerItem(31,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout4.addItem(spacerItem3,2,1,1,1)
+        spacerItem2 = QtGui.QSpacerItem(31,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout3.addItem(spacerItem2,2,1,1,1)
 
         self.line_4 = QtGui.QFrame(self.page_2)
         self.line_4.setFrameShape(QtGui.QFrame.HLine)
         self.line_4.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_4.setObjectName("line_4")
-        self.gridlayout4.addWidget(self.line_4,1,0,1,2)
+        self.gridlayout3.addWidget(self.line_4,1,0,1,2)
 
         self.label_5 = QtGui.QLabel(self.page_2)
         self.label_5.setObjectName("label_5")
-        self.gridlayout4.addWidget(self.label_5,0,0,1,2)
+        self.gridlayout3.addWidget(self.label_5,0,0,1,2)
 
         self.chatSkinPreview = QtGui.QTextBrowser(self.page_2)
         self.chatSkinPreview.setObjectName("chatSkinPreview")
-        self.gridlayout4.addWidget(self.chatSkinPreview,3,0,1,2)
+        self.gridlayout3.addWidget(self.chatSkinPreview,3,0,1,2)
         self.stackedWidget.addWidget(self.page_2)
 
         self.page_3 = QtGui.QWidget()
         self.page_3.setObjectName("page_3")
 
-        self.gridlayout5 = QtGui.QGridLayout(self.page_3)
-        self.gridlayout5.setMargin(9)
-        self.gridlayout5.setSpacing(6)
-        self.gridlayout5.setObjectName("gridlayout5")
+        self.gridlayout4 = QtGui.QGridLayout(self.page_3)
+        self.gridlayout4.setMargin(9)
+        self.gridlayout4.setSpacing(6)
+        self.gridlayout4.setObjectName("gridlayout4")
 
         self.tabWidget = QtGui.QTabWidget(self.page_3)
         self.tabWidget.setObjectName("tabWidget")
@@ -267,21 +227,21 @@ class Ui_preferences(object):
         self.tab = QtGui.QWidget()
         self.tab.setObjectName("tab")
 
-        self.gridlayout6 = QtGui.QGridLayout(self.tab)
-        self.gridlayout6.setMargin(9)
-        self.gridlayout6.setSpacing(6)
-        self.gridlayout6.setObjectName("gridlayout6")
+        self.gridlayout5 = QtGui.QGridLayout(self.tab)
+        self.gridlayout5.setMargin(9)
+        self.gridlayout5.setSpacing(6)
+        self.gridlayout5.setObjectName("gridlayout5")
 
-        spacerItem4 = QtGui.QSpacerItem(20,131,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout6.addItem(spacerItem4,1,0,1,1)
+        spacerItem3 = QtGui.QSpacerItem(20,131,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout5.addItem(spacerItem3,1,0,1,1)
 
         self.groupBox_2 = QtGui.QGroupBox(self.tab)
         self.groupBox_2.setObjectName("groupBox_2")
 
-        self.gridlayout7 = QtGui.QGridLayout(self.groupBox_2)
-        self.gridlayout7.setMargin(9)
-        self.gridlayout7.setSpacing(6)
-        self.gridlayout7.setObjectName("gridlayout7")
+        self.gridlayout6 = QtGui.QGridLayout(self.groupBox_2)
+        self.gridlayout6.setMargin(9)
+        self.gridlayout6.setSpacing(6)
+        self.gridlayout6.setObjectName("gridlayout6")
 
         self.vboxlayout4 = QtGui.QVBoxLayout()
         self.vboxlayout4.setMargin(0)
@@ -299,28 +259,28 @@ class Ui_preferences(object):
         self.notificationOnline = QtGui.QRadioButton(self.groupBox_2)
         self.notificationOnline.setObjectName("notificationOnline")
         self.vboxlayout4.addWidget(self.notificationOnline)
-        self.gridlayout7.addLayout(self.vboxlayout4,0,0,1,1)
-        self.gridlayout6.addWidget(self.groupBox_2,0,0,1,1)
+        self.gridlayout6.addLayout(self.vboxlayout4,0,0,1,1)
+        self.gridlayout5.addWidget(self.groupBox_2,0,0,1,1)
         self.tabWidget.addTab(self.tab,"")
 
         self.tab_2 = QtGui.QWidget()
         self.tab_2.setObjectName("tab_2")
 
-        self.gridlayout8 = QtGui.QGridLayout(self.tab_2)
-        self.gridlayout8.setMargin(9)
-        self.gridlayout8.setSpacing(6)
-        self.gridlayout8.setObjectName("gridlayout8")
+        self.gridlayout7 = QtGui.QGridLayout(self.tab_2)
+        self.gridlayout7.setMargin(9)
+        self.gridlayout7.setSpacing(6)
+        self.gridlayout7.setObjectName("gridlayout7")
 
-        spacerItem5 = QtGui.QSpacerItem(20,171,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout8.addItem(spacerItem5,1,0,1,1)
+        spacerItem4 = QtGui.QSpacerItem(20,171,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout7.addItem(spacerItem4,1,0,1,1)
 
         self.groupBox_3 = QtGui.QGroupBox(self.tab_2)
         self.groupBox_3.setObjectName("groupBox_3")
 
-        self.gridlayout9 = QtGui.QGridLayout(self.groupBox_3)
-        self.gridlayout9.setMargin(9)
-        self.gridlayout9.setSpacing(6)
-        self.gridlayout9.setObjectName("gridlayout9")
+        self.gridlayout8 = QtGui.QGridLayout(self.groupBox_3)
+        self.gridlayout8.setMargin(9)
+        self.gridlayout8.setSpacing(6)
+        self.gridlayout8.setObjectName("gridlayout8")
 
         self.vboxlayout5 = QtGui.QVBoxLayout()
         self.vboxlayout5.setMargin(0)
@@ -334,20 +294,20 @@ class Ui_preferences(object):
         self.notification_new_message_chat = QtGui.QRadioButton(self.groupBox_3)
         self.notification_new_message_chat.setObjectName("notification_new_message_chat")
         self.vboxlayout5.addWidget(self.notification_new_message_chat)
-        self.gridlayout9.addLayout(self.vboxlayout5,0,0,1,1)
-        self.gridlayout8.addWidget(self.groupBox_3,0,0,1,1)
+        self.gridlayout8.addLayout(self.vboxlayout5,0,0,1,1)
+        self.gridlayout7.addWidget(self.groupBox_3,0,0,1,1)
         self.tabWidget.addTab(self.tab_2,"")
-        self.gridlayout5.addWidget(self.tabWidget,2,0,1,1)
+        self.gridlayout4.addWidget(self.tabWidget,2,0,1,1)
 
         self.label_11 = QtGui.QLabel(self.page_3)
         self.label_11.setObjectName("label_11")
-        self.gridlayout5.addWidget(self.label_11,0,0,1,1)
+        self.gridlayout4.addWidget(self.label_11,0,0,1,1)
 
         self.line_5 = QtGui.QFrame(self.page_3)
         self.line_5.setFrameShape(QtGui.QFrame.HLine)
         self.line_5.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_5.setObjectName("line_5")
-        self.gridlayout5.addWidget(self.line_5,1,0,1,1)
+        self.gridlayout4.addWidget(self.line_5,1,0,1,1)
         self.stackedWidget.addWidget(self.page_3)
         self.gridlayout.addWidget(self.stackedWidget,0,1,1,2)
 
@@ -369,13 +329,10 @@ class Ui_preferences(object):
         item.setText(QtGui.QApplication.translate("preferences", "Connection", None, QtGui.QApplication.UnicodeUTF8))
 
         item1 = QtGui.QListWidgetItem(self.listWidget)
-        item1.setText(QtGui.QApplication.translate("preferences", "Bookmarks", None, QtGui.QApplication.UnicodeUTF8))
+        item1.setText(QtGui.QApplication.translate("preferences", "Chat skins", None, QtGui.QApplication.UnicodeUTF8))
 
         item2 = QtGui.QListWidgetItem(self.listWidget)
-        item2.setText(QtGui.QApplication.translate("preferences", "Chat skins", None, QtGui.QApplication.UnicodeUTF8))
-
-        item3 = QtGui.QListWidgetItem(self.listWidget)
-        item3.setText(QtGui.QApplication.translate("preferences", "Notification", None, QtGui.QApplication.UnicodeUTF8))
+        item2.setText(QtGui.QApplication.translate("preferences", "Notification", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setTitle(QtGui.QApplication.translate("preferences", "Proxy settings", None, QtGui.QApplication.UnicodeUTF8))
         self.label_6.setText(QtGui.QApplication.translate("preferences", "Proxy type:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_9.setText(QtGui.QApplication.translate("preferences", "Server:", None, QtGui.QApplication.UnicodeUTF8))
@@ -393,19 +350,6 @@ class Ui_preferences(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Connection</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_4.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-        "p, li { white-space: pre-wrap; }\n"
-        "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
-        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Bookmarks</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.bookmarks.headerItem().setText(0,QtGui.QApplication.translate("preferences", "Room", None, QtGui.QApplication.UnicodeUTF8))
-        self.bookmarks.headerItem().setText(1,QtGui.QApplication.translate("preferences", "Server", None, QtGui.QApplication.UnicodeUTF8))
-        self.bookmarks.headerItem().setText(2,QtGui.QApplication.translate("preferences", "Name", None, QtGui.QApplication.UnicodeUTF8))
-        self.bookmarks.headerItem().setText(3,QtGui.QApplication.translate("preferences", "Nickname", None, QtGui.QApplication.UnicodeUTF8))
-        self.bookmarks.headerItem().setText(4,QtGui.QApplication.translate("preferences", "Password", None, QtGui.QApplication.UnicodeUTF8))
-        self.bookmarks.headerItem().setText(5,QtGui.QApplication.translate("preferences", "Auto join", None, QtGui.QApplication.UnicodeUTF8))
-        self.removeBookmark.setText(QtGui.QApplication.translate("preferences", "Remove", None, QtGui.QApplication.UnicodeUTF8))
-        self.editBookmark.setText(QtGui.QApplication.translate("preferences", "Edit", None, QtGui.QApplication.UnicodeUTF8))
-        self.addBookmark.setText(QtGui.QApplication.translate("preferences", "Add", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"

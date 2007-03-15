@@ -138,7 +138,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.actionService_discovery, QtCore.SIGNAL("triggered ( bool )"),self.discovery)
 		app.connect(self.ui.addContact, QtCore.SIGNAL("clicked ()"),self.addContactMainWindow)
 		app.connect(self.ui.getGroupchatList, QtCore.SIGNAL("clicked ()"),self.getGroupchatList)
-		app.connect(self.ui.manageBookmarks, QtCore.SIGNAL("clicked ()"),self.manageBookmarks)
+		app.connect(self.ui.manageBookmarks, QtCore.SIGNAL("clicked ()"),self.newBookmark)
 		QtCore.QObject.connect(self.ui.groupchat, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.groupchatClicked)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
@@ -246,10 +246,10 @@ class mainWindow(QtGui.QMainWindow):
 		win=preferencesWindow(self.main,self,0)
 		win.show()
 
-	def manageBookmarks(self):
-		# open "manage bookmarks" window
-		win=preferencesWindow(self,self,1,jab=jab)
-		win.show()
+	def newBookmark(self):
+		# make new bookmark
+		edit=editBookmark(self,jab,"","","","","",self,False)
+		ret=edit.exec_()
 
 	def bookmarksContextMenu(self,pos):
 		# make groupchat bookmarks menu
@@ -261,6 +261,17 @@ class mainWindow(QtGui.QMainWindow):
 			action=menu.addAction(self.tr("Join"))
 			action.setData(item.data(0,32))
 			action.setObjectName("join_bookmark")
+			# separator
+			menu.addSeparator()
+			# Edit bookmark
+			action=menu.addAction(self.tr("Edit bookmark"))
+			action.setData(item.data(0,32))
+			action.setObjectName("edit_bookmark")
+			# Delete bookmark
+			action=menu.addAction(self.tr("Delete bookmark"))
+			action.setData(item.data(0,32))
+			action.setObjectName("delete_bookmark")
+
 		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.groupchatContextMenuTriggered)
 		# set menu position and show
 		menu.move(self.ui.bookmarks.mapToGlobal(pos))
@@ -285,6 +296,26 @@ class mainWindow(QtGui.QMainWindow):
 			nickname=unicode(lst[1].toString()) # get nickname
 			# send jabber command
 			jab.getIntoRoom(jid,nickname)
+		elif cmd=="edit_bookmark":
+			item=self.ui.bookmarks.currentItem()
+			data=action.data()
+			lst=data.toList()
+			jid=unicode(lst[0].toString()) # get jid
+			if len(jid.split("@"))!=1:
+				room=jid.split("@")[0]
+				server=jid.split("@")[1]
+			else:
+				room=jid
+			name=unicode(item.text(0))
+			nickname=unicode(lst[1].toString()) # get nickname
+			password=unicode(lst[2].toString()) # get password
+			edit=editBookmark(self,jab,room,server,name,nickname,password,self)
+			edit.exec_()
+		elif cmd=="delete_bookmark":
+			item=self.ui.bookmarks.currentItem()
+			#self.ui.bookmarks.takeTopLevelItem(self.ui.bookmarks.indexOfTopLevelItem(item))
+			del self.bookmarks[unicode(item.text(1))]
+			jab.setBookmarks(self.bookmarks)
 
 	def groupchatContextMenu(self,pos):
 		# make groupchat context menu

@@ -12,7 +12,6 @@ class preferencesWindow(QtGui.QDialog):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.main=main
 		self.jab=jab
-		self.bookmarks=self.main.bookmarks
 		self.setModal(False)
 		self.ui=Ui_preferences()
 		self.ui.setupUi(self)
@@ -54,17 +53,9 @@ class preferencesWindow(QtGui.QDialog):
 				else:
 					self.ui.chatSkins.addItem(unicode(skin))
 		self.ui.chatSkins.setCurrentIndex(0)
-		self.loadBookmarks()
-		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarkClicked)
-		QtCore.QObject.connect(self.ui.addBookmark, QtCore.SIGNAL("clicked()"),self.addBookmark)
-		QtCore.QObject.connect(self.ui.editBookmark, QtCore.SIGNAL("clicked()"),self.bookmarkClicked)
-		QtCore.QObject.connect(self.ui.removeBookmark, QtCore.SIGNAL("clicked()"),self.removeBookmark)
+
 		QtCore.QObject.connect(self.ui.chatSkins, QtCore.SIGNAL("activated ( const QString & )"),self.chatSkinsChanged)
 
-	def removeBookmark(self):
-		item=self.ui.bookmarks.currentItem()
-		self.ui.bookmarks.takeTopLevelItem(self.ui.bookmarks.indexOfTopLevelItem(item))
-		del self.bookmarks[unicode(item.text(0))+"@"+unicode(item.text(1))]
 
 	def chatSkinPreviewtextEditWrite(self,text):
 		cur=self.ui.chatSkinPreview.textCursor()
@@ -83,39 +74,6 @@ class preferencesWindow(QtGui.QDialog):
 		self.chatSkinPreviewtextEditWrite(testConfig["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("Me"))).replace("[message]",unicode(self.tr("This is my test message."))))
 		self.chatSkinPreviewtextEditWrite(testConfig["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("User has set the subject to: Subject"))))
 
-	def loadBookmarks(self):
-		self.ui.bookmarks.clear()
-		for k,v in self.bookmarks.iteritems():
-			item=QtGui.QTreeWidgetItem(self.ui.bookmarks)
-			item.setText(0,k.split("@")[0])
-			item.setText(1,k.split("@")[1])
-			item.setText(2,v["name"])
-			item.setText(3,v["nick"])
-			item.setText(4,v["password"])
-			item.setText(5,v["autojoin"])
-		self.ui.bookmarks.resizeColumnToContents(0)
-		self.ui.bookmarks.resizeColumnToContents(1)
-		self.ui.bookmarks.resizeColumnToContents(2)
-		self.ui.bookmarks.resizeColumnToContents(3)
-		self.ui.bookmarks.resizeColumnToContents(4)
-		self.ui.bookmarks.resizeColumnToContents(5)
-
-	def addBookmark(self):
-		edit=editBookmark(self.main,"","","","","",self,False)
-		ret=edit.exec_()
-		if ret==1:
-			self.loadBookmarks()
-
-	def bookmarkClicked(self,item=None,row=None):
-		if item==None:
-			item=self.ui.bookmarks.currentItem()
-			if item==None:
-				return
-		edit=editBookmark(self.main,unicode(item.text(0)),unicode(item.text(1)),unicode(item.text(2)),unicode(item.text(3)),unicode(item.text(4)),self)
-		ret=edit.exec_()
-		if ret==1:
-			self.loadBookmarks()
-			
 	def accept(self):
 		jid=unicode(self.ui.jid.text())
 		password=unicode(self.ui.password.text())
@@ -148,17 +106,14 @@ class preferencesWindow(QtGui.QDialog):
 			self.main.config["tray_message_view_new_message"]="all"
 		
 		self.main.config.write()
-		# we need to update groupchat bookmarks menu
-		self.main.bookmarks=self.bookmarks
-		self.jab.setBookmarks(self.main.bookmarks)
-		self.main.buildGroupchatMenu()
 		self.done(1)
 		
 class editBookmark(QtGui.QDialog):
-	def __init__(self,main,room,server,name,nickname,password,parent,edit=True):
+	def __init__(self,main,jab,room,server,name,nickname,password,parent,edit=True):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.parent=parent
 		self.room=room
+		self.jab=jab
 		self.server=server
 		self.main=main
 		self.edit=edit
@@ -177,15 +132,23 @@ class editBookmark(QtGui.QDialog):
 		name=unicode(self.ui.name.text())
 		nickname=unicode(self.ui.nickname.text())
 		password=unicode(self.ui.password.text())
+		edited=False
 		if self.room+"@"+self.server==room+"@"+server:
-			self.parent.bookmarks[room+"@"+server]={"name":name,"nick":nickname,"autojoin":"0","password":password}
-			self.done(1)
+			self.main.bookmarks[room+"@"+server]={"name":name,"nick":nickname,"autojoin":"0","password":password}
+			#self.done(1)
+			edited=True
 		else:
-			if self.parent.bookmarks.has_key(room):
+			if self.main.bookmarks.has_key(room):
 				print "error"
 			else:
 				if self.edit==True:
-					del self.parent.bookmarks[self.room+"@"+self.server]
-				self.parent.bookmarks[room+"@"+server]={"name":name,"nick":nickname,"autojoin":"0","password":password}
-				self.done(1)
+					del self.main.bookmarks[self.room+"@"+self.server]
+				self.main.bookmarks[room+"@"+server]={"name":name,"nick":nickname,"autojoin":"0","password":password}
+				edited=True
+		if edited:
+			#self.main.bookmarks=self.bookmarks
+			self.jab.setBookmarks(self.main.bookmarks)
+			#self.main.buildGroupchatMenu()
+
+			self.done(1)
 		
