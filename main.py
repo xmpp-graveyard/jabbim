@@ -779,7 +779,7 @@ class mainWindow(QtGui.QMainWindow):
 							self.discoInfo[jid]="conf"
 							self.ui.getGroupchatList.setEnabled(True)
 						elif ident[0]["type"]=="bytestreams" and ident[0]["category"]=="proxy":
-							jab.conn.S5B.addProxy(str(jid))
+							#jab.conn.S5B.addProxy(str(jid))
 							#jab.conn.S5B.addProxy(str('proxy.jabberfr.org'))
 							print "adding proxy",jid
 						else:
