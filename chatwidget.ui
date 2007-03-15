@@ -68,6 +68,9 @@
        <property name="readOnly" >
         <bool>true</bool>
        </property>
+       <property name="textInteractionFlags" >
+        <enum>Qt::LinksAccessibleByMouse</enum>
+       </property>
       </widget>
      </item>
     </layout>

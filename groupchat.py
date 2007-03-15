@@ -70,7 +70,6 @@ class groupChatWidget(QtGui.QWidget):
 		self.ui.users.setItemExpanded(self.roles[role],True)
 		self.ui.users.setItemHidden(self.roles[role],True)
 
-
 	def refreshStats(self):
 		for k,v in self.roles.iteritems():
 			v.setText(0,unicode(v.text(1))+" ("+str(v.childCount())+")")

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'chatwidget.ui'
 #
-# Created: Thu Mar 15 11:04:18 2007
+# Created: Thu Mar 15 12:03:26 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -44,6 +44,7 @@ class Ui_chatwidget(object):
 
         self.textEdit = QtGui.QTextEdit(chatwidget)
         self.textEdit.setReadOnly(True)
+        self.textEdit.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse)
         self.textEdit.setObjectName("textEdit")
         self.hboxlayout.addWidget(self.textEdit)
         self.gridlayout.addLayout(self.hboxlayout,1,0,1,3)

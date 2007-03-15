@@ -131,13 +131,6 @@
      </column>
     </widget>
    </item>
-   <item rowspan="2" row="1" column="0" >
-    <widget class="QTextEdit" name="textEdit" >
-     <property name="readOnly" >
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="1" colspan="2" >
     <widget class="QWidget" native="1" name="admin" >
      <layout class="QVBoxLayout" >
@@ -162,6 +155,13 @@
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item rowspan="2" row="1" column="0" >
+    <widget class="QTextBrowser" name="textEdit" >
+     <property name="openExternalLinks" >
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
   </layout>

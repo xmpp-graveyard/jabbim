@@ -23,7 +23,7 @@ except:
 from jabber import *
 import sys,os,time,random
 from configobj import ConfigObj
-
+import urllib
 from mainwindow import *
 from login import *
 from preferences import *
@@ -981,6 +981,9 @@ class mainWindow(QtGui.QMainWindow):
 			for i in range(self.chat.ui.chatTab.count()):
 				w=self.chat.ui.chatTab.widget(i)
 				if str(w.jid)==jid:
+					for word in unicode(text).split(' '):
+						if word.find("http://")!=-1:
+							text=text.replace(word,'<a href="'+word+'">'+word+'</a>')
 					message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",unicode(text))
 					w.chat.ui.info.setText(unicode(e[3]))
 					w.chat.ui.info.setCursorPosition(0)
@@ -1020,6 +1023,10 @@ class mainWindow(QtGui.QMainWindow):
 			for i in range(self.chat.ui.chatTab.count()):
 				w=self.chat.ui.chatTab.widget(i)
 				if str(w.jid)==jid:
+					for word in unicode(e[3]).split(' '):
+						if word.find("http://")!=-1:
+							print word,'<a href="'+word+'">'+word+'</a>'
+							e[3]=e[3].replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
 					notification.onNewGroupchatMessage(self,jid,user,timestamp)
 					if timestamp==None or len(timestamp)==0:
 						if unicode(w.name)==unicode(user):
