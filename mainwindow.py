@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Thu Mar 15 04:18:56 2007
+# Created: Thu Mar 15 09:10:37 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -273,6 +273,10 @@ class Ui_mainWindow(object):
         spacerItem7 = QtGui.QSpacerItem(71,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.hboxlayout2.addItem(spacerItem7)
         self.vboxlayout2.addLayout(self.hboxlayout2)
+
+        self.connectInfo = QtGui.QLabel(self.page_2)
+        self.connectInfo.setObjectName("connectInfo")
+        self.vboxlayout2.addWidget(self.connectInfo)
         self.gridlayout6.addLayout(self.vboxlayout2,1,1,1,1)
 
         spacerItem8 = QtGui.QSpacerItem(21,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)

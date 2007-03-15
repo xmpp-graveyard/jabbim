@@ -281,7 +281,8 @@ class S5B(PlugIn):
     def _addProxy(self,conn,rec,jid):
 		try:
 			for streamhost in rec.getQueryChildren():
-				self.addStreamHost(jid,'proxy',ip=streamhost.getAttr('host'),port=streamhost.getAttr('port'),zeroconf=streamhost.getAttr('zeroconf'))
+				if not self.addStreamHost(jid,'proxy',ip=streamhost.getAttr('host'),port=streamhost.getAttr('port'),zeroconf=streamhost.getAttr('zeroconf')):
+					return False
 			return True
 		except:
 			return False
@@ -407,26 +408,30 @@ class S5B(PlugIn):
         self._owner.send(iq)
         
     def addStreamHost(self,jid,type='self',ip='',port=0,zeroconf=''):
-        """Add another streamhost, for example a S5B proxy
-           type can be 'self' or 'proxy'
-           self mean that the Streamhost is us, and proxy is a ... proxy
-           We can't have more than one 'self' streamhost.
-           """
-        if type=='self':
-            for host in self.streamHosts:
-                if type=='self':return False
-        self.DEBUG('Added streamhost type : %s, jid : %s'%(type,jid),'info')
-        host={'jid':jid,'type':type}
-        if ip!='':
-            host['host']=ip
-        if port!=0:
-            host['port']=port
-        if type=='self':
-            port=self.SOCKS5.listenTCP(ip,port)
-            host['port']=port
-        if zeroconf!='' and zeroconf!=None:
-            host['zeroconf']=zeroconf
-        self.streamHosts[jid]=host
+		"""Add another streamhost, for example a S5B proxy
+			type can be 'self' or 'proxy'
+			self mean that the Streamhost is us, and proxy is a ... proxy
+			We can't have more than one 'self' streamhost.
+			"""
+		if type=='self':
+			for host in self.streamHosts:
+				if type=='self':return False
+		self.DEBUG('Added streamhost type : %s, jid : %s'%(type,jid),'info')
+		host={'jid':jid,'type':type}
+		if ip!='':
+			host['host']=ip
+		if port!=0:
+			host['port']=port
+		if type=='self':
+			try:
+				port=self.SOCKS5.listenTCP(ip,port)
+			except:
+				return 1
+			host['port']=port
+		if zeroconf!='' and zeroconf!=None:
+			host['zeroconf']=zeroconf
+		self.streamHosts[jid]=host
+		return 0
         
     def OpenBytestream(self,sid,to,fp,offset,length):
         """Send the previously opened file fp to the JID designed by to with the Stream ID : sid"""

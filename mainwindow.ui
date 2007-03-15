@@ -42,7 +42,7 @@
            <enum>QTabWidget::North</enum>
           </property>
           <property name="currentIndex" >
-           <number>3</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="tab" >
            <attribute name="title" >
@@ -531,6 +531,13 @@ p, li { white-space: pre-wrap; }
              </spacer>
             </item>
            </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="connectInfo" >
+            <property name="text" >
+             <string/>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>

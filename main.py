@@ -193,12 +193,15 @@ class mainWindow(QtGui.QMainWindow):
 		# timer config
 		self.timer=QtCore.QTimer()
 		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),jab.isalive)
+		self.connectTimer=QtCore.QTimer()
 		self.ui.password.setText(self.config['passwd'])
 		self.ui.jid_2.setText(self.config['jid'])
 		#QtCore.QObject.connect(self.ui.proxy, QtCore.SIGNAL("clicked ()"),self.proxySettings)
 		QtCore.QObject.connect(self.ui.connect, QtCore.SIGNAL("clicked ()"),self.connectClicked)
 		if self.config['savePasswd']=="True":
 			self.ui.savePassword.setChecked(True)
+		#self.ui.connectInfo.setText("Connecting")
+
 
 	def connectClicked(self):
 		jid=unicode(self.ui.jid_2.text())
