@@ -7,20 +7,39 @@ from configobj import ConfigObj
 from palette import *
 import urllib
 
+class lineEditWidget(QtGui.QTextEdit):
+	def __init__(self,main,parent=None):
+		apply(QtGui.QTextEdit.__init__,(self,parent))
+		self.main=main
+		self.setMaximumSize(QtCore.QSize(16777215,30))
+		self.setObjectName("line")
+	
+	def keyPressEvent(self,event):
+		key=event.key()
+		if key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
+			self.main.sendButtonClicked()
+		else:
+			QtGui.QTextEdit.keyPressEvent(self,event)
+
 class chatWidget(QtGui.QWidget):
 	def __init__(self,main,jid,jab,parent=None):
 		apply(QtGui.QWidget.__init__,(self,parent))
 		self.jab=jab
 		self.ui=Ui_chatwidget()
 		self.ui.setupUi(self)
+		layout=QtGui.QHBoxLayout(self.ui.lineWidget)
+		layout.setMargin(0)
+		layout.setSpacing(0)
+		self.ui.line=lineEditWidget(self,self.ui.lineWidget)
+		layout.addWidget(self.ui.line)
 		self.main=main
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
-		QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
+		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("textChanged ()"),self.lines)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 
-		#short=QtGui.QShortcut("tab",self.ui.line)
-		#QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
+		#short=QtGui.QShortcut(QtCore.Qt.Key_Return,self.ui.line)
+		#QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.sendButtonClicked)
 		self.loadSmileys()
 		self.jid=jid
 		self.name_id=-1 # for tabPressed

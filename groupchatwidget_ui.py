@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'groupchatwidget.ui'
 #
-# Created: Thu Mar 15 12:07:02 2007
+# Created: Thu Mar 15 14:25:22 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -20,11 +20,6 @@ class Ui_groupchatwidget(object):
         self.gridlayout.setMargin(9)
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
-
-        self.line = QtGui.QTextEdit(groupchatwidget)
-        self.line.setMaximumSize(QtCore.QSize(16777215,30))
-        self.line.setObjectName("line")
-        self.gridlayout.addWidget(self.line,3,0,1,1)
 
         self.smileys = QtGui.QToolButton(groupchatwidget)
         self.smileys.setIcon(QtGui.QIcon("images/22x22/emotes/biggrin.png"))
@@ -93,6 +88,10 @@ class Ui_groupchatwidget(object):
         self.textEdit.setOpenExternalLinks(True)
         self.textEdit.setObjectName("textEdit")
         self.gridlayout.addWidget(self.textEdit,1,0,2,1)
+
+        self.lineWidget = QtGui.QWidget(groupchatwidget)
+        self.lineWidget.setObjectName("lineWidget")
+        self.gridlayout.addWidget(self.lineWidget,3,0,1,1)
 
         self.retranslateUi(groupchatwidget)
         QtCore.QObject.connect(self.toolButton,QtCore.SIGNAL("toggled(bool)"),self.info_big.setShown)

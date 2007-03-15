@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'chatwidget.ui'
 #
-# Created: Thu Mar 15 12:35:59 2007
+# Created: Thu Mar 15 14:20:09 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -52,10 +52,9 @@ class Ui_chatwidget(object):
         self.sendButton.setObjectName("sendButton")
         self.gridlayout.addWidget(self.sendButton,2,2,1,1)
 
-        self.line = QtGui.QTextEdit(chatwidget)
-        self.line.setMaximumSize(QtCore.QSize(16777215,30))
-        self.line.setObjectName("line")
-        self.gridlayout.addWidget(self.line,2,0,1,1)
+        self.lineWidget = QtGui.QWidget(chatwidget)
+        self.lineWidget.setObjectName("lineWidget")
+        self.gridlayout.addWidget(self.lineWidget,2,0,1,1)
 
         self.retranslateUi(chatwidget)
         QtCore.QMetaObject.connectSlotsByName(chatwidget)

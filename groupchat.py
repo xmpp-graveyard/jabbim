@@ -6,6 +6,20 @@ from groupchatwidget_ui import *
 from groupchatadmin import *
 from configobj import ConfigObj
 
+class lineEditWidget(QtGui.QTextEdit):
+	def __init__(self,main,parent=None):
+		apply(QtGui.QTextEdit.__init__,(self,parent))
+		self.main=main
+		self.setMaximumSize(QtCore.QSize(16777215,30))
+		self.setObjectName("line")
+	
+	def keyPressEvent(self,event):
+		key=event.key()
+		if key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
+			self.main.sendButtonClicked()
+		else:
+			QtGui.QTextEdit.keyPressEvent(self,event)
+
 class groupChatWidget(QtGui.QWidget):
 	def __init__(self,main,jid,jab,affiliation,parent=None):
 		apply(QtGui.QWidget.__init__,(self,parent))
@@ -14,10 +28,17 @@ class groupChatWidget(QtGui.QWidget):
 		self.ui.setupUi(self)
 		self.main=main
 		self.affiliation=affiliation
+
+		layout=QtGui.QHBoxLayout(self.ui.lineWidget)
+		layout.setMargin(0)
+		layout.setSpacing(0)
+		self.ui.line=lineEditWidget(self,self.ui.lineWidget)
+		layout.addWidget(self.ui.line)
+
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.roomConfig, QtCore.SIGNAL("clicked ()"),self.roomConfigClicked)
 		QtCore.QObject.connect(self.ui.roomAdmin, QtCore.SIGNAL("clicked ()"),self.roomAdminClicked)
-		QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
+		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("textChanged ()"),self.lines)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 		short=QtGui.QShortcut("tab",self.ui.line)
@@ -166,7 +187,13 @@ class groupChatWidget(QtGui.QWidget):
 		repeat=False
 		for i in range(len(self.main.groupchat[self.jid][1])):
 			if unicode(self.main.groupchat[self.jid][1][i].text(0)).lower()[:len(text)]==text and i>self.name_id:
+				cur=self.ui.line.textCursor()
+				cur.movePosition(QtGui.QTextCursor.End)
+				self.ui.line.setTextCursor(cur)
 				self.ui.line.setPlainText(self.main.groupchat[self.jid][1][i].text(0)+": ")
+				cur=self.ui.line.textCursor()
+				cur.movePosition(QtGui.QTextCursor.End)
+				self.ui.line.setTextCursor(cur)
 				self.name_id=i
 				return
 			if unicode(self.main.groupchat[self.jid][1][i].text(0)).lower()[:len(text)]==text:
