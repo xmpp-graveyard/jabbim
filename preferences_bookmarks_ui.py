@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'preferences_bookmarks.ui'
 #
-# Created: Tue Feb 27 20:21:48 2007
+# Created: Thu Mar 15 05:02:01 2007
 #      by: PyQt4 UI code generator 4.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -108,7 +108,7 @@ class Ui_editbookmark(object):
 
     def retranslateUi(self, editbookmark):
         editbookmark.setWindowTitle(QtGui.QApplication.translate("editbookmark", "Edit bookmark", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton.setText(QtGui.QApplication.translate("editbookmark", "Edit", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton.setText(QtGui.QApplication.translate("editbookmark", "OK", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_2.setText(QtGui.QApplication.translate("editbookmark", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("editbookmark", "Room:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("editbookmark", "Server:", None, QtGui.QApplication.UnicodeUTF8))

@@ -56,10 +56,10 @@ class rosterWidget(QtGui.QTreeWidget):
 		palette,images=loadPalette(palette,self.main.palette["roster"])
 		self.setPalette(palette)
 		self.pixmap=images['bgImage']
-		self.addSubscription("test")
-		self.addSubscription("test")
-		self.addSubscribed("test")
-		self.addSubscribed("test")
+		#self.addSubscription("test")
+		#self.addSubscription("test")
+		#self.addSubscribed("test")
+		#self.addSubscribed("test")
 	
 	def expanded(self,item):
 		# change icon if group item expanded
