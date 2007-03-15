@@ -1150,8 +1150,15 @@ class mainWindow(QtGui.QMainWindow):
 								else:
 									self.chat.ui.chatTab.setTabIcon(i,self.getIcon(jid,'online',size="16x16"))
 						# Nastaveni tooltip
-						user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b> - '+str(e[2].getShow())+'</font><hr>'+unicode(e[2].getStatus())+'<br/><b>'+self.tr("Jabber ID:")+' </b>'+str(jid)+'')
+						#user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b> - '+str(e[2].getShow())+'</font><hr>'+unicode(e[2].getStatus())+'<br/><b>'+self.tr("Jabber ID:")+' </b>'+str(jid)+'')
 						# Nastaveni stavove zpravy pod nick v rosteru. Pokud neni zprava nastavena, vytvori se jen nick bez zpravy.
+						status=unicode(e[2].getStatus())
+						if len(status)>0 and status!="None":
+							if status[0]=="\n":
+								status=status[1:]
+						else:
+							status=""
+						user.setData(32,4,QtCore.QVariant(status))
 						user.setText(0,unicode(user.text(2)))
 						#if unicode(e[2].getStatus())=="None" or len(e[2].getStatus())==0:
 							#user.label.setText(unicode(user.text(2)))

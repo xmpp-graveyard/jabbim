@@ -1,11 +1,28 @@
-
+import os
 try:
 	from PyQt4 import QtCore, QtGui
 except:
 	print "PyQt4 is not installed."
 from palette import *
 from subscription_ui import *
+from tooltip_ui import *
 from addcontact import *
+
+class tooltipWidget(QtGui.QWidget):
+	def __init__(self,main,parent=None):
+		apply(QtGui.QWidget.__init__,(self,parent))
+		self.setMouseTracking (True)
+		self.main=main
+		self.ui=Ui_tooltipwidget()
+		self.ui.setupUi(self)
+		self.ui.gridlayout.setMargin(0)
+		self.ui.gridlayout.setSpacing(0)
+		self.setWindowFlags(QtCore.Qt.Popup)
+		palette=self.palette()
+		palette,images=loadPalette(palette,self.main.palette["tooltip"])
+		self.setPalette(palette)
+	def enterEvent(self,event):
+		self.hide()
 
 class subscriptionWidget(QtGui.QWidget):
 	def __init__(self,parent=None):
@@ -39,8 +56,10 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.headerItem().setText(1,QtGui.QApplication.translate("roster", "id", None, QtGui.QApplication.UnicodeUTF8))
 		self.headerItem().setText(2,QtGui.QApplication.translate("roster", "name", None, QtGui.QApplication.UnicodeUTF8))
 		self.headerItem().setText(3,QtGui.QApplication.translate("roster", "", None, QtGui.QApplication.UnicodeUTF8))
+		self.headerItem().setText(4,QtGui.QApplication.translate("roster", "", None, QtGui.QApplication.UnicodeUTF8))
 		self.hideColumn(1)
 		self.hideColumn(2)
+		self.hideColumn(4)
 		# signals
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.contactClicked)
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemExpanded ( QTreeWidgetItem * )"),self.expanded)
@@ -60,7 +79,10 @@ class rosterWidget(QtGui.QTreeWidget):
 		#self.addSubscription("test")
 		#self.addSubscribed("test")
 		#self.addSubscribed("test")
-	
+		self.tooltip=tooltipWidget(self.main)
+		self.timer=QtCore.QTimer()
+		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.tooltip.hide)
+
 	def expanded(self,item):
 		# change icon if group item expanded
 		if item.parent()==None:
@@ -78,9 +100,11 @@ class rosterWidget(QtGui.QTreeWidget):
 			self.setColumnWidth(0,int(self.width())-50)
 		else:
 			self.setColumnWidth(0,int(self.width())-38)
+		self.tooltip.setMaximumWidth(self.width())
+		self.tooltip.setMinimumWidth(self.width())
 
 	def hidden(self,bool):
-		# little hack (qt don't repaint reshown items, when we have not one top level item at the end)
+		# little hack (qt doesn't repaint reshown items, when we have not one top level item at the end)
 		self.setItemHidden(self.item, False)
 		self.setItemHidden(self.item, True)
 
@@ -567,3 +591,37 @@ class rosterWidget(QtGui.QTreeWidget):
 			contactMenu=self.buildGroupMenu(unicode(item.text(2)))
 			contactMenu.move(event.globalX(),event.globalY())
 			contactMenu.show()
+
+	def viewportEvent(self,event):
+		if event.type()==QtCore.QEvent.ToolTip:# and self.tooltip.isHidden():
+			item=self.itemAt(int(event.x()),int(event.y()))
+			if item.parent()!=None:
+				data=item.data(32,0) # get jid
+				jid=str(data.toString())
+				data=item.data(32,4) # get jid
+				message=unicode(data.toString())
+				if os.path.isfile(self.main.homeDir+'/.jabbim/avatars/'+jid):
+					pixmap=QtGui.QPixmap()
+					f=open(self.main.homeDir+'/.jabbim/avatars/'+jid,"r")
+					image=f.read()
+					f.close()
+					pixmap.loadFromData(image)
+					if pixmap.isNull():
+						self.tooltip.ui.icon.hide()
+					else:
+						self.tooltip.ui.icon.show()
+						self.tooltip.ui.icon.setPixmap(pixmap.scaled(64,64,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
+				else:
+					self.tooltip.ui.icon.hide()
+				self.tooltip.ui.jid.setText(jid)
+				self.tooltip.ui.status.setText(self.main.status[self.main.iconSort[unicode(item.text(1))[0]]])
+				if len(message)==0:
+					self.tooltip.ui.message.hide()
+				else:
+					self.tooltip.ui.message.show()
+					self.tooltip.ui.message.setText(message.replace("\n","<br/>"))
+				self.tooltip.move(self.mapToGlobal(QtCore.QPoint(0,event.y()+20)))
+				self.tooltip.adjustSize()
+				self.tooltip.show()
+				self.timer.start(3000)
+		return QtGui.QTreeWidget.viewportEvent(self,event)
