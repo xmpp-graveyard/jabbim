@@ -18,9 +18,7 @@ class tooltipWidget(QtGui.QWidget):
 		self.ui.gridlayout.setMargin(0)
 		self.ui.gridlayout.setSpacing(0)
 		self.setWindowFlags(QtCore.Qt.Popup)
-		palette=self.palette()
-		palette,images=loadPalette(palette,self.main.palette["tooltip"])
-		self.setPalette(palette)
+		self.setPalette(QtGui.QToolTip.palette())
 	def enterEvent(self,event):
 		self.hide()
 
