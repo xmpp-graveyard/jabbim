@@ -601,7 +601,7 @@ class rosterWidget(QtGui.QTreeWidget):
 					message=unicode(data.toString())
 					if os.path.isfile(self.main.homeDir+'/.jabbim/avatars/'+jid):
 						pixmap=QtGui.QPixmap()
-						f=open(self.main.homeDir+'/.jabbim/avatars/'+jid,"r")
+						f=open(self.main.homeDir+'/.jabbim/avatars/'+jid,"rb")
 						image=f.read()
 						f.close()
 						pixmap.loadFromData(image)

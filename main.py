@@ -208,7 +208,7 @@ class mainWindow(QtGui.QMainWindow):
 		for plugin in plugins:
 			if plugin.endswith(".py") and plugin!="plugins.py":
 				f=open("plugins/"+plugin)
-				self.plugins.append(load_source(plugin[:-3],"plugins/"+plugin,f))
+				self.plugins.append(load_source(plugin[:-3],"plugins/"+plugin,f).plugin(self))
 				f.close()
 				#self.plugins.append(eval(plugin[:-3]))
 		print self.plugins
@@ -946,7 +946,7 @@ class mainWindow(QtGui.QMainWindow):
 				if v.has_key("BINVAL"):
 					pixmap=QtGui.QPixmap()
 					image=base64.decodestring(str(v["BINVAL"]))
-					f=open(self.homeDir+'/.jabbim/avatars/'+jid,"w")
+					f=open(self.homeDir+'/.jabbim/avatars/'+jid,"wb")
 					f.write(image)
 					f.close()
 					pixmap.loadFromData(image)
@@ -1285,7 +1285,7 @@ class mainWindow(QtGui.QMainWindow):
 							self.groups[group]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,name,self.groups[group]["item"],self.offline,self.getIcon(jid,"offline")),"resources":[]}
 							if os.path.isfile(self.homeDir+'/.jabbim/avatars/'+jid):
 								pixmap=QtGui.QPixmap()
-								f=open(self.homeDir+'/.jabbim/avatars/'+jid,"r")
+								f=open(self.homeDir+'/.jabbim/avatars/'+jid,"rb")
 								image=f.read()
 								f.close()
 								pixmap.loadFromData(image)
