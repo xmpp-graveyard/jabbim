@@ -206,9 +206,11 @@ class mainWindow(QtGui.QMainWindow):
 		self.plugins=[]
 		plugins=os.listdir("plugins/")
 		for plugin in plugins:
-			if plugin.endswith(".py"):
-				load_source(plugin[:-3],"plugins/"+plugin)
-				self.plugins.append(eval(plugin[:-3]))
+			if plugin.endswith(".py") and plugin!="plugins.py":
+				f=open("plugins/"+plugin)
+				self.plugins.append(load_source(plugin[:-3],"plugins/"+plugin,f))
+				f.close()
+				#self.plugins.append(eval(plugin[:-3]))
 		print self.plugins
 
 	def connectClicked(self):

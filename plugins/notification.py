@@ -3,6 +3,8 @@ try:
 except:
 	print "PyQt4 is not installed."
 
+def init(main):
+	pass
 
 def onNewChatMessage(main,user,message):
 	if len(message)>40:
