@@ -829,14 +829,11 @@ class mainWindow(QtGui.QMainWindow):
 			for plugin in self.plugins:
 				plugin.onConnected()
 
-
 		elif e[0]=="disconnected":
 			self.timer.stop()
 			if int(self.ui.stackedWidget.currentIndex())!=1:
 				for plugin in self.plugins:
 					plugin.onDisconnected()
-
-				
 				self.ui.stackedWidget.setCurrentIndex(1)
 				self.ui.statusButton.setText(unicode(self.status["offline"]))
 				self.ui.statusButton.setIcon(self.getIcon(status="offline",size="16x16"))

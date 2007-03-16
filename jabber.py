@@ -579,23 +579,26 @@ class Jabber(groupchat,vcard):
 
 	def off(self):
 		# disconnect handler
-		if self.connected!="quit":
-			print "reconnecting"
-			self.connected="reconnect"
-			self.conn=xmpp.Client(self.server,debug=[])
-			#jabberLogin(self,user,server,password,resource,proxy)
-			try: self.conn.Dispatcher.PlugOut()
-			except: pass
-			if not self.conn.connect(proxy=self.proxy): return
-			print "reauthing"
-			if not self.conn.auth(self.user,self.password,self.resource): return
-			self.conn.Dispatcher.restoreHandlers(self.handlerssave)
-			self.conn.pluginFiletransfer()
-			self.connected=True
-			self.alive=True
-			print "connected"
-			event=customEvent(["reconnect",self.user,self.server,self.password,self.resource,self.proxy])
-			self.app.postEvent(self.main,event)
+		#if self.connected!="quit":
+			#print "reconnecting"
+			#self.connected="reconnect"
+			#self.conn=xmpp.Client(self.server)#,debug=[])
+			##jabberLogin(self,user,server,password,resource,proxy)
+			#try: self.conn.Dispatcher.PlugOut()
+			#except: pass
+			#if not self.conn.connect(proxy=self.proxy): return
+			#print "reauthing"
+			#if not self.conn.auth(self.user,self.password,self.resource): return
+			#self.conn.Dispatcher.restoreHandlers(self.handlerssave)
+			#self.conn.pluginFiletransfer()
+			#self.connected=True
+			#self.alive=True
+			#print "connected"
+			#event=customEvent(["reconnect",self.user,self.server,self.password,self.resource,self.proxy])
+			#self.app.postEvent(self.main,event)
+		self.connected=False
+		event=customEvent(["disconnected"])
+		self.app.postEvent(self.main,event)
 
 	def streamErrorHandler(self,conn,error):
 		name,text='error',error.getData()
@@ -614,7 +617,7 @@ class Jabber(groupchat,vcard):
 		user,server,password,resource=self.user,self.server,self.password,self.resource
 		proxy=self.proxy
 		
-		self.conn=xmpp.Client(server,debug=[])
+		self.conn=xmpp.Client(server)#,debug=[])
 		
 		conres=self.conn.connect(proxy=proxy)
 		self.alive=True
