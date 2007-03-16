@@ -40,10 +40,9 @@ from vcard import *
 from discovery_ui import *
 #from palette import *
 from dataforms import *
-import notification
 import socket
 import games
-
+from imp import load_source
 
 class discoveryWindow(QtGui.QDialog):
 	def __init__(self,parent=None):
@@ -201,7 +200,16 @@ class mainWindow(QtGui.QMainWindow):
 		if self.config['savePasswd']=="True":
 			self.ui.savePassword.setChecked(True)
 		#self.ui.connectInfo.setText("Connecting")
+		self.loadPlugins()
 
+	def loadPlugins(self):
+		self.plugins=[]
+		plugins=os.listdir("plugins/")
+		for plugin in plugins:
+			if plugin.endswith(".py"):
+				load_source(plugin[:-3],"plugins/"+plugin)
+				self.plugins.append(eval(plugin[:-3]))
+		print self.plugins
 
 	def connectClicked(self):
 		jid=unicode(self.ui.jid_2.text())
@@ -816,12 +824,17 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.connect.setEnabled(True)
 			self.ui.statusButton.setText(unicode(self.status["online"]))
 			self.ui.statusButton.setIcon(self.getIcon(status="online",size="16x16"))
-			notification.onConnected(self)
+			for plugin in self.plugins:
+				plugin.onConnected(self)
+
 
 		elif e[0]=="disconnected":
 			self.timer.stop()
 			if int(self.ui.stackedWidget.currentIndex())!=1:
-				notification.onDisconnected(self)
+				for plugin in self.plugins:
+					plugin.onDisconnected(self)
+
+				
 				self.ui.stackedWidget.setCurrentIndex(1)
 				self.ui.statusButton.setText(unicode(self.status["offline"]))
 				self.ui.statusButton.setIcon(self.getIcon(status="offline",size="16x16"))
@@ -1001,7 +1014,8 @@ class mainWindow(QtGui.QMainWindow):
 			timestamp="%s-%s-%s %s:%s:%s" % (timestamp[0:4],timestamp[4:6],timestamp[6:8],timestamp[9:11],timestamp[12:14],timestamp[15:17])
 			tab=None
 			tabIndex=0
-			notification.onNewHeadlineMessage(self,jid,text,subject,urls,descs,timestamp)
+			for plugin in self.plugins:
+				plugin.onNewHeadlineMessage(self,jid,text,subject,urls,descs,timestamp)
 			for i in range(self.chat.ui.chatTab.count()):
 				w=self.chat.ui.chatTab.widget(i)
 				if w.typ=="headline":
@@ -1027,7 +1041,8 @@ class mainWindow(QtGui.QMainWindow):
 						if word.find("http://")!=-1:
 							print word,'<a href="'+word+'">'+word+'</a>'
 							e[3]=e[3].replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
-					notification.onNewGroupchatMessage(self,jid,user,timestamp)
+					for plugin in self.plugins:
+						plugin.onNewGroupchatMessage(self,jid,user,timestamp)
 					if timestamp==None or len(timestamp)==0:
 						if unicode(w.name)==unicode(user):
 							message=self.skin["my_message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
@@ -1076,6 +1091,9 @@ class mainWindow(QtGui.QMainWindow):
 					tab=w
 					tabIndex=i
 			if self.config["tray_message_view_new_message"]=="all":
+				for plugin in self.plugins:
+					plugin.onNewChatMessage(self,user,unicode(e[3]))
+
 				notification.onNewChatMessage(self,user,unicode(e[3]))
 			if tab!=None:
 				if int(self.chat.ui.chatTab.currentIndex())!=tabIndex:
@@ -1083,14 +1101,17 @@ class mainWindow(QtGui.QMainWindow):
 				tab.chat.textEditWrite(message)
 			else:
 				if self.config["tray_message_view_new_message"]=="not_chat":
-					notification.onNewChatMessage(self,user,unicode(e[3]))
+					for plugin in self.plugins:
+						plugin.onNewChatMessage(self,user,unicode(e[3]))
 				self.chat.addChatTab(jid,unicode(user),icon,message)
 
 		elif e[0] == "subscribed":
 			jid=str(e[1])
 			#self.events.show()
 			#self.events.addEvent("subscribed",{"jid":str(jid)})
-			notification.onSubscribed(self,jid)
+			for plugin in self.plugins:
+				plugin.onSubscribed(self,jid)
+
 			self.ui.roster.addSubscribed(jid)
 			if not self.ui.roster.isUser(jid):
 				self.groups["Unknown"]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,jid,self.groups["Unknown"]["item"],self.offline,self.getIcon(jid,"offline")),"resources":[]}
@@ -1099,7 +1120,8 @@ class mainWindow(QtGui.QMainWindow):
 			jid=str(e[1])
 			if not self.ui.roster.isUser(jid):
 				self.ui.roster.addSubscription(jid)
-				notification.onSubscribe(self,jid)
+				for plugin in self.plugins:
+					plugin.onSubscribe(self,jid)
 				#if jid.startswith("@"):
 					#jab.roster.Authorize(str(jid))
 				#else:
@@ -1143,7 +1165,8 @@ class mainWindow(QtGui.QMainWindow):
 						#if self.config["tray_message_view_connect"]=="all":
 						print int(self.nickSort[str(e[2].getShow())]),int(unicode(user.text(1))[0])
 						if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]):
-							notification.onRosterPresence(self,unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
+							for plugin in self.plugins:
+								plugin.onRosterPresence(self,unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
 						#elif self.config["tray_message_view_connect"]=="online" and str(e[2].getShow())=="None":
 							#notification.onRosterPresence(self,unicode(user.text(2)),self.status[str(e[2].getShow())],unicode(e[2].getStatus()))
 						#elif self.config["tray_message_view_connect"]=="logged_in" and int(unicode(user.text(1)[0]))==9:
@@ -1186,7 +1209,8 @@ class mainWindow(QtGui.QMainWindow):
 						if int(unicode(user.text(1))[0])!=9:
 							# notification
 							if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]):
-								notification.onRosterPresence(self,unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
+								for plugin in self.plugins:
+									plugin.onRosterPresence(self,unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
 							# Odebrani resource z databaze
 							try:
 								self.groups[group]["users"][jid]["resources"].remove(e[3])
