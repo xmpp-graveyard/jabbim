@@ -208,7 +208,7 @@ class mainWindow(QtGui.QMainWindow):
 		for plugin in plugins:
 			if plugin.endswith(".py") and plugin!="plugins.py":
 				f=open("plugins/"+plugin)
-				self.plugins.append(load_source(plugin[:-3],"plugins/"+plugin,f).plugin(self))
+				self.plugins.append(load_source(plugin[:-3],"plugins/"+plugin,f).plugin(self,jab))
 				f.close()
 				#self.plugins.append(eval(plugin[:-3]))
 		print self.plugins
@@ -827,14 +827,14 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.statusButton.setText(unicode(self.status["online"]))
 			self.ui.statusButton.setIcon(self.getIcon(status="online",size="16x16"))
 			for plugin in self.plugins:
-				plugin.onConnected(self)
+				plugin.onConnected()
 
 
 		elif e[0]=="disconnected":
 			self.timer.stop()
 			if int(self.ui.stackedWidget.currentIndex())!=1:
 				for plugin in self.plugins:
-					plugin.onDisconnected(self)
+					plugin.onDisconnected()
 
 				
 				self.ui.stackedWidget.setCurrentIndex(1)
@@ -1017,7 +1017,7 @@ class mainWindow(QtGui.QMainWindow):
 			tab=None
 			tabIndex=0
 			for plugin in self.plugins:
-				plugin.onNewHeadlineMessage(self,jid,text,subject,urls,descs,timestamp)
+				plugin.onNewHeadlineMessage(jid,text,subject,urls,descs,timestamp)
 			for i in range(self.chat.ui.chatTab.count()):
 				w=self.chat.ui.chatTab.widget(i)
 				if w.typ=="headline":
@@ -1044,7 +1044,7 @@ class mainWindow(QtGui.QMainWindow):
 							print word,'<a href="'+word+'">'+word+'</a>'
 							e[3]=e[3].replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
 					for plugin in self.plugins:
-						plugin.onNewGroupchatMessage(self,jid,user,timestamp)
+						plugin.onNewGroupchatMessage(jid,user,timestamp)
 					if timestamp==None or len(timestamp)==0:
 						if unicode(w.name)==unicode(user):
 							message=self.skin["my_message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
@@ -1094,7 +1094,7 @@ class mainWindow(QtGui.QMainWindow):
 					tabIndex=i
 			if self.config["tray_message_view_new_message"]=="all":
 				for plugin in self.plugins:
-					plugin.onNewChatMessage(self,user,unicode(e[3]))
+					plugin.onNewChatMessage(user,unicode(e[3]))
 
 				notification.onNewChatMessage(self,user,unicode(e[3]))
 			if tab!=None:
@@ -1104,7 +1104,7 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				if self.config["tray_message_view_new_message"]=="not_chat":
 					for plugin in self.plugins:
-						plugin.onNewChatMessage(self,user,unicode(e[3]))
+						plugin.onNewChatMessage(user,unicode(e[3]))
 				self.chat.addChatTab(jid,unicode(user),icon,message)
 
 		elif e[0] == "subscribed":
@@ -1112,7 +1112,7 @@ class mainWindow(QtGui.QMainWindow):
 			#self.events.show()
 			#self.events.addEvent("subscribed",{"jid":str(jid)})
 			for plugin in self.plugins:
-				plugin.onSubscribed(self,jid)
+				plugin.onSubscribed(jid)
 
 			self.ui.roster.addSubscribed(jid)
 			if not self.ui.roster.isUser(jid):
@@ -1123,7 +1123,7 @@ class mainWindow(QtGui.QMainWindow):
 			if not self.ui.roster.isUser(jid):
 				self.ui.roster.addSubscription(jid)
 				for plugin in self.plugins:
-					plugin.onSubscribe(self,jid)
+					plugin.onSubscribe(jid)
 				#if jid.startswith("@"):
 					#jab.roster.Authorize(str(jid))
 				#else:
@@ -1168,7 +1168,7 @@ class mainWindow(QtGui.QMainWindow):
 						print int(self.nickSort[str(e[2].getShow())]),int(unicode(user.text(1))[0])
 						if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]):
 							for plugin in self.plugins:
-								plugin.onRosterPresence(self,unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
+								plugin.onRosterPresence(unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
 						#elif self.config["tray_message_view_connect"]=="online" and str(e[2].getShow())=="None":
 							#notification.onRosterPresence(self,unicode(user.text(2)),self.status[str(e[2].getShow())],unicode(e[2].getStatus()))
 						#elif self.config["tray_message_view_connect"]=="logged_in" and int(unicode(user.text(1)[0]))==9:
@@ -1212,7 +1212,7 @@ class mainWindow(QtGui.QMainWindow):
 							# notification
 							if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]):
 								for plugin in self.plugins:
-									plugin.onRosterPresence(self,unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
+									plugin.onRosterPresence(unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
 							# Odebrani resource z databaze
 							try:
 								self.groups[group]["users"][jid]["resources"].remove(e[3])
