@@ -355,7 +355,7 @@ class mainWindow(QtGui.QMainWindow):
 		# if we had some server, we can get items
 		if jid!="":
 			self.ui.groupchat.clear()
-			jab.discoveryItems(jid)
+			jab.discoveryItems(jid,back="groupchat_items")
 
 	def groupchatClicked(self,item,i):
 		# get users in groupchat
@@ -753,6 +753,17 @@ class mainWindow(QtGui.QMainWindow):
 					user.setText(0,unicode(name))
 					user.setText(1,unicode(name))
 					user.setIcon(0,self.getIcon(size="16x16"))
+			elif e[0]=="groupchat_items":
+				item=e[2]
+				jid=e[3]
+				name=""
+				if item.has_key("name"):
+					name=item["name"]
+				groupchat=QtGui.QTreeWidgetItem(self.ui.groupchat)
+				groupchat.setText(0,unicode(name))
+				groupchat.setText(1,unicode(item["jid"]))
+				groupchat.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
+				#self.ui.groupchat.sortItems(0,QtCore.Qt.AscendingOrder)
 			elif e[0]==None:
 				typ=e[1]
 				if typ=="items":
@@ -767,13 +778,6 @@ class mainWindow(QtGui.QMainWindow):
 						if item.has_key("name"):
 							name=item["name"]
 						node=""
-						if self.discoInfo.has_key(jid):
-							if self.discoInfo[jid]=="conf":
-								groupchat=QtGui.QTreeWidgetItem(self.ui.groupchat)
-								groupchat.setText(0,unicode(name))
-								groupchat.setText(1,unicode(item["jid"]))
-								groupchat.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
-								self.ui.groupchat.sortItems(0,QtCore.Qt.AscendingOrder)
 						parent=self.disco.items[jid]
 						if self.disco.nodes.has_key(jid+str(parentNode)):
 							parent=self.disco.nodes[jid+str(parentNode)]
