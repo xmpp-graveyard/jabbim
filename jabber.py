@@ -653,7 +653,7 @@ class Jabber(groupchat,vcard):
 		self.conn.RegisterHandler('presence',self.presenceHandle)
 		self.conn.RegisterDisconnectHandler(self.off)
 		self.conn.RegisterHandler('iq', self.xmppPingReply, 'get', NS_XMPP_PING)
-		self.conn.pluginFiletransfer()
+		#self.conn.pluginFiletransfer()
 		self.roster = self.conn.getRoster()
 		event=customEvent(["roster_update", self.roster])
 		self.app.postEvent(self.main,event)
