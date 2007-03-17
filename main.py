@@ -1167,9 +1167,11 @@ class mainWindow(QtGui.QMainWindow):
 						# Zmena stavu
 						#if self.config["tray_message_view_connect"]=="all":
 						print int(self.nickSort[str(e[2].getShow())]),int(unicode(user.text(1))[0])
-						if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]):
+						if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]) and not self.groups[group]["users"][jid].has_key('firsttime'):
 							for plugin in self.plugins:
 								plugin.onRosterPresence(unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
+						if self.groups[group]["users"][jid].has_key('firsttime'):
+							del self.groups[group]["users"][jid]["firsttime"]
 						#elif self.config["tray_message_view_connect"]=="online" and str(e[2].getShow())=="None":
 							#notification.onRosterPresence(self,unicode(user.text(2)),self.status[str(e[2].getShow())],unicode(e[2].getStatus()))
 						#elif self.config["tray_message_view_connect"]=="logged_in" and int(unicode(user.text(1)[0]))==9:
@@ -1283,7 +1285,7 @@ class mainWindow(QtGui.QMainWindow):
 							self.groups[group]={"item":self.ui.roster.addGroup(group),"users":{}}
 						if not self.groups[group]["users"].has_key(jid):
 							name=e[1].getName(jid)
-							self.groups[group]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,name,self.groups[group]["item"],self.offline,self.getIcon(jid,"offline")),"resources":[]}
+							self.groups[group]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,name,self.groups[group]["item"],self.offline,self.getIcon(jid,"offline")),"resources":[],'firsttime':''}
 							if os.path.isfile(self.homeDir+'/.jabbim/avatars/'+jid):
 								pixmap=QtGui.QPixmap()
 								f=open(self.homeDir+'/.jabbim/avatars/'+jid,"rb")

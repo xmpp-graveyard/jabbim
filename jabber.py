@@ -617,7 +617,7 @@ class Jabber(groupchat,vcard):
 		user,server,password,resource=self.user,self.server,self.password,self.resource
 		proxy=self.proxy
 		
-		self.conn=xmpp.Client(server)#,debug=[])
+		self.conn=xmpp.Client(server,debug=[])
 		
 		conres=self.conn.connect(proxy=proxy)
 		self.alive=True
