@@ -191,7 +191,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		# timer config
 		self.timer=QtCore.QTimer()
-		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),jab.isalive)
+		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.isalive)
 		self.connectTimer=QtCore.QTimer()
 		self.ui.password.setText(self.config['passwd'])
 		self.ui.jid_2.setText(self.config['jid'])
@@ -201,6 +201,9 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.savePassword.setChecked(True)
 		#self.ui.connectInfo.setText("Connecting")
 		self.loadPlugins()
+
+	def isalive(self):
+		app.postEvent(jab,customEvent(["isalive"]))
 
 	def loadPlugins(self):
 		self.plugins=[]
@@ -250,9 +253,10 @@ class mainWindow(QtGui.QMainWindow):
 			print connected
 			if connected==None or connected==False or connected=="quit":
 				print "connecting"
+				self.server=server
 				jabberLogin(jab,user,server,password,resource,proxy)
-			else:
-				jab.off()
+			#else:
+				#jab.off()
 			self.ui.connect.setEnabled(False)
 
 	def proxySettings(self):
@@ -308,7 +312,7 @@ class mainWindow(QtGui.QMainWindow):
 			jid=unicode(lst[0].toString()) # get jid
 			nickname=unicode(lst[1].toString()) # get nickname
 			# send jabber command
-			jab.getIntoRoom(jid,nickname)
+			app.postEvent(jab,customEvent(["get_into_room",jid,nickname]))
 		elif cmd=="edit_bookmark":
 			item=self.ui.bookmarks.currentItem()
 			data=action.data()
@@ -328,7 +332,8 @@ class mainWindow(QtGui.QMainWindow):
 			item=self.ui.bookmarks.currentItem()
 			#self.ui.bookmarks.takeTopLevelItem(self.ui.bookmarks.indexOfTopLevelItem(item))
 			del self.bookmarks[unicode(item.text(1))]
-			jab.setBookmarks(self.bookmarks)
+			app.postEvent(jab,customEvent(["set_bookmarks",self.bookmarks]))
+			#jab.setBookmarks(self.bookmarks)
 
 	def groupchatContextMenu(self,pos):
 		# make groupchat context menu
@@ -355,7 +360,8 @@ class mainWindow(QtGui.QMainWindow):
 		# if we had some server, we can get items
 		if jid!="":
 			self.ui.groupchat.clear()
-			jab.discoveryItems(jid,back="groupchat_items")
+			app.postEvent(jab,customEvent(["discovery_items",jid,"groupchat_items"]))
+			#jab.discoveryItems(jid,back="groupchat_items")
 
 	def groupchatClicked(self,item,i):
 		# get users in groupchat
@@ -366,7 +372,8 @@ class mainWindow(QtGui.QMainWindow):
 		# set item expanded
 		self.ui.groupchat.setItemExpanded(item,True)
 		# send jabber command
-		jab.discoveryItems(unicode(item.text(1)),back="muc_items")
+		app.postEvent(jab,customEvent(["discovery_items",unicode(item.text(1)),"muc_items"]))
+		#jab.discoveryItems(unicode(item.text(1)),back="muc_items")
 
 	def bookmarksClicked(self,item,i):
 		# get users in bookmarked groupchat
@@ -377,7 +384,8 @@ class mainWindow(QtGui.QMainWindow):
 		# set item expanded
 		self.ui.bookmarks.setItemExpanded(item,True)
 		# send jabber command
-		jab.discoveryItems(unicode(item.text(1)),back="bookmarks_items")
+		app.postEvent(jab,customEvent(["discovery_items",unicode(item.text(1)),"bookmarks_items"]))
+		#jab.discoveryItems(unicode(item.text(1)),back="bookmarks_items")
 
 	def jgamesClicked(self,action):
 		data=action.data()
@@ -397,7 +405,8 @@ class mainWindow(QtGui.QMainWindow):
 					#self.chat.addGameChatTab(muc+self.gameServer,muc)
 					#self.groupchat[muc+self.gameServer]=[jab.user,[]]
 					self.groupchat[room]=[nickname,[]]
-					jab.getIntoRoom(muc+self.gameServer,jab.user)
+					app.postEvent(jab,customEvent(["get_into_room",muc+self.gameServer,None]))
+					#jab.getIntoRoom(muc+self.gameServer,jab.user)
 					#jab.getGroupchatConfig(muc+self.gameServer)
 					#self.preparedGames.append([plugin.prepareGameWindow(name,self,jab,self.main.widgets[str(muc)].ui.gameFrame),plugin.config.id])
 					break
@@ -430,14 +439,16 @@ class mainWindow(QtGui.QMainWindow):
 		self.disco.ui.services.clear()
 		self.disco.nodes={}
 		self.disco.items={}
-		jab.discoveryItems()
+		app.postEvent(jab,customEvent(["discovery_items"]))
+		#jab.discoveryItems()
 
 	def trayQuit(self):
 		# turn off jabbim
 		self.tray.hide()
 		self.timer.stop()
 		app.closeAllWindows()
-		jab.disconnect()
+		app.postEvent(jab,customEvent(["disconnect"]))
+		#jab.disconnect()
 		sys.exit(0)
 
 	def trayActivated(self,reason):
@@ -589,7 +600,8 @@ class mainWindow(QtGui.QMainWindow):
 			room=unicode(cmd)
 			nickname=unicode(lst[1].toString())
 			self.groupchat[room]=[nickname,[]]
-			jab.getIntoRoom(room,nickname)
+			app.postEvent(jab,customEvent(["get_into_room",room,nickname]))
+			#jab.getIntoRoom(room,nickname)
 
 	def statusChanged(self,action):
 		# status changed
@@ -770,10 +782,11 @@ class mainWindow(QtGui.QMainWindow):
 					item=e[2]
 					jid=e[3]
 					parentNode=e[4]
-					if item.has_key("jid") and jid==jab.server:
+					if item.has_key("jid") and jid==self.server:
 						self.disco.addItem(unicode(item["jid"]))
-						jab.discoveryInfo(item["jid"])
-					if jid!=jab.server:
+						#jab.discoveryInfo(item["jid"])
+						app.postEvent(jab,customEvent(["discovery_info",item["jid"]]))
+					if jid!=self.server:
 						name=""
 						if item.has_key("name"):
 							name=item["name"]
@@ -823,9 +836,12 @@ class mainWindow(QtGui.QMainWindow):
 			#MainWindow.show() # show main window
 			#login.done(1) # close login window
 			self.ui.stackedWidget.setCurrentIndex(0)
-			jab.setStatus(self.groupchat) # set status
-			jab.getBookmarks() # get bookmarks
-			jab.isalive()
+			app.postEvent(jab,customEvent(["set_status",self.groupchat]))
+			#jab.setStatus(self.groupchat) # set status
+			app.postEvent(jab,customEvent(["get_bookmarks",self.groupchat]))
+			
+			#jab.getBookmarks() # get bookmarks
+			self.isalive()
 			self.timer.start(10000)
 			self.ui.connect.setEnabled(True)
 			self.ui.statusButton.setText(unicode(self.status["online"]))
@@ -851,8 +867,9 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.statusButton.setText(unicode(self.status["online"]))
 			self.ui.statusButton.setIcon(self.getIcon(status="online",size="16x16"))
 			self.ui.stackedWidget.setCurrentIndex(0)
-			jab.setStatus(self.groupchat) # set status
-			jab.isalive()
+			app.postEvent(jab,customEvent(["set_status",self.groupchat]))
+			#jab.setStatus(self.groupchat) # set status
+			self.isalive()
 
 		elif e[0]=="bookmarks":
 			# we get bookmarks
@@ -935,7 +952,8 @@ class mainWindow(QtGui.QMainWindow):
 			self.groupchat[room]=[nickname,[]] # initialize room storage
 			print "adding group chat tab"
 			self.chat.addGroupChatTab(room,nickname,affiliation) # add room tab
-			jab.getStoreQueue(room) # getStoreQueue
+			app.postEvent(jab,customEvent(["get_store_queue",room]))
+			#jab.getStoreQueue(room) # getStoreQueue
 
 		elif e[0] == "avatar_show":
 			# show contact avatar
@@ -1132,7 +1150,7 @@ class mainWindow(QtGui.QMainWindow):
 					#self.events.show()
 					#self.events.addEvent("subscribe",{"jid":str(jid)})
 			else:
-				jab.roster.Authorize(str(jid))
+				app.postEvent(jab,customEvent(["roster_authorize",str(jid)]))
 		
 		elif e[0] == "nick_update":
 			# Prisla presence
@@ -1271,10 +1289,13 @@ class mainWindow(QtGui.QMainWindow):
 		elif e[0] == "roster_update":
 			print "roster update"
 			items=e[1].getItems()
+			disco=[]
 			for jid in items:
 				if len(jid.split("@"))!=1:
-					if not self.discoInfo.has_key(jid.split("@")[1]):
-						jab.discoveryInfo(jid.split("@")[1])
+					if not self.discoInfo.has_key(jid.split("@")[1]) and not jid.split("@")[1] in disco:
+						app.postEvent(jab,customEvent(["discovery_info",jid.split("@")[1]]))
+						disco.append(jid.split("@")[1])
+						#jab.discoveryInfo(jid.split("@")[1])
 				try:
 					jid=str(jid).lower()
 					groups=e[1].getGroups(jid)
@@ -1351,11 +1372,12 @@ class statusWindow(QtGui.QDialog):
 	def accept(self):
 		if self.data=="offline":
 			#jab.setStatus(MainWindow.groupchat,"unavailable",unicode(self.ui.status.toPlainText ()))
-			jab.disconnect()
+			app.postEvent(jab,customEvent(["disconnect"]))
 			MainWindow.ui.stackedWidget.setCurrentIndex(1)
 			MainWindow.timer.stop()
 		else:
-			jab.setStatus(MainWindow.groupchat,self.data,unicode(self.ui.status.toPlainText ()))
+			app.postEvent(jab,customEvent(["set_status",self.groupchat,self.data,unicode(self.ui.status.toPlainText ())]))
+			#jab.setStatus(MainWindow.groupchat,self.data,unicode(self.ui.status.toPlainText ()))
 		self.done(1)
 
 

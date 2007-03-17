@@ -596,7 +596,7 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 			#event=customEvent(["reconnect",self.user,self.server,self.password,self.resource,self.proxy])
 			#QtGui.QApplication.postEvent(self.main,event)
 		self.connected=False
-		
+		print "off"
 		QtGui.QApplication.postEvent(self.main,customEvent(["disconnected"]))
 
 	def streamErrorHandler(self,conn,error):
@@ -677,7 +677,6 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 			#if self.connected=="reconnect":
 				#print "new try"
 				#self.connect_thrd()
-			print "finish",self
 			return 2
 		
 
@@ -712,12 +711,73 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 
 	# see connect_thrd(self)
 	def run(self):
+		print "run"
 		self.connect_thrd()
 		#global v1
 		#v1 = threading.Thread(target = self.connect_thrd)
 		## daemonized thread will be auto-killed when terminating application
 		#v1.setDaemon(True)
 		#v1.start()
+		print "finish",self
+
+	def customEvent(self,event):
+		data=event.data
+		
+		if data[0]=="isalive":
+			self.isalive()
+			
+		elif data[0]=="disconnect":
+			self.disconnect()
+			
+		elif data[0]=="get_into_room":
+			jid=data[1]
+			nickname=data[2]
+			if nickname==None:
+				nickname=self.user
+			self.getIntoRoom(jid,nickname)
+		
+		elif data[0]=="set_bookmarks":
+			bookmarks=data[1]
+			self.setBookmarks(data[1])
+			
+		elif data[0]=="discovery_items":
+			try:
+				jid=data[1]
+			except:
+				jid=None
+			try:
+				back=data[2]
+			except:
+				back=None
+			self.discoveryItems(jid,back=back)
+		
+		elif data[0]=="discovery_info":
+			try:
+				jid=data[1]
+			except:
+				jid=None
+			self.discoveryInfo(jid)
+		
+		elif data[0]=="set_status":
+			try:
+				status=data[2]
+			except:
+				status="online"
+			try:
+				text=data[3]
+			except:
+				text=""
+			self.setStatus(data[1],status,text)
+
+		elif data[0]=="get_bookmarks":
+			self.getBookmarks()
+			
+		elif data[0]=="get_store_queue":
+			self.getStoreQueue(data[1]) # getStoreQueue
+		
+		elif data[0]=="roster_authorize":
+			self.roster.Authorize(data[1])
+
 
 
 class customEvent(QtCore.QEvent):
