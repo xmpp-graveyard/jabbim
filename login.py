@@ -67,4 +67,4 @@ def jabberLogin(jab,user,server,password,resource,proxy):
 	jab.password=password
 	jab.resource=resource
 	jab.proxy=proxy
-	jab.connect()
+	jab.start()
