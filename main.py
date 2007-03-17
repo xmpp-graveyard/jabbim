@@ -1153,6 +1153,7 @@ class mainWindow(QtGui.QMainWindow):
 				app.postEvent(jab,customEvent(["roster_authorize",str(jid)]))
 		
 		elif e[0] == "nick_update":
+			return
 			# Prisla presence
 			jid=str(e[1])
 			# Pokud je jid v rosteru:
