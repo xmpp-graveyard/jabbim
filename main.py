@@ -746,6 +746,7 @@ class mainWindow(QtGui.QMainWindow):
 		elif event.typ=="err":
 			self.jabberErrorHandler(event.data)
 		else:
+			return
 			e=event.data
 			if e[0]=="muc_items":
 				item=e[2]
@@ -1153,7 +1154,6 @@ class mainWindow(QtGui.QMainWindow):
 				app.postEvent(jab,customEvent(["roster_authorize",str(jid)]))
 		
 		elif e[0] == "nick_update":
-			return
 			# Prisla presence
 			jid=str(e[1])
 			# Pokud je jid v rosteru:
