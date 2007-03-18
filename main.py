@@ -1170,13 +1170,10 @@ class mainWindow(QtGui.QMainWindow):
 					if str(e[2].getType())!="unavailable":
 						# Pridani resource k uzivateli, pokud uz tam neni
 						if not unicode(e[3]) in self.groups[group]["users"][jid]["resources"]:
-							pass
-							#self.groups[group]["users"][jid]["resources"].append(unicode(e[3]))
-							#resources=self.groups[group]["users"][jid]["resources"]
-							#try:
-								#resources.remove('')
-							#except:
-								#pass
+							self.groups[group]["users"][jid]["resources"].append(unicode(e[3]))
+							if '' in self.groups[group]["users"][jid]["resources"]:
+								self.groups[group]["users"][jid]["resources"].remove('')
+							resources=self.groups[group]["users"][jid]["resources"]
 							## Pokud je resourcu vic, pridavaji se polozky do rosteru
 							#if len(resources)>1:
 								## Zjisteni jid+"/"+resource v rosteru
