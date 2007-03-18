@@ -786,5 +786,5 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 class customEvent(QtCore.QEvent):
 	def __init__(self,data,typ="inc"):
 		apply(QtCore.QEvent.__init__,(self,QtCore.QEvent.User))
-		self.data=data
-		self.typ=typ
+		self.data=list(data)
+		self.typ=unicode(typ)
