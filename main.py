@@ -747,10 +747,10 @@ class mainWindow(QtGui.QMainWindow):
 		return "jabber"
 
 	def customEvent(self,event):
-		if event.typ=="inc":
-			self.jabberCommandHandler(event.data)
-		elif event.typ=="err":
-			self.jabberErrorHandler(event.data)
+		#if event.typ=="inc":
+			#self.jabberCommandHandler(event.data)
+		#elif event.typ=="err":
+			#self.jabberErrorHandler(event.data)
 		#else:
 			#e=event.data
 			#if e[0]=="muc_items":
