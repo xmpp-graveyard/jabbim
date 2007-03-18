@@ -1168,31 +1168,30 @@ class mainWindow(QtGui.QMainWindow):
 				for user,group in self.ui.roster.getUsers(jid,True).iteritems():
 					# Pokud se nejedna o odhlaseni uzivatele
 					if str(e[2].getType())!="unavailable":
-						pass
 						# Pridani resource k uzivateli, pokud uz tam neni
-						#if not e[3] in self.groups[group]["users"][jid]["resources"]:
-							#self.groups[group]["users"][jid]["resources"].append(e[3])
-							#resources=self.groups[group]["users"][jid]["resources"]
-							#try:
-								#resources.remove('')
-							#except:
-								#pass
-							## Pokud je resourcu vic, pridavaji se polozky do rosteru
-							#if len(resources)>1:
-								## Zjisteni jid+"/"+resource v rosteru
-								#res=[]
-								#for i in range(user.childCount()):
-									#j=user.child(i)
-									#j=j.data(32,0)
-									#j=str(j.toString())
-									#res.append(j)
-								#for resource in resources:
-									## Pokud uz neni resource v rosteru, pridame ho
-									#if not jid+'/'+resource in res and len(resource)!=0:
-										#item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
-						## Zmena stavu
-						##if self.config["tray_message_view_connect"]=="all":
-						##print int(self.nickSort[str(e[2].getShow())]),int(unicode(user.text(1))[0])
+						if not e[3] in self.groups[group]["users"][jid]["resources"]:
+							self.groups[group]["users"][jid]["resources"].append(e[3])
+							resources=self.groups[group]["users"][jid]["resources"]
+							try:
+								resources.remove('')
+							except:
+								pass
+							# Pokud je resourcu vic, pridavaji se polozky do rosteru
+							if len(resources)>1:
+								# Zjisteni jid+"/"+resource v rosteru
+								res=[]
+								for i in range(user.childCount()):
+									j=user.child(i)
+									j=j.data(32,0)
+									j=str(j.toString())
+									res.append(j)
+								for resource in resources:
+									# Pokud uz neni resource v rosteru, pridame ho
+									if not jid+'/'+resource in res and len(resource)!=0:
+										item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
+						# Zmena stavu
+						#if self.config["tray_message_view_connect"]=="all":
+						#print int(self.nickSort[str(e[2].getShow())]),int(unicode(user.text(1))[0])
 						#if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]) and not self.groups[group]["users"][jid].has_key('firsttime'):
 							#for plugin in self.plugins:
 								#plugin.onRosterPresence(unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
@@ -1234,7 +1233,7 @@ class mainWindow(QtGui.QMainWindow):
 							##user.label.setText(unicode(self.ui.roster.getUsers(jid)[0].text(2))+'<br/><font size="-1"><i>'+text+"</i></font>")
 						## Zobrazeni polozky v rosteru
 						#self.ui.roster.setItemHidden(user,False)
-					## Jedna se o odhlaseni
+					# Jedna se o odhlaseni
 					elif str(e[2].getType())=="unavailable":
 						# Pokud byl user predtim prihlaseny
 						if int(unicode(user.text(1))[0])!=9:
