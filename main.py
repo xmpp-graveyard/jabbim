@@ -751,86 +751,86 @@ class mainWindow(QtGui.QMainWindow):
 			self.jabberCommandHandler(event.data)
 		elif event.typ=="err":
 			self.jabberErrorHandler(event.data)
-		else:
-			e=event.data
-			if e[0]=="muc_items":
-				item=e[2]
-				jid=e[3]
-				name=unicode(item["jid"]).split("/")[1]
-				for i in self.ui.groupchat.findItems(jid,QtCore.Qt.MatchExactly,1):
-					user=QtGui.QTreeWidgetItem(i)
-					user.setText(0,unicode(name))
-					user.setText(1,unicode(name))
-					user.setIcon(0,self.getIcon(size="16x16"))
-			elif e[0]=="bookmarks_items":
-				item=e[2]
-				jid=e[3]
-				name=unicode(item["jid"]).split("/")[1]
-				for i in self.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1):
-					user=QtGui.QTreeWidgetItem(i)
-					user.setText(0,unicode(name))
-					user.setText(1,unicode(name))
-					user.setIcon(0,self.getIcon(size="16x16"))
-			elif e[0]=="groupchat_items":
-				item=e[2]
-				jid=e[3]
-				name=""
-				if item.has_key("name"):
-					name=item["name"]
-				groupchat=QtGui.QTreeWidgetItem(self.ui.groupchat)
-				groupchat.setText(0,unicode(name))
-				groupchat.setText(1,unicode(item["jid"]))
-				groupchat.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
-				#self.ui.groupchat.sortItems(0,QtCore.Qt.AscendingOrder)
-			elif e[0]==None:
-				typ=e[1]
-				if typ=="items":
-					item=e[2]
-					jid=e[3]
-					parentNode=e[4]
-					if item.has_key("jid") and jid==self.server:
-						self.disco.addItem(unicode(item["jid"]))
-						#jab.discoveryInfo(item["jid"])
-						app.postEvent(jab,customEvent(["discovery_info",item["jid"]]))
-					if jid!=self.server:
-						name=""
-						if item.has_key("name"):
-							name=item["name"]
-						node=""
-						parent=self.disco.items[jid]
-						if self.disco.nodes.has_key(jid+str(parentNode)):
-							parent=self.disco.nodes[jid+str(parentNode)]
-						if item.has_key("node"):
-							node=item["node"]
-						self.disco.addItem(unicode(item["jid"]),unicode(name),parent,node=node)
-				else:
-					ident=e[2]
-					features=e[3]
-					jid=e[4]
-					if not self.discoInfo.has_key(jid) and ident[0].has_key("type"):
-						if "http://jabber.org/protocol/muc" in features and ident[0]["type"]=="text":
-							self.discoInfo[jid]="conf"
-							self.ui.getGroupchatList.setEnabled(True)
-						elif ident[0]["type"]=="bytestreams" and ident[0]["category"]=="proxy":
-							#jab.conn.S5B.addProxy(str(jid))
-							#jab.conn.S5B.addProxy(str('proxy.jabberfr.org'))
-							print "adding proxy",jid
-						else:
-							self.discoInfo[jid]=ident[0]["type"]
-							users=self.ui.roster.getServerUsers(jid)
-							for user in users:
-								data=user.data(32,0)
-								data=str(data.toString())
-								#user.setIcon(0,QtGui.QIcon(self.statusPath+self.getUserType(data)+"-"+self.iconSort[unicode(user.text(1))[0]]+".png"))
-								user.setIcon(0,self.getIcon(data,self.iconSort[unicode(user.text(1))[0]]))
+		#else:
+			#e=event.data
+			#if e[0]=="muc_items":
+				#item=e[2]
+				#jid=e[3]
+				#name=unicode(item["jid"]).split("/")[1]
+				#for i in self.ui.groupchat.findItems(jid,QtCore.Qt.MatchExactly,1):
+					#user=QtGui.QTreeWidgetItem(i)
+					#user.setText(0,unicode(name))
+					#user.setText(1,unicode(name))
+					#user.setIcon(0,self.getIcon(size="16x16"))
+			#elif e[0]=="bookmarks_items":
+				#item=e[2]
+				#jid=e[3]
+				#name=unicode(item["jid"]).split("/")[1]
+				#for i in self.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1):
+					#user=QtGui.QTreeWidgetItem(i)
+					#user.setText(0,unicode(name))
+					#user.setText(1,unicode(name))
+					#user.setIcon(0,self.getIcon(size="16x16"))
+			#elif e[0]=="groupchat_items":
+				#item=e[2]
+				#jid=e[3]
+				#name=""
+				#if item.has_key("name"):
+					#name=item["name"]
+				#groupchat=QtGui.QTreeWidgetItem(self.ui.groupchat)
+				#groupchat.setText(0,unicode(name))
+				#groupchat.setText(1,unicode(item["jid"]))
+				#groupchat.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
+				##self.ui.groupchat.sortItems(0,QtCore.Qt.AscendingOrder)
+			#elif e[0]==None:
+				#typ=e[1]
+				#if typ=="items":
+					#item=e[2]
+					#jid=e[3]
+					#parentNode=e[4]
+					#if item.has_key("jid") and jid==self.server:
+						#self.disco.addItem(unicode(item["jid"]))
+						##jab.discoveryInfo(item["jid"])
+						#app.postEvent(jab,customEvent(["discovery_info",item["jid"]]))
+					#if jid!=self.server:
+						#name=""
+						#if item.has_key("name"):
+							#name=item["name"]
+						#node=""
+						#parent=self.disco.items[jid]
+						#if self.disco.nodes.has_key(jid+str(parentNode)):
+							#parent=self.disco.nodes[jid+str(parentNode)]
+						#if item.has_key("node"):
+							#node=item["node"]
+						#self.disco.addItem(unicode(item["jid"]),unicode(name),parent,node=node)
+				#else:
+					#ident=e[2]
+					#features=e[3]
+					#jid=e[4]
+					#if not self.discoInfo.has_key(jid) and ident[0].has_key("type"):
+						#if "http://jabber.org/protocol/muc" in features and ident[0]["type"]=="text":
+							#self.discoInfo[jid]="conf"
+							#self.ui.getGroupchatList.setEnabled(True)
+						#elif ident[0]["type"]=="bytestreams" and ident[0]["category"]=="proxy":
+							##jab.conn.S5B.addProxy(str(jid))
+							##jab.conn.S5B.addProxy(str('proxy.jabberfr.org'))
+							#print "adding proxy",jid
+						#else:
+							#self.discoInfo[jid]=ident[0]["type"]
+							#users=self.ui.roster.getServerUsers(jid)
+							#for user in users:
+								#data=user.data(32,0)
+								#data=str(data.toString())
+								##user.setIcon(0,QtGui.QIcon(self.statusPath+self.getUserType(data)+"-"+self.iconSort[unicode(user.text(1))[0]]+".png"))
+								#user.setIcon(0,self.getIcon(data,self.iconSort[unicode(user.text(1))[0]]))
 						
 	
-					if self.disco.items.has_key(jid):
-						for feature in features:
-							if not feature in self.disco.items[jid].features:
-								self.disco.items[jid].features.append(feature)
-						if self.disco.items.has_key(jid):
-							self.disco.items[jid].setText(0,ident[0]["name"])
+					#if self.disco.items.has_key(jid):
+						#for feature in features:
+							#if not feature in self.disco.items[jid].features:
+								#self.disco.items[jid].features.append(feature)
+						#if self.disco.items.has_key(jid):
+							#self.disco.items[jid].setText(0,ident[0]["name"])
 
 
 	def jabberCommandHandler(self,e):
@@ -855,441 +855,441 @@ class mainWindow(QtGui.QMainWindow):
 			for plugin in self.plugins:
 				plugin.onConnected()
 
-		elif e[0]=="disconnected":
-			self.timer.stop()
-			if int(self.ui.stackedWidget.currentIndex())!=1:
-				for plugin in self.plugins:
-					plugin.onDisconnected()
-				self.ui.stackedWidget.setCurrentIndex(1)
-				self.ui.statusButton.setText(unicode(self.status["offline"]))
-				self.ui.statusButton.setIcon(self.getIcon(status="offline",size="16x16"))
-				self.ui.connect.setEnabled(True)
+		#elif e[0]=="disconnected":
+			#self.timer.stop()
+			#if int(self.ui.stackedWidget.currentIndex())!=1:
+				#for plugin in self.plugins:
+					#plugin.onDisconnected()
+				#self.ui.stackedWidget.setCurrentIndex(1)
+				#self.ui.statusButton.setText(unicode(self.status["offline"]))
+				#self.ui.statusButton.setIcon(self.getIcon(status="offline",size="16x16"))
+				#self.ui.connect.setEnabled(True)
 
-		elif e[0]=="private_data_set":
-			self.buildGroupchatMenu()
+		#elif e[0]=="private_data_set":
+			#self.buildGroupchatMenu()
 
-		elif e[0]=="reconnect":
-			self.ui.connect.setEnabled(True)
-			self.ui.statusButton.setText(unicode(self.status["online"]))
-			self.ui.statusButton.setIcon(self.getIcon(status="online",size="16x16"))
-			self.ui.stackedWidget.setCurrentIndex(0)
-			app.postEvent(jab,customEvent(["set_status",self.groupchat]))
-			#jab.setStatus(self.groupchat) # set status
-			self.isalive()
+		#elif e[0]=="reconnect":
+			#self.ui.connect.setEnabled(True)
+			#self.ui.statusButton.setText(unicode(self.status["online"]))
+			#self.ui.statusButton.setIcon(self.getIcon(status="online",size="16x16"))
+			#self.ui.stackedWidget.setCurrentIndex(0)
+			#app.postEvent(jab,customEvent(["set_status",self.groupchat]))
+			##jab.setStatus(self.groupchat) # set status
+			#self.isalive()
 
-		elif e[0]=="bookmarks":
-			# we get bookmarks
-			# e=[command,bookmarks_list]
-			if len(e[1])!=0:
-				self.bookmarks=e[1]
-				self.buildGroupchatMenu()
+		#elif e[0]=="bookmarks":
+			## we get bookmarks
+			## e=[command,bookmarks_list]
+			#if len(e[1])!=0:
+				#self.bookmarks=e[1]
+				#self.buildGroupchatMenu()
 
-		elif e[0]=="group_chat_admin_list_setted":
-			# user set muc#admin list in room
-			# e=[command,jid,role,affiliation,toDel,items]
-			jid=e[1]
-			role=e[2]
-			affiliation=e[3]
-			toDel=e[4]
-			items=e[5]
-			if role==None:
-				role=affiliation
-			# find room
-			for i in range(self.chat.ui.chatTab.count()):
-				w=self.chat.ui.chatTab.widget(i)
-				if str(w.jid)==jid:
-					# adding items
-					for item in items:
-						if role=="moderator":
-							w.chat.chatadmin.ui.moderatorlist.addItem(item)
-						elif role=="owner":
-							w.chat.chatadmin.ui.ownerlist.addItem(item)
-						elif role=="member":
-							w.chat.chatadmin.ui.memberlist.addItem(item)
-						elif role=="outcast":
-							w.chat.chatadmin.ui.banlist.addItem(item)
-						elif role=="admin":
-							w.chat.chatadmin.ui.adminlist.addItem(item)
-					# delete item
-					if toDel!=None:
-						if role=="moderator":
-							w.chat.chatadmin.ui.moderatorlist.takeItem(w.chat.chatadmin.ui.moderatorlist.row(w.chat.chatadmin.ui.moderatorlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
-						elif role=="owner":
-							w.chat.chatadmin.ui.ownerlist.takeItem(w.chat.chatadmin.ui.ownerlist.row(w.chat.chatadmin.ui.ownerlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
-						elif role=="member":
-							w.chat.chatadmin.ui.memberlist.takeItem(w.chat.chatadmin.ui.memberlist.row(w.chat.chatadmin.ui.memberlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
-						elif role=="outcast":
-							w.chat.chatadmin.ui.banlist.takeItem(w.chat.chatadmin.ui.banlist.row(w.chat.chatadmin.ui.banlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
-						elif role=="admin":
-							w.chat.chatadmin.ui.adminlist.takeItem(w.chat.chatadmin.ui.adminlist.row(w.chat.chatadmin.ui.adminlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
-					return
+		#elif e[0]=="group_chat_admin_list_setted":
+			## user set muc#admin list in room
+			## e=[command,jid,role,affiliation,toDel,items]
+			#jid=e[1]
+			#role=e[2]
+			#affiliation=e[3]
+			#toDel=e[4]
+			#items=e[5]
+			#if role==None:
+				#role=affiliation
+			## find room
+			#for i in range(self.chat.ui.chatTab.count()):
+				#w=self.chat.ui.chatTab.widget(i)
+				#if str(w.jid)==jid:
+					## adding items
+					#for item in items:
+						#if role=="moderator":
+							#w.chat.chatadmin.ui.moderatorlist.addItem(item)
+						#elif role=="owner":
+							#w.chat.chatadmin.ui.ownerlist.addItem(item)
+						#elif role=="member":
+							#w.chat.chatadmin.ui.memberlist.addItem(item)
+						#elif role=="outcast":
+							#w.chat.chatadmin.ui.banlist.addItem(item)
+						#elif role=="admin":
+							#w.chat.chatadmin.ui.adminlist.addItem(item)
+					## delete item
+					#if toDel!=None:
+						#if role=="moderator":
+							#w.chat.chatadmin.ui.moderatorlist.takeItem(w.chat.chatadmin.ui.moderatorlist.row(w.chat.chatadmin.ui.moderatorlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
+						#elif role=="owner":
+							#w.chat.chatadmin.ui.ownerlist.takeItem(w.chat.chatadmin.ui.ownerlist.row(w.chat.chatadmin.ui.ownerlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
+						#elif role=="member":
+							#w.chat.chatadmin.ui.memberlist.takeItem(w.chat.chatadmin.ui.memberlist.row(w.chat.chatadmin.ui.memberlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
+						#elif role=="outcast":
+							#w.chat.chatadmin.ui.banlist.takeItem(w.chat.chatadmin.ui.banlist.row(w.chat.chatadmin.ui.banlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
+						#elif role=="admin":
+							#w.chat.chatadmin.ui.adminlist.takeItem(w.chat.chatadmin.ui.adminlist.row(w.chat.chatadmin.ui.adminlist.findItems(toDel[0],QtCore.Qt.MatchExactly)[0]))
+					#return
 
-		elif e[0]=="group_chat_admin_list":
-			items=e[1]
-			jid=e[2]
-			role=e[3]
-			affiliation=e[4]
-			if role==None:
-				role=affiliation
-			for i in range(self.chat.ui.chatTab.count()):
-				w=self.chat.ui.chatTab.widget(i)
-				if str(w.jid)==jid:
-					print items
-					for item in items:
-						if role=="moderator":
-							w.chat.chatadmin.ui.moderatorlist.addItem(item)
-						elif role=="owner":
-							w.chat.chatadmin.ui.ownerlist.addItem(item)
-						elif role=="member":
-							w.chat.chatadmin.ui.memberlist.addItem(item)
-						elif role=="outcast":
-							w.chat.chatadmin.ui.banlist.addItem(item)
-						elif role=="admin":
-							w.chat.chatadmin.ui.adminlist.addItem(item)
-					return
+		#elif e[0]=="group_chat_admin_list":
+			#items=e[1]
+			#jid=e[2]
+			#role=e[3]
+			#affiliation=e[4]
+			#if role==None:
+				#role=affiliation
+			#for i in range(self.chat.ui.chatTab.count()):
+				#w=self.chat.ui.chatTab.widget(i)
+				#if str(w.jid)==jid:
+					#print items
+					#for item in items:
+						#if role=="moderator":
+							#w.chat.chatadmin.ui.moderatorlist.addItem(item)
+						#elif role=="owner":
+							#w.chat.chatadmin.ui.ownerlist.addItem(item)
+						#elif role=="member":
+							#w.chat.chatadmin.ui.memberlist.addItem(item)
+						#elif role=="outcast":
+							#w.chat.chatadmin.ui.banlist.addItem(item)
+						#elif role=="admin":
+							#w.chat.chatadmin.ui.adminlist.addItem(item)
+					#return
 
-		elif e[0]=="room_opened":
-			# room is opened => add room tab and getStoreQueue
-			# e=[command,room,nickname,affiliation]
-			print "room is opened"
-			room=unicode(e[1])
-			nickname=unicode(e[2])
-			affiliation=unicode(e[3])
-			self.groupchat[room]=[nickname,[]] # initialize room storage
-			print "adding group chat tab"
-			self.chat.addGroupChatTab(room,nickname,affiliation) # add room tab
-			app.postEvent(jab,customEvent(["get_store_queue",room]))
-			#jab.getStoreQueue(room) # getStoreQueue
+		#elif e[0]=="room_opened":
+			## room is opened => add room tab and getStoreQueue
+			## e=[command,room,nickname,affiliation]
+			#print "room is opened"
+			#room=unicode(e[1])
+			#nickname=unicode(e[2])
+			#affiliation=unicode(e[3])
+			#self.groupchat[room]=[nickname,[]] # initialize room storage
+			#print "adding group chat tab"
+			#self.chat.addGroupChatTab(room,nickname,affiliation) # add room tab
+			#app.postEvent(jab,customEvent(["get_store_queue",room]))
+			##jab.getStoreQueue(room) # getStoreQueue
 
-		elif e[0] == "avatar_show":
-			# show contact avatar
-			# e=[command,vcard,jid]
-			vcard=e[1]
-			jid=str(e[2])
-			if vcard.has_key("PHOTO"):
-				v=vcard["PHOTO"]
-				if v.has_key("BINVAL"):
-					pixmap=QtGui.QPixmap()
-					image=base64.decodestring(str(v["BINVAL"]))
-					f=open(self.homeDir+'/.jabbim/avatars/'+jid,"wb")
-					f.write(image)
-					f.close()
-					pixmap.loadFromData(image)
-					for user,group in self.ui.roster.getUsers(jid,True).iteritems():
-						user.setIcon(3,QtGui.QIcon(pixmap))
+		#elif e[0] == "avatar_show":
+			## show contact avatar
+			## e=[command,vcard,jid]
+			#vcard=e[1]
+			#jid=str(e[2])
+			#if vcard.has_key("PHOTO"):
+				#v=vcard["PHOTO"]
+				#if v.has_key("BINVAL"):
+					#pixmap=QtGui.QPixmap()
+					#image=base64.decodestring(str(v["BINVAL"]))
+					#f=open(self.homeDir+'/.jabbim/avatars/'+jid,"wb")
+					#f.write(image)
+					#f.close()
+					#pixmap.loadFromData(image)
+					#for user,group in self.ui.roster.getUsers(jid,True).iteritems():
+						#user.setIcon(3,QtGui.QIcon(pixmap))
 
-		elif e[0] == "game_list":
-			self.gameslist.ui.treeWidget.clear()
-			for game in e[1]:
-				jid,name,status=game
-				for i in range(self.chat.ui.chatTab.count()):
-					w=self.chat.ui.chatTab.widget(i)
-					if str(w.jid)==jid:
-						self.chat.ui.chatTab.setTabText(i,name)
-				item=QtGui.QTreeWidgetItem(self.gameslist.ui.treeWidget)
-				item.setText(0,name)
-				if status=="pre":
-					item.setText(2,self.tr("Yes"))
-				else:
-					item.setText(2,self.tr("No"))
-				item.setData(32,0,QtCore.QVariant(jid))
-				item.setData(32,1,QtCore.QVariant(jid))
-				item.setData(32,2,QtCore.QVariant(jid))
-			self.gameslist.ui.treeWidget.resizeColumnToContents(0)
-			self.gameslist.ui.treeWidget.resizeColumnToContents(2)
-
-		elif e[0] == "group_chat_config":
-			form=e[1]
-			jid=e[2]
-			self.mucconfig=dataFormsWindow(self,jab,form,jid)
-			self.mucconfig.show()
-
-		elif e[0] == "discovery_register":
-			form=e[1]
-			jid=e[2]
-			self.discovery_register=discoveryRegisterWindow(self,jab,form,jid)
-			self.discovery_register.show()
-
-		elif e[0] == "vcard_show":
-			vcard=e[1]
-			self.vcard=vcardWindow(self,vcard)
-			self.vcard.show()
-			
-		elif e[0] == "groupchat_server_message":
-			jid=str(e[1])
-			text=unicode(e[2])
-			for i in range(self.chat.ui.chatTab.count()):
-				w=self.chat.ui.chatTab.widget(i)
-				if str(w.jid)==jid:
-					for word in unicode(text).split(' '):
-						if word.find("http://")!=-1:
-							text=text.replace(word,'<a href="'+word+'">'+word+'</a>')
-					message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",unicode(text))
-					w.chat.ui.info.setText(unicode(e[3]))
-					w.chat.ui.info.setCursorPosition(0)
-					w.chat.textEditWrite(message)
-					return
-
-		elif e[0] == "headline_message":
-			#self.message_queue.append(["headline_message",jid,text,subject,urls,descs])
-			jid=unicode(e[1])
-			text=unicode(e[2])
-			subject=e[3]
-			urls=e[4]
-			descs=e[5]
-			timestamp=e[6]
-			timestamp="%s-%s-%s %s:%s:%s" % (timestamp[0:4],timestamp[4:6],timestamp[6:8],timestamp[9:11],timestamp[12:14],timestamp[15:17])
-			tab=None
-			tabIndex=0
-			for plugin in self.plugins:
-				plugin.onNewHeadlineMessage(jid,text,subject,urls,descs,timestamp)
-			for i in range(self.chat.ui.chatTab.count()):
-				w=self.chat.ui.chatTab.widget(i)
-				if w.typ=="headline":
-					tab=w
-					tabIndex=i
-			if tab!=None:
-				if int(self.chat.ui.chatTab.currentIndex())!=tabIndex:
-					self.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
-				#yyyymmddThhmmss
-				tab.chat.addMessage(jid,subject,text,urls,descs,timestamp)
-				return
-			tab=self.chat.addHeadlineTab()
-			tab.addMessage(jid,subject,text,urls,descs,timestamp)
-
-		elif e[0] == "groupchat_message":
-			jid=str(e[1])
-			user=unicode(e[2])
-			timestamp=e[4]
-			for i in range(self.chat.ui.chatTab.count()):
-				w=self.chat.ui.chatTab.widget(i)
-				if str(w.jid)==jid:
-					for word in unicode(e[3]).split(' '):
-						if word.find("http://")!=-1:
-							print word,'<a href="'+word+'">'+word+'</a>'
-							e[3]=e[3].replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
-					for plugin in self.plugins:
-						plugin.onNewGroupchatMessage(jid,user,timestamp)
-					if timestamp==None or len(timestamp)==0:
-						if unicode(w.name)==unicode(user):
-							message=self.skin["my_message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
-						else:
-							if unicode(e[3]).lower().find(unicode(w.name).lower())!=-1:
-								message=self.skin["message_for_me"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
-							else:
-								message=self.skin["message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
-						w.chat.textEditWrite(message)
-						return
-					else:
-						timestamp=unicode(timestamp)
-						timestamp="%s-%s-%s %s:%s:%s" % (timestamp[0:4],timestamp[4:6],timestamp[6:8],timestamp[9:11],timestamp[12:14],timestamp[15:17])
-						if unicode(w.name)==unicode(user):
-							message=self.skin["my_message_history"].replace("[time]",timestamp).replace("[user]",user).replace("[message]",unicode(e[3]))
-						else:
-							if unicode(e[3]).lower().find(unicode(w.name).lower())!=-1:
-								message=self.skin["message_for_me_history"].replace("[time]",timestamp).replace("[user]",user).replace("[message]",unicode(e[3]))
-							else:
-								message=self.skin["message_history"].replace("[time]",timestamp).replace("[user]",user).replace("[message]",unicode(e[3]))
-						w.chat.textEditWrite(message)
-
-		elif e[0] == "chat_message":
-			jid=str(e[1])
-			if len(self.ui.roster.getUsers(jid))!=0:
-				user=self.ui.roster.getUsers(jid)[0]
-				icon=user.icon(0)
-				user=user.text(2)
-			else:
-				icon=self.status["offline"]
-				user=jid
-			for word in unicode(e[3]).split(' '):
-				if word.find("http://")!=-1:
-					print word,'<a href="'+word+'">'+word+'</a>'
-					e[3]=e[3].replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
-			message=self.skin["message"].replace("[time]",self.now()).replace("[user]",unicode(user)).replace("[message]",unicode(e[3]))
-			tab=None
-			tabIndex=0
-			for i in range(self.chat.ui.chatTab.count()):
-				w=self.chat.ui.chatTab.widget(i)
-				if str(w.jid)==jid+"/"+str(e[4]):
-					tab=w
-					tabIndex=i
-					break
-				if str(w.jid).rsplit("/")[0]==jid:
-					tab=w
-					tabIndex=i
-			if self.config["tray_message_view_new_message"]=="all":
-				for plugin in self.plugins:
-					plugin.onNewChatMessage(user,unicode(e[3]))
-
-				notification.onNewChatMessage(self,user,unicode(e[3]))
-			if tab!=None:
-				if int(self.chat.ui.chatTab.currentIndex())!=tabIndex:
-					self.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
-				tab.chat.textEditWrite(message)
-			else:
-				if self.config["tray_message_view_new_message"]=="not_chat":
-					for plugin in self.plugins:
-						plugin.onNewChatMessage(user,unicode(e[3]))
-				self.chat.addChatTab(jid,unicode(user),icon,message)
-
-		elif e[0] == "subscribed":
-			jid=str(e[1])
-			#self.events.show()
-			#self.events.addEvent("subscribed",{"jid":str(jid)})
-			for plugin in self.plugins:
-				plugin.onSubscribed(jid)
-
-			self.ui.roster.addSubscribed(jid)
-			if not self.ui.roster.isUser(jid):
-				self.groups["Unknown"]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,jid,self.groups["Unknown"]["item"],self.offline,self.getIcon(jid,"offline")),"resources":[]}
-
-		elif e[0] == "subscribe":
-			jid=str(e[1])
-			if not self.ui.roster.isUser(jid):
-				self.ui.roster.addSubscription(jid)
-				for plugin in self.plugins:
-					plugin.onSubscribe(jid)
-				#if jid.startswith("@"):
-					#jab.roster.Authorize(str(jid))
+		#elif e[0] == "game_list":
+			#self.gameslist.ui.treeWidget.clear()
+			#for game in e[1]:
+				#jid,name,status=game
+				#for i in range(self.chat.ui.chatTab.count()):
+					#w=self.chat.ui.chatTab.widget(i)
+					#if str(w.jid)==jid:
+						#self.chat.ui.chatTab.setTabText(i,name)
+				#item=QtGui.QTreeWidgetItem(self.gameslist.ui.treeWidget)
+				#item.setText(0,name)
+				#if status=="pre":
+					#item.setText(2,self.tr("Yes"))
 				#else:
-					##if not self.ui.roster.isUser(jid):
-					#self.events.show()
-					#self.events.addEvent("subscribe",{"jid":str(jid)})
-			else:
-				app.postEvent(jab,customEvent(["roster_authorize",str(jid)]))
-		
-		elif e[0] == "nick_update":
-			# Prisla presence
-			jid=str(e[1])
-			# Pokud je jid v rosteru:
-			if self.ui.roster.isUser(jid):
-				# Prochazeni vsech uzivatelu v rosteru, kteri maji shodne jid
-				for user,group in self.ui.roster.getUsers(jid,True).iteritems():
-					# Pokud se nejedna o odhlaseni uzivatele
-					if str(e[2].getType())!="unavailable":
-						# Pridani resource k uzivateli, pokud uz tam neni
-						if not e[3] in self.groups[group]["users"][jid]["resources"]:
-							self.groups[group]["users"][jid]["resources"].append(e[3])
-							resources=self.groups[group]["users"][jid]["resources"]
-							try:
-								resources.remove('')
-							except:
-								pass
-							# Pokud je resourcu vic, pridavaji se polozky do rosteru
-							if len(resources)>1:
-								# Zjisteni jid+"/"+resource v rosteru
-								res=[]
-								for i in range(user.childCount()):
-									j=user.child(i)
-									j=j.data(32,0)
-									j=str(j.toString())
-									res.append(j)
-								for resource in resources:
-									# Pokud uz neni resource v rosteru, pridame ho
-									if not jid+'/'+resource in res and len(resource)!=0:
-										item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
-						# Zmena stavu
-						#if self.config["tray_message_view_connect"]=="all":
-						#print int(self.nickSort[str(e[2].getShow())]),int(unicode(user.text(1))[0])
-						if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]) and not self.groups[group]["users"][jid].has_key('firsttime'):
-							for plugin in self.plugins:
-								plugin.onRosterPresence(unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
-						if self.groups[group]["users"][jid].has_key('firsttime'):
-							del self.groups[group]["users"][jid]["firsttime"]
-						#elif self.config["tray_message_view_connect"]=="online" and str(e[2].getShow())=="None":
-							#notification.onRosterPresence(self,unicode(user.text(2)),self.status[str(e[2].getShow())],unicode(e[2].getStatus()))
-						#elif self.config["tray_message_view_connect"]=="logged_in" and int(unicode(user.text(1)[0]))==9:
-							#notification.onRosterPresence(self,unicode(user.text(2)),self.status[str(e[2].getShow())],unicode(e[2].getStatus()))
-						if str(e[2].getShow())!="None":
-							user.setIcon(0,self.getIcon(jid,str(e[2].getShow())))
-							#user.setIcon(0,self.statuses[str(e[2].getShow())])
-							user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
-						else:
-							user.setIcon(0,self.getIcon(jid,"online"))
-							user.setText(1,self.nickSort["online"]+unicode(user.text(2)))
-						for i in range(self.chat.ui.chatTab.count()):
-							w=self.chat.ui.chatTab.widget(i)
-							if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
-								if str(e[2].getShow())!="None":
-									self.chat.ui.chatTab.setTabIcon(i,self.getIcon(jid,str(e[2].getShow()),size="16x16"))
-								else:
-									self.chat.ui.chatTab.setTabIcon(i,self.getIcon(jid,'online',size="16x16"))
-						# Nastaveni tooltip
-						#user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b> - '+str(e[2].getShow())+'</font><hr>'+unicode(e[2].getStatus())+'<br/><b>'+self.tr("Jabber ID:")+' </b>'+str(jid)+'')
-						# Nastaveni stavove zpravy pod nick v rosteru. Pokud neni zprava nastavena, vytvori se jen nick bez zpravy.
-						status=unicode(e[2].getStatus())
-						if len(status)>0 and status!="None":
-							if status[0]=="\n":
-								status=status[1:]
-						else:
-							status=""
-						user.setData(32,4,QtCore.QVariant(status))
-						user.setText(0,unicode(user.text(2)))
-						#if unicode(e[2].getStatus())=="None" or len(e[2].getStatus())==0:
-							#user.label.setText(unicode(user.text(2)))
+					#item.setText(2,self.tr("No"))
+				#item.setData(32,0,QtCore.QVariant(jid))
+				#item.setData(32,1,QtCore.QVariant(jid))
+				#item.setData(32,2,QtCore.QVariant(jid))
+			#self.gameslist.ui.treeWidget.resizeColumnToContents(0)
+			#self.gameslist.ui.treeWidget.resizeColumnToContents(2)
+
+		#elif e[0] == "group_chat_config":
+			#form=e[1]
+			#jid=e[2]
+			#self.mucconfig=dataFormsWindow(self,jab,form,jid)
+			#self.mucconfig.show()
+
+		#elif e[0] == "discovery_register":
+			#form=e[1]
+			#jid=e[2]
+			#self.discovery_register=discoveryRegisterWindow(self,jab,form,jid)
+			#self.discovery_register.show()
+
+		#elif e[0] == "vcard_show":
+			#vcard=e[1]
+			#self.vcard=vcardWindow(self,vcard)
+			#self.vcard.show()
+			
+		#elif e[0] == "groupchat_server_message":
+			#jid=str(e[1])
+			#text=unicode(e[2])
+			#for i in range(self.chat.ui.chatTab.count()):
+				#w=self.chat.ui.chatTab.widget(i)
+				#if str(w.jid)==jid:
+					#for word in unicode(text).split(' '):
+						#if word.find("http://")!=-1:
+							#text=text.replace(word,'<a href="'+word+'">'+word+'</a>')
+					#message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",unicode(text))
+					#w.chat.ui.info.setText(unicode(e[3]))
+					#w.chat.ui.info.setCursorPosition(0)
+					#w.chat.textEditWrite(message)
+					#return
+
+		#elif e[0] == "headline_message":
+			##self.message_queue.append(["headline_message",jid,text,subject,urls,descs])
+			#jid=unicode(e[1])
+			#text=unicode(e[2])
+			#subject=e[3]
+			#urls=e[4]
+			#descs=e[5]
+			#timestamp=e[6]
+			#timestamp="%s-%s-%s %s:%s:%s" % (timestamp[0:4],timestamp[4:6],timestamp[6:8],timestamp[9:11],timestamp[12:14],timestamp[15:17])
+			#tab=None
+			#tabIndex=0
+			#for plugin in self.plugins:
+				#plugin.onNewHeadlineMessage(jid,text,subject,urls,descs,timestamp)
+			#for i in range(self.chat.ui.chatTab.count()):
+				#w=self.chat.ui.chatTab.widget(i)
+				#if w.typ=="headline":
+					#tab=w
+					#tabIndex=i
+			#if tab!=None:
+				#if int(self.chat.ui.chatTab.currentIndex())!=tabIndex:
+					#self.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
+				##yyyymmddThhmmss
+				#tab.chat.addMessage(jid,subject,text,urls,descs,timestamp)
+				#return
+			#tab=self.chat.addHeadlineTab()
+			#tab.addMessage(jid,subject,text,urls,descs,timestamp)
+
+		#elif e[0] == "groupchat_message":
+			#jid=str(e[1])
+			#user=unicode(e[2])
+			#timestamp=e[4]
+			#for i in range(self.chat.ui.chatTab.count()):
+				#w=self.chat.ui.chatTab.widget(i)
+				#if str(w.jid)==jid:
+					#for word in unicode(e[3]).split(' '):
+						#if word.find("http://")!=-1:
+							#print word,'<a href="'+word+'">'+word+'</a>'
+							#e[3]=e[3].replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
+					#for plugin in self.plugins:
+						#plugin.onNewGroupchatMessage(jid,user,timestamp)
+					#if timestamp==None or len(timestamp)==0:
+						#if unicode(w.name)==unicode(user):
+							#message=self.skin["my_message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
 						#else:
-							#text=[word for word in unicode(e[2].getStatus()).split('\n') if word != ''][0]
-							#user.label.setText(unicode(self.ui.roster.getUsers(jid)[0].text(2))+'<br/><font size="-1"><i>'+text+"</i></font>")
-						# Zobrazeni polozky v rosteru
-						self.ui.roster.setItemHidden(user,False)
-					# Jedna se o odhlaseni
-					elif str(e[2].getType())=="unavailable":
-						# Pokud byl user predtim prihlaseny
-						if int(unicode(user.text(1))[0])!=9:
-							# notification
-							if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]):
-								for plugin in self.plugins:
-									plugin.onRosterPresence(unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
-							# Odebrani resource z databaze
-							try:
-								self.groups[group]["users"][jid]["resources"].remove(e[3])
-							except:
-								print self.groups[group]["users"][jid]["resources"]
-							# pokud by po smazani zbyla jen jedina resource, smaze se z rosteru
-							if int(user.childCount())==2:
-								for i in range(user.childCount()):
-									user.takeChild(0)
-							else:
-								# pokud po smazani nezbude ani jedna resource, je kontakt offline
-								if int(user.childCount())<=1:
-									user.setIcon(0,self.getIcon(jid,"offline"))
-									user.setText(1,self.nickSort["offline"]+unicode(user.text(2)))
-									self.ui.roster.setItemHidden(user,self.offline)
-								# smazani resource
-								for i in range(user.childCount()):
-									item=user.child(i)
-									j=item.data(32,0)
-									j=str(j.toString())
-									if str(j)==jid+"/"+e[3]:
-										user.takeChild(i)
-										break
-							for i in range(self.chat.ui.chatTab.count()):
-								w=self.chat.ui.chatTab.widget(i)
-								if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
-									self.chat.ui.chatTab.setTabIcon(i,self.getIcon(jid,'offline',size="16x16"))
-				# aktualizace cisel skupin
-				self.ui.roster.refreshStats()
-				# serazeni polozek v rosteru
-				self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
-			# Pokud je jid groupchat
-			elif self.isGroupChat(jid):
-				if str(e[2].getType())!="unavailable":
-					nick=unicode(e[3])
-					# Nalezeni spravneho groupchatu
-					for i in range(self.chat.ui.chatTab.count()):
-						w=self.chat.ui.chatTab.widget(i)
-						if str(w.jid)==jid:
-							# aktualizace uzivatele v seznamu
-							if nick==self.groupchat[jid][0]:
-								w.chat.changeAffiliation(e[2].getAffiliation())
-							w.chat.editUser(jid,nick,str(e[2].getShow()),e[2].getRole(),e[2].getAffiliation())
-							return
-				elif str(e[2].getType())=="unavailable":
-					nick=unicode(e[3])
-					for i in range(self.chat.ui.chatTab.count()):
-						w=self.chat.ui.chatTab.widget(i)
-						if str(w.jid)==jid:
-							w.chat.deleteUser(jid,nick)
+							#if unicode(e[3]).lower().find(unicode(w.name).lower())!=-1:
+								#message=self.skin["message_for_me"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
+							#else:
+								#message=self.skin["message"].replace("[time]",self.now()).replace("[user]",user).replace("[message]",unicode(e[3]))
+						#w.chat.textEditWrite(message)
+						#return
+					#else:
+						#timestamp=unicode(timestamp)
+						#timestamp="%s-%s-%s %s:%s:%s" % (timestamp[0:4],timestamp[4:6],timestamp[6:8],timestamp[9:11],timestamp[12:14],timestamp[15:17])
+						#if unicode(w.name)==unicode(user):
+							#message=self.skin["my_message_history"].replace("[time]",timestamp).replace("[user]",user).replace("[message]",unicode(e[3]))
+						#else:
+							#if unicode(e[3]).lower().find(unicode(w.name).lower())!=-1:
+								#message=self.skin["message_for_me_history"].replace("[time]",timestamp).replace("[user]",user).replace("[message]",unicode(e[3]))
+							#else:
+								#message=self.skin["message_history"].replace("[time]",timestamp).replace("[user]",user).replace("[message]",unicode(e[3]))
+						#w.chat.textEditWrite(message)
+
+		#elif e[0] == "chat_message":
+			#jid=str(e[1])
+			#if len(self.ui.roster.getUsers(jid))!=0:
+				#user=self.ui.roster.getUsers(jid)[0]
+				#icon=user.icon(0)
+				#user=user.text(2)
+			#else:
+				#icon=self.status["offline"]
+				#user=jid
+			#for word in unicode(e[3]).split(' '):
+				#if word.find("http://")!=-1:
+					#print word,'<a href="'+word+'">'+word+'</a>'
+					#e[3]=e[3].replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
+			#message=self.skin["message"].replace("[time]",self.now()).replace("[user]",unicode(user)).replace("[message]",unicode(e[3]))
+			#tab=None
+			#tabIndex=0
+			#for i in range(self.chat.ui.chatTab.count()):
+				#w=self.chat.ui.chatTab.widget(i)
+				#if str(w.jid)==jid+"/"+str(e[4]):
+					#tab=w
+					#tabIndex=i
+					#break
+				#if str(w.jid).rsplit("/")[0]==jid:
+					#tab=w
+					#tabIndex=i
+			#if self.config["tray_message_view_new_message"]=="all":
+				#for plugin in self.plugins:
+					#plugin.onNewChatMessage(user,unicode(e[3]))
+
+				#notification.onNewChatMessage(self,user,unicode(e[3]))
+			#if tab!=None:
+				#if int(self.chat.ui.chatTab.currentIndex())!=tabIndex:
+					#self.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
+				#tab.chat.textEditWrite(message)
+			#else:
+				#if self.config["tray_message_view_new_message"]=="not_chat":
+					#for plugin in self.plugins:
+						#plugin.onNewChatMessage(user,unicode(e[3]))
+				#self.chat.addChatTab(jid,unicode(user),icon,message)
+
+		#elif e[0] == "subscribed":
+			#jid=str(e[1])
+			##self.events.show()
+			##self.events.addEvent("subscribed",{"jid":str(jid)})
+			#for plugin in self.plugins:
+				#plugin.onSubscribed(jid)
+
+			#self.ui.roster.addSubscribed(jid)
+			#if not self.ui.roster.isUser(jid):
+				#self.groups["Unknown"]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,jid,self.groups["Unknown"]["item"],self.offline,self.getIcon(jid,"offline")),"resources":[]}
+
+		#elif e[0] == "subscribe":
+			#jid=str(e[1])
+			#if not self.ui.roster.isUser(jid):
+				#self.ui.roster.addSubscription(jid)
+				#for plugin in self.plugins:
+					#plugin.onSubscribe(jid)
+				##if jid.startswith("@"):
+					##jab.roster.Authorize(str(jid))
+				##else:
+					###if not self.ui.roster.isUser(jid):
+					##self.events.show()
+					##self.events.addEvent("subscribe",{"jid":str(jid)})
+			#else:
+				#app.postEvent(jab,customEvent(["roster_authorize",str(jid)]))
+		
+		#elif e[0] == "nick_update":
+			## Prisla presence
+			#jid=str(e[1])
+			## Pokud je jid v rosteru:
+			#if self.ui.roster.isUser(jid):
+				## Prochazeni vsech uzivatelu v rosteru, kteri maji shodne jid
+				#for user,group in self.ui.roster.getUsers(jid,True).iteritems():
+					## Pokud se nejedna o odhlaseni uzivatele
+					#if str(e[2].getType())!="unavailable":
+						## Pridani resource k uzivateli, pokud uz tam neni
+						#if not e[3] in self.groups[group]["users"][jid]["resources"]:
+							#self.groups[group]["users"][jid]["resources"].append(e[3])
+							#resources=self.groups[group]["users"][jid]["resources"]
+							#try:
+								#resources.remove('')
+							#except:
+								#pass
+							## Pokud je resourcu vic, pridavaji se polozky do rosteru
+							#if len(resources)>1:
+								## Zjisteni jid+"/"+resource v rosteru
+								#res=[]
+								#for i in range(user.childCount()):
+									#j=user.child(i)
+									#j=j.data(32,0)
+									#j=str(j.toString())
+									#res.append(j)
+								#for resource in resources:
+									## Pokud uz neni resource v rosteru, pridame ho
+									#if not jid+'/'+resource in res and len(resource)!=0:
+										#item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
+						## Zmena stavu
+						##if self.config["tray_message_view_connect"]=="all":
+						##print int(self.nickSort[str(e[2].getShow())]),int(unicode(user.text(1))[0])
+						#if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]) and not self.groups[group]["users"][jid].has_key('firsttime'):
+							#for plugin in self.plugins:
+								#plugin.onRosterPresence(unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
+						#if self.groups[group]["users"][jid].has_key('firsttime'):
+							#del self.groups[group]["users"][jid]["firsttime"]
+						##elif self.config["tray_message_view_connect"]=="online" and str(e[2].getShow())=="None":
+							##notification.onRosterPresence(self,unicode(user.text(2)),self.status[str(e[2].getShow())],unicode(e[2].getStatus()))
+						##elif self.config["tray_message_view_connect"]=="logged_in" and int(unicode(user.text(1)[0]))==9:
+							##notification.onRosterPresence(self,unicode(user.text(2)),self.status[str(e[2].getShow())],unicode(e[2].getStatus()))
+						#if str(e[2].getShow())!="None":
+							#user.setIcon(0,self.getIcon(jid,str(e[2].getShow())))
+							##user.setIcon(0,self.statuses[str(e[2].getShow())])
+							#user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
+						#else:
+							#user.setIcon(0,self.getIcon(jid,"online"))
+							#user.setText(1,self.nickSort["online"]+unicode(user.text(2)))
+						#for i in range(self.chat.ui.chatTab.count()):
+							#w=self.chat.ui.chatTab.widget(i)
+							#if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
+								#if str(e[2].getShow())!="None":
+									#self.chat.ui.chatTab.setTabIcon(i,self.getIcon(jid,str(e[2].getShow()),size="16x16"))
+								#else:
+									#self.chat.ui.chatTab.setTabIcon(i,self.getIcon(jid,'online',size="16x16"))
+						## Nastaveni tooltip
+						##user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b> - '+str(e[2].getShow())+'</font><hr>'+unicode(e[2].getStatus())+'<br/><b>'+self.tr("Jabber ID:")+' </b>'+str(jid)+'')
+						## Nastaveni stavove zpravy pod nick v rosteru. Pokud neni zprava nastavena, vytvori se jen nick bez zpravy.
+						#status=unicode(e[2].getStatus())
+						#if len(status)>0 and status!="None":
+							#if status[0]=="\n":
+								#status=status[1:]
+						#else:
+							#status=""
+						#user.setData(32,4,QtCore.QVariant(status))
+						#user.setText(0,unicode(user.text(2)))
+						##if unicode(e[2].getStatus())=="None" or len(e[2].getStatus())==0:
+							##user.label.setText(unicode(user.text(2)))
+						##else:
+							##text=[word for word in unicode(e[2].getStatus()).split('\n') if word != ''][0]
+							##user.label.setText(unicode(self.ui.roster.getUsers(jid)[0].text(2))+'<br/><font size="-1"><i>'+text+"</i></font>")
+						## Zobrazeni polozky v rosteru
+						#self.ui.roster.setItemHidden(user,False)
+					## Jedna se o odhlaseni
+					#elif str(e[2].getType())=="unavailable":
+						## Pokud byl user predtim prihlaseny
+						#if int(unicode(user.text(1))[0])!=9:
+							## notification
+							#if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]):
+								#for plugin in self.plugins:
+									#plugin.onRosterPresence(unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
+							## Odebrani resource z databaze
+							#try:
+								#self.groups[group]["users"][jid]["resources"].remove(e[3])
+							#except:
+								#print self.groups[group]["users"][jid]["resources"]
+							## pokud by po smazani zbyla jen jedina resource, smaze se z rosteru
+							#if int(user.childCount())==2:
+								#for i in range(user.childCount()):
+									#user.takeChild(0)
+							#else:
+								## pokud po smazani nezbude ani jedna resource, je kontakt offline
+								#if int(user.childCount())<=1:
+									#user.setIcon(0,self.getIcon(jid,"offline"))
+									#user.setText(1,self.nickSort["offline"]+unicode(user.text(2)))
+									#self.ui.roster.setItemHidden(user,self.offline)
+								## smazani resource
+								#for i in range(user.childCount()):
+									#item=user.child(i)
+									#j=item.data(32,0)
+									#j=str(j.toString())
+									#if str(j)==jid+"/"+e[3]:
+										#user.takeChild(i)
+										#break
+							#for i in range(self.chat.ui.chatTab.count()):
+								#w=self.chat.ui.chatTab.widget(i)
+								#if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
+									#self.chat.ui.chatTab.setTabIcon(i,self.getIcon(jid,'offline',size="16x16"))
+				## aktualizace cisel skupin
+				#self.ui.roster.refreshStats()
+				## serazeni polozek v rosteru
+				#self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
+			## Pokud je jid groupchat
+			#elif self.isGroupChat(jid):
+				#if str(e[2].getType())!="unavailable":
+					#nick=unicode(e[3])
+					## Nalezeni spravneho groupchatu
+					#for i in range(self.chat.ui.chatTab.count()):
+						#w=self.chat.ui.chatTab.widget(i)
+						#if str(w.jid)==jid:
+							## aktualizace uzivatele v seznamu
+							#if nick==self.groupchat[jid][0]:
+								#w.chat.changeAffiliation(e[2].getAffiliation())
+							#w.chat.editUser(jid,nick,str(e[2].getShow()),e[2].getRole(),e[2].getAffiliation())
+							#return
+				#elif str(e[2].getType())=="unavailable":
+					#nick=unicode(e[3])
+					#for i in range(self.chat.ui.chatTab.count()):
+						#w=self.chat.ui.chatTab.widget(i)
+						#if str(w.jid)==jid:
+							#w.chat.deleteUser(jid,nick)
 							
 
 		elif e[0] == "roster_update":
