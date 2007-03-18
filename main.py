@@ -43,12 +43,14 @@ from dataforms import *
 import socket
 import games
 from imp import load_source
+import time
 
 class customEvent(QtCore.QEvent):
 	def __init__(self,data,typ="inc"):
 		apply(QtCore.QEvent.__init__,(self,QtCore.QEvent.User))
-		self.data=data
-		self.typ=typ
+		self.data=list(data)
+		self.typ=unicode(typ)
+
 
 class discoveryWindow(QtGui.QDialog):
 	def __init__(self,parent=None):
