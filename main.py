@@ -1162,6 +1162,7 @@ class mainWindow(QtGui.QMainWindow):
 		elif e[0] == "nick_update":
 			# Prisla presence
 			jid=str(e[1])
+			res=unicode(e[3])
 			# Pokud je jid v rosteru:
 			if self.ui.roster.isUser(jid):
 				# Prochazeni vsech uzivatelu v rosteru, kteri maji shodne jid
@@ -1169,11 +1170,11 @@ class mainWindow(QtGui.QMainWindow):
 					# Pokud se nejedna o odhlaseni uzivatele
 					if str(e[2].getType())!="unavailable":
 						# Pridani resource k uzivateli, pokud uz tam neni
-						if not unicode(e[3]) in self.groups[group]["users"][jid]["resources"]:
-							self.groups[group]["users"][jid]["resources"].append(unicode(e[3]))
+						if not res in self.groups[group]["users"][jid]["resources"]:
+							self.groups[group]["users"][jid]["resources"].append(res)
 							if '' in self.groups[group]["users"][jid]["resources"]:
 								self.groups[group]["users"][jid]["resources"].remove('')
-							resources=self.groups[group]["users"][jid]["resources"]
+							#resources=self.groups[group]["users"][jid]["resources"]
 							## Pokud je resourcu vic, pridavaji se polozky do rosteru
 							#if len(resources)>1:
 								## Zjisteni jid+"/"+resource v rosteru
