@@ -20,7 +20,7 @@ try:
 	from PyQt4 import QtCore, QtGui
 except:
 	print "PyQt4 is not installed."
-from jabber import *
+import jabber
 import sys,os,time,random
 from configobj import ConfigObj
 import urllib
@@ -43,6 +43,12 @@ from dataforms import *
 import socket
 import games
 from imp import load_source
+
+class customEvent(QtCore.QEvent):
+	def __init__(self,data,typ="inc"):
+		apply(QtCore.QEvent.__init__,(self,QtCore.QEvent.User))
+		self.data=data
+		self.typ=typ
 
 class discoveryWindow(QtGui.QDialog):
 	def __init__(self,parent=None):
@@ -716,8 +722,8 @@ class mainWindow(QtGui.QMainWindow):
 			if os.path.exists(file):
 				icon=QtGui.QIcon(file)
 			else:
-				print "File not exist",file," <-",jid,typ
-				print "using",path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png"
+				#print "File not exist",file," <-",jid,typ
+				#print "using",path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png"
 				icon=QtGui.QIcon(path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png")
 		else:
 			if status==None:
@@ -1184,7 +1190,7 @@ class mainWindow(QtGui.QMainWindow):
 										item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
 						# Zmena stavu
 						#if self.config["tray_message_view_connect"]=="all":
-						print int(self.nickSort[str(e[2].getShow())]),int(unicode(user.text(1))[0])
+						#print int(self.nickSort[str(e[2].getShow())]),int(unicode(user.text(1))[0])
 						if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]) and not self.groups[group]["users"][jid].has_key('firsttime'):
 							for plugin in self.plugins:
 								plugin.onRosterPresence(unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
@@ -1383,7 +1389,7 @@ class statusWindow(QtGui.QDialog):
 
 app = QtGui.QApplication(sys.argv)
 
-jab = Jabber(app)
+jab = jabber.Jabber(app)
 translator=QtCore.QTranslator()
 translator.load("locales/jabbim_"+str(QtCore.QLocale.system().name())[:2]+".qm")
 app.installTranslator(translator)
