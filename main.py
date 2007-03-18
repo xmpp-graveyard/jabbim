@@ -1170,25 +1170,26 @@ class mainWindow(QtGui.QMainWindow):
 					if str(e[2].getType())!="unavailable":
 						# Pridani resource k uzivateli, pokud uz tam neni
 						if not unicode(e[3]) in self.groups[group]["users"][jid]["resources"]:
-							self.groups[group]["users"][jid]["resources"].append(unicode(e[3]))
-							resources=self.groups[group]["users"][jid]["resources"]
-							try:
-								resources.remove('')
-							except:
-								pass
-							# Pokud je resourcu vic, pridavaji se polozky do rosteru
-							if len(resources)>1:
-								# Zjisteni jid+"/"+resource v rosteru
-								res=[]
-								for i in range(user.childCount()):
-									j=user.child(i)
-									j=j.data(32,0)
-									j=str(j.toString())
-									res.append(j)
-								for resource in resources:
-									# Pokud uz neni resource v rosteru, pridame ho
-									if not jid+'/'+resource in res and len(resource)!=0:
-										item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
+							pass
+							#self.groups[group]["users"][jid]["resources"].append(unicode(e[3]))
+							#resources=self.groups[group]["users"][jid]["resources"]
+							#try:
+								#resources.remove('')
+							#except:
+								#pass
+							## Pokud je resourcu vic, pridavaji se polozky do rosteru
+							#if len(resources)>1:
+								## Zjisteni jid+"/"+resource v rosteru
+								#res=[]
+								#for i in range(user.childCount()):
+									#j=user.child(i)
+									#j=j.data(32,0)
+									#j=str(j.toString())
+									#res.append(j)
+								#for resource in resources:
+									## Pokud uz neni resource v rosteru, pridame ho
+									#if not jid+'/'+resource in res and len(resource)!=0:
+										#item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
 						# Zmena stavu
 						#if self.config["tray_message_view_connect"]=="all":
 						#print int(self.nickSort[str(e[2].getShow())]),int(unicode(user.text(1))[0])
