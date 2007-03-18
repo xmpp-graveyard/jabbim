@@ -661,12 +661,12 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 		QtGui.QApplication.postEvent(self.main,event)
 		#self.inc.put(["roster_update", self.roster])
 		self.ready=False
-		#while not self.ready:
-			#try:
-				#self.ready = self.outc.get(timeout = 0)
-			#except:
-				#self.ready = False
-		self.ready=True
+		while not self.ready:
+			try:
+				self.ready = self.outc.get(timeout = 0)
+			except:
+				self.ready = False
+		#self.ready=True
 		self.conn.sendInitPresence()
 		self.discoveryItems()
 		event2=customEvent(["con_ready"])

@@ -1293,40 +1293,40 @@ class mainWindow(QtGui.QMainWindow):
 							#w.chat.deleteUser(jid,nick)
 							
 
-		#elif e[0] == "roster_update":
-			#print "roster update"
-			#items=e[1].getItems()
-			#disco=[]
-			#for jid in items:
-				#if len(jid.split("@"))!=1:
-					#if not self.discoInfo.has_key(jid.split("@")[1]) and not jid.split("@")[1] in disco:
-						#app.postEvent(jab,customEvent(["discovery_info",jid.split("@")[1]]))
-						#disco.append(jid.split("@")[1])
-						##jab.discoveryInfo(jid.split("@")[1])
-				#try:
-					#jid=str(jid).lower()
-					#groups=e[1].getGroups(jid)
-					#if groups==None or groups==[]:
-						#groups=["Unknown"]
-					#for group in groups:
-						#if self.groups.has_key(group)==False:
-							#self.groups[group]={"item":self.ui.roster.addGroup(group),"users":{}}
-						#if not self.groups[group]["users"].has_key(jid):
-							#name=e[1].getName(jid)
-							#self.groups[group]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,name,self.groups[group]["item"],self.offline,self.getIcon(jid,"offline")),"resources":[],'firsttime':''}
-							#if os.path.isfile(self.homeDir+'/.jabbim/avatars/'+jid):
-								#pixmap=QtGui.QPixmap()
-								#f=open(self.homeDir+'/.jabbim/avatars/'+jid,"rb")
-								#image=f.read()
-								#f.close()
-								#pixmap.loadFromData(image)
-								#self.groups[group]["users"][str(jid)]['item'].setIcon(3,QtGui.QIcon(pixmap))
-				#except:
-					#pass
-			#self.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
-			#jab.outc.put(True)
-			#for k,v in self.groups.iteritems():
-				#self.ui.group.addItem(unicode(k))
+		elif e[0] == "roster_update":
+			print "roster update"
+			items=e[1].getItems()
+			disco=[]
+			for jid in items:
+				if len(jid.split("@"))!=1:
+					if not self.discoInfo.has_key(jid.split("@")[1]) and not jid.split("@")[1] in disco:
+						app.postEvent(jab,customEvent(["discovery_info",jid.split("@")[1]]))
+						disco.append(jid.split("@")[1])
+						#jab.discoveryInfo(jid.split("@")[1])
+				try:
+					jid=str(jid).lower()
+					groups=e[1].getGroups(jid)
+					if groups==None or groups==[]:
+						groups=["Unknown"]
+					for group in groups:
+						if self.groups.has_key(group)==False:
+							self.groups[group]={"item":self.ui.roster.addGroup(group),"users":{}}
+						if not self.groups[group]["users"].has_key(jid):
+							name=e[1].getName(jid)
+							self.groups[group]["users"][str(jid)]={"item":self.ui.roster.addUser(jid,name,self.groups[group]["item"],self.offline,self.getIcon(jid,"offline")),"resources":[],'firsttime':''}
+							if os.path.isfile(self.homeDir+'/.jabbim/avatars/'+jid):
+								pixmap=QtGui.QPixmap()
+								f=open(self.homeDir+'/.jabbim/avatars/'+jid,"rb")
+								image=f.read()
+								f.close()
+								pixmap.loadFromData(image)
+								self.groups[group]["users"][str(jid)]['item'].setIcon(3,QtGui.QIcon(pixmap))
+				except:
+					pass
+			self.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
+			jab.outc.put(True)
+			for k,v in self.groups.iteritems():
+				self.ui.group.addItem(unicode(k))
 
 	def jabberErrorHandler(self,error):
 		if error == "con":
