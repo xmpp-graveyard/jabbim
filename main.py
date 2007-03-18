@@ -1169,8 +1169,8 @@ class mainWindow(QtGui.QMainWindow):
 					# Pokud se nejedna o odhlaseni uzivatele
 					if str(e[2].getType())!="unavailable":
 						# Pridani resource k uzivateli, pokud uz tam neni
-						if not e[3] in self.groups[group]["users"][jid]["resources"]:
-							self.groups[group]["users"][jid]["resources"].append(e[3])
+						if not unicode(e[3]) in self.groups[group]["users"][jid]["resources"]:
+							self.groups[group]["users"][jid]["resources"].append(unicode(e[3]))
 							resources=self.groups[group]["users"][jid]["resources"]
 							try:
 								resources.remove('')
