@@ -1159,138 +1159,138 @@ class mainWindow(QtGui.QMainWindow):
 			#else:
 				#app.postEvent(jab,customEvent(["roster_authorize",str(jid)]))
 		
-		#elif e[0] == "nick_update":
-			## Prisla presence
-			#jid=str(e[1])
-			## Pokud je jid v rosteru:
-			#if self.ui.roster.isUser(jid):
-				## Prochazeni vsech uzivatelu v rosteru, kteri maji shodne jid
-				#for user,group in self.ui.roster.getUsers(jid,True).iteritems():
-					## Pokud se nejedna o odhlaseni uzivatele
-					#if str(e[2].getType())!="unavailable":
-						## Pridani resource k uzivateli, pokud uz tam neni
-						#if not e[3] in self.groups[group]["users"][jid]["resources"]:
-							#self.groups[group]["users"][jid]["resources"].append(e[3])
-							#resources=self.groups[group]["users"][jid]["resources"]
-							#try:
-								#resources.remove('')
-							#except:
-								#pass
-							## Pokud je resourcu vic, pridavaji se polozky do rosteru
-							#if len(resources)>1:
-								## Zjisteni jid+"/"+resource v rosteru
-								#res=[]
-								#for i in range(user.childCount()):
-									#j=user.child(i)
-									#j=j.data(32,0)
-									#j=str(j.toString())
-									#res.append(j)
-								#for resource in resources:
-									## Pokud uz neni resource v rosteru, pridame ho
-									#if not jid+'/'+resource in res and len(resource)!=0:
-										#item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
-						## Zmena stavu
-						##if self.config["tray_message_view_connect"]=="all":
-						##print int(self.nickSort[str(e[2].getShow())]),int(unicode(user.text(1))[0])
-						#if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]) and not self.groups[group]["users"][jid].has_key('firsttime'):
-							#for plugin in self.plugins:
-								#plugin.onRosterPresence(unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
-						#if self.groups[group]["users"][jid].has_key('firsttime'):
-							#del self.groups[group]["users"][jid]["firsttime"]
-						##elif self.config["tray_message_view_connect"]=="online" and str(e[2].getShow())=="None":
-							##notification.onRosterPresence(self,unicode(user.text(2)),self.status[str(e[2].getShow())],unicode(e[2].getStatus()))
-						##elif self.config["tray_message_view_connect"]=="logged_in" and int(unicode(user.text(1)[0]))==9:
-							##notification.onRosterPresence(self,unicode(user.text(2)),self.status[str(e[2].getShow())],unicode(e[2].getStatus()))
-						#if str(e[2].getShow())!="None":
-							#user.setIcon(0,self.getIcon(jid,str(e[2].getShow())))
-							##user.setIcon(0,self.statuses[str(e[2].getShow())])
-							#user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
+		elif e[0] == "nick_update":
+			# Prisla presence
+			jid=str(e[1])
+			# Pokud je jid v rosteru:
+			if self.ui.roster.isUser(jid):
+				# Prochazeni vsech uzivatelu v rosteru, kteri maji shodne jid
+				for user,group in self.ui.roster.getUsers(jid,True).iteritems():
+					# Pokud se nejedna o odhlaseni uzivatele
+					if str(e[2].getType())!="unavailable":
+						# Pridani resource k uzivateli, pokud uz tam neni
+						if not e[3] in self.groups[group]["users"][jid]["resources"]:
+							self.groups[group]["users"][jid]["resources"].append(e[3])
+							resources=self.groups[group]["users"][jid]["resources"]
+							try:
+								resources.remove('')
+							except:
+								pass
+							# Pokud je resourcu vic, pridavaji se polozky do rosteru
+							if len(resources)>1:
+								# Zjisteni jid+"/"+resource v rosteru
+								res=[]
+								for i in range(user.childCount()):
+									j=user.child(i)
+									j=j.data(32,0)
+									j=str(j.toString())
+									res.append(j)
+								for resource in resources:
+									# Pokud uz neni resource v rosteru, pridame ho
+									if not jid+'/'+resource in res and len(resource)!=0:
+										item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
+						# Zmena stavu
+						#if self.config["tray_message_view_connect"]=="all":
+						#print int(self.nickSort[str(e[2].getShow())]),int(unicode(user.text(1))[0])
+						if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]) and not self.groups[group]["users"][jid].has_key('firsttime'):
+							for plugin in self.plugins:
+								plugin.onRosterPresence(unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
+						if self.groups[group]["users"][jid].has_key('firsttime'):
+							del self.groups[group]["users"][jid]["firsttime"]
+						#elif self.config["tray_message_view_connect"]=="online" and str(e[2].getShow())=="None":
+							#notification.onRosterPresence(self,unicode(user.text(2)),self.status[str(e[2].getShow())],unicode(e[2].getStatus()))
+						#elif self.config["tray_message_view_connect"]=="logged_in" and int(unicode(user.text(1)[0]))==9:
+							#notification.onRosterPresence(self,unicode(user.text(2)),self.status[str(e[2].getShow())],unicode(e[2].getStatus()))
+						if str(e[2].getShow())!="None":
+							user.setIcon(0,self.getIcon(jid,str(e[2].getShow())))
+							#user.setIcon(0,self.statuses[str(e[2].getShow())])
+							user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
+						else:
+							user.setIcon(0,self.getIcon(jid,"online"))
+							user.setText(1,self.nickSort["online"]+unicode(user.text(2)))
+						for i in range(self.chat.ui.chatTab.count()):
+							w=self.chat.ui.chatTab.widget(i)
+							if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
+								if str(e[2].getShow())!="None":
+									self.chat.ui.chatTab.setTabIcon(i,self.getIcon(jid,str(e[2].getShow()),size="16x16"))
+								else:
+									self.chat.ui.chatTab.setTabIcon(i,self.getIcon(jid,'online',size="16x16"))
+						# Nastaveni tooltip
+						#user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b> - '+str(e[2].getShow())+'</font><hr>'+unicode(e[2].getStatus())+'<br/><b>'+self.tr("Jabber ID:")+' </b>'+str(jid)+'')
+						# Nastaveni stavove zpravy pod nick v rosteru. Pokud neni zprava nastavena, vytvori se jen nick bez zpravy.
+						status=unicode(e[2].getStatus())
+						if len(status)>0 and status!="None":
+							if status[0]=="\n":
+								status=status[1:]
+						else:
+							status=""
+						user.setData(32,4,QtCore.QVariant(status))
+						user.setText(0,unicode(user.text(2)))
+						#if unicode(e[2].getStatus())=="None" or len(e[2].getStatus())==0:
+							#user.label.setText(unicode(user.text(2)))
 						#else:
-							#user.setIcon(0,self.getIcon(jid,"online"))
-							#user.setText(1,self.nickSort["online"]+unicode(user.text(2)))
-						#for i in range(self.chat.ui.chatTab.count()):
-							#w=self.chat.ui.chatTab.widget(i)
-							#if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
-								#if str(e[2].getShow())!="None":
-									#self.chat.ui.chatTab.setTabIcon(i,self.getIcon(jid,str(e[2].getShow()),size="16x16"))
-								#else:
-									#self.chat.ui.chatTab.setTabIcon(i,self.getIcon(jid,'online',size="16x16"))
-						## Nastaveni tooltip
-						##user.setToolTip(0,'<font color="blue"><b>'+unicode(user.text(2))+'</b> - '+str(e[2].getShow())+'</font><hr>'+unicode(e[2].getStatus())+'<br/><b>'+self.tr("Jabber ID:")+' </b>'+str(jid)+'')
-						## Nastaveni stavove zpravy pod nick v rosteru. Pokud neni zprava nastavena, vytvori se jen nick bez zpravy.
-						#status=unicode(e[2].getStatus())
-						#if len(status)>0 and status!="None":
-							#if status[0]=="\n":
-								#status=status[1:]
-						#else:
-							#status=""
-						#user.setData(32,4,QtCore.QVariant(status))
-						#user.setText(0,unicode(user.text(2)))
-						##if unicode(e[2].getStatus())=="None" or len(e[2].getStatus())==0:
-							##user.label.setText(unicode(user.text(2)))
-						##else:
-							##text=[word for word in unicode(e[2].getStatus()).split('\n') if word != ''][0]
-							##user.label.setText(unicode(self.ui.roster.getUsers(jid)[0].text(2))+'<br/><font size="-1"><i>'+text+"</i></font>")
-						## Zobrazeni polozky v rosteru
-						#self.ui.roster.setItemHidden(user,False)
-					## Jedna se o odhlaseni
-					#elif str(e[2].getType())=="unavailable":
-						## Pokud byl user predtim prihlaseny
-						#if int(unicode(user.text(1))[0])!=9:
-							## notification
-							#if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]):
-								#for plugin in self.plugins:
-									#plugin.onRosterPresence(unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
-							## Odebrani resource z databaze
-							#try:
-								#self.groups[group]["users"][jid]["resources"].remove(e[3])
-							#except:
-								#print self.groups[group]["users"][jid]["resources"]
-							## pokud by po smazani zbyla jen jedina resource, smaze se z rosteru
-							#if int(user.childCount())==2:
-								#for i in range(user.childCount()):
-									#user.takeChild(0)
-							#else:
-								## pokud po smazani nezbude ani jedna resource, je kontakt offline
-								#if int(user.childCount())<=1:
-									#user.setIcon(0,self.getIcon(jid,"offline"))
-									#user.setText(1,self.nickSort["offline"]+unicode(user.text(2)))
-									#self.ui.roster.setItemHidden(user,self.offline)
-								## smazani resource
-								#for i in range(user.childCount()):
-									#item=user.child(i)
-									#j=item.data(32,0)
-									#j=str(j.toString())
-									#if str(j)==jid+"/"+e[3]:
-										#user.takeChild(i)
-										#break
-							#for i in range(self.chat.ui.chatTab.count()):
-								#w=self.chat.ui.chatTab.widget(i)
-								#if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
-									#self.chat.ui.chatTab.setTabIcon(i,self.getIcon(jid,'offline',size="16x16"))
-				## aktualizace cisel skupin
-				#self.ui.roster.refreshStats()
-				## serazeni polozek v rosteru
-				#self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
-			## Pokud je jid groupchat
-			#elif self.isGroupChat(jid):
-				#if str(e[2].getType())!="unavailable":
-					#nick=unicode(e[3])
-					## Nalezeni spravneho groupchatu
-					#for i in range(self.chat.ui.chatTab.count()):
-						#w=self.chat.ui.chatTab.widget(i)
-						#if str(w.jid)==jid:
-							## aktualizace uzivatele v seznamu
-							#if nick==self.groupchat[jid][0]:
-								#w.chat.changeAffiliation(e[2].getAffiliation())
-							#w.chat.editUser(jid,nick,str(e[2].getShow()),e[2].getRole(),e[2].getAffiliation())
-							#return
-				#elif str(e[2].getType())=="unavailable":
-					#nick=unicode(e[3])
-					#for i in range(self.chat.ui.chatTab.count()):
-						#w=self.chat.ui.chatTab.widget(i)
-						#if str(w.jid)==jid:
-							#w.chat.deleteUser(jid,nick)
+							#text=[word for word in unicode(e[2].getStatus()).split('\n') if word != ''][0]
+							#user.label.setText(unicode(self.ui.roster.getUsers(jid)[0].text(2))+'<br/><font size="-1"><i>'+text+"</i></font>")
+						# Zobrazeni polozky v rosteru
+						self.ui.roster.setItemHidden(user,False)
+					# Jedna se o odhlaseni
+					elif str(e[2].getType())=="unavailable":
+						# Pokud byl user predtim prihlaseny
+						if int(unicode(user.text(1))[0])!=9:
+							# notification
+							if int(self.nickSort[str(e[2].getShow())])!=int(unicode(user.text(1))[0]):
+								for plugin in self.plugins:
+									plugin.onRosterPresence(unicode(user.text(2)),str(e[2].getShow()),unicode(e[2].getStatus()),int(unicode(user.text(1)[0])))
+							# Odebrani resource z databaze
+							try:
+								self.groups[group]["users"][jid]["resources"].remove(e[3])
+							except:
+								print self.groups[group]["users"][jid]["resources"]
+							# pokud by po smazani zbyla jen jedina resource, smaze se z rosteru
+							if int(user.childCount())==2:
+								for i in range(user.childCount()):
+									user.takeChild(0)
+							else:
+								# pokud po smazani nezbude ani jedna resource, je kontakt offline
+								if int(user.childCount())<=1:
+									user.setIcon(0,self.getIcon(jid,"offline"))
+									user.setText(1,self.nickSort["offline"]+unicode(user.text(2)))
+									self.ui.roster.setItemHidden(user,self.offline)
+								# smazani resource
+								for i in range(user.childCount()):
+									item=user.child(i)
+									j=item.data(32,0)
+									j=str(j.toString())
+									if str(j)==jid+"/"+e[3]:
+										user.takeChild(i)
+										break
+							for i in range(self.chat.ui.chatTab.count()):
+								w=self.chat.ui.chatTab.widget(i)
+								if str(w.jid)==jid or str(w.jid).rsplit("/")[0]==jid:
+									self.chat.ui.chatTab.setTabIcon(i,self.getIcon(jid,'offline',size="16x16"))
+				# aktualizace cisel skupin
+				self.ui.roster.refreshStats()
+				# serazeni polozek v rosteru
+				self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
+			# Pokud je jid groupchat
+			elif self.isGroupChat(jid):
+				if str(e[2].getType())!="unavailable":
+					nick=unicode(e[3])
+					# Nalezeni spravneho groupchatu
+					for i in range(self.chat.ui.chatTab.count()):
+						w=self.chat.ui.chatTab.widget(i)
+						if str(w.jid)==jid:
+							# aktualizace uzivatele v seznamu
+							if nick==self.groupchat[jid][0]:
+								w.chat.changeAffiliation(e[2].getAffiliation())
+							w.chat.editUser(jid,nick,str(e[2].getShow()),e[2].getRole(),e[2].getAffiliation())
+							return
+				elif str(e[2].getType())=="unavailable":
+					nick=unicode(e[3])
+					for i in range(self.chat.ui.chatTab.count()):
+						w=self.chat.ui.chatTab.widget(i)
+						if str(w.jid)==jid:
+							w.chat.deleteUser(jid,nick)
 							
 
 		elif e[0] == "roster_update":
