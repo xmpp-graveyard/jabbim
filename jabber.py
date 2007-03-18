@@ -40,10 +40,8 @@ class groupchat:
 		p = xmpp.Presence(to='%s/%s'%(room, nick))
 		self.conn.SendAndCallForResponse(p,self._getIntoRoomHandler,args={'room':room,'nick':nick},myid="getintoroom")
 		# send message to GUI, because we are opened the room
-		self.mutex.lock()
 		event=customEvent(["room_opened",room,nick,""])
-		self.main.customEvent(event)
-		self.mutex.unlock()
+		QtGui.QApplication.postEvent(self.main,event)
 		#self.inc.put(["room_opened",room,nick,""])
 
 	def _getIntoRoomHandler(self,i,rep,room,nick):
@@ -52,10 +50,8 @@ class groupchat:
 			# we get error
 			code=str(rep.getErrorCode())
 			print str(rep.getError())
-			self.mutex.lock()
 			event=customEvent("muc-"+code,'err')
-			self.main.customEvent(event)
-			self.mutex.unlock()
+			QtGui.QApplication.postEvent(self.main,event)
 			#self.err.put("muc-"+code)
 			#self.deleteStoreQueue(room) # stop keeping messages
 		else:
@@ -93,17 +89,13 @@ class groupchat:
 			code=str(rep.getErrorCode())
 			print unicode(rep)
 			print str(rep.getError())
-			self.mutex.lock()
 			event=customEvent("muc_set_admin_list-"+code,'err')
-			self.main.customEvent(event)
-			self.mutex.unlock()
+			QtGui.QApplication.postEvent(self.main,event)
 			#self.err.put("muc_set_admin_list-"+code)
 		else:
 			# items setted => send info to GUI
-			self.mutex.lock()
 			event=customEvent(["group_chat_admin_list_setted",jid,role,affiliation,toDel,items])
-			self.main.customEvent(event)
-			self.mutex.unlock()
+			QtGui.QApplication.postEvent(self.main,event)
 			#self.inc.put(["group_chat_admin_list_setted",jid,role,affiliation,toDel,items])
 
 	def getGroupchatConfig(self,muc):
@@ -118,19 +110,13 @@ class groupchat:
 			code=str(rep.getErrorCode())
 			print unicode(rep)
 			print str(rep.getError())
-			self.mutex.lock()
 			event=customEvent("muc_config-"+code,'err')
-			
-			self.main.customEvent(event)
-			self.mutex.unlock()
+			QtGui.QApplication.postEvent(self.main,event)
 			#self.err.put("muc_config-"+code)
 		else:
 			# send form to GUI
-			self.mutex.lock()
 			event=customEvent(["group_chat_config",rep,muc])
-			
-			self.main.customEvent(event)
-			self.mutex.unlock()
+			QtGui.QApplication.postEvent(self.main,event)
 			#self.inc.put(["group_chat_config",rep,muc])
 
 	def getGroupchatAdminList(self,muc,role=None,affiliation=None):
@@ -149,11 +135,8 @@ class groupchat:
 			code=str(rep.getErrorCode())
 			print unicode(rep)
 			print str(rep.getError())
-			self.mutex.lock()
 			event=customEvent("groupchat_admin_list-"+code,'err')
-			
-			self.main.customEvent(event)
-			self.mutex.unlock()
+			QtGui.QApplication.postEvent(self.main,event)
 			#self.err.put("groupchat_admin_list-"+code)
 		else:
 			# get jids and save them to the list items
@@ -164,11 +147,8 @@ class groupchat:
 						jid = i.getAttr("jid")
 						items.append(jid)
 			# inform GUI
-			self.mutex.lock()
 			event=customEvent(["group_chat_admin_list",items,muc,role,affiliation])
-			
-			self.main.customEvent(event)
-			self.mutex.unlock()
+			QtGui.QApplication.postEvent(self.main,event)
 			#self.inc.put(["group_chat_admin_list",items,muc,role,affiliation])
 
 	def setGroupchatConfig(self,host,info):
@@ -194,11 +174,8 @@ class groupchat:
 			code=str(rep.getErrorCode())
 			print unicode(rep)
 			print str(rep.getError())
-			self.mutex.lock()
 			event=customEvent("groupchat_set_config-"+code,'err')
-			
-			self.main.customEvent(event)
-			self.mutex.unlock()
+			QtGui.QApplication.postEvent(self.main,event)
 			#self.err.put("groupchat_set_config-"+code)
 
 class vcard:
@@ -212,18 +189,12 @@ class vcard:
 		# if we get bad result, send to GUI empty vcard
 		if not isResultNode(rep) or rep.getVCardPayload()==None or len(rep.getVCardPayload())==0:
 			if onlyAvatar==True:
-				self.mutex.lock()
 				event=customEvent(["avatar_show",{},jid])
-				
-				self.main.customEvent(event)
-				self.mutex.unlock()
+				QtGui.QApplication.postEvent(self.main,event)
 				#self.inc.put(["avatar_show",{},jid])
 			else:
-				self.mutex.lock()
 				event=customEvent(["vcard_show",{}])
-				
-				self.main.customEvent(event)
-				self.mutex.unlock()
+				QtGui.QApplication.postEvent(self.main,event)
 				#self.inc.put(["vcard_show",{}])
 			return
 		vcard={}
@@ -233,18 +204,12 @@ class vcard:
 				vcard=self.parse(vcard,i)
 		# send vcard to GUI
 		if onlyAvatar==True:
-			self.mutex.lock()
 			event=customEvent(["avatar_show",vcard,jid])
-			
-			self.main.customEvent(event)
-			self.mutex.unlock()
+			QtGui.QApplication.postEvent(self.main,event)
 			#self.inc.put(["avatar_show",vcard,jid])
 		else:
-			self.mutex.lock()
 			event=customEvent(["vcard_show",vcard])
-			
-			self.main.customEvent(event)
-			self.mutex.unlock()
+			QtGui.QApplication.postEvent(self.main,event)
 			#self.inc.put(["vcard_show",vcard])
 
 	def parse(self,vcard,i):
@@ -280,8 +245,7 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 	StoreQueue={}
 	events=[]
 
-	def __init__(self,mutex):
-		self.mutex=mutex
+	def __init__(self,app):
 		QtCore.QThread.__init__(self)
 
 	def getStoreQueue(self,jid):
@@ -291,11 +255,8 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 			if self.StoreQueue.has_key(jid):
 				if len(self.StoreQueue[jid])!=0:
 					for i in self.StoreQueue[jid][1]:
-						self.mutex.lock()
 						event=customEvent(i)
-						
-						self.main.customEvent(event)
-						self.mutex.unlock()
+						QtGui.QApplication.postEvent(self.main,event)
 						#self.inc.put(i)
 			print "ready for deleting"
 			self.deleteStoreQueue(jid)
@@ -331,11 +292,8 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 
 	def getRegInfo(self,jid):
 		# get service discovery register information (register forms, inunicodeuctions etc)
-		self.mutex.lock()
 		event=customEvent(["discovery_register",xmpp.features.getRegInfo(self.conn,jid),unicode(jid)])
-		
-		self.main.customEvent(event)
-		self.mutex.unlock()
+		QtGui.QApplication.postEvent(self.main,event)
 		#self.inc.put(["discovery_register",xmpp.features.getRegInfo(self.conn,jid),unicode(jid)])
 
 	def disco(self,rep,jid,typ,node,back):
@@ -346,11 +304,8 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 			if not isinstance(i,unicode):
 				if typ=="items":
 					if i.getName()=='agent' and i.getTag('name'): i.setAttr('name',i.getTagData('name'))
-					self.mutex.lock()
 					event=customEvent([back,typ,i.attrs,unicode(jid),node],'discovery')
-					
-					self.main.customEvent(event)
-					self.mutex.unlock()
+					QtGui.QApplication.postEvent(self.main,event)
 					#self.discoveryQueue.put([back,typ,i.attrs,unicode(jid),node])
 					#ret.append(i.attrs)
 				if typ=="info":
@@ -365,11 +320,8 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 								if i.getTag('groupchat'): features.append(NS_GROUPCHAT)
 								if i.getTag('register'): features.append(NS_REGISTER)
 								if i.getTag('search'): features.append(NS_SEARCH)
-					self.mutex.lock()
 					event=customEvent([back,typ,identities,features,unicode(jid)],'discovery')
-					
-					self.main.customEvent(event)
-					self.mutex.unlock()
+					QtGui.QApplication.postEvent(self.main,event)
 					#self.discoveryQueue.put([back,typ,identities,features,unicode(jid)])
 
 	def discoveryItems(self,server=None,node=None,back=None):
@@ -412,11 +364,8 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 								else:
 									data["password"]=""
 								bookmarks[attrs["jid"]]=data
-		self.mutex.lock()
 		event=customEvent(["bookmarks", bookmarks])
-		
-		self.main.customEvent(event)
-		self.mutex.unlock()
+		QtGui.QApplication.postEvent(self.main,event)
 		#self.inc.put(["bookmarks", bookmarks])
 
 	def sendFile(self,to,file,desc=''):
@@ -437,20 +386,14 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 			# we get error
 			code=str(rep.getErrorCode())
 			print str(rep.getError())
-			self.mutex.lock()
 			event=customEvent("setPrivateData-"+code,'err')
-			
-			self.main.customEvent(event)
-			self.mutex.unlock()
+			QtGui.QApplication.postEvent(self.main,event)
 			#self.err.put("muc-"+code)
 			#self.deleteStoreQueue(room) # stop keeping messages
 		else:
 			# we are connected
-			self.mutex.lock()
 			event=customEvent(["private_data_set"])
-			
-			self.main.customEvent(event)
-			self.mutex.unlock()
+			QtGui.QApplication.postEvent(self.main,event)
 			#self.inc.put(["room_opened",room,nick,rep.getAffiliation()])
 
 
@@ -547,11 +490,8 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 					# GUI is ready for messages, so we can send messages to GUI
 					if len(self.message_queue)!=0:
 						for i in self.message_queue:
-							self.mutex.lock()
 							event=customEvent(i)
-							
-							self.main.customEvent(event)
-							self.mutex.unlock()
+							QtGui.QApplication.postEvent(self.main,event)
 							#self.inc.put(i)
 						self.message_queue=[]
 
@@ -583,11 +523,8 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 				# GUI is ready for presences, so we can send presences to GUI
 				if len(self.presence_queue)!=0:
 					for i in self.presence_queue:
-						self.mutex.lock()
 						event=customEvent(i)
-						
-						self.main.customEvent(event)
-						self.mutex.unlock()
+						QtGui.QApplication.postEvent(self.main,event)
 					self.presence_queue=[]
 
 	def iqHandle(self, conn, iq):
@@ -659,14 +596,11 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 			#self.alive=True
 			#print "connected"
 			#event=customEvent(["reconnect",self.user,self.server,self.password,self.resource,self.proxy])
-			#self.main.customEvent(event)
+			#QtGui.QApplication.postEvent(self.main,event)
 		self.connected=False
 		print "off"
-		self.mutex.lock()
 		event=customEvent(["disconnected"])
-		
-		self.main.customEvent(event)
-		self.mutex.unlock()
+		QtGui.QApplication.postEvent(self.main,event)
 
 	def streamErrorHandler(self,conn,error):
 		name,text='error',error.getData()
@@ -693,11 +627,8 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 		
 		if not conres:
 			self.connected = False
-			self.mutex.lock()
 			event=customEvent("con",'err')
-			
-			self.main.customEvent(event)
-			self.mutex.unlock()
+			QtGui.QApplication.postEvent(self.main,event)
 			time.sleep(1) # maybe we actually don't need it here, but it looks hax0rz, don't ya think ?
 			sys.exit(1)
 			
@@ -708,11 +639,8 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 		authres = self.conn.auth(user,password,resource)
 		
 		if not authres:
-			self.mutex.lock()
 			event=customEvent("auth",'err')
-			
-			self.main.customEvent(event)
-			self.mutex.unlock()
+			QtGui.QApplication.postEvent(self.main,event)
 			self.connected = False
 			self.alive=False
 			time.sleep(1) # maybe we actually don't need it here, but it looks hax0rz, don't ya think ?
@@ -729,11 +657,8 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 		self.conn.RegisterHandler('iq', self.xmppPingReply, 'get', NS_XMPP_PING)
 		#self.conn.pluginFiletransfer()
 		self.roster = self.conn.getRoster()
-		self.mutex.lock()
 		event=customEvent(["roster_update", self.roster])
-		
-		self.main.customEvent(event)
-		self.mutex.unlock()
+		QtGui.QApplication.postEvent(self.main,event)
 		#self.inc.put(["roster_update", self.roster])
 		self.ready=False
 		while not self.ready:
@@ -741,7 +666,7 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 				self.ready = self.outc.get(timeout = 0)
 			except:
 				self.ready = False
-		#self.ready=True
+
 		self.conn.sendInitPresence()
 		self.discoveryItems()
 		event2=customEvent(["con_ready"])
@@ -760,7 +685,6 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 
 	def isalive(self):
 		if self.alive==True:
-			
 			self.alive=False
 			print "ping"
 			iq=Iq(to=self.server,typ='get',queryNS=NS_TIME,xmlns=None)
@@ -773,11 +697,8 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 			if self.alive==2:
 				print "disconnect"
 				self.connected=False
-				self.mutex.lock()
 				event=customEvent(["disconnected"])
-				
-				self.main.customEvent(event)
-				self.mutex.unlock()
+				QtGui.QApplication.postEvent(self.main,event)
 				#sys.exit(1)
 				#self.off()
 			elif self.alive==False:
@@ -806,8 +727,7 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 		data=event.data
 		
 		if data[0]=="isalive":
-			if self.connected==True:
-				self.isalive()
+			self.isalive()
 			
 		elif data[0]=="disconnect":
 			self.disconnect()
