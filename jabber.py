@@ -366,6 +366,7 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 								bookmarks[attrs["jid"]]=data
 		event=customEvent(["bookmarks", bookmarks])
 		QtGui.QApplication.postEvent(self.main,event)
+		print "bookmarks"
 		#self.inc.put(["bookmarks", bookmarks])
 
 	def sendFile(self,to,file,desc=''):
@@ -752,7 +753,9 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 				back=data[2]
 			except:
 				back=None
-			self.discoveryItems(jid,back=back)
+			try: node=data[3]
+			except: node=None
+			self.discoveryItems(jid,node=node,back=back)
 		
 		elif data[0]=="discovery_info":
 			try:
@@ -780,6 +783,18 @@ class Jabber(QtCore.QThread,groupchat,vcard):
 		
 		elif data[0]=="roster_authorize":
 			self.roster.Authorize(data[1])
+
+		elif data[0]=="roster_unauthorize":
+			self.roster.Unauthorize(data[1])
+
+		elif data[0]=="roster_set_item":
+			self.roster.setItem(data[1],data[2],data[3])
+
+		elif data[0]=="roster_del_item":
+			self.roster.delItem(data[1])
+
+		elif data[0]=="get_vcard":
+			self.getVCard(data[1])
 
 
 

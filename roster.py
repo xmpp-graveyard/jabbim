@@ -8,6 +8,12 @@ from subscription_ui import *
 from tooltip_ui import *
 from addcontact import *
 
+class customEvent(QtCore.QEvent):
+	def __init__(self,data,typ="inc"):
+		apply(QtCore.QEvent.__init__,(self,QtCore.QEvent.User))
+		self.data=list(data)
+		self.typ=unicode(typ)
+
 class tooltipWidget(QtGui.QWidget):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QWidget.__init__,(self,parent))
@@ -277,7 +283,8 @@ class rosterWidget(QtGui.QTreeWidget):
 
 	def showVCard(self,action):
 		jid=unicode(action.item.text(1))[1:]
-		self.jab.getVCard(jid)
+		QtGui.QApplication.postEvent(self.jab,customEvent(["get_vcard",jid]))
+		#self.jab.getVCard(jid)
 		
 	def subscriptionAccepted(self,action):
 		jid=unicode(action.item.text(1))[1:]
@@ -285,14 +292,17 @@ class rosterWidget(QtGui.QTreeWidget):
 		win=addContactWindow(self.main,self.jab,self,jid,jid)
 		ret=win.exec_()
 		if ret:
-			self.jab.roster.Authorize(jid)
+			QtGui.QApplication.postEvent(self.jab,customEvent(["roster_authorize",jid]))
+			#self.jab.roster.Authorize(jid)
 		else:
-			self.jab.roster.Unauthorize(jid)
+			QtGui.QApplication.postEvent(self.jab,customEvent(["roster_unauthorize",jid]))
+			#self.jab.roster.Unauthorize(jid)
 
 	def subscriptionRejected(self,action):
 		jid=unicode(action.item.text(1))[1:]
 		self.takeTopLevelItem(self.indexOfTopLevelItem(action.item))
-		self.jab.roster.Unauthorize(jid)
+		QtGui.QApplication.postEvent(self.jab,customEvent(["roster_unauthorize",jid]))
+		#self.jab.roster.Unauthorize(jid)
 
 	def addGroup(self,name):
 		# add new group to the roster and return group QTreeWidgetItem
@@ -354,7 +364,8 @@ class rosterWidget(QtGui.QTreeWidget):
 		jid=item.data(32,0)
 		jid=str(jid.toString())
 		if b==True:
-			self.jab.roster.setItem(jid,name,self.getGroups(jid))
+			QtGui.QApplication.postEvent(self.jab,customEvent(["roster_set_item",jid,name,self.getGroups(jid)]))
+			#self.jab.roster.setItem(jid,name,self.getGroups(jid))
 			for user in self.getUsers(jid):
 				user.setText(0,name)
 				user.setText(2,name)
@@ -475,14 +486,16 @@ class rosterWidget(QtGui.QTreeWidget):
 				resources=list(self.getResources(str(jid)))
 				self.main.groups[group]["users"][str(jid)]={"item":item,"resources":resources}
 				# send jabber command
-				self.jab.roster.setItem(jid,name,self.getGroups(jid)+[unicode(group)])
+				QtGui.QApplication.postEvent(self.jab,customEvent(["roster_set_item",jid,name,self.getGroups(jid)+[unicode(group)]]))
+				#self.jab.roster.setItem(jid,name,self.getGroups(jid)+[unicode(group)])
 		else:
 			# delete contact
 			user=self.main.groups[group]["users"][str(jid)]
 			self.delUser(jid,user["item"])
 			groups=self.getGroups(jid)
 			# send jabber command
-			self.jab.roster.setItem(jid,name,groups)
+			QtGui.QApplication.postEvent(self.jab,customEvent(["roster_set_item",jid,name,groups]))
+			#self.jab.roster.setItem(jid,name,groups)
 		# refresh group stats
 		self.refreshStats()
 		# sort items
@@ -500,7 +513,8 @@ class rosterWidget(QtGui.QTreeWidget):
 			# delete user from groups
 			for user in self.getUsers(jid):
 				self.delUser(jid,user)
-			self.jab.roster.delItem(jid) # send jabber command
+			QtGui.QApplication.postEvent(self.jab,customEvent(["roster_del_item",jid]))
+			#self.jab.roster.delItem(jid) # send jabber command
 			self.refreshStats() # refresh group stats
 		elif cmd=="new_group":
 			# add contact to the new group
@@ -522,7 +536,8 @@ class rosterWidget(QtGui.QTreeWidget):
 				self.main.groups[group]["item"].addChild(item)
 				self.sortItems (1,QtCore.Qt.AscendingOrder) # sort items
 				# send jabber command
-				self.jab.roster.setItem(jid,name,self.getGroups(jid)+[unicode(group)])
+				QtGui.QApplication.postEvent(self.jab,customEvent(["roster_set_item",jid,name,self.getGroups(jid)+[unicode(group)]]))
+				#self.jab.roster.setItem(jid,name,self.getGroups(jid)+[unicode(group)])
 			# refresh stats
 			self.refreshStats()
 		elif cmd=="check_group":
@@ -546,18 +561,22 @@ class rosterWidget(QtGui.QTreeWidget):
 			# get vcard of selected contact
 			jid=action.data()
 			jid=str(jid.toString())
-			self.jab.getVCard(jid)
+			QtGui.QApplication.postEvent(self.jab,customEvent(["get_vcard",jid]))
+			#self.jab.getVCard(jid)
 		elif cmd=="avatar":
 			# get avatar of selected contact
 			jid=action.data()
 			jid=str(jid.toString())
-			self.jab.getVCard(jid,True)
+			QtGui.QApplication.postEvent(self.jab,customEvent(["get_vcard",jid]))
+			#self.jab.getVCard(jid,True)
 		elif cmd=="get_avatars":
 			# get avatars of users in selected group
 			group=action.data()
-			group=unicode(group.toString())
+			if not self.main.groups.has_key(group):
+				group="Unknown"
 			for jid,item in self.main.groups[group]["users"].iteritems():
-				self.jab.getVCard(jid,True)
+				QtGui.QApplication.postEvent(self.jab,customEvent(["get_vcard",jid]))
+				#self.jab.getVCard(jid,True)
 		elif cmd=="chat":
 			# chat with selected contact
 			jid=action.data()
@@ -572,7 +591,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			file=QtGui.QFileDialog.getOpenFileName(self,"Choose file")
 			if len(file)!=0:
 				print file,"to",jid
-				self.jab.sendFile(jid,unicode(file))
+				#self.jab.sendFile(jid,unicode(file))
 
 
 	def contextMenuEvent (self,event):

@@ -118,9 +118,11 @@ class discoveryWindow(QtGui.QDialog):
 
 	def clicked(self,item,i):
 		if item.parent()==None and int(item.childCount())==0:
-			jab.discoveryItems(unicode(item.text(1)))
+			app.postEvent(jab,customEvent(["discovery_items",jid]))
+			#jab.discoveryItems(unicode(item.text(1)))
 		if item.node!=False and int(item.childCount())==0:
-			jab.discoveryItems(unicode(item.text(1)),node=item.node)
+			app.postEvent(jab,customEvent(["discovery_items",jid,None,item.node]))
+			#jab.discoveryItems(unicode(item.text(1)),node=item.node)
 
 
 class mainWindow(QtGui.QMainWindow):
@@ -880,9 +882,13 @@ class mainWindow(QtGui.QMainWindow):
 		elif e[0]=="bookmarks":
 			# we get bookmarks
 			# e=[command,bookmarks_list]
+			print "bookmarks 0"
 			if len(e[1])!=0:
+				print "bookmarks 1"
 				self.bookmarks=e[1]
+				print "bookmarks 2"
 				self.buildGroupchatMenu()
+				print "bookmarks 3"
 
 		elif e[0]=="group_chat_admin_list_setted":
 			# user set muc#admin list in room
