@@ -82,6 +82,7 @@ class Client(derived):
 		if typ:
 			presence['typ'] = typ
 		print 'sending out presence to: ' , to
+		self.on_xml(presence.toXml())
 		self.xmlstream.send(presence)
 	
 	def connect(self):
@@ -111,6 +112,7 @@ class Client(derived):
 		q['xmlns']='jabber:iq:roster'
 		try:
 			d = iq.send()
+			self.on_xml(iq.toXml())
 			d.addCallback(self._onRosterArrive)
 		except Exception, e:
 			print e
@@ -161,6 +163,7 @@ class Client(derived):
 		iq['to'] = self.jid.host
 		iq['id'] = el['id']
 		iq['type'] = 'result'
+		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 		
 		
@@ -199,6 +202,7 @@ class Client(derived):
 					contact = Contact(item['jid'], name, item['subscription'], rosterItems, groups)
 					self.roster['users'][item['jid']] = contact
 		presence = domish.Element(('jabber:client','presence'))
+		self.on_xml(presence.toXml())
 		self.xmlstream.send(presence)
 
 	def _authfailed(self,xmlstream):
