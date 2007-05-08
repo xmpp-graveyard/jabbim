@@ -159,7 +159,7 @@ class Client(derived):
 						contact.groups = groups
 						self.on_UpdateContact(item['jid'])
 		iq = domish.Element((None, 'iq'))
-		iq['from'] = unicode(self.jid)
+		iq['from'] = self.jid.full()
 		iq['to'] = self.jid.host
 		iq['id'] = el['id']
 		iq['type'] = 'result'
