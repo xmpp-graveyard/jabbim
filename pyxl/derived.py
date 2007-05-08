@@ -1,0 +1,5 @@
+class derived:
+	def on_authFailed(self,xmlstream):
+		pass
+	def on_init(self):
+		pass
