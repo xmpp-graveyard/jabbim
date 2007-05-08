@@ -30,22 +30,21 @@ import widgets
 import pyxl
 
 from configobj import ConfigObj
-
+from include import utils
 
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
-		self.homeDir=self.getHomeDir() # get home dir
-		self.loadConfig() # load config files
+		self.homeDir=utils.getHomeDir() # get home dir
+		utils.loadConfig(self) # load config files
 		self.client=None
 		# fill login form
 		self.ui.login_password.setText(self.config['passwd'])
 		self.ui.login_jid.setText(self.config['jid'])
 		if self.config['savePasswd']=="True":
 			self.ui.login_savePassword.setChecked(True)
-
 
 		app.connect(self.ui.login_connect, QtCore.SIGNAL("clicked()"),self.connect)
 		app.connect(app,QtCore.SIGNAL("lastWindowClosed() "),self.disconnect)
@@ -124,53 +123,6 @@ class mainWindow(QtGui.QMainWindow):
 					self.config.write()
 		self.client = pyxl.client.Client(jid+"/jabbim", password, jid.split("@")[1], 5222,self)
 		self.client.connect()
-
-	def getHomeDir(self):
-		# gets homedir on win32 or linux
-		if sys.platform != 'win32' :
-			return os.path.expanduser( '~' )
-		def valid(path):
-			if path and os.path.isdir(path):
-				return True
-			return False
-		def env(name):
-			return os.environ.get( name, '' )
-		homeDir = env( 'USERPROFILE' )
-		if not valid(homeDir):
-			homeDir = env( 'HOME' )
-			if not valid(homeDir):
-				homeDir = '%s%s' % (env('HOMEDRIVE'),env('HOMEPATH'))
-				if not valid(homeDir):
-					homeDir = env( 'SYSTEMDRIVE' )
-					if homeDir and (not homeDir.endswith('\\')):
-						homeDir += '\\'
-					if not valid(homeDir):
-						homeDir = 'C:\\'
-		return homeDir
-
-	def loadConfig(self):
-		# loads config and repairs config file
-		configs={"jid":"",
-				"passwd":"",
-				"savePasswd":"",
-				}
-		self.config=ConfigObj(self.homeDir+'/.jabbim/config',encoding='UTF8')
-		if len(self.config)==0:
-			if not os.path.isdir(self.homeDir+'/.jabbim'):
-				os.mkdir(self.homeDir+'/.jabbim')
-			self.config=ConfigObj(self.homeDir+'/.jabbim/config',encoding='UTF8')
-			for k,v in configs.iteritems():
-				self.config[k]=v
-			self.config.write()
-		rewrite=False
-		for k,v in configs.iteritems():
-			try:
-				self.config[k]
-			except:
-				self.config[k]=v
-				rewrite=True
-		if rewrite==True:
-			self.config.write()
 
 translator=QtCore.QTranslator()
 translator.load("locales/jabbim_"+str(QtCore.QLocale.system().name())[:2]+".qm")
