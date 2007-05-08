@@ -42,6 +42,21 @@ class Client(derived):
 		log.startLogging(sys.stdout)
 		self.on_init()
 
+	def sendPresence(self, to, show = None, status = None, priority = None, typ = None):
+		presence = domish.Element((None, 'presence'))
+		presence['from'] = unicode(self.jid)
+		presence['to'] = to
+		if status:
+			presence.addElement('status', content = status)
+		if show:
+			presence.addElement('show', content = show)
+		if priority:
+			presence.addElement('priority', content = priority)
+		if typ:
+			presence['typ'] = typ
+		
+		self.xmlstream.send(presence)
+	
 	def connect(self):
 		self.factory = client.basicClientFactory(self.jid,self.password)
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
@@ -55,6 +70,7 @@ class Client(derived):
 	
 	def _authd(self, xmlstream):
 		self.main._connected()
+		self.xmlstream = xmlstream
 		xmlstream.addObserver("/presence", self.onPresence)
 		xmlstream.addObserver("/message", self.onMessage)
 		iq = IQ(xmlstream, 'get')
@@ -65,12 +81,12 @@ class Client(derived):
 		q['xmlns']='jabber:iq:roster'
 		try:
 			d = iq.send()
-			d.addCallback(self._onRosterArrive, xmlstream)
+			d.addCallback(self._onRosterArrive)
 		except Exception, e:
 			print e
 		
 	
-	def _onRosterArrive(self, el, xmlstream):
+	def _onRosterArrive(self, el):
 		print 'roster arrived'
 		for child in el.elements():
 			if child.name == "query":
@@ -99,7 +115,7 @@ class Client(derived):
 					contact = Contact(item['jid'], name, item['subscription'], rosterItems, groups)
 					self.roster['users'][item['jid']] = contact
 		presence = domish.Element(('jabber:client','presence'))
-		xmlstream.send(presence)
+		self.xmlstream.send(presence)
 
 	def _authfailed(self,xmlstream):
 		print "auth_failed"
