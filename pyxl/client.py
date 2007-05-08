@@ -9,6 +9,9 @@ from twisted.words.xish import domish
 from twisted.internet import reactor
 from twisted.words.protocols.jabber.xmlstream import IQ
 
+try: from PyQt4 import QtCore, QtGui
+except: print "PyQt4 is not installed."
+
 class Contact:
 	#TODO: vyresit vice resource, prioritu a stav ke kazde
 	def __init__(self, jid, name, subscription, items=[], groups = [], status = ()):
@@ -94,8 +97,11 @@ class Client:
 		xmlstream.send(presence)
 
 	
-	def _authfail(self, xmlstream):
-		print 'auth failed'
+
+
+	def _authfail(self,xmlstream):
+		print "auth_fail"
+		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(self.main.tr("Bad Jabber ID or password.")),0,1)
 	
 	def onMessage(self, el):
 		for child in el.elements():

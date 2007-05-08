@@ -31,6 +31,7 @@ import pyxl
 
 from configobj import ConfigObj
 
+
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
@@ -67,6 +68,8 @@ class mainWindow(QtGui.QMainWindow):
 					"5":"dnd",
 					"9":"offline"
 					}
+		
+		
 	def loadRoster(self):
 		# load roster widget
 		layout=QtGui.QHBoxLayout(self.ui.rosterWidget)
