@@ -115,8 +115,56 @@ class Client(derived):
 		except Exception, e:
 			print e
 
-	def onRosterAdd(self,xml):
-		print "sss"
+	def onRosterAdd(self,el):
+		print "roster item add"
+		for child in el.elements():
+			if child.name == "query":
+				allGroups=['Unknown']
+				for item in child.elements():
+					groups = []
+					for group in item.elements():
+						if group.name == 'group':
+							groups.append(group.__str__())
+							if group.__str__() not in allGroups:
+								# add group item to ther roster
+								self.roster['groups'][group.__str__()] = self.main.ui.roster.addGroup(group.__str__())
+								allGroups.append(group.__str__())
+					if item.hasAttribute('name'):
+						name = item['name']
+					else:
+						name = ''
+					subscription = ''
+					if item.hasAttribute('subscription'):
+						subscription = item['subscription']
+					#print item['jid'],groups
+					if subscription == 'remove'  and self.roster['users'].has_key(item['jid']):
+						print 'deleting contact'
+						del self.roster['users'][item['jid']]
+						self.on_DeleteContact(item['jid'])
+					elif not self.roster['users'].has_key(item['jid']):
+						rosterItems=[]
+						if len(groups)==0:
+							# add user item to Unknown group
+							rosterItems.append(self.main.ui.roster.addUser(item['jid'],name,self.roster['groups']['Unknown']))
+						for group in groups:
+							# add user item to the group
+							rosterItems.append(self.main.ui.roster.addUser(item['jid'],name,self.roster['groups'][group]))
+						contact = Contact(item['jid'], name, subscription, rosterItems, groups)
+						self.roster['users'][item['jid']] = contact
+					elif subscription != 'remove'  and self.roster['users'].has_key(item['jid']):
+						contact = self.roster['users'][item['jid']]
+						contact.name = name
+						contact.groups = groups
+						self.on_UpdateContact(item['jid'])
+		iq = domish.Element((None, 'iq'))
+		iq['from'] = unicode(self.jid)
+		iq['to'] = self.jid.host
+		iq['id'] = el['id']
+		iq['type'] = 'result'
+		self.xmlstream.send(iq)
+		
+		
+		
 	
 	def onXML(self, el):
 		if self.log:
@@ -177,10 +225,14 @@ class Client(derived):
 			if child.name == 'show':
 				show = child.__str__()
 			elif child.name == 'status':
-				status = child.__str__()
+				status = unicode(child)
 			elif child.name == 'priority':
 				priority = child.__str__()
 		if self.roster['users'].has_key(frm.userhost()):
+			if show == None and not el.hasAttribute('unavailable'):
+				show = 'online'
+			elif el.hasAttribute('unavailable'):
+				show = 'offline'
 			self.roster['users'][unicode(frm.userhost())].setStatus(resource, show,status)
 			self.on_presence(frm,show)
 			self.roster['users'][frm.userhost()].setPriority(resource, priority)
