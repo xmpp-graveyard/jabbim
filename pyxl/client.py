@@ -198,6 +198,11 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 	
+	def addContact(self, jid, msg):
+		print 'add contact'
+		self.sendRosterUpdate(jid, None, 'none', [])
+		self.sendPresence(to = jid, status = msg, typ = 'subscribe')
+	
 	def onXML(self, el):
 		if self.log:
 			self.on_xml(el.toXml())
