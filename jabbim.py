@@ -53,18 +53,13 @@ class clientClass(pyxl.client.Client):
 		if self.main.xmlConsole.ui.enable.isChecked():
 			text=unicode(xml)
 			self.main.xmlConsole.ui.xml.append(text+"\n\n")
-			#text=unicode(xml)
-			#text=text.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
-			#text=text+"<br/><br/>"
-			#cur=self.main.xmlConsole.ui.xml.textCursor()
-			#cur.movePosition(QtGui.QTextCursor.End)
-			#self.main.xmlConsole.ui.xml.setTextCursor(cur)
+	
+	def on_UpdateContact(self,jid):
+		print "update",unicode(jid)
 
-			#self.main.xmlConsole.ui.xml.insertHtml(text)
-			
-			#cur=self.main.xmlConsole.ui.xml.textCursor()
-			#cur.movePosition(QtGui.QTextCursor.End)
-			#self.main.xmlConsole.ui.xml.setTextCursor(cur)
+	def on_DeleteContact(self,jid):
+		print "delete",unicode(jid)
+
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
 		apply(QtGui.QMainWindow.__init__,(self,parent))

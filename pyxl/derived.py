@@ -9,3 +9,7 @@ class derived:
 		pass
 	def on_xml(self, xml):
 		pass
+	def on_UpdateContact(self,jid):
+		pass
+	def on_DeleteContact(self,jid):
+		pass

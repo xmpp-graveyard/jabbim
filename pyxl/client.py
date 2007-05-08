@@ -121,7 +121,9 @@ class Client(derived):
 		print "roster item add"
 		for child in el.elements():
 			if child.name == "query":
-				allGroups=['Unknown']
+				allGroups=[]
+				for k,v in self.roster['groups'].iteritems():
+					allGroups.append(k)
 				for item in child.elements():
 					groups = []
 					for group in item.elements():
