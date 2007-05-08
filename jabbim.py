@@ -43,7 +43,10 @@ class mainWindow(QtGui.QMainWindow):
 		# fill login form
 		self.ui.login_password.setText(self.config['passwd'])
 		self.ui.login_jid.setText(self.config['jid'])
-		
+		if self.config['savePasswd']=="True":
+			self.ui.login_savePassword.setChecked(True)
+
+
 		app.connect(self.ui.login_connect, QtCore.SIGNAL("clicked()"),self.connect)
 		app.connect(app,QtCore.SIGNAL("lastWindowClosed() "),self.disconnect)
 		
@@ -108,15 +111,15 @@ class mainWindow(QtGui.QMainWindow):
 		jid=unicode(self.ui.login_jid.text())
 		password=unicode(self.ui.login_password.text())
 		if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
-			# and self.config['savePasswd']=="True") or self.config['savePasswd']!=str(self.ui.savePassword.isChecked())
-			if jid!=self.config['jid'] or password!=self.config['passwd']:
+			
+			if jid!=self.config['jid'] or (password!=self.config['passwd'] and self.config['savePasswd']=="True") or self.config['savePasswd']!=str(self.ui.login_savePassword.isChecked()):
 				ret=QtGui.QMessageBox.question(self,self.tr("Login information"), self.tr("Save current login information?"),3,4)
 				if ret==3:
-					#self.config['savePasswd']=self.ui.savePassword.isChecked()
-					#if self.ui.savePassword.isChecked()==True:
-					self.config['passwd']=password
-					#else:
-						#self.config['passwd']=""
+					self.config['savePasswd']=self.ui.login_savePassword.isChecked()
+					if self.ui.login_savePassword.isChecked()==True:
+						self.config['passwd']=password
+					else:
+						self.config['passwd']=""
 					self.config['jid']=jid
 					self.config.write()
 		self.client = pyxl.client.Client(jid+"/jabbim", password, jid.split("@")[1], 5222,self)
