@@ -6,6 +6,7 @@ def loadConfig(main):
 	configs={"jid":"",
 			"passwd":"",
 			"savePasswd":"",
+			"rosterIconSize":"16",
 			}
 	main.config=ConfigObj(main.homeDir+'/.jabbim/config',encoding='UTF8')
 	if len(main.config)==0:

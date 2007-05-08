@@ -14,7 +14,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.edit=0 # temp variable for tabPressed()
 		# roster config and design informations
 		self.setAlternatingRowColors(True)
-		self.setIconSize(QtCore.QSize(16,16))
+		self.setIconSize(QtCore.QSize(int(self.main.config['rosterIconSize']),int(self.main.config['rosterIconSize'])))
 		self.setRootIsDecorated(False)
 		self.setDragEnabled(True)
 		self.setAcceptDrops(True)
@@ -55,7 +55,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		for item in self.getUserItems(jid):
 			name=unicode(item.text(0))
 			item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
-			item.setIcon(0,self.main.getIcon(size="16x16",status=self.main.icons[self.main.shows[unicode(show)]]))
+			item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize'])+"x"+str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.refreshStats()
 
@@ -86,7 +86,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
 		item.setData(32,0,QtCore.QVariant(jid))
-		item.setIcon(0,self.main.getIcon(size="16x16",status=self.main.icons["9"]))
+		item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize'])+"x"+str(self.main.config['rosterIconSize']),status=self.main.icons["9"]))
 		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)
 		# item design
 		#self.setItemHidden(item, offline)
