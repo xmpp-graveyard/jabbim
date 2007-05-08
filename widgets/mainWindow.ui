@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>311</width>
+    <width>307</width>
     <height>694</height>
    </rect>
   </property>
@@ -21,17 +21,53 @@
      <number>6</number>
     </property>
     <item row="1" column="0" >
-     <widget class="QToolButton" name="statusButton" >
-      <property name="text" >
-       <string>...</string>
+     <layout class="QHBoxLayout" >
+      <property name="margin" >
+       <number>0</number>
       </property>
-      <property name="popupMode" >
-       <enum>QToolButton::InstantPopup</enum>
+      <property name="spacing" >
+       <number>6</number>
       </property>
-      <property name="toolButtonStyle" >
-       <enum>Qt::ToolButtonTextBesideIcon</enum>
-      </property>
-     </widget>
+      <item>
+       <widget class="QToolButton" name="showOffline" >
+        <property name="text" >
+         <string>Show offline</string>
+        </property>
+        <property name="checkable" >
+         <bool>true</bool>
+        </property>
+        <property name="arrowType" >
+         <enum>Qt::NoArrow</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer>
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" >
+         <size>
+          <width>121</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QToolButton" name="statusButton" >
+        <property name="text" >
+         <string>Offline</string>
+        </property>
+        <property name="popupMode" >
+         <enum>QToolButton::InstantPopup</enum>
+        </property>
+        <property name="toolButtonStyle" >
+         <enum>Qt::ToolButtonTextBesideIcon</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item row="0" column="0" >
      <widget class="QTabWidget" name="tabWidget" >
@@ -239,7 +275,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>311</width>
+     <width>307</width>
      <height>29</height>
     </rect>
    </property>

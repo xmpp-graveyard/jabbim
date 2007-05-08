@@ -32,11 +32,20 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.hideColumn(1)
 		self.hideColumn(2)
 		self.hideColumn(4)
+		self.item=QtGui.QTreeWidgetItem(self)
+		self.item.setText(1,"999")
+		self.setItemHidden(self.item, True)
 
 	def getUserItems(self,jid):
 		if not self.main.client.roster['users'].has_key(jid):
 			return []
 		return self.main.client.roster['users'][jid].getUserItems()
+
+	def hidden(self,bool):
+		# little hack (qt doesn't repaint reshown items, when we have not one top level item at the end)
+		self.setItemHidden(self.item, False)
+		self.setItemHidden(self.item, True)
+
 
 	def refreshStats(self):
 		# rewrite online/all users stats in group QTreeWidgetItem
@@ -58,6 +67,8 @@ class rosterWidget(QtGui.QTreeWidget):
 			name=unicode(item.text(0))
 			item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
 			item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize'])+"x"+str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
+			if self.main.shows[unicode(show)]!="9":
+				self.setItemHidden(item, False)
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.refreshStats()
 
@@ -91,7 +102,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize'])+"x"+str(self.main.config['rosterIconSize']),status=self.main.icons["9"]))
 		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)
 		# item design
-		#self.setItemHidden(item, offline)
+		self.setItemHidden(item, offline)
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.refreshStats()
 		return item

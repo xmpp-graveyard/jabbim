@@ -65,7 +65,9 @@ class mainWindow(QtGui.QMainWindow):
 
 		app.connect(self.ui.login_connect, QtCore.SIGNAL("clicked()"),self.connect)
 		app.connect(app,QtCore.SIGNAL("lastWindowClosed() "),self.disconnect)
-		
+		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
+
+
 		self.ui.rosterStackedWidget.setCurrentIndex(0)
 		self.loadRoster()
 		
@@ -114,7 +116,20 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusButton.setText(unicode(self.status["offline"]))
 		self.ui.statusButton.setIcon(self.getIcon("offline",size="16x16"))
 		self.ui.statusButton.hide()
-		
+		self.offline=False
+
+	def hideOffline(self,bool):
+		# hide or show offline users
+		self.offline=not bool
+		# rewrite online/all users stats in group QTreeWidgetItem
+		for group,item in self.client.roster['groups'].iteritems():
+			# return stats (online,offline,all users) for group
+			for i in range(int(item.childCount())):
+				child=item.child(i)
+				if int(unicode(child.text(1))[0])==9:
+					self.ui.roster.setItemHidden(child, not bool)
+			self.ui.roster.hidden(not bool)
+
 	def statusChanged(self,action):
 		# status changed
 		data=action.data()
