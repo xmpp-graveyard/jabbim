@@ -20,9 +20,32 @@ class Contact:
 		self.groups = groups
 		self.status = status
 		self.rosterItems = items # user can be in many groups => more items
+		self.resources={} #resource:(show,status,priority)
 
-	def setStatus(self, status):
-		self.status = status
+	def setStatus(self, resource, show, status):
+		if self.resources.has_key(resource):
+			self.resources[resource] = {'show': show, 'status': status}
+		else:
+			self.resources[resource] = {'show': show, 'status': status, 'priority' : 0}
+		if resource == self.getHighestResource():
+			self.status = (show, status)
+			
+	def setPriority(self, resource, priority):
+		if self.resources.has_key(resource):
+			self.resources[resource]['priority'] = priority
+		else:
+			self.resources[resource] = {'show': None, 'status': '', 'priority' : priority}
+			
+	def getHighestResource(self):
+		prio = None
+		highest = None
+		for res,val in self.resources.iteritems():
+##			print val
+			if val.has_key('priority') :
+				if val['priority']>prio:
+					highest = res
+					prio = val['priority']
+		return highest
 
 	def getUserItems(self):
 		# get user QTreeWidget item from every group
@@ -42,10 +65,11 @@ class Client(derived):
 		log.startLogging(sys.stdout)
 		self.on_init()
 
-	def sendPresence(self, to, show = None, status = None, priority = None, typ = None):
+	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None):
 		presence = domish.Element((None, 'presence'))
 		presence['from'] = unicode(self.jid)
-		presence['to'] = to
+		if to:
+			presence['to'] = to
 		if status:
 			presence.addElement('status', content = status)
 		if show:
@@ -54,7 +78,7 @@ class Client(derived):
 			presence.addElement('priority', content = priority)
 		if typ:
 			presence['typ'] = typ
-		
+		print 'sending out presence to: ' , to
 		self.xmlstream.send(presence)
 	
 	def connect(self):
@@ -134,7 +158,8 @@ class Client(derived):
 	
 	def onPresence(self, el):
 		print el['from']
-		frm = jid.JID(el['from']).userhost()
+		frm = jid.JID(el['from'])
+		resource = jid.JID(el['from']).resource
 		show = status = priority = None
 		for child in el.elements():
 			if child.name == 'show':
@@ -143,10 +168,10 @@ class Client(derived):
 				status = child.__str__()
 			elif child.name == 'priority':
 				priority = child.__str__()
-		if self.roster['users'].has_key(frm):
-			self.roster['users'][unicode(frm)].setStatus((show,status))
+		if self.roster['users'].has_key(frm.userhost()):
+			self.roster['users'][unicode(frm.userhost())].setStatus(resource, show,status)
 			self.on_presence(frm,show)
-##			self.roster.setResource(resource, priority)
+			self.roster['users'][frm.userhost()].setPriority(resource, priority)
 		else:
 			print 'contact not in roster'
 		pass

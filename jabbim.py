@@ -47,7 +47,7 @@ class clientClass(pyxl.client.Client):
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(self.main.tr("Bad Jabber ID or password.")),0,1)
 	
 	def on_presence(self,jid,show):
-		self.main.ui.roster.setStatus(jid,show)
+		self.main.ui.roster.setStatus(jid.userhost(),show)
 
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
