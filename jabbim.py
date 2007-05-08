@@ -48,7 +48,25 @@ class mainWindow(QtGui.QMainWindow):
 		
 		self.ui.rosterStackedWidget.setCurrentIndex(0)
 		self.loadRoster()
-
+		
+		self.statusPath="images/xxxxx/status/"
+		self.shows={"online":"1",
+					"available":"1",
+					"chat":"2",
+					"away":"3",
+					"xa":"4",
+					"dnd":"5",
+					"None":"1",
+					"offline":"9",
+					"unavailable":"9"
+					}
+		self.icons={"1":"online",
+					"2":"chat",
+					"3":"away",
+					"4":"xa",
+					"5":"dnd",
+					"9":"offline"
+					}
 	def loadRoster(self):
 		# load roster widget
 		layout=QtGui.QHBoxLayout(self.ui.rosterWidget)
@@ -63,7 +81,25 @@ class mainWindow(QtGui.QMainWindow):
 	def disconnect(self):
 		if self.client!=None:
 			reactor.stop()
-	
+
+	def getIcon(self,jid=None,typ=None,size="32x32",status=None):
+		# return status icon
+		path=self.statusPath.replace("xxxxx",size)
+		#if jid!=None:
+			#file=path+self.getUserType(jid)+"-"+self.iconSort[self.nickSort[typ]]+".png"
+			#if os.path.exists(file):
+				#icon=QtGui.QIcon(file)
+			#else:
+				##print "File not exist",file," <-",jid,typ
+				##print "using",path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png"
+				#icon=QtGui.QIcon(path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png")
+		#else:
+		if status==None:
+			icon=QtGui.QIcon(path+"jabber-online.png")
+		else:
+			icon=QtGui.QIcon(path+"jabber-"+status+".png")
+		return icon
+
 	def connect(self):
 		# Connect to the server
 		jid=unicode(self.ui.login_jid.text())

@@ -11,17 +11,19 @@ from twisted.words.protocols.jabber.xmlstream import IQ
 
 class Contact:
 	#TODO: vyresit vice resource, prioritu a stav ke kazde
-	def __init__(self, jid, name, subscription, item, groups = [], status = ()):
+	def __init__(self, jid, name, subscription, items=[], groups = [], status = ()):
 		self.jid = jid
 		self.name = name
 		self.subscription = subscription
 		self.groups = groups
 		self.status = status
-		self.rosterItem = item
+		self.rosterItems = items
 
 	def setStatus(self, status):
 		self.status = status
-	
+
+	def getUserItems(self):
+		return self.rosterItems
 	
 class Client:
 	def __init__(self, JID, password, host, port,main):
@@ -32,7 +34,7 @@ class Client:
 		self.factory = None
 		self.connection = None
 		self.main=main # mainWindow
-		self.roster = {}
+		self.roster = {'users':{},'groups':{'Unknown':self.main.ui.roster.addGroup('Unknown')}}
 		log.startLogging(sys.stdout)
 
 	def connect(self):
@@ -67,19 +69,27 @@ class Client:
 		print 'roster arrived'
 		for child in el.elements():
 			if child.name == "query":
+				allGroups=['Unknown']
 				for item in child.elements():
-					print item['jid']
 					groups = []
 					for group in item.elements():
 						if group.name == 'group':
 							groups.append(group.__str__())
+							if group.__str__() not in allGroups:
+								self.roster['groups'][group.__str__()] = self.main.ui.roster.addGroup(group.__str__())
+								allGroups.append(group.__str__())
 					if item.hasAttribute('name'):
 						name = item['name']
 					else:
 						name = ''
-					rosterItem = self.main.ui.roster.addUser(item['jid'],name,None)
-					contact = Contact(item['jid'], name, item['subscription'], rosterItem, groups)
-					self.roster[item['jid']] = contact
+					#print item['jid'],groups
+					rosterItems=[]
+					if len(groups)==0:
+						rosterItems.append(self.main.ui.roster.addUser(item['jid'],name,self.roster['groups']['Unknown']))
+					for group in groups:
+						rosterItems.append(self.main.ui.roster.addUser(item['jid'],name,self.roster['groups'][group]))
+					contact = Contact(item['jid'], name, item['subscription'], rosterItems, groups)
+					self.roster['users'][item['jid']] = contact
 		presence = domish.Element(('jabber:client','presence'))
 		xmlstream.send(presence)
 
@@ -105,8 +115,9 @@ class Client:
 				status = child.__str__()
 			elif child.name == 'priority':
 				priority = child.__str__()
-		if self.roster.has_key(frm):
-			self.roster[unicode(frm)].setStatus((show,status))
+		if self.roster['users'].has_key(frm):
+			self.roster['users'][unicode(frm)].setStatus((show,status))
+			self.main.ui.roster.setStatus(frm,show)
 ##			self.roster.setResource(resource, priority)
 		else:
 			print 'contact not in roster'

@@ -33,20 +33,32 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.hideColumn(2)
 		self.hideColumn(4)
 
+	def getUserItems(self,jid):
+		if not self.main.client.roster['users'].has_key(jid):
+			return []
+		return self.main.client.roster['users'][jid].getUserItems()
+
+	def setStatus(self,jid,show):
+		for item in self.getUserItems(jid):
+			name=unicode(item.text(0))
+			item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
+			item.setIcon(0,self.main.getIcon(size="16x16",status=self.main.icons[self.main.shows[unicode(show)]]))
+		self.sortItems (1,QtCore.Qt.AscendingOrder)
+
 	def addGroup(self,name):
 		# add new group to the roster and return group QTreeWidgetItem
 		item=QtGui.QTreeWidgetItem(self)
 		item.setText(0,name)
 		item.setText(1,"1"+unicode(name).lower())
 		item.setText(2,name)
-		#item.setIcon(0,QtGui.QIcon("images/32x32/icons/group-closed.png"))
+		#item.setIcon(0,QtGui.QIcon("images/16x16/icons/group-closed.png"))
 		item.setBackgroundColor(0,QtGui.QColor("#000000"))
 		item.setBackgroundColor(3,QtGui.QColor("#000000"))
 		item.setTextColor(0,QtGui.QColor("#FFFFFF"))
 		item.setTextColor(3,QtGui.QColor("#FFFFFF"))
 		return item
 	
-	def addUser(self,jid,name,group,offline=True,icon=None):
+	def addUser(self,jid,name,group,offline=True):
 		# add new user to the roster and resturn QTreeWidgetItem
 		if group==None:
 			item=QtGui.QTreeWidgetItem(self)
@@ -60,10 +72,20 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
 		item.setData(32,0,QtCore.QVariant(jid))
-		#item.setIcon(0,icon)
+		item.setIcon(0,self.main.getIcon(size="16x16",status=self.main.icons["9"]))
 		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)
 		# item design
 		#self.setItemHidden(item, offline)
-		#self.sortItems (1,QtCore.Qt.AscendingOrder)
+		self.sortItems (1,QtCore.Qt.AscendingOrder)
 		#self.refreshStats()
 		return item
+		
+	def resizeEvent(self,event):
+		# when we resize roster, we need to resize columns too, because of avatar.
+		QtGui.QTreeWidget.resizeEvent(self,event)
+		if self.verticalScrollBar().isVisible():
+			self.setColumnWidth(0,int(self.width())-50)
+		else:
+			self.setColumnWidth(0,int(self.width())-38)
+		#self.tooltip.setMaximumWidth(self.width())
+		#self.tooltip.setMinimumWidth(self.width())
