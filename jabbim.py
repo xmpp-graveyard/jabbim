@@ -56,9 +56,34 @@ class clientClass(pyxl.client.Client):
 	
 	def on_UpdateContact(self,jid):
 		print "update",unicode(jid)
+		contact=self.roster['users'][jid]
+		items=contact.getUserItems()
+		for name,item in self.roster['groups'].iteritems():
+			if name in contact.groups:
+				add=True
+				for i in items:
+					parent=i.parent()
+					if item==parent:
+						add=False
+				if add:
+					contact.rosterItems.append(self.main.ui.roster.addUser(contact.jid,contact.name,self.roster['groups'][name]))
+			else:
+				for i in items:
+					parent=i.parent()
+					if item==parent:
+						parent.takeChild(parent.indexOfChild(i))
+						break
 
 	def on_DeleteContact(self,jid):
 		print "delete",unicode(jid)
+		contact=self.roster['users'][jid]
+		items=contact.getUserItems()
+		for name,item in self.roster['groups'].iteritems():
+			for i in items:
+				parent=i.parent()
+				if item==parent:
+					parent.takeChild(parent.indexOfChild(i))
+					break
 
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):

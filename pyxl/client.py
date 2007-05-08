@@ -143,8 +143,8 @@ class Client(derived):
 					#print item['jid'],groups
 					if subscription == 'remove'  and self.roster['users'].has_key(item['jid']):
 						print 'deleting contact'
-						del self.roster['users'][item['jid']]
 						self.on_DeleteContact(item['jid'])
+						del self.roster['users'][item['jid']]
 					elif not self.roster['users'].has_key(item['jid']):
 						rosterItems=[]
 						if len(groups)==0:
