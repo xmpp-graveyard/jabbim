@@ -105,8 +105,12 @@ class Client(derived):
 		self.xmlstream.addObserver("/message", self.onMessage)
 		self.xmlstream.addObserver("/iq[@type='set']/query[@xmlns='jabber:iq:roster']", self.onRosterAdd)
 		self.xmlstream.addObserver("/*", self.onXML)
+		self.xmlstream.addObserver("/presence[@type='subscribe']", self.onSubscribe)
+		self.xmlstream.addObserver("/presence[@type='unsubscribe']", self.onUnSubscribe)
+		self.xmlstream.addObserver("/presence[@type='subscribed']", self.onSubscribed)
+		self.xmlstream.addObserver("/presence[@type='unsubscribed']", self.onUnSubscribed)
 		iq = IQ(self.xmlstream, 'get')
-		iq['from'] = unicode(self.jid)
+		iq['from'] =self.jid.full()
 		iq['type'] = 'get'
 		q = iq.addElement('query')
 		q['xmlns']='jabber:iq:roster'
@@ -168,8 +172,20 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 		
-		
-		
+	def sendRosterUpdate(self, jid, name, subscription, groups):
+		iq = domish.Element((None, 'iq'))
+		iq['from'] = self.jid.full()
+		iq['type'] = 'set'
+		q = iq.addElement('query')
+		q['xmlns']='jabber:iq:roster'
+		item = q.addElement('item')
+		item['jid'] = jid
+		item['name'] = name
+		item['subscription'] = subscription
+		for group in groups:
+			item.addElement(group)
+		self.on_xml(iq.toXml())
+		self.xmlstream.send(iq)
 	
 	def onXML(self, el):
 		if self.log:
@@ -221,9 +237,28 @@ class Client(derived):
 				body = child.__str__()
 				print body
 		
+	def onSubscribe(self, el):
+		print 'on subscribe'
+		status = ''
+		for child in el.elements():
+			if child.name == 'status':
+				status = unicode(child)
+		self.on_subscribe(el['from'], status)
+	
+	def onSubscribed(self, el):
+		print 'on subscribed'
+		self.on_subscribed(el['from'])
+		
+	def onUnSubscribe(self, el):
+		print 'on unsubscribe'
+		self.on_unsubscribe(el['from'])
+		
+	def onUnSubscribed(self, el):
+		print 'on unsubscribed'
+		self.on_unsubscribed(el['from'])	
 	
 	def onPresence(self, el):
-		print el['from']
+		print 'presence > ', el['from']
 		frm = jid.JID(el['from'])
 		resource = jid.JID(el['from']).resource
 		show = status = priority = None
@@ -234,14 +269,19 @@ class Client(derived):
 				status = unicode(child)
 			elif child.name == 'priority':
 				priority = child.__str__()
+		if el.hasAttribute('type'):
+			if el['type'] != 'unavailable':
+				return
 		if self.roster['users'].has_key(frm.userhost()):
-			if show == None and not el.hasAttribute('unavailable'):
+			if show == None and not el.hasAttribute('type'):
 				show = 'online'
 			elif el.hasAttribute('unavailable'):
-				show = 'offline'
+				if el['type'] !='unavailable':
+					show = 'offline'
 			self.roster['users'][unicode(frm.userhost())].setStatus(resource, show,status)
 			self.on_presence(frm,show)
 			self.roster['users'][frm.userhost()].setPriority(resource, priority)
 		else:
-			print 'contact not in roster'
+##			print 'contact not in roster'
+			pass
 		pass

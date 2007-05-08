@@ -13,3 +13,12 @@ class derived:
 		pass
 	def on_DeleteContact(self,jid):
 		pass
+	
+	def on_subscribe(self, msg):
+		pass
+	def on_unsubscribe(self):
+		pass
+	def on_unsubscribed(self):
+		pass
+	def on_subscribed(self):
+		pass
