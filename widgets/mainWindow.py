@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Tue May  8 06:56:40 2007
+# Created: Tue May  8 09:43:06 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,15 +13,21 @@ from PyQt4 import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,294,646).size()).expandedTo(MainWindow.minimumSizeHint()))
+        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,311,694).size()).expandedTo(MainWindow.minimumSizeHint()))
 
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
         self.gridlayout = QtGui.QGridLayout(self.centralwidget)
-        self.gridlayout.setMargin(0)
-        self.gridlayout.setSpacing(0)
+        self.gridlayout.setMargin(9)
+        self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
+
+        self.statusButton = QtGui.QToolButton(self.centralwidget)
+        self.statusButton.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.statusButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+        self.statusButton.setObjectName("statusButton")
+        self.gridlayout.addWidget(self.statusButton,1,0,1,1)
 
         self.tabWidget = QtGui.QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName("tabWidget")
@@ -30,8 +36,8 @@ class Ui_MainWindow(object):
         self.rosterTab.setObjectName("rosterTab")
 
         self.gridlayout1 = QtGui.QGridLayout(self.rosterTab)
-        self.gridlayout1.setMargin(0)
-        self.gridlayout1.setSpacing(0)
+        self.gridlayout1.setMargin(9)
+        self.gridlayout1.setSpacing(6)
         self.gridlayout1.setObjectName("gridlayout1")
 
         self.rosterStackedWidget = QtGui.QStackedWidget(self.rosterTab)
@@ -45,13 +51,22 @@ class Ui_MainWindow(object):
         self.gridlayout2.setSpacing(6)
         self.gridlayout2.setObjectName("gridlayout2")
 
+        self.line = QtGui.QFrame(self.page_3)
+        self.line.setFrameShape(QtGui.QFrame.HLine)
+        self.line.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line.setObjectName("line")
+        self.gridlayout2.addWidget(self.line,1,0,1,1)
+
+        spacerItem = QtGui.QSpacerItem(20,331,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout2.addItem(spacerItem,5,0,1,1)
+
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(6)
         self.hboxlayout.setObjectName("hboxlayout")
 
-        spacerItem = QtGui.QSpacerItem(121,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.hboxlayout.addItem(spacerItem)
+        spacerItem1 = QtGui.QSpacerItem(121,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.hboxlayout.addItem(spacerItem1)
 
         self.login_savePassword = QtGui.QCheckBox(self.page_3)
         self.login_savePassword.setObjectName("login_savePassword")
@@ -61,12 +76,6 @@ class Ui_MainWindow(object):
         self.label_3 = QtGui.QLabel(self.page_3)
         self.label_3.setObjectName("label_3")
         self.gridlayout2.addWidget(self.label_3,0,0,1,1)
-
-        self.line = QtGui.QFrame(self.page_3)
-        self.line.setFrameShape(QtGui.QFrame.HLine)
-        self.line.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line.setObjectName("line")
-        self.gridlayout2.addWidget(self.line,1,0,1,1)
 
         self.hboxlayout1 = QtGui.QHBoxLayout()
         self.hboxlayout1.setMargin(0)
@@ -102,9 +111,6 @@ class Ui_MainWindow(object):
         self.vboxlayout1.addWidget(self.login_password)
         self.hboxlayout1.addLayout(self.vboxlayout1)
         self.gridlayout2.addLayout(self.hboxlayout1,2,0,1,1)
-
-        spacerItem1 = QtGui.QSpacerItem(20,331,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout2.addItem(spacerItem1,5,0,1,1)
 
         self.hboxlayout2 = QtGui.QHBoxLayout()
         self.hboxlayout2.setMargin(0)
@@ -142,13 +148,9 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0,0,294,29))
+        self.menubar.setGeometry(QtCore.QRect(0,0,311,29))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
-
-        self.statusbar = QtGui.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
@@ -157,6 +159,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Jabbim", None, QtGui.QApplication.UnicodeUTF8))
+        self.statusButton.setText(QtGui.QApplication.translate("MainWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.login_savePassword.setText(QtGui.QApplication.translate("MainWindow", "Save Password", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("MainWindow", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"

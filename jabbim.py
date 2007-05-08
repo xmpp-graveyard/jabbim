@@ -87,8 +87,43 @@ class mainWindow(QtGui.QMainWindow):
 					u"5":u"dnd",
 					u"9":u"offline"
 					}
+		self.status={"online":self.tr("Online"),
+					"available":self.tr("Online"),
+					"chat":self.tr("Chatty"),
+					"away":self.tr("Away"),
+					"xa":self.tr("Extended away"),
+					"dnd":self.tr("DND"),
+					"None":self.tr("Online"),
+					"offline":self.tr("Offline")
+					}
+		self.statusMenu=QtGui.QMenu(self.tr("Status"),self.ui.statusButton)
+		action=self.statusMenu.addAction(self.getIcon(status="online",size="16x16"),self.status["online"])
+		action.setData(QtCore.QVariant("online"))
+		action=self.statusMenu.addAction(self.getIcon(status="chat",size="16x16"),self.status["chat"])
+		action.setData(QtCore.QVariant("chat"))
+		action=self.statusMenu.addAction(self.getIcon(status="away",size="16x16"),self.status["away"])
+		action.setData(QtCore.QVariant("away"))
+		action=self.statusMenu.addAction(self.getIcon(status="xa",size="16x16"),self.status["xa"])
+		action.setData(QtCore.QVariant("xa"))
+		action=self.statusMenu.addAction(self.getIcon(status="dnd",size="16x16"),self.status["dnd"])
+		action.setData(QtCore.QVariant("dnd"))
+		action=self.statusMenu.addAction(self.getIcon(status="offline",size="16x16"),self.status["offline"])
+		action.setData(QtCore.QVariant("offline"))
+		self.ui.statusButton.setMenu(self.statusMenu)
+		app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
+		self.ui.statusButton.setText(unicode(self.status["offline"]))
+		self.ui.statusButton.setIcon(self.getIcon("offline",size="16x16"))
+		self.ui.statusButton.hide()
 		
-		
+	def statusChanged(self,action):
+		# status changed
+		data=action.data()
+		data=data.toString()
+		self.ui.statusButton.setText(unicode(action.text()))
+		self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
+		setstatus=statusWindow(data)
+		setstatus.exec_()
+
 	def loadRoster(self):
 		# load roster widget
 		layout=QtGui.QHBoxLayout(self.ui.rosterWidget)
@@ -99,6 +134,10 @@ class mainWindow(QtGui.QMainWindow):
 
 	def _connected(self):
 		self.ui.rosterStackedWidget.setCurrentIndex(1)
+		self.ui.statusButton.setText(unicode(self.status["online"]))
+		self.ui.statusButton.setIcon(self.getIcon("online",size="16x16"))
+		self.ui.statusButton.show()
+
 
 	def disconnect(self):
 		if self.client!=None:
@@ -138,8 +177,54 @@ class mainWindow(QtGui.QMainWindow):
 						self.config['passwd']=""
 					self.config['jid']=jid
 					self.config.write()
-		self.client = clientClass(jid+"/jabbim", password, jid.split("@")[1], 5222,self)
+		if self.client==None:
+			self.client = clientClass(jid+"/jabbim", password, jid.split("@")[1], 5222,self)
 		self.client.connect()
+
+
+class statusWindow(QtGui.QDialog):
+	def __init__(self,data,parent=None):
+		apply(QtGui.QDialog.__init__,(self,parent))
+		self.setModal(False)
+		self.ui=widgets.status.Ui_status()
+		self.ui.setupUi(self)
+		self.timer=QtCore.QTimer()
+		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.timeout)
+		app.connect(self.ui.status, QtCore.SIGNAL("cursorPositionChanged ()"),self.timerStop)
+		app.connect(self.ui.status, QtCore.SIGNAL("textChanged ()"),self.timerStop)
+		
+		self.timer.start(1000)
+		self.i=4
+		self.data=data
+		self.timeout()
+	
+	def timerStop(self):
+		self.timer.stop()
+		self.ui.time.setText("")
+	
+	def timeout(self):
+		if self.i!=0:
+			self.ui.time.setText(self.tr("Window will be closed in ")+unicode(self.i)+self.tr(" seconds."))
+			self.i-=1
+		else:
+			self.accept()
+	def accept(self):
+		if self.data=="offline":
+			MainWindow.client.sendPresence(show = "unavailable", status = unicode(self.ui.status.toPlainText ()))
+			MainWindow.client.factory.stopTrying()
+			MainWindow.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
+			MainWindow.ui.statusButton.setIcon(MainWindow.getIcon("offline",size="16x16"))
+			MainWindow.ui.statusButton.hide()
+			MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
+			
+
+			pass
+		else:
+			#app.postEvent(jab,customEvent(["set_status",self.groupchat,self.data,unicode(self.ui.status.toPlainText ())]))
+			#jab.setStatus(MainWindow.groupchat,self.data,unicode(self.ui.status.toPlainText ()))
+			MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()))
+		self.done(1)
+
 
 translator=QtCore.QTranslator()
 translator.load("locales/jabbim_"+str(QtCore.QLocale.system().name())[:2]+".qm")
