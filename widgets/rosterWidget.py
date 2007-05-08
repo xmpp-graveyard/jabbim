@@ -52,6 +52,8 @@ class rosterWidget(QtGui.QTreeWidget):
 			self.main.client.roster['groups'][group].setText(0,unicode(self.main.client.roster['groups'][group].text(2))+" ("+str(online)+"/"+str(online+offline)+")")
 
 	def setStatus(self,jid,show):
+		if not self.main.shows.has_key(show):
+			show="online"
 		for item in self.getUserItems(jid):
 			name=unicode(item.text(0))
 			item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
