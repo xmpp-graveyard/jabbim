@@ -85,6 +85,17 @@ class Client(derived):
 		self.on_xml(presence.toXml())
 		self.xmlstream.send(presence)
 	
+	def sendMessage(self, to, body, typ='chat', subject = None, composing = None):
+		#TODO: composing events
+		message = domish.Element((None,'message'))
+		message['to'] = to
+		message.addElement('body', content = body)
+		message['type'] = typ
+		if type == 'normal' and subject:
+			message.addElement('subject', content = subject)
+		self.on_xml(message.toXml())
+		self.xmlstream.send(message)
+
 	def connect(self):
 		if self.log:
 			log.startLogging(self.logfile)
