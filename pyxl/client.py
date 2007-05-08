@@ -20,12 +20,13 @@ class Contact:
 		self.subscription = subscription
 		self.groups = groups
 		self.status = status
-		self.rosterItems = items
+		self.rosterItems = items # user can be in many groups => more items
 
 	def setStatus(self, status):
 		self.status = status
 
 	def getUserItems(self):
+		# get user QTreeWidget item from every group
 		return self.rosterItems
 	
 class Client:
@@ -79,6 +80,7 @@ class Client:
 						if group.name == 'group':
 							groups.append(group.__str__())
 							if group.__str__() not in allGroups:
+								# add group item to ther roster
 								self.roster['groups'][group.__str__()] = self.main.ui.roster.addGroup(group.__str__())
 								allGroups.append(group.__str__())
 					if item.hasAttribute('name'):
@@ -88,8 +90,10 @@ class Client:
 					#print item['jid'],groups
 					rosterItems=[]
 					if len(groups)==0:
+						# add user item to Unknown group
 						rosterItems.append(self.main.ui.roster.addUser(item['jid'],name,self.roster['groups']['Unknown']))
 					for group in groups:
+						# add user item to the group
 						rosterItems.append(self.main.ui.roster.addUser(item['jid'],name,self.roster['groups'][group]))
 					contact = Contact(item['jid'], name, item['subscription'], rosterItems, groups)
 					self.roster['users'][item['jid']] = contact
