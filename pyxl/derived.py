@@ -7,3 +7,5 @@ class derived:
 		pass
 	def on_shutdown(self):
 		pass
+	def on_xml(self, xml):
+		pass

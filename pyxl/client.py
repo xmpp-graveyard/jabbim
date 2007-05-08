@@ -95,11 +95,11 @@ class Client(derived):
 	def _authd(self, xmlstream):
 		self.main._connected()
 		self.xmlstream = xmlstream
-		xmlstream.addObserver("/presence", self.onPresence)
-		xmlstream.addObserver("/message", self.onMessage)
-		xmlstream.addObserver("/iq[@type='set']/query[@xmlns='jabber:iq:roster']", self.onRosterAdd)
-		iq = IQ(xmlstream, 'get')
-		print unicode(iq)
+		self.xmlstream.addObserver("/presence", self.onPresence)
+		self.xmlstream.addObserver("/message", self.onMessage)
+		self.xmlstream.addObserver("/iq[@type='set']/query[@xmlns='jabber:iq:roster']", self.onRosterAdd)
+		self.xmlstream.addObserver("/*", self.onXML)
+		iq = IQ(self.xmlstream, 'get')
 		iq['from'] = unicode(self.jid)
 		iq['type'] = 'get'
 		q = iq.addElement('query')
@@ -109,10 +109,13 @@ class Client(derived):
 			d.addCallback(self._onRosterArrive)
 		except Exception, e:
 			print e
-	
+
 	def onRosterAdd(self,xml):
 		print "sss"
 	
+	def onXML(self, el):
+		self.on_xml(el.toXml())
+
 	def _onRosterArrive(self, el):
 		print 'roster arrived'
 		for child in el.elements():
