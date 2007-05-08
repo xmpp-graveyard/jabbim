@@ -38,12 +38,26 @@ class rosterWidget(QtGui.QTreeWidget):
 			return []
 		return self.main.client.roster['users'][jid].getUserItems()
 
+	def refreshStats(self):
+		# rewrite online/all users stats in group QTreeWidgetItem
+		for group,item in self.main.client.roster['groups'].iteritems():
+			# return stats (online,offline,all users) for group
+			offline=0
+			online=0
+			for i in range(int(item.childCount())):
+				if int(unicode(item.child(i).text(1))[0])==9:
+					offline+=1
+				else:
+					online+=1
+			self.main.client.roster['groups'][group].setText(0,unicode(self.main.client.roster['groups'][group].text(2))+" ("+str(online)+"/"+str(online+offline)+")")
+
 	def setStatus(self,jid,show):
 		for item in self.getUserItems(jid):
 			name=unicode(item.text(0))
 			item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
 			item.setIcon(0,self.main.getIcon(size="16x16",status=self.main.icons[self.main.shows[unicode(show)]]))
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
+		self.refreshStats()
 
 	def addGroup(self,name):
 		# add new group to the roster and return group QTreeWidgetItem
@@ -77,7 +91,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		# item design
 		#self.setItemHidden(item, offline)
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
-		#self.refreshStats()
+		self.refreshStats()
 		return item
 		
 	def resizeEvent(self,event):
