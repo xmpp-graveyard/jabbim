@@ -65,6 +65,10 @@ class clientClass(pyxl.client.Client):
 					parent=i.parent()
 					if item==parent:
 						add=False
+						i.setText(0,unicode(contact.name))
+						i.setText(1,unicode(i.text(1))[0]+unicode(contact.name).lower())
+						i.setText(2,unicode(contact.name))
+						i.setData(32,0,QtCore.QVariant(contact.jid))
 				if add:
 					contact.rosterItems.append(self.main.ui.roster.addUser(contact.jid,contact.name,self.roster['groups'][name]))
 			else:
