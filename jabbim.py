@@ -32,6 +32,12 @@ import pyxl
 from configobj import ConfigObj
 from include import utils
 
+#def kill():
+	#print "kill"
+	#mainWindow.close()
+
+#reactor.addSystemEventTrigger('after', 'shutdown', kill)
+
 class clientClass(pyxl.client.Client):
 
 	def on_init(self):
@@ -64,22 +70,22 @@ class mainWindow(QtGui.QMainWindow):
 		self.loadRoster()
 		
 		self.statusPath="images/xxxxx/status/"
-		self.shows={"online":"1",
-					"available":"1",
-					"chat":"2",
-					"away":"3",
-					"xa":"4",
-					"dnd":"5",
-					"None":"1",
-					"offline":"9",
-					"unavailable":"9"
+		self.shows={u"online":u"1",
+					u"available":u"1",
+					u"chat":u"2",
+					u"away":u"3",
+					u"xa":u"4",
+					u"dnd":u"5",
+					u"None":u"1",
+					u"offline":u"9",
+					u"unavailable":u"9"
 					}
-		self.icons={"1":"online",
-					"2":"chat",
-					"3":"away",
-					"4":"xa",
-					"5":"dnd",
-					"9":"offline"
+		self.icons={u"1":u"online",
+					u"2":u"chat",
+					u"3":u"away",
+					u"4":u"xa",
+					u"5":u"dnd",
+					u"9":u"offline"
 					}
 		
 		
@@ -96,7 +102,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def disconnect(self):
 		if self.client!=None:
-			reactor.stop()
+			reactor.stop2()
 
 	def getIcon(self,jid=None,typ=None,size="32x32",status=None):
 		# return status icon
@@ -141,5 +147,5 @@ app.installTranslator(translator)
 
 MainWindow = mainWindow()
 MainWindow.show()
-
 reactor.run()
+

@@ -5,3 +5,5 @@ class derived:
 		pass
 	def on_presence(self,frm,show):
 		pass
+	def on_shutdown(self):
+		pass

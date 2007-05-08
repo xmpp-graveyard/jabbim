@@ -175,8 +175,17 @@ class QTReactor(posixbase.PosixReactorBase):
         """
         print "stopping reactor"
         super(QTReactor, self).stop()
-        self.simulate() # Make sure we call the shutdown system events.
+        #self.simulate() # Make sure we call the shutdown system events.
+        self.qApp.quit()
 
+    def stop2(self):
+		"""Kludge to run simulate manually to avoid system events to fire.
+		(FIXME We're circumventing some sort of bug.)
+		"""
+		print "stopping reactor"
+		super(QTReactor, self).stop()
+		self.simulate() # Make sure we call the shutdown system events.
+		self.qApp.quit()
 
     def crash(self):
         if self._crashCall is not None:
