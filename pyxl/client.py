@@ -97,6 +97,7 @@ class Client(derived):
 		self.xmlstream = xmlstream
 		xmlstream.addObserver("/presence", self.onPresence)
 		xmlstream.addObserver("/message", self.onMessage)
+		xmlstream.addObserver("/iq[@type='set']/query[@xmlns='jabber:iq:roster']", self.onRosterAdd)
 		iq = IQ(xmlstream, 'get')
 		print unicode(iq)
 		iq['from'] = unicode(self.jid)
@@ -108,7 +109,9 @@ class Client(derived):
 			d.addCallback(self._onRosterArrive)
 		except Exception, e:
 			print e
-		
+	
+	def onRosterAdd(self,xml):
+		print "sss"
 	
 	def _onRosterArrive(self, el):
 		print 'roster arrived'
