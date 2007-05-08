@@ -22,6 +22,8 @@ class Contact:
 		self.rosterItems = items # user can be in many groups => more items
 		self.resources={} #resource:(show,status,priority)
 
+
+
 	def setStatus(self, resource, show, status):
 		if self.resources.has_key(resource):
 			self.resources[resource] = {'show': show, 'status': status}
@@ -62,7 +64,8 @@ class Client(derived):
 		self.connection = None
 		self.main=main # mainWindow
 		self.roster = {'users':{},'groups':{}}
-		log.startLogging(sys.stdout)
+		self.log = True
+		self.logfile = sys.stdout
 		self.on_init()
 
 	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None):
@@ -82,6 +85,8 @@ class Client(derived):
 		self.xmlstream.send(presence)
 	
 	def connect(self):
+		if self.log:
+			log.startLogging(self.logfile)
 		self.factory = client.basicClientFactory(self.jid,self.password)
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
 		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
@@ -114,7 +119,8 @@ class Client(derived):
 		print "sss"
 	
 	def onXML(self, el):
-		self.on_xml(el.toXml())
+		if self.log:
+			self.on_xml(el.toXml())
 
 	def _onRosterArrive(self, el):
 		print 'roster arrived'
