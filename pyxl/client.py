@@ -12,6 +12,8 @@ from twisted.words.protocols.jabber.xmlstream import IQ
 try: from PyQt4 import QtCore, QtGui
 except: print "PyQt4 is not installed."
 
+from derived import derived
+
 class Contact:
 	#TODO: vyresit vice resource, prioritu a stav ke kazde
 	def __init__(self, jid, name, subscription, items=[], groups = [], status = ()):
@@ -29,8 +31,9 @@ class Contact:
 		# get user QTreeWidget item from every group
 		return self.rosterItems
 	
-class Client:
-	def __init__(self, JID, password, host, port,main):
+class Client(derived):
+	def __init__(self, JID, password, host, port, main):
+		#derived.__init__(self)
 		self.jid = jid.JID(JID)
 		self.password  = password
 		self.host = host
@@ -38,15 +41,16 @@ class Client:
 		self.factory = None
 		self.connection = None
 		self.main=main # mainWindow
-		self.roster = {'users':{},'groups':{'Unknown':self.main.ui.roster.addGroup('Unknown')}}
+		self.roster = {'users':{},'groups':{}}
 		log.startLogging(sys.stdout)
+		self.on_init()
 
 	def connect(self):
 		self.factory = client.basicClientFactory(self.jid,self.password)
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
-		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._authfail)
-		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfail)
-		self.factory.addBootstrap("//event/stream/error", self._authfail)
+		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
+		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
+		self.factory.addBootstrap("//event/stream/error", self._authfailed)
 		self.connection=reactor.connectTCP(self.host,self.port,self.factory)
 	
 	def disconnect(self):
@@ -103,9 +107,13 @@ class Client:
 	
 
 
-	def _authfail(self,xmlstream):
-		print "auth_fail"
-		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(self.main.tr("Bad Jabber ID or password.")),0,1)
+	def _authfailed(self,xmlstream):
+		print "auth_failed"
+		self.on_authFailed(self,xmlstream)
+
+	def _invaliduser(self,xmlstream):
+		print "invalid_user"
+		#self.on_invalidUser(self)
 	
 	def onMessage(self, el):
 		for child in el.elements():

@@ -32,6 +32,17 @@ import pyxl
 from configobj import ConfigObj
 from include import utils
 
+class clientClass(pyxl.client.Client):
+
+	def on_init(self):
+		self.roster['groups']['Unknown']=self.main.ui.roster.addGroup('Unknown')
+		print self.main
+
+	def on_authFailed(self,xmlstream):
+		print "failed"
+		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(self.main.tr("Bad Jabber ID or password.")),0,1)
+
+
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
@@ -121,7 +132,7 @@ class mainWindow(QtGui.QMainWindow):
 						self.config['passwd']=""
 					self.config['jid']=jid
 					self.config.write()
-		self.client = pyxl.client.Client(jid+"/jabbim", password, jid.split("@")[1], 5222,self)
+		self.client = clientClass(jid+"/jabbim", password, jid.split("@")[1], 5222,self)
 		self.client.connect()
 
 translator=QtCore.QTranslator()
