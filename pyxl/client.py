@@ -9,9 +9,6 @@ from twisted.words.xish import domish
 from twisted.internet import reactor
 from twisted.words.protocols.jabber.xmlstream import IQ
 
-try: from PyQt4 import QtCore, QtGui
-except: print "PyQt4 is not installed."
-
 from derived import derived
 
 class Contact:
@@ -104,12 +101,9 @@ class Client(derived):
 		presence = domish.Element(('jabber:client','presence'))
 		xmlstream.send(presence)
 
-	
-
-
 	def _authfailed(self,xmlstream):
 		print "auth_failed"
-		self.on_authFailed(self,xmlstream)
+		self.on_authFailed(xmlstream)
 
 	def _invaliduser(self,xmlstream):
 		print "invalid_user"
@@ -135,7 +129,7 @@ class Client(derived):
 				priority = child.__str__()
 		if self.roster['users'].has_key(frm):
 			self.roster['users'][unicode(frm)].setStatus((show,status))
-			self.main.ui.roster.setStatus(frm,show)
+			self.on_presence(frm,show)
 ##			self.roster.setResource(resource, priority)
 		else:
 			print 'contact not in roster'

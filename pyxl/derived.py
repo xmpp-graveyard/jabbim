@@ -3,3 +3,5 @@ class derived:
 		pass
 	def on_init(self):
 		pass
+	def on_presence(self,frm,show):
+		pass

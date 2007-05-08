@@ -36,12 +36,12 @@ class clientClass(pyxl.client.Client):
 
 	def on_init(self):
 		self.roster['groups']['Unknown']=self.main.ui.roster.addGroup('Unknown')
-		print self.main
 
 	def on_authFailed(self,xmlstream):
-		print "failed"
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(self.main.tr("Bad Jabber ID or password.")),0,1)
-
+	
+	def on_presence(self,jid,show):
+		self.main.ui.roster.setStatus(jid,show)
 
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
