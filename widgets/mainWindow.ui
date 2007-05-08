@@ -279,7 +279,19 @@ p, li { white-space: pre-wrap; }
      <height>29</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuAkce" >
+    <property name="title" >
+     <string>Actions</string>
+    </property>
+    <addaction name="actionShow_XML" />
+   </widget>
+   <addaction name="menuAkce" />
   </widget>
+  <action name="actionShow_XML" >
+   <property name="text" >
+    <string>Show XML</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

@@ -49,6 +49,22 @@ class clientClass(pyxl.client.Client):
 	def on_presence(self,jid,show):
 		self.main.ui.roster.setStatus(jid.userhost(),show)
 
+	def on_xml(self,xml):
+		if self.main.xmlConsole.ui.enable.isChecked():
+			text=unicode(xml)
+			self.main.xmlConsole.ui.xml.append(text+"\n\n")
+			#text=unicode(xml)
+			#text=text.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
+			#text=text+"<br/><br/>"
+			#cur=self.main.xmlConsole.ui.xml.textCursor()
+			#cur.movePosition(QtGui.QTextCursor.End)
+			#self.main.xmlConsole.ui.xml.setTextCursor(cur)
+
+			#self.main.xmlConsole.ui.xml.insertHtml(text)
+			
+			#cur=self.main.xmlConsole.ui.xml.textCursor()
+			#cur.movePosition(QtGui.QTextCursor.End)
+			#self.main.xmlConsole.ui.xml.setTextCursor(cur)
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
@@ -66,6 +82,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.login_connect, QtCore.SIGNAL("clicked()"),self.connect)
 		app.connect(app,QtCore.SIGNAL("lastWindowClosed() "),self.disconnect)
 		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
+		app.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
 
 
 		self.ui.rosterStackedWidget.setCurrentIndex(0)
@@ -117,6 +134,10 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusButton.setIcon(self.getIcon("offline",size="16x16"))
 		self.ui.statusButton.hide()
 		self.offline=False
+		self.xmlConsole=XMLConsole(self)
+
+	def showXml(self,bool):
+		self.xmlConsole.show()
 
 	def hideOffline(self,bool):
 		# hide or show offline users
@@ -196,6 +217,11 @@ class mainWindow(QtGui.QMainWindow):
 			self.client = clientClass(jid+"/jabbim", password, jid.split("@")[1], 5222,self)
 		self.client.connect()
 
+class XMLConsole(QtGui.QMainWindow):
+	def __init__(self,data,parent=None):
+		apply(QtGui.QDialog.__init__,(self,parent))
+		self.ui=widgets.xmlConsole.Ui_xmlConsole()
+		self.ui.setupUi(self)
 
 class statusWindow(QtGui.QDialog):
 	def __init__(self,data,parent=None):
