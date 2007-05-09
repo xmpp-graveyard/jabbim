@@ -25,3 +25,7 @@ class derived:
 	
 	def on_message(self, frm, typ, body, subject = None):
 		pass
+	
+	def on_versionreceive(self, jid, version):
+		#version = (name, version, os)
+		pass

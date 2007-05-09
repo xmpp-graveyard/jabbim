@@ -76,6 +76,10 @@ class Client(derived):
 		self.main=main # mainWindow
 		self.roster = {'users':{},'groups':{}}
 		self.bookmarks = {'conference':{}, 'url': {}}
+		
+		self.client_name = 'Jabbim'
+		self.version = '0.0.1' # tohle asi neni nejlepsi zpusob
+		
 		self.log = True
 		self.logfile = sys.stdout
 		self.on_init()
@@ -132,6 +136,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/presence[@type='unsubscribe']", self.onUnSubscribe)
 		self.xmlstream.addObserver("/presence[@type='subscribed']", self.onSubscribed)
 		self.xmlstream.addObserver("/presence[@type='unsubscribed']", self.onUnSubscribed)
+		self.xmlstream.addObserver("/iq[@type='get']/query[@xmlns='jabber:iq:version']", self.onVersion)
 		self.getRoster()
 		self.getBookmarks()
 
@@ -226,7 +231,6 @@ class Client(derived):
 	def getBookmarks(self):
 		'get bookmarks'
 		iq = IQ(self.xmlstream, 'get')
-##		iq['to'] = self.jid.host
 		q = iq.addElement('query', 'jabber:iq:private')
 		q.addElement('storage', 'storage:bookmarks')
 		self.on_xml(iq.toXml())
@@ -396,3 +400,33 @@ class Client(derived):
 ##			print 'contact not in roster'
 			pass
 		pass
+	def onVersion(self, el):
+		print 'sending version info'
+		iq = domish.Element((None, 'iq'))
+		iq['to'] = el['from']
+		iq['type'] = 'result'
+		q = iq.addElement('query', 'jabber:iq:version')
+		q.addElement('name', content = self.client_name)
+		q.addElement('version', content = self.version)
+		self.on_xml(iq.toXml())
+		self.xmlstream.send(iq)
+	
+	def getVersion(self, jid):
+		print 'requesting version info'
+		iq = IQ(self.xmlstream, 'get')
+		iq['to'] = jid
+		q = iq.addElement('query', 'jabber:iq:version')
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		d.addCallback(self._versionReceived)
+	def _versionReceived(self, el):
+		print 'version info received'
+		name = version = os = None
+		for child in  el.children[0].elements():
+			if child.name == 'name':
+				name = unicode(child)
+			if child.name == 'version':
+				version = unicode(child)
+			if child.name == 'os':
+				os = unicode(child)
+		self.on_versionreceive(el['from'], (name, version, os))
