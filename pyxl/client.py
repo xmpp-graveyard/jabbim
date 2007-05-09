@@ -10,6 +10,7 @@ from twisted.internet import reactor
 from twisted.words.protocols.jabber.xmlstream import IQ
 
 from derived import derived
+from contact import *
 
 class Bookmark:
 	def __init__(self, name, typ, JID = None, autojoin = False, nick = None, password = None, url = None):
@@ -22,47 +23,7 @@ class Bookmark:
 		self.url = url
 		
 
-class Contact:
-	
-	def __init__(self, jid, name, subscription, items=[], groups = [], status = ()):
-		self.jid = jid
-		self.name = name
-		self.subscription = subscription
-		self.groups = groups
-		self.status = status
-		self.rosterItems = items # user can be in many groups => more items
-		self.resources={} #resource:(show,status,priority)
 
-
-
-	def setStatus(self, resource, show, status):
-		if self.resources.has_key(resource):
-			self.resources[resource] = {'show': show, 'status': status}
-		else:
-			self.resources[resource] = {'show': show, 'status': status, 'priority' : 0}
-		if resource == self.getHighestResource():
-			self.status = (show, status)
-			
-	def setPriority(self, resource, priority):
-		if self.resources.has_key(resource):
-			self.resources[resource]['priority'] = priority
-		else:
-			self.resources[resource] = {'show': None, 'status': '', 'priority' : priority}
-			
-	def getHighestResource(self):
-		prio = None
-		highest = None
-		for res,val in self.resources.iteritems():
-##			print val
-			if val.has_key('priority') :
-				if val['priority']>prio:
-					highest = res
-					prio = val['priority']
-		return highest
-
-	def getUserItems(self):
-		# get user QTreeWidget item from every group
-		return self.rosterItems
 	
 class Client(derived):
 	def __init__(self, JID, password, host, port, main):
@@ -135,15 +96,15 @@ class Client(derived):
 		self.xmlstream = xmlstream
 		self.xmlstream.addObserver("/presence", self.onPresence, 1)
 		self.xmlstream.addObserver("/message", self.onMessage, 1)
-		self.xmlstream.addObserver("/iq[@type='set']/query[@xmlns='jabber:iq:roster']", self.onRosterAdd, 1)
+		self.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='jabber:iq:roster']", self.onRosterAdd, 1)
 		self.xmlstream.addObserver("/*", self.onXML)
 		self.xmlstream.addObserver("/presence[@type='subscribe']", self.onSubscribe, 1)
 		self.xmlstream.addObserver("/presence[@type='unsubscribe']", self.onUnSubscribe, 1)
 		self.xmlstream.addObserver("/presence[@type='subscribed']", self.onSubscribed, 1)
 		self.xmlstream.addObserver("/presence[@type='unsubscribed']", self.onUnSubscribed, 1)
-		self.xmlstream.addObserver("/iq[@type='get']/query[@xmlns='jabber:iq:version']", self.onVersion, 1)
-		self.xmlstream.addObserver("/iq[@type='get']/query[@xmlns='http://jabber.org/protocol/disco#info']", self.onDiscoInfo, 1)
-		self.xmlstream.addObserver("/iq[@type='get']/query[@xmlns='jabber:iq:last']", self.onLast, 1)
+		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:version']", self.onVersion, 1)
+		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#info']", self.onDiscoInfo, 1)
+		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:last']", self.onLast, 1)
 		self.getRoster()
 		self.getBookmarks()
 
@@ -178,11 +139,11 @@ class Client(derived):
 					groups = []
 					for group in item.elements():
 						if group.name == 'group':
-							groups.append(group.__str__())
-							if group.__str__() not in allGroups:
+							groups.append(unicode(group))
+							if unicode(group) not in allGroups:
 								# add group item to ther roster
-								self.roster['groups'][group.__str__()] = self.main.ui.roster.addGroup(group.__str__())
-								allGroups.append(group.__str__())
+								self.roster['groups'][unicode(group)] = self.main.ui.roster.addGroup(unicode(group))
+								allGroups.append(unicode(group))
 					if item.hasAttribute('name'):
 						name = item['name']
 					else:
@@ -230,7 +191,7 @@ class Client(derived):
 		item['name'] = name
 		item['subscription'] = subscription
 		for group in groups:
-			item.addElement(group)
+			item.addElement('group', content = group)
 		self.disp(iq['id'])
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
@@ -332,6 +293,17 @@ class Client(derived):
 				self.disp(el['id'])
 				self.on_xml(el.toXml())
 				self.xmlstream.send(el)
+		elif not el.hasAttribute('id') and  el.name == 'iq' :
+			print 'iq bez id', el.toXml()
+			el['type']  = 'error'
+			el['to'] = el['from']
+			el['from'] = self.jid.full()
+			err = el.addElement('error')
+			err['code'] = '400'
+			err['type'] = 'modify'
+			err.addElement('bad-request')
+			self.on_xml(el.toXml())
+			self.xmlstream.send(el)
 
 	def _onRosterArrive(self, el):
 		print 'roster arrived'
@@ -342,11 +314,11 @@ class Client(derived):
 					groups = []
 					for group in item.elements():
 						if group.name == 'group':
-							groups.append(group.__str__())
-							if group.__str__() not in allGroups:
+							groups.append(unicode(group))
+							if unicode(group) not in allGroups:
 								# add group item to ther roster
-								self.roster['groups'][group.__str__()] = self.main.ui.roster.addGroup(group.__str__())
-								allGroups.append(group.__str__())
+								self.roster['groups'][unicode(group)] = self.main.ui.roster.addGroup(unicode(group))
+								allGroups.append(unicode(group))
 					if item.hasAttribute('name'):
 						name = item['name']
 					else:
@@ -407,7 +379,7 @@ class Client(derived):
 		self.on_unsubscribed(el['from'])	
 	
 	def onPresence(self, el):
-		print 'presence > ', el['from']
+##		print 'presence > ', el['from']
 		frm = jid.JID(el['from'])
 		resource = jid.JID(el['from']).resource
 		show = status = priority = None
@@ -415,7 +387,8 @@ class Client(derived):
 			if child.name == 'show':
 				show = child.__str__()
 			elif child.name == 'status':
-				status = unicode(child)
+				status = child.__str__()
+				pass
 			elif child.name == 'priority':
 				priority = child.__str__()
 		if el.hasAttribute('type'):
@@ -436,7 +409,10 @@ class Client(derived):
 		pass
 	def onVersion(self, el):
 		print 'sending version info'
-		self.disp(el['id'])
+		try:
+			self.disp(el['id'])
+		except:
+			print el.toXml()
 		iq = domish.Element((None, 'iq'))
 		iq['to'] = el['from']
 		iq['type'] = 'result'
@@ -479,11 +455,14 @@ class Client(derived):
 		id['category'] = 'client'
 		id['name'] = self.client_name
 		id['type'] = 'pc'
-		inq = el.children[0]
-		if inq.hasAttribute('node'):
-			node = inq['node']
-		else:
-			node = None
+
+		for child in el.elements():
+			if child.name == 'query':
+				if child.hasAttribute('node'):
+					node = inq['node']
+				else:
+					node = None
+		
 		if not self.discofeatures.has_key(node):
 			node = None
 		if node != None:
