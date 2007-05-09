@@ -116,3 +116,168 @@ class rosterWidget(QtGui.QTreeWidget):
 			self.setColumnWidth(0,int(self.width())-38)
 		#self.tooltip.setMaximumWidth(self.width())
 		#self.tooltip.setMinimumWidth(self.width())
+		
+	def buildContactMenu(self,jid,group):
+		# build contact menu
+		contactMenu=QtGui.QMenu(self)
+		# chat
+		action=contactMenu.addAction(self.tr("Chat"))
+		action.setData(QtCore.QVariant(jid))
+		action.setObjectName("chat")
+		# separator
+		contactMenu.addSeparator()
+		# vcard
+		action=contactMenu.addAction(self.tr("vCard"))
+		action.setData(QtCore.QVariant(jid))
+		action.setObjectName("vcard")
+		# separator
+		contactMenu.addSeparator()
+		# delete from group
+		if group!=None and len(self.main.client.roster['users'][jid].groups)>1:
+			action=contactMenu.addAction(self.tr("Delete from group"))
+			action.setData(QtCore.QVariant([unicode(jid),u"-"+group.text(2)]))
+			action.setObjectName("check_group")
+		# delete from roster
+		action=contactMenu.addAction(self.tr("Delete from roster"))
+		action.setData(QtCore.QVariant(jid))
+		action.setObjectName("delete_action")
+		# separator
+		contactMenu.addSeparator()
+		# groups -> submenu
+		group=contactMenu.addMenu (self.tr("Groups"))
+		# groups -> new group
+		action=group.addAction(self.tr("New Group"))
+		action.setData(QtCore.QVariant(jid))
+		action.setObjectName("new_group")
+		# groups -> separator
+		group.addSeparator()
+		# groups -> groups list
+		#g=self.getGroups(str(jid))
+		for k,v in self.main.client.roster['groups'].iteritems():
+			if k!="Unknown":
+				action=group.addAction(unicode(k))
+				action.setObjectName("check_group")
+				action.setCheckable(True)
+			#if len(self.main.client.roster['users'][jid].groups)==0:
+				#if k=="Unknown":
+					#action.setChecked(True)
+					#action.setData(QtCore.QVariant([unicode(jid),u"-"+unicode(k)]))
+				#else:
+					#action.setData(QtCore.QVariant([unicode(jid),u"+"+unicode(k)]))
+			#else:
+				if k in self.main.client.roster['users'][jid].groups:
+					action.setChecked(True)
+					action.setData(QtCore.QVariant([unicode(jid),u"-"+unicode(k)]))
+				else:
+					action.setData(QtCore.QVariant([unicode(jid),u"+"+unicode(k)]))
+		# signal
+		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
+		return contactMenu
+
+	def contactMenuTriggered(self,action):
+		# contact menu action handler
+		cmd=action.objectName()
+		if cmd=="delete_action":
+			print "delete_action"
+			## delete contact from roster
+			## get contact jid
+			#jid=action.data()
+			#jid=str(jid.toString())
+			#print "roster_delete_action",jid
+			## delete user from groups
+			#for user in self.getUsers(jid):
+				#self.delUser(jid,user)
+			#QtGui.QApplication.postEvent(self.jab,customEvent(["roster_del_item",jid]))
+			##self.jab.roster.delItem(jid) # send jabber command
+			#self.refreshStats() # refresh group stats
+		elif cmd=="new_group":
+			# add contact to the new group
+			# get contact jid
+			jid=action.data()
+			jid=str(jid.toString())
+			name=unicode(self.main.client.roster['users'][jid].name)
+			print "roster_new_group_action",jid,name
+			# get new group name with QDialog
+			group,b=QtGui.QInputDialog.getText(self,self.tr("New group"),self.tr("Add user to new group"), QtGui.QLineEdit.Normal, "")
+			group=unicode(group)
+			# if user set new name of group
+			if b==True and len(group)!=0:
+				# add new group
+				contact=self.main.client.roster['users'][jid]
+				self.main.client.sendRosterUpdate(contact.jid, contact.name, contact.subscription, self.main.client.roster['users'][jid].groups+[group])
+		elif cmd=="check_group":
+			items=action.data()
+			items=items.toList()
+			jid=str(items[0].toString())
+			name=unicode(self.main.client.roster['users'][jid].name)
+			action=unicode(items[1].toString())[0]
+			group=unicode(items[1].toString())[1:]
+
+			#if self.main.groups.has_key(group):
+				#if self.main.groups[group]['item']==self.main.groups['Unknown']['item']:
+					#group="Unknown"
+			#else:
+				#group="Unknown"
+
+
+			if action=="+":
+				contact=self.main.client.roster['users'][jid]
+				print "adding",jid,"groups:",self.main.client.roster['users'][jid].groups+[group]
+				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription, self.main.client.roster['users'][jid].groups+[group])
+			else:
+				contact=self.main.client.roster['users'][jid]
+				g=contact.groups
+				g.remove(group)
+				print "deleting",jid,"groups:",g,'name:',name
+				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g)
+
+		elif cmd=="vcard":
+			# get vcard of selected contact
+			jid=action.data()
+			jid=str(jid.toString())
+			QtGui.QApplication.postEvent(self.jab,customEvent(["get_vcard",jid]))
+			#self.jab.getVCard(jid)
+		elif cmd=="avatar":
+			# get avatar of selected contact
+			jid=action.data()
+			jid=str(jid.toString())
+			QtGui.QApplication.postEvent(self.jab,customEvent(["get_vcard",jid]))
+			#self.jab.getVCard(jid,True)
+		elif cmd=="get_avatars":
+			# get avatars of users in selected group
+			group=action.data()
+			if not self.main.groups.has_key(group):
+				group="Unknown"
+			for jid,item in self.main.groups[group]["users"].iteritems():
+				QtGui.QApplication.postEvent(self.jab,customEvent(["get_vcard",jid]))
+				#self.jab.getVCard(jid,True)
+		elif cmd=="chat":
+			# chat with selected contact
+			jid=action.data()
+			jid=str(jid.toString())
+			user=self.getUsers(jid)[0]
+			self.contactClicked(user,0)
+		elif cmd=="send_file":
+			# chat with selected contact
+			jid=action.data()
+			jid=str(jid.toString())
+			jid=jid+"/"+self.getResources(jid)[0]
+			file=QtGui.QFileDialog.getOpenFileName(self,"Choose file")
+			if len(file)!=0:
+				print file,"to",jid
+				#self.jab.sendFile(jid,unicode(file))
+
+	def contextMenuEvent (self,event):
+		# show contact context menu
+		item=self.itemFromIndex(self.indexAt(QtCore.QPoint(event.x(),event.y())))
+		group=item.parent()
+		jid=item.data(32,0)
+		jid=unicode(jid.toString())
+		if self.main.client.roster['users'].has_key(jid):
+			contactMenu=self.buildContactMenu(str(jid),group)
+			contactMenu.move(event.globalX(),event.globalY())
+			contactMenu.show()
+		else:
+			contactMenu=self.buildGroupMenu(unicode(item.text(2)))
+			contactMenu.move(event.globalX(),event.globalY())
+			contactMenu.show()

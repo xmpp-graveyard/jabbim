@@ -55,9 +55,10 @@ class clientClass(pyxl.client.Client):
 			self.main.xmlConsole.ui.xml.append(text+"\n\n")
 	
 	def on_UpdateContact(self,jid):
-		print "update",unicode(jid)
+		print "update",unicode(jid),"groups:",self.roster['users'][jid].groups
 		contact=self.roster['users'][jid]
 		items=contact.getUserItems()
+		toDel=[]
 		for name,item in self.roster['groups'].iteritems():
 			if name in contact.groups:
 				add=True
@@ -65,18 +66,36 @@ class clientClass(pyxl.client.Client):
 					parent=i.parent()
 					if item==parent:
 						add=False
-						i.setText(0,unicode(contact.name))
-						i.setText(1,unicode(i.text(1))[0]+unicode(contact.name).lower())
-						i.setText(2,unicode(contact.name))
+						name=contact.name
+						if name==None or len(name)==0:
+							name=jid
+						i.setText(0,unicode(name))
+						i.setText(1,unicode(i.text(1))[0]+unicode(name).lower())
+						i.setText(2,unicode(name))
 						i.setData(32,0,QtCore.QVariant(contact.jid))
+						self.main.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
+						
 				if add:
-					contact.rosterItems.append(self.main.ui.roster.addUser(contact.jid,contact.name,self.roster['groups'][name]))
+					if len(contact.getUserItems())!=0:
+						i=contact.getUserItems()[0].clone() # clone contact item
+						contact.rosterItems.append(i)
+						self.roster['groups'][name].addChild(i) # add item to the new group
+					else:
+						contact.rosterItems.append(self.main.ui.roster.addUser(contact.jid,contact.name,self.roster['groups'][name]))
+					self.main.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
+					self.main.ui.roster.refreshStats()
 			else:
 				for i in items:
 					parent=i.parent()
 					if item==parent:
+						self.roster['users'][unicode(jid)].rosterItems.remove(i)
 						parent.takeChild(parent.indexOfChild(i))
+						if int(parent.childCount())==0:
+							toDel.append(unicode(parent.text(2)))
+							self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(parent))
 						break
+		for name in toDel:
+			del self.roster['groups'][name]
 
 	def on_DeleteContact(self,jid):
 		print "delete",unicode(jid)
@@ -88,6 +107,10 @@ class clientClass(pyxl.client.Client):
 				if item==parent:
 					parent.takeChild(parent.indexOfChild(i))
 					break
+
+	def on_subscribe(self, msg):
+		#self.ui.infoDockWidget.show()
+		pass
 
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
@@ -107,7 +130,6 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(app,QtCore.SIGNAL("lastWindowClosed() "),self.disconnect)
 		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
 		app.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
-
 
 		self.ui.rosterStackedWidget.setCurrentIndex(0)
 		self.loadRoster()
@@ -159,6 +181,14 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusButton.hide()
 		self.offline=False
 		self.xmlConsole=XMLConsole(self)
+
+		#self.addInfoSubscribe()
+		#self.addInfoSubscribe()
+		#self.addInfoSubscribe()
+
+	#def addInfoSubscribe(self):
+		#widget=subscribeWidget(self.ui.infoDockWidget)
+		#self.ui.infoLayout.addWidget(widget)
 
 	def showXml(self,bool):
 		self.xmlConsole.show()
