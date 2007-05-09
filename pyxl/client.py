@@ -80,9 +80,11 @@ class Client(derived):
 		self.client_name = 'Jabbim'
 		self.version = '0.0.1' # tohle asi neni nejlepsi zpusob
 		
+		self.discofeatures = {} # node: [feature1, feature2]
 		self.log = True
 		self.logfile = sys.stdout
 		self.on_init()
+		self.registerFeature('jabber:iq:version')
 
 	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None):
 		presence = domish.Element((None, 'presence'))
@@ -137,9 +139,17 @@ class Client(derived):
 		self.xmlstream.addObserver("/presence[@type='subscribed']", self.onSubscribed)
 		self.xmlstream.addObserver("/presence[@type='unsubscribed']", self.onUnSubscribed)
 		self.xmlstream.addObserver("/iq[@type='get']/query[@xmlns='jabber:iq:version']", self.onVersion)
+		self.xmlstream.addObserver("/iq[@type='get']/query[@xmlns='http://jabber.org/protocol/disco#info']", self.onDiscoInfo)
 		self.getRoster()
 		self.getBookmarks()
 
+	def registerFeature(self, feature, node = None):
+		if self.discofeatures.has_key(node):
+			self.discofeatures[node].append(feature)
+		else:
+			self.discofeatures[node] = []
+			self.discofeatures[node].append(feature)
+	
 	def getRoster(self):
 		print 'get roster'
 		iq = IQ(self.xmlstream, 'get')
@@ -405,6 +415,7 @@ class Client(derived):
 		iq = domish.Element((None, 'iq'))
 		iq['to'] = el['from']
 		iq['type'] = 'result'
+		iq['id'] = el['id']
 		q = iq.addElement('query', 'jabber:iq:version')
 		q.addElement('name', content = self.client_name)
 		q.addElement('version', content = self.version)
@@ -430,3 +441,33 @@ class Client(derived):
 			if child.name == 'os':
 				os = unicode(child)
 		self.on_versionreceive(el['from'], (name, version, os))
+	
+	def onDiscoInfo(self, el):
+		print 'received disco#info request'
+		iq = domish.Element((None,'iq'))
+		iq['to'] = el['from']
+		iq['type'] = 'result'
+		iq['id'] = el['id']
+		q = iq.addElement('query', 'http://jabber.org/protocol/disco#info')
+		id = q.addElement('identity')
+		id['category'] = 'client'
+		id['name'] = self.client_name
+		id['type'] = 'pc'
+		inq = el.children[0]
+		if inq.hasAttribute('node'):
+			node = inq['node']
+		else:
+			node = None
+		if not self.discofeatures.has_key(node):
+			node = None
+		if node != None:
+			q['node'] = node
+		for feature in self.discofeatures[node]:
+			f = q.addElement('feature')
+			f['var'] = feature
+		
+		self.on_xml(iq.toXml())
+		self.xmlstream.send(iq)
+		
+		
+		
