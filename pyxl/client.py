@@ -220,6 +220,7 @@ class Client(derived):
 		
 	def sendRosterUpdate(self, jid, name, subscription, groups):
 		iq = domish.Element((None, 'iq'))
+		iq.addUniqueId()
 		iq['from'] = self.jid.full()
 		iq['type'] = 'set'
 		q = iq.addElement('query')
