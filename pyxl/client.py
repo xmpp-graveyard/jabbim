@@ -11,6 +11,17 @@ from twisted.words.protocols.jabber.xmlstream import IQ
 
 from derived import derived
 
+class Bookmark:
+	def __init__(self, name, typ, JID = None, autojoin = False, nick = None, password = None, url = None):
+		self.name = name
+		self.typ = typ #url/conference
+		self.jid = jid.JID(JID)
+		self.autojoin = autojoin
+		self.nick = nick
+		self.password = password
+		self.url = url
+		
+
 class Contact:
 	
 	def __init__(self, jid, name, subscription, items=[], groups = [], status = ()):
@@ -64,6 +75,7 @@ class Client(derived):
 		self.connection = None
 		self.main=main # mainWindow
 		self.roster = {'users':{},'groups':{}}
+		self.bookmarks = {'conference':{}, 'url': {}}
 		self.log = True
 		self.logfile = sys.stdout
 		self.on_init()
@@ -120,18 +132,20 @@ class Client(derived):
 		self.xmlstream.addObserver("/presence[@type='unsubscribe']", self.onUnSubscribe)
 		self.xmlstream.addObserver("/presence[@type='subscribed']", self.onSubscribed)
 		self.xmlstream.addObserver("/presence[@type='unsubscribed']", self.onUnSubscribed)
+		self.getRoster()
+		self.getBookmarks()
+
+	def getRoster(self):
+		print 'get roster'
 		iq = IQ(self.xmlstream, 'get')
 		iq['from'] =self.jid.full()
 		iq['type'] = 'get'
 		q = iq.addElement('query')
 		q['xmlns']='jabber:iq:roster'
-		try:
-			d = iq.send()
-			self.on_xml(iq.toXml())
-			d.addCallback(self._onRosterArrive)
-		except Exception, e:
-			print e
-
+		d = iq.send()
+		self.on_xml(iq.toXml())
+		d.addCallback(self._onRosterArrive)
+		
 	def onRosterAdd(self,el):
 		print "roster item add"
 		for child in el.elements():
@@ -198,6 +212,76 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 	
+	def getVCard(self, jid):
+		iq = IQ(self.xmlstream, 'get')
+		iq['to'] = jid
+		iq.addElement('vCard', 'vcard-temp')
+		d = iq.send()
+		self.on_xml(iq.toXml())
+		d.addCallback(self._vcardReceived)
+	
+	def _vcardReceived(self, el):
+		print 'vcard received'
+	
+	def getBookmarks(self):
+		'get bookmarks'
+		iq = IQ(self.xmlstream, 'get')
+##		iq['to'] = self.jid.host
+		q = iq.addElement('query', 'jabber:iq:private')
+		q.addElement('storage', 'storage:bookmarks')
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		d.addCallback(self._bookmarksReceived)
+	def setBookmarks(self):
+		iq = IQ(self.xmlstream, 'set')
+		q = iq.addElement('query', 'jabber:iq:private')
+		storage = q.addElement('storage', 'storage:bookmarks')
+		for bookmark in self.bookmarks['conference'].itervalues():
+			b = storage.addElement('conference')
+			b['jid'] = bookmark.jid.userhost()
+			b['name'] = bookmark.name
+			b['autojoin'] = unicode(bookmark.autojoin)
+			if bookmark.nick:
+				b.addElement('nick', content = bookmark.nick)
+			if bookmark.password:
+				b.addElement('password', content = bookmark.password)
+			
+		for bookmark in self.bookmarks['url'].itervalues():
+			b = storage.addElement('url')
+			b['name'] = bookmark.name
+			b['url'] = bookmark.url
+				
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		d.addCallback(self._bookmarksSet)
+	
+	def _bookmarksSet(self, el):
+		print 'bookmarks set sucessfully'
+		
+	def _bookmarksReceived(self, el):
+		print 'bookmarks received'
+		for child in el.elements():
+			if child.name == 'query':
+				for els in child.elements():
+					if els.name == 'storage':
+						for bookmark in els.elements():
+							if bookmark.name == 'conference':
+								jid = bookmark['jid']
+								name = bookmark['name']
+								autojoin = bookmark['autojoin']
+								nick = self.jid.user
+								password = None
+								for elm in bookmark.elements():
+									if elm.name == 'nick':
+										nick = unicode(elm)
+									if elm.name == 'password':
+										password = unicode(elm)
+								
+								self.bookmarks['conference'][name] = Bookmark(name, 'conference', jid, autojoin, nick,  password)
+							if bookmark.name == 'url':
+								name = bookmark['name']
+								url = bookmark['url']
+								self.bookmarks['conference'][name] = Bookmark(name, 'url', url = url)
 	
 	def addContact(self, jid, msg):
 		print 'add contact'
@@ -252,6 +336,7 @@ class Client(derived):
 		#self.on_invalidUser(self)
 	
 	def onMessage(self, el):
+		#TODO: xhtml-im a composing events
 		print 'message received'
 		typ = el['type']
 		frm = el['from']
