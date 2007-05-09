@@ -76,6 +76,7 @@ class Client(derived):
 		self.main=main # mainWindow
 		self.roster = {'users':{},'groups':{}}
 		self.bookmarks = {'conference':{}, 'url': {}}
+		self.idlist = []
 		
 		self.client_name = 'Jabbim'
 		self.version = '0.0.1' # tohle asi neni nejlepsi zpusob
@@ -84,7 +85,9 @@ class Client(derived):
 		self.log = True
 		self.logfile = sys.stdout
 		self.on_init()
+		self.last = 0
 		self.registerFeature('jabber:iq:version')
+		self.registerFeature('jabber:iq:last')
 
 	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None):
 		presence = domish.Element((None, 'presence'))
@@ -140,6 +143,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/presence[@type='unsubscribed']", self.onUnSubscribed)
 		self.xmlstream.addObserver("/iq[@type='get']/query[@xmlns='jabber:iq:version']", self.onVersion)
 		self.xmlstream.addObserver("/iq[@type='get']/query[@xmlns='http://jabber.org/protocol/disco#info']", self.onDiscoInfo)
+		self.xmlstream.addObserver("/iq[@type='get']/query[@xmlns='jabber:iq:last']", self.onLast)
 		self.getRoster()
 		self.getBookmarks()
 
@@ -157,12 +161,14 @@ class Client(derived):
 		iq['type'] = 'get'
 		q = iq.addElement('query')
 		q['xmlns']='jabber:iq:roster'
+		self.disp(iq['id'])
 		d = iq.send()
 		self.on_xml(iq.toXml())
 		d.addCallback(self._onRosterArrive)
 		
 	def onRosterAdd(self,el):
 		print "roster item add"
+		self.disp(el['id'])
 		for child in el.elements():
 			if child.name == "query":
 				allGroups=[]
@@ -224,6 +230,7 @@ class Client(derived):
 		item['subscription'] = subscription
 		for group in groups:
 			item.addElement(group)
+		self.disp(iq['id'])
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 	
@@ -231,6 +238,7 @@ class Client(derived):
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid
 		iq.addElement('vCard', 'vcard-temp')
+		self.disp(iq['id'])
 		d = iq.send()
 		self.on_xml(iq.toXml())
 		d.addCallback(self._vcardReceived)
@@ -244,6 +252,7 @@ class Client(derived):
 		q = iq.addElement('query', 'jabber:iq:private')
 		q.addElement('storage', 'storage:bookmarks')
 		self.on_xml(iq.toXml())
+		self.disp(iq['id'])
 		d = iq.send()
 		d.addCallback(self._bookmarksReceived)
 	def setBookmarks(self):
@@ -264,7 +273,8 @@ class Client(derived):
 			b = storage.addElement('url')
 			b['name'] = bookmark.name
 			b['url'] = bookmark.url
-				
+		
+		self.disp(iq['id'])
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		d.addCallback(self._bookmarksSet)
@@ -308,6 +318,19 @@ class Client(derived):
 	def onXML(self, el):
 		if self.log:
 			self.on_xml(el.toXml())
+		if el.hasAttribute('id') and el.name == 'iq':
+			if not el['id'] in self.idlist:
+				print 'nezpracovane iq ', el.toXml()
+				el['type']  = 'error'
+				el['to'] = el['from']
+				el['from'] = self.jid.full()
+				err = el.addElement('error')
+				err['code'] = '501'
+				err['type'] = 'cancel'
+				err.addElement('feature-not-implemented')
+				self.disp(el['id'])
+				self.on_xml(el.toXml())
+				self.xmlstream.send(el)
 
 	def _onRosterArrive(self, el):
 		print 'roster arrived'
@@ -412,6 +435,7 @@ class Client(derived):
 		pass
 	def onVersion(self, el):
 		print 'sending version info'
+		self.disp(el['id'])
 		iq = domish.Element((None, 'iq'))
 		iq['to'] = el['from']
 		iq['type'] = 'result'
@@ -444,6 +468,7 @@ class Client(derived):
 	
 	def onDiscoInfo(self, el):
 		print 'received disco#info request'
+		self.disp(el['id'])
 		iq = domish.Element((None,'iq'))
 		iq['to'] = el['from']
 		iq['type'] = 'result'
@@ -469,5 +494,19 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 		
+	def onLast(self, el):
+		print 'received last request'
+		self.disp(el['id'])
+		iq = domish.Element((None,'iq'))
+		iq['to'] = el['from']
+		iq['type'] = 'result'
+		iq['id'] = el['id']
+		q = iq.addElement('query','jabber:iq:last')
+		if self.last > 0:
+			q['seconds'] = self.last
 		
-		
+		self.on_xml(iq.toXml())
+		self.xmlstream.send(iq)
+	
+	def disp(self, id):
+		self.idlist.append(id)
