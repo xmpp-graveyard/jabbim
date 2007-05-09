@@ -49,6 +49,7 @@ class Client(derived):
 		self.last = 0
 		self.registerFeature('jabber:iq:version')
 		self.registerFeature('jabber:iq:last')
+		self.registerFeature('http://jabber.org/protocol/xhtml-im')
 
 	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None):
 		presence = domish.Element((None, 'presence'))
@@ -350,13 +351,16 @@ class Client(derived):
 		print 'message received'
 		typ = el['type']
 		frm = el['from']
-		body = subject = ''
+		body = subject =xhtml = None
 		for child in el.elements():
 			if child.name == "body":
 				body = unicode(child)
 			if child.name == "subject":
 				subject = unicode(child)
-		self.on_message(frm,typ,body,subject)
+			if child.name == 'html':
+				body = child.children[0]
+				xhtml = body.toXml()
+		self.on_message(frm,typ,body,subject, xhtml)
 		
 	def onSubscribe(self, el):
 		print 'on subscribe'
