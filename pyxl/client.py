@@ -12,7 +12,7 @@ from twisted.words.protocols.jabber.xmlstream import IQ
 from derived import derived
 
 class Contact:
-	#TODO: vyresit vice resource, prioritu a stav ke kazde
+	
 	def __init__(self, jid, name, subscription, items=[], groups = [], status = ()):
 		self.jid = jid
 		self.name = name
@@ -198,11 +198,15 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 	
+	
 	def addContact(self, jid, msg):
 		print 'add contact'
 		self.sendRosterUpdate(jid, None, 'none', [])
 		self.sendPresence(to = jid, status = msg, typ = 'subscribe')
-	
+	def delContact(self, jid):
+		self.sendRosterUpdate(jid, None, 'remove', [])
+		self.sendPresence(to = jid, typ = 'unsubscribe')
+		
 	def onXML(self, el):
 		if self.log:
 			self.on_xml(el.toXml())
@@ -248,10 +252,16 @@ class Client(derived):
 		#self.on_invalidUser(self)
 	
 	def onMessage(self, el):
+		print 'message received'
+		typ = el['type']
+		frm = el['from']
+		body = subject = ''
 		for child in el.elements():
 			if child.name == "body":
-				body = child.__str__()
-				print body
+				body = unicode(child)
+			if child.name == "subject":
+				subject = unicode(child)
+		self.on_message(frm,typ,body,subject)
 		
 	def onSubscribe(self, el):
 		print 'on subscribe'

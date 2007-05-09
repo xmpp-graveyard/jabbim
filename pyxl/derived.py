@@ -22,3 +22,6 @@ class derived:
 		pass
 	def on_subscribed(self):
 		pass
+	
+	def on_message(self, frm, typ, body, subject = None):
+		pass
