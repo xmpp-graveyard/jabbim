@@ -48,30 +48,30 @@ class clientClass(pyxl.client.Client):
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(self.main.tr("Bad Jabber ID or password.")),0,1)
 	
 	def on_presence(self,jid,show):
-		self.main.ui.roster.setStatus(jid.userhost(),show)
 		jid=jid.full()
 	
-		# Pridani resource
-		if len(self.roster['users'][str(jid).rsplit("/")[0]].resources)>1:
-			resource=str(jid).rsplit("/")[1]
-			if not self.roster['users'][str(jid).rsplit("/")[0]].resourcesItems.has_key(resource):
-				if len(self.roster['users'][str(jid).rsplit("/")[0]].resources)==2:
-					for k,v in self.roster['users'][str(jid).rsplit("/")[0]].resources.iteritems():
-						if not self.roster['users'][str(jid).rsplit("/")[0]].resourcesItems.has_key(k):
-							for user in self.roster['users'][str(jid).rsplit("/")[0]].rosterItems:
-								self.roster['users'][str(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(jid,unicode(user.text(2))+" - "+k,user)
-				else:
-					for user in self.roster['users'][str(jid).rsplit("/")[0]].rosterItems:
-						self.roster['users'][str(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(jid,unicode(user.text(2))+" - "+resource,user)
-		print jid,show
 		if show=="offline":
-			if len(str(jid).rsplit("/"))!=1:
-				resource=str(jid).rsplit("/")[1]
-				if self.roster['users'][str(jid).rsplit("/")[0]].resourcesItems.has_key(resource):
-					for user in self.roster['users'][str(jid).rsplit("/")[0]].rosterItems:
-						#self.roster['users'][str(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(jid,unicode(user.text(2))+" - "+k,user)
-						user.takeChild(parent.indexOfChild(self.roster['users'][str(jid).rsplit("/")[0]].resourcesItems[resource]))
-				
+			if len(unicode(jid).rsplit("/"))!=1:
+				resource=unicode(jid).rsplit("/")[1]
+				if self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems.has_key(resource):
+					for user in self.roster['users'][unicode(jid).rsplit("/")[0]].rosterItems:
+						#self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(jid,unicode(user.text(2))+" - "+k,user)
+						user.takeChild(user.indexOfChild(self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]))
+		else:
+			self.main.ui.roster.setStatus(jid.userhost(),show)
+			# Pridani resource
+			if len(self.roster['users'][unicode(jid).rsplit("/")[0]].resources)>1:
+				resource=unicode(jid).rsplit("/")[1]
+				if not self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems.has_key(resource):
+					if len(self.roster['users'][unicode(jid).rsplit("/")[0]].resources)==2:
+						for k,v in self.roster['users'][unicode(jid).rsplit("/")[0]].resources.iteritems():
+							if not self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems.has_key(k):
+								for user in self.roster['users'][unicode(jid).rsplit("/")[0]].rosterItems:
+									self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(jid,unicode(user.text(2))+" - "+k,user)
+					else:
+						for user in self.roster['users'][unicode(jid).rsplit("/")[0]].rosterItems:
+							self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(jid,unicode(user.text(2))+" - "+resource,user)
+
 				
 	def on_xml(self,xml):
 		if self.main.xmlConsole.ui.enable.isChecked():
