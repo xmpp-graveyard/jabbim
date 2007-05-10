@@ -48,9 +48,10 @@ class clientClass(pyxl.client.Client):
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(self.main.tr("Bad Jabber ID or password.")),0,1)
 	
 	def on_presence(self,jid,show):
-		jid=jid.full()
+		
 	
 		if show=="offline":
+			jid=jid.full()
 			if len(unicode(jid).rsplit("/"))!=1:
 				resource=unicode(jid).rsplit("/")[1]
 				if self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems.has_key(resource):
@@ -59,6 +60,7 @@ class clientClass(pyxl.client.Client):
 						user.takeChild(user.indexOfChild(self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]))
 		else:
 			self.main.ui.roster.setStatus(jid.userhost(),show)
+			jid=jid.full()
 			# Pridani resource
 			if len(self.roster['users'][unicode(jid).rsplit("/")[0]].resources)>1:
 				resource=unicode(jid).rsplit("/")[1]
