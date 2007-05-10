@@ -36,3 +36,7 @@ class derived:
 	def on_discoItemsReceived(self, jid, node):
 		# v self.disco[jid][node] jsou info data nebo error
 		pass
+	
+	def on_privacyReceived(self):
+		print self.privacy_lists
+		pass

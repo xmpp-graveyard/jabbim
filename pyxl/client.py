@@ -36,7 +36,9 @@ class Client(derived):
 		self.bookmarks = {'conference':{}, 'url': {}}
 		self.idlist = []
 		self.disco = {} # jid:{node1:{items:{attrs}, identity: {attrs}, features:[], err: {'info':'', 'items':''}}}
-		
+		self.privacy_lists = {}
+		self.privacy_active = None
+		self.privacy_default = None
 		self.client_name = 'Jabbim'
 		self.version = '0.0.1' # tohle asi neni nejlepsi zpusob
 		self.client_os = ''
@@ -82,7 +84,7 @@ class Client(derived):
 		self.on_xml(presence.toXml())
 		self.xmlstream.send(presence)
 	
-	def sendMessage(self, to, body, typ='chat', subject = None, composing = None):
+	def sendMessage(self, to, body, typ='chat', subject = None, composing = None, xhtml = None):
 		#TODO: composing events
 		message = domish.Element((None,'message'))
 		message['to'] = to
@@ -90,6 +92,10 @@ class Client(derived):
 		message['type'] = typ
 		if type == 'normal' and subject:
 			message.addElement('subject', content = subject)
+		if xhtml != None:
+			html = message.addElement('html','http://jabber.org/protocol/xhtml-im')
+			body = html.addElement('body', 'http://www.w3.org/1999/xhtml')
+			body.addRawXml(xhtml)
 		self.on_xml(message.toXml())
 		self.xmlstream.send(message)
 
@@ -124,8 +130,8 @@ class Client(derived):
 		self.getBookmarks()
 		self.getDiscoInfo(self.jid.host)
 		self.getDiscoItems(self.jid.host)
-		self.getDiscoInfo('pyco.cz')
-		self.getDiscoItems('pyco.cz')
+		self.getPrivacy()
+
 
 	def registerFeature(self, feature, node = None):
 		if self.discofeatures.has_key(node):
@@ -236,6 +242,7 @@ class Client(derived):
 		self.disp(iq['id'])
 		d = iq.send()
 		d.addCallback(self._bookmarksReceived)
+		
 	def setBookmarks(self):
 		iq = IQ(self.xmlstream, 'set')
 		q = iq.addElement('query', 'jabber:iq:private')
@@ -404,7 +411,12 @@ class Client(derived):
 ##		print 'presence > ', el['from']
 		frm = jid.JID(el['from'])
 		resource = jid.JID(el['from']).resource
-		show = status = priority = None
+		show = status = priority = typ = None
+		if el.hasAttribute('type'):
+			if el['type'] != 'unavailable':
+				return
+			else:
+				typ = 'unavailable'
 		features = []
 		for child in el.elements():
 			if child.name == 'show':
@@ -426,12 +438,10 @@ class Client(derived):
 				if self.caps_cache.has_key(caps_node):
 					features = self.caps_cache[caps_node]
 				else:	
-##					self.caps_cache[caps_node] = features
-					self.getFeatures(frm, caps_node)
+					if typ !='unavailable':
+						self.getFeatures(frm, caps_node)
 
-		if el.hasAttribute('type'):
-			if el['type'] != 'unavailable':
-				return
+
 		if self.roster['users'].has_key(frm.userhost()):
 			if show == None and not el.hasAttribute('type'):
 				show = 'online'
@@ -613,7 +623,7 @@ class Client(derived):
 		self.on_discoInfoReceived(jid, node_name)
 		
 	def getDiscoItems(self, jid, node = None):
-		print 'requesting disco#irems'
+		print 'requesting disco#items : '
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid
 		iq['from'] = self.jid.full()
@@ -663,6 +673,38 @@ class Client(derived):
 		node['err'] = el.firstChildElement().name
 		self.disco[jid][node_name] = node
 		self.on_discoInfoReceived(jid, node_name)
+		
+	
+	def getPrivacy(self):	
+		print 'requesting priacy lists'
+		#FIXME: predelat
+		iq = IQ(self.xmlstream, 'get')
+		q = iq.addElement('query', 'jabber:iq:privacy')
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		self.disp(iq['id'])
+		d.addCallback(self._privacyReceived)
+	
+	def _privacyReceived(self, el):
+		#FIXME: predelat
+		print 'privacy lists received' 
+		query = el.firstChildElement()
+		for child in query.elements():
+			if child.name == 'active':
+				self.privacy_active = child['name']
+			if child.name == 'default':
+				self.privacy_active = child['name']
+			if child.name == 'list':
+				listname = child['name']
+				self.privacy_lists[listname] =[]  #pozor na soucasne volani set a get
+				for item in child.elements():
+					it = {}
+					it['attrs'] = item.attributes
+					it['types'] = []
+					for stanza in item.elements:
+						it['types'].append(stanza.name)
+					self.privacy_lists['listname'].append(it)
+		self.on_privacyReceived()
 		
 	def disp(self, id):
 		self.idlist.append(id)
