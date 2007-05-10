@@ -359,6 +359,7 @@ class Client(derived):
 						rosterItems.append(self.main.ui.roster.addUser(item['jid'],name,self.roster['groups'][group]))
 					contact = Contact(self, item['jid'], name, item['subscription'], rosterItems, groups)
 					self.roster['users'][item['jid']] = contact
+			
 		presence = domish.Element(('jabber:client','presence'))
 		self.on_xml(presence.toXml())
 		self.xmlstream.send(presence)
@@ -445,8 +446,8 @@ class Client(derived):
 		if self.roster['users'].has_key(frm.userhost()):
 			if show == None and not el.hasAttribute('type'):
 				show = 'online'
-			elif el.hasAttribute('unavailable'):
-				if el['type'] !='unavailable':
+			elif el.hasAttribute('type'):
+				if el['type'] =='unavailable':
 					show = 'offline'
 			self.roster['users'][unicode(frm.userhost())].setStatus(resource, show,status)
 			self.on_presence(frm,show)
