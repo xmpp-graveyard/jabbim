@@ -22,9 +22,6 @@ class Bookmark:
 		self.password = password
 		self.url = url
 		
-
-
-	
 class Client(derived):
 	def __init__(self, JID, password, host, port, main):
 		#derived.__init__(self)
@@ -39,9 +36,13 @@ class Client(derived):
 		self.bookmarks = {'conference':{}, 'url': {}}
 		self.idlist = []
 		
+		
 		self.client_name = 'Jabbim'
 		self.version = '0.0.1' # tohle asi neni nejlepsi zpusob
-		
+		self.client_os = ''
+		self.caps_node = 'http://dev.jabbim.cz/jabbim/caps'
+		self.caps_version = self.version
+		self.caps_ext = None
 		self.discofeatures = {} # node: [feature1, feature2]
 		self.log = True
 		self.logfile = sys.stdout
@@ -50,10 +51,16 @@ class Client(derived):
 		self.registerFeature('jabber:iq:version')
 		self.registerFeature('jabber:iq:last')
 		self.registerFeature('http://jabber.org/protocol/xhtml-im')
-
-	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None):
+		
+		self.caps_cache = {} # 'node': [feature1, feature2]
+		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
+	
+	def cacheCaps(self, node, features):
+		self.caps_cache[node] = features
+	
+	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None, caps = True):
 		presence = domish.Element((None, 'presence'))
-		presence['from'] = unicode(self.jid)
+		presence['from'] = self.jid.full()
 		if to:
 			presence['to'] = to
 		if status:
@@ -64,6 +71,13 @@ class Client(derived):
 			presence.addElement('priority', content = priority)
 		if typ:
 			presence['typ'] = typ
+		if caps:
+			c = presence.addElement('c', 'http://jabber.org/protocol/caps')
+			c['node'] = self.caps_node
+			c['ver'] = self.caps_version
+			if self.caps_ext != None:
+				c['ext'] = self.caps_ext
+		
 		print 'sending out presence to: ' , to
 		self.on_xml(presence.toXml())
 		self.xmlstream.send(presence)
@@ -165,7 +179,7 @@ class Client(derived):
 						for group in groups:
 							# add user item to the group
 							rosterItems.append(self.main.ui.roster.addUser(item['jid'],name,self.roster['groups'][group]))
-						contact = Contact(item['jid'], name, subscription, rosterItems, groups)
+						contact = Contact(self, item['jid'], name, subscription, rosterItems, groups)
 						self.roster['users'][item['jid']] = contact
 					elif subscription != 'remove'  and self.roster['users'].has_key(item['jid']):
 						contact = self.roster['users'][item['jid']]
@@ -332,7 +346,7 @@ class Client(derived):
 					for group in groups:
 						# add user item to the group
 						rosterItems.append(self.main.ui.roster.addUser(item['jid'],name,self.roster['groups'][group]))
-					contact = Contact(item['jid'], name, item['subscription'], rosterItems, groups)
+					contact = Contact(self, item['jid'], name, item['subscription'], rosterItems, groups)
 					self.roster['users'][item['jid']] = contact
 		presence = domish.Element(('jabber:client','presence'))
 		self.on_xml(presence.toXml())
@@ -387,6 +401,7 @@ class Client(derived):
 		frm = jid.JID(el['from'])
 		resource = jid.JID(el['from']).resource
 		show = status = priority = None
+		features = []
 		for child in el.elements():
 			if child.name == 'show':
 				show = child.__str__()
@@ -395,6 +410,20 @@ class Client(derived):
 				pass
 			elif child.name == 'priority':
 				priority = child.__str__()
+				if priority == None:
+					print el.toXml()
+			elif child.name == 'c':
+				caps_node = child['node']
+				
+				if child.hasAttribute('ext'):
+					caps_node = '%s#%s'%(caps_node, child['ext'])
+				else:
+					caps_node = '%s#%s'%(caps_node, child['ver'])
+				if self.caps_cache.has_key(caps_node):
+					features = self.caps_cache[caps_node]
+				else:	
+					self.getFeatures(frm, caps_node)
+
 		if el.hasAttribute('type'):
 			if el['type'] != 'unavailable':
 				return
@@ -407,10 +436,40 @@ class Client(derived):
 			self.roster['users'][unicode(frm.userhost())].setStatus(resource, show,status)
 			self.on_presence(frm,show)
 			self.roster['users'][frm.userhost()].setPriority(resource, priority)
+			self.roster['users'][frm.userhost()].setFeatures(resource, features)
 		else:
 ##			print 'contact not in roster'
 			pass
-		pass
+		
+		
+	def getFeatures(self, jid, caps_node):
+		print 'requesting disco#info'
+		iq = IQ(self.xmlstream, 'get')
+		iq['to'] = jid.full()
+		iq['from'] = self.jid.full()
+		q = iq.addElement('query', 'http://jabber.org/protocol/disco#info')
+		if caps_node != None:
+			q['node'] = caps_node
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		self.disp(iq['id'])
+		d.addCallback(self._featuresReceived, caps_node)
+		
+	def _featuresReceived(self, el, node):
+		print 'features received'
+##		self.disp(el['id'])
+		features = []
+		query = el.firstChildElement()
+		for child in  el.query.elements():
+			if child.name == 'feature':
+				features.append(child['var'])
+		self.caps_cache[node] = features
+		frm = jid.JID(el['from'])
+		resource = jid.JID(el['from']).resource
+		if self.roster['users'].has_key(frm.userhost()):
+			self.roster['users'][frm.userhost()].setFeatures(resource, features)
+		
+		
 	def onVersion(self, el):
 		print 'sending version info'
 		try:
@@ -466,7 +525,9 @@ class Client(derived):
 					node = inq['node']
 				else:
 					node = None
-		
+		if node == '%s#%s'%(self.caps_node, self.caps_version): #magie: pokud se nas nekdo zepta na caps nasi verze, tak mu rekneme default
+			node == None
+			
 		if not self.discofeatures.has_key(node):
 			node = None
 		if node != None:
