@@ -36,6 +36,16 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.item.setText(1,"999")
 		self.setItemHidden(self.item, True)
 
+		QtCore.QObject.connect(self, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.contactClicked)
+
+	def contactClicked(self,item,column):
+		# open chat window for clicked contact
+		if self.main.client.roster['groups'].has_key(unicode(item.text(2))):
+			return
+		data=item.data(32,0) # get jid
+		data=str(data.toString())
+		self.main.chat.addChatTab(data,unicode(item.text(2)),self.main.getIcon(data,self.main.icons[unicode(item.text(1))[0]],size="16x16"))
+
 	def getUserItems(self,jid):
 		if not self.main.client.roster['users'].has_key(jid):
 			return []

@@ -23,6 +23,7 @@ except: print "PyQt4 is not installed."
 import qt4reactor as reactor
 app = QtGui.QApplication(sys.argv)
 reactor.install(app)
+import time
 
 from twisted.internet import reactor
 
@@ -108,9 +109,39 @@ class clientClass(pyxl.client.Client):
 					parent.takeChild(parent.indexOfChild(i))
 					break
 
-	def on_subscribe(self, msg):
+	def on_subscribe(self, msg,t):
 		#self.ui.infoDockWidget.show()
 		pass
+
+	def on_message(self, frm, typ, body, subject = None, xhtml = None):
+		print "message",frm
+		if self.roster['users'].has_key(str(frm).rsplit("/")[0]):
+			user=self.roster['users'][str(frm).rsplit("/")[0]].rosterItems[0]
+			icon=user.icon(0)
+			user=user.text(2)
+		else:
+			icon=self.main.getIcon(status="offline",size="16x16")
+			user=frm
+		
+		message=unicode(body)
+		message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user)).replace("[message]",message)
+		tab=None
+		tabIndex=0
+		for i in range(self.main.chat.ui.chatTab.count()):
+			w=self.main.chat.ui.chatTab.widget(i)
+			if str(w.jid)==str(frm):
+				tab=w
+				tabIndex=i
+				break
+			if str(w.jid).rsplit("/")[0]==str(frm).rsplit("/")[0]:
+				tab=w
+				tabIndex=i
+		if tab!=None:
+			if int(self.main.chat.ui.chatTab.currentIndex())!=tabIndex:
+				self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
+			tab.chat.textEditWrite(message)
+		else:
+			self.main.chat.addChatTab(frm,unicode(user),icon,message)
 
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
@@ -126,6 +157,8 @@ class mainWindow(QtGui.QMainWindow):
 		if self.config['savePasswd']=="True":
 			self.ui.login_savePassword.setChecked(True)
 
+		self.chat=widgets.chatwindow.chatWindow(self,self)
+
 		app.connect(self.ui.login_connect, QtCore.SIGNAL("clicked()"),self.connect)
 		app.connect(app,QtCore.SIGNAL("lastWindowClosed() "),self.disconnect)
 		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
@@ -133,7 +166,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		self.ui.rosterStackedWidget.setCurrentIndex(0)
 		self.loadRoster()
-		
+		self.loadSkin() # load chat skin
 		self.statusPath="images/xxxxx/status/"
 		self.shows={u"online":u"1",
 					u"available":u"1",
@@ -189,6 +222,15 @@ class mainWindow(QtGui.QMainWindow):
 	#def addInfoSubscribe(self):
 		#widget=subscribeWidget(self.ui.infoDockWidget)
 		#self.ui.infoLayout.addWidget(widget)
+
+	def loadSkin(self):
+		# loads config and repairs config file
+		self.skin=ConfigObj("skins/"+self.config["chat_skin"],encoding='UTF8')
+
+	def now(self):
+		# get time
+		h,m,s=time.localtime()[3:6]
+		return "%02d:%02d:%02d" % (h,m,s)
 
 	def showXml(self,bool):
 		self.xmlConsole.show()
