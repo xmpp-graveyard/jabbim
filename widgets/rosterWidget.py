@@ -46,6 +46,21 @@ class rosterWidget(QtGui.QTreeWidget):
 		data=str(data.toString())
 		self.main.chat.addChatTab(data,unicode(item.text(2)),self.main.getIcon(data,self.main.icons[unicode(item.text(1))[0]],size="16x16"))
 
+	def addResource(self,jid,name,user):
+		#item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
+
+		# add new resource called 'name', JID 'jid' with QTreeWidgetItem 'user'
+		item=QtGui.QTreeWidgetItem(user)
+		if name==None or len(name)==0:
+			name=jid
+		item.setText(0,unicode(name))
+		item.setText(1,"9"+unicode(name).lower())
+		item.setText(2,unicode(name))
+		item.setData(32,0,QtCore.QVariant(jid))
+		self.sortItems(1,QtCore.Qt.AscendingOrder)
+		return item
+
+
 	def getUserItems(self,jid):
 		if not self.main.client.roster['users'].has_key(jid):
 			return []

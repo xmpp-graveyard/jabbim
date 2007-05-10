@@ -49,7 +49,30 @@ class clientClass(pyxl.client.Client):
 	
 	def on_presence(self,jid,show):
 		self.main.ui.roster.setStatus(jid.userhost(),show)
-
+		jid=jid.full()
+	
+		# Pridani resource
+		if len(self.roster['users'][str(jid).rsplit("/")[0]].resources)>1:
+			resource=str(jid).rsplit("/")[1]
+			if not self.roster['users'][str(jid).rsplit("/")[0]].resourcesItems.has_key(resource):
+				if len(self.roster['users'][str(jid).rsplit("/")[0]].resources)==2:
+					for k,v in self.roster['users'][str(jid).rsplit("/")[0]].resources.iteritems():
+						if not self.roster['users'][str(jid).rsplit("/")[0]].resourcesItems.has_key(k):
+							for user in self.roster['users'][str(jid).rsplit("/")[0]].rosterItems:
+								self.roster['users'][str(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(jid,unicode(user.text(2))+" - "+k,user)
+				else:
+					for user in self.roster['users'][str(jid).rsplit("/")[0]].rosterItems:
+						self.roster['users'][str(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(jid,unicode(user.text(2))+" - "+resource,user)
+		print jid,show
+		if show=="offline":
+			if len(str(jid).rsplit("/"))!=1:
+				resource=str(jid).rsplit("/")[1]
+				if self.roster['users'][str(jid).rsplit("/")[0]].resourcesItems.has_key(resource):
+					for user in self.roster['users'][str(jid).rsplit("/")[0]].rosterItems:
+						#self.roster['users'][str(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(jid,unicode(user.text(2))+" - "+k,user)
+						user.takeChild(parent.indexOfChild(self.roster['users'][str(jid).rsplit("/")[0]].resourcesItems[resource]))
+				
+				
 	def on_xml(self,xml):
 		if self.main.xmlConsole.ui.enable.isChecked():
 			text=unicode(xml)

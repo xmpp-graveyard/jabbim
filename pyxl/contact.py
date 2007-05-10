@@ -6,6 +6,7 @@ class Contact:
 		self.groups = groups
 		self.status = status
 		self.rosterItems = items # user can be in many groups => more items
+		self.resourcesItems={}
 		self.resources={} #resource:(show,status,priority)
 		self.client = client
 
