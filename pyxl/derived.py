@@ -29,3 +29,10 @@ class derived:
 	def on_versionreceive(self, jid, version):
 		#version = (name, version, os)
 		pass
+	
+	def on_discoInfoReceived(self, jid, node):
+		# v self.disco[jid][node] jsou info data nebo error
+		pass
+	def on_discoItemsReceived(self, jid, node):
+		# v self.disco[jid][node] jsou info data nebo error
+		pass

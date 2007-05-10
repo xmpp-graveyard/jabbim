@@ -35,7 +35,7 @@ class Client(derived):
 		self.roster = {'users':{},'groups':{}}
 		self.bookmarks = {'conference':{}, 'url': {}}
 		self.idlist = []
-		
+		self.disco = {} # jid:{node1:{items:{attrs}, identity: {attrs}, features:[], err: {'info':'', 'items':''}}}
 		
 		self.client_name = 'Jabbim'
 		self.version = '0.0.1' # tohle asi neni nejlepsi zpusob
@@ -51,7 +51,7 @@ class Client(derived):
 		self.registerFeature('jabber:iq:version')
 		self.registerFeature('jabber:iq:last')
 		self.registerFeature('http://jabber.org/protocol/xhtml-im')
-		
+		self.registerFeature('http://jabber.org/protocol/disco#info')
 		self.caps_cache = {} # 'node': [feature1, feature2]
 		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
 	
@@ -122,6 +122,10 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:last']", self.onLast, 1)
 		self.getRoster()
 		self.getBookmarks()
+		self.getDiscoInfo(self.jid.host)
+		self.getDiscoItems(self.jid.host)
+		self.getDiscoInfo('pyco.cz')
+		self.getDiscoItems('pyco.cz')
 
 	def registerFeature(self, feature, node = None):
 		if self.discofeatures.has_key(node):
@@ -422,6 +426,7 @@ class Client(derived):
 				if self.caps_cache.has_key(caps_node):
 					features = self.caps_cache[caps_node]
 				else:	
+##					self.caps_cache[caps_node] = features
 					self.getFeatures(frm, caps_node)
 
 		if el.hasAttribute('type'):
@@ -443,7 +448,7 @@ class Client(derived):
 		
 		
 	def getFeatures(self, jid, caps_node):
-		print 'requesting disco#info'
+		print 'requesting features', caps_node
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid.full()
 		iq['from'] = self.jid.full()
@@ -493,11 +498,13 @@ class Client(derived):
 		q = iq.addElement('query', 'jabber:iq:version')
 		self.on_xml(iq.toXml())
 		d = iq.send()
+		self.disp(iq['id'])
 		d.addCallback(self._versionReceived)
 	def _versionReceived(self, el):
 		print 'version info received'
 		name = version = os = None
-		for child in  el.children[0].elements():
+		query = el.firstChildElement()
+		for child in  query.elements():
 			if child.name == 'name':
 				name = unicode(child)
 			if child.name == 'version':
@@ -553,5 +560,109 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 	
+	
+	def getDiscoInfo(self, jid, node = None):
+		print 'requesting disco#info'
+		iq = IQ(self.xmlstream, 'get')
+		iq['to'] = jid
+		iq['from'] = self.jid.full()
+		q = iq.addElement('query', 'http://jabber.org/protocol/disco#info')
+		if node != None:
+			q['node'] = node
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		self.disp(iq['id'])
+		d.addCallback(self._discoInfoReceived, node)
+		d.addErrback(self._discoInfoErrReceived, (node, jid))
+
+	def _discoInfoReceived(self, el, node):
+		print 'disco#info received'
+		node_name = node
+		if self.disco.has_key(el['from']):
+			if self.disco[el['from']].has_key(node_name):
+				node = self.disco[el['from']][node_name]
+		else:
+			self.disco[el['from']] = {}
+			node = {'features':[], 'identities':{}}
+		query = el.firstChildElement()
+		for child in query.elements():
+			if child.name == 'feature':
+				node['features'].append(child['var'])
+			if child.name == 'identity':
+				node['identities'][child['name']] = child.attributes
+		self.disco[el['from']][node_name] = node
+		if self.disco[el['from']][node_name].has_key('err'):
+			if self.disco[el['from']][node_name]['err'].has_key('info'):
+				del self.disco[el['from']][node_name]['err']['info'] #timhle smazem pripadny error ktery zustal po predchozim dotazu
+		self.on_discoInfoReceived(el['from'], node_name)
+	
+	def _discoInfoErrReceived(self, err, info):
+		print 'disco#info error received'
+		node_name = info[0]
+		jid = info[1]
+		el = err.value.getElement()
+		if self.disco.has_key(jid):
+			if self.disco[jid].has_key(node_name):
+				node = self.disco[jid][node_name]
+		else:
+			self.disco[jid] = {}
+			node = {'err':{'info':''}}
+
+		node['err'] = el.firstChildElement().name
+		self.disco[jid][node_name] = node
+		self.on_discoInfoReceived(jid, node_name)
+		
+	def getDiscoItems(self, jid, node = None):
+		print 'requesting disco#irems'
+		iq = IQ(self.xmlstream, 'get')
+		iq['to'] = jid
+		iq['from'] = self.jid.full()
+		q = iq.addElement('query', 'http://jabber.org/protocol/disco#items')
+		if node != None:
+			q['node'] = node
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		self.disp(iq['id'])
+		d.addCallback(self._discoItemsReceived, node)
+		d.addErrback(self._discoItemsErrReceived, (node, jid))
+	
+	def _discoItemsReceived(self, el, node):
+		print 'disco#items received'
+		node_name = node
+		if self.disco.has_key(el['from']):
+			if self.disco[el['from']].has_key(node_name):
+				node = self.disco[el['from']][node_name]
+		else:
+			self.disco[el['from']] = {}
+			node = {'items':{}}
+
+		query = el.firstChildElement()
+		for child in query.elements():
+			if child.name == 'items':
+				node['items'][child['name']] = child.attributes
+		
+		self.disco[el['from']][node_name] = node
+		
+		if self.disco[el['from']][node_name].has_key('err'):
+			if self.disco[el['from']][node_name]['err'].has_key('items'):
+				del self.disco[el['from']][node_name]['err']['items'] #timhle smazem pripadny error ktery zustal po predchozim dotazu
+		self.on_discoItemsReceived(el['from'], node_name)
+	
+	def _discoItemsErrReceived(self, err, info):
+		print 'disco#items error received'
+		node_name = info[0]
+		jid = info[1]
+		el = err.value.getElement()
+		if self.disco.has_key(jid):
+			if self.disco[jid].has_key(node_name):
+				node = self.disco[jid][node_name]
+		else:
+			self.disco[jid] = {}
+			node = {'err':{'items':''}}
+
+		node['err'] = el.firstChildElement().name
+		self.disco[jid][node_name] = node
+		self.on_discoInfoReceived(jid, node_name)
+		
 	def disp(self, id):
 		self.idlist.append(id)
