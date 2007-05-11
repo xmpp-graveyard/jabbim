@@ -51,13 +51,31 @@ class clientClass(pyxl.client.Client):
 		
 	
 		if show=="offline":
+
 			jid=jid.full()
+			# Pridani resource
 			if len(unicode(jid).rsplit("/"))!=1:
 				resource=unicode(jid).rsplit("/")[1]
-				if self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems.has_key(resource):
-					for user in self.roster['users'][unicode(jid).rsplit("/")[0]].rosterItems:
+				jid=unicode(jid).rsplit("/")[0]
+				if self.roster['users'][jid].resourcesItems.has_key(resource):
+					for user in self.roster['users'][jid].rosterItems:
 						#self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(jid,unicode(user.text(2))+" - "+k,user)
-						user.takeChild(user.indexOfChild(self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]))
+						user.takeChild(user.indexOfChild(self.roster['users'][jid].resourcesItems[resource]))
+					del self.roster['users'][jid].resourcesItems[resource]
+				if len(self.roster['users'][jid].resources)!=0:
+					highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
+					self.main.ui.roster.setStatus(jid,highest.show)
+				else:
+					self.main.ui.roster.setStatus(jid,show)
+			else:
+				self.main.ui.roster.setStatus(jid,show)
+				
+			#if len(unicode(jid).rsplit("/"))!=1:
+				#resource=unicode(jid).rsplit("/")[1]
+				#if self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems.has_key(resource):
+					#for user in self.roster['users'][unicode(jid).rsplit("/")[0]].rosterItems:
+						##self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(jid,unicode(user.text(2))+" - "+k,user)
+						#user.takeChild(user.indexOfChild(self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]))
 		else:
 
 			jid=jid.full()
@@ -65,20 +83,20 @@ class clientClass(pyxl.client.Client):
 			if len(unicode(jid).rsplit("/"))!=1:
 				resource=unicode(jid).rsplit("/")[1]
 				jid=unicode(jid).rsplit("/")[0]
-				#if len(self.roster['users'][jid].resources)>1:
-				if not self.roster['users'][jid].resourcesItems.has_key(resource):
-					#if len(self.roster['users'][unicode(jid).rsplit("/")[0]].resources)==2:
-						#for k,v in self.roster['users'][unicode(jid).rsplit("/")[0]].resources.iteritems():
-							#if not self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems.has_key(k):
-								#for user in self.roster['users'][unicode(jid).rsplit("/")[0]].rosterItems:
-									#self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(unicode(jid).rsplit("/")[0]+"/"+k,unicode(user.text(2))+" - "+k,user)
-									#self.main.ui.roster.setResourceStatus(jid,resource,show)
-					#else:
-					for user in self.roster['users'][jid].rosterItems:
-						self.roster['users'][jid].resourcesItems[resource]=self.main.ui.roster.addResource(jid + "/" + resource,unicode(user.text(2))+" - "+resource,user)
-				
+				if len(self.roster['users'][jid].resources)>1:
+					for i,v in self.roster['users'][jid].resources.iteritems():
+						if not self.roster['users'][jid].resourcesItems.has_key(i):
+							#if len(self.roster['users'][unicode(jid).rsplit("/")[0]].resources)==2:
+								#for k,v in self.roster['users'][unicode(jid).rsplit("/")[0]].resources.iteritems():
+									#if not self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems.has_key(k):
+										#for user in self.roster['users'][unicode(jid).rsplit("/")[0]].rosterItems:
+											#self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(unicode(jid).rsplit("/")[0]+"/"+k,unicode(user.text(2))+" - "+k,user)
+											#self.main.ui.roster.setResourceStatus(jid,resource,show)
+							#else:
+							for user in self.roster['users'][jid].rosterItems:
+								self.roster['users'][jid].resourcesItems[i]=self.main.ui.roster.addResource(jid + "/" + i,unicode(user.text(2))+" - "+i,user)
+								self.main.ui.roster.setResourceStatus(jid,i,v.show)
 				highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
-				print highest.name,highest.show,resource
 				self.main.ui.roster.setStatus(jid,highest.show)
 				self.main.ui.roster.setResourceStatus(jid,resource,show)
 			else:
@@ -90,7 +108,7 @@ class clientClass(pyxl.client.Client):
 			self.main.xmlConsole.ui.xml.append(text+"\n\n")
 	
 	def on_UpdateContact(self,jid):
-		print "update",unicode(jid),"groups:",self.roster['users'][jid].groups
+		#print "update",unicode(jid),"groups:",self.roster['users'][jid].groups
 		contact=self.roster['users'][jid]
 		items=contact.getUserItems()
 		toDel=[]
@@ -133,7 +151,7 @@ class clientClass(pyxl.client.Client):
 			del self.roster['groups'][name]
 
 	def on_DeleteContact(self,jid):
-		print "delete",unicode(jid)
+		#print "delete",unicode(jid)
 		contact=self.roster['users'][jid]
 		items=contact.getUserItems()
 		for name,item in self.roster['groups'].iteritems():
@@ -148,7 +166,7 @@ class clientClass(pyxl.client.Client):
 		pass
 
 	def on_message(self, frm, typ, body, subject = None, xhtml = None):
-		print "message",frm
+		#print "message",frm
 		if self.roster['users'].has_key(str(frm).rsplit("/")[0]):
 			user=self.roster['users'][str(frm).rsplit("/")[0]].rosterItems[0]
 			icon=user.icon(0)
