@@ -40,3 +40,6 @@ class derived:
 	def on_privacyReceived(self):
 		print self.privacy_lists
 		pass
+
+	def on_time202Received(self, jid, utc, tzo):
+		pass

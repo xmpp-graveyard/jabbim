@@ -1,4 +1,4 @@
-import sys
+import sys, time
 from twisted.python import log
 from twisted.internet import protocol
 
@@ -54,6 +54,8 @@ class Client(derived):
 		self.registerFeature('jabber:iq:last')
 		self.registerFeature('http://jabber.org/protocol/xhtml-im')
 		self.registerFeature('http://jabber.org/protocol/disco#info')
+		self.registerFeature('urn:xmpp:time')
+		self.registerFeature('jabber:iq:time')
 		self.caps_cache = {} # 'node': [feature1, feature2]
 		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
 	
@@ -126,6 +128,8 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:version']", self.onVersion, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#info']", self.onDiscoInfo, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:last']", self.onLast, 1)
+		self.xmlstream.addObserver("/iq[@type='get'][@id]/time[@xmlns='urn:xmpp:time']", self.onTime202, 1)
+		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:time']", self.onTime90, 1)
 		self.getRoster()
 		self.getBookmarks()
 		self.getDiscoInfo(self.jid.host)
@@ -707,5 +711,54 @@ class Client(derived):
 					self.privacy_lists['listname'].append(it)
 		self.on_privacyReceived()
 		
+	
+	def onTime202(self, el):
+		print 'received time202 request'
+		self.disp(el['id'])
+		iq = domish.Element((None,'iq'))
+		iq['to'] = el['from']
+		iq['type'] = 'result'
+		iq['id'] = el['id']
+		q = iq.addElement('time','urn:xmpp:time')
+		q.addElement('tzo', content = "%+03d:00"% (-time.timezone/(60*60)))
+		q.addElement('utc', content = time.strftime("%Y-%m-%dT%TZ", time.gmtime()))
+		self.on_xml(iq.toXml())
+		self.xmlstream.send(iq)
+	
+	def getTime202(self, jid):
+		print 'requesting time202 info'
+		iq = IQ(self.xmlstream, 'get')
+		iq['to'] = jid
+		iq.addElement('time','urn:xmpp:time')
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		self.disp(iq['id'])
+		d.addCallback(self._time202Received)
+	
+	def _time202Received(self, el):
+		print 'time202 received'
+		t = el.firstChildElement()
+		tzo = utc = ''
+		for child in t.elements():
+			if child.name == 'tzo':
+				tzo = child.__str__()
+			elif child.name == 'utc':
+				utc = child.__str__()
+		self.on_time202Received(jid, utc, tzo)
+	
+	def onTime90(self, el):
+		print 'received time90 request'
+		self.disp(el['id'])
+		iq = domish.Element((None,'iq'))
+		iq['to'] = el['from']
+		iq['type'] = 'result'
+		iq['id'] = el['id']
+		q = iq.addElement('query', 'jabber:iq:time')
+		q.addElement('utc', content = time.strftime("%Y%m%dT%T", time.gmtime()))
+		q.addElement('tz', content = time.strftime("%Z", time.gmtime()))
+##		q.addElement('display', content = unicode(time.strftime(u"%c", time.localtime())))
+		self.on_xml(iq.toXml())
+		self.xmlstream.send(iq)
+	
 	def disp(self, id):
 		self.idlist.append(id)
