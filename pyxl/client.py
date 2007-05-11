@@ -92,7 +92,7 @@ class Client(derived):
 		message['to'] = to
 		message.addElement('body', content = body)
 		message['type'] = typ
-		if type == 'normal' and subject:
+		if typ == 'normal' and subject:
 			message.addElement('subject', content = subject)
 		if xhtml != None:
 			html = message.addElement('html','http://jabber.org/protocol/xhtml-im')
