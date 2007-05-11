@@ -454,9 +454,9 @@ class Client(derived):
 				if el['type'] =='unavailable':
 					show = 'offline'
 			self.roster['users'][unicode(frm.userhost())].setStatus(resource, show,status)
-			self.on_presence(frm,show)
 			self.roster['users'][frm.userhost()].setPriority(resource, priority)
 			self.roster['users'][frm.userhost()].setFeatures(resource, features)
+			self.on_presence(frm,show)
 		else:
 ##			print 'contact not in roster'
 			pass

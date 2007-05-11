@@ -41,7 +41,7 @@ class Contact:
 			
 	def getHighestResource(self):
 		prio = None
-		highest = None
+		highest = self.resources.keys()[0]
 		for res,val in self.resources.iteritems():
 ##			print val
 				if val.priority>prio:
