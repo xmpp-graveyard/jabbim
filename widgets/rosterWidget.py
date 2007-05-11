@@ -66,6 +66,12 @@ class rosterWidget(QtGui.QTreeWidget):
 			return []
 		return self.main.client.roster['users'][jid].getUserItems()
 
+	def getResourceItems(self,jid):
+		if not self.main.client.roster['users'].has_key(jid):
+			return []
+		return self.main.client.roster['users'][jid].resourcesItems
+
+
 	def hidden(self,bool):
 		# little hack (qt doesn't repaint reshown items, when we have not one top level item at the end)
 		self.setItemHidden(self.item, False)
@@ -96,6 +102,22 @@ class rosterWidget(QtGui.QTreeWidget):
 				self.setItemHidden(item, False)
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.refreshStats()
+
+	def setResourceStatus(self,jid,resource,show):
+		if not self.main.shows.has_key(show):
+			show="online"
+		#for item in self.getResourceItems(jid):
+		if self.main.client.roster['users'].has_key(jid):
+			if self.main.client.roster['users'][jid].resourcesItems.has_key(resource):
+				item=self.main.client.roster['users'][jid].resourcesItems[resource]
+				name=unicode(item.text(0))
+				item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
+				item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize'])+"x"+str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
+			#if self.main.shows[unicode(show)]!="9":
+				#self.setItemHidden(item, False)
+		#self.sortItems (1,QtCore.Qt.AscendingOrder)
+		#self.refreshStats()
+
 
 	def addGroup(self,name):
 		# add new group to the roster and return group QTreeWidgetItem
