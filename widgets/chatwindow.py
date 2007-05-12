@@ -23,9 +23,9 @@ class chatWindow(QtGui.QMainWindow):
 		#self.ui.chatTab.setObjectName("chatTab")
 		#self.ui.gridlayout.addWidget(self.ui.chatTab,0,0,1,1)
 
-		#self.ui.tabCloseButton=QtGui.QPushButton(QtGui.QIcon("images/icons/close.png"),"",self.ui.chatTab)
-		#self.ui.chatTab.setCornerWidget(self.ui.tabCloseButton)
-		#QtCore.QObject.connect(self.ui.tabCloseButton, QtCore.SIGNAL("clicked ()"),self.removeTab)
+		self.ui.tabCloseButton=QtGui.QPushButton(QtGui.QIcon("images/icons/close.png"),"",self.ui.chatTab)
+		self.ui.chatTab.setCornerWidget(self.ui.tabCloseButton)
+		QtCore.QObject.connect(self.ui.tabCloseButton, QtCore.SIGNAL("clicked ()"),self.removeTab)
 		#QtCore.QObject.connect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
 		#self.ui.chatTab.removeTab(0)
 		#self.ui.gridlayout.setMargin(1)
@@ -92,11 +92,10 @@ class chatWindow(QtGui.QMainWindow):
 			#self.ui.chatTab.removeTab(0)
 
 	def removeTab(self):
-		pass
-		#w=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
+		w=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
 		#if str(w.typ)=="groupchat":
 			#print str(w.jid)
 			#self.jab.getOffRoom(str(w.jid),self.main.groupchat[str(w.jid)][0])
-		#self.ui.chatTab.removeTab(self.ui.chatTab.currentIndex())
-		#if int(self.ui.chatTab.count())==0:
-			#self.close()
+		self.ui.chatTab.removeTab(self.ui.chatTab.currentIndex())
+		if int(self.ui.chatTab.count())==0:
+			self.close()

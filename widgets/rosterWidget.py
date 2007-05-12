@@ -316,7 +316,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			# chat with selected contact
 			jid=action.data()
 			jid=str(jid.toString())
-			user=self.getUsers(jid)[0]
+			user=self.getUserItems(jid)[0]
 			self.contactClicked(user,0)
 		elif cmd=="send_file":
 			# chat with selected contact
