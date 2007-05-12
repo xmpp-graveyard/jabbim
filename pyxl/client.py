@@ -34,6 +34,7 @@ class Client(derived):
 		self.connection = None
 		self.main=main # mainWindow
 		self.roster = {'users':{},'groups':{}}
+		self.roster_meta = {} # jid: {'tag':tag,  'order': 1}
 		self.bookmarks = {'conference':{}, 'url': {}}
 		self.idlist = []
 		self.disco = {} # jid:{node1:{items:{attrs}, identity: {attrs}, features:[], err: {'info':'', 'items':''}}}
@@ -117,7 +118,7 @@ class Client(derived):
 	def connect(self):
 		if self.log:
 			log.startLogging(self.logfile)
-		self.factory = client.basicClientFactory(self.jid,self.password)
+		self.factory = client.XMPPClientFactory(self.jid,self.password)
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
 		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
 		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
@@ -143,7 +144,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:last']", self.onLast, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/time[@xmlns='urn:xmpp:time']", self.onTime202, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:time']", self.onTime90, 1)
-		self.getRoster()
+		self.getMetacontacts()
 		self.getBookmarks()
 		self.getDiscoInfo(self.jid.host)
 		self.getDiscoItems(self.jid.host)
@@ -320,6 +321,29 @@ class Client(derived):
 									name = url
 								self.bookmarks['conference'][name] = Bookmark(name, 'url', url = url)
 	
+	
+	def getMetacontacts(self):
+		'get meta contacts'
+		iq = IQ(self.xmlstream, 'get')
+		q = iq.addElement('query', 'jabber:iq:private')
+		q.addElement('storage', 'storage:metacontacts')
+		self.on_xml(iq.toXml())
+		self.disp(iq['id'])
+		d = iq.send()
+		d.addCallback(self._metacontactsReceived)
+	
+	def _metacontactsReceived(self,  el):
+		print 'metacontacts received'
+		q = el.firstChildElement()
+		storage = q.firstChildElement()
+		for item in storage.elements():
+			order = 1
+			if item.hasAttribute('order'):
+				order = int(item['order'])
+			self.roster_meta[item['jid']] = {'tag': item['tag'],  'order': order}
+		self.getRoster()
+		
+	
 	def addContact(self, jid, msg):
 		print 'add contact'
 		self.sendRosterUpdate(jid, None, 'none', [])
@@ -382,7 +406,12 @@ class Client(derived):
 					for group in groups:
 						# add user item to the group
 						rosterItems.append(self.main.ui.roster.addUser(item['jid'],name,self.roster['groups'][group]))
-					contact = Contact(self, item['jid'], name, item['subscription'], rosterItems, groups)
+					tag = None
+					order = 1
+					if self.roster_meta.has_key(item['jid']):
+						tag = self.roster_meta[item['jid']]['tag']
+						order = self.roster_meta[item['jid']]['order']
+					contact = Contact(self, item['jid'], name, item['subscription'], rosterItems, groups,  tag,  order)
 					self.roster['users'][item['jid']] = contact
 			
 		presence = domish.Element(('jabber:client','presence'))

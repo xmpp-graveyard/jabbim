@@ -1,5 +1,5 @@
 class Contact:
-	def __init__(self, client, jid, name, subscription, items=[], groups = [], status = ()):
+	def __init__(self, client, jid, name, subscription, items=[], groups = [], status = (),  tag = None,  order = 1):
 		self.jid = jid
 		self.name = name
 		self.subscription = subscription
