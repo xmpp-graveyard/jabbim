@@ -94,7 +94,10 @@ class clientClass(pyxl.client.Client):
 											#self.main.ui.roster.setResourceStatus(jid,resource,show)
 							#else:
 							for user in self.roster['users'][jid].rosterItems:
-								self.roster['users'][jid].resourcesItems[i]=self.main.ui.roster.addResource(jid + "/" + i,i,user)
+								try:
+									self.roster['users'][jid].resourcesItems[i]=self.main.ui.roster.addResource(jid + "/" + i,i,user)
+								except:
+									print "ERROR:",unicode(jid),unicode(show),unicode(resource),user
 								self.main.ui.roster.setResourceStatus(jid,i,v.show)
 				highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
 				self.main.ui.roster.setStatus(jid,highest.show)
