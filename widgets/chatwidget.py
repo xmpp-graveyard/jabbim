@@ -89,7 +89,7 @@ class chatWidget(QtGui.QWidget):
 		data=data.toString()
 #		for k,v in self.smileys.iteritems():
 #			data=data.replace(k,' <img src="images/16x16/emotes/'+v+'"/>')
-		self.ui.line.insertPlainText(data)
+		self.ui.line.insert(data)
 		self.ui.smileys.setChecked(False)
 		self.s.hide()
 		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
