@@ -11,6 +11,7 @@ from twisted.words.protocols.jabber.xmlstream import IQ
 
 from derived import derived
 from contact import *
+from groupchat import  *
 
 class Bookmark:
 	def __init__(self, name, typ, JID = None, autojoin = False, nick = None, password = None, url = None):
@@ -36,6 +37,7 @@ class Client(derived):
 		self.bookmarks = {'conference':{}, 'url': {}}
 		self.idlist = []
 		self.disco = {} # jid:{node1:{items:{attrs}, identity: {attrs}, features:[], err: {'info':'', 'items':''}}}
+		self.groupchats = {} # jid:Groupchat
 		self.privacy_lists = {}
 		self.privacy_active = None
 		self.privacy_default = None
@@ -87,7 +89,7 @@ class Client(derived):
 		self.on_xml(presence.toXml())
 		self.xmlstream.send(presence)
 	
-	def sendMessage(self, to, body, typ='chat', subject = None, composing = None, xhtml = None):
+	def sendMessage(self, to, body, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
 		#TODO: composing events
 		message = domish.Element((None,'message'))
 		message['to'] = to
@@ -145,7 +147,10 @@ class Client(derived):
 		self.getBookmarks()
 		self.getDiscoInfo(self.jid.host)
 		self.getDiscoItems(self.jid.host)
-		self.getPrivacy()
+#		self.getPrivacy()
+#		gc = Groupchat(self,  'jdev@conf.netlab.cz', 'Sefator')
+#		self.groupchats['jdev@conf.netlab.cz'] = gc
+#		gc.join()
 
 
 	def registerFeature(self, feature, node = None):
@@ -397,7 +402,8 @@ class Client(derived):
 		print 'message received'
 		typ = el['type']
 		frm = el['from']
-		body = subject =xhtml = chatstate =None
+
+		body = subject =xhtml = chatstate = delay = None
 		for child in el.elements():
 			if child.name == "body":
 				body = unicode(child)
@@ -408,9 +414,18 @@ class Client(derived):
 				xhtml = body.toXml()
 			if child.name in ['active',  'inactive',  'composing',  'paused',  'gone']:
 				chatstate = child.name
+			if child.name == 'delay':
+				delay = child['stamp']
+			elif child.name == 'x':
+				if child.hasAttribute('jabber:x:delay'):
+					delay = child['stamp']
 
-		self.on_message(frm,typ,body,subject, xhtml,  chatstate)
-		
+
+		if self.groupchats.has_key(jid.JID(frm).userhost()):
+			self.on_GCmessage(frm,typ,body,subject, xhtml,  chatstate,  delay)
+		else:
+			self.on_message(frm,typ,body,subject, xhtml,  chatstate,  delay)
+
 	def onSubscribe(self, el):
 		print 'on subscribe'
 		status = ''
@@ -435,6 +450,9 @@ class Client(derived):
 ##		print 'presence > ', el['from']
 		frm = jid.JID(el['from'])
 		resource = jid.JID(el['from']).resource
+		if self.groupchats.has_key(frm.userhost()):
+			self.onGCPresence(el)
+			return
 		show = status = priority = typ = None
 		if el.hasAttribute('type'):
 			if el['type'] != 'unavailable':
@@ -479,8 +497,10 @@ class Client(derived):
 		else:
 ##			print 'contact not in roster'
 			pass
-		
-		
+
+	def onGCPresence(self,  el):
+		print el.toXml()
+
 	def getFeatures(self, jid, caps_node):
 		print 'requesting features', caps_node
 		iq = IQ(self.xmlstream, 'get')
