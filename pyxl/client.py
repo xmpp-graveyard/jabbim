@@ -303,7 +303,9 @@ class Client(derived):
 									name = bookmark['name']
 								else:
 									name = jid
-								autojoin = bookmark['autojoin']
+								autojoin = False
+								if bookmark.hasAttribute('autojoin'):
+									autojoin = bookmark['autojoin']
 								nick = self.jid.user
 								password = None
 								for elm in bookmark.elements():
@@ -494,6 +496,7 @@ class Client(derived):
 		resource = jid.JID(el['from']).resource
 
 		show = status = priority = typ = affiliation = role = truejid = None
+		codes = []
 		if el.hasAttribute('type'):
 			if el['type'] != 'unavailable':
 				return
@@ -524,12 +527,15 @@ class Client(derived):
 						self.getFeatures(frm, caps_node)
 			elif child.name == 'x' and child.hasAttribute('xmlns') :
 				if child['xmlns'] == 'http://jabber.org/protocol/muc#user':
+
 					for item in child.elements():
 						if item.name == 'item':
 							affiliation = item['affiliation']
 							role = item['role']
 							if item.hasAttribute('jid'):
 								truejid = item['jid']
+						if item.name == 'status' :
+							codes.append(item['code'])
 
 		if show == None and not el.hasAttribute('type'):
 			show = 'online'
@@ -545,7 +551,7 @@ class Client(derived):
 			self.groupchats[frm.userhost()].setStatus(resource,  show,  status)
 			self.groupchats[frm.userhost()].setInfo(resource,  affiliation,  role,  truejid)
 			#self.groupchats[frm.userhost()]
-			self.on_GCpresence(frm.userhost(), resource,  show,  status)
+			self.on_GCpresence(frm.userhost(), resource,  show,  status,  codes)
 			return
 		else:
 ##			print 'contact not in roster'
@@ -695,7 +701,11 @@ class Client(derived):
 			if child.name == 'feature':
 				node['features'].append(child['var'])
 			if child.name == 'identity':
-				node['identities'][child['name']] = child.attributes
+				if child.hasAttribute('name'):
+					name = child['name']
+				else:
+					name = el['from']
+				node['identities'][name] = child.attributes
 		self.disco[el['from']][node_name] = node
 		if self.disco[el['from']][node_name].has_key('err'):
 			if self.disco[el['from']][node_name]['err'].has_key('info'):
@@ -709,7 +719,7 @@ class Client(derived):
 		try:
 			el = err.value.getElement()
 		except:
-			print err
+			print err,  info
 			return
 		if self.disco.has_key(jid):
 			if self.disco[jid].has_key(node_name):
