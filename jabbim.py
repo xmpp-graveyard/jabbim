@@ -48,12 +48,15 @@ class clientClass(pyxl.client.Client):
 		groups=contact.groups
 		name=contact.name
 		jid=contact.jid
-		if len(groups)==0:
-			# add user item to Unknown group
-			self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups']['Unknown']))
-		for group in groups:
-			# add user item to the group
-			self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups'][group]))
+		if jid!=contact.tag:
+	
+			if len(groups)==0:
+				# add user item to Unknown group
+				self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups']['Unknown']))
+			for group in groups:
+				# add user item to the group
+				self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups'][group]))
+
 
 	def on_rosterArrived(self):
 		for jid,user in self.roster['users'].iteritems():
