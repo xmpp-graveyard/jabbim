@@ -399,20 +399,15 @@ class Client(derived):
 					else:
 						name = ''
 					#print item['jid'],groups
-					rosterItems=[]
-					if len(groups)==0:
-						# add user item to Unknown group
-						rosterItems.append(self.main.ui.roster.addUser(item['jid'],name,self.roster['groups']['Unknown']))
-					for group in groups:
-						# add user item to the group
-						rosterItems.append(self.main.ui.roster.addUser(item['jid'],name,self.roster['groups'][group]))
 					tag = None
 					order = 1
 					if self.roster_meta.has_key(item['jid']):
 						tag = self.roster_meta[item['jid']]['tag']
 						order = self.roster_meta[item['jid']]['order']
-					contact = Contact(self, item['jid'], name, item['subscription'], rosterItems, groups,  tag,  order)
+					contact = Contact(self, item['jid'], name, item['subscription'], [], groups,  tag,  order)
 					self.roster['users'][item['jid']] = contact
+					self.on_rosterAddUser(contact)
+		self.on_rosterArrived()
 			
 		presence = domish.Element(('jabber:client','presence'))
 		self.on_xml(presence.toXml())

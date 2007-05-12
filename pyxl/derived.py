@@ -48,3 +48,9 @@ class derived:
 
 	def on_time202Received(self, jid, utc, tzo):
 		pass
+	
+	def on_rosterAddUser(self, contact):
+		pass
+	
+	def on_rosterArrived(self):
+		pass

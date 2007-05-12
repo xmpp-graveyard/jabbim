@@ -44,6 +44,22 @@ class clientClass(pyxl.client.Client):
 	def on_init(self):
 		self.roster['groups']['Unknown']=self.main.ui.roster.addGroup('Unknown')
 
+	def on_rosterAddUser(self, contact):
+		groups=contact.groups
+		name=contact.name
+		jid=contact.jid
+		if len(groups)==0:
+			# add user item to Unknown group
+			self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups']['Unknown']))
+		for group in groups:
+			# add user item to the group
+			self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups'][group]))
+
+	def on_rosterArrived(self):
+		for jid,user in self.roster['users'].iteritems():
+			if user.tag!=None:
+				print unicode(jid),unicode(user.tag)
+
 	def on_authFailed(self,xmlstream):
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(self.main.tr("Bad Jabber ID or password.")),0,1)
 	
