@@ -26,7 +26,7 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.tabCloseButton=QtGui.QPushButton(QtGui.QIcon("images/icons/close.png"),"",self.ui.chatTab)
 		self.ui.chatTab.setCornerWidget(self.ui.tabCloseButton)
 		QtCore.QObject.connect(self.ui.tabCloseButton, QtCore.SIGNAL("clicked ()"),self.removeTab)
-		#QtCore.QObject.connect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
+		QtCore.QObject.connect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
 		#self.ui.chatTab.removeTab(0)
 		#self.ui.gridlayout.setMargin(1)
 		#self.ui.gridlayout.setSpacing(1)
@@ -46,13 +46,23 @@ class chatWindow(QtGui.QMainWindow):
 		#QtGui.QMainWindow.paintEvent(self,event)
 
 
-	#def changeTab(self,index):
+	def changeTab(self,index):
+		try:
+			self.ui.chatTab.widget(index).chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		except: pass
 		#try:
-			#self.ui.chatTab.widget(index).chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
-		#except: pass
-		#try:
-			#icon=self.main.getIcon(str(self.ui.chatTab.widget(index).jid),self.main.iconSort[unicode(self.main.ui.roster.getUsers(str(self.ui.chatTab.widget(index).jid))[0].text(1))[0]],size="16x16")
-			#self.ui.chatTab.setTabIcon(index,icon)
+		jid=unicode(self.ui.chatTab.widget(index).jid)
+		if len(unicode(jid).rsplit("/"))!=1:
+			resource=unicode(jid).rsplit("/")[1]
+			jid=unicode(jid).rsplit("/")[0]
+			res=self.main.ui.roster.getResourceItems(jid)
+			
+			show=self.main.icons[unicode(res[resource].text(1))[0]]
+			print show
+			icon=self.main.getIcon(jid,show,size="16x16")
+		else:
+			icon=self.main.getIcon(jid,self.main.icons[unicode(self.main.ui.roster.getUserItems(jid)[0].text(1))[0]],size="16x16")
+		self.ui.chatTab.setTabIcon(index,icon)
 		#except:
 			#pass
 

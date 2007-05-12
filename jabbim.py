@@ -332,19 +332,21 @@ class mainWindow(QtGui.QMainWindow):
 	def getIcon(self,jid=None,typ=None,size="32x32",status=None):
 		# return status icon
 		path=self.statusPath.replace("xxxxx",size)
-		#if jid!=None:
-			#file=path+self.getUserType(jid)+"-"+self.iconSort[self.nickSort[typ]]+".png"
-			#if os.path.exists(file):
-				#icon=QtGui.QIcon(file)
-			#else:
-				##print "File not exist",file," <-",jid,typ
-				##print "using",path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png"
-				#icon=QtGui.QIcon(path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png")
-		#else:
-		if status==None:
-			icon=QtGui.QIcon(path+"jabber-online.png")
+		typ=unicode(typ)
+		if jid!=None:
+			#file=path+self.getUserType(jid)+"-"+self.icons[self.show[typ]]+".png"
+			file=path+"jabber-"+self.icons[self.shows[typ]]+".png"
+			if os.path.exists(file):
+				icon=QtGui.QIcon(file)
+			else:
+				print "File not exist",file," <-",jid,typ
+				#print "using",path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png"
+				icon=QtGui.QIcon(path+"jabber-"+self.icons[self.shows[typ]]+".png")
 		else:
-			icon=QtGui.QIcon(path+"jabber-"+status+".png")
+			if status==None:
+				icon=QtGui.QIcon(path+"jabber-online.png")
+			else:
+				icon=QtGui.QIcon(path+"jabber-"+status+".png")
 		return icon
 
 	def connect(self):
