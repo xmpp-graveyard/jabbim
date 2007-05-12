@@ -56,6 +56,7 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/disco#info')
 		self.registerFeature('urn:xmpp:time')
 		self.registerFeature('jabber:iq:time')
+		self.registerFeature('http://jabber.org/protocol/chatstates')
 		self.caps_cache = {} # 'node': [feature1, feature2]
 		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
 	
@@ -92,12 +93,22 @@ class Client(derived):
 		message['to'] = to
 		message.addElement('body', content = body)
 		message['type'] = typ
+		JID = jid.JID(to)
 		if typ == 'normal' and subject:
 			message.addElement('subject', content = subject)
 		if xhtml != None:
 			html = message.addElement('html','http://jabber.org/protocol/xhtml-im')
 			body = html.addElement('body', 'http://www.w3.org/1999/xhtml')
 			body.addRawXml(xhtml)
+		if composing:
+			if self.roster['users'].has_key(JID.userhost()):
+				if self.roster['users'].resources.has_key(JID.resouce):
+					if self.roster['users'].resources[JID.resource].hasFeature('http://jabber.org/protocol/chatstates'):
+						message.addElement(composing, 'http://jabber.org/protocol/chatstates' )
+				else:
+					if self.roster['users'].resources[self.roster['users'].getHighestResource()].hasFeature('http://jabber.org/protocol/chatstates'):
+						message.addElement(composing, 'http://jabber.org/protocol/chatstates' )
+
 		self.on_xml(message.toXml())
 		self.xmlstream.send(message)
 
@@ -377,11 +388,10 @@ class Client(derived):
 		#self.on_invalidUser(self)
 	
 	def onMessage(self, el):
-		#TODO: xhtml-im a composing events
 		print 'message received'
 		typ = el['type']
 		frm = el['from']
-		body = subject =xhtml = None
+		body = subject =xhtml = chatstate =None
 		for child in el.elements():
 			if child.name == "body":
 				body = unicode(child)
@@ -390,7 +400,10 @@ class Client(derived):
 			if child.name == 'html':
 				body = child.children[0]
 				xhtml = body.toXml()
-		self.on_message(frm,typ,body,subject, xhtml)
+			if child.name in ['active',  'inactive',  'composing',  'paused',  'gone']:
+				chatstate = child.name
+
+		self.on_message(frm,typ,body,subject, xhtml,  chatstate)
 		
 	def onSubscribe(self, el):
 		print 'on subscribe'

@@ -23,7 +23,7 @@ class derived:
 	def on_subscribed(self):
 		pass
 	
-	def on_message(self, frm, typ, body, subject = None, xhtml = None):
+	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None):
 		pass
 	
 	def on_versionreceive(self, jid, version):
