@@ -168,7 +168,7 @@ class clientClass(pyxl.client.Client):
 		#self.ui.infoDockWidget.show()
 		pass
 
-	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None):
+	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None):
 		#print "message",frm
 		if self.roster['users'].has_key(str(frm).rsplit("/")[0]):
 			user=self.roster['users'][str(frm).rsplit("/")[0]].rosterItems[0]
