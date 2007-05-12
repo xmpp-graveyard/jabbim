@@ -43,13 +43,37 @@ class clientClass(pyxl.client.Client):
 
 	def on_init(self):
 		self.roster['groups']['Unknown']=self.main.ui.roster.addGroup('Unknown')
+		self.temp_hosts=[]
+		
+	def on_discoInfoReceived(self, jid, node):
+		try:
+			name=self.disco[jid][node]['identities'].keys()[0]
+			typ=self.disco[jid][node]['identities'][name]['type']
+		except:
+			typ=None
+		if typ!=None:
+			items=self.main.ui.roster.findItems(host,QtCore.Qt.MatchEndsWith,1)
+			print items
+			if typ=="pep" or typ=="im":
+				typ="jabber"
+			elif typ=="file":
+				typ="disk"
+
+			for item in items:
+				item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize']),status=self.main.icons[unicode(item.text(1))[0]]),usertype=typ)
 
 	def on_rosterAddUser(self, contact):
 		groups=contact.groups
 		name=contact.name
 		jid=contact.jid
+		
 		if jid!=contact.tag:
-	
+			if len(unicode(jid).rsplit("@"))!=1:
+				host=unicode(jid).rsplit("@")[1]
+				if not self.disco.has_key(host) and not host in self.temp_hosts:
+					#self.main.getUserType(host)
+					self.temp_hosts.append(host)
+					self.getDiscoInfo(host)
 			if len(groups)==0:
 				# add user item to Unknown group
 				self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups']['Unknown']))
@@ -302,6 +326,21 @@ class mainWindow(QtGui.QMainWindow):
 		#widget=subscribeWidget(self.ui.infoDockWidget)
 		#self.ui.infoLayout.addWidget(widget)
 
+	def getUserType(self,jid):
+		# get type of jid (rss,disk,jabber, etc.)
+		print self.client.disco[jid]
+		#if len(jid.split("@"))!=1:
+			#if self.discoInfo.has_key(jid.split("@")[1]):
+				#typ=self.discoInfo[jid.split("@")[1]]
+				#if typ=="pep" or typ=="im":
+					#typ="jabber"
+				#elif typ=="file":
+					#typ="disk"
+				#return typ
+		#else:
+			#print jid
+		return "jabber"
+
 	def preferencesClicked(self,bool):
 		# shows preferences
 		w=widgets.preferences.preferencesWindow(self,self)
@@ -360,13 +399,13 @@ class mainWindow(QtGui.QMainWindow):
 		if self.client!=None:
 			reactor.stop2()
 
-	def getIcon(self,jid=None,typ=None,size="32x32",status=None):
+	def getIcon(self,jid=None,typ=None,size="32x32",status=None,usertype="jabber"):
 		# return status icon
 		path=self.statusPath.replace("xxxxx",size)
 		typ=unicode(typ)
 		if jid!=None:
 			#file=path+self.getUserType(jid)+"-"+self.icons[self.show[typ]]+".png"
-			file=path+"jabber-"+self.icons[self.shows[typ]]+".png"
+			file=path+usertype+"-"+self.icons[self.shows[typ]]+".png"
 			if os.path.exists(file):
 				icon=QtGui.QIcon(file)
 			else:
