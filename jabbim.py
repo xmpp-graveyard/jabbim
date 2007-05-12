@@ -94,7 +94,7 @@ class clientClass(pyxl.client.Client):
 											#self.main.ui.roster.setResourceStatus(jid,resource,show)
 							#else:
 							for user in self.roster['users'][jid].rosterItems:
-								self.roster['users'][jid].resourcesItems[i]=self.main.ui.roster.addResource(jid + "/" + i,unicode(user.text(2))+" - "+i,user)
+								self.roster['users'][jid].resourcesItems[i]=self.main.ui.roster.addResource(jid + "/" + i,i,user)
 								self.main.ui.roster.setResourceStatus(jid,i,v.show)
 				highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
 				self.main.ui.roster.setStatus(jid,highest.show)
@@ -165,7 +165,7 @@ class clientClass(pyxl.client.Client):
 		#self.ui.infoDockWidget.show()
 		pass
 
-	def on_message(self, frm, typ, body, subject = None, xhtml = None):
+	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None):
 		#print "message",frm
 		if self.roster['users'].has_key(str(frm).rsplit("/")[0]):
 			user=self.roster['users'][str(frm).rsplit("/")[0]].rosterItems[0]

@@ -6,7 +6,7 @@ def loadConfig(main):
 	configs={"jid":"",
 			"passwd":"",
 			"savePasswd":"",
-			"rosterIconSize":"16",
+			"rosterIconSize":"16x16",
 			"chat_skin":"default.conf"
 			}
 	main.config=ConfigObj(main.homeDir+'/.jabbim/config',encoding='UTF8')
