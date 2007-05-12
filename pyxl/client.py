@@ -294,7 +294,10 @@ class Client(derived):
 						for bookmark in els.elements():
 							if bookmark.name == 'conference':
 								jid = bookmark['jid']
-								name = bookmark['name']
+								if bookmark.hasAttribute('name'):
+									name = bookmark['name']
+								else:
+									name = jid
 								autojoin = bookmark['autojoin']
 								nick = self.jid.user
 								password = None
@@ -306,8 +309,11 @@ class Client(derived):
 								
 								self.bookmarks['conference'][name] = Bookmark(name, 'conference', jid, autojoin, nick,  password)
 							if bookmark.name == 'url':
-								name = bookmark['name']
 								url = bookmark['url']
+								if bookmark.hasAttribute('name'):
+									name = bookmark['name']
+								else:
+									name = url
 								self.bookmarks['conference'][name] = Bookmark(name, 'url', url = url)
 	
 	def addContact(self, jid, msg):
