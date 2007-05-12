@@ -266,7 +266,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusButton.hide()
 		self.offline=False
 		self.xmlConsole=XMLConsole(self)
-
+		self.ui.showOffline.hide()
+		
 		#self.addInfoSubscribe()
 		#self.addInfoSubscribe()
 		#self.addInfoSubscribe()
@@ -321,6 +322,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusButton.setText(unicode(self.status["online"]))
 		self.ui.statusButton.setIcon(self.getIcon("online",size="16x16"))
 		self.ui.statusButton.show()
+		self.ui.showOffline.show()
 
 
 	def disconnect(self):
@@ -405,7 +407,7 @@ class statusWindow(QtGui.QDialog):
 			MainWindow.ui.statusButton.setIcon(MainWindow.getIcon("offline",size="16x16"))
 			MainWindow.ui.statusButton.hide()
 			MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
-			
+			MainWindow.ui.showOffline.hide()
 
 			pass
 		else:

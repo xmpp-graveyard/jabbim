@@ -37,6 +37,20 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.setItemHidden(self.item, True)
 
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.contactClicked)
+		QtCore.QObject.connect(self, QtCore.SIGNAL("itemExpanded ( QTreeWidgetItem * )"),self.expanded)
+		QtCore.QObject.connect(self, QtCore.SIGNAL("itemCollapsed ( QTreeWidgetItem * )"),self.collapsed)
+
+
+	def expanded(self,item):
+		# change icon if group item expanded
+		if item.parent()==None:
+			item.setIcon(0,QtGui.QIcon("images/"+self.main.config['rosterIconSize']+"x"+self.main.config['rosterIconSize']+"/icons/group-open.png"))
+
+	def collapsed(self,item):
+		# change icon if group item collapsed
+		if item.parent()==None:
+			item.setIcon(0,QtGui.QIcon("images/"+self.main.config['rosterIconSize']+"x"+self.main.config['rosterIconSize']+"/icons/group-closed.png"))
+
 
 	def contactClicked(self,item,column):
 		# open chat window for clicked contact
@@ -115,7 +129,7 @@ class rosterWidget(QtGui.QTreeWidget):
 				item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize'])+"x"+str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
 			#if self.main.shows[unicode(show)]!="9":
 				#self.setItemHidden(item, False)
-		#self.sortItems (1,QtCore.Qt.AscendingOrder)
+		self.sortItems (1,QtCore.Qt.AscendingOrder)
 		#self.refreshStats()
 
 
@@ -125,7 +139,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(0,name)
 		item.setText(1,"1"+unicode(name).lower())
 		item.setText(2,name)
-		#item.setIcon(0,QtGui.QIcon("images/16x16/icons/group-closed.png"))
+		item.setIcon(0,QtGui.QIcon("images/"+self.main.config['rosterIconSize']+"x"+self.main.config['rosterIconSize']+"/icons/group-closed.png"))
 		item.setBackgroundColor(0,QtGui.QColor("#000000"))
 		item.setBackgroundColor(3,QtGui.QColor("#000000"))
 		item.setTextColor(0,QtGui.QColor("#FFFFFF"))
