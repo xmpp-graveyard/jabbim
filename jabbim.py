@@ -175,7 +175,7 @@ class clientClass(pyxl.client.Client):
 			icon=self.main.getIcon(status="offline",size="16x16")
 			user=frm
 		
-		message=unicode(body)
+		message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
 		message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user)).replace("[message]",message)
 		tab=None
 		tabIndex=0
