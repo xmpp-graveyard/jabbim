@@ -33,13 +33,19 @@ class Groupchat:
 			self.users[nick].setStatus(show, status)
 		else:
 			self.users[nick] = MUCContact(self, nick, show, status)
+	def setInfo(self,  nick,  affiliation,  role,  jid):
+		self.users[nick].setInfo(affiliation,  role,  jid)
+	
 
 class MUCContact:
-	def __init__(self,  muc, nick,  show,  status):
+	def __init__(self,  muc, nick,  show,  status,  affiliation=None,  role = None,  jid = None):
 		self.muc = muc
 		self.nick = nick
 		self.show = show
 		self.status = status
+		self.affiliation = affiliation
+		self.role = role
+		self.truejid = jid
 	
 	def setStatus(self,  show,  status):
 		if show == 'offline':
@@ -48,3 +54,8 @@ class MUCContact:
 		else:
 			self.show = show
 			self.status = status
+	
+	def setInfo(self,  affiliation,  role,  jid):
+		self.affiliation = affiliation
+		self.role = role
+		self.jid = jid

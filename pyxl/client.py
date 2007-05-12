@@ -493,7 +493,7 @@ class Client(derived):
 		frm = jid.JID(el['from'])
 		resource = jid.JID(el['from']).resource
 
-		show = status = priority = typ = None
+		show = status = priority = typ = affiliation = role = truejid = None
 		if el.hasAttribute('type'):
 			if el['type'] != 'unavailable':
 				return
@@ -522,6 +522,14 @@ class Client(derived):
 				else:	
 					if typ !='unavailable':
 						self.getFeatures(frm, caps_node)
+			elif child.name == 'x' and child.hasAttribute('xmlns') :
+				if child['xmlns'] == 'http://jabber.org/protocol/muc#user':
+					for item in child.elements():
+						if item.name == 'item':
+							affiliation = item['affiliation']
+							role = item['role']
+							if item.hasAttribute('jid'):
+								truejid = item['jid']
 
 		if show == None and not el.hasAttribute('type'):
 			show = 'online'
@@ -535,6 +543,7 @@ class Client(derived):
 			self.on_presence(frm,show)
 		elif self.groupchats.has_key(frm.userhost()):
 			self.groupchats[frm.userhost()].setStatus(resource,  show,  status)
+			self.groupchats[frm.userhost()].setInfo(resource,  affiliation,  role,  truejid)
 			#self.groupchats[frm.userhost()]
 			self.on_GCpresence(frm.userhost(), resource,  show,  status)
 			return
@@ -697,7 +706,11 @@ class Client(derived):
 		print 'disco#info error received'
 		node_name = info[0]
 		jid = info[1]
-		el = err.value.getElement()
+		try:
+			el = err.value.getElement()
+		except:
+			print err
+			return
 		if self.disco.has_key(jid):
 			if self.disco[jid].has_key(node_name):
 				node = self.disco[jid][node_name]
@@ -749,7 +762,11 @@ class Client(derived):
 		print 'disco#items error received'
 		node_name = info[0]
 		jid = info[1]
-		el = err.value.getElement()
+		try:
+			el = err.value.getElement()
+		except:
+			print err
+			return
 		if self.disco.has_key(jid):
 			if self.disco[jid].has_key(node_name):
 				node = self.disco[jid][node_name]
