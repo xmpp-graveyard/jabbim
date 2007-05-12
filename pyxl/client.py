@@ -148,9 +148,8 @@ class Client(derived):
 		self.getDiscoInfo(self.jid.host)
 		self.getDiscoItems(self.jid.host)
 #		self.getPrivacy()
-#		gc = Groupchat(self,  'jdev@conf.netlab.cz', 'Sefator')
-#		self.groupchats['jdev@conf.netlab.cz'] = gc
-#		gc.join()
+#		self.joinGC('jdev@conf.netlab.cz',  'Sefator')
+
 
 
 	def registerFeature(self, feature, node = None):
@@ -450,9 +449,7 @@ class Client(derived):
 ##		print 'presence > ', el['from']
 		frm = jid.JID(el['from'])
 		resource = jid.JID(el['from']).resource
-		if self.groupchats.has_key(frm.userhost()):
-			self.onGCPresence(el)
-			return
+
 		show = status = priority = typ = None
 		if el.hasAttribute('type'):
 			if el['type'] != 'unavailable':
@@ -483,23 +480,26 @@ class Client(derived):
 					if typ !='unavailable':
 						self.getFeatures(frm, caps_node)
 
-
+		if show == None and not el.hasAttribute('type'):
+			show = 'online'
+		elif el.hasAttribute('type'):
+			if el['type'] =='unavailable':
+				show = 'offline'
 		if self.roster['users'].has_key(frm.userhost()):
-			if show == None and not el.hasAttribute('type'):
-				show = 'online'
-			elif el.hasAttribute('type'):
-				if el['type'] =='unavailable':
-					show = 'offline'
 			self.roster['users'][unicode(frm.userhost())].setStatus(resource, show,status)
 			self.roster['users'][frm.userhost()].setPriority(resource, priority)
 			self.roster['users'][frm.userhost()].setFeatures(resource, features)
 			self.on_presence(frm,show)
+		elif self.groupchats.has_key(frm.userhost()):
+			self.groupchats[frm.userhost()].setStatus(resource,  show,  status)
+			#self.groupchats[frm.userhost()]
+			self.on_GCpresence(frm.userhost(), resource,  show,  status)
+			return
 		else:
 ##			print 'contact not in roster'
 			pass
 
-	def onGCPresence(self,  el):
-		print el.toXml()
+
 
 	def getFeatures(self, jid, caps_node):
 		print 'requesting features', caps_node
@@ -798,6 +798,17 @@ class Client(derived):
 ##		q.addElement('display', content = unicode(time.strftime(u"%c", time.localtime())))
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
+	
+	
+	def joinGC(self,  jid, nick):
+		gc = Groupchat(self,  jid, nick)
+		self.groupchats[jid] = gc
+		gc.join()
+
+	def leaveGC(self,  jid):
+		self.groupchats[jid] .leave()
+		del self.groupchats[jid]
+		print 'left MUC: ',  jid
 	
 	def disp(self, id):
 		self.idlist.append(id)

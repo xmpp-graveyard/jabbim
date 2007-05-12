@@ -26,7 +26,9 @@ class derived:
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
 		pass
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
-		print frm,  body
+		pass
+	
+	def on_GCpresence(self,  muc, nick,  show,  status):
 		pass
 	
 	def on_versionreceive(self, jid, version):
