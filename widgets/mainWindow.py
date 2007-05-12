@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Tue May  8 12:07:21 2007
+# Created: Sat May 12 08:26:50 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -168,12 +168,20 @@ class Ui_MainWindow(object):
 
         self.menuAkce = QtGui.QMenu(self.menubar)
         self.menuAkce.setObjectName("menuAkce")
+
+        self.menuPreferences = QtGui.QMenu(self.menubar)
+        self.menuPreferences.setObjectName("menuPreferences")
         MainWindow.setMenuBar(self.menubar)
 
         self.actionShow_XML = QtGui.QAction(MainWindow)
         self.actionShow_XML.setObjectName("actionShow_XML")
+
+        self.actionPreferences = QtGui.QAction(MainWindow)
+        self.actionPreferences.setObjectName("actionPreferences")
         self.menuAkce.addAction(self.actionShow_XML)
+        self.menuPreferences.addAction(self.actionPreferences)
         self.menubar.addAction(self.menuAkce.menuAction())
+        self.menubar.addAction(self.menuPreferences.menuAction())
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
@@ -195,5 +203,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.rosterTab), QtGui.QApplication.translate("MainWindow", "Roster", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.bookmarksTab), QtGui.QApplication.translate("MainWindow", "Bookmarks", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAkce.setTitle(QtGui.QApplication.translate("MainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuPreferences.setTitle(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.actionShow_XML.setText(QtGui.QApplication.translate("MainWindow", "Show XML", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionPreferences.setText(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
 

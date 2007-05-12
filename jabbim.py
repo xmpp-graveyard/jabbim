@@ -215,6 +215,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(app,QtCore.SIGNAL("lastWindowClosed() "),self.disconnect)
 		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
 		app.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
+		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
 
 		self.ui.rosterStackedWidget.setCurrentIndex(0)
 		self.loadRoster()
@@ -275,6 +276,11 @@ class mainWindow(QtGui.QMainWindow):
 	#def addInfoSubscribe(self):
 		#widget=subscribeWidget(self.ui.infoDockWidget)
 		#self.ui.infoLayout.addWidget(widget)
+
+	def preferencesClicked(self,bool):
+		# shows preferences
+		w=widgets.preferences.preferencesWindow(self,self)
+		w.show()
 
 	def loadSkin(self):
 		# loads config and repairs config file

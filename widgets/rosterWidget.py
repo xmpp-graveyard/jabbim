@@ -14,7 +14,8 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.edit=0 # temp variable for tabPressed()
 		# roster config and design informations
 		self.setAlternatingRowColors(True)
-		self.setIconSize(QtCore.QSize(int(self.main.config['rosterIconSize']),int(self.main.config['rosterIconSize'])))
+		size=unicode(self.main.config['rosterIconSize']).rsplit("x")
+		self.setIconSize(QtCore.QSize(int(size[0]),int(size[1])))
 		self.setRootIsDecorated(False)
 		self.setDragEnabled(True)
 		self.setAcceptDrops(True)
@@ -44,12 +45,12 @@ class rosterWidget(QtGui.QTreeWidget):
 	def expanded(self,item):
 		# change icon if group item expanded
 		if item.parent()==None:
-			item.setIcon(0,QtGui.QIcon("images/"+self.main.config['rosterIconSize']+"x"+self.main.config['rosterIconSize']+"/icons/group-open.png"))
+			item.setIcon(0,QtGui.QIcon("images/"+self.main.config['rosterIconSize']+"/icons/group-open.png"))
 
 	def collapsed(self,item):
 		# change icon if group item collapsed
 		if item.parent()==None:
-			item.setIcon(0,QtGui.QIcon("images/"+self.main.config['rosterIconSize']+"x"+self.main.config['rosterIconSize']+"/icons/group-closed.png"))
+			item.setIcon(0,QtGui.QIcon("images/"+self.main.config['rosterIconSize']+"/icons/group-closed.png"))
 
 
 	def contactClicked(self,item,column):
@@ -82,7 +83,7 @@ class rosterWidget(QtGui.QTreeWidget):
 
 	def getResourceItems(self,jid):
 		if not self.main.client.roster['users'].has_key(jid):
-			return []
+			return {}
 		return self.main.client.roster['users'][jid].resourcesItems
 
 
@@ -111,7 +112,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		for item in self.getUserItems(jid):
 			name=unicode(item.text(0))
 			item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
-			item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize'])+"x"+str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
+			item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
 			if self.main.shows[unicode(show)]!="9":
 				self.setItemHidden(item, False)
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
@@ -126,7 +127,7 @@ class rosterWidget(QtGui.QTreeWidget):
 				item=self.main.client.roster['users'][jid].resourcesItems[resource]
 				name=unicode(item.text(0))
 				item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
-				item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize'])+"x"+str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
+				item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
 			#if self.main.shows[unicode(show)]!="9":
 				#self.setItemHidden(item, False)
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
@@ -139,7 +140,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(0,name)
 		item.setText(1,"1"+unicode(name).lower())
 		item.setText(2,name)
-		item.setIcon(0,QtGui.QIcon("images/"+self.main.config['rosterIconSize']+"x"+self.main.config['rosterIconSize']+"/icons/group-closed.png"))
+		item.setIcon(0,QtGui.QIcon("images/"+self.main.config['rosterIconSize']+"/icons/group-closed.png"))
 		item.setBackgroundColor(0,QtGui.QColor("#000000"))
 		item.setBackgroundColor(3,QtGui.QColor("#000000"))
 		item.setTextColor(0,QtGui.QColor("#FFFFFF"))
@@ -160,7 +161,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
 		item.setData(32,0,QtCore.QVariant(jid))
-		item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize'])+"x"+str(self.main.config['rosterIconSize']),status=self.main.icons["9"]))
+		item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize']),status=self.main.icons["9"]))
 		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)
 		# item design
 		self.setItemHidden(item, offline)

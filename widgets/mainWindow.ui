@@ -285,11 +285,23 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="actionShow_XML" />
    </widget>
+   <widget class="QMenu" name="menuPreferences" >
+    <property name="title" >
+     <string>Preferences</string>
+    </property>
+    <addaction name="actionPreferences" />
+   </widget>
    <addaction name="menuAkce" />
+   <addaction name="menuPreferences" />
   </widget>
   <action name="actionShow_XML" >
    <property name="text" >
     <string>Show XML</string>
+   </property>
+  </action>
+  <action name="actionPreferences" >
+   <property name="text" >
+    <string>Preferences</string>
    </property>
   </action>
  </widget>
