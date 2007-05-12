@@ -127,7 +127,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		for item in self.getUserItems(jid):
 			name=unicode(item.text(0))
 			item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
-			item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
+			item.setIcon(0,self.main.getIcon(jid,size=str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
 			if self.main.shows[unicode(show)]!="9":
 				self.setItemHidden(item, False)
 		self.sortItems (1,QtCore.Qt.AscendingOrder)

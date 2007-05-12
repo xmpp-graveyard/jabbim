@@ -51,17 +51,31 @@ class clientClass(pyxl.client.Client):
 			typ=self.disco[jid][node]['identities'][name]['type']
 		except:
 			typ=None
+		#print node
 		if typ!=None:
-			items=self.main.ui.roster.findItems(host,QtCore.Qt.MatchEndsWith,1)
-			print items
+			#print jid
+			#items=self.main.ui.roster.findItems(jid,QtCore.Qt.MatchEndsWith|QtCore.Qt.MatchRecursive,2)
+			#print items
 			if typ=="pep" or typ=="im":
 				typ="jabber"
 			elif typ=="file":
 				typ="disk"
+			if not self.main.hosts.has_key(jid):
+				self.main.hosts[jid]=typ
+			#print typ,jid
 
-			for item in items:
-				item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize']),status=self.main.icons[unicode(item.text(1))[0]]),usertype=typ)
+			for key,v in self.roster['users'].iteritems():
+				if len(key.split("@"))>1:
+					if key.split("@")[1]==jid:
+						for i in range(len(v.rosterItems)):
+							status=self.main.icons[unicode(v.rosterItems[i].text(1))[0]]
+							#users.append(self.main.groups[k]["users"][key]["item"])
+							#groups[self.main.groups[k]["users"][key]["item"]]=k
+							self.roster['users'][key].rosterItems[i].setIcon(0,self.main.getIcon(jid=jid,size=str(self.main.config['rosterIconSize']),status=status,usertype=typ))
 
+			#for item in items:
+				#item.setIcon(0,self.main.getIcon(jid=jid,size=str(self.main.config['rosterIconSize']),status=self.main.icons[unicode(item.text(1))[0]],usertype=typ))
+				#item.setIcon(0,QtGui.QIcon())
 	def on_rosterAddUser(self, contact):
 		groups=contact.groups
 		name=contact.name
@@ -257,6 +271,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.login_jid.setText(self.config['jid'])
 		if self.config['savePasswd']=="True":
 			self.ui.login_savePassword.setChecked(True)
+		self.hosts={}
 
 		self.chat=widgets.chatwindow.chatWindow(self,self)
 
@@ -405,11 +420,19 @@ class mainWindow(QtGui.QMainWindow):
 		typ=unicode(typ)
 		if jid!=None:
 			#file=path+self.getUserType(jid)+"-"+self.icons[self.show[typ]]+".png"
-			file=path+usertype+"-"+self.icons[self.shows[typ]]+".png"
+			if len(jid.split("@"))>1:
+				host=jid.split("@")[1]
+			else:
+				host=None
+			if self.hosts.has_key(host):
+				usertype=self.hosts[host]
+			if status==None:
+				status=self.icons[self.shows[typ]]
+			file=path+usertype+"-"+status+".png"
 			if os.path.exists(file):
 				icon=QtGui.QIcon(file)
 			else:
-				print "File not exist",file," <-",jid,typ
+				#print "File not exist",file," <-",jid,typ
 				#print "using",path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png"
 				icon=QtGui.QIcon(path+"jabber-"+self.icons[self.shows[typ]]+".png")
 		else:
