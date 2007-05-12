@@ -57,8 +57,9 @@ class clientClass(pyxl.client.Client):
 
 	def on_rosterArrived(self):
 		for jid,user in self.roster['users'].iteritems():
-			if user.tag!=None:
-				print unicode(jid),unicode(user.tag)
+			if user.tag!=None and jid!=user.tag:
+				for item in self.roster['users'][jid].rosterItems:
+					self.roster['users'][user.tag].rosterItems.append(self.main.ui.roster.addMetaContact(jid,user.tag,item))
 
 	def on_authFailed(self,xmlstream):
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(self.main.tr("Bad Jabber ID or password.")),0,1)
@@ -102,14 +103,16 @@ class clientClass(pyxl.client.Client):
 				if len(self.roster['users'][jid].resources)>1:
 					for i,v in self.roster['users'][jid].resources.iteritems():
 						if not self.roster['users'][jid].resourcesItems.has_key(i):
-							#if len(self.roster['users'][unicode(jid).rsplit("/")[0]].resources)==2:
-								#for k,v in self.roster['users'][unicode(jid).rsplit("/")[0]].resources.iteritems():
-									#if not self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems.has_key(k):
-										#for user in self.roster['users'][unicode(jid).rsplit("/")[0]].rosterItems:
-											#self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(unicode(jid).rsplit("/")[0]+"/"+k,unicode(user.text(2))+" - "+k,user)
-											#self.main.ui.roster.setResourceStatus(jid,resource,show)
-							#else:
+							if self.roster['users'][jid].resourcesItems.has_key(0):
+								add=False
+							else:
+								if self.roster['users'][jid].tag==None or self.roster['users'][jid].tag==jid:
+									add=False
+								else:
+									add=True
 							for user in self.roster['users'][jid].rosterItems:
+								if add:
+									self.roster['users'][jid].resourcesItems[0]=self.main.ui.roster.addSubGroup(self.main.tr("Resources:"),user,first="911")
 								try:
 									self.roster['users'][jid].resourcesItems[i]=self.main.ui.roster.addResource(jid + "/" + i,i,user)
 								except:

@@ -61,6 +61,21 @@ class rosterWidget(QtGui.QTreeWidget):
 		data=str(data.toString())
 		self.main.chat.addChatTab(data,unicode(item.text(2)),self.main.getIcon(data,self.main.icons[unicode(item.text(1))[0]],size="16x16"))
 
+	def addMetaContact(self,jid,name,user):
+		#item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
+
+		# add new resource called 'name', JID 'jid' with QTreeWidgetItem 'user'
+		item=QtGui.QTreeWidgetItem(user)
+		if name==None or len(name)==0:
+			name=jid
+		item.setText(0,unicode(name))
+		item.setText(1,"9"+unicode(name).lower())
+		item.setText(2,unicode(name))
+		item.setData(32,0,QtCore.QVariant(jid))
+		self.sortItems(1,QtCore.Qt.AscendingOrder)
+		return item
+
+
 	def addResource(self,jid,name,user):
 		#item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
 
@@ -126,12 +141,26 @@ class rosterWidget(QtGui.QTreeWidget):
 			if self.main.client.roster['users'][jid].resourcesItems.has_key(resource):
 				item=self.main.client.roster['users'][jid].resourcesItems[resource]
 				name=unicode(item.text(0))
-				item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
+				item.setText(1,"9"+self.main.shows[unicode(show)]+unicode(name).lower())
 				item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
 			#if self.main.shows[unicode(show)]!="9":
 				#self.setItemHidden(item, False)
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
 		#self.refreshStats()
+
+
+	def addSubGroup(self,name,sub,first="1"):
+		# add new group to the roster and return group QTreeWidgetItem
+		item=QtGui.QTreeWidgetItem(sub)
+		item.setText(0,name)
+		item.setText(1,first+unicode(name).lower())
+		item.setText(2,name)
+		#item.setIcon(0,QtGui.QIcon("images/"+self.main.config['rosterIconSize']+"/icons/group-closed.png"))
+		#item.setBackgroundColor(0,QtGui.QColor("#000000"))
+		#item.setBackgroundColor(3,QtGui.QColor("#000000"))
+		#item.setTextColor(0,QtGui.QColor("#FFFFFF"))
+		#item.setTextColor(3,QtGui.QColor("#FFFFFF"))
+		return item
 
 
 	def addGroup(self,name):

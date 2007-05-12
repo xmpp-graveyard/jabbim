@@ -7,6 +7,7 @@ class Contact:
 		self.status = status
 		self.rosterItems = items # user can be in many groups => more items
 		self.resourcesItems={}
+		self.metaItems=[]
 		self.resources={} #resource:(show,status,priority)
 		self.client = client
 		self.tag = tag
