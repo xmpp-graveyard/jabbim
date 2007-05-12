@@ -2,7 +2,7 @@ import sys, time
 from twisted.python import log
 from twisted.internet import protocol
 
- 
+
 from twisted.words.protocols import jabber
 from twisted.words.protocols.jabber import client,jid
 from twisted.words.xish import domish
@@ -22,7 +22,7 @@ class Bookmark:
 		self.nick = nick
 		self.password = password
 		self.url = url
-		
+
 class Client(derived):
 	def __init__(self, JID, password, host, port, main):
 		#derived.__init__(self)
@@ -62,10 +62,10 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/chatstates')
 		self.caps_cache = {} # 'node': [feature1, feature2]
 		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
-	
+
 	def cacheCaps(self, node, features):
 		self.caps_cache[node] = features
-	
+
 	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None, caps = True):
 		presence = domish.Element((None, 'presence'))
 		presence['from'] = self.jid.full()
@@ -85,11 +85,11 @@ class Client(derived):
 			c['ver'] = self.caps_version
 			if self.caps_ext != None:
 				c['ext'] = self.caps_ext
-		
+
 		print 'sending out presence to: ' , to
 		self.on_xml(presence.toXml())
 		self.xmlstream.send(presence)
-	
+
 	def sendMessage(self, to, body, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
 		#TODO: composing events
 		message = domish.Element((None,'message'))
@@ -124,10 +124,10 @@ class Client(derived):
 		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
 		self.factory.addBootstrap("//event/stream/error", self._authfailed)
 		self.connection=reactor.connectTCP(self.host,self.port,self.factory)
-	
+
 	def disconnect(self):
 		self.connection.disconnect()
-	
+
 	def _authd(self, xmlstream):
 		self.main._connected()
 		self.xmlstream = xmlstream
@@ -159,7 +159,7 @@ class Client(derived):
 		else:
 			self.discofeatures[node] = []
 			self.discofeatures[node].append(feature)
-	
+
 	def getRoster(self):
 		print 'get roster'
 		iq = IQ(self.xmlstream, 'get')
@@ -171,7 +171,7 @@ class Client(derived):
 		d = iq.send()
 		self.on_xml(iq.toXml())
 		d.addCallback(self._onRosterArrive)
-		
+
 	def onRosterAdd(self,el):
 		print "roster item add"
 		self.disp(el['id'])
@@ -223,7 +223,7 @@ class Client(derived):
 		iq['type'] = 'result'
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
-		
+
 	def sendRosterUpdate(self, jid, name, subscription, groups):
 		iq = domish.Element((None, 'iq'))
 		iq.addUniqueId()
@@ -240,7 +240,7 @@ class Client(derived):
 		self.disp(iq['id'])
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
-	
+
 	def getVCard(self, jid):
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid
@@ -249,10 +249,10 @@ class Client(derived):
 		d = iq.send()
 		self.on_xml(iq.toXml())
 		d.addCallback(self._vcardReceived)
-	
+
 	def _vcardReceived(self, el):
 		print 'vcard received'
-	
+
 	def getBookmarks(self):
 		'get bookmarks'
 		iq = IQ(self.xmlstream, 'get')
@@ -262,7 +262,7 @@ class Client(derived):
 		self.disp(iq['id'])
 		d = iq.send()
 		d.addCallback(self._bookmarksReceived)
-		
+
 	def setBookmarks(self):
 		iq = IQ(self.xmlstream, 'set')
 		q = iq.addElement('query', 'jabber:iq:private')
@@ -276,20 +276,20 @@ class Client(derived):
 				b.addElement('nick', content = bookmark.nick)
 			if bookmark.password:
 				b.addElement('password', content = bookmark.password)
-			
+
 		for bookmark in self.bookmarks['url'].itervalues():
 			b = storage.addElement('url')
 			b['name'] = bookmark.name
 			b['url'] = bookmark.url
-		
+
 		self.disp(iq['id'])
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		d.addCallback(self._bookmarksSet)
-	
+
 	def _bookmarksSet(self, el):
 		print 'bookmarks set sucessfully'
-		
+
 	def _bookmarksReceived(self, el):
 		print 'bookmarks received'
 		for child in el.elements():
@@ -311,7 +311,7 @@ class Client(derived):
 										nick = unicode(elm)
 									if elm.name == 'password':
 										password = unicode(elm)
-								
+
 								self.bookmarks['conference'][name] = Bookmark(name, 'conference', jid, autojoin, nick,  password)
 							if bookmark.name == 'url':
 								url = bookmark['url']
@@ -320,8 +320,8 @@ class Client(derived):
 								else:
 									name = url
 								self.bookmarks['conference'][name] = Bookmark(name, 'url', url = url)
-	
-	
+
+
 	def getMetacontacts(self):
 		'get meta contacts'
 		iq = IQ(self.xmlstream, 'get')
@@ -331,7 +331,7 @@ class Client(derived):
 		self.disp(iq['id'])
 		d = iq.send()
 		d.addCallback(self._metacontactsReceived)
-	
+
 	def _metacontactsReceived(self,  el):
 		print 'metacontacts received'
 		q = el.firstChildElement()
@@ -342,8 +342,8 @@ class Client(derived):
 				order = int(item['order'])
 			self.roster_meta[item['jid']] = {'tag': item['tag'],  'order': order}
 		self.getRoster()
-		
-	
+
+
 	def addContact(self, jid, msg):
 		print 'add contact'
 		self.sendRosterUpdate(jid, None, 'none', [])
@@ -351,7 +351,7 @@ class Client(derived):
 	def delContact(self, jid):
 		self.sendRosterUpdate(jid, None, 'remove', [])
 		self.sendPresence(to = jid, typ = 'unsubscribe')
-		
+
 	def onXML(self, el):
 		if self.log:
 			self.on_xml(el.toXml())
@@ -404,11 +404,11 @@ class Client(derived):
 					if self.roster_meta.has_key(item['jid']):
 						tag = self.roster_meta[item['jid']]['tag']
 						order = self.roster_meta[item['jid']]['order']
-					contact = Contact(self, item['jid'], name, item['subscription'], [], groups,  tag,  order)
+					contact = Contact(self, item['jid'], name, item['subscription'], [], groups, tag =  tag, order =  order)
 					self.roster['users'][item['jid']] = contact
 					self.on_rosterAddUser(contact)
 		self.on_rosterArrived()
-			
+
 		presence = domish.Element(('jabber:client','presence'))
 		self.on_xml(presence.toXml())
 		self.xmlstream.send(presence)
@@ -420,7 +420,7 @@ class Client(derived):
 	def _invaliduser(self,xmlstream):
 		print "invalid_user"
 		#self.on_invalidUser(self)
-	
+
 	def onMessage(self, el):
 		print 'message received'
 		typ = el['type']
@@ -456,19 +456,19 @@ class Client(derived):
 			if child.name == 'status':
 				status = unicode(child)
 		self.on_subscribe(el['from'], status)
-	
+
 	def onSubscribed(self, el):
 		print 'on subscribed'
 		self.on_subscribed(el['from'])
-		
+
 	def onUnSubscribe(self, el):
 		print 'on unsubscribe'
 		self.on_unsubscribe(el['from'])
-		
+
 	def onUnSubscribed(self, el):
 		print 'on unsubscribed'
 		self.on_unsubscribed(el['from'])	
-	
+
 	def onPresence(self, el):
 ##		print 'presence > ', el['from']
 		frm = jid.JID(el['from'])
@@ -493,7 +493,7 @@ class Client(derived):
 					print el.toXml()
 			elif child.name == 'c':
 				caps_node = child['node']
-				
+
 				if child.hasAttribute('ext'):
 					caps_node = '%s#%s'%(caps_node, child['ext'])
 				else:
@@ -537,7 +537,7 @@ class Client(derived):
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._featuresReceived, caps_node)
-		
+
 	def _featuresReceived(self, el, node):
 		print 'features received'
 ##		self.disp(el['id'])
@@ -551,8 +551,8 @@ class Client(derived):
 		resource = jid.JID(el['from']).resource
 		if self.roster['users'].has_key(frm.userhost()):
 			self.roster['users'][frm.userhost()].setFeatures(resource, features)
-		
-		
+
+
 	def onVersion(self, el):
 		print 'sending version info'
 		try:
@@ -568,7 +568,7 @@ class Client(derived):
 		q.addElement('version', content = self.version)
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
-	
+
 	def getVersion(self, jid):
 		print 'requesting version info'
 		iq = IQ(self.xmlstream, 'get')
@@ -590,7 +590,7 @@ class Client(derived):
 			if child.name == 'os':
 				os = unicode(child)
 		self.on_versionreceive(el['from'], (name, version, os))
-	
+
 	def onDiscoInfo(self, el):
 		print 'received disco#info request'
 		self.disp(el['id'])
@@ -612,7 +612,7 @@ class Client(derived):
 					node = None
 		if node == '%s#%s'%(self.caps_node, self.caps_version): #magie: pokud se nas nekdo zepta na caps nasi verze, tak mu rekneme default
 			node == None
-			
+
 		if not self.discofeatures.has_key(node):
 			node = None
 		if node != None:
@@ -620,10 +620,10 @@ class Client(derived):
 		for feature in self.discofeatures[node]:
 			f = q.addElement('feature')
 			f['var'] = feature
-		
+
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
-		
+
 	def onLast(self, el):
 		print 'received last request'
 		self.disp(el['id'])
@@ -634,11 +634,11 @@ class Client(derived):
 		q = iq.addElement('query','jabber:iq:last')
 		if self.last > 0:
 			q['seconds'] = self.last
-		
+
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
-	
-	
+
+
 	def getDiscoInfo(self, jid, node = None):
 		print 'requesting disco#info'
 		iq = IQ(self.xmlstream, 'get')
@@ -673,7 +673,7 @@ class Client(derived):
 			if self.disco[el['from']][node_name]['err'].has_key('info'):
 				del self.disco[el['from']][node_name]['err']['info'] #timhle smazem pripadny error ktery zustal po predchozim dotazu
 		self.on_discoInfoReceived(el['from'], node_name)
-	
+
 	def _discoInfoErrReceived(self, err, info):
 		print 'disco#info error received'
 		node_name = info[0]
@@ -689,7 +689,7 @@ class Client(derived):
 		node['err'] = el.firstChildElement().name
 		self.disco[jid][node_name] = node
 		self.on_discoInfoReceived(jid, node_name)
-		
+
 	def getDiscoItems(self, jid, node = None):
 		print 'requesting disco#items : '
 		iq = IQ(self.xmlstream, 'get')
@@ -703,7 +703,7 @@ class Client(derived):
 		self.disp(iq['id'])
 		d.addCallback(self._discoItemsReceived, node)
 		d.addErrback(self._discoItemsErrReceived, (node, jid))
-	
+
 	def _discoItemsReceived(self, el, node):
 		print 'disco#items received'
 		node_name = node
@@ -718,14 +718,14 @@ class Client(derived):
 		for child in query.elements():
 			if child.name == 'items':
 				node['items'][child['name']] = child.attributes
-		
+
 		self.disco[el['from']][node_name] = node
-		
+
 		if self.disco[el['from']][node_name].has_key('err'):
 			if self.disco[el['from']][node_name]['err'].has_key('items'):
 				del self.disco[el['from']][node_name]['err']['items'] #timhle smazem pripadny error ktery zustal po predchozim dotazu
 		self.on_discoItemsReceived(el['from'], node_name)
-	
+
 	def _discoItemsErrReceived(self, err, info):
 		print 'disco#items error received'
 		node_name = info[0]
@@ -741,8 +741,8 @@ class Client(derived):
 		node['err'] = el.firstChildElement().name
 		self.disco[jid][node_name] = node
 		self.on_discoInfoReceived(jid, node_name)
-		
-	
+
+
 	def getPrivacy(self):	
 		print 'requesting priacy lists'
 		#FIXME: predelat
@@ -752,7 +752,7 @@ class Client(derived):
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._privacyReceived)
-	
+
 	def _privacyReceived(self, el):
 		#FIXME: predelat
 		print 'privacy lists received' 
@@ -773,8 +773,8 @@ class Client(derived):
 						it['types'].append(stanza.name)
 					self.privacy_lists['listname'].append(it)
 		self.on_privacyReceived()
-		
-	
+
+
 	def onTime202(self, el):
 		print 'received time202 request'
 		self.disp(el['id'])
@@ -787,7 +787,7 @@ class Client(derived):
 		q.addElement('utc', content = time.strftime("%Y-%m-%dT%TZ", time.gmtime()))
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
-	
+
 	def getTime202(self, jid):
 		print 'requesting time202 info'
 		iq = IQ(self.xmlstream, 'get')
@@ -797,7 +797,7 @@ class Client(derived):
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._time202Received)
-	
+
 	def _time202Received(self, el):
 		print 'time202 received'
 		t = el.firstChildElement()
@@ -808,7 +808,7 @@ class Client(derived):
 			elif child.name == 'utc':
 				utc = child.__str__()
 		self.on_time202Received(jid, utc, tzo)
-	
+
 	def onTime90(self, el):
 		print 'received time90 request'
 		self.disp(el['id'])
@@ -822,8 +822,8 @@ class Client(derived):
 ##		q.addElement('display', content = unicode(time.strftime(u"%c", time.localtime())))
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
-	
-	
+
+
 	def joinGC(self,  jid, nick):
 		gc = Groupchat(self,  jid, nick)
 		self.groupchats[jid] = gc
@@ -833,6 +833,6 @@ class Client(derived):
 		self.groupchats[jid] .leave()
 		del self.groupchats[jid]
 		print 'left MUC: ',  jid
-	
+
 	def disp(self, id):
 		self.idlist.append(id)

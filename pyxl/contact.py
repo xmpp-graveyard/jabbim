@@ -9,8 +9,9 @@ class Contact:
 		self.resourcesItems={}
 		self.resources={} #resource:(show,status,priority)
 		self.client = client
-		self.tag=tag
-		self.order=order
+		self.tag = tag
+		self.order = order
+
 
 	def setStatus(self, resource, show, status):
 		if self.resources.has_key(resource):
