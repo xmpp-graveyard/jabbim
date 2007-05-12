@@ -344,6 +344,25 @@ class Client(derived):
 		self.getRoster()
 
 
+	
+	def setMetacontacts(self):
+		print 'sending metacontacts'
+		iq = IQ(self.xmlstream, 'set')
+		q = iq.addElement('query', 'jabber:iq:private')
+		storage = q.addElement('storage', 'storage:metacontacts')
+		for jid,  val in self.roster_meta.iteritems():
+			m = storage.addElement('meta')
+			m['jid'] = jid
+			m['tag'] = val['tag']
+			m['order'] = val['order']
+		self.disp(iq['id'])
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		d.addCallback(self._metacontactsSet)
+	def _metacontactsSet(self,  el):
+		print 'metacontacts set'
+
+	
 	def addContact(self, jid, msg):
 		print 'add contact'
 		self.sendRosterUpdate(jid, None, 'none', [])
