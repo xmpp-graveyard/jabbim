@@ -1,4 +1,6 @@
-import sys, time, random
+import sys, time, random, sha
+
+import socks5
 from twisted.python import log
 from twisted.internet import protocol
 
@@ -12,6 +14,7 @@ from twisted.words.protocols.jabber.xmlstream import IQ
 from derived import derived
 from contact import *
 from groupchat import  *
+
 
 class Bookmark:
 	def __init__(self, name, typ, JID = None, autojoin = False, nick = None, password = None, url = None):
@@ -52,7 +55,12 @@ class Client(derived):
 		self.discofeatures = {} # node: [feature1, feature2]
 		self.log = True
 		self.logfile = sys.stdout
-
+		self.ft_proxies = {
+		'proxy.netlab.cz':["77.48.19.1", "7777"] ,
+		'proxy.jabber.org':['208.245.212.98', '7777']
+##		'serafim.cd.chalmers.se' : ['serafim.cd.chalmers.se', '7777']
+}
+		
 		self.last = 0
 		self.registerFeature('jabber:iq:version')
 		self.registerFeature('jabber:iq:last')
@@ -124,6 +132,7 @@ class Client(derived):
 		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
 		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
 		self.factory.addBootstrap("//event/stream/error", self._authfailed)
+		self.factory.addBootstrap("/*", self.logIt)
 ##		if self.ssl:
 ##			from twisted.internet import ssl
 ##			self.connection=reactor.connectSSL(self.host,self.port,self.factory, ssl.ClientContextFactory())
@@ -156,7 +165,7 @@ class Client(derived):
 		self.getDiscoItems(self.jid.host)
 #		self.getPrivacy()
 #		self.joinGC('jdev@conf.netlab.cz',  'Sefator')
-##		self.sendFile('public@disk.jabbim.cz', 'test.txt', '1000', None)
+##		self.sendFile('jjkobra@njs.netlab.cz/tkabber', 'test.txt', '10010', None)
 
 	def registerFeature(self, feature, node = None):
 		if self.discofeatures.has_key(node):
@@ -376,8 +385,7 @@ class Client(derived):
 		self.sendPresence(to = jid, typ = 'unsubscribe')
 
 	def onXML(self, el):
-		if self.log:
-			self.on_xml(el.toXml())
+
 		if el.hasAttribute('id') and el.name == 'iq':
 			if not el['id'] in self.idlist:
 				print 'nezpracovane iq ', el.toXml()
@@ -402,7 +410,9 @@ class Client(derived):
 			err.addElement('bad-request')
 			self.on_xml(el.toXml())
 			self.xmlstream.send(el)
-
+	def logIt(self, el):
+		if self.log:
+			self.on_xml(el.toXml())
 	def _onRosterArrive(self, el):
 		print 'roster arrived'
 		for child in el.elements():
@@ -886,7 +896,9 @@ class Client(derived):
 	def sendFile(self, jid, filename, size, fp):
 		iq = IQ(self.xmlstream, 'set')
 		iq['to'] = jid
+		sid = str(random.randint(1000, sys.maxint))
 		si = iq.addElement('si', 'http://jabber.org/protocol/si')
+		si['id'] = sid
 		si['profile'] = 'http://jabber.org/protocol/si/profile/file-transfer'
 		file = si.addElement('file', 'http://jabber.org/protocol/si/profile/file-transfer')
 		file['name'] = filename
@@ -901,27 +913,38 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._ftreplyReceived)
+		d.addCallback(self._ftreplyReceived, sid)
 	
-	def _ftreplyReceived(self, el):
+	def _ftreplyReceived(self, el, sid):
 		print el.toXml()
 		iq = IQ(self.xmlstream, 'set')
 		iq['to'] = el['from']
 		q = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
-		sid = str(random.randint(1000, sys.maxint))
+		
 		q['sid'] = sid
 		q['mode'] = 'tcp'
-		streamhost = q.addElement('streamhost')
-		streamhost['host'] = '77.48.19.1'
-		streamhost['jid'] = 'proxy.netlab.cz'
-		streamhost['port'] = '7777'
+		for proxy, data in self.ft_proxies.iteritems():
+			streamhost = q.addElement('streamhost')
+			streamhost['host'] = data[0]
+			streamhost['jid'] = proxy
+			streamhost['port'] = data[1]
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._ftreplyhostReceived)
+		d.addCallback(self._ftreplyhostReceived, sid)
+		d.addErrback(self._ftreplyhostErrReceived)
 	
-	def _ftreplyhostReceived(self, el):
+	def _ftreplyhostReceived(self, el, sid):
 		print el.toXml()
+		q = el.firstChildElement()
+		streamhost = q.firstChildElement()
+		host = streamhost['jid']
+		addr = sha.new("%s%s%s" % (sid, self.jid.full(), el['from'])).hexdigest()
+		factory = socks5.ClientFactory(host, int(self.ft_proxies[host][1]), addr, 0, None) 
+		reactor.connectTCP(host, int(self.ft_proxies[host][1]), factory)
+		
+	def _ftreplyhostErrReceived(self, err):
+		print err
 	
 	def disp(self, id):
 		self.idlist.append(id)
