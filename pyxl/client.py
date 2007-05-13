@@ -124,11 +124,12 @@ class Client(derived):
 		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
 		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
 		self.factory.addBootstrap("//event/stream/error", self._authfailed)
-		if self.ssl:
-			from twisted.internet import ssl
-			self.connection=reactor.connectSSL(self.host,self.port,self.factory, ssl.ClientContextFactory())
-		else:
-			self.connection=reactor.connectTCP(self.host,self.port,self.factory)
+##		if self.ssl:
+##			from twisted.internet import ssl
+##			self.connection=reactor.connectSSL(self.host,self.port,self.factory, ssl.ClientContextFactory())
+##		else:
+##			self.connection=reactor.connectTCP(self.host,self.port,self.factory)
+		self.connection=reactor.connectTCP(self.host,self.port,self.factory)
 
 	def disconnect(self):
 		self.connection.disconnect()
