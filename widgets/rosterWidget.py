@@ -41,6 +41,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemExpanded ( QTreeWidgetItem * )"),self.expanded)
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemCollapsed ( QTreeWidgetItem * )"),self.collapsed)
 
+		self.dnd={}
 
 	def expanded(self,item):
 		# change icon if group item expanded
@@ -57,8 +58,9 @@ class rosterWidget(QtGui.QTreeWidget):
 		# open chat window for clicked contact
 		if self.main.client.roster['groups'].has_key(unicode(item.text(2))):
 			return
-		data=item.data(32,0) # get jid
-		data=str(data.toString())
+		it=item.data(32,0)
+		it=it.toList()
+		data=str(it[0].toString())
 		self.main.chat.addChatTab(data,unicode(item.text(2)),self.main.getIcon(data,self.main.icons[unicode(item.text(1))[0]],size="16x16"))
 
 	def addMetaContact(self,jid,name,user):
@@ -71,7 +73,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(0,unicode(name))
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
-		item.setData(32,0,QtCore.QVariant(jid))
+		item.setData(32,0,QtCore.QVariant([unicode(jid),unicode("meta")]))
 		self.sortItems(1,QtCore.Qt.AscendingOrder)
 		return item
 
@@ -86,10 +88,56 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(0,unicode(name))
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
-		item.setData(32,0,QtCore.QVariant(jid))
+		item.setData(32,0,QtCore.QVariant([unicode(jid),unicode("resource")]))
 		self.sortItems(1,QtCore.Qt.AscendingOrder)
 		return item
 
+	def startDrag(self,actions):
+		# start dragging selected contact
+		item=self.currentItem()
+		it=item.data(32,0)
+		it=it.toList()
+		data=str(it[0].toString())
+		self.drag=QtGui.QDrag(self)
+		mimeData=QtCore.QMimeData()
+		mimeData.setText(data)
+		self.dnd[data]=item.parent()
+		self.drag.setMimeData(mimeData)
+		self.action=self.drag.start(QtCore.Qt.CopyAction)
+
+	def dropMimeData(self,parent, index, data, action ):
+		# drop data => change group for dropped contact
+		jid=str(data.text())
+		oldParent=self.dnd[jid]
+		del self.dnd[jid]
+		if parent in self.main.client.roster['groups'].values():
+			#name=unicode(self.main.client.roster['users'][jid].rosterItems[0].text(2))
+			#QString QInputDialog::getItem ( QWidget * parent, const QString & title, const QString & label, const QStringList & list, int current = 0, bool editable = true, bool * ok = 0, Qt::WindowFlags f = 0 )   [static]
+			items=QtCore.QStringList()
+			items.append(self.tr("Copy"))
+			items.append(self.tr("Move"))
+			q,b=QtGui.QInputDialog.getItem(self,self.tr("Copy/Move contact"),self.tr("Copy or move?"), items,0,False)
+			q=unicode(q)
+			# if user set new name of group
+			if b==True and len(q)!=0:
+				index=int(items.indexOf(QtCore.QRegExp(q)))
+				print index
+				if index==0:
+					self.changeGroup(jid,"+",unicode(parent.text(2)))
+				else:
+					name=unicode(self.main.client.roster['users'][jid].name)
+					contact=self.main.client.roster['users'][jid]
+					g=contact.groups
+					g.remove(unicode(oldParent.text(2)))
+					self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g+[unicode(parent.text(2))])
+
+			return True
+		else:
+			return False
+
+	def mimeTypes(self):
+		# set mimetypes, which we accept
+		return QtCore.QStringList("text/plain")
 
 	def getUserItems(self,jid):
 		if not self.main.client.roster['users'].has_key(jid):
@@ -121,15 +169,30 @@ class rosterWidget(QtGui.QTreeWidget):
 					online+=1
 			self.main.client.roster['groups'][group].setText(0,unicode(self.main.client.roster['groups'][group].text(2))+" ("+str(online)+"/"+str(online+offline)+")")
 
-	def setStatus(self,jid,show):
+	def setStatus(self,jid,show,i=None):
 		if not self.main.shows.has_key(show):
-			show="online"
-		for item in self.getUserItems(jid):
+			if len(self.main.client.roster['users'][jid].status)!=0:
+				if len(self.main.client.roster['users'][jid].status)>1:
+					show=self.main.client.roster['users'][jid].status[0]
+				else:
+					show=self.main.client.roster['users'][jid].status
+			else:
+				show="online"
+		#print i
+		if i!=None:
+			item=i
 			name=unicode(item.text(0))
 			item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
 			item.setIcon(0,self.main.getIcon(jid,size=str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
 			if self.main.shows[unicode(show)]!="9":
 				self.setItemHidden(item, False)
+		else:
+			for item in self.getUserItems(jid):
+				name=unicode(item.text(0))
+				item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
+				item.setIcon(0,self.main.getIcon(jid,size=str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
+				if self.main.shows[unicode(show)]!="9":
+					self.setItemHidden(item, False)
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.refreshStats()
 
@@ -189,11 +252,21 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(0,unicode(name))
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
-		item.setData(32,0,QtCore.QVariant(jid))
+		item.setData(32,0,QtCore.QVariant([unicode(jid),unicode("contact")]))
 		item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize']),status=self.main.icons["9"]))
 		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)
 		# item design
-		self.setItemHidden(item, offline)
+		if len(self.main.client.roster['users'][jid].status)!=0:
+			if len(self.main.client.roster['users'][jid].status)>1:
+				show=self.main.client.roster['users'][jid].status[0]
+			else:
+				show=self.main.client.roster['users'][jid].status
+		else:
+			show="offline"
+		if unicode(item.text(1))[0]=='9':
+			self.setItemHidden(item, offline)
+		self.setStatus(jid,show)
+
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.refreshStats()
 		return item
@@ -300,7 +373,6 @@ class rosterWidget(QtGui.QTreeWidget):
 			items=action.data()
 			items=items.toList()
 			jid=str(items[0].toString())
-			name=unicode(self.main.client.roster['users'][jid].name)
 			action=unicode(items[1].toString())[0]
 			group=unicode(items[1].toString())[1:]
 
@@ -309,19 +381,8 @@ class rosterWidget(QtGui.QTreeWidget):
 					#group="Unknown"
 			#else:
 				#group="Unknown"
-
-
-			if action=="+":
-				contact=self.main.client.roster['users'][jid]
-				print "adding",jid,"groups:",self.main.client.roster['users'][jid].groups+[group]
-				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription, self.main.client.roster['users'][jid].groups+[group])
-			else:
-				contact=self.main.client.roster['users'][jid]
-				g=contact.groups
-				g.remove(group)
-				print "deleting",jid,"groups:",g,'name:',name
-				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g)
-
+			self.changeGroup(jid,action,group)
+			
 		elif cmd=="vcard":
 			# get vcard of selected contact
 			jid=action.data()
@@ -358,12 +419,27 @@ class rosterWidget(QtGui.QTreeWidget):
 				print file,"to",jid
 				#self.jab.sendFile(jid,unicode(file))
 
+	def changeGroup(self,jid,action,group):
+			name=unicode(self.main.client.roster['users'][jid].name)
+			if action=="+":
+				contact=self.main.client.roster['users'][jid]
+				print "adding",jid,"groups:",self.main.client.roster['users'][jid].groups+[group]
+				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription, self.main.client.roster['users'][jid].groups+[group])
+			else:
+				contact=self.main.client.roster['users'][jid]
+				g=contact.groups
+				g.remove(group)
+				print "deleting",jid,"groups:",g,'name:',name
+				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g)
+
+
 	def contextMenuEvent (self,event):
 		# show contact context menu
 		item=self.itemFromIndex(self.indexAt(QtCore.QPoint(event.x(),event.y())))
 		group=item.parent()
-		jid=item.data(32,0)
-		jid=unicode(jid.toString())
+		it=item.data(32,0)
+		it=it.toList()
+		jid=str(it[0].toString())
 		if self.main.client.roster['users'].has_key(jid):
 			contactMenu=self.buildContactMenu(str(jid),group)
 			contactMenu.move(event.globalX(),event.globalY())

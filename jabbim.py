@@ -46,36 +46,27 @@ class clientClass(pyxl.client.Client):
 		self.temp_hosts=[]
 		
 	def on_discoInfoReceived(self, jid, node):
-		try:
-			name=self.disco[jid][node]['identities'].keys()[0]
-			typ=self.disco[jid][node]['identities'][name]['type']
-		except:
-			typ=None
-		#print node
-		if typ!=None:
-			#print jid
-			#items=self.main.ui.roster.findItems(jid,QtCore.Qt.MatchEndsWith|QtCore.Qt.MatchRecursive,2)
-			#print items
-			if typ=="pep" or typ=="im":
-				typ="jabber"
-			elif typ=="file":
-				typ="disk"
-			if not self.main.hosts.has_key(jid):
+		if not self.main.hosts.has_key(jid):
+			try:
+				name=self.disco[jid][node]['identities'].keys()[0]
+				typ=self.disco[jid][node]['identities'][name]['type']
+			except:
+				typ=None
+			if typ!=None:
+				if typ=="pep" or typ=="im":
+					typ="jabber"
+				elif typ=="file":
+					typ="disk"
 				self.main.hosts[jid]=typ
-			#print typ,jid
+				#for key,v in self.roster['users'].iteritems():
+					#if len(key.split("@"))>1:
+						#if key.split("@")[1]==jid:
+							#for i in range(len(v.rosterItems)):
+								#status=self.main.icons[unicode(v.rosterItems[i].text(1))[0]]
+								##users.append(self.main.groups[k]["users"][key]["item"])
+								##groups[self.main.groups[k]["users"][key]["item"]]=k
+								#self.roster['users'][key].rosterItems[i].setIcon(0,self.main.getIcon(jid=jid,size=str(self.main.config['rosterIconSize']),status=status,usertype=typ))
 
-			for key,v in self.roster['users'].iteritems():
-				if len(key.split("@"))>1:
-					if key.split("@")[1]==jid:
-						for i in range(len(v.rosterItems)):
-							status=self.main.icons[unicode(v.rosterItems[i].text(1))[0]]
-							#users.append(self.main.groups[k]["users"][key]["item"])
-							#groups[self.main.groups[k]["users"][key]["item"]]=k
-							self.roster['users'][key].rosterItems[i].setIcon(0,self.main.getIcon(jid=jid,size=str(self.main.config['rosterIconSize']),status=status,usertype=typ))
-
-			#for item in items:
-				#item.setIcon(0,self.main.getIcon(jid=jid,size=str(self.main.config['rosterIconSize']),status=self.main.icons[unicode(item.text(1))[0]],usertype=typ))
-				#item.setIcon(0,QtGui.QIcon())
 	def on_rosterAddUser(self, contact):
 		groups=contact.groups
 		name=contact.name
@@ -97,10 +88,11 @@ class clientClass(pyxl.client.Client):
 
 
 	def on_rosterArrived(self):
+		#del self.temp_hosts
 		for jid,user in self.roster['users'].iteritems():
 			if user.tag!=None and jid!=user.tag:
 				for item in self.roster['users'][jid].rosterItems:
-					self.roster['users'][user.tag].rosterItems.append(self.main.ui.roster.addMetaContact(jid,user.tag,item))
+					self.roster['users'][user.tag].rosterItems.append(self.main.ui.roster.addMetaContact(user.tag,user.tag,item))
 
 	def on_authFailed(self,xmlstream):
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(self.main.tr("Bad Jabber ID or password.")),0,1)
@@ -188,18 +180,35 @@ class clientClass(pyxl.client.Client):
 						i.setText(0,unicode(name))
 						i.setText(1,unicode(i.text(1))[0]+unicode(name).lower())
 						i.setText(2,unicode(name))
-						i.setData(32,0,QtCore.QVariant(contact.jid))
+						item.setData(32,0,QtCore.QVariant([unicode(jid),unicode("contact")]))
+						self.main.ui.roster.setStatus(jid,self.main.icons[unicode(i.text(1))[0]],i)
 						self.main.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
 						
 				if add:
 					if len(contact.getUserItems())!=0:
 						i=contact.getUserItems()[0].clone() # clone contact item
 						contact.rosterItems.append(i)
+						for x in range(int(i.childCount())):
+							child=i.child(x)
+							
+							it=child.data(32,0)
+							it=it.toList()
+							data=str(it[0].toString())
+							typ=unicode(it[1].toString())
+							
+							if typ=="meta":
+
+								print "len",len(self.roster['users'][data].rosterItems)
+								print data,jid
+								self.roster['users'][data].rosterItems.append(child)
+								print "len",len(contact.rosterItems)
 						self.roster['groups'][name].addChild(i) # add item to the new group
+						self.main.ui.roster.setStatus(contact.jid,None,i)
 					else:
 						contact.rosterItems.append(self.main.ui.roster.addUser(contact.jid,contact.name,self.roster['groups'][name]))
-					self.main.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
-					self.main.ui.roster.refreshStats()
+						self.main.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
+						self.main.ui.roster.setStatus(contact.jid,None)
+						self.main.ui.roster.refreshStats()
 			else:
 				for i in items:
 					parent=i.parent()
