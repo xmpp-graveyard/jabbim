@@ -1,4 +1,4 @@
-import sys, time
+import sys, time, random
 from twisted.python import log
 from twisted.internet import protocol
 
@@ -24,7 +24,7 @@ class Bookmark:
 		self.url = url
 
 class Client(derived):
-	def __init__(self, JID, password, host, port, main):
+	def __init__(self, JID, password, host, port, main, SSL = True):
 		#derived.__init__(self)
 		self.jid = jid.JID(JID)
 		self.password  = password
@@ -33,6 +33,7 @@ class Client(derived):
 		self.factory = None
 		self.connection = None
 		self.main=main # mainWindow
+		self.ssl = SSL
 		self.roster = {'users':{},'groups':{}}
 		self.roster_meta = {} # jid: {'tag':tag,  'order': 1}
 		self.bookmarks = {'conference':{}, 'url': {}}
@@ -51,7 +52,7 @@ class Client(derived):
 		self.discofeatures = {} # node: [feature1, feature2]
 		self.log = True
 		self.logfile = sys.stdout
-		self.on_init()
+
 		self.last = 0
 		self.registerFeature('jabber:iq:version')
 		self.registerFeature('jabber:iq:last')
@@ -62,6 +63,7 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/chatstates')
 		self.caps_cache = {} # 'node': [feature1, feature2]
 		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
+		self.on_init()
 
 	def cacheCaps(self, node, features):
 		self.caps_cache[node] = features
@@ -122,7 +124,11 @@ class Client(derived):
 		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
 		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
 		self.factory.addBootstrap("//event/stream/error", self._authfailed)
-		self.connection=reactor.connectTCP(self.host,self.port,self.factory)
+		if self.ssl:
+			from twisted.internet import ssl
+			self.connection=reactor.connectSSL(self.host,self.port,self.factory, ssl.ClientContextFactory())
+		else:
+			self.connection=reactor.connectTCP(self.host,self.port,self.factory)
 
 	def disconnect(self):
 		self.connection.disconnect()
@@ -149,6 +155,8 @@ class Client(derived):
 		self.getDiscoItems(self.jid.host)
 #		self.getPrivacy()
 #		self.joinGC('jdev@conf.netlab.cz',  'Sefator')
+##		self.sendFile('public@disk.jabbim.cz', 'test.txt', '1000', None)
+
 	def registerFeature(self, feature, node = None):
 		if self.discofeatures.has_key(node):
 			self.discofeatures[node].append(feature)
@@ -873,5 +881,46 @@ class Client(derived):
 		del self.groupchats[jid]
 		print 'left MUC: ',  jid
 
+	
+	def sendFile(self, jid, filename, size, fp):
+		iq = IQ(self.xmlstream, 'set')
+		iq['to'] = jid
+		si = iq.addElement('si', 'http://jabber.org/protocol/si')
+		si['profile'] = 'http://jabber.org/protocol/si/profile/file-transfer'
+		file = si.addElement('file', 'http://jabber.org/protocol/si/profile/file-transfer')
+		file['name'] = filename
+		file['size'] = size
+		feature = si.addElement('feature', 'http://jabber.org/protocol/feature-neg')
+		x = feature.addElement('x', 'jabber:x:data')
+		x['type'] = 'form'
+		field = x.addElement('field')
+		field['var'] = 'stream-method'
+		field['type'] = 'list-single'
+		field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		self.disp(iq['id'])
+		d.addCallback(self._ftreplyReceived)
+	
+	def _ftreplyReceived(self, el):
+		print el.toXml()
+		iq = IQ(self.xmlstream, 'set')
+		iq['to'] = el['from']
+		q = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
+		sid = str(random.randint(1000, sys.maxint))
+		q['sid'] = sid
+		q['mode'] = 'tcp'
+		streamhost = q.addElement('streamhost')
+		streamhost['host'] = '77.48.19.1'
+		streamhost['jid'] = 'proxy.netlab.cz'
+		streamhost['port'] = '7777'
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		self.disp(iq['id'])
+		d.addCallback(self._ftreplyhostReceived)
+	
+	def _ftreplyhostReceived(self, el):
+		print el.toXml()
+	
 	def disp(self, id):
 		self.idlist.append(id)
