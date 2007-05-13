@@ -3,7 +3,7 @@ import sys, time, random, sha
 import socks5
 from twisted.python import log
 from twisted.internet import protocol
-
+from twisted.names import client as dns
 
 from twisted.words.protocols import jabber
 from twisted.words.protocols.jabber import client,jid
@@ -57,8 +57,8 @@ class Client(derived):
 		self.logfile = sys.stdout
 		self.ft_proxies = {
 		'proxy.netlab.cz':["77.48.19.1", "7777"] ,
-		'proxy.jabber.org':['208.245.212.98', '7777']
-##		'serafim.cd.chalmers.se' : ['serafim.cd.chalmers.se', '7777']
+		'proxy.jabber.org':['208.245.212.98', '7777'],
+		'serafim.cd.chalmers.se' : ['serafim.cd.chalmers.se', '7777']
 }
 		
 		self.last = 0
@@ -125,6 +125,18 @@ class Client(derived):
 		self.xmlstream.send(message)
 
 	def connect(self):
+		d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host)
+		d.addCallback(self._dnsLookup)
+		d.addErrback(self._dnsLookupErr)
+	
+	def _dnsLookup(self, resp):
+		r = random.choice(resp[0])
+		self._connect(unicode(r.payload.target), int(r.payload.port))
+	
+	def _dnsLookupErr(self, resp):
+		self._connect(self.host, self.port)
+	
+	def _connect(self, host, port): 
 		if self.log:
 			log.startLogging(self.logfile)
 		self.factory = client.XMPPClientFactory(self.jid,self.password)
@@ -132,14 +144,16 @@ class Client(derived):
 		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
 		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
 		self.factory.addBootstrap("//event/stream/error", self._authfailed)
+		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
 		self.factory.addBootstrap("/*", self.logIt)
-##		if self.ssl:
-##			from twisted.internet import ssl
-##			self.connection=reactor.connectSSL(self.host,self.port,self.factory, ssl.ClientContextFactory())
-##		else:
-##			self.connection=reactor.connectTCP(self.host,self.port,self.factory)
-		self.connection=reactor.connectTCP(self.host,self.port,self.factory)
+		self.connection=reactor.connectTCP(host,port,self.factory)
 
+	def _bind(self, el):
+		#experimental
+		bind = el.firstChildElement()
+		jd = bind.firstChildElement().__str__()
+		self.jid = jid.JID(jd)
+		
 	def disconnect(self):
 		self.connection.disconnect()
 
@@ -177,7 +191,7 @@ class Client(derived):
 	def getRoster(self):
 		print 'get roster'
 		iq = IQ(self.xmlstream, 'get')
-		iq['from'] =self.jid.full()
+##		iq['from'] =self.jid.full()
 		iq['type'] = 'get'
 		q = iq.addElement('query')
 		q['xmlns']='jabber:iq:roster'
@@ -276,6 +290,7 @@ class Client(derived):
 		self.disp(iq['id'])
 		d = iq.send()
 		d.addCallback(self._bookmarksReceived)
+		d.addErrback(self._bookmarksErrReceived)
 
 	def setBookmarks(self):
 		iq = IQ(self.xmlstream, 'set')
@@ -304,6 +319,8 @@ class Client(derived):
 	def _bookmarksSet(self, el):
 		print 'bookmarks set sucessfully'
 
+	def _bookmarksErrReceived(self, err):
+		pass #no tak neprisly no
 	def _bookmarksReceived(self, el):
 		print 'bookmarks received'
 		for child in el.elements():
@@ -347,7 +364,13 @@ class Client(derived):
 		self.disp(iq['id'])
 		d = iq.send()
 		d.addCallback(self._metacontactsReceived)
-
+		d.addErrback(self._metacontactsErrReceived)
+	
+	def _metacontactsErrReceived(self,  err):
+		print 'meta error'
+		self.getRoster()
+		self.on_metaFail(err)
+		
 	def _metacontactsReceived(self,  el):
 		print 'metacontacts received'
 		q = el.firstChildElement()
