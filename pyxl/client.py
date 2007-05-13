@@ -91,7 +91,6 @@ class Client(derived):
 		self.xmlstream.send(presence)
 
 	def sendMessage(self, to, body, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
-		#TODO: composing events
 		message = domish.Element((None,'message'))
 		message['to'] = to
 		message.addElement('body', content = body)
@@ -150,9 +149,6 @@ class Client(derived):
 		self.getDiscoItems(self.jid.host)
 #		self.getPrivacy()
 #		self.joinGC('jdev@conf.netlab.cz',  'Sefator')
-
-
-
 	def registerFeature(self, feature, node = None):
 		if self.discofeatures.has_key(node):
 			self.discofeatures[node].append(feature)
@@ -345,8 +341,6 @@ class Client(derived):
 			self.roster_meta[item['jid']] = {'tag': item['tag'],  'order': order}
 		self.getRoster()
 
-
-	
 	def setMetacontacts(self):
 		print 'sending metacontacts'
 		iq = IQ(self.xmlstream, 'set')
@@ -364,7 +358,6 @@ class Client(derived):
 	def _metacontactsSet(self,  el):
 		print 'metacontacts set'
 
-	
 	def addContact(self, jid, msg):
 		print 'add contact'
 		self.sendRosterUpdate(jid, None, 'none', [])

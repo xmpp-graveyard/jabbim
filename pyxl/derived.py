@@ -54,3 +54,9 @@ class derived:
 	
 	def on_rosterArrived(self):
 		pass
+	
+	def on_roleErr(self,  muc,  err,  nick):
+		pass
+	
+	def on_affiliationErr(self,  muc,  err,  nick):
+		pass

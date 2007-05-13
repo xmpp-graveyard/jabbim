@@ -6,7 +6,62 @@ class Groupchat:
 		self.jid = JID
 		self.nick = nick
 		self.users = {} #nick: MUCContact
+	
+	def setRole(self, nick, role,  reason = None):
+		print 'setting role'
+		iq = IQ(self.client.xmlstream, 'set')
+		iq['to'] = self.jid
+		q = iq.addElement('query', 'http://jabber.org/protocol/muc#admin')
+		item = q.addElement('item')
+		item['nick'] = nick
+		item['role'] = role
+		if reason :
+			q.addElement('reason',  content = reason)
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		self.disp(iq['id'])
+		d.addCallback(self._roleResult)
+		d.addErrback(self._roleFail,  nick)
+	
+	def _roleResult(self,  el):
+		print 'role change successful'
 
+	def _roleResult(self,  err,  nick):
+		try:
+			el = err.value.getElement()
+		except:
+			print err
+			return
+		self.client.on_roleError(self.jid, el.firstChildElement().name,  nick)
+		
+	def setAffiliation(self, nick, affiliation,  reason = None):
+		print 'setting affiliation'
+		iq = IQ(self.client.xmlstream, 'set')
+		iq['to'] = self.jid
+		q = iq.addElement('query', 'http://jabber.org/protocol/muc#admin')
+		item = q.addElement('item')
+		item['nick'] = nick
+		item['affiliation'] = affiliation
+		if reason :
+			q.addElement('reason',  content = reason)
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		self.disp(iq['id'])
+		d.addCallback(self._affiliationResult)
+		d.addErrback(self._affiliationFail,  nick)
+	
+	def _affiliationResult(self,  el):
+		print 'affiliation change succesfull'
+	
+	def _affiliationFail(self,  err):
+		try:
+			el = err.value.getElement()
+		except:
+			print err
+			return
+		self.client.on_affiliationError(self.jid, el.firstChildElement().name,  nick)
+	
+	
 	def join(self):
 		print 'joining MUC: ',  self.jid
 		presence = domish.Element((None, 'presence'))
