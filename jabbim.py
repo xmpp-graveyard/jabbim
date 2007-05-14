@@ -154,13 +154,13 @@ class clientClass(pyxl.client.Client):
 				highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
 				status=None
 				if highest.status!=None:
-					status=highest.status[1].replace("\n"," ")
+					status=highest.status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
 				self.main.ui.roster.setStatus(jid,highest.show,status=status)
 				self.main.ui.roster.setResourceStatus(jid,resource,show)
 			else:
 				status=self.roster['users'][jid].status[1]
 				if status!=None:
-					status=status.replace("\n"," ")
+					status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
 				self.main.ui.roster.setStatus(jid,show,status=status)
 				
 	def on_xml(self,xml):

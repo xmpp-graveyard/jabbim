@@ -6,6 +6,80 @@ except:
 
 from tooltip_ui import *
 
+class delegate(QtGui.QItemDelegate):
+	def __init__(self,parent=None):
+		apply(QtGui.QItemDelegate.__init__,(self,parent))
+		
+	def paint(self,painter,option, index):
+		r=QtCore.QRect(QtCore.QPoint(0, 0), option.rect.size())
+		if unicode(index.data(QtCore.Qt.BackgroundRole).toString())=="#000000":
+			painter.save()
+			painter.translate(option.rect.topLeft())
+			painter.fillRect(r,QtGui.QBrush(QtGui.QColor(index.data(QtCore.Qt.BackgroundRole).toString())))
+			#drawBackground(painter, option, index);
+			painter.restore()
+
+		#print option.state
+		if option.state & QtGui.QStyle.State_Selected:
+			painter.save()
+			painter.translate(option.rect.topLeft())
+			painter.fillRect(r,option.palette.highlight())
+			#drawBackground(painter, option, index);
+			painter.restore()
+
+
+		if not index.data(QtCore.Qt.DecorationRole).isNull():
+			icon=QtGui.QIcon(index.data(QtCore.Qt.DecorationRole))
+			painter.save()
+			painter.translate(option.rect.topLeft())
+			icon.paint(painter,0,0,16,16)
+			painter.restore()
+
+		
+		doc=QtGui.QTextDocument()
+		doc.setHtml(index.data().toString())
+		painter.save()
+		rect=option.rect.topLeft()
+		rect.setX(rect.x()+20)
+		painter.translate(rect)
+		
+		doc.drawContents(painter, QtCore.QRectF(QtCore.QRect(QtCore.QPoint(0, 0), option.rect.size())))
+		#print "test"
+		painter.restore()
+		#drawFocus(painter, option, option.rect)
+
+	
+	def sizeHint(self,option,index):
+
+		doc=QtGui.QTextDocument()
+		doc.setHtml(index.data().toString())
+		return doc.size().toSize()
+
+		
+		#QWidget *Delegate::createEditor(QWidget *parent, const QStyleOptionViewItem &/*option*/, const QModelIndex &/*index*/) const
+		#{
+		#return new QTextEdit(parent);
+		#}
+		
+		#void Delegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+		#{
+		#String value=index.data(Qt::DisplayRole).toString();
+		#QTextEdit *te=static_cast<QTextEdit*>(editor);
+		#te.setHtml(value);
+		#}
+		
+		#def setModelData(editor,model,index):
+
+			#QTextEdit *te=static_cast<QTextEdit*>(editor);
+			#model.setData(index, te.toHtml());  
+		
+		
+	def updateEditorGeometry(self,editor,option,index):
+
+		editor.setGeometry(option.rect)
+
+
+
 class tooltipWidget(QtGui.QWidget):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QWidget.__init__,(self,parent))
@@ -24,6 +98,11 @@ class rosterWidget(QtGui.QTreeWidget):
 	def __init__(self,parent,main):
 		apply(QtGui.QTreeWidget.__init__,(self,parent))
 		self.setObjectName("roster")
+		self.delegate=delegate()
+		print self.itemDelegate()
+		print self.delegate
+		self.setItemDelegate(self.delegate)
+		print self.itemDelegate()
 		# main variables
 		self.main=main # mainwindow pointer
 		#self.jab=jab # jab instance pointer
@@ -188,7 +267,7 @@ class rosterWidget(QtGui.QTreeWidget):
 					offline+=1
 				else:
 					online+=1
-			self.main.client.roster['groups'][group].setText(0,unicode(self.main.client.roster['groups'][group].text(2))+" ("+str(online)+"/"+str(online+offline)+")")
+			self.main.client.roster['groups'][group].setText(0,"<font color=\"#FFFFFF\">"+unicode(self.main.client.roster['groups'][group].text(2))+" ("+str(online)+"/"+str(online+offline)+")</font>")
 
 	def setStatus(self,jid,show,i=None,status=None):
 		if not self.main.shows.has_key(show):
@@ -212,7 +291,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			for item in self.getUserItems(jid):
 				name=unicode(item.text(0))
 				if status!=None:
-					item.setText(0,unicode(item.text(2))+"\n"+status)
+					item.setText(0,unicode(item.text(2))+"<br/><font size=\"-1\"><i>&nbsp;&nbsp;"+status+"</i></font>")
 				item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
 				item.setIcon(0,self.main.getIcon(jid,size=str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
 				if self.main.shows[unicode(show)]!="9":
@@ -253,18 +332,19 @@ class rosterWidget(QtGui.QTreeWidget):
 	def addGroup(self,name):
 		# add new group to the roster and return group QTreeWidgetItem
 		item=QtGui.QTreeWidgetItem(self)
-		item.setText(0,name)
+		item.setText(0,'<font color="#FFFFFF">'+name+"</font>")
 		item.setText(1,"1"+unicode(name).lower())
 		item.setText(2,name)
 		item.setIcon(0,QtGui.QIcon("images/"+self.main.config['rosterIconSize']+"/icons/group-closed.png"))
 		item.setBackgroundColor(0,QtGui.QColor("#000000"))
 		item.setBackgroundColor(3,QtGui.QColor("#000000"))
-		item.setTextColor(0,QtGui.QColor("#FFFFFF"))
-		item.setTextColor(3,QtGui.QColor("#FFFFFF"))
+		#item.setTextColor(0,QtGui.QColor("#FFFFFF"))
+		#item.setTextColor(3,QtGui.QColor("#FFFFFF"))
 		return item
 	
 	def addUser(self,jid,name,group,offline=True):
 		# add new user to the roster and resturn QTreeWidgetItem
+
 		if group==None:
 			item=QtGui.QTreeWidgetItem(self)
 		else:
@@ -331,15 +411,15 @@ class rosterWidget(QtGui.QTreeWidget):
 		action.setObjectName("delete_action")
 		# separator
 		contactMenu.addSeparator()
-		# groups -> submenu
+		# groups . submenu
 		group=contactMenu.addMenu (self.tr("Groups"))
-		# groups -> new group
+		# groups . new group
 		action=group.addAction(self.tr("New Group"))
 		action.setData(QtCore.QVariant(jid))
 		action.setObjectName("new_group")
-		# groups -> separator
+		# groups . separator
 		group.addSeparator()
-		# groups -> groups list
+		# groups . groups list
 		#g=self.getGroups(str(jid))
 		for k,v in self.main.client.roster['groups'].iteritems():
 			if k!="Unknown":
