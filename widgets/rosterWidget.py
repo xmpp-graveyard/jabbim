@@ -12,19 +12,19 @@ class delegate(QtGui.QItemDelegate):
 		
 	def paint(self,painter,option, index):
 		r=QtCore.QRect(QtCore.QPoint(0, 0), option.rect.size())
-		if unicode(index.data(QtCore.Qt.BackgroundRole).toString())=="#000000":
+		if not index.data(QtCore.Qt.BackgroundRole).isNull():
 			painter.save()
 			painter.translate(option.rect.topLeft())
 			painter.fillRect(r,QtGui.QBrush(QtGui.QColor(index.data(QtCore.Qt.BackgroundRole).toString())))
-			#drawBackground(painter, option, index);
+
 			painter.restore()
 
-		#print option.state
+
 		if option.state & QtGui.QStyle.State_Selected:
 			painter.save()
 			painter.translate(option.rect.topLeft())
 			painter.fillRect(r,option.palette.highlight())
-			#drawBackground(painter, option, index);
+
 			painter.restore()
 
 
@@ -34,19 +34,21 @@ class delegate(QtGui.QItemDelegate):
 			painter.translate(option.rect.topLeft())
 			icon.paint(painter,0,0,16,16)
 			painter.restore()
-
+			rect=option.rect.topLeft()
+			rect.setX(rect.x()+20)
+		else:
+			rect=option.rect.topLeft()
 		
 		doc=QtGui.QTextDocument()
 		doc.setHtml(index.data().toString())
 		painter.save()
-		rect=option.rect.topLeft()
-		rect.setX(rect.x()+20)
+
 		painter.translate(rect)
 		
 		doc.drawContents(painter, QtCore.QRectF(QtCore.QRect(QtCore.QPoint(0, 0), option.rect.size())))
-		#print "test"
+
 		painter.restore()
-		#drawFocus(painter, option, option.rect)
+
 
 	
 	def sizeHint(self,option,index):
@@ -101,6 +103,8 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.delegate=delegate()
 		print self.itemDelegate()
 		print self.delegate
+		self.setMouseTracking (True)
+
 		self.setItemDelegate(self.delegate)
 		print self.itemDelegate()
 		# main variables
@@ -132,9 +136,10 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.item.setText(1,"999")
 		self.setItemHidden(self.item, True)
 
-		self.tooltip=tooltipWidget(self.main)
+		#self.tooltip=tooltipWidget(self.main)
+		self.tooltip=None
 		self.timer=QtCore.QTimer()
-		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.tooltip.hide)
+		#QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.tooltip.hide)
 
 
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.contactClicked)
@@ -269,7 +274,7 @@ class rosterWidget(QtGui.QTreeWidget):
 					online+=1
 			self.main.client.roster['groups'][group].setText(0,"<font color=\"#FFFFFF\">"+unicode(self.main.client.roster['groups'][group].text(2))+" ("+str(online)+"/"+str(online+offline)+")</font>")
 
-	def setStatus(self,jid,show,i=None,status=None):
+	def setStatus(self,jid,show,i=None,status=None,first=False):
 		if not self.main.shows.has_key(show):
 			if len(self.main.client.roster['users'][jid].status)!=0:
 				if len(self.main.client.roster['users'][jid].status)>1:
@@ -292,12 +297,14 @@ class rosterWidget(QtGui.QTreeWidget):
 				name=unicode(item.text(0))
 				if status!=None:
 					item.setText(0,unicode(item.text(2))+"<br/><font size=\"-1\"><i>&nbsp;&nbsp;"+status+"</i></font>")
+					item.setData(32,4,QtCore.QVariant(unicode(status)))
 				item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
 				item.setIcon(0,self.main.getIcon(jid,size=str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
 				if self.main.shows[unicode(show)]!="9":
 					self.setItemHidden(item, False)
-		self.sortItems (1,QtCore.Qt.AscendingOrder)
-		self.refreshStats()
+		if not first:
+			self.sortItems (1,QtCore.Qt.AscendingOrder)
+			self.refreshStats()
 
 	def setResourceStatus(self,jid,resource,show):
 		if not self.main.shows.has_key(show):
@@ -318,7 +325,7 @@ class rosterWidget(QtGui.QTreeWidget):
 	def addSubGroup(self,name,sub,first="1"):
 		# add new group to the roster and return group QTreeWidgetItem
 		item=QtGui.QTreeWidgetItem(sub)
-		item.setText(0,name)
+		item.setText(0,"<b>"+name+"</b>")
 		item.setText(1,first+unicode(name).lower())
 		item.setText(2,name)
 		#item.setIcon(0,QtGui.QIcon("images/"+self.main.config['rosterIconSize']+"/icons/group-closed.png"))
@@ -342,7 +349,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		#item.setTextColor(3,QtGui.QColor("#FFFFFF"))
 		return item
 	
-	def addUser(self,jid,name,group,offline=True):
+	def addUser(self,jid,name,group,offline=True,first=False):
 		# add new user to the roster and resturn QTreeWidgetItem
 
 		if group==None:
@@ -369,10 +376,11 @@ class rosterWidget(QtGui.QTreeWidget):
 			show="offline"
 		if unicode(item.text(1))[0]=='9':
 			self.setItemHidden(item, offline)
-		self.setStatus(jid,show)
+		if not first:
+			self.setStatus(jid,show)
 
-		self.sortItems (1,QtCore.Qt.AscendingOrder)
-		self.refreshStats()
+			self.sortItems (1,QtCore.Qt.AscendingOrder)
+			self.refreshStats()
 		return item
 		
 	def resizeEvent(self,event):
@@ -553,47 +561,64 @@ class rosterWidget(QtGui.QTreeWidget):
 			contactMenu.move(event.globalX(),event.globalY())
 			contactMenu.show()
 
+	def mouseMoveEvent(self,event):
+		item=self.itemAt(int(event.x()),int(event.y()))
+		if self.tooltip!=item and item!=None and item.parent()!=None:
+			
+			if self.tooltip!=None:
+				status=unicode(self.tooltip.data(32,4).toString())
+				if status!="None" and len(status)!=0 and status!=None:
+					status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
+					self.tooltip.setText(0,unicode(self.tooltip.text(2))+"<br/><font size=\"-1\"><i>&nbsp;&nbsp;"+status+"</i></font>")
+				else:
+					self.tooltip.setText(0,unicode(self.tooltip.text(2)))
+			self.tooltip=item
+			item.setText(0,unicode(item.text(2))+"<br/><b>TEST<b>")
+		
+		return QtGui.QTreeWidget.mouseMoveEvent(self,event)
+
 
 	def viewportEvent(self,event):
-		if event.type()==QtCore.QEvent.ToolTip:# and self.tooltip.isHidden():
-			item=self.itemAt(int(event.x()),int(event.y()))
-			if item!=None:
-				if item.parent()!=None:
-					it=item.data(32,0)
-					it=it.toList()
-					jid=str(it[0].toString())
-					typ=str(it[1].toString())
-					if typ=="contact":
-						message=self.main.client.roster['users'][jid].status[1]
-						#if os.path.isfile(self.main.homeDir+'/.jabbim/avatars/'+jid):
-							#pixmap=QtGui.QPixmap()
-							#f=open(self.main.homeDir+'/.jabbim/avatars/'+jid,"rb")
-							#image=f.read()
-							#f.close()
-							#pixmap.loadFromData(image)
-							#if pixmap.isNull():
-								#self.tooltip.ui.icon.hide()
+		#print event.type()
+		#if event.type()==QtCore.QEvent.ToolTip:# and self.tooltip.isHidden():
+			#item=self.itemAt(int(event.x()),int(event.y()))
+			#if item!=None:
+				#if item.parent()!=None:
+					#it=item.data(32,0)
+					#it=it.toList()
+					#jid=str(it[0].toString())
+					#typ=str(it[1].toString())
+					#if typ=="contact":
+						#message=self.main.client.roster['users'][jid].status[1]
+						##if os.path.isfile(self.main.homeDir+'/.jabbim/avatars/'+jid):
+							##pixmap=QtGui.QPixmap()
+							##f=open(self.main.homeDir+'/.jabbim/avatars/'+jid,"rb")
+							##image=f.read()
+							##f.close()
+							##pixmap.loadFromData(image)
+							##if pixmap.isNull():
+								##self.tooltip.ui.icon.hide()
+							##else:
+								##self.tooltip.ui.icon.show()
+								##self.tooltip.ui.icon.setPixmap(pixmap.scaled(64,64,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
+						##else:
+						#self.tooltip.ui.icon.hide()
+						#self.tooltip.ui.jid.setText(jid)
+						#self.tooltip.ui.status.setText(self.main.status[self.main.icons[unicode(item.text(1))[0]]])
+						#if message!=None:
+							#if len(message)==0:
+								#self.tooltip.ui.message.hide()
 							#else:
-								#self.tooltip.ui.icon.show()
-								#self.tooltip.ui.icon.setPixmap(pixmap.scaled(64,64,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
+								#self.tooltip.ui.message.show()
+								#self.tooltip.ui.message.setText(message.replace("\n","<br/>"))
 						#else:
-						self.tooltip.ui.icon.hide()
-						self.tooltip.ui.jid.setText(jid)
-						self.tooltip.ui.status.setText(self.main.status[self.main.icons[unicode(item.text(1))[0]]])
-						if message!=None:
-							if len(message)==0:
-								self.tooltip.ui.message.hide()
-							else:
-								self.tooltip.ui.message.show()
-								self.tooltip.ui.message.setText(message.replace("\n","<br/>"))
-						else:
-							self.tooltip.ui.message.hide()
-						self.tooltip.adjustSize()
-						if int(event.y())+20+int(self.tooltip.height())>int(self.height()):
-							self.tooltip.move(self.mapToGlobal(QtCore.QPoint(0,event.y()-10-int(self.tooltip.height()))))
-						else:
-							self.tooltip.move(self.mapToGlobal(QtCore.QPoint(0,event.y()+20)))
+							#self.tooltip.ui.message.hide()
+						#self.tooltip.adjustSize()
+						#if int(event.y())+20+int(self.tooltip.height())>int(self.height()):
+							#self.tooltip.move(self.mapToGlobal(QtCore.QPoint(0,event.y()-10-int(self.tooltip.height()))))
+						#else:
+							#self.tooltip.move(self.mapToGlobal(QtCore.QPoint(0,event.y()+20)))
 						
-						self.tooltip.show()
-						self.timer.start(3000)
+						#self.tooltip.show()
+						#self.timer.start(3000)
 		return QtGui.QTreeWidget.viewportEvent(self,event)

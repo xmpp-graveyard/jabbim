@@ -81,10 +81,10 @@ class clientClass(pyxl.client.Client):
 					self.getDiscoInfo(host)
 			if len(groups)==0:
 				# add user item to Unknown group
-				self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups']['Unknown']))
+				self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups']['Unknown'],first=True))
 			for group in groups:
 				# add user item to the group
-				self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups'][group]))
+				self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups'][group],first=True))
 
 
 	def on_rosterArrived(self):
@@ -93,12 +93,20 @@ class clientClass(pyxl.client.Client):
 			if user.tag!=None and jid!=user.tag:
 				for item in self.roster['users'][jid].rosterItems:
 					self.roster['users'][user.tag].rosterItems.append(self.main.ui.roster.addMetaContact(user.tag,user.tag,item))
+		self.main.ui.roster.refreshStats()
 
 	def on_authFailed(self,xmlstream):
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(self.main.tr("Bad Jabber ID or password.")),0,1)
 	
-	def on_presence(self,jid,show):
-		
+	def on_firstpresence(self,  bulk):
+		for presence in bulk:
+			#print presence
+			jid=presence[0]
+			show=presence[1]
+			self.on_presence(jid,show,True)
+		self.main.ui.roster.refreshStats()
+	
+	def on_presence(self,jid,show,first=False):
 	
 		if show=="offline":
 
@@ -114,11 +122,11 @@ class clientClass(pyxl.client.Client):
 					del self.roster['users'][jid].resourcesItems[resource]
 				if len(self.roster['users'][jid].resources)!=0:
 					highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
-					self.main.ui.roster.setStatus(jid,highest.show)
+					self.main.ui.roster.setStatus(jid,highest.show,first=first)
 				else:
-					self.main.ui.roster.setStatus(jid,show)
+					self.main.ui.roster.setStatus(jid,show,first=first)
 			else:
-				self.main.ui.roster.setStatus(jid,show)
+				self.main.ui.roster.setStatus(jid,show,first=first)
 				
 			#if len(unicode(jid).rsplit("/"))!=1:
 				#resource=unicode(jid).rsplit("/")[1]
@@ -155,13 +163,13 @@ class clientClass(pyxl.client.Client):
 				status=None
 				if highest.status!=None:
 					status=highest.status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
-				self.main.ui.roster.setStatus(jid,highest.show,status=status)
+				self.main.ui.roster.setStatus(jid,highest.show,status=status,first=first)
 				self.main.ui.roster.setResourceStatus(jid,resource,show)
 			else:
 				status=self.roster['users'][jid].status[1]
 				if status!=None:
 					status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
-				self.main.ui.roster.setStatus(jid,show,status=status)
+				self.main.ui.roster.setStatus(jid,show,status=status,first=first)
 				
 	def on_xml(self,xml):
 		if self.main.xmlConsole.ui.enable.isChecked():
