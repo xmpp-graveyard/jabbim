@@ -39,6 +39,8 @@ class Client(derived):
 		self.ssl = SSL
 		self.roster = {'users':{},'groups':{}}
 		self.roster_meta = {} # jid: {'tag':tag,  'order': 1}
+		self.first_presence = []
+		self.first_wait = True
 		self.bookmarks = {'conference':{}, 'url': {}}
 		self.idlist = []
 		self.disco = {} # jid:{node1:{items:{attrs}, identity: {attrs}, features:[], err: {'info':'', 'items':''}}}
@@ -175,11 +177,50 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:time']", self.onTime90, 1)
 		self.getMetacontacts()
 		self.getBookmarks()
-		self.getDiscoInfo(self.jid.host)
+		self.getDiscoInfo(self.jid.host,  callback = self._pepSupport)
 		self.getDiscoItems(self.jid.host)
+#		self.sendPEPTune()
+#		self.registerPEP('sefator@jabber.se')
 #		self.getPrivacy()
 #		self.joinGC('jdev@conf.netlab.cz',  'Sefator')
 ##		self.sendFile('jjkobra@njs.netlab.cz/tkabber', 'test.txt', '10010', None)
+	def _pepSupport(self):
+		print 'pep support arrived'
+#		print self.jid.host,  self.disco
+#		print self.disco[self.jid.host][None]
+		for key,  val in self.disco[self.jid.host][None]['identities'].iteritems():
+			print key, val
+			if val['type'] == 'pep' :
+				print 'we got a PEP support'
+				self.pep = True
+				self.registerFeature('http://jabber.org/protocol/tune')
+				self.registerFeature('http://jabber.org/protocol/tune+notify')
+#		print self.disco[self.jid.host][None]['identities']
+	def sendPEP(self,  typ,  attrs):
+		iq = IQ(self.xmlstream, 'set')
+		pb = iq.addElement('pubsub', 'http://jabber.org/protocol/pubsub' ).addElement('publish')
+		pb['node'] = 'http://jabber.org/protocol/' + typ
+		tune = pb.addElement('item').addElement(typ, 'http://jabber.org/protocol/' + typ)
+		for key, val in attrs.iteritems():
+			tune.addElement(key,  content = val)
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		self.disp(iq['id'])
+		d.addCallback(self._pepReceived)
+
+	def _pepReceived(self,  el):
+		print el.toXml()
+	
+	def registerPEP(self,  to,  typ): #typ = tune|mood|activity
+		iq = IQ(self.xmlstream, 'set')
+		iq['to'] = to
+		sb = iq.addElement('pubsub',  'http://jabber.org/protocol/pubsub').addElement('subscribe')
+		sb['jid'] = self.jid.userhost()
+		sb['node'] ='http://jabber.org/protocol/'+typ
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		self.disp(iq['id'])
+		d.addCallback(self._pepReceived)
 
 	def registerFeature(self, feature, node = None):
 		if self.discofeatures.has_key(node):
@@ -438,10 +479,12 @@ class Client(derived):
 			self.on_xml(el.toXml())
 	def _onRosterArrive(self, el):
 		print 'roster arrived'
+		ln = 0
 		for child in el.elements():
 			if child.name == "query":
 				allGroups=['Unknown']
 				for item in child.elements():
+					ln = ln + 1
 					groups = []
 					for group in item.elements():
 						if group.name == 'group':
@@ -463,11 +506,16 @@ class Client(derived):
 					contact = Contact(self, item['jid'], name, item['subscription'], [], groups, tag =  tag, order =  order)
 					self.roster['users'][item['jid']] = contact
 					self.on_rosterAddUser(contact)
-		self.on_rosterArrived()
 
+		print 'roster arrived'
 		presence = domish.Element(('jabber:client','presence'))
 		self.on_xml(presence.toXml())
 		self.xmlstream.send(presence)
+		cekej = 20
+		if ln*0.1 < cekej:
+			cekej = ln*0.1
+		reactor.callLater(cekej,  self.onFirstPresence)
+		self.on_rosterArrived()
 
 	def _authfailed(self,xmlstream):
 		print "auth_failed"
@@ -479,6 +527,7 @@ class Client(derived):
 
 	def onMessage(self, el):
 		print 'message received'
+		print el.toXml()
 		typ = el['type']
 		frm = el['from']
 
@@ -525,6 +574,11 @@ class Client(derived):
 		print 'on unsubscribed'
 		self.on_unsubscribed(el['from'])	
 
+	
+	def onFirstPresence(self):
+		self.first_wait = False
+		self.on_firstpresence(self.first_presence)
+	
 	def onPresence(self, el):
 ##		print 'presence > ', el['from']
 		frm = jid.JID(el['from'])
@@ -578,10 +632,13 @@ class Client(derived):
 			if el['type'] =='unavailable':
 				show = 'offline'
 		if self.roster['users'].has_key(frm.userhost()):
-			self.roster['users'][unicode(frm.userhost())].setStatus(resource, show,status)
+			first = self.roster['users'][unicode(frm.userhost())].setStatus(resource, show,status)
 			self.roster['users'][frm.userhost()].setPriority(resource, priority)
 			self.roster['users'][frm.userhost()].setFeatures(resource, features)
-			self.on_presence(frm,show)
+			if first and self.first_wait:
+				self.first_presence.append((frm,show))
+			else:
+				self.on_presence(frm,show)
 		elif self.groupchats.has_key(frm.userhost()):
 			self.groupchats[frm.userhost()].setStatus(resource,  show,  status)
 			self.groupchats[frm.userhost()].setInfo(resource,  affiliation,  role,  truejid)
@@ -708,8 +765,8 @@ class Client(derived):
 		self.xmlstream.send(iq)
 
 
-	def getDiscoInfo(self, jid, node = None):
-		print 'requesting disco#info'
+	def getDiscoInfo(self, jid, node = None,  callback = None):
+		print 'requesting disco#info: ',  jid
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid
 		iq['from'] = self.jid.full()
@@ -719,10 +776,10 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._discoInfoReceived, node)
+		d.addCallback(self._discoInfoReceived, node,  callback)
 		d.addErrback(self._discoInfoErrReceived, (node, jid))
 
-	def _discoInfoReceived(self, el, node):
+	def _discoInfoReceived(self, el, node,  callback):
 		print 'disco#info received'
 		node_name = node
 		if self.disco.has_key(el['from']):
@@ -730,7 +787,7 @@ class Client(derived):
 				node = self.disco[el['from']][node_name]
 		else:
 			self.disco[el['from']] = {}
-			node = {'features':[], 'identities':{}}
+			node = {'features':[], 'identities':{},  'items': {}}
 		query = el.firstChildElement()
 		for child in query.elements():
 			if child.name == 'feature':
@@ -740,12 +797,16 @@ class Client(derived):
 					name = child['name']
 				else:
 					name = el['from']
+				print node
 				node['identities'][name] = child.attributes
 		self.disco[el['from']][node_name] = node
 		if self.disco[el['from']][node_name].has_key('err'):
 			if self.disco[el['from']][node_name]['err'].has_key('info'):
 				del self.disco[el['from']][node_name]['err']['info'] #timhle smazem pripadny error ktery zustal po predchozim dotazu
+
 		self.on_discoInfoReceived(el['from'], node_name)
+		if callback != None:
+			callback()
 
 	def _discoInfoErrReceived(self, err, info):
 		print 'disco#info error received'
@@ -765,6 +826,7 @@ class Client(derived):
 
 		node['err'] = el.firstChildElement().name
 		self.disco[jid][node_name] = node
+
 		self.on_discoInfoReceived(jid, node_name)
 
 	def getDiscoItems(self, jid, node = None):
@@ -789,7 +851,7 @@ class Client(derived):
 				node = self.disco[el['from']][node_name]
 		else:
 			self.disco[el['from']] = {}
-			node = {'items':{}}
+			node = {'features':[], 'identities':{},'items':{}}
 
 		query = el.firstChildElement()
 		for child in query.elements():

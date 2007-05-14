@@ -15,14 +15,16 @@ class Contact:
 
 
 	def setStatus(self, resource, show, status):
+		first = False
 		if self.resources.has_key(resource):
 			self.resources[resource].show = show
 			self.resources[resource].status =  status
 		else:
 			self.resources[resource] = Resource(self, resource, show = show, status = status, priority = 0)
+			first = True
 		if resource == self.getHighestResource():
 			self.status = (show, status)
-	
+		return first
 ##	def getResource(self, resource):
 ##		resource = False
 ##		for res in self.resources:

@@ -5,6 +5,9 @@ class derived:
 		pass
 	def on_presence(self,frm,show):
 		pass
+	def on_firstpresence(self,  bulk):
+		print bulk
+		pass
 	def on_shutdown(self):
 		pass
 	def on_xml(self, xml):
