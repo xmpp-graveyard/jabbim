@@ -152,10 +152,16 @@ class clientClass(pyxl.client.Client):
 									print "ERROR:",unicode(jid),unicode(show),unicode(resource),user
 								self.main.ui.roster.setResourceStatus(jid,i,v.show)
 				highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
-				self.main.ui.roster.setStatus(jid,highest.show)
+				status=None
+				if highest.status!=None:
+					status=highest.status[1].replace("\n"," ")
+				self.main.ui.roster.setStatus(jid,highest.show,status=status)
 				self.main.ui.roster.setResourceStatus(jid,resource,show)
 			else:
-				self.main.ui.roster.setStatus(jid,show)
+				status=self.roster['users'][jid].status[1]
+				if status!=None:
+					status=status.replace("\n"," ")
+				self.main.ui.roster.setStatus(jid,show,status=status)
 				
 	def on_xml(self,xml):
 		if self.main.xmlConsole.ui.enable.isChecked():

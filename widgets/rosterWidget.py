@@ -4,6 +4,22 @@ try:
 except:
 	print "PyQt4 is not installed."
 
+from tooltip_ui import *
+
+class tooltipWidget(QtGui.QWidget):
+	def __init__(self,main,parent=None):
+		apply(QtGui.QWidget.__init__,(self,parent))
+		self.setMouseTracking (True)
+		self.main=main
+		self.ui=Ui_tooltipwidget()
+		self.ui.setupUi(self)
+		self.ui.gridlayout.setMargin(0)
+		self.ui.gridlayout.setSpacing(0)
+		self.setWindowFlags(QtCore.Qt.Popup)
+		self.setPalette(QtGui.QToolTip.palette())
+	def enterEvent(self,event):
+		self.hide()
+
 class rosterWidget(QtGui.QTreeWidget):
 	def __init__(self,parent,main):
 		apply(QtGui.QTreeWidget.__init__,(self,parent))
@@ -36,6 +52,11 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.item=QtGui.QTreeWidgetItem(self)
 		self.item.setText(1,"999")
 		self.setItemHidden(self.item, True)
+
+		self.tooltip=tooltipWidget(self.main)
+		self.timer=QtCore.QTimer()
+		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.tooltip.hide)
+
 
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.contactClicked)
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemExpanded ( QTreeWidgetItem * )"),self.expanded)
@@ -169,7 +190,7 @@ class rosterWidget(QtGui.QTreeWidget):
 					online+=1
 			self.main.client.roster['groups'][group].setText(0,unicode(self.main.client.roster['groups'][group].text(2))+" ("+str(online)+"/"+str(online+offline)+")")
 
-	def setStatus(self,jid,show,i=None):
+	def setStatus(self,jid,show,i=None,status=None):
 		if not self.main.shows.has_key(show):
 			if len(self.main.client.roster['users'][jid].status)!=0:
 				if len(self.main.client.roster['users'][jid].status)>1:
@@ -178,6 +199,7 @@ class rosterWidget(QtGui.QTreeWidget):
 					show=self.main.client.roster['users'][jid].status
 			else:
 				show="online"
+
 		#print i
 		if i!=None:
 			item=i
@@ -189,6 +211,8 @@ class rosterWidget(QtGui.QTreeWidget):
 		else:
 			for item in self.getUserItems(jid):
 				name=unicode(item.text(0))
+				if status!=None:
+					item.setText(0,unicode(item.text(2))+"\n"+status)
 				item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
 				item.setIcon(0,self.main.getIcon(jid,size=str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
 				if self.main.shows[unicode(show)]!="9":
@@ -448,3 +472,48 @@ class rosterWidget(QtGui.QTreeWidget):
 			contactMenu=self.buildGroupMenu(unicode(item.text(2)))
 			contactMenu.move(event.globalX(),event.globalY())
 			contactMenu.show()
+
+
+	def viewportEvent(self,event):
+		if event.type()==QtCore.QEvent.ToolTip:# and self.tooltip.isHidden():
+			item=self.itemAt(int(event.x()),int(event.y()))
+			if item!=None:
+				if item.parent()!=None:
+					it=item.data(32,0)
+					it=it.toList()
+					jid=str(it[0].toString())
+					typ=str(it[1].toString())
+					if typ=="contact":
+						message=self.main.client.roster['users'][jid].status[1]
+						#if os.path.isfile(self.main.homeDir+'/.jabbim/avatars/'+jid):
+							#pixmap=QtGui.QPixmap()
+							#f=open(self.main.homeDir+'/.jabbim/avatars/'+jid,"rb")
+							#image=f.read()
+							#f.close()
+							#pixmap.loadFromData(image)
+							#if pixmap.isNull():
+								#self.tooltip.ui.icon.hide()
+							#else:
+								#self.tooltip.ui.icon.show()
+								#self.tooltip.ui.icon.setPixmap(pixmap.scaled(64,64,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
+						#else:
+						self.tooltip.ui.icon.hide()
+						self.tooltip.ui.jid.setText(jid)
+						self.tooltip.ui.status.setText(self.main.status[self.main.icons[unicode(item.text(1))[0]]])
+						if message!=None:
+							if len(message)==0:
+								self.tooltip.ui.message.hide()
+							else:
+								self.tooltip.ui.message.show()
+								self.tooltip.ui.message.setText(message.replace("\n","<br/>"))
+						else:
+							self.tooltip.ui.message.hide()
+						self.tooltip.adjustSize()
+						if int(event.y())+20+int(self.tooltip.height())>int(self.height()):
+							self.tooltip.move(self.mapToGlobal(QtCore.QPoint(0,event.y()-10-int(self.tooltip.height()))))
+						else:
+							self.tooltip.move(self.mapToGlobal(QtCore.QPoint(0,event.y()+20)))
+						
+						self.tooltip.show()
+						self.timer.start(3000)
+		return QtGui.QTreeWidget.viewportEvent(self,event)
