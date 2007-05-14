@@ -512,8 +512,9 @@ class Client(derived):
 		self.on_xml(presence.toXml())
 		self.xmlstream.send(presence)
 		cekej = 20
-		if ln*0.1 < cekej:
-			cekej = ln*0.1
+		if ln*0.03 < cekej:
+			cekej = ln*0.03
+		print ln,  cekej
 		reactor.callLater(cekej,  self.onFirstPresence)
 		self.on_rosterArrived()
 
@@ -576,8 +577,10 @@ class Client(derived):
 
 	
 	def onFirstPresence(self):
+		print 'first presences'
 		self.first_wait = False
 		self.on_firstpresence(self.first_presence)
+		print  self.first_presence
 	
 	def onPresence(self, el):
 ##		print 'presence > ', el['from']
@@ -637,6 +640,7 @@ class Client(derived):
 			self.roster['users'][frm.userhost()].setFeatures(resource, features)
 			if first and self.first_wait:
 				self.first_presence.append((frm,show))
+				print show
 			else:
 				self.on_presence(frm,show)
 		elif self.groupchats.has_key(frm.userhost()):

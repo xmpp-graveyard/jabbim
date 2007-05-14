@@ -6,7 +6,9 @@ class derived:
 	def on_presence(self,frm,show):
 		pass
 	def on_firstpresence(self,  bulk):
-		print bulk
+		for pres in bulk:
+			print pres[0], pres[1]
+			self.on_presence(pres[0], pres[1])
 		pass
 	def on_shutdown(self):
 		pass
