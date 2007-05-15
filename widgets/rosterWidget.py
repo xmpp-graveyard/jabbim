@@ -6,6 +6,12 @@ except:
 
 from tooltip_ui import *
 
+class doc(QtGui.QTextDocument):
+	def __init__(self,parent=None):
+		apply(QtGui.QTextDocument.__init__,(self,parent))
+
+
+#documentLayout()->anchorAt(position);
 class delegate(QtGui.QItemDelegate):
 	def __init__(self,parent=None):
 		apply(QtGui.QItemDelegate.__init__,(self,parent))
@@ -561,21 +567,32 @@ class rosterWidget(QtGui.QTreeWidget):
 			contactMenu.move(event.globalX(),event.globalY())
 			contactMenu.show()
 
-	def mouseMoveEvent(self,event):
-		item=self.itemAt(int(event.x()),int(event.y()))
-		if self.tooltip!=item and item!=None and item.parent()!=None:
+	#def mouseMoveEvent(self,event):
+		#item=self.itemAt(int(event.x()),int(event.y()))
+		#if self.tooltip!=item and item!=None and item.parent()!=None:
 			
-			if self.tooltip!=None:
-				status=unicode(self.tooltip.data(32,4).toString())
-				if status!="None" and len(status)!=0 and status!=None:
-					status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
-					self.tooltip.setText(0,unicode(self.tooltip.text(2))+"<br/><font size=\"-1\"><i>&nbsp;&nbsp;"+status+"</i></font>")
-				else:
-					self.tooltip.setText(0,unicode(self.tooltip.text(2)))
-			self.tooltip=item
-			item.setText(0,unicode(item.text(2))+"<br/><b>TEST<b>")
+			#if self.tooltip!=None:
+				#status=unicode(self.tooltip.data(32,4).toString())
+				#if status!="None" and len(status)!=0 and status!=None:
+					#status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
+					#self.tooltip.setText(0,unicode(self.tooltip.text(2))+"<br/><font size=\"-1\"><i>&nbsp;&nbsp;"+status+"</i></font>")
+				#else:
+					#self.tooltip.setText(0,unicode(self.tooltip.text(2)))
+			#self.tooltip=item
+			#it=item.data(32,0)
+			#it=it.toList()
+			#jid=str(it[0].toString())
+			#contact=self.main.client.roster['users'][jid]
+			#text=""
+			#if contact.resources.keys()[0]!=None:
+				#text+="<br/><b>Resources:</b><br/>"
+			#if text!="":
+				#for resource in contact.resources.keys():
+					#if resource!=None:
+						#text+="&nbsp;&nbsp;<a href=\""+resource+"\">"+resource+"</a><br/>"
+				#item.setText(0,unicode(item.text(2))+text)
 		
-		return QtGui.QTreeWidget.mouseMoveEvent(self,event)
+		#return QtGui.QTreeWidget.mouseMoveEvent(self,event)
 
 
 	def viewportEvent(self,event):
