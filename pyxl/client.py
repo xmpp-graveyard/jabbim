@@ -432,7 +432,7 @@ class Client(derived):
 			m = storage.addElement('meta')
 			m['jid'] = jid
 			m['tag'] = val['tag']
-			m['order'] = val['order']
+			m['order'] = str(val['order'])
 		self.disp(iq['id'])
 		self.on_xml(iq.toXml())
 		d = iq.send()
@@ -514,7 +514,7 @@ class Client(derived):
 		cekej = 20
 		if ln*0.03 < cekej:
 			cekej = ln*0.03
-		print ln,  cekej
+		#print ln,  cekej
 		reactor.callLater(cekej,  self.onFirstPresence)
 		self.on_rosterArrived()
 
