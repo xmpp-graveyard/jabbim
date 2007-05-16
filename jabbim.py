@@ -72,27 +72,60 @@ class clientClass(pyxl.client.Client):
 		name=contact.name
 		jid=contact.jid
 		
-		if jid!=contact.tag:
-			if len(unicode(jid).rsplit("@"))!=1:
-				host=unicode(jid).rsplit("@")[1]
-				if not self.disco.has_key(host) and not host in self.temp_hosts:
-					#self.main.getUserType(host)
-					self.temp_hosts.append(host)
-					self.getDiscoInfo(host)
-			if len(groups)==0:
-				# add user item to Unknown group
-				self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups']['Unknown'],first=True))
-			for group in groups:
-				# add user item to the group
-				self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups'][group],first=True))
+		#if jid!=contact.tag:
+		if len(unicode(jid).rsplit("@"))!=1:
+			host=unicode(jid).rsplit("@")[1]
+			if not self.disco.has_key(host) and not host in self.temp_hosts:
+				#self.main.getUserType(host)
+				self.temp_hosts.append(host)
+				self.getDiscoInfo(host)
+		if len(groups)==0:
+			# add user item to Unknown group
+			self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups']['Unknown'],first=True))
+		for group in groups:
+			# add user item to the group
+			
+			self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups'][group],first=True))
 
 
 	def on_rosterArrived(self):
 		#del self.temp_hosts
+		#{u'cze2rus@dict.jabbim.cz': {'tag': u'cze2spa@dict.jabbim.cz', 'order': 1}, u'24.cz@tv.jabbim.cz': {'tag': u'hanzz@njs.netlab.cz', 'order': 1}, 'deutschewelle@tv.jabbim.cz': {'tag': u'dsf@tv.jabbim.cz', 'order': 1}, u'hanzz@njs.netlab.cz': {'tag': u'sef@njs.netlab.cz', 'order': 1}, u'thefox@jabbim.sk': {'tag': u'zpravy@rss.netlab.cz', 'order': 1}, u'sef@njs.netlab.cz': {'tag': u'sef@njs.netlab.cz', 'order': 1}}
+		meta={}
 		for jid,user in self.roster['users'].iteritems():
-			if user.tag!=None and jid!=user.tag:
-				for item in self.roster['users'][jid].rosterItems:
-					self.roster['users'][user.tag].rosterItems.append(self.main.ui.roster.addMetaContact(user.tag,user.tag,item))
+			#print jid
+			if user.tag!=None:
+				if not meta.has_key(user.tag):
+					meta[user.tag]=[jid]
+				else:
+					meta[user.tag].append(jid)
+		mainJid=""
+		for tag,jids in meta.iteritems():
+			for jid in jids:
+				if jid!=tag:
+					mainJid=jids[0]
+					break
+			for jid in jids:
+				print "*",jid
+				if jid!=mainJid:
+					toDel=[]
+					for item in self.roster['users'][mainJid].rosterItems:
+						self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addMetaContact(jid,jid,item))
+					for contact in self.roster['users'][jid].rosterItems:
+						it=contact.data(32,0)
+						it=it.toList()
+						if unicode(it[1].toString())=="contact":
+							toDel.append(contact)
+							parent=contact.parent()
+							parent.takeChild(parent.indexOfChild(contact))
+					for item in toDel:
+						self.roster['users'][jid].rosterItems.remove(item)
+
+		#for jid,user in self.roster['users'].iteritems():
+			#if user.tag!=None and jid!=user.tag:
+				#print jid, user.tag
+				#for item in self.roster['users'][user.tag].rosterItems:
+					#self.roster['users'][meta[user.tag]].rosterItems.append(self.main.ui.roster.addMetaContact(jid,jid,item))
 		self.main.ui.roster.refreshStats()
 
 	def on_authFailed(self,xmlstream):
@@ -252,6 +285,7 @@ class clientClass(pyxl.client.Client):
 		pass
 
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None):
+		print chatstate
 		#print "message",frm
 		if self.roster['users'].has_key(str(frm).rsplit("/")[0]):
 			user=self.roster['users'][str(frm).rsplit("/")[0]].rosterItems[0]

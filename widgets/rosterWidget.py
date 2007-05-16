@@ -212,16 +212,26 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.drag=QtGui.QDrag(self)
 		mimeData=QtCore.QMimeData()
 		mimeData.setText(data)
-		self.dnd[data]=item.parent()
+		self.dnd[data]=item
 		self.drag.setMimeData(mimeData)
 		self.action=self.drag.start(QtCore.Qt.CopyAction)
 
 	def dropMimeData(self,parent, index, data, action ):
 		# drop data => change group for dropped contact
 		jid=str(data.text())
-		oldParent=self.dnd[jid]
+		oldParent=self.dnd[jid].parent()
+		item=self.dnd[jid]
+		it=item.data(32,0)
+		it=it.toList()
+		typ=unicode(it[1].toString())
+
+		it=parent.data(32,0)
+		it=it.toList()
+		parentJid=unicode(it[0].toString())
+		parentTyp=unicode(it[1].toString())
+
 		del self.dnd[jid]
-		if parent in self.main.client.roster['groups'].values():
+		if parent in self.main.client.roster['groups'].values() and typ=="contact":
 			#name=unicode(self.main.client.roster['users'][jid].rosterItems[0].text(2))
 			#QString QInputDialog::getItem ( QWidget * parent, const QString & title, const QString & label, const QStringList & list, int current = 0, bool editable = true, bool * ok = 0, Qt::WindowFlags f = 0 )   [static]
 			items=QtCore.QStringList()
@@ -232,7 +242,6 @@ class rosterWidget(QtGui.QTreeWidget):
 			# if user set new name of group
 			if b==True and len(q)!=0:
 				index=int(items.indexOf(QtCore.QRegExp(q)))
-				print index
 				if index==0:
 					self.changeGroup(jid,"+",unicode(parent.text(2)))
 				else:
@@ -241,6 +250,46 @@ class rosterWidget(QtGui.QTreeWidget):
 					g=contact.groups
 					g.remove(unicode(oldParent.text(2)))
 					self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g+[unicode(parent.text(2))])
+
+			return True
+		elif parentTyp=="contact" and typ=="contact":
+			contact=self.main.client.roster['users'][jid]
+			i=contact.getUserItems()[0].clone() # clone contact item
+			i.setData(32,0,QtCore.QVariant([unicode(jid),unicode("meta")]))
+			contact.rosterItems.append(i)
+			toDel=[]
+			for contact in self.main.client.roster['users'][jid].rosterItems:
+				it=contact.data(32,0)
+				it=it.toList()
+				print jid,unicode(it[1].toString())
+				if unicode(it[1].toString())=="contact":
+					toDel.append(contact)
+					par=contact.parent()
+					par.takeChild(par.indexOfChild(contact))
+			for item in toDel:
+				self.main.client.roster['users'][jid].rosterItems.remove(item)
+
+			for meta in self.main.client.roster['users'][parentJid].rosterItems:
+				it=meta.data(32,0)
+				it=it.toList()
+				if unicode(it[1].toString())=="contact":
+					meta.addChild(i) # add item to the new group
+			
+			found=False
+			for meta in self.main.client.roster['users'][parentJid].rosterItems:
+				it=meta.data(32,0)
+				it=it.toList()
+				if unicode(it[1].toString())=="meta":
+					found=True
+					parentJid=unicode(it[0].toString())
+					break
+			if not found:
+				self.main.client.roster_meta[parentJid]={'tag':parentJid,'order':1}
+			self.main.client.roster_meta[jid]={'tag':parentJid,'order':1}
+
+			print self.main.client.roster_meta
+			self.main.client.setMetacontacts()
+
 
 			return True
 		else:
@@ -348,6 +397,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(0,'<font color="#FFFFFF">'+name+"</font>")
 		item.setText(1,"1"+unicode(name).lower())
 		item.setText(2,name)
+		item.setData(32,0,QtCore.QVariant([unicode(""),unicode("group")]))
 		item.setIcon(0,QtGui.QIcon("images/"+self.main.config['rosterIconSize']+"/icons/group-closed.png"))
 		item.setBackgroundColor(0,QtGui.QColor("#000000"))
 		item.setBackgroundColor(3,QtGui.QColor("#000000"))
