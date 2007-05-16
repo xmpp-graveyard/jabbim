@@ -89,6 +89,8 @@ class clientClass(pyxl.client.Client):
 
 
 	def on_rosterArrived(self):
+		if int(self.roster['groups']['Unknown'].childCount())==0:
+			self.main.ui.roster.setItemHidden(self.roster['groups']['Unknown'],True)
 		#del self.temp_hosts
 		#{u'cze2rus@dict.jabbim.cz': {'tag': u'cze2spa@dict.jabbim.cz', 'order': 1}, u'24.cz@tv.jabbim.cz': {'tag': u'hanzz@njs.netlab.cz', 'order': 1}, 'deutschewelle@tv.jabbim.cz': {'tag': u'dsf@tv.jabbim.cz', 'order': 1}, u'hanzz@njs.netlab.cz': {'tag': u'sef@njs.netlab.cz', 'order': 1}, u'thefox@jabbim.sk': {'tag': u'zpravy@rss.netlab.cz', 'order': 1}, u'sef@njs.netlab.cz': {'tag': u'sef@njs.netlab.cz', 'order': 1}}
 		meta={}
