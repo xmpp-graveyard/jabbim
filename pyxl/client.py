@@ -8,6 +8,7 @@ from twisted.names import client as dns
 from twisted.words.protocols import jabber
 from twisted.words.protocols.jabber import client,jid
 from twisted.words.xish import domish
+from twisted.words.xish.domish import Element
 from twisted.internet import reactor
 from twisted.words.protocols.jabber.xmlstream import IQ
 
@@ -61,7 +62,7 @@ class Client(derived):
 		'proxy.netlab.cz':["77.48.19.1", "7777"] ,
 		'proxy.jabber.org':['208.245.212.98', '7777'],
 		'serafim.cd.chalmers.se' : ['serafim.cd.chalmers.se', '7777']
-}
+		}
 		
 		self.last = 0
 		self.registerFeature('jabber:iq:version')
@@ -79,7 +80,7 @@ class Client(derived):
 		self.caps_cache[node] = features
 
 	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None, caps = True):
-		presence = domish.Element((None, 'presence'))
+		presence = Element((None, 'presence'))
 		presence['from'] = self.jid.full()
 		if to:
 			presence['to'] = to
@@ -103,7 +104,7 @@ class Client(derived):
 		self.xmlstream.send(presence)
 
 	def sendMessage(self, to, body, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
-		message = domish.Element((None,'message'))
+		message = Element((None,'message'))
 		message['to'] = to
 		message.addElement('body', content = body)
 		message['type'] = typ
@@ -232,7 +233,6 @@ class Client(derived):
 	def getRoster(self):
 		print 'get roster'
 		iq = IQ(self.xmlstream, 'get')
-##		iq['from'] =self.jid.full()
 		iq['type'] = 'get'
 		q = iq.addElement('query')
 		q['xmlns']='jabber:iq:roster'
@@ -251,6 +251,7 @@ class Client(derived):
 					allGroups.append(k)
 				for item in child.elements():
 					groups = []
+					itemjid = item['jid']
 					for group in item.elements():
 						if group.name == 'group':
 							groups.append(unicode(group))
@@ -266,26 +267,26 @@ class Client(derived):
 					if item.hasAttribute('subscription'):
 						subscription = item['subscription']
 					#print item['jid'],groups
-					if subscription == 'remove'  and self.roster['users'].has_key(item['jid']):
+					if subscription == 'remove'  and self.roster['users'].has_key(itemjid):
 						print 'deleting contact'
-						self.on_DeleteContact(item['jid'])
-						del self.roster['users'][item['jid']]
-					elif not self.roster['users'].has_key(item['jid']):
+						self.on_DeleteContact(itemjid)
+						del self.roster['users'][itemjid]
+					elif not self.roster['users'].has_key(itemjid):
 						rosterItems=[]
 						if len(groups)==0:
 							# add user item to Unknown group
-							rosterItems.append(self.main.ui.roster.addUser(item['jid'],name,self.roster['groups']['Unknown']))
+							rosterItems.append(self.main.ui.roster.addUser(itemjid,name,self.roster['groups']['Unknown']))
 						for group in groups:
 							# add user item to the group
-							rosterItems.append(self.main.ui.roster.addUser(item['jid'],name,self.roster['groups'][group]))
-						contact = Contact(self, item['jid'], name, subscription, rosterItems, groups)
-						self.roster['users'][item['jid']] = contact
-					elif subscription != 'remove'  and self.roster['users'].has_key(item['jid']):
-						contact = self.roster['users'][item['jid']]
+							rosterItems.append(self.main.ui.roster.addUser(itemjid,name,self.roster['groups'][group]))
+						contact = Contact(self, itemjid, name, subscription, rosterItems, groups)
+						self.roster['users'][itemjid] = contact
+					elif subscription != 'remove'  and self.roster['users'].has_key(itemjid):
+						contact = self.roster['users'][itemjid]
 						contact.name = name
 						contact.groups = groups
-						self.on_UpdateContact(item['jid'])
-		iq = domish.Element((None, 'iq'))
+						self.on_UpdateContact(itemjid)
+		iq = Element((None, 'iq'))
 		iq['from'] = self.jid.full()
 		iq['to'] = self.jid.host
 		iq['id'] = el['id']
@@ -294,7 +295,7 @@ class Client(derived):
 		self.xmlstream.send(iq)
 
 	def sendRosterUpdate(self, jid, name, subscription, groups):
-		iq = domish.Element((None, 'iq'))
+		iq = Element((None, 'iq'))
 		iq.addUniqueId()
 		iq['from'] = self.jid.full()
 		iq['type'] = 'set'
@@ -508,12 +509,12 @@ class Client(derived):
 					self.on_rosterAddUser(contact)
 
 		print 'roster arrived'
-		presence = domish.Element(('jabber:client','presence'))
+		presence = Element(('jabber:client','presence'))
 		self.on_xml(presence.toXml())
 		self.xmlstream.send(presence)
 		cekej = 20
-		if ln*0.03 < cekej:
-			cekej = ln*0.03
+		if ln*0.05 < cekej:
+			cekej = ln*0.05
 		#print ln,  cekej
 		reactor.callLater(cekej,  self.onFirstPresence)
 		self.on_rosterArrived()
@@ -580,11 +581,11 @@ class Client(derived):
 		print 'first presences'
 		self.first_wait = False
 		self.on_firstpresence(self.first_presence)
-		print  self.first_presence
 	
 	def onPresence(self, el):
 ##		print 'presence > ', el['from']
 		frm = jid.JID(el['from'])
+		fromjid = frm.userhost()
 		resource = jid.JID(el['from']).resource
 
 		show = status = priority = typ = affiliation = role = truejid = None
@@ -634,20 +635,20 @@ class Client(derived):
 		elif el.hasAttribute('type'):
 			if el['type'] =='unavailable':
 				show = 'offline'
-		if self.roster['users'].has_key(frm.userhost()):
-			first = self.roster['users'][unicode(frm.userhost())].setStatus(resource, show,status)
-			self.roster['users'][frm.userhost()].setPriority(resource, priority)
-			self.roster['users'][frm.userhost()].setFeatures(resource, features)
+		if self.roster['users'].has_key(fromjid):
+			first = self.roster['users'][unicode(fromjid)].setStatus(resource, show,status)
+			self.roster['users'][fromjid].setPriority(resource, priority)
+			self.roster['users'][fromjid].setFeatures(resource, features)
 			if first and self.first_wait:
 				self.first_presence.append((frm,show))
 				print show
 			else:
 				self.on_presence(frm,show)
-		elif self.groupchats.has_key(frm.userhost()):
-			self.groupchats[frm.userhost()].setStatus(resource,  show,  status)
-			self.groupchats[frm.userhost()].setInfo(resource,  affiliation,  role,  truejid)
-			#self.groupchats[frm.userhost()]
-			self.on_GCpresence(frm.userhost(), resource,  show,  status,  codes)
+		elif self.groupchats.has_key(fromjid):
+			self.groupchats[fromjid].setStatus(resource,  show,  status)
+			self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid)
+			#self.groupchats[fromjid]
+			self.on_GCpresence(fromjid, resource,  show,  status,  codes)
 			return
 		else:
 ##			print 'contact not in roster'
@@ -678,7 +679,7 @@ class Client(derived):
 				features.append(child['var'])
 		self.caps_cache[node] = features
 		frm = jid.JID(el['from'])
-		resource = jid.JID(el['from']).resource
+		resource = frm.resource
 		if self.roster['users'].has_key(frm.userhost()):
 			self.roster['users'][frm.userhost()].setFeatures(resource, features)
 
@@ -689,7 +690,7 @@ class Client(derived):
 			self.disp(el['id'])
 		except:
 			print el.toXml()
-		iq = domish.Element((None, 'iq'))
+		iq = Element((None, 'iq'))
 		iq['to'] = el['from']
 		iq['type'] = 'result'
 		iq['id'] = el['id']
@@ -724,7 +725,7 @@ class Client(derived):
 	def onDiscoInfo(self, el):
 		print 'received disco#info request'
 		self.disp(el['id'])
-		iq = domish.Element((None,'iq'))
+		iq = Element((None,'iq'))
 		iq['to'] = el['from']
 		iq['type'] = 'result'
 		iq['id'] = el['id']
@@ -757,7 +758,7 @@ class Client(derived):
 	def onLast(self, el):
 		print 'received last request'
 		self.disp(el['id'])
-		iq = domish.Element((None,'iq'))
+		iq = Element((None,'iq'))
 		iq['to'] = el['from']
 		iq['type'] = 'result'
 		iq['id'] = el['id']
@@ -786,11 +787,12 @@ class Client(derived):
 	def _discoInfoReceived(self, el, node,  callback):
 		print 'disco#info received'
 		node_name = node
-		if self.disco.has_key(el['from']):
-			if self.disco[el['from']].has_key(node_name):
-				node = self.disco[el['from']][node_name]
+		frm = el['from']
+		if self.disco.has_key(frm):
+			if self.disco[frm].has_key(node_name):
+				node = self.disco[frm][node_name]
 		else:
-			self.disco[el['from']] = {}
+			self.disco[frm] = {}
 			node = {'features':[], 'identities':{},  'items': {}}
 		query = el.firstChildElement()
 		for child in query.elements():
@@ -800,15 +802,15 @@ class Client(derived):
 				if child.hasAttribute('name'):
 					name = child['name']
 				else:
-					name = el['from']
+					name = frm
 				print node
 				node['identities'][name] = child.attributes
-		self.disco[el['from']][node_name] = node
-		if self.disco[el['from']][node_name].has_key('err'):
-			if self.disco[el['from']][node_name]['err'].has_key('info'):
-				del self.disco[el['from']][node_name]['err']['info'] #timhle smazem pripadny error ktery zustal po predchozim dotazu
+		self.disco[frm][node_name] = node
+		if self.disco[frm][node_name].has_key('err'):
+			if self.disco[frm][node_name]['err'].has_key('info'):
+				del self.disco[frm][node_name]['err']['info'] #timhle smazem pripadny error ktery zustal po predchozim dotazu
 
-		self.on_discoInfoReceived(el['from'], node_name)
+		self.on_discoInfoReceived(frm, node_name)
 		if callback != None:
 			callback()
 
@@ -850,11 +852,12 @@ class Client(derived):
 	def _discoItemsReceived(self, el, node):
 		print 'disco#items received'
 		node_name = node
-		if self.disco.has_key(el['from']):
-			if self.disco[el['from']].has_key(node_name):
-				node = self.disco[el['from']][node_name]
+		frm = el['from']
+		if self.disco.has_key(frm):
+			if self.disco[frm].has_key(node_name):
+				node = self.disco[frm][node_name]
 		else:
-			self.disco[el['from']] = {}
+			self.disco[frm] = {}
 			node = {'features':[], 'identities':{},'items':{}}
 
 		query = el.firstChildElement()
@@ -862,12 +865,12 @@ class Client(derived):
 			if child.name == 'items':
 				node['items'][child['name']] = child.attributes
 
-		self.disco[el['from']][node_name] = node
+		self.disco[frm][node_name] = node
 
-		if self.disco[el['from']][node_name].has_key('err'):
-			if self.disco[el['from']][node_name]['err'].has_key('items'):
-				del self.disco[el['from']][node_name]['err']['items'] #timhle smazem pripadny error ktery zustal po predchozim dotazu
-		self.on_discoItemsReceived(el['from'], node_name)
+		if self.disco[frm][node_name].has_key('err'):
+			if self.disco[frm][node_name]['err'].has_key('items'):
+				del self.disco[frm][node_name]['err']['items'] #timhle smazem pripadny error ktery zustal po predchozim dotazu
+		self.on_discoItemsReceived(frm, node_name)
 
 	def _discoItemsErrReceived(self, err, info):
 		print 'disco#items error received'
@@ -925,7 +928,7 @@ class Client(derived):
 	def onTime202(self, el):
 		print 'received time202 request'
 		self.disp(el['id'])
-		iq = domish.Element((None,'iq'))
+		iq = Element((None,'iq'))
 		iq['to'] = el['from']
 		iq['type'] = 'result'
 		iq['id'] = el['id']
@@ -959,7 +962,7 @@ class Client(derived):
 	def onTime90(self, el):
 		print 'received time90 request'
 		self.disp(el['id'])
-		iq = domish.Element((None,'iq'))
+		iq = Element((None,'iq'))
 		iq['to'] = el['from']
 		iq['type'] = 'result'
 		iq['id'] = el['id']
@@ -1009,7 +1012,6 @@ class Client(derived):
 		iq = IQ(self.xmlstream, 'set')
 		iq['to'] = el['from']
 		q = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
-		
 		q['sid'] = sid
 		q['mode'] = 'tcp'
 		for proxy, data in self.ft_proxies.iteritems():
