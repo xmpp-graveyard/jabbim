@@ -94,6 +94,7 @@ class clientClass(pyxl.client.Client):
 		#del self.temp_hosts
 		#{u'cze2rus@dict.jabbim.cz': {'tag': u'cze2spa@dict.jabbim.cz', 'order': 1}, u'24.cz@tv.jabbim.cz': {'tag': u'hanzz@njs.netlab.cz', 'order': 1}, 'deutschewelle@tv.jabbim.cz': {'tag': u'dsf@tv.jabbim.cz', 'order': 1}, u'hanzz@njs.netlab.cz': {'tag': u'sef@njs.netlab.cz', 'order': 1}, u'thefox@jabbim.sk': {'tag': u'zpravy@rss.netlab.cz', 'order': 1}, u'sef@njs.netlab.cz': {'tag': u'sef@njs.netlab.cz', 'order': 1}}
 		meta={}
+
 		for jid,user in self.roster['users'].iteritems():
 			#print jid
 			if user.tag!=None:
@@ -101,6 +102,7 @@ class clientClass(pyxl.client.Client):
 					meta[user.tag]=[jid]
 				else:
 					meta[user.tag].append(jid)
+		print "META:",meta
 		mainJid=""
 		for tag,jids in meta.iteritems():
 			for jid in jids:
