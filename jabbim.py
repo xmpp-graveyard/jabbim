@@ -126,6 +126,7 @@ class clientClass(pyxl.client.Client):
 				#print jid, user.tag
 				#for item in self.roster['users'][user.tag].rosterItems:
 					#self.roster['users'][meta[user.tag]].rosterItems.append(self.main.ui.roster.addMetaContact(jid,jid,item))
+		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.main.ui.roster.refreshStats()
 
 	def on_authFailed(self,xmlstream):
