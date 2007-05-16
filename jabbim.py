@@ -103,27 +103,29 @@ class clientClass(pyxl.client.Client):
 				else:
 					meta[user.tag].append(jid)
 		print "META:",meta
-		mainJid=""
+		
 		for tag,jids in meta.iteritems():
+			mainJid=None
 			for jid in jids:
 				if jid!=tag:
 					mainJid=jids[0]
 					break
-			for jid in jids:
-				print "*",jid
-				if jid!=mainJid:
-					toDel=[]
-					for item in self.roster['users'][mainJid].rosterItems:
-						self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addMetaContact(jid,jid,item))
-					for contact in self.roster['users'][jid].rosterItems:
-						it=contact.data(32,0)
-						it=it.toList()
-						if unicode(it[1].toString())=="contact":
-							toDel.append(contact)
-							parent=contact.parent()
-							parent.takeChild(parent.indexOfChild(contact))
-					for item in toDel:
-						self.roster['users'][jid].rosterItems.remove(item)
+			if mainJid!=None:
+				for jid in jids:
+					print "*",jid
+					if jid!=mainJid:
+						toDel=[]
+						for item in self.roster['users'][mainJid].rosterItems:
+							self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addMetaContact(jid,jid,item))
+						for contact in self.roster['users'][jid].rosterItems:
+							it=contact.data(32,0)
+							it=it.toList()
+							if unicode(it[1].toString())=="contact":
+								toDel.append(contact)
+								parent=contact.parent()
+								parent.takeChild(parent.indexOfChild(contact))
+						for item in toDel:
+							self.roster['users'][jid].rosterItems.remove(item)
 
 		#for jid,user in self.roster['users'].iteritems():
 			#if user.tag!=None and jid!=user.tag:
