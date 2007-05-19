@@ -529,7 +529,6 @@ class Client(derived):
 
 	def onMessage(self, el):
 		print 'message received'
-		print el.toXml()
 		typ = el['type']
 		frm = el['from']
 
@@ -546,10 +545,8 @@ class Client(derived):
 				chatstate = child.name
 			if child.name == 'delay':
 				delay = child['stamp']
-			elif child.name == 'x':
-				if child.hasAttribute('jabber:x:delay'):
-					delay = child['stamp']
-
+			if child.name == 'x':
+					delay = child.getAttribute('stamp')
 
 		if self.groupchats.has_key(jid.JID(frm).userhost()):
 			self.on_GCmessage(frm,typ,body,subject, xhtml,  chatstate,  delay)
@@ -647,8 +644,8 @@ class Client(derived):
 		elif self.groupchats.has_key(fromjid):
 			self.groupchats[fromjid].setStatus(resource,  show,  status)
 			if self.groupchats[fromjid].users.has_key(resource):
-				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid)
-			#self.groupchats[fromjid]
+				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid)
+				#self.groupchats[fromjid]
 			self.on_GCpresence(fromjid, resource,  show,  status,  codes)
 			return
 		else:
