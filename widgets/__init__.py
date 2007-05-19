@@ -5,3 +5,4 @@ import xmlConsole
 import subscription
 import chatwindow
 import preferences
+import joingroupchat

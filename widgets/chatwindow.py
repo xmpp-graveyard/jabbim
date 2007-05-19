@@ -5,7 +5,7 @@ except:
 
 from chat import *
 from chatwidget import *
-#from groupchat import *
+from groupchat import *
 #from gamechat import *
 #from headlinewidget import *
 #from palette import *
@@ -92,19 +92,36 @@ class chatWindow(QtGui.QMainWindow):
 			tab.chat.textEditWrite(message)
 		self.show()
 
+	def addGroupChatTab(self,room,nickname,affiliation=""):
+		tab=QtGui.QWidget(self.ui.chatTab)
+		tab.jid=room
+		tab.name=unicode(nickname)
+		tab.typ="groupchat"
+		layout=QtGui.QHBoxLayout(tab)
+		layout.setMargin(1)
+		layout.setSpacing(1)
+		tab.chat=groupChatWidget(self.main,room,tab)
+		tab.chat.ui.admin.hide()
+		layout.addWidget(tab.chat)
+		self.ui.chatTab.addTab(tab,QtGui.QIcon("images/16x16/categories/muc.png"),room)
+		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
+		self.show()
+
+
 	def closeEvent(self,e):
 		for index in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(0)
-			#if str(w.typ)=="groupchat":
+			if str(w.typ)=="groupchat":
 				#print str(w.jid)
+				self.main.client.leaveGC(w.jid)
 				#self.jab.getOffRoom(str(w.jid),self.main.groupchat[str(w.jid)][0])
 			self.ui.chatTab.removeTab(0)
 
 	def removeTab(self):
 		w=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
-		#if str(w.typ)=="groupchat":
+		if str(w.typ)=="groupchat":
 			#print str(w.jid)
-			#self.jab.getOffRoom(str(w.jid),self.main.groupchat[str(w.jid)][0])
+			self.main.client.leaveGC(w.jid)
 		self.ui.chatTab.removeTab(self.ui.chatTab.currentIndex())
 		if int(self.ui.chatTab.count())==0:
 			self.close()

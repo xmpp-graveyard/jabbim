@@ -253,42 +253,89 @@ class rosterWidget(QtGui.QTreeWidget):
 
 			return True
 		elif parentTyp=="contact" and typ=="contact":
-			contact=self.main.client.roster['users'][jid]
-			i=contact.getUserItems()[0].clone() # clone contact item
-			i.setData(32,0,QtCore.QVariant([unicode(jid),unicode("meta")]))
-			contact.rosterItems.append(i)
-			toDel=[]
-			for contact in self.main.client.roster['users'][jid].rosterItems:
-				it=contact.data(32,0)
-				it=it.toList()
-				print jid,unicode(it[1].toString())
-				if unicode(it[1].toString())=="contact":
-					toDel.append(contact)
-					par=contact.parent()
-					par.takeChild(par.indexOfChild(contact))
-			for item in toDel:
-				self.main.client.roster['users'][jid].rosterItems.remove(item)
-
-			for meta in self.main.client.roster['users'][parentJid].rosterItems:
-				it=meta.data(32,0)
-				it=it.toList()
-				if unicode(it[1].toString())=="contact":
-					meta.addChild(i) # add item to the new group
-			
-			found=False
-			for meta in self.main.client.roster['users'][parentJid].rosterItems:
-				it=meta.data(32,0)
+			hasMeta=False
+			for i in range(int(item.childCount())):
+				child=item.child(i)
+				it=child.data(32,0)
 				it=it.toList()
 				if unicode(it[1].toString())=="meta":
-					found=True
-					parentJid=unicode(it[0].toString())
+					hasMeta=True
 					break
-			if not found:
-				self.main.client.roster_meta[parentJid]={'tag':parentJid,'order':1}
-			self.main.client.roster_meta[jid]={'tag':parentJid,'order':1}
-
-			print self.main.client.roster_meta
-			self.main.client.setMetacontacts()
+			if hasMeta:
+				#contact=self.main.client.roster['users'][jid]
+				#i=contact.getUserItems()[0].clone() # clone contact item
+				#i.setData(32,0,QtCore.QVariant([unicode(jid),unicode("meta")]))
+				#contact.rosterItems.append(i)
+				#toDel=[]
+				#for contact in self.main.client.roster['users'][jid].rosterItems:
+					#it=contact.data(32,0)
+					#it=it.toList()
+					#print jid,unicode(it[1].toString())
+					#if unicode(it[1].toString())=="contact":
+						#toDel.append(contact)
+						#par=contact.parent()
+						#par.takeChild(par.indexOfChild(contact))
+				#for item in toDel:
+					#self.main.client.roster['users'][jid].rosterItems.remove(item)
+		
+				#for meta in self.main.client.roster['users'][parentJid].rosterItems:
+					#it=meta.data(32,0)
+					#it=it.toList()
+					#if unicode(it[1].toString())=="contact":
+						#meta.addChild(i) # add item to the new group
+				
+				#found=False
+				#for meta in self.main.client.roster['users'][parentJid].rosterItems:
+					#it=meta.data(32,0)
+					#it=it.toList()
+					#if unicode(it[1].toString())=="meta":
+						#found=True
+						#parentJid=unicode(it[0].toString())
+						#break
+				#if not found:
+					#self.main.client.roster_meta[parentJid]={'tag':parentJid,'order':1}
+				#self.main.client.roster_meta[jid]={'tag':parentJid,'order':1}
+		
+				#print self.main.client.roster_meta
+				#self.main.client.setMetacontacts()
+				pass
+			else:
+				contact=self.main.client.roster['users'][jid]
+				i=contact.getUserItems()[0].clone() # clone contact item
+				i.setData(32,0,QtCore.QVariant([unicode(jid),unicode("meta")]))
+				contact.rosterItems.append(i)
+				toDel=[]
+				for contact in self.main.client.roster['users'][jid].rosterItems:
+					it=contact.data(32,0)
+					it=it.toList()
+					print jid,unicode(it[1].toString())
+					if unicode(it[1].toString())=="contact":
+						toDel.append(contact)
+						par=contact.parent()
+						par.takeChild(par.indexOfChild(contact))
+				for item in toDel:
+					self.main.client.roster['users'][jid].rosterItems.remove(item)
+		
+				for meta in self.main.client.roster['users'][parentJid].rosterItems:
+					it=meta.data(32,0)
+					it=it.toList()
+					if unicode(it[1].toString())=="contact":
+						meta.addChild(i) # add item to the new group
+				
+				found=False
+				for meta in self.main.client.roster['users'][parentJid].rosterItems:
+					it=meta.data(32,0)
+					it=it.toList()
+					if unicode(it[1].toString())=="meta":
+						found=True
+						parentJid=unicode(it[0].toString())
+						break
+				if not found:
+					self.main.client.roster_meta[parentJid]={'tag':parentJid,'order':1}
+				self.main.client.roster_meta[jid]={'tag':parentJid,'order':1}
+		
+				print self.main.client.roster_meta
+				self.main.client.setMetacontacts()
 
 
 			return True

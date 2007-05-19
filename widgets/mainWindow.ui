@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>307</width>
-    <height>694</height>
+    <height>692</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -265,6 +265,34 @@ p, li { white-space: pre-wrap; }
        <attribute name="title" >
         <string>Bookmarks</string>
        </attribute>
+       <layout class="QGridLayout" >
+        <property name="margin" >
+         <number>9</number>
+        </property>
+        <property name="spacing" >
+         <number>6</number>
+        </property>
+        <item row="0" column="0" >
+         <widget class="QTreeWidget" name="bookmarks" >
+          <property name="alternatingRowColors" >
+           <bool>true</bool>
+          </property>
+          <property name="rootIsDecorated" >
+           <bool>false</bool>
+          </property>
+          <column>
+           <property name="text" >
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text" >
+            <string>Jid</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -279,17 +307,19 @@ p, li { white-space: pre-wrap; }
      <height>29</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuAkce" >
-    <property name="title" >
-     <string>Actions</string>
-    </property>
-    <addaction name="actionShow_XML" />
-   </widget>
    <widget class="QMenu" name="menuPreferences" >
     <property name="title" >
      <string>Preferences</string>
     </property>
     <addaction name="actionPreferences" />
+   </widget>
+   <widget class="QMenu" name="menuAkce" >
+    <property name="title" >
+     <string>Actions</string>
+    </property>
+    <addaction name="actionJoin_Groupchat" />
+    <addaction name="separator" />
+    <addaction name="actionShow_XML" />
    </widget>
    <addaction name="menuAkce" />
    <addaction name="menuPreferences" />
@@ -302,6 +332,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionPreferences" >
    <property name="text" >
     <string>Preferences</string>
+   </property>
+  </action>
+  <action name="actionJoin_Groupchat" >
+   <property name="text" >
+    <string>Join Groupchat</string>
    </property>
   </action>
  </widget>

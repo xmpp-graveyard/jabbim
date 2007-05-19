@@ -32,6 +32,7 @@ import pyxl
 
 from configobj import ConfigObj
 from include import utils
+import urllib
 
 #def kill():
 	#print "kill"
@@ -89,6 +90,18 @@ class clientClass(pyxl.client.Client):
 
 
 	def on_rosterArrived(self):
+		
+		print self.bookmarks
+		print "BOOKMARKS"
+
+		for k,v in self.bookmarks['conference'].iteritems():
+			# add bookmark to the bookmarks list
+			item=QtGui.QTreeWidgetItem(self.main.ui.bookmarks)
+			item.setText(0,unicode(v.name))
+			item.setText(1,unicode(v.jid.full()))
+			item.setData(0,32,QtCore.QVariant([unicode(v.jid.full()),unicode(v.nick),unicode(v.password)]))
+			item.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
+
 		if int(self.roster['groups']['Unknown'].childCount())==0:
 			self.main.ui.roster.setItemHidden(self.roster['groups']['Unknown'],True)
 		#del self.temp_hosts
@@ -145,7 +158,17 @@ class clientClass(pyxl.client.Client):
 			show=presence[1]
 			self.on_presence(jid,show,True)
 		self.main.ui.roster.refreshStats()
-	
+
+	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
+		if show=="offline":
+			pass
+		else:
+			for i in range(self.main.chat.ui.chatTab.count()):
+				w=self.main.chat.ui.chatTab.widget(i)
+				if str(w.jid)==str(muc):
+					w.chat.editUser(nick,show)
+					break
+
 	def on_presence(self,jid,show,first=False):
 	
 		if show=="offline":
@@ -291,6 +314,43 @@ class clientClass(pyxl.client.Client):
 		#self.ui.infoDockWidget.show()
 		pass
 
+
+
+	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
+		if len(str(frm).rsplit("/"))==2:
+			user=str(frm).rsplit("/")[1]
+			frm=str(frm).rsplit("/")[0]
+		else:
+			user=frm
+		print delay
+		for i in range(self.main.chat.ui.chatTab.count()):
+			w=self.main.chat.ui.chatTab.widget(i)
+			if str(w.jid)==frm:
+				for word in unicode(body).split(' '):
+					if word.find("http://")!=-1:
+						body=body.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
+				if delay==None or len(delay)==0:
+					if unicode(w.name)==unicode(user):
+						message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
+					else:
+						if unicode(body).lower().find(unicode(w.name).lower())!=-1:
+							message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
+						else:
+							message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
+					w.chat.textEditWrite(message)
+					return
+				else:
+					delay=unicode(delay)
+					delay="%s-%s-%s %s:%s:%s" % (delay[0:4],delay[4:6],delay[6:8],delay[9:11],delay[12:14],delay[15:17])
+					if unicode(w.name)==unicode(user):
+						message=self.main.skin["my_message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
+					else:
+						if unicode(body).lower().find(unicode(w.name).lower())!=-1:
+							message=self.main.skin["message_for_me_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
+						else:
+							message=self.main.skin["message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
+					w.chat.textEditWrite(message)
+
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None):
 		print chatstate
 		#print "message",frm
@@ -344,6 +404,12 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
 		app.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
+		app.connect(self.ui.actionJoin_Groupchat, QtCore.SIGNAL("triggered ( bool )"),self.joinGroupchat)
+		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
+
+		self.ui.bookmarks.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+		self.ui.bookmarks.header().hide()
+		self.ui.bookmarks.hideColumn(1)
 
 		self.ui.rosterStackedWidget.setCurrentIndex(0)
 		self.loadRoster()
@@ -404,6 +470,80 @@ class mainWindow(QtGui.QMainWindow):
 	#def addInfoSubscribe(self):
 		#widget=subscribeWidget(self.ui.infoDockWidget)
 		#self.ui.infoLayout.addWidget(widget)
+
+	def joinGroupchat(self,bool):
+		newchat=widgets.joingroupchat.joinGroupChatWindow(self)
+		ret=newchat.exec_()
+
+	def bookmarksContextMenu(self,pos):
+		# make groupchat bookmarks menu
+		item=self.ui.bookmarks.itemFromIndex(self.ui.bookmarks.indexAt(pos)) # get selected item
+		jid=str(item.text(1)) # get item jid
+		menu=QtGui.QMenu(self.ui.bookmarks) # make menu
+		if item.parent()==None:
+			# Join bookmarked groupchat
+			action=menu.addAction(self.tr("Join"))
+			action.setData(item.data(0,32))
+			action.setObjectName("join_bookmark")
+			# separator
+			menu.addSeparator()
+			# Edit bookmark
+			action=menu.addAction(self.tr("Edit bookmark"))
+			action.setData(item.data(0,32))
+			action.setObjectName("edit_bookmark")
+			# Delete bookmark
+			action=menu.addAction(self.tr("Delete bookmark"))
+			action.setData(item.data(0,32))
+			action.setObjectName("delete_bookmark")
+
+		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.groupchatContextMenuTriggered)
+		# set menu position and show
+		menu.move(self.ui.bookmarks.mapToGlobal(pos))
+		menu.show()
+
+	def groupchatContextMenuTriggered(self,action):
+		cmd=action.objectName()
+		if cmd=="join":
+			# join groupchat from Groupchats list
+			jid=action.data() # get jid
+			jid=str(jid.toString())
+			room=jid.split("@")[0] # get room
+			server=jid.split("@")[1] # get server
+			# show join groupchat dialog
+			newchat=joinGroupChatWindow(self,room=room,server=server)
+			ret=newchat.exec_()
+		elif cmd=="join_bookmark":
+			# join bookmarked groupchat
+			data=action.data()
+			lst=data.toList()
+			jid=unicode(lst[0].toString()) # get jid
+			nickname=unicode(lst[1].toString()) # get nickname
+			# send jabber command
+			self.chat.addGroupChatTab(jid,nickname)
+			#self.main.groupchat[room+"@"+server]=[nickname,[]]
+			print jid,nickname
+			self.client.joinGC(jid, nickname)
+		elif cmd=="edit_bookmark":
+			item=self.ui.bookmarks.currentItem()
+			data=action.data()
+			lst=data.toList()
+			jid=unicode(lst[0].toString()) # get jid
+			if len(jid.split("@"))!=1:
+				room=jid.split("@")[0]
+				server=jid.split("@")[1]
+			else:
+				room=jid
+			name=unicode(item.text(0))
+			nickname=unicode(lst[1].toString()) # get nickname
+			password=unicode(lst[2].toString()) # get password
+			edit=editBookmark(self,jab,room,server,name,nickname,password,self)
+			edit.exec_()
+		elif cmd=="delete_bookmark":
+			item=self.ui.bookmarks.currentItem()
+			#self.ui.bookmarks.takeTopLevelItem(self.ui.bookmarks.indexOfTopLevelItem(item))
+			del self.bookmarks[unicode(item.text(1))]
+			app.postEvent(jab,customEvent(["set_bookmarks",self.bookmarks]))
+			#jab.setBookmarks(self.bookmarks)
 
 	def getUserType(self,jid):
 		# get type of jid (rss,disk,jabber, etc.)

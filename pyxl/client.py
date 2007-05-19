@@ -646,7 +646,8 @@ class Client(derived):
 				self.on_presence(frm,show)
 		elif self.groupchats.has_key(fromjid):
 			self.groupchats[fromjid].setStatus(resource,  show,  status)
-			self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid)
+			if self.groupchats[fromjid].users.has_key(resource):
+				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid)
 			#self.groupchats[fromjid]
 			self.on_GCpresence(fromjid, resource,  show,  status,  codes)
 			return

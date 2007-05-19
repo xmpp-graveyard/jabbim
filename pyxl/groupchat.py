@@ -100,6 +100,7 @@ class MUCContact:
 		self.status = status
 		self.affiliation = affiliation
 		self.role = role
+		self.item=None
 		self.truejid = jid
 	
 	def setStatus(self,  show,  status):
