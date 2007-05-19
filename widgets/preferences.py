@@ -4,8 +4,10 @@ except:
 	print "PyQt4 is not installed."
 import sys; sys.path.append('..')
 from preferences_ui import *
+from preferences_bookmarks_ui import *
 from configobj import ConfigObj
 import os
+import pyxl
 
 class preferencesWindow(QtGui.QDialog):
 	def __init__(self,main,parent=None,page=0):
@@ -69,3 +71,44 @@ class preferencesWindow(QtGui.QDialog):
 		#size=unicode(self.main.config['rosterIconSize']).rsplit("x")
 		#self.main.ui.roster.setIconSize(QtCore.QSize(int(size[0]),int(size[1])))
 		self.done(1)
+
+class editBookmark(QtGui.QDialog):
+	def __init__(self,main,room,server,name,nickname,password,parent,edit=True):
+		apply(QtGui.QDialog.__init__,(self,parent))
+		self.parent=parent
+		self.room=room
+		self.server=server
+		self.main=main
+		self.edit=edit
+		self.name=name
+		self.setModal(True)
+		self.ui=Ui_editbookmark()
+		self.ui.setupUi(self)
+		self.ui.room.setText(room)
+		self.ui.server.setText(server)
+		self.ui.name.setText(name)
+		self.ui.nickname.setText(nickname)
+		self.ui.password.setText(password)
+
+	def accept(self):
+		room=unicode(self.ui.room.text())
+		server=unicode(self.ui.server.text())
+		name=unicode(self.ui.name.text())
+		nickname=unicode(self.ui.nickname.text())
+		password=unicode(self.ui.password.text())
+		edited=False
+		if name==self.name:
+			self.main.client.bookmarks['conference'][name]=pyxl.client.Bookmark(name, 'conference', room+"@"+server, "0", nickname, password)
+			#self.done(1)
+			edited=True
+		else:
+			if self.edit==True:
+				del self.main.client.bookmarks['conference'][self.name]
+			self.main.client.bookmarks['conference'][name]=pyxl.client.Bookmark(name, 'conference', room+"@"+server, "0", nickname, password)
+			edited=True
+		if edited:
+			#self.main.bookmarks=self.bookmarks
+			self.main.client.setBookmarks()
+			self.main.buildBookmarks()
+
+			self.done(1)

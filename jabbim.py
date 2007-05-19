@@ -91,17 +91,7 @@ class clientClass(pyxl.client.Client):
 
 	def on_rosterArrived(self):
 		
-		print self.bookmarks
-		print "BOOKMARKS"
-
-		for k,v in self.bookmarks['conference'].iteritems():
-			# add bookmark to the bookmarks list
-			item=QtGui.QTreeWidgetItem(self.main.ui.bookmarks)
-			item.setText(0,unicode(v.name))
-			item.setText(1,unicode(v.jid.full()))
-			item.setData(0,32,QtCore.QVariant([unicode(v.jid.full()),unicode(v.nick),unicode(v.password)]))
-			item.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
-
+		self.main.buildBookmarks()
 		if int(self.roster['groups']['Unknown'].childCount())==0:
 			self.main.ui.roster.setItemHidden(self.roster['groups']['Unknown'],True)
 		#del self.temp_hosts
@@ -115,7 +105,7 @@ class clientClass(pyxl.client.Client):
 					meta[user.tag]=[jid]
 				else:
 					meta[user.tag].append(jid)
-		print "META:",meta
+		#print "META:",meta
 		
 		for tag,jids in meta.iteritems():
 			mainJid=None
@@ -125,7 +115,7 @@ class clientClass(pyxl.client.Client):
 					break
 			if mainJid!=None:
 				for jid in jids:
-					print "*",jid
+					#print "*",jid
 					if jid!=mainJid:
 						toDel=[]
 						for item in self.roster['users'][mainJid].rosterItems:
@@ -275,10 +265,10 @@ class clientClass(pyxl.client.Client):
 							
 							if typ=="meta":
 
-								print "len",len(self.roster['users'][data].rosterItems)
-								print data,jid
+								#print "len",len(self.roster['users'][data].rosterItems)
+								#print data,jid
 								self.roster['users'][data].rosterItems.append(child)
-								print "len",len(contact.rosterItems)
+								#print "len",len(contact.rosterItems)
 						self.roster['groups'][name].addChild(i) # add item to the new group
 						self.main.ui.roster.setStatus(contact.jid,None,i)
 					else:
@@ -322,7 +312,7 @@ class clientClass(pyxl.client.Client):
 			frm=str(frm).rsplit("/")[0]
 		else:
 			user=frm
-		print delay
+		#print delay
 		for i in range(self.main.chat.ui.chatTab.count()):
 			w=self.main.chat.ui.chatTab.widget(i)
 			if str(w.jid)==frm:
@@ -406,6 +396,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
 		app.connect(self.ui.actionJoin_Groupchat, QtCore.SIGNAL("triggered ( bool )"),self.joinGroupchat)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
+		app.connect(self.ui.newBookmark, QtCore.SIGNAL("clicked ()"),self.newBookmark)
 
 		self.ui.bookmarks.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 		self.ui.bookmarks.header().hide()
@@ -471,6 +462,17 @@ class mainWindow(QtGui.QMainWindow):
 		#widget=subscribeWidget(self.ui.infoDockWidget)
 		#self.ui.infoLayout.addWidget(widget)
 
+	def buildBookmarks(self):
+		self.ui.bookmarks.clear()
+		for k,v in self.client.bookmarks['conference'].iteritems():
+			# add bookmark to the bookmarks list
+			item=QtGui.QTreeWidgetItem(self.ui.bookmarks)
+			item.setText(0,unicode(v.name))
+			item.setText(1,unicode(v.jid.full()))
+			item.setData(0,32,QtCore.QVariant([unicode(v.jid.full()),unicode(v.nick),unicode(v.password)]))
+			item.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
+
+
 	def joinGroupchat(self,bool):
 		newchat=widgets.joingroupchat.joinGroupChatWindow(self)
 		ret=newchat.exec_()
@@ -500,6 +502,12 @@ class mainWindow(QtGui.QMainWindow):
 		# set menu position and show
 		menu.move(self.ui.bookmarks.mapToGlobal(pos))
 		menu.show()
+
+	def newBookmark(self):
+		# make new bookmark
+		edit=widgets.preferences.editBookmark(self,"","","","","",self,False)
+		ret=edit.exec_()
+
 
 	def groupchatContextMenuTriggered(self,action):
 		cmd=action.objectName()
@@ -536,13 +544,14 @@ class mainWindow(QtGui.QMainWindow):
 			name=unicode(item.text(0))
 			nickname=unicode(lst[1].toString()) # get nickname
 			password=unicode(lst[2].toString()) # get password
-			edit=editBookmark(self,jab,room,server,name,nickname,password,self)
+			edit=widgets.preferences.editBookmark(self,room,server,name,nickname,password,self)
 			edit.exec_()
 		elif cmd=="delete_bookmark":
 			item=self.ui.bookmarks.currentItem()
 			#self.ui.bookmarks.takeTopLevelItem(self.ui.bookmarks.indexOfTopLevelItem(item))
-			del self.bookmarks[unicode(item.text(1))]
-			app.postEvent(jab,customEvent(["set_bookmarks",self.bookmarks]))
+			del self.client.bookmarks['conference'][unicode(item.text(0))]
+			self.client.setBookmarks()
+			self.buildBookmarks()
 			#jab.setBookmarks(self.bookmarks)
 
 	def getUserType(self,jid):
