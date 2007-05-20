@@ -66,7 +66,7 @@ class clientClass(pyxl.client.Client):
 								#status=self.main.icons[unicode(v.rosterItems[i].text(1))[0]]
 								##users.append(self.main.groups[k]["users"][key]["item"])
 								##groups[self.main.groups[k]["users"][key]["item"]]=k
-								#self.roster['users'][key].rosterItems[i].setIcon(0,self.main.getIcon(jid=jid,size=str(self.main.config['rosterIconSize']),status=status,usertype=typ))
+								#self.roster['users'][key].rosterItems[i].setIcon(0,self.main.getIcon(jid=jid,size=unicode(self.main.config['rosterIconSize']),status=status,usertype=typ))
 
 	def on_rosterAddUser(self, contact):
 		groups=contact.groups
@@ -162,7 +162,7 @@ class clientClass(pyxl.client.Client):
 			print "role:",role
 			for i in range(self.main.chat.ui.chatTab.count()):
 				w=self.main.chat.ui.chatTab.widget(i)
-				if str(w.jid)==str(muc):
+				if unicode(w.jid)==unicode(muc):
 					w.chat.editUser(nick,show,role)
 					break
 
@@ -267,7 +267,7 @@ class clientClass(pyxl.client.Client):
 							
 							it=child.data(32,0)
 							it=it.toList()
-							data=str(it[0].toString())
+							data=unicode(it[0].toString())
 							typ=unicode(it[1].toString())
 							
 							if typ=="meta":
@@ -314,15 +314,15 @@ class clientClass(pyxl.client.Client):
 
 
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
-		if len(str(frm).rsplit("/"))==2:
-			user=str(frm).rsplit("/")[1]
-			frm=str(frm).rsplit("/")[0]
+		if len(unicode(frm).rsplit("/"))==2:
+			user=unicode(frm).rsplit("/")[1]
+			frm=unicode(frm).rsplit("/")[0]
 		else:
 			user=frm
 		#print delay
 		for i in range(self.main.chat.ui.chatTab.count()):
 			w=self.main.chat.ui.chatTab.widget(i)
-			if str(w.jid)==frm:
+			if unicode(w.jid)==frm:
 				for word in unicode(body).split(' '):
 					if word.find("http://")!=-1:
 						body=body.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
@@ -351,8 +351,8 @@ class clientClass(pyxl.client.Client):
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None):
 		print chatstate
 		#print "message",frm
-		if self.roster['users'].has_key(str(frm).rsplit("/")[0]):
-			user=self.roster['users'][str(frm).rsplit("/")[0]].rosterItems[0]
+		if self.roster['users'].has_key(unicode(frm).rsplit("/")[0]):
+			user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
 			icon=user.icon(0)
 			user=user.text(2)
 		else:
@@ -365,11 +365,11 @@ class clientClass(pyxl.client.Client):
 		tabIndex=0
 		for i in range(self.main.chat.ui.chatTab.count()):
 			w=self.main.chat.ui.chatTab.widget(i)
-			if str(w.jid)==str(frm):
+			if unicode(w.jid)==unicode(frm):
 				tab=w
 				tabIndex=i
 				break
-			if str(w.jid).rsplit("/")[0]==str(frm).rsplit("/")[0]:
+			if unicode(w.jid).rsplit("/")[0]==unicode(frm).rsplit("/")[0]:
 				tab=w
 				tabIndex=i
 		if tab!=None:
@@ -487,7 +487,7 @@ class mainWindow(QtGui.QMainWindow):
 	def bookmarksContextMenu(self,pos):
 		# make groupchat bookmarks menu
 		item=self.ui.bookmarks.itemFromIndex(self.ui.bookmarks.indexAt(pos)) # get selected item
-		jid=str(item.text(1)) # get item jid
+		jid=unicode(item.text(1)) # get item jid
 		menu=QtGui.QMenu(self.ui.bookmarks) # make menu
 		if item.parent()==None:
 			# Join bookmarked groupchat
@@ -524,7 +524,7 @@ class mainWindow(QtGui.QMainWindow):
 		if cmd=="join":
 			# join groupchat from Groupchats list
 			jid=action.data() # get jid
-			jid=str(jid.toString())
+			jid=unicode(jid.toString())
 			room=jid.split("@")[0] # get room
 			server=jid.split("@")[1] # get server
 			# show join groupchat dialog
@@ -674,7 +674,7 @@ class mainWindow(QtGui.QMainWindow):
 		password=unicode(self.ui.login_password.text())
 		if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
 			
-			if jid!=self.config['jid'] or (password!=self.config['passwd'] and self.config['savePasswd']=="True") or self.config['savePasswd']!=str(self.ui.login_savePassword.isChecked()):
+			if jid!=self.config['jid'] or (password!=self.config['passwd'] and self.config['savePasswd']=="True") or self.config['savePasswd']!=unicode(self.ui.login_savePassword.isChecked()):
 				ret=QtGui.QMessageBox.question(self,self.tr("Login information"), self.tr("Save current login information?"),3,4)
 				if ret==3:
 					self.config['savePasswd']=self.ui.login_savePassword.isChecked()
@@ -739,7 +739,7 @@ class statusWindow(QtGui.QDialog):
 
 
 translator=QtCore.QTranslator()
-translator.load("locales/jabbim_"+str(QtCore.QLocale.system().name())[:2]+".qm")
+translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
 app.installTranslator(translator)
 
 MainWindow = mainWindow()
