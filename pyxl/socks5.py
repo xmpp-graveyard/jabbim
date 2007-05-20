@@ -70,12 +70,12 @@ server.
         self.state          = "mustNotReceiveData"
         self.otherProtocol  = otherProtocol
         self.factory        = factory
-	    
+
     def connectionMade(self):
         # prepare connection string with available authentication methods
         #
-	
-        log.debug ("SOCKS5.connectionMade")
+
+        print ("SOCKS5.connectionMade")
         methods = "\x00"
         if not self.login is None: methods += "\x02"
 
@@ -85,7 +85,7 @@ server.
         self.state = "gotHelloReply"
 
     def dataReceived (self, data):
-        log.debug ("SOCKS state=" + self.state)
+        print ("SOCKS state=" + self.state)
         method = getattr(self, 'socks_%s' % (self.state), 
             self.socks_thisMustNeverHappen)
         method (data)
@@ -112,7 +112,7 @@ self)))
         if data == "\x05\xFF":
             # No acceptable methods. We MUST close
             #
-            log.debug("No acceptable methods, closing connection")
+            print("No acceptable methods, closing connection")
             self.transport.loseConnection()
             return
 
@@ -164,7 +164,7 @@ self)))
     def socks_method_CONNECT (self):
         # Check if we have ip address or domain name
         #
-	log.debug("socks_method_CONNECT host = " + self.host)
+	print("socks_method_CONNECT host = " + self.host)
 
  	# The FaceTime SOCKS5 proxy treats IP addr the same way as hostname
        # if _ip_regex.match (self.host):
@@ -282,7 +282,7 @@ class ClientConnector (tcp.Connector):
 class ClientFactory (protocol.ClientFactory):
     def __init__(self, sockshost, socksport, host, port, otherFactory,
         method="CONNECT", login=None, password=None, timeout=60,
-        readableID=None):
+        readableID=None, xmpp = None, xmpp_sid = None):
         """ Factory creates SOCKS5 client protocol to connect through it.
         See ClientProtocol constructor for details on params.
         
@@ -303,6 +303,8 @@ class ClientFactory (protocol.ClientFactory):
         self.otherFactory   = otherFactory
         self.timeout        = timeout
         self.readableID     = readableID
+        self.xmpp = xmpp
+        self.xmpp_sid = xmpp_sid
 
         # This variable contains current status of SOCKS connection,
         # useful for diagnosting connection, without knowing SOCKS

@@ -11,6 +11,7 @@ from twisted.words.xish import domish
 from twisted.words.xish.domish import Element
 from twisted.internet import reactor
 from twisted.words.protocols.jabber.xmlstream import IQ
+from twisted.internet.protocol import Protocol, ClientFactory
 
 from derived import derived
 from contact import *
@@ -184,7 +185,7 @@ class Client(derived):
 #		self.registerPEP('sefator@jabber.se')
 #		self.getPrivacy()
 #		self.joinGC('jdev@conf.netlab.cz',  'Sefator')
-##		self.sendFile('jjkobra@njs.netlab.cz/tkabber', 'test.txt', '10010', None)
+##		self.sendFile('public@disk.jabbim.cz', 'test.txt', '10010', None)
 	def _pepSupport(self):
 		print 'pep support arrived'
 #		print self.jid.host,  self.disco
@@ -546,6 +547,7 @@ class Client(derived):
 			if child.name == 'delay':
 				delay = child['stamp']
 			if child.name == 'x':
+				if child.defaultUri == 'jabber:x:delay' :
 					delay = child.getAttribute('stamp')
 
 		if self.groupchats.has_key(jid.JID(frm).userhost()):
@@ -616,7 +618,7 @@ class Client(derived):
 					if typ !='unavailable':
 						self.getFeatures(frm, caps_node)
 			elif child.name == 'x' and child.hasAttribute('xmlns') :
-				if child['xmlns'] == 'http://jabber.org/protocol/muc#user':
+				if child.defaultUri == 'http://jabber.org/protocol/muc#user':
 
 					for item in child.elements():
 						if item.name == 'item':
@@ -1029,11 +1031,44 @@ class Client(derived):
 		streamhost = q.firstChildElement()
 		host = streamhost['jid']
 		addr = sha.new("%s%s%s" % (sid, self.jid.full(), el['from'])).hexdigest()
-		factory = socks5.ClientFactory(host, int(self.ft_proxies[host][1]), addr, 0, None) 
-		reactor.connectTCP(host, int(self.ft_proxies[host][1]), factory)
+		f = ClientFactory()
+		f.protocol = FTTest
+		factory = socks5.ClientFactory(host, int(self.ft_proxies[host][1]), addr, 0, f, xmpp = self, xmpp_sid = sid) 
+		d = reactor.connectTCP(host, int(self.ft_proxies[host][1]), factory)
+		print (d)
+		reactor.callLater(2,self.ftActivate,host, sid, factory)
 		
+	def ftActivate(self, jid, sid, factory):
+		iq = IQ(self.xmlstream, 'get')
+		iq['to'] = jid
+		q = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
+		q['sid'] = sid
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		self.disp(iq['id'])
+		d.addCallback(self._ftactivated, factory)
+	
+	def _ftactivated(self, el, factory):
+		print 'prenasime'
+		print dir(factory), factory, dir(factory.otherFactory.protocol.transport)
+		factory.otherFactory.protocol.transport.write('uuuuuuuuuuuuuu')
+		
+	
 	def _ftreplyhostErrReceived(self, err):
 		print err
 	
 	def disp(self, id):
 		self.idlist.append(id)
+
+class FTTest(Protocol):
+	def connectionMade(self):
+		print 'jsme spojeni s proxy'
+		self.transport.write('uaaaaaaffffffffffffffffffdddddddddddddddddffffffffffffffwwwwwwwwwwwwweeeeeeeeeessssssssssddddddddddddwwwwwwwwwwwddddddddddddddddddddddddwwwwaaaaaaaaaaaaaaa')
+		print dir(self.factory)
+
+
+	def connectionLost(self, reason):
+		print 'ztrata spojeni : ', reason
+	
+	def dataReceived(self, data):
+		print 'neco nam prislo'
