@@ -617,17 +617,16 @@ class Client(derived):
 				else:	
 					if typ !='unavailable':
 						self.getFeatures(frm, caps_node)
-			elif child.name == 'x' and child.hasAttribute('xmlns') :
-				if child.defaultUri == 'http://jabber.org/protocol/muc#user':
-
-					for item in child.elements():
-						if item.name == 'item':
-							affiliation = item['affiliation']
-							role = item['role']
-							if item.hasAttribute('jid'):
-								truejid = item['jid']
-						if item.name == 'status' :
-							codes.append(item['code'])
+			if child.name == 'x' and child.defaultUri == 'http://jabber.org/protocol/muc#user':
+				
+				for item in child.elements():
+					if item.name == 'item':
+						affiliation = item['affiliation']
+						role = item['role']
+						if item.hasAttribute('jid'):
+							truejid = item['jid']
+					if item.name == 'status' :
+						codes.append(item['code'])
 
 		if show == None and not el.hasAttribute('type'):
 			show = 'online'
@@ -640,7 +639,6 @@ class Client(derived):
 			self.roster['users'][fromjid].setFeatures(resource, features)
 			if first and self.first_wait:
 				self.first_presence.append((frm,show))
-				print show
 			else:
 				self.on_presence(frm,show)
 		elif self.groupchats.has_key(fromjid):
