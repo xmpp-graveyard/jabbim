@@ -833,7 +833,7 @@ class Client(derived):
 
 		self.on_discoInfoReceived(jid, node_name)
 
-	def getDiscoItems(self, jid, node = None):
+	def getDiscoItems(self, jid, node = None, callback = None):
 		print 'requesting disco#items : '
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid
@@ -844,10 +844,10 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._discoItemsReceived, node)
+		d.addCallback(self._discoItemsReceived, node, callback)
 		d.addErrback(self._discoItemsErrReceived, (node, jid))
 
-	def _discoItemsReceived(self, el, node):
+	def _discoItemsReceived(self, el, node, callback):
 		print 'disco#items received'
 
 		node_name = node
@@ -870,6 +870,8 @@ class Client(derived):
 			if self.disco[frm][node_name]['err'].has_key('items'):
 				del self.disco[frm][node_name]['err']['items'] #timhle smazem pripadny error ktery zustal po predchozim dotazu
 		self.on_discoItemsReceived(frm, node_name)
+		if callback:
+			callback()
 
 	def _discoItemsErrReceived(self, err, info):
 		print 'disco#items error received'
