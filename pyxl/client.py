@@ -849,6 +849,7 @@ class Client(derived):
 
 	def _discoItemsReceived(self, el, node):
 		print 'disco#items received'
+
 		node_name = node
 		frm = el['from']
 		if self.disco.has_key(frm):
@@ -860,7 +861,7 @@ class Client(derived):
 
 		query = el.firstChildElement()
 		for child in query.elements():
-			if child.name == 'items':
+			if child.name == 'item':
 				node['items'][child['name']] = child.attributes
 
 		self.disco[frm][node_name] = node
