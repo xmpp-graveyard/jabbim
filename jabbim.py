@@ -88,11 +88,13 @@ class clientClass(pyxl.client.Client):
 			
 			self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups'][group],first=True))
 
-	def on_discoItemsReceived(self, jid, node):
-		for k,v in self.bookmarks['conference'].iteritems():
-			if jid == v.jid.full():
-				print self.disco[jid]
-				break
+	def on_discoItemsBookmarksReceived(self, jid):
+		item=self.main.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1)[0]
+		for name in self.disco[jid][None]['items'].keys():
+			user=QtGui.QTreeWidgetItem(item)
+			user.setText(0,unicode(name))
+			user.setText(1,unicode(name))
+			user.setIcon(0,self.main.getIcon(size="16x16"))
 
 	def on_rosterArrived(self):
 		
@@ -404,6 +406,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.actionJoin_Groupchat, QtCore.SIGNAL("triggered ( bool )"),self.joinGroupchat)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
 		app.connect(self.ui.newBookmark, QtCore.SIGNAL("clicked ()"),self.newBookmark)
+		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
 
 		self.ui.bookmarks.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 		self.ui.bookmarks.header().hide()
@@ -468,6 +471,17 @@ class mainWindow(QtGui.QMainWindow):
 	#def addInfoSubscribe(self):
 		#widget=subscribeWidget(self.ui.infoDockWidget)
 		#self.ui.infoLayout.addWidget(widget)
+
+	def bookmarksClicked(self,item,i):
+		# join bookmarked groupchat
+		data=item.data(0,32)
+		lst=data.toList()
+		jid=unicode(lst[0].toString()) # get jid
+		nickname=unicode(lst[1].toString()) # get nickname
+		# send jabber command
+		self.chat.addGroupChatTab(jid,nickname)
+		#self.main.groupchat[room+"@"+server]=[nickname,[]]
+		self.client.joinGC(jid, nickname)
 
 	def buildBookmarks(self):
 		self.ui.bookmarks.clear()
@@ -565,7 +579,13 @@ class mainWindow(QtGui.QMainWindow):
 			#jab.setBookmarks(self.bookmarks)
 		elif cmd=="show_users":
 			item=self.ui.bookmarks.currentItem()
-			self.client.getDiscoItems(unicode(item.text(1)))
+			if int(item.childCount())!=0:
+				# delete all users in groupchat
+				for i in range(item.childCount()):
+					item.takeChild(0)
+			# set item expanded
+			self.ui.bookmarks.setItemExpanded(item,True)
+			self.client.getDiscoItems(unicode(item.text(1)),callback=self.client.on_discoItemsBookmarksReceived)
 
 	def getUserType(self,jid):
 		# get type of jid (rss,disk,jabber, etc.)
