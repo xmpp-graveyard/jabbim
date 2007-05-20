@@ -88,6 +88,11 @@ class clientClass(pyxl.client.Client):
 			
 			self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups'][group],first=True))
 
+	def on_discoItemsReceived(self, jid, node):
+		for k,v in self.bookmarks['conference'].iteritems():
+			if jid == v.jid.full():
+				print self.disco[jid]
+				break
 
 	def on_rosterArrived(self):
 		
@@ -153,10 +158,12 @@ class clientClass(pyxl.client.Client):
 		if show=="offline":
 			pass
 		else:
+			role=self.groupchats[muc].users[nick].role
+			print "role:",role
 			for i in range(self.main.chat.ui.chatTab.count()):
 				w=self.main.chat.ui.chatTab.widget(i)
 				if str(w.jid)==str(muc):
-					w.chat.editUser(nick,show)
+					w.chat.editUser(nick,show,role)
 					break
 
 	def on_presence(self,jid,show,first=False):
@@ -487,6 +494,9 @@ class mainWindow(QtGui.QMainWindow):
 			action=menu.addAction(self.tr("Join"))
 			action.setData(item.data(0,32))
 			action.setObjectName("join_bookmark")
+			action=menu.addAction(self.tr("User list"))
+			action.setData(item.data(0,32))
+			action.setObjectName("show_users")
 			# separator
 			menu.addSeparator()
 			# Edit bookmark
@@ -553,6 +563,9 @@ class mainWindow(QtGui.QMainWindow):
 			self.client.setBookmarks()
 			self.buildBookmarks()
 			#jab.setBookmarks(self.bookmarks)
+		elif cmd=="show_users":
+			item=self.ui.bookmarks.currentItem()
+			self.client.getDiscoItems(unicode(item.text(1)))
 
 	def getUserType(self,jid):
 		# get type of jid (rss,disk,jabber, etc.)

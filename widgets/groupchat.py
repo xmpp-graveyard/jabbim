@@ -100,26 +100,26 @@ class groupChatWidget(QtGui.QWidget):
 				return self.main.client.groupchats[self.jid].users[nick].item
 		return False
 
-	def editUser(self,nick,status):
+	def editUser(self,nick,status,role=None):
 		if self.isUser(unicode(nick))==False:
 			#user=self.isUser(unicode(nick))
 		# Pokud neni v mistnosti, vytvorime jej
 		#else:
-			#if self.roles.has_key(role):
-				#user=QtGui.QTreeWidgetItem(self.roles[role])
-			#else:
-			self.main.client.groupchats[self.jid].users[nick].item=QtGui.QTreeWidgetItem(self.ui.users)
+			if self.roles.has_key(role):
+				self.main.client.groupchats[self.jid].users[nick].item=QtGui.QTreeWidgetItem(self.roles[role])
+			else:
+				self.main.client.groupchats[self.jid].users[nick].item=QtGui.QTreeWidgetItem(self.ui.users)
 			self.main.client.groupchats[self.jid].users[nick].item.setText(0,unicode(nick))
 		# Nastaveni stavu
 		if status!="None":
 			self.main.client.groupchats[self.jid].users[nick].item.setIcon(0,self.main.getIcon(status=status,size="16x16"))
-			#user.setText(1,self.nickSort[str(e[2].getShow())]+unicode(user.text(2)))
+			self.main.client.groupchats[self.jid].users[nick].item.setText(1,self.main.shows[self.main.client.groupchats[self.jid].users[nick].show]+unicode(nick.lower()))
 		else:
 			self.main.client.groupchats[self.jid].users[nick].item.setIcon(0,self.main.getIcon(status="online",size="16x16"))
 		# Tooltip
 		#user.setToolTip('<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>Jabber ID: </b>'+str(jid)+'')
 		# serazeni
-		self.ui.users.sortItems (0,QtCore.Qt.AscendingOrder)
+		self.ui.users.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.refreshStats()
 
 	def loadSmileys(self):
