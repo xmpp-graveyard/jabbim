@@ -19,12 +19,12 @@ class Contact:
 		if self.resources.has_key(resource):
 			self.resources[resource].show = show
 			self.resources[resource].status =  status
-		elif self.resources.has_key(resource) and show == 'offline':
-			del self.resources[resource]
-			return
 		else:
 			self.resources[resource] = Resource(self, resource, show = show, status = status, priority = 0)
 			first = True
+		if self.resources.has_key(resource) and show == 'offline':
+			del self.resources[resource]
+			return
 		if resource == self.getHighestResource():
 			self.status = (show, status)
 		return first

@@ -635,8 +635,9 @@ class Client(derived):
 				show = 'offline'
 		if self.roster['users'].has_key(fromjid):
 			first = self.roster['users'][unicode(fromjid)].setStatus(resource, show,status)
-			self.roster['users'][fromjid].setPriority(resource, priority)
-			self.roster['users'][fromjid].setFeatures(resource, features)
+			if self.roster['users'][fromjid].resources.has_key(resource):
+				self.roster['users'][fromjid].setPriority(resource, priority)
+				self.roster['users'][fromjid].setFeatures(resource, features)
 			if first and self.first_wait:
 				self.first_presence.append((frm,show))
 			else:

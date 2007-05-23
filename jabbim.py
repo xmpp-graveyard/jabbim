@@ -34,12 +34,6 @@ from configobj import ConfigObj
 from include import utils
 import urllib
 
-#def kill():
-	#print "kill"
-	#mainWindow.close()
-
-#reactor.addSystemEventTrigger('after', 'shutdown', kill)
-
 class clientClass(pyxl.client.Client):
 
 	def on_init(self):
@@ -47,6 +41,7 @@ class clientClass(pyxl.client.Client):
 		self.temp_hosts=[]
 		
 	def on_discoInfoReceived(self, jid, node):
+		# save type of host, it not exist
 		if not self.main.hosts.has_key(jid):
 			try:
 				name=self.disco[jid][node]['identities'].keys()[0]
@@ -59,36 +54,32 @@ class clientClass(pyxl.client.Client):
 				elif typ=="file":
 					typ="disk"
 				self.main.hosts[jid]=typ
-				#for key,v in self.roster['users'].iteritems():
-					#if len(key.split("@"))>1:
-						#if key.split("@")[1]==jid:
-							#for i in range(len(v.rosterItems)):
-								#status=self.main.icons[unicode(v.rosterItems[i].text(1))[0]]
-								##users.append(self.main.groups[k]["users"][key]["item"])
-								##groups[self.main.groups[k]["users"][key]["item"]]=k
-								#self.roster['users'][key].rosterItems[i].setIcon(0,self.main.getIcon(jid=jid,size=unicode(self.main.config['rosterIconSize']),status=status,usertype=typ))
 
 	def on_rosterAddUser(self, contact):
+		# add user to the roster
 		groups=contact.groups
 		name=contact.name
 		jid=contact.jid
 		
-		#if jid!=contact.tag:
+		# get host info
 		if len(unicode(jid).rsplit("@"))!=1:
 			host=unicode(jid).rsplit("@")[1]
 			if not self.disco.has_key(host) and not host in self.temp_hosts:
 				#self.main.getUserType(host)
 				self.temp_hosts.append(host)
 				self.getDiscoInfo(host)
+
+		# user is not in any group
 		if len(groups)==0:
 			# add user item to Unknown group
 			self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups']['Unknown'],first=True))
-		for group in groups:
-			# add user item to the group
-			
-			self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups'][group],first=True))
+		else:
+			for group in groups:
+				# add user item to the group
+				self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups'][group],first=True))
 
 	def on_discoItemsBookmarksReceived(self, jid):
+		# make user list for bookmarked groupchat
 		item=self.main.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1)[0]
 		for name in self.disco[jid][None]['items'].keys():
 			user=QtGui.QTreeWidgetItem(item)
@@ -97,136 +88,138 @@ class clientClass(pyxl.client.Client):
 			user.setIcon(0,self.main.getIcon(size="16x16"))
 
 	def on_rosterArrived(self):
-		
+		# build Bookmarks tab
 		self.main.buildBookmarks()
+		# hide Unknown group, if has not users
 		if int(self.roster['groups']['Unknown'].childCount())==0:
 			self.main.ui.roster.setItemHidden(self.roster['groups']['Unknown'],True)
-		#del self.temp_hosts
-		#{u'cze2rus@dict.jabbim.cz': {'tag': u'cze2spa@dict.jabbim.cz', 'order': 1}, u'24.cz@tv.jabbim.cz': {'tag': u'hanzz@njs.netlab.cz', 'order': 1}, 'deutschewelle@tv.jabbim.cz': {'tag': u'dsf@tv.jabbim.cz', 'order': 1}, u'hanzz@njs.netlab.cz': {'tag': u'sef@njs.netlab.cz', 'order': 1}, u'thefox@jabbim.sk': {'tag': u'zpravy@rss.netlab.cz', 'order': 1}, u'sef@njs.netlab.cz': {'tag': u'sef@njs.netlab.cz', 'order': 1}}
-		meta={}
 
+		self.metaParents={}
+
+		# get metacontacts
+		meta={} # temp variable for metacontacts - {userTag:userJid}
 		for jid,user in self.roster['users'].iteritems():
-			#print jid
 			if user.tag!=None:
 				if not meta.has_key(user.tag):
 					meta[user.tag]=[jid]
 				else:
 					meta[user.tag].append(jid)
-		#print "META:",meta
-		
+
+		print "META:",meta
+		# process metacontacts
 		for tag,jids in meta.iteritems():
-			mainJid=None
+			# get main metacontact (first metacontact)
+			mainJid=None # JID of main metacontact (parent of all other)
 			for jid in jids:
 				if jid!=tag:
 					mainJid=jids[0]
 					break
+			#If we had some others metacontacts
 			if mainJid!=None:
+				self.metaParents[tag]=self.main.ui.roster.addMetaParent(tag,self.roster['users'][mainJid].rosterItems[0].parent())
 				for jid in jids:
-					#print "*",jid
-					if jid!=mainJid:
-						toDel=[]
-						for item in self.roster['users'][mainJid].rosterItems:
-							self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addMetaContact(jid,jid,item))
-						for contact in self.roster['users'][jid].rosterItems:
-							it=contact.data(32,0)
-							it=it.toList()
-							if unicode(it[1].toString())=="contact":
-								toDel.append(contact)
-								parent=contact.parent()
-								parent.takeChild(parent.indexOfChild(contact))
-						for item in toDel:
-							self.roster['users'][jid].rosterItems.remove(item)
+					toDel=[] # contacts to delete
+					# add metacontat to the all items of mainJid in roster
+					#for item in self.roster['users'][mainJid].rosterItems:
+					self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addMetaContact(jid,jid,self.metaParents[tag]))
+					# Delete metacontacts' top level items from roster
+					for contact in self.roster['users'][jid].rosterItems:
+						it=contact.data(32,0)
+						it=it.toList()
+						if unicode(it[1].toString())=="contact":
+							toDel.append(contact)
+							parent=contact.parent()
+							parent.takeChild(parent.indexOfChild(contact))
+					# delete metacontacts top level items from pyxl
+					for item in toDel:
+						self.roster['users'][jid].rosterItems.remove(item)
 
-		#for jid,user in self.roster['users'].iteritems():
-			#if user.tag!=None and jid!=user.tag:
-				#print jid, user.tag
-				#for item in self.roster['users'][user.tag].rosterItems:
-					#self.roster['users'][meta[user.tag]].rosterItems.append(self.main.ui.roster.addMetaContact(jid,jid,item))
+		# sort roster items and refresh group stats
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.main.ui.roster.refreshStats()
+		print "METAPARENTS",self.metaParents
 
 	def on_authFailed(self,xmlstream):
+		# Authentication error
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(self.main.tr("Bad Jabber ID or password.")),0,1)
 	
 	def on_firstpresence(self,  bulk):
+		# process all first presences at once
 		for presence in bulk:
 			#print presence
 			jid=presence[0]
 			show=presence[1]
 			self.on_presence(jid,show,True)
+		# refresh group stats
 		self.main.ui.roster.refreshStats()
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
 		if show=="offline":
 			pass
 		else:
+			# get user role
 			role=self.groupchats[muc].users[nick].role
-			print "role:",role
+			# find good tab according to jid
 			for i in range(self.main.chat.ui.chatTab.count()):
 				w=self.main.chat.ui.chatTab.widget(i)
 				if unicode(w.jid)==unicode(muc):
+					# edit user item
 					w.chat.editUser(nick,show,role)
 					break
 
 	def on_presence(self,jid,show,first=False):
-	
 		if show=="offline":
-
-			jid=jid.full()
-			# Pridani resource
+			jid=jid.full() # get jid
+			# presence has resource
 			if len(unicode(jid).rsplit("/"))!=1:
 				resource=unicode(jid).rsplit("/")[1]
 				jid=unicode(jid).rsplit("/")[0]
-				if self.roster['users'][jid].resourcesItems.has_key(resource):
-					for user in self.roster['users'][jid].rosterItems:
-						#self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(jid,unicode(user.text(2))+" - "+k,user)
-						user.takeChild(user.indexOfChild(self.roster['users'][jid].resourcesItems[resource]))
-					del self.roster['users'][jid].resourcesItems[resource]
-				if len(self.roster['users'][jid].resources)!=0:
+				# if user has this resource, we have to delete it in all r
+				#print resource,jid,self.roster['users'][jid].resourcesItems
+				#if self.roster['users'][jid].resourcesItems.has_key(resource):
+					#print self.roster['users'][jid].rosterItems
+					#for user in self.roster['users'][jid].rosterItems:
+						##self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(jid,unicode(user.text(2))+" - "+k,user)
+						#user.takeChild(user.indexOfChild(self.roster['users'][jid].resourcesItems[resource]))
+					#del self.roster['users'][jid].resourcesItems[resource]
+				print self.roster['users'][jid].resources,resource,jid
+				if len(self.roster['users'][jid].resources)>1:
 					highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
 					self.main.ui.roster.setStatus(jid,highest.show,first=first)
 				else:
 					self.main.ui.roster.setStatus(jid,show,first=first)
 			else:
 				self.main.ui.roster.setStatus(jid,show,first=first)
-				
-			#if len(unicode(jid).rsplit("/"))!=1:
-				#resource=unicode(jid).rsplit("/")[1]
-				#if self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems.has_key(resource):
-					#for user in self.roster['users'][unicode(jid).rsplit("/")[0]].rosterItems:
-						##self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(jid,unicode(user.text(2))+" - "+k,user)
-						#user.takeChild(user.indexOfChild(self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]))
 		else:
-
 			jid=jid.full()
 			# Pridani resource
 			if len(unicode(jid).rsplit("/"))!=1:
 				resource=unicode(jid).rsplit("/")[1]
 				jid=unicode(jid).rsplit("/")[0]
-				if len(self.roster['users'][jid].resources)>1:
-					for i,v in self.roster['users'][jid].resources.iteritems():
-						if not self.roster['users'][jid].resourcesItems.has_key(i):
-							if self.roster['users'][jid].resourcesItems.has_key(0):
-								add=False
-							else:
-								if self.roster['users'][jid].tag==None or self.roster['users'][jid].tag==jid:
-									add=False
-								else:
-									add=True
-							for user in self.roster['users'][jid].rosterItems:
-								if add:
-									self.roster['users'][jid].resourcesItems[0]=self.main.ui.roster.addSubGroup(self.main.tr("Resources:"),user,first="911")
-								try:
-									self.roster['users'][jid].resourcesItems[i]=self.main.ui.roster.addResource(jid + "/" + i,i,user)
-								except:
-									print "ERROR:",unicode(jid),unicode(show),unicode(resource),user
-								self.main.ui.roster.setResourceStatus(jid,i,v.show)
+				#if len(self.roster['users'][jid].resources)>1:
+					#for i,v in self.roster['users'][jid].resources.iteritems():
+						#if not self.roster['users'][jid].resourcesItems.has_key(i):
+							#if self.roster['users'][jid].resourcesItems.has_key(0):
+								#add=False
+							#else:
+								#if self.roster['users'][jid].tag==None or self.roster['users'][jid].tag==jid:
+									#add=False
+								#else:
+									#add=True
+							#for user in self.roster['users'][jid].rosterItems:
+								#if add:
+									#self.roster['users'][jid].resourcesItems[0]=self.main.ui.roster.addSubGroup(self.main.tr("Resources:"),user,first="911")
+								#try:
+									#self.roster['users'][jid].resourcesItems[i]=self.main.ui.roster.addResource(jid + "/" + i,i,user)
+								#except:
+									#print "ERROR:",unicode(jid),unicode(show),unicode(resource),user
+								#self.main.ui.roster.setResourceStatus(jid,i,v.show)
 				highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
 				status=None
 				if highest.status!=None:
 					status=highest.status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
 				self.main.ui.roster.setStatus(jid,highest.show,status=status,first=first)
-				self.main.ui.roster.setResourceStatus(jid,resource,show)
+				#self.main.ui.roster.setResourceStatus(jid,resource,show)
 			else:
 				status=self.roster['users'][jid].status[1]
 				if status!=None:
@@ -585,7 +578,7 @@ class mainWindow(QtGui.QMainWindow):
 					item.takeChild(0)
 			# set item expanded
 			self.ui.bookmarks.setItemExpanded(item,True)
-			self.client.getDiscoItems(unicode(item.text(1)),callback=self.client.on_discoItemsBookmarksReceived)
+			self.client.getDiscoItems(unicode(item.text(1)),callback=self.client.on_discoItemsBookmarksReceived,callback_par=unicode(item.text(1)))
 
 	def getUserType(self,jid):
 		# get type of jid (rss,disk,jabber, etc.)

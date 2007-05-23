@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Thu May 10 18:34:54 2007
+# Created: Mon May 21 16:21:25 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -51,10 +51,6 @@ class Ui_chatwidget(object):
         self.textEdit.setOpenExternalLinks(True)
         self.textEdit.setObjectName("textEdit")
         self.gridlayout.addWidget(self.textEdit,1,0,1,3)
-
-        self.line = QtGui.QLineEdit(chatwidget)
-        self.line.setObjectName("line")
-        self.gridlayout.addWidget(self.line,2,0,1,1)
 
         self.retranslateUi(chatwidget)
         QtCore.QMetaObject.connectSlotsByName(chatwidget)
