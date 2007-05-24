@@ -521,6 +521,8 @@ class rosterWidget(QtGui.QTreeWidget):
 					self.cloneContact(parent,item)
 				if self.main.shows[unicode(show)]!="9":
 					self.setItemHidden(item, False)
+					if typ=='meta':
+						self.setItemHidden(item.parent(), False)
 		if not first:
 			self.sortItems (1,QtCore.Qt.AscendingOrder)
 			self.refreshStats()

@@ -243,10 +243,7 @@ class clientClass(pyxl.client.Client):
 						i.setText(0,unicode(name))
 						i.setText(1,unicode(i.text(1))[0]+unicode(name).lower())
 						i.setText(2,unicode(name))
-						it=child.data(32,0)
-						it=it.toList()
-						typ=unicode(it[0].toString())
-						item.setData(32,0,QtCore.QVariant([unicode(jid),unicode(typ)]))
+						i.setData(32,0,QtCore.QVariant([unicode(jid),unicode('contact')]))
 						self.main.ui.roster.setStatus(jid,self.main.icons[unicode(i.text(1))[0]],i)
 						self.main.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
 				# we didn't find item
