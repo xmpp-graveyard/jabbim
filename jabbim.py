@@ -624,6 +624,10 @@ class mainWindow(QtGui.QMainWindow):
 				child=item.child(i)
 				if int(unicode(child.text(1))[0])==9:
 					self.ui.roster.setItemHidden(child, not bool)
+				for x in range(int(child.childCount())):
+					child2=child.child(x)
+					if int(unicode(child2.text(1))[0])==9:
+						self.ui.roster.setItemHidden(child2, not bool)
 			self.ui.roster.hidden(not bool)
 
 	def statusChanged(self,action):
