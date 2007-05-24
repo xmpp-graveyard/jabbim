@@ -101,23 +101,27 @@ class clientClass(pyxl.client.Client):
 		for jid,user in self.roster['users'].iteritems():
 			if user.tag!=None:
 				if not meta.has_key(user.tag):
-					meta[user.tag]=[jid]
+					meta[user.tag]=[[jid,user.order]]
 				else:
-					meta[user.tag].append(jid)
+					meta[user.tag].append([jid,user.order])
 
 		print "META:",meta
 		# process metacontacts
 		for tag,jids in meta.iteritems():
 			# get main metacontact (first metacontact)
 			mainJid=None # JID of main metacontact (parent of all other)
-			for jid in jids:
+			for value in jids:
+				jid=value[0]
 				if jid!=tag:
-					mainJid=jids[0]
+					mainJid=jid
 					break
 			#If we had some others metacontacts
 			if mainJid!=None:
 				self.metaParents[tag]=self.main.ui.roster.addMetaParent(tag,self.roster['users'][mainJid].rosterItems[0].parent())
-				for jid in jids:
+				main=[None,None]
+				for value in jids:
+					jid=value[0]
+					order=value[1]
 					toDel=[] # contacts to delete
 					# add metacontat to the all items of mainJid in roster
 					#for item in self.roster['users'][mainJid].rosterItems:
@@ -134,7 +138,7 @@ class clientClass(pyxl.client.Client):
 					for item in toDel:
 						self.roster['users'][jid].rosterItems.remove(item)
 				self.main.ui.roster.cloneContact(self.metaParents[tag],self.roster['users'][jid].rosterItems[-1])
-						
+
 		# sort roster items and refresh group stats
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.main.ui.roster.refreshStats()

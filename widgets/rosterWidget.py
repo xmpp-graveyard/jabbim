@@ -181,6 +181,9 @@ class rosterWidget(QtGui.QTreeWidget):
 		# add new resource called 'name', JID 'jid' with QTreeWidgetItem 'user'
 		item.setData(32,0,QtCore.QVariant([unicode(tag),unicode("metaparent")]))
 		item.setData(32,1,QtCore.QVariant(unicode(tag)))
+		
+		if self.main.offline==False:
+			self.setItemHidden(item, True)
 		self.sortItems(1,QtCore.Qt.AscendingOrder)
 		return item
 
