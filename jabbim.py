@@ -302,10 +302,15 @@ class clientClass(pyxl.client.Client):
 			frm=unicode(frm).rsplit("/")[0]
 		else:
 			user=frm
+		body=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
 		# find MUC tab
 		for i in range(self.main.chat.ui.chatTab.count()):
 			w=self.main.chat.ui.chatTab.widget(i)
 			if unicode(w.jid)==frm:
+				# set room topic
+				if subject!=None:
+					w.chat.ui.info.setText(unicode(subject))
+					w.chat.ui.info.setCursorPosition(0)
 				# set links, if we found them
 				for word in unicode(body).split(' '):
 					if word.find("http://")!=-1:
