@@ -186,6 +186,7 @@ class Client(derived):
 #		self.getPrivacy()
 #		self.joinGC('jdev@conf.netlab.cz',  'Sefator')
 ##		self.sendFile('public@disk.jabbim.cz', 'test.txt', '10010', None)
+		self.on_authd()
 	def _pepSupport(self):
 		print 'pep support arrived'
 #		print self.jid.host,  self.disco

@@ -15,7 +15,10 @@ class testClass(pyxl.client.Client):
 	def on_xml(self, xml):
 ##		print xml
 		pass
+	def on_authd(self):
+		print 'we are authed now'
+		self.joinGC('jabber@conf.netlab.cz',  'Vybliz')
 
-klient = testClass('XXX@njs.netlab.cz/test', 'XXX', 'njs.netlab.cz', 5222, uiClass())
+klient = testClass('vybliz@njs.netlab.cz/test', 'xxx', 'njs.netlab.cz', 5222, uiClass())
 klient.connect()
 reactor.run()
