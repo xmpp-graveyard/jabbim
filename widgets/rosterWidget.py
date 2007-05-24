@@ -175,14 +175,13 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.main.chat.addChatTab(data,unicode(item.text(2)),self.main.getIcon(data,self.main.icons[unicode(item.text(1))[0]],size="16x16"))
 
 
-	def addMetaParent(self,tag,parent):
+	def addMetaParent(self,tag,parent,offline=False):
 		item=QtGui.QTreeWidgetItem(parent)
 		item.setText(1,"9")
 		# add new resource called 'name', JID 'jid' with QTreeWidgetItem 'user'
 		item.setData(32,0,QtCore.QVariant([unicode(tag),unicode("metaparent")]))
 		item.setData(32,1,QtCore.QVariant(unicode(tag)))
-		
-		if self.main.offline==False:
+		if offline!=False:
 			self.setItemHidden(item, True)
 		self.sortItems(1,QtCore.Qt.AscendingOrder)
 		return item

@@ -110,18 +110,24 @@ class clientClass(pyxl.client.Client):
 		for tag,jids in meta.iteritems():
 			# get main metacontact (first metacontact)
 			mainJid=None # JID of main metacontact (parent of all other)
+			highestNum=0
+			highest=[]
 			for value in jids:
 				jid=value[0]
+				order=int(value[1])
 				if jid!=tag:
 					mainJid=jid
-					break
+				if order>=highestNum:
+					highest.append(jid)
+				
+			
 			#If we had some others metacontacts
 			if mainJid!=None:
-				self.metaParents[tag]=self.main.ui.roster.addMetaParent(tag,self.roster['users'][mainJid].rosterItems[0].parent())
+				self.metaParents[tag]=self.main.ui.roster.addMetaParent(tag,self.roster['users'][mainJid].rosterItems[0].parent(),True)
 				main=[None,None]
 				for value in jids:
 					jid=value[0]
-					order=value[1]
+					order=int(value[1])
 					toDel=[] # contacts to delete
 					# add metacontat to the all items of mainJid in roster
 					#for item in self.roster['users'][mainJid].rosterItems:
