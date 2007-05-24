@@ -700,6 +700,12 @@ class mainWindow(QtGui.QMainWindow):
 		if self.client==None:
 			self.client = clientClass(jid+"/jabbim", password, jid.split("@")[1], 5222,self)
 		self.client.connect()
+	
+	def _addGroup(self, group):
+		return self.ui.roster.addGroup(unicode(group))
+	
+	def _addUser(self, itemjid, name, grp):
+		return self.ui.roster.addUser(itemjid,name,grp)
 
 class XMLConsole(QtGui.QMainWindow):
 	def __init__(self,data,parent=None):

@@ -258,7 +258,7 @@ class Client(derived):
 							groups.append(unicode(group))
 							if unicode(group) not in allGroups:
 								# add group item to ther roster
-								self.roster['groups'][unicode(group)] = self.main.ui.roster.addGroup(unicode(group))
+								self.roster['groups'][unicode(group)] = self.main._addGroup(group)
 								allGroups.append(unicode(group))
 					if item.hasAttribute('name'):
 						name = item['name']
@@ -276,10 +276,10 @@ class Client(derived):
 						rosterItems=[]
 						if len(groups)==0:
 							# add user item to Unknown group
-							rosterItems.append(self.main.ui.roster.addUser(itemjid,name,self.roster['groups']['Unknown']))
+							rosterItems.append(self.main._addUser(itemjid,name,self.roster['groups']['Unknown']))
 						for group in groups:
 							# add user item to the group
-							rosterItems.append(self.main.ui.roster.addUser(itemjid,name,self.roster['groups'][group]))
+							rosterItems.append(self.main._addUser(itemjid,name,self.roster['groups'][group]))
 						contact = Contact(self, itemjid, name, subscription, rosterItems, groups)
 						self.roster['users'][itemjid] = contact
 					elif subscription != 'remove'  and self.roster['users'].has_key(itemjid):
@@ -493,7 +493,7 @@ class Client(derived):
 							groups.append(unicode(group))
 							if unicode(group) not in allGroups:
 								# add group item to ther roster
-								self.roster['groups'][unicode(group)] = self.main.ui.roster.addGroup(unicode(group))
+								self.roster['groups'][unicode(group)] = self.main._addGroup(unicode(group))
 								allGroups.append(unicode(group))
 					if item.hasAttribute('name'):
 						name = item['name']
@@ -863,7 +863,7 @@ class Client(derived):
 		query = el.firstChildElement()
 		for child in query.elements():
 			if child.name == 'item':
-				node['items'][child['name']] = child.attributes
+				node['items'][child['jid']] = child.attributes
 
 		self.disco[frm][node_name] = node
 
