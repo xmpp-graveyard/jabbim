@@ -5,20 +5,32 @@ except:
 from groupchatwidget_ui import *
 #from groupchatadmin import *
 from configobj import ConfigObj
+import urllib,re
+from twisted.web.microdom import *
+from twisted.web.domhelpers import gatherTextNodes
 
-#class lineEditWidget(QtGui.QTextEdit):
-	#def __init__(self,main,parent=None):
-		#apply(QtGui.QTextEdit.__init__,(self,parent))
-		#self.main=main
-		#self.setMaximumSize(QtCore.QSize(16777215,30))
-		#self.setObjectName("line")
+class lineEditWidget(QtGui.QTextEdit):
+	def __init__(self,main,parent=None):
+		apply(QtGui.QTextEdit.__init__,(self,parent))
+		self.main=main
+		self.parent=parent
+		self.setMaximumSize(QtCore.QSize(16777215,30))
+		self.setObjectName("line")
 	
-	#def keyPressEvent(self,event):
-		#key=event.key()
-		#if key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
-			#self.main.sendButtonClicked()
-		#else:
-			#QtGui.QTextEdit.keyPressEvent(self,event)
+	def keyPressEvent(self,event):
+		key=event.key()
+		if key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
+			self.main.sendButtonClicked()
+		else:
+			QtGui.QTextEdit.keyPressEvent(self,event)
+			text=unicode(self.toPlainText())
+			for k,v in self.parent.smileys.iteritems():
+				if text.find(" "+k)!=-1:
+					html=self.toHtml()
+					html.replace(k,'<img src="images/16x16/emotes/'+v+'"/> ')
+					cur=self.textCursor()
+					self.setHtml(html)
+					self.setTextCursor(cur)
 
 class groupChatWidget(QtGui.QWidget):
 	def __init__(self,main,jid,jab,parent=None):
@@ -29,15 +41,22 @@ class groupChatWidget(QtGui.QWidget):
 		self.main=main
 		self.affiliation=""
 
-		#self.ui.line=lineEditWidget(self,self)
-		#self.ui.gridlayout.addWidget(self.ui.line,3,0,1,1)
+
+		layout=QtGui.QHBoxLayout(self.ui.lineWidget)
+		layout.setMargin(0)
+		layout.setSpacing(0)
+		self.ui.line=lineEditWidget(self,self)
+		layout.addWidget(self.ui.line)
 
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.roomConfig, QtCore.SIGNAL("clicked ()"),self.roomConfigClicked)
 		QtCore.QObject.connect(self.ui.roomAdmin, QtCore.SIGNAL("clicked ()"),self.roomAdminClicked)
-		QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
+		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("textChanged ()"),self.lines)
+		#QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
+		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
+
 		short=QtGui.QShortcut("tab",self.ui.line)
 		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
 		self.ui.info_big.hide()
@@ -51,10 +70,12 @@ class groupChatWidget(QtGui.QWidget):
 		self.ui.users.header().hide()
 		self.ui.users.hideColumn(1)
 		#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)
+		self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
+		self.ui.lineWidget.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
 
-	def lines(self):
-		if self.ui.line.verticalScrollBar().isVisible():
-			self.ui.line.setMaximumHeight(int(self.ui.line.maximumHeight())+int(self.ui.line.currentFont().pointSize())+10)
+	#def lines(self):
+		#if self.ui.line.verticalScrollBar().isVisible():
+			#self.ui.line.setMaximumHeight(int(self.ui.line.maximumHeight())+int(self.ui.line.currentFont().pointSize())+10)
 
 	def changeAffiliation(self,affiliation):
 		if affiliation=="owner":
@@ -168,21 +189,37 @@ class groupChatWidget(QtGui.QWidget):
 		# add emoticon to the self.ui.line
 		data=action.data()
 		data=data.toString()
-		self.ui.line.insertPlainText(data)
+		for k,v in self.smileys.iteritems():
+			data=data.replace(k,' <img src="images/16x16/emotes/'+v+'" />')
+		self.ui.line.insertHtml(data)
 		self.ui.smileys.setChecked(False)
 		self.s.hide()
 		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def sendButtonClicked(self):
 		# sends message
-		if len(unicode(self.ui.line.text()))!=0:
-			self.main.client.sendMessage(self.jid, unicode(self.ui.line.text()), 'groupchat')
+		# sends message
+		if len(unicode(self.ui.line.toPlainText()))!=0:
+			text=unicode(self.ui.line.toHtml())
+			a=parseString(text)
+			for el in a.getElementsByTagName('img'):
+				path=el.attributes['src'].split('/')[-1]
+				for k,v in self.smileys.iteritems():
+					if v==path:
+						path=k
+				newnode = parseString("<div> "+path+"</div>").documentElement
+				el.parentNode.replaceChild(newnode,el)
+			b=a.getElementsByTagName('body')
+			c=parseString(b[0].toxml())
+			text=gatherTextNodes(c)
+
+			self.main.client.sendMessage(self.jid, unicode(text), 'groupchat')
 			self.ui.line.clear()
 			#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)
 
 	def tabPressed(self):
 		# nick completion
-		text=unicode(self.ui.line.text()).lower()
+		text=unicode(self.ui.line.toPlainText()).lower()
 		if len(text)==0:
 			return
 		text=text[0]
@@ -190,7 +227,13 @@ class groupChatWidget(QtGui.QWidget):
 		users=self.main.client.groupchats[self.jid].users.keys()
 		for i in range(len(users)):
 			if unicode(users[i]).lower()[:len(text)]==text and i>self.name_id:
-				self.ui.line.setText(users[i]+": ")
+				cur=self.ui.line.textCursor()
+				cur.movePosition(QtGui.QTextCursor.End)
+				self.ui.line.setTextCursor(cur)
+				self.ui.line.setPlainText(users[i]+": ")
+				cur=self.ui.line.textCursor()
+				cur.movePosition(QtGui.QTextCursor.End)
+				self.ui.line.setTextCursor(cur)
 				self.name_id=i
 				return
 			if unicode(users[i]).lower()[:len(text)]==text:

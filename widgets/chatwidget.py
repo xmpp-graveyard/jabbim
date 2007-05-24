@@ -37,8 +37,14 @@ class chatWidget(QtGui.QWidget):
 		apply(QtGui.QWidget.__init__,(self,parent))
 		self.ui=Ui_chatwidget()
 		self.ui.setupUi(self)
+
+		layout=QtGui.QHBoxLayout(self.ui.lineWidget)
+		layout.setMargin(0)
+		layout.setSpacing(0)
 		self.ui.line=lineEditWidget(self,self)
-		self.ui.gridlayout.addWidget(self.ui.line,2,0,1,1)
+		layout.addWidget(self.ui.line)
+		
+		#self.ui.gridlayout.addWidget(self.ui.line,2,0,1,1)
 		self.main=main
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
@@ -56,6 +62,8 @@ class chatWidget(QtGui.QWidget):
 		#self.pixmap=images['bgImage']
 		#print self.ui.line.currentFont().pointSize()
 		self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
+		self.ui.lineWidget.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
+
 
 	#def lines(self):
 		#if self.ui.line.verticalScrollBar().isVisible():
