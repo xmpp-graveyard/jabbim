@@ -121,7 +121,7 @@ class clientClass(pyxl.client.Client):
 					toDel=[] # contacts to delete
 					# add metacontat to the all items of mainJid in roster
 					#for item in self.roster['users'][mainJid].rosterItems:
-					self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addMetaContact(jid,jid,self.metaParents[tag]))
+					self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addMetaContact(jid,self.roster['users'][jid].name,self.metaParents[tag]))
 					# Delete metacontacts' top level items from roster
 					for contact in self.roster['users'][jid].rosterItems:
 						it=contact.data(32,0)
@@ -133,7 +133,8 @@ class clientClass(pyxl.client.Client):
 					# delete metacontacts top level items from pyxl
 					for item in toDel:
 						self.roster['users'][jid].rosterItems.remove(item)
-
+				self.main.ui.roster.cloneContact(self.metaParents[tag],self.roster['users'][jid].rosterItems[-1])
+						
 		# sort roster items and refresh group stats
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.main.ui.roster.refreshStats()

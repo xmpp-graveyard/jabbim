@@ -110,7 +110,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		print self.itemDelegate()
 		print self.delegate
 		self.setMouseTracking (True)
-
+		#self.setIndentation(2)
 		self.setItemDelegate(self.delegate)
 		print self.itemDelegate()
 		# main variables
@@ -153,7 +153,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemCollapsed ( QTreeWidgetItem * )"),self.collapsed)
 
 		self.dnd={}
-
+		
 	def expanded(self,item):
 		# change icon if group item expanded
 		if item.parent()==None:
@@ -177,7 +177,7 @@ class rosterWidget(QtGui.QTreeWidget):
 
 	def addMetaParent(self,tag,parent):
 		item=QtGui.QTreeWidgetItem(parent)
-		item.setText(1,"1")
+		item.setText(1,"9")
 		# add new resource called 'name', JID 'jid' with QTreeWidgetItem 'user'
 		item.setData(32,0,QtCore.QVariant([unicode(tag),unicode("metaparent")]))
 		item.setData(32,1,QtCore.QVariant(unicode(tag)))
