@@ -174,125 +174,111 @@ class clientClass(pyxl.client.Client):
 			if len(unicode(jid).rsplit("/"))!=1:
 				resource=unicode(jid).rsplit("/")[1]
 				jid=unicode(jid).rsplit("/")[0]
-				# if user has this resource, we have to delete it in all r
-				#print resource,jid,self.roster['users'][jid].resourcesItems
-				#if self.roster['users'][jid].resourcesItems.has_key(resource):
-					#print self.roster['users'][jid].rosterItems
-					#for user in self.roster['users'][jid].rosterItems:
-						##self.roster['users'][unicode(jid).rsplit("/")[0]].resourcesItems[resource]=self.main.ui.roster.addResource(jid,unicode(user.text(2))+" - "+k,user)
-						#user.takeChild(user.indexOfChild(self.roster['users'][jid].resourcesItems[resource]))
-					#del self.roster['users'][jid].resourcesItems[resource]
-				print self.roster['users'][jid].resources,resource,jid
+				# contact has more than one resource
 				if len(self.roster['users'][jid].resources)>1:
+					# set status by highest resource
 					highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
 					self.main.ui.roster.setStatus(jid,highest.show,first=first)
 				else:
+					# set status by this presence
 					self.main.ui.roster.setStatus(jid,show,first=first)
 			else:
 				self.main.ui.roster.setStatus(jid,show,first=first)
 		else:
-			jid=jid.full()
-			# Pridani resource
+			jid=jid.full() # get jid
+			# presence has resource
 			if len(unicode(jid).rsplit("/"))!=1:
 				resource=unicode(jid).rsplit("/")[1]
 				jid=unicode(jid).rsplit("/")[0]
-				#if len(self.roster['users'][jid].resources)>1:
-					#for i,v in self.roster['users'][jid].resources.iteritems():
-						#if not self.roster['users'][jid].resourcesItems.has_key(i):
-							#if self.roster['users'][jid].resourcesItems.has_key(0):
-								#add=False
-							#else:
-								#if self.roster['users'][jid].tag==None or self.roster['users'][jid].tag==jid:
-									#add=False
-								#else:
-									#add=True
-							#for user in self.roster['users'][jid].rosterItems:
-								#if add:
-									#self.roster['users'][jid].resourcesItems[0]=self.main.ui.roster.addSubGroup(self.main.tr("Resources:"),user,first="911")
-								#try:
-									#self.roster['users'][jid].resourcesItems[i]=self.main.ui.roster.addResource(jid + "/" + i,i,user)
-								#except:
-									#print "ERROR:",unicode(jid),unicode(show),unicode(resource),user
-								#self.main.ui.roster.setResourceStatus(jid,i,v.show)
+				# get highest resource and status
 				highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
 				status=None
 				if highest.status!=None:
 					status=highest.status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
+				# set status
 				self.main.ui.roster.setStatus(jid,highest.show,status=status,first=first)
-				#self.main.ui.roster.setResourceStatus(jid,resource,show)
 			else:
+				# get user status
 				status=self.roster['users'][jid].status[1]
 				if status!=None:
 					status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
+				# set status
 				self.main.ui.roster.setStatus(jid,show,status=status,first=first)
 				
 	def on_xml(self,xml):
+		# append xml to the xml console, it it's enabled...
 		if self.main.xmlConsole.ui.enable.isChecked():
 			text=unicode(xml)
 			self.main.xmlConsole.ui.xml.append(text+"\n\n")
 	
 	def on_UpdateContact(self,jid):
-		#print "update",unicode(jid),"groups:",self.roster['users'][jid].groups
+		# contact is updated
 		contact=self.roster['users'][jid]
 		items=contact.getUserItems()
-		toDel=[]
+		toDel=[] # temp variable for deleting items at the end of this function
+		# go through all groups
 		for name,item in self.roster['groups'].iteritems():
+			# updated contact has to be in this group
 			if name in contact.groups:
 				add=True
+				# go through all user items, find item in this group and edit it
 				for i in items:
 					parent=i.parent()
 					if item==parent:
-						add=False
+						add=False # we found item
 						name=contact.name
 						if name==None or len(name)==0:
 							name=jid
 						i.setText(0,unicode(name))
 						i.setText(1,unicode(i.text(1))[0]+unicode(name).lower())
 						i.setText(2,unicode(name))
-						item.setData(32,0,QtCore.QVariant([unicode(jid),unicode("contact")]))
+						it=child.data(32,0)
+						it=it.toList()
+						typ=unicode(it[0].toString())
+						item.setData(32,0,QtCore.QVariant([unicode(jid),unicode(typ)]))
 						self.main.ui.roster.setStatus(jid,self.main.icons[unicode(i.text(1))[0]],i)
 						self.main.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
-						
+				# we didn't find item
 				if add:
+					# we have some item to clone (so we can't create new one)
 					if len(contact.getUserItems())!=0:
 						i=contact.getUserItems()[0].clone() # clone contact item
 						contact.rosterItems.append(i)
-						for x in range(int(i.childCount())):
-							child=i.child(x)
-							
-							it=child.data(32,0)
-							it=it.toList()
-							data=unicode(it[0].toString())
-							typ=unicode(it[1].toString())
-							
-							if typ=="meta":
-
-								#print "len",len(self.roster['users'][data].rosterItems)
-								#print data,jid
-								self.roster['users'][data].rosterItems.append(child)
-								#print "len",len(contact.rosterItems)
+						# don't know, if we need this code now, so keep coomented...
+						#for x in range(int(i.childCount())):
+							#child=i.child(x)
+							#it=child.data(32,0)
+							#it=it.toList()
+							#data=unicode(it[0].toString())
+							#typ=unicode(it[1].toString())
+							#if typ=="meta":
+								#self.roster['users'][data].rosterItems.append(child)
 						self.roster['groups'][name].addChild(i) # add item to the new group
 						self.main.ui.roster.setStatus(contact.jid,None,i)
 					else:
+						# add new contact to the roster
 						contact.rosterItems.append(self.main.ui.roster.addUser(contact.jid,contact.name,self.roster['groups'][name]))
 						self.main.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
 						self.main.ui.roster.setStatus(contact.jid,None)
 						self.main.ui.roster.refreshStats()
 			else:
+				# user is not in this group, so we have to delete them from this group, if he is there
 				for i in items:
 					parent=i.parent()
 					if item==parent:
 						self.roster['users'][unicode(jid)].rosterItems.remove(i)
 						parent.takeChild(parent.indexOfChild(i))
+						# delete group, if it's empty
 						if int(parent.childCount())==0:
 							toDel.append(unicode(parent.text(2)))
 							self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(parent))
 						break
+		# delete all groups saved in toDel
 		for name in toDel:
 			del self.roster['groups'][name]
 
 	def on_DeleteContact(self,jid):
-		#print "delete",unicode(jid)
+		# delete contact from roster
 		contact=self.roster['users'][jid]
 		items=contact.getUserItems()
 		for name,item in self.roster['groups'].iteritems():
@@ -309,34 +295,44 @@ class clientClass(pyxl.client.Client):
 
 
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
+		# handle messages from groupchat
+		# get user (resource) and MUC jid (saved in frm)
 		if len(unicode(frm).rsplit("/"))==2:
 			user=unicode(frm).rsplit("/")[1]
 			frm=unicode(frm).rsplit("/")[0]
 		else:
 			user=frm
-		#print delay
+		# find MUC tab
 		for i in range(self.main.chat.ui.chatTab.count()):
 			w=self.main.chat.ui.chatTab.widget(i)
 			if unicode(w.jid)==frm:
+				# set links, if we found them
 				for word in unicode(body).split(' '):
 					if word.find("http://")!=-1:
 						body=body.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
+				# no delay message
 				if delay==None or len(delay)==0:
+					# it's our message
 					if unicode(w.name)==unicode(user):
 						message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
 					else:
+						# it's message for us
 						if unicode(body).lower().find(unicode(w.name).lower())!=-1:
 							message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
 						else:
 							message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
+					# write message
 					w.chat.textEditWrite(message)
 					return
 				else:
+					# get delay from string
 					delay=unicode(delay)
 					delay="%s-%s-%s %s:%s:%s" % (delay[0:4],delay[4:6],delay[6:8],delay[9:11],delay[12:14],delay[15:17])
+					# our delayed message
 					if unicode(w.name)==unicode(user):
 						message=self.main.skin["my_message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
 					else:
+						# delayed message for us
 						if unicode(body).lower().find(unicode(w.name).lower())!=-1:
 							message=self.main.skin["message_for_me_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
 						else:
@@ -344,8 +340,8 @@ class clientClass(pyxl.client.Client):
 					w.chat.textEditWrite(message)
 
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None):
-		print chatstate
-		#print "message",frm
+		# handle normal 'chat' messages
+		# get user icon or name, if we have him in roster. Or use default icon and jid as name
 		if self.roster['users'].has_key(unicode(frm).rsplit("/")[0]):
 			user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
 			icon=user.icon(0)
@@ -353,9 +349,10 @@ class clientClass(pyxl.client.Client):
 		else:
 			icon=self.main.getIcon(status="offline",size="16x16")
 			user=frm
-		
+		# strip html tags and \n from messages
 		message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
 		message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user)).replace("[message]",message)
+		# find tab
 		tab=None
 		tabIndex=0
 		for i in range(self.main.chat.ui.chatTab.count()):
@@ -367,11 +364,14 @@ class clientClass(pyxl.client.Client):
 			if unicode(w.jid).rsplit("/")[0]==unicode(frm).rsplit("/")[0]:
 				tab=w
 				tabIndex=i
+		# we found tab
 		if tab!=None:
+			# write message and set 'message' icon
 			if int(self.main.chat.ui.chatTab.currentIndex())!=tabIndex:
 				self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
 			tab.chat.textEditWrite(message)
 		else:
+			# add new chattab
 			self.main.chat.addChatTab(frm,unicode(user),icon,message)
 
 class mainWindow(QtGui.QMainWindow):
@@ -380,34 +380,13 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
 		self.homeDir=utils.getHomeDir() # get home dir
+
 		utils.loadConfig(self) # load config files
-		self.client=None
-		# fill login form
-		self.ui.login_password.setText(self.config['passwd'])
-		self.ui.login_jid.setText(self.config['jid'])
-		if self.config['savePasswd']=="True":
-			self.ui.login_savePassword.setChecked(True)
-		self.hosts={}
 
+		# variables
+		self.hosts={} # temp variable for {hos:type_of_host}
+		self.client=None # pyxl client instance
 		self.chat=widgets.chatwindow.chatWindow(self,self)
-
-		app.connect(self.ui.login_connect, QtCore.SIGNAL("clicked()"),self.connect)
-		app.connect(app,QtCore.SIGNAL("lastWindowClosed() "),self.disconnect)
-		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
-		app.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
-		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
-		app.connect(self.ui.actionJoin_Groupchat, QtCore.SIGNAL("triggered ( bool )"),self.joinGroupchat)
-		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
-		app.connect(self.ui.newBookmark, QtCore.SIGNAL("clicked ()"),self.newBookmark)
-		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
-
-		self.ui.bookmarks.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-		self.ui.bookmarks.header().hide()
-		self.ui.bookmarks.hideColumn(1)
-
-		self.ui.rosterStackedWidget.setCurrentIndex(0)
-		self.loadRoster()
-		self.loadSkin() # load chat skin
 		self.statusPath="images/xxxxx/status/"
 		self.shows={u"online":u"1",
 					u"available":u"1",
@@ -435,6 +414,37 @@ class mainWindow(QtGui.QMainWindow):
 					"None":self.tr("Online"),
 					"offline":self.tr("Offline")
 					}
+		self.offline=False
+		self.xmlConsole=XMLConsole(self)
+		self.ui.showOffline.hide()
+
+
+		# mainwindows signals
+		app.connect(self.ui.login_connect, QtCore.SIGNAL("clicked()"),self.connect)
+		app.connect(app,QtCore.SIGNAL("lastWindowClosed() "),self.disconnect)
+		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
+		app.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
+		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
+		app.connect(self.ui.actionJoin_Groupchat, QtCore.SIGNAL("triggered ( bool )"),self.joinGroupchat)
+		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
+		app.connect(self.ui.newBookmark, QtCore.SIGNAL("clicked ()"),self.newBookmark)
+		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
+
+		# fill login form
+		self.ui.login_password.setText(self.config['passwd'])
+		self.ui.login_jid.setText(self.config['jid'])
+		if self.config['savePasswd']=="True":
+			self.ui.login_savePassword.setChecked(True)
+		# set up bookmarks treeWidget
+		self.ui.bookmarks.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+		self.ui.bookmarks.header().hide()
+		self.ui.bookmarks.hideColumn(1)
+		# set up stacked widget (0==login,1==roster and etc..)
+		self.ui.rosterStackedWidget.setCurrentIndex(0)
+		self.loadRoster() # load roster widget
+		self.loadSkin() # load chat skin
+
+		# Status menu
 		self.statusMenu=QtGui.QMenu(self.tr("Status"),self.ui.statusButton)
 		action=self.statusMenu.addAction(self.getIcon(status="online",size="16x16"),self.status["online"])
 		action.setData(QtCore.QVariant("online"))
@@ -453,9 +463,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusButton.setText(unicode(self.status["offline"]))
 		self.ui.statusButton.setIcon(self.getIcon("offline",size="16x16"))
 		self.ui.statusButton.hide()
-		self.offline=False
-		self.xmlConsole=XMLConsole(self)
-		self.ui.showOffline.hide()
 		
 		#self.addInfoSubscribe()
 		#self.addInfoSubscribe()
@@ -545,8 +552,6 @@ class mainWindow(QtGui.QMainWindow):
 			nickname=unicode(lst[1].toString()) # get nickname
 			# send jabber command
 			self.chat.addGroupChatTab(jid,nickname)
-			#self.main.groupchat[room+"@"+server]=[nickname,[]]
-			print jid,nickname
 			self.client.joinGC(jid, nickname)
 		elif cmd=="edit_bookmark":
 			item=self.ui.bookmarks.currentItem()
@@ -569,7 +574,6 @@ class mainWindow(QtGui.QMainWindow):
 			del self.client.bookmarks['conference'][unicode(item.text(0))]
 			self.client.setBookmarks()
 			self.buildBookmarks()
-			#jab.setBookmarks(self.bookmarks)
 		elif cmd=="show_users":
 			item=self.ui.bookmarks.currentItem()
 			if int(item.childCount())!=0:
@@ -579,21 +583,6 @@ class mainWindow(QtGui.QMainWindow):
 			# set item expanded
 			self.ui.bookmarks.setItemExpanded(item,True)
 			self.client.getDiscoItems(unicode(item.text(1)),callback=self.client.on_discoItemsBookmarksReceived,callback_par=unicode(item.text(1)))
-
-	def getUserType(self,jid):
-		# get type of jid (rss,disk,jabber, etc.)
-		print self.client.disco[jid]
-		#if len(jid.split("@"))!=1:
-			#if self.discoInfo.has_key(jid.split("@")[1]):
-				#typ=self.discoInfo[jid.split("@")[1]]
-				#if typ=="pep" or typ=="im":
-					#typ="jabber"
-				#elif typ=="file":
-					#typ="disk"
-				#return typ
-		#else:
-			#print jid
-		return "jabber"
 
 	def preferencesClicked(self,bool):
 		# shows preferences
