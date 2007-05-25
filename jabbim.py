@@ -131,7 +131,7 @@ class clientClass(pyxl.client.Client):
 					toDel=[] # contacts to delete
 					# add metacontat to the all items of mainJid in roster
 					#for item in self.roster['users'][mainJid].rosterItems:
-					self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addMetaContact(jid,self.roster['users'][jid].name,self.metaParents[tag]),True)
+					self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addMetaContact(jid,self.roster['users'][jid].name,self.metaParents[tag],True))
 					# Delete metacontacts' top level items from roster
 					for contact in self.roster['users'][jid].rosterItems:
 						it=contact.data(32,0)
@@ -476,7 +476,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusButton.setText(unicode(self.status["offline"]))
 		self.ui.statusButton.setIcon(self.getIcon("offline",size="16x16"))
 		self.ui.statusButton.hide()
-		
+		self.config['rosterIconSize']="22x22"
 		#self.addInfoSubscribe()
 		#self.addInfoSubscribe()
 		#self.addInfoSubscribe()
@@ -660,6 +660,8 @@ class mainWindow(QtGui.QMainWindow):
 			reactor.stop2()
 
 	def getIcon(self,jid=None,typ=None,size="32x32",status=None,usertype="jabber"):
+		if size=="22x22":
+			size="32x32"
 		# return status icon
 		path=self.statusPath.replace("xxxxx",size)
 		typ=unicode(typ)

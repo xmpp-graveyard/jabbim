@@ -33,25 +33,30 @@ class delegate(QtGui.QItemDelegate):
 
 			painter.restore()
 
+		doc=QtGui.QTextDocument()
+		doc.setHtml(index.data().toString())
+
+		size=doc.size()
+		rectSize=option.rect.size()
+		posun=(float(rectSize.height())-float(size.height()))/2
+
 
 		if not index.data(QtCore.Qt.DecorationRole).isNull():
 			icon=QtGui.QIcon(index.data(QtCore.Qt.DecorationRole))
 			painter.save()
 			painter.translate(option.rect.topLeft())
-			icon.paint(painter,0,0,16,16)
+			icon.paint(painter,0,5,22,22)
 			painter.restore()
 			rect=option.rect.topLeft()
-			rect.setX(rect.x()+20)
+			rect.setX(rect.x()+24)
+			rect.setY(rect.y()+int(posun))
 		else:
 			rect=option.rect.topLeft()
+			rect.setY(rect.y()+int(posun))
 		
-		doc=QtGui.QTextDocument()
-		doc.setHtml(index.data().toString())
 		painter.save()
-
 		painter.translate(rect)
-		
-		doc.drawContents(painter, QtCore.QRectF(QtCore.QRect(QtCore.QPoint(0, 0), option.rect.size())))
+		doc.drawContents(painter, QtCore.QRectF(QtCore.QRect(QtCore.QPoint(0, 0), rectSize)))
 
 		painter.restore()
 
@@ -60,7 +65,8 @@ class delegate(QtGui.QItemDelegate):
 	def sizeHint(self,option,index):
 
 		doc=QtGui.QTextDocument()
-		doc.setHtml(index.data().toString())
+		#doc.setHtml(index.data().toString())
+		doc.setHtml("test<br/><font size=\"-1\">test</font>")
 		return doc.size().toSize()
 
 		
@@ -120,7 +126,8 @@ class rosterWidget(QtGui.QTreeWidget):
 		# roster config and design informations
 		self.setAlternatingRowColors(True)
 		size=unicode(self.main.config['rosterIconSize']).rsplit("x")
-		self.setIconSize(QtCore.QSize(int(size[0]),int(size[1])))
+		#self.setIconSize(QtCore.QSize(int(size[0]),int(size[1])))
+		self.setIconSize(QtCore.QSize(22,22))
 		self.setRootIsDecorated(False)
 		self.setDragEnabled(True)
 		self.setAcceptDrops(True)
@@ -186,7 +193,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.sortItems(1,QtCore.Qt.AscendingOrder)
 		return item
 
-	def addMetaContact(self,jid,name,user):
+	def addMetaContact(self,jid,name,user,offline=False):
 		#item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
 
 		# add new resource called 'name', JID 'jid' with QTreeWidgetItem 'user'
@@ -197,6 +204,8 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
 		item.setData(32,0,QtCore.QVariant([unicode(jid),unicode("meta")]))
+		if offline!=False:
+			self.setItemHidden(item, True)
 		self.sortItems(1,QtCore.Qt.AscendingOrder)
 		return item
 
