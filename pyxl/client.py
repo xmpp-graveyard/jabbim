@@ -172,6 +172,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/presence[@type='unsubscribe']", self.onUnSubscribe, 1)
 		self.xmlstream.addObserver("/presence[@type='subscribed']", self.onSubscribed, 1)
 		self.xmlstream.addObserver("/presence[@type='unsubscribed']", self.onUnSubscribed, 1)
+		self.xmlstream.addObserver("/presence[@type='error`']", self.onPresenceError, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:version']", self.onVersion, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#info']", self.onDiscoInfo, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:last']", self.onLast, 1)
@@ -654,8 +655,16 @@ class Client(derived):
 ##			print 'contact not in roster'
 			pass
 
-
-
+	def onPresenceError(self,  el):
+		#zatim jenom GC errory .. ani nevim jestli ma smysl zachytavat i jine ..
+		frm = jid.JID(el['from'])
+		fromjid = frm.userhost()
+		resource = jid.JID(el['from']).resource
+		if self.groupchats.has_key(fromjid):
+			err = el.firstChildElement()
+			errel = err.firstChildElement()
+			self.on_GCpresenceError(fromjid, err['code'],  err['type'],  errel.name )
+		
 	def getFeatures(self, jid, caps_node):
 		print 'requesting features', caps_node
 		iq = IQ(self.xmlstream, 'get')

@@ -5,6 +5,8 @@ class derived:
 		pass
 	def on_presence(self,frm,show):
 		pass
+	def on_GCpresenceError(self,  fromjid,  code,  type,  name):
+		pass
 	def on_firstpresence(self,  bulk):
 		for pres in bulk:
 			print pres[0], pres[1]
