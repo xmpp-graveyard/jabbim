@@ -749,14 +749,17 @@ class statusWindow(QtGui.QDialog):
 			self.accept()
 	def accept(self):
 		if self.data=="offline":
+##			MainWindow.client.factory.stopTrying()
 			MainWindow.client.sendPresence(show = "unavailable", status = unicode(self.ui.status.toPlainText ()))
-			MainWindow.client.factory.stopTrying()
+##			MainWindow.client.factory.stopTrying()
+			MainWindow.client.disconnect()
 			MainWindow.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
 			MainWindow.ui.statusButton.setIcon(MainWindow.getIcon("offline",size="16x16"))
 			MainWindow.ui.statusButton.hide()
 			MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
 			MainWindow.ui.showOffline.hide()
-
+			MainWindow.client = None
+			reactor.stop2()
 			pass
 		else:
 			#app.postEvent(jab,customEvent(["set_status",self.groupchat,self.data,unicode(self.ui.status.toPlainText ())]))

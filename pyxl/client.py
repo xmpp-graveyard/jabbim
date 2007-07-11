@@ -160,6 +160,9 @@ class Client(derived):
 		
 	def disconnect(self):
 		self.connection.disconnect()
+		self.factory.stopTrying()
+		self.connection = None
+		self.factory = None
 
 	def _authd(self, xmlstream):
 		self.main._connected()
