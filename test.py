@@ -17,8 +17,9 @@ class testClass(pyxl.client.Client):
 		pass
 	def on_authd(self):
 		print 'we are authed now'
-		self.joinGC('jabber@conf.netlab.cz',  'Vybliz')
+		self.joinGC('robots@conf.netlab.cz',  'Vybliz')
+		self.factory.stopFactory()
 
-klient = testClass('vybliz@njs.netlab.cz/test', 'xxx', 'njs.netlab.cz', 5222, uiClass())
+klient = testClass('vybliz@njs.netlab.cz/test', 'da_heslo', 'njs.netlab.cz', 5222, uiClass())
 klient.connect()
 reactor.run()

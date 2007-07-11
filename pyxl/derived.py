@@ -25,13 +25,13 @@ class derived:
 	def on_DeleteContact(self,jid):
 		pass
 	
-	def on_subscribe(self, msg):
+	def on_subscribe(self,kdo, msg):
 		pass
-	def on_unsubscribe(self):
+	def on_unsubscribe(self, kdo):
 		pass
-	def on_unsubscribed(self):
+	def on_unsubscribed(self, kdo):
 		pass
-	def on_subscribed(self):
+	def on_subscribed(self, kdo):
 		pass
 	
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):

@@ -33,7 +33,7 @@ class Client(derived):
 		#derived.__init__(self)
 		self.jid = jid.JID(JID)
 		self.password  = password
-		self.host = host
+		self.host = self.jid.host
 		self.port = port
 		self.factory = None
 		self.connection = None
@@ -92,7 +92,7 @@ class Client(derived):
 		if priority:
 			presence.addElement('priority', content = priority)
 		if typ:
-			presence['typ'] = typ
+			presence['type'] = typ
 		if caps:
 			c = presence.addElement('c', 'http://jabber.org/protocol/caps')
 			c['node'] = self.caps_node
@@ -446,10 +446,10 @@ class Client(derived):
 
 	def addContact(self, jid, msg):
 		print 'add contact'
-		self.sendRosterUpdate(jid, None, 'none', [])
+		self.sendRosterUpdate(jid, '', 'none', [])
 		self.sendPresence(to = jid, status = msg, typ = 'subscribe')
 	def delContact(self, jid):
-		self.sendRosterUpdate(jid, None, 'remove', [])
+		self.sendRosterUpdate(jid, '', 'remove', [])
 		self.sendPresence(to = jid, typ = 'unsubscribe')
 
 	def onXML(self, el):
@@ -747,7 +747,7 @@ class Client(derived):
 		for child in el.elements():
 			if child.name == 'query':
 				if child.hasAttribute('node'):
-					node = inq['node']
+					node = child['node']
 				else:
 					node = None
 		if node == '%s#%s'%(self.caps_node, self.caps_version): #magie: pokud se nas nekdo zepta na caps nasi verze, tak mu rekneme default
