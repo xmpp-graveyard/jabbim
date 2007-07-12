@@ -387,6 +387,10 @@ class clientClass(pyxl.client.Client):
 		else:
 			# add new chattab
 			self.main.chat.addChatTab(frm,unicode(user),icon,message)
+	def on_vcardReceived(self,  jid, card):
+		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db
+		self.main.storage.set_vcard(jid, [filename, hash])
+		pass
 
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):

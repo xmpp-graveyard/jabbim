@@ -339,7 +339,7 @@ class Client(derived):
 					card[y.name]=unicode(y)
 			else:
 				card[x.name]=unicode(x)
-		print card
+		self.on_vcardReceived(el['from'], card)
 
 	def getBookmarks(self):
 		'get bookmarks'

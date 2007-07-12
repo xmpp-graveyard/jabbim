@@ -20,9 +20,18 @@ class Cache:
 		print 'table here? ', result
 	
 	def get_avatar(self, jid, handler):
-		self.db.runQuery('select avatar_file, avatar_hash from vcards where jid = "%s"'%jid).addCallback(self.got_avatar, handler)
+		self.db.runQuery('select file, avatar from avatars where jid = "%s"'%jid).addCallback(self.got_avatar, handler)
 	
 	def got_avatar(self, result, handler):
 		for x in result:
 			handler(x[0], x[1])
+
+	def set_avatar(self, jid, avatar): #avatar = (file,hash)
+		self.db.runQuery('select jid from vcards where jid = "%s"'%jid).addCallback(self._has_avatar, jid, avatar)
+	
+	def _has_avatar(self, result, jid, avatar):
+		if len(result)==0:
+			self.db.runQuery('insert into avatars (jid, file, hash) values("%s","%s","%s")'%(jid, avatar[0], avatar[1]))
+		else:
+			self.db.runQuery('update avatars set file="%s", hash="%s" where jid="%s"'%(avatar[0], avatar[1], jid))
 		

@@ -71,3 +71,5 @@ class derived:
 	
 	def on_affiliationErr(self,  muc,  err,  nick):
 		pass
+	def on_vcardReceived(self,  jid, card):
+		pass
