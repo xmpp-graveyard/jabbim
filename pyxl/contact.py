@@ -12,6 +12,7 @@ class Contact:
 		self.client = client
 		self.tag = tag
 		self.order = order
+		self.vcard = {}
 
 
 	def setStatus(self, resource, show, status):

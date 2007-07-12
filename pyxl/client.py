@@ -16,6 +16,7 @@ from twisted.internet.protocol import Protocol, ClientFactory
 from derived import derived
 from contact import *
 from groupchat import  *
+##from storage import *
 
 
 class Bookmark:
@@ -185,6 +186,7 @@ class Client(derived):
 		self.getBookmarks()
 		self.getDiscoInfo(self.jid.host,  callback = self._pepSupport)
 		self.getDiscoItems(self.jid.host)
+		self.getVCard('sef@njs.netlab.cz')
 #		self.sendPEPTune()
 #		self.registerPEP('sefator@jabber.se')
 #		self.getPrivacy()
@@ -318,6 +320,7 @@ class Client(derived):
 		self.xmlstream.send(iq)
 
 	def getVCard(self, jid):
+		print 'requesting vcard for ', unicode(jid)
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid
 		iq.addElement('vCard', 'vcard-temp')
@@ -328,6 +331,15 @@ class Client(derived):
 
 	def _vcardReceived(self, el):
 		print 'vcard received'
+		vcard = el.firstChildElement()
+		card = {} 
+		for x in vcard.elements():
+			if len(x.children)>0:
+				for y in x.elements():
+					card[y.name]=unicode(y)
+			else:
+				card[x.name]=unicode(x)
+		print card
 
 	def getBookmarks(self):
 		'get bookmarks'

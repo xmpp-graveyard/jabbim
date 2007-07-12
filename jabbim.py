@@ -29,6 +29,7 @@ from twisted.internet import reactor
 
 import widgets
 import pyxl
+from pyxl import storage
 
 from configobj import ConfigObj
 from include import utils
@@ -393,7 +394,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
 		self.homeDir=utils.getHomeDir() # get home dir
-
+		self.cache = storage.Cache(db=self.homeDir+'/.jabbim/cache.db')
 		utils.loadConfig(self) # load config files
 
 		# variables
