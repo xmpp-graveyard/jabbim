@@ -1,6 +1,23 @@
 import os,sys
 from configobj import ConfigObj
 
+def cprint(color,text):
+	text=unicode(text)
+	if color=="yellow":
+		print "\033[1;33m"+text+" \033[0m"
+	elif color=="red":
+		print "\033[0;31m"+text+" \033[0m"
+	elif color=="green":
+		print "\033[0;32m"+text+" \033[0m"
+	elif color=="lightblue":
+		print "\033[1;34m"+text+" \033[0m"
+	elif color=="lightgray":
+		print "\033[0;37m"+text+" \033[0m"
+	elif color=="lightcyan":
+		print "\033[1;36m"+text+" \033[0m"
+	else:
+		print text
+
 def loadConfig(main):
 	# loads config and repairs config file
 	configs={"jid":"",
@@ -26,6 +43,8 @@ def loadConfig(main):
 			rewrite=True
 	if rewrite==True:
 		main.config.write()
+	if not os.path.isdir(main.homeDir+'/.jabbim/avatars'):
+		os.mkdir(main.homeDir+'/.jabbim/avatars')
 
 def getHomeDir():
 	# gets homedir on win32 or linux

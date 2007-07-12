@@ -464,6 +464,11 @@ class rosterWidget(QtGui.QTreeWidget):
 			return {}
 		return self.main.client.roster['users'][jid].resourcesItems
 
+	def getMetaItems(self,jid):
+		if not self.main.client.roster['users'].has_key(jid):
+			return {}
+		return self.main.client.roster['users'][jid].metaItems
+
 
 	def hidden(self,bool):
 		# little hack (qt doesn't repaint reshown items, when we have not one top level item at the end)
@@ -742,7 +747,8 @@ class rosterWidget(QtGui.QTreeWidget):
 			# get vcard of selected contact
 			jid=action.data()
 			jid=str(jid.toString())
-			QtGui.QApplication.postEvent(self.jab,customEvent(["get_vcard",jid]))
+			#QtGui.QApplication.postEvent(self.jab,customEvent(["get_vcard",jid]))
+			self.main.client.getVCard(jid)
 			#self.jab.getVCard(jid)
 		elif cmd=="avatar":
 			# get avatar of selected contact

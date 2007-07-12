@@ -25,6 +25,8 @@ app = QtGui.QApplication(sys.argv)
 reactor.install(app)
 import time
 
+import hashlib,base64
+
 from twisted.internet import reactor
 
 import widgets
@@ -78,6 +80,8 @@ class clientClass(pyxl.client.Client):
 			for group in groups:
 				# add user item to the group
 				self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups'][group],first=True))
+		# show avatar if he have him
+		self.main.cache.get_avatar(jid, self.main._loadAvatar)
 
 	def on_discoItemsBookmarksReceived(self, jid):
 		# make user list for bookmarked groupchat
@@ -145,7 +149,7 @@ class clientClass(pyxl.client.Client):
 					for item in toDel:
 						self.roster['users'][jid].rosterItems.remove(item)
 				self.main.ui.roster.cloneContact(self.metaParents[tag],self.roster['users'][jid].rosterItems[-1])
-
+		#print self.roster['users']['sef@njs.netlab.cz'].rosterItems
 		# sort roster items and refresh group stats
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.main.ui.roster.refreshStats()
@@ -387,10 +391,26 @@ class clientClass(pyxl.client.Client):
 		else:
 			# add new chattab
 			self.main.chat.addChatTab(frm,unicode(user),icon,message)
+
 	def on_vcardReceived(self,  jid, card):
+		#print card
 		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db
-##		self.main.storage.set_vcard(jid, [filename, hash])
-		pass
+		if card.has_key("BINVAL"):
+			pixmap=QtGui.QPixmap()
+			image=base64.decodestring(str(card["BINVAL"]))
+			f=open(self.main.homeDir+'/.jabbim/avatars/'+jid,"wb")
+			f.write(image)
+			f.close()
+			pixmap.loadFromData(image)
+			for item in self.main.ui.roster.getUserItems(jid):
+				utils.cprint("yellow","setting icon: "+jid)
+				item.setIcon(3,QtGui.QIcon(pixmap))
+			for item in self.main.ui.roster.getMetaItems(jid):
+				utils.cprint("yellow","setting icon: "+jid)
+				item.setIcon(3,QtGui.QIcon(pixmap))
+			sha1=hashlib.sha1(image).hexdigest()
+			self.main.cache.set_avatar(jid, ['avatars/'+jid, sha1])
+
 
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
@@ -713,6 +733,17 @@ class mainWindow(QtGui.QMainWindow):
 		if self.client==None:
 			self.client = clientClass(jid+"/jabbim", password, jid.split("@")[1], 5222,self)
 		self.client.connect()
+	
+	def _loadAvatar(self,file,jid):
+		if os.path.isfile(self.homeDir+'/.jabbim/'+unicode(file)):
+			pixmap=QtGui.QPixmap()
+			f=open(self.homeDir+'/.jabbim/'+unicode(file),"rb")
+			image=f.read()
+			f.close()
+			pixmap.loadFromData(image)
+			for item in self.ui.roster.getUserItems(jid):
+				utils.cprint("yellow","setting icon: "+jid)
+				item.setIcon(3,QtGui.QIcon(pixmap))
 	
 	def _addGroup(self, group):
 		return self.ui.roster.addGroup(unicode(group))
