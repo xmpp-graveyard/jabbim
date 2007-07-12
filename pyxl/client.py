@@ -333,6 +333,8 @@ class Client(derived):
 		print 'vcard received'
 		vcard = el.firstChildElement()
 		card = {} 
+		if vcard == None :
+			return
 		for x in vcard.elements():
 			if len(x.children)>0:
 				for y in x.elements():
@@ -604,7 +606,7 @@ class Client(derived):
 		fromjid = frm.userhost()
 		resource = jid.JID(el['from']).resource
 
-		show = status = priority = typ = affiliation = role = truejid = None
+		show = status = priority = typ = affiliation = role = truejid = hash = None
 		codes = []
 		if el.hasAttribute('type'):
 			if el['type'] != 'unavailable':
@@ -635,7 +637,6 @@ class Client(derived):
 					if typ !='unavailable':
 						self.getFeatures(frm, caps_node)
 			if child.name == 'x' and child.defaultUri == 'http://jabber.org/protocol/muc#user':
-				
 				for item in child.elements():
 					if item.name == 'item':
 						affiliation = item['affiliation']
@@ -644,6 +645,8 @@ class Client(derived):
 							truejid = item['jid']
 					if item.name == 'status' :
 						codes.append(item['code'])
+			elif child.name == 'x' and child.defaultUri == 'vcard-temp:x:update':
+				hash = unicode(child.firstChildElement())
 
 		if show == None and not el.hasAttribute('type'):
 			show = 'online'

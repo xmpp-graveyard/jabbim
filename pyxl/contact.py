@@ -13,6 +13,8 @@ class Contact:
 		self.tag = tag
 		self.order = order
 		self.vcard = {}
+		self.avatar_file = ''
+		self.avatar_hash = ''
 
 
 	def setStatus(self, resource, show, status):
