@@ -45,7 +45,10 @@ class delegate(QtGui.QItemDelegate):
 			icon=QtGui.QIcon(index.data(QtCore.Qt.DecorationRole))
 			painter.save()
 			painter.translate(option.rect.topLeft())
-			icon.paint(painter,0,5,22,22)
+			if index.column()==3:
+				icon.paint(painter,0,2,32,32)
+			else:
+				icon.paint(painter,0,5,22,22)
 			painter.restore()
 			rect=option.rect.topLeft()
 			rect.setX(rect.x()+24)
