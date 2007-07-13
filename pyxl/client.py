@@ -17,7 +17,12 @@ from derived import derived
 from contact import *
 from groupchat import  *
 ##from storage import *
-
+##class Log:
+##	def msg(self, zprava):
+##		pass
+##	def err(self, zprava):
+##		pass
+##log = Log()
 
 class Bookmark:
 	def __init__(self, name, typ, JID = None, autojoin = False, nick = None, password = None, url = None):
@@ -74,6 +79,7 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/chatstates')
 		self.caps_cache = {} # 'node': [feature1, feature2]
 		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
+		self.log = True
 		self.on_init()
 
 	def cacheCaps(self, node, features):
@@ -143,11 +149,11 @@ class Client(derived):
 
 		self.factory = client.XMPPClientFactory(self.jid,self.password)
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
-		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
-		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
-		self.factory.addBootstrap("//event/stream/error", self._authfailed)
+##		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
+##		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
+##		self.factory.addBootstrap("//event/stream/error", self._authfailed)
 		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
-		self.factory.addBootstrap("/*", self.logIt)
+##		self.factory.addBootstrap("/*", self.logIt)
 		self.connection=reactor.connectTCP(host,port,self.factory)
 
 	def _bind(self, el):
@@ -544,9 +550,10 @@ class Client(derived):
 		cekej = 20
 		if ln*0.05 < cekej:
 			cekej = ln*0.05
-		#print ln,  cekej
+		print ln,  cekej
 		reactor.callLater(cekej,  self.onFirstPresence)
-		self.on_rosterArrived()
+##		self.onFirstPresence()
+##		self.on_rosterArrived()
 
 	def _authfailed(self,xmlstream):
 		log.msg( "auth_failed")
