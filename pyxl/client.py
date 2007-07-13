@@ -478,6 +478,9 @@ class Client(derived):
 	def delContact(self, jid):
 		self.sendRosterUpdate(jid, '', 'remove', [])
 		self.sendPresence(to = jid, typ = 'unsubscribe')
+		if self.roster_meta.has_key(jid):
+			del self.roster_meta[jid]
+			self.setMetacontacts()
 
 	def onXML(self, el):
 
