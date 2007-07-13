@@ -176,7 +176,15 @@ class clientClass(pyxl.client.Client):
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
 		if show=="offline":
-			pass
+			# get user role
+			# find good tab according to jid
+			for i in range(self.main.chat.ui.chatTab.count()):
+				w=self.main.chat.ui.chatTab.widget(i)
+				if unicode(w.jid)==unicode(muc):
+					# edit user item
+					w.chat.removeUser(nick)
+					#del self.groupchats[muc].users[nick]
+					break
 		else:
 			# get user role
 			role=self.groupchats[muc].users[nick].role

@@ -687,11 +687,14 @@ class Client(derived):
 			else:
 				self.on_presence(frm,show)
 		elif self.groupchats.has_key(fromjid):
+			if show=="offline":
+				self.on_GCpresence(fromjid, resource,  show,  status,  codes)
 			self.groupchats[fromjid].setStatus(resource,  show,  status)
 			if self.groupchats[fromjid].users.has_key(resource):
 				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid)
 				#self.groupchats[fromjid]
-			self.on_GCpresence(fromjid, resource,  show,  status,  codes)
+			if show!="offline":
+				self.on_GCpresence(fromjid, resource,  show,  status,  codes)
 			return
 		else:
 ##			print 'contact not in roster'

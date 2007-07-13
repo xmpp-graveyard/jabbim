@@ -97,12 +97,12 @@ class groupChatWidget(QtGui.QWidget):
 	def roomConfigClicked(self):
 		self.jab.getGroupchatConfig(self.jid)
 
-	def deleteUser(self,jid,nick):
-		user=self.main.getGroupChatMember(jid,unicode(nick))
-		parent=user.parent()
-		parent.takeChild(int(parent.indexOfChild(user)))
-		self.main.groupchat[jid][1].remove(user)
-		self.refreshStats()
+	#def deleteUser(self,jid,nick):
+		#user=self.main.getGroupChatMember(jid,unicode(nick))
+		#parent=user.parent()
+		#parent.takeChild(int(parent.indexOfChild(user)))
+		#self.main.groupchat[jid][1].remove(user)
+		#self.refreshStats()
 
 	def addRole(self,role,name):
 		self.roles[role]=QtGui.QTreeWidgetItem(self.ui.users)
@@ -122,6 +122,11 @@ class groupChatWidget(QtGui.QWidget):
 			if self.main.client.groupchats[self.jid].users[nick].item!=None:
 				return self.main.client.groupchats[self.jid].users[nick].item
 		return False
+
+	def removeUser(self,nick):
+		parent=self.main.client.groupchats[self.jid].users[nick].item.parent()
+		parent.takeChild(int(parent.indexOfChild(self.main.client.groupchats[self.jid].users[nick].item)))
+		self.refreshStats()
 
 	def editUser(self,nick,status,role=None):
 		if self.isUser(unicode(nick))==False:
