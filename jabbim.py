@@ -543,11 +543,18 @@ class mainWindow(QtGui.QMainWindow):
 		#self.addInfoSubscribe()
 		#self.addInfoSubscribe()
 		#self.addInfoSubscribe()
-
+		self.loadTheme()
 
 	#def addInfoSubscribe(self):
 		#widget=subscribeWidget(self.ui.infoDockWidget)
 		#self.ui.infoLayout.addWidget(widget)
+
+	def loadTheme(self):
+		# windows hack
+		self.setStyleSheet("")
+		theme=open("themes/"+self.config['theme']+"/style.css")
+		self.setStyleSheet(theme.read())
+		theme.close()
 
 	def addContactMainWindow(self):
 		# add contact

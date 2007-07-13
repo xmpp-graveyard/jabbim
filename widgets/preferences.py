@@ -35,8 +35,38 @@ class preferencesWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.chatSkin_list, QtCore.SIGNAL("activated ( const QString & )"),self.chatSkin_listChanged)
 
 		# roster
-		index=self.ui.roster_iconSize.findText(self.main.config['rosterIconSize'])
-		self.ui.roster_iconSize.setCurrentIndex(int(index))
+		#index=self.ui.roster_iconSize.findText(self.main.config['rosterIconSize'])
+		#self.ui.roster_iconSize.setCurrentIndex(int(index))
+
+		# Themes
+		skins=os.listdir("themes/")
+		for skin in skins:
+			if os.path.isdir("themes/"+skin):
+				preview=QtGui.QIcon('themes/'+skin+"/preview.png")
+				item=QtGui.QListWidgetItem(preview,skin,self.ui.themes)
+				item.setData(32,QtCore.QVariant(skin))
+				if skin==self.main.config["theme"]:
+					self.ui.themes.setCurrentItem(item)
+		QtCore.QObject.connect(self.ui.themes, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.themeChanged)
+
+	def reskin(self,file=None):
+		if file==None:
+			file=self.main.config['theme']
+			style=open("styles/"+file+"/style.css")
+			self.setStyleSheet(style.read())
+			style.close()
+		else:
+			style=open("themes/"+file+"/style.css")
+			text=style.read()
+			self.setStyleSheet(text)
+			self.main.setStyleSheet(text)
+			self.main.chat.setStyleSheet(text)
+			style.close()
+
+	def themeChanged(self,item,old):
+		data=item.data(32)
+		file=unicode(data.toString())
+		self.reskin(file)
 
 	def chatSkinPreviewtextEditWrite(self,text):
 		cur=self.ui.chatSkin_preview.textCursor()
@@ -66,7 +96,8 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.config['passwd']=password
 		self.main.config['chat_skin']=unicode(self.ui.chatSkin_list.currentText())
 		self.main.config['jid']=jid
-		self.main.config['rosterIconSize']=unicode(self.ui.roster_iconSize.currentText())
+		#self.main.config['rosterIconSize']=unicode(self.ui.roster_iconSize.currentText())
+		self.main.config['theme']=unicode(self.ui.themes.currentItem().data(32).toString())
 		self.main.config.write()
 		#size=unicode(self.main.config['rosterIconSize']).rsplit("x")
 		#self.main.ui.roster.setIconSize(QtCore.QSize(int(size[0]),int(size[1])))
