@@ -23,7 +23,7 @@
     <item row="0" column="0" >
      <widget class="QStackedWidget" name="rosterStackedWidget" >
       <property name="currentIndex" >
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page_3" >
        <layout class="QGridLayout" >
@@ -204,6 +204,12 @@ p, li { white-space: pre-wrap; }
           </property>
           <widget class="QWidget" name="rosterTab" >
            <attribute name="title" >
+            <string> r</string>
+           </attribute>
+           <attribute name="icon" >
+            <iconset>images/16x16/categories/system-users.png</iconset>
+           </attribute>
+           <attribute name="toolTip" >
             <string>Roster</string>
            </attribute>
            <layout class="QGridLayout" >
@@ -220,10 +226,13 @@ p, li { white-space: pre-wrap; }
           </widget>
           <widget class="QWidget" name="tab" >
            <attribute name="title" >
-            <string> </string>
+            <string>a</string>
            </attribute>
            <attribute name="icon" >
             <iconset>images/16x16/actions/add-user.png</iconset>
+           </attribute>
+           <attribute name="toolTip" >
+            <string>Add Contact</string>
            </attribute>
            <layout class="QGridLayout" >
             <property name="margin" >
@@ -383,10 +392,13 @@ p, li { white-space: pre-wrap; }
           </widget>
           <widget class="QWidget" name="bookmarksTab" >
            <attribute name="title" >
-            <string> </string>
+            <string>b</string>
            </attribute>
            <attribute name="icon" >
             <iconset>images/16x16/categories/bookmarks.png</iconset>
+           </attribute>
+           <attribute name="toolTip" >
+            <string>Bookmarks</string>
            </attribute>
            <layout class="QGridLayout" >
             <property name="margin" >

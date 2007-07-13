@@ -446,6 +446,10 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.gridlayout.setMargin(1)
 		self.ui.gridlayout.setSpacing(1)
 
+		self.ui.tabWidget.setTabText(0,"")
+		self.ui.tabWidget.setTabText(1,"")
+		self.ui.tabWidget.setTabText(2,"")
+
 		# variables
 		self.hosts={} # temp variable for {hos:type_of_host}
 		self.client=None # pyxl client instance

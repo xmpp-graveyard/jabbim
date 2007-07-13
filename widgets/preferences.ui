@@ -311,19 +311,34 @@ p, li { white-space: pre-wrap; }
        <height>16777215</height>
       </size>
      </property>
+     <property name="iconSize" >
+      <size>
+       <width>32</width>
+       <height>32</height>
+      </size>
+     </property>
      <item>
       <property name="text" >
        <string>Connection</string>
+      </property>
+      <property name="icon" >
+       <iconset>images/32x32/categories/applications-internet.png</iconset>
       </property>
      </item>
      <item>
       <property name="text" >
        <string>Chat skins</string>
       </property>
+      <property name="icon" >
+       <iconset>images/32x32/categories/applications-graphics.png</iconset>
+      </property>
      </item>
      <item>
       <property name="text" >
        <string>Roster</string>
+      </property>
+      <property name="icon" >
+       <iconset>images/32x32/categories/system-users.png</iconset>
       </property>
      </item>
     </widget>

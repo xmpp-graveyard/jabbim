@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Sat May 12 08:44:11 2007
+# Created: Fri Jul 13 10:20:28 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -174,6 +174,7 @@ class Ui_preferences(object):
 
         self.listWidget = QtGui.QListWidget(preferences)
         self.listWidget.setMaximumSize(QtCore.QSize(150,16777215))
+        self.listWidget.setIconSize(QtCore.QSize(32,32))
         self.listWidget.setObjectName("listWidget")
         self.gridlayout.addWidget(self.listWidget,0,0,2,1)
 
@@ -226,12 +227,15 @@ class Ui_preferences(object):
 
         item = QtGui.QListWidgetItem(self.listWidget)
         item.setText(QtGui.QApplication.translate("preferences", "Connection", None, QtGui.QApplication.UnicodeUTF8))
+        item.setIcon(QtGui.QIcon("images/32x32/categories/applications-internet.png"))
 
         item1 = QtGui.QListWidgetItem(self.listWidget)
         item1.setText(QtGui.QApplication.translate("preferences", "Chat skins", None, QtGui.QApplication.UnicodeUTF8))
+        item1.setIcon(QtGui.QIcon("images/32x32/categories/applications-graphics.png"))
 
         item2 = QtGui.QListWidgetItem(self.listWidget)
         item2.setText(QtGui.QApplication.translate("preferences", "Roster", None, QtGui.QApplication.UnicodeUTF8))
+        item2.setIcon(QtGui.QIcon("images/32x32/categories/system-users.png"))
         self.saveButton.setText(QtGui.QApplication.translate("preferences", "Save", None, QtGui.QApplication.UnicodeUTF8))
         self.cancelButton.setText(QtGui.QApplication.translate("preferences", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
 
