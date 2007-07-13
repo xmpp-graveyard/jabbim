@@ -24,7 +24,8 @@ def loadConfig(main):
 			"passwd":"",
 			"savePasswd":"",
 			"rosterIconSize":"16x16",
-			"chat_skin":"default.conf"
+			"chat_skin":"default.conf",
+			"theme":"template"
 			}
 	main.config=ConfigObj(main.homeDir+'/.jabbim/config',encoding='UTF8')
 	if len(main.config)==0:
