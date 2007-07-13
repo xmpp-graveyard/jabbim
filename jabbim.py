@@ -790,15 +790,27 @@ class statusWindow(QtGui.QDialog):
 		if self.data=="offline":
 ##			MainWindow.client.factory.stopTrying()
 			MainWindow.client.sendPresence(show = "unavailable", status = unicode(self.ui.status.toPlainText ()))
-##			MainWindow.client.factory.stopTrying()
-			MainWindow.client.disconnect()
+			MainWindow.client.factory.stopTrying()
+			#MainWindow.client.disconnect()
 			MainWindow.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
 			MainWindow.ui.statusButton.setIcon(MainWindow.getIcon("offline",size="16x16"))
 			MainWindow.ui.statusButton.hide()
 			MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
 			MainWindow.ui.showOffline.hide()
+			MainWindow.client.disconnect()
+			del MainWindow.client
 			MainWindow.client = None
-			reactor.stop2()
+			#MainWindow.client.roster = {'users':{},'groups':{}}
+			#MainWindow.client.roster_meta = {} # jid: {'tag':tag,  'order': 1}
+			#MainWindow.client.first_presence = []
+			#MainWindow.client.first_wait = True
+			#MainWindow.client.bookmarks = {'conference':{}, 'url': {}}
+			#MainWindow.client.roster['groups']['Unknown']=MainWindow.ui.roster.addGroup('Unknown')
+			#MainWindow.client.temp_hosts=[]
+			#MainWindow.ui.roster.clear()
+			#MainWindow.client.disconnect()
+			#print MainWindow.client.roster
+			#reactor.stop2()
 			pass
 		else:
 			#app.postEvent(jab,customEvent(["set_status",self.groupchat,self.data,unicode(self.ui.status.toPlainText ())]))
