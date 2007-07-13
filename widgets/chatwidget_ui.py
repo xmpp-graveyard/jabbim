@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Thu May 24 14:12:41 2007
+# Created: Fri Jul 13 06:13:11 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -21,10 +21,18 @@ class Ui_chatwidget(object):
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
 
-        self.lineWidget = QtGui.QWidget(chatwidget)
+        self.splitter = QtGui.QSplitter(chatwidget)
+        self.splitter.setOrientation(QtCore.Qt.Vertical)
+        self.splitter.setObjectName("splitter")
+
+        self.textEdit = QtGui.QTextBrowser(self.splitter)
+        self.textEdit.setOpenExternalLinks(True)
+        self.textEdit.setObjectName("textEdit")
+
+        self.lineWidget = QtGui.QWidget(self.splitter)
         self.lineWidget.setMinimumSize(QtCore.QSize(0,10))
         self.lineWidget.setObjectName("lineWidget")
-        self.gridlayout.addWidget(self.lineWidget,2,0,1,3)
+        self.gridlayout.addWidget(self.splitter,1,0,1,3)
 
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setMargin(0)
@@ -41,24 +49,19 @@ class Ui_chatwidget(object):
         self.hboxlayout.addWidget(self.avatar)
         self.gridlayout.addLayout(self.hboxlayout,0,0,1,3)
 
-        self.textEdit = QtGui.QTextBrowser(chatwidget)
-        self.textEdit.setOpenExternalLinks(True)
-        self.textEdit.setObjectName("textEdit")
-        self.gridlayout.addWidget(self.textEdit,1,0,1,3)
-
         self.sendButton = QtGui.QPushButton(chatwidget)
         self.sendButton.setObjectName("sendButton")
-        self.gridlayout.addWidget(self.sendButton,3,2,1,1)
+        self.gridlayout.addWidget(self.sendButton,2,2,1,1)
 
         self.smileys = QtGui.QToolButton(chatwidget)
         self.smileys.setIcon(QtGui.QIcon("images/22x22/emotes/biggrin.png"))
         self.smileys.setCheckable(True)
         self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.smileys.setObjectName("smileys")
-        self.gridlayout.addWidget(self.smileys,3,1,1,1)
+        self.gridlayout.addWidget(self.smileys,2,1,1,1)
 
         spacerItem = QtGui.QSpacerItem(321,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem,3,0,1,1)
+        self.gridlayout.addItem(spacerItem,2,0,1,1)
 
         self.retranslateUi(chatwidget)
         QtCore.QMetaObject.connectSlotsByName(chatwidget)

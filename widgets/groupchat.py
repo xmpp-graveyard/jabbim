@@ -14,7 +14,7 @@ class lineEditWidget(QtGui.QTextEdit):
 		apply(QtGui.QTextEdit.__init__,(self,parent))
 		self.main=main
 		self.parent=parent
-		self.setMaximumSize(QtCore.QSize(16777215,30))
+		#self.setMaximumSize(QtCore.QSize(16777215,30))
 		self.setObjectName("line")
 	
 	def keyPressEvent(self,event):
@@ -59,7 +59,7 @@ class groupChatWidget(QtGui.QWidget):
 
 		short=QtGui.QShortcut("tab",self.ui.line)
 		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
-		self.ui.info_big.hide()
+		#self.ui.info_big.hide()
 		self.loadSmileys()
 		self.jid=jid
 		self.name_id=-1 # for tabPressed
@@ -70,8 +70,10 @@ class groupChatWidget(QtGui.QWidget):
 		self.ui.users.header().hide()
 		self.ui.users.hideColumn(1)
 		#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)
-		self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
-		self.ui.lineWidget.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
+		#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
+		#self.ui.lineWidget.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
+		self.ui.splitter.setSizes([500,120])
+		self.ui.splitter_2.setSizes([45,500,70])
 
 	#def lines(self):
 		#if self.ui.line.verticalScrollBar().isVisible():

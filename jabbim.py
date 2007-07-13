@@ -323,7 +323,7 @@ class clientClass(pyxl.client.Client):
 				# set room topic
 				if subject!=None:
 					w.chat.ui.info.setText(unicode(subject))
-					w.chat.ui.info.setCursorPosition(0)
+					#w.chat.ui.info.setCursorPosition(0)
 				# set links, if we found them
 				for word in unicode(body).split(' '):
 					if word.find("http://")!=-1:
@@ -420,6 +420,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.homeDir=utils.getHomeDir() # get home dir
 		self.cache = storage.Cache(db=self.homeDir+'/.jabbim/cache.db')
 		utils.loadConfig(self) # load config files
+
+		self.ui.gridlayout.setMargin(1)
+		self.ui.gridlayout.setSpacing(1)
 
 		# variables
 		self.hosts={} # temp variable for {hos:type_of_host}
@@ -681,8 +684,8 @@ class mainWindow(QtGui.QMainWindow):
 
 
 	def disconnect(self):
-		if self.client!=None:
-			reactor.stop2()
+		#if self.client!=None:
+		reactor.stop2()
 
 	def getIcon(self,jid=None,typ=None,size="32x32",status=None,usertype="jabber"):
 		if size=="22x22":

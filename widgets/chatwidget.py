@@ -14,7 +14,7 @@ class lineEditWidget(QtGui.QTextEdit):
 		apply(QtGui.QTextEdit.__init__,(self,parent))
 		self.main=main
 		self.parent=parent
-		self.setMaximumSize(QtCore.QSize(16777215,30))
+		#self.setMaximumSize(QtCore.QSize(16777215,30))
 		self.setObjectName("line")
 	
 	def keyPressEvent(self,event):
@@ -61,9 +61,9 @@ class chatWidget(QtGui.QWidget):
 		#self.setPalette(palette)
 		#self.pixmap=images['bgImage']
 		#print self.ui.line.currentFont().pointSize()
-		self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
-		self.ui.lineWidget.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
-
+		#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
+		#self.ui.lineWidget.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
+		self.ui.splitter.setSizes([500,70])
 
 	#def lines(self):
 		#if self.ui.line.verticalScrollBar().isVisible():
