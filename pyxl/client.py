@@ -186,7 +186,6 @@ class Client(derived):
 		self.getBookmarks()
 		self.getDiscoInfo(self.jid.host,  callback = self._pepSupport)
 		self.getDiscoItems(self.jid.host)
-		self.getVCard('sef@njs.netlab.cz')
 #		self.sendPEPTune()
 #		self.registerPEP('sefator@jabber.se')
 #		self.getPrivacy()
@@ -328,6 +327,12 @@ class Client(derived):
 		d = iq.send()
 		self.on_xml(iq.toXml())
 		d.addCallback(self._vcardReceived)
+		d.addErrback(self._noVcard, jid)
+	
+	def _noVcard(self, err, jid):
+#		print jid, ' no vcard available'
+		print 'chci ulozit ', jid
+		self.main.cache.set_avatar(jid, ['nic', 'nic'])
 
 	def _vcardReceived(self, el):
 		print 'vcard received'
@@ -658,6 +663,22 @@ class Client(derived):
 			if self.roster['users'][fromjid].resources.has_key(resource):
 				self.roster['users'][fromjid].setPriority(resource, priority)
 				self.roster['users'][fromjid].setFeatures(resource, features)
+			chci_card = True
+			if self.roster['users'][fromjid].avatar_hash == 'nic':
+##				print fromjid, ' nema nic'
+				chci_card = False
+			elif hash == None and self.roster['users'][fromjid].avatar_hash !='':
+##				print fromjid, ' neposle v presenci avatara'
+				chci_card = False
+				pass
+			elif self.roster['users'][fromjid].avatar_hash == hash:
+##				print fromjid, 'ma spravneho avatara'
+				chci_card = False
+				pass 
+			if chci_card :
+				print fromjid, hash, self.roster['users'][fromjid].avatar_hash
+				self.getVCard(fromjid)
+
 			if first and self.first_wait:
 				self.first_presence.append((frm,show))
 			else:

@@ -27,11 +27,12 @@ class Cache:
 			handler(x[0], x[1], x[2])
 
 	def set_avatar(self, jid, avatar): #avatar = (file,hash)
+		print 'ukladam ', jid
 		self.db.runQuery('select jid from avatars where jid = "%s"'%jid).addCallback(self._has_avatar, jid, avatar)
 	
 	def _has_avatar(self, result, jid, avatar):
 		if len(result)==0:
-			self.db.runQuery('insert into avatars (jid, file, hash) values("%s","%s","%s")'%(jid, avatar[0], avatar[1]))
+			self.db.runOperation('insert into avatars (jid, file, hash) values("%s","%s","%s")'%(jid, avatar[0], avatar[1]))
 		else:
-			self.db.runQuery('update avatars set file="%s", hash="%s" where jid="%s"'%(avatar[0], avatar[1], jid))
+			self.db.runOperation('update avatars set file="%s", hash="%s" where jid="%s"'%(avatar[0], avatar[1], jid))
 		
