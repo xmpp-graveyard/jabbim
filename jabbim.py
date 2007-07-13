@@ -735,6 +735,7 @@ class mainWindow(QtGui.QMainWindow):
 					self.config.write()
 		if self.client==None:
 			self.client = clientClass(jid+"/jabbim", password, jid.split("@")[1], 5222,self)
+			self.client.log=False
 		self.client.connect()
 	
 	def _loadAvatar(self,file,jid):
@@ -807,7 +808,7 @@ class statusWindow(QtGui.QDialog):
 			#MainWindow.client.bookmarks = {'conference':{}, 'url': {}}
 			#MainWindow.client.roster['groups']['Unknown']=MainWindow.ui.roster.addGroup('Unknown')
 			#MainWindow.client.temp_hosts=[]
-			#MainWindow.ui.roster.clear()
+			MainWindow.ui.roster.clear()
 			#MainWindow.client.disconnect()
 			#print MainWindow.client.roster
 			#reactor.stop2()
