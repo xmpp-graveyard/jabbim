@@ -20,7 +20,7 @@ class Cache:
 		print 'table here? ', result
 	
 	def get_avatar(self, jid, handler):
-		self.db.runQuery('select file, hash, jid from avatars where jid = "%s"'%jid).addCallback(self.got_avatar, handler)
+		self.db.runQuery('select file, hash, jid from avatars where jid = "%s"'%dbutil.safe(jid)).addCallback(self.got_avatar, handler)
 	
 	def got_avatar(self, result, handler):
 		for x in result:
@@ -28,11 +28,11 @@ class Cache:
 
 	def set_avatar(self, jid, avatar): #avatar = (file,hash)
 		print 'ukladam ', jid
-		self.db.runQuery('select jid from avatars where jid = "%s"'%jid).addCallback(self._has_avatar, jid, avatar)
+		self.db.runQuery('select jid from avatars where jid = "%s"'%dbutil.safe(jid)).addCallback(self._has_avatar, jid, avatar)
 	
 	def _has_avatar(self, result, jid, avatar):
 		if len(result)==0:
-			self.db.runOperation('insert into avatars (jid, file, hash) values("%s","%s","%s")'%(jid, avatar[0], avatar[1]))
+			self.db.runOperation('insert into avatars (jid, file, hash) values("%s","%s","%s")'%(dbutil.safe(jid), dbutil.safe(avatar[0]), avatar[1]))
 		else:
-			self.db.runOperation('update avatars set file="%s", hash="%s" where jid="%s"'%(avatar[0], avatar[1], jid))
+			self.db.runOperation('update avatars set file="%s", hash="%s" where jid="%s"'%(dbutil.safe(avatar[0]), avatar[1], dbutil.safe(jid)))
 		
