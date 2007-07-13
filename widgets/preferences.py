@@ -41,7 +41,7 @@ class preferencesWindow(QtGui.QDialog):
 		# Themes
 		skins=os.listdir("themes/")
 		for skin in skins:
-			if os.path.isdir("themes/"+skin):
+			if os.path.isdir("themes/"+skin) and os.path.exists("themes/"+skin+"/style.css"):
 				preview=QtGui.QIcon('themes/'+skin+"/preview.png")
 				item=QtGui.QListWidgetItem(preview,skin,self.ui.themes)
 				item.setData(32,QtCore.QVariant(skin))
