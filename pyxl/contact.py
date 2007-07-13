@@ -65,6 +65,10 @@ class Contact:
 		# get user QTreeWidget item from every group
 		return self.rosterItems
 		
+	def setAvatar(self, file, hash):
+		self.avatar_file = file
+		self.avatar_hash = hash
+		
 class Resource:
 	def __init__(self, contact, name, priority=0, show='offline', status=''):
 		self.name = name

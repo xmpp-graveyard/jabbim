@@ -20,11 +20,11 @@ class Cache:
 		print 'table here? ', result
 	
 	def get_avatar(self, jid, handler):
-		self.db.runQuery('select file, jid from avatars where jid = "%s"'%jid).addCallback(self.got_avatar, handler)
+		self.db.runQuery('select file, hash, jid from avatars where jid = "%s"'%jid).addCallback(self.got_avatar, handler)
 	
 	def got_avatar(self, result, handler):
 		for x in result:
-			handler(x[0], x[1])
+			handler(x[0], x[1], x[2])
 
 	def set_avatar(self, jid, avatar): #avatar = (file,hash)
 		self.db.runQuery('select jid from avatars where jid = "%s"'%jid).addCallback(self._has_avatar, jid, avatar)

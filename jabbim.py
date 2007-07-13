@@ -738,7 +738,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.client.log=False
 		self.client.connect()
 	
-	def _loadAvatar(self,file,jid):
+	def _loadAvatar(self,file, hash, jid):
 		if os.path.isfile(self.homeDir+'/.jabbim/'+unicode(file)):
 			pixmap=QtGui.QPixmap()
 			f=open(self.homeDir+'/.jabbim/'+unicode(file),"rb")
@@ -748,6 +748,7 @@ class mainWindow(QtGui.QMainWindow):
 			for item in self.ui.roster.getUserItems(jid):
 				utils.cprint("yellow","setting icon: "+jid)
 				item.setIcon(3,QtGui.QIcon(pixmap))
+			self.client.roster['users'][jid].setAvatar(file, hash)
 	
 	def _addGroup(self, group):
 		return self.ui.roster.addGroup(unicode(group))
