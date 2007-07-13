@@ -681,7 +681,7 @@ class Client(derived):
 				pass  
 			if chci_card :
 				print fromjid, hash, self.roster['users'][fromjid].avatar_hash 
-				self.getVCard(fromjid) 
+				self.getVCard(fromjid)
 			if first and self.first_wait:
 				self.first_presence.append((frm,show))
 			else:
