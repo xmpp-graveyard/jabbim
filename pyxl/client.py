@@ -186,6 +186,7 @@ class Client(derived):
 		self.getBookmarks()
 		self.getDiscoInfo(self.jid.host,  callback = self._pepSupport)
 		self.getDiscoItems(self.jid.host)
+		#self.getVCard('sef@njs.netlab.cz')
 #		self.sendPEPTune()
 #		self.registerPEP('sefator@jabber.se')
 #		self.getPrivacy()
@@ -280,14 +281,17 @@ class Client(derived):
 						del self.roster['users'][itemjid]
 					elif not self.roster['users'].has_key(itemjid):
 						rosterItems=[]
-						if len(groups)==0:
+						#if len(groups)==0:
 							# add user item to Unknown group
-							rosterItems.append(self.main._addUser(itemjid,name,self.roster['groups']['Unknown']))
-						for group in groups:
-							# add user item to the group
-							rosterItems.append(self.main._addUser(itemjid,name,self.roster['groups'][group]))
 						contact = Contact(self, itemjid, name, subscription, rosterItems, groups)
 						self.roster['users'][itemjid] = contact
+						self.on_rosterAddUser(contact)
+							#rosterItems.append(self.main._addUser(itemjid,name,self.roster['groups']['Unknown']))
+						#for group in groups:
+							#self.on_rosterAddUser(contact)
+							# add user item to the group
+							#rosterItems.append(self.main._addUser(itemjid,name,self.roster['groups'][group]))
+						
 					elif subscription != 'remove'  and self.roster['users'].has_key(itemjid):
 						contact = self.roster['users'][itemjid]
 						contact.name = name
@@ -327,11 +331,11 @@ class Client(derived):
 		d = iq.send()
 		self.on_xml(iq.toXml())
 		d.addCallback(self._vcardReceived)
-		d.addErrback(self._noVcard, jid)
-	
-	def _noVcard(self, err, jid):
-#		print jid, ' no vcard available'
-		print 'chci ulozit ', jid
+		d.addErrback(self._noVcard, jid) 
+
+	def _noVcard(self, err, jid): 
+		#               print jid, ' no vcard available' 
+		print 'chci ulozit ', jid 
 		self.main.cache.set_avatar(jid, ['nic', 'nic'])
 
 	def _vcardReceived(self, el):
@@ -466,10 +470,11 @@ class Client(derived):
 	def _metacontactsSet(self,  el):
 		print 'metacontacts set'
 
-	def addContact(self, jid, msg):
+	def addContact(self, jid, msg, name='', groups=[]):
 		print 'add contact'
-		self.sendRosterUpdate(jid, '', 'none', [])
+		self.sendRosterUpdate(jid, name, 'none', groups)
 		self.sendPresence(to = jid, status = msg, typ = 'subscribe')
+
 	def delContact(self, jid):
 		self.sendRosterUpdate(jid, '', 'remove', [])
 		self.sendPresence(to = jid, typ = 'unsubscribe')
@@ -663,22 +668,20 @@ class Client(derived):
 			if self.roster['users'][fromjid].resources.has_key(resource):
 				self.roster['users'][fromjid].setPriority(resource, priority)
 				self.roster['users'][fromjid].setFeatures(resource, features)
-			chci_card = True
-			if self.roster['users'][fromjid].avatar_hash == 'nic':
-##				print fromjid, ' nema nic'
-				chci_card = False
-			elif hash == None and self.roster['users'][fromjid].avatar_hash !='':
-##				print fromjid, ' neposle v presenci avatara'
-				chci_card = False
-				pass
-			elif self.roster['users'][fromjid].avatar_hash == hash:
-##				print fromjid, 'ma spravneho avatara'
-				chci_card = False
+ 
+			chci_card = True 
+			if self.roster['users'][fromjid].avatar_hash == 'nic': 
+				chci_card = False 
+			elif hash == None and self.roster['users'][fromjid].avatar_hash !='': 
+				chci_card = False 
 				pass 
+			elif self.roster['users'][fromjid].avatar_hash == hash: 
+				## print fromjid, 'ma spravneho avatara' 
+				chci_card = False 
+				pass  
 			if chci_card :
-				print fromjid, hash, self.roster['users'][fromjid].avatar_hash
-				self.getVCard(fromjid)
-
+				print fromjid, hash, self.roster['users'][fromjid].avatar_hash 
+				self.getVCard(fromjid) 
 			if first and self.first_wait:
 				self.first_presence.append((frm,show))
 			else:

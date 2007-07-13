@@ -708,8 +708,9 @@ class rosterWidget(QtGui.QTreeWidget):
 			print "delete_action"
 			## delete contact from roster
 			## get contact jid
-			#jid=action.data()
-			#jid=str(jid.toString())
+			jid=action.data()
+			jid=str(jid.toString())
+			self.main.client.delContact(jid)
 			#print "roster_delete_action",jid
 			## delete user from groups
 			#for user in self.getUsers(jid):

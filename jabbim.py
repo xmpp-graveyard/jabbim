@@ -95,6 +95,7 @@ class clientClass(pyxl.client.Client):
 	def on_rosterArrived(self):
 		# build Bookmarks tab
 		self.main.buildBookmarks()
+
 		# hide Unknown group, if has not users
 		if int(self.roster['groups']['Unknown'].childCount())==0:
 			self.main.ui.roster.setItemHidden(self.roster['groups']['Unknown'],True)
@@ -153,6 +154,10 @@ class clientClass(pyxl.client.Client):
 		# sort roster items and refresh group stats
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.main.ui.roster.refreshStats()
+
+		for k,v in self.roster['groups'].iteritems():
+			self.main.ui.add_group.addItem(unicode(k))
+
 		print "METAPARENTS",self.metaParents
 
 	def on_authFailed(self,xmlstream):
@@ -300,12 +305,16 @@ class clientClass(pyxl.client.Client):
 				if item==parent:
 					parent.takeChild(parent.indexOfChild(i))
 					break
-
-	def on_subscribe(self, msg,t):
+		for name,item in self.metaParents.iteritems():
+			for i in items:
+				parent=i.parent()
+				if item==parent:
+					parent.takeChild(parent.indexOfChild(i))
+					break
+#
+	def on_subscribe(self, frm,status):
 		#self.ui.infoDockWidget.show()
-		pass
-
-
+		self.sendPresence(to = frm, status = status, typ = 'subscribed')
 
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
 		# handle messages from groupchat
@@ -410,9 +419,6 @@ class clientClass(pyxl.client.Client):
 				item.setIcon(3,QtGui.QIcon(pixmap))
 			sha1=hashlib.sha1(image).hexdigest()
 			self.main.cache.set_avatar(jid, ['avatars/'+jid, sha1])
-			self.main._loadAvatar('avatars/'+jid, sha1, jid)
-		else:
-			self.main.cache.set_avatar(jid, ['nic', 'nic'])
 
 
 class mainWindow(QtGui.QMainWindow):
@@ -471,6 +477,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
 		app.connect(self.ui.actionJoin_Groupchat, QtCore.SIGNAL("triggered ( bool )"),self.joinGroupchat)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
+		app.connect(self.ui.addContact, QtCore.SIGNAL("clicked ()"),self.addContactMainWindow)
 		app.connect(self.ui.newBookmark, QtCore.SIGNAL("clicked ()"),self.newBookmark)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
 
@@ -512,9 +519,23 @@ class mainWindow(QtGui.QMainWindow):
 		#self.addInfoSubscribe()
 		#self.addInfoSubscribe()
 
+
 	#def addInfoSubscribe(self):
 		#widget=subscribeWidget(self.ui.infoDockWidget)
 		#self.ui.infoLayout.addWidget(widget)
+
+	def addContactMainWindow(self):
+		# add contact
+		jid=unicode(self.ui.add_jid.text())
+		nickname=unicode(self.ui.add_nickname.text())
+		group=unicode(self.ui.add_group.currentText())
+		message=unicode(self.ui.add_message.toPlainText())
+		
+		self.client.addContact(jid,message,nickname,[group])
+		
+		self.ui.add_jid.setText("")
+		self.ui.add_nickname.setText("")
+		self.ui.add_message.setPlainText("")
 
 	def bookmarksClicked(self,item,i):
 		# join bookmarked groupchat
@@ -741,7 +762,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.client.log=False
 		self.client.connect()
 	
-	def _loadAvatar(self,file, hash, jid):
+	def _loadAvatar(self,file,jid):
 		if os.path.isfile(self.homeDir+'/.jabbim/'+unicode(file)):
 			pixmap=QtGui.QPixmap()
 			f=open(self.homeDir+'/.jabbim/'+unicode(file),"rb")
@@ -751,8 +772,6 @@ class mainWindow(QtGui.QMainWindow):
 			for item in self.ui.roster.getUserItems(jid):
 				utils.cprint("yellow","setting icon: "+jid)
 				item.setIcon(3,QtGui.QIcon(pixmap))
-
-		self.client.roster['users'][jid].setAvatar(file, hash)
 	
 	def _addGroup(self, group):
 		return self.ui.roster.addGroup(unicode(group))

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Fri Jul 13 06:10:41 2007
+# Created: Fri Jul 13 08:34:03 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -139,51 +139,144 @@ class Ui_MainWindow(object):
         self.gridlayout3.addWidget(self.rosterWidget,0,0,1,1)
         self.tabWidget.addTab(self.rosterTab,"")
 
-        self.bookmarksTab = QtGui.QWidget()
-        self.bookmarksTab.setObjectName("bookmarksTab")
+        self.tab = QtGui.QWidget()
+        self.tab.setObjectName("tab")
 
-        self.gridlayout4 = QtGui.QGridLayout(self.bookmarksTab)
+        self.gridlayout4 = QtGui.QGridLayout(self.tab)
         self.gridlayout4.setMargin(9)
         self.gridlayout4.setSpacing(6)
         self.gridlayout4.setObjectName("gridlayout4")
 
-        spacerItem3 = QtGui.QSpacerItem(131,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout4.addItem(spacerItem3,1,0,1,1)
+        spacerItem3 = QtGui.QSpacerItem(20,261,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout4.addItem(spacerItem3,3,0,1,1)
 
-        self.newBookmark = QtGui.QPushButton(self.bookmarksTab)
-        self.newBookmark.setObjectName("newBookmark")
-        self.gridlayout4.addWidget(self.newBookmark,1,1,1,1)
+        self.gridlayout5 = QtGui.QGridLayout()
+        self.gridlayout5.setMargin(0)
+        self.gridlayout5.setSpacing(6)
+        self.gridlayout5.setObjectName("gridlayout5")
 
-        self.bookmarks = QtGui.QTreeWidget(self.bookmarksTab)
-        self.bookmarks.setAlternatingRowColors(True)
-        self.bookmarks.setRootIsDecorated(False)
-        self.bookmarks.setObjectName("bookmarks")
-        self.gridlayout4.addWidget(self.bookmarks,0,0,1,2)
-        self.tabWidget.addTab(self.bookmarksTab,"")
-        self.gridlayout2.addWidget(self.tabWidget,0,0,1,1)
-        self.rosterStackedWidget.addWidget(self.page_4)
-        self.gridlayout.addWidget(self.rosterStackedWidget,0,0,1,1)
+        self.label_10 = QtGui.QLabel(self.tab)
+        self.label_10.setObjectName("label_10")
+        self.gridlayout5.addWidget(self.label_10,0,0,1,1)
+
+        self.add_message = QtGui.QTextEdit(self.tab)
+        self.add_message.setObjectName("add_message")
+        self.gridlayout5.addWidget(self.add_message,1,0,1,2)
+
+        spacerItem4 = QtGui.QSpacerItem(191,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout5.addItem(spacerItem4,0,1,1,1)
+        self.gridlayout4.addLayout(self.gridlayout5,2,0,1,2)
+
+        self.line_2 = QtGui.QFrame(self.tab)
+        self.line_2.setFrameShape(QtGui.QFrame.HLine)
+        self.line_2.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line_2.setObjectName("line_2")
+        self.gridlayout4.addWidget(self.line_2,4,0,2,2)
+
+        spacerItem5 = QtGui.QSpacerItem(101,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout4.addItem(spacerItem5,6,0,1,1)
+
+        self.addContact = QtGui.QPushButton(self.tab)
+        self.addContact.setObjectName("addContact")
+        self.gridlayout4.addWidget(self.addContact,5,1,2,1)
+
+        self.label_8 = QtGui.QLabel(self.tab)
+        self.label_8.setObjectName("label_8")
+        self.gridlayout4.addWidget(self.label_8,0,0,1,1)
 
         self.hboxlayout3 = QtGui.QHBoxLayout()
         self.hboxlayout3.setMargin(0)
         self.hboxlayout3.setSpacing(6)
         self.hboxlayout3.setObjectName("hboxlayout3")
 
+        self.vboxlayout2 = QtGui.QVBoxLayout()
+        self.vboxlayout2.setMargin(0)
+        self.vboxlayout2.setSpacing(6)
+        self.vboxlayout2.setObjectName("vboxlayout2")
+
+        self.label_5 = QtGui.QLabel(self.tab)
+        self.label_5.setObjectName("label_5")
+        self.vboxlayout2.addWidget(self.label_5)
+
+        self.label_6 = QtGui.QLabel(self.tab)
+        self.label_6.setObjectName("label_6")
+        self.vboxlayout2.addWidget(self.label_6)
+
+        self.label_7 = QtGui.QLabel(self.tab)
+        self.label_7.setObjectName("label_7")
+        self.vboxlayout2.addWidget(self.label_7)
+        self.hboxlayout3.addLayout(self.vboxlayout2)
+
+        self.vboxlayout3 = QtGui.QVBoxLayout()
+        self.vboxlayout3.setMargin(0)
+        self.vboxlayout3.setSpacing(6)
+        self.vboxlayout3.setObjectName("vboxlayout3")
+
+        self.add_jid = QtGui.QLineEdit(self.tab)
+        self.add_jid.setObjectName("add_jid")
+        self.vboxlayout3.addWidget(self.add_jid)
+
+        self.add_nickname = QtGui.QLineEdit(self.tab)
+        self.add_nickname.setObjectName("add_nickname")
+        self.vboxlayout3.addWidget(self.add_nickname)
+
+        self.add_group = QtGui.QComboBox(self.tab)
+        self.add_group.setEditable(True)
+        self.add_group.setObjectName("add_group")
+        self.vboxlayout3.addWidget(self.add_group)
+        self.hboxlayout3.addLayout(self.vboxlayout3)
+        self.gridlayout4.addLayout(self.hboxlayout3,1,0,1,2)
+        self.tabWidget.addTab(self.tab,QtGui.QIcon("images/16x16/actions/add-user.png"),"")
+
+        self.bookmarksTab = QtGui.QWidget()
+        self.bookmarksTab.setObjectName("bookmarksTab")
+
+        self.gridlayout6 = QtGui.QGridLayout(self.bookmarksTab)
+        self.gridlayout6.setMargin(9)
+        self.gridlayout6.setSpacing(6)
+        self.gridlayout6.setObjectName("gridlayout6")
+
+        self.bookmarks = QtGui.QTreeWidget(self.bookmarksTab)
+        self.bookmarks.setAlternatingRowColors(True)
+        self.bookmarks.setRootIsDecorated(False)
+        self.bookmarks.setObjectName("bookmarks")
+        self.gridlayout6.addWidget(self.bookmarks,1,0,1,2)
+
+        spacerItem6 = QtGui.QSpacerItem(131,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout6.addItem(spacerItem6,2,0,1,1)
+
+        self.newBookmark = QtGui.QPushButton(self.bookmarksTab)
+        self.newBookmark.setObjectName("newBookmark")
+        self.gridlayout6.addWidget(self.newBookmark,2,1,1,1)
+
+        self.label_9 = QtGui.QLabel(self.bookmarksTab)
+        self.label_9.setObjectName("label_9")
+        self.gridlayout6.addWidget(self.label_9,0,0,1,1)
+        self.tabWidget.addTab(self.bookmarksTab,QtGui.QIcon("images/16x16/categories/bookmarks.png"),"")
+        self.gridlayout2.addWidget(self.tabWidget,0,0,1,1)
+        self.rosterStackedWidget.addWidget(self.page_4)
+        self.gridlayout.addWidget(self.rosterStackedWidget,0,0,1,1)
+
+        self.hboxlayout4 = QtGui.QHBoxLayout()
+        self.hboxlayout4.setMargin(0)
+        self.hboxlayout4.setSpacing(6)
+        self.hboxlayout4.setObjectName("hboxlayout4")
+
         self.showOffline = QtGui.QToolButton(self.centralwidget)
         self.showOffline.setCheckable(True)
         self.showOffline.setArrowType(QtCore.Qt.NoArrow)
         self.showOffline.setObjectName("showOffline")
-        self.hboxlayout3.addWidget(self.showOffline)
+        self.hboxlayout4.addWidget(self.showOffline)
 
-        spacerItem4 = QtGui.QSpacerItem(121,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.hboxlayout3.addItem(spacerItem4)
+        spacerItem7 = QtGui.QSpacerItem(121,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.hboxlayout4.addItem(spacerItem7)
 
         self.statusButton = QtGui.QToolButton(self.centralwidget)
         self.statusButton.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.statusButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.statusButton.setObjectName("statusButton")
-        self.hboxlayout3.addWidget(self.statusButton)
-        self.gridlayout.addLayout(self.hboxlayout3,1,0,1,1)
+        self.hboxlayout4.addWidget(self.statusButton)
+        self.gridlayout.addLayout(self.hboxlayout4,1,0,1,1)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(MainWindow)
@@ -228,10 +321,24 @@ class Ui_MainWindow(object):
         self.login_savePassword.setText(QtGui.QApplication.translate("MainWindow", "Save Password", None, QtGui.QApplication.UnicodeUTF8))
         self.login_connect.setText(QtGui.QApplication.translate("MainWindow", "Connect", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.rosterTab), QtGui.QApplication.translate("MainWindow", "Roster", None, QtGui.QApplication.UnicodeUTF8))
-        self.newBookmark.setText(QtGui.QApplication.translate("MainWindow", "New bookmark", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_10.setText(QtGui.QApplication.translate("MainWindow", "Message:", None, QtGui.QApplication.UnicodeUTF8))
+        self.addContact.setText(QtGui.QApplication.translate("MainWindow", "Add", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_8.setText(QtGui.QApplication.translate("MainWindow", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        "p, li { white-space: pre-wrap; }\n"
+        "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
+        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Add contact</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_5.setText(QtGui.QApplication.translate("MainWindow", "Jabber ID:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_6.setText(QtGui.QApplication.translate("MainWindow", "Nickname:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_7.setText(QtGui.QApplication.translate("MainWindow", "Group:", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("MainWindow", " ", None, QtGui.QApplication.UnicodeUTF8))
         self.bookmarks.headerItem().setText(0,QtGui.QApplication.translate("MainWindow", "Name", None, QtGui.QApplication.UnicodeUTF8))
         self.bookmarks.headerItem().setText(1,QtGui.QApplication.translate("MainWindow", "Jid", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.bookmarksTab), QtGui.QApplication.translate("MainWindow", "Bookmarks", None, QtGui.QApplication.UnicodeUTF8))
+        self.newBookmark.setText(QtGui.QApplication.translate("MainWindow", "New bookmark", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_9.setText(QtGui.QApplication.translate("MainWindow", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        "p, li { white-space: pre-wrap; }\n"
+        "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
+        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'DejaVu Sans\';\"><span style=\" font-size:12pt; font-weight:600;\">Bookmarks</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.bookmarksTab), QtGui.QApplication.translate("MainWindow", " ", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setText(QtGui.QApplication.translate("MainWindow", "Show offline", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setText(QtGui.QApplication.translate("MainWindow", "Offline", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPreferences.setTitle(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
