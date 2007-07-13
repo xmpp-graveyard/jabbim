@@ -116,12 +116,12 @@ class rosterWidget(QtGui.QTreeWidget):
 		apply(QtGui.QTreeWidget.__init__,(self,parent))
 		self.setObjectName("roster")
 		self.delegate=delegate()
-		print self.itemDelegate()
-		print self.delegate
+##		print self.itemDelegate()
+##		print self.delegate
 		self.setMouseTracking (True)
 		#self.setIndentation(2)
 		self.setItemDelegate(self.delegate)
-		print self.itemDelegate()
+##		print self.itemDelegate()
 		# main variables
 		self.main=main # mainwindow pointer
 		#self.jab=jab # jab instance pointer
@@ -253,7 +253,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		it=it.toList()
 		parentJid=unicode(it[0].toString())
 		parentTyp=unicode(it[1].toString())
-		print parentTyp,typ
+##		print parentTyp,typ
 		del self.dnd[jid]
 		if parent in self.main.client.roster['groups'].values() and typ=="contact":
 			#name=unicode(self.main.client.roster['users'][jid].rosterItems[0].text(2))
@@ -280,7 +280,7 @@ class rosterWidget(QtGui.QTreeWidget):
 
 		elif parentTyp=="metaparent" and typ=="contact":
 			if item.parent() in self.main.client.metaParents.values():
-				print "not contact"
+##				print "not contact"
 				return False
 			contact=self.main.client.roster['users'][jid]
 			i=contact.getUserItems()[0].clone() # clone contact item
@@ -290,7 +290,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			for contact in self.main.client.roster['users'][jid].rosterItems:
 				it=contact.data(32,0)
 				it=it.toList()
-				print jid,unicode(it[1].toString())
+##				print jid,unicode(it[1].toString())
 				if unicode(it[1].toString())=="contact":
 					toDel.append(contact)
 					par=contact.parent()
@@ -302,7 +302,7 @@ class rosterWidget(QtGui.QTreeWidget):
 	
 			self.main.client.roster_meta[jid]={'tag':tag,'order':1}
 	
-			print self.main.client.roster_meta
+##			print self.main.client.roster_meta
 			self.main.client.setMetacontacts()
 			return True
 
@@ -327,7 +327,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			for contact in self.main.client.roster['users'][jid].rosterItems:
 				it=contact.data(32,0)
 				it=it.toList()
-				print jid,unicode(it[1].toString())
+##				print jid,unicode(it[1].toString())
 				if unicode(it[1].toString())=="contact":
 					toDel.append(contact)
 					par=contact.parent()
@@ -366,14 +366,14 @@ class rosterWidget(QtGui.QTreeWidget):
 			self.main.client.roster_meta[parentJid]={'tag':parentJid,'order':1}
 			self.main.client.roster_meta[jid]={'tag':parentJid,'order':1}
 	
-			print self.main.client.roster_meta
+##			print self.main.client.roster_meta
 			self.main.client.setMetacontacts()
 			return True
 		
 
 		elif parent in self.main.client.roster['groups'].values() and typ=="meta":
 			if item.parent() not in self.main.client.metaParents.values():
-				print "not contact"
+##				print "not contact"
 				return False
 			contact=self.main.client.roster['users'][jid]
 			i=contact.getUserItems()[0].clone() # clone contact item
@@ -445,7 +445,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			if int(oldParent.childCount())<=1:
 				oldParent.parent().takeChild(oldParent.parent().indexOfChild(oldParent))
 
-			print self.main.client.roster_meta
+##			print self.main.client.roster_meta
 			self.main.client.setMetacontacts()
 			return True
 
@@ -705,7 +705,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		# contact menu action handler
 		cmd=action.objectName()
 		if cmd=="delete_action":
-			print "delete_action"
+##			print "delete_action"
 			## delete contact from roster
 			## get contact jid
 			jid=action.data()
@@ -724,7 +724,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			jid=action.data()
 			jid=str(jid.toString())
 			name=unicode(self.main.client.roster['users'][jid].name)
-			print "roster_new_group_action",jid,name
+##			print "roster_new_group_action",jid,name
 			# get new group name with QDialog
 			group,b=QtGui.QInputDialog.getText(self,self.tr("New group"),self.tr("Add user to new group"), QtGui.QLineEdit.Normal, "")
 			group=unicode(group)
@@ -781,20 +781,21 @@ class rosterWidget(QtGui.QTreeWidget):
 			jid=jid+"/"+self.getResources(jid)[0]
 			file=QtGui.QFileDialog.getOpenFileName(self,"Choose file")
 			if len(file)!=0:
-				print file,"to",jid
+##				print file,"to",jid
 				#self.jab.sendFile(jid,unicode(file))
+				pass
 
 	def changeGroup(self,jid,action,group):
 			name=unicode(self.main.client.roster['users'][jid].name)
 			if action=="+":
 				contact=self.main.client.roster['users'][jid]
-				print "adding",jid,"groups:",self.main.client.roster['users'][jid].groups+[group]
+##				print "adding",jid,"groups:",self.main.client.roster['users'][jid].groups+[group]
 				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription, self.main.client.roster['users'][jid].groups+[group])
 			else:
 				contact=self.main.client.roster['users'][jid]
 				g=contact.groups
 				g.remove(group)
-				print "deleting",jid,"groups:",g,'name:',name
+##				print "deleting",jid,"groups:",g,'name:',name
 				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g)
 
 

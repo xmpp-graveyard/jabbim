@@ -14,10 +14,10 @@ class Cache:
 		q.addErrback(self.table_present)
 		
 	def table_created(self, res):
-		print 'created new cache DB'
+		log.msg( 'created new cache DB')
 	
 	def table_present(self, result):
-		print 'table here? ', result
+		log.msg( 'table here? '+unicode( result))
 	
 	def get_avatar(self, jid, handler):
 		self.db.runQuery('select file, hash, jid from avatars where jid = "%s"'%dbutil.safe(jid)).addCallback(self.got_avatar, handler)
@@ -27,7 +27,7 @@ class Cache:
 			handler(x[0], x[1], x[2])
 
 	def set_avatar(self, jid, avatar): #avatar = (file,hash)
-		print 'ukladam ', jid
+		log.msg('ukladam ' + jid)
 		self.db.runQuery('select jid from avatars where jid = "%s"'%dbutil.safe(jid)).addCallback(self._has_avatar, jid, avatar)
 	
 	def _has_avatar(self, result, jid, avatar):

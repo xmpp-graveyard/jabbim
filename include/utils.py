@@ -4,19 +4,19 @@ from configobj import ConfigObj
 def cprint(color,text):
 	text=unicode(text)
 	if color=="yellow":
-		print "\033[1;33m"+text+" \033[0m"
+		return "\033[1;33m"+text+" \033[0m"
 	elif color=="red":
-		print "\033[0;31m"+text+" \033[0m"
+		return "\033[0;31m"+text+" \033[0m"
 	elif color=="green":
-		print "\033[0;32m"+text+" \033[0m"
+		return "\033[0;32m"+text+" \033[0m"
 	elif color=="lightblue":
-		print "\033[1;34m"+text+" \033[0m"
+		return "\033[1;34m"+text+" \033[0m"
 	elif color=="lightgray":
-		print "\033[0;37m"+text+" \033[0m"
+		return "\033[0;37m"+text+" \033[0m"
 	elif color=="lightcyan":
-		print "\033[1;36m"+text+" \033[0m"
+		return "\033[1;36m"+text+" \033[0m"
 	else:
-		print text
+		return text
 
 def loadConfig(main):
 	# loads config and repairs config file
@@ -25,7 +25,9 @@ def loadConfig(main):
 			"savePasswd":"",
 			"rosterIconSize":"16x16",
 			"chat_skin":"default.conf",
-			"theme":"template"
+			"theme":"template", 
+			"log":"true",
+			"logfile":"jabbim.log"
 			}
 	main.config=ConfigObj(main.homeDir+'/.jabbim/config',encoding='UTF8')
 	if len(main.config)==0:

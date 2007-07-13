@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import sys,os
 try: from PyQt4 import QtCore, QtGui
 except: print "PyQt4 is not installed."
-
+from twisted.python import log
 import qt4reactor as reactor
 app = QtGui.QApplication(sys.argv)
 reactor.install(app)
@@ -111,7 +111,7 @@ class clientClass(pyxl.client.Client):
 				else:
 					meta[user.tag].append([jid,user.order])
 
-		print "META:",meta
+##		log.msg( "META:"+unicode(meta))
 		# process metacontacts
 		for tag,jids in meta.iteritems():
 			# get main metacontact (first metacontact)
@@ -158,7 +158,7 @@ class clientClass(pyxl.client.Client):
 		for k,v in self.roster['groups'].iteritems():
 			self.main.ui.add_group.addItem(unicode(k))
 
-		print "METAPARENTS",self.metaParents
+##		log.msg( "METAPARENTS"+unicode(self.metaParents))
 
 	def on_authFailed(self,xmlstream):
 		# Authentication error
@@ -430,10 +430,10 @@ class clientClass(pyxl.client.Client):
 			f.close()
 			pixmap.loadFromData(image)
 			for item in self.main.ui.roster.getUserItems(jid):
-				utils.cprint("yellow","setting icon: "+jid)
+##				log.msg(utils.cprint("yellow","setting icon: "+jid))
 				item.setIcon(3,QtGui.QIcon(pixmap))
 			for item in self.main.ui.roster.getMetaItems(jid):
-				utils.cprint("yellow","setting icon: "+jid)
+##				log.msg(utils.cprint("yellow","setting icon: "+jid))
 				item.setIcon(3,QtGui.QIcon(pixmap))
 			sha1=hashlib.sha1(image).hexdigest()
 			self.main.cache.set_avatar(jid, ['avatars/'+jid, sha1])
@@ -544,6 +544,9 @@ class mainWindow(QtGui.QMainWindow):
 		#self.addInfoSubscribe()
 		#self.addInfoSubscribe()
 		self.loadTheme()
+##		if self.config['log'] == 'true':
+##			logfile = open(self.config['logfile'], 'w')
+##			log.startLogging(logfile)
 
 	#def addInfoSubscribe(self):
 		#widget=subscribeWidget(self.ui.infoDockWidget)
@@ -802,7 +805,7 @@ class mainWindow(QtGui.QMainWindow):
 			f.close()
 			pixmap.loadFromData(image)
 			for item in self.ui.roster.getUserItems(jid):
-				utils.cprint("yellow","setting icon: "+jid)
+##				log.msg(utils.cprint("yellow","setting icon: "+jid))
 				item.setIcon(3,QtGui.QIcon(pixmap))
 		self.client.roster['users'][jid].setAvatar(file, hash)
 	
