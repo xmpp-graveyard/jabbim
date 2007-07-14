@@ -145,12 +145,13 @@ class clientClass(pyxl.client.Client):
 						contactData=contact.data(32,0)
 						contactData=contactData.toList()
 						if unicode(contactData[1].toString())=="contact":
-							toDel.append(contact)
+							toDel.append(self.roster['users'][jid].rosterItems.index(contact))
 							parent=contact.parent()
 							parent.takeChild(parent.indexOfChild(contact))
-					for item in toDel:
-						self.roster['users'][jid].rosterItems.remove(item)
-				#self.main.ui.roster.cloneContact(self.metaParents[tag],self.roster['users'][jid].rosterItems[-1])
+					for index in toDel:
+						del self.roster['users'][jid].rosterItems[index]
+						#self.roster['users'][jid].rosterItems.remove(item)
+				self.main.ui.roster.cloneContact(self.metaParents[tag],self.roster['users'][jid].rosterItems[-1])
 
 						
 			##If we had some others metacontacts
