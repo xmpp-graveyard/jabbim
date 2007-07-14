@@ -552,8 +552,8 @@ class Client(derived):
 			cekej = ln*0.05
 		print ln,  cekej
 		reactor.callLater(cekej,  self.onFirstPresence)
-##		self.onFirstPresence()
-##		self.on_rosterArrived()
+		#self.onFirstPresence()
+		self.on_rosterArrived()
 
 	def _authfailed(self,xmlstream):
 		log.msg( "auth_failed")
