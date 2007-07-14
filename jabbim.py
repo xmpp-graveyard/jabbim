@@ -148,10 +148,10 @@ class clientClass(pyxl.client.Client):
 							toDel.append(self.roster['users'][jid].rosterItems.index(contact))
 							parent=contact.parent()
 							parent.takeChild(parent.indexOfChild(contact))
-					for index in toDel:
-						del self.roster['users'][jid].rosterItems[index]
+					#for index in toDel:
+						#del self.roster['users'][jid].rosterItems[index]
 						#self.roster['users'][jid].rosterItems.remove(item)
-				self.main.ui.roster.cloneContact(self.metaParents[tag],self.roster['users'][jid].rosterItems[-1])
+				#self.main.ui.roster.cloneContact(self.metaParents[tag],self.roster['users'][jid].rosterItems[-1])
 
 						
 			##If we had some others metacontacts
