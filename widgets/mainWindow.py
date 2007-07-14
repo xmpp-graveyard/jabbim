@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Fri Jul 13 10:23:20 2007
+# Created: Sat Jul 14 13:35:28 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,6 +14,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,307,694).size()).expandedTo(MainWindow.minimumSizeHint()))
+        MainWindow.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")

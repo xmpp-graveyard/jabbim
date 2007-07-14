@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/chat.ui'
 #
-# Created: Thu May 10 18:18:29 2007
+# Created: Sat Jul 14 13:35:56 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,13 +14,14 @@ class Ui_chatWindow(object):
     def setupUi(self, chatWindow):
         chatWindow.setObjectName("chatWindow")
         chatWindow.resize(QtCore.QSize(QtCore.QRect(0,0,581,562).size()).expandedTo(chatWindow.minimumSizeHint()))
+        chatWindow.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.centralwidget = QtGui.QWidget(chatWindow)
         self.centralwidget.setObjectName("centralwidget")
 
         self.gridlayout = QtGui.QGridLayout(self.centralwidget)
-        self.gridlayout.setMargin(9)
-        self.gridlayout.setSpacing(6)
+        self.gridlayout.setMargin(0)
+        self.gridlayout.setSpacing(0)
         self.gridlayout.setObjectName("gridlayout")
 
         self.chatTab = QtGui.QTabWidget(self.centralwidget)
