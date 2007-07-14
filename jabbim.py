@@ -558,9 +558,34 @@ class mainWindow(QtGui.QMainWindow):
 			logfile = open(self.config['logfile'], 'w')
 			log.startLogging(logfile)
 
+		self.tray=QtGui.QSystemTrayIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
+		menu=QtGui.QMenu(self)
+		menu.addMenu(self.statusMenu)
+		menu.addSeparator()
+		menu.addAction(self.tr("Close"),self.trayQuit)
+		app.connect(self.tray,QtCore.SIGNAL("activated (QSystemTrayIcon::ActivationReason)"),self.trayActivated)
+		self.tray.setContextMenu(menu)
+		self.tray.show()
+
+
 	#def addInfoSubscribe(self):
 		#widget=subscribeWidget(self.ui.infoDockWidget)
 		#self.ui.infoLayout.addWidget(widget)
+
+	def trayQuit(self):
+		# turn off jabbim
+		self.tray.hide()
+		app.closeAllWindows()
+		self.disconnect()
+		#sys.exit(0)
+
+	def trayActivated(self,reason):
+		# show or hide main window
+		if reason==QtGui.QSystemTrayIcon.Trigger:
+			if self.isHidden():
+				self.show()
+			else:
+				self.hide()
 
 	def loadTheme(self):
 		# windows hack
