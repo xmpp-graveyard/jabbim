@@ -96,6 +96,7 @@ class clientClass(pyxl.client.Client):
 		# build Bookmarks tab
 
 		self.main.buildBookmarks()
+		self.main.autoJoinGroupchat()
 		# vymazani metakontaktu
 		#self.roster_meta={}
 		#self.setMetacontacts()
@@ -140,7 +141,6 @@ class clientClass(pyxl.client.Client):
 					order=int(value[1])
 					toDel=[] # contacts to delete
 					self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addMetaContact(jid,self.roster['users'][jid].name,self.metaParents[tag],True))
-
 
 			##If we had some others metacontacts
 			#if mainJid!=None:
@@ -633,6 +633,13 @@ class mainWindow(QtGui.QMainWindow):
 			item.setData(0,32,QtCore.QVariant([unicode(v.jid.full()),unicode(v.nick),unicode(v.password)]))
 			item.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
 
+	def autoJoinGroupchat(self):
+		for k,v in self.client.bookmarks['conference'].iteritems():
+			if (v.autojoin==True or v.autojoin=="True") or (v.autojoin==1 or v.autojoin=="1"):
+				jid=unicode(v.jid.full())
+				nickname=v.nick
+				self.chat.addGroupChatTab(jid,nickname)
+				self.client.joinGC(jid, nickname)
 
 	def joinGroupchat(self,bool):
 		newchat=widgets.joingroupchat.joinGroupChatWindow(self)
@@ -669,7 +676,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def newBookmark(self):
 		# make new bookmark
-		edit=widgets.preferences.editBookmark(self,"","","","","",self,False)
+		edit=widgets.preferences.editBookmark(self,"","","","","",False,self,False)
 		ret=edit.exec_()
 
 	def groupchatContextMenuTriggered(self,action):
