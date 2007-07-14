@@ -135,6 +135,11 @@ class clientClass(pyxl.client.Client):
 
 			if mainJid!=None:
 				self.metaParents[tag]=self.main.ui.roster.addMetaParent(tag,self.roster['users'][mainJid].rosterItems[0].parent(),True)
+				for value in jids:
+					jid=value[0]
+					order=int(value[1])
+					toDel=[] # contacts to delete
+					self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addMetaContact(jid,self.roster['users'][jid].name,self.metaParents[tag],True))
 
 
 			##If we had some others metacontacts
