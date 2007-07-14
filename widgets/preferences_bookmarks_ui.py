@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'preferences_bookmarks.ui'
+# Form implementation generated from reading ui file 'widgets/preferences_bookmarks.ui'
 #
-# Created: Thu Mar 15 05:02:01 2007
-#      by: PyQt4 UI code generator 4.1.1
+# Created: Sat Jul 14 13:44:07 2007
+#      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -13,7 +13,8 @@ from PyQt4 import QtCore, QtGui
 class Ui_editbookmark(object):
     def setupUi(self, editbookmark):
         editbookmark.setObjectName("editbookmark")
-        editbookmark.resize(QtCore.QSize(QtCore.QRect(0,0,295,209).size()).expandedTo(editbookmark.minimumSizeHint()))
+        editbookmark.resize(QtCore.QSize(QtCore.QRect(0,0,262,243).size()).expandedTo(editbookmark.minimumSizeHint()))
+        editbookmark.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.gridlayout = QtGui.QGridLayout(editbookmark)
         self.gridlayout.setMargin(9)
@@ -21,13 +22,10 @@ class Ui_editbookmark(object):
         self.gridlayout.setObjectName("gridlayout")
 
         spacerItem = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem,2,0,1,1)
+        self.gridlayout.addItem(spacerItem,3,0,1,1)
 
-        self.line = QtGui.QFrame(editbookmark)
-        self.line.setFrameShape(QtGui.QFrame.HLine)
-        self.line.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line.setObjectName("line")
-        self.gridlayout.addWidget(self.line,1,0,1,2)
+        spacerItem1 = QtGui.QSpacerItem(191,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem1,1,0,1,2)
 
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setMargin(0)
@@ -41,7 +39,7 @@ class Ui_editbookmark(object):
         self.pushButton_2 = QtGui.QPushButton(editbookmark)
         self.pushButton_2.setObjectName("pushButton_2")
         self.hboxlayout.addWidget(self.pushButton_2)
-        self.gridlayout.addLayout(self.hboxlayout,2,1,1,1)
+        self.gridlayout.addLayout(self.hboxlayout,3,1,1,2)
 
         self.hboxlayout1 = QtGui.QHBoxLayout()
         self.hboxlayout1.setMargin(0)
@@ -99,7 +97,17 @@ class Ui_editbookmark(object):
         self.password.setObjectName("password")
         self.vboxlayout1.addWidget(self.password)
         self.hboxlayout1.addLayout(self.vboxlayout1)
-        self.gridlayout.addLayout(self.hboxlayout1,0,0,1,2)
+        self.gridlayout.addLayout(self.hboxlayout1,0,0,1,3)
+
+        self.autojoin = QtGui.QCheckBox(editbookmark)
+        self.autojoin.setObjectName("autojoin")
+        self.gridlayout.addWidget(self.autojoin,1,2,1,1)
+
+        self.line = QtGui.QFrame(editbookmark)
+        self.line.setFrameShape(QtGui.QFrame.HLine)
+        self.line.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line.setObjectName("line")
+        self.gridlayout.addWidget(self.line,2,0,1,3)
 
         self.retranslateUi(editbookmark)
         QtCore.QObject.connect(self.pushButton,QtCore.SIGNAL("clicked()"),editbookmark.accept)
@@ -115,4 +123,5 @@ class Ui_editbookmark(object):
         self.label_4.setText(QtGui.QApplication.translate("editbookmark", "Name:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("editbookmark", "Nickname:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("editbookmark", "Password:", None, QtGui.QApplication.UnicodeUTF8))
+        self.autojoin.setText(QtGui.QApplication.translate("editbookmark", "Autojoin", None, QtGui.QApplication.UnicodeUTF8))
 

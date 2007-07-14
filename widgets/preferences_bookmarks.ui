@@ -5,12 +5,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>295</width>
-    <height>209</height>
+    <width>262</width>
+    <height>243</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Edit bookmark</string>
+  </property>
+  <property name="windowIcon" >
+   <iconset>images/16x16/apps/jabbim.png</iconset>
   </property>
   <layout class="QGridLayout" >
    <property name="margin" >
@@ -19,7 +22,7 @@
    <property name="spacing" >
     <number>6</number>
    </property>
-   <item row="2" column="0" >
+   <item row="3" column="0" >
     <spacer>
      <property name="orientation" >
       <enum>Qt::Horizontal</enum>
@@ -33,13 +36,19 @@
     </spacer>
    </item>
    <item row="1" column="0" colspan="2" >
-    <widget class="Line" name="line" >
+    <spacer>
      <property name="orientation" >
       <enum>Qt::Horizontal</enum>
      </property>
-    </widget>
+     <property name="sizeHint" >
+      <size>
+       <width>191</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
-   <item row="2" column="1" >
+   <item row="3" column="1" colspan="2" >
     <layout class="QHBoxLayout" >
      <property name="margin" >
       <number>0</number>
@@ -63,7 +72,7 @@
      </item>
     </layout>
    </item>
-   <item row="0" column="0" colspan="2" >
+   <item row="0" column="0" colspan="3" >
     <layout class="QHBoxLayout" >
      <property name="margin" >
       <number>0</number>
@@ -142,6 +151,20 @@
       </layout>
      </item>
     </layout>
+   </item>
+   <item row="1" column="2" >
+    <widget class="QCheckBox" name="autojoin" >
+     <property name="text" >
+      <string>Autojoin</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3" >
+    <widget class="Line" name="line" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

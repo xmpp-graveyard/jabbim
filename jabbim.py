@@ -667,7 +667,6 @@ class mainWindow(QtGui.QMainWindow):
 		edit=widgets.preferences.editBookmark(self,"","","","","",self,False)
 		ret=edit.exec_()
 
-
 	def groupchatContextMenuTriggered(self,action):
 		cmd=action.objectName()
 		if cmd=="join":
@@ -701,7 +700,8 @@ class mainWindow(QtGui.QMainWindow):
 			name=unicode(item.text(0))
 			nickname=unicode(lst[1].toString()) # get nickname
 			password=unicode(lst[2].toString()) # get password
-			edit=widgets.preferences.editBookmark(self,room,server,name,nickname,password,self)
+			autojoin=self.client.bookmarks['conference'][name].autojoin
+			edit=widgets.preferences.editBookmark(self,room,server,name,nickname,password,autojoin,self)
 			edit.exec_()
 		elif cmd=="delete_bookmark":
 			item=self.ui.bookmarks.currentItem()

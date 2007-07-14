@@ -104,7 +104,7 @@ class preferencesWindow(QtGui.QDialog):
 		self.done(1)
 
 class editBookmark(QtGui.QDialog):
-	def __init__(self,main,room,server,name,nickname,password,parent,edit=True):
+	def __init__(self,main,room,server,name,nickname,password,autojoin,parent,edit=True):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.parent=parent
 		self.room=room
@@ -112,6 +112,7 @@ class editBookmark(QtGui.QDialog):
 		self.main=main
 		self.edit=edit
 		self.name=name
+		self.autojoin=autojoin
 		self.setModal(True)
 		self.ui=Ui_editbookmark()
 		self.ui.setupUi(self)
@@ -120,22 +121,27 @@ class editBookmark(QtGui.QDialog):
 		self.ui.name.setText(name)
 		self.ui.nickname.setText(nickname)
 		self.ui.password.setText(password)
-
+		if (self.autojoin==True or self.autojoin=="True") or (self.autojoin==1 or self.autojoin=="1"):
+			self.ui.autojoin.setChecked(True)
+		else:
+			self.ui.autojoin.setChecked(False)
+			
 	def accept(self):
 		room=unicode(self.ui.room.text())
 		server=unicode(self.ui.server.text())
 		name=unicode(self.ui.name.text())
 		nickname=unicode(self.ui.nickname.text())
 		password=unicode(self.ui.password.text())
+		autojoin=self.ui.autojoin.isChecked()
 		edited=False
 		if name==self.name:
-			self.main.client.bookmarks['conference'][name]=pyxl.client.Bookmark(name, 'conference', room+"@"+server, "0", nickname, password)
+			self.main.client.bookmarks['conference'][name]=pyxl.client.Bookmark(name, 'conference', room+"@"+server, autojoin, nickname, password)
 			#self.done(1)
 			edited=True
 		else:
 			if self.edit==True:
 				del self.main.client.bookmarks['conference'][self.name]
-			self.main.client.bookmarks['conference'][name]=pyxl.client.Bookmark(name, 'conference', room+"@"+server, "0", nickname, password)
+			self.main.client.bookmarks['conference'][name]=pyxl.client.Bookmark(name, 'conference', room+"@"+server, autojoin, nickname, password)
 			edited=True
 		if edited:
 			#self.main.bookmarks=self.bookmarks
