@@ -277,6 +277,8 @@ class clientClass(pyxl.client.Client):
 		contact=self.roster['users'][jid]
 		items=contact.getUserItems()
 		toDel=[] # temp variable for deleting items at the end of this function
+		toDelJid=[]
+		toDelIndex=[]
 		# go through all groups
 		for name,item in self.roster['groups'].iteritems():
 			# updated contact has to be in this group
@@ -324,7 +326,8 @@ class clientClass(pyxl.client.Client):
 				for i in items:
 					parent=i.parent()
 					if item==parent:
-						self.roster['users'][unicode(jid)].rosterItems.remove(i)
+						toDelJid.append(unicode(jid))
+						toDelIndex.append(self.roster['users'][unicode(jid)].rosterItems.index(i))
 						parent.takeChild(parent.indexOfChild(i))
 						# delete group, if it's empty
 						if int(parent.childCount())==0:
@@ -332,6 +335,8 @@ class clientClass(pyxl.client.Client):
 							self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(parent))
 						break
 		# delete all groups saved in toDel
+		for i in range(len(toDelJid)):
+			del self.roster['users'][toDelJid[i]].rosterItems[toDelIndex[i]]
 		for name in toDel:
 			del self.roster['groups'][name]
 
@@ -367,7 +372,7 @@ class clientClass(pyxl.client.Client):
 							##self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(group))
 							##del self.roster['groups'][unicode(group.text(2))]
 					#break
-		self.main.ui.roster.refreshStats()
+		#self.main.ui.roster.refreshStats()
 
 	def on_subscribe(self, frm,status):
 		#self.ui.infoDockWidget.show()
