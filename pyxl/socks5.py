@@ -4,9 +4,9 @@ from twisted.internet           import reactor, tcp
 from twisted.internet           import protocol, defer
 from twisted.python             import log, failure
 import struct, re, socket, sys
-
+from zope.interface import implements
 from sockserror import *
-
+from twisted.internet import interfaces
 # Used to distinguish IP address from domain name
 # TODO: should this be optimized somehow?
 #
@@ -410,5 +410,18 @@ class ProxyClientCreator(protocol.ClientCreator):
 	   return d
 
 
+class Send(protocol.Protocol):
+	implements(interfaces.IConsumer)
+	
+	def registerProducer(self, producer, streaming):
+		return self.transport.registerProducer(producer, streaming)
+	
+	def unregisterProducer(self):
+		self.transport.unregisterProducer()
+		self.transport.loseConnection()
 
+	def write(self, data):
+		if self.isConnected:
+			return self.transport.write(data)
+		raise Exception("Crap damn crap damn crap damn")
 
