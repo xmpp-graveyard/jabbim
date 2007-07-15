@@ -197,7 +197,7 @@ class Client(derived):
 #		self.registerPEP('sefator@jabber.se')
 #		self.getPrivacy()
 #		self.joinGC('jdev@conf.netlab.cz',  'Sefator')
-		reactor.callLater(15, self.sendFile,'public@disk.jabbim.cz/jdisk', 'test.py', unicode(os.path.getsize('test.txt')), open('test.txt','r'))
+##		reactor.callLater(15, self.sendFile,'public@disk.jabbim.cz/jdisk', 'test.py', unicode(os.path.getsize('test.txt')), open('test.txt','r'))
 		self.on_authd()
 	def _pepSupport(self):
 		log.msg('pep support arrived')
