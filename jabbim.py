@@ -80,6 +80,7 @@ class clientClass(pyxl.client.Client):
 			for group in groups:
 				# add user item to the group
 				self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups'][group],first=True))
+		log.msg(jid+" "+unicode(groups))
 		# show avatar if he have him
 		self.main.cache.get_avatar(jid, self.main._loadAvatar)
 
@@ -336,12 +337,13 @@ class clientClass(pyxl.client.Client):
 	def on_DeleteContact(self,jid):
 		# delete contact from roster
 		log.msg("delete contact")
-		contact=self.roster['users'][jid]
-		items=contact.getUserItems()
-		
-		for item in items:
-			parent=item.parent()
-			parent.takeChild(parent.indexOfChild(item))
+		#contact=self.roster['users'][jid]
+		#items=contact.getUserItems()
+		#log.msg(items)
+		#for item in items:
+			#log.msg("DELETE ITEM:"+unicode(item.text(1)))
+			#parent=item.parent()
+			#parent.takeChild(parent.indexOfChild(item))
 
 		#for name,item in self.roster['groups'].iteritems():
 			#for i in items:
