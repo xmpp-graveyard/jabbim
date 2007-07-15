@@ -220,7 +220,7 @@ class groupChatWidget(QtGui.QWidget):
 			c=parseString(b[0].toxml())
 			text=gatherTextNodes(c)
 
-			self.main.client.sendMessage(self.jid, unicode(text), 'groupchat')
+			self.main.client.sendMessage(self.jid, unicode(text, 'utf-8'), 'groupchat')
 			self.ui.line.clear()
 			#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)
 

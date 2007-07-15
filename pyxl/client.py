@@ -197,7 +197,7 @@ class Client(derived):
 #		self.registerPEP('sefator@jabber.se')
 #		self.getPrivacy()
 #		self.joinGC('jdev@conf.netlab.cz',  'Sefator')
-##		reactor.callLater(15, self.sendFile,'public@disk.jabbim.cz/jdisk', 'test.py', unicode(os.path.getsize('test.txt')), open('test.txt','r'))
+##		reactor.callLater(15, self.sendFile,'thefox@jabbim.sk/rohsypnol', '24.py', unicode(os.path.getsize('test.txt')), open('test.txt','r'))
 		self.on_authd()
 	def _pepSupport(self):
 		log.msg('pep support arrived')
@@ -1114,7 +1114,7 @@ class Client(derived):
 		factory = socks5.ClientFactory(self.ft_proxies[host][0], int(self.ft_proxies[host][1]),addr, 0,  f, xmpp = self, xmpp_sid = sid) 
 		d = reactor.connectTCP(self.ft_proxies[host][0], int(self.ft_proxies[host][1]), factory)
 		print (d)
-		reactor.callLater(5,self.ftActivate,host, sid, d, el['from'])
+		reactor.callLater(1,self.ftActivate,host, sid, d, el['from'])
 		
 	def ftActivate(self, jid, sid, conn, target):
 		iq = IQ(self.xmlstream, 'set')
