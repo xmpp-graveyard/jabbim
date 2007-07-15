@@ -335,29 +335,35 @@ class clientClass(pyxl.client.Client):
 
 	def on_DeleteContact(self,jid):
 		# delete contact from roster
+		log.msg("delete contact")
 		contact=self.roster['users'][jid]
 		items=contact.getUserItems()
-		for name,item in self.roster['groups'].iteritems():
-			for i in items:
-				parent=i.parent()
-				if item==parent:
-					parent.takeChild(parent.indexOfChild(i))
-					if parent.childCount()==0:
-						self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(parent))
-						del self.roster['groups'][unicode(parent.text(2))]
-					break
-		for name,item in self.metaParents.iteritems():
-			for i in items:
-				parent=i.parent()
-				if item==parent:
-					parent.takeChild(parent.indexOfChild(i))
-					if parent.childCount()==0:
-						group=parent.parent()
-						group.takeChild(group.indexOfChild(parent))
-						if group.childCount()==0:
-							self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(group))
-							del self.roster['groups'][unicode(group.text(2))]
-					break
+		
+		for item in items:
+			parent=item.parent()
+			parent.takeChild(parent.indexOfChild(item))
+
+		#for name,item in self.roster['groups'].iteritems():
+			#for i in items:
+				#parent=i.parent()
+				#if item==parent:
+					#parent.takeChild(parent.indexOfChild(i))
+					##if parent.childCount()==0:
+						##self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(parent))
+						##del self.roster['groups'][unicode(parent.text(2))]
+					#break
+		#for name,item in self.metaParents.iteritems():
+			#for i in items:
+				#parent=i.parent()
+				#if item==parent:
+					#parent.takeChild(parent.indexOfChild(i))
+					#if parent.childCount()==0:
+						#group=parent.parent()
+						#group.takeChild(group.indexOfChild(parent))
+						##if group.childCount()==0:
+							##self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(group))
+							##del self.roster['groups'][unicode(group.text(2))]
+					#break
 		self.main.ui.roster.refreshStats()
 
 	def on_subscribe(self, frm,status):
