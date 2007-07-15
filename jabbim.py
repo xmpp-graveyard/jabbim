@@ -152,9 +152,9 @@ class clientClass(pyxl.client.Client):
 							parent.takeChild(parent.indexOfChild(contact))
 						#self.roster['users'][jid].rosterItems.remove(item)
 				#self.main.ui.roster.cloneContact(self.metaParents[tag],self.roster['users'][jid].rosterItems[-1])
-		for i in len(toDelIndex):
+		for i in range(len(toDelIndex)):
 			jid=toDelJid[i]
-			index=toDelIndex[index]
+			index=toDelIndex[i]
 			del self.roster['users'][jid].rosterItems[index]
 
 			##If we had some others metacontacts
