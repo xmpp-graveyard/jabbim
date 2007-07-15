@@ -335,8 +335,10 @@ class clientClass(pyxl.client.Client):
 							self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(parent))
 						break
 		# delete all groups saved in toDel
-		#for i in range(len(toDelJid)):
-			#del self.roster['users'][toDelJid[i]].rosterItems[toDelIndex[i]]
+		for i in range(len(toDelJid)):
+			jid=toDelJid[i]
+			index=toDelIndex[i]
+			del self.roster['users'][jid].rosterItems[index]
 		#for name in toDel:
 			#del self.roster['groups'][name]
 
