@@ -1,4 +1,4 @@
-import sys, time, random, sha, os.path
+import sys, time, random, sha
 
 import socks5
 from twisted.python import log
@@ -16,9 +16,6 @@ from twisted.internet.protocol import Protocol, ClientFactory
 from derived import derived
 from contact import *
 from groupchat import  *
-
-from twisted.protocols.basic  import FileSender
-
 ##from storage import *
 ##class Log:
 ##	def msg(self, zprava):
@@ -67,11 +64,11 @@ class Client(derived):
 		self.caps_ext = None
 		self.discofeatures = {} # node: [feature1, feature2]
 		self.ft_proxies = {
-		'proxy.netlab.cz':["77.48.19.1", "7777"] 
-##		'proxy.jabber.org':['208.245.212.98', '7777'],
-##		'serafim.cd.chalmers.se' : ['serafim.cd.chalmers.se', '7777']
+		'proxy.netlab.cz':["77.48.19.1", "7777"] ,
+		'proxy.jabber.org':['208.245.212.98', '7777'],
+		'serafim.cd.chalmers.se' : ['serafim.cd.chalmers.se', '7777']
 		}
-		self.ft = {}
+		
 		self.last = 0
 		self.registerFeature('jabber:iq:version')
 		self.registerFeature('jabber:iq:last')
@@ -108,7 +105,7 @@ class Client(derived):
 			if self.caps_ext != None:
 				c['ext'] = self.caps_ext
 
-		log.msg('sending out presence to: ' + unicode(to))
+		log.msg('sending out presence to: ' + to)
 		self.on_xml(presence.toXml())
 		self.xmlstream.send(presence)
 
@@ -156,7 +153,7 @@ class Client(derived):
 ##		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
 ##		self.factory.addBootstrap("//event/stream/error", self._authfailed)
 		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
-		self.factory.addBootstrap("/*", self.logIt)
+##		self.factory.addBootstrap("/*", self.logIt)
 		self.connection=reactor.connectTCP(host,port,self.factory)
 
 	def _bind(self, el):
@@ -197,7 +194,7 @@ class Client(derived):
 #		self.registerPEP('sefator@jabber.se')
 #		self.getPrivacy()
 #		self.joinGC('jdev@conf.netlab.cz',  'Sefator')
-##		reactor.callLater(15, self.sendFile,'thefox@jabbim.sk/rohsypnol', '24.py', unicode(os.path.getsize('test.txt')), open('test.txt','r'))
+##		self.sendFile('public@disk.jabbim.cz', 'test.txt', '10010', None)
 		self.on_authd()
 	def _pepSupport(self):
 		log.msg('pep support arrived')
@@ -299,6 +296,7 @@ class Client(derived):
 							#rosterItems.append(self.main._addUser(itemjid,name,self.roster['groups'][group]))
 						
 					elif subscription != 'remove'  and self.roster['users'].has_key(itemjid):
+						print "update"
 						contact = self.roster['users'][itemjid]
 						contact.name = name
 						contact.groups = groups
@@ -479,11 +477,11 @@ class Client(derived):
 	def addContact(self, jid, msg, name='', groups=[]):
 		log.msg( 'add contact')
 		self.sendRosterUpdate(jid, name, 'none', groups)
-		self.sendPresence(to = jid, status = msg, typ = 'subscribe')
+		#self.sendPresence(to = jid, status = msg, typ = 'subscribe')
 
 	def delContact(self, jid):
 		self.sendRosterUpdate(jid, '', 'remove', [])
-		self.sendPresence(to = jid, typ = 'unsubscribe')
+		#self.sendPresence(to = jid, typ = 'unsubscribe')
 		if self.roster_meta.has_key(jid):
 			del self.roster_meta[jid]
 			self.setMetacontacts()
@@ -1049,15 +1047,12 @@ class Client(derived):
 
 	
 	def sendFile(self, jid, filename, size, fp):
-		log.msg('sending file to '+ jid + size)
 		iq = IQ(self.xmlstream, 'set')
 		iq['to'] = jid
 		sid = str(random.randint(1000, sys.maxint))
-		self.ft[sid] = fp
 		si = iq.addElement('si', 'http://jabber.org/protocol/si')
 		si['id'] = sid
 		si['profile'] = 'http://jabber.org/protocol/si/profile/file-transfer'
-		si['mime-type'] = 'text/plain'
 		file = si.addElement('file', 'http://jabber.org/protocol/si/profile/file-transfer')
 		file['name'] = filename
 		file['size'] = size
@@ -1072,18 +1067,8 @@ class Client(derived):
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._ftreplyReceived, sid)
-	def _ftstreamhostquery(self, el):
-		print 'proxy rika: ', el.toXml()
 	
 	def _ftreplyReceived(self, el, sid):
-		iq = IQ(self.xmlstream, 'get')
-		iq['to'] = 'proxy.netlab.cz'
-		q = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
-		self.on_xml(iq.toXml())
-		d = iq.send()
-		self.disp(iq['id'])
-		d.addCallback(self._ftstreamhostquery)
-		
 		print el.toXml()
 		iq = IQ(self.xmlstream, 'set')
 		iq['to'] = el['from']
@@ -1107,40 +1092,44 @@ class Client(derived):
 		streamhost = q.firstChildElement()
 		host = streamhost['jid']
 		addr = sha.new("%s%s%s" % (sid, self.jid.full(), el['from'])).hexdigest()
-		
 		f = ClientFactory()
-		f.protocol = socks5.Send
-
-		factory = socks5.ClientFactory(self.ft_proxies[host][0], int(self.ft_proxies[host][1]),addr, 0,  f, xmpp = self, xmpp_sid = sid) 
-		d = reactor.connectTCP(self.ft_proxies[host][0], int(self.ft_proxies[host][1]), factory)
+		f.protocol = FTTest
+		factory = socks5.ClientFactory(host, int(self.ft_proxies[host][1]), addr, 0, f, xmpp = self, xmpp_sid = sid) 
+		d = reactor.connectTCP(host, int(self.ft_proxies[host][1]), factory)
 		print (d)
-		reactor.callLater(1,self.ftActivate,host, sid, d, el['from'])
+		reactor.callLater(2,self.ftActivate,host, sid, factory)
 		
-	def ftActivate(self, jid, sid, conn, target):
-		iq = IQ(self.xmlstream, 'set')
+	def ftActivate(self, jid, sid, factory):
+		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid
 		q = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
 		q['sid'] = sid
-		q.addElement('activate', content = target)
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._ftactivated, conn, sid)
-		print iq.toXml()
+		d.addCallback(self._ftactivated, factory)
 	
-	def _ftactivated(self, el, conn, sid):
-		print el.toXml()
+	def _ftactivated(self, el, factory):
 		print 'prenasime'
-		print dir(conn), self.ft[sid]
-##		print dir(factory), factory, dir(factory.otherFactory.protocol.transport)
-##		factory.otherFactory.protocol.transport.write('uuuuuuuuuuuuuu')
-		fs = FileSender()
-		fs.beginFileTransfer(self.ft[sid],conn.transport )
+		print dir(factory), factory, dir(factory.otherFactory.protocol.transport)
+		factory.otherFactory.protocol.transport.write('uuuuuuuuuuuuuu')
+		
 	
 	def _ftreplyhostErrReceived(self, err):
-		print 'replyhost', err
+		print err
 	
 	def disp(self, id):
 		self.idlist.append(id)
 
+class FTTest(Protocol):
+	def connectionMade(self):
+		print 'jsme spojeni s proxy'
+		self.transport.write('uaaaaaaffffffffffffffffffdddddddddddddddddffffffffffffffwwwwwwwwwwwwweeeeeeeeeessssssssssddddddddddddwwwwwwwwwwwddddddddddddddddddddddddwwwwaaaaaaaaaaaaaaa')
+		print dir(self.factory)
 
+
+	def connectionLost(self, reason):
+		print 'ztrata spojeni : ', reason
+	
+	def dataReceived(self, data):
+		print 'neco nam prislo'

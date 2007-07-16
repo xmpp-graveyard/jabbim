@@ -46,7 +46,7 @@ class delegate(QtGui.QItemDelegate):
 			painter.save()
 			painter.translate(option.rect.topLeft())
 			if index.column()==3:
-				icon.paint(painter,0,2,32,32)
+				icon.paint(painter,0,0,32,32)
 			else:
 				icon.paint(painter,0,5,22,22)
 			painter.restore()
@@ -708,6 +708,7 @@ class rosterWidget(QtGui.QTreeWidget):
 ##			print "delete_action"
 			## delete contact from roster
 			## get contact jid
+			print "delete contact CLICKED"
 			jid=action.data()
 			jid=str(jid.toString())
 			self.main.client.delContact(jid)

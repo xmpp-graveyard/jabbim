@@ -40,7 +40,7 @@ import urllib
 class clientClass(pyxl.client.Client):
 
 	def on_init(self):
-		self.roster['groups']['Unknown']=self.main.ui.roster.addGroup('Unknown')
+		self.roster['groups']['Unknown']=self.main._addGroup('Unknown')
 		self.temp_hosts=[]
 		
 	def on_discoInfoReceived(self, jid, node):
@@ -601,7 +601,13 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.tray,QtCore.SIGNAL("activated (QSystemTrayIcon::ActivationReason)"),self.trayActivated)
 		self.tray.setContextMenu(menu)
 		self.tray.show()
-
+		w=self.config['windowGeometry'][2]
+		h=self.config['windowGeometry'][3]
+		print w,type(w)
+		if w=='None' or h=='None':
+			self.move(int(self.config['windowGeometry'][0]),int(self.config['windowGeometry'][1]))
+		else:
+			self.setGeometry(int(self.config['windowGeometry'][0]),int(self.config['windowGeometry'][1]),int(w),int(h))
 
 	#def addInfoSubscribe(self):
 		#widget=subscribeWidget(self.ui.infoDockWidget)
@@ -612,8 +618,29 @@ class mainWindow(QtGui.QMainWindow):
 		#QtGui.QMainWindow(self).resizeEvent(event)
 		#self.setUpdatesEnabled(True)
 
+	def closeEvent(self,event):
+		self.hide()
+		event.ignore()
+
 	def trayQuit(self):
 		# turn off jabbim
+		if str(self.config["saveGeometry"])=="True":
+			rect=self.geometry()
+			x=int(rect.x())
+			y=int(rect.y())
+			width=int(rect.width())
+			height=int(rect.height())
+			self.config["windowGeometry"]=[x,y,width,height]
+			self.config.write()
+		if str(self.config['saveExpandedGroups'])=='True':
+			expanded=[]
+			for name,item in self.client.roster['groups'].iteritems():
+				index=self.ui.roster.indexFromItem(item,0)
+				if self.ui.roster.isExpanded(index)==True:
+					expanded.append(name)
+			self.config['expandedGroups']=expanded
+			self.config.write()
+
 		self.tray.hide()
 		app.closeAllWindows()
 		self.disconnect()
@@ -892,7 +919,11 @@ class mainWindow(QtGui.QMainWindow):
 		self.client.roster['users'][jid].setAvatar(file, hash)
 	
 	def _addGroup(self, group):
-		return self.ui.roster.addGroup(unicode(group))
+		item=self.ui.roster.addGroup(unicode(group))
+		if group in self.config['expandedGroups']:
+			index=self.ui.roster.indexFromItem(item,0)
+			self.ui.roster.expand(index)
+		return item
 	
 	def _addUser(self, itemjid, name, grp):
 		return self.ui.roster.addUser(itemjid,name,grp)

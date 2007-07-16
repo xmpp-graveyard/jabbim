@@ -17,7 +17,13 @@ class preferencesWindow(QtGui.QDialog):
 		self.ui=Ui_preferences()
 		self.ui.setupUi(self)
 		self.ui.stackedWidget.setCurrentIndex(page)
-		
+
+		# Jabbim
+		if self.main.config['saveGeometry']=='True':
+			self.ui.savePosition.setChecked(True)
+		else:
+			self.ui.savePosition.setChecked(False)
+
 		# connection
 		self.ui.connection_password.setText(self.main.config['passwd'])
 		self.ui.connection_jid.setText(self.main.config['jid'])
@@ -94,6 +100,7 @@ class preferencesWindow(QtGui.QDialog):
 		password=unicode(self.ui.connection_password.text())
 		self.main.skin=ConfigObj("skins/"+unicode(self.ui.chatSkin_list.currentText()),encoding='UTF8')
 		self.main.config['passwd']=password
+		self.main.config['saveGeometry']=str(self.ui.savePosition.isChecked())
 		self.main.config['chat_skin']=unicode(self.ui.chatSkin_list.currentText())
 		self.main.config['jid']=jid
 		#self.main.config['rosterIconSize']=unicode(self.ui.roster_iconSize.currentText())

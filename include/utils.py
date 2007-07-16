@@ -25,9 +25,13 @@ def loadConfig(main):
 			"savePasswd":"",
 			"rosterIconSize":"16x16",
 			"chat_skin":"default.conf",
-			"theme":"template", 
+			"theme":"template",
 			"log":"true",
-			"logfile":"jabbim.log"
+			"logfile":"jabbim.log",
+			"windowGeometry":[0,0,None,None],
+			"saveGeometry":True,
+			"saveExpandedGroups":True,
+			"expandedGroups":[]
 			}
 	main.config=ConfigObj(main.homeDir+'/.jabbim/config',encoding='UTF8')
 	if len(main.config)==0:
