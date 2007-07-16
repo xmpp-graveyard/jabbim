@@ -485,13 +485,13 @@ class Client(derived):
 		self.sendPresence(to = jid, status = msg, typ = 'subscribe')
 
 	def delContact(self, jid):
-		if self.roster['users']['jid'].subscription != 'both':
+		if self.roster['users'][jid].subscription != 'both':
 			self.sendRosterUpdate(jid, '', 'remove', [])
 		else:
 			self.sendPresence(to = jid, typ = 'unsubscribe')
-		if self.roster_meta.has_key(jid):
-			del self.roster_meta[jid]
-			self.setMetacontacts()
+			if self.roster_meta.has_key(jid):
+				del self.roster_meta[jid]
+				self.setMetacontacts()
 
 	def onXML(self, el):
 		if el.hasAttribute('id') and el.name == 'iq':

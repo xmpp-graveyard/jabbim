@@ -344,6 +344,9 @@ class clientClass(pyxl.client.Client):
 			#del self.roster['groups'][name]
 
 	def on_unsubscribe(self,jid):
+		self.on_DeleteContact(jid)
+
+	def on_DeleteContact(self,jid):
 		# delete contact from roster
 		log.msg("delete contact")
 		contact=self.roster['users'][jid]
