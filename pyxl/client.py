@@ -586,7 +586,7 @@ class Client(derived):
 				for elm in xbody.elements():
 					xbdy = xbdy + elm.toXml()
 				log.msg(xbdy)
-				xhtml = xbody.toXml()
+				xhtml = xbdy
 			if child.name in ['active',  'inactive',  'composing',  'paused',  'gone']:
 				chatstate = child.name
 			if child.name == 'delay':
