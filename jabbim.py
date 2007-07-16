@@ -345,13 +345,12 @@ class clientClass(pyxl.client.Client):
 	def on_DeleteContact(self,jid):
 		# delete contact from roster
 		log.msg("delete contact")
-		#contact=self.roster['users'][jid]
-		#items=contact.getUserItems()
-		#log.msg(items)
-		#for item in items:
-			#log.msg("DELETE ITEM:"+unicode(item.text(1)))
-			#parent=item.parent()
-			#parent.takeChild(parent.indexOfChild(item))
+		contact=self.roster['users'][jid]
+		items=contact.getUserItems()
+		for item in items:
+			log.msg("DELETE ITEM:"+unicode(item.text(1)))
+			parent=item.parent()
+			parent.takeChild(parent.indexOfChild(item))
 
 		#for name,item in self.roster['groups'].iteritems():
 			#for i in items:
@@ -374,7 +373,7 @@ class clientClass(pyxl.client.Client):
 							##self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(group))
 							##del self.roster['groups'][unicode(group.text(2))]
 					#break
-		#self.main.ui.roster.refreshStats()
+		self.main.ui.roster.refreshStats()
 
 	def on_subscribe(self, frm,status):
 		#self.ui.infoDockWidget.show()
@@ -607,6 +606,11 @@ class mainWindow(QtGui.QMainWindow):
 	#def addInfoSubscribe(self):
 		#widget=subscribeWidget(self.ui.infoDockWidget)
 		#self.ui.infoLayout.addWidget(widget)
+
+	#def resizeEvent (self,event):
+		#self.setUpdatesEnabled(False)
+		#QtGui.QMainWindow(self).resizeEvent(event)
+		#self.setUpdatesEnabled(True)
 
 	def trayQuit(self):
 		# turn off jabbim
