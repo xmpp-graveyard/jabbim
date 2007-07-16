@@ -65,12 +65,12 @@ class clientClass(pyxl.client.Client):
 		jid=contact.jid
 		print log.msg("JID: "+jid+" "+contact.subscription)
 		# get host info
-		if len(unicode(jid).rsplit("@"))!=1:
-			host=unicode(jid).rsplit("@")[1]
-			if not self.disco.has_key(host) and not host in self.temp_hosts:
-				#self.main.getUserType(host)
-				self.temp_hosts.append(host)
-				self.getDiscoInfo(host)
+		#if len(unicode(jid).rsplit("@"))!=1:
+			#host=unicode(jid).rsplit("@")[1]
+			#if not self.disco.has_key(host) and not host in self.temp_hosts:
+				##self.main.getUserType(host)
+				#self.temp_hosts.append(host)
+				#self.getDiscoInfo(host)
 
 		# user is not in any group
 		if len(groups)==0:
