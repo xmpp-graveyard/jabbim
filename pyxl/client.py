@@ -1,4 +1,4 @@
-import sys, time, random, sha, os.path
+import sys, time, random, sha
 
 import socks5
 from twisted.python import log
@@ -17,7 +17,7 @@ from derived import derived
 from contact import *
 from groupchat import  *
 
-from twisted.protocols.basic  import FileSender
+
 
 ##from storage import *
 ##class Log:
@@ -197,7 +197,7 @@ class Client(derived):
 #		self.registerPEP('sefator@jabber.se')
 #		self.getPrivacy()
 #		self.joinGC('jdev@conf.netlab.cz',  'Sefator')
-		reactor.callLater(15, self.sendFile,'public@disk.jabbim.cz/jdisk', '28.py', unicode(os.path.getsize('test.txt')), open('test.txt','r'))
+##		reactor.callLater(15, self.sendFile,'public@disk.jabbim.cz/jdisk', '30.py', 'jabb.log')
 		self.on_authd()
 	def _pepSupport(self):
 		log.msg('pep support arrived')
@@ -258,6 +258,7 @@ class Client(derived):
 	def onRosterAdd(self,el):
 		log.msg("roster item add")
 		self.disp(el['id'])
+		log.msg(el.toXml())
 		for child in el.elements():
 			if child.name == "query":
 				allGroups=[]
@@ -285,7 +286,8 @@ class Client(derived):
 						log.msg('deleting contact')
 						self.on_DeleteContact(itemjid)
 						del self.roster['users'][itemjid]
-					elif not self.roster['users'].has_key(itemjid):
+					elif not self.roster['users'].has_key(itemjid) and subscription != 'remove':
+						log.msg(subscription)
 						rosterItems=[]
 						#if len(groups)==0:
 							# add user item to Unknown group
@@ -312,6 +314,7 @@ class Client(derived):
 		self.xmlstream.send(iq)
 
 	def sendRosterUpdate(self, jid, name, subscription, groups):
+		print jid, name, subscription, groups
 		iq = Element((None, 'iq'))
 		iq.addUniqueId()
 		iq['from'] = self.jid.full()
@@ -483,7 +486,7 @@ class Client(derived):
 
 	def delContact(self, jid):
 ##		self.sendRosterUpdate(jid, '', 'remove', [])
-		self.sendPresence(to = jid, typ = 'unsubscribe')
+##		self.sendPresence(to = jid, typ = 'unsubscribe')
 		if self.roster_meta.has_key(jid):
 			del self.roster_meta[jid]
 			self.setMetacontacts()
@@ -1053,19 +1056,21 @@ class Client(derived):
 		log.msg( 'left MUC: '+ jid)
 
 	
-	def sendFile(self, jid, filename, size, fp):
+	def sendFile(self, jid, filename, fp):
+		sid = str(random.randint(1000, sys.maxint))
+		self.ft[sid] = socks5.FT(self, sid, filename, jid, fp, None)
+		self.ft[sid].start = time.time()
 		log.msg('sending file to '+ jid)
 		iq = IQ(self.xmlstream, 'set')
 		iq['to'] = jid
-		sid = str(random.randint(1000, sys.maxint))
-		self.ft[sid] = fp
+		
 		si = iq.addElement('si', 'http://jabber.org/protocol/si')
 		si['id'] = sid
 		si['profile'] = 'http://jabber.org/protocol/si/profile/file-transfer'
 		si['mime-type'] = 'text/plain'
 		file = si.addElement('file', 'http://jabber.org/protocol/si/profile/file-transfer')
 		file['name'] = filename
-		file['size'] = size
+		file['size'] = unicode(self.ft[sid].size)
 		feature = si.addElement('feature', 'http://jabber.org/protocol/feature-neg')
 		x = feature.addElement('x', 'jabber:x:data')
 		x['type'] = 'form'
@@ -1111,6 +1116,8 @@ class Client(derived):
 		q = el.firstChildElement()
 		streamhost = q.firstChildElement()
 		host = streamhost['jid']
+		self.ft[sid].streamhost = host
+		self.ft[sid].medium = time.time()
 		addr = sha.new("%s%s%s" % (sid, self.jid.full(), el['from'])).hexdigest()
 		
 		f = ClientFactory()
@@ -1118,8 +1125,8 @@ class Client(derived):
 
 		factory = socks5.ClientFactory(self.ft_proxies[host][0], int(self.ft_proxies[host][1]),addr, 0,  f, xmpp = self, xmpp_sid = sid) 
 		d = reactor.connectTCP(self.ft_proxies[host][0], int(self.ft_proxies[host][1]), factory)
-		print (d)
-		reactor.callLater(1,self.ftActivate,host, sid, d, el['from'])
+##		print (d)
+##		reactor.callLater(1,self.ftActivate,host, sid, d, el['from'])
 		
 	def ftActivate(self, jid, sid, conn, target):
 		iq = IQ(self.xmlstream, 'set')
@@ -1136,14 +1143,20 @@ class Client(derived):
 	def _ftactivated(self, el, conn, sid):
 		print el.toXml()
 		print 'prenasime'
-		print dir(conn), self.ft[sid], dir(conn.factory.otherFactory) 
+		print dir(conn), self.ft[sid], dir(conn.transport.protocol) 
+
 ##		print dir(factory), factory, dir(factory.otherFactory.protocol.transport)
 ##		factory.otherFactory.protocol.transport.write('uuuuuuuuuuuuuu')
-		FileSender().beginFileTransfer(self.ft[sid],conn.factory.buildProtocol(address.IPv4Address('tcp', conn.host, conn.port)))
+##		FileSender().beginFileTransfer(self.ft[sid],conn.factory.buildProtocol(address.IPv4Address('tcp', conn.host, conn.port)))
+		FileSender().beginFileTransfer(self.ft[sid],conn.transport.protocol.otherProtocol)
 	
 	def _ftreplyhostErrReceived(self, err):
 		print 'replyhost', err
-	
+	def ftStart(self, sid, protocol):
+		if self.ft.has_key(sid):
+			self.ft[sid].ftstart = time.time()
+			self.ft[sid].protocol = protocol
+			self.ft[sid].activate()
 	def disp(self, id):
 		self.idlist.append(id)
 
