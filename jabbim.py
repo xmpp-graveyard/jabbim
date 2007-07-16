@@ -37,6 +37,8 @@ from configobj import ConfigObj
 from include import utils
 import urllib
 
+mutex=QtCore.QMutex()
+
 class clientClass(pyxl.client.Client):
 
 	def on_init(self):
@@ -59,6 +61,7 @@ class clientClass(pyxl.client.Client):
 				self.main.hosts[jid]=typ
 
 	def on_rosterAddUser(self, contact):
+		locker=QtCore.QMutexLocker(mutex)
 		# add user to the roster
 		groups=contact.groups
 		name=contact.name
