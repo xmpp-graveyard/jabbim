@@ -9,7 +9,7 @@ from twisted.words.protocols import jabber
 from twisted.words.protocols.jabber import client,jid
 from twisted.words.xish import domish
 from twisted.words.xish.domish import Element
-from twisted.internet import reactor
+from twisted.internet import reactor, address
 from twisted.words.protocols.jabber.xmlstream import IQ
 from twisted.internet.protocol import Protocol, ClientFactory
 
@@ -197,7 +197,7 @@ class Client(derived):
 #		self.registerPEP('sefator@jabber.se')
 #		self.getPrivacy()
 #		self.joinGC('jdev@conf.netlab.cz',  'Sefator')
-##		reactor.callLater(15, self.sendFile,'thefox@jabbim.sk/rohsypnol', '24.py', unicode(os.path.getsize('test.txt')), open('test.txt','r'))
+		reactor.callLater(15, self.sendFile,'public@disk.jabbim.cz/jdisk', '28.py', unicode(os.path.getsize('test.txt')), open('test.txt','r'))
 		self.on_authd()
 	def _pepSupport(self):
 		log.msg('pep support arrived')
@@ -615,6 +615,7 @@ class Client(derived):
 
 	def onUnSubscribed(self, el):
 		log.msg( 'on unsubscribed')
+		self.sendRosterUpdate(jid, '', 'remove', [])
 		self.on_unsubscribed(el['from'])	
 
 	
@@ -1053,7 +1054,7 @@ class Client(derived):
 
 	
 	def sendFile(self, jid, filename, size, fp):
-		log.msg('sending file to '+ jid + size)
+		log.msg('sending file to '+ jid)
 		iq = IQ(self.xmlstream, 'set')
 		iq['to'] = jid
 		sid = str(random.randint(1000, sys.maxint))
@@ -1135,11 +1136,10 @@ class Client(derived):
 	def _ftactivated(self, el, conn, sid):
 		print el.toXml()
 		print 'prenasime'
-		print dir(conn), self.ft[sid]
+		print dir(conn), self.ft[sid], dir(conn.factory.otherFactory) 
 ##		print dir(factory), factory, dir(factory.otherFactory.protocol.transport)
 ##		factory.otherFactory.protocol.transport.write('uuuuuuuuuuuuuu')
-		fs = FileSender()
-		fs.beginFileTransfer(self.ft[sid],conn.transport )
+		FileSender().beginFileTransfer(self.ft[sid],conn.factory.buildProtocol(address.IPv4Address('tcp', conn.host, conn.port)))
 	
 	def _ftreplyhostErrReceived(self, err):
 		print 'replyhost', err

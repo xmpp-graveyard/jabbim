@@ -414,6 +414,7 @@ class Send(protocol.Protocol):
 	implements(interfaces.IConsumer)
 	
 	def registerProducer(self, producer, streaming):
+		print self, producer, streaming
 		return self.transport.registerProducer(producer, streaming)
 	
 	def unregisterProducer(self):
@@ -422,7 +423,7 @@ class Send(protocol.Protocol):
 
 	def write(self, data):
 		if self.isConnected:
-			print data
+			print 'prenasim: ', data
 			return self.transport.write(data)
 		raise Exception("Crap damn crap damn crap damn")
 
