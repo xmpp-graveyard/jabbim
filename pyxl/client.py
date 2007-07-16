@@ -576,8 +576,9 @@ class Client(derived):
 			if child.name == "subject":
 				subject = unicode(child)
 			if child.name == 'html':
-				body = child.children[0]
-				xhtml = body.toXml()
+				bdy = child.firstChildElement()
+##				log.msg(bdy.toXml())
+				xhtml = bdy.toXml()
 			if child.name in ['active',  'inactive',  'composing',  'paused',  'gone']:
 				chatstate = child.name
 			if child.name == 'delay':
