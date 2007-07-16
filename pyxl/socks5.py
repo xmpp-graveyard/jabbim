@@ -422,6 +422,7 @@ class Send(protocol.Protocol):
 
 	def write(self, data):
 		if self.isConnected:
+			print data
 			return self.transport.write(data)
 		raise Exception("Crap damn crap damn crap damn")
 
