@@ -485,8 +485,10 @@ class Client(derived):
 		self.sendPresence(to = jid, status = msg, typ = 'subscribe')
 
 	def delContact(self, jid):
-##		self.sendRosterUpdate(jid, '', 'remove', [])
-##		self.sendPresence(to = jid, typ = 'unsubscribe')
+		if self.roster['users']['jid'].subscription != 'both':
+			self.sendRosterUpdate(jid, '', 'remove', [])
+		else:
+			self.sendPresence(to = jid, typ = 'unsubscribe')
 		if self.roster_meta.has_key(jid):
 			del self.roster_meta[jid]
 			self.setMetacontacts()
