@@ -85,7 +85,7 @@ class clientClass(pyxl.client.Client):
 		else:
 			for group in groups:
 				# add user item to the group
-				self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups'][unicode(group)],first=True))
+				#self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups'][unicode(group)],first=True))
 				log.msg(jid+" ADDED")
 		# show avatar if he has him
 		log.msg("GETTING AVATAR")
