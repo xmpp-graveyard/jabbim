@@ -313,10 +313,9 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 
-	def sendRosterUpdate(self, jid, name, subscription, groups):
+	def sendRosterUpdate(self, jid, name, subscription, groups, callback=None, params=None):
 		print jid, name, subscription, groups
-		iq = Element((None, 'iq'))
-		iq.addUniqueId()
+		iq = IQ(self.xmlstream, 'get')
 		iq['from'] = self.jid.full()
 		iq['type'] = 'set'
 		q = iq.addElement('query')
@@ -328,8 +327,14 @@ class Client(derived):
 		for group in groups:
 			item.addElement('group', content = group)
 		self.disp(iq['id'])
+		d = iq.send()
 		self.on_xml(iq.toXml())
-		self.xmlstream.send(iq)
+		d.addCallback(self._rosterUpdateDone, callback, params)
+		
+	def _rosterUpdateDone(self, el, callback, params):
+		if callback != None:
+			callback(params)
+
 
 	def getVCard(self, jid):
 		log.msg( 'requesting vcard for ' + unicode(jid))
@@ -481,17 +486,19 @@ class Client(derived):
 
 	def addContact(self, jid, msg, name='', groups=[]):
 		log.msg( 'add contact')
-##		self.sendRosterUpdate(jid, name, 'none', groups)
-		self.sendPresence(to = jid, status = msg, typ = 'subscribe')
+		self.sendRosterUpdate(jid, name, 'none', groups, self._contactAdded, params = {'msg':msg, 'jid':jid})
+	
+	def _contactAdded(self, params):
+		self.sendPresence(to = params['jid'], status = params['msg'], typ = 'subscribe')
 
 	def delContact(self, jid):
-		if self.roster['users'][jid].subscription != 'both':
-			self.sendRosterUpdate(jid, '', 'remove', [])
-		else:
-			self.sendPresence(to = jid, typ = 'unsubscribe')
-			if self.roster_meta.has_key(jid):
-				del self.roster_meta[jid]
-				self.setMetacontacts()
+##		if self.roster['users'][jid].subscription != 'both':
+		self.sendRosterUpdate(jid, '', 'remove', [])
+##		else:
+##			self.sendPresence(to = jid, typ = 'unsubscribe')
+		if self.roster_meta.has_key(jid):
+			del self.roster_meta[jid]
+			self.setMetacontacts()
 
 	def onXML(self, el):
 		if el.hasAttribute('id') and el.name == 'iq':
@@ -620,7 +627,7 @@ class Client(derived):
 
 	def onUnSubscribed(self, el):
 		log.msg( 'on unsubscribed')
-		self.sendRosterUpdate(jid, '', 'remove', [])
+##		self.sendRosterUpdate(jid, '', 'remove', [])
 		self.on_unsubscribed(el['from'])	
 
 	
