@@ -63,7 +63,7 @@ class clientClass(pyxl.client.Client):
 		groups=contact.groups
 		name=contact.name
 		jid=contact.jid
-		
+		print log.msg("JID: "+jid+" "+contact.subscription)
 		# get host info
 		if len(unicode(jid).rsplit("@"))!=1:
 			host=unicode(jid).rsplit("@")[1]
@@ -229,6 +229,7 @@ class clientClass(pyxl.client.Client):
 					break
 
 	def on_presence(self,jid,show,first=False):
+		log.msg("PRESENCE")
 		if show=="offline":
 			jid=jid.full() # get jid
 			# presence has resource
@@ -282,7 +283,7 @@ class clientClass(pyxl.client.Client):
 		# go through all groups
 		for name,item in self.roster['groups'].iteritems():
 			# updated contact has to be in this group
-			if name in contact.groups:
+			if name in self.roster['users'][jid].groups:
 				add=True
 				# go through all user items, find item in this group and edit it
 				for i in items:
@@ -301,9 +302,9 @@ class clientClass(pyxl.client.Client):
 				# we didn't find item
 				if add:
 					# we have some item to clone (so we can't create new one)
-					if len(contact.getUserItems())!=0:
-						i=contact.getUserItems()[0].clone() # clone contact item
-						contact.rosterItems.append(i)
+					if len(items)!=0:
+						i=items[0].clone() # clone contact item
+						self.roster['users'][jid].rosterItems.append(i)
 						# don't know, if we need this code now, so keep coomented...
 						#for x in range(int(i.childCount())):
 							#child=i.child(x)
@@ -314,12 +315,12 @@ class clientClass(pyxl.client.Client):
 							#if typ=="meta":
 								#self.roster['users'][data].rosterItems.append(child)
 						self.roster['groups'][name].addChild(i) # add item to the new group
-						self.main.ui.roster.setStatus(contact.jid,None,i)
+						self.main.ui.roster.setStatus(jid,None,i)
 					else:
 						# add new contact to the roster
-						contact.rosterItems.append(self.main.ui.roster.addUser(contact.jid,contact.name,self.roster['groups'][name]))
+						self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(contact.jid,contact.name,self.roster['groups'][name]))
 						self.main.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
-						self.main.ui.roster.setStatus(contact.jid,None)
+						self.main.ui.roster.setStatus(jid,None)
 						self.main.ui.roster.refreshStats()
 			else:
 				# user is not in this group, so we have to delete them from this group, if he is there
@@ -342,7 +343,7 @@ class clientClass(pyxl.client.Client):
 		#for name in toDel:
 			#del self.roster['groups'][name]
 
-	def on_DeleteContact(self,jid):
+	def on_unsubscribe(self,jid):
 		# delete contact from roster
 		log.msg("delete contact")
 		contact=self.roster['users'][jid]
@@ -440,7 +441,10 @@ class clientClass(pyxl.client.Client):
 			icon=self.main.getIcon(status="offline",size="16x16")
 			user=frm
 		# strip html tags and \n from messages
-		message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
+		if xhtml==None:
+			message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
+		else:
+			message=xhtml
 		message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user)).replace("[message]",message)
 		# find tab
 		tab=None
