@@ -83,7 +83,9 @@ class clientClass(pyxl.client.Client):
 				self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups'][group],first=True))
 				log.msg(jid+" "+unicode(groups)+" "+unicode(self.roster['groups'][group].text(0)))
 		# show avatar if he have him
+		log.msg("GETTING AVATAR")
 		self.main.cache.get_avatar(jid, self.main._loadAvatar)
+		log.msg("ROSTER ADD USER END")
 
 	def on_discoItemsBookmarksReceived(self, jid):
 		# make user list for bookmarked groupchat
