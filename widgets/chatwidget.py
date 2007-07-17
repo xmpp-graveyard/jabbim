@@ -146,7 +146,7 @@ class chatWidget(QtGui.QWidget):
 			c=parseString(b[0].toxml())
 			text=gatherTextNodes(c)
 
-			self.main.client.sendMessage(str(self.jid),text)
+			self.main.client.sendMessage(str(self.jid),unicode(text, 'utf-8'))
 			for word in text.split(' '):
 				if word.find("http://")!=-1:
 					print word,'<a href="'+word+'">'+word+'</a>'
