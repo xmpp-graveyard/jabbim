@@ -222,6 +222,7 @@ class groupChatWidget(QtGui.QWidget):
 
 			self.main.client.sendMessage(self.jid, unicode(text, 'utf-8'), 'groupchat')
 			self.ui.line.clear()
+			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 			#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)
 
 	def tabPressed(self):

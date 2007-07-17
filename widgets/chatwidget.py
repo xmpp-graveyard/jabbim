@@ -149,12 +149,11 @@ class chatWidget(QtGui.QWidget):
 			self.main.client.sendMessage(str(self.jid),unicode(text, 'utf-8'))
 			for word in text.split(' '):
 				if word.find("http://")!=-1:
-					print word,'<a href="'+word+'">'+word+'</a>'
 					text=text.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
-			message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",self.main.client.jid.user).replace("[message]",text)
+			message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",unicode(text,"utf-8"))
 			self.textEditWrite(message)
 			self.ui.line.clear()
-
+			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def tabPressed(self):
 		# nick completion
