@@ -196,9 +196,10 @@ class QTReactor(posixbase.PosixReactorBase):
 
 
 def install(app=None):
-    """Configure the twisted mainloop to be run inside the qt mainloop.
-    """
-    from twisted.internet import main
-
-    reactor = QTReactor(app=app)
-    main.installReactor(reactor)
+	"""Configure the twisted mainloop to be run inside the qt mainloop.
+	"""
+	from twisted.internet import main
+	
+	reactor = QTReactor(app=app)
+	main.installReactor(reactor)
+	return reactor

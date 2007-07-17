@@ -20,9 +20,9 @@ import sys,os
 try: from PyQt4 import QtCore, QtGui
 except: print "PyQt4 is not installed."
 from twisted.python import log
-import qt4reactor as reactor
+import qt4reactor as qtreactor
 app = QtGui.QApplication(sys.argv)
-reactor.install(app)
+qtreactor.install(app)
 import time
 
 import hashlib,base64
