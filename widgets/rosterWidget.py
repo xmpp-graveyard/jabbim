@@ -144,7 +144,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.headerItem().setText(1,QtGui.QApplication.translate("roster", "id", None, QtGui.QApplication.UnicodeUTF8))
 		self.headerItem().setText(2,QtGui.QApplication.translate("roster", "name", None, QtGui.QApplication.UnicodeUTF8))
 		self.headerItem().setText(3,QtGui.QApplication.translate("roster", "", None, QtGui.QApplication.UnicodeUTF8))
-		self.headerItem().setText(4,QtGui.QApplication.translate("roster", "", None, QtGui.QApplication.UnicodeUTF8))
+		self.headerItem().setText(4,QtGui.QApplication.translate("roster", "test", None, QtGui.QApplication.UnicodeUTF8))
 		self.hideColumn(1)
 		self.hideColumn(2)
 		self.hideColumn(4)
@@ -206,6 +206,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(0,unicode(name))
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
+		item.setText(4,unicode(jid))
 		item.setData(32,0,QtCore.QVariant([unicode(jid),unicode("meta")]))
 		if offline!=False:
 			self.setItemHidden(item, True)
@@ -457,10 +458,20 @@ class rosterWidget(QtGui.QTreeWidget):
 		# set mimetypes, which we accept
 		return QtCore.QStringList("text/plain")
 
+	def getGroupItem(self,name):
+		items=self.findItems(name, QtCore.Qt.MatchFixedString,2)
+		if len(items)==1:
+			return items[0]
+		return None
+
 	def getUserItems(self,jid):
-		if not self.main.client.roster['users'].has_key(jid):
-			return []
-		return self.main.client.roster['users'][jid].getUserItems()
+		items=self.findItems(unicode(jid), QtCore.Qt.MatchFixedString|QtCore.Qt.MatchRecursive,4)
+		if len(items)!=0:
+			return items
+		return []
+		#if not self.main.client.roster['users'].has_key(jid):
+			#return []
+		#return self.main.client.roster['users'][jid].getUserItems()
 
 	def getResourceItems(self,jid):
 		if not self.main.client.roster['users'].has_key(jid):
@@ -552,6 +563,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		parent.setText(0,item.text(0))
 		parent.setText(1,item.text(1))
 		parent.setText(2,item.text(2))
+		parent.setText(4,item.text(4))
 		parent.setData(32,0,QtCore.QVariant([unicode(jid),unicode("metaparent")]))
 		#parent.setData(32,0,item.data(32,0))
 		parent.setData(32,4,item.data(32,4))
@@ -614,6 +626,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(0,unicode(name))
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
+		item.setText(4,unicode(jid))
 		item.setData(32,0,QtCore.QVariant([unicode(jid),unicode("contact")]))
 		item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize']),status=self.main.icons["9"]))
 		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)

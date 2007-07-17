@@ -67,30 +67,24 @@ class clientClass(pyxl.client.Client):
 		name=unicode(contact.name)
 		jid=unicode(contact.jid)
 		log.msg("JID: "+jid+" "+contact.subscription)
-		log.msg(unicode(groups))
-		log.msg(unicode(self.roster['groups']))
 		# get host info
-		#if len(unicode(jid).rsplit("@"))!=1:
-			#host=unicode(jid).rsplit("@")[1]
-			#if not self.disco.has_key(host) and not host in self.temp_hosts:
-				##self.main.getUserType(host)
-				#self.temp_hosts.append(host)
-				#self.getDiscoInfo(host)
+		if len(unicode(jid).rsplit("@"))!=1:
+			host=unicode(jid).rsplit("@")[1]
+			if not self.disco.has_key(host) and not host in self.temp_hosts:
+				#self.main.getUserType(host)
+				self.temp_hosts.append(host)
+				self.getDiscoInfo(host)
 
 		# user is not in any group
 		if len(groups)==0:
 			#add user item to Unknown group
-			self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(jid,name,self.roster['groups']['Unknown'],first=True))
-			log.msg(jid+" "+unicode(groups)+" "+unicode(self.roster['groups']['Unknown'].text(0)))
+			self.main.ui.roster.addUser(jid,name,self.roster['groups']['Unknown'],first=True)
 		else:
 			for group in groups:
 				# add user item to the group
 				self.main.ui.roster.addUser(jid,name,self.roster['groups'][unicode(group)],first=True)
-				log.msg(jid+" ADDED")
 		# show avatar if he has him
-		log.msg("GETTING AVATAR")
 		self.main.cache.get_avatar(jid, self.main._loadAvatar)
-		log.msg("ROSTER ADD USER END")
 
 	def on_discoItemsBookmarksReceived(self, jid):
 		# make user list for bookmarked groupchat
@@ -111,7 +105,7 @@ class clientClass(pyxl.client.Client):
 		#self.setMetacontacts()
 
 		# hide Unknown group, if has not users
-		if int(self.roster['groups']['Unknown'].childCount())==0:
+		if int(self.main.ui.roster.getGroupItem("Unknown").childCount())==0:
 			self.main.ui.roster.setItemHidden(self.roster['groups']['Unknown'],True)
 
 		self.metaParents={}
@@ -145,26 +139,26 @@ class clientClass(pyxl.client.Client):
 					highest.append(jid)
 
 			if mainJid!=None:
-				self.metaParents[tag]=self.main.ui.roster.addMetaParent(tag,self.roster['users'][mainJid].rosterItems[0].parent(),True)
+				self.metaParents[tag]=self.main.ui.roster.addMetaParent(tag,self.main.ui.roster.getUserItems(mainJid)[0].parent(),True)
 				for value in jids:
 					jid=value[0]
 					order=int(value[1])
 
-					self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addMetaContact(jid,self.roster['users'][jid].name,self.metaParents[tag],True))
-					for contact in self.roster['users'][jid].rosterItems:
+					self.main.ui.roster.addMetaContact(jid,self.roster['users'][jid].name,self.metaParents[tag],True)
+					for contact in self.main.ui.roster.getUserItems(jid):
 						contactData=contact.data(32,0)
 						contactData=contactData.toList()
 						if unicode(contactData[1].toString())=="contact":
-							toDelJid.append(jid)
-							toDelIndex.append(self.roster['users'][jid].rosterItems.index(contact))
+							#toDelJid.append(jid)
+							#toDelIndex.append(self.roster['users'][jid].rosterItems.index(contact))
 							parent=contact.parent()
 							parent.takeChild(parent.indexOfChild(contact))
 						#self.roster['users'][jid].rosterItems.remove(item)
 				#self.main.ui.roster.cloneContact(self.metaParents[tag],self.roster['users'][jid].rosterItems[-1])
-		for i in range(len(toDelIndex)):
-			jid=toDelJid[i]
-			index=toDelIndex[i]
-			del self.roster['users'][jid].rosterItems[index]
+		#for i in range(len(toDelIndex)):
+			#jid=toDelJid[i]
+			#index=toDelIndex[i]
+			#del self.roster['users'][jid].rosterItems[index]
 
 			##If we had some others metacontacts
 			#if mainJid!=None:
@@ -283,7 +277,7 @@ class clientClass(pyxl.client.Client):
 	def on_UpdateContact(self,jid):
 		# contact is updated
 		contact=self.roster['users'][jid]
-		items=contact.getUserItems()
+		items=self.main.ui.roster.getUserItems(jid)
 		toDel=[] # temp variable for deleting items at the end of this function
 		toDelJid=[]
 		toDelIndex=[]
@@ -343,10 +337,10 @@ class clientClass(pyxl.client.Client):
 							self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(parent))
 						break
 		# delete all groups saved in toDel
-		for i in range(len(toDelJid)):
-			jid=toDelJid[i]
-			index=toDelIndex[i]
-			del self.roster['users'][jid].rosterItems[index]
+		#for i in range(len(toDelJid)):
+			#jid=toDelJid[i]
+			#index=toDelIndex[i]
+			#del self.roster['users'][jid].rosterItems[index]
 		#for name in toDel:
 			#del self.roster['groups'][name]
 
@@ -357,7 +351,7 @@ class clientClass(pyxl.client.Client):
 		# delete contact from roster
 		log.msg("delete contact")
 		contact=self.roster['users'][jid]
-		items=contact.getUserItems()
+		items=contact.self.main.ui.roster.getUserItems()
 		for item in items:
 			log.msg("DELETE ITEM:"+unicode(item.text(1)))
 			parent=item.parent()
