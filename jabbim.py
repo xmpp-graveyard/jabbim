@@ -921,8 +921,9 @@ class mainWindow(QtGui.QMainWindow):
 					self.config['jid']=jid
 					self.config.write()
 		if self.client==None:
-			self.client = clientClass(jid+"/jabbim", password, jid.split("@")[1], 5222,self)
+			self.client = clientClass(jid+"/jabbim", password, jid.split("@")[1], 5222,self,reactor)
 			self.client.log=True
+		self.ui.login_connect.setEnabled(False)
 		self.client.connect()
 	
 	def _loadAvatar(self,file, hash, jid):
