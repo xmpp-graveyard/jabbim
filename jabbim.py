@@ -350,8 +350,8 @@ class clientClass(pyxl.client.Client):
 	def on_DeleteContact(self,jid):
 		# delete contact from roster
 		log.msg("delete contact")
-		contact=self.roster['users'][jid]
-		items=contact.self.main.ui.roster.getUserItems()
+		#contact=self.roster['users'][jid]
+		items=self.main.ui.roster.getUserItems(jid)
 		for item in items:
 			log.msg("DELETE ITEM:"+unicode(item.text(1)))
 			parent=item.parent()
