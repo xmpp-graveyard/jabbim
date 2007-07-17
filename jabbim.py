@@ -652,12 +652,13 @@ class mainWindow(QtGui.QMainWindow):
 			self.config.write()
 		if str(self.config['saveExpandedGroups'])=='True':
 			expanded=[]
-			for name,item in self.client.roster['groups'].iteritems():
-				index=self.ui.roster.indexFromItem(item,0)
-				if self.ui.roster.isExpanded(index)==True:
-					expanded.append(name)
-			self.config['expandedGroups']=expanded
-			self.config.write()
+			if self.client!=None:
+				for name,item in self.client.roster['groups'].iteritems():
+					index=self.ui.roster.indexFromItem(item,0)
+					if self.ui.roster.isExpanded(index)==True:
+						expanded.append(name)
+				self.config['expandedGroups']=expanded
+				self.config.write()
 
 		self.tray.hide()
 		app.closeAllWindows()
