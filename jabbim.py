@@ -305,7 +305,7 @@ class clientClass(pyxl.client.Client):
 					# we have some item to clone (so we can't create new one)
 					if len(items)!=0:
 						i=items[0].clone() # clone contact item
-						self.roster['users'][jid].rosterItems.append(i)
+						#self.roster['users'][jid].rosterItems.append(i)
 						# don't know, if we need this code now, so keep coomented...
 						#for x in range(int(i.childCount())):
 							#child=i.child(x)
@@ -319,7 +319,7 @@ class clientClass(pyxl.client.Client):
 						self.main.ui.roster.setStatus(jid,None,i)
 					else:
 						# add new contact to the roster
-						self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addUser(contact.jid,contact.name,self.roster['groups'][name]))
+						self.main.ui.roster.addUser(contact.jid,contact.name,self.roster['groups'][name])
 						self.main.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
 						self.main.ui.roster.setStatus(jid,None)
 						self.main.ui.roster.refreshStats()
@@ -328,8 +328,8 @@ class clientClass(pyxl.client.Client):
 				for i in items:
 					parent=i.parent()
 					if item==parent:
-						toDelJid.append(unicode(jid))
-						toDelIndex.append(self.roster['users'][unicode(jid)].rosterItems.index(i))
+						#toDelJid.append(unicode(jid))
+						#toDelIndex.append(self.roster['users'][unicode(jid)].rosterItems.index(i))
 						parent.takeChild(parent.indexOfChild(i))
 						# delete group, if it's empty
 						if int(parent.childCount())==0:
@@ -437,10 +437,11 @@ class clientClass(pyxl.client.Client):
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None):
 		# handle normal 'chat' messages
 		# get user icon or name, if we have him in roster. Or use default icon and jid as name
-		if self.roster['users'].has_key(unicode(frm).rsplit("/")[0]):
-			user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
-			icon=user.icon(0)
-			user=user.text(2)
+		user=self.main.ui.roster.getUserItems(unicode(frm).rsplit("/")[0])
+		if len(user)!=0:
+			#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
+			icon=user[0].icon(0)
+			user=user[0].text(2)
 		else:
 			icon=self.main.getIcon(status="offline",size="16x16")
 			user=frm
