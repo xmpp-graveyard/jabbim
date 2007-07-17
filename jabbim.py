@@ -352,11 +352,13 @@ class clientClass(pyxl.client.Client):
 		log.msg("delete contact")
 		#contact=self.roster['users'][jid]
 		items=self.main.ui.roster.getUserItems(jid)
-		for i in range(len(items)):
-			item=self.main.ui.roster.getUserItems(jid)[0]
+		for item in items:
 			log.msg("DELETE ITEM:"+unicode(item.text(1)))
 			parent=item.parent()
-			parent.takeChild(parent.indexOfChild(item))
+			it=parent.takeChild(parent.indexOfChild(item))
+			it.view=0
+			del it
+			it=0
 
 		#for name,item in self.roster['groups'].iteritems():
 			#for i in items:
