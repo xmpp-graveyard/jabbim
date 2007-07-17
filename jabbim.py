@@ -360,10 +360,10 @@ class clientClass(pyxl.client.Client):
 			if parent:
 				index=parent.indexOfChild(item)
 				if index>-1:
-					#it=parent.takeChild(index)
+					it=parent.takeChild(index)
 					#it.view=0
 					#del it
-					it=0
+					#it=0
 
 		#for name,item in self.roster['groups'].iteritems():
 			#for i in items:
