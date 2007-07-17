@@ -73,3 +73,6 @@ class derived:
 		pass
 	def on_vcardReceived(self,  jid, card):
 		pass
+	
+	def on_fileReceived(self, jid, file, methods, id):
+		pass

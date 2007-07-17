@@ -428,7 +428,7 @@ class Send(protocol.Protocol):
 			self.ft.sent = self.ft.sent + len(data)
 		return self.transport.write(data)
 
-class FT:
+class FTSend:
 	def __init__(self, client, sid, filename, tojid, file, description= None):
 		self.sid = sid
 		self.filename = filename
@@ -461,4 +461,14 @@ class FT:
 		log.msg('finished transfer for ' + self.filename)
 		log.msg('times: %i - %i - %i - %i'%(self.start, self.medium, self.ftstart, time.time())) 
 
+class FTReceive:
+	def __init__(self, client,jid, sid, file, methods):
+		self.client = client
+		self.tojid = jid
+		self.sid = sid
+		self.fileprops = file
+		self.methods = methods
+		self.fp = None
+		self.method = None
+		self.file = None 
 

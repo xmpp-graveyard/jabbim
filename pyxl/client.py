@@ -188,6 +188,8 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:last']", self.onLast, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/time[@xmlns='urn:xmpp:time']", self.onTime202, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:time']", self.onTime90, 1)
+		self.xmlstream.addObserver("/iq[@type='set'][@id]/si[@xmlns='http://jabber.org/protocol/si' ][ @profile='http://jabber.org/protocol/si/profile/file-transfer']", self.onFileReceive, 1)
+		self.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='http://jabber.org/protocol/bytestreams']/streamhost", self.onStreamhosts, 1)
 		self.getMetacontacts()
 		self.getBookmarks()
 		self.getDiscoInfo(self.jid.host,  callback = self._pepSupport)
@@ -1067,7 +1069,7 @@ class Client(derived):
 	
 	def sendFile(self, jid, filename, fp):
 		sid = str(random.randint(1000, sys.maxint))
-		self.ft[sid] = socks5.FT(self, sid, filename, jid, fp, None)
+		self.ft[sid] = socks5.FTSend(self, sid, filename, jid, fp, None)
 		self.ft[sid].start = time.time()
 		log.msg('sending file to '+ jid)
 		iq = IQ(self.xmlstream, 'set')
@@ -1091,17 +1093,18 @@ class Client(derived):
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._ftreplyReceived, sid)
+	
 	def _ftstreamhostquery(self, el):
 		print 'proxy rika: ', el.toXml()
 	
 	def _ftreplyReceived(self, el, sid):
-		iq = IQ(self.xmlstream, 'get')
-		iq['to'] = 'proxy.netlab.cz'
-		q = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
-		self.on_xml(iq.toXml())
-		d = iq.send()
-		self.disp(iq['id'])
-		d.addCallback(self._ftstreamhostquery)
+##		iq = IQ(self.xmlstream, 'get')
+##		iq['to'] = 'proxy.netlab.cz'
+##		q = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
+##		self.on_xml(iq.toXml())
+##		d = iq.send()
+##		self.disp(iq['id'])
+##		d.addCallback(self._ftstreamhostquery)
 		
 		print el.toXml()
 		iq = IQ(self.xmlstream, 'set')
@@ -1134,38 +1137,61 @@ class Client(derived):
 
 		factory = socks5.ClientFactory(self.ft_proxies[host][0], int(self.ft_proxies[host][1]),addr, 0,  f, xmpp = self, xmpp_sid = sid) 
 		d = reactor.connectTCP(self.ft_proxies[host][0], int(self.ft_proxies[host][1]), factory)
-##		print (d)
-##		reactor.callLater(1,self.ftActivate,host, sid, d, el['from'])
-		
-	def ftActivate(self, jid, sid, conn, target):
-		iq = IQ(self.xmlstream, 'set')
-		iq['to'] = jid
-		q = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
-		q['sid'] = sid
-		q.addElement('activate', content = target)
-		self.on_xml(iq.toXml())
-		d = iq.send()
-		self.disp(iq['id'])
-		d.addCallback(self._ftactivated, conn, sid)
-		print iq.toXml()
-	
-	def _ftactivated(self, el, conn, sid):
-		print el.toXml()
-		print 'prenasime'
-		print dir(conn), self.ft[sid], dir(conn.transport.protocol) 
 
-##		print dir(factory), factory, dir(factory.otherFactory.protocol.transport)
-##		factory.otherFactory.protocol.transport.write('uuuuuuuuuuuuuu')
-##		FileSender().beginFileTransfer(self.ft[sid],conn.factory.buildProtocol(address.IPv4Address('tcp', conn.host, conn.port)))
-		FileSender().beginFileTransfer(self.ft[sid],conn.transport.protocol.otherProtocol)
-	
 	def _ftreplyhostErrReceived(self, err):
 		print 'replyhost', err
+	
 	def ftStart(self, sid, protocol):
 		if self.ft.has_key(sid):
 			self.ft[sid].ftstart = time.time()
 			self.ft[sid].protocol = protocol
 			self.ft[sid].activate()
+	
+	def onFileReceive(self, el):
+		print el.toXml()
+		self.disp(el['id'])
+		file = {}
+		methods = []
+		si = el.firstChildElement()
+		for e in si.elements():
+			if e.name == 'file':
+				file = e.attributes
+##				del file['xmlns']
+			elif e.name == 'feature':
+				x = e.firstChildElement()
+				for field in x.elements():
+					if field.getAttribute('var') == 'stream-method':
+						for option in field.elements():
+							methods.append(unicode(option.firstChildElement()))
+		sid = si['id']
+		self.ft[sid] = socks5.FTReceive(self, el['from'], sid, file, methods)
+		self.on_FileReceived(sid, el['id'])
+	
+	def on_FileReceived(self, sid, id):
+		if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
+			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
+			self.receiveFile(sid, id)
+	
+	def receiveFile(self, sid, id):
+		iq = Element((None,'iq'))
+		obj = self.ft[sid]
+		iq['to'] = obj.tojid
+		iq['id'] = id
+		iq['type'] = 'result'
+		si = iq.addElement('si', 'http://jabber.org/protocol/si')
+		si.addElement('file', 'http://jabber.org/protocol/si/profile/file-transfer')
+		feature = si.addElement('feature', 'http://jabber.org/protocol/feature-neg')
+		x = feature.addElement('x', 'jabber:x:data')
+		x['type'] = 'submit'
+		field = x.addElement('field')
+		field['var'] = 'stream-method'
+		value = field.addElement('value', content = obj.method)
+		self.xmlstream.send(iq)
+		
+	def onStreamhosts(self, el):
+		self.disp(el['id'])
+		print el.toXml()
+
 	def disp(self, id):
 		self.idlist.append(id)
 
