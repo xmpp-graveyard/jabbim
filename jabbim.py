@@ -361,7 +361,7 @@ class clientClass(pyxl.client.Client):
 				index=parent.indexOfChild(item)
 				if index>-1:
 					#it=parent.takeChild(index)
-					it.view=0
+					#it.view=0
 					#del it
 					it=0
 
