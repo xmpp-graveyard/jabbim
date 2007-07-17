@@ -510,8 +510,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
 		self.homeDir=utils.getHomeDir() # get home dir
-		self.cache = storage.Cache(db=self.homeDir+'/.jabbim/cache.db')
 		utils.loadConfig(self) # load config files
+		self.cache = storage.Cache(db=self.homeDir+'/.jabbim/cache.db')
+		
 
 		self.ui.gridlayout.setMargin(1)
 		self.ui.gridlayout.setSpacing(1)
