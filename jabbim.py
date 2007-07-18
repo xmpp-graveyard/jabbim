@@ -22,12 +22,12 @@ except: print "PyQt4 is not installed."
 from twisted.python import log
 import qt4reactor as qtreactor
 app = QtGui.QApplication(sys.argv)
-qtreactor.install(app)
+reactor=qtreactor.install(app)
 import time
 
 import hashlib,base64
 
-from twisted.internet import reactor
+#from twisted.internet import reactor
 
 import widgets
 import pyxl
@@ -127,34 +127,36 @@ class clientClass(pyxl.client.Client):
 		# process metacontacts
 		for tag,jids in meta.iteritems():
 			# get main metacontact (first metacontact)
-			mainJid=None # JID of main metacontact (parent of all other)
-			highestNum=0
-			highest=[]
-			for value in jids:
-				jid=value[0]
-				order=int(value[1])
-				if jid!=tag:
-					mainJid=jid
-				if order>=highestNum:
-					highest.append(jid)
-
-			if mainJid!=None:
-				self.metaParents[tag]=self.main.ui.roster.addMetaParent(tag,self.main.ui.roster.getUserItems(mainJid)[0].parent(),True)
+			if len(jids)>1:
+				mainJid=None # JID of main metacontact (parent of all other)
+				highestNum=0
+				highest=[]
 				for value in jids:
 					jid=value[0]
 					order=int(value[1])
-
-					self.main.ui.roster.addMetaContact(jid,self.roster['users'][jid].name,self.metaParents[tag],True)
-					for contact in self.main.ui.roster.getUserItems(jid):
-						contactData=contact.data(32,0)
-						contactData=contactData.toList()
-						if unicode(contactData[1].toString())=="contact":
-							#toDelJid.append(jid)
-							#toDelIndex.append(self.roster['users'][jid].rosterItems.index(contact))
-							parent=contact.parent()
-							parent.takeChild(parent.indexOfChild(contact))
-						#self.roster['users'][jid].rosterItems.remove(item)
-				#self.main.ui.roster.cloneContact(self.metaParents[tag],self.roster['users'][jid].rosterItems[-1])
+					if jid!=tag:
+						mainJid=jid
+					if order>=highestNum:
+						highest.append(jid)
+	
+				if mainJid!=None:
+					self.metaParents[tag]=self.main.ui.roster.addMetaParent(tag,self.main.ui.roster.getUserItems(mainJid)[0].parent(),True)
+					#self.metaParents[tag].
+					for value in jids:
+						jid=value[0]
+						order=int(value[1])
+	
+						self.main.ui.roster.addMetaContact(jid,self.roster['users'][jid].name,self.metaParents[tag],True)
+						for contact in self.main.ui.roster.getUserItems(jid):
+							contactData=contact.data(32,0)
+							contactData=contactData.toList()
+							if unicode(contactData[1].toString())=="contact":
+								#toDelJid.append(jid)
+								#toDelIndex.append(self.roster['users'][jid].rosterItems.index(contact))
+								parent=contact.parent()
+								parent.takeChild(parent.indexOfChild(contact))
+							#self.roster['users'][jid].rosterItems.remove(item)
+					self.main.ui.roster.cloneContact(self.metaParents[tag],self.main.ui.roster.getUserItems(jid)[0])
 		#for i in range(len(toDelIndex)):
 			#jid=toDelJid[i]
 			#index=toDelIndex[i]
@@ -185,6 +187,7 @@ class clientClass(pyxl.client.Client):
 				#self.main.ui.roster.cloneContact(self.metaParents[tag],self.roster['users'][jid].rosterItems[-1])
 		#print self.roster['users']['sef@njs.netlab.cz'].rosterItems
 		# sort roster items and refresh group stats
+		self.main.rosterHideOffline(True)
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.main.ui.roster.refreshStats()
 
@@ -205,6 +208,7 @@ class clientClass(pyxl.client.Client):
 			show=presence[1]
 			self.on_presence(jid,show,True)
 		# refresh group stats
+		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.main.ui.roster.refreshStats()
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
@@ -830,19 +834,24 @@ class mainWindow(QtGui.QMainWindow):
 
 	def hideOffline(self,bool):
 		# hide or show offline users
+		#self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.offline=not bool
-		# rewrite online/all users stats in group QTreeWidgetItem
+		self.rosterHideOffline(not bool)
+	
+	def rosterHideOffline(self,bool):
 		for group,item in self.client.roster['groups'].iteritems():
 			# return stats (online,offline,all users) for group
 			for i in range(int(item.childCount())):
 				child=item.child(i)
 				if int(unicode(child.text(1))[0])==9:
-					self.ui.roster.setItemHidden(child, not bool)
+					self.ui.roster.setItemHidden(child, bool)
+				else:
+					print unicode(child.text(1))[0]
 				for x in range(int(child.childCount())):
 					child2=child.child(x)
 					if int(unicode(child2.text(1))[0])==9:
-						self.ui.roster.setItemHidden(child2, not bool)
-			self.ui.roster.hidden(not bool)
+						self.ui.roster.setItemHidden(child2, bool)
+			self.ui.roster.hidden( bool)
 
 	def statusChanged(self,action):
 		# status changed
