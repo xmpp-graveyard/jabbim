@@ -91,6 +91,8 @@ class chatWindow(QtGui.QMainWindow):
 		if message!=None:
 			tab.chat.textEditWrite(message)
 		self.show()
+		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+
 
 	def addGroupChatTab(self,room,nickname,affiliation=""):
 		tab=QtGui.QWidget(self.ui.chatTab)
