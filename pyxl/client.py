@@ -568,10 +568,11 @@ class Client(derived):
 		cekej = 20
 		if ln*0.05 < cekej:
 			cekej = ln*0.05
-		print ln,  cekej
-		self.reactor.callLater(cekej,  self.onFirstPresence)
-		#self.onFirstPresence()
+##		print ln,  cekej
+##		self.reactor.callLater(cekej,  self.onFirstPresence)
+		self.first_wait = False
 		self.on_rosterArrived()
+##		self.onFirstPresence()
 
 	def _authfailed(self,xmlstream):
 		log.msg( "auth_failed")
@@ -1143,6 +1144,7 @@ class Client(derived):
 		print 'replyhost', err
 	
 	def ftStart(self, sid, protocol):
+		log.msg(sid)
 		if self.ft.has_key(sid):
 			self.ft[sid].ftstart = time.time()
 			self.ft[sid].protocol = protocol
@@ -1171,6 +1173,7 @@ class Client(derived):
 	def on_FileReceived(self, sid, id):
 		if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
 			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
+			self.ft[sid].file = self.ft[sid].fileprops['name']
 			self.receiveFile(sid, id)
 	
 	def receiveFile(self, sid, id):
@@ -1197,6 +1200,7 @@ class Client(derived):
 			if isinstance(self.ft[sid], socks5.FTReceive):
 				for streamhost in query.elements():
 					self.ft[sid].streamhosts.append(streamhost.attributes)
+				self.ft[sid].streamhostsID = el['id']
 				self.ft[sid].connectStreamHost()
 		print el.toXml()
 

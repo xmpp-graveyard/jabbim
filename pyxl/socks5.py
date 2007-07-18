@@ -4,7 +4,7 @@ from twisted.internet           import  tcp
 ##from twisted.internet           import  reactor
 from twisted.internet           import protocol, defer
 from twisted.python             import log, failure
-import struct, re, socket, sys
+import struct, re, socket, sys, sha
 from zope.interface import implements
 from sockserror import *
 from twisted.internet import interfaces
@@ -206,8 +206,8 @@ self)))
 
 			self.otherProtocol.transport = self
 			self.otherProtocol.connectionMade()
-			self.xmpp.ftStart(self.xmpp_sid, self.otherProtocol)
 			self.otherProtocol.ft = self.xmpp.ft[self.xmpp_sid]
+			self.xmpp.ftStart(self.xmpp_sid, self.otherProtocol)
 			return 
 
 		errcode = ord (data[1])
@@ -220,6 +220,9 @@ self)))
 			self.transport.loseConnection()
 			self.factory.clientConnectionFailed (self, failure.Failure (
 				ConnectError ("Unknown SOCKS error after CONNECT request issued %s" % (self))))
+		
+		self.otherProtocol.ft = self.xmpp.ft[self.xmpp_sid]
+		self.otherProtocol.ft.connectFailure()
 
 	def socks_done (self, data):
 		""" Proxy received data to other protocol.
@@ -326,7 +329,7 @@ class ClientFactory (protocol.ClientFactory):
 		#
 		if self.timeout is not None:
 		   log.msg ("Set timeout %d sec" % self.timeout)
-		   delayedcall = reactor.callLater (self.timeout, self.onTimeout, connector)
+		   delayedcall = self.xmpp.reactor.callLater (self.timeout, self.onTimeout, connector)
 		   setattr (self, "delayed_timeout_call", delayedcall)
 
 		# inherited
@@ -350,7 +353,7 @@ class ClientFactory (protocol.ClientFactory):
 			   self.delayed_timeout_call.cancel()
 		except:
 			pass
-
+		self.xmpp.ft[self.xmpp_sid].finish()
 		protocol.ClientFactory.stopFactory (self)
 
 	def buildProtocol (self, a):
@@ -395,6 +398,7 @@ class ClientFactory (protocol.ClientFactory):
 			if self.status != "established":
 				log.msg ("Connection FAILED before SOCKS established %s" % self)
 				self.otherFactory.clientConnectionFailed (connector, rmap)
+				self.xmpp.ft[self.xmpp_sid].connectFailure()
 			else:
 				self.otherFactory.clientConnectionFailed (connector, rmap)
 		except:
@@ -428,6 +432,17 @@ class Send(protocol.Protocol):
 		if self.ft:
 			self.ft.sent = self.ft.sent + len(data)
 		return self.transport.write(data)
+
+class Receive(protocol.Protocol):
+	def dataReceived(self, data):
+		if self.ft.fp != None:
+			self.ft.fp.write(data)
+			self.ft.received = self.ft.received + len(data)
+			
+##	def connectionLost(self, reason=protocol.connectionDone):
+##		print 'konec?'
+####		if self.ft.fp != None:
+####			self.ft.fp.close()
 
 class FTSend:
 	def __init__(self, client, sid, filename, tojid, file, description= None):
@@ -471,14 +486,47 @@ class FTReceive:
 		self.methods = methods
 		self.fp = None
 		self.method = None
-		self.file = None 
-		streamhosts = []
+		self.file = None #sem to chceme ulozit
+		self.streamhosts = []
+		self.streamhostsID = None
+		self.activeStreamhost = None
+		self.received = 0
 	
 	def connectStreamHost(self):
 		streamhost = self.streamhosts.pop(0)
-		f = ClientFactory()
-		f.protocol = socks5.Receive
-		addr = sha.new("%s%s%s" % (sid, self.client.jid.full(), self.tojid)).hexdigest()
-		factory = socks5.ClientFactory(streamhost['host'], int(streamhost['port']),addr, 0,  f, xmpp = self.client, xmpp_sid = self.sid) 
-		d = reactor.connectTCP(streamhost['host'], int(streamhost['port']), factory)
+		self.activeStreamhost = streamhost
+		f = protocol.ClientFactory()
+		f.protocol = Receive
+		addr = sha.new("%s%s%s" % (self.sid,  self.tojid, self.client.jid.full())).hexdigest()
+		factory = ClientFactory(streamhost['host'], int(streamhost['port']),addr, 0,  f, xmpp = self.client, xmpp_sid = self.sid) 
+		d = self.client.reactor.connectTCP(streamhost['host'], int(streamhost['port']), factory)
+	
+	def connectFailure(self):
+		log.msg('connect failed')
+		if len(self.streamhosts)>0:
+			self.connectStreamHost()
+		else:
+			log.msg('nemuzu se spojit')
+	
+	def activate(self):
+		print 'activate!'
+		iq = Element((None,'iq'))
+		iq['to'] = self.tojid
+		iq['id'] = self.streamhostsID
+		iq['type'] = 'result'
+		query = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
+		used = query.addElement('streamhost-used')
+		used['jid'] = self.activeStreamhost['jid']
+		print iq.toXml()
+		self.fp = open(self.file, 'w')
+		self.client.xmlstream.send(iq)
+	
+	def finish(self):
+		log.msg("konec prenosu")
+		if self.fp != None:
+			self.fp.close()
+		
+		
+		
+
 
