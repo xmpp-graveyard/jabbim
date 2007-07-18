@@ -220,6 +220,7 @@ class clientClass(pyxl.client.Client):
 			show=presence[1]
 			self.on_presence(jid,show,True)
 		# refresh group stats
+		self.main.rosterHideOffline(True)
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.main.ui.roster.refreshStats()
 
