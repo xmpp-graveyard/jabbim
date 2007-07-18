@@ -91,6 +91,8 @@ class chatWindow(QtGui.QMainWindow):
 		if message!=None:
 			tab.chat.textEditWrite(message)
 		self.show()
+		self.raise_()
+		self.activateWindow()
 		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 
@@ -108,6 +110,9 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.chatTab.addTab(tab,QtGui.QIcon("images/16x16/categories/muc.png"),room)
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 		self.show()
+		self.raise_()
+		self.activateWindow()
+		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 
 	def closeEvent(self,e):
