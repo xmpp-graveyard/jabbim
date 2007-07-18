@@ -153,14 +153,20 @@ class clientClass(pyxl.client.Client):
 						order=int(value[1])
 	
 						self.main.ui.roster.addMetaContact(jid,self.roster['users'][jid].name,self.metaParents[tag],True)
-						for contact in self.main.ui.roster.getUserItems(jid):
-							contactData=contact.data(32,0)
-							contactData=contactData.toList()
-							if unicode(contactData[1].toString())=="contact":
-								#toDelJid.append(jid)
+						items=self.main.ui.roster.getUserItems(jid,"contact")
+						lenght=int(len(items))
+						for contact in range(lenght):
+							item=self.main.ui.roster.getUserItems(jid,"contact")[0]
+							log.msg("DELETE ITEM:"+unicode(item.text(1)))
+							parent=item.parent()
+							if parent:
+								index=parent.indexOfChild(item)
+								if index>-1:
+									it=parent.takeChild(index)
+							#toDelJid.append(jid)
 								#toDelIndex.append(self.roster['users'][jid].rosterItems.index(contact))
-								parent=contact.parent()
-								parent.takeChild(parent.indexOfChild(contact))
+								#parent=contact.parent()
+								#parent.takeChild(parent.indexOfChild(contact))
 							#self.roster['users'][jid].rosterItems.remove(item)
 					self.main.ui.roster.cloneContact(self.metaParents[tag],self.main.ui.roster.getUserItems(jid)[0])
 		#for i in range(len(toDelIndex)):
