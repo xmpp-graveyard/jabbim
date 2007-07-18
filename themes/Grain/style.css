@@ -1,0 +1,33 @@
+QWidget#login { background-image: url(themes/Grain/connect_bg.png);
+                background-repeat: repeat-n;
+              }
+QLineEdit#login_jid,QLineEdit#login_password{ background-color: #C4C8CB;
+                                              border: 1px solid #838688;
+                                              border-radius: 4px;
+                                              padding: 1px;
+                                            }
+
+
+QPushButton#login_connect { background-color: #8E9194;
+                            border-radius: 4px;
+                            border: 1px solid #646668;
+                            font: bold 12px;
+                            padding: 4px 10px 4px 10px;
+                            color: #515354;
+                           }
+
+         QPushButton#login_connect:hover { background-color: #7E8183;
+                                           border: 1px solid #646668;
+                                         }
+
+         QPushButton#login_connect:pressed { background-color: #777777;
+                                           }
+
+QLabel#login_headerLabel{ color: #515354; 
+                          font: bold;
+                        }
+
+QLabel#login_jidLabel,QLabel#login_passwordLabel,QCheckBox#login_savePassword{ color: #515354;
+                                                                               font: bold;
+                                                                             }
+
