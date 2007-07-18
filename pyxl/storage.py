@@ -17,7 +17,11 @@ from twisted.python import log
 
 class Cache:
 	def __init__(self, DB_DRIVER = 'sqlite3', db='cache.db'):
-		self.db = adbapi.ConnectionPool(DB_DRIVER, db)
+		if DB_DRIVER == 'sqlite3':
+			try:
+				self.db = adbapi.ConnectionPool(DB_DRIVER, db)
+			except ImportError:
+				self.db = adbapi.ConnectionPool('pysqlite2', db)
 		c = self.db.connect()
 		q = self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created)
 		q.addErrback(self.table_present)

@@ -31,7 +31,7 @@ try:
 except:
 	log.msg('Please upgrade to python2.5')
 	from sha import new as sha1
-	from pysqlite2 import dbapi2 as sqlite3
+	
 	
 import widgets
 import pyxl
