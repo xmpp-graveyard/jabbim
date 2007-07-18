@@ -97,6 +97,7 @@ class chatWindow(QtGui.QMainWindow):
 		self.show()
 		self.raise_()
 		self.activateWindow()
+		self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
 		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def addGroupChatTab(self,room,nickname,affiliation=""):
