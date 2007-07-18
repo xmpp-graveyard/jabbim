@@ -1,6 +1,7 @@
 from twisted.internet.interfaces import ITransport
 from twisted.internet.base      import BaseConnector
-from twisted.internet           import reactor, tcp
+from twisted.internet           import  tcp
+##from twisted.internet           import  reactor
 from twisted.internet           import protocol, defer
 from twisted.python             import log, failure
 import struct, re, socket, sys
@@ -471,4 +472,13 @@ class FTReceive:
 		self.fp = None
 		self.method = None
 		self.file = None 
+		streamhosts = []
+	
+	def connectStreamHost(self):
+		streamhost = self.streamhosts.pop(0)
+		f = ClientFactory()
+		f.protocol = socks5.Receive
+		addr = sha.new("%s%s%s" % (sid, self.client.jid.full(), self.tojid)).hexdigest()
+		factory = socks5.ClientFactory(streamhost['host'], int(streamhost['port']),addr, 0,  f, xmpp = self.client, xmpp_sid = self.sid) 
+		d = reactor.connectTCP(streamhost['host'], int(streamhost['port']), factory)
 

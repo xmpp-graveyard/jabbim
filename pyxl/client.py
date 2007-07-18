@@ -9,7 +9,7 @@ from twisted.words.protocols import jabber
 from twisted.words.protocols.jabber import client,jid
 from twisted.words.xish import domish
 from twisted.words.xish.domish import Element
-from twisted.internet import reactor, address
+##from twisted.internet import reactor, address
 from twisted.words.protocols.jabber.xmlstream import IQ
 from twisted.internet.protocol import Protocol, ClientFactory
 
@@ -38,8 +38,9 @@ class Bookmark:
 		self.url = url
 
 class Client(derived):
-	def __init__(self, JID, password, host, port, main, SSL = True):
+	def __init__(self, JID, password, host, port, main,  reactor = None, SSL = True):
 		#derived.__init__(self)
+		self. reactor = reactor
 		self.jid = jid.JID(JID)
 		self.password  = password
 		self.host = self.jid.host
@@ -157,7 +158,7 @@ class Client(derived):
 ##		self.factory.addBootstrap("//event/stream/error", self._authfailed)
 		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
 		self.factory.addBootstrap("/*", self.logIt)
-		self.connection=reactor.connectTCP(host,port,self.factory)
+		self.connection= self.reactor.connectTCP(host,port,self.factory)
 
 	def _bind(self, el):
 		#experimental
@@ -287,7 +288,7 @@ class Client(derived):
 					if subscription == 'remove'  and self.roster['users'].has_key(itemjid):
 						log.msg('deleting contact')
 						self.on_DeleteContact(itemjid)
-						del self.roster['users'][itemjid]
+##						del self.roster['users'][itemjid]
 					elif not self.roster['users'].has_key(itemjid) and subscription != 'remove':
 						log.msg(subscription)
 						rosterItems=[]
@@ -568,7 +569,7 @@ class Client(derived):
 		if ln*0.05 < cekej:
 			cekej = ln*0.05
 		print ln,  cekej
-		reactor.callLater(cekej,  self.onFirstPresence)
+##		self.reactor.callLater(cekej,  self.onFirstPresence)
 		#self.onFirstPresence()
 		self.on_rosterArrived()
 
@@ -1136,7 +1137,7 @@ class Client(derived):
 		f.protocol = socks5.Send
 
 		factory = socks5.ClientFactory(self.ft_proxies[host][0], int(self.ft_proxies[host][1]),addr, 0,  f, xmpp = self, xmpp_sid = sid) 
-		d = reactor.connectTCP(self.ft_proxies[host][0], int(self.ft_proxies[host][1]), factory)
+		d = self.reactor.connectTCP(self.ft_proxies[host][0], int(self.ft_proxies[host][1]), factory)
 
 	def _ftreplyhostErrReceived(self, err):
 		print 'replyhost', err
@@ -1190,6 +1191,13 @@ class Client(derived):
 		
 	def onStreamhosts(self, el):
 		self.disp(el['id'])
+		query = el.firstChildElement()
+		sid = query['sid']
+		if self.ft.has_key(sid):
+			if isinstance(self.ft[sid], socks5.FTReceive):
+				for streamhost in query.elements():
+					self.ft[sid].streamhosts.append(streamhost.attributes)
+				self.ft[sid].connectStreamHost()
 		print el.toXml()
 
 	def disp(self, id):
