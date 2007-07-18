@@ -31,9 +31,6 @@ try:
 except:
 	log.msg('Please upgrade to python2.5')
 	from sha import new as sha1
-	
-	
-
 
 import widgets
 import pyxl
@@ -518,7 +515,7 @@ class clientClass(pyxl.client.Client):
 			self.main.cache.set_avatar(jid, ['avatars/'+jid, sha])
 			self.main._loadAvatar('avatars/'+jid, sha, jid)
 		else:
-			self.main.cache.set_avatar(jid, [nic, nic])
+			self.main.cache.set_avatar(jid, ['nic', 'nic'])
 
 
 class mainWindow(QtGui.QMainWindow):

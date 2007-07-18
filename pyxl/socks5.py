@@ -438,11 +438,6 @@ class Receive(protocol.Protocol):
 		if self.ft.fp != None:
 			self.ft.fp.write(data)
 			self.ft.received = self.ft.received + len(data)
-			
-##	def connectionLost(self, reason=protocol.connectionDone):
-##		print 'konec?'
-####		if self.ft.fp != None:
-####			self.ft.fp.close()
 
 class FTSend:
 	def __init__(self, client, sid, filename, tojid, file, description= None):
@@ -525,8 +520,3 @@ class FTReceive:
 		log.msg("konec prenosu")
 		if self.fp != None:
 			self.fp.close()
-		
-		
-		
-
-

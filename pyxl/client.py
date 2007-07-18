@@ -87,8 +87,12 @@ class Client(derived):
 		self.caps_cache = {} # 'node': [feature1, feature2]
 		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
 		self.log = True
-		self.on_init()
+		self.reactor.callFromThread(self.on_init)
 
+	def chyba(self, err):
+##		print err
+##		print dir(err)
+		err.printBriefTraceback()
 	def cacheCaps(self, node, features):
 		self.caps_cache[node] = features
 
@@ -153,18 +157,21 @@ class Client(derived):
 		self._connect(self.host, self.port)
 	
 	def _connect(self, host, port): 
-
 		self.factory = client.XMPPClientFactory(self.jid,self.password)
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
 ##		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
 ##		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
-##		self.factory.addBootstrap("//event/stream/error", self._authfailed)
+		self.factory.addBootstrap("//event/xmpp/initfailed", self._authfailed)
 		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
 		self.factory.addBootstrap("/*", self.logIt)
-		self.connection= self.reactor.connectTCP(host,port,self.factory)
+		self.reactor.connectTCP(host,port,self.factory)
+
+		log.msg('started')
 
 	def _bind(self, el):
 		#experimental
+		log.msg('bind')
+		print el.toXml()
 		bind = el.firstChildElement()
 		jd = bind.firstChildElement().__str__()
 		self.jid = jid.JID(jd)
@@ -176,6 +183,7 @@ class Client(derived):
 		self.factory = None
 
 	def _authd(self, xmlstream):
+		log.msg('authed')
 		self.main._connected()
 		self.xmlstream = xmlstream
 		self.xmlstream.addObserver("/presence", self.onPresence, 1)
@@ -204,7 +212,7 @@ class Client(derived):
 #		self.getPrivacy()
 #		self.joinGC('jdev@conf.netlab.cz',  'Sefator')
 ##		reactor.callLater(15, self.sendFile,'public@disk.jabbim.cz/jdisk', '30.py', 'jabb.log')
-		self.on_authd()
+		self.reactor.callFromThread(self.on_authd)
 	def _pepSupport(self):
 		log.msg('pep support arrived')
 #		print self.jid.host,  self.disco
@@ -227,7 +235,7 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._pepReceived)
+		d.addCallback(self._pepReceived).addErrback(self.chyba)
 
 	def _pepReceived(self,  el):
 		log.msg(el.toXml())
@@ -241,7 +249,7 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._pepReceived)
+		d.addCallback(self._pepReceived).addErrback(self.chyba)
 
 	def registerFeature(self, feature, node = None):
 		if self.discofeatures.has_key(node):
@@ -259,7 +267,7 @@ class Client(derived):
 		self.disp(iq['id'])
 		d = iq.send()
 		self.on_xml(iq.toXml())
-		d.addCallback(self._onRosterArrive)
+		d.addCallback(self._onRosterArrive).addErrback(self.chyba)
 
 	def onRosterAdd(self,el):
 		log.msg("roster item add")
@@ -278,7 +286,7 @@ class Client(derived):
 							groups.append(unicode(group))
 							if unicode(group) not in allGroups:
 								# add group item to ther roster
-								self.roster['groups'][unicode(group)] = self.main._addGroup(group)
+								self.roster['groups'][unicode(group)] = self.reactor.callFromThread(self.main._addGroup, group)
 								allGroups.append(unicode(group))
 					if item.hasAttribute('name'):
 						name = item['name']
@@ -290,7 +298,7 @@ class Client(derived):
 					#print item['jid'],groups
 					if subscription == 'remove'  and self.roster['users'].has_key(itemjid):
 						log.msg('deleting contact')
-						self.on_DeleteContact(itemjid)
+						self.reactor.callFromThread(self.on_DeleteContact,itemjid)
 ##						del self.roster['users'][itemjid]
 					elif not self.roster['users'].has_key(itemjid) and subscription != 'remove':
 						log.msg(subscription)
@@ -299,7 +307,7 @@ class Client(derived):
 							# add user item to Unknown group
 						contact = Contact(self, itemjid, name, subscription, rosterItems, groups)
 						self.roster['users'][itemjid] = contact
-						self.on_rosterAddUser(contact)
+						self.reactor.callFromThread(self.on_rosterAddUser,contact)
 							#rosterItems.append(self.main._addUser(itemjid,name,self.roster['groups']['Unknown']))
 						#for group in groups:
 							#self.on_rosterAddUser(contact)
@@ -310,7 +318,7 @@ class Client(derived):
 						contact = self.roster['users'][itemjid]
 						contact.name = name
 						contact.groups = groups
-						self.on_UpdateContact(itemjid)
+						self.reactor.callFromThread(self.on_UpdateContact,itemjid)
 		iq = Element((None, 'iq'))
 		iq['from'] = self.jid.full()
 		iq['to'] = self.jid.host
@@ -335,11 +343,11 @@ class Client(derived):
 		self.disp(iq['id'])
 		d = iq.send()
 		self.on_xml(iq.toXml())
-		d.addCallback(self._rosterUpdateDone, callback, params)
+		d.addCallback(self._rosterUpdateDone, callback, params).addErrback(self.chyba)
 		
 	def _rosterUpdateDone(self, el, callback, params):
 		if callback != None:
-			callback(params)
+			self.reactor.callFromThread(callback, params)
 
 
 	def getVCard(self, jid):
@@ -370,7 +378,7 @@ class Client(derived):
 					card[y.name]=unicode(y)
 			else:
 				card[x.name]=unicode(x)
-		self.on_vcardReceived(el['from'], card)
+		self.reactor.callFromThread(self.on_vcardReceived,el['from'], card)
 
 	def getBookmarks(self):
 		log.msg('get bookmarks')
@@ -405,7 +413,7 @@ class Client(derived):
 		self.disp(iq['id'])
 		self.on_xml(iq.toXml())
 		d = iq.send()
-		d.addCallback(self._bookmarksSet)
+		d.addCallback(self._bookmarksSet).addErrback(self.chyba)
 
 	def _bookmarksSet(self, el):
 		log.msg('bookmarks set sucessfully')
@@ -486,7 +494,7 @@ class Client(derived):
 		self.disp(iq['id'])
 		self.on_xml(iq.toXml())
 		d = iq.send()
-		d.addCallback(self._metacontactsSet)
+		d.addCallback(self._metacontactsSet).addErrback(self.chyba)
 	def _metacontactsSet(self,  el):
 		log.msg( 'metacontacts set')
 
@@ -562,7 +570,7 @@ class Client(derived):
 						order = self.roster_meta[item['jid']]['order']
 					contact = Contact(self, item['jid'], name, item['subscription'], [], groups, tag =  tag, order =  order)
 					self.roster['users'][item['jid']] = contact
-					self.on_rosterAddUser(contact)
+					self.reactor.callFromThread(self.on_rosterAddUser,contact)
 
 		log.msg( 'roster arrived')
 		presence = Element(('jabber:client','presence'))
@@ -641,7 +649,7 @@ class Client(derived):
 	def onFirstPresence(self):
 		log.msg( 'first presences')
 		self.first_wait = False
-		self.on_firstpresence(self.first_presence)
+		self.reactor.callFromThread(self.on_firstpresence, self.first_presence)
 	
 	def onPresence(self, el):
 ##		print 'presence > ', el['from']
@@ -718,7 +726,7 @@ class Client(derived):
 			if first and self.first_wait:
 				self.first_presence.append((frm,show))
 			else:
-				self.on_presence(frm,show)
+				self.reactor.callFromThread(self.on_presence,frm,show)
 		elif self.groupchats.has_key(fromjid):
 			if show=="offline":
 				self.on_GCpresence(fromjid, resource,  show,  status,  codes)
@@ -727,7 +735,7 @@ class Client(derived):
 				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid)
 				#self.groupchats[fromjid]
 			if show!="offline":
-				self.on_GCpresence(fromjid, resource,  show,  status,  codes)
+				self.reactor.callFromThread(self.on_GCpresence,fromjid, resource,  show,  status,  codes)
 			return
 		else:
 ##			print 'contact not in roster'
@@ -754,7 +762,7 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._featuresReceived, caps_node)
+		d.addCallback(self._featuresReceived, caps_node).addErrback(self.chyba)
 
 	def _featuresReceived(self, el, node):
 		log.msg( 'features received')
@@ -792,7 +800,7 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._versionReceived)
+		d.addCallback(self._versionReceived).addErrback(self.chyba)
 		
 	def _versionReceived(self, el):
 		log.msg('version info received')
@@ -805,7 +813,7 @@ class Client(derived):
 				version = unicode(child)
 			if child.name == 'os':
 				os = unicode(child)
-		self.on_versionreceive(el['from'], (name, version, os))
+		self.reactor.callFromThread(self.on_versionreceive, el['from'], (name, version, os))
 
 	def onDiscoInfo(self, el):
 		log.msg( 'received disco#info request')
@@ -895,9 +903,9 @@ class Client(derived):
 			if self.disco[frm][node_name]['err'].has_key('info'):
 				del self.disco[frm][node_name]['err']['info'] #timhle smazem pripadny error ktery zustal po predchozim dotazu
 
-		self.on_discoInfoReceived(frm, node_name)
+		self.reactor.callFromThread(self.on_discoInfoReceived, frm, node_name)
 		if callback != None:
-			callback()
+			self.reactor.callFromThread(callback)
 
 	def _discoInfoErrReceived(self, err, info):
 		log.msg('disco#info error received')
@@ -918,7 +926,7 @@ class Client(derived):
 		node['err'] = el.firstChildElement().name
 		self.disco[jid][node_name] = node
 
-		self.on_discoInfoReceived(jid, node_name)
+		self.reactor.callFromThread(self.on_discoInfoReceived ,jid, node_name)
 
 	def getDiscoItems(self, jid, node = None, callback = None, callback_par = None):
 		log.msg('requesting disco#items ')
@@ -955,7 +963,7 @@ class Client(derived):
 		if self.disco[frm][node_name].has_key('err'):
 			if self.disco[frm][node_name]['err'].has_key('items'):
 				del self.disco[frm][node_name]['err']['items'] #timhle smazem pripadny error ktery zustal po predchozim dotazu
-		self.on_discoItemsReceived(frm, node_name)
+		self.reactor.callFromThread(self.on_discoItemsReceived, frm, node_name)
 		if callback:
 			callback(callback_par)
 
@@ -977,7 +985,7 @@ class Client(derived):
 
 		node['err'] = el.firstChildElement().name
 		self.disco[jid][node_name] = node
-		self.on_discoInfoReceived(jid, node_name)
+		self.reactor.callFromThread(self.on_discoInfoReceived, jid, node_name)
 
 
 	def getPrivacy(self):	
@@ -988,7 +996,7 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._privacyReceived)
+		d.addCallback(self._privacyReceived).addErrback(self.chyba)
 
 	def _privacyReceived(self, el):
 		#FIXME: predelat
@@ -1033,7 +1041,7 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._time202Received)
+		d.addCallback(self._time202Received).addErrback(self.chyba)
 
 	def _time202Received(self, el):
 		log.msg('time202 received')
@@ -1097,7 +1105,7 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._ftreplyReceived, sid)
+		d.addCallback(self._ftreplyReceived, sid).addErrback(self.chyba)
 	
 	def _ftstreamhostquery(self, el):
 		print 'proxy rika: ', el.toXml()
