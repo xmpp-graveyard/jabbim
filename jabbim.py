@@ -621,8 +621,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.tray.show()
 		w=self.config['windowGeometry'][2]
 		h=self.config['windowGeometry'][3]
-		print w,type(w)
-		if w=='None' or h=='None':
+		if str(w)=='None' or str(h)=='None':
 			self.move(int(self.config['windowGeometry'][0]),int(self.config['windowGeometry'][1]))
 		else:
 			self.setGeometry(int(self.config['windowGeometry'][0]),int(self.config['windowGeometry'][1]),int(w),int(h))
