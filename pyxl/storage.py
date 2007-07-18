@@ -21,7 +21,7 @@ class Cache:
 			try:
 				self.db = adbapi.ConnectionPool(DB_DRIVER, db)
 			except ImportError:
-				self.db = adbapi.ConnectionPool('pysqlite2', db)
+				self.db = adbapi.ConnectionPool('pysqlite2.dbapi2', db)
 		c = self.db.connect()
 		q = self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created)
 		q.addErrback(self.table_present)
