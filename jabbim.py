@@ -19,15 +19,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import sys,os
 try: from PyQt4 import QtCore, QtGui
 except: print "PyQt4 is not installed."
-from twisted.python import log
-import qt4reactor as qtreactor
+import qt4reactor
 app = QtGui.QApplication(sys.argv)
-reactor=qtreactor.install(app)
+qt4reactor.install(app)
+from twisted.internet import reactor
+from twisted.python import log
+from twisted.words.protocols.jabber import jid as twisted_jid
 import time
 
 import hashlib,base64
-
-#from twisted.internet import reactor
 
 import widgets
 import pyxl
@@ -42,6 +42,13 @@ import urllib
 class clientClass(pyxl.client.Client):
 
 	def on_init(self):
+		translator=QtCore.QTranslator()
+		translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
+		app.installTranslator(translator)
+		
+		MainWindow = mainWindow(self)
+		MainWindow.show()
+		self.main=MainWindow
 		self.roster['groups']['Unknown']=self.main._addGroup('Unknown')
 		self.temp_hosts=[]
 		
@@ -509,7 +516,7 @@ class clientClass(pyxl.client.Client):
 
 
 class mainWindow(QtGui.QMainWindow):
-	def __init__(self,parent=None):
+	def __init__(self,client=None,parent=None):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
@@ -527,7 +534,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		# variables
 		self.hosts={} # temp variable for {hos:type_of_host}
-		self.client=None # pyxl client instance
+		self.client=client # pyxl client instance
 		self.chat=widgets.chatwindow.chatWindow(self,self)
 		self.statusPath="images/xxxxx/status/"
 		self.shows={u"online":u"1",
@@ -929,8 +936,11 @@ class mainWindow(QtGui.QMainWindow):
 					self.config['jid']=jid
 					self.config.write()
 		if self.client==None:
-			self.client = clientClass(jid+"/jabbim", password, jid.split("@")[1], 5222,self,reactor)
+			#self.client = clientClass(jid+"/jabbim", password, jid.split("@")[1], 5222,self,reactor)
 			self.client.log=True
+		self.client.jid = twisted_jid.JID(jid+"/jabbim")
+		self.client.password  = password
+		self.host = self.client.jid
 		self.ui.login_connect.setEnabled(False)
 		self.client.connect()
 	
@@ -1020,12 +1030,8 @@ class statusWindow(QtGui.QDialog):
 			MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()))
 		self.done(1)
 
+client = clientClass("jabbim", "","", 5222,None,reactor)
 
-translator=QtCore.QTranslator()
-translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
-app.installTranslator(translator)
 
-MainWindow = mainWindow()
-MainWindow.show()
 reactor.run()
 
