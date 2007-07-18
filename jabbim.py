@@ -25,10 +25,14 @@ qt4reactor.install(app)
 from twisted.internet import reactor
 from twisted.python import log
 from twisted.words.protocols.jabber import jid as twisted_jid
-import time
-
-import hashlib,base64
-
+import time,base64
+try:
+	from hashlib import sha1
+except:
+	log.msg('Please upgrade to python2.5')
+	from sha import new as sha1
+	from pysqlite2 import dbapi2 as sqlite3
+	
 import widgets
 import pyxl
 from pyxl import storage
@@ -508,9 +512,9 @@ class clientClass(pyxl.client.Client):
 			for item in self.main.ui.roster.getMetaItems(jid):
 ##				log.msg(utils.cprint("yellow","setting icon: "+jid))
 				item.setIcon(3,QtGui.QIcon(pixmap))
-			sha1=hashlib.sha1(image).hexdigest()
-			self.main.cache.set_avatar(jid, ['avatars/'+jid, sha1])
-			self.main._loadAvatar('avatars/'+jid, sha1, jid)
+			sha=sha1(image).hexdigest()
+			self.main.cache.set_avatar(jid, ['avatars/'+jid, sha])
+			self.main._loadAvatar('avatars/'+jid, sha, jid)
 		else:
 			self.main.cache.set_avatar(jid, [nic, nic])
 
