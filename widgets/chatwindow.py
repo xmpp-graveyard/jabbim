@@ -101,6 +101,19 @@ class chatWindow(QtGui.QMainWindow):
 		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def addGroupChatTab(self,room,nickname,affiliation=""):
+		for i in range(self.ui.chatTab.count()):
+			w=self.ui.chatTab.widget(i)
+			try:
+				tabjid=w.jid
+			except:
+				tabjid=""
+			if w.jid==room:
+				self.show()
+				self.raise_()
+				self.activateWindow()
+				w.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+				self.ui.chatTab.setCurrentIndex(i)
+				return
 		tab=QtGui.QWidget(self.ui.chatTab)
 		tab.jid=room
 		tab.name=unicode(nickname)

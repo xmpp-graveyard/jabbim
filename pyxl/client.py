@@ -1,4 +1,5 @@
-import sys, time, random
+import sys, time, random, sha
+
 import socks5
 from twisted.python import log
 from twisted.internet import protocol
@@ -16,11 +17,7 @@ from derived import derived
 from contact import *
 from groupchat import  *
 
-try:
-	from hashlib import sha1
-except:
-	log.msg('Please upgrade to python2.5')
-	from sha import new as sha1
+
 
 ##from storage import *
 ##class Log:
@@ -1135,7 +1132,7 @@ class Client(derived):
 		host = streamhost['jid']
 		self.ft[sid].streamhost = host
 		self.ft[sid].medium = time.time()
-		addr = sha1("%s%s%s" % (sid, self.jid.full(), el['from'])).hexdigest()
+		addr = sha.new("%s%s%s" % (sid, self.jid.full(), el['from'])).hexdigest()
 		
 		f = ClientFactory()
 		f.protocol = socks5.Send
