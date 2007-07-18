@@ -453,7 +453,6 @@ class rosterWidget(QtGui.QTreeWidget):
 					show=self.main.client.roster['users'][jid].status
 			else:
 				show="online"
-
 		#print i
 		if i!=None:
 			item=i
