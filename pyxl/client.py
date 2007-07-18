@@ -569,7 +569,7 @@ class Client(derived):
 		if ln*0.05 < cekej:
 			cekej = ln*0.05
 		print ln,  cekej
-##		self.reactor.callLater(cekej,  self.onFirstPresence)
+		self.reactor.callLater(cekej,  self.onFirstPresence)
 		#self.onFirstPresence()
 		self.on_rosterArrived()
 
