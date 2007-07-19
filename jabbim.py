@@ -142,7 +142,8 @@ class clientClass(pyxl.client.Client):
 					if order>=highestNum:
 						highest.append(jid)
 	
-				if mainJid!=None:
+				if mainJid!=None and len(self.main.ui.roster.getUserItems(mainJid))!=0:
+					log.msg(mainJid +" "+unicode(self.main.ui.roster.getUserItems(mainJid)))
 					self.metaParents[tag]=self.main.ui.roster.addMetaParent(tag,self.main.ui.roster.getUserItems(mainJid)[0].parent(),True)
 					#self.metaParents[tag].
 					for value in jids:
