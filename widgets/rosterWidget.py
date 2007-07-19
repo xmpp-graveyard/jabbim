@@ -162,6 +162,8 @@ class rosterWidget(QtGui.QTreeWidget):
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemExpanded ( QTreeWidgetItem * )"),self.expanded)
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemCollapsed ( QTreeWidgetItem * )"),self.collapsed)
 
+		self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+
 		self.dnd={}
 		
 	def expanded(self,item):

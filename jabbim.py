@@ -208,6 +208,7 @@ class clientClass(pyxl.client.Client):
 
 	def on_authFailed(self,xmlstream):
 		# Authentication error
+		self.main.ui.login_connect.setEnabled(True)
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(self.main.tr("Bad Jabber ID or password.")),0,1)
 	
 	def on_firstpresence(self,  bulk):
@@ -637,6 +638,8 @@ class mainWindow(QtGui.QMainWindow):
 		w=self.config['windowGeometry'][2]
 		h=self.config['windowGeometry'][3]
 		if str(w)=='None' or str(h)=='None':
+			if str(w)!='None':
+				self.resize(int(w),self.height())
 			self.move(int(self.config['windowGeometry'][0]),int(self.config['windowGeometry'][1]))
 		else:
 			self.setGeometry(int(self.config['windowGeometry'][0]),int(self.config['windowGeometry'][1]),int(w),int(h))
@@ -1021,6 +1024,7 @@ class statusWindow(QtGui.QDialog):
 			#MainWindow.client.roster['groups']['Unknown']=MainWindow.ui.roster.addGroup('Unknown')
 			#MainWindow.client.temp_hosts=[]
 			MainWindow.ui.roster.clear()
+			MainWindow.ui.login_connect.setEnabled(True)
 			#MainWindow.client.disconnect()
 			#print MainWindow.client.roster
 			#reactor.stop2()
