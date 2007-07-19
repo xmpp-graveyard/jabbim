@@ -890,6 +890,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusButton.setIcon(self.getIcon("online",size="16x16"))
 		self.ui.statusButton.show()
 		self.ui.showOffline.show()
+		self.tray.showMessage("Jabbim","Jabbim is ready! You are connected! :) ")
 
 
 	def disconnect(self):
