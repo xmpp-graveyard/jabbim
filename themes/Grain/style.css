@@ -33,3 +33,16 @@ QLabel#login_jidLabel,QLabel#login_passwordLabel,QCheckBox#login_savePassword{ c
                                                                                font: bold;
                                                                              }
 
+
+QWidget#rosterView { background-image: url(themes/Grain/connect_bg.png);
+                background-repeat: repeat-x;
+        background-color:#A6ADB0;
+        background-position: bottom left;
+        alternate-background-color: rgba(174,145,107,50%);
+        background-attachment: fixed;
+              }
+
+QWidget#groupStyleWidget { 
+        background-color: rgba(122,98,68,50%);
+        font: bold 12px;
+              }
