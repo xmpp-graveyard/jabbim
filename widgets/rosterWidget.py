@@ -114,7 +114,7 @@ class tooltipWidget(QtGui.QWidget):
 class rosterWidget(QtGui.QTreeWidget):
 	def __init__(self,parent,main):
 		apply(QtGui.QTreeWidget.__init__,(self,parent))
-		self.setObjectName("roster")
+		self.setObjectName("rosterView")
 		self.delegate=delegate()
 ##		print self.itemDelegate()
 ##		print self.delegate
@@ -442,7 +442,7 @@ class rosterWidget(QtGui.QTreeWidget):
 					offline+=1
 				else:
 					online+=1
-			self.main.client.roster['groups'][group].setText(0,"<font color=\"#FFFFFF\">"+unicode(self.main.client.roster['groups'][group].text(2))+" ("+str(online)+"/"+str(online+offline)+")</font>")
+			self.main.client.roster['groups'][group].setText(0,"<font color=\""+unicode(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+"\">"+unicode(self.main.client.roster['groups'][group].text(2))+" ("+str(online)+"/"+str(online+offline)+")</font>")
 
 	def setStatus(self,jid,show,i=None,status=None,first=False):
 		if not self.main.shows.has_key(show):
@@ -542,13 +542,14 @@ class rosterWidget(QtGui.QTreeWidget):
 	def addGroup(self,name):
 		# add new group to the roster and return group QTreeWidgetItem
 		item=QtGui.QTreeWidgetItem(self)
-		item.setText(0,'<font color="#FFFFFF">'+name+"</font>")
+		item.setText(0,'<font color="'+unicode(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+name+"</font>")
 		item.setText(1,"1"+unicode(name).lower())
 		item.setText(2,name)
 		item.setData(32,0,QtCore.QVariant([unicode(""),unicode("group")]))
 		item.setIcon(0,QtGui.QIcon("images/"+self.main.config['rosterIconSize']+"/icons/group-closed.png"))
-		item.setBackgroundColor(0,QtGui.QColor("#000000"))
-		item.setBackgroundColor(3,QtGui.QColor("#000000"))
+		color=self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Window)
+		item.setBackgroundColor(0,color)
+		item.setBackgroundColor(3,color)
 		#item.setTextColor(0,QtGui.QColor("#FFFFFF"))
 		#item.setTextColor(3,QtGui.QColor("#FFFFFF"))
 		return item
