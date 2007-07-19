@@ -1,5 +1,7 @@
 QWidget#login { background-image: url(themes/Grain/connect_bg.png);
-                background-repeat: repeat-n;
+                background-repeat: repeat-x;
+				background-color:#A6ADB0;
+				background-position: bottom left;
               }
 QLineEdit#login_jid,QLineEdit#login_password{ background-color: #C4C8CB;
                                               border: 1px solid #838688;
