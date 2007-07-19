@@ -145,8 +145,9 @@ class chatWidget(QtGui.QWidget):
 			b=a.getElementsByTagName('body')
 			c=parseString(b[0].toxml())
 			text=gatherTextNodes(c)
-
-			self.main.client.sendMessage(str(self.jid),unicode(text, 'utf-8'))
+			text=unicode(text, 'utf-8')
+			text=unescape(text)
+			self.main.client.sendMessage(str(self.jid),text)
 			for word in text.split(' '):
 				if word.find("http://")!=-1:
 					text=text.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
