@@ -164,7 +164,7 @@ class Client(derived):
 		self.factory.addBootstrap("//event/xmpp/initfailed", self._authfailed)
 		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
 		self.factory.addBootstrap("/*", self.logIt)
-		self.reactor.connectTCP(host,port,self.factory)
+		self.connection = self.reactor.connectTCP(host,port,self.factory)
 
 		log.msg('started')
 
@@ -355,11 +355,11 @@ class Client(derived):
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid
 		iq.addElement('vCard', 'vcard-temp')
-		self.disp(iq['id'])
-		d = iq.send()
-		self.on_xml(iq.toXml())
-		d.addCallback(self._vcardReceived)
-		d.addErrback(self._noVcard, jid) 
+##		self.disp(iq['id'])
+##		d = iq.send()
+##		self.on_xml(iq.toXml())
+##		d.addCallback(self._vcardReceived)
+##		d.addErrback(self._noVcard, jid) 
 
 	def _noVcard(self, err, jid): 
 		#               print jid, ' no vcard available' 

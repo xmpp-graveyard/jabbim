@@ -1002,7 +1002,7 @@ class statusWindow(QtGui.QDialog):
 	def accept(self):
 		if self.data=="offline":
 ##			MainWindow.client.factory.stopTrying()
-			MainWindow.client.sendPresence(show = "unavailable", status = unicode(self.ui.status.toPlainText ()))
+			MainWindow.client.sendPresence(typ = "unavailable", status = unicode(self.ui.status.toPlainText ()))
 			MainWindow.client.factory.stopTrying()
 			#MainWindow.client.disconnect()
 			MainWindow.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
