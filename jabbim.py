@@ -45,7 +45,7 @@ import urllib
 class clientClass(pyxl.client.Client):
 
 	def on_init(self):
-		self.main._addGroup('Unknown')
+		self.roster['groups']['Unknown']=self.main._addGroup('Unknown')
 		self.temp_hosts=[]
 		
 	def on_discoInfoReceived(self, jid, node):
@@ -70,14 +70,7 @@ class clientClass(pyxl.client.Client):
 		name=unicode(contact.name)
 		jid=unicode(contact.jid)
 		log.msg("JID: "+jid+" "+contact.subscription)
-
-		for gr in groups:
-			if not gr in self.main.ui.roster.getGroupItems(True):
-				self.main._addGroup(gr)
-
-
 		# get host info
-
 		if len(unicode(jid).rsplit("@"))!=1:
 			host=unicode(jid).rsplit("@")[1]
 			if not self.disco.has_key(host) and not host in self.temp_hosts:
@@ -88,11 +81,11 @@ class clientClass(pyxl.client.Client):
 		# user is not in any group
 		if len(groups)==0:
 			#add user item to Unknown group
-			self.main.ui.roster.addUser(jid,name,self.main.ui.roster.getGroupItem("Unknown"),first=True)
+			self.main.ui.roster.addUser(jid,name,self.roster['groups']['Unknown'],first=True)
 		else:
 			for group in groups:
 				# add user item to the group
-				self.main.ui.roster.addUser(jid,name,self.main.ui.roster.getGroupItem(group),first=True)
+				self.main.ui.roster.addUser(jid,name,self.roster['groups'][unicode(group)],first=True)
 		# show avatar if he has him
 		self.main.cache.get_avatar(jid, self.main._loadAvatar)
 
@@ -115,8 +108,8 @@ class clientClass(pyxl.client.Client):
 		#self.setMetacontacts()
 
 		# hide Unknown group, if has not users
-		#if int(self.main.ui.roster.getGroupItem("Unknown").childCount())==0:
-			#self.main.ui.roster.setItemHidden(self.roster['groups']['Unknown'],True)
+		if int(self.main.ui.roster.getGroupItem("Unknown").childCount())==0:
+			self.main.ui.roster.setItemHidden(self.roster['groups']['Unknown'],True)
 
 		self.metaParents={}
 
@@ -208,8 +201,8 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.main.ui.roster.refreshStats()
 
-		#for k,v in self.roster['groups'].iteritems():
-			#self.main.ui.add_group.addItem(unicode(k))
+		for k,v in self.roster['groups'].iteritems():
+			self.main.ui.add_group.addItem(unicode(k))
 
 ##		log.msg( "METAPARENTS"+unicode(self.metaParents))
 
@@ -296,23 +289,17 @@ class clientClass(pyxl.client.Client):
 			text=unicode(xml)
 			self.main.xmlConsole.ui.xml.append(text+"\n\n")
 	
-	def on_UpdateContact(self,contact):
+	def on_UpdateContact(self,jid):
 		# contact is updated
-		jid=contact.jid
+		contact=self.roster['users'][jid]
 		items=self.main.ui.roster.getUserItems(jid)
 		toDel=[] # temp variable for deleting items at the end of this function
 		toDelJid=[]
 		toDelIndex=[]
 		# go through all groups
-		
-		for gr in contact.groups:
-			if not gr in self.main.ui.roster.getGroupItems(True):
-				self.main._addGroup(gr)
-
-		for item in self.main.ui.roster.getGroupItems():
+		for name,item in self.roster['groups'].iteritems():
 			# updated contact has to be in this group
-			name=unicode(item.text(2))
-			if name in contact.groups:
+			if name in self.roster['users'][jid].groups:
 				add=True
 				# go through all user items, find item in this group and edit it
 				for i in items:
@@ -343,11 +330,11 @@ class clientClass(pyxl.client.Client):
 							#typ=unicode(it[1].toString())
 							#if typ=="meta":
 								#self.roster['users'][data].rosterItems.append(child)
-						self.main.ui.roster.getGroupItem(name).addChild(i) # add item to the new group
+						self.roster['groups'][name].addChild(i) # add item to the new group
 						self.main.ui.roster.setStatus(jid,None,i)
 					else:
 						# add new contact to the roster
-						self.main.ui.roster.addUser(contact.jid,contact.name,self.main.ui.roster.getGroupItem(name))
+						self.main.ui.roster.addUser(contact.jid,contact.name,self.roster['groups'][name])
 						self.main.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
 						self.main.ui.roster.setStatus(jid,None)
 						self.main.ui.roster.refreshStats()
@@ -863,8 +850,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.rosterHideOffline(not bool)
 	
 	def rosterHideOffline(self,bool):
-		for group in self.ui.roster.getGroupItems(True):
-			item=self.ui.roster.getGroupItem(group)
+		for group,item in self.client.roster['groups'].iteritems():
 			# return stats (online,offline,all users) for group
 			for i in range(int(item.childCount())):
 				child=item.child(i)
@@ -954,7 +940,6 @@ class mainWindow(QtGui.QMainWindow):
 					self.config['jid']=jid
 					self.config.write()
 		if self.client==None:
-			from twisted.internet import reactor
 			self.client = clientClass(jid+"/jabbim", password, jid.split("@")[1], 5222,self,reactor)
 			self.client.log=True
 		self.ui.login_connect.setEnabled(False)

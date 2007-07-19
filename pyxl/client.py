@@ -275,19 +275,19 @@ class Client(derived):
 		log.msg(el.toXml())
 		for child in el.elements():
 			if child.name == "query":
-				#allGroups=[]
-				#for k,v in self.roster['groups'].iteritems():
-					#allGroups.append(k)
+				allGroups=[]
+				for k,v in self.roster['groups'].iteritems():
+					allGroups.append(k)
 				for item in child.elements():
 					groups = []
 					itemjid = item['jid']
 					for group in item.elements():
 						if group.name == 'group':
 							groups.append(unicode(group))
-							#if unicode(group) not in allGroups:
-								## add group item to ther roster
-								#self.roster['groups'][unicode(group)] = self.reactor.callFromThread(self.main._addGroup, group)
-								#allGroups.append(unicode(group))
+							if unicode(group) not in allGroups:
+								# add group item to ther roster
+								self.roster['groups'][unicode(group)] = self.reactor.callFromThread(self.main._addGroup, group)
+								allGroups.append(unicode(group))
 					if item.hasAttribute('name'):
 						name = item['name']
 					else:
@@ -318,7 +318,7 @@ class Client(derived):
 						contact = self.roster['users'][itemjid]
 						contact.name = name
 						contact.groups = groups
-						self.reactor.callFromThread(self.on_UpdateContact,contact)
+						self.reactor.callFromThread(self.on_UpdateContact,itemjid)
 		iq = Element((None, 'iq'))
 		iq['from'] = self.jid.full()
 		iq['to'] = self.jid.host
@@ -547,17 +547,17 @@ class Client(derived):
 		ln = 0
 		for child in el.elements():
 			if child.name == "query":
-				#allGroups=['Unknown']
+				allGroups=['Unknown']
 				for item in child.elements():
 					ln = ln + 1
 					groups = []
 					for group in item.elements():
 						if group.name == 'group':
 							groups.append(unicode(group))
-							#if unicode(group) not in allGroups:
-								## add group item to ther roster
-								#self.roster['groups'][unicode(group)] = self.reactor.callFromThread(self.main._addGroup,unicode(group))
-								#allGroups.append(unicode(group))
+							if unicode(group) not in allGroups:
+								# add group item to ther roster
+								self.roster['groups'][unicode(group)] = self.main._addGroup(unicode(group))
+								allGroups.append(unicode(group))
 					if item.hasAttribute('name'):
 						name = item['name']
 					else:
@@ -582,7 +582,7 @@ class Client(derived):
 ##		print ln,  cekej
 ##		self.reactor.callLater(cekej,  self.onFirstPresence)
 		self.first_wait = False
-		self.reactor.callFromThread(self.on_rosterArrived)
+		self.on_rosterArrived()
 ##		self.onFirstPresence()
 
 	def _authfailed(self,xmlstream):
@@ -630,20 +630,20 @@ class Client(derived):
 		for child in el.elements():
 			if child.name == 'status':
 				status = unicode(child)
-		self.reactor.callFromThread(self.on_subscribe,el['from'], status)
+		self.on_subscribe(el['from'], status)
 
 	def onSubscribed(self, el):
 		log.msg( 'on subscribed')
-		self.reactor.callFromThread(self.on_subscribed, el['from'])
+		self.on_subscribed(el['from'])
 
 	def onUnSubscribe(self, el):
 		log.msg('on unsubscribe')
-		self.reactor.callFromThread(self.on_unsubscribe, el['from'])
+		self.on_unsubscribe(el['from'])
 
 	def onUnSubscribed(self, el):
 		log.msg( 'on unsubscribed')
 ##		self.sendRosterUpdate(jid, '', 'remove', [])
-		self.reactor.callFromThread(self.on_unsubscribed, el['from'])	
+		self.on_unsubscribed(el['from'])	
 
 	
 	def onFirstPresence(self):
