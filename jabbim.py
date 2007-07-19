@@ -714,9 +714,9 @@ class mainWindow(QtGui.QMainWindow):
 		jid=unicode(lst[0].toString()) # get jid
 		nickname=unicode(lst[1].toString()) # get nickname
 		# send jabber command
-		self.chat.addGroupChatTab(jid,nickname)
-		#self.main.groupchat[room+"@"+server]=[nickname,[]]
-		self.client.joinGC(jid, nickname)
+		if self.chat.addGroupChatTab(jid,nickname):
+			#self.main.groupchat[room+"@"+server]=[nickname,[]]
+			self.client.joinGC(jid, nickname)
 
 	def buildBookmarks(self):
 		self.ui.bookmarks.clear()
@@ -733,8 +733,8 @@ class mainWindow(QtGui.QMainWindow):
 			if (v.autojoin==True or v.autojoin=="True") or (v.autojoin==1 or v.autojoin=="1"):
 				jid=unicode(v.jid.full())
 				nickname=v.nick
-				self.chat.addGroupChatTab(jid,nickname)
-				self.client.joinGC(jid, nickname)
+				if self.chat.addGroupChatTab(jid,nickname):
+					self.client.joinGC(jid, nickname)
 
 	def joinGroupchat(self,bool):
 		newchat=widgets.joingroupchat.joinGroupChatWindow(self)
@@ -792,8 +792,8 @@ class mainWindow(QtGui.QMainWindow):
 			jid=unicode(lst[0].toString()) # get jid
 			nickname=unicode(lst[1].toString()) # get nickname
 			# send jabber command
-			self.chat.addGroupChatTab(jid,nickname)
-			self.client.joinGC(jid, nickname)
+			if self.chat.addGroupChatTab(jid,nickname):
+				self.client.joinGC(jid, nickname)
 		elif cmd=="edit_bookmark":
 			item=self.ui.bookmarks.currentItem()
 			data=action.data()

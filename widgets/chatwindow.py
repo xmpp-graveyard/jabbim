@@ -113,7 +113,7 @@ class chatWindow(QtGui.QMainWindow):
 				self.activateWindow()
 				w.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 				self.ui.chatTab.setCurrentIndex(i)
-				return
+				return False
 		tab=QtGui.QWidget(self.ui.chatTab)
 		tab.jid=room
 		tab.name=unicode(nickname)
@@ -130,6 +130,7 @@ class chatWindow(QtGui.QMainWindow):
 		self.raise_()
 		self.activateWindow()
 		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		return True
 
 
 	def closeEvent(self,e):
