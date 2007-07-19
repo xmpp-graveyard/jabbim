@@ -177,7 +177,7 @@ class rosterWidget(QtGui.QTreeWidget):
 
 	def contactClicked(self,item,column):
 		# open chat window for clicked contact
-		if self.main.client.roster['groups'].has_key(unicode(item.text(2))):
+		if not unicode(item.text(2)) in self.getGroupItems(True):
 			return
 		it=item.data(32,0)
 		it=it.toList()
@@ -389,6 +389,15 @@ class rosterWidget(QtGui.QTreeWidget):
 	def mimeTypes(self):
 		# set mimetypes, which we accept
 		return QtCore.QStringList("text/plain")
+	def getGroupItems(self,names=False):
+		items=[]
+		for i in range(self.topLevelItemCount()):
+			if names:
+				it=unicode(self.topLevelItem(i).text(2))
+			else:
+				it=self.topLevelItem(i)
+			items.append(it)
+		return items
 
 	def getGroupItem(self,name):
 		items=self.findItems(name, QtCore.Qt.MatchFixedString,2)
@@ -433,7 +442,8 @@ class rosterWidget(QtGui.QTreeWidget):
 
 	def refreshStats(self):
 		# rewrite online/all users stats in group QTreeWidgetItem
-		for group,item in self.main.client.roster['groups'].iteritems():
+		for group in self.getGroupItems(True):
+			item=self.getGroupItem(group)
 			# return stats (online,offline,all users) for group
 			offline=0
 			online=0
@@ -442,7 +452,7 @@ class rosterWidget(QtGui.QTreeWidget):
 					offline+=1
 				else:
 					online+=1
-			self.main.client.roster['groups'][group].setText(0,"<font color=\""+unicode(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+"\">"+unicode(self.main.client.roster['groups'][group].text(2))+" ("+str(online)+"/"+str(online+offline)+")</font>")
+			item.setText(0,"<font color=\""+unicode(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+"\">"+unicode(item.text(2))+" ("+str(online)+"/"+str(online+offline)+")</font>")
 
 	def setStatus(self,jid,show,i=None,status=None,first=False):
 		if not self.main.shows.has_key(show):
