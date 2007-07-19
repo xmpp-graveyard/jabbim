@@ -21,7 +21,7 @@ class delegate(QtGui.QItemDelegate):
 		if not index.data(QtCore.Qt.BackgroundRole).isNull():
 			painter.save()
 			painter.translate(option.rect.topLeft())
-			painter.fillRect(r,QtGui.QBrush(QtGui.QColor(index.data(QtCore.Qt.BackgroundRole).toString())))
+			painter.fillRect(r,QtGui.QBrush(QtGui.QColor(index.data(QtCore.Qt.BackgroundRole))))
 
 			painter.restore()
 
