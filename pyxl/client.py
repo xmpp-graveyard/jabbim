@@ -556,7 +556,7 @@ class Client(derived):
 							groups.append(unicode(group))
 							if unicode(group) not in allGroups:
 								# add group item to ther roster
-								self.roster['groups'][unicode(group)] = self.main._addGroup(unicode(group))
+								self.roster['groups'][unicode(group)] = self.reactor.callFromThread(self.main._addGroup,unicode(group))
 								allGroups.append(unicode(group))
 					if item.hasAttribute('name'):
 						name = item['name']
@@ -582,7 +582,7 @@ class Client(derived):
 ##		print ln,  cekej
 ##		self.reactor.callLater(cekej,  self.onFirstPresence)
 		self.first_wait = False
-		self.on_rosterArrived()
+		self.reactor.callFromThread(self.on_rosterArrived)
 ##		self.onFirstPresence()
 
 	def _authfailed(self,xmlstream):
@@ -630,20 +630,20 @@ class Client(derived):
 		for child in el.elements():
 			if child.name == 'status':
 				status = unicode(child)
-		self.on_subscribe(el['from'], status)
+		self.reactor.callFromThread(self.on_subscribe,el['from'], status)
 
 	def onSubscribed(self, el):
 		log.msg( 'on subscribed')
-		self.on_subscribed(el['from'])
+		self.reactor.callFromThread(self.on_subscribed, el['from'])
 
 	def onUnSubscribe(self, el):
 		log.msg('on unsubscribe')
-		self.on_unsubscribe(el['from'])
+		self.reactor.callFromThread(self.on_unsubscribe, el['from'])
 
 	def onUnSubscribed(self, el):
 		log.msg( 'on unsubscribed')
 ##		self.sendRosterUpdate(jid, '', 'remove', [])
-		self.on_unsubscribed(el['from'])	
+		self.reactor.callFromThread(self.on_unsubscribed, el['from'])	
 
 	
 	def onFirstPresence(self):
