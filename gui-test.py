@@ -1,118 +1,110 @@
-import sys,os
-try: from PyQt4 import QtCore, QtGui
-except: print "PyQt4 is not installed."
-import widgets
-from configobj import ConfigObj
-from include import utils
+# Twisted, the Framework of Your Internet
+# Copyright (C) 2001 Matthew W. Lefkowitz
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of version 2.1 of the GNU Lesser General Public
+# License as published by the Free Software Foundation.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-class mainWindow(QtGui.QMainWindow):
-	def __init__(self,parent=None):
-		apply(QtGui.QMainWindow.__init__,(self,parent))
-		self.ui=widgets.mainWindow.Ui_MainWindow()
-		self.ui.setupUi(self)
-		self.homeDir=utils.getHomeDir() # get home dir
-		utils.loadConfig(self) # load config files
-		self.loadRoster() # load roster widget
+"""Qt demo.
 
-		self.shows={u"online":u"1",
-					u"available":u"1",
-					u"chat":u"2",
-					u"away":u"3",
-					u"xa":u"4",
-					u"dnd":u"5",
-					u"None":u"1",
-					u"offline":u"9",
-					u"unavailable":u"9"
-					}
-		self.icons={u"1":u"online",
-					u"2":u"chat",
-					u"3":u"away",
-					u"4":u"xa",
-					u"5":u"dnd",
-					u"9":u"offline"
-					}
-		self.status={"online":self.tr("Online"),
-					"available":self.tr("Online"),
-					"chat":self.tr("Chatty"),
-					"away":self.tr("Away"),
-					"xa":self.tr("Extended away"),
-					"dnd":self.tr("DND"),
-					"None":self.tr("Online"),
-					"offline":self.tr("Offline")
-					}
+Fetch a URL's contents.
+"""
 
-		self.roster={"groups":{},"users":{}}
-		self.roster['groups']['Unknown']=self._addGroup('Unknown')
-		self.addUser('test@jabbim.cz',"test",self.roster['groups']['Unknown'],first=True)
+import sys, urlparse
+from qt import *
 
-		items=self.ui.roster.getUserItems("test@jabbim.cz")
-		lenght=int(len(items))
-		for i in range(lenght):
-			item=self.ui.roster.getUserItems("test@jabbim.cz")[0]
-			print "DELETE ITEM:"+unicode(item.text(1))
-			parent=item.parent()
-			if parent:
-				index=parent.indexOfChild(item)
-				if index>-1:
-					it=parent.takeChild(index)
-					#it.view=0
-					#del it
-					#it=0
+from twisted.internet import qtreactor, protocol
+app = QApplication([])
+qtreactor.install(app)
 
-	def addUser(self,jid,name,group,offline=True,first=False):
-		# add new user to the roster and resturn QTreeWidgetItem
-
-		if group==None:
-			item=QtGui.QTreeWidgetItem(self)
-		else:
-			item=QtGui.QTreeWidgetItem(group)
-		# if we get no name, we can use jid as name
-		if name==None or len(name)==0:
-			name=jid
-		# item data
-		item.setText(0,unicode(name))
-		item.setText(1,"9"+unicode(name).lower())
-		item.setText(2,unicode(name))
-		item.setText(4,unicode(jid))
-		item.setData(32,0,QtCore.QVariant([unicode(jid),unicode("contact")]))
-		item.setIcon(0,self.getIcon(size=str(self.config['rosterIconSize']),status=self.icons["9"]))
-		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)
-		# item design
-		#if len(self.main.client.roster['users'][jid].status)!=0:
-			#if len(self.main.client.roster['users'][jid].status)>1:
-				#show=self.main.client.roster['users'][jid].status[0]
-			#else:
-				#show=self.main.client.roster['users'][jid].status
-		#else:
-			#show="offline"
-		#if unicode(item.text(1))[0]=='9':
-			#self.ui.roster.setItemHidden(item, offline)
-		return item
-
-	def getIcon(self,jid=None,typ=None,size="32x32",status=None):
-		icon=QtGui.QIcon()
-		return icon
-
-	def _addGroup(self, group):
-		item=self.ui.roster.addGroup(unicode(group))
-		index=self.ui.roster.indexFromItem(item,0)
-		self.ui.roster.expand(index)
-		return item
-	
-	def _addUser(self, itemjid, name, grp):
-		return self.ui.roster.addUser(itemjid,name,grp)
-	
-	def loadRoster(self):
-		# load roster widget
-		layout=QtGui.QHBoxLayout(self.ui.rosterWidget)
-		layout.setMargin(0)
-		layout.setSpacing(0)
-		self.ui.roster=widgets.rosterWidget.rosterWidget(self.ui.rosterWidget,self)
-		layout.addWidget(self.ui.roster)
+from twisted.protocols import http
 
 
-app = QtGui.QApplication(sys.argv)
+class TwistzillaClient(http.HTTPClient):
+    def __init__(self, edit, urls):
+        self.urls  = urls
+        self.edit  = edit
 
-MainWindow = mainWindow()
-MainWindow.show()
-app.exec_()
+    def connectionMade(self):
+        print 'Connected.'
+
+        self.sendCommand('GET', self.urls[2])
+        self.sendHeader('Host', '%s:%d' % (self.urls[0], self.urls[1]) )
+        self.sendHeader('User-Agent', 'Twistzilla')
+        self.endHeaders()
+
+    def handleResponse(self, data):
+        print 'Got response.'
+        self.edit.setText(data)
+
+
+
+class TwistzillaWindow(QMainWindow):
+    def __init__(self, *args):
+        QMainWindow.__init__(self, *args)
+
+        self.setCaption("Twistzilla")
+
+        vbox = QVBox(self)
+        vbox.setMargin(2)
+        vbox.setSpacing(3)
+
+        hbox = QHBox(vbox)
+        label = QLabel("Address: ", hbox)
+
+        self.line  = QLineEdit("http://www.twistedmatrix.com/", hbox)
+        self.connect(self.line, SIGNAL('returnPressed()'), self.fetchURL)
+
+        self.edit = QMultiLineEdit(vbox)
+        self.edit.setEdited(0)
+
+        self.setCentralWidget(vbox)
+
+    def fetchURL(self):
+        u = urlparse.urlparse(str(self.line.text()))
+
+        pos = u[1].find(':')
+
+        if pos == -1:
+            host, port = u[1], 80
+        else:
+            host, port = u[1][:pos], int(u[1][pos+1:])
+
+        if u[2] == '':
+            file = '/'
+        else:
+            file = u[2]
+
+        print 'Connecting to.'
+        from twisted.internet import reactor
+        protocol.ClientCreator(reactor, TwistzillaClient, self.edit, (host, port, file)).connectTCP(host, port)
+
+
+def main():
+    """Run application."""
+    # hook up Qt application to Twisted
+    from twisted.internet import reactor
+    
+    win = TwistzillaWindow()
+    win.show()
+
+    # make sure stopping twisted event also shuts down QT
+    reactor.addSystemEventTrigger('after', 'shutdown', app.quit )
+
+    # shutdown twisted when window is closed
+    app.connect(app, SIGNAL("lastWindowClosed()"), reactor.stop)
+
+    reactor.run()
+
+
+if __name__ == '__main__':
+    main()

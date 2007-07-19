@@ -954,6 +954,7 @@ class mainWindow(QtGui.QMainWindow):
 					self.config['jid']=jid
 					self.config.write()
 		if self.client==None:
+			from twisted.internet import reactor
 			self.client = clientClass(jid+"/jabbim", password, jid.split("@")[1], 5222,self,reactor)
 			self.client.log=True
 		self.ui.login_connect.setEnabled(False)
