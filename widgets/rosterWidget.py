@@ -5,7 +5,7 @@ except:
 	print "PyQt4 is not installed."
 
 from tooltip_ui import *
-from eventsFTWidget_ui import *
+#from eventsFTWidget_ui import *
 from os.path import basename
 
 class doc(QtGui.QTextDocument):
