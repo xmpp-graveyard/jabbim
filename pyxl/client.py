@@ -621,8 +621,10 @@ class Client(derived):
 
 		if self.groupchats.has_key(jid.JID(frm).userhost()):
 			self.on_GCmessage(frm,typ,body,subject, xhtml,  chatstate,  delay)
+			self.dispatcher.publishEvent('on_GCmessage', frm,typ,body,subject, xhtml,  chatstate,  delay)
 		else:
 			self.on_message(frm,typ,body,subject, xhtml,  chatstate,  delay)
+			self.dispatcher.publishEvent('on_message', frm,typ,body,subject, xhtml,  chatstate,  delay)
 
 	def onSubscribe(self, el):
 		log.msg( 'on subscribe')
@@ -650,6 +652,7 @@ class Client(derived):
 		log.msg( 'first presences')
 		self.first_wait = False
 		self.reactor.callFromThread(self.on_firstpresence, self.first_presence)
+		self.dispatcher.publishEvent('first presence')
 	
 	def onPresence(self, el):
 ##		print 'presence > ', el['from']
@@ -727,15 +730,18 @@ class Client(derived):
 				self.first_presence.append((frm,show))
 			else:
 				self.reactor.callFromThread(self.on_presence,frm,show)
+				self.dispatcher.publishEvent('on_presence',frm,show)
 		elif self.groupchats.has_key(fromjid):
 			if show=="offline":
-				self.on_GCpresence(fromjid, resource,  show,  status,  codes)
+				self.reactor.callFromThread(self.on_GCpresence, fromjid, resource,  show,  status,  codes)
+				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes)
 			self.groupchats[fromjid].setStatus(resource,  show,  status)
 			if self.groupchats[fromjid].users.has_key(resource):
 				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid)
 				#self.groupchats[fromjid]
 			if show!="offline":
 				self.reactor.callFromThread(self.on_GCpresence,fromjid, resource,  show,  status,  codes)
+				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes)
 			return
 		else:
 ##			print 'contact not in roster'
@@ -750,6 +756,7 @@ class Client(derived):
 			err = el.firstChildElement()
 			errel = err.firstChildElement()
 			self.on_GCpresenceError(fromjid, err['code'],  err['type'],  errel.name )
+			self.dispatcher.publishEvent('on_GCpresenceError',fromjid, err['code'],  err['type'],  errel.name )
 		
 	def getFeatures(self, jid, caps_node):
 		log.msg('requesting features'+ caps_node)
