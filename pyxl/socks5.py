@@ -443,8 +443,8 @@ class FTSend:
 	def __init__(self, client, sid, filename, tojid, file, description= None):
 		self.sid = sid
 		self.filename = filename
-		self.file = open(file, 'r')
-		self.size = os.path.getsize(file)
+		self.fp = open(file, 'r')
+		self.size = os.path.getsize(fp)
 		self.description = description
 		self.client = client
 		self.tojid = tojid
@@ -466,7 +466,7 @@ class FTSend:
 		d.addCallback(self._activated)
 		
 	def _activated(self, el):
-		FileSender().beginFileTransfer(self. file, self.protocol)#. addCallback(self._finished)
+		FileSender().beginFileTransfer(self. fp, self.protocol)#. addCallback(self._finished)
 	
 	def _finished(self, last):
 		log.msg('finished transfer for ' + self.filename)
