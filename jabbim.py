@@ -667,7 +667,13 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				log.msg("ft.finished")
 				widget.widget.progressBar.setValue(100)
-				widget.widget.label_2.setText(self.tr("Complete"))
+				if widget.widget.complete==None:
+					widget.widget.label_2.setText(self.tr("Complete"))
+					widget.widget.complete=True
+					widget.widget.closeClicked()
+				else:
+					widget.widget.label_2.setText(self.tr("Complete"))
+					widget.widget.complete=True
 				#toDel.append(sid)
 		#for sid in toDel:
 			#self.

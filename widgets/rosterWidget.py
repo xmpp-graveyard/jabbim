@@ -13,8 +13,12 @@ class doc(QtGui.QTextDocument):
 		apply(QtGui.QTextDocument.__init__,(self,parent))
 
 class FTWidget(QtGui.QWidget):
-	def __init__(self,file,parent=None):
+	def __init__(self,file,item,main,sid,parent=None):
 		apply(QtGui.QWidget.__init__,(self,parent))
+		self.item=item
+		self.main=main
+		self.complete=False
+		self.sid=sid
 		self.gridlayout = QtGui.QGridLayout(self)
 		self.gridlayout.setMargin(0)
 		self.gridlayout.setSpacing(0)
@@ -39,16 +43,20 @@ class FTWidget(QtGui.QWidget):
 		self.hboxlayout.addWidget(self.label_2)
 
 		spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-		self.hboxlayout.addWidget(spacerItem)
+		self.hboxlayout.addStretch()
 		
 		self.closeButton = QtGui.QPushButton(self)
 		self.closeButton.setMaximumSize(16,16)
 		self.closeButton.setObjectName("closeButton")
+		self.closeButton.setFlat(True)
+		self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
 		self.hboxlayout.addWidget(self.closeButton)
+
+		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
 
 		self.gridlayout1.addLayout(self.hboxlayout,0,0,1,1)
 	
-	
+
 		self.progressBar = QtGui.QProgressBar(self)
 	
 		sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7),QtGui.QSizePolicy.Policy(1))
@@ -66,6 +74,14 @@ class FTWidget(QtGui.QWidget):
 		self.gridlayout1.setMargin(1)
 		self.gridlayout1.setSpacing(0)
 		self.setMinimumHeight(40)
+
+	def closeClicked(self):
+		if not self.complete:
+			self.main.client.ft[self.sid].protocol.unregisterProducer()
+			self.complete=None
+		else:
+			self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
+
 #documentLayout()->anchorAt(position);
 class delegate(QtGui.QItemDelegate):
 	def __init__(self,parent=None):
@@ -806,7 +822,7 @@ class rosterWidget(QtGui.QTreeWidget):
 				sid=self.main.client.sendFile(jid, basename(file), file)
 				item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 				item.setSizeHint(QtCore.QSize(100,40))
-				item.widget=FTWidget(basename(file),self.main.ui.eventsListWidget)
+				item.widget=FTWidget(basename(file),item,self.main,sid,self.main.ui.eventsListWidget)
 				self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 				self.main.filetransfer[sid]=item
 				self.main.filetransferTimer.start(500)
