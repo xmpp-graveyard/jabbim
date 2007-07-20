@@ -1,5 +1,5 @@
 import sys, time, random
-import socks5
+import socks5, events
 from twisted.python import log
 from twisted.internet import protocol
 from twisted.names import client as dns
@@ -87,12 +87,13 @@ class Client(derived):
 		self.caps_cache = {} # 'node': [feature1, feature2]
 		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
 		self.log = True
+		self.dispatcher = events.EventDispatcher()
 		self.reactor.callFromThread(self.on_init)
 
+
 	def chyba(self, err):
-##		print err
-##		print dir(err)
 		err.printBriefTraceback()
+	
 	def cacheCaps(self, node, features):
 		self.caps_cache[node] = features
 
@@ -161,13 +162,12 @@ class Client(derived):
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
 ##		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
 ##		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
-		self.factory.addBootstrap("//event/xmpp/initfailed", self._authfailed)
+##		self.factory.addBootstrap("//event/xmpp/initfailed", self._authfailed)
 		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
 		self.factory.addBootstrap("/*", self.logIt)
-		self.factory.clientConnectionLost = self.connectionLost
-		self.factory.clientConnectionFailed = self.connectionLost
+##		self.factory.clientConnectionLost = self.connectionLost
+##		self.factory.clientConnectionFailed = self.connectionLost
 		self.connection = self.reactor.connectTCP(host,port,self.factory)
-
 		log.msg('started')
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
@@ -193,6 +193,7 @@ class Client(derived):
 
 	def _authd(self, xmlstream):
 		log.msg('authed')
+##		self.dispatcher.publishEvent('authed')
 		self.main._connected()
 		self.xmlstream = xmlstream
 		self.xmlstream.addObserver("/presence", self.onPresence, 1)
@@ -215,17 +216,10 @@ class Client(derived):
 		self.getBookmarks()
 		self.getDiscoInfo(self.jid.host,  callback = self._pepSupport)
 		self.getDiscoItems(self.jid.host)
-		#self.getVCard('sef@njs.netlab.cz')
-#		self.sendPEPTune()
-#		self.registerPEP('sefator@jabber.se')
-#		self.getPrivacy()
-#		self.joinGC('jdev@conf.netlab.cz',  'Sefator')
-##		reactor.callLater(15, self.sendFile,'public@disk.jabbim.cz/jdisk', '30.py', 'jabb.log')
 		self.reactor.callFromThread(self.on_authd)
+	
 	def _pepSupport(self):
 		log.msg('pep support arrived')
-#		print self.jid.host,  self.disco
-#		print self.disco[self.jid.host][None]
 		for key,  val in self.disco[self.jid.host][None]['identities'].iteritems():
 			log.msg(key+ unicode(val))
 			if val['type'] == 'pep' :
@@ -233,7 +227,7 @@ class Client(derived):
 				self.pep = True
 				self.registerFeature('http://jabber.org/protocol/tune')
 				self.registerFeature('http://jabber.org/protocol/tune+notify')
-#		print self.disco[self.jid.host][None]['identities']
+	
 	def sendPEP(self,  typ,  attrs):
 		iq = IQ(self.xmlstream, 'set')
 		pb = iq.addElement('pubsub', 'http://jabber.org/protocol/pubsub' ).addElement('publish')
@@ -304,7 +298,6 @@ class Client(derived):
 					subscription = ''
 					if item.hasAttribute('subscription'):
 						subscription = item['subscription']
-					#print item['jid'],groups
 					if subscription == 'remove'  and self.roster['users'].has_key(itemjid):
 						log.msg('deleting contact')
 						self.reactor.callFromThread(self.on_DeleteContact,itemjid)
@@ -364,11 +357,11 @@ class Client(derived):
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid
 		iq.addElement('vCard', 'vcard-temp')
-##		self.disp(iq['id'])
-##		d = iq.send()
-##		self.on_xml(iq.toXml())
-##		d.addCallback(self._vcardReceived)
-##		d.addErrback(self._noVcard, jid) 
+		self.disp(iq['id'])
+		d = iq.send()
+		self.on_xml(iq.toXml())
+		d.addCallback(self._vcardReceived)
+		d.addErrback(self._noVcard, jid) 
 
 	def _noVcard(self, err, jid): 
 		#               print jid, ' no vcard available' 
@@ -452,7 +445,6 @@ class Client(derived):
 										nick = unicode(elm)
 									if elm.name == 'password':
 										password = unicode(elm)
-
 								self.bookmarks['conference'][name] = Bookmark(name, 'conference', jid, autojoin, nick,  password)
 							if bookmark.name == 'url':
 								url = bookmark['url']
@@ -515,10 +507,7 @@ class Client(derived):
 		self.sendPresence(to = params['jid'], status = params['msg'], typ = 'subscribe')
 
 	def delContact(self, jid):
-##		if self.roster['users'][jid].subscription != 'both':
 		self.sendRosterUpdate(jid, '', 'remove', [])
-##		else:
-##			self.sendPresence(to = jid, typ = 'unsubscribe')
 		if self.roster_meta.has_key(jid):
 			del self.roster_meta[jid]
 			self.setMetacontacts()
@@ -548,9 +537,11 @@ class Client(derived):
 			err.addElement('bad-request')
 			self.on_xml(el.toXml())
 			self.xmlstream.send(el)
+	
 	def logIt(self, el):
 		if self.log:
 			self.on_xml(el.toXml())
+	
 	def _onRosterArrive(self, el):
 		log.msg( 'roster arrived')
 		ln = 0
@@ -588,11 +579,11 @@ class Client(derived):
 		cekej = 20
 		if ln*0.05 < cekej:
 			cekej = ln*0.05
-##		print ln,  cekej
-##		self.reactor.callLater(cekej,  self.onFirstPresence)
-		self.first_wait = False
 		self.on_rosterArrived()
-##		self.onFirstPresence()
+		self.reactor.callLater(cekej,  self.onFirstPresence)
+
+
+
 
 	def _authfailed(self,xmlstream):
 		log.msg( "auth_failed")

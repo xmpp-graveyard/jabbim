@@ -428,7 +428,7 @@ class Send(protocol.Protocol):
 		self.transport.loseConnection()
 
 	def write(self, data):
-		print 'prenasim: ', len(data)
+##		print 'prenasim: ', len(data)
 		try:
 			self.ft.connector.factory.delayed_timeout_call.cancel()
 		except:
