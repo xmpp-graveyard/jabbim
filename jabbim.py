@@ -492,6 +492,7 @@ class clientClass(pyxl.client.Client):
 			# write message and set 'message' icon
 			if int(self.main.chat.ui.chatTab.currentIndex())!=tabIndex:
 				self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
+				self.main.chat.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(255,0,0))
 			tab.chat.textEditWrite(message)
 		else:
 			# add new chattab
