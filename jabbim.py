@@ -1044,6 +1044,7 @@ class statusWindow(QtGui.QDialog):
 			#MainWindow.client.roster['groups']['Unknown']=MainWindow.ui.roster.addGroup('Unknown')
 			#MainWindow.client.temp_hosts=[]
 			MainWindow.ui.roster.clear()
+			MainWindow.ui.roster.makeHiddenItem()
 			MainWindow.ui.login_connect.setEnabled(True)
 			#MainWindow.client.disconnect()
 			#print MainWindow.client.roster

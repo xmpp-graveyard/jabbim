@@ -196,9 +196,6 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.hideColumn(1)
 		self.hideColumn(2)
 		self.hideColumn(4)
-		self.item=QtGui.QTreeWidgetItem(self)
-		self.item.setText(1,"999")
-		self.setItemHidden(self.item, True)
 
 		#self.tooltip=tooltipWidget(self.main)
 		self.tooltip=None
@@ -212,7 +209,13 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 
 		self.dnd={}
-		
+		self.makeHiddenItem()
+
+	def makeHiddenItem(self):
+		self.item=QtGui.QTreeWidgetItem(self)
+		self.item.setText(1,"999")
+		self.setItemHidden(self.item, True)
+
 	def expanded(self,item):
 		# change icon if group item expanded
 		if item.parent()==None:
