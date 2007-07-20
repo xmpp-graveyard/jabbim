@@ -466,11 +466,18 @@ class FTSend:
 		d.addCallback(self._activated)
 		
 	def _activated(self, el):
-		FileSender().beginFileTransfer(self. file, self.protocol). addCallback(self._finished)
+		FileSender().beginFileTransfer(self. file, self.protocol)#. addCallback(self._finished)
 	
 	def _finished(self, last):
 		log.msg('finished transfer for ' + self.filename)
 		log.msg('times: %i - %i - %i - %i'%(self.start, self.medium, self.ftstart, time.time())) 
+	
+	def finish(self):
+		log.msg("konec prenosu")
+		if self.fp != None:
+			self.fp.close()
+		self.client.on_ftEnd(self.sid)
+		
 
 class FTReceive:
 	def __init__(self, client,jid, sid, file, methods):
@@ -520,3 +527,4 @@ class FTReceive:
 		log.msg("konec prenosu")
 		if self.fp != None:
 			self.fp.close()
+		self.client.on_ftEnd(self.sid)

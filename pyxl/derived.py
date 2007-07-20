@@ -76,3 +76,6 @@ class derived:
 	
 	def on_fileReceived(self, jid, file, methods, id):
 		pass
+	
+	def on_ftEnd(self, sid):
+		del self.ft[sid]
