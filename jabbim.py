@@ -39,6 +39,7 @@ from pyxl import storage
 from configobj import ConfigObj
 from include import utils
 import urllib
+from imp import load_source
 
 #mutex=QtCore.QMutex()
 
@@ -660,6 +661,19 @@ class mainWindow(QtGui.QMainWindow):
 		#self.setUpdatesEnabled(False)
 		#QtGui.QMainWindow(self).resizeEvent(event)
 		#self.setUpdatesEnabled(True)
+
+		
+	def loadPlugins(self):
+		self.plugins=[]
+		plugins=os.listdir("plugins/")
+		for plugin in plugins:
+			if plugin.endswith(".py") and plugin!="plugins.py":
+				f=open("plugins/"+plugin)
+				self.plugins.append(load_source(plugin[:-3],"plugins/"+plugin,f).plugin(self))
+				f.close()
+				#self.plugins.append(eval(plugin[:-3]))
+		log.msg("PLUGINS:"+unicode(self.plugins))
+
 	def refreshFT(self):
 		log.msg("refresh")
 		toDel=[]
@@ -920,6 +934,7 @@ class mainWindow(QtGui.QMainWindow):
 		layout.addWidget(self.ui.roster)
 
 	def _connected(self):
+
 		self.ui.rosterStackedWidget.setCurrentIndex(1)
 		self.ui.statusButton.setText(unicode(self.status["online"]))
 		self.ui.statusButton.setIcon(self.getIcon("online",size="16x16"))
@@ -946,7 +961,6 @@ class mainWindow(QtGui.QMainWindow):
 				host=None
 			if self.hosts.has_key(host):
 				usertype=self.hosts[host]
-				print host,self.hosts,usertype,self.hosts[host]
 				if status==None:
 					status=self.icons[self.shows[typ]]
 				file=path+usertype+"-"+status+".png"
@@ -957,7 +971,6 @@ class mainWindow(QtGui.QMainWindow):
 					#print "using",path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png"
 					icon=QtGui.QIcon(path+"jabber-"+self.icons[self.shows[typ]]+".png")
 			else:
-				print host,self.hosts
 				icon=QtGui.QIcon(path+"jabber-online.png")
 		else:
 			if status==None:
@@ -985,6 +998,7 @@ class mainWindow(QtGui.QMainWindow):
 		if self.client==None:
 			self.client = clientClass(jid+"/jabbim", password, jid.split("@")[1], 5222,self,reactor)
 			self.client.log=True
+		self.loadPlugins()
 		self.ui.login_connect.setEnabled(False)
 		self.client.connect()
 	
@@ -1066,6 +1080,7 @@ class statusWindow(QtGui.QDialog):
 			MainWindow.ui.roster.clear()
 			MainWindow.ui.roster.makeHiddenItem()
 			MainWindow.ui.login_connect.setEnabled(True)
+			MainWindow.plugins=[]
 			#MainWindow.client.disconnect()
 			#print MainWindow.client.roster
 			#reactor.stop2()

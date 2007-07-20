@@ -331,6 +331,9 @@ class rosterWidget(QtGui.QTreeWidget):
 		newParentJid=unicode(it[0].toString())
 		newParentTyp=unicode(it[1].toString())
 
+		if item==newParent:
+			return False
+
 		# Pridani kontaktu do klasicke skupiny
 		if newParentTyp=="group" and typ=="contact":
 			if unicode(oldParent.text(2))=="Unknown":
