@@ -164,10 +164,14 @@ class Client(derived):
 		self.factory.addBootstrap("//event/xmpp/initfailed", self._authfailed)
 		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
 		self.factory.addBootstrap("/*", self.logIt)
+		self.factory.connectionLost = self.connectionLost
 		self.connection = self.reactor.connectTCP(host,port,self.factory)
 
 		log.msg('started')
-
+	def connectionLost(self, reason=protocol.connectionDone):
+		log.msg('connection lost!')
+		self.on_disconnect()
+		
 	def _bind(self, el):
 		#experimental
 		log.msg('bind')
@@ -181,6 +185,7 @@ class Client(derived):
 		self.factory.stopTrying()
 		self.connection = None
 		self.factory = None
+		self.on_disconnect()
 
 	def _authd(self, xmlstream):
 		log.msg('authed')

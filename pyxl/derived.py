@@ -79,3 +79,6 @@ class derived:
 	
 	def on_ftEnd(self, sid):
 		del self.ft[sid]
+		
+	def on_disconnect(self):
+		pass

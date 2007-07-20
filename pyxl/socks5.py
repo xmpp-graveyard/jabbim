@@ -444,7 +444,7 @@ class FTSend:
 		self.sid = sid
 		self.filename = filename
 		self.fp = open(file, 'r')
-		self.size = os.path.getsize(fp)
+		self.size = os.path.getsize(file)
 		self.description = description
 		self.client = client
 		self.tojid = tojid
