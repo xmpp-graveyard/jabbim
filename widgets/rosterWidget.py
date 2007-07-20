@@ -38,14 +38,16 @@ class FTWidget(QtGui.QWidget):
 		self.label_2.setObjectName("label_2")
 		self.hboxlayout.addWidget(self.label_2)
 
+		spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+		self.hboxlayout.addWidget(spacerItem)
+		
 		self.closeButton = QtGui.QPushButton(self)
+		self.closeButton.setMaximumSize(16,16)
 		self.closeButton.setObjectName("closeButton")
 		self.hboxlayout.addWidget(self.closeButton)
 
 		self.gridlayout1.addLayout(self.hboxlayout,0,0,1,1)
 	
-		spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-		self.gridlayout1.addItem(spacerItem,0,1,1,1)
 	
 		self.progressBar = QtGui.QProgressBar(self)
 	

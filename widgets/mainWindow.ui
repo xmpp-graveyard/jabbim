@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>299</width>
-    <height>664</height>
+    <height>694</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -203,7 +203,7 @@ p, li { white-space: pre-wrap; }
         <item row="0" column="0" >
          <widget class="QTabWidget" name="tabWidget" >
           <property name="currentIndex" >
-           <number>3</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="rosterTab" >
            <attribute name="title" >
