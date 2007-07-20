@@ -1080,9 +1080,9 @@ class Client(derived):
 		log.msg( 'left MUC: '+ jid)
 
 	
-	def sendFile(self, jid, filename, fp):
+	def sendFile(self, jid, filename, fp, desc = None):
 		sid = str(random.randint(1000, sys.maxint))
-		self.ft[sid] = socks5.FTSend(self, sid, filename, jid, fp, None)
+		self.ft[sid] = socks5.FTSend(self, sid, filename, jid, fp, desc)
 		self.ft[sid].start = time.time()
 		log.msg('sending file to '+ jid)
 		iq = IQ(self.xmlstream, 'set')
@@ -1095,6 +1095,8 @@ class Client(derived):
 		file = si.addElement('file', 'http://jabber.org/protocol/si/profile/file-transfer')
 		file['name'] = filename
 		file['size'] = unicode(self.ft[sid].size)
+		if desc != None:
+			file['description'] = desc
 		feature = si.addElement('feature', 'http://jabber.org/protocol/feature-neg')
 		x = feature.addElement('x', 'jabber:x:data')
 		x['type'] = 'form'
@@ -1106,6 +1108,7 @@ class Client(derived):
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._ftreplyReceived, sid).addErrback(self.chyba)
+		return sid
 	
 	def _ftstreamhostquery(self, el):
 		print 'proxy rika: ', el.toXml()
