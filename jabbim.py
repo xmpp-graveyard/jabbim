@@ -62,6 +62,9 @@ class clientClass(pyxl.client.Client):
 				elif typ=="file":
 					typ="disk"
 				self.main.hosts[jid]=typ
+		for item in self.main.ui.roster.getHostItems("@"+jid):
+			show=unicode(item.text(1))[0]
+			item.setIcon(0,self.main.getIcon("jid@"+jid,size="32x32",status=self.main.icons[show]))
 
 	def on_rosterAddUser(self, contact):
 		#locker=QtCore.QMutexLocker(mutex)
@@ -943,15 +946,19 @@ class mainWindow(QtGui.QMainWindow):
 				host=None
 			if self.hosts.has_key(host):
 				usertype=self.hosts[host]
-			if status==None:
-				status=self.icons[self.shows[typ]]
-			file=path+usertype+"-"+status+".png"
-			if os.path.exists(file):
-				icon=QtGui.QIcon(file)
+				print host,self.hosts,usertype,self.hosts[host]
+				if status==None:
+					status=self.icons[self.shows[typ]]
+				file=path+usertype+"-"+status+".png"
+				if os.path.exists(file):
+					icon=QtGui.QIcon(file)
+				else:
+					#print "File not exist",file," <-",jid,typ
+					#print "using",path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png"
+					icon=QtGui.QIcon(path+"jabber-"+self.icons[self.shows[typ]]+".png")
 			else:
-				#print "File not exist",file," <-",jid,typ
-				#print "using",path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png"
-				icon=QtGui.QIcon(path+"jabber-"+self.icons[self.shows[typ]]+".png")
+				print host,self.hosts
+				icon=QtGui.QIcon(path+"jabber-online.png")
 		else:
 			if status==None:
 				icon=QtGui.QIcon(path+"jabber-online.png")

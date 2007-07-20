@@ -471,6 +471,13 @@ class rosterWidget(QtGui.QTreeWidget):
 			return items[0]
 		return None
 
+	def getHostItems(self,host):
+		items=self.findItems(unicode(host), QtCore.Qt.MatchContains|QtCore.Qt.MatchRecursive,4)
+		if len(items)!=0:
+				return items
+		return []
+
+
 	def getUserItems(self,jid,typ=False):
 		items=self.findItems(unicode(jid), QtCore.Qt.MatchFixedString|QtCore.Qt.MatchRecursive,4)
 		if len(items)!=0:
@@ -533,7 +540,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			item=i
 			name=unicode(item.text(0))
 			item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
-			item.setIcon(0,self.main.getIcon(jid,size=str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
+			item.setIcon(0,self.main.getIcon(jid,size="32x32",status=self.main.icons[self.main.shows[unicode(show)]]))
 			if self.main.shows[unicode(show)]!="9":
 				self.setItemHidden(item, False)
 		else:
@@ -558,7 +565,7 @@ class rosterWidget(QtGui.QTreeWidget):
 					item.setText(0,unicode(item.text(2))+resources)
 					
 				item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
-				item.setIcon(0,self.main.getIcon(jid,size=str(self.main.config['rosterIconSize']),status=self.main.icons[self.main.shows[unicode(show)]]))
+				item.setIcon(0,self.main.getIcon(jid,size="32x32",status=self.main.icons[self.main.shows[unicode(show)]]))
 				if set:
 					parent=item.parent()
 					self.cloneContact(parent,item)
