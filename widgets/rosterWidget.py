@@ -37,6 +37,11 @@ class FTWidget(QtGui.QWidget):
 		self.label_2 = QtGui.QLabel(file,self)
 		self.label_2.setObjectName("label_2")
 		self.hboxlayout.addWidget(self.label_2)
+
+		self.closeButton = QtGui.QPushButton(self)
+		self.closeButton.setObjectName("closeButton")
+		self.hboxlayout.addWidget(self.closeButton)
+
 		self.gridlayout1.addLayout(self.hboxlayout,0,0,1,1)
 	
 		spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
