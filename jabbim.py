@@ -659,6 +659,8 @@ class mainWindow(QtGui.QMainWindow):
 		#self.setUpdatesEnabled(True)
 	def refreshFT(self):
 		log.msg("refresh")
+		toDel=[]
+		print 
 		for sid,widget in self.filetransfer.iteritems():
 			if self.client.ft.has_key(sid):
 				size=float(self.client.ft[sid].size)
@@ -671,14 +673,16 @@ class mainWindow(QtGui.QMainWindow):
 					widget.widget.label_2.setText(self.tr("Complete"))
 					widget.widget.complete=True
 					widget.widget.closeClicked()
+					toDel.append(sid)
 				else:
+					toDel.append(sid)
 					widget.widget.label_2.setText(self.tr("Complete"))
 					widget.widget.complete=True
 				#toDel.append(sid)
-		#for sid in toDel:
+		for sid in toDel:
 			#self.
 			#self.ui.eventsListWidget.takeItem(self.ui.eventsListWidget.row(self.filetransfer[sid]))
-			#del self.filetransfer[sid]
+			del self.filetransfer[sid]
 		if len(self.client.ft)==0:
 			self.filetransferTimer.stop()
 	def closeEvent(self,event):
