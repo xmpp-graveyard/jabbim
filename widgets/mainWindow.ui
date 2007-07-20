@@ -203,7 +203,7 @@ p, li { white-space: pre-wrap; }
         <item row="0" column="0" >
          <widget class="QTabWidget" name="tabWidget" >
           <property name="currentIndex" >
-           <number>0</number>
+           <number>3</number>
           </property>
           <widget class="QWidget" name="rosterTab" >
            <attribute name="title" >
@@ -462,6 +462,22 @@ p, li { white-space: pre-wrap; }
 &lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'DejaVu Sans';">&lt;span style=" font-size:12pt; font-weight:600;">Bookmarks&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
               </property>
              </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="eventsTab" >
+           <attribute name="title" >
+            <string>Events</string>
+           </attribute>
+           <layout class="QGridLayout" >
+            <property name="margin" >
+             <number>9</number>
+            </property>
+            <property name="spacing" >
+             <number>6</number>
+            </property>
+            <item row="0" column="0" >
+             <widget class="QListWidget" name="eventsListWidget" />
             </item>
            </layout>
           </widget>

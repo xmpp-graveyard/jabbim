@@ -48,15 +48,6 @@ class clientClass(pyxl.client.Client):
 		self.roster['groups']['Unknown']=self.main._addGroup('Unknown')
 		self.temp_hosts=[]
 		
-	def on_disconnect(self):
-		self.main.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
-		self.main.ui.statusButton.setIcon(MainWindow.getIcon("offline",size="16x16"))
-		self.main.ui.statusButton.hide()
-
-		self.main.ui.showOffline.hide()
-		del self.main.client
-		self.main.client = None
-	
 	def on_discoInfoReceived(self, jid, node):
 		# save type of host, it not exist
 		if not self.main.hosts.has_key(jid):
@@ -546,8 +537,12 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.tabWidget.setTabText(1,"")
 		self.ui.tabWidget.setTabText(2,"")
 
+		self.filetransferTimer=QtCore.QTimer()
+		QtCore.QObject.connect(self.filetransferTimer, QtCore.SIGNAL("timeout()"),self.refreshFT)
+
 		# variables
 		self.hosts={} # temp variable for {hos:type_of_host}
+		self.filetransfer={}
 		self.client=None # pyxl client instance
 		self.chat=widgets.chatwindow.chatWindow(self,self)
 		self.statusPath="images/xxxxx/status/"
@@ -661,6 +656,21 @@ class mainWindow(QtGui.QMainWindow):
 		#self.setUpdatesEnabled(False)
 		#QtGui.QMainWindow(self).resizeEvent(event)
 		#self.setUpdatesEnabled(True)
+	def refreshFT(self):
+		toDel=[]
+		log.msg("refresh")
+		for sid,widget in self.filetransfer.iteritems():
+			if self.client.ft.has_key(sid):
+				size=float(self.client.ft[sid].size)
+				sent=float(self.client.ft[sid].sent)
+				widget.widget.progressBar.setValue(int((sent/size)*100))
+			else:
+				log.msg("ft.finished")
+				widget.widget.progressBar.setValue(100)
+				toDel.append(sid)
+		for sid in toDel:
+			self.ui.eventsListWidget.takeItem(self.ui.eventsListWidget.row(self.filetransfer[sid]))
+			del self.filetransfer[sid]
 
 	def closeEvent(self,event):
 		self.hide()
@@ -1018,9 +1028,14 @@ class statusWindow(QtGui.QDialog):
 			MainWindow.client.sendPresence(typ = "unavailable", status = unicode(self.ui.status.toPlainText ()))
 			MainWindow.client.factory.stopTrying()
 			#MainWindow.client.disconnect()
+			MainWindow.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
+			MainWindow.ui.statusButton.setIcon(MainWindow.getIcon("offline",size="16x16"))
+			MainWindow.ui.statusButton.hide()
 			MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
+			MainWindow.ui.showOffline.hide()
 			MainWindow.client.disconnect()
-
+			del MainWindow.client
+			MainWindow.client = None
 			#MainWindow.client.roster = {'users':{},'groups':{}}
 			#MainWindow.client.roster_meta = {} # jid: {'tag':tag,  'order': 1}
 			#MainWindow.client.first_presence = []

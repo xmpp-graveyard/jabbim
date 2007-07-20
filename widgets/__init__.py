@@ -6,3 +6,4 @@ import subscription
 import chatwindow
 import preferences
 import joingroupchat
+import eventsFTWidget_ui

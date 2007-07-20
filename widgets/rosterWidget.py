@@ -5,12 +5,60 @@ except:
 	print "PyQt4 is not installed."
 
 from tooltip_ui import *
+from eventsFTWidget_ui import *
+from os.path import basename
 
 class doc(QtGui.QTextDocument):
 	def __init__(self,parent=None):
 		apply(QtGui.QTextDocument.__init__,(self,parent))
 
-
+class FTWidget(QtGui.QWidget):
+	def __init__(self,file,parent=None):
+		apply(QtGui.QWidget.__init__,(self,parent))
+		self.gridlayout = QtGui.QGridLayout(self)
+		self.gridlayout.setMargin(0)
+		self.gridlayout.setSpacing(0)
+		self.gridlayout.setObjectName("gridlayout")
+	
+		self.gridlayout1 = QtGui.QGridLayout()
+		self.gridlayout1.setMargin(0)
+		self.gridlayout1.setSpacing(6)
+		self.gridlayout1.setObjectName("gridlayout1")
+	
+		self.hboxlayout = QtGui.QHBoxLayout()
+		self.hboxlayout.setMargin(0)
+		self.hboxlayout.setSpacing(6)
+		self.hboxlayout.setObjectName("hboxlayout")
+	
+		self.label = QtGui.QLabel("File transfer:",self)
+		self.label.setObjectName("label")
+		self.hboxlayout.addWidget(self.label)
+	
+		self.label_2 = QtGui.QLabel(file,self)
+		self.label_2.setObjectName("label_2")
+		self.hboxlayout.addWidget(self.label_2)
+		self.gridlayout1.addLayout(self.hboxlayout,0,0,1,1)
+	
+		spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+		self.gridlayout1.addItem(spacerItem,0,1,1,1)
+	
+		self.progressBar = QtGui.QProgressBar(self)
+	
+		sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7),QtGui.QSizePolicy.Policy(1))
+		sizePolicy.setHorizontalStretch(0)
+		sizePolicy.setVerticalStretch(0)
+		sizePolicy.setHeightForWidth(self.progressBar.sizePolicy().hasHeightForWidth())
+		self.progressBar.setSizePolicy(sizePolicy)
+		self.progressBar.setProperty("value",QtCore.QVariant(24))
+		self.progressBar.setOrientation(QtCore.Qt.Horizontal)
+		self.progressBar.setObjectName("progressBar")
+		self.gridlayout1.addWidget(self.progressBar,1,0,1,2)
+		self.gridlayout.addLayout(self.gridlayout1,0,0,1,1)
+		self.gridlayout.setMargin(1)
+		self.gridlayout.setSpacing(0)
+		self.gridlayout1.setMargin(1)
+		self.gridlayout1.setSpacing(0)
+		self.setMinimumHeight(40)
 #documentLayout()->anchorAt(position);
 class delegate(QtGui.QItemDelegate):
 	def __init__(self,parent=None):
@@ -156,7 +204,6 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.tooltip=None
 		self.timer=QtCore.QTimer()
 		#QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.tooltip.hide)
-
 
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.contactClicked)
 		QtCore.QObject.connect(self, QtCore.SIGNAL("itemExpanded ( QTreeWidgetItem * )"),self.expanded)
@@ -614,6 +661,10 @@ class rosterWidget(QtGui.QTreeWidget):
 		action=contactMenu.addAction(self.tr("vCard"))
 		action.setData(QtCore.QVariant(jid))
 		action.setObjectName("vcard")
+		# vcard
+		action=contactMenu.addAction(self.tr("Send file"))
+		action.setData(QtCore.QVariant(jid))
+		action.setObjectName("send_file")
 		# separator
 		contactMenu.addSeparator()
 		# delete from group
@@ -736,12 +787,19 @@ class rosterWidget(QtGui.QTreeWidget):
 			# chat with selected contact
 			jid=action.data()
 			jid=str(jid.toString())
-			jid=jid+"/"+self.getResources(jid)[0]
+			#jid=jid+"/"+self.getResources(jid)[0]
 			file=QtGui.QFileDialog.getOpenFileName(self,"Choose file")
 			if len(file)!=0:
 ##				print file,"to",jid
+				file=unicode(file)
 				#self.jab.sendFile(jid,unicode(file))
-				pass
+				sid=self.main.client.sendFile(jid, basename(file), file)
+				item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
+				item.setSizeHint(QtCore.QSize(100,40))
+				item.widget=FTWidget(basename(file),self.main.ui.eventsListWidget)
+				self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
+				self.main.filetransfer[sid]=item
+				self.main.filetransferTimer.start(500)
 
 	def changeGroup(self,jid,action,group):
 			name=unicode(self.main.client.roster['users'][jid].name)

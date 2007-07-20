@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Thu Jul 19 09:07:24 2007
+# Created: Fri Jul 20 09:17:15 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -258,6 +258,19 @@ class Ui_MainWindow(object):
         self.bookmarks_headerLabel.setObjectName("bookmarks_headerLabel")
         self.gridlayout6.addWidget(self.bookmarks_headerLabel,0,0,1,1)
         self.tabWidget.addTab(self.bookmarksTab,QtGui.QIcon("images/16x16/categories/bookmarks.png"),"")
+
+        self.eventsTab = QtGui.QWidget()
+        self.eventsTab.setObjectName("eventsTab")
+
+        self.gridlayout7 = QtGui.QGridLayout(self.eventsTab)
+        self.gridlayout7.setMargin(9)
+        self.gridlayout7.setSpacing(6)
+        self.gridlayout7.setObjectName("gridlayout7")
+
+        self.eventsListWidget = QtGui.QListWidget(self.eventsTab)
+        self.eventsListWidget.setObjectName("eventsListWidget")
+        self.gridlayout7.addWidget(self.eventsListWidget,0,0,1,1)
+        self.tabWidget.addTab(self.eventsTab,"")
         self.gridlayout2.addWidget(self.tabWidget,0,0,1,1)
 
         self.hboxlayout4 = QtGui.QHBoxLayout()
@@ -312,7 +325,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.rosterStackedWidget.setCurrentIndex(1)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -347,6 +360,7 @@ class Ui_MainWindow(object):
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'DejaVu Sans\';\"><span style=\" font-size:12pt; font-weight:600;\">Bookmarks</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.bookmarksTab), QtGui.QApplication.translate("MainWindow", "b", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.bookmarksTab),QtGui.QApplication.translate("MainWindow", "Bookmarks", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.eventsTab), QtGui.QApplication.translate("MainWindow", "Events", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setText(QtGui.QApplication.translate("MainWindow", "Show offline", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setText(QtGui.QApplication.translate("MainWindow", "Offline", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPreferences.setTitle(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
