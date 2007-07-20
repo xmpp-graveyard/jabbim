@@ -429,6 +429,10 @@ class Send(protocol.Protocol):
 
 	def write(self, data):
 		print 'prenasim: ', len(data)
+		try:
+			self.ft.connector.factory.delayed_timeout_call.cancel()
+		except:
+			pass
 		if self.ft:
 			self.ft.sent = self.ft.sent + len(data)
 		return self.transport.write(data)
@@ -438,6 +442,10 @@ class Receive(protocol.Protocol):
 		if self.ft.fp != None:
 			self.ft.fp.write(data)
 			self.ft.received = self.ft.received + len(data)
+		try:
+			self.ft.connector.factory.delayed_timeout_call.cancel()
+		except:
+			pass
 
 class FTSend:
 	def __init__(self, client, sid, filename, tojid, file, description= None):
@@ -451,6 +459,7 @@ class FTSend:
 		self.protocol = None
 		self.sent = 0
 		self.streamhost = None
+		self.connector = None
 
 	
 	def activate(self):
@@ -493,6 +502,7 @@ class FTReceive:
 		self.streamhostsID = None
 		self.activeStreamhost = None
 		self.received = 0
+		self.connector = None
 	
 	def connectStreamHost(self):
 		streamhost = self.streamhosts.pop(0)
@@ -501,7 +511,7 @@ class FTReceive:
 		f.protocol = Receive
 		addr = sha.new("%s%s%s" % (self.sid,  self.tojid, self.client.jid.full())).hexdigest()
 		factory = ClientFactory(streamhost['host'], int(streamhost['port']),addr, 0,  f, xmpp = self.client, xmpp_sid = self.sid) 
-		d = self.client.reactor.connectTCP(streamhost['host'], int(streamhost['port']), factory)
+		self.connector = self.client.reactor.connectTCP(streamhost['host'], int(streamhost['port']), factory)
 	
 	def connectFailure(self):
 		log.msg('connect failed')

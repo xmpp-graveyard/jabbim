@@ -164,13 +164,17 @@ class Client(derived):
 		self.factory.addBootstrap("//event/xmpp/initfailed", self._authfailed)
 		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
 		self.factory.addBootstrap("/*", self.logIt)
-		self.factory.connectionLost = self.connectionLost
+		self.factory.clientConnectionLost = self.connectionLost
+		self.factory.clientConnectionFailed = self.connectionLost
 		self.connection = self.reactor.connectTCP(host,port,self.factory)
 
 		log.msg('started')
-	def connectionLost(self, reason=protocol.connectionDone):
+	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
 		self.on_disconnect()
+		if self.factory.continueTrying:
+			self.factory.connector = connector
+			self.factory.retry()
 		
 	def _bind(self, el):
 		#experimental
@@ -1157,7 +1161,7 @@ class Client(derived):
 		f.protocol = socks5.Send
 
 		factory = socks5.ClientFactory(self.ft_proxies[host][0], int(self.ft_proxies[host][1]),addr, 0,  f, xmpp = self, xmpp_sid = sid) 
-		d = self.reactor.connectTCP(self.ft_proxies[host][0], int(self.ft_proxies[host][1]), factory)
+		self.ft[sid].connector = self.reactor.connectTCP(self.ft_proxies[host][0], int(self.ft_proxies[host][1]), factory)
 
 	def _ftreplyhostErrReceived(self, err):
 		print 'replyhost', err
