@@ -678,6 +678,12 @@ class mainWindow(QtGui.QMainWindow):
 			path = 'plugins/%s/%s.py'%( plugin, plugin)
 			try: 
 				f=open(path)
+			except:
+				continue
+				log.msg('copy plugin to homedir: '+plugin)
+			path = '%s/.jabbim/plugins/%s/%s.py'%(self.homeDir, plugin, plugin)
+			try: 
+				f=open(path)
 				continue
 			except:
 				log.msg('copy plugin to homedir: '+plugin)
