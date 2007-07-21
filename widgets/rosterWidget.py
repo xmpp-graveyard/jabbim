@@ -278,7 +278,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item=QtGui.QTreeWidgetItem(user)
 		if name==None or len(name)==0:
 			name=jid
-		item.setText(0,unicode(name))
+		item.setText(0,'<font color="'+unicode(self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+name+"</font>")
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
 		item.setText(4,unicode(jid))
@@ -569,10 +569,11 @@ class rosterWidget(QtGui.QTreeWidget):
 					if int(self.main.shows[unicode(show)])<int(item.parent().child(0).text(1)[0]):
 						set=True
 				if status!=None:
-					item.setText(0,unicode(item.text(2))+resources+"<br/><font size=\"-1\"><i>&nbsp;&nbsp;"+status+"</i></font>")
+							#item.setText(0,+name+"</font>")
+					item.setText(0,'<font color="'+unicode(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+unicode(item.text(2))+resources+"<br/><font size=\"-1\"><i>&nbsp;&nbsp;"+status+"</i></font></font>")
 					item.setData(32,4,QtCore.QVariant(unicode(status)))
 				else:
-					item.setText(0,unicode(item.text(2))+resources)
+					item.setText(0,'<font color="'+unicode(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+unicode(item.text(2))+resources+"</font>")
 					
 				item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
 				item.setIcon(0,self.main.getIcon(jid,size="32x32",status=self.main.icons[self.main.shows[unicode(show)]]))
@@ -660,13 +661,16 @@ class rosterWidget(QtGui.QTreeWidget):
 		if name==None or len(name)==0:
 			name=jid
 		# item data
-		item.setText(0,unicode(name))
+		item.setText(0,'<font color="'+unicode(self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+name+"</font>")
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
 		item.setText(4,unicode(jid))
 		item.setData(32,0,QtCore.QVariant([unicode(jid),unicode("contact")]))
 		item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize']),status=self.main.icons["9"]))
 		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)
+		color=self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Window)
+		item.setBackgroundColor(0,color)
+		item.setBackgroundColor(3,color)
 		# item design
 		if len(self.main.client.roster['users'][jid].status)!=0:
 			if len(self.main.client.roster['users'][jid].status)>1:

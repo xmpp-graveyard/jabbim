@@ -770,15 +770,21 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				self.hide()
 
-	def loadTheme(self):
+	def loadTheme(self,text=None):
 		# windows hack
 		self.setStyleSheet("")
-		theme=open("themes/"+self.config['theme']+"/style.css")
-		text=theme.read()
-		self.setStyleSheet(text)
-		self.xmlConsole.setStyleSheet(text)
-		self.chat.setStyleSheet(text)
-		theme.close()
+		if text==None:
+			theme=open("themes/"+self.config['theme']+"/style.css")
+			text=theme.read()
+			self.setStyleSheet(text)
+			self.xmlConsole.setStyleSheet(text)
+			self.chat.setStyleSheet(text)
+			theme.close()
+		else:
+			self.setStyleSheet(text)
+			self.xmlConsole.setStyleSheet(text)
+			self.chat.setStyleSheet(text)
+
 
 	def addContactMainWindow(self):
 		# add contact

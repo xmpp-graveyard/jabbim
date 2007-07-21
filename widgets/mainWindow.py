@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Fri Jul 20 11:55:19 2007
+# Created: Sat Jul 21 18:57:05 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -135,13 +135,17 @@ class Ui_MainWindow(object):
         self.gridlayout3.setSpacing(6)
         self.gridlayout3.setObjectName("gridlayout3")
 
-        self.rosterWidget = QtGui.QWidget(self.rosterTab)
-        self.rosterWidget.setObjectName("rosterWidget")
-        self.gridlayout3.addWidget(self.rosterWidget,1,0,1,1)
-
         self.groupStyleWidget = QtGui.QWidget(self.rosterTab)
         self.groupStyleWidget.setObjectName("groupStyleWidget")
         self.gridlayout3.addWidget(self.groupStyleWidget,0,0,1,1)
+
+        self.rosterWidget = QtGui.QWidget(self.rosterTab)
+        self.rosterWidget.setObjectName("rosterWidget")
+        self.gridlayout3.addWidget(self.rosterWidget,2,0,1,1)
+
+        self.userStyleWidget = QtGui.QWidget(self.rosterTab)
+        self.userStyleWidget.setObjectName("userStyleWidget")
+        self.gridlayout3.addWidget(self.userStyleWidget,1,0,1,1)
         self.tabWidget.addTab(self.rosterTab,QtGui.QIcon("images/16x16/categories/system-users.png"),"")
 
         self.addContactTab = QtGui.QWidget()
