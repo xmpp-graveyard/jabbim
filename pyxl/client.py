@@ -602,7 +602,10 @@ class Client(derived):
 
 	def onMessage(self, el):
 		log.msg( 'message received')
-		typ = el['type']
+		try:
+			typ = el['type']
+		except:
+			typ = 'normal'
 		frm = el['from']
 
 		body = subject =xhtml = chatstate = delay = None
