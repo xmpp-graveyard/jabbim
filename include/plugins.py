@@ -12,6 +12,7 @@ class PluginBase:
 		self.version = '0.1'
 		self.category = ['test', 'misc']
 		self.url = 'dev.jabbim.cz/jabbim'
+		self.handlers = []
 	
 	def loadConfig(self):
 # 		try:
@@ -33,3 +34,12 @@ class PluginBase:
 		for k in self.config.iterkeys():
 			self.confObj[k] = self.config[k]['value']
 		self.confObj.write()
+	
+	def registerHandler(self, name, method):
+		self.main.client.dispatcher.registerHandler(name, method, self.name)
+		self.handlers.append(name)
+	
+	def remove(self):
+		self.writeConfig()
+		for handler in self.handlers:
+			self.main.client.dispatcher.unregisterHandler(name, self.name)
