@@ -64,6 +64,8 @@ class chatWindow(QtGui.QMainWindow):
 		color=self.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
 		self.ui.chatTab.tabBar().setTabTextColor(index,color)
 		self.ui.chatTab.setTabIcon(index,icon)
+		self.setWindowTitle(self.ui.chatTab.tabText(index))
+
 		#except:
 			#pass
 
