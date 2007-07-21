@@ -527,6 +527,13 @@ class rosterWidget(QtGui.QTreeWidget):
 					offline+=1
 				else:
 					online+=1
+			if online==0:
+				if self.main.offline==True:
+					self.setItemHidden(self.main.client.roster['groups'][group],False)
+				else:
+					self.setItemHidden(self.main.client.roster['groups'][group],True)
+			else:
+				self.setItemHidden(self.main.client.roster['groups'][group],False)
 			self.main.client.roster['groups'][group].setText(0,"<font color=\""+unicode(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+"\">"+unicode(self.main.client.roster['groups'][group].text(2))+" ("+str(online)+"/"+str(online+offline)+")</font>")
 
 	def setStatus(self,jid,show,i=None,status=None,first=False):
@@ -576,6 +583,9 @@ class rosterWidget(QtGui.QTreeWidget):
 					self.setItemHidden(item, False)
 					if typ=='meta':
 						self.setItemHidden(item.parent(), False)
+				else:
+					self.setItemHidden(item, True)
+
 		if not first:
 			self.sortItems (1,QtCore.Qt.AscendingOrder)
 			self.refreshStats()
@@ -607,7 +617,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			#if self.main.shows[unicode(show)]!="9":
 				#self.setItemHidden(item, False)
 		self.sortItems (1,QtCore.Qt.AscendingOrder)
-		#self.refreshStats()
+		self.refreshStats()
 
 
 	def addSubGroup(self,name,sub,first="1"):

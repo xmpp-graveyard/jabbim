@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Mon Jul 16 11:09:02 2007
+# Created: Sat Jul 21 08:19:28 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,16 +17,23 @@ class Ui_preferences(object):
         preferences.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.gridlayout = QtGui.QGridLayout(preferences)
-        self.gridlayout.setMargin(9)
-        self.gridlayout.setSpacing(6)
+        self.gridlayout.setLeftMargin(9)
+        self.gridlayout.setTopMargin(9)
+        self.gridlayout.setRightMargin(9)
+        self.gridlayout.setBottomMargin(9)
+        self.gridlayout.setHorizontalSpacing(6)
+        self.gridlayout.setVerticalSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
 
         spacerItem = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.gridlayout.addItem(spacerItem,1,1,1,1)
 
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(6)
+        self.hboxlayout.setLeftMargin(0)
+        self.hboxlayout.setTopMargin(0)
+        self.hboxlayout.setRightMargin(0)
+        self.hboxlayout.setBottomMargin(0)
         self.hboxlayout.setObjectName("hboxlayout")
 
         self.saveButton = QtGui.QPushButton(preferences)
@@ -52,8 +59,12 @@ class Ui_preferences(object):
         self.page_4.setObjectName("page_4")
 
         self.gridlayout1 = QtGui.QGridLayout(self.page_4)
-        self.gridlayout1.setMargin(9)
-        self.gridlayout1.setSpacing(6)
+        self.gridlayout1.setLeftMargin(9)
+        self.gridlayout1.setTopMargin(9)
+        self.gridlayout1.setRightMargin(9)
+        self.gridlayout1.setBottomMargin(9)
+        self.gridlayout1.setHorizontalSpacing(6)
+        self.gridlayout1.setVerticalSpacing(6)
         self.gridlayout1.setObjectName("gridlayout1")
 
         self.line_2 = QtGui.QFrame(self.page_4)
@@ -79,8 +90,12 @@ class Ui_preferences(object):
         self.userPreferences.setObjectName("userPreferences")
 
         self.gridlayout2 = QtGui.QGridLayout(self.userPreferences)
-        self.gridlayout2.setMargin(9)
-        self.gridlayout2.setSpacing(6)
+        self.gridlayout2.setLeftMargin(9)
+        self.gridlayout2.setTopMargin(9)
+        self.gridlayout2.setRightMargin(9)
+        self.gridlayout2.setBottomMargin(9)
+        self.gridlayout2.setHorizontalSpacing(6)
+        self.gridlayout2.setVerticalSpacing(6)
         self.gridlayout2.setObjectName("gridlayout2")
 
         spacerItem2 = QtGui.QSpacerItem(20,16,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
@@ -90,18 +105,27 @@ class Ui_preferences(object):
         self.groupBox_4.setObjectName("groupBox_4")
 
         self.hboxlayout1 = QtGui.QHBoxLayout(self.groupBox_4)
-        self.hboxlayout1.setMargin(9)
         self.hboxlayout1.setSpacing(6)
+        self.hboxlayout1.setLeftMargin(9)
+        self.hboxlayout1.setTopMargin(9)
+        self.hboxlayout1.setRightMargin(9)
+        self.hboxlayout1.setBottomMargin(9)
         self.hboxlayout1.setObjectName("hboxlayout1")
 
         self.hboxlayout2 = QtGui.QHBoxLayout()
-        self.hboxlayout2.setMargin(0)
         self.hboxlayout2.setSpacing(6)
+        self.hboxlayout2.setLeftMargin(0)
+        self.hboxlayout2.setTopMargin(0)
+        self.hboxlayout2.setRightMargin(0)
+        self.hboxlayout2.setBottomMargin(0)
         self.hboxlayout2.setObjectName("hboxlayout2")
 
         self.vboxlayout = QtGui.QVBoxLayout()
-        self.vboxlayout.setMargin(0)
         self.vboxlayout.setSpacing(6)
+        self.vboxlayout.setLeftMargin(0)
+        self.vboxlayout.setTopMargin(0)
+        self.vboxlayout.setRightMargin(0)
+        self.vboxlayout.setBottomMargin(0)
         self.vboxlayout.setObjectName("vboxlayout")
 
         self.label_2 = QtGui.QLabel(self.groupBox_4)
@@ -114,8 +138,11 @@ class Ui_preferences(object):
         self.hboxlayout2.addLayout(self.vboxlayout)
 
         self.vboxlayout1 = QtGui.QVBoxLayout()
-        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setSpacing(6)
+        self.vboxlayout1.setLeftMargin(0)
+        self.vboxlayout1.setTopMargin(0)
+        self.vboxlayout1.setRightMargin(0)
+        self.vboxlayout1.setBottomMargin(0)
         self.vboxlayout1.setObjectName("vboxlayout1")
 
         self.connection_jid = QtGui.QLineEdit(self.groupBox_4)
@@ -147,8 +174,12 @@ class Ui_preferences(object):
         self.page_2.setObjectName("page_2")
 
         self.gridlayout3 = QtGui.QGridLayout(self.page_2)
-        self.gridlayout3.setMargin(9)
-        self.gridlayout3.setSpacing(6)
+        self.gridlayout3.setLeftMargin(9)
+        self.gridlayout3.setTopMargin(9)
+        self.gridlayout3.setRightMargin(9)
+        self.gridlayout3.setBottomMargin(9)
+        self.gridlayout3.setHorizontalSpacing(6)
+        self.gridlayout3.setVerticalSpacing(6)
         self.gridlayout3.setObjectName("gridlayout3")
 
         self.chatSkin_list = QtGui.QComboBox(self.page_2)
@@ -178,8 +209,12 @@ class Ui_preferences(object):
         self.page.setObjectName("page")
 
         self.gridlayout4 = QtGui.QGridLayout(self.page)
-        self.gridlayout4.setMargin(9)
-        self.gridlayout4.setSpacing(6)
+        self.gridlayout4.setLeftMargin(9)
+        self.gridlayout4.setTopMargin(9)
+        self.gridlayout4.setRightMargin(9)
+        self.gridlayout4.setBottomMargin(9)
+        self.gridlayout4.setHorizontalSpacing(6)
+        self.gridlayout4.setVerticalSpacing(6)
         self.gridlayout4.setObjectName("gridlayout4")
 
         self.line_5 = QtGui.QFrame(self.page)
@@ -200,8 +235,12 @@ class Ui_preferences(object):
         self.page_3.setObjectName("page_3")
 
         self.gridlayout5 = QtGui.QGridLayout(self.page_3)
-        self.gridlayout5.setMargin(9)
-        self.gridlayout5.setSpacing(6)
+        self.gridlayout5.setLeftMargin(9)
+        self.gridlayout5.setTopMargin(9)
+        self.gridlayout5.setRightMargin(9)
+        self.gridlayout5.setBottomMargin(9)
+        self.gridlayout5.setHorizontalSpacing(6)
+        self.gridlayout5.setVerticalSpacing(6)
         self.gridlayout5.setObjectName("gridlayout5")
 
         self.themes = QtGui.QListWidget(self.page_3)

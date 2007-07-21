@@ -202,8 +202,9 @@ class clientClass(pyxl.client.Client):
 		#print self.roster['users']['sef@njs.netlab.cz'].rosterItems
 		# sort roster items and refresh group stats
 		self.main.rosterHideOffline(True)
+		#self.main.ui.roster.refreshStats()
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
-		self.main.ui.roster.refreshStats()
+
 
 		for k,v in self.roster['groups'].iteritems():
 			self.main.ui.add_group.addItem(unicode(k))
@@ -224,8 +225,8 @@ class clientClass(pyxl.client.Client):
 			self.on_presence(jid,show,True)
 		# refresh group stats
 		self.main.rosterHideOffline(True)
-		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.main.ui.roster.refreshStats()
+		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
 		if show=="offline":
@@ -898,9 +899,9 @@ class mainWindow(QtGui.QMainWindow):
 	def hideOffline(self,bool):
 		# hide or show offline users
 		#self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
+		self.ui.roster.refreshStats()
 		self.offline=not bool
 		self.rosterHideOffline(not bool)
-	
 	def rosterHideOffline(self,bool):
 		for group,item in self.client.roster['groups'].iteritems():
 			# return stats (online,offline,all users) for group
