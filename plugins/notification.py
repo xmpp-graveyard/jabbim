@@ -3,7 +3,7 @@ try:
 except:
 	print "PyQt4 is not installed."
 
-class pluginClass():
+class pluginClass:
 	def __init__(self,main):
 		self.main=main
 		self.main.client.dispatcher.registerHandler('on_message', self.on_message)
