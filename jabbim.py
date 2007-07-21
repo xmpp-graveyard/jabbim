@@ -586,6 +586,7 @@ class mainWindow(QtGui.QMainWindow):
 					}
 		self.offline=False
 		self.xmlConsole=XMLConsole(self)
+
 		self.ui.showOffline.hide()
 
 
@@ -676,7 +677,7 @@ class mainWindow(QtGui.QMainWindow):
 		for plugin in plugins:
 			if plugin.endswith(".py") and plugin!="plugins.py":
 				f=open("plugins/"+plugin)
-				self.plugins.append(load_source(plugin[:-3],"plugins/"+plugin,f).plugin(self))
+				self.plugins.append(load_source(plugin[:-3],"plugins/"+plugin,f).pluginClass(self))
 				f.close()
 				#self.plugins.append(eval(plugin[:-3]))
 		log.msg("PLUGINS:"+unicode(self.plugins))
@@ -750,7 +751,10 @@ class mainWindow(QtGui.QMainWindow):
 		# windows hack
 		self.setStyleSheet("")
 		theme=open("themes/"+self.config['theme']+"/style.css")
-		self.setStyleSheet(theme.read())
+		text=theme.read()
+		self.setStyleSheet(text)
+		self.xmlConsole.setStyleSheet(text)
+		self.chat.setStyleSheet(text)
 		theme.close()
 
 	def addContactMainWindow(self):
@@ -827,6 +831,11 @@ class mainWindow(QtGui.QMainWindow):
 		# set menu position and show
 		menu.move(self.ui.bookmarks.mapToGlobal(pos))
 		menu.show()
+
+	#def reskin(self):
+		#self.setStyleSheet(text)
+		#self.chat.setStyleSheet(text)
+
 
 	def newBookmark(self):
 		# make new bookmark
