@@ -364,9 +364,9 @@ class Client(derived):
 		d.addErrback(self._noVcard, jid) 
 
 	def _noVcard(self, err, jid): 
-		#               print jid, ' no vcard available' 
+		print jid, 'no vcard available' 
 		log.msg('chci ulozit ' + jid )
-		self.main.cache.set_avatar(jid, ['nic', 'nic'])
+		self.reactor.callFromThread(self.main.cache.set_avatar,jid, ['nic', 'nic'])
 
 	def _vcardReceived(self, el):
 		log.msg( 'vcard received')
