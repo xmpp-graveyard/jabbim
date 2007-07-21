@@ -24,7 +24,7 @@ app = QtGui.QApplication(sys.argv)
 qt4reactor.install(app)
 from twisted.internet import reactor
 from twisted.python import log
-
+import shutil
 import time,base64
 try:
 	from hashlib import sha1
@@ -673,17 +673,29 @@ class mainWindow(QtGui.QMainWindow):
 		
 	def loadPlugins(self):
 		self.plugins = {}
-		plugins=os.listdir(self.homeDir + "/.jabbim/plugins/")
+		plugins=os.listdir("plugins/")
 		for plugin in plugins:
-			path = '%s/.jabbim/plugins/%s/%s.py'%(self.homeDir, plugin, plugin)
+			path = 'plugins/%s/%s.py'%( plugin, plugin)
 			try: 
 				f=open(path)
-			except:
-				log.msg('plugin load error: '+plugin)
 				continue
-			plug = load_source(plugin, path, f).Plugin(self)
-			f.close()
-			self.plugins[plug.name] = plug
+			except:
+				log.msg('copy plugin to homedir: '+plugin)
+
+			shutil.copytree("plugins/"+plugin, self.homeDir+"/.jabbim/plugins/"+plugin)
+
+		plugins=os.listdir(self.homeDir + "/.jabbim/plugins/")
+		for plugin in plugins:
+			if plugin in self.config['plugins']:
+				path = '%s/.jabbim/plugins/%s/%s.py'%(self.homeDir, plugin, plugin)
+				try: 
+					f=open(path)
+				except:
+					log.msg('plugin load error: '+plugin)
+					continue
+				plug = load_source(plugin, path, f).Plugin(self)
+				f.close()
+				self.plugins[plug.name] = plug
 				
 		log.msg("PLUGINS:"+unicode(self.plugins))
 

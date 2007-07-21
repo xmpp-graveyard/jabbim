@@ -62,7 +62,7 @@ class preferencesWindow(QtGui.QDialog):
 		# Plugins
 		#self.ui.plugins.header().hide()
 		plugins=os.listdir("plugins/")
-		self.loadedPlugins=os.listdir(self.main.homeDir + "/.jabbim/plugins/")
+		self.loadedPlugins=self.main.config['plugins']
 		for plugin in plugins:
 			path = 'plugins/%s/%s.py'%(plugin, plugin)
 			try: 
@@ -80,6 +80,7 @@ class preferencesWindow(QtGui.QDialog):
 			item.setText(1,plug.name)
 			item.setText(2,plug.description)
 			item.setData(32,0,QtCore.QVariant(unicode(plugin)))
+			log.msg("plugin "+plugin+" loaded.")
 		self.ui.plugins.resizeColumnToContents (0)
 		self.ui.plugins.resizeColumnToContents (1)
 
@@ -140,9 +141,11 @@ class preferencesWindow(QtGui.QDialog):
 			plugin=unicode(data.toString())
 			widget=self.ui.plugins.itemWidget(item,0)
 			if widget.isChecked()==True and not plugin in self.loadedPlugins:
-				shutil.copytree("plugins/"+plugin, self.main.homeDir+"/.jabbim/plugins/"+plugin)
+				#shutil.copytree("plugins/"+plugin, self.main.homeDir+"/.jabbim/plugins/"+plugin)
+				self.main.config['plugins'].append(plugin)
 			elif widget.isChecked()==False and plugin in self.loadedPlugins:
-				shutil.rmtree(self.main.homeDir+"/.jabbim/plugins/"+plugin)
+				self.main.config['plugins'].remove(plugin)
+				#shutil.rmtree(self.main.homeDir+"/.jabbim/plugins/"+plugin)
 		
 		#size=unicode(self.main.config['rosterIconSize']).rsplit("x")
 		#self.main.ui.roster.setIconSize(QtCore.QSize(int(size[0]),int(size[1])))
