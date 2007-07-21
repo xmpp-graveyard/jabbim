@@ -85,19 +85,27 @@ class Client(derived):
 		self.registerFeature('jabber:iq:time')
 		self.registerFeature('http://jabber.org/protocol/chatstates')
 		self.caps_cache = {} # 'node': [feature1, feature2]
-		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
+		
+# 		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
 		self.log = True
 		self.dispatcher = events.EventDispatcher()
 		self.reactor.callFromThread(self.on_init)
+		self.main.cache.get_caps(self._cacheCaps)
+
 
 
 	def chyba(self, err):
 		err.printBriefTraceback()
 	
 	def cacheCaps(self, node, features):
-		self.caps_cache[node] = features
-		self.main.cache.set_caps(node, features)
+		if len(self.caps_cache) >0:
+			self.caps_cache[node] = features
+			self.main.cache.set_caps(node, features)
 
+	def _cacheCaps(self, result):
+		for line in result:
+			self.caps_cache[line[0]] = line[1]
+			
 	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None, caps = True):
 		presence = Element((None, 'presence'))
 		presence['from'] = self.jid.full()

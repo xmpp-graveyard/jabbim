@@ -56,5 +56,11 @@ class Cache:
 	def set_caps(self, node, features):
 		for feature in features:
 			self.db.runOperation('insert into caps (node, feature) values ("%s", "%s")'%(node, feature))
+	
+	def get_caps(self, cb):
+		self.db.runQuery('select * from caps;').addCallback(self._got_caps, cb)
+	
+	def _got_caps(self, result, cb):
+		cb(result)
 
 		
