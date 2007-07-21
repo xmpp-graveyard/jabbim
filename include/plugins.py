@@ -4,7 +4,7 @@ from twisted.python import log
 class PluginBase:
 	def __init__(self, main):
 		self.main = main
-		self.config = {} #{'hodnota':{default:'', description:'', value: ''}}
+		self.config = {} #{'hodnota':{default:'', description:'', value: '', type: 'int|text|boolean|select'}}
 		self.description = 'basic plugin class'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Basic plugin'

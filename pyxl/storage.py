@@ -29,9 +29,10 @@ class Cache:
 		
 	def table_created(self, res):
 		log.msg( 'created new cache DB')
+		self.db.runOperation('create table caps (node text, feature text);')
 	
 	def table_present(self, result):
-		log.msg( 'table here? '+unicode( result))
+		log.msg( 'table here? ')
 	
 	def get_avatar(self, jid, handler):
 		self.db.runQuery('select file, hash, jid from avatars where jid = "%s"'%(dbutil.safe(jid),)).addCallback(self.got_avatar, handler)
@@ -51,5 +52,9 @@ class Cache:
 			self.db.runOperation('insert into avatars (jid, file, hash) values("%s","%s","%s")'%(dbutil.safe(jid), dbutil.safe(avatar[0]), avatar[1]))
 		else:
 			self.db.runOperation('update avatars set file="%s", hash="%s" where jid="%s"'%(dbutil.safe(avatar[0]), avatar[1], dbutil.safe(jid)))
+	
+	def set_caps(self, node, features):
+		for feature in features:
+			self.db.runOperation('insert into caps (node, feature) values ("%s", "%s")'%(node, feature))
 
 		

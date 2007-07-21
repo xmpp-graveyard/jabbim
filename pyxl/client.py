@@ -96,6 +96,7 @@ class Client(derived):
 	
 	def cacheCaps(self, node, features):
 		self.caps_cache[node] = features
+		self.main.cache.set_caps(node, features)
 
 	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None, caps = True):
 		presence = Element((None, 'presence'))
@@ -585,7 +586,7 @@ class Client(derived):
 		cekej = 20
 		if ln*0.05 < cekej:
 			cekej = ln*0.05
-		self.on_rosterArrived()
+		self.reactor.callFromThread(self.on_rosterArrived)
 		self.reactor.callLater(cekej,  self.onFirstPresence)
 
 
@@ -785,7 +786,7 @@ class Client(derived):
 		for child in  el.query.elements():
 			if child.name == 'feature':
 				features.append(child['var'])
-		self.caps_cache[node] = features
+		self.cacheCaps(node, features)
 		frm = jid.JID(el['from'])
 		resource = frm.resource
 		if self.roster['users'].has_key(frm.userhost()):
