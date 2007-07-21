@@ -52,6 +52,8 @@ def loadConfig(main):
 		main.config.write()
 	if not os.path.isdir(main.homeDir+'/.jabbim/avatars'):
 		os.mkdir(main.homeDir+'/.jabbim/avatars')
+	if not os.path.isdir(main.homeDir+'/.jabbim/plugins'):
+		os.mkdir(main.homeDir+'/.jabbim/plugins')
 
 def getHomeDir():
 	# gets homedir on win32 or linux

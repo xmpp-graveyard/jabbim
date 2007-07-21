@@ -1,6 +1,6 @@
 from twisted.internet import reactor
 import pyxl
-
+from twisted.python import log
 class uiClass:
 	def _connected(self):
 		print 'we are connected'
@@ -20,6 +20,8 @@ class testClass(pyxl.client.Client):
 		self.joinGC('robots@conf.netlab.cz',  'Vybliz')
 		self.factory.stopFactory()
 
-klient = testClass('vybliz@njs.netlab.cz/test', 'da_heslo', 'njs.netlab.cz', 5222, uiClass())
+klient = testClass('sef@jabbim.sk/test', 'heslo', 'njs.netlab.cz', 5222, uiClass(), reactor = reactor)
+logfile = open('test.log', 'w')
+log.startLogging(logfile)
 klient.connect()
 reactor.run()

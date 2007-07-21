@@ -672,14 +672,19 @@ class mainWindow(QtGui.QMainWindow):
 
 		
 	def loadPlugins(self):
-		self.plugins=[]
-		plugins=os.listdir("plugins/")
+		self.plugins = {}
+		plugins=os.listdir(self.homeDir + "/.jabbim/plugins/")
 		for plugin in plugins:
-			if plugin.endswith(".py") and plugin!="plugins.py":
-				f=open("plugins/"+plugin)
-				self.plugins.append(load_source(plugin[:-3],"plugins/"+plugin,f).pluginClass(self))
-				f.close()
-				#self.plugins.append(eval(plugin[:-3]))
+			path = '%s/.jabbim/plugins/%s/%s.py'%(self.homeDir, plugin, plugin)
+			try: 
+				f=open(path)
+			except:
+				log.msg('plugin load error: '+plugin)
+				continue
+			plug = load_source(plugin, path, f).Plugin(self)
+			f.close()
+			self.plugins[plug.name] = plug
+				
 		log.msg("PLUGINS:"+unicode(self.plugins))
 
 	def refreshFT(self):
