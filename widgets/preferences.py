@@ -10,6 +10,8 @@ import os
 import pyxl
 from imp import load_source
 import shutil
+from twisted.python import log
+
 
 class preferencesWindow(QtGui.QDialog):
 	def __init__(self,main,parent=None,page=0):
