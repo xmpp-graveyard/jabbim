@@ -10,6 +10,8 @@ class EventDispatcher:
 	def unregisterHander(self, name, hname):
 		try:
 			del self.callbacks[name][hname]
+		except:
+			pass
 
 	def publishEvent(self, name, *args, **kwargs):
 		if self.callbacks.has_key(name):

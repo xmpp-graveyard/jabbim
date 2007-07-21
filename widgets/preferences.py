@@ -8,6 +8,8 @@ from preferences_bookmarks_ui import *
 from configobj import ConfigObj
 import os
 import pyxl
+from imp import load_source
+import shutil
 
 class preferencesWindow(QtGui.QDialog):
 	def __init__(self,main,parent=None,page=0):
@@ -54,6 +56,30 @@ class preferencesWindow(QtGui.QDialog):
 				if skin==self.main.config["theme"]:
 					self.ui.themes.setCurrentItem(item)
 		QtCore.QObject.connect(self.ui.themes, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.themeChanged)
+
+		# Plugins
+		#self.ui.plugins.header().hide()
+		plugins=os.listdir("plugins/")
+		self.loadedPlugins=os.listdir(self.main.homeDir + "/.jabbim/plugins/")
+		for plugin in plugins:
+			path = 'plugins/%s/%s.py'%(plugin, plugin)
+			try: 
+				f=open(path)
+			except:
+				log.msg('plugin load error: '+plugin)
+				continue
+			plug = load_source(plugin, path, f).Plugin(False)
+			f.close()
+			item=QtGui.QTreeWidgetItem(self.ui.plugins)
+			widget=QtGui.QCheckBox(self.ui.plugins)
+			if plugin in self.loadedPlugins:
+				widget.setChecked(True)
+			self.ui.plugins.setItemWidget(item,0,widget)
+			item.setText(1,plug.name)
+			item.setText(2,plug.description)
+			item.setData(32,0,QtCore.QVariant(unicode(plugin)))
+		self.ui.plugins.resizeColumnToContents (0)
+		self.ui.plugins.resizeColumnToContents (1)
 
 	def reskin(self,file=None):
 		if file==None:
@@ -105,6 +131,17 @@ class preferencesWindow(QtGui.QDialog):
 		#self.main.config['rosterIconSize']=unicode(self.ui.roster_iconSize.currentText())
 		self.main.config['theme']=unicode(self.ui.themes.currentItem().data(32).toString())
 		self.main.config.write()
+		
+		for i in range(int(self.ui.plugins.topLevelItemCount())):
+			item=self.ui.plugins.topLevelItem(i)
+			data=item.data(32,0)
+			plugin=unicode(data.toString())
+			widget=self.ui.plugins.itemWidget(item,0)
+			if widget.isChecked()==True and not plugin in self.loadedPlugins:
+				shutil.copytree("plugins/"+plugin, self.main.homeDir+"/.jabbim/plugins/"+plugin)
+			elif widget.isChecked()==False and plugin in self.loadedPlugins:
+				shutil.rmtree(self.main.homeDir+"/.jabbim/plugins/"+plugin)
+		
 		#size=unicode(self.main.config['rosterIconSize']).rsplit("x")
 		#self.main.ui.roster.setIconSize(QtCore.QSize(int(size[0]),int(size[1])))
 		self.done(1)
