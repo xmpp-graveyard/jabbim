@@ -152,10 +152,12 @@ class Client(derived):
 		d.addErrback(self._dnsLookupErr)
 	
 	def _dnsLookup(self, resp):
+		print 'ok ', resp
 		r = random.choice(resp[0])
 		self._connect(unicode(r.payload.target), int(r.payload.port))
 	
 	def _dnsLookupErr(self, resp):
+		print 'err ', resp
 		self._connect(self.host, self.port)
 	
 	def _connect(self, host, port): 
