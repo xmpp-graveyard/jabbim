@@ -74,6 +74,9 @@ class clientClass(pyxl.client.Client):
 		name=unicode(contact.name)
 		jid=unicode(contact.jid)
 		log.msg("JID: "+jid+" "+contact.subscription)
+		for gr in groups:
+			if not self.roster['groups'].has_key(gr):
+				self.roster['groups'][gr]=self.main._addGroup(gr)
 		# get host info
 		if len(unicode(jid).rsplit("@"))!=1:
 			host=unicode(jid).rsplit("@")[1]
@@ -302,6 +305,9 @@ class clientClass(pyxl.client.Client):
 		toDel=[] # temp variable for deleting items at the end of this function
 		toDelJid=[]
 		toDelIndex=[]
+		for gr in contact.groups:
+			if not self.roster['groups'].has_key(gr):
+				self.roster['groups'][gr]=self.main._addGroup(gr)
 		# go through all groups
 		for name,item in self.roster['groups'].iteritems():
 			# updated contact has to be in this group
@@ -902,6 +908,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.roster.refreshStats()
 		self.offline=not bool
 		self.rosterHideOffline(not bool)
+
 	def rosterHideOffline(self,bool):
 		for group,item in self.client.roster['groups'].iteritems():
 			# return stats (online,offline,all users) for group

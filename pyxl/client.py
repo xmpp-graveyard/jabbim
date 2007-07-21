@@ -275,22 +275,22 @@ class Client(derived):
 	def onRosterAdd(self,el):
 		log.msg("roster item add")
 		self.disp(el['id'])
-		log.msg(el.toXml())
+		#log.msg(el.toXml())
 		for child in el.elements():
 			if child.name == "query":
 				allGroups=[]
-				for k,v in self.roster['groups'].iteritems():
-					allGroups.append(k)
+				#for k,v in self.roster['groups'].iteritems():
+					#allGroups.append(k)
 				for item in child.elements():
 					groups = []
 					itemjid = item['jid']
 					for group in item.elements():
 						if group.name == 'group':
 							groups.append(unicode(group))
-							if unicode(group) not in allGroups:
+							#if unicode(group) not in allGroups:
 								# add group item to ther roster
-								self.roster['groups'][unicode(group)] = self.reactor.callFromThread(self.main._addGroup, group)
-								allGroups.append(unicode(group))
+								#self.roster['groups'][unicode(group)] = self.reactor.callFromThread(self.main._addGroup, group)
+								#allGroups.append(unicode(group))
 					if item.hasAttribute('name'):
 						name = item['name']
 					else:
