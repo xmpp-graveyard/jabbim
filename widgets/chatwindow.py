@@ -60,6 +60,7 @@ class chatWindow(QtGui.QMainWindow):
 			#show=self.main.icons[unicode(res[resource].text(1))[0]]
 			#icon=self.main.getIcon(jid,show,size="16x16")
 		#else:
+		print "jid:"+unicode(jid)
 		icon=self.main.getIcon(jid,self.main.icons[unicode(self.main.ui.roster.getUserItems(jid)[0].text(1))[0]],size="16x16")
 		color=self.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
 		self.ui.chatTab.tabBar().setTabTextColor(index,color)
