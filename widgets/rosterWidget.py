@@ -570,10 +570,10 @@ class rosterWidget(QtGui.QTreeWidget):
 						set=True
 				if status!=None:
 							#item.setText(0,+name+"</font>")
-					item.setText(0,'<font color="'+unicode(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+unicode(item.text(2))+resources+"<br/><font size=\"-1\"><i>&nbsp;&nbsp;"+status+"</i></font></font>")
+					item.setText(0,'<font color="'+unicode(self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+unicode(item.text(2))+resources+"<br/><font size=\"-1\"><i>&nbsp;&nbsp;"+status+"</i></font></font>")
 					item.setData(32,4,QtCore.QVariant(unicode(status)))
 				else:
-					item.setText(0,'<font color="'+unicode(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+unicode(item.text(2))+resources+"</font>")
+					item.setText(0,'<font color="'+unicode(self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+unicode(item.text(2))+resources+"</font>")
 					
 				item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
 				item.setIcon(0,self.main.getIcon(jid,size="32x32",status=self.main.icons[self.main.shows[unicode(show)]]))

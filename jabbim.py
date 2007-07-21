@@ -829,7 +829,11 @@ class mainWindow(QtGui.QMainWindow):
 					self.client.joinGC(jid, nickname)
 
 	def joinGroupchat(self,bool):
+		file=self.config['theme']
+		style=open("themes/"+file+"/style.css")
 		newchat=widgets.joingroupchat.joinGroupChatWindow(self)
+		newchat.setStyleSheet(style.read())
+		style.close()
 		ret=newchat.exec_()
 
 	def bookmarksContextMenu(self,pos):
