@@ -146,6 +146,7 @@ class Client(derived):
 		self.xmlstream.send(message)
 
 	def connect(self):
+		log.msg('dns - ' + unicode(time.time()))
 		d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host)
 		d.addCallback(self._dnsLookup)
 		d.addErrback(self._dnsLookupErr)
@@ -168,7 +169,8 @@ class Client(derived):
 ##		self.factory.clientConnectionLost = self.connectionLost
 ##		self.factory.clientConnectionFailed = self.connectionLost
 		self.connection = self.reactor.connectTCP(host,port,self.factory)
-		log.msg('started')
+		log.msg('started - ' + unicode(time.time()))
+	
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
 		self.on_disconnect()
@@ -205,7 +207,6 @@ class Client(derived):
 		self.xmlstream.addObserver("/presence[@type='subscribed']", self.onSubscribed, 1)
 		self.xmlstream.addObserver("/presence[@type='unsubscribed']", self.onUnSubscribed, 1)
 		self.xmlstream.addObserver("/presence[@type='error`']", self.onPresenceError, 1)
-		self.xmlstream.addObserver("/iq[@type='error`']", self.onIQError, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:version']", self.onVersion, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#info']", self.onDiscoInfo, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:last']", self.onLast, 1)
@@ -219,8 +220,6 @@ class Client(derived):
 		self.getDiscoItems(self.jid.host)
 		self.reactor.callFromThread(self.on_authd)
 	
-	def onIQError(self, el):
-		print el.toXml()
 		
 	def _pepSupport(self):
 		log.msg('pep support arrived')
