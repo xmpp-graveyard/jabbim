@@ -205,6 +205,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/presence[@type='subscribed']", self.onSubscribed, 1)
 		self.xmlstream.addObserver("/presence[@type='unsubscribed']", self.onUnSubscribed, 1)
 		self.xmlstream.addObserver("/presence[@type='error`']", self.onPresenceError, 1)
+		self.xmlstream.addObserver("/iq[@type='error`']", self.onIQError, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:version']", self.onVersion, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#info']", self.onDiscoInfo, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:last']", self.onLast, 1)
@@ -218,6 +219,9 @@ class Client(derived):
 		self.getDiscoItems(self.jid.host)
 		self.reactor.callFromThread(self.on_authd)
 	
+	def onIQError(self, el):
+		print el.toXml()
+		
 	def _pepSupport(self):
 		log.msg('pep support arrived')
 		for key,  val in self.disco[self.jid.host][None]['identities'].iteritems():
@@ -358,13 +362,14 @@ class Client(derived):
 		iq['to'] = jid
 		iq.addElement('vCard', 'vcard-temp')
 		self.disp(iq['id'])
+		iq.timeout = 60
 		d = iq.send()
 		self.on_xml(iq.toXml())
-		d.addCallback(self._vcardReceived)
-		d.addErrback(self._noVcard, jid) 
+		d.addCallback(self._vcardReceived).addErrback(self._noVcard, jid) 
 
 	def _noVcard(self, err, jid): 
 		print jid, 'no vcard available' 
+		print err
 		log.msg('chci ulozit ' + jid )
 		self.reactor.callFromThread(self.main.cache.set_avatar,jid, ['nic', 'nic'])
 

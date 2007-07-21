@@ -17,7 +17,6 @@ from twisted.python import log
 
 class Cache:
 	def __init__(self, DB_DRIVER = 'sqlite3', db='cache.db'):
-		return
 		if DB_DRIVER == 'sqlite3':
 			try:
 				self.db = adbapi.ConnectionPool(DB_DRIVER, db)
@@ -35,8 +34,7 @@ class Cache:
 		log.msg( 'table here? '+unicode( result))
 	
 	def get_avatar(self, jid, handler):
-		print dir(self)
-		self.db.runQuery('select file, hash, jid from avatars where jid = %d'%(dbutil.safe(jid),)).addCallback(self.got_avatar, handler)
+		self.db.runQuery('select file, hash, jid from avatars where jid = "%s"'%(dbutil.safe(jid),)).addCallback(self.got_avatar, handler)
 
 	
 	def got_avatar(self, result, handler):
@@ -45,7 +43,7 @@ class Cache:
 
 	def set_avatar(self, jid, avatar): #avatar = (file,hash)
 		log.msg('ukladam ' + jid)
-		self.db.runQuery('select jid from avatars where jid = "%d"'%(dbutil.safe(jid),)).addCallback(self._has_avatar, jid, avatar)
+		self.db.runQuery('select jid from avatars where jid = "%s"'%(dbutil.safe(jid),)).addCallback(self._has_avatar, jid, avatar)
 
 	
 	def _has_avatar(self, result, jid, avatar):
