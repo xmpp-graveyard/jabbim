@@ -104,6 +104,12 @@ class groupChatWidget(QtGui.QWidget):
 		#self.main.groupchat[jid][1].remove(user)
 		#self.refreshStats()
 
+	def getUserItems(self,name):
+		items=self.ui.users.findItems(unicode(name), QtCore.Qt.MatchFixedString|QtCore.Qt.MatchRecursive,0)
+		if len(items)!=0:
+			return items
+		return []
+
 	def addRole(self,role,name):
 		self.roles[role]=QtGui.QTreeWidgetItem(self.ui.users)
 		self.roles[role].setText(0,unicode(name))
@@ -118,32 +124,31 @@ class groupChatWidget(QtGui.QWidget):
 				self.ui.users.setItemHidden(v,False)
 
 	def isUser(self,nick):
-		if nick in self.main.client.groupchats[self.jid].users.keys():
-			if self.main.client.groupchats[self.jid].users[nick].item!=None:
-				return self.main.client.groupchats[self.jid].users[nick].item
-		return False
+		if len(self.getUserItems(nick))==0:
+			return False
+		return True
 
 	def removeUser(self,nick):
-		parent=self.main.client.groupchats[self.jid].users[nick].item.parent()
-		parent.takeChild(int(parent.indexOfChild(self.main.client.groupchats[self.jid].users[nick].item)))
+		item=self.getUserItems(nick)[0]
+		parent=item.parent()
+		parent.takeChild(int(parent.indexOfChild(item)))
 		self.refreshStats()
 
 	def editUser(self,nick,status,role=None):
 		if self.isUser(unicode(nick))==False:
-			#user=self.isUser(unicode(nick))
-		# Pokud neni v mistnosti, vytvorime jej
-		#else:
 			if self.roles.has_key(role):
-				self.main.client.groupchats[self.jid].users[nick].item=QtGui.QTreeWidgetItem(self.roles[role])
+				item=QtGui.QTreeWidgetItem(self.roles[role])
 			else:
-				self.main.client.groupchats[self.jid].users[nick].item=QtGui.QTreeWidgetItem(self.ui.users)
-			self.main.client.groupchats[self.jid].users[nick].item.setText(0,unicode(nick))
+				item=QtGui.QTreeWidgetItem(self.ui.users)
+			item.setText(0,unicode(nick))
+		else:
+			item=self.getUserItems(nick)[0]
 		# Nastaveni stavu
 		if status!="None":
-			self.main.client.groupchats[self.jid].users[nick].item.setIcon(0,self.main.getIcon(status=status,size="16x16"))
-			self.main.client.groupchats[self.jid].users[nick].item.setText(1,self.main.shows[self.main.client.groupchats[self.jid].users[nick].show]+unicode(nick.lower()))
+			item.setIcon(0,self.main.getIcon(status=status,size="16x16"))
+			item.setText(1,self.main.shows[status]+unicode(nick.lower()))
 		else:
-			self.main.client.groupchats[self.jid].users[nick].item.setIcon(0,self.main.getIcon(status="online",size="16x16"))
+			item.setIcon(0,self.main.getIcon(status="online",size="16x16"))
 		# Tooltip
 		#user.setToolTip('<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>Jabber ID: </b>'+str(jid)+'')
 		# serazeni

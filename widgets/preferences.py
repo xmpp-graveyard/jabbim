@@ -65,9 +65,8 @@ class preferencesWindow(QtGui.QDialog):
 			style=open("themes/"+file+"/style.css")
 			text=style.read()
 			self.setStyleSheet(text)
-			self.main.setStyleSheet(text)
-			self.main.chat.setStyleSheet(text)
 			style.close()
+			self.main.loadTheme()
 
 	def themeChanged(self,item,old):
 		data=item.data(32)
