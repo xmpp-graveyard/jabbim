@@ -42,6 +42,8 @@ from include import utils
 import urllib
 from imp import load_source
 
+from include import plugins
+
 #mutex=QtCore.QMutex()
 
 class clientClass(pyxl.client.Client):
