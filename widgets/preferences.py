@@ -12,6 +12,47 @@ from imp import load_source
 import shutil
 from twisted.python import log
 
+class pluginConfiguration(QtGui.QDialog):
+	def __init__(self,plugin,parent):
+		apply(QtGui.QDialog.__init__,(self,parent))
+		self.plugin=plugin
+		self.setWindowTitle(plugin.name+" preferences")
+		
+		self.widgets={}
+		
+		#l=self.layout()
+		
+		layout=QtGui.QVBoxLayout(self)
+		for key,item in plugin.config.iteritems():
+			if item['type']=="boolean":
+				widget=QtGui.QCheckBox(item['description'],self)
+				if len(item['default'])==0:
+					if item['default']=='True':
+						widget.setChecked(True)
+				else:
+					if item['value']=='True':
+						widget.setChecked(True)
+				layout.addWidget(widget)
+				self.widgets[key]=widget
+		layout2=QtGui.QHBoxLayout()
+		close=QtGui.QPushButton("Close",self)
+		save=QtGui.QPushButton("Save",self)
+		layout2.addStretch()
+		layout2.addWidget(close)
+		layout2.addWidget(save)
+		
+		QtCore.QObject.connect(save, QtCore.SIGNAL("clicked()"),self.accept)
+		QtCore.QObject.connect(close, QtCore.SIGNAL("clicked()"),self.reject)
+		
+		layout.addLayout(layout2)
+	
+	def accept(self):
+		for key, widget in self.widgets.iteritems():
+			item=self.plugin.config[key]
+			if item['type']=="boolean":
+				self.plugin.config[key]['value']=str(widget.isChecked())
+		self.plugin.writeConfig()
+		self.done(1)
 
 class preferencesWindow(QtGui.QDialog):
 	def __init__(self,main,parent=None,page=0):
@@ -61,8 +102,10 @@ class preferencesWindow(QtGui.QDialog):
 
 		# Plugins
 		#self.ui.plugins.header().hide()
+		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.pluginsContextMenu)
 		plugins=os.listdir("plugins/")
 		self.loadedPlugins=self.main.config['plugins']
+		self.plugins={}
 		for plugin in plugins:
 			path = 'plugins/%s/%s.py'%(plugin, plugin)
 			try: 
@@ -70,7 +113,7 @@ class preferencesWindow(QtGui.QDialog):
 			except:
 				log.msg('plugin load error: '+plugin)
 				continue
-			plug = load_source(plugin, path, f).Plugin(False)
+			plug = load_source(plugin, path, f).Plugin(False,self.main.homeDir)
 			f.close()
 			item=QtGui.QTreeWidgetItem(self.ui.plugins)
 			widget=QtGui.QCheckBox(self.ui.plugins)
@@ -80,14 +123,42 @@ class preferencesWindow(QtGui.QDialog):
 			item.setText(1,plug.name)
 			item.setText(2,plug.description)
 			item.setData(32,0,QtCore.QVariant(unicode(plugin)))
+			self.plugins[plugin]=plug
 			log.msg("plugin "+plugin+" loaded.")
 		self.ui.plugins.resizeColumnToContents (0)
 		self.ui.plugins.resizeColumnToContents (1)
 
+	def pluginsContextMenu(self,pos):
+		# make groupchat bookmarks menu
+		item=self.ui.plugins.itemFromIndex(self.ui.plugins.indexAt(pos)) # get selected item
+		data=item.data(32,0)
+		name=unicode(data.toString())
+		plugin=self.plugins[name]
+		menu=QtGui.QMenu(self.ui.plugins) # make menu
+		# Join bookmarked groupchat
+		action=menu.addAction(self.tr("Plugin Configuration"))
+		action.setData(item.data(32,0))
+		action.setObjectName("config")
+		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.pluginsContextMenuTriggered)
+		# set menu position and show
+		menu.move(self.ui.plugins.mapToGlobal(pos))
+		menu.show()
+
+	def pluginsContextMenuTriggered(self,action):
+		cmd=action.objectName()
+		if cmd=="config":
+			data=action.data()
+			name=unicode(data.toString())
+			plugin=self.plugins[name]
+			dialog=pluginConfiguration(self.plugins[name],self.ui.plugins)
+			dialog.exec_()
+
+
+
 	def reskin(self,file=None):
 		if file==None:
 			file=self.main.config['theme']
-			style=open("styles/"+file+"/style.css")
+			style=open("themes/"+file+"/style.css")
 			self.setStyleSheet(style.read())
 			style.close()
 		else:

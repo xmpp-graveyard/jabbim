@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Sat Jul 21 14:38:13 2007
+# Created: Sun Jul 22 08:50:03 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -240,9 +240,11 @@ class Ui_preferences(object):
         self.gridlayout6.addWidget(self.label_8,0,0,1,1)
 
         self.plugins = QtGui.QTreeWidget(self.page_5)
+        self.plugins.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.plugins.setAlternatingRowColors(True)
         self.plugins.setRootIsDecorated(False)
         self.plugins.setObjectName("plugins")
+        self.plugins.headerItem().setText(0,"")
         self.gridlayout6.addWidget(self.plugins,2,0,1,1)
         self.stackedWidget.addWidget(self.page_5)
         self.gridlayout.addWidget(self.stackedWidget,0,1,1,2)
@@ -311,7 +313,6 @@ class Ui_preferences(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\';\"><span style=\" font-size:12pt; font-weight:600;\">Plugins</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.plugins.headerItem().setText(0,QtGui.QApplication.translate("preferences", " ", None, QtGui.QApplication.UnicodeUTF8))
         self.plugins.headerItem().setText(1,QtGui.QApplication.translate("preferences", "Name", None, QtGui.QApplication.UnicodeUTF8))
         self.plugins.headerItem().setText(2,QtGui.QApplication.translate("preferences", "Description", None, QtGui.QApplication.UnicodeUTF8))
 

@@ -14,14 +14,17 @@ class PluginBase:
 		self.url = 'dev.jabbim.cz/jabbim'
 		self.handlers = []
 	
-	def loadConfig(self):
+	def loadConfig(self,homedir=None):
+		if homedir==None:
+			homedir=self.main.homeDir
+			
 # 		try:
 # 			self.confObj = ConfigObj(main.homeDir+'/.jabbim/plugins/'+self.fname+'/config.ini',encoding='UTF8')
 # 			
 # 		except:
 # 			log.msg('No config for: '+self.name)
 # # 			return False
-		self.confObj = ConfigObj(self.main.homeDir+'/.jabbim/plugins/'+self.fname+'/config.ini',encoding='UTF8')
+		self.confObj = ConfigObj(homedir+'/.jabbim/plugins/'+self.fname+'/config.ini',encoding='UTF8')
 		for k in self.config.iterkeys():
 			try:
 				self.config[k]['value'] = self.confObj[k]
