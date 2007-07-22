@@ -993,7 +993,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusButton.setIcon(self.getIcon("online",size="16x16"))
 		self.ui.statusButton.show()
 		self.ui.showOffline.show()
-		self.tray.showMessage("Jabbim","Jabbim is ready! You are connected! :) ")
+		self.tray.showMessage(self.tr("Jabbim"),self.tr("Jabbim is ready! You are connected! :) "))
 
 
 	def disconnect(self):
@@ -1147,6 +1147,7 @@ class statusWindow(QtGui.QDialog):
 
 translator=QtCore.QTranslator()
 translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
+print "trying to load locales:","locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm"
 app.installTranslator(translator)
 
 MainWindow = mainWindow()

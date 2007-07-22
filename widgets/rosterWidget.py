@@ -15,6 +15,7 @@ class doc(QtGui.QTextDocument):
 class FTWidget(QtGui.QWidget):
 	def __init__(self,file,item,main,sid,parent=None):
 		apply(QtGui.QWidget.__init__,(self,parent))
+		self.setObjectName("FTWidget")
 		self.item=item
 		self.main=main
 		self.complete=False
@@ -34,7 +35,7 @@ class FTWidget(QtGui.QWidget):
 		self.hboxlayout.setSpacing(6)
 		self.hboxlayout.setObjectName("hboxlayout")
 	
-		self.label = QtGui.QLabel("File transfer:",self)
+		self.label = QtGui.QLabel(self.tr("File transfer:"),self)
 		self.label.setObjectName("label")
 		self.hboxlayout.addWidget(self.label)
 	

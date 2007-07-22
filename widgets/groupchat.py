@@ -64,9 +64,9 @@ class groupChatWidget(QtGui.QWidget):
 		self.jid=jid
 		self.name_id=-1 # for tabPressed
 		self.roles={}
-		self.addRole("participant","Participants")
-		self.addRole("moderator","Moderators")
-		self.addRole("visitor","Visitors")
+		self.addRole("participant",self.tr("Participants"))
+		self.addRole("moderator",self.tr("Moderators"))
+		self.addRole("visitor",self.tr("Visitors"))
 		self.ui.users.header().hide()
 		self.ui.users.hideColumn(1)
 		#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)
