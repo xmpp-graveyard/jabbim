@@ -2,9 +2,9 @@ try:
 	from PyQt4 import QtCore, QtGui
 except:
 	print "PyQt4 is not installed."
-
+import sys
+sys.path.append('.')
 from include import plugins
-
 class Plugin(plugins.PluginBase):
 	def __init__(self,main):
 		plugins.PluginBase.__init__(self, main)
