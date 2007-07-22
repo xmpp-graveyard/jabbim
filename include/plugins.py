@@ -2,7 +2,7 @@ from configobj import ConfigObj
 from twisted.python import log
 
 class PluginBase:
-	def __init__(self, main):
+	def __init__(self, main, homedir):
 		self.main = main
 		self.config = {} #{'hodnota':{default:'', description:'', value: '', type: 'int|text|boolean|select'}}
 		self.description = 'basic plugin class'
@@ -13,6 +13,7 @@ class PluginBase:
 		self.category = ['test', 'misc']
 		self.url = 'dev.jabbim.cz/jabbim'
 		self.handlers = []
+		self.homeDir = homedir
 	
 	def loadConfig(self,homedir=None):
 		if homedir==None:

@@ -702,7 +702,7 @@ class mainWindow(QtGui.QMainWindow):
 				except:
 					log.msg('plugin load error: '+plugin)
 					continue
-				plug = load_source(plugin, path, f).Plugin(self)
+				plug = load_source(plugin, path, f).Plugin(self, self.homeDir)
 				f.close()
 				self.plugins[plug.name] = plug
 				

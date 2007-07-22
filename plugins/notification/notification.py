@@ -6,8 +6,8 @@ import sys
 sys.path.append('.')
 from include import plugins
 class Plugin(plugins.PluginBase):
-	def __init__(self,main):
-		plugins.PluginBase.__init__(self, main)
+	def __init__(self,main, homedir):
+		plugins.PluginBase.__init__(self, main, homedir)
 		self.fname = 'notification'
 		self.description = 'System tray notification'
 		self.author = "Jiri 'Sef' Gabrys"
