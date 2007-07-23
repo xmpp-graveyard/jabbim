@@ -1080,6 +1080,11 @@ class mainWindow(QtGui.QMainWindow):
 		return self.ui.roster.addUser(itemjid,name,grp)
 
 	def _disconnect(self, error = None): # error = None | dns | lost | auth | failed
+		if error=="auth":
+			QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Bad Jabber ID or password.")),0,1)
+		elif error=="dns":
+			QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Server is not found.")),0,1)
+		
 		MainWindow.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
 		MainWindow.ui.statusButton.setIcon(MainWindow.getIcon("offline",size="16x16"))
 		MainWindow.ui.statusButton.hide()
@@ -1097,6 +1102,8 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.roster.makeHiddenItem()
 		MainWindow.ui.login_connect.setEnabled(True)
 		MainWindow.plugins=[]
+		MainWindow.client = None
+
 
 class XMLConsole(QtGui.QMainWindow):
 	def __init__(self,data,parent=None):
