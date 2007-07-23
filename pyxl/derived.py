@@ -77,7 +77,7 @@ class derived:
 	def on_fileReceived(self, jid, file, methods, id):
 		pass
 	
-	def on_ftEnd(self, sid):
+	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
 		del self.ft[sid]
 		
 	def on_disconnect(self):

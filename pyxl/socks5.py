@@ -382,8 +382,10 @@ class ClientFactory (protocol.ClientFactory):
 				#
 				log.msg ("Connection LOST before SOCKS established %s" % self)
 				self.otherFactory.clientConnectionFailed (connector, rmap)
+				self.xmpp.ft[self.xmpp_sid].error = "Connection lost"
 			else:
 				self.otherFactory.clientConnectionLost (connector, rmap)
+				self.xmpp.ft[self.xmpp_sid].error = "Connection lost"
 		except:
 			ei = sys.exc_info()
 			if not str (ei[0]).count ("AlreadyCalled"):
@@ -399,6 +401,7 @@ class ClientFactory (protocol.ClientFactory):
 				log.msg ("Connection FAILED before SOCKS established %s" % self)
 				self.otherFactory.clientConnectionFailed (connector, rmap)
 				self.xmpp.ft[self.xmpp_sid].connectFailure()
+				self.xmpp.ft[self.xmpp_sid].error = "Can't connect."
 			else:
 				self.otherFactory.clientConnectionFailed (connector, rmap)
 		except:
@@ -460,6 +463,7 @@ class FTSend:
 		self.sent = 0
 		self.streamhost = None
 		self.connector = None
+		self.error = None
 
 	
 	def activate(self):
@@ -485,7 +489,7 @@ class FTSend:
 		log.msg("konec prenosu")
 		if self.fp != None:
 			self.fp.close()
-		self.client.on_ftEnd(self.sid)
+		self.client.on_ftEnd(self.sid, self.error)
 		
 
 class FTReceive:
@@ -503,6 +507,7 @@ class FTReceive:
 		self.activeStreamhost = None
 		self.received = 0
 		self.connector = None
+		self.error = None
 	
 	def connectStreamHost(self):
 		streamhost = self.streamhosts.pop(0)
@@ -537,4 +542,4 @@ class FTReceive:
 		log.msg("konec prenosu")
 		if self.fp != None:
 			self.fp.close()
-		self.client.on_ftEnd(self.sid)
+		self.client.on_ftEnd(self.sid, self.error)

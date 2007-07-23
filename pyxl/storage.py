@@ -24,8 +24,8 @@ class Cache:
 				self.db = adbapi.ConnectionPool('pysqlite2.dbapi2', db)
 			except:
 				log.msg('Unknown DB error')
-		q = self.db.runQuery('create table avatars (file text, hash text, jid text);create table caps (node text, feature text);').addCallback(self.table_created)
-		q.addErrback(self.table_present)
+		self.db.runQuery('create table caps (node text, feature text);').addCallback(self.table_created).addErrback(self.table_present)
+		self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created).addErrback(self.table_present)
 		
 	def table_created(self, res):
 		log.msg( 'created new cache DB')
