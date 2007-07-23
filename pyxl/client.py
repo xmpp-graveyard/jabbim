@@ -166,12 +166,8 @@ class Client(derived):
 		self._connect(unicode(r.payload.target), int(r.payload.port))
 	
 	def _dnsLookupErr(self, resp):
-		if resp.type != names.error.DNSNameError:
-			self._connect(self.host, self.port)
-		else:
-			log.msg('dns error')
-			self.main._disconnect(error = 'dns')
-			
+		self._connect(self.host, self.port)
+
 				
 	def _connect(self, host, port): 
 		self.factory = client.XMPPClientFactory(self.jid,self.password)
