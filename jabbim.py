@@ -1079,6 +1079,25 @@ class mainWindow(QtGui.QMainWindow):
 	def _addUser(self, itemjid, name, grp):
 		return self.ui.roster.addUser(itemjid,name,grp)
 
+	def _disconnect(self):
+		MainWindow.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
+		MainWindow.ui.statusButton.setIcon(MainWindow.getIcon("offline",size="16x16"))
+		MainWindow.ui.statusButton.hide()
+		MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
+		MainWindow.ui.showOffline.hide()
+
+		#MainWindow.client.roster = {'users':{},'groups':{}}
+		#MainWindow.client.roster_meta = {} # jid: {'tag':tag,  'order': 1}
+		#MainWindow.client.first_presence = []
+		#MainWindow.client.first_wait = True
+		#MainWindow.client.bookmarks = {'conference':{}, 'url': {}}
+		#MainWindow.client.roster['groups']['Unknown']=MainWindow.ui.roster.addGroup('Unknown')
+		#MainWindow.client.temp_hosts=[]
+		MainWindow.ui.roster.clear()
+		MainWindow.ui.roster.makeHiddenItem()
+		MainWindow.ui.login_connect.setEnabled(True)
+		MainWindow.plugins=[]
+
 class XMLConsole(QtGui.QMainWindow):
 	def __init__(self,data,parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
@@ -1117,25 +1136,10 @@ class statusWindow(QtGui.QDialog):
 			MainWindow.client.sendPresence(typ = "unavailable", status = unicode(self.ui.status.toPlainText ()))
 			MainWindow.client.factory.stopTrying()
 			#MainWindow.client.disconnect()
-			MainWindow.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
-			MainWindow.ui.statusButton.setIcon(MainWindow.getIcon("offline",size="16x16"))
-			MainWindow.ui.statusButton.hide()
-			MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
-			MainWindow.ui.showOffline.hide()
 			MainWindow.client.disconnect()
 			del MainWindow.client
 			MainWindow.client = None
-			#MainWindow.client.roster = {'users':{},'groups':{}}
-			#MainWindow.client.roster_meta = {} # jid: {'tag':tag,  'order': 1}
-			#MainWindow.client.first_presence = []
-			#MainWindow.client.first_wait = True
-			#MainWindow.client.bookmarks = {'conference':{}, 'url': {}}
-			#MainWindow.client.roster['groups']['Unknown']=MainWindow.ui.roster.addGroup('Unknown')
-			#MainWindow.client.temp_hosts=[]
-			MainWindow.ui.roster.clear()
-			MainWindow.ui.roster.makeHiddenItem()
-			MainWindow.ui.login_connect.setEnabled(True)
-			MainWindow.plugins=[]
+			MainWindow._disconnect()
 			#MainWindow.client.disconnect()
 			#print MainWindow.client.roster
 			#reactor.stop2()
