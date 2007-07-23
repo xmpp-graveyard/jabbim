@@ -651,7 +651,8 @@ class mainWindow(QtGui.QMainWindow):
 		menu=QtGui.QMenu(self)
 		menu.addMenu(self.statusMenu)
 		menu.addSeparator()
-		menu.addAction(self.tr("Close"),self.trayQuit)
+		action=menu.addAction(self.tr("Hide / Show"),self.trayActivated)
+		menu.addAction(self.tr("Quit"),self.trayQuit)
 		app.connect(self.tray,QtCore.SIGNAL("activated (QSystemTrayIcon::ActivationReason)"),self.trayActivated)
 		self.tray.setContextMenu(menu)
 		self.tray.show()
@@ -766,7 +767,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.disconnect()
 		#sys.exit(0)
 
-	def trayActivated(self,reason):
+	def trayActivated(self,reason=QtGui.QSystemTrayIcon.Trigger):
 		# show or hide main window
 		if reason==QtGui.QSystemTrayIcon.Trigger:
 			if self.isHidden():
