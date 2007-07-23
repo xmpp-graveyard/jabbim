@@ -387,7 +387,7 @@ class clientClass(pyxl.client.Client):
 		for i in range(lenght):
 			item=self.main.ui.roster.getUserItems(jid)[0]
 			if item.childCount()==0:
-				log.msg("DELETE ITEM:"+unicode(item.text(1)))
+				#log.msg("DELETE ITEM:"+unicode(item.text(1)))
 				parent=item.parent()
 				if parent:
 					index=parent.indexOfChild(item)
