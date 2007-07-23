@@ -19,7 +19,9 @@ class lineEditWidget(QtGui.QTextEdit):
 	
 	def keyPressEvent(self,event):
 		key=event.key()
-		if key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
+		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier):
+			QtGui.QTextEdit.keyPressEvent(self,event)
+		elif key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
 			self.main.sendButtonClicked()
 		else:
 			QtGui.QTextEdit.keyPressEvent(self,event)
@@ -27,7 +29,7 @@ class lineEditWidget(QtGui.QTextEdit):
 			for k,v in self.parent.smileys.iteritems():
 				if text.find(" "+k)!=-1:
 					html=self.toHtml()
-					html.replace(k,'<img src="images/16x16/emotes/'+v+'"/> ')
+					html.replace(k,'<img src="images/16x16/emotes/'+v+'">test</img> ')
 					cur=self.textCursor()
 					self.setHtml(html)
 					self.setTextCursor(cur)
@@ -137,21 +139,32 @@ class chatWidget(QtGui.QWidget):
 	def sendButtonClicked(self):
 		# sends message
 		if len(unicode(self.ui.line.toPlainText()))!=0:
-			text=unicode(self.ui.line.toHtml())
-			a=parseString(text)
-			for el in a.getElementsByTagName('img'):
-				path=el.attributes['src'].split('/')[-1]
-				for k,v in self.smileys.iteritems():
-					if v==path:
-						path=k
-				newnode = parseString("<div> "+path+"</div>").documentElement
-				el.parentNode.replaceChild(newnode,el)
-			b=a.getElementsByTagName('body')
-			c=parseString(b[0].toxml())
-			text=gatherTextNodes(c)
+			text=self.ui.line.toPlainText()
+			#a=parseString(text)
+			#for el in a.getElementsByTagName('img'):
+				#path=el.attributes['src'].split('/')[-1]
+				#for k,v in self.smileys.iteritems():
+					#if v==path:
+						#path=k
+				#newnode = parseString("<div> "+path+"</div>").documentElement
+				#el.parentNode.replaceChild(newnode,el)
+			#for el in a.getElementsByTagName('br'):
+				#newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
+				#el.parentNode.replaceChild(newnode,el)
+			#for el in a.getElementsByTagName('p'):
+				#newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
+				#el.parentNode.replaceChild(newnode,el)
+
+
+			#b=a.getElementsByTagName('body')
+			#c=parseString(b[0].toxml())
+			#text=gatherTextNodes(c)
 			text=unicode(text, 'utf-8')
+			#text=text.replace(unichr(2028),"\n")
+			print text
 			text=unescape(text)
 			self.main.client.sendMessage(str(self.jid),text)
+			text=text.replace(u'\n',"<br />")
 			for word in text.split(' '):
 				if word.find("http://")!=-1:
 					text=text.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')

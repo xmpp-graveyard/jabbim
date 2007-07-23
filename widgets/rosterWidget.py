@@ -7,6 +7,8 @@ except:
 from tooltip_ui import *
 #from eventsFTWidget_ui import *
 from os.path import basename
+from twisted.python import log
+
 
 class doc(QtGui.QTextDocument):
 	def __init__(self,parent=None):
@@ -872,7 +874,7 @@ class rosterWidget(QtGui.QTreeWidget):
 				self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 				self.main.filetransfer[sid]=item
 				self.main.filetransferTimer.start(500)
-
+		log.msg("END CONTACT")
 	def changeGroup(self,jid,action,group):
 			name=unicode(self.main.client.roster['users'][jid].name)
 			if action=="+":

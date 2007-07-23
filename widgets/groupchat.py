@@ -221,10 +221,14 @@ class groupChatWidget(QtGui.QWidget):
 						path=k
 				newnode = parseString("<div> "+path+"</div>").documentElement
 				el.parentNode.replaceChild(newnode,el)
+			for el in a.getElementsByTagName('br'):
+				newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
+				el.parentNode.replaceChild(newnode,el)
 			b=a.getElementsByTagName('body')
 			c=parseString(b[0].toxml())
 			text=gatherTextNodes(c)
 			text=unicode(text, 'utf-8')
+			text=text.replace(unichr(2028),"\n")
 			text=unescape(text)
 			self.main.client.sendMessage(self.jid, text, 'groupchat')
 			self.ui.line.clear()
