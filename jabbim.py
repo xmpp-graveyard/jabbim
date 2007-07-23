@@ -531,9 +531,9 @@ class clientClass(pyxl.client.Client):
 			for item in self.main.ui.roster.getUserItems(jid):
 ##				log.msg(utils.cprint("yellow","setting icon: "+jid))
 				item.setIcon(3,QtGui.QIcon(pixmap))
-			for item in self.main.ui.roster.getMetaItems(jid):
+			#for item in self.main.ui.roster.getMetaItems(jid):
 ##				log.msg(utils.cprint("yellow","setting icon: "+jid))
-				item.setIcon(3,QtGui.QIcon(pixmap))
+				#item.setIcon(3,QtGui.QIcon(pixmap))
 			sha=sha1(image).hexdigest()
 			self.main.cache.set_avatar(jid, ['avatars/'+jid, sha])
 			self.main._loadAvatar('avatars/'+jid, sha, jid)
