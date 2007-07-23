@@ -791,7 +791,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			print "delete contact CLICKED"
 			jid=action.data()
 			jid=str(jid.toString())
-			self.main.client.delContact(jid)
+			self.main.client.on_DeleteContact(jid)
 			#print "roster_delete_action",jid
 			## delete user from groups
 			#for user in self.getUsers(jid):
