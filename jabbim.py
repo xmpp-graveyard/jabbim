@@ -982,10 +982,10 @@ class mainWindow(QtGui.QMainWindow):
 		# status changed
 		data=action.data()
 		data=data.toString()
-		self.ui.statusButton.setText(unicode(action.text()))
-		self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
 		setstatus=statusWindow(data)
-		setstatus.exec_()
+		if setstatus.exec_()==1:
+			self.ui.statusButton.setText(unicode(action.text()))
+			self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
 
 	def loadRoster(self):
 		# load roster widget
