@@ -132,6 +132,7 @@ class Client(derived):
 		self.xmlstream.send(presence)
 
 	def sendMessage(self, to, body, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
+		self.dispatcher.publishEvent('on_message_send', to, body, typ, subject,composing, xhtml,  muc)
 		message = Element((None,'message'))
 		message['to'] = to
 		message.addElement('body', content = body)

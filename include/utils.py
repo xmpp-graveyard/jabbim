@@ -35,11 +35,11 @@ def loadConfig(main):
 			"plugins":['notification'],
 			"rosterMode":"normal"
 			}
-	main.config=ConfigObj(main.homeDir+'/.jabbim/config',encoding='UTF8')
+	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:
-		if not os.path.isdir(main.homeDir+'/.jabbim'):
-			os.mkdir(main.homeDir+'/.jabbim')
-		main.config=ConfigObj(main.homeDir+'/.jabbim/config',encoding='UTF8')
+		if not os.path.isdir(main.homeDir):
+			os.mkdir(main.homeDir)
+		main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 		for k,v in configs.iteritems():
 			main.config[k]=v
 		main.config.write()
@@ -52,15 +52,15 @@ def loadConfig(main):
 			rewrite=True
 	if rewrite==True:
 		main.config.write()
-	if not os.path.isdir(main.homeDir+'/.jabbim/avatars'):
-		os.mkdir(main.homeDir+'/.jabbim/avatars')
-	if not os.path.isdir(main.homeDir+'/.jabbim/plugins'):
-		os.mkdir(main.homeDir+'/.jabbim/plugins')
+	if not os.path.isdir(main.homeDir+'/avatars'):
+		os.mkdir(main.homeDir+'/avatars')
+	if not os.path.isdir(main.homeDir+'/plugins'):
+		os.mkdir(main.homeDir+'/plugins')
 
 def getHomeDir():
 	# gets homedir on win32 or linux
 	if sys.platform != 'win32' :
-		return os.path.expanduser( '~' )
+		return os.path.expanduser( '~' )+'/.jabbim'
 	def valid(path):
 		if path and os.path.isdir(path):
 			return True
@@ -78,4 +78,5 @@ def getHomeDir():
 					homeDir += '\\'
 				if not valid(homeDir):
 					homeDir = 'C:\\'
+	homeDir = homeDir + './jabbim'
 	return homeDir

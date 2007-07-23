@@ -41,7 +41,7 @@ from configobj import ConfigObj
 from include import utils
 import urllib
 from imp import load_source
-
+from urllib import quote, unquote
 from include import plugins
 
 #mutex=QtCore.QMutex()
@@ -524,7 +524,7 @@ class clientClass(pyxl.client.Client):
 		if card.has_key("BINVAL"):
 			pixmap=QtGui.QPixmap()
 			image=base64.decodestring(str(card["BINVAL"]))
-			f=open(self.main.homeDir+'/.jabbim/avatars/'+jid,"wb")
+			f=open(self.main.homeDir+'/avatars/'+jid,"wb")
 			f.write(image)
 			f.close()
 			pixmap.loadFromData(image)
@@ -547,8 +547,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
 		self.homeDir=utils.getHomeDir() # get home dir
+		print self.homeDir
 		utils.loadConfig(self) # load config files
-		self.cache = storage.Cache(db=self.homeDir+'/.jabbim/cache.db')
+		self.cache = storage.Cache(db=self.homeDir+'/cache.db')
 		
 
 		self.ui.gridlayout.setMargin(1)
@@ -690,21 +691,21 @@ class mainWindow(QtGui.QMainWindow):
 			except:
 				continue
 				log.msg('copy plugin to homedir: '+plugin)
-			path = '%s/.jabbim/plugins/%s/%s.py'%(self.homeDir, plugin, plugin)
+			path = '%s/plugins/%s/%s.py'%(self.homeDir, plugin, plugin)
 			try: 
 				f=open(path)
 				continue
 			except:
 				log.msg('copy plugin to homedir: '+plugin)
 
-			shutil.copytree("plugins/"+plugin, self.homeDir+"/.jabbim/plugins/"+plugin)
+			shutil.copytree("plugins/"+plugin, self.homeDir+"/plugins/"+plugin)
 
 	def loadPlugins(self):
 		self.plugins = {}
-		plugins=os.listdir(self.homeDir + "/.jabbim/plugins/")
+		plugins=os.listdir(self.homeDir + "/plugins/")
 		for plugin in plugins:
 			if plugin in self.config['plugins']:
-				path = '%s/.jabbim/plugins/%s/%s.py'%(self.homeDir, plugin, plugin)
+				path = '%s/plugins/%s/%s.py'%(self.homeDir, plugin, plugin)
 				try: 
 					f=open(path)
 				except:
@@ -1064,9 +1065,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.client.connect()
 	
 	def _loadAvatar(self,file, hash, jid):
-		if os.path.isfile(self.homeDir+'/.jabbim/'+unicode(file)):
+		if os.path.isfile(self.homeDir+'/'+unicode(file)):
 			pixmap=QtGui.QPixmap()
-			f=open(self.homeDir+'/.jabbim/'+unicode(file),"rb")
+			f=open(self.homeDir+'/'+unicode(file),"rb")
 			image=f.read()
 			f.close()
 			pixmap.loadFromData(image)
