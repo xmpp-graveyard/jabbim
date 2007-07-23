@@ -378,9 +378,13 @@ class Client(derived):
 		iq.addElement('vCard', 'vcard-temp')
 		self.disp(iq['id'])
 		iq.timeout = 60
+		log.msg("Sending VCARD IQ")
 		d = iq.send()
+		log.msg("XML LOG")
 		self.on_xml(iq.toXml())
-		d.addCallback(self._vcardReceived).addErrback(self._noVcard, jid) 
+		log.msg("ADDING: callback")
+		d.addCallback(self._vcardReceived).addErrback(self._noVcard, jid)
+		log.msg("END: getVCard")
 
 	def _noVcard(self, err, jid): 
 		print jid, 'no vcard available' 
