@@ -389,7 +389,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="" line="7471221"/>
         <source>Complete</source>
-        <translation type="unfinished">Dokončen</translation>
+        <translation>Dokončen</translation>
     </message>
     <message>
         <location filename="" line="7471221"/>
@@ -419,7 +419,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="" line="7471221"/>
         <source>Jabbim is ready! You are connected! :) </source>
-        <translation>Jste připojeni! :)</translation>
+        <translation>Připojeno! :)</translation>
     </message>
     <message>
         <location filename="" line="7471221"/>
@@ -462,7 +462,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="" line="7471221"/>
         <source>Chat skins</source>
-        <translation>Vzhled Jabbimu</translation>
+        <translation>Vzhled rozhovoru</translation>
     </message>
     <message>
         <location filename="" line="7471221"/>
