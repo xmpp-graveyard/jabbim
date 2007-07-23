@@ -638,7 +638,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusButton.setText(unicode(self.status["offline"]))
 		self.ui.statusButton.setIcon(self.getIcon("offline",size="16x16"))
 		self.ui.statusButton.hide()
-		self.config['rosterIconSize']="22x22"
+		#self.config['rosterIconSize']="22x22"
 		#self.addInfoSubscribe()
 		#self.addInfoSubscribe()
 		#self.addInfoSubscribe()

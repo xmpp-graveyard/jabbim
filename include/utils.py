@@ -32,7 +32,8 @@ def loadConfig(main):
 			"saveGeometry":True,
 			"saveExpandedGroups":True,
 			"expandedGroups":[],
-			"plugins":['notification']
+			"plugins":['notification'],
+			"rosterMode":"compact"
 			}
 	main.config=ConfigObj(main.homeDir+'/.jabbim/config',encoding='UTF8')
 	if len(main.config)==0:

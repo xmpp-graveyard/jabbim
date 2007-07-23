@@ -86,8 +86,11 @@ class preferencesWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.chatSkin_list, QtCore.SIGNAL("activated ( const QString & )"),self.chatSkin_listChanged)
 
 		# roster
-		#index=self.ui.roster_iconSize.findText(self.main.config['rosterIconSize'])
-		#self.ui.roster_iconSize.setCurrentIndex(int(index))
+		index=self.ui.roster_iconSize.findText(self.main.config['rosterIconSize'])
+		log.msg(self.main.config['rosterIconSize'])
+		self.ui.roster_iconSize.setCurrentIndex(int(index))
+		if self.main.config['rosterMode']=='compact':
+			self.ui.roster_compact.toggle()
 
 		# Themes
 		skins=os.listdir("themes/")
@@ -202,8 +205,12 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.config['saveGeometry']=str(self.ui.savePosition.isChecked())
 		self.main.config['chat_skin']=unicode(self.ui.chatSkin_list.currentText())
 		self.main.config['jid']=jid
-		#self.main.config['rosterIconSize']=unicode(self.ui.roster_iconSize.currentText())
+		self.main.config['rosterIconSize']=unicode(self.ui.roster_iconSize.currentText())
 		self.main.config['theme']=unicode(self.ui.themes.currentItem().data(32).toString())
+		if self.ui.roster_compact.isChecked()==True:
+			self.main.config['rosterMode']="compact"
+		else:
+			self.main.config['rosterMode']="normal"
 		self.main.config.write()
 		
 		for i in range(int(self.ui.plugins.topLevelItemCount())):

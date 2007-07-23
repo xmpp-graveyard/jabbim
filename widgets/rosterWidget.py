@@ -191,18 +191,22 @@ class rosterWidget(QtGui.QTreeWidget):
 ##		print self.itemDelegate()
 ##		print self.delegate
 		self.setMouseTracking (True)
-		#self.setIndentation(2)
-		self.setItemDelegate(self.delegate)
-##		print self.itemDelegate()
-		# main variables
 		self.main=main # mainwindow pointer
+		#self.setIndentation(2)
+		if self.main.config['rosterMode']=="normal":
+			self.setItemDelegate(self.delegate)
+			self.setIconSize(QtCore.QSize(32,32))
+			self.main.config['rosterIconSize']="32x32"
+		elif self.main.config['rosterMode']=="compact":
+			size=unicode(self.main.config['rosterIconSize']).rsplit("x")
+			self.setIconSize(QtCore.QSize(int(size[0]),int(size[1])))
+
+		#print self.itemDelegate()
+		# main variables
 		#self.jab=jab # jab instance pointer
 		self.edit=0 # temp variable for tabPressed()
 		# roster config and design informations
 		self.setAlternatingRowColors(True)
-		size=unicode(self.main.config['rosterIconSize']).rsplit("x")
-		#self.setIconSize(QtCore.QSize(int(size[0]),int(size[1])))
-		self.setIconSize(QtCore.QSize(22,22))
 		self.setRootIsDecorated(False)
 		self.setDragEnabled(True)
 		self.setAcceptDrops(True)
@@ -279,7 +283,10 @@ class rosterWidget(QtGui.QTreeWidget):
 		item=QtGui.QTreeWidgetItem(user)
 		if name==None or len(name)==0:
 			name=jid
-		item.setText(0,'<font color="'+unicode(self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+name+"</font>")
+		if self.main.config['rosterMode']=='normal':
+			item.setText(0,'<font color="'+unicode(self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+name+"</font>")
+		elif self.main.config['rosterMode']=='compact':
+			item.setText(0,name)
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
 		item.setText(4,unicode(jid))
@@ -535,7 +542,10 @@ class rosterWidget(QtGui.QTreeWidget):
 					self.setItemHidden(self.main.client.roster['groups'][group],True)
 			else:
 				self.setItemHidden(self.main.client.roster['groups'][group],False)
-			self.main.client.roster['groups'][group].setText(0,"<font color=\""+unicode(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+"\">"+unicode(self.main.client.roster['groups'][group].text(2))+" ("+str(online)+"/"+str(online+offline)+")</font>")
+			if self.main.config['rosterMode']=='normal':
+				self.main.client.roster['groups'][group].setText(0,"<font color=\""+unicode(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+"\">"+unicode(self.main.client.roster['groups'][group].text(2))+" ("+str(online)+"/"+str(online+offline)+")</font>")
+			elif self.main.config['rosterMode']=='compact':
+				self.main.client.roster['groups'][group].setText(0,unicode(self.main.client.roster['groups'][group].text(2))+" ("+str(online)+"/"+str(online+offline)+")")
 
 	def setStatus(self,jid,show,i=None,status=None,first=False):
 		if not self.main.shows.has_key(show):
@@ -551,7 +561,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			item=i
 			name=unicode(item.text(0))
 			item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
-			item.setIcon(0,self.main.getIcon(jid,size="32x32",status=self.main.icons[self.main.shows[unicode(show)]]))
+			item.setIcon(0,self.main.getIcon(jid,size=self.main.config['rosterIconSize'],status=self.main.icons[self.main.shows[unicode(show)]]))
 			if self.main.shows[unicode(show)]!="9":
 				self.setItemHidden(item, False)
 		else:
@@ -571,13 +581,18 @@ class rosterWidget(QtGui.QTreeWidget):
 						set=True
 				if status!=None:
 							#item.setText(0,+name+"</font>")
-					item.setText(0,'<font color="'+unicode(self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+unicode(item.text(2))+resources+"<br/><font size=\"-1\"><i>&nbsp;&nbsp;"+status+"</i></font></font>")
+					if self.main.config['rosterMode']=='normal':
+						item.setText(0,'<font color="'+unicode(self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+unicode(item.text(2))+resources+"<br/><font size=\"-1\"><i>&nbsp;&nbsp;"+status+"</i></font></font>")
+					elif self.main.config['rosterMode']=='compact':
+						item.setText(0,unicode(item.text(2))+resources)
 					item.setData(32,4,QtCore.QVariant(unicode(status)))
 				else:
-					item.setText(0,'<font color="'+unicode(self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+unicode(item.text(2))+resources+"</font>")
-					
+					if self.main.config['rosterMode']=='normal':
+						item.setText(0,'<font color="'+unicode(self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+unicode(item.text(2))+resources+"</font>")
+					elif self.main.config['rosterMode']=='compact':
+						item.setText(0,unicode(item.text(2))+resources)
 				item.setText(1,self.main.shows[unicode(show)]+unicode(name).lower())
-				item.setIcon(0,self.main.getIcon(jid,size="32x32",status=self.main.icons[self.main.shows[unicode(show)]]))
+				item.setIcon(0,self.main.getIcon(jid,size=self.main.config['rosterIconSize'],status=self.main.icons[self.main.shows[unicode(show)]]))
 				if set:
 					parent=item.parent()
 					self.cloneContact(parent,item)
@@ -639,7 +654,10 @@ class rosterWidget(QtGui.QTreeWidget):
 	def addGroup(self,name):
 		# add new group to the roster and return group QTreeWidgetItem
 		item=QtGui.QTreeWidgetItem(self)
-		item.setText(0,'<font color="'+unicode(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+name+"</font>")
+		if self.main.config['rosterMode']=='normal':
+			item.setText(0,'<font color="'+unicode(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+name+"</font>")
+		elif self.main.config['rosterMode']=='compact':
+			item.setText(0,name)
 		item.setText(1,"1"+unicode(name).lower())
 		item.setText(2,name)
 		item.setData(32,0,QtCore.QVariant([unicode(""),unicode("group")]))
@@ -662,7 +680,10 @@ class rosterWidget(QtGui.QTreeWidget):
 		if name==None or len(name)==0:
 			name=jid
 		# item data
-		item.setText(0,'<font color="'+unicode(self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+name+"</font>")
+		if self.main.config['rosterMode']=='normal':
+			item.setText(0,'<font color="'+unicode(self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+'">'+name+"</font>")
+		elif self.main.config['rosterMode']=='compact':
+			item.setText(0,name)
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
 		item.setText(4,unicode(jid))
