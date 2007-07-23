@@ -1,5 +1,6 @@
 import sys, time, random
 import socks5, events
+from twisted import names
 from twisted.python import log
 from twisted.internet import protocol
 from twisted.names import client as dns
@@ -161,33 +162,40 @@ class Client(derived):
 		d.addErrback(self._dnsLookupErr)
 	
 	def _dnsLookup(self, resp):
-		print 'ok ', resp
 		r = random.choice(resp[0])
 		self._connect(unicode(r.payload.target), int(r.payload.port))
 	
 	def _dnsLookupErr(self, resp):
-		print 'err ', resp
-		self._connect(self.host, self.port)
-	
+		if resp.type != names.error.DNSNameError:
+			self._connect(self.host, self.port)
+		else:
+			log.msg('dns error')
+			self.main._disconnect(error = 'dns')
+			
+				
 	def _connect(self, host, port): 
 		self.factory = client.XMPPClientFactory(self.jid,self.password)
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
 ##		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
 ##		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
-##		self.factory.addBootstrap("//event/xmpp/initfailed", self._authfailed)
+		self.factory.addBootstrap("//event/xmpp/initfailed", self._authfailed)
 		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
 		self.factory.addBootstrap("/*", self.logIt)
-##		self.factory.clientConnectionLost = self.connectionLost
-##		self.factory.clientConnectionFailed = self.connectionLost
+		self.factory.clientConnectionLost = self.connectionLost
+		self.factory.clientConnectionFailed = self.connectionFailed
 		self.connection = self.reactor.connectTCP(host,port,self.factory)
 		log.msg('started - ' + unicode(time.time()))
 	
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
+		self.main._disconnect(error = 'lost')
 		self.on_disconnect()
-		if self.factory.continueTrying:
-			self.factory.connector = connector
-			self.factory.retry()
+	
+	def connectionFailed(self, connector, reason=protocol.connectionDone):
+		log.msg('connection failed!')
+		self.main._disconnect(error = 'failed')
+		self.on_disconnect()
+
 		
 	def _bind(self, el):
 		#experimental
@@ -602,6 +610,7 @@ class Client(derived):
 
 	def _authfailed(self,xmlstream):
 		log.msg( "auth_failed")
+		self.main._disconnect(error = 'auth')
 		self.on_authFailed(xmlstream)
 
 	def _invaliduser(self,xmlstream):

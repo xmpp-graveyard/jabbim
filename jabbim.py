@@ -1079,7 +1079,7 @@ class mainWindow(QtGui.QMainWindow):
 	def _addUser(self, itemjid, name, grp):
 		return self.ui.roster.addUser(itemjid,name,grp)
 
-	def _disconnect(self):
+	def _disconnect(self, error = None): # error = None | dns | lost | auth | failed
 		MainWindow.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
 		MainWindow.ui.statusButton.setIcon(MainWindow.getIcon("offline",size="16x16"))
 		MainWindow.ui.statusButton.hide()
