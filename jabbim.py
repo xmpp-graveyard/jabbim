@@ -166,11 +166,12 @@ class clientClass(pyxl.client.Client):
 						for contact in range(lenght):
 							item=self.main.ui.roster.getUserItems(jid,"contact")[0]
 							log.msg("DELETE ITEM:"+unicode(item.text(1)))
-							parent=item.parent()
-							if parent:
-								index=parent.indexOfChild(item)
-								if index>-1:
-									it=parent.takeChild(index)
+							if item.childCount()==0:
+								parent=item.parent()
+								if parent:
+									index=parent.indexOfChild(item)
+									if index>-1:
+										it=parent.takeChild(index)
 							#toDelJid.append(jid)
 								#toDelIndex.append(self.roster['users'][jid].rosterItems.index(contact))
 								#parent=contact.parent()
@@ -395,6 +396,9 @@ class clientClass(pyxl.client.Client):
 						#it.view=0
 						#del it
 						#it=0
+			else:
+				for bla in range(int(item.childCount())):
+					log.msg("CHILD:"+unicode(item.child(bla).text(1)))
 
 		#for name,item in self.roster['groups'].iteritems():
 			#for i in items:
