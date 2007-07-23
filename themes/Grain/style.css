@@ -1,3 +1,6 @@
+QWidget#userStyleWidget {
+  background-color: rgba(0,0,0,0%);
+}
 QWidget#login { background-image: url(themes/Grain/connect_bg.png);
                 background-repeat: repeat-x;
 				background-color:#A6ADB0;
