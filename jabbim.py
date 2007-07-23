@@ -385,15 +385,16 @@ class clientClass(pyxl.client.Client):
 		lenght=int(len(items))
 		for i in range(lenght):
 			item=self.main.ui.roster.getUserItems(jid)[0]
-			log.msg("DELETE ITEM:"+unicode(item.text(1)))
-			parent=item.parent()
-			if parent:
-				index=parent.indexOfChild(item)
-				if index>-1:
-					it=parent.takeChild(index)
-					#it.view=0
-					#del it
-					#it=0
+			if item.childCount()==0:
+				log.msg("DELETE ITEM:"+unicode(item.text(1)))
+				parent=item.parent()
+				if parent:
+					index=parent.indexOfChild(item)
+					if index>-1:
+						it=parent.takeChild(index)
+						#it.view=0
+						#del it
+						#it=0
 
 		#for name,item in self.roster['groups'].iteritems():
 			#for i in items:
