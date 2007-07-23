@@ -396,10 +396,10 @@ class clientClass(pyxl.client.Client):
 						#it.view=0
 						#del it
 						#it=0
-			else:
-				for bla in range(int(item.childCount())):
-					#log.msg("CHILD:"+unicode(item.child(bla).text(1)))
-					log.msg(unicode(item.child(bla)))
+			#else:
+				#for bla in range(int(item.childCount())):
+					##log.msg("CHILD:"+unicode(item.child(bla).text(1)))
+					#log.msg(unicode(item.child(bla)))
 		log.msg("DELETE COMPLETE")
 		#for name,item in self.roster['groups'].iteritems():
 			#for i in items:
