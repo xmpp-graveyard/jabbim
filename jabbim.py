@@ -521,6 +521,7 @@ class clientClass(pyxl.client.Client):
 	def on_vcardReceived(self,  jid, card):
 		#print card
 		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db
+		log.msg("vcard "+unicode(jid))
 		if card.has_key("BINVAL"):
 			pixmap=QtGui.QPixmap()
 			image=base64.decodestring(str(card["BINVAL"]))
@@ -535,8 +536,8 @@ class clientClass(pyxl.client.Client):
 ##				log.msg(utils.cprint("yellow","setting icon: "+jid))
 				#item.setIcon(3,QtGui.QIcon(pixmap))
 			sha=sha1(image).hexdigest()
-			self.main.cache.set_avatar(jid, ['avatars/'+jid, sha])
-			self.main._loadAvatar('avatars/'+jid, sha, jid)
+			#self.main.cache.set_avatar(jid, ['avatars/'+jid, sha])
+			#self.main._loadAvatar('avatars/'+jid, sha, jid)
 		else:
 			self.main.cache.set_avatar(jid, ['nic', 'nic'])
 
