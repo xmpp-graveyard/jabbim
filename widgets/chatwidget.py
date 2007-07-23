@@ -43,7 +43,7 @@ class chatWidget(QtGui.QWidget):
 		layout.setSpacing(0)
 		self.ui.line=lineEditWidget(self,self)
 		layout.addWidget(self.ui.line)
-		
+		self.first=None
 		#self.ui.gridlayout.addWidget(self.ui.line,2,0,1,1)
 		self.main=main
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
@@ -110,6 +110,10 @@ class chatWidget(QtGui.QWidget):
 		self.s.setShown(bool)
 	
 	def textEditWrite(self,text):
+		if self.first==True:
+			self.first=False
+		elif self.first==None:
+			self.first=True
 		cur=self.ui.textEdit.textCursor()
 		cur.movePosition(QtGui.QTextCursor.End)
 		self.ui.textEdit.setTextCursor(cur)

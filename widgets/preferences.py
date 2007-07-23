@@ -155,6 +155,7 @@ class preferencesWindow(QtGui.QDialog):
 			plugin=self.plugins[name]
 			dialog=pluginConfiguration(self.plugins[name],self.ui.plugins)
 			dialog.exec_()
+			self.main.plugins[plugin.name].config=self.plugins[name].config
 
 
 

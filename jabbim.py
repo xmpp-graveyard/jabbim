@@ -554,7 +554,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		self.filetransferTimer=QtCore.QTimer()
 		QtCore.QObject.connect(self.filetransferTimer, QtCore.SIGNAL("timeout()"),self.refreshFT)
-
+		self.copyPlugins()
 		# variables
 		self.hosts={} # temp variable for {hos:type_of_host}
 		self.filetransfer={}
@@ -673,9 +673,8 @@ class mainWindow(QtGui.QMainWindow):
 		#QtGui.QMainWindow(self).resizeEvent(event)
 		#self.setUpdatesEnabled(True)
 
-		
-	def loadPlugins(self):
-		self.plugins = {}
+
+	def copyPlugins(self):
 		plugins=os.listdir("plugins/")
 		for plugin in plugins:
 			path = 'plugins/%s/%s.py'%( plugin, plugin)
@@ -693,6 +692,8 @@ class mainWindow(QtGui.QMainWindow):
 
 			shutil.copytree("plugins/"+plugin, self.homeDir+"/.jabbim/plugins/"+plugin)
 
+	def loadPlugins(self):
+		self.plugins = {}
 		plugins=os.listdir(self.homeDir + "/.jabbim/plugins/")
 		for plugin in plugins:
 			if plugin in self.config['plugins']:
