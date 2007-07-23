@@ -123,90 +123,90 @@ class clientClass(pyxl.client.Client):
 
 		self.metaParents={}
 
-		# get metacontacts
-		meta={} # temp variable for metacontacts - {userTag:userJid}
-		for jid,user in self.roster['users'].iteritems():
-			if user.tag!=None:
-				if not meta.has_key(user.tag):
-					meta[user.tag]=[[jid,user.order]]
-				else:
-					meta[user.tag].append([jid,user.order])
+		## get metacontacts
+		#meta={} # temp variable for metacontacts - {userTag:userJid}
+		#for jid,user in self.roster['users'].iteritems():
+			#if user.tag!=None:
+				#if not meta.has_key(user.tag):
+					#meta[user.tag]=[[jid,user.order]]
+				#else:
+					#meta[user.tag].append([jid,user.order])
 
-		log.msg("META:"+unicode(meta))
+		#log.msg("META:"+unicode(meta))
 
 
-		toDelJid=[] # contacts to delete
-		toDelIndex=[] # contacts to delete
-		# process metacontacts
-		for tag,jids in meta.iteritems():
-			# get main metacontact (first metacontact)
-			if len(jids)>1:
-				mainJid=None # JID of main metacontact (parent of all other)
-				highestNum=0
-				highest=[]
-				for value in jids:
-					jid=value[0]
-					order=int(value[1])
-					if jid!=tag:
-						mainJid=jid
-					if order>=highestNum:
-						highest.append(jid)
+		#toDelJid=[] # contacts to delete
+		#toDelIndex=[] # contacts to delete
+		## process metacontacts
+		#for tag,jids in meta.iteritems():
+			## get main metacontact (first metacontact)
+			#if len(jids)>1:
+				#mainJid=None # JID of main metacontact (parent of all other)
+				#highestNum=0
+				#highest=[]
+				#for value in jids:
+					#jid=value[0]
+					#order=int(value[1])
+					#if jid!=tag:
+						#mainJid=jid
+					#if order>=highestNum:
+						#highest.append(jid)
 	
-				if mainJid!=None and len(self.main.ui.roster.getUserItems(mainJid))!=0:
-					log.msg(mainJid +" "+unicode(self.main.ui.roster.getUserItems(mainJid)))
-					self.metaParents[tag]=self.main.ui.roster.addMetaParent(tag,self.main.ui.roster.getUserItems(mainJid)[0].parent(),True)
-					#self.metaParents[tag].
-					for value in jids:
-						jid=value[0]
-						order=int(value[1])
+				#if mainJid!=None and len(self.main.ui.roster.getUserItems(mainJid))!=0:
+					#log.msg(mainJid +" "+unicode(self.main.ui.roster.getUserItems(mainJid)))
+					#self.metaParents[tag]=self.main.ui.roster.addMetaParent(tag,self.main.ui.roster.getUserItems(mainJid)[0].parent(),True)
+					##self.metaParents[tag].
+					#for value in jids:
+						#jid=value[0]
+						#order=int(value[1])
 	
-						self.main.ui.roster.addMetaContact(jid,self.roster['users'][jid].name,self.metaParents[tag],True)
-						items=self.main.ui.roster.getUserItems(jid,"contact")
-						lenght=int(len(items))
-						for contact in range(lenght):
-							item=self.main.ui.roster.getUserItems(jid,"contact")[0]
-							log.msg("DELETE ITEM:"+unicode(item.text(1)))
-							if item.childCount()==0:
-								parent=item.parent()
-								if parent:
-									index=parent.indexOfChild(item)
-									if index>-1:
-										it=parent.takeChild(index)
-							#toDelJid.append(jid)
-								#toDelIndex.append(self.roster['users'][jid].rosterItems.index(contact))
-								#parent=contact.parent()
-								#parent.takeChild(parent.indexOfChild(contact))
-							#self.roster['users'][jid].rosterItems.remove(item)
-					self.main.ui.roster.cloneContact(self.metaParents[tag],self.main.ui.roster.getUserItems(jid)[0])
-		for i in range(len(toDelIndex)):
-			jid=toDelJid[i]
-			index=toDelIndex[i]
-			del self.roster['users'][jid].rosterItems[index]
+						#self.main.ui.roster.addMetaContact(jid,self.roster['users'][jid].name,self.metaParents[tag],True)
+						#items=self.main.ui.roster.getUserItems(jid,"contact")
+						#lenght=int(len(items))
+						#for contact in range(lenght):
+							#item=self.main.ui.roster.getUserItems(jid,"contact")[0]
+							#log.msg("DELETE ITEM:"+unicode(item.text(1)))
+							#if item.childCount()==0:
+								#parent=item.parent()
+								#if parent:
+									#index=parent.indexOfChild(item)
+									#if index>-1:
+										#it=parent.takeChild(index)
+							##toDelJid.append(jid)
+								##toDelIndex.append(self.roster['users'][jid].rosterItems.index(contact))
+								##parent=contact.parent()
+								##parent.takeChild(parent.indexOfChild(contact))
+							##self.roster['users'][jid].rosterItems.remove(item)
+					#self.main.ui.roster.cloneContact(self.metaParents[tag],self.main.ui.roster.getUserItems(jid)[0])
+		##for i in range(len(toDelIndex)):
+			##jid=toDelJid[i]
+			##index=toDelIndex[i]
+			##del self.roster['users'][jid].rosterItems[index]
 
-			#If we had some others metacontacts
-			if mainJid!=None:
-				self.metaParents[tag]=self.main.ui.roster.addMetaParent(tag,self.roster['users'][mainJid].rosterItems[0].parent(),True)
-				main=[None,None]
-				for value in jids:
-					jid=value[0]
-					order=int(value[1])
-					toDel=[] # contacts to delete
-					# add metacontat to the all items of mainJid in roster
-					#for item in self.roster['users'][mainJid].rosterItems:
-					self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addMetaContact(jid,self.roster['users'][jid].name,self.metaParents[tag],True))
-					# Delete metacontacts' top level items from roster
-					for contact in self.roster['users'][jid].rosterItems:
-						it=contact.data(32,0)
-						it=it.toList()
-						if unicode(it[1].toString())=="contact":
-							toDel.append(contact)
-							parent=contact.parent()
-							parent.takeChild(parent.indexOfChild(contact))
-					# delete metacontacts top level items from pyxl
-					for item in toDel:
-						self.roster['users'][jid].rosterItems.remove(item)
-				self.main.ui.roster.cloneContact(self.metaParents[tag],self.roster['users'][jid].rosterItems[-1])
-		#print self.roster['users']['sef@njs.netlab.cz'].rosterItems
+			###If we had some others metacontacts
+			##if mainJid!=None:
+				##self.metaParents[tag]=self.main.ui.roster.addMetaParent(tag,self.roster['users'][mainJid].rosterItems[0].parent(),True)
+				##main=[None,None]
+				##for value in jids:
+					##jid=value[0]
+					##order=int(value[1])
+					##toDel=[] # contacts to delete
+					### add metacontat to the all items of mainJid in roster
+					###for item in self.roster['users'][mainJid].rosterItems:
+					##self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addMetaContact(jid,self.roster['users'][jid].name,self.metaParents[tag],True))
+					### Delete metacontacts' top level items from roster
+					##for contact in self.roster['users'][jid].rosterItems:
+						##it=contact.data(32,0)
+						##it=it.toList()
+						##if unicode(it[1].toString())=="contact":
+							##toDel.append(contact)
+							##parent=contact.parent()
+							##parent.takeChild(parent.indexOfChild(contact))
+					### delete metacontacts top level items from pyxl
+					##for item in toDel:
+						##self.roster['users'][jid].rosterItems.remove(item)
+				##self.main.ui.roster.cloneContact(self.metaParents[tag],self.roster['users'][jid].rosterItems[-1])
+		##print self.roster['users']['sef@njs.netlab.cz'].rosterItems
 		# sort roster items and refresh group stats
 		self.main.rosterHideOffline(True)
 		#self.main.ui.roster.refreshStats()
