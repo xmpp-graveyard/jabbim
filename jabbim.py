@@ -447,7 +447,10 @@ class clientClass(pyxl.client.Client):
 
 	def on_subscribe(self, frm,status):
 		#self.ui.infoDockWidget.show()
-		self.sendPresence(to = frm, status = status, typ = 'subscribed')
+		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
+		item.setSizeHint(QtCore.QSize(100,40))
+		item.widget=widgets.rosterWidget.SubscribeWidget(unicode(frm),item,self.main,self.main.ui.eventsListWidget,unicode(status))
+		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
 		# handle messages from groupchat
