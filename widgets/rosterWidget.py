@@ -897,14 +897,23 @@ class rosterWidget(QtGui.QTreeWidget):
 			jid=action.data()
 			jid=str(jid.toString())
 			#jid=jid+"/"+self.getResources(jid)[0]
-			file=QtGui.QFileDialog.getOpenFileName(self,"Choose file")
+			file=QtGui.QFileDialog.getOpenFileNames(self,"Choose file")
+			file=list(file)
 			if len(file)!=0:
 ##				print file,"to",jid
+				new=[]
+				for f in file:
+					new.append(unicode(f))
+				file=new
+				self.main.filetransferQueue.append(file)
+				file=file[0]
 				file=unicode(file)
 				#self.jab.sendFile(jid,unicode(file))
 				sid=self.main.client.sendFile(jid, basename(file), file)
 				item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 				item.setSizeHint(QtCore.QSize(100,40))
+				item.file=file
+				item.jid=jid
 				item.widget=FTWidget(basename(file),item,self.main,sid,self.main.ui.eventsListWidget)
 				self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 				self.main.filetransfer[sid]=item

@@ -43,6 +43,7 @@ import urllib
 from imp import load_source
 from urllib import quote, unquote
 from include import plugins
+from os.path import basename
 
 #mutex=QtCore.QMutex()
 
@@ -51,7 +52,24 @@ class clientClass(pyxl.client.Client):
 	def on_init(self):
 		self.roster['groups']['Unknown']=self.main._addGroup('Unknown')
 		self.temp_hosts=[]
-		
+
+	def on_GCpresenceError(self, fromjid, code, typ, name):
+		log.msg("ERROR")
+		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+code+" "+typ+" "+name),0,1)
+
+	def on_GCpresenceError(self, fromjid, code, typ, name):
+		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+code+" "+typ+" "+name),0,1)
+
+	def on_roleErr(self,  muc,  err,  nick):
+		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(muc+" "+err+" "+nick),0,1)
+	
+	def on_affiliationErr(self,  muc,  err,  nick):
+		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(muc+" "+err+" "+nick),0,1)
+
+	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
+		self.main.ftError[sid]=error
+		del self.ft[sid]
+
 	def on_discoInfoReceived(self, jid, node):
 		# save type of host, it not exist
 		if not self.main.hosts.has_key(jid):
@@ -564,11 +582,13 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.tabWidget.setTabText(2,"")
 
 		self.filetransferTimer=QtCore.QTimer()
+		self.ftError={}
 		QtCore.QObject.connect(self.filetransferTimer, QtCore.SIGNAL("timeout()"),self.refreshFT)
 		self.copyPlugins()
 		# variables
 		self.hosts={} # temp variable for {hos:type_of_host}
 		self.filetransfer={}
+		self.filetransferQueue=[]
 		self.client=None # pyxl client instance
 		self.chat=widgets.chatwindow.chatWindow(self,self)
 		self.statusPath="images/xxxxx/status/"
@@ -734,20 +754,54 @@ class mainWindow(QtGui.QMainWindow):
 				log.msg("ft.finished")
 				widget.widget.progressBar.setValue(100)
 				if widget.widget.complete==None:
-					widget.widget.label_2.setText(self.tr("Complete"))
+					if self.ftError[sid]==None:
+						widget.widget.label_2.setText(self.tr("Complete"))
+					else:
+						widget.widget.label_2.setText(self.tr("Error")+" "+unicode(self.ftError[sid]))
 					widget.widget.complete=True
 					widget.widget.closeClicked()
 					toDel.append(sid)
 				else:
 					toDel.append(sid)
-					widget.widget.label_2.setText(self.tr("Complete"))
+					if self.ftError[sid]==None:
+						widget.widget.label_2.setText(self.tr("Complete"))
+					else:
+						widget.widget.label_2.setText(self.tr("Error")+" "+unicode(self.ftError[sid]))
 					widget.widget.complete=True
 				#toDel.append(sid)
+		halt=True
 		for sid in toDel:
 			#self.
 			#self.ui.eventsListWidget.takeItem(self.ui.eventsListWidget.row(self.filetransfer[sid]))
+			queueId=None
+			for i in self.filetransferQueue:
+				if QtCore.QString(self.filetransfer[sid].file) in i:
+					queueId=i.index(self.filetransfer[sid].file)
+					self.filetransferQueue[queueId].remove(self.filetransfer[sid].file)
+					break
+			log.msg("QUEUE:"+unicode(queueId))
+			if queueId!=None:
+				if len(self.filetransferQueue[queueId])!=0:
+					self.filetransferTimer.stop()
+					jid=self.filetransfer[sid].jid
+					file=self.filetransferQueue[queueId][0]
+					file=unicode(file)
+					#self.jab.sendFile(jid,unicode(file))
+					sid2=self.client.sendFile(jid, basename(file), file)
+					item=QtGui.QListWidgetItem(self.ui.eventsListWidget)
+					item.setSizeHint(QtCore.QSize(100,40))
+					item.file=file
+					item.jid=jid
+					item.widget=widgets.rosterWidget.FTWidget(basename(file),item,self,sid2,self.ui.eventsListWidget)
+					self.ui.eventsListWidget.setItemWidget(item,item.widget)
+					self.filetransfer[sid2]=item
+					self.filetransferTimer.start(500)
+			else:
+				log.msg(unicode(self.filetransferQueue))
+				log.msg(unicode(self.filetransfer[sid].file))
 			del self.filetransfer[sid]
-		if len(self.client.ft)==0:
+		if len(self.client.ft)==0 and halt:
+			log.msg("STOPPING TIMER")
 			self.filetransferTimer.stop()
 	def closeEvent(self,event):
 		self.hide()
