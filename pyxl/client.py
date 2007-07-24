@@ -396,6 +396,7 @@ class Client(derived):
 		log.msg( 'vcard received')
 		vcard = el.firstChildElement()
 		card = {} 
+		print vcard.toXml()
 		if vcard == None :
 			return
 		for x in vcard.elements():
@@ -1172,7 +1173,7 @@ class Client(derived):
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._ftreplyhostReceived, sid)
-		d.addErrback(self._ftreplyhostErrReceived)
+		d.addErrback(self._ftreplyhostErrReceived, sid)
 	
 	def _ftreplyhostReceived(self, el, sid):
 		print el.toXml()
@@ -1189,8 +1190,9 @@ class Client(derived):
 		factory = socks5.ClientFactory(self.ft_proxies[host][0], int(self.ft_proxies[host][1]),addr, 0,  f, xmpp = self, xmpp_sid = sid) 
 		self.ft[sid].connector = self.reactor.connectTCP(self.ft_proxies[host][0], int(self.ft_proxies[host][1]), factory)
 
-	def _ftreplyhostErrReceived(self, err):
+	def _ftreplyhostErrReceived(self, err, sid):
 		print 'replyhost', err
+		self.on_ftEnd(self.sid, 'replyhost error')
 	
 	def ftStart(self, sid, protocol):
 		log.msg(sid)

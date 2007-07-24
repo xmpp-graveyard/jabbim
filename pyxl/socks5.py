@@ -476,7 +476,11 @@ class FTSend:
 		self.client.on_xml(iq.toXml())
 		d = iq.send()
 		self.client.disp(iq['id'])
-		d.addCallback(self._activated)
+		d.addCallback(self._activated).addErrback(self._activateFailed)
+	
+	def _activateFailed(self, err):
+		log.msg('activate failed with: ' + unicode(err))
+		self.client.on_ftEnd(self.sid, 'activate error')
 		
 	def _activated(self, el):
 		FileSender().beginFileTransfer(self. fp, self.protocol)#. addCallback(self._finished)
