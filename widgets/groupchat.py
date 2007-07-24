@@ -237,8 +237,8 @@ class groupChatWidget(QtGui.QWidget):
 		# sends message
 		if len(unicode(self.ui.line.toPlainText()))!=0:
 			if self.main.config['chatMode']=="normal":
-				text=self.ui.line.toPlainText()
-				text=unicode(text, 'utf-8')
+				text=unicode(self.ui.line.toPlainText())
+				#text=unicode(text, 'utf-8')
 				text=unescape(text)
 			else:
 				text=unicode(self.ui.line.toHtml())
