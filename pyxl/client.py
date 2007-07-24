@@ -1140,7 +1140,7 @@ class Client(derived):
 		field = x.addElement('field')
 		field['var'] = 'stream-method'
 		field['type'] = 'list-single'
-# 		field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
+		field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
 		field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
 		self.on_xml(iq.toXml())
 		d = iq.send()
