@@ -813,10 +813,18 @@ class mainWindow(QtGui.QMainWindow):
 					item.setSizeHint(QtCore.QSize(100,40))
 					item.file=file
 					item.jid=jid
-					item.widget=widgets.rosterWidget.FTWidget(basename(file),item,self,sid2,self.ui.eventsListWidget)
+					item.sent=self.filetransfer[sid].sent+1
+					#if self.ftError[sid]==None:
+						#item.broken=self.filetransfer[sid].broken
+					#else:
+						#item.broken=self.filetransfer[sid].broken.append(self.filetransfer[sid].file)
+					item.all=self.filetransfer[sid].all
+					log.msg("SENDING "+str(item.sent)+"/"+str(item.all))
+					item.widget=widgets.rosterWidget.FTWidget(basename(file),item,self,sid2,self.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")
 					self.ui.eventsListWidget.setItemWidget(item,item.widget)
 					self.filetransfer[sid2]=item
 					self.filetransferTimer.start(500)
+					self.ui.eventsListWidget.takeItem(self.ui.eventsListWidget.row(self.filetransfer[sid]))
 			else:
 				log.msg(unicode(self.filetransferQueue))
 				log.msg(unicode(self.filetransfer[sid].file))

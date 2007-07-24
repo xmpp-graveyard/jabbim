@@ -15,7 +15,7 @@ class doc(QtGui.QTextDocument):
 		apply(QtGui.QTextDocument.__init__,(self,parent))
 
 class FTWidget(QtGui.QWidget):
-	def __init__(self,file,item,main,sid,parent=None):
+	def __init__(self,file,item,main,sid,parent=None,stats=""):
 		apply(QtGui.QWidget.__init__,(self,parent))
 		self.setObjectName("FTWidget")
 		self.item=item
@@ -59,6 +59,8 @@ class FTWidget(QtGui.QWidget):
 
 		self.gridlayout1.addLayout(self.hboxlayout,0,0,1,1)
 	
+		self.stats = QtGui.QLabel(stats,self)
+
 
 		self.progressBar = QtGui.QProgressBar(self)
 	
@@ -67,16 +69,24 @@ class FTWidget(QtGui.QWidget):
 		sizePolicy.setVerticalStretch(0)
 		sizePolicy.setHeightForWidth(self.progressBar.sizePolicy().hasHeightForWidth())
 		self.progressBar.setSizePolicy(sizePolicy)
-		self.progressBar.setProperty("value",QtCore.QVariant(24))
+		self.progressBar.setProperty("value",QtCore.QVariant(0))
 		self.progressBar.setOrientation(QtCore.Qt.Horizontal)
 		self.progressBar.setObjectName("progressBar")
-		self.gridlayout1.addWidget(self.progressBar,1,0,1,2)
+		self.gridlayout1.addWidget(self.stats,1,0,1,2)
+		self.gridlayout1.addWidget(self.progressBar,2,0,1,2)
 		self.gridlayout.addLayout(self.gridlayout1,0,0,1,1)
 		self.gridlayout.setMargin(1)
 		self.gridlayout.setSpacing(0)
 		self.gridlayout1.setMargin(1)
 		self.gridlayout1.setSpacing(0)
-		self.setMinimumHeight(40)
+		self.setMinimumHeight(60)
+
+	def reinit(self,file,item,main,sid,parent=None,stats=""):
+		self.complete=False
+		self.sid=sid
+		self.stats.setText(stats)
+		self.progressBar.setProperty("value",QtCore.QVariant(24))
+		self.setMinimumHeight(60)
 
 	def closeClicked(self):
 		if not self.complete:
@@ -906,14 +916,18 @@ class rosterWidget(QtGui.QTreeWidget):
 					new.append(unicode(f))
 				file=new
 				self.main.filetransferQueue.append(file)
+				all=len(file)
 				file=file[0]
 				file=unicode(file)
 				#self.jab.sendFile(jid,unicode(file))
 				sid=self.main.client.sendFile(jid, basename(file), file)
 				item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
-				item.setSizeHint(QtCore.QSize(100,40))
+				item.setSizeHint(QtCore.QSize(100,60))
 				item.file=file
 				item.jid=jid
+				item.sent=1
+				item.broken=[]
+				item.all=all
 				item.widget=FTWidget(basename(file),item,self.main,sid,self.main.ui.eventsListWidget)
 				self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 				self.main.filetransfer[sid]=item
