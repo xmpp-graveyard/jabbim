@@ -25,7 +25,7 @@ class PluginBase:
 # 		except:
 # 			log.msg('No config for: '+self.name)
 # # 			return False
-		self.confObj = ConfigObj(homedir+'/plugins/'+self.fname+'/config.ini',encoding='UTF8')
+		self.confObj = ConfigObj(homedir+'/'+self.fname+'-config.ini',encoding='UTF8')
 		for k in self.config.iterkeys():
 			try:
 				self.config[k]['value'] = self.confObj[k]

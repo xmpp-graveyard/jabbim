@@ -710,19 +710,39 @@ class mainWindow(QtGui.QMainWindow):
 		plugins=os.listdir("plugins/")
 		for plugin in plugins:
 			path = 'plugins/%s/%s.py'%( plugin, plugin)
+			path2 = '%s/plugins/%s/%s.py'%(self.homeDir, plugin, plugin)
+			copy = False
 			try: 
 				f=open(path)
+				plug = load_source(plugin, path, f).Plugin(False, self.homeDir)
 			except:
+				print 'spatny plugin', plugin
 				continue
-				log.msg('copy plugin to homedir: '+plugin)
-			path = '%s/plugins/%s/%s.py'%(self.homeDir, plugin, plugin)
+			#takze mam asi spravny plugin, kouknem se jestli je v homediru
 			try: 
-				f=open(path)
-				continue
+				f2=open(path2)
+				plug2 = load_source(plugin, path, f2).Plugin(False, self.homeDir)
 			except:
+				copy = True
+			try:
+				v1 = float(plug.version)
+			except:
+				continue
+	
+			try:
+				v2 = float(plug2.version)
+			except:
+				copy = True
+	
+			if v1>v2:
+				copy = True
+			if copy:
 				log.msg('copy plugin to homedir: '+plugin)
-
-			shutil.copytree("plugins/"+plugin, self.homeDir+"/plugins/"+plugin)
+				try:
+					shutil.copytree("plugins/"+plugin, self.homeDir+"/plugins/"+plugin)
+				except:
+					shutil.rmtree(self.homeDir+"/plugins/"+plugin)
+					shutil.copytree("plugins/"+plugin, self.homeDir+"/plugins/"+plugin)
 
 	def loadPlugins(self):
 		self.plugins = {}

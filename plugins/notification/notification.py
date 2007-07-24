@@ -12,7 +12,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'System tray notification'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Notification Plugin'
-		self.version = '0.1'
+		self.version = '0.01'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}

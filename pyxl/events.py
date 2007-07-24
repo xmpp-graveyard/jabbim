@@ -1,3 +1,4 @@
+from twisted.python import log
 class EventDispatcher:
 	def __init__(self, prefix="event_"):
 		self.prefix = prefix
@@ -16,4 +17,7 @@ class EventDispatcher:
 	def publishEvent(self, name, *args, **kwargs):
 		if self.callbacks.has_key(name):
 			for cb in self.callbacks[name].itervalues():
-				cb(*args, **kwargs)
+				try:
+					cb(*args, **kwargs)
+				except Exception, ex:
+					log.msg('Plugin error: ' +unicode(ex))
