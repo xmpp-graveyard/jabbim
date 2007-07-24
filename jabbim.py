@@ -768,7 +768,7 @@ class mainWindow(QtGui.QMainWindow):
 		for sid,widget in self.filetransfer.iteritems():
 			if self.client.ft.has_key(sid):
 				size=float(self.client.ft[sid].size)
-				sent=float(self.client.ft[sid].sent)
+				sent=float(self.client.ft[sid].transfered)
 				widget.widget.progressBar.setValue(int((sent/size)*100))
 			else:
 				log.msg("ft.finished")
