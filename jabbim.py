@@ -779,18 +779,18 @@ class mainWindow(QtGui.QMainWindow):
 				widget.widget.progressBar.setValue(100)
 				if widget.widget.complete==None:
 					if self.ftError[sid]==None:
-						widget.widget.label_2.setText(self.tr("Complete"))
+						widget.widget.stats.setText(self.tr("Complete"))
 					else:
-						widget.widget.label_2.setText(self.tr("Error")+" "+unicode(self.ftError[sid]))
+						widget.widget.stats.setText(self.tr("Error")+" "+unicode(self.ftError[sid]))
 					widget.widget.complete=True
 					widget.widget.closeClicked()
 					toDel.append(sid)
 				else:
 					toDel.append(sid)
 					if self.ftError[sid]==None:
-						widget.widget.label_2.setText(self.tr("Complete"))
+						widget.widget.stats.setText(self.tr("Complete"))
 					else:
-						widget.widget.label_2.setText(self.tr("Error")+" "+unicode(self.ftError[sid]))
+						widget.widget.stats.setText(self.tr("Error")+" "+unicode(self.ftError[sid]))
 					widget.widget.complete=True
 				#toDel.append(sid)
 		halt=True
@@ -798,9 +798,11 @@ class mainWindow(QtGui.QMainWindow):
 			#self.
 			#self.ui.eventsListWidget.takeItem(self.ui.eventsListWidget.row(self.filetransfer[sid]))
 			queueId=None
+			print self.filetransferQueue,self.filetransfer[sid].file
 			for i in self.filetransferQueue:
-				if QtCore.QString(self.filetransfer[sid].file) in i:
-					queueId=i.index(self.filetransfer[sid].file)
+				if self.filetransfer[sid].file in i:
+					print i
+					queueId=self.filetransferQueue.index(i)
 					self.filetransferQueue[queueId].remove(self.filetransfer[sid].file)
 					break
 			log.msg("QUEUE:"+unicode(queueId))
@@ -813,7 +815,7 @@ class mainWindow(QtGui.QMainWindow):
 					#self.jab.sendFile(jid,unicode(file))
 					sid2=self.client.sendFile(jid, basename(file), file)
 					item=QtGui.QListWidgetItem(self.ui.eventsListWidget)
-					item.setSizeHint(QtCore.QSize(100,40))
+					item.setSizeHint(QtCore.QSize(100,60))
 					item.file=file
 					item.jid=jid
 					item.sent=self.filetransfer[sid].sent+1
@@ -827,7 +829,8 @@ class mainWindow(QtGui.QMainWindow):
 					self.ui.eventsListWidget.setItemWidget(item,item.widget)
 					self.filetransfer[sid2]=item
 					self.filetransferTimer.start(500)
-					self.ui.eventsListWidget.takeItem(self.ui.eventsListWidget.row(self.filetransfer[sid]))
+					if self.ftError[sid]==None:
+						self.ui.eventsListWidget.takeItem(self.ui.eventsListWidget.row(self.filetransfer[sid]))
 			else:
 				log.msg(unicode(self.filetransferQueue))
 				log.msg(unicode(self.filetransfer[sid].file))
