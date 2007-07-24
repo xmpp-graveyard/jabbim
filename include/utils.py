@@ -33,7 +33,8 @@ def loadConfig(main):
 			"saveExpandedGroups":True,
 			"expandedGroups":[],
 			"plugins":['notification'],
-			"rosterMode":"normal"
+			"rosterMode":"normal",
+			"chatMode":"normal"
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:

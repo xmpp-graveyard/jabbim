@@ -32,6 +32,23 @@ class lineEditWidget(QtGui.QTextEdit):
 					self.setHtml(html)
 					self.setTextCursor(cur)
 
+class normalLineEditWidget(QtGui.QTextEdit):
+	def __init__(self,main,parent=None):
+		apply(QtGui.QTextEdit.__init__,(self,parent))
+		self.main=main
+		self.parent=parent
+		#self.setMaximumSize(QtCore.QSize(16777215,30))
+		self.setObjectName("line")
+	
+	def keyPressEvent(self,event):
+		key=event.key()
+		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier):
+			QtGui.QTextEdit.keyPressEvent(self,event)
+		elif key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
+			self.main.sendButtonClicked()
+		else:
+			QtGui.QTextEdit.keyPressEvent(self,event)
+
 class groupChatWidget(QtGui.QWidget):
 	def __init__(self,main,jid,jab,parent=None):
 		apply(QtGui.QWidget.__init__,(self,parent))
@@ -45,7 +62,10 @@ class groupChatWidget(QtGui.QWidget):
 		layout=QtGui.QHBoxLayout(self.ui.lineWidget)
 		layout.setMargin(0)
 		layout.setSpacing(0)
-		self.ui.line=lineEditWidget(self,self)
+		if self.main.config['chatMode']=="normal":
+			self.ui.line=normalLineEditWidget(self,self)
+		else:
+			self.ui.line=lineEditWidget(self,self)
 		layout.addWidget(self.ui.line)
 
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
@@ -201,8 +221,12 @@ class groupChatWidget(QtGui.QWidget):
 		# add emoticon to the self.ui.line
 		data=action.data()
 		data=data.toString()
-		for k,v in self.smileys.iteritems():
-			data=data.replace(k,' <img src="images/16x16/emotes/'+v+'" />')
+		if self.main.config['chatMode']=="normal":
+			self.ui.line.append(data)
+		else:
+			for k,v in self.smileys.iteritems():
+				data=data.replace(k,' <img src="images/16x16/emotes/'+v+'" />')
+			self.ui.line.insertHtml(data)
 		self.ui.line.insertHtml(data)
 		self.ui.smileys.setChecked(False)
 		self.s.hide()
@@ -212,24 +236,29 @@ class groupChatWidget(QtGui.QWidget):
 		# sends message
 		# sends message
 		if len(unicode(self.ui.line.toPlainText()))!=0:
-			text=unicode(self.ui.line.toHtml())
-			a=parseString(text)
-			for el in a.getElementsByTagName('img'):
-				path=el.attributes['src'].split('/')[-1]
-				for k,v in self.smileys.iteritems():
-					if v==path:
-						path=k
-				newnode = parseString("<div> "+path+"</div>").documentElement
-				el.parentNode.replaceChild(newnode,el)
-			for el in a.getElementsByTagName('br'):
-				newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
-				el.parentNode.replaceChild(newnode,el)
-			b=a.getElementsByTagName('body')
-			c=parseString(b[0].toxml())
-			text=gatherTextNodes(c)
-			text=unicode(text, 'utf-8')
-			text=text.replace(unichr(2028),"\n")
-			text=unescape(text)
+			if self.main.config['chatMode']=="normal":
+				text=self.ui.line.toPlainText()
+				text=unicode(text, 'utf-8')
+				text=unescape(text)
+			else:
+				text=unicode(self.ui.line.toHtml())
+				a=parseString(text)
+				for el in a.getElementsByTagName('img'):
+					path=el.attributes['src'].split('/')[-1]
+					for k,v in self.smileys.iteritems():
+						if v==path:
+							path=k
+					newnode = parseString("<div> "+path+"</div>").documentElement
+					el.parentNode.replaceChild(newnode,el)
+				for el in a.getElementsByTagName('br'):
+					newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
+					el.parentNode.replaceChild(newnode,el)
+				b=a.getElementsByTagName('body')
+				c=parseString(b[0].toxml())
+				text=gatherTextNodes(c)
+				text=unicode(text, 'utf-8')
+				text=text.replace(unichr(2028),"\n")
+				text=unescape(text)
 			self.main.client.sendMessage(self.jid, text, 'groupchat')
 			self.ui.line.clear()
 			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)

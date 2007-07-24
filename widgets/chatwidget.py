@@ -29,27 +29,48 @@ class lineEditWidget(QtGui.QTextEdit):
 			for k,v in self.parent.smileys.iteritems():
 				if text.find(" "+k)!=-1:
 					html=self.toHtml()
-					html.replace(k,'<img src="images/16x16/emotes/'+v+'">test</img> ')
+					html.replace(k,'<img src="images/16x16/emotes/'+v+'"/> ')
 					cur=self.textCursor()
 					self.setHtml(html)
 					self.setTextCursor(cur)
+
+class normalLineEditWidget(QtGui.QTextEdit):
+	def __init__(self,main,parent=None):
+		apply(QtGui.QTextEdit.__init__,(self,parent))
+		self.main=main
+		self.parent=parent
+		#self.setMaximumSize(QtCore.QSize(16777215,30))
+		self.setObjectName("line")
+	
+	def keyPressEvent(self,event):
+		key=event.key()
+		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier):
+			QtGui.QTextEdit.keyPressEvent(self,event)
+		elif key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
+			self.main.sendButtonClicked()
+		else:
+			QtGui.QTextEdit.keyPressEvent(self,event)
 
 class chatWidget(QtGui.QWidget):
 	def __init__(self,main,jid,parent=None):
 		apply(QtGui.QWidget.__init__,(self,parent))
 		self.ui=Ui_chatwidget()
 		self.ui.setupUi(self)
+		self.main=main
 
 		layout=QtGui.QHBoxLayout(self.ui.lineWidget)
 		layout.setMargin(0)
 		layout.setSpacing(0)
-		self.ui.line=lineEditWidget(self,self)
+		if self.main.config['chatMode']=="normal":
+			self.ui.line=normalLineEditWidget(self,self)
+		else:
+			self.ui.line=lineEditWidget(self,self)
 		layout.addWidget(self.ui.line)
 		self.first=None
 		#self.ui.gridlayout.addWidget(self.ui.line,2,0,1,1)
-		self.main=main
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
-		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
+		if self.main.config['chatMode']=="normal":
+			QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("textChanged ()"),self.lines)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 
@@ -131,7 +152,12 @@ class chatWidget(QtGui.QWidget):
 		# add emoticon to the self.ui.line
 		data=action.data()
 		data=data.toString()
-		self.ui.line.append(data)
+		if self.main.config['chatMode']=="normal":
+			self.ui.line.append(data)
+		else:
+			for k,v in self.smileys.iteritems():
+				data=data.replace(k,' <img src="images/16x16/emotes/'+v+'" />')
+			self.ui.line.insertHtml(data)
 		self.ui.smileys.setChecked(False)
 		self.s.hide()
 		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
@@ -139,30 +165,29 @@ class chatWidget(QtGui.QWidget):
 	def sendButtonClicked(self):
 		# sends message
 		if len(unicode(self.ui.line.toPlainText()))!=0:
-			text=self.ui.line.toPlainText()
-			#a=parseString(text)
-			#for el in a.getElementsByTagName('img'):
-				#path=el.attributes['src'].split('/')[-1]
-				#for k,v in self.smileys.iteritems():
-					#if v==path:
-						#path=k
-				#newnode = parseString("<div> "+path+"</div>").documentElement
-				#el.parentNode.replaceChild(newnode,el)
-			#for el in a.getElementsByTagName('br'):
-				#newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
-				#el.parentNode.replaceChild(newnode,el)
-			#for el in a.getElementsByTagName('p'):
-				#newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
-				#el.parentNode.replaceChild(newnode,el)
-
-
-			#b=a.getElementsByTagName('body')
-			#c=parseString(b[0].toxml())
-			#text=gatherTextNodes(c)
-			text=unicode(text, 'utf-8')
-			#text=text.replace(unichr(2028),"\n")
-			print text
-			text=unescape(text)
+			if self.main.config['chatMode']=="normal":
+				text=self.ui.line.toPlainText()
+				text=unicode(text, 'utf-8')
+				text=unescape(text)
+			else:
+				text=self.ui.line.toHtml()
+				a=parseString(text)
+				for el in a.getElementsByTagName('img'):
+					path=el.attributes['src'].split('/')[-1]
+					for k,v in self.smileys.iteritems():
+						if v==path:
+							path=k
+					newnode = parseString("<div> "+path+"</div>").documentElement
+					el.parentNode.replaceChild(newnode,el)
+				for el in a.getElementsByTagName('br'):
+					newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
+					el.parentNode.replaceChild(newnode,el)
+				b=a.getElementsByTagName('body')
+				c=parseString(b[0].toxml())
+				text=gatherTextNodes(c)
+				text=unicode(text, 'utf-8')
+				text=text.replace(unichr(2028),"\n")
+				text=unescape(text)
 			self.main.client.sendMessage(str(self.jid),text)
 			text=text.replace(u'\n',"<br />")
 			for word in text.split(' '):
