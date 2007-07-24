@@ -789,7 +789,6 @@ class Client(derived):
 			for child in  el.elements():
 				if child.name == 'error':
 					errel = child.firstChildElement()
-#				features.append(child['var'])
 					self.on_GCpresenceError(fromjid, err.getAttribute('code'),  err.getAttribute('type'),  errel.name )
 					self.dispatcher.publishEvent('on_GCpresenceError',fromjid, err['code'],  err['type'],  errel.name )
 		
@@ -1114,7 +1113,6 @@ class Client(derived):
 	def joinGC(self,  jid, nick):
 		gc = Groupchat(self,  jid, nick)
 		self.groupchats[jid] = gc
-		print "Trying to join gc "+unicode(jid)
 		gc.join()
 
 	def leaveGC(self,  jid):
