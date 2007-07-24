@@ -497,6 +497,9 @@ class FTSend:
 		if self.fp != None:
 			self.fp.close()
 		self.client.on_ftEnd(self.sid, self.error)
+
+	def connectFailure(self):
+		pass
 		
 
 class FTReceive:
