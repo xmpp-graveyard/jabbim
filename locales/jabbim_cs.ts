@@ -661,7 +661,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/preferences.py" line="195"/>
         <source>this is message contains my name send in past.</source>
-        <translation>Toto je zpráva, která obsahuje moje jméno, poslaná v minulosti.</translation>
+        <translation>toto je zpráva, která obsahuje moje jméno, poslaná v minulosti.</translation>
     </message>
     <message>
         <location filename="widgets/preferences.py" line="196"/>
