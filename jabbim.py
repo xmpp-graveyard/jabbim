@@ -309,6 +309,7 @@ class clientClass(pyxl.client.Client):
 		toDel=[] # temp variable for deleting items at the end of this function
 		toDelJid=[]
 		toDelIndex=[]
+		log.msg(jid+" "+unicode(contact.groups))
 		for gr in contact.groups:
 			if not self.roster['groups'].has_key(gr):
 				self.roster['groups'][gr]=self.main._addGroup(gr)
@@ -347,6 +348,8 @@ class clientClass(pyxl.client.Client):
 							#if typ=="meta":
 								#self.roster['users'][data].rosterItems.append(child)
 						self.roster['groups'][name].addChild(i) # add item to the new group
+						index=self.main.ui.roster.indexFromItem(self.roster['groups'][name],0)
+						self.main.ui.roster.expand(index)
 						self.main.ui.roster.setStatus(jid,None,i)
 					else:
 						# add new contact to the roster
@@ -356,7 +359,7 @@ class clientClass(pyxl.client.Client):
 						self.main.ui.roster.refreshStats()
 			else:
 				# user is not in this group, so we have to delete them from this group, if he is there
-				for i in items:
+				for i in self.main.ui.roster.getUserItems(jid):
 					parent=i.parent()
 					if item==parent:
 						#toDelJid.append(unicode(jid))

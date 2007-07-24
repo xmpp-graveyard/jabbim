@@ -783,6 +783,41 @@ class rosterWidget(QtGui.QTreeWidget):
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
 		return contactMenu
 
+	def buildGroupMenu(self,name):
+		# build contact menu
+		groupMenu=QtGui.QMenu(self)
+		# chat
+		action=groupMenu.addAction(self.tr("Rename"))
+		action.setData(QtCore.QVariant(name))
+		action.setObjectName("rename")
+		groupMenu.connect(groupMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.groupMenuTriggered)
+		return groupMenu
+
+	def groupMenuTriggered(self,action):
+		# contact menu action handler
+		cmd=action.objectName()
+		if cmd=="rename":
+			name=action.data()
+			name=unicode(name.toString())
+			item=self.getGroupItem(name)
+			group,b=QtGui.QInputDialog.getText(self,self.tr("Rename group"),self.tr("Enter new group name"), QtGui.QLineEdit.Normal, "")
+			group=unicode(group)
+			# if user set new name of group
+			if b==True and len(group)!=0:
+				for i in range(int(item.childCount())):
+					child=item.child(i)
+					it=child.data(32,0)
+					it=it.toList()
+					jid=str(it[0].toString())
+					#print "move "+jid+" to "+group
+					# add new group
+					contact=self.main.client.roster['users'][jid]
+					for count in range(self.main.client.roster['users'][jid].groups.count(name)):
+						self.main.client.roster['users'][jid].groups.remove(name)
+					self.main.client.roster['users'][jid].groups.append(group)
+					self.main.client.sendRosterUpdate(contact.jid, contact.name, contact.subscription,self.main.client.roster['users'][jid].groups)
+
+
 	def contactMenuTriggered(self,action):
 		# contact menu action handler
 		cmd=action.objectName()
