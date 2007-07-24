@@ -425,7 +425,6 @@ class Send(protocol.Protocol):
 	implements(interfaces.IConsumer)
 	
 	def registerProducer(self, producer, streaming):
-		print self, producer, streaming
 		return self.transport.registerProducer(producer, streaming)
 	
 	def unregisterProducer(self):
@@ -442,6 +441,20 @@ class Send(protocol.Protocol):
 			self.ft.transfered = self.ft.transfered + len(data)
 		return self.transport.write(data)
 
+# class IBBSend:
+# 	implements(interfaces.IConsumer)
+# 	
+# 	def registerProducer(self, producer, streaming):
+# 		return self.factory.transport.registerProducer(producer, streaming)
+# 	
+# 	def unregisterProducer(self):
+# 		self.factory.transport.unregisterProducer()
+# 	
+# 	def write(self, data):
+# 		if self.ft:
+# 			self.ft.transfered = self.ft.transfered + len(data)
+# 		return self.factory.transport.write(data)
+	
 class Receive(protocol.Protocol):
 	def dataReceived(self, data):
 		if self.ft.fp != None:
@@ -465,7 +478,9 @@ class FTSend:
 		self.transfered = 0
 		self.streamhost = None
 		self.connector = None
-		self.error = None		
+		self.error = None	
+		self.fs = None	
+		self.ibbSeq = 0
 
 
 	

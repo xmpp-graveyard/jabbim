@@ -1003,7 +1003,8 @@ class rosterWidget(QtGui.QTreeWidget):
 				file=file[0]
 				file=unicode(file)
 				#self.jab.sendFile(jid,unicode(file))
-				sid=self.main.client.sendFile(jid, basename(file), file)
+				res = self.main.client.roster['users'][jid].getHighestResource()
+				sid=self.main.client.sendFile(jid+'/'+res, basename(file), file)
 				item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 				item.setSizeHint(QtCore.QSize(100,60))
 				item.file=file

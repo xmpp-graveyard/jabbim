@@ -16,6 +16,7 @@ from twisted.internet.protocol import Protocol, ClientFactory
 from derived import derived
 from contact import *
 from groupchat import  *
+from base64 import b64encode, b64decode
 
 try:
 	from hashlib import sha1
@@ -222,7 +223,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/presence[@type='unsubscribe']", self.onUnSubscribe, 1)
 		self.xmlstream.addObserver("/presence[@type='subscribed']", self.onSubscribed, 1)
 		self.xmlstream.addObserver("/presence[@type='unsubscribed']", self.onUnSubscribed, 1)
-		self.xmlstream.addObserver("/presence[@type='error`']", self.onPresenceError, 1)
+		self.xmlstream.addObserver("/presence[@type='error']", self.onPresenceError, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:version']", self.onVersion, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#info']", self.onDiscoInfo, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:last']", self.onLast, 1)
@@ -1139,7 +1140,8 @@ class Client(derived):
 		field = x.addElement('field')
 		field['var'] = 'stream-method'
 		field['type'] = 'list-single'
-		field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
+# 		field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
+		field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
@@ -1150,30 +1152,30 @@ class Client(derived):
 		print 'proxy rika: ', el.toXml()
 	
 	def _ftreplyReceived(self, el, sid):
-##		iq = IQ(self.xmlstream, 'get')
-##		iq['to'] = 'proxy.netlab.cz'
-##		q = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
-##		self.on_xml(iq.toXml())
-##		d = iq.send()
-##		self.disp(iq['id'])
-##		d.addCallback(self._ftstreamhostquery)
-		
-		print el.toXml()
-		iq = IQ(self.xmlstream, 'set')
-		iq['to'] = el['from']
-		q = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
-		q['sid'] = sid
-		q['mode'] = 'tcp'
-		for proxy, data in self.ft_proxies.iteritems():
-			streamhost = q.addElement('streamhost')
-			streamhost['host'] = data[0]
-			streamhost['jid'] = proxy
-			streamhost['port'] = data[1]
-		self.on_xml(iq.toXml())
-		d = iq.send()
-		self.disp(iq['id'])
-		d.addCallback(self._ftreplyhostReceived, sid)
-		d.addErrback(self._ftreplyhostErrReceived, sid)
+		typ = None
+		si = el.firstChildElement()
+		for elem in si.elements():
+			if elem.name == 'feature':
+				typ = unicode(elem.firstChildElement().firstChildElement().firstChildElement())
+		log.msg('FT: ' + typ)
+		if typ == 'http://jabber.org/protocol/ibb':
+			self.ibbSend(sid)
+		elif typ == 'http://jabber.org/protocol/bytestreams':
+			iq = IQ(self.xmlstream, 'set')
+			iq['to'] = el['from']
+			q = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
+			q['sid'] = sid
+			q['mode'] = 'tcp'
+			for proxy, data in self.ft_proxies.iteritems():
+				streamhost = q.addElement('streamhost')
+				streamhost['host'] = data[0]
+				streamhost['jid'] = proxy
+				streamhost['port'] = data[1]
+			self.on_xml(iq.toXml())
+			d = iq.send()
+			self.disp(iq['id'])
+			d.addCallback(self._ftreplyhostReceived, sid)
+			d.addErrback(self._ftreplyhostErrReceived, sid)
 	
 	def _ftreplyhostReceived(self, el, sid):
 		print el.toXml()
@@ -1254,6 +1256,67 @@ class Client(derived):
 				self.ft[sid].streamhostsID = el['id']
 				self.ft[sid].connectStreamHost()
 		print el.toXml()
+
+	def ibbSend(self, sid):
+		iq = IQ(self.xmlstream, 'set')
+		iq['to'] = self.ft[sid].tojid
+		opn = iq.addElement('open', 'http://jabber.org/protocol/ibb')
+		opn['sid'] = sid
+		opn['block-size'] = '4096'
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		self.disp(iq['id'])
+		d.addCallback(self._ftIBBStart, sid)
+		d.addErrback(self._ftIBBError, sid)
+	
+	def _ftIBBError(self, err, sid):
+		print err
+		self.ft[sid].error = 'IBB error.'
+		self.ft[sid].finish()
+	
+	def _ftIBBStart(self,el, sid):
+		iq = IQ(self.xmlstream, 'set')
+		iq['to'] = self.ft[sid].tojid
+		data = iq.addElement('data', 'http://jabber.org/protocol/ibb')
+		data['sid'] = sid
+		data['seq'] = unicode(self.ft[sid].ibbSeq)
+		dt = ''
+		dt = self.ft[sid].fp.read(4096)
+		if not dt:
+			self.ft[sid].error = 'IBB cannot start.'
+			self.ft[sid].finish()
+			return
+		data.addContent(b64encode(dt))		
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		self.disp(iq['id'])
+		self.ft[sid].ibbSeq = self.ft[sid].ibbSeq +1
+		self.ft[sid].transfered = self.ft[sid].transfered + len(dt)
+		d.addCallback(self._ftIBBContinue, sid)
+		d.addErrback(self._ftIBBError, sid)
+		
+	def _ftIBBContinue(self,el, sid):
+		iq = IQ(self.xmlstream, 'set')
+		iq['to'] = self.ft[sid].tojid
+		data = iq.addElement('data', 'http://jabber.org/protocol/ibb')
+		data['sid'] = sid
+		data['seq'] = unicode(self.ft[sid].ibbSeq)
+		dt = ''
+		dt = self.ft[sid].fp.read(4096)
+		if not dt:
+			print 'konec!', data['seq']
+			self.ft[sid].finish()
+			return
+		data.addContent(b64encode(dt))		
+		self.on_xml(iq.toXml())
+		d = iq.send()
+		self.disp(iq['id'])
+		self.ft[sid].ibbSeq = self.ft[sid].ibbSeq +1
+		self.ft[sid].transfered = self.ft[sid].transfered + len(dt)
+		d.addCallback(self._ftIBBContinue, sid)
+		d.addErrback(self._ftIBBError, sid)
+		
+		
 
 	def disp(self, id):
 		self.idlist.append(id)
