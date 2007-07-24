@@ -375,17 +375,19 @@ class ClientFactory (protocol.ClientFactory):
 		# If flag indicates that connection may not be lost
 		#
 		rmap = {"reason": reason, "socks": self.status}
-
+		if self.xmpp.ft[self.xmpp_sid].size > 	self.xmpp.ft[self.xmpp_sid].transfered:
+			self.xmpp.ft[self.xmpp_sid].error = "Connection lost"
+			
 		try:
 			if self.status != "established":
 				# Tell about error
 				#
 				log.msg ("Connection LOST before SOCKS established %s" % self)
 				self.otherFactory.clientConnectionFailed (connector, rmap)
-				self.xmpp.ft[self.xmpp_sid].error = "Connection lost"
+
 			else:
 				self.otherFactory.clientConnectionLost (connector, rmap)
-				self.xmpp.ft[self.xmpp_sid].error = "Connection lost"
+
 		except:
 			ei = sys.exc_info()
 			if not str (ei[0]).count ("AlreadyCalled"):
@@ -437,14 +439,14 @@ class Send(protocol.Protocol):
 		except:
 			pass
 		if self.ft:
-			self.ft.sent = self.ft.sent + len(data)
+			self.ft.transfered = self.ft.transfered + len(data)
 		return self.transport.write(data)
 
 class Receive(protocol.Protocol):
 	def dataReceived(self, data):
 		if self.ft.fp != None:
 			self.ft.fp.write(data)
-			self.ft.received = self.ft.received + len(data)
+			self.ft.transfered = self.ft.transfered + len(data)
 		try:
 			self.ft.connector.factory.delayed_timeout_call.cancel()
 		except:
@@ -460,10 +462,11 @@ class FTSend:
 		self.client = client
 		self.tojid = tojid
 		self.protocol = None
-		self.sent = 0
+		self.transfered = 0
 		self.streamhost = None
 		self.connector = None
-		self.error = None
+		self.error = None		
+
 
 	
 	def activate(self):
@@ -509,7 +512,8 @@ class FTReceive:
 		self.streamhosts = []
 		self.streamhostsID = None
 		self.activeStreamhost = None
-		self.received = 0
+		self.transfered = 0
+
 		self.connector = None
 		self.error = None
 	
