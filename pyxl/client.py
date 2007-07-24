@@ -779,14 +779,19 @@ class Client(derived):
 
 	def onPresenceError(self,  el):
 		#zatim jenom GC errory .. ani nevim jestli ma smysl zachytavat i jine ..
+		self.on_xml(el.toXml())
 		frm = jid.JID(el['from'])
 		fromjid = frm.userhost()
 		resource = jid.JID(el['from']).resource
 		if self.groupchats.has_key(fromjid):
 			err = el.firstChildElement()
-			errel = err.firstChildElement()
-			self.on_GCpresenceError(fromjid, err['code'],  err['type'],  errel.name )
-			self.dispatcher.publishEvent('on_GCpresenceError',fromjid, err['code'],  err['type'],  errel.name )
+			
+			for child in  el.elements():
+				if child.name == 'error':
+					errel = child.firstChildElement()
+#				features.append(child['var'])
+					self.on_GCpresenceError(fromjid, err.getAttribute('code'),  err.getAttribute('type'),  errel.name )
+					self.dispatcher.publishEvent('on_GCpresenceError',fromjid, err['code'],  err['type'],  errel.name )
 		
 	def getFeatures(self, jid, caps_node):
 		log.msg('requesting features'+ caps_node)
@@ -1109,6 +1114,7 @@ class Client(derived):
 	def joinGC(self,  jid, nick):
 		gc = Groupchat(self,  jid, nick)
 		self.groupchats[jid] = gc
+		print "Trying to join gc "+unicode(jid)
 		gc.join()
 
 	def leaveGC(self,  jid):
