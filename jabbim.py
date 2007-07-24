@@ -329,7 +329,7 @@ class clientClass(pyxl.client.Client):
 		toDelIndex=[]
 		log.msg(jid+" "+unicode(contact.groups))
 		for gr in contact.groups:
-			if not self.roster['groups'].has_key(gr):
+			if self.main.ui.roster.getGroupItem(gr)==None:
 				self.roster['groups'][gr]=self.main._addGroup(gr)
 		# go through all groups
 		for name,item in self.roster['groups'].iteritems():
@@ -368,7 +368,7 @@ class clientClass(pyxl.client.Client):
 						self.roster['groups'][name].addChild(i) # add item to the new group
 						index=self.main.ui.roster.indexFromItem(self.roster['groups'][name],0)
 						self.main.ui.roster.expand(index)
-						self.main.ui.roster.setStatus(jid,None,i)
+						#self.main.ui.roster.setStatus(jid,None,i)
 					else:
 						# add new contact to the roster
 						self.main.ui.roster.addUser(contact.jid,contact.name,self.roster['groups'][name])
@@ -382,6 +382,7 @@ class clientClass(pyxl.client.Client):
 					if item==parent:
 						#toDelJid.append(unicode(jid))
 						#toDelIndex.append(self.roster['users'][unicode(jid)].rosterItems.index(i))
+						#print "delete",parent.text(0)
 						parent.takeChild(parent.indexOfChild(i))
 						# delete group, if it's empty
 						if int(parent.childCount())==0:

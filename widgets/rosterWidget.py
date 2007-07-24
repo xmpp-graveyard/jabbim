@@ -614,6 +614,8 @@ class rosterWidget(QtGui.QTreeWidget):
 		# little hack (qt doesn't repaint reshown items, when we have not one top level item at the end)
 		self.setItemHidden(self.item, False)
 		self.setItemHidden(self.item, True)
+		#self.setItemHidden(self.item, False)
+		#self.item.setText(0,"---")
 
 
 	def refreshStats(self):
@@ -698,6 +700,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		if not first:
 			self.sortItems (1,QtCore.Qt.AscendingOrder)
 			self.refreshStats()
+		self.hidden(True)
 
 	def cloneContact(self,parent,item):
 		it=item.data(32,0)
