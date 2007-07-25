@@ -97,20 +97,29 @@ QWidget#groupStyleWidget {
   color: #F6AB43;
 }
 
-
+QPushButton {
+  border-radius: 6px;
+  background-color: #642100;
+  border: 3px solid #642100;
+  font: bold 12px;
+  color: #E4524D;
+  margin:3px;
+  padding:3px;
+}
 QToolButton
 {
   border-radius: 6px;
   background-color: #642100;
-/*   border: 1px solid #980000; */
+  border: 3px solid #642100;
   font: bold 12px;
   color: #E4524D;
   margin:3px;
 }
 
-QToolButton:hover
+QToolButton:hover,QPushButton:hover
 {
   background-color: #750D17;
+border: 3px solid #750D17;
 }
 
 
@@ -137,7 +146,7 @@ QPushButton#cancelButton {
 
 
 
-QTabWidget#tabWidget {
+QTabWidget {
 /*   background: url(themes/Grain/roster_bg.png) repeat-x; */
   background-color:black;
 /*   background-position: bottom left; */
@@ -150,7 +159,7 @@ QWidget#roster{
 /*   selection-background-color: rgba(152,125,51,40%); */
 }
 
-QTabWidget#tabWidget > QTabBar {
+QTabWidget > QTabBar {
   background-color: black;
 /*   border: 1px solid #646668; */
 }
@@ -159,29 +168,40 @@ QTabWidget#tabWidget > QTabBar {
   subcontrol-position:center center;
 }
 
-  QTabWidget#tabWidget > QTabBar::tab:middle {
+  QTabWidget > QTabBar::tab:middle {
 /*     border: 1px solid #646668; */
+    color: #F6AB43;
     background-color:#550000;
   }
 
-  QTabWidget#tabWidget > QTabBar::tab:last {
-/*     border: 1px solid #646668; */
+  QTabWidget > QTabBar::tab:last {
+border: 3px solid #550000;
+    color: #F6AB43;
     background-color:#550000;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
   }
 
-  QTabWidget#tabWidget > QTabBar::tab:first {
-    /*border: 1px solid #646668;*/
+  QTabWidget > QTabBar::tab:first {
+    border: 3px solid #550000;
+    color: #F6AB43;
     background-color:#550000;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
   }
 
-  QTabWidget#tabWidget > QTabBar::tab:selected {
+  QTabWidget > QTabBar::tab:selected {
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
+	border: 3px solid #000000;
     border-bottom-style: none;
+    color: #F6AB43;
+    background-color:black;
+  }
+  QTabWidget > QTabBar::tab:only-one {
+    border-radius: 6px;
+	border: 3px solid #FFFFFF;
+/*     border-bottom-style: none; */
     color: #F6AB43;
     background-color:black;
   }
@@ -205,12 +225,36 @@ QMenuBar {
   color: #E4524D;
 }
 
+QAbscractScrollArea{
+  background-color: black;
+color: #E4524D;
+}
+
+QScrollBar::handle:horizontal{
+  background-color: black;
+  color: #E4524D;
+}
+
+QScrollBar::sub-page{
+  background-color: black;
+color: #E4524D;
+}
+
+QScrollBar::sub-line{
+  background-color: black;
+color: #E4524D;
+}
+QScrollBar::add-line{
+color: #E4524D;
+  background-color: black;
+}
+
 QWidget#preferences,
 QWidget#xmlConsole,
 QWidget#editbookmark,
 QWidget#joingroupchat,
 QWidget#chatWidget {
- background-color: #A6ADB0;
+ background-color: black;
 }
 
 QWidget#listWidget {
@@ -245,12 +289,43 @@ QWidget#xml{
   font: bold 14px;
 }
 
-QWidget#chatWindow,QWidget#chatwidget {
-  background-color:#A6ADB0;
+QWidget#chatWindow,QWidget#chatwidget,QWidget#groupchatwidget {
+  background-color:black;
 }
 
 
-QWidget#chatWindow > QTabBar {
-  background-color: #A6ADB0;
-  border: 1px solid #646668;
+
+QWidget#users{
+  background-color: #750D17;
+/*   border: 1px solid #980000; */
+  border-radius: 10px;
+  padding: 1px;
+  color: #F6AB43;
+  alternate-background-color: rgba(00,00,00,0%);
+  selection-background-color: rgba(00,00,00,100%);
+  border:4px solid #750D17;
+
+}
+
+
+QTextEdit{
+  background-color: #750D17;
+/*   border: 1px solid #980000; */
+  border-radius: 10px;
+  padding: 1px;
+  color: #F6AB43;
+  border:4px solid #750D17;
+
+}
+
+QTextEdit#line:focus {
+  background-color: #980000;
+  border:4px solid #980000;
+/*   border: 1px solid #750D17; */
+}
+
+
+QWidget#chatWindow > QTabWidget {
+  background-color: black;
+/*   border: 1px solid #646668; */
 }
