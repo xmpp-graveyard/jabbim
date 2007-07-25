@@ -561,10 +561,17 @@ p, li { white-space: pre-wrap; }
      <string>Actions</string>
     </property>
     <addaction name="actionJoin_Groupchat" />
-    <addaction name="separator" />
     <addaction name="actionShow_XML" />
+    <addaction name="separator" />
+    <addaction name="actionQuit" />
+   </widget>
+   <widget class="QMenu" name="menuPlugins" >
+    <property name="title" >
+     <string>Plugins</string>
+    </property>
    </widget>
    <addaction name="menuAkce" />
+   <addaction name="menuPlugins" />
    <addaction name="menuPreferences" />
   </widget>
   <action name="actionShow_XML" >
@@ -580,6 +587,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionJoin_Groupchat" >
    <property name="text" >
     <string>Join Groupchat</string>
+   </property>
+  </action>
+  <action name="actionQuit" >
+   <property name="text" >
+    <string>Quit</string>
    </property>
   </action>
  </widget>

@@ -1,5 +1,9 @@
 from configobj import ConfigObj
 from twisted.python import log
+try:
+	from PyQt4 import QtCore, QtGui
+except:
+	print "PyQt4 is not installed."
 
 class PluginBase:
 	def __init__(self, main, homedir):
@@ -14,7 +18,11 @@ class PluginBase:
 		self.url = 'dev.jabbim.cz/jabbim'
 		self.handlers = []
 		self.homeDir = homedir
-	
+
+	def buildRosterMenu(self):
+		menu=self.main.ui.menuPlugins.addMenu(unicode(self.name))
+		return menu
+
 	def loadConfig(self,homedir=None):
 		if homedir==None:
 			homedir=self.main.homeDir

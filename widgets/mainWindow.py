@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sat Jul 21 18:57:05 2007
+# Created: Wed Jul 25 14:46:19 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -310,6 +310,9 @@ class Ui_MainWindow(object):
 
         self.menuAkce = QtGui.QMenu(self.menubar)
         self.menuAkce.setObjectName("menuAkce")
+
+        self.menuPlugins = QtGui.QMenu(self.menubar)
+        self.menuPlugins.setObjectName("menuPlugins")
         MainWindow.setMenuBar(self.menubar)
 
         self.actionShow_XML = QtGui.QAction(MainWindow)
@@ -320,11 +323,16 @@ class Ui_MainWindow(object):
 
         self.actionJoin_Groupchat = QtGui.QAction(MainWindow)
         self.actionJoin_Groupchat.setObjectName("actionJoin_Groupchat")
+
+        self.actionQuit = QtGui.QAction(MainWindow)
+        self.actionQuit.setObjectName("actionQuit")
         self.menuPreferences.addAction(self.actionPreferences)
         self.menuAkce.addAction(self.actionJoin_Groupchat)
-        self.menuAkce.addSeparator()
         self.menuAkce.addAction(self.actionShow_XML)
+        self.menuAkce.addSeparator()
+        self.menuAkce.addAction(self.actionQuit)
         self.menubar.addAction(self.menuAkce.menuAction())
+        self.menubar.addAction(self.menuPlugins.menuAction())
         self.menubar.addAction(self.menuPreferences.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -369,7 +377,9 @@ class Ui_MainWindow(object):
         self.statusButton.setText(QtGui.QApplication.translate("MainWindow", "Offline", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPreferences.setTitle(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAkce.setTitle(QtGui.QApplication.translate("MainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuPlugins.setTitle(QtGui.QApplication.translate("MainWindow", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
         self.actionShow_XML.setText(QtGui.QApplication.translate("MainWindow", "Show XML", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setText(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.actionJoin_Groupchat.setText(QtGui.QApplication.translate("MainWindow", "Join Groupchat", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))
 

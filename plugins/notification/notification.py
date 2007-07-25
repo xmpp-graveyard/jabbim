@@ -10,9 +10,9 @@ class Plugin(plugins.PluginBase):
 		plugins.PluginBase.__init__(self, main, homedir)
 		self.fname = 'notification'
 		self.description = 'System tray notification'
-		self.author = "Jiri 'Sef' Gabrys"
+		self.author = "Jan 'HanzZ' Kaluza"
 		self.name = 'Notification Plugin'
-		self.version = '0.01'
+		self.version = '0.02'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}
@@ -21,9 +21,14 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('on_message', self.on_message)
 			self.registerHandler('on_GCmessage', self.on_GCmessage)
 			self.loadConfig()
-			self.main.tray.showMessage(self.main.tr("Notification "),"Notification plugin is activeted", QtGui.QSystemTrayIcon.Information, 1000)
+			menu=self.buildRosterMenu()
+			menu.addAction("Notification test",self.testSlot)
+			self.main.tray.showMessage(self.main.tr("Notification "),"Notification plugin is activated", QtGui.QSystemTrayIcon.Information, 2000)
 		else:
 			self.loadConfig(homedir)
+
+	def testSlot(self):
+		self.main.tray.showMessage(self.main.tr("Notification"),"Notification plugin test :)", QtGui.QSystemTrayIcon.Information, 2000)
 
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay):
 		if self.main.client.roster['users'].has_key(unicode(frm).rsplit("/")[0]):
