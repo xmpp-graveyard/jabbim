@@ -41,7 +41,7 @@ class SubscribeWidget(QtGui.QWidget):
 		self.label.setObjectName("label")
 		self.hboxlayout.addWidget(self.label)
 	
-		self.label_2 = QtGui.QLabel(self.tr("Od:")+" "+frm,self)
+		self.label_2 = QtGui.QLabel(self.tr("From:")+" "+frm,self)
 		self.label_2.setObjectName("label_2")
 		#self.hboxlayout.addWidget(self.label_2)
 
