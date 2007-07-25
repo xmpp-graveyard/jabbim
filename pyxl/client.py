@@ -1126,7 +1126,7 @@ class Client(derived):
 		log.msg( 'left MUC: '+ jid)
 
 	
-	def sendFile(self, jid, filename, fp, desc = None):
+	def sendFile(self, jid, filename, fp, desc = None, typ = 'both'):
 		sid = str(random.randint(1000, sys.maxint))
 		self.ft[sid] = socks5.FTSend(self, sid, filename, jid, fp, desc)
 		self.ft[sid].start = time.time()
@@ -1149,8 +1149,13 @@ class Client(derived):
 		field = x.addElement('field')
 		field['var'] = 'stream-method'
 		field['type'] = 'list-single'
-		field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
-		field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
+		if typ == 'both':
+			field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
+			field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
+		elif typ == 'ibb':
+			field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
+		elif typ == 'socks':
+			field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
