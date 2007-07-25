@@ -79,6 +79,9 @@ class derived:
 	
 	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
 		del self.ft[sid]
+	
+	def on_ftTransfered(self, sid, bytes): #pocet prenesenych bajtu pro prenos se SID
+		pass
 		
 	def on_disconnect(self):
 		pass

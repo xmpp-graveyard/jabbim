@@ -439,6 +439,7 @@ class Send(protocol.Protocol):
 			pass
 		if self.ft:
 			self.ft.transfered = self.ft.transfered + len(data)
+			self.ft.client.on_ftTransfered(self.ft.sid, len(data))
 		return self.transport.write(data)
 
 # class IBBSend:
@@ -460,6 +461,7 @@ class Receive(protocol.Protocol):
 		if self.ft.fp != None:
 			self.ft.fp.write(data)
 			self.ft.transfered = self.ft.transfered + len(data)
+			self.ft.client.on_ftTransfered(self.ft.sid, len(data))
 		try:
 			self.ft.connector.factory.delayed_timeout_call.cancel()
 		except:

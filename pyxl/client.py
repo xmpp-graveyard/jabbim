@@ -1296,6 +1296,7 @@ class Client(derived):
 		self.disp(iq['id'])
 		self.ft[sid].ibbSeq = self.ft[sid].ibbSeq +1
 		self.ft[sid].transfered = self.ft[sid].transfered + len(dt)
+		self.on_ftTransfered(sid, len(dt))
 		d.addCallback(self._ftIBBContinue, sid)
 		d.addErrback(self._ftIBBError, sid)
 		
@@ -1317,6 +1318,7 @@ class Client(derived):
 		self.disp(iq['id'])
 		self.ft[sid].ibbSeq = self.ft[sid].ibbSeq +1
 		self.ft[sid].transfered = self.ft[sid].transfered + len(dt)
+		self.on_ftTransfered(sid, len(dt))
 		d.addCallback(self._ftIBBContinue, sid)
 		d.addErrback(self._ftIBBError, sid)
 		
