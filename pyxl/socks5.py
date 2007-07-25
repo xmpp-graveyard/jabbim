@@ -16,7 +16,7 @@ from twisted.words.protocols.jabber.xmlstream import IQ
 _ip_regex = re.compile ("\d\d?\d?\.\d\d?\d?\.\d\d?\d?\.\d\d?\d?")
 from twisted.protocols.basic  import FileSender
 import  os.path, time
-
+from base64 import b64encode, b64decode
 
 class ClientProtocol (protocol.Protocol):
 	""" This protocol that talks to SOCKS5 server from client side.
@@ -533,7 +533,8 @@ class FTReceive:
 		self.streamhostsID = None
 		self.activeStreamhost = None
 		self.transfered = 0
-
+		self.ibbSeq = 0
+		self.ibbCache = {}
 		self.connector = None
 		self.error = None
 	
@@ -565,6 +566,21 @@ class FTReceive:
 		print iq.toXml()
 		self.fp = open(self.file, 'w')
 		self.client.xmlstream.send(iq)
+	
+	def ibbProcess(self):
+		c = True
+		while c:
+			if self.ibbCache.has_key(self.ibbSeq):
+				print self.ibbSeq
+				data = b64decode(self.ibbCache[self.ibbSeq])
+				self.transfered = self.transfered + len(data)
+				self.client.on_ftTransfered(self.sid, len(data))
+				self.fp.write(data)
+				self.ibbSeq = self.ibbSeq + 1
+			else:
+				c = False
+			
+		
 	
 	def finish(self):
 		log.msg("konec prenosu")

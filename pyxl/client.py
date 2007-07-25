@@ -216,7 +216,7 @@ class Client(derived):
 		self.main._connected()
 		self.xmlstream = xmlstream
 		self.xmlstream.addObserver("/presence", self.onPresence, 1)
-		self.xmlstream.addObserver("/message", self.onMessage, 1)
+		self.xmlstream.addObserver("/message/body", self.onMessage, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='jabber:iq:roster']", self.onRosterAdd, 1)
 		self.xmlstream.addObserver("/*", self.onXML)
 		self.xmlstream.addObserver("/presence[@type='subscribe']", self.onSubscribe, 1)
@@ -231,6 +231,11 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:time']", self.onTime90, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/si[@xmlns='http://jabber.org/protocol/si' ][ @profile='http://jabber.org/protocol/si/profile/file-transfer']", self.onFileReceive, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='http://jabber.org/protocol/bytestreams']/streamhost", self.onStreamhosts, 1)
+		self.xmlstream.addObserver("/iq[@type='set'][@id]/open[@xmlns='http://jabber.org/protocol/ibb']", self.onIBBStart, 1)
+		self.xmlstream.addObserver("/iq[@type='set'][@id]/close[@xmlns='http://jabber.org/protocol/ibb']", self.onIBBEnd, 1)
+		self.xmlstream.addObserver("/iq[@type='set'][@id]/data[@xmlns='http://jabber.org/protocol/ibb']", self.onIBBData, 1)
+		self.xmlstream.addObserver("/message/data[@xmlns='http://jabber.org/protocol/ibb']", self.onIBBData, 1)
+		
 		self.getMetacontacts()
 		self.getBookmarks()
 		self.getDiscoInfo(self.jid.host,  callback = self._pepSupport)
@@ -1232,6 +1237,12 @@ class Client(derived):
 			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
 			self.ft[sid].file = self.ft[sid].fileprops['name']
 			self.receiveFile(sid, id)
+		if 'http://jabber.org/protocol/ibb' in self.ft[sid].methods:
+			log.msg('IBB offer')
+			self.ft[sid].method = 'http://jabber.org/protocol/ibb'
+			self.ft[sid].file = self.ft[sid].fileprops['name']
+			self.ft[sid].fp = open(self.ft[sid].file, 'w')
+			self.receiveFile(sid, id)
 	
 	def receiveFile(self, sid, id):
 		iq = Element((None,'iq'))
@@ -1247,7 +1258,9 @@ class Client(derived):
 		field = x.addElement('field')
 		field['var'] = 'stream-method'
 		value = field.addElement('value', content = obj.method)
+		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
+	
 		
 	def onStreamhosts(self, el):
 		self.disp(el['id'])
@@ -1310,6 +1323,14 @@ class Client(derived):
 		dt = self.ft[sid].fp.read(4096)
 		if not dt:
 			print 'konec!', data['seq']
+			iq = IQ(self.xmlstream, 'set')
+			iq['to'] = self.ft[sid].tojid
+			opn = iq.addElement('open', 'http://jabber.org/protocol/ibb')
+			opn['sid'] = sid
+			self.on_xml(iq.toXml())
+			d = iq.send()
+			self.disp(iq['id'])
+
 			self.ft[sid].finish()
 			return
 		data.addContent(b64encode(dt))		
@@ -1322,6 +1343,50 @@ class Client(derived):
 		d.addCallback(self._ftIBBContinue, sid)
 		d.addErrback(self._ftIBBError, sid)
 		
+	def receiveFileIBB(self, sid, id):
+		iq = Element((None,'iq'))
+		obj = self.ft[sid]
+		iq['to'] = obj.tojid
+		iq['id'] = id
+		iq['type'] = 'result'
+		self.xmlstream.send(iq)
+	
+	def onIBBStart(self, el):
+		log.msg('IBB start')
+		self.disp(el['id'])
+		opn = el.firstChildElement()
+		sid = opn['sid']
+		iq = Element((None,'iq'))
+		iq['to'] = el['from']
+		iq['id'] = el['id']
+		iq['type'] = 'result'
+		self.xmlstream.send(iq)
+		
+	def onIBBData(self, el):
+		log.msg('on data')
+		for e in el.elements():
+			if e.name == 'data':
+				sid = e['sid']
+				seq = int(e['seq'])
+				self.ft[sid].ibbCache[seq] = unicode(e)
+				self.ft[sid].ibbProcess()
+		if el.name == 'iq':
+			self.disp(el['id'])
+			iq = Element((None,'iq'))
+			iq['to'] = el['from']
+			iq['id'] = el['id']
+			iq['type'] = 'result'
+			self.xmlstream.send(iq)
+			
+		pass
+	
+	def onIBBEnd(self, iq):
+		self.disp(iq['id'])
+		close = iq.firstChildElement()
+		log.msg('IBB end')
+		sid = close['sid']
+		self.ft[sid].ibbProcess()
+		self.ft[sid].finish()
 		
 
 	def disp(self, id):
