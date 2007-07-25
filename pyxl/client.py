@@ -393,8 +393,8 @@ class Client(derived):
 		log.msg("END: getVCard")
 
 	def _noVcard(self, err, jid): 
-		print jid, 'no vcard available' 
-		print err
+		log.msg(jid + ': no vcard available')
+
 		log.msg('chci ulozit ' + jid )
 		self.reactor.callFromThread(self.main.cache.set_avatar,jid, ['nic', 'nic'])
 
@@ -402,7 +402,6 @@ class Client(derived):
 		log.msg( 'vcard received')
 		vcard = el.firstChildElement()
 		card = {} 
-		print vcard.toXml()
 		if vcard == None :
 			return
 		for x in vcard.elements():
