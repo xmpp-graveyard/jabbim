@@ -8,7 +8,7 @@ from tooltip_ui import *
 #from eventsFTWidget_ui import *
 from os.path import basename
 from twisted.python import log
-
+import filetransfer
 
 class doc(QtGui.QTextDocument):
 	def __init__(self,parent=None):
@@ -94,86 +94,7 @@ class SubscribeWidget(QtGui.QWidget):
 
 
 
-class FTWidget(QtGui.QWidget):
-	def __init__(self,file,item,main,sid,parent=None,stats=""):
-		apply(QtGui.QWidget.__init__,(self,parent))
-		self.setObjectName("FTWidget")
-		self.item=item
-		self.main=main
-		self.complete=False
-		self.sid=sid
-		self.gridlayout = QtGui.QGridLayout(self)
-		self.gridlayout.setMargin(0)
-		self.gridlayout.setSpacing(0)
-		self.gridlayout.setObjectName("gridlayout")
-	
-		self.gridlayout1 = QtGui.QGridLayout()
-		self.gridlayout1.setMargin(0)
-		self.gridlayout1.setSpacing(6)
-		self.gridlayout1.setObjectName("gridlayout1")
-	
-		self.hboxlayout = QtGui.QHBoxLayout()
-		self.hboxlayout.setMargin(0)
-		self.hboxlayout.setSpacing(6)
-		self.hboxlayout.setObjectName("hboxlayout")
-	
-		self.label = QtGui.QLabel(self.tr("File transfer:"),self)
-		self.label.setObjectName("label")
-		self.hboxlayout.addWidget(self.label)
-	
-		self.label_2 = QtGui.QLabel(file,self)
-		self.label_2.setObjectName("label_2")
-		self.hboxlayout.addWidget(self.label_2)
 
-		spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-		self.hboxlayout.addStretch()
-		
-		self.closeButton = QtGui.QPushButton(self)
-		self.closeButton.setMaximumSize(16,16)
-		self.closeButton.setObjectName("closeButton")
-		self.closeButton.setFlat(True)
-		self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
-		self.hboxlayout.addWidget(self.closeButton)
-
-		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
-
-		self.gridlayout1.addLayout(self.hboxlayout,0,0,1,1)
-	
-		self.stats = QtGui.QLabel(stats,self)
-
-
-		self.progressBar = QtGui.QProgressBar(self)
-	
-		sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7),QtGui.QSizePolicy.Policy(1))
-		sizePolicy.setHorizontalStretch(0)
-		sizePolicy.setVerticalStretch(0)
-		sizePolicy.setHeightForWidth(self.progressBar.sizePolicy().hasHeightForWidth())
-		self.progressBar.setSizePolicy(sizePolicy)
-		self.progressBar.setProperty("value",QtCore.QVariant(0))
-		self.progressBar.setOrientation(QtCore.Qt.Horizontal)
-		self.progressBar.setObjectName("progressBar")
-		self.gridlayout1.addWidget(self.stats,1,0,1,2)
-		self.gridlayout1.addWidget(self.progressBar,2,0,1,2)
-		self.gridlayout.addLayout(self.gridlayout1,0,0,1,1)
-		self.gridlayout.setMargin(1)
-		self.gridlayout.setSpacing(0)
-		self.gridlayout1.setMargin(1)
-		self.gridlayout1.setSpacing(0)
-		self.setMinimumHeight(60)
-
-	def reinit(self,file,item,main,sid,parent=None,stats=""):
-		self.complete=False
-		self.sid=sid
-		self.stats.setText(stats)
-		self.progressBar.setProperty("value",QtCore.QVariant(24))
-		self.setMinimumHeight(60)
-
-	def closeClicked(self):
-		if not self.complete:
-			self.main.client.ft[self.sid].protocol.unregisterProducer()
-			self.complete=None
-		elif self.complete==True:
-			self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
 
 #documentLayout()->anchorAt(position);
 class delegate(QtGui.QItemDelegate):
@@ -998,24 +919,28 @@ class rosterWidget(QtGui.QTreeWidget):
 				for f in file:
 					new.append(unicode(f))
 				file=new
-				self.main.filetransferQueue.append(file)
-				all=len(file)
-				file=file[0]
-				file=unicode(file)
-				#self.jab.sendFile(jid,unicode(file))
-				res = self.main.client.roster['users'][jid].getHighestResource()
-				sid=self.main.client.sendFile(jid+'/'+res, basename(file), file)
-				item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
-				item.setSizeHint(QtCore.QSize(100,60))
-				item.file=file
-				item.jid=jid
-				item.sent=1
-				item.broken=[]
-				item.all=all
-				item.widget=FTWidget(basename(file),item,self.main,sid,self.main.ui.eventsListWidget)
-				self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
-				self.main.filetransfer[sid]=item
-				self.main.filetransferTimer.start(500)
+				self.dialog=filetransfer.filetransferDialog(self.main,file,jid)
+				self.dialog.show()
+				#files=new
+				#all=len(file)
+				#file=file[0]
+				#file=unicode(file)
+				##self.jab.sendFile(jid,unicode(file))
+				#res = self.main.client.roster['users'][jid].getHighestResource()
+				#sid=self.main.client.sendFile(jid+'/'+res, basename(file), file)
+				#self.main.filetransferQueue[sid]=files
+				#item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
+				#item.setSizeHint(QtCore.QSize(100,60))
+				#item.queueId=sid
+				#item.file=file
+				#item.jid=jid+'/'+res
+				#item.sent=1
+				#item.broken=[]
+				#item.all=all
+				#item.widget=FTWidget(basename(file),item,self.main,sid,self.main.ui.eventsListWidget)
+				#self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
+				#self.main.filetransfer[sid]=item
+				##self.main.filetransferTimer.start(500)
 		log.msg("END CONTACT")
 	def changeGroup(self,jid,action,group):
 			name=unicode(self.main.client.roster['users'][jid].name)

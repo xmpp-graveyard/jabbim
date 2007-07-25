@@ -66,10 +66,82 @@ class clientClass(pyxl.client.Client):
 	def on_affiliationErr(self,  muc,  err,  nick):
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(muc+" "+err+" "+nick),0,1)
 
+	def on_ftTransfered(self, sid, bytes): #pocet prenesenych bajtu pro prenos se SID
+		log.msg("refresh")
+		toDel=[]
+		print self.main.filetransfer,sid
+		widget=self.main.filetransfer[sid]
+		if self.ft.has_key(sid):
+			size=float(self.ft[sid].size)
+			sent=float(self.ft[sid].transfered)
+			widget.widget.progressBar.setValue(int((sent/size)*100))
+		else:
+			log.msg("ft.finished")
+			widget.widget.progressBar.setValue(100)
+			if widget.widget.complete==None:
+				if self.main.ftError[sid]==None:
+					widget.widget.stats.setText(self.main.tr("Complete"))
+				else:
+					widget.widget.stats.setText(self.main.tr("Error")+" "+unicode(self.main.ftError[sid]))
+				widget.widget.complete=True
+				widget.widget.closeClicked()
+				toDel.append(sid)
+			else:
+				toDel.append(sid)
+				if self.main.ftError[sid]==None:
+					widget.widget.stats.setText(self.main.tr("Complete"))
+				else:
+					widget.widget.stats.setText(self.main.tr("Error")+" "+unicode(self.main.ftError[sid]))
+				widget.widget.complete=True
+
+		for sid in toDel:
+			#self.
+			#self.ui.eventsListWidget.takeItem(self.ui.eventsListWidget.row(self.filetransfer[sid]))
+			queueId=self.main.filetransfer[sid].queueId
+			#print self.filetransferQueue,self.filetransfer[sid].file
+			#for i in self.filetransferQueue:
+				#if self.filetransfer[sid].file in i:
+					#print i
+					#queueId=self.filetransferQueue.index(i)
+					#self.filetransferQueue[queueId].remove(self.filetransfer[sid].file)
+					#break
+			#log.msg("QUEUE:"+unicode(self.main.filetransferQueue))
+			if queueId!=None:
+				self.main.filetransferQueue[queueId].remove(self.main.filetransfer[sid].file)
+				if len(self.main.filetransferQueue[queueId])!=0:
+					jid=self.main.filetransfer[sid].jid
+					file=self.main.filetransferQueue[queueId][0]
+					file=unicode(file)
+					#self.jab.sendFile(jid,unicode(file))
+					sid2=self.sendFile(jid, basename(file), file,self.main.filetransferDescriptions[queueId][file])
+					item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
+					item.setSizeHint(QtCore.QSize(100,60))
+					item.file=file
+					item.jid=jid
+					item.queueId=self.main.filetransfer[sid].queueId
+					item.sent=self.main.filetransfer[sid].sent+1
+					#if self.ftError[sid]==None:
+						#item.broken=self.filetransfer[sid].broken
+					#else:
+						#item.broken=self.filetransfer[sid].broken.append(self.filetransfer[sid].file)
+					item.all=self.main.filetransfer[sid].all
+					log.msg("SENDING "+str(item.sent)+"/"+str(item.all))
+					item.widget=widgets.filetransfer.FTWidget(basename(file),item,self.main,sid2,self.main.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")
+					self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
+					self.main.filetransfer[sid2]=item
+					self.main.filetransferTimer.start(500)
+					if self.main.ftError[sid]==None:
+						self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.main.filetransfer[sid]))
+			else:
+				log.msg(unicode(self.main.filetransferQueue))
+				log.msg(unicode(self.main.filetransfer[sid].file))
+			del self.main.filetransfer[sid]
+
+
 	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
 		self.main.ftError[sid]=error
 		del self.ft[sid]
-
+		self.on_ftTransfered(sid, 0)
 	def on_discoInfoReceived(self, jid, node):
 		# save type of host, it not exist
 		if not self.main.hosts.has_key(jid):
@@ -586,13 +658,14 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.tabWidget.setTabText(2,"")
 
 		self.filetransferTimer=QtCore.QTimer()
+		self.filetransferDescriptions={}
 		self.ftError={}
 		QtCore.QObject.connect(self.filetransferTimer, QtCore.SIGNAL("timeout()"),self.refreshFT)
 		self.copyPlugins()
 		# variables
 		self.hosts={} # temp variable for {hos:type_of_host}
 		self.filetransfer={}
-		self.filetransferQueue=[]
+		self.filetransferQueue={}
 		self.client=None # pyxl client instance
 		self.chat=widgets.chatwindow.chatWindow(self,self)
 		self.statusPath="images/xxxxx/status/"
@@ -767,6 +840,7 @@ class mainWindow(QtGui.QMainWindow):
 		log.msg("PLUGINS:"+unicode(self.plugins))
 
 	def refreshFT(self):
+		return
 		log.msg("refresh")
 		toDel=[]
 		print 
