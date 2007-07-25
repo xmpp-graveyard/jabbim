@@ -19,9 +19,12 @@ class PluginBase:
 		self.handlers = []
 		self.homeDir = homedir
 
-	def buildRosterMenu(self):
+	def rosterMenu(self):
 		menu=self.main.ui.menuPlugins.addMenu(unicode(self.name))
 		return menu
+
+	def builRosterMenu(self):
+		pass
 
 	def loadConfig(self,homedir=None):
 		if homedir==None:

@@ -841,14 +841,18 @@ class mainWindow(QtGui.QMainWindow):
 		f.close()
 		if not self.plugins.has_key(plugin):
 			self.plugins[plugin] = plug
+			self.plugins[plugin].buildRosterMenu()
 		else:
 			print "plugin already loaded"
 		log.msg("PLUGINS:"+unicode(self.plugins))
 
 	def unloadPlugin(self,plugin):
 		if self.plugins.has_key(plugin):
+			self.ui.menuPlugins.clear()
 			self.plugins[plugin].remove()
 			del self.plugins[plugin]
+			for plug in self.plugins:
+				plug.buildRosterMenu()
 		else:
 			print "plugin is not loaded:",plugin
 		log.msg("PLUGINS:"+unicode(self.plugins))
