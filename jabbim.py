@@ -827,16 +827,30 @@ class mainWindow(QtGui.QMainWindow):
 		plugins=os.listdir(self.homeDir + "/plugins/")
 		for plugin in plugins:
 			if plugin in self.config['plugins']:
-				path = '%s/plugins/%s/%s.py'%(self.homeDir, plugin, plugin)
-				try: 
-					f=open(path)
-				except:
-					log.msg('plugin load error: '+plugin)
-					continue
-				plug = load_source(plugin, path, f).Plugin(self, self.homeDir)
-				f.close()
-				self.plugins[plug.name] = plug
-				
+				self.loadPlugin(plugin)
+		#log.msg("PLUGINS:"+unicode(self.plugins))
+	
+	def loadPlugin(self,plugin):
+		path = '%s/plugins/%s/%s.py'%(self.homeDir, plugin, plugin)
+		try: 
+			f=open(path)
+		except:
+			log.msg('plugin load error: '+plugin)
+			return
+		plug = load_source(plugin, path, f).Plugin(self, self.homeDir)
+		f.close()
+		if not self.plugins.has_key(plugin):
+			self.plugins[plugin] = plug
+		else:
+			print "plugin already loaded"
+		log.msg("PLUGINS:"+unicode(self.plugins))
+
+	def unloadPlugin(self,plugin):
+		if self.plugins.has_key(plugin):
+			self.plugins[plugin].remove()
+			del self.plugins[plugin]
+		else:
+			print "plugin is not loaded:",plugin
 		log.msg("PLUGINS:"+unicode(self.plugins))
 
 	def refreshFT(self):

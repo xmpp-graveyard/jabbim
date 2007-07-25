@@ -46,4 +46,4 @@ class PluginBase:
 	def remove(self):
 		self.writeConfig()
 		for handler in self.handlers:
-			self.main.client.dispatcher.unregisterHandler(name, self.name)
+			self.main.client.dispatcher.unregisterHandler(handler, self.name)

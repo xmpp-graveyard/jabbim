@@ -8,7 +8,7 @@ class EventDispatcher:
 	def registerHandler(self, name, meth, hname = 'nic'):
 		self.callbacks.setdefault(name, {})[hname] = meth
 	
-	def unregisterHander(self, name, hname):
+	def unregisterHandler(self, name, hname):
 		try:
 			del self.callbacks[name][hname]
 		except:

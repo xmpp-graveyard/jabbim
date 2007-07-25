@@ -26,7 +26,7 @@ QLineEdit:focus {
 QPushButton#login_connect { 
   border-radius: 4px;
 
-background-color: #642100;
+  background-color: #642100;
   border: 1px solid #980000;
   font: bold 12px;
   padding: 4px 10px 4px 10px;
@@ -87,6 +87,7 @@ QWidget#rosterTab {
 QWidget#userStyleWidget {
   background-color: rgba(0,0,0,0%);
 /*   color: rgb(209,170,129); */
+  color: #F6AB43;
 
 }
 
@@ -97,22 +98,27 @@ QWidget#groupStyleWidget {
 }
 
 
-QToolButton#showOffline,
-QToolButton#statusButton,
-QPushButton#addContact,
-QPushButton#newBookmark,
-QPushButton#pushButton,
-QPushButton#pushButton_2,
-QPushButton#saveButton,
-QPushButton#cancelButton{
-  background-color: #8E9194;
-  color: #515354;
-  margin: 5px;
-  border: 1px solid #646668;
-  border-radius: 4px;
+QToolButton
+{
+  border-radius: 6px;
+  background-color: #642100;
+/*   border: 1px solid #980000; */
   font: bold 12px;
-  padding: 2px 0px 2px 0px;
+  color: #E4524D;
+  margin:3px;
 }
+
+QToolButton:hover
+{
+  background-color: #750D17;
+}
+
+
+QToolButton:checked
+{
+  background-color: darkred;
+}
+
 
   QToolButton#statusButton::menu-arrow{
     image: url(foo.png);
@@ -128,72 +134,56 @@ QPushButton#cancelButton {
 
 
 
-QToolButton#showOffline:hover,
-QToolButton#statusButton:hover,
-QPushButton#addContact:hover,
-QPushButton#pushButton:hover,
-QPushButton#pushButton_2:hover,
-QPushButton#newBookmark:hover,
-QPushButton#saveButton:hover,
-QPushButton#cancelButton:hover{
-  background-color: #7E8183;
-}
 
-QToolButton#showOffline:checked,
-QToolButton#statusButton:pressed,
-QPushButton#addContact:pressed,
-QPushButton#pushButton:pressed,
-QPushButton#pushButton_2:pressed,
-QPushButton#newBookmark:pressed,
-QPushButton#saveButton:pressed,
-QPushButton#cancelButton:pressed{
-  background-color: #777777;
-}
 
 
 QTabWidget#tabWidget {
-  background: url(themes/Grain/roster_bg.png) repeat-x;
-  background-color:#A6ADB0;
-  background-position: bottom left;
+/*   background: url(themes/Grain/roster_bg.png) repeat-x; */
+  background-color:black;
+/*   background-position: bottom left; */
 }
 
 QWidget#roster{
-  background-repeat: repeat-x;
-  background-color:#A6ADB0;
-  background-position: bottom left;
-  selection-background-color: rgba(152,125,51,40%);
+/*   background-repeat: repeat-x; */
+  background-color:black;
+/*   background-position: bottom left; */
+/*   selection-background-color: rgba(152,125,51,40%); */
 }
 
 QTabWidget#tabWidget > QTabBar {
-  background-color: #A6ADB0;
-  border: 1px solid #646668;
+  background-color: black;
+/*   border: 1px solid #646668; */
 }
 
-
+  QTabWidget#tabWidget::tab-bar{
+  subcontrol-position:center center;
+}
 
   QTabWidget#tabWidget > QTabBar::tab:middle {
-    border: 1px solid #646668;
-    background-color:#bebebe;
+/*     border: 1px solid #646668; */
+    background-color:#550000;
   }
 
   QTabWidget#tabWidget > QTabBar::tab:last {
-    border: 1px solid #646668;
-    background-color:#bebebe;
-    border-top-right-radius: 6px;
+/*     border: 1px solid #646668; */
+    background-color:#550000;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
   }
 
   QTabWidget#tabWidget > QTabBar::tab:first {
-    border: 1px solid #646668;
-    background-color:#bebebe;
-    border-top-left-radius: 6px;
+    /*border: 1px solid #646668;*/
+    background-color:#550000;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
   }
 
   QTabWidget#tabWidget > QTabBar::tab:selected {
-    background-color:white;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     border-bottom-style: none;
-    background-color:#A6ADB0;
+    color: #F6AB43;
+    background-color:black;
   }
 
 QMenu {

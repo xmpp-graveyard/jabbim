@@ -393,8 +393,8 @@ class Client(derived):
 		log.msg("END: getVCard")
 
 	def _noVcard(self, err, jid): 
-		log.msg(jid + ': no vcard available')
-
+		print jid, 'no vcard available' 
+		print err
 		log.msg('chci ulozit ' + jid )
 		self.reactor.callFromThread(self.main.cache.set_avatar,jid, ['nic', 'nic'])
 
@@ -402,6 +402,7 @@ class Client(derived):
 		log.msg( 'vcard received')
 		vcard = el.firstChildElement()
 		card = {} 
+		print vcard.toXml()
 		if vcard == None :
 			return
 		for x in vcard.elements():
@@ -1125,7 +1126,7 @@ class Client(derived):
 		log.msg( 'left MUC: '+ jid)
 
 	
-	def sendFile(self, jid, filename, fp, desc = None, typ = 'both'):
+	def sendFile(self, jid, filename, fp, desc = None):
 		sid = str(random.randint(1000, sys.maxint))
 		self.ft[sid] = socks5.FTSend(self, sid, filename, jid, fp, desc)
 		self.ft[sid].start = time.time()
@@ -1148,13 +1149,8 @@ class Client(derived):
 		field = x.addElement('field')
 		field['var'] = 'stream-method'
 		field['type'] = 'list-single'
-		if typ == 'both':
-			field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
-			field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
-		elif typ == 'ibb':
-			field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
-		elif typ == 'socks':
-			field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
+		field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
+		field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])

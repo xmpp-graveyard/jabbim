@@ -221,8 +221,10 @@ class preferencesWindow(QtGui.QDialog):
 			widget=self.ui.plugins.itemWidget(item,0)
 			if widget.isChecked()==True and not plugin in self.loadedPlugins:
 				#shutil.copytree("plugins/"+plugin, self.main.homeDir+"/.jabbim/plugins/"+plugin)
+				self.main.loadPlugin(plugin)
 				self.main.config['plugins'].append(plugin)
 			elif widget.isChecked()==False and plugin in self.loadedPlugins:
+				self.main.unloadPlugin(plugin)
 				self.main.config['plugins'].remove(plugin)
 				#shutil.rmtree(self.main.homeDir+"/.jabbim/plugins/"+plugin)
 		
