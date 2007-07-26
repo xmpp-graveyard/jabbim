@@ -870,7 +870,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.menuPlugins.clear()
 			self.plugins[plugin].remove()
 			del self.plugins[plugin]
-			for plug in self.plugins:
+			for plug in self.plugins.itervalues():
 				plug.buildRosterMenu()
 		else:
 			print "plugin is not loaded:",plugin

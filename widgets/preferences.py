@@ -106,6 +106,7 @@ class preferencesWindow(QtGui.QDialog):
 		# Plugins
 		#self.ui.plugins.header().hide()
 		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.pluginsContextMenu)
+		self.main.copyPlugins()
 		plugins=os.listdir("plugins/")
 		self.loadedPlugins=self.main.config['plugins']
 		self.plugins={}
