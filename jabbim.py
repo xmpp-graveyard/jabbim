@@ -58,7 +58,7 @@ class clientClass(pyxl.client.Client):
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+code+" "+typ+" "+name),0,1)
 
 	def on_GCpresenceError(self, fromjid, code, typ, name):
-		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+code+" "+typ+" "+name),0,1)
+		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+unicode(code)+" "+unicode(typ)+" "+unicode(name)),0,1)
 
 	def on_roleErr(self,  muc,  err,  nick):
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(muc+" "+err+" "+nick),0,1)
@@ -840,13 +840,18 @@ class mainWindow(QtGui.QMainWindow):
 		except:
 			log.msg('plugin load error: '+plugin)
 			return
-		plug = load_source(plugin, path, f).Plugin(self, self.homeDir)
-		f.close()
-		if not self.plugins.has_key(plugin):
-			self.plugins[plugin] = plug
-			self.plugins[plugin].buildRosterMenu()
-		else:
-			print "plugin already loaded"
+		try:
+			plug = load_source(plugin, path, f).Plugin(self, self.homeDir)
+		
+			f.close()
+			if not self.plugins.has_key(plugin):
+				self.plugins[plugin] = plug
+				self.plugins[plugin].buildRosterMenu()
+			else:
+				print "plugin already loaded"
+		except Exception, ex:
+					log.msg(plugin+': '+unicode(ex))
+			
 		log.msg("PLUGINS:"+unicode(self.plugins))
 
 	def unloadPlugin(self,plugin):

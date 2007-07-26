@@ -130,7 +130,11 @@ class chatWindow(QtGui.QMainWindow):
 		tab.chat=groupChatWidget(self.main,room,tab)
 		tab.chat.ui.admin.hide()
 		layout.addWidget(tab.chat)
-		self.ui.chatTab.addTab(tab,QtGui.QIcon("images/16x16/categories/muc.png"),room)
+		jmeno = room
+		for nick, bookmark  in self.main.client.bookmarks['conference'].iteritems():
+			if bookmark.jid.userhost() == room:
+				jmeno = nick
+		self.ui.chatTab.addTab(tab,QtGui.QIcon("images/16x16/categories/muc.png"), jmeno)
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 		self.show()
 		self.raise_()

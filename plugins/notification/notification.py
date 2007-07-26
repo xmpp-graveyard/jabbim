@@ -12,7 +12,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'System tray notification'
 		self.author = "Jan 'HanzZ' Kaluza"
 		self.name = 'Notification Plugin'
-		self.version = '0.03'
+		self.version = '0.033'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}
@@ -56,6 +56,8 @@ class Plugin(plugins.PluginBase):
 					self.main.tray.showMessage(self.main.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 5000)
 
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
+		if delay != None:
+			return
 		if len(unicode(frm).rsplit("/"))==2:
 			user=unicode(frm).rsplit("/")[1]
 			frm=unicode(frm).rsplit("/")[0]
@@ -66,6 +68,8 @@ class Plugin(plugins.PluginBase):
 			for i in range(self.main.chat.ui.chatTab.count()):
 				w=self.main.chat.ui.chatTab.widget(i)
 				if unicode(w.jid)==frm:
+					if user == w.name:
+						continue
 					#print "test"
 					if unicode(body).lower().find(unicode(w.name).lower())!=-1:
 						if len(body)>40:

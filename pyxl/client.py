@@ -402,7 +402,6 @@ class Client(derived):
 		log.msg( 'vcard received')
 		vcard = el.firstChildElement()
 		card = {} 
-		print vcard.toXml()
 		if vcard == None :
 			return
 		for x in vcard.elements():
