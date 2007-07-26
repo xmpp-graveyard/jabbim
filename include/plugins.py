@@ -18,6 +18,7 @@ class PluginBase:
 		self.url = 'dev.jabbim.cz/jabbim'
 		self.handlers = []
 		self.homeDir = homedir
+		self.translator=None
 
 	def rosterMenu(self):
 		menu=self.main.ui.menuPlugins.addMenu(unicode(self.name))
@@ -26,6 +27,18 @@ class PluginBase:
 	def buildRosterMenu(self):
 		pass
 
+	def installTranslator(self):
+		self.translator=QtCore.QTranslator()
+		directory="%s/plugins/%s/"%(self.homeDir, self.fname)
+		self.translator.load(directory+"locales/"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
+		log.msg("trying to load localization file "+ directory+"locales/"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
+
+	def tr(self,text):
+		trans=self.translator.translate("Plugin",text)
+		if len(trans)==0:
+			return text
+		return trans
+	
 	def loadConfig(self,homedir=None):
 		if homedir==None:
 			homedir=self.main.homeDir
