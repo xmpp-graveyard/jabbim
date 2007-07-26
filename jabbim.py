@@ -656,6 +656,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.tabWidget.setTabText(0,"")
 		self.ui.tabWidget.setTabText(1,"")
 		self.ui.tabWidget.setTabText(2,"")
+		self.ui.tabWidget.setTabText(3,"")
 
 		self.filetransferTimer=QtCore.QTimer()
 		self.filetransferDescriptions={}

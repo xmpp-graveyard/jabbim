@@ -217,10 +217,10 @@ p, li { white-space: pre-wrap; }
            </attribute>
            <layout class="QGridLayout" >
             <property name="margin" >
-             <number>9</number>
+             <number>0</number>
             </property>
             <property name="spacing" >
-             <number>6</number>
+             <number>0</number>
             </property>
             <item row="0" column="0" >
              <widget class="QWidget" native="1" name="groupStyleWidget" />
@@ -471,6 +471,9 @@ p, li { white-space: pre-wrap; }
           <widget class="QWidget" name="eventsTab" >
            <attribute name="title" >
             <string>Events</string>
+           </attribute>
+           <attribute name="icon" >
+            <iconset>images/16x16/categories/event.png</iconset>
            </attribute>
            <layout class="QGridLayout" >
             <property name="margin" >

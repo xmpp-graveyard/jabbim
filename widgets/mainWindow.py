@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Wed Jul 25 14:46:19 2007
+# Created: Thu Jul 26 12:48:47 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -131,8 +131,8 @@ class Ui_MainWindow(object):
         self.rosterTab.setObjectName("rosterTab")
 
         self.gridlayout3 = QtGui.QGridLayout(self.rosterTab)
-        self.gridlayout3.setMargin(9)
-        self.gridlayout3.setSpacing(6)
+        self.gridlayout3.setMargin(0)
+        self.gridlayout3.setSpacing(0)
         self.gridlayout3.setObjectName("gridlayout3")
 
         self.groupStyleWidget = QtGui.QWidget(self.rosterTab)
@@ -274,7 +274,7 @@ class Ui_MainWindow(object):
         self.eventsListWidget = QtGui.QListWidget(self.eventsTab)
         self.eventsListWidget.setObjectName("eventsListWidget")
         self.gridlayout7.addWidget(self.eventsListWidget,0,0,1,1)
-        self.tabWidget.addTab(self.eventsTab,"")
+        self.tabWidget.addTab(self.eventsTab,QtGui.QIcon("images/16x16/categories/event.png"),"")
         self.gridlayout2.addWidget(self.tabWidget,0,0,1,1)
 
         self.hboxlayout4 = QtGui.QHBoxLayout()
