@@ -1,7 +1,7 @@
 import sys,os,time
 sys.path.append('.')
 from include import plugins
-
+from PyQt4 import QtCore, QtGui, uic
 from urllib import quote, unquote
 
 
@@ -12,10 +12,10 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Message Archiving'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Archive Plugin'
-		self.version = '0.037'
+		self.version = '0.042'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
-		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
+# 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
 
 
 		if main:
@@ -28,8 +28,35 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('on_message', self.on_message)
 			self.registerHandler('on_message_send', self.on_message_send)
 			self.loadConfig()
+			self.window = uic.loadUi("%s/plugins/%s/historyBrowser.ui"%(self.homeDir, self.fname))
+			self.window.setWindowIcon(self.main.windowIcon())
+			QtCore.QObject.connect(self.window.seznam, QtCore.SIGNAL("itemClicked ( QListWidgetItem * item ) "),self.itemClicked)
 		
-
+	def buildRosterMenu(self):
+		menu=self.rosterMenu()
+		menu.addAction("Archive browser",self.showSlot)
+	
+	def showSlot(self):
+		seznam = os.listdir(self.main.homeDir+'/archive/'+self.jid)
+		for jid in seznam:
+			if os.path.isdir(self.main.homeDir+'/archive/'+self.jid+'/'+jid):
+				continue
+			else:
+				self.window.seznam.addItem(unquote(jid).split('.history')[0])
+		self.window.show()
+	
+	def itemClicked(self, item):
+		jid = item.text()
+		fp = open(self.main.homeDir+'/archive/'+self.jid+'/'+jid)
+		zpravy = fp.read()
+		fp.close()
+		datum = self.window.calendar.selectedDate().toString('dd-MM-yyyy')
+		
+		for zprava in zpravy:
+			casti = zprava.split['|']
+			if datum == strfprint('%d-%m-%Y', time.localtime(casti[0])):
+				self.window.text.append('[%s] %s' %(strfprint('%X', time.localtime(casti[0])), casti[5]))
+	
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay):
 		jid = quote(frm.split('/')[0])
 

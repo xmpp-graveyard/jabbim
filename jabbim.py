@@ -633,8 +633,8 @@ class clientClass(pyxl.client.Client):
 ##				log.msg(utils.cprint("yellow","setting icon: "+jid))
 				#item.setIcon(3,QtGui.QIcon(pixmap))
 			sha=sha1(image).hexdigest()
-			#self.main.cache.set_avatar(jid, ['avatars/'+jid, sha])
-			#self.main._loadAvatar('avatars/'+jid, sha, jid)
+			self.main.cache.set_avatar(jid, ['avatars/'+jid, sha])
+			self.main._loadAvatar('avatars/'+jid, sha, jid)
 		else:
 			self.main.cache.set_avatar(jid, ['nic', 'nic'])
 
