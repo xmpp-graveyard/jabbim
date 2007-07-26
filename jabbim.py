@@ -773,6 +773,16 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.setGeometry(int(self.config['windowGeometry'][0]),int(self.config['windowGeometry'][1]),int(w),int(h))
 
+		w=self.config['chatGeometry'][2]
+		h=self.config['chatGeometry'][3]
+		if str(w)=='None' or str(h)=='None':
+			if str(w)!='None':
+				self.chat.resize(int(w),self.height())
+			self.chat.move(int(self.config['chatGeometry'][0]),int(self.config['chatGeometry'][1]))
+		else:
+			self.chat.setGeometry(int(self.config['chatGeometry'][0]),int(self.config['chatGeometry'][1]),int(w),int(h))
+
+
 	#def addInfoSubscribe(self):
 		#widget=subscribeWidget(self.ui.infoDockWidget)
 		#self.ui.infoLayout.addWidget(widget)
@@ -952,6 +962,13 @@ class mainWindow(QtGui.QMainWindow):
 			width=int(rect.width())
 			height=int(rect.height())
 			self.config["windowGeometry"]=[x,y,width,height]
+			rect=self.chat.geometry()
+			x=int(rect.x())
+			y=int(rect.y())
+			width=int(rect.width())
+			height=int(rect.height())
+			self.config["chatGeometry"]=[x,y,width,height]
+
 			self.config.write()
 		if str(self.config['saveExpandedGroups'])=='True':
 			expanded=[]

@@ -29,6 +29,7 @@ def loadConfig(main):
 			"log":"true",
 			"logfile":"jabbim.log",
 			"windowGeometry":[0,0,None,None],
+			"chatGeometry":[0,0,None,None],
 			"saveGeometry":True,
 			"saveExpandedGroups":True,
 			"expandedGroups":[],
