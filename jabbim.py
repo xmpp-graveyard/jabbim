@@ -648,7 +648,7 @@ class mainWindow(QtGui.QMainWindow):
 		print self.homeDir
 		utils.loadConfig(self) # load config files
 		self.cache = storage.Cache(db=self.homeDir+'/cache.db')
-		
+		self.plugins = {}
 
 		self.ui.gridlayout.setMargin(1)
 		self.ui.gridlayout.setSpacing(1)
@@ -823,7 +823,7 @@ class mainWindow(QtGui.QMainWindow):
 					shutil.copytree("plugins/"+plugin, self.homeDir+"/plugins/"+plugin)
 
 	def loadPlugins(self):
-		self.plugins = {}
+		
 		plugins=os.listdir(self.homeDir + "/plugins/")
 		for plugin in plugins:
 			if plugin in self.config['plugins']:
