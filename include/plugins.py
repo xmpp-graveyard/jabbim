@@ -23,7 +23,7 @@ class PluginBase:
 		menu=self.main.ui.menuPlugins.addMenu(unicode(self.name))
 		return menu
 
-	def builRosterMenu(self):
+	def buildRosterMenu(self):
 		pass
 
 	def loadConfig(self,homedir=None):

@@ -793,8 +793,8 @@ class mainWindow(QtGui.QMainWindow):
 			try: 
 				f=open(path)
 				plug = load_source(plugin, path, f).Plugin(False, self.homeDir)
-			except:
-				print 'spatny plugin', plugin
+			except Exception, ex:
+				log.msg(plugin+': '+unicode(ex))
 				continue
 			#takze mam asi spravny plugin, kouknem se jestli je v homediru
 			try: 
@@ -827,7 +827,10 @@ class mainWindow(QtGui.QMainWindow):
 		plugins=os.listdir(self.homeDir + "/plugins/")
 		for plugin in plugins:
 			if plugin in self.config['plugins']:
-				self.loadPlugin(plugin)
+				try:
+					self.loadPlugin(plugin)
+				except Exception, ex:
+					log.msg(plugin+': '+unicode(ex))	
 		#log.msg("PLUGINS:"+unicode(self.plugins))
 	
 	def loadPlugin(self,plugin):
