@@ -206,17 +206,16 @@ class groupChatWidget(QtGui.QWidget):
 		self.s.setShown(bool)
 	
 	def textEditWrite(self,text):
-		#cur=self.ui.textEdit.textCursor()
-		#cur.movePosition(QtGui.QTextCursor.End)
-		#self.ui.textEdit.setTextCursor(cur)
+		cur=self.ui.textEdit.textCursor()
+		cur.movePosition(QtGui.QTextCursor.End)
+		self.ui.textEdit.setTextCursor(cur)
 		# emoticons
 		for k,v in self.smileys.iteritems():
 			text=text.replace(" "+k,' <img src="images/16x16/emotes/'+v+'"/>')
-		self.ui.textEdit.append(text)
-		#self.ui.textEdit.insertHtml(text)
-		#cur=self.ui.textEdit.textCursor()
-		#cur.movePosition(QtGui.QTextCursor.End)
-		#self.ui.textEdit.setTextCursor(cur)
+		self.ui.textEdit.insertHtml(text)
+		cur=self.ui.textEdit.textCursor()
+		cur.movePosition(QtGui.QTextCursor.End)
+		self.ui.textEdit.setTextCursor(cur)
 	
 	def addEmoticon(self,action):
 		# add emoticon to the self.ui.line
