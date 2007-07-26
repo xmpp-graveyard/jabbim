@@ -344,7 +344,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="122"/>
         <source>Conference name:</source>
-        <translation>Konference:</translation>
+        <translation>Název:</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="123"/>
