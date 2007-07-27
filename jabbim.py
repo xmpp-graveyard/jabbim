@@ -57,8 +57,8 @@ class clientClass(pyxl.client.Client):
 		log.msg("ERROR")
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+code+" "+typ+" "+name),0,1)
 
-	def on_GCpresenceError(self, fromjid, code, typ, name):
-		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+unicode(code)+" "+unicode(typ)+" "+unicode(name)),0,1)
+	def on_GCpresenceError(self, fromjid, code, typ, name, text):
+		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+unicode(code)+" "+unicode(name)+" "+unicode(text)),0,1)
 
 	def on_roleErr(self,  muc,  err,  nick):
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(muc+" "+err+" "+nick),0,1)

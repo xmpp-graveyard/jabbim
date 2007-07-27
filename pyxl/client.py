@@ -789,13 +789,16 @@ class Client(derived):
 		fromjid = frm.userhost()
 		resource = jid.JID(el['from']).resource
 		if self.groupchats.has_key(fromjid):
-			err = el.firstChildElement()
-			
 			for child in  el.elements():
 				if child.name == 'error':
-					errel = child.firstChildElement()
-					self.on_GCpresenceError(fromjid, err.getAttribute('code'),  err.getAttribute('type'),  errel.name )
-					self.dispatcher.publishEvent('on_GCpresenceError',err.getAttribute('code'),  err.getAttribute('type'),  errel.name )
+					for elm in child.elements():
+						text = name = None
+						if elm.name == 'text':
+							text = unicode(elm)
+						else:
+							text = unicode(elm.name)
+					self.on_GCpresenceError(fromjid, child.getAttribute('code'),  child.getAttribute('type'),  name, text )
+					self.dispatcher.publishEvent('on_GCpresenceError',child.getAttribute('code'),  child.getAttribute('type'),  name , text)
 		
 	def getFeatures(self, jid, caps_node):
 		log.msg('requesting features'+ caps_node)
@@ -1232,17 +1235,17 @@ class Client(derived):
 		self.ft[sid] = socks5.FTReceive(self, el['from'], sid, file, methods)
 		self.on_fileReceived(sid, el['id'])
 	
-	def on_FileReceived(self, sid, id):
-		if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
-			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
-			self.ft[sid].file = self.ft[sid].fileprops['name']
-			self.receiveFile(sid, id)
-		elif 'http://jabber.org/protocol/ibb' in self.ft[sid].methods:
-			log.msg('IBB offer')
-			self.ft[sid].method = 'http://jabber.org/protocol/ibb'
-			self.ft[sid].file = self.ft[sid].fileprops['name']
-			self.ft[sid].fp = open(self.ft[sid].file, 'w')
-			self.receiveFile(sid, id)
+# 	def on_FileReceived(self, sid, id):
+# 		if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
+# 			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
+# 			self.ft[sid].file = self.ft[sid].fileprops['name']
+# 			self.receiveFile(sid, id)
+# 		elif 'http://jabber.org/protocol/ibb' in self.ft[sid].methods:
+# 			log.msg('IBB offer')
+# 			self.ft[sid].method = 'http://jabber.org/protocol/ibb'
+# 			self.ft[sid].file = self.ft[sid].fileprops['name']
+# 			self.ft[sid].fp = open(self.ft[sid].file, 'w')
+# 			self.receiveFile(sid, id)
 	
 	def receiveFile(self, sid, id):
 		iq = Element((None,'iq'))
