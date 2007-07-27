@@ -63,8 +63,8 @@ class PluginBase:
 			self.confObj[k] = self.config[k]['value']
 		self.confObj.write()
 	
-	def registerHandler(self, name, method):
-		self.main.client.dispatcher.registerHandler(name, method, self.name)
+	def registerHandler(self, name, method, priority = 5):
+		self.main.client.dispatcher.registerHandler(name, method, self.name, priority = priority)
 		self.handlers.append(name)
 	
 	def remove(self):

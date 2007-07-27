@@ -20,7 +20,7 @@ class EventDispatcher:
 			serazeno = sorted(seznam, key = self.k)
 			for cb in serazeno:
 				try:
-					vysl = cb['method'](*args, **kwargs):
+					vysl = cb['method'](*args, **kwargs)
 					if vysl == False:
 						return
 				except Exception, ex:
