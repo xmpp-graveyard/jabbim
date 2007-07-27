@@ -795,7 +795,7 @@ class Client(derived):
 				if child.name == 'error':
 					errel = child.firstChildElement()
 					self.on_GCpresenceError(fromjid, err.getAttribute('code'),  err.getAttribute('type'),  errel.name )
-					self.dispatcher.publishEvent('on_GCpresenceError',fromjid, err['code'],  err['type'],  errel.name )
+					self.dispatcher.publishEvent('on_GCpresenceError',err.getAttribute('code'),  err.getAttribute('type'),  errel.name )
 		
 	def getFeatures(self, jid, caps_node):
 		log.msg('requesting features'+ caps_node)
@@ -1230,14 +1230,14 @@ class Client(derived):
 							methods.append(unicode(option.firstChildElement()))
 		sid = si['id']
 		self.ft[sid] = socks5.FTReceive(self, el['from'], sid, file, methods)
-		self.on_FileReceived(sid, el['id'])
+		self.on_fileReceived(sid, el['id'])
 	
 	def on_FileReceived(self, sid, id):
 		if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
 			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
 			self.ft[sid].file = self.ft[sid].fileprops['name']
 			self.receiveFile(sid, id)
-		if 'http://jabber.org/protocol/ibb' in self.ft[sid].methods:
+		elif 'http://jabber.org/protocol/ibb' in self.ft[sid].methods:
 			log.msg('IBB offer')
 			self.ft[sid].method = 'http://jabber.org/protocol/ibb'
 			self.ft[sid].file = self.ft[sid].fileprops['name']

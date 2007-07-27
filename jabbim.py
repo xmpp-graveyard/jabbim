@@ -637,6 +637,23 @@ class clientClass(pyxl.client.Client):
 			self.main._loadAvatar('avatars/'+jid, sha, jid)
 		else:
 			self.main.cache.set_avatar(jid, ['nic', 'nic'])
+	def on_fileReceived(self, sid, id):
+		q = QtGui.QMessageBox.question(self.main,self.main.tr("File transfer"), unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+		if q == QtGui.QMessageBox.Yes:
+			filename = QtGui.QFileDialog.getSaveFileName(self.main, self.main.tr("Save File"),self.ft[sid].fileprops['name'],self.main.tr("*.*"))
+			log.msg(unicode(filename))
+			
+			log.msg('receiving file: ' + sid)
+			if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
+				self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
+				self.ft[sid].file = filename
+				self.receiveFile(sid, id)
+			elif 'http://jabber.org/protocol/ibb' in self.ft[sid].methods:
+				log.msg('IBB offer')
+				self.ft[sid].method = 'http://jabber.org/protocol/ibb'
+				self.ft[sid].file = filename
+				self.ft[sid].fp = open(self.ft[sid].file, 'w')
+				self.receiveFile(sid, id)
 
 
 class mainWindow(QtGui.QMainWindow):

@@ -461,7 +461,10 @@ class Receive(protocol.Protocol):
 		if self.ft.fp != None:
 			self.ft.fp.write(data)
 			self.ft.transfered = self.ft.transfered + len(data)
-			self.ft.client.on_ftTransfered(self.ft.sid, len(data))
+			try:
+				self.ft.client.on_ftTransfered(self.ft.sid, len(data))
+			except:
+				pass
 		try:
 			self.ft.connector.factory.delayed_timeout_call.cancel()
 		except:
@@ -532,6 +535,7 @@ class FTReceive:
 		self.streamhosts = []
 		self.streamhostsID = None
 		self.activeStreamhost = None
+		self.size = int(self.fileprops['size'])
 		self.transfered = 0
 		self.ibbSeq = 0
 		self.ibbCache = {}
