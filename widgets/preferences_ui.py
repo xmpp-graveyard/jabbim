@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Mon Jul 23 06:00:09 2007
-#      by: PyQt4 UI code generator 4.1
+# Created: Fri Jul 27 22:28:01 2007
+#      by: PyQt4 UI code generator 4.2
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_preferences(object):
@@ -158,21 +157,13 @@ class Ui_preferences(object):
         self.gridlayout4.setSpacing(6)
         self.gridlayout4.setObjectName("gridlayout4")
 
-        spacerItem3 = QtGui.QSpacerItem(81,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout4.addItem(spacerItem3,3,1,1,1)
+        spacerItem3 = QtGui.QSpacerItem(20,221,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout4.addItem(spacerItem3,4,0,1,1)
 
-        self.line_5 = QtGui.QFrame(self.page)
-        self.line_5.setFrameShape(QtGui.QFrame.HLine)
-        self.line_5.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line_5.setObjectName("line_5")
-        self.gridlayout4.addWidget(self.line_5,1,0,1,2)
-
-        self.label_6 = QtGui.QLabel(self.page)
-        self.label_6.setObjectName("label_6")
-        self.gridlayout4.addWidget(self.label_6,0,0,1,2)
-
-        spacerItem4 = QtGui.QSpacerItem(20,221,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout4.addItem(spacerItem4,4,0,1,1)
+        self.label_10 = QtGui.QLabel(self.page)
+        self.label_10.setWordWrap(True)
+        self.label_10.setObjectName("label_10")
+        self.gridlayout4.addWidget(self.label_10,3,0,1,1)
 
         self.groupBox = QtGui.QGroupBox(self.page)
         self.groupBox.setObjectName("groupBox")
@@ -204,7 +195,20 @@ class Ui_preferences(object):
         self.roster_iconSize.setObjectName("roster_iconSize")
         self.hboxlayout2.addWidget(self.roster_iconSize)
         self.vboxlayout2.addLayout(self.hboxlayout2)
-        self.gridlayout4.addWidget(self.groupBox,2,0,2,1)
+        self.gridlayout4.addWidget(self.groupBox,2,0,1,1)
+
+        self.label_6 = QtGui.QLabel(self.page)
+        self.label_6.setObjectName("label_6")
+        self.gridlayout4.addWidget(self.label_6,0,0,1,2)
+
+        self.line_5 = QtGui.QFrame(self.page)
+        self.line_5.setFrameShape(QtGui.QFrame.HLine)
+        self.line_5.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line_5.setObjectName("line_5")
+        self.gridlayout4.addWidget(self.line_5,1,0,1,2)
+
+        spacerItem4 = QtGui.QSpacerItem(81,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout4.addItem(spacerItem4,2,1,1,1)
         self.stackedWidget.addWidget(self.page)
 
         self.page_3 = QtGui.QWidget()
@@ -260,12 +264,8 @@ class Ui_preferences(object):
         self.stackedWidget.addWidget(self.page_5)
         self.gridlayout.addWidget(self.stackedWidget,0,1,1,2)
 
-        self.listWidget = QtGui.QListWidget(preferences)
-        self.listWidget.setMaximumSize(QtCore.QSize(150,16777215))
-        self.listWidget.setIconSize(QtCore.QSize(32,32))
-        self.listWidget.setViewMode(QtGui.QListView.ListMode)
-        self.listWidget.setObjectName("listWidget")
-        self.gridlayout.addWidget(self.listWidget,0,0,2,1)
+        spacerItem5 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem5,1,1,1,1)
 
         self.hboxlayout3 = QtGui.QHBoxLayout()
         self.hboxlayout3.setMargin(0)
@@ -281,8 +281,12 @@ class Ui_preferences(object):
         self.hboxlayout3.addWidget(self.cancelButton)
         self.gridlayout.addLayout(self.hboxlayout3,1,2,1,1)
 
-        spacerItem5 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem5,1,1,1,1)
+        self.listWidget = QtGui.QListWidget(preferences)
+        self.listWidget.setMaximumSize(QtCore.QSize(150,16777215))
+        self.listWidget.setIconSize(QtCore.QSize(32,32))
+        self.listWidget.setViewMode(QtGui.QListView.ListMode)
+        self.listWidget.setObjectName("listWidget")
+        self.gridlayout.addWidget(self.listWidget,0,0,2,1)
 
         self.retranslateUi(preferences)
         self.stackedWidget.setCurrentIndex(3)
@@ -310,10 +314,7 @@ class Ui_preferences(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Chat skins</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_6.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-        "p, li { white-space: pre-wrap; }\n"
-        "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
-        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Roster</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_10.setText(QtGui.QApplication.translate("preferences", "Remember: you have to restart Jabbim to change roster style!", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setTitle(QtGui.QApplication.translate("preferences", "Roster Style", None, QtGui.QApplication.UnicodeUTF8))
         self.roster_normal.setText(QtGui.QApplication.translate("preferences", "Normal", None, QtGui.QApplication.UnicodeUTF8))
         self.roster_compact.setText(QtGui.QApplication.translate("preferences", "Compact", None, QtGui.QApplication.UnicodeUTF8))
@@ -321,6 +322,10 @@ class Ui_preferences(object):
         self.roster_iconSize.addItem(QtGui.QApplication.translate("preferences", "16x16", None, QtGui.QApplication.UnicodeUTF8))
         self.roster_iconSize.addItem(QtGui.QApplication.translate("preferences", "22x22", None, QtGui.QApplication.UnicodeUTF8))
         self.roster_iconSize.addItem(QtGui.QApplication.translate("preferences", "32x32", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_6.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        "p, li { white-space: pre-wrap; }\n"
+        "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
+        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Roster</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.label_7.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
@@ -331,6 +336,8 @@ class Ui_preferences(object):
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\';\"><span style=\" font-size:12pt; font-weight:600;\">Plugins</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.plugins.headerItem().setText(1,QtGui.QApplication.translate("preferences", "Name", None, QtGui.QApplication.UnicodeUTF8))
         self.plugins.headerItem().setText(2,QtGui.QApplication.translate("preferences", "Description", None, QtGui.QApplication.UnicodeUTF8))
+        self.saveButton.setText(QtGui.QApplication.translate("preferences", "Save", None, QtGui.QApplication.UnicodeUTF8))
+        self.cancelButton.setText(QtGui.QApplication.translate("preferences", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.listWidget.clear()
 
         item = QtGui.QListWidgetItem(self.listWidget)
@@ -356,6 +363,4 @@ class Ui_preferences(object):
         item5 = QtGui.QListWidgetItem(self.listWidget)
         item5.setText(QtGui.QApplication.translate("preferences", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
         item5.setIcon(QtGui.QIcon("images/32x32/categories/applications-accessories.png"))
-        self.saveButton.setText(QtGui.QApplication.translate("preferences", "Save", None, QtGui.QApplication.UnicodeUTF8))
-        self.cancelButton.setText(QtGui.QApplication.translate("preferences", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
 
