@@ -74,6 +74,7 @@ class Plugin(plugins.PluginBase):
 		q = iq.addElement('x','jabbim:games')
 		self.main.client.on_xml(iq.toXml())
 		self.main.client.xmlstream.send(iq)
+		log.msg('reply sent')
 		
 
 class Session:

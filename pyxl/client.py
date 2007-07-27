@@ -653,6 +653,8 @@ class Client(derived):
 			if child.name == 'x':
 				if child.defaultUri == 'jabber:x:delay' :
 					delay = child.getAttribute('stamp')
+				if child.defaultUri == 'jabber:x:event':
+					chatstate = child.firstChildElement().name
 
 		if self.groupchats.has_key(jid.JID(frm).userhost()):
 			self.on_GCmessage(frm,typ,body,subject, xhtml,  chatstate,  delay)
