@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'joingroupchat.ui'
 #
-# Created: Wed Feb 28 05:43:17 2007
-#      by: PyQt4 UI code generator 4.1.1
+# Created: Fri Jul 27 19:55:39 2007
+#      by: PyQt4 UI code generator 4.2
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_joingroupchat(object):
@@ -90,6 +89,7 @@ class Ui_joingroupchat(object):
         self.vboxlayout1.addWidget(self.nickname)
 
         self.password = QtGui.QLineEdit(joingroupchat)
+        self.password.setEchoMode(QtGui.QLineEdit.Password)
         self.password.setObjectName("password")
         self.vboxlayout1.addWidget(self.password)
         self.hboxlayout.addLayout(self.vboxlayout1)
