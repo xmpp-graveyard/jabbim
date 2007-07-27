@@ -39,12 +39,12 @@ from pyxl import storage
 
 from configobj import ConfigObj
 from include import utils
-import urllib
+import urllib, random
 from imp import load_source
 from urllib import quote, unquote
 from include import plugins
 from os.path import basename
-
+from twisted.words.protocols.jabber.xmlstream import IQ
 #mutex=QtCore.QMutex()
 
 class clientClass(pyxl.client.Client):
