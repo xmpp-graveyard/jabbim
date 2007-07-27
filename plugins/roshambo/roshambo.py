@@ -13,7 +13,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Kamen - nuzky - papir'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Roshambo Plugin'
-		self.version = '0.0058'
+		self.version = '0.006'
 		self.category = ['jgames']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.sessions = {}
@@ -30,7 +30,7 @@ class Plugin(plugins.PluginBase):
 	def buildRosterMenu(self):
 		menu=self.rosterMenu()
 		menu.addAction("Challenge!",self.showSlot)
-		self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/x[@xmlns='jabbim:games']/game/text()='roshambo'", self.onInvite)
+		self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/x[@xmlns='jabbim:games']/game", self.onInvite)
 	
 	def showSlot(self):
 		for user in self.main.client.roster['users'].itervalues():
@@ -41,9 +41,10 @@ class Plugin(plugins.PluginBase):
 	
 	def sendInvite(self):
 		jid = self.invite.comboBox.currentText()
+		resource = self.main.client.roster['users'][jid].getHighestResource()
 		iq = IQ(self.main.client.xmlstream, 'set')
 		iq['type'] = 'get'
-		iq['to'] = jid
+		iq['to'] = jid+'/'+resource
 		q = iq.addElement('x', 'jabbim:games')
 		q.addElement('game', content = 'roshambo')
 		sid = str(random.randint(1000, sys.maxint))
