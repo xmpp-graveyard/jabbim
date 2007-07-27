@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'status.ui'
 #
-# Created: Tue Jan 23 20:35:55 2007
-#      by: PyQt4 UI code generator 4.0.1
+# Created: Fri Jul 27 17:40:32 2007
+#      by: PyQt4 UI code generator 4.2
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_status(object):
@@ -33,6 +32,7 @@ class Ui_status(object):
         self.gridlayout.addWidget(self.time,1,0,1,3)
 
         self.status = QtGui.QTextBrowser(status)
+        self.status.setTabChangesFocus(True)
         self.status.setReadOnly(False)
         self.status.setObjectName("status")
         self.gridlayout.addWidget(self.status,0,0,1,3)
@@ -44,3 +44,4 @@ class Ui_status(object):
     def retranslateUi(self, status):
         status.setWindowTitle(QtGui.QApplication.translate("status", "Set status message", None, QtGui.QApplication.UnicodeUTF8))
         self.set.setText(QtGui.QApplication.translate("status", "Set", None, QtGui.QApplication.UnicodeUTF8))
+

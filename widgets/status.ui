@@ -51,6 +51,9 @@
    </item>
    <item row="0" column="0" colspan="3" >
     <widget class="QTextBrowser" name="status" >
+     <property name="tabChangesFocus" >
+      <bool>true</bool>
+     </property>
      <property name="readOnly" >
       <bool>false</bool>
      </property>
