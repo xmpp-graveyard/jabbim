@@ -20,7 +20,9 @@ class EventDispatcher:
 			serazeno = sorted(seznam, key = self.k)
 			for cb in serazeno:
 				try:
-					cb['method'](*args, **kwargs)
+					vysl = cb['method'](*args, **kwargs):
+					if vysl == False:
+						return
 				except Exception, ex:
 					log.msg('Plugin error: ' +unicode(ex))
 	
