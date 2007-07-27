@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Fri Jul 27 21:13:10 2007
+# Created: Fri Jul 27 21:37:04 2007
 #      by: PyQt4 UI code generator 4.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -336,8 +336,8 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.rosterStackedWidget.setCurrentIndex(0)
         self.tabWidget.setCurrentIndex(2)
-        QtCore.QObject.connect(self.login_password,QtCore.SIGNAL("editingFinished()"),self.login_connect.click)
-        QtCore.QObject.connect(self.login_jid,QtCore.SIGNAL("editingFinished()"),self.login_connect.click)
+        QtCore.QObject.connect(self.login_password,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)
+        QtCore.QObject.connect(self.login_jid,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

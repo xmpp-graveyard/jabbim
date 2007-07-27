@@ -602,23 +602,23 @@ p, li { white-space: pre-wrap; }
  <connections>
   <connection>
    <sender>login_password</sender>
-   <signal>editingFinished()</signal>
+   <signal>returnPressed()</signal>
    <receiver>login_connect</receiver>
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>143</x>
-     <y>117</y>
+     <x>137</x>
+     <y>124</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>218</x>
+     <x>205</x>
      <y>188</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>login_jid</sender>
-   <signal>editingFinished()</signal>
+   <signal>returnPressed()</signal>
    <receiver>login_connect</receiver>
    <slot>click()</slot>
    <hints>
