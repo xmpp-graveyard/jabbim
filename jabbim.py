@@ -730,7 +730,8 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.addContact, QtCore.SIGNAL("clicked ()"),self.addContactMainWindow)
 		app.connect(self.ui.newBookmark, QtCore.SIGNAL("clicked ()"),self.newBookmark)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
-
+		QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered ( bool )"),self.trayQuit)
+		
 		# fill login form
 		self.ui.login_password.setText(self.config['passwd'])
 		self.ui.login_jid.setText(self.config['jid'])
@@ -809,7 +810,6 @@ class mainWindow(QtGui.QMainWindow):
 		#self.setUpdatesEnabled(False)
 		#QtGui.QMainWindow(self).resizeEvent(event)
 		#self.setUpdatesEnabled(True)
-
 
 	def copyPlugins(self):
 		plugins=os.listdir("plugins/")
@@ -971,7 +971,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.hide()
 		event.ignore()
 
-	def trayQuit(self):
+	def trayQuit(self,bool=True):
 		# turn off jabbim
 		if str(self.config["saveGeometry"])=="True":
 			rect=self.geometry()
