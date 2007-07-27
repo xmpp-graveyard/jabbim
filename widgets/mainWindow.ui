@@ -26,7 +26,7 @@
     <item row="0" column="0" >
      <widget class="QStackedWidget" name="rosterStackedWidget" >
       <property name="currentIndex" >
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="login" >
        <layout class="QGridLayout" >
@@ -52,7 +52,7 @@
         <item row="6" column="0" >
          <widget class="QLabel" name="login_logoLabel" >
           <property name="pixmap" >
-           <pixmap>images/logo.png</pixmap>
+           <pixmap/>
           </property>
           <property name="alignment" >
            <set>Qt::AlignCenter</set>
@@ -203,7 +203,7 @@ p, li { white-space: pre-wrap; }
         <item row="0" column="0" >
          <widget class="QTabWidget" name="tabWidget" >
           <property name="currentIndex" >
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="rosterTab" >
            <attribute name="title" >
@@ -550,7 +550,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>299</width>
-     <height>29</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPreferences" >
@@ -599,5 +599,38 @@ p, li { white-space: pre-wrap; }
   </action>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>login_password</sender>
+   <signal>editingFinished()</signal>
+   <receiver>login_connect</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>143</x>
+     <y>117</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>218</x>
+     <y>188</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>login_jid</sender>
+   <signal>editingFinished()</signal>
+   <receiver>login_connect</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>191</x>
+     <y>97</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>254</x>
+     <y>194</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Thu Jul 26 12:48:47 2007
-#      by: PyQt4 UI code generator 4.1
+# Created: Fri Jul 27 21:13:10 2007
+#      by: PyQt4 UI code generator 4.2
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_MainWindow(object):
@@ -39,7 +38,6 @@ class Ui_MainWindow(object):
         self.gridlayout1.addItem(spacerItem,5,0,1,1)
 
         self.login_logoLabel = QtGui.QLabel(self.login)
-        self.login_logoLabel.setPixmap(QtGui.QPixmap("images/logo.png"))
         self.login_logoLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.login_logoLabel.setObjectName("login_logoLabel")
         self.gridlayout1.addWidget(self.login_logoLabel,6,0,1,1)
@@ -302,7 +300,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0,0,299,29))
+        self.menubar.setGeometry(QtCore.QRect(0,0,299,28))
         self.menubar.setObjectName("menubar")
 
         self.menuPreferences = QtGui.QMenu(self.menubar)
@@ -336,8 +334,10 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuPreferences.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.rosterStackedWidget.setCurrentIndex(1)
-        self.tabWidget.setCurrentIndex(0)
+        self.rosterStackedWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
+        QtCore.QObject.connect(self.login_password,QtCore.SIGNAL("editingFinished()"),self.login_connect.click)
+        QtCore.QObject.connect(self.login_jid,QtCore.SIGNAL("editingFinished()"),self.login_connect.click)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
