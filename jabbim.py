@@ -662,7 +662,11 @@ class mainWindow(QtGui.QMainWindow):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
+		print sys.argv
 		self.homeDir=utils.getHomeDir() # get home dir
+		for x in range(0,len(sys.argv)):
+			if sys.argv[x] == '--home':
+				self.homeDir= sys.argv[x+1]
 		print self.homeDir
 		utils.loadConfig(self) # load config files
 		self.cache = storage.Cache(db=self.homeDir+'/cache.db')
