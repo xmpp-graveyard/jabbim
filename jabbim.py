@@ -46,6 +46,7 @@ from include import plugins
 from os.path import basename
 from twisted.words.protocols.jabber.xmlstream import IQ
 #mutex=QtCore.QMutex()
+from twisted.words.xish.domish import Element
 
 class clientClass(pyxl.client.Client):
 
