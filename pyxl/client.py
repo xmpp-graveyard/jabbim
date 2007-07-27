@@ -91,9 +91,10 @@ class Client(derived):
 # 		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
 		self.log = True
 		self.dispatcher = events.EventDispatcher()
+		
 		self.reactor.callFromThread(self.on_init)
 		self.main.cache.get_caps(self._cacheCaps)
-
+		self.dispatcher.registerHandler('on_message', self.on_message, 'on_message')
 
 
 	def chyba(self, err):
@@ -657,7 +658,7 @@ class Client(derived):
 			self.on_GCmessage(frm,typ,body,subject, xhtml,  chatstate,  delay)
 			self.dispatcher.publishEvent('on_GCmessage', frm,typ,body,subject, xhtml,  chatstate,  delay)
 		else:
-			self.on_message(frm,typ,body,subject, xhtml,  chatstate,  delay)
+# 			self.on_message(frm,typ,body,subject, xhtml,  chatstate,  delay)
 			self.dispatcher.publishEvent('on_message', frm,typ,body,subject, xhtml,  chatstate,  delay)
 
 	def onSubscribe(self, el):

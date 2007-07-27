@@ -5,8 +5,8 @@ class EventDispatcher:
 		self.callbacks = {}
 
 
-	def registerHandler(self, name, meth, hname = 'nic'):
-		self.callbacks.setdefault(name, {})[hname] = meth
+	def registerHandler(self, name, meth, hname = 'nic', priority = 5):
+		self.callbacks.setdefault(name, {})[hname] = {'method':meth, 'prio':priority}
 	
 	def unregisterHandler(self, name, hname):
 		try:
@@ -16,8 +16,13 @@ class EventDispatcher:
 
 	def publishEvent(self, name, *args, **kwargs):
 		if self.callbacks.has_key(name):
-			for cb in self.callbacks[name].itervalues():
+			seznam = self.callbacks[name].itervalues()
+			serazeno = sorted(seznam, key = self.k)
+			for cb in serazeno:
 				try:
-					cb(*args, **kwargs)
+					cb['method'](*args, **kwargs)
 				except Exception, ex:
 					log.msg('Plugin error: ' +unicode(ex))
+	
+	def k(self, key):
+		return key['prio']

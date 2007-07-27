@@ -12,7 +12,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Message Archiving'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Archive Plugin'
-		self.version = '0.042'
+		self.version = '0.0422'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 # 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
@@ -30,7 +30,7 @@ class Plugin(plugins.PluginBase):
 			self.loadConfig()
 			self.window = uic.loadUi("%s/plugins/%s/historyBrowser.ui"%(self.homeDir, self.fname))
 			self.window.setWindowIcon(self.main.windowIcon())
-			QtCore.QObject.connect(self.window.seznam, QtCore.SIGNAL("itemClicked ( QListWidgetItem * item ) "),self.itemClicked)
+			QtCore.QObject.connect(self.window.seznam, QtCore.SIGNAL("itemClicked ( QListWidgetItem ) "),self.itemClicked)
 		
 	def buildRosterMenu(self):
 		menu=self.rosterMenu()
@@ -46,6 +46,7 @@ class Plugin(plugins.PluginBase):
 		self.window.show()
 	
 	def itemClicked(self, item):
+		log.msg("item clicked")
 		jid = item.text()
 		fp = open(self.main.homeDir+'/archive/'+self.jid+'/'+jid)
 		zpravy = fp.read()
