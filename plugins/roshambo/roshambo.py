@@ -13,7 +13,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Kamen - nuzky - papir'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Roshambo Plugin'
-		self.version = '0.0061'
+		self.version = '0.007'
 		self.category = ['jgames']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.sessions = {}
@@ -43,7 +43,6 @@ class Plugin(plugins.PluginBase):
 		jid = self.invite.comboBox.currentText()
 		resource = self.main.client.roster['users'][unicode(jid)].getHighestResource()
 		iq = IQ(self.main.client.xmlstream, 'set')
-		iq['type'] = 'get'
 		iq['to'] = unicode(jid)+'/'+resource
 		q = iq.addElement('x', 'jabbim:games')
 		q.addElement('game', content = 'roshambo')
