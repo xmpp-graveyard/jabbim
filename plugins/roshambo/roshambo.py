@@ -14,7 +14,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Kamen - nuzky - papir'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Roshambo Plugin'
-		self.version = '0.0221'
+		self.version = '0.03'
 		self.category = ['jgames']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.sessions = {}
@@ -79,9 +79,11 @@ class Plugin(plugins.PluginBase):
 		iq['id'] = el['id']
 		q = iq.addElement('x','jabbim:games')
 		sid = el.firstChildElement()['sid']
-		self.sessions[sid] = Session(self, sid, el['from'], False)
-		
-		
+		q = QtGui.QMessageBox.question(self.main,self.main.tr("Roshambo challenge"), unicode(" %s is challenging you to roshambo."%unicode(el['from'])),QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+		if q == QtGui.QMessageBox.Yes:
+			self.sessions[sid] = Session(self, sid, el['from'], False)
+		else:
+			iq['type'] = 'error'
 		self.main.client.on_xml(iq.toXml())
 		self.main.client.xmlstream.send(iq)
 		log.msg('reply sent')
@@ -153,6 +155,8 @@ class Session:
 	
 	def cancel(self):
 		#pridat informaci pro druhou stranu
+		command = xmlrpclib.dumps((self.score,), 'quit').replace("<?xml version='1.0'?>", '')
+		self.sendRPC(command)
 		self.ui.destroy()
 		del self.plugin.sessions[self.sid]
 	
@@ -225,7 +229,9 @@ class Session:
 		
 	
 	def onQuit(self, cmd):
-		print cmd
+		self.ui.log.append('Other side has left the battlefield')
+		self.ui.send.setEnabled(False)
+
 	
 
 		
