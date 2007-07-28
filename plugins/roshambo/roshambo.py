@@ -15,7 +15,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Kamen - nuzky - papir'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Roshambo Plugin'
-		self.version = '0.031'
+		self.version = '0.04'
 		self.category = ['jgames']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.sessions = {}
@@ -80,14 +80,7 @@ class Plugin(plugins.PluginBase):
 		iq['id'] = el['id']
 		q = iq.addElement('x','jabbim:games')
 		sid = el.firstChildElement()['sid']
-		q = threads.deferToThread(MessageBoxQuestion,self.main,self.main.tr("Roshambo challenge"), unicode(" %s is challenging you to roshambo."%unicode(el['from'])),QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
-		q.addCallback(_onInviteRes, iq)
-	
-	def _onInviteRes(self, q, iq)
-		if q == QtGui.QMessageBox.Yes:
-			self.sessions[sid] = Session(self, sid, el['from'], False)
-		else:
-			iq['type'] = 'error'
+		self.sessions[sid] = Session(self, sid, el['from'], False)
 		self.main.client.on_xml(iq.toXml())
 		self.main.client.xmlstream.send(iq)
 		log.msg('reply sent')
@@ -237,7 +230,5 @@ class Session:
 		self.ui.send.setEnabled(False)
 
 	
-def MessageBoxQuestion(main, nadpis, popis, tl1, tl2):
-	return  QtGui.QMessageBox.question(main,nadpis, popis, tl1, tl2)
 		
 
