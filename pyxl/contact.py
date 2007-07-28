@@ -53,7 +53,10 @@ class Contact:
 			
 	def getHighestResource(self):
 		prio = None
-		highest = self.resources.keys()[0]
+		try:
+			highest = self.resources.keys()[0]
+		except:
+			highest = None
 		for res,val in self.resources.iteritems():
 ##			print val
 				if val.priority>prio:

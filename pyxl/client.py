@@ -242,6 +242,7 @@ class Client(derived):
 		self.getDiscoInfo(self.jid.host,  callback = self._pepSupport)
 		self.getDiscoItems(self.jid.host)
 		self.reactor.callFromThread(self.on_authd)
+		self.dispatcher.publishEvent('on_authd')
 	
 		
 	def _pepSupport(self):
@@ -605,6 +606,7 @@ class Client(derived):
 
 		log.msg( 'roster arrived')
 		presence = Element(('jabber:client','presence'))
+		presence['priority'] = '5'
 		self.on_xml(presence.toXml())
 		self.xmlstream.send(presence)
 		cekej = 20

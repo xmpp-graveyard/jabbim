@@ -39,7 +39,7 @@ from pyxl import storage
 
 from configobj import ConfigObj
 from include import utils
-import urllib, random
+import urllib, random, xmlrpclib
 from imp import load_source
 from urllib import quote, unquote
 from include import plugins
@@ -662,12 +662,12 @@ class mainWindow(QtGui.QMainWindow):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
-		print sys.argv
+
 		self.homeDir=utils.getHomeDir() # get home dir
 		for x in range(0,len(sys.argv)):
 			if sys.argv[x] == '--home':
 				self.homeDir= sys.argv[x+1]
-		print self.homeDir
+
 		utils.loadConfig(self) # load config files
 		self.cache = storage.Cache(db=self.homeDir+'/cache.db')
 		self.plugins = {}
@@ -776,7 +776,7 @@ class mainWindow(QtGui.QMainWindow):
 		#self.addInfoSubscribe()
 		self.loadTheme()
 		if self.config['log'] == 'true':
-			logfile = open(self.config['logfile'], 'w')
+			logfile = open(self.homeDir+'/'+self.config['logfile'], 'w')
 			log.startLogging(logfile)
 
 		self.tray=QtGui.QSystemTrayIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
