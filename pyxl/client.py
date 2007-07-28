@@ -648,7 +648,7 @@ class Client(derived):
 					xbdy = xbdy + elm.toXml()
 				log.msg(xbdy)
 				if len(xbdy) == 0:
-					xhtml = xbody
+					xhtml = unicode(xbody)
 				else:
 					xhtml = xbdy
 			if child.name in ['active',  'inactive',  'composing',  'paused',  'gone']:
