@@ -50,6 +50,9 @@
       <property name="text" >
        <string>OK</string>
       </property>
+      <property name="checkable" >
+       <bool>false</bool>
+      </property>
      </widget>
     </item>
     <item row="1" column="0" >
@@ -73,13 +76,16 @@
          <string>Scissors</string>
         </property>
         <property name="icon" >
-         <iconset>edit-cut.svg</iconset>
+         <iconset>plugins/roshambo/edit-cut.svg</iconset>
         </property>
         <property name="iconSize" >
          <size>
           <width>48</width>
           <height>48</height>
          </size>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -89,7 +95,7 @@
          <string>Paper</string>
         </property>
         <property name="icon" >
-         <iconset>unknown.png</iconset>
+         <iconset>plugins/roshambo/unknown.png</iconset>
         </property>
         <property name="iconSize" >
          <size>
@@ -105,7 +111,7 @@
          <string>Rock</string>
         </property>
         <property name="icon" >
-         <iconset>sutr.png</iconset>
+         <iconset>plugins/roshambo/sutr.png</iconset>
         </property>
         <property name="iconSize" >
          <size>

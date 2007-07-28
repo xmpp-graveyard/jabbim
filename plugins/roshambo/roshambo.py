@@ -14,7 +14,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Kamen - nuzky - papir'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Roshambo Plugin'
-		self.version = '0.02'
+		self.version = '0.0221'
 		self.category = ['jgames']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.sessions = {}
