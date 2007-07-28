@@ -7,4 +7,5 @@ import chatwindow
 import preferences
 import joingroupchat
 import filetransfer
+import about
 #import eventsFTWidget_ui
