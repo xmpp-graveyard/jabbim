@@ -6,6 +6,7 @@ from PyQt4 import QtCore, QtGui, uic
 from twisted.python import log
 from twisted.words.protocols.jabber.xmlstream import IQ
 from twisted.words.xish.domish import Element
+from twisted.internet import threads
 
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
@@ -14,7 +15,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Kamen - nuzky - papir'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Roshambo Plugin'
-		self.version = '0.03'
+		self.version = '0.031'
 		self.category = ['jgames']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.sessions = {}
@@ -79,7 +80,10 @@ class Plugin(plugins.PluginBase):
 		iq['id'] = el['id']
 		q = iq.addElement('x','jabbim:games')
 		sid = el.firstChildElement()['sid']
-		q = QtGui.QMessageBox.question(self.main,self.main.tr("Roshambo challenge"), unicode(" %s is challenging you to roshambo."%unicode(el['from'])),QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+		q = threads.deferToThread(MessageBoxQuestion,self.main,self.main.tr("Roshambo challenge"), unicode(" %s is challenging you to roshambo."%unicode(el['from'])),QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+		q.addCallback(_onInviteRes, iq)
+	
+	def _onInviteRes(self, q, iq)
 		if q == QtGui.QMessageBox.Yes:
 			self.sessions[sid] = Session(self, sid, el['from'], False)
 		else:
@@ -233,6 +237,7 @@ class Session:
 		self.ui.send.setEnabled(False)
 
 	
-
+def MessageBoxQuestion(main, nadpis, popis, tl1, tl2):
+	return  QtGui.QMessageBox.question(main,nadpis, popis, tl1, tl2)
 		
 

@@ -23,7 +23,7 @@ except: print "PyQt4 is not installed."
 import qt4reactor
 app = QtGui.QApplication(sys.argv)
 qt4reactor.install(app)
-from twisted.internet import reactor
+from twisted.internet import reactor, threads
 from twisted.python import log
 import shutil
 import time,base64
