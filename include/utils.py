@@ -23,7 +23,7 @@ def loadConfig(main):
 	configs={"jid":"",
 			"passwd":"",
 			"savePasswd":"",
-			"autoJoin":False;
+			"autoJoin":False,
 			"rosterIconSize":"16x16",
 			"chat_skin":"default.conf",
 			"theme":"template",
