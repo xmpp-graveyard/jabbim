@@ -4,6 +4,7 @@ except:
 	print "PyQt4 is not installed."
 import sys; sys.path.append('..')
 from preferences_ui import *
+from include import rot13
 from preferences_bookmarks_ui import *
 from configobj import ConfigObj
 import os
@@ -70,7 +71,7 @@ class preferencesWindow(QtGui.QDialog):
 			self.ui.savePosition.setChecked(False)
 
 		# connection
-		self.ui.connection_password.setText(self.main.config['passwd'])
+		self.ui.connection_password.setText(rot13.scramble(self.main.config['passwd']))
 		self.ui.connection_jid.setText(self.main.config['jid'])
 
 		# chat skins
@@ -203,7 +204,7 @@ class preferencesWindow(QtGui.QDialog):
 		jid=unicode(self.ui.connection_jid.text())
 		password=unicode(self.ui.connection_password.text())
 		self.main.skin=ConfigObj("skins/"+unicode(self.ui.chatSkin_list.currentText()),encoding='UTF8')
-		self.main.config['passwd']=password
+		self.main.config['passwd']=rot13.scramble(password)
 		self.main.config['saveGeometry']=str(self.ui.savePosition.isChecked())
 		self.main.config['chat_skin']=unicode(self.ui.chatSkin_list.currentText())
 		self.main.config['jid']=jid
