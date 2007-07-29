@@ -1289,7 +1289,7 @@ class mainWindow(QtGui.QMainWindow):
 			byte = (byte | capital)
 			rot13ed=rot13ed+(chr(byte))
 		return rot13ed
-	
+
 	def connect(self):
 		# Connect to the server
 		jid=unicode(self.ui.login_jid.text())
