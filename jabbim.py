@@ -806,6 +806,9 @@ class mainWindow(QtGui.QMainWindow):
 			self.chat.move(int(self.config['chatGeometry'][0]),int(self.config['chatGeometry'][1]))
 		else:
 			self.chat.setGeometry(int(self.config['chatGeometry'][0]),int(self.config['chatGeometry'][1]),int(w),int(h))
+		if self.config['autoJoin']=='True':
+			self.connect()
+
 
 
 	#def addInfoSubscribe(self):
@@ -1413,4 +1416,6 @@ app.installTranslator(translator)
 MainWindow = mainWindow()
 MainWindow.show()
 reactor.run()
+
+
 

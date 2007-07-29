@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Fri Jul 27 22:28:01 2007
+# Created: Sun Jul 29 17:01:51 2007
 #      by: PyQt4 UI code generator 4.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_preferences(object):
     def setupUi(self, preferences):
         preferences.setObjectName("preferences")
-        preferences.resize(QtCore.QSize(QtCore.QRect(0,0,591,422).size()).expandedTo(preferences.minimumSizeHint()))
+        preferences.resize(QtCore.QSize(QtCore.QRect(0,0,591,420).size()).expandedTo(preferences.minimumSizeHint()))
         preferences.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.gridlayout = QtGui.QGridLayout(preferences)
@@ -53,69 +53,76 @@ class Ui_preferences(object):
         self.userPreferences = QtGui.QWidget()
         self.userPreferences.setObjectName("userPreferences")
 
-        self.gridlayout2 = QtGui.QGridLayout(self.userPreferences)
-        self.gridlayout2.setMargin(9)
-        self.gridlayout2.setSpacing(6)
-        self.gridlayout2.setObjectName("gridlayout2")
+        self.vboxlayout = QtGui.QVBoxLayout(self.userPreferences)
+        self.vboxlayout.setMargin(9)
+        self.vboxlayout.setSpacing(6)
+        self.vboxlayout.setObjectName("vboxlayout")
 
-        spacerItem1 = QtGui.QSpacerItem(20,16,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout2.addItem(spacerItem1,4,0,1,1)
+        self.label = QtGui.QLabel(self.userPreferences)
+        self.label.setObjectName("label")
+        self.vboxlayout.addWidget(self.label)
+
+        self.line = QtGui.QFrame(self.userPreferences)
+        self.line.setFrameShape(QtGui.QFrame.HLine)
+        self.line.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line.setObjectName("line")
+        self.vboxlayout.addWidget(self.line)
 
         self.groupBox_4 = QtGui.QGroupBox(self.userPreferences)
         self.groupBox_4.setObjectName("groupBox_4")
 
-        self.hboxlayout = QtGui.QHBoxLayout(self.groupBox_4)
-        self.hboxlayout.setMargin(9)
+        self.gridlayout2 = QtGui.QGridLayout(self.groupBox_4)
+        self.gridlayout2.setMargin(9)
+        self.gridlayout2.setSpacing(6)
+        self.gridlayout2.setObjectName("gridlayout2")
+
+        spacerItem1 = QtGui.QSpacerItem(51,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout2.addItem(spacerItem1,1,0,1,1)
+
+        self.connection_autojoin = QtGui.QCheckBox(self.groupBox_4)
+        self.connection_autojoin.setObjectName("connection_autojoin")
+        self.gridlayout2.addWidget(self.connection_autojoin,1,1,1,1)
+
+        self.hboxlayout = QtGui.QHBoxLayout()
+        self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(6)
         self.hboxlayout.setObjectName("hboxlayout")
-
-        self.hboxlayout1 = QtGui.QHBoxLayout()
-        self.hboxlayout1.setMargin(0)
-        self.hboxlayout1.setSpacing(6)
-        self.hboxlayout1.setObjectName("hboxlayout1")
-
-        self.vboxlayout = QtGui.QVBoxLayout()
-        self.vboxlayout.setMargin(0)
-        self.vboxlayout.setSpacing(6)
-        self.vboxlayout.setObjectName("vboxlayout")
-
-        self.label_2 = QtGui.QLabel(self.groupBox_4)
-        self.label_2.setObjectName("label_2")
-        self.vboxlayout.addWidget(self.label_2)
-
-        self.label_3 = QtGui.QLabel(self.groupBox_4)
-        self.label_3.setObjectName("label_3")
-        self.vboxlayout.addWidget(self.label_3)
-        self.hboxlayout1.addLayout(self.vboxlayout)
 
         self.vboxlayout1 = QtGui.QVBoxLayout()
         self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setSpacing(6)
         self.vboxlayout1.setObjectName("vboxlayout1")
 
+        self.label_2 = QtGui.QLabel(self.groupBox_4)
+        self.label_2.setObjectName("label_2")
+        self.vboxlayout1.addWidget(self.label_2)
+
+        self.label_3 = QtGui.QLabel(self.groupBox_4)
+        self.label_3.setObjectName("label_3")
+        self.vboxlayout1.addWidget(self.label_3)
+        self.hboxlayout.addLayout(self.vboxlayout1)
+
+        self.vboxlayout2 = QtGui.QVBoxLayout()
+        self.vboxlayout2.setMargin(0)
+        self.vboxlayout2.setSpacing(6)
+        self.vboxlayout2.setObjectName("vboxlayout2")
+
         self.connection_jid = QtGui.QLineEdit(self.groupBox_4)
         self.connection_jid.setMinimumSize(QtCore.QSize(150,0))
         self.connection_jid.setMaximumSize(QtCore.QSize(16777215,16777215))
         self.connection_jid.setObjectName("connection_jid")
-        self.vboxlayout1.addWidget(self.connection_jid)
+        self.vboxlayout2.addWidget(self.connection_jid)
 
         self.connection_password = QtGui.QLineEdit(self.groupBox_4)
         self.connection_password.setEchoMode(QtGui.QLineEdit.Password)
         self.connection_password.setObjectName("connection_password")
-        self.vboxlayout1.addWidget(self.connection_password)
-        self.hboxlayout1.addLayout(self.vboxlayout1)
-        self.hboxlayout.addLayout(self.hboxlayout1)
-        self.gridlayout2.addWidget(self.groupBox_4,2,0,1,1)
+        self.vboxlayout2.addWidget(self.connection_password)
+        self.hboxlayout.addLayout(self.vboxlayout2)
+        self.gridlayout2.addLayout(self.hboxlayout,0,0,1,2)
+        self.vboxlayout.addWidget(self.groupBox_4)
 
-        self.line = QtGui.QFrame(self.userPreferences)
-        self.line.setFrameShape(QtGui.QFrame.HLine)
-        self.line.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line.setObjectName("line")
-        self.gridlayout2.addWidget(self.line,1,0,1,2)
-
-        self.label = QtGui.QLabel(self.userPreferences)
-        self.label.setObjectName("label")
-        self.gridlayout2.addWidget(self.label,0,0,1,1)
+        spacerItem2 = QtGui.QSpacerItem(20,16,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.vboxlayout.addItem(spacerItem2)
         self.stackedWidget.addWidget(self.userPreferences)
 
         self.page_2 = QtGui.QWidget()
@@ -131,8 +138,8 @@ class Ui_preferences(object):
         self.chatSkin_list.setObjectName("chatSkin_list")
         self.gridlayout3.addWidget(self.chatSkin_list,2,0,1,1)
 
-        spacerItem2 = QtGui.QSpacerItem(31,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout3.addItem(spacerItem2,2,1,1,1)
+        spacerItem3 = QtGui.QSpacerItem(31,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout3.addItem(spacerItem3,2,1,1,1)
 
         self.line_4 = QtGui.QFrame(self.page_2)
         self.line_4.setFrameShape(QtGui.QFrame.HLine)
@@ -157,8 +164,8 @@ class Ui_preferences(object):
         self.gridlayout4.setSpacing(6)
         self.gridlayout4.setObjectName("gridlayout4")
 
-        spacerItem3 = QtGui.QSpacerItem(20,221,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout4.addItem(spacerItem3,4,0,1,1)
+        spacerItem4 = QtGui.QSpacerItem(20,221,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout4.addItem(spacerItem4,4,0,1,1)
 
         self.label_10 = QtGui.QLabel(self.page)
         self.label_10.setWordWrap(True)
@@ -168,33 +175,33 @@ class Ui_preferences(object):
         self.groupBox = QtGui.QGroupBox(self.page)
         self.groupBox.setObjectName("groupBox")
 
-        self.vboxlayout2 = QtGui.QVBoxLayout(self.groupBox)
-        self.vboxlayout2.setMargin(9)
-        self.vboxlayout2.setSpacing(6)
-        self.vboxlayout2.setObjectName("vboxlayout2")
+        self.vboxlayout3 = QtGui.QVBoxLayout(self.groupBox)
+        self.vboxlayout3.setMargin(9)
+        self.vboxlayout3.setSpacing(6)
+        self.vboxlayout3.setObjectName("vboxlayout3")
 
         self.roster_normal = QtGui.QRadioButton(self.groupBox)
         self.roster_normal.setChecked(True)
         self.roster_normal.setObjectName("roster_normal")
-        self.vboxlayout2.addWidget(self.roster_normal)
+        self.vboxlayout3.addWidget(self.roster_normal)
 
         self.roster_compact = QtGui.QRadioButton(self.groupBox)
         self.roster_compact.setObjectName("roster_compact")
-        self.vboxlayout2.addWidget(self.roster_compact)
+        self.vboxlayout3.addWidget(self.roster_compact)
 
-        self.hboxlayout2 = QtGui.QHBoxLayout()
-        self.hboxlayout2.setMargin(0)
-        self.hboxlayout2.setSpacing(6)
-        self.hboxlayout2.setObjectName("hboxlayout2")
+        self.hboxlayout1 = QtGui.QHBoxLayout()
+        self.hboxlayout1.setMargin(0)
+        self.hboxlayout1.setSpacing(6)
+        self.hboxlayout1.setObjectName("hboxlayout1")
 
         self.label_9 = QtGui.QLabel(self.groupBox)
         self.label_9.setObjectName("label_9")
-        self.hboxlayout2.addWidget(self.label_9)
+        self.hboxlayout1.addWidget(self.label_9)
 
         self.roster_iconSize = QtGui.QComboBox(self.groupBox)
         self.roster_iconSize.setObjectName("roster_iconSize")
-        self.hboxlayout2.addWidget(self.roster_iconSize)
-        self.vboxlayout2.addLayout(self.hboxlayout2)
+        self.hboxlayout1.addWidget(self.roster_iconSize)
+        self.vboxlayout3.addLayout(self.hboxlayout1)
         self.gridlayout4.addWidget(self.groupBox,2,0,1,1)
 
         self.label_6 = QtGui.QLabel(self.page)
@@ -207,8 +214,8 @@ class Ui_preferences(object):
         self.line_5.setObjectName("line_5")
         self.gridlayout4.addWidget(self.line_5,1,0,1,2)
 
-        spacerItem4 = QtGui.QSpacerItem(81,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout4.addItem(spacerItem4,2,1,1,1)
+        spacerItem5 = QtGui.QSpacerItem(81,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout4.addItem(spacerItem5,2,1,1,1)
         self.stackedWidget.addWidget(self.page)
 
         self.page_3 = QtGui.QWidget()
@@ -264,22 +271,22 @@ class Ui_preferences(object):
         self.stackedWidget.addWidget(self.page_5)
         self.gridlayout.addWidget(self.stackedWidget,0,1,1,2)
 
-        spacerItem5 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem5,1,1,1,1)
-
-        self.hboxlayout3 = QtGui.QHBoxLayout()
-        self.hboxlayout3.setMargin(0)
-        self.hboxlayout3.setSpacing(6)
-        self.hboxlayout3.setObjectName("hboxlayout3")
+        self.hboxlayout2 = QtGui.QHBoxLayout()
+        self.hboxlayout2.setMargin(0)
+        self.hboxlayout2.setSpacing(6)
+        self.hboxlayout2.setObjectName("hboxlayout2")
 
         self.saveButton = QtGui.QPushButton(preferences)
         self.saveButton.setObjectName("saveButton")
-        self.hboxlayout3.addWidget(self.saveButton)
+        self.hboxlayout2.addWidget(self.saveButton)
 
         self.cancelButton = QtGui.QPushButton(preferences)
         self.cancelButton.setObjectName("cancelButton")
-        self.hboxlayout3.addWidget(self.cancelButton)
-        self.gridlayout.addLayout(self.hboxlayout3,1,2,1,1)
+        self.hboxlayout2.addWidget(self.cancelButton)
+        self.gridlayout.addLayout(self.hboxlayout2,1,2,1,1)
+
+        spacerItem6 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem6,1,1,1,1)
 
         self.listWidget = QtGui.QListWidget(preferences)
         self.listWidget.setMaximumSize(QtCore.QSize(150,16777215))
@@ -289,7 +296,7 @@ class Ui_preferences(object):
         self.gridlayout.addWidget(self.listWidget,0,0,2,1)
 
         self.retranslateUi(preferences)
-        self.stackedWidget.setCurrentIndex(3)
+        self.stackedWidget.setCurrentIndex(1)
         QtCore.QObject.connect(self.cancelButton,QtCore.SIGNAL("clicked()"),preferences.reject)
         QtCore.QObject.connect(self.saveButton,QtCore.SIGNAL("clicked()"),preferences.accept)
         QtCore.QObject.connect(self.listWidget,QtCore.SIGNAL("currentRowChanged(int)"),self.stackedWidget.setCurrentIndex)
@@ -303,13 +310,14 @@ class Ui_preferences(object):
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Jabbim</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.savePosition.setText(QtGui.QApplication.translate("preferences", "Save Jabbim position on close", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox_4.setTitle(QtGui.QApplication.translate("preferences", "Connection", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setText(QtGui.QApplication.translate("preferences", "Jabber ID:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_3.setText(QtGui.QApplication.translate("preferences", "Password:", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Connection</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox_4.setTitle(QtGui.QApplication.translate("preferences", "Connection", None, QtGui.QApplication.UnicodeUTF8))
+        self.connection_autojoin.setText(QtGui.QApplication.translate("preferences", "Automatically join at startup.", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("preferences", "Jabber ID:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3.setText(QtGui.QApplication.translate("preferences", "Password:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
