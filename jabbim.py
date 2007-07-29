@@ -388,7 +388,7 @@ class clientClass(pyxl.client.Client):
 				self.main.ui.roster.setStatus(jid,show,status=status,first=first)
 				
 	def on_xml(self,xml):
-		# append xml to the xml console, it it's enabled...
+		# append xml to the xml console, if it's enabled...
 		if self.main.xmlConsole.ui.enable.isChecked():
 			text=unicode(xml)
 			self.main.xmlConsole.ui.xml.append(text+"\n\n")
@@ -738,7 +738,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered ( bool )"),self.trayQuit)
 		
 		# fill login form
-		self.ui.login_password.setText(self.config['passwd'])
+		self.ui.login_password.setText(self.rot13(self.config['passwd']))
 		self.ui.login_jid.setText(self.config['jid'])
 		if self.config['savePasswd']=="True":
 			self.ui.login_savePassword.setChecked(True)
@@ -1275,18 +1275,33 @@ class mainWindow(QtGui.QMainWindow):
 				icon=QtGui.QIcon(path+"jabber-"+status+".png")
 		return icon
 
+
+
+
+	def rot13 (self, text=''): # rot13 cypher, it is self-inverse, no need to use special decrypting method
+		rot13ed=''
+		for letter in range(len(text)):
+			byte = ord(text[letter])
+			capital = (byte & 32) # is capital?
+			byte = (byte & (~capital))
+			if (byte >= ord('A')) and (byte <= ord('Z')):
+				byte = ((byte - ord('A') + 13) % 26 + ord('A'))
+			byte = (byte | capital)
+			rot13ed=rot13ed+(chr(byte))
+		return rot13ed
+	
 	def connect(self):
 		# Connect to the server
 		jid=unicode(self.ui.login_jid.text())
 		password=unicode(self.ui.login_password.text())
 		if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
 			
-			if jid!=self.config['jid'] or (password!=self.config['passwd'] and self.config['savePasswd']=="True") or self.config['savePasswd']!=unicode(self.ui.login_savePassword.isChecked()):
+			if jid!=self.config['jid'] or (self.rot13(password)!=self.config['passwd'] and self.config['savePasswd']=="True") or self.config['savePasswd']!=unicode(self.ui.login_savePassword.isChecked()):
 				ret=QtGui.QMessageBox.question(self,self.tr("Login information"), self.tr("Save current login information?"),3,4)
 				if ret==3:
 					self.config['savePasswd']=self.ui.login_savePassword.isChecked()
 					if self.ui.login_savePassword.isChecked()==True:
-						self.config['passwd']=password
+						self.config['passwd']=self.rot13(password)
 					else:
 						self.config['passwd']=""
 					self.config['jid']=jid
