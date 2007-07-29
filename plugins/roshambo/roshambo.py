@@ -15,7 +15,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Kamen - nuzky - papir'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Roshambo Plugin'
-		self.version = '0.04'
+		self.version = '0.041'
 		self.category = ['jgames']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.sessions = {}
@@ -40,6 +40,7 @@ class Plugin(plugins.PluginBase):
 		
 	
 	def showSlot(self):
+		self.invite.comboBox.clear()
 		for user in self.main.client.roster['users'].itervalues():
 			if len(user.resources)>0:
 				log.msg(unicode(user.resources))

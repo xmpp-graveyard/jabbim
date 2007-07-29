@@ -64,6 +64,9 @@ class chatWindow(QtGui.QMainWindow):
 		if typ=="chat":
 			icon=self.main.getIcon(jid,self.main.icons[unicode(self.main.ui.roster.getUserItems(jid)[0].text(1))[0]],size="16x16")
 			self.ui.chatTab.setTabIcon(index,icon)
+		elif typ == 'groupchat':
+			self.ui.chatTab.setTabIcon(index,QtGui.QIcon("images/16x16/categories/muc.png"))
+			
 		color=self.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
 		self.ui.chatTab.tabBar().setTabTextColor(index,color)
 		

@@ -539,7 +539,10 @@ class clientClass(pyxl.client.Client):
 		# find MUC tab
 		for i in range(self.main.chat.ui.chatTab.count()):
 			w=self.main.chat.ui.chatTab.widget(i)
-			if unicode(w.jid)==frm:
+			if unicode(w.jid) == frm:
+				if int(self.main.chat.ui.chatTab.currentIndex())!=i:
+					self.main.chat.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
+					self.main.chat.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(255,0,0))
 				# set room topic
 				if subject!=None:
 					w.chat.ui.info.setText(unicode(subject))
@@ -576,6 +579,7 @@ class clientClass(pyxl.client.Client):
 						else:
 							message=self.main.skin["message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
 					w.chat.textEditWrite(message)
+				
 
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None):
 		# handle normal 'chat' messages
