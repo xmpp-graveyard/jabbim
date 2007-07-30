@@ -814,7 +814,6 @@ class mainWindow(QtGui.QMainWindow):
 			self.connect()
 
 
-
 	#def addInfoSubscribe(self):
 		#widget=subscribeWidget(self.ui.infoDockWidget)
 		#self.ui.infoLayout.addWidget(widget)

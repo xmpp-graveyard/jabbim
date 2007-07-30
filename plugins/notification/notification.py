@@ -3,6 +3,7 @@ try:
 except:
 	print "PyQt4 is not installed."
 import sys
+import os
 sys.path.append('.')
 from include import plugins
 class Plugin(plugins.PluginBase):
@@ -12,19 +13,47 @@ class Plugin(plugins.PluginBase):
 		self.description = 'System tray notification'
 		self.author = "Jan 'HanzZ' Kaluza"
 		self.name = 'Notification Plugin'
-		self.version = '0.035'
+		self.version = '0.51'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}
 		self.config['on_muc_highlight'] = {'description':'Notify if groupchat message contains your nickname', 'default':'True', 'value': '','type':'boolean'}
+		self.soundDir="sounds/" #for now lets say we have no option to change it (but it will change :)
+		self.soundAvailable=1 # well, we suppose there is sundsupport
+		self.sounds={} # ditictionary of playable actions, will fill in later
+		# a few words to sounds directory structure: it has to contains file called simply "config"
+		# this file has to contain lines in format: action=filename.wav next line for example:
+		# online = user_online.wav
+		# GChighlight = groupchat_highlight.wav
+		# for list of actions see loadSoundConfig()
+		self.loadSoundConfig("sounds/config")
 		if main:
 			self.registerHandler('on_message', self.on_message)
 			self.registerHandler('on_GCmessage', self.on_GCmessage)
 			self.loadConfig()
 			self.installTranslator()
-			self.main.tray.showMessage(self.tr("Notification"),self.tr("Notification plugin is activated"), QtGui.QSystemTrayIcon.Information, 2000)
+			self.playsound('login')
+			#self.main.tray.showMessage(self.tr("Notification"),self.tr("Notification plugin is activated"), QtGui.QSystemTrayIcon.Information, 2000)   i do not understand why use it
 		else:
 			self.loadConfig(homedir)
+
+
+	def loadSoundConfig(self, configFile):
+		try:
+			soubor = open(configFile,'r')
+			lines = soubor.readlines()
+			for line in lines:
+					self.sounds[line.split(' = ')[0]]=line.split(' = ')[1] # so ... now, we have a dictionary
+			soubor.close() # thats all we need
+		except IOError:
+			self.soundAvailable=0
+			print "Some error occured! (IOError loading sound config file %s)"%(configFile)
+
+	def playsound(self, action):
+		if self.soundAvailable:
+			if self.sounds.has_key(action): # if exist the action file
+				if sys.platform == 'linux2': # linux sounds are produced using aplay
+					os.system('aplay -q '+self.soundDir+self.sounds[action].strip('\n')+' &')
 
 	def buildRosterMenu(self):
 		menu=self.rosterMenu()
@@ -32,8 +61,10 @@ class Plugin(plugins.PluginBase):
 
 	def testSlot(self):
 		self.main.tray.showMessage(self.tr("Notification "),self.tr("Notification plugin test :)"), QtGui.QSystemTrayIcon.Information, 2000)
+		self.playsound('new_message')
 
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay):
+		self.playsound('message')
 		if self.main.client.roster['users'].has_key(unicode(frm).rsplit("/")[0]):
 			user=self.main.client.roster['users'][unicode(frm).rsplit("/")[0]].name
 		else:
