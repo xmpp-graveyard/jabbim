@@ -1,8 +1,6 @@
 """
-Jabbim.
-Copyright (C) 2007 Jabbim Team
-	-	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
-	-	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
+Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
+Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
