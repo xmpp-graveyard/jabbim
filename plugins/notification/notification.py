@@ -10,10 +10,10 @@ class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
 		plugins.PluginBase.__init__(self, main, homedir)
 		self.fname = 'notification'
-		self.description = 'System tray notification'
-		self.author = "Jan 'HanzZ' Kaluza"
+		self.description = 'System tray and sound notification'
+		self.author = "Jan 'HanzZ' Kaluza & Josef 'PepeQ' Halicek"
 		self.name = 'Notification Plugin'
-		self.version = '0.521'
+		self.version = '0.523'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}
@@ -85,8 +85,12 @@ class Plugin(plugins.PluginBase):
 				# we found tab
 			if tab!=None:
 				if tab.chat.first==None or tab.chat.first==True:
+					print "coe?"
+					self.playsound('new_message')
 					self.main.tray.showMessage(self.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 5000)
-
+				else:
+					print "pyco coe?"
+					self.playsound('message')
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
 		if delay != None:
 			return
@@ -109,4 +113,5 @@ class Plugin(plugins.PluginBase):
 						else:
 								text=body
 						traytext=unicode(user)+": "+text
+						self.playsound('message')
 						self.main.tray.showMessage(self.tr("New groupchat message for you"), traytext, QtGui.QSystemTrayIcon.Information, 5000)
