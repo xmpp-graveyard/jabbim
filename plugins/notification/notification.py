@@ -5,7 +5,7 @@ except:
 import sys
 import os
 sys.path.append('.')
-from include import plugins
+from include import plugins, utils
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
 		plugins.PluginBase.__init__(self, main, homedir)
@@ -13,7 +13,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'System tray notification'
 		self.author = "Jan 'HanzZ' Kaluza"
 		self.name = 'Notification Plugin'
-		self.version = '0.52'
+		self.version = '0.521'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}
@@ -103,7 +103,7 @@ class Plugin(plugins.PluginBase):
 					if user == w.name:
 						continue
 					#print "test"
-					if unicode(body).lower().find(unicode(w.name).lower())!=-1:
+					if utils.need_highlight(unicode(w.name), unicode(body)):
 						if len(body)>40:
 								text=body[:40]+" ..."
 						else:

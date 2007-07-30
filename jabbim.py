@@ -558,7 +558,7 @@ class clientClass(pyxl.client.Client):
 						message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
 					else:
 						# it's message for us
-						if unicode(body).lower().find(unicode(w.name).lower())!=-1:
+						if utils.need_highlight(unicode(w.name), unicode(body)):
 							message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
 						else:
 							message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
@@ -574,7 +574,7 @@ class clientClass(pyxl.client.Client):
 						message=self.main.skin["my_message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
 					else:
 						# delayed message for us
-						if unicode(body).lower().find(unicode(w.name).lower())!=-1:
+						if utils.need_highlight(unicode(w.name), unicode(body)):
 							message=self.main.skin["message_for_me_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
 						else:
 							message=self.main.skin["message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
