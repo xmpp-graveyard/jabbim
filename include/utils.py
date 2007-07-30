@@ -117,3 +117,141 @@ def need_highlight(nick, text):
 					else: # Special word == word, no char after in word
 						return True 
 		return False
+
+distro_info = {
+	'Arch Linux': '/etc/arch-release',
+	'Aurox Linux': '/etc/aurox-release',
+	'Conectiva Linux': '/etc/conectiva-release',
+	'CRUX': '/usr/bin/crux',
+	'Debian GNU/Linux': '/etc/debian_release',
+	'Debian GNU/Linux': '/etc/debian_version',
+	'Fedora Linux': '/etc/fedora-release',
+	'Gentoo Linux': '/etc/gentoo-release',
+	'Linux from Scratch': '/etc/lfs-release',
+	'Mandrake Linux': '/etc/mandrake-release',
+	'Slackware Linux': '/etc/slackware-release',
+	'Slackware Linux': '/etc/slackware-version',
+	'Solaris/Sparc': '/etc/release',
+	'Source Mage': '/etc/sourcemage_version',
+	'SUSE Linux': '/etc/SuSE-release',
+	'Sun JDS': '/etc/sun-release',
+	'PLD Linux': '/etc/pld-release',
+	'Yellow Dog Linux': '/etc/yellowdog-release',
+	# many distros use the /etc/redhat-release for compatibility
+	# so Redhat is the last
+	'Redhat Linux': '/etc/redhat-release'
+}
+
+def get_os_info():
+	if os.name == 'nt':
+		ver = os.sys.getwindowsversion()
+		ver_format = ver[3], ver[0], ver[1]
+		win_version = {
+			(1, 4, 0): '95',
+			(1, 4, 10): '98',
+			(1, 4, 90): 'ME',
+			(2, 4, 0): 'NT',
+			(2, 5, 0): '2000',
+			(2, 5, 1): 'XP',
+			(2, 5, 2): '2003',
+			(2, 6, 0): 'Vista',
+		}
+		if win_version.has_key(ver_format):
+			return 'Windows' + ' ' + win_version[ver_format]
+		else:
+			return 'Windows'
+	elif os.name == 'posix':
+		executable = 'lsb_release'
+		params = ' --id --codename --release --short'
+		full_path_to_executable = is_in_path(executable, return_abs_path = True)
+		if full_path_to_executable:
+			command = executable + params
+			child_stdin, child_stdout = os.popen2(command)
+			output = temp_failure_retry(child_stdout.readline).strip()
+			child_stdout.close()
+			child_stdin.close()
+			os.wait()
+			# some distros put n/a in places, so remove those
+			output = output.replace('n/a', '').replace('N/A', '')
+			return output
+
+		# lsb_release executable not available, so parse files
+		for distro_name in distro_info:
+			path_to_file = distro_info[distro_name]
+			if os.path.exists(path_to_file):
+				if os.access(path_to_file, os.X_OK):
+					# the file is executable (f.e. CRUX)
+					# yes, then run it and get the first line of output.
+					text = get_output_of_command(path_to_file)[0]
+				else:
+					fd = open(path_to_file)
+					text = fd.readline().strip() # get only first line
+					fd.close()
+					if path_to_file.endswith('version'):
+						# sourcemage_version and slackware-version files
+						# have all the info we need (name and version of distro)
+						if not os.path.basename(path_to_file).startswith(
+						'sourcemage') or not\
+						os.path.basename(path_to_file).startswith('slackware'):
+							text = distro_name + ' ' + text
+					elif path_to_file.endswith('aurox-release'):
+						# file doesn't have version
+						text = distro_name
+					elif path_to_file.endswith('lfs-release'): # file just has version
+						text = distro_name + ' ' + text
+				return text
+
+		# our last chance, ask uname and strip it
+		uname_output = get_output_of_command('uname -a | cut -d" " -f1,3')
+		if uname_output is not None:
+			return uname_output[0] # only first line
+	return 'N/A'
+
+def is_in_path(name_of_command, return_abs_path = False):
+	# if return_abs_path is True absolute path will be returned
+	# for name_of_command
+	# on failures False is returned
+	is_in_dir = False
+	found_in_which_dir = None
+	path = os.getenv('PATH').split(':')
+	for path_to_directory in path:
+		try:
+			contents = os.listdir(path_to_directory)
+		except OSError: # user can have something in PATH that is not a dir
+			pass
+		else:
+			is_in_dir = name_of_command in contents
+		if is_in_dir:
+			if return_abs_path:
+				found_in_which_dir = path_to_directory
+			break
+
+	if found_in_which_dir:
+		abs_path = os.path.join(path_to_directory, name_of_command)
+		return abs_path
+	else:
+		return is_in_dir
+
+def get_output_of_command(command):
+	try:
+		child_stdin, child_stdout = os.popen2(command)
+	except ValueError:
+		return None
+
+	output = child_stdout.readlines()
+	child_stdout.close()
+	child_stdin.close()
+
+	return output
+
+def temp_failure_retry(func, *args, **kwargs):
+	while True:
+		try:
+			return func(*args, **kwargs)
+		except (os.error, IOError, select.error), ex:
+			if ex.errno == errno.EINTR:
+				continue
+			else:
+				raise
+
+

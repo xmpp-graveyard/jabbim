@@ -54,6 +54,7 @@ class clientClass(pyxl.client.Client):
 	def on_init(self):
 		self.roster['groups']['Unknown']=self.main._addGroup('Unknown')
 		self.temp_hosts=[]
+		self.client_os = utils.get_os_info()
 
 	def on_GCpresenceError(self, fromjid, code, typ, name):
 		log.msg("ERROR")
