@@ -85,3 +85,7 @@ class derived:
 		
 	def on_disconnect(self):
 		pass
+	
+	def on_verify(self, id, thread, props, frm, typ): #xep0070
+		self.replyVerify(id, thread, props, frm, typ, False)
+		pass

@@ -236,6 +236,9 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/close[@xmlns='http://jabber.org/protocol/ibb']", self.onIBBEnd, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/data[@xmlns='http://jabber.org/protocol/ibb']", self.onIBBData, 1)
 		self.xmlstream.addObserver("/message/data[@xmlns='http://jabber.org/protocol/ibb']", self.onIBBData, 1)
+		self.xmlstream.addObserver("/iq[@type='get'][@id]/confirm[@xmlns='http://jabber.org/protocol/http-auth']", self.onVerify, 1)
+		self.xmlstream.addObserver("/message/confirm[@xmlns='http://jabber.org/protocol/http-auth']", self.onVerify, 1)
+	
 		
 		self.getMetacontacts()
 		self.getBookmarks()
@@ -660,6 +663,8 @@ class Client(derived):
 					delay = child.getAttribute('stamp')
 				if child.defaultUri == 'jabber:x:event':
 					chatstate = child.firstChildElement().name
+			if child.name == 'confirm': # xep0070 - processed elsewhere
+				return
 
 		if self.groupchats.has_key(jid.JID(frm).userhost()):
 			self.on_GCmessage(frm,typ,body,subject, xhtml,  chatstate,  delay)
@@ -1125,6 +1130,55 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 
+	def onVerify(self, el):
+		sender = el['from']
+		props = None
+		thread = None
+		typ = el.name
+		id = el.getAttribute('id')
+		for e in el.elements():
+			if e.name == 'confirm':
+				props = e.attributes
+			if e.name == 'thread':
+				thread = unicode(e)
+		if el.name == 'iq':
+			self.disp(el['id'])
+		self.on_verify(id, thread, props, sender, typ)
+	
+	def replyVerify(self, id, thread, props, frm, typ, result = False):
+		if typ=='iq' and result:
+			el = Element((None,'iq'))
+			el['type'] = 'result'
+			el['id'] = id
+		
+		elif typ=='iq' and not result:
+			el = Element((None,'iq'))
+			el['type'] = 'error'
+			el['id'] = id
+			confirm = el.addElement('confirm', 'http://jabber.org/protocol/http-auth')
+			confirm.attributes = props
+			err = el.addElement('error')
+			err['code'] = '401'
+			err['type'] = 'auth'
+			err.addElement('not-authorized','urn:ietf:params:xml:xmpp-stanzas')
+		elif typ=='message' and result:
+			el = Element((None,'message'))
+			el.addElement('thread', content = thread)
+			confirm = el.addElement('confirm', 'http://jabber.org/protocol/http-auth')
+			confirm.attributes = props
+		elif typ=='message' and not result:
+			el = Element((None,'message'))
+			el['type'] = 'error'
+			el.addElement('thread', content = thread)
+			confirm = el.addElement('confirm', 'http://jabber.org/protocol/http-auth')
+			confirm.attributes = props
+			err = el.addElement('error')
+			err['code'] = '401'
+			err['type'] = 'auth'
+			err.addElement('not-authorized','urn:ietf:params:xml:xmpp-stanzas')
+		el['to'] = frm
+		self.on_xml(el.toXml())
+		self.xmlstream.send(el)
 
 	def joinGC(self,  jid, nick):
 		gc = Groupchat(self,  jid, nick)
