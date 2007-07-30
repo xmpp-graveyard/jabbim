@@ -13,7 +13,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'System tray notification'
 		self.author = "Jan 'HanzZ' Kaluza"
 		self.name = 'Notification Plugin'
-		self.version = '0.51'
+		self.version = '0.52'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}
@@ -32,7 +32,7 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('on_GCmessage', self.on_GCmessage)
 			self.loadConfig()
 			self.installTranslator()
-			self.playsound('login')
+			self.playsound('start')
 			#self.main.tray.showMessage(self.tr("Notification"),self.tr("Notification plugin is activated"), QtGui.QSystemTrayIcon.Information, 2000)   i do not understand why use it
 		else:
 			self.loadConfig(homedir)
