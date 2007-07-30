@@ -835,7 +835,7 @@ class mainWindow(QtGui.QMainWindow):
 				f=open(path)
 				plug = load_source(plugin, path, f).Plugin(False, self.homeDir)
 			except Exception, ex:
-				log.msg(plugin+': '+unicode(ex))
+				log.msg(plugin+': CHYBA!')
 				continue
 			#takze mam asi spravny plugin, kouknem se jestli je v homediru
 			try: 
