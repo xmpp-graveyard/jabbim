@@ -91,10 +91,19 @@ class preferencesWindow(QtGui.QDialog):
 		# connection
 		self.ui.connection_password.setText(rot13.scramble(self.main.config['passwd']))
 		self.ui.connection_jid.setText(self.main.config['jid'])
+		if self.main.config.has_key('resource'):
+			self.ui.connection_source.setText(self.main.config['resource'])
+		else:
+			self.ui.connection_source.setText('jabbim')
+		if self.main.config.has_key('priority'):
+			self.ui.connection_priority.setText(self.main.config['priority'])
+		else:
+			self.ui.connection_priority.setText('0')
 		if self.main.config['autoJoin']=='True':
 			self.ui.connection_autojoin.setChecked(True)
 		else:
 			self.ui.connection_autojoin.setChecked(False)
+		
 
 		# chat skins
 		skins=os.listdir("skins/")
@@ -224,6 +233,7 @@ class preferencesWindow(QtGui.QDialog):
 
 	def accept(self):
 		jid=unicode(self.ui.connection_jid.text())
+		resource=unicode(self.ui.connection_source.text())
 		password=unicode(self.ui.connection_password.text())
 		self.main.skin=ConfigObj("skins/"+unicode(self.ui.chatSkin_list.currentText()),encoding='UTF8')
 		self.main.config['passwd']=rot13.scramble(password)
@@ -231,6 +241,8 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.config['saveGeometry']=str(self.ui.savePosition.isChecked())
 		self.main.config['chat_skin']=unicode(self.ui.chatSkin_list.currentText())
 		self.main.config['jid']=jid
+		self.main.config['resource']=''+resource+''
+		self.main.config['priority']=self.ui.connection_priority.text()
 		self.main.config['rosterIconSize']=unicode(self.ui.roster_iconSize.currentText())
 		self.main.config['theme']=unicode(self.ui.themes.currentItem().data(32).toString())
 		if self.ui.roster_compact.isChecked()==True:
