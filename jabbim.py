@@ -349,6 +349,9 @@ class clientClass(pyxl.client.Client):
 					# edit user item
 					w.chat.editUser(nick,show,role)
 					break
+		message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",show).replace("[message]",unicode(status)).replace('[nick]', nick)
+		w.chat.textEditWrite(message)
+		
 
 	def on_presence(self,jid,show,first=False):
 		log.msg("PRESENCE")
@@ -1413,6 +1416,9 @@ class statusWindow(QtGui.QDialog):
 			#app.postEvent(jab,customEvent(["set_status",self.groupchat,self.data,unicode(self.ui.status.toPlainText ())]))
 			#jab.setStatus(MainWindow.groupchat,self.data,unicode(self.ui.status.toPlainText ()))
 			MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()))
+			#musime updatovat MUCy
+			for muc in MainWindow.client.groupchats.itervalues():
+				MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()), to = '%s/%s'%(muc.jid, muc.nick))
 		self.done(1)
 
 
