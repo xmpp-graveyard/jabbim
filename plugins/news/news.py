@@ -12,11 +12,12 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Headlines window'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'News Plugin'
-		self.version = '0.0031'
+		self.version = '0.014'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.kontakty = {} # jid:contact
-		#self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
+		self.config['notify_tray'] = {'description':'Notify in tray', 'default':'True', 'value': '','type':'boolean'}
+		self.config['notify_show'] = {'description':'Show window on new', 'default':'True', 'value': '','type':'boolean'}
 		if main:
 			self.loadConfig()
 			self.window = uic.loadUi("%s/plugins/%s/news.ui"%(self.homeDir, self.fname))
@@ -38,6 +39,7 @@ class Plugin(plugins.PluginBase):
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
 		if typ != 'headline':
 			return True
+		frm = frm.split('/')[0]
 		if self.kontakty.has_key(frm):
 			self.kontakty[frm].addHeadline(subject, body)
 		else:
@@ -45,12 +47,22 @@ class Plugin(plugins.PluginBase):
 			self.window.roster.addItem(item)
 			self.kontakty[frm] = Contact(frm, item, self)
 			self.kontakty[frm].addHeadline(subject, body)
+		if self.config['notify_tray']['value']=='True':
+			self.main.tray.showMessage("News",subject, QtGui.QSystemTrayIcon.Information, 3000)
+		if self.config['notify_show']['value']=='True':
+			self.window.show()
+		item =self.window.roster.currentItem()
+		if item!= None:
+			if unicode(item.text())==frm:
+				self.updateZpravy(frm)
+			
 		return False
 	
 	def contactChanged(self, item):
 		log.msg('contactChanged')
 		jid = unicode(item.text())
-		print jid
+		self.updateZpravy(jid)
+	def updateZpravy(self, jid):
 		try:
 			kontakt = self.kontakty[jid]
 		except:
@@ -58,10 +70,17 @@ class Plugin(plugins.PluginBase):
 			return
 		self.window.zpravy.clear()
 		for zprava in kontakt.zpravy:
-			print zprava.subject
-			self.window.zpravy.addItem(zprava.subject)
+			item = QtGui.QListWidgetItem(zprava.subject, self.window.zpravy)
+			font = QtGui.QFont()
+			if zprava.unread:
+				font.setBold(True)
+			item.setFont(font)
+			self.window.zpravy.addItem(item)
 	
 	def headlineChanged(self, item):
+		font = font = QtGui.QFont()
+		font.setBold(False)
+		item.setFont(font)
 		jid = unicode(self.window.roster.currentItem().text())
 		try:
 			kontakt = self.kontakty[jid]
@@ -69,8 +88,9 @@ class Plugin(plugins.PluginBase):
 			return
 		radek = self.window.zpravy.currentRow()
 		zprava = kontakt.zpravy[radek]
+		zprava.unread = False
 		self.window.subject.setText(zprava.subject)
-		self.window.datum.setText(unicode(zprava.time))
+		self.window.datum.setText(unicode(time.strftime('%X %x',time.localtime(zprava.time))))
 		self.window.zprava.setText(zprava.body)
 		
 	
