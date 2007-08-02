@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 import sys,os
 sys.path.append('.')
-try: from PyQt4 import QtCore, QtGui
+try: from PyQt4 import QtCore, QtGui, uic
 except: print "PyQt4 is not installed."
 import qt4reactor
 app = QtGui.QApplication(sys.argv)
