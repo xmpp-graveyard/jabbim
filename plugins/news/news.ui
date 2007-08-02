@@ -29,7 +29,16 @@
        <property name="orientation" >
         <enum>Qt::Horizontal</enum>
        </property>
-       <widget class="QListWidget" name="roster" />
+       <widget class="QListWidget" name="roster" >
+        <property name="sizePolicy" >
+         <sizepolicy>
+          <hsizetype>5</hsizetype>
+          <vsizetype>7</vsizetype>
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
        <widget class="QListWidget" name="zpravy" />
       </widget>
       <widget class="QWidget" name="layoutWidget" >
@@ -58,6 +67,14 @@
             </property>
             <item>
              <widget class="QLabel" name="label" >
+              <property name="sizePolicy" >
+               <sizepolicy>
+                <hsizetype>0</hsizetype>
+                <vsizetype>5</vsizetype>
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text" >
                <string>Date:</string>
               </property>
@@ -82,6 +99,14 @@
             </property>
             <item>
              <widget class="QLabel" name="label_2" >
+              <property name="sizePolicy" >
+               <sizepolicy>
+                <hsizetype>0</hsizetype>
+                <vsizetype>5</vsizetype>
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text" >
                <string>Subject:</string>
               </property>

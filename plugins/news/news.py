@@ -12,7 +12,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Headlines window'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'News Plugin'
-		self.version = '0.014'
+		self.version = '0.015'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.kontakty = {} # jid:contact
@@ -40,6 +40,8 @@ class Plugin(plugins.PluginBase):
 		if typ != 'headline':
 			return True
 		frm = frm.split('/')[0]
+		font = QtGui.QFont()
+		font.setBold(True)
 		if self.kontakty.has_key(frm):
 			self.kontakty[frm].addHeadline(subject, body)
 		else:
@@ -47,11 +49,13 @@ class Plugin(plugins.PluginBase):
 			self.window.roster.addItem(item)
 			self.kontakty[frm] = Contact(frm, item, self)
 			self.kontakty[frm].addHeadline(subject, body)
+		item.setFont(font)
 		if self.config['notify_tray']['value']=='True':
 			self.main.tray.showMessage("News",subject, QtGui.QSystemTrayIcon.Information, 3000)
 		if self.config['notify_show']['value']=='True':
 			self.window.show()
-		item =self.window.roster.currentItem()
+		itm = None
+		itm = self.window.roster.currentItem()
 		if item!= None:
 			if unicode(item.text())==frm:
 				self.updateZpravy(frm)
@@ -92,6 +96,8 @@ class Plugin(plugins.PluginBase):
 		self.window.subject.setText(zprava.subject)
 		self.window.datum.setText(unicode(time.strftime('%X %x',time.localtime(zprava.time))))
 		self.window.zprava.setText(zprava.body)
+		if kontakt.neprectene() == 0:
+			kontakt.item.setFont(font)
 		
 	
 
