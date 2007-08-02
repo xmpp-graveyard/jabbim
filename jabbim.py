@@ -365,7 +365,11 @@ class clientClass(pyxl.client.Client):
 					# edit user item
 					w.chat.editUser(nick,show,role)
 					break
-		message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",show).replace("[message]",unicode(status)).replace('[nick]', nick)
+		message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",show).replace('[nick]', nick)
+		if status == None:
+			message = message.replace("[[message]]",'')
+		else:
+			message = message.replace("[message]",unicode(status))
 		w.chat.textEditWrite(message)
 		
 
