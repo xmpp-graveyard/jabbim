@@ -830,6 +830,8 @@ class mainWindow(QtGui.QMainWindow):
 	def copyPlugins(self):
 		plugins=os.listdir("plugins/")
 		for plugin in plugins:
+			if plugin == '.svn':
+				continue
 			path = 'plugins/%s/%s.py'%( plugin, plugin)
 			path2 = '%s/plugins/%s/%s.py'%(self.homeDir, plugin, plugin)
 			copy = False
