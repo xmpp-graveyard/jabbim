@@ -91,9 +91,7 @@ class Client(derived):
 		self.caps_ext = None
 		self.discofeatures = {} # node: [feature1, feature2]
 		self.ft_proxies = {
-		'proxy.netlab.cz':["77.48.19.1", "7777"] ,
-		'proxy.jabber.org':['208.245.212.98', '7777'],
-		'serafim.cd.chalmers.se' : ['serafim.cd.chalmers.se', '7777']
+		'proxy.netlab.cz':["77.48.19.1", "7777"] 
 		}
 		self.ft = {}
 		self.last = 0
