@@ -310,11 +310,19 @@ class clientClass(pyxl.client.Client):
 			self.main.ui.add_group.addItem(unicode(k))
 
 ##		log.msg( "METAPARENTS"+unicode(self.metaParents))
-		if self.main.config.has_key('priority'):
-				pri=self.main.config['priority']
+		if MainWindow.config.has_key('autoPriority'):
+				if MainWindow.config['autoPriority']=='True':
+					pri="20"
+				else:
+					if self.main.config.has_key('priority'):
+						pri=self.main.config['priority']
+					else:
+						pri="0"
 		else:
-			pri="0"
-		log.msg('pyco:'+self.main.config['priority'])
+			if self.main.config.has_key('priority'):
+				pri=self.main.config['priority']
+			else:
+				pri="0"
 		MainWindow.client.sendPresence(priority=pri)
 		
 
@@ -1429,7 +1437,21 @@ class statusWindow(QtGui.QDialog):
 		else:
 			#app.postEvent(jab,customEvent(["set_status",self.groupchat,self.data,unicode(self.ui.status.toPlainText ())]))
 			#jab.setStatus(MainWindow.groupchat,self.data,unicode(self.ui.status.toPlainText ()))
-			MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()))
+			if MainWindow.config.has_key('autoPriority'):
+				if MainWindow.config['autoPriority']=='True':
+					priors={"chat":"25","online":"20","away":"15","xa":"10","dnd":"5"}
+					pri=priors[str(self.data)]
+				else:
+					if MainWindow.config.has_key('priority'):
+						pri=MainWindow.config['priority']
+					else:
+						pri="0"
+			else:
+				if MainWindow.config.has_key('priority'):
+						pri=MainWindow.config['priority']
+				else:
+					pri="0"
+			MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()),priority=pri)
 			#musime updatovat MUCy
 			for muc in MainWindow.client.groupchats.itervalues():
 				MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()), to = '%s/%s'%(muc.jid, muc.nick))

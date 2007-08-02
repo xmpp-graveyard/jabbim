@@ -104,6 +104,12 @@ class preferencesWindow(QtGui.QDialog):
 		else:
 			self.ui.connection_autojoin.setChecked(False)
 		
+		if self.main.config.has_key('autoPriority'):
+			if self.main.config['autoPriority']=='True':
+				self.ui.connection_autoPriority.setChecked(True)
+			else:
+				self.ui.connection_autoPriority.setChecked(False)
+		
 
 		# chat skins
 		skins=os.listdir("skins/")
@@ -238,6 +244,7 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.skin=ConfigObj("skins/"+unicode(self.ui.chatSkin_list.currentText()),encoding='UTF8')
 		self.main.config['passwd']=rot13.scramble(password)
 		self.main.config['autoJoin']=str(self.ui.connection_autojoin.isChecked())
+		self.main.config['autoPriority']=str(self.ui.connection_autoPriority.isChecked())
 		self.main.config['saveGeometry']=str(self.ui.savePosition.isChecked())
 		self.main.config['chat_skin']=unicode(self.ui.chatSkin_list.currentText())
 		self.main.config['jid']=jid
