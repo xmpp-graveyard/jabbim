@@ -19,4 +19,5 @@ widgets/waitdialog.py \
 widgets/xmlConsole.py
 
 TRANSLATIONS    = locales/jabbim_cs.ts \
-				locales/jabbim_en.ts 
+				locales/jabbim_en.ts \
+        locales/jabbim_sk.ts

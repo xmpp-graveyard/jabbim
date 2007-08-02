@@ -310,6 +310,14 @@ class clientClass(pyxl.client.Client):
 			self.main.ui.add_group.addItem(unicode(k))
 
 ##		log.msg( "METAPARENTS"+unicode(self.metaParents))
+		if self.main.config.has_key('priority'):
+				pri=self.main.config['priority']
+		else:
+			pri="0"
+		log.msg('pyco:'+self.main.config['priority'])
+		MainWindow.client.sendPresence(priority=pri)
+		
+
 
 	def on_authFailed(self,xmlstream):
 		# Authentication error
@@ -1402,7 +1410,11 @@ class statusWindow(QtGui.QDialog):
 			self.accept()
 	def accept(self):
 		if self.data=="offline":
-##			MainWindow.client.factory.stopTrying()
+##			#MainWindow.client.factory.stopTrying()
+			#if self.config.has_key('priority'):
+			#	prior=self.config['priority']
+			#else:
+			#	prior=1
 			MainWindow.client.sendPresence(typ = "unavailable", status = unicode(self.ui.status.toPlainText ()))
 			MainWindow.client.factory.stopTrying()
 			#MainWindow.client.disconnect()
