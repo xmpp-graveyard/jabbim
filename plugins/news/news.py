@@ -5,6 +5,9 @@ from PyQt4 import QtCore, QtGui, uic
 from urllib import quote, unquote
 from twisted.python import log
 
+#exp = re.compile(" (((https?://)|(ftp://)|(www\.))[^\ ]+)|(([^\ ]*\.){2,}[0-9a-z-A-Z]{2,4}(/[^\ ]*)?)")
+#exp.search('http://jabbim.cz/').group()
+
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
 		plugins.PluginBase.__init__(self, main, homedir)
@@ -42,6 +45,7 @@ class Plugin(plugins.PluginBase):
 		frm = frm.split('/')[0]
 		font = QtGui.QFont()
 		font.setBold(True)
+		
 		if self.kontakty.has_key(frm):
 			self.kontakty[frm].addHeadline(subject, body)
 		else:

@@ -856,6 +856,7 @@ class mainWindow(QtGui.QMainWindow):
 			path2 = '%s/plugins/%s/%s.py'%(self.homeDir, plugin, plugin)
 			copy = False
 			v1 = v2 = 0
+			f = f2 = False
 			try: 
 				f=open(path)
 				plug = load_source(plugin, path, f).Plugin(False, self.homeDir)
