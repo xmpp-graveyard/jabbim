@@ -870,7 +870,11 @@ class mainWindow(QtGui.QMainWindow):
 				copy = True
 			try:
 				v1 = float(plug.version)
-			except:
+			except:			
+				if f:
+					f.close()
+				if f2:
+					f2.close()
 				continue
 	
 			try:
@@ -880,6 +884,10 @@ class mainWindow(QtGui.QMainWindow):
 	
 			if v1>v2:
 				copy = True
+			if f:
+				f.close()
+			if f2:
+				f2.close()
 			if copy:
 				log.msg('copy plugin to homedir: '+plugin)
 				try:

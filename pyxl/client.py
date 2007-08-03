@@ -135,7 +135,7 @@ class Client(derived):
 		if show:
 			presence.addElement('show', content = show)
 		if priority:
-			presence.addElement('priority', content = priority)
+			presence.addElement('priority', content = unicode(priority))
 		if typ:
 			presence['type'] = typ
 		if caps:
