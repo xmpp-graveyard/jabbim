@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'status.ui'
+# Form implementation generated from reading ui file 'widgets/status.ui'
 #
-# Created: Fri Jul 27 17:40:32 2007
+# Created: Fri Aug  3 21:07:30 2007
 #      by: PyQt4 UI code generator 4.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -44,4 +44,5 @@ class Ui_status(object):
     def retranslateUi(self, status):
         status.setWindowTitle(QtGui.QApplication.translate("status", "Set status message", None, QtGui.QApplication.UnicodeUTF8))
         self.set.setText(QtGui.QApplication.translate("status", "Set", None, QtGui.QApplication.UnicodeUTF8))
+        self.status.setToolTip(QtGui.QApplication.translate("status", "Enter a short message describing your status (e.g. at lunch)", None, QtGui.QApplication.UnicodeUTF8))
 

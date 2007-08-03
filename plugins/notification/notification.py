@@ -18,6 +18,9 @@ class Plugin(plugins.PluginBase):
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}
 		self.config['on_muc_highlight'] = {'description':'Notify if groupchat message contains your nickname', 'default':'True', 'value': '','type':'boolean'}
+		self.config['sound_first_message'] = {'description':'Play sound on first message from user', 'default':'True', 'value': '','type':'boolean'}
+		self.config['sound_gc'] = {'description':'Play sound if groupchat message contains your nickname', 'default':'True', 'value': '','type':'boolean'}
+		self.config['sound_on_login'] = {'description':'Play sound on login', 'default':'True', 'value': '','type':'boolean'}
 		self.soundDir="sounds/" #for now lets say we have no option to change it (but it will change :)
 		self.soundAvailable=1 # well, we suppose there is sundsupport
 		self.sounds={} # ditictionary of playable actions, will fill in later
@@ -100,7 +103,7 @@ class Plugin(plugins.PluginBase):
 		else:
 			user=frm
 		#print self.config['on_muc_highlight']['value']
-		if self.config['on_muc_highlight']['value']=="True":
+		if self.config['on_muc_highlight']['value']=="True" or self.config['sound_gc_message']['value']=="True":
 			for i in range(self.main.chat.ui.chatTab.count()):
 				w=self.main.chat.ui.chatTab.widget(i)
 				if unicode(w.jid)==frm:
@@ -113,5 +116,6 @@ class Plugin(plugins.PluginBase):
 						else:
 								text=body
 						traytext=unicode(user)+": "+text
-						self.playsound('message')
+						if self.config['sound_gc_message']['value']=="True":
+							self.playsound('message')
 						self.main.tray.showMessage(self.tr("New groupchat message for you"), traytext, QtGui.QSystemTrayIcon.Information, 5000)

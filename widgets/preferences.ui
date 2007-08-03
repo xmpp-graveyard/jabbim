@@ -25,7 +25,7 @@
    <item row="0" column="1" colspan="2" >
     <widget class="QStackedWidget" name="stackedWidget" >
      <property name="currentIndex" >
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page_4" >
       <layout class="QGridLayout" >
@@ -67,6 +67,9 @@ p, li { white-space: pre-wrap; }
        </item>
        <item row="2" column="0" >
         <widget class="QCheckBox" name="savePosition" >
+         <property name="toolTip" >
+          <string>Jabbim will remember its position and geometry.</string>
+         </property>
          <property name="text" >
           <string>Save Jabbim position on close</string>
          </property>
@@ -186,6 +189,9 @@ p, li { white-space: pre-wrap; }
                     <height>16777215</height>
                    </size>
                   </property>
+                  <property name="toolTip" >
+                   <string>Use when you have more clients. Higher number &lt;br>means higher preference of this client.</string>
+                  </property>
                   <property name="inputMask" >
                    <string>90; </string>
                   </property>
@@ -209,6 +215,9 @@ p, li { white-space: pre-wrap; }
                 </item>
                 <item>
                  <widget class="QCheckBox" name="connection_autoPriority" >
+                  <property name="toolTip" >
+                   <string>Priority steps are per 5 numbers: 25 for chatty, 20 for available, etc</string>
+                  </property>
                   <property name="text" >
                    <string>Change priority automatically due to status</string>
                   </property>
@@ -296,10 +305,16 @@ p, li { white-space: pre-wrap; }
                   <height>16777215</height>
                  </size>
                 </property>
+                <property name="toolTip" >
+                 <string>It has the form: nickname@jabber_server.org</string>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QLineEdit" name="connection_password" >
+                <property name="toolTip" >
+                 <string>Fill in your secret password :)</string>
+                </property>
                 <property name="echoMode" >
                  <enum>QLineEdit::Password</enum>
                 </property>
@@ -315,6 +330,9 @@ p, li { white-space: pre-wrap; }
                 </property>
                 <item>
                  <widget class="QCheckBox" name="connection_autojoin" >
+                  <property name="toolTip" >
+                   <string>Jabbim will join automatically if password and &lt;br> Jabber ID are saved.</string>
+                  </property>
                   <property name="text" >
                    <string>Automatically join at startup.</string>
                   </property>
@@ -397,7 +415,11 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="3" column="0" colspan="2" >
-        <widget class="QTextBrowser" name="chatSkin_preview" />
+        <widget class="QTextBrowser" name="chatSkin_preview" >
+         <property name="toolTip" >
+          <string>Here you see preview of the selected chat look.</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -425,7 +447,10 @@ p, li { white-space: pre-wrap; }
        <item row="3" column="0" >
         <widget class="QLabel" name="label_10" >
          <property name="text" >
-          <string>Remember: you have to restart Jabbim to change roster style!</string>
+          <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Remember: you &lt;span style=" font-weight:600;">have to restart &lt;/span>Jabbim to change roster style!&lt;/p>&lt;/body>&lt;/html></string>
          </property>
          <property name="wordWrap" >
           <bool>true</bool>
@@ -446,6 +471,9 @@ p, li { white-space: pre-wrap; }
           </property>
           <item>
            <widget class="QRadioButton" name="roster_normal" >
+            <property name="toolTip" >
+             <string>Big status icons, big avatars and you will see status messages, </string>
+            </property>
             <property name="text" >
              <string>Normal</string>
             </property>
@@ -456,6 +484,9 @@ p, li { white-space: pre-wrap; }
           </item>
           <item>
            <widget class="QRadioButton" name="roster_compact" >
+            <property name="toolTip" >
+             <string>Smaller  status icons and avatars, no status messages.</string>
+            </property>
             <property name="text" >
              <string>Compact</string>
             </property>
@@ -542,6 +573,9 @@ p, li { white-space: pre-wrap; }
        </property>
        <item row="2" column="0" >
         <widget class="QListWidget" name="themes" >
+         <property name="toolTip" >
+          <string>Choose whe theme of Jabbim, then restart the client</string>
+         </property>
          <property name="iconSize" >
           <size>
            <width>128</width>
@@ -601,6 +635,9 @@ p, li { white-space: pre-wrap; }
         <widget class="QTreeWidget" name="plugins" >
          <property name="contextMenuPolicy" >
           <enum>Qt::CustomContextMenu</enum>
+         </property>
+         <property name="toolTip" >
+          <string>Tick plugins you want to use, right click to change settings.</string>
          </property>
          <property name="alternatingRowColors" >
           <bool>true</bool>

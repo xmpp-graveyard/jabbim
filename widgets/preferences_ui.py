@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Thu Aug  2 12:13:33 2007
-#      by: PyQt4 UI code generator 4.1
+# Created: Fri Aug  3 20:45:04 2007
+#      by: PyQt4 UI code generator 4.2
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_preferences(object):
@@ -376,7 +375,7 @@ class Ui_preferences(object):
         self.gridlayout.addLayout(self.hboxlayout4,1,2,1,1)
 
         self.retranslateUi(preferences)
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.cancelButton,QtCore.SIGNAL("clicked()"),preferences.reject)
         QtCore.QObject.connect(self.saveButton,QtCore.SIGNAL("clicked()"),preferences.accept)
         QtCore.QObject.connect(self.listWidget,QtCore.SIGNAL("currentRowChanged(int)"),self.stackedWidget.setCurrentIndex)
@@ -389,17 +388,23 @@ class Ui_preferences(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Jabbim</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.savePosition.setToolTip(QtGui.QApplication.translate("preferences", "Jabbim will remember its position and geometry.", None, QtGui.QApplication.UnicodeUTF8))
         self.savePosition.setText(QtGui.QApplication.translate("preferences", "Save Jabbim position on close", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_2.setTitle(QtGui.QApplication.translate("preferences", "Advanced", None, QtGui.QApplication.UnicodeUTF8))
         self.label_15.setText(QtGui.QApplication.translate("preferences", "Resource:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_16.setText(QtGui.QApplication.translate("preferences", "Priority:", None, QtGui.QApplication.UnicodeUTF8))
+        self.connection_priority.setToolTip(QtGui.QApplication.translate("preferences", "Use when you have more clients. Higher number <br>means higher preference of this client.", None, QtGui.QApplication.UnicodeUTF8))
         self.connection_priority.setInputMask(QtGui.QApplication.translate("preferences", "90; ", None, QtGui.QApplication.UnicodeUTF8))
         self.connection_priority.setText(QtGui.QApplication.translate("preferences", "0", None, QtGui.QApplication.UnicodeUTF8))
+        self.connection_autoPriority.setToolTip(QtGui.QApplication.translate("preferences", "Priority steps are per 5 numbers: 25 for chatty, 20 for available, etc", None, QtGui.QApplication.UnicodeUTF8))
         self.connection_autoPriority.setText(QtGui.QApplication.translate("preferences", "Change priority automatically due to status", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_4.setTitle(QtGui.QApplication.translate("preferences", "Connection", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("preferences", "Jabber ID:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("preferences", "Password:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_41.setText(QtGui.QApplication.translate("preferences", "Autojoin:", None, QtGui.QApplication.UnicodeUTF8))
+        self.connection_jid.setToolTip(QtGui.QApplication.translate("preferences", "It has the form: nickname@jabber_server.org", None, QtGui.QApplication.UnicodeUTF8))
+        self.connection_password.setToolTip(QtGui.QApplication.translate("preferences", "Fill in your secret password :)", None, QtGui.QApplication.UnicodeUTF8))
+        self.connection_autojoin.setToolTip(QtGui.QApplication.translate("preferences", "Jabbim will join automatically if password and <br> Jabber ID are saved.", None, QtGui.QApplication.UnicodeUTF8))
         self.connection_autojoin.setText(QtGui.QApplication.translate("preferences", "Automatically join at startup.", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
@@ -409,9 +414,15 @@ class Ui_preferences(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Chat skins</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_10.setText(QtGui.QApplication.translate("preferences", "Remember: you have to restart Jabbim to change roster style!", None, QtGui.QApplication.UnicodeUTF8))
+        self.chatSkin_preview.setToolTip(QtGui.QApplication.translate("preferences", "Here you see preview of the selected chat look.", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_10.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        "p, li { white-space: pre-wrap; }\n"
+        "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
+        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Remember: you <span style=\" font-weight:600;\">have to restart </span>Jabbim to change roster style!</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setTitle(QtGui.QApplication.translate("preferences", "Roster Style", None, QtGui.QApplication.UnicodeUTF8))
+        self.roster_normal.setToolTip(QtGui.QApplication.translate("preferences", "Big status icons, big avatars and you will see status messages, ", None, QtGui.QApplication.UnicodeUTF8))
         self.roster_normal.setText(QtGui.QApplication.translate("preferences", "Normal", None, QtGui.QApplication.UnicodeUTF8))
+        self.roster_compact.setToolTip(QtGui.QApplication.translate("preferences", "Smaller  status icons and avatars, no status messages.", None, QtGui.QApplication.UnicodeUTF8))
         self.roster_compact.setText(QtGui.QApplication.translate("preferences", "Compact", None, QtGui.QApplication.UnicodeUTF8))
         self.label_9.setText(QtGui.QApplication.translate("preferences", "Roster icons size:", None, QtGui.QApplication.UnicodeUTF8))
         self.roster_iconSize.addItem(QtGui.QApplication.translate("preferences", "16x16", None, QtGui.QApplication.UnicodeUTF8))
@@ -421,6 +432,7 @@ class Ui_preferences(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Roster</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.themes.setToolTip(QtGui.QApplication.translate("preferences", "Choose whe theme of Jabbim, then restart the client", None, QtGui.QApplication.UnicodeUTF8))
         self.label_7.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
@@ -429,6 +441,7 @@ class Ui_preferences(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\';\"><span style=\" font-size:12pt; font-weight:600;\">Plugins</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.plugins.setToolTip(QtGui.QApplication.translate("preferences", "Tick plugins you want to use, right click to change settings.", None, QtGui.QApplication.UnicodeUTF8))
         self.plugins.headerItem().setText(1,QtGui.QApplication.translate("preferences", "Name", None, QtGui.QApplication.UnicodeUTF8))
         self.plugins.headerItem().setText(2,QtGui.QApplication.translate("preferences", "Description", None, QtGui.QApplication.UnicodeUTF8))
         self.listWidget.clear()

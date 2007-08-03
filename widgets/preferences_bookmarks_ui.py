@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences_bookmarks.ui'
 #
-# Created: Sat Jul 14 13:44:07 2007
-#      by: PyQt4 UI code generator 4.1
+# Created: Fri Aug  3 21:05:40 2007
+#      by: PyQt4 UI code generator 4.2
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_editbookmark(object):
@@ -123,5 +122,11 @@ class Ui_editbookmark(object):
         self.label_4.setText(QtGui.QApplication.translate("editbookmark", "Name:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("editbookmark", "Nickname:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("editbookmark", "Password:", None, QtGui.QApplication.UnicodeUTF8))
+        self.room.setToolTip(QtGui.QApplication.translate("editbookmark", "The name of the room", None, QtGui.QApplication.UnicodeUTF8))
+        self.server.setToolTip(QtGui.QApplication.translate("editbookmark", "The server where the chat room is (e.g. conf.netlab.cz)", None, QtGui.QApplication.UnicodeUTF8))
+        self.name.setToolTip(QtGui.QApplication.translate("editbookmark", "What do you want to see in your bookmark list", None, QtGui.QApplication.UnicodeUTF8))
+        self.nickname.setToolTip(QtGui.QApplication.translate("editbookmark", "Enter your nickname", None, QtGui.QApplication.UnicodeUTF8))
+        self.password.setToolTip(QtGui.QApplication.translate("editbookmark", "Password is used when room is locked", None, QtGui.QApplication.UnicodeUTF8))
+        self.autojoin.setToolTip(QtGui.QApplication.translate("editbookmark", "If you check this, Jabbim will connect you after each start of client", None, QtGui.QApplication.UnicodeUTF8))
         self.autojoin.setText(QtGui.QApplication.translate("editbookmark", "Autojoin", None, QtGui.QApplication.UnicodeUTF8))
 

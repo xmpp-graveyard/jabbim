@@ -37,6 +37,9 @@
         <height>1</height>
        </size>
       </property>
+      <property name="toolTip" >
+       <string>Every multi user chat can has topic of it's discussion</string>
+      </property>
      </widget>
      <widget class="QSplitter" name="splitter" >
       <property name="orientation" >
@@ -47,7 +50,7 @@
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QWidget" name="" >
+      <widget class="QWidget" name="layoutWidget" >
        <layout class="QVBoxLayout" >
         <property name="margin" >
          <number>0</number>
@@ -86,6 +89,9 @@
            </property>
            <item>
             <widget class="QPushButton" name="roomAdmin" >
+             <property name="toolTip" >
+              <string>You can ban users or promote them to administrators etc</string>
+             </property>
              <property name="text" >
               <string>Room administration</string>
              </property>
@@ -93,6 +99,9 @@
            </item>
            <item>
             <widget class="QPushButton" name="roomConfig" >
+             <property name="toolTip" >
+              <string>You can set up logging of the room etc</string>
+             </property>
              <property name="text" >
               <string>Room configuration</string>
              </property>
@@ -123,6 +132,9 @@
    </item>
    <item row="1" column="1" >
     <widget class="QToolButton" name="smileys" >
+     <property name="toolTip" >
+      <string>You can add emoticons by clicking here</string>
+     </property>
      <property name="text" >
       <string>...</string>
      </property>

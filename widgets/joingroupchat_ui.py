@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'joingroupchat.ui'
+# Form implementation generated from reading ui file 'widgets/joingroupchat.ui'
 #
-# Created: Fri Jul 27 19:55:39 2007
+# Created: Fri Aug  3 20:55:01 2007
 #      by: PyQt4 UI code generator 4.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -116,12 +116,18 @@ class Ui_joingroupchat(object):
 
     def retranslateUi(self, joingroupchat):
         joingroupchat.setWindowTitle(QtGui.QApplication.translate("joingroupchat", "Join Group Chat", None, QtGui.QApplication.UnicodeUTF8))
+        self.bookmark.setToolTip(QtGui.QApplication.translate("joingroupchat", "Adds this room to your bookmarks. Bookmarks <br>are stored on the server.", None, QtGui.QApplication.UnicodeUTF8))
         self.bookmark.setText(QtGui.QApplication.translate("joingroupchat", "Bookmark this room", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("joingroupchat", "Room:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("joingroupchat", "Server:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("joingroupchat", "Conference name:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("joingroupchat", "Nickname:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("joingroupchat", "Password:", None, QtGui.QApplication.UnicodeUTF8))
+        self.room.setToolTip(QtGui.QApplication.translate("joingroupchat", "Here fill in the name of the room you want to join in", None, QtGui.QApplication.UnicodeUTF8))
+        self.server.setToolTip(QtGui.QApplication.translate("joingroupchat", "Server where the chat room is (e.g. conf.netlab.cz)", None, QtGui.QApplication.UnicodeUTF8))
+        self.name.setToolTip(QtGui.QApplication.translate("joingroupchat", "This serves only for your orientation", None, QtGui.QApplication.UnicodeUTF8))
+        self.nickname.setToolTip(QtGui.QApplication.translate("joingroupchat", "Under what name do you want to be <br>known to other participants", None, QtGui.QApplication.UnicodeUTF8))
+        self.password.setToolTip(QtGui.QApplication.translate("joingroupchat", "You need password if the room is locked", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("joingroupchat", "Join", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_2.setText(QtGui.QApplication.translate("joingroupchat", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
 

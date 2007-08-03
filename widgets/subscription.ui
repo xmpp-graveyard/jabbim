@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>209</width>
-    <height>70</height>
+    <height>108</height>
    </rect>
   </property>
   <property name="minimumSize" >
@@ -35,6 +35,9 @@
      </property>
      <item>
       <widget class="QToolButton" name="add" >
+       <property name="toolTip" >
+        <string>This adds this user to your roster and subscribe &lt;br>him. He can see your presence.</string>
+       </property>
        <property name="text" >
         <string/>
        </property>
@@ -42,6 +45,9 @@
      </item>
      <item>
       <widget class="QToolButton" name="delete" >
+       <property name="toolTip" >
+        <string>Click here if you don't want to speak with this contact :)</string>
+       </property>
        <property name="text" >
         <string/>
        </property>
@@ -49,6 +55,9 @@
      </item>
      <item>
       <widget class="QToolButton" name="vcard" >
+       <property name="toolTip" >
+        <string>Here you can gain some informations about this contact</string>
+       </property>
        <property name="text" >
         <string/>
        </property>

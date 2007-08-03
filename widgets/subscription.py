@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'subscription.ui'
+# Form implementation generated from reading ui file 'widgets/subscription.ui'
 #
-# Created: Wed Mar 14 19:26:45 2007
-#      by: PyQt4 UI code generator 4.1.1
+# Created: Fri Aug  3 21:10:25 2007
+#      by: PyQt4 UI code generator 4.2
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_subscriptionwidget(object):
     def setupUi(self, subscriptionwidget):
         subscriptionwidget.setObjectName("subscriptionwidget")
-        subscriptionwidget.resize(QtCore.QSize(QtCore.QRect(0,0,209,70).size()).expandedTo(subscriptionwidget.minimumSizeHint()))
+        subscriptionwidget.resize(QtCore.QSize(QtCore.QRect(0,0,209,108).size()).expandedTo(subscriptionwidget.minimumSizeHint()))
         subscriptionwidget.setMinimumSize(QtCore.QSize(0,70))
 
         self.gridlayout = QtGui.QGridLayout(subscriptionwidget)
@@ -52,5 +51,8 @@ class Ui_subscriptionwidget(object):
 
     def retranslateUi(self, subscriptionwidget):
         subscriptionwidget.setWindowTitle(QtGui.QApplication.translate("subscriptionwidget", "Form", None, QtGui.QApplication.UnicodeUTF8))
+        self.add.setToolTip(QtGui.QApplication.translate("subscriptionwidget", "This adds this user to your roster and subscribe <br>him. He can see your presence.", None, QtGui.QApplication.UnicodeUTF8))
+        self.delete.setToolTip(QtGui.QApplication.translate("subscriptionwidget", "Click here if you don\'t want to speak with this contact :)", None, QtGui.QApplication.UnicodeUTF8))
+        self.vcard.setToolTip(QtGui.QApplication.translate("subscriptionwidget", "Here you can gain some informations about this contact", None, QtGui.QApplication.UnicodeUTF8))
         self.text.setText(QtGui.QApplication.translate("subscriptionwidget", "User hanzz@njs.netlab.cz wants to add you to his/her roster. Add him/her?", None, QtGui.QApplication.UnicodeUTF8))
 

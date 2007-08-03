@@ -134,19 +134,39 @@
         <number>6</number>
        </property>
        <item>
-        <widget class="QLineEdit" name="room" />
+        <widget class="QLineEdit" name="room" >
+         <property name="toolTip" >
+          <string>The name of the room</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="server" />
+        <widget class="QLineEdit" name="server" >
+         <property name="toolTip" >
+          <string>The server where the chat room is (e.g. conf.netlab.cz)</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="name" />
+        <widget class="QLineEdit" name="name" >
+         <property name="toolTip" >
+          <string>What do you want to see in your bookmark list</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="nickname" />
+        <widget class="QLineEdit" name="nickname" >
+         <property name="toolTip" >
+          <string>Enter your nickname</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="password" />
+        <widget class="QLineEdit" name="password" >
+         <property name="toolTip" >
+          <string>Password is used when room is locked</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -154,6 +174,9 @@
    </item>
    <item row="1" column="2" >
     <widget class="QCheckBox" name="autojoin" >
+     <property name="toolTip" >
+      <string>If you check this, Jabbim will connect you after each start of client</string>
+     </property>
      <property name="text" >
       <string>Autojoin</string>
      </property>

@@ -37,6 +37,9 @@
    </item>
    <item row="0" column="0" colspan="2" >
     <widget class="QTreeWidget" name="treeWidget" >
+     <property name="toolTip" >
+      <string>Here you see files prepared to transfer</string>
+     </property>
      <property name="editTriggers" >
       <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::NoEditTriggers</set>
      </property>

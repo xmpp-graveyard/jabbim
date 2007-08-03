@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'widgets/filetransfer.ui'
 #
-# Created: Wed Jul 25 08:43:09 2007
-#      by: PyQt4 UI code generator 4.1
+# Created: Fri Aug  3 20:46:20 2007
+#      by: PyQt4 UI code generator 4.2
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_fileTransfer(object):
@@ -52,6 +51,7 @@ class Ui_fileTransfer(object):
 
     def retranslateUi(self, fileTransfer):
         fileTransfer.setWindowTitle(QtGui.QApplication.translate("fileTransfer", "File Transfer", None, QtGui.QApplication.UnicodeUTF8))
+        self.treeWidget.setToolTip(QtGui.QApplication.translate("fileTransfer", "Here you see files prepared to transfer", None, QtGui.QApplication.UnicodeUTF8))
         self.treeWidget.headerItem().setText(0,QtGui.QApplication.translate("fileTransfer", "Name", None, QtGui.QApplication.UnicodeUTF8))
         self.treeWidget.headerItem().setText(1,QtGui.QApplication.translate("fileTransfer", "Description", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_2.setText(QtGui.QApplication.translate("fileTransfer", "Cancel", None, QtGui.QApplication.UnicodeUTF8))

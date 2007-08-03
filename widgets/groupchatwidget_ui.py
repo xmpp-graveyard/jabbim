@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Fri Jul 13 05:50:50 2007
-#      by: PyQt4 UI code generator 4.1
+# Created: Fri Aug  3 20:49:42 2007
+#      by: PyQt4 UI code generator 4.2
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_groupchatwidget(object):
@@ -38,21 +37,21 @@ class Ui_groupchatwidget(object):
         self.textEdit.setOpenExternalLinks(True)
         self.textEdit.setObjectName("textEdit")
 
-        self.widget = QtGui.QWidget(self.splitter)
-        self.widget.setObjectName("widget")
+        self.layoutWidget = QtGui.QWidget(self.splitter)
+        self.layoutWidget.setObjectName("layoutWidget")
 
-        self.vboxlayout = QtGui.QVBoxLayout(self.widget)
+        self.vboxlayout = QtGui.QVBoxLayout(self.layoutWidget)
         self.vboxlayout.setMargin(0)
         self.vboxlayout.setSpacing(6)
         self.vboxlayout.setObjectName("vboxlayout")
 
-        self.users = QtGui.QTreeWidget(self.widget)
+        self.users = QtGui.QTreeWidget(self.layoutWidget)
         self.users.setAlternatingRowColors(True)
         self.users.setRootIsDecorated(False)
         self.users.setObjectName("users")
         self.vboxlayout.addWidget(self.users)
 
-        self.admin = QtGui.QWidget(self.widget)
+        self.admin = QtGui.QWidget(self.layoutWidget)
         self.admin.setObjectName("admin")
 
         self.vboxlayout1 = QtGui.QVBoxLayout(self.admin)
@@ -93,10 +92,14 @@ class Ui_groupchatwidget(object):
 
     def retranslateUi(self, groupchatwidget):
         groupchatwidget.setWindowTitle(QtGui.QApplication.translate("groupchatwidget", "Form", None, QtGui.QApplication.UnicodeUTF8))
+        self.info.setToolTip(QtGui.QApplication.translate("groupchatwidget", "Every multi user chat can has topic of it\'s discussion", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(0,QtGui.QApplication.translate("groupchatwidget", "user", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(1,QtGui.QApplication.translate("groupchatwidget", "jid", None, QtGui.QApplication.UnicodeUTF8))
+        self.roomAdmin.setToolTip(QtGui.QApplication.translate("groupchatwidget", "You can ban users or promote them to administrators etc", None, QtGui.QApplication.UnicodeUTF8))
         self.roomAdmin.setText(QtGui.QApplication.translate("groupchatwidget", "Room administration", None, QtGui.QApplication.UnicodeUTF8))
+        self.roomConfig.setToolTip(QtGui.QApplication.translate("groupchatwidget", "You can set up logging of the room etc", None, QtGui.QApplication.UnicodeUTF8))
         self.roomConfig.setText(QtGui.QApplication.translate("groupchatwidget", "Room configuration", None, QtGui.QApplication.UnicodeUTF8))
         self.sendButton.setText(QtGui.QApplication.translate("groupchatwidget", "Send", None, QtGui.QApplication.UnicodeUTF8))
+        self.smileys.setToolTip(QtGui.QApplication.translate("groupchatwidget", "You can add emoticons by clicking here", None, QtGui.QApplication.UnicodeUTF8))
         self.smileys.setText(QtGui.QApplication.translate("groupchatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
 
