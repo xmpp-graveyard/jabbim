@@ -206,7 +206,7 @@ p, li { white-space: pre-wrap; }
            <string/>
           </property>
           <property name="currentIndex" >
-           <number>3</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="rosterTab" >
            <attribute name="title" >
@@ -580,7 +580,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>299</width>
-     <height>28</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPreferences" >

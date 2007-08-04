@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/mainWindow.ui'
+# Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created: Fri Aug  3 21:02:23 2007
-#      by: PyQt4 UI code generator 4.2
+# Created: Sat Aug  4 11:52:07 2007
+#      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
 
+import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_MainWindow(object):
@@ -300,7 +301,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0,0,299,28))
+        self.menubar.setGeometry(QtCore.QRect(0,0,299,25))
         self.menubar.setObjectName("menubar")
 
         self.menuPreferences = QtGui.QMenu(self.menubar)
@@ -335,7 +336,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.rosterStackedWidget.setCurrentIndex(1)
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.login_password,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)
         QtCore.QObject.connect(self.login_jid,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
