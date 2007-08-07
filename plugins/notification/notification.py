@@ -13,7 +13,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'System tray and sound notification'
 		self.author = "Jan 'HanzZ' Kaluza & Josef 'PepeQ' Halicek"
 		self.name = 'Notification Plugin'
-		self.version = '0.523'
+		self.version = '0.535'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}
@@ -36,10 +36,11 @@ class Plugin(plugins.PluginBase):
 			self.loadConfig()
 			self.installTranslator()
 			self.playsound('start')
+			self.timer=QtCore.QTimer()
+			QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.changeIcon)
 			#self.main.tray.showMessage(self.tr("Notification"),self.tr("Notification plugin is activated"), QtGui.QSystemTrayIcon.Information, 2000)   i do not understand why use it
 		else:
 			self.loadConfig(homedir)
-
 
 	def loadSoundConfig(self, configFile):
 		try:
@@ -66,6 +67,20 @@ class Plugin(plugins.PluginBase):
 		self.main.tray.showMessage(self.tr("Notification "),self.tr("Notification plugin test :)"), QtGui.QSystemTrayIcon.Information, 2000)
 		self.playsound('new_message')
 
+	def startTrayBlink(self,icon="images/16x16/actions/message.png"):
+		self.trayIcon=QtGui.QIcon(icon)
+		self.ico=True
+		self.timer.start(500)
+		self.main.tray.setIcon(self.trayIcon)
+
+	def changeIcon(self):
+		if self.ico:
+			self.main.tray.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
+			self.ico=False
+		else:
+			self.ico=True
+			self.main.tray.setIcon(self.trayIcon)
+
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay):
 		self.playsound('message')
 		if self.main.client.roster['users'].has_key(unicode(frm).rsplit("/")[0]):
@@ -91,6 +106,7 @@ class Plugin(plugins.PluginBase):
 					print "coe?"
 					self.playsound('new_message')
 					self.main.tray.showMessage(self.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 5000)
+					self.startTrayBlink()
 				else:
 					print "pyco coe?"
 					self.playsound('message')
