@@ -2,11 +2,12 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Fri Aug  3 20:45:04 2007
-#      by: PyQt4 UI code generator 4.2
+# Created: Tue Aug  7 07:27:03 2007
+#      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
 
+import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_preferences(object):
@@ -197,52 +198,22 @@ class Ui_preferences(object):
         self.gridlayout2.addWidget(self.label,0,0,1,1)
         self.stackedWidget.addWidget(self.userPreferences)
 
-        self.page_2 = QtGui.QWidget()
-        self.page_2.setObjectName("page_2")
+        self.page = QtGui.QWidget()
+        self.page.setObjectName("page")
 
-        self.gridlayout6 = QtGui.QGridLayout(self.page_2)
+        self.gridlayout6 = QtGui.QGridLayout(self.page)
         self.gridlayout6.setMargin(9)
         self.gridlayout6.setSpacing(6)
         self.gridlayout6.setObjectName("gridlayout6")
 
-        self.chatSkin_list = QtGui.QComboBox(self.page_2)
-        self.chatSkin_list.setMinimumSize(QtCore.QSize(130,0))
-        self.chatSkin_list.setObjectName("chatSkin_list")
-        self.gridlayout6.addWidget(self.chatSkin_list,2,0,1,1)
-
-        spacerItem3 = QtGui.QSpacerItem(31,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout6.addItem(spacerItem3,2,1,1,1)
-
-        self.line_4 = QtGui.QFrame(self.page_2)
-        self.line_4.setFrameShape(QtGui.QFrame.HLine)
-        self.line_4.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line_4.setObjectName("line_4")
-        self.gridlayout6.addWidget(self.line_4,1,0,1,2)
-
-        self.label_5 = QtGui.QLabel(self.page_2)
-        self.label_5.setObjectName("label_5")
-        self.gridlayout6.addWidget(self.label_5,0,0,1,2)
-
-        self.chatSkin_preview = QtGui.QTextBrowser(self.page_2)
-        self.chatSkin_preview.setObjectName("chatSkin_preview")
-        self.gridlayout6.addWidget(self.chatSkin_preview,3,0,1,2)
-        self.stackedWidget.addWidget(self.page_2)
-
-        self.page = QtGui.QWidget()
-        self.page.setObjectName("page")
-
-        self.gridlayout7 = QtGui.QGridLayout(self.page)
-        self.gridlayout7.setMargin(9)
-        self.gridlayout7.setSpacing(6)
-        self.gridlayout7.setObjectName("gridlayout7")
-
-        spacerItem4 = QtGui.QSpacerItem(20,221,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout7.addItem(spacerItem4,4,0,1,1)
+        spacerItem3 = QtGui.QSpacerItem(20,221,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout6.addItem(spacerItem3,4,0,1,1)
 
         self.label_10 = QtGui.QLabel(self.page)
+        self.label_10.setAlignment(QtCore.Qt.AlignCenter)
         self.label_10.setWordWrap(True)
         self.label_10.setObjectName("label_10")
-        self.gridlayout7.addWidget(self.label_10,3,0,1,1)
+        self.gridlayout6.addWidget(self.label_10,3,0,1,1)
 
         self.groupBox = QtGui.QGroupBox(self.page)
         self.groupBox.setObjectName("groupBox")
@@ -274,64 +245,98 @@ class Ui_preferences(object):
         self.roster_iconSize.setObjectName("roster_iconSize")
         self.hboxlayout3.addWidget(self.roster_iconSize)
         self.vboxlayout4.addLayout(self.hboxlayout3)
-        self.gridlayout7.addWidget(self.groupBox,2,0,1,1)
+        self.gridlayout6.addWidget(self.groupBox,2,0,1,1)
 
         self.label_6 = QtGui.QLabel(self.page)
         self.label_6.setObjectName("label_6")
-        self.gridlayout7.addWidget(self.label_6,0,0,1,2)
+        self.gridlayout6.addWidget(self.label_6,0,0,1,2)
 
         self.line_5 = QtGui.QFrame(self.page)
         self.line_5.setFrameShape(QtGui.QFrame.HLine)
         self.line_5.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_5.setObjectName("line_5")
-        self.gridlayout7.addWidget(self.line_5,1,0,1,2)
+        self.gridlayout6.addWidget(self.line_5,1,0,1,2)
 
-        spacerItem5 = QtGui.QSpacerItem(81,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout7.addItem(spacerItem5,2,1,1,1)
+        spacerItem4 = QtGui.QSpacerItem(81,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout6.addItem(spacerItem4,2,1,1,1)
         self.stackedWidget.addWidget(self.page)
 
         self.page_3 = QtGui.QWidget()
         self.page_3.setObjectName("page_3")
 
-        self.gridlayout8 = QtGui.QGridLayout(self.page_3)
-        self.gridlayout8.setMargin(9)
-        self.gridlayout8.setSpacing(6)
-        self.gridlayout8.setObjectName("gridlayout8")
-
-        self.themes = QtGui.QListWidget(self.page_3)
-        self.themes.setIconSize(QtCore.QSize(128,128))
-        self.themes.setViewMode(QtGui.QListView.IconMode)
-        self.themes.setObjectName("themes")
-        self.gridlayout8.addWidget(self.themes,2,0,1,1)
-
-        self.label_7 = QtGui.QLabel(self.page_3)
-        self.label_7.setObjectName("label_7")
-        self.gridlayout8.addWidget(self.label_7,0,0,1,1)
+        self.gridlayout7 = QtGui.QGridLayout(self.page_3)
+        self.gridlayout7.setMargin(9)
+        self.gridlayout7.setSpacing(6)
+        self.gridlayout7.setObjectName("gridlayout7")
 
         self.line_6 = QtGui.QFrame(self.page_3)
         self.line_6.setFrameShape(QtGui.QFrame.HLine)
         self.line_6.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_6.setObjectName("line_6")
-        self.gridlayout8.addWidget(self.line_6,1,0,1,1)
+        self.gridlayout7.addWidget(self.line_6,1,0,1,1)
+
+        self.label_7 = QtGui.QLabel(self.page_3)
+        self.label_7.setObjectName("label_7")
+        self.gridlayout7.addWidget(self.label_7,0,0,1,1)
+
+        self.tabWidget = QtGui.QTabWidget(self.page_3)
+        self.tabWidget.setObjectName("tabWidget")
+
+        self.tab = QtGui.QWidget()
+        self.tab.setObjectName("tab")
+
+        self.gridlayout8 = QtGui.QGridLayout(self.tab)
+        self.gridlayout8.setMargin(9)
+        self.gridlayout8.setSpacing(6)
+        self.gridlayout8.setObjectName("gridlayout8")
+
+        self.themes = QtGui.QListWidget(self.tab)
+        self.themes.setIconSize(QtCore.QSize(128,128))
+        self.themes.setViewMode(QtGui.QListView.IconMode)
+        self.themes.setObjectName("themes")
+        self.gridlayout8.addWidget(self.themes,0,0,1,1)
+        self.tabWidget.addTab(self.tab,"")
+
+        self.tab_2 = QtGui.QWidget()
+        self.tab_2.setObjectName("tab_2")
+
+        self.gridlayout9 = QtGui.QGridLayout(self.tab_2)
+        self.gridlayout9.setMargin(9)
+        self.gridlayout9.setSpacing(6)
+        self.gridlayout9.setObjectName("gridlayout9")
+
+        self.chatSkin_preview = QtGui.QTextBrowser(self.tab_2)
+        self.chatSkin_preview.setObjectName("chatSkin_preview")
+        self.gridlayout9.addWidget(self.chatSkin_preview,1,0,1,2)
+
+        self.chatSkin_list = QtGui.QComboBox(self.tab_2)
+        self.chatSkin_list.setMinimumSize(QtCore.QSize(130,0))
+        self.chatSkin_list.setObjectName("chatSkin_list")
+        self.gridlayout9.addWidget(self.chatSkin_list,0,0,1,1)
+
+        spacerItem5 = QtGui.QSpacerItem(31,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout9.addItem(spacerItem5,0,1,1,1)
+        self.tabWidget.addTab(self.tab_2,"")
+        self.gridlayout7.addWidget(self.tabWidget,2,0,1,1)
         self.stackedWidget.addWidget(self.page_3)
 
         self.page_5 = QtGui.QWidget()
         self.page_5.setObjectName("page_5")
 
-        self.gridlayout9 = QtGui.QGridLayout(self.page_5)
-        self.gridlayout9.setMargin(9)
-        self.gridlayout9.setSpacing(6)
-        self.gridlayout9.setObjectName("gridlayout9")
+        self.gridlayout10 = QtGui.QGridLayout(self.page_5)
+        self.gridlayout10.setMargin(9)
+        self.gridlayout10.setSpacing(6)
+        self.gridlayout10.setObjectName("gridlayout10")
 
         self.line_7 = QtGui.QFrame(self.page_5)
         self.line_7.setFrameShape(QtGui.QFrame.HLine)
         self.line_7.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_7.setObjectName("line_7")
-        self.gridlayout9.addWidget(self.line_7,1,0,1,1)
+        self.gridlayout10.addWidget(self.line_7,1,0,1,1)
 
         self.label_8 = QtGui.QLabel(self.page_5)
         self.label_8.setObjectName("label_8")
-        self.gridlayout9.addWidget(self.label_8,0,0,1,1)
+        self.gridlayout10.addWidget(self.label_8,0,0,1,1)
 
         self.plugins = QtGui.QTreeWidget(self.page_5)
         self.plugins.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
@@ -339,12 +344,9 @@ class Ui_preferences(object):
         self.plugins.setRootIsDecorated(False)
         self.plugins.setObjectName("plugins")
         self.plugins.headerItem().setText(0,"")
-        self.gridlayout9.addWidget(self.plugins,2,0,1,1)
+        self.gridlayout10.addWidget(self.plugins,2,0,1,1)
         self.stackedWidget.addWidget(self.page_5)
         self.gridlayout.addWidget(self.stackedWidget,0,1,1,2)
-
-        spacerItem6 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem6,1,1,1,1)
 
         self.listWidget = QtGui.QListWidget(preferences)
 
@@ -353,8 +355,8 @@ class Ui_preferences(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.listWidget.sizePolicy().hasHeightForWidth())
         self.listWidget.setSizePolicy(sizePolicy)
-        self.listWidget.setMinimumSize(QtCore.QSize(150,0))
-        self.listWidget.setMaximumSize(QtCore.QSize(150,16777215))
+        self.listWidget.setMinimumSize(QtCore.QSize(190,0))
+        self.listWidget.setMaximumSize(QtCore.QSize(190,16777215))
         self.listWidget.setIconSize(QtCore.QSize(32,32))
         self.listWidget.setViewMode(QtGui.QListView.ListMode)
         self.listWidget.setObjectName("listWidget")
@@ -374,8 +376,12 @@ class Ui_preferences(object):
         self.hboxlayout4.addWidget(self.cancelButton)
         self.gridlayout.addLayout(self.hboxlayout4,1,2,1,1)
 
+        spacerItem6 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem6,1,1,1,1)
+
         self.retranslateUi(preferences)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.cancelButton,QtCore.SIGNAL("clicked()"),preferences.reject)
         QtCore.QObject.connect(self.saveButton,QtCore.SIGNAL("clicked()"),preferences.accept)
         QtCore.QObject.connect(self.listWidget,QtCore.SIGNAL("currentRowChanged(int)"),self.stackedWidget.setCurrentIndex)
@@ -410,11 +416,6 @@ class Ui_preferences(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Connection</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_5.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-        "p, li { white-space: pre-wrap; }\n"
-        "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
-        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Chat skins</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.chatSkin_preview.setToolTip(QtGui.QApplication.translate("preferences", "Here you see preview of the selected chat look.", None, QtGui.QApplication.UnicodeUTF8))
         self.label_10.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
@@ -432,11 +433,14 @@ class Ui_preferences(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Roster</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.themes.setToolTip(QtGui.QApplication.translate("preferences", "Choose whe theme of Jabbim, then restart the client", None, QtGui.QApplication.UnicodeUTF8))
         self.label_7.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
-        "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
-        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Themes</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
+        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\';\"><span style=\" font-size:12pt; font-weight:600;\">View</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.themes.setToolTip(QtGui.QApplication.translate("preferences", "Choose whe theme of Jabbim, then restart the client", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("preferences", "Themes", None, QtGui.QApplication.UnicodeUTF8))
+        self.chatSkin_preview.setToolTip(QtGui.QApplication.translate("preferences", "Here you see preview of the selected chat look.", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("preferences", "Chat Themes", None, QtGui.QApplication.UnicodeUTF8))
         self.label_8.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
@@ -455,20 +459,16 @@ class Ui_preferences(object):
         item1.setIcon(QtGui.QIcon("images/32x32/categories/applications-internet.png"))
 
         item2 = QtGui.QListWidgetItem(self.listWidget)
-        item2.setText(QtGui.QApplication.translate("preferences", "Chat skins", None, QtGui.QApplication.UnicodeUTF8))
-        item2.setIcon(QtGui.QIcon("images/32x32/categories/applications-graphics.png"))
+        item2.setText(QtGui.QApplication.translate("preferences", "Roster", None, QtGui.QApplication.UnicodeUTF8))
+        item2.setIcon(QtGui.QIcon("images/32x32/categories/system-users.png"))
 
         item3 = QtGui.QListWidgetItem(self.listWidget)
-        item3.setText(QtGui.QApplication.translate("preferences", "Roster", None, QtGui.QApplication.UnicodeUTF8))
-        item3.setIcon(QtGui.QIcon("images/32x32/categories/system-users.png"))
+        item3.setText(QtGui.QApplication.translate("preferences", "View", None, QtGui.QApplication.UnicodeUTF8))
+        item3.setIcon(QtGui.QIcon("images/32x32/categories/preferences-desktop-theme.png"))
 
         item4 = QtGui.QListWidgetItem(self.listWidget)
-        item4.setText(QtGui.QApplication.translate("preferences", "Themes", None, QtGui.QApplication.UnicodeUTF8))
-        item4.setIcon(QtGui.QIcon("images/32x32/categories/preferences-desktop-theme.png"))
-
-        item5 = QtGui.QListWidgetItem(self.listWidget)
-        item5.setText(QtGui.QApplication.translate("preferences", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
-        item5.setIcon(QtGui.QIcon("images/32x32/categories/applications-accessories.png"))
+        item4.setText(QtGui.QApplication.translate("preferences", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
+        item4.setIcon(QtGui.QIcon("images/32x32/categories/applications-accessories.png"))
         self.saveButton.setText(QtGui.QApplication.translate("preferences", "Save", None, QtGui.QApplication.UnicodeUTF8))
         self.cancelButton.setText(QtGui.QApplication.translate("preferences", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
 
