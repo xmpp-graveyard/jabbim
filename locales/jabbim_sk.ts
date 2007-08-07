@@ -1,210 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="en">
+<!DOCTYPE TS><TS version="1.1">
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="widgets/mainWindow.py" line="344"/>
+        <location filename="widgets/mainWindow.py" line="257"/>
         <source>Jabbim</source>
-        <translation>Jabbim</translation>
+        <translation type="unfinished">Jabbim</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="348"/>
+        <location filename="widgets/mainWindow.py" line="261"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:13pt; font-weight:600;&quot;&gt;Connect&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+        <translation type="unfinished">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:13pt; font-weight:600;&quot;&gt;Connect&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="366"/>
+        <location filename="widgets/mainWindow.py" line="262"/>
         <source>Jabber ID:</source>
-        <translation>Jabber ID:</translation>
+        <translation type="unfinished">Jabber ID:</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="350"/>
+        <location filename="widgets/mainWindow.py" line="263"/>
         <source>Password:</source>
-        <translation>Heslo:</translation>
+        <translation type="unfinished">Heslo:</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="351"/>
+        <location filename="widgets/mainWindow.py" line="264"/>
         <source>Save Password</source>
-        <translation>Uložiť heslo</translation>
+        <translation type="unfinished">Uložiť heslo</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="352"/>
+        <location filename="widgets/mainWindow.py" line="265"/>
         <source>Connect</source>
-        <translation>Pripojiť</translation>
+        <translation type="unfinished">Pripojiť</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="353"/>
+        <location filename="widgets/mainWindow.py" line="270"/>
         <source> r</source>
-        <translation> r</translation>
+        <translation type="unfinished"> r</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="354"/>
+        <location filename="widgets/mainWindow.py" line="271"/>
         <source>Roster</source>
-        <translation>Zoznam kontaktov</translation>
+        <translation type="unfinished">Zoznam kontaktov</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="355"/>
+        <location filename="" line="134832268"/>
         <source>Message:</source>
-        <translation>Správa:</translation>
+        <translation type="obsolete">Správa:</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="361"/>
+        <location filename="" line="134832268"/>
         <source>Add</source>
-        <translation>Pridať</translation>
+        <translation type="obsolete">Pridať</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="365"/>
+        <location filename="" line="134832268"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;DejaVu Sans&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Add contact&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+        <translation type="obsolete">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;DejaVu Sans&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Add contact&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="367"/>
+        <location filename="" line="134832268"/>
         <source>Nickname:</source>
-        <translation>Prezývka:</translation>
+        <translation type="obsolete">Prezývka:</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="368"/>
+        <location filename="" line="134832268"/>
         <source>Group:</source>
-        <translation>Skupina:</translation>
+        <translation type="obsolete">Skupina:</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="372"/>
+        <location filename="" line="134832268"/>
         <source>a</source>
-        <translation>a</translation>
+        <translation type="obsolete">a</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="373"/>
+        <location filename="widgets/mainWindow.py" line="288"/>
         <source>Add Contact</source>
-        <translation>Pridať kontakt</translation>
+        <translation type="unfinished">Pridať kontakt</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="374"/>
+        <location filename="widgets/mainWindow.py" line="272"/>
         <source>Name</source>
-        <translation>Meno</translation>
+        <translation type="unfinished">Meno</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="375"/>
+        <location filename="widgets/mainWindow.py" line="273"/>
         <source>Jid</source>
-        <translation>Jid</translation>
+        <translation type="unfinished">Jid</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="376"/>
+        <location filename="widgets/mainWindow.py" line="274"/>
         <source>New bookmark</source>
-        <translation>Nová záložka</translation>
+        <translation type="unfinished">Nová záložka</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="380"/>
+        <location filename="widgets/mainWindow.py" line="278"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;DejaVu Sans&apos;;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Bookmarks&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+        <translation type="unfinished">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;DejaVu Sans&apos;;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Bookmarks&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="381"/>
+        <location filename="widgets/mainWindow.py" line="279"/>
         <source>b</source>
-        <translation>b</translation>
+        <translation type="unfinished">b</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="382"/>
+        <location filename="widgets/mainWindow.py" line="280"/>
         <source>Bookmarks</source>
-        <translation>Záložky</translation>
+        <translation type="unfinished">Záložky</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="383"/>
+        <location filename="widgets/mainWindow.py" line="281"/>
         <source>Events</source>
-        <translation>Udalosti</translation>
+        <translation type="unfinished">Udalosti</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="385"/>
+        <location filename="widgets/mainWindow.py" line="267"/>
         <source>Show offline</source>
-        <translation>Zobraziť offline</translation>
+        <translation type="unfinished">Zobraziť offline</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="387"/>
+        <location filename="widgets/mainWindow.py" line="269"/>
         <source>Offline</source>
-        <translation>Offline</translation>
+        <translation type="unfinished">Offline</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="392"/>
+        <location filename="widgets/mainWindow.py" line="285"/>
         <source>Preferences</source>
-        <translation>Nastavenia</translation>
+        <translation type="unfinished">Nastavenia</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="390"/>
+        <location filename="widgets/mainWindow.py" line="283"/>
         <source>Actions</source>
-        <translation>Akcie</translation>
+        <translation type="unfinished">Akcie</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="391"/>
+        <location filename="widgets/mainWindow.py" line="284"/>
         <source>Show XML</source>
-        <translation>Zobraziť XML</translation>
+        <translation type="unfinished">Zobraziť XML</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="393"/>
+        <location filename="widgets/mainWindow.py" line="286"/>
         <source>Join Groupchat</source>
-        <translation>Pripojiť sa ku konferencii</translation>
+        <translation type="unfinished">Pripojiť sa ku konferencii</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="389"/>
+        <location filename="widgets/mainWindow.py" line="282"/>
         <source>Plugins</source>
-        <translation>Zásuvné moduly</translation>
+        <translation type="unfinished">Zásuvné moduly</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="394"/>
+        <location filename="widgets/mainWindow.py" line="287"/>
         <source>Quit</source>
-        <translation>Koniec</translation>
+        <translation type="unfinished">Koniec</translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="356"/>
-        <source>Enter a short message that you want to send to the added contact.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/mainWindow.py" line="360"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Hi! I am adding you to my roster using the jabber client Jabbim! Please authorize me to see you when you are available. Thanks!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/mainWindow.py" line="369"/>
-        <source>If you don&apos;t know contact&apos;s JID, you can&apos;t add &lt;br&gt;contact directly (use search function)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/mainWindow.py" line="370"/>
-        <source>What do you want to see in your roster :)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/mainWindow.py" line="371"/>
-        <source>Choose existing group or enter name for the new group</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/mainWindow.py" line="384"/>
+        <location filename="widgets/mainWindow.py" line="266"/>
         <source>You can show/hide contats that are unavailable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/mainWindow.py" line="386"/>
+        <location filename="widgets/mainWindow.py" line="268"/>
         <source>Here you can change your status</source>
         <translation type="unfinished"></translation>
     </message>
@@ -217,7 +189,7 @@ p, li { white-space: pre-wrap; }
         <translation>Požiadavka na autorizáciu</translation>
     </message>
     <message>
-        <location filename="widgets/rosterWidget.py" line="44"/>
+        <location filename="" line="134832268"/>
         <source>Od:</source>
         <translation type="obsolete">Od:</translation>
     </message>
@@ -232,12 +204,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/chat.py" line="47"/>
         <source>Chat</source>
-        <translation>Rozhovor</translation>
+        <translation type="unfinished">Rozhovor</translation>
     </message>
     <message>
         <location filename="widgets/chat.py" line="48"/>
         <source>Tab 1</source>
-        <translation>Karta 1</translation>
+        <translation type="unfinished">Karta 1</translation>
     </message>
 </context>
 <context>
@@ -245,17 +217,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/chatwidget_ui.py" line="70"/>
         <source>Form</source>
-        <translation>Formulár</translation>
+        <translation type="unfinished">Formulár</translation>
     </message>
     <message>
         <location filename="widgets/chatwidget_ui.py" line="71"/>
         <source>Send</source>
-        <translation>Poslať</translation>
+        <translation type="unfinished">Poslať</translation>
     </message>
     <message>
         <location filename="widgets/chatwidget_ui.py" line="72"/>
         <source>...</source>
-        <translation>...</translation>
+        <translation type="unfinished">...</translation>
     </message>
 </context>
 <context>
@@ -263,47 +235,47 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/preferences_bookmarks_ui.py" line="117"/>
         <source>Edit bookmark</source>
-        <translation>Upraviť záložku</translation>
+        <translation type="unfinished">Upraviť záložku</translation>
     </message>
     <message>
         <location filename="widgets/preferences_bookmarks_ui.py" line="118"/>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation type="unfinished">OK</translation>
     </message>
     <message>
         <location filename="widgets/preferences_bookmarks_ui.py" line="119"/>
         <source>Cancel</source>
-        <translation>Zrušiť</translation>
+        <translation type="unfinished">Zrušiť</translation>
     </message>
     <message>
         <location filename="widgets/preferences_bookmarks_ui.py" line="120"/>
         <source>Room:</source>
-        <translation>Miestnosť:</translation>
+        <translation type="unfinished">Miestnosť:</translation>
     </message>
     <message>
         <location filename="widgets/preferences_bookmarks_ui.py" line="121"/>
         <source>Server:</source>
-        <translation>Server:</translation>
+        <translation type="unfinished">Server:</translation>
     </message>
     <message>
         <location filename="widgets/preferences_bookmarks_ui.py" line="122"/>
         <source>Name:</source>
-        <translation>Meno:</translation>
+        <translation type="unfinished">Meno:</translation>
     </message>
     <message>
         <location filename="widgets/preferences_bookmarks_ui.py" line="123"/>
         <source>Nickname:</source>
-        <translation>Prezývka:</translation>
+        <translation type="unfinished">Prezývka:</translation>
     </message>
     <message>
         <location filename="widgets/preferences_bookmarks_ui.py" line="124"/>
         <source>Password:</source>
-        <translation>Heslo:</translation>
+        <translation type="unfinished">Heslo:</translation>
     </message>
     <message>
         <location filename="widgets/preferences_bookmarks_ui.py" line="131"/>
         <source>Autojoin</source>
-        <translation>Automaticky sa prihlásiť</translation>
+        <translation type="unfinished">Automaticky sa prihlásiť</translation>
     </message>
     <message>
         <location filename="widgets/preferences_bookmarks_ui.py" line="125"/>
@@ -359,37 +331,37 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/groupchatwidget_ui.py" line="94"/>
         <source>Form</source>
-        <translation>Formulár</translation>
+        <translation type="unfinished">Formulár</translation>
     </message>
     <message>
         <location filename="widgets/groupchatwidget_ui.py" line="96"/>
         <source>user</source>
-        <translation>používateľ</translation>
+        <translation type="unfinished">používateľ</translation>
     </message>
     <message>
         <location filename="widgets/groupchatwidget_ui.py" line="97"/>
         <source>jid</source>
-        <translation>jid</translation>
+        <translation type="unfinished">jid</translation>
     </message>
     <message>
         <location filename="widgets/groupchatwidget_ui.py" line="99"/>
         <source>Room administration</source>
-        <translation>Administrácia miestnosti</translation>
+        <translation type="unfinished">Administrácia miestnosti</translation>
     </message>
     <message>
         <location filename="widgets/groupchatwidget_ui.py" line="101"/>
         <source>Room configuration</source>
-        <translation>Nastavenie miestnosti</translation>
+        <translation type="unfinished">Nastavenie miestnosti</translation>
     </message>
     <message>
         <location filename="widgets/groupchatwidget_ui.py" line="102"/>
         <source>Send</source>
-        <translation>Poslať</translation>
+        <translation type="unfinished">Poslať</translation>
     </message>
     <message>
         <location filename="widgets/groupchatwidget_ui.py" line="104"/>
         <source>...</source>
-        <translation>...</translation>
+        <translation type="unfinished">...</translation>
     </message>
     <message>
         <location filename="widgets/groupchatwidget_ui.py" line="95"/>
@@ -417,47 +389,47 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="118"/>
         <source>Join Group Chat</source>
-        <translation>Pripojiť sa ku konferencii</translation>
+        <translation type="unfinished">Pripojiť sa ku konferencii</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="120"/>
         <source>Bookmark this room</source>
-        <translation>Pridať miestnosť do záložiek</translation>
+        <translation type="unfinished">Pridať miestnosť do záložiek</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="121"/>
         <source>Room:</source>
-        <translation>Miestnosť:</translation>
+        <translation type="unfinished">Miestnosť:</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="122"/>
         <source>Server:</source>
-        <translation>Server:</translation>
+        <translation type="unfinished">Server:</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="123"/>
         <source>Conference name:</source>
-        <translation>Názov konferencie:</translation>
+        <translation type="unfinished">Názov konferencie:</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="124"/>
         <source>Nickname:</source>
-        <translation>Prezývka:</translation>
+        <translation type="unfinished">Prezývka:</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="125"/>
         <source>Password:</source>
-        <translation>Heslo:</translation>
+        <translation type="unfinished">Heslo:</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="131"/>
         <source>Join</source>
-        <translation>Pripojiť</translation>
+        <translation type="unfinished">Pripojiť</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="132"/>
         <source>Cancel</source>
-        <translation>Zrušiť</translation>
+        <translation type="unfinished">Zrušiť</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="119"/>
@@ -523,77 +495,77 @@ p, li { white-space: pre-wrap; }
         <translation>Offline</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="784"/>
+        <location filename="jabbim.py" line="785"/>
         <source>Status</source>
         <translation>Stav</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="967"/>
+        <location filename="jabbim.py" line="968"/>
         <source>Complete</source>
         <translation>Ukončený</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="1134"/>
+        <location filename="jabbim.py" line="1127"/>
         <source>Join</source>
         <translation>Pripojiť</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="1137"/>
+        <location filename="jabbim.py" line="1130"/>
         <source>User list</source>
         <translation>Zoznam používateľov</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="1143"/>
+        <location filename="jabbim.py" line="1136"/>
         <source>Edit bookmark</source>
         <translation>Upraviť záložku</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="1147"/>
+        <location filename="jabbim.py" line="1140"/>
         <source>Delete bookmark</source>
         <translation>Zmazať záložku</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="1281"/>
+        <location filename="jabbim.py" line="1274"/>
         <source>Jabbim</source>
         <translation>Jabbim</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="1281"/>
+        <location filename="jabbim.py" line="1274"/>
         <source>Jabbim is ready! You are connected! :) </source>
         <translation>Jabbim je pripravený! Ste pripojený! :) </translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="1332"/>
+        <location filename="jabbim.py" line="1325"/>
         <source>Login information</source>
         <translation>Prihlasovacie informácie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="1332"/>
+        <location filename="jabbim.py" line="1325"/>
         <source>Save current login information?</source>
         <translation>Uložiť prihlasovacie informácie?</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="815"/>
+        <location filename="jabbim.py" line="816"/>
         <source>Hide / Show</source>
         <translation>Skryť / Zobraziť</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="816"/>
+        <location filename="jabbim.py" line="817"/>
         <source>Quit</source>
         <translation>Koniec</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="1378"/>
+        <location filename="jabbim.py" line="1371"/>
         <source>Error</source>
         <translation>Chyba</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="1376"/>
+        <location filename="jabbim.py" line="1369"/>
         <source>Bad Jabber ID or password.</source>
         <translation>Nesprávne Jabber ID alebo heslo.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="1378"/>
+        <location filename="jabbim.py" line="1371"/>
         <source>Server is not found.</source>
         <translation>Server nebol nájdený.</translation>
     </message>
@@ -601,78 +573,78 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>preferences</name>
     <message>
-        <location filename="widgets/preferences_ui.py" line="386"/>
+        <location filename="widgets/preferences_ui.py" line="392"/>
         <source>Jabbim - Preferences</source>
-        <translation>Jabbim - Nastavenia</translation>
+        <translation type="unfinished">Jabbim - Nastavenia</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="472"/>
         <source>Save</source>
-        <translation>Uložiť</translation>
+        <translation type="unfinished">Uložiť</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="473"/>
         <source>Cancel</source>
-        <translation>Zrušiť</translation>
-    </message>
-    <message>
-        <location filename="widgets/preferences_ui.py" line="450"/>
-        <source>Jabbim</source>
-        <translation>Jabbim</translation>
+        <translation type="unfinished">Zrušiť</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="454"/>
-        <source>Connection</source>
-        <translation>Spojenie</translation>
+        <source>Jabbim</source>
+        <translation type="unfinished">Jabbim</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="458"/>
+        <source>Connection</source>
+        <translation type="unfinished">Spojenie</translation>
+    </message>
+    <message>
+        <location filename="" line="134832268"/>
         <source>Chat skins</source>
-        <translation>Vzhľady rozhovoru</translation>
+        <translation type="obsolete">Vzhľady rozhovoru</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="462"/>
         <source>Roster</source>
-        <translation>Zoznam kontaktov</translation>
+        <translation type="unfinished">Zoznam kontaktov</translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="466"/>
+        <location filename="widgets/preferences_ui.py" line="441"/>
         <source>Themes</source>
-        <translation>Vzhľady programu</translation>
+        <translation type="unfinished">Vzhľady programu</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="470"/>
         <source>Plugins</source>
-        <translation>Zásuvné moduly</translation>
+        <translation type="unfinished">Zásuvné moduly</translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="390"/>
+        <location filename="widgets/preferences_ui.py" line="396"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Jabbim&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+        <translation type="unfinished">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Jabbim&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="392"/>
+        <location filename="widgets/preferences_ui.py" line="398"/>
         <source>Save Jabbim position on close</source>
-        <translation>Uložiť pozíciu Jabbim pri ukončení</translation>
+        <translation type="unfinished">Uložiť pozíciu Jabbim pri ukončení</translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="402"/>
+        <location filename="widgets/preferences_ui.py" line="408"/>
         <source>Jabber ID:</source>
-        <translation>Jabber ID:</translation>
+        <translation type="unfinished">Jabber ID:</translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="403"/>
+        <location filename="widgets/preferences_ui.py" line="409"/>
         <source>Password:</source>
-        <translation>Heslo:</translation>
+        <translation type="unfinished">Heslo:</translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="412"/>
+        <location filename="widgets/preferences_ui.py" line="418"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
@@ -680,15 +652,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="416"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Chat skins&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/preferences_ui.py" line="434"/>
+        <location filename="widgets/preferences_ui.py" line="435"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
@@ -696,15 +660,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="439"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Themes&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/preferences_ui.py" line="443"/>
+        <location filename="widgets/preferences_ui.py" line="447"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;DejaVu Sans&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
@@ -712,127 +668,127 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="445"/>
+        <location filename="widgets/preferences_ui.py" line="449"/>
         <source>Name</source>
-        <translation>Meno</translation>
+        <translation type="unfinished">Meno</translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="446"/>
+        <location filename="widgets/preferences_ui.py" line="450"/>
         <source>Description</source>
-        <translation>Popis</translation>
+        <translation type="unfinished">Popis</translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="422"/>
+        <location filename="widgets/preferences_ui.py" line="423"/>
         <source>Roster Style</source>
-        <translation>Štýl zoznamu kontaktov</translation>
+        <translation type="unfinished">Štýl zoznamu kontaktov</translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="424"/>
+        <location filename="widgets/preferences_ui.py" line="425"/>
         <source>Normal</source>
-        <translation>Normálny</translation>
-    </message>
-    <message>
-        <location filename="widgets/preferences_ui.py" line="426"/>
-        <source>Compact</source>
-        <translation>Kompaktný</translation>
+        <translation type="unfinished">Normálny</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="427"/>
-        <source>Roster icons size:</source>
-        <translation>Veľkosť ikon v zozname kontaktov:</translation>
+        <source>Compact</source>
+        <translation type="unfinished">Kompaktný</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="428"/>
-        <source>16x16</source>
-        <translation>16x16</translation>
+        <source>Roster icons size:</source>
+        <translation type="unfinished">Veľkosť ikon v zozname kontaktov:</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="429"/>
-        <source>22x22</source>
-        <translation>22x22</translation>
+        <source>16x16</source>
+        <translation type="unfinished">16x16</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="430"/>
-        <source>32x32</source>
-        <translation>32x32</translation>
+        <source>22x22</source>
+        <translation type="unfinished">22x22</translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="391"/>
+        <location filename="widgets/preferences_ui.py" line="431"/>
+        <source>32x32</source>
+        <translation type="unfinished">32x32</translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences_ui.py" line="397"/>
         <source>Jabbim will remember its position and geometry.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="393"/>
+        <location filename="widgets/preferences_ui.py" line="399"/>
         <source>Advanced</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="394"/>
+        <location filename="widgets/preferences_ui.py" line="400"/>
         <source>Resource:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="395"/>
+        <location filename="widgets/preferences_ui.py" line="401"/>
         <source>Priority:</source>
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="widgets/preferences_ui.py" line="396"/>
+        <location filename="widgets/preferences_ui.py" line="402"/>
         <source>Use when you have more clients. Higher number &lt;br&gt;means higher preference of this client.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="397"/>
+        <location filename="widgets/preferences_ui.py" line="403"/>
         <source>90; </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="398"/>
+        <location filename="widgets/preferences_ui.py" line="404"/>
         <source>0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="399"/>
+        <location filename="widgets/preferences_ui.py" line="405"/>
         <source>Priority steps are per 5 numbers: 25 for chatty, 20 for available, etc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="400"/>
+        <location filename="widgets/preferences_ui.py" line="406"/>
         <source>Change priority automatically due to status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="404"/>
+        <location filename="widgets/preferences_ui.py" line="410"/>
         <source>Autojoin:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="405"/>
+        <location filename="widgets/preferences_ui.py" line="411"/>
         <source>It has the form: nickname@jabber_server.org</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="406"/>
+        <location filename="widgets/preferences_ui.py" line="412"/>
         <source>Fill in your secret password :)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="407"/>
+        <location filename="widgets/preferences_ui.py" line="413"/>
         <source>Jabbim will join automatically if password and &lt;br&gt; Jabber ID are saved.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="408"/>
+        <location filename="widgets/preferences_ui.py" line="414"/>
         <source>Automatically join at startup.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="417"/>
+        <location filename="widgets/preferences_ui.py" line="442"/>
         <source>Here you see preview of the selected chat look.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="421"/>
+        <location filename="widgets/preferences_ui.py" line="422"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
@@ -840,23 +796,41 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="423"/>
+        <location filename="widgets/preferences_ui.py" line="424"/>
         <source>Big status icons, big avatars and you will see status messages, </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="425"/>
+        <location filename="widgets/preferences_ui.py" line="426"/>
         <source>Smaller  status icons and avatars, no status messages.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="435"/>
+        <location filename="widgets/preferences_ui.py" line="440"/>
         <source>Choose whe theme of Jabbim, then restart the client</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences_ui.py" line="444"/>
+        <location filename="widgets/preferences_ui.py" line="448"/>
         <source>Tick plugins you want to use, right click to change settings.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences_ui.py" line="439"/>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;DejaVu Sans&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Sans Serif&apos;;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;View&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences_ui.py" line="443"/>
+        <source>Chat Themes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences_ui.py" line="466"/>
+        <source>View</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -918,22 +892,22 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/rosterWidget.py" line="250"/>
         <source>Roster</source>
-        <translation>Zoznam kontaktov</translation>
+        <translation type="unfinished">Zoznam kontaktov</translation>
     </message>
     <message>
         <location filename="widgets/rosterWidget.py" line="251"/>
         <source>id</source>
-        <translation>id</translation>
+        <translation type="unfinished">id</translation>
     </message>
     <message>
         <location filename="widgets/rosterWidget.py" line="252"/>
         <source>name</source>
-        <translation>meno</translation>
+        <translation type="unfinished">meno</translation>
     </message>
     <message>
         <location filename="widgets/rosterWidget.py" line="254"/>
         <source>test</source>
-        <translation>test</translation>
+        <translation type="unfinished">test</translation>
     </message>
 </context>
 <context>
@@ -1057,12 +1031,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/status.py" line="45"/>
         <source>Set status message</source>
-        <translation>Nastviť stavovú správu</translation>
+        <translation type="unfinished">Nastviť stavovú správu</translation>
     </message>
     <message>
         <location filename="widgets/status.py" line="46"/>
         <source>Set</source>
-        <translation>Nastaviť</translation>
+        <translation type="unfinished">Nastaviť</translation>
     </message>
     <message>
         <location filename="widgets/status.py" line="47"/>
@@ -1073,12 +1047,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>statusWindow</name>
     <message>
-        <location filename="jabbim.py" line="1428"/>
+        <location filename="jabbim.py" line="1421"/>
         <source>Window will be closed in </source>
         <translation>Okno sa zatvorí o </translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="1428"/>
+        <location filename="jabbim.py" line="1421"/>
         <source> seconds.</source>
         <translation> s.</translation>
     </message>
@@ -1088,12 +1062,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/subscription.py" line="53"/>
         <source>Form</source>
-        <translation>Formulár</translation>
+        <translation type="unfinished">Formulár</translation>
     </message>
     <message>
         <location filename="widgets/subscription.py" line="57"/>
         <source>User hanzz@njs.netlab.cz wants to add you to his/her roster. Add him/her?</source>
-        <translation>Používateľ hanzz@njs.netlab.cz si vás chce pridať do svojho zoznamu kontaktov. Chcete si ho pridať?</translation>
+        <translation type="unfinished">Používateľ hanzz@njs.netlab.cz si vás chce pridať do svojho zoznamu kontaktov. Chcete si ho pridať?</translation>
     </message>
     <message>
         <location filename="widgets/subscription.py" line="54"/>
@@ -1116,22 +1090,22 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/tooltip_ui.py" line="63"/>
         <source>Form</source>
-        <translation>Formulár</translation>
+        <translation type="unfinished">Formulár</translation>
     </message>
     <message>
         <location filename="widgets/tooltip_ui.py" line="64"/>
         <source>Presence</source>
-        <translation>Prítomnosť</translation>
+        <translation type="unfinished">Prítomnosť</translation>
     </message>
     <message>
         <location filename="widgets/tooltip_ui.py" line="65"/>
         <source>TextLabel</source>
-        <translation>TextLabel</translation>
+        <translation type="unfinished">TextLabel</translation>
     </message>
     <message>
         <location filename="widgets/tooltip_ui.py" line="66"/>
         <source>Jabber ID</source>
-        <translation>Jabber ID</translation>
+        <translation type="unfinished">Jabber ID</translation>
     </message>
 </context>
 <context>
@@ -1139,12 +1113,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/xmlConsole.py" line="40"/>
         <source>MainWindow</source>
-        <translation>Hlavné okno</translation>
+        <translation type="unfinished">Hlavné okno</translation>
     </message>
     <message>
         <location filename="widgets/xmlConsole.py" line="41"/>
         <source>Enable console</source>
-        <translation>Zapnúť konzolu</translation>
+        <translation type="unfinished">Zapnúť konzolu</translation>
     </message>
 </context>
 </TS>
