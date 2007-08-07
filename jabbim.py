@@ -306,8 +306,8 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 
 
-		for k,v in self.roster['groups'].iteritems():
-			self.main.ui.add_group.addItem(unicode(k))
+		#for k,v in self.roster['groups'].iteritems():
+			#self.main.ui.add_group.addItem(unicode(k))
 
 ##		log.msg( "METAPARENTS"+unicode(self.metaParents))
 		if MainWindow.config.has_key('autoPriority'):
@@ -758,10 +758,11 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(app,QtCore.SIGNAL("lastWindowClosed() "),self.disconnect)
 		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
 		app.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
+		app.connect(self.ui.actionAdd_Contact, QtCore.SIGNAL("triggered ( bool )"),self.addContactMainWindow)
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
 		app.connect(self.ui.actionJoin_Groupchat, QtCore.SIGNAL("triggered ( bool )"),self.joinGroupchat)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
-		app.connect(self.ui.addContact, QtCore.SIGNAL("clicked ()"),self.addContactMainWindow)
+		#app.connect(self.ui.addContact, QtCore.SIGNAL("clicked ()"),self.addContactMainWindow)
 		app.connect(self.ui.newBookmark, QtCore.SIGNAL("clicked ()"),self.newBookmark)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
 		QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered ( bool )"),self.trayQuit)
@@ -1076,16 +1077,8 @@ class mainWindow(QtGui.QMainWindow):
 
 	def addContactMainWindow(self):
 		# add contact
-		jid=unicode(self.ui.add_jid.text())
-		nickname=unicode(self.ui.add_nickname.text())
-		group=unicode(self.ui.add_group.currentText())
-		message=unicode(self.ui.add_message.toPlainText())
-		
-		self.client.addContact(jid,message,nickname,[group])
-		
-		self.ui.add_jid.setText("")
-		self.ui.add_nickname.setText("")
-		self.ui.add_message.setPlainText("")
+		dialog=widgets.addcontact.addContactDialog(self,self)
+		dialog.exec_()
 
 	def bookmarksClicked(self,item,i):
 		# join bookmarked groupchat
