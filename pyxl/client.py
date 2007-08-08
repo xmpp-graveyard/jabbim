@@ -412,17 +412,28 @@ class Client(derived):
 		self.reactor.callFromThread(self.main.cache.set_avatar,jid, ['nic', 'nic'])
 
 	def _vcardReceived(self, el):
-		log.msg( 'vcard received')
+		log.msg('vcard received')
 		vcard = el.firstChildElement()
 		card = {} 
 		if vcard == None :
 			return
 		for x in vcard.elements():
+			pref = ''
+
 			if len(x.children)>0:
+				for bz in x.elements():
+					if x.name == 'ADR' or x.name == 'TEL':
+						for elm in x.elements():
+							if elm.name =='HOME' or elm.name =='WORK':
+								pref = elm.name + '-'
+								print pref
+								break
+						break
 				for y in x.elements():
-					card[y.name]=unicode(y)
+					card[pref + y.name]=unicode(y)
 			else:
 				card[x.name]=unicode(x)
+		print card
 		self.reactor.callFromThread(self.on_vcardReceived,el['from'], card)
 
 	def getBookmarks(self):
