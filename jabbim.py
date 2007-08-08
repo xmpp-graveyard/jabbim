@@ -798,7 +798,7 @@ class mainWindow(QtGui.QMainWindow):
 		action.setData(QtCore.QVariant("offline"))
 		self.ui.statusButton.setMenu(self.statusMenu)
 		app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
-		self.ui.statusButton.setText(unicode(self.status["offline"]))
+		#self.ui.statusButton.setText(unicode(self.status["offline"]))
 		self.ui.statusButton.setIcon(self.getIcon("offline",size="16x16"))
 		self.ui.statusButton.hide()
 		#self.config['rosterIconSize']="22x22"
@@ -1258,7 +1258,7 @@ class mainWindow(QtGui.QMainWindow):
 		data=data.toString()
 		setstatus=statusWindow(data)
 		if setstatus.exec_()==1:
-			self.ui.statusButton.setText(unicode(action.text()))
+			self.ui.statusButton.setText(unicode(""))
 			self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
 
 	def loadRoster(self):
@@ -1273,7 +1273,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.selfName.setText("<h2>"+unicode(self.client.jid.userhost())+"</h2>")
 		self.client.getVCard(unicode(self.client.jid.userhost()))
 		self.ui.rosterStackedWidget.setCurrentIndex(1)
-		self.ui.statusButton.setText(unicode(self.status["online"]))
+		#self.ui.statusButton.setText(unicode(self.status["online"]))
 		self.ui.statusButton.setIcon(self.getIcon("online",size="16x16"))
 		self.ui.statusButton.show()
 		self.ui.showOffline.show()
@@ -1375,7 +1375,7 @@ class mainWindow(QtGui.QMainWindow):
 		elif error=="dns":
 			QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Server is not found.")),0,1)
 		
-		MainWindow.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
+		#MainWindow.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
 		MainWindow.ui.statusButton.setIcon(MainWindow.getIcon("offline",size="16x16"))
 		MainWindow.ui.statusButton.hide()
 		MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
@@ -1462,6 +1462,7 @@ class statusWindow(QtGui.QDialog):
 						pri=MainWindow.config['priority']
 				else:
 					pri="0"
+			MainWindow.ui.selfStatus.setText(unicode(self.ui.status.toPlainText()).replace("\n"," ")[:25]+" ...")
 			MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()),priority=pri)
 			#musime updatovat MUCy
 			for muc in MainWindow.client.groupchats.itervalues():
