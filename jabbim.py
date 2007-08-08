@@ -649,6 +649,7 @@ class clientClass(pyxl.client.Client):
 		#print card
 		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db
 		log.msg("vcard "+unicode(jid))
+		log.msg(unicode(card))
 		if card.has_key("BINVAL"):
 			pixmap=QtGui.QPixmap()
 			image=base64.decodestring(str(card["BINVAL"]))
@@ -656,17 +657,17 @@ class clientClass(pyxl.client.Client):
 			f.write(image)
 			f.close()
 			pixmap.loadFromData(image)
+			log.msg(unicode(self.jid.userhost())+" "+unicode(jid))
+			if unicode(self.jid.userhost())==unicode(jid):
+				self.main.ui.selfAvatar.setPixmap(pixmap.scaled(38,38))
 			for item in self.main.ui.roster.getUserItems(jid):
-##				log.msg(utils.cprint("yellow","setting icon: "+jid))
 				item.setIcon(3,QtGui.QIcon(pixmap))
-			#for item in self.main.ui.roster.getMetaItems(jid):
-##				log.msg(utils.cprint("yellow","setting icon: "+jid))
-				#item.setIcon(3,QtGui.QIcon(pixmap))
 			sha=sha1(image).hexdigest()
 			self.main.cache.set_avatar(jid, ['avatars/'+jid, sha])
 			self.main._loadAvatar('avatars/'+jid, sha, jid)
 		else:
 			self.main.cache.set_avatar(jid, ['nic', 'nic'])
+
 	def on_fileReceived(self, sid, id):
 		q = QtGui.QMessageBox.question(self.main,self.main.tr("File transfer"), unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
 		if q == QtGui.QMessageBox.Yes:
@@ -835,6 +836,10 @@ class mainWindow(QtGui.QMainWindow):
 			self.chat.move(int(self.config['chatGeometry'][0]),int(self.config['chatGeometry'][1]))
 		else:
 			self.chat.setGeometry(int(self.config['chatGeometry'][0]),int(self.config['chatGeometry'][1]),int(w),int(h))
+		
+		self.ui.groupStyleWidget.hide()
+		self.ui.userStyleWidget.hide()
+		
 		if self.config['autoJoin']=='True':
 			self.connect()
 
@@ -1265,14 +1270,14 @@ class mainWindow(QtGui.QMainWindow):
 		layout.addWidget(self.ui.roster)
 
 	def _connected(self):
-
+		self.ui.selfName.setText("<h2>"+unicode(self.client.jid.userhost())+"</h2>")
+		self.client.getVCard(unicode(self.client.jid.userhost()))
 		self.ui.rosterStackedWidget.setCurrentIndex(1)
 		self.ui.statusButton.setText(unicode(self.status["online"]))
 		self.ui.statusButton.setIcon(self.getIcon("online",size="16x16"))
 		self.ui.statusButton.show()
 		self.ui.showOffline.show()
 		self.tray.showMessage(self.tr("Jabbim"),self.tr("Jabbim is ready! You are connected! :) "))
-
 
 	def disconnect(self):
 		#if self.client!=None:

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Tue Aug  7 07:06:21 2007
+# Created: Wed Aug  8 08:41:41 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -20,8 +20,8 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
 
         self.gridlayout = QtGui.QGridLayout(self.centralwidget)
-        self.gridlayout.setMargin(9)
-        self.gridlayout.setSpacing(6)
+        self.gridlayout.setMargin(0)
+        self.gridlayout.setSpacing(0)
         self.gridlayout.setObjectName("gridlayout")
 
         self.rosterStackedWidget = QtGui.QStackedWidget(self.centralwidget)
@@ -55,7 +55,7 @@ class Ui_MainWindow(object):
 
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setMargin(0)
-        self.hboxlayout.setSpacing(6)
+        self.hboxlayout.setSpacing(0)
         self.hboxlayout.setObjectName("hboxlayout")
 
         self.vboxlayout = QtGui.QVBoxLayout()
@@ -90,7 +90,7 @@ class Ui_MainWindow(object):
 
         self.hboxlayout1 = QtGui.QHBoxLayout()
         self.hboxlayout1.setMargin(0)
-        self.hboxlayout1.setSpacing(6)
+        self.hboxlayout1.setSpacing(0)
         self.hboxlayout1.setObjectName("hboxlayout1")
 
         spacerItem1 = QtGui.QSpacerItem(121,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
@@ -120,8 +120,41 @@ class Ui_MainWindow(object):
 
         self.gridlayout2 = QtGui.QGridLayout(self.roster)
         self.gridlayout2.setMargin(0)
-        self.gridlayout2.setSpacing(0)
+        self.gridlayout2.setSpacing(2)
         self.gridlayout2.setObjectName("gridlayout2")
+
+        self.frame = QtGui.QFrame(self.roster)
+        self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
+        self.frame.setFrameShadow(QtGui.QFrame.Plain)
+        self.frame.setObjectName("frame")
+
+        self.gridlayout3 = QtGui.QGridLayout(self.frame)
+        self.gridlayout3.setMargin(2)
+        self.gridlayout3.setSpacing(0)
+        self.gridlayout3.setObjectName("gridlayout3")
+
+        spacerItem3 = QtGui.QSpacerItem(161,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout3.addItem(spacerItem3,1,2,1,1)
+
+        self.statusButton = QtGui.QToolButton(self.frame)
+        self.statusButton.setMaximumSize(QtCore.QSize(16777215,20))
+        self.statusButton.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.statusButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+        self.statusButton.setObjectName("statusButton")
+        self.gridlayout3.addWidget(self.statusButton,1,1,1,1)
+
+        self.selfAvatar = QtGui.QLabel(self.frame)
+        self.selfAvatar.setMargin(2)
+        self.selfAvatar.setObjectName("selfAvatar")
+        self.gridlayout3.addWidget(self.selfAvatar,0,0,2,1)
+
+        spacerItem4 = QtGui.QSpacerItem(171,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout3.addItem(spacerItem4,0,2,1,1)
+
+        self.selfName = QtGui.QLabel(self.frame)
+        self.selfName.setObjectName("selfName")
+        self.gridlayout3.addWidget(self.selfName,0,1,1,1)
+        self.gridlayout2.addWidget(self.frame,0,0,1,1)
 
         self.hboxlayout3 = QtGui.QHBoxLayout()
         self.hboxlayout3.setMargin(0)
@@ -134,15 +167,9 @@ class Ui_MainWindow(object):
         self.showOffline.setObjectName("showOffline")
         self.hboxlayout3.addWidget(self.showOffline)
 
-        spacerItem3 = QtGui.QSpacerItem(121,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.hboxlayout3.addItem(spacerItem3)
-
-        self.statusButton = QtGui.QToolButton(self.roster)
-        self.statusButton.setPopupMode(QtGui.QToolButton.InstantPopup)
-        self.statusButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
-        self.statusButton.setObjectName("statusButton")
-        self.hboxlayout3.addWidget(self.statusButton)
-        self.gridlayout2.addLayout(self.hboxlayout3,1,0,1,1)
+        spacerItem5 = QtGui.QSpacerItem(121,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.hboxlayout3.addItem(spacerItem5)
+        self.gridlayout2.addLayout(self.hboxlayout3,2,0,1,1)
 
         self.tabWidget = QtGui.QTabWidget(self.roster)
         self.tabWidget.setObjectName("tabWidget")
@@ -150,63 +177,63 @@ class Ui_MainWindow(object):
         self.rosterTab = QtGui.QWidget()
         self.rosterTab.setObjectName("rosterTab")
 
-        self.gridlayout3 = QtGui.QGridLayout(self.rosterTab)
-        self.gridlayout3.setMargin(0)
-        self.gridlayout3.setSpacing(0)
-        self.gridlayout3.setObjectName("gridlayout3")
+        self.gridlayout4 = QtGui.QGridLayout(self.rosterTab)
+        self.gridlayout4.setMargin(0)
+        self.gridlayout4.setSpacing(0)
+        self.gridlayout4.setObjectName("gridlayout4")
 
         self.groupStyleWidget = QtGui.QWidget(self.rosterTab)
         self.groupStyleWidget.setObjectName("groupStyleWidget")
-        self.gridlayout3.addWidget(self.groupStyleWidget,0,0,1,1)
+        self.gridlayout4.addWidget(self.groupStyleWidget,0,0,1,1)
 
         self.rosterWidget = QtGui.QWidget(self.rosterTab)
         self.rosterWidget.setObjectName("rosterWidget")
-        self.gridlayout3.addWidget(self.rosterWidget,2,0,1,1)
+        self.gridlayout4.addWidget(self.rosterWidget,2,0,1,1)
 
         self.userStyleWidget = QtGui.QWidget(self.rosterTab)
         self.userStyleWidget.setObjectName("userStyleWidget")
-        self.gridlayout3.addWidget(self.userStyleWidget,1,0,1,1)
+        self.gridlayout4.addWidget(self.userStyleWidget,1,0,1,1)
         self.tabWidget.addTab(self.rosterTab,QtGui.QIcon("images/16x16/categories/system-users.png"),"")
 
         self.bookmarksTab = QtGui.QWidget()
         self.bookmarksTab.setObjectName("bookmarksTab")
 
-        self.gridlayout4 = QtGui.QGridLayout(self.bookmarksTab)
-        self.gridlayout4.setMargin(9)
-        self.gridlayout4.setSpacing(6)
-        self.gridlayout4.setObjectName("gridlayout4")
+        self.gridlayout5 = QtGui.QGridLayout(self.bookmarksTab)
+        self.gridlayout5.setMargin(9)
+        self.gridlayout5.setSpacing(6)
+        self.gridlayout5.setObjectName("gridlayout5")
 
         self.bookmarks = QtGui.QTreeWidget(self.bookmarksTab)
         self.bookmarks.setAlternatingRowColors(True)
         self.bookmarks.setRootIsDecorated(False)
         self.bookmarks.setObjectName("bookmarks")
-        self.gridlayout4.addWidget(self.bookmarks,1,0,1,2)
+        self.gridlayout5.addWidget(self.bookmarks,1,0,1,2)
 
-        spacerItem4 = QtGui.QSpacerItem(131,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout4.addItem(spacerItem4,2,0,1,1)
+        spacerItem6 = QtGui.QSpacerItem(131,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout5.addItem(spacerItem6,2,0,1,1)
 
         self.newBookmark = QtGui.QPushButton(self.bookmarksTab)
         self.newBookmark.setObjectName("newBookmark")
-        self.gridlayout4.addWidget(self.newBookmark,2,1,1,1)
+        self.gridlayout5.addWidget(self.newBookmark,2,1,1,1)
 
         self.bookmarks_headerLabel = QtGui.QLabel(self.bookmarksTab)
         self.bookmarks_headerLabel.setObjectName("bookmarks_headerLabel")
-        self.gridlayout4.addWidget(self.bookmarks_headerLabel,0,0,1,1)
+        self.gridlayout5.addWidget(self.bookmarks_headerLabel,0,0,1,1)
         self.tabWidget.addTab(self.bookmarksTab,QtGui.QIcon("images/16x16/categories/bookmarks.png"),"")
 
         self.eventsTab = QtGui.QWidget()
         self.eventsTab.setObjectName("eventsTab")
 
-        self.gridlayout5 = QtGui.QGridLayout(self.eventsTab)
-        self.gridlayout5.setMargin(9)
-        self.gridlayout5.setSpacing(6)
-        self.gridlayout5.setObjectName("gridlayout5")
+        self.gridlayout6 = QtGui.QGridLayout(self.eventsTab)
+        self.gridlayout6.setMargin(9)
+        self.gridlayout6.setSpacing(6)
+        self.gridlayout6.setObjectName("gridlayout6")
 
         self.eventsListWidget = QtGui.QListWidget(self.eventsTab)
         self.eventsListWidget.setObjectName("eventsListWidget")
-        self.gridlayout5.addWidget(self.eventsListWidget,0,0,1,1)
+        self.gridlayout6.addWidget(self.eventsListWidget,0,0,1,1)
         self.tabWidget.addTab(self.eventsTab,QtGui.QIcon("images/16x16/categories/event.png"),"")
-        self.gridlayout2.addWidget(self.tabWidget,0,0,1,1)
+        self.gridlayout2.addWidget(self.tabWidget,1,0,1,1)
         self.rosterStackedWidget.addWidget(self.roster)
         self.gridlayout.addWidget(self.rosterStackedWidget,0,0,1,1)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -263,10 +290,12 @@ class Ui_MainWindow(object):
         self.login_passwordLabel.setText(QtGui.QApplication.translate("MainWindow", "Password:", None, QtGui.QApplication.UnicodeUTF8))
         self.login_savePassword.setText(QtGui.QApplication.translate("MainWindow", "Save Password", None, QtGui.QApplication.UnicodeUTF8))
         self.login_connect.setText(QtGui.QApplication.translate("MainWindow", "Connect", None, QtGui.QApplication.UnicodeUTF8))
-        self.showOffline.setToolTip(QtGui.QApplication.translate("MainWindow", "You can show/hide contats that are unavailable", None, QtGui.QApplication.UnicodeUTF8))
-        self.showOffline.setText(QtGui.QApplication.translate("MainWindow", "Show offline", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Here you can change your status", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setText(QtGui.QApplication.translate("MainWindow", "Offline", None, QtGui.QApplication.UnicodeUTF8))
+        self.selfAvatar.setText(QtGui.QApplication.translate("MainWindow", "\n"
+        "", None, QtGui.QApplication.UnicodeUTF8))
+        self.showOffline.setToolTip(QtGui.QApplication.translate("MainWindow", "You can show/hide contats that are unavailable", None, QtGui.QApplication.UnicodeUTF8))
+        self.showOffline.setText(QtGui.QApplication.translate("MainWindow", "Show offline", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.rosterTab), QtGui.QApplication.translate("MainWindow", " r", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.rosterTab),QtGui.QApplication.translate("MainWindow", "Roster", None, QtGui.QApplication.UnicodeUTF8))
         self.bookmarks.headerItem().setText(0,QtGui.QApplication.translate("MainWindow", "Name", None, QtGui.QApplication.UnicodeUTF8))

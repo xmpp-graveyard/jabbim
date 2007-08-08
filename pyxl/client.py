@@ -222,7 +222,6 @@ class Client(derived):
 	def _authd(self, xmlstream):
 		log.msg('authed')
 ##		self.dispatcher.publishEvent('authed')
-		self.main._connected()
 		self.xmlstream = xmlstream
 		self.xmlstream.addObserver("/presence", self.onPresence, 1)
 		self.xmlstream.addObserver("/message/body", self.onMessage, 1)
@@ -254,7 +253,8 @@ class Client(derived):
 		self.getDiscoItems(self.jid.host)
 		self.reactor.callFromThread(self.on_authd)
 		self.dispatcher.publishEvent('on_authd')
-	
+		self.main._connected()
+
 		
 	def _pepSupport(self):
 		log.msg('pep support arrived')
