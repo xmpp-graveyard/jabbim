@@ -156,13 +156,35 @@ class chatWidget(QtGui.QWidget):
 			self.first=False
 		elif self.first==None:
 			self.first=True
-		#cur=self.ui.textEdit.textCursor()
-		#cur.movePosition(QtGui.QTextCursor.End)
-		#self.ui.textEdit.setTextCursor(cur)
-		# emoticons
+		cursor=QtGui.QTextCursor(self.ui.textEdit.document())
+		cursor.beginEditBlock()
+		cursor.movePosition(QtGui.QTextCursor.End)
+		
+		
+		#if not self.ui.textEdit.document().documeisEmpty():
+			#cursor.insertBlock(d->cursor.blockFormat(), d->cursor.charFormat());
+			#else
+				#cursor.setCharFormat(d->cursor.charFormat());
+		
+		#// preserve the char format
+		#QTextCharFormat oldCharFormat = d->cursor.charFormat();
+		#if (Qt::mightBeRichText(text)) {
 		for k,v in self.smileys.iteritems():
 			text=text.replace(" "+k,' <img src="images/16x16/emotes/'+v+'"/>')
-		self.ui.textEdit.append(text)
+		cursor.insertHtml(text)
+		#} else {
+			#cursor.insertText(text);
+		#}
+		#if (!d->cursor.hasSelection())
+			#d->cursor.setCharFormat(oldCharFormat);
+	
+		cursor.endEditBlock()
+
+
+		#self.ui.textEdit.setTextCursor(cur)
+		# emoticons
+
+		#self.ui.textEdit.append(text.replace("\n","<br/>"))
 		#self.ui.textEdit.insertHtml(text)
 		#cur=self.ui.textEdit.textCursor()
 		#cur.movePosition(QtGui.QTextCursor.End)
