@@ -7,3 +7,7 @@ QWidget#userStyleWidget {
     background-color:rgba(0,0,0,0%);
 /*     color:#000000; */
 }
+
+QLabel#selfName {
+margin-left:15px;
+}
