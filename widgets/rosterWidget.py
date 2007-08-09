@@ -990,8 +990,19 @@ class rosterWidget(QtGui.QTreeWidget):
 			contactMenu.move(event.globalX(),event.globalY())
 			contactMenu.show()
 
-	#def mouseMoveEvent(self,event):
+	def mouseMoveEvent(self,event):
 		#item=self.itemAt(int(event.x()),int(event.y()))
+		#if self.tooltip!=item and item!=None and item.parent()!=None:
+			#widget=QtGui.QWidget(self)
+			#widget.setAutoFillBackground(True)
+			#layout=QtGui.QHBoxLayout(widget)
+			#button=QtGui.QPushButton("Tlacitko",self)
+			#layout.addWidget(button)
+			#self.setItemWidget(item,0,widget)
+			##if self.tooltip!=None:
+				##self.setItemWidget(self.tooltip,0,QtGui.QWidget())
+			#self.tooltip=item
+			
 		#if self.tooltip!=item and item!=None and item.parent()!=None:
 			
 			#if self.tooltip!=None:
@@ -1015,7 +1026,7 @@ class rosterWidget(QtGui.QTreeWidget):
 						#text+="&nbsp;&nbsp;<a href=\""+resource+"\">"+resource+"</a><br/>"
 				#item.setText(0,unicode(item.text(2))+text)
 		
-		#return QtGui.QTreeWidget.mouseMoveEvent(self,event)
+		return QtGui.QTreeWidget.mouseMoveEvent(self,event)
 
 
 	def viewportEvent(self,event):

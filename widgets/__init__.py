@@ -8,5 +8,6 @@ import preferences
 import joingroupchat
 import filetransfer
 import addcontact
+import events
 #import about
 #import eventsFTWidget_ui
