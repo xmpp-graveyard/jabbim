@@ -135,10 +135,25 @@ class preferencesWindow(QtGui.QDialog):
 		for skin in skins:
 			if os.path.isdir("themes/"+skin) and os.path.exists("themes/"+skin+"/style.css"):
 				preview=QtGui.QIcon('themes/'+skin+"/preview.png")
-				item=QtGui.QListWidgetItem(preview,skin,self.ui.themes)
+				item=QtGui.QListWidgetItem(self.ui.themes)
+				item.setIcon(preview)
+				item.setSizeHint(QtCore.QSize(100,128))
+				conf=ConfigObj("themes/"+skin+"/theme.ini",encoding='UTF8')
+				if conf!=None and len(conf)!=0:
+					text="<b>"+self.tr("Name: ")+"</b> "+conf['name']+'<br/>'
+					text+="<b>"+self.tr("Author: ")+"</b> "+conf['author']+'<br/>'
+					text+="<b>"+self.tr("Version: ")+"</b> "+conf['version']
+				else:
+					text="<b>"+self.tr("Name: ")+"</b> "+skin
+				widget=QtGui.QLabel(text,self.ui.themes)
+				widget.setTextFormat (QtCore.Qt.RichText)
+				#widget.setMinimumHeight(128)
+				#widget.setText("test<br/>test")
+				self.ui.themes.setItemWidget(item,widget)
 				item.setData(32,QtCore.QVariant(skin))
 				if skin==self.main.config["theme"]:
 					self.ui.themes.setCurrentItem(item)
+					
 		QtCore.QObject.connect(self.ui.themes, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.themeChanged)
 
 		# Plugins
