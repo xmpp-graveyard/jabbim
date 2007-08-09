@@ -13,7 +13,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'System tray and sound notification'
 		self.author = "Jan 'HanzZ' Kaluza & Josef 'PepeQ' Halicek"
 		self.name = 'Notification Plugin'
-		self.version = '0.543'
+		self.version = '0.544'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}
@@ -37,8 +37,8 @@ class Plugin(plugins.PluginBase):
 			self.installTranslator()
 			self.playsound('start')
 			#self.timer=QtCore.QTimer()
-			QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.changeIcon)
-			#self.main.tray.showMessage(self.tr("Notification"),self.tr("Notification plugin is activated"), QtGui.QSystemTrayIcon.Information, 2000)   i do not understand why use it
+			#QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.changeIcon)
+			self.main.tray.showMessage(self.tr("Notification"),self.tr("Notification plugin is activated"), QtGui.QSystemTrayIcon.Information, 2000)   i do not understand why use it
 		else:
 			self.loadConfig(homedir)
 
