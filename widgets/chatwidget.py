@@ -91,7 +91,7 @@ class chatWidget(QtGui.QWidget):
 			QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("textChanged ()"),self.lines)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
-
+		self.ui.textEdit.setAcceptRichText(True)
 		#short=QtGui.QShortcut(QtCore.Qt.Key_Return,self.ui.line)
 		#QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.sendButtonClicked)
 		self.loadSmileys()
