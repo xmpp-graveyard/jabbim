@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Tue Aug  7 07:27:03 2007
+# Created: Thu Aug  9 10:53:23 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -292,7 +292,6 @@ class Ui_preferences(object):
 
         self.themes = QtGui.QListWidget(self.tab)
         self.themes.setIconSize(QtCore.QSize(128,128))
-        self.themes.setViewMode(QtGui.QListView.IconMode)
         self.themes.setObjectName("themes")
         self.gridlayout8.addWidget(self.themes,0,0,1,1)
         self.tabWidget.addTab(self.tab,"")
@@ -380,7 +379,7 @@ class Ui_preferences(object):
         self.gridlayout.addItem(spacerItem6,1,1,1,1)
 
         self.retranslateUi(preferences)
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(3)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.cancelButton,QtCore.SIGNAL("clicked()"),preferences.reject)
         QtCore.QObject.connect(self.saveButton,QtCore.SIGNAL("clicked()"),preferences.accept)

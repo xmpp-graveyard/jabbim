@@ -38,7 +38,7 @@ class Plugin(plugins.PluginBase):
 			self.playsound('start')
 			#self.timer=QtCore.QTimer()
 			#QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.changeIcon)
-			self.main.tray.showMessage(self.tr("Notification"),self.tr("Notification plugin is activated"), QtGui.QSystemTrayIcon.Information, 2000)   i do not understand why use it
+			#self.main.tray.showMessage(self.tr("Notification"),self.tr("Notification plugin is activated"), QtGui.QSystemTrayIcon.Information, 2000)
 		else:
 			self.loadConfig(homedir)
 
