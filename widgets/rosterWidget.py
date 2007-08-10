@@ -912,26 +912,27 @@ class rosterWidget(QtGui.QTreeWidget):
 			contactMenu.show()
 
 	def mouseMoveEvent(self,event):
-		item=self.itemAt(int(event.x()),int(event.y()))
-		if self.tooltip!=item and item!=None and item.parent()!=None:
-			widget=QtGui.QWidget(self)
-			widget.setMinimumHeight(59)
-			widget.setAutoFillBackground(True)
-			layout=QtGui.QVBoxLayout(widget)
+		#item=self.itemAt(int(event.x()),int(event.y()))
+		#if self.tooltip!=item and item!=None and item.parent()!=None:
+			#widget=QtGui.QWidget(self)
+			#widget.setMinimumHeight(59)
+			#widget.setMaximumHeight(59)
+			#widget.setAutoFillBackground(True)
+			#layout=QtGui.QVBoxLayout(widget)
 			
-			label=QtGui.QLabel(item.text(0),widget)
-			layout.addWidget(label)
+			#label=QtGui.QLabel(item.text(0),widget)
+			#layout.addWidget(label)
 			
-			status=QtGui.QLabel(unicode(item.data(32,4).toString()),widget)
-			layout.addWidget(status)
+			#status=QtGui.QLabel(unicode(item.data(32,4).toString()),widget)
+			#layout.addWidget(status)
 			
-			self.setItemWidget(item,0,widget)
-			if self.tooltip!=None:
-				self.setItemWidget(self.tooltip,0,None)
-				#self.tooltip.setSizeHint(0,self.item.sizeHint(0))
-				self.tooltip.setSizeHint(0,QtCore.QSize(100,32))
-			item.setSizeHint(0,QtCore.QSize(100,60))
-			self.tooltip=item
+			#self.setItemWidget(item,0,widget)
+			#if self.tooltip!=None:
+				#self.setItemWidget(self.tooltip,0,None)
+				##self.tooltip.setSizeHint(0,self.item.sizeHint(0))
+				#self.tooltip.setSizeHint(0,QtCore.QSize(100,32))
+			#item.setSizeHint(0,QtCore.QSize(100,60))
+			#self.tooltip=item
 			
 		#if self.tooltip!=item and item!=None and item.parent()!=None:
 			
