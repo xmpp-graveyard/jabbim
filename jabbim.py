@@ -1037,8 +1037,17 @@ class mainWindow(QtGui.QMainWindow):
 		if reason==QtGui.QSystemTrayIcon.Trigger:
 			if self.isHidden():
 				self.show()
+				self.raise_()
+				self.activateWindow()
+				self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
 			else:
-				self.hide()
+				if self.windowState() & QtCore.Qt.WindowMinimized:
+					self.show()
+					self.raise_()
+					self.activateWindow()
+					self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
+				else:
+					self.hide()
 
 	def loadTheme(self,text=None):
 		# windows hack
