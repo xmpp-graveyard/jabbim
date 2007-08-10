@@ -669,7 +669,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		# when we resize roster, we need to resize columns too, because of avatar.
 		QtGui.QTreeWidget.resizeEvent(self,event)
 		if self.verticalScrollBar().isVisible():
-			self.setColumnWidth(0,int(self.width())-50)
+			self.setColumnWidth(0,int(self.width())-38-int(self.verticalScrollBar().width()))
 		else:
 			self.setColumnWidth(0,int(self.width())-38)
 		#self.tooltip.setMaximumWidth(self.width())
