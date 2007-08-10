@@ -657,7 +657,10 @@ class clientClass(pyxl.client.Client):
 				self.ft[sid].file = filename
 				self.ft[sid].fp = open(self.ft[sid].file, 'w')
 				self.receiveFile(sid, id)
-
+	
+	def on_verify(self, id, thread, props, frm, typ): #xep0070
+# 		self.replyVerify(id, thread, props, frm, typ, False)
+		self.main.events.addBooleanEvent(self.replyVerify,[id, thread, props, frm, typ, True], self.replyVerify,[id, thread, props, frm, typ, False],header=self.main.tr('Auth request'),text=self.main.tr('URL:')+" "+unicode(props['url']) + '<br/>' +self.main.tr('ID:') + unicode(props['id']), height = 60)
 
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
