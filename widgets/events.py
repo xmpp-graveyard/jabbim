@@ -109,7 +109,7 @@ class InfoWidget(abstractWidget):
 		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
 		#self.setMinimumHeight(40)
 
-class BooleanWidget(QtGui.QWidget):
+class BooleanWidget(abstractWidget):
 	def __init__(self,header,text,item,main,trueCall,trueDict,falseCall,falseDict,parent=None):
 		apply(abstractWidget.__init__,(self,header,text,item,main,falseCall,falseDict,trueCall,trueDict,parent))
 
