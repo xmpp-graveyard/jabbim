@@ -23,71 +23,10 @@ except:
 from os.path import basename
 from twisted.python import log
 
-class InfoWidget(QtGui.QWidget):
-	def __init__(self,header,text,item,main,trueCall,trueDict,parent=None):
+class abstractWidget(QtGui.QWidget):
+	def __init__(self,header,text,item,main,falseCall=None,falseDict=None,trueCall=None,trueDict=None,parent=None):
 		apply(QtGui.QWidget.__init__,(self,parent))
-		self.setObjectName("BooleanWidget")
-		self.item=item
-		self.main=main
-		self.trueCall=trueCall
-		self.trueDict=trueDict
-		self.gridlayout = QtGui.QGridLayout(self)
-		self.gridlayout.setMargin(0)
-		self.gridlayout.setSpacing(0)
-		self.gridlayout.setObjectName("gridlayout")
-	
-		#self.gridlayout1 = QtGui.QGridLayout()
-		#self.gridlayout1.setMargin(0)
-		#self.gridlayout1.setSpacing(6)
-		#self.gridlayout1.setObjectName("gridlayout1")
-	
-		self.hboxlayout = QtGui.QHBoxLayout()
-		self.hboxlayout.setMargin(0)
-		self.hboxlayout.setSpacing(6)
-		self.hboxlayout.setObjectName("hboxlayout")
-	
-		self.label = QtGui.QLabel(header,self)
-		self.label.setObjectName("label")
-		self.hboxlayout.addWidget(self.label)
-	
-		self.label_2 = QtGui.QLabel(text,self)
-		self.label_2.setObjectName("label_2")
-		#self.hboxlayout.addWidget(self.label_2)
-
-		#spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-		#self.hboxlayout.addStretch()
-		
-		
-		self.closeButton = QtGui.QPushButton(self)
-		self.closeButton.setMaximumSize(16,16)
-		self.closeButton.setObjectName("closeButton")
-		self.closeButton.setFlat(True)
-		self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
-		self.hboxlayout.addWidget(self.closeButton)
-
-		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
-
-
-		self.gridlayout.addLayout(self.hboxlayout,0,0,1,1)
-
-
-		self.gridlayout.addWidget(self.label_2,1,0,1,1)
-		#self.gridlayout.addLayout(self.gridlayout1,0,0,1,1)
-		self.gridlayout.setMargin(1)
-		self.gridlayout.setSpacing(0)
-		#self.gridlayout1.setMargin(1)
-		#self.gridlayout1.setSpacing(0)
-		self.setMinimumHeight(40)
-
-	def closeClicked(self):
-		if self.trueCall!=None:
-			self.trueCall(*self.trueDict)
-		self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
-
-class BooleanWidget(QtGui.QWidget):
-	def __init__(self,header,text,item,main,trueCall,trueDict,falseCall,falseDict,parent=None):
-		apply(QtGui.QWidget.__init__,(self,parent))
-		self.setObjectName("BooleanWidget")
+		self.setObjectName("abstractWidget")
 		self.item=item
 		self.main=main
 		self.trueCall=trueCall
@@ -117,34 +56,27 @@ class BooleanWidget(QtGui.QWidget):
 		self.label_2.setObjectName("label_2")
 		#self.hboxlayout.addWidget(self.label_2)
 
-		spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+		#spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
 		self.hboxlayout.addStretch()
 		
-		self.submitButton = QtGui.QPushButton(self)
-		self.submitButton.setMaximumSize(16,16)
-		self.submitButton.setFlat(True)
-		self.submitButton.setIcon(QtGui.QIcon("images/16x16/actions/ok.png"))
-		self.hboxlayout.addWidget(self.submitButton)
+		##self.submitButton = QtGui.QPushButton(self)
+		##self.submitButton.setMaximumSize(16,16)
+		##self.submitButton.setFlat(True)
+		##self.submitButton.setIcon(QtGui.QIcon("images/16x16/actions/ok.png"))
+		##self.hboxlayout.addWidget(self.submitButton)
 
 		
-		self.closeButton = QtGui.QPushButton(self)
-		self.closeButton.setMaximumSize(16,16)
-		self.closeButton.setObjectName("closeButton")
-		self.closeButton.setFlat(True)
-		self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
-		self.hboxlayout.addWidget(self.closeButton)
+		##self.closeButton = QtGui.QPushButton(self)
+		##self.closeButton.setMaximumSize(16,16)
+		##self.closeButton.setObjectName("closeButton")
+		##self.closeButton.setFlat(True)
+		##self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
+		##self.hboxlayout.addWidget(self.closeButton)
 
-		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
-		QtCore.QObject.connect(self.submitButton,QtCore.SIGNAL("clicked()"),self.submitClicked)
-
+		##QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
+		##QtCore.QObject.connect(self.submitButton,QtCore.SIGNAL("clicked()"),self.submitClicked)
 
 		self.gridlayout1.addLayout(self.hboxlayout,0,0,1,1)
-	
-
-	
-		sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7),QtGui.QSizePolicy.Policy(1))
-		sizePolicy.setHorizontalStretch(0)
-		sizePolicy.setVerticalStretch(0)
 
 		self.gridlayout1.addWidget(self.label_2,1,0,1,2)
 		self.gridlayout.addLayout(self.gridlayout1,0,0,1,1)
@@ -155,13 +87,47 @@ class BooleanWidget(QtGui.QWidget):
 		self.setMinimumHeight(0)
 
 	def closeClicked(self):
-		self.falseCall(*self.falseDict)
-		#self.main.client.sendPresence(to = self.frm, status = self.status, typ = 'unsubscribed')
+		if self.falseCall!=None:
+			self.falseCall(*self.falseDict)
 		self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
+
 	def submitClicked(self):
-		self.trueCall(*self.trueDict)
-		#self.main.client.sendPresence(to = self.frm, status = self.status, typ = 'subscribed')
+		if self.trueCall!=None:
+			self.trueCall(*self.trueDict)
 		self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
+
+class InfoWidget(abstractWidget):
+	def __init__(self,header,text,item,main,falseCall,falseDict,parent=None):
+		apply(abstractWidget.__init__,(self,header,text,item,main,falseCall,falseDict,None,None,parent))
+		self.closeButton = QtGui.QPushButton(self)
+		self.closeButton.setMaximumSize(16,16)
+		self.closeButton.setObjectName("closeButton")
+		self.closeButton.setFlat(True)
+		self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
+		self.hboxlayout.addWidget(self.closeButton)
+
+		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
+		#self.setMinimumHeight(40)
+
+class BooleanWidget(QtGui.QWidget):
+	def __init__(self,header,text,item,main,trueCall,trueDict,falseCall,falseDict,parent=None):
+		apply(abstractWidget.__init__,(self,header,text,item,main,falseCall,falseDict,trueCall,trueDict,parent))
+
+		self.submitButton = QtGui.QPushButton(self)
+		self.submitButton.setMaximumSize(16,16)
+		self.submitButton.setFlat(True)
+		self.submitButton.setIcon(QtGui.QIcon("images/16x16/actions/ok.png"))
+		self.hboxlayout.addWidget(self.submitButton)
+
+		self.closeButton = QtGui.QPushButton(self)
+		self.closeButton.setMaximumSize(16,16)
+		self.closeButton.setObjectName("closeButton")
+		self.closeButton.setFlat(True)
+		self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
+		self.hboxlayout.addWidget(self.closeButton)
+
+		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
+		QtCore.QObject.connect(self.submitButton,QtCore.SIGNAL("clicked()"),self.submitClicked)
 
 class FTWidget(QtGui.QWidget):
 	def __init__(self,file,item,main,sid,parent=None,stats=""):
