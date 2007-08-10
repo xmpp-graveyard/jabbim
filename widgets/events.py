@@ -24,7 +24,7 @@ from os.path import basename
 from twisted.python import log
 
 class abstractWidget(QtGui.QWidget):
-	def __init__(self,header,text,item,main,falseCall=None,falseDict=None,trueCall=None,trueDict=None,parent=None):
+	def __init__(self,header,text,item,main,falseCall=None,falseDict=None,trueCall=None,trueDict=None,parent=None,height=40):
 		apply(QtGui.QWidget.__init__,(self,parent))
 		self.setObjectName("abstractWidget")
 		self.item=item
@@ -53,6 +53,7 @@ class abstractWidget(QtGui.QWidget):
 		self.hboxlayout.addWidget(self.label)
 	
 		self.label_2 = QtGui.QLabel(text,self)
+		self.label_2.setTextFormat(QtCore.Qt.RichText)
 		self.label_2.setObjectName("label_2")
 		#self.hboxlayout.addWidget(self.label_2)
 
@@ -84,7 +85,7 @@ class abstractWidget(QtGui.QWidget):
 		self.gridlayout.setSpacing(0)
 		self.gridlayout1.setMargin(1)
 		self.gridlayout1.setSpacing(0)
-		self.setMinimumHeight(0)
+		self.setMinimumHeight(height)
 
 	def closeClicked(self):
 		if self.falseCall!=None:
@@ -110,8 +111,8 @@ class InfoWidget(abstractWidget):
 		#self.setMinimumHeight(40)
 
 class BooleanWidget(abstractWidget):
-	def __init__(self,header,text,item,main,trueCall,trueDict,falseCall,falseDict,parent=None):
-		apply(abstractWidget.__init__,(self,header,text,item,main,falseCall,falseDict,trueCall,trueDict,parent))
+	def __init__(self,header,text,item,main,trueCall,trueDict,falseCall,falseDict,parent=None,height=40):
+		apply(abstractWidget.__init__,(self,header,text,item,main,falseCall,falseDict,trueCall,trueDict,parent,40))
 
 		self.submitButton = QtGui.QPushButton(self)
 		self.submitButton.setMaximumSize(16,16)
@@ -226,10 +227,10 @@ class events:
 		item.widget=InfoWidget(header,text,item,self.main,trueCall,trueDict,self.main.ui.eventsListWidget)
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 
-	def addBooleanEvent(self,trueCall,trueDict,falseCall,falseDict,header="",text=""):
+	def addBooleanEvent(self,trueCall,trueDict,falseCall,falseDict,header="",text="",height=40):
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
-		item.setSizeHint(QtCore.QSize(100,40))
-		item.widget=BooleanWidget(header,text,item,self.main,trueCall,trueDict,falseCall,falseDict,self.main.ui.eventsListWidget)
+		item.setSizeHint(QtCore.QSize(100,height))
+		item.widget=BooleanWidget(header,text,item,self.main,trueCall,trueDict,falseCall,falseDict,self.main.ui.eventsListWidget,height)
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 
 	def addSubscribeEvent(self,jid,status):
