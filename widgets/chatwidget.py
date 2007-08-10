@@ -160,7 +160,9 @@ class chatWidget(QtGui.QWidget):
 		cursor.beginEditBlock()
 		cursor.movePosition(QtGui.QTextCursor.End)
 		
-		
+		toEnd=False
+		if self.ui.textEdit.verticalScrollBar().value()==self.ui.textEdit.verticalScrollBar().maximum():
+			toEnd=True
 		#if not self.ui.textEdit.document().documeisEmpty():
 			#cursor.insertBlock(d->cursor.blockFormat(), d->cursor.charFormat());
 			#else
@@ -179,8 +181,9 @@ class chatWidget(QtGui.QWidget):
 			#d->cursor.setCharFormat(oldCharFormat);
 	
 		cursor.endEditBlock()
-
-
+		
+		if toEnd:
+			self.ui.textEdit.verticalScrollBar().setValue(self.ui.textEdit.verticalScrollBar().maximum())
 		#self.ui.textEdit.setTextCursor(cur)
 		# emoticons
 
