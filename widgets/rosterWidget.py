@@ -190,8 +190,10 @@ class rosterWidget(QtGui.QTreeWidget):
 
 	def makeHiddenItem(self):
 		self.item=QtGui.QTreeWidgetItem(self)
+		self.item.setText(0,"999")
 		self.item.setText(1,"999")
-		self.setItemHidden(self.item, True)
+		self.item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize']),status=self.main.icons["9"]))
+		#self.setItemHidden(self.item, True)
 
 	def expanded(self,item):
 		# change icon if group item expanded
@@ -473,6 +475,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.setItemHidden(self.item, True)
 		#self.setItemHidden(self.item, False)
 		#self.item.setText(0,"---")
+		return
 
 
 	def refreshStats(self):
@@ -909,17 +912,26 @@ class rosterWidget(QtGui.QTreeWidget):
 			contactMenu.show()
 
 	def mouseMoveEvent(self,event):
-		#item=self.itemAt(int(event.x()),int(event.y()))
-		#if self.tooltip!=item and item!=None and item.parent()!=None:
-			#widget=QtGui.QWidget(self)
-			#widget.setAutoFillBackground(True)
-			#layout=QtGui.QHBoxLayout(widget)
-			#button=QtGui.QPushButton("Tlacitko",self)
-			#layout.addWidget(button)
-			#self.setItemWidget(item,0,widget)
-			##if self.tooltip!=None:
-				##self.setItemWidget(self.tooltip,0,QtGui.QWidget())
-			#self.tooltip=item
+		item=self.itemAt(int(event.x()),int(event.y()))
+		if self.tooltip!=item and item!=None and item.parent()!=None:
+			widget=QtGui.QWidget(self)
+			widget.setMinimumHeight(59)
+			widget.setAutoFillBackground(True)
+			layout=QtGui.QVBoxLayout(widget)
+			
+			label=QtGui.QLabel(item.text(0),widget)
+			layout.addWidget(label)
+			
+			status=QtGui.QLabel(unicode(item.data(32,4).toString()),widget)
+			layout.addWidget(status)
+			
+			self.setItemWidget(item,0,widget)
+			if self.tooltip!=None:
+				self.setItemWidget(self.tooltip,0,None)
+				#self.tooltip.setSizeHint(0,self.item.sizeHint(0))
+				self.tooltip.setSizeHint(0,QtCore.QSize(100,32))
+			item.setSizeHint(0,QtCore.QSize(100,60))
+			self.tooltip=item
 			
 		#if self.tooltip!=item and item!=None and item.parent()!=None:
 			
