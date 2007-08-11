@@ -12,7 +12,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Message Archiving'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Archive Plugin'
-		self.version = '0.045'
+		self.version = '0.046'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 # 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
@@ -32,6 +32,8 @@ class Plugin(plugins.PluginBase):
 			self.window.setWindowIcon(self.main.windowIcon())
 			QtCore.QObject.connect(self.window.seznam, QtCore.SIGNAL("itemClicked ( QListWidgetItem* ) "),self.itemClicked)
 			QtCore.QObject.connect(self.window.calendar, QtCore.SIGNAL("selectionChanged()"),self.calChanged)
+		else:
+			self.loadConfig(homedir)
 	def buildRosterMenu(self):
 		menu=self.rosterMenu()
 		menu.addAction("Archive browser",self.showSlot)
