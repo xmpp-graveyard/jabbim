@@ -12,24 +12,26 @@ class Plugin(plugins.PluginBase):
 		self.description = 'ICQ auto responder'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'ICQ Responder'
-		self.version = '0.017'
+		self.version = '0.021'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.count = 0
 # 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
-		
+		self.config['message'] = {'description':'Automaticka odpoved:', 'default':"Toto je automaticka odpoved. Toto ICQ cislo je mimo provoz, jeho uzivatel nyni pouziva pouze Jabber. Muzes ho kontaktovat na jeho JabberID [JID]. Pokud nevis jak na to, navstiv  http://www.jabbim.cz/services-start.html \n Preji pekny den.", 'value': '','type':'text'}
 
 		if main:
 			self.registerHandler('on_message', self.on_message, priority = 4)
-			self.config['message'] = {'description':'', 'default':"Toto je automaticka odpoved. Toto ICQ cislo je mimo provoz, jeho uzivatel nyni pouziva pouze Jabber. Muzes ho kontaktovat na jeho JabberID "+self.main.client.jid.userhost()+" . Pokud nevis jak na to, navstiv  http://www.jabbim.cz/services-start.html \n Preji pekny den.", 'value': '','type':'text'}
+
 			self.loadConfig()
+		else:
+			self.loadConfig(homedir)
 
 	def buildRosterMenu(self):
 		menu=self.rosterMenu()
 		menu.addAction("Show count",self.showSlot)
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay):
 		if frm.find('icq')!=-1:
-			self.main.client.sendMessage(frm, self.config['message']['value'])
+			self.main.client.sendMessage(frm, self.config['message']['value'].replace('[JID]', self.main.client.jid.userhost()))
 			self.count = self.count +1
 			return False
 			
