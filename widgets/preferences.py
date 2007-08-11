@@ -45,7 +45,7 @@ class pluginConfiguration(QtGui.QDialog):
 		for key,item in plugin.config.iteritems():
 			if item['type']=="boolean":
 				widget=QtGui.QCheckBox(item['description'],self)
-				if len(item['default'])==0:
+				if len(item['value'])==0:
 					if item['default']=='True':
 						widget.setChecked(True)
 				else:
@@ -53,6 +53,18 @@ class pluginConfiguration(QtGui.QDialog):
 						widget.setChecked(True)
 				layout.addWidget(widget)
 				self.widgets[key]=widget
+			elif item['type']=="text":
+				label=QtGui.QLabel(item['description'],self)
+				if len(item['value'])==0:
+					widget=QtGui.QLineEdit(item['default'],self)
+				else:
+					widget=QtGui.QLineEdit(item['value'],self)
+				layout2=QtGui.QHBoxLayout()
+				layout2.addWidget(label)
+				layout2.addWidget(widget)
+				layout.addLayout(layout2)
+				self.widgets[key]=widget
+				
 		layout2=QtGui.QHBoxLayout()
 		close=QtGui.QPushButton("Close",self)
 		save=QtGui.QPushButton("Save",self)
@@ -70,6 +82,9 @@ class pluginConfiguration(QtGui.QDialog):
 			item=self.plugin.config[key]
 			if item['type']=="boolean":
 				self.plugin.config[key]['value']=str(widget.isChecked())
+			elif item['type']=="text":
+				print unicode(widget.text())
+				self.plugin.config[key]['value']=unicode(widget.text())
 		self.plugin.writeConfig()
 		self.done(1)
 
