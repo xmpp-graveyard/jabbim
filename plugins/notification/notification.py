@@ -13,7 +13,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'System tray and sound notification'
 		self.author = "Jan 'HanzZ' Kaluza & Josef 'PepeQ' Halicek"
 		self.name = 'Notification Plugin'
-		self.version = '0.544'
+		self.version = '0.546'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}
@@ -107,7 +107,7 @@ class Plugin(plugins.PluginBase):
 					self.playsound('new_message')
 					self.main.tray.showMessage(self.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 5000)
 					print unicode(user)
-					self.main.events.addInfoEvent(header=self.tr("New message"),text=self.tr("From: ")+unicode(user))
+					self.main.events.addInfoEvent(header=self.tr("New message"),text=self.tr("From: ")+unicode(user),name=unicode(frm),typ='newMessage',icon="images/16x16/actions/message.png")
 					#self.startTrayBlink()
 				else:
 					print "pyco coe?"

@@ -91,11 +91,21 @@ class abstractWidget(QtGui.QWidget):
 		if self.falseCall!=None:
 			self.falseCall(*self.falseDict)
 		self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
+		for event in self.main.events.events:
+			if event['widget']==self:
+				self.main.events.events.remove(event)
+				break
+		self.main.events.refreshTray()
 
 	def submitClicked(self):
 		if self.trueCall!=None:
 			self.trueCall(*self.trueDict)
 		self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
+		for event in self.main.events.events:
+			if event['widget']==self:
+				self.main.events.events.remove(event)
+				break
+		self.main.events.refreshTray()
 
 class InfoWidget(abstractWidget):
 	def __init__(self,header,text,item,main,falseCall,falseDict,parent=None):
@@ -220,12 +230,49 @@ class events:
 		self.main=main
 		self.filetransferQueue={}
 		self.filetransfer={}
+		self.events=[]
+		self.trayIcon=None
+		self.jabbimIcon=True
+		self.timer=QtCore.QTimer()
+		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.timeout)
 
-	def addInfoEvent(self,trueCall=None,trueDict=None,header="",text=""):
+	def timeout(self):
+		if self.jabbimIcon:
+			self.main.tray.setIcon(self.trayIcon)
+		else:
+			self.main.tray.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
+		self.jabbimIcon=not self.jabbimIcon
+
+	def refreshTray(self):
+		types=[]
+		for event in self.events:
+			if not event['type'] in types:
+				types.append(event['type'])
+		if len(types)==0:
+			self.timer.stop()
+			self.main.tray.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
+			self.jabbimIcon=True
+		elif len(types)==1:
+			self.trayIcon=self.events[0]['icon']
+			self.timer.start(500)
+		else:
+			self.trayIcon=QtGui.QIcon("images/16x16/categories/event.png")
+			self.timer.start(500)
+
+	def addEvent(self,name,typ,icon,widget):
+		if icon==None:
+			icon=QtGui.QIcon("images/16x16/categories/event.png")
+		else:
+			icon=QtGui.QIcon(unicode(icon))
+		self.events.append({'name':name,'type':typ,'icon':icon,'widget':widget})
+		self.refreshTray()
+
+	def addInfoEvent(self,trueCall=None,trueDict=None,header="",text="",name="",typ="",icon=None):
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		item.setSizeHint(QtCore.QSize(100,40))
 		item.widget=InfoWidget(header,text,item,self.main,trueCall,trueDict,self.main.ui.eventsListWidget)
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
+		self.addEvent(unicode(name),unicode(typ),icon,item.widget)
 
 	def addBooleanEvent(self,trueCall,trueDict,falseCall,falseDict,header="",text="",height=40):
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)

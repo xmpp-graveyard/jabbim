@@ -785,6 +785,8 @@ class mainWindow(QtGui.QMainWindow):
 		if self.config['log'] == 'true':
 			logfile = open(self.homeDir+'/'+self.config['logfile'], 'w')
 			log.startLogging(logfile)
+		
+		#self.events.addInfoEvent(header=self.tr("New message"),text=self.tr("From: "),name=unicode('ss'),typ='newMessage',icon="images/16x16/actions/message.png")
 
 		self.tray=QtGui.QSystemTrayIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 		menu=QtGui.QMenu(self)

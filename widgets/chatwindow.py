@@ -63,6 +63,17 @@ class chatWindow(QtGui.QMainWindow):
 					#painter.drawPixmap(x*int(self.pixmap.width()),y*self.pixmap.height(),self.pixmap)
 		#QtGui.QMainWindow.paintEvent(self,event)
 
+	def event(self,event):
+		# WindowActivated
+		if int(event.type())==24:
+			widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
+			for event in self.main.events.events:
+				if event['name']==widget.jid and event['type']=="newMessage":
+					event['widget'].closeClicked()
+					break
+			self.main.events.refreshTray()
+			
+		return QtGui.QMainWindow.event(self,event)
 
 	def changeTab(self,index):
 		try:
