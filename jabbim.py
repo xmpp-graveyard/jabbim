@@ -1281,7 +1281,7 @@ class mainWindow(QtGui.QMainWindow):
 		layout.addWidget(self.ui.roster)
 
 	def _connected(self):
-		self.ui.selfName.setText("<h2>"+unicode(self.client.jid.userhost())+"</h2>")
+		self.ui.selfName.setText("<h3>"+unicode(self.client.jid.userhost()).split("@")[0]+"</h3>")
 		self.client.getVCard(unicode(self.client.jid.userhost()))
 		self.ui.rosterStackedWidget.setCurrentIndex(1)
 		#self.ui.statusButton.setText(unicode(self.status["online"]))

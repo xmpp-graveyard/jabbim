@@ -198,111 +198,15 @@ p, li { white-space: pre-wrap; }
          <number>0</number>
         </property>
         <property name="spacing" >
-         <number>2</number>
+         <number>3</number>
         </property>
-        <item row="0" column="0" >
-         <widget class="QFrame" name="frame" >
-          <property name="frameShape" >
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow" >
-           <enum>QFrame::Plain</enum>
-          </property>
-          <layout class="QGridLayout" >
-           <property name="margin" >
-            <number>0</number>
-           </property>
-           <property name="spacing" >
-            <number>2</number>
-           </property>
-           <item rowspan="2" row="0" column="0" >
-            <widget class="QLabel" name="selfAvatar" >
-             <property name="text" >
-              <string/>
-             </property>
-             <property name="margin" >
-              <number>2</number>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="4" colspan="2" >
-            <widget class="QToolButton" name="statusButton" >
-             <property name="maximumSize" >
-              <size>
-               <width>16777215</width>
-               <height>20</height>
-              </size>
-             </property>
-             <property name="toolTip" >
-              <string>Here you can change your status</string>
-             </property>
-             <property name="text" >
-              <string/>
-             </property>
-             <property name="popupMode" >
-              <enum>QToolButton::InstantPopup</enum>
-             </property>
-             <property name="toolButtonStyle" >
-              <enum>Qt::ToolButtonTextBesideIcon</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1" colspan="2" >
-            <widget class="QLabel" name="selfStatus" >
-             <property name="text" >
-              <string>For more information about drag and drop with item views, refer to Using Drag and Drop with Item Views.</string>
-             </property>
-             <property name="scaledContents" >
-              <bool>true</bool>
-             </property>
-             <property name="openExternalLinks" >
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="3" colspan="2" >
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>171</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="0" column="1" colspan="2" >
-            <widget class="QLabel" name="selfName" >
-             <property name="text" >
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="3" >
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>161</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-        </item>
         <item row="1" column="0" >
          <widget class="QTabWidget" name="tabWidget" >
           <property name="toolTip" >
            <string/>
           </property>
           <property name="currentIndex" >
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="rosterTab" >
            <attribute name="title" >
@@ -422,44 +326,126 @@ p, li { white-space: pre-wrap; }
           </widget>
          </widget>
         </item>
-        <item row="2" column="0" >
-         <layout class="QHBoxLayout" >
-          <property name="margin" >
-           <number>0</number>
+        <item row="0" column="0" >
+         <widget class="QFrame" name="frame" >
+          <property name="frameShape" >
+           <enum>QFrame::StyledPanel</enum>
           </property>
-          <property name="spacing" >
-           <number>6</number>
+          <property name="frameShadow" >
+           <enum>QFrame::Plain</enum>
           </property>
-          <item>
-           <widget class="QToolButton" name="showOffline" >
-            <property name="toolTip" >
-             <string>You can show/hide contats that are unavailable</string>
-            </property>
-            <property name="text" >
-             <string>Show offline</string>
-            </property>
-            <property name="checkable" >
-             <bool>true</bool>
-            </property>
-            <property name="arrowType" >
-             <enum>Qt::NoArrow</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer>
-            <property name="orientation" >
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" >
-             <size>
-              <width>121</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
+          <layout class="QGridLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>2</number>
+           </property>
+           <item row="1" column="1" >
+            <widget class="QLabel" name="selfStatus" >
+             <property name="text" >
+              <string/>
+             </property>
+             <property name="scaledContents" >
+              <bool>true</bool>
+             </property>
+             <property name="openExternalLinks" >
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2" >
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>161</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="4" >
+            <widget class="QToolButton" name="statusButton" >
+             <property name="maximumSize" >
+              <size>
+               <width>16777215</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="toolTip" >
+              <string>Here you can change your status</string>
+             </property>
+             <property name="text" >
+              <string/>
+             </property>
+             <property name="popupMode" >
+              <enum>QToolButton::InstantPopup</enum>
+             </property>
+             <property name="toolButtonStyle" >
+              <enum>Qt::ToolButtonTextBesideIcon</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" >
+            <widget class="QLabel" name="selfName" >
+             <property name="text" >
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item rowspan="2" row="0" column="0" >
+            <widget class="QLabel" name="selfAvatar" >
+             <property name="text" >
+              <string/>
+             </property>
+             <property name="margin" >
+              <number>2</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3" >
+            <widget class="QToolButton" name="showOffline" >
+             <property name="maximumSize" >
+              <size>
+               <width>16777215</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="toolTip" >
+              <string>You can show/hide contats that are unavailable</string>
+             </property>
+             <property name="text" >
+              <string/>
+             </property>
+             <property name="icon" >
+              <iconset>images/16x16/status/jabber-not_in_roster.png</iconset>
+             </property>
+             <property name="checkable" >
+              <bool>true</bool>
+             </property>
+             <property name="arrowType" >
+              <enum>Qt::NoArrow</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2" colspan="3" >
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>171</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
         </item>
        </layout>
       </widget>
