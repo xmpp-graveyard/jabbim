@@ -212,11 +212,12 @@ class chatWidget(QtGui.QWidget):
 				text=text.replace(unichr(2028),"\n")
 				text=unescape(text)
 			self.main.client.sendMessage(str(self.jid),text)
-			text=text.replace(u'\n',"<br />")
+			text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
 			for word in text.split(' '):
 				if word.find("http://")!=-1:
 					text=text.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
 			message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text)
+			
 			self.textEditWrite(message)
 			self.ui.line.clear()
 			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
