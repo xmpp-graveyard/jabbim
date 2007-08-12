@@ -489,19 +489,20 @@ class rosterWidget(QtGui.QTreeWidget):
 					offline+=1
 				else:
 					online+=1
-			if online==0:
-				if self.main.offline==True:
-					self.setItemHidden(self.main.client.roster['groups'][group],False)
-				else:
-					self.setItemHidden(self.main.client.roster['groups'][group],True)
-			else:
-				self.setItemHidden(self.main.client.roster['groups'][group],False)
+			#if online==0:
+				#if self.main.offline==True:
+					#self.setItemHidden(self.main.client.roster['groups'][group],False)
+				#else:
+					#self.setItemHidden(self.main.client.roster['groups'][group],True)
+			#else:
+				#self.setItemHidden(self.main.client.roster['groups'][group],False)
 			if self.main.config['rosterMode']=='normal':
 				self.main.client.roster['groups'][group].setText(0,"<font color=\""+unicode(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.WindowText).name())+"\">"+unicode(self.main.client.roster['groups'][group].text(2))+" ("+str(online)+"/"+str(online+offline)+")</font>")
 			elif self.main.config['rosterMode']=='compact':
 				self.main.client.roster['groups'][group].setText(0,unicode(self.main.client.roster['groups'][group].text(2))+" ("+str(online)+"/"+str(online+offline)+")")
 
 	def setStatus(self,jid,show,i=None,status=None,first=False):
+		show=unicode(show)
 		if not self.main.shows.has_key(show):
 			if len(self.main.client.roster['users'][jid].status)!=0:
 				if len(self.main.client.roster['users'][jid].status)>1:
@@ -518,6 +519,8 @@ class rosterWidget(QtGui.QTreeWidget):
 			item.setIcon(0,self.main.getIcon(jid,size=self.main.config['rosterIconSize'],status=self.main.icons[self.main.shows[unicode(show)]]))
 			if self.main.shows[unicode(show)]!="9":
 				self.setItemHidden(item, False)
+			else:
+				self.setItemHidden(item, True)
 		else:
 			if len(self.main.client.roster['users'][jid].resources)>1:
 				resources=" ("+str(len(self.main.client.roster['users'][jid].resources))+") "
@@ -551,6 +554,7 @@ class rosterWidget(QtGui.QTreeWidget):
 					parent=item.parent()
 					self.cloneContact(parent,item)
 				if self.main.shows[unicode(show)]!="9":
+					print "JID:",unicode(jid),"DATA:",unicode(show)
 					self.setItemHidden(item, False)
 					if typ=='meta':
 						self.setItemHidden(item.parent(), False)

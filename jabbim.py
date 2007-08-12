@@ -273,7 +273,7 @@ class clientClass(pyxl.client.Client):
 				##self.main.ui.roster.cloneContact(self.metaParents[tag],self.roster['users'][jid].rosterItems[-1])
 		##print self.roster['users']['sef@njs.netlab.cz'].rosterItems
 		# sort roster items and refresh group stats
-		self.main.rosterHideOffline(True)
+		#self.main.rosterHideOffline(True)
 		#self.main.ui.roster.refreshStats()
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 
@@ -346,7 +346,7 @@ class clientClass(pyxl.client.Client):
 		
 
 	def on_presence(self,jid,show,first=False):
-		log.msg("PRESENCE")
+		log.msg("PRESENCE "+unicode(jid.full())+" "+unicode(show))
 		if show=="offline":
 			jid=jid.full() # get jid
 			# presence has resource
@@ -354,13 +354,13 @@ class clientClass(pyxl.client.Client):
 				resource=unicode(jid).rsplit("/")[1]
 				jid=unicode(jid).rsplit("/")[0]
 				# contact has more than one resource
-				if len(self.roster['users'][jid].resources)>1:
-					# set status by highest resource
-					highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
-					self.main.ui.roster.setStatus(jid,highest.show,first=first)
-				else:
+				#if len(self.roster['users'][jid].resources)>1:
+					## set status by highest resource
+					#highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
+					#self.main.ui.roster.setStatus(jid,highest.show,first=first)
+				#else:
 					# set status by this presence
-					self.main.ui.roster.setStatus(jid,show,first=first)
+				self.main.ui.roster.setStatus(jid,show,first=first)
 			else:
 				self.main.ui.roster.setStatus(jid,show,first=first)
 		else:
@@ -1238,17 +1238,24 @@ class mainWindow(QtGui.QMainWindow):
 	def rosterHideOffline(self,bool):
 		for group,item in self.client.roster['groups'].iteritems():
 			# return stats (online,offline,all users) for group
+			count=0
 			for i in range(int(item.childCount())):
 				child=item.child(i)
 				if int(unicode(child.text(1))[0])==9:
+					if bool==True:
+						count+=1
 					self.ui.roster.setItemHidden(child, bool)
 				else:
-					print unicode(child.text(1))[0]
-				for x in range(int(child.childCount())):
-					child2=child.child(x)
-					if int(unicode(child2.text(1))[0])==9:
-						self.ui.roster.setItemHidden(child2, bool)
-			self.ui.roster.hidden( bool)
+					print unicode(child.text(1))
+			if bool==True and int(item.childCount())==count:
+				self.ui.roster.setItemHidden(item, bool)
+			else:
+				self.ui.roster.setItemHidden(item, False)
+				#for x in range(int(child.childCount())):
+					#child2=child.child(x)
+					#if int(unicode(child2.text(1))[0])==9:
+						#self.ui.roster.setItemHidden(child2, bool)
+		self.ui.roster.hidden( bool)
 
 	def statusChanged(self,action):
 		# status changed
@@ -1285,8 +1292,11 @@ class mainWindow(QtGui.QMainWindow):
 		if size=="22x22":
 			size="32x32"
 		# return status icon
+		print "geticon",jid,typ,size,status,usertype
 		path=self.statusPath.replace("xxxxx",size)
 		typ=unicode(typ)
+		if status==None:
+			status=self.icons[self.shows[typ]]
 		if jid!=None:
 			#file=path+self.getUserType(jid)+"-"+self.icons[self.show[typ]]+".png"
 			if len(jid.split("@"))>1:
@@ -1295,17 +1305,16 @@ class mainWindow(QtGui.QMainWindow):
 				host=None
 			if self.hosts.has_key(host):
 				usertype=self.hosts[host]
-				if status==None:
-					status=self.icons[self.shows[typ]]
 				file=path+usertype+"-"+status+".png"
 				if os.path.exists(file):
 					icon=QtGui.QIcon(file)
 				else:
 					#print "File not exist",file," <-",jid,typ
-					#print "using",path+"jabber-"+self.iconSort[self.nickSort[typ]]+".png"
-					icon=QtGui.QIcon(path+"jabber-"+self.icons[self.shows[typ]]+".png")
+					print "using",path+"jabber-"+self.icons[self.shows[status]]+".png"
+					icon=QtGui.QIcon(path+"jabber-"+self.icons[self.shows[status]]+".png")
 			else:
-				icon=QtGui.QIcon(path+"jabber-online.png")
+				print "using",path+"jabber-"+self.icons[self.shows[status]]+".png"
+				icon=QtGui.QIcon(path+"jabber-"+self.icons[self.shows[status]]+".png")
 		else:
 			if status==None:
 				icon=QtGui.QIcon(path+"jabber-online.png")
