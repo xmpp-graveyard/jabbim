@@ -63,16 +63,16 @@ class chatWindow(QtGui.QMainWindow):
 					#painter.drawPixmap(x*int(self.pixmap.width()),y*self.pixmap.height(),self.pixmap)
 		#QtGui.QMainWindow.paintEvent(self,event)
 
-	def event(self,event):
+	def event(self,ev):
 		# WindowActivated
-		if int(event.type())==24:
+		if int(ev.type())==24:
 			widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
 			for event in self.main.events.events:
 				if event['name']==widget.jid and event['type']=="newMessage":
 					event['widget'].closeClicked()
 					break
 			self.main.events.refreshTray()
-		return QtGui.QMainWindow.event(self,event)
+		return QtGui.QMainWindow.event(self,ev)
 
 	def changeTab(self,index):
 		try:
@@ -128,6 +128,7 @@ class chatWindow(QtGui.QMainWindow):
 		print "adding new tab...", icon
 		self.ui.chatTab.addTab(tab,icon,unicode(name))
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
+		self.setWindowTitle(unicode(name))
 		tab.chat.ui.label.setText("<h2>"+name+"<h2/>")
 		if message!=None:
 			tab.chat.textEditWrite(message)
@@ -166,6 +167,7 @@ class chatWindow(QtGui.QMainWindow):
 			if bookmark.jid.userhost() == room:
 				jmeno = nick
 		self.ui.chatTab.addTab(tab,QtGui.QIcon("images/16x16/categories/muc.png"), jmeno)
+		self.setWindowTitle(unicode(jmeno))
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 		self.show()
 		self.raise_()

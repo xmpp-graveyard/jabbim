@@ -543,8 +543,9 @@ class clientClass(pyxl.client.Client):
 			w=self.main.chat.ui.chatTab.widget(i)
 			if unicode(w.jid) == frm:
 				if int(self.main.chat.ui.chatTab.currentIndex())!=i:
-					self.main.chat.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
-					self.main.chat.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(255,0,0))
+					if self.main.chat.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
+						self.main.chat.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
+						self.main.chat.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(0,128,0))
 				# set room topic
 				if subject!=None:
 					w.chat.ui.info.setText(unicode(subject))
@@ -561,6 +562,10 @@ class clientClass(pyxl.client.Client):
 					else:
 						# it's message for us
 						if utils.need_highlight(unicode(w.name), unicode(body)):
+							if int(self.main.chat.ui.chatTab.currentIndex())!=i:
+								if self.main.chat.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
+									self.main.chat.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
+									self.main.chat.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(255,0,0))
 							message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
 						else:
 							message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
