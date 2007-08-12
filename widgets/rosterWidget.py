@@ -193,7 +193,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		self.item.setText(0,"999")
 		self.item.setText(1,"999")
 		self.item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize']),status=self.main.icons["9"]))
-		#self.setItemHidden(self.item, True)
+		self.setItemHidden(self.item, True)
 
 	def expanded(self,item):
 		# change icon if group item expanded
