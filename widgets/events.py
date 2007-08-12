@@ -114,7 +114,7 @@ class InfoWidget(abstractWidget):
 		self.closeButton.setMaximumSize(16,16)
 		self.closeButton.setObjectName("closeButton")
 		self.closeButton.setFlat(True)
-		self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
+		self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/ok.png"))
 		self.hboxlayout.addWidget(self.closeButton)
 
 		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
