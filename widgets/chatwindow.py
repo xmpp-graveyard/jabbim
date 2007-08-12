@@ -72,7 +72,6 @@ class chatWindow(QtGui.QMainWindow):
 					event['widget'].closeClicked()
 					break
 			self.main.events.refreshTray()
-			
 		return QtGui.QMainWindow.event(self,event)
 
 	def changeTab(self,index):

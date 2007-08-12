@@ -52,7 +52,7 @@ from twisted.words.xish.domish import Element
 class clientClass(pyxl.client.Client):
 
 	def on_init(self):
-		self.roster['groups']['Unknown']=self.main._addGroup('Unknown')
+		#self.roster['groups']['Unknown']=self.main._addGroup('Unknown')
 		self.temp_hosts=[]
 		self.client_os = utils.get_os_info()
 
@@ -156,7 +156,7 @@ class clientClass(pyxl.client.Client):
 		# user is not in any group
 		if len(groups)==0:
 			#add user item to Unknown group
-			self.main.ui.roster.addUser(jid,name,self.roster['groups']['Unknown'],first=True)
+			self.main.ui.roster.addUser(jid,name,None,first=True)
 		else:
 			for group in groups:
 				# add user item to the group
@@ -183,8 +183,8 @@ class clientClass(pyxl.client.Client):
 		#self.setMetacontacts()
 
 		# hide Unknown group, if has not users
-		if int(self.main.ui.roster.getGroupItem("Unknown").childCount())==0:
-			self.main.ui.roster.setItemHidden(self.roster['groups']['Unknown'],True)
+		#if int(self.main.ui.roster.getGroupItem("Unknown").childCount())==0:
+			#self.main.ui.roster.setItemHidden(self.roster['groups']['Unknown'],True)
 
 		self.metaParents={}
 
@@ -401,6 +401,12 @@ class clientClass(pyxl.client.Client):
 		for gr in contact.groups:
 			if self.main.ui.roster.getGroupItem(gr)==None:
 				self.roster['groups'][gr]=self.main._addGroup(gr)
+		
+		if len(contact.groups)!=0:
+			items=self.main.ui.roster.findItems(jid, QtCore.Qt.MatchFixedString,4)
+			if len(items)==1:
+				self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(items[0]))
+		
 		# go through all groups
 		for name,item in self.roster['groups'].iteritems():
 			# updated contact has to be in this group
