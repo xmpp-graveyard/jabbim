@@ -248,7 +248,6 @@ class groupChatWidget(QtGui.QWidget):
 			for k,v in self.smileys.iteritems():
 				data=data.replace(k,' <img src="images/16x16/emotes/'+v+'" />')
 			self.ui.line.insertHtml(data)
-		self.ui.line.insertHtml(data)
 		self.ui.smileys.setChecked(False)
 		self.s.hide()
 		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)

@@ -156,6 +156,7 @@ class chatWidget(QtGui.QWidget):
 			self.first=False
 		elif self.first==None:
 			self.first=True
+		self.ui.textEdit.setUpdatesEnabled(False)
 		cursor=QtGui.QTextCursor(self.ui.textEdit.document())
 		cursor.beginEditBlock()
 		cursor.movePosition(QtGui.QTextCursor.End)
@@ -169,6 +170,8 @@ class chatWidget(QtGui.QWidget):
 		cursor.endEditBlock()
 		if toEnd:
 			self.ui.textEdit.verticalScrollBar().setValue(self.ui.textEdit.verticalScrollBar().maximum())
+		self.ui.textEdit.setUpdatesEnabled(True)
+		
 
 	
 	def addEmoticon(self,action):
