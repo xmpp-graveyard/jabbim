@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 import sys,os
 sys.path.append('.')
-try: from PyQt4 import QtCore, QtGui, uic
+try: from PyQt4 import QtCore, QtGui
 except: print "PyQt4 is not installed."
 import qt4reactor
 app = QtGui.QApplication(sys.argv)
@@ -46,13 +46,11 @@ from urllib import quote, unquote
 from include import plugins
 from os.path import basename
 from twisted.words.protocols.jabber.xmlstream import IQ
-#mutex=QtCore.QMutex()
 from twisted.words.xish.domish import Element
 
 class clientClass(pyxl.client.Client):
 
 	def on_init(self):
-		#self.roster['groups']['Unknown']=self.main._addGroup('Unknown')
 		self.temp_hosts=[]
 		self.client_os = utils.get_os_info()
 
@@ -69,27 +67,23 @@ class clientClass(pyxl.client.Client):
 	def on_affiliationErr(self,  muc,  err,  nick):
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(muc+" "+err+" "+nick),0,1)
 
-	def on_ftTransfered(self, sid, bytes): #pocet prenesenych bajtu pro prenos se SID
-		log.msg("refresh")
-		toDel=[]
-		print self.main.events.filetransfer,sid
-		widget=self.main.events.filetransfer[sid]
+	def on_ftTransfered(self, sid, bytes): # pocet prenesenych bajtu pro prenos se SID
+		toDel=[] # finished transfers
+		widget=self.main.events.filetransfer[sid] # event widget
 		if self.ft.has_key(sid):
+			# Filetransfer is alive
 			size=float(self.ft[sid].size)
 			sent=float(self.ft[sid].transfered)
 			widget.widget.progressBar.setValue(int((sent/size)*100))
 		else:
+			# Filetransfer finished
 			log.msg("ft.finished")
 			widget.widget.progressBar.setValue(100)
 			if widget.widget.complete==None:
-				# user wants to kill transport
-				#if self.main.ftError[sid]==None:
-					#widget.widget.stats.setText(self.main.tr("Complete"))
-				#else:
-					#widget.widget.stats.setText(self.main.tr("Error")+" "+unicode(self.main.ftError[sid]))
+				# User wants to close transfer
+				toDel.append(sid)
 				widget.widget.complete=True
 				widget.widget.closeClicked()
-				toDel.append(sid)
 			else:
 				# transport finished
 				toDel.append(sid)
@@ -100,23 +94,24 @@ class clientClass(pyxl.client.Client):
 				widget.widget.complete=True
 
 		for sid in toDel:
-
-			queueId=self.main.events.filetransfer[sid].queueId
+			queueId=self.main.events.filetransfer[sid].queueId # filetransfer queue ID
 			if queueId!=None:
+				# delete sent file from queue and start uploading next file in queue
 				del self.main.events.filetransferQueue[queueId][self.main.events.filetransfer[sid].file]
 				if len(self.main.events.filetransferQueue[queueId])!=0:
 					self.main.events.nextFTUploadEvent(sid,queueId)
-
 			else:
 				log.msg(unicode(self.main.events.filetransferQueue))
 				log.msg(unicode(self.main.events.filetransfer[sid].file))
+			# delete this filetransfer
 			del self.main.events.filetransfer[sid]
 
 
 	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
 		self.main.ftError[sid]=error
 		del self.ft[sid]
-		self.on_ftTransfered(sid, 0)
+		self.on_ftTransfered(sid, 0) # we have to delete filetransfer and etc
+
 	def on_discoInfoReceived(self, jid, node):
 		# save type of host, it not exist
 		if not self.main.hosts.has_key(jid):
@@ -131,37 +126,36 @@ class clientClass(pyxl.client.Client):
 				elif typ=="file":
 					typ="disk"
 				self.main.hosts[jid]=typ
+		# set icons for users with this host
 		for item in self.main.ui.roster.getHostItems("@"+jid):
 			show=unicode(item.text(1))[0]
 			item.setIcon(0,self.main.getIcon("jid@"+jid,size="32x32",status=self.main.icons[show]))
 
 	def on_rosterAddUser(self, contact):
-		#locker=QtCore.QMutexLocker(mutex)
 		# add user to the roster
 		groups=list(contact.groups)
 		name=unicode(contact.name)
 		jid=unicode(contact.jid)
-		log.msg("JID: "+jid+" "+contact.subscription)
+		log.msg("Adding user JID: "+jid+" "+contact.subscription)
+		# add group item if we haven't it
 		for gr in groups:
 			if not self.roster['groups'].has_key(gr):
 				self.roster['groups'][gr]=self.main._addGroup(gr)
-		# get host info
+		# get host info if we haven't it
 		if len(unicode(jid).rsplit("@"))!=1:
 			host=unicode(jid).rsplit("@")[1]
 			if not self.disco.has_key(host) and not host in self.temp_hosts:
-				#self.main.getUserType(host)
 				self.temp_hosts.append(host)
 				self.getDiscoInfo(host)
-
 		# user is not in any group
 		if len(groups)==0:
-			#add user item to Unknown group
+			# add user item to Unknown group
 			self.main.ui.roster.addUser(jid,name,None,first=True)
 		else:
 			for group in groups:
 				# add user item to the group
 				self.main.ui.roster.addUser(jid,name,self.roster['groups'][unicode(group)],first=True)
-		# show avatar if he has him
+		# show avatar
 		self.main.cache.get_avatar(jid, self.main._loadAvatar)
 
 	def on_discoItemsBookmarksReceived(self, jid):
@@ -174,9 +168,7 @@ class clientClass(pyxl.client.Client):
 			user.setIcon(0,self.main.getIcon(size="16x16"))
 
 	def on_rosterArrived(self):
-		# build Bookmarks tab
-
-		self.main.buildBookmarks()
+		self.main.buildBookmarks() # build Bookmarks tab
 		self.main.autoJoinGroupchat()
 		# vymazani metakontaktu
 		#self.roster_meta={}
@@ -277,27 +269,21 @@ class clientClass(pyxl.client.Client):
 		#self.main.ui.roster.refreshStats()
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 
-
-		#for k,v in self.roster['groups'].iteritems():
-			#self.main.ui.add_group.addItem(unicode(k))
-
-##		log.msg( "METAPARENTS"+unicode(self.metaParents))
+		# set the priority
 		if MainWindow.config.has_key('autoPriority'):
-				if MainWindow.config['autoPriority']=='True':
-					pri="20"
+			if MainWindow.config['autoPriority']=='True':
+				pri="20"
+			else:
+				if self.main.config.has_key('priority'):
+					pri=self.main.config['priority']
 				else:
-					if self.main.config.has_key('priority'):
-						pri=self.main.config['priority']
-					else:
-						pri="0"
+					pri="0"
 		else:
 			if self.main.config.has_key('priority'):
 				pri=self.main.config['priority']
 			else:
 				pri="0"
 		MainWindow.client.sendPresence(priority=pri)
-		
-
 
 	def on_authFailed(self,xmlstream):
 		# Authentication error
@@ -311,12 +297,13 @@ class clientClass(pyxl.client.Client):
 			jid=presence[0]
 			show=presence[1]
 			self.on_presence(jid,show,True)
-		# refresh group stats
+		# refresh and sort and so on
 		self.main.rosterHideOffline(True)
 		self.main.ui.roster.refreshStats()
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
+		# presence in groupchat
 		if show=="offline":
 			# get user role
 			# find good tab according to jid
@@ -325,7 +312,6 @@ class clientClass(pyxl.client.Client):
 				if unicode(w.jid)==unicode(muc):
 					# edit user item
 					w.chat.removeUser(nick)
-					#del self.groupchats[muc].users[nick]
 					break
 		else:
 			# get user role
@@ -337,15 +323,16 @@ class clientClass(pyxl.client.Client):
 					# edit user item
 					w.chat.editUser(nick,show,role)
 					break
+		# message skin
 		message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",show).replace('[nick]', nick)
 		if status == None:
 			message = message.replace("[[message]]",'')
 		else:
 			message = message.replace("[message]",unicode(status))
 		w.chat.textEditWrite(message)
-		
 
 	def on_presence(self,jid,show,first=False):
+		# normal presence handler
 		log.msg("PRESENCE "+unicode(jid.full())+" "+unicode(show))
 		if show=="offline":
 			jid=jid.full() # get jid
@@ -353,13 +340,6 @@ class clientClass(pyxl.client.Client):
 			if len(unicode(jid).rsplit("/"))!=1:
 				resource=unicode(jid).rsplit("/")[1]
 				jid=unicode(jid).rsplit("/")[0]
-				# contact has more than one resource
-				#if len(self.roster['users'][jid].resources)>1:
-					## set status by highest resource
-					#highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
-					#self.main.ui.roster.setStatus(jid,highest.show,first=first)
-				#else:
-					# set status by this presence
 				self.main.ui.roster.setStatus(jid,show,first=first)
 			else:
 				self.main.ui.roster.setStatus(jid,show,first=first)
@@ -404,6 +384,7 @@ class clientClass(pyxl.client.Client):
 		toDelJid=[]
 		toDelIndex=[]
 		log.msg(jid+" "+unicode(contact.groups))
+		# add group item if we haven't it
 		for gr in contact.groups:
 			if self.main.ui.roster.getGroupItem(gr)==None:
 				self.roster['groups'][gr]=self.main._addGroup(gr)
