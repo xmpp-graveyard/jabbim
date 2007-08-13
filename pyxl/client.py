@@ -745,7 +745,7 @@ class Client(derived):
 				if priority == None:
 					log.msg( el.toXml())
 			elif child.name == 'c':
-				caps_node = child['node']
+				caps_node = child.getAttribute('node')
 
 				if child.hasAttribute('ext'):
 					caps_node = '%s#%s'%(caps_node, child['ext'])
