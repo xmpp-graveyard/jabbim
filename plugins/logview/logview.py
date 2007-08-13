@@ -1,7 +1,7 @@
 import sys,os,time
 sys.path.append('.')
 from include import plugins
-from PyQt4 import QtCore, QtGui, uic
+from PyQt4 import QtCore, QtGui
 from twisted.python import log
 
 class Plugin(plugins.PluginBase):

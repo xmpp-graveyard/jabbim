@@ -2,7 +2,7 @@ import sys
 sys.path.append('.')
 import os,time, random, xmlrpclib
 from include import plugins
-from PyQt4 import QtCore, QtGui, uic
+from PyQt4 import QtCore, QtGui
 from twisted.python import log
 from twisted.words.protocols.jabber.xmlstream import IQ
 from twisted.words.xish.domish import Element
