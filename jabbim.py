@@ -384,16 +384,18 @@ class clientClass(pyxl.client.Client):
 		toDelJid=[]
 		toDelIndex=[]
 		log.msg(jid+" "+unicode(contact.groups))
+
 		# add group item if we haven't it
 		for gr in contact.groups:
 			if self.main.ui.roster.getGroupItem(gr)==None:
 				self.roster['groups'][gr]=self.main._addGroup(gr)
-		
+
+		# delete old top level item of this contact if contact is not in "toplevel group"
 		if len(contact.groups)!=0:
 			items2=self.main.ui.roster.findItems(jid, QtCore.Qt.MatchFixedString,4)
 			if len(items2)==1:
 				self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(items2[0]))
-		
+
 		# go through all groups
 		for name,item in self.roster['groups'].iteritems():
 			# updated contact has to be in this group
@@ -418,16 +420,6 @@ class clientClass(pyxl.client.Client):
 					# we have some item to clone (so we can't create new one)
 					if len(items)!=0:
 						i=items[0].clone() # clone contact item
-						#self.roster['users'][jid].rosterItems.append(i)
-						# don't know, if we need this code now, so keep coomented...
-						#for x in range(int(i.childCount())):
-							#child=i.child(x)
-							#it=child.data(32,0)
-							#it=it.toList()
-							#data=unicode(it[0].toString())
-							#typ=unicode(it[1].toString())
-							#if typ=="meta":
-								#self.roster['users'][data].rosterItems.append(child)
 						self.roster['groups'][name].addChild(i) # add item to the new group
 						index=self.main.ui.roster.indexFromItem(self.roster['groups'][name],0)
 						self.main.ui.roster.expand(index)
@@ -443,9 +435,6 @@ class clientClass(pyxl.client.Client):
 				for i in self.main.ui.roster.getUserItems(jid):
 					parent=i.parent()
 					if item==parent:
-						#toDelJid.append(unicode(jid))
-						#toDelIndex.append(self.roster['users'][unicode(jid)].rosterItems.index(i))
-						#print "delete",parent.text(0)
 						parent.takeChild(parent.indexOfChild(i))
 						# delete group, if it's empty
 						if int(parent.childCount())==0:
@@ -478,42 +467,10 @@ class clientClass(pyxl.client.Client):
 					index=parent.indexOfChild(item)
 					if index>-1:
 						it=parent.takeChild(index)
-						#it.view=0
-						#del it
-						#it=0
-			#else:
-				#for bla in range(int(item.childCount())):
-					##log.msg("CHILD:"+unicode(item.child(bla).text(1)))
-					#log.msg(unicode(item.child(bla)))
 		log.msg("DELETE COMPLETE")
-		#for name,item in self.roster['groups'].iteritems():
-			#for i in items:
-				#parent=i.parent()
-				#if item==parent:
-					#parent.takeChild(parent.indexOfChild(i))
-					##if parent.childCount()==0:
-						##self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(parent))
-						##del self.roster['groups'][unicode(parent.text(2))]
-					#break
-		#for name,item in self.metaParents.iteritems():
-			#for i in items:
-				#parent=i.parent()
-				#if item==parent:
-					#parent.takeChild(parent.indexOfChild(i))
-					#if parent.childCount()==0:
-						#group=parent.parent()
-						#group.takeChild(group.indexOfChild(parent))
-						##if group.childCount()==0:
-							##self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(group))
-							##del self.roster['groups'][unicode(group.text(2))]
-					#break
 		self.main.ui.roster.refreshStats()
 
 	def on_subscribe(self, frm,status):
-		#item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
-		#item.setSizeHint(QtCore.QSize(100,40))
-		#item.widget=widgets.rosterWidget.SubscribeWidget(unicode(frm),item,self.main,self.main.ui.eventsListWidget,unicode(status))
-		#self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 		self.main.events.addSubscribeEvent(frm,status)
 
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):

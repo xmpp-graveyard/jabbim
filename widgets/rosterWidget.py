@@ -214,7 +214,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		it=it.toList()
 		data=str(it[0].toString())
 		self.main.chat.addChatTab(data,unicode(item.text(2)),self.main.getIcon(data,self.main.icons[unicode(item.text(1))[0]],size="16x16"))
-
+		self.main.chat.activate()
 
 	def addMetaParent(self,tag,parent,offline=False):
 		item=QtGui.QTreeWidgetItem(parent)
