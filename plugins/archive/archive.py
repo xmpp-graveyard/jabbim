@@ -12,7 +12,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Message Archiving'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Archive Plugin'
-		self.version = '0.069'
+		self.version = '0.070'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 # 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
@@ -51,7 +51,7 @@ class Plugin(plugins.PluginBase):
 	def calChanged(self):	
 		log.msg("date clicked")
 		self.window.ui.text.setText('')
-		jid = quote(unicode(self.seznam.currentItem ().text()))
+		jid = quote(unicode(self.window.ui.seznam.currentItem ().text()))
 		try:
 			fp = open(self.main.homeDir+'/archive/'+self.jid+'/'+jid+'.history')
 			zpravy = fp.readlines()
