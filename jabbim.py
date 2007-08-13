@@ -677,7 +677,7 @@ class clientClass(pyxl.client.Client):
 	
 	def on_verify(self, id, thread, props, frm, typ): #xep0070
 # 		self.replyVerify(id, thread, props, frm, typ, False)
-		self.main.events.addBooleanEvent(self.replyVerify,[id, thread, props, frm, typ, True], self.replyVerify,[id, thread, props, frm, typ, False],header=self.main.tr('Auth request'),text=self.main.tr('URL:')+" "+unicode(props['url']) + '<br/>' +self.main.tr('ID:') + unicode(props['id']), height = 60)
+		self.main.events.addBooleanEvent(self.replyVerify,[id, thread, props, frm, typ, True], self.replyVerify,[id, thread, props, frm, typ, False],header=self.main.tr('Auth request'),text=self.main.tr('URL:')+" "+unicode(props['url']) + '<br/>' +self.main.tr('ID:') + unicode(props['id']), height = 60,name=frm,typ="xep70")
 
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
@@ -1054,19 +1054,20 @@ class mainWindow(QtGui.QMainWindow):
 	def trayActivated(self,reason=QtGui.QSystemTrayIcon.Trigger):
 		# show or hide main window
 		if reason==QtGui.QSystemTrayIcon.Trigger:
-			if self.isHidden():
-				self.show()
-				self.raise_()
-				self.activateWindow()
-				self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
-			else:
-				if self.windowState() & QtCore.Qt.WindowMinimized:
+			if not self.events.trayClicked():
+				if self.isHidden():
 					self.show()
 					self.raise_()
 					self.activateWindow()
 					self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
 				else:
-					self.hide()
+					if self.windowState() & QtCore.Qt.WindowMinimized:
+						self.show()
+						self.raise_()
+						self.activateWindow()
+						self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
+					else:
+						self.hide()
 
 	def loadTheme(self,text=None):
 		# windows hack
@@ -1298,7 +1299,7 @@ class mainWindow(QtGui.QMainWindow):
 		if size=="22x22":
 			size="32x32"
 		# return status icon
-		print "geticon",jid,typ,size,status,usertype
+		#print "geticon",jid,typ,size,status,usertype
 		path=self.statusPath.replace("xxxxx",size)
 		typ=unicode(typ)
 		if status==None:
@@ -1316,10 +1317,10 @@ class mainWindow(QtGui.QMainWindow):
 					icon=QtGui.QIcon(file)
 				else:
 					#print "File not exist",file," <-",jid,typ
-					print "using",path+"jabber-"+self.icons[self.shows[status]]+".png"
+					#print "using",path+"jabber-"+self.icons[self.shows[status]]+".png"
 					icon=QtGui.QIcon(path+"jabber-"+self.icons[self.shows[status]]+".png")
 			else:
-				print "using",path+"jabber-"+self.icons[self.shows[status]]+".png"
+				#print "using",path+"jabber-"+self.icons[self.shows[status]]+".png"
 				icon=QtGui.QIcon(path+"jabber-"+self.icons[self.shows[status]]+".png")
 		else:
 			if status==None:

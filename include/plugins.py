@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 from configobj import ConfigObj
 from twisted.python import log
+from imp import load_source
 try:
 	from PyQt4 import QtCore, QtGui
 except:
@@ -44,6 +45,31 @@ class PluginBase:
 
 	def buildRosterMenu(self):
 		pass
+
+	def loadUi(self,file,parent,wid):
+		f=open(file)
+		ui=load_source("", "", f)
+		f.close()
+		wid.ui=None
+		for func in dir(ui):
+			if func.startswith("Ui_"):
+				wid.ui=getattr(ui, func)()
+				wid.ui.setupUi(wid)
+		if wid.ui==None:
+			return None
+		return wid
+
+	def loadWidget(self,file,parent=None):
+		wid=QtGui.QWidget(parent)
+		return self.loadUi(file,parent,wid)
+
+	def loadWindow(self,file,parent=None):
+		wid=QtGui.QMainWindow(parent)
+		return self.loadUi(file,parent,wid)
+
+	def loadDialog(self,file,parent=None):
+		wid=QtGui.QDialog(parent)
+		return self.loadUi(file,parent,wid)
 
 	def installTranslator(self):
 		self.translator=QtCore.QTranslator()

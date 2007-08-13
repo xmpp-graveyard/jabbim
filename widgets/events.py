@@ -24,7 +24,7 @@ from os.path import basename
 from twisted.python import log
 
 class abstractWidget(QtGui.QWidget):
-	def __init__(self,header,text,item,main,falseCall=None,falseDict=None,trueCall=None,trueDict=None,parent=None,height=40):
+	def __init__(self,header,text,item,main,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40):
 		apply(QtGui.QWidget.__init__,(self,parent))
 		self.setObjectName("abstractWidget")
 		self.item=item
@@ -33,6 +33,8 @@ class abstractWidget(QtGui.QWidget):
 		self.trueDict=trueDict
 		self.falseCall=falseCall
 		self.falseDict=falseDict
+		self.action=action
+		self.actionDict=actionDict
 		self.gridlayout = QtGui.QGridLayout(self)
 		self.gridlayout.setMargin(0)
 		self.gridlayout.setSpacing(0)
@@ -108,8 +110,8 @@ class abstractWidget(QtGui.QWidget):
 		self.main.events.refreshTray()
 
 class InfoWidget(abstractWidget):
-	def __init__(self,header,text,item,main,falseCall,falseDict,parent=None):
-		apply(abstractWidget.__init__,(self,header,text,item,main,falseCall,falseDict,None,None,parent))
+	def __init__(self,header,text,item,main,falseCall,falseDict,action,actionDict,parent=None):
+		apply(abstractWidget.__init__,(self,header,text,item,main,falseCall,falseDict,None,None,action,actionDict,parent))
 		self.closeButton = QtGui.QPushButton(self)
 		self.closeButton.setMaximumSize(16,16)
 		self.closeButton.setObjectName("closeButton")
@@ -243,6 +245,14 @@ class events:
 			self.main.tray.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 		self.jabbimIcon=not self.jabbimIcon
 
+	def trayClicked(self):
+		if len(self.events)!=0:
+			widget=self.events[0]['widget']
+			if widget.action!=None:
+				widget.action(*widget.actionDict)
+				return True
+		return False
+
 	def refreshTray(self):
 		types=[]
 		for event in self.events:
@@ -267,22 +277,23 @@ class events:
 		self.events.append({'name':name,'type':typ,'icon':icon,'widget':widget})
 		self.refreshTray()
 
-	def addInfoEvent(self,trueCall=None,trueDict=None,header="",text="",name="",typ="",icon=None):
+	def addInfoEvent(self,trueCall=None,trueDict=None,header="",text="",name="",typ="",icon=None,action=None,actionDict=None):
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		item.setSizeHint(QtCore.QSize(100,40))
-		item.widget=InfoWidget(header,text,item,self.main,trueCall,trueDict,self.main.ui.eventsListWidget)
+		item.widget=InfoWidget(header,text,item,self.main,trueCall,trueDict,action,actionDict,self.main.ui.eventsListWidget)
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 		self.addEvent(unicode(name),unicode(typ),icon,item.widget)
 
-	def addBooleanEvent(self,trueCall,trueDict,falseCall,falseDict,header="",text="",height=40):
+	def addBooleanEvent(self,trueCall,trueDict,falseCall,falseDict,header="",text="",height=40,name="",typ="",icon=None):
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		item.setSizeHint(QtCore.QSize(100,height))
 		item.widget=BooleanWidget(header,text,item,self.main,trueCall,trueDict,falseCall,falseDict,self.main.ui.eventsListWidget,height)
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
+		self.addEvent(unicode(name),unicode(typ),icon,item.widget)
 
 	def addSubscribeEvent(self,jid,status):
 		#	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None, caps = True):
-		self.addBooleanEvent(self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],header=self.main.tr('Subscribe request'),text=self.main.tr('From:')+" "+unicode(jid))
+		self.addBooleanEvent(self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],header=self.main.tr('Subscribe request'),text=self.main.tr('From:')+" "+unicode(jid),name=jid,typ="subscribe")
 
 	def addFTUploadEvent(self,jid,files,descriptions):
 		# descriptions['soubor']='popis'

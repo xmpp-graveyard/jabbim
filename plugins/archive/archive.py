@@ -1,7 +1,7 @@
 import sys,os,time
 sys.path.append('.')
 from include import plugins
-from PyQt4 import QtCore, QtGui, uic
+from PyQt4 import QtCore, QtGui
 from urllib import quote, unquote
 from twisted.python import log
 
@@ -12,7 +12,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Message Archiving'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Archive Plugin'
-		self.version = '0.046'
+		self.version = '0.069'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 # 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
@@ -28,10 +28,11 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('on_message', self.on_message)
 			self.registerHandler('on_message_send', self.on_message_send)
 			self.loadConfig()
-			self.window = uic.loadUi("%s/plugins/%s/historyBrowser.ui"%(self.homeDir, self.fname))
+			self.window = self.loadWindow("%s/plugins/%s/historyBrowser.py"%(self.homeDir, self.fname))
 			self.window.setWindowIcon(self.main.windowIcon())
-			QtCore.QObject.connect(self.window.seznam, QtCore.SIGNAL("itemClicked ( QListWidgetItem* ) "),self.itemClicked)
-			QtCore.QObject.connect(self.window.calendar, QtCore.SIGNAL("selectionChanged()"),self.calChanged)
+			#log.msg(unicode(dir(self.window)))
+			QtCore.QObject.connect(self.window.ui.seznam, QtCore.SIGNAL("itemClicked ( QListWidgetItem* ) "),self.itemClicked)
+			QtCore.QObject.connect(self.window.ui.calendar, QtCore.SIGNAL("selectionChanged()"),self.calChanged)
 		else:
 			self.loadConfig(homedir)
 	def buildRosterMenu(self):
@@ -44,12 +45,12 @@ class Plugin(plugins.PluginBase):
 			if os.path.isdir(self.main.homeDir+'/archive/'+self.jid+'/'+jid):
 				continue
 			else:
-				self.window.seznam.addItem(unquote(jid).split('.history')[0])
+				self.window.ui.seznam.addItem(unquote(jid).split('.history')[0])
 		self.window.show()
 	
 	def calChanged(self):	
 		log.msg("date clicked")
-		self.window.text.setText('')
+		self.window.ui.text.setText('')
 		jid = quote(unicode(self.seznam.currentItem ().text()))
 		try:
 			fp = open(self.main.homeDir+'/archive/'+self.jid+'/'+jid+'.history')
@@ -58,19 +59,19 @@ class Plugin(plugins.PluginBase):
 		except:
 			log.err('no history file')
 			return
-		datum = self.window.calendar.selectedDate().toString('dd-MM-yyyy')
+		datum = self.window.ui.calendar.selectedDate().toString('dd-MM-yyyy')
 		if len(zpravy)>0:
 			for zprava in zpravy:
 	# 			log.msg(zprava)
 				casti = zprava.split('|')
 	# 			log.msg(unicode(casti))
 				if datum == time.strftime('%d-%m-%Y', time.localtime(float(casti[0]))):
-					self.window.text.append(unicode('[%s] %s' %(time.strftime('%X', time.localtime(float(casti[0]))), casti[5]), 'utf8'))
+					self.window.ui.text.append(unicode('[%s] %s' %(time.strftime('%X', time.localtime(float(casti[0]))), casti[5]), 'utf8'))
 
 	
 	def itemClicked(self, item):
 		log.msg("item clicked")
-		self.window.text.setText('')
+		self.window.ui.text.setText('')
 		jid = quote(unicode(item.text()))
 		try:
 			fp = open(self.main.homeDir+'/archive/'+self.jid+'/'+jid+'.history')
@@ -79,14 +80,14 @@ class Plugin(plugins.PluginBase):
 		except:
 			log.err('no history file')
 			return
-		datum = self.window.calendar.selectedDate().toString('dd-MM-yyyy')
+		datum = self.window.ui.calendar.selectedDate().toString('dd-MM-yyyy')
 		if len(zpravy)>0:
 			for zprava in zpravy:
 	# 			log.msg(zprava)
 				casti = zprava.split('|')
 	# 			log.msg(unicode(casti))
 				if datum == time.strftime('%d-%m-%Y', time.localtime(float(casti[0]))):
-					self.window.text.append(unicode('[%s] %s' %(time.strftime('%X', time.localtime(float(casti[0]))), casti[5]), 'utf8'))
+					self.window.ui.text.append(unicode('[%s] %s' %(time.strftime('%X', time.localtime(float(casti[0]))), casti[5]), 'utf8'))
 	
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay):
 		jid = quote(frm.split('/')[0])

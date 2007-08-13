@@ -103,6 +103,15 @@ class chatWindow(QtGui.QMainWindow):
 		#except:
 			#pass
 
+	def activate(self):
+		print "activate"
+		self.show()
+		self.raise_()
+		self.activateWindow()
+		self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
+		tab=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
+		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+
 	def addChatTab(self,jid,name,icon,message=None):
 		for i in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(i)
