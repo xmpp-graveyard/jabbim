@@ -141,10 +141,10 @@ class chatWindow(QtGui.QMainWindow):
 		tab.chat.ui.label.setText("<h2>"+name+"<h2/>")
 		if message!=None:
 			tab.chat.textEditWrite(message)
-		self.show()
-		self.raise_()
-		self.activateWindow()
-		self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
+		#self.show()
+		#self.raise_()
+		#self.activateWindow()
+		#self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
 		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def addGroupChatTab(self,room,nickname,affiliation=""):
