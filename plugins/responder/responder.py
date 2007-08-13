@@ -1,7 +1,7 @@
 import sys,os,time
 sys.path.append('.')
 from include import plugins
-from PyQt4 import QtCore, QtGui, uic
+from PyQt4 import QtCore, QtGui
 from urllib import quote, unquote
 from twisted.python import log
 
@@ -12,7 +12,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'ICQ auto responder'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'ICQ Responder'
-		self.version = '0.021'
+		self.version = '0.022'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.count = 0
