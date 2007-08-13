@@ -409,9 +409,9 @@ class clientClass(pyxl.client.Client):
 				self.roster['groups'][gr]=self.main._addGroup(gr)
 		
 		if len(contact.groups)!=0:
-			items=self.main.ui.roster.findItems(jid, QtCore.Qt.MatchFixedString,4)
-			if len(items)==1:
-				self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(items[0]))
+			items2=self.main.ui.roster.findItems(jid, QtCore.Qt.MatchFixedString,4)
+			if len(items2)==1:
+				self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(items2[0]))
 		
 		# go through all groups
 		for name,item in self.roster['groups'].iteritems():
