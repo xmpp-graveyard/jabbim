@@ -662,9 +662,8 @@ class rosterWidget(QtGui.QTreeWidget):
 			show="offline"
 		if unicode(item.text(1))[0]=='9':
 			self.setItemHidden(item, offline)
+		self.setStatus(jid,show,first)
 		if not first:
-			self.setStatus(jid,show)
-
 			self.sortItems (1,QtCore.Qt.AscendingOrder)
 			self.refreshStats()
 		return item
