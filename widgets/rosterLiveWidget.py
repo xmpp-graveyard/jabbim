@@ -170,6 +170,7 @@ class rosterWidget(QtGui.QWidget):
 
 	def paintEvent(self,event):
 		painter=QtGui.QPainter(self)
+		painter.setClipRegion(event.region())
 		painter.setRenderHint(painter.Antialiasing)
 		x=0
 		y=0
