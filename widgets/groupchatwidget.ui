@@ -22,13 +22,23 @@
    <property name="spacing" >
     <number>6</number>
    </property>
+   <item row="1" column="0" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>331</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
    <item row="0" column="0" colspan="3" >
     <widget class="QSplitter" name="splitter_2" >
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
-     </property>
-     <property name="opaqueResize" >
-      <bool>false</bool>
      </property>
      <widget class="QTextBrowser" name="info" >
       <property name="minimumSize" >
@@ -45,9 +55,9 @@
       <property name="orientation" >
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QTextBrowser" name="textEdit" >
-       <property name="openExternalLinks" >
-        <bool>true</bool>
+      <widget class="QTextEdit" name="textEdit" >
+       <property name="undoRedoEnabled" >
+        <bool>false</bool>
        </property>
       </widget>
       <widget class="QWidget" name="layoutWidget" >
@@ -123,13 +133,6 @@
      </widget>
     </widget>
    </item>
-   <item row="1" column="2" >
-    <widget class="QPushButton" name="sendButton" >
-     <property name="text" >
-      <string>Send</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="1" >
     <widget class="QToolButton" name="smileys" >
      <property name="toolTip" >
@@ -149,18 +152,12 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" >
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
+   <item row="1" column="2" >
+    <widget class="QPushButton" name="sendButton" >
+     <property name="text" >
+      <string>Send</string>
      </property>
-     <property name="sizeHint" >
-      <size>
-       <width>331</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
+    </widget>
    </item>
   </layout>
  </widget>

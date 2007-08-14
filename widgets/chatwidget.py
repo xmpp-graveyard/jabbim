@@ -27,6 +27,35 @@ import urllib,re
 from twisted.web.microdom import *
 from twisted.web.domhelpers import gatherTextNodes
 
+class TextIconFormat(QtGui.QTextCharFormat):
+	def __init__(self,icon,text):
+		QtGui.QTextCharFormat.__init__(self)
+		print self.property
+		self.setObjectType(0x1000)
+
+#TextIconFormat::TextIconFormat(const QString &iconName, const QString &text)
+        #: QTextCharFormat()
+#{
+        #Q_UNUSED(text);
+
+        #setObjectType(IconFormatType);
+        #QTextFormat::setProperty(IconName, iconName);
+        #QTextFormat::setProperty(IconText, text);
+
+        #// TODO: handle animations
+#}
+
+
+class TextIconHandler(QtCore.QObject):
+	def intrinsicSize(self,doc,posInDocument,format):
+		charFormat = format.toCharFormat()
+		return QSizeF(22,22)
+	
+	def drawObject(self,painter, rect, doc, posInDocument, format):
+		charFormat = format.toCharFormat()
+		pixmap = QtGui.QPixmap("images/16x16/emotes/biggrin.png")
+		painter.drawPixmap(rect, pixmap, pixmap.rect())
+
 class lineEditWidget(QtGui.QTextEdit):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QTextEdit.__init__,(self,parent))
@@ -83,6 +112,9 @@ class chatWidget(QtGui.QWidget):
 			self.ui.line=normalLineEditWidget(self,self)
 		else:
 			self.ui.line=lineEditWidget(self,self)
+		#handler=TextIconHandler()
+		#print dir(self.ui.textEdit.document().documentLayout())
+		#self.ui.textEdit.document().documentLayout().registerHandler(0x1000, handler)
 		layout.addWidget(self.ui.line)
 		self.first=None
 		#self.ui.gridlayout.addWidget(self.ui.line,2,0,1,1)
@@ -166,7 +198,12 @@ class chatWidget(QtGui.QWidget):
 			toEnd=True
 		for k,v in self.smileys.iteritems():
 			text=text.replace(" "+k,' <img src="images/16x16/emotes/'+v+'"/>')
-		cursor.insertHtml(text)
+		#cursor.insertHtml(text)
+		cursor.insertFragment(QtGui.QTextDocumentFragment.fromHtml(text))
+		#format = cursor.charFormat()
+		#icon=TextIconFormat('s','s')
+		#cursor.insertText(QtCore.QString(QtCore.QChar.ObjectReplacementCharacter), icon)
+		#cursor.setCharFormat(format)
 		cursor.endEditBlock()
 		if toEnd:
 			self.ui.textEdit.verticalScrollBar().setValue(self.ui.textEdit.verticalScrollBar().maximum())

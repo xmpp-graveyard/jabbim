@@ -9,5 +9,6 @@ import joingroupchat
 import filetransfer
 import addcontact
 import events
+import rosterLiveWidget
 #import about
 #import eventsFTWidget_ui

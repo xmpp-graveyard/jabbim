@@ -2,11 +2,12 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Fri Aug  3 20:49:42 2007
-#      by: PyQt4 UI code generator 4.2
+# Created: Tue Aug 14 13:02:50 2007
+#      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
 
+import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_groupchatwidget(object):
@@ -20,9 +21,11 @@ class Ui_groupchatwidget(object):
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
 
+        spacerItem = QtGui.QSpacerItem(331,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem,1,0,1,1)
+
         self.splitter_2 = QtGui.QSplitter(groupchatwidget)
         self.splitter_2.setOrientation(QtCore.Qt.Vertical)
-        self.splitter_2.setOpaqueResize(False)
         self.splitter_2.setObjectName("splitter_2")
 
         self.info = QtGui.QTextBrowser(self.splitter_2)
@@ -33,8 +36,8 @@ class Ui_groupchatwidget(object):
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName("splitter")
 
-        self.textEdit = QtGui.QTextBrowser(self.splitter)
-        self.textEdit.setOpenExternalLinks(True)
+        self.textEdit = QtGui.QTextEdit(self.splitter)
+        self.textEdit.setUndoRedoEnabled(False)
         self.textEdit.setObjectName("textEdit")
 
         self.layoutWidget = QtGui.QWidget(self.splitter)
@@ -73,10 +76,6 @@ class Ui_groupchatwidget(object):
         self.lineWidget.setObjectName("lineWidget")
         self.gridlayout.addWidget(self.splitter_2,0,0,1,3)
 
-        self.sendButton = QtGui.QPushButton(groupchatwidget)
-        self.sendButton.setObjectName("sendButton")
-        self.gridlayout.addWidget(self.sendButton,1,2,1,1)
-
         self.smileys = QtGui.QToolButton(groupchatwidget)
         self.smileys.setIcon(QtGui.QIcon("images/22x22/emotes/biggrin.png"))
         self.smileys.setCheckable(True)
@@ -84,8 +83,9 @@ class Ui_groupchatwidget(object):
         self.smileys.setObjectName("smileys")
         self.gridlayout.addWidget(self.smileys,1,1,1,1)
 
-        spacerItem = QtGui.QSpacerItem(331,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem,1,0,1,1)
+        self.sendButton = QtGui.QPushButton(groupchatwidget)
+        self.sendButton.setObjectName("sendButton")
+        self.gridlayout.addWidget(self.sendButton,1,2,1,1)
 
         self.retranslateUi(groupchatwidget)
         QtCore.QMetaObject.connectSlotsByName(groupchatwidget)
@@ -99,7 +99,7 @@ class Ui_groupchatwidget(object):
         self.roomAdmin.setText(QtGui.QApplication.translate("groupchatwidget", "Room administration", None, QtGui.QApplication.UnicodeUTF8))
         self.roomConfig.setToolTip(QtGui.QApplication.translate("groupchatwidget", "You can set up logging of the room etc", None, QtGui.QApplication.UnicodeUTF8))
         self.roomConfig.setText(QtGui.QApplication.translate("groupchatwidget", "Room configuration", None, QtGui.QApplication.UnicodeUTF8))
-        self.sendButton.setText(QtGui.QApplication.translate("groupchatwidget", "Send", None, QtGui.QApplication.UnicodeUTF8))
         self.smileys.setToolTip(QtGui.QApplication.translate("groupchatwidget", "You can add emoticons by clicking here", None, QtGui.QApplication.UnicodeUTF8))
         self.smileys.setText(QtGui.QApplication.translate("groupchatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.sendButton.setText(QtGui.QApplication.translate("groupchatwidget", "Send", None, QtGui.QApplication.UnicodeUTF8))
 

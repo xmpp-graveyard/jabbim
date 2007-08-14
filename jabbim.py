@@ -154,7 +154,7 @@ class clientClass(pyxl.client.Client):
 		else:
 			for group in groups:
 				# add user item to the group
-				self.main.ui.roster.addUser(jid,name,self.roster['groups'][unicode(group)],first=True)
+				self.main.ui.roster.addUser(jid,name,group,first=True)
 		# show avatar
 		self.main.cache.get_avatar(jid, self.main._loadAvatar)
 
@@ -168,6 +168,7 @@ class clientClass(pyxl.client.Client):
 			user.setIcon(0,self.main.getIcon(size="16x16"))
 
 	def on_rosterArrived(self):
+		self.main.ui.roster.sortItems()
 		self.main.buildBookmarks() # build Bookmarks tab
 		self.main.autoJoinGroupchat()
 		# vymazani metakontaktu
@@ -387,14 +388,14 @@ class clientClass(pyxl.client.Client):
 
 		# add group item if we haven't it
 		for gr in contact.groups:
-			if self.main.ui.roster.getGroupItem(gr)==None:
+			if not self.main.ui.roster.groups.has_key(gr):
 				self.roster['groups'][gr]=self.main._addGroup(gr)
 
 		# delete old top level item of this contact if contact is not in "toplevel group"
-		if len(contact.groups)!=0:
-			items2=self.main.ui.roster.findItems(jid, QtCore.Qt.MatchFixedString,4)
-			if len(items2)==1:
-				self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(items2[0]))
+		#if len(contact.groups)!=0:
+			#items2=self.main.ui.roster.findItems(jid, QtCore.Qt.MatchFixedString,4)
+			#if len(items2)==1:
+				#self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(items2[0]))
 
 		# go through all groups
 		for name,item in self.roster['groups'].iteritems():
@@ -403,43 +404,46 @@ class clientClass(pyxl.client.Client):
 				add=True
 				# go through all user items, find item in this group and edit it
 				for i in items:
-					parent=i.parent()
-					if item==parent:
+					if item.name==i.group:
 						add=False # we found item
 						name=contact.name
 						if name==None or len(name)==0:
 							name=jid
-						i.setText(0,unicode(name))
-						i.setText(1,unicode(i.text(1))[0]+unicode(name).lower())
-						i.setText(2,unicode(name))
-						i.setData(32,0,QtCore.QVariant([unicode(jid),unicode('contact')]))
-						self.main.ui.roster.setStatus(jid,self.main.icons[unicode(i.text(1))[0]],i)
-						self.main.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
+						i.name=unicode(name)
+						i.jid=jid
+						self.main.ui.roster.sortItems()
 				# we didn't find item
 				if add:
 					# we have some item to clone (so we can't create new one)
 					if len(items)!=0:
 						i=items[0].clone() # clone contact item
-						self.roster['groups'][name].addChild(i) # add item to the new group
-						index=self.main.ui.roster.indexFromItem(self.roster['groups'][name],0)
-						self.main.ui.roster.expand(index)
+						i.group=unicode(name)
+						print "append ",i
+						self.main.ui.roster.users.append(i)
+						self.main.ui.roster.sortItems()
+						self.main.ui.roster.repaint()
+						#self.roster['groups'][name].addChild(i) # add item to the new group
+						#index=self.main.ui.roster.indexFromItem(self.roster['groups'][name],0)
+						#self.main.ui.roster.expand(index)
 						#self.main.ui.roster.setStatus(jid,None,i)
 					else:
 						# add new contact to the roster
 						self.main.ui.roster.addUser(contact.jid,contact.name,self.roster['groups'][name])
-						self.main.ui.roster.sortItems(1,QtCore.Qt.AscendingOrder)
 						self.main.ui.roster.setStatus(jid,None)
-						self.main.ui.roster.refreshStats()
+						self.main.ui.roster.sortItems()
+						
+
 			else:
 				# user is not in this group, so we have to delete them from this group, if he is there
 				for i in self.main.ui.roster.getUserItems(jid):
-					parent=i.parent()
-					if item==parent:
-						parent.takeChild(parent.indexOfChild(i))
-						# delete group, if it's empty
-						if int(parent.childCount())==0:
-							toDel.append(unicode(parent.text(2)))
-							self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(parent))
+					if item.name==i.group:
+						self.main.ui.roster.users.remove(i)
+						self.main.ui.roster.sortItems()
+						self.main.ui.roster.repaint()
+						## delete group, if it's empty
+						#if int(parent.childCount())==0:
+							#toDel.append(unicode(parent.text(2)))
+							#self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(parent))
 						break
 		# delete all groups saved in toDel
 		#for i in range(len(toDelJid)):
@@ -456,17 +460,22 @@ class clientClass(pyxl.client.Client):
 		# delete contact from roster
 		log.msg("delete contact")
 		#contact=self.roster['users'][jid]
-		items=self.main.ui.roster.getUserItems(jid,'contact')
-		lenght=int(len(items))
-		for i in range(lenght):
-			item=self.main.ui.roster.getUserItems(jid)[0]
-			if item.childCount()==0:
-				#log.msg("DELETE ITEM:"+unicode(item.text(1)))
-				parent=item.parent()
-				if parent:
-					index=parent.indexOfChild(item)
-					if index>-1:
-						it=parent.takeChild(index)
+		for i in self.main.ui.roster.getUserItems(jid):
+			self.main.ui.roster.users.remove(i)
+		self.main.ui.roster.sortItems()
+		self.main.ui.roster.repaint()
+						## delete group, if it's empty
+		#items=self.main.ui.roster.getUserItems(jid,'contact')
+		#lenght=int(len(items))
+		#for i in range(lenght):
+			#item=self.main.ui.roster.getUserItems(jid)[0]
+			#if item.childCount()==0:
+				##log.msg("DELETE ITEM:"+unicode(item.text(1)))
+				#parent=item.parent()
+				#if parent:
+					#index=parent.indexOfChild(item)
+					#if index>-1:
+						#it=parent.takeChild(index)
 		log.msg("DELETE COMPLETE")
 		self.main.ui.roster.refreshStats()
 
@@ -588,7 +597,7 @@ class clientClass(pyxl.client.Client):
 			if unicode(self.jid.userhost())==unicode(jid):
 				self.main.ui.selfAvatar.setPixmap(pixmap.scaled(38,38))
 			for item in self.main.ui.roster.getUserItems(jid):
-				item.setIcon(3,QtGui.QIcon(pixmap))
+				item.setAvatar(QtGui.QIcon(pixmap))
 			sha=sha1(image).hexdigest()
 			self.main.cache.set_avatar(jid, ['avatars/'+jid, sha])
 			self.main._loadAvatar('avatars/'+jid, sha, jid)
@@ -978,8 +987,7 @@ class mainWindow(QtGui.QMainWindow):
 			expanded=[]
 			if self.client!=None:
 				for name,item in self.client.roster['groups'].iteritems():
-					index=self.ui.roster.indexFromItem(item,0)
-					if self.ui.roster.isExpanded(index)==True:
+					if item.expanded==True:
 						expanded.append(name)
 				self.config['expandedGroups']=expanded
 				self.config.write()
@@ -1176,11 +1184,16 @@ class mainWindow(QtGui.QMainWindow):
 	def hideOffline(self,bool):
 		# hide or show offline users
 		#self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
-		self.ui.roster.refreshStats()
 		self.offline=not bool
-		self.rosterHideOffline(not bool)
+		self.ui.roster.showOffline=bool
+		self.ui.roster.sortItems()
+		self.ui.roster.repaint()
+		#self.ui.roster.refreshStats()
+		
+		#self.rosterHideOffline(not bool)
 
 	def rosterHideOffline(self,bool):
+		return
 		for group,item in self.client.roster['groups'].iteritems():
 			# return stats (online,offline,all users) for group
 			count=0
@@ -1216,8 +1229,12 @@ class mainWindow(QtGui.QMainWindow):
 		layout=QtGui.QHBoxLayout(self.ui.rosterWidget)
 		layout.setMargin(0)
 		layout.setSpacing(0)
-		self.ui.roster=widgets.rosterWidget.rosterWidget(self.ui.rosterWidget,self)
-		layout.addWidget(self.ui.roster)
+		#self.ui.roster=widgets.rosterWidget.rosterWidget(self.ui.rosterWidget,self)
+		scroll=QtGui.QScrollArea(self.ui.rosterWidget)
+		scroll.setWidgetResizable (True)
+		self.ui.roster=widgets.rosterLiveWidget.rosterWidget(self,self)
+		scroll.setWidget(self.ui.roster)
+		layout.addWidget(scroll)
 
 	def _connected(self):
 		self.ui.selfName.setText("<h3>"+unicode(self.client.jid.userhost()).split("@")[0]+"</h3>")
@@ -1308,14 +1325,14 @@ class mainWindow(QtGui.QMainWindow):
 			pixmap.loadFromData(image)
 			for item in self.ui.roster.getUserItems(jid):
 ##				log.msg(utils.cprint("yellow","setting icon: "+jid))
-				item.setIcon(3,QtGui.QIcon(pixmap))
+				item.setAvatar(QtGui.QIcon(pixmap))
 		self.client.roster['users'][jid].setAvatar(file, hash)
 	
 	def _addGroup(self, group):
 		item=self.ui.roster.addGroup(unicode(group))
 		if group in self.config['expandedGroups']:
-			index=self.ui.roster.indexFromItem(item,0)
-			self.ui.roster.expand(index)
+			item.setExpanded(True)
+			#self.ui.roster.repaint()
 		return item
 	
 	def _addUser(self, itemjid, name, grp):
@@ -1340,8 +1357,11 @@ class mainWindow(QtGui.QMainWindow):
 		#MainWindow.client.bookmarks = {'conference':{}, 'url': {}}
 		#MainWindow.client.roster['groups']['Unknown']=MainWindow.ui.roster.addGroup('Unknown')
 		#MainWindow.client.temp_hosts=[]
-		MainWindow.ui.roster.clear()
-		MainWindow.ui.roster.makeHiddenItem()
+		MainWindow.ui.roster.sortedGroups=[]
+		MainWindow.ui.roster.sorted={}
+		MainWindow.ui.roster.users=[]
+		MainWindow.ui.roster.groups={}
+		#MainWindow.ui.roster.makeHiddenItem()
 		MainWindow.ui.login_connect.setEnabled(True)
 		MainWindow.plugins=[]
 		MainWindow.client = None

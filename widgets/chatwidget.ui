@@ -27,11 +27,6 @@
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
      </property>
-     <widget class="QTextBrowser" name="textEdit" >
-      <property name="openExternalLinks" >
-       <bool>true</bool>
-      </property>
-     </widget>
      <widget class="QWidget" native="1" name="lineWidget" >
       <property name="minimumSize" >
        <size>
@@ -39,6 +34,27 @@
         <height>10</height>
        </size>
       </property>
+      <layout class="QGridLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="spacing" >
+        <number>0</number>
+       </property>
+       <item row="0" column="0" >
+        <widget class="QTextEdit" name="textEdit" >
+         <property name="undoRedoEnabled" >
+          <bool>false</bool>
+         </property>
+         <property name="readOnly" >
+          <bool>false</bool>
+         </property>
+         <property name="textInteractionFlags" >
+          <enum>Qt::TextEditorInteraction</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>
