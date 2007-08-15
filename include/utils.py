@@ -107,7 +107,7 @@ def getHomeDir():
 				if not valid(homeDir):
 					homeDir = 'C:\\'
 	homeDir = homeDir + './jabbim'
-	return homeDir
+	return homeDir.encode('utf8')
 
 def need_highlight(nick, text):
 	# upraveno z gajimu
