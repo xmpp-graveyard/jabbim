@@ -847,6 +847,10 @@ class mainWindow(QtGui.QMainWindow):
 					if soubor == '.svn':
 						continue
 					try:
+						os.mkdir(kam)
+					except:
+						pass
+					try:
 						shutil.copy(odkud+soubor, kam+soubor)
 					except Exception, ex:
 						print ex
