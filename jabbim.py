@@ -547,8 +547,8 @@ class clientClass(pyxl.client.Client):
 		user=self.main.ui.roster.getUserItems(unicode(frm).rsplit("/")[0])
 		if len(user)!=0:
 			#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
-			icon=user[0].icon(0)
-			user=user[0].text(2)
+			icon=user[0].icon
+			user=user[0].name
 		else:
 			icon=self.main.getIcon(status="offline",size="16x16")
 			user=frm
@@ -580,7 +580,7 @@ class clientClass(pyxl.client.Client):
 		else:
 			# add new chattab
 			self.main.chat.addChatTab(frm,unicode(user),icon,message)
-
+			self.main.events.addInfoEvent(header=self.main.tr("New message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm),typ='newMessage',icon="images/16x16/actions/message.png",action=self.main.chat.activate,actionDict=[])
 	def on_vcardReceived(self,  jid, card):
 		#print card
 		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db

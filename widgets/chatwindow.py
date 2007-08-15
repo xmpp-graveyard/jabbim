@@ -90,7 +90,7 @@ class chatWindow(QtGui.QMainWindow):
 			#icon=self.main.getIcon(jid,show,size="16x16")
 		#else:
 		if typ=="chat":
-			icon=self.main.getIcon(jid,self.main.icons[unicode(self.main.ui.roster.getUserItems(jid)[0].text(1))[0]],size="16x16")
+			icon=self.main.getIcon(jid,self.main.icons[unicode(self.main.ui.roster.getUserItems(jid)[0].status)],size="16x16")
 			self.ui.chatTab.setTabIcon(index,icon)
 		elif typ == 'groupchat':
 			self.ui.chatTab.setTabIcon(index,QtGui.QIcon("images/16x16/categories/muc.png"))
@@ -145,6 +145,7 @@ class chatWindow(QtGui.QMainWindow):
 		#self.raise_()
 		#self.activateWindow()
 		#self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
+		#self.activate()
 		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def addGroupChatTab(self,room,nickname,affiliation=""):
