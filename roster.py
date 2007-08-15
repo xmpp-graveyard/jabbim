@@ -1,3 +1,5 @@
+
+
 import os
 try:
 	from PyQt4 import QtCore, QtGui
@@ -345,6 +347,8 @@ class rosterWidget(QtGui.QTreeWidget):
 		return item
 
 	def addResource(self,jid,name,user):
+		#item=self.ui.roster.addResource(jid+'/'+resource,unicode(user.text(2))+" - "+resource,user)
+
 		# add new resource called 'name', JID 'jid' with QTreeWidgetItem 'user'
 		item=QtGui.QTreeWidgetItem(user)
 		if name==None or len(name)==0:

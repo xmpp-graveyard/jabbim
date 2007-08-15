@@ -49,6 +49,45 @@ class customEvent(QtCore.QEvent):
 		apply(QtCore.QEvent.__init__,(self,QtCore.QEvent.User))
 		self.data=list(data)
 		self.typ=unicode(typ)
+		self.gridlayout = QtGui.QGridLayout(eventsFTWidget)
+		self.gridlayout.setMargin(0)
+		self.gridlayout.setSpacing(0)
+		self.gridlayout.setObjectName("gridlayout")
+	
+		self.gridlayout1 = QtGui.QGridLayout()
+		self.gridlayout1.setMargin(0)
+		self.gridlayout1.setSpacing(6)
+		self.gridlayout1.setObjectName("gridlayout1")
+	
+		self.hboxlayout = QtGui.QHBoxLayout()
+		self.hboxlayout.setMargin(0)
+		self.hboxlayout.setSpacing(6)
+		self.hboxlayout.setObjectName("hboxlayout")
+	
+		self.label = QtGui.QLabel(eventsFTWidget)
+		self.label.setObjectName("label")
+		self.hboxlayout.addWidget(self.label)
+	
+		self.label_2 = QtGui.QLabel(eventsFTWidget)
+		self.label_2.setObjectName("label_2")
+		self.hboxlayout.addWidget(self.label_2)
+		self.gridlayout1.addLayout(self.hboxlayout,0,0,1,1)
+	
+		spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+		self.gridlayout1.addItem(spacerItem,0,1,1,1)
+	
+		self.progressBar = QtGui.QProgressBar(eventsFTWidget)
+	
+		sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7),QtGui.QSizePolicy.Policy(1))
+		sizePolicy.setHorizontalStretch(0)
+		sizePolicy.setVerticalStretch(0)
+		sizePolicy.setHeightForWidth(self.progressBar.sizePolicy().hasHeightForWidth())
+		self.progressBar.setSizePolicy(sizePolicy)
+		self.progressBar.setProperty("value",QtCore.QVariant(24))
+		self.progressBar.setOrientation(QtCore.Qt.Horizontal)
+		self.progressBar.setObjectName("progressBar")
+		self.gridlayout1.addWidget(self.progressBar,1,0,1,2)
+		self.gridlayout.addLayout(self.gridlayout1,0,0,1,1)
 
 class discoveryWindow(QtGui.QDialog):
 	def __init__(self,parent=None):
@@ -146,6 +185,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.addContact, QtCore.SIGNAL("clicked ()"),self.addContactMainWindow)
 		app.connect(self.ui.getGroupchatList, QtCore.SIGNAL("clicked ()"),self.getGroupchatList)
 		app.connect(self.ui.manageBookmarks, QtCore.SIGNAL("clicked ()"),self.newBookmark)
+		
 		QtCore.QObject.connect(self.ui.groupchat, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.groupchatClicked)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
@@ -588,6 +628,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusButton.setMenu(self.statusMenu)
 		app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
 		self.offline=True
+
 
 	def groupchatChanged(self,action):
 		# Groupchat menu changed
@@ -1158,7 +1199,7 @@ class mainWindow(QtGui.QMainWindow):
 				#if jid.startswith("@"):
 					#jab.roster.Authorize(str(jid))
 				#else:
-					##if not self.ui.roster.isUser(jid):
+					##if not self.ui.4.isUser(jid):
 					#self.events.show()
 					#self.events.addEvent("subscribe",{"jid":str(jid)})
 			else:
