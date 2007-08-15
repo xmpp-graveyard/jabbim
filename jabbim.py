@@ -620,7 +620,7 @@ class clientClass(pyxl.client.Client):
 				log.msg('IBB offer')
 				self.ft[sid].method = 'http://jabber.org/protocol/ibb'
 				self.ft[sid].file = filename
-				self.ft[sid].fp = open(self.ft[sid].file, 'w')
+				self.ft[sid].fp = open(self.ft[sid].file, 'wb')
 				self.receiveFile(sid, id)
 	
 	def on_verify(self, id, thread, props, frm, typ): #xep0070
@@ -840,11 +840,21 @@ class mainWindow(QtGui.QMainWindow):
 				f2.close()
 			if copy:
 				log.msg('copy plugin to homedir: '+plugin)
-				try:
-					shutil.copytree("plugins/"+plugin, self.homeDir+"/plugins/"+plugin)
-				except:
-					shutil.rmtree(self.homeDir+"/plugins/"+plugin)
-					shutil.copytree("plugins/"+plugin, self.homeDir+"/plugins/"+plugin)
+				odkud = "plugins/"+plugin+'/'
+				kam = self.homeDir+"/plugins/"+plugin+'/'
+				soubory = os.listdir(odkud)
+				for soubor in soubory:
+					if soubor == '.svn':
+						continue
+					try:
+						shutil.copy(odkud+soubor, kam+soubor)
+					except:
+						log.err('Chyba pri kopirovani pluginu')
+# 				try:
+# 					shutil.copytree("plugins/"+plugin, self.homeDir+"/plugins/"+plugin)
+# 				except:
+# 					shutil.rmtree(self.homeDir+"/plugins/"+plugin)
+# 					shutil.copytree("plugins/"+plugin, self.homeDir+"/plugins/"+plugin)
 
 	def loadPlugins(self):
 		
