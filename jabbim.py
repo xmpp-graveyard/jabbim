@@ -1252,11 +1252,11 @@ class mainWindow(QtGui.QMainWindow):
 		layout.setMargin(0)
 		layout.setSpacing(0)
 		#self.ui.roster=widgets.rosterWidget.rosterWidget(self.ui.rosterWidget,self)
-		scroll=QtGui.QScrollArea(self.ui.rosterWidget)
-		scroll.setWidgetResizable (True)
+		self.scroll=QtGui.QScrollArea(self.ui.rosterWidget)
+		self.scroll.setWidgetResizable (True)
 		self.ui.roster=widgets.rosterLiveWidget.rosterWidget(self,self)
-		scroll.setWidget(self.ui.roster)
-		layout.addWidget(scroll)
+		self.scroll.setWidget(self.ui.roster)
+		layout.addWidget(self.scroll)
 
 	def _connected(self):
 		self.ui.selfName.setText("<h3>"+unicode(self.client.jid.userhost()).split("@")[0]+"</h3>")
