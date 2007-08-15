@@ -595,6 +595,7 @@ class clientClass(pyxl.client.Client):
 			pixmap.loadFromData(image)
 			log.msg(unicode(self.jid.userhost())+" "+unicode(jid))
 			if unicode(self.jid.userhost())==unicode(jid):
+				print "Setting avatar"
 				self.main.ui.selfAvatar.setPixmap(pixmap.scaled(38,38))
 			for item in self.main.ui.roster.getUserItems(jid):
 				item.setAvatar(QtGui.QIcon(pixmap))
