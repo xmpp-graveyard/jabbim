@@ -15,7 +15,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Headlines window'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'News Plugin'
-		self.version = '0.033'
+		self.version = '0.038'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.kontakty = {} # jid:contact
@@ -64,11 +64,11 @@ class Plugin(plugins.PluginBase):
  			self.main.events.addInfoEvent(header=self.tr("News: ")+subject,text=self.tr("From: ")+frm,typ='newHeadline',icon="images/32x32/status/rss-online.png")
 		if self.config['notify_show']['value']=='True':
 			self.window.show()
-		itm = None
-		itm = self.window.ui.roster.currentItem()
-		if itm!= None:
-			if unicode(itm.text())==frm:
-				self.updateZpravy(frm)
+# 		itm = None
+# 		itm = self.window.ui.roster.currentItem()
+# 		if itm!= None:
+# 			if unicode(itm.text())==frm:
+# 				self.updateZpravy(frm)
 			
 		return False
 	
@@ -79,12 +79,13 @@ class Plugin(plugins.PluginBase):
 		self.updateZpravy(jid)
 	
 	def updateZpravy(self, jid):
-		print jid
+
 		try:
 			kontakt = self.kontakty[jid]
 		except:
 			log.err(jid)
 			return
+		print ' hm',jid
 		self.window.ui.zpravy.clear()
 		setUnread = True
 		for zprava in kontakt.zpravy:
@@ -94,13 +95,14 @@ class Plugin(plugins.PluginBase):
 				font.setBold(True)
 			item.setFont(font)
 			self.window.ui.zpravy.addItem(item)
-			if setUnread :
-				if zprava.unread:
-					self.window.ui.zpravy.setCurrentItem(item)
-					setUnread = False
+# 			if setUnread :
+# 				if zprava.unread:
+# 					self.window.ui.zpravy.setCurrentItem(item)
+# 					setUnread = False
 	
 	def headlineChanged(self):
-		item = self.window.ui.zpravy.currentItem()
+		log.msg('headlineChanged')
+		item = self.window.ui.roster.currentItem()
 		font = font = QtGui.QFont()
 		font.setBold(False)
 		item.setFont(font)
@@ -117,6 +119,7 @@ class Plugin(plugins.PluginBase):
 		self.window.ui.zprava.setHtml(zprava.body)
 		if kontakt.neprectene() == 0:
 			kontakt.item.setFont(font)
+		self.updateZpravy(jid)
 		
 	
 

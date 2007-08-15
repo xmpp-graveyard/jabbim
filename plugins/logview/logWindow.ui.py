@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'logWindow.ui'
 #
-# Created: Mon Aug 13 15:44:26 2007
+# Created: Wed Aug 15 07:34:04 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -10,12 +10,12 @@
 import sys
 from PyQt4 import QtCore, QtGui
 
-class Ui_DebugLogWindow(object):
-    def setupUi(self, DebugLogWindow):
-        DebugLogWindow.setObjectName("DebugLogWindow")
-        DebugLogWindow.resize(QtCore.QSize(QtCore.QRect(0,0,363,408).size()).expandedTo(DebugLogWindow.minimumSizeHint()))
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,363,408).size()).expandedTo(MainWindow.minimumSizeHint()))
 
-        self.centralwidget = QtGui.QWidget(DebugLogWindow)
+        self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
         self.gridlayout = QtGui.QGridLayout(self.centralwidget)
@@ -35,17 +35,17 @@ class Ui_DebugLogWindow(object):
         self.logView = QtGui.QTextBrowser(self.centralwidget)
         self.logView.setObjectName("logView")
         self.gridlayout.addWidget(self.logView,0,0,1,2)
-        DebugLogWindow.setCentralWidget(self.centralwidget)
+        MainWindow.setCentralWidget(self.centralwidget)
 
-        self.statusbar = QtGui.QStatusBar(DebugLogWindow)
+        self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
-        DebugLogWindow.setStatusBar(self.statusbar)
+        MainWindow.setStatusBar(self.statusbar)
 
-        self.retranslateUi(DebugLogWindow)
-        QtCore.QMetaObject.connectSlotsByName(DebugLogWindow)
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def retranslateUi(self, DebugLogWindow):
-        DebugLogWindow.setWindowTitle(QtGui.QApplication.translate("DebugLogWindow", "Debug log", None, QtGui.QApplication.UnicodeUTF8))
-        self.clearButton.setText(QtGui.QApplication.translate("DebugLogWindow", "Clear", None, QtGui.QApplication.UnicodeUTF8))
-        self.enableBox.setText(QtGui.QApplication.translate("DebugLogWindow", "Enable", None, QtGui.QApplication.UnicodeUTF8))
+    def retranslateUi(self, MainWindow):
+        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Debug log", None, QtGui.QApplication.UnicodeUTF8))
+        self.clearButton.setText(QtGui.QApplication.translate("MainWindow", "Clear", None, QtGui.QApplication.UnicodeUTF8))
+        self.enableBox.setText(QtGui.QApplication.translate("MainWindow", "Enable", None, QtGui.QApplication.UnicodeUTF8))
 

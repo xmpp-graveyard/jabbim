@@ -117,54 +117,9 @@ class Client(derived):
 		for line in result:
 			self.caps_cache[line[0]] = line[1]
 			
-	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None, caps = True):
-		presence = Element((None, 'presence'))
-		presence['from'] = self.jid.full()
-		if to:
-			presence['to'] = to
-		if status:
-			presence.addElement('status', content = status)
-		if show:
-			presence.addElement('show', content = show)
-		if priority:
-			presence.addElement('priority', content = unicode(priority))
-		if typ:
-			presence['type'] = typ
-		if caps:
-			c = presence.addElement('c', 'http://jabber.org/protocol/caps')
-			c['node'] = self.caps_node
-			c['ver'] = self.caps_version
-			if self.caps_ext != None:
-				c['ext'] = self.caps_ext
 
-		log.msg('sending out presence to: ' + unicode(to))
-		self.on_xml(presence.toXml())
-		self.xmlstream.send(presence)
 
-	def sendMessage(self, to, body, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
-		self.dispatcher.publishEvent('on_message_send', to, body, typ, subject,composing, xhtml,  muc)
-		message = Element((None,'message'))
-		message['to'] = to
-		message.addElement('body', content = body)
-		message['type'] = typ
-		JID = jid.JID(to)
-		if typ == 'normal' and subject:
-			message.addElement('subject', content = subject)
-		if xhtml != None:
-			html = message.addElement('html','http://jabber.org/protocol/xhtml-im')
-			body = html.addElement('body', 'http://www.w3.org/1999/xhtml')
-			body.addRawXml(xhtml)
-		if composing:
-			if self.roster['users'].has_key(JID.userhost()):
-				if self.roster['users'].resources.has_key(JID.resouce):
-					if self.roster['users'].resources[JID.resource].hasFeature('http://jabber.org/protocol/chatstates'):
-						message.addElement(composing, 'http://jabber.org/protocol/chatstates' )
-				else:
-					if self.roster['users'].resources[self.roster['users'].getHighestResource()].hasFeature('http://jabber.org/protocol/chatstates'):
-						message.addElement(composing, 'http://jabber.org/protocol/chatstates' )
 
-		self.on_xml(message.toXml())
-		self.xmlstream.send(message)
 
 	def connect(self):
 		log.msg('dns - ' + unicode(time.time()))
@@ -299,16 +254,7 @@ class Client(derived):
 			self.discofeatures[node] = []
 			self.discofeatures[node].append(feature)
 
-	def getRoster(self):
-		log.msg('get roster')
-		iq = IQ(self.xmlstream, 'get')
-		iq['type'] = 'get'
-		q = iq.addElement('query')
-		q['xmlns']='jabber:iq:roster'
-		self.disp(iq['id'])
-		d = iq.send()
-		self.on_xml(iq.toXml())
-		d.addCallback(self._onRosterArrive).addErrback(self.chyba)
+
 
 	def onRosterAdd(self,el):
 		log.msg("roster item add")
@@ -367,43 +313,14 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 
-	def sendRosterUpdate(self, jid, name, subscription, groups, callback=None, params=None):
-		print jid, name, subscription, groups
-		iq = IQ(self.xmlstream, 'get')
-		iq['from'] = self.jid.full()
-		iq['type'] = 'set'
-		q = iq.addElement('query')
-		q['xmlns']='jabber:iq:roster'
-		item = q.addElement('item')
-		item['jid'] = jid
-		item['name'] = name
-		item['subscription'] = subscription
-		for group in groups:
-			item.addElement('group', content = group)
-		self.disp(iq['id'])
-		d = iq.send()
-		self.on_xml(iq.toXml())
-		d.addCallback(self._rosterUpdateDone, callback, params).addErrback(self.chyba)
+
 		
 	def _rosterUpdateDone(self, el, callback, params):
 		if callback != None:
 			self.reactor.callFromThread(callback, params)
 
 
-	def getVCard(self, jid):
-		log.msg( 'requesting vcard for ' + unicode(jid))
-		iq = IQ(self.xmlstream, 'get')
-		iq['to'] = jid
-		iq.addElement('vCard', 'vcard-temp')
-		self.disp(iq['id'])
-		iq.timeout = 60
-		log.msg("Sending VCARD IQ")
-		d = iq.send()
-		log.msg("XML LOG")
-		self.on_xml(iq.toXml())
-		log.msg("ADDING: callback")
-		d.addCallback(self._vcardReceived).addErrback(self._noVcard, jid)
-		log.msg("END: getVCard")
+
 
 	def _noVcard(self, err, jid): 
 		print jid, 'no vcard available' 
@@ -436,40 +353,7 @@ class Client(derived):
 		print card
 		self.reactor.callFromThread(self.on_vcardReceived,el['from'], card)
 
-	def getBookmarks(self):
-		log.msg('get bookmarks')
-		iq = IQ(self.xmlstream, 'get')
-		q = iq.addElement('query', 'jabber:iq:private')
-		q.addElement('storage', 'storage:bookmarks')
-		self.on_xml(iq.toXml())
-		self.disp(iq['id'])
-		d = iq.send()
-		d.addCallback(self._bookmarksReceived)
-		d.addErrback(self._bookmarksErrReceived)
 
-	def setBookmarks(self):
-		iq = IQ(self.xmlstream, 'set')
-		q = iq.addElement('query', 'jabber:iq:private')
-		storage = q.addElement('storage', 'storage:bookmarks')
-		for bookmark in self.bookmarks['conference'].itervalues():
-			b = storage.addElement('conference')
-			b['jid'] = bookmark.jid.userhost()
-			b['name'] = bookmark.name
-			b['autojoin'] = unicode(bookmark.autojoin)
-			if bookmark.nick:
-				b.addElement('nick', content = bookmark.nick)
-			if bookmark.password:
-				b.addElement('password', content = bookmark.password)
-
-		for bookmark in self.bookmarks['url'].itervalues():
-			b = storage.addElement('url')
-			b['name'] = bookmark.name
-			b['url'] = bookmark.url
-
-		self.disp(iq['id'])
-		self.on_xml(iq.toXml())
-		d = iq.send()
-		d.addCallback(self._bookmarksSet).addErrback(self.chyba)
 
 	def _bookmarksSet(self, el):
 		log.msg('bookmarks set sucessfully')
@@ -509,16 +393,6 @@ class Client(derived):
 								self.bookmarks['conference'][name] = Bookmark(name, 'url', url = url)
 
 
-	def getMetacontacts(self):
-		log.msg('get meta contacts')
-		iq = IQ(self.xmlstream, 'get')
-		q = iq.addElement('query', 'jabber:iq:private')
-		q.addElement('storage', 'storage:metacontacts')
-		self.on_xml(iq.toXml())
-		self.disp(iq['id'])
-		d = iq.send()
-		d.addCallback(self._metacontactsReceived)
-		d.addErrback(self._metacontactsErrReceived)
 	
 	def _metacontactsErrReceived(self,  err):
 		log.msg('meta error')
@@ -536,20 +410,7 @@ class Client(derived):
 			self.roster_meta[item['jid']] = {'tag': item['tag'],  'order': order}
 		self.getRoster()
 
-	def setMetacontacts(self):
-		log.msg( 'sending metacontacts')
-		iq = IQ(self.xmlstream, 'set')
-		q = iq.addElement('query', 'jabber:iq:private')
-		storage = q.addElement('storage', 'storage:metacontacts')
-		for jid,  val in self.roster_meta.iteritems():
-			m = storage.addElement('meta')
-			m['jid'] = jid
-			m['tag'] = val['tag']
-			m['order'] = str(val['order'])
-		self.disp(iq['id'])
-		self.on_xml(iq.toXml())
-		d = iq.send()
-		d.addCallback(self._metacontactsSet).addErrback(self.chyba)
+
 	def _metacontactsSet(self,  el):
 		log.msg( 'metacontacts set')
 
@@ -560,11 +421,7 @@ class Client(derived):
 	def _contactAdded(self, params):
 		self.sendPresence(to = params['jid'], status = params['msg'], typ = 'subscribe')
 
-	def delContact(self, jid):
-		self.sendRosterUpdate(jid, '', 'remove', [])
-		if self.roster_meta.has_key(jid):
-			del self.roster_meta[jid]
-			self.setMetacontacts()
+
 
 	def onXML(self, el):
 		if el.hasAttribute('id') and el.name == 'iq':
@@ -831,18 +688,7 @@ class Client(derived):
 					self.on_GCpresenceError(fromjid, child.getAttribute('code'),  child.getAttribute('type'),  name, text )
 					self.dispatcher.publishEvent('on_GCpresenceError',child.getAttribute('code'),  child.getAttribute('type'),  name , text)
 		
-	def getFeatures(self, jid, caps_node):
-		log.msg('requesting features'+ caps_node)
-		iq = IQ(self.xmlstream, 'get')
-		iq['to'] = jid.full()
-		iq['from'] = self.jid.full()
-		q = iq.addElement('query', 'http://jabber.org/protocol/disco#info')
-		if caps_node != None:
-			q['node'] = caps_node
-		self.on_xml(iq.toXml())
-		d = iq.send()
-		self.disp(iq['id'])
-		d.addCallback(self._featuresReceived, caps_node).addErrback(self.chyba)
+
 
 	def _featuresReceived(self, el, node):
 		log.msg( 'features received')
@@ -873,15 +719,7 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 
-	def getVersion(self, jid):
-		log.msg('requesting version info')
-		iq = IQ(self.xmlstream, 'get')
-		iq['to'] = jid
-		q = iq.addElement('query', 'jabber:iq:version')
-		self.on_xml(iq.toXml())
-		d = iq.send()
-		self.disp(iq['id'])
-		d.addCallback(self._versionReceived).addErrback(self.chyba)
+
 		
 	def _versionReceived(self, el):
 		log.msg('version info received')
@@ -944,19 +782,7 @@ class Client(derived):
 		self.xmlstream.send(iq)
 
 
-	def getDiscoInfo(self, jid, node = None,  callback = None):
-		log.msg( 'requesting disco#info: '+jid)
-		iq = IQ(self.xmlstream, 'get')
-		iq['to'] = jid
-		iq['from'] = self.jid.full()
-		q = iq.addElement('query', 'http://jabber.org/protocol/disco#info')
-		if node != None:
-			q['node'] = node
-		self.on_xml(iq.toXml())
-		d = iq.send()
-		self.disp(iq['id'])
-		d.addCallback(self._discoInfoReceived, node,  callback)
-		d.addErrback(self._discoInfoErrReceived, (node, jid))
+
 
 	def _discoInfoReceived(self, el, node,  callback):
 		log.msg('disco#info received')
@@ -1009,19 +835,7 @@ class Client(derived):
 
 		self.reactor.callFromThread(self.on_discoInfoReceived ,jid, node_name)
 
-	def getDiscoItems(self, jid, node = None, callback = None, callback_par = None):
-		log.msg('requesting disco#items ')
-		iq = IQ(self.xmlstream, 'get')
-		iq['to'] = jid
-		iq['from'] = self.jid.full()
-		q = iq.addElement('query', 'http://jabber.org/protocol/disco#items')
-		if node != None:
-			q['node'] = node
-		self.on_xml(iq.toXml())
-		d = iq.send()
-		self.disp(iq['id'])
-		d.addCallback(self._discoItemsReceived, node, callback, callback_par)
-		d.addErrback(self._discoItemsErrReceived, (node, jid))
+
 
 	def _discoItemsReceived(self, el, node, callback, callback_par):
 		log.msg( 'disco#items received')
@@ -1114,15 +928,7 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 
-	def getTime202(self, jid):
-		log.msg( 'requesting time202 info')
-		iq = IQ(self.xmlstream, 'get')
-		iq['to'] = jid
-		iq.addElement('time','urn:xmpp:time')
-		self.on_xml(iq.toXml())
-		d = iq.send()
-		self.disp(iq['id'])
-		d.addCallback(self._time202Received).addErrback(self.chyba)
+
 
 	def _time202Received(self, el):
 		log.msg('time202 received')
@@ -1199,15 +1005,7 @@ class Client(derived):
 		self.on_xml(el.toXml())
 		self.xmlstream.send(el)
 
-	def joinGC(self,  jid, nick):
-		gc = Groupchat(self,  jid, nick)
-		self.groupchats[jid] = gc
-		gc.join()
 
-	def leaveGC(self,  jid):
-		self.groupchats[jid] .leave()
-		del self.groupchats[jid]
-		log.msg( 'left MUC: '+ jid)
 
 	
 	def sendFile(self, jid, filename, fp, desc = None):

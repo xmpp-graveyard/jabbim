@@ -283,6 +283,7 @@ def replace_url(text):
 	exp = re.compile("([A-Za-z][A-Za-z0-9+.-]{1,120}:[A-Za-z0-9/](([A-Za-z0-9$_.+!*,;/?:@&~=-])|%[A-Fa-f0-9]{2}){1,333}(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*,;/?:@&~=%-]{0,1000}))?)")
 	for link in exp.findall(text):
 		text = text.replace(link[0], '<a href="%s">%s</a>'%(link[0], link[0]))
+	print text
 	return text
 
 

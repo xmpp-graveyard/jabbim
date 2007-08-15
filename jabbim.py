@@ -858,7 +858,7 @@ class mainWindow(QtGui.QMainWindow):
 		#log.msg("PLUGINS:"+unicode(self.plugins))
 	
 	def loadPlugin(self,plugin):
-		path = '%s/plugins/%s/%s.py'%(self.homeDir, plugin, plugin)
+		path = '%s/plugins/%s/%s.py'%(self.homeDir.encode('utf-8'), plugin, plugin)
 		try: 
 			f=open(path)
 		except:

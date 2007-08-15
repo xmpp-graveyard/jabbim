@@ -12,7 +12,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Message Archiving'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Archive Plugin'
-		self.version = '0.070'
+		self.version = '0.071'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 # 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
@@ -28,7 +28,7 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('on_message', self.on_message)
 			self.registerHandler('on_message_send', self.on_message_send)
 			self.loadConfig()
-			self.window = self.loadWindow("%s/plugins/%s/historyBrowser.py"%(self.homeDir, self.fname))
+			self.window = self.loadWindow("%s/plugins/%s/historyBrowser.ui.py"%(self.homeDir, self.fname))
 			self.window.setWindowIcon(self.main.windowIcon())
 			#log.msg(unicode(dir(self.window)))
 			QtCore.QObject.connect(self.window.ui.seznam, QtCore.SIGNAL("itemClicked ( QListWidgetItem* ) "),self.itemClicked)
