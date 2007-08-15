@@ -87,7 +87,7 @@ class rosterWidget(QtGui.QWidget):
 		self.groupGradient.setColorAt(0, QtCore.Qt.white)
 
 		self.selectedGroupGradient=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(0, 32))
-		self.selectedGroupGradient.setColorAt(1, QtCore.Qt.blue)
+		self.selectedGroupGradient.setColorAt(1, QtGui.QColor(185,227,255))
 		self.selectedGroupGradient.setColorAt(0, QtCore.Qt.white)
 
 		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
@@ -126,6 +126,7 @@ class rosterWidget(QtGui.QWidget):
 
 	def popup(self):
 		self.item=self.newitem
+		self.selected=self.item
 		self.repaint()
 
 	def addGroup(self,name):
