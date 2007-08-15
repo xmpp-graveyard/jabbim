@@ -211,20 +211,24 @@ class rosterWidget(QtGui.QWidget):
 					painter.restore()
 				items=self.getGroupSortedUsers(item.name)
 				if item.expanded and len(items)!=0:
-					if self.item in items:
-						self.userGradient=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(0, 32*len(items)+32))
-					else:
-						self.userGradient=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(0, 32*len(items)))
-					self.userGradient.setColorAt(0, QtGui.QColor(255,204,102))
-					self.userGradient.setColorAt(1, QtCore.Qt.white)
-	
-					painter.save()
-					painter.translate(x,y+32)
-					if self.item in items:
-						painter.fillRect(0,0,self.width(),32*len(items)+32,QtGui.QBrush(self.userGradient))
-					else:
-						painter.fillRect(0,0,self.width(),32*len(items),QtGui.QBrush(self.userGradient))
-					painter.restore()
+					paint=False
+					if event.region().contains(QtCore.QRect(0,y,self.width(),32*len(items)+32)):
+						paint=True
+					if paint:
+						if self.item in items:
+							self.userGradient=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(0, 32*len(items)+32))
+						else:
+							self.userGradient=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(0, 32*len(items)))
+						self.userGradient.setColorAt(0, QtGui.QColor(255,204,102))
+						self.userGradient.setColorAt(1, QtCore.Qt.white)
+		
+						painter.save()
+						painter.translate(x,y+32)
+						if self.item in items:
+							painter.fillRect(0,0,self.width(),32*len(items)+32,QtGui.QBrush(self.userGradient))
+						else:
+							painter.fillRect(0,0,self.width(),32*len(items),QtGui.QBrush(self.userGradient))
+						painter.restore()
 					
 					for useritem in items:
 						y+=32
