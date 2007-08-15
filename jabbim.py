@@ -581,6 +581,12 @@ class clientClass(pyxl.client.Client):
 			# add new chattab
 			self.main.chat.addChatTab(frm,unicode(user),icon,message)
 			self.main.events.addInfoEvent(header=self.main.tr("New message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm),typ='newMessage',icon="images/16x16/actions/message.png",action=self.main.chat.activate,actionDict=[])
+			if len(body)>40:
+					traytext=body[:40]+" ..."
+			else:
+					traytext=body
+			self.main.tray.showMessage(self.main.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 0)
+
 	def on_vcardReceived(self,  jid, card):
 		#print card
 		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db
