@@ -87,27 +87,28 @@ def loadConfig(main):
 
 def getHomeDir():
 	# gets homedir on win32 or linux
-	if sys.platform != 'win32' :
-		return os.path.expanduser( '~' )+'/.jabbim'
-	def valid(path):
-		if path and os.path.isdir(path):
-			return True
-		return False
-	def env(name):
-		return os.environ.get( name, '' )
-	homeDir = env( 'USERPROFILE' )
-	if not valid(homeDir):
-		homeDir = env( 'HOME' )
-		if not valid(homeDir):
-			homeDir = '%s%s' % (env('HOMEDRIVE'),env('HOMEPATH'))
-			if not valid(homeDir):
-				homeDir = env( 'SYSTEMDRIVE' )
-				if homeDir and (not homeDir.endswith('\\')):
-					homeDir += '\\'
-				if not valid(homeDir):
-					homeDir = 'C:\\'
-	homeDir = homeDir + './jabbim'
-	return homeDir.encode('utf8')
+# 	if sys.platform != 'win32' :
+# 		return os.path.expanduser( '~' )+'/.jabbim'
+# 	def valid(path):
+# 		if path and os.path.isdir(path):
+# 			return True
+# 		return False
+# 	def env(name):
+# 		return os.environ.get( name, '' )
+# 	homeDir = env( 'USERPROFILE' )
+# 	if not valid(homeDir):
+# 		homeDir = env( 'HOME' )
+# 		if not valid(homeDir):
+# 			homeDir = '%s%s' % (env('HOMEDRIVE'),env('HOMEPATH'))
+# 			if not valid(homeDir):
+# 				homeDir = env( 'SYSTEMDRIVE' )
+# 				if homeDir and (not homeDir.endswith('\\')):
+# 					homeDir += '\\'
+# 				if not valid(homeDir):
+# 					homeDir = 'C:\\'
+	homeDir = os.path.expanduser( '~' )+'/.jabbim'
+# 	homeDir = homeDir + './jabbim'
+	return homeDir
 
 def need_highlight(nick, text):
 	# upraveno z gajimu
