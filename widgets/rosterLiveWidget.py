@@ -319,6 +319,7 @@ class rosterWidget(QtGui.QWidget):
 		x=event.x()
 		y=event.y()
 		item=self.itemAt(x,y)
+		self.item=item
 		self.selected=item
 		self.repaint()
 		QtGui.QWidget.mousePressEvent(self,event)
