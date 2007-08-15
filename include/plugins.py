@@ -48,7 +48,7 @@ class PluginBase:
 
 	def loadUi(self,file,parent,wid):
 		f=open(file)
-		ui=load_source("", "", f)
+		ui=load_source("", file, f)
 		f.close()
 		wid.ui=None
 		for func in dir(ui):
