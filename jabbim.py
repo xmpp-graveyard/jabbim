@@ -1252,7 +1252,7 @@ class mainWindow(QtGui.QMainWindow):
 		layout.setMargin(0)
 		layout.setSpacing(0)
 		#self.ui.roster=widgets.rosterWidget.rosterWidget(self.ui.rosterWidget,self)
-		self.scroll=QtGui.QScrollArea(self.ui.rosterWidget)
+		self.scroll=scrollBar(self.ui.rosterWidget)
 		self.scroll.setWidgetResizable (True)
 		self.ui.roster=widgets.rosterLiveWidget.rosterWidget(self,self)
 		self.scroll.setWidget(self.ui.roster)
@@ -1463,6 +1463,40 @@ class statusWindow(QtGui.QDialog):
 				MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()), to = '%s/%s'%(muc.jid, muc.nick))
 		self.done(1)
 
+class scrollBar(QtGui.QScrollArea):
+	def __init__(self,parent=None):
+		QtGui.QScrollArea.__init__(self,parent)
+		self.y=0
+		self.verticalScrollBar().setPageStep(32)
+		self.verticalScrollBar().setSingleStep(32)
+	def updateScrollBars(self):
+		QtGui.QScrollArea.updateScrollBars(self)
+		self.verticalScrollBar().setPageStep(32)
+	#if not self.widget():
+		#return
+	#p=self.viewport()->size()
+	#m = self.maximumViewportSize()
+	
+	#QSize min = qSmartMinSize(widget);
+	#QSize max = qSmartMaxSize(widget);
+	#if ((resizable && m.expandedTo(min) == m && m.boundedTo(max) == m)
+		#|| (!resizable && m.expandedTo(widget->size()) == m))
+		#p = m; // no scroll bars needed
+	
+	#if (resizable)
+		#widget->resize(p.expandedTo(min).boundedTo(max));
+	#QSize v = widget->size();
+	
+	#hbar->setRange(0, v.width() - p.width());
+	#hbar->setPageStep(p.width());
+	#vbar->setRange(0, v.height() - p.height());
+	#vbar->setPageStep(p.height());
+	#updateWidgetPosition();
+
+	def scrollContentsBy(self,dx,dy):
+		#self.verticalScrollBar().setValue(32)
+
+		return QtGui.QScrollArea.scrollContentsBy(self,dx,dy)
 
 translator=QtCore.QTranslator()
 translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")

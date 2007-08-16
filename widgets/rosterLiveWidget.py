@@ -172,6 +172,100 @@ class rosterWidget(QtGui.QWidget):
 					ret.append(user)
 		return ret
 
+	def paintGroupItem(self,painter,item,x,y):
+		doc=QtGui.QTextDocument()
+		if item==self.selected:
+			painter.save()
+			painter.translate(x,y)
+			painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.selectedGroupGradient))
+			painter.restore()
+		else:
+			painter.save()
+			painter.translate(x,y)
+			painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.groupGradient))
+			painter.restore()
+		
+		if item.icon:
+			painter.drawPixmap(x,y,item.icon.pixmap(32,32))
+		
+		doc.setHtml(item.name)
+		
+		painter.save()
+		painter.translate(x+30,y+6)
+		doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
+		painter.restore()
+
+	def paintUserItem(self,painter,useritem,x,y):
+		if useritem==self.item:
+			if useritem==self.selected:
+				painter.save()
+				painter.translate(x,y)
+				painter.fillRect(0,0,self.width(),64,QtGui.QBrush(self.selectedGroupGradient))
+				painter.restore()
+
+			if useritem.icon:
+				painter.drawPixmap(x,y,useritem.icon.pixmap(32,32))
+
+			doc=QtGui.QTextDocument()
+			
+			if useritem.avatar:
+				pixmap=useritem.avatar.pixmap(64,64)
+				#doc.setTextWidth(self.width()-30-pixmap.width())
+				doc.setPageSize(QtCore.QSizeF(self.width()-30-pixmap.width(),64))
+			else:
+				doc.setPageSize(QtCore.QSizeF(self.width(),64))
+			#option=QtGui.QTextOption()
+			#option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
+			#doc.setDefaultTextOption(option)
+			if useritem.statusMessage:
+				doc.setHtml(useritem.name+"<br/><font size=\"-1\"><i>"+useritem.statusMessage+"</i></font>")
+				painter.save()
+				painter.translate(x+30,y)
+				doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
+				painter.restore()
+				#doc.setHtml("JID:<b>"+useritem.jid+"</b>")
+				#painter.save()
+				#painter.translate(4,y+32)
+				#doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
+				#painter.restore()
+			else:
+				doc.setHtml(useritem.name)
+				painter.save()
+				painter.translate(x+30,y+6)
+				doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+28))
+				painter.restore()
+			if useritem.avatar:
+				painter.drawPixmap(self.width()-pixmap.width(),y,useritem.avatar.pixmap(64,64))
+
+		else:
+			#if event.region().contains(QtCore.QRect(0,y,self.width(),y+32)):
+				#paint=True
+			if useritem==self.selected:
+				painter.save()
+				painter.translate(x,y)
+				painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.selectedGroupGradient))
+				painter.restore()
+
+			if useritem.icon:
+				painter.drawPixmap(x,y,useritem.icon.pixmap(32,32))
+
+			doc=QtGui.QTextDocument()
+			
+			
+			if useritem.statusMessage:
+				doc.setHtml(useritem.name+"<br/><font size=\"-1\"><i>"+useritem.statusMessage+"</i></font>")
+				painter.save()
+				painter.translate(x+30,y)
+				doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
+				painter.restore()
+			else:
+				doc.setHtml(useritem.name)
+				painter.save()
+				painter.translate(x+30,y+6)
+				doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+28))
+				painter.restore()
+			if useritem.avatar:
+				painter.drawPixmap(self.width()-32,y,useritem.avatar.pixmap(32,32))
 
 	def paintEvent(self,event):
 		painter=QtGui.QPainter(self)
@@ -181,168 +275,135 @@ class rosterWidget(QtGui.QWidget):
 		x=0
 		y=0
 		doc=QtGui.QTextDocument()
-
-		for key in self.sortedGroups:
-			item=self.groups[key]
-			paint=False
-			if event.region().contains(QtCore.QRect(0,y,self.width(),y+32)):
+		paint=False
+		index=False
+		for rect in event.region().rects():
+			print rect.x(),rect.y(),rect.width(),rect.height()
+			#print self.main.scroll.y
+			if rect.height()>32:
 				paint=True
-			if ((len(self.getGroupSortedUsers(item.name))!=0 and not self.showOffline) or self.showOffline):
-				if paint:
-					if item==self.selected:
-						painter.save()
-						painter.translate(x,y)
-						painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.selectedGroupGradient))
-						painter.restore()
+				#print "PAITING"
+				break
+			if rect.height()<=32:
+				item,x,y=self.itemAt(1,rect.y()+1,True)
+				if item.typ=="group":
+					self.paintGroupItem(painter,item,0,y)
+				else:
+					self.paintUserItem(painter,item,0,y)
+				item,x,y=self.itemAt(1,rect.y()+33,True)
+				if item!=None:
+					if item.typ=="group":
+						self.paintGroupItem(painter,item,0,y)
 					else:
-						painter.save()
-						painter.translate(x,y)
-						painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.groupGradient))
-						painter.restore()
-					
-					if item.icon:
-						painter.drawPixmap(x,y,item.icon.pixmap(32,32))
-					
-					doc.setHtml(item.name)
-					
-					painter.save()
-					painter.translate(x+30,y+6)
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
-					painter.restore()
-				items=self.getGroupSortedUsers(item.name)
-				if item.expanded and len(items)!=0:
-					paint=False
-					if event.region().contains(QtCore.QRect(0,y,self.width(),32*len(items)+32)):
-						paint=True
-					if paint:
-						if self.item in items:
-							self.userGradient=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(0, 32*len(items)+32))
-						else:
-							self.userGradient=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(0, 32*len(items)))
-						self.userGradient.setColorAt(0, QtGui.QColor(255,204,102))
-						self.userGradient.setColorAt(1, QtCore.Qt.white)
-		
-						painter.save()
-						painter.translate(x,y+32)
-						if self.item in items:
-							painter.fillRect(0,0,self.width(),32*len(items)+32,QtGui.QBrush(self.userGradient))
-						else:
-							painter.fillRect(0,0,self.width(),32*len(items),QtGui.QBrush(self.userGradient))
-						painter.restore()
-					
-					for useritem in items:
-						y+=32
-						paint=False
-
-						if useritem==self.item:
-							if event.region().contains(QtCore.QRect(0,y,self.width(),y+64)):
-								paint=True
-							if paint:
-								if useritem==self.selected:
-									painter.save()
-									painter.translate(x,y)
-									painter.fillRect(0,0,self.width(),64,QtGui.QBrush(self.selectedGroupGradient))
-									painter.restore()
-			
-								if useritem.icon:
-									painter.drawPixmap(x,y,useritem.icon.pixmap(32,32))
-	
-								doc=QtGui.QTextDocument()
-								
-								if useritem.avatar:
-									pixmap=useritem.avatar.pixmap(64,64)
-									#doc.setTextWidth(self.width()-30-pixmap.width())
-									doc.setPageSize(QtCore.QSizeF(self.width()-30-pixmap.width(),64))
-								else:
-									doc.setPageSize(QtCore.QSizeF(self.width(),64))
-								#option=QtGui.QTextOption()
-								#option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
-								#doc.setDefaultTextOption(option)
-								if useritem.statusMessage:
-									doc.setHtml(useritem.name+"<br/><font size=\"-1\"><i>"+useritem.statusMessage+"</i></font>")
-									painter.save()
-									painter.translate(x+30,y)
-									doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
-									painter.restore()
-									#doc.setHtml("JID:<b>"+useritem.jid+"</b>")
-									#painter.save()
-									#painter.translate(4,y+32)
-									#doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
-									#painter.restore()
-								else:
-									doc.setHtml(useritem.name)
-									painter.save()
-									painter.translate(x+30,y+6)
-									doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+28))
-									painter.restore()
-								if useritem.avatar:
-									painter.drawPixmap(self.width()-pixmap.width(),y,useritem.avatar.pixmap(64,64))
-	
-							y+=32
-						else:
-							if event.region().contains(QtCore.QRect(0,y,self.width(),y+32)):
-								paint=True
-							if paint:
-								if useritem==self.selected:
-									painter.save()
-									painter.translate(x,y)
-									painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.selectedGroupGradient))
-									painter.restore()
-			
-								if useritem.icon:
-									painter.drawPixmap(x,y,useritem.icon.pixmap(32,32))
-			
-								doc=QtGui.QTextDocument()
-								
-								
-								if useritem.statusMessage:
-									doc.setHtml(useritem.name+"<br/><font size=\"-1\"><i>"+useritem.statusMessage+"</i></font>")
-									painter.save()
-									painter.translate(x+30,y)
-									doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
-									painter.restore()
-								else:
-									doc.setHtml(useritem.name)
-									painter.save()
-									painter.translate(x+30,y+6)
-									doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+28))
-									painter.restore()
-								if useritem.avatar:
-									painter.drawPixmap(self.width()-32,y,useritem.avatar.pixmap(32,32))
-	
-					#if useritem==self.item:
-						#y-=32
-					
+						self.paintUserItem(painter,item,0,y)
+				#item,x,y=self.itemAt(1,rect.y()-33,True)
+				#if item!=None:
+					#if item.typ=="group":
+						#self.paintGroupItem(painter,item,0,y)
+					#else:
+						#self.paintUserItem(painter,item,0,y)
+				#print index.name
+				paint=False
+				break
 				
-				y+=32
-		self.setMinimumHeight(y)
+		if paint:
+			for key in self.sortedGroups:
+				item=self.groups[key]
+				paint=False
+				if not index:
+					#print "NONE"
+					paint=True
+				elif item==index:
+					paint=True
+				if ((len(self.getGroupSortedUsers(item.name))!=0 and not self.showOffline) or self.showOffline):
+					if paint:
+						self.paintGroupItem(painter,item,x,y)
+						if item==index:
+							break
+					items=self.getGroupSortedUsers(item.name)
+					if item.expanded and len(items)!=0:
+						#paint=False
+						#if event.region().contains(QtCore.QRect(0,y,self.width(),32*len(items)+32)):
+							#paint=True
+						#if paint:
+							#if self.item in items:
+								#self.userGradient=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(0, 32*len(items)+32))
+							#else:
+								#self.userGradient=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(0, 32*len(items)))
+							#self.userGradient.setColorAt(0, QtGui.QColor(255,204,102))
+							#self.userGradient.setColorAt(1, QtCore.Qt.white)
+			
+							#painter.save()
+							#painter.translate(x,y+32)
+							#if self.item in items:
+								#painter.fillRect(0,0,self.width(),32*len(items)+32,QtGui.QBrush(self.userGradient))
+							#else:
+								#painter.fillRect(0,0,self.width(),32*len(items),QtGui.QBrush(self.userGradient))
+							#painter.restore()
+						b=False
+						for useritem in items:
+							y+=32
+							paint=False
+							if not index:
+								paint=True
+							elif item==index:
+								paint=True	
+							if paint:
+								self.paintUserItem(painter,useritem,x,y)
+								if useritem==self.item:
+									y+=32
+
+							if item==index:
+								b=True
+								break
+						if b:
+							break
+						#if useritem==self.item:
+							#y-=32
+						
+					
+					y+=32
+			if not index:
+				self.setMinimumHeight(y)
 		#self.scroll.verticalScrollBar().setMaximum(int(y/32))
 
-	def itemAt(self,x1,y1):
+	def itemAt(self,x1,y1,coordinates=False):
 		x=0
 		y=0
 		for key in self.sortedGroups:
 			item=self.groups[key]
-			if (len(self.getGroupSortedUsers(item.name))!=0 and not self.showOffline) or self.showOffline:
+			items=self.getGroupSortedUsers(item.name)
+			if (len(items)!=0 and not self.showOffline) or self.showOffline:
 				if y1>=y and y1<=y+32:
-					return item
-				if item.expanded and len(self.getGroupSortedUsers(item.name))!=0:
+					if coordinates:
+						return item,x,y
+					else:
+						return item
+				if item.expanded and len(items)!=0:
 					previous=None
-					for useritem in self.getGroupSortedUsers(item.name):
-						items=self.getGroupSortedUsers(item.name)
+					for useritem in items:
 						y+=32
 						if useritem==self.item:
 							if y1>=y and y1<=y+64:
-								return useritem
+								if coordinates:
+									return useritem,x,y
+								else:
+									return useritem
 						else:
 							if y1>=y and y1<=y+32:
-								return useritem
+								if coordinates:
+									return useritem,x,y
+								else:
+									return useritem
 						if useritem==self.item:
 							y+=32
 
 					#if useritem==self.item:
 						#y-=32
 				y+=32
+		if coordinates:
+			return None,None,None
+
 
 	def mousePressEvent(self,event):
 		x=event.x()
