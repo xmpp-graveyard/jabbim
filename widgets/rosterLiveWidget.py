@@ -72,7 +72,6 @@ class userItem:
 		self.hidden=hidden
 		self.main.repaint()
 
-
 class rosterWidget(QtGui.QWidget):
 	def __init__(self,parent=None,main=None):
 		QtGui.QWidget.__init__(self,parent)
