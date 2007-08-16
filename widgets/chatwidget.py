@@ -27,23 +27,24 @@ import urllib,re
 from twisted.web.microdom import *
 from twisted.web.domhelpers import gatherTextNodes
 
-class TextIconFormat(QtGui.QTextCharFormat):
-	def __init__(self,icon,text):
-		QtGui.QTextCharFormat.__init__(self)
-		print self.property
-		self.setObjectType(0x1000)
+class textView(QtGui.QTextEdit):
+	def __init__(self,parent):
+		QtGui.QTextEdit.__init__(self,parent)
+		self.setMouseTracking(True)
+		self.setReadOnly(True)
 
-#TextIconFormat::TextIconFormat(const QString &iconName, const QString &text)
-        #: QTextCharFormat()
-#{
-        #Q_UNUSED(text);
+	def mouseMoveEvent(self,event):
+		anchor = self.anchorAt(event.pos())
+		if len(anchor)!=0:
+			self.viewport().setCursor(QtCore.Qt.PointingHandCursor)
+		else:
+			self.viewport().setCursor(QtCore.Qt.ArrowCursor)
 
-        #setObjectType(IconFormatType);
-        #QTextFormat::setProperty(IconName, iconName);
-        #QTextFormat::setProperty(IconText, text);
-
-        #// TODO: handle animations
-#}
+	def mousePressEvent(self,event):
+		anchor = self.anchorAt(event.pos())
+		if len(anchor)!=0:
+			QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
+		return QtGui.QTextEdit.mousePressEvent(self,event)
 
 
 class TextIconHandler(QtCore.QObject):
@@ -105,6 +106,12 @@ class chatWidget(QtGui.QWidget):
 		self.ui.setupUi(self)
 		self.main=main
 
+		l=QtGui.QHBoxLayout(self.ui.viewWidget)
+		l.setMargin(0)
+		l.setSpacing(0)
+		self.ui.textEdit=textView(self.ui.viewWidget)
+		l.addWidget(self.ui.textEdit)
+		
 		layout=QtGui.QHBoxLayout(self.ui.lineWidget)
 		layout.setMargin(0)
 		layout.setSpacing(0)

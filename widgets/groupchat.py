@@ -27,6 +27,25 @@ import urllib,re
 from twisted.web.microdom import *
 from twisted.web.domhelpers import gatherTextNodes
 
+class textView(QtGui.QTextEdit):
+	def __init__(self,parent):
+		QtGui.QTextEdit.__init__(self,parent)
+		self.setMouseTracking(True)
+		self.setReadOnly(True)
+
+	def mouseMoveEvent(self,event):
+		anchor = self.anchorAt(event.pos())
+		if len(anchor)!=0:
+			self.viewport().setCursor(QtCore.Qt.PointingHandCursor)
+		else:
+			self.viewport().setCursor(QtCore.Qt.ArrowCursor)
+
+	def mousePressEvent(self,event):
+		anchor = self.anchorAt(event.pos())
+		if len(anchor)!=0:
+			QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
+		return QtGui.QTextEdit.mousePressEvent(self,event)
+
 class lineEditWidget(QtGui.QTextEdit):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QTextEdit.__init__,(self,parent))
@@ -76,6 +95,12 @@ class groupChatWidget(QtGui.QWidget):
 		self.main=main
 		self.affiliation=""
 
+
+		l=QtGui.QHBoxLayout(self.ui.viewWidget)
+		l.setMargin(0)
+		l.setSpacing(0)
+		self.ui.textEdit=textView(self.ui.viewWidget)
+		l.addWidget(self.ui.textEdit)
 
 		layout=QtGui.QHBoxLayout(self.ui.lineWidget)
 		layout.setMargin(0)

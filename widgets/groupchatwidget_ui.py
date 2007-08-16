@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Tue Aug 14 13:02:50 2007
+# Created: Thu Aug 16 10:38:03 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -24,6 +24,17 @@ class Ui_groupchatwidget(object):
         spacerItem = QtGui.QSpacerItem(331,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.gridlayout.addItem(spacerItem,1,0,1,1)
 
+        self.smileys = QtGui.QToolButton(groupchatwidget)
+        self.smileys.setIcon(QtGui.QIcon("images/22x22/emotes/biggrin.png"))
+        self.smileys.setCheckable(True)
+        self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.smileys.setObjectName("smileys")
+        self.gridlayout.addWidget(self.smileys,1,1,1,1)
+
+        self.sendButton = QtGui.QPushButton(groupchatwidget)
+        self.sendButton.setObjectName("sendButton")
+        self.gridlayout.addWidget(self.sendButton,1,2,1,1)
+
         self.splitter_2 = QtGui.QSplitter(groupchatwidget)
         self.splitter_2.setOrientation(QtCore.Qt.Vertical)
         self.splitter_2.setObjectName("splitter_2")
@@ -36,9 +47,8 @@ class Ui_groupchatwidget(object):
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName("splitter")
 
-        self.textEdit = QtGui.QTextEdit(self.splitter)
-        self.textEdit.setUndoRedoEnabled(False)
-        self.textEdit.setObjectName("textEdit")
+        self.viewWidget = QtGui.QWidget(self.splitter)
+        self.viewWidget.setObjectName("viewWidget")
 
         self.layoutWidget = QtGui.QWidget(self.splitter)
         self.layoutWidget.setObjectName("layoutWidget")
@@ -76,22 +86,14 @@ class Ui_groupchatwidget(object):
         self.lineWidget.setObjectName("lineWidget")
         self.gridlayout.addWidget(self.splitter_2,0,0,1,3)
 
-        self.smileys = QtGui.QToolButton(groupchatwidget)
-        self.smileys.setIcon(QtGui.QIcon("images/22x22/emotes/biggrin.png"))
-        self.smileys.setCheckable(True)
-        self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
-        self.smileys.setObjectName("smileys")
-        self.gridlayout.addWidget(self.smileys,1,1,1,1)
-
-        self.sendButton = QtGui.QPushButton(groupchatwidget)
-        self.sendButton.setObjectName("sendButton")
-        self.gridlayout.addWidget(self.sendButton,1,2,1,1)
-
         self.retranslateUi(groupchatwidget)
         QtCore.QMetaObject.connectSlotsByName(groupchatwidget)
 
     def retranslateUi(self, groupchatwidget):
         groupchatwidget.setWindowTitle(QtGui.QApplication.translate("groupchatwidget", "Form", None, QtGui.QApplication.UnicodeUTF8))
+        self.smileys.setToolTip(QtGui.QApplication.translate("groupchatwidget", "You can add emoticons by clicking here", None, QtGui.QApplication.UnicodeUTF8))
+        self.smileys.setText(QtGui.QApplication.translate("groupchatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.sendButton.setText(QtGui.QApplication.translate("groupchatwidget", "Send", None, QtGui.QApplication.UnicodeUTF8))
         self.info.setToolTip(QtGui.QApplication.translate("groupchatwidget", "Every multi user chat can has topic of it\'s discussion", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(0,QtGui.QApplication.translate("groupchatwidget", "user", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(1,QtGui.QApplication.translate("groupchatwidget", "jid", None, QtGui.QApplication.UnicodeUTF8))
@@ -99,7 +101,4 @@ class Ui_groupchatwidget(object):
         self.roomAdmin.setText(QtGui.QApplication.translate("groupchatwidget", "Room administration", None, QtGui.QApplication.UnicodeUTF8))
         self.roomConfig.setToolTip(QtGui.QApplication.translate("groupchatwidget", "You can set up logging of the room etc", None, QtGui.QApplication.UnicodeUTF8))
         self.roomConfig.setText(QtGui.QApplication.translate("groupchatwidget", "Room configuration", None, QtGui.QApplication.UnicodeUTF8))
-        self.smileys.setToolTip(QtGui.QApplication.translate("groupchatwidget", "You can add emoticons by clicking here", None, QtGui.QApplication.UnicodeUTF8))
-        self.smileys.setText(QtGui.QApplication.translate("groupchatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
-        self.sendButton.setText(QtGui.QApplication.translate("groupchatwidget", "Send", None, QtGui.QApplication.UnicodeUTF8))
 

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Fri Jul 13 06:13:11 2007
+# Created: Thu Aug 16 10:22:51 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -25,14 +25,14 @@ class Ui_chatwidget(object):
         self.splitter.setOrientation(QtCore.Qt.Vertical)
         self.splitter.setObjectName("splitter")
 
-        self.textEdit = QtGui.QTextBrowser(self.splitter)
-        self.textEdit.setOpenExternalLinks(True)
-        self.textEdit.setObjectName("textEdit")
+        self.viewWidget = QtGui.QWidget(self.splitter)
+        self.viewWidget.setMinimumSize(QtCore.QSize(0,10))
+        self.viewWidget.setObjectName("viewWidget")
 
         self.lineWidget = QtGui.QWidget(self.splitter)
         self.lineWidget.setMinimumSize(QtCore.QSize(0,10))
         self.lineWidget.setObjectName("lineWidget")
-        self.gridlayout.addWidget(self.splitter,1,0,1,3)
+        self.gridlayout.addWidget(self.splitter,1,0,1,2)
 
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setMargin(0)
@@ -47,18 +47,24 @@ class Ui_chatwidget(object):
         self.avatar.setMaximumSize(QtCore.QSize(32,32))
         self.avatar.setObjectName("avatar")
         self.hboxlayout.addWidget(self.avatar)
-        self.gridlayout.addLayout(self.hboxlayout,0,0,1,3)
+        self.gridlayout.addLayout(self.hboxlayout,0,0,1,2)
 
-        self.sendButton = QtGui.QPushButton(chatwidget)
-        self.sendButton.setObjectName("sendButton")
-        self.gridlayout.addWidget(self.sendButton,2,2,1,1)
+        self.hboxlayout1 = QtGui.QHBoxLayout()
+        self.hboxlayout1.setMargin(0)
+        self.hboxlayout1.setSpacing(6)
+        self.hboxlayout1.setObjectName("hboxlayout1")
 
         self.smileys = QtGui.QToolButton(chatwidget)
         self.smileys.setIcon(QtGui.QIcon("images/22x22/emotes/biggrin.png"))
         self.smileys.setCheckable(True)
         self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.smileys.setObjectName("smileys")
-        self.gridlayout.addWidget(self.smileys,2,1,1,1)
+        self.hboxlayout1.addWidget(self.smileys)
+
+        self.sendButton = QtGui.QPushButton(chatwidget)
+        self.sendButton.setObjectName("sendButton")
+        self.hboxlayout1.addWidget(self.sendButton)
+        self.gridlayout.addLayout(self.hboxlayout1,2,1,1,1)
 
         spacerItem = QtGui.QSpacerItem(321,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.gridlayout.addItem(spacerItem,2,0,1,1)
@@ -68,6 +74,6 @@ class Ui_chatwidget(object):
 
     def retranslateUi(self, chatwidget):
         chatwidget.setWindowTitle(QtGui.QApplication.translate("chatwidget", "Form", None, QtGui.QApplication.UnicodeUTF8))
-        self.sendButton.setText(QtGui.QApplication.translate("chatwidget", "Send", None, QtGui.QApplication.UnicodeUTF8))
         self.smileys.setText(QtGui.QApplication.translate("chatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.sendButton.setText(QtGui.QApplication.translate("chatwidget", "Send", None, QtGui.QApplication.UnicodeUTF8))
 

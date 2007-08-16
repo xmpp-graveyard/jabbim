@@ -85,9 +85,11 @@ class rosterWidget(QtGui.QWidget):
 		self.groupGradient.setColorAt(1, QtCore.Qt.darkRed)
 		self.groupGradient.setColorAt(0, QtCore.Qt.white)
 
-		self.selectedGroupGradient=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(0, 32))
-		self.selectedGroupGradient.setColorAt(1, QtGui.QColor(185,227,255))
-		self.selectedGroupGradient.setColorAt(0, QtCore.Qt.white)
+		self.selectedGroupGradient=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(0, 64))
+		self.selectedGroupGradient.setColorAt(0.9, QtCore.Qt.white)
+		self.selectedGroupGradient.setColorAt(0.5, QtGui.QColor(185,227,255))
+		self.selectedGroupGradient.setColorAt(0.1, QtCore.Qt.white)
+		self.selectedGroupGradient.setSpread(QtGui.QGradient.RepeatSpread)
 
 		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
 
@@ -244,7 +246,11 @@ class rosterWidget(QtGui.QWidget):
 				painter.translate(x,y)
 				painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.selectedGroupGradient))
 				painter.restore()
-
+			else:
+				painter.save()
+				painter.translate(x,y)
+				painter.fillRect(0,0,self.width(),32,QtGui.QBrush(QtGui.QColor(255,255,255)))
+				painter.restore()
 			if useritem.icon:
 				painter.drawPixmap(x,y,useritem.icon.pixmap(32,32))
 
