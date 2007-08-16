@@ -39,6 +39,7 @@ class textView(QtGui.QTextEdit):
 			self.viewport().setCursor(QtCore.Qt.PointingHandCursor)
 		else:
 			self.viewport().setCursor(QtCore.Qt.ArrowCursor)
+		return QtGui.QTextEdit.mouseMoveEvent(self,event)
 
 	def mousePressEvent(self,event):
 		anchor = self.anchorAt(event.pos())

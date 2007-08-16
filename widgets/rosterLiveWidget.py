@@ -126,7 +126,7 @@ class rosterWidget(QtGui.QWidget):
 		item=self.itemAt(int(event.x()),int(event.y()))
 		if self.newitem!=item:
 			self.newitem=item
-			self.timer.start(500)
+			#self.timer.start(500)
 			
 
 	def popup(self):
@@ -285,22 +285,28 @@ class rosterWidget(QtGui.QWidget):
 		for rect in event.region().rects():
 			print rect.x(),rect.y(),rect.width(),rect.height()
 			#print self.main.scroll.y
-			if rect.height()>32:
+			if rect.height()>128:
 				paint=True
 				#print "PAITING"
 				break
-			if rect.height()<=32:
-				item,x,y=self.itemAt(1,rect.y()+1,True)
-				if item.typ=="group":
-					self.paintGroupItem(painter,item,0,y)
-				else:
-					self.paintUserItem(painter,item,0,y)
-				item,x,y=self.itemAt(1,rect.y()+33,True)
-				if item!=None:
+			if rect.height()<=128:
+				items,x,y=self.itemAt(1,rect.y()+1,int(rect.height()/32)+1)
+				#y-=32
+				for item in items:
 					if item.typ=="group":
 						self.paintGroupItem(painter,item,0,y)
+						y+=32
 					else:
 						self.paintUserItem(painter,item,0,y)
+						if self.item==item:
+							y+=32
+						y+=32
+				#item,x,y=self.itemAt(1,rect.y()+33,True)
+				#if item!=None:
+					#if item.typ=="group":
+						#self.paintGroupItem(painter,item,0,y)
+					#else:
+						#self.paintUserItem(painter,item,0,y)
 				#item,x,y=self.itemAt(1,rect.y()-33,True)
 				#if item!=None:
 					#if item.typ=="group":
@@ -372,42 +378,67 @@ class rosterWidget(QtGui.QWidget):
 				self.setMinimumHeight(y)
 		#self.scroll.verticalScrollBar().setMaximum(int(y/32))
 
-	def itemAt(self,x1,y1,coordinates=False):
+	def itemAt(self,x1,y1,count=None):
 		x=0
 		y=0
+		got=0
+		gotx=0
+		goty=0
+		ret=[]
 		for key in self.sortedGroups:
 			item=self.groups[key]
 			items=self.getGroupSortedUsers(item.name)
 			if (len(items)!=0 and not self.showOffline) or self.showOffline:
+				if got!=0:
+					ret.append(item)
+					got+=1
 				if y1>=y and y1<=y+32:
-					if coordinates:
-						return item,x,y
-					else:
+					print "ITEM"
+					if count:
+						ret.append(item)
+						got+=1
+						goty=y
+					if not count:
 						return item
+				if got==count:
+					return ret,0,goty
 				if item.expanded and len(items)!=0:
 					previous=None
 					for useritem in items:
 						y+=32
+						if got!=0:
+							ret.append(useritem)
+							got+=1
+
 						if useritem==self.item:
 							if y1>=y and y1<=y+64:
-								if coordinates:
-									return useritem,x,y
-								else:
+								if count:
+									ret.append(useritem)
+									got+=1
+									goty=y
+								if not count:
 									return useritem
 						else:
 							if y1>=y and y1<=y+32:
-								if coordinates:
-									return useritem,x,y
-								else:
+								if count:
+									ret.append(useritem)
+									got+=1
+									goty=y
+								if not count:
 									return useritem
+						if got==count:
+							return ret,0,goty
 						if useritem==self.item:
 							y+=32
 
 					#if useritem==self.item:
 						#y-=32
 				y+=32
-		if coordinates:
-			return None,None,None
+		if got!=0:
+			return ret,0,goty
+
+		if count:
+			return [],None,None
 
 
 	def mousePressEvent(self,event):

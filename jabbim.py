@@ -1493,10 +1493,13 @@ class scrollBar(QtGui.QScrollArea):
 	#vbar->setPageStep(p.height());
 	#updateWidgetPosition();
 
-	def scrollContentsBy(self,dx,dy):
-		#self.verticalScrollBar().setValue(32)
-
-		return QtGui.QScrollArea.scrollContentsBy(self,dx,dy)
+	#def scrollContentsBy(self,dx,dy):
+		#self.y+=dy
+		#if abs(self.y)>=32:
+			##if self.verticalScrollBar().value()+32<self.verticalScrollBar().maximum():
+				##self.verticalScrollBar().setValue(self.verticalScrollBar().value()+32)
+			#self.y=0
+		#return QtGui.QScrollArea.scrollContentsBy(self,dx,dy)
 
 translator=QtCore.QTranslator()
 translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
