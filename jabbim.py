@@ -1499,7 +1499,7 @@ class scrollBar(QtGui.QScrollArea):
 			##if self.verticalScrollBar().value()+32<self.verticalScrollBar().maximum():
 				##self.verticalScrollBar().setValue(self.verticalScrollBar().value()+32)
 			#self.y=0
-		#return QtGui.QScrollArea.scrollContentsBy(self,dx,dy)
+			#return QtGui.QScrollArea.scrollContentsBy(self,dx,dy)
 
 translator=QtCore.QTranslator()
 translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")

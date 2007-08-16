@@ -121,6 +121,7 @@ class rosterWidget(QtGui.QWidget):
 			temp.sort()
 			self.sorted[group]=temp
 		print self.sorted
+		self.setSize()
 
 	def mouseMoveEvent(self,event):
 		item=self.itemAt(int(event.x()),int(event.y()))
@@ -285,14 +286,25 @@ class rosterWidget(QtGui.QWidget):
 		for rect in event.region().rects():
 			print rect.x(),rect.y(),rect.width(),rect.height()
 			#print self.main.scroll.y
-			if rect.height()>128:
-				paint=True
-				#print "PAITING"
-				break
-			if rect.height()<=128:
-				items,x,y=self.itemAt(1,rect.y()+1,int(rect.height()/32)+1)
+			#if rect.height()>200:
+				#paint=True
+				##print "PAITING"
+				#break
+			#if rect.height()<=128:
+			if 1==1:
+				#if rect.height()<32:
+					#if rect.y()-32>0:
+						#items,x,y=self.itemAt(1,rect.y()-32,3)
+					#else:
+						#items,x,y=self.itemAt(1,rect.y(),2)
+				#else:
+				count=int(rect.height()/32)
+				if float(rect.height())/32.0>float(count):
+					count+=1
+				items,x,y=self.itemAt(1,rect.y(),count+1)
 				#y-=32
 				for item in items:
+					#print item.name
 					if item.typ=="group":
 						self.paintGroupItem(painter,item,0,y)
 						y+=32
@@ -389,12 +401,12 @@ class rosterWidget(QtGui.QWidget):
 			item=self.groups[key]
 			items=self.getGroupSortedUsers(item.name)
 			if (len(items)!=0 and not self.showOffline) or self.showOffline:
-				if got!=0:
+				if got!=0 and not item in ret:
 					ret.append(item)
 					got+=1
 				if y1>=y and y1<=y+32:
 					print "ITEM"
-					if count:
+					if count and not item in ret:
 						ret.append(item)
 						got+=1
 						goty=y
@@ -406,13 +418,13 @@ class rosterWidget(QtGui.QWidget):
 					previous=None
 					for useritem in items:
 						y+=32
-						if got!=0:
+						if got!=0 and not useritem in ret:
 							ret.append(useritem)
 							got+=1
 
 						if useritem==self.item:
 							if y1>=y and y1<=y+64:
-								if count:
+								if count and not useritem in ret:
 									ret.append(useritem)
 									got+=1
 									goty=y
@@ -420,7 +432,7 @@ class rosterWidget(QtGui.QWidget):
 									return useritem
 						else:
 							if y1>=y and y1<=y+32:
-								if count:
+								if count and not useritem in ret:
 									ret.append(useritem)
 									got+=1
 									goty=y
@@ -440,6 +452,23 @@ class rosterWidget(QtGui.QWidget):
 		if count:
 			return [],None,None
 
+	def setSize(self):
+		x=0
+		y=0
+		for key in self.sortedGroups:
+			item=self.groups[key]
+			items=self.getGroupSortedUsers(item.name)
+			if (len(items)!=0 and not self.showOffline) or self.showOffline:
+				if item.expanded and len(items)!=0:
+					for useritem in items:
+						y+=32
+						if useritem==self.item:
+							y+=32
+				y+=32
+
+		self.setMinimumHeight(y)
+
+	
 
 	def mousePressEvent(self,event):
 		x=event.x()
