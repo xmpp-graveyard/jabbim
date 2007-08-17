@@ -1248,6 +1248,9 @@ class mainWindow(QtGui.QMainWindow):
 		if self.ui.roster.statusLabel:
 			self.ui.roster.statusLabel.setParent(None)
 			self.ui.roster.statusLabel=None
+		if self.ui.roster.buttonWidget:
+			self.ui.roster.buttonWidget.setParent(None)
+			self.ui.roster.buttonWidget=None
 		self.ui.roster.sortItems()
 		self.ui.roster.repaint()
 		#self.ui.roster.refreshStats()

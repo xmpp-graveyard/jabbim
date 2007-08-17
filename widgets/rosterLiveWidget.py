@@ -49,6 +49,35 @@ class activeWidget(QtGui.QWidget):
 		self.stacked.addWidget(widget)
 		self.stacked.setCurrentIndex(0)
 
+class activeButtons(QtGui.QWidget):
+	def __init__(self,main,buttons,parent=None):
+		QtGui.QWidget.__init__(self,parent)
+		self.main=main
+		self.layout=QtGui.QVBoxLayout(self)
+		self.layout.setMargin(0)
+		self.layout.setSpacing(0)
+		self.setAutoFillBackground(False)
+		self.buttons={}
+		i=1
+		group=QtGui.QButtonGroup(self)
+		for b in buttons:
+			button = QtGui.QPushButton(self)
+			#button.setGeometry(0,y+16,16,16)
+			button.setMaximumSize(16,16)
+			button.setFlat(True)
+			button.setIcon(b)
+			self.layout.addWidget(button)
+			group.addButton(button)
+			self.buttons[button]=i
+			i+=1
+		QtCore.QObject.connect(group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.clicked)
+	
+	def clicked(self,button):
+		self.main.statusLabel.stacked.setCurrentIndex(self.buttons[button])
+
+
+
+
 class groupItem:
 	def __init__(self,name,icon,main):
 		self.name=name
@@ -133,7 +162,7 @@ class rosterWidget(QtGui.QWidget):
 		self.sorted={}
 		
 		self.statusLabel=None
-		self.statusButtons=[]
+		self.buttonWidget=None
 		self.bigAvatar=False
 
 		#QtCore.QObject.connect(self.main.scroll, QtCore.SIGNAL("sliderMoved(int)"),self.slider)
@@ -277,18 +306,8 @@ class rosterWidget(QtGui.QWidget):
 				painter.restore()
 				if not self.statusLabel:
 					self.statusLabel=activeWidget(useritem.statusMessage,self)
-
-					#if useritem.avatar:
-						#self.statusLabel.setGeometry(0,y+32,self.width()-32,64)
-					#else:
 					self.statusLabel.setGeometry(0,y+32,self.width(),64)
 					self.statusLabel.show()
-					#button = QtGui.QPushButton(self)
-					#button.setGeometry(32,y+16,16,16)
-					#button.setFlat(True)
-					#button.setIcon(useritem.icon)
-					#button.show()
-					#self.statusButtons.append(button)
 				#doc.setHtml("JID:<b>"+useritem.jid+"</b>")
 				#painter.save()
 				#painter.translate(4,y+32)
@@ -297,9 +316,18 @@ class rosterWidget(QtGui.QWidget):
 			else:
 				doc.setHtml(useritem.name)
 				painter.save()
-				painter.translate(x+30,y+6)
+				painter.translate(x+30,y)
 				doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+28))
 				painter.restore()
+
+			if not self.buttonWidget:
+				buttons=[]
+				for resource in self.main.client.roster['users'][useritem.jid].resources:
+					buttons.append(useritem.icon)
+				self.buttonWidget=activeButtons(self,buttons,self)
+				self.buttonWidget.setGeometry(32,y+16,self.width(),16)
+				self.buttonWidget.show()
+
 			if useritem.avatar:
 				if self.bigAvatar:
 					pixmap=useritem.avatar.pixmap(96,96)
@@ -447,6 +475,9 @@ class rosterWidget(QtGui.QWidget):
 			if self.statusLabel:
 				self.statusLabel.setParent(None)
 				self.statusLabel=None
+			if self.buttonWidget:
+				self.buttonWidget.setParent(None)
+				self.buttonWidget=None
 			self.repaint()
 		QtGui.QWidget.mousePressEvent(self,event)
 
