@@ -28,15 +28,20 @@ class activeWidget(QtGui.QWidget):
 	def __init__(self,status,parent=None):
 		QtGui.QWidget.__init__(self,parent)
 		layout=QtGui.QVBoxLayout(self)
-		layout.setMargin(0)
+		layout.setMargin(2)
 		self.stacked=QtGui.QStackedWidget(self)
 		layout.addWidget(self.stacked)
-		
+		self.setAutoFillBackground(False)
+		self.stacked.setAutoFillBackground(False)
 		self.statusLabel=QtGui.QTextEdit(self)
 		self.statusLabel.setReadOnly(True)
 		self.statusLabel.viewport().setAutoFillBackground(False)
 		self.statusLabel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-		self.statusLabel.setHtml(unicode(status))
+		self.statusLabel.setHtml("<font size=\"-1\">"+unicode(status)+"</font>")
+		self.statusLabel.setFrameShape(QtGui.QFrame.Box)
+		self.statusLabel.setFrameShadow(QtGui.QFrame.Plain)
+		self.statusLabel.setMaximumHeight(32)
+
 		self.stacked.addWidget(self.statusLabel)
 		widget=QtGui.QWidget(self)
 		widget.setAutoFillBackground(False)
@@ -239,10 +244,16 @@ class rosterWidget(QtGui.QWidget):
 
 	def paintUserItem(self,painter,useritem,x,y):
 		if useritem==self.item:
+			#painter.save()
+			#painter.translate(x,y)
+			#painter.fillRect(0,0,self.width(),96,QtGui.QBrush(self.selectedGroupGradient))
+			#painter.restore()
+			palette=QtGui.QPalette()
 			painter.save()
 			painter.translate(x,y)
-			painter.fillRect(0,0,self.width(),96,QtGui.QBrush(self.selectedGroupGradient))
+			painter.fillRect(0,0,self.width(),96,QtGui.QBrush(palette.color(QtGui.QPalette.Highlight)))
 			painter.restore()
+			
 
 			if useritem.icon:
 				painter.drawPixmap(x,y,useritem.icon.pixmap(32,32))
