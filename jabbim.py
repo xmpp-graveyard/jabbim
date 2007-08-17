@@ -369,18 +369,18 @@ class clientClass(pyxl.client.Client):
 				resource=unicode(jid).rsplit("/")[1]
 				jid=unicode(jid).rsplit("/")[0]
 				# get highest resource and status
-				#highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
-				#status=None
+				highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
+				status=highest.status
 				#if highest.status!=None:
 					#status=highest.status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
 				# set status
 				#self.main.ui.roster.setStatus(jid,highest.show,status=status,first=first)
 				# get user status
-				status=self.roster['users'][jid].status[1]
+				#status=self.roster['users'][jid].status[1]
 				if status!=None:
 					status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
 				# set status
-				self.main.ui.roster.setStatus(jid,show,status=status,first=first)
+				self.main.ui.roster.setStatus(jid,highest.show,status=highest.status,first=first)
 			else:
 				# get user status
 				status=self.roster['users'][jid].status[1]

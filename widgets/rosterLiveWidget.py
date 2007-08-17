@@ -33,50 +33,77 @@ class activeWidget(QtGui.QWidget):
 		layout.addWidget(self.stacked)
 		self.setAutoFillBackground(False)
 		self.stacked.setAutoFillBackground(False)
-		self.statusLabel=QtGui.QTextEdit(self)
-		self.statusLabel.setReadOnly(True)
-		self.statusLabel.viewport().setAutoFillBackground(False)
-		self.statusLabel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-		self.statusLabel.setHtml("<font size=\"-1\">"+unicode(status)+"</font>")
-		self.statusLabel.setFrameShape(QtGui.QFrame.Box)
-		self.statusLabel.setFrameShadow(QtGui.QFrame.Plain)
-		self.statusLabel.setMaximumHeight(32)
+		self.stacked.setCurrentIndex(0)
+	
+	def addStatusOnly(self,status):
+		statusLabel=QtGui.QTextEdit(self)
+		statusLabel.setReadOnly(True)
+		statusLabel.viewport().setAutoFillBackground(False)
+		statusLabel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+		statusLabel.setHtml("<font size=\"-1\">"+unicode(resource.status)+"</font>")
+		statusLabel.setFrameShape(QtGui.QFrame.Box)
+		statusLabel.setFrameShadow(QtGui.QFrame.Plain)
+		#statusLabel.setMaximumHeight(64)
+		layout.addWidget(statusLabel)
 
-		self.stacked.addWidget(self.statusLabel)
+		self.stacked.addWidget(widget)
+
+	def addResource(self,resource):
 		widget=QtGui.QWidget(self)
 		widget.setAutoFillBackground(False)
-		self.stacked.addWidget(self.statusLabel)
+		layout=QtGui.QVBoxLayout(widget)
+		layout.setMargin(0)
+		layout.setSpacing(0)
+		label=QtGui.QLabel("Resource: "+resource.name)
+		label.setTextFormat(QtCore.Qt.RichText)
+		label.setMaximumHeight(32)
+		layout.addWidget(label)
+		if resource.status:
+			statusLabel=QtGui.QTextEdit(self)
+			statusLabel.setReadOnly(True)
+			statusLabel.viewport().setAutoFillBackground(False)
+			statusLabel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+			statusLabel.setHtml("<font size=\"-1\">"+unicode(resource.status)+"</font>")
+			statusLabel.setFrameShape(QtGui.QFrame.NoFrame)
+			statusLabel.setFrameShadow(QtGui.QFrame.Plain)
+			#statusLabel.setMaximumHeight(32)
+			layout.addWidget(statusLabel)
+		layout.addStretch()
 		self.stacked.addWidget(widget)
-		self.stacked.setCurrentIndex(0)
+
 
 class activeButtons(QtGui.QWidget):
 	def __init__(self,main,buttons,parent=None):
 		QtGui.QWidget.__init__(self,parent)
 		self.main=main
-		self.layout=QtGui.QVBoxLayout(self)
+		self.layout=QtGui.QHBoxLayout(self)
 		self.layout.setMargin(0)
 		self.layout.setSpacing(0)
 		self.setAutoFillBackground(False)
 		self.buttons={}
-		i=1
+		i=0
 		group=QtGui.QButtonGroup(self)
 		for b in buttons:
-			button = QtGui.QPushButton(self)
-			#button.setGeometry(0,y+16,16,16)
-			button.setMaximumSize(16,16)
-			button.setFlat(True)
-			button.setIcon(b)
-			self.layout.addWidget(button)
-			group.addButton(button)
-			self.buttons[button]=i
-			i+=1
+			if b=="separator":
+				line = QtGui.QFrame(self)
+				line.setFrameShape(QtGui.QFrame.VLine)
+				line.setFrameShadow(QtGui.QFrame.Sunken)
+				self.layout.addWidget(line)
+			else:
+				button = QtGui.QPushButton(self)
+				#button.setGeometry(0,y+16,16,16)
+				button.setMaximumSize(16,16)
+				button.setFlat(True)
+				button.setIcon(b)
+				self.layout.addWidget(button)
+				group.addButton(button)
+				self.buttons[button]=i
+				i+=1
+		self.layout.addStretch()
 		QtCore.QObject.connect(group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.clicked)
 	
 	def clicked(self,button):
 		self.main.statusLabel.stacked.setCurrentIndex(self.buttons[button])
-
-
-
 
 class groupItem:
 	def __init__(self,name,icon,main):
@@ -127,11 +154,19 @@ class userItem:
 		self.hidden=hidden
 		self.main.repaint()
 
+class special:
+	def __init__(self):
+		self.typ="group"
+		self.main="special"
+		self.name="zzzzzzzzzzzzzzzzz"
+		self.expanded=False
+
 class rosterWidget(QtGui.QWidget):
 	def __init__(self,parent=None,main=None):
 		QtGui.QWidget.__init__(self,parent)
 		self.main=main
 		self.groups={}
+		self.groups["zzzzzzzzzzzzzzzzz"]=special()
 		self.users=[]
 		self.iconSize="32x32"
 		self.setMinimumWidth(150)
@@ -245,24 +280,50 @@ class rosterWidget(QtGui.QWidget):
 
 	def paintGroupItem(self,painter,item,x,y):
 		doc=QtGui.QTextDocument()
-		if item==self.selected:
-			painter.save()
-			painter.translate(x,y)
-			painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.selectedGroupGradient))
+		#if item==self.selected:
+			#painter.save()
+			#painter.translate(x,y)
+			#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.selectedGroupGradient))
+			#painter.restore()
+		#else:
+			#painter.save()
+			#painter.translate(x,y)
+			#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.groupGradient))
+			#painter.restore()
+		
+		b=painter.brush()
+		p=painter.pen()
+		painter.setBrush(QtGui.QBrush(QtGui.QColor(30,144,255)))
+		painter.setPen(QtGui.QPen(QtGui.QColor(30,144,230)))
+		painter.save()
+		painter.translate(x,y)
+
+		if y>16:
+			painter.drawLine(2,0,self.width()-2,0)
+
+		if item.main=="special":
+			painter.drawLine(2,0,self.width()-2,0)
 			painter.restore()
-		else:
-			painter.save()
-			painter.translate(x,y)
-			painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.groupGradient))
-			painter.restore()
+			painter.setBrush(b)
+			painter.setPen(p)
+			return
+		painter.drawEllipse(2,8,16,16)
+		painter.drawEllipse(self.width()-18,8,16,16)
+		#painter.drawEllipse(2,16,16,16)
+		#painter.drawEllipse(self.width()-18,16,16,16)
+		painter.drawRect(2,16,self.width()-4,32)
+		painter.drawRect(11,8,self.width()-22,32)
+		painter.restore()
+		painter.setBrush(b)
+		painter.setPen(p)
 		
 		if item.icon:
-			painter.drawPixmap(x,y,item.icon.pixmap(32,32))
+			painter.drawPixmap(x,y+4,item.icon.pixmap(32,32))
 		
-		doc.setHtml(item.name)
+		doc.setHtml("<font color=\"white\">"+item.name+"</font>")
 		
 		painter.save()
-		painter.translate(x+30,y+6)
+		painter.translate(x+30,y+10)
 		doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
 		painter.restore()
 
@@ -277,15 +338,25 @@ class rosterWidget(QtGui.QWidget):
 			#painter.translate(x,y)
 			#painter.fillRect(0,0,self.width(),96,QtGui.QBrush(self.selectedGroupGradient))
 			#painter.restore()
-			palette=QtGui.QPalette()
+			#palette=QtGui.QPalette()
+			#painter.save()
+			#painter.translate(x,y)
+			#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(palette.color(QtGui.QPalette.Highlight)))
+			#painter.restore()
+			p=painter.pen()
+			painter.setPen(QtGui.QPen(QtGui.QColor(30,144,230)))
 			painter.save()
 			painter.translate(x,y)
-			painter.fillRect(0,0,self.width(),96,QtGui.QBrush(palette.color(QtGui.QPalette.Highlight)))
+			painter.fillRect(3,0,self.width()-3,96,QtGui.QBrush(QtGui.QColor(220,229,255)))
+
+			painter.drawLine(2,0,2,96)
+			painter.drawLine(self.width()-2,0,self.width()-2,96)
 			painter.restore()
-			
+			painter.setPen(p)
+
 
 			if useritem.icon:
-				painter.drawPixmap(x,y,useritem.icon.pixmap(32,32))
+				painter.drawPixmap(x+3,y,useritem.icon.pixmap(32,32))
 
 			doc=QtGui.QTextDocument()
 			
@@ -298,59 +369,82 @@ class rosterWidget(QtGui.QWidget):
 			#option=QtGui.QTextOption()
 			#option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
 			#doc.setDefaultTextOption(option)
-			if useritem.statusMessage:
-				doc.setHtml(useritem.name)
-				painter.save()
-				painter.translate(x+30,y)
-				doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
-				painter.restore()
-				if not self.statusLabel:
-					self.statusLabel=activeWidget(useritem.statusMessage,self)
-					self.statusLabel.setGeometry(0,y+32,self.width(),64)
-					self.statusLabel.show()
-				#doc.setHtml("JID:<b>"+useritem.jid+"</b>")
+			#if useritem.statusMessage:
+				#doc.setHtml(useritem.name)
 				#painter.save()
-				#painter.translate(4,y+32)
+				#painter.translate(x+30,y)
 				#doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
 				#painter.restore()
-			else:
-				doc.setHtml(useritem.name)
-				painter.save()
-				painter.translate(x+30,y)
-				doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+28))
-				painter.restore()
-
-			if not self.buttonWidget:
+					##self.statusLabel.setGeometry(0,y+32,self.width(),64)
+					##self.statusLabel.show()
+				##doc.setHtml("JID:<b>"+useritem.jid+"</b>")
+				##painter.save()
+				##painter.translate(4,y+32)
+				##doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
+				##painter.restore()
+			#else:
+			doc.setHtml(useritem.name)
+			painter.save()
+			painter.translate(x+35,y)
+			doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33,y+28))
+			painter.restore()
+			if not self.statusLabel:
+				self.statusLabel=activeWidget(useritem.statusMessage,self)
+				self.statusLabel.setGeometry(3,y+32,self.width()-3,64)
+				self.statusLabel.show()
+			if not self.buttonWidget and self.statusLabel:
 				buttons=[]
-				for resource in self.main.client.roster['users'][useritem.jid].resources:
-					buttons.append(useritem.icon)
-				self.buttonWidget=activeButtons(self,buttons,self)
-				self.buttonWidget.setGeometry(32,y+16,self.width(),16)
-				self.buttonWidget.show()
-
-			if useritem.avatar:
-				if self.bigAvatar:
-					pixmap=useritem.avatar.pixmap(96,96)
-					painter.drawPixmap(self.width()-pixmap.width(),y,pixmap)
+				high=self.main.client.roster['users'][useritem.jid].getHighestResource()
+				if high:
+					high=self.main.client.roster['users'][useritem.jid].resources[high]
+					buttons.append(self.main.getIcon(useritem.jid,size="16x16",status=self.main.icons[self.main.shows[high.show]]))
+					print "YES",buttons
+					self.statusLabel.addResource(high)
+					for key,resource in self.main.client.roster['users'][useritem.jid].resources.iteritems():
+						if resource!=high:
+							buttons.append(self.main.getIcon(useritem.jid,size="16x16",status=self.main.icons[self.main.shows[resource.show]]))
+							self.statusLabel.addResource(resource)
+					print buttons
+					self.buttonWidget=activeButtons(self,buttons,self)
+					self.buttonWidget.setGeometry(35,y+16,self.width()-3,16)
+					self.buttonWidget.show()
 				else:
-					pixmap=useritem.avatar.pixmap(32,32)
-					painter.drawPixmap(self.width()-pixmap.width(),y,pixmap)
+					# no resource
+					if useritem.statusMessage:
+						self.statusLabel.addStatusOnly(useritem.statusMessage)
+						
+			if useritem.avatar:
+				#if self.bigAvatar:
+					#pixmap=useritem.avatar.pixmap(96,96)
+					#painter.drawPixmap(self.width()-pixmap.width()-3,y,pixmap)
+				#else:
+				pixmap=useritem.avatar.pixmap(32,32)
+				painter.drawPixmap(self.width()-pixmap.width()-3,y,pixmap)
 
 		else:
 			#if event.region().contains(QtCore.QRect(0,y,self.width(),y+32)):
 				#paint=True
-			if useritem==self.selected:
-				painter.save()
-				painter.translate(x,y)
-				painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.selectedGroupGradient))
-				painter.restore()
-			else:
-				painter.save()
-				painter.translate(x,y)
-				painter.fillRect(0,0,self.width(),32,QtGui.QBrush(QtGui.QColor(255,255,255)))
-				painter.restore()
+			#if useritem==self.selected:
+				#painter.save()
+				#painter.translate(x,y)
+				#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.selectedGroupGradient))
+				#painter.restore()
+			#else:
+			p=painter.pen()
+			painter.setPen(QtGui.QPen(QtGui.QColor(30,144,230)))
+			painter.save()
+			painter.translate(x,y)
+			painter.fillRect(0,0,self.width(),32,QtGui.QBrush(QtGui.QColor(255,255,255)))
+
+			painter.drawLine(2,0,2,32)
+			painter.drawLine(self.width()-2,0,self.width()-2,32)
+			painter.restore()
+			painter.setPen(p)
+
+
+
 			if useritem.icon:
-				painter.drawPixmap(x,y,useritem.icon.pixmap(32,32))
+				painter.drawPixmap(x+3,y,useritem.icon.pixmap(32,32))
 
 			doc=QtGui.QTextDocument()
 			
@@ -358,21 +452,25 @@ class rosterWidget(QtGui.QWidget):
 			if useritem.statusMessage:
 				doc.setHtml(useritem.name+"<br/><font size=\"-1\"><i>"+useritem.statusMessage+"</i></font>")
 				painter.save()
-				painter.translate(x+30,y)
-				doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
+				painter.translate(x+34,y)
+				if useritem.avatar:
+					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-70,y+32))
+				else:
+					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38,y+32))
 				painter.restore()
 			else:
 				doc.setHtml(useritem.name)
 				painter.save()
-				painter.translate(x+30,y+6)
-				doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+28))
+				painter.translate(x+34,y+6)
+				doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38,y+28))
 				painter.restore()
 			if useritem.avatar:
-				painter.drawPixmap(self.width()-32,y,useritem.avatar.pixmap(32,32))
+				painter.drawPixmap(self.width()-36,y,useritem.avatar.pixmap(32,32))
 
 	def paintEvent(self,event):
 		painter=QtGui.QPainter(self)
 		painter.setClipping(True)
+		painter.setRenderHint(painter.Antialiasing)
 		painter.setClipRegion(event.region())
 		for rect in event.region().rects():
 			count=int(rect.height()/32)
@@ -399,7 +497,7 @@ class rosterWidget(QtGui.QWidget):
 		for key in self.sortedGroups:
 			item=self.groups[key]
 			items=self.getGroupSortedUsers(item.name)
-			if (len(items)!=0 and not self.showOffline) or self.showOffline:
+			if ((len(items)!=0 and not self.showOffline) or self.showOffline) or item.main=="special":
 				if got!=0 and not item in ret:
 					ret.append(item)
 					got+=1
