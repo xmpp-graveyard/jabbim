@@ -40,13 +40,13 @@ class activeWidget(QtGui.QWidget):
 		statusLabel.setReadOnly(True)
 		statusLabel.viewport().setAutoFillBackground(False)
 		statusLabel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-		statusLabel.setHtml("<font size=\"-1\">"+unicode(resource.status)+"</font>")
-		statusLabel.setFrameShape(QtGui.QFrame.Box)
+		statusLabel.setHtml("<font size=\"-1\">"+unicode(status)+"</font>")
+		statusLabel.setFrameShape(QtGui.QFrame.NoFrame)
 		statusLabel.setFrameShadow(QtGui.QFrame.Plain)
 		#statusLabel.setMaximumHeight(64)
-		layout.addWidget(statusLabel)
+		#layout.addWidget(statusLabel)
 
-		self.stacked.addWidget(widget)
+		self.stacked.addWidget(statusLabel)
 
 	def addResource(self,resource):
 		widget=QtGui.QWidget(self)
