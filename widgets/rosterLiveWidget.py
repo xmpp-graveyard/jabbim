@@ -577,6 +577,17 @@ class rosterWidget(QtGui.QWidget):
 				self.buttonWidget.setParent(None)
 				self.buttonWidget=None
 			self.repaint()
+
+		if item.typ=='group':
+			if item.expanded:
+				item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png")
+				item.expanded=False
+			else:
+				item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-open.png")
+				item.expanded=True
+			self.setSize()
+			self.repaint()
+
 		QtGui.QWidget.mousePressEvent(self,event)
 
 	def mouseDoubleClickEvent(self,event):
