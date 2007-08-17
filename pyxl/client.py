@@ -67,7 +67,7 @@ class Client(derived):
 		self.roster = {'users':{},'groups':{}}
 		self.roster_meta = {} # jid: {'tag':tag,  'order': 1}
 		self.first_presence = []
-		self.first_wait = True
+		self.first_wait = False
 		self.bookmarks = {'conference':{}, 'url': {}}
 		self.idlist = []
 		self.disco = {} # jid:{node1:{items:{attrs}, identity: {attrs}, features:[], err: {'info':'', 'items':''}}}
