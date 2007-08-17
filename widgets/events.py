@@ -94,7 +94,7 @@ class abstractWidget(QtGui.QWidget):
 		self.main.events.refreshTray()
 
 class lineEditWidget(QtGui.QWidget):
-	def __init__(self,header,text,maintext,item,main,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40):
+	def __init__(self,header,text,maintext,item,main,icon=None,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40):
 		apply(QtGui.QWidget.__init__,(self,parent))
 		self.setObjectName("lineEditWidget")
 		self.item=item
@@ -120,10 +120,13 @@ class lineEditWidget(QtGui.QWidget):
 		self.hboxlayout.setSpacing(6)
 		self.hboxlayout.setObjectName("hboxlayout")
 	
+		self.i=QtGui.QLabel(self)
+		self.i.setPixmap(icon.pixmap(16,16))
+		self.hboxlayout.addWidget(self.i)
+	
 		self.label = QtGui.QLabel(header,self)
 		self.label.setObjectName("label")
 		self.hboxlayout.addWidget(self.label)
-	
 
 		self.layout2 = QtGui.QHBoxLayout()
 		self.layout2.setMargin(0)
@@ -365,9 +368,13 @@ class events:
 		self.refreshTray()
 
 	def addLineEditEvent(self,trueCall=None,trueDict=None,falseCall=None,falseDict=None,maintext="",header="",text="",name="",typ="",icon=None,action=None,actionDict=None,height=40):
+		if icon==None:
+			icon2=QtGui.QIcon("images/16x16/categories/event.png")
+		else:
+			icon2=QtGui.QIcon(unicode(icon))
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		item.setSizeHint(QtCore.QSize(100,height))
-		item.widget=lineEditWidget(header,text,maintext,item,self.main,falseCall=falseCall,falseDict=falseDict,trueCall=trueCall,trueDict=trueDict,action=action,actionDict=actionDict,parent=self.main.ui.eventsListWidget,height=height)
+		item.widget=lineEditWidget(header,text,maintext,item,self.main,icon=icon2,falseCall=falseCall,falseDict=falseDict,trueCall=trueCall,trueDict=trueDict,action=action,actionDict=actionDict,parent=self.main.ui.eventsListWidget,height=height)
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 		self.addEvent(unicode(name),unicode(typ),icon,item.widget)
 
