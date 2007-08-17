@@ -369,8 +369,6 @@ class rosterWidget(QtGui.QWidget):
 
 		self.setMinimumHeight(y)
 
-	
-
 	def mousePressEvent(self,event):
 		x=event.x()
 		y=event.y()

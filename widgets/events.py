@@ -61,23 +61,7 @@ class abstractWidget(QtGui.QWidget):
 
 		#spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
 		self.hboxlayout.addStretch()
-		
-		##self.submitButton = QtGui.QPushButton(self)
-		##self.submitButton.setMaximumSize(16,16)
-		##self.submitButton.setFlat(True)
-		##self.submitButton.setIcon(QtGui.QIcon("images/16x16/actions/ok.png"))
-		##self.hboxlayout.addWidget(self.submitButton)
 
-		
-		##self.closeButton = QtGui.QPushButton(self)
-		##self.closeButton.setMaximumSize(16,16)
-		##self.closeButton.setObjectName("closeButton")
-		##self.closeButton.setFlat(True)
-		##self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
-		##self.hboxlayout.addWidget(self.closeButton)
-
-		##QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
-		##QtCore.QObject.connect(self.submitButton,QtCore.SIGNAL("clicked()"),self.submitClicked)
 
 		self.gridlayout1.addLayout(self.hboxlayout,0,0,1,1)
 
@@ -102,6 +86,108 @@ class abstractWidget(QtGui.QWidget):
 	def submitClicked(self):
 		if self.trueCall!=None:
 			self.trueCall(*self.trueDict)
+		self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
+		for event in self.main.events.events:
+			if event['widget']==self:
+				self.main.events.events.remove(event)
+				break
+		self.main.events.refreshTray()
+
+class lineEditWidget(QtGui.QWidget):
+	def __init__(self,header,text,maintext,item,main,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40):
+		apply(QtGui.QWidget.__init__,(self,parent))
+		self.setObjectName("lineEditWidget")
+		self.item=item
+		self.main=main
+		self.trueCall=trueCall
+		self.trueDict=trueDict
+		self.falseCall=falseCall
+		self.falseDict=falseDict
+		self.action=action
+		self.actionDict=actionDict
+		self.gridlayout = QtGui.QGridLayout(self)
+		self.gridlayout.setMargin(0)
+		self.gridlayout.setSpacing(0)
+		self.gridlayout.setObjectName("gridlayout")
+	
+		self.gridlayout1 = QtGui.QGridLayout()
+		self.gridlayout1.setMargin(0)
+		self.gridlayout1.setSpacing(6)
+		self.gridlayout1.setObjectName("gridlayout1")
+	
+		self.hboxlayout = QtGui.QHBoxLayout()
+		self.hboxlayout.setMargin(0)
+		self.hboxlayout.setSpacing(6)
+		self.hboxlayout.setObjectName("hboxlayout")
+	
+		self.label = QtGui.QLabel(header,self)
+		self.label.setObjectName("label")
+		self.hboxlayout.addWidget(self.label)
+	
+
+		self.layout2 = QtGui.QHBoxLayout()
+		self.layout2.setMargin(0)
+		self.layout2.setSpacing(6)
+
+		self.label_3 = QtGui.QTextEdit(maintext,self)
+		self.label_3.setReadOnly(True)
+		#self.label_3.setTextFormat(QtCore.Qt.RichText)
+		#self.label_3.setWordWrap(True)
+		self.label_3.setObjectName("label_3")
+
+		self.label_2 = QtGui.QLabel(text,self)
+		self.label_2.setTextFormat(QtCore.Qt.RichText)
+		self.label_2.setObjectName("label_2")
+		
+		self.lineEdit=QtGui.QLineEdit(self)
+		self.layout2.addWidget(self.label_2)
+		self.layout2.addWidget(self.lineEdit)
+
+		#spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+		self.hboxlayout.addStretch()
+
+
+		self.gridlayout1.addLayout(self.hboxlayout,0,0,1,1)
+		self.gridlayout1.addWidget(self.label_3,1,0,1,2)
+
+		self.gridlayout1.addLayout(self.layout2,2,0,1,2)
+		self.gridlayout.addLayout(self.gridlayout1,0,0,1,1)
+		self.gridlayout.setMargin(1)
+		self.gridlayout.setSpacing(0)
+		self.gridlayout1.setMargin(1)
+		self.gridlayout1.setSpacing(0)
+		self.setMinimumHeight(height)
+
+
+		self.submitButton = QtGui.QPushButton(self)
+		self.submitButton.setMaximumSize(16,16)
+		self.submitButton.setFlat(True)
+		self.submitButton.setIcon(QtGui.QIcon("images/16x16/actions/ok.png"))
+		self.hboxlayout.addWidget(self.submitButton)
+
+		self.closeButton = QtGui.QPushButton(self)
+		self.closeButton.setMaximumSize(16,16)
+		self.closeButton.setObjectName("closeButton")
+		self.closeButton.setFlat(True)
+		self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
+		self.hboxlayout.addWidget(self.closeButton)
+
+		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
+		QtCore.QObject.connect(self.submitButton,QtCore.SIGNAL("clicked()"),self.submitClicked)
+
+	def closeClicked(self):
+		if self.falseCall!=None:
+			self.falseCall(*self.falseDict)
+		self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
+		for event in self.main.events.events:
+			if event['widget']==self:
+				self.main.events.events.remove(event)
+				break
+		self.main.events.refreshTray()
+
+	def submitClicked(self):
+		if self.trueCall!=None:
+			self.trueCall(*self.trueDict+[unicode(self.lineEdit.text())])
 		self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
 		for event in self.main.events.events:
 			if event['widget']==self:
@@ -275,7 +361,16 @@ class events:
 		else:
 			icon=QtGui.QIcon(unicode(icon))
 		self.events.append({'name':name,'type':typ,'icon':icon,'widget':widget})
+		self.main.ui.tabWidget.setCurrentIndex(2)
 		self.refreshTray()
+
+	def addLineEditEvent(self,trueCall=None,trueDict=None,falseCall=None,falseDict=None,maintext="",header="",text="",name="",typ="",icon=None,action=None,actionDict=None,height=40):
+		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
+		item.setSizeHint(QtCore.QSize(100,height))
+		item.widget=lineEditWidget(header,text,maintext,item,self.main,falseCall=falseCall,falseDict=falseDict,trueCall=trueCall,trueDict=trueDict,action=action,actionDict=actionDict,parent=self.main.ui.eventsListWidget,height=height)
+		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
+		self.addEvent(unicode(name),unicode(typ),icon,item.widget)
+
 
 	def addInfoEvent(self,trueCall=None,trueDict=None,header="",text="",name="",typ="",icon=None,action=None,actionDict=None):
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)

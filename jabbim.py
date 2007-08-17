@@ -59,7 +59,25 @@ class clientClass(pyxl.client.Client):
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+code+" "+typ+" "+name),0,1)
 
 	def on_GCpresenceError(self, fromjid, code, typ, name, text):
-		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+unicode(code)+" "+unicode(name)+" "+unicode(text)),0,1)
+		# find tab
+		tab=None
+		tabIndex=0
+		for i in range(self.main.chat.ui.chatTab.count()):
+			w=self.main.chat.ui.chatTab.widget(i)
+			if unicode(w.jid)==unicode(fromjid):
+				tab=w
+				tabIndex=i
+				break
+		# we found tab
+		if tab!=None:
+			self.main.chat.ui.chatTab.removeTab(tabIndex)
+			if int(self.main.chat.ui.chatTab.count())==0:
+				self.main.chat.close()
+		if int(code)==409:
+			self.main.events.addLineEditEvent(maintext=unicode(fromjid)+"<br/>"+text,trueCall=self.main.joinGC,trueDict=[fromjid],falseCall=None,falseDict=None,header="Groupchat Error",text="New name:",name=unicode(fromjid),typ="groupchatError",icon=None,action=None,actionDict=None,height=100)
+		else:
+			self.main.events.addInfoEvent(header=self.main.tr("Groupchat error"),text=text,name=unicode(fromjid),typ='groupchatError')
+		#QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+unicode(code)+" "+unicode(name)+" "+unicode(text)),0,1)
 
 	def on_roleErr(self,  muc,  err,  nick):
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(muc+" "+err+" "+nick),0,1)
@@ -1079,6 +1097,10 @@ class mainWindow(QtGui.QMainWindow):
 			item.setData(0,32,QtCore.QVariant([unicode(v.jid.full()),unicode(v.nick),unicode(v.password)]))
 			item.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
 
+	def joinGC(self,jid,nickname):
+		if self.chat.addGroupChatTab(jid,nickname):
+			self.client.joinGC(jid, nickname)
+
 	def autoJoinGroupchat(self):
 		for k,v in self.client.bookmarks['conference'].iteritems():
 			if (v.autojoin==True or v.autojoin=="True") or (v.autojoin==1 or v.autojoin=="1"):
@@ -1472,34 +1494,6 @@ class scrollBar(QtGui.QScrollArea):
 	def updateScrollBars(self):
 		QtGui.QScrollArea.updateScrollBars(self)
 		self.verticalScrollBar().setPageStep(32)
-	#if not self.widget():
-		#return
-	#p=self.viewport()->size()
-	#m = self.maximumViewportSize()
-	
-	#QSize min = qSmartMinSize(widget);
-	#QSize max = qSmartMaxSize(widget);
-	#if ((resizable && m.expandedTo(min) == m && m.boundedTo(max) == m)
-		#|| (!resizable && m.expandedTo(widget->size()) == m))
-		#p = m; // no scroll bars needed
-	
-	#if (resizable)
-		#widget->resize(p.expandedTo(min).boundedTo(max));
-	#QSize v = widget->size();
-	
-	#hbar->setRange(0, v.width() - p.width());
-	#hbar->setPageStep(p.width());
-	#vbar->setRange(0, v.height() - p.height());
-	#vbar->setPageStep(p.height());
-	#updateWidgetPosition();
-
-	#def scrollContentsBy(self,dx,dy):
-		#self.y+=dy
-		#if abs(self.y)>=32:
-			##if self.verticalScrollBar().value()+32<self.verticalScrollBar().maximum():
-				##self.verticalScrollBar().setValue(self.verticalScrollBar().value()+32)
-			#self.y=0
-			#return QtGui.QScrollArea.scrollContentsBy(self,dx,dy)
 
 translator=QtCore.QTranslator()
 translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
