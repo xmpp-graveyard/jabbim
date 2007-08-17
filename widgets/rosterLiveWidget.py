@@ -24,6 +24,18 @@ from os.path import basename
 from twisted.python import log
 import filetransfer
 
+class activeWidget(QtGui.QWidget):
+	def __init__(self,status,parent=None):
+		QtGui.QWidget.__init__(self,parent)
+		layout=QtGui.QVBoxLayout(self)
+		layout.setMargin(0)
+		self.stacked=QtGui.QStackedWidget(self)
+		layout.addWidget(self.stacked)
+		
+		self.status=QtGui.QLabel(status,self.stacked)
+		self.stacked.addWidget(self.status)
+		self.stacked.setCurrentIndex(0)
+
 class groupItem:
 	def __init__(self,name,icon,main):
 		self.name=name
@@ -108,6 +120,7 @@ class rosterWidget(QtGui.QWidget):
 		self.sorted={}
 		
 		self.statusLabel=None
+		self.statusButtons=[]
 
 		#QtCore.QObject.connect(self.main.scroll, QtCore.SIGNAL("sliderMoved(int)"),self.slider)
 
@@ -200,6 +213,11 @@ class rosterWidget(QtGui.QWidget):
 		doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
 		painter.restore()
 
+	def resizeEvent(self,event):
+		if self.statusLabel:
+			self.statusLabel.resize(self.width(),64)
+		return QtGui.QWidget.resizeEvent(self,event)
+
 	def paintUserItem(self,painter,useritem,x,y):
 		if useritem==self.item:
 			painter.save()
@@ -231,12 +249,19 @@ class rosterWidget(QtGui.QWidget):
 					self.statusLabel=QtGui.QTextEdit(self)
 					self.statusLabel.setReadOnly(True)
 					self.statusLabel.viewport().setAutoFillBackground(False)
+					self.statusLabel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 					self.statusLabel.setHtml(unicode(useritem.statusMessage))
 					#if useritem.avatar:
 						#self.statusLabel.setGeometry(0,y+32,self.width()-32,64)
 					#else:
 					self.statusLabel.setGeometry(0,y+32,self.width(),64)
 					self.statusLabel.show()
+					#button = QtGui.QPushButton(self)
+					#button.setGeometry(32,y+16,16,16)
+					#button.setFlat(True)
+					#button.setIcon(useritem.icon)
+					#button.show()
+					#self.statusButtons.append(button)
 				#doc.setHtml("JID:<b>"+useritem.jid+"</b>")
 				#painter.save()
 				#painter.translate(4,y+32)
