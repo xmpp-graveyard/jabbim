@@ -1245,6 +1245,9 @@ class mainWindow(QtGui.QMainWindow):
 		#self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.offline=not bool
 		self.ui.roster.showOffline=bool
+		if self.ui.roster.statusLabel:
+			self.ui.roster.statusLabel.setParent(None)
+			self.ui.roster.statusLabel=None
 		self.ui.roster.sortItems()
 		self.ui.roster.repaint()
 		#self.ui.roster.refreshStats()
