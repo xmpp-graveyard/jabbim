@@ -32,8 +32,16 @@ class activeWidget(QtGui.QWidget):
 		self.stacked=QtGui.QStackedWidget(self)
 		layout.addWidget(self.stacked)
 		
-		self.status=QtGui.QLabel(status,self.stacked)
-		self.stacked.addWidget(self.status)
+		self.statusLabel=QtGui.QTextEdit(self)
+		self.statusLabel.setReadOnly(True)
+		self.statusLabel.viewport().setAutoFillBackground(False)
+		self.statusLabel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+		self.statusLabel.setHtml(unicode(status))
+		self.stacked.addWidget(self.statusLabel)
+		widget=QtGui.QWidget(self)
+		widget.setAutoFillBackground(False)
+		self.stacked.addWidget(self.statusLabel)
+		self.stacked.addWidget(widget)
 		self.stacked.setCurrentIndex(0)
 
 class groupItem:
@@ -121,6 +129,7 @@ class rosterWidget(QtGui.QWidget):
 		
 		self.statusLabel=None
 		self.statusButtons=[]
+		self.bigAvatar=False
 
 		#QtCore.QObject.connect(self.main.scroll, QtCore.SIGNAL("sliderMoved(int)"),self.slider)
 
@@ -140,10 +149,20 @@ class rosterWidget(QtGui.QWidget):
 		self.setSize()
 
 	def mouseMoveEvent(self,event):
-		item=self.itemAt(int(event.x()),int(event.y()))
-		if self.newitem!=item:
-			self.newitem=item
-			#self.timer.start(500)
+		item,x,y=self.itemAt(int(event.x()),int(event.y()),1)
+		if item:
+			if self.item==item[0]:
+				if event.x()>self.width()-32 and int(event.y())<y+32 and int(event.y())>y:
+					self.bigAvatar=True
+					if self.statusLabel:
+						self.statusLabel.resize(self.width()-96,64)
+					self.repaint()
+				else:
+					self.bigAvatar=False
+					if self.statusLabel:
+						self.statusLabel.resize(self.width(),64)
+					self.repaint()
+				#self.timer.start(500)
 			
 
 	def popup(self):
@@ -246,11 +265,8 @@ class rosterWidget(QtGui.QWidget):
 				doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
 				painter.restore()
 				if not self.statusLabel:
-					self.statusLabel=QtGui.QTextEdit(self)
-					self.statusLabel.setReadOnly(True)
-					self.statusLabel.viewport().setAutoFillBackground(False)
-					self.statusLabel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-					self.statusLabel.setHtml(unicode(useritem.statusMessage))
+					self.statusLabel=activeWidget(useritem.statusMessage,self)
+
 					#if useritem.avatar:
 						#self.statusLabel.setGeometry(0,y+32,self.width()-32,64)
 					#else:
@@ -274,8 +290,12 @@ class rosterWidget(QtGui.QWidget):
 				doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+28))
 				painter.restore()
 			if useritem.avatar:
-				pixmap=useritem.avatar.pixmap(32,32)
-				painter.drawPixmap(self.width()-pixmap.width(),y,useritem.avatar.pixmap(32,32))
+				if self.bigAvatar:
+					pixmap=useritem.avatar.pixmap(96,96)
+					painter.drawPixmap(self.width()-pixmap.width(),y,pixmap)
+				else:
+					pixmap=useritem.avatar.pixmap(32,32)
+					painter.drawPixmap(self.width()-pixmap.width(),y,pixmap)
 
 		else:
 			#if event.region().contains(QtCore.QRect(0,y,self.width(),y+32)):
@@ -410,12 +430,13 @@ class rosterWidget(QtGui.QWidget):
 		x=event.x()
 		y=event.y()
 		item=self.itemAt(x,y)
-		self.item=item
-		self.selected=item
-		if self.statusLabel:
-			self.statusLabel.setParent(None)
-			self.statusLabel=None
-		self.repaint()
+		if self.item!=item:
+			self.item=item
+			self.selected=item
+			if self.statusLabel:
+				self.statusLabel.setParent(None)
+				self.statusLabel=None
+			self.repaint()
 		QtGui.QWidget.mousePressEvent(self,event)
 
 	def mouseDoubleClickEvent(self,event):
