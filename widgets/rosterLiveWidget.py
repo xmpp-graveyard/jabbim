@@ -662,6 +662,10 @@ class rosterWidget(QtGui.QWidget):
 		action.setObjectName("send_file")
 		# separator
 		contactMenu.addSeparator()
+		# rename
+		action=contactMenu.addAction(self.tr("Rename"))
+		action.setData(QtCore.QVariant(jid))
+		action.setObjectName("rename")
 		# delete from group
 		if group!=None and len(self.main.client.roster['users'][jid].groups)>1:
 			action=contactMenu.addAction(self.tr("Delete from group"))
@@ -731,6 +735,21 @@ class rosterWidget(QtGui.QWidget):
 			#QtGui.QApplication.postEvent(self.jab,customEvent(["roster_del_item",jid]))
 			##self.jab.roster.delItem(jid) # send jabber command
 			#self.refreshStats() # refresh group stats
+		elif cmd=="rename":
+			# add contact to the new group
+			# get contact jid
+			jid=action.data()
+			jid=str(jid.toString())
+			#name=unicode(self.main.client.roster['users'][jid].name)
+##			print "roster_new_group_action",jid,name
+			# get new group name with QDialog
+			name,b=QtGui.QInputDialog.getText(self,self.tr("Rename"),self.tr("Enter new name:"), QtGui.QLineEdit.Normal, "")
+			name=unicode(name)
+			# if user set new name of group
+			if b==True and len(name)!=0:
+				# add new group
+				contact=self.main.client.roster['users'][jid]
+				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription, self.main.client.roster['users'][jid].groups)
 		elif cmd=="new_group":
 			# add contact to the new group
 			# get contact jid
