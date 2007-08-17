@@ -277,118 +277,20 @@ class rosterWidget(QtGui.QWidget):
 		painter=QtGui.QPainter(self)
 		painter.setClipping(True)
 		painter.setClipRegion(event.region())
-		#painter.setRenderHint(painter.Antialiasing)
-		x=0
-		y=0
-		doc=QtGui.QTextDocument()
-		paint=False
-		index=False
 		for rect in event.region().rects():
-			print rect.x(),rect.y(),rect.width(),rect.height()
-			#print self.main.scroll.y
-			#if rect.height()>200:
-				#paint=True
-				##print "PAITING"
-				#break
-			#if rect.height()<=128:
-			if 1==1:
-				#if rect.height()<32:
-					#if rect.y()-32>0:
-						#items,x,y=self.itemAt(1,rect.y()-32,3)
-					#else:
-						#items,x,y=self.itemAt(1,rect.y(),2)
-				#else:
-				count=int(rect.height()/32)
-				if float(rect.height())/32.0>float(count):
-					count+=1
-				items,x,y=self.itemAt(1,rect.y(),count+1)
-				#y-=32
-				for item in items:
-					#print item.name
-					if item.typ=="group":
-						self.paintGroupItem(painter,item,0,y)
-						y+=32
-					else:
-						self.paintUserItem(painter,item,0,y)
-						if self.item==item:
-							y+=32
-						y+=32
-				#item,x,y=self.itemAt(1,rect.y()+33,True)
-				#if item!=None:
-					#if item.typ=="group":
-						#self.paintGroupItem(painter,item,0,y)
-					#else:
-						#self.paintUserItem(painter,item,0,y)
-				#item,x,y=self.itemAt(1,rect.y()-33,True)
-				#if item!=None:
-					#if item.typ=="group":
-						#self.paintGroupItem(painter,item,0,y)
-					#else:
-						#self.paintUserItem(painter,item,0,y)
-				#print index.name
-				paint=False
-				break
-				
-		if paint:
-			for key in self.sortedGroups:
-				item=self.groups[key]
-				paint=False
-				if not index:
-					#print "NONE"
-					paint=True
-				elif item==index:
-					paint=True
-				if ((len(self.getGroupSortedUsers(item.name))!=0 and not self.showOffline) or self.showOffline):
-					if paint:
-						self.paintGroupItem(painter,item,x,y)
-						if item==index:
-							break
-					items=self.getGroupSortedUsers(item.name)
-					if item.expanded and len(items)!=0:
-						#paint=False
-						#if event.region().contains(QtCore.QRect(0,y,self.width(),32*len(items)+32)):
-							#paint=True
-						#if paint:
-							#if self.item in items:
-								#self.userGradient=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(0, 32*len(items)+32))
-							#else:
-								#self.userGradient=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(0, 32*len(items)))
-							#self.userGradient.setColorAt(0, QtGui.QColor(255,204,102))
-							#self.userGradient.setColorAt(1, QtCore.Qt.white)
-			
-							#painter.save()
-							#painter.translate(x,y+32)
-							#if self.item in items:
-								#painter.fillRect(0,0,self.width(),32*len(items)+32,QtGui.QBrush(self.userGradient))
-							#else:
-								#painter.fillRect(0,0,self.width(),32*len(items),QtGui.QBrush(self.userGradient))
-							#painter.restore()
-						b=False
-						for useritem in items:
-							y+=32
-							paint=False
-							if not index:
-								paint=True
-							elif item==index:
-								paint=True	
-							if paint:
-								self.paintUserItem(painter,useritem,x,y)
-								if useritem==self.item:
-									y+=32
-
-							if item==index:
-								b=True
-								break
-						if b:
-							break
-						#if useritem==self.item:
-							#y-=32
-						
-					
+			count=int(rect.height()/32)
+			if float(rect.height())/32.0>float(count):
+				count+=1
+			items,x,y=self.itemAt(1,rect.y(),count+1)
+			for item in items:
+				if item.typ=="group":
+					self.paintGroupItem(painter,item,0,y)
 					y+=32
-			if not index:
-				self.setMinimumHeight(y)
-		#self.scroll.verticalScrollBar().setMaximum(int(y/32))
+				else:
+					self.paintUserItem(painter,item,0,y)
+					if self.item==item:
+						y+=32
+					y+=32
 
 	def itemAt(self,x1,y1,count=None):
 		x=0
@@ -405,7 +307,6 @@ class rosterWidget(QtGui.QWidget):
 					ret.append(item)
 					got+=1
 				if y1>=y and y1<=y+32:
-					print "ITEM"
 					if count and not item in ret:
 						ret.append(item)
 						got+=1
