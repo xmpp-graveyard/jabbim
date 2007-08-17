@@ -1054,6 +1054,21 @@ class mainWindow(QtGui.QMainWindow):
 						self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
 					else:
 						self.hide()
+		elif reason==QtGui.QSystemTrayIcon.MiddleClick:
+			self.ui.tabWidget.setCurrentIndex(2)
+			if self.isHidden():
+				self.show()
+				self.raise_()
+				self.activateWindow()
+				self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
+			else:
+				if self.windowState() & QtCore.Qt.WindowMinimized:
+					self.show()
+					self.raise_()
+					self.activateWindow()
+					self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
+				else:
+					self.hide()
 
 	def loadTheme(self,text=None):
 		# windows hack
