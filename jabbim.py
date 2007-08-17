@@ -316,6 +316,7 @@ class clientClass(pyxl.client.Client):
 	
 	def on_firstpresence(self,  bulk):
 		# process all first presences at once
+		log.msg(unicode(bulk))
 		print "PRESENCESSSSSS"
 		for presence in bulk:
 			#print presence

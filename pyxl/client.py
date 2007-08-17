@@ -67,7 +67,7 @@ class Client(derived):
 		self.roster = {'users':{},'groups':{}}
 		self.roster_meta = {} # jid: {'tag':tag,  'order': 1}
 		self.first_presence = []
-		self.first_wait = False
+		self.first_wait = True
 		self.bookmarks = {'conference':{}, 'url': {}}
 		self.idlist = []
 		self.disco = {} # jid:{node1:{items:{attrs}, identity: {attrs}, features:[], err: {'info':'', 'items':''}}}
@@ -578,7 +578,7 @@ class Client(derived):
 		self.dispatcher.publishEvent('first presence')
 	
 	def onPresence(self, el):
-##		print 'presence > ', el['from']
+		log.msg('presence > ')
 		frm = jid.JID(el['from'])
 		fromjid = frm.userhost()
 		resource = jid.JID(el['from']).resource
