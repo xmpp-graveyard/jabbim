@@ -59,6 +59,7 @@ class clientClass(pyxl.client.Client):
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+code+" "+typ+" "+name),0,1)
 
 	def on_GCpresenceError(self, fromjid, code, typ, name, text):
+		log.msg("error")
 		# find tab
 		tab=None
 		tabIndex=0
@@ -80,9 +81,11 @@ class clientClass(pyxl.client.Client):
 		#QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+unicode(code)+" "+unicode(name)+" "+unicode(text)),0,1)
 
 	def on_roleErr(self,  muc,  err,  nick):
+		log.msg("error")
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(muc+" "+err+" "+nick),0,1)
 	
 	def on_affiliationErr(self,  muc,  err,  nick):
+		log.msg("error")
 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(muc+" "+err+" "+nick),0,1)
 
 	def on_ftTransfered(self, sid, bytes): # pocet prenesenych bajtu pro prenos se SID
@@ -190,7 +193,7 @@ class clientClass(pyxl.client.Client):
 		self.main.buildBookmarks() # build Bookmarks tab
 		self.main.autoJoinGroupchat()
 		# HACK KVULI ICQ A AUTOMATICKEMU PRIHLASENI K NEMU:
-		self.sendPresence("icq.jabbim.cz",show='available', status = "")
+		#self.sendPresence("icq.jabbim.cz",show='available', status = "")
 		# vymazani metakontaktu
 		#self.roster_meta={}
 		#self.setMetacontacts()
