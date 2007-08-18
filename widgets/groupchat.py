@@ -257,8 +257,8 @@ class groupChatWidget(QtGui.QWidget):
 		toEnd=False
 		if self.ui.textEdit.verticalScrollBar().value()==self.ui.textEdit.verticalScrollBar().maximum():
 			toEnd=True
-		for k,v in self.smileys.iteritems():
-			text=text.replace(" "+k,' <img src="images/16x16/emotes/'+v+'"/>')
+		#for k,v in self.smileys.iteritems():
+			#text=text.replace(" "+k,' <img src="images/16x16/emotes/'+v+'"/>')
 		#cursor.insertHtml(text)
 		cursor.insertFragment(QtGui.QTextDocumentFragment.fromHtml(text))
 		cursor.endEditBlock()
