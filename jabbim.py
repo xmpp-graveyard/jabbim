@@ -193,7 +193,7 @@ class clientClass(pyxl.client.Client):
 		self.main.buildBookmarks() # build Bookmarks tab
 		self.main.autoJoinGroupchat()
 		# HACK KVULI ICQ A AUTOMATICKEMU PRIHLASENI K NEMU:
-		#self.sendPresence("icq.jabbim.cz",show='available', status = "")
+		self.sendPresence("icq.jabbim.cz",show='available', status = "")
 		# vymazani metakontaktu
 		#self.roster_meta={}
 		#self.setMetacontacts()
