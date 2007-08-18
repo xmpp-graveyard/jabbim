@@ -171,6 +171,7 @@ class rosterWidget(QtGui.QWidget):
 		self.iconSize="32x32"
 		self.setMinimumWidth(150)
 		self.setMinimumHeight(150)
+		self.setAcceptDrops(True)
 		self.groupGradient=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(0, 32))
 		self.groupGradient.setColorAt(1, QtCore.Qt.darkRed)
 		self.groupGradient.setColorAt(0, QtCore.Qt.white)
@@ -200,6 +201,9 @@ class rosterWidget(QtGui.QWidget):
 		self.buttonWidget=None
 		self.bigAvatar=False
 
+		self.setFocusPolicy(QtCore.Qt.ClickFocus)
+		self.data={}
+
 		#QtCore.QObject.connect(self.main.scroll, QtCore.SIGNAL("sliderMoved(int)"),self.slider)
 
 	#def slider(self,y):
@@ -220,19 +224,29 @@ class rosterWidget(QtGui.QWidget):
 	def mouseMoveEvent(self,event):
 		item,x,y=self.itemAt(int(event.x()),int(event.y()),1)
 		if item:
-			if self.item==item[0]:
-				if event.x()>self.width()-32 and int(event.y())<y+32 and int(event.y())>y:
-					self.bigAvatar=True
-					if self.statusLabel:
-						self.statusLabel.resize(self.width()-96,64)
-					self.repaint()
-				else:
-					self.bigAvatar=False
-					if self.statusLabel:
-						self.statusLabel.resize(self.width(),64)
-					self.repaint()
-				#self.timer.start(500)
-			
+			if event.buttons()==QtCore.Qt.NoButton:
+				if self.item==item[0]:
+					if event.x()>self.width()-32 and int(event.y())<y+32 and int(event.y())>y:
+						self.bigAvatar=True
+						if self.statusLabel:
+							self.statusLabel.resize(self.width()-96,64)
+						self.repaint()
+					else:
+						self.bigAvatar=False
+						if self.statusLabel:
+							self.statusLabel.resize(self.width(),64)
+						self.repaint()
+			else:
+				if item[0].typ=='user':
+					mimeData = QtCore.QMimeData()
+					mimeData.setText(item[0].jid)
+					self.data[mimeData]=item[0]
+					drag = QtGui.QDrag(self)
+					drag.setMimeData(mimeData)
+					drag.setHotSpot(event.pos())
+					#- self.rect().topLeft())
+					#dropAction = drag.start(QtCore.Qt.CopyAction | QtCore.Qt.MoveAction)
+					dropAction = drag.start(QtCore.Qt.CopyAction)
 
 	def popup(self):
 		self.item=self.newitem
@@ -548,6 +562,30 @@ class rosterWidget(QtGui.QWidget):
 		if count:
 			return [],None,None
 
+	def itemCoordinates(self,i):
+		x=0
+		y=0
+		for key in self.sortedGroups:
+			item=self.groups[key]
+			items=self.getGroupSortedUsers(item.name)
+			if ((len(items)!=0 and not self.showOffline) or self.showOffline) or item.main=="special":
+				if item==i:
+					return x,y
+				if item.expanded and len(items)!=0:
+					previous=None
+					for useritem in items:
+						y+=32
+						if useritem==i:
+							return x,y
+						if useritem==self.item:
+							y+=64
+
+					#if useritem==self.item:
+						#y-=32
+				y+=32
+
+		return None,None
+
 	def setSize(self):
 		x=0
 		y=0
@@ -563,11 +601,8 @@ class rosterWidget(QtGui.QWidget):
 
 		self.setMinimumHeight(y+64)
 
-	def mousePressEvent(self,event):
-		x=event.x()
-		y=event.y()
-		item=self.itemAt(x,y)
-		if self.item!=item:
+	def selectItem(self,item):
+		if self.item!=item and item!=None and item.main!='special':
 			self.item=item
 			self.selected=item
 			if self.statusLabel:
@@ -577,6 +612,12 @@ class rosterWidget(QtGui.QWidget):
 				self.buttonWidget.setParent(None)
 				self.buttonWidget=None
 			self.repaint()
+
+	def mousePressEvent(self,event):
+		x=event.x()
+		y=event.y()
+		item=self.itemAt(x,y)
+		self.selectItem(item)
 
 		if item.typ=='group':
 			if item.expanded:
@@ -607,6 +648,105 @@ class rosterWidget(QtGui.QWidget):
 			self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			self.main.chat.activate()
 
+	def keyPressEvent(self,event):
+		key=event.key()
+		if key==QtCore.Qt.Key_Down:
+			x,y=self.itemCoordinates(self.item)
+			if self.item.typ=="group":
+				item=self.itemAt(x,y+33)
+			else:
+				item=self.itemAt(x,y+97)
+			self.selectItem(item)
+			event.accept()
+		elif key==QtCore.Qt.Key_Up:
+			x,y=self.itemCoordinates(self.item)
+			#if self.item.typ=="group":
+				#item=self.itemAt(x,y+33)
+			#else:
+			item=self.itemAt(x,y-3)
+			self.selectItem(item)
+			event.accept()
+		event.ignore()
+			
+
+	def dragEnterEvent(self, event):
+		if event.mimeData().hasText():
+			event.acceptProposedAction()
+		else:
+			event.ignore()
+
+	def dragMoveEvent(self, event):
+		pos=event.pos()
+		#print pos.x(),pos.y()
+		item=self.itemAt(pos.x(),pos.y())
+		if item:
+			event.acceptProposedAction()
+		else:
+			event.ignore()
+
+	def dropEvent(self, event):
+		if event.mimeData().hasText():
+			jid = unicode(event.mimeData().text())
+			position = event.pos()
+			item=self.itemAt(position.x(),position.y())
+			oldItem=self.data[event.mimeData()]
+			if item==oldItem:
+				event.ignore()
+				del self.data[event.mimeData()]
+				return
+
+			#print jid,item.name
+			#for piece in pieces:
+				#newLabel = DragLabel(piece, self)
+				#newLabel.move(position)
+				#newLabel.show()
+	
+				#position += QtCore.QPoint(newLabel.width(), 0)
+	
+			#if event.source() in self.children():
+				#event.setDropAction(QtCore.Qt.MoveAction)
+				#event.accept()
+			#else:
+			event.acceptProposedAction()
+			items=QtCore.QStringList()
+			if item.typ=="group":
+				items.append(self.tr("Move"))
+				items.append(self.tr("Copy"))
+			else:
+				items.append(self.tr("Move to group"))
+				items.append(self.tr("Make metacontact"))
+				items.append(self.tr("Copy to group"))
+			q,b=QtGui.QInputDialog.getItem(self,self.tr("Contact action"),self.tr("Select action."), items,0,False)
+			q=unicode(q)
+			# if user set new name of group
+			if b==True and len(q)!=0:
+				if item.typ=='group':
+					index=int(items.indexOf(QtCore.QRegExp(q)))
+					if index==1:
+						self.changeGroup(jid,"+",unicode(item.name))
+					else:
+						name=unicode(self.main.client.roster['users'][jid].name)
+						contact=self.main.client.roster['users'][jid]
+						g=contact.groups
+						g.remove(unicode(self.groups[oldItem.group].name))
+						self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g+[unicode(item.name)])
+				else:
+					index=int(items.indexOf(QtCore.QRegExp(q)))
+					if index==2:
+						self.changeGroup(jid,"+",unicode(item.group))
+					elif index==0:
+						name=unicode(self.main.client.roster['users'][jid].name)
+						contact=self.main.client.roster['users'][jid]
+						g=contact.groups
+						g.remove(unicode(self.groups[oldItem.group].name))
+						self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g+[unicode(item.group)])
+			del self.data[event.mimeData()]
+
+		else:
+			event.ignore()
+
+	
+		
 
 	def makeHiddenItem(self):
 		pass

@@ -1519,9 +1519,9 @@ class scrollBar(QtGui.QScrollArea):
 		self.y=0
 		self.verticalScrollBar().setPageStep(32)
 		self.verticalScrollBar().setSingleStep(32)
-	def updateScrollBars(self):
-		QtGui.QScrollArea.updateScrollBars(self)
-		self.verticalScrollBar().setPageStep(32)
+	#def updateScrollBars(self):
+		#QtGui.QScrollArea.updateScrollBars(self)
+		#self.verticalScrollBar().setPageStep(32)
 
 translator=QtCore.QTranslator()
 translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
