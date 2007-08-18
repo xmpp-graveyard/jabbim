@@ -787,7 +787,14 @@ class rosterWidget(QtGui.QWidget):
 			user.statusMessage=status
 			user.status=self.main.shows[unicode(show)]
 			if not first:
+				if self.statusLabel:
+					self.statusLabel.setParent(None)
+					self.statusLabel=None
+				if self.buttonWidget:
+					self.buttonWidget.setParent(None)
+					self.buttonWidget=None
 				self.sortItems()
+				
 		self.repaint()
 
 	def cloneContact(self,parent,item):
