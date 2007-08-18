@@ -50,7 +50,7 @@ def loadConfig(main):
 			"savePasswd":"",
 			"autoJoin":False,
 			"rosterIconSize":"16x16",
-			"chat_skin":"default.conf",
+			"chat_skin":"gajim.conf",
 			"theme":"template",
 			"log":"true",
 			"logfile":"jabbim.log",
