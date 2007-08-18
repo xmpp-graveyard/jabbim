@@ -203,6 +203,7 @@ class rosterWidget(QtGui.QWidget):
 
 		self.setFocusPolicy(QtCore.Qt.ClickFocus)
 		self.data={}
+		self.metaItems={}
 
 		#QtCore.QObject.connect(self.main.scroll, QtCore.SIGNAL("sliderMoved(int)"),self.slider)
 
@@ -408,22 +409,25 @@ class rosterWidget(QtGui.QWidget):
 				self.statusLabel.show()
 			if not self.buttonWidget and self.statusLabel:
 				buttons=[]
-				high=self.main.client.roster['users'][useritem.jid].getHighestResource()
-				if high:
-					high=self.main.client.roster['users'][useritem.jid].resources[high]
-					buttons.append(self.main.getIcon(useritem.jid,size="16x16",status=self.main.icons[self.main.shows[high.show]]))
-					print "YES",buttons
-					self.statusLabel.addResource(high)
-					for key,resource in self.main.client.roster['users'][useritem.jid].resources.iteritems():
-						if resource!=high:
-							buttons.append(self.main.getIcon(useritem.jid,size="16x16",status=self.main.icons[self.main.shows[resource.show]]))
-							self.statusLabel.addResource(resource)
-					print buttons
+				if self.metaItems.has_key(useritem.jid):
+					for meta in self.metaItems[useritem.jid]:
+						buttons.append(self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)]))
+				#high=self.main.client.roster['users'][useritem.jid].getHighestResource()
+				#if high:
+					#high=self.main.client.roster['users'][useritem.jid].resources[high]
+					#buttons.append(self.main.getIcon(useritem.jid,size="16x16",status=self.main.icons[self.main.shows[high.show]]))
+					#print "YES",buttons
+					#self.statusLabel.addResource(high)
+					#for key,resource in self.main.client.roster['users'][useritem.jid].resources.iteritems():
+						#if resource!=high:
+							#buttons.append(self.main.getIcon(useritem.jid,size="16x16",status=self.main.icons[self.main.shows[resource.show]]))
+							#self.statusLabel.addResource(resource)
+					#print buttons
 					self.buttonWidget=activeButtons(self,buttons,self)
 					self.buttonWidget.setGeometry(35,y+16,self.width()-3,16)
 					self.buttonWidget.show()
 				else:
-					# no resource
+					## no resource
 					if useritem.statusMessage:
 						self.statusLabel.addStatusOnly(useritem.statusMessage)
 						
@@ -740,6 +744,10 @@ class rosterWidget(QtGui.QWidget):
 						g=contact.groups
 						g.remove(unicode(self.groups[oldItem.group].name))
 						self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g+[unicode(item.group)])
+					else:
+						self.main.client.roster_meta[item.jid]={'tag':item.jid,'order':1}
+						self.main.client.roster_meta[jid]={'tag':item.jid,'order':1}
+						self.main.client.setMetacontacts()
 			del self.data[event.mimeData()]
 
 		else:

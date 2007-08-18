@@ -205,15 +205,45 @@ class clientClass(pyxl.client.Client):
 		self.metaParents={}
 
 		## get metacontacts
-		#meta={} # temp variable for metacontacts - {userTag:userJid}
-		#for jid,user in self.roster['users'].iteritems():
-			#if user.tag!=None:
-				#if not meta.has_key(user.tag):
-					#meta[user.tag]=[[jid,user.order]]
-				#else:
-					#meta[user.tag].append([jid,user.order])
+		meta={} # temp variable for metacontacts - {userTag:userJid}
+		for jid,user in self.roster['users'].iteritems():
+			if user.tag!=None:
+				if not meta.has_key(user.tag):
+					meta[user.tag]=[[jid,user.order]]
+				else:
+					meta[user.tag].append([jid,user.order])
 
-		#log.msg("META:"+unicode(meta))
+		log.msg("META:"+unicode(meta))
+
+		for tag,jids in meta.iteritems():
+			if len(jids)>1:
+				mainJid=None # JID of main metacontact (parent of all other)
+				highestNum=0
+				highest=[]
+				for value in jids:
+					jid=value[0]
+					order=int(value[1])
+					if jid!=tag:
+						mainJid=jid
+					if order>=highestNum:
+						highest.append(jid)
+				if mainJid:
+					first=True
+					toDel=[]
+					for item in self.main.ui.roster.getUserItems(mainJid)[1:]:
+						toDel.append(item)
+					for i in range(len(toDel)):
+						self.main.ui.roster.users.remove(toDel[i])
+					
+					self.main.ui.roster.metaItems[mainJid]=[]
+					for value in jids:
+						self.main.ui.roster.metaItems[mainJid].append(self.main.ui.roster.getUserItems(value[0])[0].clone())
+						if value[0]!=mainJid:
+							for i in self.main.ui.roster.getUserItems(value[0]):
+								self.main.ui.roster.users.remove(i)
+		log.msg("METAITEMS:"+unicode(self.main.ui.roster.metaItems))
+
+
 
 
 		#toDelJid=[] # contacts to delete
@@ -291,7 +321,8 @@ class clientClass(pyxl.client.Client):
 		# sort roster items and refresh group stats
 		#self.main.rosterHideOffline(True)
 		#self.main.ui.roster.refreshStats()
-		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
+		self.main.ui.roster.sortItems()
+
 
 		# set the priority
 		if MainWindow.config.has_key('autoPriority'):
