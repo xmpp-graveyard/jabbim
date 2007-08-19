@@ -649,12 +649,18 @@ class clientClass(pyxl.client.Client):
 		log.msg("vcard "+unicode(jid))
 		log.msg(unicode(card))
 		if card.has_key("BINVAL"):
+			typ=None
+			if card.has_key("TYPE"):
+				typ=str(card['TYPE'].split("/")[1])
 			pixmap=QtGui.QPixmap()
 			image=base64.decodestring(str(card["BINVAL"]))
 			f=open(self.main.homeDir+'/avatars/'+jid,"wb")
 			f.write(image)
 			f.close()
-			pixmap.loadFromData(image)
+			if typ:
+				pixmap.loadFromData(image,typ)
+			else:
+				pixmap.loadFromData(image)
 			log.msg(unicode(self.jid.userhost())+" "+unicode(jid))
 			if unicode(self.jid.userhost())==unicode(jid):
 				print "Setting avatar"
