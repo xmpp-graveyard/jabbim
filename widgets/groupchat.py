@@ -95,7 +95,9 @@ class groupChatWidget(QtGui.QWidget):
 		self.ui.setupUi(self)
 		self.main=main
 		self.affiliation=""
-
+		self.cache={}
+		self.lines=0
+		self.maxLines=10
 
 		l=QtGui.QHBoxLayout(self.ui.viewWidget)
 		l.setMargin(0)
@@ -120,6 +122,9 @@ class groupChatWidget(QtGui.QWidget):
 		#QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
+
+		self.buttonGroup=QtGui.QButtonGroup(self.ui.logs)
+		self.ui.logsLayout=QtGui.QVBoxLayout(self.ui.logs)
 
 		short=QtGui.QShortcut("tab",self.ui.line)
 		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
@@ -264,7 +269,17 @@ class groupChatWidget(QtGui.QWidget):
 		cursor.endEditBlock()
 		if toEnd:
 			self.ui.textEdit.verticalScrollBar().setValue(self.ui.textEdit.verticalScrollBar().maximum())
-	
+		
+		self.lines+=1
+		if self.lines>self.maxLines:
+			self.lines=0
+			self.cache[self.main.now()]=self.ui.textEdit.toHtml()
+			self.ui.textEdit.setHtml("")
+			button=QtGui.QPushButton(self.main.now(),self.ui.logs)
+			button.setCheckable(True)
+			self.ui.losgLayout.addWidget(button)
+			self.ui.buttonGroup.addButton(button)
+
 	def addEmoticon(self,action):
 		# add emoticon to the self.ui.line
 		data=action.data()

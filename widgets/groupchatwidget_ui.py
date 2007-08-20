@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Thu Aug 16 10:38:03 2007
+# Created: Mon Aug 20 08:00:25 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -21,19 +21,19 @@ class Ui_groupchatwidget(object):
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
 
-        spacerItem = QtGui.QSpacerItem(331,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem,1,0,1,1)
+        spacerItem = QtGui.QSpacerItem(101,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem,1,1,1,1)
 
         self.smileys = QtGui.QToolButton(groupchatwidget)
         self.smileys.setIcon(QtGui.QIcon("images/22x22/emotes/biggrin.png"))
         self.smileys.setCheckable(True)
         self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.smileys.setObjectName("smileys")
-        self.gridlayout.addWidget(self.smileys,1,1,1,1)
+        self.gridlayout.addWidget(self.smileys,1,2,1,1)
 
         self.sendButton = QtGui.QPushButton(groupchatwidget)
         self.sendButton.setObjectName("sendButton")
-        self.gridlayout.addWidget(self.sendButton,1,2,1,1)
+        self.gridlayout.addWidget(self.sendButton,1,3,1,1)
 
         self.splitter_2 = QtGui.QSplitter(groupchatwidget)
         self.splitter_2.setOrientation(QtCore.Qt.Vertical)
@@ -84,7 +84,11 @@ class Ui_groupchatwidget(object):
         self.lineWidget = QtGui.QWidget(self.splitter_2)
         self.lineWidget.setMinimumSize(QtCore.QSize(0,10))
         self.lineWidget.setObjectName("lineWidget")
-        self.gridlayout.addWidget(self.splitter_2,0,0,1,3)
+        self.gridlayout.addWidget(self.splitter_2,0,0,1,4)
+
+        self.logs = QtGui.QWidget(groupchatwidget)
+        self.logs.setObjectName("logs")
+        self.gridlayout.addWidget(self.logs,1,0,1,1)
 
         self.retranslateUi(groupchatwidget)
         QtCore.QMetaObject.connectSlotsByName(groupchatwidget)
