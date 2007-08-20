@@ -1343,6 +1343,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.scroll.setWidgetResizable (True)
 		self.ui.roster=widgets.rosterLiveWidget.rosterWidget(self,self)
 		self.scroll.setWidget(self.ui.roster)
+		#self.scroll.palette().setColor(QtGui.QPalette.Window,QtGui.QColor(255,255,255))
+		#self.palette().color(QtGui.QPalette.Base)
 		layout.addWidget(self.scroll)
 
 	def _connected(self):

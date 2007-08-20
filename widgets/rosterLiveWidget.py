@@ -208,6 +208,8 @@ class rosterWidget(QtGui.QWidget):
 		self.colors=QtGui.QTreeWidget()
 		self.colors.hide()
 		self.colors.setObjectName("rosterView")
+		self.palette().setColor(QtGui.QPalette.Window,self.palette().color(QtGui.QPalette.Base))
+
 		self.palette=self.colors.palette()
 
 
@@ -307,10 +309,10 @@ class rosterWidget(QtGui.QWidget):
 			#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.selectedGroupGradient))
 			#painter.restore()
 		#else:
-			#painter.save()
-			#painter.translate(x,y)
-			#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.groupGradient))
-			#painter.restore()
+		painter.save()
+		painter.translate(x,y)
+		painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palette.color(QtGui.QPalette.Base)))
+		painter.restore()
 		
 		b=painter.brush()
 		p=painter.pen()
@@ -341,7 +343,7 @@ class rosterWidget(QtGui.QWidget):
 		if item.icon:
 			painter.drawPixmap(x,y+4,item.icon.pixmap(32,32))
 		
-		doc.setHtml("<font color=\"white\">"+item.name+"</font>")
+		doc.setHtml("<font color=\""+self.palette.color(QtGui.QPalette.Text).name()+"\">"+item.name+"</font>")
 		
 		painter.save()
 		painter.translate(x+30,y+10)
@@ -355,6 +357,10 @@ class rosterWidget(QtGui.QWidget):
 
 	def paintUserItem(self,painter,useritem,x,y):
 		if useritem==self.item:
+			painter.save()
+			painter.translate(x,y)
+			painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palette.color(QtGui.QPalette.Base)))
+			painter.restore()
 			#painter.save()
 			#painter.translate(x,y)
 			#painter.fillRect(0,0,self.width(),96,QtGui.QBrush(self.selectedGroupGradient))
@@ -365,10 +371,10 @@ class rosterWidget(QtGui.QWidget):
 			#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(palette.color(QtGui.QPalette.Highlight)))
 			#painter.restore()
 			p=painter.pen()
-			painter.setPen(QtGui.QPen(QtGui.QColor(30,144,230)))
+			painter.setPen(self.palette.color(QtGui.QPalette.AlternateBase))
 			painter.save()
 			painter.translate(x,y)
-			painter.fillRect(3,0,self.width()-3,96,QtGui.QBrush(QtGui.QColor(220,229,255)))
+			painter.fillRect(3,0,self.width()-3,96,QtGui.QBrush(self.palette.color(QtGui.QPalette.Highlight)))
 
 			painter.drawLine(2,0,2,96)
 			painter.drawLine(self.width()-2,0,self.width()-2,96)
@@ -404,7 +410,7 @@ class rosterWidget(QtGui.QWidget):
 				##doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
 				##painter.restore()
 			#else:
-			doc.setHtml(useritem.name)
+			doc.setHtml("<font color=\""+self.palette.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.name+"</font>")
 			painter.save()
 			painter.translate(x+35,y)
 			doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33,y+28))
@@ -454,11 +460,16 @@ class rosterWidget(QtGui.QWidget):
 				#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.selectedGroupGradient))
 				#painter.restore()
 			#else:
-			p=painter.pen()
-			painter.setPen(QtGui.QPen(QtGui.QColor(30,144,230)))
 			painter.save()
 			painter.translate(x,y)
-			painter.fillRect(0,0,self.width(),32,QtGui.QBrush(QtGui.QColor(255,255,255)))
+			painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palette.color(QtGui.QPalette.Base)))
+			painter.restore()
+
+			p=painter.pen()
+			painter.setPen(QtGui.QPen(self.palette.color(QtGui.QPalette.AlternateBase)))
+			painter.save()
+			painter.translate(x,y)
+			painter.fillRect(0,0,self.width(),32,self.palette.color(QtGui.QPalette.Base))
 
 			painter.drawLine(2,0,2,32)
 			painter.drawLine(self.width()-2,0,self.width()-2,32)
