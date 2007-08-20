@@ -194,7 +194,7 @@ class rosterWidget(QtGui.QWidget):
 		self.newitem=None
 		self.item=None
 		self.timer=QtCore.QTimer(self)
-		self.timer.setSingleShot(True)
+		#self.timer.setSingleShot(True)
 		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.popup)
 		self.sortedGroups=[]
 		self.sorted={}
@@ -264,15 +264,33 @@ class rosterWidget(QtGui.QWidget):
 					self.data[mimeData]=item[0]
 					drag = QtGui.QDrag(self)
 					drag.setMimeData(mimeData)
-					drag.setHotSpot(event.pos())
+					#drag.setHotSpot(event.pos())
 					#- self.rect().topLeft())
 					#dropAction = drag.start(QtCore.Qt.CopyAction | QtCore.Qt.MoveAction)
 					dropAction = drag.start(QtCore.Qt.CopyAction)
+		return QtGui.QWidget.mouseMoveEvent(self,event)
 
 	def popup(self):
-		self.item=self.newitem
-		self.selected=self.item
-		self.repaint()
+		#self.item=self.newitem
+		#self.selected=self.item
+		#self.repaint()
+		##log.msg("POPUP")
+		#print self.main.scroll.verticalScrollBar().maximum(),self.main.scroll.verticalScrollBar().value()
+		if self.scrollUp==None:
+			self.timer.stop()
+		if not self.scrollUp:
+			if self.main.scroll.verticalScrollBar().value()+10>self.main.scroll.verticalScrollBar().maximum():
+				self.main.scroll.verticalScrollBar().setValue(self.main.scroll.verticalScrollBar().maximum())
+				self.timer.stop()
+			else:
+				self.main.scroll.verticalScrollBar().setValue(self.main.scroll.verticalScrollBar().value()+10)
+		else:
+			if self.main.scroll.verticalScrollBar().value()-10<0:
+				self.main.scroll.verticalScrollBar().setValue(0)
+				self.timer.stop()
+			else:
+				self.main.scroll.verticalScrollBar().setValue(self.main.scroll.verticalScrollBar().value()-10)
+		#self.repaint()
 
 	def addGroup(self,name):
 		item=groupItem(name,QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png"),self)
@@ -716,15 +734,28 @@ class rosterWidget(QtGui.QWidget):
 			
 
 	def dragEnterEvent(self, event):
+		#log.msg('DRAG ENTER')
 		if event.mimeData().hasText():
 			event.acceptProposedAction()
 		else:
 			event.ignore()
 
 	def dragMoveEvent(self, event):
+		#log.msg('DRAG MOVE')
 		pos=event.pos()
-		#print pos.x(),pos.y()
+		print pos.x(),pos.y()
 		item=self.itemAt(pos.x(),pos.y())
+		self.scrollUp=None
+		if pos.y()>self.main.scroll.height()-16:
+			self.timer.start(50)
+			self.scrollUp=False
+		if pos.y()-self.main.scroll.verticalScrollBar().value()<32:
+			self.scrollUp=True
+			self.timer.start(50)
+		
+		#if not pos.y()>self.main.scroll.height()-16 and not pos.y()-self.main.scroll.verticalScrollBar().value():
+			#self.timer.stop()
+		
 		if item:
 			event.acceptProposedAction()
 		else:
