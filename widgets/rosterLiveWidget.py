@@ -112,6 +112,8 @@ class groupItem:
 		self.expanded=False
 		self.typ='group'
 		self.main=main
+		self.online=0
+		self.all=0
 	
 	def setExpanded(self,bool):
 		self.expanded=bool
@@ -227,7 +229,17 @@ class rosterWidget(QtGui.QWidget):
 				temp.append([unicode(user.status)+user.name,user])
 			temp.sort()
 			self.sorted[group]=temp
-		print self.sorted
+
+			all=0
+			online=0
+			for user in self.users:
+				if user.group==group:
+					all+=1
+					if unicode(user.show)!="9":
+						online+=1
+			self.groups[group].online=online
+			self.groups[group].all=all
+
 		self.setSize()
 
 	def mouseMoveEvent(self,event):
@@ -339,6 +351,11 @@ class rosterWidget(QtGui.QWidget):
 		painter.restore()
 		painter.setBrush(b)
 		painter.setPen(p)
+
+		painter.drawText(self.width()-52,y+3,unicode(item.online))
+		painter.drawPixmap(self.width()-42,y+3,self.main,getIcon(status="online",size="16x16").pixmap(16,16))
+		painter.drawText(self.width()-28,y+3,unicode(item.all))
+		painter.drawPixmap(self.width()-18,y+3,self.main,getIcon(status="offline",size="16x16").pixmap(16,16))
 		
 		if item.icon:
 			painter.drawPixmap(x,y+4,item.icon.pixmap(32,32))
