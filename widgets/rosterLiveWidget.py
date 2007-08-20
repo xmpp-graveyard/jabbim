@@ -204,6 +204,12 @@ class rosterWidget(QtGui.QWidget):
 		self.setFocusPolicy(QtCore.Qt.ClickFocus)
 		self.data={}
 		self.metaItems={}
+		
+		self.colors=QtGui.QTreeWidget()
+		self.colors.hide()
+		self.colors.setObjectName("rosterView")
+		self.palette=self.colors.palette()
+
 
 		#QtCore.QObject.connect(self.main.scroll, QtCore.SIGNAL("sliderMoved(int)"),self.slider)
 
@@ -308,8 +314,8 @@ class rosterWidget(QtGui.QWidget):
 		
 		b=painter.brush()
 		p=painter.pen()
-		painter.setBrush(QtGui.QBrush(QtGui.QColor(30,144,255)))
-		painter.setPen(QtGui.QPen(QtGui.QColor(30,144,230)))
+		painter.setBrush(self.palette.color(QtGui.QPalette.AlternateBase))
+		painter.setPen(self.palette.color(QtGui.QPalette.AlternateBase))
 		painter.save()
 		painter.translate(x,y)
 
