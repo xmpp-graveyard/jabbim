@@ -235,7 +235,7 @@ class rosterWidget(QtGui.QWidget):
 			for user in self.users:
 				if user.group==group:
 					all+=1
-					if unicode(user.show)!="9":
+					if unicode(user.status)!="9":
 						online+=1
 			self.groups[group].online=online
 			self.groups[group].all=all
@@ -352,10 +352,18 @@ class rosterWidget(QtGui.QWidget):
 		painter.setBrush(b)
 		painter.setPen(p)
 
-		painter.drawText(self.width()-52,y+3,unicode(item.online))
-		painter.drawPixmap(self.width()-42,y+3,self.main,getIcon(status="online",size="16x16").pixmap(16,16))
-		painter.drawText(self.width()-28,y+3,unicode(item.all))
-		painter.drawPixmap(self.width()-18,y+3,self.main,getIcon(status="offline",size="16x16").pixmap(16,16))
+		p=painter.pen()
+		painter.setPen(self.palette.color(QtGui.QPalette.Text))
+
+		painter.save()
+		painter.translate(x,y+13)
+		painter.drawText(self.width()-52,12,unicode(item.online))
+		painter.drawPixmap(self.width()-45,0,self.main.getIcon(status="online",size="16x16").pixmap(16,16))
+		painter.drawText(self.width()-28,12,unicode(item.all))
+		painter.drawPixmap(self.width()-21,0,self.main.getIcon(status="offline",size="16x16").pixmap(16,16))
+		painter.restore()
+
+		painter.setPen(p)
 		
 		if item.icon:
 			painter.drawPixmap(x,y+4,item.icon.pixmap(32,32))
