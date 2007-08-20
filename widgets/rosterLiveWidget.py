@@ -762,6 +762,7 @@ class rosterWidget(QtGui.QWidget):
 			event.ignore()
 
 	def dropEvent(self, event):
+		self.scrollUp=None
 		if event.mimeData().hasText():
 			jid = unicode(event.mimeData().text())
 			position = event.pos()
