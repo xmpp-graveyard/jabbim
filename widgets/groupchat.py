@@ -97,7 +97,7 @@ class groupChatWidget(QtGui.QWidget):
 		self.affiliation=""
 		self.cache={}
 		self.lines=0
-		self.maxLines=10
+		self.maxLines=300
 
 		l=QtGui.QHBoxLayout(self.ui.viewWidget)
 		l.setMargin(0)
@@ -121,7 +121,7 @@ class groupChatWidget(QtGui.QWidget):
 		self.actual=QtGui.QPushButton(self.tr("Actual"),self.ui.logs)
 		self.actual.setCheckable(True)
 		self.actual.setChecked(True)
-		self.ui.losgLayout.addWidget(self.actual)
+		self.ui.logsLayout.addWidget(self.actual)
 		self.buttonGroup.addButton(self.actual)
 
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
