@@ -114,17 +114,26 @@ class groupChatWidget(QtGui.QWidget):
 			self.ui.line=lineEditWidget(self,self)
 		layout.addWidget(self.ui.line)
 
+		self.buttonGroup=QtGui.QButtonGroup(self.ui.logs)
+		#self.buttonGroup.setExclusive(True)
+		self.ui.logsLayout=QtGui.QHBoxLayout(self.ui.logs)
+		
+		self.actual=QtGui.QPushButton(self.tr("Actual"),self.ui.logs)
+		self.actual.setCheckable(True)
+		self.actual.setChecked(True)
+		self.ui.losgLayout.addWidget(self.actual)
+		self.buttonGroup.addButton(self.actual)
+
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.roomConfig, QtCore.SIGNAL("clicked ()"),self.roomConfigClicked)
 		QtCore.QObject.connect(self.ui.roomAdmin, QtCore.SIGNAL("clicked ()"),self.roomAdminClicked)
+		QtCore.QObject.connect(self.buttonGroup, QtCore.SIGNAL("buttonClicked ( QAbstractButton * )  "),self.logButton)
 		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("textChanged ()"),self.lines)
 		#QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 
-		self.buttonGroup=QtGui.QButtonGroup(self.ui.logs)
-		self.ui.logsLayout=QtGui.QVBoxLayout(self.ui.logs)
 
 		short=QtGui.QShortcut("tab",self.ui.line)
 		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
@@ -253,23 +262,34 @@ class groupChatWidget(QtGui.QWidget):
 	def smileysClicked(self,bool):
 		self.s.setGeometry ( self.ui.smileys.x()-60, self.ui.smileys.y()-200, 120, 200)
 		self.s.setShown(bool)
-	
+
+	def logButton(self,button):
+		if button==self.actual:
+			self.ui.textEdit.setHtml(self.cache['actual'])
+		else:
+			time=unicode(button.text())
+			self.cache['actual']=self.ui.textEdit.toHtml()
+			self.ui.textEdit.setHtml(self.cache[time])
+
 	def textEditWrite(self,text):
-		cursor=QtGui.QTextCursor(self.ui.textEdit.document())
-		cursor.beginEditBlock()
-		cursor.movePosition(QtGui.QTextCursor.End)
-		
-		toEnd=False
-		if self.ui.textEdit.verticalScrollBar().value()==self.ui.textEdit.verticalScrollBar().maximum():
-			toEnd=True
-		#for k,v in self.smileys.iteritems():
-			#text=text.replace(" "+k,' <img src="images/16x16/emotes/'+v+'"/>')
-		#cursor.insertHtml(text)
-		cursor.insertFragment(QtGui.QTextDocumentFragment.fromHtml(text))
-		cursor.endEditBlock()
-		if toEnd:
-			self.ui.textEdit.verticalScrollBar().setValue(self.ui.textEdit.verticalScrollBar().maximum())
-		
+		if self.actual.isChecked():
+			cursor=QtGui.QTextCursor(self.ui.textEdit.document())
+			cursor.beginEditBlock()
+			cursor.movePosition(QtGui.QTextCursor.End)
+			
+			toEnd=False
+			if self.ui.textEdit.verticalScrollBar().value()==self.ui.textEdit.verticalScrollBar().maximum():
+				toEnd=True
+			#for k,v in self.smileys.iteritems():
+				#text=text.replace(" "+k,' <img src="images/16x16/emotes/'+v+'"/>')
+			#cursor.insertHtml(text)
+			cursor.insertFragment(QtGui.QTextDocumentFragment.fromHtml(text))
+			cursor.endEditBlock()
+			if toEnd:
+				self.ui.textEdit.verticalScrollBar().setValue(self.ui.textEdit.verticalScrollBar().maximum())
+		else:
+			self.cache['actual']+=text
+
 		self.lines+=1
 		if self.lines>self.maxLines:
 			self.lines=0
@@ -277,8 +297,8 @@ class groupChatWidget(QtGui.QWidget):
 			self.ui.textEdit.setHtml("")
 			button=QtGui.QPushButton(self.main.now(),self.ui.logs)
 			button.setCheckable(True)
-			self.ui.losgLayout.addWidget(button)
-			self.ui.buttonGroup.addButton(button)
+			self.ui.logsLayout.addWidget(button)
+			self.buttonGroup.addButton(button)
 
 	def addEmoticon(self,action):
 		# add emoticon to the self.ui.line
