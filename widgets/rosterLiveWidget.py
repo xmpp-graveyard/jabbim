@@ -735,7 +735,7 @@ class rosterWidget(QtGui.QWidget):
 
 	def dragEnterEvent(self, event):
 		#log.msg('DRAG ENTER')
-		if event.mimeData().hasText():
+		if event.mimeData().hasText() or event.mimeData.hasFormat("text/uri-list"):
 			event.acceptProposedAction()
 		else:
 			event.ignore()
@@ -743,7 +743,7 @@ class rosterWidget(QtGui.QWidget):
 	def dragMoveEvent(self, event):
 		#log.msg('DRAG MOVE')
 		pos=event.pos()
-		print pos.x(),pos.y()
+		#print pos.x(),pos.y()
 		item=self.itemAt(pos.x(),pos.y())
 		self.scrollUp=None
 		if pos.y()>self.main.scroll.height()-16:
@@ -763,7 +763,22 @@ class rosterWidget(QtGui.QWidget):
 
 	def dropEvent(self, event):
 		self.scrollUp=None
-		if event.mimeData().hasText():
+
+		if (event.mimeData().hasUrls()):
+			urlList=event.mimeData().urls()
+			if len(urlList)>0:
+				new=[]
+				for url in urlList:
+					new.append(unicode(url.toLocalFile()))
+				file=new
+				print file
+				position = event.pos()
+				item=self.itemAt(position.x(),position.y())
+				if item.typ=="user":
+					self.dialog=filetransfer.filetransferDialog(self.main,file,item.jid)
+					self.dialog.show()
+			event.acceptProposedAction()
+		elif event.mimeData().hasText():
 			jid = unicode(event.mimeData().text())
 			position = event.pos()
 			item=self.itemAt(position.x(),position.y())
@@ -823,7 +838,6 @@ class rosterWidget(QtGui.QWidget):
 						self.main.client.roster_meta[jid]={'tag':item.jid,'order':1}
 						self.main.client.setMetacontacts()
 			del self.data[event.mimeData()]
-
 		else:
 			event.ignore()
 
