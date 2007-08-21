@@ -147,6 +147,8 @@ class clientClass(pyxl.client.Client):
 				elif typ=="file":
 					typ="disk"
 				self.main.hosts[jid]=typ
+				if self.main.transports.has_key(jid):
+					self.main.transports[jid]=typ
 		# set icons for users with this host
 		for item in self.main.ui.roster.getHostItems("@"+jid):
 			show=unicode(item.text(1))[0]
@@ -165,9 +167,13 @@ class clientClass(pyxl.client.Client):
 		# get host info if we haven't it
 		if len(unicode(jid).rsplit("@"))!=1:
 			host=unicode(jid).rsplit("@")[1]
-			if not self.disco.has_key(host) and not host in self.temp_hosts:
-				self.temp_hosts.append(host)
-				self.getDiscoInfo(host)
+		else:
+			host=unicode(jid)
+			log.msg("Transport:"+jid)
+			self.main.transports[unicode(jid)]=""
+		if not self.disco.has_key(host) and not host in self.temp_hosts:
+			self.temp_hosts.append(host)
+			self.getDiscoInfo(host)
 		# user is not in any group
 		if len(groups)==0:
 			# add user item to Unknown group
@@ -194,7 +200,29 @@ class clientClass(pyxl.client.Client):
 		self.main.buildBookmarks() # build Bookmarks tab
 		self.main.autoJoinGroupchat()
 		# HACK KVULI ICQ A AUTOMATICKEMU PRIHLASENI K NEMU:
-		self.sendPresence("icq.jabbim.cz",show='available', status = "")
+		#self.sendPresence("icq.jabbim.cz",show='available', status = "")
+
+		menus=[]
+		for jid,typ in self.main.transports.iteritems():
+			menu=QtGui.QMenu(unicode(jid),self.main.statusMenu)
+			action=menu.addAction(self.main.getIcon(status="online",size="16x16"),self.main.status["online"])
+			action.setData(QtCore.QVariant(jid+"/online"))
+			action=menu.addAction(self.main.getIcon(status="chat",size="16x16"),self.main.status["chat"])
+			action.setData(QtCore.QVariant(jid+"/chat"))
+			action=menu.addAction(self.main.getIcon(status="away",size="16x16"),self.main.status["away"])
+			action.setData(QtCore.QVariant(jid+"/away"))
+			action=menu.addAction(self.main.getIcon(status="xa",size="16x16"),self.main.status["xa"])
+			action.setData(QtCore.QVariant(jid+"/xa"))
+			action=menu.addAction(self.main.getIcon(status="dnd",size="16x16"),self.main.status["dnd"])
+			action.setData(QtCore.QVariant(jid+"/dnd"))
+			action=menu.addAction(self.main.getIcon(status="offline",size="16x16"),self.main.status["offline"])
+			action.setData(QtCore.QVariant(jid+"/offline"))
+			#app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.main.statusChanged)
+			menus.append(menu)
+		self.main.buildStatusMenu(menus)
+		
+		
+		
 		# vymazani metakontaktu
 		#self.roster_meta={}
 		#self.setMetacontacts()
@@ -733,6 +761,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.chat=widgets.chatwindow.chatWindow(self,self)
 		self.events=widgets.events.events(self)
 		self.statusPath="images/xxxxx/status/"
+		self.transports={}
 		self.shows={u"online":u"1",
 					u"available":u"1",
 					u"chat":u"2",
@@ -793,25 +822,10 @@ class mainWindow(QtGui.QMainWindow):
 		self.loadRoster() # load roster widget
 		self.loadSkin() # load chat skin
 
-		# Status menu
-		self.statusMenu=QtGui.QMenu(self.tr("Status"),self.ui.statusButton)
-		action=self.statusMenu.addAction(self.getIcon(status="online",size="16x16"),self.status["online"])
-		action.setData(QtCore.QVariant("online"))
-		action=self.statusMenu.addAction(self.getIcon(status="chat",size="16x16"),self.status["chat"])
-		action.setData(QtCore.QVariant("chat"))
-		action=self.statusMenu.addAction(self.getIcon(status="away",size="16x16"),self.status["away"])
-		action.setData(QtCore.QVariant("away"))
-		action=self.statusMenu.addAction(self.getIcon(status="xa",size="16x16"),self.status["xa"])
-		action.setData(QtCore.QVariant("xa"))
-		action=self.statusMenu.addAction(self.getIcon(status="dnd",size="16x16"),self.status["dnd"])
-		action.setData(QtCore.QVariant("dnd"))
-		action=self.statusMenu.addAction(self.getIcon(status="offline",size="16x16"),self.status["offline"])
-		action.setData(QtCore.QVariant("offline"))
-		self.ui.statusButton.setMenu(self.statusMenu)
-		app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
-		#self.ui.statusButton.setText(unicode(self.status["offline"]))
+		self.buildStatusMenu()
 		self.ui.statusButton.setIcon(self.getIcon("offline",size="16x16"))
 		self.ui.statusButton.hide()
+
 		#self.config['rosterIconSize']="22x22"
 		#self.addInfoSubscribe()
 		#self.addInfoSubscribe()
@@ -865,6 +879,28 @@ class mainWindow(QtGui.QMainWindow):
 		#self.setUpdatesEnabled(False)
 		#QtGui.QMainWindow(self).resizeEvent(event)
 		#self.setUpdatesEnabled(True)
+
+	def buildStatusMenu(self,menus=[]):
+		# Status menu
+		self.statusMenu=QtGui.QMenu(self.tr("Status"),self.ui.statusButton)
+		for menu in menus:
+			self.statusMenu.addMenu(menu)
+			log.msg("adding menu")
+		self.statusMenu.addSeparator()
+		action=self.statusMenu.addAction(self.getIcon(status="online",size="16x16"),self.status["online"])
+		action.setData(QtCore.QVariant("online"))
+		action=self.statusMenu.addAction(self.getIcon(status="chat",size="16x16"),self.status["chat"])
+		action.setData(QtCore.QVariant("chat"))
+		action=self.statusMenu.addAction(self.getIcon(status="away",size="16x16"),self.status["away"])
+		action.setData(QtCore.QVariant("away"))
+		action=self.statusMenu.addAction(self.getIcon(status="xa",size="16x16"),self.status["xa"])
+		action.setData(QtCore.QVariant("xa"))
+		action=self.statusMenu.addAction(self.getIcon(status="dnd",size="16x16"),self.status["dnd"])
+		action.setData(QtCore.QVariant("dnd"))
+		action=self.statusMenu.addAction(self.getIcon(status="offline",size="16x16"),self.status["offline"])
+		action.setData(QtCore.QVariant("offline"))
+		self.ui.statusButton.setMenu(self.statusMenu)
+		app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
 
 	def copyPlugins(self):
 		plugins=os.listdir("plugins/")
@@ -1331,7 +1367,9 @@ class mainWindow(QtGui.QMainWindow):
 		data=action.data()
 		data=data.toString()
 		setstatus=statusWindow(data)
-		if setstatus.exec_()==1:
+		#if len(data.split("/"))==2:
+			#data=unicode(data.split("/")[1])
+		if setstatus.exec_()==1 and len(data.split("/"))==1:
 			self.ui.statusButton.setText(unicode(""))
 			self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
 
@@ -1538,6 +1576,11 @@ class statusWindow(QtGui.QDialog):
 			#reactor.stop2()
 			pass
 		else:
+			jid=None
+			if len(self.data.split("/"))==2:
+				jid=unicode(self.data.split("/")[0])
+				self.data=unicode(self.data.split("/")[1])
+
 			#app.postEvent(jab,customEvent(["set_status",self.groupchat,self.data,unicode(self.ui.status.toPlainText ())]))
 			#jab.setStatus(MainWindow.groupchat,self.data,unicode(self.ui.status.toPlainText ()))
 			if MainWindow.config.has_key('autoPriority'):
@@ -1554,11 +1597,20 @@ class statusWindow(QtGui.QDialog):
 						pri=MainWindow.config['priority']
 				else:
 					pri="0"
-			MainWindow.ui.selfStatus.setText(unicode(self.ui.status.toPlainText()).replace("\n"," ")[:25]+" ...")
-			MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()),priority=pri)
+			if not jid:
+				MainWindow.ui.selfStatus.setText(unicode(self.ui.status.toPlainText()).replace("\n"," ")[:25]+" ...")
+			if jid:
+				#typ="available"
+				#if self.data=="offline":
+					#typ="unavailable"
+				print self.data
+				MainWindow.client.sendPresence(to=jid,show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()),priority=pri)
+			else:
+				MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()),priority=pri)
 			#musime updatovat MUCy
-			for muc in MainWindow.client.groupchats.itervalues():
-				MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()), to = '%s/%s'%(muc.jid, muc.nick))
+			if not jid:
+				for muc in MainWindow.client.groupchats.itervalues():
+					MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()), to = '%s/%s'%(muc.jid, muc.nick))
 		self.done(1)
 
 class scrollBar(QtGui.QScrollArea):
