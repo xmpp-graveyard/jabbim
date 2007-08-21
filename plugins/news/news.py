@@ -1,3 +1,4 @@
+# -*- coding: utf8 -*-
 import sys,os,time
 sys.path.append('.')
 from include import plugins
@@ -13,9 +14,9 @@ class Plugin(plugins.PluginBase):
 		plugins.PluginBase.__init__(self, main, homedir)
 		self.fname = 'news'
 		self.description = 'Headlines window'
-		self.author = "Jiri 'Sef' Gabrys"
+		self.author = u"Jiří 'Sef' Gabryš"
 		self.name = 'News Plugin'
-		self.version = '0.038'
+		self.version = '0.039'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.kontakty = {} # jid:contact
