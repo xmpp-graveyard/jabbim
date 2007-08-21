@@ -149,6 +149,25 @@ class clientClass(pyxl.client.Client):
 				self.main.hosts[jid]=typ
 				if self.main.transports.has_key(jid):
 					self.main.transports[jid]=typ
+					self.menus=[]
+					for jid,typ in self.main.transports.iteritems():
+						menu=QtGui.QMenu(unicode(jid),self.main.statusMenu)
+						menu.setIcon(self.main.getIcon("jid@"+unicode(jid),status="offline",size="16x16"))
+						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="online",size="16x16"),self.main.status["online"])
+						action.setData(QtCore.QVariant(jid+"/online"))
+						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="chat",size="16x16"),self.main.status["chat"])
+						action.setData(QtCore.QVariant(jid+"/chat"))
+						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="away",size="16x16"),self.main.status["away"])
+						action.setData(QtCore.QVariant(jid+"/away"))
+						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="xa",size="16x16"),self.main.status["xa"])
+						action.setData(QtCore.QVariant(jid+"/xa"))
+						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="dnd",size="16x16"),self.main.status["dnd"])
+						action.setData(QtCore.QVariant(jid+"/dnd"))
+						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="offline",size="16x16"),self.main.status["offline"])
+						action.setData(QtCore.QVariant(jid+"/offline"))
+						#app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.main.statusChanged)
+						self.menus.append(menu)
+					self.main.buildStatusMenu(self.menus)
 		# set icons for users with this host
 		for item in self.main.ui.roster.getHostItems("@"+jid):
 			show=unicode(item.text(1))[0]
@@ -202,24 +221,24 @@ class clientClass(pyxl.client.Client):
 		# HACK KVULI ICQ A AUTOMATICKEMU PRIHLASENI K NEMU:
 		#self.sendPresence("icq.jabbim.cz",show='available', status = "")
 
-		menus=[]
+		self.menus=[]
 		for jid,typ in self.main.transports.iteritems():
 			menu=QtGui.QMenu(unicode(jid),self.main.statusMenu)
-			action=menu.addAction(self.main.getIcon(status="online",size="16x16"),self.main.status["online"])
+			action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="online",size="16x16"),self.main.status["online"])
 			action.setData(QtCore.QVariant(jid+"/online"))
-			action=menu.addAction(self.main.getIcon(status="chat",size="16x16"),self.main.status["chat"])
+			action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="chat",size="16x16"),self.main.status["chat"])
 			action.setData(QtCore.QVariant(jid+"/chat"))
-			action=menu.addAction(self.main.getIcon(status="away",size="16x16"),self.main.status["away"])
+			action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="away",size="16x16"),self.main.status["away"])
 			action.setData(QtCore.QVariant(jid+"/away"))
-			action=menu.addAction(self.main.getIcon(status="xa",size="16x16"),self.main.status["xa"])
+			action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="xa",size="16x16"),self.main.status["xa"])
 			action.setData(QtCore.QVariant(jid+"/xa"))
-			action=menu.addAction(self.main.getIcon(status="dnd",size="16x16"),self.main.status["dnd"])
+			action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="dnd",size="16x16"),self.main.status["dnd"])
 			action.setData(QtCore.QVariant(jid+"/dnd"))
 			action=menu.addAction(self.main.getIcon(status="offline",size="16x16"),self.main.status["offline"])
 			action.setData(QtCore.QVariant(jid+"/offline"))
 			#app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.main.statusChanged)
-			menus.append(menu)
-		self.main.buildStatusMenu(menus)
+			self.menus.append(menu)
+		self.main.buildStatusMenu(self.menus)
 		
 		
 		
@@ -1372,6 +1391,11 @@ class mainWindow(QtGui.QMainWindow):
 		if setstatus.exec_()==1 and len(data.split("/"))==1:
 			self.ui.statusButton.setText(unicode(""))
 			self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
+		else:
+			for menu in self.client.menus:
+				if unicode(menu.title())==unicode(data.split("/")[0]):
+					menu.setIcon(self.getIcon("jid@"+unicode(data.split("/")[0]),status=unicode(data.split("/")[1]),size="16x16"))
+					break
 
 	def loadRoster(self):
 		# load roster widget
