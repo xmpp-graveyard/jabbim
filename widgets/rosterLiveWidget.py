@@ -246,17 +246,18 @@ class rosterWidget(QtGui.QWidget):
 		item,x,y=self.itemAt(int(event.x()),int(event.y()),1)
 		if item:
 			if event.buttons()==QtCore.Qt.NoButton:
-				if self.item==item[0]:
-					if event.x()>self.width()-32 and int(event.y())<y+32 and int(event.y())>y:
-						self.bigAvatar=True
-						if self.statusLabel:
-							self.statusLabel.resize(self.width()-96,64)
-						self.repaint()
-					else:
-						self.bigAvatar=False
-						if self.statusLabel:
-							self.statusLabel.resize(self.width(),64)
-						self.repaint()
+				pass
+				#if self.item==item[0]:
+					#if event.x()>self.width()-32 and int(event.y())<y+32 and int(event.y())>y:
+						#self.bigAvatar=True
+						#if self.statusLabel:
+							#self.statusLabel.resize(self.width()-96,64)
+						#self.repaint()
+					#else:
+						#self.bigAvatar=False
+						#if self.statusLabel:
+							#self.statusLabel.resize(self.width(),64)
+						#self.repaint()
 			else:
 				if item[0].typ=='user':
 					mimeData = QtCore.QMimeData()
@@ -763,7 +764,6 @@ class rosterWidget(QtGui.QWidget):
 
 	def dropEvent(self, event):
 		self.scrollUp=None
-
 		if (event.mimeData().hasUrls()):
 			urlList=event.mimeData().urls()
 			if len(urlList)>0:
