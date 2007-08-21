@@ -90,8 +90,8 @@ class chatWindow(QtGui.QMainWindow):
 			#icon=self.main.getIcon(jid,show,size="16x16")
 		#else:
 		if typ=="chat":
-			icon=self.main.getIcon(jid,self.main.icons[unicode(self.main.ui.roster.getUserItems(jid)[0].status)],size="16x16")
-			self.ui.chatTab.setTabIcon(index,icon)
+			#icon=self.main.getIcon(jid,self.main.icons[unicode(self.main.ui.roster.getUserItems(jid)[0].status)],size="16x16")
+			self.ui.chatTab.setTabIcon(index,self.ui.chatTab.widget(index).ic)
 		elif typ == 'groupchat':
 			self.ui.chatTab.setTabIcon(index,QtGui.QIcon("images/16x16/categories/muc.png"))
 			
@@ -136,6 +136,7 @@ class chatWindow(QtGui.QMainWindow):
 		tab=QtGui.QWidget(self.ui.chatTab)
 		tab.jid=jid
 		tab.typ="chat"
+		tab.ic=icon
 		layout=QtGui.QHBoxLayout(tab)
 		layout.setMargin(1)
 		layout.setSpacing(1)
