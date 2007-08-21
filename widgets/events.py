@@ -153,9 +153,9 @@ class lineEditWidget(QtGui.QWidget):
 
 
 		self.gridlayout1.addLayout(self.hboxlayout,0,0,1,1)
-		self.gridlayout1.addWidget(self.label_3,1,0,1,2)
+		self.gridlayout1.addWidget(self.label_3,2,0,1,2)
 
-		self.gridlayout1.addLayout(self.layout2,2,0,1,2)
+		self.gridlayout1.addLayout(self.layout2,1,0,1,2)
 		self.gridlayout.addLayout(self.gridlayout1,0,0,1,1)
 		self.gridlayout.setMargin(1)
 		self.gridlayout.setSpacing(0)
