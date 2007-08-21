@@ -582,7 +582,7 @@ class Client(derived):
 		self.dispatcher.publishEvent('first presence')
 	
 	def onPresence(self, el):
-		log.msg('presence > ')
+		#log.msg('presence > ')
 		frm = jid.JID(el['from'])
 		fromjid = frm.userhost()
 		resource = jid.JID(el['from']).resource

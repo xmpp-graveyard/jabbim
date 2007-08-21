@@ -395,8 +395,8 @@ class clientClass(pyxl.client.Client):
 	
 	def on_firstpresence(self,  bulk):
 		# process all first presences at once
-		log.msg(unicode(bulk))
-		print "PRESENCESSSSSS"
+		#log.msg(unicode(bulk))
+		#print "PRESENCESSSSSS"
 		for presence in bulk:
 			#print presence
 			jid=presence[0]
@@ -439,7 +439,7 @@ class clientClass(pyxl.client.Client):
 
 	def on_presence(self,jid,show,first=False):
 		# normal presence handler
-		log.msg("PRESENCE "+unicode(jid.full())+" "+unicode(show))
+		#log.msg("PRESENCE "+unicode(jid.full())+" "+unicode(show))
 		if show=="offline":
 			jid=jid.full() # get jid
 			# presence has resource
