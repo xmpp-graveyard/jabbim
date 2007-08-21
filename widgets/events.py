@@ -334,7 +334,7 @@ class events:
 		widget=item.widget
 		if widget.action!=None:
 			widget.action(*widget.actionDict)
-			widget.submitClicked()
+		widget.submitClicked()
 
 	def timeout(self):
 		if self.jabbimIcon:
