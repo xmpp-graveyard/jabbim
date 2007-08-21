@@ -769,7 +769,9 @@ class rosterWidget(QtGui.QWidget):
 			if len(urlList)>0:
 				new=[]
 				for url in urlList:
-					new.append(unicode(url.toLocalFile()))
+					f=unicode(url.toLocalFile())
+					if len(f)!=0:
+						new.append(f)
 				file=new
 				print file
 				position = event.pos()
