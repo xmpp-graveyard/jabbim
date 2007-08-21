@@ -736,7 +736,7 @@ class rosterWidget(QtGui.QWidget):
 
 	def dragEnterEvent(self, event):
 		#log.msg('DRAG ENTER')
-		if event.mimeData().hasText() or event.mimeData.hasFormat("text/uri-list"):
+		if event.mimeData().hasText() or event.mimeData().hasFormat("text/uri-list"):
 			event.acceptProposedAction()
 		else:
 			event.ignore()
