@@ -189,6 +189,7 @@ class clientClass(pyxl.client.Client):
 			user.setIcon(0,self.main.getIcon(size="16x16"))
 
 	def on_rosterArrived(self):
+		self.main.ui.roster.repaint()
 		self.main.ui.roster.sortItems()
 		self.main.buildBookmarks() # build Bookmarks tab
 		self.main.autoJoinGroupchat()
@@ -358,6 +359,7 @@ class clientClass(pyxl.client.Client):
 		self.main.rosterHideOffline(True)
 		self.main.ui.roster.refreshStats()
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
+		self.main.ui.roster.repaint()
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
 		# presence in groupchat
@@ -641,7 +643,7 @@ class clientClass(pyxl.client.Client):
 					traytext=body[:40]+" ..."
 			else:
 					traytext=body
-			self.main.tray.showMessage(self.main.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 0)
+			self.main.tray.showMessage(self.main.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
 
 	def on_vcardReceived(self,  jid, card):
 		#print card

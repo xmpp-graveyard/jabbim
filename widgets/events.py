@@ -52,11 +52,13 @@ class abstractWidget(QtGui.QWidget):
 	
 		self.label = QtGui.QLabel(header,self)
 		self.label.setObjectName("label")
+		self.label.setAutoFillBackground(False)
 		self.hboxlayout.addWidget(self.label)
 	
 		self.label_2 = QtGui.QLabel(text,self)
 		self.label_2.setTextFormat(QtCore.Qt.RichText)
 		self.label_2.setObjectName("label_2")
+		self.label_2.setAutoFillBackground(False)
 		#self.hboxlayout.addWidget(self.label_2)
 
 		#spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
@@ -326,6 +328,13 @@ class events:
 		self.jabbimIcon=True
 		self.timer=QtCore.QTimer()
 		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.timeout)
+		QtCore.QObject.connect(self.main.ui.eventsListWidget, QtCore.SIGNAL("itemDoubleClicked ( QListWidgetItem * )"),self.itemClicked)
+
+	def itemClicked(self,item):
+		widget=item.widget
+		if widget.action!=None:
+			widget.action(*widget.actionDict)
+			widget.submitClicked()
 
 	def timeout(self):
 		if self.jabbimIcon:

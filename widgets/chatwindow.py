@@ -100,6 +100,13 @@ class chatWindow(QtGui.QMainWindow):
 		
 		self.setWindowTitle(self.ui.chatTab.tabText(index))
 
+		widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
+		for event in self.main.events.events:
+			if event['name']==widget.jid and event['type']=="newMessage":
+				event['widget'].closeClicked()
+				break
+		self.main.events.refreshTray()
+
 		#except:
 			#pass
 
