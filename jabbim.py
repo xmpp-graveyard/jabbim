@@ -649,6 +649,7 @@ class clientClass(pyxl.client.Client):
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None):
 		# handle normal 'chat' messages
 		# get user icon or name, if we have him in roster. Or use default icon and jid as name
+		log.msg("CHATSTATE:"+unicode(chatstate))
 		user=self.main.ui.roster.getUserItems(unicode(frm).rsplit("/")[0])
 		if len(user)!=0:
 			#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
@@ -889,6 +890,10 @@ class mainWindow(QtGui.QMainWindow):
 		if self.config['autoJoin']=='True':
 			self.connect()
 
+
+	#def mouseMoveEvent(self,event):
+		#self.client.dispatcher.publishEvent('on_userActivity',"mouseMove")
+		#return QtGui.QMainWindow.mouseMoveEvent(self,event)
 
 	#def addInfoSubscribe(self):
 		#widget=subscribeWidget(self.ui.infoDockWidget)

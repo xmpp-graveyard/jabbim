@@ -13,7 +13,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'System tray and sound notification'
 		self.author = "Jan 'HanzZ' Kaluza & Josef 'PepeQ' Halicek"
 		self.name = 'Notification Plugin'
-		self.version = '0.552'
+		self.version = '0.553'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}
@@ -58,6 +58,9 @@ class Plugin(plugins.PluginBase):
 			if self.sounds.has_key(action): # if exist the action file
 				if sys.platform == 'linux2': # linux sounds are produced using aplay
 					os.system('aplay -q '+self.soundDir+self.sounds[action].strip('\n')+' &')
+				else:
+					sound=QtGui.QSound(self.soundDir+self.sounds[action].strip('\n'))
+					sound.play()
 
 	def buildRosterMenu(self):
 		menu=self.rosterMenu()
