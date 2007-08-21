@@ -20,7 +20,7 @@ import sys, time, random
 import socks5, events
 from twisted import names
 from twisted.python import log
-from twisted.internet import protocol
+from twisted.internet import protocol, error
 from twisted.names import client as dns
 
 from twisted.words.protocols import jabber
@@ -151,8 +151,8 @@ class Client(derived):
 	
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
-		print reason
 		self.main._disconnect(error = 'lost')
+
 		self.on_disconnect()
 	
 	def connectionFailed(self, connector, reason=protocol.connectionDone):
@@ -161,8 +161,7 @@ class Client(derived):
 		self.on_disconnect()
 
 	def _streamEnd(self, el):
-		print 'end'
-		print dir(el)
+		pass
 		
 	def _bind(self, el):
 		#experimental

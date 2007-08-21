@@ -391,7 +391,7 @@ class clientClass(pyxl.client.Client):
 	def on_authFailed(self,xmlstream):
 		# Authentication error
 		self.main.ui.login_connect.setEnabled(True)
-		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(self.main.tr("Bad Jabber ID or password.")),0,1)
+# 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(self.main.tr("Bad Jabber ID or password.")),0,1)
 	
 	def on_firstpresence(self,  bulk):
 		# process all first presences at once
@@ -885,7 +885,7 @@ class mainWindow(QtGui.QMainWindow):
 		
 		self.ui.groupStyleWidget.hide()
 		self.ui.userStyleWidget.hide()
-		
+		self.reconnect = True # pri unavailable tady dame False
 		if self.config['autoJoin']=='True':
 			self.connect()
 
@@ -1489,6 +1489,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.client.log=True
 		self.loadPlugins()
 		self.ui.login_connect.setEnabled(False)
+		self.reconnect = True
 		self.client.connect()
 	
 	def _loadAvatar(self,file, hash, jid):
@@ -1518,12 +1519,12 @@ class mainWindow(QtGui.QMainWindow):
 			QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Bad Jabber ID or password.")),0,1)
 		elif error=="dns":
 			QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Server is not found.")),0,1)
-		elif error == 'lost':
+		elif error == 'lost' and MainWindow.reconnect:
 			# connection lost, let's wait for a while and then reconnect
 
 			MainWindow.plugins=[]
 			MainWindow.client = None
-			log.err('Connection Lost')
+# 			log.err('Connection Lost')
 			reactor.callLater(3, MainWindow.connect)
 		
 		#MainWindow.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
@@ -1590,6 +1591,7 @@ class statusWindow(QtGui.QDialog):
 			#	prior=1
 			MainWindow.client.sendPresence(typ = "unavailable", status = unicode(self.ui.status.toPlainText ()))
 			MainWindow.client.factory.stopTrying()
+			MainWindow.reconnect = False
 			#MainWindow.client.disconnect()
 			MainWindow.client.disconnect()
 			del MainWindow.client
