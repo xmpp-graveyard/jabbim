@@ -142,6 +142,7 @@ class Client(derived):
 ##		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
 		self.factory.addBootstrap("//event/xmpp/initfailed", self._authfailed)
 		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
+		self.factory.addBootstrap('//event/stream/error', self._streamEnd)
 		self.factory.addBootstrap("/*", self.logIt)
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
@@ -150,6 +151,7 @@ class Client(derived):
 	
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
+		print reason
 		self.main._disconnect(error = 'lost')
 		self.on_disconnect()
 	
@@ -158,6 +160,9 @@ class Client(derived):
 		self.main._disconnect(error = 'failed')
 		self.on_disconnect()
 
+	def _streamEnd(self, el):
+		print 'end'
+		print dir(el)
 		
 	def _bind(self, el):
 		#experimental

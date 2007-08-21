@@ -1456,6 +1456,13 @@ class mainWindow(QtGui.QMainWindow):
 			QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Bad Jabber ID or password.")),0,1)
 		elif error=="dns":
 			QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Server is not found.")),0,1)
+		elif error == 'lost':
+			# connection lost, let's wait for a while and then reconnect
+
+			MainWindow.plugins=[]
+			MainWindow.client = None
+			log.err('Connection Lost')
+			reactor.callLater(3, MainWindow.connect)
 		
 		#MainWindow.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
 		MainWindow.ui.statusButton.setIcon(MainWindow.getIcon("offline",size="16x16"))
