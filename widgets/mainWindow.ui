@@ -479,8 +479,15 @@ p, li { white-space: pre-wrap; }
     <addaction name="separator" />
     <addaction name="actionQuit" />
    </widget>
+   <widget class="QMenu" name="menuHelp" >
+    <property name="title" >
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout" />
+   </widget>
    <addaction name="menuAkce" />
    <addaction name="menuPlugins" />
+   <addaction name="menuHelp" />
   </widget>
   <action name="actionShow_XML" >
    <property name="text" >
@@ -505,6 +512,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionAdd_Contact" >
    <property name="text" >
     <string>Add Contact</string>
+   </property>
+  </action>
+  <action name="actionAbout" >
+   <property name="text" >
+    <string>About</string>
    </property>
   </action>
  </widget>

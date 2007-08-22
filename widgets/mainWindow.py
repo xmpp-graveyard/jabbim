@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sun Aug 12 16:35:19 2007
+# Created: Wed Aug 22 06:59:59 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -246,6 +246,9 @@ class Ui_MainWindow(object):
 
         self.menuAkce = QtGui.QMenu(self.menubar)
         self.menuAkce.setObjectName("menuAkce")
+
+        self.menuHelp = QtGui.QMenu(self.menubar)
+        self.menuHelp.setObjectName("menuHelp")
         MainWindow.setMenuBar(self.menubar)
 
         self.actionShow_XML = QtGui.QAction(MainWindow)
@@ -262,6 +265,9 @@ class Ui_MainWindow(object):
 
         self.actionAdd_Contact = QtGui.QAction(MainWindow)
         self.actionAdd_Contact.setObjectName("actionAdd_Contact")
+
+        self.actionAbout = QtGui.QAction(MainWindow)
+        self.actionAbout.setObjectName("actionAbout")
         self.menuAkce.addAction(self.actionJoin_Groupchat)
         self.menuAkce.addAction(self.actionAdd_Contact)
         self.menuAkce.addAction(self.actionShow_XML)
@@ -269,8 +275,10 @@ class Ui_MainWindow(object):
         self.menuAkce.addAction(self.actionPreferences)
         self.menuAkce.addSeparator()
         self.menuAkce.addAction(self.actionQuit)
+        self.menuHelp.addAction(self.actionAbout)
         self.menubar.addAction(self.menuAkce.menuAction())
         self.menubar.addAction(self.menuPlugins.menuAction())
+        self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
         self.rosterStackedWidget.setCurrentIndex(1)
@@ -305,9 +313,11 @@ class Ui_MainWindow(object):
         self.showOffline.setToolTip(QtGui.QApplication.translate("MainWindow", "You can show/hide contats that are unavailable", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPlugins.setTitle(QtGui.QApplication.translate("MainWindow", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAkce.setTitle(QtGui.QApplication.translate("MainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
         self.actionShow_XML.setText(QtGui.QApplication.translate("MainWindow", "Show XML", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setText(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.actionJoin_Groupchat.setText(QtGui.QApplication.translate("MainWindow", "Join Groupchat", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAdd_Contact.setText(QtGui.QApplication.translate("MainWindow", "Add Contact", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "About", None, QtGui.QApplication.UnicodeUTF8))
 

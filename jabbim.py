@@ -818,6 +818,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.login_connect, QtCore.SIGNAL("clicked()"),self.connect)
 		#app.connect(app,QtCore.SIGNAL("lastWindowClosed() "),self.disconnect)
 		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
+		app.connect(self.ui.actionAbout, QtCore.SIGNAL("triggered ( bool )"),self.about)
 		app.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
 		app.connect(self.ui.actionAdd_Contact, QtCore.SIGNAL("triggered ( bool )"),self.addContactMainWindow)
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
@@ -903,6 +904,10 @@ class mainWindow(QtGui.QMainWindow):
 		#self.setUpdatesEnabled(False)
 		#QtGui.QMainWindow(self).resizeEvent(event)
 		#self.setUpdatesEnabled(True)
+
+	def about(self,bool):
+		about=aboutDialog(self)
+		about.exec_()
 
 	def buildStatusMenu(self,menus=[]):
 		# Status menu
@@ -1647,6 +1652,13 @@ class statusWindow(QtGui.QDialog):
 					MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()), to = '%s/%s'%(muc.jid, muc.nick))
 		self.done(1)
 
+class aboutDialog(QtGui.QDialog):
+	def __init__(self,parent):
+		QtGui.QDialog.__init__(self,None)
+		self.setModal(True)
+		self.ui=widgets.about.Ui_about_window()
+		self.ui.setupUi(self)
+		
 class scrollBar(QtGui.QScrollArea):
 	def __init__(self,parent=None):
 		QtGui.QScrollArea.__init__(self,parent)
