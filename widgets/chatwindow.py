@@ -202,6 +202,8 @@ class chatWindow(QtGui.QMainWindow):
 				self.main.client.leaveGC(w.jid)
 				#self.jab.getOffRoom(str(w.jid),self.main.groupchat[str(w.jid)][0])
 			self.ui.chatTab.removeTab(0)
+		self.hide()
+		e.ignore()
 
 	def removeTab(self):
 		w=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
@@ -210,4 +212,4 @@ class chatWindow(QtGui.QMainWindow):
 			self.main.client.leaveGC(w.jid)
 		self.ui.chatTab.removeTab(self.ui.chatTab.currentIndex())
 		if int(self.ui.chatTab.count())==0:
-			self.close()
+			self.hide()

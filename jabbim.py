@@ -816,7 +816,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		# mainwindows signals
 		app.connect(self.ui.login_connect, QtCore.SIGNAL("clicked()"),self.connect)
-		app.connect(app,QtCore.SIGNAL("lastWindowClosed() "),self.disconnect)
+		#app.connect(app,QtCore.SIGNAL("lastWindowClosed() "),self.disconnect)
 		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
 		app.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
 		app.connect(self.ui.actionAdd_Contact, QtCore.SIGNAL("triggered ( bool )"),self.addContactMainWindow)
@@ -1108,6 +1108,7 @@ class mainWindow(QtGui.QMainWindow):
 		if len(self.client.ft)==0 and halt:
 			log.msg("STOPPING TIMER")
 			self.filetransferTimer.stop()
+
 	def closeEvent(self,event):
 		self.hide()
 		event.ignore()
@@ -1140,7 +1141,8 @@ class mainWindow(QtGui.QMainWindow):
 
 		self.tray.hide()
 		app.closeAllWindows()
-		self.disconnect()
+		#self.disconnect()
+		reactor.stop2()
 		#sys.exit(0)
 
 	def trayActivated(self,reason=QtGui.QSystemTrayIcon.Trigger):
@@ -1598,7 +1600,8 @@ class statusWindow(QtGui.QDialog):
 			MainWindow.client.factory.stopTrying()
 			MainWindow.reconnect = False
 			#MainWindow.client.disconnect()
-			MainWindow.client.disconnect()
+			#MainWindow.client.disconnect()
+			reactor.stop2()
 			del MainWindow.client
 			MainWindow.client = None
 			MainWindow._disconnect()

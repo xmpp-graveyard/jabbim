@@ -287,6 +287,10 @@ class groupChatWidget(QtGui.QWidget):
 			cursor.endEditBlock()
 			if toEnd:
 				self.ui.textEdit.verticalScrollBar().setValue(self.ui.textEdit.verticalScrollBar().maximum())
+			#f=open("test.html","w")
+			#self.main.xmlConsole.ui.xml.append(f.write(unicode(self.ui.textEdit.toHtml()))+"\n\n")
+			
+			#f.close()
 		#else:
 			#self.cache['actual']+=text
 
