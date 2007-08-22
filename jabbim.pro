@@ -16,7 +16,8 @@ widgets/status.py \
 widgets/subscription.py \
 widgets/tooltip_ui.py \
 widgets/waitdialog.py \
-widgets/xmlConsole.py
+widgets/xmlConsole.py \
+widgets/about.py
 
 TRANSLATIONS    = locales/jabbim_cs.ts \
 				locales/jabbim_en.ts \
