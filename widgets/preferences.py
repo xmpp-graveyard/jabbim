@@ -173,6 +173,7 @@ class preferencesWindow(QtGui.QDialog):
 
 		# Plugins
 		#self.ui.plugins.header().hide()
+		QtCore.QObject.connect(self.ui.pluginConfiguration, QtCore.SIGNAL("clicked()"),self.pluginConfigurationClicked)
 		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.pluginsContextMenu)
 		self.main.copyPlugins()
 		plugins=os.listdir("plugins/")
@@ -215,6 +216,15 @@ class preferencesWindow(QtGui.QDialog):
 		# set menu position and show
 		menu.move(self.ui.plugins.mapToGlobal(pos))
 		menu.show()
+
+	def pluginConfigurationClicked(self):
+		item=self.ui.plugins.currentItem()
+		data=item.data(32,0)
+		name=unicode(data.toString())
+		plugin=self.plugins[name]
+		dialog=pluginConfiguration(self.plugins[name],self.ui.plugins)
+		dialog.exec_()
+		self.main.plugins[name].config=self.plugins[name].config
 
 	def pluginsContextMenuTriggered(self,action):
 		cmd=action.objectName()
