@@ -354,7 +354,8 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="" line="138703016"/>
         <source>We thank all testers and bug reporters!</source>
-        <translation>Všem testujícím uživatelům a všem, kdo nahlásí nalezené chyby!</translation>
+        <translation>Všem testujícím uživatelům a všem,
+kdo nahlásí nalezené chyby!</translation>
     </message>
     <message>
         <location filename="" line="138703016"/>
