@@ -67,10 +67,12 @@ class chatWindow(QtGui.QMainWindow):
 		# WindowActivated
 		if int(ev.type())==24:
 			widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
-			for event in self.main.events.events:
-				if event['name']==widget.jid and event['type']=="newMessage":
+			#print self.main.events.events
+			ev2=list(self.main.events.events)
+			for event in ev2:
+				if event['name']==widget.jid and (event['type']=="newMessage" or event['type']=="message"):
 					event['widget'].closeClicked()
-					break
+					#break
 			self.main.events.refreshTray()
 		return QtGui.QMainWindow.event(self,ev)
 
@@ -101,23 +103,44 @@ class chatWindow(QtGui.QMainWindow):
 		self.setWindowTitle(self.ui.chatTab.tabText(index))
 
 		widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
-		for event in self.main.events.events:
-			if event['name']==widget.jid and event['type']=="newMessage":
+		
+		ev=list(self.main.events.events)
+		for event in ev:
+			if event['name']==widget.jid and (event['type']=="newMessage" or event['type']=="message"):
 				event['widget'].closeClicked()
-				break
-		self.main.events.refreshTray()
+				#break
+				self.main.events.refreshTray()
 
 		#except:
 			#pass
 
-	def activate(self):
+	def activate(self,jid=None):
 		print "activate"
 		self.show()
+		self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
 		self.raise_()
 		self.activateWindow()
-		self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
-		tab=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
-		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		if jid:
+			frm=jid
+			tab=None
+			tabIndex=0
+			for i in range(self.main.chat.ui.chatTab.count()):
+				w=self.main.chat.ui.chatTab.widget(i)
+				if unicode(w.jid)==unicode(frm):
+					tab=w
+					tabIndex=i
+					break
+				if unicode(w.jid).rsplit("/")[0]==unicode(frm).rsplit("/")[0]:
+					tab=w
+					tabIndex=i
+			# we found tab
+			if tab!=None:
+				self.ui.chatTab.setCurrentWidget(tab)
+				#self.changeTab()
+				return
+					
+		#tab=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
+		#tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def addChatTab(self,jid,name,icon,message=None):
 		for i in range(self.ui.chatTab.count()):
@@ -126,7 +149,7 @@ class chatWindow(QtGui.QMainWindow):
 				tabjid=w.jid
 			except:
 				tabjid=""
-			if w.jid==jid:
+			if tabjid==jid:
 				self.show()
 				self.raise_()
 				self.activateWindow()

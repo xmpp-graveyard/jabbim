@@ -710,7 +710,11 @@ class rosterWidget(QtGui.QWidget):
 			self.setSize()
 			self.repaint()
 		else:
-			self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+			res = self.main.client.roster['users'][item.jid].getHighestResource()
+			if res==None:
+				self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+			else:
+				self.main.chat.addChatTab(item.jid+"/"+res,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			self.main.chat.activate()
 
 	def keyPressEvent(self,event):

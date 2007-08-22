@@ -348,6 +348,7 @@ class events:
 			widget=self.events[0]['widget']
 			if widget.action!=None:
 				widget.action(*widget.actionDict)
+				widget.submitClicked()
 				return True
 		return False
 

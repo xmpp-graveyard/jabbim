@@ -682,11 +682,14 @@ class clientClass(pyxl.client.Client):
 			if int(self.main.chat.ui.chatTab.currentIndex())!=tabIndex:
 				self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
 				self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
+				self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm),typ='message',icon="images/16x16/actions/message.png",action=self.main.chat.activate,actionDict=[frm])
+			elif not self.main.chat.isActiveWindow():
+				self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm),typ='message',icon="images/16x16/actions/message.png",action=self.main.chat.activate,actionDict=[frm])
 			tab.chat.textEditWrite(message)
 		else:
 			# add new chattab
 			self.main.chat.addChatTab(frm,unicode(user),icon,message)
-			self.main.events.addInfoEvent(header=self.main.tr("New message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm),typ='newMessage',icon="images/16x16/actions/message.png",action=self.main.chat.activate,actionDict=[])
+			self.main.events.addInfoEvent(header=self.main.tr("New message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm),typ='message',icon="images/16x16/actions/message.png",action=self.main.chat.activate,actionDict=[])
 			if len(body)>40:
 					traytext=body[:40]+" ..."
 			else:
