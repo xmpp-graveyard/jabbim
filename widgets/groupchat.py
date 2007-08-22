@@ -102,7 +102,9 @@ class groupChatWidget(QtGui.QWidget):
 		l=QtGui.QHBoxLayout(self.ui.viewWidget)
 		l.setMargin(0)
 		l.setSpacing(0)
-		self.ui.textEdit=textView(self.ui.viewWidget)
+		#self.ui.textEdit=textView(self.ui.viewWidget)
+		self.ui.textEdit=QtGui.QTextBrowser(self.ui.viewWidget)
+		self.ui.textEdit.setReadOnly(False)
 		l.addWidget(self.ui.textEdit)
 
 		layout=QtGui.QHBoxLayout(self.ui.lineWidget)
