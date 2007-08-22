@@ -207,18 +207,21 @@ class rosterWidget(QtGui.QWidget):
 		self.data={}
 		self.metaItems={}
 		
-		self.colors=QtGui.QTreeWidget()
+		self.colors=QtGui.QTreeWidget(self.main)
 		self.colors.hide()
 		self.colors.setObjectName("rosterView")
-		self.palette().setColor(QtGui.QPalette.Window,self.palette().color(QtGui.QPalette.Base))
 
-		self.palette=self.colors.palette()
-
+		self.palet=self.colors.palette()
+		self.reskin()
 
 		#QtCore.QObject.connect(self.main.scroll, QtCore.SIGNAL("sliderMoved(int)"),self.slider)
 
 	#def slider(self,y):
 		#pass
+
+	def reskin(self):
+		self.palette().setColor(QtGui.QPalette.Window,self.palet.color(QtGui.QPalette.Base))
+		self.repaint()
 
 	def sortItems(self,column=None,typ=None):
 		self.sortedGroups=self.groups.keys()
@@ -342,13 +345,13 @@ class rosterWidget(QtGui.QWidget):
 		#else:
 		painter.save()
 		painter.translate(x,y)
-		painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palette.color(QtGui.QPalette.Base)))
+		painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
 		painter.restore()
 		
 		b=painter.brush()
 		p=painter.pen()
-		painter.setBrush(self.palette.color(QtGui.QPalette.AlternateBase))
-		painter.setPen(self.palette.color(QtGui.QPalette.AlternateBase))
+		painter.setBrush(self.palet.color(QtGui.QPalette.AlternateBase))
+		painter.setPen(self.palet.color(QtGui.QPalette.AlternateBase))
 		painter.save()
 		painter.translate(x,y)
 
@@ -372,7 +375,7 @@ class rosterWidget(QtGui.QWidget):
 		painter.setPen(p)
 
 		p=painter.pen()
-		painter.setPen(self.palette.color(QtGui.QPalette.Text))
+		painter.setPen(self.palet.color(QtGui.QPalette.Text))
 
 		painter.save()
 		painter.translate(x,y+13)
@@ -387,7 +390,7 @@ class rosterWidget(QtGui.QWidget):
 		if item.icon:
 			painter.drawPixmap(x,y+4,item.icon.pixmap(32,32))
 		
-		doc.setHtml("<font color=\""+self.palette.color(QtGui.QPalette.Text).name()+"\">"+item.name+"</font>")
+		doc.setHtml("<font color=\""+self.palet.color(QtGui.QPalette.Text).name()+"\">"+item.name+"</font>")
 		
 		painter.save()
 		painter.translate(x+30,y+10)
@@ -403,7 +406,7 @@ class rosterWidget(QtGui.QWidget):
 		if useritem==self.item:
 			painter.save()
 			painter.translate(x,y)
-			painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palette.color(QtGui.QPalette.Base)))
+			painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
 			painter.restore()
 			#painter.save()
 			#painter.translate(x,y)
@@ -415,10 +418,10 @@ class rosterWidget(QtGui.QWidget):
 			#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(palette.color(QtGui.QPalette.Highlight)))
 			#painter.restore()
 			p=painter.pen()
-			painter.setPen(self.palette.color(QtGui.QPalette.AlternateBase))
+			painter.setPen(self.palet.color(QtGui.QPalette.AlternateBase))
 			painter.save()
 			painter.translate(x,y)
-			painter.fillRect(3,0,self.width()-3,96,QtGui.QBrush(self.palette.color(QtGui.QPalette.Highlight)))
+			painter.fillRect(3,0,self.width()-3,96,QtGui.QBrush(self.palet.color(QtGui.QPalette.Highlight)))
 
 			painter.drawLine(2,0,2,96)
 			painter.drawLine(self.width()-2,0,self.width()-2,96)
@@ -454,7 +457,7 @@ class rosterWidget(QtGui.QWidget):
 				##doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
 				##painter.restore()
 			#else:
-			doc.setHtml("<font color=\""+self.palette.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.name+"</font>")
+			doc.setHtml("<font color=\""+self.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.name+"</font>")
 			painter.save()
 			painter.translate(x+35,y)
 			doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33,y+28))
@@ -506,14 +509,14 @@ class rosterWidget(QtGui.QWidget):
 			#else:
 			painter.save()
 			painter.translate(x,y)
-			painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palette.color(QtGui.QPalette.Base)))
+			painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
 			painter.restore()
 
 			p=painter.pen()
-			painter.setPen(QtGui.QPen(self.palette.color(QtGui.QPalette.AlternateBase)))
+			painter.setPen(QtGui.QPen(self.palet.color(QtGui.QPalette.AlternateBase)))
 			painter.save()
 			painter.translate(x,y)
-			painter.fillRect(0,0,self.width(),32,self.palette.color(QtGui.QPalette.Base))
+			painter.fillRect(0,0,self.width(),32,self.palet.color(QtGui.QPalette.Base))
 
 			painter.drawLine(2,0,2,32)
 			painter.drawLine(self.width()-2,0,self.width()-2,32)

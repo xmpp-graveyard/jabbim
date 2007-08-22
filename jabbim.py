@@ -855,6 +855,7 @@ class mainWindow(QtGui.QMainWindow):
 		#self.addInfoSubscribe()
 		#self.addInfoSubscribe()
 		self.loadTheme()
+		self.ui.roster.reskin()
 		if self.config['log'] == 'true':
 			logfile = open(self.homeDir+'/'+self.config['logfile'], 'w')
 			log.startLogging(logfile)
@@ -1200,6 +1201,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.setStyleSheet(text)
 			self.xmlConsole.setStyleSheet(text)
 			self.chat.setStyleSheet(text)
+		self.ui.roster.reskin()
 
 
 	def addContactMainWindow(self):
@@ -1427,6 +1429,7 @@ class mainWindow(QtGui.QMainWindow):
 		layout.addWidget(self.scroll)
 
 	def _connected(self):
+		self.ui.roster.reskin()
 		self.ui.selfName.setText("<h3>"+unicode(self.client.jid.userhost()).split("@")[0]+"</h3>")
 		self.client.getVCard(unicode(self.client.jid.userhost()))
 		self.ui.rosterStackedWidget.setCurrentIndex(1)
