@@ -73,7 +73,7 @@ class clientClass(pyxl.client.Client):
 		if tab!=None:
 			self.main.chat.ui.chatTab.removeTab(tabIndex)
 			if int(self.main.chat.ui.chatTab.count())==0:
-				self.main.chat.close()
+				self.main.chat.hide()
 		if int(code)==409:
 			self.main.events.addLineEditEvent(maintext=unicode(fromjid)+"<br/>"+text,trueCall=self.main.joinGC,trueDict=[fromjid],falseCall=None,falseDict=None,header="Groupchat Error",text="New name:",name=unicode(fromjid),typ="groupchatError",icon=None,action=None,actionDict=None,height=100)
 		else:
