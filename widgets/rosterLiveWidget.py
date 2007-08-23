@@ -28,6 +28,7 @@ class activeWidget(QtGui.QWidget):
 	def __init__(self,item,status,buttons,parent=None):
 		QtGui.QWidget.__init__(self,parent)
 		self.parent=parent
+		self.item=item
 		layout=QtGui.QVBoxLayout(self)
 		layout.setMargin(2)
 		#self.stacked=QtGui.QStackedWidget(self)
@@ -38,8 +39,10 @@ class activeWidget(QtGui.QWidget):
 		#self.setPalette(p)
 		#self.stacked.setAutoFillBackground(True)
 		#self.stacked.setCurrentIndex(0)
+		self.statusLabel=QtGui.QTextEdit(self)
+		self.statusLabel.hide()
 		if status:
-			self.statusLabel=QtGui.QTextEdit(self)
+			self.statusLabel.show()
 			self.statusLabel.setReadOnly(True)
 			self.statusLabel.viewport().setAutoFillBackground(False)
 			self.statusLabel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
@@ -59,7 +62,7 @@ class activeWidget(QtGui.QWidget):
 		self.buttons={}
 		group=QtGui.QButtonGroup(self)
 		for b in buttons:
-			jid=b[0]
+			meta=b[0]
 			icon=b[1]
 			#if b=="separator":
 				#line = QtGui.QFrame(self)
@@ -74,7 +77,7 @@ class activeWidget(QtGui.QWidget):
 			button.setIcon(icon)
 			layout2.addWidget(button)
 			group.addButton(button)
-			self.buttons[button]=jid
+			self.buttons[button]=meta
 
 		layout2.addStretch()
 		QtCore.QObject.connect(group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.clicked)
@@ -88,20 +91,46 @@ class activeWidget(QtGui.QWidget):
 		l.addWidget(self.menu,1,0)
 		menu=self.parent.buildContactMenu(item.jid,item.group)
 		self.menu.setMenu(menu)
-		label=QtGui.QLabel(self)
+		self.label=QtGui.QLabel(self)
 		size=64
 		if len(buttons)==0:
 			size=32
-		label.setMaximumSize(size,size)
+		self.label.setMaximumSize(size,size)
 		if item.avatar:
 			pixmap=item.avatar.pixmap(size,size)
-			label.setPixmap(pixmap)
-		l.addWidget(label,0,1,2,1,QtCore.Qt.AlignRight|QtCore.Qt.AlignBottom)
+			self.label.setPixmap(pixmap)
+		l.addWidget(self.label,0,1,2,1,QtCore.Qt.AlignRight|QtCore.Qt.AlignBottom)
 		
 		layout.addLayout(l)
 
+	def refreshData(self):
+		status=self.item.statusMessage
+		if status:
+			self.statusLabel.show()
+			self.statusLabel.setHtml("<font size=\"-1\">"+unicode(status)+"</font>")
+		else:
+			self.statusLabel.hide()
+
+		size=64
+		self.label.setMaximumSize(size,size)
+		if self.item.avatar:
+			pixmap=self.item.avatar.pixmap(size,size)
+			self.label.setPixmap(pixmap)
+		self.resize(self.parent.width()-46,self.parent.selectedHeight-32)
+
 	def clicked(self,button):
-		print self.buttons[button]
+		meta=self.buttons[button]
+		#items=self.parent.getUserItems(self.item.jid)
+		#for item in items:
+		self.item.name=meta.name
+		self.item.icon=meta.icon
+		self.item.avatar=meta.avatar
+		self.item.status=meta.status
+		self.item.statusMessage=meta.statusMessage
+		self.item.jid=meta.jid
+			#self.parent.statusLabel.hide()
+		self.parent.repaint()
+		self.refreshData()
 	#def addStatusOnly(self,status):
 
 
@@ -194,6 +223,7 @@ class userItem:
 		self.avatar=None
 		self.hidden=False
 		self.test=None
+		self.metajid=""
 
 	def clone(self):
 		item=userItem(unicode(self.name),unicode(self.group),unicode(self.main),self.icon)
@@ -464,7 +494,7 @@ class rosterWidget(QtGui.QWidget):
 
 	def resizeEvent(self,event):
 		if self.statusLabel:
-			self.statusLabel.resize(self.width()-5,self.selectedHeight-32)
+			self.statusLabel.resize(self.width()-46,self.selectedHeight-32)
 		return QtGui.QWidget.resizeEvent(self,event)
 
 	def paintUserItem(self,painter,useritem,x,y):
@@ -472,7 +502,7 @@ class rosterWidget(QtGui.QWidget):
 			height=91
 			if not useritem.statusMessage:
 				height-=32
-			if not self.metaItems.has_key(useritem.jid):
+			if not self.metaItems.has_key(useritem.metajid):
 				height-=16
 			self.selectedHeight=height+32
 			painter.save()
@@ -560,9 +590,9 @@ class rosterWidget(QtGui.QWidget):
 			painter.restore()
 			if not self.statusLabel:
 				buttons=[]
-				if self.metaItems.has_key(useritem.jid):
-					for meta in self.metaItems[useritem.jid]:
-						buttons.append([meta.jid,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
+				if self.metaItems.has_key(useritem.metajid):
+					for meta in self.metaItems[useritem.metajid]:
+						buttons.append([meta,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
 				self.statusLabel=activeWidget(useritem,useritem.statusMessage,buttons,self)
 				print y,y+32,height
 				self.statusLabel.setGeometry(41,y+32,self.width()-46,height)

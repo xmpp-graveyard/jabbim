@@ -278,6 +278,8 @@ class clientClass(pyxl.client.Client):
 				if mainJid:
 					first=True
 					toDel=[]
+					mainItem=self.main.ui.roster.getUserItems(mainJid)[0]
+					mainItem.metajid=mainJid
 					for item in self.main.ui.roster.getUserItems(mainJid)[1:]:
 						toDel.append(item)
 					for i in range(len(toDel)):
