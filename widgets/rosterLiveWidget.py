@@ -33,7 +33,10 @@ class activeWidget(QtGui.QWidget):
 		#self.stacked=QtGui.QStackedWidget(self)
 		#layout.addWidget(self.stacked)
 		self.setAutoFillBackground(False)
-		#self.stacked.setAutoFillBackground(False)
+		#p=self.palette()
+		#p.setColor(QtGui.QPalette.Window,QtGui.QColor(255,255,255))
+		#self.setPalette(p)
+		#self.stacked.setAutoFillBackground(True)
 		#self.stacked.setCurrentIndex(0)
 		if status:
 			self.statusLabel=QtGui.QTextEdit(self)
@@ -49,6 +52,7 @@ class activeWidget(QtGui.QWidget):
 
 		l=QtGui.QGridLayout()
 
+		#if len(buttons)!=0:
 		layout2=QtGui.QHBoxLayout()
 		layout2.setMargin(0)
 		layout2.setSpacing(0)
@@ -460,7 +464,7 @@ class rosterWidget(QtGui.QWidget):
 
 	def resizeEvent(self,event):
 		if self.statusLabel:
-			self.statusLabel.resize(self.width(),64)
+			self.statusLabel.resize(self.width()-5,self.selectedHeight-32)
 		return QtGui.QWidget.resizeEvent(self,event)
 
 	def paintUserItem(self,painter,useritem,x,y):
@@ -560,6 +564,7 @@ class rosterWidget(QtGui.QWidget):
 					for meta in self.metaItems[useritem.jid]:
 						buttons.append([meta.jid,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
 				self.statusLabel=activeWidget(useritem,useritem.statusMessage,buttons,self)
+				print y,y+32,height
 				self.statusLabel.setGeometry(41,y+32,self.width()-46,height)
 				self.statusLabel.show()
 			#if not self.buttonWidget and self.statusLabel:

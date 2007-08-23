@@ -406,6 +406,12 @@ class clientClass(pyxl.client.Client):
 		self.main.rosterHideOffline(True)
 		self.main.ui.roster.refreshStats()
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
+		if self.main.ui.roster.statusLabel:
+			self.main.ui.roster.statusLabel.setParent(None)
+			self.main.ui.roster.statusLabel=None
+		if self.main.ui.roster.buttonWidget:
+			self.main.ui.roster.buttonWidget.setParent(None)
+			self.main.ui.roster.buttonWidget=None
 		self.main.ui.roster.repaint()
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
