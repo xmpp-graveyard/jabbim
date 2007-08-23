@@ -979,6 +979,13 @@ class rosterWidget(QtGui.QWidget):
 				ret.append(user)
 		return ret
 
+	def getMetaItems(self,jid,typ=False):
+		ret=[]
+		for mainjid,users in self.metaItems.iteritems():
+			for user in users:
+				if user.jid==jid:
+					ret.append(user)
+		return ret
 
 	def hidden(self,bool):
 		pass
@@ -1004,7 +1011,16 @@ class rosterWidget(QtGui.QWidget):
 					self.buttonWidget.setParent(None)
 					self.buttonWidget=None
 				self.sortItems()
-				
+		for user in self.getMetaItems(jid):
+			user.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons[self.main.shows[unicode(show)]])
+			if self.main.shows[unicode(show)]!="9":
+				user.hidden=False
+			else:
+				user.hidden=True
+			user.statusMessage=status
+			user.status=self.main.shows[unicode(show)]
+
+
 		self.repaint()
 
 	def cloneContact(self,parent,item):
