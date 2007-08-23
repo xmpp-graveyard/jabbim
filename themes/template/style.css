@@ -1,11 +1,11 @@
 QWidget#groupStyleWidget {
-    background-color:#A6ADB0;
+    background-color:#EEEEEC;
 /*     color:#000000; */
 }
 
 QWidget#userStyleWidget {
-    background-color:rgba(0,0,0,0%);
-/*     color:#000000; */
+/*     background-color:rgba(0,0,0,0%); */
+    color:#3E3F3D;
 }
 
 QLabel#selfName {
