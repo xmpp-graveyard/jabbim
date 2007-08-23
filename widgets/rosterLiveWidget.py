@@ -91,6 +91,7 @@ class activeWidget(QtGui.QWidget):
 		l.addWidget(self.menu,1,0)
 		menu=self.parent.buildContactMenu(item.jid,item.group)
 		self.menu.setMenu(menu)
+		self.menu.setObjectName("rosterMenu")
 		self.label=QtGui.QLabel(self)
 		size=64
 		if len(buttons)==0:
@@ -662,23 +663,24 @@ class rosterWidget(QtGui.QWidget):
 			#font.setWeight(18)
 			doc.setDefaultFont(font)
 			
-			
+			if useritem.avatar:
+				pixmap=useritem.avatar.pixmap(32,32)
 			if useritem.statusMessage:
 				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.name+"</font>")
 				painter.save()
 				painter.translate(x+41,y+2)
 				if useritem.avatar:
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-70,y+32))
+					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-43-32,y+32))
 				else:
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38,y+32))
+					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-41,y+32))
 				painter.restore()
 				doc.setHtml("<font size=\"-1\" color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\"><i>"+useritem.statusMessage+"</i></font>")
 				painter.save()
 				painter.translate(x+41,y+16)
 				if useritem.avatar:
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-70,y+32))
+					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-43-32,y+32))
 				else:
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38,y+32))
+					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-41,y+32))
 				painter.restore()
 			else:
 				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.name+"</font>")
@@ -687,7 +689,7 @@ class rosterWidget(QtGui.QWidget):
 				doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38,y+28))
 				painter.restore()
 			if useritem.avatar:
-				painter.drawPixmap(self.width()-36,y,useritem.avatar.pixmap(32,32))
+				painter.drawPixmap(self.width()-4-32+(int((32-pixmap.width())/2)),y,pixmap)
 
 	def paintEvent(self,event):
 		painter=QtGui.QPainter(self)

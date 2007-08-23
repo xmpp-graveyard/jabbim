@@ -11,3 +11,8 @@ QWidget#userStyleWidget {
 QLabel#selfName {
 margin-left:15px;
 }
+/*QToolButton#rosterMenu{
+	border:			1px solid #000;
+	border-radius:		4px;
+	min-width:80px;
+}*/
