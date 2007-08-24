@@ -617,7 +617,7 @@ class clientClass(pyxl.client.Client):
 					w.chat.ui.info.setText(unicode(subject))
 					#w.chat.ui.info.setCursorPosition(0)
 				# set links, if we found them
-				message = utils.replace_url(message)
+				body = utils.replace_url(body)
 # 				for word in unicode(body).split(' '):
 # 					if word.find("http://")!=-1:
 # 						body=body.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
