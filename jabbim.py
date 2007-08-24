@@ -617,9 +617,10 @@ class clientClass(pyxl.client.Client):
 					w.chat.ui.info.setText(unicode(subject))
 					#w.chat.ui.info.setCursorPosition(0)
 				# set links, if we found them
-				for word in unicode(body).split(' '):
-					if word.find("http://")!=-1:
-						body=body.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
+				message = utils.replace_url(message)
+# 				for word in unicode(body).split(' '):
+# 					if word.find("http://")!=-1:
+# 						body=body.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
 				# no delay message
 				if delay==None or len(delay)==0:
 					# it's our message
@@ -669,6 +670,7 @@ class clientClass(pyxl.client.Client):
 		# strip html tags and \n from messages
 		if xhtml==None:
 			message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
+			message = utils.replace_url(message)
 		else:
 			message=xhtml
 		message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user)).replace("[message]",message)
