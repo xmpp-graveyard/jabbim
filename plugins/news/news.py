@@ -16,7 +16,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Headlines window'
 		self.author = u"Jiří 'Sef' Gabryš"
 		self.name = 'News Plugin'
-		self.version = '0.039'
+		self.version = '0.047'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.kontakty = {} # jid:contact
@@ -29,10 +29,10 @@ class Plugin(plugins.PluginBase):
 			self.window.setWindowIcon(self.main.windowIcon())
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
-# 			QtCore.QObject.connect(self.window.roster, QtCore.SIGNAL('itemClicked ( QListWidgetItem* )'), self.contactChanged)
-			QtCore.QObject.connect(self.window.ui.roster, QtCore.SIGNAL('itemSelectionChanged ( )'), self.contactChanged)
-# 			QtCore.QObject.connect(self.window.zpravy, QtCore.SIGNAL('itemClicked (QListWidgetItem* )'), self.headlineChanged)
-			QtCore.QObject.connect(self.window.ui.zpravy, QtCore.SIGNAL('itemSelectionChanged ( )'), self.headlineChanged)
+			QtCore.QObject.connect(self.window.ui.roster, QtCore.SIGNAL('itemClicked ( QListWidgetItem* )'), self.contactChanged)
+# 			QtCore.QObject.connect(self.window.ui.roster, QtCore.SIGNAL('itemSelectionChanged ( )'), self.contactChanged)
+			QtCore.QObject.connect(self.window.ui.zpravy, QtCore.SIGNAL('itemClicked (QListWidgetItem* )'), self.headlineChanged)
+# 			QtCore.QObject.connect(self.window.ui.zpravy, QtCore.SIGNAL('itemSelectionChanged ( )'), self.headlineChanged)
 # 			QtCore.QObject.connect(self.window.enableBox, QtCore.SIGNAL("stateChanged(int)"),self.enableToggled)
 # 			QtCore.QObject.connect(self.window.clearButton, QtCore.SIGNAL("clicked()"),self.clearLog)
 		else:
@@ -52,17 +52,18 @@ class Plugin(plugins.PluginBase):
 		font = QtGui.QFont()
 		font.setBold(True)
 		body = utils.replace_url(body)
+		index = 0
 		if self.kontakty.has_key(frm):
-			self.kontakty[frm].addHeadline(subject, body)
+			index = self.kontakty[frm].addHeadline(subject, body)
 		else:
 			item = QtGui.QListWidgetItem(frm, self.window.ui.roster)
 			self.window.ui.roster.addItem(item)
 			self.kontakty[frm] = Contact(frm, item, self)
-			self.kontakty[frm].addHeadline(subject, body)
+			index = self.kontakty[frm].addHeadline(subject, body)
 		self.kontakty[frm].item.setFont(font)
 		if self.config['notify_tray']['value']=='True':
 			self.main.tray.showMessage("News",subject, QtGui.QSystemTrayIcon.Information, 3000)
- 			self.main.events.addInfoEvent(header=self.tr("News: ")+subject,text=self.tr("From: ")+frm,typ='newHeadline',icon="images/32x32/status/rss-online.png")
+ 			self.main.events.addInfoEvent(header=self.tr("News: ")+subject,text=self.tr("From: ")+frm,typ='newHeadline',icon="images/32x32/status/rss-online.png", action = self.eventActivated, actionDict = [frm, index], trueCall = self.eventActivated, trueDict = [frm, index])
 		if self.config['notify_show']['value']=='True':
 			self.window.show()
 # 		itm = None
@@ -73,22 +74,38 @@ class Plugin(plugins.PluginBase):
 			
 		return False
 	
-	def contactChanged(self):
-		item = self.window.ui.roster.currentItem()
+	def eventActivated(self, frm, index):
+		print frm, index
+		item = self.kontakty[frm].item
+		self.window.ui.roster.setCurrentItem(item)
+		self.updateZpravy(frm, False)
+		self.window.ui.zpravy.setCurrentRow(index)					
+		zprava = self.kontakty[frm].zpravy[index]
+		kontakt = self.kontakty[frm]
+		zprava.unread = False
+		self.window.ui.subject.setText(zprava.subject)
+		self.window.ui.datum.setText(unicode(time.strftime('%X %x',time.localtime(zprava.time))))
+		self.window.ui.zprava.setHtml(zprava.body)
+		if kontakt.neprectene() == 0:
+			font =  QtGui.QFont()
+			font.setBold(False)
+			kontakt.item.setFont(font)
+		self.window.show()
+	
+	def contactChanged(self, item):
+#		item = self.window.ui.roster.currentItem()
 		log.msg('contactChanged')
 		jid = unicode(item.text())
 		self.updateZpravy(jid)
 	
-	def updateZpravy(self, jid):
-
+	def updateZpravy(self, jid, setUnread = True):
 		try:
 			kontakt = self.kontakty[jid]
 		except:
 			log.err(jid)
 			return
-		print ' hm',jid
 		self.window.ui.zpravy.clear()
-		setUnread = True
+		
 		for zprava in kontakt.zpravy:
 			item = QtGui.QListWidgetItem(zprava.subject, self.window.ui.zpravy)
 			font = QtGui.QFont()
@@ -96,15 +113,21 @@ class Plugin(plugins.PluginBase):
 				font.setBold(True)
 			item.setFont(font)
 			self.window.ui.zpravy.addItem(item)
-# 			if setUnread :
-# 				if zprava.unread:
-# 					self.window.ui.zpravy.setCurrentItem(item)
-# 					setUnread = False
+			if setUnread :
+				if zprava.unread:
+					self.window.ui.zpravy.setCurrentItem(item)		
+					zprava.unread = False
+					self.window.ui.subject.setText(zprava.subject)
+					self.window.ui.datum.setText(unicode(time.strftime('%X %x',time.localtime(zprava.time))))
+					self.window.ui.zprava.setHtml(zprava.body)
+					if kontakt.neprectene() == 0:
+						kontakt.item.setFont(font)
+					setUnread = False
 	
-	def headlineChanged(self):
+	def headlineChanged(self, item):
 		log.msg('headlineChanged')
-		item = self.window.ui.roster.currentItem()
-		font = font = QtGui.QFont()
+# 		item = self.window.ui.roster.currentItem()
+		font =  QtGui.QFont()
 		font.setBold(False)
 		item.setFont(font)
 		jid = unicode(item.text())
@@ -133,6 +156,7 @@ class Contact:
 	
 	def addHeadline(self, subject, body):
 		self.zpravy.append(Zprava(subject, body))
+		return len(self.zpravy)-1
 	
 	def neprectene(self):
 		n = 0
