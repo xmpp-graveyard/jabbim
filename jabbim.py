@@ -408,12 +408,13 @@ class clientClass(pyxl.client.Client):
 		self.main.rosterHideOffline(True)
 		self.main.ui.roster.refreshStats()
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
-		if self.main.ui.roster.statusLabel:
-			self.main.ui.roster.statusLabel.setParent(None)
-			self.main.ui.roster.statusLabel=None
-		if self.main.ui.roster.buttonWidget:
-			self.main.ui.roster.buttonWidget.setParent(None)
-			self.main.ui.roster.buttonWidget=None
+		self.main.ui.roster.statusLabel.hide()
+		#if self.main.ui.roster.statusLabel:
+			#self.main.ui.roster.statusLabel.setParent(None)
+			#self.main.ui.roster.statusLabel=None
+		#if self.main.ui.roster.buttonWidget:
+			#self.main.ui.roster.buttonWidget.setParent(None)
+			#self.main.ui.roster.buttonWidget=None
 		self.main.ui.roster.repaint()
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
@@ -618,9 +619,10 @@ class clientClass(pyxl.client.Client):
 					#w.chat.ui.info.setCursorPosition(0)
 				# set links, if we found them
 				body = utils.replace_url(body)
-# 				for word in unicode(body).split(' '):
-# 					if word.find("http://")!=-1:
-# 						body=body.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
+
+				#for word in unicode(body).split(' '):
+					#if word.find("http://")!=-1:
+						#body=body.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
 				# no delay message
 				if delay==None or len(delay)==0:
 					# it's our message
@@ -1373,12 +1375,13 @@ class mainWindow(QtGui.QMainWindow):
 		#self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.offline=not bool
 		self.ui.roster.showOffline=bool
-		if self.ui.roster.statusLabel:
-			self.ui.roster.statusLabel.setParent(None)
-			self.ui.roster.statusLabel=None
-		if self.ui.roster.buttonWidget:
-			self.ui.roster.buttonWidget.setParent(None)
-			self.ui.roster.buttonWidget=None
+		self.ui.roster.statusLabel.hide()
+		#if self.ui.roster.statusLabel:
+			#self.ui.roster.statusLabel.setParent(None)
+			#self.ui.roster.statusLabel=None
+		#if self.ui.roster.buttonWidget:
+			#self.ui.roster.buttonWidget.setParent(None)
+			#self.ui.roster.buttonWidget=None
 		self.ui.roster.sortItems()
 		self.ui.roster.repaint()
 		#self.ui.roster.refreshStats()

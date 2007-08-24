@@ -25,10 +25,10 @@ from twisted.python import log
 import filetransfer
 
 class activeWidget(QtGui.QWidget):
-	def __init__(self,item,status,buttons,parent=None):
+	def __init__(self,parent=None):
 		QtGui.QWidget.__init__(self,parent)
 		self.parent=parent
-		self.item=item
+		#self.item=item
 		layout=QtGui.QVBoxLayout(self)
 		layout.setMargin(2)
 		#self.stacked=QtGui.QStackedWidget(self)
@@ -41,26 +41,85 @@ class activeWidget(QtGui.QWidget):
 		#self.stacked.setCurrentIndex(0)
 		self.statusLabel=QtGui.QTextEdit(self)
 		self.statusLabel.hide()
-		if status:
-			self.statusLabel.show()
-			self.statusLabel.setReadOnly(True)
-			self.statusLabel.viewport().setAutoFillBackground(False)
-			self.statusLabel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-			self.statusLabel.setHtml("<font size=\"-1\">"+unicode(status)+"</font>")
-			self.statusLabel.setFrameShape(QtGui.QFrame.NoFrame)
-			self.statusLabel.setFrameShadow(QtGui.QFrame.Plain)
-			layout.addWidget(self.statusLabel)
-			self.statusLabel.setMaximumHeight(30)
+		self.statusLabel.setFrameShape(QtGui.QFrame.NoFrame)
+		self.statusLabel.setFrameShadow(QtGui.QFrame.Plain)
+		layout.addWidget(self.statusLabel)
+		self.statusLabel.setMaximumHeight(30)
+		self.statusLabel.setReadOnly(True)
+		self.statusLabel.viewport().setAutoFillBackground(False)
+		self.statusLabel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+
+		#if status:
+			#self.statusLabel.show()
+			#self.statusLabel.setHtml("<font size=\"-1\">"+unicode(status)+"</font>")
 		#layout.addWidget(statusLabel)
 
 		l=QtGui.QGridLayout()
 
 		#if len(buttons)!=0:
-		layout2=QtGui.QHBoxLayout()
-		layout2.setMargin(0)
-		layout2.setSpacing(0)
+		self.layout2=QtGui.QHBoxLayout()
+		self.layout2.setMargin(0)
+		self.layout2.setSpacing(0)
 		self.buttons={}
-		group=QtGui.QButtonGroup(self)
+		self.group=QtGui.QButtonGroup(self)
+		#for b in buttons:
+			#meta=b[0]
+			#icon=b[1]
+			##if b=="separator":
+				##line = QtGui.QFrame(self)
+				##line.setFrameShape(QtGui.QFrame.VLine)
+				##line.setFrameShadow(QtGui.QFrame.Sunken)
+				##layout2.addWidget(line)
+			##else:
+			#button = QtGui.QPushButton(self)
+			##button.setGeometry(0,y+16,16,16)
+			#button.setMaximumSize(16,16)
+			#button.setFlat(True)
+			#button.setIcon(icon)
+			#self.layout2.addWidget(button)
+			#self.group.addButton(button)
+			#self.buttons[button]=meta
+
+		self.layout2.addStretch()
+		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.clicked)
+		l.addLayout(self.layout2,0,0)
+		
+		self.menu=QtGui.QToolButton(self)
+		self.menu.setText("Menu")
+		#self.menu.setArrowType(QtCore.Qt.DownArrow)
+		self.menu.setPopupMode(self.menu.InstantPopup)
+		self.menu.setMaximumHeight(20)
+		l.addWidget(self.menu,1,0)
+		self.menu.setObjectName("rosterMenu")
+		self.label=QtGui.QLabel(self)
+		#size=64
+		#if len(buttons)==0:
+			#size=32
+		#self.label.setMaximumSize(size,size)
+		#if item.avatar:
+			#pixmap=item.avatar.pixmap(size,size)
+			#self.label.setPixmap(pixmap)
+		l.addWidget(self.label,0,1,2,1,QtCore.Qt.AlignRight|QtCore.Qt.AlignBottom)
+		
+		layout.addLayout(l)
+
+	def setData(self,item,buttons):
+		self.item=item
+		menu=self.parent.buildContactMenu(item.jid,item.group)
+		self.menu.setMenu(menu)
+		status=self.item.statusMessage
+		if status:
+			self.statusLabel.show()
+			self.statusLabel.setHtml("<font size=\"-1\">"+unicode(status)+"</font>")
+		else:
+			self.statusLabel.hide()
+
+		for button,meta in self.buttons.iteritems():
+			self.layout2.removeWidget(button)
+			self.group.removeButton(button)
+		
+		self.buttons={}
+
 		for b in buttons:
 			meta=b[0]
 			icon=b[1]
@@ -75,34 +134,22 @@ class activeWidget(QtGui.QWidget):
 			button.setMaximumSize(16,16)
 			button.setFlat(True)
 			button.setIcon(icon)
-			layout2.addWidget(button)
-			group.addButton(button)
+			self.layout2.insertWidget(0,button)
+			self.group.addButton(button)
 			self.buttons[button]=meta
 
-		layout2.addStretch()
-		QtCore.QObject.connect(group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.clicked)
-		l.addLayout(layout2,0,0)
-		
-		self.menu=QtGui.QToolButton(self)
-		self.menu.setText("Menu")
-		#self.menu.setArrowType(QtCore.Qt.DownArrow)
-		self.menu.setPopupMode(self.menu.InstantPopup)
-		self.menu.setMaximumHeight(20)
-		l.addWidget(self.menu,1,0)
-		menu=self.parent.buildContactMenu(item.jid,item.group)
-		self.menu.setMenu(menu)
-		self.menu.setObjectName("rosterMenu")
-		self.label=QtGui.QLabel(self)
 		size=64
 		if len(buttons)==0:
 			size=32
 		self.label.setMaximumSize(size,size)
-		if item.avatar:
-			pixmap=item.avatar.pixmap(size,size)
+		if self.item.avatar:
+			pixmap=self.item.avatar.pixmap(size,size)
 			self.label.setPixmap(pixmap)
-		l.addWidget(self.label,0,1,2,1,QtCore.Qt.AlignRight|QtCore.Qt.AlignBottom)
-		
-		layout.addLayout(l)
+			self.label.show()
+		else:
+			self.label.hide()
+			
+		self.resize(self.parent.width()-46,self.parent.selectedHeight-32)
 
 	def refreshData(self):
 		status=self.item.statusMessage
@@ -290,7 +337,7 @@ class rosterWidget(QtGui.QWidget):
 		self.sortedGroups=[]
 		self.sorted={}
 		
-		self.statusLabel=None
+		self.statusLabel=activeWidget(self)
 		self.buttonWidget=None
 		self.bigAvatar=False
 
@@ -589,15 +636,27 @@ class rosterWidget(QtGui.QWidget):
 			painter.translate(x+41,y+12)
 			doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33,y+28))
 			painter.restore()
-			if not self.statusLabel:
-				buttons=[]
-				if self.metaItems.has_key(useritem.metajid):
-					for meta in self.metaItems[useritem.metajid]:
-						buttons.append([meta,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
-				self.statusLabel=activeWidget(useritem,useritem.statusMessage,buttons,self)
-				print y,y+32,height
-				self.statusLabel.setGeometry(41,y+32,self.width()-46,height)
-				self.statusLabel.show()
+			if self.statusLabel:
+				if self.statusLabel.isHidden():
+					buttons=[]
+					if self.metaItems.has_key(useritem.metajid):
+						for meta in self.metaItems[useritem.metajid]:
+							buttons.append([meta,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
+					if self.statusLabel.isHidden():
+						self.statusLabel.setData(useritem,buttons)
+					print y,y+32,height
+					self.statusLabel.setGeometry(41,y+32,self.width()-46,height)
+					self.statusLabel.show()
+			#else:
+				#buttons=[]
+				#if self.metaItems.has_key(useritem.metajid):
+					#for meta in self.metaItems[useritem.metajid]:
+						#buttons.append([meta,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
+				#self.statusLabel=activeWidget(useritem,useritem.statusMessage,buttons,self)
+				#print y,y+32,height
+				#self.statusLabel.setGeometry(41,y+32,self.width()-46,height)
+				#self.statusLabel.show()
+
 			#if not self.buttonWidget and self.statusLabel:
 				#buttons=[]
 				#if self.metaItems.has_key(useritem.jid):
@@ -815,12 +874,13 @@ class rosterWidget(QtGui.QWidget):
 		if self.item!=item and item!=None and item.main!='special':
 			self.item=item
 			self.selected=item
-			if self.statusLabel:
-				self.statusLabel.setParent(None)
-				self.statusLabel=None
-			if self.buttonWidget:
-				self.buttonWidget.setParent(None)
-				self.buttonWidget=None
+			self.statusLabel.hide()
+			#if self.statusLabel:
+				#self.statusLabel.setParent(None)
+				#self.statusLabel=None
+			#if self.buttonWidget:
+				#self.buttonWidget.setParent(None)
+				#self.buttonWidget=None
 			self.repaint()
 
 	def mousePressEvent(self,event):
@@ -1041,12 +1101,7 @@ class rosterWidget(QtGui.QWidget):
 			user.statusMessage=status
 			user.status=self.main.shows[unicode(show)]
 			if not first:
-				if self.statusLabel:
-					self.statusLabel.setParent(None)
-					self.statusLabel=None
-				if self.buttonWidget:
-					self.buttonWidget.setParent(None)
-					self.buttonWidget=None
+				self.statusLabel.hide()
 				self.sortItems()
 		for user in self.getMetaItems(jid):
 			user.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons[self.main.shows[unicode(show)]])
