@@ -1119,18 +1119,20 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					highest=item
 			if highest:
-				item=self.getUserItems(mainjid)[0]
-				if item.jid!=highest.jid:
-					item.name=highest.name
-					item.icon=highest.icon
-					item.avatar=highest.avatar
-					item.status=highest.status
-					item.statusMessage=highest.statusMessage
-					item.jid=highest.jid
-					if str(item.status)!="9":
-						item.hidden=False
-					else:
-						item.hidden=True
+				item=self.getUserItems(mainjid)
+				if len(item)!=0:
+					item=item[0]
+					if item.jid!=highest.jid:
+						item.name=highest.name
+						item.icon=highest.icon
+						item.avatar=highest.avatar
+						item.status=highest.status
+						item.statusMessage=highest.statusMessage
+						item.jid=highest.jid
+						if str(item.status)!="9":
+							item.hidden=False
+						else:
+							item.hidden=True
 		if not first:
 			self.statusLabel.hide()
 			self.sortItems()
