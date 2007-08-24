@@ -374,7 +374,8 @@ class events:
 		else:
 			icon=QtGui.QIcon(unicode(icon))
 		self.events.append({'name':name,'type':typ,'icon':icon,'widget':widget})
-		self.main.ui.tabWidget.setCurrentIndex(2)
+		if typ!="message":
+			self.main.ui.tabWidget.setCurrentIndex(2)
 		self.refreshTray()
 
 	def addLineEditEvent(self,trueCall=None,trueDict=None,falseCall=None,falseDict=None,maintext="",header="",text="",name="",typ="",icon=None,action=None,actionDict=None,height=40):
