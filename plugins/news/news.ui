@@ -124,7 +124,11 @@
          </layout>
         </item>
         <item>
-         <widget class="QTextBrowser" name="zprava" />
+         <widget class="QTextBrowser" name="zprava" >
+          <property name="openExternalLinks" >
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

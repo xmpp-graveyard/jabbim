@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'news.ui'
 #
-# Created: Mon Aug 13 15:18:58 2007
+# Created: Fri Aug 24 12:06:43 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -98,6 +98,7 @@ class Ui_MainWindow(object):
         self.vboxlayout.addLayout(self.vboxlayout1)
 
         self.zprava = QtGui.QTextBrowser(self.layoutWidget)
+        self.zprava.setOpenExternalLinks(True)
         self.zprava.setObjectName("zprava")
         self.vboxlayout.addWidget(self.zprava)
         self.gridlayout.addWidget(self.splitter_2,0,0,1,1)
