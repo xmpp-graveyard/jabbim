@@ -1081,7 +1081,7 @@ class rosterWidget(QtGui.QWidget):
 		for mainjid,users in self.metaItems.iteritems():
 			for user in users:
 				if user.jid==jid:
-					ret.append(user)
+					ret.append([user,mainjid])
 		return ret
 
 	def hidden(self,bool):
@@ -1100,10 +1100,10 @@ class rosterWidget(QtGui.QWidget):
 				user.hidden=True
 			user.statusMessage=status
 			user.status=self.main.shows[unicode(show)]
-			if not first:
-				self.statusLabel.hide()
-				self.sortItems()
-		for user in self.getMetaItems(jid):
+
+		for couple in self.getMetaItems(jid):
+			user=couple[0]
+			mainjid=couple[1]
 			user.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons[self.main.shows[unicode(show)]])
 			if self.main.shows[unicode(show)]!="9":
 				user.hidden=False
@@ -1111,7 +1111,29 @@ class rosterWidget(QtGui.QWidget):
 				user.hidden=True
 			user.statusMessage=status
 			user.status=self.main.shows[unicode(show)]
-
+			highest=None
+			for item in self.metaItems[mainjid]:
+				if highest:
+					if int(item.status)<int(highest.status):
+						highest=item
+				else:
+					highest=item
+			if highest:
+				item=self.getUserItems(mainjid)[0]
+				if item.jid!=highest.jid:
+					item.name=highest.name
+					item.icon=highest.icon
+					item.avatar=highest.avatar
+					item.status=highest.status
+					item.statusMessage=highest.statusMessage
+					item.jid=highest.jid
+					if str(item.status)!="9":
+						item.hidden=False
+					else:
+						item.hidden=True
+		if not first:
+			self.statusLabel.hide()
+			self.sortItems()
 
 		self.repaint()
 
