@@ -530,6 +530,7 @@ class clientClass(pyxl.client.Client):
 						i.jid=jid
 						self.main.ui.roster.sortItems()
 				# we didn't find item
+				log.msg(unicode(add))
 				if add:
 					# we have some item to clone (so we can't create new one)
 					if len(items)!=0:
@@ -545,8 +546,8 @@ class clientClass(pyxl.client.Client):
 						#self.main.ui.roster.setStatus(jid,None,i)
 					else:
 						# add new contact to the roster
-						self.main.ui.roster.addUser(contact.jid,contact.name,self.roster['groups'][name])
-						self.main.ui.roster.setStatus(jid,None)
+						self.main.ui.roster.addUser(contact.jid,contact.name,name)
+						self.main.ui.roster.setStatus(contact.jid,None)
 						self.main.ui.roster.sortItems()
 						
 

@@ -1034,6 +1034,55 @@ class rosterWidget(QtGui.QWidget):
 					else:
 						self.changeGroup(jid,"+",unicode(item.name))
 
+			# metacontact > normal user
+			elif oldItem.typ=="user" and oldItem.metajid!="" and item.typ=="user":
+				items=QtCore.QStringList()
+				items.append(self.tr("Move to group"))
+				q,b=QtGui.QInputDialog.getItem(self,self.tr("Contact action"),self.tr("Select action."), items,0,False)
+				q=unicode(q)
+				if b==True and len(q)!=0:
+					index=int(items.indexOf(QtCore.QRegExp(q)))
+
+					if index==0:
+						for it in self.metaItems[oldItem.metajid]:
+							if it.jid==oldItem.jid:
+								self.metaItems[oldItem.metajid].remove(it)
+								del self.main.client.roster_meta[oldItem.jid]
+								self.setHighest(oldItem.metajid)
+								break
+
+						if len(self.metaItems[oldItem.metajid])==1:
+							highest=self.metaItems[oldItem.metajid][0]
+							#oldItem.name=highest.name+"LOL"
+							#oldItem.icon=highest.icon
+							#oldItem.avatar=highest.avatar
+							#oldItem.status=highest.status
+							#oldItem.statusMessage=highest.statusMessage
+							#oldItem.jid=highest.jid
+							#if str(oldItem.status)!="9":
+								#oldItem.hidden=False
+							#else:
+								#oldItem.hidden=True
+							#oldItem.metajid=""
+							#oldItem.tag=""
+							self.setHighest(oldItem.metajid)
+							del self.main.client.roster_meta[self.metaItems[oldItem.metajid][0].jid]
+							del self.metaItems[oldItem.metajid]
+							name=unicode(self.main.client.roster['users'][highest.jid].name)
+							contact=self.main.client.roster['users'][highest.jid]
+							gr=unicode(oldItem.group)
+							for it in self.getUserItems(oldItem.metajid):
+								self.users.remove(it)
+							self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,[gr])
+						
+						self.main.client.setMetacontacts()
+						name=unicode(self.main.client.roster['users'][jid].name)
+						contact=self.main.client.roster['users'][jid]
+						self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,[unicode(item.group)])
+						self.sortItems()
+						self.repaint()
+						
+
 			# normal user > normal/meta user
 			elif oldItem.typ=="user" and item.typ=="user":
 				items=QtCore.QStringList()
@@ -1057,17 +1106,19 @@ class rosterWidget(QtGui.QWidget):
 							item.tag=item.jid
 							self.metaItems[item.metajid]=[]
 							self.main.client.roster_meta[item.jid]={'tag':item.tag,'order':1}
+							it=item.clone()
+							it.tag=item.tag
+							self.metaItems[item.metajid].append(it)
 						it=oldItem.clone()
 						it.tag=item.tag
 						self.metaItems[item.metajid].append(it)
-						it=item.clone()
-						it.tag=item.tag
-						self.metaItems[item.metajid].append(it)
+						
 						for i in self.getUserItems(oldItem.jid):
 							self.users.remove(i)
 						
 						self.main.client.roster_meta[oldItem.jid]={'tag':item.tag,'order':1}
 						self.main.client.setMetacontacts()
+						self.selectItem(item)
 						self.sortItems()
 						self.repaint()
 					elif index==2:
@@ -1163,6 +1214,30 @@ class rosterWidget(QtGui.QWidget):
 			self.sortItems()
 
 		self.repaint()
+
+	def setHighest(self,mainjid):
+		highest=None
+		for item in self.metaItems[mainjid]:
+			if highest:
+				if int(item.status)<int(highest.status):
+					highest=item
+			else:
+				highest=item
+		if highest:
+			item=self.getUserItems(mainjid)
+			if len(item)!=0:
+				item=item[0]
+				if item.jid!=highest.jid:
+					item.name=highest.name
+					item.icon=highest.icon
+					item.avatar=highest.avatar
+					item.status=highest.status
+					item.statusMessage=highest.statusMessage
+					item.jid=highest.jid
+					if str(item.status)!="9":
+						item.hidden=False
+					else:
+						item.hidden=True
 
 	def cloneContact(self,parent,item):
 		pass
