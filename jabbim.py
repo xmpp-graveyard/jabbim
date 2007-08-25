@@ -280,6 +280,7 @@ class clientClass(pyxl.client.Client):
 					toDel=[]
 					mainItem=self.main.ui.roster.getUserItems(mainJid)[0]
 					mainItem.metajid=mainJid
+					mainItem.tag=tag
 					for item in self.main.ui.roster.getUserItems(mainJid)[1:]:
 						toDel.append(item)
 					for i in range(len(toDel)):
@@ -287,7 +288,9 @@ class clientClass(pyxl.client.Client):
 					
 					self.main.ui.roster.metaItems[mainJid]=[]
 					for value in jids:
-						self.main.ui.roster.metaItems[mainJid].append(self.main.ui.roster.getUserItems(value[0])[0].clone())
+						item=self.main.ui.roster.getUserItems(value[0])[0].clone()
+						item.tag=tag
+						self.main.ui.roster.metaItems[mainJid].append(item)
 						if value[0]!=mainJid:
 							for i in self.main.ui.roster.getUserItems(value[0]):
 								self.main.ui.roster.users.remove(i)

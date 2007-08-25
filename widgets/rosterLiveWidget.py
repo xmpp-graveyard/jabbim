@@ -1034,7 +1034,7 @@ class rosterWidget(QtGui.QWidget):
 					else:
 						self.changeGroup(jid,"+",unicode(item.name))
 
-			# normal user > normal user
+			# normal user > normal/meta user
 			elif oldItem.typ=="user" and item.typ=="user":
 				items=QtCore.QStringList()
 				items.append(self.tr("Move to group"))
@@ -1054,12 +1054,19 @@ class rosterWidget(QtGui.QWidget):
 					elif index==1:
 						if not self.metaItems.has_key(item.metajid):
 							item.metajid=item.jid
+							item.tag=item.jid
 							self.metaItems[item.metajid]=[]
-						self.metaItems[item.metajid].append(oldItem.clone())
+							self.main.client.roster_meta[item.jid]={'tag':item.tag,'order':1}
+						it=oldItem.clone()
+						it.tag=item.tag
+						self.metaItems[item.metajid].append(it)
+						it=item.clone()
+						it.tag=item.tag
+						self.metaItems[item.metajid].append(it)
 						for i in self.getUserItems(oldItem.jid):
 							self.users.remove(i)
-						self.main.client.roster_meta[item.jid]={'tag':item.jid,'order':1}
-						self.main.client.roster_meta[jid]={'tag':item.jid,'order':1}
+						
+						self.main.client.roster_meta[oldItem.jid]={'tag':item.tag,'order':1}
 						self.main.client.setMetacontacts()
 						self.sortItems()
 						self.repaint()
