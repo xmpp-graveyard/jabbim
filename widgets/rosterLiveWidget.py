@@ -298,7 +298,7 @@ class special:
 		self.typ="group"
 		self.main="special"
 		self.name="zzzzzzzzzzzzzzzzz"
-		self.expanded=False
+		self.expanded=True
 
 class rosterWidget(QtGui.QWidget):
 	def __init__(self,parent=None,main=None):
@@ -443,6 +443,8 @@ class rosterWidget(QtGui.QWidget):
 	def addUser(self,jid,name,group,offline=True,first=False):
 		if len(name)==0:
 			name=jid
+		if not group:
+			group="zzzzzzzzzzzzzzzzz"
 		item=userItem(name,group,self)
 		item.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons["9"])
 		item.jid=jid
@@ -780,7 +782,7 @@ class rosterWidget(QtGui.QWidget):
 		for key in self.sortedGroups:
 			item=self.groups[key]
 			items=self.getGroupSortedUsers(item.name)
-			if ((len(items)!=0 and not self.showOffline) or self.showOffline) or item.main=="special":
+			if ((len(items)!=0 and not self.showOffline) or self.showOffline):
 				if got!=0 and not item in ret:
 					ret.append(item)
 					got+=1
@@ -837,7 +839,7 @@ class rosterWidget(QtGui.QWidget):
 		for key in self.sortedGroups:
 			item=self.groups[key]
 			items=self.getGroupSortedUsers(item.name)
-			if ((len(items)!=0 and not self.showOffline) or self.showOffline) or item.main=="special":
+			if ((len(items)!=0 and not self.showOffline) or self.showOffline):
 				if item==i:
 					return x,y
 				if item.expanded and len(items)!=0:
@@ -889,7 +891,7 @@ class rosterWidget(QtGui.QWidget):
 		item=self.itemAt(x,y)
 		self.selectItem(item)
 
-		if item.typ=='group':
+		if item.typ=='group' and item.main!='special':
 			if item.expanded:
 				item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png")
 				item.expanded=False
@@ -905,7 +907,7 @@ class rosterWidget(QtGui.QWidget):
 		x=event.x()
 		y=event.y()
 		item=self.itemAt(x,y)
-		if item.typ=='group':
+		if item.typ=='group' and item.main!='special':
 			if item.expanded:
 				item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png")
 				item.expanded=False

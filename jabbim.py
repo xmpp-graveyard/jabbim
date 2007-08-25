@@ -178,7 +178,7 @@ class clientClass(pyxl.client.Client):
 		groups=list(contact.groups)
 		name=unicode(contact.name)
 		jid=unicode(contact.jid)
-		log.msg("Adding user JID: "+jid+" "+contact.subscription)
+		log.msg("Adding user JID: "+jid+" "+contact.subscription+" "+unicode(groups))
 		# add group item if we haven't it
 		for gr in groups:
 			if not self.roster['groups'].has_key(gr):
