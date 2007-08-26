@@ -1118,9 +1118,9 @@ class rosterWidget(QtGui.QWidget):
 						
 						self.main.client.roster_meta[oldItem.jid]={'tag':item.tag,'order':1}
 						self.main.client.setMetacontacts()
-						self.selectItem(item)
 						self.sortItems()
 						self.repaint()
+						self.selectItem(item)
 					elif index==2:
 						self.changeGroup(jid,"+",unicode(item.group))
 
