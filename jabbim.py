@@ -1629,7 +1629,7 @@ class statusWindow(QtGui.QDialog):
 			MainWindow.reconnect = False
 			#MainWindow.client.disconnect()
 			#MainWindow.client.disconnect()
-			reactor.stop2()
+			#reactor.stop2()
 			del MainWindow.client
 			MainWindow.client = None
 			MainWindow._disconnect()

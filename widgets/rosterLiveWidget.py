@@ -1262,6 +1262,11 @@ class rosterWidget(QtGui.QWidget):
 		action.setObjectName("send_file")
 		# separator
 		contactMenu.addSeparator()
+		# break up metacontact
+		if self.main.client.roster_meta.has_key(jid):
+			action=contactMenu.addAction(self.tr("Break up metacontact"))
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("break_up_meta")
 		# rename
 		action=contactMenu.addAction(self.tr("Rename"))
 		action.setData(QtCore.QVariant(jid))
@@ -1335,6 +1340,19 @@ class rosterWidget(QtGui.QWidget):
 			#QtGui.QApplication.postEvent(self.jab,customEvent(["roster_del_item",jid]))
 			##self.jab.roster.delItem(jid) # send jabber command
 			#self.refreshStats() # refresh group stats
+		elif cmd=="break_up_meta":
+			jid=action.data()
+			jid=str(jid.toString())
+			item=self.getUserItems(jid)[0]
+			metajid=item.metajid
+			for it in self.getUserItems(jid):
+				self.users.remove(it)
+			for it in self.metaItems[metajid]:
+				del self.main.client.roster_meta[it.jid]
+				self.main.client.on_UpdateContact(it.jid)
+			del self.metaItems[metajid]
+			self.main.client.setMetacontacts()
+
 		elif cmd=="rename":
 			# add contact to the new group
 			# get contact jid
