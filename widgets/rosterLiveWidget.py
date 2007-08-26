@@ -958,7 +958,7 @@ class rosterWidget(QtGui.QWidget):
 		#print pos.x(),pos.y()
 		item=self.itemAt(pos.x(),pos.y())
 		self.scrollUp=None
-		if pos.y()>self.main.scroll.height()-16:
+		if pos.y()-self.main.scroll.verticalScrollBar().value()>self.main.scroll.height()-16:
 			self.timer.start(50)
 			self.scrollUp=False
 		if pos.y()-self.main.scroll.verticalScrollBar().value()<32:
