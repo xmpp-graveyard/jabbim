@@ -49,6 +49,7 @@ class activeWidget(QtGui.QWidget):
 		self.statusLabel.viewport().setAutoFillBackground(False)
 		self.statusLabel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 
+
 		#if status:
 			#self.statusLabel.show()
 			#self.statusLabel.setHtml("<font size=\"-1\">"+unicode(status)+"</font>")
@@ -931,7 +932,7 @@ class rosterWidget(QtGui.QWidget):
 			if self.item.typ=="group":
 				item=self.itemAt(x,y+33)
 			else:
-				item=self.itemAt(x,y+97)
+				item=self.itemAt(x,y+self.selectedHeight+33)
 			self.selectItem(item)
 			event.accept()
 		elif key==QtCore.Qt.Key_Up:
