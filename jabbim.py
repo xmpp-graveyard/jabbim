@@ -151,20 +151,21 @@ class clientClass(pyxl.client.Client):
 					self.main.transports[jid]=typ
 					self.menus=[]
 					for jid,typ in self.main.transports.iteritems():
+						jid=unicode(jid)
 						menu=QtGui.QMenu(unicode(jid),self.main.statusMenu)
 						menu.setIcon(self.main.getIcon("jid@"+unicode(jid),status="offline",size="16x16"))
 						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="online",size="16x16"),self.main.status["online"])
-						action.setData(QtCore.QVariant(jid+"/online"))
+						action.setData(QtCore.QVariant([jid,"online"]))
 						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="chat",size="16x16"),self.main.status["chat"])
-						action.setData(QtCore.QVariant(jid+"/chat"))
+						action.setData(QtCore.QVariant([jid+"/chat"]))
 						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="away",size="16x16"),self.main.status["away"])
-						action.setData(QtCore.QVariant(jid+"/away"))
+						action.setData(QtCore.QVariant([jid+"/away"]))
 						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="xa",size="16x16"),self.main.status["xa"])
-						action.setData(QtCore.QVariant(jid+"/xa"))
+						action.setData(QtCore.QVariant([jid+"/xa"]))
 						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="dnd",size="16x16"),self.main.status["dnd"])
-						action.setData(QtCore.QVariant(jid+"/dnd"))
+						action.setData(QtCore.QVariant([jid+"/dnd"]))
 						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="offline",size="16x16"),self.main.status["offline"])
-						action.setData(QtCore.QVariant(jid+"/offline"))
+						action.setData(QtCore.QVariant([jid+"/offline"]))
 						#app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.main.statusChanged)
 						self.menus.append(menu)
 					self.main.buildStatusMenu(self.menus)
@@ -1418,17 +1419,24 @@ class mainWindow(QtGui.QMainWindow):
 	def statusChanged(self,action):
 		# status changed
 		data=action.data()
-		data=data.toString()
-		setstatus=statusWindow(data)
+		if len(data.toList())==0:
+			data=unicode(data.toString())
+			show=None
+		else:
+			data=data.toList()
+			show=unicode(data[1].toString())
+			data=unicode(data[0].toString())
+			
+		setstatus=statusWindow(data,show)
 		#if len(data.split("/"))==2:
 			#data=unicode(data.split("/")[1])
-		if setstatus.exec_()==1 and len(data.split("/"))==1:
+		if setstatus.exec_()==1 and not show:
 			self.ui.statusButton.setText(unicode(""))
 			self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
 		else:
 			for menu in self.client.menus:
-				if unicode(menu.title())==unicode(data.split("/")[0]):
-					menu.setIcon(self.getIcon("jid@"+unicode(data.split("/")[0]),status=unicode(data.split("/")[1]),size="16x16"))
+				if unicode(menu.title())==unicode(data):
+					menu.setIcon(self.getIcon("jid@"+unicode(data),status=unicode(show),size="16x16"))
 					break
 
 	def loadRoster(self):
@@ -1592,7 +1600,7 @@ class XMLConsole(QtGui.QMainWindow):
 		self.ui.setupUi(self)
 
 class statusWindow(QtGui.QDialog):
-	def __init__(self,data,parent=None):
+	def __init__(self,data,show=None,parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.setModal(False)
 		self.ui=widgets.status.Ui_status()
@@ -1605,6 +1613,7 @@ class statusWindow(QtGui.QDialog):
 		self.timer.start(1000)
 		self.i=4
 		self.data=data
+		self.show=show
 		self.timeout()
 	
 	def timerStop(self):
@@ -1639,9 +1648,9 @@ class statusWindow(QtGui.QDialog):
 			pass
 		else:
 			jid=None
-			if len(self.data.split("/"))==2:
-				jid=unicode(self.data.split("/")[0])
-				self.data=unicode(self.data.split("/")[1])
+			if self.show:
+				jid=self.data
+				self.data=self.show
 
 			#app.postEvent(jab,customEvent(["set_status",self.groupchat,self.data,unicode(self.ui.status.toPlainText ())]))
 			#jab.setStatus(MainWindow.groupchat,self.data,unicode(self.ui.status.toPlainText ()))
