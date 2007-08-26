@@ -1636,7 +1636,7 @@ class statusWindow(QtGui.QDialog):
 			MainWindow.client.sendPresence(typ = "unavailable", status = unicode(self.ui.status.toPlainText ()))
 			MainWindow.client.factory.stopTrying()
 			MainWindow.reconnect = False
-			#MainWindow.client.disconnect()
+			MainWindow.client.disconnect()
 			#MainWindow.client.disconnect()
 			#reactor.stop2()
 			del MainWindow.client
