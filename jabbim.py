@@ -547,9 +547,9 @@ class clientClass(pyxl.client.Client):
 					else:
 						# add new contact to the roster
 						self.main.ui.roster.addUser(contact.jid,contact.name,name)
-						self.main.ui.roster.setStatus(contact.jid,None)
-						self.main.ui.roster.sortItems()
-						
+						self.main.ui.roster.setStatus(contact.jid,contact.status[0],status=contact.status[1])
+						#self.main.ui.roster.sortItems()
+						#self.main.ui.roster.repaint()
 
 			else:
 				# user is not in this group, so we have to delete them from this group, if he is there

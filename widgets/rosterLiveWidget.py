@@ -1176,7 +1176,6 @@ class rosterWidget(QtGui.QWidget):
 				user.hidden=True
 			user.statusMessage=status
 			user.status=self.main.shows[unicode(show)]
-
 		for couple in self.getMetaItems(jid):
 			user=couple[0]
 			mainjid=couple[1]
@@ -1212,7 +1211,8 @@ class rosterWidget(QtGui.QWidget):
 		if not first:
 			self.statusLabel.hide()
 			self.sortItems()
-
+		#for user in self.getUserItems(jid):
+			#log.msg("hidden:"+unicode(user.hidden))
 		self.repaint()
 
 	def setHighest(self,mainjid):
@@ -1322,6 +1322,17 @@ class rosterWidget(QtGui.QWidget):
 	def groupMenuTriggered(self,action):
 		pass
 
+	def breakMetaContacts(self,jid):
+		item=self.getUserItems(jid)[0]
+		metajid=item.metajid
+		for it in self.getUserItems(jid):
+			self.users.remove(it)
+		for it in self.metaItems[metajid]:
+			del self.main.client.roster_meta[it.jid]
+			self.main.client.on_UpdateContact(it.jid)
+		del self.metaItems[metajid]
+		self.main.client.setMetacontacts()
+
 	def contactMenuTriggered(self,action):
 		# contact menu action handler
 		cmd=action.objectName()
@@ -1343,15 +1354,7 @@ class rosterWidget(QtGui.QWidget):
 		elif cmd=="break_up_meta":
 			jid=action.data()
 			jid=str(jid.toString())
-			item=self.getUserItems(jid)[0]
-			metajid=item.metajid
-			for it in self.getUserItems(jid):
-				self.users.remove(it)
-			for it in self.metaItems[metajid]:
-				del self.main.client.roster_meta[it.jid]
-				self.main.client.on_UpdateContact(it.jid)
-			del self.metaItems[metajid]
-			self.main.client.setMetacontacts()
+			self.breakMetaContacts(jid)
 
 		elif cmd=="rename":
 			# add contact to the new group
