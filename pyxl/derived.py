@@ -166,7 +166,7 @@ class derived:
 					if self.roster['users'][JID.userhost()].resources[JID.resource].hasFeature('http://jabber.org/protocol/chatstates'):
 						message.addElement(composing, 'http://jabber.org/protocol/chatstates' )
 				else:
-					if self.roster['users'][JID.userhost()].resources[self.roster['users'].getHighestResource()].hasFeature('http://jabber.org/protocol/chatstates'):
+					if self.roster['users'][JID.userhost()].resources[self.roster['users'][JID.userhost()].getHighestResource()].hasFeature('http://jabber.org/protocol/chatstates'):
 						message.addElement(composing, 'http://jabber.org/protocol/chatstates' )
 		self.on_xml(message.toXml())
 		self.xmlstream.send(message)
@@ -294,6 +294,7 @@ class derived:
 		q = iq.addElement('query', 'http://jabber.org/protocol/disco#info')
 		if caps_node != None:
 			q['node'] = caps_node
+			log.msg("CAPS:"+caps_node)
 		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
