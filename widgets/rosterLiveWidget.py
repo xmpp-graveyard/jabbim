@@ -868,10 +868,11 @@ class rosterWidget(QtGui.QWidget):
 				if item.expanded and len(items)!=0:
 					for useritem in items:
 						y+=32
-
 				y+=32
-		if y+self.selectedHeight-28>0:
+		if y+self.selectedHeight-28>0 and self.selectedHeight!=0:
 			self.setMinimumHeight(y+self.selectedHeight-28)
+		else:
+			self.setMinimumHeight(y)
 
 	def selectItem(self,item):
 		if self.item!=item and item!=None and item.main!='special':
@@ -885,6 +886,7 @@ class rosterWidget(QtGui.QWidget):
 				#self.buttonWidget.setParent(None)
 				#self.buttonWidget=None
 			self.repaint()
+			self.setSize()
 
 	def mousePressEvent(self,event):
 		x=event.x()
