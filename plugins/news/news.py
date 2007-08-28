@@ -16,7 +16,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Headlines window'
 		self.author = u"Jiří 'Sef' Gabryš"
 		self.name = 'News Plugin'
-		self.version = '0.048'
+		self.version = '0.051'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.kontakty = {} # jid:contact
@@ -63,7 +63,7 @@ class Plugin(plugins.PluginBase):
 		self.kontakty[frm].item.setFont(font)
 		if self.config['notify_tray']['value']=='True':
 			self.main.tray.showMessage("News",subject, QtGui.QSystemTrayIcon.Information, 3000)
- 			self.main.events.addInfoEvent(header=self.tr("News: ")+subject,text=self.tr("From: ")+frm,typ='newHeadline',icon="images/32x32/status/rss-online.png", action = self.eventActivated, actionDict = [frm, index], trueCall = self.eventActivated, trueDict = [frm, index])
+ 			self.main.events.addInfoEvent(header=self.tr("News: ")+subject,text=self.tr("From: ")+frm,typ='newHeadline',icon="images/32x32/status/rss-online.png", action = self.eventActivated, actionDict = [frm, index], trueCall = self.eventActivated, trueDict = [frm, index], name = '%s-%d'%(frm, index))
 		if self.config['notify_show']['value']=='True':
 			self.window.show()
 # 		itm = None
@@ -78,7 +78,7 @@ class Plugin(plugins.PluginBase):
 		print frm, index
 		item = self.kontakty[frm].item
 		self.window.ui.roster.setCurrentItem(item)
-		self.updateZpravy(frm, False)
+
 		self.window.ui.zpravy.setCurrentRow(index)					
 		zprava = self.kontakty[frm].zpravy[index]
 		kontakt = self.kontakty[frm]
@@ -90,6 +90,7 @@ class Plugin(plugins.PluginBase):
 			font =  QtGui.QFont()
 			font.setBold(False)
 			kontakt.item.setFont(font)
+		self.updateZpravy(frm, False)		
 		self.window.show()
 	
 	def contactChanged(self, item):
@@ -136,6 +137,7 @@ class Plugin(plugins.PluginBase):
 		except:
 			return
 		radek = self.window.ui.zpravy.currentRow()
+		self.removeEvent('%s-%d'%(jid, radek))
 		zprava = kontakt.zpravy[radek]
 		zprava.unread = False
 		self.window.ui.subject.setText(zprava.subject)
@@ -144,6 +146,13 @@ class Plugin(plugins.PluginBase):
 		if kontakt.neprectene() == 0:
 			kontakt.item.setFont(font)
 		self.updateZpravy(jid)
+	
+	def removeEvent(self, name):
+		ev = list(self.main.events.events)
+		for event in ev:
+			if event['name'] == name and event['typ'] == 'newHeadline':
+				event['widget'].closeClicked()
+				break
 		
 	
 

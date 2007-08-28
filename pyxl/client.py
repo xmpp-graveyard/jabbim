@@ -136,6 +136,7 @@ class Client(derived):
 
 				
 	def _connect(self, host, port): 
+		self.on_connect()
 		self.factory = client.XMPPClientFactory(self.jid,self.password)
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
 ##		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
@@ -166,7 +167,6 @@ class Client(derived):
 	def _bind(self, el):
 		#experimental
 		log.msg('bind')
-		print el.toXml()
 		bind = el.firstChildElement()
 		jd = bind.firstChildElement().__str__()
 		self.jid = jid.JID(jd)
@@ -354,7 +354,6 @@ class Client(derived):
 					card[pref + y.name]=unicode(y)
 			else:
 				card[x.name]=unicode(x)
-		print card
 		self.reactor.callFromThread(self.on_vcardReceived,el['from'], card)
 
 

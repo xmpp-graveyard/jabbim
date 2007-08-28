@@ -215,6 +215,7 @@ class clientClass(pyxl.client.Client):
 			user.setIcon(0,self.main.getIcon(size="16x16"))
 
 	def on_rosterArrived(self):
+		self.main.ui.splashProgress.setValue(60)
 		self.main.ui.roster.repaint()
 		self.main.ui.roster.sortItems()
 		self.main.buildBookmarks() # build Bookmarks tab
@@ -420,6 +421,8 @@ class clientClass(pyxl.client.Client):
 			#self.main.ui.roster.buttonWidget.setParent(None)
 			#self.main.ui.roster.buttonWidget=None
 		self.main.ui.roster.repaint()
+		self.main.ui.splashProgress.setValue(100)
+		self.main.ui.rosterStackedWidget.setCurrentIndex(1)
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
 		# presence in groupchat
@@ -764,6 +767,12 @@ class clientClass(pyxl.client.Client):
 	def on_verify(self, id, thread, props, frm, typ): #xep0070
 # 		self.replyVerify(id, thread, props, frm, typ, False)
 		self.main.events.addBooleanEvent(self.replyVerify,[id, thread, props, frm, typ, True], self.replyVerify,[id, thread, props, frm, typ, False],header=self.main.tr('Auth request'),text=self.main.tr('URL:')+" "+unicode(props['url']) + '<br/>' +self.main.tr('ID:') + unicode(props['id']), height = 60,name=frm,typ="xep70")
+	
+	def on_connect(self):
+		self.main.ui.splashProgress.setValue(20)
+	def on_authd(self):
+		self.main.ui.splashProgress.setValue(40)
+	
 
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
@@ -910,6 +919,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.userStyleWidget.hide()
 		self.reconnect = True # pri unavailable tady dame False
 		if self.config['autoJoin']=='True':
+			self.ui.rosterStackedWidget.setCurrentIndex(2)
 			self.connect()
 
 
@@ -1509,6 +1519,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def connect(self):
 		# Connect to the server
+		self.ui.rosterStackedWidget.setCurrentIndex(2)
 		jid=unicode(self.ui.login_jid.text())
 		password=unicode(self.ui.login_password.text())
 		if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
@@ -1562,13 +1573,13 @@ class mainWindow(QtGui.QMainWindow):
 			QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Bad Jabber ID or password.")),0,1)
 		elif error=="dns":
 			QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Server is not found.")),0,1)
-		elif error == 'lost' and MainWindow.reconnect:
-			# connection lost, let's wait for a while and then reconnect
+# 		elif error == 'lost' and MainWindow.reconnect:
+# 			# connection lost, let's wait for a while and then reconnect
 
-			MainWindow.plugins=[]
-			MainWindow.client = None
-# 			log.err('Connection Lost')
-			reactor.callLater(3, MainWindow.connect)
+# 			MainWindow.plugins=[]
+# 			MainWindow.client = None
+# # 			log.err('Connection Lost')
+# 			reactor.callLater(3, MainWindow.connect)
 		
 		#MainWindow.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
 		MainWindow.ui.statusButton.setIcon(MainWindow.getIcon("offline",size="16x16"))

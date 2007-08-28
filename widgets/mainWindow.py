@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/mainWindow.ui'
+# Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created: Sun Aug 26 12:43:35 2007
+# Created: Tue Aug 28 18:51:31 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -234,11 +234,33 @@ class Ui_MainWindow(object):
         self.gridlayout6.addItem(spacerItem5,0,2,1,3)
         self.gridlayout2.addWidget(self.frame,0,0,1,1)
         self.rosterStackedWidget.addWidget(self.roster)
+
+        self.splash = QtGui.QWidget()
+        self.splash.setObjectName("splash")
+
+        self.vboxlayout2 = QtGui.QVBoxLayout(self.splash)
+        self.vboxlayout2.setMargin(9)
+        self.vboxlayout2.setSpacing(6)
+        self.vboxlayout2.setObjectName("vboxlayout2")
+
+        self.splashImage = QtGui.QLabel(self.splash)
+        self.splashImage.setPixmap(QtGui.QPixmap("../images/logo.png"))
+        self.splashImage.setObjectName("splashImage")
+        self.vboxlayout2.addWidget(self.splashImage)
+
+        self.splashProgress = QtGui.QProgressBar(self.splash)
+        self.splashProgress.setProperty("value",QtCore.QVariant(0))
+        self.splashProgress.setTextVisible(False)
+        self.splashProgress.setOrientation(QtCore.Qt.Horizontal)
+        self.splashProgress.setInvertedAppearance(False)
+        self.splashProgress.setObjectName("splashProgress")
+        self.vboxlayout2.addWidget(self.splashProgress)
+        self.rosterStackedWidget.addWidget(self.splash)
         self.gridlayout.addWidget(self.rosterStackedWidget,0,0,1,1)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0,0,299,29))
+        self.menubar.setGeometry(QtCore.QRect(0,0,299,25))
         self.menubar.setObjectName("menubar")
 
         self.menuPlugins = QtGui.QMenu(self.menubar)
@@ -281,7 +303,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.rosterStackedWidget.setCurrentIndex(1)
+        self.rosterStackedWidget.setCurrentIndex(2)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.login_password,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)
         QtCore.QObject.connect(self.login_jid,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)
