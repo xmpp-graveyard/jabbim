@@ -22,6 +22,7 @@ try: from PyQt4 import QtCore, QtGui
 except: print "PyQt4 is not installed."
 from os.path import basename
 from twisted.python import log
+from twisted.words.protocols.jabber import jid
 import filetransfer
 
 class activeWidget(QtGui.QWidget):
@@ -103,6 +104,7 @@ class activeWidget(QtGui.QWidget):
 		l.addWidget(self.label,0,1,2,1,QtCore.Qt.AlignRight|QtCore.Qt.AlignBottom)
 		
 		layout.addLayout(l)
+		
 
 	def setData(self,item,buttons):
 		self.item=item
@@ -273,6 +275,7 @@ class userItem:
 		self.hidden=False
 		self.test=None
 		self.metajid=""
+		self.blink=None
 
 	def clone(self):
 		item=userItem(unicode(self.name),unicode(self.group),unicode(self.main),self.icon)
@@ -333,8 +336,9 @@ class rosterWidget(QtGui.QWidget):
 		self.newitem=None
 		self.item=None
 		self.timer=QtCore.QTimer(self)
-		#self.timer.setSingleShot(True)
 		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.popup)
+		self.timerBlink=QtCore.QTimer(self)
+		QtCore.QObject.connect(self.timerBlink, QtCore.SIGNAL("timeout ()"),self.blink)
 		self.sortedGroups=[]
 		self.sorted={}
 		
@@ -353,10 +357,32 @@ class rosterWidget(QtGui.QWidget):
 		self.palet=self.colors.palette()
 		self.reskin()
 
+		self.events=[]
+		self.bl=True
+
 		#QtCore.QObject.connect(self.main.scroll, QtCore.SIGNAL("sliderMoved(int)"),self.slider)
 
 	#def slider(self,y):
 		#pass
+
+	def refreshEvents(self):
+		for event in self.main.events.events:
+			if event['type']=="message":
+				JID=jid.JID(event['name']).userhost()
+				for item in self.getUserItems(JID):
+					item.blink=QtGui.QIcon(event['iconName'].replace("xxxxx","32x32"))
+					self.events.append(item)
+		self.timerBlink.start(500)
+
+	def blink(self):
+		self.bl=not self.bl
+		if len(self.main.events.events)>0:
+			#log.msg("blink")
+			self.repaint()
+		else:
+			self.timerBlink.stop()
+			self.bl=True
+			self.repaint()
 
 	def reskin(self):
 		self.palette().setColor(QtGui.QPalette.Window,self.palet.color(QtGui.QPalette.Base))
@@ -599,10 +625,8 @@ class rosterWidget(QtGui.QWidget):
 			painter.restore()
 			painter.setBrush(b)
 			painter.setPen(p)
-
-
-			if useritem.icon:
-				painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
+			
+			painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
 
 			doc=QtGui.QTextDocument()
 			font=doc.defaultFont()
@@ -647,7 +671,7 @@ class rosterWidget(QtGui.QWidget):
 							buttons.append([meta,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
 					if self.statusLabel.isHidden():
 						self.statusLabel.setData(useritem,buttons)
-					print y,y+32,height
+					#print y,y+32,height
 					self.statusLabel.setGeometry(41,y+32,self.width()-46,height)
 					self.statusLabel.show()
 			#else:
@@ -715,8 +739,13 @@ class rosterWidget(QtGui.QWidget):
 			#painter.setPen(p)
 
 
-
-			if useritem.icon:
+			
+			if useritem in self.events:
+				if self.bl:
+					painter.drawPixmap(x+7,y,useritem.icon.pixmap(32,32))
+				else:
+					painter.drawPixmap(x+7,y,useritem.blink.pixmap(32,32))
+			else:
 				painter.drawPixmap(x+7,y,useritem.icon.pixmap(32,32))
 
 			doc=QtGui.QTextDocument()

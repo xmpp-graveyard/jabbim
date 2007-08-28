@@ -370,19 +370,22 @@ class events:
 
 	def addEvent(self,name,typ,icon,widget):
 		if icon==None:
+			iconName=""
 			icon=QtGui.QIcon("images/16x16/categories/event.png")
 		else:
-			icon=QtGui.QIcon(unicode(icon))
-		self.events.append({'name':name,'type':typ,'icon':icon,'widget':widget})
+			iconName=unicode(icon)
+			icon=QtGui.QIcon(unicode(icon).replace("xxxxx","16x16"))
+		self.events.append({'name':name,'type':typ,'icon':icon,'iconName':iconName,'widget':widget})
 		if typ!="message":
 			self.main.ui.tabWidget.setCurrentIndex(2)
+		self.main.ui.roster.refreshEvents()
 		self.refreshTray()
 
 	def addLineEditEvent(self,trueCall=None,trueDict=None,falseCall=None,falseDict=None,maintext="",header="",text="",name="",typ="",icon=None,action=None,actionDict=None,height=40):
 		if icon==None:
 			icon2=QtGui.QIcon("images/16x16/categories/event.png")
 		else:
-			icon2=QtGui.QIcon(unicode(icon))
+			icon2=QtGui.QIcon(unicode(icon).replace("xxxxx","16x16"))
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		item.setSizeHint(QtCore.QSize(100,height))
 		item.widget=lineEditWidget(header,text,maintext,item,self.main,icon=icon2,falseCall=falseCall,falseDict=falseDict,trueCall=trueCall,trueDict=trueDict,action=action,actionDict=actionDict,parent=self.main.ui.eventsListWidget,height=height)
