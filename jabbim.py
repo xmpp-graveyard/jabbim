@@ -1294,7 +1294,7 @@ class mainWindow(QtGui.QMainWindow):
 		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.groupchatContextMenuTriggered)
 		# set menu position and show
 		menu.move(self.ui.bookmarks.mapToGlobal(pos))
-		menu.show()
+		menu.popup()
 
 	#def reskin(self):
 		#self.setStyleSheet(text)

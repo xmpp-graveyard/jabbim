@@ -1489,7 +1489,7 @@ class rosterWidget(QtGui.QWidget):
 		#if self.main.client.roster['users'].has_key(jid):
 		contactMenu=self.buildContactMenu(str(jid),group)
 		contactMenu.move(event.globalX(),event.globalY())
-		contactMenu.show()
+		contactMenu.popup()
 		#else:
 			#contactMenu=self.buildGroupMenu(unicode(item.text(2)))
 			#contactMenu.move(event.globalX(),event.globalY())
