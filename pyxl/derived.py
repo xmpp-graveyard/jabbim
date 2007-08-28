@@ -161,13 +161,13 @@ class derived:
 			body.addRawXml(xhtml)
 		if composing:
 			if self.roster['users'].has_key(JID.userhost()):
-				if self.roster['users'].resources.has_key(JID.resouce):
-					if self.roster['users'].resources[JID.resource].hasFeature('http://jabber.org/protocol/chatstates'):
+				if self.roster['users'][JID.userhost()].resources.has_key(JID.resource):
+					log.msg(unicode(self.roster['users'][JID.userhost()].resources[JID.resource].features))
+					if self.roster['users'][JID.userhost()].resources[JID.resource].hasFeature('http://jabber.org/protocol/chatstates'):
 						message.addElement(composing, 'http://jabber.org/protocol/chatstates' )
 				else:
-					if self.roster['users'].resources[self.roster['users'].getHighestResource()].hasFeature('http://jabber.org/protocol/chatstates'):
+					if self.roster['users'][JID.userhost()].resources[self.roster['users'].getHighestResource()].hasFeature('http://jabber.org/protocol/chatstates'):
 						message.addElement(composing, 'http://jabber.org/protocol/chatstates' )
-
 		self.on_xml(message.toXml())
 		self.xmlstream.send(message)
 	

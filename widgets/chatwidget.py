@@ -90,8 +90,12 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.parent=parent
 		#self.setMaximumSize(QtCore.QSize(16777215,30))
 		self.setObjectName("line")
+		self.composing=False
 	
 	def keyPressEvent(self,event):
+		if not self.composing:
+			self.composing=True
+			self.main.main.client.sendMessage(self.main.jid, "",composing="composing")
 		key=event.key()
 		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier or event.modifiers() & QtCore.Qt.ShiftModifier):
 			QtGui.QTextEdit.keyPressEvent(self,event)
@@ -269,6 +273,7 @@ class chatWidget(QtGui.QWidget):
 			self.textEditWrite(message)
 			self.ui.line.clear()
 			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+			self.ui.line.composing=False
 
 	def tabPressed(self):
 		# nick completion
