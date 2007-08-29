@@ -30,8 +30,10 @@ class activeWidget(QtGui.QWidget):
 		QtGui.QWidget.__init__(self,parent)
 		self.parent=parent
 		#self.item=item
-		layout=QtGui.QVBoxLayout(self)
-		layout.setMargin(2)
+		#layout=QtGui.QVBoxLayout(self)
+		#layout.setMargin(2)
+		l=QtGui.QGridLayout(self)
+		l.setMargin(2)
 		#self.stacked=QtGui.QStackedWidget(self)
 		#layout.addWidget(self.stacked)
 		self.setAutoFillBackground(False)
@@ -44,7 +46,7 @@ class activeWidget(QtGui.QWidget):
 		self.statusLabel.hide()
 		self.statusLabel.setFrameShape(QtGui.QFrame.NoFrame)
 		self.statusLabel.setFrameShadow(QtGui.QFrame.Plain)
-		layout.addWidget(self.statusLabel)
+		l.addWidget(self.statusLabel,0,0)
 		self.statusLabel.setMaximumHeight(30)
 		self.statusLabel.setReadOnly(True)
 		self.statusLabel.viewport().setAutoFillBackground(False)
@@ -56,7 +58,7 @@ class activeWidget(QtGui.QWidget):
 			#self.statusLabel.setHtml("<font size=\"-1\">"+unicode(status)+"</font>")
 		#layout.addWidget(statusLabel)
 
-		l=QtGui.QGridLayout()
+		
 
 		#if len(buttons)!=0:
 		self.layout2=QtGui.QHBoxLayout()
@@ -84,14 +86,15 @@ class activeWidget(QtGui.QWidget):
 
 		self.layout2.addStretch()
 		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.clicked)
-		l.addLayout(self.layout2,0,0)
+		l.addLayout(self.layout2,1,0)
 		
 		self.menu=QtGui.QToolButton(self)
 		self.menu.setText("Menu")
 		#self.menu.setArrowType(QtCore.Qt.DownArrow)
 		self.menu.setPopupMode(self.menu.InstantPopup)
+		self.menu.setMinimumHeight(20)
 		self.menu.setMaximumHeight(20)
-		l.addWidget(self.menu,1,0)
+		l.addWidget(self.menu,2,0)
 		self.menu.setObjectName("rosterMenu")
 		self.label=QtGui.QLabel(self)
 		#size=64
@@ -99,11 +102,11 @@ class activeWidget(QtGui.QWidget):
 			#size=32
 		#self.label.setMaximumSize(size,size)
 		#if item.avatar:
-			#pixmap=item.avatar.pixmap(size,size)
+			#pixmap=item.avatar.pixmap(64,64)
 			#self.label.setPixmap(pixmap)
-		l.addWidget(self.label,0,1,2,1,QtCore.Qt.AlignRight|QtCore.Qt.AlignBottom)
+		l.addWidget(self.label,0,1,4,1,QtCore.Qt.AlignRight|QtCore.Qt.AlignBottom)
 		
-		layout.addLayout(l)
+		#layout.addLayout(l)
 		
 
 	def setData(self,item,buttons):
@@ -142,7 +145,7 @@ class activeWidget(QtGui.QWidget):
 			self.buttons[button]=meta
 
 		size=64
-		if len(buttons)==0:
+		if len(buttons)==0 and not status:
 			size=32
 		self.label.setMaximumSize(size,size)
 		if self.item.avatar:
@@ -710,8 +713,8 @@ class rosterWidget(QtGui.QWidget):
 						
 			#if useritem.avatar:
 
-				#pixmap=useritem.avatar.pixmap(32,32)
-				#painter.drawPixmap(self.width()-pixmap.width()-3,y,pixmap)
+				#pixmap=useritem.avatar.pixmap(64,64)
+				#painter.drawPixmap(self.width()-pixmap.width()-8,y+self.selectedHeight-pixmap.height()-5,pixmap)
 
 		else:
 			#if event.region().contains(QtCore.QRect(0,y,self.width(),y+32)):

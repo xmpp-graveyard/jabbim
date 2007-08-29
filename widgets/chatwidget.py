@@ -69,11 +69,12 @@ class lineEditWidget(QtGui.QTextEdit):
 	def keyPressEvent(self,event):
 		key=event.key()
 		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier):
-			QtGui.QTextEdit.keyPressEvent(self,event)
+			return QtGui.QTextEdit.keyPressEvent(self,event)
 		elif key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
 			self.main.sendButtonClicked()
+			event.accepted()
 		else:
-			QtGui.QTextEdit.keyPressEvent(self,event)
+			return QtGui.QTextEdit.keyPressEvent(self,event)
 			text=unicode(self.toPlainText())
 			for k,v in self.parent.smileys.iteritems():
 				if text.find(" "+k)!=-1:

@@ -345,7 +345,7 @@ class editBookmark(QtGui.QDialog):
 		name=unicode(self.ui.name.text())
 		nickname=unicode(self.ui.nickname.text())
 		password=unicode(self.ui.password.text())
-		autojoin=self.ui.autojoin.isChecked()
+		autojoin=unicode(self.ui.autojoin.isChecked()).lower()
 		edited=False
 		if name==self.name:
 			self.main.client.bookmarks['conference'][name]=pyxl.client.Bookmark(name, 'conference', room+"@"+server, autojoin, nickname, password)

@@ -1263,7 +1263,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def autoJoinGroupchat(self):
 		for k,v in self.client.bookmarks['conference'].iteritems():
-			if (v.autojoin==True or v.autojoin=="True") or (v.autojoin==1 or v.autojoin=="1"):
+			if (v.autojoin==True or unicode(v.autojoin).lower()=="true") or (v.autojoin==1 or v.autojoin=="1"):
 				jid=unicode(v.jid.full())
 				nickname=v.nick
 				if self.chat.addGroupChatTab(jid,nickname):
