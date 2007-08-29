@@ -463,7 +463,7 @@ p, li { white-space: pre-wrap; }
            <string/>
           </property>
           <property name="pixmap" >
-           <pixmap>../images/logo.png</pixmap>
+           <pixmap>images/logo.png</pixmap>
           </property>
          </widget>
         </item>

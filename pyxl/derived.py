@@ -153,7 +153,6 @@ class derived:
 		message = Element((None,'message'))
 		message['to'] = to
 		if body != None and body.strip() != '':
-			print 'has body:',body,'::'
 			message.addElement('body', content = body)
 		message['type'] = typ
 		JID = jid.JID(to)

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created: Tue Aug 28 18:51:31 2007
+# Created: Wed Aug 29 12:41:15 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -244,7 +244,7 @@ class Ui_MainWindow(object):
         self.vboxlayout2.setObjectName("vboxlayout2")
 
         self.splashImage = QtGui.QLabel(self.splash)
-        self.splashImage.setPixmap(QtGui.QPixmap("../images/logo.png"))
+        self.splashImage.setPixmap(QtGui.QPixmap("images/logo.png"))
         self.splashImage.setObjectName("splashImage")
         self.vboxlayout2.addWidget(self.splashImage)
 
