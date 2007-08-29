@@ -720,7 +720,7 @@ class clientClass(pyxl.client.Client):
 		#print card
 		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db
 		log.msg("vcard "+unicode(jid))
-		log.msg(unicode(card))
+# 		log.msg(unicode(card))
 		if card.has_key("BINVAL"):
 			typ=None
 			if card.has_key("TYPE"):
@@ -1467,7 +1467,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.roster.reskin()
 		self.ui.selfName.setText("<h3>"+unicode(self.client.jid.userhost()).split("@")[0]+"</h3>")
 		self.client.getVCard(unicode(self.client.jid.userhost()))
-		self.ui.rosterStackedWidget.setCurrentIndex(1)
+# 		self.ui.rosterStackedWidget.setCurrentIndex(1)
 		#self.ui.statusButton.setText(unicode(self.status["online"]))
 		self.ui.statusButton.setIcon(self.getIcon("online",size="16x16"))
 		self.ui.statusButton.show()

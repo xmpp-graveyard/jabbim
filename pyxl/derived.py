@@ -147,12 +147,14 @@ class derived:
 		self.on_xml(presence.toXml())
 		self.xmlstream.send(presence)
 
-	def sendMessage(self, to, body, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
+	def sendMessage(self, to, body=None, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
 		# Posle zpravu na jid
 		self.dispatcher.publishEvent('on_message_send', to, body, typ, subject,composing, xhtml,  muc)
 		message = Element((None,'message'))
 		message['to'] = to
-		message.addElement('body', content = body)
+		if body != None and body.strip() != '':
+			print 'has body:',body,'::'
+			message.addElement('body', content = body)
 		message['type'] = typ
 		JID = jid.JID(to)
 		if typ == 'normal' and subject:
@@ -288,7 +290,7 @@ class derived:
 			del self.roster_meta[jid]
 			self.setMetacontacts()
 
-	def getFeatures(self, jid, caps_node):
+	def getFeatures(self, jid, caps_node = None):
 		log.msg('requesting features'+ caps_node)
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid.full()

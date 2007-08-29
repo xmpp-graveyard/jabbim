@@ -328,7 +328,6 @@ class Client(derived):
 
 	def _noVcard(self, err, jid): 
 		print jid, 'no vcard available' 
-		print err
 		log.msg('chci ulozit ' + jid )
 		self.reactor.callFromThread(self.main.cache.set_avatar,jid, ['nic', 'nic'])
 
@@ -347,7 +346,7 @@ class Client(derived):
 						for elm in x.elements():
 							if elm.name =='HOME' or elm.name =='WORK':
 								pref = elm.name + '-'
-								print pref
+# 								print pref
 								break
 						break
 				for y in x.elements():
