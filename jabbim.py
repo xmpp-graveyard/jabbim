@@ -669,52 +669,75 @@ class clientClass(pyxl.client.Client):
 		# handle normal 'chat' messages
 		# get user icon or name, if we have him in roster. Or use default icon and jid as name
 		log.msg("CHATSTATE:"+unicode(chatstate))
-		user=self.main.ui.roster.getUserItems(unicode(frm).rsplit("/")[0])
-		if len(user)!=0:
-			#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
-			icon=user[0].icon
-			user=user[0].name
-		else:
-			icon=self.main.getIcon(status="offline",size="16x16")
-			user=frm
-		# strip html tags and \n from messages
-		if xhtml==None:
-			message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
-			message = utils.replace_url(message)
-		else:
-			message=xhtml
-		message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user)).replace("[message]",message)
-		# find tab
-		tab=None
-		tabIndex=0
-		for i in range(self.main.chat.ui.chatTab.count()):
-			w=self.main.chat.ui.chatTab.widget(i)
-			if unicode(w.jid)==unicode(frm):
-				tab=w
-				tabIndex=i
-				break
-			if unicode(w.jid).rsplit("/")[0]==unicode(frm).rsplit("/")[0]:
-				tab=w
-				tabIndex=i
-		# we found tab
-		if tab!=None:
-			# write message and set 'message' icon
-			if int(self.main.chat.ui.chatTab.currentIndex())!=tabIndex:
-				self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
-				self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
-				self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm])
-			elif not self.main.chat.isActiveWindow():
-				self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm])
-			tab.chat.textEditWrite(message)
-		else:
-			# add new chattab
-			self.main.chat.addChatTab(frm,unicode(user),icon,message)
-			self.main.events.addInfoEvent(header=self.main.tr("New message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[])
-			if len(body)>40:
-					traytext=body[:40]+" ..."
+		if chatstate==None:
+			user=self.main.ui.roster.getUserItems(unicode(frm).rsplit("/")[0])
+			if len(user)!=0:
+				#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
+				icon=user[0].icon
+				user=user[0].name
 			else:
-					traytext=body
-			self.main.tray.showMessage(self.main.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
+				icon=self.main.getIcon(status="offline",size="16x16")
+				user=frm
+			# strip html tags and \n from messages
+			if xhtml==None:
+				message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
+				message = utils.replace_url(message)
+			else:
+				message=xhtml
+			message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user)).replace("[message]",message)
+			# find tab
+			tab=None
+			tabIndex=0
+			for i in range(self.main.chat.ui.chatTab.count()):
+				w=self.main.chat.ui.chatTab.widget(i)
+				if unicode(w.jid)==unicode(frm):
+					tab=w
+					tabIndex=i
+					break
+				if unicode(w.jid).rsplit("/")[0]==unicode(frm).rsplit("/")[0]:
+					tab=w
+					tabIndex=i
+			# we found tab
+			if tab!=None:
+				# write message and set 'message' icon
+				if int(self.main.chat.ui.chatTab.currentIndex())!=tabIndex:
+					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
+					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
+					self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm])
+				elif not self.main.chat.isActiveWindow():
+					self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm])
+				else:
+					color=self.main.chat.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
+					self.main.chat.ui.chatTab.tabBar().setTabTextColor(self.main.chat.ui.chatTab.currentIndex(),color)
+					tab.chat.ui.chatstate.setText("")
+				tab.chat.textEditWrite(message)
+			else:
+				# add new chattab
+				self.main.chat.addChatTab(frm,unicode(user),icon,message)
+				self.main.events.addInfoEvent(header=self.main.tr("New message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[])
+				if len(body)>40:
+						traytext=body[:40]+" ..."
+				else:
+						traytext=body
+				self.main.tray.showMessage(self.main.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
+		elif chatstate=="composing":
+			tab=None
+			tabIndex=0
+			for i in range(self.main.chat.ui.chatTab.count()):
+				w=self.main.chat.ui.chatTab.widget(i)
+				if unicode(w.jid)==unicode(frm):
+					tab=w
+					tabIndex=i
+					break
+				if unicode(w.jid).rsplit("/")[0]==unicode(frm).rsplit("/")[0]:
+					tab=w
+					tabIndex=i
+			# we found tab
+			if tab!=None:
+				if self.main.chat.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
+					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(0,128,0))
+				tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(i))+" "+self.main.chat.tr("is typing..."))
+
 
 	def on_vcardReceived(self,  jid, card):
 		#print card

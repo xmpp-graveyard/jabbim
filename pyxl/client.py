@@ -183,7 +183,7 @@ class Client(derived):
 ##		self.dispatcher.publishEvent('authed')
 		self.xmlstream = xmlstream
 		self.xmlstream.addObserver("/presence", self.onPresence, 1)
-		self.xmlstream.addObserver("/message/body", self.onMessage, 1)
+		self.xmlstream.addObserver("/message", self.onMessage, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='jabber:iq:roster']", self.onRosterAdd, 1)
 		self.xmlstream.addObserver("/*", self.onXML)
 		self.xmlstream.addObserver("/presence[@type='subscribe']", self.onSubscribe, 1)

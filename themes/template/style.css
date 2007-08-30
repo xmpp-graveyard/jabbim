@@ -32,7 +32,8 @@ QToolButton#rosterMenu{
 }
 
 QToolButton::menu-arrow{
-image: url(downarrow.png)
+image: url(downarrow.png);
+left:100px;
 }
 
 QToolButton{

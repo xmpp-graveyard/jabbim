@@ -74,6 +74,8 @@ class chatWindow(QtGui.QMainWindow):
 					event['widget'].closeClicked()
 					#break
 			self.main.events.refreshTray()
+			color=self.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
+			self.ui.chatTab.tabBar().setTabTextColor(self.ui.chatTab.currentIndex(),color)
 		return QtGui.QMainWindow.event(self,ev)
 
 	def changeTab(self,index):
