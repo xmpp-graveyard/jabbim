@@ -123,6 +123,7 @@ class activeWidget(QtGui.QWidget):
 		for button,meta in self.buttons.iteritems():
 			self.layout2.removeWidget(button)
 			self.group.removeButton(button)
+			button.setParent(None)
 		
 		self.buttons={}
 
