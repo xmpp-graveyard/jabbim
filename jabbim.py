@@ -786,7 +786,8 @@ class mainWindow(QtGui.QMainWindow):
 				self.homeDir= sys.argv[x+1]
 
 		utils.loadConfig(self) # load config files
-		self.cache = storage.Cache(db=self.homeDir+'/cache.db')
+		#self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
+		self.cache = storage.Cache(db=':memory:')
 		self.plugins = {}
 
 		self.ui.gridlayout.setMargin(1)
@@ -1039,7 +1040,7 @@ class mainWindow(QtGui.QMainWindow):
 		#log.msg("PLUGINS:"+unicode(self.plugins))
 	
 	def loadPlugin(self,plugin):
-		path = '%s/plugins/%s/%s.py'%(self.homeDir.encode('utf-8'), plugin, plugin)
+		path = utils.path('%s/plugins/%s/%s.py'%(self.homeDir, plugin, plugin))
 		try: 
 			f=open(path)
 		except:

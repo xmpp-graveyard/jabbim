@@ -108,7 +108,10 @@ def getHomeDir():
 # 					homeDir = 'C:\\'
 	homeDir = os.path.expanduser( '~' )+'/.jabbim'
 # 	homeDir = homeDir + './jabbim'
-	return homeDir
+	return unicode(homeDir, sys.getfilesystemencoding())
+
+def path(cesta):
+  return cesta.encode(sys.getfilesystemencoding())
 
 def need_highlight(nick, text):
 	# upraveno z gajimu
