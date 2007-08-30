@@ -13,11 +13,48 @@ QWidget#userStyleWidget {
 QLabel#selfName {
 margin-left:15px;
 }
-/*QToolButton#rosterMenu{
-	border:			1px solid #000;
-	border-radius:		4px;
-	min-width:80px;
-}*/
+QToolButton#rosterMenu:hover{
+	border-width:4px;
+	border-color:#87CEFA;
+	border-style:solid;
+	border-radius:10px;
+	background-color:#87CEFA;
+	min-width:40px;
+}
+
+QToolButton#rosterMenu{
+	border-width:4px;
+	border-color:#AFE3FA;
+	background-color:#AFE3FA;
+	border-style:solid;
+	border-radius:10px;
+	min-width:40px;
+}
+
+QToolButton::menu-arrow{
+image: url(downarrow.png)
+}
+
+QToolButton{
+	border-width:2px;
+	border-color:#AFE3FA;
+	background-color:#AFE3FA;
+	border-style:solid;
+	border-radius:2px;
+	min-width:20px;
+	min-height:20px;
+}
+
+
+
+QToolButton:hover,QToolButton:checked{
+	border-width:2px;
+	border-color:#87CEFA;
+	border-style:solid;
+	border-radius:2px;
+	background-color:#87CEFA;
+}
+
 
 QWidget#frame{
 border:0;

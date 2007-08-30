@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainWindow.ui'
+# Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Wed Aug 29 12:41:15 2007
+# Created: Thu Aug 30 14:43:44 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -124,6 +124,7 @@ class Ui_MainWindow(object):
         self.gridlayout2.setObjectName("gridlayout2")
 
         self.tabWidget = QtGui.QTabWidget(self.roster)
+        self.tabWidget.setAutoFillBackground(True)
         self.tabWidget.setObjectName("tabWidget")
 
         self.rosterTab = QtGui.QWidget()
@@ -260,7 +261,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0,0,299,25))
+        self.menubar.setGeometry(QtCore.QRect(0,0,299,29))
         self.menubar.setObjectName("menubar")
 
         self.menuPlugins = QtGui.QMenu(self.menubar)
@@ -303,7 +304,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.rosterStackedWidget.setCurrentIndex(2)
+        self.rosterStackedWidget.setCurrentIndex(1)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.login_password,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)
         QtCore.QObject.connect(self.login_jid,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)

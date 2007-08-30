@@ -26,7 +26,7 @@
     <item row="0" column="0" >
      <widget class="QStackedWidget" name="rosterStackedWidget" >
       <property name="currentIndex" >
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="login" >
        <layout class="QGridLayout" >
@@ -204,6 +204,9 @@ p, li { white-space: pre-wrap; }
          <widget class="QTabWidget" name="tabWidget" >
           <property name="toolTip" >
            <string/>
+          </property>
+          <property name="autoFillBackground" >
+           <bool>true</bool>
           </property>
           <property name="currentIndex" >
            <number>0</number>
@@ -495,7 +498,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>299</width>
-     <height>25</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPlugins" >
