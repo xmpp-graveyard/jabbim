@@ -709,7 +709,7 @@ class clientClass(pyxl.client.Client):
 				else:
 					color=self.main.chat.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(self.main.chat.ui.chatTab.currentIndex(),color)
-					tab.chat.ui.chatstate.setText("")
+				tab.chat.ui.chatstate.setText("")
 				tab.chat.textEditWrite(message)
 			else:
 				# add new chattab
