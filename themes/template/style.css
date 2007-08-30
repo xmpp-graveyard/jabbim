@@ -36,7 +36,7 @@ image: url(downarrow.png);
 left:100px;
 }
 
-QToolButton{
+/*QToolButton{
 	border-width:2px;
 	border-color:#AFE3FA;
 	background-color:#AFE3FA;
@@ -54,7 +54,7 @@ QToolButton:hover,QToolButton:checked{
 	border-style:solid;
 	border-radius:2px;
 	background-color:#87CEFA;
-}
+}*/
 
 
 QWidget#frame{
