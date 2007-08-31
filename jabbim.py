@@ -723,19 +723,19 @@ class clientClass(pyxl.client.Client):
 				else:
 						traytext=body
 				self.main.tray.showMessage(self.main.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
+		tab=None
+		tabIndex=0
+		for i in range(self.main.chat.ui.chatTab.count()):
+			w=self.main.chat.ui.chatTab.widget(i)
+			if unicode(w.jid)==unicode(frm):
+				tab=w
+				tabIndex=i
+				break
+			if unicode(w.jid).rsplit("/")[0]==unicode(frm).rsplit("/")[0]:
+				tab=w
+				tabIndex=i
+		# we found tab
 		if chatstate=="composing":
-			tab=None
-			tabIndex=0
-			for i in range(self.main.chat.ui.chatTab.count()):
-				w=self.main.chat.ui.chatTab.widget(i)
-				if unicode(w.jid)==unicode(frm):
-					tab=w
-					tabIndex=i
-					break
-				if unicode(w.jid).rsplit("/")[0]==unicode(frm).rsplit("/")[0]:
-					tab=w
-					tabIndex=i
-			# we found tab
 			if tab!=None:
 				if self.main.chat.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(0,128,0))
