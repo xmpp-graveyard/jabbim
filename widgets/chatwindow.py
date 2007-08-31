@@ -66,11 +66,14 @@ class chatWindow(QtGui.QMainWindow):
 					#painter.drawPixmap(x*int(self.pixmap.width()),y*self.pixmap.height(),self.pixmap)
 		#QtGui.QMainWindow.paintEvent(self,event)
 
-	def inactive(self,ev):
-		for i in range(self.ui.chatTab.count()):
-			w=self.ui.chatTab.widget(i)
-			if w.typ=="chat":
-				self.main.client.sendMessage(str(w.jid),"",composing="inactive")
+	def inactive(self):
+		if self.active==False:
+			for i in range(self.ui.chatTab.count()):
+				w=self.ui.chatTab.widget(i)
+				if w.typ=="chat":
+					self.main.client.sendMessage(str(w.jid),"",composing="inactive")
+			self.active=None
+		self.main.client.dispatcher.publishEvent('onInactivity', 30)
 
 	def event(self,ev):
 		# WindowActivated
@@ -87,8 +90,10 @@ class chatWindow(QtGui.QMainWindow):
 			self.main.events.refreshTray()
 			color=self.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
 			self.ui.chatTab.tabBar().setTabTextColor(self.ui.chatTab.currentIndex(),color)
+			self.timer.stop()
 		elif int(ev.type())==25:
 			if self.active:
+				print "INACTIVE"
 				self.active=False
 				self.timer.start(30000)
 		return QtGui.QMainWindow.event(self,ev)
