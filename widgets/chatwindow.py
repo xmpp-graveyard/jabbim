@@ -71,6 +71,7 @@ class chatWindow(QtGui.QMainWindow):
 			for i in range(self.ui.chatTab.count()):
 				w=self.ui.chatTab.widget(i)
 				if w.typ=="chat":
+					w.active=False
 					self.main.client.sendMessage(str(w.jid),"",composing="inactive")
 			self.active=None
 		self.main.client.dispatcher.publishEvent('onInactivity', 30)
@@ -78,9 +79,20 @@ class chatWindow(QtGui.QMainWindow):
 	def event(self,ev):
 		# WindowActivated
 		if int(ev.type())==24:
-			if not self.active:
-				self.active=True
 			widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
+
+			if self.active==None:
+				#for i in range(self.ui.chatTab.count()):
+					#w=self.ui.chatTab.widget(i)
+					#if w.typ=="chat":
+						#self.main.client.sendMessage(str(w.jid),"",composing="active")
+				widget.active=True
+				self.main.client.sendMessage(str(widget.jid),"",composing="active")
+				self.main.client.dispatcher.publishEvent('onActivity')
+			
+			self.active=True
+
+			
 			#print self.main.events.events
 			ev2=list(self.main.events.events)
 			for event in ev2:
@@ -132,7 +144,15 @@ class chatWindow(QtGui.QMainWindow):
 				event['widget'].closeClicked()
 				#break
 				self.main.events.refreshTray()
-
+		self.main.client.sendMessage(str(widget.jid),"",composing="active")
+		widget.active=True
+		
+		for i in range(self.ui.chatTab.count()):
+			w=self.ui.chatTab.widget(i)
+			if w.typ=="chat":
+				if w.active==True and w!=widget:
+					self.main.client.sendMessage(str(w.jid),"",composing="inactive")
+					w.active=False
 		#except:
 			#pass
 
@@ -191,6 +211,7 @@ class chatWindow(QtGui.QMainWindow):
 		tab.jid=jid
 		tab.typ="chat"
 		tab.ic=icon
+		tab.active=True
 		layout=QtGui.QHBoxLayout(tab)
 		layout.setMargin(1)
 		layout.setSpacing(1)
