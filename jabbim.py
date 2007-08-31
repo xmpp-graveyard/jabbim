@@ -738,7 +738,7 @@ class clientClass(pyxl.client.Client):
 				if self.main.chat.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(0,128,0))
 				tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(i))+" "+self.main.chat.tr("is typing..."))
-		elif chatstate=="active"
+		elif chatstate=="active":
 			tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(i))+" "+self.main.chat.tr("gives attention to chat."))
 	def on_vcardReceived(self,  jid, card):
 		#print card
