@@ -219,6 +219,7 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.roster.repaint()
 		self.main.ui.roster.sortItems()
 		self.main.buildBookmarks() # build Bookmarks tab
+		self.main.chat.reconnect()
 		self.main.autoJoinGroupchat()
 		# HACK KVULI ICQ A AUTOMATICKEMU PRIHLASENI K NEMU:
 		#self.sendPresence("icq.jabbim.cz",show='available', status = "")
@@ -1625,6 +1626,13 @@ class mainWindow(QtGui.QMainWindow):
 		#MainWindow.ui.roster.makeHiddenItem()
 		MainWindow.ui.login_connect.setEnabled(True)
 		MainWindow.plugins=[]
+		for jid in self.client.groupchats.keys():
+			for i in range(self.chat.ui.chatTab.count()):
+				w=self.chat.ui.chatTab.widget(i)
+				if unicode(w.jid) == jid:
+					w.chat.ui.line.setEnabled(False)
+					message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",self.tr("You are now offline."))
+					w.chat.textEditWrite(message)
 		MainWindow.client = None
 
 
@@ -1674,8 +1682,8 @@ class statusWindow(QtGui.QDialog):
 			MainWindow.client.disconnect()
 			#MainWindow.client.disconnect()
 			#reactor.stop2()
-			del MainWindow.client
-			MainWindow.client = None
+			#del MainWindow.client
+			#MainWindow.client = None
 			MainWindow._disconnect()
 			#MainWindow.client.disconnect()
 			#print MainWindow.client.roster

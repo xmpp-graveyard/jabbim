@@ -144,6 +144,15 @@ class chatWindow(QtGui.QMainWindow):
 		#tab=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
 		#tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
+	def reconnect(self):
+		for i in range(self.ui.chatTab.count()):
+			w=self.ui.chatTab.widget(i)
+			if str(w.typ)=="groupchat":
+				w.chat.ui.line.setEnabled(True)
+				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.tr("You are now online."))
+				w.chat.textEditWrite(message)
+				self.main.client.joinGC(w.jid, w.name)
+
 	def addChatTab(self,jid,name,icon,message=None):
 		for i in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(i)
@@ -222,19 +231,18 @@ class chatWindow(QtGui.QMainWindow):
 	def closeEvent(self,e):
 		for index in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(0)
-			if str(w.typ)=="groupchat":
-				#print str(w.jid)
-				self.main.client.leaveGC(w.jid)
-				#self.jab.getOffRoom(str(w.jid),self.main.groupchat[str(w.jid)][0])
+			if str(w.typ)=="groupchat" and self.main.client!=None:
+				if self.main.client.groupchats.has_key(w.jid):
+					self.main.client.leaveGC(w.jid)
 			self.ui.chatTab.removeTab(0)
 		self.hide()
 		e.ignore()
 
 	def removeTab(self):
 		w=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
-		if str(w.typ)=="groupchat":
-			#print str(w.jid)
-			self.main.client.leaveGC(w.jid)
+		if str(w.typ)=="groupchat" and self.main.client!=None:
+			if self.main.client.groupchats.has_key(w.jid):
+				self.main.client.leaveGC(w.jid)
 		self.ui.chatTab.removeTab(self.ui.chatTab.currentIndex())
 		if int(self.ui.chatTab.count())==0:
 			self.hide()
