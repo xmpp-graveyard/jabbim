@@ -264,7 +264,7 @@ class chatWidget(QtGui.QWidget):
 				text=unicode(text, 'utf-8')
 				text=text.replace(unichr(2028),"\n")
 				text=unescape(text)
-			self.main.client.sendMessage(str(self.jid),text)
+			self.main.client.sendMessage(str(self.jid),text,composing="active")
 			text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
 			for word in text.split(' '):
 				if word.find("http://")!=-1:

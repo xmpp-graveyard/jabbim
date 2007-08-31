@@ -670,7 +670,7 @@ class clientClass(pyxl.client.Client):
 		# handle normal 'chat' messages
 		# get user icon or name, if we have him in roster. Or use default icon and jid as name
 		log.msg("CHATSTATE:"+unicode(chatstate))
-		if chatstate==None:
+		if len(body)!=0:
 			user=self.main.ui.roster.getUserItems(unicode(frm).rsplit("/")[0])
 			if len(user)!=0:
 				#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
@@ -721,7 +721,7 @@ class clientClass(pyxl.client.Client):
 				else:
 						traytext=body
 				self.main.tray.showMessage(self.main.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
-		elif chatstate=="composing":
+		if chatstate=="composing":
 			tab=None
 			tabIndex=0
 			for i in range(self.main.chat.ui.chatTab.count()):
@@ -738,8 +738,8 @@ class clientClass(pyxl.client.Client):
 				if self.main.chat.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(0,128,0))
 				tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(i))+" "+self.main.chat.tr("is typing..."))
-
-
+		elif chatstate=="active"
+			tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(i))+" "+self.main.chat.tr("gives attention to chat."))
 	def on_vcardReceived(self,  jid, card):
 		#print card
 		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db
