@@ -670,6 +670,8 @@ class clientClass(pyxl.client.Client):
 		# handle normal 'chat' messages
 		# get user icon or name, if we have him in roster. Or use default icon and jid as name
 		log.msg("CHATSTATE:"+unicode(chatstate))
+		if not body:
+			body=""
 		if len(body)!=0:
 			user=self.main.ui.roster.getUserItems(unicode(frm).rsplit("/")[0])
 			if len(user)!=0:
