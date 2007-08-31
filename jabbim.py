@@ -742,6 +742,8 @@ class clientClass(pyxl.client.Client):
 				tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(i))+" "+self.main.chat.tr("is typing..."))
 		elif chatstate=="active":
 			tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(i))+" "+self.main.chat.tr("gives attention to chat."))
+		elif chatstate=="inactive":
+			tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(i))+" "+self.main.chat.tr("doesn't give attention to chat."))
 	def on_vcardReceived(self,  jid, card):
 		#print card
 		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db

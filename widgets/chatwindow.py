@@ -45,6 +45,9 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.chatTab.setCornerWidget(self.ui.tabCloseButton)
 		QtCore.QObject.connect(self.ui.tabCloseButton, QtCore.SIGNAL("clicked ()"),self.removeTab)
 		QtCore.QObject.connect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
+		self.active=False
+		self.timer=QtCore.QTimer()
+		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.inactive)
 		#self.ui.chatTab.removeTab(0)
 		#self.ui.gridlayout.setMargin(1)
 		#self.ui.gridlayout.setSpacing(1)
@@ -63,9 +66,17 @@ class chatWindow(QtGui.QMainWindow):
 					#painter.drawPixmap(x*int(self.pixmap.width()),y*self.pixmap.height(),self.pixmap)
 		#QtGui.QMainWindow.paintEvent(self,event)
 
+	def inactive(self,ev)
+		for i in range(self.ui.chatTab.count()):
+			w=self.ui.chatTab.widget(i)
+			if w.typ=="chat":
+				self.main.client.sendMessage(str(w.jid),"",composing="inactive")
+
 	def event(self,ev):
 		# WindowActivated
 		if int(ev.type())==24:
+			if not self.active:
+				self.active=True
 			widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
 			#print self.main.events.events
 			ev2=list(self.main.events.events)
@@ -76,6 +87,10 @@ class chatWindow(QtGui.QMainWindow):
 			self.main.events.refreshTray()
 			color=self.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
 			self.ui.chatTab.tabBar().setTabTextColor(self.ui.chatTab.currentIndex(),color)
+		elif int(ev.type())==25:
+			if self.active:
+				self.active=False
+				self.timer.start(30000)
 		return QtGui.QMainWindow.event(self,ev)
 
 	def changeTab(self,index):
