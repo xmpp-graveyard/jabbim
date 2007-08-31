@@ -66,7 +66,7 @@ class chatWindow(QtGui.QMainWindow):
 					#painter.drawPixmap(x*int(self.pixmap.width()),y*self.pixmap.height(),self.pixmap)
 		#QtGui.QMainWindow.paintEvent(self,event)
 
-	def inactive(self,ev)
+	def inactive(self,ev):
 		for i in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(i)
 			if w.typ=="chat":
