@@ -171,6 +171,8 @@ class derived:
 				else:
 					if self.roster['users'][JID.userhost()].resources[self.roster['users'][JID.userhost()].getHighestResource()].hasFeature('http://jabber.org/protocol/chatstates'):
 						message.addElement(composing, 'http://jabber.org/protocol/chatstates' )
+		if len(message.children) == 0:
+			return
 		self.on_xml(message.toXml())
 		self.xmlstream.send(message)
 	
