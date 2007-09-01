@@ -1141,7 +1141,7 @@ class rosterWidget(QtGui.QWidget):
 							item.metajid=item.jid
 							item.tag=item.jid
 							self.metaItems[item.metajid]=[]
-							self.main.client.roster_meta[item.jid]={'tag':item.tag,'order':1}
+							self.main.client.roster_meta[item.jid]={'tag':item.tag,'order':10}
 							it=item.clone()
 							it.tag=item.tag
 							self.metaItems[item.metajid].append(it)
@@ -1360,6 +1360,9 @@ class rosterWidget(QtGui.QWidget):
 
 	def breakMetaContacts(self,jid):
 		item=self.getUserItems(jid)[0]
+		if not item:
+			item=self.getMetaItems(jid)[0]
+			jid=item.metajid
 		metajid=item.metajid
 		for it in self.getUserItems(jid):
 			self.users.remove(it)

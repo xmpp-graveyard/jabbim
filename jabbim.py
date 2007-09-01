@@ -270,14 +270,16 @@ class clientClass(pyxl.client.Client):
 			if len(jids)>1:
 				mainJid=None # JID of main metacontact (parent of all other)
 				highestNum=0
-				highest=[]
+				#highest=
 				for value in jids:
 					jid=value[0]
 					order=int(value[1])
-					if jid!=tag:
-						mainJid=jid
+					#if jid!=tag:
+						#mainJid=jid
 					if order>=highestNum:
-						highest.append(jid)
+						highestNum=order
+						mainJid=jid
+						#highest.append(jid)
 				if mainJid:
 					first=True
 					toDel=[]
@@ -552,7 +554,14 @@ class clientClass(pyxl.client.Client):
 					else:
 						# add new contact to the roster
 						self.main.ui.roster.addUser(contact.jid,contact.name,name)
-						self.main.ui.roster.setStatus(contact.jid,contact.status[0],status=contact.status[1])
+						log.msg(unicode(contact.status))
+						if len(contact.status)==2:
+							show=contact.status[0]
+							status=contact.status[1]
+						else:
+							show=None
+							status=None
+						self.main.ui.roster.setStatus(contact.jid,show,status=status)
 						#self.main.ui.roster.sortItems()
 						#self.main.ui.roster.repaint()
 
