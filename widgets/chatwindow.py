@@ -81,7 +81,7 @@ class chatWindow(QtGui.QMainWindow):
 		if int(ev.type())==24:
 			widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
 
-			if self.active==None:
+			if self.active==None and widget.typ=="chat":
 				#for i in range(self.ui.chatTab.count()):
 					#w=self.ui.chatTab.widget(i)
 					#if w.typ=="chat":
