@@ -282,11 +282,13 @@ class userItem:
 		self.blink=None
 
 	def clone(self):
-		item=userItem(unicode(self.name),unicode(self.group),unicode(self.main),self.icon)
+		item=userItem(unicode(self.name),unicode(self.group),self.main,self.icon)
 		item.statusMessage=self.statusMessage
 		item.avatar=self.avatar
-		item.hidden=self.hidden
+		item.hidden=repr(self.hidden)
 		item.jid=unicode(self.jid)
+		item.metajid=unicode(self.metajid)
+		item.status=int(self.status)
 		return item
 
 	def setIcon(self,icon):
@@ -431,7 +433,7 @@ class rosterWidget(QtGui.QWidget):
 							#self.statusLabel.resize(self.width(),64)
 						#self.repaint()
 			else:
-				if item[0].typ=='user':
+				if item[0].typ=='user' and len(self.data)==0:
 					mimeData = QtCore.QMimeData()
 					mimeData.setText(item[0].jid)
 					self.data[mimeData]=item[0]
@@ -1151,9 +1153,10 @@ class rosterWidget(QtGui.QWidget):
 						
 						for i in self.getUserItems(oldItem.jid):
 							self.users.remove(i)
-						
+						self.setHighest(item.metajid)
 						self.main.client.roster_meta[oldItem.jid]={'tag':item.tag,'order':1}
 						self.main.client.setMetacontacts()
+						
 						self.sortItems()
 						self.repaint()
 						self.selectItem(item)
@@ -1360,9 +1363,6 @@ class rosterWidget(QtGui.QWidget):
 
 	def breakMetaContacts(self,jid):
 		item=self.getUserItems(jid)[0]
-		if not item:
-			item=self.getMetaItems(jid)[0]
-			jid=item.metajid
 		metajid=item.metajid
 		for it in self.getUserItems(jid):
 			self.users.remove(it)

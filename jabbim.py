@@ -540,7 +540,7 @@ class clientClass(pyxl.client.Client):
 				log.msg(unicode(add))
 				if add:
 					# we have some item to clone (so we can't create new one)
-					if len(items)!=0:
+					if len(items)==-1:
 						i=items[0].clone() # clone contact item
 						i.group=unicode(name)
 						print "append ",i
@@ -553,17 +553,31 @@ class clientClass(pyxl.client.Client):
 						#self.main.ui.roster.setStatus(jid,None,i)
 					else:
 						# add new contact to the roster
+						log.msg(unicode(self.main.ui.roster.users))
 						self.main.ui.roster.addUser(contact.jid,contact.name,name)
+						log.msg(unicode(self.main.ui.roster.users))
 						log.msg(unicode(contact.status))
 						if len(contact.status)==2:
 							show=contact.status[0]
 							status=contact.status[1]
 						else:
-							show=None
+							if len(contact.status)==1:
+								show=contact.status[0]
+							else:
+								show="offline"
 							status=None
-						self.main.ui.roster.setStatus(contact.jid,show,status=status)
-						#self.main.ui.roster.sortItems()
-						#self.main.ui.roster.repaint()
+						#self.main.ui.roster.setStatus(contact.jid,show,status=status)
+						for user in self.main.ui.roster.getUserItems(contact.jid):
+							user.icon=self.main.getIcon(contact.jid,size="32x32",status=self.main.icons[self.main.shows[unicode(show)]])
+							if self.main.shows[unicode(show)]!="9":
+								user.hidden=False
+							else:
+								user.hidden=True
+							user.statusMessage=status
+							user.status=self.main.shows[unicode(show)]
+						self.main.ui.roster.statusLabel.hide()
+						self.main.ui.roster.sortItems()
+						self.main.ui.roster.repaint()
 
 			else:
 				# user is not in this group, so we have to delete them from this group, if he is there
