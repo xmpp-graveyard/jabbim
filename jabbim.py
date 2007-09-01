@@ -636,59 +636,62 @@ class clientClass(pyxl.client.Client):
 			frm=unicode(frm).rsplit("/")[0]
 		else:
 			user=frm
-		body=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
-		# find MUC tab
-		for i in range(self.main.chat.ui.chatTab.count()):
-			w=self.main.chat.ui.chatTab.widget(i)
-			if unicode(w.jid) == frm:
-				if int(self.main.chat.ui.chatTab.currentIndex())!=i:
-					if self.main.chat.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
-						self.main.chat.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
-						self.main.chat.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(0,128,0))
-				# set room topic
-				if subject!=None:
-					w.chat.ui.info.setText(unicode(subject))
-					#w.chat.ui.info.setCursorPosition(0)
-				# set links, if we found them
-				body = utils.replace_url(body)
-
-				#for word in unicode(body).split(' '):
-					#if word.find("http://")!=-1:
-						#body=body.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
-				# no delay message
-				if delay==None or len(delay)==0:
-					# it's our message
-					if unicode(w.name)==unicode(user):
-						message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
-					else:
-						# it's message for us
-						if utils.need_highlight(unicode(w.name), unicode(body)):
-							if int(self.main.chat.ui.chatTab.currentIndex())!=i:
-								if self.main.chat.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
-									self.main.chat.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
-									self.main.chat.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(255,0,0))
-							message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
+		if not body:
+			body=""
+		if len(body)!=0:
+			body=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
+			# find MUC tab
+			for i in range(self.main.chat.ui.chatTab.count()):
+				w=self.main.chat.ui.chatTab.widget(i)
+				if unicode(w.jid) == frm:
+					if int(self.main.chat.ui.chatTab.currentIndex())!=i:
+						if self.main.chat.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
+							self.main.chat.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
+							self.main.chat.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(0,128,0))
+					# set room topic
+					if subject!=None:
+						w.chat.ui.info.setText(unicode(subject))
+						#w.chat.ui.info.setCursorPosition(0)
+					# set links, if we found them
+					body = utils.replace_url(body)
+	
+					#for word in unicode(body).split(' '):
+						#if word.find("http://")!=-1:
+							#body=body.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
+					# no delay message
+					if delay==None or len(delay)==0:
+						# it's our message
+						if unicode(w.name)==unicode(user):
+							message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
 						else:
-							message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
-					# write message
-					w.chat.textEditWrite(message)
-					return
-				else:
-					# get delay from string
-					delay=unicode(delay)
-					delay="%s-%s-%s %s:%s:%s" % (delay[0:4],delay[4:6],delay[6:8],delay[9:11],delay[12:14],delay[15:17])
-					# our delayed message
-					if unicode(w.name)==unicode(user):
-						message=self.main.skin["my_message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
+							# it's message for us
+							if utils.need_highlight(unicode(w.name), unicode(body)):
+								if int(self.main.chat.ui.chatTab.currentIndex())!=i:
+									if self.main.chat.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
+										self.main.chat.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
+										self.main.chat.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(255,0,0))
+								message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
+							else:
+								message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
+						# write message
+						w.chat.textEditWrite(message)
+						return
 					else:
-						# delayed message for us
-						if utils.need_highlight(unicode(w.name), unicode(body)):
-							message=self.main.skin["message_for_me_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
+						# get delay from string
+						delay=unicode(delay)
+						delay="%s-%s-%s %s:%s:%s" % (delay[0:4],delay[4:6],delay[6:8],delay[9:11],delay[12:14],delay[15:17])
+						# our delayed message
+						if unicode(w.name)==unicode(user):
+							message=self.main.skin["my_message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
 						else:
-							message=self.main.skin["message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
-					w.chat.textEditWrite(message)
-				
-
+							# delayed message for us
+							if utils.need_highlight(unicode(w.name), unicode(body)):
+								message=self.main.skin["message_for_me_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
+							else:
+								message=self.main.skin["message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
+						w.chat.textEditWrite(message)
+					
+	
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None):
 		# handle normal 'chat' messages
 		# get user icon or name, if we have him in roster. Or use default icon and jid as name
