@@ -416,6 +416,26 @@ class rosterWidget(QtGui.QWidget):
 
 		self.setSize()
 
+	def event(self,event):
+		# tooltip request:
+		if int(event.type())==110:
+			item=self.itemAt(int(event.x()),int(event.y()),1)[0]
+			if len(item)!=0:
+				item=item[0]
+				text='<table><tr>'
+				if item.avatar!=None and os.path.isfile(self.main.homeDir+'/avatars/'+unicode(item.jid)):
+					pixmap=item.avatar.pixmap(64,64)
+					text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(item.jid)+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
+				text+='<td><b>'+self.tr("Name:")+'</b> '+item.name+'<br/>'
+				text+='<b>'+self.tr("JID:")+'</b> '+item.jid+'<br/>'
+				text+='<b>'+self.tr("Status:")+'</b> '+unicode(self.main.status[self.main.icons[str(item.status)]])+'<br/>'
+				if item.statusMessage:
+					text+='<font size="-1">'+item.statusMessage+'<br/>'
+
+				text+="</td></tr></table>"
+				self.setToolTip(text)
+		return QtGui.QWidget.event(self,event)
+
 	def mouseMoveEvent(self,event):
 		item,x,y=self.itemAt(int(event.x()),int(event.y()),1)
 		if item:
