@@ -833,6 +833,8 @@ class mainWindow(QtGui.QMainWindow):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
+		
+		self.setAttribute(QtCore.Qt.WA_AlwaysShowToolTips,True)
 
 		self.homeDir=utils.getHomeDir() # get home dir
 		for x in range(0,len(sys.argv)):
