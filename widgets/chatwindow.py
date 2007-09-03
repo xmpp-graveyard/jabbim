@@ -148,7 +148,7 @@ class chatWindow(QtGui.QMainWindow):
 				event['widget'].closeClicked()
 				#break
 				self.main.events.refreshTray()
-		if w.typ=="chat":
+		if widget.typ=="chat":
 			self.main.client.sendMessage(str(widget.jid),"",composing="active")
 			widget.active=True
 		
