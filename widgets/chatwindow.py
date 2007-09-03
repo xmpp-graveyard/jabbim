@@ -68,13 +68,16 @@ class chatWindow(QtGui.QMainWindow):
 
 	def inactive(self):
 		if self.active==False:
+			print "sending inactive chatstate to all tabs"
 			for i in range(self.ui.chatTab.count()):
 				w=self.ui.chatTab.widget(i)
 				if w.typ=="chat":
 					w.active=False
 					self.main.client.sendMessage(str(w.jid),"",composing="inactive")
 			self.active=None
-		self.main.client.dispatcher.publishEvent('onInactivity', 30)
+		if self.active==None and self.main.active==False:
+			print "publishing onInactivity event"
+			self.main.client.dispatcher.publishEvent('onInactivity', 30)
 
 	def event(self,ev):
 		# WindowActivated
@@ -89,7 +92,8 @@ class chatWindow(QtGui.QMainWindow):
 				widget.active=True
 				self.main.client.sendMessage(str(widget.jid),"",composing="active")
 				self.main.client.dispatcher.publishEvent('onActivity')
-			
+				print "publishing onActivity event"
+
 			self.active=True
 
 			

@@ -979,7 +979,21 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.rosterStackedWidget.setCurrentIndex(2)
 			self.connect()
 
-
+		self.active=True
+	def event(self,ev):
+		# WindowActivated
+		if int(ev.type())==24:
+			if self.active!=True:
+				self.active=True
+				self.client.dispatcher.publishEvent('onActivity')
+				print "publishing onActivity event"
+			#self.timer.stop()
+		elif int(ev.type())==25:
+			if self.active:
+				print "INACTIVE MAINWIN"
+				self.active=False
+				self.chat.timer.start(30000)
+		return QtGui.QMainWindow.event(self,ev)
 	#def mouseMoveEvent(self,event):
 		#self.client.dispatcher.publishEvent('on_userActivity',"mouseMove")
 		#return QtGui.QMainWindow.mouseMoveEvent(self,event)
