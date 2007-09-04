@@ -22,7 +22,7 @@ try: from PyQt4 import QtCore, QtGui
 except: print "PyQt4 is not installed."
 from os.path import basename
 from twisted.python import log
-from twisted.words.protocols.jabber import jid
+from twisted.words.protocols.jabber import jid as jidT
 import filetransfer
 
 class activeWidget(QtGui.QWidget):
@@ -374,7 +374,7 @@ class rosterWidget(QtGui.QWidget):
 	def refreshEvents(self):
 		for event in self.main.events.events:
 			if event['type']=="message":
-				JID=jid.JID(event['name']).userhost()
+				JID=jidT.JID(event['name']).userhost()
 				for item in self.getUserItems(JID):
 					item.blink=QtGui.QIcon(event['iconName'].replace("xxxxx","32x32"))
 					self.events.append(item)
@@ -1235,6 +1235,13 @@ class rosterWidget(QtGui.QWidget):
 				user.hidden=True
 			user.statusMessage=status
 			user.status=self.main.shows[unicode(show)]
+		for i in range(self.main.chat.ui.chatTab.count()):
+			w=self.main.chat.ui.chatTab.widget(i)
+			if unicode(jidT.JID(w.jid).userhost())==unicode(jidT.JID(jid).userhost()):
+				w.ic=self.main.getIcon(jid,size="16x16",status=self.main.icons[self.main.shows[unicode(show)]])
+				self.main.chat.ui.chatTab.setTabIcon(i,w.ic)
+				break
+
 		for couple in self.getMetaItems(jid):
 			user=couple[0]
 			mainjid=couple[1]
