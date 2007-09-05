@@ -636,6 +636,8 @@ class clientClass(pyxl.client.Client):
 		frm=jidT.JID(frm)
 		if frm.resource:
 			user=frm.resource
+		else:
+			user=frm.userhost()
 		frm=frm.userhost()
 		if not body:
 			body=""
