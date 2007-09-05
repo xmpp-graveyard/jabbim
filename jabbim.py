@@ -633,11 +633,10 @@ class clientClass(pyxl.client.Client):
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
 		# handle messages from groupchat
 		# get user (resource) and MUC jid (saved in frm)
-		if len(unicode(frm).rsplit("/"))==2:
-			user=unicode(frm).rsplit("/")[1]
-			frm=unicode(frm).rsplit("/")[0]
-		else:
-			user=frm
+		frm=jidT.JID(frm)
+		if frm.resource:
+			user=frm.resource
+		frm=frm.userhost()
 		if not body:
 			body=""
 		if len(body)!=0:
@@ -698,17 +697,19 @@ class clientClass(pyxl.client.Client):
 		# handle normal 'chat' messages
 		# get user icon or name, if we have him in roster. Or use default icon and jid as name
 		log.msg("CHATSTATE:"+unicode(chatstate))
+		frm=jidT.JID(frm)
 		if not body:
 			body=""
 		if len(body)!=0:
-			user=self.main.ui.roster.getUserItems(unicode(frm).rsplit("/")[0])
+			user=self.main.ui.roster.getUserItems(frm.userhost())
+			log.msg("tset")
 			if len(user)!=0:
 				#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
 				icon=user[0].icon
 				user=user[0].name
 			else:
 				icon=self.main.getIcon(status="offline",size="16x16")
-				user=frm
+				user=frm.full()
 			# strip html tags and \n from messages
 			if xhtml==None:
 				message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
@@ -717,26 +718,27 @@ class clientClass(pyxl.client.Client):
 				message=xhtml
 			message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user)).replace("[message]",message)
 			# find tab
-			tab=None
-			tabIndex=0
-			for i in range(self.main.chat.ui.chatTab.count()):
-				w=self.main.chat.ui.chatTab.widget(i)
-				if unicode(w.jid)==unicode(frm):
-					tab=w
-					tabIndex=i
-					break
-				if unicode(w.jid).rsplit("/")[0]==unicode(frm).rsplit("/")[0]:
-					tab=w
-					tabIndex=i
+			#tab=None
+			#tabIndex=0
+			#for i in range(self.main.chat.ui.chatTab.count()):
+				#w=self.main.chat.ui.chatTab.widget(i)
+				#if unicode(w.jid)==unicode(frm):
+					#tab=w
+					#tabIndex=i
+					#break
+				#if unicode(w.jid).rsplit("/")[0]==unicode(frm).rsplit("/")[0]:
+					#tab=w
+					#tabIndex=i
+			tab,tabIndex=self.main.chat.findTab(frm.full())
 			# we found tab
 			if tab!=None:
 				# write message and set 'message' icon
 				if int(self.main.chat.ui.chatTab.currentIndex())!=tabIndex:
 					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
-					self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm])
+					self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()])
 				elif not self.main.chat.isActiveWindow():
-					self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm])
+					self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()])
 				else:
 					color=self.main.chat.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(self.main.chat.ui.chatTab.currentIndex(),color)
@@ -744,24 +746,16 @@ class clientClass(pyxl.client.Client):
 				tab.chat.textEditWrite(message)
 			else:
 				# add new chattab
-				self.main.chat.addChatTab(frm,unicode(user),icon,message)
-				self.main.events.addInfoEvent(header=self.main.tr("New message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[])
+				self.main.chat.addChatTab(frm.full(),unicode(user),icon,message)
+				self.main.events.addInfoEvent(header=self.main.tr("New message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[])
 				if len(body)>40:
 						traytext=body[:40]+" ..."
 				else:
 						traytext=body
 				self.main.tray.showMessage(self.main.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
-		tab=None
-		tabIndex=0
-		for i in range(self.main.chat.ui.chatTab.count()):
-			w=self.main.chat.ui.chatTab.widget(i)
-			if unicode(w.jid)==unicode(frm):
-				tab=w
-				tabIndex=i
-				break
-			if unicode(w.jid).rsplit("/")[0]==unicode(frm).rsplit("/")[0]:
-				tab=w
-				tabIndex=i
+		
+		tab,tabIndex=self.main.chat.findTab(frm.full())
+		
 		# we found tab
 		if chatstate=="composing":
 			if tab!=None:

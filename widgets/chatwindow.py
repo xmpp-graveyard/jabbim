@@ -28,6 +28,7 @@ from groupchat import *
 #from headlinewidget import *
 #from palette import *
 import os
+from twisted.words.protocols.jabber import jid as jidT
 
 class chatWindow(QtGui.QMainWindow):
 	def __init__(self,parent,main):
@@ -113,6 +114,13 @@ class chatWindow(QtGui.QMainWindow):
 				self.active=False
 				self.timer.start(30000)
 		return QtGui.QMainWindow.event(self,ev)
+
+	def findTab(self,jid=None):
+		for i in range(self.ui.chatTab.count()):
+			w=self.ui.chatTab.widget(i)
+			if unicode(w.jid)==jid:
+				return w,i # tab, index
+		return None,0 # tab, index
 
 	def changeTab(self,index):
 		try:
