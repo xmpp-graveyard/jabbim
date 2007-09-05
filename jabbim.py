@@ -47,6 +47,7 @@ from include import plugins
 from os.path import basename
 from twisted.words.protocols.jabber.xmlstream import IQ
 from twisted.words.xish.domish import Element
+from twisted.words.protocols.jabber import jid as jidT
 
 class clientClass(pyxl.client.Client):
 
@@ -460,20 +461,20 @@ class clientClass(pyxl.client.Client):
 		# normal presence handler
 		#log.msg("PRESENCE "+unicode(jid.full())+" "+unicode(show))
 		if show=="offline":
-			jid=jid.full() # get jid
+			#jid=jid.full() # get jid
 			# presence has resource
-			if len(unicode(jid).rsplit("/"))!=1:
-				resource=unicode(jid).rsplit("/")[1]
-				jid=unicode(jid).rsplit("/")[0]
-				self.main.ui.roster.setStatus(jid,show,first=first)
-			else:
-				self.main.ui.roster.setStatus(jid,show,first=first)
+			#if len(unicode(jid).rsplit("/"))!=1:
+				#resource=unicode(jid).rsplit("/")[1]
+				#jid=unicode(jid).rsplit("/")[0]
+				#self.main.ui.roster.setStatus(jid,show,first=first)
+			#else:
+			self.main.ui.roster.setStatus(jid.userhost(),show,first=first)
 		else:
-			jid=jid.full() # get jid
+			#jid=jid.full() # get jid
 			# presence has resource
-			if len(unicode(jid).rsplit("/"))!=1:
-				resource=unicode(jid).rsplit("/")[1]
-				jid=unicode(jid).rsplit("/")[0]
+			if jid.resource:
+				resource=jid.resource
+				jid=jid.userhost()
 				# get highest resource and status
 				highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
 				status=highest.status
@@ -489,6 +490,7 @@ class clientClass(pyxl.client.Client):
 				self.main.ui.roster.setStatus(jid,highest.show,status=highest.status,first=first)
 			else:
 				# get user status
+				jid=jid.userhost()
 				status=self.roster['users'][jid].status[1]
 				if status!=None:
 					status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
