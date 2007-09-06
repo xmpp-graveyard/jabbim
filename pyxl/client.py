@@ -204,6 +204,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/message/data[@xmlns='http://jabber.org/protocol/ibb']", self.onIBBData, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/confirm[@xmlns='http://jabber.org/protocol/http-auth']", self.onVerify, 1)
 		self.xmlstream.addObserver("/message/confirm[@xmlns='http://jabber.org/protocol/http-auth']", self.onVerify, 1)
+		self.xmlstream.addObserver("/iq[@type='get'][@id]/ping[@xmlns='urn:xmpp:ping']", self.onPing, 1)
 	
 		
 		self.getMetacontacts()
@@ -1271,6 +1272,16 @@ class Client(derived):
 		sid = close['sid']
 		self.ft[sid].ibbProcess()
 		self.ft[sid].finish()
+
+	def onPing(self, el):
+		log.msg('sending pong')
+		self.disp(el['id'])
+		iq = Element((None, 'iq'))
+		iq['to'] = el['from']
+		iq['type'] = 'result'
+		iq['id'] = el['id']
+		self.on_xml(iq.toXml())
+		self.xmlstream.send(iq)
 		
 
 	def disp(self, id):
