@@ -354,6 +354,13 @@ class events:
 
 	def refreshTray(self):
 		types=[]
+		
+		#self.events[0]['tooltip']!=""
+		if len(self.events)>0:
+			if self.events[0].has_key('tooltip'):
+				self.main.tray.setToolTip(self.events[0]['tooltip'])
+		else:
+			self.main.tray.setToolTip('')
 		for event in self.events:
 			if not event['type'] in types:
 				types.append(event['type'])
@@ -368,14 +375,14 @@ class events:
 			self.trayIcon=QtGui.QIcon("images/16x16/categories/event.png")
 			self.timer.start(500)
 
-	def addEvent(self,name,typ,icon,widget):
+	def addEvent(self,name,typ,icon,widget,tooltip=''):
 		if icon==None:
 			iconName=""
 			icon=QtGui.QIcon("images/16x16/categories/event.png")
 		else:
 			iconName=unicode(icon)
 			icon=QtGui.QIcon(unicode(icon).replace("xxxxx","16x16"))
-		self.events.append({'name':name,'type':typ,'icon':icon,'iconName':iconName,'widget':widget})
+		self.events.append({'name':name,'type':typ,'icon':icon,'iconName':iconName,'widget':widget,'tooltip':tooltip})
 		if typ!="message":
 			self.main.ui.tabWidget.setCurrentIndex(2)
 		self.main.ui.roster.refreshEvents()
@@ -393,12 +400,12 @@ class events:
 		self.addEvent(unicode(name),unicode(typ),icon,item.widget)
 
 
-	def addInfoEvent(self,trueCall=None,trueDict=None,header="",text="",name="",typ="",icon=None,action=None,actionDict=None):
+	def addInfoEvent(self,trueCall=None,trueDict=None,header="",text="",name="",typ="",icon=None,action=None,actionDict=None,tooltip=''):
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		item.setSizeHint(QtCore.QSize(100,40))
 		item.widget=InfoWidget(header,text,item,self.main,trueCall,trueDict,action,actionDict,self.main.ui.eventsListWidget)
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
-		self.addEvent(unicode(name),unicode(typ),icon,item.widget)
+		self.addEvent(unicode(name),unicode(typ),icon,item.widget,tooltip)
 
 	def addBooleanEvent(self,trueCall,trueDict,falseCall,falseDict,header="",text="",height=40,name="",typ="",icon=None):
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)

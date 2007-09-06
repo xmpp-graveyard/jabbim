@@ -732,15 +732,19 @@ class clientClass(pyxl.client.Client):
 					#tab=w
 					#tabIndex=i
 			tab,tabIndex=self.main.chat.findTab(frm.full())
+
+
+
+						
 			# we found tab
 			if tab!=None:
 				# write message and set 'message' icon
 				if int(self.main.chat.ui.chatTab.currentIndex())!=tabIndex:
 					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
-					self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()])
+					self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()],tooltip=self.main.tr("New message from ")+unicode(user))
 				elif not self.main.chat.isActiveWindow():
-					self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()])
+					self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()],tooltip=self.main.tr("New message from ")+unicode(user))
 				else:
 					color=self.main.chat.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(self.main.chat.ui.chatTab.currentIndex(),color)
@@ -749,11 +753,19 @@ class clientClass(pyxl.client.Client):
 			else:
 				# add new chattab
 				self.main.chat.addChatTab(frm.full(),unicode(user),icon,message)
-				self.main.events.addInfoEvent(header=self.main.tr("New message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[])
 				if len(body)>40:
 						traytext=body[:40]+" ..."
 				else:
 						traytext=body
+				text='<table><tr>'
+				if len(self.main.ui.roster.getUserItems(frm.userhost()))>0 and os.path.isfile(self.main.homeDir+'/avatars/'+unicode(frm.userhost())):
+					item=self.main.ui.roster.getUserItems(frm.userhost())[0]
+					pixmap=item.avatar.pixmap(64,64)
+					text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(item.jid)+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
+				text+='<td><b>'+self.main.tr("New message from ")+unicode(user)+'</b><br/>'
+				text+='<font size="-1">'+traytext+'<br/>'
+				text+="</td></tr></table>"
+				self.main.events.addInfoEvent(header=self.main.tr("New message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[],tooltip=text)
 				self.main.tray.showMessage(self.main.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
 		
 		tab,tabIndex=self.main.chat.findTab(frm.full())
