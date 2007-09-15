@@ -369,6 +369,8 @@ class rosterWidget(QtGui.QWidget):
 
 		self.events=[]
 		self.bl=True
+		self.animSize=0
+		#self.animUp=False
 
 		#QtCore.QObject.connect(self.main.scroll, QtCore.SIGNAL("sliderMoved(int)"),self.slider)
 
@@ -376,7 +378,8 @@ class rosterWidget(QtGui.QWidget):
 		#pass
 
 	def timeFunc(self):
-		self.selectedState=2
+		#self.selectedState=2
+		self.animSize+=5
 		self.repaint()
 
 	def refreshEvents(self):
@@ -448,16 +451,16 @@ class rosterWidget(QtGui.QWidget):
 		item,x,y=self.itemAt(int(event.x()),int(event.y()),1)
 		if item:
 			if event.buttons()==QtCore.Qt.NoButton:
-				#pass
-				if self.item==item[0]:
-					if self.selectedState!=2:
-						self.selectedState=2
-						self.repaint()
-				else:
-					if self.selectedState!=1:
-						self.selectedState=1
-						self.statusLabel.hide()
-						self.repaint()
+				pass
+				#if self.item==item[0]:
+					#if self.selectedState!=2:
+						#self.selectedState=2
+						#self.repaint()
+				#else:
+					#if self.selectedState!=1:
+						#self.selectedState=1
+						#self.statusLabel.hide()
+						#self.repaint()
 						
 				#if self.item==item[0]:
 					#if event.x()>self.width()-32 and int(event.y())<y+32 and int(event.y())>y:
@@ -620,16 +623,23 @@ class rosterWidget(QtGui.QWidget):
 
 	def paintUserItem(self,painter,useritem,x,y):
 		if useritem==self.item:
+			tmp=91
+			if not useritem.statusMessage:
+				tmp-=32
+			if not self.metaItems.has_key(useritem.metajid):
+				tmp-=16
 			if self.selectedState==2:
-				height=91
-				if not useritem.statusMessage:
-					height-=32
-				if not self.metaItems.has_key(useritem.metajid):
-					height-=16
+				height=tmp
 				self.selectedHeight=height+32
 			else:
-				height=91-32-32-16
-				self.selectedHeight=height+32
+				height=28+self.animSize
+				if height>=tmp:
+					self.time.stop()
+					self.selectedState=2
+					self.selectedHeight=tmp+32
+					height=tmp
+				else:
+					self.selectedHeight=height+32
 			painter.save()
 			painter.translate(x,y)
 			painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
@@ -958,6 +968,7 @@ class rosterWidget(QtGui.QWidget):
 			self.selected=item
 			self.statusLabel.hide()
 			self.selectedState=1
+			self.animSize=0
 			#if self.statusLabel:
 				#self.statusLabel.setParent(None)
 				#self.statusLabel=None
@@ -974,7 +985,8 @@ class rosterWidget(QtGui.QWidget):
 		self.selectItem(item)
 		#self.timeData=item
 		#self.time.stop()
-		#self.time.start(500)
+		
+		self.time.start(40)
 		if item.typ=='group' and item.main!='special':
 			if item.expanded:
 				item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png")
