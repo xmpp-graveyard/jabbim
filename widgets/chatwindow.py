@@ -74,7 +74,7 @@ class chatWindow(QtGui.QMainWindow):
 				w=self.ui.chatTab.widget(i)
 				if w.typ=="chat":
 					w.active=False
-					self.main.client.sendMessage(str(w.jid),"",composing="inactive")
+					self.main.client.sendMessage(unicode(w.jid),"",composing="inactive")
 			self.active=None
 		if self.active==None and self.main.active==False:
 			print "publishing onInactivity event"

@@ -541,7 +541,9 @@ class Client(derived):
 				if child.defaultUri == 'jabber:x:delay' :
 					delay = child.getAttribute('stamp')
 				if child.defaultUri == 'jabber:x:event':
-					chatstate = child.firstChildElement().name
+					elm = child.firstChildElement()
+					if elm:
+						chatstate = elm.name
 			if child.name == 'confirm': # xep0070 - processed elsewhere
 				return
 
