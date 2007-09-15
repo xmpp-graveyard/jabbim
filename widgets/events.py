@@ -444,10 +444,40 @@ class events:
 		item.sent=1
 		item.broken=[]
 		item.all=fileCount
+		item.download=False
 		item.widget=FTWidget(basename(file),item,self.main,sid,self.main.ui.eventsListWidget)
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 		self.filetransfer[sid]=item
-	
+
+	def addFTDownloadEvent(self,jid,file,description,sid):
+		# descriptions['soubor']='popis'
+		#filesQueue={}
+		#for name in files:
+			#filesQueue[name]=fileClass(name,descriptions[name])
+
+		#file=files
+		#fileCount=len(file)
+		#file=file[0]
+		file=unicode(file)
+		#res = self.main.client.roster['users'][jid].getHighestResource()
+		#sid=self.main.client.sendFile(jid+'/'+res, basename(file), file,descriptions[file])
+
+		#self.filetransferQueue[sid]=filesQueue
+		#self.main.filetransferDescriptions[sid]=descriptions
+		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
+		item.download=True
+
+		item.setSizeHint(QtCore.QSize(100,60))
+		item.queueId=sid
+		item.file=file
+		item.jid=jid
+		item.sent=1
+		item.broken=[]
+		item.all=1
+		item.widget=FTWidget(basename(file),item,self.main,sid,self.main.ui.eventsListWidget)
+		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
+		self.filetransfer[sid]=item
+
 	def nextFTUploadEvent(self,sid,queueId):
 		jid=self.filetransfer[sid].jid
 		file=self.filetransferQueue[queueId][self.filetransferQueue[queueId].keys()[0]].name
@@ -460,6 +490,7 @@ class events:
 		item.file=file
 		item.jid=jid
 		item.queueId=queueId
+		item.download=False
 		item.sent=self.filetransfer[sid].sent+1
 		#if self.ftError[sid]==None:
 			#item.broken=self.filetransfer[sid].broken

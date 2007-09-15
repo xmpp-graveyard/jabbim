@@ -116,15 +116,16 @@ class clientClass(pyxl.client.Client):
 				widget.widget.complete=True
 
 		for sid in toDel:
-			queueId=self.main.events.filetransfer[sid].queueId # filetransfer queue ID
-			if queueId!=None:
-				# delete sent file from queue and start uploading next file in queue
-				del self.main.events.filetransferQueue[queueId][self.main.events.filetransfer[sid].file]
-				if len(self.main.events.filetransferQueue[queueId])!=0:
-					self.main.events.nextFTUploadEvent(sid,queueId)
-			else:
-				log.msg(unicode(self.main.events.filetransferQueue))
-				log.msg(unicode(self.main.events.filetransfer[sid].file))
+			if self.main.events.filetransfer[sid].download==False:
+				queueId=self.main.events.filetransfer[sid].queueId # filetransfer queue ID
+				if queueId!=None:
+					# delete sent file from queue and start uploading next file in queue
+					del self.main.events.filetransferQueue[queueId][self.main.events.filetransfer[sid].file]
+					if len(self.main.events.filetransferQueue[queueId])!=0:
+						self.main.events.nextFTUploadEvent(sid,queueId)
+				else:
+					log.msg(unicode(self.main.events.filetransferQueue))
+					log.msg(unicode(self.main.events.filetransfer[sid].file))
 			# delete this filetransfer
 			del self.main.events.filetransfer[sid]
 
@@ -818,7 +819,7 @@ class clientClass(pyxl.client.Client):
 		#if q == QtGui.QMessageBox.Yes:
 		filename = QtGui.QFileDialog.getSaveFileName(self.main, self.main.tr("Save File"),self.ft[sid].fileprops['name'],self.main.tr("*.*"))
 		log.msg(unicode(filename))
-		
+		self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),unicode(self.ft[sid].tojid),"",sid)
 		log.msg('receiving file: ' + sid)
 		if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
 			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
@@ -830,6 +831,7 @@ class clientClass(pyxl.client.Client):
 			self.ft[sid].file = filename
 			self.ft[sid].fp = open(self.ft[sid].file, 'wb')
 			self.receiveFile(sid, id)
+		
 	
 	def on_verify(self, id, thread, props, frm, typ): #xep0070
 # 		self.replyVerify(id, thread, props, frm, typ, False)
