@@ -78,6 +78,7 @@ class abstractWidget(QtGui.QWidget):
 	def closeClicked(self):
 		if self.falseCall!=None:
 			self.falseCall(*self.falseDict)
+			self.falseCall=None
 		self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
 		for event in self.main.events.events:
 			if event['widget']==self:
@@ -88,6 +89,7 @@ class abstractWidget(QtGui.QWidget):
 	def submitClicked(self):
 		if self.trueCall!=None:
 			self.trueCall(*self.trueDict)
+			self.trueCall=None
 		self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
 		for event in self.main.events.events:
 			if event['widget']==self:
