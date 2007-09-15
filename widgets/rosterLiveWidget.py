@@ -1137,6 +1137,7 @@ class rosterWidget(QtGui.QWidget):
 						name=unicode(self.main.client.roster['users'][jid].name)
 						contact=self.main.client.roster['users'][jid]
 						self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,[unicode(item.group)])
+						self.statusLabel.hide()
 						self.sortItems()
 						self.repaint()
 						
