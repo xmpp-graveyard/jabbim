@@ -16,7 +16,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Headlines window'
 		self.author = u"Jiří 'Sef' Gabryš"
 		self.name = 'News Plugin'
-		self.version = '0.051'
+		self.version = '0.060'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.kontakty = {} # jid:contact
@@ -114,24 +114,24 @@ class Plugin(plugins.PluginBase):
 				font.setBold(True)
 			item.setFont(font)
 			self.window.ui.zpravy.addItem(item)
-			if setUnread :
-				if zprava.unread:
-					self.window.ui.zpravy.setCurrentItem(item)		
-					zprava.unread = False
-					self.window.ui.subject.setText(zprava.subject)
-					self.window.ui.datum.setText(unicode(time.strftime('%X %x',time.localtime(zprava.time))))
-					self.window.ui.zprava.setHtml(zprava.body)
-					if kontakt.neprectene() == 0:
-						kontakt.item.setFont(font)
-					setUnread = False
+# 			if setUnread :
+# 				if zprava.unread:
+# 					self.window.ui.zpravy.setCurrentItem(item)		
+# 					zprava.unread = False
+# 					self.window.ui.subject.setText(zprava.subject)
+# 					self.window.ui.datum.setText(unicode(time.strftime('%X %x',time.localtime(zprava.time))))
+# 					self.window.ui.zprava.setHtml(zprava.body)
+# 					if kontakt.neprectene() == 0:
+# 						kontakt.item.setFont(font)
+# 					setUnread = False
 	
 	def headlineChanged(self, item):
 		log.msg('headlineChanged')
-# 		item = self.window.ui.roster.currentItem()
+ 		itm = self.window.ui.roster.currentItem()
 		font =  QtGui.QFont()
 		font.setBold(False)
 		item.setFont(font)
-		jid = unicode(item.text())
+		jid = unicode(itm.text())
 		try:
 			kontakt = self.kontakty[jid]
 		except:
