@@ -1397,8 +1397,6 @@ class rosterWidget(QtGui.QWidget):
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
 		return contactMenu
-		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
-		return contactMenu
 
 	def buildGroupMenu(self,name):
 		pass
@@ -1548,22 +1546,34 @@ class rosterWidget(QtGui.QWidget):
 				#self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 				#self.main.filetransfer[sid]=item
 				##self.main.filetransferTimer.start(500)
-	
 
 		elif cmd == "a_authorize":
 			jid=action.data()
 			jid=unicode(jid.toString())
 			self.main.client.sendPresence(jid, typ="subscribed")
+			value = self.main.client.roster['users'][jid].subscription
+			if value == "none":
+				self.main.client.roster['users'][jid].subscription = "from"
+			elif value == "to":
+				self.main.client.roster['users'][jid].subscription = "both"
+			log.msg("%s authorized" % jid)
 		elif cmd == "a_unauthorize":
 			jid=action.data()
 			jid=unicode(jid.toString())
 			self.main.client.sendPresence(jid, typ="unsubscribed")
+			value = self.main.client.roster['users'][jid].subscription
+			if value == "from":
+				self.main.client.roster['users'][jid].subscription = "none"
+			elif value == "both":
+				self.main.client.roster['users'][jid].subscription = "to"
+			log.msg("removed autorization from %s" % jid)
 		elif cmd == "a_ask":
 			jid=action.data()
 			jid=unicode(jid.toString())
 			self.main.client.sendPresence(jid, typ="subscribe")
+			log.msg("sent subscription request to %s" % jid)
 
-	log.msg("END CONTACT")
+		log.msg("END CONTACT")
 
 	def changeGroup(self,jid,action,group):
 			name=unicode(self.main.client.roster['users'][jid].name)
