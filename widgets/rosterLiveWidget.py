@@ -1379,7 +1379,24 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					action.setData(QtCore.QVariant([unicode(jid),u"+"+unicode(k)]))
 				
+		subscription = contactMenu.addMenu(self.tr("Authorization"))
+		value = self.main.client.roster['users'][jid].subscription
+		if value in ["none", "to"]:
+			action = subscription.addAction(self.tr("Authorize"))
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("a_authorize")
+		if value in ["from", "both"]:
+			action = subscription.addAction(self.tr("Unauthorize"))	
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("a_unauthorize")
+		if value in ["none", "from"]:
+			action = subscription.addAction(self.tr("Ask for authorization"))	
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("a_ask")
+		
 		# signal
+		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
+		return contactMenu
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
 		return contactMenu
 
@@ -1531,7 +1548,23 @@ class rosterWidget(QtGui.QWidget):
 				#self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 				#self.main.filetransfer[sid]=item
 				##self.main.filetransferTimer.start(500)
-		log.msg("END CONTACT")
+	
+
+		elif cmd == "a_authorize":
+			jid=action.data()
+			jid=unicode(jid.toString())
+			self.main.client.sendPresence(jid, typ="subscribed")
+		elif cmd == "a_unauthorize":
+			jid=action.data()
+			jid=unicode(jid.toString())
+			self.main.client.sendPresence(jid, typ="unsubscribed")
+		elif cmd == "a_ask":
+			jid=action.data()
+			jid=unicode(jid.toString())
+			self.main.client.sendPresence(jid, typ="subscribe")
+
+	log.msg("END CONTACT")
+
 	def changeGroup(self,jid,action,group):
 			name=unicode(self.main.client.roster['users'][jid].name)
 			if action=="+":
