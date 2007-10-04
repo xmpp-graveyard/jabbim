@@ -21,7 +21,7 @@ class Plugin(plugins.PluginBase):
 		self.kontakty = {} # jid:contact
 		self.config['away_time'] = {'description':'Minutes to autoaway', 'default':10, 'value': '','type':'int'}
 		self.config['away_text'] = {'description':'Text to show while auto away', 'default':'User is away for %i minutes.', 'value': '','type':'text'}
-		self.config['preserve_show' = {'description':"Change only status message", 'default':True, 'value': '','type':'boolean'}
+		self.config['preserve_show'] = {'description':"Change only status message", 'default':True, 'value': '','type':'boolean'}
 		if main:
 			self.loadConfig()
 			self.installTranslator()
@@ -35,10 +35,10 @@ class Plugin(plugins.PluginBase):
 		
 		self.message_set = False
 		self.idletime = 0
-		self.old
+#		self.old 
 		
 	
 	def on_idle(self, cas):
 		self.idletime += cas
 		if self.idletime > (self.config['away_time']*60) and not self.message_set:
-			
+			pass	
