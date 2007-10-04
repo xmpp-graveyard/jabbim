@@ -1399,7 +1399,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def newBookmark(self):
 		# make new bookmark
-		edit=widgets.preferences.editBookmark(self,"","","","","",False,self,False)
+		edit=widgets.preferences.editBookmark(self,"","conf.netlab.cz","",self.client.jid.user,"",False,self,False)
 		ret=edit.exec_()
 
 	def groupchatContextMenuTriggered(self,action):
