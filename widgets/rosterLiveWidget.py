@@ -1313,6 +1313,7 @@ class rosterWidget(QtGui.QWidget):
 	def buildContactMenu(self,jid,group):
 		# build contact menu
 		contactMenu=QtGui.QMenu(self)
+		contact = self.main.client.roster['users'][jid]
 		# chat
 		action=contactMenu.addAction(self.tr("Chat"))
 		action.setData(QtCore.QVariant(jid))
@@ -1324,9 +1325,17 @@ class rosterWidget(QtGui.QWidget):
 		action.setData(QtCore.QVariant(jid))
 		action.setObjectName("vcard")
 		# vcard
-		action=contactMenu.addAction(self.tr("Send file"))
-		action.setData(QtCore.QVariant(jid))
-		action.setObjectName("send_file")
+		if len(contact.resources.keys()) < 2:
+			action=contactMenu.addAction(self.tr("Send file"))
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("send_file")
+		else:
+			submenu = contactMenu.addMenu(self.tr("Send file"))
+			for resource in contact.resources.keys():
+				action = submenu.addAction(resource)
+				action.setData(QtCore.QVariant("%s/%s" % (jid, resource)))
+				action.setObjectName("send_file")
+		# separator
 		# separator
 		contactMenu.addSeparator()
 		# break up metacontact
@@ -1380,17 +1389,17 @@ class rosterWidget(QtGui.QWidget):
 					action.setData(QtCore.QVariant([unicode(jid),u"+"+unicode(k)]))
 				
 		subscription = contactMenu.addMenu(self.tr("Authorization"))
-		value = self.main.client.roster['users'][jid].subscription
+		value = contact.subscription
 		if value in ["none", "to"]:
-			action = subscription.addAction(self.tr("Authorize"))
+			action = subscription.addAction(self.tr("Allow contact to see my status"))
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("a_authorize")
 		if value in ["from", "both"]:
-			action = subscription.addAction(self.tr("Unauthorize"))	
+			action = subscription.addAction(self.tr("Forbid contact to see my status"))	
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("a_unauthorize")
 		if value in ["none", "from"]:
-			action = subscription.addAction(self.tr("Ask for authorization"))	
+			action = subscription.addAction(self.tr("Ask contact to allow me see his/her status"))	
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("a_ask")
 		
