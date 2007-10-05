@@ -47,10 +47,13 @@ class PluginBase:
 		pass
 
 	def loadUi(self,file,parent,wid):
+		print locals()
+		ui = None
 		f=open(file)
-		ui=load_source("", file, f)
+		ui=load_source(self.fname, file, f)
 		f.close()
 		wid.ui=None
+		print dir(ui)
 		for func in dir(ui):
 			if func.startswith("Ui_"):
 				wid.ui=getattr(ui, func)()

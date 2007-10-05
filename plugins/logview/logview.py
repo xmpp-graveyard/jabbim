@@ -11,7 +11,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Extra debug window'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'LogView Plugin'
-		self.version = '0.032'
+		self.version = '0.033'
 		self.category = ['log', 'misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		#self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
