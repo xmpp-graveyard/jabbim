@@ -430,8 +430,11 @@ class events:
 		fileCount=len(file)
 		file=file[0]
 		file=unicode(file)
-
-		res = self.main.client.roster['users'][jid].getHighestResource()
+		
+		if jid.find("/") == -1:
+			res = self.main.client.roster['users'][jid].getHighestResource()
+		else:
+			jid, res = jid.split("/", 1)
 		sid=self.main.client.sendFile(jid+'/'+res, basename(file), file,descriptions[file])
 
 		self.filetransferQueue[sid]=filesQueue
