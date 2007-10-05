@@ -36,7 +36,7 @@ except:
 import widgets
 import pyxl
 from pyxl import storage
-
+import traceback
 from configobj import ConfigObj
 from include import utils
 from include import rot13
@@ -260,6 +260,8 @@ class clientClass(pyxl.client.Client):
 		## get metacontacts
 		meta={} # temp variable for metacontacts - {userTag:userJid}
 		for jid,user in self.roster['users'].iteritems():
+			if jid == self.jid.userhost():
+				continue
 			if user.tag!=None:
 				if not meta.has_key(user.tag):
 					meta[user.tag]=[[jid,user.order]]
@@ -857,8 +859,8 @@ class mainWindow(QtGui.QMainWindow):
 				self.homeDir= sys.argv[x+1]
 
 		utils.loadConfig(self) # load config files
-		#self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
-		self.cache = storage.Cache(db=':memory:')
+		self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache2.db'))
+##		self.cache = storage.Cache(db=':memory:')
 		self.plugins = {}
 
 		self.ui.gridlayout.setMargin(1)
@@ -1141,7 +1143,9 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				print "plugin already loaded"
 		except Exception, ex:
-					log.msg(plugin+': '+unicode(ex))
+					#log.msg(unicode(plugin)+u': '+unicode(ex))
+					traceback.print_exc()
+					pass
 			
 		log.msg("PLUGINS:"+unicode(self.plugins))
 

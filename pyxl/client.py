@@ -485,12 +485,15 @@ class Client(derived):
 					contact = Contact(self, item['jid'], name, item['subscription'], [], groups, tag =  tag, order =  order)
 					self.roster['users'][item['jid']] = contact
 					self.reactor.callFromThread(self.on_rosterAddUser,contact)
-
+		
+		self.roster['users'][self.jid.userhost()] = Contact(self, self.jid.userhost(), self.jid.user, 'both', [], [])
+		
 		log.msg( 'roster arrived')
-		presence = Element(('jabber:client','presence'))
-		presence['priority'] = '5'
-		self.on_xml(presence.toXml())
-		self.xmlstream.send(presence)
+##		presence = Element(('jabber:client','presence'))
+##		presence['priority'] = '5'
+##		self.on_xml(presence.toXml())
+##		self.xmlstream.send(presence)
+		self.sendPresence()
 		cekej = 20
 		if ln*0.05 < cekej:
 			cekej = ln*0.05
@@ -1036,7 +1039,7 @@ class Client(derived):
 		field = x.addElement('field')
 		field['var'] = 'stream-method'
 		field['type'] = 'list-single'
- 		field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
+ 		#field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
 		field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
 		self.on_xml(iq.toXml())
 		d = iq.send()

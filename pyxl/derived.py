@@ -128,6 +128,8 @@ class derived:
 		presence['from'] = self.jid.full()
 		if to:
 			presence['to'] = to
+		else:
+			self.roster['users'][self.jid.userhost()].setStatus(self.jid.resource, show, status)
 		if status:
 			presence.addElement('status', content = status)
 		if show:
