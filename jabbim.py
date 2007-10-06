@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*- 
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -859,7 +860,12 @@ class mainWindow(QtGui.QMainWindow):
 				self.homeDir= sys.argv[x+1]
 
 		utils.loadConfig(self) # load config files
-		self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache2.db'))
+		if sys.platform != 'win32':
+			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
+		else:
+			self.cache = storage.Cache(db=utils.path(u'c:\jabbim-cache.db')) #hack!
+		#elf.cache = storage.Cache(db=utils.path(u'C:\ččč\cache.db'))
+		#self.cache = storage.Cache(db=unicode(self.homeDir+u'/cache2.db'))
 ##		self.cache = storage.Cache(db=':memory:')
 		self.plugins = {}
 
@@ -1061,14 +1067,14 @@ class mainWindow(QtGui.QMainWindow):
 			v1 = v2 = 0
 			f = f2 = False
 			try: 
-				f=open(path)
+				f=open(utils.path(path))
 				plug = load_source(plugin, path, f).Plugin(False, self.homeDir)
 			except Exception, ex:
 				log.msg(plugin+': CHYBA!')
 				continue
 			#takze mam asi spravny plugin, kouknem se jestli je v homediru
 			try: 
-				f2=open(path2)
+				f2=open(utils.path(path2))
 				plug2 = load_source(plugin, path, f2).Plugin(False, self.homeDir)
 			except:
 				copy = True
@@ -1129,7 +1135,7 @@ class mainWindow(QtGui.QMainWindow):
 	def loadPlugin(self,plugin):
 		path = utils.path('%s/plugins/%s/%s.py'%(self.homeDir, plugin, plugin))
 		try: 
-			f=open(path)
+			f=open((path))
 		except:
 			log.msg('plugin load error: '+plugin)
 			return

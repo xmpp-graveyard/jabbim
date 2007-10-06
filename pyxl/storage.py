@@ -28,7 +28,7 @@ class Cache:
 			except ImportError:
 				self.db = adbapi.ConnectionPool('pysqlite2.dbapi2', db)
 			except:
-				log.msg('Unknown DB error')
+				log.msg('Unknown DB error')				
 		self.db.runQuery('create table caps (node text, feature text);').addCallback(self.table_created).addErrback(self.table_present)
 		
 		

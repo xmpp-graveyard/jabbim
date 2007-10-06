@@ -23,6 +23,7 @@ try:
 	from PyQt4 import QtCore, QtGui
 except:
 	print "PyQt4 is not installed."
+import utils
 
 class PluginBase:
 	def __init__(self, main, homedir):
@@ -49,8 +50,8 @@ class PluginBase:
 	def loadUi(self,file,parent,wid):
 		print locals()
 		ui = None
-		f=open(file)
-		ui=load_source(self.fname, file, f)
+		f=open(utils.path(file))
+		ui=load_source(self.fname, utils.path(file), f)
 		f.close()
 		wid.ui=None
 		print dir(ui)
@@ -76,8 +77,8 @@ class PluginBase:
 
 	def installTranslator(self):
 		self.translator=QtCore.QTranslator()
-		directory="%s/plugins/%s/"%(self.homeDir, self.fname)
-		self.translator.load(directory+"locales/"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
+		directory=u"%s/plugins/%s/"%(self.homeDir, self.fname)
+		self.translator.load(utils.path(directory+u"locales/"+unicode(QtCore.QLocale.system().name()[:2])+u".qm"))
 		log.msg("trying to load localization file "+ directory+"locales/"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
 
 	def tr(self,text):
@@ -96,7 +97,7 @@ class PluginBase:
 # 		except:
 # 			log.msg('No config for: '+self.name)
 # # 			return False
-		self.confObj = ConfigObj(homedir+'/'+self.fname+'-config.ini',encoding='UTF8')
+		self.confObj = ConfigObj(utils.path(homedir+'/'+self.fname+'-config.ini'),encoding='UTF8')
 		for k in self.config.iterkeys():
 			try:
 				self.config[k]['value'] = self.confObj[k]
