@@ -1321,10 +1321,36 @@ class rosterWidget(QtGui.QWidget):
 		# build contact menu
 		contactMenu=QtGui.QMenu(self)
 		contact = self.main.client.roster['users'][jid]
+		oneres = len(contact.resources.keys()) < 2
 		# chat
 		action=contactMenu.addAction(self.tr("Chat"))
 		action.setData(QtCore.QVariant(jid))
 		action.setObjectName("chat")
+		if oneres:
+			submenu=contactMenu.addMenu(self.tr("Custom status"))
+
+			for status in ["online", "chat", "away", "xa", "dnd", "offline"]:
+				action=submenu.addAction(self.main.getIcon(status=status,size="32x32"),self.main.status[status])
+				action.setObjectName("custom_status")
+				action.setData(QtCore.QVariant([unicode(status), unicode(jid)]))
+		else:
+			submenu = contactMenu.addMenu(self.tr("Custom status"))
+			resmenu = submenu.addMenu(self.tr("All resources"))
+			submenu.addSeparator()
+			resmenus = [(submenu.addMenu(res), res) for res in contact.resources.keys()]
+			resmenus.append((resmenu, ""))
+			for resmenu in resmenus:
+				resmenu, res = resmenu
+				for status in ["online", "chat", "away", "xa", "dnd", "offline"]:
+			                action=resmenu.addAction(self.main.getIcon(status=status,size="32x32"),self.main.status[status])
+					action.setObjectName("custom_status")
+					if res:
+						jr = "%s/%s" % (jid, res)
+					else:
+						jr = jid
+					action.setData(QtCore.QVariant([unicode(status), unicode(jr)]))
+
+
 		# separator
 		contactMenu.addSeparator()
 		# vcard
@@ -1332,7 +1358,7 @@ class rosterWidget(QtGui.QWidget):
 		action.setData(QtCore.QVariant(jid))
 		action.setObjectName("vcard")
 		# vcard
-		if len(contact.resources.keys()) < 2:
+		if oneres:
 			action=contactMenu.addAction(self.tr("Send file"))
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("send_file")
@@ -1526,6 +1552,8 @@ class rosterWidget(QtGui.QWidget):
 			item=self.getUserItems(jid)[0]
 			self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			self.main.chat.activate()
+		elif cmd=="custom_status":
+			pass
 
 		elif cmd=="send_file":
 			# chat with selected contact
