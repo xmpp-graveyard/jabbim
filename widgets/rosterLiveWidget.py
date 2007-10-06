@@ -1323,9 +1323,17 @@ class rosterWidget(QtGui.QWidget):
 		contact = self.main.client.roster['users'][jid]
 		oneres = len(contact.resources.keys()) < 2
 		# chat
-		action=contactMenu.addAction(self.tr("Chat"))
-		action.setData(QtCore.QVariant(jid))
-		action.setObjectName("chat")
+		if oneres:
+			action=contactMenu.addAction(self.tr("Chat"))
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("chat")
+		else:
+			submenu = contactMenu.addMenu(self.tr("Chat"))
+			for res in contact.resources.keys():
+				action=submenu.addAction(res)
+				action.setData(QtCore.QVariant("%s/%s" % (jid, res)))
+				action.setObjectName("chat")
+		# custom status
 		if oneres:
 			submenu=contactMenu.addMenu(self.tr("Custom status"))
 
@@ -1357,7 +1365,7 @@ class rosterWidget(QtGui.QWidget):
 		action=contactMenu.addAction(self.tr("vCard"))
 		action.setData(QtCore.QVariant(jid))
 		action.setObjectName("vcard")
-		# vcard
+		# filetransfer
 		if oneres:
 			action=contactMenu.addAction(self.tr("Send file"))
 			action.setData(QtCore.QVariant(jid))
@@ -1368,7 +1376,6 @@ class rosterWidget(QtGui.QWidget):
 				action = submenu.addAction(resource)
 				action.setData(QtCore.QVariant("%s/%s" % (jid, resource)))
 				action.setObjectName("send_file")
-		# separator
 		# separator
 		contactMenu.addSeparator()
 		# break up metacontact
@@ -1549,12 +1556,17 @@ class rosterWidget(QtGui.QWidget):
 			# chat with selected contact
 			jid=action.data()
 			jid=str(jid.toString())
-			item=self.getUserItems(jid)[0]
-			self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+			if jid.find("/") == -1:
+				item=self.getUserItems(jid)[0]
+				self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+			else:
+				log.msg(jid.split("/",1)[0])
+				item=self.getUserItems(jid.split("/", 1)[0])[0]
+				self.main.chat.addChatTab(jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+				
 			self.main.chat.activate()
 		elif cmd=="custom_status":
 			show, jid = [unicode(val.toString()) for val in action.data().toList()]
-			log.msg("Custom status: %s %s" % (jid, show))
 			self.main.sendCustomStatus(jid, show)
 
 		elif cmd=="send_file":
