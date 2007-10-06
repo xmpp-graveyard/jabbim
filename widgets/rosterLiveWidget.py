@@ -366,6 +366,7 @@ class rosterWidget(QtGui.QWidget):
 		self.events=[]
 		self.bl=True
 
+		self.changePos=False
 		#QtCore.QObject.connect(self.main.scroll, QtCore.SIGNAL("sliderMoved(int)"),self.slider)
 
 	#def slider(self,y):
@@ -700,6 +701,9 @@ class rosterWidget(QtGui.QWidget):
 					#print y,y+32,height
 					self.statusLabel.setGeometry(41,y+32,self.width()-46,height)
 					self.statusLabel.show()
+				elif self.changePos:
+					self.statusLabel.setGeometry(41,y+32,self.width()-46,height)
+					self.changePos=False
 			#else:
 				#buttons=[]
 				#if self.metaItems.has_key(useritem.metajid):
@@ -991,6 +995,7 @@ class rosterWidget(QtGui.QWidget):
 			else:
 				item=self.itemAt(x,y+self.selectedHeight+33)
 			self.selectItem(item)
+			self.time.start(40)
 			event.accept()
 		elif key==QtCore.Qt.Key_Up:
 			x,y=self.itemCoordinates(self.item)
@@ -999,6 +1004,7 @@ class rosterWidget(QtGui.QWidget):
 			#else:
 			item=self.itemAt(x,y-3)
 			self.selectItem(item)
+			self.time.start(40)
 			event.accept()
 		event.ignore()
 			
@@ -1276,7 +1282,8 @@ class rosterWidget(QtGui.QWidget):
 						else:
 							item.hidden=True
 		if not first:
-			self.statusLabel.hide()
+			#self.statusLabel.hide()
+			self.changePost=True
 			self.sortItems()
 		#for user in self.getUserItems(jid):
 			#log.msg("hidden:"+unicode(user.hidden))
