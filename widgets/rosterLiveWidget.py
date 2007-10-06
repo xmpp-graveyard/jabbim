@@ -1283,7 +1283,7 @@ class rosterWidget(QtGui.QWidget):
 							item.hidden=True
 		if not first:
 			#self.statusLabel.hide()
-			self.changePost=True
+			self.changePos=True
 			self.sortItems()
 		#for user in self.getUserItems(jid):
 			#log.msg("hidden:"+unicode(user.hidden))
