@@ -1033,6 +1033,10 @@ class mainWindow(QtGui.QMainWindow):
 	def about(self,bool):
 		about=aboutDialog(self)
 		about.exec_()
+	
+	def sendCustomStatus(self, jid, show = None):
+		cs = customStatusWindow(jid, show)
+		cs.exec_()
 
 	def buildStatusMenu(self,menus=[]):
 		# Status menu

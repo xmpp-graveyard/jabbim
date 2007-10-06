@@ -1553,7 +1553,9 @@ class rosterWidget(QtGui.QWidget):
 			self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			self.main.chat.activate()
 		elif cmd=="custom_status":
-			pass
+			show, jid = [unicode(val.toString()) for val in action.data().toList()]
+			log.msg("Custom status: %s %s" % (jid, show))
+			self.main.sendCustomStatus(jid, show)
 
 		elif cmd=="send_file":
 			# chat with selected contact
