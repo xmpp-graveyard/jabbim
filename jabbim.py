@@ -1759,7 +1759,7 @@ class statusWindow(QtGui.QDialog):
 		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.timeout)
 		app.connect(self.ui.status, QtCore.SIGNAL("cursorPositionChanged ()"),self.timerStop)
 		app.connect(self.ui.status, QtCore.SIGNAL("textChanged ()"),self.timerStop)
-		
+		self.ui.status.setFocus()
 		self.timer.start(1000)
 		self.i=4
 		self.data=data
