@@ -429,10 +429,19 @@ class rosterWidget(QtGui.QWidget):
 					text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(item.jid)+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
 				text+='<td><b>'+self.tr("Name:")+'</b> '+item.name+'<br/>'
 				text+='<b>'+self.tr("JID:")+'</b> '+item.jid+'<br/>'
-				text+='<b>'+self.tr("Status:")+'</b> '+unicode(self.main.status[self.main.icons[str(item.status)]])+'<br/>'
-				if item.statusMessage:
-					text+='<font size="-1">'+item.statusMessage+'<br/>'
-
+				contact = self.main.client.roster["users"][item.jid]
+				for res in contact.resources.keys():
+					status = contact.resources[res].status
+					if not status:
+						status = ""
+					priority = contact.resources[res].priority
+					if priority == None:
+						priority = self.tr("Unknown")
+					text+='<img src="../images/16x16/status/jabber-%s.png">' % contact.resources[res].show # FIXME
+					text+='<b>%s</b> (%s)<br><font size="-1">%s</font><br>' % (res, priority, status)
+					#text+='<b>'+self.tr("Status:")+'</b> '+unicode(self.main.status[self.main.icons[str(item.status)]])+'<br/>'
+					#if item.statusMessage:
+					#	text+='<font size="-1">'+item.statusMessage+'<br/>'
 				text+="</td></tr></table>"
 				self.setToolTip(text)
 		return QtGui.QWidget.event(self,event)
