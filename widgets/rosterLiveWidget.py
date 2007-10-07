@@ -437,7 +437,7 @@ class rosterWidget(QtGui.QWidget):
 					priority = contact.resources[res].priority
 					if priority == None:
 						priority = self.tr("Unknown")
-					text+='<img src="../images/16x16/status/jabber-%s.png">' % contact.resources[res].show # FIXME
+					text+='<img src="images/16x16/status/jabber-%s.png">' % contact.resources[res].show # hodilo by se rozlisit k jakymu poatri transportu
 					text+='<b>%s</b> (%s)<br><font size="-1">%s</font><br>' % (res, priority, status)
 					#text+='<b>'+self.tr("Status:")+'</b> '+unicode(self.main.status[self.main.icons[str(item.status)]])+'<br/>'
 					#if item.statusMessage:
