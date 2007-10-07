@@ -1569,9 +1569,9 @@ class rosterWidget(QtGui.QWidget):
 				item=self.getUserItems(jid)[0]
 				self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			else:
-				log.msg(jid.split("/",1)[0])
-				item=self.getUserItems(jid.split("/", 1)[0])[0]
-				self.main.chat.addChatTab(jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+				jid_r, res = jid.split("/", 1)
+				item=self.getUserItems(jid_r)[0]
+				self.main.chat.addChatTab(jid,"%s/%s" % (item.name, res),self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 				
 			self.main.chat.activate()
 		elif cmd=="custom_status":
