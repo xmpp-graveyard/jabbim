@@ -519,7 +519,7 @@ class Client(derived):
 		except:
 			typ = 'normal'
 		frm = el['from']
-
+		frmjid = jid.JID(frm)
 		body = subject =xhtml = chatstate = delay = None
 		for child in el.elements():
 			if child.name == "body":
@@ -538,6 +538,11 @@ class Client(derived):
 					xhtml = xbdy
 			if child.name in ['active',  'inactive',  'composing',  'paused',  'gone']:
 				chatstate = child.name
+				try:
+					if not 'http://jabber.org/protocol/chatstates' in self.roster['users'][frmjid.userhost()].resources[frmjid.resource].features:
+						self.roster['users'][frmjid.userhost()].resources[frmjid.resource].features.append('http://jabber.org/protocol/chatstates')
+				except:
+					pass #proste user neni v rosteru, nebo je to muc, nebo cojavim ;)
 			if child.name == 'delay':
 				delay = child['stamp']
 			if child.name == 'x':

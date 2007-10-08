@@ -13,7 +13,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'System tray and sound notification'
 		self.author = "Jan 'HanzZ' Kaluza & Josef 'PepeQ' Halicek"
 		self.name = 'Notification Plugin'
-		self.version = '0.554'
+		self.version = '0.555'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}
@@ -84,6 +84,8 @@ class Plugin(plugins.PluginBase):
 			self.main.tray.setIcon(self.trayIcon)
 
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay):
+		if body == None:
+			return
 		self.playsound('message')
 		if self.main.client.roster['users'].has_key(unicode(frm).rsplit("/")[0]):
 			user=self.main.client.roster['users'][unicode(frm).rsplit("/")[0]].name

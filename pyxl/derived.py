@@ -167,7 +167,7 @@ class derived:
 		if composing:
 			if self.roster['users'].has_key(JID.userhost()):
 				if self.roster['users'][JID.userhost()].resources.has_key(JID.resource):
-					log.msg(unicode(self.roster['users'][JID.userhost()].resources[JID.resource].features))
+					#log.msg(unicode(self.roster['users'][JID.userhost()].resources[JID.resource].features))
 					if self.roster['users'][JID.userhost()].resources[JID.resource].hasFeature('http://jabber.org/protocol/chatstates'):
 						message.addElement(composing, 'http://jabber.org/protocol/chatstates' )
 				else:

@@ -12,7 +12,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Message Archiving'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Archive Plugin'
-		self.version = '0.071'
+		self.version = '0.072'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 # 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
@@ -90,20 +90,21 @@ class Plugin(plugins.PluginBase):
 					self.window.ui.text.append(unicode('[%s] %s' %(time.strftime('%X', time.localtime(float(casti[0]))), casti[5]), 'utf8'))
 	
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay):
-		jid = quote(frm.split('/')[0])
+		if body != None:
+			jid = quote(frm.split('/')[0])
 
-		fp = open(self.main.homeDir+'/archive/'+self.jid+'/'+jid+'.history', 'a')
-		if xhtml != None:
-			telo = xhtml.replace('|', '\\|')
-		else:
-			telo = body.replace('|', '\\|')
-		msg = '|'.join([unicode(time.time()), 'from', jid, typ, quote(unicode(subject)), telo])
-		msg = msg.encode('utf8')
-		fp.write(msg+'\n')
-		fp.close()
+			fp = open(self.main.homeDir+'/archive/'+self.jid+'/'+jid+'.history', 'a')
+			if xhtml != None:
+				telo = xhtml.replace('|', '\\|')
+			else:
+				telo = body.replace('|', '\\|')
+			msg = '|'.join([unicode(time.time()), 'from', jid, typ, quote(unicode(subject)), telo])
+			msg = msg.encode('utf8')
+			fp.write(msg+'\n')
+			fp.close()
 	
 	def on_message_send (self, to, body, typ, subject,composing, xhtml,  muc):
-		if not muc:
+		if not muc and body != None:
 			jid = quote(to.split('/')[0])
 			fp = open(self.main.homeDir+'/archive/'+self.jid+'/'+jid+'.history', 'a')
 			if xhtml != None:
