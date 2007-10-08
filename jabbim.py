@@ -1008,7 +1008,8 @@ class mainWindow(QtGui.QMainWindow):
 		if int(ev.type())==24:
 			if self.active!=True:
 				self.active=True
-				self.client.dispatcher.publishEvent('onActivity')
+				if self.client:
+					self.client.dispatcher.publishEvent('onActivity')
 				print "publishing onActivity event"
 			#self.timer.stop()
 		elif int(ev.type())==25:

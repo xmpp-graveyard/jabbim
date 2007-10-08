@@ -35,18 +35,54 @@ class joinGroupChatWindow(QtGui.QDialog):
 		self.ui.server.setText(server)
 		self.ui.nickname.setText(main.client.jid.user)
 		self.ui.roomList.setHeaderLabel(main.tr('Rooms'))
+		self.ui.roomList.setSortingEnabled(False)
 		self.server = server
+		self. rooms = [] # [(roomname, roomjid, usercount), ]
 		if self.server != '':
 			self.main.client.getDiscoItems(server, callback = self._roomsReceived)
-			print 'give me rooms!'
+		
+		QtCore.QObject.connect(self.ui.roomList,QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem *, int )"), self.roomSelected)
+	
+	def getNum(self, string):
+		def reverse(s):
+			s = list(s)
+			s.reverse()
+			return "".join(s)
+		s = reverse(string)
+		i1, i2 = s.find(")"), s.find("(")
+		try:
+			cislo = int(reverse(s[i1+1:i2]))
+		except:
+			cislo = 0
+		return cislo
+
+	def sortRooms(self, x, y):
+		if x[2] > y[2]:
+			return 1
+		elif x[2] == y[2]:
+			return 0
+		elif x[2] < y[2]:
+			return -1
 	
 	def _roomsReceived(self, res):
 		log.msg( 'rooms received!')
+		self.rooms = []
+		self.ui.roomList.clear()
 		for room in self.main.client.disco[self.server][None]['items'].itervalues():
+			self.rooms.append((room['name'], room['jid'], self.getNum(room['name'])))
 
-			self.ui.roomList.addTopLevelItem(QtGui.QTreeWidgetItem([room['name']], 0))
-			print room
+		self.rooms.sort(self.sortRooms)
+		for room in self.rooms:
+			item = QtGui.QTreeWidgetItem([room[0]], 0)
+			item.setData(0, 32, QtCore.QVariant(room[1]))
+			self.ui.roomList.insertTopLevelItem(0, item)
 
+	def roomSelected(self, item, column):
+		roomjid =  item.data(0, 32).toString()
+		room = roomjid.split('@')[0]
+		self.ui.room.setText(room)
+		self.ui.name.setText(item.text(0))
+	
 	def accept(self):
 		room=unicode(self.ui.room.text())
 		server=unicode(self.ui.server.text())
