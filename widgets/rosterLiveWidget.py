@@ -955,6 +955,12 @@ class rosterWidget(QtGui.QWidget):
 				#self.buttonWidget=None
 			self.repaint()
 			self.setSize()
+		elif self.item == item and self.item != None:
+			self.item = None
+			self.selected = None
+			self.statusLabel.hide()
+			self.repaint()
+			self.setSize()
 
 	def mousePressEvent(self,event):
 		x=event.x()
