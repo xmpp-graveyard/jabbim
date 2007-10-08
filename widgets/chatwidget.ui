@@ -69,7 +69,7 @@
      <item>
       <widget class="QPushButton" name="sendButton" >
        <property name="text" >
-        <string>Send</string>
+        <string>&amp;Send</string>
        </property>
       </widget>
      </item>
