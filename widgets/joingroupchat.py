@@ -42,7 +42,8 @@ class joinGroupChatWindow(QtGui.QDialog):
 			self.main.client.getDiscoItems(server, callback = self._roomsReceived)
 		
 		QtCore.QObject.connect(self.ui.roomList,QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem *, int )"), self.roomSelected)
-	
+		QtCore.QObject.connect(self.ui.roomList,QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"), self.roomChanged)
+		
 	def getNum(self, string):
 		def reverse(s):
 			s = list(s)
@@ -83,6 +84,17 @@ class joinGroupChatWindow(QtGui.QDialog):
 		self.ui.room.setText(room)
 		self.ui.name.setText(item.text(0))
 	
+	def roomChanged(self, item, lastitem):
+		room = item.data(0, 32).toString()
+		self.main.client.getDiscoItems(room, callback = self._participantsReceived, callback_par = (room, item))
+	
+	def _participantsReceived(self, par):
+		item = par[1]
+		for usr in self.main.client.disco[unicode(par[0])][None]['items'].itervalues():
+			user=QtGui.QTreeWidgetItem(item)
+			user.setText(0, usr['name'])
+		self.ui.roomList.setItemExpanded(item,True)
+		
 	def accept(self):
 		room=unicode(self.ui.room.text())
 		server=unicode(self.ui.server.text())
