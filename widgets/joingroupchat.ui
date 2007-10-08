@@ -5,192 +5,220 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>285</width>
-    <height>236</height>
+    <width>612</width>
+    <height>264</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Join Group Chat</string>
   </property>
-  <layout class="QGridLayout" >
+  <layout class="QHBoxLayout" >
    <property name="margin" >
     <number>9</number>
    </property>
    <property name="spacing" >
     <number>6</number>
    </property>
-   <item row="1" column="0" >
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
+   <item>
+    <layout class="QGridLayout" >
+     <property name="margin" >
+      <number>0</number>
      </property>
-     <property name="sizeHint" >
-      <size>
-       <width>111</width>
-       <height>20</height>
-      </size>
+     <property name="spacing" >
+      <number>6</number>
      </property>
-    </spacer>
+     <item row="1" column="1" >
+      <widget class="QCheckBox" name="bookmark" >
+       <property name="toolTip" >
+        <string>Adds this room to your bookmarks. Bookmarks &lt;br>are stored on the server.</string>
+       </property>
+       <property name="text" >
+        <string>Bookmark this room</string>
+       </property>
+       <property name="checked" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0" colspan="2" >
+      <widget class="Line" name="line" >
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1" >
+      <layout class="QHBoxLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="pushButton" >
+         <property name="text" >
+          <string>Join</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_2" >
+         <property name="text" >
+          <string>Cancel</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="0" >
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>93</width>
+         <height>23</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="0" column="0" colspan="2" >
+      <layout class="QHBoxLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item>
+        <layout class="QVBoxLayout" >
+         <property name="margin" >
+          <number>0</number>
+         </property>
+         <property name="spacing" >
+          <number>6</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label" >
+           <property name="text" >
+            <string>Room:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_3" >
+           <property name="text" >
+            <string>Server:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_4" >
+           <property name="text" >
+            <string>Conference name:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_2" >
+           <property name="text" >
+            <string>Nickname:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_5" >
+           <property name="text" >
+            <string>Password:</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" >
+         <property name="margin" >
+          <number>0</number>
+         </property>
+         <property name="spacing" >
+          <number>6</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="room" >
+           <property name="toolTip" >
+            <string>Here fill in the name of the room you want to join in</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="server" >
+           <property name="toolTip" >
+            <string>Server where the chat room is (e.g. conf.netlab.cz)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="name" >
+           <property name="toolTip" >
+            <string>This serves only for your orientation</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="nickname" >
+           <property name="toolTip" >
+            <string>Under what name do you want to be &lt;br>known to other participants</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="password" >
+           <property name="toolTip" >
+            <string>You need password if the room is locked</string>
+           </property>
+           <property name="echoMode" >
+            <enum>QLineEdit::Password</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="3" column="0" >
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>93</width>
+         <height>29</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
-   <item row="1" column="1" >
-    <widget class="QCheckBox" name="bookmark" >
-     <property name="toolTip" >
-      <string>Adds this room to your bookmarks. Bookmarks &lt;br>are stored on the server.</string>
+   <item>
+    <widget class="QTreeWidget" name="roomList" >
+     <property name="frameShadow" >
+      <enum>QFrame::Sunken</enum>
      </property>
-     <property name="text" >
-      <string>Bookmark this room</string>
-     </property>
-     <property name="checked" >
+     <property name="rootIsDecorated" >
       <bool>true</bool>
      </property>
+     <property name="columnCount" >
+      <number>1</number>
+     </property>
+     <column>
+      <property name="text" >
+       <string>1</string>
+      </property>
+     </column>
     </widget>
-   </item>
-   <item row="2" column="0" colspan="2" >
-    <widget class="Line" name="line" >
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0" >
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" >
-      <size>
-       <width>141</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="0" column="0" colspan="2" >
-    <layout class="QHBoxLayout" >
-     <property name="margin" >
-      <number>0</number>
-     </property>
-     <property name="spacing" >
-      <number>6</number>
-     </property>
-     <item>
-      <layout class="QVBoxLayout" >
-       <property name="margin" >
-        <number>0</number>
-       </property>
-       <property name="spacing" >
-        <number>6</number>
-       </property>
-       <item>
-        <widget class="QLabel" name="label" >
-         <property name="text" >
-          <string>Room:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_3" >
-         <property name="text" >
-          <string>Server:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_4" >
-         <property name="text" >
-          <string>Conference name:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_2" >
-         <property name="text" >
-          <string>Nickname:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_5" >
-         <property name="text" >
-          <string>Password:</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" >
-       <property name="margin" >
-        <number>0</number>
-       </property>
-       <property name="spacing" >
-        <number>6</number>
-       </property>
-       <item>
-        <widget class="QLineEdit" name="room" >
-         <property name="toolTip" >
-          <string>Here fill in the name of the room you want to join in</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="server" >
-         <property name="toolTip" >
-          <string>Server where the chat room is (e.g. conf.netlab.cz)</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="name" >
-         <property name="toolTip" >
-          <string>This serves only for your orientation</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="nickname" >
-         <property name="toolTip" >
-          <string>Under what name do you want to be &lt;br>known to other participants</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="password" >
-         <property name="toolTip" >
-          <string>You need password if the room is locked</string>
-         </property>
-         <property name="echoMode" >
-          <enum>QLineEdit::Password</enum>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </item>
-   <item row="3" column="1" >
-    <layout class="QHBoxLayout" >
-     <property name="margin" >
-      <number>0</number>
-     </property>
-     <property name="spacing" >
-      <number>6</number>
-     </property>
-     <item>
-      <widget class="QPushButton" name="pushButton" >
-       <property name="text" >
-        <string>Join</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_2" >
-       <property name="text" >
-        <string>Cancel</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </item>
   </layout>
  </widget>

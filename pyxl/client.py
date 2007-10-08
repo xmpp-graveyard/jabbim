@@ -210,11 +210,15 @@ class Client(derived):
 		self.getMetacontacts()
 		self.getBookmarks()
 		self.getDiscoInfo(self.jid.host,  callback = self._pepSupport)
-		self.getDiscoItems(self.jid.host)
+		self.getDiscoItems(self.jid.host, callback = self._gotServices)
 		self.reactor.callFromThread(self.on_authd)
 		self.dispatcher.publishEvent('on_authd')
 		self.main._connected()
 
+	def _gotServices(self, res):
+		for jid in self.disco[self.jid.host][None]['items'].iterkeys():
+			self.getDiscoInfo(jid)
+			print jid
 		
 	def _pepSupport(self):
 		log.msg('pep support arrived')

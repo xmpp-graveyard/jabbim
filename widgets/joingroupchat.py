@@ -22,6 +22,8 @@ except:
 	print "PyQt4 is not installed."
 from joingroupchat_ui import *
 
+from twisted.python import log
+
 class joinGroupChatWindow(QtGui.QDialog):
 	def __init__(self,main,room="",server="",parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
@@ -31,6 +33,19 @@ class joinGroupChatWindow(QtGui.QDialog):
 		self.main=main
 		self.ui.room.setText(room)
 		self.ui.server.setText(server)
+		self.ui.nickname.setText(main.client.jid.user)
+		self.ui.roomList.setHeaderLabel(main.tr('Rooms'))
+		self.server = server
+		if self.server != '':
+			self.main.client.getDiscoItems(server, callback = self._roomsReceived)
+			print 'give me rooms!'
+	
+	def _roomsReceived(self, res):
+		log.msg( 'rooms received!')
+		for room in self.main.client.disco[self.server][None]['items'].itervalues():
+
+			self.ui.roomList.addTopLevelItem(QtGui.QTreeWidgetItem([room['name']], 0))
+			print room
 
 	def accept(self):
 		room=unicode(self.ui.room.text())

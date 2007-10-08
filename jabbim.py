@@ -1372,7 +1372,17 @@ class mainWindow(QtGui.QMainWindow):
 	def joinGroupchat(self,bool):
 		file=self.config['theme']
 		style=open("themes/"+file+"/style.css")
-		newchat=widgets.joingroupchat.joinGroupChatWindow(self)
+		mucjid = ''
+		for jid, node in self.client.disco.iteritems():
+# 			print node
+			if not node[None].has_key('identities'):
+				continue
+			for id in node[None]['identities'].itervalues():
+				print jid, id
+				if id.get('category') == 'conference' and id.get('type') == 'text' and jid.startswith('c'):
+					mucjid = jid
+					break
+		newchat=widgets.joingroupchat.joinGroupChatWindow(self, server = mucjid)
 		newchat.setStyleSheet(style.read())
 		style.close()
 		ret=newchat.exec_()
