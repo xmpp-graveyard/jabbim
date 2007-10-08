@@ -966,19 +966,21 @@ class rosterWidget(QtGui.QWidget):
 		x=event.x()
 		y=event.y()
 		item=self.itemAt(x,y)
-		self.selectItem(item)
 
-		if item.typ=='group' and item.main!='special':
-			if item.expanded:
-				item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png")
-				item.expanded=False
-			else:
-				item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-open.png")
-				item.expanded=True
-			self.setSize()
-			self.repaint()
+		if event.button() == QtCore.Qt.LeftButton:
+			self.selectItem(item)
 
-		QtGui.QWidget.mousePressEvent(self,event)
+			if item.typ=='group' and item.main!='special':
+				if item.expanded:
+					item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png")
+					item.expanded=False
+				else:
+					item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-open.png")
+					item.expanded=True
+				self.setSize()
+				self.repaint()
+
+			QtGui.QWidget.mousePressEvent(self,event)
 
 	def mouseDoubleClickEvent(self,event):
 		x=event.x()
@@ -1021,6 +1023,30 @@ class rosterWidget(QtGui.QWidget):
 			self.selectItem(item)
 			self.time.start(40)
 			event.accept()
+		elif (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and self.selected != None:
+			jid = jidT.JID(self.selected.jid)
+			jid_r = jid.userhost()
+			item=self.getUserItems(jid_r)[0]
+			self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+			self.main.chat.activate()
+		elif key==QtCore.Qt.Key_Delete: #tohle by mozna chtelo nejake potvrzeni 'Opravdu to chcete udelat?'
+			self.main.client.delContact(self.selected.jid)
+		elif key==QtCore.Qt.Key_F2:
+			jid=self.selected.jid
+			try:
+				name=unicode(self.main.client.roster['users'][jid].name)
+			except:
+				name = ''
+##			print "roster_new_group_action",jid,name
+			# get new group name with QDialog
+			name,b=QtGui.QInputDialog.getText(self,self.tr("Rename"),self.tr("Enter new name:"), QtGui.QLineEdit.Normal, name)
+			name=unicode(name)
+			# if user set new name of group
+			if b==True and len(name)!=0:
+				# add new group
+				contact=self.main.client.roster['users'][jid]
+				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription, self.main.client.roster['users'][jid].groups)
+			pass
 		event.ignore()
 			
 
@@ -1507,10 +1533,13 @@ class rosterWidget(QtGui.QWidget):
 			# get contact jid
 			jid=action.data()
 			jid=str(jid.toString())
-			#name=unicode(self.main.client.roster['users'][jid].name)
+			try:
+				name=unicode(self.main.client.roster['users'][jid].name)
+			except:
+				name = ''
 ##			print "roster_new_group_action",jid,name
 			# get new group name with QDialog
-			name,b=QtGui.QInputDialog.getText(self,self.tr("Rename"),self.tr("Enter new name:"), QtGui.QLineEdit.Normal, "")
+			name,b=QtGui.QInputDialog.getText(self,self.tr("Rename"),self.tr("Enter new name:"), QtGui.QLineEdit.Normal, name)
 			name=unicode(name)
 			# if user set new name of group
 			if b==True and len(name)!=0:
