@@ -777,13 +777,13 @@ class clientClass(pyxl.client.Client):
 		# we found tab
 		if chatstate=="composing":
 			if tab!=None:
-				if self.main.chat.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
+				if self.main.chat.ui.chatTab.tabBar().tabTextColor(tabIndex).name()!=QtGui.QColor(255,0,0).name():
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(0,128,0))
-				tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(i))+" "+self.main.chat.tr("is typing..."))
+				tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(tabIndex))+" "+self.main.chat.tr("is typing..."))
 		elif chatstate=="active":
-			tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(i))+" "+self.main.chat.tr("gives attention to chat."))
+			tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(tabIndex))+" "+self.main.chat.tr("gives attention to chat."))
 		elif chatstate=="inactive":
-			tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(i))+" "+self.main.chat.tr("doesn't give attention to chat."))
+			tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(tabIndex))+" "+self.main.chat.tr("doesn't give attention to chat."))
 	def on_vcardReceived(self,  jid, card):
 		#print card
 		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db
