@@ -1632,6 +1632,23 @@ class rosterWidget(QtGui.QWidget):
 				action=submenu.addAction(res)
 				action.setData(QtCore.QVariant("%s/%s" % (jid, res)))
 				action.setObjectName("chat")
+
+		if self.main.client.groupchats != {}:	# Mozna zobrazit i kdyz v mucu nejsme aby to bylo vic videt :)
+			submenu = contactMenu.addMenu(self.tr("Invite to conference"))
+			if oneres:
+				for gc in self.main.client.groupchats.keys():
+					action = submenu.addAction(gc)
+					action.setData(QtCore.QVariant([jid, gc]))
+					action.setObjectName("invite_gc")
+			else:
+				for gc in self.main.client.groupchats.keys():
+					submenu2 = submenu.addMenu(gc)
+					for res in contact.resources.keys():
+						action = submenu2.addAction(res)
+						action.setData(QtCore.QVariant(["%s/%s" % (jid, res), gc]))
+						action.setObjectName("invite_gc")
+
+
 		# custom status
 		if oneres:
 			submenu=contactMenu.addMenu(self.tr("Custom status"))
@@ -1867,6 +1884,11 @@ class rosterWidget(QtGui.QWidget):
 				self.main.chat.addChatTab(jid,"%s/%s" % (item.name, res),self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 				
 			self.main.chat.activate()
+		
+		elif cmd == "invite_gc":
+			user_jid, room_jid = [unicode(val.toString()) for val in action.data().toList()]
+			log.msg("invite_gc: user: %s room: %s" % (user_jid, room_jid))
+
 		elif cmd=="custom_status":
 			show, jid = [unicode(val.toString()) for val in action.data().toList()]
 			self.main.sendCustomStatus(jid, show)
