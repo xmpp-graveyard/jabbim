@@ -184,13 +184,7 @@ class derived:
 		message = Element((None,'message'))
 		message['to'] = room
 		x = message.addElement('x','http://jabber.org/protocol/muc#user')
-		if reason != None:
-			xml = '<invite to="%s"><reason>%s</reason></invite>' % (jid, reason)
-		else:
-			xml = '<invite to="%s"/>"' % jid	
-			
-# 		x.addRawXml(xml)
-		invite =  x.addElement('invite') # Z nejakeho duvodu nefunguje
+		invite =  x.addElement('invite') 
 		invite['to'] = unicode(jid)
 		if reason != None:
 			invite.addElement("reason", content = unicode(reason))
