@@ -189,11 +189,11 @@ class derived:
 		else:
 			xml = '<invite to="%s"/>"' % jid	
 			
-		x.addRawXml(xml)
-#		invite =  x.addElement('invite') # Z nejakeho duvodu nefunguje
-#		invite['to'] = jid
-#		if reason != None:
-#			invite.addElement("reason", content = reason)
+# 		x.addRawXml(xml)
+		invite =  x.addElement('invite') # Z nejakeho duvodu nefunguje
+		invite['to'] = unicode(jid)
+		if reason != None:
+			invite.addElement("reason", content = unicode(reason))
 
 		self.on_xml(message.toXml())
 		self.xmlstream.send(message)
