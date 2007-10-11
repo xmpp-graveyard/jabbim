@@ -1887,7 +1887,8 @@ class rosterWidget(QtGui.QWidget):
 		
 		elif cmd == "invite_gc":
 			user_jid, room_jid = [unicode(val.toString()) for val in action.data().toList()]
-			log.msg("invite_gc: user: %s room: %s" % (user_jid, room_jid))
+			reason = self.tr("Hi! I'd love to see you in multichat at ") + room_jid
+			self.main.client.sendInvitation(user_jid, room_jid, reason)
 
 		elif cmd=="custom_status":
 			show, jid = [unicode(val.toString()) for val in action.data().toList()]

@@ -1297,8 +1297,6 @@ class Client(derived):
 		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 		
-
 	def disp(self, id):
 		self.idlist.append(id)
-
 

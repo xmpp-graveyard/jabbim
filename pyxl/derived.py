@@ -178,7 +178,26 @@ class derived:
 			return
 		self.on_xml(message.toXml())
 		self.xmlstream.send(message)
-	
+
+
+	def sendInvitation(self, jid, room, reason = None):
+		message = Element((None,'message'))
+		message['to'] = room
+		x = message.addElement('x','http://jabber.org/protocol/muc#user')
+		if reason != None:
+			xml = '<invite to="%s"><reason>%s</reason></invite>' % (jid, reason)
+		else:
+			xml = '<invite to="%s"/>"' % jid	
+			
+		x.addRawXml(xml)
+#		invite =  x.addElement('invite') # Z nejakeho duvodu nefunguje
+#		invite['to'] = jid
+#		if reason != None:
+#			invite.addElement("reason", content = reason)
+
+		self.on_xml(message.toXml())
+		self.xmlstream.send(message)
+
 	def getRoster(self):
 		""" Posle zadost o roster na server """
 		log.msg('get roster')
