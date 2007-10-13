@@ -205,6 +205,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/confirm[@xmlns='http://jabber.org/protocol/http-auth']", self.onVerify, 1)
 		self.xmlstream.addObserver("/message/confirm[@xmlns='http://jabber.org/protocol/http-auth']", self.onVerify, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/ping[@xmlns='urn:xmpp:ping']", self.onPing, 1)
+		self.xmlstream.addObserver("/message/x[@xmlns='http://jabber.org/protocol/muc#user']/invite", self.onInvite, 1)
 	
 		
 		self.getMetacontacts()
@@ -565,6 +566,21 @@ class Client(derived):
 		else:
 # 			self.on_message(frm,typ,body,subject, xhtml,  chatstate,  delay)
 			self.dispatcher.publishEvent('on_message', frm,typ,body,subject, xhtml,  chatstate,  delay)
+
+	def onInvite(self, el):
+		room = el["from"]
+		for child in el.children:
+			if child.name == "x":
+				invite = child.firstChildElement()
+				break
+		jid = invite["from"]
+		reason = None
+		for child in invite.children:
+			if child.name == "reason":
+				reason = unicode(child)
+				break
+		log.msg("invitation recieved to: %s; from %s; reason: %s" % (room, jid, reason))
+		self.on_invite(jid, room, reason)
 
 	def onSubscribe(self, el):
 		log.msg( 'on subscribe')
