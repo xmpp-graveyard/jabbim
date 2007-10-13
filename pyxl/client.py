@@ -581,6 +581,7 @@ class Client(derived):
 				break
 		log.msg("invitation recieved to: %s; from %s; reason: %s" % (room, jid, reason))
 		self.on_invite(jid, room, reason)
+		self.main.showInvitation(jid, room, reason)
 
 	def onSubscribe(self, el):
 		log.msg( 'on subscribe')

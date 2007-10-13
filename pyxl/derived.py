@@ -194,6 +194,20 @@ class derived:
 		self.on_xml(message.toXml())
 		self.xmlstream.send(message)
 
+
+	def declineInvitation(self, jid, room, reason = None):
+		message = Element((None,'message'))
+		message['to'] = room
+		x = message.addElement('x','http://jabber.org/protocol/muc#user')
+		decline =  x.addElement('decline') 
+		decline['to'] = unicode(jid)
+		if reason != None:
+			decline.addElement("reason", content = unicode(reason))
+
+		self.on_xml(message.toXml())
+		self.xmlstream.send(message)
+
+
 	def getRoster(self):
 		""" Posle zadost o roster na server """
 		log.msg('get roster')

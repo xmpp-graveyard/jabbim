@@ -11,4 +11,5 @@ import addcontact
 import events
 import rosterLiveWidget
 import about
+import invitation
 #import eventsFTWidget_ui
