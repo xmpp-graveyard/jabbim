@@ -367,9 +367,11 @@ class rosterWidget(QtGui.QWidget):
 		self.bl=True
 
 		self.changePos=False
-		
+		self.reshow=False
+
 		self.userHeight=32
 		self.groupHeight=32
+
 		
 		self.compact=False
 		#QtCore.QObject.connect(self.main.scroll, QtCore.SIGNAL("sliderMoved(int)"),self.slider)
@@ -772,7 +774,7 @@ class rosterWidget(QtGui.QWidget):
 			doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33,y+28))
 			painter.restore()
 			if self.statusLabel:
-				if self.statusLabel.isHidden():
+				if self.reshow:
 					buttons=[]
 					if self.metaItems.has_key(useritem.metajid):
 						for meta in self.metaItems[useritem.metajid]:
@@ -782,6 +784,7 @@ class rosterWidget(QtGui.QWidget):
 					#print y,y+32,height
 					self.statusLabel.setGeometry(41,y+22,self.width()-46,height)
 					self.statusLabel.show()
+					self.reshow=False
 				elif self.changePos:
 					self.statusLabel.setGeometry(41,y+22,self.width()-46,height)
 					self.changePos=False
@@ -949,7 +952,7 @@ class rosterWidget(QtGui.QWidget):
 			doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33,y+28))
 			painter.restore()
 			if self.statusLabel:
-				if self.statusLabel.isHidden():
+				if self.reshow:
 					buttons=[]
 					if self.metaItems.has_key(useritem.metajid):
 						for meta in self.metaItems[useritem.metajid]:
@@ -959,6 +962,7 @@ class rosterWidget(QtGui.QWidget):
 					#print y,y+32,height
 					self.statusLabel.setGeometry(41,y+32,self.width()-46,height)
 					self.statusLabel.show()
+					self.reshow=False
 				elif self.changePos:
 					self.statusLabel.setGeometry(41,y+32,self.width()-46,height)
 					self.changePos=False
@@ -1201,7 +1205,8 @@ class rosterWidget(QtGui.QWidget):
 		if self.item!=item and item!=None and item.main!='special':
 			self.item=item
 			self.selected=item
-			self.statusLabel.hide()
+			#self.statusLabel.hide()
+			self.reshow=True
 			#if self.statusLabel:
 				#self.statusLabel.setParent(None)
 				#self.statusLabel=None
