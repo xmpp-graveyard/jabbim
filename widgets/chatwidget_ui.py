@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'chatwidget.ui'
+# Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Mon Oct  8 07:44:20 2007
+# Created: Thu Oct 18 20:28:03 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -21,12 +21,50 @@ class Ui_chatwidget(object):
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
 
+        spacerItem = QtGui.QSpacerItem(71,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem,1,1,1,1)
+
         self.chatstate = QtGui.QLabel(chatwidget)
         self.chatstate.setObjectName("chatstate")
-        self.gridlayout.addWidget(self.chatstate,2,0,1,1)
+        self.gridlayout.addWidget(self.chatstate,1,0,1,1)
 
-        spacerItem = QtGui.QSpacerItem(311,29,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem,2,1,1,1)
+        self.splitter_2 = QtGui.QSplitter(chatwidget)
+        self.splitter_2.setOrientation(QtCore.Qt.Horizontal)
+        self.splitter_2.setObjectName("splitter_2")
+
+        self.splitter = QtGui.QSplitter(self.splitter_2)
+        self.splitter.setOrientation(QtCore.Qt.Vertical)
+        self.splitter.setObjectName("splitter")
+
+        self.viewWidget = QtGui.QWidget(self.splitter)
+        self.viewWidget.setMinimumSize(QtCore.QSize(0,10))
+        self.viewWidget.setObjectName("viewWidget")
+
+        self.lineWidget = QtGui.QWidget(self.splitter)
+        self.lineWidget.setMinimumSize(QtCore.QSize(0,10))
+        self.lineWidget.setObjectName("lineWidget")
+
+        self.widget = QtGui.QWidget(self.splitter_2)
+        self.widget.setObjectName("widget")
+
+        self.vboxlayout = QtGui.QVBoxLayout(self.widget)
+        self.vboxlayout.setMargin(0)
+        self.vboxlayout.setSpacing(6)
+        self.vboxlayout.setObjectName("vboxlayout")
+
+        self.label = QtGui.QLabel(self.widget)
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setObjectName("label")
+        self.vboxlayout.addWidget(self.label)
+
+        self.avatar = QtGui.QLabel(self.widget)
+        self.avatar.setAlignment(QtCore.Qt.AlignCenter)
+        self.avatar.setObjectName("avatar")
+        self.vboxlayout.addWidget(self.avatar)
+
+        spacerItem1 = QtGui.QSpacerItem(20,221,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.vboxlayout.addItem(spacerItem1)
+        self.gridlayout.addWidget(self.splitter_2,0,0,1,3)
 
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setMargin(0)
@@ -43,41 +81,14 @@ class Ui_chatwidget(object):
         self.sendButton = QtGui.QPushButton(chatwidget)
         self.sendButton.setObjectName("sendButton")
         self.hboxlayout.addWidget(self.sendButton)
-        self.gridlayout.addLayout(self.hboxlayout,2,2,1,1)
-
-        self.hboxlayout1 = QtGui.QHBoxLayout()
-        self.hboxlayout1.setMargin(0)
-        self.hboxlayout1.setSpacing(6)
-        self.hboxlayout1.setObjectName("hboxlayout1")
-
-        self.label = QtGui.QLabel(chatwidget)
-        self.label.setObjectName("label")
-        self.hboxlayout1.addWidget(self.label)
-
-        self.avatar = QtGui.QLabel(chatwidget)
-        self.avatar.setMaximumSize(QtCore.QSize(32,32))
-        self.avatar.setObjectName("avatar")
-        self.hboxlayout1.addWidget(self.avatar)
-        self.gridlayout.addLayout(self.hboxlayout1,0,0,1,3)
-
-        self.splitter = QtGui.QSplitter(chatwidget)
-        self.splitter.setOrientation(QtCore.Qt.Vertical)
-        self.splitter.setObjectName("splitter")
-
-        self.viewWidget = QtGui.QWidget(self.splitter)
-        self.viewWidget.setMinimumSize(QtCore.QSize(0,10))
-        self.viewWidget.setObjectName("viewWidget")
-
-        self.lineWidget = QtGui.QWidget(self.splitter)
-        self.lineWidget.setMinimumSize(QtCore.QSize(0,10))
-        self.lineWidget.setObjectName("lineWidget")
-        self.gridlayout.addWidget(self.splitter,1,0,1,3)
+        self.gridlayout.addLayout(self.hboxlayout,1,2,1,1)
 
         self.retranslateUi(chatwidget)
         QtCore.QMetaObject.connectSlotsByName(chatwidget)
 
     def retranslateUi(self, chatwidget):
         chatwidget.setWindowTitle(QtGui.QApplication.translate("chatwidget", "Form", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("chatwidget", "name", None, QtGui.QApplication.UnicodeUTF8))
         self.smileys.setText(QtGui.QApplication.translate("chatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.sendButton.setText(QtGui.QApplication.translate("chatwidget", "&Send", None, QtGui.QApplication.UnicodeUTF8))
 

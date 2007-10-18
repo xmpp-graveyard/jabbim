@@ -9,7 +9,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See theF
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
@@ -779,8 +779,8 @@ class rosterWidget(QtGui.QWidget):
 					if self.metaItems.has_key(useritem.metajid):
 						for meta in self.metaItems[useritem.metajid]:
 							buttons.append([meta,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
-					if self.statusLabel.isHidden():
-						self.statusLabel.setData(useritem,buttons)
+					#if self.statusLabel.isHidden():
+					self.statusLabel.setData(useritem,buttons)
 					#print y,y+32,height
 					self.statusLabel.setGeometry(41,y+22,self.width()-46,height)
 					self.statusLabel.show()
@@ -957,8 +957,8 @@ class rosterWidget(QtGui.QWidget):
 					if self.metaItems.has_key(useritem.metajid):
 						for meta in self.metaItems[useritem.metajid]:
 							buttons.append([meta,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
-					if self.statusLabel.isHidden():
-						self.statusLabel.setData(useritem,buttons)
+					#if self.statusLabel.isHidden():
+					self.statusLabel.setData(useritem,buttons)
 					#print y,y+32,height
 					self.statusLabel.setGeometry(41,y+32,self.width()-46,height)
 					self.statusLabel.show()
@@ -1219,6 +1219,7 @@ class rosterWidget(QtGui.QWidget):
 			self.item = None
 			self.selected = None
 			self.statusLabel.hide()
+			self.reshow=True
 			self.repaint()
 			self.setSize()
 

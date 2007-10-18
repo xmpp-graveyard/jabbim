@@ -220,6 +220,8 @@ class chatWindow(QtGui.QMainWindow):
 				w.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 				self.ui.chatTab.setCurrentIndex(i)
 				return
+		item=self.main.ui.roster.getUserItems(jidT.JID(jid).userhost())
+
 		tab=QtGui.QWidget(self.ui.chatTab)
 		tab.jid=jid
 		tab.typ="chat"
@@ -229,12 +231,19 @@ class chatWindow(QtGui.QMainWindow):
 		layout.setMargin(1)
 		layout.setSpacing(1)
 		tab.chat=chatWidget(self.main,jid,tab)
+
+		if len(item)!=0:
+			item=item[0]
+			if item.avatar:
+				tab.chat.ui.avatar.setPixmap(item.avatar.pixmap(128,128))
+
+				
 		layout.addWidget(tab.chat)
 		print "adding new tab...", icon
 		self.ui.chatTab.addTab(tab,icon,unicode(name))
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 		self.setWindowTitle(unicode(name))
-		tab.chat.ui.label.setText("<h2>"+name+"<h2/>")
+		tab.chat.ui.label.setText("<font size=\"3\"><b>"+name+"</b></font>")
 		if message!=None:
 			tab.chat.textEditWrite(message)
 		#self.show()
