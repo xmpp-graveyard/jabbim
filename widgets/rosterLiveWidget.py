@@ -1239,6 +1239,7 @@ class rosterWidget(QtGui.QWidget):
 					item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-open.png")
 					item.expanded=True
 				self.setSize()
+				self.statusLabel.hide()
 				self.repaint()
 
 			QtGui.QWidget.mousePressEvent(self,event)
