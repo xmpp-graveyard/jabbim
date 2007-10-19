@@ -782,11 +782,11 @@ class rosterWidget(QtGui.QWidget):
 					#if self.statusLabel.isHidden():
 					self.statusLabel.setData(useritem,buttons)
 					#print y,y+32,height
-					self.statusLabel.setGeometry(41,y+22,self.width()-46,height)
+					self.statusLabel.setGeometry(41,y+26,self.width()-46,height)
 					self.statusLabel.show()
 					self.reshow=False
 				elif self.changePos:
-					self.statusLabel.setGeometry(41,y+22,self.width()-46,height)
+					self.statusLabel.setGeometry(41,y+26,self.width()-46,height)
 					self.changePos=False
 			#else:
 				#buttons=[]
