@@ -294,8 +294,15 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.config['theme']=unicode(self.ui.themes.currentItem().data(32).toString())
 		if self.ui.roster_compact.isChecked()==True:
 			self.main.config['rosterMode']="compact"
+			self.main.ui.roster.userHeight=22
+			self.main.ui.roster.groupHeight=22
+			self.main.ui.roster.compact=True
 		else:
 			self.main.config['rosterMode']="normal"
+			self.main.ui.roster.userHeight=32
+			self.main.ui.roster.groupHeight=32
+			self.main.ui.roster.compact=False
+		self.main.ui.roster.repaint()
 		self.main.config.write()
 		
 		for i in range(int(self.ui.plugins.topLevelItemCount())):

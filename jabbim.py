@@ -1001,8 +1001,14 @@ class mainWindow(QtGui.QMainWindow):
 		if self.config['autoJoin']=='True':
 			self.ui.rosterStackedWidget.setCurrentIndex(2)
 			self.connect()
-
 		self.active=True
+		
+		if self.config['rosterMode'] == "compact" :
+			self.ui.roster.userHeight=22
+			self.ui.roster.groupHeight=22
+			self.ui.roster.compact=True
+			self.ui.roster.repaint()
+		
 	def event(self,ev):
 		# WindowActivated
 		if int(ev.type())==24:
