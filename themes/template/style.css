@@ -13,23 +13,28 @@ QWidget#userStyleWidget {
 QLabel#selfName {
 margin-left:15px;
 }
-QToolButton#rosterMenu:hover{
-	border-width:4px;
-	border-color:#87CEFA;
-	border-style:solid;
-	border-radius:10px;
-	background-color:#87CEFA;
-	min-width:40px;
-}
+/* QToolButton#rosterMenu:hover{ */
+/* 	border-width:4px; */
+/* 	border-color:rgba(0,0,0,0%); */
+/* 	border-style:solid; */
+/* 	border-radius:10px; */
+/* 	background-color:rgba(0,0,0,0%); */
+/* 	min-width:16px; */
+/* } */
 
-QToolButton#rosterMenu{
-	border-width:4px;
-	border-color:#AFE3FA;
-	background-color:#AFE3FA;
-	border-style:solid;
-	border-radius:10px;
-	min-width:40px;
-}
+/* QToolButton#rosterMenu::menu-indicator { */
+/* 	border-width:4px; */
+/* 	border-color:rgba(0,0,0,0%); */
+/* 	background-color:#AFE3FA; */
+/* 	border-style:solid; */
+/* 	border-radius:10px; */
+/* 	min-width:16px; */
+/* background-color:rgba(0,0,0,0%); */
+/*      subcontrol-position: right center; */
+/*      subcontrol-origin: padding; */
+/*      left: 50px; */
+ 
+/* } */
 
 QToolButton::menu-arrow{
 image: url(downarrow.png);

@@ -88,13 +88,18 @@ class activeWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.clicked)
 		l.addLayout(self.layout2,1,0)
 		
-		self.menu=QtGui.QToolButton(self)
-		self.menu.setText("Menu")
+		self.menu=QtGui.QPushButton(self)
+		self.menu.setIcon(QtGui.QIcon("images/22x22/apps/jabbim.png"))
 		#self.menu.setArrowType(QtCore.Qt.DownArrow)
-		self.menu.setPopupMode(self.menu.InstantPopup)
-		self.menu.setMinimumHeight(20)
-		self.menu.setMaximumHeight(20)
-		l.addWidget(self.menu,2,0)
+		#self.menu.setPopupMode(self.menu.InstantPopup)
+		self.menu.setMinimumHeight(26)
+		self.menu.setMaximumHeight(26)
+		self.menu.setFocusPolicy(QtCore.Qt.NoFocus)
+		#self.menu.setMinimumWidth(40)
+		#self.menu.setMaximumWidth()
+		self.menu.setFlat(True)
+
+		l.addWidget(self.menu,2,0,QtCore.Qt.AlignRight)
 		self.menu.setObjectName("rosterMenu")
 		self.label=QtGui.QLabel(self)
 		#size=64
@@ -138,6 +143,7 @@ class activeWidget(QtGui.QWidget):
 			#else:
 			button = QtGui.QPushButton(self)
 			#button.setGeometry(0,y+16,16,16)
+			button.setFocusPolicy(QtCore.Qt.NoFocus)
 			button.setMaximumSize(16,16)
 			button.setFlat(True)
 			button.setIcon(icon)
