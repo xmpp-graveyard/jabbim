@@ -1284,6 +1284,15 @@ class rosterWidget(QtGui.QWidget):
 		self.reshow=True
 		self.repaint()
 		self.setSize()
+
+	def sel2(self):
+		self.item = None
+		self.selected = None
+		self.statusLabel.hide()
+		self.reshow=True
+		self.repaint()
+		self.setSize()
+
 	def selectItem(self,item,wait=False):
 		t=float(time.time())
 		if self.item!=item and item!=None and item.main!='special':
@@ -1295,17 +1304,20 @@ class rosterWidget(QtGui.QWidget):
 				self.setSize()
 			else:
 				self.main.client.reactor.callLater(0.2,self.sel)
-			self.timestamp=float(t)
+			#self.timestamp=float(t)
 		elif self.item == item and self.item != None:
-			print t-self.timestamp
-			if t-self.timestamp>1.0:
+			#print t-self.timestamp
+			#if t-self.timestamp>1.0:
+			if wait:
+				self.main.client.reactor.callLater(0.2,self.sel2)
+			else:
 				self.item = None
 				self.selected = None
 				self.statusLabel.hide()
 				self.reshow=True
 				self.repaint()
 				self.setSize()
-				self.timestamp=float(t)
+				#self.timestamp=float(t)
 	def mousePressEvent(self,event):
 		x=event.x()
 		y=event.y()
