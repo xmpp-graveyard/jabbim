@@ -8,11 +8,12 @@ QWidget#userStyleWidget {
     color:#3E3F3D;
 }
 
-
-
 QLabel#selfName {
 margin-left:15px;
 }
+
+
+
 /* QToolButton#rosterMenu:hover{ */
 /* 	border-width:4px; */
 /* 	border-color:rgba(0,0,0,0%); */
@@ -130,3 +131,8 @@ border:0;
      QTabWidget#tabWidget > QTabBar::tab:only-one {
          margin: 0; /* if there is only one tab, we don't want overlapping margins */
      }
+
+QWidget#selectedItemStyle{
+	background-color:rgba(243,244,248,100%);
+	color:rgba(160,169,199,100%);
+}

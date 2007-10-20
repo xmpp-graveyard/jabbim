@@ -997,6 +997,7 @@ class mainWindow(QtGui.QMainWindow):
 		
 		self.ui.groupStyleWidget.hide()
 		self.ui.userStyleWidget.hide()
+		self.ui.selectedItemStyle.hide()
 		self.reconnect = True # pri unavailable tady dame False
 		if self.config['autoJoin']=='True':
 			self.ui.rosterStackedWidget.setCurrentIndex(2)

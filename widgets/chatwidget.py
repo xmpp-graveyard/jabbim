@@ -151,6 +151,8 @@ class chatWidget(QtGui.QWidget):
 		#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
 		#self.ui.lineWidget.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
 		self.ui.splitter.setSizes([500,70])
+		self.ui.widget.setMaximumWidth(128)
+		self.ui.splitter_2.setSizes([500,128])
 
 	#def lines(self):
 		#if self.ui.line.verticalScrollBar().isVisible():

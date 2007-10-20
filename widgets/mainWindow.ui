@@ -228,14 +228,17 @@ p, li { white-space: pre-wrap; }
             <property name="spacing" >
              <number>0</number>
             </property>
-            <item row="0" column="0" >
-             <widget class="QWidget" native="1" name="groupStyleWidget" />
-            </item>
             <item row="2" column="0" >
-             <widget class="QWidget" native="1" name="rosterWidget" />
+             <widget class="QWidget" native="1" name="userStyleWidget" />
             </item>
             <item row="1" column="0" >
-             <widget class="QWidget" native="1" name="userStyleWidget" />
+             <widget class="QWidget" native="1" name="groupStyleWidget" />
+            </item>
+            <item row="3" column="0" >
+             <widget class="QWidget" native="1" name="rosterWidget" />
+            </item>
+            <item row="0" column="0" >
+             <widget class="QWidget" native="1" name="selectedItemStyle" />
             </item>
            </layout>
           </widget>

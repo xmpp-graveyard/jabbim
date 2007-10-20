@@ -28,6 +28,7 @@ import filetransfer
 class activeWidget(QtGui.QWidget):
 	def __init__(self,parent=None):
 		QtGui.QWidget.__init__(self,parent)
+		self.setObjectName("selectedContact")
 		self.parent=parent
 		#self.item=item
 		#layout=QtGui.QVBoxLayout(self)
@@ -42,11 +43,33 @@ class activeWidget(QtGui.QWidget):
 		#self.setPalette(p)
 		#self.stacked.setAutoFillBackground(True)
 		#self.stacked.setCurrentIndex(0)
+		l4=QtGui.QHBoxLayout()
+		self.jidLabel=QtGui.QWidget(self)
+		self.jidLabel.setMinimumHeight(22)
+		self.jidLabel.setMaximumHeight(22)
+		self.jidLabel.setMinimumWidth(1)
+		self.jidLabel.setMaximumWidth(1)
+		#self.jidLabel=QtGui.QPushButton(self)
+		#self.jidLabel.setMinimumHeight()
+		#self.jidLabel.setFlat(True)
+		#self.jidLabel.setFocusPolicy(QtCore.Qt.NoFocus)
+		
+		QtCore.QObject.connect(self.jidLabel,QtCore.SIGNAL("clicked()"),self.bclicked)
+
+		#self.jidLabel.setScaledContents(True)
+		#self.jidLabel.setAutoFillBackground(False)
+		l4.addStretch()
+		l4.addWidget(self.jidLabel)
+		l.addLayout(l4,0,0)
+
 		self.statusLabel=QtGui.QTextEdit(self)
+		self.statusLabel.setObjectName("selectedContactStatus")
+
 		self.statusLabel.hide()
 		self.statusLabel.setFrameShape(QtGui.QFrame.NoFrame)
 		self.statusLabel.setFrameShadow(QtGui.QFrame.Plain)
-		l.addWidget(self.statusLabel,0,0)
+		l.addWidget(self.statusLabel,1,0)
+		self.jidLabel.setMinimumHeight(24)
 		self.statusLabel.setMaximumHeight(30)
 		self.statusLabel.setReadOnly(True)
 		self.statusLabel.viewport().setAutoFillBackground(False)
@@ -86,7 +109,7 @@ class activeWidget(QtGui.QWidget):
 
 		self.layout2.addStretch()
 		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.clicked)
-		l.addLayout(self.layout2,1,0)
+		l.addLayout(self.layout2,3,0,QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
 		
 		self.menu=QtGui.QPushButton(self)
 		self.menu.setIcon(QtGui.QIcon("images/22x22/apps/jabbim.png"))
@@ -99,8 +122,9 @@ class activeWidget(QtGui.QWidget):
 		#self.menu.setMaximumWidth()
 		self.menu.setFlat(True)
 
-		l.addWidget(self.menu,2,0,QtCore.Qt.AlignRight)
+		l.addWidget(self.menu,2,0,QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
 		self.menu.setObjectName("rosterMenu")
+
 		self.label=QtGui.QLabel(self)
 		#size=64
 		#if len(buttons)==0:
@@ -109,15 +133,32 @@ class activeWidget(QtGui.QWidget):
 		#if item.avatar:
 			#pixmap=item.avatar.pixmap(64,64)
 			#self.label.setPixmap(pixmap)
-		l.addWidget(self.label,0,1,4,1,QtCore.Qt.AlignRight|QtCore.Qt.AlignBottom)
-		
+		l.addWidget(self.label,0,1,5,1,QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
+
+		#spacerItem = QtGui.QSpacerItem(71,50,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
+		#l.addItem(spacerItem,4,0)
+		l.setRowStretch(4,10)
+
 		#layout.addLayout(l)
-		
+
+	def bclicked(self):
+		item=self.item
+		res = self.parent.main.client.roster['users'][item.jid].getHighestResource()
+		if res==None:
+			self.parent.main.chat.addChatTab(item.jid,item.name,self.parent.main.getIcon(item.jid,self.parent.main.icons[str(item.status)],size="16x16"))
+		else:
+			self.parent.main.chat.addChatTab(item.jid+"/"+res,item.name,self.parent.main.getIcon(item.jid,self.parent.main.icons[str(item.status)],size="16x16"))
+		self.parent.main.chat.activate()
+
 
 	def setData(self,item,buttons):
 		self.item=item
 		menu=self.parent.buildContactMenu(item.jid,item.group)
 		self.menu.setMenu(menu)
+		self.menu.hide()
+		#self.jidLabel.setText(self.item.name)
+		#self.jidLabel.setSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Fixed)
+		#self.jidLabel.setMinimumWidth(20)
 		status=self.item.statusMessage
 		if status:
 			self.statusLabel.show()
@@ -152,8 +193,8 @@ class activeWidget(QtGui.QWidget):
 			self.buttons[button]=meta
 
 		size=64
-		if len(buttons)==0 and not status:
-			size=32
+		#if len(buttons)==0 and not status:
+			#size=32
 		self.label.setMaximumSize(size,size)
 		if self.item.avatar:
 			pixmap=self.item.avatar.pixmap(size,size)
@@ -367,7 +408,6 @@ class rosterWidget(QtGui.QWidget):
 		self.colors.setObjectName("rosterView")
 
 		self.palet=self.colors.palette()
-		self.reskin()
 
 		self.events=[]
 		self.bl=True
@@ -377,8 +417,12 @@ class rosterWidget(QtGui.QWidget):
 
 		self.userHeight=32
 		self.groupHeight=32
+		#self.selectedItemStyle=QtGui.QWidget(self.main)
+		#self.selectedItemStyle.hide()
+		#self.selectedItemStyle.setObjectName("selectedItemStyles")
+		#self.reskin()
 
-		
+
 		self.compact=False
 		#QtCore.QObject.connect(self.main.scroll, QtCore.SIGNAL("sliderMoved(int)"),self.slider)
 
@@ -525,6 +569,7 @@ class rosterWidget(QtGui.QWidget):
 		item.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons["9"])
 		item.jid=jid
 		item.hidden=True
+		item.avatar=QtGui.QIcon("images/48x48/apps/jabbim.png")
 		#self.sortItems()
 		self.users.append(item)
 
@@ -870,7 +915,7 @@ class rosterWidget(QtGui.QWidget):
 
 	def paintUserItem(self,painter,useritem,x,y):
 		if useritem==self.item:
-			height=91
+			height=111
 			if not useritem.statusMessage:
 				height-=32
 			if not self.metaItems.has_key(useritem.metajid):
@@ -899,11 +944,12 @@ class rosterWidget(QtGui.QWidget):
 			#painter.drawLine(self.width()-2,0,self.width()-2,96)
 			#painter.restore()
 			#painter.setPen(p)
-
+			#painter.setBrush(QtGui.QColor(243,244,248))
+			#pen=QtGui.QPen(QtGui.QColor(160,169,199))
 			b=painter.brush()
 			p=painter.pen()
-			painter.setBrush(QtGui.QColor(243,244,248))
-			pen=QtGui.QPen(QtGui.QColor(160,169,199))
+			painter.setBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Window))
+			pen=QtGui.QPen(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Text))
 			pen.setWidth(0)
 			painter.setPen(pen)
 			painter.save()
@@ -966,11 +1012,11 @@ class rosterWidget(QtGui.QWidget):
 					#if self.statusLabel.isHidden():
 					self.statusLabel.setData(useritem,buttons)
 					#print y,y+32,height
-					self.statusLabel.setGeometry(41,y+32,self.width()-46,height)
+					self.statusLabel.setGeometry(41,y+12,self.width()-46,height)
 					self.statusLabel.show()
 					self.reshow=False
 				elif self.changePos:
-					self.statusLabel.setGeometry(41,y+32,self.width()-46,height)
+					self.statusLabel.setGeometry(41,y+12,self.width()-46,height)
 					self.changePos=False
 			#else:
 				#buttons=[]

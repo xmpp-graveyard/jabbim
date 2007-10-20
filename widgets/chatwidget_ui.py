@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Thu Oct 18 20:28:03 2007
+# Created: Fri Oct 19 14:46:08 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -53,6 +53,7 @@ class Ui_chatwidget(object):
         self.vboxlayout.setObjectName("vboxlayout")
 
         self.label = QtGui.QLabel(self.widget)
+        self.label.setMaximumSize(QtCore.QSize(128,16777215))
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.vboxlayout.addWidget(self.label)

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Thu Aug 30 14:43:44 2007
+# Created: Sat Oct 20 08:26:45 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -135,17 +135,21 @@ class Ui_MainWindow(object):
         self.gridlayout3.setSpacing(0)
         self.gridlayout3.setObjectName("gridlayout3")
 
+        self.userStyleWidget = QtGui.QWidget(self.rosterTab)
+        self.userStyleWidget.setObjectName("userStyleWidget")
+        self.gridlayout3.addWidget(self.userStyleWidget,2,0,1,1)
+
         self.groupStyleWidget = QtGui.QWidget(self.rosterTab)
         self.groupStyleWidget.setObjectName("groupStyleWidget")
-        self.gridlayout3.addWidget(self.groupStyleWidget,0,0,1,1)
+        self.gridlayout3.addWidget(self.groupStyleWidget,1,0,1,1)
 
         self.rosterWidget = QtGui.QWidget(self.rosterTab)
         self.rosterWidget.setObjectName("rosterWidget")
-        self.gridlayout3.addWidget(self.rosterWidget,2,0,1,1)
+        self.gridlayout3.addWidget(self.rosterWidget,3,0,1,1)
 
-        self.userStyleWidget = QtGui.QWidget(self.rosterTab)
-        self.userStyleWidget.setObjectName("userStyleWidget")
-        self.gridlayout3.addWidget(self.userStyleWidget,1,0,1,1)
+        self.selectedItemStyle = QtGui.QWidget(self.rosterTab)
+        self.selectedItemStyle.setObjectName("selectedItemStyle")
+        self.gridlayout3.addWidget(self.selectedItemStyle,0,0,1,1)
         self.tabWidget.addTab(self.rosterTab,QtGui.QIcon("images/16x16/categories/system-users.png"),"")
 
         self.bookmarksTab = QtGui.QWidget()

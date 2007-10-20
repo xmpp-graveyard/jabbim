@@ -76,6 +76,12 @@ QWidget#rosterView {
 /*   border-radius: 4px; */
 }
 
+
+QWidget#selectedItemStyle{
+	background-color:#000000;
+	color:#FFFFFF;
+}
+
 QWidget#rosterTab {
   background-color:black;
   alternate-background-color: rgba(102,84,61,40%);
