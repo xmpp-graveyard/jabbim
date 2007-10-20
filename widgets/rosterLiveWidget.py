@@ -162,7 +162,7 @@ class activeWidget(QtGui.QWidget):
 		status=self.item.statusMessage
 		if status:
 			self.statusLabel.show()
-			self.statusLabel.setHtml("<font size=\"-1\">"+unicode(status)+"</font>")
+			self.statusLabel.setHtml("<font size=\"-1\" color=\""+self.parent.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+unicode(status)+"</font>")
 		else:
 			self.statusLabel.hide()
 
@@ -403,12 +403,6 @@ class rosterWidget(QtGui.QWidget):
 		self.data={}
 		self.metaItems={}
 		
-		self.colors=QtGui.QTreeWidget(self.main)
-		self.colors.hide()
-		self.colors.setObjectName("rosterView")
-
-		self.palet=self.colors.palette()
-
 		self.events=[]
 		self.bl=True
 
@@ -420,10 +414,12 @@ class rosterWidget(QtGui.QWidget):
 		#self.selectedItemStyle=QtGui.QWidget(self.main)
 		#self.selectedItemStyle.hide()
 		#self.selectedItemStyle.setObjectName("selectedItemStyles")
-		#self.reskin()
+		self.theme=False
+		self.reskin()
 
 
 		self.compact=False
+		
 		#QtCore.QObject.connect(self.main.scroll, QtCore.SIGNAL("sliderMoved(int)"),self.slider)
 
 	#def slider(self,y):
@@ -449,6 +445,13 @@ class rosterWidget(QtGui.QWidget):
 			self.repaint()
 
 	def reskin(self):
+		self.colors=QtGui.QTreeWidget(self.main)
+		self.colors.hide()
+		if self.theme==True:
+			self.colors.setObjectName("rosterView")
+
+		self.palet=self.colors.palette()
+		
 		self.palette().setColor(QtGui.QPalette.Window,self.palet.color(QtGui.QPalette.Base))
 		self.repaint()
 
@@ -684,7 +687,10 @@ class rosterWidget(QtGui.QWidget):
 		#else:
 		painter.save()
 		painter.translate(x,y)
-		painter.fillRect(0,0,self.width(),30,QtGui.QBrush(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Window)))
+		if self.theme:
+			painter.fillRect(0,0,self.width(),30,QtGui.QBrush(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Window)))
+		else:
+			painter.fillRect(0,0,self.width(),30,QtGui.QBrush(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.AlternateBase)))
 		painter.restore()
 		
 		#b=painter.brush()
@@ -948,8 +954,16 @@ class rosterWidget(QtGui.QWidget):
 			#pen=QtGui.QPen(QtGui.QColor(160,169,199))
 			b=painter.brush()
 			p=painter.pen()
-			painter.setBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Window))
-			pen=QtGui.QPen(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Text))
+			if self.theme:
+				painter.setBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Window))
+				pen=QtGui.QPen(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Text))
+			else:
+				painter.setBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight))
+				color=self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight)
+				try:
+					pen=QtGui.QPen(color.lighter())
+				except:
+					pen=QtGui.QPen(color.light())
 			pen.setWidth(0)
 			painter.setPen(pen)
 			painter.save()
@@ -997,8 +1011,10 @@ class rosterWidget(QtGui.QWidget):
 				##doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
 				##painter.restore()
 			#else:
-			
-			doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.name+"</font>")
+			if self.theme:
+				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.name+"</font>")
+			else:
+				doc.setHtml("<font color=\""+self.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.name+"</font>")
 			painter.save()
 			painter.translate(x+41,y+12)
 			doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33,y+28))
