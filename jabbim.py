@@ -808,6 +808,8 @@ class clientClass(pyxl.client.Client):
 				self.main.ui.selfAvatar.setPixmap(pixmap.scaledToHeight(48))
 			for item in self.main.ui.roster.getUserItems(jid):
 				item.setAvatar(QtGui.QIcon(pixmap))
+			for item in self.main.ui.roster.getMetaItems(jid):
+				item[0].setAvatar(QtGui.QIcon(pixmap))
 			sha=sha1(image).hexdigest()
 			self.main.cache.set_avatar(jid, ['avatars/'+jid, sha])
 			self.main._loadAvatar('avatars/'+jid, sha, jid)
@@ -1683,6 +1685,8 @@ class mainWindow(QtGui.QMainWindow):
 			for item in self.ui.roster.getUserItems(jid):
 ##				log.msg(utils.cprint("yellow","setting icon: "+jid))
 				item.setAvatar(QtGui.QIcon(pixmap))
+			for item in self.ui.roster.getMetaItems(jid):
+				item[0].setAvatar(QtGui.QIcon(pixmap))
 		self.client.roster['users'][jid].setAvatar(file, hash)
 	
 	def _addGroup(self, group):
