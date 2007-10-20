@@ -23,6 +23,7 @@ except: print "PyQt4 is not installed."
 from os.path import basename
 from twisted.python import log
 from twisted.words.protocols.jabber import jid as jidT
+import time
 import filetransfer
 
 class activeWidget(QtGui.QWidget):
@@ -162,7 +163,10 @@ class activeWidget(QtGui.QWidget):
 		status=self.item.statusMessage
 		if status:
 			self.statusLabel.show()
-			self.statusLabel.setHtml("<font size=\"-1\" color=\""+self.parent.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+unicode(status)+"</font>")
+			if self.parent.theme:
+				self.statusLabel.setHtml("<font size=\"-1\">"+unicode(status)+"</font>")
+			else:
+				self.statusLabel.setHtml("<font size=\"-1\" color=\""+self.parent.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+unicode(status)+"</font>")
 		else:
 			self.statusLabel.hide()
 
@@ -414,7 +418,8 @@ class rosterWidget(QtGui.QWidget):
 		#self.selectedItemStyle=QtGui.QWidget(self.main)
 		#self.selectedItemStyle.hide()
 		#self.selectedItemStyle.setObjectName("selectedItemStyles")
-		self.theme=False
+		self.theme=True
+		self.timestamp=0
 		self.reskin()
 
 
@@ -1270,6 +1275,7 @@ class rosterWidget(QtGui.QWidget):
 			self.setMinimumHeight(y)
 
 	def selectItem(self,item):
+		t=float(time.time())
 		if self.item!=item and item!=None and item.main!='special':
 			self.item=item
 			self.selected=item
@@ -1283,19 +1289,21 @@ class rosterWidget(QtGui.QWidget):
 				#self.buttonWidget=None
 			self.repaint()
 			self.setSize()
+			self.timestamp=float(t)
 		elif self.item == item and self.item != None:
-			self.item = None
-			self.selected = None
-			self.statusLabel.hide()
-			self.reshow=True
-			self.repaint()
-			self.setSize()
-
+			print t-self.timestamp
+			if t-self.timestamp>1.0:
+				self.item = None
+				self.selected = None
+				self.statusLabel.hide()
+				self.reshow=True
+				self.repaint()
+				self.setSize()
+				self.timestamp=float(t)
 	def mousePressEvent(self,event):
 		x=event.x()
 		y=event.y()
 		item=self.itemAt(x,y)
-
 		if event.button() == QtCore.Qt.LeftButton:
 			self.selectItem(item)
 

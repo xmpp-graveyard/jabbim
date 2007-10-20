@@ -1331,6 +1331,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.setStyleSheet("")
 		if self.config['theme']=="None":
 			text=""
+			self.ui.roster.theme=False
+		else:
+			self.ui.roster.theme=True
 		if text==None:
 			theme=open("themes/"+self.config['theme']+"/style.css")
 			text=theme.read()
