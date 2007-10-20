@@ -36,6 +36,7 @@ class activeWidget(QtGui.QWidget):
 		#layout.setMargin(2)
 		l=QtGui.QGridLayout(self)
 		l.setMargin(2)
+		l.setSpacing(0)
 		#self.stacked=QtGui.QStackedWidget(self)
 		#layout.addWidget(self.stacked)
 		self.setAutoFillBackground(False)
@@ -70,7 +71,7 @@ class activeWidget(QtGui.QWidget):
 		self.statusLabel.setFrameShape(QtGui.QFrame.NoFrame)
 		self.statusLabel.setFrameShadow(QtGui.QFrame.Plain)
 		l.addWidget(self.statusLabel,1,0)
-		self.jidLabel.setMinimumHeight(24)
+		self.jidLabel.setMinimumHeight(30)
 		self.statusLabel.setMaximumHeight(30)
 		self.statusLabel.setReadOnly(True)
 		self.statusLabel.viewport().setAutoFillBackground(False)
@@ -203,11 +204,12 @@ class activeWidget(QtGui.QWidget):
 		if self.item.avatar:
 			pixmap=self.item.avatar.pixmap(size,size)
 			self.label.setPixmap(pixmap)
+			self.label.setMinimumHeight(pixmap.height())
 			self.label.show()
 		else:
 			self.label.hide()
-			
-		self.resize(self.parent.width()-46,self.parent.selectedHeight-32)
+		#print self.parent.selectedHeight-32
+		self.resize(self.parent.width()-46,self.parent.selectedHeight+32)
 
 	def refreshData(self):
 		status=self.item.statusMessage
@@ -394,6 +396,7 @@ class rosterWidget(QtGui.QWidget):
 		self.item=None
 		self.timer=QtCore.QTimer(self)
 		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.popup)
+		
 		self.timerBlink=QtCore.QTimer(self)
 		QtCore.QObject.connect(self.timerBlink, QtCore.SIGNAL("timeout ()"),self.blink)
 		self.sortedGroups=[]
@@ -926,12 +929,13 @@ class rosterWidget(QtGui.QWidget):
 
 	def paintUserItem(self,painter,useritem,x,y):
 		if useritem==self.item:
-			height=111
-			if not useritem.statusMessage:
-				height-=32
+			height=79
+			#if not useritem.statusMessage:
+				#height-=32
 			if not self.metaItems.has_key(useritem.metajid):
 				height-=16
-			self.selectedHeight=height+32
+			self.selectedHeight=height+20
+			#height=height+5
 			painter.save()
 			painter.translate(x,y)
 			painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
@@ -980,7 +984,7 @@ class rosterWidget(QtGui.QWidget):
 			#painter.drawEllipse(self.width()-18,16,16,16)
 			#painter.drawRect(2,16,self.width()-4,32)
 			#painter.drawRect(11,8,self.width()-22,32)
-			painter.drawRect(5,5,self.width()-10,height+27)
+			painter.drawRect(5,5,self.width()-10,height+3)
 			painter.restore()
 			painter.setBrush(b)
 			painter.setPen(p)
@@ -1033,11 +1037,11 @@ class rosterWidget(QtGui.QWidget):
 					#if self.statusLabel.isHidden():
 					self.statusLabel.setData(useritem,buttons)
 					#print y,y+32,height
-					self.statusLabel.setGeometry(41,y+12,self.width()-46,height)
+					self.statusLabel.setGeometry(41,y+7,self.width()-46,height)
 					self.statusLabel.show()
 					self.reshow=False
 				elif self.changePos:
-					self.statusLabel.setGeometry(41,y+12,self.width()-46,height)
+					self.statusLabel.setGeometry(41,y+7,self.width()-46,height)
 					self.changePos=False
 			#else:
 				#buttons=[]
@@ -1274,21 +1278,23 @@ class rosterWidget(QtGui.QWidget):
 		else:
 			self.setMinimumHeight(y)
 
-	def selectItem(self,item):
+
+	def sel(self):
+		self.item=self.selected
+		self.reshow=True
+		self.repaint()
+		self.setSize()
+	def selectItem(self,item,wait=False):
 		t=float(time.time())
 		if self.item!=item and item!=None and item.main!='special':
-			self.item=item
 			self.selected=item
-			#self.statusLabel.hide()
-			self.reshow=True
-			#if self.statusLabel:
-				#self.statusLabel.setParent(None)
-				#self.statusLabel=None
-			#if self.buttonWidget:
-				#self.buttonWidget.setParent(None)
-				#self.buttonWidget=None
-			self.repaint()
-			self.setSize()
+			if not wait:
+				self.item=item
+				self.reshow=True
+				self.repaint()
+				self.setSize()
+			else:
+				self.main.client.reactor.callLater(0.2,self.sel)
 			self.timestamp=float(t)
 		elif self.item == item and self.item != None:
 			print t-self.timestamp
@@ -1305,7 +1311,7 @@ class rosterWidget(QtGui.QWidget):
 		y=event.y()
 		item=self.itemAt(x,y)
 		if event.button() == QtCore.Qt.LeftButton:
-			self.selectItem(item)
+			self.selectItem(item,True)
 
 			if item.typ=='group' and item.main!='special':
 				if item.expanded:
@@ -1318,7 +1324,7 @@ class rosterWidget(QtGui.QWidget):
 				self.statusLabel.hide()
 				self.repaint()
 
-			QtGui.QWidget.mousePressEvent(self,event)
+		QtGui.QWidget.mousePressEvent(self,event)
 
 	def mouseDoubleClickEvent(self,event):
 		x=event.x()
