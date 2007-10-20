@@ -58,15 +58,16 @@ class PrivacyList:
 		list_.attributes = {"name": self.name}
 		for rule in self.items:
 			item = list_.addElement("item")
-			items.attributes = {"action":rule.action, "order":unicode(rule.order)}
+			item.attributes = {"action":rule.action, "order":unicode(rule.order)}
 			if rule.typ and rule.value:
 				item.attributes["type"] = rule.typ
 				item.attributes["value"] = rule.value
 			for stanza in rule.stanzas:
 				item.addElement(stanza)
 
-		self.main.on_xml(iq.toXml())
-		self.main.xmlstream.send(iq)
+		self.main.client.on_xml(iq.toXml())
+		iq.send()
+		self.main.client.disp(iq["id"])
 
 	def addItem(self, item):
 		self.items.append(item)
@@ -111,5 +112,9 @@ class PrivacyList:
 	# TODO
 
 class Privacy:
-	def __init__(self):
-		self.lists = {}
+	def __init__(self, main):
+		self.main	= main
+		self.lists	= {}
+		self.active	= None
+		self.default	= None
+

@@ -35,6 +35,7 @@ from derived import derived
 from contact import *
 from groupchat import  *
 from base64 import b64encode, b64decode
+from privacy import *
 
 try:
 	from hashlib import sha1
@@ -72,9 +73,10 @@ class Client(derived):
 		self.idlist = []
 		self.disco = {} # jid:{node1:{items:{attrs}, identity: {attrs}, features:[], err: {'info':'', 'items':''}}}
 		self.groupchats = {} # jid:Groupchat
-		self.privacy_lists = {}
-		self.privacy_active = None
-		self.privacy_default = None
+	#	self.privacy_lists = {}
+	#	self.privacy_active = None
+	#	self.privacy_default = None
+		self.privacy = Privacy(self.main)
 		self.client_name = 'Jabbim'
 		self.version = '0.0.1' # tohle asi neni nejlepsi zpusob
 		self.client_os = ''
@@ -212,6 +214,7 @@ class Client(derived):
 		self.getBookmarks()
 		self.getDiscoInfo(self.jid.host,  callback = self._pepSupport)
 		self.getDiscoItems(self.jid.host, callback = self._gotServices)
+		self.getPrivacy()
 		self.reactor.callFromThread(self.on_authd)
 		self.dispatcher.publishEvent('on_authd')
 		self.main._connected()
@@ -918,8 +921,8 @@ class Client(derived):
 
 
 	def getPrivacy(self):	
-		log.msg( 'requesting priacy lists')
-		#FIXME: predelat
+		log.msg('requesting priacy lists')
+		#FIXME: predelat # Asi ok
 		iq = IQ(self.xmlstream, 'get')
 		q = iq.addElement('query', 'jabber:iq:privacy')
 		self.on_xml(iq.toXml())
@@ -928,26 +931,61 @@ class Client(derived):
 		d.addCallback(self._privacyReceived).addErrback(self.chyba)
 
 	def _privacyReceived(self, el):
-		#FIXME: predelat
-		log.msg( 'privacy lists received' )
-		query = el.firstChildElement()
-		for child in query.elements():
-			if child.name == 'active':
-				self.privacy_active = child['name']
-			if child.name == 'default':
-				self.privacy_active = child['name']
-			if child.name == 'list':
-				listname = child['name']
-				self.privacy_lists[listname] =[]  #pozor na soucasne volani set a get
-				for item in child.elements():
-					it = {}
-					it['attrs'] = item.attributes
-					it['types'] = []
-					for stanza in item.elements:
-						it['types'].append(stanza.name)
-					self.privacy_lists['listname'].append(it)
 		self.on_privacyReceived()
-
+		#FIXME: dodelat
+		log.msg('privacy lists received')
+		query = el.firstChildElement()
+		lists = []
+		active = None
+		#default = None
+		for child in query.elements():
+			if child.name == "list":
+				lists.append(child.attributes["name"])
+			if child.name == "active":
+				active = child.attributes["name"]
+			#if child.name == "default":
+			#	default = child.attributes["name"]
+			#### active == default
+		log.msg("lists: %s; active: %s" % (", ".join(lists), active))
+		if active:
+			lists.remove(active)
+		for l in lists:
+			self.privacy.lists[l] = None	# Bude nas zajimat jen active
+							# Dalsi se nactou az pozdejc, jinak je to plejtvani
+		iq	= IQ(self.xmlstream, "get")
+		query	= iq.addElement("query", "jabber:iq:privacy")
+		list_	= query.addElement("list")
+		list_.attributes = {"name":active}
+		d	= iq.send()
+		self.disp(iq["id"])
+		d.addCallback(self._activeRecieved).addErrback(self.chyba)
+	
+	def _activeRecieved(self, el):
+		log.msg("Active Privacy List recieved.")
+		query	= el.firstChildElement()
+		list_	= query.firstChildElement()
+		name	= list_.attributes["name"]
+		items	= []
+		for child in list_.elements():
+			order	= child.attributes["order"]
+			action	= child.attributes["action"]
+			if child.attributes.has_key("type"):
+				typ	= child.attributes["type"]
+				value	= child.attributes["value"]
+			else:
+				typ = value = None
+			stanzas = []
+			for stanza in child.elements():
+				stanzas.append(stanza.name)
+			item = PrivacyListItem(action, order, typ, value, stanzas)
+			items.append(item)
+		self.privacy.active = PrivacyList(name, items, self.main)
+		self.privacy.lists[name] = self.privacy.active
+		self.privacy.default = self.privacy.active
+		##
+	
+	def on_privacyReceived(self):
+		pass
 
 	def onTime202(self, el):
 		log.msg('received time202 request')
