@@ -1981,11 +1981,9 @@ class rosterWidget(QtGui.QWidget):
 			# chat with selected contact
 			jid=action.data()
 			jid=str(jid.toString())
-			#jid=jid+"/"+self.getResources(jid)[0]
 			file=QtGui.QFileDialog.getOpenFileNames(self,"Choose file")
 			file=list(file)
 			if len(file)!=0:
-##				print file,"to",jid
 				new=[]
 				for f in file:
 					new.append(unicode(f))

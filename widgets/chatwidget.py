@@ -26,6 +26,7 @@ from configobj import ConfigObj
 import urllib,re
 from twisted.web.microdom import *
 from twisted.web.domhelpers import gatherTextNodes
+import filetransfer
 
 class textView(QtGui.QTextEdit):
 	def __init__(self,parent):
@@ -132,6 +133,7 @@ class chatWidget(QtGui.QWidget):
 		self.first=None
 		#self.ui.gridlayout.addWidget(self.ui.line,2,0,1,1)
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
+		QtCore.QObject.connect(self.ui.sendFile, QtCore.SIGNAL("clicked ()"),self.sendFiles)
 		if self.main.config['chatMode']=="normal":
 			QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("textChanged ()"),self.lines)
@@ -167,6 +169,19 @@ class chatWidget(QtGui.QWidget):
 				#for y in range(int(int(viewport.height())/self.pixmap.height())+1):
 					#painter.drawPixmap(x*int(self.pixmap.width()),y*self.pixmap.height(),self.pixmap)
 		#QtGui.QWidget.paintEvent(self,event)
+
+	def sendFiles(self):
+		#jid=action.data()
+		#jid=str(jid.toString())
+		file=QtGui.QFileDialog.getOpenFileNames(self,"Choose file")
+		file=list(file)
+		if len(file)!=0:
+			new=[]
+			for f in file:
+				new.append(unicode(f))
+			file=new
+			self.dialog=filetransfer.filetransferDialog(self.main,file,self.jid)
+			self.dialog.show()
 
 	def loadSmileys(self):
 		# loads smileys.conf and makes buttons
