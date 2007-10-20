@@ -1329,6 +1329,8 @@ class mainWindow(QtGui.QMainWindow):
 	def loadTheme(self,text=None):
 		# windows hack
 		self.setStyleSheet("")
+		if self.config['theme']=="None":
+			text=""
 		if text==None:
 			theme=open("themes/"+self.config['theme']+"/style.css")
 			text=theme.read()
