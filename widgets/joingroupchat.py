@@ -21,6 +21,7 @@ try:
 except:
 	print "PyQt4 is not installed."
 from joingroupchat_ui import *
+import pyxl
 
 from twisted.python import log
 
@@ -101,11 +102,11 @@ class joinGroupChatWindow(QtGui.QDialog):
 		name=unicode(self.ui.name.text())
 		nickname=unicode(self.ui.nickname.text())
 		password=unicode(self.ui.password.text())
-		#if self.ui.bookmark.isChecked() and not self.main.bookmarks.has_key(room):
-			#print "setting bookmark for",room+"@"+server
-			#self.main.bookmarks[room+"@"+server]={"name":name,"nick":nickname,"autojoin":"0","password":password}
-			#self.jab.setBookmarks(self.main.bookmarks)
-			#self.main.buildGroupchatMenu()
+		if self.ui.bookmark.isChecked() and not self.main.client.bookmarks['conference'].has_key(name):
+			self.main.client.bookmarks['conference'][name]=pyxl.client.Bookmark(name, 'conference', room+"@"+server, 'false', nickname, password)
+			self.main.client.setBookmarks()
+			self.main.buildBookmarks()
+
 		#print "joining",room,nickname
 		self.main.chat.addGroupChatTab(room+"@"+server,nickname)
 		#self.main.groupchat[room+"@"+server]=[nickname,[]]
