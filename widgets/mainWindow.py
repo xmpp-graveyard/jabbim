@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sat Oct 20 08:26:45 2007
+# Created: Sun Oct 21 15:36:42 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -271,11 +271,11 @@ class Ui_MainWindow(object):
         self.menuPlugins = QtGui.QMenu(self.menubar)
         self.menuPlugins.setObjectName("menuPlugins")
 
-        self.menuAkce = QtGui.QMenu(self.menubar)
-        self.menuAkce.setObjectName("menuAkce")
-
         self.menuHelp = QtGui.QMenu(self.menubar)
         self.menuHelp.setObjectName("menuHelp")
+
+        self.menuAkce = QtGui.QMenu(self.menubar)
+        self.menuAkce.setObjectName("menuAkce")
         MainWindow.setMenuBar(self.menubar)
 
         self.actionShow_XML = QtGui.QAction(MainWindow)
@@ -295,14 +295,18 @@ class Ui_MainWindow(object):
 
         self.actionAbout = QtGui.QAction(MainWindow)
         self.actionAbout.setObjectName("actionAbout")
+
+        self.actionService_Discovery = QtGui.QAction(MainWindow)
+        self.actionService_Discovery.setObjectName("actionService_Discovery")
+        self.menuHelp.addAction(self.actionAbout)
         self.menuAkce.addAction(self.actionJoin_Groupchat)
         self.menuAkce.addAction(self.actionAdd_Contact)
+        self.menuAkce.addAction(self.actionService_Discovery)
         self.menuAkce.addAction(self.actionShow_XML)
         self.menuAkce.addSeparator()
         self.menuAkce.addAction(self.actionPreferences)
         self.menuAkce.addSeparator()
         self.menuAkce.addAction(self.actionQuit)
-        self.menuHelp.addAction(self.actionAbout)
         self.menubar.addAction(self.menuAkce.menuAction())
         self.menubar.addAction(self.menuPlugins.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
@@ -339,12 +343,13 @@ class Ui_MainWindow(object):
         self.statusButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Here you can change your status", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setToolTip(QtGui.QApplication.translate("MainWindow", "You can show/hide contats that are unavailable", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPlugins.setTitle(QtGui.QApplication.translate("MainWindow", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuAkce.setTitle(QtGui.QApplication.translate("MainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuAkce.setTitle(QtGui.QApplication.translate("MainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
         self.actionShow_XML.setText(QtGui.QApplication.translate("MainWindow", "Show XML", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setText(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.actionJoin_Groupchat.setText(QtGui.QApplication.translate("MainWindow", "Join Groupchat", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAdd_Contact.setText(QtGui.QApplication.translate("MainWindow", "Add Contact", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "About", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionService_Discovery.setText(QtGui.QApplication.translate("MainWindow", "Service Discovery", None, QtGui.QApplication.UnicodeUTF8))
 

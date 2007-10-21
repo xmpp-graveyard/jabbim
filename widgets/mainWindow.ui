@@ -509,23 +509,24 @@ p, li { white-space: pre-wrap; }
      <string>Plugins</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuHelp" >
+    <property name="title" >
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout" />
+   </widget>
    <widget class="QMenu" name="menuAkce" >
     <property name="title" >
      <string>Actions</string>
     </property>
     <addaction name="actionJoin_Groupchat" />
     <addaction name="actionAdd_Contact" />
+    <addaction name="actionService_Discovery" />
     <addaction name="actionShow_XML" />
     <addaction name="separator" />
     <addaction name="actionPreferences" />
     <addaction name="separator" />
     <addaction name="actionQuit" />
-   </widget>
-   <widget class="QMenu" name="menuHelp" >
-    <property name="title" >
-     <string>Help</string>
-    </property>
-    <addaction name="actionAbout" />
    </widget>
    <addaction name="menuAkce" />
    <addaction name="menuPlugins" />
@@ -559,6 +560,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionAbout" >
    <property name="text" >
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionService_Discovery" >
+   <property name="text" >
+    <string>Service Discovery</string>
    </property>
   </action>
  </widget>

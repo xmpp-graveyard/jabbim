@@ -12,4 +12,5 @@ import events
 import rosterLiveWidget
 import about
 import invitation
+import servicediscovery
 #import eventsFTWidget_ui

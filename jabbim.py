@@ -939,6 +939,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.newBookmark, QtCore.SIGNAL("clicked ()"),self.newBookmark)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
 		QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered ( bool )"),self.trayQuit)
+		QtCore.QObject.connect(self.ui.actionService_Discovery, QtCore.SIGNAL("triggered ( bool )"),self.serviceDiscovery)
 		
 		# fill login form
 		self.ui.login_password.setText(rot13.scramble(self.config['passwd']))
@@ -1011,7 +1012,11 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.roster.groupHeight=22
 			self.ui.roster.compact=True
 			self.ui.roster.repaint()
-		
+
+	def serviceDiscovery(self,b):
+		self.discovery=widgets.servicediscovery.serviceDiscoveryDialog(self,self)
+		self.discovery.show()
+
 	def event(self,ev):
 		# WindowActivated
 		if int(ev.type())==24:
