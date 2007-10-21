@@ -947,19 +947,44 @@ class Client(derived):
 			#	default = child.attributes["name"]
 			#### active == default
 		log.msg("lists: %s; active: %s" % (", ".join(lists), active))
+		
+		def getActive(el,name):
+			log.msg("Requesting active privacy list: %s." % name)
+			iq	= IQ(self.xmlstream, "get")
+			query	= iq.addElement("query", "jabber:iq:privacy")
+			list_	= query.addElement("list")
+			list_.attributes = {"name":name}
+			d	= iq.send()
+			self.on_xml(iq.toXml())
+			self.disp(iq["id"])
+			d.addCallback(self._activeRecieved).addErrback(self.chyba)
+
 		if active:
-			lists.remove(active)
+		#	lists.remove(active)
+			getActive(None,active)
+
+		else: # Pokud nemame, jeden si vytvorime
+			defaultlistname = "common"
+			lists.append(defaultlistname)
+			iq	= IQ(self.xmlstream, "set")
+			query	= iq.addElement("query", "jabber:iq:privacy")
+			list_	= query.addElement("list")
+			list_.attributes = {"name":defaultlistname} 	 # Asi neni idealni reseni
+			item	= list_.addElement("item")
+			item.attributes = {"order":"0","action":"allow","type":"jid","value":self.jid.userhost()}
+			d	= iq.send()
+			self.on_xml(iq.toXml())
+			self.disp(iq["id"])
+			log.msg("Creating new privacy list: %s." %  defaultlistname)
+			d.addCallback(getActive, defaultlistname).addErrback(self.chyba)
+			self.privacy.setActive(defaultlistname)
+			self.privacy.setDefault(defaultlistname)
+
 		for l in lists:
 			self.privacy.lists[l] = None	# Bude nas zajimat jen active
 							# Dalsi se nactou az pozdejc, jinak je to plejtvani
-		iq	= IQ(self.xmlstream, "get")
-		query	= iq.addElement("query", "jabber:iq:privacy")
-		list_	= query.addElement("list")
-		list_.attributes = {"name":active}
-		d	= iq.send()
-		self.disp(iq["id"])
-		d.addCallback(self._activeRecieved).addErrback(self.chyba)
-	
+
+
 	def _activeRecieved(self, el):
 		log.msg("Active Privacy List recieved.")
 		query	= el.firstChildElement()
@@ -983,7 +1008,7 @@ class Client(derived):
 		self.privacy.lists[name] = self.privacy.active
 		self.privacy.default = self.privacy.active
 		##
-	
+
 	def on_privacyReceived(self):
 		pass
 

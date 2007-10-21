@@ -108,7 +108,17 @@ class PrivacyList:
 	
 	######## ^   BASE   ^ #######
 	######## v ADVANCED v #######
-
+	
+	def _getScheme(self):
+		for item in self.items:
+			r += "Action: %s;" % item.action
+			r += "Order: %s;" % item.order
+			if item.typ:
+				r += "Type: %s;" % item.typ
+				r += "Value: %s;" % item.value
+			r += "Stanzas: "+", ".join(item.stanzas) or "Stanzas: All"
+			r += "\n"
+			return r
 	# TODO
 
 class Privacy:
@@ -117,4 +127,27 @@ class Privacy:
 		self.lists	= {}
 		self.active	= None
 		self.default	= None
+	
+	def setActive(self, name):
+		if name not in self.lists.keys():
+			self.lists[name] = None
+		iq = IQ(self.main.client.xmlstream, "set")
+		query = iq.addElement("query", "jabber:iq:privacy")
+		active = query.addElement("active")
+		active.attributes = {"name":name}
+		iq.send()
+		self.main.client.on_xml(iq.toXml())
+		self.main.client.disp(iq["id"])
+		self.active = self.lists[name]	
 
+	def setDefault(self, name):
+		if name not in self.lists.keys():
+			self.lists[name] = None
+		iq = IQ(self.main.client.xmlstream, "set")
+		query = iq.addElement("query", "jabber:iq:privacy")
+		default = query.addElement("default")
+		default.attributes = {"name":name}
+		iq.send()
+		self.main.client.on_xml(iq.toXml())
+		self.main.client.disp(iq["id"])
+		self.default = self.lists[name]
