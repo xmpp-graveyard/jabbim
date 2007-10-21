@@ -423,6 +423,11 @@ class rosterWidget(QtGui.QWidget):
 		#self.selectedItemStyle.setObjectName("selectedItemStyles")
 		self.theme=True
 		self.timestamp=0
+		
+		self.colors=QtGui.QTreeWidget(self.main)
+		self.colors.hide()
+		self.colors.setObjectName("rosterView")
+
 		self.reskin()
 
 
@@ -452,11 +457,11 @@ class rosterWidget(QtGui.QWidget):
 			self.bl=True
 			self.repaint()
 
-	def reskin(self):
-		self.colors=QtGui.QTreeWidget(self.main)
-		self.colors.hide()
+	def reskin(self,style=None):
 		if self.theme==True:
 			self.colors.setObjectName("rosterView")
+		else:
+			self.colors.setObjectName("rosterView2")
 
 		self.palet=self.colors.palette()
 		
@@ -489,29 +494,32 @@ class rosterWidget(QtGui.QWidget):
 		# tooltip request:
 		if int(event.type())==110:
 			item=self.itemAt(int(event.x()),int(event.y()),1)[0]
+			self.setToolTip("")
 			if len(item)!=0:
 				item=item[0]
-				text='<table><tr>'
-				if item.avatar!=None and os.path.isfile(self.main.homeDir+'/avatars/'+unicode(item.jid)):
-					pixmap=item.avatar.pixmap(64,64)
-					text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(item.jid)+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
-				text+='<td><b>'+self.tr("Name:")+'</b> '+item.name+'<br/>'
-				text+='<b>'+self.tr("JID:")+'</b> '+item.jid+'<br/>'
-				contact = self.main.client.roster["users"][item.jid]
-				for res in contact.resources.keys():
-					status = contact.resources[res].status
-					if not status:
-						status = ""
-					priority = contact.resources[res].priority
-					if priority == None:
-						priority = self.tr("Unknown")
-					text+='<img src="images/16x16/status/jabber-%s.png">' % contact.resources[res].show # hodilo by se rozlisit k jakymu poatri transportu
-					text+='<b>%s</b> (%s)<br><font size="-1">%s</font><br>' % (res, priority, status)
-					#text+='<b>'+self.tr("Status:")+'</b> '+unicode(self.main.status[self.main.icons[str(item.status)]])+'<br/>'
-					#if item.statusMessage:
-					#	text+='<font size="-1">'+item.statusMessage+'<br/>'
-				text+="</td></tr></table>"
-				self.setToolTip(text)
+				if item!=None and item.typ=="user":
+					text='<table><tr>'
+					if item.avatar!=None and os.path.isfile(self.main.homeDir+'/avatars/'+unicode(item.jid)):
+						pixmap=item.avatar.pixmap(64,64)
+						text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(item.jid)+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
+					text+='<td><b>'+self.tr("Name:")+'</b> '+item.name+'<br/>'
+					text+='<b>'+self.tr("JID:")+'</b> '+item.jid+'<br/>'
+					contact = self.main.client.roster["users"][item.jid]
+					for res in contact.resources.keys():
+						status = contact.resources[res].status
+						if not status:
+							status = ""
+						priority = contact.resources[res].priority
+						if priority == None:
+							priority = self.tr("Unknown")
+						text+='<img src="images/16x16/status/jabber-%s.png">' % contact.resources[res].show # hodilo by se rozlisit k jakymu poatri transportu
+						text+='<b>%s</b> (%s)<br><font size="-1">%s</font><br>' % (res, priority, status)
+						#text+='<b>'+self.tr("Status:")+'</b> '+unicode(self.main.status[self.main.icons[str(item.status)]])+'<br/>'
+						#if item.statusMessage:
+						#	text+='<font size="-1">'+item.statusMessage+'<br/>'
+					text+="</td></tr></table>"
+					self.setToolTip(text)
+			
 		return QtGui.QWidget.event(self,event)
 
 	def mouseMoveEvent(self,event):
@@ -1323,7 +1331,10 @@ class rosterWidget(QtGui.QWidget):
 		y=event.y()
 		item=self.itemAt(x,y)
 		if event.button() == QtCore.Qt.LeftButton:
-			self.selectItem(item,True)
+			if item.typ=='group':
+				self.selectItem(item)
+			else:
+				self.selectItem(item,True)
 
 			if item.typ=='group' and item.main!='special':
 				if item.expanded:

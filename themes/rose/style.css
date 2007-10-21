@@ -48,6 +48,11 @@ color:#842C00;
   color: #515354;
   font: bold;
 }*/
+
+QLabel{
+color:#E4524D;
+}
+
 QLabel#login_headerLabel,
 QLabel#login_jidLabel,
 QLabel#login_passwordLabel,
@@ -78,8 +83,8 @@ QWidget#rosterView {
 
 
 QWidget#selectedItemStyle{
-	background-color:#000000;
-	color:#FFFFFF;
+	background-color:#4D0000;
+	color:#CB0000;
 }
 
 QWidget#rosterTab {

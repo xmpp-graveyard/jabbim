@@ -1347,7 +1347,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.setStyleSheet(text)
 			self.xmlConsole.setStyleSheet(text)
 			self.chat.setStyleSheet(text)
-		self.ui.roster.reskin()
+		self.ui.roster.reskin(text)
 
 
 	def addContactMainWindow(self):
