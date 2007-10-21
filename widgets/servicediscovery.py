@@ -20,6 +20,8 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemExpanded ( QTreeWidgetItem * )"),self.expanded)
 		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemCollapsed ( QTreeWidgetItem * )"),self.collapsed)
 		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.itemClicked)
+		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int)"),self.itemSelected)
+
 
 		self.load()
 
@@ -45,6 +47,15 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 			return
 		self.main.client.getDiscoItems(jid, callback = self._discoItemsReceived, callback_par = (item))
 
+	def hasFeature(self,item,feature):
+		for data in item.data(32,0).toList():
+			if unicode(data.toString())==feature:
+				return True
+		return False
+
+	def itemSelected(self,item,i):
+		self.ui.register.setEnabled(self.hasFeature(item,"jabber:iq:register"))
+
 	def _discoItemsReceived(self,item):
 		jid=unicode(item.text(1))
 		for key,values in self.main.client.disco[jid][None]['items'].iteritems():
@@ -55,7 +66,9 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 			else:
 				it.setText(0,key)
 			it.setIcon(0,item.icon(0))
+		self.ui.tree.sortItems(0,QtCore.Qt.AscendingOrder)
 		item.setExpanded(True)
+		
 		self.ui.tree.resizeColumnToContents(0)
 
 	def load(self):
@@ -81,6 +94,8 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 									typ="disk"
 								parentitem.setIcon(0,self.main.getIcon(size="16x16",usertype=typ))
 								parentitem.setText(1,key)
+				if self.main.client.disco[key][None].has_key("features"):
+					parentitem.setData(32,0,QtCore.QVariant(list(self.main.client.disco[key][None]['features'])))
 				if self.main.client.disco[key][None].has_key("items"):
 					for item,values in self.main.client.disco[key][None]['items'].iteritems():
 						it=QtGui.QTreeWidgetItem(parentitem)
@@ -88,11 +103,13 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 						it.setIcon(0,parentitem.icon(0))
 						if values.has_key("jid"):
 							it.setText(1,values['jid'])
+				
 				#item=self.main.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1)[0]
 			elif self.main.client.disco[key][None].has_key("err"):
 				print key,"error"
 			print self.main.client.disco[key]
 		print categories.keys()
+		self.ui.tree.sortItems(0,QtCore.Qt.AscendingOrder)
 		self.ui.tree.resizeColumnToContents(0)
 		return categories
 
