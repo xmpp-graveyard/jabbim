@@ -19,7 +19,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 
 		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemExpanded ( QTreeWidgetItem * )"),self.expanded)
 		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemCollapsed ( QTreeWidgetItem * )"),self.collapsed)
-
+		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.itemClicked)
 
 		self.load()
 
@@ -38,7 +38,26 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 
 	def collapsed(self,item):
 		self.ui.tree.resizeColumnToContents(0)
-		
+
+	def itemClicked(self,item,i):
+		jid=unicode(item.text(1))
+		if len(jid)==0:
+			return
+		self.main.client.getDiscoItems(jid, callback = self._discoItemsReceived, callback_par = (item))
+
+	def _discoItemsReceived(self,item):
+		jid=unicode(item.text(1))
+		for key,values in self.main.client.disco[jid][None]['items'].iteritems():
+			it=QtGui.QTreeWidgetItem(item)
+			it.setText(1,values['jid'])
+			if values.has_key("name"):
+				it.setText(0,values["name"])
+			else:
+				it.setText(0,key)
+			it.setIcon(0,item.icon(0))
+		item.setExpanded(True)
+		self.ui.tree.resizeColumnToContents(0)
+
 	def load(self):
 		categories={}
 		for key in self.main.client.disco.keys():
@@ -69,7 +88,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 						it.setIcon(0,parentitem.icon(0))
 						if values.has_key("jid"):
 							it.setText(1,values['jid'])
-				
+				#item=self.main.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1)[0]
 			elif self.main.client.disco[key][None].has_key("err"):
 				print key,"error"
 			print self.main.client.disco[key]
