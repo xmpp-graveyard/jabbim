@@ -355,20 +355,54 @@ class groupChatWidget(QtGui.QWidget):
 
 	def tabPressed(self):
 		# nick completion
-		text=unicode(self.ui.line.toPlainText()).lower()
+		original=unicode(self.ui.line.toPlainText())
+		t=unicode(self.ui.line.toPlainText()).lower()
+		text=t
 		if len(text)==0:
 			return
-		text=text[0]
+		cur=self.ui.line.textCursor()
+		#cur.select(QtGui.QTextCursor.WordUnderCursor)
+		#cur.movePosition(QtGui.QTextCursor.Left, QtGui.QTextCursor.KeepAnchor)
+		self.ui.line.setTextCursor(cur)
+
+		i=0
+		newt=""
+		for word in text.split(" "):
+			if cur.position()>i and cur.position()<=i+1+len(word) and len(word)!=0:
+				text=word[0]
+				break
+			else:
+				newt=word+" "
+			i=i+1+len(word)
+		#text=unicode(cur.selectedText()).lower()
+		#text=text[0]
 		repeat=False
 		users=self.main.client.groupchats[self.jid].users.keys()
+		print text
 		for i in range(len(users)):
-			if unicode(users[i]).lower()[:len(text)]==text and i>self.name_id:
+			if unicode(users[i]).lower()[0]==unicode(text).lower() and i>self.name_id:
+				#cur=self.ui.line.textCursor()
+				#cur.movePosition(QtGui.QTextCursor.End)
+				#self.ui.line.setTextCursor(cur)
+				#self.ui.line.setPlainText(users[i]+": ")
 				cur=self.ui.line.textCursor()
-				cur.movePosition(QtGui.QTextCursor.End)
-				self.ui.line.setTextCursor(cur)
-				self.ui.line.setPlainText(users[i]+": ")
-				cur=self.ui.line.textCursor()
-				cur.movePosition(QtGui.QTextCursor.End)
+				#cur.clearSelection()
+				#cur.removeSelectedText()
+				#cur.insertText(users[i]+": ")
+				x=0
+				newt=""
+				for word in original.split(" "):
+					if cur.position()>x and cur.position()<=x+1+len(word) and len(word)!=0:
+						newt+=users[i]+": "
+					else:
+						newt+=word+" "
+					x=x+1+len(word)
+				if len(word)==0:
+					newt=newt[:-1]
+				#cur.movePosition(QtGui.QTextCursor.NextWord, QtGui.QTextCursor.KeepAnchor)
+
+				self.ui.line.setPlainText(newt)
+				#cur.movePosition(QtGui.QTextCursor.End)
 				self.ui.line.setTextCursor(cur)
 				self.name_id=i
 				return
