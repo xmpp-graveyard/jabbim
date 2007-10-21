@@ -1612,13 +1612,20 @@ class mainWindow(QtGui.QMainWindow):
 		#if self.client!=None:
 		reactor.stop2()
 
-	def getIcon(self,jid=None,typ=None,size="32x32",status=None,usertype="jabber"):
+	def getIcon(self,jid=None,typ=None,size="32x32",status=None,usertype=None):
 		if size=="22x22":
 			size="32x32"
 		# return status icon
 		#print "geticon",jid,typ,size,status,usertype
 		path=self.statusPath.replace("xxxxx",size)
 		typ=unicode(typ)
+		
+		if usertype!=None:
+			file=path+usertype+"-online.png"
+			if os.path.exists(file):
+				icon=QtGui.QIcon(file)
+				return icon
+		
 		if status==None:
 			status=self.icons[self.shows[typ]]
 		if jid!=None:

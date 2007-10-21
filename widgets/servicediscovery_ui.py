@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/servicediscovery.ui'
 #
-# Created: Sun Oct 21 15:50:52 2007
+# Created: Sun Oct 21 16:43:13 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -21,6 +21,7 @@ class Ui_serviceDiscovery(object):
         self.gridlayout.setObjectName("gridlayout")
 
         self.tree = QtGui.QTreeWidget(serviceDiscovery)
+        self.tree.setIconSize(QtCore.QSize(48,48))
         self.tree.setObjectName("tree")
         self.gridlayout.addWidget(self.tree,0,0,1,1)
 
