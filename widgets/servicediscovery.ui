@@ -27,6 +27,16 @@
        <height>48</height>
       </size>
      </property>
+     <column>
+      <property name="text" >
+       <string>name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text" >
+       <string>jid</string>
+      </property>
+     </column>
     </widget>
    </item>
   </layout>

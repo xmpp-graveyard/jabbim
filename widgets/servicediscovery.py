@@ -15,8 +15,14 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		self.main=main
 		
 		#for category in self.getCategories():
+		self.ui.tree.header().hide()
+
+		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemExpanded ( QTreeWidgetItem * )"),self.expanded)
+		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemCollapsed ( QTreeWidgetItem * )"),self.collapsed)
+
+
 		self.load()
-		
+
 
 		#for key in self.main.client.disco.keys():
 			#if self.main.client.disco[key][None].has_key("identities"):
@@ -27,9 +33,16 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 			#elif self.main.client.disco[key][None].has_key("err"):
 				#print key,"error"
 
+	def expanded(self,item):
+		self.ui.tree.resizeColumnToContents(0)
+
+	def collapsed(self,item):
+		self.ui.tree.resizeColumnToContents(0)
+		
 	def load(self):
 		categories={}
 		for key in self.main.client.disco.keys():
+			
 			if self.main.client.disco[key][None].has_key("identities"):
 				for identity,values in self.main.client.disco[key][None]["identities"].iteritems():
 					if values.has_key('category'):
@@ -39,20 +52,29 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 							item.setIcon(0,QtGui.QIcon("images/48x48/apps/jabbim.png"))
 							categories[values['category']]=item
 						if values.has_key('name'):
-							item=QtGui.QTreeWidgetItem(categories[values['category']])
-							item.setText(0,values['name'])
+							parentitem=QtGui.QTreeWidgetItem(categories[values['category']])
+							parentitem.setText(0,values['name'])
 							if values.has_key("type"):
 								typ=values['type']
 								if typ=="pep" or typ=="im":
 									typ="jabber"
 								elif typ=="file":
 									typ="disk"
-								item.setIcon(0,self.main.getIcon(size="16x16",usertype=typ))
-					print values
-							
+								parentitem.setIcon(0,self.main.getIcon(size="16x16",usertype=typ))
+								parentitem.setText(1,key)
+				if self.main.client.disco[key][None].has_key("items"):
+					for item,values in self.main.client.disco[key][None]['items'].iteritems():
+						it=QtGui.QTreeWidgetItem(parentitem)
+						it.setText(0,item)
+						it.setIcon(0,parentitem.icon(0))
+						if values.has_key("jid"):
+							it.setText(1,values['jid'])
+				
 			elif self.main.client.disco[key][None].has_key("err"):
 				print key,"error"
+			print self.main.client.disco[key]
 		print categories.keys()
+		self.ui.tree.resizeColumnToContents(0)
 		return categories
 
 	def accept(self):
