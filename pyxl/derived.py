@@ -242,7 +242,7 @@ class derived:
 		iq['to'] = jid
 		q = iq.addElement('query')
 		q['xmlns']='http://jabber.org/protocol/muc#owner'
-		x = q.addElement(forms)
+		x = q.addChild(forms)
 		x['type'] = 'submit'
 		self.disp(iq['id'])
 		d = iq.send()
@@ -274,7 +274,7 @@ class derived:
 			for k,v in llegacy.iteritems():
 				q.addElement('k', content = v)
 		elif forms != None:
-			x = q.addElement(forms)
+			x = q.addChild(forms)
 			x['type'] = 'submit'
 		else:
 			return False
