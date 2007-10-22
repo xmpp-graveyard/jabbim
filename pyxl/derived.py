@@ -220,6 +220,20 @@ class derived:
 		self.on_xml(iq.toXml())
 		d.addCallback(self._onRosterArrive).addErrback(self.chyba)
 	
+	def getRegisterForm(self, jid, callback = None):
+		""" Posle zadost o registracni formular na dany jid """
+		log.msg('get reg form')
+		iq = IQ(self.xmlstream, 'get')
+		iq['type'] = 'get'
+		iq['to'] = jid
+		q = iq.addElement('query')
+		q['xmlns']='jabber:iq:register'
+		self.disp(iq['id'])
+		d = iq.send()
+		self.on_xml(iq.toXml())
+		d.addCallback(self._onRegisterGet, callback, jid).addErrback(self.chyba)
+		return d
+	
 	def sendRosterUpdate(self, jid, name, subscription, groups, callback=None, params=None):
 		""" Zmeni zaznam v rosteru o zadanem JIDu """
 		#print jid, name, subscription, groups

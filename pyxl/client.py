@@ -1103,6 +1103,18 @@ class Client(derived):
 		self.xmlstream.send(el)
 
 
+	def _onRegisterGet(self, el, callback, jid):
+		legacy = {}
+		forms = None
+		query = el.firstChildElement()
+		for child in query.elements():
+			if child.name == 'x':
+				forms = x
+			else:
+				legacy[child.name] = unicode(child)
+		if callback != None:
+			callback(jid, legacy, forms)
+		return (jid, legacy, forms)
 
 	
 	def sendFile(self, jid, filename, fp, desc = None):
