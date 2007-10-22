@@ -25,10 +25,14 @@ import pyxl
 from twisted.python import log
 
 class dataFormsDialog(QtGui.QDialog):
-	def __init__(self,main,form,parent=None):
+	def __init__(self,main,form,jid,typ,parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.setModal(True)
 		print unicode(form.toXml())
+		self.main=main
+		self.typ=typ
+		self.jid=jid
+		self.form=form
 		#child = form.firstChildElement()
 		#print "ELEMENTS",unicode(child.toXml())
 		#print "ELEMENTS",child.elements()
@@ -74,8 +78,31 @@ class dataFormsDialog(QtGui.QDialog):
 					layout.addWidget(widget,row,1)
 					self.var[x['var']]={'widget':widget,'type':x['type']}
 					row+=1
+		self.ok=QtGui.QPushButton(self.tr("OK"),self)
+		self.cancel=QtGui.QPushButton(self.tr("Cancel"),self)
+		
+		QtCore.QObject.connect(self.ok,QtCore.SIGNAL("clicked()"),self.accept)
+		QtCore.QObject.connect(self.cancel,QtCore.SIGNAL("clicked()"),self.reject)
+		
+		layout.addWidget(self.ok,row,0)
+		layout.addWidget(self.cancel,row,1)
 
 	def accept(self):
+		if self.typ=="muc":
+			form=self.form
+			for x in form.elements():
+				if unicode(x.name)=="field":
+					if x.hasAttribute("var"):
+						if self.var.has_key(x['var']):
+							widget=self.var[x['var']]['widget']
+							typ=self.var[x['var']]['type']
+							if typ=="text-single" or typ=="text-multi":
+								for child in x.elements():
+									if child.name == 'value':
+										child.children = []
+										child.children.append(unicode(widget.text()))
+			print unicode(form.toXml())
+			self.main.client.setMUCConfig(self.jid, form)
 		self.done(1)
 
 	def reject(self):

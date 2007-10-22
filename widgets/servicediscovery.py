@@ -48,7 +48,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		#print legacy
 		#print "form:"+form.toXml()
 		if form!=None:
-			self.dialog=dataforms.dataFormsDialog(self.main,form,self)
+			self.dialog=dataforms.dataFormsDialog(self.main,form,jid,"register",self)
 			self.dialog.show()
 
 	def expanded(self,item):

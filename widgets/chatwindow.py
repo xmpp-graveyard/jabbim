@@ -275,7 +275,7 @@ class chatWindow(QtGui.QMainWindow):
 		layout.setMargin(1)
 		layout.setSpacing(1)
 		tab.chat=groupChatWidget(self.main,room,tab)
-		tab.chat.ui.admin.hide()
+		#tab.chat.ui.admin.hide()
 		layout.addWidget(tab.chat)
 		jmeno = room
 		for nick, bookmark  in self.main.client.bookmarks['conference'].iteritems():

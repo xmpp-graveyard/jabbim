@@ -26,6 +26,7 @@ from configobj import ConfigObj
 import urllib,re
 from twisted.web.microdom import *
 from twisted.web.domhelpers import gatherTextNodes
+import dataforms
 
 class textView(QtGui.QTextEdit):
 	def __init__(self,parent):
@@ -155,28 +156,34 @@ class groupChatWidget(QtGui.QWidget):
 		#self.ui.lineWidget.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
 		self.ui.splitter.setSizes([500,120])
 		self.ui.splitter_2.setSizes([45,500,70])
+		self.ui.admin.show()
 
 	#def lines(self):
 		#if self.ui.line.verticalScrollBar().isVisible():
 			#self.ui.line.setMaximumHeight(int(self.ui.line.maximumHeight())+int(self.ui.line.currentFont().pointSize())+10)
 
-	def changeAffiliation(self,affiliation):
-		if affiliation=="owner":
-			self.ui.admin.show()
-		self.affiliation=affiliation
+	#def changeAffiliation(self,affiliation):
+		#if affiliation=="owner":
+			#self.ui.admin.show()
+		#self.affiliation=affiliation
+	
+	def roomConfigClicked(self):
+		nick=self.main.client.groupchats[self.jid].nick
+		print self.main.client.groupchats[self.jid].users[nick].affiliation
+		if self.main.client.groupchats[self.jid].users[nick].affiliation=="owner":
+			d=self.main.client.getMUCConfig(self.jid)
+			d.addCallback(self._onRoomConfig)
+
+	def _onRoomConfig(self,data):
+		jid=data[0]
+		form=data[1]
+		if form!=None:
+			self.dialog=dataforms.dataFormsDialog(self.main,form,jid,"muc",self)
+			self.dialog.show()
 
 	def roomAdminClicked(self):
-		if self.affiliation=="owner":
-			self.chatadmin=groupchatAdminWindow(self,self.main,self.jab)
-			self.jab.getGroupchatAdminList(self.jid,role="moderator")
-			self.jab.getGroupchatAdminList(self.jid,affiliation="owner")
-			self.jab.getGroupchatAdminList(self.jid,affiliation="member")
-			self.jab.getGroupchatAdminList(self.jid,affiliation="outcast")
-			self.jab.getGroupchatAdminList(self.jid,affiliation="admin")
-			self.chatadmin.show()
-
-	def roomConfigClicked(self):
-		self.jab.getGroupchatConfig(self.jid)
+		pass
+		#self.jab.getGroupchatConfig(self.jid)
 
 	#def deleteUser(self,jid,nick):
 		#user=self.main.getGroupChatMember(jid,unicode(nick))
