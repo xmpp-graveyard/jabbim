@@ -363,7 +363,7 @@ class groupChatWidget(QtGui.QWidget):
 		cur=self.ui.line.textCursor()
 		#cur.select(QtGui.QTextCursor.WordUnderCursor)
 		#cur.movePosition(QtGui.QTextCursor.Left, QtGui.QTextCursor.KeepAnchor)
-		self.ui.line.setTextCursor(cur)
+		#self.ui.line.setTextCursor(cur)
 
 		i=0
 		newt=""
@@ -391,9 +391,11 @@ class groupChatWidget(QtGui.QWidget):
 				#cur.insertText(users[i]+": ")
 				x=0
 				newt=""
+				pos=0
 				for word in original.split(" "):
 					if cur.position()>x and cur.position()<=x+1+len(word) and len(word)!=0:
 						newt+=users[i]+": "
+						pos=x+len(users[i]+": ")
 					else:
 						newt+=word+" "
 					x=x+1+len(word)
@@ -402,7 +404,7 @@ class groupChatWidget(QtGui.QWidget):
 				#cur.movePosition(QtGui.QTextCursor.NextWord, QtGui.QTextCursor.KeepAnchor)
 
 				self.ui.line.setPlainText(newt)
-				#cur.movePosition(QtGui.QTextCursor.End)
+				cur.setPosition(pos)
 				self.ui.line.setTextCursor(cur)
 				self.name_id=i
 				return
