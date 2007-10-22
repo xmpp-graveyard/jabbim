@@ -1109,7 +1109,7 @@ class Client(derived):
 		query = el.firstChildElement()
 		for child in query.elements():
 			if child.name == 'x':
-				forms = x
+				forms = child
 			else:
 				legacy[child.name] = unicode(child)
 		if callback != None:

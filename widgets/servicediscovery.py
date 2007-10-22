@@ -5,6 +5,7 @@ except:
 	print "PyQt4 is not installed."
 
 from servicediscovery_ui import *
+import dataforms
 
 class serviceDiscoveryDialog(QtGui.QDialog):
 	def __init__(self,main,parent=None):
@@ -21,8 +22,9 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemCollapsed ( QTreeWidgetItem * )"),self.collapsed)
 		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.itemClicked)
 		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int)"),self.itemSelected)
+		QtCore.QObject.connect(self.ui.register, QtCore.SIGNAL("clicked()"),self.register)
 
-
+#d=self.main.client.getRegisterForm(jid)
 		self.load()
 
 
@@ -34,6 +36,20 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 				
 			#elif self.main.client.disco[key][None].has_key("err"):
 				#print key,"error"
+
+	def register(self):
+		jid=unicode(self.ui.tree.currentItem().text(1))
+		d=self.main.client.getRegisterForm(jid)
+		d.addCallback(self._onRegister)
+	
+	def _onRegister(self,data):
+		jid,legacy,form=data
+		#print jid
+		#print legacy
+		#print "form:"+form.toXml()
+		if form!=None:
+			self.dialog=dataforms.dataFormsDialog(self.main,form,self)
+			self.dialog.show()
 
 	def expanded(self,item):
 		self.ui.tree.resizeColumnToContents(0)
