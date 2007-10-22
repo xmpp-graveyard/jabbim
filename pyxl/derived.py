@@ -220,6 +220,35 @@ class derived:
 		self.on_xml(iq.toXml())
 		d.addCallback(self._onRosterArrive).addErrback(self.chyba)
 	
+	def getMUCConfig(self, jid, callback = None):
+		""" Posle zadost o registracni formular na dany jid """
+		log.msg('get muc config')
+		iq = IQ(self.xmlstream, 'get')
+		iq['type'] = 'get'
+		iq['to'] = jid
+		q = iq.addElement('query')
+		q['xmlns']='http://jabber.org/protocol/muc#owner'
+		self.disp(iq['id'])
+		d = iq.send()
+		self.on_xml(iq.toXml())
+		d.addCallback(self._onMUCConfigReceived, callback, jid).addErrback(self.chyba)
+		return d
+		
+	def setMUCConfig(self, jid, forms):
+		""" Posle zadost o registracni formular na dany jid """
+		log.msg('set muc config')
+		iq = IQ(self.xmlstream, 'set')
+		iq['type'] = 'set'
+		iq['to'] = jid
+		q = iq.addElement('query')
+		q['xmlns']='http://jabber.org/protocol/muc#owner'
+		x = q.addElement(forms)
+		x['type'] = 'submit'
+		self.disp(iq['id'])
+		d = iq.send()
+		self.on_xml(iq.toXml())
+		return d
+	
 	def getRegisterForm(self, jid, callback = None):
 		""" Posle zadost o registracni formular na dany jid """
 		log.msg('get reg form')
@@ -234,6 +263,27 @@ class derived:
 		d.addCallback(self._onRegisterGet, callback, jid).addErrback(self.chyba)
 		return d
 	
+	def setRegisterForm(self, jid, legacy=None, forms = None):
+		log.msg('set reg form')
+		iq = IQ(self.xmlstream, 'set')
+		iq['type'] = 'set'
+		iq['to'] = jid
+		q = iq.addElement('query')
+		q['xmlns']='jabber:iq:register'
+		if legacy != None:
+			for k,v in llegacy.iteritems():
+				q.addElement('k', content = v)
+		elif forms != None:
+			x = q.addElement(forms)
+			x['type'] = 'submit'
+		else:
+			return False
+		self.disp(iq['id'])
+		d = iq.send()
+		self.on_xml(iq.toXml())
+		d.addCallback(self._onRegisterSet, jid)
+		return d
+		
 	def sendRosterUpdate(self, jid, name, subscription, groups, callback=None, params=None):
 		""" Zmeni zaznam v rosteru o zadanem JIDu """
 		#print jid, name, subscription, groups

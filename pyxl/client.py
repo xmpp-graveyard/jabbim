@@ -1115,6 +1115,16 @@ class Client(derived):
 		if callback != None:
 			callback(jid, legacy, forms)
 		return (jid, legacy, forms)
+	
+	def _onMUCConfigReceived(self, el, callback, jid):
+		forms = None
+		query = el.firstChildElement()
+		for child in query.elements():
+			if child.name == 'x':
+				forms = child
+		if callback != None:
+			callback(jid, forms)
+		return (jid,  forms)
 
 	
 	def sendFile(self, jid, filename, fp, desc = None):
