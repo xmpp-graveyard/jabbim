@@ -25,6 +25,7 @@ from twisted.python import log
 from twisted.words.protocols.jabber import jid as jidT
 import time
 import filetransfer
+import addcontact
 
 class activeWidget(QtGui.QWidget):
 	def __init__(self,parent=None):
@@ -1290,6 +1291,16 @@ class rosterWidget(QtGui.QWidget):
 			jid = unicode(event.mimeData().text())
 			position = event.pos()
 			item=self.itemAt(position.x(),position.y())
+			if not self.data.has_key(jid):
+				gr=""
+				if item.typ=="group":
+					gr=item.name
+				elif item.typ=="user":
+					gr=item.group
+				dialog=addcontact.addContactDialog(self.main,self,jid=jid,group=gr,name=jid.split('@')[0])
+				dialog.exec_()
+				return
+			
 			oldItem=self.data[event.mimeData()]
 			if item==oldItem:
 				event.ignore()
