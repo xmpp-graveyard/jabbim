@@ -47,10 +47,6 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		if not data:
 			return
 		jid,legacy,form=data
-		print jid
-		print legacy
-		if form:
-			print "form:"+form.toXml()
 		if form!=None:
 			self.dialog=dataforms.dataFormsDialog(self.main,form,jid,"register",self)
 			self.dialog.show()

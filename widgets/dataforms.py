@@ -28,7 +28,7 @@ class dataFormsDialog(QtGui.QDialog):
 	def __init__(self,main,form,jid,typ,parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.setModal(True)
-		print unicode(form.toXml())
+		#print unicode(form.toXml())
 		self.main=main
 		self.typ=typ
 		self.jid=jid
@@ -111,30 +111,31 @@ class dataFormsDialog(QtGui.QDialog):
 		layout.addWidget(self.cancel,row,1)
 
 	def accept(self):
+		form=self.form
+		for x in form.elements():
+			if unicode(x.name)=="field":
+				if x.hasAttribute("var"):
+					if self.var.has_key(x['var']):
+						widget=self.var[x['var']]['widget']
+						typ=self.var[x['var']]['type']
+						if typ=="text-single" or typ=="text-multi" or typ=="text-private":
+							for child in x.elements():
+								if child.name == 'value':
+									child.children = []
+									child.children.append(unicode(widget.text()))
+						elif typ=="boolean":
+							for child in x.elements():
+								if child.name == 'value':
+									child.children = []
+									if widget.isChecked():
+										child.children.append("1")
+									else:
+										child.children.append("0")
 		if self.typ=="muc":
-			form=self.form
-			for x in form.elements():
-				if unicode(x.name)=="field":
-					if x.hasAttribute("var"):
-						if self.var.has_key(x['var']):
-							widget=self.var[x['var']]['widget']
-							typ=self.var[x['var']]['type']
-							if typ=="text-single" or typ=="text-multi" or typ=="text-private":
-								for child in x.elements():
-									if child.name == 'value':
-										child.children = []
-										child.children.append(unicode(widget.text()))
-							elif typ=="boolean":
-								for child in x.elements():
-									if child.name == 'value':
-										child.children = []
-										if widget.isChecked():
-											child.children.append("1")
-										else:
-											child.children.append("0")
-								
-			print unicode(form.toXml())
 			self.main.client.setMUCConfig(self.jid, form)
+		elif self.typ=="disco":
+			self.main.client.setRegisterForm(self.jid,forms=form)
+
 		self.done(1)
 
 	def reject(self):
