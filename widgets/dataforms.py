@@ -100,7 +100,26 @@ class dataFormsDialog(QtGui.QDialog):
 					layout.addWidget(widget,row,1)
 					self.var[x['var']]={'widget':widget,'type':x['type']}
 					row+=1
-
+				elif x['type']=="list-single":
+					#<field var='userlist' type='list-single' label='Userlist on GG server'><value>get</value><option label='ignore'><value>ignore</value></option><option label='retrieve'><value>get</value></option></field>
+					label=QtGui.QLabel(x['label'],self)
+					layout.addWidget(label,row,0)
+					widget=QtGui.QComboBox(self)
+					default=""
+					for child in x.elements():
+						if child.name == 'value':
+							default=unicode(child)
+						elif child.name=="option":
+							for ch in child.elements():
+								if ch.name=="value":
+									if unicode(ch)==default:
+										widget.insertItem(0,unicode(child['label']),QtCore.QVariant(unicode(ch)))
+									else:
+										widget.addItem(child['label'], QtCore.QVariant(unicode(ch)))
+					widget.setCurrentIndex(0)
+					layout.addWidget(widget,row,1)
+					self.var[x['var']]={'widget':widget,'type':x['type']}
+					row+=1
 		self.ok=QtGui.QPushButton(self.tr("OK"),self)
 		self.cancel=QtGui.QPushButton(self.tr("Cancel"),self)
 		
@@ -119,21 +138,40 @@ class dataFormsDialog(QtGui.QDialog):
 						widget=self.var[x['var']]['widget']
 						typ=self.var[x['var']]['type']
 						if typ=="text-single" or typ=="text-multi" or typ=="text-private":
+							make=True
 							for child in x.elements():
 								if child.name == 'value':
+									make=False
 									child.children = []
 									child.children.append(unicode(widget.text()))
+							if make:
+								x.addElement('value', content = unicode(widget.text()))
 						elif typ=="boolean":
+							make=True
+							if widget.isChecked():
+								text="1"
+							else:
+								text="0"
 							for child in x.elements():
 								if child.name == 'value':
+									make=False
 									child.children = []
-									if widget.isChecked():
-										child.children.append("1")
-									else:
-										child.children.append("0")
+									child.children.append(text)
+							if make:
+								x.addElement('value', content = text)
+						elif typ=="list-single":
+							make=True
+							for child in x.elements():
+								if child.name == 'value':
+									make=False
+									child.children = []
+									child.children.append(unicode(widget.itemData(widget.currentIndex()).toString()))
+							if make:
+								x.addElement('value', content = unicode(widget.itemData(widget.currentIndex()).toString()))
+			
 		if self.typ=="muc":
 			self.main.client.setMUCConfig(self.jid, form)
-		elif self.typ=="disco":
+		elif self.typ=="register":
 			self.main.client.setRegisterForm(self.jid,forms=form)
 
 		self.done(1)
