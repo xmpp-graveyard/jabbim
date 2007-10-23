@@ -1116,6 +1116,28 @@ class Client(derived):
 			callback(jid, legacy, forms)
 		return (jid, legacy, forms)
 	
+	def _onSearchGet(self, el, jid):
+		legacy = {}
+		forms = None
+		query = el.firstChildElement()
+		for child in query.elements():
+			if child.name == 'x':
+				forms = child
+			else:
+				legacy[child.name] = unicode(child)
+		return (jid, legacy, forms)
+	
+	def _onSearchResult(self, el, jid):
+		legacy = {}
+		forms = None
+		query = el.firstChildElement()
+		for child in query.elements():
+			if child.name == 'x':
+				forms = child
+			else:
+				legacy[child.name] = unicode(child)
+		return (jid, legacy, forms)
+				
 	def _onMUCConfigReceived(self, el, callback, jid):
 		forms = None
 		query = el.firstChildElement()

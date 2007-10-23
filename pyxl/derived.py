@@ -283,8 +283,43 @@ class derived:
 		self.disp(iq['id'])
 		d = iq.send()
 		self.on_xml(iq.toXml())
-		
 		return d
+
+	def getSearchForm(self, jid):
+		""" Posle zadost o formular pro hledani na dany jid """
+		log.msg('get reg form')
+		iq = IQ(self.xmlstream, 'get')
+		iq['type'] = 'get'
+		iq['to'] = jid
+		q = iq.addElement('query')
+		q['xmlns']='jabber:iq:search'
+		self.disp(iq['id'])
+		d = iq.send()
+		self.on_xml(iq.toXml())
+		d.addCallback(self._onSearchGet, jid).addErrback(self.chyba)
+		return d
+	
+	def setSearchForm(self, jid, legacy=None, forms = None):
+		log.msg('set search form')
+		iq = IQ(self.xmlstream, 'set')
+		iq['type'] = 'set'
+		iq['to'] = jid
+		q = iq.addElement('query')
+		q['xmlns']='jabber:iq:search'
+		if legacy != None:
+			for k,v in legacy.iteritems():
+				if k == 'instructions':
+					continue
+				q.addElement('k', content = v)
+		elif forms != None:
+			x = q.addChild(forms)
+			x['type'] = 'submit'
+		else:
+			return False
+		self.disp(iq['id'])
+		d = iq.send()
+		self.on_xml(iq.toXml())
+		return d.addCallback(self._onSearchResult, jid)	
 		
 	def sendRosterUpdate(self, jid, name, subscription, groups, callback=None, params=None):
 		""" Zmeni zaznam v rosteru o zadanem JIDu """
