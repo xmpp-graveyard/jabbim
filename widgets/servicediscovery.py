@@ -44,6 +44,8 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		d.addCallback(self._onRegister)
 	
 	def _onRegister(self,data):
+		if not data:
+			return
 		jid,legacy,form=data
 		print jid
 		print legacy

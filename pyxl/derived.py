@@ -271,7 +271,7 @@ class derived:
 		q = iq.addElement('query')
 		q['xmlns']='jabber:iq:register'
 		if legacy != None:
-			for k,v in llegacy.iteritems():
+			for k,v in legacy.iteritems():
 				q.addElement('k', content = v)
 		elif forms != None:
 			x = q.addChild(forms)
