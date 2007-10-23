@@ -446,12 +446,13 @@ class clientClass(pyxl.client.Client):
 		else:
 			# get user role
 			role=self.groupchats[muc].users[nick].role
+			affiliation=self.groupchats[muc].users[nick].affiliation
 			# find good tab according to jid
 			for i in range(self.main.chat.ui.chatTab.count()):
 				w=self.main.chat.ui.chatTab.widget(i)
 				if unicode(w.jid)==unicode(muc):
 					# edit user item
-					w.chat.editUser(nick,show,role)
+					w.chat.editUser(nick,show,role,affiliation)
 					break
 		# message skin
 		message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",show).replace('[nick]', nick)

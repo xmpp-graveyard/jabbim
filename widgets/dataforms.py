@@ -78,6 +78,29 @@ class dataFormsDialog(QtGui.QDialog):
 					layout.addWidget(widget,row,1)
 					self.var[x['var']]={'widget':widget,'type':x['type']}
 					row+=1
+				elif x['type']=="boolean":
+					widget=QtGui.QCheckBox(x['label'],self)
+					for child in x.elements():
+						if child.name == 'value':
+							if unicode(child)=="0" or unicode(child)=="false":
+								widget.setChecked(False)
+							elif unicode(child)=="1" or unicode(child)=="true":
+								widget.setChecked(True)
+					layout.addWidget(widget,row,0,1,2)
+					self.var[x['var']]={'widget':widget,'type':x['type']}
+					row+=1
+				elif x['type']=="text-private":
+					label=QtGui.QLabel(x['label'],self)
+					layout.addWidget(label,row,0)
+					widget=QtGui.QLineEdit(self)
+					widget.setEchoMode(QtGui.QLineEdit.Password)
+					for child in x.elements():
+						if child.name == 'value':
+							widget.setText(unicode(child))
+					layout.addWidget(widget,row,1)
+					self.var[x['var']]={'widget':widget,'type':x['type']}
+					row+=1
+
 		self.ok=QtGui.QPushButton(self.tr("OK"),self)
 		self.cancel=QtGui.QPushButton(self.tr("Cancel"),self)
 		
@@ -96,11 +119,20 @@ class dataFormsDialog(QtGui.QDialog):
 						if self.var.has_key(x['var']):
 							widget=self.var[x['var']]['widget']
 							typ=self.var[x['var']]['type']
-							if typ=="text-single" or typ=="text-multi":
+							if typ=="text-single" or typ=="text-multi" or typ=="text-private":
 								for child in x.elements():
 									if child.name == 'value':
 										child.children = []
 										child.children.append(unicode(widget.text()))
+							elif typ=="boolean":
+								for child in x.elements():
+									if child.name == 'value':
+										child.children = []
+										if widget.isChecked():
+											child.children.append("1")
+										else:
+											child.children.append("0")
+								
 			print unicode(form.toXml())
 			self.main.client.setMUCConfig(self.jid, form)
 		self.done(1)

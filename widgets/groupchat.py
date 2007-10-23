@@ -156,7 +156,8 @@ class groupChatWidget(QtGui.QWidget):
 		#self.ui.lineWidget.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
 		self.ui.splitter.setSizes([500,120])
 		self.ui.splitter_2.setSizes([45,500,70])
-		self.ui.admin.show()
+		#if self.main.client.groupchats[self.jid].users[nick].affiliation=="owner":
+		self.ui.admin.hide()
 
 	#def lines(self):
 		#if self.ui.line.verticalScrollBar().isVisible():
@@ -169,7 +170,6 @@ class groupChatWidget(QtGui.QWidget):
 	
 	def roomConfigClicked(self):
 		nick=self.main.client.groupchats[self.jid].nick
-		print self.main.client.groupchats[self.jid].users[nick].affiliation
 		if self.main.client.groupchats[self.jid].users[nick].affiliation=="owner":
 			d=self.main.client.getMUCConfig(self.jid)
 			d.addCallback(self._onRoomConfig)
@@ -222,7 +222,7 @@ class groupChatWidget(QtGui.QWidget):
 		parent.takeChild(int(parent.indexOfChild(item)))
 		self.refreshStats()
 
-	def editUser(self,nick,status,role=None):
+	def editUser(self,nick,status,role=None,affiliation=None):
 		if self.isUser(unicode(nick))==False:
 			if self.roles.has_key(role):
 				item=QtGui.QTreeWidgetItem(self.roles[role])
@@ -231,6 +231,10 @@ class groupChatWidget(QtGui.QWidget):
 			item.setText(0,unicode(nick))
 		else:
 			item=self.getUserItems(nick)[0]
+		
+		if affiliation=="owner" and self.main.client.groupchats[self.jid].nick==nick:
+			self.ui.admin.show()
+		
 		# Nastaveni stavu
 		if status!="None":
 			item.setIcon(0,self.main.getIcon(status=status,size="16x16"))
