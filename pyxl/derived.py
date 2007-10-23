@@ -27,6 +27,14 @@ from twisted.internet.protocol import Protocol, ClientFactory
 from twisted.internet import defer
 from contact import *
 from groupchat import  *
+
+MUCLISTTYPES = {
+'voice': ('http://jabber.org/protocol/muc#admin', 'participant', 'role'),
+'ban': 	('http://jabber.org/protocol/muc#admin', 'outcast', 'affiliation'),
+'member': ('http://jabber.org/protocol/muc#admin', 'member', 'affiliation'),
+'moderator': ('http://jabber.org/protocol/muc#admin', 'moderator', 'role'),
+'owner': 	('http://jabber.org/protocol/muc#admin', 'owner', 'affiliation'),
+'admin': 	('http://jabber.org/protocol/muc#admin', 'owner', 'affiliation')}
 class derived:
 	def on_authFailed(self,xmlstream):
 		pass
@@ -499,26 +507,37 @@ class derived:
 		log.msg( 'left MUC: '+ jid)
 ############## MUC admin ##################
 	def getMUCList(self, jid, typ = 'voice'):
-		log.msg('get voice list')
-		types = {
-		'voice': ('http://jabber.org/protocol/muc#admin', 'participant', 'role'),
-		'ban': 	('http://jabber.org/protocol/muc#admin', 'outcast', 'affiliation'),
-		'member': ('http://jabber.org/protocol/muc#admin', 'member', 'affiliation'),
-		'moderator': ('http://jabber.org/protocol/muc#admin', 'moderator', 'role'),
-		'owner': 	('http://jabber.org/protocol/muc#admin', 'owner', 'affiliation'),
-		'admin': 	('http://jabber.org/protocol/muc#admin', 'owner', 'affiliation')}
-		
+		log.msg('get muc list')
+
 		iq = IQ(self.xmlstream, 'get')
 		iq['type'] = 'get'
 		iq['to'] = jid
 		q = iq.addElement('query')
 		q['xmlns']='http://jabber.org/protocol/muc#admin'
 		item = q.addElement('item')
-		item[types[typ][2]] = types[typ][1]
+		item[MUCLISTTYPES[typ][2]] = MUCLISTTYPES[typ][1]
 		self.disp(iq['id'])
 		d = iq.send()
 		self.on_xml(iq.toXml())
 		d.addCallback(self._onMUCListGet, jid).addErrback(self.chyba)
+		return d
+	
+	def setMUCList(self, jid, items, typ, remove = False):
+		
+		iq = IQ(self.xmlstream, 'get')
+		iq['type'] = 'set'
+		iq['to'] = jid
+		q = iq.addElement('query')
+		q['xmlns']='http://jabber.org/protocol/muc#admin'
+		for item in items.itervalues():
+			itm = q.addElement('item')
+			if if item.has_key('reason') and item['reason'].strip() != '':
+				itm.addElement('reason', content = item['reason'])
+			del item['reason']
+			itm.attributes = item
+		self.disp(iq['id'])
+		d = iq.send()
+		self.on_xml(iq.toXml())
 		return d
 	
 	def getRoomCfg(self, jid, types = ['ban', 'member', 'admin', 'owner']):
