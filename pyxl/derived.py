@@ -272,6 +272,8 @@ class derived:
 		q['xmlns']='jabber:iq:register'
 		if legacy != None:
 			for k,v in legacy.iteritems():
+				if k == 'instructions':
+					continue
 				q.addElement('k', content = v)
 		elif forms != None:
 			x = q.addChild(forms)
@@ -281,7 +283,7 @@ class derived:
 		self.disp(iq['id'])
 		d = iq.send()
 		self.on_xml(iq.toXml())
-		d.addCallback(self._onRegisterSet, jid)
+		
 		return d
 		
 	def sendRosterUpdate(self, jid, name, subscription, groups, callback=None, params=None):
