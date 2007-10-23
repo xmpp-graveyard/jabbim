@@ -1147,6 +1147,22 @@ class Client(derived):
 		if callback != None:
 			callback(jid, forms)
 		return (jid,  forms)
+	
+	def _onMUCListGet(self, el, jid):
+		query = el.firstChildElement()
+		items = {}
+		for child in query.elements():
+			items[child['jid']] = child.attributes
+			items[child['jid']]['reason'] = unicode(child)
+		return jid, items
+	
+	def _onRoomCfg(self, results, jid, types):
+		config = results.pop()
+		seznamy = {}
+		for x in range(0, len(types)):
+			seznamy[types[x]] = results[x][1]
+		return (jid, config, seznamy)
+		
 
 	
 	def sendFile(self, jid, filename, fp, desc = None):

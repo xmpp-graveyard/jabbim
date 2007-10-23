@@ -24,6 +24,7 @@ from twisted.words.xish import domish
 from twisted.words.xish.domish import Element
 from twisted.words.protocols.jabber.xmlstream import IQ
 from twisted.internet.protocol import Protocol, ClientFactory
+from twisted.internet import defer
 from contact import *
 from groupchat import  *
 class derived:
@@ -491,7 +492,40 @@ class derived:
 		self.groupchats[jid] = gc
 		gc.join()
 
+
 	def leaveGC(self,  jid):
 		self.groupchats[jid] .leave()
 		del self.groupchats[jid]
 		log.msg( 'left MUC: '+ jid)
+############## MUC admin ##################
+	def getMUCList(self, jid, typ = 'voice'):
+		log.msg('get voice list')
+		types = {
+		'voice': ('http://jabber.org/protocol/muc#admin', 'participant', 'role'),
+		'ban': 	('http://jabber.org/protocol/muc#admin', 'outcast', 'affiliation'),
+		'member': ('http://jabber.org/protocol/muc#admin', 'member', 'affiliation'),
+		'moderator': ('http://jabber.org/protocol/muc#admin', 'moderator', 'role'),
+		'owner': 	('http://jabber.org/protocol/muc#admin', 'owner', 'affiliation'),
+		'admin': 	('http://jabber.org/protocol/muc#admin', 'owner', 'affiliation')}
+		
+		iq = IQ(self.xmlstream, 'get')
+		iq['type'] = 'get'
+		iq['to'] = jid
+		q = iq.addElement('query')
+		q['xmlns']='http://jabber.org/protocol/muc#admin'
+		item = q.addElement('item')
+		item[types[typ][2]] = types[typ][1]
+		self.disp(iq['id'])
+		d = iq.send()
+		self.on_xml(iq.toXml())
+		d.addCallback(self._onMUCListGet, jid).addErrback(self.chyba)
+		return d
+	
+	def getRoomCfg(self, jid, types = ['ban', 'member', 'admin', 'owner']):
+		seznam = []
+		for typ in types:
+			seznam.append(self.getMUCList(jid, typ))
+		seznam.append(self.getMUCConfig(jid))
+		
+		dl = defer.DeferredList(seznam).addCallback(self._onRoomCfg, jid, types)
+		return dl
