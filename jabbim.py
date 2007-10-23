@@ -1703,6 +1703,8 @@ class mainWindow(QtGui.QMainWindow):
 				item.setAvatar(QtGui.QIcon(pixmap))
 			for item in self.ui.roster.getMetaItems(jid):
 				item[0].setAvatar(QtGui.QIcon(pixmap))
+		else:
+			log.msg("BAD FILE FOR AVATAR:"+unicode(unicode(self.homeDir)+'/'+unicode(file)))
 		self.client.roster['users'][jid].setAvatar(file, hash)
 	
 	def _addGroup(self, group):
