@@ -6,6 +6,7 @@ except:
 
 from servicediscovery_ui import *
 import dataforms
+import legacyforms
 
 class serviceDiscoveryDialog(QtGui.QDialog):
 	def __init__(self,main,parent=None):
@@ -44,11 +45,15 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 	
 	def _onRegister(self,data):
 		jid,legacy,form=data
-		#print jid
-		#print legacy
-		#print "form:"+form.toXml()
+		print jid
+		print legacy
+		if form:
+			print "form:"+form.toXml()
 		if form!=None:
 			self.dialog=dataforms.dataFormsDialog(self.main,form,jid,"register",self)
+			self.dialog.show()
+		else:
+			self.dialog=legacyforms.legacyFormsDialog(self.main,legacy,jid,"disco",self)
 			self.dialog.show()
 
 	def expanded(self,item):
