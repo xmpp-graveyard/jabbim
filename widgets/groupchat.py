@@ -86,6 +86,14 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		elif key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
 			self.main.sendButtonClicked()
 			event.accept()
+		elif key == QtCore.Qt.Key_Up and  self.main.hindex > 0 and (event.modifiers() & QtCore.Qt.ControlModifier): 
+
+			self.main.hindex = self.main.hindex-1
+			self.main.ui.line.setText(self.main.sent[self.main.hindex])
+		elif key == QtCore.Qt.Key_Down and  self.main.hindex < len(self.main.sent) and (event.modifiers() & QtCore.Qt.ControlModifier): 
+
+			self.main.hindex = self.main.hindex+1
+			self.main.ui.line.setText(self.main.sent[self.main.hindex])
 		else:
 			return QtGui.QTextEdit.keyPressEvent(self,event)
 
@@ -158,6 +166,8 @@ class groupChatWidget(QtGui.QWidget):
 		self.ui.splitter_2.setSizes([45,500,70])
 		#if self.main.client.groupchats[self.jid].users[nick].affiliation=="owner":
 		self.ui.admin.hide()
+		self.sent = []
+		self.hindex = 0
 
 	#def lines(self):
 		#if self.ui.line.verticalScrollBar().isVisible():
@@ -360,6 +370,8 @@ class groupChatWidget(QtGui.QWidget):
 				text=text.replace(unichr(2028),"\n")
 				text=unescape(text)
 			self.main.client.sendMessage(self.jid, text, 'groupchat')
+			self.sent.append(text)
+			self.hindex = len(self.sent)
 			self.ui.line.clear()
 			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 			#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)

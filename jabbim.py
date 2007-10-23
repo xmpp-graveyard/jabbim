@@ -1693,6 +1693,7 @@ class mainWindow(QtGui.QMainWindow):
 		if os.path.isfile(self.homeDir+'/'+unicode(file)):
 			pixmap=QtGui.QPixmap()
 			f=open(self.homeDir+'/'+unicode(file),"rb")
+			print self.homeDir+'/'+unicode(file)
 			image=f.read()
 			f.close()
 			pixmap.loadFromData(image)

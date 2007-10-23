@@ -74,6 +74,8 @@ class lineEditWidget(QtGui.QTextEdit):
 		elif key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
 			self.main.sendButtonClicked()
 			event.accepted()
+		
+		
 		else:
 			return QtGui.QTextEdit.keyPressEvent(self,event)
 			text=unicode(self.toPlainText())
@@ -103,6 +105,14 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			QtGui.QTextEdit.keyPressEvent(self,event)
 		elif key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
 			self.main.sendButtonClicked()
+		elif key == QtCore.Qt.Key_Up and  self.main.hindex > 0 and (event.modifiers() & QtCore.Qt.ControlModifier): 
+
+			self.main.hindex = self.main.hindex-1
+			self.main.ui.line.setText(self.main.sent[self.main.hindex])
+		elif key == QtCore.Qt.Key_Down and  self.main.hindex < len(self.main.sent) and (event.modifiers() & QtCore.Qt.ControlModifier): 
+
+			self.main.hindex = self.main.hindex+1
+			self.main.ui.line.setText(self.main.sent[self.main.hindex])
 		else:
 			QtGui.QTextEdit.keyPressEvent(self,event)
 
@@ -155,7 +165,9 @@ class chatWidget(QtGui.QWidget):
 		self.ui.splitter.setSizes([500,70])
 		self.ui.widget.setMaximumWidth(128)
 		self.ui.splitter_2.setSizes([500,128])
-
+		self.sent = []
+		self.hindex = 0
+		
 	#def lines(self):
 		#if self.ui.line.verticalScrollBar().isVisible():
 			#self.ui.line.setMaximumHeight(int(self.ui.line.maximumHeight())+int(self.ui.line.currentFont().pointSize())+10)
@@ -289,6 +301,8 @@ class chatWidget(QtGui.QWidget):
 			message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text)
 			
 			self.textEditWrite(message)
+			self.sent.append(text)
+			self.hindex = len(self.sent)
 			self.ui.line.clear()
 			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 			self.ui.line.composing=False
