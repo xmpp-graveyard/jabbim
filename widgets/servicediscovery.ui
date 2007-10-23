@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>717</width>
+    <height>298</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -26,20 +26,20 @@
      </property>
      <property name="sizeHint" >
       <size>
-       <width>291</width>
-       <height>20</height>
+       <width>181</width>
+       <height>27</height>
       </size>
      </property>
     </spacer>
    </item>
    <item row="1" column="1" >
-    <widget class="QPushButton" name="register" >
+    <widget class="QPushButton" name="search" >
      <property name="text" >
-      <string>Register</string>
+      <string>Search</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="0" colspan="2" >
+   <item row="0" column="0" colspan="3" >
     <widget class="QTreeWidget" name="tree" >
      <property name="iconSize" >
       <size>
@@ -54,9 +54,26 @@
      </column>
      <column>
       <property name="text" >
+       <string>search</string>
+      </property>
+     </column>
+     <column>
+      <property name="text" >
+       <string>register</string>
+      </property>
+     </column>
+     <column>
+      <property name="text" >
        <string>jid</string>
       </property>
      </column>
+    </widget>
+   </item>
+   <item row="1" column="2" >
+    <widget class="QPushButton" name="register" >
+     <property name="text" >
+      <string>Register</string>
+     </property>
     </widget>
    </item>
   </layout>
