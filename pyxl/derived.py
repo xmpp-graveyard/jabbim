@@ -531,7 +531,7 @@ class derived:
 		q['xmlns']='http://jabber.org/protocol/muc#admin'
 		for item in items.itervalues():
 			itm = q.addElement('item')
-			if if item.has_key('reason') and item['reason'].strip() != '':
+			if item.has_key('reason') and item['reason'].strip() != '':
 				itm.addElement('reason', content = item['reason'])
 			del item['reason']
 			itm.attributes = item
