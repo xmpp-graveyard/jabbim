@@ -1291,7 +1291,7 @@ class rosterWidget(QtGui.QWidget):
 			jid = unicode(event.mimeData().text())
 			position = event.pos()
 			item=self.itemAt(position.x(),position.y())
-			if not self.data.has_key(jid):
+			if not self.data.has_key(event.mimeData()):
 				gr=""
 				if item.typ=="group":
 					gr=item.name
@@ -1299,6 +1299,7 @@ class rosterWidget(QtGui.QWidget):
 					gr=item.group
 				dialog=addcontact.addContactDialog(self.main,self,jid=jid,group=gr,name=jid.split('@')[0])
 				dialog.exec_()
+				event.ignore()
 				return
 			
 			oldItem=self.data[event.mimeData()]

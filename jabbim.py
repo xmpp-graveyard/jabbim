@@ -1691,6 +1691,7 @@ class mainWindow(QtGui.QMainWindow):
 	
 	def _loadAvatar(self,file, hash, jid):
 		if os.path.isfile(self.homeDir+'/'+unicode(file)):
+			jid=jidT.JID(jid).userhost()
 			pixmap=QtGui.QPixmap()
 			f=open(self.homeDir+'/'+unicode(file),"rb")
 			print self.homeDir+'/'+unicode(file)
