@@ -193,7 +193,7 @@ class groupChatWidget(QtGui.QWidget):
 		#self.refreshStats()
 
 	def getUserItems(self,name):
-		items=self.ui.users.findItems(unicode(name), QtCore.Qt.MatchFixedString|QtCore.Qt.MatchRecursive,0)
+		items=self.ui.users.findItems(unicode(name), QtCore.Qt.MatchFixedString| QtCore.Qt.MatchCaseSensitive|QtCore.Qt.MatchRecursive,0)
 		if len(items)!=0:
 			return items
 		return []

@@ -433,6 +433,7 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.rosterStackedWidget.setCurrentIndex(1)
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
+		
 		# presence in groupchat
 		if show=="offline":
 			# get user role
