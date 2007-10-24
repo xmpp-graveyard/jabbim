@@ -144,19 +144,23 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 								parentitem.setText(3,key)
 				if self.main.client.disco[key][None].has_key("features"):
 					parentitem.setData(32,0,QtCore.QVariant(list(self.main.client.disco[key][None]['features'])))
-					register=QtGui.QPushButton("Register",self.ui.tree)
-					register.setMaximumWidth(40)
-					register.setMinimumWidth(40)
+					register=QtGui.QPushButton(self.ui.tree)
+					#register.setMaximumWidth(40)
+					#register.setMinimumWidth(40)
+					register.setIcon(QtGui.QIcon("images/16x16/actions/register.png"))
 					register.setEnabled(False)
+					register.setFlat(True)
 					register.jid=parentitem.text(3)
 					register.typ="register"
 					self.group.addButton(register)
 
 					self.ui.tree.setItemWidget(parentitem,2,register)
-					search=QtGui.QPushButton("Search",self.ui.tree)
-					search.setMaximumWidth(40)
-					search.setMinimumWidth(40)
+					search=QtGui.QPushButton(self.ui.tree)
+					#search.setMaximumWidth(16)
+					#search.setMinimumWidth(16)
+					search.setIcon(QtGui.QIcon("images/16x16/actions/search.png"))
 					search.setEnabled(False)
+					search.setFlat(True)
 					search.jid=parentitem.text(3)
 					search.typ="search"
 					self.group.addButton(search)
@@ -180,8 +184,8 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		print categories.keys()
 		self.ui.tree.sortItems(0,QtCore.Qt.AscendingOrder)
 		self.ui.tree.resizeColumnToContents(0)
-		self.ui.tree.setColumnWidth (1,40)
-		self.ui.tree.setColumnWidth (2,40)
+		self.ui.tree.setColumnWidth (1,20)
+		self.ui.tree.setColumnWidth (2,20)
 		return categories
 
 	def accept(self):
