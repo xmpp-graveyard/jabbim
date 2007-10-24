@@ -32,21 +32,57 @@ class searchDialog(QtGui.QDialog):
 		self.main=main
 		self.jid=jid
 		self.form=form
-		layout=QtGui.QGridLayout(self)
-		self.var,row=dataforms.makeDataForm(self,layout,self.form)
+		l=QtGui.QHBoxLayout(self)
+		self.splitter = QtGui.QSplitter(self)
+		self.splitter.setOrientation(QtCore.Qt.Horizontal)
+		l.addWidget(self.splitter)
+		widget=QtGui.QWidget(self.splitter)
+
+		layout=QtGui.QGridLayout(widget)
+		self.var,row=dataforms.makeDataForm(widget,layout,self.form)
 		
-		self.ok=QtGui.QPushButton(self.tr("Search"),self)
-		self.cancel=QtGui.QPushButton(self.tr("Cancel"),self)
+		self.ok=QtGui.QPushButton(self.tr("Search"),widget)
+		self.cancel=QtGui.QPushButton(self.tr("Cancel"),widget)
 		
 		QtCore.QObject.connect(self.ok,QtCore.SIGNAL("clicked()"),self.search)
 		QtCore.QObject.connect(self.cancel,QtCore.SIGNAL("clicked()"),self.reject)
+
+		self.table=QtGui.QTreeWidget(self.splitter)
+		#layout.addWidget(self.table,1,2,row-1,1)
+
 		
 		layout.addWidget(self.ok,row,0)
 		layout.addWidget(self.cancel,row,1)
 
+		self.splitter.setSizes([150,500])
+
 	def _gotResults(self,data):
 		jid,legacy,form=data
-		print unicode(form.toXml())
+		for i in range(int(self.table.columnCount())):
+			self.table.headerItem().setText(i,"")
+		#self.tree.headerItem().setText(3,QtGui.QApplication.translate("serviceDiscovery", "jid", None, QtGui.QApplication.UnicodeUTF8))
+		#<x xmlns='jabber:x:data' type='result'><title>Search Results for users.netlab.cz</title><reported><field var='jid' label='Jabber ID'/><field var='fn' label='Full Name'/><field var='given' label='Name'/><field var='middle' label='Middle Name'/><field var='family' label='Family Name'/><field var='nickname' label='Nickname'/><field var='bday' label='Birthday'/><field var='ctry' label='Country'/><field var='locality' label='City'/><field var='email' label='Email'/><field var='orgname' label='Organization Name'/><field var='orgunit' label='Organization Unit'/></reported>
+		#<item><field var='jid'><value>hanzz@jabbim.pl</value></field><field var='fn'><value/></field><field var='family'><value/></field><field var='given'><value/></field><field var='middle'><value/></field><field var='nickname'><value/></field><field var='bday'><value/></field><field var='ctry'><value/></field><field var='locality'><value/></field><field var='email'><value/></field><field var='orgname'><value/></field><field var='orgunit'><value/></field></item></x>
+		fields=[]
+		i=0
+		for x in form.elements():
+			if x.name=="reported":
+				for field in x.elements():
+					if field.name=="field":
+						fields.append(field['var'])
+						self.table.headerItem().setText(i,field['label'])
+						i+=1
+			elif x.name=="item":
+				item=QtGui.QTreeWidgetItem(self.table)
+				for field in x.elements():
+					if field.name=="field":
+						text=""
+						for y in field.elements():
+							if y.name=="value":
+								text=unicode(y)
+						item.setText(fields.index(field['var']),unicode(text))
+		for i in range(int(self.table.columnCount())):
+			self.table.resizeColumnToContents(i)
 
 	def search(self):
 		form=dataforms.sendDataForm(self.main,self.jid,self.form,self.var,"only get form")
