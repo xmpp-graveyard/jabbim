@@ -181,17 +181,14 @@ class groupChatWidget(QtGui.QWidget):
 	def roomConfigClicked(self):
 		nick=self.main.client.groupchats[self.jid].nick
 		if self.main.client.groupchats[self.jid].users[nick].affiliation=="owner":
-			d=self.main.client.getRoomCfg(self.jid)
+			d=self.main.client.getMUCConfig(self.jid)
 			d.addCallback(self._onRoomConfig)
 
 	def _onRoomConfig(self,data):
 		jid=data[0]
-		form=data[1][1][1]
-		affiliation=data[2]
-		#{'ban': (u'jabbim@conf.netlab.cz', {u'123098@jabber.intermax.com.ua': {u'affiliation': u'outcast', u'jid': u'123098@jabber.intermax.com.ua', 'reason': u''}, u'jabber.intermax.com.ua': {u'affiliation': u'outcast', u'jid': u'jabber.intermax.com.ua', 'reason': u''}}), 'member': (u'jabbim@conf.netlab.cz', {u'zenek@jabbim.cz': {u'affiliation': u'member', u'jid': u'zenek@jabbim.cz', 'reason': u''}, u'lolek@njs.netlab.cz': {u'affiliation': u'member', u'jid': u'lolek@njs.netlab.cz', 'reason': u''}}), 'admin': (u'jabbim@conf.netlab.cz', {u'pyjim@jabber.cz': {u'affiliation': u'owner', u'jid': u'pyjim@jabber.cz', 'reason': u''}, u'hanzz@njs.netlab.cz': {u'affiliation': u'owner', u'jid': u'hanzz@njs.netlab.cz', 'reason': u''}, u'cornelius@njs.netlab.cz': {u'affiliation': u'owner', u'jid': u'cornelius@njs.netlab.cz', 'reason': u''}}), 'owner': (u'jabbim@conf.netlab.cz', {u'pyjim@jabber.cz': {u'affiliation': u'owner', u'jid': u'pyjim@jabber.cz', 'reason': u''}, u'hanzz@njs.netlab.cz': {u'affiliation': u'owner', u'jid': u'hanzz@njs.netlab.cz', 'reason': u''}, u'cornelius@njs.netlab.cz': {u'affiliation': u'owner', u'jid': u'cornelius@njs.netlab.cz', 'reason': u''}})}
+		form=data[1]
 		if form!=None:
-			#self.dialog=dataforms.dataFormsDialog(self.main,form,jid,"muc",self)
-			self.dialog=groupchatAdminDialog(self.main,jid,form,affiliation,self)
+			self.dialog=groupchatAdminDialog(self.main,jid,form,self)
 			self.dialog.show()
 
 	def roomAdminClicked(self):

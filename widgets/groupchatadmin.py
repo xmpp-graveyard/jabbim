@@ -26,7 +26,7 @@ from groupchatadmin_ui import *
 from twisted.python import log
 import dataforms
 class groupchatAdminDialog(QtGui.QDialog):
-	def __init__(self,main,jid,form,affiliation,parent=None):
+	def __init__(self,main,jid,form,parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.setModal(False)
 		self.ui=Ui_groupchatAdmin()
@@ -34,23 +34,93 @@ class groupchatAdminDialog(QtGui.QDialog):
 		self.main=main
 		self.jid=jid
 		self.form=form
-		self.affiliation=affiliation
 		layout=QtGui.QGridLayout(self.ui.config)
 		self.var,row=dataforms.makeDataForm(self.ui.config,layout,self.form)
 		
-		layout2=QtGui.QGridLayout(self.ui.affiliation)
-		self.scroll=QtGui.QScrollArea(self.ui.affiliation)
-		layout2.addWidget(self.scroll,0,0)
+		d=self.main.client.getMUCLists(self.jid, types = ['ban', 'member', 'admin', 'owner'])
+		d.addCallback(self._gotLists)
+
+	def _gotLists(self,data):
+		jid=data[0]
+		lists=data[1]
+		#{'ban': (u'jabbim@conf.netlab.cz', 
+		#{u'123098@jabber.intermax.com.ua': {u'affiliation': u'outcast', u'jid': u'123098@jabber.intermax.com.ua', 'reason': u''}
+		#, u'jabber.intermax.com.ua': {u'affiliation': u'outcast', u'jid': u'jabber.intermax.com.ua', 'reason': u''}}), 'member': (u'jabbim@conf.netlab.cz', {u'zenek@jabbim.cz': {u'affiliation': u'member', u'jid': u'zenek@jabbim.cz', 'reason': u''}, u'lolek@njs.netlab.cz': {u'affiliation': u'member', u'jid': u'lolek@njs.netlab.cz', 'reason': u''}}), 'admin': (u'jabbim@conf.netlab.cz', {u'pyjim@jabber.cz': {u'affiliation': u'owner', u'jid': u'pyjim@jabber.cz', 'reason': u''}, u'hanzz@njs.netlab.cz': {u'affiliation': u'owner', u'jid': u'hanzz@njs.netlab.cz', 'reason': u''}, u'cornelius@njs.netlab.cz': {u'affiliation': u'owner', u'jid': u'cornelius@njs.netlab.cz', 'reason': u''}}), 'owner': (u'jabbim@conf.netlab.cz', {u'pyjim@jabber.cz': {u'affiliation': u'owner', u'jid': u'pyjim@jabber.cz', 'reason': u''}, u'hanzz@njs.netlab.cz': {u'affiliation': u'owner', u'jid': u'hanzz@njs.netlab.cz', 'reason': u''}, u'cornelius@njs.netlab.cz': {u'affiliation': u'owner', u'jid': u'cornelius@njs.netlab.cz', 'reason': u''}})}
+		layout=QtGui.QGridLayout(self.ui.affiliation)
+		self.tree=QtGui.QTreeWidget(self.ui.affiliation)
+		QtCore.QObject.connect(self.tree, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int)"),self.itemSelected)
 		
-		widget=QtGui.QWidget()
-		layout3=QtGui.QGridLayout(widget)
+		self.tree.headerItem().setText(0,self.tr("JID"))
+		self.tree.headerItem().setText(1,self.tr("Reason"))
+		self.tree.setDragEnabled(True)
+		self.tree.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
 		
-		self.members=QtGui.QListWidget(widget)
-		layout3.addWidget(self.members,1,0,1,1)
+		#self.tree.header().hide()
+		layout.addWidget(self.tree,0,0,1,4)
 		
-		self.scroll.setWidget(widget)
+		for key,value in lists.iteritems():
+			parent=QtGui.QTreeWidgetItem(self.tree)
+			parent.setText(0,unicode(key))
+			parent.setExpanded(True)
+			parent.setData(32,0,QtCore.QVariant(unicode(key)))
+			for x,y in value[1].iteritems():
+				item=QtGui.QTreeWidgetItem(parent)
+				item.setText(0,unicode(y['jid']))
+				item.setText(1,unicode(y['reason']))
+				item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsDragEnabled)
+		self.tree.resizeColumnToContents(0)
 		
+		label=QtGui.QLabel(self.tr("Affiliation:"),self.ui.affiliation)
+		layout.addWidget(label,1,0,1,1)
+		self.affiliation=QtGui.QComboBox(self.ui.affiliation)
+		self.affiliation.addItem(self.tr("None"),QtCore.QVariant(unicode("none")))
+		self.affiliation.addItem(self.tr("Ban"),QtCore.QVariant(unicode("ban")))
+		self.affiliation.addItem(self.tr("Admin"),QtCore.QVariant(unicode("admin")))
+		self.affiliation.addItem(self.tr("Owner"),QtCore.QVariant(unicode("owner")))
+		self.affiliation.addItem(self.tr("Member"),QtCore.QVariant(unicode("member")))
+		layout.addWidget(self.affiliation,1,1,1,1)
 		
+		label=QtGui.QLabel(self.tr("JID:"),self.ui.affiliation)
+		layout.addWidget(label,1,2,1,1)
+		self.jidLine=QtGui.QLineEdit(self.ui.affiliation)
+		layout.addWidget(self.jidLine,1,3,1,1)
+		
+		label=QtGui.QLabel(self.tr("Reason:"),self.ui.affiliation)
+		layout.addWidget(label,2,0,1,1)
+		self.reasonLine=QtGui.QLineEdit(self.ui.affiliation)
+		layout.addWidget(self.reasonLine,2,1,1,3)
+
+		self.add=QtGui.QPushButton(self.tr("Add"),self.ui.affiliation)
+		layout.addWidget(self.add,3,3,1,1)
+
+		QtCore.QObject.connect(self.add, QtCore.SIGNAL("clicked()"),self.addAff)
+
+	def addAff(self):
+		affiliation=unicode(self.affiliation.itemData(self.affiliation.currentIndex()).toString())
+		jid=unicode(self.jidLine.text())
+		reason=unicode(self.reasonLine.text())
+		if len(jid)!=0:
+			for i in range(self.tree.topLevelItemCount()):
+				it=self.tree.topLevelItem(i)
+				if unicode(it.data(32,0).toString())==affiliation:
+					item=QtGui.QTreeWidgetItem(it)
+					item.setText(0,jid)
+					item.setText(1,reason)
+					item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsDragEnabled)
+					break
+			
+	
+
+	def itemSelected(self,item,i):
+		pass
+		#parent=item.parent()
+		#if parent==None:
+			#return
+		#index=self.affiliation.findData(parent.data(32,0))
+		#if index!=-1:
+			#self.affiliation.setCurrentIndex(int(index))
+			
+	
 	def accept(self):
 		dataforms.sendDataForm(self.main,self.jid,self.form,self.var,"muc")
 		self.done(1)
