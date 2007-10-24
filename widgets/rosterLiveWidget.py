@@ -1336,7 +1336,8 @@ class rosterWidget(QtGui.QWidget):
 						name=unicode(self.main.client.roster['users'][jid].name)
 						contact=self.main.client.roster['users'][jid]
 						g=contact.groups
-						g.remove(unicode(self.groups[oldItem.group].name))
+						if len(g)!=0:
+							g.remove(unicode(self.groups[oldItem.group].name))
 						self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g+[unicode(item.name)])
 					else:
 						self.changeGroup(jid,"+",unicode(item.name))
@@ -1406,7 +1407,8 @@ class rosterWidget(QtGui.QWidget):
 						name=unicode(self.main.client.roster['users'][jid].name)
 						contact=self.main.client.roster['users'][jid]
 						g=contact.groups
-						g.remove(unicode(self.groups[oldItem.group].name))
+						if len(g)!=0:
+							g.remove(unicode(self.groups[oldItem.group].name))
 						self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g+[unicode(item.group)])
 					elif index==1:
 						if not self.metaItems.has_key(item.metajid):
