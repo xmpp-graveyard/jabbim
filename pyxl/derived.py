@@ -540,11 +540,11 @@ class derived:
 		self.on_xml(iq.toXml())
 		return d
 	
-	def getRoomCfg(self, jid, types = ['ban', 'member', 'admin', 'owner']):
+	def getMUCLists(self, jid, types = ['ban', 'member', 'admin', 'owner']):
 		seznam = []
 		for typ in types:
 			seznam.append(self.getMUCList(jid, typ))
-		seznam.append(self.getMUCConfig(jid))
 		
-		dl = defer.DeferredList(seznam).addCallback(self._onRoomCfg, jid, types)
+		
+		dl = defer.DeferredList(seznam).addCallback(self._onMUCLists, jid, types)
 		return dl

@@ -1156,12 +1156,12 @@ class Client(derived):
 			items[child['jid']]['reason'] = unicode(child)
 		return jid, items
 	
-	def _onRoomCfg(self, results, jid, types):
-		config = results.pop()
+	def _onMUCLists(self, results, jid, types):
+		
 		seznamy = {}
 		for x in range(0, len(types)):
 			seznamy[types[x]] = results[x][1]
-		return (jid, config, seznamy)
+		return (jid, seznamy)
 		
 
 	
