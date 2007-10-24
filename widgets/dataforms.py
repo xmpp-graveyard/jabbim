@@ -144,6 +144,7 @@ def sendDataForm(main,jid,form,var,t):
 		main.client.setMUCConfig(jid, form)
 	elif t=="register":
 		main.client.setRegisterForm(jid,forms=form)
+	return form
 
 class dataFormsDialog(QtGui.QDialog):
 	def __init__(self,main,form,jid,typ,parent=None):
