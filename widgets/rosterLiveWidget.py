@@ -1710,6 +1710,10 @@ class rosterWidget(QtGui.QWidget):
 			action = submenu.addAction(self.tr("Block"))
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("privacy_block")
+		else:
+			action = submenu.addAction(self.tr("Unblock"))
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("privacy_unblock")
 		
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
@@ -1920,6 +1924,10 @@ class rosterWidget(QtGui.QWidget):
 			self.main.client.privacy.active.blockJID(jid)
 			log.msg("Blocking jid %s." % jid)
 
+		elif cmd == "privacy_unblock":
+			jid=unicode(action.data().toString())
+			self.main.client.privacy.active.unBlockJID(jid)
+			log.msg("Unblocking jid %s." % jid)
 		log.msg("END CONTACT")
 
 	def changeGroup(self,jid,action,group):

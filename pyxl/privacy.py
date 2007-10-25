@@ -72,7 +72,12 @@ class PrivacyList:
 	def addItem(self, item):
 		self.items.append(item)
 		self.update()
-	
+
+	def delItem(self, item):
+		if item in self.items:
+			self.items.remove(item)
+			self.update()
+
 	def mkItem(self, action, typ = None, value = None, stanzas = [],
 			to_zero = True):	# True - lowest possible (more important), False - current highest + 1 (less important)
 		orders = self._getOrders()
@@ -127,15 +132,22 @@ class PrivacyList:
 		r = False
 		order = None
 		for item in self.items:
-			if item.typ == "jid" and item.value == jid and item.action == "deny":
-				r = True
+			item.stanzas.sort()
+			if item.typ == "jid" and item.value == jid and item.action == "deny" and item.stanzas == []:
+				r = item
 				order = item.order
-			if item.typ == "jid" and item.value == jid and item.action == "allow" and item.order < order:
+
+			if	(item.typ == "jid" and item.value == jid) and (item.action == "allow" and item.order < order) and (item.stanzas == [] or item.stazas == ["iq","message","presence-out"]):
 				r = False
 		return r
 
 	def blockJID(self, jid): # Block all communication
-		self.mkItem("deny", "jid", jid)
+		self.mkItem("deny", "jid", jid)#, ["message", "iq", "presence-out"])
+
+	def unBlockJID(self, jid):
+		item = self.isBlockedJID(jid)
+		if item:
+			self.delItem(item)
 
 class Privacy:
 	def __init__(self, main):
