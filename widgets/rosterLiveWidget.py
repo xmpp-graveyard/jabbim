@@ -1485,6 +1485,8 @@ class rosterWidget(QtGui.QWidget):
 	def setStatus(self,jid,show,i=None,status=None,first=False):
 		for user in self.getUserItems(jid):
 			user.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons[self.main.shows[unicode(show)]])
+			if self.item==user:
+				self.statusLabel.hide()
 			if self.main.shows[unicode(show)]!="9":
 				user.hidden=False
 			else:
