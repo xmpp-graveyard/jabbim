@@ -39,6 +39,7 @@ class groupchatAdminDialog(QtGui.QDialog):
 		
 		d=self.main.client.getMUCLists(self.jid, types = ['ban', 'member', 'admin', 'owner'])
 		d.addCallback(self._gotLists)
+		self.items={}
 
 	def _gotLists(self,data):
 		jid=data[0]
@@ -53,10 +54,12 @@ class groupchatAdminDialog(QtGui.QDialog):
 		
 		self.tree.headerItem().setText(0,self.tr("JID"))
 		self.tree.headerItem().setText(1,self.tr("Reason"))
-		self.tree.setDragEnabled(True)
-		self.tree.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
+		self.tree.setEditTriggers(self.tree.NoEditTriggers)
+		#self.tree.setDragEnabled(True)
+		#self.tree.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
 		self.tree.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-				
+
+
 		#self.tree.header().hide()
 		layout.addWidget(self.tree,0,0,1,4)
 		
@@ -64,7 +67,10 @@ class groupchatAdminDialog(QtGui.QDialog):
 			parent=QtGui.QTreeWidgetItem(self.tree)
 			parent.setText(0,unicode(key))
 			parent.setExpanded(True)
-			parent.setData(32,0,QtCore.QVariant(unicode(key)))
+			data=key
+			if key=="ban":
+				data="outcast"
+			parent.setData(32,0,QtCore.QVariant(unicode(data)))
 			for x,y in value[1].iteritems():
 				item=QtGui.QTreeWidgetItem(parent)
 				item.setText(0,unicode(y['jid']))
@@ -75,8 +81,7 @@ class groupchatAdminDialog(QtGui.QDialog):
 		label=QtGui.QLabel(self.tr("Affiliation:"),self.ui.affiliation)
 		layout.addWidget(label,1,0,1,1)
 		self.affiliation=QtGui.QComboBox(self.ui.affiliation)
-		self.affiliation.addItem(self.tr("None"),QtCore.QVariant(unicode("none")))
-		self.affiliation.addItem(self.tr("Ban"),QtCore.QVariant(unicode("ban")))
+		self.affiliation.addItem(self.tr("Ban"),QtCore.QVariant(unicode("outcast")))
 		self.affiliation.addItem(self.tr("Admin"),QtCore.QVariant(unicode("admin")))
 		self.affiliation.addItem(self.tr("Owner"),QtCore.QVariant(unicode("owner")))
 		self.affiliation.addItem(self.tr("Member"),QtCore.QVariant(unicode("member")))
@@ -96,11 +101,15 @@ class groupchatAdminDialog(QtGui.QDialog):
 		layout.addWidget(self.add,3,3,1,1)
 
 		QtCore.QObject.connect(self.add, QtCore.SIGNAL("clicked()"),self.addAff)
+		QtCore.QObject.connect(self.tree, QtCore.SIGNAL("itemChanged ( QTreeWidgetItem * , int )"),self.itemChanged)
+		self.editItem=None
 
 	def addAff(self):
 		affiliation=unicode(self.affiliation.itemData(self.affiliation.currentIndex()).toString())
 		jid=unicode(self.jidLine.text())
 		reason=unicode(self.reasonLine.text())
+		QtCore.QObject.disconnect(self.tree,QtCore.SIGNAL("itemChanged ( QTreeWidgetItem * , int )"),self.itemChanged)
+
 		if len(jid)!=0:
 			for i in range(self.tree.topLevelItemCount()):
 				it=self.tree.topLevelItem(i)
@@ -109,8 +118,18 @@ class groupchatAdminDialog(QtGui.QDialog):
 					item.setText(0,jid)
 					item.setText(1,reason)
 					item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsDragEnabled|QtCore.Qt.ItemIsEditable)
+					self.items[unicode(item.text(0))+unicode(it.data(32,0).toString())]={"jid":unicode(item.text(0)),"reason":unicode(item.text(1)),"affiliation":unicode(it.data(32,0).toString())}
 					break
-			
+		QtCore.QObject.connect(self.tree, QtCore.SIGNAL("itemChanged ( QTreeWidgetItem * , int )"),self.itemChanged)
+
+	def itemChanged(self,item,i):
+		parent=item.parent()
+		if parent!=None and self.editItem!=None:
+			print "settings"
+			#self.items[unicode(self.editItem.text(0))+unicode(parent.data(32,0).toString())]={"jid":unicode(self.editItem.text(0)),"reason":unicode(self.editItem.text(1)),"affiliation":unicode(parent.data(32,0).toString())}
+			self.items[unicode(self.editItem.text(0))+unicode(parent.data(32,0).toString())]={"jid":unicode(self.editItem.text(0)),"reason":"","affiliation":"none",'old':unicode(parent.data(32,0).toString())}
+			self.items[unicode(item.text(0))+unicode(parent.data(32,0).toString())]={"jid":unicode(item.text(0)),"reason":unicode(item.text(1)),"affiliation":unicode(parent.data(32,0).toString())}
+			self.editItem=None
 
 	def contextMenu(self,pos):
 		item=self.tree.itemFromIndex(self.tree.indexAt(pos)) # get selected item
@@ -130,12 +149,15 @@ class groupchatAdminDialog(QtGui.QDialog):
 		if cmd=="delete":
 			item=self.tree.currentItem()
 			parent=item.parent()
-			parent.takeChild(item)
+			self.items[unicode(item.text(0))+unicode(parent.data(32,0).toString())]={"jid":unicode(item.text(0)),"reason":"","affiliation":"none",'old':unicode(parent.data(32,0).toString())}
+			parent.takeChild(parent.indexOfChild(item))
 	
 	def itemDoubleClicked(self,item,i):
 		#pass
+		parent=item.parent()
 		if parent==None:
 			return
+		self.editItem=item.clone()
 		self.tree.editItem(item,i)
 		#parent=item.parent()
 		#if parent==None:
@@ -146,6 +168,30 @@ class groupchatAdminDialog(QtGui.QDialog):
 			
 	
 	def accept(self):
+		
+		#{i:{"reason":reason,"jid":jid,"affiliation":affiliation},}
+		
+		for aff in ['outcast', 'member', 'admin', 'owner']:
+			x=0
+			items={}
+			for item in self.items.itervalues():
+				if item['affiliation']==aff:
+					items[x]={"jid":item['jid'],"reason":item['reason'],"affiliation":item['affiliation']}
+					x+=1
+				if item.has_key('old'):
+					if item['old']==aff:
+						items[x]={"jid":item['jid'],"reason":item['reason'],"affiliation":item['affiliation']}
+						x+=1
+			if len(items)!=0:
+				print items
+				self.main.client.setMUCList(self.jid, items,"")
+
+		#for i in range(self.tree.topLevelItemCount()):
+			#it=self.tree.topLevelItem(i)
+			#for y in range(int(it.childCount())):
+				#child=it.child(y)
+				#items[x]={"jid":unicode(child.text(0)),"reason":unicode(child.text(1)),"affiliation":unicode(it.data(32,0).toString())}
+				#x+=1
 		dataforms.sendDataForm(self.main,self.jid,self.form,self.var,"muc")
 		self.done(1)
 

@@ -523,7 +523,7 @@ class derived:
 		return d
 	
 	def setMUCList(self, jid, items, typ, remove = False):
-		
+
 		iq = IQ(self.xmlstream, 'get')
 		iq['type'] = 'set'
 		iq['to'] = jid
