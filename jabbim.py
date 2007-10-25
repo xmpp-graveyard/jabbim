@@ -724,7 +724,10 @@ class clientClass(pyxl.client.Client):
 				message = utils.replace_url(message)
 			else:
 				message=xhtml
-			message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user)).replace("[message]",message)
+			file=self.main.homeDir+'/avatars/'+unicode(frm.userhost())
+			if not os.path.isfile(file):
+				file="images/22x22/apps/jabbim.png"
+			message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user)).replace("[message]",message).replace("[avatar]",file)
 			# find tab
 			#tab=None
 			#tabIndex=0

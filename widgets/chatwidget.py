@@ -23,7 +23,7 @@ except:
 from chatwidget_ui import *
 from configobj import ConfigObj
 #from palette import *
-import urllib,re
+import urllib,re,os
 from twisted.web.microdom import *
 from twisted.web.domhelpers import gatherTextNodes
 import filetransfer
@@ -298,7 +298,10 @@ class chatWidget(QtGui.QWidget):
 			for word in text.split(' '):
 				if word.find("http://")!=-1:
 					text=text.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
-			message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text)
+			file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
+			if not os.path.isfile(file):
+				file="images/22x22/apps/jabbim.png"
+			message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]",file)
 			
 			self.textEditWrite(message)
 			self.sent.append(text)
