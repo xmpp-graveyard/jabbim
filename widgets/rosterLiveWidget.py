@@ -144,6 +144,7 @@ class activeWidget(QtGui.QWidget):
 
 		#layout.addLayout(l)
 
+
 	def bclicked(self):
 		item=self.item
 		res = self.parent.main.client.roster['users'][item.jid].getHighestResource()
@@ -320,7 +321,7 @@ class groupItem:
 			self.icon=QtGui.QIcon("images/"+self.main.iconSize+"/icons/group-open.png")
 
 class userItem:
-	def __init__(self,name,group,main,icon=None):
+	def __init__(self,name,group,jid,main,icon=None):
 		self.name=name
 		self.backName=name
 		self.icon=icon
@@ -334,6 +335,9 @@ class userItem:
 		self.test=None
 		self.metajid=""
 		self.blink=None
+		self.jid = jid
+		self.privacy = {}
+		self.privacy["block"] = self.main.client.privacy.active.isBlockedJID(self.jid) and True
 
 	def clone(self):
 		item=userItem(unicode(self.name),unicode(self.group),self.main,self.icon)
@@ -564,9 +568,9 @@ class rosterWidget(QtGui.QWidget):
 			name=jid
 		if not group:
 			group="zzzzzzzzzzzzzzzzz"
-		item=userItem(name,group,self)
+		item=userItem(name,group,jid,self.main)
 		item.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons["9"])
-		item.jid=jid
+		#item.jid=jid
 		item.hidden=True
 		item.avatar=QtGui.QIcon("images/48x48/apps/jabbim.png")
 		#self.sortItems()

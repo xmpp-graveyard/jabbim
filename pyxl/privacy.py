@@ -143,11 +143,15 @@ class PrivacyList:
 
 	def blockJID(self, jid): # Block all communication
 		self.mkItem("deny", "jid", jid)#, ["message", "iq", "presence-out"])
+		for x in self.main.ui.roster.getUserItems(jid.split("/", 1)[0]):
+			x.privacy["block"] = True
 
 	def unBlockJID(self, jid):
 		item = self.isBlockedJID(jid)
 		if item:
 			self.delItem(item)
+		for x in self.main.ui.roster.getUserItems(jid.split("/", 1)[0]):
+			x.privacy["block"] = False
 
 class Privacy:
 	def __init__(self, main):
