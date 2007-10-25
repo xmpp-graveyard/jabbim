@@ -1821,13 +1821,22 @@ class rosterWidget(QtGui.QWidget):
 			# chat with selected contact
 			jid=action.data()
 			jid=str(jid.toString())
-			if jid.find("/") == -1:
-				item=self.getUserItems(jid)[0]
+			#if jid.find("/") == -1:
+				#item=self.getUserItems(jid)[0]
+				#self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+			#else:
+				#jid_r, res = jid.split("/", 1)
+				#item=self.getUserItems(jid_r)[0]
+				#self.main.chat.addChatTab(jid,"%s/%s" % (item.name, res),self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+			item=self.getUserItems(jid)[0]
+			res = self.main.client.roster['users'][jid].getHighestResource()
+			if res==None:
 				self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			else:
-				jid_r, res = jid.split("/", 1)
-				item=self.getUserItems(jid_r)[0]
-				self.main.chat.addChatTab(jid,"%s/%s" % (item.name, res),self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+				self.main.chat.addChatTab(item.jid+"/"+res,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+			self.main.chat.activate()
+
+
 				
 			self.main.chat.activate()
 		
