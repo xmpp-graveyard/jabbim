@@ -48,13 +48,15 @@ class groupchatAdminDialog(QtGui.QDialog):
 		#, u'jabber.intermax.com.ua': {u'affiliation': u'outcast', u'jid': u'jabber.intermax.com.ua', 'reason': u''}}), 'member': (u'jabbim@conf.netlab.cz', {u'zenek@jabbim.cz': {u'affiliation': u'member', u'jid': u'zenek@jabbim.cz', 'reason': u''}, u'lolek@njs.netlab.cz': {u'affiliation': u'member', u'jid': u'lolek@njs.netlab.cz', 'reason': u''}}), 'admin': (u'jabbim@conf.netlab.cz', {u'pyjim@jabber.cz': {u'affiliation': u'owner', u'jid': u'pyjim@jabber.cz', 'reason': u''}, u'hanzz@njs.netlab.cz': {u'affiliation': u'owner', u'jid': u'hanzz@njs.netlab.cz', 'reason': u''}, u'cornelius@njs.netlab.cz': {u'affiliation': u'owner', u'jid': u'cornelius@njs.netlab.cz', 'reason': u''}}), 'owner': (u'jabbim@conf.netlab.cz', {u'pyjim@jabber.cz': {u'affiliation': u'owner', u'jid': u'pyjim@jabber.cz', 'reason': u''}, u'hanzz@njs.netlab.cz': {u'affiliation': u'owner', u'jid': u'hanzz@njs.netlab.cz', 'reason': u''}, u'cornelius@njs.netlab.cz': {u'affiliation': u'owner', u'jid': u'cornelius@njs.netlab.cz', 'reason': u''}})}
 		layout=QtGui.QGridLayout(self.ui.affiliation)
 		self.tree=QtGui.QTreeWidget(self.ui.affiliation)
-		QtCore.QObject.connect(self.tree, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int)"),self.itemSelected)
+		QtCore.QObject.connect(self.tree, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem *, int)"),self.itemDoubleClicked)
+		QtCore.QObject.connect(self.tree, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.contextMenu)
 		
 		self.tree.headerItem().setText(0,self.tr("JID"))
 		self.tree.headerItem().setText(1,self.tr("Reason"))
 		self.tree.setDragEnabled(True)
 		self.tree.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
-		
+		self.tree.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+				
 		#self.tree.header().hide()
 		layout.addWidget(self.tree,0,0,1,4)
 		
@@ -67,7 +69,7 @@ class groupchatAdminDialog(QtGui.QDialog):
 				item=QtGui.QTreeWidgetItem(parent)
 				item.setText(0,unicode(y['jid']))
 				item.setText(1,unicode(y['reason']))
-				item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsDragEnabled)
+				item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsEditable)
 		self.tree.resizeColumnToContents(0)
 		
 		label=QtGui.QLabel(self.tr("Affiliation:"),self.ui.affiliation)
@@ -106,13 +108,35 @@ class groupchatAdminDialog(QtGui.QDialog):
 					item=QtGui.QTreeWidgetItem(it)
 					item.setText(0,jid)
 					item.setText(1,reason)
-					item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsDragEnabled)
+					item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsDragEnabled|QtCore.Qt.ItemIsEditable)
 					break
 			
-	
 
-	def itemSelected(self,item,i):
-		pass
+	def contextMenu(self,pos):
+		item=self.tree.itemFromIndex(self.tree.indexAt(pos)) # get selected item
+		menu=QtGui.QMenu(self.tree) # make menu
+		if item.parent()!=None:
+			# Join bookmarked groupchat
+			action=menu.addAction(self.tr("Delete item"))
+			action.setData(item.data(0,32))
+			action.setObjectName("delete")
+
+		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.contextMenuTriggered)
+		# set menu position and show
+		menu.popup(self.tree.mapToGlobal(pos))
+	
+	def contextMenuTriggered(self,action):
+		cmd=action.objectName()
+		if cmd=="delete":
+			item=self.tree.currentItem()
+			parent=item.parent()
+			parent.takeChild(item)
+	
+	def itemDoubleClicked(self,item,i):
+		#pass
+		if parent==None:
+			return
+		self.tree.editItem(item,i)
 		#parent=item.parent()
 		#if parent==None:
 			#return
