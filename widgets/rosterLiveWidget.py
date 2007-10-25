@@ -1704,6 +1704,12 @@ class rosterWidget(QtGui.QWidget):
 			action = subscription.addAction(self.tr("Ask contact to allow me see his/her status"))	
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("a_ask")
+
+		submenu = contactMenu.addMenu(self.tr("Privacy"))
+		if not self.main.client.privacy.active.isBlockedJID(jid):
+			action = submenu.addAction(self.tr("Block"))
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("privacy_block")
 		
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
@@ -1908,6 +1914,11 @@ class rosterWidget(QtGui.QWidget):
 			jid=unicode(jid.toString())
 			self.main.client.sendPresence(jid, typ="subscribe")
 			log.msg("sent subscription request to %s" % jid)
+
+		elif cmd == "privacy_block":
+			jid=unicode(action.data().toString())
+			self.main.client.privacy.active.blockJID(jid)
+			log.msg("Blocking jid %s." % jid)
 
 		log.msg("END CONTACT")
 

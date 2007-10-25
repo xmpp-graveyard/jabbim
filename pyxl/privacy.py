@@ -74,10 +74,13 @@ class PrivacyList:
 		self.update()
 	
 	def mkItem(self, action, typ = None, value = None, stanzas = [],
-			order_direction = True):	# True - lowest possible (more important), False - current highest + 1 (less important)
+			to_zero = True):	# True - lowest possible (more important), False - current highest + 1 (less important)
 		orders = self._getOrders()
-		if order_direction:
-			order = filter(lambda a: a not in orders, range(len(orders)+1))[0]
+		if to_zero:
+			zitem = self.getItem(0)
+			if zitem:
+				self._advance(zitem, False)
+			order = 0
 		else:
 			order = orders[-1] + 1
 		item = PrivacyListItem(action, order, typ, value, stanzas)
@@ -109,17 +112,30 @@ class PrivacyList:
 	######## ^   BASE   ^ #######
 	######## v ADVANCED v #######
 	
-	def _getScheme(self):
-		for item in self.items:
-			r += "Action: %s;" % item.action
-			r += "Order: %s;" % item.order
-			if item.typ:
-				r += "Type: %s;" % item.typ
-				r += "Value: %s;" % item.value
-			r += "Stanzas: "+", ".join(item.stanzas) or "Stanzas: All"
-			r += "\n"
-			return r
+	#def _getScheme(self):
+	#	for item in self.items:
+	#		r += "Action: %s;" % item.action
+	#		r += "Order: %s;" % item.order
+	#		if item.typ:
+	#			r += "Type: %s;" % item.typ
+	#			r += "Value: %s;" % item.value
+	#		r += "Stanzas: "+", ".join(item.stanzas) or "Stanzas: All"
+	#		r += "\n"
+	#		return r
 	# TODO
+	def isBlockedJID(self, jid):
+		r = False
+		order = None
+		for item in self.items:
+			if item.typ == "jid" and item.value == jid and item.action == "deny":
+				r = True
+				order = item.order
+			if item.typ == "jid" and item.value == jid and item.action == "allow" and item.order < order:
+				r = False
+		return r
+
+	def blockJID(self, jid): # Block all communication
+		self.mkItem("deny", "jid", jid)
 
 class Privacy:
 	def __init__(self, main):
