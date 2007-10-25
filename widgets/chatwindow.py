@@ -94,7 +94,9 @@ class chatWindow(QtGui.QMainWindow):
 				self.main.client.sendMessage(str(widget.jid),"",composing="active")
 				self.main.client.dispatcher.publishEvent('onActivity')
 				print "publishing onActivity event"
-
+			if self.active==False:
+				self.main.client.dispatcher.publishEvent('onActivity')
+				print "publishing onActivity event"
 			self.active=True
 
 			
