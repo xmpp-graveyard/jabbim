@@ -724,10 +724,11 @@ class clientClass(pyxl.client.Client):
 				message = utils.replace_url(message)
 			else:
 				message=xhtml
-			file=self.main.homeDir+'/avatars/'+unicode(frm.userhost())
-			if not os.path.isfile(file):
-				file="images/32x32/apps/jabbim.png"
-			message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user)).replace("[message]",message).replace("[avatar]",file)
+			#file=self.main.homeDir+'/avatars/'+unicode(frm.userhost())
+			#<img src="[avatar]" width="32" height="32"/>
+			#if not os.path.isfile(file):
+				#file="images/32x32/apps/jabbim.png"
+			message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user)).replace("[message]",message)
 			# find tab
 			#tab=None
 			#tabIndex=0
@@ -747,6 +748,7 @@ class clientClass(pyxl.client.Client):
 						
 			# we found tab
 			if tab!=None:
+				message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+str(tab.chat.avatarHeight)+"\" />")
 				# write message and set 'message' icon
 				if int(self.main.chat.ui.chatTab.currentIndex())!=tabIndex:
 					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))

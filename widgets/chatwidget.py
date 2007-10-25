@@ -27,6 +27,7 @@ import urllib,re,os
 from twisted.web.microdom import *
 from twisted.web.domhelpers import gatherTextNodes
 import filetransfer
+from twisted.words.protocols.jabber import jid as jidT
 
 class textView(QtGui.QTextEdit):
 	def __init__(self,parent):
@@ -168,6 +169,15 @@ class chatWidget(QtGui.QWidget):
 		self.sent = []
 		self.hindex = 0
 		
+		self.file=self.main.homeDir+'/avatars/'+unicode(jidT.JID(jid).userhost())
+		#<img src="[avatar]" width="32" height="32"/>
+		self.avatarHeight=32
+		if not os.path.isfile(self.file):
+			self.file="images/32x32/apps/jabbim.png"
+		else:
+			pixmap=QtGui.QPixmap(self.file).scaledToWidth(32)
+			self.avatarHeight=int(pixmap.height())
+
 	#def lines(self):
 		#if self.ui.line.verticalScrollBar().isVisible():
 			#self.ui.line.setMaximumHeight(int(self.ui.line.maximumHeight())+int(self.ui.line.currentFont().pointSize())+10)
