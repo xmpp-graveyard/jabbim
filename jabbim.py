@@ -682,6 +682,26 @@ class clientClass(pyxl.client.Client):
 								message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
 							else:
 								message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
+						
+						if self.groupchats[frm].users.has_key(user):
+							truejid = self.groupchats[frm].users[user].truejid
+							print truejid
+						else:
+							truejid = None
+						file = None
+						if truejid != None:
+							print truejid
+							truejid = jidT.JID(truejid)
+							if self.roster['users'].has_key(truejid.userhost()):
+								file=self.main.homeDir+'/avatars/'+unicode(truejid.userhost())
+											
+						if file == None:
+							file=self.main.homeDir+'/avatars/'+unicode(frm+'/'+user)
+						if not os.path.isfile(file):
+							print truejid, frm, user
+							file="images/32x32/apps/jabbim.png"
+						message=message.replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\"32\" />")
+						
 						# write message
 						w.chat.textEditWrite(message)
 						return
@@ -698,6 +718,8 @@ class clientClass(pyxl.client.Client):
 								message=self.main.skin["message_for_me_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
 							else:
 								message=self.main.skin["message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
+							
+	
 						w.chat.textEditWrite(message)
 					
 	

@@ -618,7 +618,7 @@ class Client(derived):
 		#log.msg('presence > ')
 		frm = jid.JID(el['from'])
 		fromjid = frm.userhost()
-		resource = jid.JID(el['from']).resource
+		resource = frm.resource
 
 		show = status = priority = typ = affiliation = role = truejid = hash = None
 		codes = []

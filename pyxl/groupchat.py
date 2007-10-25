@@ -132,4 +132,4 @@ class MUCContact:
 	def setInfo(self,  affiliation,  role,  jid):
 		self.affiliation = affiliation
 		self.role = role
-		self.jid = jid
+		self.truejid = jid
