@@ -37,6 +37,11 @@ class PrivacyList:
 		self.main	= main
 		self._reviseOrders()
 
+		self.invisible	= None
+		lastitem = self.getItem(self._getOrders()[-1])
+		if lastitem.action == "deny" and (lastitem.stanzas == [] or "presence-out" in lastitem.stanzas) and lastitem.typ == None:
+			self.invisible = lastitem
+
 		for item in self.items:
 			if item.value and item.typ == "jid":
 				for useritem in self.main.ui.roster.getUserItems(item.value):
@@ -96,6 +101,7 @@ class PrivacyList:
 			order = orders[-1] + 1
 		item = PrivacyListItem(action, order, typ, value, stanzas)
 		self.addItem(item)
+		return item
 
 	def getItem(self, order):
 		for item in self.items:
@@ -183,6 +189,13 @@ class PrivacyList:
 			self.delItem(item)
 		for x in self.main.ui.roster.getUserItems(jid.split("/", 1)[0]):
 			x.privacy["allow"] = False
+
+	def setInvisible(self):
+		self.invisible = self.mkItem("deny", stanzas = ["presence-out"], to_zero = False)
+	def unsetInvisible(self):
+		self.delItem(self.invisible)
+		self.invisible = None
+
 	
 class Privacy:
 	def __init__(self, main):
