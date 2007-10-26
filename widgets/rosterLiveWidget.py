@@ -862,6 +862,7 @@ class rosterWidget(QtGui.QWidget):
 	def paintUserItem(self,painter,useritem,x,y):
 		# paints user item in normal roster
 		if useritem==self.item:
+			print useritem.privacy
 			# Item is selected
 			height=79
 			#if not useritem.statusMessage:
@@ -1190,6 +1191,7 @@ class rosterWidget(QtGui.QWidget):
 			self.repaint()
 		else:
 			res = self.main.client.roster['users'][item.jid].getHighestResource()
+			print res
 			if res==None:
 				self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			else:
