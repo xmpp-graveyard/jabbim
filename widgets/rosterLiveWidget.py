@@ -1747,9 +1747,6 @@ class rosterWidget(QtGui.QWidget):
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
 		return contactMenu
-		# signal
-		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
-		return contactMenu
 
 	def buildGroupMenu(self,name):
 		pass
