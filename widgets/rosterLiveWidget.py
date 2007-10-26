@@ -337,8 +337,8 @@ class userItem:
 		self.blink=None
 		self.jid = jid
 		self.privacy = {}
-		if self.main.client.privacy.active!=None:
-			self.privacy["block"] = self.main.client.privacy.active.isBlockedJID(self.jid) and True
+		#if self.main.client.privacy.active!=None:
+			#self.privacy["block"] = self.main.client.privacy.active.isBlockedJID(self.jid) and True
 
 	def clone(self):
 		item=userItem(unicode(self.name),unicode(self.group),self.main,self.icon)
