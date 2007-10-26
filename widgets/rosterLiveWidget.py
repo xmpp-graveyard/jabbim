@@ -1713,27 +1713,40 @@ class rosterWidget(QtGui.QWidget):
 			action = subscription.addAction(self.tr("Request authorization from contact"))	
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("a_ask")
-
-		submenu = contactMenu.addMenu(self.tr("Privacy"))
-		if not self.main.client.privacy.active.isBlockedJID(jid):
-			action = submenu.addAction(self.tr("Block"))
-			action.setData(QtCore.QVariant(jid))
-			action.setObjectName("privacy_block")
-		else:
-			action = submenu.addAction(self.tr("Unblock"))
-			action.setData(QtCore.QVariant(jid))
-			action.setObjectName("privacy_unblock")
 		
+		if self.main.client.privacy.active:
+			submenu = contactMenu.addMenu(self.tr("Privacy"))
+			if not self.main.client.privacy.active.isBlockedJID(jid):
+				action = submenu.addAction(self.tr("Block contact"))
+				action.setData(QtCore.QVariant(jid))
+				action.setObjectName("privacy_block")
+			else:
+				action = submenu.addAction(self.tr("Unblock contact"))
+				action.setData(QtCore.QVariant(jid))
+				action.setObjectName("privacy_unblock")
+			
 
-		if not self.main.client.privacy.active.isAllowedJID(jid):
-			action = submenu.addAction(self.tr("Allow contact to see my status when I am invisible"))
-			action.setData(QtCore.QVariant(jid))
-			action.setObjectName("privacy_allow")
-		else:
-			action = submenu.addAction(self.tr("Disallow contact to see my status when I am invisible"))
-			action.setData(QtCore.QVariant(jid))
-			action.setObjectName("privacy_disallow")
+			if not self.main.client.privacy.active.isAllowedJID(jid):
+				action = submenu.addAction(self.tr("Allow contact to see my status when I am invisible"))
+				action.setData(QtCore.QVariant(jid))
+				action.setObjectName("privacy_allow")
+			else:
+				action = submenu.addAction(self.tr("Disallow contact to see my status when I am invisible"))
+				action.setData(QtCore.QVariant(jid))
+				action.setObjectName("privacy_disallow")
+			
+			if not self.main.client.privacy.active.isHiddenJID(jid):
+				action = submenu.addAction(self.tr("Always hide my status to contact"))
+				action.setData(QtCore.QVariant(jid))
+				action.setObjectName("privacy_hide")
+			else:
+				action = submenu.addAction(self.tr("Don't hide my status to contact"))
+				action.setData(QtCore.QVariant(jid))
+				action.setObjectName("privacy_unhide")
 		
+		# signal
+		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
+		return contactMenu
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
 		return contactMenu
@@ -1957,6 +1970,15 @@ class rosterWidget(QtGui.QWidget):
 			jid=unicode(action.data().toString())
 			self.main.client.privacy.active.disAllowJID(jid)
 			log.msg("Disallowing jid %s." % jid)
+
+		elif cmd == "privacy_hide":
+			jid=unicode(action.data().toString())
+			self.main.client.privacy.active.hideJID(jid)
+			log.msg("Hiding jid %s." % jid)
+		elif cmd == "privacy_unhide":
+			jid=unicode(action.data().toString())
+			self.main.client.privacy.active.unHideJID(jid)
+			log.msg("Unhiding jid %s." % jid)
 		log.msg("END CONTACT")
 
 	def changeGroup(self,jid,action,group):

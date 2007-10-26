@@ -140,6 +140,7 @@ class PrivacyList:
 	#		r += "\n"
 	#		return r
 	# TODO
+
 	def isBlockedJID(self, jid):
 		r = False
 		order = None
@@ -152,12 +153,10 @@ class PrivacyList:
 			if	(item.typ == "jid" and item.value == jid) and (item.action == "allow" and item.order < order) and (item.stanzas == [] or item.stanzas == ["iq","message","presence-out"]):
 				r = False
 		return r
-
 	def blockJID(self, jid): # Block all communication
 		self.mkItem("deny", "jid", jid)#, ["message", "iq", "presence-out"])
 		for x in self.main.ui.roster.getUserItems(jid.split("/", 1)[0]):
 			x.privacy["block"] = True
-
 	def unBlockJID(self, jid):
 		item = self.isBlockedJID(jid)
 		if item:
@@ -176,25 +175,44 @@ class PrivacyList:
 			if	(item.typ == "jid" and item.value == jid) and (item.action == "deny" and item.order < order) and (item.stanzas == [] or "presence-out" in item.stanzas):
 				r = False
 		return r
-
 	def allowJID(self, jid): 
 		self.mkItem("allow", "jid", jid, ["presence-out"])
 		for x in self.main.ui.roster.getUserItems(jid.split("/", 1)[0]):
 			x.privacy["allow"] = True
-
 	def disAllowJID(self, jid):
 		item = self.isAllowedJID(jid)
-		log.msg("isAllowedJID(%s): %s" % (jid,str(item)))
 		if item:
 			self.delItem(item)
 		for x in self.main.ui.roster.getUserItems(jid.split("/", 1)[0]):
 			x.privacy["allow"] = False
 
+	def isHiddenJID(self, jid):
+		r = False
+		order = None
+		for item in self.items:
+			if item.typ == "jid" and item.value == jid and item.action == "deny" and item.stanzas == ["presence-out"]:
+				r = item
+				order = item.order
+			if	(item.typ == "jid" and item.value == jid) and (item.action == "allow" and item.order < order) and (item.stanzas == [] or "presence-out" in item.stanzas):
+				r = False
+		return r
+	def hideJID(self, jid): 
+		self.mkItem("deny", "jid", jid, ["presence-out"])
+		for x in self.main.ui.roster.getUserItems(jid.split("/", 1)[0]):
+			x.privacy["hide"] = True
+	def unHideJID(self, jid):
+		item = self.isHiddenJID(jid)
+		if item:
+			self.delItem(item)
+		for x in self.main.ui.roster.getUserItems(jid.split("/", 1)[0]):
+			x.privacy["hide"] = False
+
 	def setInvisible(self):
 		self.invisible = self.mkItem("deny", stanzas = ["presence-out"], to_zero = False)
 	def unsetInvisible(self):
-		self.delItem(self.invisible)
-		self.invisible = None
+		if self.invisible:
+			self.delItem(self.invisible)
+			self.invisible = None
 
 	
 class Privacy:
