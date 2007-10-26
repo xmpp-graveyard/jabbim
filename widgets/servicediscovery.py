@@ -145,31 +145,31 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 								parentitem.setText(3,key)
 				if self.main.client.disco[key][None].has_key("features"):
 					parentitem.setData(32,0,QtCore.QVariant(list(self.main.client.disco[key][None]['features'])))
-					register=QtGui.QPushButton(self.ui.tree)
-					#register.setMaximumWidth(40)
-					#register.setMinimumWidth(40)
-					register.setIcon(QtGui.QIcon("images/16x16/actions/register.png"))
-					register.setEnabled(False)
-					register.setFlat(True)
-					register.jid=parentitem.text(3)
-					register.typ="register"
-					self.group.addButton(register)
 
-					self.ui.tree.setItemWidget(parentitem,2,register)
-					search=QtGui.QPushButton(self.ui.tree)
-					#search.setMaximumWidth(16)
-					#search.setMinimumWidth(16)
-					search.setIcon(QtGui.QIcon("images/16x16/actions/search.png"))
-					search.setEnabled(False)
-					search.setFlat(True)
-					search.jid=parentitem.text(3)
-					search.typ="search"
-					self.group.addButton(search)
-					self.ui.tree.setItemWidget(parentitem,1,search)
 					if "jabber:iq:register" in list(self.main.client.disco[key][None]['features']):
-						register.setEnabled(True)
+						register=QtGui.QPushButton(self.ui.tree)
+						#register.setMaximumWidth(40)
+						#register.setMinimumWidth(40)
+						register.setIcon(QtGui.QIcon("images/16x16/actions/register.png"))
+						#register.setEnabled(False)
+						register.setFlat(True)
+						register.jid=parentitem.text(3)
+						register.typ="register"
+						self.group.addButton(register)
+						self.ui.tree.setItemWidget(parentitem,2,register)
 					elif "jabber:iq:search" in list(self.main.client.disco[key][None]['features']):
-						search.setEnabled(True)
+					
+						search=QtGui.QPushButton(self.ui.tree)
+						#search.setMaximumWidth(16)
+						#search.setMinimumWidth(16)
+						search.setIcon(QtGui.QIcon("images/16x16/actions/search.png"))
+						#search.setEnabled(False)
+						search.setFlat(True)
+						search.jid=parentitem.text(3)
+						search.typ="search"
+						self.group.addButton(search)
+						self.ui.tree.setItemWidget(parentitem,1,search)
+
 				if self.main.client.disco[key][None].has_key("items"):
 					for item,values in self.main.client.disco[key][None]['items'].iteritems():
 						it=QtGui.QTreeWidgetItem(parentitem)
