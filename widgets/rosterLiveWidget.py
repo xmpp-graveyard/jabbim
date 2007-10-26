@@ -1345,6 +1345,7 @@ class rosterWidget(QtGui.QWidget):
 						g=contact.groups
 						if len(g)!=0:
 							g.remove(unicode(self.groups[oldItem.group].name))
+						else:
 							for yy in self.getUserItems(contact.jid):
 								self.users.remove(yy)
 						self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g+[unicode(item.name)])
@@ -1418,6 +1419,7 @@ class rosterWidget(QtGui.QWidget):
 						g=contact.groups
 						if len(g)!=0:
 							g.remove(unicode(self.groups[oldItem.group].name))
+						else:
 							for yy in self.getUserItems(contact.jid):
 								self.users.remove(yy)
 						self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g+[unicode(item.group)])
