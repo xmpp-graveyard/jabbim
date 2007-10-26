@@ -1,7 +1,7 @@
 #-*-coding:UTF-8-*-
 
 from twisted.words.protocols.jabber.xmlstream import IQ
-
+from twisted.python import log
 # iq
 # | querry
 # | attr: xmlns == "jabber:iq:privacy"
@@ -139,11 +139,11 @@ class PrivacyList:
 		order = None
 		for item in self.items:
 			item.stanzas.sort()
-			if item.typ == "jid" and item.value == jid and item.action == "deny" and item.stanzas == []:
+			if item.typ == "jid" and item.value == jid and item.action == "deny" and  (item.stanzas == [] or item.stanzas == ["iq","message","presence-out"]):
 				r = item
 				order = item.order
 
-			if	(item.typ == "jid" and item.value == jid) and (item.action == "allow" and item.order < order) and (item.stanzas == [] or item.stazas == ["iq","message","presence-out"]):
+			if	(item.typ == "jid" and item.value == jid) and (item.action == "allow" and item.order < order) and (item.stanzas == [] or item.stanzas == ["iq","message","presence-out"]):
 				r = False
 		return r
 
@@ -158,7 +158,32 @@ class PrivacyList:
 			self.delItem(item)
 		for x in self.main.ui.roster.getUserItems(jid.split("/", 1)[0]):
 			x.privacy["block"] = False
+	
 
+	def isAllowedJID(self, jid):
+		r = False
+		order = None
+		for item in self.items:
+			if item.typ == "jid" and item.value == jid and item.action == "allow" and (item.stanzas == [] or "presence-out" in item.stanzas):
+				r = item
+				order = item.order
+			if	(item.typ == "jid" and item.value == jid) and (item.action == "deny" and item.order < order) and (item.stanzas == [] or "presence-out" in item.stanzas):
+				r = False
+		return r
+
+	def allowJID(self, jid): 
+		self.mkItem("allow", "jid", jid, ["presence-out"])
+		for x in self.main.ui.roster.getUserItems(jid.split("/", 1)[0]):
+			x.privacy["allow"] = True
+
+	def disAllowJID(self, jid):
+		item = self.isAllowedJID(jid)
+		log.msg("isAllowedJID(%s): %s" % (jid,str(item)))
+		if item:
+			self.delItem(item)
+		for x in self.main.ui.roster.getUserItems(jid.split("/", 1)[0]):
+			x.privacy["allow"] = False
+	
 class Privacy:
 	def __init__(self, main):
 		self.main	= main
@@ -167,25 +192,33 @@ class Privacy:
 		self.default	= None
 	
 	def setActive(self, name):
-		if name not in self.lists.keys():
+		if name not in self.lists.keys() and name != None:
 			self.lists[name] = None
 		iq = IQ(self.main.client.xmlstream, "set")
 		query = iq.addElement("query", "jabber:iq:privacy")
 		active = query.addElement("active")
-		active.attributes = {"name":name}
+		if name != None:
+			active.attributes = {"name":name}
 		iq.send()
 		self.main.client.on_xml(iq.toXml())
 		self.main.client.disp(iq["id"])
-		self.active = self.lists[name]	
+		if name != None:
+			self.active = self.lists[name]	
+		else:
+			self.active = None
 
 	def setDefault(self, name):
-		if name not in self.lists.keys():
+		if name not in self.lists.keys() and name != None:
 			self.lists[name] = None
 		iq = IQ(self.main.client.xmlstream, "set")
 		query = iq.addElement("query", "jabber:iq:privacy")
 		default = query.addElement("default")
-		default.attributes = {"name":name}
+		if name != None:
+			default.attributes = {"name":name}
 		iq.send()
 		self.main.client.on_xml(iq.toXml())
 		self.main.client.disp(iq["id"])
-		self.default = self.lists[name]
+		if name != None:
+			self.default = self.lists[name]
+		else:
+			self.default = None

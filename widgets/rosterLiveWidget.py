@@ -336,7 +336,7 @@ class userItem:
 		self.metajid=""
 		self.blink=None
 		self.jid = jid
-		self.privacy = {"block":False}
+		self.privacy = {"block":False, "allow":False}
 		#if self.main.client.privacy.active!=None:
 			#self.privacy["block"] = self.main.client.privacy.active.isBlockedJID(self.jid) and True
 
@@ -1702,15 +1702,15 @@ class rosterWidget(QtGui.QWidget):
 		subscription = contactMenu.addMenu(self.tr("Authorization"))
 		value = contact.subscription
 		if value in ["none", "to"]:
-			action = subscription.addAction(self.tr("Allow contact to see my status"))
+			action = subscription.addAction(self.tr("Send authorization to contact"))
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("a_authorize")
 		if value in ["from", "both"]:
-			action = subscription.addAction(self.tr("Forbid contact to see my status"))	
+			action = subscription.addAction(self.tr("Remove authorization from contact"))	
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("a_unauthorize")
 		if value in ["none", "from"]:
-			action = subscription.addAction(self.tr("Ask contact to allow me see his/her status"))	
+			action = subscription.addAction(self.tr("Request authorization from contact"))	
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("a_ask")
 
@@ -1723,6 +1723,16 @@ class rosterWidget(QtGui.QWidget):
 			action = submenu.addAction(self.tr("Unblock"))
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("privacy_unblock")
+		
+
+		if not self.main.client.privacy.active.isAllowedJID(jid):
+			action = submenu.addAction(self.tr("Allow contact to see my status when I am invisible"))
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("privacy_allow")
+		else:
+			action = submenu.addAction(self.tr("Disallow contact to see my status when I am invisible"))
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("privacy_disallow")
 		
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
@@ -1937,6 +1947,16 @@ class rosterWidget(QtGui.QWidget):
 			jid=unicode(action.data().toString())
 			self.main.client.privacy.active.unBlockJID(jid)
 			log.msg("Unblocking jid %s." % jid)
+
+
+		elif cmd == "privacy_allow":
+			jid=unicode(action.data().toString())
+			self.main.client.privacy.active.allowJID(jid)
+			log.msg("Allowing jid %s." % jid)
+		elif cmd == "privacy_disallow":
+			jid=unicode(action.data().toString())
+			self.main.client.privacy.active.disAllowJID(jid)
+			log.msg("Disallowing jid %s." % jid)
 		log.msg("END CONTACT")
 
 	def changeGroup(self,jid,action,group):
