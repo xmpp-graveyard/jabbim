@@ -700,7 +700,11 @@ class clientClass(pyxl.client.Client):
 						if not os.path.isfile(file):
 							print truejid, frm, user
 							file="images/32x32/apps/jabbim.png"
-						message=message.replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\"32\" />")
+						if not w.chat.sizes.has_key(file):
+							pixmap=QtGui.QPixmap(file).scaledToWidth(32)
+							w.chat.sizes[file]=str(pixmap.height())
+							
+						message=message.replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+w.chat.sizes[file]+"\" />")
 						
 						# write message
 						w.chat.textEditWrite(message)

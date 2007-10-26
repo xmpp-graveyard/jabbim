@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'groupchatwidget.ui'
+# Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Mon Oct  8 07:42:11 2007
+# Created: Fri Oct 26 06:19:48 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -72,14 +72,14 @@ class Ui_groupchatwidget(object):
         self.vboxlayout1.setSpacing(6)
         self.vboxlayout1.setObjectName("vboxlayout1")
 
-        self.roomAdmin = QtGui.QPushButton(self.admin)
-        self.roomAdmin.setObjectName("roomAdmin")
-        self.vboxlayout1.addWidget(self.roomAdmin)
-
         self.roomConfig = QtGui.QPushButton(self.admin)
         self.roomConfig.setObjectName("roomConfig")
         self.vboxlayout1.addWidget(self.roomConfig)
         self.vboxlayout.addWidget(self.admin)
+
+        self.clearChat = QtGui.QPushButton(self.layoutWidget)
+        self.clearChat.setObjectName("clearChat")
+        self.vboxlayout.addWidget(self.clearChat)
 
         self.lineWidget = QtGui.QWidget(self.splitter_2)
         self.lineWidget.setMinimumSize(QtCore.QSize(0,10))
@@ -101,8 +101,7 @@ class Ui_groupchatwidget(object):
         self.info.setToolTip(QtGui.QApplication.translate("groupchatwidget", "Every multi user chat can has topic of it\'s discussion", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(0,QtGui.QApplication.translate("groupchatwidget", "user", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(1,QtGui.QApplication.translate("groupchatwidget", "jid", None, QtGui.QApplication.UnicodeUTF8))
-        self.roomAdmin.setToolTip(QtGui.QApplication.translate("groupchatwidget", "You can ban users or promote them to administrators etc", None, QtGui.QApplication.UnicodeUTF8))
-        self.roomAdmin.setText(QtGui.QApplication.translate("groupchatwidget", "Room administration", None, QtGui.QApplication.UnicodeUTF8))
         self.roomConfig.setToolTip(QtGui.QApplication.translate("groupchatwidget", "You can set up logging of the room etc", None, QtGui.QApplication.UnicodeUTF8))
         self.roomConfig.setText(QtGui.QApplication.translate("groupchatwidget", "Room configuration", None, QtGui.QApplication.UnicodeUTF8))
+        self.clearChat.setText(QtGui.QApplication.translate("groupchatwidget", "Clear chat", None, QtGui.QApplication.UnicodeUTF8))
 

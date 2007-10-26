@@ -120,16 +120,6 @@
             <number>6</number>
            </property>
            <item>
-            <widget class="QPushButton" name="roomAdmin" >
-             <property name="toolTip" >
-              <string>You can ban users or promote them to administrators etc</string>
-             </property>
-             <property name="text" >
-              <string>Room administration</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QPushButton" name="roomConfig" >
              <property name="toolTip" >
               <string>You can set up logging of the room etc</string>
@@ -140,6 +130,13 @@
             </widget>
            </item>
           </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="clearChat" >
+          <property name="text" >
+           <string>Clear chat</string>
+          </property>
          </widget>
         </item>
        </layout>

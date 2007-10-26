@@ -138,7 +138,8 @@ class groupChatWidget(QtGui.QWidget):
 
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.roomConfig, QtCore.SIGNAL("clicked ()"),self.roomConfigClicked)
-		QtCore.QObject.connect(self.ui.roomAdmin, QtCore.SIGNAL("clicked ()"),self.roomAdminClicked)
+		QtCore.QObject.connect(self.ui.clearChat, QtCore.SIGNAL("clicked ()"),self.clearChat)
+		
 		#QtCore.QObject.connect(self.buttonGroup, QtCore.SIGNAL("buttonClicked ( QAbstractButton * )  "),self.logButton)
 		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("textChanged ()"),self.lines)
@@ -168,7 +169,7 @@ class groupChatWidget(QtGui.QWidget):
 		self.ui.admin.hide()
 		self.sent = []
 		self.hindex = 0
-
+		self.sizes={}
 	#def lines(self):
 		#if self.ui.line.verticalScrollBar().isVisible():
 			#self.ui.line.setMaximumHeight(int(self.ui.line.maximumHeight())+int(self.ui.line.currentFont().pointSize())+10)
@@ -177,6 +178,9 @@ class groupChatWidget(QtGui.QWidget):
 		#if affiliation=="owner":
 			#self.ui.admin.show()
 		#self.affiliation=affiliation
+	
+	def clearChat(self):
+		self.ui.textEdit.setHtml("")
 	
 	def roomConfigClicked(self):
 		nick=self.main.client.groupchats[self.jid].nick
