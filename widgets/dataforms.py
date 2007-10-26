@@ -184,7 +184,7 @@ class dataFormsDialog(QtGui.QDialog):
 
 	def accept(self):
 		form=self.form
-		sendDataForm(main,self.jid,form,self.var,self.typ)
+		sendDataForm(self.main,self.jid,form,self.var,self.typ)
 		#for x in form.elements():
 			#if unicode(x.name)=="field":
 				#if x.hasAttribute("var"):
