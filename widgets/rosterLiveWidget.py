@@ -336,7 +336,7 @@ class userItem:
 		self.metajid=""
 		self.blink=None
 		self.jid = jid
-		self.privacy = {}
+		self.privacy = {"block":False}
 		#if self.main.client.privacy.active!=None:
 			#self.privacy["block"] = self.main.client.privacy.active.isBlockedJID(self.jid) and True
 

@@ -37,6 +37,12 @@ class PrivacyList:
 		self.main	= main
 		self._reviseOrders()
 
+		for item in self.items:
+			if item.value and item.typ == "jid":
+				for useritem in self.main.ui.roster.getUserItems(item.value):
+					useritem.block = self.isBlockedJID(item.value) and True
+				
+
 	def _getOrders(self):
 		orders = [int(item.order) for item in self.items]
 		orders.sort()
