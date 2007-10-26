@@ -122,28 +122,45 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 
 	def load(self):
 		categories={}
+		services=QtGui.QTreeWidgetItem(self.ui.tree)
+		services.setText(0,self.tr("Services"))
+		services.setIcon(0,QtGui.QIcon("images/48x48/apps/jabbim.png"))
+		transports=QtGui.QTreeWidgetItem(self.ui.tree)
+		transports.setText(0,self.tr("Transports"))
+		transports.setIcon(0,QtGui.QIcon("images/48x48/apps/jabbim.png"))
+		conferences=QtGui.QTreeWidgetItem(self.ui.tree)
+		conferences.setText(0,self.tr("Conferences"))
+		conferences.setIcon(0,QtGui.QIcon("images/48x48/apps/jabbim.png"))
 		for key in self.main.client.disco.keys():
 			
 			if self.main.client.disco[key][None].has_key("identities"):
 				for identity,values in self.main.client.disco[key][None]["identities"].iteritems():
 					if values.has_key('category'):
-						if not values['category'] in categories.keys():
-							item=QtGui.QTreeWidgetItem(self.ui.tree)
-							item.setText(0,values['category']) # todo => lepsi nazvy
-							item.setIcon(0,QtGui.QIcon("images/48x48/apps/jabbim.png"))
-							categories[values['category']]=item
+						#if not values['category'] in categories.keys():
+							#item=QtGui.QTreeWidgetItem(self.ui.tree)
+							#item.setText(0,values['category']) # todo => lepsi nazvy
+							#item.setIcon(0,QtGui.QIcon("images/48x48/apps/jabbim.png"))
+							#categories[values['category']]=item
 						if values.has_key('name'):
-							parentitem=QtGui.QTreeWidgetItem(categories[values['category']])
-							parentitem.setText(0,values['name'])
-							if values.has_key("type"):
-								typ=values['type']
-								if typ=="pep" or typ=="im":
-									typ="jabber"
-								elif typ=="file":
-									typ="disk"
-								parentitem.setIcon(0,self.main.getIcon(size="16x16",usertype=typ))
-								parentitem.setText(3,key)
-				if self.main.client.disco[key][None].has_key("features"):
+							#[u'conference', u'service', u'headline', u'component', u'server', u'services', u'proxy', u'directory', u'gateway', u'store', u'pubsub']
+							parentitem=None
+							if values['category'] in ['service','headline','services','store']:
+								parentitem=QtGui.QTreeWidgetItem(services)
+							elif values['category'] in ['conference']:
+								parentitem=QtGui.QTreeWidgetItem(conferences)
+							elif values['category'] in ['gateway','proxy']:
+								parentitem=QtGui.QTreeWidgetItem(transports)
+							if parentitem:
+								parentitem.setText(0,values['name'])
+								if values.has_key("type"):
+									typ=values['type']
+									if typ=="pep" or typ=="im":
+										typ="jabber"
+									elif typ=="file":
+										typ="disk"
+									parentitem.setIcon(0,self.main.getIcon(size="16x16",usertype=typ))
+									parentitem.setText(3,key)
+				if self.main.client.disco[key][None].has_key("features") and parentitem:
 					parentitem.setData(32,0,QtCore.QVariant(list(self.main.client.disco[key][None]['features'])))
 
 					if "jabber:iq:register" in list(self.main.client.disco[key][None]['features']):
@@ -170,7 +187,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 						self.group.addButton(search)
 						self.ui.tree.setItemWidget(parentitem,1,search)
 
-				if self.main.client.disco[key][None].has_key("items"):
+				if self.main.client.disco[key][None].has_key("items") and parentitem:
 					for item,values in self.main.client.disco[key][None]['items'].iteritems():
 						it=QtGui.QTreeWidgetItem(parentitem)
 						it.setText(0,item)
