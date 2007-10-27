@@ -64,6 +64,9 @@ class textView(QtGui.QTextEdit):
 		for el in a.getElementsByTagName('br'):
 			newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
 			el.parentNode.replaceChild(newnode,el)
+		for el in a.getElementsByTagName('table'):
+			newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
+			el.parentNode.replaceChild(newnode,el)
 		b=a.getElementsByTagName('body')
 		try:
 			c=parseString(unicode(b[0].toxml(),'utf-8').replace("<!--EndFragment-->","").replace("<!--StartFragment-->",""))
