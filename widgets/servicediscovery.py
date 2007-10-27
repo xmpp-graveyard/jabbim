@@ -106,9 +106,40 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		#self.ui.register.setEnabled(self.hasFeature(item,"jabber:iq:register"))
 		#self.ui.search.setEnabled(self.hasFeature(item,"jabber:iq:search"))
 
+	def _discoinfo(self,item):
+		key=unicode(item.text(3))
+		if self.main.client.disco[key][None].has_key("features"):
+			if "jabber:iq:register" in list(self.main.client.disco[key][None]['features']):
+				register=QtGui.QPushButton(self.ui.tree)
+				#register.setMaximumWidth(40)
+				#register.setMinimumWidth(24)
+				register.setIcon(QtGui.QIcon("images/32x32/actions/register.png"))
+				register.setIconSize(QtCore.QSize(32,32))
+				#register.setEnabled(False)
+				register.setFlat(True)
+				register.jid=item.text(3)
+				register.typ="register"
+				self.group.addButton(register)
+				self.ui.tree.setItemWidget(item,2,register)
+			elif "jabber:iq:search" in list(self.main.client.disco[key][None]['features']):
+			
+				search=QtGui.QPushButton(self.ui.tree)
+				#search.setMaximumWidth(16)
+				#search.setMinimumWidth(24)
+				search.setIcon(QtGui.QIcon("images/32x32/actions/search.png"))
+				search.setIconSize(QtCore.QSize(32,32))
+				#search.setEnabled(False)
+				search.setFlat(True)
+				search.jid=item.text(3)
+				search.typ="search"
+				self.group.addButton(search)
+				self.ui.tree.setItemWidget(item,1,search)
+
+
 	def _discoItemsReceived(self,item):
 		jid=unicode(item.text(3))
 		for key,values in self.main.client.disco[jid][None]['items'].iteritems():
+			#print values
 			it=QtGui.QTreeWidgetItem(item)
 			it.setText(3,values['jid'])
 			if values.has_key("name"):
@@ -117,6 +148,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 				it.setText(0,key)
 			it.setIcon(0,item.icon(0))
 			it.setToolTip(0,values['jid'])
+			self.main.client.getDiscoInfo(values['jid'],callback=self._discoinfo, callback_par = (it))
 		self.ui.tree.sortItems(0,QtCore.Qt.AscendingOrder)
 		item.setExpanded(True)
 		

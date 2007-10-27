@@ -822,7 +822,7 @@ class Client(derived):
 
 
 
-	def _discoInfoReceived(self, el, node,  callback):
+	def _discoInfoReceived(self, el, node,  callback,callback_par):
 		log.msg('disco#info received')
 		node_name = node
 		frm = el['from']
@@ -850,7 +850,7 @@ class Client(derived):
 
 		self.reactor.callFromThread(self.on_discoInfoReceived, frm, node_name)
 		if callback != None:
-			self.reactor.callFromThread(callback)
+			callback(callback_par)
 
 	def _discoInfoErrReceived(self, err, info):
 		log.msg('disco#info error received')
