@@ -197,8 +197,8 @@ class chatWindow(QtGui.QMainWindow):
 				#self.changeTab()
 				return
 					
-		#tab=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
-		#tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		tab=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
+		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def reconnect(self):
 		for i in range(self.ui.chatTab.count()):
