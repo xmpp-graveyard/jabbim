@@ -15,7 +15,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Jabbim disk manager'
 		self.author = u"Josef 'Pepeq' Halíček"
 		self.name = 'JDM Plugin'
-		self.version = '0.002'
+		self.version = '0.008'
 		self.category = ['disk']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		if main:

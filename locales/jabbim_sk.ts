@@ -1,5 +1,24 @@
 <!DOCTYPE TS><TS>
 <context>
+    <name>Invitation</name>
+    <message>
+        <source>You have recieved multichat invitation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>From user</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>reason</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Jabbim</source>
@@ -155,6 +174,10 @@ p, li { white-space: pre-wrap; }
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Service Discovery</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SubscribeWidget</name>
@@ -215,12 +238,6 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Other developers:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
-    <message encoding="UTF-8">
-        <source>Josef &apos;Cornelius&apos; Vybíral
-Josef &apos;Pepeq&apos; Halíček
-Peter &apos;Chio&apos; Habčák</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -251,6 +268,13 @@ p, li { white-space: pre-wrap; }
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
+    <message encoding="UTF-8">
+        <source>Josef &apos;Cornelius&apos; Vybíral
+Josef &apos;Pepeq&apos; Halíček
+Peter &apos;Chio&apos; Habčák
+Jáchym &apos;kamahl&apos; Barvínek</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>chatWindow</name>
@@ -262,6 +286,10 @@ p, li { white-space: pre-wrap; }
         <source>Tab 1</source>
         <translation type="unfinished">Karta 1</translation>
     </message>
+    <message>
+        <source>You are now online.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>chatwidget</name>
@@ -271,11 +299,34 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Send</source>
-        <translation type="unfinished">Poslať</translation>
+        <translation type="obsolete">Poslať</translation>
     </message>
     <message>
         <source>...</source>
         <translation type="unfinished">...</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send File</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>customStatusWindow</name>
+    <message>
+        <source>Window will be closed in </source>
+        <translation type="unfinished">Okno sa zatvorí o </translation>
+    </message>
+    <message>
+        <source> seconds.</source>
+        <translation type="unfinished"> s.</translation>
     </message>
 </context>
 <context>
@@ -372,7 +423,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Room administration</source>
-        <translation type="unfinished">Administrácia miestnosti</translation>
+        <translation type="obsolete">Administrácia miestnosti</translation>
     </message>
     <message>
         <source>Room configuration</source>
@@ -380,7 +431,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Send</source>
-        <translation type="unfinished">Poslať</translation>
+        <translation type="obsolete">Poslať</translation>
     </message>
     <message>
         <source>...</source>
@@ -391,15 +442,19 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>You can ban users or promote them to administrators etc</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>You can set up logging of the room etc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>You can add emoticons by clicking here</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear chat</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -463,6 +518,17 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>You need password if the room is locked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>main</name>
+    <message>
+        <source>Rooms</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -551,6 +617,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Server is not found.</source>
         <translation>Server nebol nájdený.</translation>
+    </message>
+    <message>
+        <source>You are now offline.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -768,6 +838,10 @@ p, li { white-space: pre-wrap; }
         <source>View</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Plugin configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>preferencesWindow</name>
@@ -966,6 +1040,29 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>ID:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>self.main.chat</name>
+    <message>
+        <source>is typing...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>gives attention to chat.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>stops typing.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>doesn&apos;t give attention to chat.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -86,7 +86,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_urlValue" />
+       <widget class="QLineEdit" name="lineEdit_urlValue" >
+        <property name="text" >
+         <string>a</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -231,7 +235,10 @@ p, li { white-space: pre-wrap; }
   </widget>
   <widget class="QToolBar" name="toolBar" >
    <property name="movable" >
-    <bool>false</bool>
+    <bool>true</bool>
+   </property>
+   <property name="allowedAreas" >
+    <enum>Qt::TopToolBarArea</enum>
    </property>
    <property name="orientation" >
     <enum>Qt::Horizontal</enum>
@@ -261,7 +268,10 @@ p, li { white-space: pre-wrap; }
   </widget>
   <widget class="QToolBar" name="toolBar_2" >
    <property name="movable" >
-    <bool>false</bool>
+    <bool>true</bool>
+   </property>
+   <property name="allowedAreas" >
+    <enum>Qt::BottomToolBarArea</enum>
    </property>
    <property name="orientation" >
     <enum>Qt::Horizontal</enum>

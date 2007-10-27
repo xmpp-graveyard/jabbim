@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'jdm.ui'
+# Form implementation generated from reading ui file 'plugins/jdm/jdm.ui'
 #
-# Created: Fri Sep 28 10:18:13 2007
+# Created: Fri Sep 28 10:53:38 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -113,7 +113,8 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.toolBar = QtGui.QToolBar(MainWindow)
-        self.toolBar.setMovable(False)
+        self.toolBar.setMovable(True)
+        self.toolBar.setAllowedAreas(QtCore.Qt.TopToolBarArea)
         self.toolBar.setOrientation(QtCore.Qt.Horizontal)
         self.toolBar.setIconSize(QtCore.QSize(32,32))
         self.toolBar.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
@@ -125,7 +126,8 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusBar)
 
         self.toolBar_2 = QtGui.QToolBar(MainWindow)
-        self.toolBar_2.setMovable(False)
+        self.toolBar_2.setMovable(True)
+        self.toolBar_2.setAllowedAreas(QtCore.Qt.BottomToolBarArea)
         self.toolBar_2.setOrientation(QtCore.Qt.Horizontal)
         self.toolBar_2.setIconSize(QtCore.QSize(32,32))
         self.toolBar_2.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
@@ -193,6 +195,7 @@ class Ui_MainWindow(object):
         item1.setText(QtGui.QApplication.translate("MainWindow", "New Item", None, QtGui.QApplication.UnicodeUTF8))
         item1.setIcon(QtGui.QIcon("icons/upload.png"))
         self.label_url.setText(QtGui.QApplication.translate("MainWindow", "URL:", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit_urlValue.setText(QtGui.QApplication.translate("MainWindow", "a", None, QtGui.QApplication.UnicodeUTF8))
         self.label_fileDescription.setText(QtGui.QApplication.translate("MainWindow", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
