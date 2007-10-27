@@ -137,6 +137,7 @@ class chatWidget(QtGui.QWidget):
 			self.ui.line=normalLineEditWidget(self,self)
 		else:
 			self.ui.line=lineEditWidget(self,self)
+		self.ui.line.setAcceptRichText(False)
 		#handler=TextIconHandler()
 		#print dir(self.ui.textEdit.document().documentLayout())
 		#self.ui.textEdit.document().documentLayout().registerHandler(0x1000, handler)
@@ -328,6 +329,9 @@ class chatWidget(QtGui.QWidget):
 			self.ui.line.clear()
 			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 			self.ui.line.composing=False
+			if self.main.chat.active==False:
+				self.main.client.dispatcher.publishEvent('onActivity')
+				self.main.chat.active=True
 
 	def tabPressed(self):
 		# nick completion

@@ -341,7 +341,7 @@ class userItem:
 			#self.privacy["block"] = self.main.client.privacy.active.isBlockedJID(self.jid) and True
 
 	def clone(self):
-		item=userItem(unicode(self.name),unicode(self.group),self.main,self.icon)
+		item=userItem(unicode(self.name),unicode(self.group),self.jid,self.main,self.icon)
 		item.statusMessage=self.statusMessage
 		item.avatar=self.avatar
 		item.hidden=repr(self.hidden)
@@ -356,6 +356,7 @@ class userItem:
 	
 	def setAvatar(self,icon):
 		self.avatar=icon
+		print self.main,type(self.main)
 		self.main.repaint()
 	
 	def setHidden(self,hidden):
@@ -569,7 +570,7 @@ class rosterWidget(QtGui.QWidget):
 			name=jid
 		if not group:
 			group="zzzzzzzzzzzzzzzzz"
-		item=userItem(name,group,jid,self.main)
+		item=userItem(name,group,jid,self)
 		item.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons["9"])
 		#item.jid=jid
 		item.hidden=True

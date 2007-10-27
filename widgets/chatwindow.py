@@ -82,6 +82,7 @@ class chatWindow(QtGui.QMainWindow):
 
 	def event(self,ev):
 		# WindowActivated
+		#print int(ev.type())
 		if int(ev.type())==24:
 			widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
 

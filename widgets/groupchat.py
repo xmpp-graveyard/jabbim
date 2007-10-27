@@ -124,6 +124,7 @@ class groupChatWidget(QtGui.QWidget):
 			self.ui.line=normalLineEditWidget(self,self)
 		else:
 			self.ui.line=lineEditWidget(self,self)
+		self.ui.line.setAcceptRichText(False)
 		layout.addWidget(self.ui.line)
 
 		#self.buttonGroup=QtGui.QButtonGroup(self.ui.logs)
@@ -378,6 +379,9 @@ class groupChatWidget(QtGui.QWidget):
 			self.hindex = len(self.sent)
 			self.ui.line.clear()
 			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+			if self.main.chat.active==False:
+				self.main.client.dispatcher.publishEvent('onActivity')
+				self.main.chat.active=True
 			#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)
 
 	def tabPressed(self):
