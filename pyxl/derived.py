@@ -272,23 +272,26 @@ class derived:
 		d.addCallback(self._onRegisterGet, callback, jid).addErrback(self.chyba)
 		return d
 	
-	def setRegisterForm(self, jid, legacy=None, forms = None):
+	def setRegisterForm(self, jid, legacy=None, forms = None, remove = False):
 		log.msg('set reg form')
 		iq = IQ(self.xmlstream, 'set')
 		iq['type'] = 'set'
 		iq['to'] = jid
 		q = iq.addElement('query')
 		q['xmlns']='jabber:iq:register'
-		if legacy != None:
-			for k,v in legacy.iteritems():
-				if k == 'instructions':
-					continue
-				q.addElement('k', content = v)
-		elif forms != None:
-			x = q.addChild(forms)
-			x['type'] = 'submit'
+		if remove:
+			q.addElement('remove')
 		else:
-			return False
+			if legacy != None:
+				for k,v in legacy.iteritems():
+					if k == 'instructions':
+						continue
+					q.addElement(k, content = v)
+			elif forms != None:
+				x = q.addChild(forms)
+				x['type'] = 'submit'
+			else:
+				return False
 		self.disp(iq['id'])
 		d = iq.send()
 		self.on_xml(iq.toXml())

@@ -218,6 +218,7 @@ class Client(derived):
 		self.reactor.callFromThread(self.on_authd)
 		self.dispatcher.publishEvent('on_authd')
 		self.main._connected()
+		self.getRegisterForm('smtp-tnetlab.cz')
 
 	def _gotServices(self, res):
 		for jid in self.disco[self.jid.host][None]['items'].iterkeys():
@@ -1112,6 +1113,7 @@ class Client(derived):
 				forms = child
 			else:
 				legacy[child.name] = unicode(child)
+		print forms
 		if callback != None:
 			callback(jid, legacy, forms)
 		return (jid, legacy, forms)
