@@ -136,6 +136,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 			
 			if self.main.client.disco[key][None].has_key("identities"):
 				for identity,values in self.main.client.disco[key][None]["identities"].iteritems():
+					parentitem=None
 					if values.has_key('category'):
 						#if not values['category'] in categories.keys():
 							#item=QtGui.QTreeWidgetItem(self.ui.tree)
@@ -144,7 +145,6 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 							#categories[values['category']]=item
 						if values.has_key('name'):
 							#[u'conference', u'service', u'headline', u'component', u'server', u'services', u'proxy', u'directory', u'gateway', u'store', u'pubsub']
-							parentitem=None
 							if values['category'] in ['service','headline','services','store','directory']:
 								parentitem=QtGui.QTreeWidgetItem(services)
 							elif values['category'] in ['conference']:
@@ -162,43 +162,43 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 									parentitem.setIcon(0,self.main.getIcon(size="22x22",usertype=typ))
 									parentitem.setText(3,key)
 									parentitem.setToolTip(0,key)
-				if self.main.client.disco[key][None].has_key("features") and parentitem:
-					parentitem.setData(32,0,QtCore.QVariant(list(self.main.client.disco[key][None]['features'])))
-
-					if "jabber:iq:register" in list(self.main.client.disco[key][None]['features']):
-						register=QtGui.QPushButton(self.ui.tree)
-						#register.setMaximumWidth(40)
-						#register.setMinimumWidth(24)
-						register.setIcon(QtGui.QIcon("images/32x32/actions/register.png"))
-						register.setIconSize(QtCore.QSize(32,32))
-						#register.setEnabled(False)
-						register.setFlat(True)
-						register.jid=parentitem.text(3)
-						register.typ="register"
-						self.group.addButton(register)
-						self.ui.tree.setItemWidget(parentitem,2,register)
-					elif "jabber:iq:search" in list(self.main.client.disco[key][None]['features']):
-					
-						search=QtGui.QPushButton(self.ui.tree)
-						#search.setMaximumWidth(16)
-						#search.setMinimumWidth(24)
-						search.setIcon(QtGui.QIcon("images/32x32/actions/search.png"))
-						search.setIconSize(QtCore.QSize(32,32))
-						#search.setEnabled(False)
-						search.setFlat(True)
-						search.jid=parentitem.text(3)
-						search.typ="search"
-						self.group.addButton(search)
-						self.ui.tree.setItemWidget(parentitem,1,search)
-
-				if self.main.client.disco[key][None].has_key("items") and parentitem:
-					for item,values in self.main.client.disco[key][None]['items'].iteritems():
-						it=QtGui.QTreeWidgetItem(parentitem)
-						it.setText(0,item)
-						it.setIcon(0,parentitem.icon(0))
-						if values.has_key("jid"):
-							it.setText(3,values['jid'])
-							it.setToolTip(0,values['jid'])
+					if self.main.client.disco[key][None].has_key("features") and parentitem:
+						parentitem.setData(32,0,QtCore.QVariant(list(self.main.client.disco[key][None]['features'])))
+	
+						if "jabber:iq:register" in list(self.main.client.disco[key][None]['features']):
+							register=QtGui.QPushButton(self.ui.tree)
+							#register.setMaximumWidth(40)
+							#register.setMinimumWidth(24)
+							register.setIcon(QtGui.QIcon("images/32x32/actions/register.png"))
+							register.setIconSize(QtCore.QSize(32,32))
+							#register.setEnabled(False)
+							register.setFlat(True)
+							register.jid=parentitem.text(3)
+							register.typ="register"
+							self.group.addButton(register)
+							self.ui.tree.setItemWidget(parentitem,2,register)
+						elif "jabber:iq:search" in list(self.main.client.disco[key][None]['features']):
+						
+							search=QtGui.QPushButton(self.ui.tree)
+							#search.setMaximumWidth(16)
+							#search.setMinimumWidth(24)
+							search.setIcon(QtGui.QIcon("images/32x32/actions/search.png"))
+							search.setIconSize(QtCore.QSize(32,32))
+							#search.setEnabled(False)
+							search.setFlat(True)
+							search.jid=parentitem.text(3)
+							search.typ="search"
+							self.group.addButton(search)
+							self.ui.tree.setItemWidget(parentitem,1,search)
+	
+					if self.main.client.disco[key][None].has_key("items") and parentitem:
+						for item,values in self.main.client.disco[key][None]['items'].iteritems():
+							it=QtGui.QTreeWidgetItem(parentitem)
+							it.setText(0,item)
+							it.setIcon(0,parentitem.icon(0))
+							if values.has_key("jid"):
+								it.setText(3,values['jid'])
+								it.setToolTip(0,values['jid'])
 				
 				#item=self.main.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1)[0]
 			elif self.main.client.disco[key][None].has_key("err"):
