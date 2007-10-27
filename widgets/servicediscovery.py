@@ -102,8 +102,9 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		return False
 
 	def itemSelected(self,item,i):
-		self.ui.register.setEnabled(self.hasFeature(item,"jabber:iq:register"))
-		self.ui.search.setEnabled(self.hasFeature(item,"jabber:iq:search"))
+		pass
+		#self.ui.register.setEnabled(self.hasFeature(item,"jabber:iq:register"))
+		#self.ui.search.setEnabled(self.hasFeature(item,"jabber:iq:search"))
 
 	def _discoItemsReceived(self,item):
 		jid=unicode(item.text(3))
