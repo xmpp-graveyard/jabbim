@@ -282,6 +282,8 @@ class preferencesWindow(QtGui.QDialog):
 		resource=unicode(self.ui.connection_source.text())
 		password=unicode(self.ui.connection_password.text())
 		self.main.skin=ConfigObj("skins/"+unicode(self.ui.chatSkin_list.currentText()),encoding='UTF8')
+		if not self.main.skin.has_key("spaces_between_lines"):
+			self.main.skin["spaces_between_lines"]='0'
 		self.main.config['passwd']=rot13.scramble(password)
 		self.main.config['autoJoin']=str(self.ui.connection_autojoin.isChecked())
 		self.main.config['autoPriority']=str(self.ui.connection_autoPriority.isChecked())

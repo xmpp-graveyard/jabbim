@@ -61,17 +61,22 @@ class textView(QtGui.QTextEdit):
 					path=k
 			newnode = parseString("<div> "+path+"</div>").documentElement
 			el.parentNode.replaceChild(newnode,el)
-		for el in a.getElementsByTagName('br'):
-			newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
-			el.parentNode.replaceChild(newnode,el)
-		for el in a.getElementsByTagName('table'):
-			newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
-			el.parentNode.replaceChild(newnode,el)
 		b=a.getElementsByTagName('body')
 		try:
 			c=parseString(unicode(b[0].toxml(),'utf-8').replace("<!--EndFragment-->","").replace("<!--StartFragment-->",""))
 		except:
 			c=parseString(unicode(b[0].toxml()).replace("<!--EndFragment-->","").replace("<!--StartFragment-->",""))
+		for el in c.getElementsByTagName('br'):
+			#if self.parent.main.skin['spaces_between_lines']=='1':
+				#newnode = parseString("<div> "+unichr(2028)+unichr(2028)+"</div>").documentElement
+			#else:
+			newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
+			el.parentNode.replaceChild(newnode,el)
+		for el in c.getElementsByTagName('table'):
+			newnode = parseString(unicode(el.toxml(),'utf-8')+"<div>"+unichr(2028)+unichr(2028)+"NN</div>").documentElement
+			#print unicode(el.toxml())
+			el.parentNode.replaceChild(newnode,el)
+			
 		text=gatherTextNodes(c)
 		u=False
 		try:
@@ -81,7 +86,7 @@ class textView(QtGui.QTextEdit):
 			text=unicode(text)
 		#if u:
 		text=text.replace(unichr(2028),"\n")
-
+		print unicode(text)
 
 		self.data.append(QtCore.QMimeData())
 		self.data[-1].setText(unicode(text))

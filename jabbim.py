@@ -1543,6 +1543,8 @@ class mainWindow(QtGui.QMainWindow):
 	def loadSkin(self):
 		# loads config and repairs config file
 		self.skin=ConfigObj("skins/"+self.config["chat_skin"],encoding='UTF8')
+		if not self.skin.has_key("spaces_between_lines"):
+			self.skin["spaces_between_lines"]='0'
 
 	def now(self):
 		# get time
