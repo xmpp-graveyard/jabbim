@@ -382,6 +382,8 @@ class groupChatWidget(QtGui.QWidget):
 			if self.main.chat.active==False:
 				self.main.client.dispatcher.publishEvent('onActivity')
 				self.main.chat.active=True
+				self.main.chat.timer.stop()
+
 			#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)
 
 	def tabPressed(self):
