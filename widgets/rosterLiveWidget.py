@@ -1154,6 +1154,9 @@ class rosterWidget(QtGui.QWidget):
 				self.repaint()
 				self.setSize()
 				#self.timestamp=float(t)
+		if item!=None:
+			if item.typ=='group' or item.main=='special':
+				self.statusLabel.hide()
 	def mousePressEvent(self,event):
 		x=event.x()
 		y=event.y()
@@ -1204,14 +1207,15 @@ class rosterWidget(QtGui.QWidget):
 		if key==QtCore.Qt.Key_Down:
 			x,y=self.itemCoordinates(self.item)
 			if self.item.typ=="group":
-				item=self.itemAt(x,y+self.userHeight)
+				item=self.itemAt(x,y+self.userHeight+5)
 			else:
 				if not self.compact:
 					item=self.itemAt(x,y+self.selectedHeight+33)
 				else:
 					item=self.itemAt(x,y+self.selectedHeight+1)
+
 			self.selectItem(item)
-			self.timer.start(40)
+			#self.timer.start(40)
 			event.accept()
 		elif key==QtCore.Qt.Key_Up:
 			x,y=self.itemCoordinates(self.item)
@@ -1220,7 +1224,7 @@ class rosterWidget(QtGui.QWidget):
 			#else:
 			item=self.itemAt(x,y-3)
 			self.selectItem(item)
-			self.timer.start(40)
+			#self.timer.start(40)
 			event.accept()
 		elif (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and self.selected != None:
 			jid = jidT.JID(self.selected.jid)
