@@ -101,7 +101,7 @@ def makeDataForm(parent,layout,form):
 				row+=1
 	return var,row
 
-def sendDataForm(main,jid,form,var,t):
+def sendDataForm(main,jid,form,var,t,unregister=False):
 	for x in form.elements():
 		if unicode(x.name)=="field":
 			if x.hasAttribute("var"):
@@ -143,7 +143,10 @@ def sendDataForm(main,jid,form,var,t):
 	if t=="muc":
 		main.client.setMUCConfig(jid, form)
 	elif t=="register":
-		main.client.setRegisterForm(jid,forms=form)
+		if unregister:
+			main.client.setRegisterForm(jid,remove=True)
+		else:
+			main.client.setRegisterForm(jid,forms=form)
 	return form
 
 class dataFormsDialog(QtGui.QDialog):
@@ -166,21 +169,32 @@ class dataFormsDialog(QtGui.QDialog):
 		self.setMaximumWidth(400);
 		self.var={}
 		row=1
+		registered=False
 		for x in form.elements():
 			if unicode(x.name)=="title":
 				self.setWindowTitle(unicode(x))
 			elif unicode(x.name)=="instructions":
 				self.instructions.setText(unicode(x))
+			elif unicode(x.name)=="registered":
+				registered=True
+
 		self.var,row=makeDataForm(self,layout,form)
 
 		self.ok=QtGui.QPushButton(self.tr("OK"),self)
 		self.cancel=QtGui.QPushButton(self.tr("Cancel"),self)
-		
+
+		if registered:
+			self.unregister=QtGui.QPushButton(self.tr("Unregister"),self)
+			QtCore.QObject.connect(self.unregister,QtCore.SIGNAL("clicked()"),self.unregisterClicked)
+			layout.addWidget(self.unregister,row,1)
 		QtCore.QObject.connect(self.ok,QtCore.SIGNAL("clicked()"),self.accept)
 		QtCore.QObject.connect(self.cancel,QtCore.SIGNAL("clicked()"),self.reject)
 		
-		layout.addWidget(self.ok,row,0)
-		layout.addWidget(self.cancel,row,1)
+		layout.addWidget(self.ok,row+1,0)
+		layout.addWidget(self.cancel,row+1,1)
+
+	def unregisterClicked(self):
+		sendDataForm(self.main,self.jid,form,self.var,self.typ,unregister=True)
 
 	def accept(self):
 		form=self.form

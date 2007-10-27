@@ -76,13 +76,22 @@ class legacyFormsDialog(QtGui.QDialog):
 
 		self.ok=QtGui.QPushButton(self.tr("OK"),self)
 		self.cancel=QtGui.QPushButton(self.tr("Cancel"),self)
-		
+
+		if registered:
+			self.unregister=QtGui.QPushButton(self.tr("Unregister"),self)
+			layout.addWidget(self.unregister,row,1)
+			QtCore.QObject.connect(self.unregister,QtCore.SIGNAL("clicked()"),self.unregisterClicked)
+
 		QtCore.QObject.connect(self.ok,QtCore.SIGNAL("clicked()"),self.accept)
 		QtCore.QObject.connect(self.cancel,QtCore.SIGNAL("clicked()"),self.reject)
 		
-		layout.addWidget(self.ok,row,0)
-		layout.addWidget(self.cancel,row,1)
+		layout.addWidget(self.ok,row+1,0)
+		layout.addWidget(self.cancel,row+1,1)
 
+	def unregisterClicked(self):
+		self.main.client.setRegisterForm(self.jid,remove=True)
+
+		self.reject()
 	def accept(self):
 		form={}
 		if self.typ=="disco":
