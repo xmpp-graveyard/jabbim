@@ -164,8 +164,8 @@ class groupChatWidget(QtGui.QWidget):
 		#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)
 		#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
 		#self.ui.lineWidget.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
-		self.ui.splitter.setSizes([500,120])
-		self.ui.splitter_2.setSizes([45,500,70])
+		self.ui.splitter.setSizes(list(self.main.config['groupchatSplitterSizes']))
+		self.ui.splitter_2.setSizes(list(self.main.config['groupchatSplitter2Sizes']))
 		#if self.main.client.groupchats[self.jid].users[nick].affiliation=="owner":
 		self.ui.admin.hide()
 		self.sent = []

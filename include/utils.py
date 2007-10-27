@@ -56,6 +56,10 @@ def loadConfig(main):
 			"logfile":"jabbim.log",
 			"windowGeometry":[0,0,None,None],
 			"chatGeometry":[0,0,None,None],
+			"chatSplitterSizes":[500,70],
+			"chatSplitter2Sizes":[500,128],
+			"groupchatSplitterSizes":[500,120],
+			"groupchatSplitter2Sizes":[45,500,70],
 			"saveGeometry":True,
 			"saveExpandedGroups":True,
 			"expandedGroups":[],
@@ -80,6 +84,10 @@ def loadConfig(main):
 			rewrite=True
 	if rewrite==True:
 		main.config.write()
+	main.config["chatSplitterSizes"]=map(int, main.config["chatSplitterSizes"])
+	main.config["chatSplitter2Sizes"]=map(int, main.config["chatSplitter2Sizes"])
+	main.config["groupchatSplitterSizes"]=map(int, main.config["groupchatSplitterSizes"])
+	main.config["groupchatSplitter2Sizes"]=map(int, main.config["groupchatSplitter2Sizes"])
 	if not os.path.isdir(main.homeDir+'/avatars'):
 		os.mkdir(main.homeDir+'/avatars')
 	if not os.path.isdir(main.homeDir+'/plugins'):

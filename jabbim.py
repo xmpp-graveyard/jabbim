@@ -1324,7 +1324,18 @@ class mainWindow(QtGui.QMainWindow):
 			width=int(rect.width())
 			height=int(rect.height())
 			self.config["chatGeometry"]=[x,y,width,height]
-
+			for i in range(self.chat.ui.chatTab.count()):
+				w=self.chat.ui.chatTab.widget(i)
+				if w.typ=="chat":
+					self.config['chatSplitterSizes']=list(w.chat.ui.splitter.sizes())
+					self.config['chatSplitter2Sizes']=list(w.chat.ui.splitter_2.sizes())
+					break
+			for i in range(self.chat.ui.chatTab.count()):
+				w=self.chat.ui.chatTab.widget(i)
+				if w.typ=="groupchat":
+					self.config['groupchatSplitterSizes']=list(w.chat.ui.splitter.sizes())
+					self.config['groupchatSplitter2Sizes']=list(w.chat.ui.splitter_2.sizes())
+					break
 			self.config.write()
 		if str(self.config['saveExpandedGroups'])=='True':
 			expanded=[]

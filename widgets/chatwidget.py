@@ -230,9 +230,9 @@ class chatWidget(QtGui.QWidget):
 		#print self.ui.line.currentFont().pointSize()
 		#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
 		#self.ui.lineWidget.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
-		self.ui.splitter.setSizes([500,70])
+		self.ui.splitter.setSizes(list(self.main.config['chatSplitterSizes']))
 		self.ui.widget.setMaximumWidth(128)
-		self.ui.splitter_2.setSizes([500,128])
+		self.ui.splitter_2.setSizes(list(self.main.config['chatSplitter2Sizes']))
 		self.sent = []
 		self.hindex = 0
 		
