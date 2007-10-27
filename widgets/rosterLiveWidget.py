@@ -437,7 +437,7 @@ class rosterWidget(QtGui.QWidget):
 
 		self.reskin()
 
-
+		self.scrollUp = None
 		self.compact=False
 		
 		#QtCore.QObject.connect(self.main.scroll, QtCore.SIGNAL("sliderMoved(int)"),self.slider)
@@ -1211,7 +1211,7 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					item=self.itemAt(x,y+self.selectedHeight+1)
 			self.selectItem(item)
-			self.time.start(40)
+			self.timer.start(40)
 			event.accept()
 		elif key==QtCore.Qt.Key_Up:
 			x,y=self.itemCoordinates(self.item)
@@ -1220,7 +1220,7 @@ class rosterWidget(QtGui.QWidget):
 			#else:
 			item=self.itemAt(x,y-3)
 			self.selectItem(item)
-			self.time.start(40)
+			self.timer.start(40)
 			event.accept()
 		elif (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and self.selected != None:
 			jid = jidT.JID(self.selected.jid)
@@ -1586,14 +1586,16 @@ class rosterWidget(QtGui.QWidget):
 		# chat
 		if oneres:
 			action=contactMenu.addAction(self.tr("Chat"))
-			action.setData(QtCore.QVariant(jid))
-			action.setObjectName("chat")
+			if action != None:
+				action.setData(QtCore.QVariant(jid))
+				action.setObjectName("chat")
 		else:
 			submenu = contactMenu.addMenu(self.tr("Chat"))
 			for res in contact.resources.keys():
-				action=submenu.addAction(res)
-				action.setData(QtCore.QVariant("%s/%s" % (jid, res)))
-				action.setObjectName("chat")
+				if res != None:
+					action=submenu.addAction(unicode(res))
+					action.setData(QtCore.QVariant("%s/%s" % (jid, res)))
+					action.setObjectName("chat")
 
 		if self.main.client.groupchats != {}:	# Mozna zobrazit i kdyz v mucu nejsme aby to bylo vic videt :)
 			submenu = contactMenu.addMenu(self.tr("Invite to conference"))
@@ -1606,9 +1608,10 @@ class rosterWidget(QtGui.QWidget):
 				for gc in self.main.client.groupchats.keys():
 					submenu2 = submenu.addMenu(gc)
 					for res in contact.resources.keys():
-						action = submenu2.addAction(res)
-						action.setData(QtCore.QVariant(["%s/%s" % (jid, res), gc]))
-						action.setObjectName("invite_gc")
+						if res != None:
+							action = submenu2.addAction(res)
+							action.setData(QtCore.QVariant(["%s/%s" % (jid, res), gc]))
+							action.setObjectName("invite_gc")
 
 
 		# custom status
@@ -1651,9 +1654,10 @@ class rosterWidget(QtGui.QWidget):
 		else:
 			submenu = contactMenu.addMenu(self.tr("Send file"))
 			for resource in contact.resources.keys():
-				action = submenu.addAction(resource)
-				action.setData(QtCore.QVariant("%s/%s" % (jid, resource)))
-				action.setObjectName("send_file")
+				if resource != None:
+					action = submenu.addAction(resource)
+					action.setData(QtCore.QVariant("%s/%s" % (jid, resource)))
+					action.setObjectName("send_file")
 		# separator
 		contactMenu.addSeparator()
 		# break up metacontact
