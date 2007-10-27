@@ -819,6 +819,9 @@ class clientClass(pyxl.client.Client):
 		elif chatstate=="active":
 			if tab!=None:
 				tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(tabIndex))+" "+self.main.chat.tr("gives attention to chat."))
+		elif chatstate=="paused":
+			if tab!=None:
+				tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(tabIndex))+" "+self.main.chat.tr("stops typing."))
 		elif chatstate=="inactive":
 			if tab!=None:
 				tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(tabIndex))+" "+self.main.chat.tr("doesn't give attention to chat."))

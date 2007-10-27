@@ -139,10 +139,26 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		#self.setMaximumSize(QtCore.QSize(16777215,30))
 		self.setObjectName("line")
 		self.composing=False
+		self.timer=QtCore.QTimer()
+		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"),self.paused)
+		self.text=""
+		self.t=False
+	def paused(self):
+		try:
+			self.timer.stop()
+		except:pass
+		if self.text==unicode(self.toPlainText()):
+			self.main.main.client.sendMessage(self.main.jid, "",composing="paused")
+			self.composing=False
+		else:
+			self.timer.start(2000)
+			self.text=unicode(self.toPlainText())
+
+
+		self.t=False
 	
 	def keyPressEvent(self,event):
 		if not self.composing:
-			self.composing=True
 			self.main.main.client.sendMessage(self.main.jid, "",composing="composing")
 		key=event.key()
 		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier or event.modifiers() & QtCore.Qt.ShiftModifier):
@@ -159,6 +175,13 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			self.main.ui.line.setText(self.main.sent[self.main.hindex])
 		else:
 			QtGui.QTextEdit.keyPressEvent(self,event)
+		if not self.t and not self.composing:
+			self.text=unicode(self.toPlainText())
+			self.t=True
+			self.timer.start(2000)
+		if not self.composing:
+			self.composing=True
+
 
 class chatWidget(QtGui.QWidget):
 	def __init__(self,main,jid,parent=None):
