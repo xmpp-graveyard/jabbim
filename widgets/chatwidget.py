@@ -59,8 +59,9 @@ class textView(QtGui.QTextEdit):
 			for k,v in self.parent.smileys.iteritems():
 				if v==path:
 					path=k
-			newnode = parseString("<div> "+path+"</div>").documentElement
-			el.parentNode.replaceChild(newnode,el)
+					newnode = parseString("<div> "+path+"</div>").documentElement
+					el.parentNode.replaceChild(newnode,el)
+					break
 		b=a.getElementsByTagName('body')
 		try:
 			c=parseString(unicode(b[0].toxml(),'utf-8').replace("<!--EndFragment-->","").replace("<!--StartFragment-->",""))
