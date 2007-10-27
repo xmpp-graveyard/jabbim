@@ -648,7 +648,7 @@ class clientClass(pyxl.client.Client):
 		if not body:
 			body=""
 		if len(body)!=0:
-			body=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
+			body=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
 			# find MUC tab
 			for i in range(self.main.chat.ui.chatTab.count()):
 				w=self.main.chat.ui.chatTab.widget(i)
@@ -746,7 +746,7 @@ class clientClass(pyxl.client.Client):
 				user=frm.full()
 			# strip html tags and \n from messages
 			if xhtml==None:
-				message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/>")
+				message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
 				message = utils.replace_url(message)
 			else:
 				message=xhtml
