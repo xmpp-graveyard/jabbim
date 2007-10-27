@@ -17,6 +17,8 @@ widgets/subscription.py \
 widgets/tooltip_ui.py \
 widgets/waitdialog.py \
 widgets/xmlConsole.py \
+widgets/rosterLiveWidget.py \
+widgets/servicediscovery_ui.py \
 widgets/about.py
 
 TRANSLATIONS    = locales/jabbim_cs.ts \

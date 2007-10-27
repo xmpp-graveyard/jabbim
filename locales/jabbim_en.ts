@@ -913,6 +913,110 @@ p, li { white-space: pre-wrap; }
         <source>Enter new group name</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>JID:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter new name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select action.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move to group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contact action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Make metacontact</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invite to conference</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All resources</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Break up metacontact</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Authorization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send authorization to contact</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove authorization from contact</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Request authorization from contact</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Privacy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block contact</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unblock contact</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow contact to see my status when I am invisible</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disallow contact to see my status when I am invisible</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Always hide my status to contact</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t hide my status to contact</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hi! I&apos;d love to see you in multichat at </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>self.main</name>
@@ -985,6 +1089,33 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>doesn&apos;t give attention to chat.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>serviceDiscovery</name>
+    <message>
+        <source>Service Discovery</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>register</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>jid</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
