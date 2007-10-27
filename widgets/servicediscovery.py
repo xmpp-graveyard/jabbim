@@ -19,13 +19,13 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		
 		#for category in self.getCategories():
 		self.ui.tree.header().hide()
-
+		self.ui.tree.hideColumn(3)
 		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemExpanded ( QTreeWidgetItem * )"),self.expanded)
 		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemCollapsed ( QTreeWidgetItem * )"),self.collapsed)
 		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.itemClicked)
 		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int)"),self.itemSelected)
-		QtCore.QObject.connect(self.ui.register, QtCore.SIGNAL("clicked()"),self.register)
-		QtCore.QObject.connect(self.ui.search, QtCore.SIGNAL("clicked()"),self.search)
+		#QtCore.QObject.connect(self.ui.register, QtCore.SIGNAL("clicked()"),self.register)
+		#QtCore.QObject.connect(self.ui.search, QtCore.SIGNAL("clicked()"),self.search)
 		self.group=QtGui.QButtonGroup(self)
 		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 
@@ -115,6 +115,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 			else:
 				it.setText(0,key)
 			it.setIcon(0,item.icon(0))
+			it.setToolTip(0,values['jid'])
 		self.ui.tree.sortItems(0,QtCore.Qt.AscendingOrder)
 		item.setExpanded(True)
 		
@@ -144,7 +145,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 						if values.has_key('name'):
 							#[u'conference', u'service', u'headline', u'component', u'server', u'services', u'proxy', u'directory', u'gateway', u'store', u'pubsub']
 							parentitem=None
-							if values['category'] in ['service','headline','services','store']:
+							if values['category'] in ['service','headline','services','store','directory']:
 								parentitem=QtGui.QTreeWidgetItem(services)
 							elif values['category'] in ['conference']:
 								parentitem=QtGui.QTreeWidgetItem(conferences)
@@ -158,16 +159,18 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 										typ="jabber"
 									elif typ=="file":
 										typ="disk"
-									parentitem.setIcon(0,self.main.getIcon(size="16x16",usertype=typ))
+									parentitem.setIcon(0,self.main.getIcon(size="22x22",usertype=typ))
 									parentitem.setText(3,key)
+									parentitem.setToolTip(0,key)
 				if self.main.client.disco[key][None].has_key("features") and parentitem:
 					parentitem.setData(32,0,QtCore.QVariant(list(self.main.client.disco[key][None]['features'])))
 
 					if "jabber:iq:register" in list(self.main.client.disco[key][None]['features']):
 						register=QtGui.QPushButton(self.ui.tree)
 						#register.setMaximumWidth(40)
-						#register.setMinimumWidth(40)
-						register.setIcon(QtGui.QIcon("images/16x16/actions/register.png"))
+						#register.setMinimumWidth(24)
+						register.setIcon(QtGui.QIcon("images/32x32/actions/register.png"))
+						register.setIconSize(QtCore.QSize(32,32))
 						#register.setEnabled(False)
 						register.setFlat(True)
 						register.jid=parentitem.text(3)
@@ -178,8 +181,9 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 					
 						search=QtGui.QPushButton(self.ui.tree)
 						#search.setMaximumWidth(16)
-						#search.setMinimumWidth(16)
-						search.setIcon(QtGui.QIcon("images/16x16/actions/search.png"))
+						#search.setMinimumWidth(24)
+						search.setIcon(QtGui.QIcon("images/32x32/actions/search.png"))
+						search.setIconSize(QtCore.QSize(32,32))
 						#search.setEnabled(False)
 						search.setFlat(True)
 						search.jid=parentitem.text(3)
@@ -194,6 +198,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 						it.setIcon(0,parentitem.icon(0))
 						if values.has_key("jid"):
 							it.setText(3,values['jid'])
+							it.setToolTip(0,values['jid'])
 				
 				#item=self.main.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1)[0]
 			elif self.main.client.disco[key][None].has_key("err"):
@@ -202,8 +207,8 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		print categories.keys()
 		self.ui.tree.sortItems(0,QtCore.Qt.AscendingOrder)
 		self.ui.tree.resizeColumnToContents(0)
-		self.ui.tree.setColumnWidth (1,20)
-		self.ui.tree.setColumnWidth (2,20)
+		self.ui.tree.setColumnWidth (1,34)
+		self.ui.tree.setColumnWidth (2,34)
 		return categories
 
 	def accept(self):

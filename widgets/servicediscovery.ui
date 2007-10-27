@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>717</width>
-    <height>298</height>
+    <width>439</width>
+    <height>407</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -19,6 +19,13 @@
    <property name="spacing" >
     <number>6</number>
    </property>
+   <item row="1" column="1" >
+    <widget class="QPushButton" name="close" >
+     <property name="text" >
+      <string>Close</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="0" >
     <spacer>
      <property name="orientation" >
@@ -26,20 +33,13 @@
      </property>
      <property name="sizeHint" >
       <size>
-       <width>181</width>
+       <width>621</width>
        <height>27</height>
       </size>
      </property>
     </spacer>
    </item>
-   <item row="1" column="1" >
-    <widget class="QPushButton" name="search" >
-     <property name="text" >
-      <string>Search</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="3" >
+   <item row="0" column="0" colspan="2" >
     <widget class="QTreeWidget" name="tree" >
      <property name="iconSize" >
       <size>
@@ -69,15 +69,25 @@
      </column>
     </widget>
    </item>
-   <item row="1" column="2" >
-    <widget class="QPushButton" name="register" >
-     <property name="text" >
-      <string>Register</string>
-     </property>
-    </widget>
-   </item>
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>close</sender>
+   <signal>clicked()</signal>
+   <receiver>serviceDiscovery</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>656</x>
+     <y>276</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>544</x>
+     <y>270</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
