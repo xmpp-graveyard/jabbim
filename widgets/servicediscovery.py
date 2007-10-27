@@ -145,7 +145,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 							#categories[values['category']]=item
 						if values.has_key('name'):
 							#[u'conference', u'service', u'headline', u'component', u'server', u'services', u'proxy', u'directory', u'gateway', u'store', u'pubsub']
-							if values['category'] in ['service','headline','services','store','directory']:
+							if values['category'] in ['service','headline','services','store','directory','component']:
 								parentitem=QtGui.QTreeWidgetItem(services)
 							elif values['category'] in ['conference']:
 								parentitem=QtGui.QTreeWidgetItem(conferences)
