@@ -471,11 +471,11 @@ class Client(derived):
 #			self.on_xml(el.toXml())
 	def rawDataIn(self, buf):
 		if self.log:
-			self.on_xml(u'IN: ' + unicode(buf, 'utf8'))
+			self.on_xml(u'IN: ' + unicode(buf, 'utf8', 'replace'))
 	
 	def rawDataOut(self, buf):
 		if self.log:
-			self.on_xml(u'OUT: ' + unicode(buf, 'utf8'))
+			self.on_xml(u'OUT: ' + unicode(buf, 'utf8', 'replace'))
 			
 	def _onRosterArrive(self, el):
 		log.msg( 'roster arrived')
