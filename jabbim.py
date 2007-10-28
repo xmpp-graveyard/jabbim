@@ -1123,8 +1123,7 @@ class mainWindow(QtGui.QMainWindow):
 		cs.exec_()
 
 	def showInvitation(self, jid, room, reason = None):
-		cs = Invitation(self, jid, room, reason)
-		cs.exec_()
+		self.events.addLineEditEvent(maintext = unicode(jid)+self.tr(" invites you to conference ")+unicode(room)+".",trueCall=self.joinGC, trueDict=[room], falseCall=self.client.declineInvitation, falseDict=[jid, room],header="Groupchat Invitation",text="Nickname:",name=unicode(jid),typ="groupchatInvitation",icon=None,action=None,actionDict=None,height=100,value=self.client.jid.userhost().split("@")[0])
 
 	def buildStatusMenu(self,menus=[]):
 		# Status menu
@@ -1855,31 +1854,31 @@ class XMLConsole(QtGui.QMainWindow):
 		self.ui=widgets.xmlConsole.Ui_xmlConsole()
 		self.ui.setupUi(self)
 
-class Invitation(QtGui.QDialog):
-	def __init__(self, main, jid, room, reason = None, parent = None):
-		QtGui.QDialog.__init__(self, parent)
-		self.main = main
-		self.room = unicode(room)
-		self.jid = unicode(jid)
-		self.ui = widgets.invitation.Ui_invitation()
-		self.ui.setupUi(self)
-		s = "<h3>"+self.tr("You have recieved multichat invitation") + "<br>" + self.tr("From user") + ": %s <br>" % jid + self.tr("To room") + ": %s.</h3>" % room
-		if reason != None and reason != "":
-			s += "<br>" + self.tr("reason") + ": %s" % reason 
-		# ^ Tohle by chtělo eště doladit
-		s= unicode(s)
-		self.ui.label.setText(s)
-
-		self.ui.nickname.setText(self.main.client.jid.userhost().split("@")[0])
-		# TODO - password
-
-	def accept(self):
-		self.main.joinGC(self.room, unicode(self.ui.nickname.text()))
-		self.done(1)
-
-	def reject(self):
-		self.main.client.declineInvitation(self.jid, self.room)
-		self.done(0)
+#class Invitation(QtGui.QDialog): # SMAZAT
+#	def __init__(self, main, jid, room, reason = None, parent = None):
+#		QtGui.QDialog.__init__(self, parent)
+#		self.main = main
+#		self.room = unicode(room)
+#		self.jid = unicode(jid)
+#		self.ui = widgets.invitation.Ui_invitation()
+#		self.ui.setupUi(self)
+#		s = "<h3>"+self.tr("You have recieved multichat invitation") + "<br>" + self.tr("From user") + ": %s <br>" % jid + self.tr("To room") + ": %s.</h3>" % room
+#		if reason != None and reason != "":
+#			s += "<br>" + self.tr("reason") + ": %s" % reason 
+#		# ^ Tohle by chtělo eště doladit
+#		s= unicode(s)
+#		self.ui.label.setText(s)
+#
+#		self.ui.nickname.setText(self.main.client.jid.userhost().split("@")[0])
+#		# TODO - password
+#
+#	def accept(self):
+#		self.main.joinGC(self.room, unicode(self.ui.nickname.text()))
+#		self.done(1)
+#
+#	def reject(self):
+#		self.main.client.declineInvitation(self.jid, self.room)
+#		self.done(0)
 
 
 class customStatusWindow(QtGui.QDialog):

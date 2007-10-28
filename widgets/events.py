@@ -98,7 +98,7 @@ class abstractWidget(QtGui.QWidget):
 		self.main.events.refreshTray()
 
 class lineEditWidget(QtGui.QWidget):
-	def __init__(self,header,text,maintext,item,main,icon=None,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40):
+	def __init__(self,header,text,maintext,item,main,icon=None,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40,value=u""):
 		apply(QtGui.QWidget.__init__,(self,parent))
 		self.setObjectName("lineEditWidget")
 		self.item=item
@@ -147,6 +147,8 @@ class lineEditWidget(QtGui.QWidget):
 		self.label_2.setObjectName("label_2")
 		
 		self.lineEdit=QtGui.QLineEdit(self)
+		self.lineEdit.setText(value)
+
 		self.layout2.addWidget(self.label_2)
 		self.layout2.addWidget(self.lineEdit)
 
@@ -390,14 +392,14 @@ class events:
 		self.main.ui.roster.refreshEvents()
 		self.refreshTray()
 
-	def addLineEditEvent(self,trueCall=None,trueDict=None,falseCall=None,falseDict=None,maintext="",header="",text="",name="",typ="",icon=None,action=None,actionDict=None,height=40):
+	def addLineEditEvent(self,trueCall=None,trueDict=None,falseCall=None,falseDict=None,maintext="",header="",text="",name="",typ="",icon=None,action=None,actionDict=None,height=40,value=u""):
 		if icon==None:
 			icon2=QtGui.QIcon("images/16x16/categories/event.png")
 		else:
 			icon2=QtGui.QIcon(unicode(icon).replace("xxxxx","16x16"))
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		item.setSizeHint(QtCore.QSize(100,height))
-		item.widget=lineEditWidget(header,text,maintext,item,self.main,icon=icon2,falseCall=falseCall,falseDict=falseDict,trueCall=trueCall,trueDict=trueDict,action=action,actionDict=actionDict,parent=self.main.ui.eventsListWidget,height=height)
+		item.widget=lineEditWidget(header,text,maintext,item,self.main,icon=icon2,falseCall=falseCall,falseDict=falseDict,trueCall=trueCall,trueDict=trueDict,action=action,actionDict=actionDict,parent=self.main.ui.eventsListWidget,height=height,value=value)
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 		self.addEvent(unicode(name),unicode(typ),icon,item.widget)
 
