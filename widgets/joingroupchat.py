@@ -38,12 +38,20 @@ class joinGroupChatWindow(QtGui.QDialog):
 		self.ui.roomList.setHeaderLabel(main.tr('Rooms'))
 		self.ui.roomList.setSortingEnabled(False)
 		self.server = server
-		self. rooms = [] # [(roomname, roomjid, usercount), ]
+		self.rooms = [] # [(roomname, roomjid, usercount), ]
 		if self.server != '':
 			self.main.client.getDiscoItems(server, callback = self._roomsReceived)
 		
 		QtCore.QObject.connect(self.ui.roomList,QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem *, int )"), self.roomSelected)
 		QtCore.QObject.connect(self.ui.roomList,QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"), self.roomChanged)
+		QtCore.QObject.connect(self.ui.room,QtCore.SIGNAL("textChanged ( const QString & )"), self.textChanged)
+	
+	def textChanged(self, text):
+		print 'pip'
+		if unicode(text).strip() != '':
+			self.ui.pushButton.setEnabled(True)
+		else:
+			self.ui.pushButton.setDisabled(True)
 		
 	def getNum(self, string):
 		def reverse(s):

@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'joingroupchat.ui'
 #
-# Created: Mon Oct  8 14:55:42 2007
-#      by: PyQt4 UI code generator 4.1
+# Created: Sun Oct 28 19:13:25 2007
+#      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_joingroupchat(object):
@@ -16,8 +15,8 @@ class Ui_joingroupchat(object):
         joingroupchat.resize(QtCore.QSize(QtCore.QRect(0,0,612,264).size()).expandedTo(joingroupchat.minimumSizeHint()))
 
         self.hboxlayout = QtGui.QHBoxLayout(joingroupchat)
-        self.hboxlayout.setMargin(9)
         self.hboxlayout.setSpacing(6)
+        self.hboxlayout.setMargin(9)
         self.hboxlayout.setObjectName("hboxlayout")
 
         self.gridlayout = QtGui.QGridLayout()
@@ -37,11 +36,12 @@ class Ui_joingroupchat(object):
         self.gridlayout.addWidget(self.line,2,0,1,2)
 
         self.hboxlayout1 = QtGui.QHBoxLayout()
-        self.hboxlayout1.setMargin(0)
         self.hboxlayout1.setSpacing(6)
+        self.hboxlayout1.setMargin(0)
         self.hboxlayout1.setObjectName("hboxlayout1")
 
         self.pushButton = QtGui.QPushButton(joingroupchat)
+        self.pushButton.setEnabled(False)
         self.pushButton.setObjectName("pushButton")
         self.hboxlayout1.addWidget(self.pushButton)
 
@@ -54,13 +54,13 @@ class Ui_joingroupchat(object):
         self.gridlayout.addItem(spacerItem,1,0,1,1)
 
         self.hboxlayout2 = QtGui.QHBoxLayout()
-        self.hboxlayout2.setMargin(0)
         self.hboxlayout2.setSpacing(6)
+        self.hboxlayout2.setMargin(0)
         self.hboxlayout2.setObjectName("hboxlayout2")
 
         self.vboxlayout = QtGui.QVBoxLayout()
-        self.vboxlayout.setMargin(0)
         self.vboxlayout.setSpacing(6)
+        self.vboxlayout.setMargin(0)
         self.vboxlayout.setObjectName("vboxlayout")
 
         self.label = QtGui.QLabel(joingroupchat)
@@ -85,8 +85,8 @@ class Ui_joingroupchat(object):
         self.hboxlayout2.addLayout(self.vboxlayout)
 
         self.vboxlayout1 = QtGui.QVBoxLayout()
-        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setSpacing(6)
+        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setObjectName("vboxlayout1")
 
         self.room = QtGui.QLineEdit(joingroupchat)
