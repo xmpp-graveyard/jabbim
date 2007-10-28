@@ -182,6 +182,13 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		if not self.composing:
 			self.composing=True
 
+class frame(QtGui.QFrame):
+	def __init__(self,main,parent=None):
+		QtGui.QFrame.__init__(self,parent)
+		self.main=main
+
+	def hideEvent(self,event):
+		self.main.ui.smileys.setChecked(False)
 
 class chatWidget(QtGui.QWidget):
 	def __init__(self,main,jid,parent=None):
@@ -282,7 +289,8 @@ class chatWidget(QtGui.QWidget):
 	def loadSmileys(self):
 		# loads smileys.conf and makes buttons
 		self.smileys=ConfigObj("smileys.conf",encoding='UTF8')
-		self.s=QtGui.QFrame(self)
+		self.s=frame(self,self)
+		self.s.setWindowFlags(QtCore.Qt.Popup)
 		self.s.hide()
 		layout=QtGui.QGridLayout(self.s)
 		layout.setMargin(0)

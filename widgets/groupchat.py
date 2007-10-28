@@ -71,6 +71,14 @@ class lineEditWidget(QtGui.QTextEdit):
 					self.setHtml(html)
 					self.setTextCursor(cur)
 
+class frame(QtGui.QFrame):
+	def __init__(self,main,parent=None):
+		QtGui.QFrame.__init__(self,parent)
+		self.main=main
+
+	def hideEvent(self,event):
+		self.main.ui.smileys.setChecked(False)
+
 class normalLineEditWidget(QtGui.QTextEdit):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QTextEdit.__init__,(self,parent))
@@ -265,7 +273,8 @@ class groupChatWidget(QtGui.QWidget):
 	def loadSmileys(self):
 		# loads smileys.conf and makes buttons
 		self.smileys=ConfigObj("smileys.conf",encoding='UTF8')
-		self.s=QtGui.QFrame(self)
+		self.s=frame(self,self)
+		self.s.setWindowFlags(QtCore.Qt.Popup)
 		self.s.hide()
 		layout=QtGui.QGridLayout(self.s)
 		layout.setMargin(0)
