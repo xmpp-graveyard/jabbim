@@ -1232,6 +1232,13 @@ class rosterWidget(QtGui.QWidget):
 			item=self.getUserItems(jid_r)[0]
 			self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			self.main.chat.activate()
+		elif key==QtCore.Qt.Key_Escape:
+			self.item = None
+			self.selected = None
+			self.statusLabel.hide()
+			self.reshow=True
+			self.repaint()
+			self.setSize()
 		elif key==QtCore.Qt.Key_Delete: #tohle by mozna chtelo nejake potvrzeni 'Opravdu to chcete udelat?'
 			self.main.client.delContact(self.selected.jid)
 		elif key==QtCore.Qt.Key_F2:
