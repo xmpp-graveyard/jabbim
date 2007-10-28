@@ -989,7 +989,7 @@ class rosterWidget(QtGui.QWidget):
 		self.setSize()
 
 	def selectItem(self,item,wait=False):
-		t=float(time.time())
+		#t=float(time.time())
 		if self.item!=item and item!=None and item.main!='special':
 			self.selected=item
 			if not wait:
@@ -1016,28 +1016,33 @@ class rosterWidget(QtGui.QWidget):
 		if item!=None:
 			if item.typ=='group' or item.main=='special':
 				self.statusLabel.hide()
-	def mousePressEvent(self,event):
+	def mouseReleaseEvent(self,event):
 		x=event.x()
 		y=event.y()
 		item=self.itemAt(x,y)
-		if event.button() == QtCore.Qt.LeftButton:
-			if item.typ=='group':
-				self.selectItem(item)
-			else:
-				self.selectItem(item,True)
-
-			if item.typ=='group' and item.main!='special':
-				if item.expanded:
-					item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png")
-					item.expanded=False
+		t=QtGui.QApplication.doubleClickInterval()/1000.0
+		timestamp=float(time.time())
+		if timestamp-self.timestamp<=t:
+			self.mouseDoubleClickEvent(event)
+		else:
+			if event.button() == QtCore.Qt.LeftButton:
+				if item.typ=='group':
+					self.selectItem(item)
 				else:
-					item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-open.png")
-					item.expanded=True
-				self.setSize()
-				self.statusLabel.hide()
-				self.repaint()
-
-		QtGui.QWidget.mousePressEvent(self,event)
+					self.selectItem(item)
+	
+				if item.typ=='group' and item.main!='special':
+					if item.expanded:
+						item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png")
+						item.expanded=False
+					else:
+						item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-open.png")
+						item.expanded=True
+					self.setSize()
+					self.statusLabel.hide()
+					self.repaint()
+		self.timestamp=float(timestamp)
+		QtGui.QWidget.mouseReleaseEvent(self,event)
 
 	def mouseDoubleClickEvent(self,event):
 		x=event.x()
