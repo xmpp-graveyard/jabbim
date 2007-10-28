@@ -1719,7 +1719,11 @@ class mainWindow(QtGui.QMainWindow):
 		password=unicode(self.ui.login_password.text())
 		if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
 			
-			if jid!=self.config['jid'] or (rot13.scramble(password)!=self.config['passwd'] and self.config['savePasswd']=="True") or self.config['savePasswd']!=unicode(self.ui.login_savePassword.isChecked()):
+			if (jid!=self.config['jid'] or ( unicode(self.ui.login_savePassword.isChecked())=="True" and unicode(rot13.scramble(password))!=unicode(self.config['passwd']))) or unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked()):
+				print jid!=self.config['jid']
+				print unicode(rot13.scramble(password))!=unicode(self.config['passwd'])
+				#print unicode(self.config['savePasswd'])=="True"
+				print unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked())
 				ret=QtGui.QMessageBox.question(self,self.tr("Login information"), self.tr("Save current login information?"),3,4)
 				if ret==3:
 					self.config['savePasswd']=self.ui.login_savePassword.isChecked()
