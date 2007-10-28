@@ -149,7 +149,7 @@ class Client(derived):
 		self.factory.addBootstrap("//event/xmpp/initfailed", self._authfailed)
 		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
 		self.factory.addBootstrap('//event/stream/error', self._streamEnd)
-		self.factory.addBootstrap("/*", self.logIt)
+
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
 		self.connection = self.reactor.connectTCP(host,port,self.factory)
@@ -187,6 +187,8 @@ class Client(derived):
 		log.msg('authed')
 ##		self.dispatcher.publishEvent('authed')
 		self.xmlstream = xmlstream
+		self.xmlstream.rawDataInFn = self.rawDataIn
+		self.xmlstream.rawDataOutFn = self.rawDataOut
 		self.xmlstream.addObserver("/presence", self.onPresence, 1)
 		self.xmlstream.addObserver("/message", self.onMessage, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='jabber:iq:roster']", self.onRosterAdd, 1)
@@ -221,7 +223,7 @@ class Client(derived):
 		self.reactor.callFromThread(self.on_authd)
 		self.dispatcher.publishEvent('on_authd')
 		self.main._connected()
-		self.getRegisterForm('smtp-tnetlab.cz')
+
 
 	def _gotServices(self, res):
 		for jid in self.disco[self.jid.host][None]['items'].iterkeys():
@@ -245,7 +247,7 @@ class Client(derived):
 		tune = pb.addElement('item').addElement(typ, 'http://jabber.org/protocol/' + typ)
 		for key, val in attrs.iteritems():
 			tune.addElement(key,  content = val)
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._pepReceived).addErrback(self.chyba)
@@ -259,7 +261,7 @@ class Client(derived):
 		sb = iq.addElement('pubsub',  'http://jabber.org/protocol/pubsub').addElement('subscribe')
 		sb['jid'] = self.jid.userhost()
 		sb['node'] ='http://jabber.org/protocol/'+typ
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._pepReceived).addErrback(self.chyba)
@@ -327,7 +329,7 @@ class Client(derived):
 		iq['to'] = self.jid.host
 		iq['id'] = el['id']
 		iq['type'] = 'result'
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 
 
@@ -450,7 +452,7 @@ class Client(derived):
 				err['type'] = 'cancel'
 				err.addElement('feature-not-implemented')
 				self.disp(el['id'])
-				self.on_xml(el.toXml())
+#				self.on_xml(el.toXml())
 				self.xmlstream.send(el)
 		elif not el.hasAttribute('id') and  el.name == 'iq' :
 			log.msg( 'iq bez id'+ el.toXml())
@@ -461,13 +463,20 @@ class Client(derived):
 			err['code'] = '400'
 			err['type'] = 'modify'
 			err.addElement('bad-request')
-			self.on_xml(el.toXml())
+#			self.on_xml(el.toXml())
 			self.xmlstream.send(el)
 	
-	def logIt(self, el):
+#	def logIt(self, el):
+#		if self.log:
+#			self.on_xml(el.toXml())
+	def rawDataIn(self, buf):
 		if self.log:
-			self.on_xml(el.toXml())
+			self.on_xml(u'IN: ' + unicode(buf, 'utf8'))
 	
+	def rawDataOut(self, buf):
+		if self.log:
+			self.on_xml(u'OUT: ' + unicode(buf, 'utf8'))
+			
 	def _onRosterArrive(self, el):
 		log.msg( 'roster arrived')
 		ln = 0
@@ -713,7 +722,7 @@ class Client(derived):
 
 	def onPresenceError(self,  el):
 		#zatim jenom GC errory .. ani nevim jestli ma smysl zachytavat i jine ..
-		self.on_xml(el.toXml())
+#		self.on_xml(el.toXml())
 		frm = jid.JID(el['from'])
 		fromjid = frm.userhost()
 		resource = jid.JID(el['from']).resource
@@ -758,7 +767,7 @@ class Client(derived):
 		q.addElement('name', content = self.client_name)
 		q.addElement('version', content = self.version)
 		q.addElement('os', content = self.client_os)
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 
 
@@ -806,7 +815,7 @@ class Client(derived):
 			f = q.addElement('feature')
 			f['var'] = feature
 
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 
 	def onLast(self, el):
@@ -820,7 +829,7 @@ class Client(derived):
 		if self.last > 0:
 			q['seconds'] = self.last
 
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 
 
@@ -930,7 +939,7 @@ class Client(derived):
 		#FIXME: predelat # Asi ok
 		iq = IQ(self.xmlstream, 'get')
 		q = iq.addElement('query', 'jabber:iq:privacy')
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._privacyReceived).addErrback(self.chyba)
@@ -960,7 +969,7 @@ class Client(derived):
 			list_	= query.addElement("list")
 			list_.attributes = {"name":name}
 			d	= iq.send()
-			self.on_xml(iq.toXml())
+#			self.on_xml(iq.toXml())
 			self.disp(iq["id"])
 			d.addCallback(self._activeRecieved).addErrback(self.chyba)
 
@@ -978,7 +987,7 @@ class Client(derived):
 			item	= list_.addElement("item")
 			item.attributes = {"order":"0","action":"allow","type":"jid","value":self.jid.userhost()}
 			d	= iq.send()
-			self.on_xml(iq.toXml())
+#			self.on_xml(iq.toXml())
 			self.disp(iq["id"])
 			log.msg("Creating new privacy list: %s." %  defaultlistname)
 			d.addCallback(getActive, defaultlistname).addErrback(self.chyba)
@@ -1027,7 +1036,7 @@ class Client(derived):
 		q = iq.addElement('time','urn:xmpp:time')
 		q.addElement('tzo', content = "%+03d:00"% (-time.timezone/(60*60)))
 		q.addElement('utc', content = time.strftime("%Y-%m-%dT%TZ", time.gmtime()))
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 
 
@@ -1054,7 +1063,7 @@ class Client(derived):
 		q.addElement('utc', content = time.strftime("%Y%m%dT%T", time.gmtime()))
 		q.addElement('tz', content = time.strftime("%Z", time.gmtime()))
 ##		q.addElement('display', content = unicode(time.strftime(u"%c", time.localtime())))
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 
 	def onVerify(self, el):
@@ -1104,7 +1113,7 @@ class Client(derived):
 			err['type'] = 'auth'
 			err.addElement('not-authorized','urn:ietf:params:xml:xmpp-stanzas')
 		el['to'] = frm
-		self.on_xml(el.toXml())
+#		self.on_xml(el.toXml())
 		self.xmlstream.send(el)
 
 
@@ -1196,7 +1205,7 @@ class Client(derived):
 		field['type'] = 'list-single'
 		field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
 		field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._ftreplyReceived, sid).addErrback(self.chyba)
@@ -1225,7 +1234,7 @@ class Client(derived):
 				streamhost['host'] = data[0]
 				streamhost['jid'] = proxy
 				streamhost['port'] = data[1]
-			self.on_xml(iq.toXml())
+#			self.on_xml(iq.toXml())
 			d = iq.send()
 			self.disp(iq['id'])
 			d.addCallback(self._ftreplyhostReceived, sid)
@@ -1303,7 +1312,7 @@ class Client(derived):
 		field = x.addElement('field')
 		field['var'] = 'stream-method'
 		value = field.addElement('value', content = obj.method)
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 	
 		
@@ -1325,7 +1334,7 @@ class Client(derived):
 		opn = iq.addElement('open', 'http://jabber.org/protocol/ibb')
 		opn['sid'] = sid
 		opn['block-size'] = '4096'
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._ftIBBStart, sid)
@@ -1349,7 +1358,7 @@ class Client(derived):
 			self.ft[sid].finish()
 			return
 		data.addContent(b64encode(dt))		
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
 		self.ft[sid].ibbSeq = self.ft[sid].ibbSeq +1
@@ -1372,14 +1381,14 @@ class Client(derived):
 			iq['to'] = self.ft[sid].tojid
 			opn = iq.addElement('close', 'http://jabber.org/protocol/ibb')
 			opn['sid'] = sid
-			self.on_xml(iq.toXml())
+#			self.on_xml(iq.toXml())
 			d = iq.send()
 			self.disp(iq['id'])
 
 			self.ft[sid].finish()
 			return
 		data.addContent(b64encode(dt))		
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
 		self.ft[sid].ibbSeq = self.ft[sid].ibbSeq +1
@@ -1440,7 +1449,7 @@ class Client(derived):
 		iq['to'] = el['from']
 		iq['type'] = 'result'
 		iq['id'] = el['id']
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 		
 	def disp(self, id):

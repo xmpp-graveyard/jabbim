@@ -157,7 +157,7 @@ class derived:
 				c['ext'] = self.caps_ext
 
 		log.msg('sending out presence to: ' + unicode(to))
-		self.on_xml(presence.toXml())
+#		self.on_xml(presence.toXml())
 		self.xmlstream.send(presence)
 
 	def sendMessage(self, to, body=None, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
@@ -187,7 +187,7 @@ class derived:
 							message.addElement(composing, 'http://jabber.org/protocol/chatstates' )
 		if len(message.children) == 0:
 			return
-		self.on_xml(message.toXml())
+#		self.on_xml(message.toXml())
 		self.xmlstream.send(message)
 
 
@@ -200,7 +200,7 @@ class derived:
 		if reason != None:
 			invite.addElement("reason", content = unicode(reason))
 
-		self.on_xml(message.toXml())
+#		self.on_xml(message.toXml())
 		self.xmlstream.send(message)
 
 
@@ -213,7 +213,7 @@ class derived:
 		if reason != None:
 			decline.addElement("reason", content = unicode(reason))
 
-		self.on_xml(message.toXml())
+#		self.on_xml(message.toXml())
 		self.xmlstream.send(message)
 
 
@@ -226,7 +226,7 @@ class derived:
 		q['xmlns']='jabber:iq:roster'
 		self.disp(iq['id'])
 		d = iq.send()
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d.addCallback(self._onRosterArrive).addErrback(self.chyba)
 	
 	def getMUCConfig(self, jid, callback = None):
@@ -239,7 +239,7 @@ class derived:
 		q['xmlns']='http://jabber.org/protocol/muc#owner'
 		self.disp(iq['id'])
 		d = iq.send()
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d.addCallback(self._onMUCConfigReceived, callback, jid).addErrback(self.chyba)
 		return d
 		
@@ -255,7 +255,7 @@ class derived:
 		x['type'] = 'submit'
 		self.disp(iq['id'])
 		d = iq.send()
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		return d
 	
 	def getRegisterForm(self, jid, callback = None):
@@ -268,7 +268,7 @@ class derived:
 		q['xmlns']='jabber:iq:register'
 		self.disp(iq['id'])
 		d = iq.send()
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d.addCallback(self._onRegisterGet, callback, jid).addErrback(self.chyba)
 		return d
 	
@@ -294,7 +294,7 @@ class derived:
 				return False
 		self.disp(iq['id'])
 		d = iq.send()
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		return d
 
 	def getSearchForm(self, jid):
@@ -307,7 +307,7 @@ class derived:
 		q['xmlns']='jabber:iq:search'
 		self.disp(iq['id'])
 		d = iq.send()
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d.addCallback(self._onSearchGet, jid).addErrback(self.chyba)
 		return d
 	
@@ -330,7 +330,7 @@ class derived:
 			return False
 		self.disp(iq['id'])
 		d = iq.send()
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		return d.addCallback(self._onSearchResult, jid)	
 		
 	def sendRosterUpdate(self, jid, name, subscription, groups, callback=None, params=None):
@@ -349,7 +349,7 @@ class derived:
 			item.addElement('group', content = group)
 		self.disp(iq['id'])
 		d = iq.send()
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d.addCallback(self._rosterUpdateDone, callback, params).addErrback(self.chyba)
 	
 	def getVCard(self, jid):
@@ -363,7 +363,7 @@ class derived:
 		log.msg("Sending VCARD IQ")
 		d = iq.send()
 		log.msg("XML LOG")
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		log.msg("ADDING: callback")
 		d.addCallback(self._vcardReceived).addErrback(self._noVcard, jid)
 		log.msg("END: getVCard")
@@ -373,7 +373,7 @@ class derived:
 		iq = IQ(self.xmlstream, 'get')
 		q = iq.addElement('query', 'jabber:iq:private')
 		q.addElement('storage', 'storage:bookmarks')
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		self.disp(iq['id'])
 		d = iq.send()
 		d.addCallback(self._bookmarksReceived)
@@ -399,7 +399,7 @@ class derived:
 			b['url'] = bookmark.url
 
 		self.disp(iq['id'])
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d = iq.send()
 		d.addCallback(self._bookmarksSet).addErrback(self.chyba)
 		
@@ -409,7 +409,7 @@ class derived:
 		iq = IQ(self.xmlstream, 'get')
 		q = iq.addElement('query', 'jabber:iq:private')
 		q.addElement('storage', 'storage:metacontacts')
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		self.disp(iq['id'])
 		d = iq.send()
 		d.addCallback(self._metacontactsReceived)
@@ -426,7 +426,7 @@ class derived:
 			m['tag'] = val['tag']
 			m['order'] = str(val['order'])
 		self.disp(iq['id'])
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d = iq.send()
 		d.addCallback(self._metacontactsSet).addErrback(self.chyba)
 	
@@ -445,7 +445,7 @@ class derived:
 		if caps_node != None:
 			q['node'] = caps_node
 			log.msg("CAPS:"+caps_node)
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._featuresReceived, caps_node).addErrback(self.chyba)
@@ -455,7 +455,7 @@ class derived:
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid
 		q = iq.addElement('query', 'jabber:iq:version')
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._versionReceived).addErrback(self.chyba)
@@ -468,7 +468,7 @@ class derived:
 		q = iq.addElement('query', 'http://jabber.org/protocol/disco#info')
 		if node != None:
 			q['node'] = node
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._discoInfoReceived, node,  callback, callback_par)
@@ -482,7 +482,7 @@ class derived:
 		q = iq.addElement('query', 'http://jabber.org/protocol/disco#items')
 		if node != None:
 			q['node'] = node
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._discoItemsReceived, node, callback, callback_par)
@@ -493,7 +493,7 @@ class derived:
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid
 		iq.addElement('time','urn:xmpp:time')
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._time202Received).addErrback(self.chyba)
@@ -521,7 +521,7 @@ class derived:
 		item[MUCLISTTYPES[typ][2]] = MUCLISTTYPES[typ][1]
 		self.disp(iq['id'])
 		d = iq.send()
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		d.addCallback(self._onMUCListGet, jid).addErrback(self.chyba)
 		return d
 	
@@ -540,7 +540,7 @@ class derived:
 			itm.attributes = item
 		self.disp(iq['id'])
 		d = iq.send()
-		self.on_xml(iq.toXml())
+#		self.on_xml(iq.toXml())
 		return d
 	
 	def getMUCLists(self, jid, types = ['ban', 'member', 'admin', 'owner']):
