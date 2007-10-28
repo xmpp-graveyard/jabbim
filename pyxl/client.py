@@ -124,16 +124,19 @@ class Client(derived):
 
 
 	def connect(self):
-		log.msg('dns - ' + unicode(time.time()))
+		log.msg('dns - ' + unicode(time.time()) + '_xmpp-client._tcp.'+self.jid.host)
 		d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
 		d.addCallback(self._dnsLookup)
 		d.addErrback(self._dnsLookupErr)
 	
 	def _dnsLookup(self, resp):
+		print resp
 		r = random.choice(resp[0])
+		print unicode(r.payload.target), int(r.payload.port)
 		self._connect(unicode(r.payload.target), int(r.payload.port))
 	
 	def _dnsLookupErr(self, resp):
+		print 'err:', resp
 		self._connect(self.host, self.port)
 
 				
@@ -724,6 +727,7 @@ class Client(derived):
 						else:
 							text = unicode(elm.name)
 					self.on_GCpresenceError(fromjid, child.getAttribute('code'),  child.getAttribute('type'),  name, text )
+			del self.groupchats[fromjid]
 					self.dispatcher.publishEvent('on_GCpresenceError',child.getAttribute('code'),  child.getAttribute('type'),  name , text)
 		
 
