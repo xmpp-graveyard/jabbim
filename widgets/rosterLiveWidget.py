@@ -1020,6 +1020,8 @@ class rosterWidget(QtGui.QWidget):
 		x=event.x()
 		y=event.y()
 		item=self.itemAt(x,y)
+		if item==None:
+			return QtGui.QWidget.mouseReleaseEvent(self,event)
 		t=QtGui.QApplication.doubleClickInterval()/1000.0
 		timestamp=float(time.time())
 		if timestamp-self.timestamp<=t:
@@ -1048,6 +1050,8 @@ class rosterWidget(QtGui.QWidget):
 		x=event.x()
 		y=event.y()
 		item=self.itemAt(x,y)
+		if item==None:
+			return QtGui.QWidget.mouseReleaseEvent(self,event)
 		if item.typ=='group' and item.main!='special':
 			if item.expanded:
 				item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png")
