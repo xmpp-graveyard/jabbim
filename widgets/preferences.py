@@ -299,11 +299,15 @@ class preferencesWindow(QtGui.QDialog):
 			self.main.ui.roster.userHeight=22
 			self.main.ui.roster.groupHeight=22
 			self.main.ui.roster.compact=True
+			self.main.ui.roster.reshow=True
+			self.main.ui.roster.statusLabel.hide()
 		else:
 			self.main.config['rosterMode']="normal"
 			self.main.ui.roster.userHeight=32
 			self.main.ui.roster.groupHeight=32
 			self.main.ui.roster.compact=False
+			self.main.ui.roster.reshow=True
+			self.main.ui.roster.statusLabel.hide()
 		self.main.ui.roster.repaint()
 		self.main.config.write()
 		

@@ -584,6 +584,7 @@ class clientClass(pyxl.client.Client):
 						print "append ",i
 						self.main.ui.roster.users.append(i)
 						self.main.ui.roster.sortItems()
+						self.main.ui.roster.changePos=True
 						self.main.ui.roster.repaint()
 						#self.roster['groups'][name].addChild(i) # add item to the new group
 						#index=self.main.ui.roster.indexFromItem(self.roster['groups'][name],0)
@@ -614,6 +615,7 @@ class clientClass(pyxl.client.Client):
 							user.statusMessage=status
 							user.status=self.main.shows[unicode(show)]
 						self.main.ui.roster.statusLabel.hide()
+						self.main.ui.roster.changePos=True
 						self.main.ui.roster.sortItems()
 						self.main.ui.roster.repaint()
 
@@ -624,6 +626,7 @@ class clientClass(pyxl.client.Client):
 						self.main.ui.roster.users.remove(i)
 						self.main.ui.roster.sortItems()
 						self.main.ui.roster.repaint()
+						self.main.ui.roster.statusLabel.hide()
 						## delete group, if it's empty
 						#if int(parent.childCount())==0:
 							#toDel.append(unicode(parent.text(2)))
@@ -645,6 +648,8 @@ class clientClass(pyxl.client.Client):
 		log.msg("delete contact")
 		#contact=self.roster['users'][jid]
 		for i in self.main.ui.roster.getUserItems(jid):
+			if self.main.ui.roster.item==i:
+				self.main.ui.roster.statusLabel.hide()
 			self.main.ui.roster.users.remove(i)
 		self.main.ui.roster.sortItems()
 		self.main.ui.roster.repaint()
