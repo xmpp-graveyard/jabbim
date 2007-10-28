@@ -30,8 +30,9 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 
 #d=self.main.client.getRegisterForm(jid)
-		self.load()
+		#self.load()
 
+		self.main.client.getDiscoItems(self.main.client.jid.host, callback = self.load)
 
 		#for key in self.main.client.disco.keys():
 			#if self.main.client.disco[key][None].has_key("identities"):
@@ -154,19 +155,37 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		
 		self.ui.tree.resizeColumnToContents(0)
 
-	def load(self):
+	def load(self,data=None):
 		categories={}
-		services=QtGui.QTreeWidgetItem(self.ui.tree)
-		services.setText(0,self.tr("Services"))
-		services.setIcon(0,QtGui.QIcon("images/48x48/apps/jabbim.png"))
-		transports=QtGui.QTreeWidgetItem(self.ui.tree)
-		transports.setText(0,self.tr("Transports"))
-		transports.setIcon(0,QtGui.QIcon("images/48x48/apps/jabbim.png"))
-		conferences=QtGui.QTreeWidgetItem(self.ui.tree)
-		conferences.setText(0,self.tr("Conferences"))
-		conferences.setIcon(0,QtGui.QIcon("images/48x48/apps/jabbim.png"))
-		for key in self.main.client.disco.keys():
-			
+		self.services=QtGui.QTreeWidgetItem(self.ui.tree)
+		self.services.setText(0,self.tr("Services"))
+		self.services.setIcon(0,QtGui.QIcon("images/48x48/apps/jabbim.png"))
+		self.transports=QtGui.QTreeWidgetItem(self.ui.tree)
+		self.transports.setText(0,self.tr("Transports"))
+		self.transports.setIcon(0,QtGui.QIcon("images/48x48/apps/jabbim.png"))
+		self.conferences=QtGui.QTreeWidgetItem(self.ui.tree)
+		self.conferences.setText(0,self.tr("Conferences"))
+		self.conferences.setIcon(0,QtGui.QIcon("images/48x48/apps/jabbim.png"))
+		#print self.main.client.disco.keys()
+		key=self.main.client.jid.host
+		if key in self.main.client.disco.keys():
+			if self.main.client.disco[key][None].has_key("identities"):
+				if self.main.client.disco[key][None].has_key("items"):
+					for item,values in self.main.client.disco[key][None]['items'].iteritems():
+						print "disco items for "+values['jid']
+						self.main.client.getDiscoItems(values['jid'], callback = self.root,callback_par=(values['jid']))
+
+				
+			elif self.main.client.disco[key][None].has_key("err"):
+				print key,"error"
+			print self.main.client.disco[key]
+		print categories.keys()
+		return categories
+
+	def root(self,data=None):
+		key=data
+		print "get disco items "+data
+		if key in self.main.client.disco.keys():
 			if self.main.client.disco[key][None].has_key("identities"):
 				for identity,values in self.main.client.disco[key][None]["identities"].iteritems():
 					parentitem=None
@@ -179,11 +198,11 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 						if values.has_key('name'):
 							#[u'conference', u'service', u'headline', u'component', u'server', u'services', u'proxy', u'directory', u'gateway', u'store', u'pubsub']
 							if values['category'] in ['service','headline','services','store','directory','component']:
-								parentitem=QtGui.QTreeWidgetItem(services)
+								parentitem=QtGui.QTreeWidgetItem(self.services)
 							elif values['category'] in ['conference']:
-								parentitem=QtGui.QTreeWidgetItem(conferences)
+								parentitem=QtGui.QTreeWidgetItem(self.conferences)
 							elif values['category'] in ['gateway','proxy']:
-								parentitem=QtGui.QTreeWidgetItem(transports)
+								parentitem=QtGui.QTreeWidgetItem(self.transports)
 							if parentitem:
 								parentitem.setText(0,values['name'])
 								if values.has_key("type"):
@@ -223,27 +242,10 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 							search.typ="search"
 							self.group.addButton(search)
 							self.ui.tree.setItemWidget(parentitem,1,search)
-	
-					if self.main.client.disco[key][None].has_key("items") and parentitem:
-						for item,values in self.main.client.disco[key][None]['items'].iteritems():
-							it=QtGui.QTreeWidgetItem(parentitem)
-							it.setText(0,item)
-							it.setIcon(0,parentitem.icon(0))
-							if values.has_key("jid"):
-								it.setText(3,values['jid'])
-								it.setToolTip(0,values['jid'])
-				
-				#item=self.main.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1)[0]
-			elif self.main.client.disco[key][None].has_key("err"):
-				print key,"error"
-			print self.main.client.disco[key]
-		print categories.keys()
 		self.ui.tree.sortItems(0,QtCore.Qt.AscendingOrder)
 		self.ui.tree.resizeColumnToContents(0)
 		self.ui.tree.setColumnWidth (1,34)
 		self.ui.tree.setColumnWidth (2,34)
-		return categories
-
 	def accept(self):
 		self.done(1)
 
