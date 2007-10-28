@@ -32,137 +32,75 @@ class activeWidget(QtGui.QWidget):
 		QtGui.QWidget.__init__(self,parent)
 		self.setObjectName("selectedContact")
 		self.parent=parent
-		#self.item=item
-		#layout=QtGui.QVBoxLayout(self)
-		#layout.setMargin(2)
+		
+		# main layout
 		l=QtGui.QGridLayout(self)
 		l.setMargin(2)
 		l.setSpacing(0)
-		#self.stacked=QtGui.QStackedWidget(self)
-		#layout.addWidget(self.stacked)
 		self.setAutoFillBackground(False)
-		#p=self.palette()
-		#p.setColor(QtGui.QPalette.Window,QtGui.QColor(255,255,255))
-		#self.setPalette(p)
-		#self.stacked.setAutoFillBackground(True)
-		#self.stacked.setCurrentIndex(0)
+		
+		# layout for JID, jidLabel is virtual widget for resizing layout row to 22px
 		l4=QtGui.QHBoxLayout()
 		self.jidLabel=QtGui.QWidget(self)
-		self.jidLabel.setMinimumHeight(22)
-		self.jidLabel.setMaximumHeight(22)
+		self.jidLabel.setMinimumHeight(30)
+		self.jidLabel.setMaximumHeight(30)
 		self.jidLabel.setMinimumWidth(1)
 		self.jidLabel.setMaximumWidth(1)
-		#self.jidLabel=QtGui.QPushButton(self)
-		#self.jidLabel.setMinimumHeight()
-		#self.jidLabel.setFlat(True)
-		#self.jidLabel.setFocusPolicy(QtCore.Qt.NoFocus)
-		
-		QtCore.QObject.connect(self.jidLabel,QtCore.SIGNAL("clicked()"),self.bclicked)
 
-		#self.jidLabel.setScaledContents(True)
-		#self.jidLabel.setAutoFillBackground(False)
+		# adding jidLabel to the main layout
 		l4.addStretch()
 		l4.addWidget(self.jidLabel)
 		l.addLayout(l4,0,0)
 
+		# QTextEdit for status message
 		self.statusLabel=QtGui.QTextEdit(self)
 		self.statusLabel.setObjectName("selectedContactStatus")
-
 		self.statusLabel.hide()
 		self.statusLabel.setFrameShape(QtGui.QFrame.NoFrame)
 		self.statusLabel.setFrameShadow(QtGui.QFrame.Plain)
-		l.addWidget(self.statusLabel,1,0)
-		self.jidLabel.setMinimumHeight(30)
 		self.statusLabel.setMaximumHeight(30)
 		self.statusLabel.setReadOnly(True)
 		self.statusLabel.viewport().setAutoFillBackground(False)
 		self.statusLabel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+		l.addWidget(self.statusLabel,1,0)
 
-
-		#if status:
-			#self.statusLabel.show()
-			#self.statusLabel.setHtml("<font size=\"-1\">"+unicode(status)+"</font>")
-		#layout.addWidget(statusLabel)
-
-		
-
-		#if len(buttons)!=0:
+		# layout and buttonGroup for buttons if contact is metacontact
 		self.layout2=QtGui.QHBoxLayout()
 		self.layout2.setMargin(0)
 		self.layout2.setSpacing(0)
 		self.buttons={}
 		self.group=QtGui.QButtonGroup(self)
-		#for b in buttons:
-			#meta=b[0]
-			#icon=b[1]
-			##if b=="separator":
-				##line = QtGui.QFrame(self)
-				##line.setFrameShape(QtGui.QFrame.VLine)
-				##line.setFrameShadow(QtGui.QFrame.Sunken)
-				##layout2.addWidget(line)
-			##else:
-			#button = QtGui.QPushButton(self)
-			##button.setGeometry(0,y+16,16,16)
-			#button.setMaximumSize(16,16)
-			#button.setFlat(True)
-			#button.setIcon(icon)
-			#self.layout2.addWidget(button)
-			#self.group.addButton(button)
-			#self.buttons[button]=meta
-
+		
 		self.layout2.addStretch()
 		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.clicked)
 		l.addLayout(self.layout2,3,0,QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-		
+
+		# menu button, maybe we can delete this part in future
 		self.menu=QtGui.QPushButton(self)
 		self.menu.setIcon(QtGui.QIcon("images/22x22/apps/jabbim.png"))
-		#self.menu.setArrowType(QtCore.Qt.DownArrow)
-		#self.menu.setPopupMode(self.menu.InstantPopup)
 		self.menu.setMinimumHeight(26)
 		self.menu.setMaximumHeight(26)
 		self.menu.setFocusPolicy(QtCore.Qt.NoFocus)
-		#self.menu.setMinimumWidth(40)
-		#self.menu.setMaximumWidth()
 		self.menu.setFlat(True)
-
 		l.addWidget(self.menu,2,0,QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
 		self.menu.setObjectName("rosterMenu")
 
+		# label for avatar
 		self.label=QtGui.QLabel(self)
-		#size=64
-		#if len(buttons)==0:
-			#size=32
-		#self.label.setMaximumSize(size,size)
-		#if item.avatar:
-			#pixmap=item.avatar.pixmap(64,64)
-			#self.label.setPixmap(pixmap)
 		l.addWidget(self.label,0,1,5,1,QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
 
-		#spacerItem = QtGui.QSpacerItem(71,50,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
-		#l.addItem(spacerItem,4,0)
 		l.setRowStretch(4,10)
-
-		#layout.addLayout(l)
-
-
-	def bclicked(self):
-		item=self.item
-		res = self.parent.main.client.roster['users'][item.jid].getHighestResource()
-		if res==None:
-			self.parent.main.chat.addChatTab(item.jid,item.name,self.parent.main.getIcon(item.jid,self.parent.main.icons[str(item.status)],size="16x16"))
-		else:
-			self.parent.main.chat.addChatTab(item.jid+"/"+res,item.name,self.parent.main.getIcon(item.jid,self.parent.main.icons[str(item.status)],size="16x16"))
-		self.parent.main.chat.activate()
 
 
 	def setData(self,item,buttons):
+		# sets new data for activeWidget
 		self.item=item
+		# sets new menu (in future delete this part?)
 		menu=self.parent.buildContactMenu(item.jid,item.group)
 		self.menu.setMenu(menu)
 		self.menu.hide()
-		#self.jidLabel.setText(self.item.name)
-		#self.jidLabel.setSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Fixed)
-		#self.jidLabel.setMinimumWidth(20)
+
+		# sets status message
 		status=self.item.statusMessage
 		if status:
 			self.statusLabel.show()
@@ -173,13 +111,14 @@ class activeWidget(QtGui.QWidget):
 		else:
 			self.statusLabel.hide()
 
+		# delete old metacontact buttons
 		for button,meta in self.buttons.iteritems():
 			self.layout2.removeWidget(button)
 			self.group.removeButton(button)
 			button.setParent(None)
-		
 		self.buttons={}
 
+		# add new metacontact buttons
 		for b in buttons:
 			meta=b[0]
 			icon=b[1]
@@ -199,6 +138,7 @@ class activeWidget(QtGui.QWidget):
 			self.group.addButton(button)
 			self.buttons[button]=meta
 
+		# sets avatar
 		size=64
 		#if len(buttons)==0 and not status:
 			#size=32
@@ -210,10 +150,13 @@ class activeWidget(QtGui.QWidget):
 			self.label.show()
 		else:
 			self.label.hide()
-		#print self.parent.selectedHeight-32
+		
+		# resize activeWidget according to userItem size
 		self.resize(self.parent.width()-46,self.parent.selectedHeight+32)
 
 	def refreshData(self):
+		# sets changed data (changed by clicked() slot)
+		# sets status message
 		status=self.item.statusMessage
 		if status:
 			self.statusLabel.show()
@@ -221,87 +164,27 @@ class activeWidget(QtGui.QWidget):
 		else:
 			self.statusLabel.hide()
 
+		# sets avatar
 		size=64
 		self.label.setMaximumSize(size,size)
 		if self.item.avatar:
 			pixmap=self.item.avatar.pixmap(size,size)
 			self.label.setPixmap(pixmap)
+
+		# resize activeWidget according to userItem size
 		self.resize(self.parent.width()-46,self.parent.selectedHeight-32)
 
 	def clicked(self,button):
+		# sets item properties according to metaItem, which is represented by button
 		meta=self.buttons[button]
-		#items=self.parent.getUserItems(self.item.jid)
-		#for item in items:
 		self.item.name=meta.name
 		self.item.icon=meta.icon
 		self.item.avatar=meta.avatar
 		self.item.status=meta.status
 		self.item.statusMessage=meta.statusMessage
 		self.item.jid=meta.jid
-			#self.parent.statusLabel.hide()
 		self.parent.repaint()
 		self.refreshData()
-	#def addStatusOnly(self,status):
-
-
-		#self.stacked.addWidget(statusLabel)
-
-	#def addResource(self,resource):
-		#widget=QtGui.QWidget(self)
-		#widget.setAutoFillBackground(False)
-		#layout=QtGui.QVBoxLayout(widget)
-		#layout.setMargin(0)
-		#layout.setSpacing(0)
-		#label=QtGui.QLabel("Resource: "+resource.name)
-		#label.setTextFormat(QtCore.Qt.RichText)
-		#label.setMaximumHeight(32)
-		#layout.addWidget(label)
-		#if resource.status:
-			#statusLabel=QtGui.QTextEdit(self)
-			#statusLabel.setReadOnly(True)
-			#statusLabel.viewport().setAutoFillBackground(False)
-			#statusLabel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-			#statusLabel.setHtml("<font size=\"-1\">"+unicode(resource.status)+"</font>")
-			#statusLabel.setFrameShape(QtGui.QFrame.NoFrame)
-			#statusLabel.setFrameShadow(QtGui.QFrame.Plain)
-			##statusLabel.setMaximumHeight(32)
-			#layout.addWidget(statusLabel)
-		#layout.addStretch()
-		#self.stacked.addWidget(widget)
-
-
-class activeButtons(QtGui.QWidget):
-	def __init__(self,main,buttons,parent=None):
-		QtGui.QWidget.__init__(self,parent)
-		self.main=main
-		self.layout=QtGui.QHBoxLayout(self)
-		self.layout.setMargin(0)
-		self.layout.setSpacing(0)
-		self.setAutoFillBackground(False)
-		self.buttons={}
-		i=0
-		group=QtGui.QButtonGroup(self)
-		for b in buttons:
-			if b=="separator":
-				line = QtGui.QFrame(self)
-				line.setFrameShape(QtGui.QFrame.VLine)
-				line.setFrameShadow(QtGui.QFrame.Sunken)
-				self.layout.addWidget(line)
-			else:
-				button = QtGui.QPushButton(self)
-				#button.setGeometry(0,y+16,16,16)
-				button.setMaximumSize(16,16)
-				button.setFlat(True)
-				button.setIcon(b)
-				self.layout.addWidget(button)
-				group.addButton(button)
-				self.buttons[button]=i
-				i+=1
-		self.layout.addStretch()
-		QtCore.QObject.connect(group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.clicked)
-	
-	def clicked(self,button):
-		self.main.statusLabel.stacked.setCurrentIndex(self.buttons[button])
 
 class groupItem:
 	def __init__(self,name,icon,main):
@@ -341,6 +224,7 @@ class userItem:
 			#self.privacy["block"] = self.main.client.privacy.active.isBlockedJID(self.jid) and True
 
 	def clone(self):
+		# makes new instance of item
 		item=userItem(unicode(self.name),unicode(self.group),self.jid,self.main,self.icon)
 		item.statusMessage=self.statusMessage
 		item.avatar=self.avatar
@@ -364,6 +248,7 @@ class userItem:
 		self.main.repaint()
 
 class special:
+	# special item for contact which aren't in any group
 	def __init__(self):
 		self.typ="group"
 		self.main="special"
@@ -381,69 +266,43 @@ class rosterWidget(QtGui.QWidget):
 		self.setMinimumWidth(150)
 		self.setMinimumHeight(150)
 		self.setAcceptDrops(True)
-		self.groupGradient=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(0, 32))
-		self.groupGradient.setColorAt(1, QtCore.Qt.darkRed)
-		self.groupGradient.setColorAt(0, QtCore.Qt.white)
-
-		self.selectedGroupGradient=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(0, 96))
-		self.selectedGroupGradient.setColorAt(0.9, QtCore.Qt.white)
-		self.selectedGroupGradient.setColorAt(0.5, QtGui.QColor(185,227,255))
-		self.selectedGroupGradient.setColorAt(0.1, QtCore.Qt.white)
-		self.selectedGroupGradient.setSpread(QtGui.QGradient.RepeatSpread)
-
 		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
-
+		self.setMouseTracking(True)
+		self.setFocusPolicy(QtCore.Qt.ClickFocus)
+		
 		self.selected=None
 		self.selectedHeight=0
-		
 		self.showOffline=False
-
-		self.setMouseTracking(True)
 		self.newitem=None
 		self.item=None
-		self.timer=QtCore.QTimer(self)
-		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.popup)
-		
-		self.timerBlink=QtCore.QTimer(self)
-		QtCore.QObject.connect(self.timerBlink, QtCore.SIGNAL("timeout ()"),self.blink)
 		self.sortedGroups=[]
 		self.sorted={}
-		
 		self.statusLabel=activeWidget(self)
 		self.buttonWidget=None
 		self.bigAvatar=False
-
-		self.setFocusPolicy(QtCore.Qt.ClickFocus)
 		self.data={}
 		self.metaItems={}
-		
 		self.events=[]
 		self.bl=True
-
 		self.changePos=False
 		self.reshow=False
-
 		self.userHeight=32
 		self.groupHeight=32
-		#self.selectedItemStyle=QtGui.QWidget(self.main)
-		#self.selectedItemStyle.hide()
-		#self.selectedItemStyle.setObjectName("selectedItemStyles")
 		self.theme=True
 		self.timestamp=0
-		
+		self.scrollUp = None
+		self.compact=False
+
+		self.timer=QtCore.QTimer(self) # timer for drag and drop
+		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.popup)
+		self.timerBlink=QtCore.QTimer(self) # timer for blinking
+		QtCore.QObject.connect(self.timerBlink, QtCore.SIGNAL("timeout ()"),self.blink)
+
 		self.colors=QtGui.QTreeWidget(self.main)
 		self.colors.hide()
 		self.colors.setObjectName("rosterView")
 
 		self.reskin()
-
-		self.scrollUp = None
-		self.compact=False
-		
-		#QtCore.QObject.connect(self.main.scroll, QtCore.SIGNAL("sliderMoved(int)"),self.slider)
-
-	#def slider(self,y):
-		#pass
 
 	def refreshEvents(self):
 		for event in self.main.events.events:
@@ -1791,41 +1650,29 @@ class rosterWidget(QtGui.QWidget):
 		# contact menu action handler
 		cmd=action.objectName()
 		if cmd=="delete_action":
-##			print "delete_action"
-			## delete contact from roster
-			## get contact jid
+			# delete contact from roster
 			print "delete contact CLICKED"
 			jid=action.data()
 			jid=str(jid.toString())
 			self.main.client.delContact(jid)
-			#print "roster_delete_action",jid
-			## delete user from groups
-			#for user in self.getUsers(jid):
-				#self.delUser(jid,user)
-			#QtGui.QApplication.postEvent(self.jab,customEvent(["roster_del_item",jid]))
-			##self.jab.roster.delItem(jid) # send jabber command
-			#self.refreshStats() # refresh group stats
 		elif cmd=="break_up_meta":
+			# break up metacontact
 			jid=action.data()
 			jid=str(jid.toString())
 			self.breakMetaContacts(jid)
-
 		elif cmd=="rename":
-			# add contact to the new group
-			# get contact jid
+			# rename contact
 			jid=action.data()
 			jid=str(jid.toString())
 			try:
 				name=unicode(self.main.client.roster['users'][jid].name)
 			except:
 				name = ''
-##			print "roster_new_group_action",jid,name
-			# get new group name with QDialog
 			name,b=QtGui.QInputDialog.getText(self,self.tr("Rename"),self.tr("Enter new name:"), QtGui.QLineEdit.Normal, name)
 			name=unicode(name)
-			# if user set new name of group
+			# if user set new name
 			if b==True and len(name)!=0:
-				# add new group
+				# change name
 				contact=self.main.client.roster['users'][jid]
 				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription, self.main.client.roster['users'][jid].groups)
 		elif cmd=="new_group":
@@ -1834,8 +1681,6 @@ class rosterWidget(QtGui.QWidget):
 			jid=action.data()
 			jid=str(jid.toString())
 			name=unicode(self.main.client.roster['users'][jid].name)
-##			print "roster_new_group_action",jid,name
-			# get new group name with QDialog
 			group,b=QtGui.QInputDialog.getText(self,self.tr("New group"),self.tr("Add user to new group"), QtGui.QLineEdit.Normal, "")
 			group=unicode(group)
 			# if user set new name of group
@@ -1844,40 +1689,18 @@ class rosterWidget(QtGui.QWidget):
 				contact=self.main.client.roster['users'][jid]
 				self.main.client.sendRosterUpdate(contact.jid, contact.name, contact.subscription, self.main.client.roster['users'][jid].groups+[group])
 		elif cmd=="check_group":
+			# change users group
 			items=action.data()
 			items=items.toList()
 			jid=str(items[0].toString())
 			action=unicode(items[1].toString())[0]
 			group=unicode(items[1].toString())[1:]
-
-			#if self.main.groups.has_key(group):
-				#if self.main.groups[group]['item']==self.main.groups['Unknown']['item']:
-					#group="Unknown"
-			#else:
-				#group="Unknown"
 			self.changeGroup(jid,action,group)
-			
 		elif cmd=="vcard":
 			# get vcard of selected contact
 			jid=action.data()
 			jid=str(jid.toString())
-			#QtGui.QApplication.postEvent(self.jab,customEvent(["get_vcard",jid]))
 			self.main.client.getVCard(jid)
-			#self.jab.getVCard(jid)
-		elif cmd=="avatar":
-			# get avatar of selected contact
-			jid=action.data()
-			jid=str(jid.toString())
-			QtGui.QApplication.postEvent(self.jab,customEvent(["get_vcard",jid]))
-			#self.jab.getVCard(jid,True)
-		elif cmd=="get_avatars":
-			# get avatars of users in selected group
-			group=action.data()
-			if not self.main.groups.has_key(group):
-				group="Unknown"
-			for jid,item in self.main.groups[group]["users"].iteritems():
-				QtGui.QApplication.postEvent(self.jab,customEvent(["get_vcard",jid]))
-				#self.jab.getVCard(jid,True)
 		elif cmd=="chat":
 			# chat with selected contact
 			jid=action.data()
@@ -1896,11 +1719,6 @@ class rosterWidget(QtGui.QWidget):
 			else:
 				self.main.chat.addChatTab(item.jid+"/"+res,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			self.main.chat.activate()
-
-
-				
-			self.main.chat.activate()
-		
 		elif cmd == "invite_gc":
 			user_jid, room_jid = [unicode(val.toString()) for val in action.data().toList()]
 			reason = self.tr("Hi! I'd love to see you in multichat at ") + room_jid
@@ -1911,7 +1729,7 @@ class rosterWidget(QtGui.QWidget):
 			self.main.sendCustomStatus(jid, show)
 
 		elif cmd=="send_file":
-			# chat with selected contact
+			# sends files to contact
 			jid=action.data()
 			jid=str(jid.toString())
 			file=QtGui.QFileDialog.getOpenFileNames(self,"Choose file")
@@ -1923,27 +1741,6 @@ class rosterWidget(QtGui.QWidget):
 				file=new
 				self.dialog=filetransfer.filetransferDialog(self.main,file,jid)
 				self.dialog.show()
-				#files=new
-				#all=len(file)
-				#file=file[0]
-				#file=unicode(file)
-				##self.jab.sendFile(jid,unicode(file))
-				#res = self.main.client.roster['users'][jid].getHighestResource()
-				#sid=self.main.client.sendFile(jid+'/'+res, basename(file), file)
-				#self.main.filetransferQueue[sid]=files
-				#item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
-				#item.setSizeHint(QtCore.QSize(100,60))
-				#item.queueId=sid
-				#item.file=file
-				#item.jid=jid+'/'+res
-				#item.sent=1
-				#item.broken=[]
-				#item.all=all
-				#item.widget=FTWidget(basename(file),item,self.main,sid,self.main.ui.eventsListWidget)
-				#self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
-				#self.main.filetransfer[sid]=item
-				##self.main.filetransferTimer.start(500)
-
 		elif cmd == "a_authorize":
 			jid=action.data()
 			jid=unicode(jid.toString())
@@ -2001,17 +1798,16 @@ class rosterWidget(QtGui.QWidget):
 		log.msg("END CONTACT")
 
 	def changeGroup(self,jid,action,group):
-			name=unicode(self.main.client.roster['users'][jid].name)
-			if action=="+":
-				contact=self.main.client.roster['users'][jid]
-##				print "adding",jid,"groups:",self.main.client.roster['users'][jid].groups+[group]
-				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription, self.main.client.roster['users'][jid].groups+[group])
-			else:
-				contact=self.main.client.roster['users'][jid]
-				g=contact.groups
-				g.remove(group)
-##				print "deleting",jid,"groups:",g,'name:',name
-				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g)
+		# change group of users
+		name=unicode(self.main.client.roster['users'][jid].name)
+		if action=="+":
+			contact=self.main.client.roster['users'][jid]
+			self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription, self.main.client.roster['users'][jid].groups+[group])
+		else:
+			contact=self.main.client.roster['users'][jid]
+			g=contact.groups
+			g.remove(group)
+			self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g)
 
 	def contextMenuEvent (self,event):
 		# show contact context menu
@@ -2026,33 +1822,3 @@ class rosterWidget(QtGui.QWidget):
 			#contactMenu=self.buildGroupMenu(unicode(item.text(2)))
 			#contactMenu.move(event.globalX(),event.globalY())
 			#contactMenu.show()
-
-
-
-#app=QtGui.QApplication([])
-#win=QtGui.QMainWindow()
-#scroll=QtGui.QScrollArea(win)
-#roster = rosterWidget(scroll)
-#scroll.setWidget(roster)
-##layout=QtGui.QHBoxLayout(scroll)
-##layout.addWidget(roster)
-##layout.setMargin(0)
-#win.setCentralWidget(scroll)
-
-#roster.addGroup("Jabber")
-#roster.addUser('test',"HanzZ","ICQ")
-#roster.addUser('lala',"Sef","ICQ")
-#roster.addGroup("ICQ")
-#roster.addUser('test',"HanzZ","Jabber")
-#roster.addUser('lala',"Sef","Jabber")
-#roster.addUser('test',"HanzZ","Jabber")
-#roster.addUser('lala',"Sef","Jabber")
-#roster.addGroup("AIM")
-#roster.addUser('test',"HanzZ","AIM")
-#roster.addUser('lala',"Sef","AIM")
-#roster.addUser('test',"HanzZ","AIM")
-#roster.addUser('lala',"Sef","AIM")
-#win.show()
-#app.exec_()
-
-
