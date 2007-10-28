@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/xmlConsole.ui'
+# Form implementation generated from reading ui file 'xmlConsole.ui'
 #
-# Created: Tue May  8 12:11:28 2007
-#      by: PyQt4 UI code generator 4.1
+# Created: Sun Oct 28 14:17:40 2007
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_xmlConsole(object):
@@ -37,6 +36,6 @@ class Ui_xmlConsole(object):
         QtCore.QMetaObject.connectSlotsByName(xmlConsole)
 
     def retranslateUi(self, xmlConsole):
-        xmlConsole.setWindowTitle(QtGui.QApplication.translate("xmlConsole", "MainWindow", None, QtGui.QApplication.UnicodeUTF8))
+        xmlConsole.setWindowTitle(QtGui.QApplication.translate("xmlConsole", "XML Console", None, QtGui.QApplication.UnicodeUTF8))
         self.enable.setText(QtGui.QApplication.translate("xmlConsole", "Enable console", None, QtGui.QApplication.UnicodeUTF8))
 
