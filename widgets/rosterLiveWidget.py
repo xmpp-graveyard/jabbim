@@ -1382,12 +1382,6 @@ class rosterWidget(QtGui.QWidget):
 				user.hidden=True
 			user.statusMessage=status
 			user.status=self.main.shows[unicode(show)]
-		for i in range(self.main.chat.ui.chatTab.count()):
-			w=self.main.chat.ui.chatTab.widget(i)
-			if unicode(jidT.JID(w.jid).full())==unicode(jidT.JID(jid).full()):
-				w.ic=self.main.getIcon(jid,size="16x16",status=self.main.icons[self.main.shows[unicode(show)]])
-				self.main.chat.ui.chatTab.setTabIcon(i,w.ic)
-				break
 
 		for couple in self.getMetaItems(jid):
 			user=couple[0]

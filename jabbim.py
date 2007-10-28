@@ -478,6 +478,33 @@ class clientClass(pyxl.client.Client):
 		else:
 			#jid=jid.full() # get jid
 			# presence has resource
+			status=None
+			if jid.resource:
+				if self.roster['users'][jid.userhost()].resources.has_key(jid.resource):
+					res=self.roster['users'][jid.userhost()].resources[jid.resource]
+					status=res.status
+			else:
+				status=self.roster['users'][unicode(jid.userhost())].status[1]
+
+			for i in range(self.main.chat.ui.chatTab.count()):
+				w=self.main.chat.ui.chatTab.widget(i)
+				if unicode(jidT.JID(w.jid).full())==unicode(jid.full()):
+					w.ic=self.main.getIcon(unicode(jid.userhost()),size="16x16",status=self.main.icons[self.main.shows[unicode(show)]])
+					self.main.chat.ui.chatTab.setTabIcon(i,w.ic)
+					user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
+					if len(user)!=0:
+						#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
+						user=user[0].name
+					else:
+						user=unicode(jid.full())
+					message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",show).replace('[nick]', user)
+					if status == None or len(status)==0:
+						message = message.replace("[[message]]",'')
+					else:
+						message = message.replace("[message]",unicode(status))
+					w.chat.textEditWrite(message)
+					break
+
 			if jid.resource:
 				resource=jid.resource
 				jid=jid.userhost()
