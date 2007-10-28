@@ -139,6 +139,8 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 
 	def _discoItemsReceived(self,item):
 		jid=unicode(item.text(3))
+		for i in range(item.childCount()):
+			item.takeChild(0)
 		for key,values in self.main.client.disco[jid][None]['items'].iteritems():
 			#print values
 			it=QtGui.QTreeWidgetItem(item)

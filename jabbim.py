@@ -932,6 +932,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.client=None # pyxl client instance
 		self.chat=widgets.chatwindow.chatWindow(self,self)
 		self.events=widgets.events.events(self)
+		self.preferencesWindow=None
 		self.statusPath="images/xxxxx/status/"
 		self.transports={}
 		self.shows={u"online":u"1",
@@ -1556,8 +1557,13 @@ class mainWindow(QtGui.QMainWindow):
 
 	def preferencesClicked(self,bool):
 		# shows preferences
-		w=widgets.preferences.preferencesWindow(self,self)
-		w.show()
+		if not self.preferencesWindow:
+			self.preferencesWindow=widgets.preferences.preferencesWindow(self,self)
+			self.preferencesWindow.show()
+		else:
+			if self.preferencesWindow.isHidden()==True:
+				self.preferencesWindow=widgets.preferences.preferencesWindow(self,self)
+				self.preferencesWindow.show()
 
 	def loadSkin(self):
 		# loads config and repairs config file
