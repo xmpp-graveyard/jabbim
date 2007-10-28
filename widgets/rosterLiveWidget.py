@@ -1396,7 +1396,14 @@ class rosterWidget(QtGui.QWidget):
 			highest=None
 			for item in self.metaItems[mainjid]:
 				if highest:
-					if int(item.status)<int(highest.status):
+					husertype=""
+					usertype=""
+					if self.main.hosts.has_key(jidT.JID(highest.jid).host):
+						husertype=self.main.hosts[jidT.JID(highest.jid).host]
+					if self.main.hosts.has_key(jidT.JID(item.jid).host):
+						usertype=self.main.hosts[jidT.JID(item.jid).host]
+					#if (int(item.status)<int(highest.status) and husertype!="jabber" and highest.status=="9") or (husertype!="jabber" and highest.status=="9"):
+					if usertype=="jabber" and item.status!="9":
 						highest=item
 				else:
 					highest=item
