@@ -1208,8 +1208,11 @@ class Client(derived):
 #		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._ftreplyReceived, sid).addErrback(self.chyba)
+		d.addCallback(self._ftreplyReceived, sid).addErrback(self._ftFailed, sid)#addErrback(self.chyba)
 		return sid
+	
+	def _ftFailed(self, err, sid):
+		self.on_ftEnd(sid, 'Canceled')
 	
 	def _ftstreamhostquery(self, el):
 		print 'proxy rika: ', el.toXml()

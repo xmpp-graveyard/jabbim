@@ -313,8 +313,11 @@ class FTWidget(QtGui.QWidget):
 
 	def closeClicked(self):
 		if not self.complete:
-			self.main.client.ft[self.sid].protocol.unregisterProducer()
-			self.complete=None
+			try:
+				self.main.client.ft[self.sid].protocol.unregisterProducer()
+				self.complete=None
+			except:
+				self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
 		elif self.complete==True:
 			self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
 
