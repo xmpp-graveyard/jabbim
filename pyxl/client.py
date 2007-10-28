@@ -727,9 +727,9 @@ class Client(derived):
 						else:
 							text = unicode(elm.name)
 					self.on_GCpresenceError(fromjid, child.getAttribute('code'),  child.getAttribute('type'),  name, text )
-			del self.groupchats[fromjid]
+
 					self.dispatcher.publishEvent('on_GCpresenceError',child.getAttribute('code'),  child.getAttribute('type'),  name , text)
-		
+			del self.groupchats[fromjid]		
 
 
 	def _featuresReceived(self, el, node):
