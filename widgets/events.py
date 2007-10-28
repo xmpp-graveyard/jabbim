@@ -148,6 +148,7 @@ class lineEditWidget(QtGui.QWidget):
 		
 		self.lineEdit=QtGui.QLineEdit(self)
 		self.lineEdit.setText(value)
+		QtCore.QObject.connect(self.lineEdit, QtCore.SIGNAL("returnPressed()"), self.submitClicked)
 
 		self.layout2.addWidget(self.label_2)
 		self.layout2.addWidget(self.lineEdit)
