@@ -1661,10 +1661,13 @@ class mainWindow(QtGui.QMainWindow):
 			data=data.toList()
 			show=unicode(data[1].toString())
 			data=unicode(data[0].toString())
-			
 		setstatus=statusWindow(data,show)
 		#if len(data.split("/"))==2:
 			#data=unicode(data.split("/")[1])
+		sh=False
+		if self.isHidden()==True:
+			self.show()
+			sh=True
 		if setstatus.exec_()==1 and not show:
 			self.ui.statusButton.setText(unicode(""))
 			self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
@@ -1673,6 +1676,8 @@ class mainWindow(QtGui.QMainWindow):
 				if unicode(menu.title())==unicode(data):
 					menu.setIcon(self.getIcon("jid@"+unicode(data),status=unicode(show),size="16x16"))
 					break
+		if sh:
+			self.hide()
 
 	def loadRoster(self):
 		# load roster widget
@@ -1920,7 +1925,7 @@ class customStatusWindow(QtGui.QDialog):
 
 class statusWindow(QtGui.QDialog):
 	def __init__(self,data,show=None,parent=None):
-		apply(QtGui.QDialog.__init__,(self,parent))
+		apply(QtGui.QDialog.__init__,(self,MainWindow))
 		self.setModal(False)
 		self.ui=widgets.status.Ui_status()
 		self.ui.setupUi(self)
