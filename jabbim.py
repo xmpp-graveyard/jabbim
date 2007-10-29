@@ -1087,6 +1087,8 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.roster.compact=True
 			self.ui.roster.repaint()
 
+		self.setMinimumWidth(200)
+
 	def serviceDiscovery(self,b):
 		self.discovery=widgets.servicediscovery.serviceDiscoveryDialog(self,self)
 		self.discovery.show()

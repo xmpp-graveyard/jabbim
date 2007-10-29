@@ -2,18 +2,17 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sun Oct 21 15:36:42 2007
-#      by: PyQt4 UI code generator 4.1
+# Created: Mon Oct 29 18:16:49 2007
+#      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,299,694).size()).expandedTo(MainWindow.minimumSizeHint()))
+        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,202,694).size()).expandedTo(MainWindow.minimumSizeHint()))
         MainWindow.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.centralwidget = QtGui.QWidget(MainWindow)
@@ -265,7 +264,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0,0,299,29))
+        self.menubar.setGeometry(QtCore.QRect(0,0,202,29))
         self.menubar.setObjectName("menubar")
 
         self.menuPlugins = QtGui.QMenu(self.menubar)
