@@ -19,6 +19,7 @@ widgets/waitdialog.py \
 widgets/xmlConsole.py \
 widgets/rosterLiveWidget.py \
 widgets/servicediscovery_ui.py \
+widgets/addcontact_ui.py \
 widgets/about.py
 
 TRANSLATIONS    = locales/jabbim_cs.ts \
