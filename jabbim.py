@@ -1132,8 +1132,13 @@ class mainWindow(QtGui.QMainWindow):
 		cs = customStatusWindow(jid, show)
 		cs.exec_()
 
-	def showInvitation(self, jid, room, reason = None):
-		self.events.addLineEditEvent(maintext = unicode(jid)+self.tr(" invites you to conference ")+unicode(room)+".",trueCall=self.joinGC, trueDict=[room], falseCall=self.client.declineInvitation, falseDict=[jid, room],header="Groupchat Invitation",text="Nickname:",name=unicode(jid),typ="groupchatInvitation",icon=None,action=None,actionDict=None,height=100,value=self.client.jid.userhost().split("@")[0])
+	def showInvitation(self, jid, room, reason):# = None):
+		log.msg("%s %s %s" %(jid, room, reason))
+
+		maintext =unicode(jid)+self.tr(" invites you to conference ")+unicode(room)+"."
+		if reason != None:
+			maintext += "<br>" + self.tr("Reason: ") + unicode(reason)
+		self.events.addLineEditEvent(maintext = maintext ,trueCall=self.joinGC, trueDict=[room], falseCall=self.client.declineInvitation, falseDict=[jid, room],header="Groupchat Invitation",text="Nickname:",name=unicode(jid),typ="groupchatInvitation",icon=None,action=None,actionDict=None,height=150,value=self.client.jid.userhost().split("@")[0])
 
 	def buildStatusMenu(self,menus=[]):
 		# Status menu
