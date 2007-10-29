@@ -1084,6 +1084,9 @@ class mainWindow(QtGui.QMainWindow):
 		if self.config['rosterMode'] == "compact" :
 			self.ui.roster.userHeight=22
 			self.ui.roster.groupHeight=22
+			self.scroll.verticalScrollBar().setPageStep(22)
+			self.scroll.verticalScrollBar().setSingleStep(22)
+
 			self.ui.roster.compact=True
 			self.ui.roster.repaint()
 

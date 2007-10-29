@@ -543,146 +543,221 @@ class rosterWidget(QtGui.QWidget):
 
 	def paintCompactUserItem(self,painter,useritem,x,y):
 		if useritem==self.item:
-			height=91
-			if not useritem.statusMessage:
-				height-=32
+			#print useritem.privacy
+			# Item is selected
+			height=79
+			#if not useritem.statusMessage:
+				#height-=32
 			if not self.metaItems.has_key(useritem.metajid):
 				height-=16
-			self.selectedHeight=height+32
+			self.selectedHeight=height+20
+
+			# paint roster background
 			painter.save()
 			painter.translate(x,y)
 			painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
 			painter.restore()
-			#painter.save()
-			#painter.translate(x,y)
-			#painter.fillRect(0,0,self.width(),96,QtGui.QBrush(self.selectedGroupGradient))
-			#painter.restore()
-			#palette=QtGui.QPalette()
-			#painter.save()
-			#painter.translate(x,y)
-			#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(palette.color(QtGui.QPalette.Highlight)))
-			#painter.restore()
-			#p=painter.pen()
-			#painter.setPen(self.palet.color(QtGui.QPalette.AlternateBase))
-			#painter.save()
-			#painter.translate(x,y)
-			#painter.fillRect(3,0,self.width()-3,96,QtGui.QBrush(self.palet.color(QtGui.QPalette.Highlight)))
 
-			#painter.drawLine(2,0,2,96)
-			#painter.drawLine(self.width()-2,0,self.width()-2,96)
-			#painter.restore()
-			#painter.setPen(p)
-
+			# set pen and brush for item background
 			b=painter.brush()
 			p=painter.pen()
-			painter.setBrush(QtGui.QColor(243,244,248))
-			pen=QtGui.QPen(QtGui.QColor(160,169,199))
+			if self.theme:
+				painter.setBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Window))
+				pen=QtGui.QPen(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Text))
+			else:
+				painter.setBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight))
+				color=self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight)
+				# Qt4.2 uses .light() but Qt4.3 uses lighter(), so we have to try both of them because of compatibility
+				try:
+					pen=QtGui.QPen(color.lighter())
+				except:
+					pen=QtGui.QPen(color.light())
 			pen.setWidth(0)
 			painter.setPen(pen)
+
+			# paint item background and border
 			painter.save()
 			painter.translate(x,y)
-	
-			#painter.drawEllipse(2,8,16,16)
-			#painter.drawEllipse(self.width()-18,8,16,16)
-			#painter.drawEllipse(2,16,16,16)
-			#painter.drawEllipse(self.width()-18,16,16,16)
-			#painter.drawRect(2,16,self.width()-4,32)
-			#painter.drawRect(11,8,self.width()-22,32)
-			painter.drawRect(5,5,self.width()-10,height+20)
+			painter.drawRect(5,5,self.width()-10,height+3)
 			painter.restore()
 			painter.setBrush(b)
 			painter.setPen(p)
 			
+			# paint user status icon
 			painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
 
+			# set font
 			doc=QtGui.QTextDocument()
 			font=doc.defaultFont()
 			font.setPixelSize(12)
-			#font.setWeight(font.DemiBold)
 			doc.setDefaultFont(font)
-			
-			#if useritem.avatar:
-				#pixmap=useritem.avatar.pixmap(32,32)
-				##doc.setTextWidth(self.width()-30-pixmap.width())
-				#doc.setPageSize(QtCore.QSizeF(self.width()-30-pixmap.width(),32))
-			#else:
-				#doc.setPageSize(QtCore.QSizeF(self.width(),64))
-			#option=QtGui.QTextOption()
-			#option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
-			#doc.setDefaultTextOption(option)
-			#if useritem.statusMessage:
-				#doc.setHtml(useritem.name)
-				#painter.save()
-				#painter.translate(x+30,y)
-				#doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
-				#painter.restore()
-					##self.statusLabel.setGeometry(0,y+32,self.width(),64)
-					##self.statusLabel.show()
-				##doc.setHtml("JID:<b>"+useritem.jid+"</b>")
-				##painter.save()
-				##painter.translate(4,y+32)
-				##doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
-				##painter.restore()
-			#else:
-			
-			doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.name+"</font>")
+
+			# paint user name 
+			if self.theme:
+				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.name+"</font>")
+			else:
+				doc.setHtml("<font color=\""+self.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.name+"</font>")
 			painter.save()
 			painter.translate(x+41,y+12)
 			doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33,y+28))
 			painter.restore()
+
+			# show activeWidget
 			if self.statusLabel:
 				if self.reshow:
 					buttons=[]
+					# get metacontact items
 					if self.metaItems.has_key(useritem.metajid):
 						for meta in self.metaItems[useritem.metajid]:
 							buttons.append([meta,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
-					#if self.statusLabel.isHidden():
+					# change activeWidget data and geometry
 					self.statusLabel.setData(useritem,buttons)
-					#print y,y+32,height
-					self.statusLabel.setGeometry(41,y+26,self.width()-46,height)
+					self.statusLabel.setGeometry(41,y+7,self.width()-46,height)
 					self.statusLabel.show()
 					self.reshow=False
 				elif self.changePos:
-					self.statusLabel.setGeometry(41,y+26,self.width()-46,height)
+					self.statusLabel.setGeometry(41,y+7,self.width()-46,height)
 					self.changePos=False
-			#else:
-				#buttons=[]
-				#if self.metaItems.has_key(useritem.metajid):
-					#for meta in self.metaItems[useritem.metajid]:
-						#buttons.append([meta,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
-				#self.statusLabel=activeWidget(useritem,useritem.statusMessage,buttons,self)
-				#print y,y+32,height
-				#self.statusLabel.setGeometry(41,y+32,self.width()-46,height)
-				#self.statusLabel.show()
+			#height=91
+			#if not useritem.statusMessage:
+				#height-=32
+			#if not self.metaItems.has_key(useritem.metajid):
+				#height-=16
+			#self.selectedHeight=height+32
+			#painter.save()
+			#painter.translate(x,y)
+			#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
+			#painter.restore()
+			##painter.save()
+			##painter.translate(x,y)
+			##painter.fillRect(0,0,self.width(),96,QtGui.QBrush(self.selectedGroupGradient))
+			##painter.restore()
+			##palette=QtGui.QPalette()
+			##painter.save()
+			##painter.translate(x,y)
+			##painter.fillRect(0,0,self.width(),32,QtGui.QBrush(palette.color(QtGui.QPalette.Highlight)))
+			##painter.restore()
+			##p=painter.pen()
+			##painter.setPen(self.palet.color(QtGui.QPalette.AlternateBase))
+			##painter.save()
+			##painter.translate(x,y)
+			##painter.fillRect(3,0,self.width()-3,96,QtGui.QBrush(self.palet.color(QtGui.QPalette.Highlight)))
 
-			#if not self.buttonWidget and self.statusLabel:
-				#buttons=[]
-				#if self.metaItems.has_key(useritem.jid):
-					#for meta in self.metaItems[useritem.jid]:
-						#buttons.append(self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)]))
-				#high=self.main.client.roster['users'][useritem.jid].getHighestResource()
-				#if high:
-					#high=self.main.client.roster['users'][useritem.jid].resources[high]
-					#buttons.append(self.main.getIcon(useritem.jid,size="16x16",status=self.main.icons[self.main.shows[high.show]]))
-					#print "YES",buttons
-					#self.statusLabel.addResource(high)
-					#for key,resource in self.main.client.roster['users'][useritem.jid].resources.iteritems():
-						#if resource!=high:
-							#buttons.append(self.main.getIcon(useritem.jid,size="16x16",status=self.main.icons[self.main.shows[resource.show]]))
-							#self.statusLabel.addResource(resource)
-					#print buttons
-					#self.buttonWidget=activeButtons(self,buttons,self)
-					#self.buttonWidget.setGeometry(35,y+16,self.width()-3,16)
-					#self.buttonWidget.show()
-				#else:
-					### no resource
-					#if useritem.statusMessage:
-						#self.statusLabel.addStatusOnly(useritem.statusMessage)
+			##painter.drawLine(2,0,2,96)
+			##painter.drawLine(self.width()-2,0,self.width()-2,96)
+			##painter.restore()
+			##painter.setPen(p)
+
+			#b=painter.brush()
+			#p=painter.pen()
+			#painter.setBrush(QtGui.QColor(243,244,248))
+			#pen=QtGui.QPen(QtGui.QColor(160,169,199))
+			#pen.setWidth(0)
+			#painter.setPen(pen)
+			#painter.save()
+			#painter.translate(x,y)
+	
+			##painter.drawEllipse(2,8,16,16)
+			##painter.drawEllipse(self.width()-18,8,16,16)
+			##painter.drawEllipse(2,16,16,16)
+			##painter.drawEllipse(self.width()-18,16,16,16)
+			##painter.drawRect(2,16,self.width()-4,32)
+			##painter.drawRect(11,8,self.width()-22,32)
+			#painter.drawRect(5,5,self.width()-10,height+20)
+			#painter.restore()
+			#painter.setBrush(b)
+			#painter.setPen(p)
+			
+			#painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
+
+			#doc=QtGui.QTextDocument()
+			#font=doc.defaultFont()
+			#font.setPixelSize(12)
+			##font.setWeight(font.DemiBold)
+			#doc.setDefaultFont(font)
+			
+			##if useritem.avatar:
+				##pixmap=useritem.avatar.pixmap(32,32)
+				###doc.setTextWidth(self.width()-30-pixmap.width())
+				##doc.setPageSize(QtCore.QSizeF(self.width()-30-pixmap.width(),32))
+			##else:
+				##doc.setPageSize(QtCore.QSizeF(self.width(),64))
+			##option=QtGui.QTextOption()
+			##option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
+			##doc.setDefaultTextOption(option)
+			##if useritem.statusMessage:
+				##doc.setHtml(useritem.name)
+				##painter.save()
+				##painter.translate(x+30,y)
+				##doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
+				##painter.restore()
+					###self.statusLabel.setGeometry(0,y+32,self.width(),64)
+					###self.statusLabel.show()
+				###doc.setHtml("JID:<b>"+useritem.jid+"</b>")
+				###painter.save()
+				###painter.translate(4,y+32)
+				###doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
+				###painter.restore()
+			##else:
+			
+			#doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.name+"</font>")
+			#painter.save()
+			#painter.translate(x+41,y+12)
+			#doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33,y+28))
+			#painter.restore()
+			#if self.statusLabel:
+				#if self.reshow:
+					#buttons=[]
+					#if self.metaItems.has_key(useritem.metajid):
+						#for meta in self.metaItems[useritem.metajid]:
+							#buttons.append([meta,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
+					##if self.statusLabel.isHidden():
+					#self.statusLabel.setData(useritem,buttons)
+					##print y,y+32,height
+					#self.statusLabel.setGeometry(41,y+26,self.width()-46,height)
+					#self.statusLabel.show()
+					#self.reshow=False
+				#elif self.changePos:
+					#self.statusLabel.setGeometry(41,y+26,self.width()-46,height)
+					#self.changePos=False
+			##else:
+				##buttons=[]
+				##if self.metaItems.has_key(useritem.metajid):
+					##for meta in self.metaItems[useritem.metajid]:
+						##buttons.append([meta,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
+				##self.statusLabel=activeWidget(useritem,useritem.statusMessage,buttons,self)
+				##print y,y+32,height
+				##self.statusLabel.setGeometry(41,y+32,self.width()-46,height)
+				##self.statusLabel.show()
+
+			##if not self.buttonWidget and self.statusLabel:
+				##buttons=[]
+				##if self.metaItems.has_key(useritem.jid):
+					##for meta in self.metaItems[useritem.jid]:
+						##buttons.append(self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)]))
+				##high=self.main.client.roster['users'][useritem.jid].getHighestResource()
+				##if high:
+					##high=self.main.client.roster['users'][useritem.jid].resources[high]
+					##buttons.append(self.main.getIcon(useritem.jid,size="16x16",status=self.main.icons[self.main.shows[high.show]]))
+					##print "YES",buttons
+					##self.statusLabel.addResource(high)
+					##for key,resource in self.main.client.roster['users'][useritem.jid].resources.iteritems():
+						##if resource!=high:
+							##buttons.append(self.main.getIcon(useritem.jid,size="16x16",status=self.main.icons[self.main.shows[resource.show]]))
+							##self.statusLabel.addResource(resource)
+					##print buttons
+					##self.buttonWidget=activeButtons(self,buttons,self)
+					##self.buttonWidget.setGeometry(35,y+16,self.width()-3,16)
+					##self.buttonWidget.show()
+				##else:
+					#### no resource
+					##if useritem.statusMessage:
+						##self.statusLabel.addStatusOnly(useritem.statusMessage)
 						
-			#if useritem.avatar:
+			##if useritem.avatar:
 
-				#pixmap=useritem.avatar.pixmap(64,64)
-				#painter.drawPixmap(self.width()-pixmap.width()-8,y+self.selectedHeight-pixmap.height()-5,pixmap)
+				##pixmap=useritem.avatar.pixmap(64,64)
+				##painter.drawPixmap(self.width()-pixmap.width()-8,y+self.selectedHeight-pixmap.height()-5,pixmap)
 
 
 		else:
