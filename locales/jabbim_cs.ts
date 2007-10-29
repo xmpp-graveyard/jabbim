@@ -14,22 +14,22 @@
     <message>
         <location filename="" line="7471221"/>
         <source>You have recieved multichat invitation</source>
-        <translation>Přišla pozvánka do skupinového rozhovoru</translation>
+        <translation type="obsolete">Přišla pozvánka do skupinového rozhovoru</translation>
     </message>
     <message>
         <location filename="" line="7471221"/>
         <source>From user</source>
-        <translation>Od uživatele</translation>
+        <translation type="obsolete">Od uživatele</translation>
     </message>
     <message>
         <location filename="" line="7471221"/>
         <source>To room</source>
-        <translation>Do místnosti</translation>
+        <translation type="obsolete">Do místnosti</translation>
     </message>
     <message>
         <location filename="" line="7471221"/>
         <source>reason</source>
-        <translation>zdůvodnění</translation>
+        <translation type="obsolete">zdůvodnění</translation>
     </message>
 </context>
 <context>
@@ -838,6 +838,11 @@ Jáchym &apos;kamahl&apos; Barvínek</translation>
         <source>You are now offline.</source>
         <translation>Odpojeno.</translation>
     </message>
+    <message>
+        <location filename="" line="7471221"/>
+        <source> invites you to conference </source>
+        <translation> vás zve do skupinového rozhovoru </translation>
+    </message>
 </context>
 <context>
     <name>preferences</name>
@@ -1332,7 +1337,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="" line="7471221"/>
         <source>Name:</source>
-        <translation type="unfinished">Jméno:</translation>
+        <translation>Jméno:</translation>
     </message>
     <message>
         <location filename="" line="7471221"/>
@@ -1606,6 +1611,11 @@ p, li { white-space: pre-wrap; }
         <source>Enter a short message describing your status (e.g. at lunch)</source>
         <translation>Vložte krátkou zprávu popisující vás stav (např. jsem na obědě)</translation>
     </message>
+    <message>
+        <location filename="" line="7471221"/>
+        <source>Cancel</source>
+        <translation>Zrušit</translation>
+    </message>
 </context>
 <context>
     <name>statusWindow</name>
@@ -1676,12 +1686,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="" line="7471221"/>
         <source>MainWindow</source>
-        <translation>Hlavní okno</translation>
+        <translation type="obsolete">Hlavní okno</translation>
     </message>
     <message>
         <location filename="" line="7471221"/>
         <source>Enable console</source>
         <translation>Povolit konzolu</translation>
+    </message>
+    <message>
+        <location filename="" line="7471221"/>
+        <source>XML Console</source>
+        <translation>XML Konzola</translation>
     </message>
 </context>
 </TS>

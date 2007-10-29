@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>256</width>
+    <width>289</width>
     <height>227</height>
    </rect>
   </property>
@@ -22,30 +22,47 @@
    <property name="spacing" >
     <number>6</number>
    </property>
-   <item row="2" column="0" >
+   <item row="2" column="1" >
     <spacer>
      <property name="orientation" >
       <enum>Qt::Horizontal</enum>
      </property>
+     <property name="sizeType" >
+      <enum>QSizePolicy::Expanding</enum>
+     </property>
      <property name="sizeHint" >
       <size>
-       <width>101</width>
-       <height>20</height>
+       <width>91</width>
+       <height>27</height>
       </size>
      </property>
     </spacer>
    </item>
-   <item row="2" column="2" >
-    <widget class="QPushButton" name="set" >
+   <item row="2" column="0" >
+    <widget class="QPushButton" name="pushButton" >
      <property name="text" >
-      <string>Set</string>
+      <string>Cancel</string>
+     </property>
+     <property name="icon" >
+      <iconset>images/16x16/actions/process-stop.png</iconset>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="3" >
-    <widget class="QLabel" name="time" >
+   <item row="2" column="2" >
+    <widget class="QPushButton" name="set" >
+     <property name="sizePolicy" >
+      <sizepolicy>
+       <hsizetype>1</hsizetype>
+       <vsizetype>0</vsizetype>
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text" >
-      <string/>
+      <string>Set</string>
+     </property>
+     <property name="icon" >
+      <iconset>images/16x16/actions/ok.png</iconset>
      </property>
     </widget>
    </item>
@@ -59,6 +76,13 @@
      </property>
      <property name="readOnly" >
       <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="3" >
+    <widget class="QLabel" name="time" >
+     <property name="text" >
+      <string/>
      </property>
     </widget>
    </item>
@@ -79,6 +103,22 @@
     <hint type="destinationlabel" >
      <x>249</x>
      <y>208</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>status</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>59</x>
+     <y>206</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>117</x>
+     <y>192</y>
     </hint>
    </hints>
   </connection>

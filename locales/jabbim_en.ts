@@ -1,22 +1,6 @@
 <!DOCTYPE TS><TS>
 <context>
     <name>Invitation</name>
-    <message>
-        <source>You have recieved multichat invitation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>From user</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>To room</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>reason</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -553,6 +537,10 @@ Jáchym &apos;kamahl&apos; Barvínek</source>
     </message>
     <message>
         <source>You are now offline.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> invites you to conference </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1133,6 +1121,10 @@ p, li { white-space: pre-wrap; }
         <source>Enter a short message describing your status (e.g. at lunch)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>statusWindow</name>
@@ -1190,11 +1182,11 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>xmlConsole</name>
     <message>
-        <source>MainWindow</source>
+        <source>Enable console</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Enable console</source>
+        <source>XML Console</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
