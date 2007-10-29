@@ -272,7 +272,10 @@ class groupChatWidget(QtGui.QWidget):
 
 	def loadSmileys(self):
 		# loads smileys.conf and makes buttons
-		self.smileys=ConfigObj("smileys.conf",encoding='UTF8')
+		smileys=ConfigObj("smileys.conf",encoding='UTF8')
+		self.smileys={}
+		for k,v in smileys.iteritems():
+			self.smileys[k.replace("<","&lt;").replace(">","&gt;")]=v
 		self.s=frame(self,self)
 		self.s.setWindowFlags(QtCore.Qt.Popup)
 		self.s.hide()
@@ -282,7 +285,7 @@ class groupChatWidget(QtGui.QWidget):
 		added=[]
 		x=0
 		y=0
-		for k,v in self.smileys.iteritems():
+		for k,v in smileys.iteritems():
 			if added.count(v)==0:
 				added.append(v)
 				button=QtGui.QToolButton(self)
@@ -347,7 +350,9 @@ class groupChatWidget(QtGui.QWidget):
 		data=action.data()
 		data=data.toString()
 		if self.main.config['chatMode']=="normal":
-			self.ui.line.append(data)
+			cur=self.ui.line.textCursor()
+			cur.insertText(" "+data)
+			self.ui.line.setTextCursor(cur)
 		else:
 			for k,v in self.smileys.iteritems():
 				data=data.replace(k,' <img src="images/16x16/emotes/'+v+'" />')
