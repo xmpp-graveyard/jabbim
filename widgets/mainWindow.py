@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Mon Oct 29 18:16:49 2007
+# Created: Tue Oct 30 20:29:52 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,202,694).size()).expandedTo(MainWindow.minimumSizeHint()))
+        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,250,694).size()).expandedTo(MainWindow.minimumSizeHint()))
         MainWindow.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.centralwidget = QtGui.QWidget(MainWindow)
@@ -217,10 +217,6 @@ class Ui_MainWindow(object):
         self.statusButton.setObjectName("statusButton")
         self.gridlayout6.addWidget(self.statusButton,1,4,1,1)
 
-        self.selfName = QtGui.QLabel(self.frame)
-        self.selfName.setObjectName("selfName")
-        self.gridlayout6.addWidget(self.selfName,0,1,1,1)
-
         self.selfAvatar = QtGui.QLabel(self.frame)
         self.selfAvatar.setMargin(2)
         self.selfAvatar.setObjectName("selfAvatar")
@@ -234,8 +230,9 @@ class Ui_MainWindow(object):
         self.showOffline.setObjectName("showOffline")
         self.gridlayout6.addWidget(self.showOffline,1,3,1,1)
 
-        spacerItem5 = QtGui.QSpacerItem(171,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout6.addItem(spacerItem5,0,2,1,3)
+        self.selfName = QtGui.QLabel(self.frame)
+        self.selfName.setObjectName("selfName")
+        self.gridlayout6.addWidget(self.selfName,0,1,1,4)
         self.gridlayout2.addWidget(self.frame,0,0,1,1)
         self.rosterStackedWidget.addWidget(self.roster)
 
@@ -264,7 +261,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0,0,202,29))
+        self.menubar.setGeometry(QtCore.QRect(0,0,250,29))
         self.menubar.setObjectName("menubar")
 
         self.menuPlugins = QtGui.QMenu(self.menubar)
