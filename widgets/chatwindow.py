@@ -239,7 +239,7 @@ class chatWindow(QtGui.QMainWindow):
 			item=item[0]
 			if item.avatar:
 				result=QtGui.QPixmap(128,128)
-				avatar=item.avatar.pixmap(128,128)
+				avatar=item.avatar.pixmap(128,112)
 				#QPixmap result = photo; QPainter painter(&result); painter.drawPixmap(0, 0, frame); painter.end(); result.save("result.png");
 				frame=QtGui.QPixmap("images/128x128/frame.png")
 				painter=QtGui.QPainter(result)
