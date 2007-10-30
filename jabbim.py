@@ -55,6 +55,7 @@ class clientClass(pyxl.client.Client):
 	def on_init(self):
 		self.temp_hosts=[]
 		self.client_os = utils.get_os_info()
+		self.version = '0.2'
 
 	def on_GCpresenceError(self, fromjid, code, typ, name):
 		log.msg("ERROR")
