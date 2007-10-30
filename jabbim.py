@@ -1793,6 +1793,7 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				resource='jabbim'
 			self.client = clientClass(jid+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
+			self.client.xmlLang = unicode(QtCore.QLocale.system().name())[:2]
 			self.client.log=True
 		self.loadPlugins()
 		self.ui.login_connect.setEnabled(False)
