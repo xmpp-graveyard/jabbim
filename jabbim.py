@@ -940,7 +940,7 @@ class mainWindow(QtGui.QMainWindow):
 		if sys.platform != 'win32':
 			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
 		else:
-			self.cache = storage.Cache(db=utils.path(u'c:\jabbim-cache.db')) #hack!
+			self.cache = storage.Cache(db=encode(unicode(self.homeDir)+u'/cache.db', 'utf8')) #hack!
 		#elf.cache = storage.Cache(db=utils.path(u'C:\ččč\cache.db'))
 		#self.cache = storage.Cache(db=unicode(self.homeDir+u'/cache2.db'))
 ##		self.cache = storage.Cache(db=':memory:')
