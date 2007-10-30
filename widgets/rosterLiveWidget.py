@@ -26,6 +26,7 @@ from twisted.words.protocols.jabber import jid as jidT
 import time
 import filetransfer
 import addcontact
+import vcardview
 
 class activeWidget(QtGui.QWidget):
 	def __init__(self,parent=None):
@@ -1791,6 +1792,8 @@ class rosterWidget(QtGui.QWidget):
 			jid=action.data()
 			jid=str(jid.toString())
 			self.main.client.getVCard(jid)
+			d=self.main.client.getVCard(jid)
+			d.addCallback(self.vcardArrived)
 		elif cmd=="chat":
 			# chat with selected contact
 			jid=action.data()
@@ -1886,6 +1889,11 @@ class rosterWidget(QtGui.QWidget):
 			self.main.client.privacy.active.unHideJID(jid)
 			log.msg("Unhiding jid %s." % jid)
 		log.msg("END CONTACT")
+
+	def vcardArrived(self,data):
+		self.dialog=vcardview.vcardViewDialog(self.main,data,self)
+		self.dialog.show()
+		
 
 	def changeGroup(self,jid,action,group):
 		# change group of users
