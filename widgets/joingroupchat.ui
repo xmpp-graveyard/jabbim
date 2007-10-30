@@ -316,5 +316,85 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>room</sender>
+   <signal>returnPressed()</signal>
+   <receiver>joingroupchat</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>217</x>
+     <y>28</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>305</x>
+     <y>131</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>server</sender>
+   <signal>returnPressed()</signal>
+   <receiver>joingroupchat</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>217</x>
+     <y>57</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>305</x>
+     <y>131</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>name</sender>
+   <signal>returnPressed()</signal>
+   <receiver>joingroupchat</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>217</x>
+     <y>86</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>305</x>
+     <y>131</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>nickname</sender>
+   <signal>returnPressed()</signal>
+   <receiver>joingroupchat</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>217</x>
+     <y>115</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>305</x>
+     <y>131</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>password</sender>
+   <signal>returnPressed()</signal>
+   <receiver>joingroupchat</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>217</x>
+     <y>144</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>305</x>
+     <y>131</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
 </ui>

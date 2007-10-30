@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'joingroupchat.ui'
+# Form implementation generated from reading ui file 'widgets/joingroupchat.ui'
 #
-# Created: Sun Oct 28 19:13:25 2007
-#      by: PyQt4 UI code generator 4.3
+# Created: Tue Oct 30 16:18:52 2007
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -126,6 +126,11 @@ class Ui_joingroupchat(object):
         self.retranslateUi(joingroupchat)
         QtCore.QObject.connect(self.pushButton,QtCore.SIGNAL("clicked()"),joingroupchat.accept)
         QtCore.QObject.connect(self.pushButton_2,QtCore.SIGNAL("clicked()"),joingroupchat.reject)
+        QtCore.QObject.connect(self.room,QtCore.SIGNAL("returnPressed()"),joingroupchat.accept)
+        QtCore.QObject.connect(self.server,QtCore.SIGNAL("returnPressed()"),joingroupchat.accept)
+        QtCore.QObject.connect(self.name,QtCore.SIGNAL("returnPressed()"),joingroupchat.accept)
+        QtCore.QObject.connect(self.nickname,QtCore.SIGNAL("returnPressed()"),joingroupchat.accept)
+        QtCore.QObject.connect(self.password,QtCore.SIGNAL("returnPressed()"),joingroupchat.accept)
         QtCore.QMetaObject.connectSlotsByName(joingroupchat)
 
     def retranslateUi(self, joingroupchat):
