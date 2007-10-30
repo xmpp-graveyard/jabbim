@@ -136,6 +136,7 @@ class derived:
 	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None, caps = True):
 		"""Posle presenci na zvoleny jid"""
 		presence = Element((None, 'presence'))
+		presence['xml:lang'] = self.xmlLang
 		presence['from'] = self.jid.full()
 		if to:
 			presence['to'] = to
@@ -164,6 +165,7 @@ class derived:
 		# Posle zpravu na jid
 		self.dispatcher.publishEvent('on_message_send', to, body, typ, subject,composing, xhtml,  muc)
 		message = Element((None,'message'))
+		message['xml:lang'] = self.xmlLang
 		message['to'] = to
 		if body != None and body.strip() != '':
 			message.addElement('body', content = body)
@@ -193,6 +195,7 @@ class derived:
 
 	def sendInvitation(self, jid, room, reason = None):
 		message = Element((None,'message'))
+		message['xml:lang'] = self.xmlLang
 		message['to'] = room
 		x = message.addElement('x','http://jabber.org/protocol/muc#user')
 		invite =  x.addElement('invite') 
@@ -206,6 +209,7 @@ class derived:
 
 	def declineInvitation(self, jid, room, reason = None):
 		message = Element((None,'message'))
+		message['xml:lang'] = self.xmlLang
 		message['to'] = room
 		x = message.addElement('x','http://jabber.org/protocol/muc#user')
 		decline =  x.addElement('decline') 
@@ -221,6 +225,7 @@ class derived:
 		""" Posle zadost o roster na server """
 		log.msg('get roster')
 		iq = IQ(self.xmlstream, 'get')
+		iq['xml:lang'] = self.xmlLang
 		iq['type'] = 'get'
 		q = iq.addElement('query')
 		q['xmlns']='jabber:iq:roster'
@@ -233,6 +238,7 @@ class derived:
 		""" Posle zadost o registracni formular na dany jid """
 		log.msg('get muc config')
 		iq = IQ(self.xmlstream, 'get')
+		iq['xml:lang'] = self.xmlLang
 		iq['type'] = 'get'
 		iq['to'] = jid
 		q = iq.addElement('query')
@@ -247,6 +253,7 @@ class derived:
 		""" Posle zadost o registracni formular na dany jid """
 		log.msg('set muc config')
 		iq = IQ(self.xmlstream, 'set')
+		iq['xml:lang'] = self.xmlLang
 		iq['type'] = 'set'
 		iq['to'] = jid
 		q = iq.addElement('query')
@@ -262,6 +269,7 @@ class derived:
 		""" Posle zadost o registracni formular na dany jid """
 		log.msg('get reg form')
 		iq = IQ(self.xmlstream, 'get')
+		iq['xml:lang'] = self.xmlLang
 		iq['type'] = 'get'
 		iq['to'] = jid
 		q = iq.addElement('query')
@@ -275,6 +283,7 @@ class derived:
 	def setRegisterForm(self, jid, legacy=None, forms = None, remove = False):
 		log.msg('set reg form')
 		iq = IQ(self.xmlstream, 'set')
+		iq['xml:lang'] = self.xmlLang
 		iq['type'] = 'set'
 		iq['to'] = jid
 		q = iq.addElement('query')
@@ -301,6 +310,7 @@ class derived:
 		""" Posle zadost o formular pro hledani na dany jid """
 		log.msg('get reg form')
 		iq = IQ(self.xmlstream, 'get')
+		iq['xml:lang'] = self.xmlLang
 		iq['type'] = 'get'
 		iq['to'] = jid
 		q = iq.addElement('query')
@@ -337,6 +347,7 @@ class derived:
 		""" Zmeni zaznam v rosteru o zadanem JIDu """
 		#print jid, name, subscription, groups
 		iq = IQ(self.xmlstream, 'get')
+		iq['xml:lang'] = self.xmlLang
 		iq['from'] = self.jid.full()
 		iq['type'] = 'set'
 		q = iq.addElement('query')
@@ -356,6 +367,7 @@ class derived:
 		""" Posle zadost o vcard """
 		log.msg( 'requesting vcard for ' + unicode(jid))
 		iq = IQ(self.xmlstream, 'get')
+		iq['xml:lang'] = self.xmlLang
 		iq['to'] = jid
 		iq.addElement('vCard', 'vcard-temp')
 		self.disp(iq['id'])
@@ -371,6 +383,7 @@ class derived:
 	def getBookmarks(self):
 		log.msg('get bookmarks')
 		iq = IQ(self.xmlstream, 'get')
+		iq['xml:lang'] = self.xmlLang
 		q = iq.addElement('query', 'jabber:iq:private')
 		q.addElement('storage', 'storage:bookmarks')
 #		self.on_xml(iq.toXml())
@@ -381,6 +394,7 @@ class derived:
 
 	def setBookmarks(self):
 		iq = IQ(self.xmlstream, 'set')
+		iq['xml:lang'] = self.xmlLang
 		q = iq.addElement('query', 'jabber:iq:private')
 		storage = q.addElement('storage', 'storage:bookmarks')
 		for bookmark in self.bookmarks['conference'].itervalues():
@@ -407,6 +421,7 @@ class derived:
 	def getMetacontacts(self):
 		log.msg('get meta contacts')
 		iq = IQ(self.xmlstream, 'get')
+		iq['xml:lang'] = self.xmlLang
 		q = iq.addElement('query', 'jabber:iq:private')
 		q.addElement('storage', 'storage:metacontacts')
 #		self.on_xml(iq.toXml())
@@ -418,6 +433,7 @@ class derived:
 	def setMetacontacts(self):
 		log.msg( 'sending metacontacts')
 		iq = IQ(self.xmlstream, 'set')
+		iq['xml:lang'] = self.xmlLang
 		q = iq.addElement('query', 'jabber:iq:private')
 		storage = q.addElement('storage', 'storage:metacontacts')
 		for jid,  val in self.roster_meta.iteritems():
@@ -439,6 +455,7 @@ class derived:
 	def getFeatures(self, jid, caps_node = None):
 		log.msg('requesting features'+ caps_node)
 		iq = IQ(self.xmlstream, 'get')
+		iq['xml:lang'] = self.xmlLang
 		iq['to'] = jid.full()
 		iq['from'] = self.jid.full()
 		q = iq.addElement('query', 'http://jabber.org/protocol/disco#info')
@@ -454,6 +471,7 @@ class derived:
 		log.msg('requesting version info')
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid
+		iq['xml:lang'] = self.xmlLang
 		q = iq.addElement('query', 'jabber:iq:version')
 #		self.on_xml(iq.toXml())
 		d = iq.send()
@@ -463,6 +481,7 @@ class derived:
 	def getDiscoInfo(self, jid, node = None,  callback = None, callback_par = None):
 		log.msg( 'requesting disco#info: '+jid)
 		iq = IQ(self.xmlstream, 'get')
+		iq['xml:lang'] = self.xmlLang
 		iq['to'] = jid
 		iq['from'] = self.jid.full()
 		q = iq.addElement('query', 'http://jabber.org/protocol/disco#info')
@@ -477,6 +496,7 @@ class derived:
 	def getDiscoItems(self, jid, node = None, callback = None, callback_par = None):
 		log.msg('requesting disco#items ')
 		iq = IQ(self.xmlstream, 'get')
+		iq['xml:lang'] = self.xmlLang
 		iq['to'] = jid
 		iq['from'] = self.jid.full()
 		q = iq.addElement('query', 'http://jabber.org/protocol/disco#items')
@@ -491,6 +511,7 @@ class derived:
 	def getTime202(self, jid):
 		log.msg( 'requesting time202 info')
 		iq = IQ(self.xmlstream, 'get')
+		iq['xml:lang'] = self.xmlLang
 		iq['to'] = jid
 		iq.addElement('time','urn:xmpp:time')
 #		self.on_xml(iq.toXml())
@@ -513,6 +534,7 @@ class derived:
 		log.msg('get muc list')
 
 		iq = IQ(self.xmlstream, 'get')
+		iq['xml:lang'] = self.xmlLang
 		iq['type'] = 'get'
 		iq['to'] = jid
 		q = iq.addElement('query')
@@ -528,6 +550,7 @@ class derived:
 	def setMUCList(self, jid, items, typ, remove = False):
 
 		iq = IQ(self.xmlstream, 'get')
+		iq['xml:lang'] = self.xmlLang
 		iq['type'] = 'set'
 		iq['to'] = jid
 		q = iq.addElement('query')

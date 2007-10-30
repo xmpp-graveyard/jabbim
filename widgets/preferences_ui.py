@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/preferences.ui'
+# Form implementation generated from reading ui file 'preferences.ui'
 #
-# Created: Wed Aug 22 18:15:57 2007
-#      by: PyQt4 UI code generator 4.1
+# Created: Tue Oct 30 08:47:16 2007
+#      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_preferences(object):
@@ -23,7 +22,7 @@ class Ui_preferences(object):
 
         self.listWidget = QtGui.QListWidget(preferences)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(7))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.listWidget.sizePolicy().hasHeightForWidth())
@@ -90,8 +89,8 @@ class Ui_preferences(object):
         self.gridlayout4.setObjectName("gridlayout4")
 
         self.vboxlayout = QtGui.QVBoxLayout()
-        self.vboxlayout.setMargin(0)
         self.vboxlayout.setSpacing(6)
+        self.vboxlayout.setMargin(0)
         self.vboxlayout.setObjectName("vboxlayout")
 
         self.label_15 = QtGui.QLabel(self.groupBox_2)
@@ -105,8 +104,8 @@ class Ui_preferences(object):
         self.gridlayout4.addLayout(self.vboxlayout,0,0,1,1)
 
         self.vboxlayout1 = QtGui.QVBoxLayout()
-        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setSpacing(6)
+        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setObjectName("vboxlayout1")
 
         self.connection_source = QtGui.QLineEdit(self.groupBox_2)
@@ -114,13 +113,13 @@ class Ui_preferences(object):
         self.vboxlayout1.addWidget(self.connection_source)
 
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(6)
+        self.hboxlayout.setMargin(0)
         self.hboxlayout.setObjectName("hboxlayout")
 
         self.connection_priority = QtGui.QLineEdit(self.groupBox_2)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(0))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.connection_priority.sizePolicy().hasHeightForWidth())
@@ -150,13 +149,13 @@ class Ui_preferences(object):
         self.gridlayout5.setObjectName("gridlayout5")
 
         self.hboxlayout1 = QtGui.QHBoxLayout()
-        self.hboxlayout1.setMargin(0)
         self.hboxlayout1.setSpacing(6)
+        self.hboxlayout1.setMargin(0)
         self.hboxlayout1.setObjectName("hboxlayout1")
 
         self.vboxlayout2 = QtGui.QVBoxLayout()
-        self.vboxlayout2.setMargin(0)
         self.vboxlayout2.setSpacing(6)
+        self.vboxlayout2.setMargin(0)
         self.vboxlayout2.setObjectName("vboxlayout2")
 
         self.label_2 = QtGui.QLabel(self.groupBox_4)
@@ -173,8 +172,8 @@ class Ui_preferences(object):
         self.hboxlayout1.addLayout(self.vboxlayout2)
 
         self.vboxlayout3 = QtGui.QVBoxLayout()
-        self.vboxlayout3.setMargin(0)
         self.vboxlayout3.setSpacing(6)
+        self.vboxlayout3.setMargin(0)
         self.vboxlayout3.setObjectName("vboxlayout3")
 
         self.connection_jid = QtGui.QLineEdit(self.groupBox_4)
@@ -189,8 +188,8 @@ class Ui_preferences(object):
         self.vboxlayout3.addWidget(self.connection_password)
 
         self.hboxlayout2 = QtGui.QHBoxLayout()
-        self.hboxlayout2.setMargin(0)
         self.hboxlayout2.setSpacing(6)
+        self.hboxlayout2.setMargin(0)
         self.hboxlayout2.setObjectName("hboxlayout2")
 
         self.connection_autojoin = QtGui.QCheckBox(self.groupBox_4)
@@ -233,8 +232,8 @@ class Ui_preferences(object):
         self.groupBox.setObjectName("groupBox")
 
         self.vboxlayout4 = QtGui.QVBoxLayout(self.groupBox)
-        self.vboxlayout4.setMargin(9)
         self.vboxlayout4.setSpacing(6)
+        self.vboxlayout4.setMargin(9)
         self.vboxlayout4.setObjectName("vboxlayout4")
 
         self.roster_normal = QtGui.QRadioButton(self.groupBox)
@@ -245,20 +244,6 @@ class Ui_preferences(object):
         self.roster_compact = QtGui.QRadioButton(self.groupBox)
         self.roster_compact.setObjectName("roster_compact")
         self.vboxlayout4.addWidget(self.roster_compact)
-
-        self.hboxlayout3 = QtGui.QHBoxLayout()
-        self.hboxlayout3.setMargin(0)
-        self.hboxlayout3.setSpacing(6)
-        self.hboxlayout3.setObjectName("hboxlayout3")
-
-        self.label_9 = QtGui.QLabel(self.groupBox)
-        self.label_9.setObjectName("label_9")
-        self.hboxlayout3.addWidget(self.label_9)
-
-        self.roster_iconSize = QtGui.QComboBox(self.groupBox)
-        self.roster_iconSize.setObjectName("roster_iconSize")
-        self.hboxlayout3.addWidget(self.roster_iconSize)
-        self.vboxlayout4.addLayout(self.hboxlayout3)
         self.gridlayout6.addWidget(self.groupBox,2,0,1,1)
 
         self.label_6 = QtGui.QLabel(self.page)
@@ -371,27 +356,26 @@ class Ui_preferences(object):
         spacerItem7 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.gridlayout.addItem(spacerItem7,1,1,1,1)
 
-        self.hboxlayout4 = QtGui.QHBoxLayout()
-        self.hboxlayout4.setMargin(0)
-        self.hboxlayout4.setSpacing(6)
-        self.hboxlayout4.setObjectName("hboxlayout4")
+        self.hboxlayout3 = QtGui.QHBoxLayout()
+        self.hboxlayout3.setSpacing(6)
+        self.hboxlayout3.setMargin(0)
+        self.hboxlayout3.setObjectName("hboxlayout3")
 
         self.saveButton = QtGui.QPushButton(preferences)
         self.saveButton.setObjectName("saveButton")
-        self.hboxlayout4.addWidget(self.saveButton)
+        self.hboxlayout3.addWidget(self.saveButton)
 
         self.cancelButton = QtGui.QPushButton(preferences)
         self.cancelButton.setObjectName("cancelButton")
-        self.hboxlayout4.addWidget(self.cancelButton)
-        self.gridlayout.addLayout(self.hboxlayout4,1,2,1,1)
+        self.hboxlayout3.addWidget(self.cancelButton)
+        self.gridlayout.addLayout(self.hboxlayout3,1,2,1,1)
 
         self.retranslateUi(preferences)
-        self.stackedWidget.setCurrentIndex(4)
+        self.stackedWidget.setCurrentIndex(2)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.cancelButton,QtCore.SIGNAL("clicked()"),preferences.reject)
         QtCore.QObject.connect(self.saveButton,QtCore.SIGNAL("clicked()"),preferences.accept)
         QtCore.QObject.connect(self.listWidget,QtCore.SIGNAL("currentRowChanged(int)"),self.stackedWidget.setCurrentIndex)
-        QtCore.QObject.connect(self.roster_compact,QtCore.SIGNAL("toggled(bool)"),self.roster_iconSize.setEnabled)
         QtCore.QMetaObject.connectSlotsByName(preferences)
 
     def retranslateUi(self, preferences):
@@ -452,10 +436,6 @@ class Ui_preferences(object):
         self.roster_normal.setText(QtGui.QApplication.translate("preferences", "Normal", None, QtGui.QApplication.UnicodeUTF8))
         self.roster_compact.setToolTip(QtGui.QApplication.translate("preferences", "Smaller  status icons and avatars, no status messages.", None, QtGui.QApplication.UnicodeUTF8))
         self.roster_compact.setText(QtGui.QApplication.translate("preferences", "Compact", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_9.setText(QtGui.QApplication.translate("preferences", "Roster icons size:", None, QtGui.QApplication.UnicodeUTF8))
-        self.roster_iconSize.addItem(QtGui.QApplication.translate("preferences", "16x16", None, QtGui.QApplication.UnicodeUTF8))
-        self.roster_iconSize.addItem(QtGui.QApplication.translate("preferences", "22x22", None, QtGui.QApplication.UnicodeUTF8))
-        self.roster_iconSize.addItem(QtGui.QApplication.translate("preferences", "32x32", None, QtGui.QApplication.UnicodeUTF8))
         self.label_6.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"

@@ -139,9 +139,9 @@ class preferencesWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.chatSkin_list, QtCore.SIGNAL("activated ( const QString & )"),self.chatSkin_listChanged)
 
 		# roster
-		index=self.ui.roster_iconSize.findText(self.main.config['rosterIconSize'])
-		log.msg(self.main.config['rosterIconSize'])
-		self.ui.roster_iconSize.setCurrentIndex(int(index))
+#		index=self.ui.roster_iconSize.findText(self.main.config['rosterIconSize'])
+#		log.msg(self.main.config['rosterIconSize'])
+#		self.ui.roster_iconSize.setCurrentIndex(int(index))
 		if self.main.config['rosterMode']=='compact':
 			self.ui.roster_compact.toggle()
 

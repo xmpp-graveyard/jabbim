@@ -30,6 +30,7 @@ from twisted.words.xish.domish import Element
 ##from twisted.internet import reactor, address
 from twisted.words.protocols.jabber.xmlstream import IQ
 from twisted.internet.protocol import Protocol, ClientFactory
+from twisted.protocols import socks
 
 from derived import derived
 from contact import *
@@ -100,6 +101,7 @@ class Client(derived):
 		
 # 		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
 		self.log = True
+		self.xmlLang = 'cs'
 		self.dispatcher = events.EventDispatcher()
 		
 		self.reactor.callFromThread(self.on_init)
@@ -153,8 +155,18 @@ class Client(derived):
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
 		self.connection = self.reactor.connectTCP(host,port,self.factory)
+#		self.connection = self.reactor.connectTCP('conn443.netlab.cz',443,self.factory)
+#		def stf(prt):
+#			print 'conn: ', prt
+#			
+#		sfact = socks.SOCKSv4Factory('./socks.log')
+#		sfact.startedConnecting = stf
+#		sck = self.reactor.connectTCP('localhost', 1080, sfact )
+#		print dir(sck)
+#		
+#		self.connection = sfact.buildProtocol('f').connectClass(host, port, client.XMPPClientFactory, self.jid,self.password)
 		log.msg('started - ' + unicode(time.time()))
-	
+		
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
 		self.main._disconnect(error = 'lost')
@@ -1454,7 +1466,7 @@ class Client(derived):
 		iq['id'] = el['id']
 #		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
-		
+	
 	def disp(self, id):
 		self.idlist.append(id)
 
