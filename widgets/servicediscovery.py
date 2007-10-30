@@ -28,6 +28,10 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		#QtCore.QObject.connect(self.ui.search, QtCore.SIGNAL("clicked()"),self.search)
 		self.group=QtGui.QButtonGroup(self)
 		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
+		
+		QtCore.QObject.connect(self.ui.reload,QtCore.SIGNAL("clicked()"),self.discoReload)
+		self.ui.server.setText(self.main.client.jid.host)
+		self.server = self.main.client.jid.host
 
 #d=self.main.client.getRegisterForm(jid)
 		#self.load()
@@ -42,6 +46,10 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 				
 			#elif self.main.client.disco[key][None].has_key("err"):
 				#print key,"error"
+	def discoReload(self):
+		self.server = unicode(self.ui.server.text())
+		self.ui.tree.clear()
+		self.main.client.getDiscoItems(self.server, callback = self.load)
 
 	def buttonClicked(self,b):
 		if b.typ=="register":
@@ -169,13 +177,14 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		self.conferences.setText(0,self.tr("Conferences"))
 		self.conferences.setIcon(0,QtGui.QIcon("images/48x48/apps/jabbim.png"))
 		#print self.main.client.disco.keys()
-		key=self.main.client.jid.host
+		#key=self.main.client.jid.host
+		key = self.server
 		if key in self.main.client.disco.keys():
 			if self.main.client.disco[key][None].has_key("identities"):
 				if self.main.client.disco[key][None].has_key("items"):
 					for item,values in self.main.client.disco[key][None]['items'].iteritems():
 						print "disco items for "+values['jid']
-						self.main.client.getDiscoItems(values['jid'], callback = self.root,callback_par=(values['jid']))
+						self.main.client.getDiscoInfo(values['jid'], callback = self.root,callback_par=(values['jid']))
 
 				
 			elif self.main.client.disco[key][None].has_key("err"):
