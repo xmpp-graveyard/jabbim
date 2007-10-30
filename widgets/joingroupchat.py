@@ -110,6 +110,13 @@ class joinGroupChatWindow(QtGui.QDialog):
 		name=unicode(self.ui.name.text())
 		nickname=unicode(self.ui.nickname.text())
 		password=unicode(self.ui.password.text())
+
+		if not name:
+			name = room
+			for bkey in self.main.client.bookmarks['conference'].keys():
+				if self.main.client.bookmarks['conference'][bkey].jid.userhost() == "%s@%s" % (room, server):
+					name = self.main.client.bookmarks['conference'][bkey].name
+
 		if self.ui.bookmark.isChecked() and not self.main.client.bookmarks['conference'].has_key(name):
 			self.main.client.bookmarks['conference'][name]=pyxl.client.Bookmark(name, 'conference', room+"@"+server, 'false', nickname, password)
 			self.main.client.setBookmarks()
