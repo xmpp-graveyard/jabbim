@@ -292,7 +292,6 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.config['jid']=jid
 		self.main.config['resource']=''+resource+''
 		self.main.config['priority']=self.ui.connection_priority.text()
-		self.main.config['rosterIconSize']=unicode(self.ui.roster_iconSize.currentText())
 		self.main.config['theme']=unicode(self.ui.themes.currentItem().data(32).toString())
 		if self.ui.roster_compact.isChecked()==True:
 			self.main.config['rosterMode']="compact"
