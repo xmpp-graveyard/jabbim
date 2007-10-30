@@ -79,7 +79,7 @@ class Client(derived):
 	#	self.privacy_default = None
 		self.privacy = Privacy(self.main)
 		self.client_name = 'Jabbim'
-		self.version = '0.0.1' # tohle asi neni nejlepsi zpusob
+		self.version = '0.2' # tohle asi neni nejlepsi zpusob
 		self.client_os = ''
 		self.caps_node = 'http://dev.jabbim.cz/jabbim/caps'
 		self.caps_version = self.version
