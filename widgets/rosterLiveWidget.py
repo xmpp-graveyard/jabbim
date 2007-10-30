@@ -1149,23 +1149,28 @@ class rosterWidget(QtGui.QWidget):
 		key=event.key()
 		if key==QtCore.Qt.Key_Down:
 			x,y=self.itemCoordinates(self.item)
-			if self.item.typ=="group":
+			if self.item.typ=="group" or self.item.typ=="special":
 				item=self.itemAt(x,y+self.userHeight+5)
 			else:
 				if not self.compact:
 					item=self.itemAt(x,y+self.selectedHeight+33)
 				else:
 					item=self.itemAt(x,y+self.selectedHeight+1)
+				print item.typ
+				if item.main=="special":
+					x,y=self.itemCoordinates(item)
+					item=self.itemAt(x,y+1+self.groupHeight)
 
 			self.selectItem(item)
 			#self.timer.start(40)
 			event.accept()
 		elif key==QtCore.Qt.Key_Up:
 			x,y=self.itemCoordinates(self.item)
-			#if self.item.typ=="group":
-				#item=self.itemAt(x,y+33)
-			#else:
+
 			item=self.itemAt(x,y-3)
+			if item.main=="special":
+				x,y=self.itemCoordinates(item)
+				item=self.itemAt(x,y-3)
 			self.selectItem(item)
 			#self.timer.start(40)
 			event.accept()
