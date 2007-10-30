@@ -380,6 +380,7 @@ class derived:
 		log.msg("ADDING: callback")
 		d.addCallback(self._vcardReceived).addErrback(self._noVcard, jid)
 		log.msg("END: getVCard")
+		return d
 		
 	def getBookmarks(self):
 		log.msg('get bookmarks')

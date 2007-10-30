@@ -384,6 +384,7 @@ class Client(derived):
 			else:
 				card[x.name]=unicode(x)
 		self.reactor.callFromThread(self.on_vcardReceived,el['from'], card)
+		return card
 
 
 
