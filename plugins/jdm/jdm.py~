@@ -18,7 +18,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Jabbim disk manager'
 		self.author = u"Josef 'Pepeq' Halíček"
 		self.name = 'JDM Plugin'
-		self.version = '0.0117'
+		self.version = '0.0120'
 		self.category = ['disk']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		if main:
@@ -27,7 +27,7 @@ class Plugin(plugins.PluginBase):
 			self.window.setWindowIcon(self.main.windowIcon())
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
-			self.window.ui.log.append(self.main.client.callRemote('rpc@jabbim.cz/service', 'ping', (' ',)))
+			
 			
 
 				
@@ -35,7 +35,8 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.loadConfig(homedir)
 		
-		
+	def updateView(self, vysledek, typ = 'public'):
+		self.window.ui.log.append(unicode(vysledek))
 			
 	def buildRosterMenu(self):
 		menu=self.rosterMenu()
@@ -43,6 +44,7 @@ class Plugin(plugins.PluginBase):
 	
 	def showSlot(self):
 		self.window.show()
+		self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.main.client.jid.userhost(),)).addCallback(self.updateView, 'public')
 		
 	
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
