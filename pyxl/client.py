@@ -235,6 +235,9 @@ class Client(derived):
 		self.reactor.callFromThread(self.on_authd)
 		self.dispatcher.publishEvent('on_authd')
 		self.main._connected()
+#		def pis(co):
+#			print co
+#		self.callRemote('rpc@jabbim.cz/service', 'ping', (' ',)).addCallback(pis)
 
 
 	def _gotServices(self, res):
@@ -1466,6 +1469,9 @@ class Client(derived):
 		iq['id'] = el['id']
 #		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
+
+
+		
 	
 	def disp(self, id):
 		self.idlist.append(id)

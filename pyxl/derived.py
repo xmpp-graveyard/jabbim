@@ -27,6 +27,7 @@ from twisted.internet.protocol import Protocol, ClientFactory
 from twisted.internet import defer
 from contact import *
 from groupchat import  *
+from xmlrpclib import loads, dumps
 
 MUCLISTTYPES = {
 'voice': ('http://jabber.org/protocol/muc#admin', 'participant', 'role'),
@@ -574,3 +575,21 @@ class derived:
 		
 		dl = defer.DeferredList(seznam).addCallback(self._onMUCLists, jid, types)
 		return dl
+################# RPC ####################3
+	def callRemote(self, jid, func, params):
+		iq = IQ(self.xmlstream, 'set')
+		iq['xml:lang'] = self.xmlLang
+		iq['type'] = 'set'
+		iq['to'] = jid
+		q = iq.addElement('query')
+		q['xmlns']='jabber:iq:rpc'
+		q.addRawXml(dumps(params, func, False))
+		self.disp(iq['id'])
+		d = iq.send().addCallback(self._onCallResult)
+		return d
+	
+	def _onCallResult(self, el):
+		query = el.firstChildElement()
+		call = loads(query.firstChildElement().toXml())
+		return call
+
