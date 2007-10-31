@@ -783,8 +783,13 @@ class clientClass(pyxl.client.Client):
 				icon=user[0].icon
 				user=user[0].name
 			else:
-				icon=self.main.getIcon(status="offline",size="16x16")
-				user=frm.full()
+				#if self.groupchats[frm.host].users[nick].role
+				if self.groupchats.has_key(frm.userhost()):
+					user=frm.resource
+					icon=self.main.getIcon(status="online",size="16x16")
+				else:
+					icon=self.main.getIcon(status="offline",size="16x16")
+					user=frm.full()
 			# strip html tags and \n from messages
 			if xhtml==None:
 				message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")

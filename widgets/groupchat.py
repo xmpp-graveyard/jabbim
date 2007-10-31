@@ -155,7 +155,8 @@ class groupChatWidget(QtGui.QWidget):
 		#QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
-
+		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.userClicked)
+		
 
 		short=QtGui.QShortcut("tab",self.ui.line)
 		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
@@ -187,7 +188,13 @@ class groupChatWidget(QtGui.QWidget):
 		#if affiliation=="owner":
 			#self.ui.admin.show()
 		#self.affiliation=affiliation
-	
+
+	def userClicked(self,item,i):
+		if item.parent()==None:
+			return
+		self.main.chat.addChatTab(self.jid+"/"+unicode(item.text(0)),item.text(0),item.icon(0))
+		self.main.chat.activate()
+		
 	def clearChat(self):
 		self.ui.textEdit.setHtml("")
 	
