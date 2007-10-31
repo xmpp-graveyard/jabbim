@@ -16,8 +16,8 @@ class MUCBrowserDialog(QtGui.QDialog):
 		self.main=main
 		self.ui.nickname.setText(main.client.jid.user)
 		QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.selectionChanged)
-		#QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.CE)
-		
+		QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.CE)
+
 		mucjid = None
 		for jid, node in self.main.client.disco.iteritems():
 			if not node[None].has_key('identities'):
@@ -45,7 +45,7 @@ class MUCBrowserDialog(QtGui.QDialog):
 			self.main.client.getDiscoItems(room, callback = self._participantsReceived, callback_par = (room, item))
 			r = room.split('@')[0]
 			self.ui.room.setText(r)
-			self.ui.name.setText(item.text(0))
+			self.ui.name.setText(r)
 	
 	def _participantsReceived(self, par):
 		item = par[1]
@@ -56,8 +56,7 @@ class MUCBrowserDialog(QtGui.QDialog):
 			user.setText(0, usr['name'])
 			user.setIcon(0,self.main.getIcon(size="16x16"))
 		item.setToolTip(0,users)
-		self.ui.groupchats.setItemExpanded(item,True)
-		
+		#self.ui.groupchats.setItemExpanded(item,True)
 
 	def getNum(self, string):
 		def reverse(s):
