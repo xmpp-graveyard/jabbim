@@ -210,7 +210,10 @@ class PrivacyList:
 			x.privacy["hide"] = False
 
 	def setInvisible(self):
+		self.main.client.sendPresence(typ="unavailable")
 		self.invisible = self.mkItem("deny", stanzas = ["presence-out"], to_zero = False)
+		self.main.client.sendPresence(typ="available")
+
 	def unsetInvisible(self):
 		if self.invisible:
 			self.delItem(self.invisible)
