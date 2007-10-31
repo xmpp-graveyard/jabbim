@@ -1011,6 +1011,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
 		app.connect(self.ui.actionAbout, QtCore.SIGNAL("triggered ( bool )"),self.about)
 		app.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
+		app.connect(self.ui.actionMUC_Browser, QtCore.SIGNAL("triggered ( bool )"),self.mucBrowser)
 		app.connect(self.ui.actionAdd_Contact, QtCore.SIGNAL("triggered ( bool )"),self.addContactMainWindow)
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
 		app.connect(self.ui.actionJoin_Groupchat, QtCore.SIGNAL("triggered ( bool )"),self.joinGroupchat)
@@ -1129,6 +1130,10 @@ class mainWindow(QtGui.QMainWindow):
 		#self.setUpdatesEnabled(False)
 		#QtGui.QMainWindow(self).resizeEvent(event)
 		#self.setUpdatesEnabled(True)
+
+	def mucBrowser(self,bool):
+		self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
+		self.mucbrowser.show()
 
 	def about(self,bool):
 		about=aboutDialog(self)

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Tue Oct 30 20:29:52 2007
+# Created: Wed Oct 31 18:39:32 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -294,11 +294,15 @@ class Ui_MainWindow(object):
 
         self.actionService_Discovery = QtGui.QAction(MainWindow)
         self.actionService_Discovery.setObjectName("actionService_Discovery")
+
+        self.actionMUC_Browser = QtGui.QAction(MainWindow)
+        self.actionMUC_Browser.setObjectName("actionMUC_Browser")
         self.menuHelp.addAction(self.actionAbout)
         self.menuAkce.addAction(self.actionJoin_Groupchat)
         self.menuAkce.addAction(self.actionAdd_Contact)
         self.menuAkce.addAction(self.actionService_Discovery)
         self.menuAkce.addAction(self.actionShow_XML)
+        self.menuAkce.addAction(self.actionMUC_Browser)
         self.menuAkce.addSeparator()
         self.menuAkce.addAction(self.actionPreferences)
         self.menuAkce.addSeparator()
@@ -348,4 +352,5 @@ class Ui_MainWindow(object):
         self.actionAdd_Contact.setText(QtGui.QApplication.translate("MainWindow", "Add Contact", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "About", None, QtGui.QApplication.UnicodeUTF8))
         self.actionService_Discovery.setText(QtGui.QApplication.translate("MainWindow", "Service Discovery", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionMUC_Browser.setText(QtGui.QApplication.translate("MainWindow", "MUC Browser", None, QtGui.QApplication.UnicodeUTF8))
 

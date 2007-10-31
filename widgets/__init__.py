@@ -12,4 +12,5 @@ import events
 import rosterLiveWidget
 import about
 import servicediscovery
+import mucbrowser
 #import eventsFTWidget_ui

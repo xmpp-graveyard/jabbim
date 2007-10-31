@@ -510,6 +510,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionAdd_Contact" />
     <addaction name="actionService_Discovery" />
     <addaction name="actionShow_XML" />
+    <addaction name="actionMUC_Browser" />
     <addaction name="separator" />
     <addaction name="actionPreferences" />
     <addaction name="separator" />
@@ -552,6 +553,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionService_Discovery" >
    <property name="text" >
     <string>Service Discovery</string>
+   </property>
+  </action>
+  <action name="actionMUC_Browser" >
+   <property name="text" >
+    <string>MUC Browser</string>
    </property>
   </action>
  </widget>
