@@ -575,6 +575,8 @@ class clientClass(pyxl.client.Client):
 						i.name=unicode(name)
 						i.jid=jid
 						self.main.ui.roster.sortItems()
+						self.main.ui.roster.changePos=True
+						self.main.ui.roster.repaint()
 				# we didn't find item
 				log.msg(unicode(add))
 				if add:
