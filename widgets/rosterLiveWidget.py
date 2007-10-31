@@ -1721,11 +1721,32 @@ class rosterWidget(QtGui.QWidget):
 		return contactMenu
 
 	def buildGroupMenu(self,name):
-		pass
-
+		# build contact menu
+		contactMenu=QtGui.QMenu(self)
+		action=contactMenu.addAction(self.tr("Rename"))
+		action.setData(QtCore.QVariant(name))
+		action.setObjectName("rename")
+		# signal
+		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.groupMenuTriggered)
+		return contactMenu
+	
 	def groupMenuTriggered(self,action):
-		pass
-
+		cmd=action.objectName()
+		if cmd=="rename":
+			name=action.data()
+			name=str(name.toString())
+			group,b=QtGui.QInputDialog.getText(self,self.tr("Rename group"),self.tr("Enter new group name"), QtGui.QLineEdit.Normal, "")
+			group=unicode(group)
+			# if user set new name of group
+			if b==True and len(group)!=0:
+				for item in self.getGroupUsers(name):
+					jid=item.jid
+					contact=self.main.client.roster['users'][jid]
+					for count in range(self.main.client.roster['users'][jid].groups.count(name)):
+						self.main.client.roster['users'][jid].groups.remove(name)
+					self.main.client.roster['users'][jid].groups.append(group)
+					self.main.client.sendRosterUpdate(contact.jid, contact.name, contact.subscription,self.main.client.roster['users'][jid].groups)
+			
 	def breakMetaContacts(self,jid):
 		item=self.getUserItems(jid)[0]
 		metajid=item.metajid
@@ -1910,13 +1931,14 @@ class rosterWidget(QtGui.QWidget):
 	def contextMenuEvent (self,event):
 		# show contact context menu
 		item=self.itemAt(event.x(),event.y())
-		group=item.group
-		jid=item.jid
-		#if self.main.client.roster['users'].has_key(jid):
-		contactMenu=self.buildContactMenu(str(jid),group)
-		#contactMenu.move(event.globalX(),event.globalY())
-		contactMenu.popup(QtCore.QPoint(event.globalX(),event.globalY()))
-		#else:
-			#contactMenu=self.buildGroupMenu(unicode(item.text(2)))
+		if item.typ=="user":
+			group=item.group
+			jid=item.jid
+			#if self.main.client.roster['users'].has_key(jid):
+			contactMenu=self.buildContactMenu(str(jid),group)
 			#contactMenu.move(event.globalX(),event.globalY())
-			#contactMenu.show()
+			contactMenu.popup(QtCore.QPoint(event.globalX(),event.globalY()))
+		elif item.typ=="group":
+			contactMenu=self.buildGroupMenu(item.name)
+			contactMenu.move(event.globalX(),event.globalY())
+			contactMenu.popup(QtCore.QPoint(event.globalX(),event.globalY()))

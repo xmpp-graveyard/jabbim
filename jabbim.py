@@ -553,6 +553,7 @@ class clientClass(pyxl.client.Client):
 		for gr in contact.groups:
 			if not self.main.ui.roster.groups.has_key(gr):
 				self.roster['groups'][gr]=self.main._addGroup(gr)
+				self.roster['groups'][gr].setExpanded(True)
 
 		# delete old top level item of this contact if contact is not in "toplevel group"
 		#if len(contact.groups)!=0:
