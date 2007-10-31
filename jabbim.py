@@ -996,7 +996,8 @@ class mainWindow(QtGui.QMainWindow):
 					"xa":self.tr("Extended away"),
 					"dnd":self.tr("DND"),
 					"None":self.tr("Online"),
-					"offline":self.tr("Offline")
+					"offline":self.tr("Offline"),
+					"invisible":self.tr("Invisible")
 					}
 		self.offline=False
 		self.xmlConsole=XMLConsole(self)
@@ -1164,6 +1165,9 @@ class mainWindow(QtGui.QMainWindow):
 		action.setData(QtCore.QVariant("dnd"))
 		action=self.statusMenu.addAction(self.getIcon(status="offline",size="16x16"),self.status["offline"])
 		action.setData(QtCore.QVariant("offline"))
+		self.statusMenu.addSeparator()
+		action=self.statusMenu.addAction(self.status["invisible"])
+		action.setData(QtCore.QVariant("invisible"))
 		self.ui.statusButton.setMenu(self.statusMenu)
 		app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
 
@@ -1676,6 +1680,13 @@ class mainWindow(QtGui.QMainWindow):
 			data=data.toList()
 			show=unicode(data[1].toString())
 			data=unicode(data[0].toString())
+
+		if data == "invisible" and self.client.privacy.active:
+			self.client.privacy.active.setInvisible()
+			return
+		elif data != "invisible" and self.client.privacy.active:
+			self.client.privacy.active.unsetInvisible()
+
 		setstatus=statusWindow(data,show)
 		#if len(data.split("/"))==2:
 			#data=unicode(data.split("/")[1])
