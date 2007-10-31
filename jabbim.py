@@ -678,6 +678,8 @@ class clientClass(pyxl.client.Client):
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
 		# handle messages from groupchat
 		# get user (resource) and MUC jid (saved in frm)
+		if typ=="chat":
+			return self.on_message(frm, typ, body, subject, xhtml,chatstate,delay)
 		frm=jidT.JID(frm)
 		if frm.resource:
 			user=frm.resource
