@@ -89,11 +89,19 @@ class normalLineEditWidget(QtGui.QTextEdit):
 	
 	def keyPressEvent(self,event):
 		key=event.key()
-		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier or event.modifiers() & QtCore.Qt.ShiftModifier):
-			return QtGui.QTextEdit.keyPressEvent(self,event)
+		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier):
+			if self.main.main.config['sendByCtrl']=="True":
+				self.main.sendButtonClicked()
+				event.accepted()
+			else:
+				return QtGui.QTextEdit.keyPressEvent(self,event)
 		elif key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
-			self.main.sendButtonClicked()
-			event.accept()
+			print self.main.main.config['sendByCtrl']
+			if self.main.main.config['sendByCtrl']=="False":
+				self.main.sendButtonClicked()
+				event.accepted()
+			else:
+				return QtGui.QTextEdit.keyPressEvent(self,event)
 		elif key == QtCore.Qt.Key_Up and  self.main.hindex > 0 and (event.modifiers() & QtCore.Qt.ControlModifier): 
 
 			self.main.hindex = self.main.hindex-1

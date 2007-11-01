@@ -114,11 +114,17 @@ class lineEditWidget(QtGui.QTextEdit):
 	def keyPressEvent(self,event):
 		key=event.key()
 		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier):
-			return QtGui.QTextEdit.keyPressEvent(self,event)
+			if self.main.main.config['sendByCtrl']=="True":
+				self.main.sendButtonClicked()
+				event.accepted()
+			else:
+				return QtGui.QTextEdit.keyPressEvent(self,event)
 		elif key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
-			self.main.sendButtonClicked()
-			event.accepted()
-		
+			if self.main.main.config['sendByCtrl']=="False":
+				self.main.sendButtonClicked()
+				event.accepted()
+			else:
+				return QtGui.QTextEdit.keyPressEvent(self,event)
 		
 		else:
 			return QtGui.QTextEdit.keyPressEvent(self,event)
@@ -161,10 +167,18 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		if not self.composing:
 			self.main.main.client.sendMessage(self.main.jid, "",composing="composing")
 		key=event.key()
-		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier or event.modifiers() & QtCore.Qt.ShiftModifier):
-			QtGui.QTextEdit.keyPressEvent(self,event)
+		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier):
+			if self.main.main.config['sendByCtrl']=="True":
+				self.main.sendButtonClicked()
+				event.accepted()
+			else:
+				return QtGui.QTextEdit.keyPressEvent(self,event)
 		elif key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
-			self.main.sendButtonClicked()
+			if self.main.main.config['sendByCtrl']=="False":
+				self.main.sendButtonClicked()
+				event.accepted()
+			else:
+				return QtGui.QTextEdit.keyPressEvent(self,event)
 		elif key == QtCore.Qt.Key_Up and  self.main.hindex > 0 and (event.modifiers() & QtCore.Qt.ControlModifier): 
 
 			self.main.hindex = self.main.hindex-1

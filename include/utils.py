@@ -68,7 +68,8 @@ def loadConfig(main,status):
 			"chatMode":"normal",
 			"statusMessages":list(status),
 			"showChatStatusChanges":True,
-			"useMUCNames":True
+			"useMUCNames":True,
+			"sendByCtrl":False
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:
