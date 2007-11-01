@@ -1730,10 +1730,16 @@ class mainWindow(QtGui.QMainWindow):
 	def invStatusChanged(self, action):
 		if self.client.privacy.active:
 			self.client.privacy.active.setInvisible()
-		self.statusChanged(action,True)
+			ac = QtGui.QAction(None)
+			ac.setData(QtCore.QVariant(unicode(action.data().toString())))
+			ac.setParent(None)
+		self.statusChanged(ac)
 
 	def statusChanged(self,action,invisible=False):
 		# status changed
+		if action.parentWidget() == self.invMenu:
+			return
+		
 		data=action.data()
 		if len(data.toList())==0:
 			data=unicode(data.toString())
