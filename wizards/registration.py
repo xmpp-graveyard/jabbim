@@ -3,6 +3,11 @@ try:
 except:
 	print "PyQt4 is not installed."
 
+from twisted.internet import reactor
+from pyxl import register
+from twisted.python import log
+import sys
+
 servers=["jabbim.cz","jabbim.sk","jabbim.pl","jabbim.com","jabber.cz","njs.netlab.cz"]
 def createFirstPage(wizard):
 	# language and server
@@ -30,9 +35,9 @@ def createFirstPage(wizard):
 def createWaitPage(wizard):
 	
 	page=QtGui.QWizardPage()
-	page.setTitle(wizard.tr("Connecting"))
+	page.setTitle(wizard.tr("Registering"))
 
-	label=QtGui.QLabel(wizard.tr("Downloading informations from server."))
+	label=QtGui.QLabel(wizard.tr("Registering your account."))
 	label.setWordWrap(True)
 	
 	layout=QtGui.QGridLayout()
@@ -41,6 +46,19 @@ def createWaitPage(wizard):
 	page.setLayout(layout)
 	return page
 
+def createFinishPage(wizard):
+	
+	page=QtGui.QWizardPage()
+	page.setTitle(wizard.tr("Registration complete"))
+
+	label=QtGui.QLabel(wizard.tr("Your account is registered."))
+	label.setWordWrap(True)
+	
+	layout=QtGui.QGridLayout()
+	layout.addWidget(label,0,0,1,1)
+	
+	page.setLayout(layout)
+	return page
 
 def createSecondPage(wizard):
 	
@@ -74,44 +92,75 @@ def createThirdPage(wizard):
 	page=QtGui.QWizardPage()
 	page.setTitle(wizard.tr("JID registration"))
 
-	label=QtGui.QLabel(wizard.tr("Jabber ID registration."))
-	label.setWordWrap(True)
+	wizard.label=QtGui.QLabel(wizard.tr("Jabber ID registration."))
+	wizard.label.setWordWrap(True)
 	
-	nicknameLabel=QtGui.QLabel(wizard.tr("Nickname:"))
-	nicknameLineEdit=QtGui.QLineEdit()
+	jidLabel=QtGui.QLabel(wizard.tr("JID:"))
+	jidLineEdit=QtGui.QLineEdit()
 	
-	emailLabel=QtGui.QLabel(wizard.tr("Email:"))
-	emailLineEdit=QtGui.QLineEdit()
+	passwordLabel=QtGui.QLabel(wizard.tr("Password:"))
+	passwordLineEdit=QtGui.QLineEdit()
 	
 	layout=QtGui.QGridLayout()
-	layout.addWidget(label,0,0,1,2)
-	layout.addWidget(nicknameLabel,1,0,1,1)
-	layout.addWidget(nicknameLineEdit,1,1,1,1)
-	layout.addWidget(emailLabel,2,0,1,1)
-	layout.addWidget(emailLineEdit,2,1,1,1)
+	layout.addWidget(wizard.label,0,0,1,2)
+	layout.addWidget(jidLabel,1,0,1,1)
+	layout.addWidget(jidLineEdit,1,1,1,1)
+	layout.addWidget(passwordLabel,2,0,1,1)
+	layout.addWidget(passwordLineEdit,2,1,1,1)
 		
-	page.registerField("nickname*",nicknameLineEdit)
-	page.registerField("email*",emailLineEdit)
+	page.registerField("jid*",jidLineEdit)
+	page.registerField("password*",passwordLineEdit)
 	
 	page.setLayout(layout)
 	return page
+
+class registrationClass(register.RegisteringClient):
+	def __init__(self,main, username, server, resource,password, port, reactor):
+		register.RegisteringClient.__init__(self, username, server, resource,password, port, reactor)
+		self.main=main
+
+	def _regfailed(self, el):
+		for x in el.elements():
+			#print unicode(x.toXml())
+			if unicode(x.name)=="error":
+				if x.hasAttribute("code"):
+					if x['code']=="409":
+						print "nickname conflict"
+						self.main.error="409"
+						self.main.label.setTextFormat(QtCore.Qt.RichText)
+						self.main.label.setText(self.main.tr("Jabber ID registration.<br/><b>This Jabber ID is already registered by someone else.</b>"))
+						self.main.back()
+	def _authd(self, el):
+		self.main.next()
 
 class registrationWizard(QtGui.QWizard):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QWizard.__init__,(self,parent))
 		self.main=main
 		self.addPage(createFirstPage(self))
-		self.addPage(createWaitPage(self))
 		self.addPage(createSecondPage(self))
+		self.addPage(createThirdPage(self))
+		self.addPage(createWaitPage(self))
+		self.addPage(createFinishPage(self))
 		self.setWindowTitle(self.tr("Registration Wizard"))
+		
+		self.error=None
 	
 	def initializePage(self,i):
 		#page=self.page(i)
-		if i==1:
+		#print i,self.error
+		#if i==2 and self.error!=None:
+			#if self.error=="409":
+				
+			#self.error=None
+		if i==3:
 			server=servers[int(self.field("server").toString())-1]
-			self.main.client.getDiscoInfo(values['jid'],callback=self._discoinfo)
-			
-	def _discoinfo(self,data=None):
-		self.discoInfo=data
-		self.next()
-	
+			jid=unicode(self.field("jid").toString())
+			password=unicode(self.field("password").toString())
+
+			self.cl = registrationClass(self,jid,server, 'jab',password, 5222, reactor)
+			#log.startLogging(sys.stdout)
+			self.cl.connect()
+			reactor.run()
+
+		return
