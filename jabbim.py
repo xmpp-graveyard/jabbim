@@ -1185,7 +1185,8 @@ class mainWindow(QtGui.QMainWindow):
 		for menu in menus:
 			self.statusMenu.addMenu(menu)
 			log.msg("adding menu")
-		self.statusMenu.addSeparator()
+		if menus != []:
+			self.statusMenu.addSeparator()
 		action=self.statusMenu.addAction(self.getIcon(status="online",size="16x16"),self.status["online"])
 		action.setData(QtCore.QVariant("online"))
 		action=self.statusMenu.addAction(self.getIcon(status="chat",size="16x16"),self.status["chat"])
@@ -1198,11 +1199,24 @@ class mainWindow(QtGui.QMainWindow):
 		action.setData(QtCore.QVariant("dnd"))
 		action=self.statusMenu.addAction(self.getIcon(status="offline",size="16x16"),self.status["offline"])
 		action.setData(QtCore.QVariant("offline"))
+
 		self.statusMenu.addSeparator()
-		action=self.statusMenu.addAction(self.status["invisible"])
-		action.setData(QtCore.QVariant("invisible"))
+		self.invMenu=self.statusMenu.addMenu(self.getIcon(status="invisible",size="16x16"),self.status["invisible"])
+		
+		action=self.invMenu.addAction(self.getIcon(status="invisible-online",size="16x16"),self.status["online"])
+		action.setData(QtCore.QVariant("online"))
+		action=self.invMenu.addAction(self.getIcon(status="invisible-chat",size="16x16"),self.status["chat"])
+		action.setData(QtCore.QVariant("chat"))
+		action=self.invMenu.addAction(self.getIcon(status="invisible-away",size="16x16"),self.status["away"])
+		action.setData(QtCore.QVariant("away"))
+		action=self.invMenu.addAction(self.getIcon(status="invisible-xa",size="16x16"),self.status["xa"])
+		action.setData(QtCore.QVariant("xa"))
+		action=self.invMenu.addAction(self.getIcon(status="invisible-dnd",size="16x16"),self.status["dnd"])
+		action.setData(QtCore.QVariant("dnd"))
+
 		self.ui.statusButton.setMenu(self.statusMenu)
 		app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
+		app.connect(self.invMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.invStatusChanged)
 
 	def copyPlugins(self):
 		plugins=os.listdir("plugins/")
@@ -1712,8 +1726,13 @@ class mainWindow(QtGui.QMainWindow):
 					#if int(unicode(child2.text(1))[0])==9:
 						#self.ui.roster.setItemHidden(child2, bool)
 		self.ui.roster.hidden( bool)
+	
+	def invStatusChanged(self, action):
+		if self.client.privacy.active:
+			self.client.privacy.active.setInvisible()
+		self.statusChanged(action,True)
 
-	def statusChanged(self,action):
+	def statusChanged(self,action,invisible=False):
 		# status changed
 		data=action.data()
 		if len(data.toList())==0:
@@ -1724,10 +1743,7 @@ class mainWindow(QtGui.QMainWindow):
 			show=unicode(data[1].toString())
 			data=unicode(data[0].toString())
 
-		if data == "invisible" and self.client.privacy.active:
-			self.client.privacy.active.setInvisible()
-			return
-		elif data != "invisible" and self.client.privacy.active:
+		if self.client.privacy.active and not invisible:
 			self.client.privacy.active.unsetInvisible()
 
 		setstatus=statusWindow(data,show)
