@@ -463,6 +463,11 @@ class clientClass(pyxl.client.Client):
 		else:
 			message = message.replace("[message]",unicode(status))
 		w.chat.textEditWrite(message)
+		tab,index=self.main.chat.findTab(muc+"/"+nick)
+		if w:
+			tab.chat.textEditWrite(message)
+			tab.ic=self.main.getIcon(unicode(muc),size="16x16",status=self.main.icons[self.main.shows[unicode(show)]])
+			self.main.chat.ui.chatTab.setTabIcon(index,tab.ic)
 
 	def on_presence(self,jid,show,first=False):
 		# normal presence handler
@@ -786,6 +791,7 @@ class clientClass(pyxl.client.Client):
 				#if self.groupchats[frm.host].users[nick].role
 				if self.groupchats.has_key(frm.userhost()):
 					user=frm.resource
+					icon=self.main.getIcon(unicode(frm.userhost()),size="16x16",status=self.main.icons[self.main.shows[self.groupchats[frm.userhost()].users[user].role]])
 					icon=self.main.getIcon(status="online",size="16x16")
 				else:
 					icon=self.main.getIcon(status="offline",size="16x16")
@@ -814,8 +820,6 @@ class clientClass(pyxl.client.Client):
 					#tab=w
 					#tabIndex=i
 			tab,tabIndex=self.main.chat.findTab(frm.full())
-
-
 
 						
 			# we found tab

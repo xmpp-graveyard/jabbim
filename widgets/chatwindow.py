@@ -256,8 +256,8 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 		self.setWindowTitle(unicode(name))
 		tab.chat.ui.label.setText("<font size=\"3\"><b>"+name+"</b></font>")
-		message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+str(tab.chat.avatarHeight)+"\" />")
 		if message!=None:
+			message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+str(tab.chat.avatarHeight)+"\" />")
 			tab.chat.textEditWrite(message)
 		#self.show()
 		#self.raise_()
