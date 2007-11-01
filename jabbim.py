@@ -1755,7 +1755,10 @@ class mainWindow(QtGui.QMainWindow):
 			sh=True
 		if setstatus.exec_()==1 and not show:
 			self.ui.statusButton.setText(unicode(""))
-			self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
+			if not invisible:
+				self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
+			else:
+				self.ui.statusButton.setIcon(self.getIcon(status="invisible-"+data,size="16x16"))
 		else:
 			for menu in self.client.menus:
 				if unicode(menu.title())==unicode(data):
@@ -1785,6 +1788,9 @@ class mainWindow(QtGui.QMainWindow):
 # 		self.ui.rosterStackedWidget.setCurrentIndex(1)
 		#self.ui.statusButton.setText(unicode(self.status["online"]))
 		self.ui.statusButton.setIcon(self.getIcon("online",size="16x16"))
+		if self.client.privacy.active:
+			if self.client.privacy.active.invisible:
+				self.ui.statusButton.setIcon(self.getIcon("invisible-online",size="16x16"))
 		self.ui.statusButton.show()
 		self.ui.showOffline.show()
 		self.tray.showMessage(self.tr("Jabbim"),self.tr("Jabbim is ready! You are connected! :) "))

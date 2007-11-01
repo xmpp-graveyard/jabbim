@@ -220,7 +220,8 @@ class PrivacyList:
 		if self.invisible:
 			self.delItem(self.invisible)
 			self.invisible = None
-			log.msg("wa are now visible")
+			self.main.client.sendPresence(typ="available")
+			log.msg("we are now visible")
 
 	
 class Privacy:
