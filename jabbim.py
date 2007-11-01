@@ -21,6 +21,12 @@ import sys,os
 sys.path.append('.')
 try: from PyQt4 import QtCore, QtGui
 except: print "PyQt4 is not installed."
+
+try:
+	QtGui.QWizard
+	USE_WIZARDS=True
+except:
+	USE_WIZARDS=False
 import qt4reactor
 app = QtGui.QApplication(sys.argv)
 qt4reactor.install(app)
@@ -35,7 +41,8 @@ except:
 	from sha import new as sha1
 
 import widgets
-import wizards
+if USE_WIZARDS:
+	import wizards
 import pyxl
 from pyxl import storage
 import traceback
@@ -1147,9 +1154,10 @@ class mainWindow(QtGui.QMainWindow):
 		self.setMinimumWidth(200)
 
 	def registerButtonClicked(self):
-		self.regwiz=wizards.registration.registrationWizard(self,self)
-		self.regwiz.show()
-
+		if USE_WIZARDS:
+			self.regwiz=wizards.registration.registrationWizard(self,self)
+			self.regwiz.show()
+		return
 
 	def serviceDiscovery(self,b):
 		self.discovery=widgets.servicediscovery.serviceDiscoveryDialog(self,self)
