@@ -48,7 +48,7 @@ def loadConfig(main,status):
 	configs={"jid":"",
 			"passwd":"",
 			"savePasswd":"",
-			"autoJoin":False,
+			"autoJoin":"False",
 			"rosterIconSize":"16x16",
 			"chat_skin":"cool.conf",
 			"theme":"template",
@@ -60,16 +60,16 @@ def loadConfig(main,status):
 			"chatSplitter2Sizes":[500,128],
 			"groupchatSplitterSizes":[500,120],
 			"groupchatSplitter2Sizes":[45,500,70],
-			"saveGeometry":True,
-			"saveExpandedGroups":True,
+			"saveGeometry":"True",
+			"saveExpandedGroups":"True",
 			"expandedGroups":[],
 			"plugins":['notification'],
 			"rosterMode":"normal",
 			"chatMode":"normal",
 			"statusMessages":list(status),
-			"showChatStatusChanges":True,
-			"useMUCNames":True,
-			"sendByCtrl":False
+			"showChatStatusChanges":"True",
+			"useMUCNames":"True",
+			"sendByCtrl":"False"
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:
