@@ -1998,7 +1998,7 @@ class statusWindow(QtGui.QDialog):
 		else:
 			self.accept()
 	def accept(self):
-		if not unicode(self.ui.status.toPlainText()) in MainWindow.config['statusMessages'] and len(unicode(self.ui.status.toPlainText()))!=0:
+		if not unicode(self.ui.status.toPlainText()) in MainWindow.config['statusMessages'] and len(unicode(self.ui.status.toPlainText()))!=0 and self.ui.save.isChecked():
 			MainWindow.config['statusMessages'].append(unicode(self.ui.status.toPlainText()))
 		if self.data=="offline":
 ##			#MainWindow.client.factory.stopTrying()
