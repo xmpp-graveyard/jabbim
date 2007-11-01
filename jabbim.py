@@ -952,7 +952,11 @@ class mainWindow(QtGui.QMainWindow):
 			if sys.argv[x] == '--home':
 				self.homeDir= sys.argv[x+1]
 
-		utils.loadConfig(self) # load config files
+		statusMess=[]
+		statusMess.append(unicode(self.tr("Default Status Message, 1")))
+		statusMess.append(unicode(self.tr("Default Status Message, 2")))
+
+		utils.loadConfig(self,statusMess) # load config files
 		if sys.platform != 'win32':
 			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
 		else:
@@ -1970,6 +1974,9 @@ class statusWindow(QtGui.QDialog):
 		self.data=data
 		self.show=show
 		self.timeout()
+		for s in MainWindow.config['statusMessages']:
+			self.ui.statusBox.addItem(unicode(s))
+
 	
 	def timerStop(self):
 		self.timer.stop()

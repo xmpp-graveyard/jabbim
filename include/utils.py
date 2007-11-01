@@ -43,7 +43,7 @@ def cprint(color,text):
 	else:
 		return text
 
-def loadConfig(main):
+def loadConfig(main,status):
 	# loads config and repairs config file
 	configs={"jid":"",
 			"passwd":"",
@@ -65,7 +65,8 @@ def loadConfig(main):
 			"expandedGroups":[],
 			"plugins":['notification'],
 			"rosterMode":"normal",
-			"chatMode":"normal"
+			"chatMode":"normal",
+			"statusMessages":list(status)
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:
@@ -92,6 +93,7 @@ def loadConfig(main):
 		os.mkdir(main.homeDir+'/avatars')
 	if not os.path.isdir(main.homeDir+'/plugins'):
 		os.mkdir(main.homeDir+'/plugins')
+
 
 def getHomeDir():
 	# gets homedir on win32 or linux

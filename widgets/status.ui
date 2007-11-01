@@ -22,33 +22,30 @@
    <property name="spacing" >
     <number>6</number>
    </property>
-   <item row="2" column="1" >
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeType" >
-      <enum>QSizePolicy::Expanding</enum>
-     </property>
-     <property name="sizeHint" >
-      <size>
-       <width>91</width>
-       <height>27</height>
-      </size>
-     </property>
-    </spacer>
+   <item row="0" column="0" colspan="3" >
+    <widget class="QComboBox" name="statusBox" />
    </item>
-   <item row="2" column="0" >
-    <widget class="QPushButton" name="pushButton" >
-     <property name="text" >
-      <string>Cancel</string>
+   <item row="1" column="0" colspan="3" >
+    <widget class="QTextBrowser" name="status" >
+     <property name="toolTip" >
+      <string>Enter a short message describing your status (e.g. at lunch)</string>
      </property>
-     <property name="icon" >
-      <iconset>images/16x16/actions/process-stop.png</iconset>
+     <property name="tabChangesFocus" >
+      <bool>true</bool>
+     </property>
+     <property name="readOnly" >
+      <bool>false</bool>
      </property>
     </widget>
    </item>
-   <item row="2" column="2" >
+   <item row="2" column="0" colspan="3" >
+    <widget class="QLabel" name="time" >
+     <property name="text" >
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2" >
     <widget class="QPushButton" name="set" >
      <property name="sizePolicy" >
       <sizepolicy>
@@ -66,25 +63,31 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0" colspan="3" >
-    <widget class="QTextBrowser" name="status" >
-     <property name="toolTip" >
-      <string>Enter a short message describing your status (e.g. at lunch)</string>
+   <item row="3" column="0" >
+    <widget class="QPushButton" name="pushButton" >
+     <property name="text" >
+      <string>Cancel</string>
      </property>
-     <property name="tabChangesFocus" >
-      <bool>true</bool>
-     </property>
-     <property name="readOnly" >
-      <bool>false</bool>
+     <property name="icon" >
+      <iconset>images/16x16/actions/process-stop.png</iconset>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="3" >
-    <widget class="QLabel" name="time" >
-     <property name="text" >
-      <string/>
+   <item row="3" column="1" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
      </property>
-    </widget>
+     <property name="sizeType" >
+      <enum>QSizePolicy::Expanding</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>91</width>
+       <height>27</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
@@ -119,6 +122,22 @@
     <hint type="destinationlabel" >
      <x>117</x>
      <y>192</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>statusBox</sender>
+   <signal>currentIndexChanged(QString)</signal>
+   <receiver>status</receiver>
+   <slot>insertPlainText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>71</x>
+     <y>23</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>84</x>
+     <y>73</y>
     </hint>
    </hints>
   </connection>
