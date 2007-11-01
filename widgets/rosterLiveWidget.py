@@ -1475,6 +1475,7 @@ class rosterWidget(QtGui.QWidget):
 			user.statusMessage=status
 			user.status=self.main.shows[unicode(show)]
 			highest=None
+			print "-------"
 			for item in self.metaItems[mainjid]:
 				if highest:
 					husertype=""
@@ -1484,10 +1485,12 @@ class rosterWidget(QtGui.QWidget):
 					if self.main.hosts.has_key(jidT.JID(item.jid).host):
 						usertype=self.main.hosts[jidT.JID(item.jid).host]
 					#if (int(item.status)<int(highest.status) and husertype!="jabber" and highest.status=="9") or (husertype!="jabber" and highest.status=="9"):
-					if usertype=="jabber" and item.status!="9":
+					#print item.jid,highest.jid,item.status,highest.status,usertype=="jabber" and item.status!="9",highest.status=="9" and item.status!="9"
+					if (usertype=="jabber" and str(item.status)!="9") or (str(highest.status)=="9" and str(item.status!="9")):
 						highest=item
 				else:
 					highest=item
+			print "-------"
 			if highest:
 				item=self.getUserItems(mainjid)
 				if len(item)!=0:
