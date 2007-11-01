@@ -17,6 +17,9 @@ class MUCBrowserDialog(QtGui.QDialog):
 		self.ui.nickname.setText(main.client.jid.user)
 		QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.selectionChanged)
 		QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.CE)
+		QtCore.QObject.connect(self.ui.showJid, QtCore.SIGNAL("stateChanged ( int )"),self.showJid)
+		self.ui.groupchats.hideColumn(1)
+		self.ui.groupchats.setColumnWidth(0,42)
 
 		mucjid = None
 		for jid, node in self.main.client.disco.iteritems():
@@ -32,6 +35,17 @@ class MUCBrowserDialog(QtGui.QDialog):
 			self.ui.server.setText(self.server)
 			self.main.client.getDiscoItems(mucjid, callback = self._roomsReceived)
 		self.ui.splitter.setSizes([500,150])
+		
+
+	def showJid(self,b):
+		if self.ui.showJid.isChecked():
+			self.ui.groupchats.showColumn(1)
+			self.ui.groupchats.resizeColumnToContents(1)
+		else:
+			self.ui.groupchats.hideColumn(1)
+		self.ui.groupchats.setColumnWidth(0,42)
+
+		#self.ui.groupchats.setColumnWidth(0,36)
 
 	def CE(self,item,i):
 		if item.isExpanded():
@@ -53,8 +67,11 @@ class MUCBrowserDialog(QtGui.QDialog):
 		for usr in self.main.client.disco[unicode(par[0])][None]['items'].itervalues():
 			users+=usr['name']+", "
 			user=QtGui.QTreeWidgetItem(item)
-			user.setText(0, usr['name'])
-			user.setIcon(0,self.main.getIcon(size="16x16"))
+			#user.setText(1, usr['name'])
+			user.setText(2, usr['name'])
+			user.setIcon(2,self.main.getIcon(size="16x16"))
+			#user.setIcon(1,self.main.getIcon(size="16x16"))
+
 		item.setToolTip(0,users)
 		#self.ui.groupchats.setItemExpanded(item,True)
 
@@ -87,9 +104,12 @@ class MUCBrowserDialog(QtGui.QDialog):
 
 		self.rooms.sort(self.sortRooms)
 		for room in self.rooms:
-			item = QtGui.QTreeWidgetItem([room[0]], 0)
+			item = QtGui.QTreeWidgetItem(0)
+			item.setText(1,room[1])
+			item.setText(2,room[0])
 			item.setData(0, 32, QtCore.QVariant(room[1]))
 			item.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
+			#item.setIcon(1,QtGui.QIcon("images/16x16/categories/muc.png"))
 			self.ui.groupchats.insertTopLevelItem(0, item)
 
 	def accept(self):

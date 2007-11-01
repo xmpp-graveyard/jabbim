@@ -24,15 +24,54 @@
      <property name="orientation" >
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="opaqueResize" >
-      <bool>false</bool>
-     </property>
-     <widget class="QTreeWidget" name="groupchats" >
-      <column>
-       <property name="text" >
-        <string>Room name</string>
+     <widget class="QWidget" name="" >
+      <layout class="QGridLayout" >
+       <property name="margin" >
+        <number>0</number>
        </property>
-      </column>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item row="1" column="0" >
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>291</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="0" colspan="2" >
+        <widget class="QTreeWidget" name="groupchats" >
+         <column>
+          <property name="text" >
+           <string> </string>
+          </property>
+         </column>
+         <column>
+          <property name="text" >
+           <string>JID</string>
+          </property>
+         </column>
+         <column>
+          <property name="text" >
+           <string>Room name</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item row="1" column="1" >
+        <widget class="QCheckBox" name="showJid" >
+         <property name="text" >
+          <string>show JID</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="layoutWidget" >
       <layout class="QVBoxLayout" >
