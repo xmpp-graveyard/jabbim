@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>235</width>
+    <width>268</width>
     <height>536</height>
    </rect>
   </property>
@@ -36,40 +36,57 @@
         <property name="spacing" >
          <number>12</number>
         </property>
-        <item row="4" column="0" >
-         <layout class="QGridLayout" >
+        <item row="3" column="0" >
+         <layout class="QHBoxLayout" >
           <property name="margin" >
            <number>0</number>
           </property>
           <property name="spacing" >
-           <number>6</number>
+           <number>0</number>
           </property>
-          <item rowspan="2" row="0" column="0" >
-           <spacer>
-            <property name="orientation" >
-             <enum>Qt::Horizontal</enum>
+          <item>
+           <layout class="QVBoxLayout" >
+            <property name="margin" >
+             <number>0</number>
             </property>
-            <property name="sizeHint" >
-             <size>
-              <width>121</width>
-              <height>20</height>
-             </size>
+            <property name="spacing" >
+             <number>6</number>
             </property>
-           </spacer>
+            <item>
+             <widget class="QLabel" name="login_jidLabel" >
+              <property name="text" >
+               <string>Jabber ID:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="login_passwordLabel" >
+              <property name="text" >
+               <string>Password:</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
-          <item row="1" column="1" >
-           <widget class="QCheckBox" name="login_savePassword_2" >
-            <property name="text" >
-             <string>Auto connect</string>
+          <item>
+           <layout class="QVBoxLayout" >
+            <property name="margin" >
+             <number>0</number>
             </property>
-           </widget>
-          </item>
-          <item row="0" column="1" >
-           <widget class="QCheckBox" name="login_savePassword" >
-            <property name="text" >
-             <string>Save Password</string>
+            <property name="spacing" >
+             <number>6</number>
             </property>
-           </widget>
+            <item>
+             <widget class="QLineEdit" name="login_jid" />
+            </item>
+            <item>
+             <widget class="QLineEdit" name="login_password" >
+              <property name="echoMode" >
+               <enum>QLineEdit::Password</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
@@ -191,59 +208,12 @@
           </property>
          </spacer>
         </item>
-        <item row="3" column="0" >
-         <layout class="QHBoxLayout" >
-          <property name="margin" >
-           <number>0</number>
+        <item row="1" column="0" >
+         <widget class="Line" name="line" >
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
           </property>
-          <property name="spacing" >
-           <number>0</number>
-          </property>
-          <item>
-           <layout class="QVBoxLayout" >
-            <property name="margin" >
-             <number>0</number>
-            </property>
-            <property name="spacing" >
-             <number>6</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="login_jidLabel" >
-              <property name="text" >
-               <string>Jabber ID:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="login_passwordLabel" >
-              <property name="text" >
-               <string>Password:</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" >
-            <property name="margin" >
-             <number>0</number>
-            </property>
-            <property name="spacing" >
-             <number>6</number>
-            </property>
-            <item>
-             <widget class="QLineEdit" name="login_jid" />
-            </item>
-            <item>
-             <widget class="QLineEdit" name="login_password" >
-              <property name="echoMode" >
-               <enum>QLineEdit::Password</enum>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
+         </widget>
         </item>
         <item row="0" column="0" >
          <widget class="QLabel" name="login_headerLabel" >
@@ -258,30 +228,64 @@ p, li { white-space: pre-wrap; }
           </property>
          </widget>
         </item>
-        <item row="1" column="0" >
-         <widget class="Line" name="line" >
-          <property name="orientation" >
-           <enum>Qt::Horizontal</enum>
+        <item row="4" column="0" >
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>0</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item rowspan="2" row="0" column="0" >
+           <spacer>
+            <property name="orientation" >
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" >
+             <size>
+              <width>121</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QCheckBox" name="login_savePassword_2" >
+            <property name="text" >
+             <string>Auto connect</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" >
+           <widget class="QCheckBox" name="login_savePassword" >
+            <property name="text" >
+             <string>Save Password</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="8" column="0" >
+         <widget class="QLabel" name="login_logoLabel" >
+          <property name="pixmap" >
+           <pixmap/>
+          </property>
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0" >
+         <widget class="QLabel" name="label" >
+          <property name="pixmap" >
+           <pixmap>images/logo.png</pixmap>
+          </property>
+          <property name="alignment" >
+           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
           </property>
          </widget>
         </item>
        </layout>
-       <widget class="QLabel" name="login_logoLabel" >
-        <property name="geometry" >
-         <rect>
-          <x>9</x>
-          <y>679</y>
-          <width>260</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="pixmap" >
-         <pixmap/>
-        </property>
-        <property name="alignment" >
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
       </widget>
       <widget class="QWidget" name="roster" >
        <layout class="QGridLayout" >
@@ -584,7 +588,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>235</width>
+     <width>268</width>
      <height>29</height>
     </rect>
    </property>
