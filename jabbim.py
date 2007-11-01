@@ -795,8 +795,8 @@ class clientClass(pyxl.client.Client):
 				#if self.groupchats[frm.host].users[nick].role
 				if self.groupchats.has_key(frm.userhost()):
 					user=frm.resource
-					icon=self.main.getIcon(unicode(frm.userhost()),size="16x16",status=self.main.icons[self.main.shows[self.groupchats[frm.userhost()].users[user].role]])
-					icon=self.main.getIcon(status="online",size="16x16")
+					icon=self.main.getIcon(unicode(frm.userhost()),size="16x16",status=self.main.icons[self.main.shows[self.groupchats[frm.userhost()].users[user].show]])
+					#icon=self.main.getIcon(status="online",size="16x16")
 				else:
 					icon=self.main.getIcon(status="offline",size="16x16")
 					user=frm.full()
