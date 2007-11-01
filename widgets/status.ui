@@ -125,21 +125,5 @@
     </hint>
    </hints>
   </connection>
-  <connection>
-   <sender>statusBox</sender>
-   <signal>currentIndexChanged(QString)</signal>
-   <receiver>status</receiver>
-   <slot>insertPlainText(QString)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>71</x>
-     <y>23</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>84</x>
-     <y>73</y>
-    </hint>
-   </hints>
-  </connection>
  </connections>
 </ui>

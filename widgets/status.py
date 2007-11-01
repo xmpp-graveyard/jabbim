@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/status.ui'
 #
-# Created: Thu Nov  1 04:51:47 2007
+# Created: Thu Nov  1 04:58:05 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!

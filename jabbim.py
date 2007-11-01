@@ -1968,6 +1968,7 @@ class statusWindow(QtGui.QDialog):
 		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.timeout)
 		app.connect(self.ui.status, QtCore.SIGNAL("cursorPositionChanged ()"),self.timerStop)
 		app.connect(self.ui.status, QtCore.SIGNAL("textChanged ()"),self.timerStop)
+
 		self.ui.status.setFocus()
 		self.timer.start(1000)
 		self.i=4
@@ -1976,7 +1977,7 @@ class statusWindow(QtGui.QDialog):
 		self.timeout()
 		for s in MainWindow.config['statusMessages']:
 			self.ui.statusBox.addItem(unicode(s))
-
+		app.connect(self.ui.statusBox, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.ui.status.setPlainText)
 	
 	def timerStop(self):
 		self.timer.stop()
@@ -1989,6 +1990,8 @@ class statusWindow(QtGui.QDialog):
 		else:
 			self.accept()
 	def accept(self):
+		if not unicode(self.ui.status.toPlainText()) in MainWindow.config['statusMessages'] and len(unicode(self.ui.status.toPlainText()))!=0:
+			MainWindow.config['statusMessages'].append(unicode(self.ui.status.toPlainText()))
 		if self.data=="offline":
 ##			#MainWindow.client.factory.stopTrying()
 			#if self.config.has_key('priority'):
