@@ -34,7 +34,7 @@
        </property>
       </column>
      </widget>
-     <widget class="QWidget" name="" >
+     <widget class="QWidget" name="layoutWidget" >
       <layout class="QVBoxLayout" >
        <property name="margin" >
         <number>0</number>

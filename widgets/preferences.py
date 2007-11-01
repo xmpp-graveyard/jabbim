@@ -147,6 +147,8 @@ class preferencesWindow(QtGui.QDialog):
 
 		# Themes
 		skins=os.listdir("themes/")
+		if self.main.config['theme']=="None":
+			self.ui.useThemes.setChecked(False)
 		for skin in skins:
 			if os.path.isdir("themes/"+skin) and os.path.exists("themes/"+skin+"/style.css"):
 				preview=QtGui.QIcon('themes/'+skin+"/preview.png")
@@ -293,6 +295,9 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.config['resource']=''+resource+''
 		self.main.config['priority']=self.ui.connection_priority.text()
 		self.main.config['theme']=unicode(self.ui.themes.currentItem().data(32).toString())
+		if not self.ui.useThemes.isChecked():
+			self.main.config['theme']="None"
+			self.main.loadTheme()
 		if self.ui.roster_compact.isChecked()==True:
 			self.main.config['rosterMode']="compact"
 			self.main.ui.roster.userHeight=22
