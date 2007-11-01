@@ -57,6 +57,7 @@ class searchDialog(QtGui.QDialog):
 		self.splitter.setSizes([150,500])
 
 	def _gotResults(self,data):
+		self.table.clear()
 		jid,legacy,form=data
 		for i in range(int(self.table.columnCount())):
 			self.table.headerItem().setText(i,"")
