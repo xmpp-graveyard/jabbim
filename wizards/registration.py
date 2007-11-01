@@ -143,7 +143,7 @@ class registrationWizard(QtGui.QWizard):
 		self.addPage(createWaitPage(self))
 		self.addPage(createFinishPage(self))
 		self.setWindowTitle(self.tr("Registration Wizard"))
-		
+		self.cl=None
 		self.error=None
 	
 	def initializePage(self,i):
@@ -162,5 +162,21 @@ class registrationWizard(QtGui.QWizard):
 			#log.startLogging(sys.stdout)
 			self.cl.connect()
 			reactor.run()
-
+		#elif i==4:
+			#self.cl.disconnect()
 		return
+	
+	def reject(self):
+		if self.cl:
+			self.cl.disconnect()
+		return QtGui.QWizard.reject(self)
+
+	def accept(self):
+		if self.cl:
+			self.cl.disconnect()
+		return QtGui.QWizard.accept(self)
+
+	def finished(self,result):
+		if self.cl:
+			self.cl.disconnect()
+		return QtGui.QWizard.finished(self,result)
