@@ -212,9 +212,11 @@ class clientClass(pyxl.client.Client):
 	def on_discoItemsBookmarksReceived(self, jid):
 		# make user list for bookmarked groupchat
 		item=self.main.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1)[0]
+		for i in range(item.childCount()):
+			item.takeChild(0)
 		for name in self.disco[jid][None]['items'].keys():
 			user=QtGui.QTreeWidgetItem(item)
-			user.setText(0,unicode(name))
+			user.setText(0,unicode(jidT.JID(name).resource))
 			user.setText(1,unicode(name))
 			user.setIcon(0,self.main.getIcon(size="16x16"))
 
@@ -1027,8 +1029,11 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
 		app.connect(self.ui.actionJoin_Groupchat, QtCore.SIGNAL("triggered ( bool )"),self.joinGroupchat)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
+		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.bookmarksCurrentChanged)
+		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.bookmarksItemClicked)
+
 		#app.connect(self.ui.addContact, QtCore.SIGNAL("clicked ()"),self.addContactMainWindow)
-		app.connect(self.ui.newBookmark, QtCore.SIGNAL("clicked ()"),self.newBookmark)
+		app.connect(self.ui.mucBrowserButton, QtCore.SIGNAL("clicked ()"),self.mucBrowser)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
 		QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered ( bool )"),self.trayQuit)
 		QtCore.QObject.connect(self.ui.actionService_Discovery, QtCore.SIGNAL("triggered ( bool )"),self.serviceDiscovery)
@@ -1142,7 +1147,7 @@ class mainWindow(QtGui.QMainWindow):
 		#QtGui.QMainWindow(self).resizeEvent(event)
 		#self.setUpdatesEnabled(True)
 
-	def mucBrowser(self,bool):
+	def mucBrowser(self,bool=False):
 		self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
 		self.mucbrowser.show()
 
@@ -1619,6 +1624,16 @@ class mainWindow(QtGui.QMainWindow):
 					item.takeChild(0)
 			# set item expanded
 			self.ui.bookmarks.setItemExpanded(item,True)
+			self.client.getDiscoItems(unicode(item.text(1)),callback=self.client.on_discoItemsBookmarksReceived,callback_par=unicode(item.text(1)))
+
+	def bookmarksItemClicked(self,item,i):
+		if item.isExpanded():
+			self.ui.bookmarks.collapseItem(item)
+		else:
+			self.ui.bookmarks.expandItem(item)
+
+	def bookmarksCurrentChanged(self,item,old):
+		if item.parent()==None:
 			self.client.getDiscoItems(unicode(item.text(1)),callback=self.client.on_discoItemsBookmarksReceived,callback_par=unicode(item.text(1)))
 
 	def preferencesClicked(self,bool):
