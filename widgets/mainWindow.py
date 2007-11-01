@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/mainWindow.ui'
+# Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created: Thu Nov  1 05:07:11 2007
-#      by: PyQt4 UI code generator 4.3
+# Created: Thu Nov  1 15:59:37 2007
+#      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
 
+import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_MainWindow(object):
@@ -249,7 +250,6 @@ class Ui_MainWindow(object):
         self.vboxlayout2.setObjectName("vboxlayout2")
 
         self.splashImage = QtGui.QLabel(self.splash)
-        self.splashImage.setPixmap(QtGui.QPixmap("images/logo.png"))
         self.splashImage.setObjectName("splashImage")
         self.vboxlayout2.addWidget(self.splashImage)
 
@@ -316,8 +316,8 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.rosterStackedWidget.setCurrentIndex(0)
-        self.tabWidget.setCurrentIndex(0)
+        self.rosterStackedWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QObject.connect(self.login_password,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)
         QtCore.QObject.connect(self.login_jid,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -345,6 +345,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.bookmarksTab), QtGui.QApplication.translate("MainWindow", "b", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.bookmarksTab),QtGui.QApplication.translate("MainWindow", "Bookmarks", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.eventsTab), QtGui.QApplication.translate("MainWindow", "Events", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.eventsTab),QtGui.QApplication.translate("MainWindow", "Events", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Here you can change your status", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setToolTip(QtGui.QApplication.translate("MainWindow", "You can show/hide contats that are unavailable", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPlugins.setTitle(QtGui.QApplication.translate("MainWindow", "Plugins", None, QtGui.QApplication.UnicodeUTF8))

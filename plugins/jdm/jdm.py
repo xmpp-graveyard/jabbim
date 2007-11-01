@@ -9,16 +9,13 @@ from include import utils
 
 
 class Plugin(plugins.PluginBase):
-#	def pis(self,co):
-#		self.window.ui.log.append(co)
-	
 	def __init__(self,main, homedir):
 		plugins.PluginBase.__init__(self, main, homedir)
 		self.fname = 'jdm'
 		self.description = 'Jabbim disk manager'
 		self.author = u"Josef 'Pepeq' Halíček"
 		self.name = 'JDM Plugin'
-		self.version = '0.0121'
+		self.version = '0.1088'
 		self.category = ['disk']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		if main:
@@ -27,17 +24,20 @@ class Plugin(plugins.PluginBase):
 			self.window.setWindowIcon(self.main.windowIcon())
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
-			
-			
+			QtCore.QObject.connect(self.window.ui.reload, QtCore.SIGNAL("clicked()"),self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.main.client.jid.userhost(),)).addCallback(self.updateView, 'public'))
+			self.obsah=[]
 
-				
-   #self.main.client.callRemote('rpc@jabbim.cz/service', 'ping', (' ',)).addCallback(pis)
 		else:
 			self.loadConfig(homedir)
 		
 	def updateView(self, vysledek, typ = 'public'):
-		self.window.ui.log.append(unicode(vysledek))
-			
+		self.obsah=[]
+		self.window.ui.log.clear()
+		self.window.ui.log.append(u"hu!"+str(len(vysledek[0][0])))
+		for i in range (0,len(vysledek[0][0])):
+			self.obsah.append[vysledek[0][0][i][0],vysledek[0][0][i][1]]
+			self.window.ui.log.append(u"Název: %s \nVelikost: %s bytů\ntywe :)\n"%(self.obsah[i][0],self.obsah[i][1]))
+	
 	def buildRosterMenu(self):
 		menu=self.rosterMenu()
 		menu.addAction("Jabbim disk manager",self.showSlot)
