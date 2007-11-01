@@ -291,9 +291,10 @@ class chatWindow(QtGui.QMainWindow):
 		#tab.chat.ui.admin.hide()
 		layout.addWidget(tab.chat)
 		jmeno = room
-		for nick, bookmark  in self.main.client.bookmarks['conference'].iteritems():
-			if bookmark.jid.userhost() == room:
-				jmeno = nick
+		if str(self.main.config["useMUCNames"])=="True":
+			for nick, bookmark  in self.main.client.bookmarks['conference'].iteritems():
+				if bookmark.jid.userhost() == room:
+					jmeno = nick
 		self.ui.chatTab.addTab(tab,QtGui.QIcon("images/16x16/categories/muc.png"), jmeno)
 		self.setWindowTitle(unicode(jmeno))
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))

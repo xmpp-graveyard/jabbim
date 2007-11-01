@@ -66,7 +66,9 @@ def loadConfig(main,status):
 			"plugins":['notification'],
 			"rosterMode":"normal",
 			"chatMode":"normal",
-			"statusMessages":list(status)
+			"statusMessages":list(status),
+			"showChatStatusChanges":True,
+			"useMUCNames":True
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:

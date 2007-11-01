@@ -103,6 +103,17 @@ class preferencesWindow(QtGui.QDialog):
 		else:
 			self.ui.savePosition.setChecked(False)
 
+		# Chat
+		if self.main.config['showChatStatusChanges']=='True':
+			self.ui.showChatStatusChanges.setChecked(True)
+		else:
+			self.ui.showChatStatusChanges.setChecked(False)
+
+		if self.main.config['useMUCNames']=='True':
+			self.ui.useMUCNames.setChecked(True)
+		else:
+			self.ui.useMUCNames.setChecked(False)
+
 		# connection
 		self.ui.connection_password.setText(rot13.scramble(self.main.config['passwd']))
 		self.ui.connection_jid.setText(self.main.config['jid'])
@@ -290,14 +301,17 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.config['autoJoin']=str(self.ui.connection_autojoin.isChecked())
 		self.main.config['autoPriority']=str(self.ui.connection_autoPriority.isChecked())
 		self.main.config['saveGeometry']=str(self.ui.savePosition.isChecked())
+		self.main.config['useMUCNames']=str(self.ui.useMUCNames.isChecked())
+		self.main.config['showChatStatusChanges']=str(self.ui.showChatStatusChanges.isChecked())
 		self.main.config['chat_skin']=unicode(self.ui.chatSkin_list.currentText())
 		self.main.config['jid']=jid
 		self.main.config['resource']=''+resource+''
 		self.main.config['priority']=self.ui.connection_priority.text()
-		self.main.config['theme']=unicode(self.ui.themes.currentItem().data(32).toString())
 		if not self.ui.useThemes.isChecked():
 			self.main.config['theme']="None"
 			self.main.loadTheme()
+		else:
+			self.main.config['theme']=unicode(self.ui.themes.currentItem().data(32).toString())
 		if self.ui.roster_compact.isChecked()==True:
 			self.main.config['rosterMode']="compact"
 			self.main.ui.roster.userHeight=22

@@ -506,12 +506,13 @@ class clientClass(pyxl.client.Client):
 						user=user[0].name
 					else:
 						user=unicode(jid.full())
-					message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",show).replace('[nick]', user)
-					if status == None or len(status)==0:
-						message = message.replace("[[message]]",'')
-					else:
-						message = message.replace("[message]",unicode(status))
-					w.chat.textEditWrite(message)
+					if str(self.main.config["showChatStatusChanges"])=="True":
+						message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",show).replace('[nick]', user)
+						if status == None or len(status)==0:
+							message = message.replace("[[message]]",'')
+						else:
+							message = message.replace("[message]",unicode(status))
+						w.chat.textEditWrite(message)
 					break
 
 			if jid.resource:
