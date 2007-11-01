@@ -1733,7 +1733,7 @@ class mainWindow(QtGui.QMainWindow):
 			ac = QtGui.QAction(None)
 			ac.setData(QtCore.QVariant(unicode(action.data().toString())))
 			ac.setParent(None)
-		self.statusChanged(ac)
+		self.statusChanged(ac, True)
 
 	def statusChanged(self,action,invisible=False):
 		# status changed
