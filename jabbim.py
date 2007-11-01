@@ -35,6 +35,7 @@ except:
 	from sha import new as sha1
 
 import widgets
+import wizards
 import pyxl
 from pyxl import storage
 import traceback
@@ -1038,6 +1039,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		#app.connect(self.ui.addContact, QtCore.SIGNAL("clicked ()"),self.addContactMainWindow)
 		app.connect(self.ui.mucBrowserButton, QtCore.SIGNAL("clicked ()"),self.mucBrowser)
+		app.connect(self.ui.registerButton, QtCore.SIGNAL("clicked ()"),self.registerButtonClicked)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
 		QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered ( bool )"),self.trayQuit)
 		QtCore.QObject.connect(self.ui.actionService_Discovery, QtCore.SIGNAL("triggered ( bool )"),self.serviceDiscovery)
@@ -1118,6 +1120,11 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.roster.repaint()
 
 		self.setMinimumWidth(200)
+
+	def registerButtonClicked(self):
+		self.regwiz=wizards.registration.registrationWizard(self,self)
+		self.regwiz.show()
+
 
 	def serviceDiscovery(self,b):
 		self.discovery=widgets.servicediscovery.serviceDiscoveryDialog(self,self)
