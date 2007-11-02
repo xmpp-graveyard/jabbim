@@ -1831,10 +1831,6 @@ class mainWindow(QtGui.QMainWindow):
 # 		self.ui.rosterStackedWidget.setCurrentIndex(1)
 		#self.ui.statusButton.setText(unicode(self.status["online"]))
 		self.ui.statusButton.setIcon(self.getIcon("online",size="16x16"))
-		if self.client.privacy.active:
-			if self.client.privacy.active.invisible:
-				log.msg("Connected as invisible!")
-				self.ui.statusButton.setIcon(self.getIcon("invisible-online",size="16x16"))
 		self.ui.statusButton.show()
 		self.ui.showOffline.show()
 		self.tray.showMessage(self.tr("Jabbim"),self.tr("Jabbim is ready! You are connected! :) "))

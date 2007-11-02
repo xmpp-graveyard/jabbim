@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Thu Nov  1 18:50:29 2007
-#      by: PyQt4 UI code generator 4.3
+# Created: Fri Nov  2 15:20:26 2007
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -35,13 +35,13 @@ class Ui_MainWindow(object):
         self.gridlayout1.setObjectName("gridlayout1")
 
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(0)
+        self.hboxlayout.setMargin(0)
         self.hboxlayout.setObjectName("hboxlayout")
 
         self.vboxlayout = QtGui.QVBoxLayout()
-        self.vboxlayout.setMargin(0)
         self.vboxlayout.setSpacing(6)
+        self.vboxlayout.setMargin(0)
         self.vboxlayout.setObjectName("vboxlayout")
 
         self.login_jidLabel = QtGui.QLabel(self.login)
@@ -54,8 +54,8 @@ class Ui_MainWindow(object):
         self.hboxlayout.addLayout(self.vboxlayout)
 
         self.vboxlayout1 = QtGui.QVBoxLayout()
-        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setSpacing(6)
+        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setObjectName("vboxlayout1")
 
         self.login_jid = QtGui.QLineEdit(self.login)
@@ -70,8 +70,8 @@ class Ui_MainWindow(object):
         self.gridlayout1.addLayout(self.hboxlayout,3,0,1,1)
 
         self.hboxlayout1 = QtGui.QHBoxLayout()
-        self.hboxlayout1.setMargin(0)
         self.hboxlayout1.setSpacing(6)
+        self.hboxlayout1.setMargin(0)
         self.hboxlayout1.setObjectName("hboxlayout1")
 
         spacerItem = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
@@ -90,8 +90,8 @@ class Ui_MainWindow(object):
         self.gridlayout1.addLayout(self.hboxlayout1,5,0,1,1)
 
         self.hboxlayout2 = QtGui.QHBoxLayout()
-        self.hboxlayout2.setMargin(0)
         self.hboxlayout2.setSpacing(6)
+        self.hboxlayout2.setMargin(0)
         self.hboxlayout2.setObjectName("hboxlayout2")
 
         spacerItem2 = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
@@ -144,7 +144,6 @@ class Ui_MainWindow(object):
         self.gridlayout1.addWidget(self.login_logoLabel,8,0,1,1)
 
         self.label = QtGui.QLabel(self.login)
-        self.label.setPixmap(QtGui.QPixmap("images/logo.png"))
         self.label.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
         self.label.setObjectName("label")
         self.gridlayout1.addWidget(self.label,7,0,1,1)
@@ -251,7 +250,7 @@ class Ui_MainWindow(object):
         self.statusButton.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.statusButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.statusButton.setObjectName("statusButton")
-        self.gridlayout7.addWidget(self.statusButton,1,4,1,1)
+        self.gridlayout7.addWidget(self.statusButton,1,5,1,1)
 
         self.selfAvatar = QtGui.QLabel(self.frame)
         self.selfAvatar.setMargin(2)
@@ -264,11 +263,19 @@ class Ui_MainWindow(object):
         self.showOffline.setCheckable(True)
         self.showOffline.setArrowType(QtCore.Qt.NoArrow)
         self.showOffline.setObjectName("showOffline")
-        self.gridlayout7.addWidget(self.showOffline,1,3,1,1)
+        self.gridlayout7.addWidget(self.showOffline,1,4,1,1)
 
         self.selfName = QtGui.QLabel(self.frame)
         self.selfName.setObjectName("selfName")
         self.gridlayout7.addWidget(self.selfName,0,1,1,4)
+
+        self.toggleInvisible = QtGui.QToolButton(self.frame)
+        self.toggleInvisible.setMaximumSize(QtCore.QSize(16777215,20))
+        self.toggleInvisible.setIcon(QtGui.QIcon("images/16x16/status/jabber-invisible.png"))
+        self.toggleInvisible.setCheckable(True)
+        self.toggleInvisible.setArrowType(QtCore.Qt.NoArrow)
+        self.toggleInvisible.setObjectName("toggleInvisible")
+        self.gridlayout7.addWidget(self.toggleInvisible,1,3,1,1)
         self.gridlayout3.addWidget(self.frame,0,0,1,1)
         self.rosterStackedWidget.addWidget(self.roster)
 
@@ -276,12 +283,11 @@ class Ui_MainWindow(object):
         self.splash.setObjectName("splash")
 
         self.vboxlayout2 = QtGui.QVBoxLayout(self.splash)
-        self.vboxlayout2.setMargin(9)
         self.vboxlayout2.setSpacing(6)
+        self.vboxlayout2.setMargin(9)
         self.vboxlayout2.setObjectName("vboxlayout2")
 
         self.splashImage = QtGui.QLabel(self.splash)
-        self.splashImage.setPixmap(QtGui.QPixmap("images/logo.png"))
         self.splashImage.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
         self.splashImage.setObjectName("splashImage")
         self.vboxlayout2.addWidget(self.splashImage)
@@ -349,7 +355,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.rosterStackedWidget.setCurrentIndex(0)
+        self.rosterStackedWidget.setCurrentIndex(1)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.login_password,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)
         QtCore.QObject.connect(self.login_jid,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)
@@ -382,6 +388,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.eventsTab),QtGui.QApplication.translate("MainWindow", "Events", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Here you can change your status", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setToolTip(QtGui.QApplication.translate("MainWindow", "You can show/hide contats that are unavailable", None, QtGui.QApplication.UnicodeUTF8))
+        self.toggleInvisible.setToolTip(QtGui.QApplication.translate("MainWindow", "Toggle Invisibility", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPlugins.setTitle(QtGui.QApplication.translate("MainWindow", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAkce.setTitle(QtGui.QApplication.translate("MainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
