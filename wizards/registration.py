@@ -8,6 +8,8 @@ from twisted.internet import reactor
 from pyxl import register
 from twisted.python import log
 import sys
+from include import rot13
+
 
 servers=["jabbim.cz","jabbim.sk","jabbim.pl","jabbim.com","jabber.cz","njs.netlab.cz"]
 def createFirstPage(wizard):
@@ -109,6 +111,7 @@ def createThirdPage(wizard):
 	
 	passwordLabel=QtGui.QLabel(wizard.tr("Password:"))
 	passwordLineEdit=QtGui.QLineEdit()
+	passwordLineEdit.setEchoMode(QtGui.QLineEdit.Password)
 	
 	layout=QtGui.QGridLayout()
 	layout.addWidget(wizard.label,0,0,1,3)
@@ -155,6 +158,7 @@ class registrationWizard(QtGui.QWizard):
 		self.setWindowTitle(self.tr("Registration Wizard"))
 		self.cl=None
 		self.error=None
+		self.registered=False
 	
 	def initializePage(self,i):
 		#page=self.page(i)
@@ -175,8 +179,8 @@ class registrationWizard(QtGui.QWizard):
 			#log.startLogging(sys.stdout)
 			self.cl.connect()
 			reactor.run()
-		#elif i==4:
-			#self.cl.disconnect()
+		elif i==4:
+			self.registered=True
 		return
 	
 	def reject(self):
@@ -186,7 +190,15 @@ class registrationWizard(QtGui.QWizard):
 		return QtGui.QWizard.reject(self)
 
 	def accept(self):
-		print "accept"
+		if self.registered:
+			server=servers[int(self.field("server").toString())-1]
+			name=unicode(self.field("jid").toString())
+			password=unicode(self.field("password").toString())
+			
+			self.main.config['passwd']=rot13.scramble(password)
+			self.main.config['jid']=name+"@"+server
+			self.main.config['savePasswd']="True"
+			self.main.fillLoginForm()
 		if self.cl:
 			self.cl.disconnect()
 		return QtGui.QWizard.accept(self)
