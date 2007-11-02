@@ -95,7 +95,7 @@ class PrivacyList:
 			self.update()
 
 	def mkItem(self, action, typ = None, value = None, stanzas = [],
-			to_zero = True):	# True - lowest possible (more important), False - current highest + 1 (less important)
+			to_zero = True): # True - lowest possible (more important), False - current highest + 1 (less important)
 		orders = self._getOrders()
 		if to_zero:
 			zitem = self.getItem(0)
@@ -211,21 +211,24 @@ class PrivacyList:
 			self.delItem(item)
 		for x in self.main.ui.roster.getUserItems(jid.split("/", 1)[0]):
 			x.privacy["hide"] = False
+	
+	def _showme(self, *a):
+		sc = self.main.client.roster['users'][self.main.client.jid.userhost()].resources[self.main.client.jid.resource]
+		self.main.client.sendPresence(typ="available", show=sc.show, status=sc.status)
 
-	def setInvisible(self):
+	def setInvisible(self, globaly = False):
 		if not self.invisible:
 			self.main.client.sendPresence(typ="unavailable")
-			self.invisible = self.mkItem("deny", stanzas = ["presence-out"], to_zero = False)
-			self.main.client.sendPresence(typ="available")
+			self.invisible = self.mkItem("deny", stanzas = ["presence-out"], to_zero = globaly)
+			self._showme()
 			log.msg("we are now invisible")
 
 	def unsetInvisible(self, available = True):
 		if self.invisible:
 			self.delItem(self.invisible)
 			self.invisible = None
-			sc = self.main.client.roster['users'][self.main.client.jid.userhost()].resources[self.main.client.jid.resource]
 			if available:
-				self.main.client.sendPresence(typ="available", show=sc.show, status=sc.status)
+				self._showme()
 			log.msg("we are now visible")
 
 	
