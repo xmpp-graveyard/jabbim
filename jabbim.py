@@ -215,7 +215,8 @@ class clientClass(pyxl.client.Client):
 				# add user item to the group
 				self.main.ui.roster.addUser(jid,name,group,first=True)
 		# show avatar
-		self.main.cache.get_avatar(jid, self.main._loadAvatar)
+#		self.main.cache.get_avatar(jid, self.main._loadAvatar)
+		self.main._loadAvatar(self.main.homeDir+'/avatars/'+jid, self.avatars.get(jid), jid)
 
 	def on_discoItemsBookmarksReceived(self, jid):
 		# make user list for bookmarked groupchat
@@ -746,15 +747,22 @@ class clientClass(pyxl.client.Client):
 						else:
 							truejid = None
 						file = None
-						if truejid != None:
-							print truejid
-							truejid = jidT.JID(truejid)
-							if self.roster['users'].has_key(truejid.userhost()):
-								file=self.main.homeDir+'/avatars/'+unicode(truejid.userhost())
+#						if truejid != None:
+#							print truejid
+#							truejid = jidT.JID(truejid)
+#							if self.roster['users'].has_key(truejid.userhost()):
+#								file=self.main.homeDir+'/avatars/'+unicode(truejid.userhost())
+						print self.avatars
+						if self.avatars.has_key(frm+'/'+user):
+							file = self.main.homeDir+'/avatars/'+unicode(frm+'%'+user)
+						elif truejid != None and self.avatars.has_key(truejid):
+							file = self.main.homeDir+'/avatars/'+unicode(truejid)
+						else:
+							#self.getVCard(frm+'/'+user) #tohle asi neni potreba
+							pass
 											
-						if file == None:
-							file=self.main.homeDir+'/avatars/'+unicode(frm+'/'+user)
-						if not os.path.isfile(file):
+
+						if not os.path.isfile(unicode(file)):
 							print truejid, frm, user
 							file="images/32x32/apps/jabbim.png"
 						if not w.chat.sizes.has_key(file):
@@ -889,32 +897,49 @@ class clientClass(pyxl.client.Client):
 		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db
 		log.msg("vcard "+unicode(jid))
 # 		log.msg(unicode(card))
-		if card.has_key("BINVAL"):
-			typ=None
-			if card.has_key("TYPE"):
-				typ=str(card['TYPE'].split("/")[1])
-			pixmap=QtGui.QPixmap()
-			image=base64.decodestring(str(card["BINVAL"]))
-			f=open(self.main.homeDir+'/avatars/'+jid,"wb")
-			f.write(image)
-			f.close()
-			if typ:
-				pixmap.loadFromData(image,typ)
-			else:
-				pixmap.loadFromData(image)
-			log.msg(unicode(self.jid.userhost())+" "+unicode(jid))
-			if unicode(self.jid.userhost())==unicode(jid):
-				print "Setting avatar"
-				self.main.ui.selfAvatar.setPixmap(pixmap.scaledToHeight(48))
-			for item in self.main.ui.roster.getUserItems(jid):
-				item.setAvatar(QtGui.QIcon(pixmap))
-			for item in self.main.ui.roster.getMetaItems(jid):
-				item[0].setAvatar(QtGui.QIcon(pixmap))
-			sha=sha1(image).hexdigest()
-			self.main.cache.set_avatar(jid, ['avatars/'+jid, sha])
-			self.main._loadAvatar('avatars/'+jid, sha, jid)
+#		if card.has_key("BINVAL"):
+#			typ=None
+#			if card.has_key("TYPE"):
+#				typ=str(card['TYPE'].split("/")[1])
+#			pixmap=QtGui.QPixmap()
+#			image=base64.decodestring(str(card["BINVAL"]))
+#			f=open(self.main.homeDir+'/avatars/'+jid,"wb")
+#			f.write(image)
+#			f.close()
+#			if typ:
+#				pixmap.loadFromData(image,typ)
+#			else:
+#				pixmap.loadFromData(image)
+#			log.msg(unicode(self.jid.userhost())+" "+unicode(jid))
+#			if unicode(self.jid.userhost())==unicode(jid):
+#				print "Setting avatar"
+#				self.main.ui.selfAvatar.setPixmap(pixmap.scaledToHeight(48))
+#			for item in self.main.ui.roster.getUserItems(jid):
+#				item.setAvatar(QtGui.QIcon(pixmap))
+#			for item in self.main.ui.roster.getMetaItems(jid):
+#				item[0].setAvatar(QtGui.QIcon(pixmap))
+#			sha=sha1(image).hexdigest()
+#			self.main.cache.set_avatar(jid, ['avatars/'+jid, sha])
+#			self.main._loadAvatar('avatars/'+jid, sha, jid)
+#		else:
+#			self.main.cache.set_avatar(jid, ['nic', 'nic'])
+
+	def on_avatarUpdate(self, jid):
+		pixmap=QtGui.QPixmap()
+		if self.avatars[jid] != None:
+			f=open(self.main.homeDir+'/avatars/'+jid,"rb")
 		else:
-			self.main.cache.set_avatar(jid, ['nic', 'nic'])
+			f=open('images/32x32/apps/jabbim.png', 'rb')
+		image = f.read()
+		f.close()
+		if unicode(self.jid.userhost())==unicode(jid):
+			print "Setting avatar"
+			self.main.ui.selfAvatar.setPixmap(pixmap.scaledToHeight(48))
+		for item in self.main.ui.roster.getUserItems(jid):
+			item.setAvatar(QtGui.QIcon(pixmap))
+		for item in self.main.ui.roster.getMetaItems(jid):
+			item[0].setAvatar(QtGui.QIcon(pixmap))
+			
 
 	def on_fileReceived(self, sid, id):
 		self.main.events.addBooleanEvent(self.ftStarted,[sid,id],None,[],self.main.tr("File transfer"),text= unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),height=40,name=unicode(self.ft[sid].tojid),typ="ftTransfer",icon=None)
@@ -1924,11 +1949,10 @@ class mainWindow(QtGui.QMainWindow):
 		self.client.connect()
 	
 	def _loadAvatar(self,file, hash, jid):
-		if os.path.isfile(self.homeDir+'/'+unicode(file)):
+		if os.path.isfile(unicode(file)):
 			jid=jidT.JID(jid).userhost()
 			pixmap=QtGui.QPixmap()
-			f=open(self.homeDir+'/'+unicode(file),"rb")
-			print self.homeDir+'/'+unicode(file)
+			f=open(unicode(file),"rb")
 			image=f.read()
 			f.close()
 			pixmap.loadFromData(image)
@@ -1938,7 +1962,7 @@ class mainWindow(QtGui.QMainWindow):
 			for item in self.ui.roster.getMetaItems(jid):
 				item[0].setAvatar(QtGui.QIcon(pixmap))
 		else:
-			log.msg("BAD FILE FOR AVATAR:"+unicode(unicode(self.homeDir)+'/'+unicode(file)))
+			log.msg("BAD FILE FOR AVATAR:"+unicode(file))
 		self.client.roster['users'][jid].setAvatar(file, hash)
 	
 	def _addGroup(self, group):

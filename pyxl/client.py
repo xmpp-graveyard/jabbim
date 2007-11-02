@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
-import sys, time, random
-import socks5, events
+import sys, time, random, os
+import socks5, events, base64
 from twisted import names
 from twisted.python import log
 from twisted.internet import protocol, error
@@ -101,7 +101,13 @@ class Client(derived):
 		self.log = True
 		self.xmlLang = 'cs'
 		self.dispatcher = events.EventDispatcher()
-		
+		self.avatars = {} # jid:hash
+		path = self.main.homeDir+'/avatars/'
+		for jd in os.listdir(path):
+			fd = open(path+jd, 'rb')
+			hash = sha1(fd.read()).hexdigest()
+			fd.close()
+			self.avatars[jd] = hash
 		self.reactor.callFromThread(self.on_init)
 		self.main.cache.get_caps(self._cacheCaps)
 		self.dispatcher.registerHandler('on_message', self.on_message, 'on_message')
@@ -357,7 +363,9 @@ class Client(derived):
 	def _noVcard(self, err, jid): 
 		print jid, 'no vcard available' 
 		log.msg('chci ulozit ' + jid )
-		self.reactor.callFromThread(self.main.cache.set_avatar,jid, ['nic', 'nic'])
+#		self.reactor.callFromThread(self.main.cache.set_avatar,jid, ['nic', 'nic'])
+		self.avatars[jid] = None
+		self.on_avatarUpdate(jid)
 
 	def _vcardReceived(self, el):
 		log.msg('vcard received')
@@ -381,6 +389,20 @@ class Client(derived):
 					card[pref + y.name]=unicode(y)
 			else:
 				card[x.name]=unicode(x)
+		if card.has_key("BINVAL"):
+			image=base64.decodestring(str(card["BINVAL"]))
+			f=open(self.main.homeDir+'/avatars/'+unicode(el['from']).replace('/', '%'),"wb")
+
+			f.write(image)
+			f.close()
+
+			self.avatars[el['from']] = sha1(image).hexdigest()
+			try:
+				self.on_avatarUpdate(el['from'])
+			except:
+				print 'chyba v updatu avatara'
+		else:
+			self.avatars[el['from']] = None
 		self.reactor.callFromThread(self.on_vcardReceived,el['from'], card)
 		return card
 
@@ -524,10 +546,6 @@ class Client(derived):
 		self.roster['users'][self.jid.userhost()] = Contact(self, self.jid.userhost(), self.jid.user, 'both', [], [])
 		
 		log.msg( 'roster arrived')
-##		presence = Element(('jabber:client','presence'))
-##		presence['priority'] = '5'
-##		self.on_xml(presence.toXml())
-##		self.xmlstream.send(presence)
 		self.sendPresence()
 		cekej = 20
 		if ln*0.05 < cekej:
@@ -689,6 +707,25 @@ class Client(derived):
 			elif child.name == 'x' and child.defaultUri == 'vcard-temp:x:update':
 				hash = unicode(child.firstChildElement())
 
+#avatars
+		if self.avatars.has_key(fromjid):
+			if self.avatars[fromjid] == hash:
+				pass #vsechno je ok, mame spravneho avatara
+			elif self.avatars[fromjid] != hash and hash != None:
+				self.getVCard(fromjid)
+		elif self.avatars.has_key(frm.full()):
+			if self.avatars[frm.full()] == hash:
+				pass #vsechno je ok, mame spravneho avatara
+			elif self.avatars[frm.full()] != hash and hash != None:
+				self.getVCard(frm.full())
+		else:
+			if self.groupchats.has_key(fromjid):
+				self.getVCard(frm.full())
+			else:
+				self.getVCard(fromjid)
+				
+
+
 		if show == None and not el.hasAttribute('type'):
 			show = 'online'
 		elif el.hasAttribute('type'):
@@ -700,19 +737,21 @@ class Client(derived):
 				self.roster['users'][fromjid].setPriority(resource, priority)
 				self.roster['users'][fromjid].setFeatures(resource, features)
 
-			chci_card = True 
-			if self.roster['users'][fromjid].avatar_hash == 'nic': 
-				chci_card = False 
-			elif hash == None and self.roster['users'][fromjid].avatar_hash !='': 
-				chci_card = False 
-				pass 
-			elif self.roster['users'][fromjid].avatar_hash == hash: 
-				## print fromjid, 'ma spravneho avatara' 
-				chci_card = False 
-				pass  
-			if chci_card :
-##				print fromjid, hash, self.roster['users'][fromjid].avatar_hash 
-				self.getVCard(fromjid)
+#			chci_card = True 
+#			if self.roster['users'][fromjid].avatar_hash == 'nic': 
+#				chci_card = False 
+#			elif hash == None and self.roster['users'][fromjid].avatar_hash !='': 
+#				chci_card = False 
+#				pass 
+#			elif self.roster['users'][fromjid].avatar_hash == hash: 
+#				## print fromjid, 'ma spravneho avatara' 
+#				chci_card = False 
+#				pass  
+#			if chci_card :
+###				print fromjid, hash, self.roster['users'][fromjid].avatar_hash 
+#				self.getVCard(fromjid)
+
+			
 			if first and self.first_wait:
 				self.first_presence.append((frm,show))
 			else:
