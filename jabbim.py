@@ -1142,9 +1142,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.userStyleWidget.hide()
 		self.ui.selectedItemStyle.hide()
 		self.reconnect = True # pri unavailable tady dame False
-		if self.config['autoJoin']=='True':
-			self.ui.rosterStackedWidget.setCurrentIndex(2)
-			self.connect()
+
 		self.active=True
 		
 		if self.config['rosterMode'] == "compact" :
@@ -1159,6 +1157,10 @@ class mainWindow(QtGui.QMainWindow):
 		self.setMinimumWidth(200)
 
 		self.fillLoginForm()
+
+		if self.config['autoJoin']=='True':
+			self.ui.rosterStackedWidget.setCurrentIndex(2)
+			self.connect()
 
 	def fillLoginForm(self):
 		# fill login form

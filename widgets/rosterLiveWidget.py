@@ -471,9 +471,11 @@ class rosterWidget(QtGui.QWidget):
 
 		# set the font size for text
 		doc=QtGui.QTextDocument()
-		font=doc.defaultFont()
-		font.setPixelSize(12)
-		doc.setDefaultFont(font)
+		#font=doc.defaultFont()
+		font=QtGui.QApplication.fontMetrics()
+		fontHeight=int(font.height())
+		#font.setPixelSize(12)
+		#doc.setDefaultFont(font)
 
 		# paint background of item
 		painter.save()
@@ -501,7 +503,7 @@ class rosterWidget(QtGui.QWidget):
 		doc.setHtml("<font color=\""+self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+item.name+"</font>")
 		
 		painter.save()
-		painter.translate(x+30,y+2)
+		painter.translate(x+30,y+(22-fontHeight)/2)
 		doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+20))
 		painter.restore()
 
@@ -512,9 +514,10 @@ class rosterWidget(QtGui.QWidget):
 		
 		# set font
 		doc=QtGui.QTextDocument()
-		font=doc.defaultFont()
-		font.setPixelSize(12)
-		doc.setDefaultFont(font)
+		font=QtGui.QApplication.fontMetrics()
+		fontHeight=int(font.height())
+		#font.setPixelSize(12)
+		#doc.setDefaultFont(font)
 
 		# paint background
 		painter.save()
@@ -532,7 +535,7 @@ class rosterWidget(QtGui.QWidget):
 		# write the name of the group
 		doc.setHtml("<font color=\""+self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+item.name+"</font>")
 		painter.save()
-		painter.translate(x+30,y+6)
+		painter.translate(x+30,y+(32-fontHeight)/2)
 		doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
 		painter.restore()
 
@@ -589,9 +592,11 @@ class rosterWidget(QtGui.QWidget):
 
 			# set font
 			doc=QtGui.QTextDocument()
-			font=doc.defaultFont()
-			font.setPixelSize(12)
-			doc.setDefaultFont(font)
+			font=QtGui.QApplication.fontMetrics()
+			fontHeight=int(font.height())
+			#font=doc.defaultFont()
+			#font.setPixelSize(12)
+			#doc.setDefaultFont(font)
 
 			# paint user name 
 			if self.theme:
@@ -599,7 +604,7 @@ class rosterWidget(QtGui.QWidget):
 			else:
 				doc.setHtml("<font color=\""+self.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.name+"</font>")
 			painter.save()
-			painter.translate(x+41,y+12)
+			painter.translate(x+41,y+8+(32-fontHeight)/2)
 			doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33,y+28))
 			painter.restore()
 
@@ -769,7 +774,7 @@ class rosterWidget(QtGui.QWidget):
 			painter.restore()
 
 
-			
+
 			if useritem in self.events:
 				if self.bl:
 					painter.drawPixmap(x+7,y,useritem.icon.pixmap(22,22))
@@ -779,17 +784,19 @@ class rosterWidget(QtGui.QWidget):
 				painter.drawPixmap(x+7,y,useritem.icon.pixmap(22,22))
 
 			doc=QtGui.QTextDocument()
-			font=doc.defaultFont()
-			font.setPixelSize(12)
+			font=QtGui.QApplication.fontMetrics()
+			fontHeight=int(font.height())
+			#font=doc.defaultFont()
+			#font.setPixelSize(12)
 			#font.setWeight(18)
-			doc.setDefaultFont(font)
+			#doc.setDefaultFont(font)
 			
 			if useritem.avatar:
 				pixmap=useritem.avatar.pixmap(22,22)
 
 			doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.name+"</font>")
 			painter.save()
-			painter.translate(x+41,y+2)
+			painter.translate(x+41,y+(22-fontHeight)/2)
 			doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38,y+14))
 			painter.restore()
 			if useritem.avatar:
@@ -843,9 +850,12 @@ class rosterWidget(QtGui.QWidget):
 
 			# set font
 			doc=QtGui.QTextDocument()
-			font=doc.defaultFont()
-			font.setPixelSize(12)
-			doc.setDefaultFont(font)
+			font=QtGui.QApplication.fontMetrics()
+			fontHeight=int(font.height())
+			#print fontHeight
+			#font=doc.defaultFont()
+			#font.setPixelSize(12)
+			#doc.setDefaultFont(font)
 
 			# paint user name 
 			if self.theme:
@@ -853,7 +863,7 @@ class rosterWidget(QtGui.QWidget):
 			else:
 				doc.setHtml("<font color=\""+self.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.name+"</font>")
 			painter.save()
-			painter.translate(x+41,y+12)
+			painter.translate(x+41,y+8+(32-fontHeight)/2)
 			doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33,y+28))
 			painter.restore()
 
@@ -889,10 +899,12 @@ class rosterWidget(QtGui.QWidget):
 				painter.drawPixmap(x+7,y,useritem.icon.pixmap(32,32))
 
 			doc=QtGui.QTextDocument()
-			font=doc.defaultFont()
-			font.setPixelSize(12)
+			font=QtGui.QApplication.fontMetrics()
+			fontHeight=int(font.height())
+			#font=doc.defaultFont()
+			#font.setPixelSize(12)
 			#font.setWeight(18)
-			doc.setDefaultFont(font)
+			#doc.setDefaultFont(font)
 			
 			if useritem.avatar:
 				pixmap=useritem.avatar.pixmap(32,32)
@@ -916,7 +928,7 @@ class rosterWidget(QtGui.QWidget):
 			else:
 				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.name+"</font>")
 				painter.save()
-				painter.translate(x+41,y+2)
+				painter.translate(x+41,y+(32-fontHeight)/2)
 				doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38,y+28))
 				painter.restore()
 			if useritem.avatar:
