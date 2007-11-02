@@ -49,6 +49,7 @@ class searchDialog(QtGui.QDialog):
 
 		self.table=QtGui.QTreeWidget(self.splitter)
 		#layout.addWidget(self.table,1,2,row-1,1)
+		self.table.header().hide()
 
 		
 		layout.addWidget(self.ok,row,0)
@@ -82,6 +83,7 @@ class searchDialog(QtGui.QDialog):
 							if y.name=="value":
 								text=unicode(y)
 						item.setText(fields.index(field['var']),unicode(text))
+		self.table.header().show()
 		for i in range(int(self.table.columnCount())):
 			self.table.resizeColumnToContents(i)
 
