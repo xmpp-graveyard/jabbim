@@ -318,10 +318,10 @@ p, li { white-space: pre-wrap; }
            </attribute>
            <layout class="QGridLayout" >
             <property name="margin" >
-             <number>9</number>
+             <number>0</number>
             </property>
             <property name="spacing" >
-             <number>6</number>
+             <number>0</number>
             </property>
             <item row="2" column="0" >
              <widget class="QWidget" native="1" name="userStyleWidget" />

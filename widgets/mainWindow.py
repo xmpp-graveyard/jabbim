@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Fri Nov  2 19:16:03 2007
+# Created: Fri Nov  2 20:02:16 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -165,8 +165,8 @@ class Ui_MainWindow(object):
         self.rosterTab.setObjectName("rosterTab")
 
         self.gridlayout4 = QtGui.QGridLayout(self.rosterTab)
-        self.gridlayout4.setMargin(9)
-        self.gridlayout4.setSpacing(6)
+        self.gridlayout4.setMargin(0)
+        self.gridlayout4.setSpacing(0)
         self.gridlayout4.setObjectName("gridlayout4")
 
         self.userStyleWidget = QtGui.QWidget(self.rosterTab)

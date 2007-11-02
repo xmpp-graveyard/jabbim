@@ -303,6 +303,7 @@ def replace_url(text):
 		#print link
 		#text = text.replace(link[0], '<a href="%s">%s</a>'%(link[0], link[0]))
 	t=text
+	t=t.replace("<br/>"," <br/>")
 	text=""
 	for word in t.split(" "):
 		if word.find("://")!=-1 or word.startswith("www."):
