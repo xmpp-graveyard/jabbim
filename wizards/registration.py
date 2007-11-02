@@ -15,8 +15,8 @@ def createFirstPage(wizard):
 	page=QtGui.QWizardPage()
 	page.setTitle(wizard.tr("Introduction"))
 
-	label=QtGui.QLabel(wizard.tr("Choose your language and server."))
-	label.setWordWrap(True)
+	#label=QtGui.QLabel(wizard.tr("Choose your language and server."))
+	#label.setWordWrap(True)
 	
 	serverLabel=QtGui.QLabel(wizard.tr("Server:"))
 	serverComboBox=QtGui.QComboBox()
@@ -24,49 +24,53 @@ def createFirstPage(wizard):
 	serverComboBox.setEditable(True)
 	
 	layout=QtGui.QGridLayout()
-	layout.addWidget(label,0,0,1,2)
-	layout.addWidget(serverLabel,1,0,1,1)
-	layout.addWidget(serverComboBox,1,1,1,1)
+	#layout.addWidget(label,0,0,1,2)
+	layout.addWidget(serverLabel,0,0,1,1)
+	layout.addWidget(serverComboBox,0,1,1,1)
 	
 	page.registerField("server*",serverComboBox)
-	
+	page.setTitle(wizard.trUtf8("Registrace Jabber účtu"))
+	page.setSubTitle(wizard.trUtf8("Vyberte server, na kterém chcete účet zaregistrovat."))
+
 	page.setLayout(layout)
 	return page
 
 def createWaitPage(wizard):
 	
 	page=QtGui.QWizardPage()
-	page.setTitle(wizard.tr("Registering"))
-
-	label=QtGui.QLabel(wizard.tr("Registering your account."))
-	label.setWordWrap(True)
+	page.setTitle(wizard.trUtf8("Registrace Jabber účtu"))
+	page.setSubTitle(wizard.trUtf8("Právě probíhá registrace Vašeho účtu. Prosím vyčkejte."))
+	#label=QtGui.QLabel(wizard.tr("Registering your account."))
+	#label.setWordWrap(True)
 	
-	layout=QtGui.QGridLayout()
-	layout.addWidget(label,0,0,1,1)
+	#layout=QtGui.QGridLayout()
+	#layout.addWidget(label,0,0,1,1)
 	
-	page.setLayout(layout)
+	#page.setLayout(layout)
 	return page
 
 def createFinishPage(wizard):
 	
 	page=QtGui.QWizardPage()
-	page.setTitle(wizard.tr("Registration complete"))
+	page.setTitle(wizard.trUtf8("Registrace Jabber účtu"))
+	page.setSubTitle(wizard.trUtf8("Vaše registrace byla úspěšně dokončena."))
 
-	label=QtGui.QLabel(wizard.tr("Your account is registered."))
-	label.setWordWrap(True)
+	#label=QtGui.QLabel(wizard.tr("Your account is registered."))
+	#label.setWordWrap(True)
 	
-	layout=QtGui.QGridLayout()
-	layout.addWidget(label,0,0,1,1)
+	#layout=QtGui.QGridLayout()
+	#layout.addWidget(label,0,0,1,1)
 	
-	page.setLayout(layout)
+	#page.setLayout(layout)
 	return page
 
 def createSecondPage(wizard):
 	
 	page=QtGui.QWizardPage()
-	page.setTitle(wizard.tr("Email and Nickname"))
-
-	label=QtGui.QLabel(wizard.tr("Type your email and nickname."))
+	#page.setTitle(wizard.tr("Email and Nickname"))
+	page.setTitle(wizard.trUtf8("Registrace Jabber účtu"))
+	page.setSubTitle(wizard.trUtf8("Zadejte Váš email a Vaši přezdívku."))
+	label=QtGui.QLabel("")
 	label.setWordWrap(True)
 	
 	nicknameLabel=QtGui.QLabel(wizard.tr("Nickname:"))
@@ -92,9 +96,11 @@ def createSecondPage(wizard):
 def createThirdPage(wizard):
 	
 	page=QtGui.QWizardPage()
-	page.setTitle(wizard.tr("JID registration"))
+	#page.setTitle(wizard.tr("JID registration"))
+	page.setTitle(wizard.trUtf8("Registrace Jabber účtu"))
+	page.setSubTitle(wizard.trUtf8("Vyberte si Jabber ID a napište heslo k Vašemu budoucímu účtu."))
 
-	wizard.label=QtGui.QLabel(wizard.tr("Jabber ID registration."))
+	wizard.label=QtGui.QLabel("")
 	wizard.label.setWordWrap(True)
 	
 	jidLabel=QtGui.QLabel(wizard.tr("JID:"))
@@ -147,7 +153,6 @@ class registrationWizard(QtGui.QWizard):
 		self.addPage(createWaitPage(self))
 		self.addPage(createFinishPage(self))
 		self.setWindowTitle(self.tr("Registration Wizard"))
-		self.setTitle(self.tr("Registrace Jabber účtu"))
 		self.cl=None
 		self.error=None
 	
