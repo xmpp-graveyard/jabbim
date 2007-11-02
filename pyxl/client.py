@@ -668,10 +668,12 @@ class Client(derived):
 		show = status = priority = typ = affiliation = role = truejid = hash = None
 		codes = []
 		if el.hasAttribute('type'):
-			if el['type'] != 'unavailable':
-				return
-			else:
-				typ = 'unavailable'
+		#	if el['type'] != 'unavailable':
+		#		return
+		#	else:
+		#		typ = 'unavailable'
+			typ = el['type']
+
 		features = []
 		for child in el.elements():
 			if child.name == 'show':

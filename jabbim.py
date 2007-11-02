@@ -1763,6 +1763,10 @@ class mainWindow(QtGui.QMainWindow):
 		if self.client.privacy.active:
 			if bool:
 				self.client.privacy.active.setInvisible()
+				for gc in self.client.groupchats.keys():
+					tab, indextab = self.chat.findTab(gc)
+					self.ui.chatTab.removeTab(indextab)
+
 			else:
 				self.client.privacy.active.unsetInvisible()
 

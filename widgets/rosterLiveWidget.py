@@ -1888,7 +1888,7 @@ class rosterWidget(QtGui.QWidget):
 			jid=unicode(action.data().toString())
 			self.main.client.privacy.active.blockJID(jid)
 			log.msg("Blocking jid %s." % jid)
-
+			self.main.client.sendPresence(jid, typ="unavailable")
 		elif cmd == "privacy_unblock":
 			jid=unicode(action.data().toString())
 			self.main.client.privacy.active.unBlockJID(jid)
@@ -1908,6 +1908,7 @@ class rosterWidget(QtGui.QWidget):
 			jid=unicode(action.data().toString())
 			self.main.client.privacy.active.hideJID(jid)
 			log.msg("Hiding jid %s." % jid)
+			self.main.client.sendPresence(jid, typ="unavailable")
 		elif cmd == "privacy_unhide":
 			jid=unicode(action.data().toString())
 			self.main.client.privacy.active.unHideJID(jid)

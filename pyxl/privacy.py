@@ -223,8 +223,9 @@ class PrivacyList:
 		if self.invisible:
 			self.delItem(self.invisible)
 			self.invisible = None
+			sc = self.main.client.roster['users'][self.main.client.jid.userhost()].resources[self.main.client.jid.resource]
 			if available:
-				self.main.client.sendPresence(typ="available")
+				self.main.client.sendPresence(typ="available", show=sc.show, status=sc.status)
 			log.msg("we are now visible")
 
 	
