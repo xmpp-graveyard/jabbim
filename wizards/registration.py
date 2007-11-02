@@ -141,7 +141,7 @@ class registrationClass(register.RegisteringClient):
 						print "nickname conflict"
 						self.main.error="409"
 						self.main.label.setTextFormat(QtCore.Qt.RichText)
-						self.main.label.setText(self.main.tr("Jabber ID registration.<br/><b>This Jabber ID is already registered by someone else.</b>"))
+						self.main.label.setText(self.main.tr("<b>This Jabber ID is already registered by someone else.</b>"))
 						self.main.back()
 	def _authd(self, el):
 		self.main.next()
