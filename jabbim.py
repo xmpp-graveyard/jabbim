@@ -1066,6 +1066,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.login_connect, QtCore.SIGNAL("clicked()"),self.connect)
 		#app.connect(app,QtCore.SIGNAL("lastWindowClosed() "),self.disconnect)
 		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
+		app.connect(self.ui.toggleInvisible, QtCore.SIGNAL("clicked(bool)"),self.toggleInvisibility)
 		app.connect(self.ui.actionAbout, QtCore.SIGNAL("triggered ( bool )"),self.about)
 		app.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
 		app.connect(self.ui.actionMUC_Browser, QtCore.SIGNAL("triggered ( bool )"),self.mucBrowser)
@@ -1757,6 +1758,13 @@ class mainWindow(QtGui.QMainWindow):
 		#self.ui.roster.refreshStats()
 		
 		#self.rosterHideOffline(not bool)
+
+	def toggleInvisibility(self, bool):
+		if self.client.privacy.active:
+			if bool:
+				self.client.privacy.active.setInvisible()
+			else:
+				self.client.privacy.active.unsetInvisible()
 
 	def rosterHideOffline(self,bool):
 		return
