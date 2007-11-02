@@ -1259,23 +1259,8 @@ class mainWindow(QtGui.QMainWindow):
 		action=self.statusMenu.addAction(self.getIcon(status="offline",size="16x16"),self.status["offline"])
 		action.setData(QtCore.QVariant("offline"))
 
-		self.statusMenu.addSeparator()
-		self.invMenu=self.statusMenu.addMenu(self.getIcon(status="invisible",size="16x16"),self.status["invisible"])
-		
-		action=self.invMenu.addAction(self.getIcon(status="invisible-online",size="16x16"),self.status["online"])
-		action.setData(QtCore.QVariant("online"))
-		action=self.invMenu.addAction(self.getIcon(status="invisible-chat",size="16x16"),self.status["chat"])
-		action.setData(QtCore.QVariant("chat"))
-		action=self.invMenu.addAction(self.getIcon(status="invisible-away",size="16x16"),self.status["away"])
-		action.setData(QtCore.QVariant("away"))
-		action=self.invMenu.addAction(self.getIcon(status="invisible-xa",size="16x16"),self.status["xa"])
-		action.setData(QtCore.QVariant("xa"))
-		action=self.invMenu.addAction(self.getIcon(status="invisible-dnd",size="16x16"),self.status["dnd"])
-		action.setData(QtCore.QVariant("dnd"))
-
 		self.ui.statusButton.setMenu(self.statusMenu)
 		app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
-		app.connect(self.invMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.invStatusChanged)
 
 
 	def copyPlugins(self):
@@ -1790,42 +1775,8 @@ class mainWindow(QtGui.QMainWindow):
 						#self.ui.roster.setItemHidden(child2, bool)
 		self.ui.roster.hidden( bool)
 	
-	def invStatusChanged(self, action):
-		if not self.client.privacy.active:
-			return	
-		
-		data=action.data()
-		if len(data.toList())==0:
-			data=unicode(data.toString())
-			show=None
-		else:
-			data=data.toList()
-			show=unicode(data[1].toString())
-			data=unicode(data[0].toString())
-
-		setstatus=statusWindow(data,show,invisible=True)
-		#if len(data.split("/"))==2:
-			#data=unicode(data.split("/")[1])
-		sh=False
-		if self.isHidden()==True:
-			self.show()
-			sh=True
-		if setstatus.exec_()==1 and not show:
-			self.ui.statusButton.setText(unicode(""))
-			self.ui.statusButton.setIcon(self.getIcon(status="invisible-"+data,size="16x16"))
-		else:
-			for menu in self.client.menus:
-				if unicode(menu.title())==unicode(data):
-					menu.setIcon(self.getIcon("jid@"+unicode(data),status=unicode(show),size="16x16"))
-					break
-		if sh:
-			self.hide()
-
 	def statusChanged(self,action):
 		# status changed
-		if action.parentWidget() == self.invMenu:
-			return
-		
 		data=action.data()
 		if len(data.toList())==0:
 			data=unicode(data.toString())
@@ -1835,10 +1786,7 @@ class mainWindow(QtGui.QMainWindow):
 			show=unicode(data[1].toString())
 			data=unicode(data[0].toString())
 
-		if self.client.privacy.active:
-			self.client.privacy.active.unsetInvisible()
-
-		setstatus=statusWindow(data,show,invisible=False)
+		setstatus=statusWindow(data,show)
 		#if len(data.split("/"))==2:
 			#data=unicode(data.split("/")[1])
 		sh=False
@@ -2078,7 +2026,7 @@ class customStatusWindow(QtGui.QDialog):
 
 
 class statusWindow(QtGui.QDialog):
-	def __init__(self,data,show=None,parent=None,invisible=False):
+	def __init__(self,data,show=None,parent=None):
 		apply(QtGui.QDialog.__init__,(self,MainWindow))
 		self.setModal(False)
 		self.ui=widgets.status.Ui_status()
@@ -2097,11 +2045,8 @@ class statusWindow(QtGui.QDialog):
 		for s in MainWindow.config['statusMessages']:
 			self.ui.statusBox.addItem(unicode(s))
 		app.connect(self.ui.statusBox, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.ui.status.setPlainText)
-		if invisible:
-			MainWindow.client.privacy.active.setInvisible()
-		else:
-			MainWindow.client.privacy.active.unsetInvisible()
-	
+
+
 	def timerStop(self):
 		self.timer.stop()
 		self.ui.time.setText("")
@@ -2170,6 +2115,7 @@ class statusWindow(QtGui.QDialog):
 			if not jid:
 				for muc in MainWindow.client.groupchats.itervalues():
 					MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()), to = '%s/%s'%(muc.jid, muc.nick))
+
 		self.done(1)
 
 class aboutDialog(QtGui.QDialog):
