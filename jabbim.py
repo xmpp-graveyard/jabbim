@@ -926,12 +926,18 @@ class clientClass(pyxl.client.Client):
 
 	def on_avatarUpdate(self, jid):
 		pixmap=QtGui.QPixmap()
-		if self.avatars[jid] != None:
-			f=open(self.main.homeDir+'/avatars/'+jid,"rb")
-		else:
-			f=open('images/32x32/apps/jabbim.png', 'rb')
+		if self.avatars[jid]==None:
+			return
+		#if self.avatars[jid] != None:
+			#f=open(self.main.homeDir+'/avatars/'+jid,"rb")
+		#else:
+			#f=open('images/32x32/apps/jabbim.png', 'rb')
+		#image = f.read()
+		#f.close()
+		f=open(self.main.homeDir+'/avatars/'+jid,"rb")
 		image = f.read()
 		f.close()
+		pixmap.loadFromData(image)
 		if unicode(self.jid.userhost())==unicode(jid):
 			print "Setting avatar"
 			self.main.ui.selfAvatar.setPixmap(pixmap.scaledToHeight(48))
