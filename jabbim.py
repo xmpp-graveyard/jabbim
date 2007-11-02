@@ -1055,28 +1055,6 @@ class mainWindow(QtGui.QMainWindow):
 		# fill login form
 		self.ui.login_password.setText(rot13.scramble(self.config['passwd']))
 		self.ui.login_jid.setText(self.config['jid'])
-		if os.path.isfile(self.homeDir+'/avatars/'+unicode(self.config['jid'])):
-			pixmap=QtGui.QIcon(self.homeDir+'/avatars/'+unicode(self.config['jid']))
-			result=QtGui.QPixmap(128,128)
-			avatar=pixmap.pixmap(128,112)
-			frame=QtGui.QPixmap("images/128x128/frame.png")
-			painter=QtGui.QPainter(result)
-			painter.fillRect(0,0,128,128,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
-			painter.drawPixmap((128-avatar.width())/2,(128-avatar.height())/2,avatar)
-			painter.drawPixmap(0,0,frame)
-			painter.end()
-			self.ui.loginAvatar.setPixmap(result)
-		else:
-			pixmap=QtGui.QIcon("images/48x48/apps/jabbim.png")
-			result=QtGui.QPixmap(128,128)
-			avatar=pixmap.pixmap(128,112)
-			frame=QtGui.QPixmap("images/128x128/frame.png")
-			painter=QtGui.QPainter(result)
-			painter.fillRect(0,0,128,128,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
-			painter.drawPixmap((128-avatar.width())/2,(128-avatar.height())/2,avatar)
-			painter.drawPixmap(0,0,frame)
-			painter.end()
-			self.ui.loginAvatar.setPixmap(result)
 
 		if self.config['savePasswd']=="True":
 			self.ui.login_savePassword.setChecked(True)
@@ -1152,6 +1130,30 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.roster.repaint()
 
 		self.setMinimumWidth(200)
+
+		if os.path.isfile(self.homeDir+'/avatars/'+unicode(self.config['jid'])):
+			pixmap=QtGui.QIcon(self.homeDir+'/avatars/'+unicode(self.config['jid']))
+			result=QtGui.QPixmap(128,128)
+			avatar=pixmap.pixmap(128,112)
+			frame=QtGui.QPixmap("images/128x128/frame.png")
+			painter=QtGui.QPainter(result)
+			painter.fillRect(0,0,128,128,QtGui.QBrush(self.ui.rosterStackedWidget.widget(0).palette().color(QtGui.QPalette.Window)))
+			painter.drawPixmap((128-avatar.width())/2,(128-avatar.height())/2,avatar)
+			painter.drawPixmap(0,0,frame)
+			painter.end()
+			self.ui.loginAvatar.setPixmap(result)
+		else:
+			pixmap=QtGui.QIcon("images/48x48/apps/jabbim.png")
+			result=QtGui.QPixmap(128,128)
+			avatar=pixmap.pixmap(128,112)
+			frame=QtGui.QPixmap("images/128x128/frame.png")
+			painter=QtGui.QPainter(result)
+			painter.fillRect(0,0,128,128,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
+			painter.drawPixmap((128-avatar.width())/2,(128-avatar.height())/2,avatar)
+			painter.drawPixmap(0,0,frame)
+			painter.end()
+			self.ui.loginAvatar.setPixmap(result)
+
 
 	def registerButtonClicked(self):
 		if USE_WIZARDS:
