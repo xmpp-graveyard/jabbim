@@ -2056,7 +2056,6 @@ class statusWindow(QtGui.QDialog):
 		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.timeout)
 		app.connect(self.ui.status, QtCore.SIGNAL("cursorPositionChanged ()"),self.timerStop)
 		app.connect(self.ui.status, QtCore.SIGNAL("textChanged ()"),self.timerStop)
-
 		self.ui.status.setFocus()
 		self.timer.start(1000)
 		self.i=4
@@ -2066,13 +2065,14 @@ class statusWindow(QtGui.QDialog):
 		for s in MainWindow.config['statusMessages']:
 			self.ui.statusBox.addItem(unicode(s))
 		app.connect(self.ui.statusBox, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.ui.status.setPlainText)
+		app.connect(self.ui.statusBox, QtCore.SIGNAL("highlighted ( int)"),self.timerStop)
 
 
 	def timerStop(self):
 		self.timer.stop()
 		self.ui.time.setText("")
 	
-	def timeout(self):
+	def timeout(self,data=None):
 		if self.i!=0:
 			self.ui.time.setText(self.tr("Window will be closed in ")+unicode(self.i)+self.tr(" seconds."))
 			self.i-=1
