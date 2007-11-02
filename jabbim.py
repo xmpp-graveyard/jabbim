@@ -1689,6 +1689,8 @@ class mainWindow(QtGui.QMainWindow):
 			nickname=unicode(lst[1].toString()) # get nickname
 			password=unicode(lst[2].toString()) # get password
 			autojoin=self.client.bookmarks['conference'][name].autojoin
+			if password="None":
+				password=""
 			edit=widgets.preferences.editBookmark(self,room,server,name,nickname,password,autojoin,self)
 			edit.exec_()
 		elif cmd=="delete_bookmark":
