@@ -233,7 +233,7 @@ class Client(derived):
 		
 		self.getMetacontacts()
 		self.getBookmarks()
-		self.getDiscoInfo(self.jid.host,  callback = self._pepSupport)
+		self.getDiscoInfo(self.jid.host)#,  callback = self._pepSupport)
 		self.getDiscoItems(self.jid.host, callback = self._gotServices)
 		self.getPrivacy()
 		self.reactor.callFromThread(self.on_authd)
