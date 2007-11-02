@@ -864,7 +864,10 @@ class rosterWidget(QtGui.QWidget):
 				doc.setHtml("<font color=\""+self.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.name+"</font>")
 			painter.save()
 			painter.translate(x+41,y+8+(32-fontHeight)/2)
-			doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33,y+28))
+			if useritem.avatar:
+				doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33-32,y+28))
+			else:
+				doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33,y+28))
 			painter.restore()
 
 			# show activeWidget
@@ -929,7 +932,10 @@ class rosterWidget(QtGui.QWidget):
 				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.name+"</font>")
 				painter.save()
 				painter.translate(x+41,y+(32-fontHeight)/2)
-				doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38,y+28))
+				if useritem.avatar:
+					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38-32,y+28))
+				else:
+					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38,y+28))
 				painter.restore()
 			if useritem.avatar:
 				painter.drawPixmap(self.width()-4-32+(int((32-pixmap.width())/2)),y,pixmap)
