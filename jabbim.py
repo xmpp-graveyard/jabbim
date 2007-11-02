@@ -1468,7 +1468,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def trayQuit(self,bool=True):
 		# turn off jabbim
-		if self.client.privacy.active:
+		if self.client and self.client.privacy.active:
 			self.client.privacy.active.unsetInvisible(available=False) # hack
 
 		if str(self.config["saveGeometry"])=="True":
