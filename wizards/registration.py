@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*- 
 try:
 	from PyQt4 import QtCore, QtGui
 except:
@@ -146,6 +147,7 @@ class registrationWizard(QtGui.QWizard):
 		self.addPage(createWaitPage(self))
 		self.addPage(createFinishPage(self))
 		self.setWindowTitle(self.tr("Registration Wizard"))
+		self.setTitle(self.tr("Registrace Jabber účtu"))
 		self.cl=None
 		self.error=None
 	
