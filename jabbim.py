@@ -1069,7 +1069,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.toggleInvisible, QtCore.SIGNAL("clicked(bool)"),self.toggleInvisibility)
 		app.connect(self.ui.actionAbout, QtCore.SIGNAL("triggered ( bool )"),self.about)
 		app.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
-		app.connect(self.ui.actionMUC_Browser, QtCore.SIGNAL("triggered ( bool )"),self.mucBrowser)
+		#app.connect(self.ui.actionMUC_Browser, QtCore.SIGNAL("triggered ( bool )"),self.mucBrowser)
 		app.connect(self.ui.actionAdd_Contact, QtCore.SIGNAL("triggered ( bool )"),self.addContactMainWindow)
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
 		app.connect(self.ui.actionJoin_Groupchat, QtCore.SIGNAL("triggered ( bool )"),self.joinGroupchat)
@@ -1603,22 +1603,23 @@ class mainWindow(QtGui.QMainWindow):
 					self.client.joinGC(jid, nickname)
 
 	def joinGroupchat(self,bool):
-		file=self.config['theme']
-		style=open("themes/"+file+"/style.css")
-		mucjid = ''
-		for jid, node in self.client.disco.iteritems():
-# 			print node
-			if not node[None].has_key('identities'):
-				continue
-			for id in node[None]['identities'].itervalues():
-				print jid, id
-				if id.get('category') == 'conference' and id.get('type') == 'text' and jid.startswith('c'):
-					mucjid = jid
-					break
-		newchat=widgets.joingroupchat.joinGroupChatWindow(self, server = mucjid)
-		newchat.setStyleSheet(style.read())
-		style.close()
-		ret=newchat.exec_()
+		#file=self.config['theme']
+		#style=open("themes/"+file+"/style.css")
+		#mucjid = ''
+		#for jid, node in self.client.disco.iteritems():
+## 			print node
+			#if not node[None].has_key('identities'):
+				#continue
+			#for id in node[None]['identities'].itervalues():
+				#print jid, id
+				#if id.get('category') == 'conference' and id.get('type') == 'text' and jid.startswith('c'):
+					#mucjid = jid
+					#break
+		self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
+		self.mucbrowser.show()
+		self.mucbrowser.setStyleSheet(style.read())
+		#style.close()
+		#ret=newchat.exec_()
 
 	def bookmarksContextMenu(self,pos):
 		# make groupchat bookmarks menu
