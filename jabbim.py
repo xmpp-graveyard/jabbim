@@ -1443,6 +1443,9 @@ class mainWindow(QtGui.QMainWindow):
 
 	def trayQuit(self,bool=True):
 		# turn off jabbim
+		if self.client.privacy.active:
+			self.client.privacy.active.unsetInvisible(available=False) # hack
+
 		if str(self.config["saveGeometry"])=="True":
 			rect=self.geometry()
 			x=int(rect.x())
@@ -1830,6 +1833,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusButton.setIcon(self.getIcon("online",size="16x16"))
 		if self.client.privacy.active:
 			if self.client.privacy.active.invisible:
+				log.msg("Connected as invisible!")
 				self.ui.statusButton.setIcon(self.getIcon("invisible-online",size="16x16"))
 		self.ui.statusButton.show()
 		self.ui.showOffline.show()

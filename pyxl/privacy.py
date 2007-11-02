@@ -81,13 +81,16 @@ class PrivacyList:
 		self.main.client.on_xml(iq.toXml())
 		iq.send()
 		self.main.client.disp(iq["id"])
+		log.msg("privacy list %s updated" % self.name)
 
 	def addItem(self, item):
 		self.items.append(item)
 		self.update()
+		log.msg("added privacy list item to list %s with order %s" % (self.name, item.order))
 
 	def delItem(self, item):
 		if item in self.items:
+			log.msg("removing privacy list item from list %s with order %s" % (self.name, item.order))
 			self.items.remove(item)
 			self.update()
 
@@ -216,11 +219,12 @@ class PrivacyList:
 			self.main.client.sendPresence(typ="available")
 			log.msg("we are now invisible")
 
-	def unsetInvisible(self):
+	def unsetInvisible(self, available = True):
 		if self.invisible:
 			self.delItem(self.invisible)
 			self.invisible = None
-			self.main.client.sendPresence(typ="available")
+			if available:
+				self.main.client.sendPresence(typ="available")
 			log.msg("we are now visible")
 
 	

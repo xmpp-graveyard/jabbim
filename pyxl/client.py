@@ -74,9 +74,6 @@ class Client(derived):
 		self.idlist = []
 		self.disco = {} # jid:{node1:{items:{attrs}, identity: {attrs}, features:[], err: {'info':'', 'items':''}}}
 		self.groupchats = {} # jid:Groupchat
-	#	self.privacy_lists = {}
-	#	self.privacy_active = None
-	#	self.privacy_default = None
 		self.privacy = Privacy(self.main)
 		self.client_name = 'Jabbim'
 		self.version = '0.2' # tohle asi neni nejlepsi zpusob
@@ -95,6 +92,7 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/xhtml-im')
 		self.registerFeature('http://jabber.org/protocol/disco#info')
 		self.registerFeature('urn:xmpp:time')
+		self.registerFeature('urn:xmpp:ping')
 		self.registerFeature('jabber:iq:time')
 		self.registerFeature('http://jabber.org/protocol/chatstates')
 		self.caps_cache = {} # 'node': [feature1, feature2]
