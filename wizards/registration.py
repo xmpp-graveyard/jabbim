@@ -73,6 +73,7 @@ def createSecondPage(wizard):
 	
 	emailLabel=QtGui.QLabel(wizard.tr("Email:"))
 	emailLineEdit=QtGui.QLineEdit()
+	emailLineEdit.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp("^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.(([0-9]{1,3})|([a-zA-Z]{2,3})|(aero|coop|info|museum|name))$"),emailLineEdit))
 	
 	layout=QtGui.QGridLayout()
 	layout.addWidget(label,0,0,1,2)
@@ -97,16 +98,18 @@ def createThirdPage(wizard):
 	
 	jidLabel=QtGui.QLabel(wizard.tr("JID:"))
 	jidLineEdit=QtGui.QLineEdit()
+	wizard.serverLabel=QtGui.QLabel()
 	
 	passwordLabel=QtGui.QLabel(wizard.tr("Password:"))
 	passwordLineEdit=QtGui.QLineEdit()
 	
 	layout=QtGui.QGridLayout()
-	layout.addWidget(wizard.label,0,0,1,2)
+	layout.addWidget(wizard.label,0,0,1,3)
 	layout.addWidget(jidLabel,1,0,1,1)
 	layout.addWidget(jidLineEdit,1,1,1,1)
+	layout.addWidget(wizard.serverLabel,1,2,1,1)
 	layout.addWidget(passwordLabel,2,0,1,1)
-	layout.addWidget(passwordLineEdit,2,1,1,1)
+	layout.addWidget(passwordLineEdit,2,1,1,2)
 		
 	page.registerField("jid*",jidLineEdit)
 	page.registerField("password*",passwordLineEdit)
@@ -153,7 +156,10 @@ class registrationWizard(QtGui.QWizard):
 			#if self.error=="409":
 				
 			#self.error=None
-		if i==3:
+		if i==2:
+			server=servers[int(self.field("server").toString())-1]
+			self.serverLabel.setText("@"+server)
+		elif i==3:
 			server=servers[int(self.field("server").toString())-1]
 			jid=unicode(self.field("jid").toString())
 			password=unicode(self.field("password").toString())
@@ -167,16 +173,19 @@ class registrationWizard(QtGui.QWizard):
 		return
 	
 	def reject(self):
+		
 		if self.cl:
 			self.cl.disconnect()
 		return QtGui.QWizard.reject(self)
 
 	def accept(self):
+		print "accept"
 		if self.cl:
 			self.cl.disconnect()
 		return QtGui.QWizard.accept(self)
 
 	def finished(self,result):
+		print "finished"
 		if self.cl:
 			self.cl.disconnect()
 		return QtGui.QWizard.finished(self,result)

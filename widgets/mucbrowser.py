@@ -10,7 +10,7 @@ import pyxl
 class MUCBrowserDialog(QtGui.QDialog):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
-		self.setModal(True)
+		self.setModal(False)
 		self.ui=Ui_MUCBrowser()
 		self.ui.setupUi(self)
 		self.main=main

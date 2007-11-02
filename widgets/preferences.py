@@ -365,7 +365,7 @@ class editBookmark(QtGui.QDialog):
 		self.ui.name.setText(name)
 		self.ui.nickname.setText(nickname)
 		self.ui.password.setText(password)
-		if (self.autojoin==True or self.autojoin=="True") or (self.autojoin==1 or self.autojoin=="1"):
+		if ((self.autojoin==True or self.autojoin=="True") or (self.autojoin==1 or self.autojoin=="1")) or self.autojoin=="true":
 			self.ui.autojoin.setChecked(True)
 		else:
 			self.ui.autojoin.setChecked(False)
