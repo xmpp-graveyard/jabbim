@@ -617,16 +617,16 @@ p, li { white-space: pre-wrap; }
      <height>29</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuPlugins" >
-    <property name="title" >
-     <string>Plugins</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menuHelp" >
     <property name="title" >
      <string>Help</string>
     </property>
     <addaction name="actionAbout" />
+   </widget>
+   <widget class="QMenu" name="menuPlugins" >
+    <property name="title" >
+     <string>Plugins</string>
+    </property>
    </widget>
    <widget class="QMenu" name="menuAkce" >
     <property name="title" >
@@ -656,6 +656,9 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionJoin_Groupchat" >
+   <property name="icon" >
+    <iconset>images/16x16/categories/muc.png</iconset>
+   </property>
    <property name="text" >
     <string>Join Groupchat</string>
    </property>
@@ -666,6 +669,9 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionAdd_Contact" >
+   <property name="icon" >
+    <iconset>images/16x16/actions/add-user.png</iconset>
+   </property>
    <property name="text" >
     <string>Add Contact</string>
    </property>

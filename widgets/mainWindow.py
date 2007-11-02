@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Fri Nov  2 19:07:37 2007
+# Created: Fri Nov  2 19:16:03 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -308,11 +308,11 @@ class Ui_MainWindow(object):
         self.menubar.setGeometry(QtCore.QRect(0,0,268,29))
         self.menubar.setObjectName("menubar")
 
-        self.menuPlugins = QtGui.QMenu(self.menubar)
-        self.menuPlugins.setObjectName("menuPlugins")
-
         self.menuHelp = QtGui.QMenu(self.menubar)
         self.menuHelp.setObjectName("menuHelp")
+
+        self.menuPlugins = QtGui.QMenu(self.menubar)
+        self.menuPlugins.setObjectName("menuPlugins")
 
         self.menuAkce = QtGui.QMenu(self.menubar)
         self.menuAkce.setObjectName("menuAkce")
@@ -325,12 +325,14 @@ class Ui_MainWindow(object):
         self.actionPreferences.setObjectName("actionPreferences")
 
         self.actionJoin_Groupchat = QtGui.QAction(MainWindow)
+        self.actionJoin_Groupchat.setIcon(QtGui.QIcon("images/16x16/categories/muc.png"))
         self.actionJoin_Groupchat.setObjectName("actionJoin_Groupchat")
 
         self.actionQuit = QtGui.QAction(MainWindow)
         self.actionQuit.setObjectName("actionQuit")
 
         self.actionAdd_Contact = QtGui.QAction(MainWindow)
+        self.actionAdd_Contact.setIcon(QtGui.QIcon("images/16x16/actions/add-user.png"))
         self.actionAdd_Contact.setObjectName("actionAdd_Contact")
 
         self.actionAbout = QtGui.QAction(MainWindow)
@@ -389,8 +391,8 @@ class Ui_MainWindow(object):
         self.statusButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Here you can change your status", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setToolTip(QtGui.QApplication.translate("MainWindow", "You can show/hide contats that are unavailable", None, QtGui.QApplication.UnicodeUTF8))
         self.toggleInvisible.setToolTip(QtGui.QApplication.translate("MainWindow", "Toggle Invisibility", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuPlugins.setTitle(QtGui.QApplication.translate("MainWindow", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuPlugins.setTitle(QtGui.QApplication.translate("MainWindow", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAkce.setTitle(QtGui.QApplication.translate("MainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
         self.actionShow_XML.setText(QtGui.QApplication.translate("MainWindow", "Show XML", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setText(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
