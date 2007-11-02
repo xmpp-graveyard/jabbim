@@ -1277,6 +1277,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
 		app.connect(self.invMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.invStatusChanged)
 
+
 	def copyPlugins(self):
 		plugins=os.listdir("plugins/")
 		for plugin in plugins:
@@ -1790,14 +1791,37 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.roster.hidden( bool)
 	
 	def invStatusChanged(self, action):
-		if self.client.privacy.active:
-			self.client.privacy.active.setInvisible()
-			ac = QtGui.QAction(None)
-			ac.setData(QtCore.QVariant(unicode(action.data().toString())))
-			ac.setParent(None)
-		self.statusChanged(ac, True)
+		if not self.client.privacy.active:
+			return	
+		
+		data=action.data()
+		if len(data.toList())==0:
+			data=unicode(data.toString())
+			show=None
+		else:
+			data=data.toList()
+			show=unicode(data[1].toString())
+			data=unicode(data[0].toString())
 
-	def statusChanged(self,action,invisible=False):
+		setstatus=statusWindow(data,show,invisible=True)
+		#if len(data.split("/"))==2:
+			#data=unicode(data.split("/")[1])
+		sh=False
+		if self.isHidden()==True:
+			self.show()
+			sh=True
+		if setstatus.exec_()==1 and not show:
+			self.ui.statusButton.setText(unicode(""))
+			self.ui.statusButton.setIcon(self.getIcon(status="invisible-"+data,size="16x16"))
+		else:
+			for menu in self.client.menus:
+				if unicode(menu.title())==unicode(data):
+					menu.setIcon(self.getIcon("jid@"+unicode(data),status=unicode(show),size="16x16"))
+					break
+		if sh:
+			self.hide()
+
+	def statusChanged(self,action):
 		# status changed
 		if action.parentWidget() == self.invMenu:
 			return
@@ -1811,10 +1835,10 @@ class mainWindow(QtGui.QMainWindow):
 			show=unicode(data[1].toString())
 			data=unicode(data[0].toString())
 
-		if self.client.privacy.active and not invisible:
+		if self.client.privacy.active:
 			self.client.privacy.active.unsetInvisible()
 
-		setstatus=statusWindow(data,show)
+		setstatus=statusWindow(data,show,invisible=False)
 		#if len(data.split("/"))==2:
 			#data=unicode(data.split("/")[1])
 		sh=False
@@ -1823,10 +1847,7 @@ class mainWindow(QtGui.QMainWindow):
 			sh=True
 		if setstatus.exec_()==1 and not show:
 			self.ui.statusButton.setText(unicode(""))
-			if not invisible:
-				self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
-			else:
-				self.ui.statusButton.setIcon(self.getIcon(status="invisible-"+data,size="16x16"))
+			self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
 		else:
 			for menu in self.client.menus:
 				if unicode(menu.title())==unicode(data):
@@ -2057,7 +2078,7 @@ class customStatusWindow(QtGui.QDialog):
 
 
 class statusWindow(QtGui.QDialog):
-	def __init__(self,data,show=None,parent=None):
+	def __init__(self,data,show=None,parent=None,invisible=False):
 		apply(QtGui.QDialog.__init__,(self,MainWindow))
 		self.setModal(False)
 		self.ui=widgets.status.Ui_status()
@@ -2076,6 +2097,10 @@ class statusWindow(QtGui.QDialog):
 		for s in MainWindow.config['statusMessages']:
 			self.ui.statusBox.addItem(unicode(s))
 		app.connect(self.ui.statusBox, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.ui.status.setPlainText)
+		if invisible:
+			MainWindow.client.privacy.active.setInvisible()
+		else:
+			MainWindow.client.privacy.active.unsetInvisible()
 	
 	def timerStop(self):
 		self.timer.stop()
