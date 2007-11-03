@@ -2021,12 +2021,18 @@ class rosterWidget(QtGui.QWidget):
 				#jid_r, res = jid.split("/", 1)
 				#item=self.getUserItems(jid_r)[0]
 				#self.main.chat.addChatTab(jid,"%s/%s" % (item.name, res),self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
-			item=self.getUserItems(jid)[0]
-			res = self.main.client.roster['users'][jid].getHighestResource()
-			if res==None:
-				self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+			
+			jid=jidT.JID(jid)
+			if not jid.resource:
+				item=self.getUserItems(jid)[0]
+				res = self.main.client.roster['users'][jid].getHighestResource()
+				if res==None:
+					self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+				else:
+					self.main.chat.addChatTab(item.jid+"/"+res,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			else:
-				self.main.chat.addChatTab(item.jid+"/"+res,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+				item=self.getUserItems(jid.userhost())[0]
+				self.main.chat.addChatTab(jid.full(),item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			self.main.chat.activate()
 		elif cmd == "invite_gc":
 			user_jid, room_jid = [unicode(val.toString()) for val in action.data().toList()]

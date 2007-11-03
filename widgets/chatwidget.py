@@ -237,6 +237,7 @@ class chatWidget(QtGui.QWidget):
 			QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("textChanged ()"),self.lines)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
+		QtCore.QObject.connect(self.ui.boldButton, QtCore.SIGNAL("clicked (bool)"),self.bold)
 		self.ui.textEdit.setAcceptRichText(True)
 		self.ui.textEdit.setHtml("<br/>")
 		#short=QtGui.QShortcut(QtCore.Qt.Key_Return,self.ui.line)
@@ -252,7 +253,7 @@ class chatWidget(QtGui.QWidget):
 		#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
 		#self.ui.lineWidget.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
 		self.ui.splitter.setSizes(list(self.main.config['chatSplitterSizes']))
-		self.ui.widget.setMaximumWidth(128)
+		self.ui.avatar.setMaximumWidth(128)
 		self.ui.splitter_2.setSizes(list(self.main.config['chatSplitter2Sizes']))
 		self.sent = []
 		self.hindex = 0
@@ -272,6 +273,16 @@ class chatWidget(QtGui.QWidget):
 		else:
 			pixmap=QtGui.QPixmap(f).scaledToWidth(32)
 			self.selfHeight=int(pixmap.height())
+		self.xhtml=False
+		if not self.xhtml:
+			self.ui.boldButton.hide()
+
+	def bold(self,bool):
+		print bool
+		if bool==True:
+			self.ui.line.setFontWeight(QtGui.QFont.Bold)
+		else:
+			self.ui.line.setFontWeight(QtGui.QFont.Normal)
 
 	#def lines(self):
 		#if self.ui.line.verticalScrollBar().isVisible():
@@ -407,7 +418,31 @@ class chatWidget(QtGui.QWidget):
 				text=unicode(text, 'utf-8')
 				text=text.replace(unichr(2028),"\n")
 				text=unescape(text)
-			self.main.client.sendMessage(unicode(self.jid),text,composing="active")
+			if self.xhtml:
+				text=self.ui.line.toHtml()
+				#text=text.replace(unichr(0),"")
+				#print text
+				a=parseString(unicode(text))
+				for el in a.getElementsByTagName('p'):
+					if el.hasAttribute("style"):
+						el.removeAttribute("style")
+				for el in a.getElementsByTagName('body'):
+					if el.hasAttribute("style"):
+						el.removeAttribute("style")
+				#for el in a.getElementsByTagName('span'):
+					#if el.hasAttribute("style"):
+						#el.removeAttribute("style")
+
+
+
+				b=a.getElementsByTagName('body')
+				b=b[0]
+
+				text=b.toxml()
+				text=unicode(text,'utf-8')
+				self.main.client.sendMessage(unicode(self.jid),xhtml=text,composing="active")
+			else:
+				self.main.client.sendMessage(unicode(self.jid),text,composing="active")
 			text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
 			for word in text.split(' '):
 				if word.find("http://")!=-1:
