@@ -1766,6 +1766,8 @@ class mainWindow(QtGui.QMainWindow):
 				colors.append(value)
 		if len(colors)==0:
 			return None
+		if len(colors)==1:
+			return colors[0]
 		if i>len(colors)-1:
 			return colors[i%(len(colors)-1)]
 		else:
