@@ -1263,9 +1263,13 @@ class rosterWidget(QtGui.QWidget):
 				contact=self.main.client.roster['users'][jid]
 				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription, self.main.client.roster['users'][jid].groups)
 			pass
+		elif key==QtCore.Qt.Key_O and event.modifiers() & QtCore.Qt.ControlModifier:
+			check=not self.main.ui.showOffline.isChecked()
+			self.main.ui.showOffline.setChecked(check)
+			self.main.hideOffline(check)
 		else:
-			self.main.ui.rosterSearch.setFocus(QtCore.Qt.MouseFocusReason)
-			self.main.ui.rosterSearch.setText(event.text())
+			#self.main.ui.rosterSearch.setFocus(QtCore.Qt.MouseFocusReason)
+			self.main.ui.rosterSearch.event(event)
 		event.ignore()
 			
 
@@ -1501,20 +1505,25 @@ class rosterWidget(QtGui.QWidget):
 
 	def search(self,text=""):
 		text=unicode(text).lower()
+		first=None
 		if len(text)!=0:
 			for user in self.users:
 				if user.name.lower().find(text)!=-1:
 					user.hiddenBySearch=False
+					if not first and ((self.showOffline==False and not user.hidden) or self.showOffline==True):
+						first=user
 				else:
 					user.hiddenBySearch=True
 		else:
 			for user in self.users:
-				if user.name.find(text)!=-1:
-					user.hiddenBySearch=False
+				user.hiddenBySearch=False
+				if not first and ((self.showOffline==False and not user.hidden) or self.showOffline==True):
+					first=user
 		if self.item:
 			if self.item.typ=="user":
 				if self.item.hiddenBySearch==True:
 					self.statusLabel.hide()
+					self.selectItem(first)
 				else:
 					self.reshow=True
 		self.repaint()
