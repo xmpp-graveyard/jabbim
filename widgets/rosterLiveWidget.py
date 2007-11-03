@@ -100,7 +100,7 @@ class activeWidget(QtGui.QWidget):
 		menu=self.parent.buildContactMenu(item.jid,item.group)
 		self.menu.setMenu(menu)
 		self.menu.hide()
-
+		
 		# sets status message
 		status=self.item.statusMessage
 		if status:
@@ -111,14 +111,14 @@ class activeWidget(QtGui.QWidget):
 				self.statusLabel.setHtml("<font size=\"-1\" color=\""+self.parent.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+unicode(status)+"</font>")
 		else:
 			self.statusLabel.hide()
-
+		#print "privacy2"
 		# delete old metacontact buttons
 		for button,meta in self.buttons.iteritems():
 			self.layout2.removeWidget(button)
 			self.group.removeButton(button)
 			button.setParent(None)
 		self.buttons={}
-
+		#print "privacy3"
 		# add new metacontact buttons
 		for b in buttons:
 			meta=b[0]
@@ -138,7 +138,7 @@ class activeWidget(QtGui.QWidget):
 			self.layout2.insertWidget(0,button)
 			self.group.addButton(button)
 			self.buttons[button]=meta
-
+		#print "privacy4"
 		# sets avatar
 		size=64
 		#if len(buttons)==0 and not status:
@@ -151,7 +151,7 @@ class activeWidget(QtGui.QWidget):
 			self.label.show()
 		else:
 			self.label.hide()
-		
+		#print "privacy5"
 		# resize activeWidget according to userItem size
 		self.resize(self.parent.width()-46,self.parent.selectedHeight+32)
 
@@ -911,7 +911,6 @@ class rosterWidget(QtGui.QWidget):
 			else:
 				doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33,y+28))
 			painter.restore()
-
 			# show activeWidget
 			if self.statusLabel:
 				if self.reshow:
@@ -1746,7 +1745,7 @@ class rosterWidget(QtGui.QWidget):
 		if oneres:
 			action=contactMenu.addAction(self.tr("Chat"))
 			if action != None:
-				action.setData(QtCore.QVariant(jid))
+				action.setData(QtCore.QVariant(unicode(jid)))
 				action.setObjectName("chat")
 		else:
 			submenu = contactMenu.addMenu(self.tr("Chat"))
@@ -1755,7 +1754,6 @@ class rosterWidget(QtGui.QWidget):
 					action=submenu.addAction(unicode(res))
 					action.setData(QtCore.QVariant("%s/%s" % (jid, res)))
 					action.setObjectName("chat")
-
 		if self.main.client.groupchats != {}:	# Mozna zobrazit i kdyz v mucu nejsme aby to bylo vic videt :)
 			submenu = contactMenu.addMenu(self.tr("Invite to conference"))
 			if oneres:
@@ -1772,7 +1770,6 @@ class rosterWidget(QtGui.QWidget):
 							action.setData(QtCore.QVariant(["%s/%s" % (jid, res), gc]))
 							action.setObjectName("invite_gc")
 
-
 		# custom status
 		if oneres:
 			submenu=contactMenu.addMenu(self.tr("Custom status"))
@@ -1787,8 +1784,8 @@ class rosterWidget(QtGui.QWidget):
 			submenu.addSeparator()
 			resmenus = [(submenu.addMenu(res), res) for res in contact.resources.keys()]
 			resmenus.append((resmenu, ""))
-			for resmenu in resmenus:
-				resmenu, res = resmenu
+			for resm in resmenus:
+				resmenu, res = resm
 				for status in ["online", "chat", "away", "xa", "dnd", "offline"]:
 			                action=resmenu.addAction(self.main.getIcon(status=status,size="32x32"),self.main.status[status])
 					action.setObjectName("custom_status")
