@@ -594,6 +594,7 @@ class clientClass(pyxl.client.Client):
 						if name==None or len(name)==0:
 							name=jid
 						i.name=unicode(name)
+						i.escapedName=unicode(name).replace("<","&lt;").replace(">","&gt;")
 						i.jid=jid
 						self.main.ui.roster.sortItems()
 						self.main.ui.roster.changePos=True

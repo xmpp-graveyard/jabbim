@@ -196,7 +196,8 @@ class groupItem:
 		self.main=main
 		self.online=0
 		self.all=0
-	
+		self.escapedName=name.replace("<","&lt;").replace(">","&gt;")
+
 	def setExpanded(self,bool):
 		self.expanded=bool
 		if not self.expanded:
@@ -223,6 +224,7 @@ class userItem:
 		self.privacy = {"block":False, "allow":False, "hide":False}
 		self.hiddenBySearch=False
 		self.transport=False
+		self.escapedName=name.replace("<","&lt;").replace(">","&gt;")
 		#if self.main.client.privacy.active!=None:
 			#self.privacy["block"] = self.main.client.privacy.active.isBlockedJID(self.jid) and True
 
@@ -384,7 +386,7 @@ class rosterWidget(QtGui.QWidget):
 					if item.avatar!=None and os.path.isfile(self.main.homeDir+'/avatars/'+unicode(item.jid)):
 						pixmap=item.avatar.pixmap(64,64)
 						text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(item.jid)+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
-					text+='<td><b>'+self.tr("Name:")+'</b> '+item.name+'<br/>'
+					text+='<td><b>'+self.tr("Name:")+'</b> '+item.escapedName+'<br/>'
 					text+='<b>'+self.tr("JID:")+'</b> '+item.jid+'<br/>'
 					contact = self.main.client.roster["users"][item.jid]
 					for res in contact.resources.keys():
@@ -517,7 +519,7 @@ class rosterWidget(QtGui.QWidget):
 		if item.icon:
 			painter.drawPixmap(x,y,item.icon.pixmap(22,22))
 
-		doc.setHtml("<font color=\""+self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+item.name+"</font>")
+		doc.setHtml("<font color=\""+self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+item.escapedName+"</font>")
 		
 		painter.save()
 		painter.translate(x+30,y+(22-fontHeight)/2)
@@ -550,7 +552,7 @@ class rosterWidget(QtGui.QWidget):
 			painter.drawPixmap(x,y,item.icon.pixmap(32,32))
 		
 		# write the name of the group
-		doc.setHtml("<font color=\""+self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+item.name+"</font>")
+		doc.setHtml("<font color=\""+self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+item.escapedName+"</font>")
 		painter.save()
 		painter.translate(x+30,y+(32-fontHeight)/2)
 		doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
@@ -624,9 +626,9 @@ class rosterWidget(QtGui.QWidget):
 
 			# paint user name 
 			if self.theme:
-				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.name+"</font>")
+				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+"</font>")
 			else:
-				doc.setHtml("<font color=\""+self.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.name+"</font>")
+				doc.setHtml("<font color=\""+self.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.escapedName+"</font>")
 			painter.save()
 			painter.translate(x+41,y+8+(32-fontHeight)/2)
 			if useritem.avatar:
@@ -719,7 +721,7 @@ class rosterWidget(QtGui.QWidget):
 			##option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
 			##doc.setDefaultTextOption(option)
 			##if useritem.statusMessage:
-				##doc.setHtml(useritem.name)
+				##doc.setHtml(useritem.escapedName)
 				##painter.save()
 				##painter.translate(x+30,y)
 				##doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
@@ -733,7 +735,7 @@ class rosterWidget(QtGui.QWidget):
 				###painter.restore()
 			##else:
 			
-			#doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.name+"</font>")
+			#doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+"</font>")
 			#painter.save()
 			#painter.translate(x+41,y+12)
 			#doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33,y+28))
@@ -821,7 +823,7 @@ class rosterWidget(QtGui.QWidget):
 			if useritem.avatar:
 				pixmap=useritem.avatar.pixmap(22,22)
 
-			doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.name+"</font>")
+			doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+"</font>")
 			painter.save()
 			painter.translate(x+41,y+(22-fontHeight)/2)
 			if useritem.avatar:
@@ -895,9 +897,9 @@ class rosterWidget(QtGui.QWidget):
 
 			# paint user name 
 			if self.theme:
-				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.name+"</font>")
+				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+"</font>")
 			else:
-				doc.setHtml("<font color=\""+self.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.name+"</font>")
+				doc.setHtml("<font color=\""+self.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.escapedName+"</font>")
 			painter.save()
 			painter.translate(x+41,y+8+(32-fontHeight)/2)
 			if useritem.avatar:
@@ -948,7 +950,7 @@ class rosterWidget(QtGui.QWidget):
 			if useritem.avatar:
 				pixmap=useritem.avatar.pixmap(32,32)
 			if useritem.statusMessage:
-				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.name+"</font>")
+				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+"</font>")
 				painter.save()
 				painter.translate(x+41,y+2)
 				if useritem.avatar:
@@ -965,7 +967,7 @@ class rosterWidget(QtGui.QWidget):
 					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-41,y+32))
 				painter.restore()
 			else:
-				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.name+"</font>")
+				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+"</font>")
 				painter.save()
 				painter.translate(x+41,y+(32-fontHeight)/2)
 				if useritem.avatar:
