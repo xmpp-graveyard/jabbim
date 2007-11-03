@@ -1263,6 +1263,9 @@ class rosterWidget(QtGui.QWidget):
 				contact=self.main.client.roster['users'][jid]
 				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription, self.main.client.roster['users'][jid].groups)
 			pass
+		else:
+			self.main.ui.rosterSearch.setFocus(QtCore.Qt.MouseFocusReason)
+			self.main.ui.rosterSearch.setText(event.text())
 		event.ignore()
 			
 
@@ -1508,6 +1511,12 @@ class rosterWidget(QtGui.QWidget):
 			for user in self.users:
 				if user.name.find(text)!=-1:
 					user.hiddenBySearch=False
+		if self.item:
+			if self.item.typ=="user":
+				if self.item.hiddenBySearch==True:
+					self.statusLabel.hide()
+				else:
+					self.reshow=True
 		self.repaint()
 
 	def getUserItems(self,jid,typ=False):
