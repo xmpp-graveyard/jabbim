@@ -752,7 +752,7 @@ p, li { white-space: pre-wrap; }
            <string/>
           </property>
           <property name="pixmap" >
-           <pixmap/>
+           <pixmap>images/logo.png</pixmap>
           </property>
           <property name="alignment" >
            <set>Qt::AlignBottom|Qt::AlignHCenter</set>

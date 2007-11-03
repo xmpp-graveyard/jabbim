@@ -1278,11 +1278,6 @@ class mainWindow(QtGui.QMainWindow):
 	def buildStatusMenu(self,menus=[]):
 		# Status menu
 		self.statusMenu=QtGui.QMenu(self.tr("Status"),self.ui.statusButton)
-		for menu in menus:
-			self.statusMenu.addMenu(menu)
-			log.msg("adding menu")
-		if menus != []:
-			self.statusMenu.addSeparator()
 		action=self.statusMenu.addAction(self.getIcon(status="online",size="16x16"),self.status["online"])
 		action.setData(QtCore.QVariant("online"))
 		action=self.statusMenu.addAction(self.getIcon(status="chat",size="16x16"),self.status["chat"])
@@ -1295,6 +1290,13 @@ class mainWindow(QtGui.QMainWindow):
 		action.setData(QtCore.QVariant("dnd"))
 		action=self.statusMenu.addAction(self.getIcon(status="offline",size="16x16"),self.status["offline"])
 		action.setData(QtCore.QVariant("offline"))
+
+		if menus != []:
+			self.statusMenu.addSeparator()
+
+		for menu in menus:
+			self.statusMenu.addMenu(menu)
+			log.msg("adding menu")
 
 		self.ui.statusButton.setMenu(self.statusMenu)
 		app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
