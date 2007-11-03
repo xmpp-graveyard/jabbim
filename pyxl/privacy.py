@@ -64,7 +64,7 @@ class PrivacyList:
 				self._reviseOrders()
 		self.update()
 
-	def update(self):
+	def update(self, sm = False):
 		iq	= IQ(self.main.client.xmlstream, "set")
 		query	= iq.addElement("query", "jabber:iq:privacy")
 		list_	= query.addElement("list")
@@ -79,23 +79,26 @@ class PrivacyList:
 				item.addElement(stanza)
 
 		self.main.client.on_xml(iq.toXml())
-		iq.send()
+		d=iq.send()
+		if sm:
+			d.addCallback(self._showme)
 		self.main.client.disp(iq["id"])
 		log.msg("privacy list %s updated" % self.name)
 
-	def addItem(self, item):
+	def addItem(self, item, sm = False):
 		self.items.append(item)
-		self.update()
+		self.update(sm)
 		log.msg("added privacy list item to list %s with order %s" % (self.name, item.order))
 
-	def delItem(self, item):
+	def delItem(self, item, sm = False):
 		if item in self.items:
 			log.msg("removing privacy list item from list %s with order %s" % (self.name, item.order))
 			self.items.remove(item)
-			self.update()
+			self.update(sm)
 
 	def mkItem(self, action, typ = None, value = None, stanzas = [],
-			to_zero = True): # True - lowest possible (more important), False - current highest + 1 (less important)
+			to_zero = True, # True - lowest possible (more important), False - current highest + 1 (less important)
+			sm = False):
 		orders = self._getOrders()
 		if to_zero:
 			zitem = self.getItem(0)
@@ -105,7 +108,7 @@ class PrivacyList:
 		else:
 			order = orders[-1] + 1
 		item = PrivacyListItem(action, order, typ, value, stanzas)
-		self.addItem(item)
+		self.addItem(item, sm)
 		return item
 
 	def getItem(self, order):
@@ -219,16 +222,14 @@ class PrivacyList:
 	def setInvisible(self, globaly = False):
 		if not self.invisible:
 			self.main.client.sendPresence(typ="unavailable")
-			self.invisible = self.mkItem("deny", stanzas = ["presence-out"], to_zero = globaly)
-			self._showme()
+			self.invisible = self.mkItem("deny", stanzas = ["presence-out"], to_zero = globaly)#, sm = True)
+			self.main.client.sendPresence(typ="invisible")
 			log.msg("we are now invisible")
 
 	def unsetInvisible(self, available = True):
 		if self.invisible:
-			self.delItem(self.invisible)
+			self.delItem(self.invisible, available)
 			self.invisible = None
-			if available:
-				self._showme()
 			log.msg("we are now visible")
 
 	
