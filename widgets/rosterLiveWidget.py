@@ -1149,14 +1149,22 @@ class rosterWidget(QtGui.QWidget):
 	def setSize(self):
 		x=0
 		y=0
-		for key in self.sortedGroups:
-			item=self.groups[key]
-			items=self.getGroupSortedUsers(item.name)
-			if (len(items)!=0 and not self.showOffline) or self.showOffline:
-				if item.expanded and len(items)!=0:
-					for useritem in items:
-						y+=self.userHeight
-				y+=self.groupHeight
+		if self.searchMode==False:
+			for key in self.sortedGroups:
+				item=self.groups[key]
+				items=self.getGroupSortedUsers(item.name)
+				if (len(items)!=0 and not self.showOffline) or self.showOffline:
+					if item.expanded and len(items)!=0:
+						for useritem in items:
+							y+=self.userHeight
+					y+=self.groupHeight
+		else:
+			for item in self.users:
+				if item.hiddenBySearch==False:
+					useritem=item
+					if useritem==self.item:
+						y+=self.selectedHeight-28
+					y+=self.userHeight
 		if y+self.selectedHeight-28>0 and self.selectedHeight!=0:
 			self.setMinimumHeight(y+self.selectedHeight-28)
 		else:
