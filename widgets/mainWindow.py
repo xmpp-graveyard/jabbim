@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sat Nov  3 11:45:48 2007
-#      by: PyQt4 UI code generator 4.3.1
+# Created: Sat Nov  3 13:09:39 2007
+#      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -35,13 +35,13 @@ class Ui_MainWindow(object):
         self.gridlayout1.setObjectName("gridlayout1")
 
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setSpacing(0)
         self.hboxlayout.setMargin(0)
+        self.hboxlayout.setSpacing(0)
         self.hboxlayout.setObjectName("hboxlayout")
 
         self.vboxlayout = QtGui.QVBoxLayout()
-        self.vboxlayout.setSpacing(6)
         self.vboxlayout.setMargin(0)
+        self.vboxlayout.setSpacing(6)
         self.vboxlayout.setObjectName("vboxlayout")
 
         self.login_jidLabel = QtGui.QLabel(self.login)
@@ -54,8 +54,8 @@ class Ui_MainWindow(object):
         self.hboxlayout.addLayout(self.vboxlayout)
 
         self.vboxlayout1 = QtGui.QVBoxLayout()
-        self.vboxlayout1.setSpacing(6)
         self.vboxlayout1.setMargin(0)
+        self.vboxlayout1.setSpacing(6)
         self.vboxlayout1.setObjectName("vboxlayout1")
 
         self.login_jid = QtGui.QLineEdit(self.login)
@@ -70,8 +70,8 @@ class Ui_MainWindow(object):
         self.gridlayout1.addLayout(self.hboxlayout,3,0,1,1)
 
         self.hboxlayout1 = QtGui.QHBoxLayout()
-        self.hboxlayout1.setSpacing(6)
         self.hboxlayout1.setMargin(0)
+        self.hboxlayout1.setSpacing(6)
         self.hboxlayout1.setObjectName("hboxlayout1")
 
         spacerItem = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
@@ -90,8 +90,8 @@ class Ui_MainWindow(object):
         self.gridlayout1.addLayout(self.hboxlayout1,5,0,1,1)
 
         self.hboxlayout2 = QtGui.QHBoxLayout()
-        self.hboxlayout2.setSpacing(6)
         self.hboxlayout2.setMargin(0)
+        self.hboxlayout2.setSpacing(6)
         self.hboxlayout2.setObjectName("hboxlayout2")
 
         spacerItem2 = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
@@ -154,7 +154,7 @@ class Ui_MainWindow(object):
 
         self.gridlayout3 = QtGui.QGridLayout(self.roster)
         self.gridlayout3.setMargin(0)
-        self.gridlayout3.setSpacing(3)
+        self.gridlayout3.setSpacing(0)
         self.gridlayout3.setObjectName("gridlayout3")
 
         self.tabWidget = QtGui.QTabWidget(self.roster)
@@ -170,13 +170,13 @@ class Ui_MainWindow(object):
         self.gridlayout4.setObjectName("gridlayout4")
 
         self.hboxlayout3 = QtGui.QHBoxLayout()
+        self.hboxlayout3.setMargin(3)
         self.hboxlayout3.setSpacing(6)
-        self.hboxlayout3.setMargin(0)
         self.hboxlayout3.setObjectName("hboxlayout3")
 
-        self.label_2 = QtGui.QLabel(self.rosterTab)
-        self.label_2.setObjectName("label_2")
-        self.hboxlayout3.addWidget(self.label_2)
+        self.rosterSearchLabel = QtGui.QLabel(self.rosterTab)
+        self.rosterSearchLabel.setObjectName("rosterSearchLabel")
+        self.hboxlayout3.addWidget(self.rosterSearchLabel)
 
         self.rosterSearch = QtGui.QLineEdit(self.rosterTab)
         self.rosterSearch.setObjectName("rosterSearch")
@@ -246,7 +246,7 @@ class Ui_MainWindow(object):
         self.frame.setObjectName("frame")
 
         self.gridlayout7 = QtGui.QGridLayout(self.frame)
-        self.gridlayout7.setMargin(9)
+        self.gridlayout7.setMargin(0)
         self.gridlayout7.setSpacing(6)
         self.gridlayout7.setObjectName("gridlayout7")
 
@@ -295,8 +295,8 @@ class Ui_MainWindow(object):
         self.splash.setObjectName("splash")
 
         self.vboxlayout2 = QtGui.QVBoxLayout(self.splash)
-        self.vboxlayout2.setSpacing(6)
         self.vboxlayout2.setMargin(9)
+        self.vboxlayout2.setSpacing(6)
         self.vboxlayout2.setObjectName("vboxlayout2")
 
         self.splashImage = QtGui.QLabel(self.splash)
@@ -387,7 +387,7 @@ class Ui_MainWindow(object):
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:13pt; font-weight:600;\">Connect</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.login_savePassword_2.setText(QtGui.QApplication.translate("MainWindow", "Auto connect", None, QtGui.QApplication.UnicodeUTF8))
         self.login_savePassword.setText(QtGui.QApplication.translate("MainWindow", "Save Password", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setText(QtGui.QApplication.translate("MainWindow", "User search:", None, QtGui.QApplication.UnicodeUTF8))
+        self.rosterSearchLabel.setText(QtGui.QApplication.translate("MainWindow", "User search:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.rosterTab), QtGui.QApplication.translate("MainWindow", " r", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.rosterTab),QtGui.QApplication.translate("MainWindow", "Roster", None, QtGui.QApplication.UnicodeUTF8))
         self.bookmarks.headerItem().setText(0,QtGui.QApplication.translate("MainWindow", "Name", None, QtGui.QApplication.UnicodeUTF8))

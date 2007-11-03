@@ -291,6 +291,7 @@ class rosterWidget(QtGui.QWidget):
 		self.events=[]
 		self.bl=True
 		self.changePos=False
+		self.searchMode=False
 		self.reshow=False
 		self.userHeight=32
 		self.groupHeight=32
@@ -310,7 +311,9 @@ class rosterWidget(QtGui.QWidget):
 
 		self.reskin()
 		self.blinkJids=[]
-
+		self.main.ui.rosterSearch.hide()
+		self.main.ui.rosterSearchLabel.hide()
+		
 	def refreshEvents(self):
 		events=[]
 		for event in self.main.events.events:
@@ -988,7 +991,11 @@ class rosterWidget(QtGui.QWidget):
 			count=int(rect.height()/self.userHeight)
 			if float(rect.height())/float(self.userHeight)>float(count):
 				count+=1
+			#if self.searchMode:
+				#items,x,y=self.searchtemAt(1,rect.y(),count+1)
+			#else:
 			items,x,y=self.itemAt(1,rect.y(),count+1)
+				
 			for item in items:
 				if item.typ=="group":
 					if self.compact:
@@ -1012,54 +1019,93 @@ class rosterWidget(QtGui.QWidget):
 		gotx=0
 		goty=0
 		ret=[]
-		for key in self.sortedGroups:
-			item=self.groups[key]
-			items=self.getGroupSortedUsers(item.name)
-			if ((len(items)!=0 and not self.showOffline) or self.showOffline):
-				if got!=0 and not item in ret:
-					ret.append(item)
-					got+=1
-				if y1>=y and y1<=y+self.groupHeight:
-					if count and not item in ret:
+		if self.searchMode==False:
+			for key in self.sortedGroups:
+				item=self.groups[key]
+				items=self.getGroupSortedUsers(item.name)
+				if ((len(items)!=0 and not self.showOffline) or self.showOffline):
+					if got!=0 and not item in ret:
 						ret.append(item)
 						got+=1
-						goty=y
-					if not count:
-						return item
-				if got==count:
-					return ret,0,goty
-				if item.expanded and len(items)!=0:
-					previous=None
-					for useritem in items:
-						y+=self.userHeight
-						if got!=0 and not useritem in ret:
-							ret.append(useritem)
+					if y1>=y and y1<=y+self.groupHeight:
+						if count and not item in ret:
+							ret.append(item)
 							got+=1
+							goty=y
+						if not count:
+							return item
+					if got==count:
+						return ret,0,goty
+					if item.expanded and len(items)!=0:
+						previous=None
+						for useritem in items:
+							y+=self.userHeight
+							if got!=0 and not useritem in ret:
+								ret.append(useritem)
+								got+=1
+	
+							if useritem==self.item:
+								if y1>=y and y1<=y+self.selectedHeight-28+self.userHeight:
+									if count and not useritem in ret:
+										ret.append(useritem)
+										got+=1
+										goty=y
+									if not count:
+										return useritem
+							else:
+								if y1>=y and y1<=y+self.userHeight:
+									if count and not useritem in ret:
+										ret.append(useritem)
+										got+=1
+										goty=y
+									if not count:
+										return useritem
+							if got==count:
+								return ret,0,goty
+							if useritem==self.item:
+								y+=self.selectedHeight-28
+	
+						#if useritem==self.item:
+							#y-=32
+					y+=self.groupHeight
+		else:
+			users=[]
+			for item in self.users:
+				users.append([item.name.lower(),item])
+			users.sort()
+			for item in users:
+				item=item[1]
+				if item.hiddenBySearch==False:
+					useritem=item
+					if got!=0 and not useritem in ret:
+						ret.append(useritem)
+						got+=1
 
-						if useritem==self.item:
-							if y1>=y and y1<=y+self.selectedHeight-28+self.userHeight:
-								if count and not useritem in ret:
-									ret.append(useritem)
-									got+=1
-									goty=y
-								if not count:
-									return useritem
-						else:
-							if y1>=y and y1<=y+self.userHeight:
-								if count and not useritem in ret:
-									ret.append(useritem)
-									got+=1
-									goty=y
-								if not count:
-									return useritem
-						if got==count:
-							return ret,0,goty
-						if useritem==self.item:
-							y+=self.selectedHeight-28
+					if useritem==self.item:
+						if y1>=y and y1<=y+self.selectedHeight-28+self.userHeight:
+							if count and not useritem in ret:
+								ret.append(useritem)
+								got+=1
+								goty=y
+							if not count:
+								return useritem
+					else:
+						if y1>=y and y1<=y+self.userHeight:
+							if count and not useritem in ret:
+								ret.append(useritem)
+								got+=1
+								goty=y
+							if not count:
+								return useritem
+					if got==count:
+						return ret,0,goty
+					if useritem==self.item:
+						y+=self.selectedHeight-28
+					y+=self.userHeight
 
-					#if useritem==self.item:
-						#y-=32
-				y+=self.groupHeight
+						#if useritem==self.item:
+							#y-=32
+					#y+=self.groupHeight
 		if got!=0:
 			return ret,0,goty
 
@@ -1069,24 +1115,34 @@ class rosterWidget(QtGui.QWidget):
 	def itemCoordinates(self,i):
 		x=0
 		y=0
-		for key in self.sortedGroups:
-			item=self.groups[key]
-			items=self.getGroupSortedUsers(item.name)
-			if ((len(items)!=0 and not self.showOffline) or self.showOffline):
-				if item==i:
-					return x,y
-				if item.expanded and len(items)!=0:
-					previous=None
-					for useritem in items:
-						y+=self.userHeight
-						if useritem==i:
-							return x,y
-						if useritem==self.item:
-							y+=self.selectedHeight-28
-
-					#if useritem==self.item:
-						#y-=32
-				y+=self.groupHeight
+		if self.searchMode==False:
+			for key in self.sortedGroups:
+				item=self.groups[key]
+				items=self.getGroupSortedUsers(item.name)
+				if ((len(items)!=0 and not self.showOffline) or self.showOffline):
+					if item==i:
+						return x,y
+					if item.expanded and len(items)!=0:
+						previous=None
+						for useritem in items:
+							y+=self.userHeight
+							if useritem==i:
+								return x,y
+							if useritem==self.item:
+								y+=self.selectedHeight-28
+	
+						#if useritem==self.item:
+							#y-=32
+					y+=self.groupHeight
+		else:
+			for item in self.users:
+				if item.hiddenBySearch==False:
+					useritem=item
+					if useritem==i:
+						return x,y
+					if useritem==self.item:
+						y+=self.selectedHeight-28
+					y+=self.userHeight
 
 		return None,None
 
@@ -1241,10 +1297,19 @@ class rosterWidget(QtGui.QWidget):
 		elif key==QtCore.Qt.Key_Escape:
 			self.item = None
 			self.selected = None
+			if self.searchMode==True:
+				self.searchMode=False
+				for user in self.users:
+					user.hiddenBySearch=False
+				self.main.ui.rosterSearch.setText("")
+				self.main.ui.rosterSearch.hide()
+				self.main.ui.rosterSearchLabel.hide()
+
 			self.statusLabel.hide()
 			self.reshow=True
 			self.repaint()
 			self.setSize()
+
 		elif key==QtCore.Qt.Key_Delete: #tohle by mozna chtelo nejake potvrzeni 'Opravdu to chcete udelat?'
 			self.main.client.delContact(self.selected.jid)
 		elif key==QtCore.Qt.Key_F2:
@@ -1507,17 +1572,25 @@ class rosterWidget(QtGui.QWidget):
 		text=unicode(text).lower()
 		first=None
 		if len(text)!=0:
+			self.main.ui.rosterSearch.show()
+			self.main.ui.rosterSearchLabel.show()
+			self.searchMode=True
 			for user in self.users:
 				if user.name.lower().find(text)!=-1:
 					user.hiddenBySearch=False
-					if not first and ((self.showOffline==False and not user.hidden) or self.showOffline==True):
+					if not first:
 						first=user
+						print "FIRST:",first.jid,text
 				else:
 					user.hiddenBySearch=True
 		else:
+			self.main.ui.rosterSearch.hide()
+			self.main.ui.rosterSearchLabel.hide()
+			self.searchMode=False
+			self.statusLabel.hide()
 			for user in self.users:
 				user.hiddenBySearch=False
-				if not first and ((self.showOffline==False and not user.hidden) or self.showOffline==True):
+				if not first:
 					first=user
 		if self.item:
 			if self.item.typ=="user":
@@ -1526,6 +1599,11 @@ class rosterWidget(QtGui.QWidget):
 					self.selectItem(first)
 				else:
 					self.reshow=True
+			else:
+				self.statusLabel.hide()
+				self.selectItem(first)
+		else:
+			self.selectItem(first)
 		self.repaint()
 
 	def getUserItems(self,jid,typ=False):
