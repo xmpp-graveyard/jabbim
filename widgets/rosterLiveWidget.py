@@ -304,14 +304,26 @@ class rosterWidget(QtGui.QWidget):
 		self.colors.setObjectName("rosterView")
 
 		self.reskin()
+		self.blinkJids=[]
 
 	def refreshEvents(self):
+		events=[]
 		for event in self.main.events.events:
 			if event['type']=="message":
 				JID=jidT.JID(event['name']).userhost()
+				if not JID in self.blinkJids:
+					self.blinkJids.append(JID)
+				events.append(JID)
 				for item in self.getUserItems(JID):
 					item.blink=QtGui.QIcon(event['iconName'].replace("xxxxx","32x32"))
 					self.events.append(item)
+		for jid in self.blinkJids:
+			if not jid in events:
+				for item in self.getUserItems(jid):
+					if item in self.events:
+						self.events.remove(item)
+
+			
 		self.timerBlink.start(500)
 
 	def blink(self):
@@ -588,7 +600,14 @@ class rosterWidget(QtGui.QWidget):
 			painter.setPen(p)
 			
 			# paint user status icon
-			painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
+			if useritem in self.events:
+				if self.bl:
+					painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
+				else:
+					painter.drawPixmap(x+7,y+11,useritem.blink.pixmap(32,32))
+			else:
+				painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
+			
 
 			# set font
 			doc=QtGui.QTextDocument()
@@ -852,7 +871,13 @@ class rosterWidget(QtGui.QWidget):
 			painter.setPen(p)
 			
 			# paint user status icon
-			painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
+			if useritem in self.events:
+				if self.bl:
+					painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
+				else:
+					painter.drawPixmap(x+7,y+11,useritem.blink.pixmap(32,32))
+			else:
+				painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
 
 			# set font
 			doc=QtGui.QTextDocument()

@@ -382,6 +382,7 @@ class events:
 		else:
 			self.trayIcon=QtGui.QIcon("images/16x16/categories/event.png")
 			self.timer.start(500)
+		self.main.ui.roster.refreshEvents()
 
 	def addEvent(self,name,typ,icon,widget,tooltip=''):
 		if icon==None:
@@ -393,7 +394,7 @@ class events:
 		self.events.append({'name':name,'type':typ,'icon':icon,'iconName':iconName,'widget':widget,'tooltip':tooltip})
 		if typ!="message":
 			self.main.ui.tabWidget.setCurrentIndex(2)
-		self.main.ui.roster.refreshEvents()
+		#self.main.ui.roster.refreshEvents()
 		self.refreshTray()
 
 	def addLineEditEvent(self,trueCall=None,trueDict=None,falseCall=None,falseDict=None,maintext="",header="",text="",name="",typ="",icon=None,action=None,actionDict=None,height=40,value=u""):
