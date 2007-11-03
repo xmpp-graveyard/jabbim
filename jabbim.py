@@ -1085,7 +1085,9 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.actionAdd_Contact, QtCore.SIGNAL("triggered ( bool )"),self.addContactMainWindow)
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
 		app.connect(self.ui.actionJoin_Groupchat, QtCore.SIGNAL("triggered ( bool )"),self.joinGroupchat)
-		app.connect(self.ui.selfStatus, QtCore.SIGNAL("lostFocus()"), self.statMsgChanged)
+#		app.connect(self.ui.selfStatus_lineEdit, QtCore.SIGNAL("lostFocus()"), self.statMsgChanged)
+#		app.connect(self.ui.selfStatus_lineEdit, QtCore.SIGNAL("returnPressed()"), self.statMsgChanged)
+#		app.connect(self.ui.selfStatus_label, QtCore.SIGNAL("clicked()"), self.statMsgChanged)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.bookmarksCurrentChanged)
 
@@ -1116,6 +1118,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.buildStatusMenu()
 		self.ui.statusButton.setIcon(self.getIcon("offline",size="16x16"))
 		self.ui.statusButton.hide()
+		self.ui.showWidget = widgets.show.showWidget(self, self.ui.hboxlayout4, self.tr("Your status message here."))
+#		self.ui.selfStatus_lineEdit.hide()
+#		self.ui.selfStatus_label.setText("...")
 
 		#self.config['rosterIconSize']="22x22"
 		#self.addInfoSubscribe()
@@ -1261,11 +1266,15 @@ class mainWindow(QtGui.QMainWindow):
 		cs = customStatusWindow(jid, show)
 		cs.exec_()
 
-	def statMsgChanged(self):
-		self.client.sendPresence(
-				status = unicode(self.ui.selfStatus.text()),
-				show = self.client.roster['users'][self.client.jid.userhost()].resources[self.client.jid.resource].show
-				)
+	#def statMsgChanged(self):
+	#	text = unicode(self.ui.selfStatus_lineEdit.text())
+	#	self.client.sendPresence(
+	#			status =text, 
+	#			show = self.client.roster['users'][self.client.jid.userhost()].resources[self.client.jid.resource].show
+	#			)
+	#	self.ui.selfStatus_label.setText(text)
+	#	self.ui.selfStatus_lineEdit.hide()
+	#	self.ui.selfStatus_label.show()
 
 	def showInvitation(self, jid, room, reason):# = None):
 		log.msg("%s %s %s" %(jid, room, reason))
@@ -2172,7 +2181,7 @@ class statusWindow(QtGui.QDialog):
 				else:
 					pri="0"
 			if not jid:
-				MainWindow.ui.selfStatus.setText(unicode(self.ui.status.toPlainText()).replace("\n"," ")[:25])
+				MainWindow.ui.showWidget.label.setText(unicode(self.ui.status.toPlainText()).replace("\n"," ")[:25])
 			if jid:
 				#typ="available"
 				#if self.data=="offline":
