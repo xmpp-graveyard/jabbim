@@ -1386,7 +1386,7 @@ class rosterWidget(QtGui.QWidget):
 								self.metaItems[oldItem.metajid].remove(it)
 								del self.main.client.roster_meta[oldItem.jid]
 								break
-
+						print self.metaItems[oldItem.metajid]
 						if len(self.metaItems[oldItem.metajid])==1:
 							highest=self.metaItems[oldItem.metajid][0]
 							#oldItem.name=highest.name+"LOL"
