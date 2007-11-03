@@ -221,6 +221,7 @@ class userItem:
 		self.blink=None
 		self.jid = jid
 		self.privacy = {"block":False, "allow":False, "hide":False}
+		self.hiddenBySearch=False
 		#if self.main.client.privacy.active!=None:
 			#self.privacy["block"] = self.main.client.privacy.active.isBlockedJID(self.jid) and True
 
@@ -467,11 +468,11 @@ class rosterWidget(QtGui.QWidget):
 		ret=[]
 		for key in self.sorted[group]:
 			user=key[1]
-			if self.showOffline==True:
+			if self.showOffline==True and not user.hiddenBySearch:
 				if user.group==group:
 					ret.append(user)
 			else:
-				if user.group==group and not user.hidden:
+				if user.group==group and not user.hidden and not user.hiddenBySearch:
 					ret.append(user)
 		return ret
 
@@ -1478,6 +1479,19 @@ class rosterWidget(QtGui.QWidget):
 	def getHostItems(self,host):
 		return []
 
+	def search(self,text=""):
+		text=unicode(text).lower()
+		if len(text)!=0:
+			for user in self.users:
+				if user.name.lower().find(text)!=-1:
+					user.hiddenBySearch=False
+				else:
+					user.hiddenBySearch=True
+		else:
+			for user in self.users:
+				if user.name.find(text)!=-1:
+					user.hiddenBySearch=False
+		self.repaint()
 
 	def getUserItems(self,jid,typ=False):
 		ret=[]

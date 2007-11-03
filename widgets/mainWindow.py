@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Fri Nov  2 20:02:16 2007
+# Created: Sat Nov  3 03:51:09 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -169,21 +169,35 @@ class Ui_MainWindow(object):
         self.gridlayout4.setSpacing(0)
         self.gridlayout4.setObjectName("gridlayout4")
 
-        self.userStyleWidget = QtGui.QWidget(self.rosterTab)
-        self.userStyleWidget.setObjectName("userStyleWidget")
-        self.gridlayout4.addWidget(self.userStyleWidget,2,0,1,1)
+        self.hboxlayout3 = QtGui.QHBoxLayout()
+        self.hboxlayout3.setMargin(0)
+        self.hboxlayout3.setSpacing(6)
+        self.hboxlayout3.setObjectName("hboxlayout3")
+
+        self.label_2 = QtGui.QLabel(self.rosterTab)
+        self.label_2.setObjectName("label_2")
+        self.hboxlayout3.addWidget(self.label_2)
+
+        self.rosterSearch = QtGui.QLineEdit(self.rosterTab)
+        self.rosterSearch.setObjectName("rosterSearch")
+        self.hboxlayout3.addWidget(self.rosterSearch)
+        self.gridlayout4.addLayout(self.hboxlayout3,3,0,1,1)
+
+        self.selectedItemStyle = QtGui.QWidget(self.rosterTab)
+        self.selectedItemStyle.setObjectName("selectedItemStyle")
+        self.gridlayout4.addWidget(self.selectedItemStyle,0,0,1,1)
+
+        self.rosterWidget = QtGui.QWidget(self.rosterTab)
+        self.rosterWidget.setObjectName("rosterWidget")
+        self.gridlayout4.addWidget(self.rosterWidget,4,0,1,1)
 
         self.groupStyleWidget = QtGui.QWidget(self.rosterTab)
         self.groupStyleWidget.setObjectName("groupStyleWidget")
         self.gridlayout4.addWidget(self.groupStyleWidget,1,0,1,1)
 
-        self.rosterWidget = QtGui.QWidget(self.rosterTab)
-        self.rosterWidget.setObjectName("rosterWidget")
-        self.gridlayout4.addWidget(self.rosterWidget,3,0,1,1)
-
-        self.selectedItemStyle = QtGui.QWidget(self.rosterTab)
-        self.selectedItemStyle.setObjectName("selectedItemStyle")
-        self.gridlayout4.addWidget(self.selectedItemStyle,0,0,1,1)
+        self.userStyleWidget = QtGui.QWidget(self.rosterTab)
+        self.userStyleWidget.setObjectName("userStyleWidget")
+        self.gridlayout4.addWidget(self.userStyleWidget,2,0,1,1)
         self.tabWidget.addTab(self.rosterTab,QtGui.QIcon("images/16x16/categories/system-users.png"),"")
 
         self.bookmarksTab = QtGui.QWidget()
@@ -375,6 +389,7 @@ class Ui_MainWindow(object):
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:13pt; font-weight:600;\">Connect</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.login_savePassword_2.setText(QtGui.QApplication.translate("MainWindow", "Auto connect", None, QtGui.QApplication.UnicodeUTF8))
         self.login_savePassword.setText(QtGui.QApplication.translate("MainWindow", "Save Password", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("MainWindow", "User search:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.rosterTab), QtGui.QApplication.translate("MainWindow", " r", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.rosterTab),QtGui.QApplication.translate("MainWindow", "Roster", None, QtGui.QApplication.UnicodeUTF8))
         self.bookmarks.headerItem().setText(0,QtGui.QApplication.translate("MainWindow", "Name", None, QtGui.QApplication.UnicodeUTF8))
