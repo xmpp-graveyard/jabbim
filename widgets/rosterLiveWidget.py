@@ -1372,6 +1372,8 @@ class rosterWidget(QtGui.QWidget):
 
 			# metacontact > normal user
 			elif oldItem.typ=="user" and oldItem.metajid!="" and item.typ=="user":
+				del self.data[event.mimeData()]
+				return
 				items=QtCore.QStringList()
 				items.append(self.tr("Move to group"))
 				q,b=QtGui.QInputDialog.getItem(self,self.tr("Contact action"),self.tr("Select action."), items,0,False)
