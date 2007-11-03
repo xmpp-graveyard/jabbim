@@ -718,7 +718,11 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item row="2" column="0" colspan="6" >
-            <widget class="QLineEdit" name="selfStatus" />
+            <widget class="QLineEdit" name="selfStatus" >
+             <property name="toolTip" >
+              <string>Your status message</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
