@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sat Nov  3 17:19:11 2007
+# Created: Sat Nov  3 20:17:09 2007
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,268,536).size()).expandedTo(MainWindow.minimumSizeHint()))
+        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,237,536).size()).expandedTo(MainWindow.minimumSizeHint()))
         MainWindow.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.centralwidget = QtGui.QWidget(MainWindow)
@@ -250,17 +250,20 @@ class Ui_MainWindow(object):
         self.gridlayout7.setSpacing(6)
         self.gridlayout7.setObjectName("gridlayout7")
 
-        spacerItem7 = QtGui.QSpacerItem(161,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout7.addItem(spacerItem7,1,1,1,2)
-
         self.statusButton = QtGui.QToolButton(self.frame)
         self.statusButton.setMaximumSize(QtCore.QSize(16777215,20))
         self.statusButton.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.statusButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.statusButton.setObjectName("statusButton")
-        self.gridlayout7.addWidget(self.statusButton,1,5,1,1)
+        self.gridlayout7.addWidget(self.statusButton,1,8,1,1)
 
         self.selfAvatar = QtGui.QLabel(self.frame)
+
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Maximum,QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.selfAvatar.sizePolicy().hasHeightForWidth())
+        self.selfAvatar.setSizePolicy(sizePolicy)
         self.selfAvatar.setMargin(2)
         self.selfAvatar.setObjectName("selfAvatar")
         self.gridlayout7.addWidget(self.selfAvatar,0,0,2,1)
@@ -271,11 +274,11 @@ class Ui_MainWindow(object):
         self.showOffline.setCheckable(True)
         self.showOffline.setArrowType(QtCore.Qt.NoArrow)
         self.showOffline.setObjectName("showOffline")
-        self.gridlayout7.addWidget(self.showOffline,1,4,1,1)
+        self.gridlayout7.addWidget(self.showOffline,1,7,1,1)
 
         self.selfName = QtGui.QLabel(self.frame)
         self.selfName.setObjectName("selfName")
-        self.gridlayout7.addWidget(self.selfName,0,1,1,4)
+        self.gridlayout7.addWidget(self.selfName,0,1,1,6)
 
         self.toggleInvisible = QtGui.QToolButton(self.frame)
         self.toggleInvisible.setMaximumSize(QtCore.QSize(16777215,20))
@@ -283,11 +286,11 @@ class Ui_MainWindow(object):
         self.toggleInvisible.setCheckable(True)
         self.toggleInvisible.setArrowType(QtCore.Qt.NoArrow)
         self.toggleInvisible.setObjectName("toggleInvisible")
-        self.gridlayout7.addWidget(self.toggleInvisible,1,3,1,1)
+        self.gridlayout7.addWidget(self.toggleInvisible,1,6,1,1)
 
         self.hboxlayout4 = QtGui.QHBoxLayout()
         self.hboxlayout4.setObjectName("hboxlayout4")
-        self.gridlayout7.addLayout(self.hboxlayout4,2,0,1,6)
+        self.gridlayout7.addLayout(self.hboxlayout4,1,1,1,5)
         self.gridlayout3.addWidget(self.frame,0,0,1,1)
         self.rosterStackedWidget.addWidget(self.roster)
 
@@ -316,7 +319,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0,0,268,29))
+        self.menubar.setGeometry(QtCore.QRect(0,0,237,29))
         self.menubar.setObjectName("menubar")
 
         self.menuHelp = QtGui.QMenu(self.menubar)
