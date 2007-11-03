@@ -1076,6 +1076,10 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.bookmarksCurrentChanged)
 
+		self.ui.actionAdd_Contact.setEnabled(False)
+		self.ui.actionJoin_Groupchat.setEnabled(False)
+		self.ui.actionService_Discovery.setEnabled(False)
+
 		#app.connect(self.ui.addContact, QtCore.SIGNAL("clicked ()"),self.addContactMainWindow)
 		app.connect(self.ui.mucBrowserButton, QtCore.SIGNAL("clicked ()"),self.mucBrowser)
 		app.connect(self.ui.registerButton, QtCore.SIGNAL("clicked ()"),self.registerButtonClicked)
@@ -1848,6 +1852,9 @@ class mainWindow(QtGui.QMainWindow):
 
 	def _connected(self):
 		self.ui.roster.reskin()
+		self.ui.actionAdd_Contact.setEnabled(True)
+		self.ui.actionJoin_Groupchat.setEnabled(True)
+		self.ui.actionService_Discovery.setEnabled(True)
 		self.ui.selfName.setText("<h3>"+unicode(self.client.jid.userhost()).split("@")[0]+"</h3>")
 		self.client.getVCard(unicode(self.client.jid.userhost()))
 # 		self.ui.rosterStackedWidget.setCurrentIndex(1)
@@ -1986,6 +1993,10 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.statusButton.hide()
 		MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
 		MainWindow.ui.showOffline.hide()
+		MainWindow.ui.actionAdd_Contact.setEnabled(False)
+		MainWindow.ui.actionJoin_Groupchat.setEnabled(False)
+		MainWindow.ui.actionService_Discovery.setEnabled(False)
+
 
 		#MainWindow.client.roster = {'users':{},'groups':{}}
 		#MainWindow.client.roster_meta = {} # jid: {'tag':tag,  'order': 1}
