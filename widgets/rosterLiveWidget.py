@@ -222,6 +222,7 @@ class userItem:
 		self.jid = jid
 		self.privacy = {"block":False, "allow":False, "hide":False}
 		self.hiddenBySearch=False
+		self.transport=False
 		#if self.main.client.privacy.active!=None:
 			#self.privacy["block"] = self.main.client.privacy.active.isBlockedJID(self.jid) and True
 
@@ -466,14 +467,17 @@ class rosterWidget(QtGui.QWidget):
 	def getGroupSortedUsers(self,group):
 		# get all users from group. Returned list is sorted and depends on self.showOffline variable.
 		ret=[]
+		transport=self.main.config['showTransports']
 		for key in self.sorted[group]:
 			user=key[1]
 			if self.showOffline==True and not user.hiddenBySearch:
 				if user.group==group:
-					ret.append(user)
+					if (transport=="False" and user.transport==False) or transport=="True":
+						ret.append(user)
 			else:
 				if user.group==group and not user.hidden and not user.hiddenBySearch:
-					ret.append(user)
+					if (transport=="False" and user.transport==False) or transport=="True":
+						ret.append(user)
 		return ret
 
 	def paintCompactGroupItem(self,painter,item,x,y):

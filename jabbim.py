@@ -181,6 +181,9 @@ class clientClass(pyxl.client.Client):
 						#app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.main.statusChanged)
 						self.menus.append(menu)
 					self.main.buildStatusMenu(self.menus)
+				for host in self.main.hosts:
+					for i in self.main.ui.roster.getUserItems(host):
+						i.transport=True
 		# set icons for users with this host
 		for item in self.main.ui.roster.getHostItems("@"+jid):
 			show=unicode(item.text(1))[0]
