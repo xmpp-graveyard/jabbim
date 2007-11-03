@@ -1466,8 +1466,11 @@ class rosterWidget(QtGui.QWidget):
 						self.main.client.setMetacontacts()
 						
 						self.sortItems()
+						if self.item!=item:
+							self.selectItem(item)
+						self.reshow=True
 						self.repaint()
-						self.selectItem(item)
+
 					elif index==2:
 						self.changeGroup(jid,"+",unicode(item.group))
 
