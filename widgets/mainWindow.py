@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sat Nov  3 03:51:09 2007
-#      by: PyQt4 UI code generator 4.3
+# Created: Sat Nov  3 11:28:20 2007
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -35,13 +35,13 @@ class Ui_MainWindow(object):
         self.gridlayout1.setObjectName("gridlayout1")
 
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(0)
+        self.hboxlayout.setMargin(0)
         self.hboxlayout.setObjectName("hboxlayout")
 
         self.vboxlayout = QtGui.QVBoxLayout()
-        self.vboxlayout.setMargin(0)
         self.vboxlayout.setSpacing(6)
+        self.vboxlayout.setMargin(0)
         self.vboxlayout.setObjectName("vboxlayout")
 
         self.login_jidLabel = QtGui.QLabel(self.login)
@@ -54,8 +54,8 @@ class Ui_MainWindow(object):
         self.hboxlayout.addLayout(self.vboxlayout)
 
         self.vboxlayout1 = QtGui.QVBoxLayout()
-        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setSpacing(6)
+        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setObjectName("vboxlayout1")
 
         self.login_jid = QtGui.QLineEdit(self.login)
@@ -70,8 +70,8 @@ class Ui_MainWindow(object):
         self.gridlayout1.addLayout(self.hboxlayout,3,0,1,1)
 
         self.hboxlayout1 = QtGui.QHBoxLayout()
-        self.hboxlayout1.setMargin(0)
         self.hboxlayout1.setSpacing(6)
+        self.hboxlayout1.setMargin(0)
         self.hboxlayout1.setObjectName("hboxlayout1")
 
         spacerItem = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
@@ -90,8 +90,8 @@ class Ui_MainWindow(object):
         self.gridlayout1.addLayout(self.hboxlayout1,5,0,1,1)
 
         self.hboxlayout2 = QtGui.QHBoxLayout()
-        self.hboxlayout2.setMargin(0)
         self.hboxlayout2.setSpacing(6)
+        self.hboxlayout2.setMargin(0)
         self.hboxlayout2.setObjectName("hboxlayout2")
 
         spacerItem2 = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
@@ -170,8 +170,8 @@ class Ui_MainWindow(object):
         self.gridlayout4.setObjectName("gridlayout4")
 
         self.hboxlayout3 = QtGui.QHBoxLayout()
-        self.hboxlayout3.setMargin(0)
         self.hboxlayout3.setSpacing(6)
+        self.hboxlayout3.setMargin(0)
         self.hboxlayout3.setObjectName("hboxlayout3")
 
         self.label_2 = QtGui.QLabel(self.rosterTab)
@@ -250,14 +250,8 @@ class Ui_MainWindow(object):
         self.gridlayout7.setSpacing(6)
         self.gridlayout7.setObjectName("gridlayout7")
 
-        self.selfStatus = QtGui.QLabel(self.frame)
-        self.selfStatus.setScaledContents(True)
-        self.selfStatus.setOpenExternalLinks(True)
-        self.selfStatus.setObjectName("selfStatus")
-        self.gridlayout7.addWidget(self.selfStatus,1,1,1,1)
-
         spacerItem7 = QtGui.QSpacerItem(161,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout7.addItem(spacerItem7,1,2,1,1)
+        self.gridlayout7.addItem(spacerItem7,1,1,1,2)
 
         self.statusButton = QtGui.QToolButton(self.frame)
         self.statusButton.setMaximumSize(QtCore.QSize(16777215,20))
@@ -290,6 +284,10 @@ class Ui_MainWindow(object):
         self.toggleInvisible.setArrowType(QtCore.Qt.NoArrow)
         self.toggleInvisible.setObjectName("toggleInvisible")
         self.gridlayout7.addWidget(self.toggleInvisible,1,3,1,1)
+
+        self.selfStatus = QtGui.QLineEdit(self.frame)
+        self.selfStatus.setObjectName("selfStatus")
+        self.gridlayout7.addWidget(self.selfStatus,2,0,1,6)
         self.gridlayout3.addWidget(self.frame,0,0,1,1)
         self.rosterStackedWidget.addWidget(self.roster)
 
@@ -297,12 +295,11 @@ class Ui_MainWindow(object):
         self.splash.setObjectName("splash")
 
         self.vboxlayout2 = QtGui.QVBoxLayout(self.splash)
-        self.vboxlayout2.setMargin(9)
         self.vboxlayout2.setSpacing(6)
+        self.vboxlayout2.setMargin(9)
         self.vboxlayout2.setObjectName("vboxlayout2")
 
         self.splashImage = QtGui.QLabel(self.splash)
-        self.splashImage.setPixmap(QtGui.QPixmap("images/logo.png"))
         self.splashImage.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
         self.splashImage.setObjectName("splashImage")
         self.vboxlayout2.addWidget(self.splashImage)

@@ -1085,6 +1085,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.actionAdd_Contact, QtCore.SIGNAL("triggered ( bool )"),self.addContactMainWindow)
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
 		app.connect(self.ui.actionJoin_Groupchat, QtCore.SIGNAL("triggered ( bool )"),self.joinGroupchat)
+		app.connect(self.ui.selfStatus, QtCore.SIGNAL("lostFocus()"), self.statMsgChanged)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.bookmarksCurrentChanged)
 
@@ -1259,6 +1260,12 @@ class mainWindow(QtGui.QMainWindow):
 	def sendCustomStatus(self, jid, show = None):
 		cs = customStatusWindow(jid, show)
 		cs.exec_()
+
+	def statMsgChanged(self):
+		self.client.sendPresence(
+				status = unicode(self.ui.selfStatus.text()),
+				show = self.client.roster['users'][self.client.jid.userhost()].resources[self.client.jid.resource].show
+				)
 
 	def showInvitation(self, jid, room, reason):# = None):
 		log.msg("%s %s %s" %(jid, room, reason))
@@ -2163,7 +2170,7 @@ class statusWindow(QtGui.QDialog):
 				else:
 					pri="0"
 			if not jid:
-				MainWindow.ui.selfStatus.setText(unicode(self.ui.status.toPlainText()).replace("\n"," ")[:25]+" ...")
+				MainWindow.ui.selfStatus.setText(unicode(self.ui.status.toPlainText()).replace("\n"," ")[:25])
 			if jid:
 				#typ="available"
 				#if self.data=="offline":
