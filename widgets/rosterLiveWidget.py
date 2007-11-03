@@ -1299,7 +1299,14 @@ class rosterWidget(QtGui.QWidget):
 			jid = jidT.JID(self.selected.jid)
 			jid_r = jid.userhost()
 			item=self.getUserItems(jid_r)[0]
-			self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+			item=self.getUserItems(jid_r)[0]
+			res = self.main.client.roster['users'][jid_r].getHighestResource()
+			if res==None:
+				self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+			else:
+				self.main.chat.addChatTab(item.jid+"/"+res,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+
+			#self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			self.main.chat.activate()
 		elif key==QtCore.Qt.Key_Escape:
 			self.item = None
