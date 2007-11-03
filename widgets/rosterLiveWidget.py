@@ -179,6 +179,7 @@ class activeWidget(QtGui.QWidget):
 		# sets item properties according to metaItem, which is represented by button
 		meta=self.buttons[button]
 		self.item.name=meta.name
+		self.item.escapedName=meta.escapedName
 		self.item.icon=meta.icon
 		self.item.avatar=meta.avatar
 		self.item.status=meta.status
@@ -1381,9 +1382,9 @@ class rosterWidget(QtGui.QWidget):
 					if index==0:
 						for it in self.metaItems[oldItem.metajid]:
 							if it.jid==oldItem.jid:
+								self.setHighest(oldItem.metajid)
 								self.metaItems[oldItem.metajid].remove(it)
 								del self.main.client.roster_meta[oldItem.jid]
-								self.setHighest(oldItem.metajid)
 								break
 
 						if len(self.metaItems[oldItem.metajid])==1:
@@ -1408,11 +1409,15 @@ class rosterWidget(QtGui.QWidget):
 							gr=unicode(oldItem.group)
 							for it in self.getUserItems(oldItem.metajid):
 								self.users.remove(it)
+							for it in self.getUserItems(contact.jid):
+								it.metajid=""
 							self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,[gr])
 						
 						self.main.client.setMetacontacts()
 						name=unicode(self.main.client.roster['users'][jid].name)
 						contact=self.main.client.roster['users'][jid]
+						for it in self.getUserItems(contact.jid):
+							it.metajid=""
 						self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,[unicode(item.group)])
 						self.statusLabel.hide()
 						self.sortItems()
@@ -1448,11 +1453,12 @@ class rosterWidget(QtGui.QWidget):
 							self.main.client.roster_meta[item.jid]={'tag':item.tag,'order':10}
 							it=item.clone()
 							it.tag=item.tag
+
 							self.metaItems[item.metajid].append(it)
 						it=oldItem.clone()
 						it.tag=item.tag
+
 						self.metaItems[item.metajid].append(it)
-						
 						for i in self.getUserItems(oldItem.jid):
 							self.users.remove(i)
 						self.setHighest(item.metajid)
@@ -1585,12 +1591,23 @@ class rosterWidget(QtGui.QWidget):
 
 	def setHighest(self,mainjid):
 		highest=None
+		print "-------"
 		for item in self.metaItems[mainjid]:
 			if highest:
-				if int(item.status)<int(highest.status):
+				husertype=""
+				usertype=""
+				if self.main.hosts.has_key(jidT.JID(highest.jid).host):
+					husertype=self.main.hosts[jidT.JID(highest.jid).host]
+				if self.main.hosts.has_key(jidT.JID(item.jid).host):
+					usertype=self.main.hosts[jidT.JID(item.jid).host]
+				#if (int(item.status)<int(highest.status) and husertype!="jabber" and highest.status=="9") or (husertype!="jabber" and highest.status=="9"):
+				#print item.jid,highest.jid,item.status,highest.status,usertype=="jabber" and item.status!="9",highest.status=="9" and item.status!="9"
+				if ((usertype=="jabber" and str(item.status)!="9") or (str(highest.status)=="9" and str(item.status!="9"))) and item.jid!=mainjid:
 					highest=item
 			else:
-				highest=item
+				if item.jid!=mainjid:
+					highest=item
+		print "-------"
 		if highest:
 			item=self.getUserItems(mainjid)
 			if len(item)!=0:
