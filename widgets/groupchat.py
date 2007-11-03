@@ -188,6 +188,7 @@ class groupChatWidget(QtGui.QWidget):
 		self.sent = []
 		self.hindex = 0
 		self.sizes={}
+		self.colors=[]
 	#def lines(self):
 		#if self.ui.line.verticalScrollBar().isVisible():
 			#self.ui.line.setMaximumHeight(int(self.ui.line.maximumHeight())+int(self.ui.line.currentFont().pointSize())+10)
@@ -267,6 +268,7 @@ class groupChatWidget(QtGui.QWidget):
 			else:
 				item=QtGui.QTreeWidgetItem(self.ui.users)
 			item.setText(0,unicode(nick))
+			self.colors.append(item)
 		else:
 			item=self.getUserItems(nick)[0]
 		

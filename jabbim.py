@@ -740,6 +740,14 @@ class clientClass(pyxl.client.Client):
 								message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
 							else:
 								message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
+								if len(w.chat.getUserItems(user))!=0:
+									item=w.chat.getUserItems(user)[0]
+									if item in w.chat.colors:
+										cIndex=w.chat.colors.index(item)
+										colors=self.main.getSkinColors(cIndex)
+										if colors!=None:
+											message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
+								
 						
 						if self.groupchats[frm].users.has_key(user):
 							truejid = self.groupchats[frm].users[user].truejid
@@ -1746,6 +1754,18 @@ class mainWindow(QtGui.QMainWindow):
 		self.skin=ConfigObj("skins/"+self.config["chat_skin"],encoding='UTF8')
 		if not self.skin.has_key("spaces_between_lines"):
 			self.skin["spaces_between_lines"]='0'
+	
+	def getSkinColors(self,i):
+		colors=[]
+		for key,value in self.skin.iteritems():
+			if key.startswith("color"):
+				colors.append(value)
+		if len(colors)==0:
+			return None
+		if i>len(colors)-1:
+			return colors[i%(len(colors)-1)]
+		else:
+			return colors[i]
 
 	def now(self):
 		# get time
