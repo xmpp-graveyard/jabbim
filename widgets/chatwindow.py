@@ -49,6 +49,11 @@ class chatWindow(QtGui.QMainWindow):
 		self.active=False
 		self.timer=QtCore.QTimer()
 		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.inactive)
+		nextTab=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_Right), self,self.next)
+		nextTab=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_Left), self,self.previous)
+		
+		#nextTab=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.ShiftModifier + QtCore.Qt.Key_Right), self,self.moveRight)
+		#nextTab=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.ShiftModifier + QtCore.Qt.Key_Left), self,self.moveLeft)
 		#self.ui.chatTab.removeTab(0)
 		#self.ui.gridlayout.setMargin(1)
 		#self.ui.gridlayout.setSpacing(1)
@@ -66,6 +71,28 @@ class chatWindow(QtGui.QMainWindow):
 				#for y in range(int(int(viewport.height())/self.pixmap.height())+1):
 					#painter.drawPixmap(x*int(self.pixmap.width()),y*self.pixmap.height(),self.pixmap)
 		#QtGui.QMainWindow.paintEvent(self,event)
+
+	#def moveRight(self):
+		#i=int(self.ui.chatTab.currentIndex())+1
+		#if i<=self.ui.chatTab.count():
+			#self.ui.chatTab.setCurrentIndex(i)
+
+	#def moveLeft(self):
+		#i=int(self.ui.chatTab.currentIndex())-1
+		#if i>=0:
+			#widget=self.ui.chatTab.currentWidget()
+			#self.ui.chatTab.insertTab(i,widget,self.ui.chatTab.tabIcon(i+1),self.ui.chatTab.tabText(i+1))
+			#self.ui.chatTab.setCurrentIndex(i)
+
+	def next(self):
+		i=int(self.ui.chatTab.currentIndex())+1
+		if i<=self.ui.chatTab.count():
+			self.ui.chatTab.setCurrentIndex(i)
+
+	def previous(self):
+		i=int(self.ui.chatTab.currentIndex())-1
+		if i>=0:
+			self.ui.chatTab.setCurrentIndex(i)
 
 	def inactive(self):
 		if self.active==False:
@@ -251,7 +278,7 @@ class chatWindow(QtGui.QMainWindow):
 				
 		layout.addWidget(tab.chat)
 		print "adding new tab...", icon
-		self.ui.chatTab.addTab(tab,icon,unicode(name))
+		self.ui.chatTab.addTab(tab,icon,"&"+unicode(name))
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 		self.setWindowTitle(unicode(name))
 		tab.chat.ui.label.setText("<font size=\"3\"><b>"+name+"</b></font>")
