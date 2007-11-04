@@ -478,7 +478,7 @@ class clientClass(pyxl.client.Client):
 			message = message.replace("[message]",unicode(status))
 		w.chat.textEditWrite(message)
 		tab,index=self.main.chat.findTab(muc+"/"+nick)
-		if w:
+		if w and tab:
 			tab.chat.textEditWrite(message)
 			tab.ic=self.main.getIcon(unicode(muc),size="16x16",status=self.main.icons[self.main.shows[unicode(show)]])
 			self.main.chat.ui.chatTab.setTabIcon(index,tab.ic)
