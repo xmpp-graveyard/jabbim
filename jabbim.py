@@ -744,13 +744,16 @@ class clientClass(pyxl.client.Client):
 								message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
 							else:
 								message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
+								colors=None
 								if len(w.chat.getUserItems(user))!=0:
 									item=w.chat.getUserItems(user)[0]
 									if item in w.chat.colors:
 										cIndex=w.chat.colors.index(item)
 										colors=self.main.getSkinColors(cIndex)
-										if colors!=None:
-											message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
+								else:
+									colors=self.main.getSkinColors(0)
+								if colors!=None:
+									message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
 								
 						
 						if self.groupchats[frm].users.has_key(user):
@@ -838,6 +841,9 @@ class clientClass(pyxl.client.Client):
 			#if not os.path.isfile(file):
 				#file="images/32x32/apps/jabbim.png"
 			message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user)).replace("[message]",message)
+			colors=self.main.getSkinColors(0)
+			if colors!=None:
+				message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
 			# find tab
 			#tab=None
 			#tabIndex=0
