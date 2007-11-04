@@ -55,7 +55,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Message Archiving'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Archive Plugin'
-		self.version = '0.141'
+		self.version = '0.146'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 # 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
@@ -158,7 +158,7 @@ class Plugin(plugins.PluginBase):
 						#self.window.ui.text.append(unicode('[%s] %s' %(time.strftime('%X', time.localtime(float(casti[0]))), casti[5]), 'utf8'))
 	
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay):
-		if body != None:
+		if body != None and chatstate==None:
 			jid = quote(frm.split('/')[0])
 			if typ=='groupchat':
 				if delay!=None:
@@ -180,7 +180,7 @@ class Plugin(plugins.PluginBase):
 			fp.write()
 	
 	def on_message_send (self, to, body, typ, subject,composing, xhtml,  muc):
-		if not muc and body != None:
+		if not muc and body != None and len(body)!=0:
 			jid = quote(to.split('/')[0])
 			fp=ConfigObj(self.main.homeDir+'/archive/'+self.jid+'/'+jid+'.history',encoding='UTF8')
 			if xhtml != None:
