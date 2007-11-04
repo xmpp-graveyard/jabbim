@@ -1562,12 +1562,14 @@ class mainWindow(QtGui.QMainWindow):
 					self.raise_()
 					self.activateWindow()
 					self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
+					self.ui.roster.setFocus(QtCore.Qt.MouseFocusReason)
 				else:
 					if self.windowState() & QtCore.Qt.WindowMinimized:
 						self.show()
 						self.raise_()
 						self.activateWindow()
 						self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
+						self.ui.roster.setFocus(QtCore.Qt.MouseFocusReason)
 					else:
 						self.hide()
 		elif reason==QtGui.QSystemTrayIcon.MiddleClick:
@@ -1577,12 +1579,14 @@ class mainWindow(QtGui.QMainWindow):
 				self.raise_()
 				self.activateWindow()
 				self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
+				self.ui.roster.setFocus(QtCore.Qt.MouseFocusReason)
 			else:
 				if self.windowState() & QtCore.Qt.WindowMinimized:
 					self.show()
 					self.raise_()
 					self.activateWindow()
 					self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
+					self.ui.roster.setFocus(QtCore.Qt.MouseFocusReason)
 				else:
 					self.hide()
 
