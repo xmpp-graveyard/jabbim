@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 from twisted.words.xish import domish
+from twisted.words.protocols.jabber import jid as jidT
 
 class Groupchat:
 	def __init__(self,  client,  JID,  nick):
@@ -81,6 +82,7 @@ class Groupchat:
 	
 	
 	def join(self):
+		self.client.getDiscoInfo(jidT.JID(self.jid).host)
 		print 'joining MUC: ',  self.jid
 		presence = domish.Element((None, 'presence'))
 		presence['to'] = '%s/%s'%(self.jid,  self.nick)

@@ -710,21 +710,31 @@ class Client(derived):
 				hash = unicode(child.firstChildElement())
 
 #avatars
-		if self.avatars.has_key(fromjid):
-			if self.avatars[fromjid] == hash:
-				pass #vsechno je ok, mame spravneho avatara
-			elif self.avatars[fromjid] != hash and hash != None:
-				self.getVCard(fromjid)
-		elif self.avatars.has_key(frm.full()):
-			if self.avatars[frm.full()] == hash:
-				pass #vsechno je ok, mame spravneho avatara
-			elif self.avatars[frm.full()] != hash and hash != None:
-				self.getVCard(frm.full())
-		else:
-			if self.groupchats.has_key(fromjid):
-				self.getVCard(frm.full())
+		wantAvatar=True
+		if self.groupchats.has_key(fromjid):
+			if self.main.client.disco.has_key(frm.host):
+				if self.main.client.disco[frm.host][None].has_key("identities"):
+					if self.main.client.disco[frm.host][None].has_key("identities"):
+						for identity,values in self.main.client.disco[frm.host][None]["identities"].iteritems():
+							if values['type']=='irc':
+								wantAvatar=False
+
+		if wantAvatar:
+			if self.avatars.has_key(fromjid):
+				if self.avatars[fromjid] == hash:
+					pass #vsechno je ok, mame spravneho avatara
+				elif self.avatars[fromjid] != hash and hash != None:
+					self.getVCard(fromjid)
+			elif self.avatars.has_key(frm.full()):
+				if self.avatars[frm.full()] == hash:
+					pass #vsechno je ok, mame spravneho avatara
+				elif self.avatars[frm.full()] != hash and hash != None:
+					self.getVCard(frm.full())
 			else:
-				self.getVCard(fromjid)
+				if self.groupchats.has_key(fromjid):
+					self.getVCard(frm.full())
+				else:
+					self.getVCard(fromjid)
 				
 
 
