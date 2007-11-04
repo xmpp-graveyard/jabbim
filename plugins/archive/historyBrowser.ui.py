@@ -2,18 +2,17 @@
 
 # Form implementation generated from reading ui file 'historyBrowser.ui'
 #
-# Created: Wed Aug 15 07:33:37 2007
-#      by: PyQt4 UI code generator 4.1
+# Created: Sun Nov  4 04:55:01 2007
+#      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,582,609).size()).expandedTo(MainWindow.minimumSizeHint()))
+        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,560,429).size()).expandedTo(MainWindow.minimumSizeHint()))
 
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -23,35 +22,21 @@ class Ui_MainWindow(object):
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
 
-        self.splitter_2 = QtGui.QSplitter(self.centralwidget)
-        self.splitter_2.setOrientation(QtCore.Qt.Horizontal)
-        self.splitter_2.setObjectName("splitter_2")
+        self.calendarWidget = QtGui.QWidget(self.centralwidget)
+        self.calendarWidget.setObjectName("calendarWidget")
+        self.gridlayout.addWidget(self.calendarWidget,1,0,1,1)
 
-        self.splitter = QtGui.QSplitter(self.splitter_2)
-        self.splitter.setOrientation(QtCore.Qt.Vertical)
-        self.splitter.setObjectName("splitter")
-
-        self.calendar = QtGui.QCalendarWidget(self.splitter)
-
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(5),QtGui.QSizePolicy.Policy(5))
-        sizePolicy.setHorizontalStretch(254)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.calendar.sizePolicy().hasHeightForWidth())
-        self.calendar.setSizePolicy(sizePolicy)
-        self.calendar.setGridVisible(False)
-        self.calendar.setHeaderVisible(True)
-        self.calendar.setObjectName("calendar")
-
-        self.seznam = QtGui.QListWidget(self.splitter)
+        self.seznam = QtGui.QListWidget(self.centralwidget)
         self.seznam.setObjectName("seznam")
+        self.gridlayout.addWidget(self.seznam,0,0,1,1)
 
-        self.text = QtGui.QTextBrowser(self.splitter_2)
+        self.text = QtGui.QTextBrowser(self.centralwidget)
         self.text.setObjectName("text")
-        self.gridlayout.addWidget(self.splitter_2,0,0,1,1)
+        self.gridlayout.addWidget(self.text,0,1,2,1)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0,0,582,25))
+        self.menubar.setGeometry(QtCore.QRect(0,0,560,29))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
 

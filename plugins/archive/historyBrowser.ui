@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>582</width>
-    <height>609</height>
+    <width>560</width>
+    <height>429</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -20,35 +20,14 @@
     <property name="spacing" >
      <number>6</number>
     </property>
+    <item row="1" column="0" >
+     <widget class="QWidget" native="1" name="calendarWidget" />
+    </item>
     <item row="0" column="0" >
-     <widget class="QSplitter" name="splitter_2" >
-      <property name="orientation" >
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <widget class="QSplitter" name="splitter" >
-       <property name="orientation" >
-        <enum>Qt::Vertical</enum>
-       </property>
-       <widget class="QCalendarWidget" name="calendar" >
-        <property name="sizePolicy" >
-         <sizepolicy>
-          <hsizetype>5</hsizetype>
-          <vsizetype>5</vsizetype>
-          <horstretch>254</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="gridVisible" >
-         <bool>false</bool>
-        </property>
-        <property name="headerVisible" >
-         <bool>true</bool>
-        </property>
-       </widget>
-       <widget class="QListWidget" name="seznam" />
-      </widget>
-      <widget class="QTextBrowser" name="text" />
-     </widget>
+     <widget class="QListWidget" name="seznam" />
+    </item>
+    <item rowspan="2" row="0" column="1" >
+     <widget class="QTextBrowser" name="text" />
     </item>
    </layout>
   </widget>
@@ -57,8 +36,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>582</width>
-     <height>25</height>
+     <width>560</width>
+     <height>29</height>
     </rect>
    </property>
   </widget>
