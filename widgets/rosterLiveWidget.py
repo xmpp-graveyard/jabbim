@@ -417,7 +417,10 @@ class rosterWidget(QtGui.QWidget):
 					self.data[mimeData]=item[0] # we have to find the item if user drop it
 					drag = QtGui.QDrag(self)
 					drag.setMimeData(mimeData)
-					dropAction = drag.start(QtCore.Qt.CopyAction)
+					dropAction = drag.start(QtCore.Qt.CopyAction | QtCore.Qt.MoveAction)
+			elif len(self.data)!=0:
+				self.data={}
+				
 		return QtGui.QWidget.mouseMoveEvent(self,event)
 
 	def popup(self):
@@ -1459,6 +1462,7 @@ class rosterWidget(QtGui.QWidget):
 			# metacontact > normal user
 			elif oldItem.typ=="user" and oldItem.metajid!="" and item.typ=="user":
 				del self.data[event.mimeData()]
+				event.ignore()
 				return
 				items=QtCore.QStringList()
 				items.append(self.tr("Move to group"))
@@ -1561,7 +1565,7 @@ class rosterWidget(QtGui.QWidget):
 
 					elif index==2:
 						self.changeGroup(jid,"+",unicode(item.group))
-
+			event.acceptProposedAction()
 			del self.data[event.mimeData()]
 		else:
 			event.ignore()
