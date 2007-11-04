@@ -50,8 +50,9 @@ class chatWindow(QtGui.QMainWindow):
 		self.timer=QtCore.QTimer()
 		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.inactive)
 		nextTab=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_Right), self,self.next)
-		nextTab=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_Left), self,self.previous)
-		
+		previousTab=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_Left), self,self.previous)
+		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.ControlModifier + QtCore.Qt.Key_W), self,self.removeTab)
+
 		#nextTab=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.ShiftModifier + QtCore.Qt.Key_Right), self,self.moveRight)
 		#nextTab=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.ShiftModifier + QtCore.Qt.Key_Left), self,self.moveLeft)
 		#self.ui.chatTab.removeTab(0)
@@ -176,7 +177,7 @@ class chatWindow(QtGui.QMainWindow):
 		color=self.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
 		self.ui.chatTab.tabBar().setTabTextColor(index,color)
 		
-		self.setWindowTitle(self.ui.chatTab.tabText(index))
+		self.setWindowTitle(unicode(self.ui.chatTab.tabText(index)).replace("&",""))
 
 		widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
 		

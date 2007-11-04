@@ -814,22 +814,23 @@ class clientClass(pyxl.client.Client):
 		frm=jidT.JID(frm)
 		if not body:
 			body=""
-		if len(body)!=0:
-			user=self.main.ui.roster.getUserItems(frm.userhost())
-			log.msg("tset")
-			if len(user)!=0:
-				#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
-				icon=user[0].icon
-				user=user[0].name
+		user=self.main.ui.roster.getUserItems(frm.userhost())
+		log.msg("tset")
+		if len(user)!=0:
+			#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
+			icon=user[0].icon
+			user=user[0].name
+		else:
+			#if self.groupchats[frm.host].users[nick].role
+			if self.groupchats.has_key(frm.userhost()):
+				user=frm.resource
+				icon=self.main.getIcon(unicode(frm.userhost()),size="16x16",status=self.main.icons[self.main.shows[self.groupchats[frm.userhost()].users[user].show]])
+				#icon=self.main.getIcon(status="online",size="16x16")
 			else:
-				#if self.groupchats[frm.host].users[nick].role
-				if self.groupchats.has_key(frm.userhost()):
-					user=frm.resource
-					icon=self.main.getIcon(unicode(frm.userhost()),size="16x16",status=self.main.icons[self.main.shows[self.groupchats[frm.userhost()].users[user].show]])
-					#icon=self.main.getIcon(status="online",size="16x16")
-				else:
-					icon=self.main.getIcon(status="offline",size="16x16")
-					user=frm.full()
+				icon=self.main.getIcon(status="offline",size="16x16")
+				user=frm.full()
+
+		if len(body)!=0:
 			# strip html tags and \n from messages
 			if xhtml==None:
 				message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
@@ -840,7 +841,7 @@ class clientClass(pyxl.client.Client):
 			#<img src="[avatar]" width="32" height="32"/>
 			#if not os.path.isfile(file):
 				#file="images/32x32/apps/jabbim.png"
-			message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user)).replace("[message]",message)
+			message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message)
 			colors=self.main.getSkinColors(0)
 			if colors!=None:
 				message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
@@ -899,16 +900,16 @@ class clientClass(pyxl.client.Client):
 			if tab!=None:
 				if self.main.chat.ui.chatTab.tabBar().tabTextColor(tabIndex).name()!=QtGui.QColor(255,0,0).name():
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(0,128,0))
-				tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(tabIndex))+" "+self.main.chat.tr("is typing..."))
+				tab.chat.ui.chatstate.setText(unicode(user)+" "+self.main.chat.tr("is typing..."))
 		elif chatstate=="active":
 			if tab!=None:
-				tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(tabIndex))+" "+self.main.chat.tr("gives attention to chat."))
+				tab.chat.ui.chatstate.setText(unicode(user)+" "+self.main.chat.tr("gives attention to chat."))
 		elif chatstate=="paused":
 			if tab!=None:
-				tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(tabIndex))+" "+self.main.chat.tr("stops typing."))
+				tab.chat.ui.chatstate.setText(unicode(user)+" "+self.main.chat.tr("stops typing."))
 		elif chatstate=="inactive":
 			if tab!=None:
-				tab.chat.ui.chatstate.setText(unicode(self.main.chat.ui.chatTab.tabBar().tabText(tabIndex))+" "+self.main.chat.tr("doesn't give attention to chat."))
+				tab.chat.ui.chatstate.setText(unicode(user)+" "+self.main.chat.tr("doesn't give attention to chat."))
 
 	def on_vcardReceived(self,  jid, card):
 		#print card
