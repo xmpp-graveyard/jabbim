@@ -255,6 +255,8 @@ class chatWidget(QtGui.QWidget):
 		self.ui.splitter.setSizes(list(self.main.config['chatSplitterSizes']))
 		self.ui.avatar.setMaximumWidth(128)
 		self.ui.splitter_2.setSizes(list(self.main.config['chatSplitter2Sizes']))
+		widget=self.ui.splitter_2.widget(1)
+		widget.setMaximumWidth(128)
 		self.sent = []
 		self.hindex = 0
 		

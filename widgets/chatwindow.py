@@ -316,6 +316,7 @@ class chatWindow(QtGui.QMainWindow):
 			item=item[0]
 			if item.avatar:
 				avatar=item.avatar.pixmap(100,112)
+				print "avatar:",str(avatar.width())+"x"+str(avatar.height())
 				if avatar.width()<=58 and avatar.height()<=58:
 					size=64
 				else:
