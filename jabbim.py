@@ -944,6 +944,7 @@ class clientClass(pyxl.client.Client):
 #			self.main.cache.set_avatar(jid, ['nic', 'nic'])
 
 	def on_avatarUpdate(self, jid):
+		print unicode(jid)
 		pixmap=QtGui.QPixmap()
 		if self.avatars[jid]==None:
 			return

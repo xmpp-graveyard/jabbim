@@ -871,13 +871,13 @@ class rosterWidget(QtGui.QWidget):
 	def paintUserItem(self,painter,useritem,x,y):
 		# paints user item in normal roster
 		if useritem==self.item:
-			print useritem.privacy
+			#print useritem.privacy
 			# Item is selected
 			height=79
 			#if not useritem.statusMessage:
 				#height-=32
-			if not self.metaItems.has_key(useritem.metajid):
-				height-=16
+			#if not self.metaItems.has_key(useritem.metajid):
+				#height-=16
 			self.selectedHeight=height+20
 
 			# paint roster background
@@ -951,8 +951,10 @@ class rosterWidget(QtGui.QWidget):
 							buttons.append([meta,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
 					# change activeWidget data and geometry
 					self.statusLabel.setData(useritem,buttons)
+					print "height:",height
 					self.statusLabel.setGeometry(41,y+7,self.width()-46,height)
 					self.statusLabel.show()
+					#self.statusLabel.setGeometry(41,y+7,self.width()-46,height)
 					self.reshow=False
 				elif self.changePos:
 					self.statusLabel.setGeometry(41,y+7,self.width()-46,height)
@@ -1676,12 +1678,12 @@ class rosterWidget(QtGui.QWidget):
 	def setStatus(self,jid,show,i=None,status=None,first=False):
 		for user in self.getUserItems(jid):
 			user.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons[self.main.shows[unicode(show)]])
-			if self.item==user:
-				self.statusLabel.hide()
 			if self.main.shows[unicode(show)]!="9":
 				user.hidden=False
 			else:
 				user.hidden=True
+				if self.item==user:
+					self.statusLabel.hide()
 			user.statusMessage=status
 			user.status=self.main.shows[unicode(show)]
 
