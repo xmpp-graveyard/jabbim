@@ -7,7 +7,6 @@ class showLabel(QtGui.QLabel):
 		self.defaulttext = unicode(defaulttext)
 		self.setText(self.defaulttext)
                 self.parent = parent
-		
         def mouseReleaseEvent(self,event):
 		text = unicode(self.text())
 		text = text.replace("&amp;", "&")
