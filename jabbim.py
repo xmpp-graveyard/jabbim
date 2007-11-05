@@ -1204,26 +1204,38 @@ class mainWindow(QtGui.QMainWindow):
 
 		if os.path.isfile(self.homeDir+'/avatars/'+unicode(self.config['jid'])):
 			pixmap=QtGui.QIcon(self.homeDir+'/avatars/'+unicode(self.config['jid']))
-			result=QtGui.QPixmap(128,128)
-			avatar=pixmap.pixmap(128,112)
-			frame=QtGui.QPixmap("images/128x128/frame.png")
+			avatar=pixmap.pixmap(100,112)
+			if avatar.width()<=58 and avatar.height()<=58:
+				size=64
+			else:
+				size=128
+			result=QtGui.QPixmap(size,size)
+			frame=QtGui.QPixmap("images/"+str(size)+"x"+str(size)+"/frame.png")
 			painter=QtGui.QPainter(result)
-			painter.fillRect(0,0,128,128,QtGui.QBrush(self.ui.rosterStackedWidget.widget(0).palette().color(QtGui.QPalette.Window)))
-			painter.drawPixmap((128-avatar.width())/2,(128-avatar.height())/2,avatar)
+			painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
+			painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
 			painter.drawPixmap(0,0,frame)
 			painter.end()
 			self.ui.loginAvatar.setPixmap(result)
 		else:
 			pixmap=QtGui.QIcon("images/48x48/apps/jabbim.png")
-			result=QtGui.QPixmap(128,128)
 			avatar=pixmap.pixmap(128,112)
-			frame=QtGui.QPixmap("images/128x128/frame.png")
+			if avatar.width()<=58 and avatar.height()<=58:
+				size=64
+			else:
+				size=128
+			result=QtGui.QPixmap(size,size)
+			frame=QtGui.QPixmap("images/"+str(size)+"x"+str(size)+"/frame.png")
 			painter=QtGui.QPainter(result)
-			painter.fillRect(0,0,128,128,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
-			painter.drawPixmap((128-avatar.width())/2,(128-avatar.height())/2,avatar)
+			painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
+			painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
 			painter.drawPixmap(0,0,frame)
 			painter.end()
 			self.ui.loginAvatar.setPixmap(result)
+		self.ui.loginAvatar.setMaximumSize(QtCore.QSize(size,size))
+		self.ui.loginAvatar.setMinimumSize(QtCore.QSize(size,size))
+		self.ui.loginAvatar.setAlignment(QtCore.Qt.AlignCenter)
+
 
 	def registerButtonClicked(self):
 		if USE_WIZARDS:

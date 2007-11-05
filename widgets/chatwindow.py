@@ -315,12 +315,16 @@ class chatWindow(QtGui.QMainWindow):
 		if len(item)!=0:
 			item=item[0]
 			if item.avatar:
-				result=QtGui.QPixmap(128,128)
-				avatar=item.avatar.pixmap(128,112)
-				frame=QtGui.QPixmap("images/128x128/frame.png")
+				avatar=item.avatar.pixmap(100,112)
+				if avatar.width()<=58 and avatar.height()<=58:
+					size=64
+				else:
+					size=128
+				result=QtGui.QPixmap(size,size)
+				frame=QtGui.QPixmap("images/"+str(size)+"x"+str(size)+"/frame.png")
 				painter=QtGui.QPainter(result)
-				painter.fillRect(0,0,128,128,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
-				painter.drawPixmap((128-avatar.width())/2,(128-avatar.height())/2,avatar)
+				painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
+				painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
 				painter.drawPixmap(0,0,frame)
 				painter.end()
 				tab.chat.ui.avatar.setPixmap(result)
