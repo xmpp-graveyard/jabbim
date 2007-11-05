@@ -28,7 +28,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		#QtCore.QObject.connect(self.ui.search, QtCore.SIGNAL("clicked()"),self.search)
 		self.group=QtGui.QButtonGroup(self)
 		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
-		
+
 		QtCore.QObject.connect(self.ui.reload,QtCore.SIGNAL("clicked()"),self.discoReload)
 		self.ui.server.setText(self.main.client.jid.host)
 		self.server = self.main.client.jid.host

@@ -27,6 +27,8 @@ import urllib,re
 from twisted.web.microdom import *
 from twisted.web.domhelpers import gatherTextNodes
 import dataforms
+from twisted.words.protocols.jabber import jid as jidT
+
 
 class textView(QtGui.QTextEdit):
 	def __init__(self,parent):
@@ -189,6 +191,8 @@ class groupChatWidget(QtGui.QWidget):
 		self.hindex = 0
 		self.sizes={}
 		self.colors=[]
+		for key,value in self.main.plugins.iteritems():
+			value.buildChatWidget(unicode(jidT.JID(self.jid).userhost()),self.ui.layoutWidget.layout())
 	#def lines(self):
 		#if self.ui.line.verticalScrollBar().isVisible():
 			#self.ui.line.setMaximumHeight(int(self.ui.line.maximumHeight())+int(self.ui.line.currentFont().pointSize())+10)

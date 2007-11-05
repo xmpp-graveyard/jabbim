@@ -47,6 +47,9 @@ class PluginBase:
 	def buildRosterMenu(self):
 		pass
 
+	def buildChatWidget(self,jid,layout):
+		pass
+
 	def loadUi(self,file,parent,wid):
 		print locals()
 		ui = None

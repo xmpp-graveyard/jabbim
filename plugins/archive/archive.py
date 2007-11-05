@@ -46,7 +46,45 @@ class calendar(QtGui.QCalendarWidget):
 				
 		#painter.restore()
 		#QtGui.QCalendarWidget.paintCell(self,painter,rect,date)
+
+
+class FileBackend:
+	def __init__(self,archive):
+		self.archive=archive
+
+	def saveMessage(self, to, body, typ, subject, xhtml, direction):
+		jid = quote(to.split('/')[0])
+		fp = open(self.archive.main.homeDir+'/archive/'+self.archive.jid+'/'+jid+'.history', 'a')
+		if xhtml != None:
+			telo = xhtml.replace('|', '&#124;').replace("\n","<br/>")
+		else:
+			telo = body.replace('|', '&#124;').replace("\n","<br/>")
+		msg = '|'.join([unicode(time.time()), direction, jid, typ, quote(unicode(subject)), telo])
+		msg = msg.encode('utf8')
+		fp.write(msg+'\n')
+		fp.close()
+
+	def getMessages(self,jid):
+		try:
+			fp = open(self.archive.main.homeDir+'/archive/'+self.archive.jid+'/'+jid+'.history')
+		except:
+			log.err('no history file')
+			return None
+		ret=[] # timestamp,direction,message
+		#zpravy = fp.readlines()
+		#print zpravy
+		#for msg in zpravy:
+			#print msg
+		#msg=fp.readline()
+		#while len(msg)==0:
+		for msg in fp.xreadlines():
+			parsed=msg.split('|')
+			ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[5],"utf8")])
+		fp.close()
+		return ret
 		
+		
+			
 
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
@@ -55,13 +93,14 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Message Archiving'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Archive Plugin'
-		self.version = '0.146'
+		self.version = '0.171'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 # 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
 
 
 		if main:
+			self.backend=FileBackend(self)
 			self.jid = quote(self.main.client.jid.userhost())
 			if not os.path.isdir(self.main.homeDir+'/archive'):
 				os.mkdir(self.main.homeDir+'/archive')
@@ -80,82 +119,85 @@ class Plugin(plugins.PluginBase):
 			#log.msg(unicode(dir(self.window)))
 			QtCore.QObject.connect(self.window.ui.seznam, QtCore.SIGNAL("itemClicked ( QListWidgetItem* ) "),self.itemClicked)
 			QtCore.QObject.connect(self.window.ui.calendar, QtCore.SIGNAL("selectionChanged()"),self.calChanged)
+			self.group=QtGui.QButtonGroup(self.window)
+			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 		else:
 			self.loadConfig(homedir)
+
 	def buildRosterMenu(self):
 		menu=self.rosterMenu()
 		menu.addAction("Archive browser",self.showSlot)
 	
-	def showSlot(self):
+	def buttonClicked(self,button):
+		jid=button.jid
+		self.showSlot(jid)
+		
+
+	
+	def buildChatWidget(self,jid,layout):
+		print "buildChatWidget"
+		button=QtGui.QPushButton()
+		button.setText("History")
+		button.jid=unicode(jid)
+		self.group.addButton(button)
+		layout.addWidget(button)
+
+		
+	
+	def showSlot(self,j=None):
 		self.window.ui.seznam.clear()
 		self.window.ui.calendar.setDates([])
 		self.window.ui.text.setText('')
 		seznam = os.listdir(self.main.homeDir+'/archive/'+self.jid)
+		click=None
 		for jid in seznam:
 			if os.path.isdir(self.main.homeDir+'/archive/'+self.jid+'/'+jid):
 				continue
 			else:
-				self.window.ui.seznam.addItem(unquote(jid).split('.history')[0])
-
+				item=QtGui.QListWidgetItem()
+				item.setText(unquote(jid).split('.history')[0])
+				self.window.ui.seznam.addItem(item)
+				if unicode(unquote(jid).split('.history')[0])==unicode(j):
+					click=item
+		if click:
+			self.itemClicked(click)
+			
 		self.window.show()
 	
 	def calChanged(self):	
-		log.msg("date clicked")
 		self.itemClicked(self.window.ui.seznam.currentItem())
-		#self.window.ui.text.setText('')
-		#jid = quote(unicode(self.window.ui.seznam.currentItem ().text()))
-		#try:
-			#fp = open(self.main.homeDir+'/archive/'+self.jid+'/'+jid+'.history')
-			#zpravy = fp.readlines()
-			#fp.close()
-		#except:
-			#log.err('no history file')
-			#return
-		#datum = self.window.ui.calendar.selectedDate().toString('dd-MM-yyyy')
-		#if len(zpravy)>0:
-			#for zprava in zpravy:
-	## 			log.msg(zprava)
-				#casti = zprava.split('|')
-	## 			log.msg(unicode(casti))
-				#if datum == time.strftime('%d-%m-%Y', time.localtime(float(casti[0]))):
-					#self.window.ui.text.append(unicode('[%s] %s' %(time.strftime('%X', time.localtime(float(casti[0]))), casti[5]), 'utf8'))
-
 	
 	def itemClicked(self, item):
 		log.msg("item clicked")
 		self.window.ui.text.setText('')
 		jid = quote(unicode(item.text()))
-		fp = ConfigObj(self.main.homeDir+'/archive/'+self.jid+'/'+jid+'.history')
-		#try:
-			#fp = open(self.main.homeDir+'/archive/'+self.jid+'/'+jid+'.history')
-			#zpravy = fp.readlines()
-			#fp.close()
-		#except:
-		if len(fp)==0:
-			log.err('no history file')
-			return
-		#datum = self.window.ui.calendar.selectedDate().toString('dd-MM-yyyy')
+		messages=self.backend.getMessages(jid)
+
 		datum=self.window.ui.calendar.selectedDate()
 		dates=[]
-		for date,value in fp.iteritems():
-			d=time.localtime(float(date))
+		html=""
+		me=unicode(self.main.client.jid.user)
+
+		user=self.main.ui.roster.getUserItems(unicode(item.text()))
+		if len(user)!=0:
+			user=user[0].name
+		else:
+			user=unicode(item.text())
+
+		for msg in messages:
+			d=time.localtime(msg[0])
 			qdate=QtCore.QDate(d[0],d[1],d[2])
 			if datum==qdate:
-				msg=""
-				for m in value[4:]:
-					msg+=m+"\n"
-				self.window.ui.text.append(unicode('[%s] %s' %(str(d[3])+":"+str(d[4])+":"+str(d[5]), msg),"utf8"))
+				#message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+				if msg[1]=='to':
+					who=me
+				else:
+					who=user
+				html+=unicode('[%s] %s: %s<br/><br/>' %(str(d[3])+":"+str(d[4])+":"+str(d[5]),who, msg[2]))
 			if not qdate in dates:
 				dates.append(qdate)
-		print dates
+		self.window.ui.text.setHtml(html)
 		self.window.ui.calendar.setDates(dates)
-		#if len(zpravy)>0:
-			#for zprava in zpravy:
-				#casti = zprava.split('|')
-				#log.msg(unicode(casti))
-				#if len(casti)!=0:
-					#if datum == time.strftime('%d-%m-%Y', time.localtime(float(casti[0]))):
-						#self.window.ui.text.append(unicode('[%s] %s' %(time.strftime('%X', time.localtime(float(casti[0]))), casti[5]), 'utf8'))
 	
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay):
 		if body != None and chatstate==None:
@@ -170,26 +212,9 @@ class Plugin(plugins.PluginBase):
 						if tab.name==res[1]:
 							return
 				
-			fp=ConfigObj(self.main.homeDir+'/archive/'+self.jid+'/'+jid+'.history',encoding='UTF8')
-			if xhtml != None:
-				telo = xhtml
-			else:
-				telo = body
-			telo=telo.split("\n")
-			fp[unicode(time.time())]=['from',jid, typ, unicode(subject)]+telo
-			fp.write()
-	
+			self.backend.saveMessage(frm, body, typ, subject, xhtml, "from")
+
+		
 	def on_message_send (self, to, body, typ, subject,composing, xhtml,  muc):
 		if not muc and body != None and len(body)!=0:
-			jid = quote(to.split('/')[0])
-			fp=ConfigObj(self.main.homeDir+'/archive/'+self.jid+'/'+jid+'.history',encoding='UTF8')
-			if xhtml != None:
-				telo = xhtml
-			else:
-				telo = body
-			telo=telo.split("\n")
-			fp[unicode(time.time())]=['to',jid, typ, unicode(subject)]+telo
-			#msg = '|'.join([unicode(time.time()), 'to', jid, typ, quote(unicode(subject)), telo])
-			#msg = msg.encode('utf8')
-			fp.write()
-			#fp.close()
+			self.backend.saveMessage(to, body, typ, subject, xhtml, "to")

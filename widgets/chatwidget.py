@@ -279,6 +279,9 @@ class chatWidget(QtGui.QWidget):
 		if not self.xhtml:
 			self.ui.boldButton.hide()
 
+		for key,value in self.main.plugins.iteritems():
+			value.buildChatWidget(unicode(jidT.JID(self.jid).userhost()),self.ui.layoutWidget.layout())
+
 	def bold(self,bool):
 		print bool
 		if bool==True:
