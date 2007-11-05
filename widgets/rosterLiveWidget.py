@@ -180,6 +180,8 @@ class activeWidget(QtGui.QWidget):
 		meta=self.buttons[button]
 		self.item.name=meta.name
 		self.item.escapedName=meta.escapedName
+		self.item.frameAvatar=meta.frameAvatar
+		self.item.selectedFrameAvatar=meta.selectedFrameAvatar
 		self.item.icon=meta.icon
 		self.item.avatar=meta.avatar
 		self.item.status=meta.status
@@ -238,6 +240,8 @@ class userItem:
 		item.jid=unicode(self.jid)
 		item.metajid=unicode(self.metajid)
 		item.status=int(self.status)
+		item.frameAvatar=self.frameAvatar
+		item.selectedFrameAvatar=self.selectedFrameAvatar
 		return item
 
 	def setIcon(self,icon):
@@ -1714,6 +1718,9 @@ class rosterWidget(QtGui.QWidget):
 					item=item[0]
 					if item.jid!=highest.jid:
 						item.name=highest.name
+						item.escapedName=highest.escapedName
+						item.frameAvatar=highest.frameAvatar
+						item.selectedFrameAvatar=highest.selectedFrameAvatar
 						item.icon=highest.icon
 						item.avatar=highest.avatar
 						item.status=highest.status
