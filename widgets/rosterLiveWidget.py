@@ -145,7 +145,7 @@ class activeWidget(QtGui.QWidget):
 			#size=32
 		self.label.setMaximumSize(size,size)
 		if self.item.avatar:
-			pixmap=self.item.avatar.pixmap(size,size)
+			pixmap=self.item.selectedFrameAvatar.pixmap(size,size)
 			self.label.setPixmap(pixmap)
 			self.label.setMinimumHeight(pixmap.height())
 			self.label.show()
@@ -169,7 +169,7 @@ class activeWidget(QtGui.QWidget):
 		size=64
 		self.label.setMaximumSize(size,size)
 		if self.item.avatar:
-			pixmap=self.item.avatar.pixmap(size,size)
+			pixmap=self.item.selectedFrameAvatar.pixmap(size,size)
 			self.label.setPixmap(pixmap)
 
 		# resize activeWidget according to userItem size
@@ -246,8 +246,31 @@ class userItem:
 	
 	def setAvatar(self,icon):
 		self.avatar=icon
-		print self.main,type(self.main)
-		self.main.repaint()
+		result=QtGui.QPixmap(32,32)
+		avatar=self.avatar.pixmap(30,30)
+		frame=QtGui.QPixmap("images/32x32/frame.png")
+		painter=QtGui.QPainter(result)
+		painter.fillRect(0,0,32,32,QtGui.QBrush(self.main.palet.color(QtGui.QPalette.Base)))
+		painter.drawPixmap((32-avatar.width())/2,(32-avatar.height())/2,avatar)
+		painter.drawPixmap(0,0,frame)
+		painter.end()
+		self.frameAvatar=QtGui.QIcon(result)
+
+		result=QtGui.QPixmap(64,64)
+		avatar=self.avatar.pixmap(60,58)
+		frame=QtGui.QPixmap("images/64x64/frame.png")
+		painter=QtGui.QPainter(result)
+		if self.main.theme:
+			painter.fillRect(0,0,64,64,self.main.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Window))
+		else:
+			painter.fillRect(0,0,64,64,self.main.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight))
+		painter.drawPixmap((64-avatar.width())/2,(64-avatar.height())/2,avatar)
+		painter.drawPixmap(0,0,frame)
+		painter.end()
+		self.selectedFrameAvatar=QtGui.QIcon(result)
+
+		#tab.chat.ui.avatar.setPixmap(result)
+		#self.main.repaint()
 	
 	def setHidden(self,hidden):
 		self.hidden=hidden
@@ -457,7 +480,7 @@ class rosterWidget(QtGui.QWidget):
 		item.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons["9"])
 		#item.jid=jid
 		item.hidden=True
-		item.avatar=QtGui.QIcon("images/48x48/apps/jabbim.png")
+		item.setAvatar(QtGui.QIcon("images/48x48/apps/jabbim.png"))
 		#self.sortItems()
 		self.users.append(item)
 
@@ -954,7 +977,7 @@ class rosterWidget(QtGui.QWidget):
 			#doc.setDefaultFont(font)
 			
 			if useritem.avatar:
-				pixmap=useritem.avatar.pixmap(32,32)
+				pixmap=useritem.frameAvatar.pixmap(32,32)
 			if useritem.statusMessage:
 				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+"</font>")
 				painter.save()
