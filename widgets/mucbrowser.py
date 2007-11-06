@@ -63,6 +63,8 @@ class MUCBrowserDialog(QtGui.QDialog):
 	
 	def _participantsReceived(self, par):
 		item = par[1]
+		for i in range(int(item.childCount())):
+			item.takeChild(0)
 		users="<b>Users:</b> "
 		for usr in self.main.client.disco[unicode(par[0])][None]['items'].itervalues():
 			users+=usr['name']+", "
