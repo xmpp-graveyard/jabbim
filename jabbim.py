@@ -733,17 +733,23 @@ class clientClass(pyxl.client.Client):
 					if delay==None or len(delay)==0:
 						# it's our message
 						if unicode(w.name)==unicode(user):
-							message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
+							if unicode(body).startswith("/me"):
+								message=self.main.skin["my_me_message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body)[3:])
+							else:
+								message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
 						else:
 							# it's message for us
-							if utils.need_highlight(unicode(w.name), unicode(body)):
+							if utils.need_highlight(unicode(w.name), unicode(body)) and not unicode(body).startswith("/me"):
 								if int(self.main.chat.ui.chatTab.currentIndex())!=i:
 									if self.main.chat.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
 										self.main.chat.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
 										self.main.chat.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(255,0,0))
 								message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
 							else:
-								message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
+								if unicode(body).startswith("/me"):
+									message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body)[3:])
+								else:
+									message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
 								colors=None
 								if len(w.chat.getUserItems(user))!=0:
 									item=w.chat.getUserItems(user)[0]
@@ -802,7 +808,18 @@ class clientClass(pyxl.client.Client):
 								message=self.main.skin["message_for_me_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
 							else:
 								message=self.main.skin["message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
-							
+
+						colors=None
+						if len(w.chat.getUserItems(user))!=0:
+							item=w.chat.getUserItems(user)[0]
+							if item in w.chat.colors:
+								cIndex=w.chat.colors.index(item)
+								colors=self.main.getSkinColors(cIndex)
+						else:
+							colors=self.main.getSkinColors(0)
+						if colors!=None:
+							message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
+
 	
 						w.chat.textEditWrite(message)
 					
@@ -841,7 +858,10 @@ class clientClass(pyxl.client.Client):
 			#<img src="[avatar]" width="32" height="32"/>
 			#if not os.path.isfile(file):
 				#file="images/32x32/apps/jabbim.png"
-			message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message)
+			if unicode(body).startswith("/me"):
+				message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message[3:])
+			else:
+				message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message)
 			colors=self.main.getSkinColors(0)
 			if colors!=None:
 				message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])

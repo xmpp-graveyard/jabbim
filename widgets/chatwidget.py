@@ -455,7 +455,10 @@ class chatWidget(QtGui.QWidget):
 			file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
 			if not os.path.isfile(file):
 				file="images/32x32/apps/jabbim.png"
-			message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+			if unicode(body).startswith("/me"):
+				message=self.main.skin["my_me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text[3:]).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+			else:
+				message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 			
 			self.textEditWrite(message)
 			self.sent.append(text)
