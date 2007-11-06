@@ -113,6 +113,11 @@ class preferencesWindow(QtGui.QDialog):
 			self.ui.useMUCNames.setChecked(True)
 		else:
 			self.ui.useMUCNames.setChecked(False)
+		if self.main.config['sendByCtrl']=='True':
+			self.ui.sendByCtrl.setChecked(True)
+		else:
+			self.ui.sendByCtrl.setChecked(False)
+		
 
 		# connection
 		self.ui.connection_password.setText(rot13.scramble(self.main.config['passwd']))
@@ -302,6 +307,7 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.config['autoPriority']=str(self.ui.connection_autoPriority.isChecked())
 		self.main.config['saveGeometry']=str(self.ui.savePosition.isChecked())
 		self.main.config['useMUCNames']=str(self.ui.useMUCNames.isChecked())
+		self.main.config['sendByCtrl']=str(self.ui.sendByCtrl.isChecked())
 		self.main.config['showChatStatusChanges']=str(self.ui.showChatStatusChanges.isChecked())
 		self.main.config['chat_skin']=unicode(self.ui.chatSkin_list.currentText())
 		self.main.config['jid']=jid

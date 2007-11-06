@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Thu Nov  1 08:04:09 2007
+# Created: Tue Nov  6 19:11:54 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -205,44 +205,48 @@ class Ui_preferences(object):
         self.gridlayout6.setSpacing(6)
         self.gridlayout6.setObjectName("gridlayout6")
 
-        spacerItem3 = QtGui.QSpacerItem(20,171,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout6.addItem(spacerItem3,4,0,1,1)
-
-        self.groupBox_3 = QtGui.QGroupBox(self.page_2)
-        self.groupBox_3.setObjectName("groupBox_3")
-
-        self.vboxlayout4 = QtGui.QVBoxLayout(self.groupBox_3)
-        self.vboxlayout4.setMargin(9)
-        self.vboxlayout4.setSpacing(6)
-        self.vboxlayout4.setObjectName("vboxlayout4")
-
-        self.showChatStatusChanges = QtGui.QCheckBox(self.groupBox_3)
-        self.showChatStatusChanges.setObjectName("showChatStatusChanges")
-        self.vboxlayout4.addWidget(self.showChatStatusChanges)
-        self.gridlayout6.addWidget(self.groupBox_3,2,0,1,1)
-
-        self.groupBox_5 = QtGui.QGroupBox(self.page_2)
-        self.groupBox_5.setObjectName("groupBox_5")
-
-        self.vboxlayout5 = QtGui.QVBoxLayout(self.groupBox_5)
-        self.vboxlayout5.setMargin(9)
-        self.vboxlayout5.setSpacing(6)
-        self.vboxlayout5.setObjectName("vboxlayout5")
-
-        self.useMUCNames = QtGui.QCheckBox(self.groupBox_5)
-        self.useMUCNames.setObjectName("useMUCNames")
-        self.vboxlayout5.addWidget(self.useMUCNames)
-        self.gridlayout6.addWidget(self.groupBox_5,3,0,1,1)
-
-        self.label_5 = QtGui.QLabel(self.page_2)
-        self.label_5.setObjectName("label_5")
-        self.gridlayout6.addWidget(self.label_5,0,0,1,1)
-
         self.line_3 = QtGui.QFrame(self.page_2)
         self.line_3.setFrameShape(QtGui.QFrame.HLine)
         self.line_3.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_3.setObjectName("line_3")
         self.gridlayout6.addWidget(self.line_3,1,0,1,1)
+
+        self.label_5 = QtGui.QLabel(self.page_2)
+        self.label_5.setObjectName("label_5")
+        self.gridlayout6.addWidget(self.label_5,0,0,1,1)
+
+        self.groupBox_5 = QtGui.QGroupBox(self.page_2)
+        self.groupBox_5.setObjectName("groupBox_5")
+
+        self.vboxlayout4 = QtGui.QVBoxLayout(self.groupBox_5)
+        self.vboxlayout4.setMargin(9)
+        self.vboxlayout4.setSpacing(6)
+        self.vboxlayout4.setObjectName("vboxlayout4")
+
+        self.useMUCNames = QtGui.QCheckBox(self.groupBox_5)
+        self.useMUCNames.setObjectName("useMUCNames")
+        self.vboxlayout4.addWidget(self.useMUCNames)
+        self.gridlayout6.addWidget(self.groupBox_5,4,0,1,1)
+
+        spacerItem3 = QtGui.QSpacerItem(20,171,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout6.addItem(spacerItem3,5,0,1,1)
+
+        self.groupBox_3 = QtGui.QGroupBox(self.page_2)
+        self.groupBox_3.setObjectName("groupBox_3")
+
+        self.vboxlayout5 = QtGui.QVBoxLayout(self.groupBox_3)
+        self.vboxlayout5.setMargin(9)
+        self.vboxlayout5.setSpacing(6)
+        self.vboxlayout5.setObjectName("vboxlayout5")
+
+        self.showChatStatusChanges = QtGui.QCheckBox(self.groupBox_3)
+        self.showChatStatusChanges.setObjectName("showChatStatusChanges")
+        self.vboxlayout5.addWidget(self.showChatStatusChanges)
+        self.gridlayout6.addWidget(self.groupBox_3,3,0,1,1)
+
+        self.sendByCtrl = QtGui.QCheckBox(self.page_2)
+        self.sendByCtrl.setObjectName("sendByCtrl")
+        self.gridlayout6.addWidget(self.sendByCtrl,2,0,1,1)
         self.stackedWidget.addWidget(self.page_2)
 
         self.page = QtGui.QWidget()
@@ -447,14 +451,15 @@ class Ui_preferences(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Connection</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox_3.setTitle(QtGui.QApplication.translate("preferences", "Normal chat", None, QtGui.QApplication.UnicodeUTF8))
-        self.showChatStatusChanges.setText(QtGui.QApplication.translate("preferences", "Show status message", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox_5.setTitle(QtGui.QApplication.translate("preferences", "Groupchat", None, QtGui.QApplication.UnicodeUTF8))
-        self.useMUCNames.setText(QtGui.QApplication.translate("preferences", "Use names for tabs", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\';\"><span style=\" font-size:12pt; font-weight:600;\">Chat</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox_5.setTitle(QtGui.QApplication.translate("preferences", "Groupchat", None, QtGui.QApplication.UnicodeUTF8))
+        self.useMUCNames.setText(QtGui.QApplication.translate("preferences", "Use names for tabs", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox_3.setTitle(QtGui.QApplication.translate("preferences", "Normal chat", None, QtGui.QApplication.UnicodeUTF8))
+        self.showChatStatusChanges.setText(QtGui.QApplication.translate("preferences", "Show status message", None, QtGui.QApplication.UnicodeUTF8))
+        self.sendByCtrl.setText(QtGui.QApplication.translate("preferences", "Sends messages with ctrl+enter", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setTitle(QtGui.QApplication.translate("preferences", "Roster Style", None, QtGui.QApplication.UnicodeUTF8))
         self.roster_normal.setToolTip(QtGui.QApplication.translate("preferences", "Big status icons, big avatars and you will see status messages, ", None, QtGui.QApplication.UnicodeUTF8))
         self.roster_normal.setText(QtGui.QApplication.translate("preferences", "Normal", None, QtGui.QApplication.UnicodeUTF8))
