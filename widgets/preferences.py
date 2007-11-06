@@ -117,6 +117,11 @@ class preferencesWindow(QtGui.QDialog):
 			self.ui.sendByCtrl.setChecked(True)
 		else:
 			self.ui.sendByCtrl.setChecked(False)
+		if self.main.config['showTransports']=='True':
+			self.ui.showTransports.setChecked(True)
+		else:
+			self.ui.showTransports.setChecked(False)
+		
 		
 
 		# connection
@@ -308,6 +313,7 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.config['saveGeometry']=str(self.ui.savePosition.isChecked())
 		self.main.config['useMUCNames']=str(self.ui.useMUCNames.isChecked())
 		self.main.config['sendByCtrl']=str(self.ui.sendByCtrl.isChecked())
+		self.main.config['showTransports']=str(self.ui.showTransports.isChecked())
 		self.main.config['showChatStatusChanges']=str(self.ui.showChatStatusChanges.isChecked())
 		self.main.config['chat_skin']=unicode(self.ui.chatSkin_list.currentText())
 		self.main.config['jid']=jid

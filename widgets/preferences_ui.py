@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Tue Nov  6 19:11:54 2007
+# Created: Tue Nov  6 19:32:51 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -258,7 +258,24 @@ class Ui_preferences(object):
         self.gridlayout7.setObjectName("gridlayout7")
 
         spacerItem4 = QtGui.QSpacerItem(20,221,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout7.addItem(spacerItem4,4,0,1,1)
+        self.gridlayout7.addItem(spacerItem4,5,0,1,1)
+
+        self.showTransports = QtGui.QCheckBox(self.page)
+        self.showTransports.setObjectName("showTransports")
+        self.gridlayout7.addWidget(self.showTransports,4,0,1,2)
+
+        spacerItem5 = QtGui.QSpacerItem(81,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout7.addItem(spacerItem5,3,1,1,1)
+
+        self.line_5 = QtGui.QFrame(self.page)
+        self.line_5.setFrameShape(QtGui.QFrame.HLine)
+        self.line_5.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line_5.setObjectName("line_5")
+        self.gridlayout7.addWidget(self.line_5,1,0,1,2)
+
+        self.label_6 = QtGui.QLabel(self.page)
+        self.label_6.setObjectName("label_6")
+        self.gridlayout7.addWidget(self.label_6,0,0,1,2)
 
         self.groupBox = QtGui.QGroupBox(self.page)
         self.groupBox.setObjectName("groupBox")
@@ -276,20 +293,7 @@ class Ui_preferences(object):
         self.roster_compact = QtGui.QRadioButton(self.groupBox)
         self.roster_compact.setObjectName("roster_compact")
         self.vboxlayout6.addWidget(self.roster_compact)
-        self.gridlayout7.addWidget(self.groupBox,2,0,1,1)
-
-        self.label_6 = QtGui.QLabel(self.page)
-        self.label_6.setObjectName("label_6")
-        self.gridlayout7.addWidget(self.label_6,0,0,1,2)
-
-        self.line_5 = QtGui.QFrame(self.page)
-        self.line_5.setFrameShape(QtGui.QFrame.HLine)
-        self.line_5.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line_5.setObjectName("line_5")
-        self.gridlayout7.addWidget(self.line_5,1,0,1,2)
-
-        spacerItem5 = QtGui.QSpacerItem(81,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout7.addItem(spacerItem5,2,1,1,1)
+        self.gridlayout7.addWidget(self.groupBox,2,0,2,1)
         self.stackedWidget.addWidget(self.page)
 
         self.page_3 = QtGui.QWidget()
@@ -390,6 +394,16 @@ class Ui_preferences(object):
         self.stackedWidget.addWidget(self.page_5)
         self.gridlayout.addWidget(self.stackedWidget,0,1,1,2)
 
+        self.listWidget = QtGui.QListWidget(preferences)
+        self.listWidget.setMinimumSize(QtCore.QSize(190,0))
+        self.listWidget.setIconSize(QtCore.QSize(32,32))
+        self.listWidget.setViewMode(QtGui.QListView.ListMode)
+        self.listWidget.setObjectName("listWidget")
+        self.gridlayout.addWidget(self.listWidget,0,0,2,1)
+
+        spacerItem8 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem8,1,1,1,1)
+
         self.hboxlayout3 = QtGui.QHBoxLayout()
         self.hboxlayout3.setMargin(0)
         self.hboxlayout3.setSpacing(6)
@@ -404,18 +418,8 @@ class Ui_preferences(object):
         self.hboxlayout3.addWidget(self.cancelButton)
         self.gridlayout.addLayout(self.hboxlayout3,1,2,1,1)
 
-        spacerItem8 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem8,1,1,1,1)
-
-        self.listWidget = QtGui.QListWidget(preferences)
-        self.listWidget.setMinimumSize(QtCore.QSize(190,0))
-        self.listWidget.setIconSize(QtCore.QSize(32,32))
-        self.listWidget.setViewMode(QtGui.QListView.ListMode)
-        self.listWidget.setObjectName("listWidget")
-        self.gridlayout.addWidget(self.listWidget,0,0,2,1)
-
         self.retranslateUi(preferences)
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(3)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.cancelButton,QtCore.SIGNAL("clicked()"),preferences.reject)
         QtCore.QObject.connect(self.saveButton,QtCore.SIGNAL("clicked()"),preferences.accept)
@@ -460,15 +464,16 @@ class Ui_preferences(object):
         self.groupBox_3.setTitle(QtGui.QApplication.translate("preferences", "Normal chat", None, QtGui.QApplication.UnicodeUTF8))
         self.showChatStatusChanges.setText(QtGui.QApplication.translate("preferences", "Show status message", None, QtGui.QApplication.UnicodeUTF8))
         self.sendByCtrl.setText(QtGui.QApplication.translate("preferences", "Sends messages with ctrl+enter", None, QtGui.QApplication.UnicodeUTF8))
+        self.showTransports.setText(QtGui.QApplication.translate("preferences", "Show transports", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_6.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        "p, li { white-space: pre-wrap; }\n"
+        "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
+        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Roster</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setTitle(QtGui.QApplication.translate("preferences", "Roster Style", None, QtGui.QApplication.UnicodeUTF8))
         self.roster_normal.setToolTip(QtGui.QApplication.translate("preferences", "Big status icons, big avatars and you will see status messages, ", None, QtGui.QApplication.UnicodeUTF8))
         self.roster_normal.setText(QtGui.QApplication.translate("preferences", "Normal", None, QtGui.QApplication.UnicodeUTF8))
         self.roster_compact.setToolTip(QtGui.QApplication.translate("preferences", "Smaller  status icons and avatars, no status messages.", None, QtGui.QApplication.UnicodeUTF8))
         self.roster_compact.setText(QtGui.QApplication.translate("preferences", "Compact", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_6.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-        "p, li { white-space: pre-wrap; }\n"
-        "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
-        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Roster</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.useThemes.setText(QtGui.QApplication.translate("preferences", "Use themes", None, QtGui.QApplication.UnicodeUTF8))
         self.themes.setToolTip(QtGui.QApplication.translate("preferences", "Choose whe theme of Jabbim, then restart the client", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("preferences", "Themes", None, QtGui.QApplication.UnicodeUTF8))
@@ -486,8 +491,6 @@ class Ui_preferences(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\';\"><span style=\" font-size:12pt; font-weight:600;\">Plugins</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.saveButton.setText(QtGui.QApplication.translate("preferences", "Save", None, QtGui.QApplication.UnicodeUTF8))
-        self.cancelButton.setText(QtGui.QApplication.translate("preferences", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.listWidget.clear()
 
         item = QtGui.QListWidgetItem(self.listWidget)
@@ -513,4 +516,6 @@ class Ui_preferences(object):
         item5 = QtGui.QListWidgetItem(self.listWidget)
         item5.setText(QtGui.QApplication.translate("preferences", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
         item5.setIcon(QtGui.QIcon("images/32x32/categories/applications-accessories.png"))
+        self.saveButton.setText(QtGui.QApplication.translate("preferences", "Save", None, QtGui.QApplication.UnicodeUTF8))
+        self.cancelButton.setText(QtGui.QApplication.translate("preferences", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
 
