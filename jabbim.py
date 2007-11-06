@@ -1109,6 +1109,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.mucBrowserButton, QtCore.SIGNAL("clicked ()"),self.mucBrowser)
 		app.connect(self.ui.registerButton, QtCore.SIGNAL("clicked ()"),self.registerButtonClicked)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
+		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.bookmarksItemClicked)
 		QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered ( bool )"),self.trayQuit)
 		QtCore.QObject.connect(self.ui.actionService_Discovery, QtCore.SIGNAL("triggered ( bool )"),self.serviceDiscovery)
 		
