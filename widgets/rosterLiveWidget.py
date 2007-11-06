@@ -586,7 +586,7 @@ class rosterWidget(QtGui.QWidget):
 			painter.drawPixmap(x,y,item.icon.pixmap(32,32))
 		
 		# write the name of the group
-		doc.setHtml("<font color=\""+self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+item.escapedName+"</font>")
+		doc.setHtml("<font color=\""+self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+item.escapedName+" ("+str(item.online)+"/"+str(item.all)+")</font>")
 		painter.save()
 		painter.translate(x+30,y+(32-fontHeight)/2)
 		doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
