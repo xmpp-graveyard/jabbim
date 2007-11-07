@@ -14,4 +14,5 @@ import about
 import servicediscovery
 import mucbrowser
 import show
+import privacy
 #import eventsFTWidget_ui

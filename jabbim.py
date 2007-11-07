@@ -322,6 +322,12 @@ class clientClass(pyxl.client.Client):
 		log.msg("METAITEMS:"+unicode(self.main.ui.roster.metaItems))
 
 
+		for item in self.privacy.active.items:
+			if item.value and item.typ == "jid":
+				for useritem in self.main.ui.roster.getUserItems(item.value):
+					useritem.privacy["block"] = self.privacy.active.isBlockedJID(item.value)
+					useritem.privacy["allow"] = self.privacy.active.isAllowedJID(item.value)
+					useritem.privacy["hide"] = self.privacy.active.isHiddenJID(item.value)
 
 
 		#toDelJid=[] # contacts to delete
@@ -982,7 +988,7 @@ class clientClass(pyxl.client.Client):
 			print "Setting avatar"
 			avatar=pixmap.scaledToHeight(48)
 			self.main.ui.selfAvatar.setPixmap(avatar)
-			self.main.ui.selfAvatar.setMinimumWidth(avatar.width()+20)
+			self.main.ui.selfAvatar.setMinimumWidth(avatar.width()+3)
 		for item in self.main.ui.roster.getUserItems(jid):
 			item.setAvatar(QtGui.QIcon(pixmap))
 		for item in self.main.ui.roster.getMetaItems(jid):
@@ -1111,7 +1117,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.toggleInvisible, QtCore.SIGNAL("clicked(bool)"),self.toggleInvisibility)
 		app.connect(self.ui.actionAbout, QtCore.SIGNAL("triggered ( bool )"),self.about)
 		app.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
-		#app.connect(self.ui.actionMUC_Browser, QtCore.SIGNAL("triggered ( bool )"),self.mucBrowser)
+		app.connect(self.ui.actionPrivacy_list_editor, QtCore.SIGNAL("triggered ( bool )"),self.privacyListEditor)
 		app.connect(self.ui.actionAdd_Contact, QtCore.SIGNAL("triggered ( bool )"),self.addContactMainWindow)
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
 		app.connect(self.ui.actionJoin_Groupchat, QtCore.SIGNAL("triggered ( bool )"),self.joinGroupchat)
@@ -1149,7 +1155,10 @@ class mainWindow(QtGui.QMainWindow):
 		self.buildStatusMenu()
 		self.ui.statusButton.setIcon(self.getIcon("offline",size="16x16"))
 		self.ui.statusButton.hide()
-		self.ui.showWidget = widgets.show.showWidget(self, self.ui.hboxlayout4, self.tr("Your status message here."))
+		statusLayout=QtGui.QHBoxLayout(self.ui.statusWidget)
+		statusLayout.setMargin(0)
+		statusLayout.setSpacing(0)
+		self.ui.showWidget = widgets.show.showWidget(self, statusLayout, self.tr("Your status message here."))
 #		self.ui.selfStatus_lineEdit.hide()
 #		self.ui.selfStatus_label.setText("...")
 
@@ -1296,6 +1305,10 @@ class mainWindow(QtGui.QMainWindow):
 		#self.setUpdatesEnabled(False)
 		#QtGui.QMainWindow(self).resizeEvent(event)
 		#self.setUpdatesEnabled(True)
+
+	def privacyListEditor(self,bool=False):
+		self.ple=widgets.privacy.PrivacyListEditorDialog(self,self)
+		self.ple.show()
 
 	def mucBrowser(self,bool=False):
 		self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)

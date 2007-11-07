@@ -45,9 +45,9 @@ class PrivacyList:
 		for item in self.items:
 			if item.value and item.typ == "jid":
 				for useritem in self.main.ui.roster.getUserItems(item.value):
-					useritem.privacy["block"] = self.isBlockedJID(item.value) and True
-					useritem.privacy["allow"] = self.isAllowedJID(item.value) and True
-					useritem.privacy["hide"] = self.isHiddenJID(item.value) and True
+					useritem.privacy["block"] = self.isBlockedJID(item.value)
+					useritem.privacy["allow"] = self.isAllowedJID(item.value)
+					useritem.privacy["hide"] = self.isHiddenJID(item.value)
 				
 
 	def _getOrders(self):
