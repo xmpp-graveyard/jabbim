@@ -1976,6 +1976,10 @@ class rosterWidget(QtGui.QWidget):
 		action=contactMenu.addAction(self.tr("Rename"))
 		action.setData(QtCore.QVariant(name))
 		action.setObjectName("rename")
+		
+		action=contactMenu.addAction(self.tr("Remove group"))
+		action.setData(QtCore.QVariant(name))
+		action.setObjectName("remove_group")
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.groupMenuTriggered)
 		return contactMenu
@@ -1996,7 +2000,16 @@ class rosterWidget(QtGui.QWidget):
 						self.main.client.roster['users'][jid].groups.remove(name)
 					self.main.client.roster['users'][jid].groups.append(group)
 					self.main.client.sendRosterUpdate(contact.jid, contact.name, contact.subscription,self.main.client.roster['users'][jid].groups)
-			
+		elif cmd=="remove_group":
+			name=action.data()
+			name=str(name.toString())
+			for item in self.getGroupUsers(name):
+				jid=item.jid
+				contact=self.main.client.roster['users'][jid]
+				g=contact.groups
+				g.remove(name)
+				self.main.client.sendRosterUpdate(contact.jid, contact.name, contact.subscription,g)
+
 	def breakMetaContacts(self,jid):
 		item=self.getUserItems(jid)[0]
 		metajid=item.metajid

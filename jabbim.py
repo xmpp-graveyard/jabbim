@@ -607,6 +607,7 @@ class clientClass(pyxl.client.Client):
 		# go through all groups
 		rosterGroups=dict(self.roster['groups'])
 		rosterGroups[self.main.ui.roster.specialName]=self.main.ui.roster.groups[self.main.ui.roster.specialName]
+		toDel=[]
 		for name,item in rosterGroups.iteritems():
 			# updated contact has to be in this group
 			if name in jidGroups:
@@ -673,6 +674,8 @@ class clientClass(pyxl.client.Client):
 				# user is not in this group, so we have to delete them from this group, if he is there
 				for i in self.main.ui.roster.getUserItems(jid):
 					if item.name==i.group:
+						if item.all==1 and not item.name in toDel:
+							toDel.append(unicode(item.name))
 						self.main.ui.roster.users.remove(i)
 						self.main.ui.roster.sortItems()
 						self.main.ui.roster.repaint()
@@ -682,6 +685,10 @@ class clientClass(pyxl.client.Client):
 							#toDel.append(unicode(parent.text(2)))
 							#self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(parent))
 						break
+		for i in toDel:
+			if i!=self.main.ui.roster.specialName:
+				del self.main.ui.roster.groups[i]
+				self.main.ui.roster.sortItems()
 		# delete all groups saved in toDel
 		#for i in range(len(toDelJid)):
 			#jid=toDelJid[i]
