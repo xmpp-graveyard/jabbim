@@ -1831,9 +1831,10 @@ class rosterWidget(QtGui.QWidget):
 			resmenu = submenu.addMenu(self.tr("All resources"))
 			submenu.addSeparator()
 			resources=contact.resources.keys()
+			resmenus=[]
 			for resource in resources:
 				if resource!=None:
-					resmenu.append((submenu.addMenu(res),resource))
+					resmenus.append((submenu.addMenu(res),resource))
 			resmenus.append((resmenu, ""))
 			print "LOG 7"
 			for resm in resmenus:
