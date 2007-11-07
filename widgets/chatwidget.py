@@ -259,7 +259,7 @@ class chatWidget(QtGui.QWidget):
 		widget.setMaximumWidth(128)
 		self.sent = []
 		self.hindex = 0
-		
+		self.unread=0
 		self.file=self.main.homeDir+'/avatars/'+unicode(jidT.JID(jid).userhost())
 		#<img src="[avatar]" width="32" height="32"/>
 		self.avatarHeight=32

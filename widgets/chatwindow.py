@@ -226,9 +226,12 @@ class chatWindow(QtGui.QMainWindow):
 		color=self.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
 		self.ui.chatTab.tabBar().setTabTextColor(index,color)
 		
+		
 		self.setWindowTitle(unicode(self.ui.chatTab.tabText(index)).replace("&",""))
 
 		widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
+		widget.chat.unread=0
+		self.ui.chatTab.setTabText(index,widget.tabName)
 		
 		ev=list(self.main.events.events)
 		for event in ev:
@@ -333,6 +336,7 @@ class chatWindow(QtGui.QMainWindow):
 				
 		layout.addWidget(tab.chat)
 		print "adding new tab...", icon
+		tab.tabName=unicode("&"+unicode(name))
 		self.ui.chatTab.addTab(tab,icon,"&"+unicode(name))
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 		self.setWindowTitle(unicode(name))
@@ -376,6 +380,7 @@ class chatWindow(QtGui.QMainWindow):
 			for nick, bookmark  in self.main.client.bookmarks['conference'].iteritems():
 				if bookmark.jid.userhost() == room:
 					jmeno = nick
+		tab.tabName=unicode(jmeno)
 		self.ui.chatTab.addTab(tab,QtGui.QIcon("images/16x16/categories/muc.png"), jmeno)
 		self.setWindowTitle(unicode(jmeno))
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))

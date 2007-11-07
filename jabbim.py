@@ -746,11 +746,14 @@ class clientClass(pyxl.client.Client):
 			# find MUC tab
 			for i in range(self.main.chat.ui.chatTab.count()):
 				w=self.main.chat.ui.chatTab.widget(i)
+				countMessage=False
 				if unicode(w.jid) == frm:
 					if int(self.main.chat.ui.chatTab.currentIndex())!=i:
 						if self.main.chat.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
 							self.main.chat.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
 							self.main.chat.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(0,128,0))
+							self.main.chat.ui.chatTab.setTabText(i,w.tabName+" ("+str(w.chat.unread+1)+")")
+						countMessage=True
 					# set room topic
 					if subject!=None:
 						subject=utils.replace_url(subject)
@@ -777,6 +780,8 @@ class clientClass(pyxl.client.Client):
 									if self.main.chat.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
 										self.main.chat.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
 										self.main.chat.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(255,0,0))
+										self.main.chat.ui.chatTab.setTabText(i,w.tabName+" ("+str(w.chat.unread+1)+")")
+									countMessage=True
 								message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user).replace("[message]",unicode(body))
 							else:
 								if unicode(body).startswith("/me"):
@@ -826,6 +831,8 @@ class clientClass(pyxl.client.Client):
 						message=message.replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+w.chat.sizes[file]+"\" />")
 						
 						# write message
+						if countMessage:
+							w.chat.unread+=1
 						w.chat.textEditWrite(message)
 						return
 					else:
@@ -920,11 +927,14 @@ class clientClass(pyxl.client.Client):
 				if int(self.main.chat.ui.chatTab.currentIndex())!=tabIndex:
 					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
+					self.main.chat.ui.chatTab.setTabText(tabIndex,tab.tabName+" ("+str(tab.chat.unread+1)+")")
 					self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()],tooltip=self.main.tr("New message from ")+unicode(user))
+					tab.chat.unread+=1
 				elif not self.main.chat.isActiveWindow():
 					self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()],tooltip=self.main.tr("New message from ")+unicode(user))
 				else:
 					color=self.main.chat.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
+					self.main.chat.ui.chatTab.setTabText(tabIndex,tab.tabName)
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(self.main.chat.ui.chatTab.currentIndex(),color)
 				tab.chat.ui.chatstate.setText("")
 				tab.chat.textEditWrite(message)
