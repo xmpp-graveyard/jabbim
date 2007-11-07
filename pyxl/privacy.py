@@ -78,7 +78,7 @@ class PrivacyList:
 			for stanza in rule.stanzas:
 				item.addElement(stanza)
 
-		self.main.client.on_xml(iq.toXml())
+		#self.main.client.on_xml(iq.toXml())
 		d=iq.send()
 		if sm:
 			d.addCallback(self._showme)
@@ -249,7 +249,7 @@ class Privacy:
 		if name != None:
 			active.attributes = {"name":name}
 		iq.send()
-		self.main.client.on_xml(iq.toXml())
+	#	self.main.client.on_xml(iq.toXml())
 		self.main.client.disp(iq["id"])
 		if name != None:
 			self.active = self.lists[name]	
@@ -265,7 +265,7 @@ class Privacy:
 		if name != None:
 			default.attributes = {"name":name}
 		iq.send()
-		self.main.client.on_xml(iq.toXml())
+		#self.main.client.on_xml(iq.toXml())
 		self.main.client.disp(iq["id"])
 		if name != None:
 			self.default = self.lists[name]

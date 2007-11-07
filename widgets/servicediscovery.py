@@ -8,6 +8,7 @@ from servicediscovery_ui import *
 import dataforms
 import legacyforms
 from search import *
+import commands
 
 class serviceDiscoveryDialog(QtGui.QDialog):
 	def __init__(self,main,parent=None):
@@ -58,6 +59,11 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		elif b.typ=="search":
 			d=self.main.client.getSearchForm(b.jid)
 			d.addCallback(self._gotSearchForm)
+		elif b.typ=="cmds":
+			cmds = commands.Commands(self.main, b.jid)
+			cmds.dialog.exec_()
+
+
 
 	def register(self):
 		jid=unicode(self.ui.tree.currentItem().text(3))
