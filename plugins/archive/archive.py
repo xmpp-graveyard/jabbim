@@ -14,7 +14,10 @@ class calendar(QtGui.QCalendarWidget):
 
 	def setDates(self,dates):
 		self.dates=dates
-		self.repaint()
+		if len(self.dates)!=0:
+			self.setSelectedDate(self.dates[-1].addMonths(1))
+			self.setSelectedDate(self.dates[-1])
+		#self.repaint()
 
 	def paintCell(self,painter,rect,date):
 		#painter.save()
@@ -93,7 +96,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Message Archiving'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Archive Plugin'
-		self.version = '0.171'
+		self.version = '0.181'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 # 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
@@ -160,15 +163,16 @@ class Plugin(plugins.PluginBase):
 				if unicode(unquote(jid).split('.history')[0])==unicode(j):
 					click=item
 		if click:
+			self.window.ui.seznam.setCurrentItem(click)
 			self.itemClicked(click)
 			
 		self.window.show()
 	
 	def calChanged(self):	
-		self.itemClicked(self.window.ui.seznam.currentItem())
+		self.itemClicked(self.window.ui.seznam.currentItem(),setDate=False)
 	
-	def itemClicked(self, item):
-		log.msg("item clicked")
+	def itemClicked(self, item,setDate=True):
+
 		self.window.ui.text.setText('')
 		jid = quote(unicode(item.text()))
 		messages=self.backend.getMessages(jid)
@@ -197,7 +201,8 @@ class Plugin(plugins.PluginBase):
 			if not qdate in dates:
 				dates.append(qdate)
 		self.window.ui.text.setHtml(html)
-		self.window.ui.calendar.setDates(dates)
+		if setDate:
+			self.window.ui.calendar.setDates(dates)
 	
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay):
 		if body != None and chatstate==None:
