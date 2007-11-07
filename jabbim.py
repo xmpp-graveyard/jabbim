@@ -727,7 +727,8 @@ class clientClass(pyxl.client.Client):
 							self.main.chat.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(0,128,0))
 					# set room topic
 					if subject!=None:
-						w.chat.ui.info.setText(unicode(subject))
+						subject=utils.replace_url(subject)
+						w.chat.ui.info.setHtml(unicode(subject))
 						#w.chat.ui.info.setCursorPosition(0)
 					# set links, if we found them
 					body = utils.replace_url(body)

@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Fri Oct 26 06:19:48 2007
-#      by: PyQt4 UI code generator 4.1
+# Created: Wed Nov  7 08:21:44 2007
+#      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_groupchatwidget(object):
@@ -41,6 +40,7 @@ class Ui_groupchatwidget(object):
 
         self.info = QtGui.QTextBrowser(self.splitter_2)
         self.info.setMinimumSize(QtCore.QSize(0,1))
+        self.info.setOpenExternalLinks(True)
         self.info.setObjectName("info")
 
         self.splitter = QtGui.QSplitter(self.splitter_2)

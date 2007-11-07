@@ -76,6 +76,9 @@
       <property name="toolTip" >
        <string>Every multi user chat can has topic of it's discussion</string>
       </property>
+      <property name="openExternalLinks" >
+       <bool>true</bool>
+      </property>
      </widget>
      <widget class="QSplitter" name="splitter" >
       <property name="orientation" >
