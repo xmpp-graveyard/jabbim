@@ -586,11 +586,30 @@ class clientClass(pyxl.client.Client):
 			#items2=self.main.ui.roster.findItems(jid, QtCore.Qt.MatchFixedString,4)
 			#if len(items2)==1:
 				#self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(items2[0]))
-
+		jidGroups=list(self.roster['users'][jid].groups)
+		if len(jidGroups)==0:
+			jidGroups=[self.main.ui.roster.specialName]
+			#add=True
+			#for i in items:
+				#if i.group==self.main.ui.roster.specialName:
+					#add=False
+					#name=contact.name
+					#if name==None or len(name)==0:
+						#name=jid
+					#i.name=unicode(name)
+					#i.escapedName=unicode(name).replace("<","&lt;").replace(">","&gt;")
+					#i.jid=jid
+					#self.main.ui.roster.sortItems()
+					#self.main.ui.roster.changePos=True
+					#self.main.ui.roster.repaint()
+			#if add:
+				
 		# go through all groups
-		for name,item in self.roster['groups'].iteritems():
+		rosterGroups=dict(self.roster['groups'])
+		rosterGroups[self.main.ui.roster.specialName]=self.main.ui.roster.groups[self.main.ui.roster.specialName]
+		for name,item in rosterGroups.iteritems():
 			# updated contact has to be in this group
-			if name in self.roster['users'][jid].groups:
+			if name in jidGroups:
 				add=True
 				# go through all user items, find item in this group and edit it
 				for i in items:

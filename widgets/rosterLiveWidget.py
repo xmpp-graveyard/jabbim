@@ -293,7 +293,8 @@ class rosterWidget(QtGui.QWidget):
 		QtGui.QWidget.__init__(self,parent)
 		self.main=main
 		self.groups={}
-		self.groups["zzzzzzzzzzzzzzzzz"]=special()
+		self.specialName="zzzzzzzzzzzzzzzzz"
+		self.groups[self.specialName]=special()
 		self.users=[]
 		self.iconSize="32x32"
 		self.setMinimumWidth(150)
@@ -479,7 +480,7 @@ class rosterWidget(QtGui.QWidget):
 		if len(name)==0:
 			name=jid
 		if not group:
-			group="zzzzzzzzzzzzzzzzz"
+			group=self.specialName
 		item=userItem(name,group,jid,self)
 		item.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons["9"])
 		#item.jid=jid
