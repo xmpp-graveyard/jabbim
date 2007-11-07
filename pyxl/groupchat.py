@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 from twisted.words.xish import domish
 from twisted.words.protocols.jabber import jid as jidT
+from twisted.words.protocols.jabber.xmlstream import IQ
 
 class Groupchat:
 	def __init__(self,  client,  JID,  nick):
@@ -36,12 +37,15 @@ class Groupchat:
 		item['role'] = role
 		if reason :
 			q.addElement('reason',  content = reason)
-		self.on_xml(iq.toXml())
+		self.client.on_xml(iq.toXml())
 		d = iq.send()
-		self.disp(iq['id'])
+		self.client.disp(iq['id'])
 		d.addCallback(self._roleResult)
 		d.addErrback(self._roleFail,  nick)
-	
+
+	def _roleFail(self,el,data=None):
+		print "role fail"
+
 	def _roleResult(self,  el):
 		print 'role change successful'
 
@@ -63,9 +67,9 @@ class Groupchat:
 		item['affiliation'] = affiliation
 		if reason :
 			q.addElement('reason',  content = reason)
-		self.on_xml(iq.toXml())
+		self.client.on_xml(iq.toXml())
 		d = iq.send()
-		self.disp(iq['id'])
+		self.client.disp(iq['id'])
 		d.addCallback(self._affiliationResult)
 		d.addErrback(self._affiliationFail,  nick)
 	

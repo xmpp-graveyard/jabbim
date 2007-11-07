@@ -166,8 +166,8 @@ class groupChatWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.userClicked)
-		
-
+		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.usersContextMenu)
+		self.ui.users.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 		short=QtGui.QShortcut("tab",self.ui.line)
 		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
 		#self.ui.info_big.hide()
@@ -201,6 +201,30 @@ class groupChatWidget(QtGui.QWidget):
 		#if affiliation=="owner":
 			#self.ui.admin.show()
 		#self.affiliation=affiliation
+
+	def usersContextMenu(self,pos):
+		item=self.ui.users.itemFromIndex(self.ui.users.indexAt(pos)) # get selected item
+		name=unicode(item.text(0)) # get contact name
+		menu=QtGui.QMenu(self.ui.users) # make menu
+		if item.parent()!=None:
+			action=menu.addAction(self.tr("Kick"))
+			action.setData(QtCore.QVariant(name))
+			action.setObjectName("kick")
+
+		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.usersContextMenuTriggered)
+		# set menu position and show
+		menu.popup(self.ui.users.mapToGlobal(pos))
+	
+	def usersContextMenuTriggered(self,action):
+		cmd=action.objectName()
+		if cmd=="kick":
+			name=unicode(action.data().toString())
+			if self.main.client.groupchats.has_key(self.jid):
+				reason,b=QtGui.QInputDialog.getText(self,self.tr("Reason"),self.tr("Enter reason:"), QtGui.QLineEdit.Normal, "")
+				reason=unicode(reason)
+				# if user set new name of group
+				if b==True:
+					self.main.client.groupchats[self.jid].setRole(name, 'none',  reason)
 
 	def userClicked(self,item,i):
 		if item.parent()==None:
