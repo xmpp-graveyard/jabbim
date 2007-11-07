@@ -130,8 +130,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 				register.typ="register"
 				self.group.addButton(register)
 				self.ui.tree.setItemWidget(item,2,register)
-			elif "jabber:iq:search" in list(self.main.client.disco[key][None]['features']):
-			
+			if "jabber:iq:search" in list(self.main.client.disco[key][None]['features']):
 				search=QtGui.QPushButton(self.ui.tree)
 				#search.setMaximumWidth(16)
 				#search.setMinimumWidth(24)
@@ -143,6 +142,15 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 				search.typ="search"
 				self.group.addButton(search)
 				self.ui.tree.setItemWidget(item,1,search)
+			if "http://jabber.org/protocol/commands" in list(self.main.client.disco[key][None]['features']):
+				cmds=QtGui.QPushButton(self.ui.tree)
+				cmds.setIcon(QtGui.QIcon("images/32x32/actions/exec.png"))
+				cmds.setIconSize(QtCore.QSize(32,32))
+				cmds.setFlat(True)
+				cmds.jid=item.text(3)
+				cmds.typ="cmds"
+				self.group.addButton(cmds)
+				self.ui.tree.setItemWidget(item,4,cmds)
 
 
 	def _discoItemsReceived(self,item):
@@ -240,8 +248,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 							register.typ="register"
 							self.group.addButton(register)
 							self.ui.tree.setItemWidget(parentitem,2,register)
-						elif "jabber:iq:search" in list(self.main.client.disco[key][None]['features']):
-						
+						if "jabber:iq:search" in list(self.main.client.disco[key][None]['features']):
 							search=QtGui.QPushButton(self.ui.tree)
 							#search.setMaximumWidth(16)
 							#search.setMinimumWidth(24)
@@ -253,10 +260,20 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 							search.typ="search"
 							self.group.addButton(search)
 							self.ui.tree.setItemWidget(parentitem,1,search)
+						if "http://jabber.org/protocol/commands" in list(self.main.client.disco[key][None]['features']):
+							cmds=QtGui.QPushButton(self.ui.tree)
+							cmds.setIcon(QtGui.QIcon("images/32x32/actions/exec.png"))
+							cmds.setIconSize(QtCore.QSize(32,32))
+							cmds.setFlat(True)
+							cmds.jid=parentitem.text(3)
+							cmds.typ="cmds"
+							self.group.addButton(cmds)
+							self.ui.tree.setItemWidget(parentitem,4,cmds)
 		self.ui.tree.sortItems(0,QtCore.Qt.AscendingOrder)
 		self.ui.tree.resizeColumnToContents(0)
 		self.ui.tree.setColumnWidth (1,34)
 		self.ui.tree.setColumnWidth (2,34)
+		self.ui.tree.setColumnWidth (4,34)
 	def accept(self):
 		self.done(1)
 

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'servicediscovery.ui'
+# Form implementation generated from reading ui file 'widgets/servicediscovery.ui'
 #
-# Created: Tue Oct 30 08:00:41 2007
-#      by: PyQt4 UI code generator 4.3
+# Created: Wed Nov  7 15:36:32 2007
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -57,5 +57,6 @@ class Ui_serviceDiscovery(object):
         self.tree.headerItem().setText(1,QtGui.QApplication.translate("serviceDiscovery", "search", None, QtGui.QApplication.UnicodeUTF8))
         self.tree.headerItem().setText(2,QtGui.QApplication.translate("serviceDiscovery", "register", None, QtGui.QApplication.UnicodeUTF8))
         self.tree.headerItem().setText(3,QtGui.QApplication.translate("serviceDiscovery", "jid", None, QtGui.QApplication.UnicodeUTF8))
+        self.tree.headerItem().setText(4,QtGui.QApplication.translate("serviceDiscovery", "commands", None, QtGui.QApplication.UnicodeUTF8))
         self.close.setText(QtGui.QApplication.translate("serviceDiscovery", "Close", None, QtGui.QApplication.UnicodeUTF8))
 
