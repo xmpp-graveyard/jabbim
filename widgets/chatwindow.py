@@ -340,7 +340,7 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.chatTab.addTab(tab,icon,"&"+unicode(name))
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 		self.setWindowTitle(unicode(name))
-		tab.chat.ui.label.setText("<font size=\"3\"><b>"+name+"</b></font>")
+		tab.chat.ui.label.setText("<font size=\"3\"><b>"+name+"</b><br/>"+self.tr("Resource:")+" "+jidT.JID(jid).resource+"</font>")
 		if message!=None:
 			message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+str(tab.chat.avatarHeight)+"\" />")
 			tab.chat.textEditWrite(message)
