@@ -37,7 +37,7 @@ from contact import *
 from groupchat import  *
 from base64 import b64encode, b64decode
 from privacy import *
-
+#from bosh import client as bclient
 try:
 	from hashlib import sha1
 except:
@@ -149,6 +149,7 @@ class Client(derived):
 	def _connect(self, host, port): 
 		self.on_connect()
 		self.factory = client.XMPPClientFactory(self.jid,self.password)
+#		self.factory = bclient.BOSHClientFactory(self.jid, self.password, 'http://bosh.bluendo.com:10080/httpb')
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
 ##		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
 ##		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
@@ -1391,7 +1392,8 @@ class Client(derived):
 		if self.ft.has_key(sid):
 			if isinstance(self.ft[sid], socks5.FTReceive):
 				for streamhost in query.elements():
-					self.ft[sid].streamhosts.append(streamhost.attributes)
+					if streamhost.name == 'streamhost':
+						self.ft[sid].streamhosts.append(streamhost.attributes)
 				self.ft[sid].streamhostsID = el['id']
 				self.ft[sid].connectStreamHost()
 		print el.toXml()

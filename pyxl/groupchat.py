@@ -36,7 +36,7 @@ class Groupchat:
 		item['nick'] = nick
 		item['role'] = role
 		if reason :
-			q.addElement('reason',  content = reason)
+			item.addElement('reason',  content = reason)
 		self.client.on_xml(iq.toXml())
 		d = iq.send()
 		self.client.disp(iq['id'])
@@ -66,7 +66,7 @@ class Groupchat:
 		item['nick'] = nick
 		item['affiliation'] = affiliation
 		if reason :
-			q.addElement('reason',  content = reason)
+			item.addElement('reason',  content = reason)
 		self.client.on_xml(iq.toXml())
 		d = iq.send()
 		self.client.disp(iq['id'])
