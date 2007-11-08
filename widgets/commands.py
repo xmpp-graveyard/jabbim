@@ -15,6 +15,7 @@ class CommandsDialog(QtGui.QDialog):
 		
 		self.group = QtGui.QButtonGroup(self)
 		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked) 
+		QtCore.QObject.connect(self.ui.execute,QtCore.SIGNAL("clicked ()"),self.cmds.submit) 
 
 	def _resetLayout(self): # Asi neni nejchytrejsi
 		for button in self.group.buttons():
@@ -34,6 +35,8 @@ class Commands:
 		self.jid	= unicode(jid)
 		self.dialog	= CommandsDialog(self)
 		self.sessionid	= None
+		self.node	= None
+		self.var = self.row = None
 		self.dialog.ui.execute.hide()
 		self.requestCommandsList()
 
@@ -73,7 +76,9 @@ class Commands:
 	def execCommand(self, node, jid=None):
 		if jid == None:
 			jid = self.jid
+		self.jid = jid
 		iq = IQ(self.main.client.xmlstream, "set")
+		self.node = node
 		iq["to"] = jid
 		command = iq.addElement("command")
 		command.attributes = {"node":node, "xmlns": "http://jabber.org/protocol/commands", "action":"execute"}
@@ -87,10 +92,21 @@ class Commands:
 		self.sessionid = command["sessionid"]
 		self.dialog._resetLayout()
 		if command["status"] == "completed":
-			dataforms.makeDataForm(
+			self.var, self.row = dataforms.makeDataForm(
 					self.dialog,
 					self.dialog.ui.gridlayout2,
 					command.firstChildElement()
 					)
 			self.dialog.ui.execute.show()
 		log.msg("Executed command with sessionid %s." % self.sessionid)
+
+	def submit(self):
+		iq=IQ(self.main.client.xmlstream, "set")
+		iq["to"] = self.jid
+		command=iq.addElement("command")
+		command.attributes = {"node":self.node, "xmlns": "http://jabber.org/protocol/commands", "sessionid":self.sessionid}
+		form = dataforms.sendDataForm(self.main, self.jid, self.var, "submit")
+		command.addRawXml(form.toXml())
+		d=iq.send()
+		d.addCallback(self._formRecieved)
+		self.main.client.disp(iq["id"])
