@@ -19,6 +19,7 @@ class CommandsDialog(QtGui.QDialog):
 	def _resetLayout(self): # Asi neni nejchytrejsi
 		for button in self.group.buttons():
 			self.ui.gridlayout2.removeWidget(button)
+			button.setParent(None)
 
 	def buttonClicked(self, button):
 		self.cmds.execCommand(button.node, button.jid)
