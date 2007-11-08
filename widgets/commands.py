@@ -16,11 +16,9 @@ class CommandsDialog(QtGui.QDialog):
 		self.group = QtGui.QButtonGroup(self)
 		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked) 
 
-	#def _resetLayout(self): # Asi neni nejchytrejsi
-	#	self.ui.gridlayout.removeItem(self.ui.gridlayout2)
-	#	self.ui.gridlayout2 = QtGui.QGridLayout()
-#		self.ui.gridlayout2.setObjectName("gridlayout2")
-#		self.ui.gridlayout.addLayout(self.ui.gridlayout2,0,0,1,1)
+	def _resetLayout(self): # Asi neni nejchytrejsi
+		for button in self.group.buttons():
+			self.ui.gridlayout2.removeWidget(button)
 
 	def buttonClicked(self, button):
 		self.cmds.execCommand(button.node, button.jid)
@@ -86,7 +84,7 @@ class Commands:
 	def _formRecieved(self, el):
 		command = el.firstChildElement()
 		self.sessionid = command["sessionid"]
-#		self.dialog._resetLayout()
+		self.dialog._resetLayout()
 		if command["status"] == "completed":
 			dataforms.makeDataForm(
 					self.dialog,
@@ -94,5 +92,4 @@ class Commands:
 					command.firstChildElement()
 					)
 			self.dialog.ui.execute.show()
-		log.msg("Executed command %s." % command["node"])
-
+		log.msg("Executed command with sessionid %s." % self.sessionid)
