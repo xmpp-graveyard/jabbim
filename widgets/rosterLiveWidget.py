@@ -1968,15 +1968,15 @@ class rosterWidget(QtGui.QWidget):
 				action.setData(QtCore.QVariant(jid))
 				action.setObjectName("privacy_unblock")
 			
-
-			if not self.main.client.privacy.active.isAllowedJID(jid):
-				action = submenu.addAction(self.tr("Allow contact to see my status when I am invisible"))
-				action.setData(QtCore.QVariant(jid))
-				action.setObjectName("privacy_allow")
-			else:
-				action = submenu.addAction(self.tr("Disallow contact to see my status when I am invisible"))
-				action.setData(QtCore.QVariant(jid))
-				action.setObjectName("privacy_disallow")
+			# Sekci nemazat
+			#if not self.main.client.privacy.active.isAllowedJID(jid):
+			#	action = submenu.addAction(self.tr("Allow contact to see my status when I am invisible"))
+			#	action.setData(QtCore.QVariant(jid))
+			#	action.setObjectName("privacy_allow")
+			#else:
+			#	action = submenu.addAction(self.tr("Disallow contact to see my status when I am invisible"))
+			#	action.setData(QtCore.QVariant(jid))
+			#	action.setObjectName("privacy_disallow")
 			
 			if not self.main.client.privacy.active.isHiddenJID(jid):
 				action = submenu.addAction(self.tr("Always hide my status to contact"))

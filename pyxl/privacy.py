@@ -222,8 +222,7 @@ class PrivacyList:
 	def setInvisible(self, globaly = False):
 		if not self.invisible:
 			self.main.client.sendPresence(typ="unavailable")
-			self.invisible = self.mkItem("deny", stanzas = ["presence-out"], to_zero = globaly)#, sm = True)
-			self.main.client.sendPresence(typ="invisible")
+			self.invisible = self.mkItem("deny", stanzas = ["presence-out"], to_zero = globaly, sm = True)
 			log.msg("we are now invisible")
 
 	def unsetInvisible(self, available = True):
