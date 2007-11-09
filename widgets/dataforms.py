@@ -107,7 +107,7 @@ def sendDataForm(main,jid,form,var,t,unregister=False):
 				if var.has_key(x['var']):
 					widget=var[x['var']]['widget']
 					typ=var[x['var']]['type']
-					if typ=="text-single" or typ=="text-multi" or typ=="text-private":
+					if typ=="text-single" or typ=="text-private":
 						make=True
 						for child in x.elements():
 							if child.name == 'value':
@@ -116,6 +116,15 @@ def sendDataForm(main,jid,form,var,t,unregister=False):
 								child.children.append(unicode(widget.text()))
 						if make:
 							x.addElement('value', content = unicode(widget.text()))
+					elif typ=="text-multi":
+						make=True
+						for child in x.elements():
+							if child.name == 'value':
+								make=False
+								child.children = []
+								child.children.append(unicode(widget.text()))
+						if make:
+							x.addElement('value', content = unicode(widget.toPlainText()))
 					elif typ=="boolean":
 						make=True
 						if widget.isChecked():
