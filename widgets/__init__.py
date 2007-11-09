@@ -16,4 +16,5 @@ import mucbrowser
 import show
 import privacy
 import commands
+import vcardeditor
 #import eventsFTWidget_ui

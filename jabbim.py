@@ -1176,6 +1176,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.bookmarksItemClicked)
 		QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered ( bool )"),self.trayQuit)
 		QtCore.QObject.connect(self.ui.actionService_Discovery, QtCore.SIGNAL("triggered ( bool )"),self.serviceDiscovery)
+		QtCore.QObject.connect(self.ui.actionIdentity, QtCore.SIGNAL("triggered ( bool )"),self.identityEditor)
 		
 
 			
@@ -1347,6 +1348,13 @@ class mainWindow(QtGui.QMainWindow):
 	def privacyListEditor(self,bool=False):
 		self.ple=widgets.privacy.PrivacyListEditorDialog(self,self)
 		self.ple.show()
+
+	def identityEditor(self,bool=False):
+		d=self.client.getVCard(self.client.jid.userhost())
+		d.addCallback(self.identityEditorVcardArrived)
+	def identityEditorVcardArrived(self,data=None):
+		self.ve=widgets.vcardeditor.vcardEditorDialog(self,data,self)
+		self.ve.show()
 
 	def mucBrowser(self,bool=False):
 		self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)

@@ -642,6 +642,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionService_Discovery" />
     <addaction name="actionShow_XML" />
     <addaction name="actionPrivacy_list_editor" />
+    <addaction name="actionIdentity" />
     <addaction name="separator" />
     <addaction name="actionPreferences" />
     <addaction name="separator" />
@@ -700,6 +701,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionPrivacy_list_editor" >
    <property name="text" >
     <string>Privacy list editor</string>
+   </property>
+  </action>
+  <action name="actionIdentity" >
+   <property name="text" >
+    <string>Identity</string>
    </property>
   </action>
  </widget>

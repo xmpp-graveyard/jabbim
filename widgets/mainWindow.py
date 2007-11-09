@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Wed Nov  7 07:42:02 2007
+# Created: Fri Nov  9 22:39:55 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -360,12 +360,16 @@ class Ui_MainWindow(object):
 
         self.actionPrivacy_list_editor = QtGui.QAction(MainWindow)
         self.actionPrivacy_list_editor.setObjectName("actionPrivacy_list_editor")
+
+        self.actionIdentity = QtGui.QAction(MainWindow)
+        self.actionIdentity.setObjectName("actionIdentity")
         self.menuHelp.addAction(self.actionAbout)
         self.menuAkce.addAction(self.actionJoin_Groupchat)
         self.menuAkce.addAction(self.actionAdd_Contact)
         self.menuAkce.addAction(self.actionService_Discovery)
         self.menuAkce.addAction(self.actionShow_XML)
         self.menuAkce.addAction(self.actionPrivacy_list_editor)
+        self.menuAkce.addAction(self.actionIdentity)
         self.menuAkce.addSeparator()
         self.menuAkce.addAction(self.actionPreferences)
         self.menuAkce.addSeparator()
@@ -422,4 +426,5 @@ class Ui_MainWindow(object):
         self.actionService_Discovery.setText(QtGui.QApplication.translate("MainWindow", "Service Discovery", None, QtGui.QApplication.UnicodeUTF8))
         self.actionMUC_Browser.setText(QtGui.QApplication.translate("MainWindow", "MUC Browser", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPrivacy_list_editor.setText(QtGui.QApplication.translate("MainWindow", "Privacy list editor", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionIdentity.setText(QtGui.QApplication.translate("MainWindow", "Identity", None, QtGui.QApplication.UnicodeUTF8))
 

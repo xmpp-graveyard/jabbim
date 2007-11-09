@@ -394,7 +394,7 @@ class derived:
 		vcard = iq.addElement('vCard', 'vcard-temp')
 		for k,v in card.iteritems():
 			s = k.split('-')
-			if len(s)>0:
+			if len(s)>1:
 				found = False
 				for el in vcard.elements():
 					if el.name == s[0]:
