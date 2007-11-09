@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'commands.ui'
 #
-# Created: Fri Nov  9 18:23:32 2007
+# Created: Fri Nov  9 19:46:39 2007
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -48,8 +48,13 @@ class Ui_Dialog(object):
         self.vboxlayout.setObjectName("vboxlayout")
 
         self.label = QtGui.QLabel(Dialog)
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.vboxlayout.addWidget(self.label)
+
+        self.label_2 = QtGui.QLabel(Dialog)
+        self.label_2.setObjectName("label_2")
+        self.vboxlayout.addWidget(self.label_2)
 
         self.line = QtGui.QFrame(Dialog)
         self.line.setFrameShape(QtGui.QFrame.HLine)

@@ -39,6 +39,7 @@ class CommandsDialog(QtGui.QDialog):
 		self.tbg.addButton(self.ui.cancel)
 
 		self.ui.close.hide()
+		self.ui.label_2.hide()
 
 
 	def _reset(self): 
@@ -51,6 +52,7 @@ class CommandsDialog(QtGui.QDialog):
 		self.ui.complete.hide()
 		self.ui.cancel.hide()
 		self.ui.close.hide()
+		self.ui.label_2.hide()
 
 	def buttonClicked(self, button):
 		self.cmds.execCommand(button.node, unicode(button.text()), button.jid)
@@ -115,18 +117,26 @@ class Commands:
 		self.jid = jid
 		self.node = node
 		self.name = name
-		self.dialog.setWindowTitle(unicode(self.dialog.windowTitle()) + " - " + self.name)
 		iq = IQ(self.main.client.xmlstream, "set")
 		iq["xml:lang"] = self.main.client.xmlLang
 		iq["to"] = jid
 		command = iq.addElement("command")
 		command.attributes = {"node":node, "xmlns": "http://jabber.org/protocol/commands", "action":"execute"}
 		d=iq.send()
-		d.addCallback(self._formRecieved).addErrback(self._formRecieved)
+		d.addCallback(self._formRecieved).addErrback(self._errorRecieved)
 		self.main.client.disp(iq["id"])
 		log.msg("Executing command %s." % node)
+	
+	def _errorRecieved(self, err):
+		self.dialog._reset()
+		self.dialog.ui.close.show()
+		self.dialog.ui.label.setText("<b>%s</b>" % self.main.tr("Error"))
+		self.dialog.ui.label_2.show()
+		self.dialog.ui.label_2.setText(unicode(err.value))
+		self.dialog.ui.line.hide()
 
 	def _formRecieved(self, el):
+		log.msg(`el`+str(dir(el)))
 		command = el.firstChildElement()
 		self.sessionid = command["sessionid"]
 		self.dialog._reset()
@@ -178,9 +188,12 @@ class Commands:
 					s = self.main.tr("Warning")
 				else:
 					s = self.main.tr("Info")
-					s = u"\n<b>%s</b>: " % s
-					s += unicode(element)
-				self.dialog.ui.label.setText(unicode(self.dialog.ui.label.text())+s)
+				self.dialog.ui.label.setText("<b>%s</b>" % s)
+				self.dialog.ui.label_2.show()
+				self.dialog.ui.label_2.setText(unicode(element))
+				self.dialog.ui.close.show()
+				self.dialog.ui.line.hide()
+		self.dialog.setWindowTitle(unicode(self.dialog.windowTitle()) + " - " + self.name)
 
 
 	def submit(self,action):
@@ -193,5 +206,5 @@ class Commands:
 			form = dataforms.sendDataForm(self.main, self.jid, self.form, self.var, "submit")
 			command.addRawXml(form.toXml())
 		d=iq.send()
-		d.addCallback(self._formRecieved).addErrback(self._formRecieved)
+		d.addCallback(self._formRecieved).addErrback(self._errorRecieved)
 		self.main.client.disp(iq["id"])
