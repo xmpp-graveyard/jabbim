@@ -27,6 +27,7 @@ import time
 import filetransfer
 import addcontact
 import vcardview
+import commands
 
 class activeWidget(QtGui.QWidget):
 	def __init__(self,parent=None):
@@ -1822,7 +1823,7 @@ class rosterWidget(QtGui.QWidget):
 					action.setObjectName("chat")
 		print "LOG 2"
 		if self.main.client.groupchats != {}:	# Mozna zobrazit i kdyz v mucu nejsme aby to bylo vic videt :)
-			submenu = contactMenu.addMenu(self.tr("Invite to conference"))
+			submenu = contactMenu.addMenu(QtGui.QIcon("images/16x16/categories/muc.png"),self.tr("Invite to conference"))
 			if oneres:
 				for gc in self.main.client.groupchats.keys():
 					action = submenu.addAction(gc)
@@ -1986,6 +1987,9 @@ class rosterWidget(QtGui.QWidget):
 				action = submenu.addAction(self.tr("Don't hide my status to contact"))
 				action.setData(QtCore.QVariant(jid))
 				action.setObjectName("privacy_unhide")
+		action=contactMenu.addAction(QtGui.QIcon("images/16x16/actions/exec.png"),self.tr("Extra actions"))
+		action.setData(QtCore.QVariant(jid))
+		action.setObjectName("ad_hoc")
 		
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
@@ -2200,6 +2204,10 @@ class rosterWidget(QtGui.QWidget):
 			jid=unicode(action.data().toString())
 			self.main.client.privacy.active.unHideJID(jid)
 			log.msg("Unhiding jid %s." % jid)
+		elif cmd == "ad_hoc":
+			jid=unicode(action.data().toString())
+			cmds = commands.Commands(self.main, jid)
+			cmds.dialog.exec_()
 		log.msg("END CONTACT")
 
 	def vcardArrived(self,data):

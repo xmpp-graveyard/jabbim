@@ -97,8 +97,9 @@ class Commands:
 				continue
 			commands.append(item.attributes)
 		if commands == []:
-			self.dialog.ui.label.setText(self.main.tr("Sorry. No commands available."))
-			self.dialog.ui.gridlayout2.addWidget(label, 0, 0)
+			self.dialog.ui.label.setText(self.main.tr("Sorry. No extra actions available."))
+			self.dialog.ui.close.show()
+			self.dialog.ui.line.hide()
 			return
 		c = 0
 		for command in commands:
@@ -192,7 +193,7 @@ class Commands:
 				else:
 					s = self.main.tr("Info")
 				self.dialog.ui.label_2.show()
-				self.dialog.ui.label_2.setText("<b>%s</b>:" % s +unicode(element))
+				self.dialog.ui.label_2.setText("<b>%s</b>: " % s +unicode(element))
 				self.dialog.ui.close.show()
 		if unicode(self.dialog.windowTitle()).find(self.name) != -1:
 			self.dialog.setWindowTitle(unicode(self.dialog.windowTitle()) + " - " + self.name)
