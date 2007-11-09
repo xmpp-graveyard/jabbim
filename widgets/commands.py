@@ -140,6 +140,15 @@ class Commands:
 		command = el.firstChildElement()
 		self.sessionid = command["sessionid"]
 		self.dialog._reset()
+		if command["status"] == "completed":
+			self.dialog.ui.label.setText(self.main.tr("Completed!"))
+			log.msg("Completed command with sessionid %s." % self.sessionid)
+		elif command["status"] == "executing":
+			self.dialog.ui.label.setText(self.main.tr("In progress."))
+			log.msg("Executing command with sessionid %s." % self.sessionid)
+		elif command["status"] == "canceled":
+			self.dialog.ui.label.setText("Canceled.")
+			log.msg("Canceled command with sessionid %s." % self.sessionid)
 		for element in command.elements():
 			if element.name == "actions":
 				for x in element.elements():
@@ -152,27 +161,22 @@ class Commands:
 			if element.name == "x":
 				self.form = element
 				if command["status"] == "completed":
-					self.dialog.ui.label.setText(self.main.tr("Completed!"))
 					self.dialog.ui.close.show()
 					self.var, self.row = dataforms.makeDataForm(
 							self.dialog,
 							self.dialog.ui.gridlayout2,
 							element
 							)
-					log.msg("Completed command with sessionid %s." % self.sessionid)
 
 				elif command["status"] == "executing":
-					self.dialog.ui.label.setText(self.main.tr("In progress."))
 					self.dialog.ui.cancel.show()
 					self.var, self.row = dataforms.makeDataForm(
 							self.dialog,
 							self.dialog.ui.gridlayout2,
 							element
 							)
-					log.msg("Executing command with sessionid %s." % self.sessionid)
 
 				elif command["status"] == "canceled":
-					self.dialog.ui.label.setText("Canceled.")
 					self.dialog.ui.close.show()
 					self.dialog.ui.line.hide()
 					self.var, self.row = dataforms.makeDataForm(
@@ -180,7 +184,6 @@ class Commands:
 							self.dialog.ui.gridlayout2,
 							element
 							)
-					log.msg("Canceled command with sessionid %s." % self.sessionid)
 			if element.name == "note":
 				if element["type"] == "error":
 					s = self.main.tr("Error")
@@ -188,12 +191,11 @@ class Commands:
 					s = self.main.tr("Warning")
 				else:
 					s = self.main.tr("Info")
-				self.dialog.ui.label.setText("<b>%s</b>" % s)
 				self.dialog.ui.label_2.show()
-				self.dialog.ui.label_2.setText(unicode(element))
+				self.dialog.ui.label_2.setText("<b>%s</b>:" % s +unicode(element))
 				self.dialog.ui.close.show()
-				self.dialog.ui.line.hide()
-		self.dialog.setWindowTitle(unicode(self.dialog.windowTitle()) + " - " + self.name)
+		if unicode(self.dialog.windowTitle()).find(self.name) != -1:
+			self.dialog.setWindowTitle(unicode(self.dialog.windowTitle()) + " - " + self.name)
 
 
 	def submit(self,action):
