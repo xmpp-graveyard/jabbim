@@ -83,7 +83,7 @@ class Commands:
 		query		= iq.addElement("query", "http://jabber.org/protocol/disco#items")
 		query.attributes["node"] = "http://jabber.org/protocol/commands"
 		d		= iq.send()
-		d.addCallback(self._commandsListRecieved).addErrback(self.main.client.chyba)
+		d.addCallback(self._commandsListRecieved).addErrback(self._errorRecieved)
 		self.main.client.disp(iq["id"])
 		log.msg("Sending request for Ad-Hoc Commands list")
 
