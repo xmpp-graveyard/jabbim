@@ -35,7 +35,7 @@ MUCLISTTYPES = {
 'member': ('http://jabber.org/protocol/muc#admin', 'member', 'affiliation'),
 'moderator': ('http://jabber.org/protocol/muc#admin', 'moderator', 'role'),
 'owner': 	('http://jabber.org/protocol/muc#admin', 'owner', 'affiliation'),
-'admin': 	('http://jabber.org/protocol/muc#admin', 'owner', 'affiliation')}
+'admin': 	('http://jabber.org/protocol/muc#admin', 'admin', 'affiliation')}
 class derived:
 	def on_authFailed(self,xmlstream):
 		pass
