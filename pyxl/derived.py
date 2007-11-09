@@ -384,6 +384,35 @@ class derived:
 		d.addCallback(self._vcardReceived).addErrback(self._noVcard, jid)
 		log.msg("END: getVCard")
 		return d
+	
+	def setVCard(self, card):
+		""" Posle vlastni vcard """
+#		log.msg( 'requesting vcard for ' + unicode(jid))
+		iq = IQ(self.xmlstream, 'set')
+		iq['xml:lang'] = self.xmlLang
+#		iq['to'] = jid
+		vcard = iq.addElement('vCard', 'vcard-temp')
+		for k,v in card.iteritems():
+			s = k.split('-')
+			if len(s)>0:
+				found = False
+				for el in vcard.elements():
+					if el.name == s[0]:
+						el.addElement(s[1], content = v)
+						found = True
+						break
+				if not found:
+					el = vcard.addElement(s[0])
+					el.addElement(s[1], content = v)
+			else:
+				el = vcard.addElement(k, content = v)
+				
+					
+		self.disp(iq['id'])
+		iq.timeout = 60
+		d = iq.send()
+		log.msg("END: getVCard")
+		return d
 		
 	def getBookmarks(self):
 		log.msg('get bookmarks')

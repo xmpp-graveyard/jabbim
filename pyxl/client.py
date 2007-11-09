@@ -709,6 +709,7 @@ class Client(derived):
 						codes.append(item['code'])
 			elif child.name == 'x' and child.defaultUri == 'vcard-temp:x:update':
 				hash = unicode(child.firstChildElement())
+				print fromjid, hash
 
 #avatars
 		wantAvatar=True
