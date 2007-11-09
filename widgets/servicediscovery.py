@@ -252,6 +252,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 							register.setFlat(True)
 							register.jid=parentitem.text(3)
 							register.typ="register"
+							register.setToolTip(self.tr("Register service"))
 							self.group.addButton(register)
 							self.ui.tree.setItemWidget(parentitem,2,register)
 						if "jabber:iq:search" in list(self.main.client.disco[key][None]['features']):
@@ -264,6 +265,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 							search.setFlat(True)
 							search.jid=parentitem.text(3)
 							search.typ="search"
+							search.setToolTip(self.tr("Search service for users"))
 							self.group.addButton(search)
 							self.ui.tree.setItemWidget(parentitem,1,search)
 						if "http://jabber.org/protocol/commands" in list(self.main.client.disco[key][None]['features']):
@@ -273,6 +275,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 							cmds.setFlat(True)
 							cmds.jid=parentitem.text(3)
 							cmds.typ="cmds"
+							cmds.setToolTip(self.tr("Execute extra action"))
 							self.group.addButton(cmds)
 							self.ui.tree.setItemWidget(parentitem,4,cmds)
 		self.ui.tree.sortItems(0,QtCore.Qt.AscendingOrder)

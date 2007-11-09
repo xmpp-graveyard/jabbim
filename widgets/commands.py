@@ -14,16 +14,49 @@ class CommandsDialog(QtGui.QDialog):
 		self.ui.setupUi(self)
 		
 		self.group = QtGui.QButtonGroup(self)
-		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked) 
-		QtCore.QObject.connect(self.ui.execute,QtCore.SIGNAL("clicked ()"),self.cmds.submit) 
+		self.tbg = QtGui.QButtonGroup(self)
 
-	def _resetLayout(self): # Asi neni nejchytrejsi
+		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked) 
+		QtCore.QObject.connect(self.tbg,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.tbgButtonClicked) 
+		#QtCore.QObject.connect(self.ui.next,QtCore.SIGNAL("clicked ()"),self.cmds.submit) 
+		#QtCore.QObject.connect(self.ui.previous,QtCore.SIGNAL("clicked ()"),self.cmds.submit) 
+		#QtCore.QObject.connect(self.ui.complete,QtCore.SIGNAL("clicked ()"),self.cmds.submit) 
+
+		self.ui.next.hide()
+		self.ui.next.action = "next"
+		self.tbg.addButton(self.ui.next)
+	
+		self.ui.previous.hide()
+		self.ui.previous.action = "prev"
+		self.tbg.addButton(self.ui.previous)
+
+		self.ui.complete.hide()
+		self.ui.complete.action = "complete"
+		self.tbg.addButton(self.ui.complete)
+		
+		self.ui.cancel.hide()
+		self.ui.cancel.action = "cancel"
+		self.tbg.addButton(self.ui.cancel)
+
+		self.ui.close.hide()
+
+
+	def _reset(self): 
+		self.ui.label.setText(u"")
 		for button in self.group.buttons():
 			self.ui.gridlayout2.removeWidget(button)
 			button.setParent(None)
+		self.ui.next.hide()
+		self.ui.previous.hide()
+		self.ui.complete.hide()
+		self.ui.cancel.hide()
+		self.ui.close.hide()
 
 	def buttonClicked(self, button):
-		self.cmds.execCommand(button.node, button.jid)
+		self.cmds.execCommand(button.node, unicode(button.text()), button.jid)
+
+	def tbgButtonClicked(self, button):
+		self.cmds.submit(button.action)
 
 	def reject(self):
 		self.close()
@@ -36,12 +69,14 @@ class Commands:
 		self.dialog	= CommandsDialog(self)
 		self.sessionid	= None
 		self.node	= None
+		self.form	= None
+		self.name 	= None
 		self.var = self.row = None
-		self.dialog.ui.execute.hide()
 		self.requestCommandsList()
 
 	def requestCommandsList(self):
 		iq		= IQ(self.main.client.xmlstream, "get")
+		iq["xml:lang"] = self.main.client.xmlLang
 		iq["to"]	= self.jid
 		query		= iq.addElement("query", "http://jabber.org/protocol/disco#items")
 		query.attributes["node"] = "http://jabber.org/protocol/commands"
@@ -51,6 +86,7 @@ class Commands:
 		log.msg("Sending request for Ad-Hoc Commands list")
 
 	def _commandsListRecieved(self, el):
+		self.dialog.ui.label.setText(self.main.tr("Choose action to execute."))
 		log.msg("Ad-Hoc commands list recieved")
 		query	= el.firstChildElement()
 		commands = []
@@ -59,7 +95,7 @@ class Commands:
 				continue
 			commands.append(item.attributes)
 		if commands == []:
-			label = QtGui.QLabel(self.main.tr("Sorry. No commands available."))
+			self.dialog.ui.label.setText(self.main.tr("Sorry. No commands available."))
 			self.dialog.ui.gridlayout2.addWidget(label, 0, 0)
 			return
 		c = 0
@@ -73,40 +109,89 @@ class Commands:
 			self.dialog.ui.gridlayout2.addWidget(button, c, 0)
 			c += 1
 
-	def execCommand(self, node, jid=None):
+	def execCommand(self, node, name, jid = None):
 		if jid == None:
 			jid = self.jid
 		self.jid = jid
-		iq = IQ(self.main.client.xmlstream, "set")
 		self.node = node
+		self.name = name
+		self.dialog.setWindowTitle(unicode(self.dialog.windowTitle()) + " - " + self.name)
+		iq = IQ(self.main.client.xmlstream, "set")
+		iq["xml:lang"] = self.main.client.xmlLang
 		iq["to"] = jid
 		command = iq.addElement("command")
 		command.attributes = {"node":node, "xmlns": "http://jabber.org/protocol/commands", "action":"execute"}
 		d=iq.send()
-		d.addCallback(self._formRecieved)
+		d.addCallback(self._formRecieved).addErrback(self._formRecieved)
 		self.main.client.disp(iq["id"])
 		log.msg("Executing command %s." % node)
 
 	def _formRecieved(self, el):
 		command = el.firstChildElement()
 		self.sessionid = command["sessionid"]
-		self.dialog._resetLayout()
-		if command["status"] == "completed":
-			self.var, self.row = dataforms.makeDataForm(
-					self.dialog,
-					self.dialog.ui.gridlayout2,
-					command.firstChildElement()
-					)
-			self.dialog.ui.execute.show()
-		log.msg("Executed command with sessionid %s." % self.sessionid)
+		self.dialog._reset()
+		for element in command.elements():
+			if element.name == "actions":
+				for x in element.elements():
+					if x.name == "prev":
+						self.dialog.ui.previous.show()
+					if x.name == "next":
+						self.dialog.ui.next.show()
+					if x.name == "complete":
+						self.dialog.ui.complete.show()
+			if element.name == "x":
+				self.form = element
+				if command["status"] == "completed":
+					self.dialog.ui.label.setText(self.main.tr("Completed!"))
+					self.dialog.ui.close.show()
+					self.var, self.row = dataforms.makeDataForm(
+							self.dialog,
+							self.dialog.ui.gridlayout2,
+							element
+							)
+					log.msg("Completed command with sessionid %s." % self.sessionid)
 
-	def submit(self):
+				elif command["status"] == "executing":
+					self.dialog.ui.label.setText(self.main.tr("In progress."))
+					self.dialog.ui.cancel.show()
+					self.var, self.row = dataforms.makeDataForm(
+							self.dialog,
+							self.dialog.ui.gridlayout2,
+							element
+							)
+					log.msg("Executing command with sessionid %s." % self.sessionid)
+
+				elif command["status"] == "canceled":
+					self.dialog.ui.label.setText("Canceled.")
+					self.dialog.ui.close.show()
+					self.dialog.ui.line.hide()
+					self.var, self.row = dataforms.makeDataForm(
+							self.dialog,
+							self.dialog.ui.gridlayout2,
+							element
+							)
+					log.msg("Canceled command with sessionid %s." % self.sessionid)
+			if element.name == "note":
+				if element["type"] == "error":
+					s = self.main.tr("Error")
+				elif element["type"] == "warn":
+					s = self.main.tr("Warning")
+				else:
+					s = self.main.tr("Info")
+					s = u"\n<b>%s</b>: " % s
+					s += unicode(element)
+				self.dialog.ui.label.setText(unicode(self.dialog.ui.label.text())+s)
+
+
+	def submit(self,action):
 		iq=IQ(self.main.client.xmlstream, "set")
+		iq["xml:lang"] = self.main.client.xmlLang
 		iq["to"] = self.jid
 		command=iq.addElement("command")
-		command.attributes = {"node":self.node, "xmlns": "http://jabber.org/protocol/commands", "sessionid":self.sessionid}
-		form = dataforms.sendDataForm(self.main, self.jid, self.var, "submit")
-		command.addRawXml(form.toXml())
+		command.attributes = {"node":self.node, "xmlns": "http://jabber.org/protocol/commands", "sessionid":self.sessionid,"action":action}
+		if action != "cancel":
+			form = dataforms.sendDataForm(self.main, self.jid, self.form, self.var, "submit")
+			command.addRawXml(form.toXml())
 		d=iq.send()
-		d.addCallback(self._formRecieved)
+		d.addCallback(self._formRecieved).addErrback(self._formRecieved)
 		self.main.client.disp(iq["id"])

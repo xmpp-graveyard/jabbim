@@ -5,27 +5,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>318</width>
-    <height>116</height>
+    <width>447</width>
+    <height>148</height>
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Dialog</string>
+   <string>Extra action</string>
   </property>
   <layout class="QGridLayout" >
-   <item row="2" column="0" >
+   <item row="5" column="0" >
     <layout class="QGridLayout" >
-     <item row="0" column="2" >
-      <widget class="QPushButton" name="close" >
+     <item row="0" column="4" >
+      <widget class="QPushButton" name="cancel" >
        <property name="text" >
-        <string>Close</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1" >
-      <widget class="QPushButton" name="execute" >
-       <property name="text" >
-        <string>Execute</string>
+        <string>Cancel</string>
        </property>
       </widget>
      </item>
@@ -42,12 +35,58 @@
        </property>
       </spacer>
      </item>
+     <item row="0" column="3" >
+      <widget class="QPushButton" name="next" >
+       <property name="text" >
+        <string>Next →</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2" >
+      <widget class="QPushButton" name="complete" >
+       <property name="text" >
+        <string>Finish</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" >
+      <widget class="QPushButton" name="previous" >
+       <property name="text" >
+        <string>← Back</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="5" >
+      <widget class="QPushButton" name="close" >
+       <property name="text" >
+        <string>Close</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
-   <item row="0" column="0" >
+   <item rowspan="3" row="0" column="0" >
+    <layout class="QVBoxLayout" >
+     <item>
+      <widget class="QLabel" name="label" >
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line" >
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="0" >
     <layout class="QGridLayout" />
    </item>
-   <item row="1" column="0" >
+   <item row="4" column="0" >
     <spacer>
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
@@ -71,11 +110,11 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>299</x>
+     <x>399</x>
      <y>92</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>173</x>
+     <x>223</x>
      <y>57</y>
     </hint>
    </hints>

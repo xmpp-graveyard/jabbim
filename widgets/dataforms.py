@@ -24,9 +24,8 @@ import pyxl
 
 from twisted.python import log
 
-def makeDataForm(parent,layout,form):
+def makeDataForm(parent,layout,form,row=1):
 	var={}
-	row=1
 	for x in form.elements():
 		if unicode(x.name)=="field":
 			if x['type']=="text-single":
