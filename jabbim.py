@@ -824,7 +824,7 @@ class clientClass(pyxl.client.Client):
 #							if self.roster['users'].has_key(truejid.userhost()):
 #								file=self.main.homeDir+'/avatars/'+unicode(truejid.userhost())
 						print self.avatars
-						if self.avatars.has_key(frm+'/'+user):
+						if self.avatars.has_key(frm+'%'+user):
 							file = self.main.homeDir+'/avatars/'+unicode(frm+'%'+user)
 						elif truejid != None and self.avatars.has_key(truejid):
 							file = self.main.homeDir+'/avatars/'+unicode(truejid)
@@ -835,6 +835,7 @@ class clientClass(pyxl.client.Client):
 
 						if not os.path.isfile(unicode(file)):
 							print truejid, frm, user
+							#sef@njs.netlab.cz/Doma jabber@conf.netlab.cz Sef 
 							file="images/32x32/apps/jabbim.png"
 						if not w.chat.sizes.has_key(file):
 							pixmap=QtGui.QPixmap(file).scaledToWidth(32)
