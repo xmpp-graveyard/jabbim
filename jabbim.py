@@ -816,7 +816,7 @@ class clientClass(pyxl.client.Client):
 							truejid = self.groupchats[frm].users[user].truejid
 							print truejid
 							if truejid:
-								truejid=unicode(jidT.JID(w.jid).userhost())
+								truejid=unicode(jidT.JID(truejid).userhost())
 								print truejid
 						else:
 							truejid = None
