@@ -424,7 +424,10 @@ class clientClass(pyxl.client.Client):
 				pri=self.main.config['priority']
 			else:
 				pri="0"
-		MainWindow.client.sendPresence(priority=pri)
+		show=unicode(self.main.ui.loginStatus.itemData(int(self.main.ui.loginStatus.currentIndex())).toString())
+		self.main.client.sendPresence(show=show,priority=pri)
+		self.main.ui.statusButton.setText(unicode(""))
+		self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
 
 	def on_authFailed(self,xmlstream):
 		# Authentication error
@@ -1267,6 +1270,12 @@ class mainWindow(QtGui.QMainWindow):
 		self.setMinimumWidth(200)
 
 		self.fillLoginForm()
+
+		self.ui.loginStatus.addItem(self.getIcon(status="online",size="16x16"), self.status["online"],QtCore.QVariant("online"))
+		self.ui.loginStatus.addItem(self.getIcon(status="chat",size="16x16"), self.status["chat"],QtCore.QVariant("chat"))
+		self.ui.loginStatus.addItem(self.getIcon(status="away",size="16x16"), self.status["away"],QtCore.QVariant("away"))
+		self.ui.loginStatus.addItem(self.getIcon(status="xa",size="16x16"), self.status["xa"],QtCore.QVariant("xa"))
+		self.ui.loginStatus.addItem(self.getIcon(status="dnd",size="16x16"), self.status["dnd"],QtCore.QVariant("dnd"))
 
 		if self.config['autoJoin']=='True':
 			self.ui.rosterStackedWidget.setCurrentIndex(2)
