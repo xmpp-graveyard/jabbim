@@ -20,7 +20,8 @@ class MUCBrowserDialog(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.showJid, QtCore.SIGNAL("stateChanged ( int )"),self.showJid)
 		self.ui.groupchats.hideColumn(1)
 		self.ui.groupchats.setColumnWidth(0,42)
-
+		self.ui.groupchats.setSortingEnabled(True)
+		self.ui.groupchats.hideColumn(3)
 		mucjid = None
 		for jid, node in self.main.client.disco.iteritems():
 			if not node[None].has_key('identities'):
@@ -39,12 +40,28 @@ class MUCBrowserDialog(QtGui.QDialog):
 
 	def showJid(self,b):
 		if self.ui.showJid.isChecked():
+			for i in range(self.ui.groupchats.topLevelItemCount()):
+				item=self.ui.groupchats.topLevelItem(i)
+				for x in range(item.childCount()):
+					child=item.child(x)
+					child.setText(1,child.text(2))
+					child.setIcon(1,child.icon(2))
+					child.setText(2,"")
+					child.setIcon(2,QtGui.QIcon())
 			self.ui.groupchats.showColumn(1)
 			self.ui.groupchats.resizeColumnToContents(1)
 		else:
 			self.ui.groupchats.hideColumn(1)
+			for i in range(self.ui.groupchats.topLevelItemCount()):
+				item=self.ui.groupchats.topLevelItem(i)
+				for x in range(item.childCount()):
+					child=item.child(x)
+					child.setText(2,child.text(1))
+					child.setIcon(2,child.icon(1))
+					child.setText(1,"")
+					child.setIcon(1,QtGui.QIcon())
 		self.ui.groupchats.setColumnWidth(0,42)
-
+	
 		#self.ui.groupchats.setColumnWidth(0,36)
 
 	def CE(self,item,i):
@@ -76,7 +93,7 @@ class MUCBrowserDialog(QtGui.QDialog):
 
 		item.setToolTip(0,users)
 		#self.ui.groupchats.setItemExpanded(item,True)
-
+		self.ui.groupchats.sortByColumn(3,QtCore.Qt.DescendingOrder)
 	def getNum(self, string):
 		def reverse(s):
 			s = list(s)
@@ -109,11 +126,12 @@ class MUCBrowserDialog(QtGui.QDialog):
 			item = QtGui.QTreeWidgetItem(0)
 			item.setText(1,room[1])
 			item.setText(2,room[0])
+			item.setText(3,(int(room[2])+1)*'a')
 			item.setData(0, 32, QtCore.QVariant(room[1]))
 			item.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
 			#item.setIcon(1,QtGui.QIcon("images/16x16/categories/muc.png"))
 			self.ui.groupchats.insertTopLevelItem(0, item)
-
+		self.ui.groupchats.sortByColumn(3,QtCore.Qt.DescendingOrder)
 	def accept(self):
 		room=unicode(self.ui.room.text())
 		server=unicode(self.ui.server.text())
