@@ -817,6 +817,7 @@ class clientClass(pyxl.client.Client):
 							print truejid
 							if truejid:
 								truejid=unicode(jidT.JID(w.jid).userhost())
+								print truejid
 						else:
 							truejid = None
 						file = None
