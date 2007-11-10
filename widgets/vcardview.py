@@ -16,11 +16,11 @@ class vcardViewDialog(QtGui.QDialog):
 		self.main=main
 		print data
 		text=""
-		if data.has_key("GIVEN"):
+		if data.has_key("N-GIVEN"):
 			text+="<b>"+self.tr("Name: ")+"</b>"+data['GIVEN']+"<br/>"
-		if data.has_key("FAMILY"):
+		if data.has_key("N-FAMILY"):
 			text+="<b>"+self.tr("Surname: ")+"</b>"+data['FAMILY']+"<br/>"
-		if data.has_key("USERID"):
+		if data.has_key("EMAIL-USERID"):
 			text+="<b>"+self.tr("JID: ")+"</b>"+data['USERID']+"<br/>"
 		if data.has_key("HOME-LOCALITY"):
 			text+="<b>"+self.tr("Locality: ")+"</b>"+data["HOME-LOCALITY"]+"<br/>"
@@ -29,7 +29,7 @@ class vcardViewDialog(QtGui.QDialog):
 		if data.has_key("HOME-NUMBER"):
 			text+="<b>"+self.tr("Home tel. number: ")+"</b>"+data['HOME-NUMBER']+"<br/>"
 		
-		if data.has_key("BINVAL"):
+		if data.has_key("PHOTO-BINVAL"):
 			image=base64.decodestring(str(data["BINVAL"]))
 			pixmap=QtGui.QPixmap()
 			pixmap.loadFromData(image)
