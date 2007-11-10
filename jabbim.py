@@ -1864,7 +1864,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.bookmarks.expandItem(item)
 
 	def bookmarksCurrentChanged(self,item,old):
-		if item.parent()==None:
+		if item != None and item.parent()==None:
 			self.client.getDiscoItems(unicode(item.text(1)),callback=self.client.on_discoItemsBookmarksReceived,callback_par=unicode(item.text(1)))
 
 	def preferencesClicked(self,bool):
