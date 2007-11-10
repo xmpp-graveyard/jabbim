@@ -194,6 +194,8 @@ class clientClass(pyxl.client.Client):
 		groups=list(contact.groups)
 		name=unicode(contact.name)
 		jid=unicode(contact.jid)
+		while u'' in groups:
+			groups.remove('')
 		log.msg("Adding user JID: "+jid+" "+contact.subscription+" "+unicode(groups))
 		# add group item if we haven't it
 		for gr in groups:
@@ -568,6 +570,9 @@ class clientClass(pyxl.client.Client):
 	
 	def on_UpdateContact(self,jid):
 		# contact is updated
+		if len(self.roster['users'][jid].groups)==1:
+			if len(self.roster['users'][jid].groups[0])==0:
+				self.roster['users'][jid].groups=[]
 		contact=self.roster['users'][jid]
 		items=self.main.ui.roster.getUserItems(jid)
 		toDel=[] # temp variable for deleting items at the end of this function
@@ -588,6 +593,8 @@ class clientClass(pyxl.client.Client):
 				#self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(items2[0]))
 		jidGroups=list(self.roster['users'][jid].groups)
 		if len(jidGroups)==0:
+			jidGroups=[self.main.ui.roster.specialName]
+		elif len(jidGroups[0])==0:
 			jidGroups=[self.main.ui.roster.specialName]
 			#add=True
 			#for i in items:
@@ -2159,7 +2166,8 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.roster.sortedGroups=[]
 		MainWindow.ui.roster.sorted={}
 		MainWindow.ui.roster.users=[]
-		MainWindow.ui.roster.groups={}
+		#MainWindow.ui.roster.groups={}
+		MainWindow.ui.roster.disconnect()
 		#MainWindow.ui.roster.makeHiddenItem()
 		MainWindow.ui.login_connect.setEnabled(True)
 		MainWindow.plugins=[]

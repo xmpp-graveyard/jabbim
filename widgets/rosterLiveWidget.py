@@ -342,7 +342,12 @@ class rosterWidget(QtGui.QWidget):
 		self.blinkJids=[]
 		self.main.ui.rosterSearch.hide()
 		self.main.ui.rosterSearchLabel.hide()
-		
+
+	def disconnect(self):
+		self.groups={}
+		self.specialName="zzzzzzzzzzzzzzzzz"
+		self.groups[self.specialName]=special()
+
 	def refreshEvents(self):
 		events=[]
 		for event in self.main.events.events:
