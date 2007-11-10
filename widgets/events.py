@@ -220,7 +220,7 @@ class InfoWidget(abstractWidget):
 
 class BooleanWidget(abstractWidget):
 	def __init__(self,header,text,item,main,trueCall,trueDict,falseCall,falseDict,parent=None,height=40):
-		apply(abstractWidget.__init__,(self,header,text,item,main,falseCall,falseDict,trueCall,trueDict,parent,40))
+		apply(abstractWidget.__init__,(self,header,text,item,main,falseCall,falseDict,trueCall,trueDict,None,None,parent,40))
 
 		self.submitButton = QtGui.QPushButton(self)
 		self.submitButton.setMaximumSize(16,16)

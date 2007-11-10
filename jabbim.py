@@ -606,6 +606,7 @@ class clientClass(pyxl.client.Client):
 				
 		# go through all groups
 		rosterGroups=dict(self.roster['groups'])
+		print self.main.ui.roster.groups
 		rosterGroups[self.main.ui.roster.specialName]=self.main.ui.roster.groups[self.main.ui.roster.specialName]
 		toDel=[]
 		for name,item in rosterGroups.iteritems():
