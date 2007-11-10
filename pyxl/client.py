@@ -378,20 +378,14 @@ class Client(derived):
 			pref = ''
 
 			if len(x.children)>0:
-				for bz in x.elements():
-					if x.name == 'ADR' or x.name == 'TEL':
-						for elm in x.elements():
-							if elm.name =='HOME' or elm.name =='WORK':
-								pref = elm.name + '-'
-# 								print pref
-								break
-						break
+				pref = x.name + '-'
 				for y in x.elements():
 					card[pref + y.name]=unicode(y)
 			else:
 				card[x.name]=unicode(x)
-		if card.has_key("BINVAL"):
-			image=base64.decodestring(str(card["BINVAL"]))
+		print card
+		if card.has_key("PHOTO-BINVAL"):
+			image=base64.decodestring(str(card["PHOTO-BINVAL"]))
 			f=open(self.main.homeDir+'/avatars/'+unicode(el['from']).replace('/', '%'),"wb")
 
 			f.write(image)
