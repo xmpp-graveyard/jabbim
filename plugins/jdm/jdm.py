@@ -15,7 +15,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Jabbim disk manager'
 		self.author = u"Josef 'Pepeq' Halíček"
 		self.name = 'JDM Plugin'
-		self.version = '0.1088'
+		self.version = '0.1090'
 		self.category = ['disk']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		if main:
@@ -24,18 +24,14 @@ class Plugin(plugins.PluginBase):
 			self.window.setWindowIcon(self.main.windowIcon())
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
-			QtCore.QObject.connect(self.window.ui.reload, QtCore.SIGNAL("clicked()"),self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.main.client.jid.userhost(),)).addCallback(self.updateView, 'public'))
+
 			self.obsah=[]
 
 		else:
 			self.loadConfig(homedir)
 		
 	def updateView(self, vysledek, typ = 'public'):
-		self.obsah=[]
-		self.window.ui.log.clear()
-		self.window.ui.log.append(u"hu!"+str(len(vysledek[0][0])))
 		for i in range (0,len(vysledek[0][0])):
-			self.obsah.append[vysledek[0][0][i][0],vysledek[0][0][i][1]]
 			self.window.ui.log.append(u"Název: %s \nVelikost: %s bytů\ntywe :)\n"%(self.obsah[i][0],self.obsah[i][1]))
 	
 	def buildRosterMenu(self):

@@ -1,5 +1,106 @@
 <!DOCTYPE TS><TS>
 <context>
+    <name>Dialog</name>
+    <message>
+        <source>Extra action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <source>Next →</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Finish</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <source>← Back</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FTWidget</name>
+    <message>
+        <source>File transfer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MUCBrowser</name>
+    <message>
+        <source>MUC Browser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>JID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>#</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>show JID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room Informations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Server:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User Informations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Password:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nickname:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bookmarks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bookmark this room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Join</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Jabbim</source>
@@ -117,6 +218,95 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>MUC Browser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Status:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Toggle Invisibility</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User search:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Privacy list editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Identity</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PrivacyListEditor</name>
+    <message>
+        <source>Privacy List Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Jabber ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;DejaVu Sans&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Privacy list editor&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>VCardEdit</name>
+    <message>
+        <source>VCard Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Avatar:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Avatar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Surname:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -281,6 +471,10 @@ p, li { white-space: pre-wrap; }
         <source>You are now online.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Resource:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>chatwidget</name>
@@ -302,6 +496,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Send File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bold</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -380,6 +578,33 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>fileTransfer</name>
+    <message>
+        <source>File Transfer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Here you see files prepared to transfer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>groupChatWidget</name>
     <message>
         <source>Participants</source>
@@ -391,6 +616,37 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Visitors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Kick</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter reason:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>groupchatAdmin</name>
+    <message>
+        <source>MUC Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Affiliations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -621,6 +877,10 @@ p, li { white-space: pre-wrap; }
         <source>Reason: </source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Your status message here.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>preferences</name>
@@ -840,6 +1100,14 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Chat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sends messages with ctrl+enter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show transports</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1072,14 +1340,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Allow contact to see my status when I am invisible</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Disallow contact to see my status when I am invisible</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Always hide my status to contact</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1089,6 +1349,25 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Hi! I&apos;d love to see you in multichat at </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extra actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove group</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>searchDialog</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1146,6 +1425,38 @@ p, li { white-space: pre-wrap; }
         <source>Message</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Subscribe request</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>From:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose action to execute.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sorry. No extra actions available.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Completed!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>In progress.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>self.main.chat</name>
@@ -1198,6 +1509,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ok</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>commands</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1274,6 +1589,63 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Jabber ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vcardEditorDialog</name>
+    <message>
+        <source>Avatar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your avatar was too big. He had to be resized to smaller size.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vcardView</name>
+    <message>
+        <source>VCard Viewer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Avatar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vcard</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vcardViewDialog</name>
+    <message>
+        <source>Name: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Surname: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>JID: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Locality: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Country: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Home tel. number: </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
