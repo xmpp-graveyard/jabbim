@@ -44,7 +44,7 @@ class MUCBrowserDialog(QtGui.QDialog):
 				item=self.ui.groupchats.topLevelItem(i)
 				for x in range(item.childCount()):
 					child=item.child(x)
-					child.setText(1,child.text(2))
+					child.setText(1,unicode(child.text(2)))
 					child.setIcon(1,child.icon(2))
 					child.setText(2,"")
 					child.setIcon(2,QtGui.QIcon())
@@ -56,7 +56,7 @@ class MUCBrowserDialog(QtGui.QDialog):
 				item=self.ui.groupchats.topLevelItem(i)
 				for x in range(item.childCount()):
 					child=item.child(x)
-					child.setText(2,child.text(1))
+					child.setText(2,unicode(child.text(1)))
 					child.setIcon(2,child.icon(1))
 					child.setText(1,"")
 					child.setIcon(1,QtGui.QIcon())
@@ -93,7 +93,8 @@ class MUCBrowserDialog(QtGui.QDialog):
 
 		item.setToolTip(0,users)
 		#self.ui.groupchats.setItemExpanded(item,True)
-		self.ui.groupchats.sortByColumn(3,QtCore.Qt.DescendingOrder)
+		if self.ui.groupchats.sortColumn()==3:
+			self.ui.groupchats.sortByColumn(3,QtCore.Qt.DescendingOrder)
 	def getNum(self, string):
 		def reverse(s):
 			s = list(s)
