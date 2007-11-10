@@ -227,12 +227,14 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.chatTab.tabBar().setTabTextColor(index,color)
 		
 		
-		self.setWindowTitle(unicode(self.ui.chatTab.tabText(index)).replace("&",""))
+		
 
 		widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
 		widget.chat.unread=0
 		self.ui.chatTab.setTabText(index,widget.tabName)
-		
+
+		self.setWindowTitle(unicode(self.ui.chatTab.tabText(index)).replace("&",""))
+
 		ev=list(self.main.events.events)
 		for event in ev:
 			if event['name']==widget.jid and (event['type']=="newMessage" or event['type']=="message"):

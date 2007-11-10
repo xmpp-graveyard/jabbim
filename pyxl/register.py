@@ -38,7 +38,8 @@ class RegisteringClient:
 #		print 'err:', resp
 		self._connect(self.host, self.port)
 
-				
+
+
 	def _connect(self, host, port): 
 		self.factory = client.basicClientFactory(self.jid,self.password)
 		self.factory.addBootstrap('//event/stream/start',self._streamstart)
