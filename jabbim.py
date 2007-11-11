@@ -1130,6 +1130,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.events=widgets.events.events(self)
 		self.preferencesWindow=None
 		self.mucbrowser=None
+		self.addcontactdialog=None
 		self.statusPath="images/xxxxx/status/"
 		self.transports={}
 		self.shows={u"online":u"1",
@@ -1739,8 +1740,13 @@ class mainWindow(QtGui.QMainWindow):
 
 	def addContactMainWindow(self):
 		# add contact
-		dialog=widgets.addcontact.addContactDialog(self,self)
-		dialog.exec_()
+		if not self.addcontactdialog:
+			self.addcontactdialog=widgets.addcontact.addContactDialog(self,self)
+			self.addcontactdialog.show()
+		else:
+			if self.addcontactdialog.isHidden()==True:
+				self.addcontactdialog=widgets.addcontact.addContactDialog(self,self)
+				self.addcontactdialog.show()
 
 	def bookmarksClicked(self,item,i):
 		# join bookmarked groupchat

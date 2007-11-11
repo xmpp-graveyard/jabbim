@@ -5,11 +5,12 @@ except:
 	print "PyQt4 is not installed."
 
 from addcontact_ui import *
+from search import *
 
 class addContactDialog(QtGui.QDialog):
 	def __init__(self,main,parent=None,jid="",group=None,name=""):
 		apply(QtGui.QDialog.__init__,(self,parent))
-		self.setModal(True)
+		self.setModal(False)
 		self.ui=Ui_addContact()
 		self.ui.setupUi(self)
 		self.main=main
@@ -21,6 +22,41 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.add_group.setCurrentIndex(0)
 		self.ui.add_nickname.setText(unicode(name))
 		self.ui.add_jid.setText(unicode(jid))
+		QtCore.QObject.connect(self.ui.search,QtCore.SIGNAL("clicked()"),self.search)
+
+		self.searchJid=None
+		#key=self.main.client.jid.host
+		#print key,self.main.client.disco.keys()
+		for key in self.main.client.disco.keys():
+			#if self.main.client.disco[key][None].has_key("identities"):
+				##for identity,values in self.main.client.disco[key][None].iteritems():
+					#if values.has_key('category'):
+						#pass
+			got=False
+			if self.main.client.disco[key][None].has_key("identities"):
+				for identity in self.main.client.disco[key][None]["identities"].itervalues():
+					if identity['category']=="directory" and identity['type']=='user':
+						got=True
+			if self.main.client.disco[key][None].has_key("features") and got:
+				if "jabber:iq:search" in list(self.main.client.disco[key][None]['features']):
+					#print self.main.client.disco[key]
+					self.searchJid=unicode(key)
+		print 'searchJid',self.searchJid
+		if not self.searchJid:
+			self.ui.search.hide()
+
+	def search(self):
+		d=self.main.client.getSearchForm(self.searchJid)
+		d.addCallback(self._gotSearchForm)
+		
+	def _gotSearchForm(self,data):
+		if not data:
+			return
+		jid,legacy,form=data
+		if form!=None:
+			self.dialog=searchDialog(self.main,jid,form,self)
+			self.dialog.show()
+
 
 		
 	def accept(self):

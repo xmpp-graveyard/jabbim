@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'widgets/addcontact.ui'
 #
-# Created: Tue Aug  7 07:12:43 2007
-#      by: PyQt4 UI code generator 4.1
+# Created: Sun Nov 11 06:24:45 2007
+#      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_addContact(object):
@@ -31,6 +30,10 @@ class Ui_addContact(object):
 
         spacerItem = QtGui.QSpacerItem(201,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.hboxlayout.addItem(spacerItem)
+
+        self.search = QtGui.QPushButton(addContact)
+        self.search.setObjectName("search")
+        self.hboxlayout.addWidget(self.search)
 
         self.save = QtGui.QPushButton(addContact)
         self.save.setObjectName("save")
@@ -112,6 +115,7 @@ class Ui_addContact(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Add contact</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.search.setText(QtGui.QApplication.translate("addContact", "Search user", None, QtGui.QApplication.UnicodeUTF8))
         self.save.setText(QtGui.QApplication.translate("addContact", "Save", None, QtGui.QApplication.UnicodeUTF8))
         self.cancel.setText(QtGui.QApplication.translate("addContact", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.add_messageLabel.setText(QtGui.QApplication.translate("addContact", "Message:", None, QtGui.QApplication.UnicodeUTF8))
