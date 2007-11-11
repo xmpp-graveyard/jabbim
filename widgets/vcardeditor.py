@@ -27,8 +27,14 @@ class vcardEditorDialog(QtGui.QDialog):
 			pixmap=QtGui.QPixmap()
 			pixmap.loadFromData(image)
 			pixmap=QtGui.QIcon(pixmap)
-
 			self.ui.avatar.setPixmap(pixmap.pixmap(128,128))
+		if data.has_key("NICKNAME"):
+			self.ui.nickname.setText(data['NICKNAME'])
+		if data.has_key("FN"):
+			self.ui.fullname.setText(data['FN'])
+		
+
+			
 
 		QtCore.QObject.connect(self.ui.setAvatar, QtCore.SIGNAL("clicked()"),self.setAvatar)
 	
@@ -49,6 +55,8 @@ class vcardEditorDialog(QtGui.QDialog):
 	def accept(self):
 		self.data["N-GIVEN"]=unicode(self.ui.name.text())
 		self.data["N-FAMILY"]=unicode(self.ui.surname.text())
+		self.data["FN"]=unicode(self.ui.fullname.text())
+		self.data["NICKNAME"]=unicode(self.ui.nickname.text())
 		avatar=self.ui.avatar.pixmap()
 		bytes=QtCore.QByteArray()
 		buf=QtCore.QBuffer(bytes)
@@ -56,8 +64,10 @@ class vcardEditorDialog(QtGui.QDialog):
 		avatar.save(buf, "PNG")
 		self.data["PHOTO-BINVAL"]=base64.encodestring(str(bytes))
 		keys=list(self.data.keys())
+		#print self.data
 		for key in keys:
 			if len(self.data[key])==0:
 				del self.data[key]
+		#print self.data
 		self.main.client.setVCard(self.data)
 		self.done(1)

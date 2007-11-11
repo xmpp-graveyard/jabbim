@@ -388,8 +388,12 @@ class Client(derived):
 
 			if len(x.children)>0:
 				pref = x.name + '-'
+				got=False
 				for y in x.elements():
+					got=True
 					card[pref + y.name]=unicode(y)
+				if not got:
+					card[x.name]=unicode(x)
 			else:
 				card[x.name]=unicode(x)
 		print card
