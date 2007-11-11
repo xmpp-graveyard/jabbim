@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Tue Nov  6 19:32:51 2007
-#      by: PyQt4 UI code generator 4.3
+# Created: Sun Nov 11 11:51:57 2007
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_preferences(object):
     def setupUi(self, preferences):
         preferences.setObjectName("preferences")
-        preferences.resize(QtCore.QSize(QtCore.QRect(0,0,591,420).size()).expandedTo(preferences.minimumSizeHint()))
+        preferences.resize(QtCore.QSize(QtCore.QRect(0,0,676,420).size()).expandedTo(preferences.minimumSizeHint()))
         preferences.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.gridlayout = QtGui.QGridLayout(preferences)
@@ -75,8 +75,8 @@ class Ui_preferences(object):
         self.gridlayout4.setObjectName("gridlayout4")
 
         self.vboxlayout = QtGui.QVBoxLayout()
-        self.vboxlayout.setMargin(0)
         self.vboxlayout.setSpacing(6)
+        self.vboxlayout.setMargin(0)
         self.vboxlayout.setObjectName("vboxlayout")
 
         self.label_15 = QtGui.QLabel(self.groupBox_2)
@@ -90,8 +90,8 @@ class Ui_preferences(object):
         self.gridlayout4.addLayout(self.vboxlayout,0,0,1,1)
 
         self.vboxlayout1 = QtGui.QVBoxLayout()
-        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setSpacing(6)
+        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setObjectName("vboxlayout1")
 
         self.connection_source = QtGui.QLineEdit(self.groupBox_2)
@@ -99,24 +99,18 @@ class Ui_preferences(object):
         self.vboxlayout1.addWidget(self.connection_source)
 
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(6)
+        self.hboxlayout.setMargin(0)
         self.hboxlayout.setObjectName("hboxlayout")
-
-        self.connection_priority = QtGui.QLineEdit(self.groupBox_2)
-
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(0))
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.connection_priority.sizePolicy().hasHeightForWidth())
-        self.connection_priority.setSizePolicy(sizePolicy)
-        self.connection_priority.setMinimumSize(QtCore.QSize(30,0))
-        self.connection_priority.setMaximumSize(QtCore.QSize(30,16777215))
-        self.connection_priority.setObjectName("connection_priority")
-        self.hboxlayout.addWidget(self.connection_priority)
 
         spacerItem2 = QtGui.QSpacerItem(41,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.hboxlayout.addItem(spacerItem2)
+
+        self.connection_priority = QtGui.QSpinBox(self.groupBox_2)
+        self.connection_priority.setMinimum(-128)
+        self.connection_priority.setMaximum(127)
+        self.connection_priority.setObjectName("connection_priority")
+        self.hboxlayout.addWidget(self.connection_priority)
 
         self.connection_autoPriority = QtGui.QCheckBox(self.groupBox_2)
         self.connection_autoPriority.setObjectName("connection_autoPriority")
@@ -135,13 +129,13 @@ class Ui_preferences(object):
         self.gridlayout5.setObjectName("gridlayout5")
 
         self.hboxlayout1 = QtGui.QHBoxLayout()
-        self.hboxlayout1.setMargin(0)
         self.hboxlayout1.setSpacing(6)
+        self.hboxlayout1.setMargin(0)
         self.hboxlayout1.setObjectName("hboxlayout1")
 
         self.vboxlayout2 = QtGui.QVBoxLayout()
-        self.vboxlayout2.setMargin(0)
         self.vboxlayout2.setSpacing(6)
+        self.vboxlayout2.setMargin(0)
         self.vboxlayout2.setObjectName("vboxlayout2")
 
         self.label_2 = QtGui.QLabel(self.groupBox_4)
@@ -158,8 +152,8 @@ class Ui_preferences(object):
         self.hboxlayout1.addLayout(self.vboxlayout2)
 
         self.vboxlayout3 = QtGui.QVBoxLayout()
-        self.vboxlayout3.setMargin(0)
         self.vboxlayout3.setSpacing(6)
+        self.vboxlayout3.setMargin(0)
         self.vboxlayout3.setObjectName("vboxlayout3")
 
         self.connection_jid = QtGui.QLineEdit(self.groupBox_4)
@@ -174,8 +168,8 @@ class Ui_preferences(object):
         self.vboxlayout3.addWidget(self.connection_password)
 
         self.hboxlayout2 = QtGui.QHBoxLayout()
-        self.hboxlayout2.setMargin(0)
         self.hboxlayout2.setSpacing(6)
+        self.hboxlayout2.setMargin(0)
         self.hboxlayout2.setObjectName("hboxlayout2")
 
         self.connection_autojoin = QtGui.QCheckBox(self.groupBox_4)
@@ -219,8 +213,8 @@ class Ui_preferences(object):
         self.groupBox_5.setObjectName("groupBox_5")
 
         self.vboxlayout4 = QtGui.QVBoxLayout(self.groupBox_5)
-        self.vboxlayout4.setMargin(9)
         self.vboxlayout4.setSpacing(6)
+        self.vboxlayout4.setMargin(9)
         self.vboxlayout4.setObjectName("vboxlayout4")
 
         self.useMUCNames = QtGui.QCheckBox(self.groupBox_5)
@@ -235,8 +229,8 @@ class Ui_preferences(object):
         self.groupBox_3.setObjectName("groupBox_3")
 
         self.vboxlayout5 = QtGui.QVBoxLayout(self.groupBox_3)
-        self.vboxlayout5.setMargin(9)
         self.vboxlayout5.setSpacing(6)
+        self.vboxlayout5.setMargin(9)
         self.vboxlayout5.setObjectName("vboxlayout5")
 
         self.showChatStatusChanges = QtGui.QCheckBox(self.groupBox_3)
@@ -281,8 +275,8 @@ class Ui_preferences(object):
         self.groupBox.setObjectName("groupBox")
 
         self.vboxlayout6 = QtGui.QVBoxLayout(self.groupBox)
-        self.vboxlayout6.setMargin(9)
         self.vboxlayout6.setSpacing(6)
+        self.vboxlayout6.setMargin(9)
         self.vboxlayout6.setObjectName("vboxlayout6")
 
         self.roster_normal = QtGui.QRadioButton(self.groupBox)
@@ -405,8 +399,8 @@ class Ui_preferences(object):
         self.gridlayout.addItem(spacerItem8,1,1,1,1)
 
         self.hboxlayout3 = QtGui.QHBoxLayout()
-        self.hboxlayout3.setMargin(0)
         self.hboxlayout3.setSpacing(6)
+        self.hboxlayout3.setMargin(0)
         self.hboxlayout3.setObjectName("hboxlayout3")
 
         self.saveButton = QtGui.QPushButton(preferences)
@@ -419,7 +413,7 @@ class Ui_preferences(object):
         self.gridlayout.addLayout(self.hboxlayout3,1,2,1,1)
 
         self.retranslateUi(preferences)
-        self.stackedWidget.setCurrentIndex(3)
+        self.stackedWidget.setCurrentIndex(0)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.cancelButton,QtCore.SIGNAL("clicked()"),preferences.reject)
         QtCore.QObject.connect(self.saveButton,QtCore.SIGNAL("clicked()"),preferences.accept)
@@ -438,9 +432,6 @@ class Ui_preferences(object):
         self.groupBox_2.setTitle(QtGui.QApplication.translate("preferences", "Advanced", None, QtGui.QApplication.UnicodeUTF8))
         self.label_15.setText(QtGui.QApplication.translate("preferences", "Resource:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_16.setText(QtGui.QApplication.translate("preferences", "Priority:", None, QtGui.QApplication.UnicodeUTF8))
-        self.connection_priority.setToolTip(QtGui.QApplication.translate("preferences", "Use when you have more clients. Higher number <br>means higher preference of this client.", None, QtGui.QApplication.UnicodeUTF8))
-        self.connection_priority.setInputMask(QtGui.QApplication.translate("preferences", "90; ", None, QtGui.QApplication.UnicodeUTF8))
-        self.connection_priority.setText(QtGui.QApplication.translate("preferences", "0", None, QtGui.QApplication.UnicodeUTF8))
         self.connection_autoPriority.setToolTip(QtGui.QApplication.translate("preferences", "Priority steps are per 5 numbers: 25 for chatty, 20 for available, etc", None, QtGui.QApplication.UnicodeUTF8))
         self.connection_autoPriority.setText(QtGui.QApplication.translate("preferences", "Change priority automatically due to status", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_4.setTitle(QtGui.QApplication.translate("preferences", "Connection", None, QtGui.QApplication.UnicodeUTF8))

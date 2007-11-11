@@ -132,9 +132,9 @@ class preferencesWindow(QtGui.QDialog):
 		else:
 			self.ui.connection_source.setText('jabbim')
 		if self.main.config.has_key('priority'):
-			self.ui.connection_priority.setText(self.main.config['priority'])
+			self.ui.connection_priority.setValue(int(self.main.config['priority']))
 		else:
-			self.ui.connection_priority.setText('0')
+			self.ui.connection_priority.setValue(0)
 		if self.main.config['autoJoin']=='True':
 			self.ui.connection_autojoin.setChecked(True)
 		else:
