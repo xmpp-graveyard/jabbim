@@ -155,6 +155,7 @@ def sendDataForm(main,jid,form,var,t,unregister=False):
 			main.client.setRegisterForm(jid,remove=True)
 		else:
 			main.client.setRegisterForm(jid,forms=form)
+	form["type"] = "submit"
 	return form
 
 class dataFormsDialog(QtGui.QDialog):

@@ -9,6 +9,7 @@ from commands_ui import Ui_Dialog
 class CommandsDialog(QtGui.QDialog):
 	def __init__(self, cmds, parent = None):
 		QtGui.QDialog.__init__(self, parent)
+		self.setModal(True)
 		self.cmds = cmds
 		self.ui = Ui_Dialog()
 		self.ui.setupUi(self)
@@ -206,7 +207,7 @@ class Commands:
 		command=iq.addElement("command")
 		command.attributes = {"node":self.node, "xmlns": "http://jabber.org/protocol/commands", "sessionid":self.sessionid,"action":action}
 		if action != "cancel":
-			form = dataforms.sendDataForm(self.main, self.jid, self.form, self.var, "submit")
+			form = dataforms.sendDataForm(self.main, self.jid, self.form, self.var, None)
 			command.addChild(form)
 		else:
 			self.dialog.reject()
