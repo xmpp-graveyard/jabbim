@@ -2012,17 +2012,18 @@ class rosterWidget(QtGui.QWidget):
 				action = submenu.addAction(self.tr("Don't hide my status to contact"))
 				action.setData(QtCore.QVariant(jid))
 				action.setObjectName("privacy_unhide")
-		if oneres:
-			action=contactMenu.addAction(QtGui.QIcon("images/16x16/actions/exec.png"),self.tr("Extra actions"))
-			action.setData(QtCore.QVariant("%s/%s" % (jid, contact.resources.keys()[0])))
-			action.setObjectName("ad_hoc")
-		else:
-			submenu=contactMenu.addMenu(QtGui.QIcon("images/16x16/actions/exec.png"),self.tr("Extra actions"))
-			for res in contact.resources.keys():
-				if res != None:
-					action=submenu.addAction(res)
-					action.setData(QtCore.QVariant("%s/%s" %(jid,res)))
-					action.setObjectName("ad_hoc")
+		if len(contact.resources)!=0:
+			if oneres:
+				action=contactMenu.addAction(QtGui.QIcon("images/16x16/actions/exec.png"),self.tr("Extra actions"))
+				action.setData(QtCore.QVariant("%s/%s" % (jid, contact.resources.keys()[0])))
+				action.setObjectName("ad_hoc")
+			else:
+				submenu=contactMenu.addMenu(QtGui.QIcon("images/16x16/actions/exec.png"),self.tr("Extra actions"))
+				for res in contact.resources.keys():
+					if res != None:
+						action=submenu.addAction(res)
+						action.setData(QtCore.QVariant("%s/%s" %(jid,res)))
+						action.setObjectName("ad_hoc")
 		
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
