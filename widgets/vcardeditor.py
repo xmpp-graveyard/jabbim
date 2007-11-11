@@ -8,7 +8,7 @@ from vcardeditor_ui import *
 import base64
 
 class vcardEditorDialog(QtGui.QDialog):
-	def __init__(self,main,data,parent=None):
+	def __init__(self,main,data,parent=None,editable=True):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.setModal(True)
 		self.ui=Ui_VCardEdit()
@@ -32,11 +32,25 @@ class vcardEditorDialog(QtGui.QDialog):
 			self.ui.nickname.setText(data['NICKNAME'])
 		if data.has_key("FN"):
 			self.ui.fullname.setText(data['FN'])
-		
-
-			
-
-		QtCore.QObject.connect(self.ui.setAvatar, QtCore.SIGNAL("clicked()"),self.setAvatar)
+		#<ADR>
+			#<WORK/>
+			#<EXTADD>Suite 600</EXTADD>
+			#<STREET>1899 Wynkoop Street</STREET>
+			#<LOCALITY>Denver</LOCALITY>
+			#<REGION>CO</REGION>
+			#<PCODE>80202</PCODE>
+			#<CTRY>USA</CTRY>
+		#</ADR>
+		self.editable=editable
+		if not self.editable:
+			self.ui.name.setReadOnly(True)
+			self.ui.nickname.setReadOnly(True)
+			self.ui.fullname.setReadOnly(True)
+			self.ui.surname.setReadOnly(True)
+			self.ui.pushButton.hide()
+			self.ui.setAvatar.hide()
+		else:
+			QtCore.QObject.connect(self.ui.setAvatar, QtCore.SIGNAL("clicked()"),self.setAvatar)
 	
 	def setAvatar(self):
 		file=list(QtGui.QFileDialog.getOpenFileNames(self,"Choose picture"))
@@ -53,21 +67,22 @@ class vcardEditorDialog(QtGui.QDialog):
 				QtGui.QMessageBox.information(self,self.tr("Avatar"),self.tr("Your avatar was too big. He had to be resized to smaller size."))
 
 	def accept(self):
-		self.data["N-GIVEN"]=unicode(self.ui.name.text())
-		self.data["N-FAMILY"]=unicode(self.ui.surname.text())
-		self.data["FN"]=unicode(self.ui.fullname.text())
-		self.data["NICKNAME"]=unicode(self.ui.nickname.text())
-		avatar=self.ui.avatar.pixmap()
-		bytes=QtCore.QByteArray()
-		buf=QtCore.QBuffer(bytes)
-		buf.open(QtCore.QIODevice.WriteOnly)
-		avatar.save(buf, "PNG")
-		self.data["PHOTO-BINVAL"]=base64.encodestring(str(bytes))
-		keys=list(self.data.keys())
-		#print self.data
-		for key in keys:
-			if len(self.data[key])==0:
-				del self.data[key]
-		#print self.data
-		self.main.client.setVCard(self.data)
+		if self.editable:
+			self.data["N-GIVEN"]=unicode(self.ui.name.text())
+			self.data["N-FAMILY"]=unicode(self.ui.surname.text())
+			self.data["FN"]=unicode(self.ui.fullname.text())
+			self.data["NICKNAME"]=unicode(self.ui.nickname.text())
+			avatar=self.ui.avatar.pixmap()
+			bytes=QtCore.QByteArray()
+			buf=QtCore.QBuffer(bytes)
+			buf.open(QtCore.QIODevice.WriteOnly)
+			avatar.save(buf, "PNG")
+			self.data["PHOTO-BINVAL"]=base64.encodestring(str(bytes))
+			keys=list(self.data.keys())
+			#print self.data
+			for key in keys:
+				if len(self.data[key])==0:
+					del self.data[key]
+			#print self.data
+			self.main.client.setVCard(self.data)
 		self.done(1)

@@ -26,7 +26,7 @@ from twisted.words.protocols.jabber import jid as jidT
 import time
 import filetransfer
 import addcontact
-import vcardview
+import vcardeditor
 import commands
 
 class activeWidget(QtGui.QWidget):
@@ -2244,8 +2244,10 @@ class rosterWidget(QtGui.QWidget):
 		log.msg("END CONTACT")
 
 	def vcardArrived(self,data):
-		self.dialog=vcardview.vcardViewDialog(self.main,data,self)
-		self.dialog.show()
+		#self.dialog=vcardview.vcardViewDialog(self.main,data,self)
+		#self.dialog.show()
+		self.ve=vcardeditor.vcardEditorDialog(self.main,data,self,False)
+		self.ve.show()
 		
 
 	def changeGroup(self,jid,action,group):
