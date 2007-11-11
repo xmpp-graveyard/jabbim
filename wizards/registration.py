@@ -43,6 +43,10 @@ def createFirstPage(wizard):
 	passwordLabel=QtGui.QLabel(wizard.tr("Password:"))
 	passwordLineEdit=QtGui.QLineEdit()
 	passwordLineEdit.setEchoMode(QtGui.QLineEdit.Password)
+
+	password2Label=QtGui.QLabel(wizard.tr("Password again:"))
+	password2LineEdit=QtGui.QLineEdit()
+	password2LineEdit.setEchoMode(QtGui.QLineEdit.Password)
 	
 	serverLabel=QtGui.QLabel(wizard.tr("Server:"))
 	wizard.serverComboBox=QtGui.QComboBox()
@@ -60,13 +64,16 @@ def createFirstPage(wizard):
 	layout.addWidget(wizard.nicknameLineEdit,3,1,1,1)
 	layout.addWidget(passwordLabel,4,0,1,1)
 	layout.addWidget(passwordLineEdit,4,1,1,1)
-	layout.addWidget(label2,5,0,1,2)
-	layout.addWidget(QtGui.QLabel(wizard.trUtf8("Vaše Jabber ID:")),6,0,1,1)
-	layout.addWidget(wizard.jidLabel,6,1,1,1)
+	layout.addWidget(password2Label,5,0,1,1)
+	layout.addWidget(password2LineEdit,5,1,1,1)
+	layout.addWidget(label2,6,0,1,2)
+	layout.addWidget(QtGui.QLabel(wizard.trUtf8("Vaše Jabber ID:")),7,0,1,1)
+	layout.addWidget(wizard.jidLabel,7,1,1,1)
 	
 	page.registerField("server*",wizard.serverComboBox)
 	page.registerField("nickname*",wizard.nicknameLineEdit)
 	page.registerField("password*",passwordLineEdit)
+	page.registerField("password2*",password2LineEdit)
 	page.setTitle(wizard.trUtf8("Registrace Jabber účtu"))
 	page.setSubTitle(wizard.trUtf8("Vyberte server, na kterém chcete účet zaregistrovat, a Vaši přezdívku."))
 	
@@ -313,6 +320,12 @@ class registrationWizard(QtGui.QWizard):
 			if self.registered==True:
 				return True
 			else:
+				return False
+		elif int(self.currentId())==0:
+			if unicode(self.field("password").toString())==unicode(self.field("password2").toString()):
+				return True
+			else:
+				self.label.setText(self.trUtf8("Hesla nejsou stejná."))
 				return False
 		else:
 			return self.currentPage().validatePage()
