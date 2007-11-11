@@ -1129,6 +1129,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.chat=widgets.chatwindow.chatWindow(self,self)
 		self.events=widgets.events.events(self)
 		self.preferencesWindow=None
+		self.mucbrowser=None
 		self.statusPath="images/xxxxx/status/"
 		self.transports={}
 		self.shows={u"online":u"1",
@@ -1379,8 +1380,15 @@ class mainWindow(QtGui.QMainWindow):
 		self.ve.show()
 
 	def mucBrowser(self,bool=False):
-		self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
-		self.mucbrowser.show()
+		if not self.mucbrowser:
+			self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
+			self.mucbrowser.show()
+		else:
+			if self.mucbrowser.isHidden()==True:
+				self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
+				self.mucbrowser.show()
+		
+		
 
 	def about(self,bool):
 		about=aboutDialog(self)
@@ -1780,9 +1788,11 @@ class mainWindow(QtGui.QMainWindow):
 				#if id.get('category') == 'conference' and id.get('type') == 'text' and jid.startswith('c'):
 					#mucjid = jid
 					#break
-		self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
-		self.mucbrowser.show()
-		self.mucbrowser.setStyleSheet(style.read())
+		self.mucBrowser(bool)
+		#self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
+		#self.mucbrowser.show()
+		#if style:
+		#self.mucbrowser.setStyleSheet(style.read())
 		#style.close()
 		#ret=newchat.exec_()
 
