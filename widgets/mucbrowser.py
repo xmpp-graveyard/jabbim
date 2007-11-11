@@ -87,8 +87,13 @@ class MUCBrowserDialog(QtGui.QDialog):
 			users+=usr['name']+", "
 			user=QtGui.QTreeWidgetItem(item)
 			#user.setText(1, usr['name'])
-			user.setText(2, usr['name'])
-			user.setIcon(2,self.main.getIcon(size="16x16"))
+			if self.ui.showJid.isChecked():
+				user.setText(1, usr['name'])
+				user.setIcon(1,self.main.getIcon(size="16x16"))
+			else:
+				user.setText(2, usr['name'])
+				user.setIcon(2,self.main.getIcon(size="16x16"))
+
 			#user.setIcon(1,self.main.getIcon(size="16x16"))
 
 		item.setToolTip(0,users)
