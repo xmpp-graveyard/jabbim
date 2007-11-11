@@ -38,6 +38,7 @@ from groupchat import  *
 from base64 import b64encode, b64decode
 from privacy import *
 from adhoc import *
+import rc
 #from bosh import client as bclient
 try:
 	from hashlib import sha1
@@ -76,7 +77,6 @@ class Client(derived):
 		self.disco = {} # jid:{node1:{items:{attrs}, identity: {attrs}, features:[], err: {'info':'', 'items':''}}}
 		self.groupchats = {} # jid:Groupchat
 		self.privacy = Privacy(self.main)
-		self.commands = Commands(self.main)
 		self.client_name = 'Jabbim'
 		self.version = '0.2' # tohle asi neni nejlepsi zpusob
 		self.client_os = ''
@@ -220,7 +220,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/presence[@type='error']", self.onPresenceError, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:version']", self.onVersion, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#info']", self.onDiscoInfo, 1)
-		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#items'][@node='http://jabber.org/protocol/commands']", self.commands.commandsList, 1)
+		self.xmlstream.addObserver("/iq[@type='set'][@id]/command[@xmlns='http://jabber.org/protocol/commands'][@node]", self.onCommand, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:last']", self.onLast, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/time[@xmlns='urn:xmpp:time']", self.onTime202, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:time']", self.onTime90, 1)
@@ -244,6 +244,11 @@ class Client(derived):
 		self.reactor.callFromThread(self.on_authd)
 		self.dispatcher.publishEvent('on_authd')
 		self.main._connected()
+
+		self.commands = Commands(self.main)
+		self.commands.registerNode("http://jabber.org/protocol/rc#set-status", self.main.tr("Change status"), rc.fSetStatus)
+		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#items'][@node='http://jabber.org/protocol/commands']", self.commands.commandsList, 1)
+
 #		def pis(co):
 #			print co
 #		self.callRemote('rpc@jabbim.cz/service', 'ping', (' ',)).addCallback(pis)
@@ -882,6 +887,16 @@ class Client(derived):
 
 #		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
+
+	def onCommand(self, el):
+		self.disp(el['id'])
+		log.msg("On command event")
+		command = el.firstChildElement()
+		node = command["node"]
+		try:
+			sid = command["sessionid"]
+		except KeyError:
+			self.commands.startSession(node, el["from"], el["id"])
 
 	def onLast(self, el):
 		log.msg('received last request')

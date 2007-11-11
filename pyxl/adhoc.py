@@ -20,7 +20,7 @@ def x2dict(x):
 	return data
 
 class Stage:
-	def __init__(self, main, session, data = None, xmllang=None):
+	def __init__(self, main, id, session, data = None, xmllang=None):
 		self.main = main
 		self.session = session
 		self.data = data
@@ -30,6 +30,7 @@ class Stage:
 		self.status = None
 		self.actions = {"cancel":CancelStage} # "action":StageClass
 		self.execute = None
+		self.id = id
 
 	def exec_(self):
 		pass # Definovat v subclass
@@ -37,6 +38,7 @@ class Stage:
 	def send(self):
 		iq = IQ(self.main.client.xmlstream, "result")
 		iq["to"] = self.session.jid
+		iq["id"] = self.id
 		command = iq.addElement("command")
 		command.attributes = {
 				"xmlns":"http://jabber.org/protocol/commands",
@@ -55,7 +57,7 @@ class Stage:
 		
 		self.session.addCallbackStages(self.actions)
 		iq.send()
-		self.main.client.disp(iq["id"])
+#		self.main.client.disp(iq["id"])
 
 class CancelStage(Stage):
 	def exec_(self):
@@ -63,22 +65,22 @@ class CancelStage(Stage):
 		self.session.sessionEnded()
 
 class Session:
-	def __init__(self, main, node, firststage, jid, sessionid):
+	def __init__(self, main, node, firststage, jid, sessionid, fid):
 		self.main	= main
 		#self.client	= main.client
 		self.node	= unicode(node)
 		#self.name	= unicode(name)
-		self.stages	= stages	# list of classes (not instances)
 		self.jid 	= unicode(jid)
+		#self.stages	= stages	# list of classes (not instances)
 		#self.firststage	= firstage
 
 		self.sessionid	= sessionid
 		self.nextstages = {}
 
-		self.execStage(firststage)
+		self.execStage(firststage, fid)
 
-	def execStage(self, stageC, data = None, xmllang=None):
-		stage = stageC(self, data, xmllang)
+	def execStage(self, stageC, id, data = None, xmllang=None):
+		stage = stageC(self.main, id, self, data, xmllang)
 		stage.exec_()
 		stage.send()
 
@@ -104,19 +106,20 @@ class Session:
 
 class Commands:
 	def __init__(self, main):
-		self.sessions = []
+		self.sessions = {}
 		self.nodes = {}
 		self.sessionids = 0
 		self.main = main
 
 	def registerNode(self, name, desc, firststage, jid = None):
+	#	self.main.client.registerFeature(name, "http://jabber.org/protocol/commands")
 		if jid == None:
 			jid = unicode(self.main.client.jid.full())
-		self.nodes["name"] = [desc, firststage, jid]
+		self.nodes[name] = [desc, firststage, jid]
 
-	def startSession(self, node, jid):
+	def startSession(self, node, jid, fid):
 		self.sessionids += 1
-		self.sessions[self.sessionids] = Session(self.main, node, self.nodes[node][1], jid, unicode(self.sessionids))
+		self.sessions[self.sessionids] = Session(self.main, node, self.nodes[node][1], jid, unicode(self.sessionids), fid)
 
 	def commandsList(self, el):
 		self.main.client.disp(el["id"])
@@ -128,6 +131,7 @@ class Commands:
 		for node in self.nodes.keys():
 			item = query.addElement("item")
 			item["node"] = node
+			item["name"] = self.nodes[node][0]
 			item["jid"] = self.nodes[node][2]
 		iq.send()
 		self.main.client.disp(iq["id"])

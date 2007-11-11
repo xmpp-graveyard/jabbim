@@ -6,8 +6,8 @@ class Field:
 	def __init__(self, var, typ, label=None, desc=None, required=False, values=[], options=[]):
 		self.var = unicode(var)
 		self.typ = typ
-		self.label = unicode(label)
-		self.desc = unicode(desc)
+		self.label = label
+		self.desc = desc
 		self.required = required
 		self.values = values
 		self.options = options
@@ -17,17 +17,17 @@ class Field:
 		el["var"] = self.var
 		el["type"] = self.typ
 		if self.label:
-			el["label"] = self.label
+			el["label"] = unicode(self.label)
 		if self.desc:
-			el.addElement("desc", content=self.desc)
-		if required:
+			el.addElement("desc", content=unicode(self.desc))
+		if self.required:
 			el.addElement("required")
 		for val in self.values:
 			el.addElement("value", content=unicode(val))
-		for option in options: # [[label, value]]
+		for option in self.options: # [[label, value]]
 			op=el.addElement("option")
 			op["label"] = option[0]
-			op.addElement("value", content=unicode(op[1]))
+			op.addElement("value", content=unicode(option[1]))
 		return el
 class Item:
 	def __init__(self, fields):
@@ -57,6 +57,7 @@ class Xform:
 		self.title = title
 		self.reported = reported
 		self.items = items
+		self.fields = fields
 
 	def buildElement(self):
 		el = Element(("jabber:x:data", "x"))
@@ -66,10 +67,10 @@ class Xform:
 		for itnstruction in self.instructions:
 			el.addElement("instructions", contens = unicode(instruction))
 		if self.reported:
-			el.addChild(self.reported)
+			el.addChild(self.reported.buildElement())
 		for item in self.items:
-			el.addChild(item)
+			el.addChild(item.buildElement())
 		for field in self.fields:
-			el.addChild(field)
+			el.addChild(field.buildElement())
 		return el
 
