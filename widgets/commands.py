@@ -207,7 +207,9 @@ class Commands:
 		command.attributes = {"node":self.node, "xmlns": "http://jabber.org/protocol/commands", "sessionid":self.sessionid,"action":action}
 		if action != "cancel":
 			form = dataforms.sendDataForm(self.main, self.jid, self.form, self.var, "submit")
-			command.addRawXml(form.toXml())
+			command.addChild(form)
+		else:
+			self.dialog.reject()
 		d=iq.send()
 		d.addCallback(self._formRecieved).addErrback(self._errorRecieved)
 		self.main.client.disp(iq["id"])
