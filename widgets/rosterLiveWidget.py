@@ -676,7 +676,7 @@ class rosterWidget(QtGui.QWidget):
 					painter.drawPixmap(x+7,y+11,useritem.blink.pixmap(32,32))
 			else:
 				if useritem.privacy['block'] or useritem.privacy['hide']:
-					painter.drawPixmap(x+7,y+11,self.main.getIcon(status="error",size="32x32"))
+					painter.drawPixmap(x+7,y+11,self.main.getIcon(status="error",size="32x32").pixmap(32,32))
 				else:
 					painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
 
