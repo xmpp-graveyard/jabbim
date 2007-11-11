@@ -675,8 +675,10 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					painter.drawPixmap(x+7,y+11,useritem.blink.pixmap(32,32))
 			else:
-				painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
-			
+				if useritem.privacy['block'] or useritem.privacy['hide']:
+					painter.drawPixmap(x+7,y+11,self.main.getIcon(status="error",size="32x32"))
+				else:
+					painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
 
 			# set font
 			doc=QtGui.QTextDocument()
@@ -872,8 +874,10 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					painter.drawPixmap(x+7,y,useritem.blink.pixmap(22,22))
 			else:
-				painter.drawPixmap(x+7,y,useritem.icon.pixmap(22,22))
-
+				if useritem.privacy['block'] or useritem.privacy['hide']:
+					painter.drawPixmap(x+7,y,self.main.getIcon(status="error",size="22x22").pixmap(22,22))
+				else:
+					painter.drawPixmap(x+7,y,useritem.icon.pixmap(22,22))
 			doc=QtGui.QTextDocument()
 			font=QtGui.QApplication.fontMetrics()
 			fontHeight=int(font.height())
@@ -946,7 +950,10 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					painter.drawPixmap(x+7,y+11,useritem.blink.pixmap(32,32))
 			else:
-				painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
+				if useritem.privacy['block'] or useritem.privacy['hide']:
+					painter.drawPixmap(x+7,y+11,self.main.getIcon(status="error",size="32x32").pixmap(32,32))
+				else:
+					painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
 
 			# set font
 			doc=QtGui.QTextDocument()
@@ -1000,7 +1007,10 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					painter.drawPixmap(x+7,y,useritem.blink.pixmap(32,32))
 			else:
-				painter.drawPixmap(x+7,y,useritem.icon.pixmap(32,32))
+				if useritem.privacy['block'] or useritem.privacy['hide']:
+					painter.drawPixmap(x+7,y+11,self.main.getIcon(status="error",size="32x32").pixmap(32,32))
+				else:
+					painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
 
 			doc=QtGui.QTextDocument()
 			font=QtGui.QApplication.fontMetrics()
@@ -1054,7 +1064,14 @@ class rosterWidget(QtGui.QWidget):
 				#items,x,y=self.searchtemAt(1,rect.y(),count+1)
 			#else:
 			items,x,y=self.itemAt(1,rect.y(),count+1)
-				
+			if len(items)==0:
+				doc=QtGui.QTextDocument()
+				option=doc.defaultTextOption()
+				option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
+				doc.setDefaultTextOption(option)
+				#doc.setHtml(self.tr("You haven't any contacts in your contact list. You can add them with Add contact from menu Actions."))
+				painter.drawText(QtCore.QRectF(10,10,self.width()-20,100),QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap,self.tr("You haven't any contacts in your contact list. You can add them with Add contact from menu Actions."))
+				#doc.drawContents(painter,)
 			for item in items:
 				if item.typ=="group":
 					if self.compact:

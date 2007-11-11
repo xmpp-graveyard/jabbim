@@ -34,7 +34,7 @@ class PrivacyListEditorDialog(QtGui.QDialog):
 		self.changes={}
 
 		for useritem in self.main.ui.roster.users:
-			if (useritem.privacy["block"] or useritem.privacy["allow"]) or useritem.privacy["hide"]:
+			if useritem.privacy["block"] or useritem.privacy["hide"]:
 				item=QtGui.QTreeWidgetItem(self.ui.privacyList)
 				item.setText(0,useritem.name)
 				
