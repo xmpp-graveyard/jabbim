@@ -396,7 +396,7 @@ class Client(derived):
 					card[x.name]=unicode(x)
 			else:
 				card[x.name]=unicode(x)
-		print card
+				
 		if card.has_key("PHOTO-BINVAL"):
 			image=base64.decodestring(str(card["PHOTO-BINVAL"]))
 			f=open(self.main.homeDir+'/avatars/'+unicode(el['from']).replace('/', '%'),"wb")
@@ -411,8 +411,8 @@ class Client(derived):
 				print 'chyba v updatu avatara'
 		else:
 			self.avatars[el['from']] = None
-		self.reactor.callFromThread(self.on_vcardReceived,el['from'], card)
-		return card
+		self.reactor.callFromThread(self.on_vcardReceived,el['from'], vcard)
+		return vcard
 
 
 

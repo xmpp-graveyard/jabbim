@@ -390,28 +390,29 @@ class derived:
 #		log.msg( 'requesting vcard for ' + unicode(jid))
 		iq = IQ(self.xmlstream, 'set')
 		iq['xml:lang'] = self.xmlLang
-#		iq['to'] = jid
-		vcard = iq.addElement('vCard', 'vcard-temp')
-		for k,v in card.iteritems():
-			s = k.split('-')
-			if len(s)>1:
-				found = False
-				for el in vcard.elements():
-					if el.name == s[0]:
-						el.addElement(s[1], content = v)
-						found = True
-						break
-				if not found:
-					el = vcard.addElement(s[0])
-					el.addElement(s[1], content = v)
-			else:
-				el = vcard.addElement(k, content = v)
-				
-					
+		iq['to'] = jid
+#		vcard = iq.addElement('vCard', 'vcard-temp')
+#		for k,v in card.iteritems():
+#			s = k.split('-')
+#			if len(s)>1:
+#				found = False
+#				for el in vcard.elements():
+#					if el.name == s[0]:
+#						el.addElement(s[1], content = v)
+#						found = True
+#						break
+#				if not found:
+#					el = vcard.addElement(s[0])
+#					el.addElement(s[1], content = v)
+#			else:
+#				el = vcard.addElement(k, content = v)
+#				
+#					
+		iq.addChild(card)
 		self.disp(iq['id'])
-		iq.timeout = 60
+#		iq.timeout = 60
 		d = iq.send()
-		log.msg("END: getVCard")
+		log.msg("END: setVCard")
 		return d
 		
 	def getBookmarks(self):
