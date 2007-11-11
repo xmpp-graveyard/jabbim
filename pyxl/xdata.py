@@ -1,0 +1,75 @@
+#-*-coding:UTF-8-*-
+
+from twisted.words.xish.domish import Element
+
+class Field:
+	def __init__(self, var, typ, label=None, desc=None, required=False, values=[], options=[]):
+		self.var = unicode(var)
+		self.typ = typ
+		self.label = unicode(label)
+		self.desc = unicode(desc)
+		self.required = required
+		self.values = values
+		self.options = options
+
+	def buildElement(self):
+		el = Element((None,"field"))
+		el["var"] = self.var
+		el["type"] = self.typ
+		if self.label:
+			el["label"] = self.label
+		if self.desc:
+			el.addElement("desc", content=self.desc)
+		if required:
+			el.addElement("required")
+		for val in self.values:
+			el.addElement("value", content=unicode(val))
+		for option in options: # [[label, value]]
+			op=el.addElement("option")
+			op["label"] = option[0]
+			op.addElement("value", content=unicode(op[1]))
+		return el
+class Item:
+	def __init__(self, fields):
+		self.fields = fields
+	def buildElement(self):
+		el = Element((None, "item"))
+		for field in self.fields:
+			el.addChild(field)
+		return el
+
+class Reported:
+	def __init__(self, vars={}):
+		self.vars = vars # {"var": {"label":description,"type":field-type}}
+	def buildElement(self):
+		el = Element((None, "reported"))
+		for var in self.vars.keys():
+			field = el.addElement("field")
+			field["var"] = var
+			for attr in self.vars[var]:
+				field[attr] = self.vars[var][attr]
+		return el
+
+class Xform:
+	def __init__(self, typ="result", instructions=[], title=None, reported=None, items=[], fields=[]):
+		self.typ = typ
+		self.instructions = instructions
+		self.title = title
+		self.reported = reported
+		self.items = items
+
+	def buildElement(self):
+		el = Element(("jabber:x:data", "x"))
+		el["type"] = self.typ
+		if self.title:
+			el.addElement("title", content = unicode(title))
+		for itnstruction in self.instructions:
+			el.addElement("instructions", contens = unicode(instruction))
+		if self.reported:
+			el.addChild(self.reported)
+		for item in self.items:
+			el.addChild(item)
+		for field in self.fields:
+			el.addChild(field)
+		return el
+

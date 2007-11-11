@@ -37,6 +37,7 @@ from contact import *
 from groupchat import  *
 from base64 import b64encode, b64decode
 from privacy import *
+from adhoc import *
 #from bosh import client as bclient
 try:
 	from hashlib import sha1
@@ -75,6 +76,7 @@ class Client(derived):
 		self.disco = {} # jid:{node1:{items:{attrs}, identity: {attrs}, features:[], err: {'info':'', 'items':''}}}
 		self.groupchats = {} # jid:Groupchat
 		self.privacy = Privacy(self.main)
+		self.commands = Commands(self.main)
 		self.client_name = 'Jabbim'
 		self.version = '0.2' # tohle asi neni nejlepsi zpusob
 		self.client_os = ''
@@ -95,6 +97,7 @@ class Client(derived):
 		self.registerFeature('urn:xmpp:ping')
 		self.registerFeature('jabber:iq:time')
 		self.registerFeature('http://jabber.org/protocol/chatstates')
+		self.registerFeature('http://jabber.org/protocol/commands')
 		self.caps_cache = {} # 'node': [feature1, feature2]
 		
 # 		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
@@ -217,6 +220,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/presence[@type='error']", self.onPresenceError, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:version']", self.onVersion, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#info']", self.onDiscoInfo, 1)
+		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#items'][@node='http://jabber.org/protocol/commands']", self.commands.commandsList, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:last']", self.onLast, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/time[@xmlns='urn:xmpp:time']", self.onTime202, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:time']", self.onTime90, 1)
