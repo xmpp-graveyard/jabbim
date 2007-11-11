@@ -411,6 +411,13 @@ class groupChatWidget(QtGui.QWidget):
 		# sends message
 		# sends message
 		if len(unicode(self.ui.line.toPlainText()))!=0:
+			services=unicode(self.ui.line.toPlainText())
+			if services.startswith("/google"):
+				anchor="http://www.google.com/search?q="+services.replace("/google ","")
+				QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
+				self.ui.line.clear()
+				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+				return
 			if self.main.config['chatMode']=="normal":
 				text=unicode(self.ui.line.toPlainText())
 				#text=unicode(text, 'utf-8')

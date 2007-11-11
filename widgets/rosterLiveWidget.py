@@ -1065,12 +1065,15 @@ class rosterWidget(QtGui.QWidget):
 			#else:
 			items,x,y=self.itemAt(1,rect.y(),count+1)
 			if len(items)==0:
-				doc=QtGui.QTextDocument()
-				option=doc.defaultTextOption()
-				option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
-				doc.setDefaultTextOption(option)
+				#doc=QtGui.QTextDocument()
+				#option=doc.defaultTextOption()
+				#option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
+				#doc.setDefaultTextOption(option)
 				#doc.setHtml(self.tr("You haven't any contacts in your contact list. You can add them with Add contact from menu Actions."))
-				painter.drawText(QtCore.QRectF(10,10,self.width()-20,100),QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap,self.tr("You haven't any contacts in your contact list. You can add them with Add contact from menu Actions."))
+				if len(self.users)==0:
+					painter.drawText(QtCore.QRectF(10,10,self.width()-20,100),QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap,self.tr("You haven't any contacts in your contact list. You can add them with Add contact from menu Actions."))
+				else:
+					painter.drawText(QtCore.QRectF(10,10,self.width()-20,100),QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap,self.tr("You haven't any online contact in your contact list. To see offline contacts, you have to click Show Offline button, which is above this message."))
 				#doc.drawContents(painter,)
 			for item in items:
 				if item.typ=="group":
