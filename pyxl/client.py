@@ -898,7 +898,23 @@ class Client(derived):
 		command = el.firstChildElement()
 		node = command["node"]
 		try:
+			lang = el["xml:lang"]
+		except:
+			lang = None
+		try:
+			try:
+				action = command["action"]
+			except:
+				action = "execute"
 			sid = command["sessionid"]
+			x = command.firstChildElement()
+			self.commands.sessions[sid].execStage(
+					self.commands.nextstages[action],
+					el["id"],
+					commands.x2dict(x),
+					lang
+					)
+
 		except KeyError:
 			self.commands.startSession(node, el["from"], el["id"])
 
