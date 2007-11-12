@@ -353,7 +353,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="" line="0"/>
         <source>Help</source>
-        <translation>?</translation>
+        <translation>Nápověda</translation>
     </message>
     <message>
         <location filename="" line="0"/>
