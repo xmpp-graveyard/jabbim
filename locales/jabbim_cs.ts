@@ -302,7 +302,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="" line="0"/>
         <source>Plugins</source>
-        <translation>Přídavné moduly</translation>
+        <translation>Pluginy</translation>
     </message>
     <message>
         <location filename="" line="0"/>
@@ -353,7 +353,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="" line="0"/>
         <source>Help</source>
-        <translation>Nápověda</translation>
+        <translation>?</translation>
     </message>
     <message>
         <location filename="" line="0"/>
@@ -1360,7 +1360,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="" line="0"/>
         <source>Your status message here.</source>
-        <translation type="unfinished">Popis Vašeho stavu.</translation>
+        <translation>Popis Vašeho stavu.</translation>
     </message>
 </context>
 <context>
