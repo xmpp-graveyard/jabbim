@@ -385,12 +385,12 @@ class derived:
 		log.msg("END: getVCard")
 		return d
 	
-	def setVCard(self, card):
+	def setVCard(self,card):
 		""" Posle vlastni vcard """
 #		log.msg( 'requesting vcard for ' + unicode(jid))
 		iq = IQ(self.xmlstream, 'set')
-		iq['xml:lang'] = self.xmlLang
-		iq['to'] = jid
+		#iq['xml:lang'] = self.xmlLang
+		#iq['to'] = self.jid.userhost()
 #		vcard = iq.addElement('vCard', 'vcard-temp')
 #		for k,v in card.iteritems():
 #			s = k.split('-')
@@ -411,6 +411,7 @@ class derived:
 		iq.addChild(card)
 		self.disp(iq['id'])
 #		iq.timeout = 60
+		#print iq.toXml()
 		d = iq.send()
 		log.msg("END: setVCard")
 		return d

@@ -15,23 +15,43 @@ class vcardEditorDialog(QtGui.QDialog):
 		self.ui.setupUi(self)
 		self.main=main
 		self.data=data
-		print data
+		
+		for x in self.data.elements():
+			name=unicode(x.name)
+			if name=="NICKNAME":
+				self.ui.nickname.setText(unicode(x))
+			elif name=="FN":
+				self.ui.fullname.setText(unicode(x))
+			else:
+				for y in x.elements():
+					child=unicode(y.name)
+					if name=="N" and child=="GIVEN":
+						self.ui.name.setText(unicode(y))
+					elif name=="N" and child=="FAMILY":
+						self.ui.surname.setText(unicode(y))
+					elif name=="PHOTO" and child=="BINVAL":
+						image=base64.decodestring(str(unicode(y)))
+						pixmap=QtGui.QPixmap()
+						pixmap.loadFromData(image)
+						pixmap=QtGui.QIcon(pixmap)
+						self.ui.avatar.setPixmap(pixmap.pixmap(128,128))
+
 		self.ui.avatar.setText("")
 		text=""
-		if data.has_key("N-GIVEN"):
-			self.ui.name.setText(data['N-GIVEN'])
-		if data.has_key("N-FAMILY"):
-			self.ui.surname.setText(data['N-FAMILY'])
-		if data.has_key("PHOTO-BINVAL"):
-			image=base64.decodestring(str(data["PHOTO-BINVAL"]))
-			pixmap=QtGui.QPixmap()
-			pixmap.loadFromData(image)
-			pixmap=QtGui.QIcon(pixmap)
-			self.ui.avatar.setPixmap(pixmap.pixmap(128,128))
-		if data.has_key("NICKNAME"):
-			self.ui.nickname.setText(data['NICKNAME'])
-		if data.has_key("FN"):
-			self.ui.fullname.setText(data['FN'])
+		#if data.has_key("N-GIVEN"):
+			#self.ui.name.setText(data['N-GIVEN'])
+		#if data.has_key("N-FAMILY"):
+			#self.ui.surname.setText(data['N-FAMILY'])
+		#if data.has_key("PHOTO-BINVAL"):
+			#image=base64.decodestring(str(data["PHOTO-BINVAL"]))
+			#pixmap=QtGui.QPixmap()
+			#pixmap.loadFromData(image)
+			#pixmap=QtGui.QIcon(pixmap)
+			#self.ui.avatar.setPixmap(pixmap.pixmap(128,128))
+		#if data.has_key("NICKNAME"):
+			#self.ui.nickname.setText(data['NICKNAME'])
+		#if data.has_key("FN"):
+			#self.ui.fullname.setText(data['FN'])
 		#<ADR>
 			#<WORK/>
 			#<EXTADD>Suite 600</EXTADD>
@@ -68,21 +88,52 @@ class vcardEditorDialog(QtGui.QDialog):
 
 	def accept(self):
 		if self.editable:
-			self.data["N-GIVEN"]=unicode(self.ui.name.text())
-			self.data["N-FAMILY"]=unicode(self.ui.surname.text())
-			self.data["FN"]=unicode(self.ui.fullname.text())
-			self.data["NICKNAME"]=unicode(self.ui.nickname.text())
-			avatar=self.ui.avatar.pixmap()
-			bytes=QtCore.QByteArray()
-			buf=QtCore.QBuffer(bytes)
-			buf.open(QtCore.QIODevice.WriteOnly)
-			avatar.save(buf, "PNG")
-			self.data["PHOTO-BINVAL"]=base64.encodestring(str(bytes))
-			keys=list(self.data.keys())
+			
+			for x in self.data.elements():
+				name=unicode(x.name)
+				if name=="NICKNAME":
+					x.children = []
+					x.children.append(unicode(self.ui.name.text()))
+					#x.addElement('value', content = unicode(widget.text()))
+				elif name=="FN":
+					x.children = []
+					x.children.append(unicode(self.ui.fullname.text()))
+				else:
+					for y in x.elements():
+						child=unicode(y.name)
+						if name=="N" and child=="GIVEN":
+							y.children = []
+							y.children.append(unicode(self.ui.name.text()))
+							#self.ui.name.setText(unicode(y))
+						elif name=="N" and child=="FAMILY":
+							y.children = []
+							y.children.append(unicode(self.ui.surname.text()))
+						elif name=="PHOTO" and child=="BINVAL":
+							avatar=self.ui.avatar.pixmap()
+							bytes=QtCore.QByteArray()
+							buf=QtCore.QBuffer(bytes)
+							buf.open(QtCore.QIODevice.WriteOnly)
+							avatar.save(buf, "PNG")
+							y.children = []
+							y.children.append(base64.encodestring(str(bytes)))
+			#print unicode(self.data),type(self.data)
+			#print unicode(self.data.toXml())
+			
+			#self.data["N-GIVEN"]=unicode(self.ui.name.text())
+			#self.data["N-FAMILY"]=unicode(self.ui.surname.text())
+			#self.data["FN"]=unicode(self.ui.fullname.text())
+			#self.data["NICKNAME"]=unicode(self.ui.nickname.text())
+			#avatar=self.ui.avatar.pixmap()
+			#bytes=QtCore.QByteArray()
+			#buf=QtCore.QBuffer(bytes)
+			#buf.open(QtCore.QIODevice.WriteOnly)
+			#avatar.save(buf, "PNG")
+			#self.data["PHOTO-BINVAL"]=base64.encodestring(str(bytes))
+			#keys=list(self.data.keys())
 			#print self.data
-			for key in keys:
-				if len(self.data[key])==0:
-					del self.data[key]
+			#for key in keys:
+				#if len(self.data[key])==0:
+					#del self.data[key]
 			#print self.data
 			self.main.client.setVCard(self.data)
 		self.done(1)
