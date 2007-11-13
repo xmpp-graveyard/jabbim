@@ -9,36 +9,19 @@ import base64
 from twisted.words.xish.domish import Element
 
 class vcardEditorDialog(QtGui.QDialog):
-	def __init__(self,main,data,parent=None,editable=True):
+	def __init__(self,main,jid,parent=None,editable=True):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.setModal(True)
 		self.ui=Ui_VCardEdit()
 		self.ui.setupUi(self)
 		self.main=main
-		self.data=data
+		self.data=None
+
+		d=self.main.client.getVCard(jid)
+		d.addCallback(self.vcardArrived)
+		self.ui.tabWidget.setEnabled(False)
+
 		self.ui.avatar.setPixmap(QtGui.QPixmap())
-		if self.data:
-			for x in self.data.elements():
-				name=unicode(x.name)
-				if name=="NICKNAME":
-					self.ui.nickname.setText(unicode(x))
-				elif name=="FN":
-					self.ui.fullname.setText(unicode(x))
-				else:
-					for y in x.elements():
-						child=unicode(y.name)
-						if name=="N" and child=="GIVEN":
-							self.ui.name.setText(unicode(y))
-						elif name=="N" and child=="FAMILY":
-							self.ui.surname.setText(unicode(y))
-						elif name=="PHOTO" and child=="BINVAL":
-							image=base64.decodestring(str(unicode(y)))
-							pixmap=QtGui.QPixmap()
-							pixmap.loadFromData(image)
-							pixmap=QtGui.QIcon(pixmap)
-							self.ui.avatar.setPixmap(pixmap.pixmap(128,128))
-		else:
-			self.data = Element(('vcard-temp','vCard'))
 
 		self.ui.avatar.setText("")
 		text=""
@@ -74,8 +57,60 @@ class vcardEditorDialog(QtGui.QDialog):
 			self.ui.surname.setReadOnly(True)
 			self.ui.pushButton.hide()
 			self.ui.setAvatar.hide()
+			self.ui.homeextadd.setReadOnly(True)
+			self.ui.homestreet.setReadOnly(True)
+			self.ui.homelocality.setReadOnly(True)
+			self.ui.homecountry.setReadOnly(True)
+			self.ui.homepcode.setReadOnly(True)
 		else:
 			QtCore.QObject.connect(self.ui.setAvatar, QtCore.SIGNAL("clicked()"),self.setAvatar)
+	
+
+	def vcardArrived(self,data):
+		self.data=data
+		if self.data:
+			for x in self.data.elements():
+				name=unicode(x.name)
+				if name=="NICKNAME":
+					self.ui.nickname.setText(unicode(x))
+				elif name=="FN":
+					self.ui.fullname.setText(unicode(x))
+				elif name=="ADR":
+					typ=""
+					for y in x.elements():
+						child=unicode(y.name)
+						if child=="HOME":
+							typ="HOME"
+					if typ=="HOME":
+						for y in x.elements():
+							child=unicode(y.name)
+							if child=="EXTADD":
+								self.ui.homeextadd.setText(unicode(y))
+							elif child=="STREET":
+								self.ui.homestreet.setText(unicode(y))
+							elif child=="LOCALITY":
+								self.ui.homelocality.setText(unicode(y))
+							elif child=="CTRY":
+								self.ui.homecountry.setText(unicode(y))
+							elif child=="PCODE":
+								self.ui.homepcode.setText(unicode(y))
+				else:
+					for y in x.elements():
+						child=unicode(y.name)
+						if name=="N" and child=="GIVEN":
+							self.ui.name.setText(unicode(y))
+						elif name=="N" and child=="FAMILY":
+							self.ui.surname.setText(unicode(y))
+						elif name=="PHOTO" and child=="BINVAL":
+							image=base64.decodestring(str(unicode(y)))
+							pixmap=QtGui.QPixmap()
+							pixmap.loadFromData(image)
+							pixmap=QtGui.QIcon(pixmap)
+							self.ui.avatar.setPixmap(pixmap.pixmap(128,128))
+		else:
+			self.data = Element(('vcard-temp','vCard'))
+		self.ui.download.hide()
+		self.ui.tabWidget.setEnabled(True)
 	
 	def setAvatar(self):
 		file=list(QtGui.QFileDialog.getOpenFileNames(self,"Choose picture"))
@@ -92,14 +127,22 @@ class vcardEditorDialog(QtGui.QDialog):
 				QtGui.QMessageBox.information(self,self.tr("Avatar"),self.tr("Your avatar was too big. He had to be resized to smaller size."))
 
 	def accept(self):
-		if self.editable:
+		if self.editable and self.data:
 			name2=unicode(self.ui.name.text())
 			nickname=unicode(self.ui.nickname.text())
 			fullname=unicode(self.ui.fullname.text())
 			surname=unicode(self.ui.surname.text())
+
+			homeextadd=unicode(self.ui.homeextadd.text())
+			homestreet=unicode(self.ui.homestreet.text())
+			homelocality=unicode(self.ui.homelocality.text())
+			homecountry=unicode(self.ui.homecountry.text())
+			homepcode=unicode(self.ui.homepcode.text())
+
 			avatar=self.ui.avatar.pixmap()
 			n=False
 			photo=False
+			homeadr=False
 			for x in self.data.elements():
 				name=unicode(x.name)
 				if name=="NICKNAME" and nickname!=None:
@@ -111,6 +154,39 @@ class vcardEditorDialog(QtGui.QDialog):
 					x.children = []
 					x.children.append(fullname)
 					fullname=None
+
+				elif name=="ADR":
+					typ=""
+					for y in x.elements():
+						child=unicode(y.name)
+						if child=="HOME":
+							typ="HOME"
+							homeadr=x
+					if typ=="HOME":
+						for y in x.elements():
+							child=unicode(y.name)
+							if child=="EXTADD":
+								y.children = []
+								y.children.append(homeextadd)
+								homeextadd=None
+							elif child=="STREET":
+								y.children = []
+								y.children.append(homestreet)
+								homestreet=None
+							elif child=="LOCALITY":
+								y.children = []
+								y.children.append(homelocality)
+								homelocality=None
+							elif child=="CTRY":
+								y.children = []
+								y.children.append(homecountry)
+								homecountry=None
+							elif child=="PCODE":
+								y.children = []
+								y.children.append(homepcode)
+								homepcode=None
+
+
 				else:
 					for y in x.elements():
 						child=unicode(y.name)
@@ -148,6 +224,36 @@ class vcardEditorDialog(QtGui.QDialog):
 					if not n:
 						n=self.data.addElement('N')
 					n.addElement('FAMILY', content = unicode(surname))
+			if homeextadd!=None:
+				if len(homeextadd)!=0:
+					if not homeadr:
+						homeadr=self.data.addElement('ADR')
+						homeadr.addElement('HOME')
+					homeadr.addElement('EXTADD', content = unicode(homeextadd))
+			if homestreet!=None:
+				if len(homestreet)!=0:
+					if not homeadr:
+						homeadr=self.data.addElement('ADR')
+						homeadr.addElement('HOME')
+					homeadr.addElement('STREET', content = unicode(homestreet))
+			if homelocality!=None:
+				if len(homelocality)!=0:
+					if not homeadr:
+						homeadr=self.data.addElement('ADR')
+						homeadr.addElement('HOME')
+					homeadr.addElement('LOCALITY', content = unicode(homelocality))
+			if homecountry!=None:
+				if len(homecountry)!=0:
+					if not homeadr:
+						homeadr=self.data.addElement('ADR')
+						homeadr.addElement('HOME')
+					homeadr.addElement('CTRY', content = unicode(homecountry))
+			if homepcode!=None:
+				if len(homepcode)!=0:
+					if not homeadr:
+						homeadr=self.data.addElement('ADR')
+						homeadr.addElement('HOME')
+					homeadr.addElement('PCODE', content = unicode(homepcode))
 			if avatar!=None:
 				if not avatar.isNull():
 					bytes=QtCore.QByteArray()

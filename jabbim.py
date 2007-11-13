@@ -1374,10 +1374,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ple.show()
 
 	def identityEditor(self,bool=False):
-		d=self.client.getVCard(self.client.jid.userhost())
-		d.addCallback(self.identityEditorVcardArrived)
-	def identityEditorVcardArrived(self,data=None):
-		self.ve=widgets.vcardeditor.vcardEditorDialog(self,data,self)
+		self.ve=widgets.vcardeditor.vcardEditorDialog(self,self.client.jid.userhost(),self)
 		self.ve.show()
 
 	def mucBrowser(self,bool=False):
@@ -2200,7 +2197,7 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.roster.disconnect()
 		#MainWindow.ui.roster.makeHiddenItem()
 		MainWindow.ui.login_connect.setEnabled(True)
-		MainWindow.plugins=[]
+		MainWindow.plugins={}
 		for jid in self.client.groupchats.keys():
 			for i in range(self.chat.ui.chatTab.count()):
 				w=self.chat.ui.chatTab.widget(i)

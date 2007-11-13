@@ -2134,9 +2134,11 @@ class rosterWidget(QtGui.QWidget):
 			# get vcard of selected contact
 			jid=action.data()
 			jid=str(jid.toString())
-			self.main.client.getVCard(jid)
-			d=self.main.client.getVCard(jid)
-			d.addCallback(self.vcardArrived)
+			#self.main.client.getVCard(jid)
+			self.ve=vcardeditor.vcardEditorDialog(self.main,jid,self,False)
+			self.ve.show()
+			#d=self.main.client.getVCard(jid)
+			#d.addCallback(self.vcardArrived)
 		elif cmd=="chat":
 			# chat with selected contact
 			jid=action.data()
@@ -2244,11 +2246,11 @@ class rosterWidget(QtGui.QWidget):
 			cmds.dialog.exec_()
 		log.msg("END CONTACT")
 
-	def vcardArrived(self,data):
+	#def vcardArrived(self,data):
 		#self.dialog=vcardview.vcardViewDialog(self.main,data,self)
 		#self.dialog.show()
-		self.ve=vcardeditor.vcardEditorDialog(self.main,data,self,False)
-		self.ve.show()
+		#self.ve=vcardeditor.vcardEditorDialog(self.main,data,self,False)
+		#self.ve.show()
 		
 
 	def changeGroup(self,jid,action,group):
