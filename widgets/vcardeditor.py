@@ -6,6 +6,7 @@ except:
 
 from vcardeditor_ui import *
 import base64
+from twisted.words.xish.domish import Element
 
 class vcardEditorDialog(QtGui.QDialog):
 	def __init__(self,main,data,parent=None,editable=True):
@@ -15,26 +16,29 @@ class vcardEditorDialog(QtGui.QDialog):
 		self.ui.setupUi(self)
 		self.main=main
 		self.data=data
-		
-		for x in self.data.elements():
-			name=unicode(x.name)
-			if name=="NICKNAME":
-				self.ui.nickname.setText(unicode(x))
-			elif name=="FN":
-				self.ui.fullname.setText(unicode(x))
-			else:
-				for y in x.elements():
-					child=unicode(y.name)
-					if name=="N" and child=="GIVEN":
-						self.ui.name.setText(unicode(y))
-					elif name=="N" and child=="FAMILY":
-						self.ui.surname.setText(unicode(y))
-					elif name=="PHOTO" and child=="BINVAL":
-						image=base64.decodestring(str(unicode(y)))
-						pixmap=QtGui.QPixmap()
-						pixmap.loadFromData(image)
-						pixmap=QtGui.QIcon(pixmap)
-						self.ui.avatar.setPixmap(pixmap.pixmap(128,128))
+		self.ui.avatar.setPixmap(QtGui.QPixmap())
+		if self.data:
+			for x in self.data.elements():
+				name=unicode(x.name)
+				if name=="NICKNAME":
+					self.ui.nickname.setText(unicode(x))
+				elif name=="FN":
+					self.ui.fullname.setText(unicode(x))
+				else:
+					for y in x.elements():
+						child=unicode(y.name)
+						if name=="N" and child=="GIVEN":
+							self.ui.name.setText(unicode(y))
+						elif name=="N" and child=="FAMILY":
+							self.ui.surname.setText(unicode(y))
+						elif name=="PHOTO" and child=="BINVAL":
+							image=base64.decodestring(str(unicode(y)))
+							pixmap=QtGui.QPixmap()
+							pixmap.loadFromData(image)
+							pixmap=QtGui.QIcon(pixmap)
+							self.ui.avatar.setPixmap(pixmap.pixmap(128,128))
+		else:
+			self.data = Element(('vcard-temp','vCard'))
 
 		self.ui.avatar.setText("")
 		text=""
@@ -62,6 +66,7 @@ class vcardEditorDialog(QtGui.QDialog):
 			#<CTRY>USA</CTRY>
 		#</ADR>
 		self.editable=editable
+		
 		if not self.editable:
 			self.ui.name.setReadOnly(True)
 			self.ui.nickname.setReadOnly(True)
@@ -88,52 +93,79 @@ class vcardEditorDialog(QtGui.QDialog):
 
 	def accept(self):
 		if self.editable:
-			
+			name2=unicode(self.ui.name.text())
+			nickname=unicode(self.ui.nickname.text())
+			fullname=unicode(self.ui.fullname.text())
+			surname=unicode(self.ui.surname.text())
+			avatar=self.ui.avatar.pixmap()
+			n=False
+			photo=False
 			for x in self.data.elements():
 				name=unicode(x.name)
-				if name=="NICKNAME":
+				if name=="NICKNAME" and nickname!=None:
 					x.children = []
-					x.children.append(unicode(self.ui.name.text()))
+					x.children.append(nickname)
+					nickname=None
 					#x.addElement('value', content = unicode(widget.text()))
-				elif name=="FN":
+				elif name=="FN" and fullname!=None:
 					x.children = []
-					x.children.append(unicode(self.ui.fullname.text()))
+					x.children.append(fullname)
+					fullname=None
 				else:
 					for y in x.elements():
 						child=unicode(y.name)
-						if name=="N" and child=="GIVEN":
+						if name=="N":
+							n=x
+						if name=="PHOTO":
+							photo=x
+						if name=="N" and child=="GIVEN" and name2!=None:
 							y.children = []
-							y.children.append(unicode(self.ui.name.text()))
+							y.children.append(name2)
+							name2=None
 							#self.ui.name.setText(unicode(y))
-						elif name=="N" and child=="FAMILY":
+						elif name=="N" and child=="FAMILY" and surname!=None:
 							y.children = []
-							y.children.append(unicode(self.ui.surname.text()))
-						elif name=="PHOTO" and child=="BINVAL":
-							avatar=self.ui.avatar.pixmap()
-							bytes=QtCore.QByteArray()
-							buf=QtCore.QBuffer(bytes)
-							buf.open(QtCore.QIODevice.WriteOnly)
-							avatar.save(buf, "PNG")
+							y.children.append(surname)
+							surname=None
+						elif name=="PHOTO" and child=="BINVAL" and avatar!=None:
+							#avatar=self.ui.avatar.pixmap()
 							y.children = []
-							y.children.append(base64.encodestring(str(bytes)))
+							if not avatar.isNull():
+								bytes=QtCore.QByteArray()
+								buf=QtCore.QBuffer(bytes)
+								buf.open(QtCore.QIODevice.WriteOnly)
+								avatar.save(buf, "PNG")
+							
+								y.children.append(base64.encodestring(str(bytes)))
+							avatar=None
+			if name2!=None:
+				if len(name2)!=0:
+					if not n:
+						n=self.data.addElement('N')
+					n.addElement('GIVEN', content = unicode(name2))
+			if surname!=None:
+				if len(surname)!=0:
+					if not n:
+						n=self.data.addElement('N')
+					n.addElement('FAMILY', content = unicode(surname))
+			if avatar!=None:
+				if not avatar.isNull():
+					bytes=QtCore.QByteArray()
+					buf=QtCore.QBuffer(bytes)
+					buf.open(QtCore.QIODevice.WriteOnly)
+					avatar.save(buf, "PNG")
+					if not photo:
+						photo=self.data.addElement('PHOTO')
+					photo.addElement('BINVAL', content = base64.encodestring(str(bytes)))
+			if nickname!=None:
+				if len(nickname)!=0:
+					self.data.addElement('NICKNAME',content = unicode(nickname))
+			if fullname!=None:
+				if len(fullname)!=0:
+					self.data.addElement('FN',content = unicode(fullname))
+
 			#print unicode(self.data),type(self.data)
-			#print unicode(self.data.toXml())
-			
-			#self.data["N-GIVEN"]=unicode(self.ui.name.text())
-			#self.data["N-FAMILY"]=unicode(self.ui.surname.text())
-			#self.data["FN"]=unicode(self.ui.fullname.text())
-			#self.data["NICKNAME"]=unicode(self.ui.nickname.text())
-			#avatar=self.ui.avatar.pixmap()
-			#bytes=QtCore.QByteArray()
-			#buf=QtCore.QBuffer(bytes)
-			#buf.open(QtCore.QIODevice.WriteOnly)
-			#avatar.save(buf, "PNG")
-			#self.data["PHOTO-BINVAL"]=base64.encodestring(str(bytes))
-			#keys=list(self.data.keys())
-			#print self.data
-			#for key in keys:
-				#if len(self.data[key])==0:
-					#del self.data[key]
-			#print self.data
+			#print "NEW",unicode(self.data.toXml())
+
 			self.main.client.setVCard(self.data)
 		self.done(1)
