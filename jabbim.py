@@ -507,6 +507,24 @@ class clientClass(pyxl.client.Client):
 				#self.main.ui.roster.setStatus(jid,show,first=first)
 			#else:
 			self.main.ui.roster.setStatus(jid.userhost(),show,first=first)
+
+			for i in range(self.main.chat.ui.chatTab.count()):
+				w=self.main.chat.ui.chatTab.widget(i)
+				if unicode(jidT.JID(w.jid).full())==unicode(jid.full()):
+					w.ic=self.main.getIcon(unicode(jid.userhost()),size="16x16",status="offline")
+					self.main.chat.ui.chatTab.setTabIcon(i,w.ic)
+					user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
+					if len(user)!=0:
+						#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
+						user=user[0].name
+					else:
+						user=unicode(jid.full())
+					if str(self.main.config["showChatStatusChanges"])=="True":
+						message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",self.main.tr("offline")).replace('[nick]', user)
+						message = message.replace("[[message]]",'')
+						w.chat.textEditWrite(message)
+					break
+
 		else:
 			#jid=jid.full() # get jid
 			# presence has resource
