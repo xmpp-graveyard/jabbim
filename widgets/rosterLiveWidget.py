@@ -1244,7 +1244,7 @@ class rosterWidget(QtGui.QWidget):
 					if useritem==self.item:
 						y+=self.selectedHeight-28
 					y+=self.userHeight
-		if y+self.selectedHeight-28>0 and self.selectedHeight!=0:
+		if y+self.selectedHeight-28>0 and self.selectedHeight!=0 and not self.statusLabel.isHidden():
 			self.setMinimumHeight(y+self.selectedHeight-28)
 		else:
 			self.setMinimumHeight(y)
