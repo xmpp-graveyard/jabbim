@@ -2243,6 +2243,8 @@ class mainWindow(QtGui.QMainWindow):
 					w=self.chat.ui.chatTab.widget(i)
 					if unicode(w.jid) == jid:
 						w.chat.ui.line.setEnabled(False)
+						w.chat.ui.users.clear()
+						w.chat.addRoles()
 						message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",self.tr("You are now offline."))
 						w.chat.textEditWrite(message)
 		MainWindow.client = None

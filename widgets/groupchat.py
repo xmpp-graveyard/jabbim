@@ -194,6 +194,10 @@ class groupChatWidget(QtGui.QWidget):
 		for key,value in self.main.plugins.iteritems():
 			value.buildChatWidget(unicode(jidT.JID(self.jid).userhost()),self.ui.layoutWidget.layout())
 		self.unread=0
+	def addRoles(self):
+		self.addRole("participant",self.tr("Participants"))
+		self.addRole("moderator",self.tr("Moderators"))
+		self.addRole("visitor",self.tr("Visitors"))
 	#def lines(self):
 		#if self.ui.line.verticalScrollBar().isVisible():
 			#self.ui.line.setMaximumHeight(int(self.ui.line.maximumHeight())+int(self.ui.line.currentFont().pointSize())+10)
