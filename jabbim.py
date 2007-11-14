@@ -514,6 +514,10 @@ class clientClass(pyxl.client.Client):
 					w.ic=self.main.getIcon(unicode(jid.userhost()),size="16x16",status="offline")
 					self.main.chat.ui.chatTab.setTabIcon(i,w.ic)
 					user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
+					if len(user)==0:
+						user=self.main.ui.roster.getMetaItems(jid.userhost())
+						if len(user)!=0:
+							user=user[0]
 					if len(user)!=0:
 						#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
 						user=user[0].name
@@ -542,6 +546,10 @@ class clientClass(pyxl.client.Client):
 					w.ic=self.main.getIcon(unicode(jid.userhost()),size="16x16",status=self.main.icons[self.main.shows[unicode(show)]])
 					self.main.chat.ui.chatTab.setTabIcon(i,w.ic)
 					user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
+					if len(user)==0:
+						user=self.main.ui.roster.getMetaItems(jid.userhost())
+						if len(user)!=0:
+							user=user[0]
 					if len(user)!=0:
 						#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
 						user=user[0].name
@@ -911,6 +919,10 @@ class clientClass(pyxl.client.Client):
 		if not body:
 			body=""
 		user=self.main.ui.roster.getUserItems(frm.userhost())
+		if len(user)==0:
+			user=self.main.ui.roster.getMetaItems(frm.userhost())
+			if len(user)!=0:
+				user=user[0]
 		log.msg("tset")
 		if len(user)!=0:
 			#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]

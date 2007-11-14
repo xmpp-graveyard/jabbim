@@ -323,10 +323,11 @@ class chatWindow(QtGui.QMainWindow):
 		if len(item)!=0:
 			it=item
 		elif len(metaitem)!=0:
-			it=metaitem
+			it=metaitem[0]
 
 		if len(it)!=0:
-			item=it[0]
+			it=it[0]
+			print it
 			if it.avatar:
 				avatar=it.avatar.pixmap(100,112)
 				print "avatar:",str(avatar.width())+"x"+str(avatar.height())
