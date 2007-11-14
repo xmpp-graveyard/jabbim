@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'xmlConsole.ui'
+# Form implementation generated from reading ui file 'widgets/xmlConsole.ui'
 #
-# Created: Tue Oct 30 15:04:10 2007
+# Created: Wed Nov 14 06:54:03 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -18,6 +18,8 @@ class Ui_xmlConsole(object):
         self.centralwidget.setObjectName("centralwidget")
 
         self.gridlayout = QtGui.QGridLayout(self.centralwidget)
+        self.gridlayout.setMargin(9)
+        self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
 
         self.xml = QtGui.QTextBrowser(self.centralwidget)
@@ -25,6 +27,8 @@ class Ui_xmlConsole(object):
         self.gridlayout.addWidget(self.xml,0,0,1,1)
 
         self.hboxlayout = QtGui.QHBoxLayout()
+        self.hboxlayout.setMargin(0)
+        self.hboxlayout.setSpacing(6)
         self.hboxlayout.setObjectName("hboxlayout")
 
         self.enable = QtGui.QCheckBox(self.centralwidget)
@@ -40,6 +44,8 @@ class Ui_xmlConsole(object):
         self.hboxlayout.addItem(spacerItem)
 
         self.hboxlayout1 = QtGui.QHBoxLayout()
+        self.hboxlayout1.setMargin(0)
+        self.hboxlayout1.setSpacing(6)
         self.hboxlayout1.setObjectName("hboxlayout1")
 
         self.presence = QtGui.QPushButton(self.centralwidget)
@@ -58,7 +64,7 @@ class Ui_xmlConsole(object):
 
         self.textEdit = QtGui.QTextEdit(self.centralwidget)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred,QtGui.QSizePolicy.Maximum)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(0))
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.textEdit.sizePolicy().hasHeightForWidth())
@@ -68,6 +74,8 @@ class Ui_xmlConsole(object):
         self.gridlayout.addWidget(self.textEdit,2,0,1,1)
 
         self.hboxlayout2 = QtGui.QHBoxLayout()
+        self.hboxlayout2.setMargin(0)
+        self.hboxlayout2.setSpacing(6)
         self.hboxlayout2.setObjectName("hboxlayout2")
 
         spacerItem1 = QtGui.QSpacerItem(441,21,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
@@ -80,6 +88,7 @@ class Ui_xmlConsole(object):
         xmlConsole.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(xmlConsole)
+        QtCore.QObject.connect(self.clear,QtCore.SIGNAL("clicked()"),self.xml.clear)
         QtCore.QMetaObject.connectSlotsByName(xmlConsole)
 
     def retranslateUi(self, xmlConsole):

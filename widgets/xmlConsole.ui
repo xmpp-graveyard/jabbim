@@ -14,11 +14,23 @@
   </property>
   <widget class="QWidget" name="centralwidget" >
    <layout class="QGridLayout" >
+    <property name="margin" >
+     <number>9</number>
+    </property>
+    <property name="spacing" >
+     <number>6</number>
+    </property>
     <item row="0" column="0" >
      <widget class="QTextBrowser" name="xml" />
     </item>
     <item row="1" column="0" >
      <layout class="QHBoxLayout" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
       <item>
        <widget class="QCheckBox" name="enable" >
         <property name="text" >
@@ -51,6 +63,12 @@
       </item>
       <item>
        <layout class="QHBoxLayout" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
+        <property name="spacing" >
+         <number>6</number>
+        </property>
         <item>
          <widget class="QPushButton" name="presence" >
           <property name="text" >
@@ -79,7 +97,9 @@
     <item row="2" column="0" >
      <widget class="QTextEdit" name="textEdit" >
       <property name="sizePolicy" >
-       <sizepolicy vsizetype="Maximum" hsizetype="Preferred" >
+       <sizepolicy>
+        <hsizetype>0</hsizetype>
+        <vsizetype>0</vsizetype>
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -94,6 +114,12 @@
     </item>
     <item row="3" column="0" >
      <layout class="QHBoxLayout" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
       <item>
        <spacer>
         <property name="orientation" >
@@ -120,5 +146,22 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>clear</sender>
+   <signal>clicked()</signal>
+   <receiver>xml</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>124</x>
+     <y>397</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>115</x>
+     <y>235</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
