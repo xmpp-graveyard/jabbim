@@ -446,6 +446,7 @@ class events:
 			sid=self.main.client.sendFile(jid, basename(file), file,descriptions[file])
 		else:
 			sid=self.main.client.sendFile(jid+'/'+res, basename(file), file,descriptions[file])
+		self.main.tray.showMessage(self.main.tr("Sending file ")+file+self.main.tr(" to ")+unicode(jid), self.main.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
 
 		self.filetransferQueue[sid]=filesQueue
 		#self.main.filetransferDescriptions[sid]=descriptions
@@ -498,6 +499,7 @@ class events:
 
 		file=unicode(file)
 		sid2=self.main.client.sendFile(jid, basename(file), file, description)
+		self.main.tray.showMessage(self.main.tr("Sending file ")+file+self.main.tr(" to ")+unicode(jid), self.main.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		item.setSizeHint(QtCore.QSize(100,60))
 		item.file=file

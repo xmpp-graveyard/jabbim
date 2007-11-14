@@ -121,9 +121,12 @@ class clientClass(pyxl.client.Client):
 				toDel.append(sid)
 				if self.main.ftError[sid]==None:
 					widget.widget.stats.setText(self.main.tr("Complete"))
+					self.main.tray.showMessage(self.main.tr("File ")+unicode(widget.file)+self.main.tr(" has been sent "),"", QtGui.QSystemTrayIcon.Information, 4000)
 				else:
 					widget.widget.stats.setText(self.main.tr("Error")+" "+unicode(self.main.ftError[sid]))
+					self.main.tray.showMessage(self.main.tr("File ")+unicode(widget.file)+self.main.tr(" can't be sent "),"", QtGui.QSystemTrayIcon.Critical, 4000)
 				widget.widget.complete=True
+
 
 		for sid in toDel:
 			if self.main.events.filetransfer[sid].download==False:
