@@ -308,6 +308,7 @@ class chatWindow(QtGui.QMainWindow):
 				self.ui.chatTab.setCurrentIndex(i)
 				return
 		item=self.main.ui.roster.getUserItems(jidT.JID(jid).userhost())
+		metaitem=self.main.ui.roster.getMetaItems(jidT.JID(jid).userhost())
 
 		tab=QtGui.QWidget(self.ui.chatTab)
 		tab.jid=jid
@@ -318,11 +319,16 @@ class chatWindow(QtGui.QMainWindow):
 		layout.setMargin(1)
 		layout.setSpacing(1)
 		tab.chat=chatWidget(self.main,jid,tab)
-
+		it=[]
 		if len(item)!=0:
-			item=item[0]
-			if item.avatar:
-				avatar=item.avatar.pixmap(100,112)
+			it=item
+		elif len(metaitem)!=0:
+			it=metaitem
+
+		if len(it)!=0:
+			item=it[0]
+			if it.avatar:
+				avatar=it.avatar.pixmap(100,112)
 				print "avatar:",str(avatar.width())+"x"+str(avatar.height())
 				if avatar.width()<=58 and avatar.height()<=58:
 					size=64
