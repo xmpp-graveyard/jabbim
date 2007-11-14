@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>412</width>
-    <height>372</height>
+    <height>547</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -21,14 +21,31 @@
      <number>6</number>
     </property>
     <item row="1" column="0" >
+     <widget class="QListWidget" name="list" />
+    </item>
+    <item row="0" column="0" >
+     <widget class="QLabel" name="label_2" >
+      <property name="text" >
+       <string>Icons =)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0" >
+     <widget class="QLabel" name="label" >
+      <property name="text" >
+       <string>Text log:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0" >
+     <widget class="QTextEdit" name="log" />
+    </item>
+    <item row="4" column="0" >
      <widget class="QPushButton" name="reload" >
       <property name="text" >
        <string>Reload</string>
       </property>
      </widget>
-    </item>
-    <item row="0" column="0" >
-     <widget class="QTextEdit" name="log" />
     </item>
    </layout>
   </widget>

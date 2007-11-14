@@ -7,7 +7,6 @@ from urllib import quote, unquote
 from twisted.python import log
 from include import utils
 
-
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
 		plugins.PluginBase.__init__(self, main, homedir)
@@ -15,7 +14,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Jabbim disk manager'
 		self.author = u"Josef 'Pepeq' Halíček"
 		self.name = 'JDM Plugin'
-		self.version = '0.1090'
+		self.version = '0.1117'
 		self.category = ['disk']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		if main:
@@ -31,12 +30,24 @@ class Plugin(plugins.PluginBase):
 			self.loadConfig(homedir)
 		
 	def updateView(self, vysledek, typ = 'public'):
+		#[0][0] je seznam jednotlivych polozek, kazda polozka ma nazev a velikost
 		for i in range (0,len(vysledek[0][0])):
-			self.window.ui.log.append(u"Název: %s \nVelikost: %s bytů\ntywe :)\n"%(self.obsah[i][0],self.obsah[i][1]))
+			self.obsah.append([i,vysledek[0][0][i][0],vysledek[0][0][i][0].split(".")[-1],vysledek[0][0][i][1]]);
+			
+			#self.window.ui.log.append(u"Název: %s \nVelikost: %s bytů\ntywe :)\n"%(self.obsah[i][0],self.obsah[i][1]))
+			
+		
+		for i in range (0,len(self.obsah)):
+			self.window.ui.log.append(unicode(self.obsah[i]))
+
+		
+		
+		#for i in range (0,len(vysledek[0][0])):
+		#	self.window.ui.log.append(u"Název: %s \nVelikost: %s bytů\ntywe :)\n"%(self.obsah[i][0],self.obsah[i][1]))
 	
 	def buildRosterMenu(self):
 		menu=self.rosterMenu()
-		menu.addAction("Jabbim disk manager",self.showSlot)
+		menu.addAction("Jabbim disk manager2",self.showSlot)
 	
 	def showSlot(self):
 		self.window.show()
