@@ -70,7 +70,8 @@ def loadConfig(main,status):
 			"showChatStatusChanges":"True",
 			"useMUCNames":"True",
 			"sendByCtrl":"False",
-			"showTransports":"False"
+			"showTransports":"False",
+			"oneWindow":"False"
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:

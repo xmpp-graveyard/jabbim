@@ -1166,7 +1166,17 @@ class mainWindow(QtGui.QMainWindow):
 		self.filetransfer={}
 		self.filetransferQueue={}
 		self.client=None # pyxl client instance
-		self.chat=widgets.chatwindow.chatWindow(self,self)
+		if self.config['oneWindow']=="True":
+			self.workspace=QtGui.QWorkspace(self.ui.mdiWidget)
+			layout=QtGui.QHBoxLayout(self.ui.mdiWidget)
+			layout.addWidget(self.workspace)
+			self.chat=widgets.chatwindow.chatWindow(self.workspace,self)
+			self.workspace.addWindow(self.chat)
+			self.chat.showMaximized()
+		else:
+			self.ui.mdiWidget.hide()
+			self.ui.mdiWidget.setParent(None)
+			self.chat=widgets.chatwindow.chatWindow(self,self)
 		self.events=widgets.events.events(self)
 		self.preferencesWindow=None
 		self.mucbrowser=None
