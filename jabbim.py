@@ -185,9 +185,9 @@ class clientClass(pyxl.client.Client):
 					for i in self.main.ui.roster.getUserItems(host):
 						i.transport=True
 		# set icons for users with this host
-		for item in self.main.ui.roster.getHostItems("@"+jid):
-			show=unicode(item.text(1))[0]
-			item.setIcon(0,self.main.getIcon("jid@"+jid,size="32x32",status=self.main.icons[show]))
+		for item in self.main.ui.roster.getHostItems(jid):
+			show=unicode(item.status)
+			item.icon=self.main.getIcon("jid@"+jid,size=self.main.ui.roster.iconSize,status=self.main.icons[show])
 
 	def on_rosterAddUser(self, contact):
 		# add user to the roster

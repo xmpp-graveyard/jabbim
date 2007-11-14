@@ -1661,7 +1661,17 @@ class rosterWidget(QtGui.QWidget):
 		return None
 
 	def getHostItems(self,host):
-		return []
+		ret=[]
+		for user in self.users:
+			if jidT.JID(user.jid).host==host:
+				ret.append(user)
+		for mainjid,users in self.metaItems.iteritems():
+			for user in users:
+				if jidT.JID(user.jid).host==host:
+					ret.append(user)
+		print "HOSTITEMS:",ret
+		return ret
+
 
 	def search(self,text=""):
 		text=unicode(text).lower()
