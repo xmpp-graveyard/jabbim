@@ -159,10 +159,12 @@ class Client(derived):
 		self.factory.addBootstrap("//event/xmpp/initfailed", self._authfailed)
 		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
 		self.factory.addBootstrap('//event/stream/error', self._streamEnd)
-
+		
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
 		self.connection = self.reactor.connectTCP(host,port,self.factory)
+
+
 #		self.connection = self.reactor.connectTCP('conn443.netlab.cz',443,self.factory)
 #		def stf(prt):
 #			print 'conn: ', prt
@@ -581,10 +583,14 @@ class Client(derived):
 			typ = 'normal'
 		frm = el['from']
 		frmjid = jid.JID(frm)
-		body = subject =xhtml = chatstate = delay = None
+		body = subject =xhtml = chatstate = delay = error =  None
 		for child in el.elements():
 			if child.name == "body":
 				body = unicode(child)
+			if child.name == 'error':
+				for x in child.elements():
+					if x.name != 'text':
+						error = x.name
 			if child.name == "subject":
 				subject = unicode(child)
 			if child.name == 'html':
@@ -618,10 +624,10 @@ class Client(derived):
 
 		if self.groupchats.has_key(jid.JID(frm).userhost()):
 			self.on_GCmessage(frm,typ,body,subject, xhtml,  chatstate,  delay)
-			self.dispatcher.publishEvent('on_GCmessage', frm,typ,body,subject, xhtml,  chatstate,  delay)
+			self.dispatcher.publishEvent('on_GCmessage', frm,typ,body,subject, xhtml,  chatstate,  delay, error)
 		else:
 # 			self.on_message(frm,typ,body,subject, xhtml,  chatstate,  delay)
-			self.dispatcher.publishEvent('on_message', frm,typ,body,subject, xhtml,  chatstate,  delay)
+			self.dispatcher.publishEvent('on_message', frm,typ,body,subject, xhtml,  chatstate,  delay, error)
 
 	def onInvite(self, el):
 		room = el["from"]
@@ -673,7 +679,7 @@ class Client(derived):
 		fromjid = frm.userhost()
 		resource = frm.resource
 
-		show = status = priority = typ = affiliation = role = truejid = hash = None
+		show = status = priority = typ = affiliation = role = truejid = hash = error = None
 		codes = []
 		if el.hasAttribute('type'):
 		#	if el['type'] != 'unavailable':
@@ -684,6 +690,10 @@ class Client(derived):
 
 		features = []
 		for child in el.elements():
+			if child.name == 'error':
+				for x in child.elements():
+					if x.name != 'text':
+						error = x.name
 			if child.name == 'show':
 				show = child.__str__()
 			elif child.name == 'status':
@@ -777,7 +787,7 @@ class Client(derived):
 				self.first_presence.append((frm,show))
 			else:
 				self.reactor.callFromThread(self.on_presence,frm,show)
-				self.dispatcher.publishEvent('on_presence',frm,show)
+				self.dispatcher.publishEvent('on_presence',frm,show, error)
 		elif self.groupchats.has_key(fromjid):
 			if show=="offline":
 				self.reactor.callFromThread(self.on_GCpresence, fromjid, resource,  show,  status,  codes)

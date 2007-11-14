@@ -41,7 +41,7 @@ class derived:
 		pass
 	def on_init(self):
 		pass
-	def on_presence(self,frm,show):
+	def on_presence(self,frm,show, error):
 		pass
 	def on_GCpresenceError(self,  fromjid,  code,  type,  name, text):
 		pass
@@ -72,9 +72,9 @@ class derived:
 	def on_subscribed(self, kdo):
 		pass
 	
-	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
+	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
 		pass
-	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
+	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
 		pass
 	
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):

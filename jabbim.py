@@ -770,7 +770,7 @@ class clientClass(pyxl.client.Client):
 	def on_subscribe(self, frm,status):
 		self.main.events.addSubscribeEvent(frm,status)
 
-	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
+	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
 		# handle messages from groupchat
 		# get user (resource) and MUC jid (saved in frm)
 		if typ=="chat":
@@ -915,7 +915,7 @@ class clientClass(pyxl.client.Client):
 						w.chat.textEditWrite(message)
 					
 	
-	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None):
+	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None, error = None):
 		# handle normal 'chat' messages
 		# get user icon or name, if we have him in roster. Or use default icon and jid as name
 		log.msg("CHATSTATE:"+unicode(chatstate))
