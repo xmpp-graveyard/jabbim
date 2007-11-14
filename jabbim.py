@@ -896,7 +896,8 @@ class clientClass(pyxl.client.Client):
 		log.msg("tset")
 		if len(user)!=0:
 			#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
-			icon=user[0].icon
+			#icon=user[0].icon
+			icon=self.main.getIcon(unicode(frm.userhost()),status=self.main.icons[str(user[0].status)],size="16x16")
 			user=user[0].name
 		else:
 			#if self.groupchats[frm.host].users[nick].role
