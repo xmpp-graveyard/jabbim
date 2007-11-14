@@ -442,7 +442,10 @@ class events:
 			res = self.main.client.roster['users'][jid].getHighestResource()
 		else:
 			jid, res = jid.split("/", 1)
-		sid=self.main.client.sendFile(jid+'/'+res, basename(file), file,descriptions[file])
+		if res==None:
+			sid=self.main.client.sendFile(jid, basename(file), file,descriptions[file])
+		else:
+			sid=self.main.client.sendFile(jid+'/'+res, basename(file), file,descriptions[file])
 
 		self.filetransferQueue[sid]=filesQueue
 		#self.main.filetransferDescriptions[sid]=descriptions

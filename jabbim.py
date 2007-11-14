@@ -2198,13 +2198,14 @@ class mainWindow(QtGui.QMainWindow):
 		#MainWindow.ui.roster.makeHiddenItem()
 		MainWindow.ui.login_connect.setEnabled(True)
 		MainWindow.plugins={}
-		for jid in self.client.groupchats.keys():
-			for i in range(self.chat.ui.chatTab.count()):
-				w=self.chat.ui.chatTab.widget(i)
-				if unicode(w.jid) == jid:
-					w.chat.ui.line.setEnabled(False)
-					message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",self.tr("You are now offline."))
-					w.chat.textEditWrite(message)
+		if self.client:
+			for jid in self.client.groupchats.keys():
+				for i in range(self.chat.ui.chatTab.count()):
+					w=self.chat.ui.chatTab.widget(i)
+					if unicode(w.jid) == jid:
+						w.chat.ui.line.setEnabled(False)
+						message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",self.tr("You are now offline."))
+						w.chat.textEditWrite(message)
 		MainWindow.client = None
 
 

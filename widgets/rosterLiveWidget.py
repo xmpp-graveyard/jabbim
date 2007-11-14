@@ -2153,8 +2153,8 @@ class rosterWidget(QtGui.QWidget):
 			
 			jid=jidT.JID(jid)
 			if not jid.resource:
-				item=self.getUserItems(jid)[0]
-				res = self.main.client.roster['users'][jid].getHighestResource()
+				item=self.getUserItems(jid.userhost())[0]
+				res = self.main.client.roster['users'][jid.userhost()].getHighestResource()
 				if res==None:
 					self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 				else:
