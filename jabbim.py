@@ -527,6 +527,7 @@ class clientClass(pyxl.client.Client):
 						message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",self.main.tr("offline")).replace('[nick]', user)
 						message = message.replace("[[message]]",'')
 						w.chat.textEditWrite(message)
+						w.chat.ui.chatstate.setText("")
 					break
 
 		else:
