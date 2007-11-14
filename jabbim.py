@@ -445,7 +445,11 @@ class clientClass(pyxl.client.Client):
 			#print presence
 			jid=presence[0]
 			show=presence[1]
-			self.on_presence(jid,show,True)
+			if len(presence)==3:
+				error=presence[2]
+			else:
+				error=None
+			self.on_presence(jid,show,error,True)
 		# refresh and sort and so on
 		self.main.rosterHideOffline(True)
 		self.main.ui.roster.refreshStats()
@@ -497,10 +501,16 @@ class clientClass(pyxl.client.Client):
 			tab.ic=self.main.getIcon(unicode(muc),size="16x16",status=self.main.icons[self.main.shows[unicode(show)]])
 			self.main.chat.ui.chatTab.setTabIcon(index,tab.ic)
 
-	def on_presence(self,jid,show,first=False):
+	def on_presence(self,jid,show,error,first=False):
 		#print "presence",jid,show
 		# normal presence handler
 		#log.msg("PRESENCE "+unicode(jid.full())+" "+unicode(show))
+		
+		if error!=None:
+			print "PRESENCE ERROR:"+unicode(error)
+			return
+		
+		
 		if show=="offline":
 			#jid=jid.full() # get jid
 			# presence has resource
@@ -774,7 +784,7 @@ class clientClass(pyxl.client.Client):
 		# handle messages from groupchat
 		# get user (resource) and MUC jid (saved in frm)
 		if typ=="chat":
-			return self.on_message(frm, typ, body, subject, xhtml,chatstate,delay)
+			return self.on_message(frm, typ, body, subject, xhtml,chatstate,delay,error)
 		frm=jidT.JID(frm)
 		if frm.resource:
 			user=frm.resource
@@ -919,6 +929,7 @@ class clientClass(pyxl.client.Client):
 		# handle normal 'chat' messages
 		# get user icon or name, if we have him in roster. Or use default icon and jid as name
 		log.msg("CHATSTATE:"+unicode(chatstate))
+		log.msg("ERROR:"+unicode(error))
 		frm=jidT.JID(frm)
 		if not body:
 			body=""
@@ -942,6 +953,18 @@ class clientClass(pyxl.client.Client):
 			else:
 				icon=self.main.getIcon(status="offline",size="16x16")
 				user=frm.full()
+		tab,tabIndex=self.main.chat.findTab(frm.full())
+
+		if error=="remote-server-not-found":
+			if tab!=None:
+				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.main.tr("Your message can't be sent. Remote server not found."))
+				tab.chat.textEditWrite(message)
+			return
+		elif error!=None:
+			if tab!=None:
+				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.main.tr("Your message can't be sent.")+" "+unicode(error))
+				tab.chat.textEditWrite(message)
+			return
 
 		if len(body)!=0:
 			# strip html tags and \n from messages
@@ -1015,7 +1038,6 @@ class clientClass(pyxl.client.Client):
 				self.main.events.addInfoEvent(header=self.main.tr("New message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[],tooltip=text)
 				self.main.tray.showMessage(self.main.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
 		
-		tab,tabIndex=self.main.chat.findTab(frm.full())
 		
 		# we found tab
 		if chatstate=="composing":
