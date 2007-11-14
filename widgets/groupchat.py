@@ -351,8 +351,14 @@ class groupChatWidget(QtGui.QWidget):
 					x+=1
 	
 	def smileysClicked(self,bool):
-		self.s.setGeometry ( self.ui.smileys.x()-60, self.ui.smileys.y()-200, 120, 200)
-		self.s.setShown(bool)
+		pos=self.ui.smileys.mapToGlobal(QtCore.QPoint(0,0))
+		x=pos.x()
+		y=pos.y()
+		self.s.setGeometry(x-60,y-200, 120, 200)
+		if self.s.isVisible():
+			self.s.setVisible(False)
+		else:
+			self.s.setVisible(True)
 
 	def logButton(self,button):
 		if button==self.actual:
