@@ -368,7 +368,11 @@ class events:
 			if self.events[0].has_key('tooltip'):
 				self.main.tray.setToolTip(self.events[0]['tooltip'])
 		else:
-			self.main.tray.setToolTip('')
+			if self.main.selfStatus!="":
+				data=self.main.selfStatus
+				self.main.tray.setToolTip(self.main.tr('Your status:')+" "+self.main.status[data])
+			else:
+				self.main.tray.setToolTip('')
 		for event in self.events:
 			if not event['type'] in types:
 				types.append(event['type'])

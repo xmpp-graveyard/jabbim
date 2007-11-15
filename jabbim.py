@@ -428,6 +428,7 @@ class clientClass(pyxl.client.Client):
 			else:
 				pri="0"
 		show=unicode(self.main.ui.loginStatus.itemData(int(self.main.ui.loginStatus.currentIndex())).toString())
+		self.main.tray.setToolTip(self.main.tr('Your status:')+" "+self.main.status[show])
 		self.main.client.sendPresence(show=show,priority=pri)
 		self.main.ui.statusButton.setText(unicode(""))
 		self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
@@ -1152,6 +1153,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.setupUi(self)
 		self.ui.toggleInvisible.hide()
 
+		self.selfStatus=""
 		self.setAttribute(QtCore.Qt.WA_AlwaysShowToolTips,True)
 
 		self.homeDir=utils.getHomeDir() # get home dir
@@ -2088,6 +2090,9 @@ class mainWindow(QtGui.QMainWindow):
 		if setstatus.exec_()==1 and not show:
 			self.ui.statusButton.setText(unicode(""))
 			self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
+			self.selfStatus=data
+			self.tray.setToolTip(self.tr('Your status:')+" "+self.status[data])
+
 		else:
 			for menu in self.client.menus:
 				if unicode(menu.title())==unicode(data):
