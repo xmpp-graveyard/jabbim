@@ -628,14 +628,13 @@ class rosterWidget(QtGui.QWidget):
 
 	def paintCompactUserItem(self,painter,useritem,x,y):
 		if useritem==self.item:
-			#print useritem.privacy
-			# Item is selected
 			height=79
 			#if not useritem.statusMessage:
 				#height-=32
-			if not self.metaItems.has_key(useritem.metajid):
-				height-=16
+			#if not self.metaItems.has_key(useritem.metajid):
+				#height-=16
 			self.selectedHeight=height+20
+
 
 			# paint roster background
 			painter.save()
