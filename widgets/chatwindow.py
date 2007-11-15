@@ -176,6 +176,8 @@ class chatWindow(QtGui.QMainWindow):
 				self.main.client.dispatcher.publishEvent('onActivity')
 				print "publishing onActivity event"
 			index=int(self.ui.chatTab.currentIndex())
+			widget=self.ui.chatTab.widget(index)
+			widget.chat.unread=0
 			self.setWindowTitle(unicode(self.ui.chatTab.tabText(index)).replace("&",""))
 			self.active=True
 
