@@ -338,6 +338,7 @@ class preferencesWindow(QtGui.QDialog):
 			self.main.ui.roster.compact=False
 			self.main.ui.roster.reshow=True
 			self.main.ui.roster.statusLabel.hide()
+		self.main.ui.roster.setSize()
 		self.main.ui.roster.repaint()
 		self.main.config.write()
 		
