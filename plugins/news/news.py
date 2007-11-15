@@ -16,7 +16,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Headlines window'
 		self.author = u"Jiří 'Sef' Gabryš"
 		self.name = 'News Plugin'
-		self.version = '0.060'
+		self.version = '0.061'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.kontakty = {} # jid:contact
@@ -45,7 +45,7 @@ class Plugin(plugins.PluginBase):
 	def showSlot(self):
 		self.window.show()
 	
-	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
+	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
 		if typ != 'headline':
 			return True
 		frm = frm.split('/')[0]

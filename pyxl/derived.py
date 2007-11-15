@@ -41,7 +41,7 @@ class derived:
 		pass
 	def on_init(self):
 		pass
-	def on_presence(self,frm,show, error):
+	def on_presence(self,frm,show, error=None):
 		pass
 	def on_GCpresenceError(self,  fromjid,  code,  type,  name, text):
 		pass

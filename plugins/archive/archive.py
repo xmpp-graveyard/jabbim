@@ -96,7 +96,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Message Archiving'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Archive Plugin'
-		self.version = '0.181'
+		self.version = '0.182'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 # 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
@@ -204,7 +204,7 @@ class Plugin(plugins.PluginBase):
 		if setDate:
 			self.window.ui.calendar.setDates(dates)
 	
-	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay):
+	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay, error=None):
 		if body != None and chatstate==None:
 			jid = quote(frm.split('/')[0])
 			if typ=='groupchat':

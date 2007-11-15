@@ -501,7 +501,7 @@ class clientClass(pyxl.client.Client):
 			tab.ic=self.main.getIcon(unicode(muc),size="16x16",status=self.main.icons[self.main.shows[unicode(show)]])
 			self.main.chat.ui.chatTab.setTabIcon(index,tab.ic)
 
-	def on_presence(self,jid,show,error,first=False):
+	def on_presence(self,jid,show,error=None,first=False):
 		#print "presence",jid,show
 		# normal presence handler
 		#log.msg("PRESENCE "+unicode(jid.full())+" "+unicode(show))

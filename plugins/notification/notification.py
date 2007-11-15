@@ -13,7 +13,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'System tray and sound notification'
 		self.author = "Jan 'HanzZ' Kaluza & Josef 'PepeQ' Halicek"
 		self.name = 'Notification Plugin'
-		self.version = '0.555'
+		self.version = '0.556'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}
@@ -83,7 +83,7 @@ class Plugin(plugins.PluginBase):
 			self.ico=True
 			self.main.tray.setIcon(self.trayIcon)
 
-	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay):
+	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay, error):
 		if body == None:
 			return
 		self.playsound('message')
@@ -115,7 +115,7 @@ class Plugin(plugins.PluginBase):
 				else:
 					print "pyco coe?"
 					self.playsound('message')
-	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
+	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
 		if delay != None:
 			return
 		if len(unicode(frm).rsplit("/"))==2:
