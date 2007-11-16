@@ -930,9 +930,20 @@ class Client(derived):
 					)
 			log.msg("ok, continuing in current session")
 
-		except KeyError, e:
-			log.msg("KeyError: %s; Starting new session" % e.message)
-			self.commands.startSession(node, el["from"], el["id"])
+		except KeyError:
+			if jid.JID(el["from"]).userhost() == self.jid.userhost() or self.commands.nodes[node][3]:
+				self.commands.startSession(node, el["from"], el["id"])
+				log.msg("Starting new session")
+			else:
+				iq = IQ(self.xmlstream, "error")
+				iq["to"] = el["from"]
+				iq["id"] = el["id"]
+				error = iq.addElement("error")
+				error["code"] = "403"
+				error["type"] = "cancel"
+				error.addElement("forbidden", "urn:ietf:params:xml:ns:xmpp-stanzas")
+				iq.send()
+				
 
 	def onLast(self, el):
 		log.msg('received last request')

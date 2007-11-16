@@ -6,6 +6,8 @@ from twisted.python import log
 #from xdata import *
 
 def x2dict(x):
+	if not x:
+		return
 	if x["type"] != "submit":
 		return
 	data = {}
@@ -116,11 +118,11 @@ class Commands:
 		self.sessionids = 0
 		self.main = main
 
-	def registerNode(self, name, desc, firststage, jid = None):
+	def registerNode(self, name, desc, firststage, jid = None, public=False):
 	#	self.main.client.registerFeature(name, "http://jabber.org/protocol/commands")
 		if jid == None:
 			jid = unicode(self.main.client.jid.full())
-		self.nodes[name] = [desc, firststage, jid]
+		self.nodes[name] = [desc, firststage, jid, public]
 
 	def startSession(self, node, jid, fid):
 		self.sessionids += 1
