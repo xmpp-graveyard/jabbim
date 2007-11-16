@@ -509,7 +509,7 @@ class clientClass(pyxl.client.Client):
 		#print "presence",jid,show
 		# normal presence handler
 		#log.msg("PRESENCE "+unicode(jid.full())+" "+unicode(show))
-		
+		print 'error: ', error
 		if error!=None:
 			print "PRESENCE ERROR:"+unicode(error)
 			return

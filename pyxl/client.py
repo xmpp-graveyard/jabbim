@@ -114,8 +114,9 @@ class Client(derived):
 		self.reactor.callFromThread(self.on_init)
 		self.main.cache.get_caps(self._cacheCaps)
 		self.dispatcher.registerHandler('on_message', self.on_message, 'on_message')
-
-
+		self.dispatcher.registerHandler('on_presence', self.on_presence, 'on_presence')
+		self.dispatcher.registerHandler('on_GCpresence', self.on_GCpresence, 'on_GCpresence')
+		
 	def chyba(self, err):
 		err.printBriefTraceback()
 	
@@ -588,6 +589,7 @@ class Client(derived):
 			if child.name == "body":
 				body = unicode(child)
 			if child.name == 'error':
+				error = 'error'
 				for x in child.elements():
 					if x.name != 'text':
 						error = x.name
@@ -687,10 +689,12 @@ class Client(derived):
 		#	else:
 		#		typ = 'unavailable'
 			typ = el['type']
-
+		if typ == 'error':
+			error = 'error'
 		features = []
 		for child in el.elements():
 			if child.name == 'error':
+				error = 'error'
 				for x in child.elements():
 					if x.name != 'text':
 						error = x.name
@@ -782,22 +786,21 @@ class Client(derived):
 ###				print fromjid, hash, self.roster['users'][fromjid].avatar_hash 
 #				self.getVCard(fromjid)
 
-			
 			if first and self.first_wait:
 				self.first_presence.append((frm,show))
 			else:
-				self.reactor.callFromThread(self.on_presence,frm,show)
+#				self.reactor.callFromThread(self.on_presence,frm,show, error)
 				self.dispatcher.publishEvent('on_presence',frm,show, error)
 		elif self.groupchats.has_key(fromjid):
 			if show=="offline":
-				self.reactor.callFromThread(self.on_GCpresence, fromjid, resource,  show,  status,  codes)
+#				self.reactor.callFromThread(self.on_GCpresence, fromjid, resource,  show,  status,  codes)
 				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes)
 			self.groupchats[fromjid].setStatus(resource,  show,  status)
 			if self.groupchats[fromjid].users.has_key(resource):
 				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid)
 				#self.groupchats[fromjid]
 			if show!="offline":
-				self.reactor.callFromThread(self.on_GCpresence,fromjid, resource,  show,  status,  codes)
+#				self.reactor.callFromThread(self.on_GCpresence,fromjid, resource,  show,  status,  codes)
 				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes)
 			return
 		else:
