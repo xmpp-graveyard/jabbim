@@ -171,6 +171,9 @@ class Commands:
 					actions.append(x.name)
 			if element.name == "x":
 				self.form = element
+				for elem in element.elements():
+					if elem.name == "title":
+						title = unicode(elem)
 				if command["status"] == "completed":
 					self.dialog.ui.close.show()
 					self.var, self.row = dataforms.makeDataForm(
@@ -178,9 +181,6 @@ class Commands:
 							self.dialog.ui.gridlayout2,
 							element
 							)
-				for elem in element.elements():
-					if elem.name == "title":
-						title = unicode(elem)
 
 				elif command["status"] == "executing":
 					self.dialog.ui.cancel.show()
