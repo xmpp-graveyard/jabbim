@@ -805,7 +805,7 @@ class clientClass(pyxl.client.Client):
 						if self.main.chat.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
 							self.main.chat.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
 							self.main.chat.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(0,128,0))
-							self.main.chat.ui.chatTab.setTabText(i,w.tabName+" ("+str(w.chat.unread+1)+")")
+						self.main.chat.ui.chatTab.setTabText(i,w.tabName+" ("+str(w.chat.unread+1)+")")
 						countMessage=True
 					if not self.main.chat.isActiveWindow():
 						if int(self.main.chat.ui.chatTab.currentIndex())==i:
