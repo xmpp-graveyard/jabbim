@@ -787,7 +787,7 @@ class Client(derived):
 #				self.getVCard(fromjid)
 
 			if first and self.first_wait:
-				self.first_presence.append((frm,show))
+				self.first_presence.append((frm,show, error))
 			else:
 #				self.reactor.callFromThread(self.on_presence,frm,show, error)
 				self.dispatcher.publishEvent('on_presence',frm,show, error)
