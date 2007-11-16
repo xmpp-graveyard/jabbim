@@ -179,7 +179,7 @@ class Commands:
 							element
 							)
 				for elem in element.elements():
-					if elem.name = "title":
+					if elem.name == "title":
 						title = unicode(elem)
 
 				elif command["status"] == "executing":
