@@ -38,6 +38,9 @@ def makeDataForm(parent,layout,form,row=1):
 				layout.addWidget(widget,row,1)
 				var[x['var']]={'widget':widget,'type':x['type']}
 				row+=1
+				for d in x.elements():
+					if d.name == "desc":
+						widget.setToolTip(unicode(d))
 			elif x['type']=="fixed":
 				label=QtGui.QLabel(parent)
 				label.setWordWrap(True)
@@ -45,6 +48,9 @@ def makeDataForm(parent,layout,form,row=1):
 					if child.name == 'value':
 						label.setText(unicode(child))
 				layout.addWidget(label,row,0,1,2)
+				for d in x.elements():
+					if d.name == "desc":
+						widget.setToolTip(unicode(d))
 				row+=1
 			elif x['type']=="text-multi":
 				label=QtGui.QLabel(x['label'],parent)
@@ -55,6 +61,9 @@ def makeDataForm(parent,layout,form,row=1):
 						widget.setText(unicode(child))
 				layout.addWidget(widget,row,1)
 				var[x['var']]={'widget':widget,'type':x['type']}
+				for d in x.elements():
+					if d.name == "desc":
+						widget.setToolTip(unicode(d))
 				row+=1
 			elif x['type']=="boolean":
 				widget=QtGui.QCheckBox(x['label'],parent)
@@ -66,6 +75,9 @@ def makeDataForm(parent,layout,form,row=1):
 							widget.setChecked(True)
 				layout.addWidget(widget,row,0,1,2)
 				var[x['var']]={'widget':widget,'type':x['type']}
+				for d in x.elements():
+					if d.name == "desc":
+						widget.setToolTip(unicode(d))
 				row+=1
 			elif x['type']=="text-private":
 				label=QtGui.QLabel(x['label'],parent)
@@ -77,6 +89,9 @@ def makeDataForm(parent,layout,form,row=1):
 						widget.setText(unicode(child))
 				layout.addWidget(widget,row,1)
 				var[x['var']]={'widget':widget,'type':x['type']}
+				for d in x.elements():
+					if d.name == "desc":
+						widget.setToolTip(unicode(d))
 				row+=1
 			elif x['type']=="list-single":
 				#<field var='userlist' type='list-single' label='Userlist on GG server'><value>get</value><option label='ignore'><value>ignore</value></option><option label='retrieve'><value>get</value></option></field>
@@ -97,6 +112,9 @@ def makeDataForm(parent,layout,form,row=1):
 				widget.setCurrentIndex(0)
 				layout.addWidget(widget,row,1)
 				var[x['var']]={'widget':widget,'type':x['type']}
+				for d in x.elements():
+					if d.name == "desc":
+						widget.setToolTip(unicode(d))
 				row+=1
 	return var,row
 
