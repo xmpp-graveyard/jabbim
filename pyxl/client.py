@@ -916,16 +916,19 @@ class Client(derived):
 				action = command["action"]
 			except:
 				action = "execute"
-			sid = command["sessionid"]
+			sid = unicode(command["sessionid"])
 			x = command.firstChildElement()
+			log.msg(unicode(dir(self.commands)))
 			self.commands.sessions[sid].execStage(
-					self.commands.nextstages[action],
+					self.commands.sessions[sid].nextstages[action],
 					el["id"],
-					commands.x2dict(x),
+					x2dict(x),
 					lang
 					)
+			log.msg("ok, continuing in current session")
 
-		except KeyError:
+		except KeyError, e:
+			log.msg("KeyError: %s; Starting new session" % e.message)
 			self.commands.startSession(node, el["from"], el["id"])
 
 	def onLast(self, el):

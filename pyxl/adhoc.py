@@ -2,21 +2,23 @@
 
 from twisted.words.protocols.jabber.xmlstream import IQ
 from twisted.words.xish.domish import Element
+from twisted.python import log
 #from xdata import *
 
 def x2dict(x):
 	if x["type"] != "submit":
 		return
 	data = {}
+	log.msg(x.toXml())
 	for field in x.elements():
+		values = []
 		if field.name != "field":
 			continue
-		values = []
-		for value in field.elemens():
+		for value in field.elements():
 			if value.name != "value":
 				continue
 			values.append(unicode(value))
-		data[filed["var"]] = [values, filed["type"]]
+		data[field["var"]] = [values, field["type"]]
 	return data
 
 class Stage:
@@ -31,6 +33,8 @@ class Stage:
 		self.actions = {"cancel":CancelStage} # "action":StageClass
 		self.execute = None
 		self.id = id
+
+		log.msg("__init__ stage %s; data %s" % (id, data))
 
 	def exec_(self):
 		pass # Definovat v subclass
@@ -57,49 +61,50 @@ class Stage:
 		
 		self.session.addCallbackStages(self.actions)
 		iq.send()
+		log.msg("Sent stage %s" % self.id)
 #		self.main.client.disp(iq["id"])
 
 class CancelStage(Stage):
 	def exec_(self):
 		self.status = "cancelled"
 		self.session.sessionEnded()
+		log.msg("Stage cancelled")
 
 class Session:
 	def __init__(self, main, node, firststage, jid, sessionid, fid):
 		self.main	= main
-		#self.client	= main.client
 		self.node	= unicode(node)
-		#self.name	= unicode(name)
 		self.jid 	= unicode(jid)
-		#self.stages	= stages	# list of classes (not instances)
-		#self.firststage	= firstage
 
 		self.sessionid	= sessionid
 		self.nextstages = {}
 
 		self.execStage(firststage, fid)
+		log.msg("Starting session %s" % self.sessionid)
 
 	def execStage(self, stageC, id, data = None, xmllang=None):
 		stage = stageC(self.main, id, self, data, xmllang)
 		stage.exec_()
+		log.msg("Executing stage")
 		stage.send()
+		log.msg("Stage executed")
 
 	def addCallbackStages(self, stages):
-		self.nextages = stages
+		self.nextstages = stages
 
-	def _recieved(self, el):
-		command = el.firstChildElement()
-		try:
-			action = command.attributes["action"]
-		except KeyError:
-			action = "execute"
-		try:
-			xmllang = command.attributes["xml:lang"]
-		except KeyError:
-			xmllang = None
-		x = command.firstChildElement()
-		data = x2dict(x)
-		self.execStage(self.nextstages[action], data, xmllang)
+#	def _recieved(self, el):
+#		command = el.firstChildElement()
+#		try:
+#			action = command.attributes["action"]
+#		except KeyError:
+#			action = "execute"
+#		try:
+#			xmllang = command.attributes["xml:lang"]
+#		except KeyError:
+#			xmllang = None
+#		x = command.firstChildElement()
+#		data = x2dict(x)
+#		self.execStage(self.nextstages[action], data, xmllang)
 
 	def sessionEnded(self):
 		del self.main.client.commands.sessions[self.sessionid]
@@ -119,7 +124,7 @@ class Commands:
 
 	def startSession(self, node, jid, fid):
 		self.sessionids += 1
-		self.sessions[self.sessionids] = Session(self.main, node, self.nodes[node][1], jid, unicode(self.sessionids), fid)
+		self.sessions[unicode(self.sessionids)] = Session(self.main, node, self.nodes[node][1], jid, unicode(self.sessionids), fid)
 
 	def commandsList(self, el):
 		self.main.client.disp(el["id"])

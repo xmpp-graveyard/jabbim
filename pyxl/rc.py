@@ -24,9 +24,9 @@ class SetStatus(Stage):
 		self.actions = {}
 
 		self.main.client.sendPresence(
-				show = self.data["show"],
-				status = self.data["status"],
-				priority = self.data["priority"],
+				show = self.data["show"][0][0],
+				status = self.data["status"][0][0],
+				priority = self.data["priority"][0][0],
 				)
-		self.main.ui.statusButton.setIcon(self.main.getIcon(self.data["show"], size="16x16"))
-		self.ui.showWidget.setText(unicode(self.data["status"]))
+		self.main.ui.statusButton.setIcon(self.main.getIcon(self.data["show"][0][0], size="16x16"))
+		self.main.ui.showWidget.setText(unicode(self.data["status"][0][0]))

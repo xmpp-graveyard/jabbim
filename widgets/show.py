@@ -64,3 +64,7 @@ class showWidget(QtGui.QWidget):
 			show = self.main.client.roster['users'][self.main.client.jid.userhost()].resources[self.main.client.jid.resource].show
 		)
 
+	def setText(self, text):
+		self.label.setText(text)
+		self.lineEdit.setText(text)
+
