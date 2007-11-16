@@ -2,6 +2,7 @@
 
 from xdata import *
 from adhoc import Stage, CancelStage
+from twisted.python import log
 
 class fSetStatus(Stage):
 	def exec_(self):
@@ -22,11 +23,12 @@ class SetStatus(Stage):
 	def exec_(self):
 		self.status = "completed"
 		self.actions = {}
-
+		
 		self.main.client.sendPresence(
 				show = self.data["show"][0][0],
 				status = self.data["status"][0][0],
 				priority = self.data["priority"][0][0],
 				)
-		self.main.ui.statusButton.setIcon(self.main.getIcon(self.data["show"][0][0], size="16x16"))
+		icon = self.main.getIcon(self.data["show"][0][0], size="16x16")
+		self.main.ui.statusButton.setIcon(self.main.getIcon(status=self.data["show"][0][0], size="16x16"))
 		self.main.ui.showWidget.setText(unicode(self.data["status"][0][0]))
