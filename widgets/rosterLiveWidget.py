@@ -1275,7 +1275,7 @@ class rosterWidget(QtGui.QWidget):
 			else:
 				self.main.client.reactor.callLater(0.2,self.sel)
 			#self.timestamp=float(t)
-		elif self.item == item and self.item != None:
+		elif self.item == item and self.item != None and item.main!='special':
 			#print t-self.timestamp
 			#if t-self.timestamp>1.0:
 			if wait:
@@ -1289,7 +1289,7 @@ class rosterWidget(QtGui.QWidget):
 				self.setSize()
 				#self.timestamp=float(t)
 		if item!=None:
-			if item.typ=='group' or item.main=='special':
+			if item.typ=='group' and item.main!='special':
 				self.statusLabel.hide()
 	def mouseReleaseEvent(self,event):
 		x=event.x()

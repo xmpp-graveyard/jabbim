@@ -2022,7 +2022,9 @@ class mainWindow(QtGui.QMainWindow):
 		#self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.offline=not bool
 		self.ui.roster.showOffline=bool
-		self.ui.roster.statusLabel.hide()
+		self.ui.roster.reshow=True
+		if int(self.ui.roster.item.status)==9 and not bool:
+			self.ui.roster.statusLabel.hide()
 		#if self.ui.roster.statusLabel:
 			#self.ui.roster.statusLabel.setParent(None)
 			#self.ui.roster.statusLabel=None
