@@ -199,6 +199,16 @@ class chatWindow(QtGui.QMainWindow):
 				self.timer.start(30000)
 		return QtGui.QMainWindow.event(self,ev)
 
+	def getUnreadMessages(self):
+		count=0
+		for i in range(self.ui.chatTab.count()):
+			w=self.ui.chatTab.widget(i)
+			#try:
+			count+=int(w.chat.unread)
+			#except:
+				#pass
+		return count
+
 	def findTab(self,jid=None):
 		for i in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(i)

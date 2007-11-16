@@ -808,9 +808,9 @@ class clientClass(pyxl.client.Client):
 						self.main.chat.ui.chatTab.setTabText(i,w.tabName+" ("+str(w.chat.unread+1)+")")
 						countMessage=True
 					if not self.main.chat.isActiveWindow():
-						if int(self.main.chat.ui.chatTab.currentIndex())==i:
-							self.main.chat.setWindowTitle(w.tabName.replace("&","")+" ("+str(w.chat.unread+1)+")")
-							countMessage=True
+						#if int(self.main.chat.ui.chatTab.currentIndex())==i:
+						self.main.chat.setWindowTitle(w.tabName.replace("&","")+" ("+str(int(self.main.chat.getUnreadMessages())+1)+")")
+						countMessage=True
 							#w.chat.unread+=1
 					# set room topic
 					if subject!=None:
@@ -1012,9 +1012,9 @@ class clientClass(pyxl.client.Client):
 					tab.chat.unread+=1
 				elif not self.main.chat.isActiveWindow():
 					self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()],tooltip=self.main.tr("New message from ")+unicode(user))
-					if int(self.main.chat.ui.chatTab.currentIndex())==tabIndex:
-						self.main.chat.setWindowTitle(tab.tabName.replace("&","")+" ("+str(tab.chat.unread+1)+")")
-						tab.chat.unread+=1
+					#if int(self.main.chat.ui.chatTab.currentIndex())==tabIndex:
+					self.main.chat.setWindowTitle(tab.tabName.replace("&","")+" ("+str(int(self.main.chat.getUnreadMessages())+1)+")")
+					tab.chat.unread+=1
 				else:
 					color=self.main.chat.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
 					self.main.chat.ui.chatTab.setTabText(tabIndex,tab.tabName)
