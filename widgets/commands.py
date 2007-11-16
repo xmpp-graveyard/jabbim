@@ -9,7 +9,7 @@ from commands_ui import Ui_Dialog
 class CommandsDialog(QtGui.QDialog):
 	def __init__(self, cmds, parent = None):
 		QtGui.QDialog.__init__(self, parent)
-		self.setModal(True)
+		self.setModal(False)
 		self.cmds = cmds
 		self.ui = Ui_Dialog()
 		self.ui.setupUi(self)
@@ -46,14 +46,26 @@ class CommandsDialog(QtGui.QDialog):
 	def _reset(self): 
 		self.ui.label.setText(u"")
 		for button in self.group.buttons():
-			self.ui.gridlayout2.removeWidget(button)
-			button.setParent(None)
+			try:
+				self.ui.gridlayout2.removeWidget(button)
+				button.setParent(None)
+			except:
+				pass
+		del self.ui.gridlayout2
+		self.ui.gridlayout2 = QtGui.QGridLayout()
+		self.ui.gridlayout2.setObjectName("gridlayout2")
+		self.ui.gridlayout.addLayout(self.ui.gridlayout2,3,0,1,1)
+
 		self.ui.next.hide()
 		self.ui.previous.hide()
 		self.ui.complete.hide()
 		self.ui.cancel.hide()
 		self.ui.close.hide()
 		self.ui.label_2.hide()
+		#if self.cmds.var:
+		#	for var in self.cmds.var.values():
+		#		self.ui.gridlayout2.removeWidget(var["widget"])
+
 
 	def buttonClicked(self, button):
 		self.cmds.execCommand(button.node, unicode(button.text()), button.jid)
@@ -142,6 +154,8 @@ class Commands:
 		command = el.firstChildElement()
 		self.sessionid = command["sessionid"]
 		self.dialog._reset()
+		actions =[]
+		title = unicode(self.dialog.windowTitle()) + " - " + self.name
 		if command["status"] == "completed":
 			self.dialog.ui.label.setText(self.main.tr("Completed!"))
 			log.msg("Completed command with sessionid %s." % self.sessionid)
@@ -154,12 +168,7 @@ class Commands:
 		for element in command.elements():
 			if element.name == "actions":
 				for x in element.elements():
-					if x.name == "prev":
-						self.dialog.ui.previous.show()
-					if x.name == "next":
-						self.dialog.ui.next.show()
-					if x.name == "complete":
-						self.dialog.ui.complete.show()
+					actions.append(x.name)
 			if element.name == "x":
 				self.form = element
 				if command["status"] == "completed":
@@ -169,6 +178,9 @@ class Commands:
 							self.dialog.ui.gridlayout2,
 							element
 							)
+				for elem in element.elements():
+					if elem.name = "title":
+						title = unicode(elem)
 
 				elif command["status"] == "executing":
 					self.dialog.ui.cancel.show()
@@ -196,8 +208,16 @@ class Commands:
 				self.dialog.ui.label_2.show()
 				self.dialog.ui.label_2.setText("<b>%s</b>: " % s +unicode(element))
 				self.dialog.ui.close.show()
-		if unicode(self.dialog.windowTitle()).find(self.name) != -1:
-			self.dialog.setWindowTitle(unicode(self.dialog.windowTitle()) + " - " + self.name)
+		if actions ==[] and command["status"] == "executing":
+			actions = ["complete"]
+		for a in actions:
+			if a == "prev":
+				self.dialog.ui.previous.show()
+			if a == "next":
+				self.dialog.ui.next.show()
+			if a == "complete":
+				self.dialog.ui.complete.show()
+		self.dialog.setWindowTitle(title)
 
 
 	def submit(self,action):

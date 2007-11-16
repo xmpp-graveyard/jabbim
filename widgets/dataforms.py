@@ -161,7 +161,7 @@ def sendDataForm(main,jid,form,var,t,unregister=False):
 class dataFormsDialog(QtGui.QDialog):
 	def __init__(self,main,form,jid,typ,parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
-		self.setModal(True)
+		self.setModal(False)
 		#print unicode(form.toXml())
 		self.main=main
 		self.typ=typ
