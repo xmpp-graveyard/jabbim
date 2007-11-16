@@ -469,6 +469,9 @@ class clientClass(pyxl.client.Client):
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
 		
 		# presence in groupchat
+		if not self.groupchats.has_key(muc):
+			log.msg("bad GC presence:"+unicode(muc)+"; we are not connected there")
+			return
 		if show=="offline":
 			# get user role
 			# find good tab according to jid
