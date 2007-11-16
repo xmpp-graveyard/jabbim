@@ -1429,6 +1429,7 @@ class mainWindow(QtGui.QMainWindow):
 				if self.client:
 					self.client.dispatcher.publishEvent('onActivity')
 				print "publishing onActivity event"
+			self.ui.roster.setFocus(QtCore.Qt.MouseFocusReason)
 			#self.timer.stop()
 		elif int(ev.type())==25:
 			if self.active:
