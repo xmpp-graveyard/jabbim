@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Wed Nov  7 08:21:44 2007
+# Created: Fri Nov 16 21:26:34 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -59,7 +59,10 @@ class Ui_groupchatwidget(object):
         self.vboxlayout.setObjectName("vboxlayout")
 
         self.users = QtGui.QTreeWidget(self.layoutWidget)
+        self.users.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.users.setAlternatingRowColors(True)
+        self.users.setIconSize(QtCore.QSize(32,32))
+        self.users.setIndentation(0)
         self.users.setRootIsDecorated(False)
         self.users.setObjectName("users")
         self.vboxlayout.addWidget(self.users)

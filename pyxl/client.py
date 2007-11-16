@@ -407,11 +407,11 @@ class Client(derived):
 			f.write(image)
 			f.close()
 
-			self.avatars[el['from']] = sha1(image).hexdigest()
-			try:
-				self.on_avatarUpdate(el['from'])
-			except:
-				print 'chyba v updatu avatara'
+			self.avatars[el['from'].replace("/","%")] = sha1(image).hexdigest()
+			#try:
+			self.on_avatarUpdate(el['from'])
+			#except:
+				#print 'chyba v updatu avatara'
 		else:
 			self.avatars[el['from']] = None
 		self.reactor.callFromThread(self.on_vcardReceived,el['from'], vcard)

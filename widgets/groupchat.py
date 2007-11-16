@@ -307,13 +307,18 @@ class groupChatWidget(QtGui.QWidget):
 		
 		if affiliation=="owner" and self.main.client.groupchats[self.jid].nick==nick:
 			self.ui.admin.show()
-		
+
+		#if self.ui.users.verticalScrollBar().isVisible():
+			#self.ui.users.setColumnWidth(0,int(self.ui.users.width())-38-int(self.ui.users.verticalScrollBar().width()))
+		#else:
+			#self.ui.users.setColumnWidth(0,int(self.ui.users.width())-38)
+
 		# Nastaveni stavu
 		if status!="None":
-			item.setIcon(0,self.main.getIcon(status=status,size="16x16"))
+			item.setIcon(0,self.main.getIcon(status=status,size="32x32"))
 			item.setText(1,self.main.shows[status]+unicode(nick.lower()))
 		else:
-			item.setIcon(0,self.main.getIcon(status="online",size="16x16"))
+			item.setIcon(0,self.main.getIcon(status="online",size="32x32"))
 		# Tooltip
 		#user.setToolTip('<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>Jabber ID: </b>'+str(jid)+'')
 		# serazeni

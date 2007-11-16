@@ -95,8 +95,20 @@
         </property>
         <item>
          <widget class="QTreeWidget" name="users" >
+          <property name="horizontalScrollBarPolicy" >
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
           <property name="alternatingRowColors" >
            <bool>true</bool>
+          </property>
+          <property name="iconSize" >
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
+          <property name="indentation" >
+           <number>0</number>
           </property>
           <property name="rootIsDecorated" >
            <bool>false</bool>

@@ -1092,9 +1092,9 @@ class clientClass(pyxl.client.Client):
 #			self.main.cache.set_avatar(jid, ['nic', 'nic'])
 
 	def on_avatarUpdate(self, jid):
-		print unicode(jid)
+		print "AVATAR:",unicode(jid)
 		pixmap=QtGui.QPixmap()
-		if self.avatars[jid]==None:
+		if self.avatars[jid.replace('/','%')]==None:
 			return
 		#if self.avatars[jid] != None:
 			#f=open(self.main.homeDir+'/avatars/'+jid,"rb")
@@ -1102,10 +1102,14 @@ class clientClass(pyxl.client.Client):
 			#f=open('images/32x32/apps/jabbim.png', 'rb')
 		#image = f.read()
 		#f.close()
-		f=open(self.main.homeDir+'/avatars/'+jid,"rb")
+		try:
+			f=open(self.main.homeDir+'/avatars/'+jid.replace("/","%"),"rb")
+		except:
+			return
 		image = f.read()
 		f.close()
 		pixmap.loadFromData(image)
+
 		if unicode(self.jid.userhost())==unicode(jid):
 			print "Setting avatar"
 			avatar=pixmap.scaledToHeight(48)
@@ -1115,6 +1119,54 @@ class clientClass(pyxl.client.Client):
 			item.setAvatar(QtGui.QIcon(pixmap))
 		for item in self.main.ui.roster.getMetaItems(jid):
 			item[0].setAvatar(QtGui.QIcon(pixmap))
+
+		#for user in self.groupchats[]
+
+		#if self.groupchats[frm].users.has_key(user):
+			#truejid = self.groupchats[frm].users[user].truejid
+			#print truejid
+			#if truejid:
+				#truejid=unicode(jidT.JID(truejid).userhost())
+				#print truejid
+		#else:
+			#truejid = None
+		#file = None
+		#if self.avatars.has_key(frm+'%'+user):
+			#file = self.main.homeDir+'/avatars/'+unicode(frm+'%'+user)
+		#elif truejid != None and self.avatars.has_key(truejid):
+			#file = self.main.homeDir+'/avatars/'+unicode(truejid)
+		#else:
+			##self.getVCard(frm+'/'+user) #tohle asi neni potreba
+			#pass
+							
+
+		#if not os.path.isfile(unicode(file)):
+			#print truejid, frm, user
+			##sef@njs.netlab.cz/Doma jabber@conf.netlab.cz Sef 
+			#file="images/32x32/apps/jabbim.png"
+		#if not w.chat.sizes.has_key(file):
+			#pixmap=QtGui.QPixmap(file).scaledToWidth(32)
+			#w.chat.sizes[file]=str(pixmap.height())
+
+		avatar=QtGui.QIcon(pixmap).pixmap(28,28)
+		result=QtGui.QPixmap(32,32)
+		result.fill(QtCore.Qt.transparent)
+		frame=QtGui.QPixmap("images/32x32/frame.png")
+		painter=QtGui.QPainter(result)
+		painter.fillRect(0,0,32,32,QtGui.QColor(0,0,0,0))
+		painter.drawPixmap((32-avatar.width())/2,(32-avatar.height())/2,avatar)
+		painter.drawPixmap(0,0,frame)
+		painter.end()
+		self.frameAvatar=QtGui.QIcon(result)
+
+		jid = jidT.JID(jid)
+		w,i=self.main.chat.findTab(jid.userhost())
+		if w:
+			for item in w.chat.getUserItems(jid.resource):
+				item.setIcon(0,QtGui.QIcon(result))
+			
+		
+		
 			
 
 	def on_fileReceived(self, sid, id):
@@ -2027,8 +2079,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.offline=not bool
 		self.ui.roster.showOffline=bool
 		self.ui.roster.reshow=True
-		if int(self.ui.roster.item.status)==9 and not bool:
-			self.ui.roster.statusLabel.hide()
+		if self.ui.roster.item:
+			if int(self.ui.roster.item.status)==9 and not bool:
+				self.ui.roster.statusLabel.hide()
 		#if self.ui.roster.statusLabel:
 			#self.ui.roster.statusLabel.setParent(None)
 			#self.ui.roster.statusLabel=None

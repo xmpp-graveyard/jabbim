@@ -178,9 +178,9 @@ class Commands:
 							self.dialog.ui.gridlayout2,
 							element
 							)
-				for elem in element.elements():
-					if elem.name == "title":
-						title = unicode(elem)
+				#for elem in element.elements():
+					#if elem.name == "title":
+						#title = unicode(elem)
 
 				elif command["status"] == "executing":
 					self.dialog.ui.cancel.show()
