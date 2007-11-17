@@ -52,6 +52,17 @@ def makeDataForm(parent,layout,form,row=1):
 					if d.name == "desc":
 						widget.setToolTip(unicode(d))
 				row+=1
+			elif x['type']=="fixed":
+				label=QtGui.QTextEdit(self)
+				label.setReadOnly(True)
+				for child in x.elements():
+					if child.name == 'value':
+						label.setText(unicode(child))
+				layout.addWidget(label,row,0,1,2)
+				for d in x.elements():
+					if d.name == "desc":
+						widget.setToolTip(unicode(d))
+				row+=1
 			elif x['type']=="text-multi":
 				label=QtGui.QLabel(x['label'],parent)
 				layout.addWidget(label,row,0)
@@ -190,18 +201,16 @@ class dataFormsDialog(QtGui.QDialog):
 		#print "ELEMENTS",child.elements()
 		layout=QtGui.QGridLayout(self)
 		
-		self.instructions=QtGui.QTextEdit(self)
-		self.instructions.setReadOnly(True)
-		layout.addWidget(self.instructions,0,0,1,2)
+		#self.instructions=QtGui.QTextEdit(self)
+		#self.instructions.setReadOnly(True)
+		#layout.addWidget(self.instructions,0,0,1,2)
 		self.setMaximumWidth(400);
 		self.var={}
-		row=1
+		row=0
 		registered=False
 		for x in form.elements():
 			if unicode(x.name)=="title":
 				self.setWindowTitle(unicode(x))
-			elif unicode(x.name)=="instructions":
-				self.instructions.setText(unicode(x))
 			elif unicode(x.name)=="registered":
 				registered=True
 
