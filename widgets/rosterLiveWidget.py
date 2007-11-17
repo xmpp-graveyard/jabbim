@@ -1090,6 +1090,7 @@ class rosterWidget(QtGui.QWidget):
 						y+=self.selectedHeight-28
 					y+=self.userHeight
 		if self.reshow:
+			print "hiding"
 			self.statusLabel.hide()
 	def itemAt(self,x1,y1,count=None):
 		x=0

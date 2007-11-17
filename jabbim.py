@@ -2088,8 +2088,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.roster.showOffline=bool
 		self.ui.roster.reshow=True
 		if self.ui.roster.item:
-			if int(self.ui.roster.item.status)==9 and not bool:
-				self.ui.roster.statusLabel.hide()
+			if self.ui.roster.item.typ=="user":
+				if int(self.ui.roster.item.status)==9 and not bool:
+					self.ui.roster.statusLabel.hide()
 		#if self.ui.roster.statusLabel:
 			#self.ui.roster.statusLabel.setParent(None)
 			#self.ui.roster.statusLabel=None
