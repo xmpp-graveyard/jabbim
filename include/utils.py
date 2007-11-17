@@ -60,6 +60,9 @@ def loadConfig(main,status):
 			"chatSplitter2Sizes":[500,128],
 			"groupchatSplitterSizes":[500,120],
 			"groupchatSplitter2Sizes":[45,500,70],
+			"groupchatSplitSizes1":[500,70],
+			"groupchatSplitSizes2":[500,120],
+			"groupchatSplitSizes3":[45,500],
 			"saveGeometry":"True",
 			"saveExpandedGroups":"True",
 			"expandedGroups":[],
@@ -94,6 +97,9 @@ def loadConfig(main,status):
 	main.config["chatSplitter2Sizes"]=map(int, main.config["chatSplitter2Sizes"])
 	main.config["groupchatSplitterSizes"]=map(int, main.config["groupchatSplitterSizes"])
 	main.config["groupchatSplitter2Sizes"]=map(int, main.config["groupchatSplitter2Sizes"])
+	main.config["groupchatSplitSizes1"]=map(int, main.config["groupchatSplitSizes1"])
+	main.config["groupchatSplitSizes2"]=map(int, main.config["groupchatSplitSizes2"])
+	main.config["groupchatSplitSizes3"]=map(int, main.config["groupchatSplitSizes3"])
 	if not os.path.isdir(main.homeDir+'/avatars'):
 		os.mkdir(main.homeDir+'/avatars')
 	if not os.path.isdir(main.homeDir+'/plugins'):

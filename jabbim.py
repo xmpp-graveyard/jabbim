@@ -1800,8 +1800,10 @@ class mainWindow(QtGui.QMainWindow):
 			for i in range(self.chat.ui.chatTab.count()):
 				w=self.chat.ui.chatTab.widget(i)
 				if w.typ=="groupchat":
-					self.config['groupchatSplitterSizes']=list(w.chat.ui.splitter.sizes())
-					self.config['groupchatSplitter2Sizes']=list(w.chat.ui.splitter_2.sizes())
+					self.config['groupchatSplitSizes1']=list(w.chat.ui.splitter.sizes())
+					self.config['groupchatSplitSizes2']=list(w.chat.ui.splitter_2.sizes())
+					self.config['groupchatSplitSizes3']=list(w.chat.ui.splitter_3.sizes())
+
 					break
 			self.config.write()
 		if str(self.config['saveExpandedGroups'])=='True':

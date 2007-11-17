@@ -22,47 +22,8 @@
    <property name="spacing" >
     <number>6</number>
    </property>
-   <item row="1" column="1" >
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" >
-      <size>
-       <width>101</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="1" column="2" >
-    <widget class="QToolButton" name="smileys" >
-     <property name="toolTip" >
-      <string>You can add emoticons by clicking here</string>
-     </property>
-     <property name="text" >
-      <string>...</string>
-     </property>
-     <property name="icon" >
-      <iconset>images/22x22/emotes/biggrin.png</iconset>
-     </property>
-     <property name="checkable" >
-      <bool>true</bool>
-     </property>
-     <property name="popupMode" >
-      <enum>QToolButton::InstantPopup</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="3" >
-    <widget class="QPushButton" name="sendButton" >
-     <property name="text" >
-      <string>&amp;Send</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="4" >
-    <widget class="QSplitter" name="splitter_2" >
+   <item rowspan="2" row="0" column="0" colspan="2" >
+    <widget class="QSplitter" name="splitter_3" >
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
      </property>
@@ -80,11 +41,75 @@
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QSplitter" name="splitter" >
+     <widget class="QSplitter" name="splitter_2" >
       <property name="orientation" >
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QWidget" native="1" name="viewWidget" />
+      <widget class="QSplitter" name="splitter" >
+       <property name="orientation" >
+        <enum>Qt::Vertical</enum>
+       </property>
+       <widget class="QWidget" native="1" name="viewWidget" />
+       <widget class="QWidget" name="" >
+        <layout class="QGridLayout" >
+         <property name="margin" >
+          <number>0</number>
+         </property>
+         <property name="spacing" >
+          <number>6</number>
+         </property>
+         <item row="1" column="2" >
+          <widget class="QPushButton" name="sendButton" >
+           <property name="text" >
+            <string>&amp;Send</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" colspan="3" >
+          <widget class="QWidget" native="1" name="lineWidget" >
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>10</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" >
+          <spacer>
+           <property name="orientation" >
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" >
+            <size>
+             <width>161</width>
+             <height>27</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="1" >
+          <widget class="QToolButton" name="smileys" >
+           <property name="toolTip" >
+            <string>You can add emoticons by clicking here</string>
+           </property>
+           <property name="text" >
+            <string>...</string>
+           </property>
+           <property name="icon" >
+            <iconset>images/22x22/emotes/biggrin.png</iconset>
+           </property>
+           <property name="checkable" >
+            <bool>true</bool>
+           </property>
+           <property name="popupMode" >
+            <enum>QToolButton::InstantPopup</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
       <widget class="QWidget" name="layoutWidget" >
        <layout class="QVBoxLayout" >
         <property name="margin" >
@@ -154,21 +179,13 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QWidget" native="1" name="pluginWidget" />
+        </item>
        </layout>
       </widget>
      </widget>
-     <widget class="QWidget" native="1" name="lineWidget" >
-      <property name="minimumSize" >
-       <size>
-        <width>0</width>
-        <height>10</height>
-       </size>
-      </property>
-     </widget>
     </widget>
-   </item>
-   <item row="1" column="0" >
-    <widget class="QWidget" native="1" name="logs" />
    </item>
   </layout>
  </widget>

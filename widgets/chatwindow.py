@@ -441,8 +441,9 @@ class chatWindow(QtGui.QMainWindow):
 			self.main.config['chatSplitter2Sizes']=list(w.chat.ui.splitter_2.sizes())
 
 		if w.typ=="groupchat":
-			self.main.config['groupchatSplitterSizes']=list(w.chat.ui.splitter.sizes())
-			self.main.config['groupchatSplitter2Sizes']=list(w.chat.ui.splitter_2.sizes())
+			self.main.config['groupchatSplitSizes1']=list(w.chat.ui.splitter.sizes())
+			self.main.config['groupchatSplitSizes2']=list(w.chat.ui.splitter_2.sizes())
+			self.main.config['groupchatSplitSizes3']=list(w.chat.ui.splitter_3.sizes())
 
 		self.ui.chatTab.removeTab(self.ui.chatTab.currentIndex())
 		if int(self.ui.chatTab.count())==0:
