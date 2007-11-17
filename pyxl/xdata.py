@@ -63,9 +63,9 @@ class Xform:
 		el = Element(("jabber:x:data", "x"))
 		el["type"] = self.typ
 		if self.title:
-			el.addElement("title", content = unicode(title))
+			el.addElement("title", content = unicode(self.title))
 		for itnstruction in self.instructions:
-			el.addElement("instructions", contens = unicode(instruction))
+			el.addElement("instructions", content = unicode(instruction))
 		if self.reported:
 			el.addChild(self.reported.buildElement())
 		for item in self.items:
