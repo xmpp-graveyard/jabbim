@@ -319,6 +319,42 @@ class groupChatWidget(QtGui.QWidget):
 			item.setText(1,self.main.shows[status]+unicode(nick.lower()))
 		else:
 			item.setIcon(0,self.main.getIcon(status="online",size="32x32"))
+
+		avatar=item.icon(1)
+		if not avatar.isNull():
+			avatar=avatar.pixmap(28,28)
+			#item.setIcon(1,QtGui.QIcon(avatar))
+	
+			result=QtGui.QPixmap(32,32)
+			result.fill(QtCore.Qt.transparent)
+			frame=QtGui.QPixmap("images/32x32/frame.png")
+			painter=QtGui.QPainter(result)
+			painter.fillRect(0,0,32,32,QtGui.QColor(0,0,0,0))
+			painter.drawPixmap((32-avatar.width())/2,(32-avatar.height())/2,avatar)
+			icon=self.main.getIcon(status=self.main.icons[unicode(item.text(1))[0]],size="16x16")
+			#painter.drawPixmap(0,0,frame)
+			
+			if icon:
+				painter.drawPixmap(16,16,icon.pixmap(16,16))
+			painter.end()
+			#self.frameAvatar=QtGui.QIcon(result)
+		else:
+			result=QtGui.QPixmap(32,32)
+			result.fill(QtCore.Qt.transparent)
+			#frame=QtGui.QPixmap("images/32x32/frame.png")
+			painter=QtGui.QPainter(result)
+			painter.fillRect(0,0,32,32,QtGui.QColor(0,0,0,0))
+			#painter.drawPixmap((32-avatar.width())/2,(32-avatar.height())/2,avatar)
+			icon=self.main.getIcon(status=self.main.icons[unicode(item.text(1))[0]],size="16x16")
+			#painter.drawPixmap(0,0,frame)
+			
+			if icon:
+				painter.drawPixmap(16,16,icon.pixmap(16,16))
+			painter.end()
+
+		item.setIcon(0,QtGui.QIcon(result))
+
+
 		# Tooltip
 		#user.setToolTip('<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>Jabber ID: </b>'+str(jid)+'')
 		# serazeni
