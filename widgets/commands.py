@@ -45,16 +45,23 @@ class CommandsDialog(QtGui.QDialog):
 
 	def _reset(self): 
 		self.ui.label.setText(u"")
-		for button in self.group.buttons():
-			try:
-				self.ui.gridlayout2.removeWidget(button)
-				button.setParent(None)
-			except:
-				pass
-		del self.ui.gridlayout2
-		self.ui.gridlayout2 = QtGui.QGridLayout()
-		self.ui.gridlayout2.setObjectName("gridlayout2")
-		self.ui.gridlayout.addLayout(self.ui.gridlayout2,3,0,1,1)
+		#for button in self.group.buttons():
+			#try:
+				#self.ui.gridlayout2.removeWidget(button)
+				#button.setParent(None)
+			#except:
+				#pass
+		for i in range(self.ui.gridlayout2.count()):
+			item=self.ui.gridlayout2.itemAt(0)
+			if item.widget():
+				item.widget().setParent(None)
+			#self.ui.gridlayout2.removeItem(item)
+		
+		#self.ui.gridlayout.removeItem(self.ui.gridlayout2)
+		#self.ui.gridlayout2.deleteLater
+		#self.ui.gridlayout2 = QtGui.QGridLayout()
+		#self.ui.gridlayout2.setObjectName("gridlayout2")
+		#self.ui.gridlayout.addLayout(self.ui.gridlayout2,3,0,1,1)
 
 		self.ui.next.hide()
 		self.ui.previous.hide()
