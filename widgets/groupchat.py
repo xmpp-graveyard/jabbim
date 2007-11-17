@@ -194,6 +194,17 @@ class groupChatWidget(QtGui.QWidget):
 		for key,value in self.main.plugins.iteritems():
 			value.buildChatWidget(unicode(jidT.JID(self.jid).userhost()),self.ui.layoutWidget.layout())
 		self.unread=0
+		
+		self.connecting=QtGui.QLabel(self.tr("Connecting to MUC. This can take a few seconds."),self.ui.textEdit)
+		self.connecting.adjustSize()
+	
+	def showConnecting(self):
+		pos=self.ui.textEdit.mapToGlobal(QtCore.QPoint(0,0))
+		x=pos.x()
+		y=pos.y()
+		self.connecting.setGeometry((x+self.ui.textEdit.width())/2-self.connecting.width()/2,(y+self.ui.textEdit.height())/2-self.connecting.height()/2, self.connecting.width(), self.connecting.height())
+		self.connecting.show()
+		
 	def addRoles(self):
 		self.addRole("participant",self.tr("Participants"))
 		self.addRole("moderator",self.tr("Moderators"))
@@ -295,6 +306,8 @@ class groupChatWidget(QtGui.QWidget):
 		self.refreshStats()
 
 	def editUser(self,nick,status,role=None,affiliation=None):
+		if not self.connecting.isHidden():
+			self.connecting.hide()
 		if self.isUser(unicode(nick))==False:
 			if self.roles.has_key(role):
 				item=QtGui.QTreeWidgetItem(self.roles[role])

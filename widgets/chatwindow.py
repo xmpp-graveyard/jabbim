@@ -410,7 +410,9 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.chatTab.addTab(tab,QtGui.QIcon("images/16x16/categories/muc.png"), jmeno)
 		self.setWindowTitle(unicode(jmeno))
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
+		
 		self.show()
+		tab.chat.showConnecting()
 		self.raise_()
 		self.activateWindow()
 		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
