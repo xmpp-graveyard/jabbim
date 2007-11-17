@@ -1,3 +1,4 @@
+#-*-coding:UTF-8-*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -84,6 +85,7 @@ class Client(derived):
 		self.caps_version = self.version
 		self.caps_ext = None
 		self.discofeatures = {} # node: [feature1, feature2]
+		self.discoitems = {None:[],"http://jabber.org/protocol/commands":[]}
 		self.ft_proxies = {
 		'proxy.netlab.cz':["77.48.19.1", "7777"] 
 		}
@@ -98,6 +100,11 @@ class Client(derived):
 		self.registerFeature('jabber:iq:time')
 		self.registerFeature('http://jabber.org/protocol/chatstates')
 		self.registerFeature('http://jabber.org/protocol/commands')
+
+		self.registerFeature('http://jabber.org/protocol/disco#info', 'http://jabber.org/protocol/commands')
+		self.registerFeature('jabber:x:data', 'http://jabber.org/protocol/commands')
+		self.registerFeature('http://jabber.org/protocol/commands','http://jabber.org/protocol/commands')
+
 		self.caps_cache = {} # 'node': [feature1, feature2]
 		
 # 		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
@@ -223,6 +230,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/presence[@type='error']", self.onPresenceError, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:version']", self.onVersion, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#info']", self.onDiscoInfo, 1)
+		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#items']", self.onDiscoItems, 1) 
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/command[@xmlns='http://jabber.org/protocol/commands'][@node]", self.onCommand, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:last']", self.onLast, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/time[@xmlns='urn:xmpp:time']", self.onTime202, 1)
@@ -251,7 +259,6 @@ class Client(derived):
 		self.commands = Commands(self.main)
 		self.commands.registerNode("http://jabber.org/protocol/rc#set-status", self.main.tr("Change status"), rc.fSetStatus)
 		self.commands.registerNode("http://jabber.org/protocol/rc#leave-groupchats", self.main.tr("Leave groupchats"), rc.fLeaveGC)
-		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#items'][@node='http://jabber.org/protocol/commands']", self.commands.commandsList, 1)
 
 #		def pis(co):
 #			print co
@@ -299,13 +306,18 @@ class Client(derived):
 		self.disp(iq['id'])
 		d.addCallback(self._pepReceived).addErrback(self.chyba)
 
-	def registerFeature(self, feature, node = None):
+	def registerFeature(self, feature, node = None, identity = None):#{"category":None,"type":None,"name":None}):
 		if self.discofeatures.has_key(node):
-			self.discofeatures[node].append(feature)
+			self.discofeatures[node].append((feature,))
 		else:
 			self.discofeatures[node] = []
-			self.discofeatures[node].append(feature)
+			self.discofeatures[node].append((feature, identity))
 
+	#def registerItem(self, jid = None, name = None, node = None, parentnode = None):
+	#	log.msg("registering disco#item")
+	#	if jid == None:
+	#		jid = self.jid.full()
+	#	self.discoitems[parentnode].append({"jid":jid,"name":name,"node":node})
 
 
 	def onRosterAdd(self,el):
@@ -901,9 +913,44 @@ class Client(derived):
 			q['node'] = node
 		for feature in self.discofeatures[node]:
 			f = q.addElement('feature')
-			f['var'] = feature
+			f['var'] = feature[0]
+			if len(feature) > 1:
+				if type(feature[1]) == type({}):
+					log.msg("FEATURESM: %s" % `feature`)
+					ide = q.addElement("identity")
+					for k in feature[1].keys():
+						ide[k] = feature[1][k]
 
 #		self.on_xml(iq.toXml())
+		self.xmlstream.send(iq)
+
+	def onDiscoItems(self, el):
+		log.msg( 'received disco#items request')
+		log.msg("ITEMS: "+`self.discoitems`)
+		self.disp(el['id'])
+		iq = Element((None,'iq'))
+		iq['to'] = el['from']
+		iq['type'] = 'result'
+		iq['id'] = el['id']
+		q = iq.addElement('query', 'http://jabber.org/protocol/disco#items')
+		node = None
+		for child in el.elements():
+			if child.name == "query":
+				if child.hasAttribute("node"):
+					node = child["node"]
+		if node != None:
+			q["node"] = node
+		try:
+			for item in self.discoitems[node]:
+				i = q.addElement("item")
+				i["jid"] = item["jid"]
+				if item["name"] != None:
+					i["name"] = item["name"]
+				if item["node"] != None:
+					i["node"] = item["node"]
+		except KeyError:
+			pass
+
 		self.xmlstream.send(iq)
 
 	def onCommand(self, el):

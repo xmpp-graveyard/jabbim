@@ -119,9 +119,12 @@ class Commands:
 		self.main = main
 
 	def registerNode(self, name, desc, firststage, jid = None, public=False):
-	#	self.main.client.registerFeature(name, "http://jabber.org/protocol/commands")
 		if jid == None:
 			jid = unicode(self.main.client.jid.full())
+		self.main.client.registerFeature("http://jabber.org/protocol/commands", name, identity={"category":"automation","type":"command-node","name":desc})
+		self.main.client.registerFeature("jabber:x:data", name)
+		self.main.client.discoitems["http://jabber.org/protocol/commands"].append({"jid":jid,"name":desc,"node":name})
+		self.main.client.discoitems[name] = []
 		self.nodes[name] = [desc, firststage, jid, public]
 
 	def startSession(self, node, jid, fid):
