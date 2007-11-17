@@ -1094,6 +1094,8 @@ class clientClass(pyxl.client.Client):
 	def on_avatarUpdate(self, jid):
 		print "AVATAR:",unicode(jid)
 		pixmap=QtGui.QPixmap()
+		if not self.avatars.has_key(jid.replace('/','%')):
+			return
 		if self.avatars[jid.replace('/','%')]==None:
 			return
 		#if self.avatars[jid] != None:

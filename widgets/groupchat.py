@@ -245,7 +245,7 @@ class groupChatWidget(QtGui.QWidget):
 	def userClicked(self,item,i):
 		if item.parent()==None:
 			return
-		self.main.chat.addChatTab(self.jid+"/"+unicode(item.text(0)),item.text(0),item.icon(0))
+		self.main.chat.addChatTab(self.jid+"/"+unicode(item.text(0)),item.text(0),item.icon(1))
 		self.main.chat.activate()
 		
 	def clearChat(self):
@@ -308,7 +308,9 @@ class groupChatWidget(QtGui.QWidget):
 	def editUser(self,nick,status,role=None,affiliation=None):
 		if not self.connecting.isHidden():
 			self.connecting.hide()
+		new=False
 		if self.isUser(unicode(nick))==False:
+			new=True
 			if self.roles.has_key(role):
 				item=QtGui.QTreeWidgetItem(self.roles[role])
 			else:
@@ -332,6 +334,10 @@ class groupChatWidget(QtGui.QWidget):
 			item.setText(1,self.main.shows[status]+unicode(nick.lower()))
 		else:
 			item.setIcon(0,self.main.getIcon(status="online",size="32x32"))
+
+		if new:
+			self.main.client.on_avatarUpdate(self.jid+"/"+unicode(item.text(0)))
+
 
 		avatar=item.icon(1)
 		if not avatar.isNull():
