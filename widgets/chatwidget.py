@@ -293,6 +293,8 @@ class chatWidget(QtGui.QWidget):
 			painter.end()
 			self.ui.selfAvatar.setPixmap(result)
 			self.ui.selfAvatar.setMaximumWidth(64)
+		else:
+			self.ui.selfAvatar.hide()
 
 
 	def bold(self,bool):
