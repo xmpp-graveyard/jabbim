@@ -282,6 +282,19 @@ class chatWidget(QtGui.QWidget):
 		for key,value in self.main.plugins.iteritems():
 			value.buildChatWidget(unicode(jidT.JID(self.jid).userhost()),self.ui.layoutWidget.layout())
 
+		if self.main.selfAvatar:
+			result=QtGui.QPixmap(64,64)
+			result.fill(QtCore.Qt.transparent)
+			avatar=QtGui.QIcon(self.main.selfAvatar).pixmap(60,58)
+			frame=QtGui.QPixmap("images/64x64/frame.png")
+			painter=QtGui.QPainter(result)
+			painter.drawPixmap((64-avatar.width())/2,(64-avatar.height())/2,avatar)
+			painter.drawPixmap(0,0,frame)
+			painter.end()
+			self.ui.selfAvatar.setPixmap(result)
+			self.ui.selfAvatar.setMaximumWidth(64)
+
+
 	def bold(self,bool):
 		print bool
 		if bool==True:

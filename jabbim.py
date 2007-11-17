@@ -1113,6 +1113,7 @@ class clientClass(pyxl.client.Client):
 		if unicode(self.jid.userhost())==unicode(jid):
 			print "Setting avatar"
 			avatar=pixmap.scaledToHeight(48)
+			self.main.selfAvatar=pixmap
 			self.main.ui.selfAvatar.setPixmap(avatar)
 			self.main.ui.selfAvatar.setMinimumWidth(avatar.width()+3)
 		for item in self.main.ui.roster.getUserItems(jid):
@@ -1214,7 +1215,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
 		self.ui.toggleInvisible.hide()
-
+		self.selfAvatar=None
 		self.selfStatus=""
 		self.setAttribute(QtCore.Qt.WA_AlwaysShowToolTips,True)
 

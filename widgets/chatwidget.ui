@@ -22,30 +22,7 @@
    <property name="spacing" >
     <number>6</number>
    </property>
-   <item row="1" column="2" >
-    <widget class="QPushButton" name="boldButton" >
-     <property name="text" >
-      <string>bold</string>
-     </property>
-     <property name="checkable" >
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1" >
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" >
-      <size>
-       <width>301</width>
-       <height>29</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="0" column="0" colspan="4" >
+   <item row="0" column="0" >
     <widget class="QSplitter" name="splitter_2" >
      <property name="orientation" >
       <enum>Qt::Horizontal</enum>
@@ -62,13 +39,106 @@
         </size>
        </property>
       </widget>
-      <widget class="QWidget" native="1" name="lineWidget" >
-       <property name="minimumSize" >
-        <size>
-         <width>0</width>
-         <height>10</height>
-        </size>
-       </property>
+      <widget class="QWidget" name="" >
+       <layout class="QVBoxLayout" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
+        <property name="spacing" >
+         <number>6</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" >
+          <property name="margin" >
+           <number>0</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="selfAvatar" >
+            <property name="sizePolicy" >
+             <sizepolicy>
+              <hsizetype>1</hsizetype>
+              <vsizetype>1</vsizetype>
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text" >
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" native="1" name="lineWidget" >
+            <property name="minimumSize" >
+             <size>
+              <width>0</width>
+              <height>10</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" >
+          <property name="margin" >
+           <number>0</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item>
+           <spacer>
+            <property name="orientation" >
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" >
+             <size>
+              <width>111</width>
+              <height>29</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="boldButton" >
+            <property name="text" >
+             <string>bold</string>
+            </property>
+            <property name="checkable" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="smileys" >
+            <property name="text" >
+             <string>...</string>
+            </property>
+            <property name="icon" >
+             <iconset>images/22x22/emotes/biggrin.png</iconset>
+            </property>
+            <property name="checkable" >
+             <bool>true</bool>
+            </property>
+            <property name="popupMode" >
+             <enum>QToolButton::InstantPopup</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="sendButton" >
+            <property name="text" >
+             <string>&amp;Send</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
      </widget>
      <widget class="QWidget" name="layoutWidget" >
@@ -103,6 +173,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QLabel" name="chatstate" >
+         <property name="text" >
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="sendFile" >
          <property name="text" >
           <string>Send File</string>
@@ -124,46 +201,6 @@
        </item>
       </layout>
      </widget>
-    </widget>
-   </item>
-   <item row="1" column="3" >
-    <layout class="QHBoxLayout" >
-     <property name="margin" >
-      <number>0</number>
-     </property>
-     <property name="spacing" >
-      <number>6</number>
-     </property>
-     <item>
-      <widget class="QToolButton" name="smileys" >
-       <property name="text" >
-        <string>...</string>
-       </property>
-       <property name="icon" >
-        <iconset>images/22x22/emotes/biggrin.png</iconset>
-       </property>
-       <property name="checkable" >
-        <bool>true</bool>
-       </property>
-       <property name="popupMode" >
-        <enum>QToolButton::InstantPopup</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="sendButton" >
-       <property name="text" >
-        <string>&amp;Send</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="1" column="0" >
-    <widget class="QLabel" name="chatstate" >
-     <property name="text" >
-      <string/>
-     </property>
     </widget>
    </item>
   </layout>
