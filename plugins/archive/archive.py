@@ -96,7 +96,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Message Archiving'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Archive Plugin'
-		self.version = '0.182'
+		self.version = '0.185'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 # 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
@@ -140,7 +140,9 @@ class Plugin(plugins.PluginBase):
 	def buildChatWidget(self,jid,layout):
 		print "buildChatWidget"
 		button=QtGui.QPushButton()
-		button.setText("History")
+		#button.setText("History")
+		button.setIconSize(QtCore.QSize(32,32))
+		button.setIcon(QtGui.QIcon("%s/plugins/%s/history.png"%(self.homeDir, self.fname)))
 		button.jid=unicode(jid)
 		self.group.addButton(button)
 		layout.addWidget(button)

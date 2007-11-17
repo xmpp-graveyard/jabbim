@@ -29,6 +29,77 @@ from twisted.web.domhelpers import gatherTextNodes
 import filetransfer
 from twisted.words.protocols.jabber import jid as jidT
 
+class flowLayout(QtGui.QLayout):
+	def __init__(self, parent=None, margin=0, spacing=-1):
+		QtGui.QLayout.__init__(self, parent)
+
+		if parent is not None:
+			self.setMargin(margin)
+		self.setSpacing(spacing)
+
+		self.itemList = []
+
+	def addItem(self, item):
+		self.itemList.append(item)
+
+	def count(self):
+		return len(self.itemList)
+
+	def itemAt(self, index):
+		if index >= 0 and index < len(self.itemList):
+			return self.itemList[index]
+
+	def takeAt(self, index):
+		if index >= 0 and index < len(self.itemList):
+			return self.itemList.pop(index)
+
+	def expandingDirections(self):
+		return QtCore.Qt.Orientations(QtCore.Qt.Orientation(0))
+
+	def hasHeightForWidth(self):
+		return True
+
+	def heightForWidth(self, width):
+		height = self.doLayout(QtCore.QRect(0, 0, width, 0), True)
+		return height
+
+	def setGeometry(self, rect):
+		QtGui.QLayout.setGeometry(self, rect)
+		self.doLayout(rect, False)
+
+	def sizeHint(self):
+		return self.minimumSize()
+
+	def minimumSize(self):
+		size = QtCore.QSize()
+
+		for item in self.itemList:
+			size = size.expandedTo(item.minimumSize())
+
+		size += QtCore.QSize(2 * self.margin(), 2 * self.margin())
+		return size
+
+	def doLayout(self, rect, testOnly):
+		x = rect.x()
+		y = rect.y()
+		lineHeight = 0
+
+		for item in self.itemList:
+			nextX = x + item.sizeHint().width() + self.spacing()
+			if nextX - self.spacing() > rect.right() and lineHeight > 0:
+				x = rect.x()
+				y = y + lineHeight + self.spacing()
+				nextX = x + item.sizeHint().width() + self.spacing()
+				lineHeight = 0
+
+			if not testOnly:
+				item.setGeometry(QtCore.QRect(QtCore.QPoint(x, y), item.sizeHint()))
+
+			x = nextX
+			lineHeight = max(lineHeight, item.sizeHint().height())
+
+		return y + lineHeight - rect.y()
+
 class textView(QtGui.QTextEdit):
 	def __init__(self,main,parent):
 		QtGui.QTextEdit.__init__(self,parent)
@@ -232,7 +303,6 @@ class chatWidget(QtGui.QWidget):
 		self.first=None
 		#self.ui.gridlayout.addWidget(self.ui.line,2,0,1,1)
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
-		QtCore.QObject.connect(self.ui.sendFile, QtCore.SIGNAL("clicked ()"),self.sendFiles)
 		if self.main.config['chatMode']=="normal":
 			QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("textChanged ()"),self.lines)
@@ -279,8 +349,19 @@ class chatWidget(QtGui.QWidget):
 		if not self.xhtml:
 			self.ui.boldButton.hide()
 
+
+		self.flowLayout = flowLayout()
+		
 		for key,value in self.main.plugins.iteritems():
-			value.buildChatWidget(unicode(jidT.JID(self.jid).userhost()),self.ui.layoutWidget.layout())
+			value.buildChatWidget(unicode(jidT.JID(self.jid).userhost()),self.flowLayout)
+		
+		self.ui.sendFile=QtGui.QPushButton()
+		self.ui.sendFile.setIconSize(QtCore.QSize(32,32))
+		self.ui.sendFile.setIcon(QtGui.QIcon("images/32x32/actions/upload"))
+		self.flowLayout.addWidget(self.ui.sendFile)
+		
+		self.ui.pluginWidget.setLayout(self.flowLayout)
+		QtCore.QObject.connect(self.ui.sendFile, QtCore.SIGNAL("clicked ()"),self.sendFiles)
 
 		if self.main.selfAvatar:
 			result=QtGui.QPixmap(64,64)

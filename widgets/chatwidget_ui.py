@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Sat Nov 17 07:09:44 2007
+# Created: Sat Nov 17 17:40:34 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -32,10 +32,10 @@ class Ui_chatwidget(object):
         self.viewWidget.setMinimumSize(QtCore.QSize(0,10))
         self.viewWidget.setObjectName("viewWidget")
 
-        self.widget = QtGui.QWidget(self.splitter)
-        self.widget.setObjectName("widget")
+        self.layoutWidget = QtGui.QWidget(self.splitter)
+        self.layoutWidget.setObjectName("layoutWidget")
 
-        self.vboxlayout = QtGui.QVBoxLayout(self.widget)
+        self.vboxlayout = QtGui.QVBoxLayout(self.layoutWidget)
         self.vboxlayout.setMargin(0)
         self.vboxlayout.setSpacing(6)
         self.vboxlayout.setObjectName("vboxlayout")
@@ -45,7 +45,7 @@ class Ui_chatwidget(object):
         self.hboxlayout.setSpacing(6)
         self.hboxlayout.setObjectName("hboxlayout")
 
-        self.selfAvatar = QtGui.QLabel(self.widget)
+        self.selfAvatar = QtGui.QLabel(self.layoutWidget)
 
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(1),QtGui.QSizePolicy.Policy(1))
         sizePolicy.setHorizontalStretch(0)
@@ -55,7 +55,7 @@ class Ui_chatwidget(object):
         self.selfAvatar.setObjectName("selfAvatar")
         self.hboxlayout.addWidget(self.selfAvatar)
 
-        self.lineWidget = QtGui.QWidget(self.widget)
+        self.lineWidget = QtGui.QWidget(self.layoutWidget)
         self.lineWidget.setMinimumSize(QtCore.QSize(0,10))
         self.lineWidget.setObjectName("lineWidget")
         self.hboxlayout.addWidget(self.lineWidget)
@@ -69,49 +69,49 @@ class Ui_chatwidget(object):
         spacerItem = QtGui.QSpacerItem(111,29,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.hboxlayout1.addItem(spacerItem)
 
-        self.boldButton = QtGui.QPushButton(self.widget)
+        self.boldButton = QtGui.QPushButton(self.layoutWidget)
         self.boldButton.setCheckable(True)
         self.boldButton.setObjectName("boldButton")
         self.hboxlayout1.addWidget(self.boldButton)
 
-        self.smileys = QtGui.QToolButton(self.widget)
+        self.smileys = QtGui.QToolButton(self.layoutWidget)
         self.smileys.setIcon(QtGui.QIcon("images/22x22/emotes/biggrin.png"))
         self.smileys.setCheckable(True)
         self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.smileys.setObjectName("smileys")
         self.hboxlayout1.addWidget(self.smileys)
 
-        self.sendButton = QtGui.QPushButton(self.widget)
+        self.sendButton = QtGui.QPushButton(self.layoutWidget)
         self.sendButton.setObjectName("sendButton")
         self.hboxlayout1.addWidget(self.sendButton)
         self.vboxlayout.addLayout(self.hboxlayout1)
 
-        self.layoutWidget = QtGui.QWidget(self.splitter_2)
-        self.layoutWidget.setObjectName("layoutWidget")
+        self.layoutWidget1 = QtGui.QWidget(self.splitter_2)
+        self.layoutWidget1.setObjectName("layoutWidget1")
 
-        self.vboxlayout1 = QtGui.QVBoxLayout(self.layoutWidget)
+        self.vboxlayout1 = QtGui.QVBoxLayout(self.layoutWidget1)
         self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setSpacing(6)
         self.vboxlayout1.setObjectName("vboxlayout1")
 
-        self.avatar = QtGui.QLabel(self.layoutWidget)
+        self.avatar = QtGui.QLabel(self.layoutWidget1)
         self.avatar.setAlignment(QtCore.Qt.AlignCenter)
         self.avatar.setObjectName("avatar")
         self.vboxlayout1.addWidget(self.avatar)
 
-        self.label = QtGui.QLabel(self.layoutWidget)
+        self.label = QtGui.QLabel(self.layoutWidget1)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setWordWrap(True)
         self.label.setObjectName("label")
         self.vboxlayout1.addWidget(self.label)
 
-        self.chatstate = QtGui.QLabel(self.layoutWidget)
+        self.chatstate = QtGui.QLabel(self.layoutWidget1)
         self.chatstate.setObjectName("chatstate")
         self.vboxlayout1.addWidget(self.chatstate)
 
-        self.sendFile = QtGui.QPushButton(self.layoutWidget)
-        self.sendFile.setObjectName("sendFile")
-        self.vboxlayout1.addWidget(self.sendFile)
+        self.pluginWidget = QtGui.QWidget(self.layoutWidget1)
+        self.pluginWidget.setObjectName("pluginWidget")
+        self.vboxlayout1.addWidget(self.pluginWidget)
 
         spacerItem1 = QtGui.QSpacerItem(20,281,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
         self.vboxlayout1.addItem(spacerItem1)
@@ -126,5 +126,4 @@ class Ui_chatwidget(object):
         self.smileys.setText(QtGui.QApplication.translate("chatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.sendButton.setText(QtGui.QApplication.translate("chatwidget", "&Send", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("chatwidget", "name", None, QtGui.QApplication.UnicodeUTF8))
-        self.sendFile.setText(QtGui.QApplication.translate("chatwidget", "Send File", None, QtGui.QApplication.UnicodeUTF8))
 

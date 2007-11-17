@@ -39,7 +39,7 @@
         </size>
        </property>
       </widget>
-      <widget class="QWidget" name="" >
+      <widget class="QWidget" name="layoutWidget" >
        <layout class="QVBoxLayout" >
         <property name="margin" >
          <number>0</number>
@@ -180,11 +180,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="sendFile" >
-         <property name="text" >
-          <string>Send File</string>
-         </property>
-        </widget>
+        <widget class="QWidget" native="1" name="pluginWidget" />
        </item>
        <item>
         <spacer>
