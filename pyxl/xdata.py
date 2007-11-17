@@ -64,7 +64,7 @@ class Xform:
 		el["type"] = self.typ
 		if self.title:
 			el.addElement("title", content = unicode(self.title))
-		for itnstruction in self.instructions:
+		for instruction in self.instructions:
 			el.addElement("instructions", content = unicode(instruction))
 		if self.reported:
 			el.addChild(self.reported.buildElement())

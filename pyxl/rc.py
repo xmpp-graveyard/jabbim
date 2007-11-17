@@ -32,3 +32,27 @@ class SetStatus(Stage):
 		icon = self.main.getIcon(self.data["show"][0][0], size="16x16")
 		self.main.ui.statusButton.setIcon(self.main.getIcon(status=self.data["show"][0][0], size="16x16"))
 		self.main.ui.showWidget.setText(unicode(self.data["status"][0][0]))
+
+class fLeaveGC(Stage):
+	def exec_(self):
+		self.status = "executing"
+		self.actions = {"cancel":CancelStage, "complete":LeaveGC, "execute":LeaveGC}
+		self.execute = "complete"
+
+		gcop = [[key, key] for key in self.main.client.groupchats.keys()]
+		
+		field = Field("groupchats", "list-multi", self.main.tr("Groupchats to leave: "), options=gcop)
+		self.xform = Xform("form", fields=[field], title=self.main.tr("Leave groupchats"),instructions=[self.main.tr("Choose groupchats you want remote client to leave.")]).buildElement()
+
+class LeaveGC(Stage):
+	def exec_(self):
+		self.status = "completed"
+		self.actions = {}
+		
+		for gc in self.data["groupchats"][0]:
+			tab,index=self.main.chat.findTab(gc) 
+			if tab != None:
+				self.main.chat.ui.chatTab.setCurrentIndex(index) 
+				self.main.chat.removeTab()
+		self.xform = Xform("result", instructions=self.main.tr("Groupchats left.")).buildElement()
+

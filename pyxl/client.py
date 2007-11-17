@@ -250,6 +250,7 @@ class Client(derived):
 
 		self.commands = Commands(self.main)
 		self.commands.registerNode("http://jabber.org/protocol/rc#set-status", self.main.tr("Change status"), rc.fSetStatus)
+		self.commands.registerNode("http://jabber.org/protocol/rc#leave-groupchats", self.main.tr("Leave groupchats"), rc.fLeaveGC)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#items'][@node='http://jabber.org/protocol/commands']", self.commands.commandsList, 1)
 
 #		def pis(co):
