@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Sat Nov 17 19:10:45 2007
+# Created: Sat Nov 17 20:04:48 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -97,10 +97,6 @@ class Ui_groupchatwidget(object):
         self.vboxlayout1.addWidget(self.roomConfig)
         self.vboxlayout.addWidget(self.admin)
 
-        self.clearChat = QtGui.QPushButton(self.layoutWidget)
-        self.clearChat.setObjectName("clearChat")
-        self.vboxlayout.addWidget(self.clearChat)
-
         self.pluginWidget = QtGui.QWidget(self.layoutWidget)
         self.pluginWidget.setObjectName("pluginWidget")
         self.vboxlayout.addWidget(self.pluginWidget)
@@ -119,5 +115,4 @@ class Ui_groupchatwidget(object):
         self.users.headerItem().setText(1,QtGui.QApplication.translate("groupchatwidget", "jid", None, QtGui.QApplication.UnicodeUTF8))
         self.roomConfig.setToolTip(QtGui.QApplication.translate("groupchatwidget", "You can set up logging of the room etc", None, QtGui.QApplication.UnicodeUTF8))
         self.roomConfig.setText(QtGui.QApplication.translate("groupchatwidget", "Room configuration", None, QtGui.QApplication.UnicodeUTF8))
-        self.clearChat.setText(QtGui.QApplication.translate("groupchatwidget", "Clear chat", None, QtGui.QApplication.UnicodeUTF8))
 

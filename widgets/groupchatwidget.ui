@@ -173,13 +173,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="clearChat" >
-          <property name="text" >
-           <string>Clear chat</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QWidget" native="1" name="pluginWidget" />
         </item>
        </layout>

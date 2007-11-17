@@ -227,7 +227,7 @@ class groupChatWidget(QtGui.QWidget):
 
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.roomConfig, QtCore.SIGNAL("clicked ()"),self.roomConfigClicked)
-		QtCore.QObject.connect(self.ui.clearChat, QtCore.SIGNAL("clicked ()"),self.clearChat)
+		
 		
 		#QtCore.QObject.connect(self.buttonGroup, QtCore.SIGNAL("buttonClicked ( QAbstractButton * )  "),self.logButton)
 		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
@@ -269,6 +269,12 @@ class groupChatWidget(QtGui.QWidget):
 		
 		for key,value in self.main.plugins.iteritems():
 			value.buildChatWidget(unicode(jidT.JID(self.jid).userhost()),self.flowLayout)
+		
+		self.ui.clearChat=QtGui.QPushButton()
+		self.ui.clearChat.setIconSize(QtCore.QSize(32,32))
+		self.ui.clearChat.setIcon(QtGui.QIcon("images/32x32/actions/clear.png"))
+		self.flowLayout.addWidget(self.ui.clearChat)
+		QtCore.QObject.connect(self.ui.clearChat, QtCore.SIGNAL("clicked ()"),self.clearChat)
 		
 		self.ui.pluginWidget.setLayout(self.flowLayout)
 
