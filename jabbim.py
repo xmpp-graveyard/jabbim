@@ -2368,6 +2368,18 @@ class XMLConsole(QtGui.QMainWindow):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.ui=widgets.xmlConsole.Ui_xmlConsole()
 		self.ui.setupUi(self)
+		QtCore.QObject.connect(self.ui.send,QtCore.SIGNAL("clicked()"),self.send)
+		QtCore.QObject.connect(self.ui.message,QtCore.SIGNAL("clicked()"),self.message)
+		QtCore.QObject.connect(self.ui.presence,QtCore.SIGNAL("clicked()"),self.presence)
+
+	def message(self):
+		self.ui.textEdit.setText("<message to='USER@DOMAIN' from='"+MainWindow.client.jid.full()+"'>\n<body>Body text</body>\n</message>")
+
+	def presence(self):
+		self.ui.textEdit.setText("<presence from='"+MainWindow.client.jid.full()+"'>\n<show>???</show>\n<status>???</status>\n</presence>")
+
+	def send(self):
+		text=unicode(self.ui.textEdit.toPlainText())
 
 class customStatusWindow(QtGui.QDialog):
 	def __init__(self,jid,show=None,parent=None):

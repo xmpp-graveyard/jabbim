@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/xmlConsole.ui'
 #
-# Created: Wed Nov 14 06:54:03 2007
+# Created: Sun Nov 18 18:43:41 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -22,69 +22,62 @@ class Ui_xmlConsole(object):
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
 
-        self.xml = QtGui.QTextBrowser(self.centralwidget)
+        self.splitter = QtGui.QSplitter(self.centralwidget)
+        self.splitter.setOrientation(QtCore.Qt.Vertical)
+        self.splitter.setObjectName("splitter")
+
+        self.xml = QtGui.QTextBrowser(self.splitter)
         self.xml.setObjectName("xml")
-        self.gridlayout.addWidget(self.xml,0,0,1,1)
+
+        self.widget = QtGui.QWidget(self.splitter)
+        self.widget.setObjectName("widget")
+
+        self.gridlayout1 = QtGui.QGridLayout(self.widget)
+        self.gridlayout1.setMargin(0)
+        self.gridlayout1.setSpacing(6)
+        self.gridlayout1.setObjectName("gridlayout1")
+
+        self.textEdit = QtGui.QTextEdit(self.widget)
+        self.textEdit.setObjectName("textEdit")
+        self.gridlayout1.addWidget(self.textEdit,1,0,1,6)
+
+        self.clear = QtGui.QPushButton(self.widget)
+        self.clear.setObjectName("clear")
+        self.gridlayout1.addWidget(self.clear,0,1,1,1)
+
+        self.presence = QtGui.QPushButton(self.widget)
+        self.presence.setObjectName("presence")
+        self.gridlayout1.addWidget(self.presence,0,3,1,1)
+
+        self.iq = QtGui.QPushButton(self.widget)
+        self.iq.setObjectName("iq")
+        self.gridlayout1.addWidget(self.iq,0,4,1,1)
+
+        self.enable = QtGui.QCheckBox(self.widget)
+        self.enable.setChecked(False)
+        self.enable.setObjectName("enable")
+        self.gridlayout1.addWidget(self.enable,0,0,1,1)
+
+        spacerItem = QtGui.QSpacerItem(81,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout1.addItem(spacerItem,0,2,1,1)
+
+        self.message = QtGui.QPushButton(self.widget)
+        self.message.setObjectName("message")
+        self.gridlayout1.addWidget(self.message,0,5,1,1)
+        self.gridlayout.addWidget(self.splitter,0,0,1,1)
 
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(6)
         self.hboxlayout.setObjectName("hboxlayout")
 
-        self.enable = QtGui.QCheckBox(self.centralwidget)
-        self.enable.setChecked(False)
-        self.enable.setObjectName("enable")
-        self.hboxlayout.addWidget(self.enable)
-
-        self.clear = QtGui.QPushButton(self.centralwidget)
-        self.clear.setObjectName("clear")
-        self.hboxlayout.addWidget(self.clear)
-
-        spacerItem = QtGui.QSpacerItem(81,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.hboxlayout.addItem(spacerItem)
-
-        self.hboxlayout1 = QtGui.QHBoxLayout()
-        self.hboxlayout1.setMargin(0)
-        self.hboxlayout1.setSpacing(6)
-        self.hboxlayout1.setObjectName("hboxlayout1")
-
-        self.presence = QtGui.QPushButton(self.centralwidget)
-        self.presence.setObjectName("presence")
-        self.hboxlayout1.addWidget(self.presence)
-
-        self.iq = QtGui.QPushButton(self.centralwidget)
-        self.iq.setObjectName("iq")
-        self.hboxlayout1.addWidget(self.iq)
-
-        self.message = QtGui.QPushButton(self.centralwidget)
-        self.message.setObjectName("message")
-        self.hboxlayout1.addWidget(self.message)
-        self.hboxlayout.addLayout(self.hboxlayout1)
-        self.gridlayout.addLayout(self.hboxlayout,1,0,1,1)
-
-        self.textEdit = QtGui.QTextEdit(self.centralwidget)
-
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(0))
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.textEdit.sizePolicy().hasHeightForWidth())
-        self.textEdit.setSizePolicy(sizePolicy)
-        self.textEdit.setMaximumSize(QtCore.QSize(16777215,100))
-        self.textEdit.setObjectName("textEdit")
-        self.gridlayout.addWidget(self.textEdit,2,0,1,1)
-
-        self.hboxlayout2 = QtGui.QHBoxLayout()
-        self.hboxlayout2.setMargin(0)
-        self.hboxlayout2.setSpacing(6)
-        self.hboxlayout2.setObjectName("hboxlayout2")
-
         spacerItem1 = QtGui.QSpacerItem(441,21,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.hboxlayout2.addItem(spacerItem1)
+        self.hboxlayout.addItem(spacerItem1)
 
         self.send = QtGui.QPushButton(self.centralwidget)
         self.send.setObjectName("send")
-        self.hboxlayout2.addWidget(self.send)
-        self.gridlayout.addLayout(self.hboxlayout2,3,0,1,1)
+        self.hboxlayout.addWidget(self.send)
+        self.gridlayout.addLayout(self.hboxlayout,1,0,1,1)
         xmlConsole.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(xmlConsole)
@@ -93,10 +86,10 @@ class Ui_xmlConsole(object):
 
     def retranslateUi(self, xmlConsole):
         xmlConsole.setWindowTitle(QtGui.QApplication.translate("xmlConsole", "XML Console", None, QtGui.QApplication.UnicodeUTF8))
-        self.enable.setText(QtGui.QApplication.translate("xmlConsole", "Enable", None, QtGui.QApplication.UnicodeUTF8))
         self.clear.setText(QtGui.QApplication.translate("xmlConsole", "Clear", None, QtGui.QApplication.UnicodeUTF8))
         self.presence.setText(QtGui.QApplication.translate("xmlConsole", "presence", None, QtGui.QApplication.UnicodeUTF8))
         self.iq.setText(QtGui.QApplication.translate("xmlConsole", "iq", None, QtGui.QApplication.UnicodeUTF8))
+        self.enable.setText(QtGui.QApplication.translate("xmlConsole", "Enable", None, QtGui.QApplication.UnicodeUTF8))
         self.message.setText(QtGui.QApplication.translate("xmlConsole", "message", None, QtGui.QApplication.UnicodeUTF8))
         self.send.setText(QtGui.QApplication.translate("xmlConsole", "&Send", None, QtGui.QApplication.UnicodeUTF8))
 
