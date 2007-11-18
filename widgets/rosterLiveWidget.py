@@ -237,11 +237,15 @@ class userItem:
 		item=userItem(unicode(self.name),unicode(self.group),self.jid,self.main,self.icon)
 		item.statusMessage=self.statusMessage
 		item.avatar=self.avatar
-		item.hidden=repr(self.hidden)
+		item.hidden=self.hidden
 		item.jid=unicode(self.jid)
 		item.metajid=unicode(self.metajid)
 		item.status=int(self.status)
 		item.frameAvatar=self.frameAvatar
+		item.privacy['block']=self.privacy['block']
+		item.privacy['allow']=self.privacy['allow']
+		item.privacy['hide']=self.privacy['hide']
+		#item.privacy=self.privacy)
 		item.selectedFrameAvatar=self.selectedFrameAvatar
 		return item
 
@@ -498,6 +502,7 @@ class rosterWidget(QtGui.QWidget):
 	def getGroupUsers(self,group):
 		# get all user items from `group`
 		ret=[]
+
 		for user in self.users:
 			if self.showOffline==True:
 				if user.group==group:
@@ -505,6 +510,7 @@ class rosterWidget(QtGui.QWidget):
 			else:
 				if user.group==group and not user.hidden:
 					ret.append(user)
+
 		return ret
 
 	def getGroupSortedUsers(self,group):

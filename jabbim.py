@@ -685,7 +685,7 @@ class clientClass(pyxl.client.Client):
 				log.msg(unicode(add))
 				if add:
 					# we have some item to clone (so we can't create new one)
-					if len(items)==-1:
+					if len(items)!=0:
 						i=items[0].clone() # clone contact item
 						i.group=unicode(name)
 						print "append ",i
