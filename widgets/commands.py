@@ -48,7 +48,7 @@ class CommandsDialog(QtGui.QMainWindow):
 
 		self.ui.close.hide()
 		self.ui.label_2.hide()
-
+		QtCore.QObject.connect(self.ui.close,QtCore.SIGNAL("clicked ()"),self.reject)
 
 	def _reset(self): 
 		self.ui.label.setText(u"")

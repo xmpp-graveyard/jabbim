@@ -149,8 +149,8 @@ def sendDataForm(main,jid,form,var,t,unregister=False):
 						make=True
 						text=unicode(widget.toPlainText())
 						text=text.split('\n')
-						while '' in text:
-							text.remove('')
+						#while '' in text:
+							#text.remove('')
 						
 						for child in x.elements():
 							if child.name == 'value':
