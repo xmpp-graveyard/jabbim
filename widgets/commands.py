@@ -6,10 +6,10 @@ from twisted.python import log
 import dataforms
 from commands_ui import Ui_Dialog
 
-class CommandsDialog(QtGui.QDialog):
+class CommandsDialog(QtGui.QMainWindow):
 	def __init__(self, cmds, parent = None):
-		QtGui.QDialog.__init__(self, parent)
-		self.setModal(False)
+		QtGui.QMainWindow.__init__(self, parent)
+		#self.setModal(False)
 		self.cmds = cmds
 		self.ui = Ui_Dialog()
 		self.ui.setupUi(self)
@@ -22,6 +22,13 @@ class CommandsDialog(QtGui.QDialog):
 		#QtCore.QObject.connect(self.ui.next,QtCore.SIGNAL("clicked ()"),self.cmds.submit) 
 		#QtCore.QObject.connect(self.ui.previous,QtCore.SIGNAL("clicked ()"),self.cmds.submit) 
 		#QtCore.QObject.connect(self.ui.complete,QtCore.SIGNAL("clicked ()"),self.cmds.submit) 
+
+		self.scroll=QtGui.QScrollArea(self)
+		self.widget=QtGui.QWidget()
+		self.ui.glayout=QtGui.QGridLayout(self.widget)
+		self.scroll.setWidget(self.widget)
+		self.scroll.setWidgetResizable(True)
+		self.ui.vboxlayout.addWidget(self.scroll)
 
 		self.ui.next.hide()
 		self.ui.next.action = "next"
@@ -51,8 +58,8 @@ class CommandsDialog(QtGui.QDialog):
 				#button.setParent(None)
 			#except:
 				#pass
-		for i in range(self.ui.gridlayout2.count()):
-			item=self.ui.gridlayout2.itemAt(0)
+		for i in range(self.ui.glayout.count()):
+			item=self.ui.glayout.itemAt(0)
 			if item.widget():
 				item.widget().setParent(None)
 			#self.ui.gridlayout2.removeItem(item)
@@ -129,7 +136,7 @@ class Commands:
 			button.node = unicode(command["node"])
 			button.jid = unicode(command["jid"])
 			self.dialog.group.addButton(button)
-			self.dialog.ui.gridlayout2.addWidget(button, c, 0)
+			self.dialog.ui.glayout.addWidget(button, c, 0)
 			c += 1
 
 	def execCommand(self, node, name, jid = None):
@@ -185,7 +192,7 @@ class Commands:
 					self.dialog.ui.close.show()
 					self.var, self.row = dataforms.makeDataForm(
 							self.dialog,
-							self.dialog.ui.gridlayout2,
+							self.dialog.ui.glayout,
 							element
 							)
 
@@ -193,7 +200,7 @@ class Commands:
 					self.dialog.ui.cancel.show()
 					self.var, self.row = dataforms.makeDataForm(
 							self.dialog,
-							self.dialog.ui.gridlayout2,
+							self.dialog.ui.glayout,
 							element
 							)
 
@@ -202,7 +209,7 @@ class Commands:
 					self.dialog.ui.line.hide()
 					self.var, self.row = dataforms.makeDataForm(
 							self.dialog,
-							self.dialog.ui.gridlayout2,
+							self.dialog.ui.glayout,
 							element
 							)
 			if element.name == "note":

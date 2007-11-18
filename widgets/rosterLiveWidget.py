@@ -2199,8 +2199,8 @@ class rosterWidget(QtGui.QWidget):
 			log.msg("Unhiding jid %s." % jid)
 		elif cmd == "ad_hoc":
 			jid=unicode(action.data().toString())
-			cmds = commands.Commands(self.main, jid)
-			cmds.dialog.exec_()
+			self.cmds = commands.Commands(self.main, jid)
+			self.cmds.dialog.show()
 		log.msg("END CONTACT")
 
 	#def vcardArrived(self,data):

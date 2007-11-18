@@ -1,133 +1,121 @@
 <ui version="4.0" >
  <class>Dialog</class>
- <widget class="QDialog" name="Dialog" >
+ <widget class="QMainWindow" name="Dialog" >
   <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>447</width>
-    <height>148</height>
+    <width>436</width>
+    <height>358</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Extra action</string>
   </property>
-  <layout class="QGridLayout" >
-   <item row="5" column="0" >
-    <layout class="QGridLayout" >
-     <item row="0" column="4" >
-      <widget class="QPushButton" name="cancel" >
-       <property name="text" >
-        <string>Cancel</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0" >
-      <spacer>
-       <property name="orientation" >
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" >
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="0" column="3" >
-      <widget class="QPushButton" name="next" >
-       <property name="text" >
-        <string>Next →</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2" >
-      <widget class="QPushButton" name="complete" >
-       <property name="text" >
-        <string>Finish</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1" >
-      <widget class="QPushButton" name="previous" >
-       <property name="text" >
-        <string>← Back</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="5" >
-      <widget class="QPushButton" name="close" >
-       <property name="text" >
-        <string>Close</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item rowspan="3" row="0" column="0" >
-    <layout class="QVBoxLayout" >
-     <item>
-      <widget class="QLabel" name="label" >
-       <property name="text" >
-        <string/>
-       </property>
-       <property name="alignment" >
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_2" >
-       <property name="text" >
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="line" >
-       <property name="orientation" >
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="3" column="0" >
-    <layout class="QGridLayout" />
-   </item>
-   <item row="4" column="0" >
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" >
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-  </layout>
+  <widget class="QWidget" name="centralwidget" >
+   <layout class="QGridLayout" >
+    <property name="margin" >
+     <number>9</number>
+    </property>
+    <property name="spacing" >
+     <number>6</number>
+    </property>
+    <item row="1" column="0" >
+     <layout class="QGridLayout" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item row="0" column="4" >
+       <widget class="QPushButton" name="cancel" >
+        <property name="text" >
+         <string>Cancel</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" >
+       <spacer>
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" >
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="3" >
+       <widget class="QPushButton" name="next" >
+        <property name="text" >
+         <string>Next →</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" >
+       <widget class="QPushButton" name="complete" >
+        <property name="text" >
+         <string>Finish</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" >
+       <widget class="QPushButton" name="previous" >
+        <property name="text" >
+         <string>← Back</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5" >
+       <widget class="QPushButton" name="close" >
+        <property name="text" >
+         <string>Close</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="0" >
+     <layout class="QVBoxLayout" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label" >
+        <property name="text" >
+         <string/>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_2" >
+        <property name="text" >
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line" >
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar" />
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>close</sender>
-   <signal>clicked()</signal>
-   <receiver>Dialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>399</x>
-     <y>92</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>223</x>
-     <y>57</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
