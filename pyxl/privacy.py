@@ -21,7 +21,18 @@ from twisted.python import log
 #       `--| [presence-out]
 
 class PrivacyListItem:
+	"Simple privacy rule class"
 	def __init__(self, action, order, typ = None, value = None, stanzas = []):
+		"""@type action: str
+@param action: "allow" or "deny"
+@type order: unsigned int
+@param order: should be genereated automaticaly, bacause it must be unique within list
+@type typ: str
+@param typ: "jid", "group" or "subscription"
+@type value: unicode
+@param value: According to typ param
+@type stanzas: list
+@param stanzas: "message", "iq", "presence-in" and/or "presence-out" are allowed values in the list"""
 		self.action	= action
 		self.order	= int(order)
 		if self.order < 0:
@@ -31,7 +42,14 @@ class PrivacyListItem:
 		self.stanzas	= stanzas # stanzas = [] denies|allows all communication
 
 class PrivacyList:
+	"Class that manages one privacy list"
 	def __init__(self, name, items, main):
+		"""@type name: unicode
+@param name: Name of the list
+@type items: list
+@param items: list of PrivacyListItem instances
+@type main: MainWindow
+@param main: main instance"""
 		self.name	= name
 		self.items	= items
 		self.main	= main
@@ -51,11 +69,14 @@ class PrivacyList:
 				
 
 	def _getOrders(self):
+		"""@rtype: list
+@return: sorted list of used orders in privacy list"""
 		orders = [int(item.order) for item in self.items]
 		orders.sort()
 		return orders
 
 	def _reviseOrders(self): # ejabberd je pyca, jednodussi prace s itemama
+		"""Reordes items in privacy list to have unique orders, because some servers don't handle it correctly :("""
 		orders = self._getOrders()
 		while orders:
 			i = orders.pop()
@@ -65,6 +86,10 @@ class PrivacyList:
 		self.update()
 
 	def update(self, sm = False):
+		"""Sends the list to server
+		
+@type sm: bool
+@param sm: used to handle invisiblity"""
 		iq	= IQ(self.main.client.xmlstream, "set")
 		query	= iq.addElement("query", "jabber:iq:privacy")
 		list_	= query.addElement("list")
@@ -86,11 +111,21 @@ class PrivacyList:
 		log.msg("privacy list %s updated" % self.name)
 
 	def addItem(self, item, sm = False):
+		"""Adds new rule to list
+@type item: PrivacyListItem
+@param item: item you want to add
+@type sm: bool
+@param sm: used to handle invisibility, see _showme"""
 		self.items.append(item)
 		self.update(sm)
 		log.msg("added privacy list item to list %s with order %s" % (self.name, item.order))
 
 	def delItem(self, item, sm = False):
+		"""Removes item from list
+@type item: PrivacyListItem
+@param item: item you want to remove
+@type sm: bool
+@param sm: used to handle invisibility, see _showme"""
 		if item in self.items:
 			log.msg("removing privacy list item from list %s with order %s" % (self.name, item.order))
 			self.items.remove(item)
@@ -99,6 +134,15 @@ class PrivacyList:
 	def mkItem(self, action, typ = None, value = None, stanzas = [],
 			to_zero = True, # True - lowest possible (more important), False - current highest + 1 (less important)
 			sm = False):
+		"""Creates a new PrivacyListItem, automaticaly assignig order
+
+action, typ, value and stanzas attributes are the same as for PrivacyListItem.__init__
+
+@type to_zero: bool
+@param to_zero: Assign zero order and reorder other items - lower order = higher importance (True), or uses the highest order otherwise
+@type sm: bool
+@param sm: used to handle invisibility, see _showme
+"""
 		orders = self._getOrders()
 		if to_zero:
 			zitem = self.getItem(0)
@@ -112,11 +156,24 @@ class PrivacyList:
 		return item
 
 	def getItem(self, order):
+		"""@rtype: PrivacyListItem
+@return: returns the item with requested order
+
+@type order: int
+@param order: ."""
 		for item in self.items:
 			if item.order == order:
 				return item
 
 	def _advance(self, item, update=True):
+		"""Used in _reviseOrders and changeOrder
+
+Selected item's order and evry directly following items' (+1) orders are incremented by one
+
+@type item: PrivacyListItem
+@param item: item to advance
+@type update: bool
+@param update: use the update method or not?"""
 		orders = self._getOrders()
 		to_advance = None
 		if item.order + 1 in orders:
@@ -128,6 +185,12 @@ class PrivacyList:
 			self.update()
 			
 	def changeOrder(self, old, new):
+		"""Changes order of an item.
+
+@type old: int
+@param old: old order of item
+@type new: int
+@param new: new order of item"""
 		orders = self._getOrders()
 		item = getItem(old)
 		if new in orders:
@@ -220,12 +283,17 @@ class PrivacyList:
 		self.main.client.sendPresence(typ="available", show=sc.show, status=sc.status)
 
 	def setInvisible(self, globaly = False):
+		"""Become invisible wihin the list
+
+@type globaly: bool
+@param globaly: Become invisible globaly, not selectively"""
 		if not self.invisible:
 			self.main.client.sendPresence(typ="unavailable")
 			self.invisible = self.mkItem("deny", stanzas = ["presence-out"], to_zero = globaly, sm = True)
 			log.msg("we are now invisible")
 
 	def unsetInvisible(self, available = True):
+		"Become visible"
 		if self.invisible:
 			self.delItem(self.invisible, available)
 			self.invisible = None
@@ -233,6 +301,9 @@ class PrivacyList:
 
 	
 class Privacy:
+	"""Class for multiple privacy lists management
+
+Use self.lists["name"] for access to single privacy lists instances"""
 	def __init__(self, main):
 		self.main	= main
 		self.lists	= {}
@@ -240,6 +311,10 @@ class Privacy:
 		self.default	= None
 	
 	def setActive(self, name):
+		"Set the privacy list as active
+
+@type name: unicode
+@param name: chosen list's name"
 		if name not in self.lists.keys() and name != None:
 			self.lists[name] = None
 		iq = IQ(self.main.client.xmlstream, "set")
@@ -256,6 +331,10 @@ class Privacy:
 			self.active = None
 
 	def setDefault(self, name):
+		"Set the privacy list as default.
+
+@type name: unicode
+@param name: chosen list's name"
 		if name not in self.lists.keys() and name != None:
 			self.lists[name] = None
 		iq = IQ(self.main.client.xmlstream, "set")
