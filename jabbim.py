@@ -2380,7 +2380,11 @@ class XMLConsole(QtGui.QMainWindow):
 
 	def send(self):
 		text=unicode(self.ui.textEdit.toPlainText())
-		#MainWindow.client.xmlstream.send(text)
+		try:
+			MainWindow.client.xmlstream.send(text)
+		except:
+			print "can't send"
+		self.ui.textEdit.setText("")
 
 class customStatusWindow(QtGui.QDialog):
 	def __init__(self,jid,show=None,parent=None):
