@@ -62,7 +62,8 @@ class CommandsDialog(QtGui.QMainWindow):
 			item=self.ui.glayout.itemAt(0)
 			if item.widget():
 				item.widget().setParent(None)
-			#self.ui.gridlayout2.removeItem(item)
+			else:
+				self.ui.glayout.removeItem(item)
 		
 		#self.ui.gridlayout.removeItem(self.ui.gridlayout2)
 		#self.ui.gridlayout2.deleteLater
@@ -138,6 +139,8 @@ class Commands:
 			self.dialog.group.addButton(button)
 			self.dialog.ui.glayout.addWidget(button, c, 0)
 			c += 1
+		spacerItem = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+		self.dialog.ui.glayout.addItem(spacerItem,c,0)
 
 	def execCommand(self, node, name, jid = None):
 		if jid == None:
@@ -231,6 +234,8 @@ class Commands:
 				self.dialog.ui.next.show()
 			if a == "complete":
 				self.dialog.ui.complete.show()
+		spacerItem = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+		self.dialog.ui.glayout.addItem(spacerItem,self.row,0)
 		self.dialog.setWindowTitle(title)
 
 

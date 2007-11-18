@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/commands.ui'
 #
-# Created: Sun Nov 18 15:28:58 2007
+# Created: Sun Nov 18 16:01:03 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,6 +13,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(QtCore.QSize(QtCore.QRect(0,0,436,358).size()).expandedTo(Dialog.minimumSizeHint()))
+        Dialog.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.centralwidget = QtGui.QWidget(Dialog)
         self.centralwidget.setObjectName("centralwidget")
