@@ -968,8 +968,14 @@ class Client(derived):
 			except:
 				action = "execute"
 			sid = unicode(command["sessionid"])
-			x = command.firstChildElement()
-			log.msg(unicode(dir(self.commands)))
+			x = None
+			for child in command.elements():
+				if child.name == "x":
+					x = child
+			#x = command.firstChildElement()
+			#log.msg(unicode(dir(self.commands)))
+			if x == None:
+				return
 			self.commands.sessions[sid].execStage(
 					self.commands.sessions[sid].nextstages[action],
 					el["id"],
@@ -978,7 +984,9 @@ class Client(derived):
 					)
 			log.msg("ok, continuing in current session")
 
-		except KeyError:
+
+		except KeyError,e:
+			log.msg("Key error: %s " % e.message)
 			if jid.JID(el["from"]).userhost() == self.jid.userhost() or self.commands.nodes[node][3]:
 				self.commands.startSession(node, el["from"], el["id"])
 				log.msg("Starting new session")

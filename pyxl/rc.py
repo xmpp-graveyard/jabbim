@@ -25,13 +25,13 @@ class SetStatus(Stage):
 		self.actions = {}
 		
 		self.main.client.sendPresence(
-				show = self.data["show"][0][0],
-				status = self.data["status"][0][0],
-				priority = self.data["priority"][0][0],
+				show = self.data["show"][0],
+				status = self.data["status"][0],
+				priority = self.data["priority"][0],
 				)
-		icon = self.main.getIcon(self.data["show"][0][0], size="16x16")
-		self.main.ui.statusButton.setIcon(self.main.getIcon(status=self.data["show"][0][0], size="16x16"))
-		self.main.ui.showWidget.setText(unicode(self.data["status"][0][0]))
+		icon = self.main.getIcon(self.data["show"][0], size="16x16")
+		self.main.ui.statusButton.setIcon(self.main.getIcon(status=self.data["show"][0], size="16x16"))
+		self.main.ui.showWidget.setText(unicode(self.data["status"][0]))
 
 class fLeaveGC(Stage):
 	def exec_(self):
@@ -49,10 +49,10 @@ class LeaveGC(Stage):
 		self.status = "completed"
 		self.actions = {}
 		
-		for gc in self.data["groupchats"][0]:
+		for gc in self.data["groupchats"]:
 			tab,index=self.main.chat.findTab(gc) 
 			if tab != None:
 				self.main.chat.ui.chatTab.setCurrentIndex(index) 
 				self.main.chat.removeTab()
-		self.xform = Xform("result", instructions=self.main.tr("Groupchats left.")).buildElement()
+		self.xform = Xform("result", instructions=[self.main.tr("Groupchats left.")]).buildElement()
 

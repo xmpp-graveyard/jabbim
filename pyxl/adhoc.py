@@ -7,8 +7,10 @@ from twisted.python import log
 
 def x2dict(x):
 	if not x:
+		log.msg("Not x")
 		return
 	if x["type"] != "submit":
+		log.msg('Not type="submit"')
 		return
 	data = {}
 	log.msg(x.toXml())
@@ -20,7 +22,7 @@ def x2dict(x):
 			if value.name != "value":
 				continue
 			values.append(unicode(value))
-		data[field["var"]] = [values, field["type"]]
+		data[field["var"]] = values 
 	return data
 
 class Stage:
