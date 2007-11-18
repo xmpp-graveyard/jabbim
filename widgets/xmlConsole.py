@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/xmlConsole.ui'
 #
-# Created: Sun Nov 18 18:43:41 2007
+# Created: Sun Nov 18 19:00:40 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,6 +13,7 @@ class Ui_xmlConsole(object):
     def setupUi(self, xmlConsole):
         xmlConsole.setObjectName("xmlConsole")
         xmlConsole.resize(QtCore.QSize(QtCore.QRect(0,0,497,569).size()).expandedTo(xmlConsole.minimumSizeHint()))
+        xmlConsole.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.centralwidget = QtGui.QWidget(xmlConsole)
         self.centralwidget.setObjectName("centralwidget")
