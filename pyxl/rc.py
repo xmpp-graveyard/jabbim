@@ -9,11 +9,14 @@ class fSetStatus(Stage):
 		self.status = "executing"
 		self.actions = {"cancel":CancelStage, "complete":SetStatus, "execute":SetStatus}
 		self.execute = "complete"
-		
+	
 		sc = self.main.client.roster['users'][self.main.client.jid.userhost()].resources[self.main.client.jid.resource]
+		sshow = sc.show
+		if sshow == "online":
+			sshow = "available"
 		show = Field("show", "list-single", self.main.tr("Show: "), options=[
 			[self.main.status[status], status] for status in ["available","chat","away","xa","dnd","offline"]
-				], values = [sc.show])
+				], values = [sshow])
 		status = Field("status", "text-multi", self.main.tr("Status message: "), values = [sc.status or u""])
 		priority = Field("priority", "text-single", self.main.tr("Priority"), values = [sc.priority])
 
@@ -24,14 +27,30 @@ class SetStatus(Stage):
 		self.status = "completed"
 		self.actions = {}
 		
+		typ = None
+		show = self.data["show"][0]
+		if show =="available":
+			show = None
+			typ = show
+			self.data["show"][0] = "online"
+		if show == "offline":
+			show = None
+			typ = "unavailable"
+
 		self.main.client.sendPresence(
-				show = self.data["show"][0],
+				typ = typ,
+				show = show,
 				status = self.data["status"][0],
 				priority = self.data["priority"][0],
 				)
 		icon = self.main.getIcon(self.data["show"][0], size="16x16")
 		self.main.ui.statusButton.setIcon(self.main.getIcon(status=self.data["show"][0], size="16x16"))
 		self.main.ui.showWidget.setText(unicode(self.data["status"][0]))
+		
+		sc = self.main.client.roster['users'][self.main.client.jid.userhost()].resources[self.main.client.jid.resource]
+		sc.show = self.data["show"][0]
+
+		self.xform = Xform("result", instructions=[self.main.tr("Status changed.")]).buildElement()
 
 class fLeaveGC(Stage):
 	def exec_(self):
