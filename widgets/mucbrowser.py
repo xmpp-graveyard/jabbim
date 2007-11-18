@@ -18,6 +18,8 @@ class MUCBrowserDialog(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.selectionChanged)
 		QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.CE)
 		QtCore.QObject.connect(self.ui.showJid, QtCore.SIGNAL("stateChanged ( int )"),self.showJid)
+		QtCore.QObject.connect(self.ui.lineEdit, QtCore.SIGNAL("textChanged ( const QString & )"),self.filterChanged)
+
 		self.ui.groupchats.hideColumn(1)
 		self.ui.groupchats.setColumnWidth(0,42)
 		self.ui.groupchats.setSortingEnabled(True)
@@ -36,8 +38,23 @@ class MUCBrowserDialog(QtGui.QDialog):
 			self.ui.server.setText(self.server)
 			self.main.client.getDiscoItems(mucjid, callback = self._roomsReceived)
 		self.ui.splitter.setSizes([500,150])
-		
 
+		self.ui.lineEdit.hide()
+		self.ui.label_5.hide()
+
+	def filterChanged(self,text):
+		if len(text)<4 and len(text)!=0:
+			return
+		for i in range(self.ui.groupchats.topLevelItemCount()):
+			item=self.ui.groupchats.topLevelItem(i)
+			if len(text)==0:
+				self.ui.groupchats.setItemHidden(item, False)
+			else:
+				if unicode(item.text(1)).find(unicode(text).lower())==-1:
+					self.ui.groupchats.setItemHidden(item, True)
+				#else:
+					#self.ui.groupchats.setItemHidden(item, False)
+				
 	def showJid(self,b):
 		if self.ui.showJid.isChecked():
 			for i in range(self.ui.groupchats.topLevelItemCount()):

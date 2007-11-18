@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mucbrowser.ui'
 #
-# Created: Sat Nov 10 06:14:55 2007
+# Created: Sun Nov 18 05:51:05 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -23,36 +23,44 @@ class Ui_MUCBrowser(object):
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName("splitter")
 
-        self.layoutWidget = QtGui.QWidget(self.splitter)
-        self.layoutWidget.setObjectName("layoutWidget")
+        self.widget = QtGui.QWidget(self.splitter)
+        self.widget.setObjectName("widget")
 
-        self.gridlayout1 = QtGui.QGridLayout(self.layoutWidget)
+        self.gridlayout1 = QtGui.QGridLayout(self.widget)
         self.gridlayout1.setMargin(0)
         self.gridlayout1.setSpacing(6)
         self.gridlayout1.setObjectName("gridlayout1")
 
-        spacerItem = QtGui.QSpacerItem(291,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout1.addItem(spacerItem,1,0,1,1)
+        self.showJid = QtGui.QCheckBox(self.widget)
+        self.showJid.setObjectName("showJid")
+        self.gridlayout1.addWidget(self.showJid,1,3,1,1)
 
-        self.groupchats = QtGui.QTreeWidget(self.layoutWidget)
+        self.label_5 = QtGui.QLabel(self.widget)
+        self.label_5.setObjectName("label_5")
+        self.gridlayout1.addWidget(self.label_5,1,1,1,1)
+
+        self.groupchats = QtGui.QTreeWidget(self.widget)
         self.groupchats.setAllColumnsShowFocus(True)
         self.groupchats.setObjectName("groupchats")
         self.groupchats.headerItem().setText(0,"")
-        self.gridlayout1.addWidget(self.groupchats,0,0,1,2)
+        self.gridlayout1.addWidget(self.groupchats,0,0,1,4)
 
-        self.showJid = QtGui.QCheckBox(self.layoutWidget)
-        self.showJid.setObjectName("showJid")
-        self.gridlayout1.addWidget(self.showJid,1,1,1,1)
+        spacerItem = QtGui.QSpacerItem(91,22,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout1.addItem(spacerItem,1,0,1,1)
 
-        self.layoutWidget1 = QtGui.QWidget(self.splitter)
-        self.layoutWidget1.setObjectName("layoutWidget1")
+        self.lineEdit = QtGui.QLineEdit(self.widget)
+        self.lineEdit.setObjectName("lineEdit")
+        self.gridlayout1.addWidget(self.lineEdit,1,2,1,1)
 
-        self.vboxlayout = QtGui.QVBoxLayout(self.layoutWidget1)
+        self.layoutWidget = QtGui.QWidget(self.splitter)
+        self.layoutWidget.setObjectName("layoutWidget")
+
+        self.vboxlayout = QtGui.QVBoxLayout(self.layoutWidget)
         self.vboxlayout.setMargin(0)
         self.vboxlayout.setSpacing(6)
         self.vboxlayout.setObjectName("vboxlayout")
 
-        self.groupBox = QtGui.QGroupBox(self.layoutWidget1)
+        self.groupBox = QtGui.QGroupBox(self.layoutWidget)
         self.groupBox.setObjectName("groupBox")
 
         self.gridlayout2 = QtGui.QGridLayout(self.groupBox)
@@ -77,7 +85,7 @@ class Ui_MUCBrowser(object):
         self.gridlayout2.addWidget(self.label,0,0,1,1)
         self.vboxlayout.addWidget(self.groupBox)
 
-        self.groupBox_2 = QtGui.QGroupBox(self.layoutWidget1)
+        self.groupBox_2 = QtGui.QGroupBox(self.layoutWidget)
         self.groupBox_2.setObjectName("groupBox_2")
 
         self.gridlayout3 = QtGui.QGridLayout(self.groupBox_2)
@@ -102,7 +110,7 @@ class Ui_MUCBrowser(object):
         self.gridlayout3.addWidget(self.label_4,0,0,1,1)
         self.vboxlayout.addWidget(self.groupBox_2)
 
-        self.groupBox_3 = QtGui.QGroupBox(self.layoutWidget1)
+        self.groupBox_3 = QtGui.QGroupBox(self.layoutWidget)
         self.groupBox_3.setObjectName("groupBox_3")
 
         self.gridlayout4 = QtGui.QGridLayout(self.groupBox_3)
@@ -135,11 +143,11 @@ class Ui_MUCBrowser(object):
         spacerItem2 = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.hboxlayout.addItem(spacerItem2)
 
-        self.pushButton_2 = QtGui.QPushButton(self.layoutWidget1)
+        self.pushButton_2 = QtGui.QPushButton(self.layoutWidget)
         self.pushButton_2.setObjectName("pushButton_2")
         self.hboxlayout.addWidget(self.pushButton_2)
 
-        self.pushButton = QtGui.QPushButton(self.layoutWidget1)
+        self.pushButton = QtGui.QPushButton(self.layoutWidget)
         self.pushButton.setObjectName("pushButton")
         self.hboxlayout.addWidget(self.pushButton)
         self.vboxlayout.addLayout(self.hboxlayout)
@@ -152,10 +160,11 @@ class Ui_MUCBrowser(object):
 
     def retranslateUi(self, MUCBrowser):
         MUCBrowser.setWindowTitle(QtGui.QApplication.translate("MUCBrowser", "MUC Browser", None, QtGui.QApplication.UnicodeUTF8))
+        self.showJid.setText(QtGui.QApplication.translate("MUCBrowser", "show JID", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_5.setText(QtGui.QApplication.translate("MUCBrowser", "Hledat podle Jabber ID:", None, QtGui.QApplication.UnicodeUTF8))
         self.groupchats.headerItem().setText(1,QtGui.QApplication.translate("MUCBrowser", "JID", None, QtGui.QApplication.UnicodeUTF8))
         self.groupchats.headerItem().setText(2,QtGui.QApplication.translate("MUCBrowser", "Room name", None, QtGui.QApplication.UnicodeUTF8))
         self.groupchats.headerItem().setText(3,QtGui.QApplication.translate("MUCBrowser", "#", None, QtGui.QApplication.UnicodeUTF8))
-        self.showJid.setText(QtGui.QApplication.translate("MUCBrowser", "show JID", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setTitle(QtGui.QApplication.translate("MUCBrowser", "Room Informations", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("MUCBrowser", "Server:", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("MUCBrowser", "Room:", None, QtGui.QApplication.UnicodeUTF8))

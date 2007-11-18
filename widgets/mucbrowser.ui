@@ -24,7 +24,7 @@
      <property name="orientation" >
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QWidget" name="layoutWidget" >
+     <widget class="QWidget" name="" >
       <layout class="QGridLayout" >
        <property name="margin" >
         <number>0</number>
@@ -32,20 +32,21 @@
        <property name="spacing" >
         <number>6</number>
        </property>
-       <item row="1" column="0" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Horizontal</enum>
+       <item row="1" column="3" >
+        <widget class="QCheckBox" name="showJid" >
+         <property name="text" >
+          <string>show JID</string>
          </property>
-         <property name="sizeHint" >
-          <size>
-           <width>291</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
+        </widget>
        </item>
-       <item row="0" column="0" colspan="2" >
+       <item row="1" column="1" >
+        <widget class="QLabel" name="label_5" >
+         <property name="text" >
+          <string>Hledat podle Jabber ID:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="4" >
         <widget class="QTreeWidget" name="groupchats" >
          <property name="allColumnsShowFocus" >
           <bool>true</bool>
@@ -72,12 +73,21 @@
          </column>
         </widget>
        </item>
-       <item row="1" column="1" >
-        <widget class="QCheckBox" name="showJid" >
-         <property name="text" >
-          <string>show JID</string>
+       <item row="1" column="0" >
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
          </property>
-        </widget>
+         <property name="sizeHint" >
+          <size>
+           <width>91</width>
+           <height>22</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="1" column="2" >
+        <widget class="QLineEdit" name="lineEdit" />
        </item>
       </layout>
      </widget>
