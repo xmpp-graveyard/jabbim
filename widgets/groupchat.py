@@ -414,6 +414,17 @@ class groupChatWidget(QtGui.QWidget):
 			self.colors.append(item)
 		else:
 			item=self.getUserItems(nick)[0]
+			if item.parent()!=self.roles[role]:
+				self.removeUser(nick)
+				new=True
+				if self.roles.has_key(role):
+					item=QtGui.QTreeWidgetItem(self.roles[role])
+				else:
+					item=QtGui.QTreeWidgetItem(self.ui.users)
+				item.setText(0,unicode(nick))
+				self.colors.append(item)
+
+
 		
 		if affiliation=="owner" and self.main.client.groupchats[self.jid].nick==nick:
 			self.ui.admin.show()
