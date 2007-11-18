@@ -50,7 +50,7 @@
         <enum>Qt::Vertical</enum>
        </property>
        <widget class="QWidget" native="1" name="viewWidget" />
-       <widget class="QWidget" name="" >
+       <widget class="QWidget" name="layoutWidget" >
         <layout class="QGridLayout" >
          <property name="margin" >
           <number>0</number>
@@ -151,7 +151,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QWidget" native="1" name="admin" >
+         <widget class="QWidget" native="1" name="admin2" >
           <layout class="QVBoxLayout" >
            <property name="margin" >
             <number>0</number>
@@ -159,16 +159,6 @@
            <property name="spacing" >
             <number>6</number>
            </property>
-           <item>
-            <widget class="QPushButton" name="roomConfig" >
-             <property name="toolTip" >
-              <string>You can set up logging of the room etc</string>
-             </property>
-             <property name="text" >
-              <string>Room configuration</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </widget>
         </item>

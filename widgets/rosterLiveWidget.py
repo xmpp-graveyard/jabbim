@@ -210,6 +210,9 @@ class groupItem:
 			self.icon=QtGui.QIcon("images/"+self.main.iconSize+"/icons/group-open.png")
 
 class userItem:
+	"""
+	Class for users roster items
+	"""
 	def __init__(self,name,group,jid,main,icon=None):
 		self.name=name
 		self.backName=name

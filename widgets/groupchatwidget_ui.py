@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Sat Nov 17 20:32:57 2007
+# Created: Sun Nov 18 11:34:52 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -40,19 +40,19 @@ class Ui_groupchatwidget(object):
         self.viewWidget = QtGui.QWidget(self.splitter)
         self.viewWidget.setObjectName("viewWidget")
 
-        self.widget = QtGui.QWidget(self.splitter)
-        self.widget.setObjectName("widget")
+        self.layoutWidget = QtGui.QWidget(self.splitter)
+        self.layoutWidget.setObjectName("layoutWidget")
 
-        self.gridlayout1 = QtGui.QGridLayout(self.widget)
+        self.gridlayout1 = QtGui.QGridLayout(self.layoutWidget)
         self.gridlayout1.setMargin(0)
         self.gridlayout1.setSpacing(6)
         self.gridlayout1.setObjectName("gridlayout1")
 
-        self.sendButton = QtGui.QPushButton(self.widget)
+        self.sendButton = QtGui.QPushButton(self.layoutWidget)
         self.sendButton.setObjectName("sendButton")
         self.gridlayout1.addWidget(self.sendButton,1,2,1,1)
 
-        self.lineWidget = QtGui.QWidget(self.widget)
+        self.lineWidget = QtGui.QWidget(self.layoutWidget)
         self.lineWidget.setMinimumSize(QtCore.QSize(0,10))
         self.lineWidget.setObjectName("lineWidget")
         self.gridlayout1.addWidget(self.lineWidget,0,0,1,3)
@@ -60,22 +60,22 @@ class Ui_groupchatwidget(object):
         spacerItem = QtGui.QSpacerItem(161,27,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.gridlayout1.addItem(spacerItem,1,0,1,1)
 
-        self.smileys = QtGui.QToolButton(self.widget)
+        self.smileys = QtGui.QToolButton(self.layoutWidget)
         self.smileys.setIcon(QtGui.QIcon("images/22x22/emotes/biggrin.png"))
         self.smileys.setCheckable(True)
         self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.smileys.setObjectName("smileys")
         self.gridlayout1.addWidget(self.smileys,1,1,1,1)
 
-        self.layoutWidget = QtGui.QWidget(self.splitter_2)
-        self.layoutWidget.setObjectName("layoutWidget")
+        self.layoutWidget1 = QtGui.QWidget(self.splitter_2)
+        self.layoutWidget1.setObjectName("layoutWidget1")
 
-        self.vboxlayout = QtGui.QVBoxLayout(self.layoutWidget)
+        self.vboxlayout = QtGui.QVBoxLayout(self.layoutWidget1)
         self.vboxlayout.setMargin(0)
         self.vboxlayout.setSpacing(6)
         self.vboxlayout.setObjectName("vboxlayout")
 
-        self.users = QtGui.QTreeWidget(self.layoutWidget)
+        self.users = QtGui.QTreeWidget(self.layoutWidget1)
         self.users.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.users.setAlternatingRowColors(True)
         self.users.setIconSize(QtCore.QSize(32,32))
@@ -84,20 +84,16 @@ class Ui_groupchatwidget(object):
         self.users.setObjectName("users")
         self.vboxlayout.addWidget(self.users)
 
-        self.admin = QtGui.QWidget(self.layoutWidget)
-        self.admin.setObjectName("admin")
+        self.admin2 = QtGui.QWidget(self.layoutWidget1)
+        self.admin2.setObjectName("admin2")
 
-        self.vboxlayout1 = QtGui.QVBoxLayout(self.admin)
+        self.vboxlayout1 = QtGui.QVBoxLayout(self.admin2)
         self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setSpacing(6)
         self.vboxlayout1.setObjectName("vboxlayout1")
+        self.vboxlayout.addWidget(self.admin2)
 
-        self.roomConfig = QtGui.QPushButton(self.admin)
-        self.roomConfig.setObjectName("roomConfig")
-        self.vboxlayout1.addWidget(self.roomConfig)
-        self.vboxlayout.addWidget(self.admin)
-
-        self.pluginWidget = QtGui.QWidget(self.layoutWidget)
+        self.pluginWidget = QtGui.QWidget(self.layoutWidget1)
         self.pluginWidget.setObjectName("pluginWidget")
         self.vboxlayout.addWidget(self.pluginWidget)
         self.gridlayout.addWidget(self.splitter_3,0,0,2,2)
@@ -113,6 +109,4 @@ class Ui_groupchatwidget(object):
         self.smileys.setText(QtGui.QApplication.translate("groupchatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(0,QtGui.QApplication.translate("groupchatwidget", "user", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(1,QtGui.QApplication.translate("groupchatwidget", "jid", None, QtGui.QApplication.UnicodeUTF8))
-        self.roomConfig.setToolTip(QtGui.QApplication.translate("groupchatwidget", "You can set up logging of the room etc", None, QtGui.QApplication.UnicodeUTF8))
-        self.roomConfig.setText(QtGui.QApplication.translate("groupchatwidget", "Room configuration", None, QtGui.QApplication.UnicodeUTF8))
 

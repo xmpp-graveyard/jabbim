@@ -226,7 +226,6 @@ class groupChatWidget(QtGui.QWidget):
 		#self.buttonGroup.addButton(self.actual)
 
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
-		QtCore.QObject.connect(self.ui.roomConfig, QtCore.SIGNAL("clicked ()"),self.roomConfigClicked)
 		
 		
 		#QtCore.QObject.connect(self.buttonGroup, QtCore.SIGNAL("buttonClicked ( QAbstractButton * )  "),self.logButton)
@@ -257,7 +256,7 @@ class groupChatWidget(QtGui.QWidget):
 		self.ui.splitter_2.setSizes(list(self.main.config['groupchatSplitSizes2']))
 		self.ui.splitter_3.setSizes(list(self.main.config['groupchatSplitSizes3']))
 		#if self.main.client.groupchats[self.jid].users[nick].affiliation=="owner":
-		self.ui.admin.hide()
+		
 		self.sent = []
 		self.hindex = 0
 		self.sizes={}
@@ -270,12 +269,19 @@ class groupChatWidget(QtGui.QWidget):
 		for key,value in self.main.plugins.iteritems():
 			value.buildChatWidget(unicode(jidT.JID(self.jid).userhost()),self.flowLayout)
 		
+		self.ui.admin=QtGui.QPushButton()
+		self.ui.admin.setIconSize(QtCore.QSize(32,32))
+		self.ui.admin.setIcon(QtGui.QIcon("images/32x32/actions/register.png"))
+		self.flowLayout.addWidget(self.ui.admin)
+		QtCore.QObject.connect(self.ui.admin, QtCore.SIGNAL("clicked ()"),self.roomConfigClicked)
+
 		self.ui.clearChat=QtGui.QPushButton()
 		self.ui.clearChat.setIconSize(QtCore.QSize(32,32))
 		self.ui.clearChat.setIcon(QtGui.QIcon("images/32x32/actions/clear.png"))
 		self.flowLayout.addWidget(self.ui.clearChat)
 		QtCore.QObject.connect(self.ui.clearChat, QtCore.SIGNAL("clicked ()"),self.clearChat)
-		
+		self.ui.admin.hide()
+
 		self.ui.pluginWidget.setLayout(self.flowLayout)
 
 
