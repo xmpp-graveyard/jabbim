@@ -2510,15 +2510,15 @@ class scrollBar(QtGui.QScrollArea):
 	#def updateScrollBars(self):
 		#QtGui.QScrollArea.updateScrollBars(self)
 		#self.verticalScrollBar().setPageStep(32)
-
-translator=QtCore.QTranslator()
-translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
-print "trying to load locales:","locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm"
-app.installTranslator(translator)
-
-MainWindow = mainWindow()
-MainWindow.show()
-reactor.run()
+if __name__ == "__main__":
+	translator=QtCore.QTranslator()
+	translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
+	print "trying to load locales:","locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm"
+	app.installTranslator(translator)
+	
+	MainWindow = mainWindow()
+	MainWindow.show()
+	reactor.run()
 
 
 
