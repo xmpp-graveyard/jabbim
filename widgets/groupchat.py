@@ -343,7 +343,8 @@ class groupChatWidget(QtGui.QWidget):
 	def userClicked(self,item,i):
 		if item.parent()==None:
 			return
-		self.main.chat.addChatTab(self.jid+"/"+unicode(item.text(0)),item.text(0),item.icon(1))
+		icon=self.main.getIcon(status=self.main.icons[unicode(item.text(1))[0]],size="16x16")
+		self.main.chat.addChatTab(self.jid+"/"+unicode(item.text(0)),item.text(0),icon)
 		self.main.chat.activate()
 		
 	def clearChat(self):
