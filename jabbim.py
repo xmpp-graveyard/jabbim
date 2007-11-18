@@ -217,11 +217,11 @@ class clientClass(pyxl.client.Client):
 		# user is not in any group
 		if len(groups)==0:
 			# add user item to Unknown group
-			self.main.ui.roster.addUser(jid,name,None,first=True)
+			self.main.ui.roster.addUser(jid,name,None)
 		else:
 			for group in groups:
 				# add user item to the group
-				self.main.ui.roster.addUser(jid,name,group,first=True)
+				self.main.ui.roster.addUser(jid,name,group)
 		# show avatar
 #		self.main.cache.get_avatar(jid, self.main._loadAvatar)
 		self.main._loadAvatar(self.main.homeDir+'/avatars/'+jid, self.avatars.get(jid), jid)

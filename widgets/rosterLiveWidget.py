@@ -214,29 +214,28 @@ class userItem:
 	Class for users roster items
 	"""
 	def __init__(self,name,group,jid,main,icon=None):
-		self.name=name
-		self.backName=name
-		self.icon=icon
-		self.typ='user'
-		self.group=group
+		self.name=name #: contact name
+		self.icon=icon #: contact icon
+		self.typ='user' #: typ of item, constant for user items
+		self.group=group #: group of contact
 		self.status=9
-		self.statusMessage=None
-		self.main=main
+		self.statusMessage=None #: statusMessage
+		self.main=main #: rosterWidget
 		self.avatar=None
 		self.hidden=False
-		self.test=None
-		self.metajid=""
-		self.blink=None
+		#self.test=None
+		self.metajid="" #: contains parent jid of this item, if this contact is member of metacontacts
+		self.blink=None # if True, icon blinks
 		self.jid = jid
 		self.privacy = {"block":False, "allow":False, "hide":False}
 		self.hiddenBySearch=False
 		self.transport=False
 		self.escapedName=name.replace("<","&lt;").replace(">","&gt;")
-		#if self.main.client.privacy.active!=None:
-			#self.privacy["block"] = self.main.client.privacy.active.isBlockedJID(self.jid) and True
 
 	def clone(self):
-		# makes new instance of item
+		"""
+		Makes new instance of userItem which is copy of current userItem
+		"""
 		item=userItem(unicode(self.name),unicode(self.group),self.jid,self.main,self.icon)
 		item.statusMessage=self.statusMessage
 		item.avatar=self.avatar
@@ -248,15 +247,22 @@ class userItem:
 		item.privacy['block']=self.privacy['block']
 		item.privacy['allow']=self.privacy['allow']
 		item.privacy['hide']=self.privacy['hide']
-		#item.privacy=self.privacy)
 		item.selectedFrameAvatar=self.selectedFrameAvatar
 		return item
 
 	def setIcon(self,icon):
+		"""
+		Sets userItem icon
+		@type icon: QtGui.QIcon
+		"""
 		self.icon=icon
 		self.main.repaint()
 	
 	def setAvatar(self,icon):
+		"""
+		Sets userItem's avatar. Frame is painted automaticaly by this function.
+		@type icon: QtGui.QIcon
+		"""
 		self.avatar=icon
 		result=QtGui.QPixmap(32,32)
 		avatar=self.avatar.pixmap(30,30)
@@ -280,16 +286,19 @@ class userItem:
 		painter.drawPixmap(0,0,frame)
 		painter.end()
 		self.selectedFrameAvatar=QtGui.QIcon(result)
-
-		#tab.chat.ui.avatar.setPixmap(result)
-		#self.main.repaint()
 	
 	def setHidden(self,hidden):
+		"""
+		Hide or show userItem
+		@type hidden: boolean
+		"""
 		self.hidden=hidden
 		self.main.repaint()
 
 class special:
-	# special item for contact which aren't in any group
+	"""
+	special item for contact which aren't in any group
+	"""
 	def __init__(self):
 		self.typ="group"
 		self.main="special"
@@ -297,6 +306,9 @@ class special:
 		self.expanded=True
 
 class rosterWidget(QtGui.QWidget):
+	"""
+	RosterLiveWidget class.
+	"""
 	def __init__(self,parent=None,main=None):
 		QtGui.QWidget.__init__(self,parent)
 		self.main=main
@@ -305,13 +317,14 @@ class rosterWidget(QtGui.QWidget):
 		self.groups[self.specialName]=special()
 		self.users=[]
 		self.iconSize="32x32"
+
 		self.setMinimumWidth(150)
 		self.setMinimumHeight(150)
 		self.setAcceptDrops(True)
 		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
 		self.setMouseTracking(True)
 		self.setFocusPolicy(QtCore.Qt.ClickFocus)
-		
+
 		self.selected=None
 		self.selectedHeight=0
 		self.showOffline=False
@@ -351,11 +364,17 @@ class rosterWidget(QtGui.QWidget):
 		self.main.ui.rosterSearchLabel.hide()
 
 	def disconnect(self):
+		"""
+		Resets roster. Called by mainWindow on disconnect
+		"""
 		self.groups={}
 		self.specialName="zzzzzzzzzzzzzzzzz"
 		self.groups[self.specialName]=special()
 
 	def refreshEvents(self):
+		"""
+		Blinks with userItem icon if there is some event for userItem with event's JID.
+		"""
 		events=[]
 		for event in self.main.events.events:
 			if event['type']=="message":
@@ -371,8 +390,6 @@ class rosterWidget(QtGui.QWidget):
 				for item in self.getUserItems(jid):
 					if item in self.events:
 						self.events.remove(item)
-
-			
 		self.timerBlink.start(500)
 
 	def blink(self):
@@ -386,6 +403,11 @@ class rosterWidget(QtGui.QWidget):
 			self.repaint()
 
 	def reskin(self,style=None):
+		"""
+		Reload roster skin
+		"""
+
+
 		if self.theme==True:
 			self.colors.setObjectName("rosterView")
 		else:
@@ -397,7 +419,9 @@ class rosterWidget(QtGui.QWidget):
 		self.repaint()
 
 	def sortItems(self,column=None,typ=None):
-		# sort groups and users in groups and count online/offline users
+		"""
+		Sort groups and users in groups and count online/offline users
+		"""
 		self.sortedGroups=self.groups.keys()
 		self.sortedGroups.sort()
 		for group in self.sortedGroups:
@@ -448,7 +472,9 @@ class rosterWidget(QtGui.QWidget):
 		return QtGui.QWidget.event(self,event)
 
 	def mouseMoveEvent(self,event):
-		# starts drag and drop if mouse button is pressed
+		"""
+		starts drag and drop if mouse button is pressed
+		"""
 		item,x,y=self.itemAt(int(event.x()),int(event.y()),1)
 		if item:
 			if event.buttons()!=QtCore.Qt.NoButton:
@@ -465,7 +491,9 @@ class rosterWidget(QtGui.QWidget):
 		return QtGui.QWidget.mouseMoveEvent(self,event)
 
 	def popup(self):
-		# called by timer if user wants to use autoscroll when DNDs the item
+		"""
+		called by timer if user wants to use autoscroll when DNDs the item
+		"""
 		if self.scrollUp==None:
 			self.timer.stop()
 		if not self.scrollUp:
@@ -482,30 +510,44 @@ class rosterWidget(QtGui.QWidget):
 				self.main.scroll.verticalScrollBar().setValue(self.main.scroll.verticalScrollBar().value()-10)
 
 	def addGroup(self,name):
-		# add new group
+		"""
+		add new group
+		@type name: unicode
+		@rtype: groupItem
+		@return: created groupItem
+		"""
 		item=groupItem(name,QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png"),self)
 		self.groups[name]=item
 		self.repaint()
 		return item
 
-	def addUser(self,jid,name,group,offline=True,first=False):
-		# add new user
+	def addUser(self,jid,name,group):
+		"""
+		add new user
+		@type jid: unicode
+		@type name: unicode
+		@type group: unicode
+		@rtype: userItem
+		@return: created userItem
+		"""
 		if len(name)==0:
 			name=jid
 		if not group:
 			group=self.specialName
 		item=userItem(name,group,jid,self)
 		item.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons["9"])
-		#item.jid=jid
 		item.hidden=True
 		item.setAvatar(QtGui.QIcon("images/48x48/apps/jabbim.png"))
-		#self.sortItems()
 		self.users.append(item)
 
 	def getGroupUsers(self,group):
-		# get all user items from `group`
+		"""
+		get all user items from `group`
+		@type group: unicode
+		@rtype: list
+		@return: list of userItem
+		"""
 		ret=[]
-
 		for user in self.users:
 			if self.showOffline==True:
 				if user.group==group:
@@ -513,11 +555,15 @@ class rosterWidget(QtGui.QWidget):
 			else:
 				if user.group==group and not user.hidden:
 					ret.append(user)
-
 		return ret
 
 	def getGroupSortedUsers(self,group):
-		# get all users from group. Returned list is sorted and depends on self.showOffline variable.
+		"""
+		get all users from group. Returned list is sorted and depends on self.showOffline variable.
+		@type group: unicode
+		@rtype: list
+		@return: sorted list of userItem
+		"""
 		ret=[]
 		transport=self.main.config['showTransports']
 		for key in self.sorted[group]:
@@ -533,7 +579,9 @@ class rosterWidget(QtGui.QWidget):
 		return ret
 
 	def paintCompactGroupItem(self,painter,item,x,y):
-		# paints group item in compact roster
+		"""
+		paints group item in compact roster
+		"""
 		if item.main=="special":
 			# we don't want to paint `special` item
 			return
@@ -590,7 +638,9 @@ class rosterWidget(QtGui.QWidget):
 		painter.restore()
 
 	def paintGroupItem(self,painter,item,x,y):
-		# paints group item in normal roster
+		"""
+		paints group item in normal roster
+		"""
 		if item.main=="special":
 			return
 		
@@ -627,10 +677,10 @@ class rosterWidget(QtGui.QWidget):
 		doc.drawContents(painter, QtCore.QRectF(0,0,width+15,y+32))
 		painter.restore()
 
-
-
 	def resizeEvent(self,event):
-		# resizes activeWidget if roster is resized
+		"""
+		resizes activeWidget if roster is resized
+		"""
 		if self.statusLabel:
 			self.statusLabel.resize(self.width()-46,self.selectedHeight-32)
 		return QtGui.QWidget.resizeEvent(self,event)
@@ -725,146 +775,6 @@ class rosterWidget(QtGui.QWidget):
 				elif self.changePos:
 					self.statusLabel.setGeometry(41,y+7,self.width()-46,height)
 					self.changePos=False
-			#height=91
-			#if not useritem.statusMessage:
-				#height-=32
-			#if not self.metaItems.has_key(useritem.metajid):
-				#height-=16
-			#self.selectedHeight=height+32
-			#painter.save()
-			#painter.translate(x,y)
-			#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
-			#painter.restore()
-			##painter.save()
-			##painter.translate(x,y)
-			##painter.fillRect(0,0,self.width(),96,QtGui.QBrush(self.selectedGroupGradient))
-			##painter.restore()
-			##palette=QtGui.QPalette()
-			##painter.save()
-			##painter.translate(x,y)
-			##painter.fillRect(0,0,self.width(),32,QtGui.QBrush(palette.color(QtGui.QPalette.Highlight)))
-			##painter.restore()
-			##p=painter.pen()
-			##painter.setPen(self.palet.color(QtGui.QPalette.AlternateBase))
-			##painter.save()
-			##painter.translate(x,y)
-			##painter.fillRect(3,0,self.width()-3,96,QtGui.QBrush(self.palet.color(QtGui.QPalette.Highlight)))
-
-			##painter.drawLine(2,0,2,96)
-			##painter.drawLine(self.width()-2,0,self.width()-2,96)
-			##painter.restore()
-			##painter.setPen(p)
-
-			#b=painter.brush()
-			#p=painter.pen()
-			#painter.setBrush(QtGui.QColor(243,244,248))
-			#pen=QtGui.QPen(QtGui.QColor(160,169,199))
-			#pen.setWidth(0)
-			#painter.setPen(pen)
-			#painter.save()
-			#painter.translate(x,y)
-	
-			##painter.drawEllipse(2,8,16,16)
-			##painter.drawEllipse(self.width()-18,8,16,16)
-			##painter.drawEllipse(2,16,16,16)
-			##painter.drawEllipse(self.width()-18,16,16,16)
-			##painter.drawRect(2,16,self.width()-4,32)
-			##painter.drawRect(11,8,self.width()-22,32)
-			#painter.drawRect(5,5,self.width()-10,height+20)
-			#painter.restore()
-			#painter.setBrush(b)
-			#painter.setPen(p)
-			
-			#painter.drawPixmap(x+7,y+11,useritem.icon.pixmap(32,32))
-
-			#doc=QtGui.QTextDocument()
-			#font=doc.defaultFont()
-			#font.setPixelSize(12)
-			##font.setWeight(font.DemiBold)
-			#doc.setDefaultFont(font)
-			
-			##if useritem.avatar:
-				##pixmap=useritem.avatar.pixmap(32,32)
-				###doc.setTextWidth(self.width()-30-pixmap.width())
-				##doc.setPageSize(QtCore.QSizeF(self.width()-30-pixmap.width(),32))
-			##else:
-				##doc.setPageSize(QtCore.QSizeF(self.width(),64))
-			##option=QtGui.QTextOption()
-			##option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
-			##doc.setDefaultTextOption(option)
-			##if useritem.statusMessage:
-				##doc.setHtml(useritem.escapedName)
-				##painter.save()
-				##painter.translate(x+30,y)
-				##doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
-				##painter.restore()
-					###self.statusLabel.setGeometry(0,y+32,self.width(),64)
-					###self.statusLabel.show()
-				###doc.setHtml("JID:<b>"+useritem.jid+"</b>")
-				###painter.save()
-				###painter.translate(4,y+32)
-				###doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
-				###painter.restore()
-			##else:
-			
-			#doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+"</font>")
-			#painter.save()
-			#painter.translate(x+41,y+12)
-			#doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-33,y+28))
-			#painter.restore()
-			#if self.statusLabel:
-				#if self.reshow:
-					#buttons=[]
-					#if self.metaItems.has_key(useritem.metajid):
-						#for meta in self.metaItems[useritem.metajid]:
-							#buttons.append([meta,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
-					##if self.statusLabel.isHidden():
-					#self.statusLabel.setData(useritem,buttons)
-					##print y,y+32,height
-					#self.statusLabel.setGeometry(41,y+26,self.width()-46,height)
-					#self.statusLabel.show()
-					#self.reshow=False
-				#elif self.changePos:
-					#self.statusLabel.setGeometry(41,y+26,self.width()-46,height)
-					#self.changePos=False
-			##else:
-				##buttons=[]
-				##if self.metaItems.has_key(useritem.metajid):
-					##for meta in self.metaItems[useritem.metajid]:
-						##buttons.append([meta,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
-				##self.statusLabel=activeWidget(useritem,useritem.statusMessage,buttons,self)
-				##print y,y+32,height
-				##self.statusLabel.setGeometry(41,y+32,self.width()-46,height)
-				##self.statusLabel.show()
-
-			##if not self.buttonWidget and self.statusLabel:
-				##buttons=[]
-				##if self.metaItems.has_key(useritem.jid):
-					##for meta in self.metaItems[useritem.jid]:
-						##buttons.append(self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)]))
-				##high=self.main.client.roster['users'][useritem.jid].getHighestResource()
-				##if high:
-					##high=self.main.client.roster['users'][useritem.jid].resources[high]
-					##buttons.append(self.main.getIcon(useritem.jid,size="16x16",status=self.main.icons[self.main.shows[high.show]]))
-					##print "YES",buttons
-					##self.statusLabel.addResource(high)
-					##for key,resource in self.main.client.roster['users'][useritem.jid].resources.iteritems():
-						##if resource!=high:
-							##buttons.append(self.main.getIcon(useritem.jid,size="16x16",status=self.main.icons[self.main.shows[resource.show]]))
-							##self.statusLabel.addResource(resource)
-					##print buttons
-					##self.buttonWidget=activeButtons(self,buttons,self)
-					##self.buttonWidget.setGeometry(35,y+16,self.width()-3,16)
-					##self.buttonWidget.show()
-				##else:
-					#### no resource
-					##if useritem.statusMessage:
-						##self.statusLabel.addStatusOnly(useritem.statusMessage)
-						
-			##if useritem.avatar:
-
-				##pixmap=useritem.avatar.pixmap(64,64)
-				##painter.drawPixmap(self.width()-pixmap.width()-8,y+self.selectedHeight-pixmap.height()-5,pixmap)
 
 
 		else:
@@ -909,7 +819,9 @@ class rosterWidget(QtGui.QWidget):
 				painter.drawPixmap(self.width()-4-32+(int((32-pixmap.width())/2)),y,pixmap)
 
 	def paintUserItem(self,painter,useritem,x,y):
-		# paints user item in normal roster
+		"""
+		paints user item in normal roster
+		"""
 		if useritem==self.item:
 			#print useritem.privacy
 			# Item is selected
@@ -1099,9 +1011,18 @@ class rosterWidget(QtGui.QWidget):
 						y+=self.selectedHeight-28
 					y+=self.userHeight
 		if self.reshow:
-			print "hiding"
 			self.statusLabel.hide()
+
 	def itemAt(self,x1,y1,count=None):
+		"""
+		Get items at position x1,y1.
+		@type x1: number
+		@type x2: number
+		@type count: number
+		@param count: count of returned items. First item has position [x1,y1].
+		@rtype: list
+		@return: [list of userItem, groupItem, specialItem,X of last item, Y of last item]
+		"""
 		x=0
 		y=0
 		got=0
@@ -1153,9 +1074,6 @@ class rosterWidget(QtGui.QWidget):
 								return ret,0,goty
 							if useritem==self.item:
 								y+=self.selectedHeight-28
-	
-						#if useritem==self.item:
-							#y-=32
 					y+=self.groupHeight
 		else:
 			users=[]
@@ -1192,9 +1110,6 @@ class rosterWidget(QtGui.QWidget):
 						y+=self.selectedHeight-28
 					y+=self.userHeight
 
-						#if useritem==self.item:
-							#y-=32
-					#y+=self.groupHeight
 		if got!=0:
 			return ret,0,goty
 
@@ -1202,6 +1117,12 @@ class rosterWidget(QtGui.QWidget):
 			return [],None,None
 
 	def itemCoordinates(self,i):
+		"""
+		Return coordinates of userItem i
+		@type i: userItem
+		@rtype: list
+		@return: [X,Y]
+		"""
 		x=0
 		y=0
 		if self.searchMode==False:
@@ -1236,6 +1157,9 @@ class rosterWidget(QtGui.QWidget):
 		return None,None
 
 	def setSize(self):
+		"""
+		Set height of rosterLiveWidget
+		"""
 		x=0
 		y=0
 		if self.searchMode==False:
@@ -1260,48 +1184,44 @@ class rosterWidget(QtGui.QWidget):
 			self.setMinimumHeight(y)
 
 
-	def sel(self):
-		self.item=self.selected
-		self.reshow=True
-		self.repaint()
-		self.setSize()
+	#def sel(self):
+		#self.item=self.selected
+		#self.reshow=True
+		#self.repaint()
+		#self.setSize()
 
-	def sel2(self):
-		self.item = None
-		self.selected = None
-		self.statusLabel.hide()
-		self.reshow=True
-		self.repaint()
-		self.setSize()
+	#def sel2(self):
+		#self.item = None
+		#self.selected = None
+		#self.statusLabel.hide()
+		#self.reshow=True
+		#self.repaint()
+		#self.setSize()
 
-	def selectItem(self,item,wait=False):
-		#t=float(time.time())
+	def selectItem(self,item):
+		"""
+		Select item
+		@type item: userItem
+		"""
 		if self.item!=item and item!=None and item.main!='special':
 			self.selected=item
-			if not wait:
-				self.item=item
-				self.reshow=True
-				self.repaint()
-				self.setSize()
-			else:
-				self.main.client.reactor.callLater(0.2,self.sel)
-			#self.timestamp=float(t)
+			self.item=item
+			self.reshow=True
+			self.repaint()
+			self.setSize()
+			#self.main.client.reactor.callLater(0.2,self.sel)
+
 		elif self.item == item and self.item != None and item.main!='special':
-			#print t-self.timestamp
-			#if t-self.timestamp>1.0:
-			if wait:
-				self.main.client.reactor.callLater(0.2,self.sel2)
-			else:
-				self.item = None
-				self.selected = None
-				self.statusLabel.hide()
-				self.reshow=True
-				self.repaint()
-				self.setSize()
-				#self.timestamp=float(t)
+			self.item = None
+			self.selected = None
+			self.statusLabel.hide()
+			self.reshow=True
+			self.repaint()
+			self.setSize()
 		if item!=None:
 			if item.typ=='group' and item.main!='special':
 				self.statusLabel.hide()
+
 	def mouseReleaseEvent(self,event):
 		x=event.x()
 		y=event.y()
@@ -1671,6 +1591,12 @@ class rosterWidget(QtGui.QWidget):
 		return None
 
 	def getHostItems(self,host):
+		"""
+		Get all userItem with selected host
+		@type host: unicode
+		@rtype: list
+		@return: list of userItem
+		"""
 		ret=[]
 		for user in self.users:
 			if jidT.JID(user.jid).host==host:
@@ -1679,9 +1605,8 @@ class rosterWidget(QtGui.QWidget):
 			for user in users:
 				if jidT.JID(user.jid).host==host:
 					ret.append(user)
-		print "HOSTITEMS:",ret
+		#print "HOSTITEMS:",ret
 		return ret
-
 
 	def search(self,text=""):
 		text=unicode(text).lower()
@@ -1721,14 +1646,26 @@ class rosterWidget(QtGui.QWidget):
 			self.selectItem(first)
 		self.repaint()
 
-	def getUserItems(self,jid,typ=False):
+	def getUserItems(self,jid):
+		"""
+		Get all userItems with JID jid
+		@type jid: unicode
+		@rtype: list
+		@return: list of userItem
+		"""
 		ret=[]
 		for user in self.users:
 			if user.jid==jid:
 				ret.append(user)
 		return ret
 
-	def getMetaItems(self,jid,typ=False):
+	def getMetaItems(self,jid):
+		"""
+		Get all metaItems with JID jid
+		@type jid: unicode
+		@rtype: list
+		@return: list of userItem
+		"""
 		ret=[]
 		for mainjid,users in self.metaItems.iteritems():
 			for user in users:
