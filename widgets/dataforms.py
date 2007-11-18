@@ -151,7 +151,7 @@ def sendDataForm(main,jid,form,var,t,unregister=False):
 							if child.name == 'value':
 								make=False
 								child.children = []
-								child.children.append(unicode(widget.text()))
+								child.children.append(unicode(widget.toPlainText()))
 						if make:
 							x.addElement('value', content = unicode(widget.toPlainText()))
 					elif typ=="boolean":
