@@ -67,9 +67,11 @@ def makeDataForm(parent,layout,form,row=1):
 				label=QtGui.QLabel(x['label'],parent)
 				layout.addWidget(label,row,0)
 				widget=QtGui.QTextEdit(parent)
+				text=""
 				for child in x.elements():
 					if child.name == 'value':
-						widget.setText(unicode(child))
+						text+=unicode(child)+"\n"
+				widget.setText(unicode(text))
 				layout.addWidget(widget,row,1)
 				var[x['var']]={'widget':widget,'type':x['type']}
 				for d in x.elements():
