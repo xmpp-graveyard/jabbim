@@ -147,13 +147,22 @@ def sendDataForm(main,jid,form,var,t,unregister=False):
 							x.addElement('value', content = unicode(widget.text()))
 					elif typ=="text-multi":
 						make=True
+						text=unicode(widget.toPlainText())
+						text=text.split('\n')
+						while '' in text:
+							text.remove('')
+						
 						for child in x.elements():
 							if child.name == 'value':
 								make=False
 								child.children = []
-								child.children.append(unicode(widget.toPlainText()))
-						if make:
-							x.addElement('value', content = unicode(widget.toPlainText()))
+								if len(text)!=0:
+									child.children.append(text[0])
+									text.remove(text[0])
+						for t in text:
+							x.addElement('value', content = unicode(t))
+						#if make:
+							#x.addElement('value', content = unicode(widget.toPlainText()))
 					elif typ=="boolean":
 						make=True
 						if widget.isChecked():
