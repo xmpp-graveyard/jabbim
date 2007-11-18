@@ -284,6 +284,12 @@ class groupChatWidget(QtGui.QWidget):
 		self.connecting=QtGui.QLabel(self.tr("Connecting to MUC. This can take a few seconds."),self.ui.textEdit)
 		self.connecting.adjustSize()
 	
+		self.init=""
+		if self.main.skin.has_key("on_init"):
+			self.init=self.main.skin["on_init"]
+		self.ui.textEdit.setHtml("<br/>"+self.init)
+
+	
 	def showConnecting(self):
 		pos=self.ui.textEdit.mapToGlobal(QtCore.QPoint(0,0))
 		x=pos.x()
@@ -335,7 +341,10 @@ class groupChatWidget(QtGui.QWidget):
 		self.main.chat.activate()
 		
 	def clearChat(self):
-		self.ui.textEdit.setHtml("")
+		self.init=""
+		if self.main.skin.has_key("on_init"):
+			self.init=self.main.skin["on_init"]
+		self.ui.textEdit.setHtml("<br/>"+self.init)
 	
 	def roomConfigClicked(self):
 		nick=self.main.client.groupchats[self.jid].nick

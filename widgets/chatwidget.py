@@ -309,7 +309,10 @@ class chatWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 		QtCore.QObject.connect(self.ui.boldButton, QtCore.SIGNAL("clicked (bool)"),self.bold)
 		self.ui.textEdit.setAcceptRichText(True)
-		self.ui.textEdit.setHtml("<br/>")
+		self.init=""
+		if self.main.skin.has_key("on_init"):
+			self.init=self.main.skin["on_init"]
+		self.ui.textEdit.setHtml("<br/>"+self.init)
 		#short=QtGui.QShortcut(QtCore.Qt.Key_Return,self.ui.line)
 		#QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.sendButtonClicked)
 		self.loadSmileys()
