@@ -21,7 +21,7 @@ from twisted.python import log
 #       `--| [presence-out]
 
 class PrivacyListItem:
-	"Simple privacy rule class"
+	"""Simple privacy rule class"""
 	def __init__(self, action, order, typ = None, value = None, stanzas = []):
 		"""@type action: str
 @param action: "allow" or "deny"
@@ -42,7 +42,7 @@ class PrivacyListItem:
 		self.stanzas	= stanzas # stanzas = [] denies|allows all communication
 
 class PrivacyList:
-	"Class that manages one privacy list"
+	"""Class that manages one privacy list"""
 	def __init__(self, name, items, main):
 		"""@type name: unicode
 @param name: Name of the list
@@ -311,10 +311,10 @@ Use self.lists["name"] for access to single privacy lists instances"""
 		self.default	= None
 	
 	def setActive(self, name):
-		"Set the privacy list as active
+		"""Set the privacy list as active
 
 @type name: unicode
-@param name: chosen list's name"
+@param name: chosen list's name"""
 		if name not in self.lists.keys() and name != None:
 			self.lists[name] = None
 		iq = IQ(self.main.client.xmlstream, "set")
@@ -331,10 +331,10 @@ Use self.lists["name"] for access to single privacy lists instances"""
 			self.active = None
 
 	def setDefault(self, name):
-		"Set the privacy list as default.
+		"""Set the privacy list as default.
 
 @type name: unicode
-@param name: chosen list's name"
+@param name: chosen list's name"""
 		if name not in self.lists.keys() and name != None:
 			self.lists[name] = None
 		iq = IQ(self.main.client.xmlstream, "set")
