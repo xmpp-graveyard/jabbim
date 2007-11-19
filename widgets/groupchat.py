@@ -269,15 +269,15 @@ class groupChatWidget(QtGui.QWidget):
 		for key,value in self.main.plugins.iteritems():
 			value.buildChatWidget(unicode(jidT.JID(self.jid).userhost()),self.flowLayout)
 		
-		self.ui.admin=QtGui.QPushButton()
-		self.ui.admin.setIconSize(QtCore.QSize(32,32))
+		self.ui.admin=QtGui.QToolButton()
+		self.ui.admin.setIconSize(QtCore.QSize(16,16))
 		self.ui.admin.setIcon(QtGui.QIcon("images/32x32/actions/register.png"))
 		self.ui.admin.setToolTip(self.tr("Room administration"))
 		self.flowLayout.addWidget(self.ui.admin)
 		QtCore.QObject.connect(self.ui.admin, QtCore.SIGNAL("clicked ()"),self.roomConfigClicked)
 
-		self.ui.clearChat=QtGui.QPushButton()
-		self.ui.clearChat.setIconSize(QtCore.QSize(32,32))
+		self.ui.clearChat=QtGui.QToolButton()
+		self.ui.clearChat.setIconSize(QtCore.QSize(16,16))
 		self.ui.clearChat.setIcon(QtGui.QIcon("images/32x32/actions/clear.png"))
 		self.ui.clearChat.setToolTip(self.tr("Clear chat"))
 		self.flowLayout.addWidget(self.ui.clearChat)
