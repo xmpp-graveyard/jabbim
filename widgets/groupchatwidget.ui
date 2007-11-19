@@ -83,14 +83,6 @@
          </item>
          <item row="1" column="1" >
           <widget class="QToolButton" name="smileys" >
-           <property name="sizePolicy" >
-            <sizepolicy>
-             <hsizetype>1</hsizetype>
-             <vsizetype>1</vsizetype>
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
            <property name="toolTip" >
             <string>You can add emoticons by clicking here</string>
            </property>
