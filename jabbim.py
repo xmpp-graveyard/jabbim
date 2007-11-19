@@ -1177,6 +1177,7 @@ class clientClass(pyxl.client.Client):
 					#self.frameAvatar=QtGui.QIcon(result)
 					
 					item.setIcon(0,QtGui.QIcon(result))
+					w.chat.setTooltip(item,jid.full())
 			
 		
 		

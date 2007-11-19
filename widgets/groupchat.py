@@ -561,6 +561,31 @@ class groupChatWidget(QtGui.QWidget):
 		self.ui.users.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.refreshStats()
 
+	def setTooltip(self,item,jid):
+		#jid=self.jid+"/"+nick
+		nick=unicode(jidT.JID(jid).resource)
+		status=self.main.client.groupchats[self.jid].users[nick].show
+		item=self.getUserItems(nick)[0]
+		text='<table><tr>'
+		if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")):
+			f=open(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
+			image = f.read()
+			f.close()
+			pixmap=QtGui.QPixmap()
+			pixmap.loadFromData(image)
+			pixmap=QtGui.QIcon(pixmap)
+			pixmap=pixmap.pixmap(64,64)
+			text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
+		text+='<td><b>'+self.tr("Name:")+'</b> '+nick+'<br/>'
+		if self.main.client.groupchats[self.jid].users[nick].truejid:
+			text+='<b>'+self.tr("JID:")+'</b> '+self.main.client.groupchats[self.jid].users[nick].truejid+'<br/>'
+		else:
+			text+='<b>'+self.tr("JID:")+'</b> '+unicode(self.jid)+'/'+nick+'<br/>'
+		text+='<img src="images/16x16/status/jabber-%s.png">' % status # hodilo by se rozlisit k jakymu poatri transportu
+		text+='<font size="-1">%s</font><br>' % unicode(self.main.client.groupchats[self.jid].users[nick].status).replace("None","")
+		text+="</td></tr></table>"
+		item.setToolTip(0,text)
+
 	def loadSmileys(self):
 		# loads smileys.conf and makes buttons
 		smileys=ConfigObj("smileys.conf",encoding='UTF8')
