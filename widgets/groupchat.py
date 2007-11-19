@@ -449,6 +449,7 @@ class groupChatWidget(QtGui.QWidget):
 			item.setText(1,self.main.shows[status]+unicode(nick.lower()))
 		else:
 			item.setIcon(0,self.main.getIcon(status="online",size="32x32"))
+			item.setText(1,self.main.shows['online']+unicode(nick.lower()))
 
 		if new:
 			self.main.client.on_avatarUpdate(self.jid+"/"+unicode(item.text(0)))
