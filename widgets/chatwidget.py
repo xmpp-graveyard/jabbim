@@ -358,8 +358,8 @@ class chatWidget(QtGui.QWidget):
 		for key,value in self.main.plugins.iteritems():
 			value.buildChatWidget(unicode(jidT.JID(self.jid).userhost()),self.flowLayout)
 		
-		self.ui.sendFile=QtGui.QPushButton()
-		self.ui.sendFile.setIconSize(QtCore.QSize(32,32))
+		self.ui.sendFile=QtGui.QToolButton()
+		self.ui.sendFile.setIconSize(QtCore.QSize(16,16))
 		self.ui.sendFile.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
 		self.ui.sendFile.setToolTip(self.tr("Send file"))
 		self.flowLayout.addWidget(self.ui.sendFile)
