@@ -23,7 +23,7 @@ except:
 from groupchatwidget_ui import *
 from groupchatadmin import *
 from configobj import ConfigObj
-import urllib,re
+import urllib,re,os
 from twisted.web.microdom import *
 from twisted.web.domhelpers import gatherTextNodes
 import dataforms
@@ -450,10 +450,31 @@ class groupChatWidget(QtGui.QWidget):
 		else:
 			item.setIcon(0,self.main.getIcon(status="online",size="32x32"))
 			item.setText(1,self.main.shows['online']+unicode(nick.lower()))
+			status="online"
 
 		if new:
 			self.main.client.on_avatarUpdate(self.jid+"/"+unicode(item.text(0)))
 
+		jid=self.jid+"/"+nick
+		text='<table><tr>'
+		if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")):
+			f=open(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
+			image = f.read()
+			f.close()
+			pixmap=QtGui.QPixmap()
+			pixmap.loadFromData(image)
+			pixmap=QtGui.QIcon(pixmap)
+			pixmap=pixmap.pixmap(64,64)
+			text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
+		text+='<td><b>'+self.tr("Name:")+'</b> '+nick+'<br/>'
+		if self.main.client.groupchats[self.jid].users[nick].truejid:
+			text+='<b>'+self.tr("JID:")+'</b> '+self.main.client.groupchats[self.jid].users[nick].truejid+'<br/>'
+		else:
+			text+='<b>'+self.tr("JID:")+'</b> '+unicode(self.jid)+'/'+nick+'<br/>'
+		text+='<img src="images/16x16/status/jabber-%s.png">' % status # hodilo by se rozlisit k jakymu poatri transportu
+		text+='<font size="-1">%s</font><br>' % unicode(self.main.client.groupchats[self.jid].users[nick].status).replace("None","")
+		text+="</td></tr></table>"
+		item.setToolTip(0,text)
 
 		avatar=item.icon(1)
 		if not avatar.isNull():
