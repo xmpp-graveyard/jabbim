@@ -100,7 +100,7 @@
          <item row="1" column="2" >
           <widget class="QToolButton" name="sendButton" >
            <property name="text" >
-            <string>Send</string>
+            <string>&amp;Send</string>
            </property>
           </widget>
          </item>
