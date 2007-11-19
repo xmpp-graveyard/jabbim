@@ -34,7 +34,7 @@ class flowLayout(QtGui.QLayout):
 		QtGui.QLayout.__init__(self, parent)
 
 		if parent is not None:
-			self.setMargin(margin)
+			self.setMargin(2)
 		self.setSpacing(spacing)
 
 		self.itemList = []

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Mon Nov 19 17:25:11 2007
+# Created: Mon Nov 19 18:41:34 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -48,10 +48,6 @@ class Ui_groupchatwidget(object):
         self.gridlayout1.setSpacing(6)
         self.gridlayout1.setObjectName("gridlayout1")
 
-        self.sendButton = QtGui.QPushButton(self.layoutWidget)
-        self.sendButton.setObjectName("sendButton")
-        self.gridlayout1.addWidget(self.sendButton,1,2,1,1)
-
         self.lineWidget = QtGui.QWidget(self.layoutWidget)
         self.lineWidget.setMinimumSize(QtCore.QSize(0,10))
         self.lineWidget.setObjectName("lineWidget")
@@ -61,11 +57,21 @@ class Ui_groupchatwidget(object):
         self.gridlayout1.addItem(spacerItem,1,0,1,1)
 
         self.smileys = QtGui.QToolButton(self.layoutWidget)
+
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(1),QtGui.QSizePolicy.Policy(1))
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.smileys.sizePolicy().hasHeightForWidth())
+        self.smileys.setSizePolicy(sizePolicy)
         self.smileys.setIcon(QtGui.QIcon("images/22x22/emotes/biggrin.png"))
         self.smileys.setCheckable(True)
         self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.smileys.setObjectName("smileys")
         self.gridlayout1.addWidget(self.smileys,1,1,1,1)
+
+        self.sendButton = QtGui.QToolButton(self.layoutWidget)
+        self.sendButton.setObjectName("sendButton")
+        self.gridlayout1.addWidget(self.sendButton,1,2,1,1)
 
         self.layoutWidget1 = QtGui.QWidget(self.splitter_2)
         self.layoutWidget1.setObjectName("layoutWidget1")
@@ -84,15 +90,6 @@ class Ui_groupchatwidget(object):
         self.users.setObjectName("users")
         self.vboxlayout.addWidget(self.users)
 
-        self.admin2 = QtGui.QWidget(self.layoutWidget1)
-        self.admin2.setObjectName("admin2")
-
-        self.vboxlayout1 = QtGui.QVBoxLayout(self.admin2)
-        self.vboxlayout1.setMargin(0)
-        self.vboxlayout1.setSpacing(6)
-        self.vboxlayout1.setObjectName("vboxlayout1")
-        self.vboxlayout.addWidget(self.admin2)
-
         self.pluginWidget = QtGui.QWidget(self.layoutWidget1)
         self.pluginWidget.setObjectName("pluginWidget")
         self.vboxlayout.addWidget(self.pluginWidget)
@@ -104,9 +101,8 @@ class Ui_groupchatwidget(object):
     def retranslateUi(self, groupchatwidget):
         groupchatwidget.setWindowTitle(QtGui.QApplication.translate("groupchatwidget", "Form", None, QtGui.QApplication.UnicodeUTF8))
         self.info.setToolTip(QtGui.QApplication.translate("groupchatwidget", "Every multi user chat can has topic of it\'s discussion", None, QtGui.QApplication.UnicodeUTF8))
-        self.sendButton.setText(QtGui.QApplication.translate("groupchatwidget", "&Send", None, QtGui.QApplication.UnicodeUTF8))
         self.smileys.setToolTip(QtGui.QApplication.translate("groupchatwidget", "You can add emoticons by clicking here", None, QtGui.QApplication.UnicodeUTF8))
-        self.smileys.setText(QtGui.QApplication.translate("groupchatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.sendButton.setText(QtGui.QApplication.translate("groupchatwidget", "Send", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(0,QtGui.QApplication.translate("groupchatwidget", "user", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(1,QtGui.QApplication.translate("groupchatwidget", "jid", None, QtGui.QApplication.UnicodeUTF8))
 

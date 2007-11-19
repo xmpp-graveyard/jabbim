@@ -58,13 +58,6 @@
          <property name="spacing" >
           <number>6</number>
          </property>
-         <item row="1" column="2" >
-          <widget class="QPushButton" name="sendButton" >
-           <property name="text" >
-            <string>&amp;Send</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="0" colspan="3" >
           <widget class="QWidget" native="1" name="lineWidget" >
            <property name="minimumSize" >
@@ -90,11 +83,16 @@
          </item>
          <item row="1" column="1" >
           <widget class="QToolButton" name="smileys" >
+           <property name="sizePolicy" >
+            <sizepolicy>
+             <hsizetype>1</hsizetype>
+             <vsizetype>1</vsizetype>
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="toolTip" >
             <string>You can add emoticons by clicking here</string>
-           </property>
-           <property name="text" >
-            <string>...</string>
            </property>
            <property name="icon" >
             <iconset>images/22x22/emotes/biggrin.png</iconset>
@@ -104,6 +102,13 @@
            </property>
            <property name="popupMode" >
             <enum>QToolButton::InstantPopup</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2" >
+          <widget class="QToolButton" name="sendButton" >
+           <property name="text" >
+            <string>Send</string>
            </property>
           </widget>
          </item>
@@ -148,18 +153,6 @@
             <string>jid</string>
            </property>
           </column>
-         </widget>
-        </item>
-        <item>
-         <widget class="QWidget" native="1" name="admin2" >
-          <layout class="QVBoxLayout" >
-           <property name="margin" >
-            <number>0</number>
-           </property>
-           <property name="spacing" >
-            <number>6</number>
-           </property>
-          </layout>
          </widget>
         </item>
         <item>
