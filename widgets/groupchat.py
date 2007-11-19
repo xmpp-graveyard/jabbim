@@ -101,11 +101,12 @@ class flowLayout(QtGui.QLayout):
 		return y + lineHeight - rect.y()
 
 class textView(QtGui.QTextEdit):
-	def __init__(self,parent):
+	def __init__(self,main,parent):
 		QtGui.QTextEdit.__init__(self,parent)
+		self.parent=main
 		self.setMouseTracking(True)
 		self.setReadOnly(True)
-
+		self.data=[]
 	def mouseMoveEvent(self,event):
 		anchor = self.anchorAt(event.pos())
 		if len(anchor)!=0:
@@ -119,6 +120,49 @@ class textView(QtGui.QTextEdit):
 		if len(anchor)!=0:
 			QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
 		return QtGui.QTextEdit.mousePressEvent(self,event)
+
+	def createMimeDataFromSelection (self):
+		text=unicode(self.textCursor().selection().toHtml())
+		#print text
+		a=parseString(text)
+		for el in a.getElementsByTagName('img'):
+			path=el.attributes['src'].split('/')[-1]
+			for k,v in self.parent.smileys.iteritems():
+				if v==path:
+					path=k
+					newnode = parseString("<div> "+path+"</div>").documentElement
+					el.parentNode.replaceChild(newnode,el)
+					break
+		b=a.getElementsByTagName('body')
+		try:
+			c=parseString(unicode(b[0].toxml(),'utf-8').replace("<!--EndFragment-->","").replace("<!--StartFragment-->",""))
+		except:
+			c=parseString(unicode(b[0].toxml()).replace("<!--EndFragment-->","").replace("<!--StartFragment-->",""))
+		for el in c.getElementsByTagName('br'):
+			#if self.parent.main.skin['spaces_between_lines']=='1':
+				#newnode = parseString("<div> "+unichr(2028)+unichr(2028)+"</div>").documentElement
+			#else:
+			newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
+			el.parentNode.replaceChild(newnode,el)
+		for el in c.getElementsByTagName('table'):
+			newnode = parseString(unicode(el.toxml(),'utf-8')+"<div>"+unichr(2028)+unichr(2028)+"NN</div>").documentElement
+			#print unicode(el.toxml())
+			el.parentNode.replaceChild(newnode,el)
+			
+		text=gatherTextNodes(c)
+		u=False
+		try:
+			text=unicode(text, 'utf-8')
+			u=True
+		except:
+			text=unicode(text)
+		#if u:
+		text=text.replace(unichr(2028),"\n")
+		print unicode(text)
+
+		self.data.append(QtCore.QMimeData())
+		self.data[-1].setText(unicode(text))
+		return self.data[-1]
 
 class lineEditWidget(QtGui.QTextEdit):
 	def __init__(self,main,parent=None):
@@ -200,7 +244,7 @@ class groupChatWidget(QtGui.QWidget):
 		l=QtGui.QHBoxLayout(self.ui.viewWidget)
 		l.setMargin(0)
 		l.setSpacing(0)
-		self.ui.textEdit=textView(self.ui.viewWidget)
+		self.ui.textEdit=textView(self,self.ui.viewWidget)
 		#self.ui.textEdit=textView()
 		#self.ui.textEdit.setReadOnly(False)
 		l.addWidget(self.ui.textEdit)

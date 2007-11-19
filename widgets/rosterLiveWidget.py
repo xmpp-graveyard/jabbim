@@ -28,6 +28,7 @@ import filetransfer
 import addcontact
 import vcardeditor
 import commands
+from include import rot13
 
 class activeWidget(QtGui.QWidget):
 	def __init__(self,parent=None):
@@ -1358,6 +1359,8 @@ class rosterWidget(QtGui.QWidget):
 				contact=self.main.client.roster['users'][jid]
 				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription, self.main.client.roster['users'][jid].groups)
 			pass
+		elif key==QtCore.Qt.Key_M and event.modifiers() & QtCore.Qt.ControlModifier:
+			QtGui.QMessageBox.warning(self,':)',unicode(rot13.scramble("UnamM wr arwirgfv oberp :). Irgfv arm Frs....")),0,1)
 		elif key==QtCore.Qt.Key_O and event.modifiers() & QtCore.Qt.ControlModifier:
 			check=not self.main.ui.showOffline.isChecked()
 			self.main.ui.showOffline.setChecked(check)
