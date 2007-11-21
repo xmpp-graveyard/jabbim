@@ -36,16 +36,16 @@ class SetStatus(Stage):
 		if show == "offline":
 			show = None
 			typ = "unavailable"
-
+		status = "\n".join(self.data["status"])
 		self.main.client.sendPresence(
 				typ = typ,
 				show = show,
-				status = self.data["status"][0],
+				status = status,
 				priority = self.data["priority"][0],
 				)
 		icon = self.main.getIcon(self.data["show"][0], size="16x16")
 		self.main.ui.statusButton.setIcon(self.main.getIcon(status=self.data["show"][0], size="16x16"))
-		self.main.ui.showWidget.setText(unicode(self.data["status"][0]))
+		self.main.ui.showWidget.setText(status)
 		
 		sc = self.main.client.roster['users'][self.main.client.jid.userhost()].resources[self.main.client.jid.resource]
 		sc.show = self.data["show"][0]
