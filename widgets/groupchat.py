@@ -431,6 +431,8 @@ class groupChatWidget(QtGui.QWidget):
 
 	def addRole(self,role,name):
 		self.roles[role]=QtGui.QTreeWidgetItem(self.ui.users)
+		self.roles[role].setBackground(0,QtGui.QBrush(self.ui.users.palette().color(QtGui.QPalette.AlternateBase)))
+		self.roles[role].setIcon(0,QtGui.QIcon("images/32x32/categories/system-users.png"))
 		self.roles[role].setText(0,unicode(name))
 		self.roles[role].setText(1,unicode(name))
 		self.ui.users.setItemExpanded(self.roles[role],True)
