@@ -127,6 +127,21 @@
                </property>
               </widget>
              </item>
+             <item>
+              <widget class="QLabel" name="label_5" >
+               <property name="sizePolicy" >
+                <sizepolicy>
+                 <hsizetype>0</hsizetype>
+                 <vsizetype>5</vsizetype>
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text" >
+                <string>Status:</string>
+               </property>
+              </widget>
+             </item>
             </layout>
            </item>
            <item>
@@ -144,6 +159,18 @@
               <widget class="QLineEdit" name="login_password" >
                <property name="echoMode" >
                 <enum>QLineEdit::Password</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="loginStatus" >
+               <property name="sizePolicy" >
+                <sizepolicy>
+                 <hsizetype>7</hsizetype>
+                 <vsizetype>0</vsizetype>
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
                </property>
               </widget>
              </item>
@@ -265,34 +292,6 @@ p, li { white-space: pre-wrap; }
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
-         </item>
-         <item row="4" column="0" >
-          <layout class="QHBoxLayout" >
-           <property name="margin" >
-            <number>0</number>
-           </property>
-           <property name="spacing" >
-            <number>6</number>
-           </property>
-           <item>
-            <widget class="QLabel" name="label_4" >
-             <property name="sizePolicy" >
-              <sizepolicy>
-               <hsizetype>0</hsizetype>
-               <vsizetype>5</vsizetype>
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text" >
-              <string>Status:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QComboBox" name="loginStatus" />
-           </item>
-          </layout>
          </item>
          <item row="8" column="0" >
           <widget class="QLabel" name="label" >
@@ -656,12 +655,6 @@ p, li { white-space: pre-wrap; }
      <height>29</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuHelp" >
-    <property name="title" >
-     <string>Help</string>
-    </property>
-    <addaction name="actionAbout" />
-   </widget>
    <widget class="QMenu" name="menuPlugins" >
     <property name="title" >
      <string>Plugins</string>
@@ -681,6 +674,12 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionPreferences" />
     <addaction name="separator" />
     <addaction name="actionQuit" />
+   </widget>
+   <widget class="QMenu" name="menuHelp" >
+    <property name="title" >
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout" />
    </widget>
    <addaction name="menuAkce" />
    <addaction name="menuPlugins" />
@@ -718,6 +717,9 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionAbout" >
+   <property name="icon" >
+    <iconset>images/16x16/actions/about.png</iconset>
+   </property>
    <property name="text" >
     <string>About</string>
    </property>
@@ -738,6 +740,9 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionIdentity" >
+   <property name="icon" >
+    <iconset>images/16x16/categories/v-card.png</iconset>
+   </property>
    <property name="text" >
     <string>Identity</string>
    </property>

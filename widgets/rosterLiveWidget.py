@@ -1801,7 +1801,6 @@ class rosterWidget(QtGui.QWidget):
 		contact = self.main.client.roster['users'][jid]
 		oneres = len(contact.resources.keys()) < 2
 		# chat
-		print "LOG 1"
 		if oneres:
 			action=contactMenu.addAction(self.tr("Chat"))
 			if action != None:
@@ -1814,7 +1813,6 @@ class rosterWidget(QtGui.QWidget):
 					action=submenu.addAction(unicode(res))
 					action.setData(QtCore.QVariant("%s/%s" % (jid, res)))
 					action.setObjectName("chat")
-		print "LOG 2"
 		if self.main.client.groupchats != {}:	# Mozna zobrazit i kdyz v mucu nejsme aby to bylo vic videt :)
 			submenu = contactMenu.addMenu(QtGui.QIcon("images/16x16/categories/muc.png"),self.tr("Invite to conference"))
 			if oneres:
@@ -1830,19 +1828,15 @@ class rosterWidget(QtGui.QWidget):
 							action = submenu2.addAction(res)
 							action.setData(QtCore.QVariant(["%s/%s" % (jid, res), gc]))
 							action.setObjectName("invite_gc")
-		print "LOG 3"
 		# custom status
 		if oneres:
-			print "LOG 5"
 			submenu=contactMenu.addMenu(self.tr("Custom status"))
 
 			for status in ["online", "chat", "away", "xa", "dnd", "offline"]:
 				action=submenu.addAction(self.main.getIcon(status=status,size="32x32"),self.main.status[status])
 				action.setObjectName("custom_status")
 				action.setData(QtCore.QVariant([unicode(status), unicode(jid)]))
-			print "LOG 8"
 		else:
-			print "LOG 6"
 			submenu = contactMenu.addMenu(self.tr("Custom status"))
 			resmenu = submenu.addMenu(self.tr("All resources"))
 			submenu.addSeparator()
@@ -1852,7 +1846,6 @@ class rosterWidget(QtGui.QWidget):
 				if resource!=None:
 					resmenus.append((submenu.addMenu(res),resource))
 			resmenus.append((resmenu, ""))
-			print "LOG 7"
 			for resm in resmenus:
 				resmenu, res = resm
 				for status in ["online", "chat", "away", "xa", "dnd", "offline"]:
@@ -1864,7 +1857,6 @@ class rosterWidget(QtGui.QWidget):
 					else:
 						jr = jid
 					action.setData(QtCore.QVariant([unicode(status), unicode(jr)]))
-		print "LOG 4"
 
 		# separator
 		contactMenu.addSeparator()
@@ -1872,16 +1864,19 @@ class rosterWidget(QtGui.QWidget):
 		action=contactMenu.addAction(self.tr("vCard"))
 		action.setData(QtCore.QVariant(jid))
 		action.setObjectName("vcard")
+		action.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
 		# filetransfer
 		if oneres:
 			action=contactMenu.addAction(self.tr("Send file"))
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("send_file")
+			action.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
 		else:
 			submenu = contactMenu.addMenu(self.tr("Send file"))
 			for resource in contact.resources.keys():
 				if resource != None:
 					action = submenu.addAction(resource)
+					action.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
 					action.setData(QtCore.QVariant("%s/%s" % (jid, resource)))
 					action.setObjectName("send_file")
 		# separator

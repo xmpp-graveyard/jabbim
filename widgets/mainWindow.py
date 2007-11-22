@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Wed Nov 14 14:58:51 2007
+# Created: Thu Nov 22 19:14:21 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -81,6 +81,16 @@ class Ui_MainWindow(object):
         self.login_passwordLabel = QtGui.QLabel(self.login)
         self.login_passwordLabel.setObjectName("login_passwordLabel")
         self.vboxlayout.addWidget(self.login_passwordLabel)
+
+        self.label_5 = QtGui.QLabel(self.login)
+
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(5))
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
+        self.label_5.setSizePolicy(sizePolicy)
+        self.label_5.setObjectName("label_5")
+        self.vboxlayout.addWidget(self.label_5)
         self.hboxlayout1.addLayout(self.vboxlayout)
 
         self.vboxlayout1 = QtGui.QVBoxLayout()
@@ -96,6 +106,16 @@ class Ui_MainWindow(object):
         self.login_password.setEchoMode(QtGui.QLineEdit.Password)
         self.login_password.setObjectName("login_password")
         self.vboxlayout1.addWidget(self.login_password)
+
+        self.loginStatus = QtGui.QComboBox(self.login)
+
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7),QtGui.QSizePolicy.Policy(0))
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.loginStatus.sizePolicy().hasHeightForWidth())
+        self.loginStatus.setSizePolicy(sizePolicy)
+        self.loginStatus.setObjectName("loginStatus")
+        self.vboxlayout1.addWidget(self.loginStatus)
         self.hboxlayout1.addLayout(self.vboxlayout1)
         self.gridlayout1.addLayout(self.hboxlayout1,3,0,1,1)
 
@@ -143,26 +163,6 @@ class Ui_MainWindow(object):
         self.login_headerLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.login_headerLabel.setObjectName("login_headerLabel")
         self.gridlayout1.addWidget(self.login_headerLabel,0,0,1,1)
-
-        self.hboxlayout3 = QtGui.QHBoxLayout()
-        self.hboxlayout3.setMargin(0)
-        self.hboxlayout3.setSpacing(6)
-        self.hboxlayout3.setObjectName("hboxlayout3")
-
-        self.label_4 = QtGui.QLabel(self.login)
-
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(5))
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
-        self.label_4.setSizePolicy(sizePolicy)
-        self.label_4.setObjectName("label_4")
-        self.hboxlayout3.addWidget(self.label_4)
-
-        self.loginStatus = QtGui.QComboBox(self.login)
-        self.loginStatus.setObjectName("loginStatus")
-        self.hboxlayout3.addWidget(self.loginStatus)
-        self.gridlayout1.addLayout(self.hboxlayout3,4,0,1,1)
 
         self.label = QtGui.QLabel(self.login)
         self.label.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
@@ -246,19 +246,19 @@ class Ui_MainWindow(object):
         self.gridlayout5.setSpacing(0)
         self.gridlayout5.setObjectName("gridlayout5")
 
-        self.hboxlayout4 = QtGui.QHBoxLayout()
-        self.hboxlayout4.setMargin(0)
-        self.hboxlayout4.setSpacing(6)
-        self.hboxlayout4.setObjectName("hboxlayout4")
+        self.hboxlayout3 = QtGui.QHBoxLayout()
+        self.hboxlayout3.setMargin(0)
+        self.hboxlayout3.setSpacing(6)
+        self.hboxlayout3.setObjectName("hboxlayout3")
 
         self.rosterSearchLabel = QtGui.QLabel(self.rosterTab)
         self.rosterSearchLabel.setObjectName("rosterSearchLabel")
-        self.hboxlayout4.addWidget(self.rosterSearchLabel)
+        self.hboxlayout3.addWidget(self.rosterSearchLabel)
 
         self.rosterSearch = QtGui.QLineEdit(self.rosterTab)
         self.rosterSearch.setObjectName("rosterSearch")
-        self.hboxlayout4.addWidget(self.rosterSearch)
-        self.gridlayout5.addLayout(self.hboxlayout4,3,0,1,1)
+        self.hboxlayout3.addWidget(self.rosterSearch)
+        self.gridlayout5.addLayout(self.hboxlayout3,3,0,1,1)
 
         self.selectedItemStyle = QtGui.QWidget(self.rosterTab)
         self.selectedItemStyle.setObjectName("selectedItemStyle")
@@ -349,14 +349,14 @@ class Ui_MainWindow(object):
         self.menubar.setGeometry(QtCore.QRect(0,0,335,29))
         self.menubar.setObjectName("menubar")
 
-        self.menuHelp = QtGui.QMenu(self.menubar)
-        self.menuHelp.setObjectName("menuHelp")
-
         self.menuPlugins = QtGui.QMenu(self.menubar)
         self.menuPlugins.setObjectName("menuPlugins")
 
         self.menuAkce = QtGui.QMenu(self.menubar)
         self.menuAkce.setObjectName("menuAkce")
+
+        self.menuHelp = QtGui.QMenu(self.menubar)
+        self.menuHelp.setObjectName("menuHelp")
         MainWindow.setMenuBar(self.menubar)
 
         self.actionShow_XML = QtGui.QAction(MainWindow)
@@ -377,6 +377,7 @@ class Ui_MainWindow(object):
         self.actionAdd_Contact.setObjectName("actionAdd_Contact")
 
         self.actionAbout = QtGui.QAction(MainWindow)
+        self.actionAbout.setIcon(QtGui.QIcon("images/16x16/actions/about.png"))
         self.actionAbout.setObjectName("actionAbout")
 
         self.actionService_Discovery = QtGui.QAction(MainWindow)
@@ -389,8 +390,8 @@ class Ui_MainWindow(object):
         self.actionPrivacy_list_editor.setObjectName("actionPrivacy_list_editor")
 
         self.actionIdentity = QtGui.QAction(MainWindow)
+        self.actionIdentity.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
         self.actionIdentity.setObjectName("actionIdentity")
-        self.menuHelp.addAction(self.actionAbout)
         self.menuAkce.addAction(self.actionJoin_Groupchat)
         self.menuAkce.addAction(self.actionAdd_Contact)
         self.menuAkce.addAction(self.actionService_Discovery)
@@ -401,6 +402,7 @@ class Ui_MainWindow(object):
         self.menuAkce.addAction(self.actionPreferences)
         self.menuAkce.addSeparator()
         self.menuAkce.addAction(self.actionQuit)
+        self.menuHelp.addAction(self.actionAbout)
         self.menubar.addAction(self.menuAkce.menuAction())
         self.menubar.addAction(self.menuPlugins.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
@@ -418,13 +420,13 @@ class Ui_MainWindow(object):
         self.login_connect.setText(QtGui.QApplication.translate("MainWindow", "Connect", None, QtGui.QApplication.UnicodeUTF8))
         self.login_jidLabel.setText(QtGui.QApplication.translate("MainWindow", "Jabber ID:", None, QtGui.QApplication.UnicodeUTF8))
         self.login_passwordLabel.setText(QtGui.QApplication.translate("MainWindow", "Password:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_5.setText(QtGui.QApplication.translate("MainWindow", "Status:", None, QtGui.QApplication.UnicodeUTF8))
         self.login_savePassword_2.setText(QtGui.QApplication.translate("MainWindow", "Auto connect", None, QtGui.QApplication.UnicodeUTF8))
         self.login_savePassword.setText(QtGui.QApplication.translate("MainWindow", "Save Password", None, QtGui.QApplication.UnicodeUTF8))
         self.login_headerLabel.setText(QtGui.QApplication.translate("MainWindow", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:13pt; font-weight:600;\">Connect</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_4.setText(QtGui.QApplication.translate("MainWindow", "Status:", None, QtGui.QApplication.UnicodeUTF8))
         self.toggleInvisible.setToolTip(QtGui.QApplication.translate("MainWindow", "Toggle Invisibility", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Here you can change your status", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setToolTip(QtGui.QApplication.translate("MainWindow", "You can show/hide contats that are unavailable", None, QtGui.QApplication.UnicodeUTF8))
@@ -442,9 +444,9 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.bookmarksTab),QtGui.QApplication.translate("MainWindow", "Bookmarks", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.eventsTab), QtGui.QApplication.translate("MainWindow", "Events", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.eventsTab),QtGui.QApplication.translate("MainWindow", "Events", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPlugins.setTitle(QtGui.QApplication.translate("MainWindow", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAkce.setTitle(QtGui.QApplication.translate("MainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
         self.actionShow_XML.setText(QtGui.QApplication.translate("MainWindow", "Show XML", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setText(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.actionJoin_Groupchat.setText(QtGui.QApplication.translate("MainWindow", "Join Groupchat", None, QtGui.QApplication.UnicodeUTF8))
