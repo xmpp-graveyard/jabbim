@@ -883,12 +883,15 @@ class clientClass(pyxl.client.Client):
 						else:
 							#self.getVCard(frm+'/'+user) #tohle asi neni potreba
 							pass
+
 											
 
 						if not os.path.isfile(unicode(file)):
 							print truejid, frm, user
 							#sef@njs.netlab.cz/Doma jabber@conf.netlab.cz Sef 
 							file="images/32x32/apps/jabbim.png"
+						if unicode(user)==unicode(frm):
+							file = "images/32x32/categories/conferences.png"
 						if not w.chat.sizes.has_key(file):
 							pixmap=QtGui.QPixmap(file).scaledToWidth(32)
 							w.chat.sizes[file]=str(pixmap.height())
