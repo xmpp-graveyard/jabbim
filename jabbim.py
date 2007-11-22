@@ -1884,7 +1884,6 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.roster.theme=False
 		self.ui.roster.reskin(text)
 
-
 	def addContactMainWindow(self):
 		# add contact
 		if not self.addcontactdialog:
