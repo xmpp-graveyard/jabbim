@@ -30,7 +30,7 @@ import dataforms
 from twisted.words.protocols.jabber import jid as jidT
 
 class flowLayout(QtGui.QLayout):
-	def __init__(self, parent=None, margin=0, spacing=-1):
+	def __init__(self, parent=None, margin=1, spacing=1):
 		QtGui.QLayout.__init__(self, parent)
 
 		if parent is not None:
@@ -91,7 +91,7 @@ class flowLayout(QtGui.QLayout):
 				y = y + lineHeight + self.spacing()
 				nextX = x + item.sizeHint().width() + self.spacing()
 				lineHeight = 0
-
+			#print x,y,item.sizeHint().width(),item.sizeHint().height()
 			if not testOnly:
 				item.setGeometry(QtCore.QRect(QtCore.QPoint(x, y), item.sizeHint()))
 
@@ -308,7 +308,10 @@ class groupChatWidget(QtGui.QWidget):
 
 
 
-		self.flowLayout = flowLayout()
+		#self.flowLayout = flowLayout()
+		self.flowLayout = QtGui.QHBoxLayout()
+		self.flowLayout.setMargin(1)
+		self.flowLayout.setSpacing(2)
 		
 		for key,value in self.main.plugins.iteritems():
 			value.buildChatWidget(unicode(jidT.JID(self.jid).userhost()),self.flowLayout)
@@ -327,6 +330,8 @@ class groupChatWidget(QtGui.QWidget):
 		self.flowLayout.addWidget(self.ui.clearChat)
 		QtCore.QObject.connect(self.ui.clearChat, QtCore.SIGNAL("clicked ()"),self.clearChat)
 		self.ui.admin.hide()
+
+		self.flowLayout.addStretch()
 
 		self.ui.pluginWidget.setLayout(self.flowLayout)
 
