@@ -497,6 +497,7 @@ class groupChatWidget(QtGui.QWidget):
 			status="online"
 
 		if new:
+			item.setIcon(1,QtGui.QIcon("images/32x32/apps/jabbim.png"))
 			self.main.client.on_avatarUpdate(self.jid+"/"+unicode(item.text(0)))
 
 		jid=self.jid+"/"+nick
