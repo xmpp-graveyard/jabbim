@@ -348,9 +348,10 @@ class chatWindow(QtGui.QMainWindow):
 				else:
 					size=128
 				result=QtGui.QPixmap(size,size)
+				result.fill(QtCore.Qt.transparent)
 				frame=QtGui.QPixmap("images/"+str(size)+"x"+str(size)+"/frame.png")
 				painter=QtGui.QPainter(result)
-				painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
+				#painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
 				painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
 				painter.drawPixmap(0,0,frame)
 				painter.end()
@@ -369,9 +370,11 @@ class chatWindow(QtGui.QMainWindow):
 				else:
 					size=128
 				result=QtGui.QPixmap(size,size)
+				result.fill(QtCore.Qt.transparent)
 				frame=QtGui.QPixmap("images/"+str(size)+"x"+str(size)+"/frame.png")
 				painter=QtGui.QPainter(result)
-				painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
+				#painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
+				
 				painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
 				painter.drawPixmap(0,0,frame)
 				painter.end()
