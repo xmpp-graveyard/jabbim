@@ -316,6 +316,11 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.config['showTransports']=str(self.ui.showTransports.isChecked())
 		self.main.config['showChatStatusChanges']=str(self.ui.showChatStatusChanges.isChecked())
 		self.main.config['chat_skin']=unicode(self.ui.chatSkin_list.currentText())
+		
+		#data=item.data(32)
+		#file=unicode(data.toString())
+		#self.reskin(file)
+		
 		self.main.config['jid']=jid
 		self.main.config['resource']=''+resource+''
 		self.main.config['priority']=self.ui.connection_priority.text()

@@ -1865,7 +1865,7 @@ class mainWindow(QtGui.QMainWindow):
 	def loadTheme(self,text=None):
 		# windows hack
 		self.setStyleSheet("")
-		if self.config['theme']=="None":
+		if self.config['theme']=="None" and not text:
 			text=""
 			self.ui.roster.theme=False
 		else:
@@ -1881,6 +1881,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.setStyleSheet(text)
 			self.xmlConsole.setStyleSheet(text)
 			self.chat.setStyleSheet(text)
+			self.ui.roster.theme=True
 		self.ui.roster.reskin(text)
 
 
