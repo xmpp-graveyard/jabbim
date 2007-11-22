@@ -1881,7 +1881,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.setStyleSheet(text)
 			self.xmlConsole.setStyleSheet(text)
 			self.chat.setStyleSheet(text)
-			self.ui.roster.theme=True
+			self.ui.roster.theme=False
 		self.ui.roster.reskin(text)
 
 
