@@ -134,6 +134,9 @@
             <property name="text" >
              <string>&amp;Send</string>
             </property>
+            <property name="icon" >
+             <iconset>images/16x16/actions/send.png</iconset>
+            </property>
            </widget>
           </item>
          </layout>

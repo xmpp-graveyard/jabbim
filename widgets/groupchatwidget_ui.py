@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Thu Nov 22 14:47:58 2007
+# Created: Thu Nov 22 18:37:12 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -64,6 +64,8 @@ class Ui_groupchatwidget(object):
         self.gridlayout1.addWidget(self.smileys,1,1,1,1)
 
         self.sendButton = QtGui.QToolButton(self.layoutWidget)
+        self.sendButton.setIcon(QtGui.QIcon("images/16x16/actions/send.png"))
+        self.sendButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.sendButton.setObjectName("sendButton")
         self.gridlayout1.addWidget(self.sendButton,1,2,1,1)
 

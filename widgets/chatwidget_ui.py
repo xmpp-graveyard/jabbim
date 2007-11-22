@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Sat Nov 17 17:40:34 2007
+# Created: Thu Nov 22 18:38:56 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -82,6 +82,7 @@ class Ui_chatwidget(object):
         self.hboxlayout1.addWidget(self.smileys)
 
         self.sendButton = QtGui.QPushButton(self.layoutWidget)
+        self.sendButton.setIcon(QtGui.QIcon("images/16x16/actions/send.png"))
         self.sendButton.setObjectName("sendButton")
         self.hboxlayout1.addWidget(self.sendButton)
         self.vboxlayout.addLayout(self.hboxlayout1)
