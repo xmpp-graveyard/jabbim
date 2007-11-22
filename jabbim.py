@@ -1881,7 +1881,9 @@ class mainWindow(QtGui.QMainWindow):
 			self.setStyleSheet(text)
 			self.xmlConsole.setStyleSheet(text)
 			self.chat.setStyleSheet(text)
-			self.ui.roster.theme=False
+			if text:
+				if len(text)==0:
+					self.ui.roster.theme=False
 		self.ui.roster.reskin(text)
 
 	def addContactMainWindow(self):

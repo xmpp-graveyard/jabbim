@@ -189,7 +189,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		self.transports.setIcon(0,QtGui.QIcon("images/48x48/apps/jabbim.png"))
 		self.conferences=QtGui.QTreeWidgetItem(self.ui.tree)
 		self.conferences.setText(0,self.tr("Conferences"))
-		self.conferences.setIcon(0,QtGui.QIcon("images/48x48/apps/jabbim.png"))
+		self.conferences.setIcon(0,QtGui.QIcon("images/48x48/categories/conferences.png"))
 		#print self.main.client.disco.keys()
 		#key=self.main.client.jid.host
 		key = self.server
