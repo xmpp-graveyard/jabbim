@@ -87,7 +87,7 @@
             <string>You can add emoticons by clicking here</string>
            </property>
            <property name="icon" >
-            <iconset>images/22x22/emotes/biggrin.png</iconset>
+            <iconset>images/16x16/emotes/biggrin.png</iconset>
            </property>
            <property name="checkable" >
             <bool>true</bool>
