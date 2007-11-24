@@ -101,7 +101,7 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/chatstates')
 		self.registerFeature('http://jabber.org/protocol/commands')
 
-		self.registerFeature('http://jabber.org/protocol/disco#info', 'http://jabber.org/protocol/commands')
+		self.registerFeature('http://jabber.org/protocol/disco#info', 'http://jabber.org/protocol/commands', identity={"category":"automation","type":"command-list", "name":self.main.tr("Extra actions")})
 		self.registerFeature('jabber:x:data', 'http://jabber.org/protocol/commands')
 		self.registerFeature('http://jabber.org/protocol/commands','http://jabber.org/protocol/commands')
 
@@ -894,10 +894,6 @@ class Client(derived):
 		iq['type'] = 'result'
 		iq['id'] = el['id']
 		q = iq.addElement('query', 'http://jabber.org/protocol/disco#info')
-		id = q.addElement('identity')
-		id['category'] = 'client'
-		id['name'] = self.client_name
-		id['type'] = 'pc'
 
 		for child in el.elements():
 			if child.name == 'query':
@@ -912,6 +908,11 @@ class Client(derived):
 			node = None
 		if node != None:
 			q['node'] = node
+		else:
+			id = q.addElement('identity')
+			id['category'] = 'client'
+			id['name'] = self.client_name
+			id['type'] = 'pc'
 		for feature in self.discofeatures[node]:
 			f = q.addElement('feature')
 			f['var'] = feature[0]
