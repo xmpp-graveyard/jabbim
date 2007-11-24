@@ -21,6 +21,7 @@ def x2dict(x):
 		return
 	data = {}
 	log.msg(x.toXml())
+			pwd = "/" # FIXME
 	for field in x.elements():
 		values = []
 		if field.name != "field":
@@ -83,8 +84,7 @@ dict self.actions = {"action":Stage} - "action" is the action chosen by responde
 		actions = command.addElement("actions")
 		if self.execute:
 			actions["execute"] = self.execute
-		for action in self.actions.keys():
-			if action != "cancel" or action != "execute":
+			if action != "cancel" and action != "execute":
 				actions.addElement(action)
 		if self.xform:
 			command.addChild(self.xform)
