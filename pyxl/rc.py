@@ -84,7 +84,9 @@ class ResendFile(Stage):
 		self.actions = {"cancel":CancelStage, "next":ResendFile, "execute":ResendFile}
 		self.execute = "next"
 
-		files = dirs = []
+		files = []
+		dirs = []
+
 		if self.data == None:
 			pwd = os.environ["PWD"]
 		elif os.path.isdir(os.path.join(self.data["pwd"][0], self.data["file"][0])):
@@ -102,15 +104,17 @@ class ResendFile(Stage):
 			self.xform = None
 			return
 		for f in os.listdir(pwd):
-			if not os.access(os.path.join(pwd,f), os.R_OK):
-				continue
-			if os.path.isfile(os.path.join(pwd,f)):
-				files.append([f, f])
-			else:
-				dirs.append(["%s%s" % (f, os.path.sep), f])
-		dirs.insert(0, [self.main.tr("Up"), os.path.pardir])
+			if os.access(os.path.join(pwd,f), os.R_OK):
+				if os.path.isfile(os.path.join(pwd,f)):
+					files.append([f, f])
+				else:
+					dirs.append(["%s%s" % (f, os.path.sep), f])
+		files.sort()
+		dirs.sort()
+		dirs.insert(0, [os.path.pardir, os.path.pardir])
 		dirs.extend(files)
-			
+		log.msg(unicode(files))	
+
 		field = Field("file", "list-single", self.main.tr("Choose file or directory: "), required=True, options=dirs)
 		field2 = Field("pwd", "hidden", values=[pwd])
 		self.xform = Xform("form", fields=[field, field2], title=self.main.tr("Resend file"),instructions=[self.main.tr("Choose file you want to resend from remote system or directory you want to browse."),"PWD: %s" % pwd]).buildElement()
