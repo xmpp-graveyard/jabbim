@@ -21,7 +21,6 @@ def x2dict(x):
 		return
 	data = {}
 	log.msg(x.toXml())
-			pwd = "/" # FIXME
 	for field in x.elements():
 		values = []
 		if field.name != "field":
