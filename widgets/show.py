@@ -9,9 +9,7 @@ class showLabel(QtGui.QLabel):
                 self.parent = parent
         def mouseReleaseEvent(self,event):
 		text = unicode(self.text())
-		text = text.replace("&amp;", "&")
-		text = text.replace("&lt;", "<")
-		text = text.replace("&gt;", ">")
+		text = text.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">")
 		if text == self.defaulttext: # Asi neni nechytrejsi
 			text = u"" 
 		self.parent.lineEdit.setText(text)
@@ -51,9 +49,7 @@ class showWidget(QtGui.QWidget):
 		
 	def lineEditToLabel(self):
 		text = unicode(self.lineEdit.text())
-		text4label = text.replace("&", "&amp;")
-		text4label = text4label.replace("<", "&lt;")
-		text4label = text4label.replace(">", "&gt;")
+		text4label = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 		self.label.setText(text4label)
 		if text == u"":
 			self.label.setText(self.label.defaulttext)

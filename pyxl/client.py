@@ -1381,7 +1381,7 @@ class Client(derived):
 		file['name'] = filename
 		file['size'] = unicode(self.ft[sid].size)
 		if desc != None:
-			file.addElement('desc', content = desc)
+			file.addElement('desc', content = unicode(desc))
 		feature = si.addElement('feature', 'http://jabber.org/protocol/feature-neg')
 		x = feature.addElement('x', 'jabber:x:data')
 		x['type'] = 'form'

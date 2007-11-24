@@ -3,7 +3,7 @@
 from xdata import *
 from adhoc import Stage, CancelStage
 from twisted.python import log
-import os
+import os, sys
 
 class fSetStatus(Stage):
 	def exec_(self):
@@ -86,15 +86,19 @@ class ResendFile(Stage):
 
 		files = dirs = []
 		if self.data == None:
-			pwd = self.main.homeDir
+			pwd = os.environ["PWD"]
 		elif os.path.isdir(os.path.join(self.data["pwd"][0], self.data["file"][0])):
 			if self.data["file"][0] == os.path.pardir:
 				pwd = os.path.split(self.data["pwd"][0])[0]
 			else:
 				pwd = os.path.join(self.data["pwd"][0], self.data["file"][0])
 		else:
-			self.main.client.sendFile(self.session.jid, self.data["file"][0], os.path.join(self.data["pwd"][0], self.data["file"][0]))
-			self.execute = "completed"
+			f = os.path.join(self.data["pwd"][0], self.data["file"][0])
+
+			self.main.events.addFTUploadEvent(self.session.jid, [f], {f:unicode(self.main.tr("Sent via remote controlling"))})
+			self.status = "completed"
+			self.execute = None
+			self.actions={}
 			self.xform = None
 			return
 		for f in os.listdir(pwd):
