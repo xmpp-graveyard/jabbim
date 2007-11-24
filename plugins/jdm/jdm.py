@@ -14,7 +14,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Jabbim disk manager'
 		self.author = u"Josef 'Pepeq' Halíček"
 		self.name = 'JDM Plugin'
-		self.version = '0.1117'
+		self.version = '0.1124'
 		self.category = ['disk']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		if main:
@@ -35,12 +35,12 @@ class Plugin(plugins.PluginBase):
 			self.obsah.append([i,vysledek[0][0][i][0],vysledek[0][0][i][0].split(".")[-1],vysledek[0][0][i][1]]);
 			
 			#self.window.ui.log.append(u"Název: %s \nVelikost: %s bytů\ntywe :)\n"%(self.obsah[i][0],self.obsah[i][1]))
-			
-		
+
 		for i in range (0,len(self.obsah)):
 			self.window.ui.log.append(unicode(self.obsah[i]))
-
-		
+			item=QtGui.QListWidgetItem(unicode(self.obsah[i][1]))
+			item.setIcon(QtGui.QIcon(self.homeDir+"/plugins/jdm/file.png"));
+			self.window.ui.list.addItem(item)
 		
 		#for i in range (0,len(vysledek[0][0])):
 		#	self.window.ui.log.append(u"Název: %s \nVelikost: %s bytů\ntywe :)\n"%(self.obsah[i][0],self.obsah[i][1]))

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'jdm_ui.ui'
 #
-# Created: Tue Nov 13 22:55:40 2007
+# Created: Wed Nov 14 09:34:57 2007
 #      by: PyQt4 UI code generator 4.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -24,6 +24,9 @@ class Ui_MainWindow(object):
         self.gridlayout.setObjectName("gridlayout")
 
         self.list = QtGui.QListWidget(self.centralwidget)
+        self.list.setIconSize(QtCore.QSize(32,32))
+        self.list.setTextElideMode(QtCore.Qt.ElideMiddle)
+        self.list.setViewMode(QtGui.QListView.IconMode)
         self.list.setObjectName("list")
         self.gridlayout.addWidget(self.list,1,0,1,1)
 
