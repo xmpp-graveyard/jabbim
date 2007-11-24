@@ -111,9 +111,8 @@ class ResendFile(Stage):
 					dirs.append(["%s%s" % (f, os.path.sep), f])
 		files.sort()
 		dirs.sort()
-		dirs.insert(0, [os.path.pardir, os.path.pardir])
+		dirs.insert(0, ["%s%s (%s)" % (os.path.pardir, os.path.sep, self.main.tr("One directory up")), os.path.pardir])
 		dirs.extend(files)
-		log.msg(unicode(files))	
 
 		field = Field("file", "list-single", self.main.tr("Choose file or directory: "), required=True, options=dirs)
 		field2 = Field("pwd", "hidden", values=[pwd])
