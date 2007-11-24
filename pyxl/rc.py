@@ -3,6 +3,7 @@
 from xdata import *
 from adhoc import Stage, CancelStage
 from twisted.python import log
+import os
 
 class fSetStatus(Stage):
 	def exec_(self):
@@ -76,4 +77,37 @@ class LeaveGC(Stage):
 				self.main.chat.ui.chatTab.setCurrentIndex(index) 
 				self.main.chat.removeTab()
 		self.xform = Xform("result", instructions=[self.main.tr("Groupchats left.")]).buildElement()
+
+class ResendFile(Stage):
+	def exec_(self):
+		self.status = "executing"
+		self.actions = {"cancel":CancelStage, "next":ResendFile, "execute":ResendFile}
+		self.execute = "next"
+
+		files = dirs = []
+		if self.data == None:
+			pwd = self.main.homeDir
+		elif os.path.isdir(os.path.join(self.data["pwd"][0], self.data["file"][0])):
+			if self.data["file"][0] == os.path.pardir:
+				pwd = os.path.split(self.data["pwd"][0])[0]
+			else:
+				pwd = os.path.join(self.data["pwd"][0], self.data["file"][0])
+		else:
+			self.main.client.sendFile(self.session.jid, self.data["file"][0], os.path.join(self.data["pwd"][0], self.data["file"][0]))
+			self.execute = "completed"
+			self.xform = None
+			return
+		for f in os.listdir(pwd):
+			if not os.access(os.path.join(pwd,f), os.R_OK):
+				continue
+			if os.path.isfile(os.path.join(pwd,f)):
+				files.append([f, f])
+			else:
+				dirs.append(["%s%s" % (f, os.path.sep), f])
+		dirs.insert(0, [self.main.tr("Up"), os.path.pardir])
+		dirs.extend(files)
+			
+		field = Field("file", "list-single", self.main.tr("Choose file or directory: "), required=True, options=dirs)
+		field2 = Field("pwd", "hidden", values=[pwd])
+		self.xform = Xform("form", fields=[field, field2], title=self.main.tr("Resend file"),instructions=[self.main.tr("Choose file you want to resend from remote system or directory you want to browse."),"PWD: %s" % pwd]).buildElement()
 

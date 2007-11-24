@@ -84,7 +84,7 @@ dict self.actions = {"action":Stage} - "action" is the action chosen by responde
 		if self.execute:
 			actions["execute"] = self.execute
 		for action in self.actions.keys():
-			if action != "cancel":
+			if action != "cancel" or action != "execute":
 				actions.addElement(action)
 		if self.xform:
 			command.addChild(self.xform)

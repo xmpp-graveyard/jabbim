@@ -259,6 +259,7 @@ class Client(derived):
 		self.commands = Commands(self.main)
 		self.commands.registerNode("http://jabber.org/protocol/rc#set-status", self.main.tr("Change status"), rc.fSetStatus)
 		self.commands.registerNode("http://jabber.org/protocol/rc#leave-groupchats", self.main.tr("Leave groupchats"), rc.fLeaveGC)
+		self.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#resend-file", self.main.tr("Resend file"), rc.ResendFile)
 
 #		def pis(co):
 #			print co
