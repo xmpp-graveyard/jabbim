@@ -477,7 +477,7 @@ class chatWindow(QtGui.QMainWindow):
 				if result:
 					tab.chat.ui.avatar.setPixmap(result)
 		else:
-			result=self.main.getAvatar(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%"),size="128x128",frame=True)
+			result=self.main.getAvatar(unicode(jid).replace("/","%"),size="128x128",frame=True)
 			if result:
 			#if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")):
 				#f=open(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
