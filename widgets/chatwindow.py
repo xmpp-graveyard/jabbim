@@ -24,6 +24,7 @@ except:
 from chat import *
 from chatwidget import *
 from groupchat import *
+from include import utils
 #from gamechat import *
 #from headlinewidget import *
 #from palette import *
@@ -304,6 +305,123 @@ class chatWindow(QtGui.QMainWindow):
 				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.tr("You are now online."))
 				w.chat.textEditWrite(message)
 				self.main.client.joinGC(w.jid, w.name)
+
+	def onGCMessage(self,w,i,body,delay,subject,user):
+		countMessage=False
+		if int(self.ui.chatTab.currentIndex())!=i:
+			if self.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
+				self.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
+				self.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(0,128,0))
+			self.main.chat.ui.chatTab.setTabText(i,w.tabName+" ("+str(w.chat.unread+1)+")")
+			countMessage=True
+		if not self.main.chat.isActiveWindow():
+			self.main.chat.setWindowTitle(w.tabName.replace("&","")+" ("+str(int(self.getUnreadMessages())+1)+")")
+			countMessage=True
+		# set room topic
+		if subject!=None:
+			subject=utils.replace_url(subject)
+			w.chat.ui.info.setHtml(unicode(subject))
+			#w.chat.ui.info.setCursorPosition(0)
+		# set links, if we found them
+					
+		# no delay message
+		if delay==None or len(delay)==0:
+			# it's our message
+			if unicode(w.name)==unicode(user):
+				if unicode(body).startswith("/me"):
+					message=self.main.skin["my_me_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body)[3:])
+					body=unicode(body)[3:]
+				else:
+					message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body))
+			else:
+				# it's message for us
+				if utils.need_highlight(unicode(w.name), unicode(body)) and not unicode(body).startswith("/me"):
+					if int(self.ui.chatTab.currentIndex())!=i:
+						if self.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
+							self.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
+							self.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(255,0,0))
+					message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body))
+				else:
+					if unicode(body).startswith("/me"):
+						message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body)[3:])
+						body=unicode(body)[3:]
+					else:
+						message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body))
+					colors=None
+					if len(w.chat.getUserItems(user))!=0:
+						item=w.chat.getUserItems(user)[0]
+						if item in w.chat.colors:
+							cIndex=w.chat.colors.index(item)
+							colors=self.main.getSkinColors(cIndex)
+					else:
+						colors=self.main.getSkinColors(0)
+					if colors!=None:
+						message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
+					
+			
+			if self.main.client.groupchats[w.jid].users.has_key(user):
+				truejid = self.main.client.groupchats[w.jid].users[user].truejid
+				print truejid
+				if truejid:
+					truejid=unicode(jidT.JID(truejid).userhost())
+					print truejid
+			else:
+				truejid = None
+			file = None
+			print self.main.client.avatars
+			if self.main.client.avatars.has_key(w.jid+'%'+user):
+				file = self.main.homeDir+'/avatars/'+unicode(w.jid+'%'+user)
+			elif truejid != None and self.main.client.avatars.has_key(truejid):
+				file = self.main.homeDir+'/avatars/'+unicode(truejid)
+			else:
+				#self.getVCard(frm+'/'+user) #tohle asi neni potreba
+				pass
+
+			if not os.path.isfile(unicode(file)):
+				print truejid, w.jid, user
+				#sef@njs.netlab.cz/Doma jabber@conf.netlab.cz Sef 
+				file="images/32x32/apps/jabbim.png"
+			if unicode(user)==unicode(w.jid):
+				file = "images/32x32/categories/conferences.png"
+			if not w.chat.sizes.has_key(file):
+				pixmap=QtGui.QPixmap(file).scaledToHeight(32)
+				
+				w.chat.sizes[file]=str(pixmap.width())
+				
+			message=message.replace("[avatar]","<img src=\""+file+"\" height=\"32\" width=\""+w.chat.sizes[file]+"\" />")
+			message=message.replace('[message]',body)
+			# write message
+			if countMessage:
+				w.chat.unread+=1
+			w.chat.textEditWrite(message)
+			return
+		else:
+			# get delay from string
+			delay=unicode(delay)
+			delay="%s-%s-%s %s:%s:%s" % (delay[0:4],delay[4:6],delay[6:8],delay[9:11],delay[12:14],delay[15:17])
+			# our delayed message
+			if unicode(w.name)==unicode(user):
+				message=self.main.skin["my_message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
+			else:
+				# delayed message for us
+				if utils.need_highlight(unicode(w.name), unicode(body)):
+					message=self.main.skin["message_for_me_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
+				else:
+					message=self.main.skin["message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
+
+			colors=None
+			if len(w.chat.getUserItems(user))!=0:
+				item=w.chat.getUserItems(user)[0]
+				if item in w.chat.colors:
+					cIndex=w.chat.colors.index(item)
+					colors=self.main.getSkinColors(cIndex)
+			else:
+				colors=self.main.getSkinColors(0)
+			if colors!=None:
+				message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
+
+
+			w.chat.textEditWrite(message)
 
 	def addChatTab(self,jid,name,icon,message=None):
 		for i in range(self.ui.chatTab.count()):
