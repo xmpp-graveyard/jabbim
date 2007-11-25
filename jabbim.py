@@ -2039,6 +2039,9 @@ class mainWindow(QtGui.QMainWindow):
 		#if self.client!=None:
 		reactor.stop2()
 
+	#def keyPressEvent(self,event):
+		#return self.ui.roster.event(event)
+
 	def getAvatar(self,pixmap,size="auto",frame=False,status=None):
 		if isinstance(pixmap,unicode) or isinstance(pixmap,str):
 			file=self.homeDir+'/avatars/'+unicode(pixmap)
