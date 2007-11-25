@@ -1340,8 +1340,8 @@ class rosterWidget(QtGui.QWidget):
 
 			self.statusLabel.hide()
 			self.reshow=True
-			self.repaint()
 			self.setSize()
+			self.repaint()
 
 		elif key==QtCore.Qt.Key_Delete: #tohle by mozna chtelo nejake potvrzeni 'Opravdu to chcete udelat?'
 			self.main.client.delContact(self.selected.jid)
