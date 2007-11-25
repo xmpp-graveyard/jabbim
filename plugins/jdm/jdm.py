@@ -14,9 +14,10 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Jabbim disk manager'
 		self.author = u"Josef 'Pepeq' Halíček"
 		self.name = 'JDM Plugin'
-		self.version = '0.1132'
+		self.version = '0.1134'
 		self.category = ['disk']
 		self.url = 'http://dev.jabbim.cz/jabbim'
+		QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.main.client.jid.userhost(),)).addCallback(self.updateView, 'public'))
 		if main:
 			self.installTranslator()
 			self.window = self.loadWindow("%s/plugins/%s/jdm_ui.py"%(self.homeDir, self.fname))
@@ -75,6 +76,8 @@ class Plugin(plugins.PluginBase):
 		menu=self.rosterMenu()
 		menu.addAction("Jabbim disk manager2",self.showSlot)
 	
+	def call(self,jid="",type="lis")
+	
 	def showSlot(self):
 		self.window.show()
 		self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.main.client.jid.userhost(),)).addCallback(self.updateView, 'public')
@@ -82,6 +85,6 @@ class Plugin(plugins.PluginBase):
 	
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
 		pass
-	
+		
 
 	
