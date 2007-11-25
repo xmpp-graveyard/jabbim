@@ -384,8 +384,8 @@ class chatWindow(QtGui.QMainWindow):
 			if unicode(user)==unicode(w.jid):
 				file = "images/32x32/categories/conferences.png"
 			if not w.chat.sizes.has_key(file):
-				pixmap=QtGui.QPixmap(file).scaledToHeight(32)
-				
+				#pixmap=QtGui.QPixmap(file).scaledToHeight(32)
+				pixmap=QtGui.QPixmap(file).scaled(32,32,QtCore.Qt.KeepAspectRatio)
 				w.chat.sizes[file]=str(pixmap.width())
 				
 			message=message.replace("[avatar]","<img src=\""+file+"\" height=\"32\" width=\""+w.chat.sizes[file]+"\" />")
