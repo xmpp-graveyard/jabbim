@@ -341,43 +341,47 @@ class chatWindow(QtGui.QMainWindow):
 			it=it[0]
 			avatar=it.avatar
 			if avatar:
-				avatar=avatar.pixmap(100,112)
-				print "avatar:",str(avatar.width())+"x"+str(avatar.height())
-				if avatar.width()<=58 and avatar.height()<=58:
-					size=64
-				else:
-					size=128
-				result=QtGui.QPixmap(size,size)
-				result.fill(QtCore.Qt.transparent)
-				frame=QtGui.QPixmap("images/"+str(size)+"x"+str(size)+"/frame.png")
-				painter=QtGui.QPainter(result)
-				#painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
-				painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
-				painter.drawPixmap(0,0,frame)
-				painter.end()
-				tab.chat.ui.avatar.setPixmap(result)
+				#avatar=avatar.pixmap(100,112)
+				#print "avatar:",str(avatar.width())+"x"+str(avatar.height())
+				#if avatar.width()<=58 and avatar.height()<=58:
+					#size=64
+				#else:
+					#size=128
+				#result=QtGui.QPixmap(size,size)
+				#result.fill(QtCore.Qt.transparent)
+				#frame=QtGui.QPixmap("images/"+str(size)+"x"+str(size)+"/frame.png")
+				#painter=QtGui.QPainter(result)
+				##painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
+				#painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
+				#painter.drawPixmap(0,0,frame)
+				#painter.end()
+				result=self.main.getAvatar(avatar,size="128x128",frame=True)
+				if result:
+					tab.chat.ui.avatar.setPixmap(result)
 		else:
-			if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")):
-				f=open(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
-				image = f.read()
-				f.close()
-				pixmap=QtGui.QPixmap()
-				pixmap.loadFromData(image)
-				avatar=QtGui.QIcon(pixmap)
-				avatar=avatar.pixmap(100,112)
-				if avatar.width()<=58 and avatar.height()<=58:
-					size=64
-				else:
-					size=128
-				result=QtGui.QPixmap(size,size)
-				result.fill(QtCore.Qt.transparent)
-				frame=QtGui.QPixmap("images/"+str(size)+"x"+str(size)+"/frame.png")
-				painter=QtGui.QPainter(result)
-				#painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
+			result=self.main.getAvatar(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%"),size="128x128",frame=True)
+			if result:
+			#if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")):
+				#f=open(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
+				#image = f.read()
+				#f.close()
+				#pixmap=QtGui.QPixmap()
+				#pixmap.loadFromData(image)
+				#avatar=QtGui.QIcon(pixmap)
+				#avatar=avatar.pixmap(100,112)
+				#if avatar.width()<=58 and avatar.height()<=58:
+					#size=64
+				#else:
+					#size=128
+				#result=QtGui.QPixmap(size,size)
+				#result.fill(QtCore.Qt.transparent)
+				#frame=QtGui.QPixmap("images/"+str(size)+"x"+str(size)+"/frame.png")
+				#painter=QtGui.QPainter(result)
+				##painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
 				
-				painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
-				painter.drawPixmap(0,0,frame)
-				painter.end()
+				#painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
+				#painter.drawPixmap(0,0,frame)
+				#painter.end()
 				tab.chat.ui.avatar.setPixmap(result)
 
 				

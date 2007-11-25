@@ -1096,24 +1096,13 @@ class clientClass(pyxl.client.Client):
 
 	def on_avatarUpdate(self, jid):
 		print "AVATAR:",unicode(jid)
-		pixmap=QtGui.QPixmap()
+		#pixmap=QtGui.QPixmap()
 		if not self.avatars.has_key(jid.replace('/','%')):
 			return
 		if self.avatars[jid.replace('/','%')]==None:
 			return
-		#if self.avatars[jid] != None:
-			#f=open(self.main.homeDir+'/avatars/'+jid,"rb")
-		#else:
-			#f=open('images/32x32/apps/jabbim.png', 'rb')
-		#image = f.read()
-		#f.close()
-		try:
-			f=open(self.main.homeDir+'/avatars/'+jid.replace("/","%"),"rb")
-		except:
-			return
-		image = f.read()
-		f.close()
-		pixmap.loadFromData(image)
+
+		pixmap=self.main.getAvatar(jid.replace('/','%'),frame=False,status=None)
 
 		if unicode(self.jid.userhost())==unicode(jid):
 			print "Setting avatar"
@@ -1126,59 +1115,14 @@ class clientClass(pyxl.client.Client):
 		for item in self.main.ui.roster.getMetaItems(jid):
 			item[0].setAvatar(QtGui.QIcon(pixmap))
 
-		#for user in self.groupchats[]
-
-		#if self.groupchats[frm].users.has_key(user):
-			#truejid = self.groupchats[frm].users[user].truejid
-			#print truejid
-			#if truejid:
-				#truejid=unicode(jidT.JID(truejid).userhost())
-				#print truejid
-		#else:
-			#truejid = None
-		#file = None
-		#if self.avatars.has_key(frm+'%'+user):
-			#file = self.main.homeDir+'/avatars/'+unicode(frm+'%'+user)
-		#elif truejid != None and self.avatars.has_key(truejid):
-			#file = self.main.homeDir+'/avatars/'+unicode(truejid)
-		#else:
-			##self.getVCard(frm+'/'+user) #tohle asi neni potreba
-			#pass
-							
-
-		#if not os.path.isfile(unicode(file)):
-			#print truejid, frm, user
-			##sef@njs.netlab.cz/Doma jabber@conf.netlab.cz Sef 
-			#file="images/32x32/apps/jabbim.png"
-		#if not w.chat.sizes.has_key(file):
-			#pixmap=QtGui.QPixmap(file).scaledToWidth(32)
-			#w.chat.sizes[file]=str(pixmap.height())
-
-
 		jid = jidT.JID(jid)
 		w,i=self.main.chat.findTab(jid.userhost())
 		if w:
 			for item in w.chat.getUserItems(jid.resource):
 				text=unicode(item.text(1))
 				if len(text)!=0:
-					avatar=QtGui.QIcon(pixmap).pixmap(28,28)
-					item.setIcon(1,QtGui.QIcon(avatar))
-	
-					result=QtGui.QPixmap(32,32)
-					result.fill(QtCore.Qt.transparent)
-					frame=QtGui.QPixmap("images/32x32/frame.png")
-					painter=QtGui.QPainter(result)
-					painter.fillRect(0,0,32,32,QtGui.QColor(0,0,0,0))
-					painter.drawPixmap((32-avatar.width())/2,(32-avatar.height())/2,avatar)
-					
-					icon=self.main.getIcon(status=self.main.icons[text[0]],size="16x16")
-					#painter.drawPixmap(0,0,frame)
-					
-					if icon:
-						painter.drawPixmap(16,16,icon.pixmap(16,16))
-					painter.end()
-					#self.frameAvatar=QtGui.QIcon(result)
-					
+					item.setIcon(1,QtGui.QIcon(pixmap))
+					result=self.main.getAvatar(pixmap,size="32x32",frame=False,status=self.main.icons[text[0]])
 					item.setIcon(0,QtGui.QIcon(result))
 					w.chat.setTooltip(item,jid.full())
 			
@@ -2216,6 +2160,56 @@ class mainWindow(QtGui.QMainWindow):
 	def disconnect(self):
 		#if self.client!=None:
 		reactor.stop2()
+
+	def getAvatar(self,pixmap,size="auto",frame=False,status=None):
+		if isinstance(pixmap,unicode) or isinstance(pixmap,str):
+			file=self.homeDir+'/avatars/'+unicode(pixmap)
+			if not os.path.isfile(file):
+				return None
+			icon=QtGui.QIcon(file)
+		elif isinstance(pixmap,QtGui.QPixmap):
+			icon=QtGui.QIcon(pixmap)
+		else:
+			icon=pixmap
+		if size!="auto":
+			x=int(size.split('x')[0])
+			y=int(size.split('x')[1])
+		if frame and size!='auto':
+			if size=="128x128":
+				avatar=icon.pixmap(100,112)
+				if avatar.width()<=58 and avatar.height()<=58:
+					size="64x64"
+				x=int(size.split('x')[0])
+				y=int(size.split('x')[1])
+			elif size=="64x64":
+				avatar=icon.pixmap(60,58)
+			elif size=="32x32":
+				avatar=icon.pixmap(30,30)
+			else:
+				return False
+	
+			result=QtGui.QPixmap(x,y)
+			result.fill(QtCore.Qt.transparent)
+			frame=QtGui.QPixmap("images/"+str(size)+"/frame.png")
+			painter=QtGui.QPainter(result)
+			painter.drawPixmap((x-avatar.width())/2,(y-avatar.height())/2,avatar)
+			painter.drawPixmap(0,0,frame)
+			painter.end()
+		elif size!="auto" and not frame:
+			avatar=icon.pixmap(28,28)
+			result=QtGui.QPixmap(x,y)
+			result.fill(QtCore.Qt.transparent)
+			painter=QtGui.QPainter(result)
+			painter.drawPixmap((x-avatar.width())/2,(y-avatar.height())/2,avatar)
+			if status:
+				icon=self.getIcon(status=unicode(status),size="16x16")
+				if icon:
+					painter.drawPixmap(16,16,icon.pixmap(16,16))
+			painter.end()
+		elif size=="auto" and not frame:
+			return QtGui.QPixmap(file)
+			
+		return result
 
 	def getIcon(self,jid=None,typ=None,size="32x32",status=None,usertype=None):
 		if size=="22x22":

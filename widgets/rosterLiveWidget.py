@@ -265,30 +265,8 @@ class userItem:
 		@type icon: QtGui.QIcon
 		"""
 		self.avatar=icon
-		result=QtGui.QPixmap(32,32)
-		result.fill(QtCore.Qt.transparent)
-		avatar=self.avatar.pixmap(30,30)
-		frame=QtGui.QPixmap("images/32x32/frame.png")
-		painter=QtGui.QPainter(result)
-		#painter.fillRect(0,0,32,32,QtGui.QBrush(self.main.palet.color(QtGui.QPalette.Base)))
-		painter.drawPixmap((32-avatar.width())/2,(32-avatar.height())/2,avatar)
-		painter.drawPixmap(0,0,frame)
-		painter.end()
-		self.frameAvatar=QtGui.QIcon(result)
-
-		result=QtGui.QPixmap(64,64)
-		result.fill(QtCore.Qt.transparent)
-		avatar=self.avatar.pixmap(60,58)
-		frame=QtGui.QPixmap("images/64x64/frame.png")
-		painter=QtGui.QPainter(result)
-		#if self.main.theme:
-			#painter.fillRect(0,0,64,64,self.main.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Window))
-		#else:
-			#painter.fillRect(0,0,64,64,self.main.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight))
-		painter.drawPixmap((64-avatar.width())/2,(64-avatar.height())/2,avatar)
-		painter.drawPixmap(0,0,frame)
-		painter.end()
-		self.selectedFrameAvatar=QtGui.QIcon(result)
+		self.frameAvatar=QtGui.QIcon(self.main.main.getAvatar(self.avatar.pixmap(30,30),size="32x32",frame=True))
+		self.selectedFrameAvatar=QtGui.QIcon(self.main.main.getAvatar(self.avatar.pixmap(60,58),size="64x64",frame=True))
 	
 	def setHidden(self,hidden):
 		"""

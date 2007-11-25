@@ -530,37 +530,9 @@ class groupChatWidget(QtGui.QWidget):
 
 		avatar=item.icon(1)
 		if not avatar.isNull():
-			avatar=avatar.pixmap(28,28)
-			#item.setIcon(1,QtGui.QIcon(avatar))
-	
-			result=QtGui.QPixmap(32,32)
-			result.fill(QtCore.Qt.transparent)
-			frame=QtGui.QPixmap("images/32x32/frame.png")
-			painter=QtGui.QPainter(result)
-			painter.fillRect(0,0,32,32,QtGui.QColor(0,0,0,0))
-			painter.drawPixmap((32-avatar.width())/2,(32-avatar.height())/2,avatar)
-			icon=self.main.getIcon(status=self.main.icons[unicode(item.text(1))[0]],size="16x16")
-			#painter.drawPixmap(0,0,frame)
-			
-			if icon:
-				painter.drawPixmap(16,16,icon.pixmap(16,16))
-			painter.end()
-			#self.frameAvatar=QtGui.QIcon(result)
-		else:
-			result=QtGui.QPixmap(32,32)
-			result.fill(QtCore.Qt.transparent)
-			#frame=QtGui.QPixmap("images/32x32/frame.png")
-			painter=QtGui.QPainter(result)
-			painter.fillRect(0,0,32,32,QtGui.QColor(0,0,0,0))
-			#painter.drawPixmap((32-avatar.width())/2,(32-avatar.height())/2,avatar)
-			icon=self.main.getIcon(status=self.main.icons[unicode(item.text(1))[0]],size="16x16")
-			#painter.drawPixmap(0,0,frame)
-			
-			if icon:
-				painter.drawPixmap(16,16,icon.pixmap(16,16))
-			painter.end()
-
-		item.setIcon(0,QtGui.QIcon(result))
+			#avatar=avatar.pixmap(28,28)
+			result=self.main.getAvatar(avatar,size="32x32",frame=False,status=self.main.icons[unicode(item.text(1))[0]])
+			item.setIcon(0,QtGui.QIcon(result))
 
 
 		# Tooltip
