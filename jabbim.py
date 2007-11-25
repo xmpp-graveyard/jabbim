@@ -1784,7 +1784,7 @@ class mainWindow(QtGui.QMainWindow):
 		# turn off jabbim
 		if self.client and self.client.privacy.active:
 			self.client.privacy.active.unsetInvisible(available=False) # hack
-
+		print "LOG 1"
 		if str(self.config["saveGeometry"])=="True":
 			rect=self.geometry()
 			x=int(rect.x())
@@ -1813,6 +1813,7 @@ class mainWindow(QtGui.QMainWindow):
 
 					break
 			self.config.write()
+		print "LOG 2"
 		if str(self.config['saveExpandedGroups'])=='True':
 			expanded=[]
 			if self.client!=None:
@@ -1821,11 +1822,13 @@ class mainWindow(QtGui.QMainWindow):
 						expanded.append(name)
 				self.config['expandedGroups']=expanded
 				self.config.write()
-
+		print "LOG 3"
 		self.tray.hide()
 		app.closeAllWindows()
+		print "LOG 4"
 		#self.disconnect()
 		reactor.stop2()
+		print "LOG 5"
 		#sys.exit(0)
 
 	def trayActivated(self,reason=QtGui.QSystemTrayIcon.Trigger):
