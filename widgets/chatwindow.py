@@ -386,9 +386,9 @@ class chatWindow(QtGui.QMainWindow):
 			if not w.chat.sizes.has_key(file):
 				#pixmap=QtGui.QPixmap(file).scaledToHeight(32)
 				pixmap=QtGui.QPixmap(file).scaled(32,32,QtCore.Qt.KeepAspectRatio)
-				w.chat.sizes[file]=str(pixmap.width())
+				w.chat.sizes[file]=[str(pixmap.width()),str(pixmap.height())]
 				
-			message=message.replace("[avatar]","<img src=\""+file+"\" height=\"32\" width=\""+w.chat.sizes[file]+"\" />")
+			message=message.replace("[avatar]","<img src=\""+file+"\" height=\""+w.chat.sizes[file][1]+"\" width=\""+w.chat.sizes[file][0]+"\" />")
 			message=message.replace('[message]',body)
 			# write message
 			if countMessage:
