@@ -1479,7 +1479,6 @@ class mainWindow(QtGui.QMainWindow):
 # 					shutil.copytree("plugins/"+plugin, self.homeDir+"/plugins/"+plugin)
 
 	def loadPlugins(self):
-		
 		plugins=os.listdir(self.homeDir + "/plugins/")
 		for plugin in plugins:
 			if plugin in self.config['plugins']:
@@ -2236,7 +2235,9 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.roster.disconnect()
 		#MainWindow.ui.roster.makeHiddenItem()
 		MainWindow.ui.login_connect.setEnabled(True)
-		MainWindow.plugins={}
+		#MainWindow.plugins={}
+		#for i in range(len(MainWindow.plugins)):
+			#MainWindow.unloadPlugin(MainWindow.plugins.keys()[0])
 		if self.client:
 			for jid in self.client.groupchats.keys():
 				for i in range(self.chat.ui.chatTab.count()):
