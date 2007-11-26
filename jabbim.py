@@ -65,12 +65,13 @@ class clientClass(pyxl.client.Client):
 		self.client_os = utils.get_os_info()
 		self.version = '0.2'
 
-	def on_GCpresenceError(self, fromjid, code, typ, name):
-		log.msg("ERROR")
-		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+code+" "+typ+" "+name),0,1)
+#	def on_GCpresenceError(self, fromjid, code, typ, name):
+#		log.msg("ERROR")
+#		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+code+" "+typ+" "+name),0,1)
 
-	def on_GCpresenceError(self, fromjid, code, typ, name, text):
+	def on_GCpresenceError(self, fromjid, code, typ, name, text, resource = ""):
 		log.msg("error")
+		log.msg("RESOURCE: "+resource)
 		# find tab
 		tab=None
 		tabIndex=0
@@ -86,7 +87,7 @@ class clientClass(pyxl.client.Client):
 			if int(self.main.chat.ui.chatTab.count())==0:
 				self.main.chat.hide()
 		if int(code)==409:
-			self.main.events.addLineEditEvent(maintext=unicode(fromjid)+"<br/>"+text,trueCall=self.main.joinGC,trueDict=[fromjid],falseCall=None,falseDict=None,header="Groupchat Error",text="New name:",name=unicode(fromjid),typ="groupchatError",icon=None,action=None,actionDict=None,height=100)
+			self.main.events.addLineEditEvent(maintext=unicode(fromjid)+"<br/>"+text,trueCall=self.main.joinGC,trueDict=[fromjid],falseCall=None,falseDict=None,header="Groupchat Error",text="New name:",name=unicode(fromjid),typ="groupchatError",icon=None,action=None,actionDict=None,height=100, value=resource)
 		else:
 			self.main.events.addInfoEvent(header=self.main.tr("Groupchat error"),text=text,name=unicode(fromjid),typ='groupchatError')
 		#QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+unicode(code)+" "+unicode(name)+" "+unicode(text)),0,1)
@@ -468,6 +469,7 @@ class clientClass(pyxl.client.Client):
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
 		
+		show = unicode(show) #!
 		# presence in groupchat
 		if not self.groupchats.has_key(muc):
 			log.msg("bad GC presence:"+unicode(muc)+"; we are not connected there")

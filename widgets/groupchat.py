@@ -495,6 +495,7 @@ class groupChatWidget(QtGui.QWidget):
 			#self.ui.users.setColumnWidth(0,int(self.ui.users.width())-38)
 
 		# Nastaveni stavu
+		status = unicode(status)
 		if status!="None":
 			item.setIcon(0,self.main.getIcon(status=status,size="32x32"))
 			item.setText(1,self.main.shows[status]+unicode(nick.lower()))
