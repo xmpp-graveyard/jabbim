@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 from twisted.python import log
 import traceback
+import StringIO
+
 
 class EventDispatcher:
 	def __init__(self, prefix="event_"):
@@ -45,7 +47,12 @@ class EventDispatcher:
 						return
 				except Exception, ex:
 					log.msg('Plugin error: ' +unicode(ex))
-					traceback.print_exc()
+					output = StringIO.StringIO()
+					
+					traceback.print_exc(file=output)
+					message = unicode(output.getvalue())
+					log.msg(message)
+					
 	
 	def k(self, key):
 		return key['prio']
