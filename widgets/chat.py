@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'widgets/chat.ui'
 #
-# Created: Sat Jul 14 13:35:56 2007
-#      by: PyQt4 UI code generator 4.1
+# Created: Mon Nov 26 19:22:04 2007
+#      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_chatWindow(object):
@@ -25,12 +24,6 @@ class Ui_chatWindow(object):
         self.gridlayout.setObjectName("gridlayout")
 
         self.chatTab = QtGui.QTabWidget(self.centralwidget)
-
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7),QtGui.QSizePolicy.Policy(7))
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.chatTab.sizePolicy().hasHeightForWidth())
-        self.chatTab.setSizePolicy(sizePolicy)
         self.chatTab.setObjectName("chatTab")
 
         self.tab = QtGui.QWidget()

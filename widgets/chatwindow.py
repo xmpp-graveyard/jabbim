@@ -31,12 +31,30 @@ from include import utils
 import os
 from twisted.words.protocols.jabber import jid as jidT
 
+class tabWidget(QtGui.QTabBar):
+	def __init__(self,parent,main):
+		QtGui.QTabBar.__init__(self,parent)
+		self.main=main
+	
+	def mouseReleaseEvent(self,event):
+		if self.main.main.QT43:
+			if event.button()==QtCore.Qt.MidButton:
+				pos=event.pos()
+				index=self.tabAt(pos)
+				if index!=-1:
+					self.main.removeTab(index)
+				event.ignore()
+				return
+		return QtGui.QTabBar.mouseReleaseEvent(self,event)
+
 class chatWindow(QtGui.QMainWindow):
 	def __init__(self,parent,main):
 		apply(QtGui.QMainWindow.__init__,(self,None))
 		self.main=main
 		self.ui=Ui_chatWindow()
 		self.ui.setupUi(self)
+		self.tabBar=tabWidget(self,self)
+		self.ui.chatTab.setTabBar(self.tabBar)
 		self.ui.chatTab.removeTab(0)
 		## tab
 		#self.ui.chatTab = mainTab(main,self.ui.centralwidget)
@@ -575,8 +593,10 @@ class chatWindow(QtGui.QMainWindow):
 		self.hide()
 		e.ignore()
 
-	def removeTab(self):
-		w=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
+	def removeTab(self,index=None):
+		if index==None:
+			index=self.ui.chatTab.currentIndex()
+		w=self.ui.chatTab.widget(index)
 		if str(w.typ)=="groupchat" and self.main.client!=None:
 			if self.main.client.groupchats.has_key(w.jid):
 				self.main.client.leaveGC(w.jid)
@@ -591,6 +611,6 @@ class chatWindow(QtGui.QMainWindow):
 			self.main.config['groupchatSplitSizes2']=list(w.chat.ui.splitter_2.sizes())
 			self.main.config['groupchatSplitSizes3']=list(w.chat.ui.splitter_3.sizes())
 
-		self.ui.chatTab.removeTab(self.ui.chatTab.currentIndex())
+		self.ui.chatTab.removeTab(index)
 		if int(self.ui.chatTab.count())==0:
 			self.hide()

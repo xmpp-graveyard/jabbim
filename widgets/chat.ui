@@ -25,14 +25,6 @@
     </property>
     <item row="0" column="0" >
      <widget class="QTabWidget" name="chatTab" >
-      <property name="sizePolicy" >
-       <sizepolicy>
-        <hsizetype>7</hsizetype>
-        <vsizetype>7</vsizetype>
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
       <property name="currentIndex" >
        <number>0</number>
       </property>

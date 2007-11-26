@@ -1049,7 +1049,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.selfAvatar=None
 		self.selfStatus=""
 		self.setAttribute(QtCore.Qt.WA_AlwaysShowToolTips,True)
-
+		self.QT43=USE_WIZARDS
 		self.homeDir=utils.getHomeDir() # get home dir
 		for x in range(0,len(sys.argv)):
 			if sys.argv[x] == '--home':
