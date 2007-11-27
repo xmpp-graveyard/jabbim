@@ -167,6 +167,7 @@ class Client(derived):
 		self.factory.addBootstrap("//event/xmpp/initfailed", self._authfailed)
 		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
 		self.factory.addBootstrap('//event/stream/error', self._streamEnd)
+		self.factory.addBootstrap('/*', self.bootLog)
 		
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
@@ -184,7 +185,11 @@ class Client(derived):
 #		
 #		self.connection = sfact.buildProtocol('f').connectClass(host, port, client.XMPPClientFactory, self.jid,self.password)
 		log.msg('started - ' + unicode(time.time()))
-		
+	
+	def bootLog(self, el):
+		if self.log:
+			self.on_xml(u'BOOT: ' + el.toXml())
+			
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
 		self.main._disconnect(error = 'lost')
@@ -217,6 +222,7 @@ class Client(derived):
 		log.msg('authed')
 ##		self.dispatcher.publishEvent('authed')
 		self.xmlstream = xmlstream
+		self.xmlstream.removeObserver('/*', self.bootLog)
 		self.xmlstream.rawDataInFn = self.rawDataIn
 		self.xmlstream.rawDataOutFn = self.rawDataOut
 		self.xmlstream.addObserver("/presence", self.onPresence, 1)
@@ -583,6 +589,7 @@ class Client(derived):
 
 	def _authfailed(self,xmlstream):
 		log.msg( "auth_failed")
+		print unicode(xmlstream)
 		self.main._disconnect(error = 'auth')
 		self.on_authFailed(xmlstream)
 
