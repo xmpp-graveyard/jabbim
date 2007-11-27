@@ -330,7 +330,7 @@ class chatWindow(QtGui.QMainWindow):
 			if self.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
 				self.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
 				self.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(0,128,0))
-			self.main.chat.ui.chatTab.setTabText(i,w.tabName+" ("+str(w.chat.unread+1)+")")
+			self.main.chat.ui.chatTab.setTabText(i,"("+str(w.chat.unread+1)+") "+w.tabName)
 			countMessage=True
 		if not self.main.chat.isActiveWindow():
 			self.main.chat.setWindowTitle(w.tabName.replace("&","")+" ("+str(int(self.getUnreadMessages())+1)+")")
