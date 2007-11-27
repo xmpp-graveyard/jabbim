@@ -30,7 +30,7 @@
       </property>
       <widget class="QStackedWidget" name="rosterStackedWidget" >
        <property name="currentIndex" >
-        <number>0</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="login" >
         <layout class="QGridLayout" >
@@ -610,15 +610,32 @@ p, li { white-space: pre-wrap; }
           <number>6</number>
          </property>
          <item>
-          <widget class="QLabel" name="splashImage" >
-           <property name="text" >
-            <string/>
+          <spacer>
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
            </property>
+           <property name="sizeHint" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="splashImage" >
            <property name="pixmap" >
-            <pixmap/>
+            <pixmap>images/logo.png</pixmap>
            </property>
            <property name="alignment" >
             <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="loginInfo" >
+           <property name="alignment" >
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>

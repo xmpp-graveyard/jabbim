@@ -386,7 +386,7 @@ class chatWindow(QtGui.QMainWindow):
 			else:
 				truejid = None
 			file = None
-			print self.main.client.avatars
+			#print self.main.client.avatars
 			if self.main.client.avatars.has_key(w.jid+'%'+user):
 				file = self.main.homeDir+'/avatars/'+unicode(w.jid+'%'+user)
 			elif truejid != None and self.main.client.avatars.has_key(truejid):

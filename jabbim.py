@@ -240,6 +240,7 @@ class clientClass(pyxl.client.Client):
 
 	def on_rosterArrived(self):
 		self.main.ui.splashProgress.setValue(60)
+		self.main.ui.loginInfo.setText(self.main.tr("Roster arrived."))
 		self.main.ui.roster.repaint()
 		self.main.ui.roster.sortItems()
 		self.main.buildBookmarks() # build Bookmarks tab
@@ -465,6 +466,7 @@ class clientClass(pyxl.client.Client):
 			#self.main.ui.roster.buttonWidget=None
 		self.main.ui.roster.repaint()
 		self.main.ui.splashProgress.setValue(100)
+		self.main.ui.loginInfo.setText(self.main.tr("Jabbim is ready."))
 		self.main.ui.rosterStackedWidget.setCurrentIndex(1)
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
@@ -1037,8 +1039,10 @@ class clientClass(pyxl.client.Client):
 		self.main.events.addBooleanEvent(self.replyVerify,[id, thread, props, frm, typ, True], self.replyVerify,[id, thread, props, frm, typ, False],header=self.main.tr('Auth request'),text=self.main.tr('URL:')+" "+unicode(props['url']) + '<br/>' +self.main.tr('ID:') + unicode(props['id']), height = 60,name=frm,typ="xep70")
 	
 	def on_connect(self):
+		self.main.ui.loginInfo.setText(self.main.tr("Jabbim is connected to the server."))
 		self.main.ui.splashProgress.setValue(20)
 	def on_authd(self):
+		self.main.ui.loginInfo.setText(self.main.tr("Jabbim is logged in."))
 		self.main.ui.splashProgress.setValue(40)
 	
 
@@ -2144,6 +2148,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.rosterStackedWidget.setCurrentIndex(2)
 		jid=unicode(self.ui.login_jid.text())
 		password=unicode(self.ui.login_password.text())
+		self.ui.loginInfo.setText(self.tr("Connecting to the server..."))
 		if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
 			
 			if (jid!=self.config['jid'] or ( unicode(self.ui.login_savePassword.isChecked())=="True" and unicode(rot13.scramble(password))!=unicode(self.config['passwd']))) or unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked()):

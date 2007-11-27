@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Thu Nov 22 19:14:21 2007
+# Created: Tue Nov 27 06:03:35 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -326,10 +326,19 @@ class Ui_MainWindow(object):
         self.vboxlayout2.setSpacing(6)
         self.vboxlayout2.setObjectName("vboxlayout2")
 
+        spacerItem7 = QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.vboxlayout2.addItem(spacerItem7)
+
         self.splashImage = QtGui.QLabel(self.splash)
+        self.splashImage.setPixmap(QtGui.QPixmap("images/logo.png"))
         self.splashImage.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
         self.splashImage.setObjectName("splashImage")
         self.vboxlayout2.addWidget(self.splashImage)
+
+        self.loginInfo = QtGui.QLabel(self.splash)
+        self.loginInfo.setAlignment(QtCore.Qt.AlignCenter)
+        self.loginInfo.setObjectName("loginInfo")
+        self.vboxlayout2.addWidget(self.loginInfo)
 
         self.splashProgress = QtGui.QProgressBar(self.splash)
         self.splashProgress.setProperty("value",QtCore.QVariant(0))
@@ -408,7 +417,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.rosterStackedWidget.setCurrentIndex(0)
+        self.rosterStackedWidget.setCurrentIndex(2)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.login_password,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)
         QtCore.QObject.connect(self.login_jid,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)
