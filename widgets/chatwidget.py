@@ -107,6 +107,7 @@ class textView(QtGui.QTextEdit):
 		self.setMouseTracking(True)
 		self.setReadOnly(True)
 		self.data=[]
+		self.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
 	def mouseMoveEvent(self,event):
 		anchor = self.anchorAt(event.pos())
 		if len(anchor)!=0:
@@ -117,8 +118,9 @@ class textView(QtGui.QTextEdit):
 
 	def mousePressEvent(self,event):
 		anchor = self.anchorAt(event.pos())
-		if len(anchor)!=0:
-			QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
+		if event.button()==QtCore.Qt.LeftButton:
+			if len(anchor)!=0:
+				QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
 		return QtGui.QTextEdit.mousePressEvent(self,event)
 	
 	def createMimeDataFromSelection (self):
@@ -158,7 +160,7 @@ class textView(QtGui.QTextEdit):
 			text=unicode(text)
 		#if u:
 		text=text.replace(unichr(2028),"\n")
-		print unicode(text)
+		#print unicode(text)
 
 		self.data.append(QtCore.QMimeData())
 		self.data[-1].setText(unicode(text))
