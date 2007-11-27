@@ -1407,8 +1407,16 @@ class rosterWidget(QtGui.QWidget):
 					gr=item.name
 				elif item.typ=="user":
 					gr=item.group
-				dialog=addcontact.addContactDialog(self.main,self,jid=jid,group=gr,name=jid.split('@')[0])
-				dialog.exec_()
+				try:
+					jidT.JID(jid)
+					validJid=True
+				except:
+					validJid=False
+				if validJid:
+					dialog=addcontact.addContactDialog(self.main,self,jid=jid,group=gr,name=jid.split('@')[0])
+					dialog.exec_()
+				#else:
+					
 				event.ignore()
 				return
 			
