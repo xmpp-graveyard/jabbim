@@ -178,16 +178,25 @@ class preferencesWindow(QtGui.QDialog):
 				item.setSizeHint(QtCore.QSize(100,128))
 				conf=ConfigObj("themes/"+skin+"/theme.ini",encoding='UTF8')
 				if conf!=None and len(conf)!=0:
-					text="<b>"+self.tr("Name: ")+"</b> "+conf['name']+'<br/>'
-					text+="<b>"+self.tr("Author: ")+"</b> "+conf['author']+'<br/>'
-					text+="<b>"+self.tr("Version: ")+"</b> "+conf['version']
+					#text="<b>"+self.tr("Name: ")+"</b> "+conf['name']+'<br/>'
+					#text+="<b>"+self.tr("Author: ")+"</b> "+conf['author']+'<br/>'
+					#text+="<b>"+self.tr("Version: ")+"</b> "+conf['version']
+					#text="<b>"+self.tr("Name: ")+"</b> "+conf['name']+'<br/>'
+					#text+="<b>"+self.tr("Author: ")+"</b> "+conf['author']+'<br/>'
+					#text+="<b>"+self.tr("Version: ")+"</b> "+conf['version']
+					text = self.tr("Name: %1\nAuthor: %2\nVersion: %3") \
+											.arg(conf['name']) \
+											.arg(conf['author']) \
+											.arg(conf['version'])
 				else:
-					text="<b>"+self.tr("Name: ")+"</b> "+skin
-				widget=QtGui.QLabel(text,self.ui.themes)
-				widget.setTextFormat (QtCore.Qt.RichText)
+					text = self.tr("Name: ") + skin
+
+				#widget=QtGui.QLabel(text,self.ui.themes)
+				#widget.setTextFormat (QtCore.Qt.RichText)
 				#widget.setMinimumHeight(128)
+				item.setText(text)
 				#widget.setText("test<br/>test")
-				self.ui.themes.setItemWidget(item,widget)
+				#self.ui.themes.setItemWidget(item,widget)
 				item.setData(32,QtCore.QVariant(skin))
 				if skin==self.main.config["theme"]:
 					self.ui.themes.setCurrentItem(item)
