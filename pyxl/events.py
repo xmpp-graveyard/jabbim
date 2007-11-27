@@ -47,10 +47,11 @@ class EventDispatcher:
 						return
 				except Exception, ex:
 					log.msg('Plugin error: ' +unicode(ex))
-					output = StringIO.StringIO()
+					#output = StringIO.StringIO()
 					
-					traceback.print_exc(file=output)
-					message = unicode(output.getvalue())
+					#traceback.print_exc(file=output)
+					#message = unicode(output.getvalue())
+					message = traceback.format_exc()
 					log.msg(message)
 					
 	
