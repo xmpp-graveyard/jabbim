@@ -39,6 +39,10 @@ class PluginBase:
 		self.handlers = []
 		self.homeDir = homedir
 		self.translator=None
+		self.developMode=False
+
+	def connected(self):
+		pass
 
 	def rosterMenu(self):
 		menu=self.main.ui.menuPlugins.addMenu(unicode(self.name))
@@ -51,13 +55,13 @@ class PluginBase:
 		pass
 
 	def loadUi(self,file,parent,wid):
-		print locals()
+		#print locals()
 		ui = None
 		f=open(utils.path(file))
 		ui=load_source(self.fname, utils.path(file), f)
 		f.close()
 		wid.ui=None
-		print dir(ui)
+		#print dir(ui)
 		for func in dir(ui):
 			if func.startswith("Ui_"):
 				wid.ui=getattr(ui, func)()

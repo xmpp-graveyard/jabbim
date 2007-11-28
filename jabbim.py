@@ -468,6 +468,9 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.splashProgress.setValue(100)
 		self.main.ui.loginInfo.setText(self.main.tr("Jabbim is ready."))
 		self.main.ui.rosterStackedWidget.setCurrentIndex(1)
+		#for key,value in self.main.plugins.iteritems():
+			#value.connected()
+		self.main.loadPlugins()
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
 		
@@ -1429,6 +1432,7 @@ class mainWindow(QtGui.QMainWindow):
 			copy = False
 			v1 = v2 = 0
 			f = f2 = False
+			plug=False
 			try: 
 				f=open(utils.path(path))
 				plug = load_source(plugin, path, f).Plugin(False, self.homeDir)
@@ -1455,12 +1459,17 @@ class mainWindow(QtGui.QMainWindow):
 			except:
 				copy = True
 	
+	
 			if v1>v2:
 				copy = True
 			if f:
 				f.close()
 			if f2:
 				f2.close()
+			if plug:
+				#print "plug mode",plug2.developMode
+				if plug.developMode:
+					copy=True
 			if copy:
 				log.msg('copy plugin to homedir: '+plugin)
 				odkud = "plugins/"+plugin+'/'
@@ -1496,23 +1505,27 @@ class mainWindow(QtGui.QMainWindow):
 	
 	def loadPlugin(self,plugin):
 		path = utils.path('%s/plugins/%s/%s.py'%(self.homeDir, plugin, plugin))
+		log.msg("loading "+unicode(plugin)+" plugin...")
 		try: 
 			f=open((path))
 		except:
 			log.msg('plugin load error: '+plugin)
 			return
 		try:
-			plug = load_source(plugin, path, f).Plugin(self, self.homeDir)
+
 		
-			f.close()
 			if not self.plugins.has_key(plugin):
+				plug = load_source(plugin, path, f).Plugin(self, self.homeDir)
 				self.plugins[plugin] = plug
 				self.plugins[plugin].buildRosterMenu()
 			else:
 				print "plugin already loaded"
+			f.close()
+
 		except Exception, ex:
 					#log.msg(unicode(plugin)+u': '+unicode(ex))
 					traceback.print_exc()
+					f.close()
 					pass
 			
 		log.msg("PLUGINS:"+unicode(self.plugins))
@@ -2173,7 +2186,6 @@ class mainWindow(QtGui.QMainWindow):
 			self.client = clientClass(jid+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
 			self.client.xmlLang = unicode(QtCore.QLocale.system().name())[:2]
 			self.client.log=True
-		self.loadPlugins()
 		self.ui.login_connect.setEnabled(False)
 		self.reconnect = True
 		self.client.connect()
@@ -2206,6 +2218,8 @@ class mainWindow(QtGui.QMainWindow):
 		return self.ui.roster.addUser(itemjid,name,grp)
 
 	def _disconnect(self, error = None): # error = None | dns | lost | auth | failed
+		if not self.client:
+			return
 		if error=="auth":
 			QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Bad Jabber ID or password.")),0,1)
 		elif error=="dns":
@@ -2243,8 +2257,8 @@ class mainWindow(QtGui.QMainWindow):
 		#MainWindow.ui.roster.makeHiddenItem()
 		MainWindow.ui.login_connect.setEnabled(True)
 		#MainWindow.plugins={}
-		#for i in range(len(MainWindow.plugins)):
-			#MainWindow.unloadPlugin(MainWindow.plugins.keys()[0])
+		for i in range(len(MainWindow.plugins)):
+			MainWindow.unloadPlugin(MainWindow.plugins.keys()[0])
 		if self.client:
 			for jid in self.client.groupchats.keys():
 				for i in range(self.chat.ui.chatTab.count()):
@@ -2256,6 +2270,7 @@ class mainWindow(QtGui.QMainWindow):
 						message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",self.tr("You are now offline."))
 						w.chat.textEditWrite(message)
 		MainWindow.client = None
+		print "disconnected....."
 
 
 class XMLConsole(QtGui.QMainWindow):

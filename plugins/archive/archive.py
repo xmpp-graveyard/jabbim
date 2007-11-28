@@ -99,6 +99,7 @@ class Plugin(plugins.PluginBase):
 		self.version = '0.189'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
+		self.developMode=True
 # 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
 
 
