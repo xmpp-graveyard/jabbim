@@ -218,6 +218,7 @@ class Plugin(plugins.PluginBase):
 			self.itemClicked(item,False)
 	
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay, error=None):
+		print chatstate,frm,typ
 		if body != None and chatstate==None:
 			#jid = quote(frm.split('/')[0])
 			if typ=='groupchat':
@@ -229,7 +230,6 @@ class Plugin(plugins.PluginBase):
 					if len(res)>1:
 						if tab.name==res[1]:
 							return
-				
 			self.backend.saveMessage(frm, body, typ, subject, xhtml, "from")
 
 		
