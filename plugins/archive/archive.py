@@ -62,6 +62,10 @@ class FileBackend:
 			telo = xhtml.replace('|', '&#124;').replace("\n","<br/>")
 		else:
 			telo = body.replace('|', '&#124;').replace("\n","<br/>")
+		if typ=="groupchat":
+			if len(to.split('/'))>1:
+				jid=to.split('/')[1]
+
 		msg = '|'.join([unicode(time.time()), direction, jid, typ, quote(unicode(subject)), telo])
 		msg = msg.encode('utf8')
 		fp.write(msg+'\n')
@@ -73,7 +77,7 @@ class FileBackend:
 		except:
 			log.err('no history file')
 			return None
-		ret=[] # timestamp,direction,message
+		ret=[] # timestamp,direction,from,message
 		#zpravy = fp.readlines()
 		#print zpravy
 		#for msg in zpravy:
@@ -82,7 +86,7 @@ class FileBackend:
 		#while len(msg)==0:
 		for msg in fp.xreadlines():
 			parsed=msg.split('|')
-			ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[5],"utf8")])
+			ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
 		fp.close()
 		return ret
 		
@@ -180,7 +184,7 @@ class Plugin(plugins.PluginBase):
 
 		self.window.ui.text.setText('')
 		jid = quote(unicode(item.text()))
-		messages=self.backend.getMessages(jid)
+		messages=self.backend.getMessages(jid) # timestamp,direction,from,message
 
 		datum=self.window.ui.calendar.selectedDate()
 		dates=[]
@@ -191,7 +195,7 @@ class Plugin(plugins.PluginBase):
 		if len(user)!=0:
 			user=user[0].name
 		else:
-			user=unicode(item.text())
+			user=None
 
 		for msg in messages:
 			d=time.localtime(msg[0])
@@ -201,17 +205,21 @@ class Plugin(plugins.PluginBase):
 				if msg[1]=='to':
 					who=me
 				else:
-					who=user
-				html+=unicode('[%s] %s: %s<br/><br/>' %(str(d[3])+":"+str(d[4])+":"+str(d[5]),who, msg[2]))
+					if user:
+						who=user
+					else:
+						who=msg[2]
+				html+=unicode('[%s] %s: %s<br/><br/>' %(str(d[3])+":"+str(d[4])+":"+str(d[5]),who, msg[3]))
 			if not qdate in dates:
 				dates.append(qdate)
 		self.window.ui.text.setHtml(html)
 		if setDate:
 			self.window.ui.calendar.setDates(dates)
+			self.itemClicked(item,False)
 	
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay, error=None):
 		if body != None and chatstate==None:
-			jid = quote(frm.split('/')[0])
+			#jid = quote(frm.split('/')[0])
 			if typ=='groupchat':
 				if delay!=None:
 					return

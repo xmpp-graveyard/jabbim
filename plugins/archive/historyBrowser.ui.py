@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'historyBrowser.ui'
+# Form implementation generated from reading ui file 'plugins/archive/historyBrowser.ui'
 #
-# Created: Sun Nov  4 04:55:01 2007
+# Created: Wed Nov 28 18:34:13 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -22,17 +22,23 @@ class Ui_MainWindow(object):
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
 
-        self.calendarWidget = QtGui.QWidget(self.centralwidget)
-        self.calendarWidget.setObjectName("calendarWidget")
-        self.gridlayout.addWidget(self.calendarWidget,1,0,1,1)
+        self.splitter_2 = QtGui.QSplitter(self.centralwidget)
+        self.splitter_2.setOrientation(QtCore.Qt.Horizontal)
+        self.splitter_2.setObjectName("splitter_2")
 
-        self.seznam = QtGui.QListWidget(self.centralwidget)
+        self.splitter = QtGui.QSplitter(self.splitter_2)
+        self.splitter.setOrientation(QtCore.Qt.Vertical)
+        self.splitter.setObjectName("splitter")
+
+        self.seznam = QtGui.QListWidget(self.splitter)
         self.seznam.setObjectName("seznam")
-        self.gridlayout.addWidget(self.seznam,0,0,1,1)
 
-        self.text = QtGui.QTextBrowser(self.centralwidget)
+        self.calendarWidget = QtGui.QWidget(self.splitter)
+        self.calendarWidget.setObjectName("calendarWidget")
+
+        self.text = QtGui.QTextBrowser(self.splitter_2)
         self.text.setObjectName("text")
-        self.gridlayout.addWidget(self.text,0,1,2,1)
+        self.gridlayout.addWidget(self.splitter_2,0,0,1,1)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(MainWindow)
