@@ -245,7 +245,7 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.roster.sortItems()
 		self.main.buildBookmarks() # build Bookmarks tab
 		self.main.chat.reconnect()
-		self.main.autoJoinGroupchat()
+		
 		# HACK KVULI ICQ A AUTOMATICKEMU PRIHLASENI K NEMU:
 		#self.sendPresence("icq.jabbim.cz",show='available', status = "")
 
@@ -471,6 +471,7 @@ class clientClass(pyxl.client.Client):
 		#for key,value in self.main.plugins.iteritems():
 			#value.connected()
 		self.main.loadPlugins()
+		self.main.autoJoinGroupchat()
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
 		
