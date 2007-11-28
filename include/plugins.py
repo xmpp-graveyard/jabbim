@@ -94,6 +94,10 @@ class PluginBase:
 			return text
 		return trans
 	
+	def getConfig(self,config):
+		return ConfigObj(config,encoding='UTF8')
+
+	
 	def loadConfig(self,homedir=None):
 		if homedir==None:
 			homedir=self.main.homeDir

@@ -129,6 +129,7 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.calendar, QtCore.SIGNAL("selectionChanged()"),self.calChanged)
 			self.group=QtGui.QButtonGroup(self.window)
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
+			self.skin=self.getConfig("skins/gajim.conf")
 		else:
 			self.loadConfig(homedir)
 
@@ -190,7 +191,10 @@ class Plugin(plugins.PluginBase):
 		dates=[]
 		html=""
 		me=unicode(self.main.client.jid.user)
-
+			#if unicode(body).startswith("/me"):
+				#message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message[3:])
+			#else:
+				#message=self.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message)
 		user=self.main.ui.roster.getUserItems(unicode(item.text()))
 		if len(user)!=0:
 			user=user[0].name
@@ -204,12 +208,14 @@ class Plugin(plugins.PluginBase):
 				#message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 				if msg[1]=='to':
 					who=me
+					html+=self.skin["my_message"].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("<br/><br/>","<br/>")
 				else:
 					if user:
 						who=user
 					else:
 						who=msg[2]
-				html+=unicode('[%s] %s: %s<br/><br/>' %(str(d[3])+":"+str(d[4])+":"+str(d[5]),who, msg[3]))
+				#html+=unicode('[%s] %s: %s<br/><br/>' %(str(d[3])+":"+str(d[4])+":"+str(d[5]),who, msg[3]))
+					html+=self.skin["message"].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("[foreground]",self.skin['color1'][0]).replace("[background]",self.skin['color1'][1]).replace("<br/><br/>","<br/>")
 			if not qdate in dates:
 				dates.append(qdate)
 		self.window.ui.text.setHtml(html)
