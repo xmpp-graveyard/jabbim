@@ -1541,7 +1541,7 @@ class mainWindow(QtGui.QMainWindow):
 	def unloadPlugin(self,plugin):
 		if self.plugins.has_key(plugin):
 			self.ui.menuPlugins.clear()
-			self.runPluginCommand(self.plugins[plugins].remove,[])
+			self.runPluginCommand(self.plugins[plugin].remove,[])
 			
 			del self.plugins[plugin]
 			for plug in self.plugins.itervalues():
