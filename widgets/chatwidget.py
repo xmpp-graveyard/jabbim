@@ -358,7 +358,7 @@ class chatWidget(QtGui.QWidget):
 		self.flowLayout = flowLayout()
 		
 		for key,value in self.main.plugins.iteritems():
-			value.buildChatWidget(unicode(jidT.JID(self.jid).userhost()),self.flowLayout)
+			self.main.runPluginCommand(value.buildChatWidget,[unicode(jidT.JID(self.jid).userhost()),self.flowLayout])
 		
 		self.ui.sendFile=QtGui.QToolButton()
 		self.ui.sendFile.setIconSize(QtCore.QSize(16,16))

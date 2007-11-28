@@ -1500,8 +1500,16 @@ class mainWindow(QtGui.QMainWindow):
 				try:
 					self.loadPlugin(plugin)
 				except Exception, ex:
-					log.msg(plugin+': '+unicode(ex))	
+					log.msg(plugin+': '+unicode(ex))
 		#log.msg("PLUGINS:"+unicode(self.plugins))
+	
+	def runPluginCommand(self,command,args):
+		try:
+			command(*args)
+		except Exception, ex:
+			log.msg('Plugin error: ' +unicode(ex))
+			message = unicode(traceback.format_exc())
+			log.msg(message)
 	
 	def loadPlugin(self,plugin):
 		path = utils.path('%s/plugins/%s/%s.py'%(self.homeDir, plugin, plugin))
@@ -1517,7 +1525,7 @@ class mainWindow(QtGui.QMainWindow):
 			if not self.plugins.has_key(plugin):
 				plug = load_source(plugin, path, f).Plugin(self, self.homeDir)
 				self.plugins[plugin] = plug
-				self.plugins[plugin].buildRosterMenu()
+				self.runPluginCommand(buildRosterMenu,[])
 			else:
 				print "plugin already loaded"
 			f.close()
@@ -1533,10 +1541,11 @@ class mainWindow(QtGui.QMainWindow):
 	def unloadPlugin(self,plugin):
 		if self.plugins.has_key(plugin):
 			self.ui.menuPlugins.clear()
-			self.plugins[plugin].remove()
+			self.runPluginCommand(remove,[])
+			
 			del self.plugins[plugin]
 			for plug in self.plugins.itervalues():
-				plug.buildRosterMenu()
+				self.runPluginCommand(buildRosterMenu,[])
 		else:
 			print "plugin is not loaded:",plugin
 		log.msg("PLUGINS:"+unicode(self.plugins))
