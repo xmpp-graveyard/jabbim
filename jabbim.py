@@ -1525,7 +1525,7 @@ class mainWindow(QtGui.QMainWindow):
 			if not self.plugins.has_key(plugin):
 				plug = load_source(plugin, path, f).Plugin(self, self.homeDir)
 				self.plugins[plugin] = plug
-				self.runPluginCommand(buildRosterMenu,[])
+				self.runPluginCommand(self.plugins[plugin].buildRosterMenu,[])
 			else:
 				print "plugin already loaded"
 			f.close()
@@ -1545,7 +1545,7 @@ class mainWindow(QtGui.QMainWindow):
 			
 			del self.plugins[plugin]
 			for plug in self.plugins.itervalues():
-				self.runPluginCommand(buildRosterMenu,[])
+				self.runPluginCommand(plug.buildRosterMenu,[])
 		else:
 			print "plugin is not loaded:",plugin
 		log.msg("PLUGINS:"+unicode(self.plugins))
