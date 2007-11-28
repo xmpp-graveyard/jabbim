@@ -218,8 +218,7 @@ class Plugin(plugins.PluginBase):
 			self.itemClicked(item,False)
 	
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay, error=None):
-		print chatstate,frm,typ
-		if body != None and chatstate==None:
+		if body != None:
 			#jid = quote(frm.split('/')[0])
 			if typ=='groupchat':
 				if delay!=None:
