@@ -29,7 +29,10 @@ def makeDataForm(parent,layout,form,row=1):
 	for x in form.elements():
 		if unicode(x.name)=="field":
 			if x['type']=="text-single":
-				label=QtGui.QLabel(x['label'],parent)
+                                try:
+                                        label=QtGui.QLabel(x['label'],parent)
+                                except KeyError:
+                                        label=None
 				layout.addWidget(label,row,0)
 				widget=QtGui.QLineEdit(parent)
 				for child in x.elements():
@@ -64,7 +67,10 @@ def makeDataForm(parent,layout,form,row=1):
 						widget.setToolTip(unicode(d))
 				row+=1
 			elif x['type']=="text-multi":
-				label=QtGui.QLabel(x['label'],parent)
+                                try:
+                                        label=QtGui.QLabel(x['label'],parent)
+                                except KeyError:
+                                        label=None
 				layout.addWidget(label,row,0)
 				widget=QtGui.QTextEdit(parent)
 				text=""
@@ -79,7 +85,11 @@ def makeDataForm(parent,layout,form,row=1):
 						widget.setToolTip(unicode(d))
 				row+=1
 			elif x['type']=="boolean":
-				widget=QtGui.QCheckBox(x['label'],parent)
+                                try:
+                                        ltext=x['label']
+                                except KeyError:
+                                        ltext=None
+				widget=QtGui.QCheckBox(ltext,parent)
 				for child in x.elements():
 					if child.name == 'value':
 						if unicode(child)=="0" or unicode(child)=="false":
@@ -93,7 +103,10 @@ def makeDataForm(parent,layout,form,row=1):
 						widget.setToolTip(unicode(d))
 				row+=1
 			elif x['type']=="text-private":
-				label=QtGui.QLabel(x['label'],parent)
+                                try:
+                                        label=QtGui.QLabel(x['label'],parent)
+                                except KeyError:
+                                        label=None
 				layout.addWidget(label,row,0)
 				widget=QtGui.QLineEdit(parent)
 				widget.setEchoMode(QtGui.QLineEdit.Password)
@@ -108,7 +121,10 @@ def makeDataForm(parent,layout,form,row=1):
 				row+=1
 			elif x['type']=="list-single":
 				#<field var='userlist' type='list-single' label='Userlist on GG server'><value>get</value><option label='ignore'><value>ignore</value></option><option label='retrieve'><value>get</value></option></field>
-				label=QtGui.QLabel(x['label'],parent)
+                                try:
+                                        label=QtGui.QLabel(x['label'],parent)
+                                except KeyError:
+                                        label=None
 				layout.addWidget(label,row,0)
 				widget=QtGui.QComboBox(parent)
 				default=""

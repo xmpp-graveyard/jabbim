@@ -22,7 +22,7 @@ class Plugin(plugins.PluginBase):
 			self.installTranslator()
 			self.window = self.loadWindow("%s/plugins/%s/jdm_ui.py"%(self.homeDir, self.fname))
 			self.window.setWindowIcon(self.main.windowIcon())
-			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call())
+			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call)
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
 
