@@ -2085,15 +2085,15 @@ class mainWindow(QtGui.QMainWindow):
 			y=int(size.split('x')[1])
 		if frame and size!='auto':
 			if size=="128x128":
-				avatar=icon.pixmap(100,112)
-				if avatar.width()<=58 and avatar.height()<=58:
+				avatar=icon.pixmap(100,100)
+				if avatar.width()<=50 and avatar.height()<=50:
 					size="64x64"
 				x=int(size.split('x')[0])
 				y=int(size.split('x')[1])
 			elif size=="64x64":
-				avatar=icon.pixmap(60,58)
+				avatar=icon.pixmap(50,50)
 			elif size=="32x32":
-				avatar=icon.pixmap(30,30)
+				avatar=icon.pixmap(25,25)
 			else:
 				return False
 	
@@ -2105,7 +2105,7 @@ class mainWindow(QtGui.QMainWindow):
 			painter.drawPixmap(0,0,frame)
 			painter.end()
 		elif size!="auto" and not frame:
-			avatar=icon.pixmap(28,28)
+			avatar=icon.pixmap(25,25)
 			result=QtGui.QPixmap(x,y)
 			result.fill(QtCore.Qt.transparent)
 			painter=QtGui.QPainter(result)
