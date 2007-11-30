@@ -75,7 +75,7 @@ def createFirstPage(wizard):
 	page.registerField("password*",passwordLineEdit)
 	page.registerField("password2*",password2LineEdit)
 	page.setTitle(wizard.trUtf8("Registrace Jabber účtu"))
-	page.setSubTitle(wizard.trUtf8("Vyberte server, na kterém chcete účet zaregistrovat a Svoji přezdívku."))
+	page.setSubTitle(wizard.trUtf8("Vyberte server, na kterém chcete účet zaregistrovat a svoji přezdívku."))
 	
 
 	page.setLayout(layout)
