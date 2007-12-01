@@ -1477,7 +1477,7 @@ class mainWindow(QtGui.QMainWindow):
 				kam = self.homeDir+"/plugins/"+plugin+'/'
 				soubory = os.listdir(odkud)
 				for soubor in soubory:
-					if soubor == '.svn':
+					if soubor == '.svn' or os.path.isdir(odkud+"/"+soubor):
 						continue
 					try:
 						os.mkdir(kam)
