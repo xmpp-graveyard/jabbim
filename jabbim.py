@@ -29,6 +29,7 @@ except:
 	USE_WIZARDS=False
 import qt4reactor
 app = QtGui.QApplication(sys.argv)
+app.setQuitOnLastWindowClosed(False)
 qt4reactor.install(app)
 from twisted.internet import reactor, threads
 from twisted.python import log
