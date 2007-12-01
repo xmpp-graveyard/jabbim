@@ -1,3 +1,3 @@
 SOURCES         = notification.py
-TRANSLATIONS    = locales/cs.ts \
-				locales/en.ts 
+TRANSLATIONS    = cs.ts \
+				en.ts 
