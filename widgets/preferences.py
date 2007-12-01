@@ -23,6 +23,7 @@ except:
 import sys; sys.path.append('..')
 from preferences_ui import *
 from include import rot13
+from pref import jabbim,connection,chat,roster
 from preferences_bookmarks_ui import *
 from configobj import ConfigObj
 import os
@@ -30,6 +31,9 @@ import pyxl
 from imp import load_source
 import shutil
 from twisted.python import log
+import dataforms
+from twisted.words.xish import domish
+#from twisted.web.microdom import *
 
 class pluginConfiguration(QtGui.QDialog):
 	def __init__(self,plugin,parent):
@@ -88,6 +92,203 @@ class pluginConfiguration(QtGui.QDialog):
 		self.plugin.writeConfig()
 		self.done(1)
 
+def getVarData(var):
+	ret={}
+	for key,value in var.iteritems():
+		typ=value['type']
+		widget=value['widget']
+		if typ=="text-single" or typ=="text-private":
+			ret[key]=unicode(widget.text())
+		elif typ=="text-multi":
+			text=unicode(widget.toPlainText())
+			ret[key]=unicode(text)
+		elif typ=="boolean":
+			if widget.isChecked():
+				text="True"
+			else:
+				text="False"
+			ret[key]=unicode(text)
+		elif typ=="list-single":
+			ret[key]=unicode(widget.itemData(widget.currentIndex()).toString())
+		elif typ=="number-spin":
+			ret[key]=unicode(widget.value())
+		elif typ=="boolean-radio":
+			ret[key]=unicode(widget.checkedButton().data)
+	return ret
+
+def makePreferences(main,parent,layout,form,row=1):
+	var={}
+	boxes={}
+	getBox=False
+	par=parent
+	lay=layout
+	keys=form.keys()
+	if "__sort__" in keys:
+		keys=form['__sort__']
+	for key in keys:
+		x=form[key]
+		val=x['value']
+		if x.has_key('groupbox'):
+			if not boxes.has_key(x['groupbox']):
+				boxes[x['groupbox']]=[QtGui.QGroupBox(x['groupbox'],parent)]
+				boxes[x['groupbox']].append(QtGui.QGridLayout(boxes[x['groupbox']][0]))
+				layout.addWidget(boxes[x['groupbox']][0],row,0,1,2)
+				row+=1
+				oldrow=int(row)
+			par=boxes[x['groupbox']][0]
+			lay=boxes[x['groupbox']][1]
+			getBox=True
+		elif getBox:
+			getBox=False
+			row=int(oldrow)
+			par=parent
+			lay=layout
+		if main.main.config.has_key(key):
+			val=main.main.config[key]
+			if key=="passwd":
+				val=rot13.scramble(val)
+		if x['type']=="text-single":
+			try:
+				label=QtGui.QLabel(x['label'],par)
+			except KeyError:
+				label=None
+			lay.addWidget(label,row,0)
+			widget=QtGui.QLineEdit(par)
+			widget.setText(unicode(val))
+			lay.addWidget(widget,row,1)
+			var[key]={'widget':widget,'type':x['type']}
+			row+=1
+			#for d in x.elements():
+				#if d.name == "desc":
+					#widget.setToolTip(unicode(d))
+		elif x['type']=="number-spin":
+			try:
+				label=QtGui.QLabel(x['label'],par)
+			except KeyError:
+				label=None
+			lay.addWidget(label,row,0)
+			widget=QtGui.QSpinBox(par)
+			widget.setValue(int(val))
+			lay.addWidget(widget,row,1)
+			var[key]={'widget':widget,'type':x['type']}
+			row+=1
+		elif x['type']=="fixed":
+			label=QtGui.QLabel(par)
+			label.setWordWrap(True)
+			label.setText(unicode(val))
+			lay.addWidget(label,row,0,1,2)
+			#for d in x.elements():
+				#if d.name == "desc":
+					#widget.setToolTip(unicode(d))
+			row+=1
+		elif x['type']=="text-multi":
+			try:
+				label=QtGui.QLabel(x['label'],par)
+			except KeyError:
+				label=None
+			lay.addWidget(label,row,0)
+			widget=QtGui.QTextEdit(par)
+			#text=""
+			#for child in x.elements():
+				#if child.name == 'value':
+					#text+=unicode(child)+"\n"
+			widget.setText(unicode(val))
+			lay.addWidget(widget,row,1)
+			var[key]={'widget':widget,'type':x['type']}
+			#for d in x.elements():
+				#if d.name == "desc":
+					#widget.setToolTip(unicode(d))
+			row+=1
+		elif x['type']=="boolean":
+			try:
+					ltext=x['label']
+			except KeyError:
+					ltext=""
+			widget=QtGui.QCheckBox(ltext,par)
+			#for child in x.elements():
+				#if child.name == 'value':
+			if unicode(val)=="0" or unicode(val).lower()=="false":
+				widget.setChecked(False)
+			elif unicode(val)=="1" or unicode(val).lower()=="true":
+				widget.setChecked(True)
+			if x.has_key('column'):
+				if x['column']=='right':
+					lay.addWidget(widget,row,1,1,1)
+				else:
+					lay.addWidget(widget,row,0,1,2)
+			else:
+				lay.addWidget(widget,row,0,1,2)
+			var[key]={'widget':widget,'type':x['type']}
+			#for d in x.elements():
+				#if d.name == "desc":
+					#widget.setToolTip(unicode(d))
+			row+=1
+		elif x['type']=="boolean-radio":
+			group=QtGui.QButtonGroup()
+			for data,lab in x['options'].iteritems():
+				widget=QtGui.QRadioButton(lab,par)
+				widget.data=unicode(data)
+				if unicode(val)==unicode(data):
+					widget.setChecked(True)
+				else:
+					widget.setChecked(False)
+				if x.has_key('column'):
+					if x['column']=='right':
+						lay.addWidget(widget,row,1,1,1)
+					else:
+						lay.addWidget(widget,row,0,1,2)
+				else:
+					lay.addWidget(widget,row,0,1,2)
+				group.addButton(widget)
+				row+=1
+			var[key]={'widget':group,'type':x['type']}
+		elif x['type']=="text-private":
+			try:
+				label=QtGui.QLabel(x['label'],par)
+			except KeyError:
+				label=None
+			lay.addWidget(label,row,0)
+			widget=QtGui.QLineEdit(par)
+			widget.setEchoMode(QtGui.QLineEdit.Password)
+			#for child in x.elements():
+				#if child.name == 'value':
+			widget.setText(unicode(val))
+			lay.addWidget(widget,row,1)
+			var[key]={'widget':widget,'type':x['type']}
+			#for d in x.elements():
+				#if d.name == "desc":
+					#widget.setToolTip(unicode(d))
+			row+=1
+		elif x['type']=="list-single":
+			# TODO
+			##<field var='userlist' type='list-single' label='Userlist on GG server'><value>get</value><option label='ignore'><value>ignore</value></option><option label='retrieve'><value>get</value></option></field>
+			#try:
+				#label=QtGui.QLabel(x['label'],parent)
+			#except KeyError:
+				#label=None
+			#layout.addWidget(label,row,0)
+			#widget=QtGui.QComboBox(parent)
+			#default=""
+			#for child in x.elements():
+				#if child.name == 'value':
+					#default=unicode(child)
+				#elif child.name=="option":
+					#for ch in child.elements():
+						#if ch.name=="value":
+							#if unicode(ch)==default:
+								#widget.insertItem(0,unicode(child['label']),QtCore.QVariant(unicode(ch)))
+							#else:
+								#widget.addItem(child['label'], QtCore.QVariant(unicode(ch)))
+			#widget.setCurrentIndex(0)
+			#layout.addWidget(widget,row,1)
+			#var[key]={'widget':widget,'type':x['type']}
+			#for d in x.elements():
+				#if d.name == "desc":
+					#widget.setToolTip(unicode(d))
+			row+=1
+	return var,row
+
+
 class preferencesWindow(QtGui.QDialog):
 	def __init__(self,main,parent=None,page=0):
 		apply(QtGui.QDialog.__init__,(self,parent))
@@ -97,55 +298,23 @@ class preferencesWindow(QtGui.QDialog):
 		self.ui.setupUi(self)
 		self.ui.stackedWidget.setCurrentIndex(page)
 
+		self.var=[]
+
 		# Jabbim
-		if self.main.config['saveGeometry']=='True':
-			self.ui.savePosition.setChecked(True)
-		else:
-			self.ui.savePosition.setChecked(False)
+		layout=QtGui.QGridLayout(self.ui.jabbimWidget)
+		self.var.append(makePreferences(self,self.ui.jabbimWidget,layout,jabbim.preferences(self).config)[0])
 
 		# Chat
-		if self.main.config['showChatStatusChanges']=='True':
-			self.ui.showChatStatusChanges.setChecked(True)
-		else:
-			self.ui.showChatStatusChanges.setChecked(False)
+		layout=QtGui.QGridLayout(self.ui.chatWidget)
+		self.var.append(makePreferences(self,self.ui.chatWidget,layout,chat.preferences(self).config)[0])
 
-		if self.main.config['useMUCNames']=='True':
-			self.ui.useMUCNames.setChecked(True)
-		else:
-			self.ui.useMUCNames.setChecked(False)
-		if self.main.config['sendByCtrl']=='True':
-			self.ui.sendByCtrl.setChecked(True)
-		else:
-			self.ui.sendByCtrl.setChecked(False)
-		if self.main.config['showTransports']=='True':
-			self.ui.showTransports.setChecked(True)
-		else:
-			self.ui.showTransports.setChecked(False)
-		
-		
+		# Roster
+		layout=QtGui.QGridLayout(self.ui.rosterWidget)
+		self.var.append(makePreferences(self,self.ui.rosterWidget,layout,roster.preferences(self).config)[0])
 
 		# connection
-		self.ui.connection_password.setText(rot13.scramble(self.main.config['passwd']))
-		self.ui.connection_jid.setText(self.main.config['jid'])
-		if self.main.config.has_key('resource'):
-			self.ui.connection_source.setText(self.main.config['resource'])
-		else:
-			self.ui.connection_source.setText('jabbim')
-		if self.main.config.has_key('priority'):
-			self.ui.connection_priority.setValue(int(self.main.config['priority']))
-		else:
-			self.ui.connection_priority.setValue(0)
-		if self.main.config['autoJoin']=='True':
-			self.ui.connection_autojoin.setChecked(True)
-		else:
-			self.ui.connection_autojoin.setChecked(False)
-		
-		if self.main.config.has_key('autoPriority'):
-			if self.main.config['autoPriority']=='True':
-				self.ui.connection_autoPriority.setChecked(True)
-			else:
-				self.ui.connection_autoPriority.setChecked(False)
-		
+		layout=QtGui.QGridLayout(self.ui.connectionWidget)
+		self.var.append(makePreferences(self,self.ui.connectionWidget,layout,connection.preferences(self).config)[0])
 
 		# chat skins
 		skins=os.listdir("skins/")
@@ -159,12 +328,6 @@ class preferencesWindow(QtGui.QDialog):
 		self.ui.chatSkin_list.setCurrentIndex(0)
 		QtCore.QObject.connect(self.ui.chatSkin_list, QtCore.SIGNAL("activated ( const QString & )"),self.chatSkin_listChanged)
 
-		# roster
-#		index=self.ui.roster_iconSize.findText(self.main.config['rosterIconSize'])
-#		log.msg(self.main.config['rosterIconSize'])
-#		self.ui.roster_iconSize.setCurrentIndex(int(index))
-		if self.main.config['rosterMode']=='compact':
-			self.ui.roster_compact.toggle()
 
 		# Themes
 		skins=os.listdir("themes/")
@@ -310,43 +473,41 @@ class preferencesWindow(QtGui.QDialog):
 		self.chatSkinPreviewtextEditWrite(testConfig["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("User has set the subject to: Subject"))))
 
 	def accept(self):
-		jid=unicode(self.ui.connection_jid.text())
-		resource=unicode(self.ui.connection_source.text())
-		password=unicode(self.ui.connection_password.text())
 		self.main.skin=ConfigObj("skins/"+unicode(self.ui.chatSkin_list.currentText()),encoding='UTF8')
 		if not self.main.skin.has_key("spaces_between_lines"):
 			self.main.skin["spaces_between_lines"]='0'
-		self.main.config['passwd']=rot13.scramble(password)
-		self.main.config['autoJoin']=str(self.ui.connection_autojoin.isChecked())
-		self.main.config['autoPriority']=str(self.ui.connection_autoPriority.isChecked())
-		self.main.config['saveGeometry']=str(self.ui.savePosition.isChecked())
-		self.main.config['useMUCNames']=str(self.ui.useMUCNames.isChecked())
-		self.main.config['sendByCtrl']=str(self.ui.sendByCtrl.isChecked())
-		self.main.config['showTransports']=str(self.ui.showTransports.isChecked())
-		self.main.config['showChatStatusChanges']=str(self.ui.showChatStatusChanges.isChecked())
+
+		for cfg in self.var:
+			for key,value in getVarData(cfg).iteritems():
+				if key=='passwd':
+					self.main.config[key]=rot13.scramble(unicode(value))
+				else:
+					self.main.config[key]=unicode(value)
+					print key,"=",unicode(value)
+
 		self.main.config['chat_skin']=unicode(self.ui.chatSkin_list.currentText())
 		
 		#data=item.data(32)
 		#file=unicode(data.toString())
 		#self.reskin(file)
 		
-		self.main.config['jid']=jid
-		self.main.config['resource']=''+resource+''
-		self.main.config['priority']=self.ui.connection_priority.text()
+		#self.main.config['jid']=jid
+		#self.main.config['resource']=''+resource+''
+		#self.main.config['priority']=self.ui.connection_priority.text()
 		if not self.ui.useThemes.isChecked():
 			self.main.config['theme']="None"
 			self.main.loadTheme()
 		else:
 			self.main.config['theme']=unicode(self.ui.themes.currentItem().data(32).toString())
-		if self.ui.roster_compact.isChecked()==True:
-			self.main.config['rosterMode']="compact"
+		if self.main.config['rosterMode']=="compact":
+			#self.main.config['rosterMode']="compact"
 			self.main.ui.roster.userHeight=22
 			self.main.ui.roster.groupHeight=22
 			self.main.ui.roster.compact=True
 			self.main.ui.roster.reshow=True
 			self.main.ui.roster.statusLabel.hide()
-		else:
-			self.main.config['rosterMode']="normal"
+		elif self.main.config['rosterMode']=='normal':
+			#self.main.config['rosterMode']="normal"
 			self.main.ui.roster.userHeight=32
 			self.main.ui.roster.groupHeight=32
 			self.main.ui.roster.compact=False

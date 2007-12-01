@@ -29,10 +29,10 @@ def makeDataForm(parent,layout,form,row=1):
 	for x in form.elements():
 		if unicode(x.name)=="field":
 			if x['type']=="text-single":
-                                try:
-                                        label=QtGui.QLabel(x['label'],parent)
-                                except KeyError:
-                                        label=None
+				try:
+						label=QtGui.QLabel(x['label'],parent)
+				except KeyError:
+						label=None
 				layout.addWidget(label,row,0)
 				widget=QtGui.QLineEdit(parent)
 				for child in x.elements():
@@ -67,10 +67,10 @@ def makeDataForm(parent,layout,form,row=1):
 						widget.setToolTip(unicode(d))
 				row+=1
 			elif x['type']=="text-multi":
-                                try:
-                                        label=QtGui.QLabel(x['label'],parent)
-                                except KeyError:
-                                        label=None
+				try:
+						label=QtGui.QLabel(x['label'],parent)
+				except KeyError:
+						label=None
 				layout.addWidget(label,row,0)
 				widget=QtGui.QTextEdit(parent)
 				text=""
@@ -85,16 +85,16 @@ def makeDataForm(parent,layout,form,row=1):
 						widget.setToolTip(unicode(d))
 				row+=1
 			elif x['type']=="boolean":
-                                try:
-                                        ltext=x['label']
-                                except KeyError:
-                                        ltext=None
+				try:
+						ltext=x['label']
+				except KeyError:
+						ltext=""
 				widget=QtGui.QCheckBox(ltext,parent)
 				for child in x.elements():
 					if child.name == 'value':
-						if unicode(child)=="0" or unicode(child)=="false":
+						if unicode(child)=="0" or unicode(child).lower()=="false":
 							widget.setChecked(False)
-						elif unicode(child)=="1" or unicode(child)=="true":
+						elif unicode(child)=="1" or unicode(child).lower()=="true":
 							widget.setChecked(True)
 				layout.addWidget(widget,row,0,1,2)
 				var[x['var']]={'widget':widget,'type':x['type']}
@@ -103,10 +103,10 @@ def makeDataForm(parent,layout,form,row=1):
 						widget.setToolTip(unicode(d))
 				row+=1
 			elif x['type']=="text-private":
-                                try:
-                                        label=QtGui.QLabel(x['label'],parent)
-                                except KeyError:
-                                        label=None
+				try:
+						label=QtGui.QLabel(x['label'],parent)
+				except KeyError:
+						label=None
 				layout.addWidget(label,row,0)
 				widget=QtGui.QLineEdit(parent)
 				widget.setEchoMode(QtGui.QLineEdit.Password)
@@ -121,10 +121,10 @@ def makeDataForm(parent,layout,form,row=1):
 				row+=1
 			elif x['type']=="list-single":
 				#<field var='userlist' type='list-single' label='Userlist on GG server'><value>get</value><option label='ignore'><value>ignore</value></option><option label='retrieve'><value>get</value></option></field>
-                                try:
-                                        label=QtGui.QLabel(x['label'],parent)
-                                except KeyError:
-                                        label=None
+				try:
+						label=QtGui.QLabel(x['label'],parent)
+				except KeyError:
+						label=None
 				layout.addWidget(label,row,0)
 				widget=QtGui.QComboBox(parent)
 				default=""
@@ -146,6 +146,26 @@ def makeDataForm(parent,layout,form,row=1):
 						widget.setToolTip(unicode(d))
 				row+=1
 	return var,row
+
+def getVarData(var):
+	ret={}
+	for key,value in var.iteritems():
+		typ=value['type']
+		widget=value['widget']
+		if typ=="text-single" or typ=="text-private":
+			ret[key]=unicode(widget.text())
+		elif typ=="text-multi":
+			text=unicode(widget.toPlainText())
+			ret[key]=unicode(text)
+		elif typ=="boolean":
+			if widget.isChecked():
+				text="True"
+			else:
+				text="False"
+			ret[key]=unicode(text)
+		elif typ=="list-single":
+			ret[key]=unicode(widget.itemData(widget.currentIndex()).toString())
+	return ret
 
 def sendDataForm(main,jid,form,var,t,unregister=False):
 	for x in form.elements():
