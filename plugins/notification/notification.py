@@ -6,6 +6,18 @@ import sys
 import os
 sys.path.append('.')
 from include import plugins, utils
+
+class osd(QtGui.QWidget):
+	def __init__(self):
+		QtGui.QWidget.__init__(self,None,QtCore.Qt.Window | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint | QtCore.Qt.CustomizeWindowHint)
+		self.timer=QtCore.QTimer()
+		QtCore.QObject.connect(self.timer,QtCore.SIGNAL("timeout()"),self.hide)
+	
+	def view(self):
+		self.setGeometry(10,10,100,100)
+		self.show()
+		self.timer.start(2000)
+
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
 		plugins.PluginBase.__init__(self, main, homedir)
@@ -30,12 +42,14 @@ class Plugin(plugins.PluginBase):
 		# GChighlight = groupchat_highlight.wav
 		# for list of actions see loadSoundConfig()
 		self.loadSoundConfig("sounds/config")
+		self.developMode=True
 		if main:
 			self.registerHandler('on_message', self.on_message)
 			self.registerHandler('on_GCmessage', self.on_GCmessage)
 			self.loadConfig()
 			self.installTranslator()
 			self.playsound('start')
+			self.osd=osd()
 			#self.timer=QtCore.QTimer()
 			#QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.changeIcon)
 			#self.main.tray.showMessage(self.tr("Notification"),self.tr("Notification plugin is activated"), QtGui.QSystemTrayIcon.Information, 2000)
@@ -68,6 +82,7 @@ class Plugin(plugins.PluginBase):
 	def testSlot(self):
 		self.main.tray.showMessage(self.tr("Notification "),self.tr("Notification plugin test :)"), QtGui.QSystemTrayIcon.Information, 2000)
 		self.playsound('new_message')
+		self.osd.view()
 
 	#def startTrayBlink(self,icon="images/16x16/actions/message.png"):
 		#self.trayIcon=QtGui.QIcon(icon)
