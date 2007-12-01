@@ -74,8 +74,8 @@ class LeaveGC(Stage):
 		for gc in self.data["groupchats"]:
 			tab,index=self.main.chat.findTab(gc) 
 			if tab != None:
-				self.main.chat.ui.chatTab.setCurrentIndex(index) 
-				self.main.chat.removeTab()
+				self.main.chat.ui.chatTab.setCurrentIndex(index)
+				self.main.chat.removeTab(ask=False)
 		self.xform = Xform("result", instructions=[self.main.tr("Groupchats left.")]).buildElement()
 
 class ResendFile(Stage):

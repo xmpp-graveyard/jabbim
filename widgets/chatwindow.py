@@ -30,6 +30,21 @@ from include import utils
 #from palette import *
 import os
 from twisted.words.protocols.jabber import jid as jidT
+from leaveroom_ui import *
+
+class leaveMucDialog(QtGui.QDialog):
+	def __init__(self,main,jid,parent):
+		QtGui.QDialog.__init__(self,parent)
+		self.setModal(True)
+		self.ui=Ui_leaveroom()
+		self.ui.setupUi(self)
+		self.main=main
+		self.ui.leaveroom.setText(self.tr("You are trying to leave room ")+unicode(jid)+"<br/>"+self.tr("Do you realy want to leave this room?"))
+
+	def accept(self):
+		if self.ui.checkBox.isChecked():
+			self.main.config["askBeforeQuitMUC"]="False"
+		self.done(1)
 
 class tabWidget(QtGui.QTabBar):
 	def __init__(self,parent,main):
@@ -585,22 +600,19 @@ class chatWindow(QtGui.QMainWindow):
 
 	def closeEvent(self,e):
 		for index in range(self.ui.chatTab.count()):
-			w=self.ui.chatTab.widget(0)
-			if str(w.typ)=="groupchat" and self.main.client!=None:
-				if self.main.client.groupchats.has_key(w.jid):
-					self.main.client.leaveGC(w.jid)
-			self.ui.chatTab.removeTab(0)
+			#w=self.ui.chatTab.widget(0)
+			#if str(w.typ)=="groupchat" and self.main.client!=None:
+				#if self.main.client.groupchats.has_key(w.jid):
+					#self.main.client.leaveGC(w.jid)
+			#self.ui.chatTab.removeTab(0)
+			self.removeTab(0)
 		self.hide()
 		e.ignore()
 
-	def removeTab(self,index=None):
+	def removeTab(self,index=None,ask=True):
 		if index==None:
 			index=self.ui.chatTab.currentIndex()
 		w=self.ui.chatTab.widget(index)
-		if str(w.typ)=="groupchat" and self.main.client!=None:
-			if self.main.client.groupchats.has_key(w.jid):
-				self.main.client.leaveGC(w.jid)
-
 		if w.typ=="chat":
 			print w.chat.ui.splitter.sizes()
 			self.main.config['chatSplitterSizes']=list(w.chat.ui.splitter.sizes())
@@ -611,6 +623,22 @@ class chatWindow(QtGui.QMainWindow):
 			self.main.config['groupchatSplitSizes2']=list(w.chat.ui.splitter_2.sizes())
 			self.main.config['groupchatSplitSizes3']=list(w.chat.ui.splitter_3.sizes())
 
-		self.ui.chatTab.removeTab(index)
-		if int(self.ui.chatTab.count())==0:
-			self.hide()
+		if str(w.typ)=="groupchat" and self.main.client!=None:
+			if ask and self.main.config["askBeforeQuitMUC"]=="True":
+				d=leaveMucDialog(self.main,w.jid,self)
+				if d.exec_()==1:
+					if self.main.client.groupchats.has_key(w.jid):
+						self.main.client.leaveGC(w.jid)
+					self.ui.chatTab.removeTab(index)
+					if int(self.ui.chatTab.count())==0:
+						self.hide()
+			else:
+				if self.main.client.groupchats.has_key(w.jid):
+					self.main.client.leaveGC(w.jid)
+				self.ui.chatTab.removeTab(index)
+				if int(self.ui.chatTab.count())==0:
+					self.hide()
+		else:
+			self.ui.chatTab.removeTab(index)
+			if int(self.ui.chatTab.count())==0:
+				self.hide()
