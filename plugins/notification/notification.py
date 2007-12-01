@@ -12,9 +12,46 @@ class osd(QtGui.QWidget):
 		QtGui.QWidget.__init__(self,None,QtCore.Qt.Window | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint | QtCore.Qt.CustomizeWindowHint)
 		self.timer=QtCore.QTimer()
 		QtCore.QObject.connect(self.timer,QtCore.SIGNAL("timeout()"),self.hide)
-	
-	def view(self):
-		self.setGeometry(10,10,100,100)
+		#self.setFrameShape(self.Box)
+		#self.setLineWidth(2)
+		#self.setMidLineWidth(0)
+		#self.palette().setColor(QtGui.QPalette.Window,self.palette().color(QtGui.QPalette.Highlight))
+		#self.palette().setColor(QtGui.QPalette.Text,self.palette().color(QtGui.QPalette.HighlightedText))
+		font=QtGui.QApplication.fontMetrics()
+		self.f=QtGui.QApplication.font()
+		self.f.setPixelSize(40)
+		self.f.setBold(True)
+		self.text=""
+
+	def paintEvent(self,event):
+		painter=QtGui.QPainter(self)
+		painter.setClipping(True)
+		#rect=event.region().rects()[0]
+		g=QtGui.QLinearGradient(QtCore.QPointF(100, 100),QtCore.QPointF(200, 200))
+		g.setColorAt(0,self.palette().color(QtGui.QPalette.Highlight))
+		c=self.palette().color(QtGui.QPalette.Highlight)
+		try:
+			g.setColorAt(1,c.lighter())
+		except:
+			g.setColorAt(1,c.light())
+
+		
+		#g=self.palette().color(QtGui.QPalette.Highlight))
+		painter.fillRect(0,0,self.width(),self.height(),QtGui.QBrush(QtGui.QColor(0,0,0)))
+		painter.fillRect(3,3,self.width()-6,self.height()-6,QtGui.QBrush(g))
+		p=painter.pen()
+		painter.setPen(QtGui.QPen(self.palette().color(QtGui.QPalette.HighlightedText)))
+		painter.setFont(self.f)
+		painter.drawText(QtCore.QRectF(0,0,self.width(),self.height()),QtCore.Qt.AlignCenter,self.text)
+		painter.setPen(p)
+
+	def view(self,text="Notification text"):
+		self.text=text
+		metrics=QtGui.QFontMetrics(self.f)
+		height=int(metrics.height())
+		width=int(metrics.width(text))
+
+		self.setGeometry(10,10,width+20,height+10)
 		self.show()
 		self.timer.start(2000)
 
