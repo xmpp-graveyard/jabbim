@@ -606,7 +606,7 @@ class chatWindow(QtGui.QMainWindow):
 					#self.main.client.leaveGC(w.jid)
 			#self.ui.chatTab.removeTab(0)
 			self.removeTab(0)
-		self.hide()
+			self.hide()
 		e.ignore()
 
 	def removeTab(self,index=None,ask=True):
