@@ -57,7 +57,15 @@ class FileBackend:
 
 	def saveMessage(self, to, body, typ, subject, xhtml, direction):
 		jid = quote(to.split('/')[0])
-		fp = open(self.archive.main.homeDir+'/archive/'+self.archive.jid+'/'+jid+'.history', 'a')
+		t=time.time()
+		d=time.localtime(t)
+		dat=str(d[0])+"-"+str(d[1])+"-"+str(d[2])
+		try:
+			fp = open(self.archive.main.homeDir+'/archive/'+self.archive.jid+'/'+jid+'/'+dat+'.history', 'a')
+		except:
+			os.mkdir(self.archive.main.homeDir+'/archive/'+self.archive.jid+'/'+jid)
+			fp = open(self.archive.main.homeDir+'/archive/'+self.archive.jid+'/'+jid+'/'+dat+'.history', 'a')
+	
 		if xhtml != None:
 			telo = xhtml.replace('|', '&#124;').replace("\n","<br/>")
 		else:
@@ -66,14 +74,23 @@ class FileBackend:
 			if len(to.split('/'))>1:
 				jid=to.split('/')[1]
 
-		msg = '|'.join([unicode(time.time()), direction, jid, typ, quote(unicode(subject)), telo])
+
+		msg = '|'.join([unicode(t), direction, jid, typ, quote(unicode(subject)), telo])
 		msg = msg.encode('utf8')
 		fp.write(msg+'\n')
 		fp.close()
 
-	def getMessages(self,jid):
+	def getDates(self,jid):
+		ret=[]
+		for file in os.listdir(self.archive.main.homeDir+'/archive/'+self.archive.jid+'/'+jid):
+			if file.split('.')[1]=="history":
+				dat=file.split('.')[0]
+				ret.append(dat)
+		return ret
+
+	def getMessages(self,jid,date):
 		try:
-			fp = open(self.archive.main.homeDir+'/archive/'+self.archive.jid+'/'+jid+'.history')
+			fp = open(self.archive.main.homeDir+'/archive/'+self.archive.jid+'/'+jid+'/'+date+'.history')
 		except:
 			log.err('no history file')
 			return None
@@ -165,13 +182,13 @@ class Plugin(plugins.PluginBase):
 		click=None
 		for jid in seznam:
 			if os.path.isdir(self.main.homeDir+'/archive/'+self.jid+'/'+jid):
-				continue
-			else:
 				item=QtGui.QListWidgetItem()
 				item.setText(unquote(jid).split('.history')[0])
 				self.window.ui.seznam.addItem(item)
 				if unicode(unquote(jid).split('.history')[0])==unicode(j):
 					click=item
+			else:
+				continue
 		if click:
 			self.window.ui.seznam.setCurrentItem(click)
 			self.itemClicked(click)
@@ -182,13 +199,21 @@ class Plugin(plugins.PluginBase):
 		self.itemClicked(self.window.ui.seznam.currentItem(),setDate=False)
 	
 	def itemClicked(self, item,setDate=True):
+		jid = quote(unicode(item.text()))
+		if setDate:
+			dates=[]
+			for date in self.backend.getDates(jid):
+				d=date.split('-')
+				qdate=QtCore.QDate(int(d[0]),int(d[1]),int(d[2]))
+				if not qdate in dates:
+					dates.append(qdate)
+			self.window.ui.calendar.setDates(dates)
+			#self.itemClicked(item,False)
+			#return
 
 		self.window.ui.text.setText('')
-		jid = quote(unicode(item.text()))
-		messages=self.backend.getMessages(jid) # timestamp,direction,from,message
-
 		datum=self.window.ui.calendar.selectedDate()
-		dates=[]
+		messages=self.backend.getMessages(jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day())) # timestamp,direction,from,message
 		html=""
 		me=unicode(self.main.client.jid.user)
 			#if unicode(body).startswith("/me"):
@@ -203,25 +228,18 @@ class Plugin(plugins.PluginBase):
 
 		for msg in messages:
 			d=time.localtime(msg[0])
-			qdate=QtCore.QDate(d[0],d[1],d[2])
-			if datum==qdate:
-				#message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
-				if msg[1]=='to':
-					who=me
-					html+=self.skin["my_message"].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("<br/><br/>","<br/>")
+			#qdate=QtCore.QDate(d[0],d[1],d[2])
+			#if datum==qdate:
+			if msg[1]=='to':
+				who=me
+				html+=self.skin["my_message"].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("<br/><br/>","<br/>")
+			else:
+				if user:
+					who=user
 				else:
-					if user:
-						who=user
-					else:
-						who=msg[2]
-				#html+=unicode('[%s] %s: %s<br/><br/>' %(str(d[3])+":"+str(d[4])+":"+str(d[5]),who, msg[3]))
-					html+=self.skin["message"].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("[foreground]",self.skin['color1'][0]).replace("[background]",self.skin['color1'][1]).replace("<br/><br/>","<br/>")
-			if not qdate in dates:
-				dates.append(qdate)
+					who=msg[2]
+				html+=self.skin["message"].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("[foreground]",self.skin['color1'][0]).replace("[background]",self.skin['color1'][1]).replace("<br/><br/>","<br/>")
 		self.window.ui.text.setHtml(html)
-		if setDate:
-			self.window.ui.calendar.setDates(dates)
-			self.itemClicked(item,False)
 	
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay, error=None):
 		if body != None:
