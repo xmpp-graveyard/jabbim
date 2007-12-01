@@ -1486,7 +1486,9 @@ class mainWindow(QtGui.QMainWindow):
 					try:
 						shutil.copy(odkud+soubor, kam+soubor)
 					except Exception, ex:
-						print ex
+						log.msg('copy error: ' +unicode(ex))
+						message = traceback.format_exc()
+						log.msg(message)
 						log.err('Chyba pri kopirovani pluginu')
 # 				try:
 # 					shutil.copytree("plugins/"+plugin, self.homeDir+"/plugins/"+plugin)
