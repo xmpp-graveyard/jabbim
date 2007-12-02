@@ -28,7 +28,8 @@ import utils
 class PluginBase:
 	def __init__(self, main, homedir):
 		self.main = main
-		self.config = {} #{'hodnota':{default:'', description:'', value: '', type: 'int|text|boolean|select'}}
+		self.config = None
+		self.configDialog = None
 		self.description = 'basic plugin class'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Basic plugin'
@@ -97,7 +98,15 @@ class PluginBase:
 	def getConfig(self,config):
 		return ConfigObj(config,encoding='UTF8')
 
-	
+	def on_saveConfig(self):
+		pass
+
+	def on_showPreferences(self,dialog):
+		pass
+
+	def on_endPreferences(self):
+		pass
+
 	def loadConfig(self,homedir=None):
 		if homedir==None:
 			homedir=self.main.homeDir
@@ -108,19 +117,22 @@ class PluginBase:
 # 		except:
 # 			log.msg('No config for: '+self.name)
 # # 			return False
-		self.confObj = ConfigObj(utils.path(homedir+'/'+self.fname+'-config.ini'),encoding='UTF8')
-		for k in self.config.iterkeys():
-			try:
-				self.config[k]['value'] = self.confObj[k]
-			except:
-				self.config[k]['value'] = self.config[k]['default']
-				self.confObj[k] = self.config[k]['default']
-				self.confObj.write()
+		self.config = ConfigObj(utils.path(homedir+'/'+self.fname+'-config.ini'),encoding='UTF8')
+		if self.configDialog:
+			for k,v in self.configDialog.config.iteritems():
+				#try:
+					#self.config[k]['value'] = self.confObj[k]
+				#except:
+				if not self.config.has_key(k):
+					self.config[k] = v['value']
+					#self.confObj[k] = self.config[k]['default']
+					self.config.write()
 	
 	def writeConfig(self):
-		for k in self.config.iterkeys():
-			self.confObj[k] = self.config[k]['value']
-		self.confObj.write()
+		#for k in self.config.iterkeys():
+			#self.confObj[k] = self.config[k]['value']
+		#self.confObj.write()
+		self.config.write()
 	
 	def registerHandler(self, name, method, priority = 5):
 		self.main.client.dispatcher.registerHandler(name, method, self.name, priority = priority)

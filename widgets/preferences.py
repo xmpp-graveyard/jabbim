@@ -3,7 +3,7 @@ Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
 
 This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
+#modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
 of the License, or (at your option) any later version.
 
@@ -40,34 +40,38 @@ class pluginConfiguration(QtGui.QDialog):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.plugin=plugin
 		self.setWindowTitle(plugin.name+" preferences")
+
+		self.plugin.on_showPreferences(self)
+
+		layout=QtGui.QGridLayout(self)
+		self.var,row=makePreferences(self.plugin.config,self,layout,self.plugin.configDialog.config)
+		#self.widgets={}
 		
-		self.widgets={}
+		##l=self.layout()
 		
-		#l=self.layout()
-		
-		layout=QtGui.QVBoxLayout(self)
-		for key,item in plugin.config.iteritems():
-			if item['type']=="boolean":
-				widget=QtGui.QCheckBox(item['description'],self)
-				if len(item['value'])==0:
-					if item['default']=='True':
-						widget.setChecked(True)
-				else:
-					if item['value']=='True':
-						widget.setChecked(True)
-				layout.addWidget(widget)
-				self.widgets[key]=widget
-			elif item['type']=="text":
-				label=QtGui.QLabel(item['description'],self)
-				if len(item['value'])==0:
-					widget=QtGui.QLineEdit(item['default'],self)
-				else:
-					widget=QtGui.QLineEdit(item['value'],self)
-				layout2=QtGui.QHBoxLayout()
-				layout2.addWidget(label)
-				layout2.addWidget(widget)
-				layout.addLayout(layout2)
-				self.widgets[key]=widget
+		#layout=QtGui.QVBoxLayout(self)
+		#for key,item in plugin.config.iteritems():
+			#if item['type']=="boolean":
+				#widget=QtGui.QCheckBox(item['description'],self)
+				#if len(item['value'])==0:
+					#if item['default']=='True':
+						#widget.setChecked(True)
+				#else:
+					#if item['value']=='True':
+						#widget.setChecked(True)
+				#layout.addWidget(widget)
+				#self.widgets[key]=widget
+			#elif item['type']=="text":
+				#label=QtGui.QLabel(item['description'],self)
+				#if len(item['value'])==0:
+					#widget=QtGui.QLineEdit(item['default'],self)
+				#else:
+					#widget=QtGui.QLineEdit(item['value'],self)
+				#layout2=QtGui.QHBoxLayout()
+				#layout2.addWidget(label)
+				#layout2.addWidget(widget)
+				#layout.addLayout(layout2)
+				#self.widgets[key]=widget
 				
 		layout2=QtGui.QHBoxLayout()
 		close=QtGui.QPushButton("Close",self)
@@ -79,18 +83,27 @@ class pluginConfiguration(QtGui.QDialog):
 		QtCore.QObject.connect(save, QtCore.SIGNAL("clicked()"),self.accept)
 		QtCore.QObject.connect(close, QtCore.SIGNAL("clicked()"),self.reject)
 		
-		layout.addLayout(layout2)
+		layout.addLayout(layout2,row,0,1,2)
 	
 	def accept(self):
-		for key, widget in self.widgets.iteritems():
-			item=self.plugin.config[key]
-			if item['type']=="boolean":
-				self.plugin.config[key]['value']=str(widget.isChecked())
-			elif item['type']=="text":
-				print unicode(widget.text())
-				self.plugin.config[key]['value']=unicode(widget.text())
+		#for key, widget in self.widgets.iteritems():
+			#item=self.plugin.config[key]
+			#if item['type']=="boolean":
+				#self.plugin.config[key]['value']=str(widget.isChecked())
+			#elif item['type']=="text":
+				#print unicode(widget.text())
+				#self.plugin.config[key]['value']=unicode(widget.text())
+
+		self.plugin.on_saveConfig()
+		for key,value in getVarData(self.var).iteritems():
+			self.plugin.config[key]=unicode(value)
+			print key,"=",unicode(value)
 		self.plugin.writeConfig()
 		self.done(1)
+
+	def reject(self):
+		self.plugin.on_endPreferences()
+		self.close()
 
 def getVarData(var):
 	ret={}
@@ -143,8 +156,8 @@ def makePreferences(main,parent,layout,form,row=1):
 			row=int(oldrow)
 			par=parent
 			lay=layout
-		if main.main.config.has_key(key):
-			val=main.main.config[key]
+		if main.has_key(key):
+			val=main[key]
 			if key=="passwd":
 				val=rot13.scramble(val)
 		if x['type']=="text-single":
@@ -302,19 +315,19 @@ class preferencesWindow(QtGui.QDialog):
 
 		# Jabbim
 		layout=QtGui.QGridLayout(self.ui.jabbimWidget)
-		self.var.append(makePreferences(self,self.ui.jabbimWidget,layout,jabbim.preferences(self).config)[0])
+		self.var.append(makePreferences(self.main.config,self.ui.jabbimWidget,layout,jabbim.preferences(self).config)[0])
 
 		# Chat
 		layout=QtGui.QGridLayout(self.ui.chatWidget)
-		self.var.append(makePreferences(self,self.ui.chatWidget,layout,chat.preferences(self).config)[0])
+		self.var.append(makePreferences(self.main.config,self.ui.chatWidget,layout,chat.preferences(self).config)[0])
 
 		# Roster
 		layout=QtGui.QGridLayout(self.ui.rosterWidget)
-		self.var.append(makePreferences(self,self.ui.rosterWidget,layout,roster.preferences(self).config)[0])
+		self.var.append(makePreferences(self.main.config,self.ui.rosterWidget,layout,roster.preferences(self).config)[0])
 
 		# connection
 		layout=QtGui.QGridLayout(self.ui.connectionWidget)
-		self.var.append(makePreferences(self,self.ui.connectionWidget,layout,connection.preferences(self).config)[0])
+		self.var.append(makePreferences(self.main.config,self.ui.connectionWidget,layout,connection.preferences(self).config)[0])
 
 		# chat skins
 		skins=os.listdir("skins/")
@@ -370,6 +383,8 @@ class preferencesWindow(QtGui.QDialog):
 		#self.ui.plugins.header().hide()
 		QtCore.QObject.connect(self.ui.pluginConfiguration, QtCore.SIGNAL("clicked()"),self.pluginConfigurationClicked)
 		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.pluginsContextMenu)
+		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int)"),self.pluginSelected)
+
 		self.main.copyPlugins()
 		plugins=os.listdir("plugins/")
 		self.loadedPlugins=self.main.config['plugins']
@@ -381,7 +396,14 @@ class preferencesWindow(QtGui.QDialog):
 			except:
 				log.msg('plugin load error: '+plugin)
 				continue
-			plug = load_source(plugin, path, f).Plugin(False,self.main.homeDir)
+
+			try: 
+				plug = load_source(plugin, path, f).Plugin(False,self.main.homeDir)
+			except Exception, ex:
+				log.msg(plugin+': CHYBA PRI NAHRAVANI => SPATNA SYNTAXE V PLUGINU!')
+				f.close()
+				continue
+			
 			f.close()
 			item=QtGui.QTreeWidgetItem(self.ui.plugins)
 			widget=QtGui.QCheckBox(self.ui.plugins)
@@ -396,21 +418,31 @@ class preferencesWindow(QtGui.QDialog):
 		self.ui.plugins.resizeColumnToContents (0)
 		self.ui.plugins.resizeColumnToContents (1)
 
+	def pluginSelected(self,item,i):
+		data=item.data(32,0)
+		name=unicode(data.toString())
+		plugin=self.plugins[name]
+		if plugin.configDialog:
+			self.ui.pluginConfiguration.setEnabled(True)
+		else:
+			self.ui.pluginConfiguration.setEnabled(False)
+
 	def pluginsContextMenu(self,pos):
 		# make groupchat bookmarks menu
 		item=self.ui.plugins.itemFromIndex(self.ui.plugins.indexAt(pos)) # get selected item
 		data=item.data(32,0)
 		name=unicode(data.toString())
 		plugin=self.plugins[name]
-		menu=QtGui.QMenu(self.ui.plugins) # make menu
-		# Join bookmarked groupchat
-		action=menu.addAction(self.tr("Plugin Configuration"))
-		action.setData(item.data(32,0))
-		action.setObjectName("config")
-		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.pluginsContextMenuTriggered)
-		# set menu position and show
-		menu.move(self.ui.plugins.mapToGlobal(pos))
-		menu.show()
+		if plugin.configDialog:
+			menu=QtGui.QMenu(self.ui.plugins) # make menu
+			# Join bookmarked groupchat
+			action=menu.addAction(self.tr("Plugin Configuration"))
+			action.setData(item.data(32,0))
+			action.setObjectName("config")
+			menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.pluginsContextMenuTriggered)
+			# set menu position and show
+			menu.move(self.ui.plugins.mapToGlobal(pos))
+			menu.show()
 
 	def pluginConfigurationClicked(self):
 		item=self.ui.plugins.currentItem()
@@ -419,7 +451,8 @@ class preferencesWindow(QtGui.QDialog):
 		plugin=self.plugins[name]
 		dialog=pluginConfiguration(self.plugins[name],self.ui.plugins)
 		dialog.exec_()
-		self.main.plugins[name].config=self.plugins[name].config
+		if self.main.plugins.has_key(name):
+			self.main.plugins[name].config=self.plugins[name].config
 
 	def pluginsContextMenuTriggered(self,action):
 		cmd=action.objectName()
@@ -429,6 +462,7 @@ class preferencesWindow(QtGui.QDialog):
 			plugin=self.plugins[name]
 			dialog=pluginConfiguration(self.plugins[name],self.ui.plugins)
 			dialog.exec_()
+		if self.main.plugins.has_key(name):
 			self.main.plugins[name].config=self.plugins[name].config
 
 

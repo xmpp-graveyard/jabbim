@@ -6,17 +6,13 @@ import sys
 import os
 sys.path.append('.')
 from include import plugins, utils
-
+import time
 class osd(QtGui.QWidget):
-	def __init__(self):
-		QtGui.QWidget.__init__(self,None,QtCore.Qt.Window | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint | QtCore.Qt.CustomizeWindowHint)
+	def __init__(self,parent=None):
+		QtGui.QWidget.__init__(self,parent,QtCore.Qt.Window | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint | QtCore.Qt.CustomizeWindowHint)
 		self.timer=QtCore.QTimer()
 		QtCore.QObject.connect(self.timer,QtCore.SIGNAL("timeout()"),self.hide)
-		#self.setFrameShape(self.Box)
-		#self.setLineWidth(2)
-		#self.setMidLineWidth(0)
-		#self.palette().setColor(QtGui.QPalette.Window,self.palette().color(QtGui.QPalette.Highlight))
-		#self.palette().setColor(QtGui.QPalette.Text,self.palette().color(QtGui.QPalette.HighlightedText))
+
 		font=QtGui.QApplication.fontMetrics()
 		self.f=QtGui.QApplication.font()
 		self.bigfont=20
@@ -33,13 +29,18 @@ class osd(QtGui.QWidget):
 		self.transparent=True
 		self.desktop=QtGui.QPixmap()
 		self.leftPixmap=None
+		self.started=int(time.time())
+		self.dropTime=5
+		self.changingPos=False
+		self.osdx=10
+		self.osdy=10
 
 	def paintEvent(self,event):
 		painter=QtGui.QPainter(self)
 		painter.setClipping(True)
 		#rect=event.region().rects()[0]
 		painter.fillRect(0,0,self.width(),self.height(),QtGui.QBrush(QtGui.QColor(0,0,0)))
-		
+
 		
 		if not self.transparent:
 			g=QtGui.QLinearGradient(QtCore.QPointF(100, 100),QtCore.QPointF(200, 200))
@@ -85,6 +86,32 @@ class osd(QtGui.QWidget):
 				painter.drawText(QtCore.QRectF(0,0,self.width(),self.height()),QtCore.Qt.AlignCenter,self.text)
 		painter.setPen(p)
 
+	def mousePressEvent(self, event):
+		if event.button() == QtCore.Qt.LeftButton:
+			self.dragPosition = event.globalPos() - self.frameGeometry().topLeft()
+			event.accept()
+	
+	def mouseMoveEvent(self, event):
+		if event.buttons() == QtCore.Qt.LeftButton:
+			self.move(event.globalPos() - self.dragPosition)
+			event.accept()
+
+
+	def pos(self,text="Notification test"):
+		self.changingPos=True
+		self.text=text
+		metrics=QtGui.QFontMetrics(self.f)
+		height=int(metrics.height())
+		width=int(metrics.width(text))
+		self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
+		self.leftPixmap=None
+		self.smallText=""
+		if height<54:
+			height=54
+		self.setGeometry(self.osdx,self.osdy,width+20,height+10)
+		self.show()
+		self.setMouseTracking(True)
+
 	def test(self,text="Notification test"):
 		self.text=text
 		metrics=QtGui.QFontMetrics(self.f)
@@ -95,11 +122,15 @@ class osd(QtGui.QWidget):
 		self.smallText=""
 		if height<54:
 			height=54
-		self.setGeometry(10,10,width+20,height+10)
+		self.setGeometry(self.osdx,self.osdy,width+20,height+10)
 		self.show()
 		self.timer.start(2000)
 
 	def view(self,leftPixmap,headline,text):
+		t=int(time.time())
+		print t,self.started,self.dropTime
+		if t<self.started+self.dropTime:
+			return
 		self.text=headline
 		
 		metrics=QtGui.QFontMetrics(self.f)
@@ -124,11 +155,25 @@ class osd(QtGui.QWidget):
 			height=54
 			height2=0
 
-		self.setGeometry(10,10,width+20,height+height2+10)
+		self.setGeometry(self.osdx,self.osdy,width+20,height+height2+10)
 		self.show()
 		self.timer.start(2000)
 		
-		
+
+class config:
+	def __init__(self,main):
+		self.main=main
+		self.config={}
+		self.config['on_first_message']={'type':'boolean','label':self.main.tr("Notify on first message from user"),'value':'True','groupbox':self.main.tr('Tray icon')}
+		self.config['on_muc_highlight']={'type':'boolean','label':self.main.tr("Notify if groupchat message contains your nickname"),'value':'True','groupbox':self.main.tr('Tray icon')}
+		self.config['sound_first_message']={'type':'boolean','label':self.main.tr("Play sound on first message from user"),'value':'True','groupbox':self.main.tr('Sounds')}
+		self.config['sound_gc']={'type':'boolean','label':self.main.tr("Play sound if groupchat message contains your nickname"),'value':'True','groupbox':self.main.tr('Sounds')}
+		self.config['sound_on_login']={'type':'boolean','label':self.main.tr("Play sound on login"),'value':'True','groupbox':self.main.tr('Sounds')}
+		self.config['osd_transparent']={'type':'boolean','label':self.main.tr("Use transparent background"),'value':'True','groupbox':self.main.tr('OSD')}
+		self.config['osd_on_presence']={'type':'boolean','label':self.main.tr("Use OSD for presences"),'value':'True','groupbox':self.main.tr('OSD')}
+		self.config['osd_x']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD')}
+		self.config['osd_y']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD')}
+
 
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
@@ -140,11 +185,13 @@ class Plugin(plugins.PluginBase):
 		self.version = '0.556'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
-		self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}
-		self.config['on_muc_highlight'] = {'description':'Notify if groupchat message contains your nickname', 'default':'True', 'value': '','type':'boolean'}
-		self.config['sound_first_message'] = {'description':'Play sound on first message from user', 'default':'True', 'value': '','type':'boolean'}
-		self.config['sound_gc'] = {'description':'Play sound if groupchat message contains your nickname', 'default':'True', 'value': '','type':'boolean'}
-		self.config['sound_on_login'] = {'description':'Play sound on login', 'default':'True', 'value': '','type':'boolean'}
+		self.installTranslator()
+		self.configDialog=config(self)
+		#self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}
+		#self.config['on_muc_highlight'] = {'description':'Notify if groupchat message contains your nickname', 'default':'True', 'value': '','type':'boolean'}
+		#self.config['sound_first_message'] = {'description':'Play sound on first message from user', 'default':'True', 'value': '','type':'boolean'}
+		#self.config['sound_gc'] = {'description':'Play sound if groupchat message contains your nickname', 'default':'True', 'value': '','type':'boolean'}
+		#self.config['sound_on_login'] = {'description':'Play sound on login', 'default':'True', 'value': '','type':'boolean'}
 		self.soundDir="sounds/" #for now lets say we have no option to change it (but it will change :)
 		self.soundAvailable=1 # well, we suppose there is sundsupport
 		self.sounds={} # ditictionary of playable actions, will fill in later
@@ -160,14 +207,38 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('on_GCmessage', self.on_GCmessage)
 			self.registerHandler('on_presence',self.on_presence)
 			self.loadConfig()
-			self.installTranslator()
 			self.playsound('start')
 			self.osd=osd()
+			self.osd.osdx=int(self.config['osd_x'])
+			self.osd.osdy=int(self.config['osd_y'])
+			if self.config['osd_transparent']!="True":
+				self.osd.transparent=False
 			#self.timer=QtCore.QTimer()
 			#QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.changeIcon)
 			#self.main.tray.showMessage(self.tr("Notification"),self.tr("Notification plugin is activated"), QtGui.QSystemTrayIcon.Information, 2000)
 		else:
 			self.loadConfig(homedir)
+
+
+	def on_showPreferences(self,dialog):
+		self.osd=osd(dialog)
+		self.osd.osdx=int(self.config['osd_x'])
+		self.osd.osdy=int(self.config['osd_y'])
+		self.osd.transparent=False
+		self.osd.pos()
+
+		#dialog.setModal(False)
+
+	def on_endPreferences(self):
+		self.osd.hide()
+	
+	def on_saveConfig(self):
+		self.osd.hide()
+		rect=self.osd.geometry()
+		x=int(rect.x())
+		y=int(rect.y())
+		self.config['osd_x']=str(x)
+		self.config['osd_y']=str(y)
 
 	def loadSoundConfig(self, configFile):
 		try:
@@ -198,7 +269,7 @@ class Plugin(plugins.PluginBase):
 		self.osd.test()
 	
 	def on_presence(self,jid,show,error):
-		if error:
+		if error or self.config['osd_on_presence']=="False":
 			return
 
 		status=None
@@ -252,7 +323,7 @@ class Plugin(plugins.PluginBase):
 				traytext=body[:40]+" ..."
 		else:
 				traytext=body
-		if self.config['on_first_message']['value']=="True":
+		if self.config['on_first_message']=="True":
 			tab=None
 			for i in range(self.main.chat.ui.chatTab.count()):
 				w=self.main.chat.ui.chatTab.widget(i)
@@ -280,8 +351,8 @@ class Plugin(plugins.PluginBase):
 			frm=unicode(frm).rsplit("/")[0]
 		else:
 			user=frm
-		#print self.config['on_muc_highlight']['value']
-		if self.config['on_muc_highlight']['value']=="True" or self.config['sound_gc_message']['value']=="True":
+		#print self.config['on_muc_highlight']
+		if self.config['on_muc_highlight']=="True" or self.config['sound_gc_message']=="True":
 			for i in range(self.main.chat.ui.chatTab.count()):
 				w=self.main.chat.ui.chatTab.widget(i)
 				if unicode(w.jid)==frm:
@@ -294,6 +365,6 @@ class Plugin(plugins.PluginBase):
 						else:
 								text=body
 						traytext=unicode(user)+": "+text
-						if self.config['sound_gc_message']['value']=="True":
+						if self.config['sound_gc_message']=="True":
 							self.playsound('message')
 						self.main.tray.showMessage(self.tr("New groupchat message for you"), traytext, QtGui.QSystemTrayIcon.Information, 5000)
