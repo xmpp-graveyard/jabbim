@@ -19,6 +19,7 @@ class vcardEditorDialog(QtGui.QDialog):
 
 		d=self.main.client.getVCard(jid)
 		d.addCallback(self.vcardArrived)
+		d.addErrback(self.noVcard)
 		self.ui.tabWidget.setEnabled(False)
 
 		self.ui.avatar.setPixmap(QtGui.QPixmap())
@@ -65,7 +66,8 @@ class vcardEditorDialog(QtGui.QDialog):
 		else:
 			QtCore.QObject.connect(self.ui.setAvatar, QtCore.SIGNAL("clicked()"),self.setAvatar)
 	
-
+	def noVcard(self,data=None):
+		self.ui.download.setText(self.tr("Can't download vCard of this contact."))
 	def vcardArrived(self,data):
 		self.data=data
 		if self.data:
@@ -107,11 +109,16 @@ class vcardEditorDialog(QtGui.QDialog):
 							pixmap.loadFromData(image)
 							pixmap=QtGui.QIcon(pixmap)
 							self.ui.avatar.setPixmap(pixmap.pixmap(128,128))
+			self.ui.download.hide()
+			self.ui.tabWidget.setEnabled(True)
 		else:
 			self.data = Element(('vcard-temp','vCard'))
-		self.ui.download.hide()
-		self.ui.tabWidget.setEnabled(True)
-	
+			self.ui.download.setText(self.tr("Can't download vCard of this contact."))
+			if self.editable:
+				self.ui.download.hide()
+				self.ui.tabWidget.setEnabled(True)
+		
+
 	def setAvatar(self):
 		file=list(QtGui.QFileDialog.getOpenFileNames(self,"Choose picture"))
 		if len(file)!=0:
