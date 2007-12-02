@@ -1275,6 +1275,12 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.login_password.setText(rot13.scramble(self.config['passwd']))
 		self.ui.login_jid.setText(self.config['jid'])
 
+		if self.config['autoJoin']=="True":
+			self.ui.login_autoconnect.setChecked(True)
+		else:
+			self.ui.login_autoconnect.setChecked(False)
+
+
 		if self.config['savePasswd']=="True":
 			self.ui.login_savePassword.setChecked(True)
 
@@ -2188,6 +2194,7 @@ class mainWindow(QtGui.QMainWindow):
 		jid=unicode(self.ui.login_jid.text())
 		password=unicode(self.ui.login_password.text())
 		self.ui.loginInfo.setText(self.tr("Connecting to the server..."))
+		self.config['autoJoin']=unicode(self.ui.login_autoconnect.isChecked())
 		if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
 			
 			if (jid!=self.config['jid'] or ( unicode(self.ui.login_savePassword.isChecked())=="True" and unicode(rot13.scramble(password))!=unicode(self.config['passwd']))) or unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked()):

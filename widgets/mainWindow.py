@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Tue Nov 27 06:03:35 2007
+# Created: Sun Dec  2 18:31:26 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -145,9 +145,9 @@ class Ui_MainWindow(object):
         spacerItem4 = QtGui.QSpacerItem(121,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.gridlayout2.addItem(spacerItem4,0,0,2,1)
 
-        self.login_savePassword_2 = QtGui.QCheckBox(self.login)
-        self.login_savePassword_2.setObjectName("login_savePassword_2")
-        self.gridlayout2.addWidget(self.login_savePassword_2,1,1,1,1)
+        self.login_autoconnect = QtGui.QCheckBox(self.login)
+        self.login_autoconnect.setObjectName("login_autoconnect")
+        self.gridlayout2.addWidget(self.login_autoconnect,1,1,1,1)
 
         self.login_savePassword = QtGui.QCheckBox(self.login)
         self.login_savePassword.setObjectName("login_savePassword")
@@ -430,7 +430,7 @@ class Ui_MainWindow(object):
         self.login_jidLabel.setText(QtGui.QApplication.translate("MainWindow", "Jabber ID:", None, QtGui.QApplication.UnicodeUTF8))
         self.login_passwordLabel.setText(QtGui.QApplication.translate("MainWindow", "Password:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("MainWindow", "Status:", None, QtGui.QApplication.UnicodeUTF8))
-        self.login_savePassword_2.setText(QtGui.QApplication.translate("MainWindow", "Auto connect", None, QtGui.QApplication.UnicodeUTF8))
+        self.login_autoconnect.setText(QtGui.QApplication.translate("MainWindow", "Auto connect", None, QtGui.QApplication.UnicodeUTF8))
         self.login_savePassword.setText(QtGui.QApplication.translate("MainWindow", "Save Password", None, QtGui.QApplication.UnicodeUTF8))
         self.login_headerLabel.setText(QtGui.QApplication.translate("MainWindow", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
