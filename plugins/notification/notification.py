@@ -22,23 +22,33 @@ class osd(QtGui.QWidget):
 		self.f.setPixelSize(40)
 		self.f.setBold(True)
 		self.text=""
+		self.transparent=True
+		self.desktop=QtGui.QPixmap()
 
 	def paintEvent(self,event):
 		painter=QtGui.QPainter(self)
 		painter.setClipping(True)
 		#rect=event.region().rects()[0]
-		g=QtGui.QLinearGradient(QtCore.QPointF(100, 100),QtCore.QPointF(200, 200))
-		g.setColorAt(0,self.palette().color(QtGui.QPalette.Highlight))
-		c=self.palette().color(QtGui.QPalette.Highlight)
-		try:
-			g.setColorAt(1,c.lighter())
-		except:
-			g.setColorAt(1,c.light())
+		painter.fillRect(0,0,self.width(),self.height(),QtGui.QBrush(QtGui.QColor(0,0,0)))
+		
+		
+		if not self.transparent:
+			g=QtGui.QLinearGradient(QtCore.QPointF(100, 100),QtCore.QPointF(200, 200))
+			g.setColorAt(0,self.palette().color(QtGui.QPalette.Highlight))
+			c=self.palette().color(QtGui.QPalette.Highlight)
+			try:
+				g.setColorAt(1,c.lighter())
+			except:
+				g.setColorAt(1,c.light())
+			painter.fillRect(1,1,self.width()-2,self.height()-2,QtGui.QBrush(g))
+		else:
+			painter.drawPixmap(1,1,self.desktop,11,11,self.width()-2,self.height()-2)
+			c=self.palette().color(QtGui.QPalette.Highlight)
+			c.setAlpha(200)
+			painter.fillRect(1,1,self.width()-2,self.height()-2,QtGui.QBrush(c))
+		
 
 		
-		#g=self.palette().color(QtGui.QPalette.Highlight))
-		painter.fillRect(0,0,self.width(),self.height(),QtGui.QBrush(QtGui.QColor(0,0,0)))
-		painter.fillRect(3,3,self.width()-6,self.height()-6,QtGui.QBrush(g))
 		p=painter.pen()
 		painter.setPen(QtGui.QPen(self.palette().color(QtGui.QPalette.HighlightedText)))
 		painter.setFont(self.f)
@@ -50,7 +60,7 @@ class osd(QtGui.QWidget):
 		metrics=QtGui.QFontMetrics(self.f)
 		height=int(metrics.height())
 		width=int(metrics.width(text))
-
+		self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
 		self.setGeometry(10,10,width+20,height+10)
 		self.show()
 		self.timer.start(2000)
