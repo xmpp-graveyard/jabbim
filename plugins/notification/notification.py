@@ -19,11 +19,20 @@ class osd(QtGui.QWidget):
 		#self.palette().setColor(QtGui.QPalette.Text,self.palette().color(QtGui.QPalette.HighlightedText))
 		font=QtGui.QApplication.fontMetrics()
 		self.f=QtGui.QApplication.font()
-		self.f.setPixelSize(40)
+		self.bigfont=20
+		self.smallfont=14
+		self.f.setPixelSize(20)
 		self.f.setBold(True)
+
+		self.f2=QtGui.QApplication.font()
+		self.f2.setPixelSize(14)
+		self.f2.setBold(True)
+
 		self.text=""
+		self.smallText=""
 		self.transparent=True
 		self.desktop=QtGui.QPixmap()
+		self.leftPixmap=None
 
 	def paintEvent(self,event):
 		painter=QtGui.QPainter(self)
@@ -47,23 +56,79 @@ class osd(QtGui.QWidget):
 			c.setAlpha(200)
 			painter.fillRect(1,1,self.width()-2,self.height()-2,QtGui.QBrush(c))
 		
-
-		
 		p=painter.pen()
 		painter.setPen(QtGui.QPen(self.palette().color(QtGui.QPalette.HighlightedText)))
 		painter.setFont(self.f)
-		painter.drawText(QtCore.QRectF(0,0,self.width(),self.height()),QtCore.Qt.AlignCenter,self.text)
+		metrics=QtGui.QFontMetrics(self.f)
+		height=int(metrics.height())
+		
+		bigpart=int((float(self.height())/float(self.bigfont+self.smallfont))*self.bigfont)
+		smallpart=int((float(self.height())/float(self.bigfont+self.smallfont))*self.smallfont)
+		print bigpart,smallpart,self.height()
+		
+		if self.leftPixmap:
+			if self.smallText:
+				painter.setFont(self.f)
+				painter.drawText(QtCore.QRectF(32,0,self.width(),bigpart),QtCore.Qt.AlignCenter,self.text)
+				painter.setFont(self.f2)
+				painter.drawText(QtCore.QRectF(32,bigpart,self.width(),smallpart-5),QtCore.Qt.AlignCenter,self.smallText)
+			else:
+				painter.drawText(QtCore.QRectF(32,0,self.width(),self.height()),QtCore.Qt.AlignCenter,self.text)
+			painter.drawPixmap(0,0,self.leftPixmap)
+		else:
+			if self.smallText:
+				painter.setFont(self.f)
+				painter.drawText(QtCore.QRectF(0,0,self.width(),bigpart),QtCore.Qt.AlignCenter,self.text)
+				painter.setFont(self.f2)
+				painter.drawText(QtCore.QRectF(0,bigpart,self.width(),smallpart-5),QtCore.Qt.AlignCenter,self.smallText)
+			else:
+				painter.drawText(QtCore.QRectF(0,0,self.width(),self.height()),QtCore.Qt.AlignCenter,self.text)
 		painter.setPen(p)
 
-	def view(self,text="Notification text"):
+	def test(self,text="Notification test"):
 		self.text=text
 		metrics=QtGui.QFontMetrics(self.f)
 		height=int(metrics.height())
 		width=int(metrics.width(text))
 		self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
+		self.leftPixmap=None
+		self.smallText=""
+		if height<54:
+			height=54
 		self.setGeometry(10,10,width+20,height+10)
 		self.show()
 		self.timer.start(2000)
+
+	def view(self,leftPixmap,headline,text):
+		self.text=headline
+		
+		metrics=QtGui.QFontMetrics(self.f)
+		height=int(metrics.height())
+		width=int(metrics.width(headline))
+		
+		metrics2=QtGui.QFontMetrics(self.f2)
+		height2=int(metrics2.height())
+		width2=int(metrics2.width(text))
+		if width2>width:
+			while width2>width:
+				text=text[:-1]
+				width2=int(metrics2.width(text+"..."))
+			text+="..."
+		self.smallText=text
+		self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
+		self.leftPixmap=leftPixmap
+		if leftPixmap:
+			width+=64
+
+		if height+height2<54:
+			height=54
+			height2=0
+
+		self.setGeometry(10,10,width+20,height+height2+10)
+		self.show()
+		self.timer.start(2000)
+		
+		
 
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
@@ -93,6 +158,7 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.registerHandler('on_message', self.on_message)
 			self.registerHandler('on_GCmessage', self.on_GCmessage)
+			self.registerHandler('on_presence',self.on_presence)
 			self.loadConfig()
 			self.installTranslator()
 			self.playsound('start')
@@ -129,7 +195,36 @@ class Plugin(plugins.PluginBase):
 	def testSlot(self):
 		self.main.tray.showMessage(self.tr("Notification "),self.tr("Notification plugin test :)"), QtGui.QSystemTrayIcon.Information, 2000)
 		self.playsound('new_message')
-		self.osd.view()
+		self.osd.test()
+	
+	def on_presence(self,jid,show,error):
+		if error:
+			return
+
+		status=None
+		if jid.resource:
+			if self.main.client.roster['users'][jid.userhost()].resources.has_key(jid.resource):
+				res=self.main.client.roster['users'][jid.userhost()].resources[jid.resource]
+				status=res.status
+		else:
+			status=self.main.client.roster['users'][unicode(jid.userhost())].status[1]
+
+
+		user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
+		if len(user)==0:
+			user=self.main.ui.roster.getMetaItems(jid.userhost())
+			if len(user)!=0:
+				user=user[0]
+		if len(user)!=0:
+			#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
+			user=user[0].name
+		else:
+			user=unicode(jid.full())
+
+		pixmap=self.main.getAvatar(jid.userhost().replace('/','%'),frame=False,size="64x64")
+		if not status:
+			status=""
+		self.osd.view(pixmap,user+self.tr(" is now ")+self.main.status[unicode(show)],unicode(status))
 
 	#def startTrayBlink(self,icon="images/16x16/actions/message.png"):
 		#self.trayIcon=QtGui.QIcon(icon)
