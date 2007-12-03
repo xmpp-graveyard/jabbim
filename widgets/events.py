@@ -44,8 +44,12 @@ class abstractWidget(QtGui.QWidget):
 		self.gridlayout1.setMargin(0)
 		self.gridlayout1.setSpacing(6)
 		self.gridlayout1.setObjectName("gridlayout1")
-	
-		self.hboxlayout = QtGui.QHBoxLayout()
+		
+		self.hwidget=QtGui.QWidget(self)
+		self.hwidget.palette().setColor(QtGui.QPalette.Base,parent.palette().color(QtGui.QPalette.AlternateBase))
+		self.hwidget.setAutoFillBackground(True)
+
+		self.hboxlayout = QtGui.QHBoxLayout(self.hwidget)
 		self.hboxlayout.setMargin(0)
 		self.hboxlayout.setSpacing(6)
 		self.hboxlayout.setObjectName("hboxlayout")
@@ -53,8 +57,7 @@ class abstractWidget(QtGui.QWidget):
 		self.label = QtGui.QLabel(header,self)
 		self.label.setObjectName("label")
 		#self.label.setAutoFillBackground(False)
-		self.label.palette().setColor(QtGui.QPalette.Base,QtGui.QColor(128,128,128))
-		self.label.setAutoFillBackground(True)
+		self.label.setAutoFillBackground(False)
 		self.hboxlayout.addWidget(self.label)
 	
 		self.label_2 = QtGui.QLabel(text,self)
@@ -67,7 +70,7 @@ class abstractWidget(QtGui.QWidget):
 		self.hboxlayout.addStretch()
 
 
-		self.gridlayout1.addLayout(self.hboxlayout,0,0,1,1)
+		self.gridlayout1.addWidget(self.hwidget,0,0,1,1)
 
 		self.gridlayout1.addWidget(self.label_2,1,0,1,2)
 		self.gridlayout.addLayout(self.gridlayout1,0,0,1,1)

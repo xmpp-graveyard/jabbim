@@ -762,8 +762,20 @@ class clientClass(pyxl.client.Client):
 		#for name in toDel:
 			#del self.roster['groups'][name]
 
-	def on_unsubscribe(self,jid):
-		self.on_DeleteContact(jid)
+	def on_unsubscribed(self,jid):
+		jid=jidT.JID(jid)
+		user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
+		if len(user)==0:
+			user=self.main.ui.roster.getMetaItems(jid.userhost())
+			if len(user)!=0:
+				user=user[0]
+		if len(user)!=0:
+			#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
+			user=user[0].name
+		else:
+			user=unicode(jid.full())
+		jid=unicode(jid.full())
+		self.main.events.addBooleanEvent(self.on_DeleteContact,[jid],None,[],self.main.tr("Remove contact?"),jid+self.main.tr(" removed you from his/her contact list. Do you want to remove him/her too?"),height=60,name=jid,typ="unsubcsribe",icon=None)
 
 	def on_DeleteContact(self,jid):
 		# delete contact from roster
