@@ -16,12 +16,12 @@ class osd(QtGui.QWidget):
 		font=QtGui.QApplication.fontMetrics()
 		self.f=QtGui.QApplication.font()
 		self.bigfont=20
-		self.smallfont=14
+		self.smallfont=11
 		self.f.setPixelSize(20)
 		self.f.setBold(True)
 
 		self.f2=QtGui.QApplication.font()
-		self.f2.setPixelSize(14)
+		self.f2.setPixelSize(11)
 		self.f2.setBold(True)
 
 		self.text=""
@@ -63,25 +63,25 @@ class osd(QtGui.QWidget):
 		metrics=QtGui.QFontMetrics(self.f)
 		height=int(metrics.height())
 		
-		bigpart=int((float(self.height())/float(self.bigfont+self.smallfont))*self.bigfont)
-		smallpart=int((float(self.height())/float(self.bigfont+self.smallfont))*self.smallfont)
+		bigpart=int((float(self.height())/float(self.bigfont+self.smallTextHeight))*self.bigfont)
+		smallpart=int((float(self.height())/float(self.bigfont+self.smallTextHeight))*self.smallTextHeight)
 		print bigpart,smallpart,self.height()
 		
 		if self.leftPixmap:
 			if self.smallText:
 				painter.setFont(self.f)
-				painter.drawText(QtCore.QRectF(32,0,self.width(),bigpart),QtCore.Qt.AlignCenter,self.text)
+				painter.drawText(QtCore.QRectF(65,0,self.width()-70,bigpart),QtCore.Qt.AlignCenter,self.text)
 				painter.setFont(self.f2)
-				painter.drawText(QtCore.QRectF(32,bigpart,self.width(),smallpart-5),QtCore.Qt.AlignCenter,self.smallText)
+				painter.drawText(QtCore.QRectF(65,bigpart,self.width()-70,smallpart-5),QtCore.Qt.AlignCenter|QtCore.Qt.TextWordWrap,self.smallText)
 			else:
-				painter.drawText(QtCore.QRectF(32,0,self.width(),self.height()),QtCore.Qt.AlignCenter,self.text)
+				painter.drawText(QtCore.QRectF(65,0,self.width()-70,self.height()),QtCore.Qt.AlignCenter,self.text)
 			painter.drawPixmap(0,0,self.leftPixmap)
 		else:
 			if self.smallText:
 				painter.setFont(self.f)
 				painter.drawText(QtCore.QRectF(0,0,self.width(),bigpart),QtCore.Qt.AlignCenter,self.text)
 				painter.setFont(self.f2)
-				painter.drawText(QtCore.QRectF(0,bigpart,self.width(),smallpart-5),QtCore.Qt.AlignCenter,self.smallText)
+				painter.drawText(QtCore.QRectF(0,bigpart,self.width(),smallpart-5),QtCore.Qt.AlignCenter|QtCore.Qt.TextWordWrap,self.smallText)
 			else:
 				painter.drawText(QtCore.QRectF(0,0,self.width(),self.height()),QtCore.Qt.AlignCenter,self.text)
 		painter.setPen(p)
@@ -106,6 +106,7 @@ class osd(QtGui.QWidget):
 		self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
 		self.leftPixmap=None
 		self.smallText=""
+		self.smallTextHeight=self.smallfont
 		if height<54:
 			height=54
 		self.setGeometry(self.osdx,self.osdy,width+20,height+10)
@@ -117,6 +118,7 @@ class osd(QtGui.QWidget):
 		metrics=QtGui.QFontMetrics(self.f)
 		height=int(metrics.height())
 		width=int(metrics.width(text))
+		self.smallTextHeight=self.smallfont
 		self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
 		self.leftPixmap=None
 		self.smallText=""
@@ -140,16 +142,34 @@ class osd(QtGui.QWidget):
 		metrics2=QtGui.QFontMetrics(self.f2)
 		height2=int(metrics2.height())
 		width2=int(metrics2.width(text))
+		#if width2>width:
+			#while width2>width:
+				#text=text[:-1]
+				#width2=int(metrics2.width(text+"..."))
+			#text+="..."
+		t=""
+
+		if leftPixmap:
+			width+=64
+
 		if width2>width:
-			while width2>width:
-				text=text[:-1]
-				width2=int(metrics2.width(text+"..."))
-			text+="..."
+			x=0
+			for word in text.split(' '):
+				xx=int(metrics2.width(word))
+				if x+xx>width+20-65:
+					t+="\n"+word+" "
+					x=0
+				else:
+					t+=word+" "
+					x+=xx
+		else:
+			t=text
+		height2=int(metrics2.height())*len(t.split("\n"))
+		self.smallTextHeight=height2
 		self.smallText=text
 		self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
 		self.leftPixmap=leftPixmap
-		if leftPixmap:
-			width+=64
+
 
 		if height+height2<54:
 			height=54
