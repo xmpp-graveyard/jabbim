@@ -8,12 +8,13 @@ from addcontact_ui import *
 from search import *
 
 class addContactDialog(QtGui.QDialog):
-	def __init__(self,main,parent=None,jid="",group=None,name=""):
+	def __init__(self,main,parent=None,jid="",group=None,name="",add=True):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.setModal(False)
 		self.ui=Ui_addContact()
 		self.ui.setupUi(self)
 		self.main=main
+		self.add=add
 		for k,v in self.main.client.roster['groups'].iteritems():
 			if k==group:
 				self.ui.add_group.insertItem(0,unicode(k))
@@ -22,6 +23,10 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.add_group.setCurrentIndex(0)
 		self.ui.add_nickname.setText(unicode(name))
 		self.ui.add_jid.setText(unicode(jid))
+		if not self.add:
+			self.ui.add_jid.setEnabled(False)
+			self.ui.add_message.hide()
+			self.ui.add_messageLabel.hide()
 		QtCore.QObject.connect(self.ui.search,QtCore.SIGNAL("clicked()"),self.search)
 
 		self.searchJid=None
@@ -64,7 +69,11 @@ class addContactDialog(QtGui.QDialog):
 		nickname=unicode(self.ui.add_nickname.text())
 		group=unicode(self.ui.add_group.currentText())
 		message=unicode(self.ui.add_message.toPlainText())
-		
-		self.main.client.addContact(jid,message,nickname,[group])
+		if self.add:
+			self.main.client.addContact(jid,message,nickname,[group])
+		else:
+			contact=self.main.client.roster['users'][jid]
+			self.main.client.sendRosterUpdate(jid,nickname, contact.subscription, [group])
+
 
 		self.done(1)

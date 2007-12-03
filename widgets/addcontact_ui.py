@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/addcontact.ui'
 #
-# Created: Sun Nov 11 06:24:45 2007
+# Created: Mon Dec  3 21:38:09 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -18,10 +18,6 @@ class Ui_addContact(object):
         self.gridlayout.setMargin(9)
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
-
-        self.addContact_headerLabel = QtGui.QLabel(addContact)
-        self.addContact_headerLabel.setObjectName("addContact_headerLabel")
-        self.gridlayout.addWidget(self.addContact_headerLabel,0,0,1,1)
 
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setMargin(0)
@@ -42,7 +38,11 @@ class Ui_addContact(object):
         self.cancel = QtGui.QPushButton(addContact)
         self.cancel.setObjectName("cancel")
         self.hboxlayout.addWidget(self.cancel)
-        self.gridlayout.addLayout(self.hboxlayout,3,0,1,1)
+        self.gridlayout.addLayout(self.hboxlayout,4,0,1,1)
+
+        self.addContact_headerLabel = QtGui.QLabel(addContact)
+        self.addContact_headerLabel.setObjectName("addContact_headerLabel")
+        self.gridlayout.addWidget(self.addContact_headerLabel,0,0,1,1)
 
         self.gridlayout1 = QtGui.QGridLayout()
         self.gridlayout1.setMargin(0)
@@ -104,6 +104,9 @@ class Ui_addContact(object):
         self.hboxlayout1.addLayout(self.vboxlayout1)
         self.gridlayout.addLayout(self.hboxlayout1,1,0,1,1)
 
+        spacerItem2 = QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout.addItem(spacerItem2,3,0,1,1)
+
         self.retranslateUi(addContact)
         QtCore.QObject.connect(self.save,QtCore.SIGNAL("clicked()"),addContact.accept)
         QtCore.QObject.connect(self.cancel,QtCore.SIGNAL("clicked()"),addContact.reject)
@@ -111,13 +114,13 @@ class Ui_addContact(object):
 
     def retranslateUi(self, addContact):
         addContact.setWindowTitle(QtGui.QApplication.translate("addContact", "Add Contact", None, QtGui.QApplication.UnicodeUTF8))
+        self.search.setText(QtGui.QApplication.translate("addContact", "Search user", None, QtGui.QApplication.UnicodeUTF8))
+        self.save.setText(QtGui.QApplication.translate("addContact", "Save", None, QtGui.QApplication.UnicodeUTF8))
+        self.cancel.setText(QtGui.QApplication.translate("addContact", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.addContact_headerLabel.setText(QtGui.QApplication.translate("addContact", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Add contact</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.search.setText(QtGui.QApplication.translate("addContact", "Search user", None, QtGui.QApplication.UnicodeUTF8))
-        self.save.setText(QtGui.QApplication.translate("addContact", "Save", None, QtGui.QApplication.UnicodeUTF8))
-        self.cancel.setText(QtGui.QApplication.translate("addContact", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.add_messageLabel.setText(QtGui.QApplication.translate("addContact", "Message:", None, QtGui.QApplication.UnicodeUTF8))
         self.add_message.setToolTip(QtGui.QApplication.translate("addContact", "Enter a short message that you want to send to the added contact.", None, QtGui.QApplication.UnicodeUTF8))
         self.add_message.setHtml(QtGui.QApplication.translate("addContact", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"

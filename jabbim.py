@@ -803,7 +803,17 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.roster.refreshStats()
 
 	def on_subscribe(self, frm,status):
-		self.main.events.addSubscribeEvent(frm,status)
+		#self.main.events.addSubscribeEvent(frm,status)
+		#if len(self.main.ui.roster.getUserItems(frm))==0 and len(self.main.ui.roster.getMetaItems(frm)):
+		self.main.events.addBooleanEvent(self._onSubscribe,[frm,status],self.main.client.sendPresence,[frm,None,status,None,'unsubscribed'],header=self.main.tr('Add contact?'),text=self.main.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
+		#else:
+			#self.main.events.addSubscribeEvent(frm,status)
+	def _onSubscribe(self,frm,status):
+		#def __init__(self,main,parent=None,jid="",group=None,name="",add=True):
+		self.sendPresence(frm,None,status,None,'subscribed')
+		dialog=widgets.addcontact.addContactDialog(self.main,self.main,jid=frm,group="",name=frm.split('@')[0],add=False)
+		dialog.exec_()
+
 
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
 		# handle messages from groupchat
