@@ -129,7 +129,7 @@ class osd(QtGui.QWidget):
 			height=54
 		self.setGeometry(int(self.main.config['osd_x']),int(self.main.config['osd_y']),width+20,height+10)
 		self.show()
-		self.timer.start(2000)
+		self.timer.start(int(self.main.config['osd_time'])*1000)
 
 	def view(self,leftPixmap,headline,text):
 		t=int(time.time())
@@ -187,7 +187,7 @@ class osd(QtGui.QWidget):
 			self.osdY=self.screenHeight-(height+height2+10)-10
 		self.setGeometry(self.osdX,self.osdY,width+20,height+height2+10)
 		self.show()
-		self.timer.start(2000)
+		self.timer.start(int(self.main.config['osd_time'])*1000)
 		
 
 class config:
@@ -200,6 +200,7 @@ class config:
 		self.config['sound_gc_message']={'type':'boolean','label':self.main.tr("Play sound if groupchat message contains your nickname"),'value':'True','groupbox':self.main.tr('Sounds')}
 		self.config['sound_on_login']={'type':'boolean','label':self.main.tr("Play sound on login"),'value':'True','groupbox':self.main.tr('Sounds')}
 		self.config['osd_transparent']={'type':'boolean','label':self.main.tr("Use transparent background"),'value':'True','groupbox':self.main.tr('OSD')}
+		self.config['osd_time']={'type':'number-spin','label':self.main.tr("Display time (seconds):"),'value':'2','groupbox':self.main.tr('OSD')}
 		self.config['osd_on_presence']={'type':'boolean','label':self.main.tr("Use OSD for presences"),'value':'True','groupbox':self.main.tr('OSD')}
 		self.config['osd_x']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD')}
 		self.config['osd_y']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD')}
