@@ -775,7 +775,7 @@ class clientClass(pyxl.client.Client):
 		else:
 			user=unicode(jid.full())
 		jid=unicode(jid.full())
-		self.main.events.addBooleanEvent(self.on_DeleteContact,[jid],None,[],self.main.tr("Remove contact?"),jid+self.main.tr(" removed you from his/her contact list. Do you want to remove him/her too?"),height=60,name=jid,typ="unsubcsribe",icon=None)
+		self.main.events.addBooleanEvent(self.on_DeleteContact,[jid],None,[],self.main.tr("Remove contact?"),jid+self.main.tr(" removed you from his/her contact list. Do you want to remove him/her too?"),height=80,name=jid,typ="unsubcsribe",icon=None)
 
 	def on_DeleteContact(self,jid):
 		# delete contact from roster

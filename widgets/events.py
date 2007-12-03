@@ -62,6 +62,7 @@ class abstractWidget(QtGui.QWidget):
 	
 		self.label_2 = QtGui.QLabel(text,self)
 		self.label_2.setTextFormat(QtCore.Qt.RichText)
+		self.label_2.setWordWrap(True)
 		self.label_2.setObjectName("label_2")
 		self.label_2.setAutoFillBackground(False)
 		#self.hboxlayout.addWidget(self.label_2)
