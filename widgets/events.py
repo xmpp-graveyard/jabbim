@@ -52,7 +52,9 @@ class abstractWidget(QtGui.QWidget):
 	
 		self.label = QtGui.QLabel(header,self)
 		self.label.setObjectName("label")
-		self.label.setAutoFillBackground(False)
+		#self.label.setAutoFillBackground(False)
+		self.label.palette().setColor(QtGui.QPalette.Base,QtGui.QColor(128,128,128))
+		self.label.setAutoFillBackground(True)
 		self.hboxlayout.addWidget(self.label)
 	
 		self.label_2 = QtGui.QLabel(text,self)
@@ -119,17 +121,26 @@ class lineEditWidget(QtGui.QWidget):
 		self.gridlayout1.setSpacing(6)
 		self.gridlayout1.setObjectName("gridlayout1")
 	
-		self.hboxlayout = QtGui.QHBoxLayout()
+		self.hwidget=QtGui.QWidget(self)
+
+		self.hwidget.palette().setColor(QtGui.QPalette.Base,parent.palette().color(QtGui.QPalette.AlternateBase))
+		self.hwidget.setAutoFillBackground(True)
+
+		self.hboxlayout = QtGui.QHBoxLayout(self.hwidget)
 		self.hboxlayout.setMargin(0)
 		self.hboxlayout.setSpacing(6)
 		self.hboxlayout.setObjectName("hboxlayout")
 	
 		self.i=QtGui.QLabel(self)
 		self.i.setPixmap(icon.pixmap(16,16))
+		#self.i.palette().setColor(QtGui.QPalette.Base,QtGui.QColor(128,128,128))
+		#self.i.setAutoFillBackground(True)
 		self.hboxlayout.addWidget(self.i)
 	
 		self.label = QtGui.QLabel(header,self)
 		self.label.setObjectName("label")
+		#self.label.palette().setColor(QtGui.QPalette.Base,QtGui.QColor(128,128,128))
+		#self.label.setAutoFillBackground(True)
 		self.hboxlayout.addWidget(self.label)
 
 		self.layout2 = QtGui.QHBoxLayout()
@@ -157,7 +168,7 @@ class lineEditWidget(QtGui.QWidget):
 		self.hboxlayout.addStretch()
 
 
-		self.gridlayout1.addLayout(self.hboxlayout,0,0,1,1)
+		self.gridlayout1.addWidget(self.hwidget,0,0,1,1)
 		self.gridlayout1.addWidget(self.label_3,2,0,1,2)
 
 		self.gridlayout1.addLayout(self.layout2,1,0,1,2)
@@ -173,6 +184,8 @@ class lineEditWidget(QtGui.QWidget):
 		self.submitButton.setMaximumSize(16,16)
 		self.submitButton.setFlat(True)
 		self.submitButton.setIcon(QtGui.QIcon("images/16x16/actions/ok.png"))
+		#self.submitButton.palette().setColor(QtGui.QPalette.Button,QtGui.QColor(128,128,128))
+		#self.submitButton.setAutoFillBackground(True)
 		self.hboxlayout.addWidget(self.submitButton)
 
 		self.closeButton = QtGui.QPushButton(self)
@@ -180,6 +193,9 @@ class lineEditWidget(QtGui.QWidget):
 		self.closeButton.setObjectName("closeButton")
 		self.closeButton.setFlat(True)
 		self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
+		#self.closeButton.palette().setColor(QtGui.QPalette.Button,QtGui.QColor(128,128,128))
+		#self.closeButton.setAutoFillBackground(True)
+
 		self.hboxlayout.addWidget(self.closeButton)
 
 		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
@@ -212,7 +228,7 @@ class InfoWidget(abstractWidget):
 		self.closeButton.setMaximumSize(16,16)
 		self.closeButton.setObjectName("closeButton")
 		self.closeButton.setFlat(True)
-		self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/ok.png"))
+		self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
 		self.hboxlayout.addWidget(self.closeButton)
 
 		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
