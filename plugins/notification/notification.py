@@ -8,11 +8,11 @@ sys.path.append('.')
 from include import plugins, utils
 import time
 class osd(QtGui.QWidget):
-	def __init__(self,parent=None):
+	def __init__(self,main,parent=None):
 		QtGui.QWidget.__init__(self,parent,QtCore.Qt.Window | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint | QtCore.Qt.CustomizeWindowHint)
 		self.timer=QtCore.QTimer()
 		QtCore.QObject.connect(self.timer,QtCore.SIGNAL("timeout()"),self.hide)
-
+		self.main=main
 		font=QtGui.QApplication.fontMetrics()
 		self.f=QtGui.QApplication.font()
 		self.bigfont=20
@@ -32,8 +32,11 @@ class osd(QtGui.QWidget):
 		self.started=int(time.time())
 		self.dropTime=5
 		self.changingPos=False
-		self.osdx=10
-		self.osdy=10
+		self.osdX=int(self.main.config['osd_x'])
+		self.osdy=int(self.main.config['osd_y'])
+		g=QtGui.QApplication.desktop().screenGeometry()
+		self.screenWidth=int(g.width())
+		self.screenHeight=int(g.height())
 
 	def paintEvent(self,event):
 		painter=QtGui.QPainter(self)
@@ -52,7 +55,7 @@ class osd(QtGui.QWidget):
 				g.setColorAt(1,c.light())
 			painter.fillRect(1,1,self.width()-2,self.height()-2,QtGui.QBrush(g))
 		else:
-			painter.drawPixmap(1,1,self.desktop,11,11,self.width()-2,self.height()-2)
+			painter.drawPixmap(1,1,self.desktop,self.osdX+1,self.osdY+1,self.width()-2,self.height()-2)
 			c=self.palette().color(QtGui.QPalette.Highlight)
 			c.setAlpha(200)
 			painter.fillRect(1,1,self.width()-2,self.height()-2,QtGui.QBrush(c))
@@ -109,7 +112,7 @@ class osd(QtGui.QWidget):
 		self.smallTextHeight=self.smallfont
 		if height<54:
 			height=54
-		self.setGeometry(self.osdx,self.osdy,width+20,height+10)
+		self.setGeometry(int(self.main.config['osd_y']),int(self.main.config['osd_x']),width+20,height+10)
 		self.show()
 		self.setMouseTracking(True)
 
@@ -124,7 +127,7 @@ class osd(QtGui.QWidget):
 		self.smallText=""
 		if height<54:
 			height=54
-		self.setGeometry(self.osdx,self.osdy,width+20,height+10)
+		self.setGeometry(int(self.main.config['osd_x']),int(self.main.config['osd_y']),width+20,height+10)
 		self.show()
 		self.timer.start(2000)
 
@@ -174,8 +177,15 @@ class osd(QtGui.QWidget):
 		if height+height2<54:
 			height=54
 			height2=0
-
-		self.setGeometry(self.osdx,self.osdy,width+20,height+height2+10)
+		osdx=int(self.main.config['osd_x'])
+		osdy=int(self.main.config['osd_y'])
+		self.osdX=osdx
+		self.osdY=osdy
+		if osdx+width+20>self.screenWidth:
+			self.osdX=self.screenWidth-(width+20)-10
+		if osdy+height+height2+10>self.screenHeight:
+			self.osdY=self.screenHeight-(height+height2+10)-10
+		self.setGeometry(self.osdX,self.osdY,width+20,height+height2+10)
 		self.show()
 		self.timer.start(2000)
 		
@@ -228,7 +238,7 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('on_presence',self.on_presence)
 			self.loadConfig()
 			self.playsound('start')
-			self.osd=osd()
+			self.osd=osd(self)
 			self.osd.osdx=int(self.config['osd_x'])
 			self.osd.osdy=int(self.config['osd_y'])
 			if self.config['osd_transparent']!="True":
@@ -241,7 +251,7 @@ class Plugin(plugins.PluginBase):
 
 
 	def on_showPreferences(self,dialog):
-		self.osd=osd(dialog)
+		self.osd=osd(self,dialog)
 		self.osd.osdx=int(self.config['osd_x'])
 		self.osd.osdy=int(self.config['osd_y'])
 		self.osd.transparent=False
