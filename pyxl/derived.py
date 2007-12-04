@@ -503,7 +503,11 @@ class derived:
 		self.disp(iq['id'])
 		d.addCallback(self._featuresReceived, caps_node).addErrback(self.chyba)
 
-	def getVersion(self, jid):
+	def getVersion(self, jid, callback=None, errback=None):
+		if callback==None:
+			callback=self._versionReceived
+		if errback==None:
+			errback=self.chyba
 		log.msg('requesting version info')
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid
@@ -512,7 +516,7 @@ class derived:
 #		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._versionReceived).addErrback(self.chyba)
+		d.addCallback(callback).addErrback(errback)
 
 	def getDiscoInfo(self, jid, node = None,  callback = None, callback_par = None):
 		log.msg( 'requesting disco#info: '+jid)

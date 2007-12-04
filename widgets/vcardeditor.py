@@ -20,10 +20,10 @@ class vcardEditorDialog(QtGui.QDialog):
 			self.setWindowTitle(self.tr("VCard Editor"))
 		self.ui.setupUi(self)
 		self.data=None
-
 		d=self.main.client.getVCard(jid)
 		d.addCallback(self.vcardArrived)
 		d.addErrback(self.noVcard)
+		self.main.client.getVersion(jid, callback=self.versionReceived, errback=self.versionErrReceived)
 		self.ui.tabWidget.setEnabled(False)
 
 		self.ui.avatar.setPixmap(QtGui.QPixmap())
@@ -122,6 +122,25 @@ class vcardEditorDialog(QtGui.QDialog):
 				self.ui.download.hide()
 				self.ui.tabWidget.setEnabled(True)
 		
+	def versionReceived(self, el):
+		query = el.firstChildElement()
+		os = None
+		for x in query.elements():
+			if x.name == "name":
+				self.ui.ver_name.setText(unicode(x))
+			elif x.name == "version":
+				self.ui.ver_version.setText(unicode(x))
+			elif x.name == "os":
+				os = unicode(x)
+		if os != None:
+			self.ui.ver_os.setText(os)
+		else:
+			self.ui.ver_os.setText(self.tr("Unable to retrieve."))
+
+	def versionErrReceived(self, err):
+		self.ui.ver_name.setText(self.tr("Unable to retrieve."))
+		self.ui.ver_version.setText(self.tr("Unable to retrieve."))
+		self.ui.ver_os.setText(self.tr("Unable to retrieve."))
 
 	def setAvatar(self):
 		file=list(QtGui.QFileDialog.getOpenFileNames(self,"Choose picture"))
