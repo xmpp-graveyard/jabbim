@@ -61,7 +61,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 			d.addCallback(self._gotSearchForm)
 		elif b.typ=="cmds":
 			cmds = commands.Commands(self.main, b.jid)
-			cmds.dialog.exec_()
+			cmds.dialog.show()
 
 
 
