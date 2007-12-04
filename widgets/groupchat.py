@@ -383,7 +383,7 @@ class groupChatWidget(QtGui.QWidget):
 
 		self.ui.disco_info.setText(unicode(", ".join(features)))
 		log.msg("ROOM INFO RECEIVED")
-		log.msg(unicode(self.disco_info))
+		log.msg(unicode(self.disco_features))
 		
 	
 	def showConnecting(self):
