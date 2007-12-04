@@ -577,7 +577,7 @@ class chatWindow(QtGui.QMainWindow):
 		layout=QtGui.QHBoxLayout(tab)
 		layout.setMargin(1)
 		layout.setSpacing(1)
-		tab.chat=groupChatWidget(self.main,room,tab)
+		tab.chat=groupChatWidget(self.main,room,tab,nickname)
 		#tab.chat.ui.admin.hide()
 		layout.addWidget(tab.chat)
 		jmeno = room

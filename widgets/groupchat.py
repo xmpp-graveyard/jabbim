@@ -233,9 +233,10 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			return QtGui.QTextEdit.keyPressEvent(self,event)
 
 class groupChatWidget(QtGui.QWidget):
-	def __init__(self,main,jid,jab,parent=None):
+	def __init__(self,main,jid,jab,nickname,parent=None):
 		apply(QtGui.QWidget.__init__,(self,parent))
 		self.jab=jab
+		self.nick = nickname
 		self.ui=Ui_groupchatwidget()
 		self.ui.setupUi(self)
 		self.main=main
@@ -785,6 +786,7 @@ class groupChatWidget(QtGui.QWidget):
 		#text=text[0]
 		repeat=False
 		users=self.main.client.groupchats[self.jid].users.keys()
+		users.remove(self.nick)
 		print text
 		for i in range(len(users)):
 			if unicode(users[i]).lower()[0]==unicode(text).lower() and i>self.name_id:
