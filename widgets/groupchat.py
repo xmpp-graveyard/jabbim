@@ -28,6 +28,7 @@ from twisted.web.microdom import *
 from twisted.web.domhelpers import gatherTextNodes
 import dataforms
 from twisted.words.protocols.jabber import jid as jidT
+import vcardeditor
 
 class flowLayout(QtGui.QLayout):
 	def __init__(self, parent=None, margin=1, spacing=1):
@@ -408,10 +409,16 @@ class groupChatWidget(QtGui.QWidget):
 		item=self.ui.users.itemFromIndex(self.ui.users.indexAt(pos)) # get selected item
 		name=unicode(item.text(0)) # get contact name
 		menu=QtGui.QMenu(self.ui.users) # make menu
+		jid="%s/%s" % (self.jid, name)
 		if item.parent()!=None:
 			action=menu.addAction(self.tr("Kick"))
 			action.setData(QtCore.QVariant(name))
 			action.setObjectName("kick")
+			menu.addSeparator()
+			action=menu.addAction(self.tr("vCard"))
+			action.setData(QtCore.QVariant(jid))
+			action.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
+			action.setObjectName("vcard")
 
 		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.usersContextMenuTriggered)
 		# set menu position and show
@@ -427,6 +434,12 @@ class groupChatWidget(QtGui.QWidget):
 				# if user set new name of group
 				if b==True:
 					self.main.client.groupchats[self.jid].setRole(name, 'none',  reason)
+		elif cmd == "vcard":
+			jid=action.data()
+			jid=unicode(jid.toString())
+			self.ve=vcardeditor.vcardEditorDialog(self.main,jid,self,False)
+			self.ve.show()
+			
 
 	def userClicked(self,item,i):
 		if item.parent()==None:

@@ -2082,7 +2082,7 @@ class rosterWidget(QtGui.QWidget):
 		elif cmd=="vcard":
 			# get vcard of selected contact
 			jid=action.data()
-			jid=str(jid.toString())
+			jid=unicode(jid.toString())
 			#self.main.client.getVCard(jid)
 			self.ve=vcardeditor.vcardEditorDialog(self.main,jid,self,False)
 			self.ve.show()
