@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
+# Form implementation generated from reading ui file 'groupchatwidget.ui'
 #
-# Created: Fri Nov 23 15:22:08 2007
-#      by: PyQt4 UI code generator 4.3
+# Created: Tue Dec  4 16:54:39 2007
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -73,8 +73,8 @@ class Ui_groupchatwidget(object):
         self.layoutWidget1.setObjectName("layoutWidget1")
 
         self.vboxlayout = QtGui.QVBoxLayout(self.layoutWidget1)
-        self.vboxlayout.setMargin(0)
         self.vboxlayout.setSpacing(6)
+        self.vboxlayout.setMargin(0)
         self.vboxlayout.setObjectName("vboxlayout")
 
         self.users = QtGui.QTreeWidget(self.layoutWidget1)
@@ -88,7 +88,11 @@ class Ui_groupchatwidget(object):
         self.pluginWidget = QtGui.QWidget(self.layoutWidget1)
         self.pluginWidget.setObjectName("pluginWidget")
         self.vboxlayout.addWidget(self.pluginWidget)
-        self.gridlayout.addWidget(self.splitter_3,0,0,2,2)
+        self.gridlayout.addWidget(self.splitter_3,1,0,2,2)
+
+        self.disco_info = QtGui.QLabel(groupchatwidget)
+        self.disco_info.setObjectName("disco_info")
+        self.gridlayout.addWidget(self.disco_info,0,0,1,2)
 
         self.retranslateUi(groupchatwidget)
         QtCore.QMetaObject.connectSlotsByName(groupchatwidget)

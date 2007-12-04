@@ -1046,7 +1046,7 @@ class Client(derived):
 					name = child['name']
 				else:
 					name = frm
-				log.msg( node)
+				log.msg(unicode(node))
 				node['identities'][name] = child.attributes
 		self.disco[frm][node_name] = node
 		if self.disco[frm][node_name].has_key('err'):

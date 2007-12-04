@@ -348,6 +348,41 @@ class groupChatWidget(QtGui.QWidget):
 			self.init=self.main.skin["on_init"]
 		self.ui.textEdit.setHtml("<br/>"+self.init)
 
+		self.disco_features = []
+		log.msg("REQUESTING ROOM INFO")
+		self.main.client.getDiscoInfo(self.jid, callback=self._infoReceived)
+
+	def _infoReceived(self, *a):
+		self.disco_features = self.main.client.disco[self.jid][None]["features"]
+		features = []
+		possible_features = {
+				# http://jabber.org/protocol/muc#register
+				# http://jabber.org/protocol/muc#roomconfig
+				# http://jabber.org/protocol/muc#roominfo
+				"muc_hidden":self.tr("Hidden"),
+				"muc_membersonly":self.tr("Members only"),
+				"muc_moderated":self.tr("Moderated"),
+				"muc_nonanonymous":self.tr("Non anonymous"),
+				"muc_open":self.tr("Open"),
+				"muc_passwordprotected":self.tr("Password protected"),
+				"muc_persistent":self.tr("Persistent"),
+				"muc_public":self.tr("Public"),
+				# muc_rooms
+				"muc_semianonymous":self.tr("Semi-anonymous"),
+				"muc_temporary":self.tr("Temporary"),
+				"muc_unmoderated":self.tr("Unmoderated"),
+				"muc_unsecured":self.tr("Unsecured")
+				}
+		for f in self.disco_features:
+			if f in possible_features.keys():
+				features.append(unicode(possible_features[f]))
+			else:
+				log.msg("Unknown room feature: %s" % f)
+
+		self.ui.disco_info.setText(unicode(", ".join(features)))
+		log.msg("ROOM INFO RECEIVED")
+		log.msg(unicode(self.disco_info))
+		
 	
 	def showConnecting(self):
 		pos=self.ui.textEdit.mapToGlobal(QtCore.QPoint(0,0))
