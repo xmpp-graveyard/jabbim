@@ -1442,26 +1442,41 @@ class rosterWidget(QtGui.QWidget):
 			
 			# normal user > group
 			if oldItem.typ=="user" and item.typ=="group":
-				items=QtCore.QStringList()
-				items.append(self.tr("Move"))
-				items.append(self.tr("Copy"))
-				q,b=QtGui.QInputDialog.getItem(self,self.tr("Action"),self.tr("Select action."), items,0,False)
-				q=unicode(q)
+				#items=QtCore.QStringList()
+				#items.append(self.tr("Move"))
+				#items.append(self.tr("Copy"))
+				#q,b=QtGui.QInputDialog.getItem(self,self.tr("Action"),self.tr("Select action."), items,0,False)
+				#q=unicode(q)
+
+				contactMenu=QtGui.QMenu(self)
+				action=contactMenu.addAction(self.tr("Move to group"))
+				action.jid=jid
+				action.oldItem=oldItem
+				action.item=item
+				action.setObjectName("move_to_group_ng")
 				
-				if b==True and len(q)!=0:
-					index=int(items.indexOf(QtCore.QRegExp(q)))
-					if index==0:
-						name=unicode(self.main.client.roster['users'][jid].name)
-						contact=self.main.client.roster['users'][jid]
-						g=contact.groups
-						if len(g)!=0:
-							g.remove(unicode(self.groups[oldItem.group].name))
-						else:
-							for yy in self.getUserItems(contact.jid):
-								self.users.remove(yy)
-						self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g+[unicode(item.name)])
-					else:
-						self.changeGroup(jid,"+",unicode(item.name))
+				action=contactMenu.addAction(self.tr("Copy to group"))
+				action.jid=jid
+				action.item=item
+				action.setObjectName("copy_to_group_ng")
+				# signal
+				contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.dropMenuTriggered)
+				contactMenu.popup(self.mapToGlobal(position))
+
+				#if b==True and len(q)!=0:
+					#index=int(items.indexOf(QtCore.QRegExp(q)))
+					#if index==0:
+						#name=unicode(self.main.client.roster['users'][jid].name)
+						#contact=self.main.client.roster['users'][jid]
+						#g=contact.groups
+						#if len(g)!=0:
+							#g.remove(unicode(self.groups[oldItem.group].name))
+						#else:
+							#for yy in self.getUserItems(contact.jid):
+								#self.users.remove(yy)
+						#self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g+[unicode(item.name)])
+					#else:
+						#self.changeGroup(jid,"+",unicode(item.name))
 
 			# metacontact > normal user
 			elif oldItem.typ=="user" and oldItem.metajid!="" and item.typ=="user":
@@ -1522,60 +1537,145 @@ class rosterWidget(QtGui.QWidget):
 
 			# normal user > normal/meta user
 			elif oldItem.typ=="user" and item.typ=="user":
-				items=QtCore.QStringList()
-				items.append(self.tr("Move to group"))
-				items.append(self.tr("Make metacontact"))
-				items.append(self.tr("Copy to group"))
-				q,b=QtGui.QInputDialog.getItem(self,self.tr("Contact action"),self.tr("Select action."), items,0,False)
-				q=unicode(q)
-				if b==True and len(q)!=0:
-					index=int(items.indexOf(QtCore.QRegExp(q)))
+				#items=QtCore.QStringList()
+				#items.append(self.tr("Move to group"))
+				#items.append(self.tr("Make metacontact"))
+				#items.append(self.tr("Copy to group"))
+				#q,b=QtGui.QInputDialog.getItem(self,self.tr("Contact action"),self.tr("Select action."), items,0,False)
+				#q=unicode(q)
+				# build contact menu
+				contactMenu=QtGui.QMenu(self)
+				action=contactMenu.addAction(self.tr("Move to group"))
+				action.jid=jid
+				action.oldItem=oldItem
+				action.item=item
+				action.setObjectName("move_to_group_nn")
+				
+				action=contactMenu.addAction(self.tr("Make metacontact"))
+				action.item=item
+				action.oldItem=oldItem
+				action.setObjectName("make_metacontact_nn")
+				
+				action=contactMenu.addAction(self.tr("Copy to group"))
+				action.jid=jid
+				action.item=item
+				action.setObjectName("copy_to_group_nn")
+				# signal
+				contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.dropMenuTriggered)
+				contactMenu.popup(self.mapToGlobal(position))
 
-					if index==0:
-						name=unicode(self.main.client.roster['users'][jid].name)
-						contact=self.main.client.roster['users'][jid]
-						g=contact.groups
-						if len(g)!=0:
-							g.remove(unicode(self.groups[oldItem.group].name))
-						else:
-							for yy in self.getUserItems(contact.jid):
-								self.users.remove(yy)
-						self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g+[unicode(item.group)])
-					elif index==1:
-						if not self.metaItems.has_key(item.metajid):
-							item.metajid=item.jid
-							item.tag=item.jid
-							self.metaItems[item.metajid]=[]
-							self.main.client.roster_meta[item.jid]={'tag':item.tag,'order':10}
-							it=item.clone()
-							it.tag=item.tag
+				#if b==True and len(q)!=0:
+					#index=int(items.indexOf(QtCore.QRegExp(q)))
 
-							self.metaItems[item.metajid].append(it)
-						it=oldItem.clone()
-						it.tag=item.tag
+					#if index==0:
+						#name=unicode(self.main.client.roster['users'][jid].name)
+						#contact=self.main.client.roster['users'][jid]
+						#g=contact.groups
+						#if len(g)!=0:
+							#g.remove(unicode(self.groups[oldItem.group].name))
+						#else:
+							#for yy in self.getUserItems(contact.jid):
+								#self.users.remove(yy)
+						#self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g+[unicode(item.group)])
+					#elif index==1:
+						#if not self.metaItems.has_key(item.metajid):
+							#item.metajid=item.jid
+							#item.tag=item.jid
+							#self.metaItems[item.metajid]=[]
+							#self.main.client.roster_meta[item.jid]={'tag':item.tag,'order':10}
+							#it=item.clone()
+							#it.tag=item.tag
 
-						self.metaItems[item.metajid].append(it)
-						for i in self.getUserItems(oldItem.jid):
-							self.users.remove(i)
-						self.setHighest(item.metajid)
-						self.main.client.roster_meta[oldItem.jid]={'tag':item.tag,'order':1}
-						self.main.client.setMetacontacts()
+							#self.metaItems[item.metajid].append(it)
+						#it=oldItem.clone()
+						#it.tag=item.tag
+
+						#self.metaItems[item.metajid].append(it)
+						#for i in self.getUserItems(oldItem.jid):
+							#self.users.remove(i)
+						#self.setHighest(item.metajid)
+						#self.main.client.roster_meta[oldItem.jid]={'tag':item.tag,'order':1}
+						#self.main.client.setMetacontacts()
 						
-						self.sortItems()
-						if self.item!=item:
-							self.selectItem(item)
-						self.reshow=True
-						self.repaint()
+						#self.sortItems()
+						#if self.item!=item:
+							#self.selectItem(item)
+						#self.reshow=True
+						#self.repaint()
 
-					elif index==2:
-						self.changeGroup(jid,"+",unicode(item.group))
+					#elif index==2:
+						#self.changeGroup(jid,"+",unicode(item.group))
 			event.acceptProposedAction()
 			del self.data[event.mimeData()]
 		else:
 			event.ignore()
 
-	
-		
+	def dropMenuTriggered(self,action):
+		cmd=action.objectName()
+		if cmd=="move_to_group_nn":
+			jid=action.jid
+			oldItem=action.oldItem
+			item=action.item
+
+			name=unicode(self.main.client.roster['users'][jid].name)
+			contact=self.main.client.roster['users'][jid]
+			g=contact.groups
+			if len(g)!=0:
+				g.remove(unicode(self.groups[oldItem.group].name))
+			else:
+				for yy in self.getUserItems(contact.jid):
+					self.users.remove(yy)
+			self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g+[unicode(item.group)])
+		elif cmd=="make_metacontact_nn":
+			item=action.item
+			oldItem=action.oldItem
+			if not self.metaItems.has_key(item.metajid):
+				item.metajid=item.jid
+				item.tag=item.jid
+				self.metaItems[item.metajid]=[]
+				self.main.client.roster_meta[item.jid]={'tag':item.tag,'order':10}
+				it=item.clone()
+				it.tag=item.tag
+
+				self.metaItems[item.metajid].append(it)
+			it=oldItem.clone()
+			it.tag=item.tag
+
+			self.metaItems[item.metajid].append(it)
+			for i in self.getUserItems(oldItem.jid):
+				self.users.remove(i)
+			self.setHighest(item.metajid)
+			self.main.client.roster_meta[oldItem.jid]={'tag':item.tag,'order':1}
+			self.main.client.setMetacontacts()
+			
+			self.sortItems()
+			if self.item!=item:
+				self.selectItem(item)
+			self.reshow=True
+			self.repaint()
+
+		elif cmd=="copy_to_group_nn":
+			item=action.item
+			jid=action.jid
+			self.changeGroup(jid,"+",unicode(item.group))
+
+		elif cmd=="move_to_group_ng":
+			jid=action.jid
+			oldItem=action.oldItem
+			item=action.item
+			name=unicode(self.main.client.roster['users'][jid].name)
+			contact=self.main.client.roster['users'][jid]
+			g=contact.groups
+			if len(g)!=0:
+				g.remove(unicode(self.groups[oldItem.group].name))
+			else:
+				for yy in self.getUserItems(contact.jid):
+					self.users.remove(yy)
+			self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g+[unicode(item.name)])
+		elif cmd=="copy_to_group_ng":
+			item=action.item
+			jid=action.jid
+			self.changeGroup(jid,"+",unicode(item.name))
 
 	def makeHiddenItem(self):
 		pass
