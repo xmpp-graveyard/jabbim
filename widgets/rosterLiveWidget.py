@@ -1947,10 +1947,20 @@ class rosterWidget(QtGui.QWidget):
 		# separator
 		contactMenu.addSeparator()
 		# vcard
-		action=contactMenu.addAction(self.tr("vCard"))
-		action.setData(QtCore.QVariant(jid))
-		action.setObjectName("vcard")
-		action.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
+		if oneres:
+			action=contactMenu.addAction(QtGui.QIcon("images/16x16/categories/v-card.png"),self.tr("vCard"))
+			action.setData(QtCore.QVariant("%s/%s" % (jid, contact.resources.keys()[0])))
+			action.setObjectName("vcard")
+		else:		# Potrebujeme resource pro Software Version, vCard je na nem nezavisla
+			submenu=contactMenu.addMenu(QtGui.QIcon("images/16x16/categories/v-card.png"),self.tr("vCard"))
+			for res in contact.resources.keys():
+				if res != None:
+					action=submenu.addAction(res)
+					action.setData(QtCore.QVariant("%s/%s" %(jid,res)))
+					action.setObjectName("vcard")
+		#action=contactMenu.addAction(self.tr("vCard"))
+		#action.setData(QtCore.QVariant(jid))
+		#action.setObjectName("vcard")
 		# filetransfer
 		if oneres:
 			action=contactMenu.addAction(self.tr("Send file"))
