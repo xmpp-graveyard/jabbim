@@ -13,8 +13,12 @@ class vcardEditorDialog(QtGui.QDialog):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.setModal(True)
 		self.ui=Ui_VCardEdit()
-		self.ui.setupUi(self)
 		self.main=main
+		if jid != self.main.client.jid.full():
+			self.setWindowTitle(jid+" - "+self.tr("vCard"))
+		else:
+			self.setWindowTitle(self.tr("VCard Editor"))
+		self.ui.setupUi(self)
 		self.data=None
 
 		d=self.main.client.getVCard(jid)

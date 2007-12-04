@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/vcardeditor.ui'
 #
-# Created: Tue Nov 13 21:12:28 2007
-#      by: PyQt4 UI code generator 4.3
+# Created: Tue Dec  4 18:35:05 2007
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -162,7 +162,6 @@ class Ui_VCardEdit(object):
         VCardEdit.setTabOrder(self.pushButton_2,self.pushButton)
 
     def retranslateUi(self, VCardEdit):
-        VCardEdit.setWindowTitle(QtGui.QApplication.translate("VCardEdit", "VCard Editor", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_2.setText(QtGui.QApplication.translate("VCardEdit", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("VCardEdit", "Save", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("VCardEdit", "Full name:", None, QtGui.QApplication.UnicodeUTF8))
