@@ -91,8 +91,12 @@ class osd(QtGui.QWidget):
 		painter.setPen(p)
 
 	def mousePressEvent(self, event):
-		if event.button() == QtCore.Qt.LeftButton:
-			self.dragPosition = event.globalPos() - self.frameGeometry().topLeft()
+		if self.changingPos:
+			if event.button() == QtCore.Qt.LeftButton:
+				self.dragPosition = event.globalPos() - self.frameGeometry().topLeft()
+				event.accept()
+		else:
+			self.hide()
 			event.accept()
 	
 	def mouseMoveEvent(self, event):

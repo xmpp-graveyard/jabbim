@@ -1696,12 +1696,16 @@ class rosterWidget(QtGui.QWidget):
 		"""
 		ret=[]
 		for user in self.users:
-			if jidT.JID(user.jid).host==host:
-				ret.append(user)
+			j=self.main.getJid(user.jid)
+			if j:
+				if j.host==host:
+					ret.append(user)
 		for mainjid,users in self.metaItems.iteritems():
 			for user in users:
-				if jidT.JID(user.jid).host==host:
-					ret.append(user)
+				j=self.main.getJid(user.jid)
+				if j:
+					if j.host==host:
+						ret.append(user)
 		#print "HOSTITEMS:",ret
 		return ret
 

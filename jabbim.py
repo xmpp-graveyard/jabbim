@@ -1353,6 +1353,13 @@ class mainWindow(QtGui.QMainWindow):
 			self.regwiz.show()
 		return
 
+	def getJid(self,jid):
+		try:
+			jidt=jidT.JID(jid)
+		except:
+			return None
+		return jidt
+
 	def serviceDiscovery(self,b):
 		self.discovery=widgets.servicediscovery.serviceDiscoveryDialog(self,self)
 		self.discovery.show()
