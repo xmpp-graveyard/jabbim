@@ -68,8 +68,10 @@ class vcardEditorDialog(QtGui.QDialog):
 			self.ui.homecountry.setReadOnly(True)
 			self.ui.homepcode.setReadOnly(True)
 			self.ui.about.setReadOnly(True)
+			self.ui.homepage_edit.hide()
 		else:
 			QtCore.QObject.connect(self.ui.setAvatar, QtCore.SIGNAL("clicked()"),self.setAvatar)
+			self.ui.homepage_label.hide()
 	
 	def noVcard(self,data=None):
 		self.ui.download.setText(self.tr("Can't download vCard of this contact."))
@@ -82,6 +84,13 @@ class vcardEditorDialog(QtGui.QDialog):
 					self.ui.nickname.setText(unicode(x))
 				elif name=="FN":
 					self.ui.fullname.setText(unicode(x))
+				elif name=="URL":
+					if self.editable:
+						self.ui.homepage_edit.setText(unicode(x))
+					else:
+						ht = unicode(x)
+						ht = '<a href="%s">%s</a>' % (ht, ht)
+						self.ui.homepage_label.setText(ht)
 				elif name=="ADR":
 					typ=""
 					for y in x.elements():
@@ -172,6 +181,7 @@ class vcardEditorDialog(QtGui.QDialog):
 			homelocality=unicode(self.ui.homelocality.text())
 			homecountry=unicode(self.ui.homecountry.text())
 			homepcode=unicode(self.ui.homepcode.text())
+			url=unicode(self.ui.homepage_edit.text())
 
 			avatar=self.ui.avatar.pixmap()
 			n=False
@@ -192,6 +202,10 @@ class vcardEditorDialog(QtGui.QDialog):
 				elif name=="DESC" and about != None:
 					x.children = []
 					x.children.append(about)
+					about=None
+				elif name=="URL" and url != None:
+					x.children = []
+					x.children.append(url)
 					about=None
 
 				elif name=="ADR":
@@ -311,6 +325,9 @@ class vcardEditorDialog(QtGui.QDialog):
 			if about != None:
 				if len(about) != 0:
 					self.data.addElement('DESC', content = unicode(about))
+			if url != None:
+				if len(url) != 0:
+					self.data.addElement('URL', content = unicode(url))
 
 			#print unicode(self.data),type(self.data)
 			#print "NEW",unicode(self.data.toXml())
