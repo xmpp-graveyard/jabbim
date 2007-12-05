@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/vcardeditor.ui'
 #
-# Created: Tue Dec  4 20:05:54 2007
+# Created: Wed Dec  5 19:02:56 2007
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -137,41 +137,52 @@ class Ui_VCardEdit(object):
         self.gridlayout2.addWidget(self.label_6,0,0,1,1)
         self.tabWidget.addTab(self.tab_2,"")
 
+        self.tab_4 = QtGui.QWidget()
+        self.tab_4.setObjectName("tab_4")
+
+        self.gridlayout3 = QtGui.QGridLayout(self.tab_4)
+        self.gridlayout3.setObjectName("gridlayout3")
+
+        self.about = QtGui.QTextEdit(self.tab_4)
+        self.about.setObjectName("about")
+        self.gridlayout3.addWidget(self.about,0,0,1,1)
+        self.tabWidget.addTab(self.tab_4,"")
+
         self.tab_3 = QtGui.QWidget()
         self.tab_3.setObjectName("tab_3")
 
-        self.gridlayout3 = QtGui.QGridLayout(self.tab_3)
-        self.gridlayout3.setObjectName("gridlayout3")
+        self.gridlayout4 = QtGui.QGridLayout(self.tab_3)
+        self.gridlayout4.setObjectName("gridlayout4")
 
         self.ver_label_name = QtGui.QLabel(self.tab_3)
         self.ver_label_name.setObjectName("ver_label_name")
-        self.gridlayout3.addWidget(self.ver_label_name,0,0,1,1)
+        self.gridlayout4.addWidget(self.ver_label_name,0,0,1,1)
 
         self.ver_name = QtGui.QLineEdit(self.tab_3)
         self.ver_name.setReadOnly(True)
         self.ver_name.setObjectName("ver_name")
-        self.gridlayout3.addWidget(self.ver_name,0,1,1,1)
+        self.gridlayout4.addWidget(self.ver_name,0,1,1,1)
 
         self.ver_label_version = QtGui.QLabel(self.tab_3)
         self.ver_label_version.setObjectName("ver_label_version")
-        self.gridlayout3.addWidget(self.ver_label_version,1,0,1,1)
+        self.gridlayout4.addWidget(self.ver_label_version,1,0,1,1)
 
         self.ver_version = QtGui.QLineEdit(self.tab_3)
         self.ver_version.setReadOnly(True)
         self.ver_version.setObjectName("ver_version")
-        self.gridlayout3.addWidget(self.ver_version,1,1,1,1)
+        self.gridlayout4.addWidget(self.ver_version,1,1,1,1)
 
         self.ver_label_os = QtGui.QLabel(self.tab_3)
         self.ver_label_os.setObjectName("ver_label_os")
-        self.gridlayout3.addWidget(self.ver_label_os,2,0,1,1)
+        self.gridlayout4.addWidget(self.ver_label_os,2,0,1,1)
 
         self.ver_os = QtGui.QLineEdit(self.tab_3)
         self.ver_os.setReadOnly(True)
         self.ver_os.setObjectName("ver_os")
-        self.gridlayout3.addWidget(self.ver_os,2,1,1,1)
+        self.gridlayout4.addWidget(self.ver_os,2,1,1,1)
 
         spacerItem3 = QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout3.addItem(spacerItem3,3,1,1,1)
+        self.gridlayout4.addItem(spacerItem3,3,1,1,1)
         self.tabWidget.addTab(self.tab_3,"")
         self.gridlayout.addWidget(self.tabWidget,0,0,1,3)
 
@@ -214,6 +225,7 @@ class Ui_VCardEdit(object):
         self.label_7.setText(QtGui.QApplication.translate("VCardEdit", "Locality:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_6.setText(QtGui.QApplication.translate("VCardEdit", "Street:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("VCardEdit", "Home address", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QtGui.QApplication.translate("VCardEdit", "About", None, QtGui.QApplication.UnicodeUTF8))
         self.ver_label_name.setText(QtGui.QApplication.translate("VCardEdit", "Name:", None, QtGui.QApplication.UnicodeUTF8))
         self.ver_label_version.setText(QtGui.QApplication.translate("VCardEdit", "Version:", None, QtGui.QApplication.UnicodeUTF8))
         self.ver_label_os.setText(QtGui.QApplication.translate("VCardEdit", "Operating system:", None, QtGui.QApplication.UnicodeUTF8))

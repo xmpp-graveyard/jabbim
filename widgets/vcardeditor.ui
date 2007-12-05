@@ -243,6 +243,16 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_4" >
+      <attribute name="title" >
+       <string>About</string>
+      </attribute>
+      <layout class="QGridLayout" >
+       <item row="0" column="0" >
+        <widget class="QTextEdit" name="about" />
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tab_3" >
       <attribute name="title" >
        <string>Software info</string>

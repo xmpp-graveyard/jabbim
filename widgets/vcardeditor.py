@@ -11,7 +11,7 @@ from twisted.words.xish.domish import Element
 class vcardEditorDialog(QtGui.QDialog):
 	def __init__(self,main,jid,parent=None,editable=True):
 		apply(QtGui.QDialog.__init__,(self,parent))
-		self.setModal(True)
+		self.setModal(False)
 		self.ui=Ui_VCardEdit()
 		self.main=main
 		if jid not in [self.main.client.jid.full(), self.main.client.jid.userhost()]:
@@ -67,6 +67,7 @@ class vcardEditorDialog(QtGui.QDialog):
 			self.ui.homelocality.setReadOnly(True)
 			self.ui.homecountry.setReadOnly(True)
 			self.ui.homepcode.setReadOnly(True)
+			self.ui.about.setReadOnly(True)
 		else:
 			QtCore.QObject.connect(self.ui.setAvatar, QtCore.SIGNAL("clicked()"),self.setAvatar)
 	
@@ -100,6 +101,8 @@ class vcardEditorDialog(QtGui.QDialog):
 								self.ui.homecountry.setText(unicode(y))
 							elif child=="PCODE":
 								self.ui.homepcode.setText(unicode(y))
+				elif name == "DESC":
+					self.ui.about.setText(unicode(x))
 				else:
 					for y in x.elements():
 						child=unicode(y.name)
@@ -162,6 +165,7 @@ class vcardEditorDialog(QtGui.QDialog):
 			nickname=unicode(self.ui.nickname.text())
 			fullname=unicode(self.ui.fullname.text())
 			surname=unicode(self.ui.surname.text())
+			about=unicode(self.ui.about.toPlainText())
 
 			homeextadd=unicode(self.ui.homeextadd.text())
 			homestreet=unicode(self.ui.homestreet.text())
@@ -184,6 +188,11 @@ class vcardEditorDialog(QtGui.QDialog):
 					x.children = []
 					x.children.append(fullname)
 					fullname=None
+
+				elif name=="DESC" and about != None:
+					x.children = []
+					x.children.append(about)
+					about=None
 
 				elif name=="ADR":
 					typ=""
@@ -299,6 +308,9 @@ class vcardEditorDialog(QtGui.QDialog):
 			if fullname!=None:
 				if len(fullname)!=0:
 					self.data.addElement('FN',content = unicode(fullname))
+			if about != None:
+				if len(about) != 0:
+					self.data.addElement('DESC', content = unicode(about))
 
 			#print unicode(self.data),type(self.data)
 			#print "NEW",unicode(self.data.toXml())
