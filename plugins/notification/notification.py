@@ -7,6 +7,7 @@ import os
 sys.path.append('.')
 from include import plugins, utils
 import time
+from twisted.words.protocols.jabber import jid as jidT
 class osd(QtGui.QWidget):
 	def __init__(self,main,parent=None):
 		QtGui.QWidget.__init__(self,parent,QtCore.Qt.Window | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint | QtCore.Qt.CustomizeWindowHint)
@@ -202,6 +203,8 @@ class config:
 		self.config['osd_transparent']={'type':'boolean','label':self.main.tr("Use transparent background"),'value':'True','groupbox':self.main.tr('OSD')}
 		self.config['osd_time']={'type':'number-spin','label':self.main.tr("Display time (seconds):"),'value':'2','groupbox':self.main.tr('OSD')}
 		self.config['osd_on_presence']={'type':'boolean','label':self.main.tr("Use OSD for presences"),'value':'True','groupbox':self.main.tr('OSD')}
+		self.config['osd_on_message']={'type':'boolean','label':self.main.tr("Use OSD for messages"),'value':'True','groupbox':self.main.tr('OSD')}
+
 		self.config['osd_x']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD')}
 		self.config['osd_y']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD')}
 
@@ -342,7 +345,7 @@ class Plugin(plugins.PluginBase):
 			self.ico=True
 			self.main.tray.setIcon(self.trayIcon)
 
-	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay, error):
+	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay, error=None):
 		if body == None:
 			return
 		self.playsound('message')
@@ -374,6 +377,24 @@ class Plugin(plugins.PluginBase):
 				else:
 					print "pyco coe?"
 					self.playsound('message')
+		if self.config['osd_on_message']=="True":
+			print "osd"
+			jid=jidT.JID(frm)
+			user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
+			if len(user)==0:
+				user=self.main.ui.roster.getMetaItems(jid.userhost())
+				if len(user)!=0:
+					user=user[0]
+			if len(user)!=0:
+				#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
+				user=user[0].name
+			else:
+				user=unicode(jid.full())
+	
+			pixmap=self.main.getAvatar(jid.userhost().replace('/','%'),frame=False,size="64x64")
+			self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext))
+
+
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
 		if delay != None:
 			return

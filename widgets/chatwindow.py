@@ -278,6 +278,8 @@ class chatWindow(QtGui.QMainWindow):
 		
 
 		widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
+		if not widget:
+			return
 		widget.chat.unread=0
 		self.ui.chatTab.setTabText(index,widget.tabName)
 

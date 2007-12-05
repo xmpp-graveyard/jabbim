@@ -12,7 +12,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'ICQ auto responder'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'ICQ Responder'
-		self.version = '0.022'
+		self.version = '0.023'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.count = 0
@@ -29,7 +29,7 @@ class Plugin(plugins.PluginBase):
 	def buildRosterMenu(self):
 		menu=self.rosterMenu()
 		menu.addAction("Show count",self.showSlot)
-	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay):
+	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay,error=None):
 		if frm.find('icq')!=-1:
 			self.main.client.sendMessage(frm, self.config['message']['value'].replace('[JID]', self.main.client.jid.userhost()))
 			self.count = self.count +1
