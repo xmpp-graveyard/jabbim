@@ -107,7 +107,10 @@ class osd(QtGui.QWidget):
 		metrics=QtGui.QFontMetrics(self.f)
 		height=int(metrics.height())
 		width=int(metrics.width(text))
-		self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
+		if self.transparent:
+			self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
+		else:
+			self.desktop=QtGui.QPixmap()
 		self.leftPixmap=None
 		self.smallText=""
 		self.smallTextHeight=self.smallfont
@@ -123,7 +126,10 @@ class osd(QtGui.QWidget):
 		height=int(metrics.height())
 		width=int(metrics.width(text))
 		self.smallTextHeight=self.smallfont
-		self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
+		if self.transparent:
+			self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
+		else:
+			self.desktop=QtGui.QPixmap()
 		self.leftPixmap=None
 		self.smallText=""
 		if height<54:
@@ -171,7 +177,10 @@ class osd(QtGui.QWidget):
 		height2=int(metrics2.height())*len(t.split("\n"))
 		self.smallTextHeight=height2
 		self.smallText=text
-		self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
+		if self.transparent:
+			self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
+		else:
+			self.desktop=QtGui.QPixmap()
 		self.leftPixmap=leftPixmap
 
 
