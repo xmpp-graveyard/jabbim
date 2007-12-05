@@ -805,7 +805,13 @@ class clientClass(pyxl.client.Client):
 	def on_subscribe(self, frm,status):
 		#self.main.events.addSubscribeEvent(frm,status)
 		#if len(self.main.ui.roster.getUserItems(frm))==0 and len(self.main.ui.roster.getMetaItems(frm)):
-		self.main.events.addBooleanEvent(self._onSubscribe,[frm,status],self.main.client.sendPresence,[frm,None,status,None,'unsubscribed'],header=self.main.tr('Add contact?'),text=self.main.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
+		contact=self.roster['users'][frm]
+		subscription=contact.subscription
+		if subscription=='none':
+			self.main.events.addBooleanEvent(self._onSubscribe,[frm,status],self.main.client.sendPresence,[frm,None,status,None,'unsubscribed'],header=self.main.tr('Add contact?'),text=self.main.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
+		elif subscription=='to':
+			self.main.events.addBooleanEvent(self.sendPresence,[frm,None,status,None,'subscribed'],self.sendPresence,[frm,None,status,None,'unsubscribed'],header=self.main.tr('Authorize contact?'),text=self.main.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
+			#self.addBooleanEvent(self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],header=self.main.tr('Subscribe request'),text=self.main.tr('From:')+" "+unicode(jid),name=jid,typ="subscribe")
 		#else:
 			#self.main.events.addSubscribeEvent(frm,status)
 	def _onSubscribe(self,frm,status):

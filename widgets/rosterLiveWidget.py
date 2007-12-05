@@ -1949,7 +1949,11 @@ class rosterWidget(QtGui.QWidget):
 		# vcard
 		if oneres:
 			action=contactMenu.addAction(QtGui.QIcon("images/16x16/categories/v-card.png"),self.tr("vCard"))
-			action.setData(QtCore.QVariant("%s/%s" % (jid, contact.resources.keys()[0])))
+			resource=contact.resources.keys()
+			if len(resource)!=0:
+				action.setData(QtCore.QVariant("%s/%s" % (jid, resource[0])))
+			else:
+				action.setData(QtCore.QVariant("%s" % (jid)))
 			action.setObjectName("vcard")
 		else:		# Potrebujeme resource pro Software Version, vCard je na nem nezavisla
 			submenu=contactMenu.addMenu(QtGui.QIcon("images/16x16/categories/v-card.png"),self.tr("vCard"))
