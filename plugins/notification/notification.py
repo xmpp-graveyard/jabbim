@@ -10,7 +10,7 @@ import time
 from twisted.words.protocols.jabber import jid as jidT
 class osd(QtGui.QWidget):
 	def __init__(self,main,parent=None):
-		QtGui.QWidget.__init__(self,parent,QtCore.Qt.Window | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint | QtCore.Qt.CustomizeWindowHint)
+		QtGui.QWidget.__init__(self,parent,QtCore.Qt.Tool | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint | QtCore.Qt.CustomizeWindowHint)
 		self.timer=QtCore.QTimer()
 		QtCore.QObject.connect(self.timer,QtCore.SIGNAL("timeout()"),self.hide)
 		self.main=main
