@@ -1221,6 +1221,7 @@ class rosterWidget(QtGui.QWidget):
 			self.mouseDoubleClickEvent(event)
 		else:
 			if event.button() == QtCore.Qt.LeftButton:
+				self.oldItem=self.item
 				if item.typ=='group':
 					self.selectItem(item)
 				else:
@@ -1243,6 +1244,8 @@ class rosterWidget(QtGui.QWidget):
 		x=event.x()
 		y=event.y()
 		item=self.itemAt(x,y)
+		if self.item!=item:
+			item=self.oldItem
 		if item==None:
 			return QtGui.QWidget.mouseReleaseEvent(self,event)
 		if item.typ=='group' and item.main!='special':
