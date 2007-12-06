@@ -38,6 +38,12 @@ class osd(QtGui.QWidget):
 		g=QtGui.QApplication.desktop().screenGeometry()
 		self.screenWidth=int(g.width())
 		self.screenHeight=int(g.height())
+		
+		self.cl=QtGui.QPushButton(self)
+		self.cl.setIcon(QtGui.QIcon("images/icons/close.png"))
+		self.cl.setMaximumSize(16,16)
+		self.cl.setFlat(True)
+		QtCore.QObject.connect(self.cl,QtCore.SIGNAL("clicked()"),self.hide)
 
 	def paintEvent(self,event):
 		painter=QtGui.QPainter(self)
@@ -123,6 +129,7 @@ class osd(QtGui.QWidget):
 		self.setGeometry(int(self.main.config['osd_y']),int(self.main.config['osd_x']),width+20,height+10)
 		self.show()
 		self.setMouseTracking(True)
+		self.cl.hide()
 
 	def test(self,text="Notification test"):
 		self.text=text
@@ -200,6 +207,8 @@ class osd(QtGui.QWidget):
 		if osdy+height+height2+10>self.screenHeight:
 			self.osdY=self.screenHeight-(height+height2+10)-10
 		self.setGeometry(self.osdX,self.osdY,width+20,height+height2+10)
+		self.cl.setGeometry(self.width()-18,2,16,16)
+
 		self.show()
 		self.timer.start(int(self.main.config['osd_time'])*1000)
 		
@@ -390,7 +399,7 @@ class Plugin(plugins.PluginBase):
 				else:
 					print "pyco coe?"
 					self.playsound('message')
-		if self.config['osd_on_message']=="True":
+		if self.config['osd_on_message']=="True" and not self.main.chat.isActiveWindow():
 			print "osd"
 			jid=jidT.JID(frm)
 			user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
