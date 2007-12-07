@@ -382,6 +382,7 @@ class groupChatWidget(QtGui.QWidget):
 				log.msg("Unknown room feature: %s" % f)
 
 		self.ui.disco_info.setText(unicode(", ".join(features)))
+		self.ui.disco_info.hide()
 		log.msg("ROOM INFO RECEIVED")
 		log.msg(unicode(self.disco_features))
 		
