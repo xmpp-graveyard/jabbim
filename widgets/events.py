@@ -409,6 +409,13 @@ class events:
 			self.timer.start(500)
 		self.main.ui.roster.refreshEvents()
 
+	def getEvents(self,name,typ):
+		ret=[]
+		for event in self.events:
+			if event['type']==typ and event['name']==name:
+				ret.append(event)
+		return ret
+
 	def addEvent(self,name,typ,icon,widget,tooltip=''):
 		if icon==None:
 			iconName=""

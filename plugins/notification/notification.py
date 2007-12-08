@@ -44,6 +44,8 @@ class osd(QtGui.QWidget):
 		self.cl.setMaximumSize(16,16)
 		self.cl.setFlat(True)
 		QtCore.QObject.connect(self.cl,QtCore.SIGNAL("clicked()"),self.hide)
+		self.onClick=None
+		self.onClickDict=None
 
 	def paintEvent(self,event):
 		painter=QtGui.QPainter(self)
@@ -102,6 +104,8 @@ class osd(QtGui.QWidget):
 				self.dragPosition = event.globalPos() - self.frameGeometry().topLeft()
 				event.accept()
 		else:
+			if self.onClick!=None:
+				self.onClick(*self.onClickDict)
 			self.hide()
 			event.accept()
 	
@@ -149,9 +153,11 @@ class osd(QtGui.QWidget):
 		self.show()
 		self.timer.start(int(self.main.config['osd_time'])*1000)
 
-	def view(self,leftPixmap,headline,text):
+	def view(self,leftPixmap,headline,text,onClick=None,onClickDict=None):
 		t=int(time.time())
-		print t,self.started,self.dropTime
+		#print t,self.started,self.dropTime
+		self.onClick=onClick
+		self.onClickDict=onClickDict
 		if t<self.started+self.dropTime:
 			return
 		self.text=headline
@@ -414,8 +420,18 @@ class Plugin(plugins.PluginBase):
 				user=unicode(jid.full())
 	
 			pixmap=self.main.getAvatar(jid.userhost().replace('/','%'),frame=False,size="64x64")
-			self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext))
-
+			events=self.main.events.getEvents(unicode(jid.full()),'message')
+			print events
+			if len(events)!=0:
+				event=events[-1]
+				onClick=event['widget'].action
+				onClickDict=event['widget'].actionDict
+				print "onclick:",onClick
+				print "onclickdict:",onClickDict
+			else:
+				onClick=None
+				onClickDict=None
+			self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),onClick,onClickDict)
 
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
 		if delay != None:
