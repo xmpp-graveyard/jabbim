@@ -208,6 +208,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 	
 	def keyPressEvent(self,event):
 		key=event.key()
+		self.main.tabWord=None
 		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier):
 			if self.main.main.config['sendByCtrl']=="True":
 				self.main.sendButtonClicked()
@@ -262,7 +263,7 @@ class groupChatWidget(QtGui.QWidget):
 			self.ui.line=lineEditWidget(self,self)
 		self.ui.line.setAcceptRichText(False)
 		layout.addWidget(self.ui.line)
-
+		self.tabWord=None
 		#self.buttonGroup=QtGui.QButtonGroup(self.ui.logs)
 		##self.buttonGroup.setExclusive(True)
 		#self.ui.logsLayout=QtGui.QHBoxLayout(self.ui.logs)
@@ -778,19 +779,22 @@ class groupChatWidget(QtGui.QWidget):
 		newt=""
 		for word in text.split(" "):
 			if cur.position()>i and cur.position()<=i+1+len(word) and len(word)!=0:
-				text=word[0]
+				text=word
 				break
 			else:
 				newt=word+" "
 			i=i+1+len(word)
+		if not self.tabWord:
+			self.name_id=-1
+			self.tabWord=text
 		#text=unicode(cur.selectedText()).lower()
 		#text=text[0]
 		repeat=False
 		users=self.main.client.groupchats[self.jid].users.keys()
 		users.remove(self.nick)
-		print text
+		#print text
 		for i in range(len(users)):
-			if unicode(users[i]).lower()[0]==unicode(text).lower() and i>self.name_id:
+			if unicode(users[i]).lower()[:len(self.tabWord)]==unicode(self.tabWord).lower() and i>self.name_id:
 				#cur=self.ui.line.textCursor()
 				#cur.movePosition(QtGui.QTextCursor.End)
 				#self.ui.line.setTextCursor(cur)
@@ -818,9 +822,9 @@ class groupChatWidget(QtGui.QWidget):
 				self.ui.line.setTextCursor(cur)
 				self.name_id=i
 				return
-			if unicode(users[i]).lower()[:len(text)]==text:
-				repeat=True
+			#if unicode(users[i]).lower()[:len(text)]==text:
+				#repeat=True
 		self.name_id=-1
-		if repeat==True:
-			self.tabPressed()
+		#if repeat==True:
+		self.tabPressed()
 			
