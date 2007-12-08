@@ -351,14 +351,29 @@ class Plugin(plugins.PluginBase):
 				user=user[0]
 		if len(user)!=0:
 			#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
+			it=user[0]
 			user=user[0].name
+			
 		else:
+			it=None
 			user=unicode(jid.full())
 
 		pixmap=self.main.getAvatar(jid.userhost().replace('/','%'),frame=False,size="64x64")
 		if not status:
 			status=""
-		self.osd.view(pixmap,user+self.tr(" is now ")+self.main.status[unicode(show)],unicode(status))
+		self.osd.view(pixmap,user+self.tr(" is now ")+self.main.status[unicode(show)],unicode(status),self.addChatTab,[it,jid])
+
+	def addChatTab(self,item,jid):
+		if item:
+			res = self.main.client.roster['users'][item.jid].getHighestResource()
+			
+			if res==None:
+				self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+			else:
+				self.main.chat.addChatTab(item.jid+"/"+res,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+		else:
+			self.main.chat.addChatTab(jid.full(),jid.full(),self.main.getIcon(jid.userhost(),"offline",size="16x16"))
+		self.main.chat.activate()
 
 	#def startTrayBlink(self,icon="images/16x16/actions/message.png"):
 		#self.trayIcon=QtGui.QIcon(icon)
