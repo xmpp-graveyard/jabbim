@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sat Dec  8 20:54:05 2007
+# Created: Sat Dec  8 20:57:55 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -42,7 +42,7 @@ class Ui_MainWindow(object):
         self.line_2.setFrameShape(QtGui.QFrame.HLine)
         self.line_2.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_2.setObjectName("line_2")
-        self.gridlayout1.addWidget(self.line_2,7,0,1,1)
+        self.gridlayout1.addWidget(self.line_2,8,0,1,1)
 
         self.line = QtGui.QFrame(self.login)
         self.line.setFrameShape(QtGui.QFrame.HLine)
@@ -53,7 +53,7 @@ class Ui_MainWindow(object):
         self.login_logoLabel = QtGui.QLabel(self.login)
         self.login_logoLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.login_logoLabel.setObjectName("login_logoLabel")
-        self.gridlayout1.addWidget(self.login_logoLabel,12,0,1,1)
+        self.gridlayout1.addWidget(self.login_logoLabel,13,0,1,1)
 
         self.gridlayout2 = QtGui.QGridLayout()
         self.gridlayout2.setMargin(0)
@@ -75,7 +75,7 @@ class Ui_MainWindow(object):
         self.label_2 = QtGui.QLabel(self.login)
         self.label_2.setWordWrap(True)
         self.label_2.setObjectName("label_2")
-        self.gridlayout1.addWidget(self.label_2,8,0,1,1)
+        self.gridlayout1.addWidget(self.label_2,9,0,1,1)
 
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setMargin(0)
@@ -125,7 +125,7 @@ class Ui_MainWindow(object):
 
         spacerItem6 = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.hboxlayout2.addItem(spacerItem6)
-        self.gridlayout1.addLayout(self.hboxlayout2,9,0,1,1)
+        self.gridlayout1.addLayout(self.hboxlayout2,10,0,1,1)
 
         self.hboxlayout3 = QtGui.QHBoxLayout()
         self.hboxlayout3.setMargin(0)
@@ -185,7 +185,7 @@ class Ui_MainWindow(object):
         self.label = QtGui.QLabel(self.login)
         self.label.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
         self.label.setObjectName("label")
-        self.gridlayout1.addWidget(self.label,11,0,1,1)
+        self.gridlayout1.addWidget(self.label,12,0,1,1)
 
         self.login_headerLabel = QtGui.QLabel(self.login)
         self.login_headerLabel.setAlignment(QtCore.Qt.AlignCenter)
@@ -194,6 +194,11 @@ class Ui_MainWindow(object):
 
         spacerItem7 = QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
         self.gridlayout1.addItem(spacerItem7,6,0,1,1)
+
+        self.login_headerLabel_2 = QtGui.QLabel(self.login)
+        self.login_headerLabel_2.setAlignment(QtCore.Qt.AlignCenter)
+        self.login_headerLabel_2.setObjectName("login_headerLabel_2")
+        self.gridlayout1.addWidget(self.login_headerLabel_2,7,0,1,1)
         self.rosterStackedWidget.addWidget(self.login)
 
         self.roster = QtGui.QWidget()
@@ -460,6 +465,10 @@ class Ui_MainWindow(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:13pt; font-weight:600;\">Connect</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.login_headerLabel_2.setText(QtGui.QApplication.translate("MainWindow", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        "p, li { white-space: pre-wrap; }\n"
+        "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
+        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\';\"><span style=\" font-size:13pt; font-weight:600;\">Register</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.toggleInvisible.setToolTip(QtGui.QApplication.translate("MainWindow", "Toggle Invisibility", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Here you can change your status", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setToolTip(QtGui.QApplication.translate("MainWindow", "You can show/hide contats that are unavailable", None, QtGui.QApplication.UnicodeUTF8))
