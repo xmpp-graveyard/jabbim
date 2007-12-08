@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sat Dec  8 20:57:55 2007
+# Created: Sat Dec  8 21:05:28 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,335,536).size()).expandedTo(MainWindow.minimumSizeHint()))
+        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,335,746).size()).expandedTo(MainWindow.minimumSizeHint()))
         MainWindow.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.centralwidget = QtGui.QWidget(MainWindow)
@@ -51,9 +51,10 @@ class Ui_MainWindow(object):
         self.gridlayout1.addWidget(self.line,1,0,1,1)
 
         self.login_logoLabel = QtGui.QLabel(self.login)
+        self.login_logoLabel.setPixmap(QtGui.QPixmap("images/logo.png"))
         self.login_logoLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.login_logoLabel.setObjectName("login_logoLabel")
-        self.gridlayout1.addWidget(self.login_logoLabel,13,0,1,1)
+        self.gridlayout1.addWidget(self.login_logoLabel,14,0,1,1)
 
         self.gridlayout2 = QtGui.QGridLayout()
         self.gridlayout2.setMargin(0)
@@ -182,23 +183,24 @@ class Ui_MainWindow(object):
         self.hboxlayout3.addLayout(self.vboxlayout1)
         self.gridlayout1.addLayout(self.hboxlayout3,3,0,1,1)
 
-        self.label = QtGui.QLabel(self.login)
-        self.label.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
-        self.label.setObjectName("label")
-        self.gridlayout1.addWidget(self.label,12,0,1,1)
-
         self.login_headerLabel = QtGui.QLabel(self.login)
         self.login_headerLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.login_headerLabel.setObjectName("login_headerLabel")
         self.gridlayout1.addWidget(self.login_headerLabel,0,0,1,1)
 
-        spacerItem7 = QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout1.addItem(spacerItem7,6,0,1,1)
-
         self.login_headerLabel_2 = QtGui.QLabel(self.login)
         self.login_headerLabel_2.setAlignment(QtCore.Qt.AlignCenter)
         self.login_headerLabel_2.setObjectName("login_headerLabel_2")
         self.gridlayout1.addWidget(self.login_headerLabel_2,7,0,1,1)
+
+        spacerItem7 = QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout1.addItem(spacerItem7,13,0,1,1)
+
+        self.widget = QtGui.QWidget(self.login)
+        self.widget.setMinimumSize(QtCore.QSize(0,10))
+        self.widget.setMaximumSize(QtCore.QSize(16777215,10))
+        self.widget.setObjectName("widget")
+        self.gridlayout1.addWidget(self.widget,6,0,1,1)
         self.rosterStackedWidget.addWidget(self.login)
 
         self.roster = QtGui.QWidget()
