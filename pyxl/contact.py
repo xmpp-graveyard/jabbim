@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 class Contact:
-	def __init__(self, client, jid, name, subscription, items=[], groups = [], status = (),  tag = None,  order = 1):
+	def __init__(self, client, jid, name, subscription, items=[], groups = [], status = (),  tag = None,  order = 1, ask = None):
 		self.jid = jid
 		self.name = name
 		self.subscription = subscription
@@ -33,6 +33,7 @@ class Contact:
 		self.vcard = {}
 		self.avatar_file = ''
 		self.avatar_hash = ''
+		self.ask = ask
 
 
 	def setStatus(self, resource, show, status):

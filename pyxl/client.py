@@ -351,6 +351,10 @@ class Client(derived):
 					else:
 						name = ''
 					subscription = ''
+					if item.hasAttribute('ask'):
+						ask = item['ask']
+					else:
+						ask = None
 					if item.hasAttribute('subscription'):
 						subscription = item['subscription']
 					if subscription == 'remove'  and self.roster['users'].has_key(itemjid):
@@ -362,7 +366,7 @@ class Client(derived):
 						rosterItems=[]
 						#if len(groups)==0:
 							# add user item to Unknown group
-						contact = Contact(self, itemjid, name, subscription, rosterItems, groups)
+						contact = Contact(self, itemjid, name, subscription, rosterItems, groups, ask = ask)
 						self.roster['users'][itemjid] = contact
 						self.reactor.callFromThread(self.on_rosterAddUser,contact)
 							#rosterItems.append(self.main._addUser(itemjid,name,self.roster['groups']['Unknown']))
@@ -564,13 +568,17 @@ class Client(derived):
 						name = item['name']
 					else:
 						name = ''
+					if item.hasAttribute('ask'):
+						ask = item['ask']
+					else:
+						ask = None
 					#print item['jid'],groups
 					tag = None
 					order = 1
 					if self.roster_meta.has_key(item['jid']):
 						tag = self.roster_meta[item['jid']]['tag']
 						order = self.roster_meta[item['jid']]['order']
-					contact = Contact(self, item['jid'], name, item['subscription'], [], groups, tag =  tag, order =  order)
+					contact = Contact(self, item['jid'], name, item['subscription'], [], groups, tag =  tag, order =  order, ask = ask)
 					self.roster['users'][item['jid']] = contact
 					self.reactor.callFromThread(self.on_rosterAddUser,contact)
 		
