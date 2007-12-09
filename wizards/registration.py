@@ -53,6 +53,7 @@ def createFirstPage(wizard):
 	wizard.serverComboBox.addItems(QtCore.QStringList([wizard.tr("Choose server")]+servers))
 	wizard.serverComboBox.setEditable(True)
 	QtCore.QObject.connect(wizard.serverComboBox,QtCore.SIGNAL("activated ( const QString & )"),wizard.serverComboBoxActivated)
+	QtCore.QObject.connect(wizard.serverComboBox,QtCore.SIGNAL("editTextChanged ( const QString & )"),wizard.serverComboBoxActivated)
 	QtCore.QObject.connect(wizard.nicknameLineEdit,QtCore.SIGNAL("textEdited ( const QString & )"),wizard.nicknameChanged)
 	
 	layout=QtGui.QGridLayout()
@@ -69,8 +70,7 @@ def createFirstPage(wizard):
 	layout.addWidget(label2,6,0,1,2)
 	layout.addWidget(QtGui.QLabel(wizard.trUtf8("Vaše Jabber ID:")),7,0,1,1)
 	layout.addWidget(wizard.jidLabel,7,1,1,1)
-	
-	page.registerField("server*",wizard.serverComboBox)
+	page.registerField("server",wizard.serverComboBox)
 	page.registerField("nickname*",wizard.nicknameLineEdit)
 	page.registerField("password*",passwordLineEdit)
 	page.registerField("password2*",password2LineEdit)

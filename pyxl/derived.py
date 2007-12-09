@@ -71,6 +71,8 @@ class derived:
 		pass
 	def on_subscribed(self, kdo):
 		pass
+	def on_unavailable(self,frm):
+		pass
 	
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
 		pass

@@ -762,7 +762,13 @@ class clientClass(pyxl.client.Client):
 		#for name in toDel:
 			#del self.roster['groups'][name]
 
+	def on_unsubscribe(self,jid):
+		print "unsubscribe"
+		
+
 	def on_unsubscribed(self,jid):
+		print "unsubscribed"
+
 		jid=jidT.JID(jid)
 		user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
 		if len(user)==0:
@@ -775,7 +781,8 @@ class clientClass(pyxl.client.Client):
 		else:
 			user=unicode(jid.full())
 		jid=unicode(jid.full())
-		self.main.events.addBooleanEvent(self.on_DeleteContact,[jid],None,[],self.main.tr("Remove contact?"),jid+self.main.tr(" removed you from his/her contact list. Do you want to remove him/her too?"),height=80,name=jid,typ="unsubcsribe",icon=None)
+		self.main.events.addBooleanEvent(self.delContact,[jid],None,[],self.main.tr("Remove contact?"),jid+self.main.tr(" removed your authorization. You won't see his status. Do you want to remove him/her from your contact list?"),height=100,name=jid,typ="unsubcsribed",icon=None)
+
 
 	def on_DeleteContact(self,jid):
 		# delete contact from roster
@@ -805,24 +812,26 @@ class clientClass(pyxl.client.Client):
 	def on_subscribe(self, frm,status):
 		#self.main.events.addSubscribeEvent(frm,status)
 		#if len(self.main.ui.roster.getUserItems(frm))==0 and len(self.main.ui.roster.getMetaItems(frm)):
-		contact=self.roster['users'][frm]
-		ask=contact.ask
-		print "ASK:",ask
-		print "ASK:",self.roster['users']['hanzz@njs.netlab.cz'].ask
-		
-		if ask=='subscribe':
-			self.main.events.addBooleanEvent(self._onSubscribe,[frm,status],self.main.client.sendPresence,[frm,None,status,None,'unsubscribed'],header=self.main.tr('Add contact?'),text=self.main.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
-		#elif subscription=='to':
-		else:
+		if self.roster['users'].has_key(frm):
+			#contact=self.roster['users'][frm]
+			#ask=contact.ask
+			#print "ASK:",ask
+			
+			#if ask=='subscribe':
+				#self.main.events.addBooleanEvent(self._onSubscribe,[frm,status],self.main.client.sendPresence,[frm,None,status,None,'unsubscribed'],header=self.main.tr('Add contact?'),text=self.main.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
+			#else:
 			self.main.events.addBooleanEvent(self.sendPresence,[frm,None,status,None,'subscribed'],self.sendPresence,[frm,None,status,None,'unsubscribed'],header=self.main.tr('Authorize contact?'),text=self.main.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
-			#self.addBooleanEvent(self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],header=self.main.tr('Subscribe request'),text=self.main.tr('From:')+" "+unicode(jid),name=jid,typ="subscribe")
-		#else:
-			#self.main.events.addSubscribeEvent(frm,status)
-	def _onSubscribe(self,frm,status):
+				#self.addBooleanEvent(self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],header=self.main.tr('Subscribe request'),text=self.main.tr('From:')+" "+unicode(jid),name=jid,typ="subscribe")
+			#else:
+				#self.main.events.addSubscribeEvent(frm,status)
+		else:
+			self.main.events.addBooleanEvent(self._onSubscribe,[frm,status,True],self.main.client.sendPresence,[frm,None,status,None,'unsubscribed'],header=self.main.tr('Add contact?'),text=self.main.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
+
+	def _onSubscribe(self,frm,status,add=False):
 		#def __init__(self,main,parent=None,jid="",group=None,name="",add=True):
-		self.sendPresence(frm,None,status,None,'subscribed')
-		dialog=widgets.addcontact.addContactDialog(self.main,self.main,jid=frm,group="",name=frm.split('@')[0],add=False)
+		dialog=widgets.addcontact.addContactDialog(self.main,self.main,jid=frm,group="",name=frm.split('@')[0],add=add)
 		dialog.exec_()
+		self.sendPresence(frm,None,status,None,'subscribed')
 
 
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):

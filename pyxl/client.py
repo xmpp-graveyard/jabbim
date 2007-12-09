@@ -234,6 +234,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/presence[@type='subscribed']", self.onSubscribed, 1)
 		self.xmlstream.addObserver("/presence[@type='unsubscribed']", self.onUnSubscribed, 1)
 		self.xmlstream.addObserver("/presence[@type='error']", self.onPresenceError, 1)
+		#self.xmlstream.addObserver("/presence[@type='unavailable']", self.onUnavailable, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:version']", self.onVersion, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#info']", self.onDiscoInfo, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#items']", self.onDiscoItems, 1) 
@@ -684,6 +685,10 @@ class Client(derived):
 			if child.name == 'status':
 				status = unicode(child)
 		self.on_subscribe(el['from'], status)
+
+	def onUnavailable(self, el):
+		log.msg( 'on subscribed')
+		self.on_unavailable(el['from'])
 
 	def onSubscribed(self, el):
 		log.msg( 'on subscribed')
