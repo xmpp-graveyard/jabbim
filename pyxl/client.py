@@ -715,7 +715,7 @@ class Client(derived):
 		frm = jid.JID(el['from'])
 		fromjid = frm.userhost()
 		resource = frm.resource
-
+		print "PRESENCE"
 		show = status = priority = typ = affiliation = role = truejid = hash = error = None
 		codes = []
 		if el.hasAttribute('type'):
@@ -801,6 +801,8 @@ class Client(derived):
 		elif el.hasAttribute('type'):
 			if el['type'] =='unavailable':
 				show = 'offline'
+			else:
+				return
 		if self.roster['users'].has_key(fromjid):
 			first = self.roster['users'][unicode(fromjid)].setStatus(resource, show,status)
 			if self.roster['users'][fromjid].resources.has_key(resource):
