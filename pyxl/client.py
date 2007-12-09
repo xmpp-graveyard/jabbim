@@ -504,8 +504,7 @@ class Client(derived):
 
 	def addContact(self, jid, msg, name='', groups=[]):
 		log.msg( 'add contact')
-		self.sendPresence(to = jid, status = msg, typ = 'subscribe')
-		#self.sendRosterUpdate(jid, name, 'none', groups, self._contactAdded, params = {'msg':msg, 'jid':jid})
+		self.sendRosterUpdate(jid, name, 'none', groups, self._contactAdded, params = {'msg':msg, 'jid':jid})
 	
 	def _contactAdded(self, params):
 		self.sendPresence(to = params['jid'], status = params['msg'], typ = 'subscribe')
