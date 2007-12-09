@@ -504,7 +504,8 @@ class Client(derived):
 
 	def addContact(self, jid, msg, name='', groups=[]):
 		log.msg( 'add contact')
-		self.sendRosterUpdate(jid, name, 'none', groups, self._contactAdded, params = {'msg':msg, 'jid':jid})
+		self.sendPresence(to = params['jid'], status = params['msg'], typ = 'subscribe')
+		#self.sendRosterUpdate(jid, name, 'none', groups, self._contactAdded, params = {'msg':msg, 'jid':jid})
 	
 	def _contactAdded(self, params):
 		self.sendPresence(to = params['jid'], status = params['msg'], typ = 'subscribe')
@@ -572,6 +573,7 @@ class Client(derived):
 						ask = item['ask']
 					else:
 						ask = None
+					#print "PYXL ASK:",ask
 					#print item['jid'],groups
 					tag = None
 					order = 1
