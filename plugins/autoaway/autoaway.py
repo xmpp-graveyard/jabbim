@@ -140,7 +140,7 @@ class Plugin(plugins.PluginBase):
 			self.log = False
 			#self.registerHandler('onInactivity', self.on_idle, priority=4)
 			#self.registerHandler('onActivity', self.on_active, priority=4)
-			if sys.platform == 'linux2':
+			if sys.platform == 'win32':
 				self.thread=autoAwayThread(self)
 			else:
 				self.thread=autoAwayThreadWin(self)
