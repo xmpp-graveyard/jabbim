@@ -948,7 +948,7 @@ class clientClass(pyxl.client.Client):
 				elif not self.main.chat.isActiveWindow():
 					self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()],tooltip=self.main.tr("New message from ")+unicode(user))
 					#if int(self.main.chat.ui.chatTab.currentIndex())==tabIndex:
-					self.main.chat.setWindowTitle(tab.tabName.replace("&","")+" ("+str(int(self.main.chat.getUnreadMessages())+1)+")")
+					self.main.chat.setWindowTitle("("+str(int(self.main.chat.getUnreadMessages())+1)+") "+tab.tabName.replace("&",""))
 					tab.chat.unread+=1
 				else:
 					color=self.main.chat.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
