@@ -89,7 +89,7 @@ class autoAwayThreadWin(QtCore.QThread):
 			#xss.XScreenSaverAllocInfo.restype = ctypes.POINTER(XScreenSaverInfo)
 			#xss_info = xss.XScreenSaverAllocInfo()
 			#xss.XScreenSaverQueryInfo( dpy, root, xss_info)
-			GetLastInputInfo(byref(lastInputInfo))
+			GetLastInputInfo(ctypes.byref(lastInputInfo))
 			idleDelta = int(GetTickCount() - lastInputInfo.dwTime)
 			if int(idleDelta)>awayTime and idleDelta<awayTime+1000:
 				self.emit(QtCore.SIGNAL("setAway()"))
