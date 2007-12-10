@@ -2141,6 +2141,7 @@ class mainWindow(QtGui.QMainWindow):
 		if size!="auto":
 			x=int(size.split('x')[0])
 			y=int(size.split('x')[1])
+		
 		if frame and size!='auto':
 			if size=="128x128":
 				avatar=icon.pixmap(100,100)
@@ -2157,7 +2158,10 @@ class mainWindow(QtGui.QMainWindow):
 	
 			result=QtGui.QPixmap(x,y)
 			result.fill(QtCore.Qt.transparent)
-			frame=QtGui.QPixmap("images/"+str(size)+"/frame.png")
+			if os.path.exists("themes/"+self.config['theme']+"/frame-"+str(size)+".png"):
+				frame=QtGui.QPixmap("themes/"+self.config['theme']+"/frame-"+str(size)+".png")
+			else:
+				frame=QtGui.QPixmap("images/"+str(size)+"/frame.png")
 			painter=QtGui.QPainter(result)
 			painter.drawPixmap((x-avatar.width())/2,(y-avatar.height())/2,avatar)
 			painter.drawPixmap(0,0,frame)
