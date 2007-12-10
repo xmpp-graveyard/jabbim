@@ -76,7 +76,7 @@ class autoAwayThreadWin(QtCore.QThread):
 		GetTickCount = ctypes.windll.kernel32.GetTickCount
 		GetLastInputInfo = ctypes.windll.user32.GetLastInputInfo
 		lastInputInfo = LASTINPUTINFO()
-		lastInputInfo.cbSize = sizeof(lastInputInfo)
+		lastInputInfo.cbSize = ctypes.sizeof(lastInputInfo)
 #for i in range(10):
     #GetLastInputInfo(byref(lastInputInfo))
     #idleDelta = float(GetTickCount() - lastInputInfo.dwTime) / 1000
