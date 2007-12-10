@@ -529,7 +529,7 @@ class rosterWidget(QtGui.QWidget):
 
 	def getGroupUsers(self,group):
 		"""
-		get all user items from `group`
+		get user items according to show online from `group`
 		@type group: unicode
 		@rtype: list
 		@return: list of userItem
@@ -542,6 +542,13 @@ class rosterWidget(QtGui.QWidget):
 			else:
 				if user.group==group and not user.hidden:
 					ret.append(user)
+		return ret
+
+	def getAllGroupUsers(self,group):
+		ret=[]
+		for user in self.users:
+			if user.group==group:
+				ret.append(user)
 		return ret
 
 	def getGroupSortedUsers(self,group):
@@ -2122,7 +2129,7 @@ class rosterWidget(QtGui.QWidget):
 			group=unicode(group)
 			# if user set new name of group
 			if b==True and len(group)!=0:
-				for item in self.getGroupUsers(name):
+				for item in self.getAllGroupUsers(name):
 					jid=item.jid
 					contact=self.main.client.roster['users'][jid]
 					for count in range(self.main.client.roster['users'][jid].groups.count(name)):
@@ -2132,7 +2139,7 @@ class rosterWidget(QtGui.QWidget):
 		elif cmd=="remove_group":
 			name=action.data()
 			name=str(name.toString())
-			for item in self.getGroupUsers(name):
+			for item in self.getAllGroupUsers(name):
 				jid=item.jid
 				contact=self.main.client.roster['users'][jid]
 				g=contact.groups
