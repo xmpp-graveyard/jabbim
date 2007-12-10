@@ -141,9 +141,10 @@ class Plugin(plugins.PluginBase):
 			#self.registerHandler('onInactivity', self.on_idle, priority=4)
 			#self.registerHandler('onActivity', self.on_active, priority=4)
 			if sys.platform == 'win32':
-				self.thread=autoAwayThread(self)
-			else:
 				self.thread=autoAwayThreadWin(self)
+			else:
+				self.thread=autoAwayThread(self)
+
 			QtCore.QObject.connect(self.thread, QtCore.SIGNAL("setAway()"), self.setAway,QtCore.Qt.QueuedConnection)
 			QtCore.QObject.connect(self.thread, QtCore.SIGNAL("setOnline()"), self.setOnline,QtCore.Qt.QueuedConnection)
 			self.thread.start()
