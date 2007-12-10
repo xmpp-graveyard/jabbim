@@ -34,6 +34,7 @@ from twisted.python import log
 import dataforms
 from twisted.words.xish import domish
 #from twisted.web.microdom import *
+import traceback
 
 class pluginConfiguration(QtGui.QDialog):
 	def __init__(self,plugin,parent):
@@ -401,6 +402,8 @@ class preferencesWindow(QtGui.QDialog):
 				plug = load_source(plugin, path, f).Plugin(False,self.main.homeDir)
 			except Exception, ex:
 				log.msg(plugin+': CHYBA PRI NAHRAVANI => SPATNA SYNTAXE V PLUGINU!')
+				message = unicode(traceback.format_exc())
+				print message
 				f.close()
 				continue
 			
@@ -453,6 +456,7 @@ class preferencesWindow(QtGui.QDialog):
 		dialog.exec_()
 		if self.main.plugins.has_key(name):
 			self.main.plugins[name].config=self.plugins[name].config
+			self.main.plugins[name].on_configChanged()
 
 	def pluginsContextMenuTriggered(self,action):
 		cmd=action.objectName()
@@ -464,6 +468,7 @@ class preferencesWindow(QtGui.QDialog):
 			dialog.exec_()
 		if self.main.plugins.has_key(name):
 			self.main.plugins[name].config=self.plugins[name].config
+			self.main.plugins[name].on_configChanged()
 
 
 

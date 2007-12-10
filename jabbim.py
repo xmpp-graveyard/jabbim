@@ -58,6 +58,7 @@ from os.path import basename
 from twisted.words.protocols.jabber.xmlstream import IQ
 from twisted.words.xish.domish import Element
 from twisted.words.protocols.jabber import jid as jidT
+import ctypes
 
 class clientClass(pyxl.client.Client):
 

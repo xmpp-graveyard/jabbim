@@ -83,6 +83,9 @@ class PluginBase:
 		wid=QtGui.QDialog(parent)
 		return self.loadUi(file,parent,wid)
 
+	def on_configChanged(self):
+		pass
+
 	def installTranslator(self):
 		self.translator=QtCore.QTranslator()
 		directory=u"%s/plugins/%s/"%(self.homeDir, self.fname)
@@ -90,6 +93,8 @@ class PluginBase:
 		log.msg("trying to load localization file "+ directory+unicode(QtCore.QLocale.system().name())[:2]+".qm")
 
 	def tr(self,text):
+		if not self.translator:
+			return text
 		trans=self.translator.translate("Plugin",text)
 		if len(trans)==0:
 			return text
@@ -123,7 +128,7 @@ class PluginBase:
 				#try:
 					#self.config[k]['value'] = self.confObj[k]
 				#except:
-				if not self.config.has_key(k):
+				if not self.config.has_key(k) and not k.startswith("__"):
 					self.config[k] = v['value']
 					#self.confObj[k] = self.config[k]['default']
 					self.config.write()
@@ -138,7 +143,11 @@ class PluginBase:
 		self.main.client.dispatcher.registerHandler(name, method, self.name, priority = priority)
 		self.handlers.append(name)
 	
+	def on_remove(self):
+		pass
+	
 	def remove(self):
+		self.on_remove()
 		self.writeConfig()
 		for handler in self.handlers:
 			self.main.client.dispatcher.unregisterHandler(handler, self.name)
