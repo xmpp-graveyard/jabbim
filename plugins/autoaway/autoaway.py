@@ -54,6 +54,57 @@ class autoAwayThread(QtCore.QThread):
 				if not threadRun:
 					break
 
+class LASTINPUTINFO(ctypes.Structure):
+	_fields_ = [("cbSize", ctypes.c_uint),
+				("dwTime", ctypes.c_uint)]
+
+
+class autoAwayThreadWin(QtCore.QThread):
+	def __init__(self,main):
+		QtCore.QThread.__init__(self,None)
+		self.main=main
+
+	def run(self):
+		locker = QtCore.QMutexLocker(mutex)
+		config=self.main.config
+		threadRun=True
+		#xlib = ctypes.cdll.LoadLibrary(find_library("X11"))
+		#dpy = xlib.XOpenDisplay( os.environ['DISPLAY'])
+		#root = xlib.XDefaultRootWindow( dpy)
+		#xss = ctypes.cdll.LoadLibrary(find_library("Xss"))
+		
+		GetTickCount = ctypes.windll.kernel32.GetTickCount
+		GetLastInputInfo = ctypes.windll.user32.GetLastInputInfo
+		lastInputInfo = LASTINPUTINFO()
+		lastInputInfo.cbSize = sizeof(lastInputInfo)
+#for i in range(10):
+    #GetLastInputInfo(byref(lastInputInfo))
+    #idleDelta = float(GetTickCount() - lastInputInfo.dwTime) / 1000
+    #print "Last input event was %.2f seconds ago." % idleDelta
+    #time.sleep(1)
+		
+		status="online"
+		while threadRun:
+			awayTime=int(self.main.config['awayTime'])*60000
+			#xss.XScreenSaverAllocInfo.restype = ctypes.POINTER(XScreenSaverInfo)
+			#xss_info = xss.XScreenSaverAllocInfo()
+			#xss.XScreenSaverQueryInfo( dpy, root, xss_info)
+			GetLastInputInfo(byref(lastInputInfo))
+			idleDelta = int(GetTickCount() - lastInputInfo.dwTime)
+			if int(idleDelta)>awayTime and idleDelta<awayTime+1000:
+				self.emit(QtCore.SIGNAL("setAway()"))
+				status="away"
+			elif int(idleDelta)<1000 and status!="online":
+				self.emit(QtCore.SIGNAL("setOnline()"))
+				status="online"
+
+			#print "Idle time in milliseconds: %d" % ( xss_info.contents.idle)
+			for i in range(2):
+				time.sleep(0.5)
+				threadRun=self.main.threadRun
+				if not threadRun:
+					break
+
 class config:
 	def __init__(self,main):
 		self.main=main
@@ -89,8 +140,10 @@ class Plugin(plugins.PluginBase):
 			self.log = False
 			#self.registerHandler('onInactivity', self.on_idle, priority=4)
 			#self.registerHandler('onActivity', self.on_active, priority=4)
-			
-			self.thread=autoAwayThread(self)
+			if sys.platform == 'linux2':
+				self.thread=autoAwayThread(self)
+			else:
+				self.thread=autoAwayThreadWin(self)
 			QtCore.QObject.connect(self.thread, QtCore.SIGNAL("setAway()"), self.setAway,QtCore.Qt.QueuedConnection)
 			QtCore.QObject.connect(self.thread, QtCore.SIGNAL("setOnline()"), self.setOnline,QtCore.Qt.QueuedConnection)
 			self.thread.start()
