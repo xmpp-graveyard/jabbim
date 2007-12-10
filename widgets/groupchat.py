@@ -164,7 +164,7 @@ class textView(QtGui.QTextEdit):
 		#print unicode(text)
 
 		self.data.append(QtCore.QMimeData())
-		self.data[-1].setText(unicode(text))
+		self.data[-1].setText(unicode(text).replace("&gt;",">").replace("&lt;","<").replace("&amp;","&").replace("&quot;","\""))
 		return self.data[-1]
 
 class lineEditWidget(QtGui.QTextEdit):
