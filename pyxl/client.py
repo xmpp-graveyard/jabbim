@@ -1035,7 +1035,7 @@ class Client(derived):
 		iq['id'] = el['id']
 		q = iq.addElement('query','jabber:iq:last')
 		if self.last > 0:
-			q['seconds'] = self.last
+			q['seconds'] = str(self.last)
 
 #		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)

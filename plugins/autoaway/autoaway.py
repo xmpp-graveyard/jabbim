@@ -36,6 +36,7 @@ class autoAwayThread(QtCore.QThread):
 				if idle < awayTime:
 					self.emit(QtCore.SIGNAL("setOnline()"))
 					status="online"
+				self.main.main.client.last=int(idle/1000)
 
 			if status == "online":
 				sleeptime = min(0, awayTime - idle)

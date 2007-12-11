@@ -2138,13 +2138,15 @@ class rosterWidget(QtGui.QWidget):
 					self.main.client.sendRosterUpdate(contact.jid, contact.name, contact.subscription,self.main.client.roster['users'][jid].groups)
 		elif cmd=="remove_group":
 			name=action.data()
-			name=str(name.toString())
-			for item in self.getAllGroupUsers(name):
-				jid=item.jid
-				contact=self.main.client.roster['users'][jid]
-				g=contact.groups
-				g.remove(name)
-				self.main.client.sendRosterUpdate(contact.jid, contact.name, contact.subscription,g)
+			name=unicode(name.toString())
+			ret=QtGui.QMessageBox.question(self,self.tr("Remove group?"), self.tr("Do you want to remove group ")+unicode(name)+self.tr(" from your roster?"),QtGui.QMessageBox.Yes|QtGui.QMessageBox.No, QtGui.QMessageBox.Yes)
+			if ret==QtGui.QMessageBox.Yes:
+				for item in self.getAllGroupUsers(name):
+					jid=item.jid
+					contact=self.main.client.roster['users'][jid]
+					g=contact.groups
+					g.remove(name)
+					self.main.client.sendRosterUpdate(contact.jid, contact.name, contact.subscription,g)
 
 	def breakMetaContacts(self,jid):
 		item=self.getUserItems(jid)[0]
@@ -2165,7 +2167,9 @@ class rosterWidget(QtGui.QWidget):
 			print "delete contact CLICKED"
 			jid=action.data()
 			jid=str(jid.toString())
-			self.main.client.delContact(jid)
+			ret=QtGui.QMessageBox.question(self,self.tr("Delete contact?"), self.tr("Do you want to delete this contact from your roster?"),QtGui.QMessageBox.Yes|QtGui.QMessageBox.No, QtGui.QMessageBox.Yes)
+			if ret==QtGui.QMessageBox.Yes:
+				self.main.client.delContact(jid)
 		elif cmd=="break_up_meta":
 			# break up metacontact
 			jid=action.data()
