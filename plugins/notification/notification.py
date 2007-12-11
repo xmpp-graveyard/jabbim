@@ -55,7 +55,7 @@ class osd(QtGui.QWidget):
 		painter.fillRect(0,0,self.width(),self.height(),QtGui.QBrush(QtGui.QColor(0,0,0)))
 
 		
-		if not self.main.config['osd_transparent']:
+		if self.main.config['osd_transparent']!="True":
 			g=QtGui.QLinearGradient(QtCore.QPointF(100, 100),QtCore.QPointF(200, 200))
 			g.setColorAt(0,self.palette().color(QtGui.QPalette.Highlight))
 			c=self.palette().color(QtGui.QPalette.Highlight)
@@ -142,7 +142,7 @@ class osd(QtGui.QWidget):
 		height=int(metrics.height())
 		width=int(metrics.width(text))
 		self.smallTextHeight=self.smallfont
-		if self.main.config['osd_transparent']:
+		if self.main.config['osd_transparent']=="True":
 			self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
 		else:
 			self.desktop=QtGui.QPixmap()
@@ -195,7 +195,7 @@ class osd(QtGui.QWidget):
 		height2=int(metrics2.height())*len(t.split("\n"))
 		self.smallTextHeight=height2
 		self.smallText=text
-		if self.main.config['osd_transparent']:
+		if self.main.config['osd_transparent']=="True":
 			self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
 		else:
 			self.desktop=QtGui.QPixmap()
