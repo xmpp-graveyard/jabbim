@@ -1255,7 +1255,7 @@ class mainWindow(QtGui.QMainWindow):
 		
 		#self.events.addInfoEvent(header=self.tr("New message"),text=self.tr("From: "),name=unicode('ss'),typ='newMessage',icon="images/16x16/actions/message.png")
 
-		self.tray=QtGui.QSystemTrayIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
+		self.tray=QtGui.QSystemTrayIcon(QtGui.QIcon(QtGui.QIcon("images/16x16/apps/jabbim.png").pixmap(16,16,QtGui.QIcon.Disabled)))
 		menu=QtGui.QMenu(self)
 		menu.addMenu(self.statusMenu)
 		menu.addSeparator()
@@ -2120,7 +2120,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusButton.show()
 		self.ui.showOffline.show()
 		self.tray.showMessage(self.tr("Jabbim"),self.tr("Jabbim is ready! You are connected! :) "))
-
+		self.tray.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 	def disconnect(self):
 		#if self.client!=None:
 		reactor.stop2()
@@ -2304,6 +2304,7 @@ class mainWindow(QtGui.QMainWindow):
 		return self.ui.roster.addUser(itemjid,name,grp)
 
 	def _disconnect(self, error = None): # error = None | dns | lost | auth | failed
+		self.tray.setIcon(QtGui.QIcon(QtGui.QIcon("images/16x16/apps/jabbim.png").pixmap(16,16,QtGui.QIcon.Disabled)))
 		if not self.client:
 			return
 		if error=="auth":
