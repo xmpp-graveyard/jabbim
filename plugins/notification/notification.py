@@ -35,7 +35,7 @@ class osd(QtGui.QWidget):
 		self.dropTime=5
 		self.changingPos=False
 		self.osdX=int(self.main.config['osd_x'])
-		self.osdy=int(self.main.config['osd_y'])
+		self.osdY=int(self.main.config['osd_y'])
 		g=QtGui.QApplication.desktop().screenGeometry()
 		self.screenWidth=int(g.width())
 		self.screenHeight=int(g.height())
