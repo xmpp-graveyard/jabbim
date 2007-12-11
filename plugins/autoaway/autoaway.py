@@ -23,9 +23,9 @@ class autoAwayThread(QtCore.QThread):
 		threadRun=True
 		self.load_libraries()
 		status="online"
-		mutex.lock()
-		while self.main.threadRun:
-			mutex.unlock()
+		#mutex.lock()
+		while True:
+			
 			awayTime=int(self.main.config['awayTime'])*60000
 			idle = self.get_idle_time()
 			if status == "online":
@@ -49,7 +49,8 @@ class autoAwayThread(QtCore.QThread):
 			if not self.main.threadRun:
 				break
 			finish_cond.wait(mutex, sleeptime)
-		mutex.unlock()
+			mutex.unlock()
+		#mutex.unlock()
 
 class XScreenSaverInfo( ctypes.Structure):
 	""" typedef struct { ... } XScreenSaverInfo; """
@@ -167,6 +168,7 @@ class Plugin(plugins.PluginBase):
 
 
 	def on_remove(self):
+		print "remove"
 		mutex.lock()
 		self.threadRun=False
 		mutex.unlock()
