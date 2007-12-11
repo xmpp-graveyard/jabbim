@@ -152,19 +152,25 @@ class Plugin(plugins.PluginBase):
 		print "autoaway online"
 		if self.message_set:
 			self.message_set=False
-			self.main.client.sendPresence(show = 'online', status = "autoaway")
+			self.main.ui.statusButton.setIcon(self.main.getIcon(status='online', size="16x16"))
+			self.main.ui.showWidget.setText("")
+			self.main.client.sendPresence(show = 'online', status = "")
 			for muc in self.main.client.groupchats.itervalues():
 				self.main.client.sendPresence(show = 'online', status = "", to = '%s/%s'%(muc.jid, muc.nick))
 
 	def setAway(self):
 		print "autoaway away"
-		self.message_set=True
-		contact = self.main.client.roster['users'][self.main.client.jid.userhost()]
-		print "current show:",contact.resources[self.main.client.jid.resource].show
-		if contact.resources[self.main.client.jid.resource].show=="online":
-			self.main.client.sendPresence(show = 'away', status = "autoaway")
+		#contact = self.main.client.roster['users'][self.main.client.jid.userhost()]
+		#print "current show:",contact.resources[self.main.client.jid.resource].show
+		if self.main.selfStatus=="online":
+			self.main.ui.statusButton.setIcon(self.main.getIcon(status='away', size="16x16"))
+			self.main.ui.showWidget.setText(self.config['awayMessage'].replace('[time]',self.config['awayTime']))
+			self.main.client.sendPresence(show = 'away', status = self.config['awayMessage'].replace('[time]',self.config['awayTime']))
 			for muc in self.main.client.groupchats.itervalues():
 				self.main.client.sendPresence(show = 'away', status = self.config['awayMessage'].replace('[time]',self.config['awayTime']), to = '%s/%s'%(muc.jid, muc.nick))
+			self.message_set=True
+
+
 
 
 	def on_remove(self):

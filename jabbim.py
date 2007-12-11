@@ -432,6 +432,7 @@ class clientClass(pyxl.client.Client):
 			else:
 				pri="0"
 		show=unicode(self.main.ui.loginStatus.itemData(int(self.main.ui.loginStatus.currentIndex())).toString())
+		self.main.selfStatus=show
 		self.main.tray.setToolTip(self.main.tr('Your status:')+" "+self.main.status[show])
 		self.main.client.sendPresence(show=show,priority=pri)
 		self.main.ui.statusButton.setText(unicode(""))
