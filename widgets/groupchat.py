@@ -353,6 +353,7 @@ class groupChatWidget(QtGui.QWidget):
 
 		self.disco_features = []
 		log.msg("REQUESTING ROOM INFO")
+		self.ui.disco_info.hide()
 		self.main.client.getDiscoInfo(self.jid, callback=self._infoReceived)
 
 	def _infoReceived(self, *a):
