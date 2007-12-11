@@ -10,8 +10,7 @@ import time
 import ctypes
 from ctypes.util import find_library
 
-mutex=QtCore.QMutex()
-finish_cond=QtCore.QWaitCondition()
+
 
 class autoAwayThread(QtCore.QThread):
 	def __init__(self,main):
@@ -45,12 +44,12 @@ class autoAwayThread(QtCore.QThread):
 				# I don't know how to do it, so we'll poll every 10 seconds instead to detect input.
 				sleeptime = 10000
 					
-			mutex.lock()
+			self.main.mutex.lock()
 			if not self.main.threadRun:
 				break
-			finish_cond.wait(mutex, sleeptime)
-			mutex.unlock()
-		#mutex.unlock()
+			self.main.finish_cond.wait(self.main.mutex, sleeptime)
+			self.main.mutex.unlock()
+		self.main.mutex.unlock()
 
 class XScreenSaverInfo( ctypes.Structure):
 	""" typedef struct { ... } XScreenSaverInfo; """
@@ -126,7 +125,8 @@ class Plugin(plugins.PluginBase):
 		self.configDialog=config(self)
 		if main:
 			self.loadConfig()
-
+			self.mutex=QtCore.QMutex()
+			self.finish_cond=QtCore.QWaitCondition()
 ##			self.window = self.loadWindow("%s/plugins/%s/news.ui.py"%(self.homeDir, self.fname))
 ##			self.window.setWindowIcon(self.main.windowIcon())
 			self.log = False
@@ -169,10 +169,10 @@ class Plugin(plugins.PluginBase):
 
 	def on_remove(self):
 		print "remove"
-		mutex.lock()
+		self.mutex.lock()
 		self.threadRun=False
-		mutex.unlock()
-		finish_cond.wakeAll()
+		self.mutex.unlock()
+		self.finish_cond.wakeAll()
 		self.thread.wait()
 
 	#def on_idle(self, cas):
