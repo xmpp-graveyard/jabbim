@@ -728,6 +728,11 @@ class groupChatWidget(QtGui.QWidget):
 				self.ui.line.clear()
 				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 				return
+			elif services.startswith("/nick "):
+				self.main.client.sendPresence(to=self.jid+"/"+services.replace("/nick ",""))
+				self.ui.line.clear()
+				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+				return
 			if self.main.config['chatMode']=="normal":
 				text=unicode(self.ui.line.toPlainText())
 				#text=unicode(text, 'utf-8')
