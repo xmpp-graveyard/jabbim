@@ -39,7 +39,7 @@ class autoAwayThread(QtCore.QThread):
 				self.main.main.client.last=int(idle/1000)
 
 			if status == "online":
-				sleeptime = min(0, awayTime - idle)
+				sleeptime = max(0, awayTime - idle)
 			else:
 				# Ideally, after going away, we'd like to receive a notification of any user's input.
 				# I don't know how to do it, so we'll poll every 10 seconds instead to detect input.
