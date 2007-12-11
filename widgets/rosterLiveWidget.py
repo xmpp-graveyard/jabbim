@@ -2025,8 +2025,8 @@ class rosterWidget(QtGui.QWidget):
 		group.addSeparator()
 		# groups . groups list
 		#g=self.getGroups(str(jid))
-		for k,v in self.main.client.roster['groups'].iteritems():
-			if k!="Unknown":
+		for k,v in self.groups.iteritems():
+			if k!="Unknown" and k!=self.specialName:
 				action=group.addAction(unicode(k))
 				action.setObjectName("check_group")
 				action.setCheckable(True)
