@@ -9,6 +9,47 @@ from include import utils
 import time
 import ctypes
 from ctypes.util import find_library
+
+mutex=QtCore.QMutex()
+finish_cond=QtCore.QWaitCondition()
+
+class autoAwayThread(QtCore.QThread):
+	def __init__(self,main):
+		QtCore.QThread.__init__(self,None)
+		self.main=main
+
+	def run(self):
+		config=self.main.config
+		threadRun=True
+		self.load_libraries()
+		status="online"
+		mutex.lock()
+		while self.main.threadRun:
+			mutex.unlock()
+			awayTime=int(self.main.config['awayTime'])*60000
+			idle = self.get_idle_time()
+			if status == "online":
+				if idle > awayTime:
+					self.emit(QtCore.SIGNAL("setAway()"))
+					status="away"
+			else:  # we're in autoaway
+				if idle < awayTime:
+					self.emit(QtCore.SIGNAL("setOnline()"))
+					status="online"
+
+			if status == "online":
+				sleeptime = min(0, awayTime - idle)
+			else:
+				# Ideally, after going away, we'd like to receive a notification of any user's input.
+				# I don't know how to do it, so we'll poll every 10 seconds instead to detect input.
+				sleeptime = 10000
+					
+			mutex.lock()
+			if not self.main.threadRun:
+				break
+			finish_cond.wait(mutex, sleeptime)
+		mutex.unlock()
+
 class XScreenSaverInfo( ctypes.Structure):
 	""" typedef struct { ... } XScreenSaverInfo; """
 	_fields_ = [('window',      ctypes.c_ulong), # screen saver window
@@ -18,93 +59,42 @@ class XScreenSaverInfo( ctypes.Structure):
 				('idle',        ctypes.c_ulong), # milliseconds
 				('event_mask',  ctypes.c_ulong)] # events
 
-mutex=QtCore.QMutex()
-
-
-class autoAwayThread(QtCore.QThread):
+class autoAwayThreadX11(autoAwayThread):
 	def __init__(self,main):
-		QtCore.QThread.__init__(self,None)
-		self.main=main
+		autoAwayThread.__init__(self,main)
 
-	def run(self):
-		locker = QtCore.QMutexLocker(mutex)
-		config=self.main.config
-		threadRun=True
+	def load_libraries(self):
 		xlib = ctypes.cdll.LoadLibrary(find_library("X11"))
-		dpy = xlib.XOpenDisplay( os.environ['DISPLAY'])
-		root = xlib.XDefaultRootWindow( dpy)
-		xss = ctypes.cdll.LoadLibrary(find_library("Xss"))
-		status="online"
-		while threadRun:
-			awayTime=int(self.main.config['awayTime'])*60000
-			xss.XScreenSaverAllocInfo.restype = ctypes.POINTER(XScreenSaverInfo)
-			xss_info = xss.XScreenSaverAllocInfo()
-			xss.XScreenSaverQueryInfo( dpy, root, xss_info)
-			if int(xss_info.contents.idle)>awayTime and int(xss_info.contents.idle)<awayTime+1000:
-				self.emit(QtCore.SIGNAL("setAway()"))
-				status="away"
-			elif int(xss_info.contents.idle)<1000 and status!="online":
-				self.emit(QtCore.SIGNAL("setOnline()"))
-				status="online"
+		self.dpy = xlib.XOpenDisplay(os.environ['DISPLAY'])
+		self.root = xlib.XDefaultRootWindow(self.dpy)
+		self.xss = ctypes.cdll.LoadLibrary(find_library("Xss"))
 
-			#print "Idle time in milliseconds: %d" % ( xss_info.contents.idle)
-			for i in range(2):
-				time.sleep(0.5)
-				threadRun=self.main.threadRun
-				if not threadRun:
-					break
+	def get_idle_time(self):
+		self.xss.XScreenSaverAllocInfo.restype = ctypes.POINTER(XScreenSaverInfo)
+		xss_info = self.xss.XScreenSaverAllocInfo()
+		self.xss.XScreenSaverQueryInfo(self.dpy, self.root, xss_info)
+		return int(xss_info.contents.idle)
+		
 
 class LASTINPUTINFO(ctypes.Structure):
 	_fields_ = [("cbSize", ctypes.c_uint),
 				("dwTime", ctypes.c_uint)]
 
 
-class autoAwayThreadWin(QtCore.QThread):
+class autoAwayThreadWin(autoAwayThread):
 	def __init__(self,main):
-		QtCore.QThread.__init__(self,None)
-		self.main=main
+		autoAwayThread.__init__(self,main)
 
-	def run(self):
-		locker = QtCore.QMutexLocker(mutex)
-		config=self.main.config
-		threadRun=True
-		#xlib = ctypes.cdll.LoadLibrary(find_library("X11"))
-		#dpy = xlib.XOpenDisplay( os.environ['DISPLAY'])
-		#root = xlib.XDefaultRootWindow( dpy)
-		#xss = ctypes.cdll.LoadLibrary(find_library("Xss"))
+	def load_libraries(self):
+		self.GetTickCount = ctypes.windll.kernel32.GetTickCount
+		self.GetLastInputInfo = ctypes.windll.user32.GetLastInputInfo
+		self.lastInputInfo = LASTINPUTINFO()
+		self.lastInputInfo.cbSize = ctypes.sizeof(self.lastInputInfo)
+
+	def get_idle_time(self):
+		self.GetLastInputInfo(ctypes.byref(self.lastInputInfo))
+		return int(self.GetTickCount() - self.lastInputInfo.dwTime)
 		
-		GetTickCount = ctypes.windll.kernel32.GetTickCount
-		GetLastInputInfo = ctypes.windll.user32.GetLastInputInfo
-		lastInputInfo = LASTINPUTINFO()
-		lastInputInfo.cbSize = ctypes.sizeof(lastInputInfo)
-#for i in range(10):
-    #GetLastInputInfo(byref(lastInputInfo))
-    #idleDelta = float(GetTickCount() - lastInputInfo.dwTime) / 1000
-    #print "Last input event was %.2f seconds ago." % idleDelta
-    #time.sleep(1)
-		
-		status="online"
-		while threadRun:
-			awayTime=int(self.main.config['awayTime'])*60000
-			#xss.XScreenSaverAllocInfo.restype = ctypes.POINTER(XScreenSaverInfo)
-			#xss_info = xss.XScreenSaverAllocInfo()
-			#xss.XScreenSaverQueryInfo( dpy, root, xss_info)
-			GetLastInputInfo(ctypes.byref(lastInputInfo))
-			idleDelta = int(GetTickCount() - lastInputInfo.dwTime)
-			if int(idleDelta)>awayTime and idleDelta<awayTime+1000:
-				self.emit(QtCore.SIGNAL("setAway()"))
-				status="away"
-			elif int(idleDelta)<1000 and status!="online":
-				self.emit(QtCore.SIGNAL("setOnline()"))
-				status="online"
-
-			#print "Idle time in milliseconds: %d" % ( xss_info.contents.idle)
-			for i in range(2):
-				time.sleep(0.5)
-				threadRun=self.main.threadRun
-				if not threadRun:
-					break
-
 class config:
 	def __init__(self,main):
 		self.main=main
@@ -143,7 +133,7 @@ class Plugin(plugins.PluginBase):
 			if sys.platform == 'win32':
 				self.thread=autoAwayThreadWin(self)
 			else:
-				self.thread=autoAwayThread(self)
+				self.thread=autoAwayThreadX11(self)
 
 			QtCore.QObject.connect(self.thread, QtCore.SIGNAL("setAway()"), self.setAway,QtCore.Qt.QueuedConnection)
 			QtCore.QObject.connect(self.thread, QtCore.SIGNAL("setOnline()"), self.setOnline,QtCore.Qt.QueuedConnection)
@@ -176,7 +166,10 @@ class Plugin(plugins.PluginBase):
 
 
 	def on_remove(self):
+		mutex.lock()
 		self.threadRun=False
+		mutex.unlock()
+		finish_cond.wakeAll()
 		self.thread.wait()
 
 	#def on_idle(self, cas):
