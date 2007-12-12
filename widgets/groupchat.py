@@ -415,10 +415,11 @@ class groupChatWidget(QtGui.QWidget):
 		menu=QtGui.QMenu(self.ui.users) # make menu
 		jid="%s/%s" % (self.jid, name)
 		if item.parent()!=None:
-			action=menu.addAction(self.tr("Kick"))
-			action.setData(QtCore.QVariant(name))
-			action.setObjectName("kick")
-			menu.addSeparator()
+			if self.affiliation=="moderator" or self.affiliation=="owner":
+				action=menu.addAction(self.tr("Kick"))
+				action.setData(QtCore.QVariant(name))
+				action.setObjectName("kick")
+				menu.addSeparator()
 			action=menu.addAction(self.tr("vCard"))
 			action.setData(QtCore.QVariant(jid))
 			action.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
@@ -508,7 +509,19 @@ class groupChatWidget(QtGui.QWidget):
 			return False
 		return True
 
-	def removeUser(self,nick):
+	def removeUser(self,nick,codes):
+		if self.main.client.groupchats[self.jid].nick==nick:
+			if u'307' in codes:
+				self.ui.line.setEnabled(False)
+				self.ui.users.clear()
+				self.addRoles()
+				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.tr("You has been kicked from the room."))
+				self.textEditWrite(message)
+				return
+		if u'307' in codes:
+			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",nick+self.tr(" has been kicked from this room."))
+			self.textEditWrite(message)
+
 		item=self.getUserItems(nick)[0]
 		parent=item.parent()
 		parent.takeChild(int(parent.indexOfChild(item)))
@@ -539,9 +552,13 @@ class groupChatWidget(QtGui.QWidget):
 				self.colors.append(item)
 
 
+		if self.main.client.groupchats[self.jid].nick==nick:
+			self.affiliation=affiliation
+			#print "affiliation:",affiliation,"role:",role
+			if affiliation=="owner":
+				self.ui.admin.show()
+
 		
-		if affiliation=="owner" and self.main.client.groupchats[self.jid].nick==nick:
-			self.ui.admin.show()
 
 		#if self.ui.users.verticalScrollBar().isVisible():
 			#self.ui.users.setColumnWidth(0,int(self.ui.users.width())-38-int(self.ui.users.verticalScrollBar().width()))

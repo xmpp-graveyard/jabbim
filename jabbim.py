@@ -490,7 +490,7 @@ class clientClass(pyxl.client.Client):
 				w=self.main.chat.ui.chatTab.widget(i)
 				if unicode(w.jid)==unicode(muc):
 					# edit user item
-					w.chat.removeUser(nick)
+					w.chat.removeUser(nick,codes)
 					break
 		else:
 			# get user role
