@@ -361,7 +361,7 @@ class Client(derived):
 					if subscription == 'remove'  and self.roster['users'].has_key(itemjid):
 						log.msg('deleting contact')
 						self.reactor.callFromThread(self.on_DeleteContact,itemjid)
-##						del self.roster['users'][itemjid]
+						del self.roster['users'][itemjid]
 					elif not self.roster['users'].has_key(itemjid) and subscription != 'remove':
 						log.msg(subscription)
 						rosterItems=[]
