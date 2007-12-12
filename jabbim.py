@@ -865,6 +865,8 @@ class clientClass(pyxl.client.Client):
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None, error = None):
 		# handle normal 'chat' messages
 		# get user icon or name, if we have him in roster. Or use default icon and jid as name
+		if typ=="groupchat":
+			return
 		log.msg("CHATSTATE:"+unicode(chatstate))
 		log.msg("ERROR:"+unicode(error))
 		frm=jidT.JID(frm)

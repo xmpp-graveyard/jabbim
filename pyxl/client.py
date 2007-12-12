@@ -660,7 +660,8 @@ class Client(derived):
 			self.dispatcher.publishEvent('on_GCmessage', frm,typ,body,subject, xhtml,  chatstate,  delay, error)
 		else:
 # 			self.on_message(frm,typ,body,subject, xhtml,  chatstate,  delay)
-			self.dispatcher.publishEvent('on_message', frm,typ,body,subject, xhtml,  chatstate,  delay, error)
+			if typ!="groupchat":
+				self.dispatcher.publishEvent('on_message', frm,typ,body,subject, xhtml,  chatstate,  delay, error)
 
 	def onInvite(self, el):
 		room = el["from"]
