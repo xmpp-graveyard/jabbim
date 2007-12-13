@@ -105,7 +105,7 @@ class osd(QtGui.QWidget):
 				self.dragPosition = event.globalPos() - self.frameGeometry().topLeft()
 				event.accept()
 		else:
-			if self.onClick!=None:
+			if self.onClick!=None and event.button() != QtCore.Qt.LeftButton::
 				self.onClick(*self.onClickDict)
 			self.hide()
 			event.accept()
