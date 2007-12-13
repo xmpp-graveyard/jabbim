@@ -476,7 +476,7 @@ class clientClass(pyxl.client.Client):
 		self.main.loadPlugins()
 		self.main.autoJoinGroupchat()
 
-	def on_GCpresence(self,  muc, nick,  show,  status,  codes = []):
+	def on_GCpresence(self,  muc, nick,  show,  status,  codes = [], reason = '', actor = None):
 		
 		show = unicode(show) #!
 		# presence in groupchat

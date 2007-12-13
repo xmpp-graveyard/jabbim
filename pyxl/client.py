@@ -717,7 +717,7 @@ class Client(derived):
 		fromjid = frm.userhost()
 		resource = frm.resource
 		print "PRESENCE"
-		show = status = priority = typ = affiliation = role = truejid = hash = error = None
+		show = status = priority = typ = affiliation = role = truejid = hash = error = reason = actor = None
 		codes = []
 		if el.hasAttribute('type'):
 		#	if el['type'] != 'unavailable':
@@ -762,6 +762,11 @@ class Client(derived):
 						role = item['role']
 						if item.hasAttribute('jid'):
 							truejid = item['jid']
+						for itm in item.elements():
+							if itm.name == 'reason':
+								reason = unicode(itm)
+							elif itm.name == 'actor':
+								actor = itm.getAttribute('jid')
 					if item.name == 'status' :
 						codes.append(item['code'])
 			elif child.name == 'x' and child.defaultUri == 'vcard-temp:x:update':
@@ -832,14 +837,14 @@ class Client(derived):
 		elif self.groupchats.has_key(fromjid):
 			if show=="offline":
 #				self.reactor.callFromThread(self.on_GCpresence, fromjid, resource,  show,  status,  codes)
-				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes)
+				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor)
 			self.groupchats[fromjid].setStatus(resource,  show,  status)
 			if self.groupchats[fromjid].users.has_key(resource):
 				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid)
 				#self.groupchats[fromjid]
 			if show!="offline":
 #				self.reactor.callFromThread(self.on_GCpresence,fromjid, resource,  show,  status,  codes)
-				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes)
+				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor)
 			return
 		else:
 ##			print 'contact not in roster'
