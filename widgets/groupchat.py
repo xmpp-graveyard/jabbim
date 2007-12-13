@@ -518,8 +518,18 @@ class groupChatWidget(QtGui.QWidget):
 				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.tr("You has been kicked from the room."))
 				self.textEditWrite(message)
 				return
+			elif u'301' in codes:
+				self.ui.line.setEnabled(False)
+				self.ui.users.clear()
+				self.addRoles()
+				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.tr("You has been banned for the room."))
+				self.textEditWrite(message)
+				return
 		if u'307' in codes:
 			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",nick+self.tr(" has been kicked from this room."))
+			self.textEditWrite(message)
+		elif u'301' in codes:
+			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",nick+self.tr(" has been banned for this room."))
 			self.textEditWrite(message)
 
 		item=self.getUserItems(nick)[0]
