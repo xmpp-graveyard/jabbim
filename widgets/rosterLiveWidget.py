@@ -1853,6 +1853,7 @@ class rosterWidget(QtGui.QWidget):
 			highest=None
 			print "-------"
 			for item in self.metaItems[mainjid]:
+				print jid,item.jid
 				if highest:
 					husertype=""
 					usertype=""
