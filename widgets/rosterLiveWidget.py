@@ -758,7 +758,7 @@ class rosterWidget(QtGui.QWidget):
 				if self.reshow:
 					buttons=[]
 					# get metacontact items
-					if self.metaItems.has_key(useritem.metajid):
+					if self.metaItems.has_key(useritem.metajid) and not self.searchMode:
 						for meta in self.metaItems[useritem.metajid]:
 							buttons.append([meta,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
 					# change activeWidget data and geometry
@@ -895,7 +895,7 @@ class rosterWidget(QtGui.QWidget):
 				if self.reshow:
 					buttons=[]
 					# get metacontact items
-					if self.metaItems.has_key(useritem.metajid):
+					if self.metaItems.has_key(useritem.metajid) and not self.searchMode:
 						for meta in self.metaItems[useritem.metajid]:
 							buttons.append([meta,self.main.getIcon(meta.jid,size="16x16",status=self.main.icons[unicode(meta.status)])])
 					# change activeWidget data and geometry
@@ -1072,7 +1072,11 @@ class rosterWidget(QtGui.QWidget):
 		else:
 			users=[]
 			for item in self.users:
-				users.append([item.name.lower(),item])
+				if not self.metaItems.has_key(item.jid):
+					users.append([item.name.lower(),item])
+			for v in self.metaItems.itervalues():
+				for user in v:
+					users.append([user.name.lower(),user])
 			users.sort()
 			for item in users:
 				item=item[1]
@@ -1139,7 +1143,25 @@ class rosterWidget(QtGui.QWidget):
 							#y-=32
 					y+=self.groupHeight
 		else:
+			#for item in self.users:
+				#if item.hiddenBySearch==False:
+					#useritem=item
+					#if useritem==i:
+						#return x,y
+					#if useritem==self.item:
+						#y+=self.selectedHeight-28
+					#y+=self.userHeight
+
+			users=[]
 			for item in self.users:
+				if not self.metaItems.has_key(item.jid):
+					users.append([item.name.lower(),item])
+			for v in self.metaItems.itervalues():
+				for user in v:
+					users.append([user.name.lower(),user])
+			users.sort()
+			for item in users:
+				item=item[1]
 				if item.hiddenBySearch==False:
 					useritem=item
 					if useritem==i:
@@ -1276,30 +1298,32 @@ class rosterWidget(QtGui.QWidget):
 	def keyPressEvent(self,event):
 		key=event.key()
 		if key==QtCore.Qt.Key_Down:
-			x,y=self.itemCoordinates(self.item)
-			if self.item.typ=="group" or self.item.typ=="special":
-				item=self.itemAt(x,y+self.userHeight+5)
-			else:
-				if not self.compact:
-					item=self.itemAt(x,y+self.selectedHeight+33)
+			if self.item:
+				x,y=self.itemCoordinates(self.item)
+				if self.item.typ=="group" or self.item.typ=="special":
+					item=self.itemAt(x,y+self.userHeight+5)
 				else:
-					item=self.itemAt(x,y+self.selectedHeight+1)
-				print item.typ
-				if item.main=="special":
-					x,y=self.itemCoordinates(item)
-					item=self.itemAt(x,y+1+self.groupHeight)
-
-			self.selectItem(item)
+					if not self.compact:
+						item=self.itemAt(x,y+self.selectedHeight+33)
+					else:
+						item=self.itemAt(x,y+self.selectedHeight+1)
+					print item.typ
+					if item.main=="special":
+						x,y=self.itemCoordinates(item)
+						item=self.itemAt(x,y+1+self.groupHeight)
+	
+				self.selectItem(item)
 			#self.timer.start(40)
 			event.accept()
 		elif key==QtCore.Qt.Key_Up:
-			x,y=self.itemCoordinates(self.item)
-
-			item=self.itemAt(x,y-3)
-			if item.main=="special":
-				x,y=self.itemCoordinates(item)
+			if self.item:
+				x,y=self.itemCoordinates(self.item)
+	
 				item=self.itemAt(x,y-3)
-			self.selectItem(item)
+				if item.main=="special":
+					x,y=self.itemCoordinates(item)
+					item=self.itemAt(x,y-3)
+				self.selectItem(item)
 			#self.timer.start(40)
 			event.accept()
 		elif (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and self.selected != None:
@@ -1731,9 +1755,17 @@ class rosterWidget(QtGui.QWidget):
 					user.hiddenBySearch=False
 					if not first:
 						first=user
-						print "FIRST:",first.jid,text
 				else:
 					user.hiddenBySearch=True
+			for v in self.metaItems.itervalues():
+				for user in v:
+					if user.name.lower().find(text)!=-1:
+						user.hiddenBySearch=False
+						if not first:
+							first=user
+					else:
+						user.hiddenBySearch=True
+			
 		else:
 			self.main.ui.rosterSearch.hide()
 			self.main.ui.rosterSearchLabel.hide()
@@ -1743,6 +1775,11 @@ class rosterWidget(QtGui.QWidget):
 				user.hiddenBySearch=False
 				if not first:
 					first=user
+			for v in self.metaItems.itervalues():
+				for user in v:
+					user.hiddenBySearch=False
+					if not first:
+						first=user
 		if self.item:
 			if self.item.typ=="user":
 				if self.item.hiddenBySearch==True:
