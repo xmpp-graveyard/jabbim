@@ -53,7 +53,9 @@ class calendar(QtGui.QCalendarWidget):
 
 class FileBackend:
 	def __init__(self,archive):
-		self.archive=archive
+		#self.archive=archive
+		self.homeDir=unicode(archive.main.homeDir)
+		self.jid=unicode(archive.jid)
 
 	def saveMessage(self, to, body, typ, subject, xhtml, direction):
 		jid = quote(to.split('/')[0])
@@ -61,10 +63,10 @@ class FileBackend:
 		d=time.localtime(t)
 		dat=str(d[0])+"-"+str(d[1])+"-"+str(d[2])
 		try:
-			fp = open(self.archive.main.homeDir+'/archive/'+self.archive.jid+'/'+jid+'/'+dat+'.history', 'a')
+			fp = open(self.homeDir+'/archive/'+self.jid+'/'+jid+'/'+dat+'.history', 'a')
 		except:
-			os.mkdir(self.archive.main.homeDir+'/archive/'+self.archive.jid+'/'+jid)
-			fp = open(self.archive.main.homeDir+'/archive/'+self.archive.jid+'/'+jid+'/'+dat+'.history', 'a')
+			os.mkdir(self.homeDir+'/archive/'+self.jid+'/'+jid)
+			fp = open(self.homeDir+'/archive/'+self.jid+'/'+jid+'/'+dat+'.history', 'a')
 	
 		if xhtml != None:
 			telo = xhtml.replace('|', '&#124;').replace("\n","<br/>")
@@ -82,7 +84,7 @@ class FileBackend:
 
 	def getDates(self,jid):
 		ret=[]
-		for file in os.listdir(self.archive.main.homeDir+'/archive/'+self.archive.jid+'/'+jid):
+		for file in os.listdir(self.homeDir+'/archive/'+self.jid+'/'+jid):
 			if file.split('.')[1]=="history":
 				dat=file.split('.')[0]
 				ret.append(dat)
@@ -90,7 +92,7 @@ class FileBackend:
 
 	def getMessages(self,jid,date):
 		try:
-			fp = open(self.archive.main.homeDir+'/archive/'+self.archive.jid+'/'+jid+'/'+date+'.history')
+			fp = open(self.homeDir+'/archive/'+self.jid+'/'+jid+'/'+date+'.history')
 		except:
 			log.err('no history file')
 			return None
@@ -106,9 +108,108 @@ class FileBackend:
 			ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
 		fp.close()
 		return ret
-		
-		
+
+class backendThread(QtCore.QThread):
+	def __init__(self,archive):
+		QtCore.QThread.__init__(self,None)
+		self.archive=archive
+		self.mutex=QtCore.QMutex()
+		self.condition=QtCore.QWaitCondition()
+		self.action=[]
+
+	def __del__(self):
+		self.mutex.lock()
+		self.action = ['stop']
+		self.condition.wakeOne()
+		self.mutex.unlock()
+		self.wait()
+
+
+	def getMessages(self,jid,date,me,user,my_message,message,color1):
+		locker=QtCore.QMutexLocker(self.mutex)
+		self.action.append(["getMessages",jid,date,me,user,my_message,message,color1])
+		self.condition.wakeOne()
+
+	def getDates(self,jid):
+		locker=QtCore.QMutexLocker(self.mutex)
+		self.action.append(["getDates",jid])
+		self.condition.wakeOne()
+
+	def saveMessage(self,to, body, typ, subject, xhtml, direction):
+		locker=QtCore.QMutexLocker(self.mutex)
+		self.action.append(["saveMessage",to,body,typ,subject,xhtml,direction])
+		self.condition.wakeOne()
+
+
+	def run(self):
+		self.mutex.lock()
+		backend=FileBackend(self.archive)
+		self.mutex.unlock()
+		while True:
 			
+			
+			
+			while True:
+				self.mutex.lock()
+				if len(list(self.action))==0:
+					self.mutex.unlock()
+					break
+				else:
+					action=self.action.pop()
+					if action=="stop":
+						self.mutex.unlock()
+						return
+				self.mutex.unlock()
+				
+				if action[0]=="getMessages":
+					messages=backend.getMessages(action[1],action[2])
+					if not messages:
+						break
+					html=""
+					me=action[3]
+					user=action[4]
+
+					for msg in messages:
+						d=time.localtime(msg[0])
+						#qdate=QtCore.QDate(d[0],d[1],d[2])
+						#if datum==qdate:
+						if msg[1]=='to':
+							who=me
+							html+=action[5].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("<br/><br/>","<br/>")
+						else:
+							if user:
+								who=user
+							else:
+								who=msg[2]
+							html+=action[6].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("[foreground]",action[7][0]).replace("[background]",action[7][1]).replace("<br/><br/>","<br/>")
+					self.emit(QtCore.SIGNAL("gotMessages(const QString &)"),QtCore.QString(html))
+				
+				elif action[0]=='getDates':
+					dates=backend.getDates(action[1])
+					self.emit(QtCore.SIGNAL("gotDates(const QStringList &)"),QtCore.QStringList(dates))
+				
+				elif action[0]=='saveMessage':
+					to=action[1]
+					body=action[2]
+					typ=action[3]
+					subject=action[4]
+					xhtml=action[5]
+					direction=action[6]
+					backend.saveMessage(to,body,typ,subject,xhtml,direction)
+			self.mutex.lock()
+			
+			self.action=[]
+			self.mutex.unlock()
+
+			
+			self.mutex.lock()
+			self.condition.wait(self.mutex)
+			self.mutex.unlock()
+			if self.action:
+				if self.action[0]=="stop":
+					return
+			
+
 
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
@@ -125,7 +226,12 @@ class Plugin(plugins.PluginBase):
 
 
 		if main:
-			self.backend=FileBackend(self)
+			#self.backend=FileBackend(self)
+			self.thread=backendThread(self)
+			QtCore.QObject.connect(self.thread, QtCore.SIGNAL("gotDates(const QStringList &)"), self.gotDates,QtCore.Qt.QueuedConnection)
+			QtCore.QObject.connect(self.thread, QtCore.SIGNAL("gotMessages(const QString &)"), self.gotMessages,QtCore.Qt.QueuedConnection)
+			self.thread.start()
+
 			self.jid = quote(self.main.client.jid.userhost())
 			if not os.path.isdir(self.main.homeDir+'/archive'):
 				os.mkdir(self.main.homeDir+'/archive')
@@ -198,48 +304,48 @@ class Plugin(plugins.PluginBase):
 	def calChanged(self):	
 		self.itemClicked(self.window.ui.seznam.currentItem(),setDate=False)
 	
-	def itemClicked(self, item,setDate=True):
+	def gotDates(self,dates):
+		print "got dates"
+		all=[]
+		for date in list(dates):
+			d=unicode(date).split('-')
+			qdate=QtCore.QDate(int(d[0]),int(d[1]),int(d[2]))
+			if not qdate in all:
+				all.append(qdate)
+		self.window.ui.calendar.setDates(all)
+		item=self.window.ui.seznam.currentItem()
 		jid = quote(unicode(item.text()))
-		if setDate:
-			dates=[]
-			for date in self.backend.getDates(jid):
-				d=date.split('-')
-				qdate=QtCore.QDate(int(d[0]),int(d[1]),int(d[2]))
-				if not qdate in dates:
-					dates.append(qdate)
-			self.window.ui.calendar.setDates(dates)
-			#self.itemClicked(item,False)
-			#return
-
+		
 		self.window.ui.text.setText('')
 		datum=self.window.ui.calendar.selectedDate()
-		messages=self.backend.getMessages(jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day())) # timestamp,direction,from,message
-		html=""
 		me=unicode(self.main.client.jid.user)
-			#if unicode(body).startswith("/me"):
-				#message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message[3:])
-			#else:
-				#message=self.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message)
+
 		user=self.main.ui.roster.getUserItems(unicode(item.text()))
 		if len(user)!=0:
 			user=user[0].name
 		else:
 			user=None
+		self.thread.getMessages(jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'])
 
-		for msg in messages:
-			d=time.localtime(msg[0])
-			#qdate=QtCore.QDate(d[0],d[1],d[2])
-			#if datum==qdate:
-			if msg[1]=='to':
-				who=me
-				html+=self.skin["my_message"].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("<br/><br/>","<br/>")
-			else:
-				if user:
-					who=user
-				else:
-					who=msg[2]
-				html+=self.skin["message"].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("[foreground]",self.skin['color1'][0]).replace("[background]",self.skin['color1'][1]).replace("<br/><br/>","<br/>")
+	def gotMessages(self,html):
+		print "got messages"
 		self.window.ui.text.setHtml(html)
+
+	def itemClicked(self, item,setDate=True):
+		jid = quote(unicode(item.text()))
+		if setDate:
+			self.thread.getDates(jid)
+		else:
+			self.window.ui.text.setText('')
+			datum=self.window.ui.calendar.selectedDate()
+			me=unicode(self.main.client.jid.user)
+	
+			user=self.main.ui.roster.getUserItems(unicode(item.text()))
+			if len(user)!=0:
+				user=user[0].name
+			else:
+				user=None
+			self.thread.getMessages(jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'])
 	
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay, error=None):
 		if body != None:
@@ -253,9 +359,10 @@ class Plugin(plugins.PluginBase):
 					if len(res)>1:
 						if tab.name==res[1]:
 							return
-			self.backend.saveMessage(frm, body, typ, subject, xhtml, "from")
+			self.thread.saveMessage(frm, body, typ, subject, xhtml, "from")
 
 		
 	def on_message_send (self, to, body, typ, subject,composing, xhtml,  muc):
 		if not muc and body != None and len(body)!=0:
-			self.backend.saveMessage(to, body, typ, subject, xhtml, "to")
+			self.thread.saveMessage(to, body, typ, subject, xhtml, "to")
+			pass
