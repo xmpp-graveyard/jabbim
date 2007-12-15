@@ -29,7 +29,11 @@
        <property name="orientation" >
         <enum>Qt::Vertical</enum>
        </property>
-       <widget class="QListWidget" name="seznam" />
+       <widget class="QTreeWidget" name="seznam" >
+        <property name="rootIsDecorated" >
+         <bool>false</bool>
+        </property>
+       </widget>
        <widget class="QWidget" native="1" name="calendarWidget" />
       </widget>
       <widget class="QTextBrowser" name="text" />

@@ -251,11 +251,12 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.calendar=calendar(self.window.ui.calendarWidget)
 			layout.addWidget(self.window.ui.calendar)
 			#log.msg(unicode(dir(self.window)))
-			QtCore.QObject.connect(self.window.ui.seznam, QtCore.SIGNAL("itemClicked ( QListWidgetItem* ) "),self.itemClicked)
-			QtCore.QObject.connect(self.window.ui.calendar, QtCore.SIGNAL("selectionChanged()"),self.calChanged)
+			QtCore.QObject.connect(self.window.ui.seznam, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int ) "),self.itemClicked)
+			QtCore.QObject.connect(self.window.ui.calendar, QtCore.SIGNAL("itemSelectionChanged()"),self.calChanged)
 			self.group=QtGui.QButtonGroup(self.window)
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 			self.skin=self.getConfig("skins/gajim.conf")
+			self.window.ui.seznam.header().hide()
 		else:
 			self.loadConfig(homedir)
 
@@ -287,13 +288,30 @@ class Plugin(plugins.PluginBase):
 		self.window.ui.seznam.clear()
 		self.window.ui.calendar.setDates([])
 		self.window.ui.text.setText('')
+		contact=QtGui.QTreeWidgetItem(self.window.ui.seznam)
+		contact.setText(0,self.tr("Contacts in roster"))
+		others=QtGui.QTreeWidgetItem(self.window.ui.seznam)
+		others.setText(0,self.tr("Others"))
+		self.window.ui.seznam.expandItem(contact)
+		self.window.ui.seznam.expandItem(others)
+		contact.setBackground(0,QtGui.QBrush(self.window.ui.seznam.palette().color(QtGui.QPalette.AlternateBase)))
+		others.setBackground(0,QtGui.QBrush(self.window.ui.seznam.palette().color(QtGui.QPalette.AlternateBase)))
 		seznam = os.listdir(self.main.homeDir+'/archive/'+self.jid)
 		click=None
 		for jid in seznam:
 			if os.path.isdir(self.main.homeDir+'/archive/'+self.jid+'/'+jid):
-				item=QtGui.QListWidgetItem()
-				item.setText(unquote(jid).split('.history')[0])
-				self.window.ui.seznam.addItem(item)
+				if self.main.client.roster['users'].has_key(unicode(unquote(jid).split('.history')[0])):
+					item=QtGui.QTreeWidgetItem(contact)
+					name=self.main.client.roster['users'][unicode(unquote(jid).split('.history')[0])].name
+					if not name or len(name)==0:
+						item.setText(0,unicode(unquote(jid).split('.history')[0]))
+					else:
+						item.setText(0,name)
+				else:
+					item=QtGui.QTreeWidgetItem(others)
+					item.setText(0,unquote(jid).split('.history')[0])
+				item.setData(0,32,QtCore.QVariant(unicode(unquote(jid).split('.history')[0])))
+				#self.window.ui.seznam.addItem(item)
 				if unicode(unquote(jid).split('.history')[0])==unicode(j):
 					click=item
 			else:
@@ -317,13 +335,13 @@ class Plugin(plugins.PluginBase):
 				all.append(qdate)
 		self.window.ui.calendar.setDates(all)
 		item=self.window.ui.seznam.currentItem()
-		jid = quote(unicode(item.text()))
+		jid = quote(unicode(item.data(0,32).toString()))
 		
 		self.window.ui.text.setText('')
 		datum=self.window.ui.calendar.selectedDate()
 		me=unicode(self.main.client.jid.user)
 
-		user=self.main.ui.roster.getUserItems(unicode(item.text()))
+		user=self.main.ui.roster.getUserItems(unicode(item.data(0,32).toString()))
 		if len(user)!=0:
 			user=user[0].name
 		else:
@@ -334,8 +352,8 @@ class Plugin(plugins.PluginBase):
 		print "got messages"
 		self.window.ui.text.setHtml(html)
 
-	def itemClicked(self, item,setDate=True):
-		jid = quote(unicode(item.text()))
+	def itemClicked(self, item,column=0,setDate=True):
+		jid = quote(unicode(item.data(0,32).toString()))
 		if setDate:
 			self.thread.getDates(jid)
 		else:
@@ -343,7 +361,7 @@ class Plugin(plugins.PluginBase):
 			datum=self.window.ui.calendar.selectedDate()
 			me=unicode(self.main.client.jid.user)
 	
-			user=self.main.ui.roster.getUserItems(unicode(item.text()))
+			user=self.main.ui.roster.getUserItems(unicode(item.data(0,32).toString()))
 			if len(user)!=0:
 				user=user[0].name
 			else:

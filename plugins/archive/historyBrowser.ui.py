@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'plugins/archive/historyBrowser.ui'
 #
-# Created: Wed Nov 28 18:34:13 2007
+# Created: Sat Dec 15 11:59:57 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -30,7 +30,8 @@ class Ui_MainWindow(object):
         self.splitter.setOrientation(QtCore.Qt.Vertical)
         self.splitter.setObjectName("splitter")
 
-        self.seznam = QtGui.QListWidget(self.splitter)
+        self.seznam = QtGui.QTreeWidget(self.splitter)
+        self.seznam.setRootIsDecorated(False)
         self.seznam.setObjectName("seznam")
 
         self.calendarWidget = QtGui.QWidget(self.splitter)
