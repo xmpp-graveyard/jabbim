@@ -741,10 +741,13 @@ class rosterWidget(QtGui.QWidget):
 			#doc.setDefaultFont(font)
 
 			# paint user name 
+			res=""
+			if len(self.main.client.roster['users'][useritem.jid].resources)>1:
+				res=" ("+str(len(self.main.client.roster['users'][useritem.jid].resources))+")"
 			if self.theme:
-				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+"</font>")
+				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+res+"</font>")
 			else:
-				doc.setHtml("<font color=\""+self.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.escapedName+"</font>")
+				doc.setHtml("<font color=\""+self.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.escapedName+res+"</font>")
 			painter.save()
 			painter.translate(x+41,y+8+(32-fontHeight)/2)
 			if useritem.avatar:
@@ -800,8 +803,11 @@ class rosterWidget(QtGui.QWidget):
 			
 			if useritem.avatar:
 				pixmap=useritem.avatar.pixmap(22,22)
+			res=""
+			if len(self.main.client.roster['users'][useritem.jid].resources)>1:
+				res=" ("+str(len(self.main.client.roster['users'][useritem.jid].resources))+")"
 
-			doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+"</font>")
+			doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+res+"</font>")
 			painter.save()
 			painter.translate(x+41,y+(22-fontHeight)/2)
 			if useritem.avatar:
@@ -879,10 +885,13 @@ class rosterWidget(QtGui.QWidget):
 			#doc.setDefaultFont(font)
 
 			# paint user name 
+			res=""
+			if len(self.main.client.roster['users'][useritem.jid].resources)>1:
+				res=" ("+str(len(self.main.client.roster['users'][useritem.jid].resources))+")"
 			if self.theme:
-				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+"</font>")
+				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+res+"</font>")
 			else:
-				doc.setHtml("<font color=\""+self.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.escapedName+"</font>")
+				doc.setHtml("<font color=\""+self.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.escapedName+res+"</font>")
 			painter.save()
 			painter.translate(x+41,y+8+(32-fontHeight)/2)
 			if useritem.avatar:
@@ -933,11 +942,15 @@ class rosterWidget(QtGui.QWidget):
 			#font.setPixelSize(12)
 			#font.setWeight(18)
 			#doc.setDefaultFont(font)
-			
+
+			res=""
+			if len(self.main.client.roster['users'][useritem.jid].resources)>1:
+				res=" ("+str(len(self.main.client.roster['users'][useritem.jid].resources))+")"
+
 			if useritem.avatar:
 				pixmap=useritem.frameAvatar.pixmap(32,32)
 			if useritem.statusMessage:
-				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+"</font>")
+				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+res+"</font>")
 				painter.save()
 				painter.translate(x+41,y+2)
 				if useritem.avatar:
@@ -954,7 +967,7 @@ class rosterWidget(QtGui.QWidget):
 					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-41,y+32))
 				painter.restore()
 			else:
-				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+"</font>")
+				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+res+"</font>")
 				painter.save()
 				painter.translate(x+41,y+(32-fontHeight)/2)
 				if useritem.avatar:
