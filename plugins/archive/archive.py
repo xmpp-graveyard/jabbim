@@ -76,8 +76,11 @@ class FileBackend:
 			if len(to.split('/'))>1:
 				jid=to.split('/')[1]
 
-
-		msg = '|'.join([unicode(t), direction, jid, typ, quote(unicode(subject)), telo])
+		if subject==None:
+			subject=""
+		subject=subject.replace('|', '&#124;').replace("\n","<br/>")
+		#print unicode(subject)
+		msg = '|'.join([unicode(t), direction, jid, typ, unicode(subject), telo])
 		msg = msg.encode('utf8')
 		fp.write(msg+'\n')
 		fp.close()
@@ -365,4 +368,3 @@ class Plugin(plugins.PluginBase):
 	def on_message_send (self, to, body, typ, subject,composing, xhtml,  muc):
 		if not muc and body != None and len(body)!=0:
 			self.thread.saveMessage(to, body, typ, subject, xhtml, "to")
-			pass
