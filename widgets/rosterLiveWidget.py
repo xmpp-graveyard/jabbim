@@ -1807,6 +1807,13 @@ class rosterWidget(QtGui.QWidget):
 				ret.append(user)
 		return ret
 
+	def getMetaParents(self,jid):
+		ret=[]
+		for user in self.users:
+			if user.metajid==jid:
+				ret.append(user)
+		return ret
+
 	def getMetaItems(self,jid):
 		"""
 		Get all metaItems with JID jid
@@ -1853,7 +1860,7 @@ class rosterWidget(QtGui.QWidget):
 			highest=None
 			print "-------"
 			for item in self.metaItems[mainjid]:
-				print jid,item.jid
+				print jid,item.jid,item.status
 				if highest:
 					husertype=""
 					usertype=""
@@ -1867,11 +1874,13 @@ class rosterWidget(QtGui.QWidget):
 						highest=item
 				else:
 					highest=item
+			print highest.jid
 			print "-------"
 			if highest:
-				item=self.getUserItems(mainjid)
+				item=self.getMetaParents(mainjid)
 				if len(item)!=0:
 					item=item[0]
+					print item.jid,highest.jid
 					if item.jid!=highest.jid:
 						item.name=highest.name
 						item.escapedName=highest.escapedName
