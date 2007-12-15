@@ -9,6 +9,14 @@ from include import utils
 #exp = re.compile(" (((https?://)|(ftp://)|(www\.))[^\ ]+)|(([^\ ]*\.){2,}[0-9a-z-A-Z]{2,4}(/[^\ ]*)?)")
 #exp.search('http://jabbim.cz/').group()
 
+class config:
+	def __init__(self,main):
+		self.main=main
+		self.config={}
+		self.config['notify_tray']={'type':'boolean','label':self.main.tr("Notify in tray"),'value':'True'}
+		self.config['notify_show']={'type':'boolean','label':self.main.tr("Show window on new"),'value':'True'}
+		self.config['__sort__']=['notify_tray','notify_show']
+
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
 		plugins.PluginBase.__init__(self, main, homedir)
@@ -20,11 +28,14 @@ class Plugin(plugins.PluginBase):
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.kontakty = {} # jid:contact
-		self.config['notify_tray'] = {'description':'Notify in tray', 'default':'True', 'value': '','type':'boolean'}
-		self.config['notify_show'] = {'description':'Show window on new', 'default':'True', 'value': '','type':'boolean'}
+		#self.config['notify_tray'] = {'description':'Notify in tray', 'default':'True', 'value': '','type':'boolean'}
+		#self.config['notify_show'] = {'description':'Show window on new', 'default':'True', 'value': '','type':'boolean'}
+		self.developMode=True
+		self.installTranslator()
+		self.configDialog=config(self)
 		if main:
 			self.loadConfig()
-			self.installTranslator()
+			#self.installTranslator()
 			self.window = self.loadWindow("%s/plugins/%s/news.ui.py"%(self.homeDir, self.fname))
 			self.window.setWindowIcon(self.main.windowIcon())
 			self.log = False
@@ -61,10 +72,10 @@ class Plugin(plugins.PluginBase):
 			self.kontakty[frm] = Contact(frm, item, self)
 			index = self.kontakty[frm].addHeadline(subject, body)
 		self.kontakty[frm].item.setFont(font)
-		if self.config['notify_tray']['value']=='True':
+		if self.config['notify_tray']=='True':
 			self.main.tray.showMessage("News",subject, QtGui.QSystemTrayIcon.Information, 3000)
  			self.main.events.addInfoEvent(header=self.tr("News: ")+subject,text=self.tr("From: ")+frm,typ='newHeadline',icon="images/32x32/status/rss-online.png", action = self.eventActivated, actionDict = [frm, index], trueCall = self.eventActivated, trueDict = [frm, index], name = '%s-%d'%(frm, index))
-		if self.config['notify_show']['value']=='True':
+		if self.config['notify_show']=='True':
 			self.window.show()
 # 		itm = None
 # 		itm = self.window.ui.roster.currentItem()
