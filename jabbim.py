@@ -608,10 +608,10 @@ class clientClass(pyxl.client.Client):
 				if status!=None:
 					status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
 				# set status
-				try:
-					self.main.ui.roster.setStatus(jid,highest.show,status=highest.status,first=first)
-				except:
-					print 'UGLY HACK! ', jid
+				#try:
+				self.main.ui.roster.setStatus(jid,highest.show,status=highest.status,first=first)
+				#except:
+					#print 'UGLY HACK! ', jid
 			else:
 				# get user status
 				jid=jid.userhost()
