@@ -1111,10 +1111,16 @@ class mainWindow(QtGui.QMainWindow):
 		for x in range(0,len(sys.argv)):
 			if sys.argv[x] == '--home':
 				self.homeDir= sys.argv[x+1]
+		profiles=utils.getProfiles(self.homeDir)
+		#if len(profiles)==0:
+			#QtGui.QMessageBox.warning(self,'Warning',unicode("No profile found"),0,1)
+		# detect old version of config dir (version without profiles)
+		#if os.path.isfile(self.homeDir+'/config'):
+			#QtGui.QMessageBox.warning(self,'Warning',unicode("Because of changes in jabbim configuration system you have to delete contents of your"),0,1)
 
 		statusMess=[]
-		statusMess.append(unicode(self.tr("Default Status Message, 1")))
-		statusMess.append(unicode(self.tr("Default Status Message, 2")))
+		#statusMess.append(unicode(self.tr("Default Status Message, 1")))
+		#statusMess.append(unicode(self.tr("Default Status Message, 2")))
 
 		utils.loadConfig(self,statusMess) # load config files
 		if sys.platform != 'win32':

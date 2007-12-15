@@ -106,6 +106,13 @@ def loadConfig(main,status):
 	if not os.path.isdir(main.homeDir+'/plugins'):
 		os.mkdir(main.homeDir+'/plugins')
 
+def getProfiles(homedir):
+	profiles=[]
+	for file in os.listdir(homedir):
+		if os.path.isdir(homedir+"/"+file):
+			if file.endswith("-profile"):
+				profiles.append(file)
+	return profiles
 
 def getHomeDir():
 	# gets homedir on win32 or linux
