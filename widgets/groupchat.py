@@ -489,6 +489,13 @@ class groupChatWidget(QtGui.QWidget):
 			return items
 		return []
 
+	def getUserName(self,jid):
+		#if self.main.client.groupchats[self.jid].users[nick].truejid:
+		for nick,user in self.main.client.groupchats[self.jid].users.iteritems():
+			if user.truejid==jid:
+				return nick
+		return jid
+
 	def addRole(self,role,name):
 		self.roles[role]=QtGui.QTreeWidgetItem(self.ui.users)
 		self.roles[role].setBackground(0,QtGui.QBrush(self.ui.users.palette().color(QtGui.QPalette.AlternateBase)))
@@ -509,20 +516,29 @@ class groupChatWidget(QtGui.QWidget):
 			return False
 		return True
 
-	def removeUser(self,nick,codes):
+	def removeUser(self,nick,codes=[],reason="",actor=None):
 		if self.main.client.groupchats[self.jid].nick==nick:
 			if u'307' in codes:
 				self.ui.line.setEnabled(False)
 				self.ui.users.clear()
 				self.addRoles()
-				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.tr("You has been kicked from the room."))
+				if actor and len(reason)!=0:
+					name=self.getUserName(actor)
+					message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("You have been kicked from the room by %s. Reason: %s.")) % (unicode(name),unicode(reason)))
+				elif actor:
+					name=self.getUserName(actor)
+					message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("You have been kicked from the room by %s.")) % unicode(name))
+				elif len(reason)!=0:
+					message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("You have been kicked from the room. Reason: %s.")) % unicode(reason))
+				else:
+					message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("You have been kicked from the room.")))
 				self.textEditWrite(message)
 				return
 			elif u'301' in codes:
 				self.ui.line.setEnabled(False)
 				self.ui.users.clear()
 				self.addRoles()
-				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.tr("You has been banned for the room."))
+				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.tr("You have been banned for the room."))
 				self.textEditWrite(message)
 				return
 		if u'307' in codes:

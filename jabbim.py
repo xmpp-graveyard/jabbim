@@ -483,6 +483,7 @@ class clientClass(pyxl.client.Client):
 		if not self.groupchats.has_key(muc):
 			log.msg("bad GC presence:"+unicode(muc)+"; we are not connected there")
 			return
+		print 'reason,actor=',reason,actor
 		if show=="offline":
 			# get user role
 			# find good tab according to jid
@@ -490,7 +491,7 @@ class clientClass(pyxl.client.Client):
 				w=self.main.chat.ui.chatTab.widget(i)
 				if unicode(w.jid)==unicode(muc):
 					# edit user item
-					w.chat.removeUser(nick,codes)
+					w.chat.removeUser(nick,codes,reason,actor)
 					break
 		else:
 			# get user role
