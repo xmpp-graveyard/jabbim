@@ -252,7 +252,7 @@ class Plugin(plugins.PluginBase):
 			layout.addWidget(self.window.ui.calendar)
 			#log.msg(unicode(dir(self.window)))
 			QtCore.QObject.connect(self.window.ui.seznam, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int ) "),self.itemClicked)
-			QtCore.QObject.connect(self.window.ui.calendar, QtCore.SIGNAL("itemSelectionChanged()"),self.calChanged)
+			QtCore.QObject.connect(self.window.ui.calendar, QtCore.SIGNAL("selectionChanged()"),self.calChanged)
 			self.group=QtGui.QButtonGroup(self.window)
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 			self.skin=self.getConfig("skins/gajim.conf")
