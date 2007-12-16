@@ -5,7 +5,7 @@ from PyQt4 import QtCore, QtGui
 from urllib import quote, unquote
 from twisted.python import log
 from configobj import ConfigObj
-
+from twisted.internet import threads
 class calendar(QtGui.QCalendarWidget):
 	def __init__(self,parent):
 		QtGui.QCalendarWidget.__init__(self,parent)
@@ -229,13 +229,14 @@ class Plugin(plugins.PluginBase):
 
 
 		if main:
-			#self.backend=FileBackend(self)
-			self.thread=backendThread(self)
-			QtCore.QObject.connect(self.thread, QtCore.SIGNAL("gotDates(const QStringList &)"), self.gotDates,QtCore.Qt.QueuedConnection)
-			QtCore.QObject.connect(self.thread, QtCore.SIGNAL("gotMessages(const QString &)"), self.gotMessages,QtCore.Qt.QueuedConnection)
-			self.thread.start()
+			#self.thread=backendThread(self)
+			#QtCore.QObject.connect(self.thread, QtCore.SIGNAL("gotDates(const QStringList &)"), self.gotDates,QtCore.Qt.QueuedConnection)
+			#QtCore.QObject.connect(self.thread, QtCore.SIGNAL("gotMessages(const QString &)"), self.gotMessages,QtCore.Qt.QueuedConnection)
+			#self.thread.start()
 
 			self.jid = quote(self.main.client.jid.userhost())
+			self.backend=FileBackend(self)
+
 			if not os.path.isdir(self.main.homeDir+'/archive'):
 				os.mkdir(self.main.homeDir+'/archive')
 					
@@ -325,7 +326,9 @@ class Plugin(plugins.PluginBase):
 	def calChanged(self):	
 		self.itemClicked(self.window.ui.seznam.currentItem(),setDate=False)
 	
-	def gotDates(self,dates):
+	
+	def getDates(self,jid):
+		dates=self.backend.getDates(jid)
 		print "got dates"
 		all=[]
 		for date in list(dates):
@@ -346,7 +349,33 @@ class Plugin(plugins.PluginBase):
 			user=user[0].name
 		else:
 			user=None
-		self.thread.getMessages(jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'])
+		d=threads.deferToThread(self.getMessages,jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'])
+		d.addCallback(self.gotMessages)
+
+	def getMessages(self,jid,datum,me,user,my_message,message,color):
+		action=["",jid,datum,me,user,my_message,message,color]
+		messages=self.backend.getMessages(action[1],action[2])
+		if not messages:
+			return ""
+		
+		html=""
+		me=action[3]
+		user=action[4]
+
+		for msg in messages:
+			d=time.localtime(msg[0])
+			#qdate=QtCore.QDate(d[0],d[1],d[2])
+			#if datum==qdate:
+			if msg[1]=='to':
+				who=me
+				html+=action[5].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("<br/><br/>","<br/>")
+			else:
+				if user:
+					who=user
+				else:
+					who=msg[2]
+				html+=action[6].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("[foreground]",action[7][0]).replace("[background]",action[7][1]).replace("<br/><br/>","<br/>")
+		return html
 
 	def gotMessages(self,html):
 		print "got messages"
@@ -355,7 +384,7 @@ class Plugin(plugins.PluginBase):
 	def itemClicked(self, item,column=0,setDate=True):
 		jid = quote(unicode(item.data(0,32).toString()))
 		if setDate:
-			self.thread.getDates(jid)
+			self.getDates(jid)
 		else:
 			self.window.ui.text.setText('')
 			datum=self.window.ui.calendar.selectedDate()
@@ -366,8 +395,10 @@ class Plugin(plugins.PluginBase):
 				user=user[0].name
 			else:
 				user=None
-			self.thread.getMessages(jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'])
-	
+			#self.thread.getMessages(jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'])
+			 #addCallback(self, callback, *args, **kw)
+			d=threads.deferToThread(self.getMessages,jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'])
+			d.addCallback(self.gotMessages)
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay, error=None):
 		if body != None:
 			#jid = quote(frm.split('/')[0])
@@ -380,9 +411,10 @@ class Plugin(plugins.PluginBase):
 					if len(res)>1:
 						if tab.name==res[1]:
 							return
-			self.thread.saveMessage(frm, body, typ, subject, xhtml, "from")
+			self.backend.saveMessage(frm, body, typ, subject, xhtml, "from")
 
 		
 	def on_message_send (self, to, body, typ, subject,composing, xhtml,  muc):
 		if not muc and body != None and len(body)!=0:
-			self.thread.saveMessage(to, body, typ, subject, xhtml, "to")
+			self.backend.saveMessage(to, body, typ, subject, xhtml, "to")
+			pass
