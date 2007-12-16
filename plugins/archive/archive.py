@@ -112,108 +112,6 @@ class FileBackend:
 		fp.close()
 		return ret
 
-class backendThread(QtCore.QThread):
-	def __init__(self,archive):
-		QtCore.QThread.__init__(self,None)
-		self.archive=archive
-		self.mutex=QtCore.QMutex()
-		self.condition=QtCore.QWaitCondition()
-		self.action=[]
-
-	def __del__(self):
-		self.mutex.lock()
-		self.action = ['stop']
-		self.condition.wakeOne()
-		self.mutex.unlock()
-		self.wait()
-
-
-	def getMessages(self,jid,date,me,user,my_message,message,color1):
-		locker=QtCore.QMutexLocker(self.mutex)
-		self.action.append(["getMessages",jid,date,me,user,my_message,message,color1])
-		self.condition.wakeOne()
-
-	def getDates(self,jid):
-		locker=QtCore.QMutexLocker(self.mutex)
-		self.action.append(["getDates",jid])
-		self.condition.wakeOne()
-
-	def saveMessage(self,to, body, typ, subject, xhtml, direction):
-		locker=QtCore.QMutexLocker(self.mutex)
-		self.action.append(["saveMessage",to,body,typ,subject,xhtml,direction])
-		self.condition.wakeOne()
-
-
-	def run(self):
-		self.mutex.lock()
-		backend=FileBackend(self.archive)
-		self.mutex.unlock()
-		while True:
-			
-			
-			
-			while True:
-				self.mutex.lock()
-				if len(list(self.action))==0:
-					self.mutex.unlock()
-					break
-				else:
-					action=self.action.pop()
-					if action=="stop":
-						self.mutex.unlock()
-						return
-				self.mutex.unlock()
-				
-				if action[0]=="getMessages":
-					messages=backend.getMessages(action[1],action[2])
-					if not messages:
-						break
-					html=""
-					me=action[3]
-					user=action[4]
-
-					for msg in messages:
-						d=time.localtime(msg[0])
-						#qdate=QtCore.QDate(d[0],d[1],d[2])
-						#if datum==qdate:
-						if msg[1]=='to':
-							who=me
-							html+=action[5].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("<br/><br/>","<br/>")
-						else:
-							if user:
-								who=user
-							else:
-								who=msg[2]
-							html+=action[6].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("[foreground]",action[7][0]).replace("[background]",action[7][1]).replace("<br/><br/>","<br/>")
-					self.emit(QtCore.SIGNAL("gotMessages(const QString &)"),QtCore.QString(html))
-				
-				elif action[0]=='getDates':
-					dates=backend.getDates(action[1])
-					self.emit(QtCore.SIGNAL("gotDates(const QStringList &)"),QtCore.QStringList(dates))
-				
-				elif action[0]=='saveMessage':
-					to=action[1]
-					body=action[2]
-					typ=action[3]
-					subject=action[4]
-					xhtml=action[5]
-					direction=action[6]
-					backend.saveMessage(to,body,typ,subject,xhtml,direction)
-			self.mutex.lock()
-			
-			self.action=[]
-			self.mutex.unlock()
-
-			
-			self.mutex.lock()
-			self.condition.wait(self.mutex)
-			self.mutex.unlock()
-			if self.action:
-				if self.action[0]=="stop":
-					return
-			
-
-
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
 		plugins.PluginBase.__init__(self, main, homedir)
@@ -229,10 +127,6 @@ class Plugin(plugins.PluginBase):
 
 
 		if main:
-			#self.thread=backendThread(self)
-			#QtCore.QObject.connect(self.thread, QtCore.SIGNAL("gotDates(const QStringList &)"), self.gotDates,QtCore.Qt.QueuedConnection)
-			#QtCore.QObject.connect(self.thread, QtCore.SIGNAL("gotMessages(const QString &)"), self.gotMessages,QtCore.Qt.QueuedConnection)
-			#self.thread.start()
 
 			self.jid = quote(self.main.client.jid.userhost())
 			self.backend=FileBackend(self)
@@ -395,8 +289,6 @@ class Plugin(plugins.PluginBase):
 				user=user[0].name
 			else:
 				user=None
-			#self.thread.getMessages(jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'])
-			 #addCallback(self, callback, *args, **kw)
 			d=threads.deferToThread(self.getMessages,jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'])
 			d.addCallback(self.gotMessages)
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay, error=None):
@@ -417,4 +309,4 @@ class Plugin(plugins.PluginBase):
 	def on_message_send (self, to, body, typ, subject,composing, xhtml,  muc):
 		if not muc and body != None and len(body)!=0:
 			self.backend.saveMessage(to, body, typ, subject, xhtml, "to")
-			pass
+
