@@ -1805,7 +1805,9 @@ class rosterWidget(QtGui.QWidget):
 				self.selectItem(first)
 		else:
 			self.selectItem(first)
+		self.setSize()
 		self.repaint()
+		
 
 	def getUserItems(self,jid):
 		"""
@@ -2417,7 +2419,8 @@ class rosterWidget(QtGui.QWidget):
 		# show contact context menu
 		item=self.itemAt(event.x(),event.y())
 		if item.typ=="user":
-			self.selectItem(item)
+			if self.item!=item:
+				self.selectItem(item)
 			group=item.group
 			jid=item.jid
 			#if self.main.client.roster['users'].has_key(jid):
