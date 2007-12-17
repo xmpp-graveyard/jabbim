@@ -1111,7 +1111,7 @@ class mainWindow(QtGui.QMainWindow):
 		for x in range(0,len(sys.argv)):
 			if sys.argv[x] == '--home':
 				self.homeDir= sys.argv[x+1]
-		profiles=utils.getProfiles(self.homeDir)
+		
 		#if len(profiles)==0:
 			#QtGui.QMessageBox.warning(self,'Warning',unicode("No profile found"),0,1)
 		# detect old version of config dir (version without profiles)
@@ -1123,6 +1123,7 @@ class mainWindow(QtGui.QMainWindow):
 		#statusMess.append(unicode(self.tr("Default Status Message, 2")))
 
 		utils.loadConfig(self,statusMess) # load config files
+		profiles=utils.getProfiles(self.homeDir)
 		if sys.platform != 'win32':
 			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
 		else:

@@ -767,6 +767,7 @@ class Client(derived):
 								reason = unicode(itm)
 							elif itm.name == 'actor':
 								actor = itm.getAttribute('jid')
+						print reason, actor
 					if item.name == 'status' :
 						codes.append(item['code'])
 			elif child.name == 'x' and child.defaultUri == 'vcard-temp:x:update':
