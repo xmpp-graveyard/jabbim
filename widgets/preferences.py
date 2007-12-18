@@ -347,6 +347,8 @@ class preferencesWindow(QtGui.QDialog):
 		skins=os.listdir("themes/")
 		if self.main.config['theme']=="None":
 			self.ui.useThemes.setChecked(False)
+			QtCore.QObject.connect(self.ui.useThemes,QtCore.SIGNAL("stateChanged ( int )"),self.useThemesChanged)
+		self.currentTheme=self.main.config['theme']
 		for skin in skins:
 			if os.path.isdir("themes/"+skin) and os.path.exists("themes/"+skin+"/style.css"):
 				preview=QtGui.QIcon('themes/'+skin+"/preview.png")
@@ -420,6 +422,19 @@ class preferencesWindow(QtGui.QDialog):
 			log.msg("plugin "+plugin+" loaded.")
 		self.ui.plugins.resizeColumnToContents (0)
 		self.ui.plugins.resizeColumnToContents (1)
+
+	def useThemesChanged(self,state):
+		if not self.ui.useThemes.isChecked():
+			self.main.config['theme']='None'
+			self.main.loadTheme()
+			self.setStyleSheet("")
+		else:
+			item=list(self.ui.themes.selectedItems())
+			if len(item)!=0:
+				item=item[0]
+				data=item.data(32)
+				file=unicode(data.toString())
+				self.reskin(file)
 
 	def pluginSelected(self,item,i):
 		data=item.data(32,0)
@@ -574,6 +589,13 @@ class preferencesWindow(QtGui.QDialog):
 		#self.main.ui.roster.setIconSize(QtCore.QSize(int(size[0]),int(size[1])))
 		self.done(1)
 
+	def reject(self):
+		self.main.config['theme']=self.currentTheme
+		if self.currentTheme!="None":
+			self.reskin(self.currentTheme)
+		else:
+			self.main.loadTheme()
+		self.close()
 class editBookmark(QtGui.QDialog):
 	def __init__(self,main,room,server,name,nickname,password,autojoin,parent,edit=True):
 		apply(QtGui.QDialog.__init__,(self,parent))
