@@ -2421,6 +2421,7 @@ class customStatusWindow(QtGui.QDialog):
 			self.i-=1
 		else:
 			self.accept()
+			self.timer.stop()
 	def accept(self):
 		MainWindow.client.sendPresence(to=self.jid,show = unicode(self.show), status = unicode(self.ui.status.toPlainText ()))
 		self.done(1)
@@ -2457,6 +2458,7 @@ class statusWindow(QtGui.QDialog):
 			self.ui.time.setText(self.tr("Window will be closed in ")+unicode(self.i)+self.tr(" seconds."))
 			self.i-=1
 		else:
+			self.timer.stop()
 			self.accept()
 	def accept(self):
 		if not unicode(self.ui.status.toPlainText()) in MainWindow.config['statusMessages'] and len(unicode(self.ui.status.toPlainText()))!=0 and self.ui.save.isChecked():
