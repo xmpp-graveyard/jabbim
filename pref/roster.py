@@ -5,4 +5,5 @@ class preferences:
 		self.config['rosterMode']={'type':'boolean-radio','label':'','value':'normal','options':{},'groupbox':self.main.tr('Roster style')}
 		self.config['rosterMode']['options']={'normal':self.main.tr('Normal'),'compact':self.main.tr('Compact')}
 		self.config['showTransports']={'type':'boolean','label':self.main.tr('Show transports'),'value':'False'}
-		self.config['__sort__']=['rosterMode','showTransports']
+		self.config['bigOnClick']={'type':'boolean','label':self.main.tr('Display user info on click'),'value':'True'}
+		self.config['__sort__']=['rosterMode','showTransports','bigOnClick']

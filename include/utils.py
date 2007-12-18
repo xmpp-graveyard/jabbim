@@ -75,7 +75,8 @@ def loadConfig(main,status):
 			"sendByCtrl":"False",
 			"showTransports":"False",
 			"oneWindow":"False",
-			"askBeforeQuitMUC":"True"
+			"askBeforeQuitMUC":"True",
+			"bigOnClick":"True"
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:
