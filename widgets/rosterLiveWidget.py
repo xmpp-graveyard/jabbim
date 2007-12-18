@@ -439,6 +439,7 @@ class rosterWidget(QtGui.QWidget):
 					text+='<td><b>'+self.tr("Name:")+'</b> '+item.escapedName+'<br/>'
 					text+='<b>'+self.tr("JID:")+'</b> '+item.jid+'<br/>'
 					contact = self.main.client.roster["users"][item.jid]
+					text+='<b>'+self.tr("Subscription:")+'</b> '+unicode(contact.subscription)+'<br/>'
 					for res in contact.resources.keys():
 						status = contact.resources[res].status
 						if not status:
@@ -474,7 +475,9 @@ class rosterWidget(QtGui.QWidget):
 					dropAction = drag.start(QtCore.Qt.CopyAction | QtCore.Qt.MoveAction)
 			elif len(self.data)!=0:
 				self.data={}
-				
+			if event.buttons()==QtCore.Qt.NoButton:
+				if self.item!=item[0]:
+					self.selectItem(item[0])
 		return QtGui.QWidget.mouseMoveEvent(self,event)
 
 	def popup(self):
