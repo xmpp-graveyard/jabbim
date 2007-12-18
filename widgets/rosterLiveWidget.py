@@ -475,9 +475,7 @@ class rosterWidget(QtGui.QWidget):
 					dropAction = drag.start(QtCore.Qt.CopyAction | QtCore.Qt.MoveAction)
 			elif len(self.data)!=0:
 				self.data={}
-			if event.buttons()==QtCore.Qt.NoButton:
-				if self.item!=item[0]:
-					self.selectItem(item[0])
+				
 		return QtGui.QWidget.mouseMoveEvent(self,event)
 
 	def popup(self):
