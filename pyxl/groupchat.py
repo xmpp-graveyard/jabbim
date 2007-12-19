@@ -37,7 +37,7 @@ class Groupchat:
 		item['role'] = role
 		if reason :
 			item.addElement('reason',  content = reason)
-		self.client.on_xml(iq.toXml())
+		#self.client.on_xml(iq.toXml())
 		d = iq.send()
 		self.client.disp(iq['id'])
 		d.addCallback(self._roleResult)
@@ -67,7 +67,7 @@ class Groupchat:
 		item['affiliation'] = affiliation
 		if reason :
 			item.addElement('reason',  content = reason)
-		self.client.on_xml(iq.toXml())
+		#self.client.on_xml(iq.toXml())
 		d = iq.send()
 		self.client.disp(iq['id'])
 		d.addCallback(self._affiliationResult)
@@ -91,19 +91,19 @@ class Groupchat:
 		presence = domish.Element((None, 'presence'))
 		presence['to'] = '%s/%s'%(self.jid,  self.nick)
 		presence.addElement('x', 'http://jabber.org/protocol/muc')
-		self.client.on_xml(presence.toXml())
+		#self.client.on_xml(presence.toXml())
 		self.client.xmlstream.send(presence)
 
 	
 	def leave(self,  status = None):
 		print 'leaving MUC: ',  self.jid
 		presence = domish.Element((None, 'presence'))
-		presence['to'] = self.jid
+		presence['to'] = self.jid+"/"+self.nick
 		presence['type'] = 'unavailable'
 		if status:
 			presence['status'] = status
 		presence.addElement('x', 'http://jabber.org/protocol/muc')
-		self.client.on_xml(presence.toXml())
+		#self.client.on_xml(presence.toXml())
 		self.client.xmlstream.send(presence)
 
 	

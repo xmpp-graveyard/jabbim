@@ -774,6 +774,7 @@ class groupChatWidget(QtGui.QWidget):
 				return
 			elif services.startswith("/nick "):
 				self.main.client.sendPresence(to=self.jid+"/"+services.replace("/nick ",""))
+				self.main.client.groupchats[self.jid].nick=services.replace("/nick ","")
 				self.ui.line.clear()
 				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 				return

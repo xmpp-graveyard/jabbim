@@ -568,7 +568,7 @@ class derived:
 
 
 	def leaveGC(self,  jid):
-		self.groupchats[jid] .leave()
+		self.groupchats[jid].leave()
 		del self.groupchats[jid]
 		log.msg( 'left MUC: '+ jid)
 ############## MUC admin ##################
