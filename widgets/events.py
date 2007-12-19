@@ -369,7 +369,7 @@ class events:
 		if self.jabbimIcon:
 			self.main.tray.setIcon(self.trayIcon)
 		else:
-			self.main.tray.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
+			self.main.tray.setIcon(self.main.getCurrentTrayIcon())
 		self.jabbimIcon=not self.jabbimIcon
 
 	def trayClicked(self):
@@ -399,7 +399,7 @@ class events:
 				types.append(event['type'])
 		if len(types)==0:
 			self.timer.stop()
-			self.main.tray.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
+			self.main.tray.setIcon(self.main.getCurrentTrayIcon())
 			self.jabbimIcon=True
 		elif len(types)==1:
 			self.trayIcon=self.events[0]['icon']

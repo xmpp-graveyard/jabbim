@@ -2206,6 +2206,18 @@ class mainWindow(QtGui.QMainWindow):
 			
 		return result
 
+	def getCurrentTrayIcon(self):
+		icon=QtGui.QIcon("images/16x16/apps/jabbim.png")
+		if self.selfStatus!='online':
+			result=icon.pixmap(16,16)
+			painter=QtGui.QPainter(result)
+			icon=self.getIcon(status=unicode(self.selfStatus),size="16x16")
+			painter.drawPixmap(0,0,icon.pixmap(16,16))
+			painter.end()
+		else:
+			result=icon
+		return QtGui.QIcon(result)
+
 	def getIcon(self,jid=None,typ=None,size="32x32",status=None,usertype=None):
 		if size=="22x22":
 			size="32x32"
