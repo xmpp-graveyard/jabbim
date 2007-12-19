@@ -2487,7 +2487,16 @@ class statusWindow(QtGui.QDialog):
 			if self.show:
 				jid=self.data
 				self.data=self.show
-
+			icon=QtGui.QIcon("images/16x16/apps/jabbim.png")
+			if self.data!='online':
+				result=icon.pixmap(16,16)
+				painter=QtGui.QPainter(result)
+				icon=MainWindow.getIcon(status=unicode(self.data),size="16x16")
+				painter.drawPixmap(0,0,icon.pixmap(16,16))
+				painter.end()
+			else:
+				result=icon
+			MainWindow.tray.setIcon(QtGui.QIcon(result))
 			#app.postEvent(jab,customEvent(["set_status",self.groupchat,self.data,unicode(self.ui.status.toPlainText ())]))
 			#jab.setStatus(MainWindow.groupchat,self.data,unicode(self.ui.status.toPlainText ()))
 			if MainWindow.config.has_key('autoPriority'):
