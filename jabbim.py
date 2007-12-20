@@ -977,7 +977,8 @@ class clientClass(pyxl.client.Client):
 				text+="</td></tr></table>"
 				self.main.events.addInfoEvent(header=self.main.tr("New message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[],tooltip=text)
 				self.main.tray.showMessage(self.main.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
-		
+				if self.main.chat.isHidden():
+					self.main.chat.showMinimized()
 		
 		# we found tab
 		if chatstate=="composing":

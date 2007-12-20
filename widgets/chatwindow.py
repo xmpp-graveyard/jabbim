@@ -552,8 +552,12 @@ class chatWindow(QtGui.QMainWindow):
 		print "adding new tab...", icon
 		tab.tabName=unicode("&"+unicode(name))
 		self.ui.chatTab.addTab(tab,icon,"&"+unicode(name))
-		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
-		self.setWindowTitle(unicode(name))
+		if message:
+			tab.unread=1
+			self.setWindowTitle("(1) "+unicode(name))
+		else:
+			self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
+			self.setWindowTitle(unicode(name))
 		if jidT.JID(jid).resource:
 			tab.chat.ui.label.setText("<font size=\"3\"><b>"+name+"</b><br/>"+self.tr("Resource:")+" "+jidT.JID(jid).resource+"</font>")
 		else:
