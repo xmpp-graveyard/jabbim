@@ -1112,7 +1112,7 @@ class mainWindow(QtGui.QMainWindow):
 		for x in range(0,len(sys.argv)):
 			if sys.argv[x] == '--home':
 				self.homeDir= sys.argv[x+1]
-		
+		self.realHomeDir=unicode(self.homeDir)
 		#if len(profiles)==0:
 			#QtGui.QMessageBox.warning(self,'Warning',unicode("No profile found"),0,1)
 		# detect old version of config dir (version without profiles)
@@ -1122,9 +1122,14 @@ class mainWindow(QtGui.QMainWindow):
 		statusMess=[]
 		#statusMess.append(unicode(self.tr("Default Status Message, 1")))
 		#statusMess.append(unicode(self.tr("Default Status Message, 2")))
-
 		utils.loadConfig(self,statusMess) # load config files
 		profiles=utils.getProfiles(self.homeDir)
+		for profile in profiles:
+			jid=profile.replace('-profile','')
+			self.ui.profilesList.addItem(jid)
+			#if self.config['jid']==jid:
+		
+		
 		if sys.platform != 'win32':
 			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
 		else:
@@ -1218,6 +1223,7 @@ class mainWindow(QtGui.QMainWindow):
 #		app.connect(self.ui.selfStatus_label, QtCore.SIGNAL("clicked()"), self.statMsgChanged)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.bookmarksCurrentChanged)
+		QtCore.QObject.connect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
 
 		self.ui.actionAdd_Contact.setEnabled(False)
 		self.ui.actionJoin_Groupchat.setEnabled(False)
@@ -1323,6 +1329,11 @@ class mainWindow(QtGui.QMainWindow):
 		if self.config['autoJoin']=='True':
 			self.ui.rosterStackedWidget.setCurrentIndex(2)
 			self.connect()
+	
+	def profileChanged(self,jid):
+		self.homeDir=unicode(self.realHomeDir+"/"+jid+"-profile")
+		utils.loadConfig(self,[]) # load config files
+		self.fillLoginForm()
 
 	def fillLoginForm(self):
 		# fill login form
@@ -1742,6 +1753,9 @@ class mainWindow(QtGui.QMainWindow):
 						expanded.append(name)
 				self.config['expandedGroups']=expanded
 				self.config.write()
+		f=open(self.realHomeDir+"/config",'w')
+		self.config.write(f)
+		f.close()
 		print "LOG 3"
 		self.tray.hide()
 		app.closeAllWindows()
@@ -2263,7 +2277,7 @@ class mainWindow(QtGui.QMainWindow):
 
 
 
-
+	#def newProfiles(self)
 
 	def connect(self):
 		# Connect to the server
@@ -2272,22 +2286,36 @@ class mainWindow(QtGui.QMainWindow):
 		password=unicode(self.ui.login_password.text())
 		self.ui.loginInfo.setText(self.tr("Connecting to the server..."))
 		self.config['autoJoin']=unicode(self.ui.login_autoconnect.isChecked())
-		if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
-			
-			if (jid!=self.config['jid'] or ( unicode(self.ui.login_savePassword.isChecked())=="True" and unicode(rot13.scramble(password))!=unicode(self.config['passwd']))) or unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked()):
-				print jid!=self.config['jid']
-				print unicode(rot13.scramble(password))!=unicode(self.config['passwd'])
-				#print unicode(self.config['savePasswd'])=="True"
-				print unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked())
-				ret=QtGui.QMessageBox.question(self,self.tr("Login information"), self.tr("Save current login information?"),3,4)
-				if ret==3:
-					self.config['savePasswd']=self.ui.login_savePassword.isChecked()
-					if self.ui.login_savePassword.isChecked()==True:
-						self.config['passwd']=rot13.scramble(password)
-					else:
-						self.config['passwd']=""
-					self.config['jid']=jid
-					self.config.write()
+		profiles=utils.getProfiles(self.realHomeDir)
+		if jid+"-profile" in profiles:
+			if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
+				
+				if (jid!=self.config['jid'] or ( unicode(self.ui.login_savePassword.isChecked())=="True" and unicode(rot13.scramble(password))!=unicode(self.config['passwd']))) or unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked()):
+					print jid!=self.config['jid']
+					print unicode(rot13.scramble(password))!=unicode(self.config['passwd'])
+					#print unicode(self.config['savePasswd'])=="True"
+					print unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked())
+					ret=QtGui.QMessageBox.question(self,self.tr("Login information"), self.tr("Save current login information?"),3,4)
+					if ret==3:
+						self.config['savePasswd']=self.ui.login_savePassword.isChecked()
+						if self.ui.login_savePassword.isChecked()==True:
+							self.config['passwd']=rot13.scramble(password)
+						else:
+							self.config['passwd']=""
+						self.config['jid']=jid
+						self.config.write()
+		else:
+			ret=QtGui.QMessageBox.question(self,self.tr("New profile"), self.tr("Profile for this JID doesn't exist. Do you want to create it?"),3,4)
+			if ret==3:
+				self.homeDir=self.realHomeDir+"/"+jid+"-profile"
+				utils.loadConfig(self,[]) # load config files
+				self.config['savePasswd']=self.ui.login_savePassword.isChecked()
+				if self.ui.login_savePassword.isChecked()==True:
+					self.config['passwd']=rot13.scramble(password)
+				else:
+					self.config['passwd']=""
+				self.config['jid']=jid
+				self.config.write()
 		if self.client==None:
 			if self.config.has_key('resource'):
 				resource=''.join(self.config['resource'])
