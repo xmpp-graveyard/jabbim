@@ -154,6 +154,7 @@ class Client(derived):
 	
 	def _dnsLookupErr(self, resp):
 		print 'err:', resp
+		print dir(resp)
 		self._connect(self.host, self.port)
 		#self._connect('talk.google.com', self.port)
 
