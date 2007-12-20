@@ -2288,6 +2288,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.config['autoJoin']=unicode(self.ui.login_autoconnect.isChecked())
 		profiles=utils.getProfiles(self.realHomeDir)
 		if jid+"-profile" in profiles:
+			self.homeDir=self.realHomeDir+"/"+jid+"-profile"
+			utils.loadConfig(self,[]) # load config files
 			if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
 				
 				if (jid!=self.config['jid'] or ( unicode(self.ui.login_savePassword.isChecked())=="True" and unicode(rot13.scramble(password))!=unicode(self.config['passwd']))) or unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked()):
