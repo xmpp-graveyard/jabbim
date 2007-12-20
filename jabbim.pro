@@ -38,7 +38,7 @@ widgets/commands.py \
 widgets/commands_ui.py \
 widgets/vcardeditor.py \
 widgets/vcardeditor_ui.py \
-widgets/about.py
+widgets/about.py \
 wizards/registration.py
 
 TRANSLATIONS    = locales/jabbim_cs.ts \
