@@ -191,6 +191,9 @@ Jáchym 'kamahl' Barvínek</string>
      <property name="alignment" >
       <set>Qt::AlignCenter</set>
      </property>
+     <property name="openExternalLinks" >
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item row="12" column="0" >

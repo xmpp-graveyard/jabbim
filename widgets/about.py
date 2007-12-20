@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'about.ui'
 #
-# Created: Tue Oct 30 18:02:33 2007
+# Created: Thu Dec 20 18:51:25 2007
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -81,6 +81,7 @@ class Ui_about_window(object):
 
         self.label_12 = QtGui.QLabel(about_window)
         self.label_12.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_12.setOpenExternalLinks(True)
         self.label_12.setObjectName("label_12")
         self.gridlayout.addWidget(self.label_12,11,0,1,1)
 
