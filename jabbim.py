@@ -2334,22 +2334,22 @@ class mainWindow(QtGui.QMainWindow):
 						self.config['jid']=jid
 						self.config.write()
 		else:
-			ret=QtGui.QMessageBox.question(self,self.tr("New profile"), self.tr("Profile for this JID doesn't exist. Do you want to create it?"),3,4)
-			if ret==3:
-				self.homeDir=self.realHomeDir+"/"+jid+"-profile"
-				if not os.path.isdir(self.homeDir):
-					os.mkdir(self.homeDir)
-				f=open(self.homeDir+"/config",'w')
-				self.config.write(f)
-				f.close()
-				utils.loadConfig(self,[]) # load config files
-				self.config['savePasswd']=self.ui.login_savePassword.isChecked()
-				if self.ui.login_savePassword.isChecked()==True:
-					self.config['passwd']=rot13.scramble(password)
-				else:
-					self.config['passwd']=""
-				self.config['jid']=jid
-				self.config.write()
+			#ret=QtGui.QMessageBox.question(self,self.tr("New profile"), self.tr("Profile for this JID doesn't exist. Do you want to create it?"),3,4)
+			#if ret==3:
+			self.homeDir=self.realHomeDir+"/"+jid+"-profile"
+			if not os.path.isdir(self.homeDir):
+				os.mkdir(self.homeDir)
+			f=open(self.homeDir+"/config",'w')
+			self.config.write(f)
+			f.close()
+			utils.loadConfig(self,[]) # load config files
+			self.config['savePasswd']=self.ui.login_savePassword.isChecked()
+			if self.ui.login_savePassword.isChecked()==True:
+				self.config['passwd']=rot13.scramble(password)
+			else:
+				self.config['passwd']=""
+			self.config['jid']=jid
+			self.config.write()
 		if self.client==None:
 			if self.config.has_key('resource'):
 				resource=''.join(self.config['resource'])
