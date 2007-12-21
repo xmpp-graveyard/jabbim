@@ -72,7 +72,7 @@ border-bottom: 2px solid #C2C7CB;
                                      stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);
 }
 
-QWidget#rosterWidget > QWidget{
+QWidget#rosterTab > QWidget#rosterWidget > QWidget{
 border:0;
 }
 
