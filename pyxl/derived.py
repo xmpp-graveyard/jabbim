@@ -196,6 +196,8 @@ class derived:
 		if len(message.children) == 0:
 			return
 #		self.on_xml(message.toXml())
+		if self.evil:
+			message.addElement('evil', 'http://jabber.org/protocol/evil')
 		self.xmlstream.send(message)
 
 

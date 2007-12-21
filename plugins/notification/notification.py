@@ -245,7 +245,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'System tray and sound notification'
 		self.author = "Jan 'HanzZ' Kaluza & Josef 'PepeQ' Halicek"
 		self.name = 'Notification Plugin'
-		self.version = '0.556'
+		self.version = '0.666'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.installTranslator()
@@ -269,6 +269,7 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('on_message', self.on_message)
 			self.registerHandler('on_GCmessage', self.on_GCmessage)
 			self.registerHandler('on_presence',self.on_presence)
+			self.registerHandler('on_evil',self.on_evil)
 			self.loadConfig()
 			self.playsound('start')
 			self.osd=osd(self)
@@ -331,6 +332,26 @@ class Plugin(plugins.PluginBase):
 		self.playsound('new_message')
 		self.osd.test()
 	
+	def on_evil(self, frm, typ):
+		jid = jidT.JID(frm)		
+		user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
+		if len(user)==0:
+			user=self.main.ui.roster.getMetaItems(jid.userhost())
+			if len(user)!=0:
+				user=user[0]
+		if len(user)!=0:
+			#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
+			it=user[0]
+			user=user[0].name
+			
+		else:
+			it=None
+			user=unicode(jid.full())
+		
+		print 'EVIL PANIC!!!'
+		pixmap=self.main.getAvatar(jid.userhost().replace('/','%'),frame=False,size="64x64")
+		self.osd.view(pixmap,self.tr('WARNING!'),unicode('Evil '+typ+' from '+jid.userhost()),self.addChatTab,[it,jid])
+		
 	def on_presence(self,jid,show,error):
 		if error or self.config['osd_on_presence']=="False":
 			return
@@ -413,13 +434,11 @@ class Plugin(plugins.PluginBase):
 				# we found tab
 			if tab!=None:
 				if tab.chat.first==None or tab.chat.first==True:
-					print "coe?"
 					self.playsound('new_message')
 					#self.main.tray.showMessage(self.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 5000)
 					print unicode(user)
 					#self.startTrayBlink()
 				else:
-					print "pyco coe?"
 					self.playsound('message')
 		if self.config['osd_on_message']=="True" and not self.main.chat.isActiveWindow():
 			print "osd"

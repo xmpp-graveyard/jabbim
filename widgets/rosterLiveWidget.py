@@ -1560,6 +1560,9 @@ class rosterWidget(QtGui.QWidget):
 			check=not self.main.ui.showOffline.isChecked()
 			self.main.ui.showOffline.setChecked(check)
 			self.main.hideOffline(check)
+		elif key==QtCore.Qt.Key_E and event.modifiers() & QtCore.Qt.ControlModifier:
+			self.main.client.evil = not self.main.client.evil
+			print self.main.client.evil
 		else:
 			#self.main.ui.rosterSearch.setFocus(QtCore.Qt.MouseFocusReason)
 			self.main.ui.rosterSearch.event(event)

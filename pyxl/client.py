@@ -108,6 +108,7 @@ class Client(derived):
 		self.caps_cache = {} # 'node': [feature1, feature2]
 		
 # 		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
+		self.evil = False
 		self.log = True
 		self.xmlLang = 'cs'
 		self.dispatcher = events.EventDispatcher()
@@ -254,6 +255,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/message/confirm[@xmlns='http://jabber.org/protocol/http-auth']", self.onVerify, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/ping[@xmlns='urn:xmpp:ping']", self.onPing, 1)
 		self.xmlstream.addObserver("/message/x[@xmlns='http://jabber.org/protocol/muc#user']/invite", self.onInvite, 1)
+		self.xmlstream.addObserver("/*/evil[@xmlns='http://jabber.org/protocol/evil']", self.onEvil, 1)
 	
 		
 		self.getMetacontacts()
@@ -1673,9 +1675,12 @@ class Client(derived):
 #		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 
-
+	def onEvil(self, el):
+		log.msg('we are tainted by evil')
+		frm = el['from'] 
+		typ = el.name
+		self.dispatcher.publishEvent('on_evil', frm, typ)
 		
-	
 	def disp(self, id):
 		self.idlist.append(id)
 
