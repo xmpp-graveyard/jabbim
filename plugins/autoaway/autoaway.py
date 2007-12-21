@@ -101,7 +101,7 @@ class config:
 		self.main=main
 		self.config={}
 		self.config['awayTime']={'type':'number-spin','label':self.main.tr("Away time (minutes):"),'value':'5'}
-		self.config['awayMessage']={'type':'text-multi','label':self.main.tr("Away text"),'value':self.main.tr("I'm not here for more than [time] minutes.")}
+		self.config['awayMessage']={'type':'text-multi','label':self.main.tr("Away text"),'value':self.main.tr("I'm not here since [last].")}
 		self.config['__sort__']=['awayTime','awayMessage']
 
 class Plugin(plugins.PluginBase):
@@ -164,10 +164,11 @@ class Plugin(plugins.PluginBase):
 		#print "current show:",contact.resources[self.main.client.jid.resource].show
 		if self.main.selfStatus=="online":
 			self.main.ui.statusButton.setIcon(self.main.getIcon(status='away', size="16x16"))
-			self.main.ui.showWidget.setText(self.config['awayMessage'].replace('[time]',self.config['awayTime']))
-			self.main.client.sendPresence(show = 'away', status = self.config['awayMessage'].replace('[time]',self.config['awayTime']))
+			now=self.main.now()
+			self.main.ui.showWidget.setText(self.config['awayMessage'].replace('[time]',self.config['awayTime']).replace("[last]",unicode(now)))
+			self.main.client.sendPresence(show = 'away', status = self.config['awayMessage'].replace('[time]',self.config['awayTime']).replace("[last]",unicode(now)))
 			for muc in self.main.client.groupchats.itervalues():
-				self.main.client.sendPresence(show = 'away', status = self.config['awayMessage'].replace('[time]',self.config['awayTime']), to = '%s/%s'%(muc.jid, muc.nick))
+				self.main.client.sendPresence(show = 'away', status = self.config['awayMessage'].replace('[time]',self.config['awayTime']).replace("[last]",unicode(now)), to = '%s/%s'%(muc.jid, muc.nick))
 			self.message_set=True
 
 
