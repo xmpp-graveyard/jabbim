@@ -819,6 +819,7 @@ class chatWindow(QtGui.QMainWindow):
 			self.main.config['groupchatSplitSizes3']=list(w.chat.ui.splitter_3.sizes())
 
 		if str(w.typ)=="groupchat" and self.main.client!=None:
+			print self.main.config["askBeforeQuitMUC"]
 			if ask and self.main.config["askBeforeQuitMUC"]=="True":
 				d=leaveMucDialog(self.main,w.jid,self)
 				if d.exec_()==1:
