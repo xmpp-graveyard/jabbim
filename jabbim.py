@@ -1336,7 +1336,10 @@ class mainWindow(QtGui.QMainWindow):
 
 	def fillLoginForm(self):
 		profiles=utils.getProfiles(self.realHomeDir)
-
+		
+		if len(profiles)==0:
+			self.ui.profilesList.hide()
+		
 		if self.ui.profilesList.count()!=len(profiles):
 			QtCore.QObject.disconnect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
 			self.ui.profilesList.clear()
