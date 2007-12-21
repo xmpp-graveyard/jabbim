@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Thu Dec 20 19:58:39 2007
+# Created: Fri Dec 21 05:15:38 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -186,6 +186,7 @@ class Ui_MainWindow(object):
         self.gridlayout1.addItem(spacerItem7,6,0,1,1)
 
         self.profilesList = QtGui.QComboBox(self.login)
+        self.profilesList.setIconSize(QtCore.QSize(22,22))
         self.profilesList.setObjectName("profilesList")
         self.gridlayout1.addWidget(self.profilesList,9,0,1,1)
         self.rosterStackedWidget.addWidget(self.login)

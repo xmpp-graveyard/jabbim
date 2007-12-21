@@ -1123,11 +1123,7 @@ class mainWindow(QtGui.QMainWindow):
 		#statusMess.append(unicode(self.tr("Default Status Message, 1")))
 		#statusMess.append(unicode(self.tr("Default Status Message, 2")))
 		utils.loadConfig(self,statusMess) # load config files
-		profiles=utils.getProfiles(self.homeDir)
-		for profile in profiles:
-			jid=profile.replace('-profile','')
-			self.ui.profilesList.addItem(jid)
-			#if self.config['jid']==jid:
+
 		
 		
 		if sys.platform != 'win32':
@@ -1334,8 +1330,36 @@ class mainWindow(QtGui.QMainWindow):
 		self.homeDir=unicode(self.realHomeDir+"/"+jid+"-profile")
 		utils.loadConfig(self,[]) # load config files
 		self.fillLoginForm()
+		self.loadTheme()
+		self.ui.roster.reskin()
+
 
 	def fillLoginForm(self):
+		profiles=utils.getProfiles(self.realHomeDir)
+
+		if self.ui.profilesList.count()!=len(profiles):
+			QtCore.QObject.disconnect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
+			self.ui.profilesList.clear()
+			for profile in profiles:
+				jid=profile.replace('-profile','')
+		
+				if os.path.isfile(self.realHomeDir+"/"+profile+"/avatars/"+unicode(jid)):
+					avatar=QtGui.QPixmap(self.realHomeDir+"/"+profile+"/avatars/"+unicode(jid)).scaled(22,22,QtCore.Qt.KeepAspectRatio)
+					result=QtGui.QPixmap(22,22)
+					result.fill(QtCore.Qt.transparent)
+					painter=QtGui.QPainter(result)
+					painter.drawPixmap((22-avatar.width())/2,(22-avatar.height())/2,avatar)
+					painter.end()
+					result=QtGui.QIcon(result)
+				else:
+					result=QtGui.QIcon("images/22x22/apps/jabbim.png")
+		
+				if self.config['jid']==jid:
+					self.ui.profilesList.insertItem(0,result,jid)
+				else:
+					self.ui.profilesList.addItem(result,jid)
+			self.ui.profilesList.setCurrentIndex(0)
+			QtCore.QObject.connect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
 		# fill login form
 		self.ui.login_password.setText(rot13.scramble(self.config['passwd']))
 		self.ui.login_jid.setText(self.config['jid'])
@@ -2310,6 +2334,11 @@ class mainWindow(QtGui.QMainWindow):
 			ret=QtGui.QMessageBox.question(self,self.tr("New profile"), self.tr("Profile for this JID doesn't exist. Do you want to create it?"),3,4)
 			if ret==3:
 				self.homeDir=self.realHomeDir+"/"+jid+"-profile"
+				if not os.path.isdir(self.homeDir):
+					os.mkdir(self.homeDir)
+				f=open(self.homeDir+"/config",'w')
+				self.config.write(f)
+				f.close()
 				utils.loadConfig(self,[]) # load config files
 				self.config['savePasswd']=self.ui.login_savePassword.isChecked()
 				if self.ui.login_savePassword.isChecked()==True:

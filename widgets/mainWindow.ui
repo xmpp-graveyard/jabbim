@@ -353,7 +353,14 @@ p, li { white-space: pre-wrap; }
           </spacer>
          </item>
          <item row="9" column="0" >
-          <widget class="QComboBox" name="profilesList" />
+          <widget class="QComboBox" name="profilesList" >
+           <property name="iconSize" >
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
