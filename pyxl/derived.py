@@ -165,6 +165,8 @@ class derived:
 
 		log.msg('sending out presence to: ' + unicode(to))
 #		self.on_xml(presence.toXml())
+		if self.evil :
+			presence.addElement('evil', 'http://jabber.org/protocol/evil')
 		self.xmlstream.send(presence)
 
 	def sendMessage(self, to, body=None, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
@@ -196,7 +198,7 @@ class derived:
 		if len(message.children) == 0:
 			return
 #		self.on_xml(message.toXml())
-		if self.evil:
+		if self.evil and body != None and body.strip() != '' :
 			message.addElement('evil', 'http://jabber.org/protocol/evil')
 		self.xmlstream.send(message)
 
