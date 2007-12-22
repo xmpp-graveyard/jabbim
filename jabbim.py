@@ -1118,11 +1118,8 @@ class mainWindow(QtGui.QMainWindow):
 			if USE_WIZARDS:
 				self.startwiz=wizards.firststart.firstStartWizard(self,self)
 				self.startwiz.show()
-			#QtGui.QMessageBox.warning(self,'Warning',unicode("No profile found"),0,1)
-			#QtGui.QMessageBox.warning(self,'Warning',unicode("No profile found"),0,1)
-		# detect old version of config dir (version without profiles)
-		#if os.path.isfile(self.homeDir+'/config'):
-			#QtGui.QMessageBox.warning(self,'Warning',unicode("Because of changes in jabbim configuration system you have to delete contents of your"),0,1)
+
+
 
 		statusMess=[]
 		#statusMess.append(unicode(self.tr("Default Status Message, 1")))
@@ -1130,8 +1127,14 @@ class mainWindow(QtGui.QMainWindow):
 		if len(profiles)==1:
 			self.homeDir=self.realHomeDir+"/"+profiles[0]
 		utils.loadConfig(self,statusMess) # load config files
+		if not self.config['jid']+"-profile" in profiles:
+			if len(profiles)!=0:
+				self.homeDir=self.realHomeDir+"/"+profiles[0]
+				utils.loadConfig(self,statusMess) # load config files
+			else:
+				os.remove(self.realHomeDir+'/config')
+				utils.loadConfig(self,statusMess) # load config files
 
-		
 		
 		if sys.platform != 'win32':
 			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
@@ -1759,43 +1762,44 @@ class mainWindow(QtGui.QMainWindow):
 		if self.client and self.client.privacy.active:
 			self.client.privacy.active.unsetInvisible(available=False) # hack
 		print "LOG 1"
-		if str(self.config["saveGeometry"])=="True":
-			rect=self.geometry()
-			x=int(rect.x())
-			y=int(rect.y())
-			width=int(rect.width())
-			height=int(rect.height())
-			self.config["windowGeometry"]=[x,y,width,height]
-			rect=self.chat.geometry()
-			x=int(rect.x())
-			y=int(rect.y())
-			width=int(rect.width())
-			height=int(rect.height())
-			self.config["chatGeometry"]=[x,y,width,height]
-			for i in range(self.chat.ui.chatTab.count()):
-				w=self.chat.ui.chatTab.widget(i)
-				if w.typ=="chat":
-					self.config['chatSplitterSizes']=list(w.chat.ui.splitter.sizes())
-					self.config['chatSplitter2Sizes']=list(w.chat.ui.splitter_2.sizes())
-					break
-			for i in range(self.chat.ui.chatTab.count()):
-				w=self.chat.ui.chatTab.widget(i)
-				if w.typ=="groupchat":
-					self.config['groupchatSplitSizes1']=list(w.chat.ui.splitter.sizes())
-					self.config['groupchatSplitSizes2']=list(w.chat.ui.splitter_2.sizes())
-					self.config['groupchatSplitSizes3']=list(w.chat.ui.splitter_3.sizes())
-
-					break
-			self.config.write()
-		print "LOG 2"
-		if str(self.config['saveExpandedGroups'])=='True':
-			expanded=[]
-			if self.client!=None:
-				for name,item in self.client.roster['groups'].iteritems():
-					if item.expanded==True:
-						expanded.append(name)
-				self.config['expandedGroups']=expanded
+		if os.path.isfile(self.config.filename):
+			if str(self.config["saveGeometry"])=="True":
+				rect=self.geometry()
+				x=int(rect.x())
+				y=int(rect.y())
+				width=int(rect.width())
+				height=int(rect.height())
+				self.config["windowGeometry"]=[x,y,width,height]
+				rect=self.chat.geometry()
+				x=int(rect.x())
+				y=int(rect.y())
+				width=int(rect.width())
+				height=int(rect.height())
+				self.config["chatGeometry"]=[x,y,width,height]
+				for i in range(self.chat.ui.chatTab.count()):
+					w=self.chat.ui.chatTab.widget(i)
+					if w.typ=="chat":
+						self.config['chatSplitterSizes']=list(w.chat.ui.splitter.sizes())
+						self.config['chatSplitter2Sizes']=list(w.chat.ui.splitter_2.sizes())
+						break
+				for i in range(self.chat.ui.chatTab.count()):
+					w=self.chat.ui.chatTab.widget(i)
+					if w.typ=="groupchat":
+						self.config['groupchatSplitSizes1']=list(w.chat.ui.splitter.sizes())
+						self.config['groupchatSplitSizes2']=list(w.chat.ui.splitter_2.sizes())
+						self.config['groupchatSplitSizes3']=list(w.chat.ui.splitter_3.sizes())
+	
+						break
 				self.config.write()
+			print "LOG 2"
+			if str(self.config['saveExpandedGroups'])=='True':
+				expanded=[]
+				if self.client!=None:
+					for name,item in self.client.roster['groups'].iteritems():
+						if item.expanded==True:
+							expanded.append(name)
+					self.config['expandedGroups']=expanded
+					self.config.write()
 		f=open(self.realHomeDir+"/config",'w')
 		self.config.write(f)
 		f.close()
