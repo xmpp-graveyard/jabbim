@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sat Dec 22 12:58:18 2007
+# Created: Sat Dec 22 14:05:01 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -38,11 +38,11 @@ class Ui_MainWindow(object):
         self.gridlayout1.setSpacing(6)
         self.gridlayout1.setObjectName("gridlayout1")
 
-        self.line_2 = QtGui.QFrame(self.login)
-        self.line_2.setFrameShape(QtGui.QFrame.HLine)
-        self.line_2.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line_2.setObjectName("line_2")
-        self.gridlayout1.addWidget(self.line_2,8,0,1,1)
+        self.profilesLine = QtGui.QFrame(self.login)
+        self.profilesLine.setFrameShape(QtGui.QFrame.HLine)
+        self.profilesLine.setFrameShadow(QtGui.QFrame.Sunken)
+        self.profilesLine.setObjectName("profilesLine")
+        self.gridlayout1.addWidget(self.profilesLine,8,0,1,1)
 
         self.line = QtGui.QFrame(self.login)
         self.line.setFrameShape(QtGui.QFrame.HLine)
@@ -177,10 +177,10 @@ class Ui_MainWindow(object):
         self.login_headerLabel.setObjectName("login_headerLabel")
         self.gridlayout1.addWidget(self.login_headerLabel,0,0,1,1)
 
-        self.login_headerLabel_2 = QtGui.QLabel(self.login)
-        self.login_headerLabel_2.setAlignment(QtCore.Qt.AlignCenter)
-        self.login_headerLabel_2.setObjectName("login_headerLabel_2")
-        self.gridlayout1.addWidget(self.login_headerLabel_2,7,0,1,1)
+        self.profilesHeader = QtGui.QLabel(self.login)
+        self.profilesHeader.setAlignment(QtCore.Qt.AlignCenter)
+        self.profilesHeader.setObjectName("profilesHeader")
+        self.gridlayout1.addWidget(self.profilesHeader,7,0,1,1)
 
         spacerItem7 = QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
         self.gridlayout1.addItem(spacerItem7,6,0,1,1)
@@ -458,7 +458,7 @@ class Ui_MainWindow(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:13pt; font-weight:600;\">Connect</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.login_headerLabel_2.setText(QtGui.QApplication.translate("MainWindow", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        self.profilesHeader.setText(QtGui.QApplication.translate("MainWindow", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\';\"><span style=\" font-size:13pt; font-weight:600;\">Profiles</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))

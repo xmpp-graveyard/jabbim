@@ -1118,7 +1118,6 @@ class mainWindow(QtGui.QMainWindow):
 			if USE_WIZARDS:
 				self.startwiz=wizards.firststart.firstStartWizard(self,self)
 				self.startwiz.show()
-
 			#QtGui.QMessageBox.warning(self,'Warning',unicode("No profile found"),0,1)
 			#QtGui.QMessageBox.warning(self,'Warning',unicode("No profile found"),0,1)
 		# detect old version of config dir (version without profiles)
@@ -1128,6 +1127,8 @@ class mainWindow(QtGui.QMainWindow):
 		statusMess=[]
 		#statusMess.append(unicode(self.tr("Default Status Message, 1")))
 		#statusMess.append(unicode(self.tr("Default Status Message, 2")))
+		if len(profiles)==1:
+			self.homeDir=self.realHomeDir+"/"+profiles[0]
 		utils.loadConfig(self,statusMess) # load config files
 
 		
@@ -1235,6 +1236,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		#app.connect(self.ui.addContact, QtCore.SIGNAL("clicked ()"),self.addContactMainWindow)
 		app.connect(self.ui.mucBrowserButton, QtCore.SIGNAL("clicked ()"),self.mucBrowser)
+		self.ui.registerButton.hide()
 		app.connect(self.ui.registerButton, QtCore.SIGNAL("clicked ()"),self.registerButtonClicked)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.bookmarksItemClicked)
@@ -1345,9 +1347,15 @@ class mainWindow(QtGui.QMainWindow):
 	def fillLoginForm(self):
 		profiles=utils.getProfiles(self.realHomeDir)
 		
-		if len(profiles)==0:
+		if len(profiles)<=1:
 			self.ui.profilesList.hide()
-		
+			self.ui.profilesLine.hide()
+			self.ui.profilesHeader.hide()
+		else:
+			self.ui.profilesList.show()
+			self.ui.profilesLine.show()
+			self.ui.profilesHeader.show()
+
 		if self.ui.profilesList.count()!=len(profiles):
 			QtCore.QObject.disconnect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
 			self.ui.profilesList.clear()

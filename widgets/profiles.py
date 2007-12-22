@@ -58,17 +58,23 @@ class profilesWindow(QtGui.QMainWindow):
 	
 			#self.ui.profilesList.addItem(result,jid)
 			item=QtGui.QListWidgetItem(result,jid,self.ui.profilesList)
-		
+		return profiles
 
 	def newProfile(self):
 		fs=firststart.firstStartWizard(self.main,self.main)
 		fs.exec_()
 		self.loadProfiles()
+
 	def removeProfile(self):
 		item=self.ui.profilesList.currentItem()
 		jid=unicode(item.text())
 		shutil.rmtree(self.main.realHomeDir+"/"+jid+"-profile",True)
-		self.loadProfiles()
+		profiles=self.loadProfiles()
+		print profiles
+		if len(profiles)>0:
+			print "profilechanged"
+			self.main.profileChanged(profiles[0].replace("-profile",''))
+		self.main.fillLoginForm()
 
 	def profileChanged(self,item,old):
 		self.ui.removeProfile.setEnabled(True)
