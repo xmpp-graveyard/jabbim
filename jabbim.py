@@ -1113,7 +1113,13 @@ class mainWindow(QtGui.QMainWindow):
 			if sys.argv[x] == '--home':
 				self.homeDir= sys.argv[x+1]
 		self.realHomeDir=unicode(self.homeDir)
-		#if len(profiles)==0:
+		profiles=utils.getProfiles(self.realHomeDir)
+		if len(profiles)==0:
+			if USE_WIZARDS:
+				self.startwiz=wizards.firststart.firstStartWizard(self,self)
+				self.startwiz.show()
+
+			#QtGui.QMessageBox.warning(self,'Warning',unicode("No profile found"),0,1)
 			#QtGui.QMessageBox.warning(self,'Warning',unicode("No profile found"),0,1)
 		# detect old version of config dir (version without profiles)
 		#if os.path.isfile(self.homeDir+'/config'):
