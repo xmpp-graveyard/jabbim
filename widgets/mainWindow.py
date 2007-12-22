@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Fri Dec 21 05:15:38 2007
+# Created: Sat Dec 22 12:58:18 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -379,11 +379,11 @@ class Ui_MainWindow(object):
         self.menuPlugins = QtGui.QMenu(self.menubar)
         self.menuPlugins.setObjectName("menuPlugins")
 
-        self.menuAkce = QtGui.QMenu(self.menubar)
-        self.menuAkce.setObjectName("menuAkce")
-
         self.menuHelp = QtGui.QMenu(self.menubar)
         self.menuHelp.setObjectName("menuHelp")
+
+        self.menuAkce = QtGui.QMenu(self.menubar)
+        self.menuAkce.setObjectName("menuAkce")
         MainWindow.setMenuBar(self.menubar)
 
         self.actionShow_XML = QtGui.QAction(MainWindow)
@@ -419,6 +419,10 @@ class Ui_MainWindow(object):
         self.actionIdentity = QtGui.QAction(MainWindow)
         self.actionIdentity.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
         self.actionIdentity.setObjectName("actionIdentity")
+
+        self.actionProfiles = QtGui.QAction(MainWindow)
+        self.actionProfiles.setObjectName("actionProfiles")
+        self.menuHelp.addAction(self.actionAbout)
         self.menuAkce.addAction(self.actionJoin_Groupchat)
         self.menuAkce.addAction(self.actionAdd_Contact)
         self.menuAkce.addAction(self.actionService_Discovery)
@@ -427,9 +431,9 @@ class Ui_MainWindow(object):
         self.menuAkce.addAction(self.actionIdentity)
         self.menuAkce.addSeparator()
         self.menuAkce.addAction(self.actionPreferences)
+        self.menuAkce.addAction(self.actionProfiles)
         self.menuAkce.addSeparator()
         self.menuAkce.addAction(self.actionQuit)
-        self.menuHelp.addAction(self.actionAbout)
         self.menubar.addAction(self.menuAkce.menuAction())
         self.menubar.addAction(self.menuPlugins.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
@@ -476,8 +480,8 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.eventsTab), QtGui.QApplication.translate("MainWindow", "Events", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.eventsTab),QtGui.QApplication.translate("MainWindow", "Events", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPlugins.setTitle(QtGui.QApplication.translate("MainWindow", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuAkce.setTitle(QtGui.QApplication.translate("MainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuAkce.setTitle(QtGui.QApplication.translate("MainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
         self.actionShow_XML.setText(QtGui.QApplication.translate("MainWindow", "Show XML", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setText(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.actionJoin_Groupchat.setText(QtGui.QApplication.translate("MainWindow", "Join Groupchat", None, QtGui.QApplication.UnicodeUTF8))
@@ -488,4 +492,5 @@ class Ui_MainWindow(object):
         self.actionMUC_Browser.setText(QtGui.QApplication.translate("MainWindow", "MUC Browser", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPrivacy_list_editor.setText(QtGui.QApplication.translate("MainWindow", "Privacy list editor", None, QtGui.QApplication.UnicodeUTF8))
         self.actionIdentity.setText(QtGui.QApplication.translate("MainWindow", "Identity", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionProfiles.setText(QtGui.QApplication.translate("MainWindow", "Profiles", None, QtGui.QApplication.UnicodeUTF8))
 

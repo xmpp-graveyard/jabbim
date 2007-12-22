@@ -1172,6 +1172,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.chat=widgets.chatwindow.chatWindow(self,self)
 		self.events=widgets.events.events(self)
 		self.preferencesWindow=None
+		self.profilesWindow=None
 		self.mucbrowser=None
 		self.addcontactdialog=None
 		self.statusPath="images/xxxxx/status/"
@@ -1219,6 +1220,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.actionPrivacy_list_editor, QtCore.SIGNAL("triggered ( bool )"),self.privacyListEditor)
 		app.connect(self.ui.actionAdd_Contact, QtCore.SIGNAL("triggered ( bool )"),self.addContactMainWindow)
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
+		app.connect(self.ui.actionProfiles, QtCore.SIGNAL("triggered ( bool )"),self.profilesClicked)
 		app.connect(self.ui.actionJoin_Groupchat, QtCore.SIGNAL("triggered ( bool )"),self.joinGroupchat)
 #		app.connect(self.ui.selfStatus_lineEdit, QtCore.SIGNAL("lostFocus()"), self.statMsgChanged)
 #		app.connect(self.ui.selfStatus_lineEdit, QtCore.SIGNAL("returnPressed()"), self.statMsgChanged)
@@ -2026,6 +2028,16 @@ class mainWindow(QtGui.QMainWindow):
 		if item != None and item.parent()==None:
 			self.client.getDiscoItems(unicode(item.text(1)),callback=self.client.on_discoItemsBookmarksReceived,callback_par=unicode(item.text(1)))
 
+	def profilesClicked(self,bool):
+		if not self.profilesWindow:
+			self.profilesWindow=widgets.profiles.profilesWindow(self,self)
+			self.profilesWindow.show()
+		else:
+			if self.profilesWindow.isHidden()==True:
+				self.profilesWindow=widgets.profiles.profilesWindow(self,self)
+				self.profilesWindow.show()
+
+
 	def preferencesClicked(self,bool):
 		# shows preferences
 		if not self.preferencesWindow:
@@ -2310,7 +2322,21 @@ class mainWindow(QtGui.QMainWindow):
 
 
 
-	#def newProfiles(self)
+	def newProfile(self,jid,password,savePassword):
+		self.homeDir=self.realHomeDir+"/"+jid+"-profile"
+		if not os.path.isdir(self.homeDir):
+			os.mkdir(self.homeDir)
+		f=open(self.homeDir+"/config",'w')
+		self.config.write(f)
+		f.close()
+		utils.loadConfig(self,[]) # load config files
+		self.config['savePasswd']=savePassword
+		if savePassword==True:
+			self.config['passwd']=rot13.scramble(password)
+		else:
+			self.config['passwd']=""
+		self.config['jid']=jid
+		self.config.write()
 
 	def connect(self):
 		# Connect to the server

@@ -723,6 +723,12 @@ p, li { white-space: pre-wrap; }
      <string>Plugins</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuHelp" >
+    <property name="title" >
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout" />
+   </widget>
    <widget class="QMenu" name="menuAkce" >
     <property name="title" >
      <string>Actions</string>
@@ -735,14 +741,9 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionIdentity" />
     <addaction name="separator" />
     <addaction name="actionPreferences" />
+    <addaction name="actionProfiles" />
     <addaction name="separator" />
     <addaction name="actionQuit" />
-   </widget>
-   <widget class="QMenu" name="menuHelp" >
-    <property name="title" >
-     <string>Help</string>
-    </property>
-    <addaction name="actionAbout" />
    </widget>
    <addaction name="menuAkce" />
    <addaction name="menuPlugins" />
@@ -808,6 +809,11 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text" >
     <string>Identity</string>
+   </property>
+  </action>
+  <action name="actionProfiles" >
+   <property name="text" >
+    <string>Profiles</string>
    </property>
   </action>
  </widget>

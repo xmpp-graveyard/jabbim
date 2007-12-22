@@ -57,6 +57,9 @@ def createFirstPage(wizard):
 	layout.addWidget(wizard.label,0,0,1,2)
 	layout.addWidget(wizard.newAccount,1,0,1,2)
 	layout.addWidget(wizard.oldAccount,2,0,1,2)
+	
+
+	
 	page.registerField("newAccount",wizard.newAccount)
 	page.registerField("oldAccount",wizard.oldAccount)
 	page.setTitle(wizard.trUtf8("Vitejte...."))
@@ -72,11 +75,33 @@ def createSecondPage(wizard):
 	page=QtGui.QWizardPage()
 	page.setTitle(wizard.tr("Welcome"))
 
-	wizard.label=QtGui.QLabel(wizard.trUtf8("Po kliknuti na tlacitko Dokoncit se muzete prihlasit k Vasemu Jabber uctu."))
+	wizard.label=QtGui.QLabel(wizard.trUtf8("K vytvoreni noveho profilu je potreba vyplnit nasledujici formular."))
 	wizard.label.setWordWrap(True)
+
+	jidLabel=QtGui.QLabel(wizard.tr("Jabber ID:"))
+	wizard.jid=QtGui.QLineEdit()
+
+	wizard.savePassword=QtGui.QCheckBox(wizard.tr("Save password"))
+	
+
+	passwordLabel=QtGui.QLabel(wizard.tr("Password:"))
+	wizard.password=QtGui.QLineEdit()
+	wizard.password.setEchoMode(QtGui.QLineEdit.Password)
+	wizard.password.setEnabled(False)
+	QtCore.QObject.connect(wizard.savePassword,QtCore.SIGNAL("stateChanged ( int )"),wizard.password.setEnabled)
 
 	layout=QtGui.QGridLayout()
 	layout.addWidget(wizard.label,0,0,1,2)
+	layout.addWidget(jidLabel,1,0,1,1)
+	layout.addWidget(wizard.jid,1,1,1,1)
+	layout.addWidget(wizard.savePassword,2,0,1,2)
+	layout.addWidget(passwordLabel,3,0,1,1)
+	layout.addWidget(wizard.password,3,1,1,1)
+	
+	page.registerField("jid*",wizard.jid)
+	page.registerField("savePassword",wizard.savePassword)
+	page.registerField("password",wizard.password)
+	
 	page.setTitle(wizard.trUtf8("Vitejte...."))
 	page.setSubTitle(wizard.trUtf8("Prihlaseni"))
 	
@@ -98,6 +123,7 @@ class firstStartWizard(QtGui.QWizard):
 		#self.error=None
 		#self.registered=False
 		#self.jid=""
+
 
 		
 	def initializePage(self,i):
@@ -168,6 +194,12 @@ class firstStartWizard(QtGui.QWizard):
 			self.hide()
 			self.regwiz=registration.registrationWizard(self.main,None)
 			self.regwiz.exec_()
+		else:
+			jid=unicode(self.jid.text())
+			savePassword=self.savePassword.isChecked()
+			password=unicode(self.password.text())
+			self.main.newProfile(jid,password,savePassword)
+			self.main.fillLoginForm()
 		return QtGui.QWizard.accept(self)
 
 	#def finished(self,result):

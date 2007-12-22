@@ -347,6 +347,7 @@ class registrationWizard(QtGui.QWizard):
 			self.main.config['jid']=name+"@"+server
 			self.main.config['savePasswd']="True"
 			self.main.fillLoginForm()
+			self.main.connect()
 		if self.cl:
 			self.cl.disconnect()
 		return QtGui.QWizard.accept(self)
