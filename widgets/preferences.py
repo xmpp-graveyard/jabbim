@@ -314,6 +314,12 @@ class preferencesWindow(QtGui.QDialog):
 
 		self.var=[]
 
+		if self.main.client:
+			self.ui.profile.hide()
+		else:
+			self.ui.profile.setText("<b>"+self.tr("Profile:")+"</b> "+unicode(self.main.config['jid']))
+			self.ui.profile.show()
+
 		# Jabbim
 		layout=QtGui.QGridLayout(self.ui.jabbimWidget)
 		self.var.append(makePreferences(self.main.config,self.ui.jabbimWidget,layout,jabbim.preferences(self).config)[0])
