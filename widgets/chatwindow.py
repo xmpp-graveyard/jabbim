@@ -305,9 +305,12 @@ class chatWindow(QtGui.QMainWindow):
 		#X11.XSendEvent( xdisplay, rootwin, 0, (SubstructureRedirectmask |
 											#SubstructureNotifyMask),
 						#ctypes.pointer(e) )
-
+		self.flash=False
 	def tabOne(self):
 		self.ui.chatTab.setCurrentIndex(0)
+		if sys.platform == 'win32' :
+			self.flash=not self.flash
+			ctypes.windll.user32.FlashWindow(int(self.winId()),self.flash)
 	def tabTwo(self):
 		self.ui.chatTab.setCurrentIndex(1)
 	def tabThree(self):
