@@ -320,12 +320,12 @@ class chatWindow(QtGui.QMainWindow):
 
 	def flash(self):
 		print 'flash timer...'
-		ctypes.windll.user32.FlashWindow(int(self.winId()),False)
+		#ctypes.windll.user32.FlashWindow(int(self.winId()),False)
 		ctypes.windll.user32.FlashWindow(int(self.winId()),True)
 		if self.flashStatus:
 			self.main.client.reactor.callLater(1,self.flash)
-		else:
-			ctypes.windll.user32.FlashWindow(int(self.winId()),False)
+		#else:
+			#ctypes.windll.user32.FlashWindow(int(self.winId()),False)
 
 
 
@@ -426,6 +426,7 @@ class chatWindow(QtGui.QMainWindow):
 			widget.chat.unread=0
 			self.setWindowTitle(unicode(self.ui.chatTab.tabText(index)).replace("&",""))
 			self.active=True
+			print "activated..........."
 			self.flashStatus=False
 			
 			#print self.main.events.events
