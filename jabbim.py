@@ -1157,7 +1157,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.filetransferDescriptions={}
 		self.ftError={}
 		QtCore.QObject.connect(self.filetransferTimer, QtCore.SIGNAL("timeout()"),self.refreshFT)
-		self.copyPlugins()
+		
 		# variables
 		self.hosts={} # temp variable for {hos:type_of_host}
 		self.filetransfer={}
@@ -1622,6 +1622,7 @@ class mainWindow(QtGui.QMainWindow):
 # 					shutil.copytree("plugins/"+plugin, self.homeDir+"/plugins/"+plugin)
 
 	def loadPlugins(self):
+		self.copyPlugins()
 		plugins=os.listdir(self.homeDir + "/plugins/")
 		for plugin in plugins:
 			if plugin in self.config['plugins']:
