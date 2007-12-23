@@ -2423,6 +2423,8 @@ class rosterWidget(QtGui.QWidget):
 				name=unicode(self.main.client.roster['users'][jid].name)
 			except:
 				name = ''
+			if len(name) == 0:
+				name = jid.split('@')[0]
 			name,b=QtGui.QInputDialog.getText(self,self.tr("Rename"),self.tr("Enter new name:"), QtGui.QLineEdit.Normal, name)
 			name=unicode(name)
 			# if user set new name
