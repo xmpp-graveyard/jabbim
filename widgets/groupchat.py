@@ -319,7 +319,7 @@ class groupChatWidget(QtGui.QWidget):
 		self.flowLayout.setSpacing(2)
 		
 		for key,value in self.main.plugins.iteritems():
-			self.main.runPluginCommand(value.buildChatWidget,[unicode(jidT.JID(self.jid).userhost()),self.flowLayout])
+			self.main.runPluginCommand(value.buildGroupchatWidget,[unicode(jidT.JID(self.jid).userhost()),self.flowLayout,self])
 		
 		self.ui.admin=QtGui.QToolButton()
 		self.ui.admin.setIconSize(QtCore.QSize(16,16))

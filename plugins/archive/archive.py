@@ -6,6 +6,8 @@ from urllib import quote, unquote
 from twisted.python import log
 from configobj import ConfigObj
 from twisted.internet import threads
+from twisted.words.protocols.jabber import jid as jidT
+
 class calendar(QtGui.QCalendarWidget):
 	def __init__(self,parent):
 		QtGui.QCalendarWidget.__init__(self,parent)
@@ -112,6 +114,27 @@ class FileBackend:
 		fp.close()
 		return ret
 
+	def getLastMessages(self,jid,count):
+		dates=self.getDates(jid)
+		print dates
+		if len(dates)==0:
+			return ""
+		d=dates[0]
+		
+		newestStr=unicode(d)
+		d=unicode(d).split('-')
+		newest=QtCore.QDate(int(d[0]),int(d[1]),int(d[2]))
+		for date in dates:
+			d=unicode(date).split('-')
+			d=QtCore.QDate(int(d[0]),int(d[1]),int(d[2]))
+			if d>newest:
+				newest=d
+				newestStr=unicode(date)
+		
+		messages=self.getMessages(jid,newestStr)
+		return messages[-count:]
+		
+
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
 		plugins.PluginBase.__init__(self, main, homedir)
@@ -165,8 +188,54 @@ class Plugin(plugins.PluginBase):
 		
 
 	
-	def buildChatWidget(self,jid,layout):
-		print "buildChatWidget"
+	def buildChatWidget(self,jid,layout,widget):
+		button=QtGui.QToolButton()
+		#button.setText("History")
+		button.setIconSize(QtCore.QSize(16,16))
+		button.setIcon(QtGui.QIcon("%s/plugins/%s/history.png"%(self.homeDir, self.fname)))
+		button.jid=unicode(jid)
+		button.setToolTip("History")
+
+		self.group.addButton(button)
+		layout.addWidget(button)
+		
+		me=unicode(self.main.client.jid.user)
+
+		jid = jidT.JID(jid)
+		user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
+		if len(user)==0:
+			user=self.main.ui.roster.getMetaItems(jid.userhost())
+			if len(user)!=0:
+				user=user[0]
+		if len(user)!=0:
+			#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
+			it=user[0]
+			user=user[0].name
+		else:
+			it=None
+			user=unicode(jid.full())
+		
+		avatar="<img src=\""+widget.file+"\" width=\"32\" height=\""+str(widget.avatarHeight)+"\" />"
+		
+		file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
+		if not os.path.isfile(file):
+			file="images/32x32/apps/jabbim.png"
+		selfavatar="<img src=\""+file+"\" width=\"32\" height=\""+str(widget.selfHeight)+"\" />"
+
+		
+		jid=unicode(jid.userhost())
+		jid = quote(jid)
+		d=threads.deferToThread(self.getLastMessages,jid,5,me,user,unicode(self.main.skin["my_message"]),unicode(self.main.skin["message"]),self.main.skin['color1'],avatar,selfavatar)
+		d.addCallback(self.gotLastMessages,widget)
+		#html=self.getLastMessages(jid,5,me,user,unicode(self.main.skin["my_message"]),unicode(self.main.skin["message"]),self.main.skin['color1'])
+		#self.gotLastMessages(html,widget)
+
+	def gotLastMessages(self,html,widget):
+		print "got last messages"
+		widget.textEditWrite(html,True)
+		
+
+	def buildGroupchatWidget(self,jid,layout,widget):
 		button=QtGui.QToolButton()
 		#button.setText("History")
 		button.setIconSize(QtCore.QSize(16,16))
@@ -177,7 +246,6 @@ class Plugin(plugins.PluginBase):
 		self.group.addButton(button)
 		layout.addWidget(button)
 
-		
 	
 	def showSlot(self,j=None):
 		self.window.ui.seznam.clear()
@@ -245,6 +313,32 @@ class Plugin(plugins.PluginBase):
 			user=None
 		d=threads.deferToThread(self.getMessages,jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'])
 		d.addCallback(self.gotMessages)
+
+	def getLastMessages(self,jid,count,me,user,my_message,message,color,avatar,selfavatar):
+		action=["",jid,count,me,user,my_message,message,color,avatar]
+		messages=self.backend.getLastMessages(action[1],action[2])
+		if not messages:
+			return ""
+		
+		html=""
+		me=action[3]
+		user=action[4]
+
+		for msg in messages:
+			d=time.localtime(msg[0])
+			#qdate=QtCore.QDate(d[0],d[1],d[2])
+			#if datum==qdate:
+			if msg[1]=='to':
+				who=me
+				html+=action[5].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("<br/><br/>","<br/>").replace('[avatar]',selfavatar)
+			else:
+				if user:
+					who=user
+				else:
+					who=msg[2]
+				html+=action[6].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("[foreground]",action[7][0]).replace("[background]",action[7][1]).replace("<br/><br/>","<br/>").replace('[avatar]',avatar)
+		return html
+
 
 	def getMessages(self,jid,datum,me,user,my_message,message,color):
 		action=["",jid,datum,me,user,my_message,message,color]

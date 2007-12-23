@@ -52,7 +52,10 @@ class PluginBase:
 	def buildRosterMenu(self):
 		pass
 
-	def buildChatWidget(self,jid,layout):
+	def buildChatWidget(self,jid,layout,widget):
+		pass
+
+	def buildGroupchatWidget(self,jid,layout,widget):
 		pass
 
 	def loadUi(self,file,parent,wid):

@@ -861,8 +861,7 @@ class clientClass(pyxl.client.Client):
 					self.main.chat.onGCMessage(w,i,body,delay,subject,user)
 					return
 
-					
-	
+
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None, error = None):
 		# handle normal 'chat' messages
 		# get user icon or name, if we have him in roster. Or use default icon and jid as name

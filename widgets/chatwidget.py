@@ -358,7 +358,7 @@ class chatWidget(QtGui.QWidget):
 		self.flowLayout = flowLayout()
 		
 		for key,value in self.main.plugins.iteritems():
-			self.main.runPluginCommand(value.buildChatWidget,[unicode(jidT.JID(self.jid).userhost()),self.flowLayout])
+			self.main.runPluginCommand(value.buildChatWidget,[unicode(jidT.JID(self.jid).userhost()),self.flowLayout,self])
 		
 		self.ui.sendFile=QtGui.QToolButton()
 		self.ui.sendFile.setIconSize(QtCore.QSize(16,16))
@@ -452,11 +452,12 @@ class chatWidget(QtGui.QWidget):
 			self.s.setVisible(True)
 
 	
-	def textEditWrite(self,text):
-		if self.first==True:
-			self.first=False
-		elif self.first==None:
-			self.first=True
+	def textEditWrite(self,text,history=False):
+		if not history:
+			if self.first==True:
+				self.first=False
+			elif self.first==None:
+				self.first=True
 		self.ui.textEdit.setUpdatesEnabled(False)
 		cursor=QtGui.QTextCursor(self.ui.textEdit.document())
 		cursor.beginEditBlock()

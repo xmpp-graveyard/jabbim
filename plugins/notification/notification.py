@@ -333,7 +333,7 @@ class Plugin(plugins.PluginBase):
 		self.osd.test()
 	
 	def on_evil(self, frm, typ):
-		jid = jidT.JID(frm)		
+		jid = jidT.JID(frm)
 		user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
 		if len(user)==0:
 			user=self.main.ui.roster.getMetaItems(jid.userhost())
