@@ -437,6 +437,7 @@ class clientClass(pyxl.client.Client):
 		self.main.client.sendPresence(show=show,priority=pri)
 		self.main.ui.statusButton.setText(unicode(""))
 		self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
+		self.main.ui.login_cancel.hide()
 
 	def on_authFailed(self,xmlstream):
 		# Authentication error
@@ -1254,6 +1255,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.mucBrowserButton, QtCore.SIGNAL("clicked ()"),self.mucBrowser)
 		self.ui.registerButton.hide()
 		app.connect(self.ui.registerButton, QtCore.SIGNAL("clicked ()"),self.registerButtonClicked)
+		app.connect(self.ui.login_cancel, QtCore.SIGNAL("clicked ()"),self.connectCancel)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.bookmarksItemClicked)
 		QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered ( bool )"),self.trayQuit)
@@ -2364,9 +2366,21 @@ class mainWindow(QtGui.QMainWindow):
 		self.config['jid']=jid
 		self.config.write()
 
+	def connectCancel(self):
+		print "DISCONNECT"
+		self.client.factory.stopTrying()
+		self.reconnect = False
+		self.client.disconnect()
+		self._disconnect()
+
 	def connect(self):
 		# Connect to the server
 		self.ui.rosterStackedWidget.setCurrentIndex(2)
+		self.ui.login_connect.setEnabled(False)
+		self.ui.profilesList.setEnabled(False)
+		reactor.callLater(0.1,self.connect__)
+	
+	def connect__(self):
 		jid=unicode(self.ui.login_jid.text())
 		password=unicode(self.ui.login_password.text())
 		self.ui.loginInfo.setText(self.tr("Connecting to the server..."))
@@ -2416,8 +2430,6 @@ class mainWindow(QtGui.QMainWindow):
 			self.client = clientClass(jid+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
 			self.client.xmlLang = unicode(QtCore.QLocale.system().name())[:2]
 			self.client.log=True
-		self.ui.login_connect.setEnabled(False)
-		self.ui.profilesList.setEnabled(False)
 		self.reconnect = True
 		self.client.connect()
 	
@@ -2472,7 +2484,7 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.actionAdd_Contact.setEnabled(False)
 		MainWindow.ui.actionJoin_Groupchat.setEnabled(False)
 		MainWindow.ui.actionService_Discovery.setEnabled(False)
-
+		self.ui.login_cancel.show()
 
 		#MainWindow.client.roster = {'users':{},'groups':{}}
 		#MainWindow.client.roster_meta = {} # jid: {'tag':tag,  'order': 1}
@@ -2598,24 +2610,12 @@ class statusWindow(QtGui.QDialog):
 		if not unicode(self.ui.status.toPlainText()) in MainWindow.config['statusMessages'] and len(unicode(self.ui.status.toPlainText()))!=0 and self.ui.save.isChecked():
 			MainWindow.config['statusMessages'].append(unicode(self.ui.status.toPlainText()))
 		if self.data=="offline":
-##			#MainWindow.client.factory.stopTrying()
-			#if self.config.has_key('priority'):
-			#	prior=self.config['priority']
-			#else:
-			#	prior=1
 			MainWindow.client.sendPresence(typ = "unavailable", status = unicode(self.ui.status.toPlainText ()))
 			MainWindow.client.factory.stopTrying()
 			MainWindow.reconnect = False
 			MainWindow.client.disconnect()
-			#MainWindow.client.disconnect()
-			#reactor.stop2()
-			#del MainWindow.client
-			#MainWindow.client = None
 			MainWindow._disconnect()
-			#MainWindow.client.disconnect()
-			#print MainWindow.client.roster
-			#reactor.stop2()
-			pass
+
 		else:
 			jid=None
 			if self.show:

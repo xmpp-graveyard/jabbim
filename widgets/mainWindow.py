@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sat Dec 22 14:05:01 2007
+# Created: Sun Dec 23 12:54:07 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -358,13 +358,23 @@ class Ui_MainWindow(object):
         self.loginInfo.setObjectName("loginInfo")
         self.vboxlayout2.addWidget(self.loginInfo)
 
+        self.hboxlayout5 = QtGui.QHBoxLayout()
+        self.hboxlayout5.setMargin(0)
+        self.hboxlayout5.setSpacing(6)
+        self.hboxlayout5.setObjectName("hboxlayout5")
+
         self.splashProgress = QtGui.QProgressBar(self.splash)
         self.splashProgress.setProperty("value",QtCore.QVariant(0))
         self.splashProgress.setTextVisible(False)
         self.splashProgress.setOrientation(QtCore.Qt.Horizontal)
         self.splashProgress.setInvertedAppearance(False)
         self.splashProgress.setObjectName("splashProgress")
-        self.vboxlayout2.addWidget(self.splashProgress)
+        self.hboxlayout5.addWidget(self.splashProgress)
+
+        self.login_cancel = QtGui.QPushButton(self.splash)
+        self.login_cancel.setObjectName("login_cancel")
+        self.hboxlayout5.addWidget(self.login_cancel)
+        self.vboxlayout2.addLayout(self.hboxlayout5)
         self.rosterStackedWidget.addWidget(self.splash)
 
         self.mdiWidget = QtGui.QWidget(self.splitter)
@@ -479,6 +489,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.bookmarksTab),QtGui.QApplication.translate("MainWindow", "Bookmarks", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.eventsTab), QtGui.QApplication.translate("MainWindow", "Events", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.eventsTab),QtGui.QApplication.translate("MainWindow", "Events", None, QtGui.QApplication.UnicodeUTF8))
+        self.login_cancel.setText(QtGui.QApplication.translate("MainWindow", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPlugins.setTitle(QtGui.QApplication.translate("MainWindow", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAkce.setTitle(QtGui.QApplication.translate("MainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))

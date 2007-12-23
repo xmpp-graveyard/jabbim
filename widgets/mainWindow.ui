@@ -686,20 +686,37 @@ p, li { white-space: pre-wrap; }
           </widget>
          </item>
          <item>
-          <widget class="QProgressBar" name="splashProgress" >
-           <property name="value" >
+          <layout class="QHBoxLayout" >
+           <property name="margin" >
             <number>0</number>
            </property>
-           <property name="textVisible" >
-            <bool>false</bool>
+           <property name="spacing" >
+            <number>6</number>
            </property>
-           <property name="orientation" >
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="invertedAppearance" >
-            <bool>false</bool>
-           </property>
-          </widget>
+           <item>
+            <widget class="QProgressBar" name="splashProgress" >
+             <property name="value" >
+              <number>0</number>
+             </property>
+             <property name="textVisible" >
+              <bool>false</bool>
+             </property>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="invertedAppearance" >
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="login_cancel" >
+             <property name="text" >
+              <string>Cancel</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>
