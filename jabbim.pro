@@ -1,4 +1,15 @@
 SOURCES         = jabbim.py \
+widgets/about.py \
+widgets/addcontact.py \
+widgets/addcontact_ui.py \
+widgets/commands.py \
+widgets/commands_ui.py \
+widgets/dataforms.py \
+widgets/events.py \
+widgets/filetransfer.py \
+widgets/filetransfer_ui.py \
+widgets/groupchatadmin.py \
+widgets/groupchatadmin_ui.py \
 widgets/groupchat.py \
 widgets/groupchatwidget_ui.py \
 widgets/chat.py \
@@ -7,39 +18,40 @@ widgets/chatwidget_ui.py \
 widgets/chatwindow.py \
 widgets/joingroupchat.py \
 widgets/joingroupchat_ui.py \
+widgets/leaveroom_ui.py \
+widgets/legacyforms.py \
 widgets/mainWindow.py \
+widgets/mucbrowser.py \
+widgets/mucbrowser_ui.py \
 widgets/preferences_bookmarks_ui.py \
 widgets/preferences.py \
 widgets/preferences_ui.py \
-widgets/preferences_bookmarks_ui.py \
-widgets/rosterWidget.py \
-widgets/rosterLiveWidget.py \
-widgets/status.py \
-widgets/subscription.py \
-widgets/tooltip_ui.py \
-widgets/waitdialog.py \
-widgets/xmlConsole.py \
-widgets/rosterLiveWidget.py \
-widgets/servicediscovery_ui.py \
-widgets/addcontact_ui.py \
-widgets/events.py \
-widgets/filetransfer_ui.py \
-widgets/groupchatadmin_ui.py \
-widgets/mucbrowser_ui.py \
+widgets/privacy.py \
 widgets/privacy_ui.py \
+widgets/profiles.py \
+widgets/profiles_ui.py \
+widgets/rosterLiveWidget.py \
+widgets/rosterWidget.py \
 widgets/search.py \
+widgets/servicediscovery.py \
+widgets/servicediscovery_ui.py \
 widgets/show.py \
 widgets/status.py \
 widgets/subscription.py \
+widgets/tooltip_ui.py \
+widgets/vcardeditor.py \
+widgets/vcardeditor_ui.py \
 widgets/vcardview.py \
 widgets/vcardview_ui.py \
 widgets/waitdialog.py \
-widgets/commands.py \
-widgets/commands_ui.py \
-widgets/vcardeditor.py \
-widgets/vcardeditor_ui.py \
-widgets/about.py \
-wizards/registration.py
+widgets/xmlConsole.py \
+wizards/addcontact.py \
+wizards/firststart.py \
+wizards/registration.py \
+pref/connection.py \
+pref/chat.py \
+pref/jabbim.py \
+pref/roster.py
 
 TRANSLATIONS    = locales/jabbim_cs.ts \
 				locales/jabbim_en.ts \
