@@ -427,7 +427,7 @@ class chatWindow(QtGui.QMainWindow):
 			self.setWindowTitle(unicode(self.ui.chatTab.tabText(index)).replace("&",""))
 			self.active=True
 			print "activated..........."
-			self.flashStatus=False
+			#self.flashStatus=False
 			
 			#print self.main.events.events
 			ev2=list(self.main.events.events)
