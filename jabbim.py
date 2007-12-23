@@ -2565,7 +2565,7 @@ class statusWindow(QtGui.QDialog):
 		self.timeout()
 		for s in MainWindow.config['statusMessages']:
 			self.ui.statusBox.addItem(unicode(s))
-		app.connect(self.ui.statusBox, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.ui.status.setPlainText)
+		app.connect(self.ui.statusBox, QtCore.SIGNAL("activated ( const QString & )"),self.ui.status.setPlainText)
 		app.connect(self.ui.statusBox, QtCore.SIGNAL("highlighted ( int)"),self.timerStop)
 
 
