@@ -1064,7 +1064,21 @@ class clientClass(pyxl.client.Client):
 			
 
 	def on_fileReceived(self, sid, id):
-		self.main.events.addBooleanEvent(self.ftStarted,[sid,id],None,[],self.main.tr("File transfer"),text= unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),height=40,name=unicode(self.ft[sid].tojid),typ="ftTransfer",icon=None)
+		if not self.main.config['autoDownload']:
+			self.main.events.addBooleanEvent(self.ftStarted,[sid,id],None,[],self.main.tr("File transfer"),text= unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),height=40,name=unicode(self.ft[sid].tojid),typ="ftTransfer",icon=None)
+		else:
+			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),unicode(self.ft[sid].tojid),"",sid)
+			filename = self.main.config['autoDownloadPath']+'/'+self.ft[sid].fileprops['name']
+			if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
+				self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
+				self.ft[sid].file = filename
+				self.receiveFile(sid, id)
+			elif 'http://jabber.org/protocol/ibb' in self.ft[sid].methods:
+				log.msg('IBB offer')
+				self.ft[sid].method = 'http://jabber.org/protocol/ibb'
+				self.ft[sid].file = filename
+				self.ft[sid].fp = open(self.ft[sid].file, 'wb')
+				self.receiveFile(sid, id)
 
 	def ftStarted(self,sid,id):
 		#q = QtGui.QMessageBox.question(self.main,self.main.tr("File transfer"), unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
@@ -2403,6 +2417,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.client.xmlLang = unicode(QtCore.QLocale.system().name())[:2]
 			self.client.log=True
 		self.ui.login_connect.setEnabled(False)
+		self.ui.profilesList.setEnabled(False)
 		self.reconnect = True
 		self.client.connect()
 	

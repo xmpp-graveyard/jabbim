@@ -163,7 +163,7 @@ class Client(derived):
 	def _connect(self, host, port): 
 		self.on_connect()
 		self.factory = client.XMPPClientFactory(self.jid,self.password)
-#		self.factory = bclient.BOSHClientFactory(self.jid, self.password, 'http://bosh.bluendo.com:10080/httpb')
+#		self.factory = bclient.BOSHClientFactory(self.jid, self.password, 'http://localhost:8080', bosh_attrs = {"wait": "100"})
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
 ##		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
 ##		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
@@ -175,8 +175,11 @@ class Client(derived):
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
 		self.connection = self.reactor.connectTCP(host,port,self.factory)
+#		self.connection = self.reactor.connectTCP('localhost',8080,self.factory)
 
-
+#		print dir(self.factory)
+#		p = self.factory.buildProtocol('tcp:localhost:8080')
+#		print dir(p)
 #		self.connection = self.reactor.connectTCP('conn443.netlab.cz',443,self.factory)
 #		def stf(prt):
 #			print 'conn: ', prt

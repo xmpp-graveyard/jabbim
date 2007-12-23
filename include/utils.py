@@ -49,6 +49,8 @@ def loadConfig(main,status):
 			"passwd":"",
 			"savePasswd":"",
 			"autoJoin":"False",
+			"autoDownload":"False",
+			"autoDownloadPath": main.homeDir,
 			"rosterIconSize":"16x16",
 			"chat_skin":"cool.conf",
 			"theme":"template",
