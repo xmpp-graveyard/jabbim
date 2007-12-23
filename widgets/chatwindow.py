@@ -754,7 +754,8 @@ class chatWindow(QtGui.QMainWindow):
 		if message:
 			tab.unread=1
 			self.setWindowTitle("(1) "+unicode(name))
-			self.startFlash()
+			if not self.isActiveWindow():
+				self.startFlash()
 		else:
 			self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 			self.setWindowTitle(unicode(name))
