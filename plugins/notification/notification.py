@@ -435,6 +435,7 @@ class Plugin(plugins.PluginBase):
 			if tab!=None:
 				if tab.chat.first==None or tab.chat.first==True:
 					self.playsound('new_message')
+					
 					#self.main.tray.showMessage(self.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 5000)
 					print unicode(user)
 					#self.startTrayBlink()

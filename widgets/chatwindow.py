@@ -305,12 +305,29 @@ class chatWindow(QtGui.QMainWindow):
 		#X11.XSendEvent( xdisplay, rootwin, 0, (SubstructureRedirectmask |
 											#SubstructureNotifyMask),
 						#ctypes.pointer(e) )
-		self.flash=False
+		#self.flash=False
+		self.flashStatus=False
+		
+
+
+	def startFlash(self):
+		self.flashStatus=True
+		if sys.platform == 'win32':
+			ctypes.windll.user32.FlashWindow(int(self.winId()),True)
+			self.main.client.reactor.callLater(1,self.flash)
+
+	def flash(self):
+		ctypes.windll.user32.FlashWindow(int(self.winId()),False)
+		ctypes.windll.user32.FlashWindow(int(self.winId()),True)
+		if self.flashStatus:
+			self.main.client.reactor.callLater(1,self.flash)
+		else:
+			ctypes.windll.user32.FlashWindow(int(self.winId()),False)
+
+
+
 	def tabOne(self):
 		self.ui.chatTab.setCurrentIndex(0)
-		if sys.platform == 'win32' :
-			self.flash=not self.flash
-			ctypes.windll.user32.FlashWindow(int(self.winId()),self.flash)
 	def tabTwo(self):
 		self.ui.chatTab.setCurrentIndex(1)
 	def tabThree(self):
@@ -406,7 +423,7 @@ class chatWindow(QtGui.QMainWindow):
 			widget.chat.unread=0
 			self.setWindowTitle(unicode(self.ui.chatTab.tabText(index)).replace("&",""))
 			self.active=True
-
+			self.flashStatus=False
 			
 			#print self.main.events.events
 			ev2=list(self.main.events.events)
@@ -737,6 +754,7 @@ class chatWindow(QtGui.QMainWindow):
 		if message:
 			tab.unread=1
 			self.setWindowTitle("(1) "+unicode(name))
+			self.startFlash()
 		else:
 			self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 			self.setWindowTitle(unicode(name))
