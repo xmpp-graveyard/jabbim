@@ -18,4 +18,5 @@ import privacy
 import commands
 import vcardeditor
 import profiles
+import statuswidget_ui
 #import eventsFTWidget_ui
