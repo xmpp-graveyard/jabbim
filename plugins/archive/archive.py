@@ -133,7 +133,13 @@ class FileBackend:
 		
 		messages=self.getMessages(jid,newestStr)
 		return messages[-count:]
-		
+
+
+class config:
+	def __init__(self,main):
+		self.main=main
+		self.config={}
+		self.config['messagesNumber']={'type':'number-spin','label':self.main.tr("Number of messages from last conversation, which are show in chat:"),'value':'5'}
 
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
@@ -146,10 +152,13 @@ class Plugin(plugins.PluginBase):
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.developMode=True
-# 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
+
+		self.installTranslator()
+		self.configDialog=config(self)
 
 
 		if main:
+			self.loadConfig(homedir)
 
 			self.jid = quote(self.main.client.jid.userhost())
 			self.backend=FileBackend(self)
@@ -225,7 +234,7 @@ class Plugin(plugins.PluginBase):
 		
 		jid=unicode(jid.userhost())
 		jid = quote(jid)
-		d=threads.deferToThread(self.getLastMessages,jid,5,me,user,unicode(self.main.skin["my_message"]),unicode(self.main.skin["message"]),self.main.skin['color1'],avatar,selfavatar)
+		d=threads.deferToThread(self.getLastMessages,jid,int(self.config['messagesNumber']),me,user,unicode(self.main.skin["my_message"]),unicode(self.main.skin["message"]),self.main.skin['color1'],avatar,selfavatar)
 		d.addCallback(self.gotLastMessages,widget)
 		#html=self.getLastMessages(jid,5,me,user,unicode(self.main.skin["my_message"]),unicode(self.main.skin["message"]),self.main.skin['color1'])
 		#self.gotLastMessages(html,widget)
