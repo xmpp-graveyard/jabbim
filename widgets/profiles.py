@@ -25,7 +25,10 @@ import os
 from profiles_ui import *
 from include import utils
 import shutil
-from wizards import firststart
+try:
+	from wizards import firststart
+except:
+	pass
 class profilesWindow(QtGui.QMainWindow):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
@@ -61,9 +64,10 @@ class profilesWindow(QtGui.QMainWindow):
 		return profiles
 
 	def newProfile(self):
-		fs=firststart.firstStartWizard(self.main,self.main)
-		fs.exec_()
-		self.loadProfiles()
+		if self.main.QT43:
+			fs=firststart.firstStartWizard(self.main,self.main)
+			fs.exec_()
+			self.loadProfiles()
 
 	def removeProfile(self):
 		item=self.ui.profilesList.currentItem()
