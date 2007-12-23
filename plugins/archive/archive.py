@@ -207,37 +207,38 @@ class Plugin(plugins.PluginBase):
 
 		self.group.addButton(button)
 		layout.addWidget(button)
-		
-		me=unicode(self.main.client.jid.user)
-
 		jid = jidT.JID(jid)
-		user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
-		if len(user)==0:
-			user=self.main.ui.roster.getMetaItems(jid.userhost())
+		if os.path.isdir(self.main.homeDir+'/archive/'+self.jid+'/'+quote(jid.userhost())):
+			me=unicode(self.main.client.jid.user)
+	
+			
+			user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
+			if len(user)==0:
+				user=self.main.ui.roster.getMetaItems(jid.userhost())
+				if len(user)!=0:
+					user=user[0]
 			if len(user)!=0:
-				user=user[0]
-		if len(user)!=0:
-			#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
-			it=user[0]
-			user=user[0].name
-		else:
-			it=None
-			user=unicode(jid.full())
-		
-		avatar="<img src=\""+widget.file+"\" width=\"32\" height=\""+str(widget.avatarHeight)+"\" />"
-		
-		file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
-		if not os.path.isfile(file):
-			file="images/32x32/apps/jabbim.png"
-		selfavatar="<img src=\""+file+"\" width=\"32\" height=\""+str(widget.selfHeight)+"\" />"
-
-		
-		jid=unicode(jid.userhost())
-		jid = quote(jid)
-		d=threads.deferToThread(self.getLastMessages,jid,int(self.config['messagesNumber']),me,user,unicode(self.main.skin["my_message"]),unicode(self.main.skin["message"]),self.main.skin['color1'],avatar,selfavatar)
-		d.addCallback(self.gotLastMessages,widget)
-		#html=self.getLastMessages(jid,5,me,user,unicode(self.main.skin["my_message"]),unicode(self.main.skin["message"]),self.main.skin['color1'])
-		#self.gotLastMessages(html,widget)
+				#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
+				it=user[0]
+				user=user[0].name
+			else:
+				it=None
+				user=unicode(jid.full())
+			
+			avatar="<img src=\""+widget.file+"\" width=\"32\" height=\""+str(widget.avatarHeight)+"\" />"
+			
+			file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
+			if not os.path.isfile(file):
+				file="images/32x32/apps/jabbim.png"
+			selfavatar="<img src=\""+file+"\" width=\"32\" height=\""+str(widget.selfHeight)+"\" />"
+	
+			
+			jid=unicode(jid.userhost())
+			jid = quote(jid)
+			d=threads.deferToThread(self.getLastMessages,jid,int(self.config['messagesNumber']),me,user,unicode(self.main.skin["my_message"]),unicode(self.main.skin["message"]),self.main.skin['color1'],avatar,selfavatar)
+			d.addCallback(self.gotLastMessages,widget)
+			#html=self.getLastMessages(jid,5,me,user,unicode(self.main.skin["my_message"]),unicode(self.main.skin["message"]),self.main.skin['color1'])
+			#self.gotLastMessages(html,widget)
 
 	def gotLastMessages(self,html,widget):
 		print "got last messages"
