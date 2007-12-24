@@ -30,16 +30,17 @@ class Cache:
 			except:
 				log.msg('Unknown DB error')				
 		self.db.runQuery('create table caps (node text, feature text);').addCallback(self.table_created).addErrback(self.table_present)
-		
+		self.db.runQuery('create table status (show text, desc text, id int auto_increment primary key);').addErrback(self.table_present)
+		self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created2).addErrback(self.table_present)
 		
 	def table_created(self, res):
 		log.msg( 'created new cache DB')
 # 		self.db.runOperation('create table caps (node text, feature text);')
-		self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created2).addErrback(self.table_present)
+		#self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created2).addErrback(self.table_present)
 	
 	def table_created2(self, res):
 		print 'avatars created'
-		self.db.runQuery('create table status (show text, desc text, id int auto_increment primary key);').addErrback(self.table_present)
+		#self.db.runQuery('create table status (show text, desc text, id int auto_increment primary key);').addErrback(self.table_present)
 		
 	def table_present(self, result):
 		log.msg( 'table here? ')
