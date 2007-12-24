@@ -39,7 +39,8 @@ class Cache:
 	
 	def table_created2(self, res):
 		print 'avatars created'
-	
+		self.db.runQuery('create table status (show text, desc text, id int auto_increment primary key);').addErrback(self.table_present)
+		
 	def table_present(self, result):
 		log.msg( 'table here? ')
 		print result
@@ -72,5 +73,13 @@ class Cache:
 	
 	def _got_caps(self, result, cb):
 		cb(result)
+	
+	def get_status(self):
+		return self.db.runQuery('select * from status;')
+	
+	def del_status(self, id):
+		return self.db.runOperation('delete from status where id = "?"'%id)
+	def set_status(self, show, message):
+		return self.db.runOperation('insert into status (show, desc) values ("?", "?")'%(show, message))
 
 		
