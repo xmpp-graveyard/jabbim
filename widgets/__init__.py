@@ -19,4 +19,5 @@ import commands
 import vcardeditor
 import profiles
 import statuswidget_ui
+import statuseditor
 #import eventsFTWidget_ui

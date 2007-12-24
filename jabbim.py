@@ -1409,9 +1409,12 @@ class mainWindow(QtGui.QMainWindow):
 		#action.setData(QtCore.QVariant("dnd"))
 
 		#self.statusWidgetMenu.addSeparator()
-		action=self.statusWidgetMenu.addAction(self.getIcon(status="online",size="16x16"),self.tr("Custom message"))
+		action=self.statusWidgetMenu.addAction(self.getIcon(status="online",size="16x16"),self.tr("Add message"))
 		action.setData(QtCore.QVariant("custom_message"))
-		
+
+		action=self.statusWidgetMenu.addAction(self.getIcon(status="online",size="16x16"),self.tr("Remove message"))
+		action.setData(QtCore.QVariant("remove_message"))
+
 		action=self.statusWidgetMenu.addAction(self.getIcon(status="offline",size="16x16"),self.tr("Log out"))
 		action.setData(QtCore.QVariant("offline"))
 
@@ -1424,6 +1427,9 @@ class mainWindow(QtGui.QMainWindow):
 		data=unicode(data.toString())
 		if data=='custom_message':
 			cs = statusWidgetWindow(None,self)
+			cs.exec_()
+		elif data=='remove_message':
+			cs = widgets.statuseditor.statusEditorWindow(self,self)
 			cs.exec_()
 		else:
 			data=data.split("_")
