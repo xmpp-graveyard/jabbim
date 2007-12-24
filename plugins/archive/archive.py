@@ -95,7 +95,7 @@ class FileBackend:
 				ret.append(dat)
 		return ret
 
-	def getMessages(self,jid,date):
+	def getMessages(self,jid,date,maxTime=None):
 		try:
 			fp = open(self.homeDir+'/archive/'+self.jid+'/'+jid+'/'+date+'.history')
 		except:
@@ -108,13 +108,34 @@ class FileBackend:
 			#print msg
 		#msg=fp.readline()
 		#while len(msg)==0:
-		for msg in fp.xreadlines():
-			parsed=msg.split('|')
-			ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
+		if not maxTime:
+			for msg in fp.xreadlines():
+				parsed=msg.split('|')
+				ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
+		else:
+			maxTime=maxTime.split(":")
+			now=time.localtime()
+			for msg in fp.xreadlines():
+				parsed=msg.split('|')
+				d=time.localtime(float(parsed[0]))
+				#html+=action[5].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5]))
+				intervalHour=int(d[3])+int(maxTime[0])
+				intervalMin=int(d[4])+int(maxTime[1])
+				intervalSec=int(d[5])+int(maxTime[2])
+				if intervalHour>=24:
+					intervalHour-=24
+				if intervalMin>=60:
+					intervalMin-=60
+				if intervalSec>=60:
+					intervalSec-=60
+				if intervalHour>int(now[3]):
+					ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
+				elif intervalHour<=int(now[3]) and intervalMin>=int(now[4]):
+					ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
 		fp.close()
 		return ret
 
-	def getLastMessages(self,jid,count):
+	def getLastMessages(self,jid,count,maxTime):
 		dates=self.getDates(jid)
 		print dates
 		if len(dates)==0:
@@ -131,7 +152,7 @@ class FileBackend:
 				newest=d
 				newestStr=unicode(date)
 		
-		messages=self.getMessages(jid,newestStr)
+		messages=self.getMessages(jid,newestStr,maxTime)
 		return messages[-count:]
 
 
@@ -140,6 +161,7 @@ class config:
 		self.main=main
 		self.config={}
 		self.config['messagesNumber']={'type':'number-spin','label':self.main.tr("Number of messages from last conversation, which are show in chat:"),'value':'5'}
+		self.config['messagesTime']={'type':'time-interval','label':self.main.tr("Cas, po kterem se zpravy z posledni konverzace nezobrazi:"),'value':'1:0:0'}
 
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
@@ -235,7 +257,7 @@ class Plugin(plugins.PluginBase):
 			
 			jid=unicode(jid.userhost())
 			jid = quote(jid)
-			d=threads.deferToThread(self.getLastMessages,jid,int(self.config['messagesNumber']),me,user,unicode(self.main.skin["my_message_history"]),unicode(self.main.skin["message_history"]),self.main.skin['color1'],avatar,selfavatar)
+			d=threads.deferToThread(self.getLastMessages,jid,int(self.config['messagesNumber']),me,user,unicode(self.main.skin["my_message_history"]),unicode(self.main.skin["message_history"]),self.main.skin['color1'],avatar,selfavatar,self.config['messagesTime'])
 			d.addCallback(self.gotLastMessages,widget)
 			#html=self.getLastMessages(jid,5,me,user,unicode(self.main.skin["my_message"]),unicode(self.main.skin["message"]),self.main.skin['color1'])
 			#self.gotLastMessages(html,widget)
@@ -327,9 +349,9 @@ class Plugin(plugins.PluginBase):
 		d=threads.deferToThread(self.getMessages,jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'])
 		d.addCallback(self.gotMessages)
 
-	def getLastMessages(self,jid,count,me,user,my_message,message,color,avatar,selfavatar):
+	def getLastMessages(self,jid,count,me,user,my_message,message,color,avatar,selfavatar,maxTime):
 		action=["",jid,count,me,user,my_message,message,color,avatar]
-		messages=self.backend.getLastMessages(action[1],action[2])
+		messages=self.backend.getLastMessages(action[1],action[2],maxTime)
 		if not messages:
 			return ""
 		

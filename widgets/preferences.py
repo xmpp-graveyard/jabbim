@@ -113,6 +113,8 @@ def getVarData(var):
 		widget=value['widget']
 		if typ=="text-single" or typ=="text-private":
 			ret[key]=unicode(widget.text())
+		elif typ=="time-interval":
+			ret[key]=unicode(widget.time().toString("H:m:s"))
 		elif typ=="text-multi":
 			text=unicode(widget.toPlainText())
 			ret[key]=unicode(text)
@@ -175,6 +177,19 @@ def makePreferences(main,parent,layout,form,row=1):
 			#for d in x.elements():
 				#if d.name == "desc":
 					#widget.setToolTip(unicode(d))
+		elif x['type']=="time-interval":
+			try:
+				label=QtGui.QLabel(x['label'],par)
+			except KeyError:
+				label=None
+			lay.addWidget(label,row,0)
+			widget=QtGui.QTimeEdit(par)
+			d=val.split(":")
+			t=QtCore.QTime(int(d[0]),int(d[1]),int(d[2]))
+			widget.setTime(t)
+			lay.addWidget(widget,row,1)
+			var[key]={'widget':widget,'type':x['type']}
+			row+=1
 		elif x['type']=="number-spin":
 			try:
 				label=QtGui.QLabel(x['label'],par)
