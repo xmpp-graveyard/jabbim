@@ -235,14 +235,17 @@ class Plugin(plugins.PluginBase):
 			
 			jid=unicode(jid.userhost())
 			jid = quote(jid)
-			d=threads.deferToThread(self.getLastMessages,jid,int(self.config['messagesNumber']),me,user,unicode(self.main.skin["my_message"]),unicode(self.main.skin["message"]),self.main.skin['color1'],avatar,selfavatar)
+			d=threads.deferToThread(self.getLastMessages,jid,int(self.config['messagesNumber']),me,user,unicode(self.main.skin["my_message_history"]),unicode(self.main.skin["message_history"]),self.main.skin['color1'],avatar,selfavatar)
 			d.addCallback(self.gotLastMessages,widget)
 			#html=self.getLastMessages(jid,5,me,user,unicode(self.main.skin["my_message"]),unicode(self.main.skin["message"]),self.main.skin['color1'])
 			#self.gotLastMessages(html,widget)
 
 	def gotLastMessages(self,html,widget):
 		print "got last messages"
+		old=widget.ui.textEdit.toHtml()
+		widget.ui.textEdit.setHtml("")
 		widget.textEditWrite(html,True)
+		widget.textEditWrite(old)
 		
 
 	def buildGroupchatWidget(self,jid,layout,widget):
