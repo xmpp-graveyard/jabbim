@@ -95,12 +95,17 @@ class PluginBase:
 		self.translator.load(utils.path(directory+unicode(QtCore.QLocale.system().name()[:2])+u".qm"))
 		log.msg("trying to load localization file "+ directory+unicode(QtCore.QLocale.system().name())[:2]+".qm")
 
-	def tr(self,text):
+	def tr(self,text,cl=None):
 		if not self.translator:
 			return text
-		trans=self.translator.translate("Plugin",text)
-		if len(trans)==0:
-			return text
+		if cl:
+			trans=self.translator.translate(cl,text)
+		else:
+			trans=self.translator.translate("Plugin",text)
+			if len(trans)==0:
+				trans=self.translator.translate("self.main",text)
+				if len(trans)==0:
+					return text
 		return trans
 	
 	def getConfig(self,config):
