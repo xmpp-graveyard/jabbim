@@ -1364,7 +1364,7 @@ class mainWindow(QtGui.QMainWindow):
 		print "RESULT"
 		print result
 
-	def buildStatusWidgetMenu(self):
+	def buildStatusWidgetMenu(self,data=None):
 		# Status menu
 		
 		d=self.cache.get_status()
@@ -2710,8 +2710,8 @@ class statusWidgetWindow(QtGui.QDialog):
 		#config=ConfigObj(MainWindow.homeDir+'/statusmessages',encoding='UTF8')
 		#config[show].append(unicode(self.ui.status.toPlainText ()))
 		#config.write()
-		MainWindow.cache.set_status(show,unicode(self.ui.status.toPlainText ()))
-		MainWindow.buildStatusWidgetMenu()
+		d=MainWindow.cache.set_status(show,unicode(self.ui.status.toPlainText ()))
+		d.addCallback(MainWindow.buildStatusWidgetMenu)
 		MainWindow.sendPresence(self.jid,show,unicode(self.ui.status.toPlainText ()))
 		self.done(1)
 

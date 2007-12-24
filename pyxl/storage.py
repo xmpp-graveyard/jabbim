@@ -30,7 +30,7 @@ class Cache:
 			except:
 				log.msg('Unknown DB error')				
 		self.db.runQuery('create table caps (node text, feature text);').addCallback(self.table_created).addErrback(self.table_present)
-		self.db.runQuery('create table status (show text, desc text, id int auto_increment primary key);').addErrback(self.table_present)
+		self.db.runQuery('create table status (show text, desc text, id integer primary key);').addErrback(self.table_present)
 		self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created2).addErrback(self.table_present)
 		
 	def table_created(self, res):
@@ -80,10 +80,11 @@ class Cache:
 	
 	def del_status(self, id):
 		return self.db.runOperation('delete from status where id = "%s"'%id)
+
 	def set_status(self, show, message):
 		message=message.replace("'","''")
 		log.msg(unicode(message))
-		return self.db.runOperation('insert into status (show, desc) values ("%s", "%s")'%(show, message))
+		return self.db.runOperation('insert into status (show, desc,id) values ("%s", "%s",NULL)'%(show, message))
 	
 	def close(self):
 		self.db.close()
