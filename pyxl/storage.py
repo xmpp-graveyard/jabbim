@@ -81,5 +81,8 @@ class Cache:
 		return self.db.runOperation('delete from status where id = "?"'%id)
 	def set_status(self, show, message):
 		return self.db.runOperation('insert into status (show, desc) values ("?", "?")'%(show, message))
+	
+	def close(self):
+		self.db.close()
 
 		
