@@ -1149,11 +1149,11 @@ class mainWindow(QtGui.QMainWindow):
 				os.remove(self.realHomeDir+'/config')
 				utils.loadConfig(self,statusMess) # load config files
 
-		
 		if sys.platform != 'win32':
 			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
 		else:
 			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
+
 		#elf.cache = storage.Cache(db=utils.path(u'C:\ččč\cache.db'))
 		#self.cache = storage.Cache(db=unicode(self.homeDir+u'/cache2.db'))
 ##		self.cache = storage.Cache(db=':memory:')
@@ -1359,8 +1359,18 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.rosterStackedWidget.setCurrentIndex(2)
 			self.connect()
 
+	def _buildStatusWidgetMenu(self,result):
+		# Status menu
+		print "RESULT"
+		print result
+
 	def buildStatusWidgetMenu(self):
 		# Status menu
+		
+		d=self.cache.get_status()
+		d.addCallback(self._buildStatusWidgetMenu)
+			#def get_status(self):
+		#return self.db.runQuery('select * from status;')
 		
 		config=ConfigObj(self.homeDir+'/statusmessages',encoding='UTF8')
 		if len(config)==0:
@@ -1491,6 +1501,13 @@ class mainWindow(QtGui.QMainWindow):
 		self.fillLoginForm()
 		self.loadTheme()
 		self.ui.roster.reskin()
+		if self.cache:
+			self.cache.close()
+			del self.cache
+		if sys.platform != 'win32':
+			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
+		else:
+			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
 
 
 	def fillLoginForm(self):
@@ -2690,9 +2707,10 @@ class statusWidgetWindow(QtGui.QDialog):
 
 	def accept(self):
 		show=unicode(self.ui.show.itemData(self.ui.show.currentIndex()).toString())
-		config=ConfigObj(MainWindow.homeDir+'/statusmessages',encoding='UTF8')
-		config[show].append(unicode(self.ui.status.toPlainText ()))
-		config.write()
+		#config=ConfigObj(MainWindow.homeDir+'/statusmessages',encoding='UTF8')
+		#config[show].append(unicode(self.ui.status.toPlainText ()))
+		#config.write()
+		MainWindow.cache.set_status(show,unicode(self.ui.status.toPlainText ()))
 		MainWindow.buildStatusWidgetMenu()
 		MainWindow.sendPresence(self.jid,show,unicode(self.ui.status.toPlainText ()))
 		self.done(1)
@@ -2804,8 +2822,8 @@ class statusWindow(QtGui.QDialog):
 						pri=MainWindow.config['priority']
 				else:
 					pri="0"
-			if not jid:
-				MainWindow.ui.showWidget.label.setText(unicode(self.ui.status.toPlainText()).replace("\n"," ")[:25])
+			#if not jid:
+				#MainWindow.ui.showWidget.label.setText(unicode(self.ui.status.toPlainText()).replace("\n"," ")[:25])
 			if jid:
 				#typ="available"
 				#if self.data=="offline":
