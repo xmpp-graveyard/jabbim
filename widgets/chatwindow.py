@@ -427,13 +427,17 @@ class chatWindow(QtGui.QMainWindow):
 			self.setWindowTitle(unicode(self.ui.chatTab.tabText(index)).replace("&",""))
 			self.active=True
 			print "activated..........."
-			self.flashStatus=False
 			
 			#print self.main.events.events
 			ev2=list(self.main.events.events)
+			r=False
 			for event in ev2:
 				if event['name']==widget.jid and (event['type']=="newMessage" or event['type']=="message"):
 					event['widget'].closeClicked()
+					r=True
+			if r:
+				print "some events was removed"
+				self.flashStatus=False
 					#break
 			self.main.events.refreshTray()
 			color=self.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
