@@ -1359,42 +1359,52 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.rosterStackedWidget.setCurrentIndex(2)
 			self.connect()
 
-	def _buildStatusWidgetMenu(self,result):
+	#def _buildStatusWidgetMenu(self,result):
 		# Status menu
-		print "RESULT"
-		print result
+		#print result
 
 	def buildStatusWidgetMenu(self,data=None):
 		# Status menu
-		
-		d=self.cache.get_status()
-		d.addCallback(self._buildStatusWidgetMenu)
-			#def get_status(self):
-		#return self.db.runQuery('select * from status;')
-		
-		config=ConfigObj(self.homeDir+'/statusmessages',encoding='UTF8')
-		if len(config)==0:
+		print "data:",data
+		if data==None:
+			d=self.cache.get_status()
+			d.addCallback(self.buildStatusWidgetMenu)
+			return
+		else:
+			config={}
 			config['online']=[]
 			config['chat']=[]
 			config['away']=[]
 			config['xa']=[]
 			config['dnd']=[]
-			config.write()
+			for status in data:
+				config[status[0]].append([status[1],str(status[2])])
+			
+		#config=ConfigObj(self.homeDir+'/statusmessages',encoding='UTF8')
+		#if len(config)==0:
+			#config['online']=[]
+			#config['chat']=[]
+			#config['away']=[]
+			#config['xa']=[]
+			#config['dnd']=[]
+			#config.write()
 
 		self.statusWidgetMenu=QtGui.QMenu(self.tr("Status"),self.ui.statusButton)
 		separator=False
-		for key in config.keys():
+		for key in ['online','chat','away','xa','dnd']:
 			if separator and len(config[key])!=0:
 				self.statusWidgetMenu.addSeparator()
 			action=self.statusWidgetMenu.addAction(self.getIcon(status=key,size="16x16"),self.status[key])
 			action.setData(QtCore.QVariant(key))
 			if len(config[key])!=0:
-				for status in config[key]:
+				for val in config[key]:
+					status=val[0]
+					index=val[1]
 					if len(status)>20:
 						action=self.statusWidgetMenu.addAction(self.getIcon(status=key,size="16x16"),unicode(status)[:20]+"...")
 					else:
 						action=self.statusWidgetMenu.addAction(self.getIcon(status=key,size="16x16"),unicode(status))
-					action.setData(QtCore.QVariant(key+"_"+unicode(config[key].index(status))))
+					action.setData(QtCore.QVariant(key+"_"+unicode(index)))
 				self.statusWidgetMenu.addSeparator()
 				separator=False
 			else:
@@ -1422,8 +1432,8 @@ class mainWindow(QtGui.QMainWindow):
 		action=self.statusWidgetMenu.addAction(self.getIcon(status="online",size="16x16"),self.tr("Add message"))
 		action.setData(QtCore.QVariant("custom_message"))
 
-		action=self.statusWidgetMenu.addAction(self.getIcon(status="online",size="16x16"),self.tr("Remove message"))
-		action.setData(QtCore.QVariant("remove_message"))
+		action=self.statusWidgetMenu.addAction(self.getIcon(status="online",size="16x16"),self.tr("Manage messages"))
+		action.setData(QtCore.QVariant("manage_messages"))
 
 		action=self.statusWidgetMenu.addAction(self.getIcon(status="offline",size="16x16"),self.tr("Log out"))
 		action.setData(QtCore.QVariant("offline"))
@@ -1436,64 +1446,82 @@ class mainWindow(QtGui.QMainWindow):
 		data=action.data()
 		data=unicode(data.toString())
 		if data=='custom_message':
-			cs = statusWidgetWindow(None,self)
+			cs = widgets.statuseditor.statusWidgetWindow(None,self,self)
 			cs.exec_()
-		elif data=='remove_message':
+		elif data=='manage_messages':
 			cs = widgets.statuseditor.statusEditorWindow(self,self)
 			cs.exec_()
 		else:
 			data=data.split("_")
-			config=ConfigObj(self.homeDir+'/statusmessages',encoding='UTF8')
+			#config=ConfigObj(self.homeDir+'/statusmessages',encoding='UTF8')
 			if len(data)==2:
 				show=data[0]
 				messageIndex=data[1]
-				message=config[show][int(messageIndex)]
+				d=self.cache.get_status_by_id(str(messageIndex))
+				d.addCallback(self._gotStatus)
+				return
+				#message=config[show][int(messageIndex)]
 			elif len(data)==1:
 				show=data[0]
 				message=""
 			self.sendPresence(None,show,message)
 
+	def _gotStatus(self,result):
+		print result
+		if not result:
+			return
+		if len(result)==0:
+			return
+		self.sendPresence(None,result[0][0],result[0][1])
+
 	def sendPresence(self,jid,show,message):
-		icon=QtGui.QIcon("images/16x16/apps/jabbim.png")
-		if show!='online':
-			result=icon.pixmap(16,16)
-			painter=QtGui.QPainter(result)
-			icon=self.getIcon(status=unicode(show),size="16x16")
-			painter.drawPixmap(0,0,icon.pixmap(16,16))
-			painter.end()
+		if show=="offline":
+			MainWindow.client.sendPresence(typ = "unavailable", status = unicode(self.ui.status.toPlainText ()))
+			MainWindow.client.factory.stopTrying()
+			MainWindow.reconnect = False
+			MainWindow.client.disconnect()
+			MainWindow._disconnect()
 		else:
-			result=icon
-		self.tray.setIcon(QtGui.QIcon(result))
-		if self.config.has_key('autoPriority'):
-			if self.config['autoPriority']=='True':
-				priors={"chat":"25","online":"20","away":"15","xa":"10","dnd":"5"}
-				pri=priors[str(show)]
+			icon=QtGui.QIcon("images/16x16/apps/jabbim.png")
+			if show!='online':
+				result=icon.pixmap(16,16)
+				painter=QtGui.QPainter(result)
+				icon=self.getIcon(status=unicode(show),size="16x16")
+				painter.drawPixmap(0,0,icon.pixmap(16,16))
+				painter.end()
+			else:
+				result=icon
+			self.tray.setIcon(QtGui.QIcon(result))
+			if self.config.has_key('autoPriority'):
+				if self.config['autoPriority']=='True':
+					priors={"chat":"25","online":"20","away":"15","xa":"10","dnd":"5"}
+					pri=priors[str(show)]
+				else:
+					if self.config.has_key('priority'):
+						pri=self.config['priority']
+					else:
+						pri="0"
 			else:
 				if self.config.has_key('priority'):
 					pri=self.config['priority']
 				else:
 					pri="0"
-		else:
-			if self.config.has_key('priority'):
-				pri=self.config['priority']
+			if jid:
+				self.client.sendPresence(to=jid,show = unicode(show), status = unicode(message),priority=pri)
 			else:
-				pri="0"
-		if jid:
-			self.client.sendPresence(to=jid,show = unicode(show), status = unicode(message),priority=pri)
-		else:
-			self.client.sendPresence(show = unicode(show), status = unicode(message),priority=pri)
-		#musime updatovat MUCy
-		if not jid:
-			for muc in self.client.groupchats.itervalues():
-				self.client.sendPresence(show = unicode(show), status = unicode(message), to = '%s/%s'%(muc.jid, muc.nick))
-
-		if len(message)>20:
-			self.ui.statusWidget.setText(unicode(message)[:20]+"...")
-		elif len(message)==0:
-			self.ui.statusWidget.setText(self.status[show])
-		else:
-			self.ui.statusWidget.setText(unicode(message))
-		self.ui.statusWidget.setIcon(self.getIcon(status=show,size="16x16"))
+				self.client.sendPresence(show = unicode(show), status = unicode(message),priority=pri)
+			#musime updatovat MUCy
+			if not jid:
+				for muc in self.client.groupchats.itervalues():
+					self.client.sendPresence(show = unicode(show), status = unicode(message), to = '%s/%s'%(muc.jid, muc.nick))
+	
+			if len(message)>20:
+				self.ui.statusWidget.setText(unicode(message)[:20]+"...")
+			elif len(message)==0:
+				self.ui.statusWidget.setText(self.status[show])
+			else:
+				self.ui.statusWidget.setText(unicode(message))
+			self.ui.statusWidget.setIcon(self.getIcon(status=show,size="16x16"))
 
 	def profileChanged(self,jid):
 		self.homeDir=unicode(self.realHomeDir+"/"+jid+"-profile")
@@ -2689,31 +2717,7 @@ class XMLConsole(QtGui.QMainWindow):
 		self.ui.textEdit.setText("")
 
 
-class statusWidgetWindow(QtGui.QDialog):
-	def __init__(self,jid,parent=None):
-		apply(QtGui.QDialog.__init__,(self,parent))
-		self.setModal(False)
-		self.ui=widgets.statuswidget_ui.Ui_statusWidgetWindow()
-		self.ui.setupUi(self)
-		#config=ConfigObj(MainWindow.homeDir+'/statusmessages',encoding='UTF8')
 
-		self.ui.show.addItem(MainWindow.getIcon(status="online",size="16x16"), MainWindow.status["online"],QtCore.QVariant("online"))
-		self.ui.show.addItem(MainWindow.getIcon(status="chat",size="16x16"), MainWindow.status["chat"],QtCore.QVariant("chat"))
-		self.ui.show.addItem(MainWindow.getIcon(status="away",size="16x16"), MainWindow.status["away"],QtCore.QVariant("away"))
-		self.ui.show.addItem(MainWindow.getIcon(status="xa",size="16x16"), MainWindow.status["xa"],QtCore.QVariant("xa"))
-		self.ui.show.addItem(MainWindow.getIcon(status="dnd",size="16x16"), MainWindow.status["dnd"],QtCore.QVariant("dnd"))
-		self.jid=jid
-		#app.connect(self.ui.show, QtCore.SIGNAL("activated ( const QString & )"),self.ui.status.setPlainText)
-
-	def accept(self):
-		show=unicode(self.ui.show.itemData(self.ui.show.currentIndex()).toString())
-		#config=ConfigObj(MainWindow.homeDir+'/statusmessages',encoding='UTF8')
-		#config[show].append(unicode(self.ui.status.toPlainText ()))
-		#config.write()
-		d=MainWindow.cache.set_status(show,unicode(self.ui.status.toPlainText ()))
-		d.addCallback(MainWindow.buildStatusWidgetMenu)
-		MainWindow.sendPresence(self.jid,show,unicode(self.ui.status.toPlainText ()))
-		self.done(1)
 
 class customStatusWindow(QtGui.QDialog):
 	def __init__(self,jid,show=None,parent=None):
