@@ -316,14 +316,21 @@ class chatWindow(QtGui.QMainWindow):
 		if sys.platform == 'win32':
 			print "starting flash timer"
 			ctypes.windll.user32.FlashWindow(int(self.winId()),True)
-			self.main.client.reactor.callLater(1,self.flash)
+			self.main.client.reactor.callLater(1,self._flashYes)
 
 	def flash(self):
 		print 'flash timer...'
 		#ctypes.windll.user32.FlashWindow(int(self.winId()),False)
+	def _flashYes(self):
 		ctypes.windll.user32.FlashWindow(int(self.winId()),True)
 		if self.flashStatus:
-			self.main.client.reactor.callLater(1,self.flash)
+			self.main.client.reactor.callLater(1,self._flashNo)
+		else:
+			self._flashNo()
+	def _flashNo(self):
+		ctypes.windll.user32.FlashWindow(int(self.winId()),True)
+		if self.flashStatus:
+			self.main.client.reactor.callLater(1,self._flashYes)
 		#else:
 			#ctypes.windll.user32.FlashWindow(int(self.winId()),False)
 
