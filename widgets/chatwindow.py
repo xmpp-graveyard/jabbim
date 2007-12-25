@@ -779,7 +779,8 @@ class chatWindow(QtGui.QMainWindow):
 		#self.activateWindow()
 		#self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
 		#self.activate()
-		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		#if not message:
+			#tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def addGroupChatTab(self,room,nickname,affiliation=""):
 		for i in range(self.ui.chatTab.count()):
