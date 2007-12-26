@@ -316,21 +316,14 @@ class chatWindow(QtGui.QMainWindow):
 		if sys.platform == 'win32':
 			print "starting flash timer"
 			ctypes.windll.user32.FlashWindow(int(self.winId()),True)
-			self.main.client.reactor.callLater(1,self._flashYes)
+			self.main.client.reactor.callLater(1,self.flash)
 
 	def flash(self):
 		print 'flash timer...'
 		#ctypes.windll.user32.FlashWindow(int(self.winId()),False)
-	def _flashYes(self):
 		ctypes.windll.user32.FlashWindow(int(self.winId()),True)
 		if self.flashStatus:
-			self.main.client.reactor.callLater(1,self._flashNo)
-		else:
-			self._flashNo()
-	def _flashNo(self):
-		ctypes.windll.user32.FlashWindow(int(self.winId()),True)
-		if self.flashStatus:
-			self.main.client.reactor.callLater(1,self._flashYes)
+			self.main.client.reactor.callLater(1,self.flash)
 		#else:
 			#ctypes.windll.user32.FlashWindow(int(self.winId()),False)
 
@@ -413,49 +406,51 @@ class chatWindow(QtGui.QMainWindow):
 	def event(self,ev):
 		# WindowActivated
 		#print int(ev.type())
+		handler=QtGui.QMainWindow.event(self,ev)
 		if int(ev.type())==24:
-			widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
-
-			if self.active==None and widget.typ=="chat":
-				#for i in range(self.ui.chatTab.count()):
-					#w=self.ui.chatTab.widget(i)
-					#if w.typ=="chat":
-						#self.main.client.sendMessage(str(w.jid),"",composing="active")
-				widget.active=True
-				self.main.client.sendMessage(str(widget.jid),"",composing="active")
-				self.main.client.dispatcher.publishEvent('onActivity')
-				print "publishing onActivity event"
-			if self.active==False:
-				self.main.client.dispatcher.publishEvent('onActivity')
-				print "publishing onActivity event"
-			index=int(self.ui.chatTab.currentIndex())
-			widget=self.ui.chatTab.widget(index)
-			widget.chat.unread=0
-			self.setWindowTitle(unicode(self.ui.chatTab.tabText(index)).replace("&",""))
-			self.active=True
-			print "activated..........."
-			
-			#print self.main.events.events
-			ev2=list(self.main.events.events)
-			r=False
-			for event in ev2:
-				if event['name']==widget.jid and (event['type']=="newMessage" or event['type']=="message"):
-					event['widget'].closeClicked()
-					r=True
-			if r:
-				print "some events was removed"
-				self.flashStatus=False
-					#break
-			self.main.events.refreshTray()
-			color=self.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
-			self.ui.chatTab.tabBar().setTabTextColor(self.ui.chatTab.currentIndex(),color)
-			self.timer.stop()
+			if self.isActiveWindow():
+				widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
+		
+				if self.active==None and widget.typ=="chat":
+					#for i in range(self.ui.chatTab.count()):
+						#w=self.ui.chatTab.widget(i)
+						#if w.typ=="chat":
+							#self.main.client.sendMessage(str(w.jid),"",composing="active")
+					widget.active=True
+					self.main.client.sendMessage(str(widget.jid),"",composing="active")
+					self.main.client.dispatcher.publishEvent('onActivity')
+					print "publishing onActivity event"
+				if self.active==False:
+					self.main.client.dispatcher.publishEvent('onActivity')
+					print "publishing onActivity event"
+				index=int(self.ui.chatTab.currentIndex())
+				widget=self.ui.chatTab.widget(index)
+				widget.chat.unread=0
+				self.setWindowTitle(unicode(self.ui.chatTab.tabText(index)).replace("&",""))
+				self.active=True
+				print "activated..........."
+				
+				#print self.main.events.events
+				ev2=list(self.main.events.events)
+				r=False
+				for event in ev2:
+					if event['name']==widget.jid and (event['type']=="newMessage" or event['type']=="message"):
+						event['widget'].closeClicked()
+						r=True
+				if r:
+					print "some events was removed"
+					self.flashStatus=False
+						#break
+				self.main.events.refreshTray()
+				color=self.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
+				self.ui.chatTab.tabBar().setTabTextColor(self.ui.chatTab.currentIndex(),color)
+				self.timer.stop()
 		elif int(ev.type())==25:
 			if self.active:
 				print "INACTIVE"
 				self.active=False
 				self.timer.start(30000)
-		return QtGui.QMainWindow.event(self,ev)
+		return handler
 
 	def getUnreadMessages(self):
 		count=0
@@ -786,8 +781,7 @@ class chatWindow(QtGui.QMainWindow):
 		#self.activateWindow()
 		#self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
 		#self.activate()
-		#if not message:
-			#tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def addGroupChatTab(self,room,nickname,affiliation=""):
 		for i in range(self.ui.chatTab.count()):
