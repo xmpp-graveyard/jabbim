@@ -1154,6 +1154,8 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
 
+		self.cache.create_tables()
+		
 		#elf.cache = storage.Cache(db=utils.path(u'C:\ččč\cache.db'))
 		#self.cache = storage.Cache(db=unicode(self.homeDir+u'/cache2.db'))
 ##		self.cache = storage.Cache(db=':memory:')
