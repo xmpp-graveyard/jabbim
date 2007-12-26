@@ -41,6 +41,7 @@ class PluginBase:
 		self.homeDir = homedir
 		self.translator=None
 		self.developMode=False
+		self.loadedWindows=[]
 
 	def connected(self):
 		pass
@@ -72,6 +73,7 @@ class PluginBase:
 				wid.ui.setupUi(wid)
 		if wid.ui==None:
 			return None
+		self.loadedWindows.append(wid)
 		return wid
 
 	def loadWidget(self,file,parent=None):
@@ -156,6 +158,10 @@ class PluginBase:
 	
 	def remove(self):
 		self.on_remove()
+		for window in self.loadedWindows:
+			window.close()
+		for i in range(int(len(self.loadedWindows))):
+			del self.loadedWindows[0]
 		self.writeConfig()
 		for handler in self.handlers:
 			self.main.client.dispatcher.unregisterHandler(handler, self.name)
