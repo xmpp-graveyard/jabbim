@@ -69,6 +69,7 @@ class Client(derived):
 		self.connection = None
 		self.main=main # mainWindow
 		self.ssl = SSL
+		self.lastxml=10
 		self.roster = {'users':{},'groups':{}}
 		self.roster_meta = {} # jid: {'tag':tag,  'order': 1}
 		self.first_presence = []

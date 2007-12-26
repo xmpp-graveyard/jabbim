@@ -628,6 +628,15 @@ class clientClass(pyxl.client.Client):
 		if self.main.xmlConsole.ui.enable.isChecked():
 			text=unicode(xml)
 			self.main.xmlConsole.ui.xml.append(text+"\n\n")
+		if self.lastxml<10:
+			self.lastxml+=1
+			f=open(self.main.homeDir+'/lastxml','a')
+		else:
+			self.lastxml=0
+			f=open(self.main.homeDir+'/lastxml','w')
+		f.write(unicode(xml))
+		f.close()
+
 	
 	def on_UpdateContact(self,jid):
 		# contact is updated
@@ -2562,6 +2571,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.rosterStackedWidget.setCurrentIndex(2)
 		self.ui.login_connect.setEnabled(False)
 		self.ui.profilesList.setEnabled(False)
+		#if not os.path.isfile(self.main.homeDir+'/lastxml':
 		reactor.callLater(0.1,self.connect__)
 	
 	def connect__(self):
