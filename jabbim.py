@@ -1363,12 +1363,18 @@ class mainWindow(QtGui.QMainWindow):
 		# Status menu
 		#print result
 
+	def _error(self,result):
+		log.msg( 'CHYBA V DATABAZI?!!! ')
+		print result
+	
+
 	def buildStatusWidgetMenu(self,data=None):
 		# Status menu
 		print "data:",data
 		if data==None:
 			d=self.cache.get_status()
 			d.addCallback(self.buildStatusWidgetMenu)
+			d.addErrback(self._error)
 			return
 		else:
 			config={}
