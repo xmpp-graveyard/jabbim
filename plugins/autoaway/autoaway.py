@@ -155,23 +155,26 @@ class Plugin(plugins.PluginBase):
 		print "autoaway online"
 		if self.message_set:
 			self.message_set=False
-			self.main.ui.statusButton.setIcon(self.main.getIcon(status='online', size="16x16"))
-			self.main.ui.showWidget.setText("")
-			self.main.client.sendPresence(show = 'online', status = "")
-			for muc in self.main.client.groupchats.itervalues():
-				self.main.client.sendPresence(show = 'online', status = "", to = '%s/%s'%(muc.jid, muc.nick))
+			#self.main.ui.statusButton.setIcon(self.main.getIcon(status='online', size="16x16"))
+			#self.main.ui.showWidget.setText("")
+			#self.main.client.sendPresence(show = 'online', status = "")
+			#for muc in self.main.client.groupchats.itervalues():
+				#self.main.client.sendPresence(show = 'online', status = "", to = '%s/%s'%(muc.jid, muc.nick))
+			self.sendPresence(None,'online',"")
+
 
 	def setAway(self):
 		print "autoaway away"
 		#contact = self.main.client.roster['users'][self.main.client.jid.userhost()]
 		#print "current show:",contact.resources[self.main.client.jid.resource].show
 		if self.main.selfStatus=="online":
-			self.main.ui.statusButton.setIcon(self.main.getIcon(status='away', size="16x16"))
+			#self.main.ui.statusButton.setIcon(self.main.getIcon(status='away', size="16x16"))
 			now=self.main.now()
-			self.main.ui.showWidget.setText(self.config['awayMessage'].replace('[time]',self.config['awayTime']).replace("[last]",unicode(now)))
-			self.main.client.sendPresence(show = 'away', status = self.config['awayMessage'].replace('[time]',self.config['awayTime']).replace("[last]",unicode(now)))
-			for muc in self.main.client.groupchats.itervalues():
-				self.main.client.sendPresence(show = 'away', status = self.config['awayMessage'].replace('[time]',self.config['awayTime']).replace("[last]",unicode(now)), to = '%s/%s'%(muc.jid, muc.nick))
+			#self.main.ui.showWidget.setText(self.config['awayMessage'].replace('[time]',self.config['awayTime']).replace("[last]",unicode(now)))
+			#self.main.client.sendPresence(show = 'away', status = self.config['awayMessage'].replace('[time]',self.config['awayTime']).replace("[last]",unicode(now)))
+			#for muc in self.main.client.groupchats.itervalues():
+				#self.main.client.sendPresence(show = 'away', status = self.config['awayMessage'].replace('[time]',self.config['awayTime']).replace("[last]",unicode(now)), to = '%s/%s'%(muc.jid, muc.nick))
+			self.sendPresence(None,'away',self.config['awayMessage'].replace('[time]',self.config['awayTime']).replace("[last]",unicode(now)))
 			self.message_set=True
 
 
