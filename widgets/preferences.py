@@ -405,6 +405,7 @@ class preferencesWindow(QtGui.QDialog):
 
 		# Plugins
 		#self.ui.plugins.header().hide()
+		QtCore.QObject.connect(self.ui.applyButton, QtCore.SIGNAL("clicked()"),self.save)
 		QtCore.QObject.connect(self.ui.pluginConfiguration, QtCore.SIGNAL("clicked()"),self.pluginConfigurationClicked)
 		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.pluginsContextMenu)
 		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int)"),self.pluginSelected)
@@ -547,7 +548,8 @@ class preferencesWindow(QtGui.QDialog):
 		self.chatSkinPreviewtextEditWrite(testConfig["message_for_me"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("Me"))+", "+unicode(self.tr("this is message contains my name."))))
 		self.chatSkinPreviewtextEditWrite(testConfig["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("User has set the subject to: Subject"))))
 
-	def accept(self):
+
+	def save(self):
 		self.main.skin=ConfigObj("skins/"+unicode(self.ui.chatSkin_list.currentText()),encoding='UTF8')
 		if not self.main.skin.has_key("spaces_between_lines"):
 			self.main.skin["spaces_between_lines"]='0'
@@ -608,6 +610,9 @@ class preferencesWindow(QtGui.QDialog):
 		
 		#size=unicode(self.main.config['rosterIconSize']).rsplit("x")
 		#self.main.ui.roster.setIconSize(QtCore.QSize(int(size[0]),int(size[1])))
+
+	def accept(self):
+		self.save()
 		self.done(1)
 
 	def reject(self):

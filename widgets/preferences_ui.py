@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Sat Dec 22 11:44:29 2007
+# Created: Wed Dec 26 09:48:29 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -239,6 +239,10 @@ class Ui_preferences(object):
         self.saveButton.setObjectName("saveButton")
         self.hboxlayout.addWidget(self.saveButton)
 
+        self.applyButton = QtGui.QPushButton(preferences)
+        self.applyButton.setObjectName("applyButton")
+        self.hboxlayout.addWidget(self.applyButton)
+
         self.cancelButton = QtGui.QPushButton(preferences)
         self.cancelButton.setObjectName("cancelButton")
         self.hboxlayout.addWidget(self.cancelButton)
@@ -300,6 +304,7 @@ class Ui_preferences(object):
         "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\';\"><span style=\" font-size:12pt; font-weight:600;\">Plugins</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.saveButton.setText(QtGui.QApplication.translate("preferences", "Save", None, QtGui.QApplication.UnicodeUTF8))
+        self.applyButton.setText(QtGui.QApplication.translate("preferences", "Apply", None, QtGui.QApplication.UnicodeUTF8))
         self.cancelButton.setText(QtGui.QApplication.translate("preferences", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.listWidget.clear()
 
