@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 from twisted.enterprise import adbapi, util as dbutil
 from twisted.python import log
-
+from twisted.internet.defer import DeferredList
 class Cache:
 	def __init__(self, DB_DRIVER = 'sqlite3', db='cache.db'):
 		if DB_DRIVER == 'sqlite3':
@@ -29,9 +29,10 @@ class Cache:
 				self.db = adbapi.ConnectionPool('pysqlite2.dbapi2', db)
 			except:
 				log.msg('Unknown DB error')				
-		self.db.runQuery('create table caps (node text, feature text);').addCallback(self.table_created).addErrback(self.table_present)
-		self.db.runQuery('create table status (show text, desc text, id integer primary key);').addErrback(self.table_present)
-		self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created2).addErrback(self.table_present)
+		t1 = self.db.runQuery('create table caps (node text, feature text);').addCallback(self.table_created).addErrback(self.table_present)
+		t2 = self.db.runQuery('create table status (show text, desc text, id integer primary key);').addErrback(self.table_present)
+		t3 = self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created2).addErrback(self.table_present)
+		return DeferredList([t1,t2,t3], consumeErrors = True)
 		
 	def table_created(self, res):
 		log.msg( 'created new cache DB')
