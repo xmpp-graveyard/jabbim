@@ -1496,37 +1496,40 @@ class mainWindow(QtGui.QMainWindow):
 		self.sendPresence(None,result[0][0],result[0][1])
 
 	def sendPresence(self,jid,show,message):
-		if show=="offline":
-			MainWindow.client.sendPresence(typ = "unavailable", status = unicode(self.ui.status.toPlainText ()))
-			MainWindow.client.factory.stopTrying()
-			MainWindow.reconnect = False
-			MainWindow.client.disconnect()
-			MainWindow._disconnect()
-		else:
-			icon=QtGui.QIcon("images/16x16/apps/jabbim.png")
-			if show!='online':
-				result=icon.pixmap(16,16)
-				painter=QtGui.QPainter(result)
-				icon=self.getIcon(status=unicode(show),size="16x16")
-				painter.drawPixmap(0,0,icon.pixmap(16,16))
-				painter.end()
+		if not jid:
+			if show=="offline":
+				
+				self.client.sendPresence(typ = "unavailable", status = unicode(message))
+				MainWindow.client.factory.stopTrying()
+				MainWindow.reconnect = False
+				MainWindow.client.disconnect()
+				MainWindow._disconnect()
 			else:
-				result=icon
-			self.tray.setIcon(QtGui.QIcon(result))
-			if self.config.has_key('autoPriority'):
-				if self.config['autoPriority']=='True':
-					priors={"chat":"25","online":"20","away":"15","xa":"10","dnd":"5"}
-					pri=priors[str(show)]
+				icon=QtGui.QIcon("images/16x16/apps/jabbim.png")
+				if show!='online':
+					result=icon.pixmap(16,16)
+					painter=QtGui.QPainter(result)
+					icon=self.getIcon(status=unicode(show),size="16x16")
+					painter.drawPixmap(0,0,icon.pixmap(16,16))
+					painter.end()
+				else:
+					result=icon
+				self.tray.setIcon(QtGui.QIcon(result))
+				if self.config.has_key('autoPriority'):
+					if self.config['autoPriority']=='True':
+						priors={"chat":"25","online":"20","away":"15","xa":"10","dnd":"5"}
+						pri=priors[str(show)]
+					else:
+						if self.config.has_key('priority'):
+							pri=self.config['priority']
+						else:
+							pri="0"
 				else:
 					if self.config.has_key('priority'):
 						pri=self.config['priority']
 					else:
 						pri="0"
-			else:
-				if self.config.has_key('priority'):
-					pri=self.config['priority']
-				else:
-					pri="0"
+				self.selfStatus=show
 			if jid:
 				self.client.sendPresence(to=jid,show = unicode(show), status = unicode(message),priority=pri)
 			else:
@@ -1535,14 +1538,14 @@ class mainWindow(QtGui.QMainWindow):
 			if not jid:
 				for muc in self.client.groupchats.itervalues():
 					self.client.sendPresence(show = unicode(show), status = unicode(message), to = '%s/%s'%(muc.jid, muc.nick))
-	
-			if len(message)>20:
-				self.ui.statusWidget.setText(unicode(message)[:20]+"...")
-			elif len(message)==0:
-				self.ui.statusWidget.setText(self.status[show])
-			else:
-				self.ui.statusWidget.setText(unicode(message))
-			self.ui.statusWidget.setIcon(self.getIcon(status=show,size="16x16"))
+		
+				if len(message)>20:
+					self.ui.statusWidget.setText(unicode(message)[:20]+"...")
+				elif len(message)==0:
+					self.ui.statusWidget.setText(self.status[show])
+				else:
+					self.ui.statusWidget.setText(unicode(message))
+				self.ui.statusWidget.setIcon(self.getIcon(status=show,size="16x16"))
 
 	def profileChanged(self,jid):
 		self.homeDir=unicode(self.realHomeDir+"/"+jid+"-profile")
