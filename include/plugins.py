@@ -147,7 +147,8 @@ class PluginBase:
 		#for k in self.config.iterkeys():
 			#self.confObj[k] = self.config[k]['value']
 		#self.confObj.write()
-		self.config.write()
+		if self.config:
+			self.config.write()
 	
 	def registerHandler(self, name, method, priority = 5):
 		self.main.client.dispatcher.registerHandler(name, method, self.name, priority = priority)
