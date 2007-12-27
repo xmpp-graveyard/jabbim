@@ -1439,41 +1439,44 @@ class mainWindow(QtGui.QMainWindow):
 			self.statusWidgetMenu.addSeparator()
 
 		print 'TRANSPORTS:',self.transports
-		for transport in list(self.transports.keys()):
-			show=self.client.roster['users'][transport].status
-			if len(show)==0:
-				show='offline'
-			else:
-				show=show[0]
-			#mainAction=self.statusWidgetMenu.addAction(self.getIcon(status=unicode(show),size="16x16"),unicode(transport))
-			menu=QtGui.QMenu(transport,self.statusWidgetMenu)
-			menu.setIcon(self.getIcon(status=show,size="16x16"))
-			separator=False
-			for key in ['online','chat','away','xa','dnd']:
-				if separator and len(config[key])!=0:
-					menu.addSeparator()
-				action=menu.addAction(self.getIcon(status=key,size="16x16"),self.status[key])
-				action.setData(QtCore.QVariant([key,unicode(transport)]))
-				if len(config[key])!=0:
-					for val in config[key]:
-						status=val[0]
-						index=val[1]
-						if len(status)>20:
-							action=menu.addAction(self.getIcon(status=key,size="16x16"),unicode(status)[:20]+"...")
-						else:
-							action=menu.addAction(self.getIcon(status=key,size="16x16"),unicode(status))
-						action.setData(QtCore.QVariant([key+"_"+unicode(index),unicode(transport)]))
-					menu.addSeparator()
-					separator=False
+		if len(self.transports)!=0:
+			for transport in list(self.transports.keys()):
+				show=self.client.roster['users'][transport].status
+				if len(show)==0:
+					show='offline'
 				else:
-					separator=True
-			if separator:
-				menu.addSeparator()
-			if self.transports[transport]:
-				menu.setIcon(self.transports[transport].icon())
-			
-			self.transports[transport]=menu
-			self.statusWidgetMenu.addMenu(menu)
+					show=show[0]
+				#mainAction=self.statusWidgetMenu.addAction(self.getIcon(status=unicode(show),size="16x16"),unicode(transport))
+				menu=QtGui.QMenu(transport,self.statusWidgetMenu)
+				menu.setIcon(self.getIcon(status=show,size="16x16"))
+				separator=False
+				for key in ['online','chat','away','xa','dnd']:
+					if separator and len(config[key])!=0:
+						menu.addSeparator()
+					action=menu.addAction(self.getIcon(status=key,size="16x16"),self.status[key])
+					action.setData(QtCore.QVariant([key,unicode(transport)]))
+					if len(config[key])!=0:
+						for val in config[key]:
+							status=val[0]
+							index=val[1]
+							if len(status)>20:
+								action=menu.addAction(self.getIcon(status=key,size="16x16"),unicode(status)[:20]+"...")
+							else:
+								action=menu.addAction(self.getIcon(status=key,size="16x16"),unicode(status))
+							action.setData(QtCore.QVariant([key+"_"+unicode(index),unicode(transport)]))
+						menu.addSeparator()
+						separator=False
+					else:
+						separator=True
+				if separator:
+					menu.addSeparator()
+				if self.transports[transport]:
+					menu.setIcon(self.transports[transport].icon())
+				
+				self.transports[transport]=menu
+				self.statusWidgetMenu.addMenu(menu)
+			self.statusWidgetMenu.addSeparator()
+
 			#mainAction.setMenu(menu)
 
 		
