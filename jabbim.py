@@ -634,7 +634,10 @@ class clientClass(pyxl.client.Client):
 		else:
 			self.lastxml=0
 			f=open(self.main.homeDir+'/lastxml','w')
-		f.write(unicode(xml))
+		try:
+			f.write(unicode(xml))
+		except:
+			log.err('Chyba zapisu lastxml')
 		f.close()
 
 	
