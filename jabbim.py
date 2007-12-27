@@ -165,28 +165,29 @@ class clientClass(pyxl.client.Client):
 				elif typ=="file":
 					typ="disk"
 				self.main.hosts[jid]=typ
-				if self.main.transports.has_key(jid):
-					self.main.transports[jid]=typ
-					self.menus=[]
-					for jid,typ in self.main.transports.iteritems():
-						jid=unicode(jid)
-						menu=QtGui.QMenu(unicode(jid),self.main.statusMenu)
-						menu.setIcon(self.main.getIcon("jid@"+unicode(jid),status="offline",size="16x16"))
-						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="online",size="16x16"),self.main.status["online"])
-						action.setData(QtCore.QVariant([jid,"online"]))
-						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="chat",size="16x16"),self.main.status["chat"])
-						action.setData(QtCore.QVariant([jid,"chat"]))
-						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="away",size="16x16"),self.main.status["away"])
-						action.setData(QtCore.QVariant([jid,"away"]))
-						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="xa",size="16x16"),self.main.status["xa"])
-						action.setData(QtCore.QVariant([jid,"xa"]))
-						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="dnd",size="16x16"),self.main.status["dnd"])
-						action.setData(QtCore.QVariant([jid,"dnd"]))
-						action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="offline",size="16x16"),self.main.status["offline"])
-						action.setData(QtCore.QVariant([jid,"offline"]))
-						#app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.main.statusChanged)
-						self.menus.append(menu)
-					self.main.buildStatusMenu(self.menus)
+				#if self.main.transports.has_key(jid):
+					#self.main.transports[jid]=typ
+					#self.menus=[]
+					#for jid,typ in self.main.transports.iteritems():
+						#jid=unicode(jid)
+						#menu=QtGui.QMenu(unicode(jid),self.main.statusMenu)
+						#menu.setIcon(self.main.getIcon("jid@"+unicode(jid),status="offline",size="16x16"))
+						#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="online",size="16x16"),self.main.status["online"])
+						#action.setData(QtCore.QVariant([jid,"online"]))
+						#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="chat",size="16x16"),self.main.status["chat"])
+						#action.setData(QtCore.QVariant([jid,"chat"]))
+						#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="away",size="16x16"),self.main.status["away"])
+						#action.setData(QtCore.QVariant([jid,"away"]))
+						#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="xa",size="16x16"),self.main.status["xa"])
+						#action.setData(QtCore.QVariant([jid,"xa"]))
+						#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="dnd",size="16x16"),self.main.status["dnd"])
+						#action.setData(QtCore.QVariant([jid,"dnd"]))
+						#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="offline",size="16x16"),self.main.status["offline"])
+						#action.setData(QtCore.QVariant([jid,"offline"]))
+						##app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.main.statusChanged)
+						#self.menus.append(menu)
+					#self.main.buildStatusMenu(self.menus)
+					#self.main.buildStatusWidgetMenu()
 				for host in self.main.hosts:
 					for i in self.main.ui.roster.getUserItems(host):
 						i.transport=True
@@ -213,7 +214,7 @@ class clientClass(pyxl.client.Client):
 		else:
 			host=unicode(jid)
 			log.msg("Transport:"+jid)
-			self.main.transports[unicode(jid)]=""
+			self.main.transports[unicode(jid)]=None
 		if not self.disco.has_key(host) and not host in self.temp_hosts:
 			self.temp_hosts.append(host)
 			self.getDiscoInfo(host)
@@ -252,23 +253,24 @@ class clientClass(pyxl.client.Client):
 		#self.sendPresence("icq.jabbim.cz",show='available', status = "")
 
 		self.menus=[]
-		for jid,typ in self.main.transports.iteritems():
-			menu=QtGui.QMenu(unicode(jid),self.main.statusMenu)
-			action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="online",size="16x16"),self.main.status["online"])
-			action.setData(QtCore.QVariant(jid+"/online"))
-			action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="chat",size="16x16"),self.main.status["chat"])
-			action.setData(QtCore.QVariant(jid+"/chat"))
-			action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="away",size="16x16"),self.main.status["away"])
-			action.setData(QtCore.QVariant(jid+"/away"))
-			action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="xa",size="16x16"),self.main.status["xa"])
-			action.setData(QtCore.QVariant(jid+"/xa"))
-			action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="dnd",size="16x16"),self.main.status["dnd"])
-			action.setData(QtCore.QVariant(jid+"/dnd"))
-			action=menu.addAction(self.main.getIcon(status="offline",size="16x16"),self.main.status["offline"])
-			action.setData(QtCore.QVariant(jid+"/offline"))
-			#app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.main.statusChanged)
-			self.menus.append(menu)
-		self.main.buildStatusMenu(self.menus)
+		#print "TTTTTTTTTTTTTT:",self.main.transports
+		#for jid,typ in self.main.transports.iteritems():
+			#menu=QtGui.QMenu(unicode(jid),self.main.statusMenu)
+			#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="online",size="16x16"),self.main.status["online"])
+			#action.setData(QtCore.QVariant(jid+"/online"))
+			#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="chat",size="16x16"),self.main.status["chat"])
+			#action.setData(QtCore.QVariant(jid+"/chat"))
+			#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="away",size="16x16"),self.main.status["away"])
+			#action.setData(QtCore.QVariant(jid+"/away"))
+			#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="xa",size="16x16"),self.main.status["xa"])
+			#action.setData(QtCore.QVariant(jid+"/xa"))
+			#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="dnd",size="16x16"),self.main.status["dnd"])
+			#action.setData(QtCore.QVariant(jid+"/dnd"))
+			#action=menu.addAction(self.main.getIcon(status="offline",size="16x16"),self.main.status["offline"])
+			#action.setData(QtCore.QVariant(jid+"/offline"))
+			##app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.main.statusChanged)
+			#self.menus.append(menu)
+		self.main.buildStatusWidgetMenu()
 		
 		
 		
@@ -1433,11 +1435,47 @@ class mainWindow(QtGui.QMainWindow):
 				separator=False
 			else:
 				separator=True
-
-		#action=self.statusWidgetMenu.addAction(self.getIcon(status="chat",size="16x16"),self.status["chat"])
-		#action.setData(QtCore.QVariant("chat"))
 		if separator:
 			self.statusWidgetMenu.addSeparator()
+
+		print 'TRANSPORTS:',self.transports
+		for transport in list(self.transports.keys()):
+			show=self.client.roster['users'][transport].status
+			if len(show)==0:
+				show='offline'
+			else:
+				show=show[0]
+			#mainAction=self.statusWidgetMenu.addAction(self.getIcon(status=unicode(show),size="16x16"),unicode(transport))
+			menu=QtGui.QMenu(transport,self.statusWidgetMenu)
+			menu.setIcon(self.getIcon(status=show,size="16x16"))
+			separator=False
+			for key in ['online','chat','away','xa','dnd']:
+				if separator and len(config[key])!=0:
+					menu.addSeparator()
+				action=menu.addAction(self.getIcon(status=key,size="16x16"),self.status[key])
+				action.setData(QtCore.QVariant([key,unicode(transport)]))
+				if len(config[key])!=0:
+					for val in config[key]:
+						status=val[0]
+						index=val[1]
+						if len(status)>20:
+							action=menu.addAction(self.getIcon(status=key,size="16x16"),unicode(status)[:20]+"...")
+						else:
+							action=menu.addAction(self.getIcon(status=key,size="16x16"),unicode(status))
+						action.setData(QtCore.QVariant([key+"_"+unicode(index),unicode(transport)]))
+					menu.addSeparator()
+					separator=False
+				else:
+					separator=True
+			if separator:
+				menu.addSeparator()
+			if self.transports[transport]:
+				menu.setIcon(self.transports[transport].icon())
+			
+			self.transports[transport]=menu
+			self.statusWidgetMenu.addMenu(menu)
+			#mainAction.setMenu(menu)
+
 		
 		#action=self.statusWidgetMenu.addAction(self.getIcon(status="away",size="16x16"),self.status["away"])
 		#action.setData(QtCore.QVariant("away"))
@@ -1468,7 +1506,14 @@ class mainWindow(QtGui.QMainWindow):
 	def statusWidgetChanged(self,action):
 		# status changed
 		data=action.data()
-		data=unicode(data.toString())
+		if len(data.toList())==0:
+			data=unicode(data.toString())
+			jid=None
+		else:
+			data=data.toList()
+			jid=unicode(data[1].toString())
+			data=unicode(data[0].toString())
+
 		if data=='custom_message':
 			cs = widgets.statuseditor.statusWidgetWindow(None,self,self)
 			cs.exec_()
@@ -1482,23 +1527,24 @@ class mainWindow(QtGui.QMainWindow):
 				show=data[0]
 				messageIndex=data[1]
 				d=self.cache.get_status_by_id(str(messageIndex))
-				d.addCallback(self._gotStatus)
+				d.addCallback(self._gotStatus,jid)
 				return
 				#message=config[show][int(messageIndex)]
 			elif len(data)==1:
 				show=data[0]
 				message=""
-			self.sendPresence(None,show,message)
+			self.sendPresence(jid,show,message)
 
-	def _gotStatus(self,result):
+	def _gotStatus(self,result,jid):
 		print result
 		if not result:
 			return
 		if len(result)==0:
 			return
-		self.sendPresence(None,result[0][0],result[0][1])
+		self.sendPresence(jid,result[0][0],result[0][1])
 
 	def sendPresence(self,jid,show,message,pri=None):
+		print "sending presence",jid,show
 		if not jid:
 			if show=="offline":
 				
@@ -1534,22 +1580,26 @@ class mainWindow(QtGui.QMainWindow):
 						else:
 							pri="0"
 				self.selfStatus=show
-			if jid:
-				self.client.sendPresence(to=jid,show = unicode(show), status = unicode(message),priority=pri)
+		if jid:
+			if self.transports.has_key(jid):
+				if self.transports[jid]!=None:
+					self.transports[jid].setIcon(self.getIcon(status=unicode(show),size="16x16"))
+				
+			self.client.sendPresence(to=jid,show = unicode(show), status = unicode(message),priority=pri)
+		else:
+			self.client.sendPresence(show = unicode(show), status = unicode(message),priority=pri)
+		#musime updatovat MUCy
+		if not jid:
+			for muc in self.client.groupchats.itervalues():
+				self.client.sendPresence(show = unicode(show), status = unicode(message), to = '%s/%s'%(muc.jid, muc.nick))
+	
+			if len(message)>20:
+				self.ui.statusWidget.setText(unicode(message)[:20]+"...")
+			elif len(message)==0:
+				self.ui.statusWidget.setText(self.status[show])
 			else:
-				self.client.sendPresence(show = unicode(show), status = unicode(message),priority=pri)
-			#musime updatovat MUCy
-			if not jid:
-				for muc in self.client.groupchats.itervalues():
-					self.client.sendPresence(show = unicode(show), status = unicode(message), to = '%s/%s'%(muc.jid, muc.nick))
-		
-				if len(message)>20:
-					self.ui.statusWidget.setText(unicode(message)[:20]+"...")
-				elif len(message)==0:
-					self.ui.statusWidget.setText(self.status[show])
-				else:
-					self.ui.statusWidget.setText(unicode(message))
-				self.ui.statusWidget.setIcon(self.getIcon(status=show,size="16x16"))
+				self.ui.statusWidget.setText(unicode(message))
+			self.ui.statusWidget.setIcon(self.getIcon(status=show,size="16x16"))
 
 	def profileChanged(self,jid):
 		self.homeDir=unicode(self.realHomeDir+"/"+jid+"-profile")
