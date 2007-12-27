@@ -141,18 +141,24 @@ class FileBackend:
 		if len(dates)==0:
 			return ""
 		d=dates[0]
-		
-		newestStr=unicode(d)
-		d=unicode(d).split('-')
-		newest=QtCore.QDate(int(d[0]),int(d[1]),int(d[2]))
-		for date in dates:
-			d=unicode(date).split('-')
-			d=QtCore.QDate(int(d[0]),int(d[1]),int(d[2]))
-			if d>newest:
-				newest=d
-				newestStr=unicode(date)
+		if maxTime=="0:0:0":
+			newestStr=unicode(d)
+			d=unicode(d).split('-')
+			newest=QtCore.QDate(int(d[0]),int(d[1]),int(d[2]))
+			for date in dates:
+				d=unicode(date).split('-')
+				d=QtCore.QDate(int(d[0]),int(d[1]),int(d[2]))
+				if d>newest:
+					newest=d
+					newestStr=unicode(date)
+		else:
+			d=time.localtime()
+			newestStr=str(d[0])+"-"+str(d[1])+"-"+str(d[2])
+
 		
 		messages=self.getMessages(jid,newestStr,maxTime)
+		if not messages:
+			return []
 		return messages[-count:]
 
 
