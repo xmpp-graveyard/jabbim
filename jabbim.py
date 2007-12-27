@@ -434,7 +434,7 @@ class clientClass(pyxl.client.Client):
 		show=unicode(self.main.ui.loginStatus.itemData(int(self.main.ui.loginStatus.currentIndex())).toString())
 		self.main.selfStatus=show
 		self.main.tray.setToolTip(self.main.tr('Your status:')+" "+self.main.status[show])
-		self.main.client.sendPresence(show=show,priority=pri)
+		self.main.sendPresence(None,show,"",pri)
 		self.main.ui.statusButton.setText(unicode(""))
 		self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
 		self.main.ui.login_cancel.hide()
@@ -1167,7 +1167,7 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
 
-		self.cache.create_tables()
+		self.cache.create_tables().addCallback(self.tables_created)
 		
 		#elf.cache = storage.Cache(db=utils.path(u'C:\ččč\cache.db'))
 		#self.cache = storage.Cache(db=unicode(self.homeDir+u'/cache2.db'))
@@ -1301,7 +1301,6 @@ class mainWindow(QtGui.QMainWindow):
 		#self.ui.showWidget.setIcon(self.getIcon("offline",size="16x16"))
 
 		#statusLayout.addWidget(self.ui.showWidget)
-		self.buildStatusWidgetMenu()
 #		self.ui.selfStatus_lineEdit.hide()
 #		self.ui.selfStatus_label.setText("...")
 
@@ -1373,6 +1372,10 @@ class mainWindow(QtGui.QMainWindow):
 		if self.config['autoJoin']=='True':
 			self.ui.rosterStackedWidget.setCurrentIndex(2)
 			self.connect()
+
+	def tables_created(self,data=None):
+		self.buildStatusWidgetMenu()
+
 
 	#def _buildStatusWidgetMenu(self,result):
 		# Status menu
@@ -1495,7 +1498,7 @@ class mainWindow(QtGui.QMainWindow):
 			return
 		self.sendPresence(None,result[0][0],result[0][1])
 
-	def sendPresence(self,jid,show,message):
+	def sendPresence(self,jid,show,message,pri=None):
 		if not jid:
 			if show=="offline":
 				
@@ -1515,20 +1518,21 @@ class mainWindow(QtGui.QMainWindow):
 				else:
 					result=icon
 				self.tray.setIcon(QtGui.QIcon(result))
-				if self.config.has_key('autoPriority'):
-					if self.config['autoPriority']=='True':
-						priors={"chat":"25","online":"20","away":"15","xa":"10","dnd":"5"}
-						pri=priors[str(show)]
+				if not pri:
+					if self.config.has_key('autoPriority'):
+						if self.config['autoPriority']=='True':
+							priors={"chat":"25","online":"20","away":"15","xa":"10","dnd":"5"}
+							pri=priors[str(show)]
+						else:
+							if self.config.has_key('priority'):
+								pri=self.config['priority']
+							else:
+								pri="0"
 					else:
 						if self.config.has_key('priority'):
 							pri=self.config['priority']
 						else:
 							pri="0"
-				else:
-					if self.config.has_key('priority'):
-						pri=self.config['priority']
-					else:
-						pri="0"
 				self.selfStatus=show
 			if jid:
 				self.client.sendPresence(to=jid,show = unicode(show), status = unicode(message),priority=pri)

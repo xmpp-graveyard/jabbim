@@ -30,7 +30,7 @@ class Cache:
 			except:
 				log.msg('Unknown DB error')
 				
-	def create_tables(self):				
+	def create_tables(self):
 		t1 = self.db.runQuery('create table caps (node text, feature text);').addCallback(self.table_created).addErrback(self.table_present)
 		t2 = self.db.runQuery('create table status (show text, desc text, id integer primary key);').addErrback(self.table_present)
 		t3 = self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created2).addErrback(self.table_present)
