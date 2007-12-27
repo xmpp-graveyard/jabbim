@@ -853,13 +853,16 @@ class groupChatWidget(QtGui.QWidget):
 				#cur.clearSelection()
 				#cur.removeSelectedText()
 				#cur.insertText(users[i]+": ")
-				x=0
+				x=0 #first letter of word index in string
 				newt=""
 				pos=0
+				ending = " " #ending of the sugested nick, set to space by default, example "Sef "
 				for word in original.split(" "):
 					if cur.position()>x and cur.position()<=x+1+len(word) and len(word)!=0:
-						newt+=users[i]+": "
-						pos=x+len(users[i]+": ")
+						if x == 0: #if the nick is the first word in string, ending will be ": ", example - "Sef: "
+							ending = ": "
+						newt+=users[i]+ending
+						pos=x+len(users[i]+ending)
 					else:
 						newt+=word+" "
 					x=x+1+len(word)
