@@ -17,46 +17,6 @@
   </property>
   <widget class="QWidget" name="centralwidget" >
    <layout class="QGridLayout" >
-    <property name="margin" >
-     <number>9</number>
-    </property>
-    <property name="spacing" >
-     <number>6</number>
-    </property>
-    <item row="5" column="1" >
-     <spacer>
-      <property name="orientation" >
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" >
-       <size>
-        <width>20</width>
-        <height>141</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="3" column="1" >
-     <widget class="QPushButton" name="newProfile" >
-      <property name="text" >
-       <string>New</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="1" >
-     <widget class="QPushButton" name="removeProfile" >
-      <property name="text" >
-       <string>Remove</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="1" >
-     <widget class="QPushButton" name="pushButton" >
-      <property name="text" >
-       <string>Close</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0" colspan="2" >
      <widget class="QLabel" name="label" >
       <property name="text" >
@@ -78,6 +38,47 @@
         <width>22</width>
         <height>22</height>
        </size>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1" >
+     <widget class="QPushButton" name="newProfile" >
+      <property name="text" >
+       <string>New</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1" >
+     <widget class="QPushButton" name="changePassword" >
+      <property name="text" >
+       <string>Change Password</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1" >
+     <widget class="QPushButton" name="removeProfile" >
+      <property name="text" >
+       <string>Remove</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1" >
+     <spacer>
+      <property name="orientation" >
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" >
+       <size>
+        <width>20</width>
+        <height>141</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="6" column="1" >
+     <widget class="QPushButton" name="pushButton" >
+      <property name="text" >
+       <string>Close</string>
       </property>
      </widget>
     </item>

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/profiles.ui'
 #
-# Created: Sat Dec 22 13:06:50 2007
+# Created: Fri Dec 28 21:16:25 2007
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -19,24 +19,7 @@ class Ui_profilesWindow(object):
         self.centralwidget.setObjectName("centralwidget")
 
         self.gridlayout = QtGui.QGridLayout(self.centralwidget)
-        self.gridlayout.setMargin(9)
-        self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
-
-        spacerItem = QtGui.QSpacerItem(20,141,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout.addItem(spacerItem,5,1,1,1)
-
-        self.newProfile = QtGui.QPushButton(self.centralwidget)
-        self.newProfile.setObjectName("newProfile")
-        self.gridlayout.addWidget(self.newProfile,3,1,1,1)
-
-        self.removeProfile = QtGui.QPushButton(self.centralwidget)
-        self.removeProfile.setObjectName("removeProfile")
-        self.gridlayout.addWidget(self.removeProfile,4,1,1,1)
-
-        self.pushButton = QtGui.QPushButton(self.centralwidget)
-        self.pushButton.setObjectName("pushButton")
-        self.gridlayout.addWidget(self.pushButton,6,1,1,1)
 
         self.label = QtGui.QLabel(self.centralwidget)
         self.label.setObjectName("label")
@@ -52,6 +35,25 @@ class Ui_profilesWindow(object):
         self.profilesList.setIconSize(QtCore.QSize(22,22))
         self.profilesList.setObjectName("profilesList")
         self.gridlayout.addWidget(self.profilesList,2,0,5,1)
+
+        self.newProfile = QtGui.QPushButton(self.centralwidget)
+        self.newProfile.setObjectName("newProfile")
+        self.gridlayout.addWidget(self.newProfile,2,1,1,1)
+
+        self.changePassword = QtGui.QPushButton(self.centralwidget)
+        self.changePassword.setObjectName("changePassword")
+        self.gridlayout.addWidget(self.changePassword,3,1,1,1)
+
+        self.removeProfile = QtGui.QPushButton(self.centralwidget)
+        self.removeProfile.setObjectName("removeProfile")
+        self.gridlayout.addWidget(self.removeProfile,4,1,1,1)
+
+        spacerItem = QtGui.QSpacerItem(20,141,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout.addItem(spacerItem,5,1,1,1)
+
+        self.pushButton = QtGui.QPushButton(self.centralwidget)
+        self.pushButton.setObjectName("pushButton")
+        self.gridlayout.addWidget(self.pushButton,6,1,1,1)
         profilesWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(profilesWindow)
@@ -60,8 +62,9 @@ class Ui_profilesWindow(object):
 
     def retranslateUi(self, profilesWindow):
         profilesWindow.setWindowTitle(QtGui.QApplication.translate("profilesWindow", "Profiles", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("profilesWindow", "<h2>Profiles</h2>", None, QtGui.QApplication.UnicodeUTF8))
         self.newProfile.setText(QtGui.QApplication.translate("profilesWindow", "New", None, QtGui.QApplication.UnicodeUTF8))
+        self.changePassword.setText(QtGui.QApplication.translate("profilesWindow", "Change Password", None, QtGui.QApplication.UnicodeUTF8))
         self.removeProfile.setText(QtGui.QApplication.translate("profilesWindow", "Remove", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("profilesWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("profilesWindow", "<h2>Profiles</h2>", None, QtGui.QApplication.UnicodeUTF8))
 

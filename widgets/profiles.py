@@ -29,6 +29,44 @@ try:
 	from wizards import firststart
 except:
 	pass
+
+class passwordChangeDialog(QtGui.QDialog):
+	def __init__(self,main,parent):
+		QtGui.QDialog.__init__(self,parent)
+		self.main=main
+		layout=QtGui.QGridLayout(self)
+		self.setWindowTitle(self.tr("Password Change"))
+		header=QtGui.QLabel(self.tr('Enter your new password.'),self)
+		self.pass1=QtGui.QLineEdit(self)
+		self.pass1.setEchoMode(QtGui.QLineEdit.Password)
+		self.pass2=QtGui.QLineEdit(self)
+		self.pass2.setEchoMode(QtGui.QLineEdit.Password)
+		QtCore.QObject.connect(self.pass1,QtCore.SIGNAL("textChanged ( const QString & )"),self.textChanged)
+		QtCore.QObject.connect(self.pass2,QtCore.SIGNAL("textChanged ( const QString & )"),self.textChanged)
+		
+		no=QtGui.QPushButton(self.tr("Cancel"),self)
+		self.ok=QtGui.QPushButton(self.tr("Change"),self)
+		QtCore.QObject.connect(self.ok,QtCore.SIGNAL("clicked()"),self.accept)
+		QtCore.QObject.connect(no,QtCore.SIGNAL("clicked()"),self.reject)
+		self.ok.setEnabled(False)
+		
+		layout.addWidget(header,0,0,1,2)
+		layout.addWidget(self.pass1,1,0,1,2)
+		layout.addWidget(self.pass2,2,0,1,2)
+		layout.addWidget(no,3,0,1,1)
+		layout.addWidget(self.ok,3,1,1,1)
+
+	def textChanged(self,text):
+		if self.pass1.text()==self.pass2.text() and len(unicode(self.pass1.text()))!=0:
+			self.ok.setEnabled(True)
+		else:
+			self.ok.setEnabled(False)
+			
+	def accept(self):
+		text=unicode(self.pass1.text())
+		self.main.client.setRegisterForm(self.main.client.jid.host,{'username':self.main.client.jid.user,'password':text})
+		self.done(1)
+		
 class profilesWindow(QtGui.QMainWindow):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
@@ -36,13 +74,27 @@ class profilesWindow(QtGui.QMainWindow):
 		self.ui=Ui_profilesWindow()
 		self.ui.setupUi(self)
 		self.loadProfiles()
-		QtCore.QObject.connect(self.ui.profilesList, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.profileChanged)
+		QtCore.QObject.connect(self.ui.profilesList, QtCore.SIGNAL("itemSelectionChanged()"),self.profileChanged)
 		QtCore.QObject.connect(self.ui.removeProfile, QtCore.SIGNAL("clicked()"),self.removeProfile)
 		QtCore.QObject.connect(self.ui.newProfile, QtCore.SIGNAL("clicked()"),self.newProfile)
+		QtCore.QObject.connect(self.ui.changePassword, QtCore.SIGNAL("clicked()"),self.changePassword)
 		self.ui.removeProfile.setEnabled(False)
+		self.ui.changePassword.setEnabled(False)
 
+	def changePassword(self):
+		if not self.main.client:
+			QtGui.QMessageBox.information(self,self.tr('Error'),self.tr("You have to be connected to change password."))
+		else:
+			#text,ok=QtGui.QInputDialog.getText(self,self.tr('Change password'), self.tr("Your new password:"),QtGui.QLineEdit.Password)
+			#text=unicode(text)
+			#if ok==True and len(text)!=0:
+				#self.main.client.setRegisterForm(self.main.client.jid.host(),{'username':self.main.client.jid.user(),'password':text})
+			d=passwordChangeDialog(self.main,self)
+			d.exec_()
 
 	def loadProfiles(self):
+		self.ui.removeProfile.setEnabled(False)
+		self.ui.changePassword.setEnabled(False)
 		self.ui.profilesList.clear()
 		profiles=utils.getProfiles(self.main.realHomeDir)
 		for profile in profiles:
@@ -80,7 +132,11 @@ class profilesWindow(QtGui.QMainWindow):
 			self.main.profileChanged(profiles[0].replace("-profile",''))
 		self.main.fillLoginForm()
 
-	def profileChanged(self,item,old):
-		self.ui.removeProfile.setEnabled(True)
-	
+	def profileChanged(self):
+		if self.ui.profilesList.currentItem():
+			self.ui.removeProfile.setEnabled(True)
+			self.ui.changePassword.setEnabled(True)
+		else:
+			self.ui.removeProfile.setEnabled(False)
+			self.ui.changePassword.setEnabled(False)
 
