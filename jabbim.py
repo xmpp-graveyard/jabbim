@@ -1372,15 +1372,17 @@ class mainWindow(QtGui.QMainWindow):
 			self.connect()
 
 	def tables_created(self,data=None):
-#		self.buildStatusWidgetMenu()
-		time.sleep(1)
+		
+		if not data[1][0]:
+			self.buildStatusWidgetMenu()
+			return
 		t1=self.cache.set_status('online',self.tr("I'm here"))
 		t2=self.cache.set_status('dnd',self.tr("Doing something important. Message me later."))
 		t3=self.cache.set_status('chat',self.tr("Chat with me!"))
 		t4=self.cache.set_status('xa',self.tr("Leave a message. Beep"))
 		t5=self.cache.set_status('away',self.tr("Doing something else for a moment."))
-		t6=self.cache.set_status('offline',self.tr("Sleeping .."))
-		d=DeferredList([t1,t2,t3,t4,t5,t6], consumeErrors = False)
+#		t6=self.cache.set_status('offline',self.tr("Sleeping .."))
+		d=DeferredList([t1,t2,t3,t4,t5], consumeErrors = False)
 		d.addCallback(self._defaultMsg).addErrback(self._error)
 
 	def _defaultMsg(self, data):
@@ -1423,7 +1425,7 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			config={}
 			config['online']=[]
-			config['offline']=[]
+
 			config['chat']=[]
 			config['away']=[]
 			config['xa']=[]
