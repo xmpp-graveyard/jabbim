@@ -20,8 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 from twisted.enterprise import adbapi, util as dbutil
 from twisted.python import log
 from twisted.internet.defer import DeferredList
+
 class Cache:
-	def __init__(self, DB_DRIVER = 'sqlite3', db='cache.db'):
+	def __init__(self, DB_DRIVER = 'sqlite3', db='cache.db'):#,isolation_level = "IMMEDIATE"):
 		if DB_DRIVER == 'sqlite3':
 			try:
 				self.db = adbapi.ConnectionPool(DB_DRIVER, db)
@@ -31,13 +32,13 @@ class Cache:
 				log.msg('Unknown DB error')
 				
 	def create_tables(self):
-		t1 = self.db.runQuery('create table caps (node text, feature text);').addCallback(self.table_created)#.addErrback(self.table_present)
-		t2 = self.db.runQuery('create table status (show text, desc text, id integer primary key);')#.addErrback(self.table_present)
-		t3 = self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created2)#.addErrback(self.table_present)
-		return DeferredList([t1,t2,t3], consumeErrors = False)
+		t1 = self.db.runQuery('create table caps (node text, feature text);').addCallback(self.table_created, 'caps')#.addErrback(self.table_present)
+		t2 = self.db.runQuery('create table status (show text, desc text, id integer primary key);').addCallback(self.table_created, 'status')#.addErrback(self.table_present)
+		t3 = self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created, 'avatars')#.addErrback(self.table_present)
+		return DeferredList([t1,t3,t2], consumeErrors = False)
 		
-	def table_created(self, res):
-		log.msg( 'created new cache DB')
+	def table_created(self, res, table):
+		log.msg( 'created '+table)
 # 		self.db.runOperation('create table caps (node text, feature text);')
 		#self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created2).addErrback(self.table_present)
 	
@@ -88,11 +89,11 @@ class Cache:
 		return self.db.runOperation('delete from status where id = %s'%id)
 
 	def set_status(self, show, message):
-		message=message.replace("'","''")
-		return self.db.runOperation('insert into status (show, desc,id) values ("%s", "%s",NULL)'%(show, message))
+		#message=message.replace("'","''")
+		return self.db.runOperation('insert into status (show, desc,id) values (?, ?,NULL)',(unicode(show), unicode(message)))
 	
 	def update_status(self,show,message,ID):
-		return self.db.runOperation('update status set show="%s", desc="%s" where id=%s'%(dbutil.safe(show), dbutil.safe(message), str(ID)))
+		return self.db.runOperation('update status set show=?, desc=? where id=?',(unicode(show), unicode(message), int(ID)))
 
 	
 	def close(self):

@@ -32,6 +32,7 @@ app = QtGui.QApplication(sys.argv)
 app.setQuitOnLastWindowClosed(False)
 qt4reactor.install(app)
 from twisted.internet import reactor, threads
+from twisted.internet.defer import DeferredList
 from twisted.python import log
 import shutil
 import time,base64
@@ -1371,18 +1372,26 @@ class mainWindow(QtGui.QMainWindow):
 			self.connect()
 
 	def tables_created(self,data=None):
+#		self.buildStatusWidgetMenu()
+		time.sleep(1)
+		t1=self.cache.set_status('online',self.tr("I'm here"))
+		t2=self.cache.set_status('dnd',self.tr("Doing something important. Message me later."))
+		t3=self.cache.set_status('chat',self.tr("Chat with me!"))
+		t4=self.cache.set_status('xa',self.tr("Leave a message. Beep"))
+		t5=self.cache.set_status('away',self.tr("Doing something else for a moment."))
+		t6=self.cache.set_status('offline',self.tr("Sleeping .."))
+		d=DeferredList([t1,t2,t3,t4,t5,t6], consumeErrors = False)
+		d.addCallback(self._defaultMsg).addErrback(self._error)
+
+	def _defaultMsg(self, data):
+#		print data
+		for x in data:
+			if not x[0]:
+				print x[1], dir(x[1])
 		self.buildStatusWidgetMenu()
-		#t1=self.main.cache.set_status('online',self.tr("jsem tady"))
-		#t2=self.main.cache.set_status('dnd',self.tr("spim"))
-		#t3=self.main.cache.set_status('chat',self.tr("spim"))
-		#t4=self.main.cache.set_status('xa',self.tr("spim"))
-		#t5=self.main.cache.set_status('away',self.tr("spim"))
-		#t6=self.main.cache.set_status('offline',self.tr("spim"))
-		#d=DeferredList([t1,t2,t3,t4,t5,t6], consumeErrors = True)
-		#d.addCallback(self.buildStatusWidgetMenu)
-		
 
 	def tables_loaded(self,data=None):
+		print data
 		self.buildStatusWidgetMenu()
 
 	def buildTrayMenu(self):
@@ -1414,6 +1423,7 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			config={}
 			config['online']=[]
+			config['offline']=[]
 			config['chat']=[]
 			config['away']=[]
 			config['xa']=[]
