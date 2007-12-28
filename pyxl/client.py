@@ -29,9 +29,10 @@ from twisted.words.protocols.jabber import client,jid
 from twisted.words.xish import domish
 from twisted.words.xish.domish import Element
 ##from twisted.internet import reactor, address
-from twisted.words.protocols.jabber.xmlstream import IQ
+from twisted.words.protocols.jabber.xmlstream import IQ, TimeoutError
 from twisted.internet.protocol import Protocol, ClientFactory
 from twisted.protocols import socks
+from twisted.internet.task import LoopingCall
 
 from derived import derived
 from contact import *
@@ -125,6 +126,7 @@ class Client(derived):
 		self.dispatcher.registerHandler('on_message', self.on_message, 'on_message')
 		self.dispatcher.registerHandler('on_presence', self.on_presence, 'on_presence')
 		self.dispatcher.registerHandler('on_GCpresence', self.on_GCpresence, 'on_GCpresence')
+		self.xping = LoopingCall(self.heartbeat)
 		
 	def chyba(self, err):
 		err.printBriefTraceback()
@@ -139,7 +141,26 @@ class Client(derived):
 			self.caps_cache[line[0]] = line[1]
 			
 
-
+	def heartbeat(self):
+		log.msg('heartbeat')
+		iq = IQ(self.xmlstream, 'get')
+		iq['xml:lang'] = self.xmlLang
+		q = iq.addElement('ping', 'urn:xmpp:ping')
+		self.disp(iq['id'])
+		iq.timeout = 30
+		d = iq.send()
+		d.addCallback(self._heartbeat)
+		d.addErrback(self._heartbeatErr)
+		return d
+	
+	def _heartbeat(self, el):
+		log.msg('heartbeat ok')
+	
+	def _heartbeatErr(self, err):
+		if err.type == TimeoutError:
+			log.msg('heartbeat failed')
+			self.main._disconnect(error = 'lost')
+			self.on_disconnect()
 
 
 	def connect(self):
@@ -209,6 +230,7 @@ class Client(derived):
 		self.on_disconnect()
 
 	def _streamEnd(self, el):
+		self.xping.stop()
 		pass
 		
 	def _bind(self, el):
@@ -261,7 +283,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/message/x[@xmlns='http://jabber.org/protocol/muc#user']/invite", self.onInvite, 1)
 		self.xmlstream.addObserver("/*/evil[@xmlns='http://jabber.org/protocol/evil']", self.onEvil, 1)
 	
-		
+		self.xping.start(120)		
 		self.getMetacontacts()
 		self.getBookmarks()
 		self.getDiscoInfo(self.jid.host)#,  callback = self._pepSupport)

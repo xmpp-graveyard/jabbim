@@ -2779,6 +2779,13 @@ class mainWindow(QtGui.QMainWindow):
 						message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",self.tr("You are now offline."))
 						w.chat.textEditWrite(message)
 		MainWindow.client = None
+		if error == 'lost' and MainWindow.reconnect:
+ 			# connection lost, let's wait for a while and then reconnect
+			MainWindow.tray.showMessage(self.tr("Connection lost! "),self.tr("Trying to reconnect ..  ") , QtGui.QSystemTrayIcon.Warning, 5000)
+ 			MainWindow.plugins={}
+ 			MainWindow.client = None
+			log.err('Connection Lost')
+ 			reactor.callLater(3, MainWindow.connect)
 		print "disconnected....."
 
 
