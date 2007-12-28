@@ -1159,7 +1159,7 @@ class rosterWidget(QtGui.QWidget):
 				#items,x,y=self.searchtemAt(1,rect.y(),count+1)
 			#else:
 			items,x,y=self.itemAt(1,rect.y(),count+1)
-			if len(items)==0:
+			if len(items)==0 and not self.searchMode:
 				#doc=QtGui.QTextDocument()
 				#option=doc.defaultTextOption()
 				#option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
