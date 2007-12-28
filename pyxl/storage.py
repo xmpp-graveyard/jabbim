@@ -25,7 +25,7 @@ class Cache:
 	def __init__(self, DB_DRIVER = 'sqlite3', db='cache.db'):#,isolation_level = "IMMEDIATE"):
 		if DB_DRIVER == 'sqlite3':
 			try:
-				self.db = adbapi.ConnectionPool(DB_DRIVER, db)
+				self.db = adbapi.ConnectionPool(DB_DRIVER, db, cp_min=1, cp_max=1)
 			except ImportError:
 				self.db = adbapi.ConnectionPool('pysqlite2.dbapi2', db)
 			except:
@@ -90,7 +90,7 @@ class Cache:
 
 	def set_status(self, show, message):
 		#message=message.replace("'","''")
-		return self.db.runOperation('insert into status (show, desc,id) values (?, ?,NULL)',(unicode(show), unicode(message)))
+		return self.db.runQuery('insert into status (show, desc,id) values (?, ?,NULL)',(unicode(show), unicode(message)))
 	
 	def update_status(self,show,message,ID):
 		return self.db.runOperation('update status set show=?, desc=? where id=?',(unicode(show), unicode(message), int(ID)))
