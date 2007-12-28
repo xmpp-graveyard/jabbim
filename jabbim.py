@@ -1170,7 +1170,7 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
 
-		self.cache.create_tables().addCallback(self.tables_created)
+		self.cache.create_tables().addCallback(self.tables_created).addErrback(self.tables_loaded)
 		
 		#elf.cache = storage.Cache(db=utils.path(u'C:\ččč\cache.db'))
 		#self.cache = storage.Cache(db=unicode(self.homeDir+u'/cache2.db'))
@@ -1372,7 +1372,19 @@ class mainWindow(QtGui.QMainWindow):
 
 	def tables_created(self,data=None):
 		self.buildStatusWidgetMenu()
-	
+		#t1=self.main.cache.set_status('online',self.tr("jsem tady"))
+		#t2=self.main.cache.set_status('dnd',self.tr("spim"))
+		#t3=self.main.cache.set_status('chat',self.tr("spim"))
+		#t4=self.main.cache.set_status('xa',self.tr("spim"))
+		#t5=self.main.cache.set_status('away',self.tr("spim"))
+		#t6=self.main.cache.set_status('offline',self.tr("spim"))
+		#d=DeferredList([t1,t2,t3,t4,t5,t6], consumeErrors = True)
+		#d.addCallback(self.buildStatusWidgetMenu)
+		
+
+	def tables_loaded(self,data=None):
+		self.buildStatusWidgetMenu()
+
 	def buildTrayMenu(self):
 		menu=QtGui.QMenu(self)
 		menu.addMenu(self.statusWidgetMenu)
