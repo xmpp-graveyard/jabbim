@@ -1293,9 +1293,9 @@ class mainWindow(QtGui.QMainWindow):
 
 		self.loadSkin() # load chat skin
 
-		self.buildStatusMenu()
-		self.ui.statusButton.setIcon(self.getIcon("offline",size="16x16"))
-		self.ui.statusButton.hide()
+		#self.buildStatusMenu()
+		#self.ui.statusButton.setIcon(self.getIcon("offline",size="16x16"))
+		#self.ui.statusButton.hide()
 		#statusLayout=QtGui.QHBoxLayout(self.ui.statusWidget)
 		#statusLayout.setMargin(0)
 		#statusLayout.setSpacing(0)
@@ -1320,13 +1320,6 @@ class mainWindow(QtGui.QMainWindow):
 		#self.events.addInfoEvent(header=self.tr("New message"),text=self.tr("From: "),name=unicode('ss'),typ='newMessage',icon="images/16x16/actions/message.png")
 
 		self.tray=QtGui.QSystemTrayIcon(QtGui.QIcon(QtGui.QIcon("images/16x16/apps/jabbim.png").pixmap(16,16,QtGui.QIcon.Disabled)))
-		menu=QtGui.QMenu(self)
-		menu.addMenu(self.statusMenu)
-		menu.addSeparator()
-		action=menu.addAction(self.tr("Hide / Show"),self.trayActivated)
-		menu.addAction(self.tr("Quit"),self.trayQuit)
-		app.connect(self.tray,QtCore.SIGNAL("activated (QSystemTrayIcon::ActivationReason)"),self.trayActivated)
-		self.tray.setContextMenu(menu)
 		self.tray.show()
 		w=self.config['windowGeometry'][2]
 		h=self.config['windowGeometry'][3]
@@ -1378,6 +1371,15 @@ class mainWindow(QtGui.QMainWindow):
 
 	def tables_created(self,data=None):
 		self.buildStatusWidgetMenu()
+	
+	def buildTrayMenu(self):
+		menu=QtGui.QMenu(self)
+		menu.addMenu(self.statusWidgetMenu)
+		menu.addSeparator()
+		action=menu.addAction(self.tr("Hide / Show"),self.trayActivated)
+		menu.addAction(self.tr("Quit"),self.trayQuit)
+		app.connect(self.tray,QtCore.SIGNAL("activated (QSystemTrayIcon::ActivationReason)"),self.trayActivated)
+		self.tray.setContextMenu(menu)
 
 
 	#def _buildStatusWidgetMenu(self,result):
@@ -1416,7 +1418,7 @@ class mainWindow(QtGui.QMainWindow):
 			#config['dnd']=[]
 			#config.write()
 
-		self.statusWidgetMenu=QtGui.QMenu(self.tr("Status"),self.ui.statusButton)
+		self.statusWidgetMenu=QtGui.QMenu(self.tr("Status"),self.ui.statusWidget)
 		separator=False
 		for key in ['online','chat','away','xa','dnd']:
 			if separator and len(config[key])!=0:
@@ -1506,6 +1508,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		self.ui.statusWidget.setMenu(self.statusWidgetMenu)
 		app.connect(self.statusWidgetMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusWidgetChanged)
+		self.buildTrayMenu()
 
 	def statusWidgetChanged(self,action):
 		# status changed
@@ -1794,31 +1797,31 @@ class mainWindow(QtGui.QMainWindow):
 			maintext += "<br>" + self.tr("Reason: ") + unicode(reason)
 		self.events.addLineEditEvent(maintext = maintext ,trueCall=self.joinGC, trueDict=[room], falseCall=self.client.declineInvitation, falseDict=[jid, room],header="Groupchat Invitation",text="Nickname:",name=unicode(jid),typ="groupchatInvitation",icon=None,action=None,actionDict=None,height=150,value=self.client.jid.userhost().split("@")[0])
 
-	def buildStatusMenu(self,menus=[]):
-		# Status menu
-		self.statusMenu=QtGui.QMenu(self.tr("Status"),self.ui.statusButton)
-		action=self.statusMenu.addAction(self.getIcon(status="online",size="16x16"),self.status["online"])
-		action.setData(QtCore.QVariant("online"))
-		action=self.statusMenu.addAction(self.getIcon(status="chat",size="16x16"),self.status["chat"])
-		action.setData(QtCore.QVariant("chat"))
-		action=self.statusMenu.addAction(self.getIcon(status="away",size="16x16"),self.status["away"])
-		action.setData(QtCore.QVariant("away"))
-		action=self.statusMenu.addAction(self.getIcon(status="xa",size="16x16"),self.status["xa"])
-		action.setData(QtCore.QVariant("xa"))
-		action=self.statusMenu.addAction(self.getIcon(status="dnd",size="16x16"),self.status["dnd"])
-		action.setData(QtCore.QVariant("dnd"))
-		action=self.statusMenu.addAction(self.getIcon(status="offline",size="16x16"),self.status["offline"])
-		action.setData(QtCore.QVariant("offline"))
+	#def buildStatusMenu(self,menus=[]):
+		## Status menu
+		#self.statusMenu=QtGui.QMenu(self.tr("Status"),self.ui.statusButton)
+		#action=self.statusMenu.addAction(self.getIcon(status="online",size="16x16"),self.status["online"])
+		#action.setData(QtCore.QVariant("online"))
+		#action=self.statusMenu.addAction(self.getIcon(status="chat",size="16x16"),self.status["chat"])
+		#action.setData(QtCore.QVariant("chat"))
+		#action=self.statusMenu.addAction(self.getIcon(status="away",size="16x16"),self.status["away"])
+		#action.setData(QtCore.QVariant("away"))
+		#action=self.statusMenu.addAction(self.getIcon(status="xa",size="16x16"),self.status["xa"])
+		#action.setData(QtCore.QVariant("xa"))
+		#action=self.statusMenu.addAction(self.getIcon(status="dnd",size="16x16"),self.status["dnd"])
+		#action.setData(QtCore.QVariant("dnd"))
+		#action=self.statusMenu.addAction(self.getIcon(status="offline",size="16x16"),self.status["offline"])
+		#action.setData(QtCore.QVariant("offline"))
 
-		if menus != []:
-			self.statusMenu.addSeparator()
+		#if menus != []:
+			#self.statusMenu.addSeparator()
 
-		for menu in menus:
-			self.statusMenu.addMenu(menu)
-			log.msg("adding menu")
+		#for menu in menus:
+			#self.statusMenu.addMenu(menu)
+			#log.msg("adding menu")
 
-		self.ui.statusButton.setMenu(self.statusMenu)
-		app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
+		#self.ui.statusButton.setMenu(self.statusMenu)
+		#app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
 
 
 	def copyPlugins(self):
@@ -2418,37 +2421,37 @@ class mainWindow(QtGui.QMainWindow):
 						#self.ui.roster.setItemHidden(child2, bool)
 		self.ui.roster.hidden( bool)
 	
-	def statusChanged(self,action):
-		# status changed
-		data=action.data()
-		if len(data.toList())==0:
-			data=unicode(data.toString())
-			show=None
-		else:
-			data=data.toList()
-			show=unicode(data[1].toString())
-			data=unicode(data[0].toString())
+	#def statusChanged(self,action):
+		## status changed
+		#data=action.data()
+		#if len(data.toList())==0:
+			#data=unicode(data.toString())
+			#show=None
+		#else:
+			#data=data.toList()
+			#show=unicode(data[1].toString())
+			#data=unicode(data[0].toString())
 
-		setstatus=statusWindow(data,show)
-		#if len(data.split("/"))==2:
-			#data=unicode(data.split("/")[1])
-		sh=False
-		if self.isHidden()==True:
-			self.show()
-			sh=True
-		if setstatus.exec_()==1 and not show:
-			self.ui.statusButton.setText(unicode(""))
-			self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
-			self.selfStatus=data
-			self.tray.setToolTip(self.tr('Your status:')+" "+self.status[data])
+		#setstatus=statusWindow(data,show)
+		##if len(data.split("/"))==2:
+			##data=unicode(data.split("/")[1])
+		#sh=False
+		#if self.isHidden()==True:
+			#self.show()
+			#sh=True
+		#if setstatus.exec_()==1 and not show:
+			#self.ui.statusButton.setText(unicode(""))
+			#self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
+			#self.selfStatus=data
+			#self.tray.setToolTip(self.tr('Your status:')+" "+self.status[data])
 
-		else:
-			for menu in self.client.menus:
-				if unicode(menu.title())==unicode(data):
-					menu.setIcon(self.getIcon("jid@"+unicode(data),status=unicode(show),size="16x16"))
-					break
-		if sh:
-			self.hide()
+		#else:
+			#for menu in self.client.menus:
+				#if unicode(menu.title())==unicode(data):
+					#menu.setIcon(self.getIcon("jid@"+unicode(data),status=unicode(show),size="16x16"))
+					#break
+		#if sh:
+			#self.hide()
 
 	def loadRoster(self):
 		# load roster widget
@@ -2473,8 +2476,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.client.getVCard(unicode(self.client.jid.userhost()))
 # 		self.ui.rosterStackedWidget.setCurrentIndex(1)
 		#self.ui.statusButton.setText(unicode(self.status["online"]))
-		self.ui.statusButton.setIcon(self.getIcon("online",size="16x16"))
-		self.ui.statusButton.show()
+		#self.ui.statusButton.setIcon(self.getIcon("online",size="16x16"))
+		#self.ui.statusButton.show()
 		self.ui.showOffline.show()
 		self.tray.showMessage(self.tr("Jabbim"),self.tr("Jabbim is ready! You are connected! :) "))
 		self.tray.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
@@ -2739,8 +2742,8 @@ class mainWindow(QtGui.QMainWindow):
 # 			reactor.callLater(3, MainWindow.connect)
 		
 		#MainWindow.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
-		MainWindow.ui.statusButton.setIcon(MainWindow.getIcon("offline",size="16x16"))
-		MainWindow.ui.statusButton.hide()
+		#MainWindow.ui.statusButton.setIcon(MainWindow.getIcon("offline",size="16x16"))
+		#MainWindow.ui.statusButton.hide()
 		MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
 		MainWindow.ui.showOffline.hide()
 		MainWindow.ui.actionAdd_Contact.setEnabled(False)
