@@ -1320,6 +1320,7 @@ class mainWindow(QtGui.QMainWindow):
 		#self.events.addInfoEvent(header=self.tr("New message"),text=self.tr("From: "),name=unicode('ss'),typ='newMessage',icon="images/16x16/actions/message.png")
 
 		self.tray=QtGui.QSystemTrayIcon(QtGui.QIcon(QtGui.QIcon("images/16x16/apps/jabbim.png").pixmap(16,16,QtGui.QIcon.Disabled)))
+		app.connect(self.tray,QtCore.SIGNAL("activated (QSystemTrayIcon::ActivationReason)"),self.trayActivated)
 		self.tray.show()
 		w=self.config['windowGeometry'][2]
 		h=self.config['windowGeometry'][3]
@@ -1378,7 +1379,6 @@ class mainWindow(QtGui.QMainWindow):
 		menu.addSeparator()
 		action=menu.addAction(self.tr("Hide / Show"),self.trayActivated)
 		menu.addAction(self.tr("Quit"),self.trayQuit)
-		app.connect(self.tray,QtCore.SIGNAL("activated (QSystemTrayIcon::ActivationReason)"),self.trayActivated)
 		self.tray.setContextMenu(menu)
 
 

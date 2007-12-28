@@ -399,8 +399,9 @@ class events:
 				types.append(event['type'])
 		if len(types)==0:
 			self.timer.stop()
-			self.main.tray.setIcon(self.main.getCurrentTrayIcon())
-			self.jabbimIcon=True
+			if not self.jabbimIcon:
+				self.main.tray.setIcon(self.main.getCurrentTrayIcon())
+				self.jabbimIcon=True
 		elif len(types)==1:
 			self.trayIcon=self.events[0]['icon']
 			self.timer.start(500)
