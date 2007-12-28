@@ -1133,6 +1133,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
 		self.ui.toggleInvisible.hide()
+		self.ui.statusButton.hide()
 		self.selfAvatar=None
 		self.selfStatus=""
 		self.setAttribute(QtCore.Qt.WA_AlwaysShowToolTips,True)
