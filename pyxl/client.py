@@ -171,6 +171,7 @@ class Client(derived):
 			import IPConfig
 			srv = IPConfig.IPConfig().get_dns()
 			r = dns.Resolver(servers=[(srv[0], 53)])
+			print dir(r)
 			d = r.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
 		else:
 #		d = threads.deferToThread(getaddrinfo,self.jid.host, "xmpp-client",socket.AF_UNSPEC, socket.SOCK_STREAM)
@@ -179,9 +180,10 @@ class Client(derived):
 		d.addErrback(self._dnsLookupErr)
 	
 	def _dnsLookup(self, resp):
-		print resp
-		r = random.choice(resp)
-		self._connect(unicode(r[4][0]), int(r[4][1]))
+		
+		r = random.choice(resp[0])
+		self._connect(unicode(r.payload.target), int(r.payload.port))
+#		self._connect(unicode(r[4][0]), int(r[4][1]))
 	
 	def _dnsLookupErr(self, resp):
 		print 'err:', resp
