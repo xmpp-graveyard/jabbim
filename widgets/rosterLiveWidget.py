@@ -439,7 +439,13 @@ class rosterWidget(QtGui.QWidget):
 					text+='<td><b>'+self.tr("Name:")+'</b> '+item.escapedName+'<br/>'
 					text+='<b>'+self.tr("JID:")+'</b> '+item.jid+'<br/>'
 					contact = self.main.client.roster["users"][item.jid]
-					text+='<b>'+self.tr("Subscription:")+'</b> '+unicode(contact.subscription)+'<br/>'
+					if unicode(contact.subscription) == 'from':
+						text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" from")+'<br/>'
+					elif unicode(contact.subscription) == 'to':
+						text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" to")+'<br/>'
+					elif unicode(contact.subscription) == 'none':
+						text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" none")+'<br/>'	
+						
 					for res in contact.resources.keys():
 						status = contact.resources[res].status
 						if not status:
