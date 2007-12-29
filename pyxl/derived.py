@@ -203,7 +203,7 @@ class derived:
 		self.xmlstream.send(message)
 
 
-	def sendInvitation(self, jid, room, reason = None):
+	def sendInvitation(self, jid, room, reason = None, cont = False):
 		message = Element((None,'message'))
 		message['xml:lang'] = self.xmlLang
 		message['to'] = room
@@ -212,6 +212,8 @@ class derived:
 		invite['to'] = unicode(jid)
 		if reason != None:
 			invite.addElement("reason", content = unicode(reason))
+		if cont:
+			invite.addElement("continue")
 
 #		self.on_xml(message.toXml())
 		self.xmlstream.send(message)
