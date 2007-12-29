@@ -23,7 +23,9 @@ from twisted import names
 from twisted.python import log
 from twisted.internet import protocol, error
 from twisted.names import client as dns
-
+from socket import getaddrinfo
+import socket
+from twisted.internet import threads
 from twisted.words.protocols import jabber
 from twisted.words.protocols.jabber import client,jid
 from twisted.words.xish import domish
@@ -165,15 +167,16 @@ class Client(derived):
 
 	def connect(self):
 		log.msg('dns - ' + unicode(time.time()) + '_xmpp-client._tcp.'+self.jid.host)
-		d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
+		
+		d = threads.deferToThread(getaddrinfo,self.jid.host, "xmpp-client",socket.AF_UNSPEC, socket.SOCK_STREAM)
+#		d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
 		d.addCallback(self._dnsLookup)
 		d.addErrback(self._dnsLookupErr)
 	
 	def _dnsLookup(self, resp):
 		print resp
-		r = random.choice(resp[0])
-		print unicode(r.payload.target), int(r.payload.port)
-		self._connect(unicode(r.payload.target), int(r.payload.port))
+		r = random.choice(resp)
+		self._connect(unicode(r[4][0]), int(r[4][1]))
 	
 	def _dnsLookupErr(self, resp):
 		print 'err:', resp
@@ -283,7 +286,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/message/x[@xmlns='http://jabber.org/protocol/muc#user']/invite", self.onInvite, 1)
 		self.xmlstream.addObserver("/*/evil[@xmlns='http://jabber.org/protocol/evil']", self.onEvil, 1)
 	
-		self.xping.start(120, False)
+		self.xping.start(120, False)		
 		self.getMetacontacts()
 		self.getBookmarks()
 		self.getDiscoInfo(self.jid.host)#,  callback = self._pepSupport)
