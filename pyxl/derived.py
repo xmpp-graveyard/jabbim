@@ -131,7 +131,7 @@ class derived:
 		pass
 	def on_connect(self):
 		pass
-	def on_invite(self, jid, room, reason = None):
+	def on_invite(self, jid, room, reason = None, cont = False):
 		pass
 	
 	def on_avatarUpdate(self, jid):

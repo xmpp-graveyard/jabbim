@@ -283,7 +283,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/message/x[@xmlns='http://jabber.org/protocol/muc#user']/invite", self.onInvite, 1)
 		self.xmlstream.addObserver("/*/evil[@xmlns='http://jabber.org/protocol/evil']", self.onEvil, 1)
 	
-		self.xping.start(120)		
+		self.xping.start(120, False)		
 		self.getMetacontacts()
 		self.getBookmarks()
 		self.getDiscoInfo(self.jid.host)#,  callback = self._pepSupport)
@@ -701,13 +701,15 @@ class Client(derived):
 				break
 		jid = invite["from"]
 		reason = None
+		cont = False
 		for child in invite.children:
 			if child.name == "reason":
 				reason = unicode(child)
-				break
+			if child.name == "continue":
+				cont = True
 		log.msg("invitation recieved to: %s; from %s; reason: %s" % (room, jid, reason))
-		self.on_invite(jid, room, reason)
-		self.main.showInvitation(jid, room, reason)
+		self.on_invite(jid, room, reason, cont)
+#		self.main.showInvitation(jid, room, reason, cont)
 
 	def onSubscribe(self, el):
 		log.msg( 'on subscribe')

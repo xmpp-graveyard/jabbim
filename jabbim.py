@@ -479,6 +479,8 @@ class clientClass(pyxl.client.Client):
 			#value.connected()
 		self.main.loadPlugins()
 		self.main.autoJoinGroupchat()
+	def on_invite(self,jid, room, reason, cont = False):
+		self.main.showInvitation(jid, room, reason, cont)
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = [], reason = '', actor = None):
 		
@@ -1813,7 +1815,7 @@ class mainWindow(QtGui.QMainWindow):
 	#	self.ui.selfStatus_lineEdit.hide()
 	#	self.ui.selfStatus_label.show()
 
-	def showInvitation(self, jid, room, reason):# = None):
+	def showInvitation(self, jid, room, reason, cont = False):# = None):
 		log.msg("%s %s %s" %(jid, room, reason))
 
 		maintext =unicode(jid)+self.tr(" invites you to conference ")+unicode(room)+"."
