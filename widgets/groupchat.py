@@ -105,10 +105,43 @@ class textView(QtGui.QTextEdit):
 	def __init__(self,main,parent):
 		QtGui.QTextEdit.__init__(self,parent)
 		self.parent=main
+		self.main=self.parent.main
 		self.setMouseTracking(True)
 		self.setReadOnly(True)
 		self.data=[]
 		self.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
+		self.setAcceptDrops(True)
+
+
+	def dragEnterEvent(self, event):
+		#log.msg('DRAG ENTER')
+		if event.mimeData().hasText():
+			if self.main.getJid(unicode(event.mimeData().text())):
+				event.acceptProposedAction()
+			else:
+				event.ignore()
+		else:
+			event.ignore()
+
+	def dragMoveEvent(self, event):
+		#log.msg('DRAG MOVE')
+		event.acceptProposedAction()
+
+	def dropEvent(self, event):
+		if event.mimeData().hasText():
+			jid=self.main.getJid(unicode(event.mimeData().text()))
+			if not jid:
+				event.ignore()
+				return
+			room=unicode(self.parent.jid)
+			reason = self.tr("Hi! I'd love to see you in multichat at ") + room
+			self.main.client.sendInvitation(jid.full(), room, reason)
+			event.acceptProposedAction()
+		else:
+			event.ignore()
+
+
+
 	def mouseMoveEvent(self,event):
 		anchor = self.anchorAt(event.pos())
 		if len(anchor)!=0:
