@@ -633,12 +633,12 @@ class clientClass(pyxl.client.Client):
 			self.main.xmlConsole.ui.xml.append(text+"\n\n")
 		if self.lastxml<10:
 			self.lastxml+=1
-			f=open(self.main.homeDir+'/lastxml','a')
+			f=open(self.main.homeDir+'/lastxml','ab')
 		else:
 			self.lastxml=0
-			f=open(self.main.homeDir+'/lastxml','w')
+			f=open(self.main.homeDir+'/lastxml','wb')
 		try:
-			f.write(unicode(xml))
+			f.write(unicode(xml).encode('utf-8','replace'))
 		except:
 			log.err('Chyba zapisu lastxml')
 		f.close()
@@ -2513,6 +2513,8 @@ class mainWindow(QtGui.QMainWindow):
 		#return self.ui.roster.event(event)
 
 	def getAvatar(self,pixmap,size="auto",frame=False,status=None):
+		if not pixmap:
+			return None
 		if isinstance(pixmap,unicode) or isinstance(pixmap,str):
 			file=self.homeDir+'/avatars/'+unicode(pixmap)
 			if not os.path.isfile(file):
