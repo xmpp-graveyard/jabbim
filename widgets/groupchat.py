@@ -343,7 +343,7 @@ class groupChatWidget(QtGui.QWidget):
 		self.hindex = 0
 		self.sizes={}
 		self.colors=[]
-
+		self.invitation=[]
 
 
 		#self.flowLayout = flowLayout()
@@ -589,6 +589,8 @@ class groupChatWidget(QtGui.QWidget):
 	def editUser(self,nick,status,role=None,affiliation=None):
 		if not self.connecting.isHidden():
 			self.connecting.hide()
+			for inv in self.invitation:
+				self.main.client.sendInvitation(inv, self.jid, cont=True)
 		new=False
 		if self.isUser(unicode(nick))==False:
 			new=True

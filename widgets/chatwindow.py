@@ -783,7 +783,7 @@ class chatWindow(QtGui.QMainWindow):
 		#self.activate()
 		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
-	def addGroupChatTab(self,room,nickname,affiliation=""):
+	def addGroupChatTab(self,room,nickname,affiliation="",name=None):
 		for i in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(i)
 			try:
@@ -812,6 +812,8 @@ class chatWindow(QtGui.QMainWindow):
 			for nick, bookmark  in self.main.client.bookmarks['conference'].iteritems():
 				if bookmark.jid.userhost() == room:
 					jmeno = nick
+		if name:
+			jmeno=name
 		tab.tabName=unicode(jmeno)
 		self.ui.chatTab.addTab(tab,QtGui.QIcon("images/16x16/categories/muc.png"), jmeno)
 		self.setWindowTitle(unicode(jmeno))

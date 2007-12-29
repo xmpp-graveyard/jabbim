@@ -28,6 +28,7 @@ from twisted.web.microdom import *
 from twisted.web.domhelpers import gatherTextNodes
 import filetransfer
 from twisted.words.protocols.jabber import jid as jidT
+import time
 
 class flowLayout(QtGui.QLayout):
 	def __init__(self, parent=None, margin=0, spacing=-1):
@@ -104,10 +105,65 @@ class textView(QtGui.QTextEdit):
 	def __init__(self,main,parent):
 		QtGui.QTextEdit.__init__(self,parent)
 		self.parent=main
+		self.main=self.parent.main
 		self.setMouseTracking(True)
 		self.setReadOnly(True)
 		self.data=[]
 		self.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
+		self.setAcceptDrops(True)
+
+
+	def dragEnterEvent(self, event):
+		#log.msg('DRAG ENTER')
+		if event.mimeData().hasText():
+			if self.main.getJid(unicode(event.mimeData().text())):
+				event.acceptProposedAction()
+			else:
+				event.ignore()
+		else:
+			event.ignore()
+
+	def dragMoveEvent(self, event):
+		#log.msg('DRAG MOVE')
+		event.acceptProposedAction()
+
+	def dropEvent(self, event):
+		if event.mimeData().hasText():
+			jid2=self.main.getJid(unicode(event.mimeData().text()))
+			if not jid2:
+				event.ignore()
+				return
+
+			room=str(int(time.time()))
+			mucjid = None
+			for jid, node in self.main.client.disco.iteritems():
+				if not node[None].has_key('identities'):
+					continue
+				for id in node[None]['identities'].itervalues():
+					#print jid, id
+					if id.get('category') == 'conference' and id.get('type') == 'text' and jid.startswith('c'):
+						mucjid = jid
+						break
+				if mucjid:
+					break
+			room+="@"+mucjid
+			
+			#if self.main.client.roster['users'].has_key(jid2.userhost()):
+				#name=unicode(self.main.client.roster['users'][jid2.userhost()].name)
+			#else:
+			name=self.parent.parent.tabName
+			rmIndex=int(self.main.chat.ui.chatTab.currentIndex())
+			#self.main.chat.removeTab()
+			if self.main.chat.addGroupChatTab(room,self.main.client.jid.user,name=name):
+				tab,index=self.main.chat.findTab(room)
+				tab.chat.invitation=[unicode(jid2.full()),unicode(self.parent.jid)]
+				self.main.client.joinGC(room, self.main.client.jid.user)
+			
+			self.main.chat.removeTab(rmIndex)
+			event.acceptProposedAction()
+		else:
+			event.ignore()
+		
 	def mouseMoveEvent(self,event):
 		anchor = self.anchorAt(event.pos())
 		if len(anchor)!=0:
@@ -283,7 +339,7 @@ class chatWidget(QtGui.QWidget):
 		self.ui=Ui_chatwidget()
 		self.ui.setupUi(self)
 		self.main=main
-
+		self.parent=parent
 		l=QtGui.QHBoxLayout(self.ui.viewWidget)
 		l.setMargin(0)
 		l.setSpacing(0)
