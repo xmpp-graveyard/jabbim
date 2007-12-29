@@ -1425,7 +1425,7 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			config={}
 			config['online']=[]
-
+			config['offline']=[]
 			config['chat']=[]
 			config['away']=[]
 			config['xa']=[]
