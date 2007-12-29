@@ -167,11 +167,15 @@ class Client(derived):
 
 	def connect(self):
 		log.msg('dns - ' + unicode(time.time()) + '_xmpp-client._tcp.'+self.jid.host)
-		
-		d = threads.deferToThread(getaddrinfo,self.jid.host, "xmpp-client",socket.AF_UNSPEC, socket.SOCK_STREAM)
-#		d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
-		d.addCallback(self._dnsLookup)
-		d.addErrback(self._dnsLookupErr)
+		if sys.platform == 'win32':
+			import IPConfig
+			srv = IPConfig.IPConfig().get_dns()
+			print srv
+		else:
+#		d = threads.deferToThread(getaddrinfo,self.jid.host, "xmpp-client",socket.AF_UNSPEC, socket.SOCK_STREAM)
+			d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
+			d.addCallback(self._dnsLookup)
+			d.addErrback(self._dnsLookupErr)
 	
 	def _dnsLookup(self, resp):
 		print resp
