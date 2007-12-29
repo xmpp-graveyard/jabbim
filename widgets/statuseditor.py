@@ -92,6 +92,7 @@ class statusEditorWindow(QtGui.QDialog):
 		else:
 			config={}
 			config['online']=[]
+			config['offline']=[]
 			config['chat']=[]
 			config['away']=[]
 			config['xa']=[]
