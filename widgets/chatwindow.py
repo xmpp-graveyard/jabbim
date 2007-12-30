@@ -769,6 +769,8 @@ class chatWindow(QtGui.QMainWindow):
 		else:
 			self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 			self.setWindowTitle(unicode(name))
+			tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+
 		if jidT.JID(jid).resource:
 			tab.chat.ui.label.setText("<font size=\"3\"><b>"+name+"</b><br/>"+self.tr("Resource:")+" "+jidT.JID(jid).resource+"</font>")
 		else:
@@ -781,7 +783,6 @@ class chatWindow(QtGui.QMainWindow):
 		#self.activateWindow()
 		#self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
 		#self.activate()
-		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def addGroupChatTab(self,room,nickname,affiliation="",name=None):
 		for i in range(self.ui.chatTab.count()):
