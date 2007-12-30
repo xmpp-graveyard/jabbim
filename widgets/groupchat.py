@@ -135,7 +135,7 @@ class textView(QtGui.QTextEdit):
 				return
 			room=unicode(self.parent.jid)
 			reason = self.tr("Hi! I'd love to see you in multichat at ") + room
-			self.main.client.sendInvitation(jid.full(), room, reason)
+			self.main.client.sendInvitation(jid.full(), room, reason,cont=True)
 			event.acceptProposedAction()
 		else:
 			event.ignore()

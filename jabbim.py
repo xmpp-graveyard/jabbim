@@ -491,6 +491,7 @@ class clientClass(pyxl.client.Client):
 			self.main.showInvitation(jid, room, reason, cont)
 		else:
 			tab,tabIndex=self.main.chat.findTab(unicode(jid))
+			print 'jid=',unicode(jid)
 			if tab:
 				self.main.chat.removeTab(tabIndex)
 				if self.main.chat.addGroupChatTab(room,self.jid.user,tab.tabName):
