@@ -487,7 +487,17 @@ class clientClass(pyxl.client.Client):
 		self.main.loadPlugins()
 		self.main.autoJoinGroupchat()
 	def on_invite(self,jid, room, reason, cont = False):
-		self.main.showInvitation(jid, room, reason, cont)
+		if not cont:
+			self.main.showInvitation(jid, room, reason, cont)
+		else:
+			tab,tabIndex=self.main.chat.findTab(unicode(jid))
+			if tab:
+				self.main.chat.removeTab(tabIndex)
+				if self.main.chat.addGroupChatTab(room,self.jid.user,tab.tabName):
+					self.joinGC(room, self.jid.user)
+				
+			else:
+				self.main.showInvitation(jid, room, reason, cont)
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = [], reason = '', actor = None):
 		
