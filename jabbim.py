@@ -67,11 +67,15 @@ class clientClass(pyxl.client.Client):
 		self.temp_hosts=[]
 		self.client_os = utils.get_os_info()
 		self.version = '0.2'
+		self.bookmarksEnabled=True
 
 #	def on_GCpresenceError(self, fromjid, code, typ, name):
 #		log.msg("ERROR")
 #		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+code+" "+typ+" "+name),0,1)
 
+	def on_bookmarksFail(self):
+		self.main.ui.tabWidget.setTabEnabled(1,False)
+		self.bookmarksEnabled=False
 	def on_privacyFail(self):
 		self.main.ui.actionPrivacy_list_editor.setEnabled(False)
 

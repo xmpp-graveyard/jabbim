@@ -24,6 +24,9 @@ class MUCBrowserDialog(QtGui.QDialog):
 		self.ui.groupchats.setColumnWidth(0,42)
 		self.ui.groupchats.setSortingEnabled(True)
 		self.ui.groupchats.hideColumn(3)
+		if not self.main.client.bookmarksEnabled:
+			self.ui.groupBox_3.setEnabled(False)
+
 		mucjid = None
 		for jid, node in self.main.client.disco.iteritems():
 			if not node[None].has_key('identities'):
@@ -164,17 +167,17 @@ class MUCBrowserDialog(QtGui.QDialog):
 
 		if not name:
 			name = room
-			for bkey in self.main.client.bookmarks['conference'].keys():
-				if self.main.client.bookmarks['conference'][bkey].jid.userhost() == "%s@%s" % (room, server):
-					name = self.main.client.bookmarks['conference'][bkey].name
-
-		if self.ui.bookmark.isChecked() and not self.main.client.bookmarks['conference'].has_key(name):
-			self.main.client.bookmarks['conference'][name]=pyxl.client.Bookmark(name, 'conference', room+"@"+server, 'false', nickname, password)
-			self.main.client.setBookmarks()
-			self.main.buildBookmarks()
+			if self.main.client.bookmarksEnabled:
+				for bkey in self.main.client.bookmarks['conference'].keys():
+					if self.main.client.bookmarks['conference'][bkey].jid.userhost() == "%s@%s" % (room, server):
+						name = self.main.client.bookmarks['conference'][bkey].name
+		if self.main.client.bookmarksEnabled:
+			if self.ui.bookmark.isChecked() and not self.main.client.bookmarks['conference'].has_key(name):
+				self.main.client.bookmarks['conference'][name]=pyxl.client.Bookmark(name, 'conference', room+"@"+server, 'false', nickname, password)
+				self.main.client.setBookmarks()
+				self.main.buildBookmarks()
 
 		#print "joining",room,nickname
-		self.main.chat.addGroupChatTab(room+"@"+server,nickname)
-		#self.main.groupchat[room+"@"+server]=[nickname,[]]
-		self.main.client.joinGC(room+"@"+server, nickname)
+		if self.main.chat.addGroupChatTab(room+"@"+server,nickname):
+			self.main.client.joinGC(room+"@"+server, nickname)
 		self.done(1)
