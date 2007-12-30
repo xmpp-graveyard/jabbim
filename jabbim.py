@@ -982,6 +982,12 @@ class clientClass(pyxl.client.Client):
 				if self.main.chat.isHidden():
 					self.main.chat.showMinimized()
 				self.main.chat.addChatTab(frm.full(),unicode(user),icon,message)
+				tab,tabIndex=self.main.chat.findTab(frm.full())
+				if tab:
+					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
+					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
+					self.main.chat.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)
+					tab.chat.unread+=1
 				if len(body)>40:
 						traytext=body[:40]+" ..."
 				else:
