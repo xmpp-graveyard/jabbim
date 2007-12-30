@@ -2306,35 +2306,36 @@ class rosterWidget(QtGui.QWidget):
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("a_ask")
 		
-		if self.main.client.privacy.active:
-			submenu = contactMenu.addMenu(self.tr("Privacy"))
-			if not self.main.client.privacy.active.isBlockedJID(jid):
-				action = submenu.addAction(self.tr("Block contact"))
-				action.setData(QtCore.QVariant(jid))
-				action.setObjectName("privacy_block")
-			else:
-				action = submenu.addAction(self.tr("Unblock contact"))
-				action.setData(QtCore.QVariant(jid))
-				action.setObjectName("privacy_unblock")
-			
-			# Sekci nemazat
-			#if not self.main.client.privacy.active.isAllowedJID(jid):
-			#	action = submenu.addAction(self.tr("Allow contact to see my status when I am invisible"))
-			#	action.setData(QtCore.QVariant(jid))
-			#	action.setObjectName("privacy_allow")
-			#else:
-			#	action = submenu.addAction(self.tr("Disallow contact to see my status when I am invisible"))
-			#	action.setData(QtCore.QVariant(jid))
-			#	action.setObjectName("privacy_disallow")
-			
-			if not self.main.client.privacy.active.isHiddenJID(jid):
-				action = submenu.addAction(self.tr("Always hide my status to contact"))
-				action.setData(QtCore.QVariant(jid))
-				action.setObjectName("privacy_hide")
-			else:
-				action = submenu.addAction(self.tr("Don't hide my status to contact"))
-				action.setData(QtCore.QVariant(jid))
-				action.setObjectName("privacy_unhide")
+		if self.main.client.privacy:
+			if self.main.client.privacy.active:
+				submenu = contactMenu.addMenu(self.tr("Privacy"))
+				if not self.main.client.privacy.active.isBlockedJID(jid):
+					action = submenu.addAction(self.tr("Block contact"))
+					action.setData(QtCore.QVariant(jid))
+					action.setObjectName("privacy_block")
+				else:
+					action = submenu.addAction(self.tr("Unblock contact"))
+					action.setData(QtCore.QVariant(jid))
+					action.setObjectName("privacy_unblock")
+				
+				# Sekci nemazat
+				#if not self.main.client.privacy.active.isAllowedJID(jid):
+				#	action = submenu.addAction(self.tr("Allow contact to see my status when I am invisible"))
+				#	action.setData(QtCore.QVariant(jid))
+				#	action.setObjectName("privacy_allow")
+				#else:
+				#	action = submenu.addAction(self.tr("Disallow contact to see my status when I am invisible"))
+				#	action.setData(QtCore.QVariant(jid))
+				#	action.setObjectName("privacy_disallow")
+				
+				if not self.main.client.privacy.active.isHiddenJID(jid):
+					action = submenu.addAction(self.tr("Always hide my status to contact"))
+					action.setData(QtCore.QVariant(jid))
+					action.setObjectName("privacy_hide")
+				else:
+					action = submenu.addAction(self.tr("Don't hide my status to contact"))
+					action.setData(QtCore.QVariant(jid))
+					action.setObjectName("privacy_unhide")
 		if len(contact.resources)!=0:
 			if oneres:
 				action=contactMenu.addAction(QtGui.QIcon("images/16x16/actions/exec.png"),self.tr("Extra actions"))
