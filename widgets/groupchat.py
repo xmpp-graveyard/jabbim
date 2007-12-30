@@ -590,7 +590,8 @@ class groupChatWidget(QtGui.QWidget):
 		if not self.connecting.isHidden():
 			self.connecting.hide()
 			for inv in self.invitation:
-				self.main.client.sendInvitation(inv, self.jid, cont=True)
+				reason = self.tr("Hi! I'd love to see you in multichat at ") + self.jid
+				self.main.client.sendInvitation(inv, self.jid,reason, cont=True)
 		new=False
 		if self.isUser(unicode(nick))==False:
 			new=True

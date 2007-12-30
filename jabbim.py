@@ -487,6 +487,7 @@ class clientClass(pyxl.client.Client):
 		self.main.loadPlugins()
 		self.main.autoJoinGroupchat()
 	def on_invite(self,jid, room, reason, cont = False):
+		print "invite",cont
 		if not cont:
 			self.main.showInvitation(jid, room, reason, cont)
 		else:
@@ -1191,7 +1192,10 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				os.remove(self.realHomeDir+'/config')
 				utils.loadConfig(self,statusMess) # load config files
-
+		else:
+			self.homeDir=self.realHomeDir+"/"+profiles[0]
+			utils.loadConfig(self,statusMess) # load config files
+		
 		if sys.platform != 'win32':
 			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
 		else:
