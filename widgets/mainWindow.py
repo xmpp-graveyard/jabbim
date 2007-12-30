@@ -418,9 +418,11 @@ class Ui_MainWindow(object):
         MainWindow.setMenuBar(self.menubar)
 
         self.actionShow_XML = QtGui.QAction(MainWindow)
+        self.actionShow_XML.setIcon(QtGui.QIcon("images/16x16/actions/xml-konzole.png"))
         self.actionShow_XML.setObjectName("actionShow_XML")
 
         self.actionPreferences = QtGui.QAction(MainWindow)
+        self.actionPreferences.setIcon(QtGui.QIcon("images/16x16/categories/gtk-preferences.png"))
         self.actionPreferences.setObjectName("actionPreferences")
 
         self.actionJoin_Groupchat = QtGui.QAction(MainWindow)
@@ -428,10 +430,11 @@ class Ui_MainWindow(object):
         self.actionJoin_Groupchat.setObjectName("actionJoin_Groupchat")
 
         self.actionQuit = QtGui.QAction(MainWindow)
+        self.actionQuit.setIcon(QtGui.QIcon("images/16x16/actions/gtk-quit.png"))
         self.actionQuit.setObjectName("actionQuit")
 
         self.actionAdd_Contact = QtGui.QAction(MainWindow)
-        self.actionAdd_Contact.setIcon(QtGui.QIcon("images/16x16/actions/add-user.png"))
+        self.actionAdd_Contact.setIcon(QtGui.QIcon("images/16x16/actions/gtk-add.png"))
         self.actionAdd_Contact.setObjectName("actionAdd_Contact")
 
         self.actionAbout = QtGui.QAction(MainWindow)
@@ -439,6 +442,7 @@ class Ui_MainWindow(object):
         self.actionAbout.setObjectName("actionAbout")
 
         self.actionService_Discovery = QtGui.QAction(MainWindow)
+        self.actionService_Discovery.setIcon(QtGui.QIcon("images/16x16/actions/service-discovery.png"))
         self.actionService_Discovery.setObjectName("actionService_Discovery")
 
         self.actionMUC_Browser = QtGui.QAction(MainWindow)

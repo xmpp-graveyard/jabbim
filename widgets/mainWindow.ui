@@ -812,11 +812,17 @@ p, li { white-space: pre-wrap; }
    <addaction name="menuHelp" />
   </widget>
   <action name="actionShow_XML" >
+   <property name="icon" >
+    <iconset>images/16x16/actions/xml-konzole.png</iconset>
+   </property>
    <property name="text" >
     <string>Show XML</string>
    </property>
   </action>
   <action name="actionPreferences" >
+   <property name="icon" >
+    <iconset>images/16x16/categories/gtk-preferences.png</iconset>
+   </property>
    <property name="text" >
     <string>Preferences</string>
    </property>
@@ -830,13 +836,16 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionQuit" >
+   <property name="icon" >
+    <iconset>images/16x16/actions/gtk-quit.png</iconset>
+   </property>
    <property name="text" >
     <string>Quit</string>
    </property>
   </action>
   <action name="actionAdd_Contact" >
    <property name="icon" >
-    <iconset>images/16x16/actions/add-user.png</iconset>
+    <iconset>images/16x16/actions/gtk-add.png</iconset>
    </property>
    <property name="text" >
     <string>Add Contact</string>
@@ -851,6 +860,9 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionService_Discovery" >
+   <property name="icon" >
+    <iconset>images/16x16/actions/service-discovery.png</iconset>
+   </property>
    <property name="text" >
     <string>Service Discovery</string>
    </property>
