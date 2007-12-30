@@ -72,6 +72,18 @@ class clientClass(pyxl.client.Client):
 #		log.msg("ERROR")
 #		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+code+" "+typ+" "+name),0,1)
 
+	def on_privacyReceived(self):
+		for item in self.privacy.active.items:
+			if item.value and item.typ == "jid":
+				for useritem in self.main.ui.roster.getUserItems(item.value):
+					useritem.privacy["block"] = self.privacy.active.isBlockedJID(item.value)
+					useritem.privacy["allow"] = self.privacy.active.isAllowedJID(item.value)
+					useritem.privacy["hide"] = self.privacy.active.isHiddenJID(item.value)
+
+	def on_privacyFail(self):
+		log.msg("privacy fail")
+		self.main.ui.actionPrivacy_list_editor.setEnabled(False)
+
 	def on_GCpresenceError(self, fromjid, code, typ, name, text, resource = ""):
 		log.msg("error")
 		log.msg("RESOURCE: "+resource)
@@ -333,13 +345,8 @@ class clientClass(pyxl.client.Client):
 								self.main.ui.roster.users.remove(i)
 		log.msg("METAITEMS:"+unicode(self.main.ui.roster.metaItems))
 
-		if self.privacy != False:
-			for item in self.privacy.active.items:
-				if item.value and item.typ == "jid":
-					for useritem in self.main.ui.roster.getUserItems(item.value):
-						useritem.privacy["block"] = self.privacy.active.isBlockedJID(item.value)
-						useritem.privacy["allow"] = self.privacy.active.isAllowedJID(item.value)
-						useritem.privacy["hide"] = self.privacy.active.isHiddenJID(item.value)
+		#if self.privacy != False:
+
 
 
 		#toDelJid=[] # contacts to delete
@@ -2068,8 +2075,8 @@ class mainWindow(QtGui.QMainWindow):
 
 	def trayQuit(self,bool=True):
 		# turn off jabbim
-		if self.client and self.client.privacy.active:
-			self.client.privacy.active.unsetInvisible(available=False) # hack
+		#if self.client and self.client.privacy.active:
+			#self.client.privacy.active.unsetInvisible(available=False) # hack
 		print "LOG 1"
 		if os.path.isfile(self.config.filename):
 			if str(self.config["saveGeometry"])=="True":
