@@ -52,6 +52,8 @@ class derived:
 		pass
 	def on_privacyFail(self):
 		pass
+	def on_bookmarksFail(self):
+		pass
 	def on_shutdown(self):
 		pass
 	def on_xml(self, xml):
