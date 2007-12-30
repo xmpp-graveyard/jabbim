@@ -333,13 +333,13 @@ class clientClass(pyxl.client.Client):
 								self.main.ui.roster.users.remove(i)
 		log.msg("METAITEMS:"+unicode(self.main.ui.roster.metaItems))
 
-
-		for item in self.privacy.active.items:
-			if item.value and item.typ == "jid":
-				for useritem in self.main.ui.roster.getUserItems(item.value):
-					useritem.privacy["block"] = self.privacy.active.isBlockedJID(item.value)
-					useritem.privacy["allow"] = self.privacy.active.isAllowedJID(item.value)
-					useritem.privacy["hide"] = self.privacy.active.isHiddenJID(item.value)
+		if self.privacy != False:
+			for item in self.privacy.active.items:
+				if item.value and item.typ == "jid":
+					for useritem in self.main.ui.roster.getUserItems(item.value):
+						useritem.privacy["block"] = self.privacy.active.isBlockedJID(item.value)
+						useritem.privacy["allow"] = self.privacy.active.isAllowedJID(item.value)
+						useritem.privacy["hide"] = self.privacy.active.isHiddenJID(item.value)
 
 
 		#toDelJid=[] # contacts to delete

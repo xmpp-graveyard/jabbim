@@ -180,7 +180,7 @@ class Client(derived):
 		d.addErrback(self._dnsLookupErr)
 	
 	def _dnsLookup(self, resp):
-		
+
 		r = random.choice(resp[0])
 		self._connect(unicode(r.payload.target), int(r.payload.port))
 #		self._connect(unicode(r[4][0]), int(r[4][1]))
@@ -1199,7 +1199,13 @@ class Client(derived):
 #		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._privacyReceived).addErrback(self.chyba)
+		d.addCallback(self._privacyReceived).addErrback(self._noPrivacy).addErrback(self.chyba)
+		return d
+		
+	def _noPrivacy(self, err):
+		log.msg('jabber:iq:privacy is unsupported here .. damned gtalk')
+		self.privacy = False
+		return err
 
 	def _privacyReceived(self, el):
 		self.on_privacyReceived()

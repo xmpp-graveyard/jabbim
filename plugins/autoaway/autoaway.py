@@ -160,7 +160,7 @@ class Plugin(plugins.PluginBase):
 			#self.main.client.sendPresence(show = 'online', status = "")
 			#for muc in self.main.client.groupchats.itervalues():
 				#self.main.client.sendPresence(show = 'online', status = "", to = '%s/%s'%(muc.jid, muc.nick))
-			self.sendPresence(None,'online',"")
+			self.main.sendPresence(None,'online',"")
 
 
 	def setAway(self):
@@ -174,7 +174,7 @@ class Plugin(plugins.PluginBase):
 			#self.main.client.sendPresence(show = 'away', status = self.config['awayMessage'].replace('[time]',self.config['awayTime']).replace("[last]",unicode(now)))
 			#for muc in self.main.client.groupchats.itervalues():
 				#self.main.client.sendPresence(show = 'away', status = self.config['awayMessage'].replace('[time]',self.config['awayTime']).replace("[last]",unicode(now)), to = '%s/%s'%(muc.jid, muc.nick))
-			self.sendPresence(None,'away',self.config['awayMessage'].replace('[time]',self.config['awayTime']).replace("[last]",unicode(now)))
+			self.main.sendPresence(None,'away',self.config['awayMessage'].replace('[time]',self.config['awayTime']).replace("[last]",unicode(now)))
 			self.message_set=True
 
 
