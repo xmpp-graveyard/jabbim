@@ -1205,6 +1205,7 @@ class Client(derived):
 	def _noPrivacy(self, err):
 		log.msg('jabber:iq:privacy is unsupported here .. damned gtalk')
 		self.privacy = False
+		self.on_privacyFail()
 		return err
 
 	def _privacyReceived(self, el):

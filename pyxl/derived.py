@@ -50,6 +50,8 @@ class derived:
 			print pres[0], pres[1]
 			self.on_presence(pres[0], pres[1])
 		pass
+	def on_privacyFail(self):
+		pass
 	def on_shutdown(self):
 		pass
 	def on_xml(self, xml):
