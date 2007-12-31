@@ -354,7 +354,7 @@ class events:
 		self.filetransfer={}
 		self.events=[]
 		self.trayIcon=None
-		self.jabbimIcon=True
+		self.jabbimIcon=None
 		self.timer=QtCore.QTimer()
 		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.timeout)
 		QtCore.QObject.connect(self.main.ui.eventsListWidget, QtCore.SIGNAL("itemDoubleClicked ( QListWidgetItem * )"),self.itemClicked)
@@ -368,8 +368,12 @@ class events:
 	def timeout(self):
 		if self.jabbimIcon:
 			self.main.tray.setIcon(self.trayIcon)
+			self.main.ui.tabWidget.setTabIcon(2,self.trayIcon)
 		else:
 			self.main.tray.setIcon(self.main.getCurrentTrayIcon())
+			result=QtGui.QPixmap(16,16)
+			result.fill(QtCore.Qt.transparent)
+			self.main.ui.tabWidget.setTabIcon(2,QtGui.QIcon(result))
 		self.jabbimIcon=not self.jabbimIcon
 
 	def trayClicked(self):
@@ -399,9 +403,10 @@ class events:
 				types.append(event['type'])
 		if len(types)==0:
 			self.timer.stop()
-			if not self.jabbimIcon:
+			if self.jabbimIcon!=None:
 				self.main.tray.setIcon(self.main.getCurrentTrayIcon())
-				self.jabbimIcon=True
+				self.main.ui.tabWidget.setTabIcon(2,QtGui.QIcon("images/16x16/categories/event.png"))
+				self.jabbimIcon=None
 		elif len(types)==1:
 			self.trayIcon=self.events[0]['icon']
 			self.timer.start(500)
