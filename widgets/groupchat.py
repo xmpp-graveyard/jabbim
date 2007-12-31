@@ -496,7 +496,7 @@ class groupChatWidget(QtGui.QWidget):
 				features.append(unicode(possible_features[f]))
 			else:
 				log.msg("Unknown room feature: %s" % f)
-
+		
 		self.ui.disco_info.setText(unicode(", ".join(features)))
 		self.ui.disco_info.hide()
 		log.msg("ROOM INFO RECEIVED")
@@ -525,10 +525,19 @@ class groupChatWidget(QtGui.QWidget):
 
 	def usersContextMenu(self,pos):
 		item=self.ui.users.itemFromIndex(self.ui.users.indexAt(pos)) # get selected item
+		if not item:
+			return
 		name=unicode(item.text(0)) # get contact name
 		menu=QtGui.QMenu(self.ui.users) # make menu
 		jid="%s/%s" % (self.jid, name)
 		if item.parent()!=None:
+			affiliation=""
+			role=""
+			if self.main.client.groupchats.has_key(self.jid):
+				if self.main.client.groupchats[self.jid].users.has_key(name):
+					affiliation=self.main.client.groupchats[self.jid].users[name].affiliation
+					role=self.main.client.groupchats[self.jid].users[name].role
+
 			separator=False
 			if self.role=="moderator" or self.affiliation=="owner":
 				action=menu.addAction(self.tr("Kick"))
@@ -542,6 +551,71 @@ class groupChatWidget(QtGui.QWidget):
 				separator=True
 			if separator:
 				menu.addSeparator()
+			
+			separator=False
+
+			if self.affiliation=="owner":
+				if affiliation=='owner':
+					action=menu.addAction(self.tr("Revoke ownership"))
+					action.setData(QtCore.QVariant(name))
+					action.setObjectName("revoke_owner")
+					separator=True
+				else:
+					action=menu.addAction(self.tr("Grant ownership"))
+					action.setData(QtCore.QVariant(name))
+					action.setObjectName("grant_owner")
+					separator=True
+
+				if affiliation=='admin':
+					action=menu.addAction(self.tr("Revoke admin"))
+					action.setData(QtCore.QVariant(name))
+					action.setObjectName("revoke_admin")
+					separator=True
+				else:
+					action=menu.addAction(self.tr("Grant admin"))
+					action.setData(QtCore.QVariant(name))
+					action.setObjectName("grant_admin")
+					separator=True
+
+			if self.affiliation=="admin" or self.affiliation=="owner":
+				if (affiliation=='member' or affiliation=='none') and role=='moderator':
+					action=menu.addAction(self.tr("Revoke moderator"))
+					action.setData(QtCore.QVariant(name))
+					action.setObjectName("revoke_moderator")
+					separator=True
+				elif role!='moderator':
+					action=menu.addAction(self.tr("Grant moderator"))
+					action.setData(QtCore.QVariant(name))
+					action.setObjectName("grant_moderator")
+					separator=True
+				
+				if affiliation=='member':
+					action=menu.addAction(self.tr("Revoke membership"))
+					action.setData(QtCore.QVariant(name))
+					action.setObjectName("revoke_member")
+					separator=True
+				else:
+					action=menu.addAction(self.tr("Grant membership"))
+					action.setData(QtCore.QVariant(name))
+					action.setObjectName("grant_member")
+					separator=True
+			if self.role=='moderator':
+				if "muc_moderated" in self.disco_features:
+					if affiliation=='participant':
+						action=menu.addAction(self.tr("Revoke voice"))
+						action.setData(QtCore.QVariant(name))
+						action.setObjectName("revoke_voice")
+						separator=True
+					else:
+						action=menu.addAction(self.tr("Grant voice"))
+						action.setData(QtCore.QVariant(name))
+						action.setObjectName("grant_voice")
+						separator=True
+
+			if separator:
+				menu.addSeparator()
+
+			
 			action=menu.addAction(self.tr("vCard"))
 			action.setData(QtCore.QVariant(jid))
 			action.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
@@ -569,6 +643,46 @@ class groupChatWidget(QtGui.QWidget):
 				# if user set new name of group
 				if b==True:
 					self.main.client.groupchats[self.jid].setAffiliation(name, 'outcast',  reason)
+		elif cmd=='grant_moderator':
+			name=unicode(action.data().toString())
+			if self.main.client.groupchats.has_key(self.jid):
+				self.main.client.groupchats[self.jid].setRole(name, 'moderator')
+		elif cmd=='revoke_moderator':
+			name=unicode(action.data().toString())
+			if self.main.client.groupchats.has_key(self.jid):
+				self.main.client.groupchats[self.jid].setRole(name, 'participant')
+		elif cmd=='grant_voice':
+			name=unicode(action.data().toString())
+			if self.main.client.groupchats.has_key(self.jid):
+				self.main.client.groupchats[self.jid].setRole(name, 'participant')
+		elif cmd=='revoke_voice':
+			name=unicode(action.data().toString())
+			if self.main.client.groupchats.has_key(self.jid):
+				self.main.client.groupchats[self.jid].setRole(name, 'visitor')
+		elif cmd=='grant_member':
+			name=unicode(action.data().toString())
+			if self.main.client.groupchats.has_key(self.jid):
+				self.main.client.groupchats[self.jid].setAffiliation(name, 'member')
+		elif cmd=='revoke_member':
+			name=unicode(action.data().toString())
+			if self.main.client.groupchats.has_key(self.jid):
+				self.main.client.groupchats[self.jid].setAffiliation(name, 'none')
+		elif cmd=='grant_owner':
+			name=unicode(action.data().toString())
+			if self.main.client.groupchats.has_key(self.jid):
+				self.main.client.groupchats[self.jid].setAffiliation(name, 'owner')
+		elif cmd=='revoke_owner':
+			name=unicode(action.data().toString())
+			if self.main.client.groupchats.has_key(self.jid):
+				self.main.client.groupchats[self.jid].setAffiliation(name, 'none')
+		elif cmd=='grant_admin':
+			name=unicode(action.data().toString())
+			if self.main.client.groupchats.has_key(self.jid):
+				self.main.client.groupchats[self.jid].setAffiliation(name, 'admin')
+		elif cmd=='revoke_admin':
+			name=unicode(action.data().toString())
+			if self.main.client.groupchats.has_key(self.jid):
+				self.main.client.groupchats[self.jid].setAffiliation(name, 'none')
 		elif cmd == "vcard":
 			jid=action.data()
 			jid=unicode(jid.toString())
