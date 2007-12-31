@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'groupchatwidget.ui'
+# Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Tue Dec  4 16:54:39 2007
-#      by: PyQt4 UI code generator 4.3.1
+# Created: Mon Dec 31 05:41:18 2007
+#      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_groupchatwidget(object):
     def setupUi(self, groupchatwidget):
         groupchatwidget.setObjectName("groupchatwidget")
-        groupchatwidget.resize(QtCore.QSize(QtCore.QRect(0,0,536,410).size()).expandedTo(groupchatwidget.minimumSizeHint()))
+        groupchatwidget.resize(QtCore.QSize(QtCore.QRect(0,0,536,408).size()).expandedTo(groupchatwidget.minimumSizeHint()))
         groupchatwidget.setFocusPolicy(QtCore.Qt.StrongFocus)
 
         self.gridlayout = QtGui.QGridLayout(groupchatwidget)
@@ -73,9 +73,27 @@ class Ui_groupchatwidget(object):
         self.layoutWidget1.setObjectName("layoutWidget1")
 
         self.vboxlayout = QtGui.QVBoxLayout(self.layoutWidget1)
-        self.vboxlayout.setSpacing(6)
         self.vboxlayout.setMargin(0)
+        self.vboxlayout.setSpacing(6)
         self.vboxlayout.setObjectName("vboxlayout")
+
+        self.editSubject = QtGui.QPushButton(self.layoutWidget1)
+        self.editSubject.setObjectName("editSubject")
+        self.vboxlayout.addWidget(self.editSubject)
+
+        self.hboxlayout = QtGui.QHBoxLayout()
+        self.hboxlayout.setMargin(0)
+        self.hboxlayout.setSpacing(6)
+        self.hboxlayout.setObjectName("hboxlayout")
+
+        self.saveTopic = QtGui.QPushButton(self.layoutWidget1)
+        self.saveTopic.setObjectName("saveTopic")
+        self.hboxlayout.addWidget(self.saveTopic)
+
+        self.revertTopic = QtGui.QPushButton(self.layoutWidget1)
+        self.revertTopic.setObjectName("revertTopic")
+        self.hboxlayout.addWidget(self.revertTopic)
+        self.vboxlayout.addLayout(self.hboxlayout)
 
         self.users = QtGui.QTreeWidget(self.layoutWidget1)
         self.users.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
@@ -102,6 +120,9 @@ class Ui_groupchatwidget(object):
         self.info.setToolTip(QtGui.QApplication.translate("groupchatwidget", "Every multi user chat can has topic of it\'s discussion", None, QtGui.QApplication.UnicodeUTF8))
         self.smileys.setToolTip(QtGui.QApplication.translate("groupchatwidget", "You can add emoticons by clicking here", None, QtGui.QApplication.UnicodeUTF8))
         self.sendButton.setText(QtGui.QApplication.translate("groupchatwidget", "&Send", None, QtGui.QApplication.UnicodeUTF8))
+        self.editSubject.setText(QtGui.QApplication.translate("groupchatwidget", "Edit subject", None, QtGui.QApplication.UnicodeUTF8))
+        self.saveTopic.setText(QtGui.QApplication.translate("groupchatwidget", "Save subject", None, QtGui.QApplication.UnicodeUTF8))
+        self.revertTopic.setText(QtGui.QApplication.translate("groupchatwidget", "Revert", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(0,QtGui.QApplication.translate("groupchatwidget", "user", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(1,QtGui.QApplication.translate("groupchatwidget", "jid", None, QtGui.QApplication.UnicodeUTF8))
 

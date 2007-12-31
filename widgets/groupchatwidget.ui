@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>536</width>
-    <height>410</height>
+    <height>408</height>
    </rect>
   </property>
   <property name="focusPolicy" >
@@ -16,22 +16,10 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" >
-   <property name="leftMargin" >
+   <property name="margin" >
     <number>9</number>
    </property>
-   <property name="topMargin" >
-    <number>9</number>
-   </property>
-   <property name="rightMargin" >
-    <number>9</number>
-   </property>
-   <property name="bottomMargin" >
-    <number>9</number>
-   </property>
-   <property name="horizontalSpacing" >
-    <number>6</number>
-   </property>
-   <property name="verticalSpacing" >
+   <property name="spacing" >
     <number>6</number>
    </property>
    <item rowspan="2" row="1" column="0" colspan="2" >
@@ -64,22 +52,10 @@
        <widget class="QWidget" native="1" name="viewWidget" />
        <widget class="QWidget" name="layoutWidget" >
         <layout class="QGridLayout" >
-         <property name="leftMargin" >
+         <property name="margin" >
           <number>0</number>
          </property>
-         <property name="topMargin" >
-          <number>0</number>
-         </property>
-         <property name="rightMargin" >
-          <number>0</number>
-         </property>
-         <property name="bottomMargin" >
-          <number>0</number>
-         </property>
-         <property name="horizontalSpacing" >
-          <number>6</number>
-         </property>
-         <property name="verticalSpacing" >
+         <property name="spacing" >
           <number>6</number>
          </property>
          <item row="0" column="0" colspan="3" >
@@ -139,21 +115,43 @@
       </widget>
       <widget class="QWidget" name="layoutWidget" >
        <layout class="QVBoxLayout" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
         <property name="spacing" >
          <number>6</number>
         </property>
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
-         <number>0</number>
-        </property>
+        <item>
+         <widget class="QPushButton" name="editSubject" >
+          <property name="text" >
+           <string>Edit subject</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" >
+          <property name="margin" >
+           <number>0</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="saveTopic" >
+            <property name="text" >
+             <string>Save subject</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="revertTopic" >
+            <property name="text" >
+             <string>Revert</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
         <item>
          <widget class="QTreeWidget" name="users" >
           <property name="horizontalScrollBarPolicy" >

@@ -573,8 +573,7 @@ class chatWindow(QtGui.QMainWindow):
 			countMessage=True
 		# set room topic
 		if subject!=None:
-			subject=utils.replace_url(subject)
-			w.chat.ui.info.setHtml(unicode(subject))
+			w.chat.changeTopic(unicode(subject))
 			#w.chat.ui.info.setCursorPosition(0)
 		# set links, if we found them
 					

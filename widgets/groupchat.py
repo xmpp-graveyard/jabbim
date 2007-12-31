@@ -29,6 +29,7 @@ from twisted.web.domhelpers import gatherTextNodes
 import dataforms
 from twisted.words.protocols.jabber import jid as jidT
 import vcardeditor
+from include import utils
 
 class flowLayout(QtGui.QLayout):
 	def __init__(self, parent=None, margin=1, spacing=1):
@@ -275,6 +276,7 @@ class groupChatWidget(QtGui.QWidget):
 		self.ui.setupUi(self)
 		self.main=main
 		self.affiliation=""
+		self.role=""
 		self.cache={}
 		self.lines=0
 		self.maxLines=300
@@ -388,6 +390,85 @@ class groupChatWidget(QtGui.QWidget):
 		log.msg("REQUESTING ROOM INFO")
 		self.ui.disco_info.hide()
 		self.main.client.getDiscoInfo(self.jid, callback=self._infoReceived)
+		self.editing=False
+		self.topic=""
+		#QtCore.QObject.connect(self.ui.info, QtCore.SIGNAL("cursorPositionChanged()"),self.topicChanged)
+		QtCore.QObject.connect(self.ui.saveTopic, QtCore.SIGNAL("clicked()"),self.topicSaved)
+		QtCore.QObject.connect(self.ui.revertTopic, QtCore.SIGNAL("clicked()"),self.topicReverted)
+		QtCore.QObject.connect(self.ui.editSubject, QtCore.SIGNAL("clicked()"),self.editSubject)
+
+		self.ui.saveTopic.hide()
+		self.ui.revertTopic.hide()
+		self.ui.editSubject.hide()
+		self.ui.info.setAcceptRichText(False)
+		
+
+	def editSubject(self):
+		self.ui.info.setReadOnly(False)
+		position=int(self.ui.info.textCursor().position())
+		cursor=self.ui.info.textCursor()
+		cursor.setPosition(0)
+		self.ui.info.setTextCursor(cursor)
+		self.topic=unicode(self.ui.info.toPlainText())
+		self.ui.info.clear()
+		self.ui.info.setPlainText(self.topic)
+		cursor=self.ui.info.textCursor()
+		cursor.setPosition(position)
+		self.ui.info.setTextCursor(cursor)
+		self.ui.saveTopic.show()
+		self.ui.revertTopic.show()
+		self.ui.editSubject.hide()
+		self.ui.info.setFocus(QtCore.Qt.MouseFocusReason)
+
+
+	def topicReverted(self):
+		self.ui.saveTopic.hide()
+		self.ui.revertTopic.hide()
+		print self.topic
+		topic=utils.replace_url(self.topic)
+		self.ui.info.setHtml(unicode(topic))
+		self.editing=False
+		self.ui.info.setReadOnly(True)
+		self.ui.editSubject.show()
+
+	def topicSaved(self):
+		print 'save topic'
+		topic=unicode(self.ui.info.toPlainText())
+		self.main.client.sendMessage(self.jid, typ='groupchat',body='/me has set subject to: '+topic,subject=topic)
+		self.ui.saveTopic.hide()
+		self.ui.revertTopic.hide()
+		topic=utils.replace_url(topic)
+		self.ui.info.setHtml(unicode(topic))
+		self.editing=False
+		self.ui.info.setReadOnly(True)
+		self.ui.editSubject.show()
+		
+
+	#def topicChanged(self):
+		#if self.editing==False and not self.ui.info.isReadOnly():
+			#self.editing=True
+			#position=int(self.ui.info.textCursor().position())
+			#cursor=self.ui.info.textCursor()
+			#cursor.setPosition(0)
+			#self.ui.info.setTextCursor(cursor)
+			#self.topic=unicode(self.ui.info.toPlainText())
+			#self.ui.info.clear()
+			#self.ui.info.setPlainText(self.topic)
+			#cursor=self.ui.info.textCursor()
+			#cursor.setPosition(position)
+			#self.ui.info.setTextCursor(cursor)
+			#self.ui.saveTopic.show()
+			#self.ui.revertTopic.show()
+		#elif self.editing==False and self.ui.info.isReadOnly() and self.role=='moderator':
+			#self.ui.info.setReadOnly(False)
+
+	def changeTopic(self,topic):
+		subject=utils.replace_url(topic)
+		#QtCore.QObject.disconnect(self.ui.info, QtCore.SIGNAL("cursorPositionChanged()"),self.topicChanged)
+		self.ui.info.setHtml(unicode(subject))
+		#QtCore.QObject.connect(self.ui.info, QtCore.SIGNAL("cursorPositionChanged()"),self.topicChanged)
+
+
 
 	def _infoReceived(self, *a):
 		self.disco_features = self.main.client.disco[self.jid][None]["features"]
@@ -616,10 +697,13 @@ class groupChatWidget(QtGui.QWidget):
 
 		if self.main.client.groupchats[self.jid].nick==nick:
 			self.affiliation=affiliation
+			self.role=role
 			#print "affiliation:",affiliation,"role:",role
 			if affiliation=="owner":
 				self.ui.admin.show()
-
+			if role=='moderator':
+				#self.ui.info.setReadOnly(False)
+				self.ui.editSubject.show()
 		
 
 		#if self.ui.users.verticalScrollBar().isVisible():
@@ -915,5 +999,6 @@ class groupChatWidget(QtGui.QWidget):
 				#repeat=True
 		self.name_id=-1
 		#if repeat==True:
-		self.tabPressed()
+		if len(users)!=0:
+			self.tabPressed()
 			
