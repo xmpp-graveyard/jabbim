@@ -529,10 +529,18 @@ class groupChatWidget(QtGui.QWidget):
 		menu=QtGui.QMenu(self.ui.users) # make menu
 		jid="%s/%s" % (self.jid, name)
 		if item.parent()!=None:
-			if self.affiliation=="moderator" or self.affiliation=="owner":
+			separator=False
+			if self.role=="moderator" or self.affiliation=="owner":
 				action=menu.addAction(self.tr("Kick"))
 				action.setData(QtCore.QVariant(name))
 				action.setObjectName("kick")
+				separator=True
+			if self.affiliation=="admin" or self.affiliation=="owner":
+				action=menu.addAction(self.tr("Ban"))
+				action.setData(QtCore.QVariant(name))
+				action.setObjectName("ban")
+				separator=True
+			if separator:
 				menu.addSeparator()
 			action=menu.addAction(self.tr("vCard"))
 			action.setData(QtCore.QVariant(jid))
@@ -553,6 +561,14 @@ class groupChatWidget(QtGui.QWidget):
 				# if user set new name of group
 				if b==True:
 					self.main.client.groupchats[self.jid].setRole(name, 'none',  reason)
+		elif cmd=='ban':
+			name=unicode(action.data().toString())
+			if self.main.client.groupchats.has_key(self.jid):
+				reason,b=QtGui.QInputDialog.getText(self,self.tr("Reason"),self.tr("Enter reason:"), QtGui.QLineEdit.Normal, "")
+				reason=unicode(reason)
+				# if user set new name of group
+				if b==True:
+					self.main.client.groupchats[self.jid].setAffiliation(name, 'outcast',  reason)
 		elif cmd == "vcard":
 			jid=action.data()
 			jid=unicode(jid.toString())
