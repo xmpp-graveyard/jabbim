@@ -495,7 +495,7 @@ class clientClass(pyxl.client.Client):
 			print 'jid=',unicode(jid)
 			if tab:
 				self.main.chat.removeTab(tabIndex)
-				if self.main.chat.addGroupChatTab(room,self.jid.user,tab.tabName):
+				if self.main.chat.addGroupChatTab(room,self.jid.user,name=tab.tabName):
 					self.joinGC(room, self.jid.user)
 				
 			else:
