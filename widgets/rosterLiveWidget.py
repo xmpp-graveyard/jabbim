@@ -476,13 +476,31 @@ class rosterWidget(QtGui.QWidget):
 					mimeData = QtCore.QMimeData()
 					mimeData.setText(item[0].jid) # mimedata is users jid
 					self.data[mimeData]=item[0] # we have to find the item if user drop it
-					drag = QtGui.QDrag(self)
-					drag.setMimeData(mimeData)
-					dropAction = drag.start(QtCore.Qt.CopyAction | QtCore.Qt.MoveAction)
+					self.drag = QtGui.QDrag(self)
+					self.drag.setMimeData(mimeData)
+					self.drag.setPixmap(item[0].avatar.pixmap(64,64))
+					dropAction = self.drag.exec_(QtCore.Qt.CopyAction | QtCore.Qt.MoveAction)
+					QtCore.QObject.connect(self.drag,QtCore.SIGNAL("targetChanged ( QWidget * )"),self.dtc)
 			elif len(self.data)!=0:
 				self.data={}
 				
 		return QtGui.QWidget.mouseMoveEvent(self,event)
+
+	def dtc(self,widget):
+		print "dtc"
+		message=None
+		text=unicode(self.drag.mimeData().text())
+		try:
+			message=widget.dndmessage(text)
+		except:
+			pass
+		if message:
+			print message
+			self.drag.setPixmap(QtGui.QPixmap("images/32x32/apps/jabbim.png"))
+
+	def dndmessage(self,text):
+		if self.main.client.roster['users'].has_key(text):
+			return "presunout kontakt/vytvorit metakontakt"
 
 	def popup(self):
 		"""
