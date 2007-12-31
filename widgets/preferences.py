@@ -616,11 +616,12 @@ class preferencesWindow(QtGui.QDialog):
 		self.done(1)
 
 	def reject(self):
-		self.main.config['theme']=self.currentTheme
-		if self.currentTheme!="None":
-			self.reskin(self.currentTheme)
-		else:
-			self.main.loadTheme()
+		if self.main.config['theme']!=self.currentTheme:
+			self.main.config['theme']=self.currentTheme
+			if self.currentTheme!="None":
+				self.reskin(self.currentTheme)
+			else:
+				self.main.loadTheme()
 		self.close()
 class editBookmark(QtGui.QDialog):
 	def __init__(self,main,room,server,name,nickname,password,autojoin,parent,edit=True):
