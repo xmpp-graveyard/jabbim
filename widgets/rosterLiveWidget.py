@@ -478,26 +478,39 @@ class rosterWidget(QtGui.QWidget):
 					self.data[mimeData]=item[0] # we have to find the item if user drop it
 					self.drag = QtGui.QDrag(self)
 					self.drag.setMimeData(mimeData)
-					self.drag.setPixmap(item[0].avatar.pixmap(64,64))
-					#QtCore.QObject.connect(self.drag,QtCore.SIGNAL("targetChanged ( QWidget * )"),self.dtc)
+					
+					f=QtGui.QApplication.font()
+					f.setPixelSize(11)
+					f.setBold(True)
+
+					metrics=QtGui.QFontMetrics(f)
+					width=int(metrics.width(item[0].name))
+					
+					avatar=item[0].avatar.pixmap(64,64)
+					
+					result=QtGui.QPixmap(avatar.width()+width+6,avatar.height()+4)
+					result.fill(QtGui.QColor(0,0,0))
+					painter=QtGui.QPainter(result)
+					painter.fillRect(1,1,result.width()-2,result.height()-2,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
+					painter.drawPixmap(2,2,avatar)
+					painter.setFont(f)
+					painter.drawText(QtCore.QRectF(avatar.width()+3,0,width,avatar.height()),QtCore.Qt.AlignCenter,item[0].name)
+					painter.end()
+
+					self.drag.setPixmap(result)
+					QtCore.QObject.connect(self.drag,QtCore.SIGNAL("targetChanged ( QWidget * )"),self.dtc)
 					dropAction = self.drag.start(QtCore.Qt.CopyAction | QtCore.Qt.MoveAction)
 			elif len(self.data)!=0:
 				self.data={}
 				
 		return QtGui.QWidget.mouseMoveEvent(self,event)
 
-	#def dtc(self,widget):
-		#print "dtc"
-		#message=None
-		#text=unicode(self.drag.mimeData().text())
-		#try:
-			#message=widget.dndmessage(text)
-		#except:
-			#pass
-		#if message:
-			#print message
-			#self.drag.setPixmap(QtGui.QPixmap("images/32x32/apps/jabbim.png"))
-
+	def dtc(self,widget):
+		if widget!=self and self.selected:
+			self.selected=None
+			self.repaint()
+			
+		
 	#def dndmessage(self,text):
 		#if self.main.client.roster['users'].has_key(text):
 			#return "presunout kontakt/vytvorit metakontakt"
@@ -1113,7 +1126,13 @@ class rosterWidget(QtGui.QWidget):
 
 			painter.save()
 			painter.translate(x,y)
-			painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
+			if useritem==self.selected:
+				if self.theme:
+					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Window)))
+				else:
+					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight)))
+			else:
+				painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
 			painter.restore()
 			
 			if useritem in self.events:
@@ -1141,8 +1160,15 @@ class rosterWidget(QtGui.QWidget):
 
 			if useritem.avatar:
 				pixmap=useritem.frameAvatar.pixmap(32,32)
+			if useritem==self.selected:
+				if self.theme:
+					fontcolor=self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()
+				else:
+					fontcolor=self.palet.color(QtGui.QPalette.HighlightedText).name()
+			else:
+				fontcolor=self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()
 			if useritem.statusMessage:
-				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+res+"</font>")
+				doc.setHtml("<font color=\""+fontcolor+"\">"+useritem.escapedName+res+"</font>")
 				painter.save()
 				painter.translate(x+41,y+2)
 				if useritem.avatar:
@@ -1150,7 +1176,7 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-41,y+32))
 				painter.restore()
-				doc.setHtml("<font size=\"-1\" color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\"><i>"+useritem.statusMessage+"</i></font>")
+				doc.setHtml("<font size=\"-1\" color=\""+fontcolor+"\"><i>"+useritem.statusMessage+"</i></font>")
 				painter.save()
 				painter.translate(x+41,y+16)
 				if useritem.avatar:
@@ -1159,7 +1185,7 @@ class rosterWidget(QtGui.QWidget):
 					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-41,y+32))
 				painter.restore()
 			else:
-				doc.setHtml("<font color=\""+self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+res+"</font>")
+				doc.setHtml("<font color=\""+fontcolor+"\">"+useritem.escapedName+res+"</font>")
 				painter.save()
 				painter.translate(x+41,y+(32-fontHeight)/2)
 				if useritem.avatar:
@@ -1425,7 +1451,7 @@ class rosterWidget(QtGui.QWidget):
 		@type item: userItem
 		"""
 		if self.item!=item and item!=None and item.main!='special':
-			self.selected=item
+			#self.selected=item
 			self.item=item
 			self.reshow=True
 			self.repaint()
@@ -1434,7 +1460,7 @@ class rosterWidget(QtGui.QWidget):
 
 		elif self.item == item and self.item != None and item.main!='special':
 			self.item = None
-			self.selected = None
+			#self.selected = None
 			self.statusLabel.hide()
 			self.reshow=True
 			self.repaint()
@@ -1532,7 +1558,7 @@ class rosterWidget(QtGui.QWidget):
 			#self.timer.start(40)
 			event.accept()
 		elif (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and self.selected != None:
-			jid = jidT.JID(self.selected.jid)
+			jid = jidT.JID(self.item.jid)
 			jid_r = jid.userhost()
 			item=self.getUserItems(jid_r)[0]
 			item=self.getUserItems(jid_r)[0]
@@ -1546,7 +1572,7 @@ class rosterWidget(QtGui.QWidget):
 			self.main.chat.activate()
 		elif key==QtCore.Qt.Key_Escape:
 			self.item = None
-			self.selected = None
+			#self.selected = None
 			if self.searchMode==True:
 				self.searchMode=False
 				for user in self.users:
@@ -1561,9 +1587,9 @@ class rosterWidget(QtGui.QWidget):
 			self.repaint()
 
 		elif key==QtCore.Qt.Key_Delete: #tohle by mozna chtelo nejake potvrzeni 'Opravdu to chcete udelat?'
-			self.main.client.delContact(self.selected.jid)
+			self.main.client.delContact(self.item.jid)
 		elif key==QtCore.Qt.Key_F2:
-			jid=self.selected.jid
+			jid=self.item.jid
 			try:
 				name=unicode(self.main.client.roster['users'][jid].name)
 			except:
@@ -1618,11 +1644,21 @@ class rosterWidget(QtGui.QWidget):
 		
 		if item:
 			event.acceptProposedAction()
+			if self.selected!=item:
+				self.selected=item
+				self.repaint()
 		else:
+			if self.selected:
+				self.selected=None
+				self.repaint()
 			event.ignore()
 
 	def dropEvent(self, event):
 		self.scrollUp=None
+		if self.selected:
+			self.selected=None
+			self.repaint()
+
 		if (event.mimeData().hasUrls()):
 			urlList=event.mimeData().urls()
 			if len(urlList)>0:
