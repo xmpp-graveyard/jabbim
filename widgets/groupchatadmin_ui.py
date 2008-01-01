@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatadmin.ui'
 #
-# Created: Wed Oct 24 03:34:51 2007
-#      by: PyQt4 UI code generator 4.1
+# Created: Tue Jan  1 19:05:33 2008
+#      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_groupchatAdmin(object):
@@ -30,6 +29,20 @@ class Ui_groupchatAdmin(object):
         self.affiliation = QtGui.QWidget()
         self.affiliation.setObjectName("affiliation")
         self.groupchatAdminTab.addTab(self.affiliation,"")
+
+        self.subjectTab = QtGui.QWidget()
+        self.subjectTab.setObjectName("subjectTab")
+
+        self.gridlayout1 = QtGui.QGridLayout(self.subjectTab)
+        self.gridlayout1.setMargin(9)
+        self.gridlayout1.setSpacing(6)
+        self.gridlayout1.setObjectName("gridlayout1")
+
+        self.subject = QtGui.QTextBrowser(self.subjectTab)
+        self.subject.setReadOnly(False)
+        self.subject.setObjectName("subject")
+        self.gridlayout1.addWidget(self.subject,0,0,1,1)
+        self.groupchatAdminTab.addTab(self.subjectTab,"")
         self.gridlayout.addWidget(self.groupchatAdminTab,0,0,1,3)
 
         self.pushButton = QtGui.QPushButton(groupchatAdmin)
@@ -44,7 +57,7 @@ class Ui_groupchatAdmin(object):
         self.gridlayout.addItem(spacerItem,1,0,1,1)
 
         self.retranslateUi(groupchatAdmin)
-        self.groupchatAdminTab.setCurrentIndex(0)
+        self.groupchatAdminTab.setCurrentIndex(2)
         QtCore.QObject.connect(self.pushButton,QtCore.SIGNAL("clicked()"),groupchatAdmin.reject)
         QtCore.QObject.connect(self.pushButton_2,QtCore.SIGNAL("clicked()"),groupchatAdmin.accept)
         QtCore.QMetaObject.connectSlotsByName(groupchatAdmin)
@@ -53,6 +66,7 @@ class Ui_groupchatAdmin(object):
         groupchatAdmin.setWindowTitle(QtGui.QApplication.translate("groupchatAdmin", "MUC Configuration", None, QtGui.QApplication.UnicodeUTF8))
         self.groupchatAdminTab.setTabText(self.groupchatAdminTab.indexOf(self.config), QtGui.QApplication.translate("groupchatAdmin", "MUC Configuration", None, QtGui.QApplication.UnicodeUTF8))
         self.groupchatAdminTab.setTabText(self.groupchatAdminTab.indexOf(self.affiliation), QtGui.QApplication.translate("groupchatAdmin", "Affiliations", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupchatAdminTab.setTabText(self.groupchatAdminTab.indexOf(self.subjectTab), QtGui.QApplication.translate("groupchatAdmin", "Room subject", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("groupchatAdmin", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_2.setText(QtGui.QApplication.translate("groupchatAdmin", "Save", None, QtGui.QApplication.UnicodeUTF8))
 

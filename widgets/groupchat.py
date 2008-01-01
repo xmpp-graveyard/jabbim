@@ -390,58 +390,58 @@ class groupChatWidget(QtGui.QWidget):
 		log.msg("REQUESTING ROOM INFO")
 		self.ui.disco_info.hide()
 		self.main.client.getDiscoInfo(self.jid, callback=self._infoReceived)
-		self.editing=False
-		self.topic=""
+		#self.editing=False
+		#self.topic=""
 		#QtCore.QObject.connect(self.ui.info, QtCore.SIGNAL("cursorPositionChanged()"),self.topicChanged)
-		QtCore.QObject.connect(self.ui.saveTopic, QtCore.SIGNAL("clicked()"),self.topicSaved)
-		QtCore.QObject.connect(self.ui.revertTopic, QtCore.SIGNAL("clicked()"),self.topicReverted)
-		QtCore.QObject.connect(self.ui.editSubject, QtCore.SIGNAL("clicked()"),self.editSubject)
+		#QtCore.QObject.connect(self.ui.saveTopic, QtCore.SIGNAL("clicked()"),self.topicSaved)
+		#QtCore.QObject.connect(self.ui.revertTopic, QtCore.SIGNAL("clicked()"),self.topicReverted)
+		#QtCore.QObject.connect(self.ui.editSubject, QtCore.SIGNAL("clicked()"),self.editSubject)
 
-		self.ui.saveTopic.hide()
-		self.ui.revertTopic.hide()
-		self.ui.editSubject.hide()
-		self.ui.info.setAcceptRichText(False)
+		#self.ui.saveTopic.hide()
+		#self.ui.revertTopic.hide()
+		#self.ui.editSubject.hide()
+		#self.ui.info.setAcceptRichText(False)
 		
 
-	def editSubject(self):
-		self.ui.info.setReadOnly(False)
-		position=int(self.ui.info.textCursor().position())
-		cursor=self.ui.info.textCursor()
-		cursor.setPosition(0)
-		self.ui.info.setTextCursor(cursor)
-		self.topic=unicode(self.ui.info.toPlainText())
-		self.ui.info.clear()
-		self.ui.info.setPlainText(self.topic)
-		cursor=self.ui.info.textCursor()
-		cursor.setPosition(position)
-		self.ui.info.setTextCursor(cursor)
-		self.ui.saveTopic.show()
-		self.ui.revertTopic.show()
-		self.ui.editSubject.hide()
-		self.ui.info.setFocus(QtCore.Qt.MouseFocusReason)
+	#def editSubject(self):
+		#self.ui.info.setReadOnly(False)
+		#position=int(self.ui.info.textCursor().position())
+		#cursor=self.ui.info.textCursor()
+		#cursor.setPosition(0)
+		#self.ui.info.setTextCursor(cursor)
+		#self.topic=unicode(self.ui.info.toPlainText())
+		#self.ui.info.clear()
+		#self.ui.info.setPlainText(self.topic)
+		#cursor=self.ui.info.textCursor()
+		#cursor.setPosition(position)
+		#self.ui.info.setTextCursor(cursor)
+		#self.ui.saveTopic.show()
+		#self.ui.revertTopic.show()
+		#self.ui.editSubject.hide()
+		#self.ui.info.setFocus(QtCore.Qt.MouseFocusReason)
 
 
-	def topicReverted(self):
-		self.ui.saveTopic.hide()
-		self.ui.revertTopic.hide()
-		print self.topic
-		topic=utils.replace_url(self.topic)
-		self.ui.info.setHtml(unicode(topic))
-		self.editing=False
-		self.ui.info.setReadOnly(True)
-		self.ui.editSubject.show()
+	#def topicReverted(self):
+		#self.ui.saveTopic.hide()
+		#self.ui.revertTopic.hide()
+		#print self.topic
+		#topic=utils.replace_url(self.topic)
+		#self.ui.info.setHtml(unicode(topic))
+		#self.editing=False
+		#self.ui.info.setReadOnly(True)
+		#self.ui.editSubject.show()
 
-	def topicSaved(self):
-		print 'save topic'
-		topic=unicode(self.ui.info.toPlainText())
-		self.main.client.sendMessage(self.jid, typ='groupchat',body='/me has set subject to: '+topic,subject=topic)
-		self.ui.saveTopic.hide()
-		self.ui.revertTopic.hide()
-		topic=utils.replace_url(topic)
-		self.ui.info.setHtml(unicode(topic))
-		self.editing=False
-		self.ui.info.setReadOnly(True)
-		self.ui.editSubject.show()
+	#def topicSaved(self):
+		#print 'save topic'
+		#topic=unicode(self.ui.info.toPlainText())
+		#self.main.client.sendMessage(self.jid, typ='groupchat',body='/me has set subject to: '+topic,subject=topic)
+		#self.ui.saveTopic.hide()
+		#self.ui.revertTopic.hide()
+		#topic=utils.replace_url(topic)
+		#self.ui.info.setHtml(unicode(topic))
+		#self.editing=False
+		#self.ui.info.setReadOnly(True)
+		#self.ui.editSubject.show()
 		
 
 	#def topicChanged(self):
@@ -708,12 +708,15 @@ class groupChatWidget(QtGui.QWidget):
 		if self.main.client.groupchats[self.jid].users[nick].affiliation=="owner":
 			d=self.main.client.getMUCConfig(self.jid)
 			d.addCallback(self._onRoomConfig)
+		elif self.role=='moderator':
+			self.dialog=groupchatAdminDialog(self.main,self.jid,None,self,subject=unicode(self.ui.info.toPlainText()))
+			self.dialog.show()
 
 	def _onRoomConfig(self,data):
 		jid=data[0]
 		form=data[1]
 		if form!=None:
-			self.dialog=groupchatAdminDialog(self.main,jid,form,self)
+			self.dialog=groupchatAdminDialog(self.main,jid,form,self,subject=unicode(self.ui.info.toPlainText()))
 			self.dialog.show()
 
 	def roomAdminClicked(self):
@@ -833,7 +836,8 @@ class groupChatWidget(QtGui.QWidget):
 				self.ui.admin.show()
 			if role=='moderator':
 				#self.ui.info.setReadOnly(False)
-				self.ui.editSubject.show()
+				self.ui.admin.show()
+				#self.ui.editSubject.show()
 		
 
 		#if self.ui.users.verticalScrollBar().isVisible():

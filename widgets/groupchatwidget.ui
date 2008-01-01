@@ -122,37 +122,6 @@
          <number>6</number>
         </property>
         <item>
-         <widget class="QPushButton" name="editSubject" >
-          <property name="text" >
-           <string>Edit subject</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" >
-          <property name="margin" >
-           <number>0</number>
-          </property>
-          <property name="spacing" >
-           <number>6</number>
-          </property>
-          <item>
-           <widget class="QPushButton" name="saveTopic" >
-            <property name="text" >
-             <string>Save subject</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="revertTopic" >
-            <property name="text" >
-             <string>Revert</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
          <widget class="QTreeWidget" name="users" >
           <property name="horizontalScrollBarPolicy" >
            <enum>Qt::ScrollBarAlwaysOff</enum>

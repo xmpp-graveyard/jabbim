@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Mon Dec 31 05:41:18 2007
+# Created: Tue Jan  1 19:08:49 2008
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -77,24 +77,6 @@ class Ui_groupchatwidget(object):
         self.vboxlayout.setSpacing(6)
         self.vboxlayout.setObjectName("vboxlayout")
 
-        self.editSubject = QtGui.QPushButton(self.layoutWidget1)
-        self.editSubject.setObjectName("editSubject")
-        self.vboxlayout.addWidget(self.editSubject)
-
-        self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setMargin(0)
-        self.hboxlayout.setSpacing(6)
-        self.hboxlayout.setObjectName("hboxlayout")
-
-        self.saveTopic = QtGui.QPushButton(self.layoutWidget1)
-        self.saveTopic.setObjectName("saveTopic")
-        self.hboxlayout.addWidget(self.saveTopic)
-
-        self.revertTopic = QtGui.QPushButton(self.layoutWidget1)
-        self.revertTopic.setObjectName("revertTopic")
-        self.hboxlayout.addWidget(self.revertTopic)
-        self.vboxlayout.addLayout(self.hboxlayout)
-
         self.users = QtGui.QTreeWidget(self.layoutWidget1)
         self.users.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.users.setIconSize(QtCore.QSize(32,32))
@@ -120,9 +102,6 @@ class Ui_groupchatwidget(object):
         self.info.setToolTip(QtGui.QApplication.translate("groupchatwidget", "Every multi user chat can has topic of it\'s discussion", None, QtGui.QApplication.UnicodeUTF8))
         self.smileys.setToolTip(QtGui.QApplication.translate("groupchatwidget", "You can add emoticons by clicking here", None, QtGui.QApplication.UnicodeUTF8))
         self.sendButton.setText(QtGui.QApplication.translate("groupchatwidget", "&Send", None, QtGui.QApplication.UnicodeUTF8))
-        self.editSubject.setText(QtGui.QApplication.translate("groupchatwidget", "Edit subject", None, QtGui.QApplication.UnicodeUTF8))
-        self.saveTopic.setText(QtGui.QApplication.translate("groupchatwidget", "Save subject", None, QtGui.QApplication.UnicodeUTF8))
-        self.revertTopic.setText(QtGui.QApplication.translate("groupchatwidget", "Revert", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(0,QtGui.QApplication.translate("groupchatwidget", "user", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(1,QtGui.QApplication.translate("groupchatwidget", "jid", None, QtGui.QApplication.UnicodeUTF8))
 
