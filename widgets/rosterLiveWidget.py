@@ -686,24 +686,41 @@ class rosterWidget(QtGui.QWidget):
 		# paint background
 		painter.save()
 		painter.translate(x,y)
-		if self.theme:
-			painter.fillRect(0,0,self.width(),30,QtGui.QBrush(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Window)))
+
+		if item==self.selected:
+			if self.theme:
+				painter.fillRect(0,0,self.width(),30,QtGui.QBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Window)))
+			else:
+				painter.fillRect(0,0,self.width(),30,QtGui.QBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight)))
 		else:
-			painter.fillRect(0,0,self.width(),30,QtGui.QBrush(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.AlternateBase)))
+			if self.theme:
+				painter.fillRect(0,0,self.width(),30,QtGui.QBrush(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Window)))
+			else:
+				painter.fillRect(0,0,self.width(),30,QtGui.QBrush(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.AlternateBase)))
+		
 		painter.restore()
 		
 		# draw status icon of item
 		if item.icon:
 			painter.drawPixmap(x,y,item.icon.pixmap(32,32))
-		
+
+		if item==self.selected:
+			if self.theme:
+				fontcolor=self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name()
+			else:
+				fontcolor=self.palet.color(QtGui.QPalette.HighlightedText).name()
+		else:
+			fontcolor=self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name()
+
+
 		# write the name of the group
-		doc.setHtml("<font color=\""+self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+item.escapedName+"</font>")
+		doc.setHtml("<font color=\""+fontcolor+"\">"+item.escapedName+"</font>")
 		painter.save()
 		painter.translate(x+30,y+(32-fontHeight)/2)
 		doc.drawContents(painter, QtCore.QRectF(0,0,self.width(),y+32))
 		painter.restore()
 		width=int(font.width("("+str(item.online)+"/"+str(item.all)+")"))
-		doc.setHtml("<font color=\""+self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">("+str(item.online)+"/"+str(item.all)+")</font>")
+		doc.setHtml("<font color=\""+fontcolor+"\">("+str(item.online)+"/"+str(item.all)+")</font>")
 		painter.save()
 		painter.translate((int(self.width())-width-6),y+(32-fontHeight)/2)
 		doc.drawContents(painter, QtCore.QRectF(0,0,width+15,y+32))
