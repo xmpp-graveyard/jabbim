@@ -113,24 +113,24 @@ class FileBackend:
 				parsed=msg.split('|')
 				ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
 		else:
-			maxTime=maxTime.split(":")
+			maxTime=maxTime.split(":") # [20,0,0]
 			now=time.localtime()
 			for msg in fp.xreadlines():
 				parsed=msg.split('|')
 				d=time.localtime(float(parsed[0]))
 				#html+=action[5].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5]))
-				intervalHour=int(d[3])+int(maxTime[0])
-				intervalMin=int(d[4])+int(maxTime[1])
-				intervalSec=int(d[5])+int(maxTime[2])
-				if intervalHour>=24:
-					intervalHour-=24
-				if intervalMin>=60:
-					intervalMin-=60
-				if intervalSec>=60:
-					intervalSec-=60
-				if intervalHour>int(now[3]):
+				intervalHour=abs(int(d[3])-int(now[3])) # 20
+				intervalMin=abs(int(d[4])-int(now[4])) # 2
+				intervalSec=abs(int(d[5])-int(now[5]))
+				#if intervalHour>=24:
+					#intervalHour-=24
+				#if intervalMin>=60:
+					#intervalMin-=60
+				#if intervalSec>=60:
+					#intervalSec-=60
+				if intervalHour<int(maxTime[0]):
 					ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
-				elif intervalHour<=int(now[3]) and intervalMin>=int(now[4]):
+				elif intervalHour<=int(maxTime[0]) and intervalMin<=int(maxTime[1]):
 					ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
 		fp.close()
 		return ret
