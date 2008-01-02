@@ -149,7 +149,7 @@ class Client(derived):
 		iq['xml:lang'] = self.xmlLang
 		q = iq.addElement('ping', 'urn:xmpp:ping')
 		self.disp(iq['id'])
-		iq.timeout = 30
+		iq.timeout = 60
 		d = iq.send()
 		d.addCallback(self._heartbeat)
 		d.addErrback(self._heartbeatErr)
@@ -161,6 +161,10 @@ class Client(derived):
 	def _heartbeatErr(self, err):
 		if err.type == TimeoutError:
 			log.msg('heartbeat failed')
+			self.connection.disconnect()
+			self.factory.stopTrying()
+			self.connection = None
+			self.factory = None
 			self.main._disconnect(error = 'lost')
 			self.on_disconnect()
 
