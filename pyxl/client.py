@@ -673,14 +673,18 @@ class Client(derived):
 				subject = unicode(child)
 			if child.name == 'html':
 				xbody = child.firstChildElement()
-				xbdy = ''
-				for elm in xbody.elements():
-					xbdy = xbdy + elm.toXml()
-				log.msg(xbdy)
-				if len(xbdy) == 0:
-					xhtml = unicode(xbody)
-				else:
-					xhtml = xbdy
+#				xbdy = ''
+#				for elm in xbody.elements():
+#					xbdy = xbdy + elm.toXml()
+#				log.msg(xbdy)
+#				if len(xbdy) == 0:
+#					xhtml = unicode(xbody)
+#				else:
+#					xhtml = xbdy
+				xbody.attributes = {}
+				del(xbody.defaultUri)
+				del(xbody.uri)
+				xhtml = xbody.toXml().replace('<body>','').replace('</body>', '')
 			if child.name in ['active',  'inactive',  'composing',  'paused',  'gone']:
 				chatstate = child.name
 				try:
