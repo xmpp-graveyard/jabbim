@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
+import gc
+#gc.set_debug(gc.DEBUG_LEAK|gc.DEBUG_UNCOLLECTABLE)
 import sys,os
 sys.path.append('.')
 try: from PyQt4 import QtCore, QtGui
@@ -1985,7 +1987,7 @@ class mainWindow(QtGui.QMainWindow):
 			if not self.plugins.has_key(plugin):
 				plug = load_source(plugin, path, f).Plugin(self, self.homeDir)
 				self.plugins[plugin] = plug
-				self.runPluginCommand(self.plugins[plugin].buildRosterMenu,[])
+				#self.runPluginCommand(self.plugins[plugin].buildRosterMenu,[])
 			else:
 				print "plugin already loaded"
 			f.close()
@@ -2002,8 +2004,14 @@ class mainWindow(QtGui.QMainWindow):
 		if self.plugins.has_key(plugin):
 			self.ui.menuPlugins.clear()
 			self.runPluginCommand(self.plugins[plugin].remove,[])
-			
+			print gc.get_referents(self.plugins[plugin])
+
 			del self.plugins[plugin]
+			#print "GARBAGE:",gc.garbage
+			#print "DELETING GARBAGE"
+			del gc.garbage[:]
+			print "GARBAGE:",gc.garbage
+			print "UNREACHABLE OBJECTS:",gc.collect()
 			for plug in self.plugins.itervalues():
 				self.runPluginCommand(plug.buildRosterMenu,[])
 		else:

@@ -15,34 +15,35 @@ class Plugin(plugins.PluginBase):
 		self.category = ['log', 'misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		#self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
+		self.developMode=True
 		if main:
 			self.loadConfig()
-			self.window = self.loadWindow("%s/plugins/%s/logWindow.ui.py"%(self.homeDir, self.fname))
-			self.window.setWindowIcon(self.main.windowIcon())
-			self.log = False
-			QtCore.QObject.connect(self.window.ui.enableBox, QtCore.SIGNAL("stateChanged(int)"),self.enableToggled)
-			QtCore.QObject.connect(self.window.ui.clearButton, QtCore.SIGNAL("clicked()"),self.clearLog)
+			#self.window = self.loadWindow("%s/plugins/%s/logWindow.ui.py"%(self.homeDir, self.fname))
+			#self.window.setWindowIcon(self.main.windowIcon())
+			#self.log = False
+			#QtCore.QObject.connect(self.window.ui.enableBox, QtCore.SIGNAL("stateChanged(int)"),self.enableToggled)
+			#QtCore.QObject.connect(self.window.ui.clearButton, QtCore.SIGNAL("clicked()"),self.clearLog)
 			
-	def buildRosterMenu(self):
-		menu=self.rosterMenu()
-		menu.addAction("Show log",self.showSlot)
+	#def buildRosterMenu(self):
+		#menu=self.rosterMenu()
+		#menu.addAction("Show log",self.showSlot)
 	
-	def showSlot(self):
-		self.window.show()
+	#def showSlot(self):
+		#self.window.show()
 	
-	def enableToggled(self, state):
-		if (not self.log) and self.window.ui.enableBox.isChecked():
-			self.log = True
-			log.addObserver(self.observer)
-# 			self.window.ui.logView.append('Log started')
-		else:
-			self.log = False
-			log.removeObserver(self.observer)
+	#def enableToggled(self, state):
+		#if (not self.log) and self.window.ui.enableBox.isChecked():
+			#self.log = True
+			#log.addObserver(self.observer)
+## 			self.window.ui.logView.append('Log started')
+		#else:
+			#self.log = False
+			#log.removeObserver(self.observer)
 	
-	def observer(self, msg):
-		self.window.ui.logView.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']))))
-		if msg['isError']:
-			self.main.tray.showMessage(self.main.tr("Log"),unicode(' '.join(msg['message'])), QtGui.QSystemTrayIcon.Warning, 2000)
+	#def observer(self, msg):
+		#self.window.ui.logView.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']))))
+		#if msg['isError']:
+			#self.main.tray.showMessage(self.main.tr("Log"),unicode(' '.join(msg['message'])), QtGui.QSystemTrayIcon.Warning, 2000)
 	
-	def clearLog(self):
-		self.window.ui.logView.setText('')
+	#def clearLog(self):
+		#self.window.ui.logView.setText('')

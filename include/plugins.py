@@ -165,4 +165,20 @@ class PluginBase:
 			del self.loadedWindows[0]
 		self.writeConfig()
 		for handler in self.handlers:
-			self.main.client.dispatcher.unregisterHandler(handler, self.name)
+			self.main.client.dispatcher.unregisterHandler(handler, unicode(self.name))
+		self.main = None
+		self.config = None
+		self.configDialog = None
+		self.description = 'basic plugin class'
+		self.author = "Jiri 'Sef' Gabrys"
+		self.name = 'Basic plugin'
+		self.fname = ''
+		self.version = '0.1'
+		self.category = ['test', 'misc']
+		self.url = 'dev.jabbim.cz/jabbim'
+		self.handlers = []
+		self.homeDir = None
+		self.translator=None
+		self.developMode=False
+		self.loadedWindows=[]
+		

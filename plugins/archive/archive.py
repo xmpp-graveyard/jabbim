@@ -188,7 +188,7 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.loadConfig(homedir)
 
-			self.jid = quote(self.main.client.jid.userhost())
+			self.jid = quote(unicode(self.main.client.jid.userhost()))
 			self.backend=FileBackend(self)
 
 			if not os.path.isdir(self.main.homeDir+'/archive'):
@@ -214,6 +214,9 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.seznam.header().hide()
 		else:
 			self.loadConfig(homedir)
+
+	#def on_remove(self):
+		
 
 	def buildRosterMenu(self):
 		menu=self.rosterMenu()
