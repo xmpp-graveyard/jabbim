@@ -948,7 +948,8 @@ class clientClass(pyxl.client.Client):
 				message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
 				message = utils.replace_url(message)
 			else:
-				message=xhtml
+				message=xhtml.replace("&quot;",'"')
+				print 'xhtml=',unicode(message)
 			#file=self.main.homeDir+'/avatars/'+unicode(frm.userhost())
 			#<img src="[avatar]" width="32" height="32"/>
 			#if not os.path.isfile(file):

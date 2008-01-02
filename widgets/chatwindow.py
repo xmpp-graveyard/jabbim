@@ -33,7 +33,7 @@ from twisted.words.protocols.jabber import jid as jidT
 from leaveroom_ui import *
 import ctypes
 from ctypes.util import find_library
-
+import sys
 #if sys.platform == 'win32' :
 	#def _flash( window, yes ) :
 		#ctypes.windll.user32.FlashWindow( int(window.winId()), yes )

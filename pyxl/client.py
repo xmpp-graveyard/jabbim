@@ -853,7 +853,21 @@ class Client(derived):
 				show = 'offline'
 			else:
 				return
-		if self.roster['users'].has_key(fromjid):
+
+		if self.groupchats.has_key(fromjid):
+			if show=="offline":
+#				self.reactor.callFromThread(self.on_GCpresence, fromjid, resource,  show,  status,  codes)
+				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor)
+			self.groupchats[fromjid].setStatus(resource,  show,  status)
+			if self.groupchats[fromjid].users.has_key(resource):
+				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid)
+				#self.groupchats[fromjid]
+			if show!="offline":
+#				self.reactor.callFromThread(self.on_GCpresence,fromjid, resource,  show,  status,  codes)
+				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor)
+			return
+
+		elif self.roster['users'].has_key(fromjid):
 			first = self.roster['users'][unicode(fromjid)].setStatus(resource, show,status)
 			if self.roster['users'][fromjid].resources.has_key(resource):
 				self.roster['users'][fromjid].setPriority(resource, priority)
@@ -878,18 +892,7 @@ class Client(derived):
 			else:
 #				self.reactor.callFromThread(self.on_presence,frm,show, error)
 				self.dispatcher.publishEvent('on_presence',frm,show, error)
-		elif self.groupchats.has_key(fromjid):
-			if show=="offline":
-#				self.reactor.callFromThread(self.on_GCpresence, fromjid, resource,  show,  status,  codes)
-				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor)
-			self.groupchats[fromjid].setStatus(resource,  show,  status)
-			if self.groupchats[fromjid].users.has_key(resource):
-				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid)
-				#self.groupchats[fromjid]
-			if show!="offline":
-#				self.reactor.callFromThread(self.on_GCpresence,fromjid, resource,  show,  status,  codes)
-				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor)
-			return
+
 		else:
 ##			print 'contact not in roster'
 			pass
