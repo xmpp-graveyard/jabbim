@@ -1275,7 +1275,7 @@ class rosterWidget(QtGui.QWidget):
 			for key in self.sortedGroups:
 				item=self.groups[key]
 				items=self.getGroupSortedUsers(item.name)
-				if ((len(items)!=0 and not self.showOffline) or self.showOffline):
+				if ((len(items)!=0 and not self.showOffline) or self.showOffline) and item.all!=0:
 					if got!=0 and not item in ret:
 						ret.append(item)
 						got+=1
@@ -1375,7 +1375,7 @@ class rosterWidget(QtGui.QWidget):
 			for key in self.sortedGroups:
 				item=self.groups[key]
 				items=self.getGroupSortedUsers(item.name)
-				if ((len(items)!=0 and not self.showOffline) or self.showOffline):
+				if ((len(items)!=0 and not self.showOffline) or self.showOffline) and item.all!=0:
 					if item==i:
 						return x,y
 					if item.expanded and len(items)!=0:
@@ -1742,18 +1742,19 @@ class rosterWidget(QtGui.QWidget):
 				#items.append(self.tr("Copy"))
 				#q,b=QtGui.QInputDialog.getItem(self,self.tr("Action"),self.tr("Select action."), items,0,False)
 				#q=unicode(q)
-
-				contactMenu=QtGui.QMenu(self)
-				action=contactMenu.addAction(self.tr("Move to group"))
-				action.jid=jid
-				action.oldItem=oldItem
-				action.item=item
-				action.setObjectName("move_to_group_ng")
 				
-				action=contactMenu.addAction(self.tr("Copy to group"))
-				action.jid=jid
-				action.item=item
-				action.setObjectName("copy_to_group_ng")
+				contactMenu=QtGui.QMenu(self)
+				if item.name!=self.specialName:
+					action=contactMenu.addAction(self.tr("Move to group"))
+					action.jid=jid
+					action.oldItem=oldItem
+					action.item=item
+					action.setObjectName("move_to_group_ng")
+					
+					action=contactMenu.addAction(self.tr("Copy to group"))
+					action.jid=jid
+					action.item=item
+					action.setObjectName("copy_to_group_ng")
 				# signal
 				contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.dropMenuTriggered)
 				contactMenu.popup(self.mapToGlobal(position))
@@ -1840,21 +1841,22 @@ class rosterWidget(QtGui.QWidget):
 				#q=unicode(q)
 				# build contact menu
 				contactMenu=QtGui.QMenu(self)
-				action=contactMenu.addAction(self.tr("Move to group"))
-				action.jid=jid
-				action.oldItem=oldItem
-				action.item=item
-				action.setObjectName("move_to_group_nn")
+				if self.specialName!=item.group:
+					action=contactMenu.addAction(self.tr("Move to group"))
+					action.jid=jid
+					action.oldItem=oldItem
+					action.item=item
+					action.setObjectName("move_to_group_nn")
 				
 				action=contactMenu.addAction(self.tr("Make metacontact"))
 				action.item=item
 				action.oldItem=oldItem
 				action.setObjectName("make_metacontact_nn")
-				
-				action=contactMenu.addAction(self.tr("Copy to group"))
-				action.jid=jid
-				action.item=item
-				action.setObjectName("copy_to_group_nn")
+				if self.specialName!=item.group:
+					action=contactMenu.addAction(self.tr("Copy to group"))
+					action.jid=jid
+					action.item=item
+					action.setObjectName("copy_to_group_nn")
 				# signal
 				contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.dropMenuTriggered)
 				contactMenu.popup(self.mapToGlobal(position))
