@@ -577,7 +577,39 @@ class chatWindow(QtGui.QMainWindow):
 			w.chat.changeTopic(unicode(subject))
 			#w.chat.ui.info.setCursorPosition(0)
 		# set links, if we found them
-					
+
+		# avatar
+
+		if self.main.client.groupchats[w.jid].users.has_key(user):
+			truejid = self.main.client.groupchats[w.jid].users[user].truejid
+			print truejid
+			if truejid:
+				truejid=unicode(jidT.JID(truejid).userhost())
+				print truejid
+		else:
+			truejid = None
+
+		file = None
+		#print self.main.client.avatars
+		if self.main.client.avatars.has_key(w.jid+'%'+user):
+			file = self.main.homeDir+'/avatars/'+unicode(w.jid+'%'+user)
+		elif truejid != None and self.main.client.avatars.has_key(truejid):
+			file = self.main.homeDir+'/avatars/'+unicode(truejid)
+		else:
+			#self.getVCard(frm+'/'+user) #tohle asi neni potreba
+			pass
+
+		if not os.path.isfile(unicode(file)):
+			print truejid, w.jid, user
+			#sef@njs.netlab.cz/Doma jabber@conf.netlab.cz Sef 
+			file="images/32x32/apps/jabbim.png"
+		if unicode(user)==unicode(w.jid):
+			file = "images/32x32/categories/conferences.png"
+		if not w.chat.sizes.has_key(file):
+			#pixmap=QtGui.QPixmap(file).scaledToHeight(32)
+			pixmap=QtGui.QPixmap(file).scaled(32,32,QtCore.Qt.KeepAspectRatio)
+			w.chat.sizes[file]=[str(pixmap.width()),str(pixmap.height())]
+
 		# no delay message
 		if delay==None or len(delay)==0:
 			# it's our message
@@ -613,34 +645,8 @@ class chatWindow(QtGui.QMainWindow):
 						message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
 					
 			
-			if self.main.client.groupchats[w.jid].users.has_key(user):
-				truejid = self.main.client.groupchats[w.jid].users[user].truejid
-				print truejid
-				if truejid:
-					truejid=unicode(jidT.JID(truejid).userhost())
-					print truejid
-			else:
-				truejid = None
-			file = None
-			#print self.main.client.avatars
-			if self.main.client.avatars.has_key(w.jid+'%'+user):
-				file = self.main.homeDir+'/avatars/'+unicode(w.jid+'%'+user)
-			elif truejid != None and self.main.client.avatars.has_key(truejid):
-				file = self.main.homeDir+'/avatars/'+unicode(truejid)
-			else:
-				#self.getVCard(frm+'/'+user) #tohle asi neni potreba
-				pass
 
-			if not os.path.isfile(unicode(file)):
-				print truejid, w.jid, user
-				#sef@njs.netlab.cz/Doma jabber@conf.netlab.cz Sef 
-				file="images/32x32/apps/jabbim.png"
-			if unicode(user)==unicode(w.jid):
-				file = "images/32x32/categories/conferences.png"
-			if not w.chat.sizes.has_key(file):
-				#pixmap=QtGui.QPixmap(file).scaledToHeight(32)
-				pixmap=QtGui.QPixmap(file).scaled(32,32,QtCore.Qt.KeepAspectRatio)
-				w.chat.sizes[file]=[str(pixmap.width()),str(pixmap.height())]
+
 				
 			message=message.replace("[avatar]","<img src=\""+file+"\" height=\""+w.chat.sizes[file][1]+"\" width=\""+w.chat.sizes[file][0]+"\" />")
 			message=message.replace('[message]',body)
@@ -662,7 +668,7 @@ class chatWindow(QtGui.QMainWindow):
 					message=self.main.skin["message_for_me_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
 				else:
 					message=self.main.skin["message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
-
+			message=message.replace("[avatar]","<img src=\""+file+"\" height=\""+str(int(w.chat.sizes[file][1])/2)+"\" width=\""+str(int(w.chat.sizes[file][0])/2)+"\" />")
 			colors=None
 			if len(w.chat.getUserItems(user))!=0:
 				item=w.chat.getUserItems(user)[0]

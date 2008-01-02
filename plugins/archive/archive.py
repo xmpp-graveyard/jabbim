@@ -253,12 +253,12 @@ class Plugin(plugins.PluginBase):
 				it=None
 				user=unicode(jid.full())
 			
-			avatar="<img src=\""+widget.file+"\" width=\"32\" height=\""+str(widget.avatarHeight)+"\" />"
+			avatar="<img src=\""+widget.file+"\" width=\"16\" height=\""+str(widget.avatarHeight/2)+"\" />"
 			
 			file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
 			if not os.path.isfile(file):
 				file="images/32x32/apps/jabbim.png"
-			selfavatar="<img src=\""+file+"\" width=\"32\" height=\""+str(widget.selfHeight)+"\" />"
+			selfavatar="<img src=\""+file+"\" width=\"16\" height=\""+str(widget.selfHeight/2)+"\" />"
 	
 			
 			jid=unicode(jid.userhost())
