@@ -1987,7 +1987,7 @@ class mainWindow(QtGui.QMainWindow):
 			if not self.plugins.has_key(plugin):
 				plug = load_source(plugin, path, f).Plugin(self, self.homeDir)
 				self.plugins[plugin] = plug
-				#self.runPluginCommand(self.plugins[plugin].buildRosterMenu,[])
+				self.runPluginCommand(self.plugins[plugin].buildRosterMenu,[])
 			else:
 				print "plugin already loaded"
 			f.close()
