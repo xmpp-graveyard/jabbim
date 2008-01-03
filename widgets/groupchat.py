@@ -369,6 +369,16 @@ class groupChatWidget(QtGui.QWidget):
 		self.ui.clearChat.setToolTip(self.tr("Clear chat"))
 		self.flowLayout.addWidget(self.ui.clearChat)
 		QtCore.QObject.connect(self.ui.clearChat, QtCore.SIGNAL("clicked ()"),self.clearChat)
+						
+		self.ui.toggleInfo=QtGui.QToolButton()
+		self.ui.toggleInfo.setIconSize(QtCore.QSize(16,16))
+		self.ui.toggleInfo.setIcon(QtGui.QIcon("images/16x16/actions/info.png"))
+		self.ui.toggleInfo.setCheckable(True)
+		self.ui.toggleInfo.setToolTip(self.tr("Show room info"))
+		self.flowLayout.addWidget(self.ui.toggleInfo)
+		QtCore.QObject.connect(self.ui.toggleInfo, QtCore.SIGNAL("toggled(bool)"),self.toggleInfo)
+						
+		self.ui.admin.hide()
 		self.ui.admin.hide()
 
 		self.flowLayout.addStretch()
@@ -702,7 +712,15 @@ class groupChatWidget(QtGui.QWidget):
 		if self.main.skin.has_key("on_init"):
 			self.init=self.main.skin["on_init"]
 		self.ui.textEdit.setHtml("<br/>"+self.init)
-	
+
+	def toggleInfo(self, b):
+		log.msg("Info toggled:"+`b`)
+		if b:
+			self.ui.disco_info.show()
+			self.ui.toggleInfo.setToolTip(self.tr("Hide room info"))
+		else:
+			self.ui.disco_info.hide()
+			self.ui.toggleInfo.setToolTip(self.tr("Show room info"))
 	def roomConfigClicked(self):
 		nick=self.main.client.groupchats[self.jid].nick
 		if self.main.client.groupchats[self.jid].users[nick].affiliation=="owner":
