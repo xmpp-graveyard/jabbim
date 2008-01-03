@@ -1196,7 +1196,7 @@ class mainWindow(QtGui.QMainWindow):
 				os.remove(self.realHomeDir+'/config')
 				utils.loadConfig(self,statusMess) # load config files
 		else:
-			self.homeDir=self.realHomeDir+"/"+profiles[0]
+			self.homeDir=self.realHomeDir+"/"+self.config['jid']+"-profile"
 			utils.loadConfig(self,statusMess) # load config files
 		
 		if sys.platform != 'win32':
@@ -2749,6 +2749,11 @@ class mainWindow(QtGui.QMainWindow):
 				self.config['passwd']=""
 			self.config['jid']=jid
 			self.config.write()
+
+		f=open(self.realHomeDir+"/config",'w')
+		self.config.write(f)
+		f.close()
+		
 		if self.client==None:
 			if self.config.has_key('resource'):
 				resource=''.join(self.config['resource'])
@@ -2815,6 +2820,7 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.actionJoin_Groupchat.setEnabled(False)
 		MainWindow.ui.actionService_Discovery.setEnabled(False)
 		self.ui.login_cancel.show()
+		self.ui.profilesList.setEnabled(True)
 
 		#MainWindow.client.roster = {'users':{},'groups':{}}
 		#MainWindow.client.roster_meta = {} # jid: {'tag':tag,  'order': 1}
