@@ -161,12 +161,13 @@ class Client(derived):
 	def _heartbeatErr(self, err):
 		if err.type == TimeoutError:
 			log.msg('heartbeat failed')
+			self.xping.stop()
 			self.connection.disconnect()
 			self.factory.stopTrying()
 			self.connection = None
 			self.factory = None
-			self.main._disconnect(error = 'lost')
-			self.on_disconnect()
+#			self.main._disconnect(error = 'lost')
+#			self.on_disconnect()
 
 
 	def connect(self):
@@ -234,6 +235,9 @@ class Client(derived):
 			
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
+		self.factory.stopTrying()
+		self.connection = None
+		self.factory = None
 		self.main._disconnect(error = 'lost')
 
 		self.on_disconnect()
