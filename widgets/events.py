@@ -413,6 +413,8 @@ class events:
 		else:
 			self.trayIcon=QtGui.QIcon("images/16x16/categories/event.png")
 			self.timer.start(500)
+		if not 'message' in types and not 'newMessage' in types:
+			self.main.chat.flashStatus=False
 		self.main.ui.roster.refreshEvents()
 
 	def getEvents(self,name,typ):
