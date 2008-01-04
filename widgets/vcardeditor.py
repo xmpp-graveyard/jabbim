@@ -328,9 +328,25 @@ class vcardEditorDialog(QtGui.QDialog):
 			if url != None:
 				if len(url) != 0:
 					self.data.addElement('URL', content = unicode(url))
-
-			#print unicode(self.data),type(self.data)
-			#print "NEW",unicode(self.data.toXml())
-
-			self.main.client.setVCard(self.data)
+			self.ui.download.setText(self.tr("Saving VCard"))
+			self.ui.download.show()
+			self.ui.pushButton.setEnabled(False)
+			self.ui.pushButton_2.setEnabled(False)
+			self.main.client.setVCard(self.data).addCallback(self.vcard_set).addErrback(self.vcard_set_error)
+			
+		else:
+			self.done(1)
+	
+	def vcard_set(self,data=None):
+		self.main.client.getVCard(self.main.client.jid.userhost())
 		self.done(1)
+
+	def vcard_set_error(self,data=None):
+		self.ui.download.setText(self.tr("Can't send VCard to the server"))
+		self.ui.download.show()
+		self.ui.pushButton.setEnabled(True)
+		self.ui.pushButton_2.setEnabled(True)
+		#self.done(1)
+	
+	#def getVCard_(self,data,jid):
+		#return self.main.client.getVCard(self,jid)
