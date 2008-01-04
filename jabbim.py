@@ -1003,13 +1003,6 @@ class clientClass(pyxl.client.Client):
 				# add new chattab
 				if self.main.chat.isHidden():
 					self.main.chat.showMinimized()
-				self.main.chat.addChatTab(frm.full(),unicode(user),icon,message)
-				tab,tabIndex=self.main.chat.findTab(frm.full())
-				if tab:
-					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
-					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
-					self.main.chat.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)
-					tab.chat.unread+=1
 				if len(body)>40:
 						traytext=body[:40]+" ..."
 				else:
@@ -1024,6 +1017,14 @@ class clientClass(pyxl.client.Client):
 				text+="</td></tr></table>"
 				self.main.events.addInfoEvent(header=self.main.tr("New message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[],tooltip=text)
 				self.main.tray.showMessage(self.main.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
+				self.main.chat.addChatTab(frm.full(),unicode(user),icon,message)
+				tab,tabIndex=self.main.chat.findTab(frm.full())
+				if tab:
+					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
+					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
+					self.main.chat.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)
+					tab.chat.unread+=1
+
 
 		
 		# we found tab

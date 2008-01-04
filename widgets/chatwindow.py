@@ -410,41 +410,41 @@ class chatWindow(QtGui.QMainWindow):
 		if int(ev.type())==24:
 			if self.isActiveWindow():
 				widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
-		
-				if self.active==None and widget.typ=="chat":
-					#for i in range(self.ui.chatTab.count()):
-						#w=self.ui.chatTab.widget(i)
-						#if w.typ=="chat":
-							#self.main.client.sendMessage(str(w.jid),"",composing="active")
-					widget.active=True
-					self.main.client.sendMessage(str(widget.jid),"",composing="active")
-					self.main.client.dispatcher.publishEvent('onActivity')
-					print "publishing onActivity event"
-				if self.active==False:
-					self.main.client.dispatcher.publishEvent('onActivity')
-					print "publishing onActivity event"
-				index=int(self.ui.chatTab.currentIndex())
-				self.changeTab(index)
-				widget=self.ui.chatTab.widget(index)
-				widget.chat.unread=0
-				self.setWindowTitle(unicode(self.ui.chatTab.tabText(index)).replace("&",""))
-				self.active=True
-				print "activated..........."
-				
-				#print self.main.events.events
-				ev2=list(self.main.events.events)
-				r=False
-				for event in ev2:
-					if event['name']==widget.jid and (event['type']=="newMessage" or event['type']=="message"):
-						event['widget'].closeClicked()
-						r=True
-				if r:
-					print "some events was removed"
-					self.flashStatus=False
-						#break
-				self.main.events.refreshTray()
-				color=self.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
-				self.ui.chatTab.tabBar().setTabTextColor(self.ui.chatTab.currentIndex(),color)
+				if widget:
+					if self.active==None and widget.typ=="chat":
+						#for i in range(self.ui.chatTab.count()):
+							#w=self.ui.chatTab.widget(i)
+							#if w.typ=="chat":
+								#self.main.client.sendMessage(str(w.jid),"",composing="active")
+						widget.active=True
+						self.main.client.sendMessage(str(widget.jid),"",composing="active")
+						self.main.client.dispatcher.publishEvent('onActivity')
+						print "publishing onActivity event"
+					if self.active==False:
+						self.main.client.dispatcher.publishEvent('onActivity')
+						print "publishing onActivity event"
+					index=int(self.ui.chatTab.currentIndex())
+					self.changeTab(index)
+					widget=self.ui.chatTab.widget(index)
+					widget.chat.unread=0
+					self.setWindowTitle(unicode(self.ui.chatTab.tabText(index)).replace("&",""))
+					self.active=True
+					print "activated..........."
+					
+					#print self.main.events.events
+					ev2=list(self.main.events.events)
+					r=False
+					for event in ev2:
+						if event['name']==widget.jid and (event['type']=="newMessage" or event['type']=="message"):
+							event['widget'].closeClicked()
+							r=True
+					if r:
+						print "some events was removed"
+						self.flashStatus=False
+							#break
+					self.main.events.refreshTray()
+					color=self.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
+					self.ui.chatTab.tabBar().setTabTextColor(self.ui.chatTab.currentIndex(),color)
 				self.timer.stop()
 		elif int(ev.type())==25:
 			if self.active:
@@ -770,7 +770,7 @@ class chatWindow(QtGui.QMainWindow):
 		if message:
 			tab.unread=1
 			self.setWindowTitle("(1) "+unicode(name))
-			if not self.isActiveWindow():
+			if not self.isActiveWindow() or self.windowState() & QtCore.Qt.WindowMinimized:
 				self.startFlash()
 		else:
 			self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
