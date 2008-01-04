@@ -1086,7 +1086,7 @@ class clientClass(pyxl.client.Client):
 
 		if unicode(self.jid.userhost())==unicode(jid):
 			print "Setting avatar"
-			avatar=pixmap.scaledToHeight(48)
+			avatar=pixmap.scaledToHeight(48,QtCore.Qt.SmoothTransformation)
 			self.main.selfAvatar=pixmap
 			self.main.ui.selfAvatar.setPixmap(avatar)
 			self.main.ui.selfAvatar.setMinimumWidth(avatar.width()+3)
