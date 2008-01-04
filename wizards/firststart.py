@@ -51,7 +51,7 @@ def createFirstPage(wizard):
 	
 	wizard.newAccount=QtGui.QRadioButton(wizard.tr("Create new Jabber account"))
 	wizard.newAccount.setChecked(True)
-	wizard.oldAccount=QtGui.QRadioButton(wizard.tr("Use existed Jabber account"))
+	wizard.oldAccount=QtGui.QRadioButton(wizard.tr("Use existing Jabber account"))
 	
 	layout=QtGui.QGridLayout()
 	layout.addWidget(wizard.label,0,0,1,2)

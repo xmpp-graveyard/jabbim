@@ -3,7 +3,7 @@ Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
 
 This program is free software; you can redistribute it and/or
-#modify it under the terms of the GNU General Public License
+modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
 of the License, or (at your option) any later version.
 
@@ -25,6 +25,7 @@ import os
 from profiles_ui import *
 from include import utils
 import shutil
+from twisted.python import log
 try:
 	from wizards import firststart
 except:
@@ -36,7 +37,9 @@ class passwordChangeDialog(QtGui.QDialog):
 		self.main=main
 		layout=QtGui.QGridLayout(self)
 		self.setWindowTitle(self.tr("Password Change"))
-		header=QtGui.QLabel(self.tr('Enter your new password.'),self)
+		header=QtGui.QLabel(self.tr('Enter your new password:'),self)
+		header2=QtGui.QLabel(self.tr('Confirm password:'),self)
+		self.dif=QtGui.QLabel(self.tr('Passwords vary.'))
 		self.pass1=QtGui.QLineEdit(self)
 		self.pass1.setEchoMode(QtGui.QLineEdit.Password)
 		self.pass2=QtGui.QLineEdit(self)
@@ -52,15 +55,19 @@ class passwordChangeDialog(QtGui.QDialog):
 		
 		layout.addWidget(header,0,0,1,2)
 		layout.addWidget(self.pass1,1,0,1,2)
-		layout.addWidget(self.pass2,2,0,1,2)
-		layout.addWidget(no,3,0,1,1)
-		layout.addWidget(self.ok,3,1,1,1)
+		layout.addWidget(header2,2,0,1,2)
+		layout.addWidget(self.pass2,3,0,1,2)
+		layout.addWidget(no,4,0,1,1)
+		layout.addWidget(self.ok,4,1,1,1)
+		layout.addWidget(self.dif,5,0,1,2)
 
 	def textChanged(self,text):
 		if self.pass1.text()==self.pass2.text() and len(unicode(self.pass1.text()))!=0:
 			self.ok.setEnabled(True)
+			self.dif.setText(self.tr('Passwords identify.'))
 		else:
 			self.ok.setEnabled(False)
+			self.dif.setText(self.tr('Passwords vary.'))
 			
 	def accept(self):
 		text=unicode(self.pass1.text())
@@ -124,13 +131,15 @@ class profilesWindow(QtGui.QMainWindow):
 	def removeProfile(self):
 		item=self.ui.profilesList.currentItem()
 		jid=unicode(item.text())
-		shutil.rmtree(self.main.realHomeDir+"/"+jid+"-profile",True)
-		profiles=self.loadProfiles()
-		print profiles
-		if len(profiles)>0:
-			print "profilechanged"
-			self.main.profileChanged(profiles[0].replace("-profile",''))
-		self.main.fillLoginForm()
+		ret=QtGui.QMessageBox.question(self,self.tr("Remove profile?"), self.tr("Do you really want to remove profile ")+unicode(jid)+"?",QtGui.QMessageBox.Yes|QtGui.QMessageBox.No, QtGui.QMessageBox.Yes)  
+		if ret==QtGui.QMessageBox.Yes:
+			shutil.rmtree(self.main.realHomeDir+"/"+jid+"-profile",True)
+			profiles=self.loadProfiles()
+			print profiles
+			if len(profiles)>0:
+				print "profilechanged"
+				self.main.profileChanged(profiles[0].replace("-profile",''))
+			self.main.fillLoginForm()
 
 	def profileChanged(self):
 		if self.ui.profilesList.currentItem():
