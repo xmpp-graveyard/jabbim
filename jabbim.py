@@ -1179,7 +1179,7 @@ class mainWindow(QtGui.QMainWindow):
 			if USE_WIZARDS:
 				self.startwiz=wizards.firststart.firstStartWizard(self,self)
 				self.startwiz.show()
-
+		self.log=None
 
 
 		statusMess=[]
@@ -1348,8 +1348,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.loadTheme()
 		self.ui.roster.reskin()
 		if self.config['log'] == 'true':
-			logfile = open(self.homeDir+'/'+self.config['logfile'], 'w')
-			log.startLogging(logfile)
+			self.logfile = open(self.homeDir+'/'+self.config['logfile'], 'w')
+			self.log=log.FileLogObserver(self.logfile)
+			log.startLoggingWithObserver(self.log.emit)
 		
 		#self.events.addInfoEvent(header=self.tr("New message"),text=self.tr("From: "),name=unicode('ss'),typ='newMessage',icon="images/16x16/actions/message.png")
 
@@ -1668,6 +1669,17 @@ class mainWindow(QtGui.QMainWindow):
 	def profileChanged(self,jid):
 		self.homeDir=unicode(self.realHomeDir+"/"+jid+"-profile")
 		utils.loadConfig(self,[]) # load config files
+		if self.config['log'] == 'true':
+			logfile = open(self.homeDir+'/'+self.config['logfile'], 'w')
+			start=True
+			if self.log:
+				start=False
+				log.removeObserver(self.log.emit)
+			self.log=log.FileLogObserver(logfile)
+			log.addObserver(self.log.emit)
+			if start:
+				log.startLoggingWithObserver(self.log.emit, setStdout=0)
+
 		self.fillLoginForm()
 		self.loadTheme()
 		self.ui.roster.reskin()
