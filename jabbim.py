@@ -37,7 +37,7 @@ from twisted.internet import reactor, threads
 from twisted.internet.defer import DeferredList
 from twisted.python import log
 import shutil
-import time,base64
+import time,base64, re
 try:
 	from hashlib import sha1
 except:
@@ -2736,6 +2736,12 @@ class mainWindow(QtGui.QMainWindow):
 
 	def connect(self):
 		# Connect to the server
+		jid=unicode(self.ui.login_jid.text()) 
+		if not re.match(r'.+@.+', jid): 
+			self.ui.login_jid.setFocus(QtCore.Qt.OtherFocusReason) 
+			if jid.find('@') == -1: 
+				self.ui.login_jid.setText(jid + '@') 
+			return 
 		self.ui.rosterStackedWidget.setCurrentIndex(2)
 		self.ui.login_connect.setEnabled(False)
 		self.ui.profilesList.setEnabled(False)
