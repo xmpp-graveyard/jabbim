@@ -1051,10 +1051,10 @@ class groupChatWidget(QtGui.QWidget):
 				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 				return
 			elif services.startswith("/join "):
-				self.main.client.sendPresence(to=self.jid+"/"+services.replace("/nick ",""))
-				self.main.client.groupchats[self.jid].nick=services.replace("/nick ","")
-				#if self.main.chat.addGroupChatTab(room+"@"+server,nickname):
-					#self.main.client.joinGC(room+"@"+server, nickname)
+				#self.main.client.sendPresence(to=self.jid+"/"+services.replace("/nick ",""))
+				#self.main.client.groupchats[self.jid].nick=services.replace("/nick ","")
+				if self.main.chat.addGroupChatTab(services.replace("/join ",""),self.main.client.groupchats[self.jid].nick):
+					self.main.client.joinGC(services.replace("/join ",""), self.main.client.groupchats[self.jid].nick)
 				self.ui.line.clear()
 				#self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 				return
