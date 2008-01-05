@@ -538,11 +538,15 @@ class clientClass(pyxl.client.Client):
 					w.chat.editUser(nick,show,role,affiliation)
 					break
 		# message skin
-		message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",show).replace('[nick]', nick)
+		mainWindow=self.main
+		message="[nick] "+unicode(mainWindow.tr('is now'))+" [show] [[message]]"
 		if status == None:
 			message = message.replace("[[message]]",'')
 		else:
 			message = message.replace("[message]",unicode(status))
+		message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', nick)
+		message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
+
 		w.chat.textEditWrite(message)
 		tab,index=self.main.chat.findTab(muc+"/"+nick)
 		if w and tab:
@@ -2154,6 +2158,7 @@ class mainWindow(QtGui.QMainWindow):
 							expanded.append(name)
 					self.config['expandedGroups']=expanded
 					self.config.write()
+		print self.config['askBeforeQuitMUC']
 		f=open(self.realHomeDir+"/config",'w')
 		self.config.write(f)
 		f.close()
@@ -2871,7 +2876,7 @@ class mainWindow(QtGui.QMainWindow):
 						w.chat.ui.line.setEnabled(False)
 						w.chat.ui.users.clear()
 						w.chat.addRoles()
-						message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",self.tr("You are now offline."))
+						message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",unicode(self.tr("You are now offline.")))
 						w.chat.textEditWrite(message)
 		MainWindow.client = None
 		if error == 'lost' and MainWindow.reconnect:
