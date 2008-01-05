@@ -2715,9 +2715,11 @@ class mainWindow(QtGui.QMainWindow):
 
 	def connectCancel(self):
 		print "DISCONNECT"
-		self.client.factory.stopTrying()
+		if self.client:
+			self.client.factory.stopTrying()
 		self.reconnect = False
-		self.client.disconnect()
+		if self.client:
+			self.client.disconnect()
 		self._disconnect()
 
 	def connect(self):
@@ -2734,60 +2736,62 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.loginInfo.setText(self.tr("Connecting to the server..."))
 		self.config['autoJoin']=unicode(self.ui.login_autoconnect.isChecked())
 		profiles=utils.getProfiles(self.realHomeDir)
-		if jid+"-profile" in profiles:
-			self.homeDir=self.realHomeDir+"/"+jid+"-profile"
-			utils.loadConfig(self,[]) # load config files
-			if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
-				
-				if (jid!=self.config['jid'] or ( unicode(self.ui.login_savePassword.isChecked())=="True" and unicode(rot13.scramble(password))!=unicode(self.config['passwd']))) or unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked()):
-					print jid!=self.config['jid']
-					print unicode(rot13.scramble(password))!=unicode(self.config['passwd'])
-					#print unicode(self.config['savePasswd'])=="True"
-					print unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked())
-					ret=QtGui.QMessageBox.question(self,self.tr("Login information"), self.tr("Save current login information?"),3,4)
-					if ret==3:
-						self.config['savePasswd']=self.ui.login_savePassword.isChecked()
-						if self.ui.login_savePassword.isChecked()==True:
-							self.config['passwd']=rot13.scramble(password)
-						else:
-							self.config['passwd']=""
-						self.config['jid']=jid
-						self.config.write()
-		else:
-			#ret=QtGui.QMessageBox.question(self,self.tr("New profile"), self.tr("Profile for this JID doesn't exist. Do you want to create it?"),3,4)
-			#if ret==3:
-			self.homeDir=self.realHomeDir+"/"+jid+"-profile"
-			if not os.path.isdir(self.homeDir):
-				os.mkdir(self.homeDir)
-			f=open(self.homeDir+"/config",'w')
+		if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
+	
+			if jid+"-profile" in profiles:
+				self.homeDir=self.realHomeDir+"/"+jid+"-profile"
+				utils.loadConfig(self,[]) # load config files
+				if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
+					
+					if (jid!=self.config['jid'] or ( unicode(self.ui.login_savePassword.isChecked())=="True" and unicode(rot13.scramble(password))!=unicode(self.config['passwd']))) or unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked()):
+						print jid!=self.config['jid']
+						print unicode(rot13.scramble(password))!=unicode(self.config['passwd'])
+						#print unicode(self.config['savePasswd'])=="True"
+						print unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked())
+						ret=QtGui.QMessageBox.question(self,self.tr("Login information"), self.tr("Save current login information?"),3,4)
+						if ret==3:
+							self.config['savePasswd']=self.ui.login_savePassword.isChecked()
+							if self.ui.login_savePassword.isChecked()==True:
+								self.config['passwd']=rot13.scramble(password)
+							else:
+								self.config['passwd']=""
+							self.config['jid']=jid
+							self.config.write()
+			else:
+				#ret=QtGui.QMessageBox.question(self,self.tr("New profile"), self.tr("Profile for this JID doesn't exist. Do you want to create it?"),3,4)
+				#if ret==3:
+				self.homeDir=self.realHomeDir+"/"+jid+"-profile"
+				if not os.path.isdir(self.homeDir):
+					os.mkdir(self.homeDir)
+				f=open(self.homeDir+"/config",'w')
+				self.config.write(f)
+				f.close()
+				utils.loadConfig(self,[]) # load config files
+				self.config['savePasswd']=self.ui.login_savePassword.isChecked()
+				if self.ui.login_savePassword.isChecked()==True:
+					self.config['passwd']=rot13.scramble(password)
+				else:
+					self.config['passwd']=""
+				self.config['jid']=jid
+				self.config.write()
+	
+			f=open(self.realHomeDir+"/config",'w')
 			self.config.write(f)
 			f.close()
-			utils.loadConfig(self,[]) # load config files
-			self.config['savePasswd']=self.ui.login_savePassword.isChecked()
-			if self.ui.login_savePassword.isChecked()==True:
-				self.config['passwd']=rot13.scramble(password)
-			else:
-				self.config['passwd']=""
-			self.config['jid']=jid
-			self.config.write()
-
-		f=open(self.realHomeDir+"/config",'w')
-		self.config.write(f)
-		f.close()
-		
-		if self.client==None:
-			if self.config.has_key('resource'):
-				resource=''.join(self.config['resource'])
-			else:
-				resource='jabbim'
-			self.client = clientClass(jid+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
-			self.client.xmlLang = unicode(QtCore.QLocale.system().name())[:2]
-			self.client.log=True
-		f=open(self.realHomeDir+"/config",'w')
-		self.config.write(f)
-		f.close()
-		self.reconnect = True
-		self.client.connect()
+			
+			if self.client==None:
+				if self.config.has_key('resource'):
+					resource=''.join(self.config['resource'])
+				else:
+					resource='jabbim'
+				self.client = clientClass(jid+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
+				self.client.xmlLang = unicode(QtCore.QLocale.system().name())[:2]
+				self.client.log=True
+			f=open(self.realHomeDir+"/config",'w')
+			self.config.write(f)
+			f.close()
+			self.reconnect = True
+			self.client.connect()
 	
 	def _loadAvatar(self,file, hash, jid):
 		if os.path.isfile(unicode(file)):
@@ -2818,8 +2822,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def _disconnect(self, error = None): # error = None | dns | lost | auth | failed
 		self.tray.setIcon(QtGui.QIcon(QtGui.QIcon("images/16x16/apps/jabbim.png").pixmap(16,16,QtGui.QIcon.Disabled)))
-		if not self.client:
-			return
+
 		if error=="auth":
 			QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Bad Jabber ID or password.")),0,1)
 		elif error=="dns":

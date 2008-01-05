@@ -503,7 +503,8 @@ class groupChatWidget(QtGui.QWidget):
 				}
 		for f in self.disco_features:
 			if f in possible_features.keys():
-				features.append(unicode(possible_features[f]))
+				if not unicode(possible_features[f]) in features:
+					features.append(unicode(possible_features[f]))
 			else:
 				log.msg("Unknown room feature: %s" % f)
 		

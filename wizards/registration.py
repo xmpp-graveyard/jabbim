@@ -16,77 +16,77 @@ from twisted.words.protocols.jabber.xmlstream import IQ
 import base64
 
 servers=["jabbim.cz","jabbim.sk","jabbim.pl","jabbim.com","jabber.cz","njs.netlab.cz"]
-def createFirstPage(wizard):
+def createFirstPage(registrationWizard):
 	# language and server
 	page=QtGui.QWizardPage()
-	page.setTitle(wizard.tr("Introduction"))
+	page.setTitle(registrationWizard.tr("Introduction"))
 
-	label=QtGui.QLabel(wizard.trUtf8("Server je místo, kde jsou uložena Vaše uživatelská data."))
+	label=QtGui.QLabel(registrationWizard.trUtf8("Server je místo, kde jsou uložena Vaše uživatelská data."))
 	label.setWordWrap(True)
 
-	label2=QtGui.QLabel(wizard.trUtf8("Jabber ID (JID) je obdoba emailové adresy. Je to Váš identifikátor v sítich jabber a ostatní uživatelé Vám na tuto adresu mohou pomocí jabberu psát."))
+	label2=QtGui.QLabel(registrationWizard.trUtf8("Jabber ID (JID) je obdoba emailové adresy. Je to Váš identifikátor v sítich jabber a ostatní uživatelé Vám na tuto adresu mohou pomocí jabberu psát."))
 	label2.setWordWrap(True)
 
-	wizard.label=QtGui.QLabel("")
-	wizard.label.setWordWrap(True)
+	registrationWizard.label=QtGui.QLabel("")
+	registrationWizard.label.setWordWrap(True)
 
-	#label2=QtGui.QLabel(wizard.tr("Server je místo, kde jsou uložena Vaše uživatelská data.")
+	#label2=QtGui.QLabel(registrationWizard.tr("Server je místo, kde jsou uložena Vaše uživatelská data.")
 	#label2.setWordWrap(True)
 
-	#wizard.serverLab=QtGui.QLabel()
-	wizard.jidLabel=QtGui.QLabel()
+	#registrationWizard.serverLab=QtGui.QLabel()
+	registrationWizard.jidLabel=QtGui.QLabel()
 
-	nicknameLabel=QtGui.QLabel(wizard.tr("Nickname:"))
-	wizard.nicknameLineEdit=QtGui.QLineEdit()
-	#wizard.serverLabel=QtGui.QLabel()
+	nicknameLabel=QtGui.QLabel(registrationWizard.tr("Nickname:"))
+	registrationWizard.nicknameLineEdit=QtGui.QLineEdit()
+	#registrationWizard.serverLabel=QtGui.QLabel()
 	
-	passwordLabel=QtGui.QLabel(wizard.tr("Password:"))
+	passwordLabel=QtGui.QLabel(registrationWizard.tr("Password:"))
 	passwordLineEdit=QtGui.QLineEdit()
 	passwordLineEdit.setEchoMode(QtGui.QLineEdit.Password)
 
-	password2Label=QtGui.QLabel(wizard.tr("Password again:"))
+	password2Label=QtGui.QLabel(registrationWizard.tr("Password again:"))
 	password2LineEdit=QtGui.QLineEdit()
 	password2LineEdit.setEchoMode(QtGui.QLineEdit.Password)
 	
-	serverLabel=QtGui.QLabel(wizard.tr("Server:"))
-	wizard.serverComboBox=QtGui.QComboBox()
-	wizard.serverComboBox.addItems(QtCore.QStringList([wizard.tr("Choose server")]+servers))
-	wizard.serverComboBox.setEditable(True)
-	QtCore.QObject.connect(wizard.serverComboBox,QtCore.SIGNAL("activated ( const QString & )"),wizard.serverComboBoxActivated)
-	QtCore.QObject.connect(wizard.serverComboBox,QtCore.SIGNAL("editTextChanged ( const QString & )"),wizard.serverComboBoxActivated)
-	QtCore.QObject.connect(wizard.nicknameLineEdit,QtCore.SIGNAL("textEdited ( const QString & )"),wizard.nicknameChanged)
+	serverLabel=QtGui.QLabel(registrationWizard.tr("Server:"))
+	registrationWizard.serverComboBox=QtGui.QComboBox()
+	registrationWizard.serverComboBox.addItems(QtCore.QStringList([registrationWizard.tr("Choose server")]+servers))
+	registrationWizard.serverComboBox.setEditable(True)
+	QtCore.QObject.connect(registrationWizard.serverComboBox,QtCore.SIGNAL("activated ( const QString & )"),registrationWizard.serverComboBoxActivated)
+	QtCore.QObject.connect(registrationWizard.serverComboBox,QtCore.SIGNAL("editTextChanged ( const QString & )"),registrationWizard.serverComboBoxActivated)
+	QtCore.QObject.connect(registrationWizard.nicknameLineEdit,QtCore.SIGNAL("textEdited ( const QString & )"),registrationWizard.nicknameChanged)
 	
 	layout=QtGui.QGridLayout()
-	layout.addWidget(wizard.label,0,0,1,2)
+	layout.addWidget(registrationWizard.label,0,0,1,2)
 	layout.addWidget(label,1,0,1,2)
 	layout.addWidget(serverLabel,2,0,1,1)
-	layout.addWidget(wizard.serverComboBox,2,1,1,1)
+	layout.addWidget(registrationWizard.serverComboBox,2,1,1,1)
 	layout.addWidget(nicknameLabel,3,0,1,1)
-	layout.addWidget(wizard.nicknameLineEdit,3,1,1,1)
+	layout.addWidget(registrationWizard.nicknameLineEdit,3,1,1,1)
 	layout.addWidget(passwordLabel,4,0,1,1)
 	layout.addWidget(passwordLineEdit,4,1,1,1)
 	layout.addWidget(password2Label,5,0,1,1)
 	layout.addWidget(password2LineEdit,5,1,1,1)
 	layout.addWidget(label2,6,0,1,2)
-	layout.addWidget(QtGui.QLabel(wizard.trUtf8("Vaše Jabber ID:")),7,0,1,1)
-	layout.addWidget(wizard.jidLabel,7,1,1,1)
-	page.registerField("server",wizard.serverComboBox)
-	page.registerField("nickname*",wizard.nicknameLineEdit)
+	layout.addWidget(QtGui.QLabel(registrationWizard.trUtf8("Vaše Jabber ID:")),7,0,1,1)
+	layout.addWidget(registrationWizard.jidLabel,7,1,1,1)
+	page.registerField("server",registrationWizard.serverComboBox)
+	page.registerField("nickname*",registrationWizard.nicknameLineEdit)
 	page.registerField("password*",passwordLineEdit)
 	page.registerField("password2*",password2LineEdit)
-	page.setTitle(wizard.trUtf8("Registrace Jabber účtu"))
-	page.setSubTitle(wizard.trUtf8("Vyberte server, na kterém chcete účet zaregistrovat a svoji přezdívku."))
+	page.setTitle(registrationWizard.trUtf8("Registrace Jabber účtu"))
+	page.setSubTitle(registrationWizard.trUtf8("Vyberte server, na kterém chcete účet zaregistrovat a svoji přezdívku."))
 	
 
 	page.setLayout(layout)
 	return page
 
-def createWaitPage(wizard):
+def createWaitPage(registrationWizard):
 	
 	page=QtGui.QWizardPage()
-	page.setTitle(wizard.trUtf8("Registrace Jabber účtu"))
-	page.setSubTitle(wizard.trUtf8("Právě probíhá registrace Vašeho účtu. Prosím vyčkejte."))
-	#label=QtGui.QLabel(wizard.tr("Registering your account."))
+	page.setTitle(registrationWizard.trUtf8("Registrace Jabber účtu"))
+	page.setSubTitle(registrationWizard.trUtf8("Právě probíhá registrace Vašeho účtu. Prosím vyčkejte."))
+	#label=QtGui.QLabel(registrationWizard.tr("Registering your account."))
 	#label.setWordWrap(True)
 	
 	#layout=QtGui.QGridLayout()
@@ -95,13 +95,13 @@ def createWaitPage(wizard):
 	#page.setLayout(layout)
 	return page
 
-def createFinishPage(wizard):
+def createFinishPage(registrationWizard):
 	
 	page=QtGui.QWizardPage()
-	page.setTitle(wizard.trUtf8("Registrace Jabber účtu"))
-	page.setSubTitle(wizard.trUtf8("Vaše registrace byla úspěšně dokončena."))
+	page.setTitle(registrationWizard.trUtf8("Registrace Jabber účtu"))
+	page.setSubTitle(registrationWizard.trUtf8("Vaše registrace byla úspěšně dokončena."))
 
-	#label=QtGui.QLabel(wizard.tr("Your account is registered."))
+	#label=QtGui.QLabel(registrationWizard.tr("Your account is registered."))
 	#label.setWordWrap(True)
 	
 	#layout=QtGui.QGridLayout()
@@ -110,27 +110,27 @@ def createFinishPage(wizard):
 	#page.setLayout(layout)
 	return page
 
-def createSecondPage(wizard):
+def createSecondPage(registrationWizard):
 	
 	page=QtGui.QWizardPage()
-	#page.setTitle(wizard.tr("Email and Nickname"))
-	page.setTitle(wizard.trUtf8("Registrace Jabber účtu"))
-	page.setSubTitle(wizard.trUtf8("Váš účet byl zaregistrován. Nyní stačí jen vyplnit informace o Vás."))
+	#page.setTitle(registrationWizard.tr("Email and Nickname"))
+	page.setTitle(registrationWizard.trUtf8("Registrace Jabber účtu"))
+	page.setSubTitle(registrationWizard.trUtf8("Váš účet byl zaregistrován. Nyní stačí jen vyplnit informace o Vás."))
 	
-	firstnameLabel=QtGui.QLabel(wizard.tr("Firstname:"))
+	firstnameLabel=QtGui.QLabel(registrationWizard.tr("Firstname:"))
 	firstnameLineEdit=QtGui.QLineEdit()
 	
-	surnameLabel=QtGui.QLabel(wizard.tr("Surname:"))
+	surnameLabel=QtGui.QLabel(registrationWizard.tr("Surname:"))
 	surnameLineEdit=QtGui.QLineEdit()
 	
-	emailLabel=QtGui.QLabel(wizard.tr("Email:"))
+	emailLabel=QtGui.QLabel(registrationWizard.tr("Email:"))
 	emailLineEdit=QtGui.QLineEdit()
 	emailLineEdit.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp("^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.(([0-9]{1,3})|([a-zA-Z]{2,3})|(aero|coop|info|museum|name))$"),emailLineEdit))
 	
-	avatarLabel=QtGui.QLabel(wizard.tr("Avatar:"))
-	wizard.avatar=QtGui.QLabel("")
-	button=QtGui.QPushButton(wizard.tr("Open"))
-	QtCore.QObject.connect(button,QtCore.SIGNAL("clicked()"),wizard.setAvatar)
+	avatarLabel=QtGui.QLabel(registrationWizard.tr("Avatar:"))
+	registrationWizard.avatar=QtGui.QLabel("")
+	button=QtGui.QPushButton(registrationWizard.tr("Open"))
+	QtCore.QObject.connect(button,QtCore.SIGNAL("clicked()"),registrationWizard.setAvatar)
 	
 	layout=QtGui.QGridLayout()
 	#layout.addWidget(label,0,0,1,2)
@@ -141,7 +141,7 @@ def createSecondPage(wizard):
 	layout.addWidget(emailLabel,3,0,1,1)
 	layout.addWidget(emailLineEdit,3,1,1,2)
 	layout.addWidget(avatarLabel,4,0,1,1)
-	layout.addWidget(wizard.avatar,4,1,1,1)
+	layout.addWidget(registrationWizard.avatar,4,1,1,1)
 	layout.addWidget(button,4,2,1,1)
 		
 	page.registerField("firstname*",firstnameLineEdit)
@@ -151,29 +151,29 @@ def createSecondPage(wizard):
 	page.setLayout(layout)
 	return page
 
-def createThirdPage(wizard):
+def createThirdPage(registrationWizard):
 	
 	page=QtGui.QWizardPage()
-	#page.setTitle(wizard.tr("JID registration"))
-	page.setTitle(wizard.trUtf8("Registrace Jabber účtu"))
-	page.setSubTitle(wizard.trUtf8("Vyberte si Jabber ID a napište heslo k Vašemu budoucímu účtu."))
+	#page.setTitle(registrationWizard.tr("JID registration"))
+	page.setTitle(registrationWizard.trUtf8("Registrace Jabber účtu"))
+	page.setSubTitle(registrationWizard.trUtf8("Vyberte si Jabber ID a napište heslo k Vašemu budoucímu účtu."))
 
-	wizard.label=QtGui.QLabel("")
-	wizard.label.setWordWrap(True)
+	registrationWizard.label=QtGui.QLabel("")
+	registrationWizard.label.setWordWrap(True)
 	
-	jidLabel=QtGui.QLabel(wizard.tr("JID:"))
+	jidLabel=QtGui.QLabel(registrationWizard.tr("JID:"))
 	jidLineEdit=QtGui.QLineEdit()
-	wizard.serverLabel=QtGui.QLabel()
+	registrationWizard.serverLabel=QtGui.QLabel()
 	
-	passwordLabel=QtGui.QLabel(wizard.tr("Password:"))
+	passwordLabel=QtGui.QLabel(registrationWizard.tr("Password:"))
 	passwordLineEdit=QtGui.QLineEdit()
 	passwordLineEdit.setEchoMode(QtGui.QLineEdit.Password)
 	
 	layout=QtGui.QGridLayout()
-	layout.addWidget(wizard.label,0,0,1,3)
+	layout.addWidget(registrationWizard.label,0,0,1,3)
 	layout.addWidget(jidLabel,1,0,1,1)
 	layout.addWidget(jidLineEdit,1,1,1,1)
-	layout.addWidget(wizard.serverLabel,1,2,1,1)
+	layout.addWidget(registrationWizard.serverLabel,1,2,1,1)
 	layout.addWidget(passwordLabel,2,0,1,1)
 	layout.addWidget(passwordLineEdit,2,1,1,2)
 		
@@ -196,8 +196,9 @@ class registrationClass(register.RegisteringClient):
 					if x['code']=="409":
 						print "nickname conflict"
 						self.main.error="409"
+						registrationWizard=self.main
 						self.main.label.setTextFormat(QtCore.Qt.RichText)
-						self.main.label.setText(self.main.tr("<b>This Jabber ID is already registered by someone else.</b>"))
+						self.main.label.setText(registrationWizard.tr("<b>This Jabber ID is already registered by someone else.</b>"))
 						self.main.registered=False
 						self.main.back()
 	def _authd(self, el):

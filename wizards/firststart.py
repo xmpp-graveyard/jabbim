@@ -9,101 +9,101 @@ from twisted.python import log
 import registration
 import sys
 
-def createFirstPage(wizard):
+def createFirstPage(firstStartWizard):
 	# language and server
 	page=QtGui.QWizardPage()
-	page.setTitle(wizard.tr("Welcome"))
+	page.setTitle(firstStartWizard.tr("Welcome"))
 
-	wizard.label=QtGui.QLabel(wizard.trUtf8("Vítejte ........."))
-	wizard.label.setWordWrap(True)
+	firstStartWizard.label=QtGui.QLabel(firstStartWizard.trUtf8("Vítejte ........."))
+	firstStartWizard.label.setWordWrap(True)
 
-	#label2=QtGui.QLabel(wizard.trUtf8("Jabber ID (JID) je obdoba emailové adresy. Je to Váš identifikátor v sítich jabber a ostatní uživatelé Vám na tuto adresu mohou pomocí jabberu psát."))
+	#label2=QtGui.QLabel(firstStartWizard.trUtf8("Jabber ID (JID) je obdoba emailové adresy. Je to Váš identifikátor v sítich jabber a ostatní uživatelé Vám na tuto adresu mohou pomocí jabberu psát."))
 	#label2.setWordWrap(True)
 
-	#wizard.label=QtGui.QLabel("")
-	#wizard.label.setWordWrap(True)
+	#firstStartWizard.label=QtGui.QLabel("")
+	#firstStartWizard.label.setWordWrap(True)
 
-	#label2=QtGui.QLabel(wizard.tr("Server je místo, kde jsou uložena Vaše uživatelská data.")
+	#label2=QtGui.QLabel(firstStartWizard.tr("Server je místo, kde jsou uložena Vaše uživatelská data.")
 	#label2.setWordWrap(True)
 
-	#wizard.serverLab=QtGui.QLabel()
-	#wizard.jidLabel=QtGui.QLabel()
+	#firstStartWizard.serverLab=QtGui.QLabel()
+	#firstStartWizard.jidLabel=QtGui.QLabel()
 
-	#nicknameLabel=QtGui.QLabel(wizard.tr("Nickname:"))
-	#wizard.nicknameLineEdit=QtGui.QLineEdit()
-	##wizard.serverLabel=QtGui.QLabel()
+	#nicknameLabel=QtGui.QLabel(firstStartWizard.tr("Nickname:"))
+	#firstStartWizard.nicknameLineEdit=QtGui.QLineEdit()
+	##firstStartWizard.serverLabel=QtGui.QLabel()
 	
-	#passwordLabel=QtGui.QLabel(wizard.tr("Password:"))
+	#passwordLabel=QtGui.QLabel(firstStartWizard.tr("Password:"))
 	#passwordLineEdit=QtGui.QLineEdit()
 	#passwordLineEdit.setEchoMode(QtGui.QLineEdit.Password)
 
-	#password2Label=QtGui.QLabel(wizard.tr("Password again:"))
+	#password2Label=QtGui.QLabel(firstStartWizard.tr("Password again:"))
 	#password2LineEdit=QtGui.QLineEdit()
 	#password2LineEdit.setEchoMode(QtGui.QLineEdit.Password)
 	
-	#serverLabel=QtGui.QLabel(wizard.tr("Server:"))
-	#wizard.serverComboBox=QtGui.QComboBox()
-	#wizard.serverComboBox.addItems(QtCore.QStringList([wizard.tr("Choose server")]+servers))
-	#wizard.serverComboBox.setEditable(True)
-	#QtCore.QObject.connect(wizard.serverComboBox,QtCore.SIGNAL("activated ( const QString & )"),wizard.serverComboBoxActivated)
-	#QtCore.QObject.connect(wizard.serverComboBox,QtCore.SIGNAL("editTextChanged ( const QString & )"),wizard.serverComboBoxActivated)
-	#QtCore.QObject.connect(wizard.nicknameLineEdit,QtCore.SIGNAL("textEdited ( const QString & )"),wizard.nicknameChanged)
+	#serverLabel=QtGui.QLabel(firstStartWizard.tr("Server:"))
+	#firstStartWizard.serverComboBox=QtGui.QComboBox()
+	#firstStartWizard.serverComboBox.addItems(QtCore.QStringList([firstStartWizard.tr("Choose server")]+servers))
+	#firstStartWizard.serverComboBox.setEditable(True)
+	#QtCore.QObject.connect(firstStartWizard.serverComboBox,QtCore.SIGNAL("activated ( const QString & )"),firstStartWizard.serverComboBoxActivated)
+	#QtCore.QObject.connect(firstStartWizard.serverComboBox,QtCore.SIGNAL("editTextChanged ( const QString & )"),firstStartWizard.serverComboBoxActivated)
+	#QtCore.QObject.connect(firstStartWizard.nicknameLineEdit,QtCore.SIGNAL("textEdited ( const QString & )"),firstStartWizard.nicknameChanged)
 	
-	wizard.newAccount=QtGui.QRadioButton(wizard.tr("Create new Jabber account"))
-	wizard.newAccount.setChecked(True)
-	wizard.oldAccount=QtGui.QRadioButton(wizard.tr("Use existing Jabber account"))
+	firstStartWizard.newAccount=QtGui.QRadioButton(firstStartWizard.tr("Create new Jabber account"))
+	firstStartWizard.newAccount.setChecked(True)
+	firstStartWizard.oldAccount=QtGui.QRadioButton(firstStartWizard.tr("Use existing Jabber account"))
 	
 	layout=QtGui.QGridLayout()
-	layout.addWidget(wizard.label,0,0,1,2)
-	layout.addWidget(wizard.newAccount,1,0,1,2)
-	layout.addWidget(wizard.oldAccount,2,0,1,2)
+	layout.addWidget(firstStartWizard.label,0,0,1,2)
+	layout.addWidget(firstStartWizard.newAccount,1,0,1,2)
+	layout.addWidget(firstStartWizard.oldAccount,2,0,1,2)
 	
 
 	
-	page.registerField("newAccount",wizard.newAccount)
-	page.registerField("oldAccount",wizard.oldAccount)
-	page.setTitle(wizard.trUtf8("Vitejte...."))
-	page.setSubTitle(wizard.trUtf8("Vyberte jednu z moznosti."))
+	page.registerField("newAccount",firstStartWizard.newAccount)
+	page.registerField("oldAccount",firstStartWizard.oldAccount)
+	page.setTitle(firstStartWizard.trUtf8("Vitejte...."))
+	page.setSubTitle(firstStartWizard.trUtf8("Vyberte jednu z moznosti."))
 	
 
 	page.setLayout(layout)
 	return page
 
 
-def createSecondPage(wizard):
+def createSecondPage(firstStartWizard):
 	# language and server
 	page=QtGui.QWizardPage()
-	page.setTitle(wizard.tr("Welcome"))
+	page.setTitle(firstStartWizard.tr("Welcome"))
 
-	wizard.label=QtGui.QLabel(wizard.trUtf8("K vytvoreni noveho profilu je potreba vyplnit nasledujici formular."))
-	wizard.label.setWordWrap(True)
+	firstStartWizard.label=QtGui.QLabel(firstStartWizard.trUtf8("K vytvoreni noveho profilu je potreba vyplnit nasledujici formular."))
+	firstStartWizard.label.setWordWrap(True)
 
-	jidLabel=QtGui.QLabel(wizard.tr("Jabber ID:"))
-	wizard.jid=QtGui.QLineEdit()
+	jidLabel=QtGui.QLabel(firstStartWizard.tr("Jabber ID:"))
+	firstStartWizard.jid=QtGui.QLineEdit()
 
-	wizard.savePassword=QtGui.QCheckBox(wizard.tr("Save password"))
+	firstStartWizard.savePassword=QtGui.QCheckBox(firstStartWizard.tr("Save password"))
 	
 
-	passwordLabel=QtGui.QLabel(wizard.tr("Password:"))
-	wizard.password=QtGui.QLineEdit()
-	wizard.password.setEchoMode(QtGui.QLineEdit.Password)
-	wizard.password.setEnabled(False)
-	QtCore.QObject.connect(wizard.savePassword,QtCore.SIGNAL("stateChanged ( int )"),wizard.password.setEnabled)
+	passwordLabel=QtGui.QLabel(firstStartWizard.tr("Password:"))
+	firstStartWizard.password=QtGui.QLineEdit()
+	firstStartWizard.password.setEchoMode(QtGui.QLineEdit.Password)
+	firstStartWizard.password.setEnabled(False)
+	QtCore.QObject.connect(firstStartWizard.savePassword,QtCore.SIGNAL("stateChanged ( int )"),firstStartWizard.password.setEnabled)
 
 	layout=QtGui.QGridLayout()
-	layout.addWidget(wizard.label,0,0,1,2)
+	layout.addWidget(firstStartWizard.label,0,0,1,2)
 	layout.addWidget(jidLabel,1,0,1,1)
-	layout.addWidget(wizard.jid,1,1,1,1)
-	layout.addWidget(wizard.savePassword,2,0,1,2)
+	layout.addWidget(firstStartWizard.jid,1,1,1,1)
+	layout.addWidget(firstStartWizard.savePassword,2,0,1,2)
 	layout.addWidget(passwordLabel,3,0,1,1)
-	layout.addWidget(wizard.password,3,1,1,1)
+	layout.addWidget(firstStartWizard.password,3,1,1,1)
 	
-	page.registerField("jid*",wizard.jid)
-	page.registerField("savePassword",wizard.savePassword)
-	page.registerField("password",wizard.password)
+	page.registerField("jid*",firstStartWizard.jid)
+	page.registerField("savePassword",firstStartWizard.savePassword)
+	page.registerField("password",firstStartWizard.password)
 	
-	page.setTitle(wizard.trUtf8("Vitejte...."))
-	page.setSubTitle(wizard.trUtf8("Prihlaseni"))
+	page.setTitle(firstStartWizard.trUtf8("Vitejte...."))
+	page.setSubTitle(firstStartWizard.trUtf8("Prihlaseni"))
 	
 
 	page.setLayout(layout)
