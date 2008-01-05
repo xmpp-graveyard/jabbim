@@ -298,6 +298,7 @@ class rosterWidget(QtGui.QWidget):
 		self.groups[self.specialName]=special()
 		self.users=[]
 		self.iconSize="32x32"
+		self.setObjectName("mainRosterWidget")
 
 		self.setMinimumWidth(150)
 		self.setMinimumHeight(150)
@@ -1214,6 +1215,7 @@ class rosterWidget(QtGui.QWidget):
 				painter.drawPixmap(self.width()-4-32+(int((32-pixmap.width())/2)),y,pixmap)
 
 	def paintEvent(self,event):
+		QtGui.QWidget.paintEvent(self,event)
 		painter=QtGui.QPainter(self)
 		painter.setClipping(True)
 		#painter.setRenderHint(painter.Antialiasing)

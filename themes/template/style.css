@@ -136,3 +136,6 @@ QWidget#selectedItemStyle{
 	background-color:rgba(243,244,248,100%);
 	color:rgba(160,169,199,100%);
 }
+QWidget#mainRosterWidget,QWidget#rosterView,QWidget#rosterTab > QWidget#rosterWidget > QWidget{
+background-color:#FFFFFF;
+}
