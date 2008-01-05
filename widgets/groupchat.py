@@ -1050,6 +1050,14 @@ class groupChatWidget(QtGui.QWidget):
 				self.ui.line.clear()
 				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 				return
+			elif services.startswith("/join "):
+				self.main.client.sendPresence(to=self.jid+"/"+services.replace("/nick ",""))
+				self.main.client.groupchats[self.jid].nick=services.replace("/nick ","")
+				#if self.main.chat.addGroupChatTab(room+"@"+server,nickname):
+					#self.main.client.joinGC(room+"@"+server, nickname)
+				self.ui.line.clear()
+				#self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+				return
 			if self.main.config['chatMode']=="normal":
 				text=unicode(self.ui.line.toPlainText())
 				#text=unicode(text, 'utf-8')

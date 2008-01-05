@@ -1,10 +1,12 @@
 QWidget#groupStyleWidget {
-    background-color:#EEEEEC;
+/*     background-color:#EEEEEC; */
+    background-color:rgba(0,0,0,0%);
+
 /*     color:#000000; */
 }
 
 QWidget#userStyleWidget {
-/*     background-color:rgba(0,0,0,0%); */
+    background-color:rgba(0,0,0,0%);
     color:#3E3F3D;
 }
 
@@ -136,6 +138,10 @@ QWidget#selectedItemStyle{
 	background-color:rgba(243,244,248,100%);
 	color:rgba(160,169,199,100%);
 }
-QWidget#mainRosterWidget,QWidget#rosterView,QWidget#rosterTab > QWidget#rosterWidget > QWidget{
-background-color:#FFFFFF;
+QWidget#mainRosterWidget,QWidget#rosterTab > QWidget#rosterWidget > QWidget{
+background-color:#ffffff;  
+background-image: url(themes/rose/rose.jpg);
+background-repeat: repeat-n;  
+background-attachment: fixed;  
+
 }
