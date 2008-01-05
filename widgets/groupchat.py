@@ -547,14 +547,16 @@ class groupChatWidget(QtGui.QWidget):
 				if self.main.client.groupchats[self.jid].users.has_key(name):
 					affiliation=self.main.client.groupchats[self.jid].users[name].affiliation
 					role=self.main.client.groupchats[self.jid].users[name].role
-
+			
+			affiliations={'none':0,'member':1,'admin':2,'owner':3}
+			
 			separator=False
-			if self.role=="moderator" or self.affiliation=="owner":
+			if (self.role=="moderator" or self.affiliation=="owner") and affiliations[self.affiliation]>affiliations[affiliation]:
 				action=menu.addAction(self.tr("Kick"))
 				action.setData(QtCore.QVariant(name))
 				action.setObjectName("kick")
 				separator=True
-			if self.affiliation=="admin" or self.affiliation=="owner":
+			if (self.affiliation=="admin" or self.affiliation=="owner") and affiliations[self.affiliation]>affiliations[affiliation]:
 				action=menu.addAction(self.tr("Ban"))
 				action.setData(QtCore.QVariant(name))
 				action.setObjectName("ban")
@@ -586,41 +588,41 @@ class groupChatWidget(QtGui.QWidget):
 					action.setData(QtCore.QVariant(name))
 					action.setObjectName("grant_admin")
 					separator=True
-
-			if self.affiliation=="admin" or self.affiliation=="owner":
-				if (affiliation=='member' or affiliation=='none') and role=='moderator':
-					action=menu.addAction(self.tr("Revoke moderator"))
-					action.setData(QtCore.QVariant(name))
-					action.setObjectName("revoke_moderator")
-					separator=True
-				elif role!='moderator':
-					action=menu.addAction(self.tr("Grant moderator"))
-					action.setData(QtCore.QVariant(name))
-					action.setObjectName("grant_moderator")
-					separator=True
-				
-				if affiliation=='member':
-					action=menu.addAction(self.tr("Revoke membership"))
-					action.setData(QtCore.QVariant(name))
-					action.setObjectName("revoke_member")
-					separator=True
-				else:
-					action=menu.addAction(self.tr("Grant membership"))
-					action.setData(QtCore.QVariant(name))
-					action.setObjectName("grant_member")
-					separator=True
-			if self.role=='moderator':
-				if "muc_moderated" in self.disco_features:
-					if affiliation=='participant':
-						action=menu.addAction(self.tr("Revoke voice"))
+			if affiliations[self.affiliation]>affiliations[affiliation]:
+				if self.affiliation=="admin" or self.affiliation=="owner":
+					if (affiliation=='member' or affiliation=='none') and role=='moderator':
+						action=menu.addAction(self.tr("Revoke moderator"))
 						action.setData(QtCore.QVariant(name))
-						action.setObjectName("revoke_voice")
+						action.setObjectName("revoke_moderator")
+						separator=True
+					elif role!='moderator':
+						action=menu.addAction(self.tr("Grant moderator"))
+						action.setData(QtCore.QVariant(name))
+						action.setObjectName("grant_moderator")
+						separator=True
+					
+					if affiliation=='member':
+						action=menu.addAction(self.tr("Revoke membership"))
+						action.setData(QtCore.QVariant(name))
+						action.setObjectName("revoke_member")
 						separator=True
 					else:
-						action=menu.addAction(self.tr("Grant voice"))
+						action=menu.addAction(self.tr("Grant membership"))
 						action.setData(QtCore.QVariant(name))
-						action.setObjectName("grant_voice")
+						action.setObjectName("grant_member")
 						separator=True
+				if self.role=='moderator':
+					if "muc_moderated" in self.disco_features:
+						if affiliation=='participant':
+							action=menu.addAction(self.tr("Revoke voice"))
+							action.setData(QtCore.QVariant(name))
+							action.setObjectName("revoke_voice")
+							separator=True
+						else:
+							action=menu.addAction(self.tr("Grant voice"))
+							action.setData(QtCore.QVariant(name))
+							action.setObjectName("grant_voice")
+							separator=True
 
 			if separator:
 				menu.addSeparator()
