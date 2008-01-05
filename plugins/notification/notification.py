@@ -32,7 +32,7 @@ class osd(QtGui.QWidget):
 		self.desktop=QtGui.QPixmap()
 		self.leftPixmap=None
 		self.started=int(time.time())
-		self.dropTime=5
+		self.dropTime=20
 		self.changingPos=False
 		self.osdX=int(self.main.config['osd_x'])
 		self.osdY=int(self.main.config['osd_y'])

@@ -12,7 +12,9 @@ QLabel#selfName {
 margin-left:15px;
 }
 
-
+QWidget#chatView{
+background-color:#000000;
+}
 
 /* QToolButton#rosterMenu:hover{ */
 /* 	border-width:4px; */
