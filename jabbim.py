@@ -1133,10 +1133,7 @@ class clientClass(pyxl.client.Client):
 			
 
 	def on_fileReceived(self, sid, id):
-		mainWindow=self.main
-		if not self.main.config['autoDownload']:
-			self.main.events.addBooleanEvent(self.ftStarted,[sid,id],None,[],mainWindow.tr("File transfer"),text= unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),height=40,name=unicode(self.ft[sid].tojid),typ="ftTransfer",icon=None)
-		else:
+		if self.main.config['autoDownload'] == 'True':
 			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),unicode(self.ft[sid].tojid),"",sid)
 			filename = self.main.config['autoDownloadPath']+'/'+self.ft[sid].fileprops['name']
 			if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
@@ -1149,6 +1146,8 @@ class clientClass(pyxl.client.Client):
 				self.ft[sid].file = filename
 				self.ft[sid].fp = open(self.ft[sid].file, 'wb')
 				self.receiveFile(sid, id)
+		else:
+			self.main.events.addBooleanEvent(self.ftStarted,[sid,id],None,[],self.main.tr("File transfer"),text= unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),height=40,name=unicode(self.ft[sid].tojid),typ="ftTransfer",icon=None)
 
 	def ftStarted(self,sid,id):
 		#q = QtGui.QMessageBox.question(self.main,self.main.tr("File transfer"), unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)

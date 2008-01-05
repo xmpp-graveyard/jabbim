@@ -114,7 +114,7 @@ def getProfiles(homedir):
 		os.mkdir(homedir)
 	profiles=[]
 	for file in os.listdir(homedir):
-		if os.path.isdir(homedir+"/"+file):
+		if os.path.isdir(homedir+u"/"+unicode(file)):
 			if file.endswith("-profile"):
 				profiles.append(file)
 	return profiles
