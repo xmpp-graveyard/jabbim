@@ -52,6 +52,9 @@ class PluginBase:
 
 	def buildRosterMenu(self):
 		pass
+	
+	def buildContactMenu(self,menu,contact):
+		pass
 
 	def buildChatWidget(self,jid,layout,widget):
 		pass

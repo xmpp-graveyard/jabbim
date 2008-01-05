@@ -59,6 +59,9 @@ class FileBackend:
 		self.homeDir=unicode(archive.main.homeDir)
 		self.jid=unicode(archive.jid)
 
+	def getJidList(self):
+		return os.listdir(self.homeDir+'/archive/'+self.jid)
+
 	def saveMessage(self, to, body, typ, subject, xhtml, direction):
 		jid = quote(to.split('/')[0])
 		t=time.time()
@@ -221,6 +224,11 @@ class Plugin(plugins.PluginBase):
 	def buildRosterMenu(self):
 		menu=self.rosterMenu()
 		menu.addAction("Archive browser",self.showSlot)
+	
+	def buildContactMenu(self,menu,contact):
+		#menu.addAction()
+		pass
+		
 	
 	def buttonClicked(self,button):
 		jid=button.jid

@@ -1326,6 +1326,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.actionJoin_Groupchat, QtCore.SIGNAL("triggered ( bool )"),self.joinGroupchat)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.bookmarksCurrentChanged)
+		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemActivated ( QTreeWidgetItem *, int )"),self.bookmarksClicked)
 		QtCore.QObject.connect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
 		app.connect(self.ui.mucBrowserButton, QtCore.SIGNAL("clicked ()"),self.mucBrowser)
 		app.connect(self.ui.registerButton, QtCore.SIGNAL("clicked ()"),self.registerButtonClicked)
@@ -1335,6 +1336,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered ( bool )"),self.trayQuit)
 		QtCore.QObject.connect(self.ui.actionService_Discovery, QtCore.SIGNAL("triggered ( bool )"),self.serviceDiscovery)
 		QtCore.QObject.connect(self.ui.actionIdentity, QtCore.SIGNAL("triggered ( bool )"),self.identityEditor)
+		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Delete), self.ui.bookmarks,self.deleteCurrentBookmark)
 
 		# set up bookmarks treeWidget
 		self.ui.bookmarks.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
@@ -2287,6 +2289,13 @@ class mainWindow(QtGui.QMainWindow):
 		#self.mucbrowser.setStyleSheet(style.read())
 		#style.close()
 		#ret=newchat.exec_()
+
+	def deleteCurrentBookmark(self):
+		item=self.ui.bookmarks.currentItem()
+		if item:
+			del self.client.bookmarks['conference'][unicode(item.text(0))]
+			self.client.setBookmarks()
+			self.buildBookmarks()
 
 	def bookmarksContextMenu(self,pos):
 		# make groupchat bookmarks menu
