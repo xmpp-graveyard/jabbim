@@ -960,10 +960,10 @@ class rosterWidget(QtGui.QWidget):
 				self.selectedHeight=height+20
 	
 				# paint roster background
-				painter.save()
-				painter.translate(x,y)
-				painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
-				painter.restore()
+				#painter.save()
+				#painter.translate(x,y)
+				#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
+				#painter.restore()
 	
 				# set pen and brush for item background
 				b=painter.brush()
@@ -1043,10 +1043,10 @@ class rosterWidget(QtGui.QWidget):
 			elif self.main.config['bigOnClick']=="False":
 				height=32
 				self.selectedHeight=30
-				painter.save()
-				painter.translate(x,y)
-				painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
-				painter.restore()
+				#painter.save()
+				#painter.translate(x,y)
+				#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
+				#painter.restore()
 
 
 				# set pen and brush for item background
@@ -1150,7 +1150,7 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight)))
 			else:
-				painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
+				painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Window)))
 			painter.restore()
 			
 			if useritem in self.events:
