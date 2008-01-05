@@ -31,9 +31,12 @@ class Adapter:
 		self.nameservers = nameserver.replace(',',' ').split(' ')
 
 		if nameserver == '' and self.dhcp_enabled:
-			(nameserver, type) = _winreg.QueryValueEx(self.tcpip_params_key, "DhcpNameServer")
-			self.nameservers = nameserver.split(' ')	
-
+			try:
+				(nameserver, type) = _winreg.QueryValueEx(self.tcpip_params_key, "DhcpNameServer")
+				self.nameservers = nameserver.split(' ')
+			except WindowsError:
+				self.nameservers = []
+	
 	def get_dns(self):
 		return self.nameservers
 
