@@ -594,7 +594,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/vcardeditor_ui.py" line="244"/>
         <source>About</source>
-        <translation>O programu</translation>
+        <translation type="unfinished">Poznámky</translation>
     </message>
     <message>
         <location filename="widgets/vcardeditor_ui.py" line="246"/>
@@ -609,7 +609,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/vcardeditor_ui.py" line="248"/>
         <source>Software info</source>
-        <translation>Další informace</translation>
+        <translation type="unfinished">Informace o klientu</translation>
     </message>
 </context>
 <context encoding="UTF-8">
