@@ -82,6 +82,7 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.actionPrivacy_list_editor.setEnabled(False)
 
 	def on_GCpresenceError(self, fromjid, code, typ, name, text, resource = ""):
+		mainWindow=self.main
 		log.msg("error")
 		log.msg("RESOURCE: "+resource)
 		# find tab
@@ -101,20 +102,22 @@ class clientClass(pyxl.client.Client):
 		if int(code)==409:
 			self.main.events.addLineEditEvent(maintext=unicode(fromjid)+"<br/>"+text,trueCall=self.main.joinGC,trueDict=[fromjid],falseCall=None,falseDict=None,header="Groupchat Error",text="New name:",name=unicode(fromjid),typ="groupchatError",icon=None,action=None,actionDict=None,height=100, value=resource)
 		else:
-			self.main.events.addInfoEvent(header=self.main.tr("Groupchat error"),text=text,name=unicode(fromjid),typ='groupchatError')
+			self.main.events.addInfoEvent(header=mainWindow.tr("Groupchat error"),text=text,name=unicode(fromjid),typ='groupchatError')
 		#QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+unicode(code)+" "+unicode(name)+" "+unicode(text)),0,1)
 
 	def on_roleErr(self,  muc,  err,  nick):
 		log.msg("error")
-		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(muc+" "+err+" "+nick),0,1)
+		#QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(muc+" "+err+" "+nick),0,1)
 	
 	def on_affiliationErr(self,  muc,  err,  nick):
 		log.msg("error")
-		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(muc+" "+err+" "+nick),0,1)
+		#QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(muc+" "+err+" "+nick),0,1)
 
 	def on_ftTransfered(self, sid, bytes): # pocet prenesenych bajtu pro prenos se SID
 		toDel=[] # finished transfers
 		widget=self.main.events.filetransfer[sid] # event widget
+		mainWindow=self.main
+
 		if self.ft.has_key(sid):
 			# Filetransfer is alive
 			size=float(self.ft[sid].size)
@@ -133,11 +136,11 @@ class clientClass(pyxl.client.Client):
 				# transport finished
 				toDel.append(sid)
 				if self.main.ftError[sid]==None:
-					widget.widget.stats.setText(self.main.tr("Complete"))
-					self.main.tray.showMessage(self.main.tr("File ")+unicode(widget.file)+self.main.tr(" has been sent "),"", QtGui.QSystemTrayIcon.Information, 4000)
+					widget.widget.stats.setText(mainWindow.tr("Complete"))
+					self.main.tray.showMessage(mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" has been sent "),"", QtGui.QSystemTrayIcon.Information, 4000)
 				else:
-					widget.widget.stats.setText(self.main.tr("Error")+" "+unicode(self.main.ftError[sid]))
-					self.main.tray.showMessage(self.main.tr("File ")+unicode(widget.file)+self.main.tr(" can't be sent "),"", QtGui.QSystemTrayIcon.Critical, 4000)
+					widget.widget.stats.setText(mainWindow.tr("Error")+" "+unicode(self.main.ftError[sid]))
+					self.main.tray.showMessage(mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" can't be sent "),"", QtGui.QSystemTrayIcon.Critical, 4000)
 				widget.widget.complete=True
 
 
@@ -253,7 +256,8 @@ class clientClass(pyxl.client.Client):
 
 	def on_rosterArrived(self):
 		self.main.ui.splashProgress.setValue(60)
-		self.main.ui.loginInfo.setText(self.main.tr("Roster arrived."))
+		mainWindow=self.main
+		self.main.ui.loginInfo.setText(mainWindow.tr("Roster arrived."))
 		self.main.ui.roster.repaint()
 		self.main.ui.roster.sortItems()
 		self.main.buildBookmarks() # build Bookmarks tab
@@ -445,7 +449,7 @@ class clientClass(pyxl.client.Client):
 				pri="0"
 		show=unicode(self.main.ui.loginStatus.itemData(int(self.main.ui.loginStatus.currentIndex())).toString())
 		self.main.selfStatus=show
-		self.main.tray.setToolTip(self.main.tr('Your status:')+" "+self.main.status[show])
+		self.main.tray.setToolTip(mainWindow.tr('Your status:')+" "+self.main.status[show])
 		self.main.sendPresence(None,show,"",pri)
 		self.main.ui.statusButton.setText(unicode(""))
 		self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
@@ -482,7 +486,9 @@ class clientClass(pyxl.client.Client):
 			#self.main.ui.roster.buttonWidget=None
 		self.main.ui.roster.repaint()
 		self.main.ui.splashProgress.setValue(100)
-		self.main.ui.loginInfo.setText(self.main.tr("Jabbim is ready."))
+		mainWindow=self.main
+
+		self.main.ui.loginInfo.setText(mainWindow.tr("Jabbim is ready."))
 		self.main.ui.rosterStackedWidget.setCurrentIndex(1)
 		#for key,value in self.main.plugins.iteritems():
 			#value.connected()
@@ -552,7 +558,8 @@ class clientClass(pyxl.client.Client):
 		if error!=None:
 			print "PRESENCE ERROR:"+unicode(error)
 			return
-		
+		mainWindow=self.main
+
 		
 		if show=="offline":
 			#jid=jid.full() # get jid
@@ -580,7 +587,7 @@ class clientClass(pyxl.client.Client):
 					else:
 						user=unicode(jid.full())
 					if str(self.main.config["showChatStatusChanges"])=="True":
-						message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",self.main.tr("offline")).replace('[nick]', user)
+						message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",mainWindow.tr("offline")).replace('[nick]', user)
 						message = message.replace("[[message]]",'')
 						w.chat.textEditWrite(message)
 						w.chat.ui.chatstate.setText("")
@@ -810,6 +817,7 @@ class clientClass(pyxl.client.Client):
 
 	def on_unsubscribed(self,jid):
 		print "unsubscribed"
+		mainWindow=self.main
 
 		jid=jidT.JID(jid)
 		user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
@@ -823,7 +831,7 @@ class clientClass(pyxl.client.Client):
 		else:
 			user=unicode(jid.full())
 		jid=unicode(jid.full())
-		self.main.events.addBooleanEvent(self.delContact,[jid],None,[],self.main.tr("Remove contact?"),jid+self.main.tr(" removed your authorization. You won't see his status. Do you want to remove him/her from your contact list?"),height=100,name=jid,typ="unsubcsribed",icon=None)
+		self.main.events.addBooleanEvent(self.delContact,[jid],None,[],mainWindow.tr("Remove contact?"),jid+mainWindow.tr(" removed your authorization. You won't see his status. Do you want to remove him/her from your contact list?"),height=100,name=jid,typ="unsubcsribed",icon=None)
 
 
 	def on_DeleteContact(self,jid):
@@ -854,6 +862,8 @@ class clientClass(pyxl.client.Client):
 	def on_subscribe(self, frm,status):
 		#self.main.events.addSubscribeEvent(frm,status)
 		#if len(self.main.ui.roster.getUserItems(frm))==0 and len(self.main.ui.roster.getMetaItems(frm)):
+		mainWindow=self.main
+
 		if self.roster['users'].has_key(frm):
 			#contact=self.roster['users'][frm]
 			#ask=contact.ask
@@ -862,12 +872,12 @@ class clientClass(pyxl.client.Client):
 			#if ask=='subscribe':
 				#self.main.events.addBooleanEvent(self._onSubscribe,[frm,status],self.main.client.sendPresence,[frm,None,status,None,'unsubscribed'],header=self.main.tr('Add contact?'),text=self.main.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
 			#else:
-			self.main.events.addBooleanEvent(self.sendPresence,[frm,None,status,None,'subscribed'],self.sendPresence,[frm,None,status,None,'unsubscribed'],header=self.main.tr('Authorize contact?'),text=self.main.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
+			self.main.events.addBooleanEvent(self.sendPresence,[frm,None,status,None,'subscribed'],self.sendPresence,[frm,None,status,None,'unsubscribed'],header=mainWindow.tr('Authorize contact?'),text=mainWindow.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
 				#self.addBooleanEvent(self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],header=self.main.tr('Subscribe request'),text=self.main.tr('From:')+" "+unicode(jid),name=jid,typ="subscribe")
 			#else:
 				#self.main.events.addSubscribeEvent(frm,status)
 		else:
-			self.main.events.addBooleanEvent(self._onSubscribe,[frm,status,True],self.main.client.sendPresence,[frm,None,status,None,'unsubscribed'],header=self.main.tr('Add contact?'),text=self.main.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
+			self.main.events.addBooleanEvent(self._onSubscribe,[frm,status,True],self.main.client.sendPresence,[frm,None,status,None,'unsubscribed'],header=mainWindow.tr('Add contact?'),text=mainWindow.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
 
 	def _onSubscribe(self,frm,status,add=False):
 		#def __init__(self,main,parent=None,jid="",group=None,name="",add=True):
@@ -932,15 +942,15 @@ class clientClass(pyxl.client.Client):
 				icon=self.main.getIcon(status="offline",size="16x16")
 				user=frm.full()
 		tab,tabIndex=self.main.chat.findTab(frm.full())
-
+		mainWindow=self.main
 		if error=="remote-server-not-found":
 			if tab!=None:
-				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.main.tr("Your message can't be sent. Remote server not found."))
+				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent. Remote server not found."))
 				tab.chat.textEditWrite(message)
 			return
 		elif error!=None:
 			if tab!=None:
-				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.main.tr("Your message can't be sent.")+" "+unicode(error))
+				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent.")+" "+unicode(error))
 				tab.chat.textEditWrite(message)
 			return
 
@@ -986,10 +996,10 @@ class clientClass(pyxl.client.Client):
 					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
 					self.main.chat.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)
-					self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()],tooltip=self.main.tr("New message from ")+unicode(user))
+					self.main.events.addInfoEvent(header=mainWindow.tr("Message"),text=mainWindow.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()],tooltip=mainWindow.tr("New message from ")+unicode(user))
 					tab.chat.unread+=1
 				elif not self.main.chat.isActiveWindow():
-					self.main.events.addInfoEvent(header=self.main.tr("Message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()],tooltip=self.main.tr("New message from ")+unicode(user))
+					self.main.events.addInfoEvent(header=mainWindow.tr("Message"),text=mainWindow.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()],tooltip=mainWindow.tr("New message from ")+unicode(user))
 					#if int(self.main.chat.ui.chatTab.currentIndex())==tabIndex:
 					self.main.chat.setWindowTitle("("+str(int(self.main.chat.getUnreadMessages())+1)+") "+tab.tabName.replace("&",""))
 					tab.chat.unread+=1
@@ -1012,11 +1022,11 @@ class clientClass(pyxl.client.Client):
 					item=self.main.ui.roster.getUserItems(frm.userhost())[0]
 					pixmap=item.avatar.pixmap(64,64)
 					text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(item.jid)+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
-				text+='<td><b>'+self.main.tr("New message from ")+unicode(user)+'</b><br/>'
+				text+='<td><b>'+mainWindow.tr("New message from ")+unicode(user)+'</b><br/>'
 				text+='<font size="-1">'+traytext+'<br/>'
 				text+="</td></tr></table>"
-				self.main.events.addInfoEvent(header=self.main.tr("New message"),text=self.main.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[],tooltip=text)
-				self.main.tray.showMessage(self.main.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
+				self.main.events.addInfoEvent(header=mainWindow.tr("New message"),text=mainWindow.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[],tooltip=text)
+				self.main.tray.showMessage(mainWindow.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
 				self.main.chat.addChatTab(frm.full(),unicode(user),icon,message)
 				tab,tabIndex=self.main.chat.findTab(frm.full())
 				if tab:
@@ -1032,16 +1042,16 @@ class clientClass(pyxl.client.Client):
 			if tab!=None:
 				if self.main.chat.ui.chatTab.tabBar().tabTextColor(tabIndex).name()!=QtGui.QColor(255,0,0).name():
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(0,128,0))
-				tab.chat.ui.chatstate.setText(unicode(user)+" "+self.main.tr("is typing..."))
+				tab.chat.ui.chatstate.setText(unicode(user)+" "+mainWindow.tr("is typing..."))
 		elif chatstate=="active":
 			if tab!=None:
-				tab.chat.ui.chatstate.setText(unicode(user)+" "+self.main.tr("gives attention to chat."))
+				tab.chat.ui.chatstate.setText(unicode(user)+" "+mainWindow.tr("gives attention to chat."))
 		elif chatstate=="paused":
 			if tab!=None:
-				tab.chat.ui.chatstate.setText(unicode(user)+" "+self.main.tr("stops typing."))
+				tab.chat.ui.chatstate.setText(unicode(user)+" "+mainWindow.tr("stops typing."))
 		elif chatstate=="inactive":
 			if tab!=None:
-				tab.chat.ui.chatstate.setText(unicode(user)+" "+self.main.tr("doesn't give attention to chat."))
+				tab.chat.ui.chatstate.setText(unicode(user)+" "+mainWindow.tr("doesn't give attention to chat."))
 
 	def on_vcardReceived(self,  jid, card):
 		#print card
@@ -1112,8 +1122,9 @@ class clientClass(pyxl.client.Client):
 			
 
 	def on_fileReceived(self, sid, id):
+		mainWindow=self.main
 		if not self.main.config['autoDownload']:
-			self.main.events.addBooleanEvent(self.ftStarted,[sid,id],None,[],self.main.tr("File transfer"),text= unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),height=40,name=unicode(self.ft[sid].tojid),typ="ftTransfer",icon=None)
+			self.main.events.addBooleanEvent(self.ftStarted,[sid,id],None,[],mainWindow.tr("File transfer"),text= unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),height=40,name=unicode(self.ft[sid].tojid),typ="ftTransfer",icon=None)
 		else:
 			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),unicode(self.ft[sid].tojid),"",sid)
 			filename = self.main.config['autoDownloadPath']+'/'+self.ft[sid].fileprops['name']
@@ -1131,7 +1142,8 @@ class clientClass(pyxl.client.Client):
 	def ftStarted(self,sid,id):
 		#q = QtGui.QMessageBox.question(self.main,self.main.tr("File transfer"), unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
 		#if q == QtGui.QMessageBox.Yes:
-		filename = QtGui.QFileDialog.getSaveFileName(self.main, self.main.tr("Save File"),self.ft[sid].fileprops['name'],self.main.tr("*.*"))
+		mainWindow=self.main
+		filename = QtGui.QFileDialog.getSaveFileName(self.main, mainWindow.tr("Save File"),self.ft[sid].fileprops['name'],mainWindow.tr("*.*"))
 		log.msg(unicode(filename))
 		self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),unicode(self.ft[sid].tojid),"",sid)
 		log.msg('receiving file: ' + sid)
@@ -1149,13 +1161,15 @@ class clientClass(pyxl.client.Client):
 	
 	def on_verify(self, id, thread, props, frm, typ): #xep0070
 # 		self.replyVerify(id, thread, props, frm, typ, False)
-		self.main.events.addBooleanEvent(self.replyVerify,[id, thread, props, frm, typ, True], self.replyVerify,[id, thread, props, frm, typ, False],header=self.main.tr('Auth request'),text=self.main.tr('URL:')+" "+unicode(props['url']) + '<br/>' +self.main.tr('ID:') + unicode(props['id']), height = 60,name=frm,typ="xep70")
+		mainWindow=self.main
+		self.main.events.addBooleanEvent(self.replyVerify,[id, thread, props, frm, typ, True], self.replyVerify,[id, thread, props, frm, typ, False],header=mainWindow.tr('Auth request'),text=mainWindow.tr('URL:')+" "+unicode(props['url']) + '<br/>' +mainWindow.tr('ID:') + unicode(props['id']), height = 60,name=frm,typ="xep70")
 	
 	def on_connect(self):
-		self.main.ui.loginInfo.setText(self.main.tr("Jabbim is connected to the server."))
+		mainWindow=self.main
+		self.main.ui.loginInfo.setText(mainWindow.tr("Jabbim is connected to the server."))
 		self.main.ui.splashProgress.setValue(20)
 	def on_authd(self):
-		self.main.ui.loginInfo.setText(self.main.tr("Jabbim is logged in."))
+		self.main.ui.loginInfo.setText(mainWindow.tr("Jabbim is logged in."))
 		self.main.ui.splashProgress.setValue(40)
 	
 
@@ -1166,88 +1180,96 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.setupUi(self)
 		self.ui.toggleInvisible.hide()
 		self.ui.statusButton.hide()
-		self.selfAvatar=None
-		self.selfStatus=""
 		self.setAttribute(QtCore.Qt.WA_AlwaysShowToolTips,True)
-		self.QT43=USE_WIZARDS
-		self.homeDir=utils.getHomeDir() # get home dir
+		
+		self.selfAvatar=None #: current avatar (QPixmap or None)
+		self.selfStatus="" #: current show (string according to self.shows)
+		self.QT43=USE_WIZARDS #: True if Qt version == 4.3
+		self.log=None
+		self.plugins = {}
+
+		# get homedir
+		self.homeDir=utils.getHomeDir() #: Jabbim root directory + profile directory
 		for x in range(0,len(sys.argv)):
 			if sys.argv[x] == '--home':
 				self.homeDir= sys.argv[x+1]
-		self.realHomeDir=unicode(self.homeDir)
+		self.realHomeDir=unicode(self.homeDir) #: Jabbim root directory
+		
+		# check if there is existing profile
 		profiles=utils.getProfiles(self.realHomeDir)
 		if len(profiles)==0:
 			if USE_WIZARDS:
 				self.startwiz=wizards.firststart.firstStartWizard(self,self)
 				self.startwiz.show()
-		self.log=None
 
-
-		statusMess=[]
-		#statusMess.append(unicode(self.tr("Default Status Message, 1")))
-		#statusMess.append(unicode(self.tr("Default Status Message, 2")))
-		if len(profiles)==1:
-			self.homeDir=self.realHomeDir+"/"+profiles[0]
-		utils.loadConfig(self,statusMess) # load config files
+		# load last profile according to ~/config
+		utils.loadConfig(self,[])
 		if not self.config['jid']+"-profile" in profiles:
 			if len(profiles)!=0:
 				self.homeDir=self.realHomeDir+"/"+profiles[0]
-				utils.loadConfig(self,statusMess) # load config files
+				utils.loadConfig(self,statusMess)
 			else:
 				os.remove(self.realHomeDir+'/config')
-				utils.loadConfig(self,statusMess) # load config files
+				utils.loadConfig(self,[])
 		else:
 			self.homeDir=self.realHomeDir+"/"+self.config['jid']+"-profile"
-			utils.loadConfig(self,statusMess) # load config files
+			utils.loadConfig(self,[])
 		
+		# load cache and create tables
 		if sys.platform != 'win32':
 			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
 		else:
 			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
-
 		self.cache.create_tables().addCallback(self.tables_created).addErrback(self.tables_loaded)
 		
-		#elf.cache = storage.Cache(db=utils.path(u'C:\ččč\cache.db'))
-		#self.cache = storage.Cache(db=unicode(self.homeDir+u'/cache2.db'))
-##		self.cache = storage.Cache(db=':memory:')
-		self.plugins = {}
-
+		# look & feel :)
 		self.ui.gridlayout.setMargin(1)
 		self.ui.gridlayout.setSpacing(1)
-
 		self.ui.tabWidget.setTabText(0,"")
 		self.ui.tabWidget.setTabText(1,"")
 		self.ui.tabWidget.setTabText(2,"")
 		self.ui.tabWidget.setTabText(3,"")
+		self.ui.actionAdd_Contact.setEnabled(False)
+		self.ui.actionJoin_Groupchat.setEnabled(False)
+		self.ui.actionService_Discovery.setEnabled(False)
+		self.ui.registerButton.hide()
+		self.ui.groupStyleWidget.hide()
+		self.ui.userStyleWidget.hide()
+		self.ui.selectedItemStyle.hide()
+		self.setMinimumWidth(200)
 
+		# filetransfer
 		self.filetransferTimer=QtCore.QTimer()
+		QtCore.QObject.connect(self.filetransferTimer, QtCore.SIGNAL("timeout()"),self.refreshFT)
 		self.filetransferDescriptions={}
 		self.ftError={}
-		QtCore.QObject.connect(self.filetransferTimer, QtCore.SIGNAL("timeout()"),self.refreshFT)
-		
-		# variables
-		self.hosts={} # temp variable for {hos:type_of_host}
 		self.filetransfer={}
 		self.filetransferQueue={}
-		self.client=None # pyxl client instance
+		
+		# preparing chat window
 		if self.config['oneWindow']=="True":
 			self.workspace=QtGui.QWorkspace(self.ui.mdiWidget)
 			layout=QtGui.QHBoxLayout(self.ui.mdiWidget)
 			layout.addWidget(self.workspace)
 			self.chat=widgets.chatwindow.chatWindow(self.workspace,self)
 			self.workspace.addWindow(self.chat)
-			self.chat.showMaximized()
+			self.chat.showMaximized() #: chat window
 		else:
 			self.ui.mdiWidget.hide()
 			self.ui.mdiWidget.setParent(None)
-			self.chat=widgets.chatwindow.chatWindow(self,self)
-		self.events=widgets.events.events(self)
+			self.chat=widgets.chatwindow.chatWindow(self,self) #: chat window
+		
+		# variables
+		self.hosts={} #: {host:type_of_host}
+		self.client=None #: Pyxl client instance
+		self.events=widgets.events.events(self) #: events class
 		self.preferencesWindow=None
 		self.profilesWindow=None
 		self.mucbrowser=None
 		self.addcontactdialog=None
 		self.statusPath="images/xxxxx/status/"
 		self.transports={}
+		#: {show:ID}
 		self.shows={u"online":u"1",
 					u"available":u"1",
 					u"chat":u"2",
@@ -1258,6 +1280,7 @@ class mainWindow(QtGui.QMainWindow):
 					u"offline":u"9",
 					u"unavailable":u"9"
 					}
+		#: {ID:icon_text}
 		self.icons={u"1":u"online",
 					u"2":u"chat",
 					u"3":u"away",
@@ -1265,6 +1288,7 @@ class mainWindow(QtGui.QMainWindow):
 					u"5":u"dnd",
 					u"9":u"offline"
 					}
+		#: {show:translated_text}
 		self.status={"online":self.tr("Online"),
 					"available":self.tr("Online"),
 					"chat":self.tr("Chatty"),
@@ -1277,13 +1301,10 @@ class mainWindow(QtGui.QMainWindow):
 					}
 		self.offline=False
 		self.xmlConsole=XMLConsole(self)
-
 		self.ui.showOffline.hide()
 
-
-		# mainwindows signals
+		# signals
 		app.connect(self.ui.login_connect, QtCore.SIGNAL("clicked()"),self.connect)
-		#app.connect(app,QtCore.SIGNAL("lastWindowClosed() "),self.disconnect)
 		app.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
 		app.connect(self.ui.toggleInvisible, QtCore.SIGNAL("clicked(bool)"),self.toggleInvisibility)
 		app.connect(self.ui.actionAbout, QtCore.SIGNAL("triggered ( bool )"),self.about)
@@ -1293,20 +1314,10 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
 		app.connect(self.ui.actionProfiles, QtCore.SIGNAL("triggered ( bool )"),self.profilesClicked)
 		app.connect(self.ui.actionJoin_Groupchat, QtCore.SIGNAL("triggered ( bool )"),self.joinGroupchat)
-#		app.connect(self.ui.selfStatus_lineEdit, QtCore.SIGNAL("lostFocus()"), self.statMsgChanged)
-#		app.connect(self.ui.selfStatus_lineEdit, QtCore.SIGNAL("returnPressed()"), self.statMsgChanged)
-#		app.connect(self.ui.selfStatus_label, QtCore.SIGNAL("clicked()"), self.statMsgChanged)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.bookmarksCurrentChanged)
 		QtCore.QObject.connect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
-
-		self.ui.actionAdd_Contact.setEnabled(False)
-		self.ui.actionJoin_Groupchat.setEnabled(False)
-		self.ui.actionService_Discovery.setEnabled(False)
-
-		#app.connect(self.ui.addContact, QtCore.SIGNAL("clicked ()"),self.addContactMainWindow)
 		app.connect(self.ui.mucBrowserButton, QtCore.SIGNAL("clicked ()"),self.mucBrowser)
-		self.ui.registerButton.hide()
 		app.connect(self.ui.registerButton, QtCore.SIGNAL("clicked ()"),self.registerButtonClicked)
 		app.connect(self.ui.login_cancel, QtCore.SIGNAL("clicked ()"),self.connectCancel)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
@@ -1314,50 +1325,33 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered ( bool )"),self.trayQuit)
 		QtCore.QObject.connect(self.ui.actionService_Discovery, QtCore.SIGNAL("triggered ( bool )"),self.serviceDiscovery)
 		QtCore.QObject.connect(self.ui.actionIdentity, QtCore.SIGNAL("triggered ( bool )"),self.identityEditor)
-		
 
-			
 		# set up bookmarks treeWidget
 		self.ui.bookmarks.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 		self.ui.bookmarks.header().hide()
 		self.ui.bookmarks.hideColumn(1)
+		
 		# set up stacked widget (0==login,1==roster and etc..)
 		self.ui.rosterStackedWidget.setCurrentIndex(0)
 		self.loadRoster() # load roster widget
 		QtCore.QObject.connect(self.ui.rosterSearch, QtCore.SIGNAL(" textEdited ( const QString & )"),self.ui.roster.search)
 
 		self.loadSkin() # load chat skin
-
-		#self.buildStatusMenu()
-		#self.ui.statusButton.setIcon(self.getIcon("offline",size="16x16"))
-		#self.ui.statusButton.hide()
-		#statusLayout=QtGui.QHBoxLayout(self.ui.statusWidget)
-		#statusLayout.setMargin(0)
-		#statusLayout.setSpacing(0)
-		#self.ui.showWidget = widgets.show.showWidget(self, statusLayout, self.tr("Your status message here."))
-		#self.ui.showWidget = QtGui.QToolButton(self.ui.statusWidget)
-		#self.ui.showWidget.setIcon(self.getIcon("offline",size="16x16"))
-
-		#statusLayout.addWidget(self.ui.showWidget)
-#		self.ui.selfStatus_lineEdit.hide()
-#		self.ui.selfStatus_label.setText("...")
-
-		#self.config['rosterIconSize']="22x22"
-		#self.addInfoSubscribe()
-		#self.addInfoSubscribe()
-		#self.addInfoSubscribe()
-		self.loadTheme()
+		self.loadTheme() # load theme
 		self.ui.roster.reskin()
+		
+		# open log file
 		if self.config['log'] == 'true':
 			self.logfile = open(self.homeDir+'/'+self.config['logfile'], 'w')
 			self.log=log.FileLogObserver(self.logfile)
 			log.startLoggingWithObserver(self.log.emit)
 		
-		#self.events.addInfoEvent(header=self.tr("New message"),text=self.tr("From: "),name=unicode('ss'),typ='newMessage',icon="images/16x16/actions/message.png")
-
+		# show tray icon
 		self.tray=QtGui.QSystemTrayIcon(QtGui.QIcon(QtGui.QIcon("images/16x16/apps/jabbim.png").pixmap(16,16,QtGui.QIcon.Disabled)))
 		app.connect(self.tray,QtCore.SIGNAL("activated (QSystemTrayIcon::ActivationReason)"),self.trayActivated)
 		self.tray.show()
+		
+		# set mainwindow's and chatwindow's position
 		w=self.config['windowGeometry'][2]
 		h=self.config['windowGeometry'][3]
 		if str(w)=='None' or str(h)=='None':
@@ -1366,7 +1360,6 @@ class mainWindow(QtGui.QMainWindow):
 			self.move(int(self.config['windowGeometry'][0]),int(self.config['windowGeometry'][1]))
 		else:
 			self.setGeometry(int(self.config['windowGeometry'][0]),int(self.config['windowGeometry'][1]),int(w),int(h))
-
 		w=self.config['chatGeometry'][2]
 		h=self.config['chatGeometry'][3]
 		if str(w)=='None' or str(h)=='None':
@@ -1375,33 +1368,28 @@ class mainWindow(QtGui.QMainWindow):
 			self.chat.move(int(self.config['chatGeometry'][0]),int(self.config['chatGeometry'][1]))
 		else:
 			self.chat.setGeometry(int(self.config['chatGeometry'][0]),int(self.config['chatGeometry'][1]),int(w),int(h))
-		
-		self.ui.groupStyleWidget.hide()
-		self.ui.userStyleWidget.hide()
-		self.ui.selectedItemStyle.hide()
-		self.reconnect = True # pri unavailable tady dame False
 
+		self.reconnect = True # pri unavailable tady dame False
 		self.active=True
 		
+		# set roster mode
 		if self.config['rosterMode'] == "compact" :
 			self.ui.roster.userHeight=22
 			self.ui.roster.groupHeight=22
 			self.scroll.verticalScrollBar().setPageStep(22)
 			self.scroll.verticalScrollBar().setSingleStep(22)
-
 			self.ui.roster.compact=True
 			self.ui.roster.repaint()
 
-		self.setMinimumWidth(200)
-
+		# fill login form
 		self.fillLoginForm()
-
 		self.ui.loginStatus.addItem(self.getIcon(status="online",size="16x16"), self.status["online"],QtCore.QVariant("online"))
 		self.ui.loginStatus.addItem(self.getIcon(status="chat",size="16x16"), self.status["chat"],QtCore.QVariant("chat"))
 		self.ui.loginStatus.addItem(self.getIcon(status="away",size="16x16"), self.status["away"],QtCore.QVariant("away"))
 		self.ui.loginStatus.addItem(self.getIcon(status="xa",size="16x16"), self.status["xa"],QtCore.QVariant("xa"))
 		self.ui.loginStatus.addItem(self.getIcon(status="dnd",size="16x16"), self.status["dnd"],QtCore.QVariant("dnd"))
 
+		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.ui.rosterStackedWidget.setCurrentIndex(2)
 			self.connect()
