@@ -83,7 +83,7 @@ class Client(derived):
 		self.groupchats = {} # jid:Groupchat
 		self.privacy = Privacy(self.main)
 		self.client_name = 'Jabbim'
-		self.version = '0.2' # tohle asi neni nejlepsi zpusob
+		self.version = '0.3' # tohle asi neni nejlepsi zpusob
 		self.client_os = ''
 		self.caps_node = 'http://dev.jabbim.cz/jabbim/caps'
 		self.caps_version = self.version
@@ -177,11 +177,13 @@ class Client(derived):
 		if sys.platform == 'win32':
 			import IPConfig
 			srv = IPConfig.IPConfig().get_dns()
-			r = dns.Resolver(servers=[(srv[0], 53)])
-			print dir(r)
-			d = r.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
+			if len(srv) > 0:
+				r = dns.Resolver(servers=[(srv[0], 53)])
+				print dir(r)
+				d = r.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
+			else:
+				d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
 		else:
-#		d = threads.deferToThread(getaddrinfo,self.jid.host, "xmpp-client",socket.AF_UNSPEC, socket.SOCK_STREAM)
 			d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
 		d.addCallback(self._dnsLookup)
 		d.addErrback(self._dnsLookupErr)
