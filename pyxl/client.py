@@ -162,8 +162,10 @@ class Client(derived):
 		if err.type == TimeoutError:
 			log.msg('heartbeat failed')
 			self.xping.stop()
+			if self.factory:
+				self.factory.stopTrying()
 			self.connection.disconnect()
-			self.factory.stopTrying()
+			
 			self.connection = None
 			self.factory = None
 #			self.main._disconnect(error = 'lost')
