@@ -591,8 +591,15 @@ class clientClass(pyxl.client.Client):
 					else:
 						user=unicode(jid.full())
 					if str(self.main.config["showChatStatusChanges"])=="True":
-						message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",mainWindow.tr("offline")).replace('[nick]', user)
+						#message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",mainWindow.tr("offline")).replace('[nick]', user)
+						#message = message.replace("[[message]]",'')
+
+						mainWindow=self.main
+						message="[nick] "+unicode(mainWindow.tr('is now'))+" [show] [[message]]"
 						message = message.replace("[[message]]",'')
+						message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', user)
+						message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
+
 						w.chat.textEditWrite(message)
 						w.chat.ui.chatstate.setText("")
 					break
@@ -624,11 +631,11 @@ class clientClass(pyxl.client.Client):
 					else:
 						user=unicode(jid.full())
 					if str(self.main.config["showChatStatusChanges"])=="True":
-						message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",show).replace('[nick]', user)
-						if status == None or len(status)==0:
-							message = message.replace("[[message]]",'')
-						else:
-							message = message.replace("[message]",unicode(status))
+						mainWindow=self.main
+						message="[nick] "+unicode(mainWindow.tr('is now'))+" [show] [[message]]"
+						message = message.replace("[[message]]",'')
+						message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', user)
+						message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
 						w.chat.textEditWrite(message)
 					break
 
