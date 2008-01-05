@@ -782,6 +782,7 @@ class groupChatWidget(QtGui.QWidget):
 		return True
 
 	def removeUser(self,nick,codes=[],reason="",actor=None):
+		nick=unicode(nick)
 		if self.main.client.groupchats[self.jid].nick==nick:
 			if u'307' in codes:
 				self.ui.line.setEnabled(False)
@@ -803,14 +804,14 @@ class groupChatWidget(QtGui.QWidget):
 				self.ui.line.setEnabled(False)
 				self.ui.users.clear()
 				self.addRoles()
-				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.tr("You have been banned for the room."))
+				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("You have been banned for the room.")))
 				self.textEditWrite(message)
 				return
 		if u'307' in codes:
-			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",nick+self.tr(" has been kicked from this room."))
+			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",nick+unicode(self.tr(" has been kicked from this room.")))
 			self.textEditWrite(message)
 		elif u'301' in codes:
-			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",nick+self.tr(" has been banned for this room."))
+			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",nick+unicode(self.tr(" has been banned for this room.")))
 			self.textEditWrite(message)
 
 		item=self.getUserItems(nick)[0]
