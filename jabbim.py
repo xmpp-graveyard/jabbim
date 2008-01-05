@@ -906,6 +906,17 @@ class clientClass(pyxl.client.Client):
 				w=self.main.chat.ui.chatTab.widget(i)
 				countMessage=False
 				if unicode(w.jid) == frm:
+					mainWindow=self.main
+					if error=="remote-server-not-found":
+						if w!=None:
+							message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent. Remote server not found."))
+							w.chat.textEditWrite(message)
+						return
+					elif error!=None:
+						if w!=None:
+							message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent.")+" "+unicode(error))
+							w.chat.textEditWrite(message)
+						return
 					body = utils.replace_url(body)
 					self.main.chat.onGCMessage(w,i,body,delay,subject,user)
 					return
