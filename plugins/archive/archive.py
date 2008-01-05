@@ -215,6 +215,7 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 			self.skin=self.getConfig("skins/gajim.conf")
 			self.window.ui.seznam.header().hide()
+			self.jidList=self.backend.getJidList()
 		else:
 			self.loadConfig(homedir)
 
@@ -226,9 +227,17 @@ class Plugin(plugins.PluginBase):
 		menu.addAction("Archive browser",self.showSlot)
 	
 	def buildContactMenu(self,menu,contact):
-		#menu.addAction()
-		pass
-		
+		if unicode(contact.jid).replace("@","%40") in self.jidList:
+			self.action=menu.addAction(self.tr("History"))
+			self.action.setData(QtCore.QVariant(unicode(contact.jid)))
+			self.action.setObjectName("history")
+			self.action.setIcon(QtGui.QIcon("%s/plugins/%s/history.png"%(self.homeDir, self.fname)))
+			QtCore.QObject.connect(self.action,QtCore.SIGNAL("triggered ( bool )"),self.toggled)
+	
+	def toggled(self,b):
+		jid=unicode(self.action.data().toString())
+		self.showSlot(jid)
+		self.action.deleteLater()
 	
 	def buttonClicked(self,button):
 		jid=button.jid
@@ -285,7 +294,8 @@ class Plugin(plugins.PluginBase):
 		widget.ui.textEdit.setHtml("")
 		widget.textEditWrite(html,True)
 		widget.textEditWrite(old)
-		
+		self.jidList=self.backend.getJidList()
+
 
 	def buildGroupchatWidget(self,jid,layout,widget):
 		button=QtGui.QToolButton()
@@ -294,9 +304,9 @@ class Plugin(plugins.PluginBase):
 		button.setIcon(QtGui.QIcon("%s/plugins/%s/history.png"%(self.homeDir, self.fname)))
 		button.jid=unicode(jid)
 		button.setToolTip("History")
-
 		self.group.addButton(button)
 		layout.addWidget(button)
+		self.jidList=self.backend.getJidList()
 
 	
 	def showSlot(self,j=None):

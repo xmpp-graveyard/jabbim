@@ -2312,8 +2312,12 @@ class rosterWidget(QtGui.QWidget):
 					action.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
 					action.setData(QtCore.QVariant("%s/%s" % (jid, resource)))
 					action.setObjectName("send_file")
+
+		for key,value in self.main.plugins.iteritems():
+			self.main.runPluginCommand(value.buildContactMenu,[contactMenu,contact])
 		# separator
 		contactMenu.addSeparator()
+		
 		# break up metacontact
 		if self.main.client.roster_meta.has_key(jid):
 			action=contactMenu.addAction(self.tr("Break up metacontact"))
