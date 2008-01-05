@@ -4,7 +4,7 @@ QWidget#groupStyleWidget {
 }
 
 QWidget#userStyleWidget {
-/*     background-color:rgba(0,0,0,0%); */
+    background-color:#FFFFFF;
     color:#3E3F3D;
 }
 
