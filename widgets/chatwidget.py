@@ -111,7 +111,7 @@ class textView(QtGui.QTextEdit):
 		self.data=[]
 		self.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
 		self.setAcceptDrops(True)
-
+		self.setObjectName("chatView")
 
 	def dragEnterEvent(self, event):
 		#log.msg('DRAG ENTER')
