@@ -4,7 +4,7 @@ QWidget#groupStyleWidget {
 }
 
 QWidget#userStyleWidget {
-    background-color:#FFFFFF;
+/*     background-color:rgba(0,0,0,0%); */
     color:#3E3F3D;
 }
 
@@ -135,7 +135,4 @@ border:0;
 QWidget#selectedItemStyle{
 	background-color:rgba(243,244,248,100%);
 	color:rgba(160,169,199,100%);
-}
-QWidget#mainRosterWidget,QWidget#rosterTab > QWidget#rosterWidget > QWidget{
-background-color:#FFFFFF;
 }
