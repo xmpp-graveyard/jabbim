@@ -274,6 +274,7 @@ class groupChatWidget(QtGui.QWidget):
 		self.nick = nickname
 		self.ui=Ui_groupchatwidget()
 		self.ui.setupUi(self)
+		self.ui.disco_info.hide()
 		self.main=main
 		self.affiliation=""
 		self.role=""
@@ -398,8 +399,9 @@ class groupChatWidget(QtGui.QWidget):
 
 		self.disco_features = []
 		log.msg("REQUESTING ROOM INFO")
-		self.ui.disco_info.hide()
-		self.main.client.getDiscoInfo(self.jid, callback=self._infoReceived)
+		self._getInfo()
+		def _getInfo(self):
+			self.main.client.getDiscoInfo(self.jid, callback=self._infoReceived)
 		#self.editing=False
 		#self.topic=""
 		#QtCore.QObject.connect(self.ui.info, QtCore.SIGNAL("cursorPositionChanged()"),self.topicChanged)
@@ -736,6 +738,7 @@ class groupChatWidget(QtGui.QWidget):
 	def toggleInfo(self, b):
 		log.msg("Info toggled:"+`b`)
 		if b:
+			self._getInfo()
 			self.ui.disco_info.show()
 			self.ui.toggleInfo.setToolTip(self.tr("Hide room info"))
 		else:
