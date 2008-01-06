@@ -522,7 +522,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="icon" >
-               <iconset>images/16x16/status/jabber-not_in_roster.png</iconset>
+               <iconset>images/16x16/apps/jabbim.png</iconset>
               </property>
               <property name="checkable" >
                <bool>true</bool>

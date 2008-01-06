@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sun Jan  6 09:42:38 2008
+# Created: Sun Jan  6 12:13:23 2008
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -266,7 +266,7 @@ class Ui_MainWindow(object):
 
         self.showOffline = QtGui.QToolButton(self.frame)
         self.showOffline.setMaximumSize(QtCore.QSize(16777215,20))
-        self.showOffline.setIcon(QtGui.QIcon("images/16x16/status/jabber-not_in_roster.png"))
+        self.showOffline.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
         self.showOffline.setCheckable(True)
         self.showOffline.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.showOffline.setArrowType(QtCore.Qt.NoArrow)
