@@ -315,6 +315,17 @@ def makePreferences(main,parent,layout,form,row=1):
 				#if d.name == "desc":
 					#widget.setToolTip(unicode(d))
 			row+=1
+	for key in keys:
+		x=form[key]
+		val=x['value']
+		if x['type']=="boolean":
+			if x.has_key("enable"):
+				for w in x['enable']:
+					QtCore.QObject.connect(var[key]['widget'],QtCore.SIGNAL("toggled (bool)"),var[w]['widget'].setEnabled)
+					if unicode(val)=="0" or unicode(val).lower()=="false":
+						var[w]['widget'].setEnabled(False)
+					elif unicode(val)=="1" or unicode(val).lower()=="true":
+						var[w]['widget'].setEnabled(True)
 	return var,row
 
 
