@@ -208,7 +208,9 @@ class clientClass(pyxl.client.Client):
 		for item in self.main.ui.roster.getHostItems(jid):
 			show=unicode(item.status)
 			item.icon=self.main.getIcon("jid@"+jid,size=self.main.ui.roster.iconSize,status=self.main.icons[show])
-
+		if jidT.JID(jid).userhost()==self.jid.userhost():
+			print 'self discoInfo'
+				self.main.buildOfflineMenu()
 	def on_rosterAddUser(self, contact):
 		# add user to the roster
 		groups=list(contact.groups)
