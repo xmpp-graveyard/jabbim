@@ -43,6 +43,7 @@ class statusWidgetWindow(QtGui.QDialog):
 		self.ui.show.addItem(self.main.getIcon(status="away",size="16x16"), self.main.status["away"],QtCore.QVariant("away"))
 		self.ui.show.addItem(self.main.getIcon(status="xa",size="16x16"), self.main.status["xa"],QtCore.QVariant("xa"))
 		self.ui.show.addItem(self.main.getIcon(status="dnd",size="16x16"), self.main.status["dnd"],QtCore.QVariant("dnd"))
+		self.ui.show.setCurrentIndex(self.ui.show.findData(QtCore.QVariant(self.main.selfStatus)))
 		self.jid=jid
 		#app.connect(self.ui.show, QtCore.SIGNAL("activated ( const QString & )"),self.ui.status.setPlainText)
 
