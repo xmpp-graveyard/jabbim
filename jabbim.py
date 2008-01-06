@@ -1593,11 +1593,15 @@ class mainWindow(QtGui.QMainWindow):
 
 	def sendPresence(self,jid,show,message="",pri=None):
 		"""
-		Send presence with show and message to JID jid and update GUI. Presence has priority pri.
+		Send presence and update GUI.
 		@type jid: unicode
+		@param jid: JID or None for sending presence to server
 		@type show: unicode
+		@param show: String from this list: ["online","chat","away","xa","dnd","offline"]
 		@type message: unicode
+		@param message: Status message
 		@type pri: integer
+		@param pri: Priority
 		"""
 		print "sending presence",jid,show
 		if not jid:
@@ -2695,7 +2699,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.config.write(f)
 		f.close()
 		utils.loadConfig(self,[]) # load config files
-		self.config['savePasswd']=savePassword
+		self.config['savePasswd']=unicode(savePassword)
 		if savePassword==True:
 			self.config['passwd']=rot13.scramble(password)
 		else:
