@@ -1438,7 +1438,11 @@ class mainWindow(QtGui.QMainWindow):
 		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.ui.rosterStackedWidget.setCurrentIndex(2)
-			self.connect()
+			if self.config['specifyHost']:
+				self.client.connect(self.config['connectHost'], self.config['connectPort'])
+			else:
+				self.client.connect()
+			
 
 	def buildOfflineMenu(self):
 		self.offlineMenu=QtGui.QMenu(self.ui.showOffline)
@@ -2865,7 +2869,10 @@ class mainWindow(QtGui.QMainWindow):
 			self.config.write(f)
 			f.close()
 			self.reconnect = True
-			self.client.connect()
+			if self.config['specifyHost']:
+				self.client.connect(self.config['connectHost'], self.config['connectPort'])
+			else:
+				self.client.connect()
 	
 	def _loadAvatar(self,file, hash, jid):
 		if os.path.isfile(unicode(file)):

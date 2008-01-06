@@ -68,7 +68,7 @@ def loadConfig(main,status):
 			"saveGeometry":"True",
 			"saveExpandedGroups":"True",
 			"expandedGroups":[],
-			"plugins":['notification'],
+			"plugins":['notification', 'archive'],
 			"rosterMode":"normal",
 			"chatMode":"normal",
 			"statusMessages":list(status),
@@ -78,7 +78,10 @@ def loadConfig(main,status):
 			"showTransports":"False",
 			"oneWindow":"False",
 			"askBeforeQuitMUC":"True",
-			"bigOnClick":"True"
+			"bigOnClick":"True", 
+			"specifyHost":"False",
+			"connectHost": "",
+			"connectPort": "5222"
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:
