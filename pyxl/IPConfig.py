@@ -22,20 +22,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import _winreg
 
 class Adapter:
-	def __init__(self, hklm, nicname):
-		card_key = _winreg.OpenKey(hklm, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\NetworkCards\\%s" % nicname)
-		(self.id, type) = _winreg.QueryValueEx(card_key, "ServiceName")
-		self.tcpip_params_key = _winreg.OpenKey(hklm, "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\%s" % self.id)
-		(self.dhcp_enabled, type) = _winreg.QueryValueEx(self.tcpip_params_key, "EnableDHCP")
-		(nameserver, type) = _winreg.QueryValueEx(self.tcpip_params_key, "NameServer")
-		self.nameservers = nameserver.replace(',',' ').split(' ')
+	def __init__(self, interfaces_key, nic_uuid):
+		try:
+			tcpip_params_key = _winreg.OpenKey(interfaces_key, nic_uuid)
+			(dhcp_enabled, type) = _winreg.QueryValueEx(tcpip_params_key, "EnableDHCP")
+			(nameserver, type) = _winreg.QueryValueEx(tcpip_params_key, "NameServer")
+			self.nameservers = nameserver.replace(',',' ').split(' ')
 
-		if nameserver == '' and self.dhcp_enabled:
-			try:
-				(nameserver, type) = _winreg.QueryValueEx(self.tcpip_params_key, "DhcpNameServer")
+			if nameserver == '' and dhcp_enabled:
+				(nameserver, type) = _winreg.QueryValueEx(tcpip_params_key, "DhcpNameServer")
 				self.nameservers = nameserver.split(' ')
-			except WindowsError:
-				self.nameservers = []
+		except WindowsError:
+			self.nameservers = []
 	
 	def get_dns(self):
 		return self.nameservers
@@ -44,13 +42,13 @@ class IPConfig:
 	def __init__(self):
 		self.cards = []
 		hklm = _winreg.ConnectRegistry(None, _winreg.HKEY_LOCAL_MACHINE)
-		cards_key = _winreg.OpenKey(hklm, r'SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkCards')
+		interfaces_key = _winreg.OpenKey(hklm, r'SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces')
 		i = 0
 		try:
 			while True:
-				card_name = _winreg.EnumKey(cards_key, i)
+				nic_uuid = _winreg.EnumKey(interfaces_key, i)
 				i = i + 1
-				card = Adapter(hklm, card_name)
+				card = Adapter(interfaces_key, nic_uuid)
 				self.cards.append(card)
 		except EnvironmentError:
 			pass
