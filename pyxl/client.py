@@ -104,6 +104,7 @@ class Client(derived):
 		self.registerFeature('jabber:iq:time')
 		self.registerFeature('http://jabber.org/protocol/chatstates')
 		self.registerFeature('http://jabber.org/protocol/commands')
+		self.registerFeature('http://kopete.kde.org/protocol/file-preview')
 
 		self.registerFeature('http://jabber.org/protocol/disco#info', 'http://jabber.org/protocol/commands', identity={"category":"automation","type":"command-list", "name":self.main.tr("Extra actions")})
 		self.registerFeature('jabber:x:data', 'http://jabber.org/protocol/commands')
@@ -1464,7 +1465,7 @@ class Client(derived):
 		
 
 	
-	def sendFile(self, jid, filename, fp, desc = None):
+	def sendFile(self, jid, filename, fp, desc = None, preview = None, previewType = 'image/jpeg'):
 		sid = str(random.randint(1000, sys.maxint))
 		self.ft[sid] = socks5.FTSend(self, sid, filename, jid, fp, desc)
 		self.ft[sid].start = time.time()
@@ -1479,6 +1480,9 @@ class Client(derived):
 		file = si.addElement('file', 'http://jabber.org/protocol/si/profile/file-transfer')
 		file['name'] = filename
 		file['size'] = unicode(self.ft[sid].size)
+		if preview != None:
+			prev = file.addElement('preview', 'http://kopete.kde.org/protocol/file-preview', content = preview)
+			prev['type'] = previewType
 		if desc != None:
 			file.addElement('desc', content = unicode(desc))
 		feature = si.addElement('feature', 'http://jabber.org/protocol/feature-neg')
@@ -1562,7 +1566,10 @@ class Client(derived):
 		for e in si.elements():
 			if e.name == 'file':
 				file = e.attributes
-##				del file['xmlns']
+				for elm in e.elements():
+					if elm.name == 'preview':
+						file['preview'] = unicode(elm)
+						file['previewType'] = elm.getAttribute('type', 'image/jpeg')
 			elif e.name == 'feature':
 				x = e.firstChildElement()
 				for field in x.elements():
