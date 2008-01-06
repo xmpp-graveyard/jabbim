@@ -1445,14 +1445,29 @@ class mainWindow(QtGui.QMainWindow):
 		self.showOfflineAction.setObjectName('show_offline')
 		self.showOfflineAction.setChecked(self.offline)
 		QtCore.QObject.connect(self.showOfflineAction,QtCore.SIGNAL("toggled ( bool )"),self.hideOffline)
+
+		action=self.offlineMenu.addAction(self.tr("Show transports"))
+		action.setCheckable(True)
+		action.setObjectName('show_transports')
+		if self.config['showTransports']=='True':
+			action.setChecked(True)
+
+
 		separator=False
 		for resource in self.selfResources:
 			print 'self resource:',resource
+			menu=QtGui.QMenu(unicode(resource),self.offlineMenu)
+			separator=True
 			if self.client.roster['users'][self.client.jid.userhost()].resources[resource].hasFeature('http://jabber.org/protocol/commands'):
-				action=self.offlineMenu.addAction(unicode(resource))
+				action=menu.addAction(self.tr("Commands"))
 				action.setObjectName('commands')
 				action.setData(QtCore.QVariant(unicode(resource)))
-				separator=True
+
+			action=menu.addAction(self.tr("Send file"))
+			action.setObjectName('send_file')
+			action.setData(QtCore.QVariant(unicode(resource)))
+
+			self.offlineMenu.addMenu(menu)
 		if separator:
 			self.offlineMenu.addSeparator()
 		self.ui.showOffline.setMenu(self.offlineMenu)
@@ -1463,6 +1478,19 @@ class mainWindow(QtGui.QMainWindow):
 		if cmd=='commands':
 			self.cmds = widgets.commands.Commands(self, unicode(self.client.jid.userhost())+"/"+unicode(action.data().toString()))
 			self.cmds.dialog.show()
+		elif cmd=='send_file':
+			jid=unicode(self.client.jid.userhost())+"/"+unicode(action.data().toString())
+			file=QtGui.QFileDialog.getOpenFileNames(self,"Choose file")
+			file=list(file)
+			if len(file)!=0:
+				new=[]
+				for f in file:
+					new.append(unicode(f))
+				file=new
+				self.dialog=widgets.filetransfer.filetransferDialog(self,file,jid)
+				self.dialog.show()
+		elif cmd=="show_transports":
+			self.config['showTransports']=unicode(action.isChecked())
 
 	def tables_created(self,data=None):
 		if not data[1][0]:
