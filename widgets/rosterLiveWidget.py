@@ -1574,7 +1574,7 @@ class rosterWidget(QtGui.QWidget):
 				self.selectItem(item)
 			#self.timer.start(40)
 			event.accept()
-		elif (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and self.selected != None:
+		elif (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and self.item != None:
 			jid = jidT.JID(self.item.jid)
 			jid_r = jid.userhost()
 			item=self.getUserItems(jid_r)[0]
