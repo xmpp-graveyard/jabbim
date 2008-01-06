@@ -1465,13 +1465,24 @@ class Client(derived):
 		
 
 	
-	def sendFile(self, jid, filename, fp, desc = None, preview = None, previewType = 'image/jpeg'):
+	def sendFile(self, outjid, filename, fp, desc = None, preview = None, previewType = 'image/jpeg', typ = None): #typ = None/ibb/socks5
 		sid = str(random.randint(1000, sys.maxint))
-		self.ft[sid] = socks5.FTSend(self, sid, filename, jid, fp, desc)
-		self.ft[sid].start = time.time()
-		log.msg('sending file to '+ jid)
+		
+		log.msg('sending file to '+ outjid)
 		iq = IQ(self.xmlstream, 'set')
-		iq['to'] = jid
+		
+		outjd = jid.JID(outjid)
+		frmjid = None
+		if self.groupchats.has_key(outjd.userhost()):
+			if self.groupchats[outjd.userhost()].users[outjd.resource].truejid == None:
+				frmjid = outjd.userhost() + '/' + self.groupchats[outjd.userhost()].nick
+				iq['from'] = frmjid
+				typ = 'ibb'
+			else:
+				outjid = self.groupchats[outjd.userhost()].users[outjd.resource].truejid
+		iq['to'] = outjid
+		self.ft[sid] = socks5.FTSend(self, sid, filename, outjid, fp, desc, frmjid)
+		self.ft[sid].start = time.time()
 		
 		si = iq.addElement('si', 'http://jabber.org/protocol/si')
 		si['id'] = sid
@@ -1491,8 +1502,13 @@ class Client(derived):
 		field = x.addElement('field')
 		field['var'] = 'stream-method'
 		field['type'] = 'list-single'
-		field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
-		field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
+		if typ == None:
+			field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
+			field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
+		elif typ == 'ibb':
+			field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
+		elif typ == 'socks5':
+			field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
 #		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
@@ -1577,7 +1593,7 @@ class Client(derived):
 						for option in field.elements():
 							methods.append(unicode(option.firstChildElement()))
 		sid = si['id']
-		self.ft[sid] = socks5.FTReceive(self, el['from'], sid, file, methods)
+		self.ft[sid] = socks5.FTReceive(self, el['from'], sid, file, methods, el['to'])
 		self.on_fileReceived(sid, el['id'])
 	
 # 	def on_FileReceived(self, sid, id):
@@ -1596,6 +1612,7 @@ class Client(derived):
 		iq = Element((None,'iq'))
 		obj = self.ft[sid]
 		iq['to'] = obj.tojid
+		iq['from'] = obj.frmjid
 		iq['id'] = id
 		iq['type'] = 'result'
 		si = iq.addElement('si', 'http://jabber.org/protocol/si')
@@ -1626,6 +1643,8 @@ class Client(derived):
 	def ibbSend(self, sid):
 		iq = IQ(self.xmlstream, 'set')
 		iq['to'] = self.ft[sid].tojid
+		if self.ft[sid].frmjid != None:
+			iq['from'] = self.ft[sid].frmjid
 		opn = iq.addElement('open', 'http://jabber.org/protocol/ibb')
 		opn['sid'] = sid
 		opn['block-size'] = '4096'
@@ -1643,6 +1662,8 @@ class Client(derived):
 	def _ftIBBStart(self,el, sid):
 		iq = IQ(self.xmlstream, 'set')
 		iq['to'] = self.ft[sid].tojid
+		if self.ft[sid].frmjid != None:
+			iq['from'] = self.ft[sid].frmjid
 		data = iq.addElement('data', 'http://jabber.org/protocol/ibb')
 		data['sid'] = sid
 		data['seq'] = unicode(self.ft[sid].ibbSeq)
@@ -1665,6 +1686,8 @@ class Client(derived):
 	def _ftIBBContinue(self,el, sid):
 		iq = IQ(self.xmlstream, 'set')
 		iq['to'] = self.ft[sid].tojid
+		if self.ft[sid].frmjid != None:
+			iq['from'] = self.ft[sid].frmjid
 		data = iq.addElement('data', 'http://jabber.org/protocol/ibb')
 		data['sid'] = sid
 		data['seq'] = unicode(self.ft[sid].ibbSeq)
@@ -1674,6 +1697,8 @@ class Client(derived):
 			print 'konec!', data['seq']
 			iq = IQ(self.xmlstream, 'set')
 			iq['to'] = self.ft[sid].tojid
+			if self.ft[sid].frmjid != None:
+				iq['from'] = self.ft[sid].frmjid
 			opn = iq.addElement('close', 'http://jabber.org/protocol/ibb')
 			opn['sid'] = sid
 #			self.on_xml(iq.toXml())
@@ -1696,6 +1721,8 @@ class Client(derived):
 		iq = Element((None,'iq'))
 		obj = self.ft[sid]
 		iq['to'] = obj.tojid
+		if self.ft[sid].frmjid != None:
+			iq['from'] = self.ft[sid].frmjid
 		iq['id'] = id
 		iq['type'] = 'result'
 		self.xmlstream.send(iq)
@@ -1707,6 +1734,8 @@ class Client(derived):
 		sid = opn['sid']
 		iq = Element((None,'iq'))
 		iq['to'] = el['from']
+		if self.ft[sid].frmjid != None:
+			iq['from'] = self.ft[sid].frmjid
 		iq['id'] = el['id']
 		iq['type'] = 'result'
 		self.xmlstream.send(iq)
@@ -1723,6 +1752,8 @@ class Client(derived):
 			self.disp(el['id'])
 			iq = Element((None,'iq'))
 			iq['to'] = el['from']
+			if self.ft[sid].frmjid != None:
+				iq['from'] = self.ft[sid].frmjid
 			iq['id'] = el['id']
 			iq['type'] = 'result'
 			self.xmlstream.send(iq)

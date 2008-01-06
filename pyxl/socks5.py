@@ -490,7 +490,7 @@ class Receive(protocol.Protocol):
 			pass
 
 class FTSend:
-	def __init__(self, client, sid, filename, tojid, file, description= None):
+	def __init__(self, client, sid, filename, tojid, file, description= None, frmjid = None):
 		self.sid = sid
 		self.filename = filename
 		self.fp = open(file, 'rb')
@@ -505,6 +505,7 @@ class FTSend:
 		self.error = None	
 		self.fs = None	
 		self.ibbSeq = 0
+		self.frmjid = frmjid
 
 
 	
@@ -512,6 +513,8 @@ class FTSend:
 		log.msg('received activate for '+self.filename)
 		iq = IQ(self.client.xmlstream, 'set')
 		iq['to'] = self.streamhost
+		if self.frmjid != None:
+			iq['from'] = self.frmjid
 		q = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
 		q['sid'] = self.sid
 		q.addElement('activate', content = self.tojid)
@@ -542,7 +545,7 @@ class FTSend:
 		
 
 class FTReceive:
-	def __init__(self, client,jid, sid, file, methods):
+	def __init__(self, client,jid, sid, file, methods, frmjid):
 		self.client = client
 		self.tojid = jid
 		self.sid = sid
@@ -560,13 +563,14 @@ class FTReceive:
 		self.ibbCache = {}
 		self.connector = None
 		self.error = None
+		self.frmjid = frmjid
 	
 	def connectStreamHost(self):
 		streamhost = self.streamhosts.pop(0)
 		self.activeStreamhost = streamhost
 		f = protocol.ClientFactory()
 		f.protocol = Receive
-		addr = sha.new("%s%s%s" % (self.sid,  self.tojid, self.client.jid.full())).hexdigest()
+		addr = sha.new("%s%s%s" % (self.sid,  self.tojid, self.frmjid)).hexdigest()
 		factory = ClientFactory(streamhost['host'], int(streamhost['port']),addr, 0,  f, xmpp = self.client, xmpp_sid = self.sid) 
 		self.connector = self.client.reactor.connectTCP(streamhost['host'], int(streamhost['port']), factory)
 	
@@ -581,6 +585,7 @@ class FTReceive:
 		print 'activate!'
 		iq = Element((None,'iq'))
 		iq['to'] = self.tojid
+		iq['from'] = self.frmjid
 		iq['id'] = self.streamhostsID
 		iq['type'] = 'result'
 		query = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
