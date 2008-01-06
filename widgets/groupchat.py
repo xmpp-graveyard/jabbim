@@ -400,8 +400,8 @@ class groupChatWidget(QtGui.QWidget):
 		self.disco_features = []
 		log.msg("REQUESTING ROOM INFO")
 		self._getInfo()
-		def _getInfo(self):
-			self.main.client.getDiscoInfo(self.jid, callback=self._infoReceived)
+	def _getInfo(self):
+		self.main.client.getDiscoInfo(self.jid, callback=self._infoReceived)
 		#self.editing=False
 		#self.topic=""
 		#QtCore.QObject.connect(self.ui.info, QtCore.SIGNAL("cursorPositionChanged()"),self.topicChanged)
