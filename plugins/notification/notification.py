@@ -289,7 +289,7 @@ class Plugin(plugins.PluginBase):
 		self.osd.osdx=int(self.config['osd_x'])
 		self.osd.osdy=int(self.config['osd_y'])
 		self.osd.transparent=False
-		self.osd.pos()
+		self.osd.pos(self.tr("Notification test - can drag"))
 
 		#dialog.setModal(False)
 
@@ -325,12 +325,12 @@ class Plugin(plugins.PluginBase):
 
 	def buildRosterMenu(self):
 		menu=self.rosterMenu()
-		menu.addAction("Notification test",self.testSlot)
+		menu.addAction(self.tr("Notification test"),self.testSlot)
 
 	def testSlot(self):
 		self.main.tray.showMessage(self.tr("Notification "),self.tr("Notification plugin test :)"), QtGui.QSystemTrayIcon.Information, 2000)
 		self.playsound('new_message')
-		self.osd.test()
+		self.osd.test(self.tr("Notification test"))
 	
 	def on_evil(self, frm, typ):
 		jid = jidT.JID(frm)

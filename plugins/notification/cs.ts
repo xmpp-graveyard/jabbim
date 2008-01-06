@@ -33,6 +33,29 @@
         <source>New message from </source>
         <translation>Nová zpráva od </translation>
     </message>
+    <message>
+        <location filename="notification.py" line="292"/>
+        <source>Notification test - can drag</source>
+        <translation>Zde se budou zobrazovat zprávy. Táhnutím můžete přesunout na Vámi požadovanou pozici</translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="333"/>
+        <source>Notification test</source>
+        <translation>Test upozornění</translation>
+    </message>
+</context>
+<context>
+    <name>osd</name>
+    <message>
+        <location filename="notification.py" line="124"/>
+        <source>Notification test-can drag</source>
+        <translation type="obsolete">Zde se budou zobrazovat zprávy. Táhnutím můžete přesunout na Vámi požadovanou pozici</translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="150"/>
+        <source>Notification test</source>
+        <translation type="obsolete">Zde se budou zobrazovat zprávy</translation>
+    </message>
 </context>
 <context>
     <name>self.main</name>
@@ -95,6 +118,16 @@
         <location filename="notification.py" line="235"/>
         <source>Use OSD for messages</source>
         <translation>Použij OSD pro zprávy</translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="139"/>
+        <source>Notification test</source>
+        <translation type="obsolete">Zde se budou zobrazovat zprávy</translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="125"/>
+        <source>Notification test-can drag</source>
+        <translation type="obsolete">Zde se budou zobrazovat zprávy. Táhnutím můžete přesunout na Vámi požadovanou pozici</translation>
     </message>
 </context>
 </TS>

@@ -32,6 +32,19 @@
         <source>New message from </source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="notification.py" line="292"/>
+        <source>Notification test - can drag</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="333"/>
+        <source>Notification test</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>osd</name>
 </context>
 <context>
     <name>self.main</name>
