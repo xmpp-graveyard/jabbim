@@ -315,6 +315,10 @@ def makePreferences(main,parent,layout,form,row=1):
 				#if d.name == "desc":
 					#widget.setToolTip(unicode(d))
 			row+=1
+		if var.has_key(key):
+			if x.has_key("tooltip"):
+				var[key]['widget'].setTooltip(unicode(x['tooltip']))
+		
 	for key in keys:
 		x=form[key]
 		val=x['value']
