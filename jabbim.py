@@ -78,6 +78,9 @@ class clientClass(pyxl.client.Client):
 	def on_bookmarksFail(self):
 		self.main.ui.tabWidget.setTabEnabled(1,False)
 		self.bookmarksEnabled=False
+		mainWindow=self.main
+		self.main.tray.showMessage(MainWindow.tr("Error"),mainWindow.tr("Your server doesn't support Private XML Storage. Some functions will be disabled."))
+		
 	def on_privacyFail(self):
 		self.main.ui.actionPrivacy_list_editor.setEnabled(False)
 
