@@ -1438,7 +1438,7 @@ class mainWindow(QtGui.QMainWindow):
 		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.ui.rosterStackedWidget.setCurrentIndex(2)
-			if self.config['specifyHost']:
+			if self.config['specifyHost'] == 'True':
 				self.client.connect(self.config['connectHost'], self.config['connectPort'])
 			else:
 				self.client.connect()
@@ -2869,7 +2869,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.config.write(f)
 			f.close()
 			self.reconnect = True
-			if self.config['specifyHost']:
+			if self.config['specifyHost'] == 'True':
 				self.client.connect(self.config['connectHost'], self.config['connectPort'])
 			else:
 				self.client.connect()
