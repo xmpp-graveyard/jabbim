@@ -563,9 +563,14 @@ class clientClass(pyxl.client.Client):
 			print "PRESENCE ERROR:"+unicode(error)
 			return
 		mainWindow=self.main
-
-		
+		#else:
+			#print jid.userhost(),self.jid.userhost()
 		if show=="offline":
+			if jid.userhost()==self.jid.userhost():
+				print 'self presence'
+				if jid.resource in self.main.selfResources:
+					self.main.selfResources.remove(jid.resource)
+					self.main.buildOfflineMenu()
 			#jid=jid.full() # get jid
 			# presence has resource
 			#if len(unicode(jid).rsplit("/"))!=1:
@@ -607,6 +612,11 @@ class clientClass(pyxl.client.Client):
 		else:
 			#jid=jid.full() # get jid
 			# presence has resource
+			if jid.userhost()==self.jid.userhost():
+				print 'self presence'
+				if not jid.resource in self.main.selfResources:
+					self.main.selfResources.append(jid.resource)
+					self.main.buildOfflineMenu()
 			status=None
 			if jid.resource:
 				if self.roster['users'][jid.userhost()].resources.has_key(jid.resource):
@@ -1324,9 +1334,10 @@ class mainWindow(QtGui.QMainWindow):
 		self.xmlConsole=XMLConsole(self)
 		self.ui.showOffline.hide()
 
+
 		# signals
 		QtCore.QObject.connect(self.ui.login_connect, QtCore.SIGNAL("clicked()"),self.connect)
-		QtCore.QObject.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
+		#QtCore.QObject.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
 		QtCore.QObject.connect(self.ui.toggleInvisible, QtCore.SIGNAL("clicked(bool)"),self.toggleInvisibility)
 		QtCore.QObject.connect(self.ui.registerButton, QtCore.SIGNAL("clicked ()"),self.registerButtonClicked)
 		QtCore.QObject.connect(self.ui.login_cancel, QtCore.SIGNAL("clicked ()"),self.connectCancel)
@@ -1365,6 +1376,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.loadSkin() # load chat skin
 		self.loadTheme() # load theme
 		self.ui.roster.reskin()
+		self.selfResources=[]
+		self.buildOfflineMenu()
 		
 		# open log file
 		if self.config['log'] == 'true':
@@ -1419,6 +1432,31 @@ class mainWindow(QtGui.QMainWindow):
 		if self.config['autoJoin']=='True':
 			self.ui.rosterStackedWidget.setCurrentIndex(2)
 			self.connect()
+
+	def buildOfflineMenu(self):
+		self.offlineMenu=QtGui.QMenu(self.ui.showOffline)
+		self.showOfflineAction=self.offlineMenu.addAction(self.tr("Show Offline"))
+		self.showOfflineAction.setCheckable(True)
+		self.showOfflineAction.setObjectName('show_offline')
+		self.showOfflineAction.setChecked(self.offline)
+		QtCore.QObject.connect(self.showOfflineAction,QtCore.SIGNAL("toggled ( bool )"),self.hideOffline)
+		separator=False
+		for resource in self.selfResources:
+			if self.client.roster['users'][self.client.jid.userhost()].resources[resource].hasFeature('http://jabber.org/protocol/commands'):
+				action=self.offlineMenu.addAction(unicode(resource))
+				action.setObjectName('commands')
+				action.setData(QtCore.QVariant(unicode(resource)))
+				separator=True
+		if separator:
+			self.offlineMenu.addSeparator()
+		self.ui.showOffline.setMenu(self.offlineMenu)
+		app.connect(self.offlineMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.offlineMenuChanged)
+
+	def offlineMenuChanged(self,action):
+		cmd=unicode(action.objectName())
+		if cmd=='commands':
+			self.cmds = widgets.commands.Commands(self, unicode(self.client.jid.userhost())+"/"+unicode(action.data().toString()))
+			self.cmds.dialog.show()
 
 	def tables_created(self,data=None):
 		if not data[1][0]:

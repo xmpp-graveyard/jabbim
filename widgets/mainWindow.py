@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sun Dec 23 18:58:17 2007
+# Created: Sun Jan  6 09:42:38 2008
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -268,6 +268,7 @@ class Ui_MainWindow(object):
         self.showOffline.setMaximumSize(QtCore.QSize(16777215,20))
         self.showOffline.setIcon(QtGui.QIcon("images/16x16/status/jabber-not_in_roster.png"))
         self.showOffline.setCheckable(True)
+        self.showOffline.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.showOffline.setArrowType(QtCore.Qt.NoArrow)
         self.showOffline.setObjectName("showOffline")
         self.gridlayout4.addWidget(self.showOffline,1,3,1,1)
@@ -404,7 +405,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0,0,335,29))
+        self.menubar.setGeometry(QtCore.QRect(0,0,335,31))
         self.menubar.setObjectName("menubar")
 
         self.menuPlugins = QtGui.QMenu(self.menubar)
@@ -474,7 +475,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.rosterStackedWidget.setCurrentIndex(0)
+        self.rosterStackedWidget.setCurrentIndex(1)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.login_password,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)
         QtCore.QObject.connect(self.login_jid,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)

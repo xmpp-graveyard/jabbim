@@ -30,7 +30,7 @@
       </property>
       <widget class="QStackedWidget" name="rosterStackedWidget" >
        <property name="currentIndex" >
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="login" >
         <layout class="QGridLayout" >
@@ -527,6 +527,9 @@ p, li { white-space: pre-wrap; }
               <property name="checkable" >
                <bool>true</bool>
               </property>
+              <property name="popupMode" >
+               <enum>QToolButton::InstantPopup</enum>
+              </property>
               <property name="arrowType" >
                <enum>Qt::NoArrow</enum>
               </property>
@@ -777,7 +780,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>335</width>
-     <height>29</height>
+     <height>31</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPlugins" >
