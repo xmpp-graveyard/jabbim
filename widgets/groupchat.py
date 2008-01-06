@@ -1069,8 +1069,12 @@ class groupChatWidget(QtGui.QWidget):
 				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 				return
 			elif services.startswith("/nick "):
-				self.main.client.sendPresence(to=self.jid+"/"+services.replace("/nick ",""))
-				self.main.client.groupchats[self.jid].nick=services.replace("/nick ","")
+				if not self.main.client.groupchats[self.jid].users.has_key(services.replace("/nick ","")):
+					self.main.client.sendPresence(to=self.jid+"/"+services.replace("/nick ",""))
+					self.main.client.groupchats[self.jid].nick=services.replace("/nick ","")
+				else:
+					message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("Nickname is used by somebody else.")))
+					self.textEditWrite(message)
 				self.ui.line.clear()
 				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 				return
