@@ -1082,16 +1082,16 @@ class clientClass(pyxl.client.Client):
 			if tab!=None:
 				if self.main.chat.ui.chatTab.tabBar().tabTextColor(tabIndex).name()!=QtGui.QColor(255,0,0).name():
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(0,128,0))
-				tab.chat.ui.chatstate.setText(unicode(user)+" "+mainWindow.tr("is typing..."))
+				tab.chat.ui.chatstate.setText(mainWindow.tr("is typing..."))
 		elif chatstate=="active":
 			if tab!=None:
-				tab.chat.ui.chatstate.setText(unicode(user)+" "+mainWindow.tr("gives attention to chat."))
+				tab.chat.ui.chatstate.setText(mainWindow.tr("gives attention to chat."))
 		elif chatstate=="paused":
 			if tab!=None:
-				tab.chat.ui.chatstate.setText(unicode(user)+" "+mainWindow.tr("stops typing."))
+				tab.chat.ui.chatstate.setText(mainWindow.tr("stops typing."))
 		elif chatstate=="inactive":
 			if tab!=None:
-				tab.chat.ui.chatstate.setText(unicode(user)+" "+mainWindow.tr("doesn't give attention to chat."))
+				tab.chat.ui.chatstate.setText(mainWindow.tr("doesn't give attention to chat."))
 
 	def on_vcardReceived(self,  jid, card):
 		#print card
