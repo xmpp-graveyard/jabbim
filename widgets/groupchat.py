@@ -1144,6 +1144,7 @@ class groupChatWidget(QtGui.QWidget):
 		if not self.tabWord:
 			self.name_id=-1
 			self.tabWord=text
+		
 		#text=unicode(cur.selectedText()).lower()
 		#text=text[0]
 		repeat=False
@@ -1151,41 +1152,43 @@ class groupChatWidget(QtGui.QWidget):
 		users.remove(self.nick)
 		#print text
 		for i in range(len(users)):
-			if unicode(users[i]).lower()[:len(self.tabWord)]==unicode(self.tabWord).lower() and i>self.name_id:
-				#cur=self.ui.line.textCursor()
-				#cur.movePosition(QtGui.QTextCursor.End)
-				#self.ui.line.setTextCursor(cur)
-				#self.ui.line.setPlainText(users[i]+": ")
-				cur=self.ui.line.textCursor()
-				#cur.clearSelection()
-				#cur.removeSelectedText()
-				#cur.insertText(users[i]+": ")
-				x=0 #first letter of word index in string
-				newt=""
-				pos=0
-				ending = " " #ending of the sugested nick, set to space by default, example "Sef "
-				for word in original.split(" "):
-					if cur.position()>x and cur.position()<=x+1+len(word) and len(word)!=0:
-						if x == 0: #if the nick is the first word in string, ending will be ": ", example - "Sef: "
-							ending = ": "
-						newt+=users[i]+ending
-						pos=x+len(users[i]+ending)
-					else:
-						newt+=word+" "
-					x=x+1+len(word)
-				if len(word)==0:
-					newt=newt[:-1]
-				#cur.movePosition(QtGui.QTextCursor.NextWord, QtGui.QTextCursor.KeepAnchor)
-
-				self.ui.line.setPlainText(newt)
-				cur.setPosition(pos)
-				self.ui.line.setTextCursor(cur)
-				self.name_id=i
-				return
-			#if unicode(users[i]).lower()[:len(text)]==text:
-				#repeat=True
+			if unicode(users[i]).lower()[:len(self.tabWord)]==unicode(self.tabWord).lower():
+				if i>self.name_id:
+					#cur=self.ui.line.textCursor()
+					#cur.movePosition(QtGui.QTextCursor.End)
+					#self.ui.line.setTextCursor(cur)
+					#self.ui.line.setPlainText(users[i]+": ")
+					cur=self.ui.line.textCursor()
+					#cur.clearSelection()
+					#cur.removeSelectedText()
+					#cur.insertText(users[i]+": ")
+					x=0 #first letter of word index in string
+					newt=""
+					pos=0
+					ending = " " #ending of the sugested nick, set to space by default, example "Sef "
+					for word in original.split(" "):
+						if cur.position()>x and cur.position()<=x+1+len(word) and len(word)!=0:
+							if x == 0: #if the nick is the first word in string, ending will be ": ", example - "Sef: "
+								ending = ": "
+							newt+=users[i]+ending
+							pos=x+len(users[i]+ending)
+						else:
+							newt+=word+" "
+						x=x+1+len(word)
+					if len(word)==0:
+						newt=newt[:-1]
+					#cur.movePosition(QtGui.QTextCursor.NextWord, QtGui.QTextCursor.KeepAnchor)
+	
+					self.ui.line.setPlainText(newt)
+					cur.setPosition(pos)
+					self.ui.line.setTextCursor(cur)
+					self.name_id=i
+					return
+				#if unicode(users[i]).lower()[:len(text)]==text:
+					#repeat=True
+				repeat=True
 		self.name_id=-1
-		#if repeat==True:
-		if len(users)!=0:
+		if repeat==True:
+		#if len(users)!=0:
 			self.tabPressed()
 			
