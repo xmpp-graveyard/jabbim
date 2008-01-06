@@ -44,6 +44,7 @@ from privacy import *
 from adhoc import *
 import rc
 #from bosh import client as bclient
+#import bosh_wokkel
 try:
 	from hashlib import sha1
 except:
@@ -129,6 +130,7 @@ class Client(derived):
 		self.dispatcher.registerHandler('on_message', self.on_message, 'on_message')
 		self.dispatcher.registerHandler('on_presence', self.on_presence, 'on_presence')
 		self.dispatcher.registerHandler('on_GCpresence', self.on_GCpresence, 'on_GCpresence')
+		self.dispatcher.registerHandler('on_authd', self.on_authd, 'on_authd')
 		self.xping = LoopingCall(self.heartbeat)
 		
 	def chyba(self, err):
@@ -206,9 +208,9 @@ class Client(derived):
 
 				
 	def _connect(self, host, port): 
-		self.on_connect()
+		
 		self.factory = client.XMPPClientFactory(self.jid,self.password)
-#		self.factory = bclient.BOSHClientFactory(self.jid, self.password, 'http://localhost:8080', bosh_attrs = {"wait": "100"})
+#		self.factory = bclient.BOSHClientFactory(self.jid, self.password, 'http://jabber.pilsfree.cz:8080/httpb', bosh_attrs = {"wait": "100"})
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
 ##		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
 ##		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
@@ -220,8 +222,9 @@ class Client(derived):
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
 		self.connection = self.reactor.connectTCP(host,port,self.factory)
-#		self.connection = self.reactor.connectTCP('localhost',8080,self.factory)
 
+#		self.connection = self.reactor.connectTCP('jabber.pilsfree.cz',8080,self.factory)
+		self.on_connect()
 #		print dir(self.factory)
 #		p = self.factory.buildProtocol('tcp:localhost:8080')
 #		print dir(p)
@@ -315,15 +318,15 @@ class Client(derived):
 		self.getDiscoInfo(self.jid.host)#,  callback = self._pepSupport)
 		self.getDiscoItems(self.jid.host, callback = self._gotServices)
 		self.getPrivacy()
-		self.reactor.callFromThread(self.on_authd)
+#		self.reactor.callFromThread(self.on_authd)
 		self.dispatcher.publishEvent('on_authd')
 		self.main._connected()
-
+		print 'pre commands'
 		self.commands = Commands(self.main)
 		self.commands.registerNode("http://jabber.org/protocol/rc#set-status", self.main.tr("Change status"), rc.fSetStatus)
 		self.commands.registerNode("http://jabber.org/protocol/rc#leave-groupchats", self.main.tr("Leave groupchats"), rc.fLeaveGC)
 		self.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#resend-file", self.main.tr("Resend file"), rc.ResendFile)
-
+		print 'post commands'
 #		def pis(co):
 #			print co
 #		self.callRemote('rpc@jabbim.cz/service', 'ping', (' ',)).addCallback(pis)
@@ -600,11 +603,17 @@ class Client(derived):
 #			self.on_xml(el.toXml())
 	def rawDataIn(self, buf):
 		if self.log:
-			self.on_xml(u'IN: ' + unicode(buf, 'utf8', 'replace'))
+			try:
+				self.on_xml(u'IN: ' + unicode(buf, 'utf8', 'replace'))
+			except:
+				self.on_xml(u'IN: ' + buf)
 	
 	def rawDataOut(self, buf):
 		if self.log:
-			self.on_xml(u'OUT: ' + unicode(buf, 'utf8', 'replace'))
+			try:
+				self.on_xml(u'OUT: ' + unicode(buf, 'utf8', 'replace'))
+			except:
+				self.on_xml(u'OUT: ' + buf)
 			
 	def _onRosterArrive(self, el):
 		log.msg( 'roster arrived')

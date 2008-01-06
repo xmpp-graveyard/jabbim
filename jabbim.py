@@ -260,6 +260,7 @@ class clientClass(pyxl.client.Client):
 			user.setIcon(0,self.main.getIcon(size="16x16"))
 
 	def on_rosterArrived(self):
+		print 'we got roster'
 		self.main.ui.splashProgress.setValue(60)
 		mainWindow=self.main
 		self.main.ui.loginInfo.setText(mainWindow.tr("Roster arrived."))
@@ -1206,7 +1207,9 @@ class clientClass(pyxl.client.Client):
 		mainWindow=self.main
 		self.main.ui.loginInfo.setText(mainWindow.tr("Jabbim is connected to the server."))
 		self.main.ui.splashProgress.setValue(20)
+	
 	def on_authd(self):
+		mainWindow=self.main
 		self.main.ui.loginInfo.setText(mainWindow.tr("Jabbim is logged in."))
 		self.main.ui.splashProgress.setValue(40)
 	
@@ -2624,6 +2627,7 @@ class mainWindow(QtGui.QMainWindow):
 		layout.addWidget(self.scroll)
 
 	def _connected(self):
+		print 'connected in main'
 		self.ui.roster.reskin()
 		self.ui.actionAdd_Contact.setEnabled(True)
 		self.ui.actionJoin_Groupchat.setEnabled(True)
@@ -2637,6 +2641,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.showOffline.show()
 		self.tray.showMessage(self.tr("Jabbim"),self.tr("Jabbim is ready! You are connected! :) "))
 		self.tray.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
+		print 'end connected in main'
 	def disconnect(self):
 		#if self.client!=None:
 		reactor.stop2()
