@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="en">
-<defaultcodec></defaultcodec>
 <context>
     <name>Dialog</name>
     <message>
@@ -974,32 +973,32 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>groupChatWidget</name>
     <message>
-        <location filename="widgets/groupchat.py" line="527"/>
+        <location filename="widgets/groupchat.py" line="526"/>
         <source>Participants</source>
         <translation>Participants</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="528"/>
+        <location filename="widgets/groupchat.py" line="527"/>
         <source>Moderators</source>
         <translation>Moderators</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="529"/>
+        <location filename="widgets/groupchat.py" line="528"/>
         <source>Visitors</source>
         <translation>Visitors</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="558"/>
+        <location filename="widgets/groupchat.py" line="557"/>
         <source>Kick</source>
         <translation>Kick</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="661"/>
+        <location filename="widgets/groupchat.py" line="660"/>
         <source>Reason</source>
         <translation>Reason</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="661"/>
+        <location filename="widgets/groupchat.py" line="660"/>
         <source>Enter reason:</source>
         <translation>Enter reason:</translation>
     </message>
@@ -1019,12 +1018,12 @@ p, li { white-space: pre-wrap; }
         <translation>Connecting to MUC. This can take a few seconds.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="953"/>
+        <location filename="widgets/groupchat.py" line="952"/>
         <source>Name:</source>
         <translation>Name:</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="957"/>
+        <location filename="widgets/groupchat.py" line="956"/>
         <source>JID:</source>
         <translation>JID:</translation>
     </message>
@@ -1089,122 +1088,122 @@ p, li { white-space: pre-wrap; }
         <translation>Unsecured</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="634"/>
+        <location filename="widgets/groupchat.py" line="633"/>
         <source>vCard</source>
         <translation>User Info</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="816"/>
+        <location filename="widgets/groupchat.py" line="815"/>
         <source>You have been kicked from the room by %s. Reason: %s.</source>
         <translation>You have been kicked from the room by %s. Reason: %s.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="819"/>
+        <location filename="widgets/groupchat.py" line="818"/>
         <source>You have been kicked from the room by %s.</source>
         <translation>You have been kicked from the room by %s.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="821"/>
+        <location filename="widgets/groupchat.py" line="820"/>
         <source>You have been kicked from the room. Reason: %s.</source>
         <translation>You have been kicked from the room. Reason: %s.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="823"/>
+        <location filename="widgets/groupchat.py" line="822"/>
         <source>You have been kicked from the room.</source>
         <translation>You have been kicked from the room.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="830"/>
+        <location filename="widgets/groupchat.py" line="829"/>
         <source>You have been banned for the room.</source>
         <translation>You have been banned for the room.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="834"/>
+        <location filename="widgets/groupchat.py" line="833"/>
         <source> has been kicked from this room.</source>
         <translation> has been kicked from this room.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="837"/>
+        <location filename="widgets/groupchat.py" line="836"/>
         <source> has been banned for this room.</source>
         <translation> has been banned for this room.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="746"/>
+        <location filename="widgets/groupchat.py" line="745"/>
         <source>Show room info</source>
         <translation>Show room info</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="563"/>
+        <location filename="widgets/groupchat.py" line="562"/>
         <source>Ban</source>
         <translation>Ban</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="574"/>
+        <location filename="widgets/groupchat.py" line="573"/>
         <source>Revoke ownership</source>
         <translation>Revoke ownership</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="579"/>
+        <location filename="widgets/groupchat.py" line="578"/>
         <source>Grant ownership</source>
         <translation>Grant ownership</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="585"/>
+        <location filename="widgets/groupchat.py" line="584"/>
         <source>Revoke admin</source>
         <translation>Revoke admin</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="590"/>
+        <location filename="widgets/groupchat.py" line="589"/>
         <source>Grant admin</source>
         <translation>Grant admin</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="597"/>
+        <location filename="widgets/groupchat.py" line="596"/>
         <source>Revoke moderator</source>
         <translation>Revoke moderator</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="602"/>
+        <location filename="widgets/groupchat.py" line="601"/>
         <source>Grant moderator</source>
         <translation>Grant moderator</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="608"/>
+        <location filename="widgets/groupchat.py" line="607"/>
         <source>Revoke membership</source>
         <translation>Revoke membership</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="613"/>
+        <location filename="widgets/groupchat.py" line="612"/>
         <source>Grant membership</source>
         <translation>Grant membership</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="620"/>
+        <location filename="widgets/groupchat.py" line="619"/>
         <source>Revoke voice</source>
         <translation>Revoke voice</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="625"/>
+        <location filename="widgets/groupchat.py" line="624"/>
         <source>Grant voice</source>
         <translation>Grant voice</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="743"/>
+        <location filename="widgets/groupchat.py" line="742"/>
         <source>Hide room info</source>
         <translation>Hide room info</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="849"/>
+        <location filename="widgets/groupchat.py" line="848"/>
         <source>Hi! I&apos;d love to see you in multichat at </source>
         <translation>Hi! I&apos;d love to see you in chatroom at </translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="639"/>
+        <location filename="widgets/groupchat.py" line="638"/>
         <source>Send file</source>
         <translation>Send file</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="1076"/>
+        <location filename="widgets/groupchat.py" line="1075"/>
         <source>Nickname is used by somebody else.</source>
         <translation>Nickname is used by somebody else.</translation>
     </message>
