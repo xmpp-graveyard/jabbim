@@ -51,7 +51,7 @@ class Plugin(plugins.PluginBase):
 			
 	def buildRosterMenu(self):
 		menu=self.rosterMenu()
-		menu.addAction("Show news",self.showSlot)
+		menu.addAction(self.main.tr("Show news"),self.showSlot)
 	
 	def showSlot(self):
 		self.window.show()
