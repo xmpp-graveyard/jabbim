@@ -56,3 +56,4 @@ pref/roster.py
 TRANSLATIONS    = locales/jabbim_cs.ts \
 				locales/jabbim_en.ts \
         locales/jabbim_sk.ts
+	locales/jabbim_pl.ts
