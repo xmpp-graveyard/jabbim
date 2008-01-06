@@ -1444,6 +1444,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.showOfflineAction,QtCore.SIGNAL("toggled ( bool )"),self.hideOffline)
 		separator=False
 		for resource in self.selfResources:
+			print 'self resource:',resource
 			if self.client.roster['users'][self.client.jid.userhost()].resources[resource].hasFeature('http://jabber.org/protocol/commands'):
 				action=self.offlineMenu.addAction(unicode(resource))
 				action.setObjectName('commands')
