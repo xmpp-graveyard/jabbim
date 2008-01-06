@@ -17,7 +17,7 @@ class Plugin(plugins.PluginBase):
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.count = 0
 # 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
-		self.config['message'] = {'description':'Automaticka odpoved:', 'default':"Toto je automaticka odpoved. Toto ICQ cislo je mimo provoz, jeho uzivatel nyni pouziva pouze Jabber. Muzes ho kontaktovat na jeho JabberID [JID]. Pokud nevis jak na to, navstiv  http://www.jabbim.cz/services-start.html \n Preji pekny den.", 'value': '','type':'text'}
+		self.config['message'] = {'description':self.tr('Automaticka odpoved:'), 'default':self.tr("Toto je automaticka odpoved. Toto ICQ cislo je mimo provoz, jeho uzivatel nyni pouziva pouze Jabber. Muzes ho kontaktovat na jeho JabberID [JID]. Pokud nevis jak na to, navstiv  http://www.jabbim.cz/services-start.html \n Preji pekny den."), 'value': '','type':'text'}
 
 		if main:
 			self.registerHandler('on_message', self.on_message, priority = 4)
