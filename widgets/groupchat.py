@@ -30,7 +30,7 @@ import dataforms
 from twisted.words.protocols.jabber import jid as jidT
 import vcardeditor
 from include import utils
-
+import filetransfer 
 class flowLayout(QtGui.QLayout):
 	def __init__(self, parent=None, margin=1, spacing=1):
 		QtGui.QLayout.__init__(self, parent)
@@ -633,6 +633,11 @@ class groupChatWidget(QtGui.QWidget):
 			action.setData(QtCore.QVariant(jid))
 			action.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
 			action.setObjectName("vcard")
+			
+			action=menu.addAction(self.tr("Send file"))
+			action.setData(QtCore.QVariant(jid))
+			action.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
+			action.setObjectName("send_file")
 
 		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.usersContextMenuTriggered)
 		# set menu position and show
@@ -701,6 +706,18 @@ class groupChatWidget(QtGui.QWidget):
 			jid=unicode(jid.toString())
 			self.ve=vcardeditor.vcardEditorDialog(self.main,jid,self,False)
 			self.ve.show()
+		elif cmd == "send_file":
+			jid=unicode(action.data().toString())
+
+			file=QtGui.QFileDialog.getOpenFileNames(self,"Choose file")
+			file=list(file)
+			if len(file)!=0:
+				new=[]
+				for f in file:
+					new.append(unicode(f))
+				file=new
+				self.dialog=filetransfer.filetransferDialog(self.main,file,jid)
+				self.dialog.show()
 			
 
 	def userClicked(self,item,i):
