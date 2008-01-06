@@ -11,6 +11,11 @@
 <context>
     <name>Plugin</name>
     <message>
+        <location filename="archive.py" line="231"/>
+        <source>History</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="archive.py" line="317"/>
         <source>Contacts in roster</source>
         <translation type="unfinished"></translation>
@@ -18,11 +23,6 @@
     <message>
         <location filename="archive.py" line="319"/>
         <source>Others</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="archive.py" line="231"/>
-        <source>History</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

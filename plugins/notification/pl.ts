@@ -3,6 +3,16 @@
 <context>
     <name>Plugin</name>
     <message>
+        <location filename="notification.py" line="292"/>
+        <source>Notification test - can drag</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="333"/>
+        <source>Notification test</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="notification.py" line="331"/>
         <source>Notification </source>
         <translation type="unfinished"></translation>
@@ -10,11 +20,6 @@
     <message>
         <location filename="notification.py" line="331"/>
         <source>Notification plugin test :)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="notification.py" line="496"/>
-        <source>New groupchat message for you</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -33,13 +38,8 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="notification.py" line="292"/>
-        <source>Notification test - can drag</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="notification.py" line="333"/>
-        <source>Notification test</source>
+        <location filename="notification.py" line="496"/>
+        <source>New groupchat message for you</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
