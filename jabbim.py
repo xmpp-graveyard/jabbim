@@ -1010,6 +1010,8 @@ class clientClass(pyxl.client.Client):
 			colors=self.main.getSkinColors(0)
 			if colors!=None:
 				message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
+				if len(colors)==3:
+					message=message.replace("[additive]",colors[2])
 			# find tab
 			#tab=None
 			#tabIndex=0
