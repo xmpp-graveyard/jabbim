@@ -4,7 +4,7 @@ class preferences:
 		self.config['passwd']={'type':'text-private','label':preferencesWindow.tr("Password:"),'value':'','groupbox':preferencesWindow.tr('Connection')}
 		self.config['jid']={'type':'text-single','label':preferencesWindow.tr("Jabber ID:"),'value':'','groupbox':preferencesWindow.tr('Connection')}
 		self.config['autoJoin']={'type':'boolean','label':preferencesWindow.tr("Automatically join at startup."),'value':'False','groupbox':preferencesWindow.tr('Connection')}
-		self.config['resource']={'type':'text-single','label':preferencesWindow.tr("Resource:"),'value':'jabbim','groupbox':preferencesWindow.tr('Advanced')}
+		self.config['resource']={'type':'text-single','label':preferencesWindow.tr('Resource (<a href="http://www.jabber.cz/wiki/Resource">?</a>):'),'value':'jabbim','groupbox':preferencesWindow.tr('Advanced')}
 		#self.config['priority']={'type':'number-spin','label':preferencesWindow.tr("Priority:"),'value':'0','groupbox':preferencesWindow.tr('Advanced')}
 		self.config['specifyHost']={'type':'boolean','label':preferencesWindow.tr("Specify host for connection"),'value':'False','groupbox':preferencesWindow.tr('Advanced'), 'enable': ['connectHost', 'connectPort'], 'column':'right', 'tooltip':preferencesWindow.tr("Enable only if your server has broken DNS SRV record or if you REALLY know what are you doing.")}
 		self.config['connectHost']={'type':'text-single','label':preferencesWindow.tr("Host:"),'value':'','groupbox':preferencesWindow.tr('Advanced')}

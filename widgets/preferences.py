@@ -166,6 +166,7 @@ def makePreferences(main,parent,layout,form,row=1):
 		if x['type']=="text-single":
 			try:
 				label=QtGui.QLabel(x['label'],par)
+				label.setOpenExternalLinks(True)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
@@ -180,6 +181,7 @@ def makePreferences(main,parent,layout,form,row=1):
 		elif x['type']=="time-interval":
 			try:
 				label=QtGui.QLabel(x['label'],par)
+				label.setOpenExternalLinks(True)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
@@ -193,6 +195,7 @@ def makePreferences(main,parent,layout,form,row=1):
 		elif x['type']=="number-spin":
 			try:
 				label=QtGui.QLabel(x['label'],par)
+				label.setOpenExternalLinks(True)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
@@ -203,6 +206,7 @@ def makePreferences(main,parent,layout,form,row=1):
 			row+=1
 		elif x['type']=="fixed":
 			label=QtGui.QLabel(par)
+			label.setOpenExternalLinks(True)
 			label.setWordWrap(True)
 			label.setText(unicode(val))
 			lay.addWidget(label,row,0,1,2)
@@ -213,6 +217,7 @@ def makePreferences(main,parent,layout,form,row=1):
 		elif x['type']=="text-multi":
 			try:
 				label=QtGui.QLabel(x['label'],par)
+				label.setOpenExternalLinks(True)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
@@ -274,6 +279,7 @@ def makePreferences(main,parent,layout,form,row=1):
 		elif x['type']=="text-private":
 			try:
 				label=QtGui.QLabel(x['label'],par)
+				label.setOpenExternalLinks(True)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
