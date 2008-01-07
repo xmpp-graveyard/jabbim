@@ -382,6 +382,15 @@ class groupChatWidget(QtGui.QWidget):
 		self.flowLayout.addWidget(self.ui.clearChat)
 		QtCore.QObject.connect(self.ui.clearChat, QtCore.SIGNAL("clicked ()"),self.clearChat)
 						
+		self.ui.changeNick=QtGui.QToolButton()
+		self.ui.changeNick.setIconSize(QtCore.QSize(16,16))
+		#self.ui.changeNick.setIcon(QtGui.QIcon("FIXME"))
+		self.ui.changeNick.setToolTip(self.tr("Change nickname"))
+		self.ui.changeNick.setMinimumHeight(self.ui.sendButton.height())
+		self.ui.changeNick.setMaximumHeight(self.ui.sendButton.height())
+		self.flowLayout.addWidget(self.ui.changeNick)
+		QtCore.QObject.connect(self.ui.changeNick, QtCore.SIGNAL("clicked ()"),self.changeNick)
+						
 		self.ui.toggleInfo=QtGui.QToolButton()
 		self.ui.toggleInfo.setIconSize(QtCore.QSize(16,16))
 		self.ui.toggleInfo.setIcon(QtGui.QIcon("images/16x16/actions/info.png"))
@@ -392,7 +401,6 @@ class groupChatWidget(QtGui.QWidget):
 		self.flowLayout.addWidget(self.ui.toggleInfo)
 		QtCore.QObject.connect(self.ui.toggleInfo, QtCore.SIGNAL("toggled(bool)"),self.toggleInfo)
 						
-		self.ui.admin.hide()
 		self.ui.admin.hide()
 
 		self.flowLayout.addStretch()
@@ -756,6 +764,19 @@ class groupChatWidget(QtGui.QWidget):
 		else:
 			self.ui.disco_info.hide()
 			self.ui.toggleInfo.setToolTip(self.tr("Show room info"))
+
+	def changeNick(self):
+		nick, b = QtGui.QInputDialog.getText(self,self.tr("Change nick"),self.tr("Enter new nickname:"), QtGui.QLineEdit.Normal, "")
+		if nick and b:
+			if nick not in self.main.client.groupchats[self.jid].users.keys():
+				self.main.client.sendPresence(to=self.jid+"/"+nick)
+				self.main.client.groupchats[self.jid].nick=nick
+			else:
+				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("Nickname is used by somebody else.")))
+				self.textEditWrite(message)
+
+		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+
 	def roomConfigClicked(self):
 		nick=self.main.client.groupchats[self.jid].nick
 		if self.main.client.groupchats[self.jid].users[nick].affiliation=="owner":
