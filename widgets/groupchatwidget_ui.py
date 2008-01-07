@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Tue Jan  1 19:08:49 2008
+# Created: Mon Jan  7 10:53:35 2008
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -57,6 +57,12 @@ class Ui_groupchatwidget(object):
         self.gridlayout1.addItem(spacerItem,1,0,1,1)
 
         self.smileys = QtGui.QToolButton(self.layoutWidget)
+
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(1),QtGui.QSizePolicy.Policy(1))
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.smileys.sizePolicy().hasHeightForWidth())
+        self.smileys.setSizePolicy(sizePolicy)
         self.smileys.setIcon(QtGui.QIcon("images/16x16/emotes/biggrin.png"))
         self.smileys.setCheckable(True)
         self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
@@ -64,6 +70,12 @@ class Ui_groupchatwidget(object):
         self.gridlayout1.addWidget(self.smileys,1,1,1,1)
 
         self.sendButton = QtGui.QToolButton(self.layoutWidget)
+
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(1),QtGui.QSizePolicy.Policy(1))
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.sendButton.sizePolicy().hasHeightForWidth())
+        self.sendButton.setSizePolicy(sizePolicy)
         self.sendButton.setIcon(QtGui.QIcon("images/16x16/actions/send.png"))
         self.sendButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.sendButton.setObjectName("sendButton")
