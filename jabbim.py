@@ -3137,12 +3137,20 @@ class scrollBar(QtGui.QScrollArea):
 	#def updateScrollBars(self):
 		#QtGui.QScrollArea.updateScrollBars(self)
 		#self.verticalScrollBar().setPageStep(32)
+
+look=QtGui.QStyleFactory.create("cleanlooks")
+class style(QtGui.QStyle):
+	def polish(self,palette):
+		palette.setBrush(QtGui.QPalette.Button, QtCore.Qt.red);
+	def drawPrimitive(self, element,option, painter,widget=None):
+		return look.drawPrimitive(self, element,option, painter,widget)
+
 if __name__ == "__main__":
 	translator=QtCore.QTranslator()
 	translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
 	print "trying to load locales:","locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm"
 	app.installTranslator(translator)
-	
+	app.setStyle(style())
 	MainWindow = mainWindow()
 	MainWindow.show()
 	reactor.run()
