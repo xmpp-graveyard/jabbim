@@ -789,7 +789,7 @@ class Client(derived):
 		fromjid = frm.userhost()
 		resource = frm.resource
 		print "PRESENCE"
-		show = status = priority = typ = affiliation = role = truejid = hash = error = reason = actor = None
+		show = status = priority = nick = typ = affiliation = role = truejid = hash = error = reason = actor = None
 		codes = []
 		if el.hasAttribute('type'):
 		#	if el['type'] != 'unavailable':
@@ -832,6 +832,8 @@ class Client(derived):
 					if item.name == 'item':
 						affiliation = item['affiliation']
 						role = item['role']
+						if item.hasAttribute('nick'):
+							nick=unicode(item['nick'])
 						if item.hasAttribute('jid'):
 							truejid = item['jid']
 						for itm in item.elements():
@@ -886,14 +888,14 @@ class Client(derived):
 		if self.groupchats.has_key(fromjid):
 			if show=="offline":
 #				self.reactor.callFromThread(self.on_GCpresence, fromjid, resource,  show,  status,  codes)
-				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor)
+				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor, nick)
 			self.groupchats[fromjid].setStatus(resource,  show,  status)
 			if self.groupchats[fromjid].users.has_key(resource):
 				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid)
 				#self.groupchats[fromjid]
 			if show!="offline":
 #				self.reactor.callFromThread(self.on_GCpresence,fromjid, resource,  show,  status,  codes)
-				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor)
+				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor, nick)
 			return
 
 		elif self.roster['users'].has_key(fromjid):

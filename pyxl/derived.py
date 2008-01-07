@@ -83,7 +83,7 @@ class derived:
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
 		pass
 	
-	def on_GCpresence(self,  muc, nick,  show,  status,  codes = [], reason = '', actor = None):
+	def on_GCpresence(self,  muc, nick,  show,  status,  codes = [], reason = '', actor = None,n=None):
 		pass
 	
 	def on_versionreceive(self, jid, version):

@@ -515,7 +515,7 @@ class clientClass(pyxl.client.Client):
 			else:
 				self.main.showInvitation(jid, room, reason, cont)
 
-	def on_GCpresence(self,  muc, nick,  show,  status,  codes = [], reason = '', actor = None):
+	def on_GCpresence(self,  muc, nick,  show,  status,  codes = [], reason = '', actor = None, n=None):
 		
 		show = unicode(show) #!
 		# presence in groupchat
@@ -530,7 +530,7 @@ class clientClass(pyxl.client.Client):
 				w=self.main.chat.ui.chatTab.widget(i)
 				if unicode(w.jid)==unicode(muc):
 					# edit user item
-					w.chat.removeUser(nick,codes,reason,actor)
+					w.chat.removeUser(nick,codes,reason,actor,n)
 					break
 		else:
 			# get user role
@@ -544,14 +544,15 @@ class clientClass(pyxl.client.Client):
 					w.chat.editUser(nick,show,role,affiliation)
 					break
 		# message skin
-		mainWindow=self.main
-		message="[nick] "+unicode(mainWindow.tr('is now'))+" [show] [[message]]"
-		if status == None:
-			message = message.replace("[[message]]",'')
-		else:
-			message = message.replace("[message]",unicode(status))
-		message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', nick)
-		message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
+		if not u'303' in codes:
+			mainWindow=self.main
+			message="[nick] "+unicode(mainWindow.tr('is now'))+" [show] [[message]]"
+			if status == None:
+				message = message.replace("[[message]]",'')
+			else:
+				message = message.replace("[message]",unicode(status))
+			message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', nick)
+			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
 
 		w.chat.textEditWrite(message)
 		tab,index=self.main.chat.findTab(muc+"/"+nick)

@@ -816,7 +816,7 @@ class groupChatWidget(QtGui.QWidget):
 			return False
 		return True
 
-	def removeUser(self,nick,codes=[],reason="",actor=None):
+	def removeUser(self,nick,codes=[],reason="",actor=None,n=None):
 		nick=unicode(nick)
 		if self.main.client.groupchats[self.jid].nick==nick:
 			if u'307' in codes:
@@ -848,7 +848,9 @@ class groupChatWidget(QtGui.QWidget):
 		elif u'301' in codes:
 			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",nick+unicode(self.tr(" has been banned for this room.")))
 			self.textEditWrite(message)
-
+		elif u'303':
+			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",nick+unicode(self.tr(" has been renamed to "))+unicode(n)+".")
+			self.textEditWrite(message)
 		item=self.getUserItems(nick)[0]
 		parent=item.parent()
 		parent.takeChild(int(parent.indexOfChild(item)))
