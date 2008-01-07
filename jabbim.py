@@ -1816,6 +1816,9 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.login_autoconnect.setChecked(False)
 		if self.config['savePasswd']=="True":
 			self.ui.login_savePassword.setChecked(True)
+		else:
+			self.ui.login_savePassword.setChecked(False)
+			self.ui.login_autoconnect.setEnabled(False)
 
 		if os.path.isfile(self.homeDir+'/avatars/'+unicode(self.config['jid'])):
 			pixmap=QtGui.QIcon(self.homeDir+'/avatars/'+unicode(self.config['jid']))
@@ -2818,7 +2821,6 @@ class mainWindow(QtGui.QMainWindow):
 		jid=unicode(self.ui.login_jid.text())
 		password=unicode(self.ui.login_password.text())
 		self.ui.loginInfo.setText(self.tr("Connecting to the server..."))
-		self.config['autoJoin']=unicode(self.ui.login_autoconnect.isChecked())
 		profiles=utils.getProfiles(self.realHomeDir)
 		if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
 	
@@ -2827,7 +2829,7 @@ class mainWindow(QtGui.QMainWindow):
 				utils.loadConfig(self,[]) # load config files
 				if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
 					
-					if (jid!=self.config['jid'] or ( unicode(self.ui.login_savePassword.isChecked())=="True" and unicode(rot13.scramble(password))!=unicode(self.config['passwd']))) or unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked()):
+					if (jid!=self.config['jid'] or ( unicode(self.ui.login_savePassword.isChecked())=="True" and unicode(rot13.scramble(password))!=unicode(self.config['passwd']))) or (unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked()) or unicode(self.ui.login_autoconnect.isChecked())!=self.config['autoJoin']):
 						print jid!=self.config['jid']
 						print unicode(rot13.scramble(password))!=unicode(self.config['passwd'])
 						#print unicode(self.config['savePasswd'])=="True"
@@ -2840,6 +2842,10 @@ class mainWindow(QtGui.QMainWindow):
 							else:
 								self.config['passwd']=""
 							self.config['jid']=jid
+							if self.ui.login_autoconnect.isEnabled():
+								self.config['autoJoin']=unicode(self.ui.login_autoconnect.isChecked())
+							else:
+								self.config['autoJoin']="False"
 							self.config.write()
 			else:
 				#ret=QtGui.QMessageBox.question(self,self.tr("New profile"), self.tr("Profile for this JID doesn't exist. Do you want to create it?"),3,4)
@@ -2859,6 +2865,7 @@ class mainWindow(QtGui.QMainWindow):
 				self.config['jid']=jid
 				self.config.write()
 	
+
 			f=open(self.realHomeDir+"/config",'w')
 			self.config.write(f)
 			f.close()

@@ -48,7 +48,7 @@ class Cache:
 		
 	def table_present(self, result):
 		log.msg( 'table here? ')
-		print result
+		#print result
 	
 	def get_avatar(self, jid, handler):
 		self.db.runQuery('select file, hash, jid from avatars where jid = "%s"'%(dbutil.safe(jid),)).addCallback(self.got_avatar, handler)

@@ -30,7 +30,7 @@
       </property>
       <widget class="QStackedWidget" name="rosterStackedWidget" >
        <property name="currentIndex" >
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="login" >
         <layout class="QGridLayout" >
@@ -780,7 +780,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>335</width>
-     <height>31</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPlugins" >
@@ -903,12 +903,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>137</x>
-     <y>124</y>
+     <x>200</x>
+     <y>236</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>205</x>
-     <y>188</y>
+     <x>158</x>
+     <y>352</y>
     </hint>
    </hints>
   </connection>
@@ -919,12 +919,28 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>191</x>
-     <y>97</y>
+     <x>231</x>
+     <y>206</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>254</x>
-     <y>194</y>
+     <x>158</x>
+     <y>352</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>login_savePassword</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>login_autoconnect</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>177</x>
+     <y>307</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>171</x>
+     <y>332</y>
     </hint>
    </hints>
   </connection>
