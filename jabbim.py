@@ -456,7 +456,7 @@ class clientClass(pyxl.client.Client):
 		show=unicode(self.main.ui.loginStatus.itemData(int(self.main.ui.loginStatus.currentIndex())).toString())
 		self.main.selfStatus=show
 		self.main.tray.setToolTip(mainWindow.tr('Your status:')+" "+self.main.status[show])
-		self.main.sendPresence(None,show,"",pri)
+		self.main.sendPresence(None,show,"")
 		self.main.ui.statusButton.setText(unicode(""))
 		self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
 		self.main.ui.login_cancel.hide()
@@ -1694,8 +1694,10 @@ class mainWindow(QtGui.QMainWindow):
 					# get priority from config
 					if self.config.has_key('autoPriority'):
 						if self.config['autoPriority']=='True':
-							priors={"chat":"25","online":"20","away":"15","xa":"10","dnd":"5"}
-							pri=priors[str(show)]
+							#priors={"chat":"25","online":"20","away":"15","xa":"10","dnd":"5"}
+							#'autoPriority_chat','autoPriority_online','autoPriority_away','autoPriority_xa','autoPriority_dnd'
+							
+							pri=str(self.config["autoPriority_"+str(show)])
 						else:
 							if self.config.has_key('priority'):
 								pri=self.config['priority']
@@ -3087,7 +3089,7 @@ class statusWindow(QtGui.QDialog):
 			#jab.setStatus(MainWindow.groupchat,self.data,unicode(self.ui.status.toPlainText ()))
 			if MainWindow.config.has_key('autoPriority'):
 				if MainWindow.config['autoPriority']=='True':
-					priors={"chat":"25","online":"20","away":"15","xa":"10","dnd":"5"}
+					#priors={"chat":"25","online":"20","away":"15","xa":"10","dnd":"5"}
 					pri=priors[str(self.data)]
 				else:
 					if MainWindow.config.has_key('priority'):

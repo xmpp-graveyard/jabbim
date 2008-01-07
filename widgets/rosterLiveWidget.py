@@ -283,7 +283,8 @@ class special:
 	def __init__(self):
 		self.typ="group"
 		self.main="special"
-		self.name="zzzzzzzzzzzzzzzzz"
+		#self.name=".#$%^&*()_.@#$%^&*(((((((((("
+		self.name="zzzzzzzzzzzzzzzzzzzzzz%%%$@#@^&"
 		self.expanded=True
 
 class rosterWidget(QtGui.QWidget):
@@ -294,7 +295,8 @@ class rosterWidget(QtGui.QWidget):
 		QtGui.QWidget.__init__(self,parent)
 		self.main=main
 		self.groups={}
-		self.specialName="zzzzzzzzzzzzzzzzz"
+		self.specialName="zzzzzzzzzzzzzzzzzzzzzz%%%$@#@^&"
+		#self.specialName=".#$%^&*()_.@#$%^&*(((((((((("
 		self.groups[self.specialName]=special()
 		self.users=[]
 		self.iconSize="32x32"
@@ -349,7 +351,8 @@ class rosterWidget(QtGui.QWidget):
 		Resets roster. Called by mainWindow on disconnect
 		"""
 		self.groups={}
-		self.specialName="zzzzzzzzzzzzzzzzz"
+		#self.specialName=".#$%^&*()_.@#$%^&*(((((((((("
+		self.specialName="zzzzzzzzzzzzzzzzzzzzzz%%%$@#@^&"
 		self.groups[self.specialName]=special()
 
 	def refreshEvents(self):

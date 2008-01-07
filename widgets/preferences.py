@@ -330,6 +330,30 @@ def makePreferences(main,parent,layout,form,row=1):
 						var[w]['widget'].setEnabled(False)
 					elif unicode(val)=="1" or unicode(val).lower()=="true":
 						var[w]['widget'].setEnabled(True)
+			if x.has_key("disable"):
+				for w in x['disable']:
+					QtCore.QObject.connect(var[key]['widget'],QtCore.SIGNAL("toggled (bool)"),var[w]['widget'].setDisabled)
+					if unicode(val)=="0" or unicode(val).lower()=="false":
+						var[w]['widget'].setDisabled(False)
+					elif unicode(val)=="1" or unicode(val).lower()=="true":
+						var[w]['widget'].setDisabled(True)
+			if x.has_key("show"):
+				for w in x['show']:
+					QtCore.QObject.connect(var[key]['widget'],QtCore.SIGNAL("toggled (bool)"),var[w]['widget'].setVisible)
+					if unicode(val)=="0" or unicode(val).lower()=="false":
+						var[w]['widget'].setVisible(False)
+					elif unicode(val)=="1" or unicode(val).lower()=="true":
+						var[w]['widget'].setVisible(True)
+			if x.has_key("hide"):
+				for w in x['hide']:
+					QtCore.QObject.connect(var[key]['widget'],QtCore.SIGNAL("toggled (bool)"),var[w]['widget'].setHidden)
+					if unicode(val)=="0" or unicode(val).lower()=="false":
+						var[w]['widget'].setHidden(False)
+					elif unicode(val)=="1" or unicode(val).lower()=="true":
+						var[w]['widget'].setHidden(True)
+
+
+
 	return var,row
 
 

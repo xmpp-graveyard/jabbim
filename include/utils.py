@@ -55,6 +55,14 @@ def loadConfig(main,status):
 			"chat_skin":"cool.conf",
 			"theme":"template",
 			"log":"true",
+			"resource":"jabbim",
+			"autoPriority":"True",
+			"priority":"0",
+			"autoPriority_chat":25,
+			"autoPriority_online":20,
+			"autoPriority_away":15,
+			"autoPriority_xa":10,
+			"autoPriority_dnd":5,
 			"logfile":"jabbim.log",
 			"windowGeometry":[0,0,None,None],
 			"chatGeometry":[0,0,None,None],
@@ -324,7 +332,7 @@ def replace_url(text):
 	#exp = re.compile("([A-Za-z][A-Za-z0-9+.-]{1,120}:[A-Za-z0-9/](([A-Za-z0-9$_.+!*,;/?:@&~=-])|%[A-Fa-f0-9]{2}){1,333}(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*,;/?:@&~=%-]{0,1000}))?)")
 	#exp=re.compile(unicode(r"((http|ftp)://)?(((([\d]+\.)+){3}[\d]+(/[\w./]+)?)|([a-z]\w*((\.\w+)+){2,})([/][\w.~]*)*)"))
 	#for link in exp.findall(text):
-		#print link
+		#fnt link
 		#text = text.replace(link[0], '<a href="%s">%s</a>'%(link[0], link[0]))
 	t=text
 	t=t.replace("<br/>"," <br/>")
