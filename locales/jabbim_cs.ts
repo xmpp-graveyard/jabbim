@@ -1208,32 +1208,32 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>groupChatWidget</name>
     <message>
-        <location filename="widgets/groupchat.py" line="539"/>
+        <location filename="widgets/groupchat.py" line="547"/>
         <source>Participants</source>
         <translation>Účastníci</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="540"/>
+        <location filename="widgets/groupchat.py" line="548"/>
         <source>Moderators</source>
         <translation>Moderátoři</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="541"/>
+        <location filename="widgets/groupchat.py" line="549"/>
         <source>Visitors</source>
         <translation>Návštěvníci</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="570"/>
+        <location filename="widgets/groupchat.py" line="578"/>
         <source>Kick</source>
         <translation>Vyhodit</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="673"/>
+        <location filename="widgets/groupchat.py" line="681"/>
         <source>Reason</source>
         <translation>Důvod</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="673"/>
+        <location filename="widgets/groupchat.py" line="681"/>
         <source>Enter reason:</source>
         <translation>Vložte důvod:</translation>
     </message>
@@ -1248,204 +1248,219 @@ p, li { white-space: pre-wrap; }
         <translation>Vyčistit rozhovor</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="405"/>
+        <location filename="widgets/groupchat.py" line="413"/>
         <source>Connecting to MUC. This can take a few seconds.</source>
         <translation>Připojuji se k místnosti. Prosím čekejte.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="967"/>
+        <location filename="widgets/groupchat.py" line="988"/>
         <source>Name:</source>
         <translation>Jméno:</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="971"/>
+        <location filename="widgets/groupchat.py" line="992"/>
         <source>JID:</source>
         <translation>Jabber ID:</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="505"/>
+        <location filename="widgets/groupchat.py" line="513"/>
         <source>Hidden</source>
         <translation>Skrytá</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="506"/>
+        <location filename="widgets/groupchat.py" line="514"/>
         <source>Members only</source>
         <translation>Jen pro členy</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="507"/>
+        <location filename="widgets/groupchat.py" line="515"/>
         <source>Moderated</source>
         <translation>Moderovaný</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="508"/>
+        <location filename="widgets/groupchat.py" line="516"/>
         <source>Non anonymous</source>
         <translation>Neanonymní</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="509"/>
+        <location filename="widgets/groupchat.py" line="517"/>
         <source>Open</source>
         <translation>Otevřená</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="510"/>
+        <location filename="widgets/groupchat.py" line="518"/>
         <source>Password protected</source>
         <translation>Chráněná heslem</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="511"/>
+        <location filename="widgets/groupchat.py" line="519"/>
         <source>Persistent</source>
         <translation>Trvalá</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="512"/>
+        <location filename="widgets/groupchat.py" line="520"/>
         <source>Public</source>
         <translation>Veřejná</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="514"/>
+        <location filename="widgets/groupchat.py" line="522"/>
         <source>Semi-anonymous</source>
         <translation>Polo-anonymní</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="515"/>
+        <location filename="widgets/groupchat.py" line="523"/>
         <source>Temporary</source>
         <translation>Dočasná</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="516"/>
+        <location filename="widgets/groupchat.py" line="524"/>
         <source>Unmoderated</source>
         <translation>Nemoderovaná</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="519"/>
+        <location filename="widgets/groupchat.py" line="527"/>
         <source>Unsecured</source>
         <translation>Nezabezpečená</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="646"/>
+        <location filename="widgets/groupchat.py" line="654"/>
         <source>vCard</source>
         <translation>Vizitka</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="828"/>
+        <location filename="widgets/groupchat.py" line="849"/>
         <source>You have been kicked from the room by %s. Reason: %s.</source>
         <translation>Byl/a jste vyhozen/a z místnosti %s s následujícím důvodem: %s.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="831"/>
+        <location filename="widgets/groupchat.py" line="852"/>
         <source>You have been kicked from the room by %s.</source>
         <translation>Byl/a jste vyhozen/a z místnosti %s.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="833"/>
+        <location filename="widgets/groupchat.py" line="854"/>
         <source>You have been kicked from the room. Reason: %s.</source>
         <translation>Byl/a jste vyhozen/a z místnosti s následujícím důvodem: %s.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="835"/>
+        <location filename="widgets/groupchat.py" line="856"/>
         <source>You have been kicked from the room.</source>
         <translation>Byl/a jste vyhozen/a z místnosti.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="842"/>
+        <location filename="widgets/groupchat.py" line="863"/>
         <source>You have been banned for the room.</source>
         <translation>Byl/a jste vyhozen/a z místnosti a byl Vám odepřen budoucí vstup.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="846"/>
+        <location filename="widgets/groupchat.py" line="867"/>
         <source> has been kicked from this room.</source>
         <translation> byl/a vyhozen/a z místnosti.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="849"/>
+        <location filename="widgets/groupchat.py" line="870"/>
         <source> has been banned for this room.</source>
         <translation>byl/a vyhozen/a z místnosti a byl/a mu/jí odepřen budoucí vstup.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="758"/>
+        <location filename="widgets/groupchat.py" line="766"/>
         <source>Show room info</source>
         <translation>Zobrazit informace o místnosti</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="575"/>
+        <location filename="widgets/groupchat.py" line="583"/>
         <source>Ban</source>
         <translation>Ban</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="586"/>
+        <location filename="widgets/groupchat.py" line="594"/>
         <source>Revoke ownership</source>
         <translation>Odebrat vlastnictví</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="591"/>
+        <location filename="widgets/groupchat.py" line="599"/>
         <source>Grant ownership</source>
         <translation>Učinit vlastníkem</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="597"/>
+        <location filename="widgets/groupchat.py" line="605"/>
         <source>Revoke admin</source>
         <translation>Odebrat administrátorství</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="602"/>
+        <location filename="widgets/groupchat.py" line="610"/>
         <source>Grant admin</source>
         <translation>Učinit administrátorem</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="609"/>
+        <location filename="widgets/groupchat.py" line="617"/>
         <source>Revoke moderator</source>
         <translation>Odebrat moderatorství</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="614"/>
+        <location filename="widgets/groupchat.py" line="622"/>
         <source>Grant moderator</source>
         <translation>Učinit moderátorem</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="620"/>
+        <location filename="widgets/groupchat.py" line="628"/>
         <source>Revoke membership</source>
         <translation>Odebrat členství</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="625"/>
+        <location filename="widgets/groupchat.py" line="633"/>
         <source>Grant membership</source>
         <translation>Učinit členem</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="632"/>
+        <location filename="widgets/groupchat.py" line="640"/>
         <source>Revoke voice</source>
         <translation>Odebrat hlas</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="637"/>
+        <location filename="widgets/groupchat.py" line="645"/>
         <source>Grant voice</source>
         <translation>Dát hlas</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="755"/>
+        <location filename="widgets/groupchat.py" line="763"/>
         <source>Hide room info</source>
         <translation>Schovat informace o místnosti</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="863"/>
+        <location filename="widgets/groupchat.py" line="884"/>
         <source>Hi! I&apos;d love to see you in multichat at </source>
         <translation>Ahoj, rád bych se s tebou potkal v místnosti </translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="651"/>
+        <location filename="widgets/groupchat.py" line="659"/>
         <source>Send file</source>
         <translation>Poslat soubor</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="1090"/>
+        <location filename="widgets/groupchat.py" line="1111"/>
         <source>Nickname is used by somebody else.</source>
         <translation>Přezdívka už je používána jiným uživatelem.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="852"/>
+        <location filename="widgets/groupchat.py" line="873"/>
         <source> has been renamed to </source>
         <translation> se přejmenoval na  </translation>
+    </message>
+    <message>
+        <location filename="widgets/groupchat.py" line="388"/>
+        <source>Change nickname</source>
+        <translation>Změnit přezdívku</translation>
+    </message>
+    <message>
+        <location filename="widgets/groupchat.py" line="769"/>
+        <source>Change nick</source>
+        <translation>Změnit přezdívku</translation>
+    </message>
+    <message>
+        <location filename="widgets/groupchat.py" line="769"/>
+        <source>Enter new nickname:</source>
+        <translation>Vložte Vaši novou přezdívku:</translation>
     </message>
 </context>
 <context>

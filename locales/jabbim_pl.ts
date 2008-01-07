@@ -932,17 +932,17 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>groupChatWidget</name>
     <message>
-        <location filename="widgets/groupchat.py" line="539"/>
+        <location filename="widgets/groupchat.py" line="547"/>
         <source>Participants</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="540"/>
+        <location filename="widgets/groupchat.py" line="548"/>
         <source>Moderators</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="541"/>
+        <location filename="widgets/groupchat.py" line="549"/>
         <source>Visitors</source>
         <translation type="unfinished"></translation>
     </message>
@@ -952,212 +952,212 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="758"/>
+        <location filename="widgets/groupchat.py" line="766"/>
         <source>Show room info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="405"/>
+        <location filename="widgets/groupchat.py" line="413"/>
         <source>Connecting to MUC. This can take a few seconds.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="505"/>
+        <location filename="widgets/groupchat.py" line="513"/>
         <source>Hidden</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="506"/>
+        <location filename="widgets/groupchat.py" line="514"/>
         <source>Members only</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="507"/>
+        <location filename="widgets/groupchat.py" line="515"/>
         <source>Moderated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="508"/>
+        <location filename="widgets/groupchat.py" line="516"/>
         <source>Non anonymous</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="509"/>
+        <location filename="widgets/groupchat.py" line="517"/>
         <source>Open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="510"/>
+        <location filename="widgets/groupchat.py" line="518"/>
         <source>Password protected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="511"/>
+        <location filename="widgets/groupchat.py" line="519"/>
         <source>Persistent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="512"/>
+        <location filename="widgets/groupchat.py" line="520"/>
         <source>Public</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="514"/>
+        <location filename="widgets/groupchat.py" line="522"/>
         <source>Semi-anonymous</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="515"/>
+        <location filename="widgets/groupchat.py" line="523"/>
         <source>Temporary</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="516"/>
+        <location filename="widgets/groupchat.py" line="524"/>
         <source>Unmoderated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="519"/>
+        <location filename="widgets/groupchat.py" line="527"/>
         <source>Unsecured</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="570"/>
+        <location filename="widgets/groupchat.py" line="578"/>
         <source>Kick</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="575"/>
+        <location filename="widgets/groupchat.py" line="583"/>
         <source>Ban</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="586"/>
+        <location filename="widgets/groupchat.py" line="594"/>
         <source>Revoke ownership</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="591"/>
+        <location filename="widgets/groupchat.py" line="599"/>
         <source>Grant ownership</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="597"/>
+        <location filename="widgets/groupchat.py" line="605"/>
         <source>Revoke admin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="602"/>
+        <location filename="widgets/groupchat.py" line="610"/>
         <source>Grant admin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="609"/>
+        <location filename="widgets/groupchat.py" line="617"/>
         <source>Revoke moderator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="614"/>
+        <location filename="widgets/groupchat.py" line="622"/>
         <source>Grant moderator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="620"/>
+        <location filename="widgets/groupchat.py" line="628"/>
         <source>Revoke membership</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="625"/>
+        <location filename="widgets/groupchat.py" line="633"/>
         <source>Grant membership</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="632"/>
+        <location filename="widgets/groupchat.py" line="640"/>
         <source>Revoke voice</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="637"/>
+        <location filename="widgets/groupchat.py" line="645"/>
         <source>Grant voice</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="646"/>
+        <location filename="widgets/groupchat.py" line="654"/>
         <source>vCard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="651"/>
+        <location filename="widgets/groupchat.py" line="659"/>
         <source>Send file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="673"/>
+        <location filename="widgets/groupchat.py" line="681"/>
         <source>Reason</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="673"/>
+        <location filename="widgets/groupchat.py" line="681"/>
         <source>Enter reason:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="755"/>
+        <location filename="widgets/groupchat.py" line="763"/>
         <source>Hide room info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="828"/>
+        <location filename="widgets/groupchat.py" line="849"/>
         <source>You have been kicked from the room by %s. Reason: %s.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="831"/>
+        <location filename="widgets/groupchat.py" line="852"/>
         <source>You have been kicked from the room by %s.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="833"/>
+        <location filename="widgets/groupchat.py" line="854"/>
         <source>You have been kicked from the room. Reason: %s.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="835"/>
+        <location filename="widgets/groupchat.py" line="856"/>
         <source>You have been kicked from the room.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="842"/>
+        <location filename="widgets/groupchat.py" line="863"/>
         <source>You have been banned for the room.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="846"/>
+        <location filename="widgets/groupchat.py" line="867"/>
         <source> has been kicked from this room.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="849"/>
+        <location filename="widgets/groupchat.py" line="870"/>
         <source> has been banned for this room.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="863"/>
+        <location filename="widgets/groupchat.py" line="884"/>
         <source>Hi! I&apos;d love to see you in multichat at </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="967"/>
+        <location filename="widgets/groupchat.py" line="988"/>
         <source>Name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="971"/>
+        <location filename="widgets/groupchat.py" line="992"/>
         <source>JID:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="1090"/>
+        <location filename="widgets/groupchat.py" line="1111"/>
         <source>Nickname is used by somebody else.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1167,8 +1167,23 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="852"/>
+        <location filename="widgets/groupchat.py" line="873"/>
         <source> has been renamed to </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/groupchat.py" line="388"/>
+        <source>Change nickname</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/groupchat.py" line="769"/>
+        <source>Change nick</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/groupchat.py" line="769"/>
+        <source>Enter new nickname:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
