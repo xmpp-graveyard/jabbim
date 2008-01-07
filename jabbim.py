@@ -554,7 +554,7 @@ class clientClass(pyxl.client.Client):
 			message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', nick)
 			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
 
-		w.chat.textEditWrite(message)
+			w.chat.textEditWrite(message)
 		tab,index=self.main.chat.findTab(muc+"/"+nick)
 		if w and tab:
 			tab.chat.textEditWrite(message)
