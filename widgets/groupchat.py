@@ -384,7 +384,7 @@ class groupChatWidget(QtGui.QWidget):
 						
 		self.ui.changeNick=QtGui.QToolButton()
 		self.ui.changeNick.setIconSize(QtCore.QSize(16,16))
-		#self.ui.changeNick.setIcon(QtGui.QIcon("FIXME"))
+		self.ui.changeNick.setIcon(QtGui.QIcon("images/16x16/actions/edit.png"))
 		self.ui.changeNick.setToolTip(self.tr("Change nickname"))
 		self.ui.changeNick.setMinimumHeight(self.ui.sendButton.height())
 		self.ui.changeNick.setMaximumHeight(self.ui.sendButton.height())
