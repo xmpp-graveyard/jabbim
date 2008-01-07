@@ -304,6 +304,8 @@ class Plugin(plugins.PluginBase):
 		button.setIcon(QtGui.QIcon("%s/plugins/%s/history.png"%(self.homeDir, self.fname)))
 		button.jid=unicode(jid)
 		button.setToolTip("History")
+		button.setMinimumHeight(widget.sendButton.height())
+		button.setMaximumHeight(widget.sendButton.height())
 		self.group.addButton(button)
 		layout.addWidget(button)
 		self.jidList=self.backend.getJidList()

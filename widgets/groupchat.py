@@ -353,7 +353,14 @@ class groupChatWidget(QtGui.QWidget):
 		self.flowLayout = QtGui.QHBoxLayout()
 		self.flowLayout.setMargin(0)
 		self.flowLayout.setSpacing(2)
-		
+
+		self.ui.sendButton.setMinimumHeight(self.ui.sendButton.height())
+		self.ui.sendButton.setMaximumHeight(self.ui.sendButton.height())
+
+		self.ui.smileys.setMinimumHeight(self.ui.sendButton.height())
+		self.ui.smileys.setMaximumHeight(self.ui.sendButton.height())
+
+
 		for key,value in self.main.plugins.iteritems():
 			self.main.runPluginCommand(value.buildGroupchatWidget,[unicode(jidT.JID(self.jid).userhost()),self.flowLayout,self])
 		
@@ -366,20 +373,24 @@ class groupChatWidget(QtGui.QWidget):
 		self.flowLayout.addWidget(self.ui.admin)
 		QtCore.QObject.connect(self.ui.admin, QtCore.SIGNAL("clicked ()"),self.roomConfigClicked)
 
-		#self.ui.clearChat=QtGui.QToolButton()
-		#self.ui.clearChat.setIconSize(QtCore.QSize(16,16))
-		#self.ui.clearChat.setIcon(QtGui.QIcon("images/32x32/actions/clear.png"))
-		#self.ui.clearChat.setToolTip(self.tr("Clear chat"))
-		#self.flowLayout.addWidget(self.ui.clearChat)
-		#QtCore.QObject.connect(self.ui.clearChat, QtCore.SIGNAL("clicked ()"),self.clearChat)
+		self.ui.clearChat=QtGui.QToolButton()
+		self.ui.clearChat.setIconSize(QtCore.QSize(16,16))
+		self.ui.clearChat.setIcon(QtGui.QIcon("images/32x32/actions/clear.png"))
+		self.ui.clearChat.setToolTip(self.tr("Clear chat"))
+		self.ui.clearChat.setMinimumHeight(self.ui.sendButton.height())
+		self.ui.clearChat.setMaximumHeight(self.ui.sendButton.height())
+		self.flowLayout.addWidget(self.ui.clearChat)
+		QtCore.QObject.connect(self.ui.clearChat, QtCore.SIGNAL("clicked ()"),self.clearChat)
 						
-		#self.ui.toggleInfo=QtGui.QToolButton()
-		#self.ui.toggleInfo.setIconSize(QtCore.QSize(16,16))
-		#self.ui.toggleInfo.setIcon(QtGui.QIcon("images/16x16/actions/info.png"))
-		#self.ui.toggleInfo.setCheckable(True)
-		#self.ui.toggleInfo.setToolTip(self.tr("Show room info"))
-		#self.flowLayout.addWidget(self.ui.toggleInfo)
-		#QtCore.QObject.connect(self.ui.toggleInfo, QtCore.SIGNAL("toggled(bool)"),self.toggleInfo)
+		self.ui.toggleInfo=QtGui.QToolButton()
+		self.ui.toggleInfo.setIconSize(QtCore.QSize(16,16))
+		self.ui.toggleInfo.setIcon(QtGui.QIcon("images/16x16/actions/info.png"))
+		self.ui.toggleInfo.setCheckable(True)
+		self.ui.toggleInfo.setToolTip(self.tr("Show room info"))
+		self.ui.toggleInfo.setMinimumHeight(self.ui.sendButton.height())
+		self.ui.toggleInfo.setMaximumHeight(self.ui.sendButton.height())
+		self.flowLayout.addWidget(self.ui.toggleInfo)
+		QtCore.QObject.connect(self.ui.toggleInfo, QtCore.SIGNAL("toggled(bool)"),self.toggleInfo)
 						
 		self.ui.admin.hide()
 		self.ui.admin.hide()
