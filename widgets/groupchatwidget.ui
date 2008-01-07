@@ -22,7 +22,7 @@
    <property name="spacing" >
     <number>6</number>
    </property>
-   <item rowspan="2" row="1" column="0" colspan="2" >
+   <item row="1" column="0" >
     <widget class="QSplitter" name="splitter_3" >
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
@@ -75,22 +75,14 @@
            </property>
            <property name="sizeHint" >
             <size>
-             <width>161</width>
-             <height>27</height>
+             <width>158</width>
+             <height>0</height>
             </size>
            </property>
           </spacer>
          </item>
          <item row="1" column="1" >
           <widget class="QToolButton" name="smileys" >
-           <property name="sizePolicy" >
-            <sizepolicy>
-             <hsizetype>1</hsizetype>
-             <vsizetype>1</vsizetype>
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
            <property name="toolTip" >
             <string>You can add emoticons by clicking here</string>
            </property>
@@ -107,14 +99,6 @@
          </item>
          <item row="1" column="2" >
           <widget class="QToolButton" name="sendButton" >
-           <property name="sizePolicy" >
-            <sizepolicy>
-             <hsizetype>1</hsizetype>
-             <vsizetype>1</vsizetype>
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
            <property name="text" >
             <string>&amp;Send</string>
            </property>
@@ -174,7 +158,7 @@
      </widget>
     </widget>
    </item>
-   <item row="0" column="0" colspan="2" >
+   <item row="0" column="0" >
     <widget class="QLabel" name="disco_info" >
      <property name="text" >
       <string/>

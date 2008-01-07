@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Mon Jan  7 10:53:35 2008
+# Created: Mon Jan  7 11:08:48 2008
 #      by: PyQt4 UI code generator 4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -53,16 +53,10 @@ class Ui_groupchatwidget(object):
         self.lineWidget.setObjectName("lineWidget")
         self.gridlayout1.addWidget(self.lineWidget,0,0,1,3)
 
-        spacerItem = QtGui.QSpacerItem(161,27,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        spacerItem = QtGui.QSpacerItem(158,0,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.gridlayout1.addItem(spacerItem,1,0,1,1)
 
         self.smileys = QtGui.QToolButton(self.layoutWidget)
-
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(1),QtGui.QSizePolicy.Policy(1))
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.smileys.sizePolicy().hasHeightForWidth())
-        self.smileys.setSizePolicy(sizePolicy)
         self.smileys.setIcon(QtGui.QIcon("images/16x16/emotes/biggrin.png"))
         self.smileys.setCheckable(True)
         self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
@@ -70,12 +64,6 @@ class Ui_groupchatwidget(object):
         self.gridlayout1.addWidget(self.smileys,1,1,1,1)
 
         self.sendButton = QtGui.QToolButton(self.layoutWidget)
-
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(1),QtGui.QSizePolicy.Policy(1))
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.sendButton.sizePolicy().hasHeightForWidth())
-        self.sendButton.setSizePolicy(sizePolicy)
         self.sendButton.setIcon(QtGui.QIcon("images/16x16/actions/send.png"))
         self.sendButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.sendButton.setObjectName("sendButton")
@@ -100,11 +88,11 @@ class Ui_groupchatwidget(object):
         self.pluginWidget = QtGui.QWidget(self.layoutWidget1)
         self.pluginWidget.setObjectName("pluginWidget")
         self.vboxlayout.addWidget(self.pluginWidget)
-        self.gridlayout.addWidget(self.splitter_3,1,0,2,2)
+        self.gridlayout.addWidget(self.splitter_3,1,0,1,1)
 
         self.disco_info = QtGui.QLabel(groupchatwidget)
         self.disco_info.setObjectName("disco_info")
-        self.gridlayout.addWidget(self.disco_info,0,0,1,2)
+        self.gridlayout.addWidget(self.disco_info,0,0,1,1)
 
         self.retranslateUi(groupchatwidget)
         QtCore.QMetaObject.connectSlotsByName(groupchatwidget)
