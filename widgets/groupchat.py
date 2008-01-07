@@ -771,6 +771,7 @@ class groupChatWidget(QtGui.QWidget):
 			if nick not in self.main.client.groupchats[self.jid].users.keys():
 				self.main.client.sendPresence(to=self.jid+"/"+nick)
 				self.main.client.groupchats[self.jid].nick=nick
+				self.nick=nick
 			else:
 				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("Nickname is used by somebody else.")))
 				self.textEditWrite(message)
