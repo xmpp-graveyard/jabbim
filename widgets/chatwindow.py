@@ -854,6 +854,8 @@ class chatWindow(QtGui.QMainWindow):
 			print w.chat.ui.splitter.sizes()
 			self.main.config['chatSplitterSizes']=list(w.chat.ui.splitter.sizes())
 			self.main.config['chatSplitter2Sizes']=list(w.chat.ui.splitter_2.sizes())
+			self.main.client.sendMessage(str(w.jid),"",composing="gone")
+		
 
 		if w.typ=="groupchat":
 			self.main.config['groupchatSplitSizes1']=list(w.chat.ui.splitter.sizes())

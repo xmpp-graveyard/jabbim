@@ -1093,7 +1093,9 @@ class clientClass(pyxl.client.Client):
 		elif chatstate=="inactive":
 			if tab!=None:
 				tab.chat.ui.chatstate.setText(mainWindow.tr("doesn't give attention to chat."))
-
+		elif chatstate=="gone":
+			if tab!=None:
+				tab.chat.ui.chatstate.setText(mainWindow.tr("closed the chat window."))
 	def on_vcardReceived(self,  jid, card):
 		#print card
 		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db
