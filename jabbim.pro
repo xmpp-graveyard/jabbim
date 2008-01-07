@@ -45,7 +45,6 @@ widgets/vcardview.py \
 widgets/vcardview_ui.py \
 widgets/waitdialog.py \
 widgets/xmlConsole.py \
-wizards/addcontact.py \
 wizards/firststart.py \
 wizards/registration.py \
 pref/connection.py \

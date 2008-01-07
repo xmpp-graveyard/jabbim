@@ -1520,7 +1520,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.buildStatusWidgetMenu()
 
 	def tables_loaded(self,data=None):
-		print data
+#		print data
+		print 'tables present'
 		self.buildStatusWidgetMenu()
 
 	def _error(self,result):
