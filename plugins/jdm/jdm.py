@@ -14,7 +14,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Jabbim disk manager'
 		self.author = u"Josef 'Pepeq' Halíček"
 		self.name = 'JDM Plugin'
-		self.version = '0.1136'
+		self.version = '0.1147'
 		self.category = ['disk']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		
@@ -23,6 +23,7 @@ class Plugin(plugins.PluginBase):
 			self.window = self.loadWindow("%s/plugins/%s/jdm_ui.py"%(self.homeDir, self.fname))
 			self.window.setWindowIcon(self.main.windowIcon())
 			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call)
+			QtCore.QObject.connect(self.window.ui.list, QtCore.SIGNAL("itemClicked ( QListWidgetItem *)"),self.clicked)
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
 
@@ -93,6 +94,11 @@ class Plugin(plugins.PluginBase):
 	
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
 		pass
+		
+	def clicked(self,item):
+		
+		self.window.ui.log.append(unicode(self.obsah[self.obsah.index(item.text())][2]))
+		#self.window.ui.log.append(unicode(item.text()))
 		
 
 	
