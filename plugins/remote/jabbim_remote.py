@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 import sys, xmlrpclib, traceback
-fp = open('/tmp/jabbb','w')
-fp.write(unicode(sys.argv))
-fp.close()
 
 def handleuri(argv):
 	print 'handle uri!'
