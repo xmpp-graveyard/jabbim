@@ -96,7 +96,7 @@ class chatWindow(QtGui.QMainWindow):
 			w=self.ui.chatTab.widget(0)
 			if str(w.typ)=="groupchat":
 				pass
-				self.main.client.
+#				self.main.client.
 			self.ui.chatTab.removeTab(0)
 
 	def removeTab(self):
