@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 import sys, xmlrpclib, traceback
+fp = open('/tmp/jabbb','w')
+fp.write(unicode(sys.argv))
+fp.close()
 
 def handleuri(argv):
+	print 'handle uri!'
 	print argv
 	if not argv[0].startswith('xmpp:'):
 		return 'wrong uri'
@@ -22,4 +26,4 @@ if functions.has_key(sys.argv[1]):
 		print 'error in command: ', sys.argv[1]
 		print traceback.format_exc()
 else:
-	print 'unknown command'
+	print	handleuri(sys.argv[1:])
