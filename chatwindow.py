@@ -95,6 +95,7 @@ class chatWindow(QtGui.QMainWindow):
 		for index in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(0)
 			if str(w.typ)=="groupchat":
+				pass
 				self.main.client.
 			self.ui.chatTab.removeTab(0)
 
