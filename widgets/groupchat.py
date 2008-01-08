@@ -870,7 +870,7 @@ class groupChatWidget(QtGui.QWidget):
 		elif u'301' in codes:
 			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",nick+unicode(self.tr(" has been banned for this room.")))
 			self.textEditWrite(message)
-		elif u'303':
+		elif u'303' in codes:
 			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",nick+unicode(self.tr(" has been renamed to "))+unicode(n)+".")
 			self.textEditWrite(message)
 		item=self.getUserItems(nick)[0]
