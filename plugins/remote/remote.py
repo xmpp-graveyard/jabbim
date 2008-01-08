@@ -5,6 +5,7 @@ from twisted.python import log
 from configobj import ConfigObj
 from twisted.words.protocols.jabber import jid as jidT
 from twisted.web import xmlrpc, server
+from PyQt4 import QtCore, QtGui
 
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
@@ -46,3 +47,27 @@ class Remote(xmlrpc.XMLRPC):
 	def xmlrpc_setStatus(self, show, status):
 		self.main.sendPresence(None, show, status)
 		return True
+	
+	def xmlrpc_startChat(self, jid, nick = None):
+		print 'startChat from RPC'
+		jid = self.main.getJid(jid)
+		if  jid :
+			if nick == None:
+				nick = jid.user
+			self.main.chat.addChatTab(jid.userhost(), nick, QtGui.QIcon(self.main.getIcon(status="offline",size="16x16")))
+			return True
+		else:
+			return False
+	
+	def xmlrpc_joinMUC(self, jid):
+		jid = self.main.getJid(jid)
+		if jid:
+			nickname = self.main.client.jid.user
+			if self.main.chat.addGroupChatTab(jid.userhost(),nickname):
+					self.main.client.joinGC(jid.userhost(), nickname)
+					return True
+			else:
+				return False
+		else:
+			return False
+					
