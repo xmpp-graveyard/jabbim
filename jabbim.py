@@ -1253,7 +1253,7 @@ class mainWindow(QtGui.QMainWindow):
 		if not self.config['jid']+"-profile" in profiles:
 			if len(profiles)!=0:
 				self.homeDir=self.realHomeDir+"/"+profiles[0]
-				utils.loadConfig(self,statusMess)
+				utils.loadConfig(self,[])
 			else:
 				os.remove(self.realHomeDir+'/config')
 				utils.loadConfig(self,[])
@@ -1506,6 +1506,7 @@ class mainWindow(QtGui.QMainWindow):
 		if not data[1][0]:
 			self.buildStatusWidgetMenu()
 			return
+		print data
 		t1=self.cache.set_status('online',self.tr("I'm here"))
 		t2=self.cache.set_status('dnd',self.tr("Doing something important. Message me later."))
 		t3=self.cache.set_status('chat',self.tr("Chat with me!"))
