@@ -183,6 +183,7 @@ class Client(derived):
 			if sys.platform == 'win32':
 				import IPConfig
 				srv = IPConfig.IPConfig().get_dns()
+				print unicode(srv)
 				if len(srv) > 0:
 					r = dns.Resolver(servers=[(srv[0], 53)])
 					print dir(r)

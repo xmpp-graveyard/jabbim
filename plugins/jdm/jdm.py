@@ -17,7 +17,7 @@ class Plugin(plugins.PluginBase):
 		self.version = '0.1147'
 		self.category = ['disk']
 		self.url = 'http://dev.jabbim.cz/jabbim'
-		
+		self.developMode=True
 		if main:
 			self.installTranslator()
 			self.window = self.loadWindow("%s/plugins/%s/jdm_ui.py"%(self.homeDir, self.fname))
@@ -96,8 +96,9 @@ class Plugin(plugins.PluginBase):
 		pass
 		
 	def clicked(self,item):
-		
-		self.window.ui.log.append(unicode(self.obsah[self.obsah.index(item.text())][2]))
+		print 'clicked',item
+		self.window.ui.label_name.setText(item.text())
+		#self.window.ui.log.append(unicode(self.obsah[self.obsah.index(item.text())][2]))
 		#self.window.ui.log.append(unicode(item.text()))
 		
 
