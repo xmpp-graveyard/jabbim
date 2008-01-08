@@ -85,4 +85,11 @@ class Remote(xmlrpc.XMLRPC):
 				return False
 		else:
 			return False
-					
+				
+	def xmlrpc_addContact(self, jid):
+		jid = self.main.getJid(jid)
+		if jid:
+			self.main.addContactMainWindow(jid)
+			return True
+		else:
+			return False
