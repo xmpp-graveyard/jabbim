@@ -32,9 +32,9 @@ class Cache:
 				log.msg('Unknown DB error')
 				
 	def create_tables(self):
-		t1 = self.db.runQuery('create table caps (node text, feature text);').addCallback(self.table_created, 'caps').addErrback(self.table_present)
-		t2 = self.db.runQuery('create table status (show text, desc text, id integer primary key);').addCallback(self.table_created, 'status').addErrback(self.table_present)
-		t3 = self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created, 'avatars').addErrback(self.table_present)
+		t1 = self.db.runQuery('create table caps (node text, feature text);').addCallback(self.table_created, 'caps')#.addErrback(self.table_present)
+		t2 = self.db.runQuery('create table status (show text, desc text, id integer primary key);').addCallback(self.table_created, 'status')#.addErrback(self.table_present)
+		t3 = self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created, 'avatars')#.addErrback(self.table_present)
 		return DeferredList([t1,t3,t2], consumeErrors = False)
 		
 	def table_created(self, res, table):
