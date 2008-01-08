@@ -46,10 +46,8 @@ class Plugin(plugins.PluginBase):
 	
 	def on_remove(self):
 		#remove factory and listening port here
-		print dir(self.server)
-		self.conn.stopListening()
 
-	def on_unload(self):
+		self.conn.stopListening()
 		os.remove(self.pfilename)
 			
 
