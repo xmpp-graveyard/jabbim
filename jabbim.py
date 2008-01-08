@@ -2815,6 +2815,8 @@ class mainWindow(QtGui.QMainWindow):
 			if jid.find('@') == -1: 
 				self.ui.login_jid.setText(jid + '@') 
 			return 
+		if len(unicode(self.ui.login_password.text())) == 0:
+			return
 		self.ui.rosterStackedWidget.setCurrentIndex(2)
 		self.ui.login_connect.setEnabled(False)
 		self.ui.profilesList.setEnabled(False)
