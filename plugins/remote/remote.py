@@ -1,3 +1,5 @@
+#-*- coding: UTF-8 -*-
+
 import sys,os,time
 sys.path.append('.')
 from include import plugins
@@ -6,6 +8,8 @@ from configobj import ConfigObj
 from twisted.words.protocols.jabber import jid as jidT
 from twisted.web import xmlrpc, server
 from PyQt4 import QtCore, QtGui
+from twisted.python import log
+from time import time
 
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
@@ -20,12 +24,23 @@ class Plugin(plugins.PluginBase):
 		self.developMode=True
 
 		if main:
+			self.pfilename = os.path.join(homedir,"xmlrpcports")
 			self.loadConfig(homedir)
 			self.loadConfig()
 			r = Remote(main)
 			from twisted.internet import reactor
 			self.server = server.Site(r)
-			self.conn = reactor.listenTCP(7080, self.server, interface = 'localhost')
+			port = 7080
+			while True:
+				try:
+					self.conn = reactor.listenTCP(port, self.server, interface = 'localhost')
+					break
+				except:
+					port += 1
+			pfile = open(self.pfilename, "a")
+			pfile.write("%s:%s\n" % (time(), port)) # timstamp (float): port (int)
+			pfile.close()
+
 		else:
 			self.loadConfig(homedir)
 	
@@ -33,7 +48,9 @@ class Plugin(plugins.PluginBase):
 		#remove factory and listening port here
 		print dir(self.server)
 		self.conn.stopListening()
-		pass
+
+	def on_unload(self):
+		os.remove(self.pfilename)
 			
 
 

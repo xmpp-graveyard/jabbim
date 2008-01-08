@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 import sys, xmlrpclib, traceback
+from optparse import OptionParser
+
+parser = OptionParser()
+parser.add_option("-u","--uri", dest="uri", metavar="XMPP-URI", help="Execute xmpp uri (see RFC 4622)", type="str")
+options, args = parser.parse_args()
 
 def handleuri(argv):
 	print 'handle uri!'
