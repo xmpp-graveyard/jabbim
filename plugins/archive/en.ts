@@ -11,12 +11,12 @@
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="archive.py" line="317"/>
+        <location filename="archive.py" line="319"/>
         <source>Contacts in roster</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="archive.py" line="319"/>
+        <location filename="archive.py" line="321"/>
         <source>Others</source>
         <translation type="unfinished"></translation>
     </message>
