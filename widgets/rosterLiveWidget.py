@@ -300,7 +300,7 @@ class rosterWidget(QtGui.QWidget):
 		self.groups[self.specialName]=special()
 		self.users=[]
 		self.iconSize="32x32"
-
+		self.setObjectName("mainRosterWidget")
 		self.setMinimumWidth(150)
 		self.setMinimumHeight(150)
 		self.setAcceptDrops(True)
@@ -1217,6 +1217,7 @@ class rosterWidget(QtGui.QWidget):
 				painter.drawPixmap(self.width()-4-32+(int((32-pixmap.width())/2)),y,pixmap)
 
 	def paintEvent(self,event):
+		QtGui.QWidget.paintEvent(self,event)
 		painter=QtGui.QPainter(self)
 		painter.setClipping(True)
 		#painter.setRenderHint(painter.Antialiasing)
@@ -1784,7 +1785,7 @@ class rosterWidget(QtGui.QWidget):
 				return
 				items=QtCore.QStringList()
 				items.append(self.tr("Move to group"))
-				q,b=QtGui.QInputDialog.getItem(self,self.tr("Contact action"),self.tr("Select action."), items,0,False)
+				q,b=QtGui.QInputDialog.getItem(self.main,self.tr("Contact action"),self.tr("Select action."), items,0,False)
 				q=unicode(q)
 				if b==True and len(q)!=0:
 					index=int(items.indexOf(QtCore.QRegExp(q)))
@@ -2452,7 +2453,7 @@ class rosterWidget(QtGui.QWidget):
 		if cmd=="rename":
 			name=action.data()
 			name=str(name.toString())
-			group,b=QtGui.QInputDialog.getText(self,self.tr("Rename group"),self.tr("Enter new group name"), QtGui.QLineEdit.Normal, "")
+			group,b=QtGui.QInputDialog.getText(self.main,self.tr("Rename group"),self.tr("Enter new group name"), QtGui.QLineEdit.Normal, "")
 			group=unicode(group)
 			# if user set new name of group
 			if b==True and len(group)!=0:
@@ -2512,7 +2513,7 @@ class rosterWidget(QtGui.QWidget):
 				name = ''
 			if len(name) == 0:
 				name = jid.split('@')[0]
-			name,b=QtGui.QInputDialog.getText(self,self.tr("Rename"),self.tr("Enter new name:"), QtGui.QLineEdit.Normal, name)
+			name,b=QtGui.QInputDialog.getText(self.main,self.tr("Rename"),self.tr("Enter new name:"), QtGui.QLineEdit.Normal, name)
 			name=unicode(name)
 			# if user set new name
 			if b==True and len(name)!=0:
@@ -2525,7 +2526,7 @@ class rosterWidget(QtGui.QWidget):
 			jid=action.data()
 			jid=str(jid.toString())
 			name=unicode(self.main.client.roster['users'][jid].name)
-			group,b=QtGui.QInputDialog.getText(self,self.tr("New group"),self.tr("Add user to new group"), QtGui.QLineEdit.Normal, "")
+			group,b=QtGui.QInputDialog.getText(self.main,self.tr("New group"),self.tr("Add user to new group"), QtGui.QLineEdit.Normal, "")
 			group=unicode(group)
 			# if user set new name of group
 			if b==True and len(group)!=0:
@@ -2545,7 +2546,7 @@ class rosterWidget(QtGui.QWidget):
 			jid=action.data()
 			jid=unicode(jid.toString())
 			#self.main.client.getVCard(jid)
-			self.ve=vcardeditor.vcardEditorDialog(self.main,jid,self,False)
+			self.ve=vcardeditor.vcardEditorDialog(self.main,jid,self.main,False)
 			self.ve.show()
 			#d=self.main.client.getVCard(jid)
 			#d.addCallback(self.vcardArrived)
@@ -2586,7 +2587,7 @@ class rosterWidget(QtGui.QWidget):
 			# sends files to contact
 			jid=action.data()
 			jid=str(jid.toString())
-			file=QtGui.QFileDialog.getOpenFileNames(self,"Choose file")
+			file=QtGui.QFileDialog.getOpenFileNames(self.main,"Choose file")
 			file=list(file)
 			if len(file)!=0:
 				new=[]

@@ -96,7 +96,7 @@ class Commands:
 	def __init__(self, main, jid):
 		self.main	= main
 		self.jid	= unicode(jid)
-		self.dialog	= CommandsDialog(self)
+		self.dialog	= CommandsDialog(self,self.main)
 		self.sessionid	= None
 		self.node	= None
 		self.form	= None

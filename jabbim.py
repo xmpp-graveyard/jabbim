@@ -3147,6 +3147,7 @@ class scrollBar(QtGui.QScrollArea):
 		self.y=0
 		self.verticalScrollBar().setPageStep(32)
 		self.verticalScrollBar().setSingleStep(32)
+		self.setObjectName("scroll")
 	#def updateScrollBars(self):
 		#QtGui.QScrollArea.updateScrollBars(self)
 		#self.verticalScrollBar().setPageStep(32)
