@@ -727,12 +727,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>customStatusWindow</name>
     <message>
-        <location filename="jabbim.py" line="3034"/>
+        <location filename="jabbim.py" line="3036"/>
         <source>Window will be closed in </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3034"/>
+        <location filename="jabbim.py" line="3036"/>
         <source> seconds.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1500,7 +1500,7 @@ Do you realy want to leave this room?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2927"/>
+        <location filename="jabbim.py" line="2929"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1790,42 +1790,42 @@ Do you realy want to leave this room?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2827"/>
+        <location filename="jabbim.py" line="2829"/>
         <source>Connecting to the server...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2841"/>
+        <location filename="jabbim.py" line="2843"/>
         <source>Login information</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2841"/>
+        <location filename="jabbim.py" line="2843"/>
         <source>Save current login information?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2925"/>
+        <location filename="jabbim.py" line="2927"/>
         <source>Bad Jabber ID or password.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2927"/>
+        <location filename="jabbim.py" line="2929"/>
         <source>Server is not found.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2972"/>
+        <location filename="jabbim.py" line="2974"/>
         <source>You are now offline.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2977"/>
+        <location filename="jabbim.py" line="2979"/>
         <source>Connection lost! </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2977"/>
+        <location filename="jabbim.py" line="2979"/>
         <source>Trying to reconnect ..  </source>
         <translation type="unfinished"></translation>
     </message>
@@ -2511,12 +2511,12 @@ Version: %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="1239"/>
+        <location filename="widgets/rosterLiveWidget.py" line="1240"/>
         <source>You haven&apos;t any contacts in your contact list. You can add them with Add contact from menu Actions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="1241"/>
+        <location filename="widgets/rosterLiveWidget.py" line="1242"/>
         <source>You haven&apos;t any online contact in your contact list. To see offline contacts, you have to click Show Offline button, which is above this message.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2526,32 +2526,32 @@ Version: %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2515"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2516"/>
         <source>Enter new name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="1848"/>
+        <location filename="widgets/rosterLiveWidget.py" line="1849"/>
         <source>Move to group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="1859"/>
+        <location filename="widgets/rosterLiveWidget.py" line="1860"/>
         <source>Copy to group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="1787"/>
+        <location filename="widgets/rosterLiveWidget.py" line="1788"/>
         <source>Contact action</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="1787"/>
+        <location filename="widgets/rosterLiveWidget.py" line="1788"/>
         <source>Select action.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="1854"/>
+        <location filename="widgets/rosterLiveWidget.py" line="1855"/>
         <source>Make metacontact</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2561,17 +2561,17 @@ Version: %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2239"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2240"/>
         <source>Invite to conference</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2262"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2263"/>
         <source>Custom status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2263"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2264"/>
         <source>All resources</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2586,7 +2586,7 @@ Version: %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2326"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2327"/>
         <source>Break up metacontact</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2611,57 +2611,57 @@ Version: %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2374"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2375"/>
         <source>Authorization</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2377"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2378"/>
         <source>Send authorization to contact</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2381"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2382"/>
         <source>Remove authorization from contact</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2385"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2386"/>
         <source>Request authorization from contact</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2391"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2392"/>
         <source>Privacy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2393"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2394"/>
         <source>Block contact</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2397"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2398"/>
         <source>Unblock contact</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2412"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2413"/>
         <source>Always hide my status to contact</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2416"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2417"/>
         <source>Don&apos;t hide my status to contact</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2425"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2426"/>
         <source>Extra actions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2443"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2444"/>
         <source>Remove group</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2676,27 +2676,27 @@ Version: %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2469"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2470"/>
         <source>Remove group?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2469"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2470"/>
         <source>Do you want to remove group </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2469"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2470"/>
         <source> from your roster?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2497"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2498"/>
         <source>Delete contact?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2497"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2498"/>
         <source>Do you want to delete this contact from your roster?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2711,7 +2711,7 @@ Version: %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2578"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2579"/>
         <source>Hi! I&apos;d love to see you in multichat at </source>
         <translation type="unfinished"></translation>
     </message>
@@ -2934,12 +2934,12 @@ Version: %3</source>
 <context>
     <name>statusWindow</name>
     <message>
-        <location filename="jabbim.py" line="3072"/>
+        <location filename="jabbim.py" line="3074"/>
         <source>Window will be closed in </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3072"/>
+        <location filename="jabbim.py" line="3074"/>
         <source> seconds.</source>
         <translation type="unfinished"></translation>
     </message>
