@@ -32,6 +32,7 @@ QTextEdit{
 	border:2px solid #C3D9FF;
 	border-radius: 6px;
 	background-color:#FFFFFF;
+	font-size:10em;
 }
 
  QProgressBar {
@@ -49,6 +50,8 @@ QTreeWidget,QListWidget {
 	background-color:white;
 	selection-background-color:#CDEB8B;
 	selection-color:black;
+	border:2px solid #C3D9FF;
+	border-radius: 6px;
 }
 
 
