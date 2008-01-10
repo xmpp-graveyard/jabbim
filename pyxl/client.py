@@ -183,10 +183,11 @@ class Client(derived):
 			if sys.platform == 'win32':
 				import IPConfig
 				srv = IPConfig.IPConfig().get_dns()
-				print unicode(srv)
-				if len(srv) > 0:
-					r = dns.Resolver(servers=[(srv[0], 53)])
-					print dir(r)
+				dnssrv = []
+				for server in srv:
+					dnssrv.append((server, 53))
+				if len(dnssrv) > 0:
+					r = dns.Resolver(servers=dnssrv)
 					d = r.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
 				else:
 					d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
