@@ -45,14 +45,14 @@ class SetStatus(Stage):
 				priority = self.data["priority"][0],
 				)
 		icon = self.main.getIcon(self.data["show"][0], size="16x16")
-		self.main.ui.statusButton.setIcon(self.main.getIcon(status=self.data["show"][0], size="16x16"))
-		self.main.ui.showWidget.setText(status)
+		#self.main.ui.statusButton.setIcon(self.main.getIcon(status=self.data["show"][0], size="16x16"))
+		#self.main.ui.showWidget.setText(status)
 		
 		sc = self.main.client.roster['users'][self.main.client.jid.userhost()].resources[self.main.client.jid.resource]
 		sc.show = self.data["show"][0]
 
-		for muc in self.main.client.groupchats.itervalues():
-			self.main.client.sendPresence(show = unicode(show), status = unicode(self.data["status"][0]), to = '%s/%s'%(muc.jid, muc.nick))
+		#for muc in self.main.client.groupchats.itervalues():
+		#	self.main.client.sendPresence(show = unicode(show), status = unicode(self.data["status"][0]), to = '%s/%s'%(muc.jid, muc.nick))
 		self.xform = Xform("result", instructions=[self.main.tr("Status changed.")]).buildElement()
 
 class fLeaveGC(Stage):
