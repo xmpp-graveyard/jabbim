@@ -20,7 +20,7 @@ try:
 	from PyQt4 import QtCore, QtGui
 except:
 	print "PyQt4 is not installed."
-
+import gc
 from chat import *
 from chatwidget import *
 from groupchat import *
@@ -882,3 +882,21 @@ class chatWindow(QtGui.QMainWindow):
 			self.ui.chatTab.removeTab(index)
 			if int(self.ui.chatTab.count())==0:
 				self.hide()
+		#w.deleteLater()
+		
+		l=gc.get_referents(w)
+		for x in range(len(l)):
+			del l[0]
+		l=gc.get_referrers(w)
+		for x in range(len(l)):
+			del l[0]
+		print gc.get_referrers(w)
+		w.setParent(None)
+		del w
+
+		print "GARBAGE:",gc.garbage
+		del gc.garbage[:]
+		print "GARBAGE:",gc.garbage
+		print "UNREACHABLE OBJECTS:",gc.collect()
+
+		#del
