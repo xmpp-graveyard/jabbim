@@ -31,13 +31,17 @@ class Adapter:
 			print "Adapter: EnableDHCP=%s" % unicode(dhcp_enabled)
 			(nameserver, type) = _winreg.QueryValueEx(tcpip_params_key, "NameServer")
 			print "Adapter: NameServer=%s" % unicode(nameserver)
-			self.nameservers = nameserver.replace(',',' ').split(' ')
 
 			if nameserver == '' and dhcp_enabled:
 				print "Adapter: alternative branch"
 				(nameserver, type) = _winreg.QueryValueEx(tcpip_params_key, "DhcpNameServer")
 				print "Adapter: DhcpNameServer=%s" % unicode(nameserver)
-				self.nameservers = nameserver.split(' ')
+
+			if nameserver == '':
+				print "Adapter: no nameserver on this iface"
+				self.nameservers = []
+			else:
+				self.nameservers = nameserver.replace(',',' ').split(' ')
 		except WindowsError:
 			print "Adapter: a key is not present"
 			self.nameservers = []
