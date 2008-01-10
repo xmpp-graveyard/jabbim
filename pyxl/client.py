@@ -1068,6 +1068,9 @@ class Client(derived):
 		log.msg("On command event")
 		command = el.firstChildElement()
 		node = command["node"]
+		public = self.commands.nodes[node][3]
+		ji = jid.JID(el['from']).userhost()
+		allowed = public or (ji == self.jid.userhost())
 		try:
 			lang = el["xml:lang"]
 		except:
@@ -1086,6 +1089,8 @@ class Client(derived):
 			#log.msg(unicode(dir(self.commands)))
 			if x == None:
 				return
+			if not allowed:
+				raise RuntimeError("forbidden")
 			self.commands.sessions[sid].execStage(
 					self.commands.sessions[sid].nextstages[action],
 					el["id"],
@@ -1095,8 +1100,7 @@ class Client(derived):
 			log.msg("ok, continuing in current session")
 
 
-		except KeyError,e:
-			log.msg("Key error: %s " % e.message)
+		except KeyError, RuntimeError:
 			if jid.JID(el["from"]).userhost() == self.jid.userhost() or self.commands.nodes[node][3]:
 				self.commands.startSession(node, el["from"], el["id"])
 				log.msg("Starting new session")
