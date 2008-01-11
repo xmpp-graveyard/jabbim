@@ -1303,6 +1303,7 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.ui.mdiWidget.hide()
 			self.ui.mdiWidget.setParent(None)
+			self.setMaximumWidth(250)
 			self.chat=widgets.chatwindow.chatWindow(self,self) #: chat window
 		
 		# variables
@@ -1832,9 +1833,10 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				size=128
 			result=QtGui.QPixmap(size,size)
+			result.fill(QtCore.Qt.transparent)
 			frame=QtGui.QPixmap("images/"+str(size)+"x"+str(size)+"/frame.png")
 			painter=QtGui.QPainter(result)
-			painter.fillRect(0,0,size,size,QtGui.QBrush(self.ui.login.palette().color(QtGui.QPalette.Window)))
+			#painter.fillRect(0,0,size,size,QtGui.QBrush(self.ui.login.palette().color(QtGui.QPalette.Window)))
 			painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
 			painter.drawPixmap(0,0,frame)
 			painter.end()
@@ -1847,9 +1849,10 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				size=128
 			result=QtGui.QPixmap(size,size)
+			result.fill(QtCore.Qt.transparent)
 			frame=QtGui.QPixmap("images/"+str(size)+"x"+str(size)+"/frame.png")
 			painter=QtGui.QPainter(result)
-			painter.fillRect(0,0,size,size,QtGui.QBrush(self.ui.login.palette().color(QtGui.QPalette.Window)))
+			#painter.fillRect(0,0,size,size,QtGui.QBrush(self.ui.login.palette().color(QtGui.QPalette.Window)))
 			painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
 			painter.drawPixmap(0,0,frame)
 			painter.end()

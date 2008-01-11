@@ -408,7 +408,6 @@ class preferencesWindow(QtGui.QDialog):
 		self.ui.chatSkin_list.setCurrentIndex(0)
 		QtCore.QObject.connect(self.ui.chatSkin_list, QtCore.SIGNAL("activated ( const QString & )"),self.chatSkin_listChanged)
 
-
 		# Themes
 		skins=os.listdir("themes/")
 		if self.main.config['theme']=="None":
@@ -416,8 +415,11 @@ class preferencesWindow(QtGui.QDialog):
 			QtCore.QObject.connect(self.ui.useThemes,QtCore.SIGNAL("stateChanged ( int )"),self.useThemesChanged)
 		self.currentTheme=self.main.config['theme']
 		for skin in skins:
+
 			if os.path.isdir("themes/"+skin) and os.path.exists("themes/"+skin+"/style.css"):
 				preview=QtGui.QIcon('themes/'+skin+"/preview.png")
+				log.msg('SKIN:'+skin)
+
 				item=QtGui.QListWidgetItem(self.ui.themes)
 				item.setIcon(preview)
 				item.setSizeHint(QtCore.QSize(100,128))

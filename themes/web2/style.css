@@ -8,6 +8,17 @@ QMainWindow,QDialog {
 	color:#36393D;
 }
 
+QWidget#login{
+/* background-color:#D7DFE6; */
+background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+				stop:0 #BDCAD5, stop:0.5 #CED7DF,stop: 0.75 #D8DFE5, stop: 1 #D7DFE6);
+
+background-repeat: no-repeat;
+background-image:url('themes/web2/login.png');
+background-position: top left;
+background-attachment: fixed;
+}
+
 QTabWidget#tabWidget {
 border:0;
 }
@@ -259,14 +270,51 @@ QComboBox::drop-down {
 }
 
 QComboBox::down-arrow {
-	image: url();
+	image: url('themes/web2/open.png');
 }
 
 QComboBox::down-arrow:on { /* shift the arrow when popup is open */
 	top: 1px;
 	left: 1px;
 }
+QCheckBox{
+	border:2px solid #C3D9FF;
+	border-radius: 6px;
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #dadbde);
+/* 	padding:5px; */
+	padding-left:3px;
+	padding-right:3px;
+}
+QCheckBox:disabled{
+	border:2px solid #EEEEEE;
+	border-radius: 6px;
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #EEEEEE);
+	color:gray
+}
 
+QCheckBox:hover{
+	border:2px solid #CDEB8B;
+	border-radius: 6px;
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #CDEB8B);
+}
+
+QCheckBox:focus{
+	border:2px solid #CDEB8B;
+	border-radius: 6px;
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #CDEB8B, stop: 1 #f6f7fa);
+}
+
+QCheckBox::indicator::checked {
+	image: url('themes/web2/check.png');
+}
+
+QCheckBox::indicator::checked:disabled {
+	image: url('themes/web2/unchecked.png');
+}
+
+QCheckBox::indicator::unchecked {
+	image: url('themes/web2/blank.png');
+}
 
 
 
@@ -274,7 +322,7 @@ QLineEdit {
 	border:2px solid #C3D9FF;
 	border-radius: 6px;
 	padding: 0 8px;
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #dadbde);
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ffffff, stop: 1 #f6f7fa);
 	selection-background-color: darkgray;
 }
 
