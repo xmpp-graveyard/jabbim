@@ -39,6 +39,8 @@ QWidget#roster{
 
 }
 
+
+
 QTextEdit{
 	border:2px solid #C3D9FF;
 	border-radius: 6px;
@@ -411,3 +413,27 @@ QFrame#frame{
 color:black;
 border:0;
 }
+
+QLabel#login_headerLabel{
+color:white;
+}
+
+QGroupBox{
+	border:2px solid #C3D9FF;
+	border-radius: 6px;
+	padding-top:15px;
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ffffff, stop: 1 #f6f7fa);
+}
+
+ QGroupBox::title {
+     subcontrol-origin: margin;
+     subcontrol-position: top center; /* position at the top center */
+     padding: 0 3px;
+	border:2px solid #C3D9FF;
+	border-radius: 6px;
+	border-top-left-radius:0;
+	border-top-right-radius:0;
+
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #C3D9FF, stop: 1 #f6f7fa);
+
+ }
