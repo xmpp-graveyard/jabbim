@@ -36,8 +36,8 @@ def getHomeDir():
 def readpfile(pfile):
 	ports = {}
 	for line in open(pfile).read().splitlines():
-		timestamp, port = line.split(":",1)
-		ports[timestamp] = port
+		timestamp, port, cookie = line.split(":",2)
+		ports[timestamp] = (port, cookie)
 	return ports
 
 def scanports(): #
@@ -52,8 +52,10 @@ def scanports(): #
 	p = {}
 	for d in profs:
 		p.update(d)
+
 	return p[p.keys()[0]]
-print scanports()
+
+
 
 def handleuri(argv):
 	print 'handle uri!'
@@ -63,12 +65,13 @@ def handleuri(argv):
 	uri = ' '.join(argv)[5:]
 	parts = uri.split('?', 1)
 	if len (parts) == 1:
-		return server.startChat(parts[0])
+		return server.startChat(parts[0], porty[1])
 	elif parts[1] == 'join':
-		return server.joinMUC(parts[0])
-		
+		return server.joinMUC(parts[0], porty[1])
+
+porty = scanports()	
 functions = {'uri': handleuri}#, 'setStatus':setStatus}
-server = xmlrpclib.Server('http://localhost:7080/')
+server = xmlrpclib.Server('http://localhost:%s/'%porty[0])
 
 if functions.has_key(sys.argv[1]):
 	try:	

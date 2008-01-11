@@ -10,6 +10,11 @@ from twisted.web import xmlrpc, server
 from PyQt4 import QtCore, QtGui
 from twisted.python import log
 from time import time
+try:
+	from hashlib import sha1
+except:
+	log.msg('Please upgrade to python2.5')
+	from sha import new as sha1
 
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir):
@@ -27,7 +32,8 @@ class Plugin(plugins.PluginBase):
 			self.pfilename = os.path.join(homedir,"xmlrpcports")
 			self.loadConfig(homedir)
 			self.loadConfig()
-			r = Remote(main)
+			self.cookie = generateCookie()
+			r = Remote(main, self)
 			from twisted.internet import reactor
 			self.server = server.Site(r)
 			port = 7080
@@ -37,8 +43,9 @@ class Plugin(plugins.PluginBase):
 					break
 				except:
 					port += 1
+			
 			pfile = open(self.pfilename, "a")
-			pfile.write("%s:%s\n" % (time(), port)) # timstamp (float): port (int)
+			pfile.write("%s:%s:%s\n" % (time(), port, self.cookie)) # timstamp (float): port (int) : cookie (str)
 			pfile.close()
 
 		else:
@@ -50,21 +57,33 @@ class Plugin(plugins.PluginBase):
 		self.conn.stopListening()
 		os.remove(self.pfilename)
 			
+def generateCookie():
+	magic = unicode(globals())+unicode(time())
+	return sha1(magic).hexdigest()
 
+def checkCookie(incoming, mine):
+	if incoming != mine:
+		print 'bad cookie'
+		return False
+	else:
+		return True
 
 
 class Remote(xmlrpc.XMLRPC):
 	"""An example object to be published."""
 	allowNone = True
-	def __init__(self, main):
+	def __init__(self, main, plugin):
 		self.main = main
+		self.cookie = plugin.cookie
 		
 	def xmlrpc_setStatus(self, show, status):
 		self.main.sendPresence(None, show, status)
 		return True
 	
-	def xmlrpc_startChat(self, jid, nick = None):
+	def xmlrpc_startChat(self, jid, cookie, nick = None):
 		print 'startChat from RPC'
+		if not checkCookie(cookie, self.cookie):
+			return False
 		jid = self.main.getJid(jid)
 		if  jid :
 			if nick == None:
@@ -74,7 +93,9 @@ class Remote(xmlrpc.XMLRPC):
 		else:
 			return False
 	
-	def xmlrpc_joinMUC(self, jid):
+	def xmlrpc_joinMUC(self, jid, cookie):
+		if not checkCookie(cookie, self.cookie):
+			return False
 		jid = self.main.getJid(jid)
 		if jid:
 			nickname = self.main.client.jid.user
