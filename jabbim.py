@@ -944,7 +944,7 @@ class clientClass(pyxl.client.Client):
 							message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent.")+" "+unicode(error))
 							w.chat.textEditWrite(message)
 						return
-					body=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
+					body=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ").replace('&','&amp;')
 					body = utils.replace_url(body)
 					body=body.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 					self.main.chat.onGCMessage(w,i,body,delay,subject,user)
@@ -997,7 +997,7 @@ class clientClass(pyxl.client.Client):
 		if len(body)!=0:
 			# strip html tags and \n from messages
 			if xhtml==None:
-				message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")#.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
+				message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ").replace('&','&amp;')
 				message = utils.replace_url(message)
 				message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 			else:
