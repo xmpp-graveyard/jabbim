@@ -73,29 +73,29 @@ QTreeWidget,QListWidget {
 
 
 QMenu {
-  background-color: #EEEEEE;
+  background-color: #EFF8FF;
 
 /*   border-radius: 4px; */
-  border: 1px solid black;
+  border: 2px solid #507390;
   color: black;
 }
 
   QMenu:selected {
-    background-color: #CDEB8B;
+    background-color: #C3D9FF;
 /*     border: 1px solid #646668; */
     color: black;
   }
 
  QMenu::item:disabled {
-  background-color: #B9B9B9;
+  background-color: #AABBC6;
   color:gray;
 
  }
 
 QMenuBar {
-  background-color: #EEEEEE;
+  background-color: #507390;
 /*   border: 1px solid #FF8800; */
-  color: black;
+  color: white;
 }
 
 /*QWidget#chatView{
@@ -275,8 +275,8 @@ QComboBox:on { /* shift the text when the popup opens */
 QComboBox::drop-down {
 	subcontrol-origin: padding;
 	subcontrol-position: top right;
-	width: 15px;
-
+	width: 16px;
+	padding-right:4px;
 	border-left-width: 0px;
 	border-left-color: darkgray;
 	border-left-style: solid; /* just a single line */
