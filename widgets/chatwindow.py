@@ -431,7 +431,6 @@ class chatWindow(QtGui.QMainWindow):
 					self.active=True
 					print "activated..........."
 					
-					#print self.main.events.events
 					ev2=list(self.main.events.events)
 					r=False
 					for event in ev2:
