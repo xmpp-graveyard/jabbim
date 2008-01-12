@@ -86,7 +86,7 @@ def loadConfig(main,status):
 			"showTransports":"False",
 			"oneWindow":"False",
 			"askBeforeQuitMUC":"True",
-			"bigOnClick":"True", 
+			"bigOnClick":"False",
 			"specifyHost":"False",
 			"connectHost": "",
 			"connectPort": "5222"
