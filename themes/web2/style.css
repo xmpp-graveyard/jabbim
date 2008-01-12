@@ -216,9 +216,9 @@ QTabWidget > QTabBar::tab:hover{
 }
   QTabWidget > QTabBar::tab:only-one {
     border-radius: 6px;
-	border: 2px solid #CDEB8B;
+	border: 2px solid #89A0C6;
     border-bottom-style: none;
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #CDEB8B, stop: 1 #f6f7fa);
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #89A0C6);
 	padding:3px;
 	padding-left:8px;
 	padding-right:8px;
