@@ -86,10 +86,11 @@ QMenu {
     color: black;
   }
 
- QMenu::item:disabled {
+ QMenu:disabled {
   background-color: #AABBC6;
   padding-left:20px;
-/*   color:gray; */
+  font-style: italic;
+  color:gray;
 
  }
 
