@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Mon Jan  7 20:53:23 2008
-#      by: PyQt4 UI code generator 4.3
+# Created: Sat Jan 12 18:28:11 2008
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -339,8 +339,9 @@ class Ui_MainWindow(object):
         self.gridlayout6.addWidget(self.mucBrowserButton,2,1,1,1)
 
         self.bookmarks_headerLabel = QtGui.QLabel(self.bookmarksTab)
+        self.bookmarks_headerLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.bookmarks_headerLabel.setObjectName("bookmarks_headerLabel")
-        self.gridlayout6.addWidget(self.bookmarks_headerLabel,0,0,1,1)
+        self.gridlayout6.addWidget(self.bookmarks_headerLabel,0,0,1,2)
         self.tabWidget.addTab(self.bookmarksTab,QtGui.QIcon("images/16x16/categories/bookmarks.png"),"")
 
         self.eventsTab = QtGui.QWidget()
@@ -353,7 +354,12 @@ class Ui_MainWindow(object):
 
         self.eventsListWidget = QtGui.QListWidget(self.eventsTab)
         self.eventsListWidget.setObjectName("eventsListWidget")
-        self.gridlayout7.addWidget(self.eventsListWidget,0,0,1,1)
+        self.gridlayout7.addWidget(self.eventsListWidget,1,0,1,1)
+
+        self.eventsLabel = QtGui.QLabel(self.eventsTab)
+        self.eventsLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.eventsLabel.setObjectName("eventsLabel")
+        self.gridlayout7.addWidget(self.eventsLabel,0,0,1,1)
         self.tabWidget.addTab(self.eventsTab,QtGui.QIcon("images/16x16/categories/event.png"),"")
         self.gridlayout3.addWidget(self.tabWidget,1,0,1,1)
         self.rosterStackedWidget.addWidget(self.roster)
@@ -515,6 +521,10 @@ class Ui_MainWindow(object):
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'DejaVu Sans\';\"><span style=\" font-size:12pt; font-weight:600;\">Bookmarks</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.bookmarksTab), QtGui.QApplication.translate("MainWindow", "b", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.bookmarksTab),QtGui.QApplication.translate("MainWindow", "Bookmarks", None, QtGui.QApplication.UnicodeUTF8))
+        self.eventsLabel.setText(QtGui.QApplication.translate("MainWindow", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        "p, li { white-space: pre-wrap; }\n"
+        "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:8pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
+        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt;\"><span style=\" font-size:12pt; font-weight:600;\">Events</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.eventsTab), QtGui.QApplication.translate("MainWindow", "Events", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.eventsTab),QtGui.QApplication.translate("MainWindow", "Events", None, QtGui.QApplication.UnicodeUTF8))
         self.login_cancel.setText(QtGui.QApplication.translate("MainWindow", "Cancel", None, QtGui.QApplication.UnicodeUTF8))

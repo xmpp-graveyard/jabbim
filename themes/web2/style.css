@@ -482,7 +482,7 @@ padding-bottom:5px;
 padding-top:5px;
 }
 
-QLabel#login_headerLabel,QLabel#bookmarks_headerLabel{
+QLabel#login_headerLabel,QLabel#bookmarks_headerLabel,QLabel#eventsLabel{
 /* color:white; */
 	border:2px solid #C3D9FF;
 	border-radius: 6px;
