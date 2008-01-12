@@ -119,6 +119,8 @@ class activeWidget(QtGui.QWidget):
 			self.layout2.removeWidget(button)
 			self.group.removeButton(button)
 			button.setParent(None)
+		for i in range(len(self.buttons.values())):
+			del self.buttons.values()[0]
 		self.buttons={}
 		#print "privacy3"
 		# add new metacontact buttons
@@ -632,7 +634,7 @@ class rosterWidget(QtGui.QWidget):
 		# paint background of item
 		painter.save()
 		painter.translate(x,y)
-		painter.fillRect(0,0,self.width(),22,QtGui.QBrush(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Window)))
+		painter.fillRect(0,0,self.width(),22,QtGui.QBrush(self.main.ui.groupStyleWidget.palette().window()))
 		painter.restore()
 
 		
@@ -692,12 +694,12 @@ class rosterWidget(QtGui.QWidget):
 
 		if item==self.selected:
 			if self.theme:
-				painter.fillRect(0,0,self.width(),30,QtGui.QBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Window)))
+				painter.fillRect(0,0,self.width(),30,QtGui.QBrush(self.main.ui.selectedItemStyle.palette().window()))
 			else:
 				painter.fillRect(0,0,self.width(),30,QtGui.QBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight)))
 		else:
 			if self.theme:
-				painter.fillRect(0,0,self.width(),30,QtGui.QBrush(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Window)))
+				painter.fillRect(0,0,self.width(),30,QtGui.QBrush(self.main.ui.groupStyleWidget.palette().window()))
 			else:
 				painter.fillRect(0,0,self.width(),30,QtGui.QBrush(self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.AlternateBase)))
 		
@@ -1446,10 +1448,16 @@ class rosterWidget(QtGui.QWidget):
 					if useritem==self.item:
 						y+=self.selectedHeight-28
 					y+=self.userHeight
-		if y+self.selectedHeight-28>0 and self.selectedHeight!=0 and not self.statusLabel.isHidden():
-			self.setMinimumHeight(y+self.selectedHeight-28)
+		size=y+self.selectedHeight-28
+		if size<self.parent().height()-20:
+			if self.parent().height()-20>0:
+				self.setMinimumHeight(self.parent().height()-20)
 		else:
-			self.setMinimumHeight(y)
+			if y+self.selectedHeight-28>0 and self.selectedHeight!=0 and not self.statusLabel.isHidden():
+				self.setMinimumHeight(size)
+			else:
+				self.setMinimumHeight(size)
+		#self.setMinimumHeight(1500)
 
 
 	#def sel(self):
