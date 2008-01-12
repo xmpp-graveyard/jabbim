@@ -341,7 +341,7 @@ QSpinBox {
 	border-radius: 6px;
 	padding: 0 8px;
 	padding-right:13px;
-	background-color: black;
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ffffff, stop: 1 #f6f7fa);
 	selection-background-color: darkgray;
 }
 
@@ -355,7 +355,7 @@ QSpinBox:disabled{
 QSpinBox:hover{
 	border:2px solid #89A0C6;
 	border-radius: 6px;
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #89A0C6);
+	background-color: black;
 }
 
 QSpinBox:focus{
