@@ -4,7 +4,7 @@
 }*/
 
 QMainWindow,QDialog {
-	background-color:#F9F7ED;
+	background-color: #EFF8FF;
 	color:#36393D;
 }
 
@@ -65,7 +65,7 @@ QTextEdit{
 QTreeWidget,QListWidget {
 	alternate-background-color: #EEEEEE;
 	background-color:white;
-	selection-background-color:#CDEB8B;
+	selection-background-color:#C3D9FF;
 	selection-color:black;
 	border:2px solid #C3D9FF;
 	border-radius: 6px;
@@ -204,7 +204,8 @@ padding-right:5px;
 	border: 2px solid #89A0C6;
     border-bottom-style: none;
 /* 	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #CDEB8B, stop: 1 #f6f7fa); */
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #89A0C6, stop: 1 #f6f7fa);
+/* 	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #89A0C6, stop: 1 #f6f7fa); */
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #89A0C6);
 
        margin-left: -2px;
          margin-right: -2px;
