@@ -928,7 +928,6 @@ class clientClass(pyxl.client.Client):
 		if not body:
 			body=""
 		if len(body)!=0:
-			body=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ").replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 			# find MUC tab
 			for i in range(self.main.chat.ui.chatTab.count()):
 				w=self.main.chat.ui.chatTab.widget(i)
@@ -945,7 +944,9 @@ class clientClass(pyxl.client.Client):
 							message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent.")+" "+unicode(error))
 							w.chat.textEditWrite(message)
 						return
+					body=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
 					body = utils.replace_url(body)
+					body=body.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 					self.main.chat.onGCMessage(w,i,body,delay,subject,user)
 					return
 
@@ -996,8 +997,9 @@ class clientClass(pyxl.client.Client):
 		if len(body)!=0:
 			# strip html tags and \n from messages
 			if xhtml==None:
-				message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ").replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
+				message=unicode(body).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")#.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 				message = utils.replace_url(message)
+				message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 			else:
 				message=xhtml.replace("&quot;",'"')
 				print 'xhtml=',unicode(message)
