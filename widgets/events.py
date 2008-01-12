@@ -406,6 +406,8 @@ class events:
 			if self.jabbimIcon!=None:
 				self.main.tray.setIcon(self.main.getCurrentTrayIcon())
 				self.main.ui.tabWidget.setTabIcon(2,QtGui.QIcon("images/16x16/categories/event.png"))
+				if self.main.ui.rosterStackedWidget.currentIndex()==2:
+					self.main.ui.rosterStackedWidget.setCurrentIndex(0)
 				self.jabbimIcon=None
 		elif len(types)==1:
 			self.trayIcon=self.events[0]['icon']
