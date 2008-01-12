@@ -8,6 +8,11 @@ QMainWindow,QDialog {
 	color:#36393D;
 }
 
+QSplitter::handle {
+	background-color: #EFF8FF;
+}
+
+
 QWidget#login,QWidget#splash{
 /* background-color:#D7DFE6; */
 background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
