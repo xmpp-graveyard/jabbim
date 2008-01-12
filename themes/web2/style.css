@@ -86,11 +86,11 @@ QMenu {
     color: black;
   }
 
-/* QMenu::item:disabled {
+ QMenu::item:disabled {
   background-color: #AABBC6;
-  color:gray;
+/*   color:gray; */
 
- }*/
+ }
 
 QMenuBar {
   background-color: #507390;
