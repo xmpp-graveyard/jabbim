@@ -1074,6 +1074,7 @@ class clientClass(pyxl.client.Client):
 				self.main.tray.showMessage(mainWindow.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
 				self.main.chat.addChatTab(frm.full(),unicode(user),icon,message)
 				self.main.chat.setWindowState(self.main.chat.windowState() & QtCore.Qt.WindowMinimized | ~QtCore.Qt.WindowActive)
+				self.main.setWindowState(self.main.windowState() & QtCore.Qt.WindowActive)
 
 				tab,tabIndex=self.main.chat.findTab(frm.full())
 				if tab:
