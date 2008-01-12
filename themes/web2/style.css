@@ -13,6 +13,13 @@ QSplitter::handle {
 }
 
 
+QMainWindow#MainWindow{
+background-color:#507390;
+/* border-color:#507390; */
+
+}
+
+
 QWidget#login,QWidget#splash{
 /* background-color:#D7DFE6; */
 background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
@@ -97,6 +104,7 @@ QMenu {
   color:gray;
 
  }
+
 
 QMenuBar {
   background-color: #507390;
@@ -466,10 +474,12 @@ background:0;
 QFrame#frame{
 
          background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                     stop: 0.0 #EEEEEE, stop: 1.0 #F9F7ED);
+                                     stop: 0.0 #507390,stop:0.1 #EEEEEE, stop: 1.0 #FFFFFF);
 
 color:black;
 border:0;
+padding-bottom:5px;
+padding-top:5px;
 }
 
 QLabel#login_headerLabel,QLabel#bookmarks_headerLabel{
