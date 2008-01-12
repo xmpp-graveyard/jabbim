@@ -184,7 +184,7 @@ QTabWidget > QTabBar {
 	border:0;
 	border-top:2px solid #C3D9FF;
 	border-bottom:2px solid #C3D9FF;
-    color: black;
+/*     color: black; */
 	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #dadbde);
 	padding:3px;
 }
@@ -192,7 +192,7 @@ QTabWidget > QTabBar {
   QTabWidget > QTabBar::tab:last {
 	border:2px solid #C3D9FF;
 	border-left:0;
-    color: black;
+/*     color: black; */
 	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #dadbde);
 	padding:3px;
 	padding-right:5px;
@@ -204,7 +204,7 @@ padding-right:5px;
   QTabWidget > QTabBar::tab:first {
 	border:2px solid #C3D9FF;
 	border-right:0;
-    color: black;
+/*     color: black; */
 	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #dadbde);
 	padding:3px;
 	padding-left:5px;
