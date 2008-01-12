@@ -2927,11 +2927,11 @@ class mainWindow(QtGui.QMainWindow):
 
 	def _disconnect(self, error = None): # error = None | dns | lost | auth | failed
 		self.tray.setIcon(QtGui.QIcon(QtGui.QIcon("images/16x16/apps/jabbim.png").pixmap(16,16,QtGui.QIcon.Disabled)))
-
-		if error=="auth":
-			QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Bad Jabber ID or password.")),0,1)
-		elif error=="dns":
-			QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Server is not found.")),0,1)
+		if self.client:
+			if error=="auth":
+				QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Bad Jabber ID or password.")),0,1)
+			elif error=="dns":
+				QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Server is not found.")),0,1)
 # 		elif error == 'lost' and MainWindow.reconnect:
 # 			# connection lost, let's wait for a while and then reconnect
 
