@@ -1073,6 +1073,8 @@ class clientClass(pyxl.client.Client):
 				self.main.events.addInfoEvent(header=mainWindow.tr("New message"),text=mainWindow.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[],tooltip=text)
 				self.main.tray.showMessage(mainWindow.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
 				self.main.chat.addChatTab(frm.full(),unicode(user),icon,message)
+				self.main.chat.setWindowState(self.main.chat.windowState() & QtCore.Qt.WindowMinimized | ~QtCore.Qt.WindowActive)
+
 				tab,tabIndex=self.main.chat.findTab(frm.full())
 				if tab:
 					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))

@@ -439,7 +439,7 @@ class chatWindow(QtGui.QMainWindow):
 							event['widget'].closeClicked()
 							r=True
 					if r:
-						print "some events was removed"
+						print "some events were removed"
 						self.flashStatus=False
 							#break
 					self.main.events.refreshTray()
