@@ -2901,7 +2901,7 @@ class mainWindow(QtGui.QMainWindow):
 					resource=''.join(self.config['resource'])
 				else:
 					resource='jabbim'
-				self.client = clientClass(jid+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
+				self.client = clientClass(unicode(jid).lower()+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
 				self.client.xmlLang = unicode(QtCore.QLocale.system().name())[:2]
 				self.client.log=True
 			f=open(self.realHomeDir+"/config",'w')
