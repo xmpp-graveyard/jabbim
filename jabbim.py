@@ -2799,8 +2799,9 @@ class mainWindow(QtGui.QMainWindow):
 
 	def newProfile(self,jid,password,savePassword):
 		self.homeDir=self.realHomeDir+"/"+jid+"-profile"
-		if not os.path.isdir(self.homeDir):
-			os.mkdir(self.homeDir)
+		#if not os.path.isdir(self.homeDir):
+			#os.mkdir(self.homeDir)
+		utils.makeHomeDir(self.homeDir)
 		f=open(self.homeDir+"/config",'w')
 		self.config.write(f)
 		f.close()
@@ -2872,8 +2873,9 @@ class mainWindow(QtGui.QMainWindow):
 				#ret=QtGui.QMessageBox.question(self,self.tr("New profile"), self.tr("Profile for this JID doesn't exist. Do you want to create it?"),3,4)
 				#if ret==3:
 				self.homeDir=self.realHomeDir+"/"+jid+"-profile"
-				if not os.path.isdir(self.homeDir):
-					os.mkdir(self.homeDir)
+				utils.makeHomeDir(self.homeDir)
+				#if not os.path.isdir(self.homeDir):
+					#os.mkdir(self.homeDir)
 				f=open(self.homeDir+"/config",'w')
 				self.config.write(f)
 				f.close()

@@ -43,6 +43,11 @@ def cprint(color,text):
 	else:
 		return text
 
+def makeHomeDir(homeDir):
+	if not os.path.isdir(homeDir):
+		os.mkdir(homeDir)
+		os.chmod(homeDir, 0700)
+		
 def loadConfig(main,status):
 	# loads config and repairs config file
 	configs={"jid":"",
@@ -93,8 +98,10 @@ def loadConfig(main,status):
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:
-		if not os.path.isdir(main.homeDir):
-			os.mkdir(main.homeDir)
+		makeHomeDir(main.homeDir)
+		#if not os.path.isdir(main.homeDir):
+			#os.mkdir(main.homeDir)
+			#os.chmod(main.homeDir, 0700)
 		main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 		for k,v in configs.iteritems():
 			main.config[k]=v
@@ -121,8 +128,7 @@ def loadConfig(main,status):
 		os.mkdir(main.homeDir+'/plugins')
 
 def getProfiles(homedir):
-	if not os.path.isdir(homedir):
-		os.mkdir(homedir)
+	makeHomeDir(homedir)
 	profiles=[]
 	for file in os.listdir(homedir):
 		if os.path.isdir(homedir+u"/"+unicode(file)):
