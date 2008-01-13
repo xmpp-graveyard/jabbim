@@ -913,7 +913,9 @@ class rosterWidget(QtGui.QWidget):
 			painter.save()
 			painter.translate(x,y)
 			if self.theme:
-				painter.fillRect(0,0,self.width(),16,QtGui.QBrush(self.main.ui.userStyleWidget.palette().window()))
+				brush=QtGui.QBrush(self.main.ui.userStyleWidget.palette().window())
+				if brush.color().alpha()!=0:
+					painter.fillRect(0,0,self.width(),16,brush)
 			else:
 				painter.fillRect(0,0,self.width(),16,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
 			painter.restore()
@@ -1158,7 +1160,10 @@ class rosterWidget(QtGui.QWidget):
 					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight)))
 			else:
 				if self.theme:
-					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.main.ui.userStyleWidget.palette().window()))
+					brush=QtGui.QBrush(self.main.ui.userStyleWidget.palette().window())
+					if brush.color().alpha()!=0:
+						painter.fillRect(0,0,self.width(),32,brush)
+					#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.main.ui.userStyleWidget.palette().window()))
 				else:
 					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
 			painter.restore()

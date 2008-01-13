@@ -144,7 +144,7 @@ QWidget#rosterTab{
 }
 
 QWidget#userStyleWidget {
-  background-color: white;
+  background-color: rgba(0,0,0,0);
 /*   color: rgb(209,170,129); */
   color: black;
 
