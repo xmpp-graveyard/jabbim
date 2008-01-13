@@ -911,6 +911,7 @@ class clientClass(pyxl.client.Client):
 		#def __init__(self,main,parent=None,jid="",group=None,name="",add=True):
 		dialog=widgets.addcontact.addContactDialog(self.main,self.main,jid=frm,group="",name=frm.split('@')[0],add=add)
 		dialog.exec_()
+		self.sendPresence(frm,None,status,None,'subscribe')
 		self.sendPresence(frm,None,status,None,'subscribed')
 
 
