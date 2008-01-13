@@ -1323,6 +1323,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.client=None #: Pyxl client instance
 		self.events=widgets.events.events(self) #: events class
 		self.preferencesWindow=None
+		self.styleSheetText=""
 		self.profilesWindow=None
 		self.mucbrowser=None
 		self.addcontactdialog=None
@@ -2304,6 +2305,7 @@ class mainWindow(QtGui.QMainWindow):
 	def loadTheme(self,text=None):
 		# windows hack
 		self.setStyleSheet("")
+		
 		if self.config['theme']=="None" and not text:
 			text=""
 			self.ui.roster.theme=False
@@ -2323,6 +2325,7 @@ class mainWindow(QtGui.QMainWindow):
 			if text:
 				if len(text)==0:
 					self.ui.roster.theme=False
+		self.styleSheetText=text
 		self.ui.roster.reskin(text)
 
 	def addContactMainWindow(self):
