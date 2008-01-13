@@ -912,10 +912,10 @@ class rosterWidget(QtGui.QWidget):
 
 			painter.save()
 			painter.translate(x,y)
-				if self.theme:
-					painter.fillRect(0,0,self.width(),16,QtGui.QBrush(self.main.ui.userStyleWidget.palette().window()))
-				else:
-					painter.fillRect(0,0,self.width(),16,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
+			if self.theme:
+				painter.fillRect(0,0,self.width(),16,QtGui.QBrush(self.main.ui.userStyleWidget.palette().window()))
+			else:
+				painter.fillRect(0,0,self.width(),16,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
 			painter.restore()
 
 
