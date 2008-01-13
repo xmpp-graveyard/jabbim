@@ -973,7 +973,7 @@ class rosterWidget(QtGui.QWidget):
 				b=painter.brush()
 				p=painter.pen()
 				if self.theme:
-					painter.setBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Window))
+					painter.setBrush(self.main.ui.selectedItemStyle.palette().window())
 					pen=QtGui.QPen(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Text))
 				else:
 					painter.setBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight))
@@ -1150,11 +1150,14 @@ class rosterWidget(QtGui.QWidget):
 			painter.translate(x,y)
 			if useritem==self.selected:
 				if self.theme:
-					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Window)))
+					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.main.ui.selectedItemStyle.palette().window()))
 				else:
 					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight)))
 			else:
-				painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
+				if self.theme:
+					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.main.ui.userStyleWidget.palette().window()))
+				else:
+					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
 			painter.restore()
 			
 			if useritem in self.events:
