@@ -33,7 +33,7 @@ QWidget QMenu::separator { background: #ddd; height: 1px; margin: 0px 5px; }
 /* roster */
 QWidget#rosterTab > QWidget#rosterWidget > QWidget{ border:0; background: transparent; }
 QTreeWidget#rosterView{ background: transparent;  }
-QWidget#selectedItemStyle{ border: 0px; color:rgba(160,169,255,50%); background: #fff; }
+QWidget#selectedItemStyle{ border: 0px; color:rgba(160,169,255,50%); background: rgba(160,169,255,20%); }
 QWidget#groupStyleWidget { background: rgba(160,190,255,50%); }
 QWidget#userStyleWidget { background-color:rgba(0,0,0,0); }
 QWidget QTreeWidget, QWidget QListWidget { border: 2px groove #bbb; border-radius: 4px; background: rgba(255,255,255,20%); }
