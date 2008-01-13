@@ -27,7 +27,7 @@ QTextBrowser { background: rgba(255,255,255,20%); }
 /* menu */
 QWidget QMenuBar::item, QMenuBar#menubar::item { background: transparent; font-weight: bold; }
 QWidget QMenu { background: transparent; } 
-QWidget QMenu::item::selected { background: #52b6ff; }
+QWidget QMenu:selected { background: #52b6ff; }
 QWidget QMenu::separator { background: #ddd; height: 1px; margin: 0px 5px; }
 
 /* roster */
