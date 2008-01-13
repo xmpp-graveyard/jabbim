@@ -683,7 +683,7 @@ class Client(derived):
 			typ = el['type']
 		except:
 			typ = 'normal'
-		frm = el['from']
+		frm = unicode(el['from']).lower()
 		frmjid = jid.JID(frm)
 		body = subject =xhtml = chatstate = delay = error =  None
 		for child in el.elements():
