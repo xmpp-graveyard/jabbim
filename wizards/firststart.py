@@ -192,7 +192,7 @@ class firstStartWizard(QtGui.QWizard):
 	def accept(self):
 		if self.newAccount.isChecked():
 			self.hide()
-			self.regwiz=registration.registrationWizard(self.main,None)
+			self.regwiz=registration.registrationWizard(self.main,self.main)
 			self.regwiz.exec_()
 		else:
 			jid=unicode(self.jid.text())
