@@ -3156,7 +3156,7 @@ class statusWindow(QtGui.QDialog):
 
 class aboutDialog(QtGui.QDialog):
 	def __init__(self,parent):
-		QtGui.QDialog.__init__(self,None)
+		QtGui.QDialog.__init__(self,parent)
 		self.setModal(True)
 		self.ui=widgets.about.Ui_about_window()
 		self.ui.setupUi(self)
