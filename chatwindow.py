@@ -3,9 +3,10 @@ try:
 except:
 	print "PyQt4 is not installed."
 
-from chat import *
 #from chat import *
-#from groupchat import *
+#from chatwindow_ui import *
+from chat import *
+from groupchat import *
 #from gamechat import *
 #from headlinewidget import *
 #from palette import *
@@ -16,25 +17,25 @@ class chatWindow(QtGui.QMainWindow):
 		apply(QtGui.QMainWindow.__init__,(self,None))
 		self.main=main
 		self.jab=jab
-		self.ui=Ui_chatWindow()
-		self.ui.setupUi(self)
-		self.ui.chatTab.removeTab(0)
+#		self.ui=Ui_chatWindow()
+#		self.ui.setupUi(self)
+#		self.ui.chatTab.removeTab(0)
 		## tab
-		#self.ui.chatTab = mainTab(main,self.ui.centralwidget)
-		#self.ui.chatTab.setObjectName("chatTab")
-		#self.ui.gridlayout.addWidget(self.ui.chatTab,0,0,1,1)
+		self.ui.chatTab = mainTab(main,self.ui.centralwidget)
+		self.ui.chatTab.setObjectName("chatTab")
+		self.ui.gridlayout.addWidget(self.ui.chatTab,0,0,1,1)
 
-		#self.ui.tabCloseButton=QtGui.QPushButton(QtGui.QIcon("images/icons/close.png"),"",self.ui.chatTab)
-		#self.ui.chatTab.setCornerWidget(self.ui.tabCloseButton)
-		#QtCore.QObject.connect(self.ui.tabCloseButton, QtCore.SIGNAL("clicked ()"),self.removeTab)
-		#QtCore.QObject.connect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
-		#self.ui.chatTab.removeTab(0)
-		#self.ui.gridlayout.setMargin(1)
-		#self.ui.gridlayout.setSpacing(1)
+		self.ui.tabCloseButton=QtGui.QPushButton(QtGui.QIcon("images/icons/close.png"),"",self.ui.chatTab)
+		self.ui.chatTab.setCornerWidget(self.ui.tabCloseButton)
+		QtCore.QObject.connect(self.ui.tabCloseButton, QtCore.SIGNAL("clicked ()"),self.removeTab)
+#		QtCore.QObject.connect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
+		self.ui.chatTab.removeTab(0)
+		self.ui.gridlayout.setMargin(1)
+		self.ui.gridlayout.setSpacing(1)
 		#palette=self.palette()
-		#palette,images=loadPalette(palette,self.main.palette["chatwindow"])
-		#self.setPalette(palette)
-		#self.pixmap=images['bgImage']
+#		palette,images=loadPalette(palette,self.main.palette["chatwindow"])
+#		self.setPalette(palette)
+#		self.pixmap=images['bgImage']
 
 	#def paintEvent(self,event):
 		## paintEvent handler
