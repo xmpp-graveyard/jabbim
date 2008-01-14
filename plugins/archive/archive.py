@@ -203,7 +203,7 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('on_GCmessage', self.on_message)
 			self.registerHandler('on_message_send', self.on_message_send)
 			self.loadConfig()
-			self.window = self.loadWindow("%s/plugins/%s/historyBrowser.ui.py"%(self.homeDir, self.fname))
+			self.window = self.loadWindow("%s/plugins/%s/historyBrowser.ui.py"%(self.homeDir, self.fname),self.main)
 			self.window.setWindowIcon(self.main.windowIcon())
 			layout=QtGui.QHBoxLayout(self.window.ui.calendarWidget)
 			self.window.ui.calendar=calendar(self.window.ui.calendarWidget)
