@@ -16,8 +16,6 @@ class vcardEditorDialog(QtGui.QDialog):
 		self.ui.setupUi(self)
 		self.main=main
 		#print self.main.styleSheetText
-		self.setStyleSheet("")
-		self.setStyleSheet("QWidget {background-image:url(themes/Aluminium/metal.png);}")
 		if jid not in [self.main.client.jid.full(), self.main.client.jid.userhost()]:
 			self.setWindowTitle(jid+" - "+self.tr("vCard"))
 		else:
