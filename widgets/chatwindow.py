@@ -843,7 +843,7 @@ class chatWindow(QtGui.QMainWindow):
 			#self.ui.chatTab.removeTab(0)
 			self.removeTab(0)
 			#self.hide()
-		e.ignore()
+		e.accept()
 
 	def removeTab(self,index=None,ask=True):
 		if index==None:
