@@ -558,7 +558,7 @@ class chatWindow(QtGui.QMainWindow):
 				w.chat.ui.line.setEnabled(True)
 				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.tr("You are now online."))
 				w.chat.textEditWrite(message)
-				self.main.client.joinGC(w.jid, w.name)
+				self.main.client.joinGC(w.jid, w.chat.nick)
 
 	def onGCMessage(self,w,i,body,delay,subject,user):
 		countMessage=False
@@ -612,7 +612,7 @@ class chatWindow(QtGui.QMainWindow):
 		# no delay message
 		if delay==None or len(delay)==0:
 			# it's our message
-			if unicode(w.name)==unicode(user):
+			if unicode(w.chat.nick)==unicode(user):
 				if unicode(body).startswith("/me"):
 					message=self.main.skin["my_me_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body)[3:])
 					body=unicode(body)[3:]
@@ -620,7 +620,7 @@ class chatWindow(QtGui.QMainWindow):
 					message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body))
 			else:
 				# it's message for us
-				if utils.need_highlight(unicode(w.name), unicode(body)) and not unicode(body).startswith("/me"):
+				if utils.need_highlight(unicode(w.chat.nick), unicode(body)) and not unicode(body).startswith("/me"):
 					if int(self.ui.chatTab.currentIndex())!=i:
 						if self.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
 							self.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
@@ -660,11 +660,11 @@ class chatWindow(QtGui.QMainWindow):
 			delay=unicode(delay)
 			delay="%s-%s-%s %s:%s:%s" % (delay[0:4],delay[4:6],delay[6:8],delay[9:11],delay[12:14],delay[15:17])
 			# our delayed message
-			if unicode(w.name)==unicode(user):
+			if unicode(w.chat.nick)==unicode(user):
 				message=self.main.skin["my_message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
 			else:
 				# delayed message for us
-				if utils.need_highlight(unicode(w.name), unicode(body)):
+				if utils.need_highlight(unicode(w.chat.nick), unicode(body)):
 					message=self.main.skin["message_for_me_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
 				else:
 					message=self.main.skin["message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
