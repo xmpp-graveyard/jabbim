@@ -2206,8 +2206,11 @@ class mainWindow(QtGui.QMainWindow):
 			self.filetransferTimer.stop()
 
 	def closeEvent(self,event):
-		self.hide()
-		event.ignore()
+		if self.tray.isVisible():
+			self.hide()
+			event.ignore()
+		else:
+			QtGui.QMainWindow.closeEvent(event)
 
 	def trayQuit(self,bool=True):
 		# turn off jabbim
