@@ -835,6 +835,7 @@ class chatWindow(QtGui.QMainWindow):
 
 
 	def closeEvent(self,e):
+		print "TRAY VISIBLE CHAT:"+unicode(self.main.tray.isVisible())
 		for index in range(self.ui.chatTab.count()):
 			#w=self.ui.chatTab.widget(0)
 			#if str(w.typ)=="groupchat" and self.main.client!=None:

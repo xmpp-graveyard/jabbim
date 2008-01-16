@@ -2206,7 +2206,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.filetransferTimer.stop()
 
 	def closeEvent(self,event):
-		print "TRAY VISIBLE:"+unicode(self.tray.isVisible())
+		print "TRAY VISIBLE MAIN:"+unicode(self.tray.isVisible())
 		if self.tray.isVisible():
 			self.hide()
 			event.accept()
@@ -2264,7 +2264,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.config.write(f)
 		f.close()
 		print "LOG 3"
-		self.config["askBeforeQuitMUC"]='False'
 		app.closeAllWindows()
 		self.tray.hide()
 
