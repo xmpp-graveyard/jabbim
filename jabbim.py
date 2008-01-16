@@ -30,7 +30,18 @@ try:
 except:
 	USE_WIZARDS=False
 import qt4reactor
-app = QtGui.QApplication(sys.argv)
+
+class jabbimApplication(QtGui.QApplication):
+	def __init__(self,args=[]):
+		QtGui.QApplication.__init__(self,args)
+		self.shutdown=False
+	
+	def commitData(self,manager):
+		print "data commited"
+		self.shutdown=True
+		manager.release()
+
+app = jabbimApplication(sys.argv)
 app.setQuitOnLastWindowClosed(False)
 qt4reactor.install(app)
 from twisted.internet import reactor, threads
@@ -1236,7 +1247,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.toggleInvisible.hide()
 		self.ui.statusButton.hide()
 		self.setAttribute(QtCore.Qt.WA_AlwaysShowToolTips,True)
-		
+		self.app=app
 		self.selfAvatar=None #: current avatar (QPixmap or None)
 		self.selfStatus="" #: current show (string according to self.shows)
 		self.QT43=USE_WIZARDS #: True if Qt version == 4.3

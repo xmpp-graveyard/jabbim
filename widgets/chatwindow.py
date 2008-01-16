@@ -864,7 +864,7 @@ class chatWindow(QtGui.QMainWindow):
 
 		if str(w.typ)=="groupchat" and self.main.client!=None:
 			print self.main.config["askBeforeQuitMUC"]
-			if ask and self.main.config["askBeforeQuitMUC"]=="True":
+			if ask and self.main.config["askBeforeQuitMUC"]=="True" and self.main.app.shutdown==False:
 				d=leaveMucDialog(self.main,w.jid,self)
 				if d.exec_()==1:
 					if self.main.client.groupchats.has_key(w.jid):
