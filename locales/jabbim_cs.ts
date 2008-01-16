@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs">
-<defaultcodec></defaultcodec>
 <context>
     <name>Dialog</name>
     <message>
@@ -1173,27 +1172,27 @@ p, li { white-space: pre-wrap; }
     <message encoding="UTF-8">
         <location filename="wizards/firststart.py" line="17"/>
         <source>Vítejte .........</source>
-        <translation>Vítejte .........</translation>
+        <translation type="unfinished">Abyste mohli Jabbim klienta používat, musíte vlastnit jabber účet. Jabber účet je vázán na Jabber ID (ve tvaru honza@jabbim.cz). Pokud tento údaj znáte, pak vlastníte jabber účet. </translation>
     </message>
     <message>
         <location filename="wizards/firststart.py" line="52"/>
         <source>Create new Jabber account</source>
-        <translation>Vytvořit nový účet</translation>
+        <translation>Jabber účet nemám a chci ho vytvořit</translation>
     </message>
     <message>
         <location filename="wizards/firststart.py" line="54"/>
         <source>Use existing Jabber account</source>
-        <translation>Použít existující Jabber účet</translation>
+        <translation>Mám Jabber účet</translation>
     </message>
     <message>
         <location filename="wizards/firststart.py" line="105"/>
         <source>Vitejte....</source>
-        <translation type="unfinished">Vítejte do otevřeného světa Jabber. Tento pomocník Vám pomůže s založením nového účtu, a ty tak budeš již za chvíli moci mluvit se svými přáteli.</translation>
+        <translation type="unfinished">Vítejte do otevřeného světa Jabber.</translation>
     </message>
     <message>
         <location filename="wizards/firststart.py" line="66"/>
         <source>Vyberte jednu z moznosti.</source>
-        <translation>Vyberte jednu z možností.</translation>
+        <translation type="unfinished"> </translation>
     </message>
     <message>
         <location filename="wizards/firststart.py" line="78"/>
