@@ -861,7 +861,7 @@ class chatWindow(QtGui.QMainWindow):
 			self.main.config['groupchatSplitSizes1']=list(w.chat.ui.splitter.sizes())
 			self.main.config['groupchatSplitSizes2']=list(w.chat.ui.splitter_2.sizes())
 			self.main.config['groupchatSplitSizes3']=list(w.chat.ui.splitter_3.sizes())
-
+		removed=False
 		if str(w.typ)=="groupchat" and self.main.client!=None:
 			print self.main.config["askBeforeQuitMUC"]
 			if ask and self.main.config["askBeforeQuitMUC"]=="True" and self.main.app.shutdown==False:
@@ -872,31 +872,34 @@ class chatWindow(QtGui.QMainWindow):
 					self.ui.chatTab.removeTab(index)
 					if int(self.ui.chatTab.count())==0:
 						self.hide()
+					removed=True
 			else:
 				if self.main.client.groupchats.has_key(w.jid):
 					self.main.client.leaveGC(w.jid)
 				self.ui.chatTab.removeTab(index)
 				if int(self.ui.chatTab.count())==0:
 					self.hide()
+				removed=True
 		else:
 			self.ui.chatTab.removeTab(index)
 			if int(self.ui.chatTab.count())==0:
 				self.hide()
+			removed=True
 		#w.deleteLater()
-		
-		l=gc.get_referents(w)
-		for x in range(len(l)):
-			del l[0]
-		l=gc.get_referrers(w)
-		for x in range(len(l)):
-			del l[0]
-		print gc.get_referrers(w)
-		w.setParent(None)
-		del w
-
-		print "GARBAGE:",gc.garbage
-		del gc.garbage[:]
-		print "GARBAGE:",gc.garbage
-		print "UNREACHABLE OBJECTS:",gc.collect()
+		if removed:
+			l=gc.get_referents(w)
+			for x in range(len(l)):
+				del l[0]
+			l=gc.get_referrers(w)
+			for x in range(len(l)):
+				del l[0]
+			print gc.get_referrers(w)
+			w.setParent(None)
+			del w
+	
+			print "GARBAGE:",gc.garbage
+			del gc.garbage[:]
+			print "GARBAGE:",gc.garbage
+			print "UNREACHABLE OBJECTS:",gc.collect()
 
 		#del
