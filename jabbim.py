@@ -2264,8 +2264,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.config.write(f)
 		f.close()
 		print "LOG 3"
-		self.tray.hide()
 		app.closeAllWindows()
+		self.tray.hide()
+
 		print "LOG 4"
 		#self.disconnect()
 		reactor.stop2()
