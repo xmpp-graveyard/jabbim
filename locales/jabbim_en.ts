@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="en">
+<defaultcodec></defaultcodec>
 <context>
     <name>Dialog</name>
     <message>
         <location filename="widgets/commands_ui.py" line="85"/>
         <source>Extra action</source>
-        <translation>AdHoc</translation>
+        <translation type="unfinished">Command</translation>
     </message>
     <message>
         <location filename="widgets/commands_ui.py" line="86"/>
@@ -350,7 +351,10 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;DejaVu Sans&apos;; font-size:8pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Events&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;DejaVu Sans&apos;; font-size:8pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Events&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -546,7 +550,7 @@ p, li { white-space: pre-wrap; }
     <message encoding="UTF-8">
         <location filename="widgets/about.py" line="116"/>
         <source>0.2 - DAŽBOG</source>
-        <translation>0.2 - DAŽBOG</translation>
+        <translation type="obsolete">0.2 - DAŽBOG</translation>
     </message>
     <message>
         <location filename="widgets/about.py" line="120"/>
@@ -627,6 +631,11 @@ Jáchym &apos;kamahl&apos; Barvínek</translation>
      p, li { white-space: pre-wrap; }
      &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
      &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Thanks to:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="widgets/about.py" line="116"/>
+        <source>0.3 - PERUN</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -930,7 +939,7 @@ p, li { white-space: pre-wrap; }
     <message encoding="UTF-8">
         <location filename="wizards/firststart.py" line="17"/>
         <source>Vítejte .........</source>
-        <translation>Welcome .........</translation>
+        <translation type="unfinished">Welcome to the open world of Jabber. This wizzard will help you with creating your account, so you can chat with your friends in no time </translation>
     </message>
     <message>
         <location filename="wizards/firststart.py" line="52"/>
@@ -945,7 +954,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="wizards/firststart.py" line="105"/>
         <source>Vitejte....</source>
-        <translation>Welcome .........</translation>
+        <translation type="unfinished">Welcome to the open world of Jabber. This wizzard will help you with creating your account, so you can chat with your friends in no time </translation>
     </message>
     <message>
         <location filename="wizards/firststart.py" line="66"/>
@@ -1123,7 +1132,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/groupchat.py" line="864"/>
         <source>You have been banned for the room.</source>
-        <translation>You have been banned for the room.</translation>
+        <translation type="unfinished">You have been banned for the room.</translation>
     </message>
     <message>
         <location filename="widgets/groupchat.py" line="868"/>
@@ -1218,22 +1227,22 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/groupchat.py" line="874"/>
         <source> has been renamed to </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"> has been renamed to </translation>
     </message>
     <message>
         <location filename="widgets/groupchat.py" line="388"/>
         <source>Change nickname</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Change nickname</translation>
     </message>
     <message>
         <location filename="widgets/groupchat.py" line="769"/>
         <source>Change nick</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Change nick</translation>
     </message>
     <message>
         <location filename="widgets/groupchat.py" line="769"/>
         <source>Enter new nickname:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Enter new nickname:</translation>
     </message>
 </context>
 <context>
@@ -1352,7 +1361,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/groupchatwidget_ui.py" line="103"/>
         <source>You can add emoticons by clicking here</source>
-        <translation>You can add emoticons by clicking here</translation>
+        <translation type="unfinished">You can insert emoticons by clicking here</translation>
     </message>
     <message>
         <location filename="widgets/groupchatwidget_ui.py" line="104"/>
@@ -1415,7 +1424,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="147"/>
         <source>Here fill in the name of the room you want to join in</source>
-        <translation>Here fill in the name of the room you want to join in</translation>
+        <translation type="unfinished">Fill in the name of the room you want to join</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="148"/>
@@ -1897,7 +1906,7 @@ Do you realy want to leave this room?</translation>
     <message>
         <location filename="jabbim.py" line="1109"/>
         <source>closed the chat window.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">closed the chat window.</translation>
     </message>
 </context>
 <context>
@@ -1930,12 +1939,12 @@ Do you realy want to leave this room?</translation>
     <message>
         <location filename="widgets/profiles.py" line="70"/>
         <source>Passwords vary.</source>
-        <translation>Passwords vary.</translation>
+        <translation type="unfinished">Passwords differ.</translation>
     </message>
     <message>
         <location filename="widgets/profiles.py" line="67"/>
         <source>Passwords identify.</source>
-        <translation>Passwords identify.</translation>
+        <translation type="unfinished">Passwords match.</translation>
     </message>
 </context>
 <context>
@@ -2432,7 +2441,7 @@ Version: %3</translation>
     <message>
         <location filename="wizards/registration.py" line="265"/>
         <source>Your avatar was too big. He had to be resized to smaller size.</source>
-        <translation>Your avatar was too big. He had to be resized to smaller size.</translation>
+        <translation type="unfinished">Your avatar was too big. It had to be resized.</translation>
     </message>
     <message encoding="UTF-8">
         <location filename="wizards/registration.py" line="329"/>
@@ -2583,7 +2592,7 @@ Version: %3</translation>
     <message>
         <location filename="widgets/rosterWidget.py" line="303"/>
         <source>Move</source>
-        <translation></translation>
+        <translation type="unfinished">Move</translation>
     </message>
     <message>
         <location filename="widgets/rosterWidget.py" line="304"/>
@@ -2768,7 +2777,7 @@ Version: %3</translation>
     <message>
         <location filename="widgets/rosterLiveWidget.py" line="2445"/>
         <source>Extra actions</source>
-        <translation>Extra actions</translation>
+        <translation type="unfinished">Commands</translation>
     </message>
     <message>
         <location filename="widgets/rosterLiveWidget.py" line="2463"/>
@@ -2778,7 +2787,7 @@ Version: %3</translation>
     <message>
         <location filename="widgets/rosterLiveWidget.py" line="1253"/>
         <source>You haven&apos;t any contacts in your contact list. You can add them with Add contact from menu Actions.</source>
-        <translation>You haven&apos;t any contacts in your contact list. You can add them with Add contact from menu Actions.</translation>
+        <translation type="unfinished">You haven&apos;t got any contacts in your contact list. You can add them with Add contact from menu Actions.</translation>
     </message>
     <message>
         <location filename="widgets/rosterLiveWidget.py" line="1255"/>
@@ -3379,42 +3388,42 @@ Version: %3</translation>
 <context>
     <name>vcardEditorDialog</name>
     <message>
-        <location filename="widgets/vcardeditor.py" line="173"/>
+        <location filename="widgets/vcardeditor.py" line="171"/>
         <source>Avatar</source>
         <translation>Avatar</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="173"/>
+        <location filename="widgets/vcardeditor.py" line="171"/>
         <source>Your avatar was too big. He had to be resized to smaller size.</source>
         <translation>Your avatar was too big. He had to be resized to smaller size.</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="22"/>
+        <location filename="widgets/vcardeditor.py" line="20"/>
         <source>vCard</source>
         <translation>User Info</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="24"/>
+        <location filename="widgets/vcardeditor.py" line="22"/>
         <source>VCard Editor</source>
         <translation>User Info Editor</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="136"/>
+        <location filename="widgets/vcardeditor.py" line="134"/>
         <source>Can&apos;t download vCard of this contact.</source>
         <translation>Can&apos;t download User Info for this contact.</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="159"/>
+        <location filename="widgets/vcardeditor.py" line="157"/>
         <source>Unable to retrieve.</source>
         <translation>Unable to retrieve.</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="335"/>
+        <location filename="widgets/vcardeditor.py" line="333"/>
         <source>Saving VCard</source>
         <translation>Saving user info</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="349"/>
+        <location filename="widgets/vcardeditor.py" line="347"/>
         <source>Can&apos;t send VCard to the server</source>
         <translation>Can&apos;t send user info to the server</translation>
     </message>

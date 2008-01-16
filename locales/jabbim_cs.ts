@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs">
-<defaultcodec></defaultcodec>
 <context>
     <name>Dialog</name>
     <message>
@@ -774,7 +773,7 @@ Jáchym &apos;kamahl&apos; Barvínek</translation>
     <message encoding="UTF-8">
         <location filename="widgets/about.py" line="116"/>
         <source>0.2 - DAŽBOG</source>
-        <translation>0.2 - DAŽBOG</translation>
+        <translation type="obsolete">0.2 - DAŽBOG</translation>
     </message>
     <message>
         <location filename="widgets/about.py" line="120"/>
@@ -855,6 +854,11 @@ Jáchym &apos;kamahl&apos; Barvínek</translation>
       p, li { white-space: pre-wrap; }
       &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
       &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Poděkování:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="widgets/about.py" line="116"/>
+        <source>0.3 - PERUN</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3909,42 +3913,42 @@ Version: %3</source>
 <context>
     <name>vcardEditorDialog</name>
     <message>
-        <location filename="widgets/vcardeditor.py" line="173"/>
+        <location filename="widgets/vcardeditor.py" line="171"/>
         <source>Avatar</source>
         <translation>Avatar</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="173"/>
+        <location filename="widgets/vcardeditor.py" line="171"/>
         <source>Your avatar was too big. He had to be resized to smaller size.</source>
         <translation>Váš avatar je příliš velký, a proto musel být zmenšen.</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="22"/>
+        <location filename="widgets/vcardeditor.py" line="20"/>
         <source>vCard</source>
         <translation>Vizitka</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="24"/>
+        <location filename="widgets/vcardeditor.py" line="22"/>
         <source>VCard Editor</source>
         <translation>Moje vizitka</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="136"/>
+        <location filename="widgets/vcardeditor.py" line="134"/>
         <source>Can&apos;t download vCard of this contact.</source>
         <translation>Nemohu stáhnout vizitku tohoto uživatele.</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="159"/>
+        <location filename="widgets/vcardeditor.py" line="157"/>
         <source>Unable to retrieve.</source>
         <translation>Nepodařilo se získat.</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="335"/>
+        <location filename="widgets/vcardeditor.py" line="333"/>
         <source>Saving VCard</source>
         <translation>Ukládám vizitku</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="349"/>
+        <location filename="widgets/vcardeditor.py" line="347"/>
         <source>Can&apos;t send VCard to the server</source>
         <translation>Odeslání vizitky na server se nezdařilo</translation>
     </message>
