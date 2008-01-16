@@ -2264,6 +2264,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.config.write(f)
 		f.close()
 		print "LOG 3"
+		self.config["askBeforeQuitMUC"]='False'
 		app.closeAllWindows()
 		self.tray.hide()
 
