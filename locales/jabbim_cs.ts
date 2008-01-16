@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs">
+<defaultcodec></defaultcodec>
 <context>
     <name>Dialog</name>
     <message>
@@ -1187,7 +1188,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="wizards/firststart.py" line="105"/>
         <source>Vitejte....</source>
-        <translation>Vítejte....</translation>
+        <translation type="unfinished">Vítejte do otevřeného světa Jabber. Tento pomocník Vám pomůže s založením nového účtu, a ty tak budeš již za chvíli moci mluvit se svými přáteli.</translation>
     </message>
     <message>
         <location filename="wizards/firststart.py" line="66"/>
