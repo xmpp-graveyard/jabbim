@@ -415,9 +415,9 @@ class chatWindow(QtGui.QMainWindow):
 						#for i in range(self.ui.chatTab.count()):
 							#w=self.ui.chatTab.widget(i)
 							#if w.typ=="chat":
-								#self.main.client.sendMessage(str(w.jid),"",composing="active")
+								#self.main.client.sendMessage(unicode(w.jid),"",composing="active")
 						widget.active=True
-						self.main.client.sendMessage(str(widget.jid),"",composing="active")
+						self.main.client.sendMessage(unicode(widget.jid),"",composing="active")
 						self.main.client.dispatcher.publishEvent('onActivity')
 						print "publishing onActivity event"
 					if self.active==False:
@@ -511,14 +511,14 @@ class chatWindow(QtGui.QMainWindow):
 				#break
 				self.main.events.refreshTray()
 		if widget.typ=="chat":
-			self.main.client.sendMessage(str(widget.jid),"",composing="active")
+			self.main.client.sendMessage(unicode(widget.jid),"",composing="active")
 			widget.active=True
 		
 		for i in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(i)
 			if w.typ=="chat":
 				if w.active==True and w!=widget:
-					self.main.client.sendMessage(str(w.jid),"",composing="inactive")
+					self.main.client.sendMessage(unicode(w.jid),"",composing="inactive")
 					w.active=False
 		#except:
 			#pass
@@ -554,7 +554,7 @@ class chatWindow(QtGui.QMainWindow):
 	def reconnect(self):
 		for i in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(i)
-			if str(w.typ)=="groupchat":
+			if unicode(w.typ)=="groupchat":
 				w.chat.ui.line.setEnabled(True)
 				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.tr("You are now online."))
 				w.chat.textEditWrite(message)
@@ -566,10 +566,10 @@ class chatWindow(QtGui.QMainWindow):
 			if self.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
 				self.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
 				self.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(0,128,0))
-			self.main.chat.ui.chatTab.setTabText(i,"("+str(w.chat.unread+1)+") "+w.tabName)
+			self.main.chat.ui.chatTab.setTabText(i,"("+unicode(w.chat.unread+1)+") "+w.tabName)
 			countMessage=True
 		if not self.main.chat.isActiveWindow():
-			self.main.chat.setWindowTitle("("+str(int(self.getUnreadMessages())+1)+") "+w.tabName.replace("&",""))
+			self.main.chat.setWindowTitle("("+unicode(int(self.getUnreadMessages())+1)+") "+w.tabName.replace("&",""))
 			countMessage=True
 		# set room topic
 		if subject!=None:
@@ -607,7 +607,7 @@ class chatWindow(QtGui.QMainWindow):
 		if not w.chat.sizes.has_key(file):
 			#pixmap=QtGui.QPixmap(file).scaledToHeight(32)
 			pixmap=QtGui.QPixmap(file).scaled(32,32,QtCore.Qt.KeepAspectRatio)
-			w.chat.sizes[file]=[str(pixmap.width()),str(pixmap.height())]
+			w.chat.sizes[file]=[unicode(pixmap.width()),unicode(pixmap.height())]
 
 		# no delay message
 		if delay==None or len(delay)==0:
@@ -668,7 +668,7 @@ class chatWindow(QtGui.QMainWindow):
 					message=self.main.skin["message_for_me_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
 				else:
 					message=self.main.skin["message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
-			message=message.replace("[avatar]","<img src=\""+file+"\" height=\""+str(int(w.chat.sizes[file][1])/2)+"\" width=\""+str(int(w.chat.sizes[file][0])/2)+"\" />")
+			message=message.replace("[avatar]","<img src=\""+file+"\" height=\""+unicode(int(w.chat.sizes[file][1])/2)+"\" width=\""+unicode(int(w.chat.sizes[file][0])/2)+"\" />")
 			colors=None
 			if len(w.chat.getUserItems(user))!=0:
 				item=w.chat.getUserItems(user)[0]
@@ -720,14 +720,14 @@ class chatWindow(QtGui.QMainWindow):
 			avatar=it.avatar
 			if avatar:
 				#avatar=avatar.pixmap(100,112)
-				#print "avatar:",str(avatar.width())+"x"+str(avatar.height())
+				#print "avatar:",unicode(avatar.width())+"x"+unicode(avatar.height())
 				#if avatar.width()<=58 and avatar.height()<=58:
 					#size=64
 				#else:
 					#size=128
 				#result=QtGui.QPixmap(size,size)
 				#result.fill(QtCore.Qt.transparent)
-				#frame=QtGui.QPixmap("images/"+str(size)+"x"+str(size)+"/frame.png")
+				#frame=QtGui.QPixmap("images/"+unicode(size)+"x"+unicode(size)+"/frame.png")
 				#painter=QtGui.QPainter(result)
 				##painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
 				#painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
@@ -753,7 +753,7 @@ class chatWindow(QtGui.QMainWindow):
 					#size=128
 				#result=QtGui.QPixmap(size,size)
 				#result.fill(QtCore.Qt.transparent)
-				#frame=QtGui.QPixmap("images/"+str(size)+"x"+str(size)+"/frame.png")
+				#frame=QtGui.QPixmap("images/"+unicode(size)+"x"+unicode(size)+"/frame.png")
 				#painter=QtGui.QPainter(result)
 				##painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
 				
@@ -782,7 +782,7 @@ class chatWindow(QtGui.QMainWindow):
 		else:
 			tab.chat.ui.label.setText("<font size=\"3\"><b>"+name+"</b></font>")
 		if message!=None:
-			message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+str(tab.chat.avatarHeight)+"\" />")
+			message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+unicode(tab.chat.avatarHeight)+"\" />")
 			tab.chat.textEditWrite(message)
 		#self.show()
 		#self.raise_()
@@ -815,7 +815,7 @@ class chatWindow(QtGui.QMainWindow):
 		#tab.chat.ui.admin.hide()
 		layout.addWidget(tab.chat)
 		jmeno = room
-		if str(self.main.config["useMUCNames"])=="True":
+		if unicode(self.main.config["useMUCNames"])=="True":
 			for nick, bookmark  in self.main.client.bookmarks['conference'].iteritems():
 				if bookmark.jid.userhost() == room:
 					jmeno = nick
@@ -838,7 +838,7 @@ class chatWindow(QtGui.QMainWindow):
 		print "TRAY VISIBLE CHAT:"+unicode(self.main.tray.isVisible())
 		for index in range(self.ui.chatTab.count()):
 			#w=self.ui.chatTab.widget(0)
-			#if str(w.typ)=="groupchat" and self.main.client!=None:
+			#if unicode(w.typ)=="groupchat" and self.main.client!=None:
 				#if self.main.client.groupchats.has_key(w.jid):
 					#self.main.client.leaveGC(w.jid)
 			#self.ui.chatTab.removeTab(0)
@@ -854,7 +854,7 @@ class chatWindow(QtGui.QMainWindow):
 			print w.chat.ui.splitter.sizes()
 			self.main.config['chatSplitterSizes']=list(w.chat.ui.splitter.sizes())
 			self.main.config['chatSplitter2Sizes']=list(w.chat.ui.splitter_2.sizes())
-			self.main.client.sendMessage(str(w.jid),"",composing="gone")
+			self.main.client.sendMessage(unicode(w.jid),"",composing="gone")
 		
 
 		if w.typ=="groupchat":
@@ -862,7 +862,7 @@ class chatWindow(QtGui.QMainWindow):
 			self.main.config['groupchatSplitSizes2']=list(w.chat.ui.splitter_2.sizes())
 			self.main.config['groupchatSplitSizes3']=list(w.chat.ui.splitter_3.sizes())
 		removed=False
-		if str(w.typ)=="groupchat" and self.main.client!=None:
+		if unicode(w.typ)=="groupchat" and self.main.client!=None:
 			print self.main.config["askBeforeQuitMUC"]
 			if ask and self.main.config["askBeforeQuitMUC"]=="True" and self.main.app.shutdown==False:
 				d=leaveMucDialog(self.main,w.jid,self)
