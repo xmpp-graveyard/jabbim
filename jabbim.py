@@ -2209,7 +2209,7 @@ class mainWindow(QtGui.QMainWindow):
 		print "TRAY VISIBLE:"+unicode(self.tray.isVisible())
 		if self.tray.isVisible():
 			self.hide()
-			event.ignore()
+			event.accept()
 			return
 		event.accept()
 		self.trayQuit()
