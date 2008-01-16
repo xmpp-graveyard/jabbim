@@ -2211,9 +2211,9 @@ class mainWindow(QtGui.QMainWindow):
 			self.hide()
 			event.accept()
 			return
-		event.accept()
 		self.trayQuit()
-		
+		event.accept()
+
 			
 
 	def trayQuit(self,bool=True):
