@@ -3059,7 +3059,8 @@ class customStatusWindow(QtGui.QDialog):
 		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.timeout)
 		app.connect(self.ui.status, QtCore.SIGNAL("cursorPositionChanged ()"),self.timerStop)
 		app.connect(self.ui.status, QtCore.SIGNAL("textChanged ()"),self.timerStop)
-		
+		self.ui.statusBox.hide()
+		self.ui.save.hide()
 		self.timer.start(1000)
 		self.i=4
 		self.jid=jid
