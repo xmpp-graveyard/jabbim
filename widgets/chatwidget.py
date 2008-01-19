@@ -524,6 +524,7 @@ class chatWidget(QtGui.QWidget):
 			toEnd=True
 		for k,v in self.smileys.iteritems():
 			text=text.replace(" "+k,' <img src="images/16x16/emotes/'+v+'"/>')
+			text=text.replace("&nbsp;"+k,' <img src="images/16x16/emotes/'+v+'"/>')
 			#if text[:len(v)]==k:
 				#text='<img src="images/16x16/emotes/'+v+'"/>'+text[len(v):]
 		#cursor.insertHtml(text)
