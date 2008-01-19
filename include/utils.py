@@ -48,7 +48,9 @@ def makeHomeDir(homeDir):
 		os.mkdir(homeDir)
 		os.mkdir(homeDir+"/emoticons")
 		os.chmod(homeDir, 0700)
-		
+	if not os.path.isdir(homeDir+"/emoticons"):
+		os.mkdir(homeDir+"/emoticons")
+
 def loadConfig(main,status):
 	# loads config and repairs config file
 	configs={"jid":"",
