@@ -396,7 +396,7 @@ class preferencesWindow(QtGui.QDialog):
 		layout=QtGui.QGridLayout(self.ui.connectionWidget)
 		self.var.append(makePreferences(self.main.config,self.ui.connectionWidget,layout,connection.preferences(self).config)[0])
 
-		# emoticons
+		# emoticons from Jabbim root directory
 		packs=os.listdir("emoticons/")
 		for pack in packs:
 			if os.path.isdir('emoticons/'+pack):
@@ -410,6 +410,22 @@ class preferencesWindow(QtGui.QDialog):
 							item=self.ui.emoticonsList.insertItem(0,QtGui.QIcon('emoticons/'+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
 						else:
 							item=self.ui.emoticonsList.addItem(QtGui.QIcon('emoticons/'+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
+		
+		# emoticons from users home directory
+		packs=os.listdir(self.main.realHomeDir+"/emoticons")
+		for pack in packs:
+			if os.path.isdir(self.main.realHomeDir+"/emoticons/"+pack):
+				emoticons=os.listdir(self.main.realHomeDir+"/emoticons/"+pack+"/")
+				for emoticon in emoticons:
+					if emoticon.endswith('.cfg'):
+						emo=pack+"/"+emoticon
+						config=ConfigObj(self.main.realHomeDir+"/emoticons/"+emo,encoding='UTF8')
+						
+						if emo==self.main.config["emoticons"]:
+							item=self.ui.emoticonsList.insertItem(0,QtGui.QIcon(self.main.realHomeDir+"/emoticons/"+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
+						else:
+							item=self.ui.emoticonsList.addItem(QtGui.QIcon(self.main.realHomeDir+"/emoticons/"+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
+
 		self.emoticonsListChanged(0)
 		self.ui.emoticonsList.setCurrentIndex(0)
 		
@@ -513,13 +529,17 @@ class preferencesWindow(QtGui.QDialog):
 
 	def emoticonsListChanged(self,index):
 		path=unicode(self.ui.emoticonsList.itemData(index).toString())
+		src='emoticons/'
 		config=ConfigObj("emoticons/"+path,encoding='UTF8')
+		if len(config)==0:
+			src=self.main.realHomeDir+'/emoticons/'
+			config=ConfigObj(self.main.realHomeDir+"/emoticons/"+path,encoding='UTF8')
 		html=""
 		values=[]
 		for k,v in config['emoticons'].iteritems():
 			#self.smileys[k.replace("<","&lt;").replace(">","&gt;")]=v
 			if not v in values:
-				html+='<img src="emoticons/'+os.path.dirname(path)+'/'+v+'" />'
+				html+='<img src="'+src+os.path.dirname(path)+'/'+v+'" />'
 				values.append(v)
 		self.ui.emoticonsPreview.setHtml(html)
 		html=""

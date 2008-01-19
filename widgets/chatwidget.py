@@ -470,15 +470,18 @@ class chatWidget(QtGui.QWidget):
 	def loadSmileys(self):
 		# loads smileys.conf and makes buttons
 		smileys=ConfigObj("emoticons/"+self.main.config['emoticons'],encoding='UTF8')
+		src='emoticons/'
 		if len(smileys)==0:
-			smileys=ConfigObj(self.main.homeDir+"/emoticons/"+self.main.config['emoticons'],encoding='UTF8')
+			smileys=ConfigObj(self.main.realHomeDir+"/emoticons/"+self.main.config['emoticons'],encoding='UTF8')
+			src=self.main.realHomeDir+'/emoticons/'
+
 		if len(smileys)==0:
 			# emotions pack doesn't exist
 			return
 
 		self.smileys={}
 		for k,v in smileys['emoticons'].iteritems():
-			self.smileys[k.replace("<","&lt;").replace(">","&gt;")]="emoticons/"+os.path.dirname(self.main.config['emoticons'])+"/"+v
+			self.smileys[k.replace("<","&lt;").replace(">","&gt;")]=src+os.path.dirname(self.main.config['emoticons'])+"/"+v
 		self.s=frame(self,self)
 		self.s.setWindowFlags(QtCore.Qt.Popup)
 		self.s.hide()
@@ -492,7 +495,7 @@ class chatWidget(QtGui.QWidget):
 			if added.count(v)==0:
 				added.append(v)
 				button=QtGui.QToolButton(self)
-				action=QtGui.QAction(QtGui.QIcon("emoticons/"+os.path.dirname(self.main.config['emoticons'])+"/"+v),"",self.s)
+				action=QtGui.QAction(QtGui.QIcon(src+os.path.dirname(self.main.config['emoticons'])+"/"+v),"",self.s)
 				action.setData(QtCore.QVariant(k))
 				button.setDefaultAction(action)
 				button.setToolTip(str(k))

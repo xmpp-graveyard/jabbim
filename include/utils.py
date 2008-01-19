@@ -46,6 +46,7 @@ def cprint(color,text):
 def makeHomeDir(homeDir):
 	if not os.path.isdir(homeDir):
 		os.mkdir(homeDir)
+		os.mkdir(homeDir+"/emoticons")
 		os.chmod(homeDir, 0700)
 		
 def loadConfig(main,status):
