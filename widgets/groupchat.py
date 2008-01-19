@@ -1132,7 +1132,7 @@ class groupChatWidget(QtGui.QWidget):
 			elif services.startswith("/say"):
 				self.ui.line.setPlainText(services.replace("/say ",""))
 
-			elif services.startswith("/"):
+			elif services.startswith("/") and not services.startswith("/me"):
 				try:
 					cmd, args = services.split(" ", 1)
 					args = args.split(" ")
