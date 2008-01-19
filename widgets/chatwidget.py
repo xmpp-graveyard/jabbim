@@ -568,6 +568,21 @@ class chatWidget(QtGui.QWidget):
 				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 				self.ui.line.composing=False
 				return
+				
+			elif services.startswith("/"):
+				try:
+					cmd, args = services.split(" ", 1)
+					args = args.split(" ")
+				except ValueError:
+					cmd = services
+					args = []
+				cmd = cmd[1:]
+				self.main.client.dispatcher.publishEvent("onCommand", cmd, args, self, "chat")
+				self.ui.line.clear()
+				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+				self.ui.line.composing=False
+				return
+
 			if self.main.config['chatMode']=="normal":
 				text=unicode(self.ui.line.toPlainText())
 				#text=unicode(text, 'utf-8')
