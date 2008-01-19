@@ -345,13 +345,13 @@ def replace_url(text):
 	t=text
 	t=t.replace("<br/>"," <br/>")
 	text=""
-	for word in t.split(" "):
+	for word in t.split("&nbsp;"):
 		if word.find("://")!=-1:
-			text+='<a href="%s">%s</a>'%(word, word)+" "
+			text+='<a href="%s">%s</a>'%(word, word)+"&nbsp;"
 		elif word.startswith("www."):
-			text+='<a href="http://%s">%s</a>'%(word, word)+" "
+			text+='<a href="http://%s">%s</a>'%(word, word)+"&nbsp;"
 		else:
-			text+=word+" "
-	return text[:-1]
+			text+=word+"&nbsp;"
+	return text[:-6]
 
 

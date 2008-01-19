@@ -1064,7 +1064,7 @@ class groupChatWidget(QtGui.QWidget):
 				toEnd=True
 			for k,v in self.smileys.iteritems():
 				text=text.replace(" "+k,' <img src="'+v+'"/>')
-				text=text.replace("&nbsp;"+k,' <img src="'+v+'"/>')
+				text=text.replace("&nbsp;"+k,'&nbsp;<img src="'+v+'"/>')
 			#cursor.insertHtml(text)
 			cursor.insertFragment(QtGui.QTextDocumentFragment.fromHtml(text))
 			cursor.endEditBlock()
