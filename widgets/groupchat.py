@@ -1124,6 +1124,26 @@ class groupChatWidget(QtGui.QWidget):
 				self.ui.line.clear()
 				#self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 				return
+			elif services.startswith("/leave"):
+				tab,tabIndex=self.main.chat.findTab(unicode(self.jid))
+				self.main.chat.removeTab(tabIndex, False)
+				self.ui.line.clear()
+				return
+			elif services.startswith("/say"):
+				self.ui.line.setPlainText(services.replace("/say ",""))
+
+			elif services.startswith("/"):
+				try:
+					cmd, args = services.split(" ", 1)
+					args = args.split(" ")
+				except ValueError:
+					cmd = services
+					args = []
+				cmd = cmd[1:]
+				self.main.client.dispatcher.publishEvent("onCommand", cmd, args)
+				self.ui.line.clear()
+				return
+
 			if self.main.config['chatMode']=="normal":
 				text=unicode(self.ui.line.toPlainText())
 				#text=unicode(text, 'utf-8')

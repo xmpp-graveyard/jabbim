@@ -1,3 +1,4 @@
+#-*-coding:utf-8-*-
 import sys,os,time
 sys.path.append('.')
 from include import plugins
@@ -30,11 +31,11 @@ class Plugin(plugins.PluginBase):
 		pass
 	def on_message_send(self, to, body, typ, subject,composing, xhtml,  muc):
 		if body[:7]=="/amarok":
-			playing=commands.getoutput("dcop amarok player nowPlaying") 
+			playing=unicode(commands.getoutput("dcop amarok player nowPlaying") )
 			if playing=='':
 				playing='Ticho :)'
 			if playing=='call failed':
-				plying='Amarok nejede'
+				playing='Amarok nejede'
 			self.main.client.sendMessage(to, u"/me hraje: (8)  "+playing,'chat', self.main.client.jid.userhost())
 			return False
 
