@@ -1162,19 +1162,19 @@ class groupChatWidget(QtGui.QWidget):
 				for el in a.getElementsByTagName('br'):
 					newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
 					el.parentNode.replaceChild(newnode,el)
-					b=a.getElementsByTagName('body')
-					c=parseString(b[0].toxml())
-					text=gatherTextNodes(c)
-					text=unicode(text, 'utf-8')
-					text=text.replace(unichr(2028),"\n")
-					text=unescape(text)
-				self.main.client.sendMessage(self.jid, text, 'groupchat')
-				self.sent.append(text)
-				self.hindex = len(self.sent)
-				self.ui.line.clear()
-				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
-				if self.main.chat.active==False:
-					self.main.client.dispatcher.publishEvent('onActivity')
+				b=a.getElementsByTagName('body')
+				c=parseString(b[0].toxml())
+				text=gatherTextNodes(c)
+				text=unicode(text, 'utf-8')
+				text=text.replace(unichr(2028),"\n")
+				text=unescape(text)
+			self.main.client.sendMessage(self.jid, text, 'groupchat')
+			self.sent.append(text)
+			self.hindex = len(self.sent)
+			self.ui.line.clear()
+			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+			if self.main.chat.active==False:
+				self.main.client.dispatcher.publishEvent('onActivity')
 				self.main.chat.active=True
 				self.main.chat.timer.stop()
 
