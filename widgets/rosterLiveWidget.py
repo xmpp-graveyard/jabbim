@@ -1558,8 +1558,11 @@ class rosterWidget(QtGui.QWidget):
 			self.setSize()
 			self.repaint()
 		else:
-			res = self.main.client.roster['users'][item.jid].getHighestResource()
-			
+			jidt = jidT.JID(item.jid)
+			if jidt.resource:
+				res=jidt.resouce
+			else:
+				res = self.main.client.roster['users'][item.jid].getHighestResource()
 			if res==None:
 				self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			else:
@@ -1600,9 +1603,11 @@ class rosterWidget(QtGui.QWidget):
 		elif (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and self.item != None:
 			jid = jidT.JID(self.item.jid)
 			jid_r = jid.userhost()
-			item=self.getUserItems(jid_r)[0]
-			item=self.getUserItems(jid_r)[0]
-			res = self.main.client.roster['users'][jid_r].getHighestResource()
+			item=self.item
+			if jid.resource:
+				res=jid.resouce
+			else:
+				res = self.main.client.roster['users'][jid_r].getHighestResource()
 			if res==None:
 				self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			else:
