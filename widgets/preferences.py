@@ -396,6 +396,25 @@ class preferencesWindow(QtGui.QDialog):
 		layout=QtGui.QGridLayout(self.ui.connectionWidget)
 		self.var.append(makePreferences(self.main.config,self.ui.connectionWidget,layout,connection.preferences(self).config)[0])
 
+		# emoticons
+		packs=os.listdir("emoticons/")
+		for pack in packs:
+			if os.path.isdir('emoticons/'+pack):
+				emoticons=os.listdir('emoticons/'+pack+"/")
+				for emoticon in emoticons:
+					if emoticon.endswith('.cfg'):
+						emo=pack+"/"+emoticon
+						config=ConfigObj("emoticons/"+emo,encoding='UTF8')
+						
+						if emo==self.main.config["emoticons"]:
+							item=self.ui.emoticonsList.insertItem(0,QtGui.QIcon('emoticons/'+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
+						else:
+							item=self.ui.emoticonsList.addItem(QtGui.QIcon('emoticons/'+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
+		self.emoticonsListChanged(0)
+		self.ui.emoticonsList.setCurrentIndex(0)
+		
+		QtCore.QObject.connect(self.ui.emoticonsList,QtCore.SIGNAL('activated ( int )'),self.emoticonsListChanged)
+
 		# chat skins
 		skins=os.listdir("skins/")
 		for skin in skins:
@@ -491,6 +510,23 @@ class preferencesWindow(QtGui.QDialog):
 			log.msg("plugin "+plugin+" loaded.")
 		self.ui.plugins.resizeColumnToContents (0)
 		self.ui.plugins.resizeColumnToContents (1)
+
+	def emoticonsListChanged(self,index):
+		path=unicode(self.ui.emoticonsList.itemData(index).toString())
+		config=ConfigObj("emoticons/"+path,encoding='UTF8')
+		html=""
+		values=[]
+		for k,v in config['emoticons'].iteritems():
+			#self.smileys[k.replace("<","&lt;").replace(">","&gt;")]=v
+			if not v in values:
+				html+='<img src="emoticons/'+os.path.dirname(path)+'/'+v+'" />'
+				values.append(v)
+		self.ui.emoticonsPreview.setHtml(html)
+		html=""
+		html+=self.tr("Name: ")+unicode(config['header']['name'])+"<br/>"
+		if config['header'].has_key('license'):
+			html+=self.tr("License: ")+unicode(config['header']['license'])+"<br/>"
+		self.ui.emoticonsInfo.setText(html)
 
 	def useThemesChanged(self,state):
 		if not self.ui.useThemes.isChecked():
@@ -610,7 +646,11 @@ class preferencesWindow(QtGui.QDialog):
 					print key,"=",unicode(value)
 
 		self.main.config['chat_skin']=unicode(self.ui.chatSkin_list.currentText())
-		
+		self.main.config['emoticons']=unicode(self.ui.emoticonsList.itemData(self.ui.emoticonsList.currentIndex()).toString())
+		for i in range(self.main.chat.ui.chatTab.count()):
+			w=self.main.chat.ui.chatTab.widget(i)
+			w.chat.loadSmileys()
+
 		#data=item.data(32)
 		#file=unicode(data.toString())
 		#self.reskin(file)

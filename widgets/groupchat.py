@@ -219,7 +219,7 @@ class lineEditWidget(QtGui.QTextEdit):
 			for k,v in self.parent.smileys.iteritems():
 				if text.find(" "+k)!=-1:
 					html=self.toHtml()
-					html.replace(k,'<img src="images/16x16/emotes/'+v+'"/> ')
+					html.replace(k,'<img src="'+v+'"/> ')
 					cur=self.textCursor()
 					self.setHtml(html)
 					self.setTextCursor(cur)
@@ -998,10 +998,16 @@ class groupChatWidget(QtGui.QWidget):
 
 	def loadSmileys(self):
 		# loads smileys.conf and makes buttons
-		smileys=ConfigObj("smileys.conf",encoding='UTF8')
+		smileys=ConfigObj("emoticons/"+self.main.config['emoticons'],encoding='UTF8')
+		if len(smileys)==0:
+			smileys=ConfigObj(self.main.homeDir+"/emoticons/"+self.main.config['emoticons'],encoding='UTF8')
+		if len(smileys)==0:
+			# emotions pack doesn't exist
+			return
+
 		self.smileys={}
-		for k,v in smileys.iteritems():
-			self.smileys[k.replace("<","&lt;").replace(">","&gt;")]=v
+		for k,v in smileys['emoticons'].iteritems():
+			self.smileys[k.replace("<","&lt;").replace(">","&gt;")]="emoticons/"+os.path.dirname(self.main.config['emoticons'])+"/"+v
 		self.s=frame(self,self)
 		self.s.setWindowFlags(QtCore.Qt.Popup)
 		self.s.hide()
@@ -1011,11 +1017,11 @@ class groupChatWidget(QtGui.QWidget):
 		added=[]
 		x=0
 		y=0
-		for k,v in smileys.iteritems():
+		for k,v in smileys['emoticons'].iteritems():
 			if added.count(v)==0:
 				added.append(v)
 				button=QtGui.QToolButton(self)
-				action=QtGui.QAction(QtGui.QIcon("images/16x16/emotes/"+v),"",self.s)
+				action=QtGui.QAction(QtGui.QIcon("emoticons/"+os.path.dirname(self.main.config['emoticons'])+"/"+v),"",self.s)
 				action.setData(QtCore.QVariant(k))
 				button.setDefaultAction(action)
 				button.setToolTip(str(k))
@@ -1054,8 +1060,8 @@ class groupChatWidget(QtGui.QWidget):
 			if self.ui.textEdit.verticalScrollBar().value()==self.ui.textEdit.verticalScrollBar().maximum():
 				toEnd=True
 			for k,v in self.smileys.iteritems():
-				text=text.replace(" "+k,' <img src="images/16x16/emotes/'+v+'"/>')
-				text=text.replace("&nbsp;"+k,' <img src="images/16x16/emotes/'+v+'"/>')
+				text=text.replace(" "+k,' <img src="'+v+'"/>')
+				text=text.replace("&nbsp;"+k,' <img src="'+v+'"/>')
 			#cursor.insertHtml(text)
 			cursor.insertFragment(QtGui.QTextDocumentFragment.fromHtml(text))
 			cursor.endEditBlock()

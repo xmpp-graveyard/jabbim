@@ -58,6 +58,7 @@ def loadConfig(main,status):
 			"autoDownloadPath": main.homeDir,
 			"rosterIconSize":"16x16",
 			"chat_skin":"cool.conf",
+			"emoticons":"default/smileys.cfg",
 			"theme":"template",
 			"log":"true",
 			"resource":"jabbim",
