@@ -1560,7 +1560,7 @@ class rosterWidget(QtGui.QWidget):
 		else:
 			jidt = jidT.JID(item.jid)
 			if jidt.resource:
-				res=jidt.resouce
+				res=jidt.resource
 			else:
 				res = self.main.client.roster['users'][item.jid].getHighestResource()
 			if res==None:
@@ -1605,7 +1605,7 @@ class rosterWidget(QtGui.QWidget):
 			jid_r = jid.userhost()
 			item=self.item
 			if jid.resource:
-				res=jid.resouce
+				res=jid.resource
 			else:
 				res = self.main.client.roster['users'][jid_r].getHighestResource()
 			if res==None:
