@@ -19,9 +19,7 @@ class Plugin(plugins.PluginBase):
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.count = 0
 		self.developMode=True
-# 		self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
 		if main:
-			#self.registerHandler('on_message_send', self.on_message_send, priority = 1)
 
 			self.registerHandler("onCommand", self.commandCalled, priority=5)
 			self.loadConfig()
@@ -33,10 +31,10 @@ class Plugin(plugins.PluginBase):
 	def commandCalled(self, cmd, args, chat, typ):
 		if cmd != "amarok":
 			return
-		playing=unicode(commands.getoutput("dcop amarok player nowPlaying"))
+		playing=unicode(commands.getoutput("dcop amarok player nowPlaying"), "utf-8")
 		if playing != "":
 			playing="/me hraje: (8) %s (8)" % playing
 		else:
-			playing=unicode("AmaroK právě nic nepřehrává.")
+			playing=unicode("AmaroK právě nic nepřehrává.", "utf-8")
 		self.main.client.sendMessage(unicode(chat.jid), playing, typ)
 
