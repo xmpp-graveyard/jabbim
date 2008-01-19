@@ -190,6 +190,20 @@ class leaveMucDialog(QtGui.QDialog):
 			self.main.config["askBeforeQuitMUC"]="False"
 		self.done(1)
 
+class leaveAllMucDialog(QtGui.QDialog):
+	def __init__(self,main,parent):
+		QtGui.QDialog.__init__(self,parent)
+		self.setModal(True)
+		self.ui=Ui_leaveroom()
+		self.ui.setupUi(self)
+		self.main=main
+		self.ui.leaveroom.setText(self.tr("Do you really want to leave all rooms you are connected to?"))
+		
+	def accept(self):
+		if self.ui.checkBox.isChecked():
+			self.main.config["askBeforeQuitMUC"]="False"
+		self.done(1)
+
 class tabWidget(QtGui.QTabBar):
 	def __init__(self,parent,main):
 		QtGui.QTabBar.__init__(self,parent)
@@ -835,16 +849,25 @@ class chatWindow(QtGui.QMainWindow):
 
 
 	def closeEvent(self,e):
-		print "TRAY VISIBLE CHAT:"+unicode(self.main.tray.isVisible())
-		for index in range(self.ui.chatTab.count()):
-			#w=self.ui.chatTab.widget(0)
-			#if unicode(w.typ)=="groupchat" and self.main.client!=None:
-				#if self.main.client.groupchats.has_key(w.jid):
-					#self.main.client.leaveGC(w.jid)
-			#self.ui.chatTab.removeTab(0)
-			self.removeTab(0)
-			#self.hide()
-		e.accept()
+		ask=False
+		for i in range(self.ui.chatTab.count()):
+			w=self.ui.chatTab.widget(i)
+			if unicode(w.typ)=='groupchat':
+				ask=True
+				break
+		
+		if ask and self.main.config["askBeforeQuitMUC"]=="True" and self.main.app.shutdown==False:
+			d=leaveAllMucDialog(self.main,self)
+			if d.exec_()==1:
+				for index in range(self.ui.chatTab.count()):
+					self.removeTab(0,ask=False)
+				e.accept()
+			else:
+				e.ignore()
+		else:
+			for index in range(self.ui.chatTab.count()):
+				self.removeTab(0,ask=False)
+			e.accept()
 
 	def removeTab(self,index=None,ask=True):
 		if index==None:
