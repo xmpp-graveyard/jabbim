@@ -1140,7 +1140,7 @@ class groupChatWidget(QtGui.QWidget):
 					cmd = services
 					args = []
 				cmd = cmd[1:]
-				self.main.client.dispatcher.publishEvent("onCommand", cmd, args)
+				self.main.client.dispatcher.publishEvent("onCommand", cmd, args, self)
 				self.ui.line.clear()
 				return
 
