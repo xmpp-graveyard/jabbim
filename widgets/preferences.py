@@ -679,9 +679,10 @@ class preferencesWindow(QtGui.QDialog):
 
 
 	def save(self):
-		self.main.skin=ConfigObj("skins/"+unicode(self.ui.chatSkin_list.currentText()),encoding='UTF8')
-		if not self.main.skin.has_key("spaces_between_lines"):
-			self.main.skin["spaces_between_lines"]='0'
+		if not self.justShowed:
+			self.main.skin=ConfigObj("skins/"+unicode(self.ui.chatSkin_list.currentText()),encoding='UTF8')
+			if not self.main.skin.has_key("spaces_between_lines"):
+				self.main.skin["spaces_between_lines"]='0'
 
 		for cfg in self.var:
 			for key,value in getVarData(cfg).iteritems():
@@ -690,12 +691,12 @@ class preferencesWindow(QtGui.QDialog):
 				else:
 					self.main.config[key]=unicode(value)
 					print key,"=",unicode(value)
-
-		self.main.config['chat_skin']=unicode(self.ui.chatSkin_list.currentText())
-		self.main.config['emoticons']=unicode(self.ui.emoticonsList.itemData(self.ui.emoticonsList.currentIndex()).toString())
-		for i in range(self.main.chat.ui.chatTab.count()):
-			w=self.main.chat.ui.chatTab.widget(i)
-			w.chat.loadSmileys()
+		if not self.justShowed:
+			self.main.config['chat_skin']=unicode(self.ui.chatSkin_list.currentText())
+			self.main.config['emoticons']=unicode(self.ui.emoticonsList.itemData(self.ui.emoticonsList.currentIndex()).toString())
+			for i in range(self.main.chat.ui.chatTab.count()):
+				w=self.main.chat.ui.chatTab.widget(i)
+				w.chat.loadSmileys()
 
 		#data=item.data(32)
 		#file=unicode(data.toString())
@@ -704,11 +705,12 @@ class preferencesWindow(QtGui.QDialog):
 		#self.main.config['jid']=jid
 		#self.main.config['resource']=''+resource+''
 		#self.main.config['priority']=self.ui.connection_priority.text()
-		if not self.ui.useThemes.isChecked():
-			self.main.config['theme']="None"
-			self.main.loadTheme()
-		else:
-			self.main.config['theme']=unicode(self.ui.themes.currentItem().data(32).toString())
+		if not self.justShowed:
+			if not self.ui.useThemes.isChecked():
+				self.main.config['theme']="None"
+				self.main.loadTheme()
+			else:
+				self.main.config['theme']=unicode(self.ui.themes.currentItem().data(32).toString())
 		if self.main.config['rosterMode']=="compact":
 			#self.main.config['rosterMode']="compact"
 			self.main.ui.roster.userHeight=22
