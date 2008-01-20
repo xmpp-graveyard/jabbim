@@ -5,8 +5,8 @@ from PyQt4 import QtCore, QtGui
 from twisted.python import log
 
 class Plugin(plugins.PluginBase):
-	def __init__(self,main, homedir):
-		plugins.PluginBase.__init__(self, main, homedir)
+	def __init__(self, main, homedir, plugindir):
+		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'logview'
 		self.description = 'Extra debug window'
 		self.author = "Jiri 'Sef' Gabrys"
@@ -15,10 +15,9 @@ class Plugin(plugins.PluginBase):
 		self.category = ['log', 'misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		#self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
-		self.developMode=True
 		if main:
 			self.loadConfig()
-			#self.window = self.loadWindow("%s/plugins/%s/logWindow.ui.py"%(self.homeDir, self.fname))
+			#self.window = self.loadWindow("%s/logWindow.ui.py" % self.pluginDir)
 			#self.window.setWindowIcon(self.main.windowIcon())
 			#self.log = False
 			#QtCore.QObject.connect(self.window.ui.enableBox, QtCore.SIGNAL("stateChanged(int)"),self.enableToggled)

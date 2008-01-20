@@ -14,22 +14,22 @@ class config:
 		self.config["format"] = {
 				"type": "text-multi",
 				"label": self.main.tr("Format of message. %artist is replaced by artist's name, %title by track name and so on for %album, %genre, %year, %type and %totalTime"),
-				"value": "/me hraje: (8) %artist - %title (%album) (8)"
+				"value": u"/me hraje: (8) %artist - %title (%album) (8)"
 				}
 		self.config["amarok_off"] = {
 				"type": "text-single",
 				"label": self.main.tr("Message when amaroK is not running."),
-				"value": "/me má vypnutý amarok :'("
+				"value": u"/me má vypnutý amarok :'("
 				}
 		self.config["amarok_paused"] = {
 				"type": "text-single",
 				"label": self.main.tr("Message when nothing is being played in amaroK."),
-				"value": "/me zrovna nic nepřehrává :'("
+				"value": u"/me zrovna nic nepřehrává :'("
 				}
 
 class Plugin(plugins.PluginBase):
-	def __init__(self,main, homedir):
-		plugins.PluginBase.__init__(self, main, homedir)
+	def __init__(self, main, homedir, plugindir):
+		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'DCOPer'
 		self.description = 'DCOP plugin for /amarok'
 		self.author = "Josef 'Pepeq' Halicek & Jachym 'kamahl' Barvinek"
@@ -38,7 +38,6 @@ class Plugin(plugins.PluginBase):
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.count = 0
-		self.developMode=True
 
 		self.installTranslator()	
 

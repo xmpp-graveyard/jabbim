@@ -47,7 +47,6 @@ qt4reactor.install(app)
 from twisted.internet import reactor, threads
 from twisted.internet.defer import DeferredList
 from twisted.python import log
-import shutil
 import time,base64, re
 try:
 	from hashlib import sha1
@@ -509,6 +508,7 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.rosterStackedWidget.setCurrentIndex(1)
 		#for key,value in self.main.plugins.iteritems():
 			#value.connected()
+		self.main.findPlugins()
 		self.main.loadPlugins()
 		self.main.autoJoinGroupchat()
 	def on_invite(self,jid, room, reason, cont = False):
@@ -2006,86 +2006,33 @@ class mainWindow(QtGui.QMainWindow):
 		#app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
 
 
-	def copyPlugins(self):
-		plugins=os.listdir("plugins/")
-		for plugin in plugins:
-			if plugin == '.svn':
-				continue
-			path = 'plugins/%s/%s.py'%( plugin, plugin)
-			path2 = '%s/plugins/%s/%s.py'%(self.homeDir, plugin, plugin)
-			copy = False
-			v1 = v2 = 0
-			f = f2 = False
-			plug=False
-			try: 
-				f=open(utils.path(path))
-				plug = load_source(plugin, path, f).Plugin(False, self.homeDir)
-			except Exception, ex:
-				log.msg(plugin+': CHYBA!')
-				continue
-			#takze mam asi spravny plugin, kouknem se jestli je v homediru
-			try: 
-				f2=open(utils.path(path2))
-				plug2 = load_source(plugin, path, f2).Plugin(False, self.homeDir)
-			except:
-				copy = True
-			try:
-				v1 = float(plug.version)
-			except:			
-				if f:
-					f.close()
-				if f2:
-					f2.close()
-				continue
-	
-			try:
-				v2 = float(plug2.version)
-			except:
-				copy = True
-	
-	
-			if v1>v2:
-				copy = True
-			if f:
-				f.close()
-			if f2:
-				f2.close()
-			if plug:
-				#print "plug mode",plug2.developMode
-				if plug.developMode:
-					copy=True
-			if copy:
-				log.msg('copy plugin to homedir: '+plugin)
-				odkud = "plugins/"+plugin+'/'
-				kam = self.homeDir+"/plugins/"+plugin+'/'
-				soubory = os.listdir(odkud)
-				for soubor in soubory:
-					if soubor == '.svn' or os.path.isdir(odkud+"/"+soubor):
-						continue
-					try:
-						os.mkdir(kam)
-					except:
-						pass
-					try:
-						shutil.copy(odkud+soubor, kam+soubor)
-					except Exception, ex:
-						log.err('copy error: ' +unicode(ex))
-						message = traceback.format_exc()
-						log.err(message)
-						log.err('Chyba pri kopirovani pluginu '+unicode(plugin))
-# 				try:
-# 					shutil.copytree("plugins/"+plugin, self.homeDir+"/plugins/"+plugin)
-# 				except:
-# 					shutil.rmtree(self.homeDir+"/plugins/"+plugin)
-# 					shutil.copytree("plugins/"+plugin, self.homeDir+"/plugins/"+plugin)
+	def findPlugins(self):
+		if len(self.plugins) != 0:
+			return  # we've done this already
+		plugin_paths = ['plugins/', self.homeDir + '/plugins/']
+		for plugin_path in plugin_paths:
+			for plugin_name in os.listdir(plugin_path):
+				if plugin_name == '.svn':
+					continue
+				dir = '%s/%s' % (plugin_path, plugin_name)
+				path = '%s/%s.py' % (dir, plugin_name)
+
+				try:
+					f=open(utils.path(path))
+					plug = load_source(plugin_name, path, f).Plugin(False, self.homeDir, dir)
+					version = float(plug.version)
+				except Exception, ex:
+					log.msg(path+': BAD PLUGIN!')
+					continue
+
+				if not self.plugins.has_key(plugin_name) or version > self.plugins[plugin_name]['version']:
+					self.plugins[plugin_name] = { 'dir': dir, 'version': version, 'module': None }
 
 	def loadPlugins(self):
-		self.copyPlugins()
-		plugins=os.listdir(self.homeDir + "/plugins/")
-		for plugin in plugins:
-			if plugin in self.config['plugins']:
+		for plugin_name in self.plugins.keys():
+			if plugin_name in self.config['plugins']:
 				try:
-					self.loadPlugin(plugin)
+					self.loadPlugin(plugin_name)
 				except Exception, ex:
 					log.msg(plugin+': '+unicode(ex))
 		#log.msg("PLUGINS:"+unicode(self.plugins))
@@ -2099,7 +2046,8 @@ class mainWindow(QtGui.QMainWindow):
 			log.msg(message)
 	
 	def loadPlugin(self,plugin):
-		path = utils.path('%s/plugins/%s/%s.py'%(self.homeDir, plugin, plugin))
+		dir = self.plugins[plugin]['dir']
+		path = utils.path('%s/%s.py' % (dir, plugin))
 		log.msg("loading "+unicode(plugin)+" plugin...")
 		try: 
 			f=open((path))
@@ -2108,11 +2056,10 @@ class mainWindow(QtGui.QMainWindow):
 			return
 		try:
 
-		
-			if not self.plugins.has_key(plugin):
-				plug = load_source(plugin, path, f).Plugin(self, self.homeDir)
-				self.plugins[plugin] = plug
-				self.runPluginCommand(self.plugins[plugin].buildRosterMenu,[])
+			if not self.plugins[plugin]['module']:
+				plug = load_source(plugin, path, f).Plugin(self, self.homeDir, dir)
+				self.plugins[plugin]['module'] = plug
+				self.runPluginCommand(self.plugins[plugin]['module'].buildRosterMenu,[])
 			else:
 				print "plugin already loaded"
 			f.close()
@@ -2126,19 +2073,19 @@ class mainWindow(QtGui.QMainWindow):
 		log.msg("PLUGINS:"+unicode(self.plugins))
 
 	def unloadPlugin(self,plugin):
-		if self.plugins.has_key(plugin):
+		if self.plugins[plugin]['module']:
 			self.ui.menuPlugins.clear()
-			self.runPluginCommand(self.plugins[plugin].remove,[])
-			print gc.get_referents(self.plugins[plugin])
+			self.runPluginCommand(self.plugins[plugin]['module'].remove,[])
+			print gc.get_referents(self.plugins[plugin]['module'])
 
-			del self.plugins[plugin]
+			self.plugins[plugin]['module'] = None
 			#print "GARBAGE:",gc.garbage
 			#print "DELETING GARBAGE"
 			del gc.garbage[:]
 			print "GARBAGE:",gc.garbage
 			print "UNREACHABLE OBJECTS:",gc.collect()
 			for plug in self.plugins.itervalues():
-				self.runPluginCommand(plug.buildRosterMenu,[])
+				self.runPluginCommand(plug['module'].buildRosterMenu,[])
 		else:
 			print "plugin is not loaded:",plugin
 		log.msg("PLUGINS:"+unicode(self.plugins))
@@ -3210,6 +3157,3 @@ if __name__ == "__main__":
 	MainWindow = mainWindow()
 	MainWindow.show()
 	reactor.run()
-
-
-

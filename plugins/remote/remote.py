@@ -17,8 +17,8 @@ except:
 	from sha import new as sha1
 
 class Plugin(plugins.PluginBase):
-	def __init__(self,main, homedir):
-		plugins.PluginBase.__init__(self, main, homedir)
+	def __init__(self, main, homedir, plugindir):
+		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'remote'
 		self.description = 'XMLRPC Remote Control'
 		self.author = "Jiri 'Sef' Gabrys"
@@ -26,7 +26,6 @@ class Plugin(plugins.PluginBase):
 		self.version = '0.01'
 		self.category = ['utils']
 		self.url = 'http://dev.jabbim.cz/jabbim'
-		self.developMode=True
 
 		if main:
 			self.pfilename = os.path.join(homedir,"xmlrpcports")

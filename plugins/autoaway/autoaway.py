@@ -108,8 +108,8 @@ class config:
 		self.config['__sort__']=['awayTime','awayMessage']
 
 class Plugin(plugins.PluginBase):
-	def __init__(self,main, homedir):
-		plugins.PluginBase.__init__(self, main, homedir)
+	def __init__(self, main, homedir, plugindir):
+		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'autoaway'
 		self.description = 'Auto away'
 		self.author = u"Jan 'HanzZ' Kaluža"
@@ -118,7 +118,6 @@ class Plugin(plugins.PluginBase):
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.kontakty = {} # jid:contact
-		self.developMode=True
 		#self.config['away_time'] = {'description':'Minutes to autoaway', 'default':'10', 'value': '','type':'text'}
 		#self.config['away_text'] = {'description':'Text to show while auto away', 'default':'User is away for %i minutes.', 'value': '','type':'text'}
 		#self.config['preserve_show'] = {'description':"Change only status message", 'default':'True', 'value': '','type':'boolean'}
@@ -130,7 +129,7 @@ class Plugin(plugins.PluginBase):
 			self.loadConfig()
 			self.mutex=QtCore.QMutex()
 			self.finish_cond=QtCore.QWaitCondition()
-##			self.window = self.loadWindow("%s/plugins/%s/news.ui.py"%(self.homeDir, self.fname))
+##			self.window = self.loadWindow("%s/news.ui.py" % self.pluginDir)
 ##			self.window.setWindowIcon(self.main.windowIcon())
 			self.log = False
 			#self.registerHandler('onInactivity', self.on_idle, priority=4)

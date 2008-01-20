@@ -18,8 +18,8 @@ class config:
 		self.config['__sort__']=['notify_tray','notify_show']
 
 class Plugin(plugins.PluginBase):
-	def __init__(self,main, homedir):
-		plugins.PluginBase.__init__(self, main, homedir)
+	def __init__(self, main, homedir, plugindir):
+		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'news'
 		self.description = 'Headlines window'
 		self.author = u"Jiří 'Sef' Gabryš"
@@ -30,13 +30,12 @@ class Plugin(plugins.PluginBase):
 		self.kontakty = {} # jid:contact
 		#self.config['notify_tray'] = {'description':'Notify in tray', 'default':'True', 'value': '','type':'boolean'}
 		#self.config['notify_show'] = {'description':'Show window on new', 'default':'True', 'value': '','type':'boolean'}
-		self.developMode=True
 		self.installTranslator()
 		self.configDialog=config(self)
 		if main:
 			self.loadConfig()
 			#self.installTranslator()
-			self.window = self.loadWindow("%s/plugins/%s/news.ui.py"%(self.homeDir, self.fname))
+			self.window = self.loadWindow("%s/news.ui.py" % self.pluginDir)
 			self.window.setWindowIcon(self.main.windowIcon())
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)

@@ -239,8 +239,8 @@ class config:
 
 
 class Plugin(plugins.PluginBase):
-	def __init__(self,main, homedir):
-		plugins.PluginBase.__init__(self, main, homedir)
+	def __init__(self, main, homedir, plugindir):
+		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'notification'
 		self.description = 'System tray and sound notification'
 		self.author = "Jan 'HanzZ' Kaluza & Josef 'PepeQ' Halicek"
@@ -264,7 +264,6 @@ class Plugin(plugins.PluginBase):
 		# GChighlight = groupchat_highlight.wav
 		# for list of actions see loadSoundConfig()
 		self.loadSoundConfig("sounds/config")
-		self.developMode=True
 		if main:
 			self.registerHandler('on_message', self.on_message)
 			self.registerHandler('on_GCmessage', self.on_GCmessage)

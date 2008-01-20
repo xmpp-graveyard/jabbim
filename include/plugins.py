@@ -26,7 +26,7 @@ except:
 import utils
 
 class PluginBase:
-	def __init__(self, main, homedir):
+	def __init__(self, main, homedir, plugindir):
 		self.main = main
 		self.config = None
 		self.configDialog = None
@@ -39,8 +39,8 @@ class PluginBase:
 		self.url = 'dev.jabbim.cz/jabbim'
 		self.handlers = []
 		self.homeDir = homedir
+		self.pluginDir = plugindir
 		self.translator=None
-		self.developMode=False
 		self.loadedWindows=[]
 
 	def connected(self):
@@ -96,7 +96,7 @@ class PluginBase:
 
 	def installTranslator(self):
 		self.translator=QtCore.QTranslator()
-		directory=u"%s/plugins/%s/"%(self.homeDir, self.fname)
+		directory=unicode(self.pluginDir)
 		self.translator.load(utils.path(directory+unicode(QtCore.QLocale.system().name()[:2])+u".qm"))
 		log.msg("trying to load localization file "+ directory+unicode(QtCore.QLocale.system().name())[:2]+".qm")
 
@@ -182,6 +182,5 @@ class PluginBase:
 		self.handlers = []
 		self.homeDir = None
 		self.translator=None
-		self.developMode=False
 		self.loadedWindows=[]
 		

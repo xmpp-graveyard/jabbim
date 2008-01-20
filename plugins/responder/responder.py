@@ -6,8 +6,8 @@ from urllib import quote, unquote
 from twisted.python import log
 
 class Plugin(plugins.PluginBase):
-	def __init__(self,main, homedir):
-		plugins.PluginBase.__init__(self, main, homedir)
+	def __init__(self, main, homedir, plugindir):
+		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'responder'
 		self.description = 'ICQ auto responder'
 		self.author = "Jiri 'Sef' Gabrys"

@@ -173,8 +173,8 @@ class config:
 		self.config['messagesTime']={'type':'time-interval','label':self.main.tr("Cas, po kterem se zpravy z posledni konverzace nezobrazi:"),'value':'1:0:0'}
 
 class Plugin(plugins.PluginBase):
-	def __init__(self,main, homedir):
-		plugins.PluginBase.__init__(self, main, homedir)
+	def __init__(self, main, homedir, plugindir):
+		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'archive'
 		self.description = 'Message Archiving'
 		self.author = "Jiri 'Sef' Gabrys"
@@ -182,7 +182,6 @@ class Plugin(plugins.PluginBase):
 		self.version = '0.189'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
-		self.developMode=True
 
 		self.installTranslator()
 		self.configDialog=config(self)
@@ -203,7 +202,7 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('on_GCmessage', self.on_message)
 			self.registerHandler('on_message_send', self.on_message_send)
 			self.loadConfig()
-			self.window = self.loadWindow("%s/plugins/%s/historyBrowser.ui.py"%(self.homeDir, self.fname),self.main)
+			self.window = self.loadWindow("%s/historyBrowser.ui.py" % self.pluginDir, self.main)
 			self.window.setWindowIcon(self.main.windowIcon())
 			layout=QtGui.QHBoxLayout(self.window.ui.calendarWidget)
 			self.window.ui.calendar=calendar(self.window.ui.calendarWidget)
@@ -231,7 +230,7 @@ class Plugin(plugins.PluginBase):
 			self.action=menu.addAction(self.tr("History"))
 			self.action.setData(QtCore.QVariant(unicode(contact.jid)))
 			self.action.setObjectName("history")
-			self.action.setIcon(QtGui.QIcon("%s/plugins/%s/history.png"%(self.homeDir, self.fname)))
+			self.action.setIcon(QtGui.QIcon("%s/history.png" % self.pluginDir))
 			QtCore.QObject.connect(self.action,QtCore.SIGNAL("triggered ( bool )"),self.toggled)
 	
 	def toggled(self,b):
@@ -249,7 +248,7 @@ class Plugin(plugins.PluginBase):
 		button=QtGui.QToolButton()
 		#button.setText("History")
 		button.setIconSize(QtCore.QSize(16,16))
-		button.setIcon(QtGui.QIcon("%s/plugins/%s/history.png"%(self.homeDir, self.fname)))
+		button.setIcon(QtGui.QIcon("%s/history.png" % self.pluginDir))
 		button.jid=unicode(jid)
 		button.setToolTip("History")
 
@@ -301,7 +300,7 @@ class Plugin(plugins.PluginBase):
 		button=QtGui.QToolButton()
 		#button.setText("History")
 		button.setIconSize(QtCore.QSize(16,16))
-		button.setIcon(QtGui.QIcon("%s/plugins/%s/history.png"%(self.homeDir, self.fname)))
+		button.setIcon(QtGui.QIcon("%s/history.png" % self.pluginDir))
 		button.jid=unicode(jid)
 		button.setToolTip("History")
 		button.setMinimumHeight(widget.ui.sendButton.height())

@@ -492,12 +492,13 @@ class preferencesWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.pluginsContextMenu)
 		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int)"),self.pluginSelected)
 
-		self.main.copyPlugins()
-		plugins=os.listdir("plugins/")
 		self.loadedPlugins=self.main.config['plugins']
 		self.plugins={}
+		self.main.findPlugins()
+		plugins=self.main.plugins.keys()
 		for plugin in plugins:
-			path = 'plugins/%s/%s.py'%(plugin, plugin)
+			dir = self.main.plugins[plugin]['dir']
+			path = '%s/%s.py' % (dir, plugin)
 			try: 
 				f=open(path)
 			except:
@@ -505,7 +506,7 @@ class preferencesWindow(QtGui.QDialog):
 				continue
 
 			try: 
-				plug = load_source(plugin, path, f).Plugin(False,self.main.homeDir)
+				plug = load_source(plugin, path, f).Plugin(False, self.main.homeDir, dir)
 			except Exception, ex:
 				log.msg(plugin+': CHYBA PRI NAHRAVANI => SPATNA SYNTAXE V PLUGINU!')
 				message = unicode(traceback.format_exc())

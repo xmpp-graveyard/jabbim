@@ -9,8 +9,8 @@ from twisted.words.xish.domish import Element
 from twisted.internet import threads
 
 class Plugin(plugins.PluginBase):
-	def __init__(self,main, homedir):
-		plugins.PluginBase.__init__(self, main, homedir)
+	def __init__(self, main, homedir, plugindir):
+		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'roshambo'
 		self.description = 'Kamen - nuzky - papir'
 		self.author = "Jiri 'Sef' Gabrys"
@@ -22,7 +22,7 @@ class Plugin(plugins.PluginBase):
 		#self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
 		if main:
 			self.loadConfig()
-			self.invite = uic.loadUi("%s/plugins/%s/invite.ui"%(self.homeDir, self.fname))
+			self.invite = uic.loadUi("%s/invite.ui" % self.pluginDir)
 			self.invite.setWindowIcon(self.main.windowIcon())
 			QtCore.QObject.connect(self.invite.pushButton, QtCore.SIGNAL("clicked()"), self.sendInvite)
 			self.registerHandler('on_authd', self.authd)
@@ -118,7 +118,7 @@ class Session:
 		self.ini = ini
 		self.plugin = plugin
 		self.jid = jid
-		self.ui = uic.loadUi("%s/plugins/%s/game.ui"%(self.plugin.homeDir, self.plugin.fname))
+		self.ui = uic.loadUi("%s/game.ui" % self.plugin.pluginDir)
 		self.score = {'ja':0, 'on':0}
 		self.turn = 0
 		self.rpc = {'ready': self.onReady, 'turn': self.onTurn, 'quit': self.onQuit}
