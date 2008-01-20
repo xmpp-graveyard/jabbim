@@ -14,17 +14,17 @@ class config:
 		self.config["format"] = {
 				"type": "text-multi",
 				"label": self.main.tr("Format of message. %artist is replaced by artist's name, %title by track name and so on for %album, %genre, %year, %type and %totalTime"),
-				"value": u"/me hraje: (8) %artist - %title (%album) (8)"
+				"value": unicode("/me plays: (8) %artist - %title (%album) (8)", "utf-8")
 				}
 		self.config["amarok_off"] = {
 				"type": "text-single",
 				"label": self.main.tr("Message when amaroK is not running."),
-				"value": u"/me má vypnutý amarok :'("
+				"value": "/me has amaroK turned off :'("
 				}
 		self.config["amarok_paused"] = {
 				"type": "text-single",
 				"label": self.main.tr("Message when nothing is being played in amaroK."),
-				"value": u"/me zrovna nic nepřehrává :'("
+				"value": "/me isn't listening to anything at the moment."
 				}
 
 class Plugin(plugins.PluginBase):
@@ -59,7 +59,7 @@ class Plugin(plugins.PluginBase):
 	def commandCalled(self, cmd, args, chat, typ):
 		if cmd != "amarok":
 			return
-		title = unicode(commands.getoutput("dcop amarok player title"))
+		title = unicode(commands.getoutput("dcop amarok player title"), "utf-8")
 		if title == u"call failed":
 			msg = unicode(self.config["amarok_off"], "utf-8")
 		if title == u"":
@@ -67,12 +67,12 @@ class Plugin(plugins.PluginBase):
 		else:
 			msg = unicode(self.config["format"], "utf-8")
 			msg = msg.replace("%title", title)
-			msg = msg.replace("%artist", commands.getoutput("dcop amarok player artist"))
-			msg = msg.replace("%album", commands.getoutput("dcop amarok player album"))
-			msg = msg.replace("%genre", commands.getoutput("dcop amarok player genre"))
-			msg = msg.replace("%year", commands.getoutput("dcop amarok player year"))
-			msg = msg.replace("%type", commands.getoutput("dcop amarok player type"))
-			msg = msg.replace("%totalTime", commands.getoutput("dcop amarok player totalTime"))
+			msg = msg.replace("%artist", unicode(commands.getoutput("dcop amarok player artist"),"utf-8"))
+			msg = msg.replace("%album", unicode(commands.getoutput("dcop amarok player album"),"utf-8"))
+			msg = msg.replace("%genre", unicode(commands.getoutput("dcop amarok player genre"),"utf-8"))
+			msg = msg.replace("%year", unicode(commands.getoutput("dcop amarok player year"),"utf-8"))
+			msg = msg.replace("%type", unicode(commands.getoutput("dcop amarok player type"),"utf-8"))
+			msg = msg.replace("%totalTime", unicode(commands.getoutput("dcop amarok player totalTime"),"utf-8"))
 		#playing=unicode(commands.getoutput("dcop amarok player nowPlaying"), "utf-8")
 		log.msg("Playing: "+`msg`)
 		self.main.client.sendMessage(unicode(chat.jid), msg, typ)
