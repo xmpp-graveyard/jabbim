@@ -113,6 +113,7 @@ class textView(QtGui.QTextEdit):
 		self.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
 		self.setAcceptDrops(True)
 		self.setObjectName("chatView")
+		self.setWordWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
 
 	def dragEnterEvent(self, event):
 		#log.msg('DRAG ENTER')
@@ -1064,7 +1065,7 @@ class groupChatWidget(QtGui.QWidget):
 			if self.ui.textEdit.verticalScrollBar().value()==self.ui.textEdit.verticalScrollBar().maximum():
 				toEnd=True
 			for k,v in self.smileys.iteritems():
-				text=text.replace(" "+k,' <img src="'+v+'"/>')
+				text=text.replace(" "+k,'&nbsp;<img src="'+v+'"/>')
 				text=text.replace("&nbsp;"+k,'&nbsp;<img src="'+v+'"/>')
 			#cursor.insertHtml(text)
 			cursor.insertFragment(QtGui.QTextDocumentFragment.fromHtml(text))

@@ -29,7 +29,7 @@ from twisted.web.domhelpers import gatherTextNodes
 import filetransfer
 from twisted.words.protocols.jabber import jid as jidT
 import time
-
+from include import utils
 class flowLayout(QtGui.QLayout):
 	def __init__(self, parent=None, margin=0, spacing=-1):
 		QtGui.QLayout.__init__(self, parent)
@@ -112,6 +112,7 @@ class textView(QtGui.QTextEdit):
 		self.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
 		self.setAcceptDrops(True)
 		self.setObjectName("chatView")
+		self.setWordWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
 
 	def dragEnterEvent(self, event):
 		#log.msg('DRAG ENTER')
@@ -533,8 +534,8 @@ class chatWidget(QtGui.QWidget):
 		if self.ui.textEdit.verticalScrollBar().value()==self.ui.textEdit.verticalScrollBar().maximum():
 			toEnd=True
 		for k,v in self.smileys.iteritems():
-			text=text.replace(" "+k,' <img src="'+v+'"/>')
-			text=text.replace("&nbsp;"+k,' <img src="'+v+'"/>')
+			text=text.replace(" "+k,'&nbsp;<img src="'+v+'"/>')
+			text=text.replace("&nbsp;"+k,'&nbsp;<img src="'+v+'"/>')
 			#if text[:len(v)]==k:
 				#text='<img src="images/16x16/emotes/'+v+'"/>'+text[len(v):]
 		#cursor.insertHtml(text)
@@ -641,10 +642,9 @@ class chatWidget(QtGui.QWidget):
 				self.main.client.sendMessage(unicode(self.jid),xhtml=text,composing="active")
 			else:
 				self.main.client.sendMessage(unicode(self.jid),text,composing="active")
-			text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ").replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
-			for word in text.split(' '):
-				if word.find("http://")!=-1:
-					text=text.replace(word,'<a href="'+unicode(urllib.unquote(word))+'">'+word+'</a>')
+			text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
+			text=utils.replace_url(text)
+			text=text.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 			file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
 			if not os.path.isfile(file):
 				file="images/32x32/apps/jabbim.png"

@@ -957,9 +957,8 @@ class clientClass(pyxl.client.Client):
 							w.chat.textEditWrite(message)
 						return
 					body=unicode(body).replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
-					
-					body=body.replace(" ","&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 					body = utils.replace_url(body)
+					body=body.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 					self.main.chat.onGCMessage(w,i,body,delay,subject,user)
 					return
 
@@ -1011,9 +1010,9 @@ class clientClass(pyxl.client.Client):
 			# strip html tags and \n from messages
 			if xhtml==None:
 				message=unicode(body).replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
-				
-				message=message.replace(" ","&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 				message = utils.replace_url(message)
+				message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
+				
 			else:
 				message=xhtml.replace("&quot;",'"')
 				print 'xhtml=',unicode(message)
