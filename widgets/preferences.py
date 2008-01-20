@@ -468,6 +468,7 @@ class preferencesWindow(QtGui.QDialog):
 
 		# Themes
 		skins=os.listdir("themes/")
+		QtCore.QObject.disconnect(self.ui.themes, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.themeChanged)
 
 		for skin in skins:
 
@@ -502,6 +503,7 @@ class preferencesWindow(QtGui.QDialog):
 				item.setData(32,QtCore.QVariant(skin))
 				if skin==self.main.config["theme"]:
 					self.ui.themes.setCurrentItem(item)
+		QtCore.QObject.connect(self.ui.themes, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.themeChanged)
 
 
 	def reloadPreferences(self):
