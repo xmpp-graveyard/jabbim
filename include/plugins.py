@@ -97,8 +97,8 @@ class PluginBase:
 	def installTranslator(self):
 		self.translator=QtCore.QTranslator()
 		directory=unicode(self.pluginDir)
-		self.translator.load(utils.path(directory+unicode(QtCore.QLocale.system().name()[:2])+u".qm"))
-		log.msg("trying to load localization file "+ directory+unicode(QtCore.QLocale.system().name())[:2]+".qm")
+		self.translator.load(utils.path(directory+"/"+unicode(QtCore.QLocale.system().name()[:2])+u".qm"))
+		log.msg("trying to load localization file "+ directory+"/"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
 
 	def tr(self,text,cl=None):
 		if not self.translator:
