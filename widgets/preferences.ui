@@ -220,7 +220,7 @@ p, li { white-space: pre-wrap; }
        <item row="2" column="0" >
         <widget class="QTabWidget" name="tabWidget" >
          <property name="currentIndex" >
-          <number>2</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="tab" >
           <attribute name="title" >
@@ -260,7 +260,7 @@ p, li { white-space: pre-wrap; }
          </widget>
          <widget class="QWidget" name="tab_2" >
           <attribute name="title" >
-           <string>Chat Themes</string>
+           <string>Chat skins</string>
           </attribute>
           <layout class="QGridLayout" >
            <property name="margin" >
@@ -269,7 +269,7 @@ p, li { white-space: pre-wrap; }
            <property name="spacing" >
             <number>6</number>
            </property>
-           <item row="1" column="0" colspan="2" >
+           <item row="2" column="0" >
             <widget class="QTextBrowser" name="chatSkin_preview" >
              <property name="toolTip" >
               <string>Here you see preview of the selected chat look.</string>
@@ -286,18 +286,15 @@ p, li { white-space: pre-wrap; }
              </property>
             </widget>
            </item>
-           <item row="0" column="1" >
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
+           <item row="1" column="0" >
+            <widget class="QLabel" name="chatSkinInfo" >
+             <property name="text" >
+              <string>info</string>
              </property>
-             <property name="sizeHint" >
-              <size>
-               <width>31</width>
-               <height>20</height>
-              </size>
+             <property name="textFormat" >
+              <enum>Qt::RichText</enum>
              </property>
-            </spacer>
+            </widget>
            </item>
           </layout>
          </widget>

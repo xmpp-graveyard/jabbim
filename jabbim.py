@@ -2494,7 +2494,10 @@ class mainWindow(QtGui.QMainWindow):
 
 	def loadSkin(self):
 		# loads config and repairs config file
-		self.skin=ConfigObj("skins/"+self.config["chat_skin"],encoding='UTF8')
+		self.skin=ConfigObj("chatskins/"+self.config["chatSkin"],encoding='UTF8')
+		if len(self.skin)==0:
+			self.skin=ConfigObj(self.realHomeDir+"/chatskins/"+self.config["chatSkin"],encoding='UTF8')
+		self.skin=self.skin['chatskin']
 		if not self.skin.has_key("spaces_between_lines"):
 			self.skin["spaces_between_lines"]='0'
 	

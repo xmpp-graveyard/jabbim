@@ -398,7 +398,7 @@ class preferencesWindow(QtGui.QDialog):
 		self.var.append(makePreferences(self.main.config,self.ui.connectionWidget,layout,connection.preferences(self).config)[0])
 
 		QtCore.QObject.connect(self.ui.emoticonsList,QtCore.SIGNAL('activated ( int )'),self.emoticonsListChanged)
-		QtCore.QObject.connect(self.ui.chatSkin_list, QtCore.SIGNAL("activated ( const QString & )"),self.chatSkin_listChanged)
+		QtCore.QObject.connect(self.ui.chatSkin_list, QtCore.SIGNAL("activated ( int )"),self.chatSkin_listChanged)
 
 		QtCore.QObject.connect(self.ui.useThemes,QtCore.SIGNAL("stateChanged ( int )"),self.useThemesChanged)
 		QtCore.QObject.connect(self.ui.themes, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.themeChanged)
@@ -455,15 +455,43 @@ class preferencesWindow(QtGui.QDialog):
 		self.emoticonsListChanged(0)
 		self.ui.emoticonsList.setCurrentIndex(0)
 
-		# chat skins
-		skins=os.listdir("skins/")
-		for skin in skins:
-			if skin.endswith(".conf"):
-				if skin==self.main.config["chat_skin"]:
-					self.ui.chatSkin_list.insertItem(0,unicode(skin))
-					self.chatSkin_listChanged(skin)
-				else:
-					self.ui.chatSkin_list.addItem(unicode(skin))
+		# chat skins from Jabbim root directory
+		packs=os.listdir("chatskins/")
+		for pack in packs:
+			if os.path.isdir('chatskins/'+pack):
+				skins=os.listdir('chatskins/'+pack+"/")
+				for skin in skins:
+					if skin.endswith('.cfg'):
+						path=pack+"/"+skin
+						config=ConfigObj("chatskins/"+path,encoding='UTF8')
+						if path==self.main.config["chatSkin"]:
+							self.ui.chatSkin_list.insertItem(0,unicode(config['header']['name']),QtCore.QVariant(path))
+						else:
+							self.ui.chatSkin_list.addItem(unicode(config['header']['name']),QtCore.QVariant(path))
+
+		# chat skins from Jabbim root directory
+		packs=os.listdir(self.main.realHomeDir+"/chatskins/")
+		for pack in packs:
+			if os.path.isdir(self.main.realHomeDir+'/chatskins/'+pack):
+				skins=os.listdir(self.main.realHomeDir+'/chatskins/'+pack+"/")
+				for skin in skins:
+					if skin.endswith('.cfg'):
+						path=pack+"/"+skin
+						config=ConfigObj(self.main.realHomeDir+"/chatskins/"+path,encoding='UTF8')
+						if path==self.main.config["chatSkin"]:
+							self.ui.chatSkin_list.insertItem(0,unicode(config['header']['name']),QtCore.QVariant(path))
+						else:
+							self.ui.chatSkin_list.addItem(unicode(config['header']['name']),QtCore.QVariant(path))
+
+		#skins=os.listdir("skins/")
+		#for skin in skins:
+			#if skin.endswith(".conf"):
+				#if skin==self.main.config["chat_skin"]:
+					#self.ui.chatSkin_list.insertItem(0,unicode(skin))
+					#self.chatSkin_listChanged(skin)
+				#else:
+					#self.ui.chatSkin_list.addItem(unicode(skin))
+		self.chatSkin_listChanged(0)
 		self.ui.chatSkin_list.setCurrentIndex(0)
 
 		# Themes
@@ -667,24 +695,35 @@ class preferencesWindow(QtGui.QDialog):
 		cur.movePosition(QtGui.QTextCursor.End)
 		self.ui.chatSkin_preview.setTextCursor(cur)
 
-	def chatSkin_listChanged(self,file):
-		file=unicode(file)
-		testConfig=ConfigObj("skins/"+file,encoding='UTF8')
+	def chatSkin_listChanged(self,index):
+		path=unicode(self.ui.chatSkin_list.itemData(index).toString())
+		src='chatskins/'
+		config=ConfigObj("chatskins/"+path,encoding='UTF8')
+		if len(config)==0:
+			src=self.main.realHomeDir+'/chatskins/'
+			config=ConfigObj(self.main.realHomeDir+"/chatskins/"+path,encoding='UTF8')
+		html=""
+		html+=self.tr("Name: ")+unicode(config['header']['name'])+"<br/>"
+		if config['header'].has_key('license'):
+			html+=self.tr("License: ")+unicode(config['header']['license'])+"<br/>"
+		self.ui.chatSkinInfo.setText(html)
+		
 		self.ui.chatSkin_preview.clear()
-		self.chatSkinPreviewtextEditWrite(testConfig["message_history"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("This is test message send in past."))).replace('[background]',testConfig['color1'][0]).replace('[foreground]',testConfig['color1'][1]))
-		self.chatSkinPreviewtextEditWrite(testConfig["my_message_history"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("Me"))).replace("[message]",unicode(self.tr("This is my test message send in past."))))
-		self.chatSkinPreviewtextEditWrite(testConfig["message_for_me_history"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("Me"))+", "+unicode(self.tr("this is message contains my name send in past."))))
-		self.chatSkinPreviewtextEditWrite(testConfig["message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("This is test message."))).replace('[background]',testConfig['color1'][0]).replace('[foreground]',testConfig['color1'][1]))
-		self.chatSkinPreviewtextEditWrite(testConfig["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("Me"))).replace("[message]",unicode(self.tr("This is my test message."))))
-		self.chatSkinPreviewtextEditWrite(testConfig["message_for_me"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("Me"))+", "+unicode(self.tr("this is message contains my name."))))
-		self.chatSkinPreviewtextEditWrite(testConfig["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("User has set the subject to: Subject"))))
+		self.chatSkinPreviewtextEditWrite(config['chatskin']["message_history"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("This is test message send in past."))).replace('[background]',config['chatskin']['color1'][0]).replace('[foreground]',config['chatskin']['color1'][1]).replace("[avatar]","<img src=\"images/16x16/apps/jabbim.png\" width=\"16\" height=\"16\" />"))
+		self.chatSkinPreviewtextEditWrite(config['chatskin']["my_message_history"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("Me"))).replace("[message]",unicode(self.tr("This is my test message send in past."))).replace("[avatar]","<img src=\"images/16x16/apps/jabbim.png\" width=\"16\" height=\"16\" />"))
+		self.chatSkinPreviewtextEditWrite(config['chatskin']["message_for_me_history"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("Me"))+", "+unicode(self.tr("this is message contains my name send in past."))).replace("[avatar]","<img src=\"images/16x16/apps/jabbim.png\" width=\"16\" height=\"16\" />"))
+		self.chatSkinPreviewtextEditWrite(config['chatskin']["message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("This is test message."))).replace('[background]',config['chatskin']['color1'][0]).replace('[foreground]',config['chatskin']['color1'][1]).replace("[avatar]","<img src=\"images/32x32/apps/jabbim.png\" width=\"32\" height=\"32\" />"))
+		self.chatSkinPreviewtextEditWrite(config['chatskin']["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("Me"))).replace("[message]",unicode(self.tr("This is my test message."))).replace("[avatar]","<img src=\"images/32x32/apps/jabbim.png\" width=\"32\" height=\"32\" />"))
+		self.chatSkinPreviewtextEditWrite(config['chatskin']["message_for_me"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("Me"))+", "+unicode(self.tr("this is message contains my name."))).replace("[avatar]","<img src=\"images/32x32/apps/jabbim.png\" width=\"32\" height=\"32\" />"))
+		self.chatSkinPreviewtextEditWrite(config['chatskin']["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("User has set the subject to: Subject"))))
 
 
 	def save(self):
-		if not self.justShowed:
-			self.main.skin=ConfigObj("skins/"+unicode(self.ui.chatSkin_list.currentText()),encoding='UTF8')
-			if not self.main.skin.has_key("spaces_between_lines"):
-				self.main.skin["spaces_between_lines"]='0'
+		#if not self.justShowed:
+			
+			#self.main.skin=ConfigObj("skins/"+unicode(self.ui.chatSkin_list.currentText()),encoding='UTF8')
+			#if not self.main.skin.has_key("spaces_between_lines"):
+				#self.main.skin["spaces_between_lines"]='0'
 
 		for cfg in self.var:
 			for key,value in getVarData(cfg).iteritems():
@@ -694,7 +733,8 @@ class preferencesWindow(QtGui.QDialog):
 					self.main.config[key]=unicode(value)
 					print key,"=",unicode(value)
 		if not self.justShowed:
-			self.main.config['chat_skin']=unicode(self.ui.chatSkin_list.currentText())
+			self.main.config['chatSkin']=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())
+			self.main.loadSkin()
 			self.main.config['emoticons']=unicode(self.ui.emoticonsList.itemData(self.ui.emoticonsList.currentIndex()).toString())
 			for i in range(self.main.chat.ui.chatTab.count()):
 				w=self.main.chat.ui.chatTab.widget(i)

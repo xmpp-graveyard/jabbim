@@ -47,9 +47,12 @@ def makeHomeDir(homeDir):
 	if not os.path.isdir(homeDir):
 		os.mkdir(homeDir)
 		os.mkdir(homeDir+"/emoticons")
+		os.mkdir(homeDir+"/chatskins")
 		os.chmod(homeDir, 0700)
 	if not os.path.isdir(homeDir+"/emoticons"):
 		os.mkdir(homeDir+"/emoticons")
+	if not os.path.isdir(homeDir+"/chatskins"):
+		os.mkdir(homeDir+"/chatskins")
 
 def loadConfig(main,status):
 	# loads config and repairs config file
@@ -61,6 +64,7 @@ def loadConfig(main,status):
 			"autoDownloadPath": main.homeDir,
 			"rosterIconSize":"16x16",
 			"chat_skin":"cool.conf",
+			"chatSkin":"cool/cool.cfg",
 			"emoticons":"default/smileys.cfg",
 			"theme":"template",
 			"log":"true",

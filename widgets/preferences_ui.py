@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Sat Jan 19 16:58:11 2008
+# Created: Sun Jan 20 15:18:52 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -172,15 +172,17 @@ class Ui_preferences(object):
 
         self.chatSkin_preview = QtGui.QTextBrowser(self.tab_2)
         self.chatSkin_preview.setObjectName("chatSkin_preview")
-        self.gridlayout7.addWidget(self.chatSkin_preview,1,0,1,2)
+        self.gridlayout7.addWidget(self.chatSkin_preview,2,0,1,1)
 
         self.chatSkin_list = QtGui.QComboBox(self.tab_2)
         self.chatSkin_list.setMinimumSize(QtCore.QSize(130,0))
         self.chatSkin_list.setObjectName("chatSkin_list")
         self.gridlayout7.addWidget(self.chatSkin_list,0,0,1,1)
 
-        spacerItem4 = QtGui.QSpacerItem(31,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout7.addItem(spacerItem4,0,1,1,1)
+        self.chatSkinInfo = QtGui.QLabel(self.tab_2)
+        self.chatSkinInfo.setTextFormat(QtCore.Qt.RichText)
+        self.chatSkinInfo.setObjectName("chatSkinInfo")
+        self.gridlayout7.addWidget(self.chatSkinInfo,1,0,1,1)
         self.tabWidget.addTab(self.tab_2,"")
 
         self.tab_3 = QtGui.QWidget()
@@ -240,8 +242,8 @@ class Ui_preferences(object):
         self.plugins.headerItem().setText(0,"")
         self.gridlayout9.addWidget(self.plugins,2,0,1,2)
 
-        spacerItem5 = QtGui.QSpacerItem(261,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout9.addItem(spacerItem5,3,0,1,1)
+        spacerItem4 = QtGui.QSpacerItem(261,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout9.addItem(spacerItem4,3,0,1,1)
 
         self.label_8 = QtGui.QLabel(self.page_5)
         self.label_8.setObjectName("label_8")
@@ -273,8 +275,8 @@ class Ui_preferences(object):
         self.hboxlayout.addWidget(self.cancelButton)
         self.gridlayout.addLayout(self.hboxlayout,2,2,1,1)
 
-        spacerItem6 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem6,2,1,1,1)
+        spacerItem5 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem5,2,1,1,1)
 
         self.listWidget = QtGui.QListWidget(preferences)
         self.listWidget.setMinimumSize(QtCore.QSize(190,0))
@@ -285,7 +287,7 @@ class Ui_preferences(object):
 
         self.retranslateUi(preferences)
         self.stackedWidget.setCurrentIndex(4)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QObject.connect(self.cancelButton,QtCore.SIGNAL("clicked()"),preferences.reject)
         QtCore.QObject.connect(self.saveButton,QtCore.SIGNAL("clicked()"),preferences.accept)
         QtCore.QObject.connect(self.listWidget,QtCore.SIGNAL("currentRowChanged(int)"),self.stackedWidget.setCurrentIndex)
@@ -315,7 +317,8 @@ class Ui_preferences(object):
         self.themes.setToolTip(QtGui.QApplication.translate("preferences", "Choose whe theme of Jabbim, then restart the client", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("preferences", "Themes", None, QtGui.QApplication.UnicodeUTF8))
         self.chatSkin_preview.setToolTip(QtGui.QApplication.translate("preferences", "Here you see preview of the selected chat look.", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("preferences", "Chat Themes", None, QtGui.QApplication.UnicodeUTF8))
+        self.chatSkinInfo.setText(QtGui.QApplication.translate("preferences", "info", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("preferences", "Chat skins", None, QtGui.QApplication.UnicodeUTF8))
         self.emoticonsInfo.setText(QtGui.QApplication.translate("preferences", "info", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QtGui.QApplication.translate("preferences", "Emoticons", None, QtGui.QApplication.UnicodeUTF8))
         self.label_7.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
