@@ -2342,7 +2342,7 @@ class rosterWidget(QtGui.QWidget):
 					action.setObjectName("send_file")
 
 		for key,value in self.main.plugins.iteritems():
-			self.main.runPluginCommand(value.buildContactMenu,[contactMenu,contact])
+			self.main.runPluginCommand(value['module'].buildContactMenu,[contactMenu,contact])
 		# separator
 		contactMenu.addSeparator()
 		

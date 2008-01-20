@@ -362,7 +362,7 @@ class groupChatWidget(QtGui.QWidget):
 
 
 		for key,value in self.main.plugins.iteritems():
-			self.main.runPluginCommand(value.buildGroupchatWidget,[unicode(jidT.JID(self.jid).userhost()),self.flowLayout,self])
+			self.main.runPluginCommand(value['module'].buildGroupchatWidget,[unicode(jidT.JID(self.jid).userhost()),self.flowLayout,self])
 		
 		self.ui.admin=QtGui.QToolButton()
 		self.ui.admin.setIconSize(QtCore.QSize(16,16))
