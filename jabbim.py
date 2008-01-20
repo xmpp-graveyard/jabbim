@@ -1335,7 +1335,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.hosts={} #: {host:type_of_host}
 		self.client=None #: Pyxl client instance
 		self.events=widgets.events.events(self) #: events class
-		self.preferencesWindow=None
+		self.preferencesWindow=widgets.preferences.preferencesWindow(self,self)
 		self.styleSheetText=""
 		self.profilesWindow=None
 		self.mucbrowser=None
@@ -2482,13 +2482,14 @@ class mainWindow(QtGui.QMainWindow):
 
 	def preferencesClicked(self,bool):
 		# shows preferences
-		if not self.preferencesWindow:
-			self.preferencesWindow=widgets.preferences.preferencesWindow(self,self)
+		#if not self.preferencesWindow:
+			#self.preferencesWindow=widgets.preferences.preferencesWindow(self,self)
+			#self.preferencesWindow.show()
+		#else:
+		if self.preferencesWindow.isHidden()==True:
+			#self.preferencesWindow=widgets.preferences.preferencesWindow(self,self)
 			self.preferencesWindow.show()
-		else:
-			if self.preferencesWindow.isHidden()==True:
-				self.preferencesWindow=widgets.preferences.preferencesWindow(self,self)
-				self.preferencesWindow.show()
+			self.preferencesWindow.reloadPreferences()
 
 	def loadSkin(self):
 		# loads config and repairs config file

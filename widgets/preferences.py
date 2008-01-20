@@ -379,11 +379,7 @@ class preferencesWindow(QtGui.QDialog):
 
 		self.var=[]
 
-		if self.main.client:
-			self.ui.profile.hide()
-		else:
-			self.ui.profile.setText("<b>"+self.tr("Profile:")+"</b> "+unicode(self.main.config['jid']))
-			self.ui.profile.show()
+		self.justShowed=False
 
 		# Jabbim
 		layout=QtGui.QGridLayout(self.ui.jabbimWidget)
@@ -401,6 +397,31 @@ class preferencesWindow(QtGui.QDialog):
 		layout=QtGui.QGridLayout(self.ui.connectionWidget)
 		self.var.append(makePreferences(self.main.config,self.ui.connectionWidget,layout,connection.preferences(self).config)[0])
 
+		QtCore.QObject.connect(self.ui.emoticonsList,QtCore.SIGNAL('activated ( int )'),self.emoticonsListChanged)
+		QtCore.QObject.connect(self.ui.chatSkin_list, QtCore.SIGNAL("activated ( const QString & )"),self.chatSkin_listChanged)
+
+		QtCore.QObject.connect(self.ui.useThemes,QtCore.SIGNAL("stateChanged ( int )"),self.useThemesChanged)
+		QtCore.QObject.connect(self.ui.themes, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.themeChanged)
+
+		# Plugins
+		QtCore.QObject.connect(self.ui.applyButton, QtCore.SIGNAL("clicked()"),self.save)
+		QtCore.QObject.connect(self.ui.pluginConfiguration, QtCore.SIGNAL("clicked()"),self.pluginConfigurationClicked)
+		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.pluginsContextMenu)
+		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int)"),self.pluginSelected)
+		QtCore.QObject.connect(self.ui.listWidget, QtCore.SIGNAL("currentRowChanged ( int)"),self.currentRowChanged)
+		self.ui.plugins.resizeColumnToContents (0)
+		self.ui.plugins.resizeColumnToContents (1)
+
+	def currentRowChanged(self,row):
+		if self.justShowed:
+			if row==4:
+				self.reloadView()
+				self.justShowed=False
+
+	def reloadView(self):
+		self.ui.emoticonsList.clear()
+		self.ui.chatSkin_list.clear()
+		self.ui.themes.clear()
 		# emoticons from Jabbim root directory
 		packs=os.listdir("emoticons/")
 		for pack in packs:
@@ -433,8 +454,6 @@ class preferencesWindow(QtGui.QDialog):
 
 		self.emoticonsListChanged(0)
 		self.ui.emoticonsList.setCurrentIndex(0)
-		
-		QtCore.QObject.connect(self.ui.emoticonsList,QtCore.SIGNAL('activated ( int )'),self.emoticonsListChanged)
 
 		# chat skins
 		skins=os.listdir("skins/")
@@ -446,14 +465,10 @@ class preferencesWindow(QtGui.QDialog):
 				else:
 					self.ui.chatSkin_list.addItem(unicode(skin))
 		self.ui.chatSkin_list.setCurrentIndex(0)
-		QtCore.QObject.connect(self.ui.chatSkin_list, QtCore.SIGNAL("activated ( const QString & )"),self.chatSkin_listChanged)
 
 		# Themes
 		skins=os.listdir("themes/")
-		if self.main.config['theme']=="None":
-			self.ui.useThemes.setChecked(False)
-			QtCore.QObject.connect(self.ui.useThemes,QtCore.SIGNAL("stateChanged ( int )"),self.useThemesChanged)
-		self.currentTheme=self.main.config['theme']
+
 		for skin in skins:
 
 			if os.path.isdir("themes/"+skin) and os.path.exists("themes/"+skin+"/style.css"):
@@ -487,18 +502,24 @@ class preferencesWindow(QtGui.QDialog):
 				item.setData(32,QtCore.QVariant(skin))
 				if skin==self.main.config["theme"]:
 					self.ui.themes.setCurrentItem(item)
-					
-		QtCore.QObject.connect(self.ui.themes, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.themeChanged)
 
-		# Plugins
-		#self.ui.plugins.header().hide()
-		QtCore.QObject.connect(self.ui.applyButton, QtCore.SIGNAL("clicked()"),self.save)
-		QtCore.QObject.connect(self.ui.pluginConfiguration, QtCore.SIGNAL("clicked()"),self.pluginConfigurationClicked)
-		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.pluginsContextMenu)
-		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int)"),self.pluginSelected)
 
+	def reloadPreferences(self):
+		self.ui.stackedWidget.setCurrentIndex(0)
+		self.ui.listWidget.setCurrentRow(0)
+		if self.main.config['theme']=="None":
+			self.ui.useThemes.setChecked(False)
+		self.currentTheme=self.main.config['theme']
+		self.justShowed=True
+		if self.main.client:
+			self.ui.profile.hide()
+		else:
+			self.ui.profile.setText("<b>"+self.tr("Profile:")+"</b> "+unicode(self.main.config['jid']))
+			self.ui.profile.show()
+		
 		self.loadedPlugins=self.main.config['plugins']
 		self.plugins={}
+		self.ui.plugins.clear()
 		self.main.findPlugins()
 		plugins=self.main.plugins.keys()
 		for plugin in plugins:
@@ -530,8 +551,7 @@ class preferencesWindow(QtGui.QDialog):
 			item.setData(32,0,QtCore.QVariant(unicode(plugin)))
 			self.plugins[plugin]=plug
 			log.msg("plugin "+plugin+" loaded.")
-		self.ui.plugins.resizeColumnToContents (0)
-		self.ui.plugins.resizeColumnToContents (1)
+
 
 	def emoticonsListChanged(self,index):
 		path=unicode(self.ui.emoticonsList.itemData(index).toString())
