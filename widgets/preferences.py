@@ -167,6 +167,7 @@ def makePreferences(main,parent,layout,form,row=1):
 			try:
 				label=QtGui.QLabel(x['label'],par)
 				label.setOpenExternalLinks(True)
+				label.setWordWrap(True)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
@@ -182,6 +183,7 @@ def makePreferences(main,parent,layout,form,row=1):
 			try:
 				label=QtGui.QLabel(x['label'],par)
 				label.setOpenExternalLinks(True)
+				label.setWordWrap(True)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
@@ -196,6 +198,7 @@ def makePreferences(main,parent,layout,form,row=1):
 			try:
 				label=QtGui.QLabel(x['label'],par)
 				label.setOpenExternalLinks(True)
+				label.setWordWrap(True)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
@@ -218,6 +221,7 @@ def makePreferences(main,parent,layout,form,row=1):
 			try:
 				label=QtGui.QLabel(x['label'],par)
 				label.setOpenExternalLinks(True)
+				label.setWordWrap(True)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
@@ -280,6 +284,7 @@ def makePreferences(main,parent,layout,form,row=1):
 			try:
 				label=QtGui.QLabel(x['label'],par)
 				label.setOpenExternalLinks(True)
+				label.setWordWrap(True)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
