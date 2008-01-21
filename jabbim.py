@@ -2086,7 +2086,8 @@ class mainWindow(QtGui.QMainWindow):
 			print "GARBAGE:",gc.garbage
 			print "UNREACHABLE OBJECTS:",gc.collect()
 			for plug in self.plugins.itervalues():
-				self.runPluginCommand(plug['module'].buildRosterMenu,[])
+				if plug['module']:
+					self.runPluginCommand(plug['module'].buildRosterMenu,[])
 		else:
 			print "plugin is not loaded:",plugin
 		log.msg("PLUGINS:"+unicode(self.plugins))
@@ -2954,8 +2955,8 @@ class mainWindow(QtGui.QMainWindow):
 		#MainWindow.ui.roster.makeHiddenItem()
 		MainWindow.ui.login_connect.setEnabled(True)
 		#MainWindow.plugins={}
-		for i in range(len(MainWindow.plugins)):
-			MainWindow.unloadPlugin(MainWindow.plugins.keys()[0])
+		for i in MainWindow.plugins.keys():
+			MainWindow.unloadPlugin(i)
 		if self.client:
 			for jid in self.client.groupchats.keys():
 				for i in range(self.chat.ui.chatTab.count()):
