@@ -123,6 +123,44 @@
            </widget>
           </item>
           <item>
+           <widget class="QToolButton" name="italicButton" >
+            <property name="focusPolicy" >
+             <enum>Qt::NoFocus</enum>
+            </property>
+            <property name="text" >
+             <string>Italic</string>
+            </property>
+            <property name="icon" >
+             <iconset>images/16x16/actions/format-text-italic.png</iconset>
+            </property>
+            <property name="checkable" >
+             <bool>true</bool>
+            </property>
+            <property name="toolButtonStyle" >
+             <enum>Qt::ToolButtonIconOnly</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="underlineButton" >
+            <property name="focusPolicy" >
+             <enum>Qt::NoFocus</enum>
+            </property>
+            <property name="text" >
+             <string>Underline</string>
+            </property>
+            <property name="icon" >
+             <iconset>images/16x16/actions/format-text-underline.png</iconset>
+            </property>
+            <property name="checkable" >
+             <bool>true</bool>
+            </property>
+            <property name="toolButtonStyle" >
+             <enum>Qt::ToolButtonIconOnly</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="Line" name="line" >
             <property name="orientation" >
              <enum>Qt::Vertical</enum>

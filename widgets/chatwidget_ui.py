@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Mon Jan 21 15:55:19 2008
+# Created: Mon Jan 21 21:05:30 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -77,6 +77,22 @@ class Ui_chatwidget(object):
         self.boldButton.setObjectName("boldButton")
         self.hboxlayout1.addWidget(self.boldButton)
 
+        self.italicButton = QtGui.QToolButton(self.layoutWidget)
+        self.italicButton.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.italicButton.setIcon(QtGui.QIcon("images/16x16/actions/format-text-italic.png"))
+        self.italicButton.setCheckable(True)
+        self.italicButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
+        self.italicButton.setObjectName("italicButton")
+        self.hboxlayout1.addWidget(self.italicButton)
+
+        self.underlineButton = QtGui.QToolButton(self.layoutWidget)
+        self.underlineButton.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.underlineButton.setIcon(QtGui.QIcon("images/16x16/actions/format-text-underline.png"))
+        self.underlineButton.setCheckable(True)
+        self.underlineButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
+        self.underlineButton.setObjectName("underlineButton")
+        self.hboxlayout1.addWidget(self.underlineButton)
+
         self.line = QtGui.QFrame(self.layoutWidget)
         self.line.setFrameShape(QtGui.QFrame.VLine)
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
@@ -134,6 +150,8 @@ class Ui_chatwidget(object):
     def retranslateUi(self, chatwidget):
         chatwidget.setWindowTitle(QtGui.QApplication.translate("chatwidget", "Form", None, QtGui.QApplication.UnicodeUTF8))
         self.boldButton.setText(QtGui.QApplication.translate("chatwidget", "Bold", None, QtGui.QApplication.UnicodeUTF8))
+        self.italicButton.setText(QtGui.QApplication.translate("chatwidget", "Italic", None, QtGui.QApplication.UnicodeUTF8))
+        self.underlineButton.setText(QtGui.QApplication.translate("chatwidget", "Underline", None, QtGui.QApplication.UnicodeUTF8))
         self.smileys.setText(QtGui.QApplication.translate("chatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.sendButton.setText(QtGui.QApplication.translate("chatwidget", "&Send", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("chatwidget", "name", None, QtGui.QApplication.UnicodeUTF8))

@@ -280,6 +280,8 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.text=""
 		self.t=False
 		self.bold=False
+		self.italic=False
+		self.underline=False
 
 	def paused(self):
 		try:
@@ -323,6 +325,16 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			if self.bold!=b:
 				self.bold=b
 				self.parent.ui.boldButton.setChecked(b)
+			b=self.fontItalic()
+			if self.italic!=b:
+				self.italic=b
+				self.parent.ui.italicButton.setChecked(b)
+			b=self.fontUnderline()
+			if self.underline!=b:
+				self.underline=b
+				self.parent.ui.underlineButton.setChecked(b)
+
+			#if
 			QtGui.QTextEdit.keyPressEvent(self,event)
 		if not self.t and not self.composing:
 			self.text=unicode(self.toPlainText())
@@ -372,6 +384,8 @@ class chatWidget(QtGui.QWidget):
 		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("textChanged ()"),self.lines)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 		QtCore.QObject.connect(self.ui.boldButton, QtCore.SIGNAL("toggled (bool)"),self.bold)
+		QtCore.QObject.connect(self.ui.italicButton, QtCore.SIGNAL("toggled (bool)"),self.italic)
+		QtCore.QObject.connect(self.ui.underlineButton, QtCore.SIGNAL("toggled (bool)"),self.underline)
 		self.ui.textEdit.setAcceptRichText(False)
 		self.init=""
 		if self.main.skin.has_key("on_init"):
@@ -438,6 +452,15 @@ class chatWidget(QtGui.QWidget):
 			self.ui.selfAvatar.setMaximumWidth(64)
 		else:
 			self.ui.selfAvatar.hide()
+
+	def italic(self,bool):
+		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
+		self.ui.line.setFontItalic(bool)
+
+	def underline(self,bool):
+		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
+		self.ui.line.setFontUnderline(bool)
+
 
 	def bold(self,bool):
 		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
