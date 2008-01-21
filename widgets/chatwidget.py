@@ -669,9 +669,8 @@ class chatWidget(QtGui.QWidget):
 
 				b=a.getElementsByTagName('body')
 				b=b[0]
-
 				text=b.toxml()
-				xhtml=unicode(text,'utf-8')
+				xhtml=unicode(text,'utf-8').replace("<body>","").replace("</body>","")
 				text=unicode(self.ui.line.toPlainText())
 				#text=unicode(text, 'utf-8')
 				text=unescape(text)
