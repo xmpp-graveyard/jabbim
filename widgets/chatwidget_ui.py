@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Mon Jan 21 15:39:53 2008
+# Created: Mon Jan 21 15:55:19 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -76,6 +76,12 @@ class Ui_chatwidget(object):
         self.boldButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         self.boldButton.setObjectName("boldButton")
         self.hboxlayout1.addWidget(self.boldButton)
+
+        self.line = QtGui.QFrame(self.layoutWidget)
+        self.line.setFrameShape(QtGui.QFrame.VLine)
+        self.line.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line.setObjectName("line")
+        self.hboxlayout1.addWidget(self.line)
 
         self.smileys = QtGui.QToolButton(self.layoutWidget)
         self.smileys.setIcon(QtGui.QIcon("images/16x16/emotes/biggrin.png"))

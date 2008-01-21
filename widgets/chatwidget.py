@@ -435,7 +435,7 @@ class chatWidget(QtGui.QWidget):
 			self.ui.selfAvatar.hide()
 
 	def bold(self,bool):
-		self.ui.line.setFocus(QtCore.Qt.ShortcutFocusReason)
+		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
 		f=self.ui.line.currentCharFormat()
 		if bool==True:
 			f.setFontWeight(QtGui.QFont.Bold)

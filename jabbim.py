@@ -490,7 +490,7 @@ class clientClass(pyxl.client.Client):
 				error=None
 			self.on_presence(jid,show,error,True)
 		# refresh and sort and so on
-		self.main.rosterHideOffline(True)
+		#self.main.rosterHideOffline(True)
 		self.main.ui.roster.refreshStats()
 		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.main.ui.roster.statusLabel.hide()
@@ -1256,11 +1256,11 @@ class mainWindow(QtGui.QMainWindow):
 		self.plugins = {}
 
 		# get homedir
-		self.homeDir=utils.getHomeDir() #: Jabbim root directory + profile directory
+		self.homeDir=utils.getHomeDir() #: Jabbim home directory + profile directory
 		for x in range(0,len(sys.argv)):
 			if sys.argv[x] == '--home':
 				self.homeDir= sys.argv[x+1]
-		self.realHomeDir=unicode(self.homeDir) #: Jabbim root directory
+		self.realHomeDir=unicode(self.homeDir) #: Jabbim home directory
 		
 		# check if there is existing profile
 		profiles=utils.getProfiles(self.realHomeDir)
@@ -1268,10 +1268,7 @@ class mainWindow(QtGui.QMainWindow):
 			if USE_WIZARDS:
 				self.startwiz=wizards.firststart.firstStartWizard(self,self)
 				self.startwiz.show()
-		#print app.desktop().availableGeometry().x()
-		#print app.desktop().availableGeometry().y()
-		#print app.desktop().availableGeometry().width()
-		#print app.desktop().availableGeometry().height()
+
 		# load last profile according to ~/config
 		utils.loadConfig(self,[])
 		if not self.config['jid']+"-profile" in profiles:
@@ -1309,8 +1306,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.setMinimumWidth(200)
 
 		# filetransfer
-		self.filetransferTimer=QtCore.QTimer()
-		QtCore.QObject.connect(self.filetransferTimer, QtCore.SIGNAL("timeout()"),self.refreshFT)
+		#self.filetransferTimer=QtCore.QTimer()
+		#QtCore.QObject.connect(self.filetransferTimer, QtCore.SIGNAL("timeout()"),self.refreshFT)
 		self.filetransferDescriptions={}
 		self.ftError={}
 		self.filetransfer={}
@@ -1378,7 +1375,6 @@ class mainWindow(QtGui.QMainWindow):
 
 		# signals
 		QtCore.QObject.connect(self.ui.login_connect, QtCore.SIGNAL("clicked()"),self.connect)
-		#QtCore.QObject.connect(self.ui.showOffline, QtCore.SIGNAL("clicked(bool)"),self.hideOffline)
 		QtCore.QObject.connect(self.ui.toggleInvisible, QtCore.SIGNAL("clicked(bool)"),self.toggleInvisibility)
 		QtCore.QObject.connect(self.ui.registerButton, QtCore.SIGNAL("clicked ()"),self.registerButtonClicked)
 		QtCore.QObject.connect(self.ui.login_cancel, QtCore.SIGNAL("clicked ()"),self.connectCancel)
@@ -1409,16 +1405,16 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.bookmarks.header().hide()
 		self.ui.bookmarks.hideColumn(1)
 		
-		# set up stacked widget (0==login,1==roster and etc..)
+		# set up stacked widget (0==login,1==roster, 2==events and etc..)
 		self.ui.rosterStackedWidget.setCurrentIndex(0)
 		self.loadRoster() # load roster widget
 		QtCore.QObject.connect(self.ui.rosterSearch, QtCore.SIGNAL(" textEdited ( const QString & )"),self.ui.roster.search)
 
 		self.loadSkin() # load chat skin
 		self.loadTheme() # load theme
-		self.ui.roster.reskin()
-		self.selfResources=[]
-		self.buildOfflineMenu()
+		self.ui.roster.reskin() # reskin roster
+		self.selfResources=[] #: Resources which are connected from the same JID as user
+		self.buildOfflineMenu() # build menu with 'show offline', 'show away'
 		
 		# open log file
 		if self.config['log'] == 'true':
@@ -1431,7 +1427,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.tray,QtCore.SIGNAL("activated (QSystemTrayIcon::ActivationReason)"),self.trayActivated)
 		self.tray.show()
 		
-		# set mainwindow's and chatwindow's position
+		# set mainwindow size and position
 		w=self.config['windowGeometry'][2]
 		h=self.config['windowGeometry'][3]
 		if str(w)=='None' or str(h)=='None':
@@ -1440,6 +1436,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.move(int(self.config['windowGeometry'][0]),int(self.config['windowGeometry'][1]))
 		else:
 			self.setGeometry(int(self.config['windowGeometry'][0]),int(self.config['windowGeometry'][1]),int(w),int(h))
+		# set chatWindow size and position
 		w=self.config['chatGeometry'][2]
 		h=self.config['chatGeometry'][3]
 		if str(w)=='None' or str(h)=='None':
@@ -1449,7 +1446,7 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.chat.setGeometry(int(self.config['chatGeometry'][0]),int(self.config['chatGeometry'][1]),int(w),int(h))
 
-		self.reconnect = True # pri unavailable tady dame False
+		self.reconnect = True # :# True = Jabbim will reconnect after disconnect
 		self.active=True
 		
 		# set roster mode
@@ -1475,6 +1472,10 @@ class mainWindow(QtGui.QMainWindow):
 			
 
 	def buildOfflineMenu(self):
+		"""
+		Builds menu with 'show offline', 'show away' etc. There are selfResources (if user is connected from more than one client) too.
+		"""
+		# make Show offline QAction
 		self.offlineMenu=QtGui.QMenu(self.ui.showOffline)
 		self.showOfflineAction=self.offlineMenu.addAction(self.tr("Show Offline"))
 		self.showOfflineAction.setCheckable(True)
@@ -1482,53 +1483,63 @@ class mainWindow(QtGui.QMainWindow):
 		self.showOfflineAction.setChecked(self.offline)
 		QtCore.QObject.connect(self.showOfflineAction,QtCore.SIGNAL("toggled ( bool )"),self.hideOffline)
 
+		# make Show transports QAction
 		action=self.offlineMenu.addAction(self.tr("Show transports"))
 		action.setCheckable(True)
 		action.setObjectName('show_transports')
 		if self.config['showTransports']=='True':
 			action.setChecked(True)
 
-
-		separator=False
-		for resource in self.selfResources:
-			print 'self resource:',resource
-			menu=QtGui.QMenu(unicode(resource),self.offlineMenu)
-			separator=True
-			if self.client.roster['users'][self.client.jid.userhost()].resources[resource].hasFeature('http://jabber.org/protocol/commands'):
-				action=menu.addAction(self.tr("Commands"))
-				action.setObjectName('commands')
+		# add resources connected to the same JID (selfResources)
+		if len(self.selfResources)!=0:
+			for resource in self.selfResources:
+				menu=QtGui.QMenu(unicode(resource),self.offlineMenu)
+				# resource supports adhoc commands
+				if self.client.roster['users'][self.client.jid.userhost()].resources[resource].hasFeature('http://jabber.org/protocol/commands'):
+					action=menu.addAction(self.tr("Commands"))
+					action.setObjectName('commands')
+					action.setData(QtCore.QVariant(unicode(resource)))
+				# send file QAction
+				action=menu.addAction(self.tr("Send file"))
+				action.setObjectName('send_file')
 				action.setData(QtCore.QVariant(unicode(resource)))
 
-			action=menu.addAction(self.tr("Send file"))
-			action.setObjectName('send_file')
-			action.setData(QtCore.QVariant(unicode(resource)))
-
-			self.offlineMenu.addMenu(menu)
-		if separator:
+				self.offlineMenu.addMenu(menu)
 			self.offlineMenu.addSeparator()
+
 		self.ui.showOffline.setMenu(self.offlineMenu)
-		app.connect(self.offlineMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.offlineMenuChanged)
+		QtCore.QObject.connect(self.offlineMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.offlineMenuChanged)
 
 	def offlineMenuChanged(self,action):
+		"""
+		Executes command according to action.objectName(). Called when user choose one of QAction from self.offlineMenu, which si created by self.buildOfflineMenu().
+		@type action: QAction
+		@param action: QAction from self.offlineMenu
+		"""
 		cmd=unicode(action.objectName())
 		if cmd=='commands':
+			# show adhoc dialog
 			self.cmds = widgets.commands.Commands(self, unicode(self.client.jid.userhost())+"/"+unicode(action.data().toString()))
 			self.cmds.dialog.show()
 		elif cmd=='send_file':
-			jid=unicode(self.client.jid.userhost())+"/"+unicode(action.data().toString())
-			file=QtGui.QFileDialog.getOpenFileNames(self,"Choose file")
+			jid=unicode(self.client.jid.userhost())+"/"+unicode(action.data().toString()) # make jid from users jid + selected resource
+			file=QtGui.QFileDialog.getOpenFileNames(self,"Choose file") # get filenames
 			file=list(file)
 			if len(file)!=0:
 				new=[]
 				for f in file:
 					new.append(unicode(f))
 				file=new
+				# show filetransfer dialog, which sends files
 				self.dialog=widgets.filetransfer.filetransferDialog(self,file,jid)
 				self.dialog.show()
 		elif cmd=="show_transports":
 			self.config['showTransports']=unicode(action.isChecked())
 
 	def tables_created(self,data=None):
+		"""
+		Called on __init__ when new sqlite tables were created. If tables were empty, adds default values (default status messages etc.), otherwise calls self.buildStatusWidgetMenu().
+		"""
 		if not data[1][0]:
 			self.buildStatusWidgetMenu()
 			return
@@ -1542,22 +1553,32 @@ class mainWindow(QtGui.QMainWindow):
 		d.addCallback(self._defaultMsg).addErrback(self._error)
 
 	def _defaultMsg(self, data):
-#		print data
+		"""
+		Called when default status message have been added. Calls self.buildStatusWidgetMenu().
+		"""
 		for x in data:
 			if not x[0]:
 				print x[1], dir(x[1])
 		self.buildStatusWidgetMenu()
 
 	def tables_loaded(self,data=None):
-#		print data
+		"""
+		Called when sqlite db has been loaded. Calls self.buildStatusWidgetMenu().
+		"""
 		print 'tables present'
 		self.buildStatusWidgetMenu()
 
 	def _error(self,result):
+		"""
+		Called if there was some error with using DB.
+		"""
 		log.msg( 'CHYBA V DATABAZI?!!! ')
 		print result
 
 	def buildTrayMenu(self):
+		"""
+		Builds system tray menu.
+		"""
 		menu=QtGui.QMenu(self)
 		menu.addMenu(self.statusWidgetMenu)
 		menu.addSeparator()
@@ -1567,7 +1588,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def buildStatusWidgetMenu(self,data=None):
 		"""
-		Rebuild (update) status menu. Must be called without parametrs.
+		Rebuilds (updates) status menu. Must be called without parametrs.
 		"""
 		if data==None:
 			# get status messages from DB
@@ -1588,7 +1609,7 @@ class mainWindow(QtGui.QMainWindow):
 				config[status[0]].append([status[1],str(status[2])])
 
 		self.statusWidgetMenu=QtGui.QMenu(self.tr("Status"),self.ui.statusWidget)
-		# make global menu
+		# make global menu. If some show has custom message, add seperator between last custom message and next show
 		separator=False
 		for key in ['online','chat','away','xa','dnd']:
 			if separator and len(config[key])!=0:
@@ -1611,17 +1632,20 @@ class mainWindow(QtGui.QMainWindow):
 		if separator:
 			self.statusWidgetMenu.addSeparator()
 		
-		# make menu for transport
+		# make menu for transports
 		if len(self.transports)!=0:
 			for transport in list(self.transports.keys()):
+				# make transports QMenu and use icon according to transports type and show
 				show=self.client.roster['users'][transport].status
 				if len(show)==0:
 					show='offline'
 				else:
 					show=show[0]
-				#mainAction=self.statusWidgetMenu.addAction(self.getIcon(status=unicode(show),size="16x16"),unicode(transport))
 				menu=QtGui.QMenu(transport,self.statusWidgetMenu)
 				menu.setIcon(self.getIcon(status=show,size="16x16"))
+				# add custom messages and shows QActions to the transports QMenu
+				# it's the same code (principle) as above, but it uses different QAction.data(),
+				# so we can recognize if user wants to send presence to the transport instead of server
 				separator=False
 				for key in ['online','chat','away','xa','dnd']:
 					if separator and len(config[key])!=0:
@@ -1636,6 +1660,7 @@ class mainWindow(QtGui.QMainWindow):
 								action=menu.addAction(self.getIcon(status=key,size="16x16"),unicode(status)[:20]+"...")
 							else:
 								action=menu.addAction(self.getIcon(status=key,size="16x16"),unicode(status))
+							# [show_idOfMessage,jidOfTransport]
 							action.setData(QtCore.QVariant([key+"_"+unicode(index),unicode(transport)]))
 						menu.addSeparator()
 						separator=False
@@ -1643,10 +1668,12 @@ class mainWindow(QtGui.QMainWindow):
 						separator=True
 				if separator:
 					menu.addSeparator()
-				# we have to use status icon from previous instance of QMenu,
-				# because it can be something different than online
+				# We have to use status icon from previous instance of QMenu,
+				# because transport doesn't need to have the same show in roster as we send him before
+				# So FE we sent away, but in roster we have still online...
 				if self.transports[transport]:
 					menu.setIcon(self.transports[transport].icon())
+				# updates transport menu in self.transports and add it to the self.statusWidgetMenu
 				self.transports[transport]=menu
 				self.statusWidgetMenu.addMenu(menu)
 			self.statusWidgetMenu.addSeparator()
@@ -1664,25 +1691,34 @@ class mainWindow(QtGui.QMainWindow):
 		self.buildTrayMenu()
 
 	def statusWidgetChanged(self,action):
-		# status changed
+		"""
+		Executes command according to action.objectName(). Called when user choose one of QAction from self.statusWidgetMenu, which si created by self.buildStatusWidgetMenu().
+		@type action: QAction
+		@param action: QAction from self.statusWidgetMenu. if QAction.data() is string, presence is sent to the server or one of other commands is executed. If it's list, then it's in format [show,JID] and presence is sent to the JID. Show is in format "show_idOfStatusMessage" or just "show".
+		"""
 		data=action.data()
 		if len(data.toList())==0:
+			# We are sending presence to the server
 			data=unicode(data.toString())
 			jid=None
 		else:
+			# We are sending presence to the transport
 			data=data.toList()
 			jid=unicode(data[1].toString())
 			data=unicode(data[0].toString())
 
 		if data=='custom_message':
+			# show 'add custom message' dialog
 			cs = widgets.statuseditor.statusWidgetWindow(None,self,self)
 			cs.exec_()
 		elif data=='manage_messages':
+			# show 'manage messages' dialog
 			cs = widgets.statuseditor.statusEditorWindow(self,self)
 			cs.exec_()
 		else:
 			data=data.split("_")
 			if len(data)==2:
+				# get statusMessage according to ID and call self._gotStatus when we have it
 				show=data[0]
 				messageIndex=data[1]
 				d=self.cache.get_status_by_id(str(messageIndex))
@@ -1691,10 +1727,13 @@ class mainWindow(QtGui.QMainWindow):
 			elif len(data)==1:
 				show=data[0]
 				message=""
+			# send presence
 			self.sendPresence(jid,show,message)
 
 	def _gotStatus(self,result,jid):
-		print result
+		"""
+		Called from self.statusWidgetChange when we got statusMessage. Sends presence with message from result to JID.
+		"""
 		if not result:
 			return
 		if len(result)==0:
@@ -1703,7 +1742,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def sendPresence(self,jid,show,message="",pri=None):
 		"""
-		Send presence and update GUI.
+		Sends presence and update GUI.
 		@type jid: unicode
 		@param jid: JID or None for sending presence to server
 		@type show: unicode
@@ -1769,8 +1808,13 @@ class mainWindow(QtGui.QMainWindow):
 			self.client.sendPresence(to=jid,show = unicode(show), status = unicode(message),priority=pri)
 
 	def profileChanged(self,jid):
-		self.homeDir=unicode(self.realHomeDir+"/"+jid+"-profile")
-		utils.loadConfig(self,[])
+		"""
+		Changes profile. Called when user changes profile in Login Window. Profile can be changed only if Jabbim is not connected.
+		@type jid: unicode
+		@param jid: profiles Jabber ID
+		"""
+		self.homeDir=unicode(self.realHomeDir+"/"+jid+"-profile") # get new homedir
+		utils.loadConfig(self,[]) # load profiles config
 		# change log files
 		if self.config['log'] == 'true':
 			logfile = open(self.homeDir+'/'+self.config['logfile'], 'w')
@@ -1794,7 +1838,6 @@ class mainWindow(QtGui.QMainWindow):
 			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
 		else:
 			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
-
 
 	def fillLoginForm(self):
 		"""
@@ -1888,12 +1931,18 @@ class mainWindow(QtGui.QMainWindow):
 
 
 	def registerButtonClicked(self):
+		# depracted
 		if USE_WIZARDS:
 			self.regwiz=wizards.registration.registrationWizard(self,self)
 			self.regwiz.show()
 		return
 
 	def getJid(self,jid):
+		"""
+		Returns Twisted Jabber ID or None if JID is in bad format.
+		@type jid: unicode
+		@param jid: profiles Jabber ID
+		"""
 		try:
 			jidt=jidT.JID(jid)
 		except:
@@ -1901,10 +1950,14 @@ class mainWindow(QtGui.QMainWindow):
 		return jidt
 
 	def serviceDiscovery(self,b):
+		"""
+		Shows Service Discovery Dialog. Called by QAction from main menu.
+		"""
 		self.discovery=widgets.servicediscovery.serviceDiscoveryDialog(self,self)
 		self.discovery.show()
 
 	def event(self,ev):
+		# depracted
 		# WindowActivated
 		if int(ev.type())==24:
 			if self.active!=True:
@@ -1920,28 +1973,25 @@ class mainWindow(QtGui.QMainWindow):
 				self.active=False
 				self.chat.timer.start(30000)
 		return QtGui.QMainWindow.event(self,ev)
-	#def mouseMoveEvent(self,event):
-		#self.client.dispatcher.publishEvent('on_userActivity',"mouseMove")
-		#return QtGui.QMainWindow.mouseMoveEvent(self,event)
-
-	#def addInfoSubscribe(self):
-		#widget=subscribeWidget(self.ui.infoDockWidget)
-		#self.ui.infoLayout.addWidget(widget)
-
-	#def resizeEvent (self,event):
-		#self.setUpdatesEnabled(False)
-		#QtGui.QMainWindow(self).resizeEvent(event)
-		#self.setUpdatesEnabled(True)
 
 	def privacyListEditor(self,bool=False):
+		"""
+		Shows Privacy List Editor. Called by QAction from main menu.
+		"""
 		self.ple=widgets.privacy.PrivacyListEditorDialog(self,self)
 		self.ple.show()
 
 	def identityEditor(self,bool=False):
+		"""
+		Shows Vcard Editor. Called by QAction from main menu.
+		"""
 		self.ve=widgets.vcardeditor.vcardEditorDialog(self,self.client.jid.userhost(),self)
 		self.ve.show()
 
 	def mucBrowser(self,bool=False):
+		"""
+		Shows MUC Browser.
+		"""
 		if not self.mucbrowser:
 			self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
 			self.mucbrowser.show()
@@ -1949,10 +1999,11 @@ class mainWindow(QtGui.QMainWindow):
 			if self.mucbrowser.isHidden()==True:
 				self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
 				self.mucbrowser.show()
-		
-		
 
 	def about(self,bool):
+		"""
+		Shows About Jabbim dialog.
+		"""
 		about=aboutDialog(self)
 		about.exec_()
 	
@@ -1960,17 +2011,18 @@ class mainWindow(QtGui.QMainWindow):
 		cs = customStatusWindow(jid, show)
 		cs.exec_()
 
-	#def statMsgChanged(self):
-	#	text = unicode(self.ui.selfStatus_lineEdit.text())
-	#	self.client.sendPresence(
-	#			status =text, 
-	#			show = self.client.roster['users'][self.client.jid.userhost()].resources[self.client.jid.resource].show
-	#			)
-	#	self.ui.selfStatus_label.setText(text)
-	#	self.ui.selfStatus_lineEdit.hide()
-	#	self.ui.selfStatus_label.show()
-
-	def showInvitation(self, jid, room, reason, cont = False):# = None):
+	def showInvitation(self, jid, room, reason, cont = False):
+		"""
+		Shows invitation to room in events.
+		@type jid: unicode
+		@param jid: Jabber ID of user who sends invitation
+		@type room: unicode
+		@param room: Jabber ID of room
+		@type reason: unicode
+		@param reason: Reason
+		@type cont: boolean
+		@param cont: True if the invitation was sent to invite third person to the 1to1 chat (chat -> groupchat)
+		"""
 		log.msg("%s %s %s" %(jid, room, reason))
 
 		maintext =unicode(jid)+self.tr(" invites you to conference ")+unicode(room)+"."
@@ -1978,34 +2030,10 @@ class mainWindow(QtGui.QMainWindow):
 			maintext += "<br>" + self.tr("Reason: ") + unicode(reason)
 		self.events.addLineEditEvent(maintext = maintext ,trueCall=self.joinGC, trueDict=[room], falseCall=self.client.declineInvitation, falseDict=[jid, room],header="Groupchat Invitation",text="Nickname:",name=unicode(jid),typ="groupchatInvitation",icon=None,action=None,actionDict=None,height=150,value=self.client.jid.userhost().split("@")[0])
 
-	#def buildStatusMenu(self,menus=[]):
-		## Status menu
-		#self.statusMenu=QtGui.QMenu(self.tr("Status"),self.ui.statusButton)
-		#action=self.statusMenu.addAction(self.getIcon(status="online",size="16x16"),self.status["online"])
-		#action.setData(QtCore.QVariant("online"))
-		#action=self.statusMenu.addAction(self.getIcon(status="chat",size="16x16"),self.status["chat"])
-		#action.setData(QtCore.QVariant("chat"))
-		#action=self.statusMenu.addAction(self.getIcon(status="away",size="16x16"),self.status["away"])
-		#action.setData(QtCore.QVariant("away"))
-		#action=self.statusMenu.addAction(self.getIcon(status="xa",size="16x16"),self.status["xa"])
-		#action.setData(QtCore.QVariant("xa"))
-		#action=self.statusMenu.addAction(self.getIcon(status="dnd",size="16x16"),self.status["dnd"])
-		#action.setData(QtCore.QVariant("dnd"))
-		#action=self.statusMenu.addAction(self.getIcon(status="offline",size="16x16"),self.status["offline"])
-		#action.setData(QtCore.QVariant("offline"))
-
-		#if menus != []:
-			#self.statusMenu.addSeparator()
-
-		#for menu in menus:
-			#self.statusMenu.addMenu(menu)
-			#log.msg("adding menu")
-
-		#self.ui.statusButton.setMenu(self.statusMenu)
-		#app.connect(self.statusMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusChanged)
-
-
 	def findPlugins(self):
+		"""
+		Finds plugins in plugins/ and ~/plugins and saves informations about them to the self.plugins
+		"""
 		if len(self.plugins) != 0:
 			return  # we've done this already
 		plugin_paths = ['plugins/', self.homeDir + '/plugins/']
@@ -2030,6 +2058,9 @@ class mainWindow(QtGui.QMainWindow):
 					self.plugins[plugin_name] = { 'dir': dir, 'version': version, 'module': None }
 
 	def loadPlugins(self):
+		"""
+		Loads plugins according to config file (self.config['plugins'])
+		"""
 		for plugin_name in self.plugins.keys():
 			if plugin_name in self.config['plugins']:
 				try:
@@ -2039,6 +2070,13 @@ class mainWindow(QtGui.QMainWindow):
 		#log.msg("PLUGINS:"+unicode(self.plugins))
 	
 	def runPluginCommand(self,command,args):
+		"""
+		Safely runs plugins command.
+		@type command: pointer to function
+		@param command: pointer to plugins function
+		@type args: list
+		@param args: list of arguments for function
+		"""
 		try:
 			command(*args)
 		except Exception, ex:
@@ -2047,6 +2085,11 @@ class mainWindow(QtGui.QMainWindow):
 			log.msg(message)
 	
 	def loadPlugin(self,plugin):
+		"""
+		Loads plugin. Plugin is loaded to the self.plugins[name]['module'].
+		@type plugin: unicode
+		@param plugin: plugins name
+		"""
 		dir = self.plugins[plugin]['dir']
 		path = utils.path('%s/%s.py' % (dir, plugin))
 		log.msg("loading "+unicode(plugin)+" plugin...")
@@ -2056,35 +2099,32 @@ class mainWindow(QtGui.QMainWindow):
 			log.msg('plugin load error: '+plugin)
 			return
 		try:
-
 			if not self.plugins[plugin]['module']:
-				plug = load_source(plugin, path, f).Plugin(self, self.homeDir, dir)
-				self.plugins[plugin]['module'] = plug
-				self.runPluginCommand(self.plugins[plugin]['module'].buildRosterMenu,[])
+				plug = load_source(plugin, path, f).Plugin(self, self.homeDir, dir) # load plugin module
+				self.plugins[plugin]['module'] = plug 
+				self.runPluginCommand(self.plugins[plugin]['module'].buildRosterMenu,[]) # build menu for plugin
 			else:
 				print "plugin already loaded"
 			f.close()
-
 		except Exception, ex:
 					#log.msg(unicode(plugin)+u': '+unicode(ex))
 					traceback.print_exc()
 					f.close()
 					pass
-			
 		log.msg("PLUGINS:"+unicode(self.plugins))
 
 	def unloadPlugin(self,plugin):
+		"""
+		Unloads plugin. Plugin module is deleted and self.plugins[plugin]=None
+		@type plugin: unicode
+		@param plugin: plugins name
+		"""
 		if self.plugins[plugin]['module']:
-			self.ui.menuPlugins.clear()
-			self.runPluginCommand(self.plugins[plugin]['module'].remove,[])
-			print gc.get_referents(self.plugins[plugin]['module'])
-
+			self.ui.menuPlugins.clear() # clear plugins menu
+			self.runPluginCommand(self.plugins[plugin]['module'].remove,[]) # inform plugin that it will be removed
 			self.plugins[plugin]['module'] = None
-			#print "GARBAGE:",gc.garbage
-			#print "DELETING GARBAGE"
-			del gc.garbage[:]
-			print "GARBAGE:",gc.garbage
-			print "UNREACHABLE OBJECTS:",gc.collect()
+			del gc.garbage[:] # delete plugin from python
+			# rebuild plugins menu
 			for plug in self.plugins.itervalues():
 				if plug['module']:
 					self.runPluginCommand(plug['module'].buildRosterMenu,[])
@@ -2092,82 +2132,10 @@ class mainWindow(QtGui.QMainWindow):
 			print "plugin is not loaded:",plugin
 		log.msg("PLUGINS:"+unicode(self.plugins))
 
-	def refreshFT(self):
-		return
-		log.msg("refresh")
-		toDel=[]
-		print 
-		for sid,widget in self.filetransfer.iteritems():
-			if self.client.ft.has_key(sid):
-				size=float(self.client.ft[sid].size)
-				sent=float(self.client.ft[sid].transfered)
-				widget.widget.progressBar.setValue(int((sent/size)*100))
-			else:
-				log.msg("ft.finished")
-				widget.widget.progressBar.setValue(100)
-				if widget.widget.complete==None:
-					if self.ftError[sid]==None:
-						widget.widget.stats.setText(self.tr("Complete"))
-					else:
-						widget.widget.stats.setText(self.tr("Error")+" "+unicode(self.ftError[sid]))
-					widget.widget.complete=True
-					widget.widget.closeClicked()
-					toDel.append(sid)
-				else:
-					toDel.append(sid)
-					if self.ftError[sid]==None:
-						widget.widget.stats.setText(self.tr("Complete"))
-					else:
-						widget.widget.stats.setText(self.tr("Error")+" "+unicode(self.ftError[sid]))
-					widget.widget.complete=True
-				#toDel.append(sid)
-		halt=True
-		for sid in toDel:
-			#self.
-			#self.ui.eventsListWidget.takeItem(self.ui.eventsListWidget.row(self.filetransfer[sid]))
-			queueId=None
-			print self.filetransferQueue,self.filetransfer[sid].file
-			for i in self.filetransferQueue:
-				if self.filetransfer[sid].file in i:
-					print i
-					queueId=self.filetransferQueue.index(i)
-					self.filetransferQueue[queueId].remove(self.filetransfer[sid].file)
-					break
-			log.msg("QUEUE:"+unicode(queueId))
-			if queueId!=None:
-				if len(self.filetransferQueue[queueId])!=0:
-					self.filetransferTimer.stop()
-					jid=self.filetransfer[sid].jid
-					file=self.filetransferQueue[queueId][0]
-					file=unicode(file)
-					#self.jab.sendFile(jid,unicode(file))
-					sid2=self.client.sendFile(jid, basename(file), file)
-					item=QtGui.QListWidgetItem(self.ui.eventsListWidget)
-					item.setSizeHint(QtCore.QSize(100,60))
-					item.file=file
-					item.jid=jid
-					item.sent=self.filetransfer[sid].sent+1
-					#if self.ftError[sid]==None:
-						#item.broken=self.filetransfer[sid].broken
-					#else:
-						#item.broken=self.filetransfer[sid].broken.append(self.filetransfer[sid].file)
-					item.all=self.filetransfer[sid].all
-					log.msg("SENDING "+str(item.sent)+"/"+str(item.all))
-					item.widget=widgets.rosterWidget.FTWidget(basename(file),item,self,sid2,self.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")
-					self.ui.eventsListWidget.setItemWidget(item,item.widget)
-					self.filetransfer[sid2]=item
-					self.filetransferTimer.start(500)
-					if self.ftError[sid]==None:
-						self.ui.eventsListWidget.takeItem(self.ui.eventsListWidget.row(self.filetransfer[sid]))
-			else:
-				log.msg(unicode(self.filetransferQueue))
-				log.msg(unicode(self.filetransfer[sid].file))
-			del self.filetransfer[sid]
-		if len(self.client.ft)==0 and halt:
-			log.msg("STOPPING TIMER")
-			self.filetransferTimer.stop()
-
 	def closeEvent(self,event):
+		"""
+		Hides window to the tray or quit if tray is not visible. Called by WM when windows is closed.
+		"""
 		print "TRAY VISIBLE MAIN:"+unicode(self.tray.isVisible())
 		if self.tray.isVisible():
 			self.hide()
@@ -2176,14 +2144,14 @@ class mainWindow(QtGui.QMainWindow):
 		self.trayQuit()
 		event.accept()
 
-			
-
 	def trayQuit(self,bool=True):
-		# turn off jabbim
+		"""
+		Exits Jabbim.
+		"""
 		#if self.client and self.client.privacy.active:
 			#self.client.privacy.active.unsetInvisible(available=False) # hack
-		print "LOG 1"
 		if os.path.isfile(self.config.filename):
+			# save windows geometry and sizes of splitters in chat window
 			if str(self.config["saveGeometry"])=="True":
 				rect=self.geometry()
 				x=int(rect.x())
@@ -2212,7 +2180,7 @@ class mainWindow(QtGui.QMainWindow):
 	
 						break
 				self.config.write()
-			print "LOG 2"
+			# save expanded groups
 			if str(self.config['saveExpandedGroups'])=='True':
 				expanded=[]
 				if self.client!=None:
@@ -2221,22 +2189,21 @@ class mainWindow(QtGui.QMainWindow):
 							expanded.append(name)
 					self.config['expandedGroups']=expanded
 					self.config.write()
-		print self.config['askBeforeQuitMUC']
+		# save config to the ~/.jabbim/
+		# we cat detect last loged user (=> last used profile) from it
 		f=open(self.realHomeDir+"/config",'w')
 		self.config.write(f)
 		f.close()
-		print "LOG 3"
+		# close windows, hide tray :)
 		app.closeAllWindows()
 		self.tray.hide()
-
-		print "LOG 4"
-		#self.disconnect()
+		# stop reactor
 		reactor.stop2()
-		print "LOG 5"
-		#sys.exit(0)
 
 	def trayActivated(self,reason=QtGui.QSystemTrayIcon.Trigger):
-		# show or hide main window
+		"""
+		Shows or hides mainWindow. Called when is tray activated.
+		"""
 		if reason==QtGui.QSystemTrayIcon.Trigger:
 			if not self.events.trayClicked():
 				if self.isHidden():
@@ -2273,15 +2240,21 @@ class mainWindow(QtGui.QMainWindow):
 					self.hide()
 
 	def loadTheme(self,text=None):
-		# windows hack
-		self.setStyleSheet("")
+		"""
+		Loads theme. If text==None, self.config['theme'] is used. Otherwise is stylesheet sets to `text`.
+		@type text: unicode
+		@param text: stylesheet css
+		"""
+		self.setStyleSheet("") # windows hack
 		
 		if self.config['theme']=="None" and not text:
+			# theme isn't used
 			text=""
 			self.ui.roster.theme=False
 		else:
 			self.ui.roster.theme=True
 		if text==None:
+			# open theme according to self.config
 			theme=open("themes/"+self.config['theme']+"/style.css")
 			text=theme.read()
 			self.setStyleSheet(text)
@@ -2289,6 +2262,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.chat.setStyleSheet(text)
 			theme.close()
 		else:
+			# use text for stylesheet css
 			self.setStyleSheet(text)
 			self.xmlConsole.setStyleSheet(text)
 			self.chat.setStyleSheet(text)
@@ -2296,10 +2270,12 @@ class mainWindow(QtGui.QMainWindow):
 				if len(text)==0:
 					self.ui.roster.theme=False
 		self.styleSheetText=text
-		self.ui.roster.reskin(text)
+		self.ui.roster.reskin(text) # reskin roster
 
 	def addContactMainWindow(self):
-		# add contact
+		"""
+		Shows Add Contact Dialog.
+		"""
 		if not self.addcontactdialog:
 			self.addcontactdialog=widgets.addcontact.addContactDialog(self,self)
 			self.addcontactdialog.show()
@@ -2309,7 +2285,9 @@ class mainWindow(QtGui.QMainWindow):
 				self.addcontactdialog.show()
 
 	def bookmarksClicked(self,item,i):
-		# join bookmarked groupchat
+		"""
+		Joins MUC when user clicked on bookmark in Bookmarks tab.
+		"""
 		data=item.data(0,32)
 		lst=data.toList()
 		jid=unicode(lst[0].toString()) # get jid
@@ -2320,6 +2298,9 @@ class mainWindow(QtGui.QMainWindow):
 			self.client.joinGC(jid, nickname)
 
 	def buildBookmarks(self):
+		"""
+		Adds bookmarks items to self.ui.bookmarks (QTreeWidget)
+		"""
 		self.ui.bookmarks.clear()
 		for k,v in self.client.bookmarks['conference'].iteritems():
 			# add bookmark to the bookmarks list
@@ -2330,10 +2311,20 @@ class mainWindow(QtGui.QMainWindow):
 			item.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
 
 	def joinGC(self,jid,nickname):
+		"""
+		Joins to groupchat.
+		@type jid: unicode
+		@param jid: Groupchats Jabber ID
+		@type nickname: unicode
+		@param nickname: users nickname
+		"""
 		if self.chat.addGroupChatTab(jid,nickname):
 			self.client.joinGC(jid, nickname)
 
 	def autoJoinGroupchat(self):
+		"""
+		Joins to groupchats which have autojoin flag.
+		"""
 		for k,v in self.client.bookmarks['conference'].iteritems():
 			if (v.autojoin==True or unicode(v.autojoin).lower()=="true") or (v.autojoin==1 or v.autojoin=="1"):
 				jid=unicode(v.jid.full())
@@ -2342,27 +2333,15 @@ class mainWindow(QtGui.QMainWindow):
 					self.client.joinGC(jid, nickname)
 
 	def joinGroupchat(self,bool):
-		#file=self.config['theme']
-		#style=open("themes/"+file+"/style.css")
-		#mucjid = ''
-		#for jid, node in self.client.disco.iteritems():
-## 			print node
-			#if not node[None].has_key('identities'):
-				#continue
-			#for id in node[None]['identities'].itervalues():
-				#print jid, id
-				#if id.get('category') == 'conference' and id.get('type') == 'text' and jid.startswith('c'):
-					#mucjid = jid
-					#break
+		"""
+		Called when user activate Join Groupchat QAction from main menu.
+		"""
 		self.mucBrowser(bool)
-		#self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
-		#self.mucbrowser.show()
-		#if style:
-		#self.mucbrowser.setStyleSheet(style.read())
-		#style.close()
-		#ret=newchat.exec_()
 
 	def deleteCurrentBookmark(self):
+		"""
+		Deletes currently selected bookmark.
+		"""
 		item=self.ui.bookmarks.currentItem()
 		if item:
 			del self.client.bookmarks['conference'][unicode(item.text(0))]
@@ -2370,6 +2349,9 @@ class mainWindow(QtGui.QMainWindow):
 			self.buildBookmarks()
 
 	def bookmarksContextMenu(self,pos):
+		"""
+		Makes bookmarks context menu. Called when user right-click on bookmark.
+		"""
 		# make groupchat bookmarks menu
 		item=self.ui.bookmarks.itemFromIndex(self.ui.bookmarks.indexAt(pos)) # get selected item
 		jid=unicode(item.text(1)) # get item jid
@@ -2394,21 +2376,14 @@ class mainWindow(QtGui.QMainWindow):
 			action.setObjectName("delete_bookmark")
 
 		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.groupchatContextMenuTriggered)
-		# set menu position and show
-		#menu.move()
 		menu.popup(self.ui.bookmarks.mapToGlobal(pos))
 
-	#def reskin(self):
-		#self.setStyleSheet(text)
-		#self.chat.setStyleSheet(text)
-
-
-	def newBookmark(self):
-		# make new bookmark
-		edit=widgets.preferences.editBookmark(self,"","conf.netlab.cz","",self.client.jid.user,"",False,self,False)
-		ret=edit.exec_()
-
 	def groupchatContextMenuTriggered(self,action):
+		"""
+		Executes command according to action.objectName(). Called when user choose one of QAction from bookmarks menu.
+		@type action: QAction
+		@param action: QAction from bookmarks menu
+		"""
 		cmd=action.objectName()
 		if cmd=="join":
 			# join groupchat from Groupchats list
@@ -2481,20 +2456,15 @@ class mainWindow(QtGui.QMainWindow):
 				self.profilesWindow=widgets.profiles.profilesWindow(self,self)
 				self.profilesWindow.show()
 
-
 	def preferencesClicked(self,bool):
-		# shows preferences
-		#if not self.preferencesWindow:
-			#self.preferencesWindow=widgets.preferences.preferencesWindow(self,self)
-			#self.preferencesWindow.show()
-		#else:
 		if self.preferencesWindow.isHidden()==True:
-			#self.preferencesWindow=widgets.preferences.preferencesWindow(self,self)
 			self.preferencesWindow.show()
 			self.preferencesWindow.reloadPreferences()
 
 	def loadSkin(self):
-		# loads config and repairs config file
+		"""
+		Loads chat skin. Skin is loaded to self.skin.
+		"""
 		self.skin=ConfigObj("chatskins/"+self.config["chatSkin"],encoding='UTF8')
 		if len(self.skin)==0:
 			self.skin=ConfigObj(self.realHomeDir+"/chatskins/"+self.config["chatSkin"],encoding='UTF8')
@@ -2503,6 +2473,14 @@ class mainWindow(QtGui.QMainWindow):
 			self.skin["spaces_between_lines"]='0'
 	
 	def getSkinColors(self,i):
+		"""
+		Returns colors from chat skins. This is useful for using different colors for different nicknames in Groupchat.
+		Every user in groupchat have his own ID and according to ID is choosen one color.
+		@type i: integer
+		@param i: ID of user (color)
+		@rtype: list
+		@return: list of colors [#000000,#FFFFFF,#EFEFEF]
+		"""
 		colors=[]
 		for key,value in self.skin.iteritems():
 			if key.startswith("color"):
@@ -2517,7 +2495,11 @@ class mainWindow(QtGui.QMainWindow):
 			return colors[i]
 
 	def now(self):
-		# get time
+		"""
+		Returns current time in format hh:mm:ss
+		@rtype: unicode
+		@return: current time in format hh:mm:ss
+		"""
 		h,m,s=time.localtime()[3:6]
 		return "%02d:%02d:%02d" % (h,m,s)
 
@@ -2525,8 +2507,11 @@ class mainWindow(QtGui.QMainWindow):
 		self.xmlConsole.show()
 
 	def hideOffline(self,bool):
-		# hide or show offline users
-		#self.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
+		"""
+		Hides or shows offline users
+		@type bool: boolean
+		@param bool: True == offline users are shown, False offline users are hidden
+		"""
 		self.offline=not bool
 		self.ui.roster.showOffline=bool
 		self.ui.roster.reshow=True
@@ -2534,99 +2519,37 @@ class mainWindow(QtGui.QMainWindow):
 			if self.ui.roster.item.typ=="user":
 				if int(self.ui.roster.item.status)==9 and not bool:
 					self.ui.roster.statusLabel.hide()
-		#if self.ui.roster.statusLabel:
-			#self.ui.roster.statusLabel.setParent(None)
-			#self.ui.roster.statusLabel=None
-		#if self.ui.roster.buttonWidget:
-			#self.ui.roster.buttonWidget.setParent(None)
-			#self.ui.roster.buttonWidget=None
 		self.ui.roster.sortItems()
 		self.ui.roster.repaint()
-		#self.ui.roster.refreshStats()
-		
-		#self.rosterHideOffline(not bool)
 
 	def toggleInvisibility(self, bool):
+		# depracted these days because ejabberd doesn't support invisibility (there are bugs fixed in svn)
 		if self.client.privacy.active:
 			if bool:
 				self.client.privacy.active.setInvisible()
 				for gc in self.client.groupchats.keys():
 					tab, indextab = self.chat.findTab(gc)
 					self.ui.chatTab.removeTab(indextab)
-
 			else:
 				self.client.privacy.active.unsetInvisible()
 
-	def rosterHideOffline(self,bool):
-		return
-		for group,item in self.client.roster['groups'].iteritems():
-			# return stats (online,offline,all users) for group
-			count=0
-			for i in range(int(item.childCount())):
-				child=item.child(i)
-				if int(unicode(child.text(1))[0])==9:
-					if bool==True:
-						count+=1
-					self.ui.roster.setItemHidden(child, bool)
-				else:
-					print unicode(child.text(1))
-			if bool==True and int(item.childCount())==count:
-				self.ui.roster.setItemHidden(item, bool)
-			else:
-				self.ui.roster.setItemHidden(item, False)
-				#for x in range(int(child.childCount())):
-					#child2=child.child(x)
-					#if int(unicode(child2.text(1))[0])==9:
-						#self.ui.roster.setItemHidden(child2, bool)
-		self.ui.roster.hidden( bool)
-	
-	#def statusChanged(self,action):
-		## status changed
-		#data=action.data()
-		#if len(data.toList())==0:
-			#data=unicode(data.toString())
-			#show=None
-		#else:
-			#data=data.toList()
-			#show=unicode(data[1].toString())
-			#data=unicode(data[0].toString())
-
-		#setstatus=statusWindow(data,show)
-		##if len(data.split("/"))==2:
-			##data=unicode(data.split("/")[1])
-		#sh=False
-		#if self.isHidden()==True:
-			#self.show()
-			#sh=True
-		#if setstatus.exec_()==1 and not show:
-			#self.ui.statusButton.setText(unicode(""))
-			#self.ui.statusButton.setIcon(self.getIcon(status=data,size="16x16"))
-			#self.selfStatus=data
-			#self.tray.setToolTip(self.tr('Your status:')+" "+self.status[data])
-
-		#else:
-			#for menu in self.client.menus:
-				#if unicode(menu.title())==unicode(data):
-					#menu.setIcon(self.getIcon("jid@"+unicode(data),status=unicode(show),size="16x16"))
-					#break
-		#if sh:
-			#self.hide()
-
 	def loadRoster(self):
-		# load roster widget
+		"""
+		Loads roster widget.
+		"""
 		layout=QtGui.QHBoxLayout(self.ui.rosterWidget)
 		layout.setMargin(0)
 		layout.setSpacing(0)
-		#self.ui.roster=widgets.rosterWidget.rosterWidget(self.ui.rosterWidget,self)
 		self.scroll=scrollBar(self.ui.rosterWidget)
 		self.scroll.setWidgetResizable (True)
 		self.ui.roster=widgets.rosterLiveWidget.rosterWidget(self,self)
 		self.scroll.setWidget(self.ui.roster)
-		#self.scroll.palette().setColor(QtGui.QPalette.Window,QtGui.QColor(255,255,255))
-		#self.palette().color(QtGui.QPalette.Base)
 		layout.addWidget(self.scroll)
 
 	def _connected(self):
+		"""
+		Shows roster, changes tray icon, enable menu items etc... Called by Pyxl when we are connected.
+		"""
 		print 'connected in main'
 		self.ui.roster.reskin()
 		self.ui.actionAdd_Contact.setEnabled(True)
@@ -2634,22 +2557,32 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.actionService_Discovery.setEnabled(True)
 		self.ui.selfName.setText("<h3>"+unicode(self.client.jid.userhost()).split("@")[0]+"</h3>")
 		self.client.getVCard(unicode(self.client.jid.userhost()))
-# 		self.ui.rosterStackedWidget.setCurrentIndex(1)
-		#self.ui.statusButton.setText(unicode(self.status["online"]))
-		#self.ui.statusButton.setIcon(self.getIcon("online",size="16x16"))
-		#self.ui.statusButton.show()
 		self.ui.showOffline.show()
 		self.tray.showMessage(self.tr("Jabbim"),self.tr("Jabbim is ready! You are connected! :) "))
 		self.tray.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 		print 'end connected in main'
+
 	def disconnect(self):
+		"""
+		Stops reactor
+		"""
 		#if self.client!=None:
 		reactor.stop2()
 
-	#def keyPressEvent(self,event):
-		#return self.ui.roster.event(event)
-
 	def getAvatar(self,pixmap,size="auto",frame=False,status=None):
+		"""
+		Returns avatar of contact.
+		@type pixmap: unicode or QtGui.QIcon or QtGui.QPixmap
+		@param pixmap: unicode - Jabber ID of contact with "@" replaced with "%";
+		@type size: unicode
+		@param size: auto, 16x16, 32x32, 64x64, 128x128
+		@type frame: boolean
+		@param frame: True - Frame is painted around the avatar.
+		@type status: unicode or None
+		@param status: String from this list: ["online","chat","away","xa","dnd","offline"]. Status icon will be painted to the corner.
+		@rtype: QtGui.QPixmap
+		@return: avatar
+		"""
 		if not pixmap:
 			return None
 		if isinstance(pixmap,unicode) or isinstance(pixmap,str):
@@ -2719,6 +2652,11 @@ class mainWindow(QtGui.QMainWindow):
 		return result
 
 	def getCurrentTrayIcon(self):
+		"""
+		Returns current tray icon according to show.
+		@rtype: QtGui.QIcon
+		@return: current tray icon
+		"""
 		icon=QtGui.QIcon("images/16x16/apps/jabbim.png")
 		if self.selfStatus!='online':
 			result=icon.pixmap(16,16)
@@ -2731,6 +2669,17 @@ class mainWindow(QtGui.QMainWindow):
 		return QtGui.QIcon(result)
 
 	def getIcon(self,jid=None,typ=None,size="32x32",status=None,usertype=None):
+		"""
+		Returns status icon.
+		@type jid: unicode
+		@param jid: Jabber ID
+		@type size: unicode
+		@param size: 16x16 or 32x32
+		@type status: unicode
+		@param status: String from this list: ["online","chat","away","xa","dnd","offline"]
+		@rtype: QtGui.QIcon
+		@return: status icon
+		"""
 		if size=="22x22":
 			size="32x32"
 		# return status icon
@@ -2770,9 +2719,6 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				icon=QtGui.QIcon(path+"jabber-"+status+".png")
 		return icon
-
-
-
 
 	def newProfile(self,jid,password,savePassword):
 		self.homeDir=self.realHomeDir+"/"+jid+"-profile"
