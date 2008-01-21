@@ -279,6 +279,8 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"),self.paused)
 		self.text=""
 		self.t=False
+		self.bold=False
+
 	def paused(self):
 		try:
 			self.timer.stop()
@@ -289,7 +291,6 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		else:
 			self.timer.start(2000)
 			self.text=unicode(self.toPlainText())
-
 
 		self.t=False
 	
@@ -318,6 +319,10 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			self.main.hindex = self.main.hindex+1
 			self.main.ui.line.setText(self.main.sent[self.main.hindex])
 		else:
+			b=self.fontWeight()==QtGui.QFont.Bold
+			if self.bold!=b:
+				self.bold=b
+				self.parent.ui.boldButton.setChecked(b)
 			QtGui.QTextEdit.keyPressEvent(self,event)
 		if not self.t and not self.composing:
 			self.text=unicode(self.toPlainText())
@@ -436,13 +441,13 @@ class chatWidget(QtGui.QWidget):
 
 	def bold(self,bool):
 		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
-		f=self.ui.line.currentCharFormat()
+		#f=self.ui.line.currentCharFormat()
 		if bool==True:
-			f.setFontWeight(QtGui.QFont.Bold)
+			self.ui.line.setFontWeight(QtGui.QFont.Bold)
 		else:
-			f.setFontWeight(QtGui.QFont.Normal)
-		self.ui.line.textCursor().mergeCharFormat(f)
-		self.ui.line.mergeCurrentCharFormat(f)
+			self.ui.line.setFontWeight(QtGui.QFont.Normal)
+		#self.ui.line.textCursor().mergeCharFormat(f)
+		#self.ui.line.mergeCurrentCharFormat(f)
 		#print bool
 		#font=self.ui.line.currentFont()
 		#font.setBold(bool)
