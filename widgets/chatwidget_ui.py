@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Fri Nov 23 15:22:20 2007
-#      by: PyQt4 UI code generator 4.3
+# Created: Mon Jan 21 15:39:53 2008
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -47,7 +47,7 @@ class Ui_chatwidget(object):
 
         self.selfAvatar = QtGui.QLabel(self.layoutWidget)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(1),QtGui.QSizePolicy.Policy(1))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(0))
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.selfAvatar.sizePolicy().hasHeightForWidth())
@@ -69,8 +69,11 @@ class Ui_chatwidget(object):
         spacerItem = QtGui.QSpacerItem(111,29,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.hboxlayout1.addItem(spacerItem)
 
-        self.boldButton = QtGui.QPushButton(self.layoutWidget)
+        self.boldButton = QtGui.QToolButton(self.layoutWidget)
+        self.boldButton.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.boldButton.setIcon(QtGui.QIcon("images/16x16/actions/format-text-bold.png"))
         self.boldButton.setCheckable(True)
+        self.boldButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         self.boldButton.setObjectName("boldButton")
         self.hboxlayout1.addWidget(self.boldButton)
 
@@ -107,6 +110,7 @@ class Ui_chatwidget(object):
         self.vboxlayout1.addWidget(self.label)
 
         self.chatstate = QtGui.QLabel(self.layoutWidget1)
+        self.chatstate.setAlignment(QtCore.Qt.AlignCenter)
         self.chatstate.setObjectName("chatstate")
         self.vboxlayout1.addWidget(self.chatstate)
 
@@ -123,7 +127,7 @@ class Ui_chatwidget(object):
 
     def retranslateUi(self, chatwidget):
         chatwidget.setWindowTitle(QtGui.QApplication.translate("chatwidget", "Form", None, QtGui.QApplication.UnicodeUTF8))
-        self.boldButton.setText(QtGui.QApplication.translate("chatwidget", "bold", None, QtGui.QApplication.UnicodeUTF8))
+        self.boldButton.setText(QtGui.QApplication.translate("chatwidget", "Bold", None, QtGui.QApplication.UnicodeUTF8))
         self.smileys.setText(QtGui.QApplication.translate("chatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.sendButton.setText(QtGui.QApplication.translate("chatwidget", "&Send", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("chatwidget", "name", None, QtGui.QApplication.UnicodeUTF8))

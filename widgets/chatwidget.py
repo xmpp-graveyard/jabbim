@@ -366,8 +366,8 @@ class chatWidget(QtGui.QWidget):
 			QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("textChanged ()"),self.lines)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
-		QtCore.QObject.connect(self.ui.boldButton, QtCore.SIGNAL("clicked (bool)"),self.bold)
-		self.ui.textEdit.setAcceptRichText(True)
+		QtCore.QObject.connect(self.ui.boldButton, QtCore.SIGNAL("toggled (bool)"),self.bold)
+		self.ui.textEdit.setAcceptRichText(False)
 		self.init=""
 		if self.main.skin.has_key("on_init"):
 			self.init=self.main.skin["on_init"]
@@ -407,7 +407,7 @@ class chatWidget(QtGui.QWidget):
 		else:
 			pixmap=QtGui.QPixmap(f).scaledToWidth(32)
 			self.selfHeight=int(pixmap.height())
-		self.xhtml=False
+		self.xhtml=True
 		if not self.xhtml:
 			self.ui.boldButton.hide()
 
@@ -434,14 +434,19 @@ class chatWidget(QtGui.QWidget):
 		else:
 			self.ui.selfAvatar.hide()
 
-
 	def bold(self,bool):
-		print bool
+		self.ui.line.setFocus(QtCore.Qt.ShortcutFocusReason)
+		f=self.ui.line.currentCharFormat()
 		if bool==True:
-			self.ui.line.setFontWeight(QtGui.QFont.Bold)
+			f.setFontWeight(QtGui.QFont.Bold)
 		else:
-			self.ui.line.setFontWeight(QtGui.QFont.Normal)
-
+			f.setFontWeight(QtGui.QFont.Normal)
+		self.ui.line.textCursor().mergeCharFormat(f)
+		self.ui.line.mergeCurrentCharFormat(f)
+		#print bool
+		#font=self.ui.line.currentFont()
+		#font.setBold(bool)
+		#self.ui.line.setCurrentFont(font)
 	#def lines(self):
 		#if self.ui.line.verticalScrollBar().isVisible():
 			#self.ui.line.setMaximumHeight(int(self.ui.line.maximumHeight())+int(self.ui.line.currentFont().pointSize())+10)
@@ -638,20 +643,28 @@ class chatWidget(QtGui.QWidget):
 				b=b[0]
 
 				text=b.toxml()
-				text=unicode(text,'utf-8')
-				self.main.client.sendMessage(unicode(self.jid),xhtml=text,composing="active")
+				xhtml=unicode(text,'utf-8')
+				text=unicode(self.ui.line.toPlainText())
+				#text=unicode(text, 'utf-8')
+				text=unescape(text)
+				self.main.client.sendMessage(unicode(self.jid),text,xhtml=xhtml,composing="active")
+				message=xhtml.replace("&quot;",'"')
+				file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
+				if not os.path.isfile(file):
+					file="images/32x32/apps/jabbim.png"
+				message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",message).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 			else:
 				self.main.client.sendMessage(unicode(self.jid),text,composing="active")
-			text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
-			text=utils.replace_url(text)
-			text=text.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
-			file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
-			if not os.path.isfile(file):
-				file="images/32x32/apps/jabbim.png"
-			if unicode(text).startswith("/me"):
-				message=self.main.skin["my_me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text[3:]).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
-			else:
-				message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+				text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
+				text=utils.replace_url(text)
+				text=text.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
+				file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
+				if not os.path.isfile(file):
+					file="images/32x32/apps/jabbim.png"
+				if unicode(text).startswith("/me"):
+					message=self.main.skin["my_me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text[3:]).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+				else:
+					message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 			
 			self.textEditWrite(message)
 			self.sent.append(text)
