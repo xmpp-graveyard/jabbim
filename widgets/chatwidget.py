@@ -612,6 +612,7 @@ class chatWidget(QtGui.QWidget):
 		for k,v in self.smileys.iteritems():
 			text=text.replace(" "+k,'&nbsp;<img src="'+v+'"/>')
 			text=text.replace("&nbsp;"+k,'&nbsp;<img src="'+v+'"/>')
+			text=text.replace(">"+k,'><img src="'+v+'"/>')
 		# insert text to the self.ui.textEdit
 		cursor.insertFragment(QtGui.QTextDocumentFragment.fromHtml(text))
 		cursor.endEditBlock()
