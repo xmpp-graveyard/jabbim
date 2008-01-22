@@ -31,6 +31,9 @@ from twisted.words.protocols.jabber import jid as jidT
 import time
 from include import utils
 class flowLayout(QtGui.QLayout):
+	"""
+	Flow layout from Qt4 examples. Used for plugins buttons.
+	"""
 	def __init__(self, parent=None, margin=0, spacing=-1):
 		QtGui.QLayout.__init__(self, parent)
 
@@ -102,6 +105,9 @@ class flowLayout(QtGui.QLayout):
 		return y + lineHeight - rect.y()
 
 class textView(QtGui.QTextEdit):
+	"""
+	Text view for chat conversation.
+	"""
 	def __init__(self,main,parent):
 		QtGui.QTextEdit.__init__(self,parent)
 		self.parent=main
@@ -115,7 +121,6 @@ class textView(QtGui.QTextEdit):
 		self.setWordWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
 
 	def dragEnterEvent(self, event):
-		#log.msg('DRAG ENTER')
 		if event.mimeData().hasText():
 			if self.main.getJid(unicode(event.mimeData().text())):
 				event.acceptProposedAction()
@@ -125,17 +130,22 @@ class textView(QtGui.QTextEdit):
 			event.ignore()
 
 	def dragMoveEvent(self, event):
-		#log.msg('DRAG MOVE')
 		event.acceptProposedAction()
 
 	def dropEvent(self, event):
+		"""
+		Called when something is dropped to this widget.
+		If there is JID dropped, new MUC is created and the jid is invited to the room.
+		"""
 		if event.mimeData().hasText():
+			# test if it is JID
 			jid2=self.main.getJid(unicode(event.mimeData().text()))
 			if not jid2:
 				event.ignore()
 				return
 
-			room=str(int(time.time()))
+			room=str(int(time.time())) # define room name
+			# find server when we can host the room
 			mucjid = None
 			for jid, node in self.main.client.disco.iteritems():
 				if not node[None].has_key('identities'):
@@ -147,25 +157,25 @@ class textView(QtGui.QTextEdit):
 						break
 				if mucjid:
 					break
-			room+="@"+mucjid
+			room+="@"+mucjid # room jabber id
 			
-			#if self.main.client.roster['users'].has_key(jid2.userhost()):
-				#name=unicode(self.main.client.roster['users'][jid2.userhost()].name)
-			#else:
-			name=self.parent.parent.tabName
-			rmIndex=int(self.main.chat.ui.chatTab.currentIndex())
-			#self.main.chat.removeTab()
+			name=self.parent.parent.tabName # get name of tab where is this widget showed
+			rmIndex=int(self.main.chat.ui.chatTab.currentIndex()) # get index of this tab
+			# join to the room and send invitation
 			if self.main.chat.addGroupChatTab(room,self.main.client.jid.user,name=name):
 				tab,index=self.main.chat.findTab(room)
 				tab.chat.invitation=[unicode(jid2.full()),unicode(self.parent.jid)]
 				self.main.client.joinGC(room, self.main.client.jid.user)
-			
+			# remove old user2user conversation tab
 			self.main.chat.removeTab(rmIndex)
 			event.acceptProposedAction()
 		else:
 			event.ignore()
 		
 	def mouseMoveEvent(self,event):
+		"""
+		Changes mouse pointer if it is above link.
+		"""
 		anchor = self.anchorAt(event.pos())
 		if len(anchor)!=0:
 			self.viewport().setCursor(QtCore.Qt.PointingHandCursor)
@@ -174,13 +184,19 @@ class textView(QtGui.QTextEdit):
 		return QtGui.QTextEdit.mouseMoveEvent(self,event)
 
 	def mousePressEvent(self,event):
+		"""
+		Opens link under mouse pointer.
+		"""
 		anchor = self.anchorAt(event.pos())
 		if event.button()==QtCore.Qt.LeftButton:
 			if len(anchor)!=0:
 				QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
 		return QtGui.QTextEdit.mousePressEvent(self,event)
 	
-	def createMimeDataFromSelection (self):
+	def createMimeDataFromSelection(self):
+		"""
+		Creates data for clipboard from selected text.
+		"""
 		text=unicode(self.textCursor().selection().toHtml())
 		#print text
 		a=parseString(text)
@@ -223,22 +239,11 @@ class textView(QtGui.QTextEdit):
 		self.data[-1].setText(unicode(text).replace("&gt;",">").replace("&lt;","<").replace("&amp;","&").replace("&quot;","\""))
 		return self.data[-1]
 
-class TextIconHandler(QtCore.QObject):
-	def intrinsicSize(self,doc,posInDocument,format):
-		charFormat = format.toCharFormat()
-		return QSizeF(22,22)
-	
-	def drawObject(self,painter, rect, doc, posInDocument, format):
-		charFormat = format.toCharFormat()
-		pixmap = QtGui.QPixmap("images/16x16/emotes/biggrin.png")
-		painter.drawPixmap(rect, pixmap, pixmap.rect())
-
 class lineEditWidget(QtGui.QTextEdit):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QTextEdit.__init__,(self,parent))
 		self.main=main
 		self.parent=parent
-		#self.setMaximumSize(QtCore.QSize(16777215,30))
 		self.setObjectName("line")
 	
 	def keyPressEvent(self,event):
@@ -268,14 +273,16 @@ class lineEditWidget(QtGui.QTextEdit):
 					self.setTextCursor(cur)
 
 class normalLineEditWidget(QtGui.QTextEdit):
+	"""
+	QTextEdit widget for user input.
+	"""
 	def __init__(self,main,parent=None):
 		apply(QtGui.QTextEdit.__init__,(self,parent))
-		self.main=main
-		self.parent=parent
-		#self.setMaximumSize(QtCore.QSize(16777215,30))
+		self.main=main #: MainWindow pointer
+		self.parent=parent #: parent
 		self.setObjectName("line")
-		self.composing=False
-		self.timer=QtCore.QTimer()
+		self.composing=False #: True if user is typing
+		self.timer=QtCore.QTimer() # timer to determine if user paused typing
 		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"),self.paused)
 		self.text=""
 		self.t=False
@@ -284,13 +291,18 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.underline=False
 
 	def paused(self):
+		"""
+		Detects if user stops typing and sends 'paused' message if user stops.
+		"""
 		try:
 			self.timer.stop()
 		except:pass
 		if self.text==unicode(self.toPlainText()):
+			# text from previous loop is the same as currently typed text => user stops typing
 			self.main.main.client.sendMessage(self.main.jid, "",composing="paused")
 			self.composing=False
 		else:
+			# text from previous loop is diffrent from currently typed text => user is typing
 			self.timer.start(2000)
 			self.text=unicode(self.toPlainText())
 
@@ -298,6 +310,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 	
 	def keyPressEvent(self,event):
 		if not self.composing:
+			# user starts typing
 			self.main.main.client.sendMessage(self.main.jid, "",composing="composing")
 		key=event.key()
 		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier):
@@ -313,7 +326,6 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			else:
 				return QtGui.QTextEdit.keyPressEvent(self,event)
 		elif key == QtCore.Qt.Key_Up and  self.main.hindex > 0 and (event.modifiers() & QtCore.Qt.ControlModifier): 
-
 			self.main.hindex = self.main.hindex-1
 			self.main.ui.line.setText(self.main.sent[self.main.hindex])
 		elif key == QtCore.Qt.Key_Down and  self.main.hindex < len(self.main.sent) and (event.modifiers() & QtCore.Qt.ControlModifier): 
@@ -321,6 +333,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			self.main.hindex = self.main.hindex+1
 			self.main.ui.line.setText(self.main.sent[self.main.hindex])
 		else:
+			# detect format of current character
 			b=self.fontWeight()==QtGui.QFont.Bold
 			if self.bold!=b:
 				self.bold=b
@@ -334,8 +347,10 @@ class normalLineEditWidget(QtGui.QTextEdit):
 				self.underline=b
 				self.parent.ui.underlineButton.setChecked(b)
 
-			#if
 			QtGui.QTextEdit.keyPressEvent(self,event)
+
+		# user starts composing so we have to start checking if he doesn't stop
+		# we have to start timer only once, so there is some type of locker self.t
 		if not self.t and not self.composing:
 			self.text=unicode(self.toPlainText())
 			self.t=True
@@ -344,11 +359,17 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			self.composing=True
 
 class frame(QtGui.QFrame):
+	"""
+	QFrame for emoticons.
+	"""
 	def __init__(self,main,parent=None):
 		QtGui.QFrame.__init__(self,parent)
 		self.main=main
 
 	def hideEvent(self,event):
+		"""
+		Uncheck Emoticons button in ChatWidget
+		"""
 		self.main.ui.smileys.setChecked(False)
 
 class chatWidget(QtGui.QWidget):
@@ -436,21 +457,21 @@ class chatWidget(QtGui.QWidget):
 			self.ui.italicButton.hide()
 			self.ui.underlineButton.hide()
 
-
+		# plugins buttons
 		self.flowLayout = flowLayout()
-		
 		for key,value in self.main.plugins.iteritems():
 			if value['module']:
 				self.main.runPluginCommand(value['module'].buildChatWidget,[unicode(jidT.JID(self.jid).userhost()),self.flowLayout,self])
 		
+		# sendFile buttons
 		self.ui.sendFile=QtGui.QToolButton()
 		self.ui.sendFile.setIconSize(QtCore.QSize(16,16))
 		self.ui.sendFile.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
 		self.ui.sendFile.setToolTip(self.tr("Send file"))
 		self.flowLayout.addWidget(self.ui.sendFile)
-		
-		self.ui.pluginWidget.setLayout(self.flowLayout)
 		QtCore.QObject.connect(self.ui.sendFile, QtCore.SIGNAL("clicked ()"),self.sendFiles)
+
+		self.ui.pluginWidget.setLayout(self.flowLayout)
 
 		if self.main.selfAvatar:
 			result=self.main.getAvatar(self.main.selfAvatar,size="64x64",frame=True)
@@ -460,44 +481,39 @@ class chatWidget(QtGui.QWidget):
 			self.ui.selfAvatar.hide()
 
 	def italic(self,bool):
+		"""
+		Sets italic font according to bool.
+		@type bool: boolean
+		@param bool: True - italic font
+		"""
 		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
 		self.ui.line.setFontItalic(bool)
 
 	def underline(self,bool):
+		"""
+		Sets underline font according to bool.
+		@type bool: boolean
+		@param bool: True - underline font
+		"""
 		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
 		self.ui.line.setFontUnderline(bool)
 
-
 	def bold(self,bool):
+		"""
+		Sets bold font according to bool.
+		@type bool: boolean
+		@param bool: True - bold font
+		"""
 		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
-		#f=self.ui.line.currentCharFormat()
 		if bool==True:
 			self.ui.line.setFontWeight(QtGui.QFont.Bold)
 		else:
 			self.ui.line.setFontWeight(QtGui.QFont.Normal)
-		#self.ui.line.textCursor().mergeCharFormat(f)
-		#self.ui.line.mergeCurrentCharFormat(f)
-		#print bool
-		#font=self.ui.line.currentFont()
-		#font.setBold(bool)
-		#self.ui.line.setCurrentFont(font)
-	#def lines(self):
-		#if self.ui.line.verticalScrollBar().isVisible():
-			#self.ui.line.setMaximumHeight(int(self.ui.line.maximumHeight())+int(self.ui.line.currentFont().pointSize())+10)
-
-	#def paintEvent(self,event):
-		## paintEvent handler
-		#if self.pixmap!=None:
-			#viewport=self
-			#painter=QtGui.QPainter(viewport)
-			#for x in range(int(int(viewport.width())//self.pixmap.width())+1):
-				#for y in range(int(int(viewport.height())/self.pixmap.height())+1):
-					#painter.drawPixmap(x*int(self.pixmap.width()),y*self.pixmap.height(),self.pixmap)
-		#QtGui.QWidget.paintEvent(self,event)
 
 	def sendFiles(self):
-		#jid=action.data()
-		#jid=str(jid.toString())
+		"""
+		Shows filetransfer dialog and sends files to user who chats with us.
+		"""
 		file=QtGui.QFileDialog.getOpenFileNames(self,"Choose file")
 		file=list(file)
 		if len(file)!=0:
@@ -505,24 +521,31 @@ class chatWidget(QtGui.QWidget):
 			for f in file:
 				new.append(unicode(f))
 			file=new
+			# show filetransfer dialog and send files
 			self.dialog=filetransfer.filetransferDialog(self.main,file,self.jid)
 			self.dialog.show()
 
 	def loadSmileys(self):
-		# loads smileys.conf and makes buttons
+		"""
+		Loads emoticons pack according to self.main.config['emoticons'] and makes
+		widget for choosing emoticons
+		"""
+		# load emoticons pack
 		smileys=ConfigObj("emoticons/"+self.main.config['emoticons'],encoding='UTF8')
 		src='emoticons/'
 		if len(smileys)==0:
 			smileys=ConfigObj(self.main.realHomeDir+"/emoticons/"+self.main.config['emoticons'],encoding='UTF8')
 			src=self.main.realHomeDir+'/emoticons/'
-
 		if len(smileys)==0:
 			# emotions pack doesn't exist
 			return
 
-		self.smileys={}
+		# load images
+		self.smileys={} #: images for emoticons. for example {":-)":"emoticons/default/smile.png"}
 		for k,v in smileys['emoticons'].iteritems():
 			self.smileys[k.replace("<","&lt;").replace(">","&gt;")]=src+os.path.dirname(self.main.config['emoticons'])+"/"+v
+		
+		# make QFrame for images preview
 		self.s=frame(self,self)
 		self.s.setWindowFlags(QtCore.Qt.Popup)
 		self.s.hide()
@@ -532,6 +555,7 @@ class chatWidget(QtGui.QWidget):
 		added=[]
 		x=0
 		y=0
+		# make QToolButton for every image, add it to layout of self.s, and connnect to self.addEmotion
 		for k,v in smileys['emoticons'].iteritems():
 			if added.count(v)==0:
 				added.append(v)
@@ -548,6 +572,9 @@ class chatWidget(QtGui.QWidget):
 					x+=1
 	
 	def smileysClicked(self,bool):
+		"""
+		Shows self.s (QFrame with emoticons).
+		"""
 		pos=self.ui.smileys.mapToGlobal(QtCore.QPoint(0,0))
 		x=pos.x()
 		y=pos.y()
@@ -556,46 +583,54 @@ class chatWidget(QtGui.QWidget):
 			self.s.setVisible(False)
 		else:
 			self.s.setVisible(True)
-
 	
 	def textEditWrite(self,text,history=False):
+		"""
+		Appends formated message to the chat view (self.ui.textEdit).
+		@type text: unicode
+		@param text: formated message
+		@type history: boolean
+		@param history: True if text is history message (has delay). In this case self.first will not be updated.
+		"""
+		# update information about first message of this chat
 		if not history:
 			if self.first==True:
 				self.first=False
 			elif self.first==None:
 				self.first=True
-		self.ui.textEdit.setUpdatesEnabled(False)
+		self.ui.textEdit.setUpdatesEnabled(False) # disable updates because of performance
+		# move text cursor to the end of document
 		cursor=QtGui.QTextCursor(self.ui.textEdit.document())
 		cursor.beginEditBlock()
 		cursor.movePosition(QtGui.QTextCursor.End)
 		
+		# if scrollbar is in the end, we have to scroll it to the end as well when we finish
 		toEnd=False
 		if self.ui.textEdit.verticalScrollBar().value()==self.ui.textEdit.verticalScrollBar().maximum():
 			toEnd=True
+		# replace emoticons by images
 		for k,v in self.smileys.iteritems():
 			text=text.replace(" "+k,'&nbsp;<img src="'+v+'"/>')
 			text=text.replace("&nbsp;"+k,'&nbsp;<img src="'+v+'"/>')
-			#if text[:len(v)]==k:
-				#text='<img src="images/16x16/emotes/'+v+'"/>'+text[len(v):]
-		#cursor.insertHtml(text)
+		# insert text to the self.ui.textEdit
 		cursor.insertFragment(QtGui.QTextDocumentFragment.fromHtml(text))
-		#format = cursor.charFormat()
-		#icon=TextIconFormat('s','s')
-		#cursor.insertText(QtCore.QString(QtCore.QChar.ObjectReplacementCharacter), icon)
-		#cursor.setCharFormat(format)
 		cursor.endEditBlock()
 		if toEnd:
+			# scroll to the end
 			self.ui.textEdit.verticalScrollBar().setValue(self.ui.textEdit.verticalScrollBar().maximum())
 		self.ui.textEdit.setUpdatesEnabled(True)
 		
 
 	
 	def addEmoticon(self,action):
-		# add emoticon to the self.ui.line
+		"""
+		Insert emoticon according to action.objectName() to the self.ui.line. Called when user choose one of emoticons.
+		@type action: QAction
+		@param action: emotion QAction
+		"""
 		data=action.data()
 		data=data.toString()
 		if self.main.config['chatMode']=="normal":
-			#self.ui.line.append(data)
 			cur=self.ui.line.textCursor()
 			cur.insertText(" "+data)
 			self.ui.line.setTextCursor(cur)
@@ -608,8 +643,12 @@ class chatWidget(QtGui.QWidget):
 		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 	
 	def sendButtonClicked(self):
-		# sends message
+		"""
+		Sends message writed in self.ui.line or call command if message starts with "/".
+		"""
+		
 		if len(unicode(self.ui.line.toPlainText()))!=0:
+			# execute commands if message starts with "/"
 			services=unicode(self.ui.line.toPlainText())
 			if services.startswith("/google"):
 				anchor="http://www.google.com/search?q="+services.replace("/google ","")
@@ -627,67 +666,48 @@ class chatWidget(QtGui.QWidget):
 					cmd = services
 					args = []
 				cmd = cmd[1:]
+				# publish onCommnad event for events subscribers (mainly plugins)
 				self.main.client.dispatcher.publishEvent("onCommand", cmd, args, self, "chat")
 				self.ui.line.clear()
 				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 				self.ui.line.composing=False
 				return
-
-			if self.main.config['chatMode']=="normal":
-				text=unicode(self.ui.line.toPlainText())
-				#text=unicode(text, 'utf-8')
-				text=unescape(text)
-			else:
-				text=self.ui.line.toHtml()
-				a=parseString(text)
-				for el in a.getElementsByTagName('img'):
-					path=el.attributes['src'].split('/')[-1]
-					for k,v in self.smileys.iteritems():
-						if v==path:
-							path=k
-					newnode = parseString("<div> "+path+"</div>").documentElement
-					el.parentNode.replaceChild(newnode,el)
-				for el in a.getElementsByTagName('br'):
-					newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
-					el.parentNode.replaceChild(newnode,el)
-				b=a.getElementsByTagName('body')
-				c=parseString(b[0].toxml())
-				text=gatherTextNodes(c)
-				text=unicode(text, 'utf-8')
-				text=text.replace(unichr(2028),"\n")
-				text=unescape(text)
+			
+			# get plain text message
+			text=unicode(self.ui.line.toPlainText())
+			text=unescape(text)
 			if self.xhtml:
-				text=self.ui.line.toHtml()
-				#text=text.replace(unichr(0),"")
-				#print text
-				a=parseString(unicode(text))
+				# get message in Qt html format
+				xhtml=self.ui.line.toHtml()
+				
+				# remove things which are not allowed by XEP or are unnecessarily
+				a=parseString(unicode(xhtml))
 				for el in a.getElementsByTagName('p'):
 					if el.hasAttribute("style"):
 						el.removeAttribute("style")
 				for el in a.getElementsByTagName('body'):
 					if el.hasAttribute("style"):
 						el.removeAttribute("style")
-				#for el in a.getElementsByTagName('span'):
-					#if el.hasAttribute("style"):
-						#el.removeAttribute("style")
-
-
-
 				b=a.getElementsByTagName('body')
 				b=b[0]
-				text=b.toxml()
-				xhtml=unicode(text,'utf-8').replace("<body>","").replace("</body>","").replace("<p>","<span>").replace("</p>","</span>")
-				text=unicode(self.ui.line.toPlainText())
-				#text=unicode(text, 'utf-8')
-				text=unescape(text)
+				xhtml=b.toxml()
+				# TODO: we must replace only first <body> and <p>... not tags in whole message
+				xhtml=unicode(xhtml,'utf-8').replace("<body>","").replace("</body>","").replace("<p>","<span>").replace("</p>","</span>")
+				
+				# send message
 				self.main.client.sendMessage(unicode(self.jid),text,xhtml=xhtml,composing="active")
+				
+				# prepare message for showing in GUI
 				message=xhtml.replace("&quot;",'"')
 				file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
 				if not os.path.isfile(file):
 					file="images/32x32/apps/jabbim.png"
 				message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",message).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 			else:
+				# send message
 				self.main.client.sendMessage(unicode(self.jid),text,composing="active")
+				
+				# prepare message for showing in GUI
 				text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
 				text=utils.replace_url(text)
 				text=text.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
@@ -698,31 +718,16 @@ class chatWidget(QtGui.QWidget):
 					message=self.main.skin["my_me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text[3:]).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 				else:
 					message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
-			
+			# show message
 			self.textEditWrite(message)
+			# add message to 'sent messages history'
 			self.sent.append(text)
 			self.hindex = len(self.sent)
+			
 			self.ui.line.clear()
 			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 			self.ui.line.composing=False
+			# depracted
 			if self.main.chat.active==False:
 				self.main.client.dispatcher.publishEvent('onActivity')
 				self.main.chat.active=True
-
-	def tabPressed(self):
-		# nick completion
-		text=unicode(self.ui.line.text()).lower()
-		if len(text)==0:
-			return
-		text=text[0]
-		repeat=False
-		for i in range(self.ui.listWidget.count()):
-			if unicode(self.ui.listWidget.item(i).text()).lower()[:len(text)]==text and i>self.name_id:
-				self.ui.line.setText(self.ui.listWidget.item(i).text()+": ")
-				self.name_id=i
-				return
-			if unicode(self.ui.listWidget.item(i).text()).lower()[:len(text)]==text:
-				repeat=True
-		self.name_id=-1
-		if repeat==True:
-			self.tabPressed()
