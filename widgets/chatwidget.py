@@ -555,6 +555,12 @@ class chatWidget(QtGui.QWidget):
 			colorIcon.fill(self.defaultFormat.foreground().color())
 			self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
 
+	def clearLine(self):
+		format=self.ui.line.currentCharFormat()
+		self.ui.line.clear()
+		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
+		self.ui.line.setCurrentCharFormat(format)
+		
 
 	def italic(self,bool):
 		"""
@@ -801,8 +807,9 @@ class chatWidget(QtGui.QWidget):
 			self.sent.append(text)
 			self.hindex = len(self.sent)
 			
-			self.ui.line.clear()
-			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+			#self.ui.line.clear()
+			#self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+			self.clearLine()
 			self.ui.line.composing=False
 			# depracted
 			if self.main.chat.active==False:
