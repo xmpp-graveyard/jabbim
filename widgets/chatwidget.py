@@ -458,9 +458,9 @@ class chatWidget(QtGui.QWidget):
 		
 		# allow xhmtl if user supports it
 		jidt=jidT.JID(self.jid)
-		if self.main.client.roster['users'].has_key(jidt.userhost()):
+		try:
 			self.xhtml=self.main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/xhtml-im') #: True if user supports xhtml, otherwise False
-		else:
+		except:
 			self.xhtml=False
 		if not self.xhtml:
 			self.ui.boldButton.hide()
