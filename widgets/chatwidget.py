@@ -358,77 +358,83 @@ class chatWidget(QtGui.QWidget):
 		self.ui.setupUi(self)
 		self.main=main
 		self.parent=parent
+
+		# chat view widget (self.ui.textEdit)
 		l=QtGui.QHBoxLayout(self.ui.viewWidget)
 		l.setMargin(0)
 		l.setSpacing(0)
 		self.ui.textEdit=textView(self,self.ui.viewWidget)
 		l.addWidget(self.ui.textEdit)
-		
+
+		# chat editor widget (self.ui.line)
 		layout=QtGui.QHBoxLayout(self.ui.lineWidget)
 		layout.setMargin(0)
 		layout.setSpacing(0)
-		if self.main.config['chatMode']=="normal":
-			self.ui.line=normalLineEditWidget(self,self)
-		else:
-			self.ui.line=lineEditWidget(self,self)
+		self.ui.line=normalLineEditWidget(self,self)
 		self.ui.line.setAcceptRichText(False)
-		#handler=TextIconHandler()
-		#print dir(self.ui.textEdit.document().documentLayout())
-		#self.ui.textEdit.document().documentLayout().registerHandler(0x1000, handler)
 		layout.addWidget(self.ui.line)
-		self.first=None
-		#self.ui.gridlayout.addWidget(self.ui.line,2,0,1,1)
+
+		self.first=None #: True if first message arrived; False if arrived more than one message. Otherwise None.
+		self.jid=jid #: users JID
+
+		# signals
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
-		if self.main.config['chatMode']=="normal":
-			QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
-		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("textChanged ()"),self.lines)
+		QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 		QtCore.QObject.connect(self.ui.boldButton, QtCore.SIGNAL("toggled (bool)"),self.bold)
 		QtCore.QObject.connect(self.ui.italicButton, QtCore.SIGNAL("toggled (bool)"),self.italic)
 		QtCore.QObject.connect(self.ui.underlineButton, QtCore.SIGNAL("toggled (bool)"),self.underline)
+		
 		self.ui.textEdit.setAcceptRichText(False)
+		# save init part from self.main.skin to the textEdit
 		self.init=""
 		if self.main.skin.has_key("on_init"):
 			self.init=self.main.skin["on_init"]
 		self.ui.textEdit.setHtml("<br/>"+self.init)
-		#short=QtGui.QShortcut(QtCore.Qt.Key_Return,self.ui.line)
-		#QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.sendButtonClicked)
-		self.loadSmileys()
-		self.jid=jid
-		self.name_id=-1 # for tabPressed
-		#palette=self.palette()
-		#palette,images=loadPalette(palette,self.main.palette["chatwidget"])
-		#self.setPalette(palette)
-		#self.pixmap=images['bgImage']
-		#print self.ui.line.currentFont().pointSize()
-		#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
-		#self.ui.lineWidget.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
+		
+		self.loadSmileys() # load emoticons
+		
+		# set splitters sizes
 		self.ui.splitter.setSizes(list(self.main.config['chatSplitterSizes']))
-		self.ui.avatar.setMaximumWidth(128)
 		self.ui.splitter_2.setSizes(list(self.main.config['chatSplitter2Sizes']))
 		widget=self.ui.splitter_2.widget(1)
 		widget.setMaximumWidth(128)
+		
+		# Maximum width of avatar Widget
+		self.ui.avatar.setMaximumWidth(128)
+		
 		self.sent = []
 		self.hindex = 0
-		self.unread=0
-		self.file=self.main.homeDir+'/avatars/'+unicode(jidT.JID(jid).userhost())
-		#<img src="[avatar]" width="32" height="32"/>
-		self.avatarHeight=32
+		self.unread=0 #: number of unread messages
+		
+		# get users avatar
+		self.file=self.main.homeDir+'/avatars/'+unicode(jidT.JID(jid).userhost()) #: path to users avatar
+		self.avatarHeight=32 #: avatars height
 		if not os.path.isfile(self.file):
+			# use default avatar if users avatar doesn't exist
 			self.file="images/32x32/apps/jabbim.png"
 		else:
+			# change size of users avatar
+			# TODO: size should be changed by skin...
 			pixmap=QtGui.QPixmap(self.file).scaledToWidth(32)
 			self.avatarHeight=int(pixmap.height())
-		self.selfHeight=32
+
+		# get self avatar
+		self.selfHeight=32 #: height of self avatar
 		f=self.main.homeDir+'/avatars/'+self.main.client.jid.userhost()
 		if not os.path.isfile(f):
 			self.file="images/32x32/apps/jabbim.png"
 		else:
 			pixmap=QtGui.QPixmap(f).scaledToWidth(32)
 			self.selfHeight=int(pixmap.height())
-		self.xhtml=True
+		
+		# allow xhmtl if user supports it
+		jidt=jidT.JID(self.jid)
+		self.xhtml=self.main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/xhtml-im') #: True if user supports xhtml, otherwise False
 		if not self.xhtml:
 			self.ui.boldButton.hide()
+			self.ui.italicButton.hide()
+			self.ui.underlineButton.hide()
 
 
 		self.flowLayout = flowLayout()
@@ -670,7 +676,7 @@ class chatWidget(QtGui.QWidget):
 				b=a.getElementsByTagName('body')
 				b=b[0]
 				text=b.toxml()
-				xhtml=unicode(text,'utf-8').replace("<body>","").replace("</body>","")
+				xhtml=unicode(text,'utf-8').replace("<body>","").replace("</body>","").replace("<p>","<span>").replace("</p>","</span>")
 				text=unicode(self.ui.line.toPlainText())
 				#text=unicode(text, 'utf-8')
 				text=unescape(text)
