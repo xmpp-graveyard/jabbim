@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Mon Jan 21 21:05:30 2008
+# Created: Tue Jan 22 18:49:45 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -92,6 +92,12 @@ class Ui_chatwidget(object):
         self.underlineButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         self.underlineButton.setObjectName("underlineButton")
         self.hboxlayout1.addWidget(self.underlineButton)
+
+        self.colorButton = QtGui.QToolButton(self.layoutWidget)
+        self.colorButton.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.colorButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
+        self.colorButton.setObjectName("colorButton")
+        self.hboxlayout1.addWidget(self.colorButton)
 
         self.line = QtGui.QFrame(self.layoutWidget)
         self.line.setFrameShape(QtGui.QFrame.VLine)

@@ -161,6 +161,16 @@
            </widget>
           </item>
           <item>
+           <widget class="QToolButton" name="colorButton" >
+            <property name="popupMode" >
+             <enum>QToolButton::InstantPopup</enum>
+            </property>
+            <property name="toolButtonStyle" >
+             <enum>Qt::ToolButtonIconOnly</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="Line" name="line" >
             <property name="orientation" >
              <enum>Qt::Vertical</enum>

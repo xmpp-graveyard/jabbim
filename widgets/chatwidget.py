@@ -289,6 +289,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.bold=False
 		self.italic=False
 		self.underline=False
+		self.color=None
 
 	def paused(self):
 		"""
@@ -346,6 +347,12 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			if self.underline!=b:
 				self.underline=b
 				self.parent.ui.underlineButton.setChecked(b)
+			b=self.textColor()
+			if self.color!=b:
+				self.color=b
+				colorIcon=QtGui.QPixmap(16,16)
+				colorIcon.fill(b)
+				self.parent.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
 
 			QtGui.QTextEdit.keyPressEvent(self,event)
 
@@ -459,6 +466,49 @@ class chatWidget(QtGui.QWidget):
 			self.ui.boldButton.hide()
 			self.ui.italicButton.hide()
 			self.ui.underlineButton.hide()
+			self.ui.colorButton.hide()
+		else:
+			self.defaultFormat=self.ui.line.currentCharFormat()
+			colorMenu=QtGui.QMenu(self.ui.colorButton)
+			colorIcon=QtGui.QPixmap(16,16)
+			
+			colorIcon.fill(QtCore.Qt.white)
+			action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('White'))
+			action.setData(QtCore.QVariant("#ffffff"))
+
+			colorIcon.fill(QtCore.Qt.black)
+			action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Black'))
+			action.setData(QtCore.QVariant("#000000"))
+			
+			colorIcon.fill(QtCore.Qt.red)
+			action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Red'))
+			action.setData(QtCore.QVariant("#ff0000"))
+			
+			colorIcon.fill(QtCore.Qt.green)
+			action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Green'))
+			action.setData(QtCore.QVariant("#00ff00"))
+			
+			colorIcon.fill(QtCore.Qt.blue)
+			action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Blue'))
+			action.setData(QtCore.QVariant("#0000ff"))
+
+			colorIcon.fill(QtCore.Qt.magenta)
+			action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Pink'))
+			action.setData(QtCore.QVariant("#ff00ff"))
+
+			colorIcon.fill(QtCore.Qt.yellow)
+			action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Yellow'))
+			action.setData(QtCore.QVariant("#ffff00"))
+
+			colorMenu.addSeparator()
+
+			action=colorMenu.addAction(self.tr('No color'))
+			action.setData(QtCore.QVariant("no"))
+
+			QtCore.QObject.connect(colorMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.color)
+			self.ui.colorButton.setMenu(colorMenu)
+			colorIcon.fill(self.defaultFormat.foreground().color())
+			self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
 
 		# plugins buttons
 		self.flowLayout = flowLayout()
@@ -482,6 +532,29 @@ class chatWidget(QtGui.QWidget):
 			self.ui.selfAvatar.setMaximumWidth(64)
 		else:
 			self.ui.selfAvatar.hide()
+
+	def color(self,action):
+		"""
+		Sets foreground color according to action.data(). Data should be color like #FFFFFF or string "no" for default system color.
+		"""
+		color=unicode(action.data().toString())
+		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
+		if color.startswith("#"):
+			c=QtGui.QColor(color)
+			self.ui.line.setTextColor(c)
+			colorIcon=QtGui.QPixmap(16,16)
+			colorIcon.fill(c)
+			self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
+		else:
+			format=self.defaultFormat
+			format.setFontItalic(self.ui.line.fontItalic())
+			format.setFontUnderline(self.ui.line.fontUnderline())
+			format.setFontWeight(self.ui.line.fontWeight())
+			self.ui.line.setCurrentCharFormat(format)
+			colorIcon=QtGui.QPixmap(16,16)
+			colorIcon.fill(self.defaultFormat.foreground().color())
+			self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
+
 
 	def italic(self,bool):
 		"""
