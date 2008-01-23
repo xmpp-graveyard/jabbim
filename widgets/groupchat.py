@@ -742,7 +742,20 @@ class groupChatWidget(abstractChatWidget):
 			xhtml=b.toxml()
 			# TODO: we must replace only first <body> and <p>... not tags in whole message
 			xhtml=unicode(xhtml,'utf-8').replace("<body>","").replace("</body>","").replace("<p>","<span>").replace("</p>","</span>")
-			
+			#xhtml=utils.replace_url(xhtml)
+			links=[]
+			temp=unicode(xhtml).replace(">","<")
+			for word in temp.split("<"):
+				for w in word.split(' '):
+					if not w in links:
+						if w.find("://")!=-1:
+							links.append(w.strip())
+						elif w.startswith("www."):
+							links.append(w.strip())
+			for link in links:
+				xhtml=xhtml.replace(link,'<a href="'+link+'">'+link+'</a>')
+			print xhtml
+			#return
 			# send message
 			self.main.client.sendMessage(unicode(self.jid),text,'groupchat',xhtml=xhtml,composing="active")
 
