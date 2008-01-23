@@ -240,6 +240,10 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.parent=parent
 		#self.setMaximumSize(QtCore.QSize(16777215,30))
 		self.setObjectName("line")
+		self.bold=False
+		self.italic=False
+		self.underline=False
+		self.color=None
 	
 	def keyPressEvent(self,event):
 		key=event.key()
@@ -266,6 +270,25 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			self.main.hindex = self.main.hindex+1
 			self.main.ui.line.setText(self.main.sent[self.main.hindex])
 		else:
+			# detect format of current character
+			b=self.fontWeight()==QtGui.QFont.Bold
+			if self.bold!=b:
+				self.bold=b
+				self.parent.ui.boldButton.setChecked(b)
+			b=self.fontItalic()
+			if self.italic!=b:
+				self.italic=b
+				self.parent.ui.italicButton.setChecked(b)
+			b=self.fontUnderline()
+			if self.underline!=b:
+				self.underline=b
+				self.parent.ui.underlineButton.setChecked(b)
+			b=self.textColor()
+			if self.color!=b:
+				self.color=b
+				colorIcon=QtGui.QPixmap(16,16)
+				colorIcon.fill(b)
+				self.parent.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
 			return QtGui.QTextEdit.keyPressEvent(self,event)
 
 class groupChatWidget(QtGui.QWidget):
@@ -301,6 +324,54 @@ class groupChatWidget(QtGui.QWidget):
 		self.ui.line.setAcceptRichText(False)
 		layout.addWidget(self.ui.line)
 		self.tabWord=None
+
+		QtCore.QObject.connect(self.ui.boldButton, QtCore.SIGNAL("toggled (bool)"),self.bold)
+		QtCore.QObject.connect(self.ui.italicButton, QtCore.SIGNAL("toggled (bool)"),self.italic)
+		QtCore.QObject.connect(self.ui.underlineButton, QtCore.SIGNAL("toggled (bool)"),self.underline)
+
+		self.defaultFormat=self.ui.line.currentCharFormat()
+		colorMenu=QtGui.QMenu(self.ui.colorButton)
+		colorIcon=QtGui.QPixmap(16,16)
+		
+		colorIcon.fill(QtCore.Qt.white)
+		action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('White'))
+		action.setData(QtCore.QVariant("#ffffff"))
+
+		colorIcon.fill(QtCore.Qt.black)
+		action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Black'))
+		action.setData(QtCore.QVariant("#000000"))
+		
+		colorIcon.fill(QtCore.Qt.red)
+		action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Red'))
+		action.setData(QtCore.QVariant("#ff0000"))
+		
+		colorIcon.fill(QtCore.Qt.green)
+		action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Green'))
+		action.setData(QtCore.QVariant("#00ff00"))
+		
+		colorIcon.fill(QtCore.Qt.blue)
+		action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Blue'))
+		action.setData(QtCore.QVariant("#0000ff"))
+
+		colorIcon.fill(QtCore.Qt.magenta)
+		action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Pink'))
+		action.setData(QtCore.QVariant("#ff00ff"))
+
+		colorIcon.fill(QtCore.Qt.yellow)
+		action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Yellow'))
+		action.setData(QtCore.QVariant("#ffff00"))
+
+		colorMenu.addSeparator()
+
+		action=colorMenu.addAction(self.tr('No color'))
+		action.setData(QtCore.QVariant("no"))
+
+		QtCore.QObject.connect(colorMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.color)
+		self.ui.colorButton.setMenu(colorMenu)
+		colorIcon.fill(self.defaultFormat.foreground().color())
+		self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
+
+
 		#self.buttonGroup=QtGui.QButtonGroup(self.ui.logs)
 		##self.buttonGroup.setExclusive(True)
 		#self.ui.logsLayout=QtGui.QHBoxLayout(self.ui.logs)
@@ -423,6 +494,69 @@ class groupChatWidget(QtGui.QWidget):
 		self.disco_features = []
 		log.msg("REQUESTING ROOM INFO")
 		self._getInfo()
+
+
+
+	def color(self,action):
+		"""
+		Sets foreground color according to action.data(). Data should be color like #FFFFFF or string "no" for default system color.
+		"""
+		color=unicode(action.data().toString())
+		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
+		if color.startswith("#"):
+			c=QtGui.QColor(color)
+			self.ui.line.setTextColor(c)
+			colorIcon=QtGui.QPixmap(16,16)
+			colorIcon.fill(c)
+			self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
+		else:
+			format=self.defaultFormat
+			format.setFontItalic(self.ui.line.fontItalic())
+			format.setFontUnderline(self.ui.line.fontUnderline())
+			format.setFontWeight(self.ui.line.fontWeight())
+			self.ui.line.setCurrentCharFormat(format)
+			colorIcon=QtGui.QPixmap(16,16)
+			colorIcon.fill(self.defaultFormat.foreground().color())
+			self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
+
+	def clearLine(self):
+		format=self.ui.line.currentCharFormat()
+		self.ui.line.clear()
+		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
+		self.ui.line.setCurrentCharFormat(format)
+		
+
+	def italic(self,bool):
+		"""
+		Sets italic font according to bool.
+		@type bool: boolean
+		@param bool: True - italic font
+		"""
+		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
+		self.ui.line.setFontItalic(bool)
+
+	def underline(self,bool):
+		"""
+		Sets underline font according to bool.
+		@type bool: boolean
+		@param bool: True - underline font
+		"""
+		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
+		self.ui.line.setFontUnderline(bool)
+
+	def bold(self,bool):
+		"""
+		Sets bold font according to bool.
+		@type bool: boolean
+		@param bool: True - bold font
+		"""
+		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
+		if bool==True:
+			self.ui.line.setFontWeight(QtGui.QFont.Bold)
+		else:
+			self.ui.line.setFontWeight(QtGui.QFont.Normal)
+
+
 	def _getInfo(self):
 		self.main.client.getDiscoInfo(self.jid, callback=self._infoReceived)
 		#self.editing=False
@@ -1179,7 +1313,28 @@ class groupChatWidget(QtGui.QWidget):
 				text=unicode(text, 'utf-8')
 				text=text.replace(unichr(2028),"\n")
 				text=unescape(text)
-			self.main.client.sendMessage(self.jid, text, 'groupchat')
+
+			# get message in Qt html format
+			xhtml=self.ui.line.toHtml()
+				
+			# remove things which are not allowed by XEP or are unnecessarily
+			a=parseString(unicode(xhtml))
+			for el in a.getElementsByTagName('p'):
+				if el.hasAttribute("style"):
+					el.removeAttribute("style")
+			for el in a.getElementsByTagName('body'):
+				if el.hasAttribute("style"):
+					el.removeAttribute("style")
+			b=a.getElementsByTagName('body')
+			b=b[0]
+			xhtml=b.toxml()
+			# TODO: we must replace only first <body> and <p>... not tags in whole message
+			xhtml=unicode(xhtml,'utf-8').replace("<body>","").replace("</body>","").replace("<p>","<span>").replace("</p>","</span>")
+			
+			# send message
+			self.main.client.sendMessage(unicode(self.jid),text,'groupchat',xhtml=xhtml,composing="active")
+
+			#self.main.client.sendMessage(self.jid, text, 'groupchat')
 			self.sent.append(text)
 			self.hindex = len(self.sent)
 			self.ui.line.clear()
