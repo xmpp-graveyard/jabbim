@@ -348,6 +348,7 @@ class groupChatWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.underlineButton, QtCore.SIGNAL("toggled (bool)"),self.underline)
 
 		self.defaultFormat=self.ui.line.currentCharFormat()
+		self.defaultColor=self.ui.line.textColor()
 		colorMenu=QtGui.QMenu(self.ui.colorButton)
 		colorIcon=QtGui.QPixmap(16,16)
 		
