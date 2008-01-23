@@ -30,105 +30,10 @@ import dataforms
 from twisted.words.protocols.jabber import jid as jidT
 import vcardeditor
 from include import utils
-import filetransfer 
-class flowLayout(QtGui.QLayout):
-	def __init__(self, parent=None, margin=1, spacing=1):
-		QtGui.QLayout.__init__(self, parent)
+import filetransfer
+from abstractchatwidget import abstractChatWidget,abstractTextView
 
-		if parent is not None:
-			self.setMargin(margin)
-		self.setSpacing(spacing)
-
-		self.itemList = []
-
-	def addItem(self, item):
-		self.itemList.append(item)
-
-	def count(self):
-		return len(self.itemList)
-
-	def itemAt(self, index):
-		if index >= 0 and index < len(self.itemList):
-			return self.itemList[index]
-
-	def takeAt(self, index):
-		if index >= 0 and index < len(self.itemList):
-			return self.itemList.pop(index)
-
-	def expandingDirections(self):
-		return QtCore.Qt.Orientations(QtCore.Qt.Orientation(0))
-
-	def hasHeightForWidth(self):
-		return True
-
-	def heightForWidth(self, width):
-		height = self.doLayout(QtCore.QRect(0, 0, width, 0), True)
-		return height
-
-	def setGeometry(self, rect):
-		QtGui.QLayout.setGeometry(self, rect)
-		self.doLayout(rect, False)
-
-	def sizeHint(self):
-		return self.minimumSize()
-
-	def minimumSize(self):
-		size = QtCore.QSize()
-
-		for item in self.itemList:
-			size = size.expandedTo(item.minimumSize())
-
-		size += QtCore.QSize(2 * self.margin(), 2 * self.margin())
-		return size
-
-	def doLayout(self, rect, testOnly):
-		x = rect.x()
-		y = rect.y()
-		lineHeight = 0
-
-		for item in self.itemList:
-			nextX = x + item.sizeHint().width() + self.spacing()
-			if nextX - self.spacing() > rect.right() and lineHeight > 0:
-				x = rect.x()
-				y = y + lineHeight + self.spacing()
-				nextX = x + item.sizeHint().width() + self.spacing()
-				lineHeight = 0
-			#print x,y,item.sizeHint().width(),item.sizeHint().height()
-			if not testOnly:
-				item.setGeometry(QtCore.QRect(QtCore.QPoint(x, y), item.sizeHint()))
-
-			x = nextX
-			lineHeight = max(lineHeight, item.sizeHint().height())
-
-		return y + lineHeight - rect.y()
-
-class textView(QtGui.QTextEdit):
-	def __init__(self,main,parent):
-		QtGui.QTextEdit.__init__(self,parent)
-		self.parent=main
-		self.main=self.parent.main
-		self.setMouseTracking(True)
-		self.setReadOnly(True)
-		self.data=[]
-		self.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
-		self.setAcceptDrops(True)
-		self.setObjectName("chatView")
-		self.setWordWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
-
-	def dragEnterEvent(self, event):
-		#log.msg('DRAG ENTER')
-		if event.mimeData().hasText():
-			if self.main.getJid(unicode(event.mimeData().text())):
-				event.acceptProposedAction()
-			else:
-				event.ignore()
-		else:
-			event.ignore()
-
-	def dragMoveEvent(self, event):
-		#log.msg('DRAG MOVE')
-		event.acceptProposedAction()
-
+class textView(abstractTextView):
 	def dropEvent(self, event):
 		if event.mimeData().hasText():
 			jid=self.main.getJid(unicode(event.mimeData().text()))
@@ -142,282 +47,24 @@ class textView(QtGui.QTextEdit):
 		else:
 			event.ignore()
 
-
-
-	def mouseMoveEvent(self,event):
-		anchor = self.anchorAt(event.pos())
-		if len(anchor)!=0:
-			self.viewport().setCursor(QtCore.Qt.PointingHandCursor)
-		else:
-			self.viewport().setCursor(QtCore.Qt.ArrowCursor)
-		return QtGui.QTextEdit.mouseMoveEvent(self,event)
-
-	def mousePressEvent(self,event):
-		anchor = self.anchorAt(event.pos())
-		if event.button()==QtCore.Qt.LeftButton:
-			if len(anchor)!=0:
-				QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
-		return QtGui.QTextEdit.mousePressEvent(self,event)
-
-	def createMimeDataFromSelection (self):
-		text=unicode(self.textCursor().selection().toHtml())
-		#print text
-		a=parseString(text)
-		for el in a.getElementsByTagName('img'):
-			path=el.attributes['src'].split('/')[-1]
-			for k,v in self.parent.smileys.iteritems():
-				if v==path:
-					path=k
-					newnode = parseString("<div> "+path+"</div>").documentElement
-					el.parentNode.replaceChild(newnode,el)
-					break
-		b=a.getElementsByTagName('body')
-		try:
-			c=parseString(unicode(b[0].toxml(),'utf-8').replace("<!--EndFragment-->","").replace("<!--StartFragment-->",""))
-		except:
-			c=parseString(unicode(b[0].toxml()).replace("<!--EndFragment-->","").replace("<!--StartFragment-->",""))
-		for el in c.getElementsByTagName('br'):
-			#if self.parent.main.skin['spaces_between_lines']=='1':
-				#newnode = parseString("<div> "+unichr(2028)+unichr(2028)+"</div>").documentElement
-			#else:
-			newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
-			el.parentNode.replaceChild(newnode,el)
-		for el in c.getElementsByTagName('table'):
-			newnode = parseString(unicode(el.toxml(),'utf-8')+"<div>"+unichr(2028)+unichr(2028)+"NN</div>").documentElement
-			#print unicode(el.toxml())
-			el.parentNode.replaceChild(newnode,el)
-			
-		text=gatherTextNodes(c)
-		u=False
-		try:
-			text=unicode(text, 'utf-8')
-			u=True
-		except:
-			text=unicode(text)
-		#if u:
-		text=text.replace(unichr(2028),"\n")
-		#print unicode(text)
-
-		self.data.append(QtCore.QMimeData())
-		self.data[-1].setText(unicode(text).replace("&gt;",">").replace("&lt;","<").replace("&amp;","&").replace("&quot;","\""))
-		return self.data[-1]
-
-class lineEditWidget(QtGui.QTextEdit):
-	def __init__(self,main,parent=None):
-		apply(QtGui.QTextEdit.__init__,(self,parent))
-		self.main=main
-		self.parent=parent
-		#self.setMaximumSize(QtCore.QSize(16777215,30))
-		self.setObjectName("line")
-	
-	def keyPressEvent(self,event):
-		key=event.key()
-		if key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
-			self.main.sendButtonClicked()
-		else:
-			QtGui.QTextEdit.keyPressEvent(self,event)
-			text=unicode(self.toPlainText())
-			for k,v in self.parent.smileys.iteritems():
-				if text.find(" "+k)!=-1:
-					html=self.toHtml()
-					html.replace(k,'<img src="'+v+'"/> ')
-					cur=self.textCursor()
-					self.setHtml(html)
-					self.setTextCursor(cur)
-
-class frame(QtGui.QFrame):
-	def __init__(self,main,parent=None):
-		QtGui.QFrame.__init__(self,parent)
-		self.main=main
-
-	def hideEvent(self,event):
-		self.main.ui.smileys.setChecked(False)
-
-class normalLineEditWidget(QtGui.QTextEdit):
-	def __init__(self,main,parent=None):
-		apply(QtGui.QTextEdit.__init__,(self,parent))
-		self.main=main
-		self.parent=parent
-		#self.setMaximumSize(QtCore.QSize(16777215,30))
-		self.setObjectName("line")
-		self.bold=False
-		self.italic=False
-		self.underline=False
-		self.color=None
-		QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
-
-	def focusInEvent(self,event):
-		r=QtGui.QTextEdit.focusInEvent(self,event)
-		self.reformat()
-		return r
-
-	def formatChanged(self,format):
-		#print "format changed",len(unicode(self.toPlainText()))
-		if len(unicode(self.toPlainText()))==0:
-			self.reformat()
-
-	def reformat(self):
-		self.parent.underline(self.underline)
-		self.parent.bold(self.bold)
-		self.parent.italic(self.italic)
-		if self.color:
-			self.parent.color(unicode(self.color.name()))
-
-	def keyPressEvent(self,event):
-		key=event.key()
-		self.main.tabWord=None
-		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier):
-			if self.main.main.config['sendByCtrl']=="True":
-				self.main.sendButtonClicked()
-				event.accept()
-			else:
-				return QtGui.QTextEdit.keyPressEvent(self,event)
-		elif key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
-			print self.main.main.config['sendByCtrl']
-			if self.main.main.config['sendByCtrl']=="False":
-				self.main.sendButtonClicked()
-				event.accept()
-			else:
-				return QtGui.QTextEdit.keyPressEvent(self,event)
-		elif key == QtCore.Qt.Key_Up and  self.main.hindex > 0 and (event.modifiers() & QtCore.Qt.ControlModifier): 
-
-			self.main.hindex = self.main.hindex-1
-			self.main.ui.line.setText(self.main.sent[self.main.hindex])
-		elif key == QtCore.Qt.Key_Down and  self.main.hindex < len(self.main.sent) and (event.modifiers() & QtCore.Qt.ControlModifier): 
-
-			self.main.hindex = self.main.hindex+1
-			self.main.ui.line.setText(self.main.sent[self.main.hindex])
-		else:
-			# detect format of current character
-			b=self.fontWeight()==QtGui.QFont.Bold
-			if self.bold!=b:
-				self.bold=b
-				self.parent.ui.boldButton.setChecked(b)
-			b=self.fontItalic()
-			if self.italic!=b:
-				self.italic=b
-				self.parent.ui.italicButton.setChecked(b)
-			b=self.fontUnderline()
-			if self.underline!=b:
-				self.underline=b
-				self.parent.ui.underlineButton.setChecked(b)
-			b=self.textColor()
-			if self.color!=b:
-				self.color=b
-				colorIcon=QtGui.QPixmap(16,16)
-				colorIcon.fill(b)
-				self.parent.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
-			return QtGui.QTextEdit.keyPressEvent(self,event)
-
-class groupChatWidget(QtGui.QWidget):
+class groupChatWidget(abstractChatWidget):
 	def __init__(self,main,jid,jab,nickname,parent=None):
-		apply(QtGui.QWidget.__init__,(self,parent))
-		self.jab=jab
+		abstractChatWidget.__init__(self,Ui_groupchatwidget,textView,main,jid,True,parent)
 		self.nick = nickname
-		self.ui=Ui_groupchatwidget()
-		self.ui.setupUi(self)
 		self.ui.disco_info.hide()
-		self.main=main
 		self.affiliation=""
 		self.role=""
 		self.cache={}
 		self.lines=0
 		self.maxLines=300
 
-		l=QtGui.QHBoxLayout(self.ui.viewWidget)
-		l.setMargin(0)
-		l.setSpacing(0)
-		self.ui.textEdit=textView(self,self.ui.viewWidget)
-		#self.ui.textEdit=textView()
-		#self.ui.textEdit.setReadOnly(False)
-		l.addWidget(self.ui.textEdit)
-
-		layout=QtGui.QHBoxLayout(self.ui.lineWidget)
-		layout.setMargin(0)
-		layout.setSpacing(0)
-		if self.main.config['chatMode']=="normal":
-			self.ui.line=normalLineEditWidget(self,self)
-		else:
-			self.ui.line=lineEditWidget(self,self)
-		self.ui.line.setAcceptRichText(False)
-		layout.addWidget(self.ui.line)
 		self.tabWord=None
 
-		QtCore.QObject.connect(self.ui.boldButton, QtCore.SIGNAL("toggled (bool)"),self.bold)
-		QtCore.QObject.connect(self.ui.italicButton, QtCore.SIGNAL("toggled (bool)"),self.italic)
-		QtCore.QObject.connect(self.ui.underlineButton, QtCore.SIGNAL("toggled (bool)"),self.underline)
-
-		self.defaultFormat=self.ui.line.currentCharFormat()
-		self.defaultColor=self.ui.line.textColor()
-		colorMenu=QtGui.QMenu(self.ui.colorButton)
-		colorIcon=QtGui.QPixmap(16,16)
-		
-		colorIcon.fill(QtCore.Qt.white)
-		action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('White'))
-		action.setData(QtCore.QVariant("#ffffff"))
-
-		colorIcon.fill(QtCore.Qt.black)
-		action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Black'))
-		action.setData(QtCore.QVariant("#000000"))
-		
-		colorIcon.fill(QtCore.Qt.red)
-		action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Red'))
-		action.setData(QtCore.QVariant("#ff0000"))
-		
-		colorIcon.fill(QtCore.Qt.green)
-		action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Green'))
-		action.setData(QtCore.QVariant("#00ff00"))
-		
-		colorIcon.fill(QtCore.Qt.blue)
-		action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Blue'))
-		action.setData(QtCore.QVariant("#0000ff"))
-
-		colorIcon.fill(QtCore.Qt.magenta)
-		action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Pink'))
-		action.setData(QtCore.QVariant("#ff00ff"))
-
-		colorIcon.fill(QtCore.Qt.yellow)
-		action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Yellow'))
-		action.setData(QtCore.QVariant("#ffff00"))
-
-		colorMenu.addSeparator()
-
-		action=colorMenu.addAction(self.tr('No color'))
-		action.setData(QtCore.QVariant("no"))
-
-		QtCore.QObject.connect(colorMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.color)
-		self.ui.colorButton.setMenu(colorMenu)
-		colorIcon.fill(self.defaultFormat.foreground().color())
-		self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
-
-
-		#self.buttonGroup=QtGui.QButtonGroup(self.ui.logs)
-		##self.buttonGroup.setExclusive(True)
-		#self.ui.logsLayout=QtGui.QHBoxLayout(self.ui.logs)
-		
-		#self.actual=QtGui.QPushButton(self.tr("Actual"),self.ui.logs)
-		#self.actual.setCheckable(True)
-		#self.actual.setChecked(True)
-		#self.ui.logsLayout.addWidget(self.actual)
-		#self.buttonGroup.addButton(self.actual)
-
-		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
-		
-		
-		#QtCore.QObject.connect(self.buttonGroup, QtCore.SIGNAL("buttonClicked ( QAbstractButton * )  "),self.logButton)
-		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
-		#QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("textChanged ()"),self.lines)
-		#QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
-		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
-		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.userClicked)
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.usersContextMenu)
 		self.ui.users.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 		short=QtGui.QShortcut("tab",self.ui.line)
 		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
-		#self.ui.info_big.hide()
-		self.loadSmileys()
-		self.jid=jid
 		self.name_id=-1 # for tabPressed
 		self.roles={}
 		self.addRole("participant",self.tr("Participants"))
@@ -425,22 +72,16 @@ class groupChatWidget(QtGui.QWidget):
 		self.addRole("visitor",self.tr("Visitors"))
 		self.ui.users.header().hide()
 		self.ui.users.hideColumn(1)
-		#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)
-		#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
-		#self.ui.lineWidget.setMaximumHeight(int(self.ui.line.currentFont().pointSize())*8)
 		self.ui.splitter.setSizes(list(self.main.config['groupchatSplitSizes1']))
 		self.ui.splitter_2.setSizes(list(self.main.config['groupchatSplitSizes2']))
 		self.ui.splitter_3.setSizes(list(self.main.config['groupchatSplitSizes3']))
-		#if self.main.client.groupchats[self.jid].users[nick].affiliation=="owner":
+
 		
-		self.sent = []
-		self.hindex = 0
 		self.sizes={}
 		self.colors=[]
 		self.invitation=[]
 
 
-		#self.flowLayout = flowLayout()
 		self.flowLayout = QtGui.QHBoxLayout()
 		self.flowLayout.setMargin(0)
 		self.flowLayout.setSpacing(2)
@@ -505,171 +146,18 @@ class groupChatWidget(QtGui.QWidget):
 		self.connecting=QtGui.QLabel(self.tr("Connecting to MUC. This can take a few seconds."),self.ui.textEdit)
 		self.connecting.adjustSize()
 	
-		self.init=""
-		if self.main.skin.has_key("on_init"):
-			self.init=self.main.skin["on_init"]
-		self.ui.textEdit.setHtml("<br/>"+self.init)
-
 		self.disco_features = []
 		log.msg("REQUESTING ROOM INFO")
 		self._getInfo()
 
 
 
-	def color(self,action):
-		"""
-		Sets foreground color according to action.data(). Data should be color like #FFFFFF or string "no" for default system color.
-		"""
-		if isinstance(action,unicode) or isinstance(action,str):
-			color=action
-			self.ui.line.color=QtGui.QColor(color)
-		else:
-			color=unicode(action.data().toString())
-			self.ui.line.color=QtGui.QColor(color)
-			self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
-		
-		if color.startswith("#") and QtGui.QColor(color)!=self.defaultColor:
-			c=QtGui.QColor(color)
-			self.ui.line.setTextColor(c)
-			colorIcon=QtGui.QPixmap(16,16)
-			colorIcon.fill(c)
-			self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
-			#self.noColor=False
-		else:
-			format=self.defaultFormat
-			format.setFontItalic(self.ui.line.fontItalic())
-			format.setFontUnderline(self.ui.line.fontUnderline())
-			format.setFontWeight(self.ui.line.fontWeight())
-			self.ui.line.setCurrentCharFormat(format)
-			colorIcon=QtGui.QPixmap(16,16)
-			colorIcon.fill(self.defaultFormat.foreground().color())
-			self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
-			#self.noColor=True
-
-	def clearLine(self):
-		format=self.ui.line.currentCharFormat()
-		self.ui.line.clear()
-		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
-		self.ui.line.setCurrentCharFormat(format)
-		
-
-	def italic(self,bool):
-		"""
-		Sets italic font according to bool.
-		@type bool: boolean
-		@param bool: True - italic font
-		"""
-		self.ui.line.italic=bool
-		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
-		self.ui.line.setFontItalic(bool)
-
-
-	def underline(self,bool):
-		"""
-		Sets underline font according to bool.
-		@type bool: boolean
-		@param bool: True - underline font
-		"""
-		self.ui.line.underline=bool
-		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
-		self.ui.line.setFontUnderline(bool)
-
-
-	def bold(self,bool):
-		"""
-		Sets bold font according to bool.
-		@type bool: boolean
-		@param bool: True - bold font
-		"""
-		self.ui.line.bold=bool
-		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
-		if bool==True:
-			self.ui.line.setFontWeight(QtGui.QFont.Bold)
-		else:
-			self.ui.line.setFontWeight(QtGui.QFont.Normal)
-
-
 	def _getInfo(self):
 		self.main.client.getDiscoInfo(self.jid, callback=self._infoReceived)
-		#self.editing=False
-		#self.topic=""
-		#QtCore.QObject.connect(self.ui.info, QtCore.SIGNAL("cursorPositionChanged()"),self.topicChanged)
-		#QtCore.QObject.connect(self.ui.saveTopic, QtCore.SIGNAL("clicked()"),self.topicSaved)
-		#QtCore.QObject.connect(self.ui.revertTopic, QtCore.SIGNAL("clicked()"),self.topicReverted)
-		#QtCore.QObject.connect(self.ui.editSubject, QtCore.SIGNAL("clicked()"),self.editSubject)
-
-		#self.ui.saveTopic.hide()
-		#self.ui.revertTopic.hide()
-		#self.ui.editSubject.hide()
-		#self.ui.info.setAcceptRichText(False)
-		
-
-	#def editSubject(self):
-		#self.ui.info.setReadOnly(False)
-		#position=int(self.ui.info.textCursor().position())
-		#cursor=self.ui.info.textCursor()
-		#cursor.setPosition(0)
-		#self.ui.info.setTextCursor(cursor)
-		#self.topic=unicode(self.ui.info.toPlainText())
-		#self.ui.info.clear()
-		#self.ui.info.setPlainText(self.topic)
-		#cursor=self.ui.info.textCursor()
-		#cursor.setPosition(position)
-		#self.ui.info.setTextCursor(cursor)
-		#self.ui.saveTopic.show()
-		#self.ui.revertTopic.show()
-		#self.ui.editSubject.hide()
-		#self.ui.info.setFocus(QtCore.Qt.MouseFocusReason)
-
-
-	#def topicReverted(self):
-		#self.ui.saveTopic.hide()
-		#self.ui.revertTopic.hide()
-		#print self.topic
-		#topic=utils.replace_url(self.topic)
-		#self.ui.info.setHtml(unicode(topic))
-		#self.editing=False
-		#self.ui.info.setReadOnly(True)
-		#self.ui.editSubject.show()
-
-	#def topicSaved(self):
-		#print 'save topic'
-		#topic=unicode(self.ui.info.toPlainText())
-		#self.main.client.sendMessage(self.jid, typ='groupchat',body='/me has set subject to: '+topic,subject=topic)
-		#self.ui.saveTopic.hide()
-		#self.ui.revertTopic.hide()
-		#topic=utils.replace_url(topic)
-		#self.ui.info.setHtml(unicode(topic))
-		#self.editing=False
-		#self.ui.info.setReadOnly(True)
-		#self.ui.editSubject.show()
-		
-
-	#def topicChanged(self):
-		#if self.editing==False and not self.ui.info.isReadOnly():
-			#self.editing=True
-			#position=int(self.ui.info.textCursor().position())
-			#cursor=self.ui.info.textCursor()
-			#cursor.setPosition(0)
-			#self.ui.info.setTextCursor(cursor)
-			#self.topic=unicode(self.ui.info.toPlainText())
-			#self.ui.info.clear()
-			#self.ui.info.setPlainText(self.topic)
-			#cursor=self.ui.info.textCursor()
-			#cursor.setPosition(position)
-			#self.ui.info.setTextCursor(cursor)
-			#self.ui.saveTopic.show()
-			#self.ui.revertTopic.show()
-		#elif self.editing==False and self.ui.info.isReadOnly() and self.role=='moderator':
-			#self.ui.info.setReadOnly(False)
 
 	def changeTopic(self,topic):
 		subject=utils.replace_url(topic)
-		#QtCore.QObject.disconnect(self.ui.info, QtCore.SIGNAL("cursorPositionChanged()"),self.topicChanged)
 		self.ui.info.setHtml(unicode(subject))
-		#QtCore.QObject.connect(self.ui.info, QtCore.SIGNAL("cursorPositionChanged()"),self.topicChanged)
-
-
 
 	def _infoReceived(self, *a):
 		self.disco_features = self.main.client.disco[self.jid][None]["features"]
@@ -715,14 +203,6 @@ class groupChatWidget(QtGui.QWidget):
 		self.addRole("participant",self.tr("Participants"))
 		self.addRole("moderator",self.tr("Moderators"))
 		self.addRole("visitor",self.tr("Visitors"))
-	#def lines(self):
-		#if self.ui.line.verticalScrollBar().isVisible():
-			#self.ui.line.setMaximumHeight(int(self.ui.line.maximumHeight())+int(self.ui.line.currentFont().pointSize())+10)
-
-	#def changeAffiliation(self,affiliation):
-		#if affiliation=="owner":
-			#self.ui.admin.show()
-		#self.affiliation=affiliation
 
 	def usersContextMenu(self,pos):
 		item=self.ui.users.itemFromIndex(self.ui.users.indexAt(pos)) # get selected item
@@ -1164,55 +644,6 @@ class groupChatWidget(QtGui.QWidget):
 		text+="</td></tr></table>"
 		item.setToolTip(0,text)
 
-	def loadSmileys(self):
-		# loads smileys.conf and makes buttons
-		smileys=ConfigObj("emoticons/"+self.main.config['emoticons'],encoding='UTF8')
-		src='emoticons/'
-		if len(smileys)==0:
-			smileys=ConfigObj(self.main.realHomeDir+"/emoticons/"+self.main.config['emoticons'],encoding='UTF8')
-			src=self.main.realHomeDir+'/emoticons/'
-
-		if len(smileys)==0:
-			# emotions pack doesn't exist
-			return
-
-		self.smileys={}
-		for k,v in smileys['emoticons'].iteritems():
-			self.smileys[k.replace("<","&lt;").replace(">","&gt;")]=src+os.path.dirname(self.main.config['emoticons'])+"/"+v
-		self.s=frame(self,self)
-		self.s.setWindowFlags(QtCore.Qt.Popup)
-		self.s.hide()
-		layout=QtGui.QGridLayout(self.s)
-		layout.setMargin(0)
-		layout.setSpacing(0)
-		added=[]
-		x=0
-		y=0
-		for k,v in smileys['emoticons'].iteritems():
-			if added.count(v)==0:
-				added.append(v)
-				button=QtGui.QToolButton(self)
-				action=QtGui.QAction(QtGui.QIcon(src+os.path.dirname(self.main.config['emoticons'])+"/"+v),"",self.s)
-				action.setData(QtCore.QVariant(k))
-				button.setDefaultAction(action)
-				button.setToolTip(str(k))
-				QtCore.QObject.connect(button, QtCore.SIGNAL("triggered ( QAction *)"),self.addEmoticon)
-				layout.addWidget(button,x,y)
-				y+=1
-				if y==5:
-					y=0
-					x+=1
-	
-	def smileysClicked(self,bool):
-		pos=self.ui.smileys.mapToGlobal(QtCore.QPoint(0,0))
-		x=pos.x()
-		y=pos.y()
-		self.s.setGeometry(x-60,y-220, 120, 200)
-		if self.s.isVisible():
-			self.s.setVisible(False)
-		else:
-			self.s.setVisible(True)
-
 	def logButton(self,button):
 		if button==self.actual:
 			self.ui.textEdit.setHtml(self.cache['actual'])
@@ -1220,58 +651,6 @@ class groupChatWidget(QtGui.QWidget):
 			time=unicode(button.text())
 			self.cache['actual']=self.ui.textEdit.toHtml()
 			self.ui.textEdit.setHtml(self.cache[time])
-
-	def textEditWrite(self,text):
-		#if self.actual.isChecked():
-			cursor=QtGui.QTextCursor(self.ui.textEdit.document())
-			cursor.beginEditBlock()
-			cursor.movePosition(QtGui.QTextCursor.End)
-			
-			toEnd=False
-			if self.ui.textEdit.verticalScrollBar().value()==self.ui.textEdit.verticalScrollBar().maximum():
-				toEnd=True
-			for k,v in self.smileys.iteritems():
-				text=text.replace(" "+k,'&nbsp;<img src="'+v+'"/>')
-				text=text.replace("&nbsp;"+k,'&nbsp;<img src="'+v+'"/>')
-				text=text.replace(">"+k,'><img src="'+v+'"/>')
-			#cursor.insertHtml(text)
-			cursor.insertFragment(QtGui.QTextDocumentFragment.fromHtml(text))
-			cursor.endEditBlock()
-			if toEnd:
-				self.ui.textEdit.verticalScrollBar().setValue(self.ui.textEdit.verticalScrollBar().maximum())
-			#f=open("test.html","w")
-			#self.main.xmlConsole.ui.xml.append(f.write(unicode(self.ui.textEdit.toHtml()))+"\n\n")
-			
-			#f.close()
-		#else:
-			#self.cache['actual']+=text
-
-		#self.lines+=1
-		#if self.lines>self.maxLines:
-			#self.lines=0
-			#self.cache[self.main.now()]=self.ui.textEdit.toHtml()
-			#self.ui.textEdit.setHtml("")
-			#button=QtGui.QPushButton(self.main.now(),self.ui.logs)
-			#button.setCheckable(True)
-			#self.ui.logsLayout.addWidget(button)
-			#self.buttonGroup.addButton(button)
-
-	def addEmoticon(self,action):
-		# add emoticon to the self.ui.line
-		data=action.data()
-		data=data.toString()
-		if self.main.config['chatMode']=="normal":
-			cur=self.ui.line.textCursor()
-			cur.insertText(" "+data)
-			self.ui.line.setTextCursor(cur)
-		else:
-			for k,v in self.smileys.iteritems():
-				data=data.replace(k,' <img src="images/16x16/emotes/'+v+'" />')
-			self.ui.line.insertHtml(data)
-		self.ui.smileys.setChecked(False)
-		self.s.hide()
-		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
-
 	def sendButtonClicked(self):
 		# sends message
 		# sends message
