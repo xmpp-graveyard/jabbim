@@ -290,6 +290,24 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.italic=False
 		self.underline=False
 		self.color=None
+		QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
+
+	def focusInEvent(self,event):
+		r=QtGui.QTextEdit.focusInEvent(self,event)
+		self.reformat()
+		return r
+
+	def formatChanged(self,format):
+		#print "format changed",len(unicode(self.toPlainText()))
+		if len(unicode(self.toPlainText()))==0:
+			self.reformat()
+
+	def reformat(self):
+		self.parent.underline(self.underline)
+		self.parent.bold(self.bold)
+		self.parent.italic(self.italic)
+		if self.color:
+			self.parent.color(unicode(self.color.name()))
 
 	def paused(self):
 		"""
@@ -430,7 +448,7 @@ class chatWidget(QtGui.QWidget):
 		
 		# Maximum width of avatar Widget
 		self.ui.avatar.setMaximumWidth(128)
-		
+		self.noColor=True
 		self.sent = []
 		self.hindex = 0
 		self.unread=0 #: number of unread messages
@@ -469,6 +487,7 @@ class chatWidget(QtGui.QWidget):
 			self.ui.colorButton.hide()
 		else:
 			self.defaultFormat=self.ui.line.currentCharFormat()
+			self.defaultColor=self.ui.line.textColor()
 			colorMenu=QtGui.QMenu(self.ui.colorButton)
 			colorIcon=QtGui.QPixmap(16,16)
 			
@@ -537,14 +556,21 @@ class chatWidget(QtGui.QWidget):
 		"""
 		Sets foreground color according to action.data(). Data should be color like #FFFFFF or string "no" for default system color.
 		"""
-		color=unicode(action.data().toString())
-		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
-		if color.startswith("#"):
+		if isinstance(action,unicode) or isinstance(action,str):
+			color=action
+			self.ui.line.color=QtGui.QColor(color)
+		else:
+			color=unicode(action.data().toString())
+			self.ui.line.color=QtGui.QColor(color)
+			self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
+		
+		if color.startswith("#") and QtGui.QColor(color)!=self.defaultColor:
 			c=QtGui.QColor(color)
 			self.ui.line.setTextColor(c)
 			colorIcon=QtGui.QPixmap(16,16)
 			colorIcon.fill(c)
 			self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
+			#self.noColor=False
 		else:
 			format=self.defaultFormat
 			format.setFontItalic(self.ui.line.fontItalic())
@@ -554,6 +580,7 @@ class chatWidget(QtGui.QWidget):
 			colorIcon=QtGui.QPixmap(16,16)
 			colorIcon.fill(self.defaultFormat.foreground().color())
 			self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
+			#self.noColor=True
 
 	def clearLine(self):
 		format=self.ui.line.currentCharFormat()
@@ -568,8 +595,10 @@ class chatWidget(QtGui.QWidget):
 		@type bool: boolean
 		@param bool: True - italic font
 		"""
+		self.ui.line.italic=bool
 		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
 		self.ui.line.setFontItalic(bool)
+
 
 	def underline(self,bool):
 		"""
@@ -577,8 +606,10 @@ class chatWidget(QtGui.QWidget):
 		@type bool: boolean
 		@param bool: True - underline font
 		"""
+		self.ui.line.underline=bool
 		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
 		self.ui.line.setFontUnderline(bool)
+
 
 	def bold(self,bool):
 		"""
@@ -586,6 +617,7 @@ class chatWidget(QtGui.QWidget):
 		@type bool: boolean
 		@param bool: True - bold font
 		"""
+		self.ui.line.bold=bool
 		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
 		if bool==True:
 			self.ui.line.setFontWeight(QtGui.QFont.Bold)
