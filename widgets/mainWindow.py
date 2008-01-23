@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sat Jan 12 18:28:11 2008
+# Created: Wed Jan 23 20:13:10 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -246,16 +246,15 @@ class Ui_MainWindow(object):
         self.toggleInvisible.setObjectName("toggleInvisible")
         self.gridlayout4.addWidget(self.toggleInvisible,1,2,1,1)
 
-        self.selfAvatar = QtGui.QLabel(self.frame)
+        self.selfAvatarWidget = QtGui.QWidget(self.frame)
 
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(0))
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.selfAvatar.sizePolicy().hasHeightForWidth())
-        self.selfAvatar.setSizePolicy(sizePolicy)
-        self.selfAvatar.setMargin(2)
-        self.selfAvatar.setObjectName("selfAvatar")
-        self.gridlayout4.addWidget(self.selfAvatar,0,0,2,1)
+        sizePolicy.setHeightForWidth(self.selfAvatarWidget.sizePolicy().hasHeightForWidth())
+        self.selfAvatarWidget.setSizePolicy(sizePolicy)
+        self.selfAvatarWidget.setObjectName("selfAvatarWidget")
+        self.gridlayout4.addWidget(self.selfAvatarWidget,0,0,2,1)
 
         self.statusButton = QtGui.QToolButton(self.frame)
         self.statusButton.setMaximumSize(QtCore.QSize(16777215,20))

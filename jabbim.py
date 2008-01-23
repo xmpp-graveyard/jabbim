@@ -1253,7 +1253,23 @@ class clientClass(pyxl.client.Client):
 		mainWindow=self.main
 		self.main.ui.loginInfo.setText(mainWindow.tr("Jabbim is logged in."))
 		self.main.ui.splashProgress.setValue(40)
+
+class AvatarLabel(QtGui.QLabel):
+	def __init__(self,main,parent):
+		QtGui.QLabel.__init__(self,parent)
+		self.setObjectName("selfAvatar")
+		self.main=main
+		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
 	
+	def mouseDoubleClickEvent(self,event):
+		self.main.identityEditor()
+		event.accept()
+
+	def contextMenuEvent (self,event):
+		self.main.offlineMenu.move(event.globalX(),event.globalY())
+		self.main.offlineMenu.popup(QtCore.QPoint(event.globalX(),event.globalY()))
+		event.accept()
+
 
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
@@ -1262,6 +1278,11 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.setupUi(self)
 		self.ui.toggleInvisible.hide()
 		self.ui.statusButton.hide()
+		layout=QtGui.QHBoxLayout(self.ui.selfAvatarWidget)
+		layout.setMargin(0)
+		layout.setSpacing(0)
+		self.ui.selfAvatar=AvatarLabel(self,self.ui.selfAvatarWidget)
+		layout.addWidget(self.ui.selfAvatar)
 		self.setAttribute(QtCore.Qt.WA_AlwaysShowToolTips,True)
 		self.app=app
 		self.selfAvatar=None #: current avatar (QPixmap or None)
