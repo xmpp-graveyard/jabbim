@@ -468,6 +468,7 @@ class clientClass(pyxl.client.Client):
 		show=unicode(self.main.ui.loginStatus.itemData(int(self.main.ui.loginStatus.currentIndex())).toString())
 		self.main.selfStatus=show
 		self.main.tray.setToolTip(mainWindow.tr('Your status:')+" "+self.main.status[show])
+		self.main.ui.selfAvatar.refreshToolTip()
 		self.main.sendPresence(None,show,"")
 		self.main.ui.statusButton.setText(unicode(""))
 		self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
@@ -1265,10 +1266,42 @@ class AvatarLabel(QtGui.QLabel):
 		self.main.identityEditor()
 		event.accept()
 
-	def contextMenuEvent (self,event):
+	def contextMenuEvent(self,event):
 		self.main.offlineMenu.move(event.globalX(),event.globalY())
 		self.main.offlineMenu.popup(QtCore.QPoint(event.globalX(),event.globalY()))
 		event.accept()
+	
+	def refreshToolTip(self):
+		if self.main.client:
+			text='<table><tr>'
+			if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(self.main.config['jid'])):
+				pixmap=QtGui.QIcon(self.main.homeDir+'/avatars/'+unicode(self.main.config['jid'])).pixmap(64,64)
+				text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(self.main.config['jid'])+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
+			#text+='<td><b>'+self.tr("Name:")+'</b> '+item.escapedName+'<br/>'
+			text+='<td><b>'+self.tr("JID:")+'</b> '+unicode(self.main.config['jid'])+'<br/>'
+			if self.main.client.roster["users"].has_key(unicode(self.main.config['jid'])):
+				contact = self.main.client.roster["users"][unicode(self.main.config['jid'])]
+		
+				for res in contact.resources.keys():
+					status = contact.resources[res].status
+					if not status:
+						status = ""
+					priority = contact.resources[res].priority
+					#if priority == None:
+					#	priority = self.tr("Unknown")
+					if priority != None:
+						priority = "(%s: %s)" % (self.tr("Priority"),priority)
+					else:
+						priority = ""
+					show=contact.resources[res].show
+					if not show:
+						show='online'
+					text+='<img src="images/16x16/status/jabber-%s.png">' % show # hodilo by se rozlisit k jakymu poatri transportu
+					if res != None:
+						text+='<b>%s</b> %s<br>' % (res, priority)
+					text+='<font size="-1">%s</font>' % (status)
+			text+="</td></tr></table>"
+			self.setToolTip(text)
 
 
 class mainWindow(QtGui.QMainWindow):
@@ -1545,6 +1578,9 @@ class mainWindow(QtGui.QMainWindow):
 
 		self.ui.showOffline.setMenu(self.offlineMenu)
 		QtCore.QObject.connect(self.offlineMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.offlineMenuChanged)
+
+		# refresh selfAvatar tooltip, because some resource could be added
+		self.ui.selfAvatar.refreshToolTip()
 
 	def offlineMenuChanged(self,action):
 		"""
