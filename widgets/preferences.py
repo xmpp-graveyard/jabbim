@@ -411,6 +411,18 @@ class preferencesWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.listWidget, QtCore.SIGNAL("currentRowChanged ( int)"),self.currentRowChanged)
 		self.ui.plugins.resizeColumnToContents (0)
 		self.ui.plugins.resizeColumnToContents (1)
+		
+		QtCore.QObject.connect(self.ui.moreEmoticons, QtCore.SIGNAL("clicked()"),self.getMoreEmoticons)
+	
+	def getMoreEmoticons(self):
+		print "fetching emoticons list"
+		self.main.client.callRemote('rpc@jabbim.cz/service', 'getList', ('smileys/',)).addCallback(self._emoticonsListArrived)#.addErrback(self._emoticonsListError)
+
+	def _emoticonsListArrived(self,data):
+		print data
+
+	def _emoticonsListError(self,data):
+		print data
 
 	def currentRowChanged(self,row):
 		if self.justShowed:

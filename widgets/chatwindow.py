@@ -574,7 +574,10 @@ class chatWindow(QtGui.QMainWindow):
 				w.chat.textEditWrite(message)
 				self.main.client.joinGC(w.jid, w.chat.nick)
 
-	def onGCMessage(self,w,i,body,delay,subject,user):
+	def onGCMessage(self,w,i,body,delay,subject,user,xhtml):
+		oldbody=body
+		if xhtml:
+			body=xhtml
 		countMessage=False
 		if int(self.ui.chatTab.currentIndex())!=i:
 			if self.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
@@ -634,7 +637,7 @@ class chatWindow(QtGui.QMainWindow):
 					message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body))
 			else:
 				# it's message for us
-				if utils.need_highlight(unicode(w.chat.nick), unicode(body)) and not unicode(body).startswith("/me"):
+				if utils.need_highlight(unicode(w.chat.nick), unicode(oldbody)) and not unicode(body).startswith("/me"):
 					if int(self.ui.chatTab.currentIndex())!=i:
 						if self.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
 							self.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))

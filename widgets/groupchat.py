@@ -783,7 +783,6 @@ class groupChatWidget(abstractChatWidget):
 		if not self.tabWord:
 			self.name_id=-1
 			self.tabWord=text
-		
 		#text=unicode(cur.selectedText()).lower()
 		#text=text[0]
 		repeat=False

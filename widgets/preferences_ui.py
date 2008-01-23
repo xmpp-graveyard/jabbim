@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Sun Jan 20 18:55:53 2008
+# Created: Wed Jan 23 20:50:09 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -19,11 +19,6 @@ class Ui_preferences(object):
         self.gridlayout.setMargin(9)
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
-
-        self.profile = QtGui.QLabel(preferences)
-        self.profile.setFrameShape(QtGui.QFrame.StyledPanel)
-        self.profile.setObjectName("profile")
-        self.gridlayout.addWidget(self.profile,0,1,1,2)
 
         self.stackedWidget = QtGui.QStackedWidget(preferences)
         self.stackedWidget.setObjectName("stackedWidget")
@@ -193,33 +188,40 @@ class Ui_preferences(object):
         self.gridlayout8.setSpacing(6)
         self.gridlayout8.setObjectName("gridlayout8")
 
+        spacerItem4 = QtGui.QSpacerItem(271,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout8.addItem(spacerItem4,3,0,1,1)
+
+        self.moreEmoticons = QtGui.QPushButton(self.tab_3)
+        self.moreEmoticons.setObjectName("moreEmoticons")
+        self.gridlayout8.addWidget(self.moreEmoticons,3,1,1,1)
+
         self.emoticonsPreview = QtGui.QTextEdit(self.tab_3)
         self.emoticonsPreview.setUndoRedoEnabled(False)
         self.emoticonsPreview.setReadOnly(True)
         self.emoticonsPreview.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
         self.emoticonsPreview.setObjectName("emoticonsPreview")
-        self.gridlayout8.addWidget(self.emoticonsPreview,2,0,1,1)
+        self.gridlayout8.addWidget(self.emoticonsPreview,2,0,1,2)
+
+        self.emoticonsList = QtGui.QComboBox(self.tab_3)
+        self.emoticonsList.setObjectName("emoticonsList")
+        self.gridlayout8.addWidget(self.emoticonsList,0,0,1,2)
 
         self.emoticonsInfo = QtGui.QLabel(self.tab_3)
         self.emoticonsInfo.setTextFormat(QtCore.Qt.RichText)
         self.emoticonsInfo.setObjectName("emoticonsInfo")
-        self.gridlayout8.addWidget(self.emoticonsInfo,1,0,1,1)
-
-        self.emoticonsList = QtGui.QComboBox(self.tab_3)
-        self.emoticonsList.setObjectName("emoticonsList")
-        self.gridlayout8.addWidget(self.emoticonsList,0,0,1,1)
+        self.gridlayout8.addWidget(self.emoticonsInfo,1,0,1,2)
         self.tabWidget.addTab(self.tab_3,"")
         self.gridlayout5.addWidget(self.tabWidget,2,0,1,1)
-
-        self.label_7 = QtGui.QLabel(self.page_3)
-        self.label_7.setObjectName("label_7")
-        self.gridlayout5.addWidget(self.label_7,0,0,1,1)
 
         self.line_6 = QtGui.QFrame(self.page_3)
         self.line_6.setFrameShape(QtGui.QFrame.HLine)
         self.line_6.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_6.setObjectName("line_6")
         self.gridlayout5.addWidget(self.line_6,1,0,1,1)
+
+        self.label_7 = QtGui.QLabel(self.page_3)
+        self.label_7.setObjectName("label_7")
+        self.gridlayout5.addWidget(self.label_7,0,0,1,1)
         self.stackedWidget.addWidget(self.page_3)
 
         self.page_5 = QtGui.QWidget()
@@ -242,8 +244,8 @@ class Ui_preferences(object):
         self.plugins.headerItem().setText(0,"")
         self.gridlayout9.addWidget(self.plugins,2,0,1,2)
 
-        spacerItem4 = QtGui.QSpacerItem(261,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout9.addItem(spacerItem4,3,0,1,1)
+        spacerItem5 = QtGui.QSpacerItem(261,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout9.addItem(spacerItem5,3,0,1,1)
 
         self.label_8 = QtGui.QLabel(self.page_5)
         self.label_8.setObjectName("label_8")
@@ -256,6 +258,11 @@ class Ui_preferences(object):
         self.gridlayout9.addWidget(self.line_7,1,0,1,2)
         self.stackedWidget.addWidget(self.page_5)
         self.gridlayout.addWidget(self.stackedWidget,1,1,1,2)
+
+        self.profile = QtGui.QLabel(preferences)
+        self.profile.setFrameShape(QtGui.QFrame.StyledPanel)
+        self.profile.setObjectName("profile")
+        self.gridlayout.addWidget(self.profile,0,1,1,2)
 
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setMargin(0)
@@ -275,8 +282,8 @@ class Ui_preferences(object):
         self.hboxlayout.addWidget(self.cancelButton)
         self.gridlayout.addLayout(self.hboxlayout,2,2,1,1)
 
-        spacerItem5 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem5,2,1,1,1)
+        spacerItem6 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem6,2,1,1,1)
 
         self.listWidget = QtGui.QListWidget(preferences)
         self.listWidget.setMinimumSize(QtCore.QSize(190,0))
@@ -287,7 +294,7 @@ class Ui_preferences(object):
 
         self.retranslateUi(preferences)
         self.stackedWidget.setCurrentIndex(4)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QObject.connect(self.cancelButton,QtCore.SIGNAL("clicked()"),preferences.reject)
         QtCore.QObject.connect(self.saveButton,QtCore.SIGNAL("clicked()"),preferences.accept)
         QtCore.QObject.connect(self.listWidget,QtCore.SIGNAL("currentRowChanged(int)"),self.stackedWidget.setCurrentIndex)
@@ -296,7 +303,6 @@ class Ui_preferences(object):
 
     def retranslateUi(self, preferences):
         preferences.setWindowTitle(QtGui.QApplication.translate("preferences", "Jabbim - Preferences", None, QtGui.QApplication.UnicodeUTF8))
-        self.profile.setText(QtGui.QApplication.translate("preferences", "profile", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
@@ -319,6 +325,7 @@ class Ui_preferences(object):
         self.chatSkin_preview.setToolTip(QtGui.QApplication.translate("preferences", "Here you see preview of the selected chat look.", None, QtGui.QApplication.UnicodeUTF8))
         self.chatSkinInfo.setText(QtGui.QApplication.translate("preferences", "info", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("preferences", "Chat skins", None, QtGui.QApplication.UnicodeUTF8))
+        self.moreEmoticons.setText(QtGui.QApplication.translate("preferences", "Get more emoticons", None, QtGui.QApplication.UnicodeUTF8))
         self.emoticonsInfo.setText(QtGui.QApplication.translate("preferences", "info", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QtGui.QApplication.translate("preferences", "Emoticons", None, QtGui.QApplication.UnicodeUTF8))
         self.label_7.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -333,6 +340,7 @@ class Ui_preferences(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\';\"><span style=\" font-size:12pt; font-weight:600;\">Plugins</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.profile.setText(QtGui.QApplication.translate("preferences", "profile", None, QtGui.QApplication.UnicodeUTF8))
         self.saveButton.setText(QtGui.QApplication.translate("preferences", "Save", None, QtGui.QApplication.UnicodeUTF8))
         self.applyButton.setText(QtGui.QApplication.translate("preferences", "Apply", None, QtGui.QApplication.UnicodeUTF8))
         self.cancelButton.setText(QtGui.QApplication.translate("preferences", "Cancel", None, QtGui.QApplication.UnicodeUTF8))

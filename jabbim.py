@@ -974,8 +974,8 @@ class clientClass(pyxl.client.Client):
 						body = utils.replace_url(body)
 						body=body.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 					else:
-						body=xhtml.replace("&quot;",'"')
-					self.main.chat.onGCMessage(w,i,body,delay,subject,user)
+						xhtml=xhtml.replace("&quot;",'"')
+					self.main.chat.onGCMessage(w,i,body,delay,subject,user,xhtml)
 					return
 
 

@@ -22,16 +22,6 @@
    <property name="spacing" >
     <number>6</number>
    </property>
-   <item row="0" column="1" colspan="2" >
-    <widget class="QLabel" name="profile" >
-     <property name="frameShape" >
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="text" >
-      <string>profile</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="1" colspan="2" >
     <widget class="QStackedWidget" name="stackedWidget" >
      <property name="currentIndex" >
@@ -220,7 +210,7 @@ p, li { white-space: pre-wrap; }
        <item row="2" column="0" >
         <widget class="QTabWidget" name="tabWidget" >
          <property name="currentIndex" >
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="tab" >
           <attribute name="title" >
@@ -309,7 +299,27 @@ p, li { white-space: pre-wrap; }
            <property name="spacing" >
             <number>6</number>
            </property>
-           <item row="2" column="0" >
+           <item row="3" column="0" >
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>271</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="3" column="1" >
+            <widget class="QPushButton" name="moreEmoticons" >
+             <property name="text" >
+              <string>Get more emoticons</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2" >
             <widget class="QTextEdit" name="emoticonsPreview" >
              <property name="undoRedoEnabled" >
               <bool>false</bool>
@@ -322,7 +332,10 @@ p, li { white-space: pre-wrap; }
              </property>
             </widget>
            </item>
-           <item row="1" column="0" >
+           <item row="0" column="0" colspan="2" >
+            <widget class="QComboBox" name="emoticonsList" />
+           </item>
+           <item row="1" column="0" colspan="2" >
             <widget class="QLabel" name="emoticonsInfo" >
              <property name="text" >
               <string>info</string>
@@ -332,11 +345,15 @@ p, li { white-space: pre-wrap; }
              </property>
             </widget>
            </item>
-           <item row="0" column="0" >
-            <widget class="QComboBox" name="emoticonsList" />
-           </item>
           </layout>
          </widget>
+        </widget>
+       </item>
+       <item row="1" column="0" >
+        <widget class="Line" name="line_6" >
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
         </widget>
        </item>
        <item row="0" column="0" >
@@ -346,13 +363,6 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style>&lt;/head>&lt;body style=" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;">
 &lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Sans Serif';">&lt;span style=" font-size:12pt; font-weight:600;">View&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" >
-        <widget class="Line" name="line_6" >
-         <property name="orientation" >
-          <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
@@ -436,6 +446,16 @@ p, li { white-space: pre-wrap; }
        </item>
       </layout>
      </widget>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="2" >
+    <widget class="QLabel" name="profile" >
+     <property name="frameShape" >
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="text" >
+      <string>profile</string>
+     </property>
     </widget>
    </item>
    <item row="2" column="2" >

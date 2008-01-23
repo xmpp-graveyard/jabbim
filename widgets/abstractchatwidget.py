@@ -157,6 +157,7 @@ class lineEditWidget(QtGui.QTextEdit):
 	
 	def keyPressEvent(self,event):
 		key=event.key()
+		self.main.tabWord=None
 		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier):
 			if self.main.main.config['sendByCtrl']=="True":
 				self.main.sendButtonClicked()
@@ -241,6 +242,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			# user starts typing
 			self.main.main.client.sendMessage(self.main.jid, "",composing="composing")
 		key=event.key()
+		self.main.tabWord=None
 		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier):
 			if self.main.main.config['sendByCtrl']=="True":
 				self.main.sendButtonClicked()
