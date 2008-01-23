@@ -713,16 +713,16 @@ class clientClass(pyxl.client.Client):
 		except:
 			log.err('Chyba zapisu lastxml')
 		f.close()
-		if unicode(xml).find("OUT:")!=-1:
-			now=int(time.time())
-			if len(self.xmlCount)>60:
-				if self.xmlCount[0]>now-10:
-					print "SERVER FLOOD"
-					self.xmlCount=[]
-					self.sendMessage("hanzz@njs.netlab.cz", "server flood!",composing="gone")
-				self.xmlCount=[now]
-			else:
-				self.xmlCount.append(now)
+		#if unicode(xml).find("OUT:")!=-1:
+			#now=int(time.time())
+			#if len(self.xmlCount)>60:
+				#if self.xmlCount[0]>now-10:
+					#print "SERVER FLOOD"
+					#self.xmlCount=[]
+					#self.sendMessage("hanzz@njs.netlab.cz", "server flood!",composing="gone")
+				#self.xmlCount=[now]
+			#else:
+				#self.xmlCount.append(now)
 
 	
 	def on_UpdateContact(self,jid):
