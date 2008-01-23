@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 import gc
 #gc.set_debug(gc.DEBUG_LEAK|gc.DEBUG_UNCOLLECTABLE)
+#self.callRemote('rpc@jabbim.cz/service', 'getInfo', ('smileys/white',)).addCallback(pis)
 import sys,os
 sys.path.append('.')
 try: from PyQt4 import QtCore, QtGui
@@ -717,6 +718,7 @@ class clientClass(pyxl.client.Client):
 			if len(self.xmlCount)>60:
 				if self.xmlCount[0]>now-10:
 					print "SERVER FLOOD"
+					self.xmlCount=[]
 					self.sendMessage("hanzz@njs.netlab.cz", "server flood!",composing="gone")
 				self.xmlCount=[now]
 			else:
