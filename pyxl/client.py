@@ -165,14 +165,9 @@ class Client(derived):
 		if err.type == TimeoutError:
 			log.msg('heartbeat failed')
 			self.xping.stop()
-			if self.factory:
-				self.factory.stopTrying()
-			self.connection.disconnect()
-			
-			self.connection = None
-			self.factory = None
-#			self.main._disconnect(error = 'lost')
-#			self.on_disconnect()
+#			if self.factory:
+#				self.factory.stopTrying()
+			self.connectionLost()
 
 
 	def connect(self, host = None, port = '5222'):
@@ -250,7 +245,8 @@ class Client(derived):
 			
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
-		self.factory.stopTrying()
+		if factory:
+			self.factory.stopTrying()
 		self.connection = None
 		self.factory = None
 		self.main._disconnect(error = 'lost')
@@ -330,10 +326,10 @@ class Client(derived):
 		self.commands.registerNode("http://jabber.org/protocol/rc#set-status", self.main.tr("Change status"), rc.fSetStatus)
 		self.commands.registerNode("http://jabber.org/protocol/rc#leave-groupchats", self.main.tr("Leave groupchats"), rc.fLeaveGC)
 		self.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#resend-file", self.main.tr("Resend file"), rc.ResendFile)
-		print 'post commands'
+#		print 'post commands'
 #		def pis(co):
 #			print co
-#		self.callRemote('rpc@jabbim.cz/service', 'ping', (' ',)).addCallback(pis)
+#		self.callRemote('rpc@jabbim.cz/service', 'getInfo', ('smileys/white',)).addCallback(pis)
 
 
 	def _gotServices(self, res):

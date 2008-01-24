@@ -183,6 +183,8 @@ class derived:
 			message.addElement('body', content = body)
 		message['type'] = typ
 		JID = jid.JID(to)
+		if self.groupchats.has_key(JID.userhost()):
+			message['from'] = JID.userhost() + '/' + self.groupchats[JID.userhost()].nick
 		if (typ=='groupchat' or typ == 'normal') and subject:
 			message.addElement('subject', content = subject)
 		if xhtml != None:
