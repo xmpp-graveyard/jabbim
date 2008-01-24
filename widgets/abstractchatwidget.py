@@ -154,7 +154,9 @@ class lineEditWidget(QtGui.QTextEdit):
 		self.main=main
 		self.parent=parent
 		self.setObjectName("line")
-	
+
+
+
 	def keyPressEvent(self,event):
 		key=event.key()
 		self.main.tabWord=None
@@ -201,6 +203,29 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.underline=False
 		self.color=None
 		QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
+		QtCore.QObject.connect(self,QtCore.SIGNAL("cursorPositionChanged ()"),self.setFormat)
+
+	def setFormat(self):
+		# detect format of current character
+		if len(unicode(self.textCursor().selectedText()))==0:
+			b=self.fontWeight()==QtGui.QFont.Bold
+			if self.bold!=b:
+				self.bold=b
+				self.parent.ui.boldButton.setChecked(b)
+			b=self.fontItalic()
+			if self.italic!=b:
+				self.italic=b
+				self.parent.ui.italicButton.setChecked(b)
+			b=self.fontUnderline()
+			if self.underline!=b:
+				self.underline=b
+				self.parent.ui.underlineButton.setChecked(b)
+			b=self.textColor()
+			if self.color!=b:
+				self.color=b
+				colorIcon=QtGui.QPixmap(16,16)
+				colorIcon.fill(b)
+				self.parent.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
 
 	def focusInEvent(self,event):
 		r=QtGui.QTextEdit.focusInEvent(self,event)
@@ -263,26 +288,6 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			self.main.hindex = self.main.hindex+1
 			self.main.ui.line.setText(self.main.sent[self.main.hindex])
 		else:
-			# detect format of current character
-			b=self.fontWeight()==QtGui.QFont.Bold
-			if self.bold!=b:
-				self.bold=b
-				self.parent.ui.boldButton.setChecked(b)
-			b=self.fontItalic()
-			if self.italic!=b:
-				self.italic=b
-				self.parent.ui.italicButton.setChecked(b)
-			b=self.fontUnderline()
-			if self.underline!=b:
-				self.underline=b
-				self.parent.ui.underlineButton.setChecked(b)
-			b=self.textColor()
-			if self.color!=b:
-				self.color=b
-				colorIcon=QtGui.QPixmap(16,16)
-				colorIcon.fill(b)
-				self.parent.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
-
 			QtGui.QTextEdit.keyPressEvent(self,event)
 
 		# user starts composing so we have to start checking if he doesn't stop
