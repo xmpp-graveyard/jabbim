@@ -741,7 +741,20 @@ class groupChatWidget(abstractChatWidget):
 			b=b[0]
 			xhtml=b.toxml()
 			# TODO: we must replace only first <body> and <p>... not tags in whole message
-			xhtml=unicode(xhtml,'utf-8').replace("<body>","").replace("</body>","").replace("<p>","<span>").replace("</p>","</span>")
+			
+			xhtml=unicode(xhtml,'utf-8').replace("<body>","").replace("</body>","")#.replace("<p>","<span>").replace("</p>","</span>")
+			if len(xhtml.split("<p>"))==1:
+				xhtml=xhtml.replace("<p>","<span>").replace("</p>","</span>")
+			else:
+				xhtml=xhtml.replace("<p>","").replace("</p>","<br/>")
+				br=xhtml.split('<br/>') # [a,b,c,d]
+				t=""
+				for i in range(len(br)):
+					if i!=len(br)-1:
+						t+=br[i]+"<br/>"
+					else:
+						t+=br[i]
+				xhtml=t[:-5]
 			#xhtml=utils.replace_url(xhtml)
 			links=[]
 			temp=unicode(xhtml).replace(">","<")
