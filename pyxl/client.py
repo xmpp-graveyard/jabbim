@@ -88,7 +88,7 @@ class Client(derived):
 		self.client_os = ''
 		self.caps_node = 'http://dev.jabbim.cz/jabbim/caps'
 		self.caps_version = self.version
-		self.caps_ext = None
+		
 		self.discofeatures = {} # node: [feature1, feature2]
 		self.discoitems = {None:[],"http://jabber.org/protocol/commands":[]}
 		self.ft_proxies = {
@@ -110,10 +110,13 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/disco#info', 'http://jabber.org/protocol/commands', identity={"category":"automation","type":"command-list", "name":self.main.tr("Extra actions")})
 		self.registerFeature('jabber:x:data', 'http://jabber.org/protocol/commands')
 		self.registerFeature('http://jabber.org/protocol/commands','http://jabber.org/protocol/commands')
-
-		self.caps_cache = {} # 'node': [feature1, feature2]
 		
-# 		self.cacheCaps('%s#%s'%(self.caps_node, self.caps_version), self.discofeatures[None])
+		self.caps_cache = {} # 'node': [feature1, feature2]
+		features = []
+		for f in self.discofeatures[None]:
+			features.append(f[0])
+		self.caps_ext = self.calcCapsExt(features = features)
+ 		self.cacheCaps(self.caps_ext, features)
 		self.evil = False
 		self.log = True
 		self.xmlLang = 'cs'
@@ -126,7 +129,7 @@ class Client(derived):
 			fd.close()
 			self.avatars[jd] = hash
 		self.reactor.callFromThread(self.on_init)
-		self.main.cache.get_caps(self._cacheCaps)
+		self.main.cache.get_caps().addCallback(self._cacheCaps)
 		self.dispatcher.registerHandler('on_message', self.on_message, 'on_message')
 		self.dispatcher.registerHandler('on_presence', self.on_presence, 'on_presence')
 		self.dispatcher.registerHandler('on_GCpresence', self.on_GCpresence, 'on_GCpresence')
@@ -136,10 +139,9 @@ class Client(derived):
 	def chyba(self, err):
 		err.printBriefTraceback()
 	
-	def cacheCaps(self, node, features):
-		if len(self.caps_cache) >0:
-			self.caps_cache[node] = features
-			self.main.cache.set_caps(node, features)
+	def cacheCaps(self, ext, features):
+		self.caps_cache[ext] = features
+		self.main.cache.set_caps(ext, features)
 
 	def _cacheCaps(self, result):
 		for line in result:
@@ -167,7 +169,7 @@ class Client(derived):
 			self.xping.stop()
 #			if self.factory:
 #				self.factory.stopTrying()
-			self.connectionLost()
+			self.connectionLost(self.connection)
 
 
 	def connect(self, host = None, port = '5222'):
@@ -245,7 +247,7 @@ class Client(derived):
 			
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
-		if factory:
+		if self.factory:
 			self.factory.stopTrying()
 		self.connection = None
 		self.factory = None
@@ -822,15 +824,12 @@ class Client(derived):
 			elif child.name == 'c':
 				caps_node = child.getAttribute('node')
 
-				if child.hasAttribute('ext'):
-					caps_node = '%s#%s'%(caps_node, child['ext'])
-				else:
-					caps_node = '%s#%s'%(caps_node, child['ver'])
-				if self.caps_cache.has_key(caps_node):
-					features = self.caps_cache[caps_node]
+				ext = child.getAttribute('ext')
+				if self.caps_cache.has_key(ext):
+					features = self.caps_cache[ext]
 				else:	
 					if typ !='unavailable':
-						self.getFeatures(frm, caps_node)
+						self.getFeatures(frm, ext)
 			if child.name == 'x' and child.defaultUri == 'http://jabber.org/protocol/muc#user':
 				for item in child.elements():
 					if item.name == 'item':
@@ -953,20 +952,28 @@ class Client(derived):
 			del self.groupchats[fromjid]		
 
 
-	def _featuresReceived(self, el, node):
+	def _featuresReceived(self, el, ext, jid):
 		log.msg( 'features received')
 ##		self.disp(el['id'])
 		features = []
 		query = el.firstChildElement()
-		for child in  el.query.elements():
+		for child in  query.elements():
 			if child.name == 'feature':
 				features.append(child['var'])
-		self.cacheCaps(node, features)
+		self.cacheCaps(ext, features)
 		frm = jid.JID(el['from'])
 		resource = frm.resource
 		if self.roster['users'].has_key(frm.userhost()):
 			self.roster['users'][frm.userhost()].setFeatures(resource, features)
-
+	
+	def calcCapsExt(self, identity = ['client/pc'], features = []):
+		identity.sort()
+		features.sort()
+		print identity, features
+		out = '<'.join(identity) + '<' + '<'.join(features)
+		out = b64encode(sha1(out).digest())
+		return out
+		
 
 	def onVersion(self, el):
 		log.msg('sending version info')

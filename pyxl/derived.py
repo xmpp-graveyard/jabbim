@@ -502,20 +502,17 @@ class derived:
 			del self.roster_meta[jid]
 			self.setMetacontacts()
 
-	def getFeatures(self, jid, caps_node = None):
-		log.msg('requesting features'+ caps_node)
+	def getFeatures(self, jid, ext = None):
+		log.msg('requesting features'+ unicode(ext))
 		iq = IQ(self.xmlstream, 'get')
 		iq['xml:lang'] = self.xmlLang
 		iq['to'] = jid.full()
 		iq['from'] = self.jid.full()
 		q = iq.addElement('query', 'http://jabber.org/protocol/disco#info')
-		if caps_node != None:
-			q['node'] = caps_node
-			log.msg("CAPS:"+caps_node)
 #		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._featuresReceived, caps_node).addErrback(self.chyba)
+		d.addCallback(self._featuresReceived, ext, jid).addErrback(self.chyba)
 
 	def getVersion(self, jid, callback=None, errback=None):
 		if callback==None:
