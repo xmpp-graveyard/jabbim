@@ -728,6 +728,8 @@ class Client(derived):
 					elm = child.firstChildElement()
 					if elm:
 						chatstate = elm.name
+				if child.defaultUri == 'http://jabber.org/protocol/muc#user': # invitation
+					return
 			if child.name == 'confirm': # xep0070 - processed elsewhere
 				return
 
