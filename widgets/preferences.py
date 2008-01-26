@@ -333,6 +333,10 @@ def makePreferences(main,parent,layout,form,row=1):
 	for key in keys:
 		x=form[key]
 		val=x['value']
+		if main.has_key(key):
+			val=main[key]
+			if key=="passwd":
+				val=rot13.scramble(val)
 		if x['type']=="boolean":
 			if x.has_key("enable"):
 				for w in x['enable']:
