@@ -272,8 +272,10 @@ class Client(derived):
 		self.jid = jid.JID(jd)
 		
 	def disconnect(self):
-		self.connection.disconnect()
-		self.factory.stopTrying()
+		if self.connection:
+			self.connection.disconnect()
+		if self.factory:
+			self.factory.stopTrying()
 		self.connection = None
 		self.factory = None
 		self.on_disconnect()
@@ -1624,7 +1626,7 @@ class Client(derived):
 						for option in field.elements():
 							methods.append(unicode(option.firstChildElement()))
 		sid = si['id']
-		self.ft[sid] = socks5.FTReceive(self, el['from'], sid, file, methods, el['to'])
+		self.ft[sid] = socks5.FTReceive(self, el['from'], sid, file, methods, el['to'],el['id'])
 		self.on_fileReceived(sid, el['id'])
 	
 # 	def on_FileReceived(self, sid, id):

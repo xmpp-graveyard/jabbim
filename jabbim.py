@@ -176,6 +176,11 @@ class clientClass(pyxl.client.Client):
 
 	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
 		self.main.ftError[sid]=error
+		print sid,self.main.allowedSids
+		if sid in self.main.allowedSids:
+			# pokracovani jabbim extra
+			print "Part of jabbim extra has been downloaded"
+			self.main.allowedSids.remove(sid)
 		del self.ft[sid]
 		self.on_ftTransfered(sid, 0) # we have to delete filetransfer and etc
 
@@ -1209,9 +1214,16 @@ class clientClass(pyxl.client.Client):
 			
 
 	def on_fileReceived(self, sid, id):
-		if self.main.config['autoDownload'] == 'True':
-			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),unicode(self.ft[sid].tojid),"",sid)
+		if self.main.config['autoDownload'] == 'True' or unicode(sid) in self.main.allowedSids:
 			filename = self.main.config['autoDownloadPath']+'/'+self.ft[sid].fileprops['name']
+			if unicode(self.ft[sid].tojid).find("rpc@jabbim.cz")!=-1 and not unicode(sid) in self.main.allowedSids:
+				return
+			else:
+				filename = self.main.realHomeDir+'/'+self.ft[sid].fileprops['name']
+			if self.ft[sid].method!=None:
+				return
+			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),unicode(self.ft[sid].tojid),"",sid)
+			
 			if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
 				self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
 				self.ft[sid].file = filename
@@ -1222,8 +1234,12 @@ class clientClass(pyxl.client.Client):
 				self.ft[sid].file = filename
 				self.ft[sid].fp = open(self.ft[sid].file, 'wb')
 				self.receiveFile(sid, id)
+			#if unicode(sid) in self.main.allowedSids:
+				#self.main.allowedSids.remove(unicode(sid))
+
 		else:
-			self.main.events.addBooleanEvent(self.ftStarted,[sid,id],None,[],self.main.tr("File transfer"),text= unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),height=40,name=unicode(self.ft[sid].tojid),typ="ftTransfer",icon=None)
+			if unicode(self.ft[sid].tojid).find("rpc@jabbim.cz")==-1:
+				self.main.events.addBooleanEvent(self.ftStarted,[sid,id],None,[],self.main.tr("File transfer"),text= unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),height=40,name=unicode(self.ft[sid].tojid),typ="ftTransfer",icon=None)
 
 	def ftStarted(self,sid,id):
 		#q = QtGui.QMessageBox.question(self.main,self.main.tr("File transfer"), unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
@@ -1386,6 +1402,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ftError={}
 		self.filetransfer={}
 		self.filetransferQueue={}
+		self.allowedSids=[]
 		
 		# preparing chat window
 		if self.config['oneWindow']=="True":
@@ -2821,7 +2838,8 @@ class mainWindow(QtGui.QMainWindow):
 	def connectCancel(self):
 		print "DISCONNECT"
 		if self.client:
-			self.client.factory.stopTrying()
+			if self.client.factory:
+				self.client.factory.stopTrying()
 		self.reconnect = False
 		if self.client:
 			self.client.disconnect()

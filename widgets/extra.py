@@ -36,13 +36,14 @@ class extraDialog(QtGui.QDialog):
 		self.main=main
 		if typ=="emoticons":
 			self.ui.label.setText("<h3>"+self.tr("Emoticons")+"</h3>")
-			self.main.client.callRemote('rpc@jabbim.cz/service', 'getList', ('smileys/',)).addCallback(self._emoticonsListArrived)#.addErrback(self._emoticonsListError)
+			self.main.client.callRemote('rpc@jabbim.cz/service', 'getList', ('emoticons/',)).addCallback(self._emoticonsListArrived)#.addErrback(self._emoticonsListError)
 			QtCore.QObject.connect(self.ui.listWidget,QtCore.SIGNAL("currentItemChanged( QListWidgetItem *, QListWidgetItem *)"),self.selectionChanged)
 		self.ui.preview.hide()
+
 	def selectionChanged(self,item,old):
 		if item:
 			name=unicode(item.text())
-			self.main.client.callRemote('rpc@jabbim.cz/service', 'getInfo', ('smileys/'+name,)).addCallback(self._emoticonArrived)
+			self.main.client.callRemote('rpc@jabbim.cz/service', 'getInfo', ('emoticons/'+name,)).addCallback(self._emoticonArrived)
 	
 	def _emoticonArrived(self,data):
 		data=data[0][0]
@@ -64,9 +65,35 @@ class extraDialog(QtGui.QDialog):
 	def _emoticonsListError(self,data):
 		print data
 
+	def _getFile(self,data):
+		print "DATA:",unicode(data)
+		sid=unicode(data[0][0])
+		self.main.allowedSids.append(sid)
+		print "GOT SID",sid
+		print "KEYS ARE",self.main.client.ft.keys()
+		if self.main.client.ft.has_key(sid):
+			if self.main.client.ft[sid].method==None:
+				self.main.events.addFTDownloadEvent(unicode(self.main.client.ft[sid].tojid),unicode(self.main.client.ft[sid].tojid),"",sid)
+				filename = self.main.realHomeDir+'/'+self.main.client.ft[sid].fileprops['name']
+				if 'http://jabber.org/protocol/bytestreams' in self.main.client.ft[sid].methods:
+					self.main.client.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
+					self.main.client.ft[sid].file = filename
+					self.main.client.receiveFile(sid, self.main.client.ft[sid].answerId)
+				elif 'http://jabber.org/protocol/ibb' in self.main.client.ft[sid].methods:
+					log.msg('IBB offer')
+					self.main.client.ft[sid].method = 'http://jabber.org/protocol/ibb'
+					self.main.client.ft[sid].file = filename
+					self.main.client.ft[sid].fp = open(self.main.client.ft[sid].file, 'wb')
+					self.main.client.receiveFile(sid, self.main.client.ft[sid].answerId)
+				#self.main.allowedSids.remove(sid)
+		#else:
+			#self.main.allowedSids.remove(sid)
+		self.done(1)
 
 	def accept(self):
-		self.done(1)
+		name=unicode(self.ui.listWidget.currentItem().text())
+		self.main.client.callRemote('rpc@jabbim.cz/service','getFile',('emoticons/'+name+'.zip',)).addCallback(self._getFile)
+		#self.done(1)
 
 	def reject(self):
 		self.close()

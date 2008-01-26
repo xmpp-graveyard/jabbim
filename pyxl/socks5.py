@@ -545,7 +545,7 @@ class FTSend:
 		
 
 class FTReceive:
-	def __init__(self, client,jid, sid, file, methods, frmjid):
+	def __init__(self, client,jid, sid, file, methods, frmjid,answerId=None):
 		self.client = client
 		self.tojid = jid
 		self.sid = sid
@@ -564,6 +564,7 @@ class FTReceive:
 		self.connector = None
 		self.error = None
 		self.frmjid = frmjid
+		self.answerId=answerId
 	
 	def connectStreamHost(self):
 		streamhost = self.streamhosts.pop(0)
