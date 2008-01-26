@@ -223,7 +223,7 @@ class Client(derived):
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
 		self.connection = self.reactor.connectTCP(host,port,self.factory)
-
+		print host,port
 #		self.connection = self.reactor.connectTCP('jabber.pilsfree.cz',8080,self.factory)
 		self.on_connect()
 #		print dir(self.factory)

@@ -35,6 +35,7 @@ import dataforms
 from twisted.words.xish import domish
 #from twisted.web.microdom import *
 import traceback
+from extra import extraDialog
 
 class pluginConfiguration(QtGui.QDialog):
 	def __init__(self,plugin,parent):
@@ -419,14 +420,8 @@ class preferencesWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.moreEmoticons, QtCore.SIGNAL("clicked()"),self.getMoreEmoticons)
 	
 	def getMoreEmoticons(self):
-		print "fetching emoticons list"
-		self.main.client.callRemote('rpc@jabbim.cz/service', 'getList', ('smileys/',)).addCallback(self._emoticonsListArrived)#.addErrback(self._emoticonsListError)
-
-	def _emoticonsListArrived(self,data):
-		print data
-
-	def _emoticonsListError(self,data):
-		print data
+		d=extraDialog("emoticons",self.main,self.main)
+		d.exec_()
 
 	def currentRowChanged(self,row):
 		if self.justShowed:
