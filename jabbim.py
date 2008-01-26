@@ -2934,13 +2934,24 @@ class mainWindow(QtGui.QMainWindow):
 	def _addUser(self, itemjid, name, grp):
 		return self.ui.roster.addUser(itemjid,name,grp)
 
+	def _badJabberPassword(self):
+		QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Bad Jabber ID or password.")),0,1)
+
+	def _serverNotFound(self):
+		QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Server is not found.")),0,1)
+
 	def _disconnect(self, error = None): # error = None | dns | lost | auth | failed
 		self.tray.setIcon(QtGui.QIcon(QtGui.QIcon("images/16x16/apps/jabbim.png").pixmap(16,16,QtGui.QIcon.Disabled)))
 		if self.client:
 			if error=="auth":
-				QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Bad Jabber ID or password.")),0,1)
+				reactor.callLater(0,self._badJabberPassword)
+				#QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Bad Jabber ID or password.")),0,1)
 			elif error=="dns":
-				QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Server is not found.")),0,1)
+				reactor.callLater(0,self._serverNotFound)
+				#QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Server is not found.")),0,1)
+			self.client.factory.stopTrying()
+			self.reconnect = False
+
 # 		elif error == 'lost' and MainWindow.reconnect:
 # 			# connection lost, let's wait for a while and then reconnect
 
