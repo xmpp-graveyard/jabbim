@@ -67,7 +67,6 @@ class groupChatWidget(abstractChatWidget):
 		# signals
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.userClicked)
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.usersContextMenu)
-		
 
 		# shortcuts
 		short=QtGui.QShortcut("tab",self.ui.line)

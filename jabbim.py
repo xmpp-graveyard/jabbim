@@ -2413,7 +2413,11 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Called when user activate Join Groupchat QAction from main menu.
 		"""
-		self.mucBrowser(bool)
+		#self.mucBrowser(bool)
+		if USE_WIZARDS:
+			self.joingroupchatwizard=wizards.joingroupchat.joinGroupchatWizard(self,self)
+			self.joingroupchatwizard.show()
+
 
 	def deleteCurrentBookmark(self):
 		"""
@@ -2952,7 +2956,8 @@ class mainWindow(QtGui.QMainWindow):
 			elif error=="dns":
 				reactor.callLater(0,self._serverNotFound)
 				#QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Server is not found.")),0,1)
-			self.client.factory.stopTrying()
+			if self.client.factory:
+				self.client.factory.stopTrying()
 			self.reconnect = False
 
 # 		elif error == 'lost' and MainWindow.reconnect:
