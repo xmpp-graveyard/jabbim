@@ -97,7 +97,7 @@
     <message>
         <location filename="widgets/mucbrowser_ui.py" line="173"/>
         <source>Nickname:</source>
-        <translation>Surnom:</translation>
+        <translation>Pseudo:</translation>
     </message>
     <message>
         <location filename="widgets/mucbrowser_ui.py" line="174"/>
@@ -202,7 +202,7 @@ p, li { white-space: pre-wrap; }
         <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;DejaVu Sans&apos;;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Bookmarks&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;DejaVu Sans&apos;;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Signets&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="522"/>
@@ -354,7 +354,7 @@ p, li { white-space: pre-wrap; }
         <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;DejaVu Sans&apos;; font-size:8pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Events&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Evénements&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -441,7 +441,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/vcardeditor_ui.py" line="233"/>
         <source>Nickname:</source>
-        <translation>Surnom:</translation>
+        <translation>Psudo:</translation>
     </message>
     <message>
         <location filename="widgets/vcardeditor_ui.py" line="238"/>
@@ -695,7 +695,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/addcontact_ui.py" line="131"/>
         <source>Nickname:</source>
-        <translation>Surnom:</translation>
+        <translation>Pseudo:</translation>
     </message>
     <message>
         <location filename="widgets/addcontact_ui.py" line="132"/>
@@ -848,7 +848,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/preferences_bookmarks_ui.py" line="123"/>
         <source>Nickname:</source>
-        <translation>Surnom:</translation>
+        <translation>Pseudo:</translation>
     </message>
     <message>
         <location filename="widgets/preferences_bookmarks_ui.py" line="124"/>
@@ -878,7 +878,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/preferences_bookmarks_ui.py" line="128"/>
         <source>Enter your nickname</source>
-        <translation>Entrez votre surnom</translation>
+        <translation>Entrez votre pseudo</translation>
     </message>
     <message>
         <location filename="widgets/preferences_bookmarks_ui.py" line="129"/>
@@ -1222,7 +1222,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/groupchat.py" line="1113"/>
         <source>Nickname is used by somebody else.</source>
-        <translation>Ce surnom est utilisé par quelqu&apos;un d&apos;autre.</translation>
+        <translation>Ce pseudo est utilisé par quelqu&apos;un d&apos;autre.</translation>
     </message>
     <message>
         <location filename="widgets/groupchat.py" line="874"/>
@@ -1232,17 +1232,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/groupchat.py" line="388"/>
         <source>Change nickname</source>
-        <translation>Changer de surnom</translation>
+        <translation>Changer de pseudo</translation>
     </message>
     <message>
         <location filename="widgets/groupchat.py" line="769"/>
         <source>Change nick</source>
-        <translation>Changer de surnom</translation>
+        <translation>Changer de pseudo</translation>
     </message>
     <message>
         <location filename="widgets/groupchat.py" line="769"/>
         <source>Enter new nickname:</source>
-        <translation>Entrez un nouveau surnom:</translation>
+        <translation>Entrez un nouveau pseudo:</translation>
     </message>
 </context>
 <context>
@@ -1399,7 +1399,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="145"/>
         <source>Nickname:</source>
-        <translation>Surnom:</translation>
+        <translation>Pseudo:</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="146"/>
@@ -1816,7 +1816,7 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="1097"/>
         <source>is typing...</source>
-        <translation>est en train de taper...</translation>
+        <translation>est en train de composer...</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1100"/>
@@ -2466,7 +2466,7 @@ Version: %3</translation>
     <message>
         <location filename="wizards/registration.py" line="39"/>
         <source>Nickname:</source>
-        <translation>Surnom:</translation>
+        <translation>Pseudo:</translation>
     </message>
     <message>
         <location filename="wizards/registration.py" line="168"/>
