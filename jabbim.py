@@ -674,8 +674,11 @@ class clientClass(pyxl.client.Client):
 				resource=jid.resource
 				jid=jid.userhost()
 				# get highest resource and status
-				highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
-				status=highest.status
+				try:
+					highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
+					status=highest.status
+				except:
+					print 'error in resource', jid.full()
 				#if highest.status!=None:
 					#status=highest.status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
 				# set status

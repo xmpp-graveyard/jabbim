@@ -952,7 +952,7 @@ class Client(derived):
 			del self.groupchats[fromjid]		
 
 
-	def _featuresReceived(self, el, ext, jid):
+	def _featuresReceived(self, el, ext, jd):
 		log.msg( 'features received')
 ##		self.disp(el['id'])
 		features = []

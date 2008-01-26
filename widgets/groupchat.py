@@ -67,11 +67,12 @@ class groupChatWidget(abstractChatWidget):
 		# signals
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.userClicked)
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.usersContextMenu)
-		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
+		
 
 		# shortcuts
 		short=QtGui.QShortcut("tab",self.ui.line)
-
+		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
+		
 		# make roles in users list
 		self.roles={} #: list of possible roles [possible role:QtreeWidgetItem]
 		self.addRole("participant",self.tr("Participants"))
