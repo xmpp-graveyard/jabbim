@@ -34,6 +34,9 @@ import filetransfer
 from abstractchatwidget import abstractChatWidget,abstractTextView
 
 class textView(abstractTextView):
+	"""
+	QTextEdit for conversation.
+	"""
 	def dropEvent(self, event):
 		if event.mimeData().hasText():
 			jid=self.main.getJid(unicode(event.mimeData().text()))
@@ -50,53 +53,60 @@ class textView(abstractTextView):
 class groupChatWidget(abstractChatWidget):
 	def __init__(self,main,jid,jab,nickname,parent=None):
 		abstractChatWidget.__init__(self,Ui_groupchatwidget,textView,main,jid,True,parent)
-		self.nick = nickname
-		self.ui.disco_info.hide()
-		self.affiliation=""
-		self.role=""
+		self.nick = nickname #: MUC Jabber ID
+		self.affiliation="" #: user affiliation
+		self.role="" #: user role
+		# these days depracted, but maybe will be used in future
 		self.cache={}
 		self.lines=0
 		self.maxLines=300
+		self.tabWord=None #: when user press Tab, contains word where was Tab pressed
+		self.name_id=-1 # for tabPressed
+		self.ui.disco_info.hide()
 
-		self.tabWord=None
-
+		# signals
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.userClicked)
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.usersContextMenu)
-		self.ui.users.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-		short=QtGui.QShortcut("tab",self.ui.line)
 		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
-		self.name_id=-1 # for tabPressed
-		self.roles={}
+
+		# shortcuts
+		short=QtGui.QShortcut("tab",self.ui.line)
+
+		# make roles in users list
+		self.roles={} #: list of possible roles [possible role:QtreeWidgetItem]
 		self.addRole("participant",self.tr("Participants"))
 		self.addRole("moderator",self.tr("Moderators"))
 		self.addRole("visitor",self.tr("Visitors"))
 		self.ui.users.header().hide()
 		self.ui.users.hideColumn(1)
+		self.ui.users.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+
+		# splitter size
 		self.ui.splitter.setSizes(list(self.main.config['groupchatSplitSizes1']))
 		self.ui.splitter_2.setSizes(list(self.main.config['groupchatSplitSizes2']))
 		self.ui.splitter_3.setSizes(list(self.main.config['groupchatSplitSizes3']))
 
-		
-		self.sizes={}
-		self.colors=[]
-		self.invitation=[]
+		self.sizes={} #: sizes of avatars of other occupants
+		self.colors=[] #: colors of other occupants
+		self.invitation=[] #: contains JIDs where is send invitation when first presence from MUC arrived (important for converting chat to groupchat)
 
-
+		# layout for plugins
 		self.flowLayout = QtGui.QHBoxLayout()
 		self.flowLayout.setMargin(0)
 		self.flowLayout.setSpacing(2)
 
+		# use the same height for all buttons
 		self.ui.sendButton.setMinimumHeight(self.ui.sendButton.height())
 		self.ui.sendButton.setMaximumHeight(self.ui.sendButton.height())
-
 		self.ui.smileys.setMinimumHeight(self.ui.sendButton.height())
 		self.ui.smileys.setMaximumHeight(self.ui.sendButton.height())
 
-
+		# load plugins buttons
 		for key,value in self.main.plugins.iteritems():
 			if value['module']:
 				self.main.runPluginCommand(value['module'].buildGroupchatWidget,[unicode(jidT.JID(self.jid).userhost()),self.flowLayout,self])
-		
+
+		# make global buttons
 		self.ui.admin=QtGui.QToolButton()
 		self.ui.admin.setIconSize(QtCore.QSize(16,16))
 		self.ui.admin.setIcon(QtGui.QIcon("images/32x32/actions/register.png"))
@@ -133,33 +143,41 @@ class groupChatWidget(abstractChatWidget):
 		self.ui.toggleInfo.setMaximumHeight(self.ui.sendButton.height())
 		self.flowLayout.addWidget(self.ui.toggleInfo)
 		QtCore.QObject.connect(self.ui.toggleInfo, QtCore.SIGNAL("toggled(bool)"),self.toggleInfo)
-						
+
 		self.ui.admin.hide()
-
 		self.flowLayout.addStretch()
-
 		self.ui.pluginWidget.setLayout(self.flowLayout)
 
 
-		self.unread=0
-		
+		self.unread=0 #: number of unread message
+
+		# label showed until first presence arrive
 		self.connecting=QtGui.QLabel(self.tr("Connecting to MUC. This can take a few seconds."),self.ui.textEdit)
 		self.connecting.adjustSize()
-	
-		self.disco_features = []
+
+		self.disco_features = [] #: list of room features
 		log.msg("REQUESTING ROOM INFO")
 		self._getInfo()
 
-
-
 	def _getInfo(self):
+		"""
+		Gets room disco#info.
+		"""
 		self.main.client.getDiscoInfo(self.jid, callback=self._infoReceived)
 
 	def changeTopic(self,topic):
+		"""
+		Called when rooms topic is changed.
+		@type topic: unicode
+		@param topic: new topic
+		"""
 		subject=utils.replace_url(topic)
 		self.ui.info.setHtml(unicode(subject))
 
 	def _infoReceived(self, *a):
+		"""
+		Called By pyxl when disco#info is received
+		"""
 		self.disco_features = self.main.client.disco[self.jid][None]["features"]
 		features = []
 		possible_features = {
@@ -193,6 +211,9 @@ class groupChatWidget(abstractChatWidget):
 		
 	
 	def showConnecting(self):
+		"""
+		Shows 'connecting...' QLabel in conversations QTextEdit.
+		"""
 		pos=self.ui.textEdit.mapToGlobal(QtCore.QPoint(0,0))
 		x=pos.x()
 		y=pos.y()
@@ -200,6 +221,9 @@ class groupChatWidget(abstractChatWidget):
 		self.connecting.show()
 		
 	def addRoles(self):
+		"""
+		Adds all roles QTreeWidgetItems to users list (self.ui.users).
+		"""
 		self.addRole("participant",self.tr("Participants"))
 		self.addRole("moderator",self.tr("Moderators"))
 		self.addRole("visitor",self.tr("Visitors"))
