@@ -220,21 +220,8 @@ class chatWidget(abstractChatWidget):
 			if self.xhtml:
 				# get message in Qt html format
 				xhtml=self.ui.line.toHtml()
-				
-				# remove things which are not allowed by XEP or are unnecessarily
-				a=parseString(unicode(xhtml))
-				for el in a.getElementsByTagName('p'):
-					if el.hasAttribute("style"):
-						el.removeAttribute("style")
-				for el in a.getElementsByTagName('body'):
-					if el.hasAttribute("style"):
-						el.removeAttribute("style")
-				b=a.getElementsByTagName('body')
-				b=b[0]
-				xhtml=b.toxml()
-				# TODO: we must replace only first <body> and <p>... not tags in whole message
-				xhtml=unicode(xhtml,'utf-8').replace("<body>","").replace("</body>","").replace("<p>","<span>").replace("</p>","</span>")
-				
+				xhtml=self.qtHtmlToXhtml(xhtml)
+
 				# send message
 				self.main.client.sendMessage(unicode(self.jid),text,xhtml=xhtml,composing="active")
 				
