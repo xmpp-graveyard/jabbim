@@ -84,7 +84,7 @@ class Client(derived):
 		self.groupchats = {} # jid:Groupchat
 		self.privacy = Privacy(self.main)
 		self.client_name = 'Jabbim'
-		self.version = '0.3' # tohle asi neni nejlepsi zpusob
+		self.version = '0.4SVN' # tohle asi neni nejlepsi zpusob
 		self.client_os = ''
 		self.caps_node = 'http://dev.jabbim.cz/jabbim/caps'
 		self.caps_version = self.version

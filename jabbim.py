@@ -79,7 +79,7 @@ class clientClass(pyxl.client.Client):
 	def on_init(self):
 		self.temp_hosts=[]
 		self.client_os = utils.get_os_info()
-		self.version = '0.3SVN'
+		self.version = '0.4SVN'
 		self.bookmarksEnabled=True
 		self.xmlCount=[]
 
