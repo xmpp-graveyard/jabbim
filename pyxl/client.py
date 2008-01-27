@@ -113,6 +113,8 @@ class Client(derived):
 		self.registerFeature('jabber:x:data', 'http://jabber.org/protocol/commands')
 		self.registerFeature('http://jabber.org/protocol/commands','http://jabber.org/protocol/commands')
 		self.registerFeature('http://jabber.org/protocol/si/profile/file-transfer')
+		self.registerFeature('http://jabber.org/protocol/si')
+		
 		
 		
 		self.caps_cache = {} # 'node': [feature1, feature2]
