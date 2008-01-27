@@ -193,6 +193,7 @@ class firstStartWizard(QtGui.QWizard):
 		if self.newAccount.isChecked():
 			self.hide()
 			self.regwiz=registration.registrationWizard(self.main,self.main)
+			self.regwiz.setGeometry(self.geometry())
 			self.regwiz.exec_()
 		else:
 			jid=unicode(self.jid.text())

@@ -25,6 +25,7 @@ from twisted.python import log
 from twisted.words.protocols.jabber import jid as jidT
 import time
 import filetransfer
+import albumfiletransfer
 import addcontact
 import vcardeditor
 import commands
@@ -1717,8 +1718,12 @@ class rosterWidget(QtGui.QWidget):
 				position = event.pos()
 				item=self.itemAt(position.x(),position.y())
 				if item.typ=="user":
-					self.dialog=filetransfer.filetransferDialog(self.main,file,item.jid)
-					self.dialog.show()
+					self.main.showFiletransferDialog(file,jid)
+					#if item.jid=="album@disk.jabbim.cz":
+						#self.dialog=albumfiletransfer.albumFiletransferDialog(self.main,file,item.jid)
+					#else:
+						#self.dialog=filetransfer.filetransferDialog(self.main,file,item.jid)
+					#self.dialog.show()
 			event.acceptProposedAction()
 		elif event.mimeData().hasText():
 			jid = unicode(event.mimeData().text())
@@ -2612,15 +2617,16 @@ class rosterWidget(QtGui.QWidget):
 			# sends files to contact
 			jid=action.data()
 			jid=str(jid.toString())
-			file=QtGui.QFileDialog.getOpenFileNames(self.main,"Choose file")
-			file=list(file)
-			if len(file)!=0:
-				new=[]
-				for f in file:
-					new.append(unicode(f))
-				file=new
-				self.dialog=filetransfer.filetransferDialog(self.main,file,jid)
-				self.dialog.show()
+			self.main.sendFiles(jid)
+			#file=QtGui.QFileDialog.getOpenFileNames(self.main,"Choose file")
+			#file=list(file)
+			#if len(file)!=0:
+				#new=[]
+				#for f in file:
+					#new.append(unicode(f))
+				#file=new
+				#self.dialog=filetransfer.filetransferDialog(self.main,file,jid)
+				#self.dialog.show()
 		elif cmd == "a_authorize":
 			jid=action.data()
 			jid=unicode(jid.toString())

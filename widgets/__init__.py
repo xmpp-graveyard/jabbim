@@ -7,6 +7,7 @@ import chatwindow
 import preferences
 import joingroupchat
 import filetransfer
+import albumfiletransfer
 import addcontact
 import events
 import rosterLiveWidget

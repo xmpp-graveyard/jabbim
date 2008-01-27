@@ -173,16 +173,17 @@ class chatWidget(abstractChatWidget):
 		"""
 		Shows filetransfer dialog and sends files to user who chats with us.
 		"""
-		file=QtGui.QFileDialog.getOpenFileNames(self,"Choose file")
-		file=list(file)
-		if len(file)!=0:
-			new=[]
-			for f in file:
-				new.append(unicode(f))
-			file=new
-			# show filetransfer dialog and send files
-			self.dialog=filetransfer.filetransferDialog(self.main,file,self.jid)
-			self.dialog.show()
+		self.main.sendFiles(self.jid)
+		#file=QtGui.QFileDialog.getOpenFileNames(self,"Choose file")
+		#file=list(file)
+		#if len(file)!=0:
+			#new=[]
+			#for f in file:
+				#new.append(unicode(f))
+			#file=new
+			## show filetransfer dialog and send files
+			#self.dialog=filetransfer.filetransferDialog(self.main,file,self.jid)
+			#self.dialog.show()
 	
 	def sendButtonClicked(self):
 		"""

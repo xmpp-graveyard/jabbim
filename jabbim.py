@@ -1560,7 +1560,32 @@ class mainWindow(QtGui.QMainWindow):
 		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.connect()
-			
+
+	def sendFiles(self,jid):
+		file=QtGui.QFileDialog.getOpenFileNames(self,self.tr("Choose files"))
+		file=list(file)
+		if len(file)!=0:
+			new=[]
+			for f in file:
+				new.append(unicode(f))
+			file=new
+			self.showFiletransferDialog(file,jid)
+			#self.senddialog=filetransfer.filetransferDialog(self.main,file,jid)
+			#self.senddialog.show()
+
+	def showFiletransferDialog(self,files,jid):
+		"""
+		Shows filetransfer dialog.
+		@type files: list of unicode
+		@param files: list of files (full path)
+		@type jid: unicode
+		@param jid: JID
+		"""
+		#if jid=="album@disk.jabbim.cz":
+		self.senddialog=widgets.albumfiletransfer.albumFiletransferDialog(self,files,jid)
+		#else:
+			#self.senddialog=widgets.filetransfer.filetransferDialog(self,files,jid)
+		self.senddialog.show()
 
 	def buildOfflineMenu(self):
 		"""
