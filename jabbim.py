@@ -68,7 +68,7 @@ import urllib, random, xmlrpclib
 from imp import load_source
 from urllib import quote, unquote
 from include import plugins
-from os.path import basename
+from os.path import basename,dirname
 from twisted.words.protocols.jabber.xmlstream import IQ
 from twisted.words.xish.domish import Element
 from twisted.words.protocols.jabber import jid as jidT
@@ -152,10 +152,10 @@ class clientClass(pyxl.client.Client):
 				toDel.append(sid)
 				if self.main.ftError[sid]==None:
 					widget.widget.stats.setText(mainWindow.tr("Complete"))
-					self.main.tray.showMessage(mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" has been sent "),"", QtGui.QSystemTrayIcon.Information, 4000)
+					self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" has been sent/downloaded "), QtGui.QSystemTrayIcon.Information, 4000)
 				else:
 					widget.widget.stats.setText(mainWindow.tr("Error")+" "+unicode(self.main.ftError[sid]))
-					self.main.tray.showMessage(mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" can't be sent "),"", QtGui.QSystemTrayIcon.Critical, 4000)
+					self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" can't be sent/downloadeded "), QtGui.QSystemTrayIcon.Critical, 4000)
 				widget.widget.complete=True
 
 
@@ -178,9 +178,12 @@ class clientClass(pyxl.client.Client):
 		self.main.ftError[sid]=error
 		print sid,self.main.allowedSids
 		if sid in self.main.allowedSids:
-			# pokracovani jabbim extra
+			# continuing with jabbim extra
 			print "Part of jabbim extra has been downloaded"
+			file=self.ft[sid].file
+			root=utils.extractZip(file,dirname(file))
 			self.main.allowedSids.remove(sid)
+			self.main.preferencesWindow.reloadView(file,root)
 		del self.ft[sid]
 		self.on_ftTransfered(sid, 0) # we have to delete filetransfer and etc
 

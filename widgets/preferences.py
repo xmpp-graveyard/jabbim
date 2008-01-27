@@ -36,6 +36,7 @@ from twisted.words.xish import domish
 #from twisted.web.microdom import *
 import traceback
 from extra import extraDialog
+from os.path import basename
 
 class pluginConfiguration(QtGui.QDialog):
 	def __init__(self,plugin,parent):
@@ -429,10 +430,20 @@ class preferencesWindow(QtGui.QDialog):
 				self.reloadView()
 				self.justShowed=False
 
-	def reloadView(self):
+	def reloadView(self,extraPart='',extraRoot=''):
 		self.ui.emoticonsList.clear()
 		self.ui.chatSkin_list.clear()
 		self.ui.themes.clear()
+		if extraPart.find("emoticons/")!=-1:
+			pack=os.listdir(self.main.realHomeDir+'/emoticons/'+extraRoot)
+			for emoticon in pack:
+				if emoticon.endswith('.cfg'):
+					currentEmoticons=unicode(extraRoot+'/'+emoticon).replace("//",'/')
+					print "USING DONWLOADED EMOTICONS:",currentEmoticons
+					break
+			self.ui.tabWidget.setCurrentIndex(2)
+		else:
+			currentEmoticons=self.main.config["emoticons"]
 		# emoticons from Jabbim root directory
 		packs=os.listdir("emoticons/")
 		for pack in packs:
@@ -443,7 +454,7 @@ class preferencesWindow(QtGui.QDialog):
 						emo=pack+"/"+emoticon
 						config=ConfigObj("emoticons/"+emo,encoding='UTF8')
 						
-						if emo==self.main.config["emoticons"]:
+						if emo==currentEmoticons:
 							item=self.ui.emoticonsList.insertItem(0,QtGui.QIcon('emoticons/'+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
 						else:
 							item=self.ui.emoticonsList.addItem(QtGui.QIcon('emoticons/'+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
@@ -458,7 +469,7 @@ class preferencesWindow(QtGui.QDialog):
 						emo=pack+"/"+emoticon
 						config=ConfigObj(self.main.realHomeDir+"/emoticons/"+emo,encoding='UTF8')
 						
-						if emo==self.main.config["emoticons"]:
+						if emo==currentEmoticons:
 							item=self.ui.emoticonsList.insertItem(0,QtGui.QIcon(self.main.realHomeDir+"/emoticons/"+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
 						else:
 							item=self.ui.emoticonsList.addItem(QtGui.QIcon(self.main.realHomeDir+"/emoticons/"+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))

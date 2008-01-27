@@ -25,7 +25,46 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 import os,sys, re
 from configobj import ConfigObj
+import zipfile
+from cStringIO import StringIO
 
+def extractZip( filename, dir ):
+	zf = zipfile.ZipFile( filename )
+	namelist = zf.namelist()
+	dirlist = filter( lambda x: x.endswith( '/' ), namelist )
+	filelist = filter( lambda x: not x.endswith( '/' ), namelist )
+	# make base
+	pushd = os.getcwd()
+	if not os.path.isdir( dir ):
+		os.mkdir( dir )
+	os.chdir( dir )
+	# create directory structure
+	dirlist.sort()
+	root=dirlist[0]
+	for dirs in dirlist:
+		dirs = dirs.split( '/' )
+		prefix = ''
+		for dir in dirs:
+			dirname = os.path.join( prefix, dir )
+			if dir and not os.path.isdir( dirname ):
+				os.mkdir( dirname )
+			prefix = dirname
+	# extract files
+	for fn in filelist:
+		try:
+			out = open( fn, 'wb' )
+			buffer = StringIO( zf.read( fn ))
+			buflen = 2 ** 20
+			datum = buffer.read( buflen )
+			while datum:
+				out.write( datum )
+				datum = buffer.read( buflen )
+			out.close()
+		finally:
+			print fn
+	os.chdir( pushd )
+	return root
+	
 def cprint(color,text):
 	text=unicode(text)
 	if color=="yellow":
