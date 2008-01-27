@@ -211,7 +211,7 @@ class Client(derived):
 	def _connect(self, host, port): 
 		
 		self.factory = client.XMPPClientFactory(self.jid,self.password)
-#		self.factory = bclient.BOSHClientFactory(self.jid, self.password, 'http://jabber.pilsfree.cz:8080/httpb', bosh_attrs = {"wait": "100"})
+#		self.factory = bclient.BOSHClientFactory(self.jid, self.password, 'http://soumar.jabbim.cz:5280/http-bind', bosh_attrs = {"wait": "100"})
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
 ##		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
 ##		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
@@ -224,7 +224,7 @@ class Client(derived):
 		self.factory.clientConnectionFailed = self.connectionFailed
 		self.connection = self.reactor.connectTCP(host,port,self.factory)
 		print host,port
-#		self.connection = self.reactor.connectTCP('jabber.pilsfree.cz',8080,self.factory)
+#		self.connection = self.reactor.connectTCP('soumar.jabbim.cz',5280,self.factory)
 		self.on_connect()
 #		print dir(self.factory)
 #		p = self.factory.buildProtocol('tcp:localhost:8080')
@@ -331,9 +331,9 @@ class Client(derived):
 		self.commands.registerNode("http://jabber.org/protocol/rc#leave-groupchats", self.main.tr("Leave groupchats"), rc.fLeaveGC)
 		self.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#resend-file", self.main.tr("Resend file"), rc.ResendFile)
 #		print 'post commands'
-#		def pis(co):
-#			print co
-#		self.callRemote('rpc@jabbim.cz/service', 'getInfo', ('smileys/white',)).addCallback(pis)
+		def pis(co):
+			print co
+		self.callRemote('rpc@jabbim.cz/service', 'getFile', ('smileys/white.zip',)).addCallback(pis)
 
 
 	def _gotServices(self, res):
@@ -577,6 +577,9 @@ class Client(derived):
 
 
 	def onXML(self, el):
+		if not el.hasAttribute('from'):
+			print el.toXml()
+			return
 		if el.hasAttribute('id') and el.name == 'iq':
 			if not el['id'] in self.idlist:
 				log.msg('nezpracovane iq '+ el.toXml())
