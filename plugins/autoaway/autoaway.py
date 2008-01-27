@@ -132,6 +132,7 @@ class Plugin(plugins.PluginBase):
 ##			self.window = self.loadWindow("%s/news.ui.py" % self.pluginDir)
 ##			self.window.setWindowIcon(self.main.windowIcon())
 			self.log = False
+			self.currentMessage=""
 			#self.registerHandler('onInactivity', self.on_idle, priority=4)
 			#self.registerHandler('onActivity', self.on_active, priority=4)
 			if sys.platform == 'win32':
@@ -159,13 +160,13 @@ class Plugin(plugins.PluginBase):
 			#self.main.client.sendPresence(show = 'online', status = "")
 			#for muc in self.main.client.groupchats.itervalues():
 				#self.main.client.sendPresence(show = 'online', status = "", to = '%s/%s'%(muc.jid, muc.nick))
-			self.main.sendPresence(None,'online',"")
+			self.main.sendPresence(None,'online',self.currentMessage)
 
 
 	def setAway(self):
 		print "autoaway away"
-		#contact = self.main.client.roster['users'][self.main.client.jid.userhost()]
-		#print "current show:",contact.resources[self.main.client.jid.resource].show
+		contact = self.main.client.roster['users'][self.main.client.jid.userhost()]
+		self.currentMessage=unicode(contact.resources[self.main.client.jid.resource].status)
 		if self.main.selfStatus=="online":
 			#self.main.ui.statusButton.setIcon(self.main.getIcon(status='away', size="16x16"))
 			now=self.main.now()
