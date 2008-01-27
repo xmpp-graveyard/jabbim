@@ -202,8 +202,9 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.italic=False
 		self.underline=False
 		self.color=None
-		QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
-		QtCore.QObject.connect(self,QtCore.SIGNAL("cursorPositionChanged ()"),self.setFormat)
+		if self.parent.xhtml:
+			QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
+			QtCore.QObject.connect(self,QtCore.SIGNAL("cursorPositionChanged ()"),self.setFormat)
 
 	def setFormat(self):
 		# detect format of current character
@@ -229,7 +230,8 @@ class normalLineEditWidget(QtGui.QTextEdit):
 
 	def focusInEvent(self,event):
 		r=QtGui.QTextEdit.focusInEvent(self,event)
-		self.reformat()
+		if self.parent.xhtml:
+			self.reformat()
 		return r
 
 	def formatChanged(self,format):

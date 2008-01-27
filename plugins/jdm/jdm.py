@@ -22,7 +22,7 @@ class Plugin(plugins.PluginBase):
 			self.window = self.loadWindow("%s/jdm_ui.py" % self.pluginDir)
 			self.window.setWindowIcon(self.main.windowIcon())
 			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call)
-			QtCore.QObject.connect(self.window.ui.list, QtCore.SIGNAL("itemClicked ( QListWidgetItem *)"),self.clicked)
+			QtCore.QObject.connect(self.window.ui.list, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.clicked)
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
 
@@ -30,52 +30,56 @@ class Plugin(plugins.PluginBase):
 
 		else:
 			self.loadConfig(homedir)
-		
-	def updateView(self, vysledek, typ = 'public'):
-		self.window.ui.list.clear()
-		self.window.ui.log.clear()
-		self.obsah=[]
-		
-		#[0][0] je seznam jednotlivych polozek, kazda polozka ma nazev a velikost
-		for i in range (0,len(vysledek[0][0])):
-			self.obsah.append([i,vysledek[0][0][i][0],vysledek[0][0][i][0].split(".")[-1],vysledek[0][0][i][1]])
-			
-			#self.window.ui.log.append(u"Název: %s \nVelikost: %s bytů\ntywe :)\n"%(self.obsah[i][0],self.obsah[i][1]))
 
-		for i in range (0,len(self.obsah)):
-			self.window.ui.log.append(unicode(self.obsah[i]))
-			
-			item=QtGui.QListWidgetItem(unicode(self.obsah[i][1]))
-			item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic-template.png"));  #preventivne pokud se netrefime
-			
-			if self.obsah[i][2] in ["exe","run","sh","bin"]: 
+	def toNormalSize(self,size):
+		original=int(size)
+		new=int(size/1000) # kB
+		if new==0:
+			return str(round(original,2.0))+" B" # B
+		size=new
+		new=int(size/1000) # MB
+		if new==0:
+			return str(round(original/1000.0,2))+" kB" # kB
+		return str(round(original/1000000.0,2))+" MB" # MB
+
+	def updateView(self, data, typ = 'public'):
+		self.window.ui.list.clear()
+		#self.window.ui.log.clear()
+		data=data[0][0]
+		print data #2 - white.zip [37.5KiB] - 38438
+		for file in data:
+			name=file[0]
+			size=file[1]
+			ext=name.split('.')[-1]
+			item=QtGui.QListWidgetItem(unicode(name))
+			item.setData(32,QtCore.QVariant([unicode(size)]))
+			if ext in ["exe","run","sh","bin"]: 
 				item.setIcon(QtGui.QIcon(self.pluginDir+"/application-x-executable.png"))
-			if self.obsah[i][2] in ["svg","jpg","png","gif","tif","tiff","bmp","ico","xcf"]: 
+			elif ext in ["svg","jpg","png","gif","tif","tiff","bmp","ico","xcf"]: 
 				item.setIcon(QtGui.QIcon(self.pluginDir+"/image-x-generic.png"))
-			if self.obsah[i][2] in ["wav","mp3","ogg","mp4","flac"]:
-				item.setIcon(QtGui.QIcon(self.pluginDir+"/jdm/audio-x-generic.png"))
-			if self.obsah[i][2] in ["rar","zip","gz","bz","tgz","deb","rpm","tar","pkg","7z","ace"]:
+			elif ext in ["wav","mp3","ogg","mp4","flac"]:
+				item.setIcon(QtGui.QIcon(self.pluginDir+"/audio-x-generic.png"))
+			elif ext in ["rar","zip","gz","bz","tgz","deb","rpm","tar","pkg","7z","ace"]:
 				item.setIcon(QtGui.QIcon(self.pluginDir+"/package-x-generic.png"))
-			if self.obsah[i][2] in ["htm","html","xml"]:
+			elif ext in ["htm","html","xml"]:
 				item.setIcon(QtGui.QIcon(self.pluginDir+"/text-html.png"))
-			if self.obsah[i][2] in ["txt","c","py","log"]:
+			elif ext in ["txt","c","py","log"]:
 				item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic.png"))
-			if self.obsah[i][2] in ["mov","avi","mpg","swf","dv"]:
+			elif ext in ["mov","avi","mpg","swf","dv"]:
 				item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic.png"))
-			if self.obsah[i][2] in ["odt","doc","pdf","docx"]:
+			elif ext in ["odt","doc","pdf","docx"]:
 				item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-document.png"))
-			if self.obsah[i][2] in ["ods","xls","cvs"]:
+			elif ext in ["ods","xls","cvs"]:
 				item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-spreadsheet.png"))
-			if self.obsah[i][2] in ["pts","ppt","odp"]:
+			elif ext in ["pts","ppt","odp"]:
 				item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-presentation.png"))
+			else:
+				item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic-template.png"));  #preventivne pokud se netrefime
 			self.window.ui.list.addItem(item)
-		
-		#for i in range (0,len(vysledek[0][0])):
-		#	self.window.ui.log.append(u"Název: %s \nVelikost: %s bytů\ntywe :)\n"%(self.obsah[i][0],self.obsah[i][1]))
-	
+
 	def buildRosterMenu(self):
 		menu=self.rosterMenu()
-		menu.addAction("Jabbim disk manager2",self.showSlot)
+		menu.addAction("Jabbim disk manager",self.showSlot)
 	
 	def call(self,jid="",type="public"):
 		if jid=="":
@@ -89,14 +93,17 @@ class Plugin(plugins.PluginBase):
 	
 	def showSlot(self):
 		self.window.show()
-		self.call()		
+		self.call()
 	
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
 		pass
 		
-	def clicked(self,item):
-		print 'clicked',item
+	def clicked(self,item,old):
+		print 'click',item
 		self.window.ui.label_name.setText(item.text())
+		data=item.data(32).toList()
+		size=int(data[0].toString())
+		self.window.ui.label_size.setText(self.toNormalSize(size))
 		#self.window.ui.log.append(unicode(self.obsah[self.obsah.index(item.text())][2]))
 		#self.window.ui.log.append(unicode(item.text()))
 		
