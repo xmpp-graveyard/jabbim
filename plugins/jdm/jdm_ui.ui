@@ -14,10 +14,22 @@
   </property>
   <widget class="QWidget" name="centralwidget" >
    <layout class="QGridLayout" >
-    <property name="margin" >
+    <property name="leftMargin" >
      <number>9</number>
     </property>
-    <property name="spacing" >
+    <property name="topMargin" >
+     <number>9</number>
+    </property>
+    <property name="rightMargin" >
+     <number>9</number>
+    </property>
+    <property name="bottomMargin" >
+     <number>9</number>
+    </property>
+    <property name="horizontalSpacing" >
+     <number>6</number>
+    </property>
+    <property name="verticalSpacing" >
      <number>6</number>
     </property>
     <item rowspan="2" row="1" column="0" >
@@ -37,8 +49,17 @@
       <property name="textElideMode" >
        <enum>Qt::ElideMiddle</enum>
       </property>
+      <property name="gridSize" >
+       <size>
+        <width>128</width>
+        <height>96</height>
+       </size>
+      </property>
       <property name="viewMode" >
        <enum>QListView::IconMode</enum>
+      </property>
+      <property name="wordWrap" >
+       <bool>true</bool>
       </property>
      </widget>
     </item>
@@ -54,18 +75,25 @@
     </item>
     <item row="1" column="1" >
      <layout class="QVBoxLayout" >
-      <property name="margin" >
-       <number>0</number>
-      </property>
       <property name="spacing" >
        <number>6</number>
+      </property>
+      <property name="leftMargin" >
+       <number>0</number>
+      </property>
+      <property name="topMargin" >
+       <number>0</number>
+      </property>
+      <property name="rightMargin" >
+       <number>0</number>
+      </property>
+      <property name="bottomMargin" >
+       <number>0</number>
       </property>
       <item>
        <widget class="QLabel" name="label_3" >
         <property name="sizePolicy" >
-         <sizepolicy>
-          <hsizetype>0</hsizetype>
-          <vsizetype>5</vsizetype>
+         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -88,9 +116,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <widget class="QLabel" name="label_4" >
         <property name="sizePolicy" >
-         <sizepolicy>
-          <hsizetype>0</hsizetype>
-          <vsizetype>5</vsizetype>
+         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -106,9 +132,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <widget class="QLabel" name="label_name" >
         <property name="sizePolicy" >
-         <sizepolicy>
-          <hsizetype>0</hsizetype>
-          <vsizetype>5</vsizetype>
+         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -127,9 +151,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <widget class="QLabel" name="label_6" >
         <property name="sizePolicy" >
-         <sizepolicy>
-          <hsizetype>0</hsizetype>
-          <vsizetype>5</vsizetype>
+         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -145,9 +167,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <widget class="QLabel" name="label_size" >
         <property name="sizePolicy" >
-         <sizepolicy>
-          <hsizetype>0</hsizetype>
-          <vsizetype>5</vsizetype>
+         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -167,11 +187,20 @@ p, li { white-space: pre-wrap; }
     </item>
     <item row="0" column="0" colspan="2" >
      <layout class="QHBoxLayout" >
-      <property name="margin" >
-       <number>0</number>
-      </property>
       <property name="spacing" >
        <number>6</number>
+      </property>
+      <property name="leftMargin" >
+       <number>0</number>
+      </property>
+      <property name="topMargin" >
+       <number>0</number>
+      </property>
+      <property name="rightMargin" >
+       <number>0</number>
+      </property>
+      <property name="bottomMargin" >
+       <number>0</number>
       </property>
       <item>
        <widget class="QLabel" name="label_description" >

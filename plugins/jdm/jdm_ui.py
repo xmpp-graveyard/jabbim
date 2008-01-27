@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'jdm_ui.ui'
 #
-# Created: Sun Nov 25 21:09:52 2007
-#      by: PyQt4 UI code generator 4.1
+# Created: Sun Jan 27 12:55:08 2008
+#      by: PyQt4 UI code generator 4.3.3
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
 from PyQt4 import QtCore, QtGui
 
 class Ui_MainWindow(object):
@@ -27,7 +26,9 @@ class Ui_MainWindow(object):
         self.list.setMinimumSize(QtCore.QSize(480,0))
         self.list.setIconSize(QtCore.QSize(32,32))
         self.list.setTextElideMode(QtCore.Qt.ElideMiddle)
+        self.list.setGridSize(QtCore.QSize(128,96))
         self.list.setViewMode(QtGui.QListView.IconMode)
+        self.list.setWordWrap(True)
         self.list.setObjectName("list")
         self.gridlayout.addWidget(self.list,1,0,2,1)
 
@@ -37,13 +38,13 @@ class Ui_MainWindow(object):
         self.gridlayout.addWidget(self.log,2,1,1,1)
 
         self.vboxlayout = QtGui.QVBoxLayout()
-        self.vboxlayout.setMargin(0)
         self.vboxlayout.setSpacing(6)
+        self.vboxlayout.setMargin(0)
         self.vboxlayout.setObjectName("vboxlayout")
 
         self.label_3 = QtGui.QLabel(self.centralwidget)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(5))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
@@ -59,7 +60,7 @@ class Ui_MainWindow(object):
 
         self.label_4 = QtGui.QLabel(self.centralwidget)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(5))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
@@ -69,7 +70,7 @@ class Ui_MainWindow(object):
 
         self.label_name = QtGui.QLabel(self.centralwidget)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(5))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_name.sizePolicy().hasHeightForWidth())
@@ -80,7 +81,7 @@ class Ui_MainWindow(object):
 
         self.label_6 = QtGui.QLabel(self.centralwidget)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(5))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
@@ -90,7 +91,7 @@ class Ui_MainWindow(object):
 
         self.label_size = QtGui.QLabel(self.centralwidget)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(5))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_size.sizePolicy().hasHeightForWidth())
@@ -101,8 +102,8 @@ class Ui_MainWindow(object):
         self.gridlayout.addLayout(self.vboxlayout,1,1,1,1)
 
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(6)
+        self.hboxlayout.setMargin(0)
         self.hboxlayout.setObjectName("hboxlayout")
 
         self.label_description = QtGui.QLabel(self.centralwidget)
