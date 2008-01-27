@@ -25,28 +25,14 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <widget class="QWidget" name="" >
-      <layout class="QGridLayout" >
+      <layout class="QVBoxLayout" >
        <property name="margin" >
         <number>0</number>
        </property>
        <property name="spacing" >
         <number>6</number>
        </property>
-       <item row="1" column="3" >
-        <widget class="QCheckBox" name="showJid" >
-         <property name="text" >
-          <string>show JID</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1" >
-        <widget class="QLabel" name="label_5" >
-         <property name="text" >
-          <string>Hledat podle Jabber ID:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="4" >
+       <item>
         <widget class="QTreeWidget" name="groupchats" >
          <property name="allColumnsShowFocus" >
           <bool>true</bool>
@@ -73,21 +59,59 @@
          </column>
         </widget>
        </item>
-       <item row="1" column="0" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Horizontal</enum>
+       <item>
+        <layout class="QHBoxLayout" >
+         <property name="margin" >
+          <number>0</number>
          </property>
-         <property name="sizeHint" >
-          <size>
-           <width>91</width>
-           <height>22</height>
-          </size>
+         <property name="spacing" >
+          <number>6</number>
          </property>
-        </spacer>
-       </item>
-       <item row="1" column="2" >
-        <widget class="QLineEdit" name="lineEdit" />
+         <item>
+          <spacer>
+           <property name="orientation" >
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" >
+            <size>
+             <width>100</width>
+             <height>31</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_5" >
+           <property name="text" >
+            <string>Server:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit" />
+         </item>
+         <item>
+          <widget class="QPushButton" name="serverChangeButton" >
+           <property name="text" >
+            <string>OK</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="showJid" >
+           <property name="text" >
+            <string>show JID</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>
@@ -111,27 +135,17 @@
           <property name="spacing" >
            <number>6</number>
           </property>
-          <item row="1" column="1" >
-           <widget class="QLineEdit" name="server" >
-            <property name="text" >
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1" >
-           <widget class="QLineEdit" name="room" />
-          </item>
-          <item row="1" column="0" >
-           <widget class="QLabel" name="label_2" >
-            <property name="text" >
-             <string>Server:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0" >
-           <widget class="QLabel" name="label" >
+          <item row="0" column="0" colspan="2" >
+           <widget class="QLabel" name="roomLabel" >
             <property name="text" >
              <string>Room:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2" >
+           <widget class="QLabel" name="serverLabel" >
+            <property name="text" >
+             <string>Server:</string>
             </property>
            </widget>
           </item>
@@ -268,6 +282,17 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>nickname</tabstop>
+  <tabstop>password</tabstop>
+  <tabstop>name</tabstop>
+  <tabstop>bookmark</tabstop>
+  <tabstop>showJid</tabstop>
+  <tabstop>pushButton_2</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>groupchats</tabstop>
+  <tabstop>lineEdit</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -277,8 +302,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>598</x>
-     <y>367</y>
+     <x>700</x>
+     <y>377</y>
     </hint>
     <hint type="destinationlabel" >
      <x>630</x>
@@ -293,12 +318,28 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>524</x>
-     <y>365</y>
+     <x>617</x>
+     <y>377</y>
     </hint>
     <hint type="destinationlabel" >
      <x>632</x>
      <y>337</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>bookmark</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>name</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>564</x>
+     <y>305</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>565</x>
+     <y>279</y>
     </hint>
    </hints>
   </connection>

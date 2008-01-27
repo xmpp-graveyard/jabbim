@@ -18,8 +18,9 @@ class MUCBrowserDialog(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.selectionChanged)
 		QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.CE)
 		QtCore.QObject.connect(self.ui.showJid, QtCore.SIGNAL("stateChanged ( int )"),self.showJid)
-		QtCore.QObject.connect(self.ui.lineEdit, QtCore.SIGNAL("textChanged ( const QString & )"),self.filterChanged)
-
+		#QtCore.QObject.connect(self.ui.lineEdit, QtCore.SIGNAL("textChanged ( const QString & )"),self.filterChanged)
+		QtCore.QObject.connect(self.ui.serverChangeButton, QtCore.SIGNAL("clicked()"),self.serverChanged)
+		self.room=""
 		self.ui.groupchats.hideColumn(1)
 		self.ui.groupchats.setColumnWidth(0,42)
 		self.ui.groupchats.setSortingEnabled(True)
@@ -38,12 +39,21 @@ class MUCBrowserDialog(QtGui.QDialog):
 					break
 		self.server=mucjid
 		if mucjid:
-			self.ui.server.setText(self.server)
+			self.ui.serverLabel.setText(self.tr("Server: ")+self.server)
+			self.ui.lineEdit.setText(self.server)
 			self.main.client.getDiscoItems(mucjid, callback = self._roomsReceived)
 		self.ui.splitter.setSizes([500,150])
 
-		self.ui.lineEdit.hide()
-		self.ui.label_5.hide()
+		#self.ui.lineEdit.hide()
+		#self.ui.label_5.hide()
+
+	def serverChanged(self):
+		server=unicode(self.ui.lineEdit.text())
+		self.server=server
+		if self.server:
+			self.ui.serverLabel.setText(self.tr("Server: ")+self.server)
+			self.ui.groupchats.clear()
+			self.main.client.getDiscoItems(self.server, callback = self._roomsReceived)
 
 	def filterChanged(self,text):
 		if len(text)<4 and len(text)!=0:
@@ -95,7 +105,8 @@ class MUCBrowserDialog(QtGui.QDialog):
 			room = item.data(0, 32).toString()
 			self.main.client.getDiscoItems(room, callback = self._participantsReceived, callback_par = (room, item))
 			r = room.split('@')[0]
-			self.ui.room.setText(r)
+			self.ui.roomLabel.setText(self.tr("Room: ")+r)
+			self.room=room
 			self.ui.name.setText(r)
 	
 	def _participantsReceived(self, par):
@@ -159,8 +170,8 @@ class MUCBrowserDialog(QtGui.QDialog):
 			self.ui.groupchats.insertTopLevelItem(0, item)
 		self.ui.groupchats.sortByColumn(3,QtCore.Qt.DescendingOrder)
 	def accept(self):
-		room=unicode(self.ui.room.text())
-		server=unicode(self.ui.server.text())
+		room=self.room#unicode(self.ui.room.text())
+		server=self.server#unicode(self.ui.server.text())
 		name=unicode(self.ui.name.text())
 		nickname=unicode(self.ui.nickname.text())
 		password=unicode(self.ui.password.text())
