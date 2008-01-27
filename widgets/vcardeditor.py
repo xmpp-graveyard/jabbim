@@ -29,6 +29,7 @@ class vcardEditorDialog(QtGui.QDialog):
 		self.ui.tabWidget.setEnabled(False)
 
 		self.ui.avatar.setPixmap(QtGui.QPixmap())
+		self.ui.clearAvatar.hide()
 
 		self.ui.avatar.setText("")
 		text=""
@@ -73,6 +74,7 @@ class vcardEditorDialog(QtGui.QDialog):
 			self.ui.homepage_edit.hide()
 		else:
 			QtCore.QObject.connect(self.ui.setAvatar, QtCore.SIGNAL("clicked()"),self.setAvatar)
+			QtCore.QObject.connect(self.ui.clearAvatar, QtCore.SIGNAL("clicked()"),self.clearAvatar)
 			self.ui.homepage_label.hide()
 	
 	def noVcard(self,data=None):
@@ -127,6 +129,8 @@ class vcardEditorDialog(QtGui.QDialog):
 							pixmap.loadFromData(image)
 							pixmap=QtGui.QIcon(pixmap)
 							self.ui.avatar.setPixmap(pixmap.pixmap(128,128))
+							if self.editable:
+								self.ui.clearAvatar.show()
 			self.ui.download.hide()
 			self.ui.tabWidget.setEnabled(True)
 		else:
@@ -155,6 +159,10 @@ class vcardEditorDialog(QtGui.QDialog):
 		self.ui.ver_name.setText(self.tr("Unable to retrieve."))
 		self.ui.ver_version.setText(self.tr("Unable to retrieve."))
 		self.ui.ver_os.setText(self.tr("Unable to retrieve."))
+
+	def clearAvatar(self):
+		self.ui.avatar.setPixmap(QtGui.QPixmap())
+		self.ui.clearAvatar.hide()
 
 	def setAvatar(self):
 		file=list(QtGui.QFileDialog.getOpenFileNames(self,"Choose picture"))
