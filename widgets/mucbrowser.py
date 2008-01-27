@@ -106,7 +106,7 @@ class MUCBrowserDialog(QtGui.QDialog):
 			self.main.client.getDiscoItems(room, callback = self._participantsReceived, callback_par = (room, item))
 			r = room.split('@')[0]
 			self.ui.roomLabel.setText(self.tr("Room: ")+r)
-			self.room=room
+			self.room=r
 			self.ui.name.setText(r)
 	
 	def _participantsReceived(self, par):
@@ -170,12 +170,12 @@ class MUCBrowserDialog(QtGui.QDialog):
 			self.ui.groupchats.insertTopLevelItem(0, item)
 		self.ui.groupchats.sortByColumn(3,QtCore.Qt.DescendingOrder)
 	def accept(self):
-		room=self.room#unicode(self.ui.room.text())
-		server=self.server#unicode(self.ui.server.text())
+		room=unicode(self.room)#unicode(self.ui.room.text())
+		server=unicode(self.server)#unicode(self.ui.server.text())
 		name=unicode(self.ui.name.text())
 		nickname=unicode(self.ui.nickname.text())
 		password=unicode(self.ui.password.text())
-
+		print room+'@'+server
 		if not name:
 			name = room
 			if self.main.client.bookmarksEnabled:
