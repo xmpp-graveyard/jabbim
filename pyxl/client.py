@@ -112,6 +112,8 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/disco#info', 'http://jabber.org/protocol/commands', identity={"category":"automation","type":"command-list", "name":self.main.tr("Extra actions")})
 		self.registerFeature('jabber:x:data', 'http://jabber.org/protocol/commands')
 		self.registerFeature('http://jabber.org/protocol/commands','http://jabber.org/protocol/commands')
+		self.registerFeature('http://jabber.org/protocol/si/profile/file-transfer')
+		
 		
 		self.caps_cache = {} # 'node': [feature1, feature2]
 		features = []
