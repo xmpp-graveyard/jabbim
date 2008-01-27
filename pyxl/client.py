@@ -108,6 +108,7 @@ class Client(derived):
 		self.registerFeature('http://kopete.kde.org/protocol/file-preview')
 		self.registerFeature('http://jabber.org/protocol/bytestreams')
 		self.registerFeature('http://jabber.org/protocol/ibb')
+		self.registerFeature('http://jabber.org/protocol/bytestreams#udp')
 		self.registerFeature('http://jabber.org/protocol/disco#info', 'http://jabber.org/protocol/commands', identity={"category":"automation","type":"command-list", "name":self.main.tr("Extra actions")})
 		self.registerFeature('jabber:x:data', 'http://jabber.org/protocol/commands')
 		self.registerFeature('http://jabber.org/protocol/commands','http://jabber.org/protocol/commands')
