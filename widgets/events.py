@@ -22,6 +22,7 @@ except:
 	print "PyQt4 is not installed."
 from os.path import basename
 from twisted.python import log
+from os.path import basename
 
 class abstractWidget(QtGui.QWidget):
 	def __init__(self,header,text,item,main,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40):
@@ -366,11 +367,12 @@ class events:
 		widget.submitClicked()
 
 	def timeout(self):
+		mainWindow=self.main
 		if self.jabbimIcon:
-			self.main.tray.setIcon(self.trayIcon)
+			mainWindow.tray.setIcon(self.trayIcon)
 			self.main.ui.tabWidget.setTabIcon(2,self.trayIcon)
 		else:
-			self.main.tray.setIcon(self.main.getCurrentTrayIcon())
+			mainWindow.tray.setIcon(self.main.getCurrentTrayIcon())
 			result=QtGui.QPixmap(16,16)
 			result.fill(QtCore.Qt.transparent)
 			self.main.ui.tabWidget.setTabIcon(2,QtGui.QIcon(result))
@@ -387,24 +389,24 @@ class events:
 
 	def refreshTray(self):
 		types=[]
-		
+		mainWindow=self.main
 		#self.events[0]['tooltip']!=""
 		if len(self.events)>0:
 			if self.events[0].has_key('tooltip'):
-				self.main.tray.setToolTip(self.events[0]['tooltip'])
+				mainWindow.tray.setToolTip(self.events[0]['tooltip'])
 		else:
 			if self.main.selfStatus!="":
 				data=self.main.selfStatus
-				self.main.tray.setToolTip(self.main.tr('Your status:')+" "+self.main.status[data])
+				mainWindow.tray.setToolTip(mainWindow.tr('Your status:')+" "+self.main.status[data])
 			else:
-				self.main.tray.setToolTip('')
+				mainWindow.tray.setToolTip('')
 		for event in self.events:
 			if not event['type'] in types:
 				types.append(event['type'])
 		if len(types)==0:
 			self.timer.stop()
 			if self.jabbimIcon!=None:
-				self.main.tray.setIcon(self.main.getCurrentTrayIcon())
+				mainWindow.tray.setIcon(self.main.getCurrentTrayIcon())
 				self.main.ui.tabWidget.setTabIcon(2,QtGui.QIcon("images/16x16/categories/event.png"))
 				if self.main.ui.tabWidget.currentIndex()==2:
 					self.main.ui.tabWidget.setCurrentIndex(0)
@@ -467,7 +469,8 @@ class events:
 
 	def addSubscribeEvent(self,jid,status):
 		#	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None, caps = True):
-		self.addBooleanEvent(self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],header=self.main.tr('Subscribe request'),text=self.main.tr('From:')+" "+unicode(jid),name=jid,typ="subscribe")
+		mainWindow=self.main
+		self.addBooleanEvent(self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],header=mainWindow.tr('Subscribe request'),text=mainWindow.tr('From:')+" "+unicode(jid),name=jid,typ="subscribe")
 
 	def addFTUploadEvent(self,jid,files,descriptions):
 		# descriptions['soubor']='popis'
@@ -488,7 +491,8 @@ class events:
 			sid=self.main.client.sendFile(jid, basename(file), file,descriptions[file])
 		else:
 			sid=self.main.client.sendFile(jid+'/'+res, basename(file), file,descriptions[file])
-		self.main.tray.showMessage(self.main.tr("Sending file ")+file+self.main.tr(" to ")+unicode(jid), self.main.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
+		mainWindow=self.main
+		mainWindow.tray.showMessage(mainWindow.tr("Sending file ")+basename(file)+mainWindow.tr(" to ")+unicode(jid), mainWindow.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
 
 		self.filetransferQueue[sid]=filesQueue
 		#self.main.filetransferDescriptions[sid]=descriptions
@@ -538,10 +542,11 @@ class events:
 		jid=self.filetransfer[sid].jid
 		file=self.filetransferQueue[queueId][self.filetransferQueue[queueId].keys()[0]].name
 		description=self.filetransferQueue[queueId][self.filetransferQueue[queueId].keys()[0]].description
-
+		
+		mainWindow=self.main
 		file=unicode(file)
 		sid2=self.main.client.sendFile(jid, basename(file), file, description)
-		self.main.tray.showMessage(self.main.tr("Sending file ")+file+self.main.tr(" to ")+unicode(jid), self.main.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
+		mainWindow.tray.showMessage(mainWindow.tr("Sending file ")+basename(file)+mainWindow.tr(" to ")+unicode(jid), mainWindow.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		item.setSizeHint(QtCore.QSize(100,60))
 		item.file=file
