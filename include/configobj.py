@@ -4,9 +4,6 @@
 # E-mail: fuzzyman AT voidspace DOT org DOT uk
 #         nico AT tekNico DOT net
 
-# chmod minor fix for Jabbim client http://dev.jabbim.cz/jabbim
-# added by Josef Halicek, josef.halicek AT gmail DOT com
-
 # ConfigObj 4
 # http://www.voidspace.org.uk/python/configobj.html
 
@@ -1497,7 +1494,7 @@ class ConfigObj(Section):
                 for val in value])
         if not isinstance(value, StringTypes):
             if self.stringify:
-                value = str(value)
+                value = unicode(value)
             else:
                 raise TypeError, 'Value "%s" is not a string.' % value
         squot = "'%s'"
@@ -1851,8 +1848,6 @@ class ConfigObj(Section):
             h = open(self.filename, 'wb')
             h.write(output)
             h.close()
-        if sys.platform != 'win32' :     # we need to protect config file to access only by owner
-            os.chmod(self.filename,0700) # added by josef.halicek
 
     def validate(self, validator, preserve_errors=False, copy=False,
         section=None):
