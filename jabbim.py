@@ -1451,6 +1451,7 @@ class mainWindow(QtGui.QMainWindow):
 					u"xa":u"4",
 					u"dnd":u"5",
 					u"None":u"1",
+					u"":u"1",
 					u"offline":u"9",
 					u"unavailable":u"9"
 					}
