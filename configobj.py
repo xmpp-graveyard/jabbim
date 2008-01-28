@@ -1494,7 +1494,7 @@ class ConfigObj(Section):
                 for val in value])
         if not isinstance(value, StringTypes):
             if self.stringify:
-                value = str(value)
+                value = unicode(value)
             else:
                 raise TypeError, 'Value "%s" is not a string.' % value
         squot = "'%s'"
