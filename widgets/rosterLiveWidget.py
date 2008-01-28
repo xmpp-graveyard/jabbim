@@ -2140,8 +2140,10 @@ class rosterWidget(QtGui.QWidget):
 			res=self.main.client.roster['users'][jid].resources[res]
 			show=res.show
 			status=res.status
-
+		if not self.main.shows.has_key(unicode(show)):
+			return
 		for user in self.getUserItems(jid):
+			
 			user.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons[self.main.shows[unicode(show)]])
 			if self.main.shows[unicode(show)]!="9":
 				user.hidden=False
