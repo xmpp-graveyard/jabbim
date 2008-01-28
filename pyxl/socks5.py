@@ -593,7 +593,7 @@ class FTReceive:
 		used = query.addElement('streamhost-used')
 		used['jid'] = self.activeStreamhost['jid']
 		print iq.toXml()
-		self.fp = open(self.file, 'w')
+		self.fp = open(self.file, 'wb')
 		self.client.xmlstream.send(iq)
 	
 	def ibbProcess(self):
