@@ -132,47 +132,58 @@ class clientClass(pyxl.client.Client):
 		toDel=[] # finished transfers
 		widget=self.main.events.filetransfer[sid] # event widget
 		mainWindow=self.main
-
-		if self.ft.has_key(sid):
-			# Filetransfer is alive
-			size=float(self.ft[sid].size)
-			sent=float(self.ft[sid].transfered)
-			widget.widget.progressBar.setValue(int((sent/size)*100))
-		else:
-			# Filetransfer finished
-			log.msg("ft.finished")
-			widget.widget.progressBar.setValue(100)
-			if widget.widget.complete==None:
-				# User wants to close transfer
-				toDel.append(sid)
-				widget.widget.complete=True
-				widget.widget.closeClicked()
+		if widget.typ=='normal':
+			if self.ft.has_key(sid):
+				# Filetransfer is alive
+				size=float(self.ft[sid].size)
+				sent=float(self.ft[sid].transfered)
+				widget.widget.progressBar.setValue(int((sent/size)*100))
 			else:
-				# transport finished
-				toDel.append(sid)
-				if self.main.ftError[sid]==None:
-					widget.widget.stats.setText(mainWindow.tr("Complete"))
-					self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" has been sent/downloaded "), QtGui.QSystemTrayIcon.Information, 4000)
+				# Filetransfer finished
+				log.msg("ft.finished")
+				widget.widget.progressBar.setValue(100)
+				if widget.widget.complete==None:
+					# User wants to close transfer
+					toDel.append(sid)
+					widget.widget.complete=True
+					widget.widget.closeClicked()
 				else:
-					widget.widget.stats.setText(mainWindow.tr("Error")+" "+unicode(self.main.ftError[sid]))
-					self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" can't be sent/downloadeded "), QtGui.QSystemTrayIcon.Critical, 4000)
-				widget.widget.complete=True
-
-
-		for sid in toDel:
-			if self.main.events.filetransfer[sid].download==False:
-				queueId=self.main.events.filetransfer[sid].queueId # filetransfer queue ID
-				if queueId!=None:
-					# delete sent file from queue and start uploading next file in queue
-					del self.main.events.filetransferQueue[queueId][self.main.events.filetransfer[sid].file]
-					if len(self.main.events.filetransferQueue[queueId])!=0:
-						self.main.events.nextFTUploadEvent(sid,queueId)
-				else:
-					log.msg(unicode(self.main.events.filetransferQueue))
-					log.msg(unicode(self.main.events.filetransfer[sid].file))
-			# delete this filetransfer
-			del self.main.events.filetransfer[sid]
-
+					# transport finished
+					toDel.append(sid)
+					if self.main.ftError[sid]==None:
+						widget.widget.stats.setText(mainWindow.tr("Complete"))
+						self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" has been sent/downloaded "), QtGui.QSystemTrayIcon.Information, 4000)
+					else:
+						widget.widget.stats.setText(mainWindow.tr("Error")+" "+unicode(self.main.ftError[sid]))
+						self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" can't be sent/downloadeded "), QtGui.QSystemTrayIcon.Critical, 4000)
+					widget.widget.complete=True
+	
+	
+			for sid in toDel:
+				if self.main.events.filetransfer[sid].download==False:
+					queueId=self.main.events.filetransfer[sid].queueId # filetransfer queue ID
+					if queueId!=None:
+						# delete sent file from queue and start uploading next file in queue
+						del self.main.events.filetransferQueue[queueId][self.main.events.filetransfer[sid].file]
+						if len(self.main.events.filetransferQueue[queueId])!=0:
+							self.main.events.nextFTUploadEvent(sid,queueId)
+					else:
+						log.msg(unicode(self.main.events.filetransferQueue))
+						log.msg(unicode(self.main.events.filetransfer[sid].file))
+				# delete this filetransfer
+				del self.main.events.filetransfer[sid]
+		else:
+			if self.ft.has_key(sid):
+				# Filetransfer is alive
+				size=float(self.ft[sid].size)
+				sent=float(self.ft[sid].transfered)
+				widget.setValue(int((sent/size)*100))
+			else:
+				# Filetransfer finished
+				log.msg("ft.finished")
+				widget.setValue(100)
+				# User wants to close transfer
+				del self.main.events.filetransfer[sid]
 
 	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
 		self.main.ftError[sid]=error

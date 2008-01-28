@@ -505,6 +505,7 @@ class events:
 		item.broken=[]
 		item.all=fileCount
 		item.download=False
+		item.typ='normal'
 		item.widget=FTWidget(basename(file),item,self.main,sid,self.main.ui.eventsListWidget)
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 		self.filetransfer[sid]=item
@@ -534,6 +535,7 @@ class events:
 		item.sent=1
 		item.broken=[]
 		item.all=1
+		item.typ='normal'
 		item.widget=FTWidget(basename(file),item,self.main,sid,self.main.ui.eventsListWidget)
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 		self.filetransfer[sid]=item
@@ -559,6 +561,7 @@ class events:
 		#else:
 			#item.broken=self.filetransfer[sid].broken.append(self.filetransfer[sid].file)
 		item.all=self.filetransfer[sid].all
+		item.typ='normal'
 		log.msg("SENDING "+str(item.sent)+"/"+str(item.all))
 		item.widget=FTWidget(basename(file),item,self.main,sid2,self.main.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)

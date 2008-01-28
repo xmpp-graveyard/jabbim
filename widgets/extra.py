@@ -73,7 +73,9 @@ class extraDialog(QtGui.QDialog):
 		print "KEYS ARE",self.main.client.ft.keys()
 		if self.main.client.ft.has_key(sid):
 			if self.main.client.ft[sid].method==None:
-				self.main.events.addFTDownloadEvent(unicode(self.main.client.ft[sid].tojid),unicode(self.main.client.ft[sid].tojid),"",sid)
+				#self.main.events.addFTDownloadEvent(unicode(self.main.client.ft[sid].tojid),unicode(self.main.client.ft[sid].tojid),"",sid)
+				self.main.events.filetransfer[sid]=self.progress
+				self.main.events.filetransfer[sid].typ='extra'
 				filename = self.main.realHomeDir+'/'+self.main.client.ft[sid].fileprops['name']
 				if 'http://jabber.org/protocol/bytestreams' in self.main.client.ft[sid].methods:
 					self.main.client.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
@@ -92,6 +94,10 @@ class extraDialog(QtGui.QDialog):
 
 	def accept(self):
 		name=unicode(self.ui.listWidget.currentItem().text())
+		b=QtGui.QPushButton()
+		self.progress=QtGui.QProgressDialog(self.tr('Downloading emoticons pack:')+" "+name,"", 0, 100, self.main.preferencesWindow)
+		self.progress.setCancelButton(b)
+		b.hide()
 		self.main.client.callRemote('rpc@jabbim.cz/service','getFile',('emoticons/'+name+'.zip',)).addCallback(self._getFile)
 		#self.done(1)
 
