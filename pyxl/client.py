@@ -108,7 +108,7 @@ class Client(derived):
 		self.registerFeature('http://kopete.kde.org/protocol/file-preview')
 		self.registerFeature('http://jabber.org/protocol/bytestreams')
 		self.registerFeature('http://jabber.org/protocol/ibb')
-		self.registerFeature('http://jabber.org/protocol/bytestreams#udp')
+#		self.registerFeature('http://jabber.org/protocol/bytestreams#udp')
 		self.registerFeature('http://jabber.org/protocol/disco#info', 'http://jabber.org/protocol/commands', identity={"category":"automation","type":"command-list", "name":self.main.tr("Extra actions")})
 		self.registerFeature('jabber:x:data', 'http://jabber.org/protocol/commands')
 		self.registerFeature('http://jabber.org/protocol/commands','http://jabber.org/protocol/commands')
@@ -337,9 +337,9 @@ class Client(derived):
 		self.commands.registerNode("http://jabber.org/protocol/rc#leave-groupchats", self.main.tr("Leave groupchats"), rc.fLeaveGC)
 		self.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#resend-file", self.main.tr("Resend file"), rc.ResendFile)
 #		print 'post commands'
-		def pis(co):
-			print co
-		self.callRemote('rpc@jabbim.cz/service', 'getFile', ('smileys/white.zip',)).addCallback(pis)
+#		def pis(co):
+#			print co
+#		self.callRemote('rpc@jabbim.cz/service', 'getFile', ('smileys/white.zip',)).addCallback(pis)
 
 
 	def _gotServices(self, res):
