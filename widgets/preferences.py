@@ -673,8 +673,9 @@ class preferencesWindow(QtGui.QDialog):
 		dialog=pluginConfiguration(self.plugins[name],self.ui.plugins)
 		dialog.exec_()
 		if self.main.plugins.has_key(name):
-			self.main.plugins[name].config=self.plugins[name].config
-			self.main.plugins[name].on_configChanged()
+			if self.main.plugins[name]['module']:
+				self.main.plugins[name]['module'].config=self.plugins[name].config
+				self.main.plugins[name]['module'].on_configChanged()
 
 	def pluginsContextMenuTriggered(self,action):
 		cmd=action.objectName()
@@ -685,8 +686,9 @@ class preferencesWindow(QtGui.QDialog):
 			dialog=pluginConfiguration(self.plugins[name],self.ui.plugins)
 			dialog.exec_()
 		if self.main.plugins.has_key(name):
-			self.main.plugins[name].config=self.plugins[name].config
-			self.main.plugins[name].on_configChanged()
+			if self.main.plugins[name]['module']:
+				self.main.plugins[name]['module'].config=self.plugins[name].config
+				self.main.plugins[name]['module'].on_configChanged()
 
 
 
