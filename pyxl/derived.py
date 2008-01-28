@@ -383,7 +383,7 @@ class derived:
 	
 	def getVCard(self, jid):
 		""" Posle zadost o vcard """
-		log.msg( 'requesting vcard for ' + unicode(jid))
+		#log.msg( 'requesting vcard for ' + unicode(jid))
 		iq = IQ(self.xmlstream, 'get')
 		iq['xml:lang'] = self.xmlLang
 		iq['to'] = jid
@@ -530,7 +530,7 @@ class derived:
 		d.addCallback(callback).addErrback(errback)
 
 	def getDiscoInfo(self, jid, node = None,  callback = None, callback_par = None):
-		log.msg( 'requesting disco#info: '+jid)
+		#log.msg( 'requesting disco#info: '+jid)
 		iq = IQ(self.xmlstream, 'get')
 		iq['xml:lang'] = self.xmlLang
 		iq['to'] = jid

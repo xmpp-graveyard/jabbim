@@ -63,7 +63,7 @@ class FileBackend:
 		return os.listdir(self.homeDir+'/archive/'+self.jid)
 
 	def saveMessage(self, to, body, typ, subject, xhtml, direction):
-		jid = quote(to.split('/')[0])
+		jid = unicode(to.split('/')[0])
 		t=time.time()
 		d=time.localtime(t)
 		dat=str(d[0])+"-"+str(d[1])+"-"+str(d[2])
@@ -190,7 +190,7 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.loadConfig(homedir)
 
-			self.jid = quote(unicode(self.main.client.jid.userhost()))
+			self.jid = unicode(unicode(self.main.client.jid.userhost()))
 			self.backend=FileBackend(self)
 
 			if not os.path.isdir(self.main.homeDir+'/archive'):
@@ -255,7 +255,7 @@ class Plugin(plugins.PluginBase):
 		self.group.addButton(button)
 		layout.addWidget(button)
 		jid = jidT.JID(jid)
-		if os.path.isdir(self.main.homeDir+'/archive/'+self.jid+'/'+quote(jid.userhost())):
+		if os.path.isdir(self.main.homeDir+'/archive/'+self.jid+'/'+unicode(jid.userhost())):
 			me=unicode(self.main.client.jid.user)
 	
 			
@@ -281,7 +281,7 @@ class Plugin(plugins.PluginBase):
 	
 			
 			jid=unicode(jid.userhost())
-			jid = quote(jid)
+			jid = unicode(jid)
 			d=threads.deferToThread(self.getLastMessages,jid,int(self.config['messagesNumber']),me,user,unicode(self.main.skin["my_message_history"]),unicode(self.main.skin["message_history"]),self.main.skin['color1'],avatar,selfavatar,self.config['messagesTime'])
 			d.addCallback(self.gotLastMessages,widget)
 			#html=self.getLastMessages(jid,5,me,user,unicode(self.main.skin["my_message"]),unicode(self.main.skin["message"]),self.main.skin['color1'])
@@ -326,19 +326,19 @@ class Plugin(plugins.PluginBase):
 		click=None
 		for jid in seznam:
 			if os.path.isdir(self.main.homeDir+'/archive/'+self.jid+'/'+jid):
-				if self.main.client.roster['users'].has_key(unicode(unquote(jid).split('.history')[0])):
+				if self.main.client.roster['users'].has_key(unicode(unicode(jid).split('.history')[0])):
 					item=QtGui.QTreeWidgetItem(contact)
-					name=self.main.client.roster['users'][unicode(unquote(jid).split('.history')[0])].name
+					name=self.main.client.roster['users'][unicode(unicode(jid).split('.history')[0])].name
 					if not name or len(name)==0:
-						item.setText(0,unicode(unquote(jid).split('.history')[0]))
+						item.setText(0,unicode(unicode(jid).split('.history')[0]))
 					else:
 						item.setText(0,name)
 				else:
 					item=QtGui.QTreeWidgetItem(others)
-					item.setText(0,unquote(jid).split('.history')[0])
-				item.setData(0,32,QtCore.QVariant(unicode(unquote(jid).split('.history')[0])))
+					item.setText(0,unicode(jid).split('.history')[0])
+				item.setData(0,32,QtCore.QVariant(unicode(unicode(jid).split('.history')[0])))
 				#self.window.ui.seznam.addItem(item)
-				if unicode(unquote(jid).split('.history')[0])==unicode(j):
+				if unicode(unicode(jid).split('.history')[0])==unicode(j):
 					click=item
 			else:
 				continue
@@ -363,7 +363,7 @@ class Plugin(plugins.PluginBase):
 				all.append(qdate)
 		self.window.ui.calendar.setDates(all)
 		item=self.window.ui.seznam.currentItem()
-		jid = quote(unicode(item.data(0,32).toString()))
+		jid = unicode(unicode(item.data(0,32).toString()))
 		
 		self.window.ui.text.setText('')
 		datum=self.window.ui.calendar.selectedDate()
@@ -433,7 +433,7 @@ class Plugin(plugins.PluginBase):
 		self.window.ui.text.setHtml(html)
 
 	def itemClicked(self, item,column=0,setDate=True):
-		jid = quote(unicode(item.data(0,32).toString()))
+		jid = unicode(unicode(item.data(0,32).toString()))
 		if setDate:
 			self.getDates(jid)
 		else:
@@ -450,7 +450,7 @@ class Plugin(plugins.PluginBase):
 			d.addCallback(self.gotMessages)
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay, error=None):
 		if body != None:
-			#jid = quote(frm.split('/')[0])
+			#jid = unicode(frm.split('/')[0])
 			if typ=='groupchat':
 				if delay!=None:
 					return

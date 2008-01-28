@@ -33,7 +33,6 @@ class Contact:
 		self.vcard = {}
 		self.avatar_file = ''
 		self.avatar_hash = ''
-		print "MAKING CONTACT",ask
 		self.ask = ask
 
 

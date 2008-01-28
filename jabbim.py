@@ -99,7 +99,7 @@ class clientClass(pyxl.client.Client):
 	def on_GCpresenceError(self, fromjid, code, typ, name, text, resource = ""):
 		mainWindow=self.main
 		log.msg("error")
-		log.msg("RESOURCE: "+resource)
+		#log.msg("RESOURCE: "+resource)
 		# find tab
 		tab=None
 		tabIndex=0
@@ -252,7 +252,7 @@ class clientClass(pyxl.client.Client):
 		jid=unicode(contact.jid)
 		while u'' in groups:
 			groups.remove('')
-		log.msg("Adding user JID: "+jid+" "+contact.subscription+" "+unicode(groups))
+		#log.msg("Adding user JID: "+jid+" "+contact.subscription+" "+unicode(groups))
 		# add group item if we haven't it
 		for gr in groups:
 			if not self.roster['groups'].has_key(gr):
@@ -262,7 +262,7 @@ class clientClass(pyxl.client.Client):
 			host=unicode(jid).rsplit("@")[1]
 		else:
 			host=unicode(jid)
-			log.msg("Transport:"+jid)
+			#log.msg("Transport:"+jid)
 			self.main.transports[unicode(jid)]=None
 		if not self.disco.has_key(host) and not host in self.temp_hosts:
 			self.temp_hosts.append(host)
@@ -346,7 +346,7 @@ class clientClass(pyxl.client.Client):
 				else:
 					meta[user.tag].append([jid,user.order])
 
-		log.msg("META:"+unicode(meta))
+		#log.msg("META:"+unicode(meta))
 
 		for tag,jids in meta.iteritems():
 			if len(jids)>1:
@@ -539,7 +539,7 @@ class clientClass(pyxl.client.Client):
 			self.main.showInvitation(jid, room, reason, cont)
 		else:
 			tab,tabIndex=self.main.chat.findTab(unicode(jid))
-			print 'jid=',unicode(jid)
+			print 'jid=',[unicode(jid)]
 			if tab:
 				self.main.chat.removeTab(tabIndex)
 				if self.main.chat.addGroupChatTab(room,self.jid.user,name=tab.tabName):
@@ -555,7 +555,7 @@ class clientClass(pyxl.client.Client):
 		if not self.groupchats.has_key(muc):
 			log.msg("bad GC presence:"+unicode(muc)+"; we are not connected there")
 			return
-		print 'reason,actor=',reason,actor
+		print 'reason,actor=',[reason],[actor]
 		if show=="offline":
 			# get user role
 			# find good tab according to jid
@@ -598,7 +598,7 @@ class clientClass(pyxl.client.Client):
 		#print "presence",jid,show
 		# normal presence handler
 		#log.msg("PRESENCE "+unicode(jid.full())+" "+unicode(show))
-		print 'error: ', error
+		print 'error: ', [error]
 		if error!=None:
 			print "PRESENCE ERROR:"+unicode(error)
 			return
@@ -697,7 +697,7 @@ class clientClass(pyxl.client.Client):
 					highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
 					status=highest.status
 				except:
-					print 'error in resource', jid.full()
+					print 'error in resource', [jid.full()]
 				#if highest.status!=None:
 					#status=highest.status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
 				# set status
@@ -758,7 +758,7 @@ class clientClass(pyxl.client.Client):
 		toDel=[] # temp variable for deleting items at the end of this function
 		toDelJid=[]
 		toDelIndex=[]
-		log.msg(jid+" "+unicode(contact.groups))
+		#log.msg(jid+" "+unicode(contact.groups))
 
 		# add group item if we haven't it
 		for gr in contact.groups:
@@ -1162,7 +1162,8 @@ class clientClass(pyxl.client.Client):
 	def on_vcardReceived(self,  jid, card):
 		#print card
 		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db
-		log.msg("vcard "+unicode(jid))
+		pass
+		#log.msg("vcard "+unicode(jid))
 # 		log.msg(unicode(card))
 #		if card.has_key("BINVAL"):
 #			typ=None
@@ -1192,7 +1193,7 @@ class clientClass(pyxl.client.Client):
 #			self.main.cache.set_avatar(jid, ['nic', 'nic'])
 
 	def on_avatarUpdate(self, jid):
-		print "AVATAR:",unicode(jid)
+		print "AVATAR:",[unicode(jid)]
 		#pixmap=QtGui.QPixmap()
 		if not self.avatars.has_key(jid.replace('/','%')):
 			return
