@@ -1345,7 +1345,7 @@ class mainWindow(QtGui.QMainWindow):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
-		self.ui.toggleInvisible.hide()
+		#self.ui.toggleInvisible.hide()
 		self.ui.statusButton.hide()
 		layout=QtGui.QHBoxLayout(self.ui.selfAvatarWidget)
 		layout.setMargin(0)
@@ -1482,7 +1482,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		# signals
 		QtCore.QObject.connect(self.ui.login_connect, QtCore.SIGNAL("clicked()"),self.connect)
-		QtCore.QObject.connect(self.ui.toggleInvisible, QtCore.SIGNAL("clicked(bool)"),self.toggleInvisibility)
+		#QtCore.QObject.connect(self.ui.toggleInvisible, QtCore.SIGNAL("clicked(bool)"),self.toggleInvisibility)
 		QtCore.QObject.connect(self.ui.registerButton, QtCore.SIGNAL("clicked ()"),self.registerButtonClicked)
 		QtCore.QObject.connect(self.ui.login_cancel, QtCore.SIGNAL("clicked ()"),self.connectCancel)
 		QtCore.QObject.connect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
@@ -1622,7 +1622,9 @@ class mainWindow(QtGui.QMainWindow):
 		action.setObjectName('show_transports')
 		if self.config['showTransports']=='True':
 			action.setChecked(True)
-
+		# make Toggle Invisibility QAction
+		self.toggleInv=self.offlineMenu.addAction(self.tr("Become invisible"))
+		self.toggleInv.setObjectName("toggle_invisible")
 		# add resources connected to the same JID (selfResources)
 		if len(self.selfResources)!=0:
 			for resource in self.selfResources:
@@ -1671,6 +1673,14 @@ class mainWindow(QtGui.QMainWindow):
 				self.dialog.show()
 		elif cmd=="show_transports":
 			self.config['showTransports']=unicode(action.isChecked())
+		elif cmd=="toggle_invisible":
+			if self.toggleInv.text() == self.tr("Become invisible"):
+				self.toggleInv.setText(self.tr("Become visible"))
+				self.toggleInvisibility(True)
+			else:
+				self.toggleInv.setText(self.tr("Become invisible"))
+				self.toggleInvisibility(False)
+
 
 	def tables_created(self,data=None):
 		"""
@@ -2664,6 +2674,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def toggleInvisibility(self, bool):
 		# depracted these days because ejabberd doesn't support invisibility (there are bugs fixed in svn)
+		# Should be ok these days :-)
 		if self.client.privacy.active:
 			if bool:
 				self.client.privacy.active.setInvisible()
