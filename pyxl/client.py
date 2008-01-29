@@ -151,7 +151,10 @@ class Client(derived):
 
 	def _cacheCaps(self, result):
 		for line in result:
-			self.caps_cache[line[0]] = line[1]
+			features = self.caps_cache.get(line[0], [])
+			if line[1] not in features:
+				self.caps_cache[line[0]] = features.append(line[1])
+
 			
 
 	def heartbeat(self):
@@ -907,7 +910,7 @@ class Client(derived):
 				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor, nick)
 			self.groupchats[fromjid].setStatus(resource,  show,  status)
 			if self.groupchats[fromjid].users.has_key(resource):
-				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid)
+				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid, features)
 				#self.groupchats[fromjid]
 			if show!="offline":
 #				self.reactor.callFromThread(self.on_GCpresence,fromjid, resource,  show,  status,  codes)
