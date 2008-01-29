@@ -166,7 +166,10 @@ class Plugin(plugins.PluginBase):
 	def setAway(self):
 		print "autoaway away"
 		contact = self.main.client.roster['users'][self.main.client.jid.userhost()]
-		self.currentMessage=unicode(contact.resources[self.main.client.jid.resource].status)
+		if contact.resources[self.main.client.jid.resource].status:
+			self.currentMessage=unicode(contact.resources[self.main.client.jid.resource].status)
+		else:
+			self.currentMessage=""
 		if self.main.selfStatus=="online":
 			#self.main.ui.statusButton.setIcon(self.main.getIcon(status='away', size="16x16"))
 			now=self.main.now()
