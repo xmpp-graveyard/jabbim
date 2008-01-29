@@ -226,7 +226,7 @@ class Plugin(plugins.PluginBase):
 		menu.addAction("Archive browser",self.showSlot)
 	
 	def buildContactMenu(self,menu,contact):
-		if unicode(contact.jid).replace("@","%40") in self.jidList:
+		if unicode(contact.jid) in self.jidList:
 			self.action=menu.addAction(self.tr("History"))
 			self.action.setData(QtCore.QVariant(unicode(contact.jid)))
 			self.action.setObjectName("history")
