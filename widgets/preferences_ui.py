@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/preferences.ui'
+# Form implementation generated from reading ui file 'preferences.ui'
 #
-# Created: Wed Jan 23 20:50:09 2008
-#      by: PyQt4 UI code generator 4.3.1
+# Created: Tue Jan 29 07:36:31 2008
+#      by: PyQt4 UI code generator 4.3.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -265,8 +265,8 @@ class Ui_preferences(object):
         self.gridlayout.addWidget(self.profile,0,1,1,2)
 
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(6)
+        self.hboxlayout.setMargin(0)
         self.hboxlayout.setObjectName("hboxlayout")
 
         self.saveButton = QtGui.QPushButton(preferences)
@@ -363,7 +363,7 @@ class Ui_preferences(object):
         item3.setIcon(QtGui.QIcon("images/32x32/categories/system-users.png"))
 
         item4 = QtGui.QListWidgetItem(self.listWidget)
-        item4.setText(QtGui.QApplication.translate("preferences", "View", None, QtGui.QApplication.UnicodeUTF8))
+        item4.setText(QtGui.QApplication.translate("preferences", "Appearance", None, QtGui.QApplication.UnicodeUTF8))
         item4.setIcon(QtGui.QIcon("images/32x32/categories/preferences-desktop-theme.png"))
 
         item5 = QtGui.QListWidgetItem(self.listWidget)
