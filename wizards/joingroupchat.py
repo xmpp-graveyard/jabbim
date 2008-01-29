@@ -10,30 +10,30 @@ import registration
 import sys
 import pyxl
 
-def createFirstPage(joinGroupchatWizard):
-	# language and server
-	page=QtGui.QWizardPage()
-	page.setTitle(joinGroupchatWizard.tr("Join Groupchat"))
+#def createFirstPage(joinGroupchatWizard):
+	## language and server
+	#page=QtGui.QWizardPage()
+	#page.setTitle(joinGroupchatWizard.tr("Join Groupchat"))
 
-	#joinGroupchatWizard.label=QtGui.QLabel(joinGroupchatWizard.trUtf8("Vítejte ........."))
-	#joinGroupchatWizard.label.setWordWrap(True)
+	##joinGroupchatWizard.label=QtGui.QLabel(joinGroupchatWizard.trUtf8("Vítejte ........."))
+	##joinGroupchatWizard.label.setWordWrap(True)
 	
-	joinGroupchatWizard.address=QtGui.QRadioButton(joinGroupchatWizard.tr("I know room Jabber ID (address)."))
-	joinGroupchatWizard.address.setChecked(True)
-	joinGroupchatWizard.browser=QtGui.QRadioButton(joinGroupchatWizard.tr("I want to browse rooms."))
+	#joinGroupchatWizard.address=QtGui.QRadioButton(joinGroupchatWizard.tr("I know room Jabber ID (address)."))
+	#joinGroupchatWizard.address.setChecked(True)
+	#joinGroupchatWizard.browser=QtGui.QRadioButton(joinGroupchatWizard.tr("I want to browse rooms."))
 
-	layout=QtGui.QGridLayout()
-	#layout.addWidget(joinGroupchatWizard.label,0,0,1,2)
-	layout.addWidget(joinGroupchatWizard.address,1,0,1,2)
-	layout.addWidget(joinGroupchatWizard.browser,2,0,1,2)
+	#layout=QtGui.QGridLayout()
+	##layout.addWidget(joinGroupchatWizard.label,0,0,1,2)
+	#layout.addWidget(joinGroupchatWizard.address,1,0,1,2)
+	#layout.addWidget(joinGroupchatWizard.browser,2,0,1,2)
 
-	page.registerField("address",joinGroupchatWizard.address)
-	page.registerField("browser",joinGroupchatWizard.browser)
-	page.setTitle(joinGroupchatWizard.trUtf8("Join Groupchat"))
-	page.setSubTitle(joinGroupchatWizard.trUtf8("Choose one of options"))
+	#page.registerField("address",joinGroupchatWizard.address)
+	#page.registerField("browser",joinGroupchatWizard.browser)
+	#page.setTitle(joinGroupchatWizard.trUtf8("Join Groupchat"))
+	#page.setSubTitle(joinGroupchatWizard.trUtf8("Choose one of options"))
 
-	page.setLayout(layout)
-	return page
+	#page.setLayout(layout)
+	#return page
 
 
 def createSecondPage(joinGroupchatWizard):
@@ -97,14 +97,14 @@ class joinGroupchatWizard(QtGui.QWizard):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QWizard.__init__,(self,parent))
 		self.main=main
-		self.addPage(createFirstPage(self))
+		#self.addPage(createFirstPage(self))
 		self.addPage(createSecondPage(self))
 		self.setWindowTitle(self.tr("Join Groupchat"))
 
-	def initializePage(self,i):
-		if i==1:
-			if self.browser.isChecked():
-					self.accept()
+	#def initializePage(self,i):
+		#if i==1:
+			#if self.browser.isChecked():
+					#self.accept()
 
 	def jidChanged(self,text):
 		text=unicode(text)
@@ -114,33 +114,33 @@ class joinGroupchatWizard(QtGui.QWizard):
 				self.bookmarkName.setText(unicode(jid.userhost()).split("@")[0])
 
 	def accept(self):
-		if self.browser.isChecked():
-			self.hide()
-			#self.regwiz=registration.registrationWizard(self.main,self.main)
-			#self.regwiz.exec_()
-			self.main.mucBrowser(True)
-		else:
-			jid=unicode(self.jid.text())
-			nickname=unicode(self.nickname.text())
-			password=unicode(self.password.text())
-			saveRoom=self.saveRoom.isChecked()
-			autojoin=unicode(self.autojoin.isChecked()).lower()
-			bookmarkName=unicode(self.bookmarkName.text())
-			self.hide()
-			#if len(bookmarkName)==0:
-				#bookmarkName=jid
-				#for bkey in self.main.client.bookmarks['conference'].keys():
-					#if self.main.client.bookmarks['conference'][bkey].jid.userhost() == jid:
-						#bookmarkName = self.main.client.bookmarks['conference'][bkey].name
-	
-			if saveRoom and not self.main.client.bookmarks['conference'].has_key(bookmarkName):
-				self.main.client.bookmarks['conference'][bookmarkName]=pyxl.client.Bookmark(bookmarkName, 'conference', jid, autojoin, nickname, password)
-				self.main.client.setBookmarks()
-				self.main.buildBookmarks()
-	
-			#print "joining",room,nickname
-			if self.main.chat.addGroupChatTab(jid,nickname):
-				self.main.client.joinGC(jid, nickname)
+		#if self.browser.isChecked():
+			#self.hide()
+			##self.regwiz=registration.registrationWizard(self.main,self.main)
+			##self.regwiz.exec_()
+			#self.main.mucBrowser(True)
+		#else:
+		jid=unicode(self.jid.text())
+		nickname=unicode(self.nickname.text())
+		password=unicode(self.password.text())
+		saveRoom=self.saveRoom.isChecked()
+		autojoin=unicode(self.autojoin.isChecked()).lower()
+		bookmarkName=unicode(self.bookmarkName.text())
+		self.hide()
+		#if len(bookmarkName)==0:
+			#bookmarkName=jid
+			#for bkey in self.main.client.bookmarks['conference'].keys():
+				#if self.main.client.bookmarks['conference'][bkey].jid.userhost() == jid:
+					#bookmarkName = self.main.client.bookmarks['conference'][bkey].name
+
+		if saveRoom and not self.main.client.bookmarks['conference'].has_key(bookmarkName):
+			self.main.client.bookmarks['conference'][bookmarkName]=pyxl.client.Bookmark(bookmarkName, 'conference', jid, autojoin, nickname, password)
+			self.main.client.setBookmarks()
+			self.main.buildBookmarks()
+
+		#print "joining",room,nickname
+		if self.main.chat.addGroupChatTab(jid,nickname):
+			self.main.client.joinGC(jid, nickname)
 
 		return QtGui.QWizard.accept(self)
 

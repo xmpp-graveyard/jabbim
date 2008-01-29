@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Wed Jan 23 20:13:10 2008
+# Created: Tue Jan 29 15:48:19 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -410,7 +410,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0,0,335,21))
+        self.menubar.setGeometry(QtCore.QRect(0,0,335,28))
         self.menubar.setObjectName("menubar")
 
         self.menuPlugins = QtGui.QMenu(self.menubar)
@@ -421,6 +421,9 @@ class Ui_MainWindow(object):
 
         self.menuAkce = QtGui.QMenu(self.menubar)
         self.menuAkce.setObjectName("menuAkce")
+
+        self.menuGroupchat = QtGui.QMenu(self.menuAkce)
+        self.menuGroupchat.setObjectName("menuGroupchat")
         MainWindow.setMenuBar(self.menubar)
 
         self.actionShow_XML = QtGui.QAction(MainWindow)
@@ -430,10 +433,6 @@ class Ui_MainWindow(object):
         self.actionPreferences = QtGui.QAction(MainWindow)
         self.actionPreferences.setIcon(QtGui.QIcon("images/16x16/categories/gtk-preferences.png"))
         self.actionPreferences.setObjectName("actionPreferences")
-
-        self.actionJoin_Groupchat = QtGui.QAction(MainWindow)
-        self.actionJoin_Groupchat.setIcon(QtGui.QIcon("images/16x16/categories/muc.png"))
-        self.actionJoin_Groupchat.setObjectName("actionJoin_Groupchat")
 
         self.actionQuit = QtGui.QAction(MainWindow)
         self.actionQuit.setIcon(QtGui.QIcon("images/16x16/actions/gtk-quit.png"))
@@ -463,8 +462,16 @@ class Ui_MainWindow(object):
 
         self.actionProfiles = QtGui.QAction(MainWindow)
         self.actionProfiles.setObjectName("actionProfiles")
+
+        self.actionJoin_groupchat = QtGui.QAction(MainWindow)
+        self.actionJoin_groupchat.setObjectName("actionJoin_groupchat")
+
+        self.actionBrowse_rooms = QtGui.QAction(MainWindow)
+        self.actionBrowse_rooms.setObjectName("actionBrowse_rooms")
         self.menuHelp.addAction(self.actionAbout)
-        self.menuAkce.addAction(self.actionJoin_Groupchat)
+        self.menuGroupchat.addAction(self.actionJoin_groupchat)
+        self.menuGroupchat.addAction(self.actionBrowse_rooms)
+        self.menuAkce.addAction(self.menuGroupchat.menuAction())
         self.menuAkce.addAction(self.actionAdd_Contact)
         self.menuAkce.addAction(self.actionService_Discovery)
         self.menuAkce.addAction(self.actionShow_XML)
@@ -530,9 +537,9 @@ class Ui_MainWindow(object):
         self.menuPlugins.setTitle(QtGui.QApplication.translate("MainWindow", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAkce.setTitle(QtGui.QApplication.translate("MainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuGroupchat.setTitle(QtGui.QApplication.translate("MainWindow", "Groupchat", None, QtGui.QApplication.UnicodeUTF8))
         self.actionShow_XML.setText(QtGui.QApplication.translate("MainWindow", "Show XML", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setText(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionJoin_Groupchat.setText(QtGui.QApplication.translate("MainWindow", "Join Groupchat", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAdd_Contact.setText(QtGui.QApplication.translate("MainWindow", "Add Contact", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "About", None, QtGui.QApplication.UnicodeUTF8))
@@ -541,4 +548,6 @@ class Ui_MainWindow(object):
         self.actionPrivacy_list_editor.setText(QtGui.QApplication.translate("MainWindow", "Privacy list editor", None, QtGui.QApplication.UnicodeUTF8))
         self.actionIdentity.setText(QtGui.QApplication.translate("MainWindow", "Identity", None, QtGui.QApplication.UnicodeUTF8))
         self.actionProfiles.setText(QtGui.QApplication.translate("MainWindow", "Profiles", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionJoin_groupchat.setText(QtGui.QApplication.translate("MainWindow", "Join groupchat", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionBrowse_rooms.setText(QtGui.QApplication.translate("MainWindow", "Browse rooms", None, QtGui.QApplication.UnicodeUTF8))
 

@@ -468,7 +468,7 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item rowspan="2" row="0" column="0" >
-             <widget class="QWidget" name="selfAvatarWidget" >
+             <widget class="QWidget" native="1" name="selfAvatarWidget" >
               <property name="sizePolicy" >
                <sizepolicy>
                 <hsizetype>0</hsizetype>
@@ -476,9 +476,6 @@ p, li { white-space: pre-wrap; }
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
-              </property>
-              <property name="text" >
-               <string/>
               </property>
              </widget>
             </item>
@@ -793,7 +790,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>335</width>
-     <height>21</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPlugins" >
@@ -811,7 +808,14 @@ p, li { white-space: pre-wrap; }
     <property name="title" >
      <string>Actions</string>
     </property>
-    <addaction name="actionJoin_Groupchat" />
+    <widget class="QMenu" name="menuGroupchat" >
+     <property name="title" >
+      <string>Groupchat</string>
+     </property>
+     <addaction name="actionJoin_groupchat" />
+     <addaction name="actionBrowse_rooms" />
+    </widget>
+    <addaction name="menuGroupchat" />
     <addaction name="actionAdd_Contact" />
     <addaction name="actionService_Discovery" />
     <addaction name="actionShow_XML" />
@@ -841,14 +845,6 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text" >
     <string>Preferences</string>
-   </property>
-  </action>
-  <action name="actionJoin_Groupchat" >
-   <property name="icon" >
-    <iconset>images/16x16/categories/muc.png</iconset>
-   </property>
-   <property name="text" >
-    <string>Join Groupchat</string>
    </property>
   </action>
   <action name="actionQuit" >
@@ -904,6 +900,16 @@ p, li { white-space: pre-wrap; }
   <action name="actionProfiles" >
    <property name="text" >
     <string>Profiles</string>
+   </property>
+  </action>
+  <action name="actionJoin_groupchat" >
+   <property name="text" >
+    <string>Join groupchat</string>
+   </property>
+  </action>
+  <action name="actionBrowse_rooms" >
+   <property name="text" >
+    <string>Browse rooms</string>
    </property>
   </action>
  </widget>
