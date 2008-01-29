@@ -754,7 +754,10 @@ class groupChatWidget(abstractChatWidget):
 			xhtml=self.ui.line.toHtml()
 			xhtml=self.qtHtmlToXhtml(xhtml)
 			# send message
-			self.main.client.sendMessage(unicode(self.jid),text,'groupchat',xhtml=xhtml,composing="active")
+			if xhtml==text:
+				self.main.client.sendMessage(unicode(self.jid),text,'groupchat',composing="active")
+			else:
+				self.main.client.sendMessage(unicode(self.jid),text,'groupchat',xhtml=xhtml,composing="active")
 
 			#self.main.client.sendMessage(self.jid, text, 'groupchat')
 			self.sent.append(text)

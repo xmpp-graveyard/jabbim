@@ -222,9 +222,11 @@ class chatWidget(abstractChatWidget):
 				# get message in Qt html format
 				xhtml=self.ui.line.toHtml()
 				xhtml=self.qtHtmlToXhtml(xhtml)
-
 				# send message
-				self.main.client.sendMessage(unicode(self.jid),text,xhtml=xhtml,composing="active")
+				if xhtml==text:
+					self.main.client.sendMessage(unicode(self.jid),text,composing="active")
+				else:
+					self.main.client.sendMessage(unicode(self.jid),text,xhtml=xhtml,composing="active")
 				
 				# prepare message for showing in GUI
 				message=xhtml.replace("&quot;",'"')
