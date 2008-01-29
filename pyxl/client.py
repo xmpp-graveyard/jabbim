@@ -25,7 +25,7 @@ from twisted.internet import protocol, error
 from twisted.names import client as dns
 from socket import getaddrinfo
 import socket
-from twisted.internet import threads
+from twisted.internet import threads, defer
 from twisted.words.protocols import jabber
 from twisted.words.protocols.jabber import client,jid
 from twisted.words.xish import domish
@@ -151,9 +151,10 @@ class Client(derived):
 
 	def _cacheCaps(self, result):
 		for line in result:
-			features = self.caps_cache.get(line[0], [])
-			if line[1] not in features:
-				self.caps_cache[line[0]] = features.append(line[1])
+			if line != None:
+				features = self.caps_cache.get(line[0], [])
+				if line[1] not in features:
+					self.caps_cache[line[0]] = features.append(line[1])
 
 			
 
@@ -1179,6 +1180,11 @@ class Client(derived):
 					name = frm
 				log.msg(unicode(node))
 				node['identities'][name] = child.attributes
+				cat = child.getAttribute('category')
+				typ = child.getAttribute('type')
+				if cat == 'proxy' and typ == 'bytestreams':
+					if not self.ft_proxies.has_key(frm):
+						self.ft_proxies[frm] = []
 		self.disco[frm][node_name] = node
 		if self.disco[frm][node_name].has_key('err'):
 			if self.disco[frm][node_name]['err'].has_key('info'):
@@ -1555,10 +1561,51 @@ class Client(derived):
 		elif typ == 'socks5':
 			field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
 #		self.on_xml(iq.toXml())
-		d = iq.send()
+		
 		self.disp(iq['id'])
-		d.addCallback(self._ftreplyReceived, sid).addErrback(self._ftFailed, sid)#addErrback(self.chyba)
+		d = self._checkProxies()
+		def _doSend(self, iq, client):
+
+			d = iq.send()
+			d.addCallback(client._ftreplyReceived, sid).addErrback(client._ftFailed, sid)#addErrback(self.chyba)
+		
+		if d != None:
+			d.addCallback(_doSend, iq, self)
+		else:
+			_doSend(None, iq, self)
+			
 		return sid
+	
+	def _checkProxies(self):
+		print 'checking list of proxies', self.ft_proxies
+		dlist = []
+		for proxy, data in self.ft_proxies.iteritems():
+			if len(data) != 2:
+				dlist.append(self.getProxyInfo(proxy))
+		if len(dlist) != 0:
+			d = defer.DeferredList(dlist).addCallback(self._updatedProxyInfo)
+			return d
+		return None
+	
+	def _updatedProxyInfo(self, results):
+		print self.ft_proxies
+	
+	def getProxyInfo(self, proxy):
+		iq = IQ(self.xmlstream, 'get')
+		iq['xml:lang'] = self.xmlLang
+		iq['type'] = 'get'
+		iq['to'] = proxy
+		q = iq.addElement('query')
+		q['xmlns']='http://jabber.org/protocol/bytestreams'
+		self.disp(iq['id'])
+		d = iq.send()
+		d.addCallback(self._onProxyInfo).addErrback(self.chyba)
+		return d
+	
+	def _onProxyInfo(self, el):
+		q = el.firstChildElement()
+		info = q.firstChildElement()
+		self.ft_proxies[el['from']] = [info.getAttribute('host'), info.getAttribute('port')]
 	
 	def _ftFailed(self, err, sid):
 		self.on_ftEnd(sid, 'Canceled')
