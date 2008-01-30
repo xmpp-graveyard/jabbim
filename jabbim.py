@@ -1345,7 +1345,7 @@ class mainWindow(QtGui.QMainWindow):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
-		#self.ui.toggleInvisible.hide()
+		self.ui.toggleInvisible.hide()
 		self.ui.statusButton.hide()
 		layout=QtGui.QHBoxLayout(self.ui.selfAvatarWidget)
 		layout.setMargin(0)
@@ -1409,6 +1409,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.userStyleWidget.hide()
 		self.ui.selectedItemStyle.hide()
 		self.setMinimumWidth(200)
+		self.ui.statusLine.hide()
 
 		# filetransfer
 		#self.filetransferTimer=QtCore.QTimer()
@@ -1487,6 +1488,8 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.login_cancel, QtCore.SIGNAL("clicked ()"),self.connectCancel)
 		QtCore.QObject.connect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
 		QtCore.QObject.connect(self.ui.mucBrowserButton, QtCore.SIGNAL("clicked ()"),self.mucBrowser)
+		QtCore.QObject.connect(self.ui.statusMessage, QtCore.SIGNAL("clicked (bool)"),self.statusMessageClicked)
+		QtCore.QObject.connect(self.ui.statusLine, QtCore.SIGNAL("editingFinished ()"),self.statusLineFinished)
 		
 		QtCore.QObject.connect(self.ui.actionAbout, QtCore.SIGNAL("triggered ( bool )"),self.about)
 		QtCore.QObject.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
@@ -1579,6 +1582,19 @@ class mainWindow(QtGui.QMainWindow):
 		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.connect()
+
+	def statusLineFinished(self):
+		status=unicode(self.ui.statusLine.text())
+		if len(status)!=0:
+			self.sendPresence(None,self.selfStatus,status)
+		self.ui.statusLine.hide()
+		self.ui.statusMessage.show()
+
+	def statusMessageClicked(self,b):
+		self.ui.statusMessage.hide()
+		self.ui.statusLine.setText("")
+		self.ui.statusLine.show()
+		self.ui.statusLine.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def sendFiles(self,jid):
 		file=QtGui.QFileDialog.getOpenFileNames(self,self.tr("Choose files"))
@@ -1941,12 +1957,12 @@ class mainWindow(QtGui.QMainWindow):
 				
 				# update statusWidget
 				if len(message)>20:
-					self.ui.statusWidget.setText(unicode(message)[:20]+"...")
+					self.ui.statusMessage.setText(unicode(message)[:20]+"...")
 				elif len(message)==0:
-					self.ui.statusWidget.setText(self.status[show])
+					self.ui.statusMessage.setText(self.status[show])
 				else:
-					self.ui.statusWidget.setText(unicode(message))
-				self.ui.statusWidget.setIcon(self.getIcon(status=show,size="16x16"))
+					self.ui.statusMessage.setText(unicode(message))
+				self.ui.statusMessage.setIcon(self.getIcon(status=show,size="16x16"))
 		else:
 			# update transport's icon in statusWidgetMenu
 			if self.transports.has_key(jid):

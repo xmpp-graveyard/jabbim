@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainWindow.ui'
+# Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Tue Jan 29 19:17:04 2008
-#      by: PyQt4 UI code generator 4.3.3
+# Created: Wed Jan 30 21:12:10 2008
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,335,741).size()).expandedTo(MainWindow.minimumSizeHint()))
+        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,335,746).size()).expandedTo(MainWindow.minimumSizeHint()))
         MainWindow.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.centralwidget = QtGui.QWidget(MainWindow)
@@ -68,8 +68,8 @@ class Ui_MainWindow(object):
         self.gridlayout1.addLayout(self.gridlayout2,4,0,1,1)
 
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setSpacing(6)
         self.hboxlayout.setMargin(0)
+        self.hboxlayout.setSpacing(6)
         self.hboxlayout.setObjectName("hboxlayout")
 
         spacerItem1 = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
@@ -86,8 +86,8 @@ class Ui_MainWindow(object):
         self.gridlayout1.addLayout(self.hboxlayout,2,0,1,1)
 
         self.hboxlayout1 = QtGui.QHBoxLayout()
-        self.hboxlayout1.setSpacing(6)
         self.hboxlayout1.setMargin(0)
+        self.hboxlayout1.setSpacing(6)
         self.hboxlayout1.setObjectName("hboxlayout1")
 
         spacerItem3 = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
@@ -102,8 +102,8 @@ class Ui_MainWindow(object):
         self.gridlayout1.addLayout(self.hboxlayout1,5,0,1,1)
 
         self.hboxlayout2 = QtGui.QHBoxLayout()
-        self.hboxlayout2.setSpacing(6)
         self.hboxlayout2.setMargin(0)
+        self.hboxlayout2.setSpacing(6)
         self.hboxlayout2.setObjectName("hboxlayout2")
 
         spacerItem5 = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
@@ -118,13 +118,13 @@ class Ui_MainWindow(object):
         self.gridlayout1.addLayout(self.hboxlayout2,10,0,1,1)
 
         self.hboxlayout3 = QtGui.QHBoxLayout()
-        self.hboxlayout3.setSpacing(0)
         self.hboxlayout3.setMargin(0)
+        self.hboxlayout3.setSpacing(0)
         self.hboxlayout3.setObjectName("hboxlayout3")
 
         self.vboxlayout = QtGui.QVBoxLayout()
-        self.vboxlayout.setSpacing(6)
         self.vboxlayout.setMargin(0)
+        self.vboxlayout.setSpacing(6)
         self.vboxlayout.setObjectName("vboxlayout")
 
         self.login_jidLabel = QtGui.QLabel(self.login)
@@ -137,7 +137,7 @@ class Ui_MainWindow(object):
 
         self.label_5 = QtGui.QLabel(self.login)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Preferred)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(5))
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
@@ -147,8 +147,8 @@ class Ui_MainWindow(object):
         self.hboxlayout3.addLayout(self.vboxlayout)
 
         self.vboxlayout1 = QtGui.QVBoxLayout()
-        self.vboxlayout1.setSpacing(6)
         self.vboxlayout1.setMargin(0)
+        self.vboxlayout1.setSpacing(6)
         self.vboxlayout1.setObjectName("vboxlayout1")
 
         self.login_jid = QtGui.QLineEdit(self.login)
@@ -162,7 +162,7 @@ class Ui_MainWindow(object):
 
         self.loginStatus = QtGui.QComboBox(self.login)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Fixed)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7),QtGui.QSizePolicy.Policy(0))
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.loginStatus.sizePolicy().hasHeightForWidth())
@@ -209,38 +209,17 @@ class Ui_MainWindow(object):
         self.gridlayout4.setSpacing(4)
         self.gridlayout4.setObjectName("gridlayout4")
 
-        self.statusWidget2 = QtGui.QWidget(self.frame)
-        self.statusWidget2.setObjectName("statusWidget2")
-
-        self.hboxlayout4 = QtGui.QHBoxLayout(self.statusWidget2)
-        self.hboxlayout4.setSpacing(0)
-        self.hboxlayout4.setMargin(0)
-        self.hboxlayout4.setObjectName("hboxlayout4")
-
-        self.statusWidget = QtGui.QToolButton(self.statusWidget2)
-
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.statusWidget.sizePolicy().hasHeightForWidth())
-        self.statusWidget.setSizePolicy(sizePolicy)
-        self.statusWidget.setMaximumSize(QtCore.QSize(16777215,20))
-        self.statusWidget.setIcon(QtGui.QIcon("images/16x16/status/jabber-not_in_roster.png"))
-        self.statusWidget.setPopupMode(QtGui.QToolButton.InstantPopup)
-        self.statusWidget.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
-        self.statusWidget.setAutoRaise(True)
-        self.statusWidget.setArrowType(QtCore.Qt.NoArrow)
-        self.statusWidget.setObjectName("statusWidget")
-        self.hboxlayout4.addWidget(self.statusWidget)
-        self.gridlayout4.addWidget(self.statusWidget2,1,1,1,1)
-
-        self.selfName = QtGui.QLabel(self.frame)
-        self.selfName.setObjectName("selfName")
-        self.gridlayout4.addWidget(self.selfName,0,1,1,4)
+        self.toggleInvisible = QtGui.QToolButton(self.frame)
+        self.toggleInvisible.setMaximumSize(QtCore.QSize(16777215,20))
+        self.toggleInvisible.setIcon(QtGui.QIcon("images/16x16/status/jabber-invisible.png"))
+        self.toggleInvisible.setCheckable(True)
+        self.toggleInvisible.setArrowType(QtCore.Qt.NoArrow)
+        self.toggleInvisible.setObjectName("toggleInvisible")
+        self.gridlayout4.addWidget(self.toggleInvisible,1,4,1,1)
 
         self.selfAvatarWidget = QtGui.QWidget(self.frame)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Fixed)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(0))
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.selfAvatarWidget.sizePolicy().hasHeightForWidth())
@@ -253,7 +232,45 @@ class Ui_MainWindow(object):
         self.statusButton.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.statusButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.statusButton.setObjectName("statusButton")
-        self.gridlayout4.addWidget(self.statusButton,1,4,1,1)
+        self.gridlayout4.addWidget(self.statusButton,1,6,1,1)
+
+        self.statusWidget2 = QtGui.QWidget(self.frame)
+        self.statusWidget2.setObjectName("statusWidget2")
+
+        self.hboxlayout4 = QtGui.QHBoxLayout(self.statusWidget2)
+        self.hboxlayout4.setMargin(0)
+        self.hboxlayout4.setSpacing(0)
+        self.hboxlayout4.setObjectName("hboxlayout4")
+
+        self.statusMessage = QtGui.QToolButton(self.statusWidget2)
+
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7),QtGui.QSizePolicy.Policy(0))
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.statusMessage.sizePolicy().hasHeightForWidth())
+        self.statusMessage.setSizePolicy(sizePolicy)
+        self.statusMessage.setMaximumSize(QtCore.QSize(16777215,20))
+        self.statusMessage.setIcon(QtGui.QIcon("images/16x16/status/jabber-not_in_roster.png"))
+        self.statusMessage.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.statusMessage.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+        self.statusMessage.setAutoRaise(True)
+        self.statusMessage.setArrowType(QtCore.Qt.NoArrow)
+        self.statusMessage.setObjectName("statusMessage")
+        self.hboxlayout4.addWidget(self.statusMessage)
+        self.gridlayout4.addWidget(self.statusWidget2,1,1,1,1)
+
+        self.statusWidget = QtGui.QToolButton(self.frame)
+        self.statusWidget.setMaximumSize(QtCore.QSize(16777215,20))
+        self.statusWidget.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.statusWidget.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+        self.statusWidget.setAutoRaise(True)
+        self.statusWidget.setArrowType(QtCore.Qt.DownArrow)
+        self.statusWidget.setObjectName("statusWidget")
+        self.gridlayout4.addWidget(self.statusWidget,1,3,1,1)
+
+        self.selfName = QtGui.QLabel(self.frame)
+        self.selfName.setObjectName("selfName")
+        self.gridlayout4.addWidget(self.selfName,0,1,1,4)
 
         self.showOffline = QtGui.QToolButton(self.frame)
         self.showOffline.setMaximumSize(QtCore.QSize(16777215,20))
@@ -262,7 +279,11 @@ class Ui_MainWindow(object):
         self.showOffline.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.showOffline.setArrowType(QtCore.Qt.NoArrow)
         self.showOffline.setObjectName("showOffline")
-        self.gridlayout4.addWidget(self.showOffline,1,3,1,1)
+        self.gridlayout4.addWidget(self.showOffline,1,5,1,1)
+
+        self.statusLine = QtGui.QLineEdit(self.frame)
+        self.statusLine.setObjectName("statusLine")
+        self.gridlayout4.addWidget(self.statusLine,1,2,1,1)
         self.gridlayout3.addWidget(self.frame,0,0,1,1)
 
         self.tabWidget = QtGui.QTabWidget(self.roster)
@@ -278,8 +299,8 @@ class Ui_MainWindow(object):
         self.gridlayout5.setObjectName("gridlayout5")
 
         self.hboxlayout5 = QtGui.QHBoxLayout()
-        self.hboxlayout5.setSpacing(6)
         self.hboxlayout5.setMargin(0)
+        self.hboxlayout5.setSpacing(6)
         self.hboxlayout5.setObjectName("hboxlayout5")
 
         self.rosterSearchLabel = QtGui.QLabel(self.rosterTab)
@@ -359,14 +380,15 @@ class Ui_MainWindow(object):
         self.splash.setObjectName("splash")
 
         self.vboxlayout2 = QtGui.QVBoxLayout(self.splash)
-        self.vboxlayout2.setSpacing(6)
         self.vboxlayout2.setMargin(9)
+        self.vboxlayout2.setSpacing(6)
         self.vboxlayout2.setObjectName("vboxlayout2")
 
         spacerItem9 = QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
         self.vboxlayout2.addItem(spacerItem9)
 
         self.splashImage = QtGui.QLabel(self.splash)
+        self.splashImage.setPixmap(QtGui.QPixmap("images/logo.png"))
         self.splashImage.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
         self.splashImage.setObjectName("splashImage")
         self.vboxlayout2.addWidget(self.splashImage)
@@ -377,8 +399,8 @@ class Ui_MainWindow(object):
         self.vboxlayout2.addWidget(self.loginInfo)
 
         self.hboxlayout6 = QtGui.QHBoxLayout()
-        self.hboxlayout6.setSpacing(6)
         self.hboxlayout6.setMargin(0)
+        self.hboxlayout6.setSpacing(6)
         self.hboxlayout6.setObjectName("hboxlayout6")
 
         self.splashProgress = QtGui.QProgressBar(self.splash)
@@ -478,7 +500,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.rosterStackedWidget.setCurrentIndex(0)
+        self.rosterStackedWidget.setCurrentIndex(1)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.login_password,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)
         QtCore.QObject.connect(self.login_jid,QtCore.SIGNAL("returnPressed()"),self.login_connect.click)
@@ -502,8 +524,10 @@ class Ui_MainWindow(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\';\"><span style=\" font-size:13pt; font-weight:600;\">Profiles</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.statusWidget.setText(QtGui.QApplication.translate("MainWindow", "Online", None, QtGui.QApplication.UnicodeUTF8))
+        self.toggleInvisible.setToolTip(QtGui.QApplication.translate("MainWindow", "Toggle Invisibility", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Here you can change your status", None, QtGui.QApplication.UnicodeUTF8))
+        self.statusMessage.setText(QtGui.QApplication.translate("MainWindow", "Online", None, QtGui.QApplication.UnicodeUTF8))
+        self.statusWidget.setToolTip(QtGui.QApplication.translate("MainWindow", "Here you can change your status", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setToolTip(QtGui.QApplication.translate("MainWindow", "You can show/hide contats that are unavailable", None, QtGui.QApplication.UnicodeUTF8))
         self.rosterSearchLabel.setText(QtGui.QApplication.translate("MainWindow", "User search:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.rosterTab), QtGui.QApplication.translate("MainWindow", " r", None, QtGui.QApplication.UnicodeUTF8))
