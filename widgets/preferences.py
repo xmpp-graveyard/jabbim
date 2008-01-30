@@ -760,9 +760,10 @@ class preferencesWindow(QtGui.QDialog):
 			self.main.config['chatSkin']=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())
 			self.main.loadSkin()
 			self.main.config['emoticons']=unicode(self.ui.emoticonsList.itemData(self.ui.emoticonsList.currentIndex()).toString())
-			for i in range(self.main.chat.ui.chatTab.count()):
-				w=self.main.chat.ui.chatTab.widget(i)
-				w.chat.loadSmileys()
+			self.main.emoticonsWidget.reinit()
+			#for i in range(self.main.chat.ui.chatTab.count()):
+				#w=self.main.chat.ui.chatTab.widget(i)
+				#w.chat.loadSmileys()
 
 		#data=item.data(32)
 		#file=unicode(data.toString())

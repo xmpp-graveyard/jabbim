@@ -1574,6 +1574,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.loginStatus.addItem(self.getIcon(status="xa",size="16x16"), self.status["xa"],QtCore.QVariant("xa"))
 		self.ui.loginStatus.addItem(self.getIcon(status="dnd",size="16x16"), self.status["dnd"],QtCore.QVariant("dnd"))
 
+		self.emoticonsWidget=widgets.emoticonswidget.emoticonsWidget(self,self)
+
 		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.connect()

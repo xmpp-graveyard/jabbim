@@ -12,6 +12,7 @@ import filetransfer
 from twisted.words.protocols.jabber import jid as jidT
 import time
 from include import utils
+from emoticonswidget import *
 
 class abstractTextView(QtGui.QTextEdit):
 	"""
@@ -111,7 +112,7 @@ class abstractTextView(QtGui.QTextEdit):
 		a=parseString(text)
 		for el in a.getElementsByTagName('img'):
 			path=el.attributes['src'].split('/')[-1]
-			for k,v in self.parent.smileys.iteritems():
+			for k,v in self.parent.main.emoticonsWidget.smileys.iteritems():
 				if v==path:
 					path=k
 					newnode = parseString("<div> "+path+"</div>").documentElement
@@ -301,19 +302,6 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		if not self.composing:
 			self.composing=True
 
-class frame(QtGui.QFrame):
-	"""
-	QFrame for emoticons.
-	"""
-	def __init__(self,main,parent=None):
-		QtGui.QFrame.__init__(self,parent)
-		self.main=main
-
-	def hideEvent(self,event):
-		"""
-		Uncheck Emoticons button in ChatWidget
-		"""
-		self.main.ui.smileys.setChecked(False)
 
 class abstractChatWidget(QtGui.QWidget):
 	def __init__(self,initClass,textEditClass,main,jid,xhtml=True,parent=None):
@@ -359,7 +347,6 @@ class abstractChatWidget(QtGui.QWidget):
 			self.init=self.main.skin["on_init"]
 		self.ui.textEdit.setHtml("<br/>"+self.init)
 		
-		self.loadSmileys() # load emoticons
 		self.unread=0 #: number of unread messages
 
 		if not self.xhtml:
@@ -507,52 +494,6 @@ class abstractChatWidget(QtGui.QWidget):
 		for link in links:
 			xhtml=xhtml.replace(link,'<a href="'+link+'">'+link+'</a>')
 		return xhtml
-
-	def loadSmileys(self):
-		"""
-		Loads emoticons pack according to self.main.config['emoticons'] and makes
-		widget for choosing emoticons
-		"""
-		# load emoticons pack
-		smileys=ConfigObj("emoticons/"+self.main.config['emoticons'],encoding='UTF8')
-		src='emoticons/'
-		if len(smileys)==0:
-			smileys=ConfigObj(self.main.realHomeDir+"/emoticons/"+self.main.config['emoticons'],encoding='UTF8')
-			src=self.main.realHomeDir+'/emoticons/'
-		if len(smileys)==0:
-			# emotions pack doesn't exist
-			return
-
-		# load images
-		self.smileys={} #: images for emoticons. for example {":-)":"emoticons/default/smile.png"}
-		for k,v in smileys['emoticons'].iteritems():
-			self.smileys[k.replace("<","&lt;").replace(">","&gt;")]=src+os.path.dirname(self.main.config['emoticons'])+"/"+v
-		
-		# make QFrame for images preview
-		self.s=frame(self,self)
-		self.s.setWindowFlags(QtCore.Qt.Popup)
-		self.s.hide()
-		layout=QtGui.QGridLayout(self.s)
-		layout.setMargin(0)
-		layout.setSpacing(0)
-		added=[]
-		x=0
-		y=0
-		# make QToolButton for every image, add it to layout of self.s, and connnect to self.addEmotion
-		for k,v in smileys['emoticons'].iteritems():
-			if added.count(v)==0:
-				added.append(v)
-				button=QtGui.QToolButton(self)
-				action=QtGui.QAction(QtGui.QIcon(src+os.path.dirname(self.main.config['emoticons'])+"/"+v),"",self.s)
-				action.setData(QtCore.QVariant(k))
-				button.setDefaultAction(action)
-				button.setToolTip(str(k))
-				QtCore.QObject.connect(button, QtCore.SIGNAL("triggered ( QAction *)"),self.addEmoticon)
-				layout.addWidget(button,x,y)
-				y+=1
-				if y==5:
-					y=0
-					x+=1
 	
 	def smileysClicked(self,bool):
 		"""
@@ -561,11 +502,12 @@ class abstractChatWidget(QtGui.QWidget):
 		pos=self.ui.smileys.mapToGlobal(QtCore.QPoint(0,0))
 		x=pos.x()
 		y=pos.y()
-		self.s.setGeometry(x-60,y-200, 120, 200)
-		if self.s.isVisible():
-			self.s.setVisible(False)
+		self.main.emoticonsWidget.acceptor=self
+		self.main.emoticonsWidget.setGeometry(x-self.main.emoticonsWidget.pixmap.width()/2,y-self.main.emoticonsWidget.pixmap.height(), self.main.emoticonsWidget.pixmap.width(), self.main.emoticonsWidget.pixmap.height())
+		if self.main.emoticonsWidget.isVisible():
+			self.main.emoticonsWidget.setVisible(False)
 		else:
-			self.s.setVisible(True)
+			self.main.emoticonsWidget.setVisible(True)
 
 	def underline(self,bool):
 		"""
@@ -616,7 +558,7 @@ class abstractChatWidget(QtGui.QWidget):
 		if self.ui.textEdit.verticalScrollBar().value()==self.ui.textEdit.verticalScrollBar().maximum():
 			toEnd=True
 		# replace emoticons by images
-		for k,v in self.smileys.iteritems():
+		for k,v in self.main.emoticonsWidget.smileys.iteritems():
 			text=text.replace(" "+k,'&nbsp;<img src="'+v+'"/>')
 			text=text.replace("&nbsp;"+k,'&nbsp;<img src="'+v+'"/>')
 			text=text.replace(">"+k,'><img src="'+v+'"/>')
@@ -634,8 +576,11 @@ class abstractChatWidget(QtGui.QWidget):
 		@type action: QAction
 		@param action: emotion QAction
 		"""
-		data=action.data()
-		data=data.toString()
+		if isinstance(action,unicode):
+			data=action
+		else:
+			data=action.data()
+			data=data.toString()
 		if self.main.config['chatMode']=="normal":
 			cur=self.ui.line.textCursor()
 			cur.insertText(" "+data)
@@ -644,8 +589,6 @@ class abstractChatWidget(QtGui.QWidget):
 			for k,v in self.smileys.iteritems():
 				data=data.replace(k,' <img src="images/16x16/emotes/'+v+'" />')
 			self.ui.line.insertHtml(data)
-		self.ui.smileys.setChecked(False)
-		self.s.hide()
 		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 	
 	def sendButtonClicked(self):

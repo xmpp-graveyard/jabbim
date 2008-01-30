@@ -21,4 +21,5 @@ import vcardeditor
 import profiles
 import statuswidget_ui
 import statuseditor
+import emoticonswidget
 #import eventsFTWidget_ui
