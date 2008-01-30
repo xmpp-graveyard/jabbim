@@ -372,7 +372,8 @@ class ClientFactory (protocol.ClientFactory):
 			   self.delayed_timeout_call.cancel()
 		except:
 			pass
-		self.xmpp.ft[self.xmpp_sid].finish()
+		if not self.status == 'unconnected':
+			self.xmpp.ft[self.xmpp_sid].finish()
 		protocol.ClientFactory.stopFactory (self)
 
 	def buildProtocol (self, a):
@@ -421,6 +422,7 @@ class ClientFactory (protocol.ClientFactory):
 			if self.status != "established":
 				log.msg ("Connection FAILED before SOCKS established %s" % self)
 				self.otherFactory.clientConnectionFailed (connector, rmap)
+				self.stopFactory()
 				self.xmpp.ft[self.xmpp_sid].connectFailure()
 				self.xmpp.ft[self.xmpp_sid].error = "Can't connect."
 			else:
@@ -567,6 +569,7 @@ class FTReceive:
 		self.answerId=answerId
 	
 	def connectStreamHost(self):
+		print self.streamhosts
 		streamhost = self.streamhosts.pop(0)
 		self.activeStreamhost = streamhost
 		f = protocol.ClientFactory()
@@ -577,7 +580,10 @@ class FTReceive:
 	
 	def connectFailure(self):
 		log.msg('connect failed')
+
 		if len(self.streamhosts)>0:
+			self.connector = None
+			self.activeStreamhost = None
 			self.connectStreamHost()
 		else:
 			log.msg('nemuzu se spojit')
@@ -593,6 +599,8 @@ class FTReceive:
 		used = query.addElement('streamhost-used')
 		used['jid'] = self.activeStreamhost['jid']
 		print iq.toXml()
+		self.streamhosts = []
+		self.error = None
 		self.fp = open(self.file, 'wb')
 		self.client.xmlstream.send(iq)
 	
@@ -612,7 +620,8 @@ class FTReceive:
 		
 	
 	def finish(self):
-		log.msg("konec prenosu")
-		if self.fp != None:
-			self.fp.close()
-		self.client.on_ftEnd(self.sid, self.error)
+		if len(self.streamhosts) == 0:
+			log.msg("konec prenosu")
+			if self.fp != None:
+				self.fp.close()
+			self.client.on_ftEnd(self.sid, self.error)
