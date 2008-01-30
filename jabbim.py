@@ -1489,7 +1489,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
 		QtCore.QObject.connect(self.ui.mucBrowserButton, QtCore.SIGNAL("clicked ()"),self.mucBrowser)
 		QtCore.QObject.connect(self.ui.statusMessage, QtCore.SIGNAL("clicked (bool)"),self.statusMessageClicked)
-		QtCore.QObject.connect(self.ui.statusLine, QtCore.SIGNAL("editingFinished ()"),self.statusLineFinished)
+		QtCore.QObject.connect(self.ui.statusLine, QtCore.SIGNAL("returnPressed ()"),self.statusLineFinished)
 		
 		QtCore.QObject.connect(self.ui.actionAbout, QtCore.SIGNAL("triggered ( bool )"),self.about)
 		QtCore.QObject.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
@@ -1510,7 +1510,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.bookmarksItemClicked)
 		
 		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Delete), self.ui.bookmarks,self.deleteCurrentBookmark)
-		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Escape), self.ui.statusLine,self.statusLineCancelede)
+		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Escape), self.ui.statusLine,self.statusLineCanceled)
 
 		# set up bookmarks treeWidget
 		self.ui.bookmarks.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
