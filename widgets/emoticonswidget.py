@@ -24,18 +24,24 @@ import os
 from configobj import ConfigObj
 
 class emoticonsWidget(QtGui.QLabel):
+	"""
+	QLabel for choosing emoticons
+	"""
 	def __init__(self,main,parent=None):
 		apply(QtGui.QLabel.__init__,(self,parent))
 		self.setWindowFlags(QtCore.Qt.Popup)
 		self.setObjectName('emoticonList')
-		self.main=main
-		self.acceptor=None
-		self.l=[]
-		self.emoWidth=None
-		self.emoHeight=None
+		self.main=main #: mainWindow
+		self.acceptor=None #: chatWidget or groupchatWidget which accepts request for addEmoticon
+		self.l=[] #: list of emoticons [[':)',':(',...],[':*',':/',...],[],]
+		self.emoWidth=None #: width of first emoticon
+		self.emoHeight=None # height of first emoticon
 		self.reinit()
 
 	def event(self,event):
+		"""
+		Shows tooltip according to mouse pointer.
+		"""
 		# tooltip request:
 		if int(event.type())==110:
 			x=event.x()
@@ -47,11 +53,23 @@ class emoticonsWidget(QtGui.QLabel):
 		return QtGui.QLabel.event(self,event)
 
 	def emoticonAt(self,x,y):
+		"""
+		Returns emoticon according to x,y.
+		@type x: integer
+		@param x: x
+		@type y: integer
+		@param y: y
+		@rtype: unicode
+		@return: emoticon (for example ":)")
+		"""
 		x=int(x/(self.emoWidth+2))
 		y=int(y/(self.emoHeight+2))
 		return self.l[y][x]
 		
 	def mousePressEvent(self,event):
+		"""
+		Calls acceptors function addEmoticon(choosed_emoticon) and unchecks acceptors ui,smileys button.
+		"""
 		x=event.x()
 		y=event.y()
 		if x>0 and y>0 and x<self.pixmap.width() and y<self.pixmap.height():
@@ -64,6 +82,9 @@ class emoticonsWidget(QtGui.QLabel):
 		self.hide()
 
 	def reinit(self):
+		"""
+		Loads emoticon pack according to self.main.config['emoticons'].
+		"""
 		# load emoticons pack
 		smileys=ConfigObj("emoticons/"+self.main.config['emoticons'],encoding='UTF8')
 		src='emoticons/'
@@ -82,10 +103,12 @@ class emoticonsWidget(QtGui.QLabel):
 		added=[]
 		x=0
 		y=0
-		# make QToolButton for every image, add it to layout of self.s, and connnect to self.addEmotion
 		self.emoWidth=None
 		self.emoHeight=None
 		self.l=[[]]
+		
+		# get first image height and width
+		# fill self.l list
 		for k,v in smileys['emoticons'].iteritems():
 			if added.count(v)==0:
 				added.append(v)
@@ -99,16 +122,18 @@ class emoticonsWidget(QtGui.QLabel):
 					self.l.append([])
 					y=0
 					x+=1
+		# count width and height for all images
 		width=6*(self.emoWidth+2)
 		height=(x+1)*(self.emoHeight+2)
-		# make QFrame for images preview
+		# make QPixmap with counted width and height
 		self.pixmap=QtGui.QPixmap(width,height)
 		self.pixmap.fill(self.palette().base().color())
+		
 		added=[]
 		x=0
 		y=0
+		# paint emoticons to the self.pixmap
 		painter=QtGui.QPainter(self.pixmap)
-		# make QToolButton for every image, add it to layout of self.s, and connnect to self.addEmotion
 		for k,v in smileys['emoticons'].iteritems():
 			print k
 			if added.count(v)==0:
@@ -121,4 +146,5 @@ class emoticonsWidget(QtGui.QLabel):
 					y=0
 					x+=1
 		painter.end()
+		# set self.pixmap as background for QLabel
 		self.setPixmap(self.pixmap)
