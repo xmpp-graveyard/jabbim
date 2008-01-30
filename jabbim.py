@@ -1510,6 +1510,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.bookmarksItemClicked)
 		
 		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Delete), self.ui.bookmarks,self.deleteCurrentBookmark)
+		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Escape), self.ui.statusLine,self.statusLineCancelede)
 
 		# set up bookmarks treeWidget
 		self.ui.bookmarks.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
@@ -1582,6 +1583,10 @@ class mainWindow(QtGui.QMainWindow):
 		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.connect()
+
+	def statusLineCanceled(self):
+		self.ui.statusLine.hide()
+		self.ui.statusMessage.show()
 
 	def statusLineFinished(self):
 		status=unicode(self.ui.statusLine.text())
