@@ -135,7 +135,6 @@ class emoticonsWidget(QtGui.QLabel):
 		# paint emoticons to the self.pixmap
 		painter=QtGui.QPainter(self.pixmap)
 		for k,v in smileys['emoticons'].iteritems():
-			print k
 			if added.count(v)==0:
 				added.append(v)
 				p=QtGui.QPixmap(src+os.path.dirname(self.main.config['emoticons'])+"/"+v)
