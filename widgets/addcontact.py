@@ -27,7 +27,9 @@ class addContactDialog(QtGui.QDialog):
 			self.ui.add_jid.setEnabled(False)
 			self.ui.add_message.hide()
 			self.ui.add_messageLabel.hide()
+		self.jidChanged()
 		QtCore.QObject.connect(self.ui.search,QtCore.SIGNAL("clicked()"),self.search)
+		QtCore.QObject.connect(self.ui.add_jid,QtCore.SIGNAL("textEdited ( const QString & )"),self.jidChanged)
 
 		self.searchJid=None
 		#key=self.main.client.jid.host
@@ -50,6 +52,14 @@ class addContactDialog(QtGui.QDialog):
 		if not self.searchJid:
 			self.ui.search.hide()
 
+	def jidChanged(self,text=""):
+		text=unicode(self.ui.add_jid.text())
+		if text.find('@')!=-1:
+			jid=self.main.getJid(text)
+			if jid:
+				self.ui.save.setEnabled(True)
+				return
+		self.ui.save.setEnabled(False)
 	def search(self):
 		d=self.main.client.getSearchForm(self.searchJid)
 		d.addCallback(self._gotSearchForm)
