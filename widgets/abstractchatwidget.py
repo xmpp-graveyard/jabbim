@@ -483,7 +483,9 @@ class abstractChatWidget(QtGui.QWidget):
 			xhtml=t[:-5]
 		# replace url by <a href="url"></url>
 		same=False
-		if xhtml.replace("<br/>",'\n').replace("<br />",'\n')==text:
+		#print xhtml.replace("<br/>",'\n').replace("<br />",'\n')
+		#print escape(text)
+		if xhtml.replace("<br/>",'\n').replace("<br />",'\n')==escape(text):
 			same=True
 		links=[]
 		temp=unicode(xhtml).replace(">","<")

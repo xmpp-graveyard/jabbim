@@ -217,12 +217,12 @@ class chatWidget(abstractChatWidget):
 			
 			# get plain text message
 			text=unicode(self.ui.line.toPlainText())
-			text=unescape(text)
 			ret=[]
 			if self.xhtml:
 				# get message in Qt html format
 				xhtml=self.ui.line.toHtml()
 				xhtml,same=self.qtHtmlToXhtml(xhtml,text)
+				text=unescape(text)
 				# send message
 				if same:
 					for key,value in self.main.plugins.iteritems():
@@ -245,6 +245,7 @@ class chatWidget(abstractChatWidget):
 				message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",message).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 			else:
 				# send message
+				text=unescape(text)
 				for key,value in self.main.plugins.iteritems():
 					if value['module']:
 						ret.append(self.main.runPluginCommand(value['module'].on_messageSend,[unicode(self.jid),text,'',"active"]))
