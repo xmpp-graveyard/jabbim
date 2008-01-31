@@ -263,7 +263,8 @@ class chatWidget(abstractChatWidget):
 				else:
 					message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 			# show message
-			self.textEditWrite(message)
+			if not False in ret:
+				self.textEditWrite(message)
 			# add message to 'sent messages history'
 			self.sent.append(text)
 			self.hindex = len(self.sent)
