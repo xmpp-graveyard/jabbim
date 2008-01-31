@@ -32,6 +32,7 @@ import vcardeditor
 from include import utils
 import filetransfer
 from abstractchatwidget import abstractChatWidget,abstractTextView
+import addcontact
 
 class textView(abstractTextView):
 	"""
@@ -238,8 +239,10 @@ class groupChatWidget(abstractChatWidget):
 		if item.parent()!=None:
 			affiliation=""
 			role=""
+			user = None
 			if self.main.client.groupchats.has_key(self.jid):
 				if self.main.client.groupchats[self.jid].users.has_key(name):
+					user = self.main.client.groupchats[self.jid].users[name]
 					affiliation=self.main.client.groupchats[self.jid].users[name].affiliation
 					role=self.main.client.groupchats[self.jid].users[name].role
 			
@@ -322,6 +325,13 @@ class groupChatWidget(abstractChatWidget):
 			if separator:
 				menu.addSeparator()
 
+			if user != None:
+				if user.truejid != None:
+					jid = jidT.JID(user.truejid).userhost()
+					action=menu.addAction(self.tr("Add to roster"))
+					action.setData(QtCore.QVariant([jid, name]))
+					action.setIcon(QtGui.QIcon("images/16x16/actions/add-user.png"))
+					action.setObjectName("add-user")
 			
 			action=menu.addAction(self.tr("vCard"))
 			action.setData(QtCore.QVariant(jid))
@@ -412,6 +422,9 @@ class groupChatWidget(abstractChatWidget):
 				file=new
 				self.dialog=filetransfer.filetransferDialog(self.main,file,jid)
 				self.dialog.show()
+		elif cmd == 'add-user':
+			jid, nick = [unicode(val.toString()) for val in action.data().toList()]
+			addcontact.addContactDialog(self.main,self.main, jid = jid, name = nick).show()
 			
 
 	def userClicked(self,item,i):
