@@ -765,14 +765,9 @@ class groupChatWidget(abstractChatWidget):
 
 			# get message in Qt html format
 			xhtml=self.ui.line.toHtml()
-			xhtml=self.qtHtmlToXhtml(xhtml)
-			# send message
-			#if xhtml==text:
-				#self.main.client.sendMessage(unicode(self.jid),text,'groupchat',composing="active")
-			#else:
-				#self.main.client.sendMessage(unicode(self.jid),text,'groupchat',xhtml=xhtml,composing="active")
+			xhtml,same=self.qtHtmlToXhtml(xhtml,text)
 			ret=[]
-			if xhtml==text:
+			if same:
 				for key,value in self.main.plugins.iteritems():
 					if value['module']:
 						ret.append(self.main.runPluginCommand(value['module'].on_groupchatMessageSend,[unicode(self.jid),text,'',"active"]))

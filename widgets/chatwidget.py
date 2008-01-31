@@ -222,9 +222,9 @@ class chatWidget(abstractChatWidget):
 			if self.xhtml:
 				# get message in Qt html format
 				xhtml=self.ui.line.toHtml()
-				xhtml=self.qtHtmlToXhtml(xhtml)
+				xhtml,same=self.qtHtmlToXhtml(xhtml,text)
 				# send message
-				if xhtml==text:
+				if same:
 					for key,value in self.main.plugins.iteritems():
 						if value['module']:
 							ret.append(self.main.runPluginCommand(value['module'].on_messageSend,[unicode(self.jid),text,'',"active"]))

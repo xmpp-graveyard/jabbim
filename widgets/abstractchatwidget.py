@@ -445,9 +445,9 @@ class abstractChatWidget(QtGui.QWidget):
 		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
 		self.ui.line.setFontItalic(bool)
 
-	def qtHtmlToXhtml(self,xhtml):
+	def qtHtmlToXhtml(self,xhtml,text):
 		"""
-		Convetrs html from QTextEdit to xhtml-im compatible text.
+		Converts html from QTextEdit to xhtml-im compatible text.
 		@type xhtml: unicode
 		@param xhtml: Qt html
 		"""
@@ -482,6 +482,9 @@ class abstractChatWidget(QtGui.QWidget):
 					t+=br[i]
 			xhtml=t[:-5]
 		# replace url by <a href="url"></url>
+		same=False
+		if xhtml.replace("<br/>",'\n').replace("<br />",'\n')==text:
+			same=True
 		links=[]
 		temp=unicode(xhtml).replace(">","<")
 		for word in temp.split("<"):
@@ -493,7 +496,7 @@ class abstractChatWidget(QtGui.QWidget):
 						links.append(w.strip())
 		for link in links:
 			xhtml=xhtml.replace(link,'<a href="'+link+'">'+link+'</a>')
-		return xhtml
+		return xhtml,same
 	
 	def smileysClicked(self,bool):
 		"""
