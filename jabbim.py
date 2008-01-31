@@ -2634,6 +2634,14 @@ class mainWindow(QtGui.QMainWindow):
 			self.preferencesWindow.show()
 			self.preferencesWindow.reloadPreferences()
 
+	def loadJabbimExtraConfig(self,config,fallback):
+		try:
+			config=ConfigObj(config,encoding='UTF8')
+			return True,config
+		except:
+			config=ConfigObj(fallback,encoding='UTF8')
+			return False,config
+
 	def loadSkin(self):
 		"""
 		Loads chat skin. Skin is loaded to self.skin.

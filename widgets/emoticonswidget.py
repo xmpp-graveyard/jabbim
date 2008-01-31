@@ -86,11 +86,15 @@ class emoticonsWidget(QtGui.QLabel):
 		Loads emoticon pack according to self.main.config['emoticons'].
 		"""
 		# load emoticons pack
-		smileys=ConfigObj("emoticons/"+self.main.config['emoticons'],encoding='UTF8')
+		#smileys=ConfigObj("emoticons/"+self.main.config['emoticons'],encoding='UTF8')
+		loaded,smileys=self.main.loadJabbimExtraConfig("emoticons/"+self.main.config['emoticons'],'emoticons/default/smileys.cfg')
 		src='emoticons/'
-		if len(smileys)==0:
-			smileys=ConfigObj(self.main.realHomeDir+"/emoticons/"+self.main.config['emoticons'],encoding='UTF8')
+		if len(smileys)==0 or not loaded:
+			#smileys=ConfigObj(self.main.realHomeDir+"/emoticons/"+self.main.config['emoticons'],encoding='UTF8')
+			loaded,smileys=self.main.loadJabbimExtraConfig(self.main.realHomeDir+"/emoticons/"+self.main.config['emoticons'],'emoticons/default/smileys.cfg')
 			src=self.main.realHomeDir+'/emoticons/'
+		if not loaded:
+			self.main.config['emoticons']='default/smileys.cfg'
 		if len(smileys)==0:
 			# emotions pack doesn't exist
 			return

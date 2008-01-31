@@ -160,6 +160,13 @@ def loadConfig(main,status):
 		except:
 			main.config[k]=v
 			rewrite=True
+	loaded,cf=main.loadJabbimExtraConfig("emoticons/"+main.config['emoticons'],'emoticons/default/smileys.cfg')
+	if len(cf)==0 or not loaded:
+		loaded,cf=main.loadJabbimExtraConfig(main.realHomeDir+"/emoticons/"+main.config['emoticons'],'emoticons/default/smileys.cfg')
+		if len(cf)==0 or not loaded:
+			main.config['emoticons']="default/smileys.cfg"
+			rewrite=True
+	
 	if rewrite==True:
 		main.config.write()
 	main.config["chatSplitterSizes"]=map(int, main.config["chatSplitterSizes"])

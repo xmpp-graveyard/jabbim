@@ -452,12 +452,13 @@ class preferencesWindow(QtGui.QDialog):
 				for emoticon in emoticons:
 					if emoticon.endswith('.cfg'):
 						emo=pack+"/"+emoticon
-						config=ConfigObj("emoticons/"+emo,encoding='UTF8')
-						
-						if emo==currentEmoticons:
-							item=self.ui.emoticonsList.insertItem(0,QtGui.QIcon('emoticons/'+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
-						else:
-							item=self.ui.emoticonsList.addItem(QtGui.QIcon('emoticons/'+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
+						#config=ConfigObj("emoticons/"+emo,encoding='UTF8')
+						loaded,config=self.main.loadJabbimExtraConfig("emoticons/"+emo,'emoticons/default/smileys.cfg')
+						if loaded:
+							if emo==currentEmoticons:
+								item=self.ui.emoticonsList.insertItem(0,QtGui.QIcon('emoticons/'+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
+							else:
+								item=self.ui.emoticonsList.addItem(QtGui.QIcon('emoticons/'+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
 		
 		# emoticons from users home directory
 		packs=os.listdir(self.main.realHomeDir+"/emoticons")
@@ -467,12 +468,13 @@ class preferencesWindow(QtGui.QDialog):
 				for emoticon in emoticons:
 					if emoticon.endswith('.cfg'):
 						emo=pack+"/"+emoticon
-						config=ConfigObj(self.main.realHomeDir+"/emoticons/"+emo,encoding='UTF8')
-						
-						if emo==currentEmoticons:
-							item=self.ui.emoticonsList.insertItem(0,QtGui.QIcon(self.main.realHomeDir+"/emoticons/"+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
-						else:
-							item=self.ui.emoticonsList.addItem(QtGui.QIcon(self.main.realHomeDir+"/emoticons/"+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
+						#config=ConfigObj(self.main.realHomeDir+"/emoticons/"+emo,encoding='UTF8')
+						loaded,config=self.main.loadJabbimExtraConfig(self.main.realHomeDir+"/emoticons/"+emo,'emoticons/default/smileys.cfg')
+						if loaded:
+							if emo==currentEmoticons:
+								item=self.ui.emoticonsList.insertItem(0,QtGui.QIcon(self.main.realHomeDir+"/emoticons/"+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
+							else:
+								item=self.ui.emoticonsList.addItem(QtGui.QIcon(self.main.realHomeDir+"/emoticons/"+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
 
 		self.emoticonsListChanged(0)
 		self.ui.emoticonsList.setCurrentIndex(0)
@@ -608,10 +610,14 @@ class preferencesWindow(QtGui.QDialog):
 	def emoticonsListChanged(self,index):
 		path=unicode(self.ui.emoticonsList.itemData(index).toString())
 		src='emoticons/'
-		config=ConfigObj("emoticons/"+path,encoding='UTF8')
-		if len(config)==0:
+		#config=ConfigObj("emoticons/"+path,encoding='UTF8')
+		loaded,config=self.main.loadJabbimExtraConfig("emoticons/"+path,'emoticons/default/smileys.cfg')
+		if len(config)==0 or not loaded:
 			src=self.main.realHomeDir+'/emoticons/'
-			config=ConfigObj(self.main.realHomeDir+"/emoticons/"+path,encoding='UTF8')
+			#config=ConfigObj(self.main.realHomeDir+"/emoticons/"+path,encoding='UTF8')
+			loaded,config=self.main.loadJabbimExtraConfig(self.main.realHomeDir+"/emoticons/"+path,'emoticons/default/smileys.cfg')
+			if not loaded:
+				return
 		html=""
 		values=[]
 		for k,v in config['emoticons'].iteritems():
