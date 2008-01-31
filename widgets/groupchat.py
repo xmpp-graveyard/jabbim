@@ -767,10 +767,23 @@ class groupChatWidget(abstractChatWidget):
 			xhtml=self.ui.line.toHtml()
 			xhtml=self.qtHtmlToXhtml(xhtml)
 			# send message
+			#if xhtml==text:
+				#self.main.client.sendMessage(unicode(self.jid),text,'groupchat',composing="active")
+			#else:
+				#self.main.client.sendMessage(unicode(self.jid),text,'groupchat',xhtml=xhtml,composing="active")
+			ret=[]
 			if xhtml==text:
-				self.main.client.sendMessage(unicode(self.jid),text,'groupchat',composing="active")
+				for key,value in self.main.plugins.iteritems():
+					if value['module']:
+						ret.append(self.main.runPluginCommand(value['module'].on_groupchatMessageSend,[unicode(self.jid),text,'',"active"]))
+				if not False in ret:
+					self.main.client.sendMessage(unicode(self.jid),text,'groupchat',composing="active")
 			else:
-				self.main.client.sendMessage(unicode(self.jid),text,'groupchat',xhtml=xhtml,composing="active")
+				for key,value in self.main.plugins.iteritems():
+					if value['module']:
+						ret.append(self.main.runPluginCommand(value['module'].on_groupchatMessageSend,[unicode(self.jid),text,xhtml,"active"]))
+				if not False in ret:
+					self.main.client.sendMessage(unicode(self.jid),text,'groupchat',xhtml=xhtml,composing="active")
 
 			#self.main.client.sendMessage(self.jid, text, 'groupchat')
 			self.sent.append(text)

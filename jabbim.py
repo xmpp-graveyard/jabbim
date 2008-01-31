@@ -2247,7 +2247,8 @@ class mainWindow(QtGui.QMainWindow):
 		@param args: list of arguments for function
 		"""
 		try:
-			command(*args)
+			ret=command(*args)
+			return ret
 		except Exception, ex:
 			log.msg('Plugin error: ' +unicode(ex))
 			message = unicode(traceback.format_exc())

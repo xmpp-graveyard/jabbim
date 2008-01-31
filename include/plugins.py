@@ -125,6 +125,13 @@ class PluginBase:
 	def on_endPreferences(self):
 		pass
 
+	def on_messageSend(self,jid,text="",xhtml="",composite=""):
+		return True
+
+	def on_groupchatMessageSend(self,jid,text="",xhtml="",composite=""):
+		return True
+
+
 	def loadConfig(self,homedir=None):
 		if homedir==None:
 			homedir=self.main.homeDir

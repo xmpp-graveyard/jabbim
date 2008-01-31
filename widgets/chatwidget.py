@@ -218,15 +218,24 @@ class chatWidget(abstractChatWidget):
 			# get plain text message
 			text=unicode(self.ui.line.toPlainText())
 			text=unescape(text)
+			ret=[]
 			if self.xhtml:
 				# get message in Qt html format
 				xhtml=self.ui.line.toHtml()
 				xhtml=self.qtHtmlToXhtml(xhtml)
 				# send message
 				if xhtml==text:
-					self.main.client.sendMessage(unicode(self.jid),text,composing="active")
+					for key,value in self.main.plugins.iteritems():
+						if value['module']:
+							ret.append(self.main.runPluginCommand(value['module'].on_messageSend,[unicode(self.jid),text,'',"active"]))
+					if not False in ret:
+						self.main.client.sendMessage(unicode(self.jid),text,composing="active")
 				else:
-					self.main.client.sendMessage(unicode(self.jid),text,xhtml=xhtml,composing="active")
+					for key,value in self.main.plugins.iteritems():
+						if value['module']:
+							ret.append(self.main.runPluginCommand(value['module'].on_messageSend,[unicode(self.jid),text,xhtml,"active"]))
+					if not False in ret:
+						self.main.client.sendMessage(unicode(self.jid),text,xhtml=xhtml,composing="active")
 				
 				# prepare message for showing in GUI
 				message=xhtml.replace("&quot;",'"')
@@ -236,7 +245,11 @@ class chatWidget(abstractChatWidget):
 				message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",message).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 			else:
 				# send message
-				self.main.client.sendMessage(unicode(self.jid),text,composing="active")
+				for key,value in self.main.plugins.iteritems():
+					if value['module']:
+						ret.append(self.main.runPluginCommand(value['module'].on_messageSend,[unicode(self.jid),text,'',"active"]))
+				if not False in ret:
+					self.main.client.sendMessage(unicode(self.jid),text,composing="active")
 				
 				# prepare message for showing in GUI
 				text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
