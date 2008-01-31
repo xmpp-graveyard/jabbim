@@ -176,6 +176,9 @@ class derived:
 	def sendMessage(self, to, body=None, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
 		# Posle zpravu na jid
 		self.dispatcher.publishEvent('on_message_send', to, body, typ, subject,composing, xhtml,  muc)
+	
+	def _sendMessage(self, to, body=None, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
+		#hack kvuli moznosti zpracovat odchozi zpravu
 		message = Element((None,'message'))
 		message['xml:lang'] = self.xmlLang
 		message['to'] = to
@@ -188,9 +191,17 @@ class derived:
 		if (typ=='groupchat' or typ == 'normal') and subject:
 			message.addElement('subject', content = subject)
 		if xhtml != None:
-			html = message.addElement('html','http://jabber.org/protocol/xhtml-im')
-			body = html.addElement('body', 'http://www.w3.org/1999/xhtml')
-			body.addRawXml(xhtml)
+#			if self.roster['users'].has_key(JID.userhost()):
+#				if self.roster['users'][JID.userhost()].resources.has_key(JID.resource):
+#					if self.roster['users'][JID.userhost()].resources[JID.resource].hasFeature('http://jabber.org/protocol/xhtml-im'):
+#						html = message.addElement('html','http://jabber.org/protocol/xhtml-im')
+#						body = html.addElement('body', 'http://www.w3.org/1999/xhtml')
+#						body.addRawXml(xhtml)
+#			elif muc:
+				html = message.addElement('html','http://jabber.org/protocol/xhtml-im')
+				body = html.addElement('body', 'http://www.w3.org/1999/xhtml')
+				body.addRawXml(xhtml)
+
 		if composing:
 			if self.roster['users'].has_key(JID.userhost()):
 				if self.roster['users'][JID.userhost()].resources.has_key(JID.resource):

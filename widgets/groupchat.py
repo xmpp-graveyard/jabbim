@@ -67,6 +67,7 @@ class groupChatWidget(abstractChatWidget):
 
 		# signals
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.userClicked)
+		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int )"),self.userSingleClicked)
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.usersContextMenu)
 
 		# shortcuts
@@ -433,6 +434,13 @@ class groupChatWidget(abstractChatWidget):
 		icon=self.main.getIcon(status=self.main.icons[unicode(item.text(1))[0]],size="16x16")
 		self.main.chat.addChatTab(self.jid+"/"+unicode(item.text(0)),item.text(0),icon)
 		self.main.chat.activate()
+	
+	def userSingleClicked(self,item,i):
+		if item.parent()==None:
+			return
+		text = unicode(self.ui.line.text)
+		if len(text) == 0:
+			self.ui.line.setText(unicode(item.text(0))+':')
 		
 	def clearChat(self):
 		self.init=""
