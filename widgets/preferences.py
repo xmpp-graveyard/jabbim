@@ -487,11 +487,13 @@ class preferencesWindow(QtGui.QDialog):
 				for skin in skins:
 					if skin.endswith('.cfg'):
 						path=pack+"/"+skin
-						config=ConfigObj("chatskins/"+path,encoding='UTF8')
-						if path==self.main.config["chatSkin"]:
-							self.ui.chatSkin_list.insertItem(0,unicode(config['header']['name']),QtCore.QVariant(path))
-						else:
-							self.ui.chatSkin_list.addItem(unicode(config['header']['name']),QtCore.QVariant(path))
+						#config=ConfigObj("chatskins/"+path,encoding='UTF8')
+						loaded,config=self.main.loadJabbimExtraConfig("chatskins/"+path,'chatskins/cool/cool.cfg')
+						if loaded:
+							if path==self.main.config["chatSkin"]:
+								self.ui.chatSkin_list.insertItem(0,unicode(config['header']['name']),QtCore.QVariant(path))
+							else:
+								self.ui.chatSkin_list.addItem(unicode(config['header']['name']),QtCore.QVariant(path))
 
 		# chat skins from Jabbim root directory
 		packs=os.listdir(self.main.realHomeDir+"/chatskins/")
@@ -501,11 +503,13 @@ class preferencesWindow(QtGui.QDialog):
 				for skin in skins:
 					if skin.endswith('.cfg'):
 						path=pack+"/"+skin
-						config=ConfigObj(self.main.realHomeDir+"/chatskins/"+path,encoding='UTF8')
-						if path==self.main.config["chatSkin"]:
-							self.ui.chatSkin_list.insertItem(0,unicode(config['header']['name']),QtCore.QVariant(path))
-						else:
-							self.ui.chatSkin_list.addItem(unicode(config['header']['name']),QtCore.QVariant(path))
+						#config=ConfigObj(self.main.realHomeDir+"/chatskins/"+path,encoding='UTF8')
+						loaded,config=self.main.loadJabbimExtraConfig(self.main.realHomeDir+"/chatskins/"+path,'chatskins/cool/cool.cfg')
+						if loaded:
+							if path==self.main.config["chatSkin"]:
+								self.ui.chatSkin_list.insertItem(0,unicode(config['header']['name']),QtCore.QVariant(path))
+							else:
+								self.ui.chatSkin_list.addItem(unicode(config['header']['name']),QtCore.QVariant(path))
 
 		#skins=os.listdir("skins/")
 		#for skin in skins:
@@ -728,10 +732,14 @@ class preferencesWindow(QtGui.QDialog):
 	def chatSkin_listChanged(self,index):
 		path=unicode(self.ui.chatSkin_list.itemData(index).toString())
 		src='chatskins/'
-		config=ConfigObj("chatskins/"+path,encoding='UTF8')
-		if len(config)==0:
+
+		loaded,config=self.main.loadJabbimExtraConfig("chatskins/"+path,'chatskins/cool/cool.cfg')
+		if len(config)==0 or not loaded:
 			src=self.main.realHomeDir+'/chatskins/'
-			config=ConfigObj(self.main.realHomeDir+"/chatskins/"+path,encoding='UTF8')
+			#config=ConfigObj(self.main.realHomeDir+"/emoticons/"+path,encoding='UTF8')
+			loaded,config=self.main.loadJabbimExtraConfig(self.main.realHomeDir+"/chatskins/"+path,'chatskins/cool/cool.cfg')
+			if not loaded:
+				return
 		html=""
 		html+=self.tr("Name: ")+unicode(config['header']['name'])+"<br/>"
 		if config['header'].has_key('license'):
