@@ -46,8 +46,9 @@ class emoticonsWidget(QtGui.QLabel):
 		if int(event.type())==110:
 			x=event.x()
 			y=event.y()
-			if x>0 and y>0 and x<self.pixmap.width() and y<self.pixmap.height():
-				self.setToolTip(unicode(self.emoticonAt(x,y)))
+			if x>0 and y>0 and x<self.pixmap.width()-5 and y<self.pixmap.height()-5:
+				e=unicode(self.emoticonAt(x,y)).replace("<","&lt;").replace(">","&gt;")
+				self.setToolTip("<img src=\""+self.smileys[e]+"\"/> "+e)
 			else:
 				self.setToolTip("")
 		return QtGui.QLabel.event(self,event)
@@ -72,7 +73,7 @@ class emoticonsWidget(QtGui.QLabel):
 		"""
 		x=event.x()
 		y=event.y()
-		if x>0 and y>0 and x<self.pixmap.width() and y<self.pixmap.height():
+		if x>0 and y>0 and x<self.pixmap.width()-5 and y<self.pixmap.height()-5:
 			x=int(x/(self.emoWidth+2))
 			y=int(y/(self.emoHeight+2))
 			if self.acceptor:
@@ -127,8 +128,8 @@ class emoticonsWidget(QtGui.QLabel):
 					y=0
 					x+=1
 		# count width and height for all images
-		width=6*(self.emoWidth+2)
-		height=(x+1)*(self.emoHeight+2)
+		width=6*(self.emoWidth+2)+10
+		height=(x+1)*(self.emoHeight+2)+10
 		# make QPixmap with counted width and height
 		self.pixmap=QtGui.QPixmap(width,height)
 		self.pixmap.fill(self.palette().base().color())
@@ -143,11 +144,16 @@ class emoticonsWidget(QtGui.QLabel):
 				added.append(v)
 				p=QtGui.QPixmap(src+os.path.dirname(self.main.config['emoticons'])+"/"+v)
 				em=p.scaled(self.emoWidth,self.emoHeight,QtCore.Qt.KeepAspectRatio)
-				painter.drawPixmap(y*self.emoWidth+y*2,x*self.emoHeight+x*2,em)
+				painter.drawPixmap(5+y*self.emoWidth+y*2,5+x*self.emoHeight+x*2,em)
 				y+=1
 				if y==6:
 					y=0
 					x+=1
+		pen=QtGui.QPen()
+		pen.setWidth(2)
+		pen.setBrush(QtGui.QBrush(self.palette().dark().color()))
+		painter.setPen(pen)
+		painter.drawRect(0,0,width,height)
 		painter.end()
 		# set self.pixmap as background for QLabel
 		self.setPixmap(self.pixmap)
