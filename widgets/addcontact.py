@@ -32,13 +32,8 @@ class addContactDialog(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.add_jid,QtCore.SIGNAL("textEdited ( const QString & )"),self.jidChanged)
 
 		self.searchJid=None
-		#key=self.main.client.jid.host
-		#print key,self.main.client.disco.keys()
+
 		for key in self.main.client.disco.keys():
-			#if self.main.client.disco[key][None].has_key("identities"):
-				##for identity,values in self.main.client.disco[key][None].iteritems():
-					#if values.has_key('category'):
-						#pass
 			got=False
 			if self.main.client.disco[key][None].has_key("identities"):
 				for identity in self.main.client.disco[key][None]["identities"].itervalues():
