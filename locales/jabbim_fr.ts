@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="en">
+<defaultcodec></defaultcodec>
 <context>
     <name>AvatarLabel</name>
     <message>
         <location filename="jabbim.py" line="1305"/>
         <source>JID:</source>
-        <translation type="unfinished">JID:</translation>
+        <translation>JID:</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1317"/>
         <source>Priority</source>
-        <translation type="unfinished">Priorité</translation>
+        <translation>Priorité</translation>
     </message>
 </context>
 <context>
@@ -144,7 +145,7 @@
     <message>
         <location filename="widgets/mucbrowser_ui.py" line="184"/>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -152,12 +153,12 @@
     <message>
         <location filename="widgets/mucbrowser.py" line="54"/>
         <source>Server: </source>
-        <translation type="unfinished"></translation>
+        <translation>Serveur: </translation>
     </message>
     <message>
         <location filename="widgets/mucbrowser.py" line="108"/>
         <source>Room: </source>
-        <translation type="unfinished"></translation>
+        <translation>Salle: </translation>
     </message>
 </context>
 <context>
@@ -471,7 +472,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/vcardeditor_ui.py" line="248"/>
         <source>Nickname:</source>
-        <translation>Psudo:</translation>
+        <translation>Pseudo:</translation>
     </message>
     <message>
         <location filename="widgets/vcardeditor_ui.py" line="252"/>
@@ -541,7 +542,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/vcardeditor_ui.py" line="245"/>
         <source>Clear</source>
-        <translation type="unfinished">Effacer</translation>
+        <translation>Effacer</translation>
     </message>
 </context>
 <context encoding="UTF-8">
@@ -819,17 +820,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/chatwidget_ui.py" line="158"/>
         <source>Bold</source>
-        <translation type="unfinished"></translation>
+        <translation>Gras</translation>
     </message>
     <message>
         <location filename="widgets/chatwidget_ui.py" line="159"/>
         <source>Italic</source>
-        <translation type="unfinished"></translation>
+        <translation>Italique</translation>
     </message>
     <message>
         <location filename="widgets/chatwidget_ui.py" line="160"/>
         <source>Underline</source>
-        <translation type="unfinished"></translation>
+        <translation>Souligné</translation>
     </message>
 </context>
 <context>
@@ -1421,17 +1422,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/groupchatwidget_ui.py" line="148"/>
         <source>Underline</source>
-        <translation type="unfinished"></translation>
+        <translation>Souligné</translation>
     </message>
     <message>
         <location filename="widgets/groupchatwidget_ui.py" line="149"/>
         <source>Bold</source>
-        <translation type="unfinished"></translation>
+        <translation>Gras</translation>
     </message>
     <message>
         <location filename="widgets/groupchatwidget_ui.py" line="151"/>
         <source>Italic</source>
-        <translation type="unfinished"></translation>
+        <translation>Italique</translation>
     </message>
 </context>
 <context>
@@ -1522,7 +1523,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/chatwindow.py" line="200"/>
         <source>Do you really want to leave all rooms you are connected to?</source>
-        <translation type="unfinished"></translation>
+        <translation>Voulez-vous réellement quitter toutes les salles auquelles vous êtes connectés?</translation>
     </message>
 </context>
 <context>
@@ -1909,7 +1910,7 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="158"/>
         <source>File transfer</source>
-        <translation type="unfinished">Transfert de fichier</translation>
+        <translation>Transfert de fichier</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1251"/>
@@ -1984,42 +1985,42 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="155"/>
         <source> has been sent/downloaded </source>
-        <translation type="unfinished"></translation>
+        <translation> a été envoyé/téléchargé </translation>
     </message>
     <message>
         <location filename="jabbim.py" line="158"/>
         <source> can&apos;t be sent/downloadeded </source>
-        <translation type="unfinished"></translation>
+        <translation> ne peut être envoyé/téléchargé </translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1568"/>
         <source>Choose files</source>
-        <translation type="unfinished"></translation>
+        <translation>Choisissez les fichiers</translation>
     </message>
     <message>
         <location filename="widgets/events.py" line="473"/>
         <source>Subscribe request</source>
-        <translation type="unfinished">Demande d&apos;abonnement</translation>
+        <translation>Demande d&apos;abonnement</translation>
     </message>
     <message>
         <location filename="widgets/events.py" line="473"/>
         <source>From:</source>
-        <translation type="unfinished">De:</translation>
+        <translation>De:</translation>
     </message>
     <message>
         <location filename="widgets/events.py" line="549"/>
         <source>Sending file </source>
-        <translation type="unfinished">Envoi du fichier </translation>
+        <translation>Envoi du fichier </translation>
     </message>
     <message>
         <location filename="widgets/events.py" line="549"/>
         <source> to </source>
-        <translation type="unfinished"> à </translation>
+        <translation> à </translation>
     </message>
     <message>
         <location filename="widgets/events.py" line="549"/>
         <source>You can see progress of sending in Events tab in main window.</source>
-        <translation type="unfinished">Vous pouvez suivre la progression de l&apos;envoi dans l&apos;onglet Evénements de la fenêtre principale.</translation>
+        <translation>Vous pouvez suivre la progression de l&apos;envoi dans l&apos;onglet Evénements de la fenêtre principale.</translation>
     </message>
 </context>
 <context>
@@ -2231,22 +2232,22 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/preferences_ui.py" line="329"/>
         <source>info</source>
-        <translation type="unfinished"></translation>
+        <translation>info</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="327"/>
         <source>Chat skins</source>
-        <translation type="unfinished"></translation>
+        <translation>Apparences de la fenêtre de discution</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="328"/>
         <source>Get more emoticons</source>
-        <translation type="unfinished"></translation>
+        <translation>Obtenir plus d&apos;emoticones</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="330"/>
         <source>Emoticons</source>
-        <translation type="unfinished"></translation>
+        <translation>Emoticones</translation>
     </message>
 </context>
 <context>
@@ -2500,12 +2501,14 @@ Version: %3</translation>
         <source>Name: %1
 Author: %2
 Version: %3</source>
-        <translation type="unfinished"></translation>
+        <translation>Nom: %1
+Autheur: %2
+Version: %3</translation>
     </message>
     <message>
         <location filename="widgets/preferences.py" line="730"/>
         <source>License: </source>
-        <translation type="unfinished"></translation>
+        <translation>License: </translation>
     </message>
 </context>
 <context>
