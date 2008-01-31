@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/addcontact.ui'
 #
-# Created: Mon Dec  3 21:38:09 2007
-#      by: PyQt4 UI code generator 4.3
+# Created: Thu Jan 31 15:45:13 2008
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -111,6 +111,12 @@ class Ui_addContact(object):
         QtCore.QObject.connect(self.save,QtCore.SIGNAL("clicked()"),addContact.accept)
         QtCore.QObject.connect(self.cancel,QtCore.SIGNAL("clicked()"),addContact.reject)
         QtCore.QMetaObject.connectSlotsByName(addContact)
+        addContact.setTabOrder(self.add_jid,self.add_nickname)
+        addContact.setTabOrder(self.add_nickname,self.add_group)
+        addContact.setTabOrder(self.add_group,self.add_message)
+        addContact.setTabOrder(self.add_message,self.save)
+        addContact.setTabOrder(self.save,self.cancel)
+        addContact.setTabOrder(self.cancel,self.search)
 
     def retranslateUi(self, addContact):
         addContact.setWindowTitle(QtGui.QApplication.translate("addContact", "Add Contact", None, QtGui.QApplication.UnicodeUTF8))
@@ -125,8 +131,8 @@ class Ui_addContact(object):
         self.add_message.setToolTip(QtGui.QApplication.translate("addContact", "Enter a short message that you want to send to the added contact.", None, QtGui.QApplication.UnicodeUTF8))
         self.add_message.setHtml(QtGui.QApplication.translate("addContact", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
-        "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
-        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\';\">Hi! I am adding you to my roster using the jabber client Jabbim! Please authorize me to see you when you are available. Thanks!</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:13pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
+        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\'; font-size:9pt;\">Hi! I am adding you to my roster using the jabber client Jabbim! Please authorize me to see you when you are available. Thanks!</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.add_jidLabel.setText(QtGui.QApplication.translate("addContact", "Jabber ID:", None, QtGui.QApplication.UnicodeUTF8))
         self.add_nicknameLabel.setText(QtGui.QApplication.translate("addContact", "Nickname:", None, QtGui.QApplication.UnicodeUTF8))
         self.add_groupLabel.setText(QtGui.QApplication.translate("addContact", "Group:", None, QtGui.QApplication.UnicodeUTF8))
