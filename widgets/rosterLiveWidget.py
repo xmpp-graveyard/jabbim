@@ -2483,7 +2483,7 @@ class rosterWidget(QtGui.QWidget):
 		cmd=action.objectName()
 		if cmd=="rename":
 			name=action.data()
-			name=str(name.toString())
+			name=unicode(name.toString())
 			group,b=QtGui.QInputDialog.getText(self.main,self.tr("Rename group"),self.tr("Enter new group name"), QtGui.QLineEdit.Normal, "")
 			group=unicode(group)
 			# if user set new name of group
@@ -2525,19 +2525,19 @@ class rosterWidget(QtGui.QWidget):
 			# delete contact from roster
 			print "delete contact CLICKED"
 			jid=action.data()
-			jid=str(jid.toString())
+			jid=unicode(jid.toString())
 			ret=QtGui.QMessageBox.question(self,self.tr("Delete contact?"), self.tr("Do you want to delete this contact from your roster?"),QtGui.QMessageBox.Yes|QtGui.QMessageBox.No, QtGui.QMessageBox.Yes)
 			if ret==QtGui.QMessageBox.Yes:
 				self.main.client.delContact(jid)
 		elif cmd=="break_up_meta":
 			# break up metacontact
 			jid=action.data()
-			jid=str(jid.toString())
+			jid=unicode(jid.toString())
 			self.breakMetaContacts(jid)
 		elif cmd=="rename":
 			# rename contact
 			jid=action.data()
-			jid=str(jid.toString())
+			jid=unicode(jid.toString())
 			try:
 				name=unicode(self.main.client.roster['users'][jid].name)
 			except:
@@ -2555,7 +2555,7 @@ class rosterWidget(QtGui.QWidget):
 			# add contact to the new group
 			# get contact jid
 			jid=action.data()
-			jid=str(jid.toString())
+			jid=unicode(jid.toString())
 			name=unicode(self.main.client.roster['users'][jid].name)
 			group,b=QtGui.QInputDialog.getText(self.main,self.tr("New group"),self.tr("Add user to new group"), QtGui.QLineEdit.Normal, "")
 			group=unicode(group)
@@ -2568,7 +2568,7 @@ class rosterWidget(QtGui.QWidget):
 			# change users group
 			items=action.data()
 			items=items.toList()
-			jid=str(items[0].toString())
+			jid=unicode(items[0].toString())
 			action=unicode(items[1].toString())[0]
 			group=unicode(items[1].toString())[1:]
 			self.changeGroup(jid,action,group)
@@ -2584,7 +2584,7 @@ class rosterWidget(QtGui.QWidget):
 		elif cmd=="chat":
 			# chat with selected contact
 			jid=action.data()
-			jid=str(jid.toString())
+			jid=unicode(jid.toString())
 			#if jid.find("/") == -1:
 				#item=self.getUserItems(jid)[0]
 				#self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
@@ -2617,7 +2617,7 @@ class rosterWidget(QtGui.QWidget):
 		elif cmd=="send_file":
 			# sends files to contact
 			jid=action.data()
-			jid=str(jid.toString())
+			jid=unicode(jid.toString())
 			self.main.sendFiles(jid)
 			#file=QtGui.QFileDialog.getOpenFileNames(self.main,"Choose file")
 			#file=list(file)
