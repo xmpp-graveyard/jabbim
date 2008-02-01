@@ -264,6 +264,7 @@ class Plugin(plugins.PluginBase):
 		# GChighlight = groupchat_highlight.wav
 		# for list of actions see loadSoundConfig()
 		self.loadSoundConfig("sounds/config")
+		self.osd=None
 		if main:
 			self.registerHandler('on_message', self.on_message)
 			self.registerHandler('on_GCmessage', self.on_GCmessage)
@@ -296,12 +297,13 @@ class Plugin(plugins.PluginBase):
 		self.osd.hide()
 	
 	def on_saveConfig(self):
-		self.osd.hide()
-		rect=self.osd.geometry()
-		x=int(rect.x())
-		y=int(rect.y())
-		self.config['osd_x']=str(x)
-		self.config['osd_y']=str(y)
+		if self.osd:
+			self.osd.hide()
+			rect=self.osd.geometry()
+			x=int(rect.x())
+			y=int(rect.y())
+			self.config['osd_x']=str(x)
+			self.config['osd_y']=str(y)
 
 	def loadSoundConfig(self, configFile):
 		try:

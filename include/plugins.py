@@ -42,6 +42,8 @@ class PluginBase:
 		self.pluginDir = plugindir
 		self.translator=None
 		self.loadedWindows=[]
+		self.showInPreferences=False
+		self.preferencesIcon=QtGui.QIcon()
 
 	def connected(self):
 		pass

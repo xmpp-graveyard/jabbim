@@ -48,34 +48,7 @@ class pluginConfiguration(QtGui.QDialog):
 
 		layout=QtGui.QGridLayout(self)
 		self.var,row=makePreferences(self.plugin.config,self,layout,self.plugin.configDialog.config)
-		#self.widgets={}
-		
-		##l=self.layout()
-		
-		#layout=QtGui.QVBoxLayout(self)
-		#for key,item in plugin.config.iteritems():
-			#if item['type']=="boolean":
-				#widget=QtGui.QCheckBox(item['description'],self)
-				#if len(item['value'])==0:
-					#if item['default']=='True':
-						#widget.setChecked(True)
-				#else:
-					#if item['value']=='True':
-						#widget.setChecked(True)
-				#layout.addWidget(widget)
-				#self.widgets[key]=widget
-			#elif item['type']=="text":
-				#label=QtGui.QLabel(item['description'],self)
-				#if len(item['value'])==0:
-					#widget=QtGui.QLineEdit(item['default'],self)
-				#else:
-					#widget=QtGui.QLineEdit(item['value'],self)
-				#layout2=QtGui.QHBoxLayout()
-				#layout2.addWidget(label)
-				#layout2.addWidget(widget)
-				#layout.addLayout(layout2)
-				#self.widgets[key]=widget
-				
+
 		layout2=QtGui.QHBoxLayout()
 		close=QtGui.QPushButton("Close",self)
 		save=QtGui.QPushButton("Save",self)
@@ -89,14 +62,6 @@ class pluginConfiguration(QtGui.QDialog):
 		layout.addLayout(layout2,row,0,1,2)
 	
 	def accept(self):
-		#for key, widget in self.widgets.iteritems():
-			#item=self.plugin.config[key]
-			#if item['type']=="boolean":
-				#self.plugin.config[key]['value']=str(widget.isChecked())
-			#elif item['type']=="text":
-				#print unicode(widget.text())
-				#self.plugin.config[key]['value']=unicode(widget.text())
-
 		self.plugin.on_saveConfig()
 		for key,value in getVarData(self.var).iteritems():
 			self.plugin.config[key]=unicode(value)
@@ -386,6 +351,7 @@ class preferencesWindow(QtGui.QDialog):
 		self.var=[]
 
 		self.justShowed=False
+		self.showedPlugins={}
 
 		# Jabbim
 		layout=QtGui.QGridLayout(self.ui.jabbimWidget)
@@ -414,7 +380,7 @@ class preferencesWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.pluginConfiguration, QtCore.SIGNAL("clicked()"),self.pluginConfigurationClicked)
 		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.pluginsContextMenu)
 		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int)"),self.pluginSelected)
-		QtCore.QObject.connect(self.ui.listWidget, QtCore.SIGNAL("currentRowChanged ( int)"),self.currentRowChanged)
+		QtCore.QObject.connect(self.ui.listWidget, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.currentItemChanged)
 		
 		QtCore.QObject.connect(self.ui.moreEmoticons, QtCore.SIGNAL("clicked()"),self.getMoreEmoticons)
 	
@@ -422,11 +388,29 @@ class preferencesWindow(QtGui.QDialog):
 		d=extraDialog("emoticons",self.main,self.main)
 		d.exec_()
 
-	def currentRowChanged(self,row):
+	def currentItemChanged(self,item,previous):
+		row=self.ui.listWidget.row(item)
 		if self.justShowed:
 			if row==4:
 				self.reloadView()
 				self.justShowed=False
+				return
+		name=unicode(previous.data(32).toString())
+		if self.showedPlugins.has_key(name):
+			self.plugins[name].on_endPreferences()
+		
+		name=unicode(item.data(32).toString())
+		if self.showedPlugins.has_key(name):
+			if not self.showedPlugins[name]:
+				plug=self.plugins[name]
+				widget=self.ui.stackedWidget.widget(row)
+				layout=QtGui.QGridLayout(widget)
+				var,row=makePreferences(plug.config,widget,layout,plug.configDialog.config)
+				spacerItem = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+				layout.addItem(spacerItem,row+1,0)
+				self.showedPlugins[name]=var
+			self.plugins[name].on_showPreferences(self.ui.stackedWidget.widget(row))
+
 
 	def reloadView(self,extraPart='',extraRoot=''):
 		self.ui.emoticonsList.clear()
@@ -573,8 +557,15 @@ class preferencesWindow(QtGui.QDialog):
 			self.ui.profile.setText("<b>"+self.tr("Profile:")+"</b> "+unicode(self.main.config['jid']))
 			self.ui.profile.show()
 		
+		for i in range(6,int(self.ui.listWidget.count())):
+			self.ui.listWidget.takeItem(6)
+			widget=self.ui.stackedWidget.widget(6)
+			self.ui.stackedWidget.removeWidget(widget)
+			del widget
+
 		self.loadedPlugins=self.main.config['plugins']
 		self.plugins={}
+		self.showedPlugins={}
 		self.ui.plugins.clear()
 		self.main.findPlugins()
 		plugins=self.main.plugins.keys()
@@ -606,6 +597,13 @@ class preferencesWindow(QtGui.QDialog):
 			item.setText(2,plug.description)
 			item.setData(32,0,QtCore.QVariant(unicode(plugin)))
 			self.plugins[plugin]=plug
+			if plug.configDialog and plug.showInPreferences:
+				listItem=QtGui.QListWidgetItem(plug.name,self.ui.listWidget)
+				listItem.setData(32,QtCore.QVariant(plugin))
+				listItem.setIcon(plug.preferencesIcon)
+				widget=QtGui.QWidget()
+				self.ui.stackedWidget.addWidget(widget)
+				self.showedPlugins[plugin]=None
 			log.msg("plugin "+plugin+" loaded.")
 		self.ui.plugins.resizeColumnToContents (0)
 		self.ui.plugins.resizeColumnToContents (1)
@@ -674,6 +672,18 @@ class preferencesWindow(QtGui.QDialog):
 			# set menu position and show
 			menu.move(self.ui.plugins.mapToGlobal(pos))
 			menu.show()
+
+	def savePluginConfiguration(self,name,var):
+		plugin=self.plugins[name]
+		plugin.on_saveConfig()
+		for key,value in getVarData(var).iteritems():
+			plugin.config[key]=unicode(value)
+			print key,"=",unicode(value)
+		plugin.writeConfig()
+		if self.main.plugins.has_key(name):
+			if self.main.plugins[name]['module']:
+				self.main.plugins[name]['module'].config=self.plugins[name].config
+				self.main.plugins[name]['module'].on_configChanged()
 
 	def pluginConfigurationClicked(self):
 		item=self.ui.plugins.currentItem()
@@ -762,6 +772,10 @@ class preferencesWindow(QtGui.QDialog):
 			#self.main.skin=ConfigObj("skins/"+unicode(self.ui.chatSkin_list.currentText()),encoding='UTF8')
 			#if not self.main.skin.has_key("spaces_between_lines"):
 				#self.main.skin["spaces_between_lines"]='0'
+
+		for name,var in self.showedPlugins.iteritems():
+			if var:
+				self.savePluginConfiguration(name,var)
 
 		for cfg in self.var:
 			for key,value in getVarData(cfg).iteritems():
