@@ -129,17 +129,19 @@ class abstractTextView(QtGui.QTextEdit):
 			#if self.parent.main.skin['spaces_between_lines']=='1':
 				#newnode = parseString("<div> "+unichr(2028)+unichr(2028)+"</div>").documentElement
 			#else:
-			newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
+			newnode = parseString("<div> 123456789123456789987654321</div>").documentElement
 			el.parentNode.replaceChild(newnode,el)
 		for el in c.getElementsByTagName('table'):
-			newnode = parseString(unicode("<div>"+unichr(2028)+unichr(2028)+"</div>")).documentElement
+			newnode = parseString(unicode("<div>123456789123456789987654321123456789123456789987654321</div>")).documentElement
 			#print [newnode.toxml()]
 			#el.parentNode.replaceChild(newnode,el)
 			el.appendChild(newnode)
 			
 		text=gatherTextNodes(c)
 		u=False
-		text=text.replace(unichr(2028),"\n")
+		text=text.replace("123456789123456789987654321","\n")
+		print [text]
+		#print [text]
 		try:
 			text=unicode(text, 'utf-8')
 			u=True
