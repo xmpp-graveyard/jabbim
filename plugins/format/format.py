@@ -31,7 +31,7 @@ class Plugin(plugins.PluginBase):
 		self.url = 'http://dev.jabbim.cz/jabbim'
 
 		if main:
-			self.loadConfig() 
+			self.loadConfig()
 #			f=open(utils.path(plugindir+'/textile.py')) 
 #			textile = load_source(self.fname, plugindir+'/textile.py', f)
 #			f.close()
