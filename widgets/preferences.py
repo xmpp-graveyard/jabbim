@@ -267,6 +267,21 @@ def makePreferences(main,parent,layout,form,row=1):
 					#widget.setToolTip(unicode(d))
 			row+=1
 		elif x['type']=="list-single":
+			try:
+				label=QtGui.QLabel(x['label'],par)
+				label.setOpenExternalLinks(True)
+				label.setWordWrap(True)
+			except KeyError:
+				label=None
+			lay.addWidget(label,row,0)
+			widget=QtGui.QComboBox(par)
+			for iKey,iValue in x['items'].iteritems():
+				widget.addItem(unicode(iKey),QtCore.QVariant(unicode(iValue)))
+			if widget.findData(QtCore.QVariant(unicode(val)))!=None:
+				widget.setCurrentIndex(widget.findData(QtCore.QVariant(unicode(val))))
+			lay.addWidget(widget,row,1)
+			var[key]={'widget':widget,'type':x['type']}
+			row+=1
 			# TODO
 			##<field var='userlist' type='list-single' label='Userlist on GG server'><value>get</value><option label='ignore'><value>ignore</value></option><option label='retrieve'><value>get</value></option></field>
 			#try:
