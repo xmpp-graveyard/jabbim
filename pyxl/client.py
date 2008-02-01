@@ -114,6 +114,7 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/commands','http://jabber.org/protocol/commands')
 		self.registerFeature('http://jabber.org/protocol/si/profile/file-transfer')
 		self.registerFeature('http://jabber.org/protocol/si')
+		self.registerFeature("urn:xmpp:receipts")
 		
 		
 		
@@ -706,6 +707,17 @@ class Client(derived):
 			frm=unicode(frm).lower()
 		body = subject =xhtml = chatstate = delay = error =  None
 		for child in el.elements():
+			if child.name == "request":
+				if child.defaultUri == "urn:xmpp:receipts":
+					message=Element((None, "message"))
+					message["to"] = el["from"]
+					message["from"] = self.jid.full()
+					try:
+						message["id"] = el["id"]
+					except KeyError:
+						pass # kdyby to nejakej chytrak poslal bez id, muze jabbim shodit
+					message.addElement("received", "urn:xmpp:receipts")
+					self.xmlstream.send(message)
 			if child.name == "body":
 				body = unicode(child)
 			if child.name == 'error':
@@ -747,6 +759,8 @@ class Client(derived):
 						chatstate = elm.name
 				if child.defaultUri == 'http://jabber.org/protocol/muc#user': # invitation
 					return
+
+
 			if child.name == 'confirm': # xep0070 - processed elsewhere
 				return
 
