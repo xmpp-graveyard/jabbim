@@ -598,7 +598,7 @@ class preferencesWindow(QtGui.QDialog):
 				plug = load_source(plugin, path, f).Plugin(False, self.main.homeDir, dir)
 			except Exception, ex:
 				log.msg(plugin+': CHYBA PRI NAHRAVANI => SPATNA SYNTAXE V PLUGINU!')
-				message = unicode(traceback.format_exc())
+				message = unicode(traceback.format_exc(), 'utf-8')
 				print message
 				f.close()
 				continue

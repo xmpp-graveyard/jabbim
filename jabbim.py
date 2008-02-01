@@ -2208,7 +2208,7 @@ class mainWindow(QtGui.QMainWindow):
 					version = float(plug.version)
 				except Exception, ex:
 					log.msg(path+': BAD PLUGIN!')
-					message = unicode(traceback.format_exc())
+					message = unicode(traceback.format_exc(), 'utf-8')
 					log.msg(message)
 					continue
 
