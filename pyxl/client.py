@@ -959,8 +959,9 @@ class Client(derived):
 		if self.groupchats.has_key(fromjid):
 			for child in  el.elements():
 				if child.name == 'error':
+					text = name = None
 					for elm in child.elements():
-						text = name = None
+
 						if elm.name == 'text':
 							text = unicode(elm)
 						else:
