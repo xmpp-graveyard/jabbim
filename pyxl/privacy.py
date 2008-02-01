@@ -43,7 +43,7 @@ class PrivacyListItem:
 
 class PrivacyList:
 	"""Class that manages one privacy list"""
-	def __init__(self, name, items, main):
+	def __init__(self, name, items, main, rev=True):
 		"""@type name: unicode
 @param name: Name of the list
 @type items: list
@@ -53,7 +53,8 @@ class PrivacyList:
 		self.name	= name
 		self.items	= items
 		self.main	= main
-		self._reviseOrders()
+		if rev:
+			self._reviseOrders()
 
 		self.invisible	= None
 		lastitem = self.getItem(self._getOrders()[-1])

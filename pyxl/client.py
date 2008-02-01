@@ -1265,7 +1265,16 @@ class Client(derived):
 		self.reactor.callFromThread(self.on_discoInfoReceived, jid, node_name)
 
 	def onPrivacyPush(self, el):
-		self.getPrivacy()
+		name = el.firstChildElement().firstChildElement()["name"]
+		if name != self.privacy.active.name:
+			return			# Je nam to u prdele,  protoze jiny listy nez active nevedem
+		iq	= IQ(self.xmlstream, "get")
+		query	= iq.addElement("query", "jabber:iq:privacy")
+		list_	= query.addElement("list")
+		list_.attributes = {"name":name}
+		d	= iq.send()
+		self.disp(iq["id"])
+		d.addCallback(self._activeRecieved, False).addErrback(self.chyba)
 
 	def getPrivacy(self):	
 		log.msg('requesting priacy lists')
@@ -1303,7 +1312,7 @@ class Client(derived):
 			list_.attributes = {"name":name}
 			d	= iq.send()
 			self.disp(iq["id"])
-			d.addCallback(self._activeRecieved).addErrback(self.chyba)
+			d.addCallback(self._activeRecieved, True).addErrback(self.chyba)
 
 		if active:
 			getActive(None,active)
@@ -1329,7 +1338,7 @@ class Client(derived):
 							# Dalsi se nactou az pozdejc, jinak je to plejtvani
 
 
-	def _activeRecieved(self, el):
+	def _activeRecieved(self, el, b=True):
 		log.msg("Active Privacy List recieved.")
 		query	= el.firstChildElement()
 		list_	= query.firstChildElement()
@@ -1348,10 +1357,11 @@ class Client(derived):
 				stanzas.append(stanza.name)
 			item = PrivacyListItem(action, order, typ, value, stanzas)
 			items.append(item)
-		self.privacy.active = PrivacyList(name, items, self.main)
+		self.privacy.active = PrivacyList(name, items, self.main, b)
 		self.privacy.lists[name] = self.privacy.active
 		self.privacy.default = self.privacy.active
-		self.privacy.active.unsetInvisible(available=False) ## HACK
+		if b:
+			self.privacy.active.unsetInvisible(available=False) ## HACK
 		##
 
 	def on_privacyReceived(self):
