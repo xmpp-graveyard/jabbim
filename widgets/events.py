@@ -23,6 +23,7 @@ except:
 from os.path import basename
 from twisted.python import log
 from os.path import basename
+import vcardeditor
 
 class abstractWidget(QtGui.QWidget):
 	def __init__(self,header,text,item,main,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40):
@@ -260,6 +261,49 @@ class BooleanWidget(abstractWidget):
 		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
 		QtCore.QObject.connect(self.submitButton,QtCore.SIGNAL("clicked()"),self.submitClicked)
 
+class AddUserWidget(abstractWidget):
+	def __init__(self,header,text,item,main,trueCall,trueDict,falseCall,falseDict,parent=None,height=40):
+		apply(abstractWidget.__init__,(self,header,text,item,main,falseCall,falseDict,trueCall,trueDict,None,None,parent,40))
+
+		self.submitButton = QtGui.QPushButton(self)
+		self.submitButton.setMaximumSize(16,16)
+		self.submitButton.setFlat(True)
+		self.submitButton.setIcon(QtGui.QIcon("images/16x16/actions/ok.png"))
+		self.hboxlayout.addWidget(self.submitButton)
+		self.label_2.setWordWrap(False)
+		self.closeButton = QtGui.QPushButton(self)
+		self.closeButton.setMaximumSize(16,16)
+		self.closeButton.setObjectName("closeButton")
+		self.closeButton.setFlat(True)
+		self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
+		self.hboxlayout.addWidget(self.closeButton)
+
+		self.vcard=QtGui.QPushButton(self.tr("Vcard"))
+		self.chat=QtGui.QPushButton(self.tr("Chat"))
+
+		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
+		QtCore.QObject.connect(self.submitButton,QtCore.SIGNAL("clicked()"),self.submitClicked)
+		QtCore.QObject.connect(self.vcard,QtCore.SIGNAL("clicked()"),self.vcardClicked)
+		QtCore.QObject.connect(self.chat,QtCore.SIGNAL("clicked()"),self.chatClicked)
+
+		l=QtGui.QHBoxLayout()
+		l.addWidget(self.vcard)
+		l.addWidget(self.chat)
+		self.line=QtGui.QFrame()
+		self.line.setFrameShape(QtGui.QFrame.HLine)
+		self.line.setFrameShadow(QtGui.QFrame.Sunken)
+		self.gridlayout1.addLayout(l,2,0)
+		self.gridlayout1.addWidget(self.line,3,0)
+
+	def vcardClicked(self,b=False):
+		self.ve=vcardeditor.vcardEditorDialog(self.main,self.jid,self.main,False)
+		self.ve.show()
+
+	def chatClicked(self,b=False):
+		self.main.chat.addChatTab(self.jid,self.jid,self.main.getIcon(self.jid,'online',size="16x16"))
+		self.main.chat.activate()
+
+
 class FTWidget(QtGui.QWidget):
 	def __init__(self,file,item,main,sid,parent=None,stats=""):
 		apply(QtGui.QWidget.__init__,(self,parent))
@@ -466,6 +510,18 @@ class events:
 		item.widget=BooleanWidget(header,text,item,self.main,trueCall,trueDict,falseCall,falseDict,self.main.ui.eventsListWidget,height)
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 		self.addEvent(unicode(name),unicode(typ),icon,item.widget)
+
+	def addAddUserEvent(self,jid,status):
+		mainWindow=self.main
+
+		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
+		item.setSizeHint(QtCore.QSize(100,70))
+		item.widget=AddUserWidget("<b>"+mainWindow.tr('Add contact?')+"</b>",mainWindow.tr('JID:')+" "+unicode(jid),item,self.main,self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],self.main.ui.eventsListWidget,70)
+		item.widget.jid=jid
+		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
+		self.addEvent(unicode(jid),unicode('subscribe'),None,item.widget)
+
+		#self.addBooleanEvent(self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],header=mainWindow.tr('Add contact?'),text=mainWindow.tr('JID:')+" "+unicode(jid),name=jid,typ="subscribe")
 
 	def addSubscribeEvent(self,jid,status):
 		#	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None, caps = True):

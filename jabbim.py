@@ -1582,6 +1582,7 @@ class mainWindow(QtGui.QMainWindow):
 		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.connect()
+		
 
 	def statusLineCanceled(self):
 		self.ui.statusLine.hide()
@@ -1645,8 +1646,8 @@ class mainWindow(QtGui.QMainWindow):
 		if self.config['showTransports']=='True':
 			action.setChecked(True)
 		# make Toggle Invisibility QAction
-		self.toggleInv=self.offlineMenu.addAction(self.tr("Become invisible"))
-		self.toggleInv.setObjectName("toggle_invisible")
+		#self.toggleInv=self.offlineMenu.addAction(self.tr("Become invisible"))
+		#self.toggleInv.setObjectName("toggle_invisible")
 		# add resources connected to the same JID (selfResources)
 		if len(self.selfResources)!=0:
 			for resource in self.selfResources:
@@ -2693,6 +2694,7 @@ class mainWindow(QtGui.QMainWindow):
 		@type bool: boolean
 		@param bool: True == offline users are shown, False offline users are hidden
 		"""
+		self.events.addAddUserEvent('hanzz@njs.netlab.cz','online')
 		self.offline=not bool
 		self.ui.roster.showOffline=bool
 		self.ui.roster.reshow=True
