@@ -410,9 +410,10 @@ class preferencesWindow(QtGui.QDialog):
 				self.reloadView()
 				self.justShowed=False
 				return
-		name=unicode(previous.data(32).toString())
-		if self.showedPlugins.has_key(name):
-			self.plugins[name].on_endPreferences()
+		if previous:
+			name=unicode(previous.data(32).toString())
+			if self.showedPlugins.has_key(name):
+				self.plugins[name].on_endPreferences()
 		
 		name=unicode(item.data(32).toString())
 		if self.showedPlugins.has_key(name):
