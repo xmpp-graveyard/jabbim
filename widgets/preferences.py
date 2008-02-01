@@ -415,8 +415,6 @@ class preferencesWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.pluginsContextMenu)
 		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int)"),self.pluginSelected)
 		QtCore.QObject.connect(self.ui.listWidget, QtCore.SIGNAL("currentRowChanged ( int)"),self.currentRowChanged)
-		self.ui.plugins.resizeColumnToContents (0)
-		self.ui.plugins.resizeColumnToContents (1)
 		
 		QtCore.QObject.connect(self.ui.moreEmoticons, QtCore.SIGNAL("clicked()"),self.getMoreEmoticons)
 	
@@ -609,6 +607,8 @@ class preferencesWindow(QtGui.QDialog):
 			item.setData(32,0,QtCore.QVariant(unicode(plugin)))
 			self.plugins[plugin]=plug
 			log.msg("plugin "+plugin+" loaded.")
+		self.ui.plugins.resizeColumnToContents (0)
+		self.ui.plugins.resizeColumnToContents (1)
 
 
 	def emoticonsListChanged(self,index):
