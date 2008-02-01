@@ -325,6 +325,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/message/confirm[@xmlns='http://jabber.org/protocol/http-auth']", self.onVerify, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/ping[@xmlns='urn:xmpp:ping']", self.onPing, 1)
 		self.xmlstream.addObserver("/message/x[@xmlns='http://jabber.org/protocol/muc#user']/invite", self.onInvite, 1)
+		self.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='jabber:iq:privacy']", self.onPrivacyPush, 1)
 		self.xmlstream.addObserver("/*/evil[@xmlns='http://jabber.org/protocol/evil']", self.onEvil, 1)
 	
 		self.xping.start(120, False)		
@@ -1263,13 +1264,13 @@ class Client(derived):
 		self.disco[jid][node_name] = node
 		self.reactor.callFromThread(self.on_discoInfoReceived, jid, node_name)
 
+	def onPrivacyPush(self, el):
+		self.getPrivacy()
 
 	def getPrivacy(self):	
 		log.msg('requesting priacy lists')
-		#FIXME: predelat # Asi ok
 		iq = IQ(self.xmlstream, 'get')
 		q = iq.addElement('query', 'jabber:iq:privacy')
-#		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._privacyReceived).addErrback(self._noPrivacy).addErrback(self.chyba)
@@ -1283,20 +1284,15 @@ class Client(derived):
 
 	def _privacyReceived(self, el):
 		self.on_privacyReceived()
-		#FIXME: dodelat
 		log.msg('privacy lists received')
 		query = el.firstChildElement()
 		lists = []
 		active = None
-		#default = None
 		for child in query.elements():
 			if child.name == "list":
 				lists.append(child.attributes["name"])
 			if child.name == "active":
 				active = child.attributes["name"]
-			#if child.name == "default":
-			#	default = child.attributes["name"]
-			#### active == default
 		log.msg("lists: %s; active: %s" % (", ".join(lists), active))
 		
 		def getActive(el,name):
@@ -1306,12 +1302,10 @@ class Client(derived):
 			list_	= query.addElement("list")
 			list_.attributes = {"name":name}
 			d	= iq.send()
-#			self.on_xml(iq.toXml())
 			self.disp(iq["id"])
 			d.addCallback(self._activeRecieved).addErrback(self.chyba)
 
 		if active:
-		#	lists.remove(active)
 			getActive(None,active)
 
 		else: # Pokud nemame, jeden si vytvorime
@@ -1324,7 +1318,6 @@ class Client(derived):
 			item	= list_.addElement("item")
 			item.attributes = {"order":"0","action":"allow","type":"jid","value":self.jid.userhost()}
 			d	= iq.send()
-#			self.on_xml(iq.toXml())
 			self.disp(iq["id"])
 			log.msg("Creating new privacy list: %s." %  defaultlistname)
 			d.addCallback(getActive, defaultlistname).addErrback(self.chyba)
