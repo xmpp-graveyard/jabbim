@@ -441,6 +441,7 @@ class groupChatWidget(abstractChatWidget):
 		text = unicode(self.ui.line.text)
 		if len(text) == 0:
 			self.ui.line.setText(unicode(item.text(0))+':')
+			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 		
 	def clearChat(self):
 		self.init=""
