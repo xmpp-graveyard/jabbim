@@ -112,6 +112,8 @@ class abstractTextView(QtGui.QTextEdit):
 		a=parseString(text)
 		for el in a.getElementsByTagName('img'):
 			path=el.attributes['src'].split('/')[-1]
+			p=os.path.dirname(self.parent.main.emoticonsWidget.smileys[self.parent.main.emoticonsWidget.smileys.keys()[0]])
+			path=p+"/"+path
 			for k,v in self.parent.main.emoticonsWidget.smileys.iteritems():
 				if v==path:
 					path=k
@@ -130,19 +132,21 @@ class abstractTextView(QtGui.QTextEdit):
 			newnode = parseString("<div> "+unichr(2028)+"</div>").documentElement
 			el.parentNode.replaceChild(newnode,el)
 		for el in c.getElementsByTagName('table'):
-			newnode = parseString(unicode(el.toxml(),'utf-8')+"<div>"+unichr(2028)+unichr(2028)+"NN</div>").documentElement
-			#print unicode(el.toxml())
-			el.parentNode.replaceChild(newnode,el)
+			newnode = parseString(unicode("<div>"+unichr(2028)+unichr(2028)+"</div>")).documentElement
+			#print [newnode.toxml()]
+			#el.parentNode.replaceChild(newnode,el)
+			el.appendChild(newnode)
 			
 		text=gatherTextNodes(c)
 		u=False
+		text=text.replace(unichr(2028),"\n")
 		try:
 			text=unicode(text, 'utf-8')
 			u=True
 		except:
 			text=unicode(text)
 		#if u:
-		text=text.replace(unichr(2028),"\n")
+		#print [text]
 		#print unicode(text)
 
 		self.data.append(QtCore.QMimeData())
