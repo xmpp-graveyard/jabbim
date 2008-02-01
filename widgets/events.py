@@ -270,7 +270,7 @@ class AddUserWidget(abstractWidget):
 		self.submitButton.setFlat(True)
 		self.submitButton.setIcon(QtGui.QIcon("images/16x16/actions/ok.png"))
 		self.hboxlayout.addWidget(self.submitButton)
-		self.label_2.setWordWrap(False)
+		#self.label_2.setWordWrap(False)
 		self.closeButton = QtGui.QPushButton(self)
 		self.closeButton.setMaximumSize(16,16)
 		self.closeButton.setObjectName("closeButton")
@@ -508,18 +508,16 @@ class events:
 		self.addEvent(unicode(name),unicode(typ),icon,item.widget)
 
 	def addAddUserEvent(self,jid,status):
+		metrics=QtGui.QApplication.fontMetrics()
 		mainWindow=self.main
-
+		text=mainWindow.tr('JID:')+" "+unicode(jid)+"<br/>"+mainWindow.tr("Message: ")+"<i>"+unicode(status)+'</i>'
+		rect=metrics.boundingRect(0, 0,self.main.width(), self.main.height(), QtCore.Qt.TextWordWrap, text)
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
-		item.setSizeHint(QtCore.QSize(100,70))
-		#self.main.events.addBooleanEvent(self._onSubscribe,[frm,status,True],self.main.client.sendPresence,[frm,None,status,None,'unsubscribed'],header=mainWindow.tr('Add contact?'),text=mainWindow.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
-
-		item.widget=AddUserWidget("<b>"+mainWindow.tr('Add contact?')+"</b>",mainWindow.tr('JID:')+" "+unicode(jid),item,self.main,self.main.client._onSubscribe,[jid,status,True],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],self.main.ui.eventsListWidget,70)
+		item.setSizeHint(QtCore.QSize(100,60+rect.height()))
+		item.widget=AddUserWidget("<b>"+mainWindow.tr('Add contact?')+"</b>",text,item,self.main,self.main.client._onSubscribe,[jid,'online',True],self.main.client.sendPresence,[jid,None,'online',None,'unsubscribed'],self.main.ui.eventsListWidget,60+rect.height())
 		item.widget.jid=jid
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 		self.addEvent(unicode(jid),unicode('subscribe'),None,item.widget)
-
-		#self.addBooleanEvent(self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],header=mainWindow.tr('Add contact?'),text=mainWindow.tr('JID:')+" "+unicode(jid),name=jid,typ="subscribe")
 
 	def addSubscribeEvent(self,jid,status):
 		#	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None, caps = True):

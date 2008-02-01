@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs">
-<defaultcodec></defaultcodec>
 <context>
     <name>AvatarLabel</name>
     <message>
@@ -2129,7 +2128,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="938"/>
         <source>Authorize contact?</source>
-        <translation>Autorizovat uživatele k zobrazení Vašeho stavu?</translation>
+        <translation type="unfinished">Autorizovat kontakt?</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="943"/>
