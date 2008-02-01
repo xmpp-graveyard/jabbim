@@ -2317,8 +2317,8 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Exits Jabbim.
 		"""
-		#if self.client and self.client.privacy.active:
-			#self.client.privacy.active.unsetInvisible(available=False) # hack
+		if self.client and self.client.privacy.active:
+			self.client.privacy.active.unsetInvisible(available=False) # hack
 		if os.path.isfile(self.config.filename):
 			# save windows geometry and sizes of splitters in chat window
 			if str(self.config["saveGeometry"])=="True":

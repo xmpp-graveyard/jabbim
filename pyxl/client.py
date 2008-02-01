@@ -1358,6 +1358,7 @@ class Client(derived):
 		self.privacy.active = PrivacyList(name, items, self.main)
 		self.privacy.lists[name] = self.privacy.active
 		self.privacy.default = self.privacy.active
+		self.privacy.active.unsetInvisible(available=False) ## HACK
 		##
 
 	def on_privacyReceived(self):
