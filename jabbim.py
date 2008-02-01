@@ -2683,7 +2683,7 @@ class mainWindow(QtGui.QMainWindow):
 		@type bool: boolean
 		@param bool: True == offline users are shown, False offline users are hidden
 		"""
-		self.events.addAddUserEvent('hanzz@njs.netlab.cz','online')
+		self.events.addAddUserEvent('hanzz@njs.netlab.cz','offline users are shown, False offline users are hidden')
 		self.offline=not bool
 		self.ui.roster.showOffline=bool
 		self.ui.roster.reshow=True

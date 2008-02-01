@@ -144,7 +144,7 @@ QWidget#rosterTab{
 }
 
 QWidget#userStyleWidget {
-  background-color: white;
+  background-color: rgba(0,0,0,0);
 /*   color: rgb(209,170,129); */
   color: black;
 
@@ -308,17 +308,10 @@ QComboBox::down-arrow:on { /* shift the arrow when popup is open */
 	left: 1px;
 }
 QCheckBox{
-	border:2px solid #C3D9FF;
-	border-radius: 6px;
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #dadbde);
-/* 	padding:5px; */
 	padding-left:3px;
 	padding-right:3px;
 }
 QCheckBox:disabled{
-	border:2px solid #EEEEEE;
-	border-radius: 6px;
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #EEEEEE);
 	color:gray
 }
 
@@ -328,25 +321,27 @@ QCheckBox:hover{
 	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #89A0C6);
 }
 
-QCheckBox:focus{
-	border:2px solid #89A0C6;
-	border-radius: 6px;
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #89A0C6, stop: 1 #f6f7fa);
-
-/* 	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #CDEB8B, stop: 1 #f6f7fa); */
-}
-
 QCheckBox::indicator::checked {
+	border:2px solid #C3D9FF;
+	border-radius: 6px;
 	image: url('themes/web2/check.png');
 }
 
 QCheckBox::indicator::checked:disabled {
+	border:2px solid #C3D9FF;
+	border-radius: 6px;
 	image: url('themes/web2/unchecked.png');
 }
 
+
+
 QCheckBox::indicator::unchecked {
+	border:2px solid #C3D9FF;
+	border-radius: 6px;
 	image: url('themes/web2/blank.png');
 }
+
+
 
 
 QSpinBox {
