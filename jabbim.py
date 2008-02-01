@@ -950,8 +950,8 @@ class clientClass(pyxl.client.Client):
 			#else:
 				#self.main.events.addSubscribeEvent(frm,status)
 		else:
-			self.main.events.addBooleanEvent(self._onSubscribe,[frm,status,True],self.main.client.sendPresence,[frm,None,status,None,'unsubscribed'],header=mainWindow.tr('Add contact?'),text=mainWindow.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
-
+			#self.main.events.addBooleanEvent(self._onSubscribe,[frm,status,True],self.main.client.sendPresence,[frm,None,status,None,'unsubscribed'],header=mainWindow.tr('Add contact?'),text=mainWindow.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
+			self.main.events.addAddUserEvent(frm,status)
 	def _onSubscribe(self,frm,status,add=False):
 		#def __init__(self,main,parent=None,jid="",group=None,name="",add=True):
 		dialog=widgets.addcontact.addContactDialog(self.main,self.main,jid=frm,group="",name=frm.split('@')[0],add=add)
@@ -2694,7 +2694,7 @@ class mainWindow(QtGui.QMainWindow):
 		@type bool: boolean
 		@param bool: True == offline users are shown, False offline users are hidden
 		"""
-		self.events.addAddUserEvent('hanzz@njs.netlab.cz','online')
+		#self.events.addAddUserEvent('hanzz@njs.netlab.cz','online')
 		self.offline=not bool
 		self.ui.roster.showOffline=bool
 		self.ui.roster.reshow=True

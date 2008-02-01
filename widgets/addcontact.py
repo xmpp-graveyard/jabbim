@@ -44,7 +44,7 @@ class addContactDialog(QtGui.QDialog):
 					#print self.main.client.disco[key]
 					self.searchJid=unicode(key)
 		print 'searchJid',self.searchJid
-		if not self.searchJid:
+		if not self.searchJid or not self.add:
 			self.ui.search.hide()
 
 	def jidChanged(self,text=""):

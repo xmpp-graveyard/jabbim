@@ -289,11 +289,7 @@ class AddUserWidget(abstractWidget):
 		l=QtGui.QHBoxLayout()
 		l.addWidget(self.vcard)
 		l.addWidget(self.chat)
-		self.line=QtGui.QFrame()
-		self.line.setFrameShape(QtGui.QFrame.HLine)
-		self.line.setFrameShadow(QtGui.QFrame.Sunken)
 		self.gridlayout1.addLayout(l,2,0)
-		self.gridlayout1.addWidget(self.line,3,0)
 
 	def vcardClicked(self,b=False):
 		self.ve=vcardeditor.vcardEditorDialog(self.main,self.jid,self.main,False)
@@ -516,7 +512,9 @@ class events:
 
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		item.setSizeHint(QtCore.QSize(100,70))
-		item.widget=AddUserWidget("<b>"+mainWindow.tr('Add contact?')+"</b>",mainWindow.tr('JID:')+" "+unicode(jid),item,self.main,self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],self.main.ui.eventsListWidget,70)
+		#self.main.events.addBooleanEvent(self._onSubscribe,[frm,status,True],self.main.client.sendPresence,[frm,None,status,None,'unsubscribed'],header=mainWindow.tr('Add contact?'),text=mainWindow.tr('JID:')+" "+unicode(frm),name=frm,typ="subscribe")
+
+		item.widget=AddUserWidget("<b>"+mainWindow.tr('Add contact?')+"</b>",mainWindow.tr('JID:')+" "+unicode(jid),item,self.main,self.main.client._onSubscribe,[jid,status,True],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],self.main.ui.eventsListWidget,70)
 		item.widget.jid=jid
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 		self.addEvent(unicode(jid),unicode('subscribe'),None,item.widget)
