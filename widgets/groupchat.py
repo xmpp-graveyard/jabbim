@@ -442,6 +442,9 @@ class groupChatWidget(abstractChatWidget):
 		if len(text) == 0:
 			self.ui.line.setText(unicode(item.text(0))+':')
 			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+			cur=self.ui.line.textCursor()
+			cur.movePosition(QtGui.QTextCursor.End)
+			self.ui.line.setTextCursor(cur)
 		
 	def clearChat(self):
 		self.init=""
