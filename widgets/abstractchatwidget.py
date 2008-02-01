@@ -209,7 +209,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 
 	def setFormat(self):
 		# detect format of current character
-		if len(unicode(self.textCursor().selectedText()))==0:
+		if len(unicode(self.textCursor().selectedText()))==0 and len(unicode(self.toPlainText()))!=0:
 			b=self.fontWeight()==QtGui.QFont.Bold
 			if self.bold!=b:
 				self.bold=b
@@ -236,7 +236,6 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		return r
 
 	def formatChanged(self,format):
-		#print "format changed",len(unicode(self.toPlainText()))
 		if len(unicode(self.toPlainText()))==0:
 			self.reformat()
 

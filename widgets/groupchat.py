@@ -440,7 +440,7 @@ class groupChatWidget(abstractChatWidget):
 			return
 		text = unicode(self.ui.line.text)
 		if len(text) == 0:
-			self.ui.line.setText(unicode(item.text(0))+':')
+			self.ui.line.setText(unicode(item.text(0))+': ')
 			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 			cur=self.ui.line.textCursor()
 			cur.movePosition(QtGui.QTextCursor.End)
