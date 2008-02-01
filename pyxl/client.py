@@ -959,7 +959,7 @@ class Client(derived):
 		if self.groupchats.has_key(fromjid):
 			for child in  el.elements():
 				if child.name == 'error':
-					text = name = None
+					text = name = ""
 					for elm in child.elements():
 
 						if elm.name == 'text':
