@@ -187,7 +187,9 @@ class leaveMucDialog(QtGui.QDialog):
 
 	def accept(self):
 		if self.ui.checkBox.isChecked():
-			self.main.config["askBeforeQuitMUC"]="False"
+			if self.main.config['askBeforeQuitMUC']!="False":
+				self.main.config["askBeforeQuitMUC"]="False"
+				self.main.config.write()
 		self.done(1)
 
 class leaveAllMucDialog(QtGui.QDialog):
