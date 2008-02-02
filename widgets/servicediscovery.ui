@@ -1,0 +1,113 @@
+<ui version="4.0" >
+ <class>serviceDiscovery</class>
+ <widget class="QDialog" name="serviceDiscovery" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>439</width>
+    <height>407</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Service Discovery</string>
+  </property>
+  <layout class="QGridLayout" >
+   <item row="0" column="0" colspan="2" >
+    <layout class="QHBoxLayout" >
+     <item>
+      <widget class="QLabel" name="label" >
+       <property name="text" >
+        <string>Server:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="server" />
+     </item>
+     <item>
+      <widget class="QPushButton" name="reload" >
+       <property name="text" >
+        <string>Ok</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0" colspan="2" >
+    <widget class="QTreeWidget" name="tree" >
+     <property name="iconSize" >
+      <size>
+       <width>48</width>
+       <height>48</height>
+      </size>
+     </property>
+     <column>
+      <property name="text" >
+       <string>name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text" >
+       <string>search</string>
+      </property>
+     </column>
+     <column>
+      <property name="text" >
+       <string>register</string>
+      </property>
+     </column>
+     <column>
+      <property name="text" >
+       <string>jid</string>
+      </property>
+     </column>
+     <column>
+      <property name="text" >
+       <string>commands</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item row="2" column="0" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>621</width>
+       <height>27</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="1" >
+    <widget class="QPushButton" name="close" >
+     <property name="text" >
+      <string>Close</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>close</sender>
+   <signal>clicked()</signal>
+   <receiver>serviceDiscovery</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>656</x>
+     <y>276</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>544</x>
+     <y>270</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

@@ -1,0 +1,970 @@
+<ui version="4.0" >
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>335</width>
+    <height>746</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Jabbim</string>
+  </property>
+  <property name="windowIcon" >
+   <iconset>images/16x16/apps/jabbim.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <layout class="QGridLayout" >
+    <property name="margin" >
+     <number>0</number>
+    </property>
+    <property name="spacing" >
+     <number>0</number>
+    </property>
+    <item row="0" column="0" >
+     <widget class="QSplitter" name="splitter" >
+      <property name="orientation" >
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QStackedWidget" name="rosterStackedWidget" >
+       <property name="currentIndex" >
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="login" >
+        <layout class="QGridLayout" >
+         <property name="margin" >
+          <number>9</number>
+         </property>
+         <property name="spacing" >
+          <number>6</number>
+         </property>
+         <item row="3" column="0" >
+          <layout class="QVBoxLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>2</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="label" >
+             <property name="text" >
+              <string>Jabber ID:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="login_jid" />
+           </item>
+           <item>
+            <widget class="QLabel" name="label_2" >
+             <property name="text" >
+              <string>Password:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="login_password" >
+             <property name="echoMode" >
+              <enum>QLineEdit::Password</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_3" >
+             <property name="text" >
+              <string>Status:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="loginStatus" >
+             <property name="sizePolicy" >
+              <sizepolicy>
+               <hsizetype>7</hsizetype>
+               <vsizetype>0</vsizetype>
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="4" column="0" >
+          <layout class="QGridLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <item rowspan="2" row="0" column="0" >
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>121</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="1" >
+            <widget class="QCheckBox" name="login_autoconnect" >
+             <property name="text" >
+              <string>Auto connect</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" >
+            <widget class="QCheckBox" name="login_savePassword" >
+             <property name="text" >
+              <string>Save Password</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="5" column="0" >
+          <layout class="QHBoxLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="login_connect" >
+             <property name="text" >
+              <string>Connect</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item row="6" column="0" >
+          <spacer>
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="9" column="0" >
+          <widget class="QComboBox" name="profilesList" >
+           <property name="iconSize" >
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0" >
+          <widget class="QLabel" name="profilesHeader" >
+           <property name="text" >
+            <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Sans Serif';">&lt;span style=" font-size:13pt; font-weight:600;">Profiles&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+           </property>
+           <property name="alignment" >
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" >
+          <widget class="QLabel" name="login_headerLabel" >
+           <property name="text" >
+            <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:13pt; font-weight:600;">Connect&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+           </property>
+           <property name="alignment" >
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="0" >
+          <layout class="QHBoxLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="registerButton" >
+             <property name="text" >
+              <string>Register</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item row="2" column="0" >
+          <layout class="QHBoxLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="loginAvatar" >
+             <property name="minimumSize" >
+              <size>
+               <width>128</width>
+               <height>128</height>
+              </size>
+             </property>
+             <property name="maximumSize" >
+              <size>
+               <width>128</width>
+               <height>128</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="0" >
+          <widget class="Line" name="line" >
+           <property name="orientation" >
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0" >
+          <widget class="Line" name="profilesLine" >
+           <property name="orientation" >
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="roster" >
+        <layout class="QGridLayout" >
+         <property name="margin" >
+          <number>0</number>
+         </property>
+         <property name="spacing" >
+          <number>0</number>
+         </property>
+         <item row="0" column="0" >
+          <widget class="QFrame" name="frame" >
+           <property name="frameShape" >
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow" >
+            <enum>QFrame::Plain</enum>
+           </property>
+           <layout class="QGridLayout" >
+            <property name="margin" >
+             <number>0</number>
+            </property>
+            <property name="spacing" >
+             <number>4</number>
+            </property>
+            <item row="1" column="4" >
+             <widget class="QToolButton" name="toggleInvisible" >
+              <property name="maximumSize" >
+               <size>
+                <width>16777215</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip" >
+               <string>Toggle Invisibility</string>
+              </property>
+              <property name="text" >
+               <string/>
+              </property>
+              <property name="icon" >
+               <iconset>images/16x16/status/jabber-invisible.png</iconset>
+              </property>
+              <property name="checkable" >
+               <bool>true</bool>
+              </property>
+              <property name="arrowType" >
+               <enum>Qt::NoArrow</enum>
+              </property>
+             </widget>
+            </item>
+            <item rowspan="2" row="0" column="0" >
+             <widget class="QWidget" native="1" name="selfAvatarWidget" >
+              <property name="sizePolicy" >
+               <sizepolicy>
+                <hsizetype>0</hsizetype>
+                <vsizetype>0</vsizetype>
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="6" >
+             <widget class="QToolButton" name="statusButton" >
+              <property name="maximumSize" >
+               <size>
+                <width>16777215</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip" >
+               <string>Here you can change your status</string>
+              </property>
+              <property name="text" >
+               <string/>
+              </property>
+              <property name="popupMode" >
+               <enum>QToolButton::InstantPopup</enum>
+              </property>
+              <property name="toolButtonStyle" >
+               <enum>Qt::ToolButtonTextBesideIcon</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1" >
+             <widget class="QWidget" native="1" name="statusWidget2" >
+              <layout class="QHBoxLayout" >
+               <property name="margin" >
+                <number>0</number>
+               </property>
+               <property name="spacing" >
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QToolButton" name="statusMessage" >
+                 <property name="sizePolicy" >
+                  <sizepolicy>
+                   <hsizetype>7</hsizetype>
+                   <vsizetype>0</vsizetype>
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="maximumSize" >
+                  <size>
+                   <width>16777215</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                 <property name="text" >
+                  <string>Online</string>
+                 </property>
+                 <property name="icon" >
+                  <iconset>images/16x16/status/jabber-not_in_roster.png</iconset>
+                 </property>
+                 <property name="popupMode" >
+                  <enum>QToolButton::InstantPopup</enum>
+                 </property>
+                 <property name="toolButtonStyle" >
+                  <enum>Qt::ToolButtonTextBesideIcon</enum>
+                 </property>
+                 <property name="autoRaise" >
+                  <bool>true</bool>
+                 </property>
+                 <property name="arrowType" >
+                  <enum>Qt::NoArrow</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="1" column="3" >
+             <widget class="QToolButton" name="statusWidget" >
+              <property name="maximumSize" >
+               <size>
+                <width>16777215</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip" >
+               <string>Here you can change your status</string>
+              </property>
+              <property name="text" >
+               <string/>
+              </property>
+              <property name="popupMode" >
+               <enum>QToolButton::InstantPopup</enum>
+              </property>
+              <property name="toolButtonStyle" >
+               <enum>Qt::ToolButtonTextBesideIcon</enum>
+              </property>
+              <property name="autoRaise" >
+               <bool>true</bool>
+              </property>
+              <property name="arrowType" >
+               <enum>Qt::DownArrow</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1" colspan="4" >
+             <widget class="QLabel" name="selfName" >
+              <property name="text" >
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="5" >
+             <widget class="QToolButton" name="showOffline" >
+              <property name="maximumSize" >
+               <size>
+                <width>16777215</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip" >
+               <string>You can show/hide contats that are unavailable</string>
+              </property>
+              <property name="text" >
+               <string/>
+              </property>
+              <property name="icon" >
+               <iconset>images/16x16/apps/jabbim.png</iconset>
+              </property>
+              <property name="checkable" >
+               <bool>true</bool>
+              </property>
+              <property name="popupMode" >
+               <enum>QToolButton::InstantPopup</enum>
+              </property>
+              <property name="arrowType" >
+               <enum>Qt::NoArrow</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2" >
+             <widget class="QLineEdit" name="statusLine" />
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="1" column="0" >
+          <widget class="QTabWidget" name="tabWidget" >
+           <property name="toolTip" >
+            <string/>
+           </property>
+           <property name="autoFillBackground" >
+            <bool>true</bool>
+           </property>
+           <property name="currentIndex" >
+            <number>0</number>
+           </property>
+           <widget class="QWidget" name="rosterTab" >
+            <attribute name="title" >
+             <string> r</string>
+            </attribute>
+            <attribute name="icon" >
+             <iconset>images/16x16/categories/system-users.png</iconset>
+            </attribute>
+            <attribute name="toolTip" >
+             <string>Roster</string>
+            </attribute>
+            <layout class="QGridLayout" >
+             <property name="margin" >
+              <number>0</number>
+             </property>
+             <property name="spacing" >
+              <number>0</number>
+             </property>
+             <item row="3" column="0" >
+              <layout class="QHBoxLayout" >
+               <property name="margin" >
+                <number>0</number>
+               </property>
+               <property name="spacing" >
+                <number>6</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="rosterSearchLabel" >
+                 <property name="text" >
+                  <string>User search:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="rosterSearch" />
+               </item>
+              </layout>
+             </item>
+             <item row="0" column="0" >
+              <widget class="QWidget" native="1" name="selectedItemStyle" />
+             </item>
+             <item row="4" column="0" >
+              <widget class="QWidget" native="1" name="rosterWidget" />
+             </item>
+             <item row="1" column="0" >
+              <widget class="QWidget" native="1" name="groupStyleWidget" />
+             </item>
+             <item row="2" column="0" >
+              <widget class="QWidget" native="1" name="userStyleWidget" />
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="bookmarksTab" >
+            <attribute name="title" >
+             <string>b</string>
+            </attribute>
+            <attribute name="icon" >
+             <iconset>images/16x16/categories/bookmarks.png</iconset>
+            </attribute>
+            <attribute name="toolTip" >
+             <string>Bookmarks</string>
+            </attribute>
+            <layout class="QGridLayout" >
+             <property name="margin" >
+              <number>9</number>
+             </property>
+             <property name="spacing" >
+              <number>6</number>
+             </property>
+             <item row="1" column="0" colspan="2" >
+              <widget class="QTreeWidget" name="bookmarks" >
+               <property name="alternatingRowColors" >
+                <bool>true</bool>
+               </property>
+               <property name="rootIsDecorated" >
+                <bool>false</bool>
+               </property>
+               <column>
+                <property name="text" >
+                 <string>Name</string>
+                </property>
+               </column>
+               <column>
+                <property name="text" >
+                 <string>Jid</string>
+                </property>
+               </column>
+              </widget>
+             </item>
+             <item row="2" column="0" >
+              <spacer>
+               <property name="orientation" >
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" >
+                <size>
+                 <width>131</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="2" column="1" >
+              <widget class="QPushButton" name="mucBrowserButton" >
+               <property name="text" >
+                <string>MUC Browser</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" colspan="2" >
+              <widget class="QLabel" name="bookmarks_headerLabel" >
+               <property name="text" >
+                <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'DejaVu Sans';">&lt;span style=" font-size:12pt; font-weight:600;">Bookmarks&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+               </property>
+               <property name="alignment" >
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="eventsTab" >
+            <attribute name="title" >
+             <string>Events</string>
+            </attribute>
+            <attribute name="icon" >
+             <iconset>images/16x16/categories/event.png</iconset>
+            </attribute>
+            <attribute name="toolTip" >
+             <string>Events</string>
+            </attribute>
+            <layout class="QGridLayout" >
+             <property name="margin" >
+              <number>9</number>
+             </property>
+             <property name="spacing" >
+              <number>6</number>
+             </property>
+             <item row="1" column="0" >
+              <widget class="QListWidget" name="eventsListWidget" />
+             </item>
+             <item row="0" column="0" >
+              <widget class="QLabel" name="eventsLabel" >
+               <property name="text" >
+                <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'DejaVu Sans'; font-size:8pt; font-weight:400; font-style:normal; text-decoration:none;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt;">&lt;span style=" font-size:12pt; font-weight:600;">Events&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+               </property>
+               <property name="alignment" >
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="splash" >
+        <layout class="QVBoxLayout" >
+         <property name="margin" >
+          <number>9</number>
+         </property>
+         <property name="spacing" >
+          <number>6</number>
+         </property>
+         <item>
+          <spacer>
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="splashImage" >
+           <property name="pixmap" >
+            <pixmap>images/logo.png</pixmap>
+           </property>
+           <property name="alignment" >
+            <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="loginInfo" >
+           <property name="alignment" >
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <item>
+            <widget class="QProgressBar" name="splashProgress" >
+             <property name="value" >
+              <number>0</number>
+             </property>
+             <property name="textVisible" >
+              <bool>false</bool>
+             </property>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="invertedAppearance" >
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="login_cancel" >
+             <property name="text" >
+              <string>Cancel</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QWidget" native="1" name="mdiWidget" />
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>335</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuPlugins" >
+    <property name="title" >
+     <string>Plugins</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuHelp" >
+    <property name="title" >
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout" />
+   </widget>
+   <widget class="QMenu" name="menuAkce" >
+    <property name="title" >
+     <string>Actions</string>
+    </property>
+    <widget class="QMenu" name="menuGroupchat" >
+     <property name="title" >
+      <string>Groupchat</string>
+     </property>
+     <addaction name="actionJoin_groupchat" />
+     <addaction name="actionBrowse_rooms" />
+    </widget>
+    <addaction name="menuGroupchat" />
+    <addaction name="actionAdd_Contact" />
+    <addaction name="actionService_Discovery" />
+    <addaction name="actionShow_XML" />
+    <addaction name="actionPrivacy_list_editor" />
+    <addaction name="actionIdentity" />
+    <addaction name="separator" />
+    <addaction name="actionPreferences" />
+    <addaction name="actionProfiles" />
+    <addaction name="separator" />
+    <addaction name="actionQuit" />
+   </widget>
+   <addaction name="menuAkce" />
+   <addaction name="menuPlugins" />
+   <addaction name="menuHelp" />
+  </widget>
+  <action name="actionShow_XML" >
+   <property name="icon" >
+    <iconset>images/16x16/actions/xml-konzole.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Show XML</string>
+   </property>
+  </action>
+  <action name="actionPreferences" >
+   <property name="icon" >
+    <iconset>images/16x16/categories/gtk-preferences.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Preferences</string>
+   </property>
+  </action>
+  <action name="actionQuit" >
+   <property name="icon" >
+    <iconset>images/16x16/actions/gtk-quit.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionAdd_Contact" >
+   <property name="icon" >
+    <iconset>images/16x16/actions/gtk-add.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Add Contact</string>
+   </property>
+  </action>
+  <action name="actionAbout" >
+   <property name="icon" >
+    <iconset>images/16x16/actions/about.png</iconset>
+   </property>
+   <property name="text" >
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionService_Discovery" >
+   <property name="icon" >
+    <iconset>images/16x16/actions/service-discovery.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Service Discovery</string>
+   </property>
+  </action>
+  <action name="actionMUC_Browser" >
+   <property name="text" >
+    <string>MUC Browser</string>
+   </property>
+  </action>
+  <action name="actionPrivacy_list_editor" >
+   <property name="text" >
+    <string>Privacy list editor</string>
+   </property>
+  </action>
+  <action name="actionIdentity" >
+   <property name="icon" >
+    <iconset>images/16x16/categories/v-card.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Identity</string>
+   </property>
+  </action>
+  <action name="actionProfiles" >
+   <property name="text" >
+    <string>Profiles</string>
+   </property>
+  </action>
+  <action name="actionJoin_groupchat" >
+   <property name="text" >
+    <string>Join groupchat</string>
+   </property>
+  </action>
+  <action name="actionBrowse_rooms" >
+   <property name="text" >
+    <string>Browse rooms</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>login_password</sender>
+   <signal>returnPressed()</signal>
+   <receiver>login_connect</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>200</x>
+     <y>236</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>158</x>
+     <y>352</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>login_jid</sender>
+   <signal>returnPressed()</signal>
+   <receiver>login_connect</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>231</x>
+     <y>206</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>158</x>
+     <y>352</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>login_savePassword</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>login_autoconnect</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>177</x>
+     <y>307</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>171</x>
+     <y>332</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
