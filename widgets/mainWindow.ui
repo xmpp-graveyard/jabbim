@@ -384,7 +384,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="icon" >
-               <iconset>../../branch/jabbim-ng/widgets/images/16x16/status/jabber-invisible.png</iconset>
+               <iconset>images/16x16/status/jabber-invisible.png</iconset>
               </property>
               <property name="checkable" >
                <bool>true</bool>
@@ -457,7 +457,7 @@ p, li { white-space: pre-wrap; }
                   <string>Online</string>
                  </property>
                  <property name="icon" >
-                  <iconset>../../branch/jabbim-ng/widgets/images/16x16/status/jabber-not_in_roster.png</iconset>
+                  <iconset>images/16x16/status/jabber-not_in_roster.png</iconset>
                  </property>
                  <property name="popupMode" >
                   <enum>QToolButton::InstantPopup</enum>
@@ -526,7 +526,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="icon" >
-               <iconset>../../branch/jabbim-ng/widgets/images/16x16/apps/jabbim.png</iconset>
+               <iconset>images/16x16/apps/jabbim.png</iconset>
               </property>
               <property name="checkable" >
                <bool>true</bool>
@@ -561,7 +561,7 @@ p, li { white-space: pre-wrap; }
              <string> r</string>
             </attribute>
             <attribute name="icon" >
-             <iconset>../../branch/jabbim-ng/widgets/images/16x16/categories/system-users.png</iconset>
+             <iconset>images/16x16/categories/system-users.png</iconset>
             </attribute>
             <attribute name="toolTip" >
              <string>Roster</string>
@@ -612,7 +612,7 @@ p, li { white-space: pre-wrap; }
              <string>b</string>
             </attribute>
             <attribute name="icon" >
-             <iconset>../../branch/jabbim-ng/widgets/images/16x16/categories/bookmarks.png</iconset>
+             <iconset>images/16x16/categories/bookmarks.png</iconset>
             </attribute>
             <attribute name="toolTip" >
              <string>Bookmarks</string>
@@ -684,7 +684,7 @@ p, li { white-space: pre-wrap; }
              <string>Events</string>
             </attribute>
             <attribute name="icon" >
-             <iconset>../../branch/jabbim-ng/widgets/images/16x16/categories/event.png</iconset>
+             <iconset>images/16x16/categories/event.png</iconset>
             </attribute>
             <attribute name="toolTip" >
              <string>Events</string>
@@ -742,7 +742,7 @@ p, li { white-space: pre-wrap; }
          <item>
           <widget class="QLabel" name="splashImage" >
            <property name="pixmap" >
-            <pixmap>../../branch/jabbim-ng/widgets/images/logo.png</pixmap>
+            <pixmap>images/logo.png</pixmap>
            </property>
            <property name="alignment" >
             <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -846,7 +846,7 @@ p, li { white-space: pre-wrap; }
   </widget>
   <action name="actionShow_XML" >
    <property name="icon" >
-    <iconset>../../branch/jabbim-ng/widgets/images/16x16/actions/xml-konzole.png</iconset>
+    <iconset>images/16x16/actions/xml-konzole.png</iconset>
    </property>
    <property name="text" >
     <string>Show XML</string>
@@ -854,7 +854,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionPreferences" >
    <property name="icon" >
-    <iconset>../../branch/jabbim-ng/widgets/images/16x16/categories/gtk-preferences.png</iconset>
+    <iconset>images/16x16/categories/gtk-preferences.png</iconset>
    </property>
    <property name="text" >
     <string>Preferences</string>
@@ -862,7 +862,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionQuit" >
    <property name="icon" >
-    <iconset>../../branch/jabbim-ng/widgets/images/16x16/actions/gtk-quit.png</iconset>
+    <iconset>images/16x16/actions/gtk-quit.png</iconset>
    </property>
    <property name="text" >
     <string>Quit</string>
@@ -870,7 +870,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionAdd_Contact" >
    <property name="icon" >
-    <iconset>../../branch/jabbim-ng/widgets/images/16x16/actions/gtk-add.png</iconset>
+    <iconset>images/16x16/actions/gtk-add.png</iconset>
    </property>
    <property name="text" >
     <string>Add Contact</string>
@@ -878,7 +878,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionAbout" >
    <property name="icon" >
-    <iconset>../../branch/jabbim-ng/widgets/images/16x16/actions/about.png</iconset>
+    <iconset>images/16x16/actions/about.png</iconset>
    </property>
    <property name="text" >
     <string>About</string>
@@ -886,7 +886,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionService_Discovery" >
    <property name="icon" >
-    <iconset>../../branch/jabbim-ng/widgets/images/16x16/actions/service-discovery.png</iconset>
+    <iconset>images/16x16/actions/service-discovery.png</iconset>
    </property>
    <property name="text" >
     <string>Service Discovery</string>
@@ -904,7 +904,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionIdentity" >
    <property name="icon" >
-    <iconset>../../branch/jabbim-ng/widgets/images/16x16/categories/v-card.png</iconset>
+    <iconset>images/16x16/categories/v-card.png</iconset>
    </property>
    <property name="text" >
     <string>Identity</string>

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sat Feb  2 16:31:45 2008
+# Created: Sat Feb  2 16:45:03 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -199,7 +199,7 @@ class Ui_MainWindow(object):
 
         self.toggleInvisible = QtGui.QToolButton(self.frame)
         self.toggleInvisible.setMaximumSize(QtCore.QSize(16777215,20))
-        self.toggleInvisible.setIcon(QtGui.QIcon("../../branch/jabbim-ng/widgets/images/16x16/status/jabber-invisible.png"))
+        self.toggleInvisible.setIcon(QtGui.QIcon("images/16x16/status/jabber-invisible.png"))
         self.toggleInvisible.setCheckable(True)
         self.toggleInvisible.setArrowType(QtCore.Qt.NoArrow)
         self.toggleInvisible.setObjectName("toggleInvisible")
@@ -238,7 +238,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.statusMessage.sizePolicy().hasHeightForWidth())
         self.statusMessage.setSizePolicy(sizePolicy)
         self.statusMessage.setMaximumSize(QtCore.QSize(16777215,20))
-        self.statusMessage.setIcon(QtGui.QIcon("../../branch/jabbim-ng/widgets/images/16x16/status/jabber-not_in_roster.png"))
+        self.statusMessage.setIcon(QtGui.QIcon("images/16x16/status/jabber-not_in_roster.png"))
         self.statusMessage.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.statusMessage.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.statusMessage.setAutoRaise(True)
@@ -262,7 +262,7 @@ class Ui_MainWindow(object):
 
         self.showOffline = QtGui.QToolButton(self.frame)
         self.showOffline.setMaximumSize(QtCore.QSize(16777215,20))
-        self.showOffline.setIcon(QtGui.QIcon("../../branch/jabbim-ng/widgets/images/16x16/apps/jabbim.png"))
+        self.showOffline.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
         self.showOffline.setCheckable(True)
         self.showOffline.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.showOffline.setArrowType(QtCore.Qt.NoArrow)
@@ -315,7 +315,7 @@ class Ui_MainWindow(object):
         self.userStyleWidget = QtGui.QWidget(self.rosterTab)
         self.userStyleWidget.setObjectName("userStyleWidget")
         self.gridlayout5.addWidget(self.userStyleWidget,2,0,1,1)
-        self.tabWidget.addTab(self.rosterTab,QtGui.QIcon("../../branch/jabbim-ng/widgets/images/16x16/categories/system-users.png"),"")
+        self.tabWidget.addTab(self.rosterTab,QtGui.QIcon("images/16x16/categories/system-users.png"),"")
 
         self.bookmarksTab = QtGui.QWidget()
         self.bookmarksTab.setObjectName("bookmarksTab")
@@ -342,7 +342,7 @@ class Ui_MainWindow(object):
         self.bookmarks_headerLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.bookmarks_headerLabel.setObjectName("bookmarks_headerLabel")
         self.gridlayout6.addWidget(self.bookmarks_headerLabel,0,0,1,2)
-        self.tabWidget.addTab(self.bookmarksTab,QtGui.QIcon("../../branch/jabbim-ng/widgets/images/16x16/categories/bookmarks.png"),"")
+        self.tabWidget.addTab(self.bookmarksTab,QtGui.QIcon("images/16x16/categories/bookmarks.png"),"")
 
         self.eventsTab = QtGui.QWidget()
         self.eventsTab.setObjectName("eventsTab")
@@ -360,7 +360,7 @@ class Ui_MainWindow(object):
         self.eventsLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.eventsLabel.setObjectName("eventsLabel")
         self.gridlayout7.addWidget(self.eventsLabel,0,0,1,1)
-        self.tabWidget.addTab(self.eventsTab,QtGui.QIcon("../../branch/jabbim-ng/widgets/images/16x16/categories/event.png"),"")
+        self.tabWidget.addTab(self.eventsTab,QtGui.QIcon("images/16x16/categories/event.png"),"")
         self.gridlayout3.addWidget(self.tabWidget,1,0,1,1)
         self.rosterStackedWidget.addWidget(self.roster)
 
@@ -376,7 +376,7 @@ class Ui_MainWindow(object):
         self.vboxlayout2.addItem(spacerItem9)
 
         self.splashImage = QtGui.QLabel(self.splash)
-        self.splashImage.setPixmap(QtGui.QPixmap("../../branch/jabbim-ng/widgets/images/logo.png"))
+        self.splashImage.setPixmap(QtGui.QPixmap("images/logo.png"))
         self.splashImage.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
         self.splashImage.setObjectName("splashImage")
         self.vboxlayout2.addWidget(self.splashImage)
@@ -428,27 +428,27 @@ class Ui_MainWindow(object):
         MainWindow.setMenuBar(self.menubar)
 
         self.actionShow_XML = QtGui.QAction(MainWindow)
-        self.actionShow_XML.setIcon(QtGui.QIcon("../../branch/jabbim-ng/widgets/images/16x16/actions/xml-konzole.png"))
+        self.actionShow_XML.setIcon(QtGui.QIcon("images/16x16/actions/xml-konzole.png"))
         self.actionShow_XML.setObjectName("actionShow_XML")
 
         self.actionPreferences = QtGui.QAction(MainWindow)
-        self.actionPreferences.setIcon(QtGui.QIcon("../../branch/jabbim-ng/widgets/images/16x16/categories/gtk-preferences.png"))
+        self.actionPreferences.setIcon(QtGui.QIcon("images/16x16/categories/gtk-preferences.png"))
         self.actionPreferences.setObjectName("actionPreferences")
 
         self.actionQuit = QtGui.QAction(MainWindow)
-        self.actionQuit.setIcon(QtGui.QIcon("../../branch/jabbim-ng/widgets/images/16x16/actions/gtk-quit.png"))
+        self.actionQuit.setIcon(QtGui.QIcon("images/16x16/actions/gtk-quit.png"))
         self.actionQuit.setObjectName("actionQuit")
 
         self.actionAdd_Contact = QtGui.QAction(MainWindow)
-        self.actionAdd_Contact.setIcon(QtGui.QIcon("../../branch/jabbim-ng/widgets/images/16x16/actions/gtk-add.png"))
+        self.actionAdd_Contact.setIcon(QtGui.QIcon("images/16x16/actions/gtk-add.png"))
         self.actionAdd_Contact.setObjectName("actionAdd_Contact")
 
         self.actionAbout = QtGui.QAction(MainWindow)
-        self.actionAbout.setIcon(QtGui.QIcon("../../branch/jabbim-ng/widgets/images/16x16/actions/about.png"))
+        self.actionAbout.setIcon(QtGui.QIcon("images/16x16/actions/about.png"))
         self.actionAbout.setObjectName("actionAbout")
 
         self.actionService_Discovery = QtGui.QAction(MainWindow)
-        self.actionService_Discovery.setIcon(QtGui.QIcon("../../branch/jabbim-ng/widgets/images/16x16/actions/service-discovery.png"))
+        self.actionService_Discovery.setIcon(QtGui.QIcon("images/16x16/actions/service-discovery.png"))
         self.actionService_Discovery.setObjectName("actionService_Discovery")
 
         self.actionMUC_Browser = QtGui.QAction(MainWindow)
@@ -458,7 +458,7 @@ class Ui_MainWindow(object):
         self.actionPrivacy_list_editor.setObjectName("actionPrivacy_list_editor")
 
         self.actionIdentity = QtGui.QAction(MainWindow)
-        self.actionIdentity.setIcon(QtGui.QIcon("../../branch/jabbim-ng/widgets/images/16x16/categories/v-card.png"))
+        self.actionIdentity.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
         self.actionIdentity.setObjectName("actionIdentity")
 
         self.actionProfiles = QtGui.QAction(MainWindow)
