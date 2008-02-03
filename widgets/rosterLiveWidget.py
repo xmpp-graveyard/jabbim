@@ -916,9 +916,9 @@ class rosterWidget(QtGui.QWidget):
 			if self.theme:
 				brush=QtGui.QBrush(self.main.ui.userStyleWidget.palette().window())
 				if brush.color().alpha()!=0:
-					painter.fillRect(0,0,self.width(),16,brush)
+					painter.fillRect(0,0,self.width(),22,brush)
 			else:
-				painter.fillRect(0,0,self.width(),16,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
+				painter.fillRect(0,0,self.width(),22,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
 			painter.restore()
 
 
