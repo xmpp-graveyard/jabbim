@@ -213,34 +213,36 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.r=False
 		if self.parent.xhtml:
 			QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
-			QtCore.QObject.connect(self,QtCore.SIGNAL("cursorPositionChanged ()"),self.setFormat)
+			#QtCore.QObject.connect(self,QtCore.SIGNAL("cursorPositionChanged ()"),self.setFormat)
 
-	def setFormat(self):
+	def setFormat(self,fmt=None):
 		# detect format of current character
-		if len(unicode(self.textCursor().selectedText()))==0 and len(unicode(self.toPlainText()))!=0:
-			b=self.fontWeight()==QtGui.QFont.Bold
+		f=fmt.font()
+		if len(unicode(self.textCursor().selectedText()))==0:
+			b=f.bold()
 			if self.bold!=b:
 				self.bold=b
 				self.parent.ui.boldButton.setChecked(b)
-			b=self.fontItalic()
+			b=f.italic()
 			if self.italic!=b:
 				self.italic=b
 				self.parent.ui.italicButton.setChecked(b)
-			b=self.fontUnderline()
+			b=f.underline()
 			if self.underline!=b:
 				self.underline=b
 				self.parent.ui.underlineButton.setChecked(b)
-			b=self.textColor()
+			b=fmt.foreground().color()
 			if self.color!=b:
 				self.color=b
 				colorIcon=QtGui.QPixmap(16,16)
 				colorIcon.fill(b)
 				self.parent.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
-			b=float(self.fontPointSize())
+			b=float(f.pointSize())
 			if self.fontSize!=b:
 				self.fontSize=b
 				if self.fontSize==0.0:
 					self.fontSize=float(str(self.parent.ui.fontSize.currentText()))
+					self.parent.fontSize(self.fontSize)
 				self.parent.ui.fontSize.setCurrentIndex(self.parent.ui.fontSize.findText(str(int(self.fontSize))))
 
 	def focusInEvent(self,event):
@@ -252,6 +254,8 @@ class normalLineEditWidget(QtGui.QTextEdit):
 	def formatChanged(self,format):
 		if len(unicode(self.toPlainText()))==0 and not self.r:
 			self.reformat()
+		else:
+			self.setFormat(format)
 
 	def reformat(self):
 		self.r=True
@@ -261,7 +265,8 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		if self.fontSize:
 			if self.fontSize==0.0:
 				self.fontSize=float(str(self.parent.ui.fontSize.currentText()))
-			self.setFontPointSize(self.fontSize)
+			#self.setFontPointSize(self.fontSize)
+			self.parent.fontSize(self.fontSize)
 			self.parent.ui.fontSize.setCurrentIndex(self.parent.ui.fontSize.findText(str(int(self.fontSize))))
 		if self.color:
 			self.parent.color(unicode(self.color.name()))
@@ -437,7 +442,14 @@ class abstractChatWidget(QtGui.QWidget):
 		size=float(size)
 		self.ui.line.fontSize=size
 		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
-		self.ui.line.setFontPointSize(size)
+		#self.ui.line.setFontPointSize(size)
+		fmt=QtGui.QTextCharFormat()
+		fmt.setFontPointSize(size)
+		cursor = self.ui.line.textCursor()
+		cursor.mergeCharFormat(fmt)
+		self.ui.line.setTextCursor(cursor)
+		self.ui.line.mergeCurrentCharFormat(fmt)
+
 
 	def color(self,action):
 		"""
@@ -484,7 +496,13 @@ class abstractChatWidget(QtGui.QWidget):
 		"""
 		self.ui.line.italic=bool
 		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
-		self.ui.line.setFontItalic(bool)
+
+		fmt=QtGui.QTextCharFormat()
+		fmt.setFontItalic(bool)
+		cursor = self.ui.line.textCursor()
+		cursor.mergeCharFormat(fmt)
+		self.ui.line.setTextCursor(cursor)
+		self.ui.line.mergeCurrentCharFormat(fmt)
 
 	def qtHtmlToXhtml(self,xhtml,text):
 		"""
@@ -563,7 +581,13 @@ class abstractChatWidget(QtGui.QWidget):
 		"""
 		self.ui.line.underline=bool
 		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
-		self.ui.line.setFontUnderline(bool)
+
+		fmt=QtGui.QTextCharFormat()
+		fmt.setFontUnderline(bool)
+		cursor = self.ui.line.textCursor()
+		cursor.mergeCharFormat(fmt)
+		self.ui.line.setTextCursor(cursor)
+		self.ui.line.mergeCurrentCharFormat(fmt)
 
 
 	def bold(self,bool):
@@ -574,10 +598,17 @@ class abstractChatWidget(QtGui.QWidget):
 		"""
 		self.ui.line.bold=bool
 		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
+
+		fmt=QtGui.QTextCharFormat()
+		
 		if bool==True:
-			self.ui.line.setFontWeight(QtGui.QFont.Bold)
+			fmt.setFontWeight(QtGui.QFont.Bold)
 		else:
-			self.ui.line.setFontWeight(QtGui.QFont.Normal)
+			fmt.setFontWeight(QtGui.QFont.Normal)
+		cursor = self.ui.line.textCursor()
+		cursor.mergeCharFormat(fmt)
+		self.ui.line.setTextCursor(cursor)
+		self.ui.line.mergeCurrentCharFormat(fmt)
 
 	def appendXhtml(self,xhtml):
 		message=xhtml.replace("&quot;",'"')
