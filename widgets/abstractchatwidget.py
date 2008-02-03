@@ -240,9 +240,6 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			b=float(f.pointSize())
 			if self.fontSize!=b:
 				self.fontSize=b
-				if self.fontSize==0.0:
-					self.fontSize=float(str(self.parent.ui.fontSize.currentText()))
-					self.parent.fontSize(self.fontSize)
 				self.parent.ui.fontSize.setCurrentIndex(self.parent.ui.fontSize.findText(str(int(self.fontSize))))
 
 	def focusInEvent(self,event):
@@ -263,8 +260,6 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.parent.bold(self.bold)
 		self.parent.italic(self.italic)
 		if self.fontSize:
-			if self.fontSize==0.0:
-				self.fontSize=float(str(self.parent.ui.fontSize.currentText()))
 			#self.setFontPointSize(self.fontSize)
 			self.parent.fontSize(self.fontSize)
 			self.parent.ui.fontSize.setCurrentIndex(self.parent.ui.fontSize.findText(str(int(self.fontSize))))
