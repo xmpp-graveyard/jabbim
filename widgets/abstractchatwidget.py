@@ -209,6 +209,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.italic=False
 		self.underline=False
 		self.color=None
+		self.backgroundColor=None
 		self.fontSize=None
 		self.r=False
 		if self.parent.xhtml:
@@ -237,6 +238,22 @@ class normalLineEditWidget(QtGui.QTextEdit):
 				colorIcon=QtGui.QPixmap(16,16)
 				colorIcon.fill(b)
 				self.parent.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
+			b=fmt.background().color()
+			if True:
+
+				self.backgroundColor=b
+				colorIcon=QtGui.QPixmap(16,16)
+				#for background color
+				if fmt.background().isOpaque():
+					colorIcon.fill(QtGui.QColor(b))
+				else:
+					colorIcon.fill(QtGui.QColor(self.parent.defaultBackgroundColor))
+				p=QtGui.QPixmap("images/16x16/actions/format-text-bold.png")
+				painter=QtGui.QPainter(colorIcon)
+				painter.drawPixmap(0,0,p)
+				painter.end()
+				self.parent.ui.backgroundButton.setIcon(QtGui.QIcon(colorIcon))
+
 			b=float(f.pointSize())
 			if self.fontSize!=b:
 				self.fontSize=b
@@ -245,16 +262,16 @@ class normalLineEditWidget(QtGui.QTextEdit):
 	def focusInEvent(self,event):
 		r=QtGui.QTextEdit.focusInEvent(self,event)
 		if self.parent.xhtml:
-			self.reformat()
+			self.reformat(self.currentCharFormat())
 		return r
 
 	def formatChanged(self,format):
 		if len(unicode(self.toPlainText()))==0 and not self.r:
-			self.reformat()
-		else:
-			self.setFormat(format)
+			self.reformat(format)
+			return
+		self.setFormat(format)
 
-	def reformat(self):
+	def reformat(self,fmt):
 		self.r=True
 		self.parent.underline(self.underline)
 		self.parent.bold(self.bold)
@@ -265,6 +282,11 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			self.parent.ui.fontSize.setCurrentIndex(self.parent.ui.fontSize.findText(str(int(self.fontSize))))
 		if self.color:
 			self.parent.color(unicode(self.color.name()))
+		if self.backgroundColor:
+			if fmt.background().isOpaque():
+				self.parent.background(unicode(self.backgroundColor.name()))
+			else:
+				self.parent.background(unicode('no'))
 		self.r=False
 	def paused(self):
 		"""
@@ -375,6 +397,7 @@ class abstractChatWidget(QtGui.QWidget):
 			self.ui.underlineButton.hide()
 			self.ui.colorButton.hide()
 			self.ui.fontSize.hide()
+			self.ui.backgroundButton.hide()
 		else:
 			db=QtGui.QFontDatabase()
 			for size in db.standardSizes():
@@ -384,55 +407,76 @@ class abstractChatWidget(QtGui.QWidget):
 
 			self.defaultFormat=self.ui.line.currentCharFormat()
 			self.defaultColor=self.ui.line.textColor()
+			self.defaultBackgroundColor=QtGui.QColor(self.ui.line.palette().base().color())
 			colorMenu=QtGui.QMenu(self.ui.colorButton)
+			backgroundMenu=QtGui.QMenu(self.ui.backgroundButton)
 			colorIcon=QtGui.QPixmap(16,16)
 			
 			colorIcon.fill(QtCore.Qt.white)
 			action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('White'))
 			action.setData(QtCore.QVariant("#ffffff"))
+			action=backgroundMenu.addAction(QtGui.QIcon(colorIcon),self.tr('White'))
+			action.setData(QtCore.QVariant("#ffffff"))
 
 			colorIcon.fill(QtCore.Qt.black)
 			action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Black'))
 			action.setData(QtCore.QVariant("#000000"))
-			
+			action=backgroundMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Black'))
+			action.setData(QtCore.QVariant("#000000"))
+
 			colorIcon.fill(QtCore.Qt.red)
 			action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Red'))
 			action.setData(QtCore.QVariant("#ff0000"))
-			
+			action=backgroundMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Red'))
+			action.setData(QtCore.QVariant("#ff0000"))
+
 			colorIcon.fill(QtCore.Qt.green)
 			action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Green'))
 			action.setData(QtCore.QVariant("#00ff00"))
-			
+			action=backgroundMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Green'))
+			action.setData(QtCore.QVariant("#00ff00"))
+
 			colorIcon.fill(QtCore.Qt.blue)
 			action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Blue'))
+			action.setData(QtCore.QVariant("#0000ff"))
+			action=backgroundMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Blue'))
 			action.setData(QtCore.QVariant("#0000ff"))
 
 			colorIcon.fill(QtCore.Qt.magenta)
 			action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Pink'))
 			action.setData(QtCore.QVariant("#ff00ff"))
+			action=backgroundMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Pink'))
+			action.setData(QtCore.QVariant("#ff00ff"))
 
 			colorIcon.fill(QtCore.Qt.yellow)
 			action=colorMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Yellow'))
+			action.setData(QtCore.QVariant("#ffff00"))
+			action=backgroundMenu.addAction(QtGui.QIcon(colorIcon),self.tr('Yellow'))
 			action.setData(QtCore.QVariant("#ffff00"))
 
 			colorMenu.addSeparator()
 
 			action=colorMenu.addAction(self.tr('No color'))
 			action.setData(QtCore.QVariant("no"))
+			action=backgroundMenu.addAction(self.tr('No color'))
+			action.setData(QtCore.QVariant("no"))
 
 			QtCore.QObject.connect(colorMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.color)
+			QtCore.QObject.connect(backgroundMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.background)
 			self.ui.colorButton.setMenu(colorMenu)
+			self.ui.backgroundButton.setMenu(backgroundMenu)
 			colorIcon.fill(self.defaultFormat.foreground().color())
 			self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
 			
-			# for background color
-			#colorIcon.fill(self.defaultFormat.foreground().color())
-			#p=QtGui.QPixmap("images/16x16/actions/format-text-bold.png")
-			#painter=QtGui.QPainter(colorIcon)
-			#painter.drawPixmap(0,0,p)
-			#painter.end()
-			#self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
-	
+			#for background color
+			colorIcon.fill(self.defaultBackgroundColor)
+			p=QtGui.QPixmap("images/16x16/actions/format-text-bold.png")
+			painter=QtGui.QPainter(colorIcon)
+			painter.drawPixmap(0,0,p)
+			painter.end()
+			self.ui.backgroundButton.setIcon(QtGui.QIcon(colorIcon))
+	#fmt.setBackground(QtGui.QBrush(QtGui.QColor(QtCore.Qt.red)))
+
 	def fontSize(self,size):
 		size=float(size)
 		self.ui.line.fontSize=size
@@ -445,14 +489,14 @@ class abstractChatWidget(QtGui.QWidget):
 		self.ui.line.setTextCursor(cursor)
 		self.ui.line.mergeCurrentCharFormat(fmt)
 
-
 	def color(self,action):
 		"""
 		Sets foreground color according to action.data(). Data should be color like #FFFFFF or string "no" for default system color.
 		"""
 		if isinstance(action,unicode) or isinstance(action,str):
 			color=action
-			self.ui.line.color=QtGui.QColor(color)
+			if color.startswith('#'):
+				self.ui.line.color=QtGui.QColor(color)
 		else:
 			color=unicode(action.data().toString())
 			self.ui.line.color=QtGui.QColor(color)
@@ -464,17 +508,82 @@ class abstractChatWidget(QtGui.QWidget):
 			colorIcon=QtGui.QPixmap(16,16)
 			colorIcon.fill(c)
 			self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
-			#self.noColor=False
 		else:
 			format=self.defaultFormat
 			format.setFontItalic(self.ui.line.fontItalic())
 			format.setFontUnderline(self.ui.line.fontUnderline())
 			format.setFontWeight(self.ui.line.fontWeight())
+			fmt=self.ui.line.currentCharFormat()
+			if fmt.background().isOpaque():
+				format.setBackground(QtGui.QBrush(fmt.background()))
+
 			self.ui.line.setCurrentCharFormat(format)
 			colorIcon=QtGui.QPixmap(16,16)
 			colorIcon.fill(self.defaultFormat.foreground().color())
 			self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
-			#self.noColor=True
+
+	def background(self,action):
+		"""
+		Sets background color according to action.data(). Data should be color like #FFFFFF or string "no" for default system color.
+		"""
+		if isinstance(action,unicode) or isinstance(action,str):
+			color=action
+			if color.startswith('#'):
+				self.ui.line.backgroundColor=QtGui.QColor(color)
+		else:
+			color=unicode(action.data().toString())
+			self.ui.line.backgroundColor=QtGui.QColor(color)
+			self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
+		
+		if color.startswith("#") and QtGui.QColor(color)!=self.defaultBackgroundColor:
+			#c=QtGui.QColor(color)
+			#self.ui.line.setTextColor(c)
+			#colorIcon=QtGui.QPixmap(16,16)
+			#colorIcon.fill(c)
+			#self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
+
+			fmt=QtGui.QTextCharFormat()
+			fmt.setBackground(QtGui.QBrush(QtGui.QColor(color)))
+			cursor = self.ui.line.textCursor()
+			cursor.mergeCharFormat(fmt)
+			self.ui.line.setTextCursor(cursor)
+			self.ui.line.mergeCurrentCharFormat(fmt)
+			
+			colorIcon=QtGui.QPixmap(16,16)
+			#for background color
+			colorIcon.fill(QtGui.QColor(color))
+			p=QtGui.QPixmap("images/16x16/actions/format-text-bold.png")
+			painter=QtGui.QPainter(colorIcon)
+			painter.drawPixmap(0,0,p)
+			painter.end()
+			self.ui.backgroundButton.setIcon(QtGui.QIcon(colorIcon))
+
+
+		else:
+			#format=self.defaultFormat
+			#format.setFontItalic(self.ui.line.fontItalic())
+			#format.setFontUnderline(self.ui.line.fontUnderline())
+			#format.setFontWeight(self.ui.line.fontWeight())
+			#format.setBackground(QtGui.QBrush(QtGui.QColor(QtCore.Qt.red)))
+			#self.ui.line.setCurrentCharFormat(format)
+			
+			fmt=QtGui.QTextCharFormat()
+			fmt.setFontItalic(self.ui.line.fontItalic())
+			fmt.setFontUnderline(self.ui.line.fontUnderline())
+			fmt.setFontWeight(self.ui.line.fontWeight())
+			c=QtGui.QColor(self.ui.line.textColor())
+			self.ui.line.setCurrentCharFormat(fmt)
+			if c!=self.defaultColor:
+				self.ui.line.setTextColor(c)
+			
+			colorIcon=QtGui.QPixmap(16,16)
+			#for background color
+			colorIcon.fill(self.defaultBackgroundColor)
+			p=QtGui.QPixmap("images/16x16/actions/format-text-bold.png")
+			painter=QtGui.QPainter(colorIcon)
+			painter.drawPixmap(0,0,p)
+			painter.end()
+			self.ui.backgroundButton.setIcon(QtGui.QIcon(colorIcon))
 
 	def clearLine(self):
 		format=self.ui.line.currentCharFormat()

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Sun Feb  3 13:45:52 2008
+# Created: Sun Feb  3 21:22:16 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -98,6 +98,12 @@ class Ui_groupchatwidget(object):
         self.colorButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         self.colorButton.setObjectName("colorButton")
         self.hboxlayout.addWidget(self.colorButton)
+
+        self.backgroundButton = QtGui.QToolButton(self.widget)
+        self.backgroundButton.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.backgroundButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
+        self.backgroundButton.setObjectName("backgroundButton")
+        self.hboxlayout.addWidget(self.backgroundButton)
 
         self.fontSize = QtGui.QComboBox(self.widget)
         self.fontSize.setObjectName("fontSize")

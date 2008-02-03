@@ -171,6 +171,16 @@
            </widget>
           </item>
           <item>
+           <widget class="QToolButton" name="backgroundButton" >
+            <property name="popupMode" >
+             <enum>QToolButton::InstantPopup</enum>
+            </property>
+            <property name="toolButtonStyle" >
+             <enum>Qt::ToolButtonIconOnly</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QComboBox" name="fontSize" />
           </item>
           <item>
