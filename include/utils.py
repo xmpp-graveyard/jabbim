@@ -141,7 +141,8 @@ def loadConfig(main,status):
 			"bigOnClick":"False",
 			"specifyHost":"False",
 			"connectHost": "",
-			"connectPort": "5222"
+			"connectPort": "5222",
+			"showOffline":"True"
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:

@@ -2087,7 +2087,11 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.loginAvatar.setMaximumSize(QtCore.QSize(size,size))
 		self.ui.loginAvatar.setMinimumSize(QtCore.QSize(size,size))
 		self.ui.loginAvatar.setAlignment(QtCore.Qt.AlignCenter)
-
+		# set showOffline
+		if self.config['showOffline']=='True':
+			self.offline=False
+			self.buildOfflineMenu()
+			self.hideOffline(True)
 
 	def registerButtonClicked(self):
 		# depracted
@@ -2685,7 +2689,8 @@ class mainWindow(QtGui.QMainWindow):
 		@param bool: True == offline users are shown, False offline users are hidden
 		"""
 		#self.events.addAddUserEvent('hanzz@njs.netlab.cz','offline users are shown, False offline users are hidden')
-		self.offline=not bool
+		self.config['showOffline']=unicode(bool)
+		self.offline=bool
 		self.ui.roster.showOffline=bool
 		self.ui.roster.reshow=True
 		if self.ui.roster.item:
