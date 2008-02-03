@@ -209,6 +209,8 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.italic=False
 		self.underline=False
 		self.color=None
+		self.fontSize=None
+		self.r=False
 		if self.parent.xhtml:
 			QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
 			QtCore.QObject.connect(self,QtCore.SIGNAL("cursorPositionChanged ()"),self.setFormat)
@@ -234,6 +236,12 @@ class normalLineEditWidget(QtGui.QTextEdit):
 				colorIcon=QtGui.QPixmap(16,16)
 				colorIcon.fill(b)
 				self.parent.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
+			b=float(self.fontPointSize())
+			if self.fontSize!=b:
+				self.fontSize=b
+				if self.fontSize==0.0:
+					self.fontSize=float(str(self.parent.ui.fontSize.currentText()))
+				self.parent.ui.fontSize.setCurrentIndex(self.parent.ui.fontSize.findText(str(int(self.fontSize))))
 
 	def focusInEvent(self,event):
 		r=QtGui.QTextEdit.focusInEvent(self,event)
@@ -242,16 +250,22 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		return r
 
 	def formatChanged(self,format):
-		if len(unicode(self.toPlainText()))==0:
+		if len(unicode(self.toPlainText()))==0 and not self.r:
 			self.reformat()
 
 	def reformat(self):
+		self.r=True
 		self.parent.underline(self.underline)
 		self.parent.bold(self.bold)
 		self.parent.italic(self.italic)
+		if self.fontSize:
+			if self.fontSize==0.0:
+				self.fontSize=float(str(self.parent.ui.fontSize.currentText()))
+			self.setFontPointSize(self.fontSize)
+			self.parent.ui.fontSize.setCurrentIndex(self.parent.ui.fontSize.findText(str(int(self.fontSize))))
 		if self.color:
 			self.parent.color(unicode(self.color.name()))
-
+		self.r=False
 	def paused(self):
 		"""
 		Detects if user stops typing and sends 'paused' message if user stops.
@@ -344,6 +358,7 @@ class abstractChatWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.boldButton, QtCore.SIGNAL("toggled (bool)"),self.bold)
 		QtCore.QObject.connect(self.ui.italicButton, QtCore.SIGNAL("toggled (bool)"),self.italic)
 		QtCore.QObject.connect(self.ui.underlineButton, QtCore.SIGNAL("toggled (bool)"),self.underline)
+		QtCore.QObject.connect(self.ui.fontSize,QtCore.SIGNAL("activated(const QString &)"),self.fontSize)
 		
 		self.ui.textEdit.setAcceptRichText(False)
 		# save init part from self.main.skin to the textEdit
@@ -359,7 +374,14 @@ class abstractChatWidget(QtGui.QWidget):
 			self.ui.italicButton.hide()
 			self.ui.underlineButton.hide()
 			self.ui.colorButton.hide()
+			self.ui.fontSize.hide()
 		else:
+			db=QtGui.QFontDatabase()
+			for size in db.standardSizes():
+				self.ui.fontSize.addItem(str(size))
+			self.ui.fontSize.setCurrentIndex(self.ui.fontSize.findText(str(QtGui.QApplication.font().pointSize())))
+			self.ui.line.fontSize=float(str(QtGui.QApplication.font().pointSize()))
+
 			self.defaultFormat=self.ui.line.currentCharFormat()
 			self.defaultColor=self.ui.line.textColor()
 			colorMenu=QtGui.QMenu(self.ui.colorButton)
@@ -402,7 +424,21 @@ class abstractChatWidget(QtGui.QWidget):
 			self.ui.colorButton.setMenu(colorMenu)
 			colorIcon.fill(self.defaultFormat.foreground().color())
 			self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
+			
+			# for background color
+			#colorIcon.fill(self.defaultFormat.foreground().color())
+			#p=QtGui.QPixmap("images/16x16/actions/format-text-bold.png")
+			#painter=QtGui.QPainter(colorIcon)
+			#painter.drawPixmap(0,0,p)
+			#painter.end()
+			#self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))
 	
+	def fontSize(self,size):
+		size=float(size)
+		self.ui.line.fontSize=size
+		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
+		self.ui.line.setFontPointSize(size)
+
 	def color(self,action):
 		"""
 		Sets foreground color according to action.data(). Data should be color like #FFFFFF or string "no" for default system color.

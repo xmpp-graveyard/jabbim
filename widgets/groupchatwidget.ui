@@ -16,22 +16,10 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" >
-   <property name="leftMargin" >
+   <property name="margin" >
     <number>9</number>
    </property>
-   <property name="topMargin" >
-    <number>9</number>
-   </property>
-   <property name="rightMargin" >
-    <number>9</number>
-   </property>
-   <property name="bottomMargin" >
-    <number>9</number>
-   </property>
-   <property name="horizontalSpacing" >
-    <number>6</number>
-   </property>
-   <property name="verticalSpacing" >
+   <property name="spacing" >
     <number>6</number>
    </property>
    <item row="0" column="0" >
@@ -41,20 +29,11 @@
      </property>
      <widget class="QWidget" name="layoutWidget" >
       <layout class="QVBoxLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
        <property name="spacing" >
         <number>6</number>
-       </property>
-       <property name="leftMargin" >
-        <number>0</number>
-       </property>
-       <property name="topMargin" >
-        <number>0</number>
-       </property>
-       <property name="rightMargin" >
-        <number>0</number>
-       </property>
-       <property name="bottomMargin" >
-        <number>0</number>
        </property>
        <item>
         <widget class="QLabel" name="disco_info" >
@@ -90,27 +69,95 @@
         <enum>Qt::Vertical</enum>
        </property>
        <widget class="QWidget" native="1" name="viewWidget" />
-       <widget class="QWidget" name="layoutWidget" >
+       <widget class="QWidget" name="" >
         <layout class="QGridLayout" >
-         <property name="leftMargin" >
+         <property name="margin" >
           <number>0</number>
          </property>
-         <property name="topMargin" >
-          <number>0</number>
-         </property>
-         <property name="rightMargin" >
-          <number>0</number>
-         </property>
-         <property name="bottomMargin" >
-          <number>0</number>
-         </property>
-         <property name="horizontalSpacing" >
+         <property name="spacing" >
           <number>6</number>
          </property>
-         <property name="verticalSpacing" >
-          <number>6</number>
-         </property>
-         <item row="0" column="0" colspan="8" >
+         <item row="1" column="1" >
+          <widget class="QToolButton" name="boldButton" >
+           <property name="focusPolicy" >
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="text" >
+            <string>Bold</string>
+           </property>
+           <property name="icon" >
+            <iconset>images/16x16/actions/format-text-bold.png</iconset>
+           </property>
+           <property name="checkable" >
+            <bool>true</bool>
+           </property>
+           <property name="toolButtonStyle" >
+            <enum>Qt::ToolButtonIconOnly</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" >
+          <spacer>
+           <property name="orientation" >
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" >
+            <size>
+             <width>16</width>
+             <height>29</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="2" >
+          <widget class="QToolButton" name="italicButton" >
+           <property name="focusPolicy" >
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="text" >
+            <string>Italic</string>
+           </property>
+           <property name="icon" >
+            <iconset>images/16x16/actions/format-text-italic.png</iconset>
+           </property>
+           <property name="checkable" >
+            <bool>true</bool>
+           </property>
+           <property name="toolButtonStyle" >
+            <enum>Qt::ToolButtonIconOnly</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="7" >
+          <widget class="QToolButton" name="smileys" >
+           <property name="toolTip" >
+            <string>You can add emoticons by clicking here</string>
+           </property>
+           <property name="icon" >
+            <iconset>images/16x16/emotes/biggrin.png</iconset>
+           </property>
+           <property name="checkable" >
+            <bool>true</bool>
+           </property>
+           <property name="popupMode" >
+            <enum>QToolButton::InstantPopup</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="8" >
+          <widget class="QToolButton" name="sendButton" >
+           <property name="text" >
+            <string>&amp;Send</string>
+           </property>
+           <property name="icon" >
+            <iconset>images/16x16/actions/send.png</iconset>
+           </property>
+           <property name="toolButtonStyle" >
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" colspan="9" >
           <widget class="QWidget" native="1" name="lineWidget" >
            <property name="minimumSize" >
             <size>
@@ -139,6 +186,16 @@
            </property>
           </widget>
          </item>
+         <item row="1" column="5" >
+          <widget class="QComboBox" name="fontSize" />
+         </item>
+         <item row="1" column="6" >
+          <widget class="Line" name="line" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
          <item row="1" column="4" >
           <widget class="QToolButton" name="colorButton" >
            <property name="popupMode" >
@@ -149,112 +206,16 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="1" >
-          <widget class="QToolButton" name="boldButton" >
-           <property name="focusPolicy" >
-            <enum>Qt::NoFocus</enum>
-           </property>
-           <property name="text" >
-            <string>Bold</string>
-           </property>
-           <property name="icon" >
-            <iconset>images/16x16/actions/format-text-bold.png</iconset>
-           </property>
-           <property name="checkable" >
-            <bool>true</bool>
-           </property>
-           <property name="toolButtonStyle" >
-            <enum>Qt::ToolButtonIconOnly</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="7" >
-          <widget class="QToolButton" name="sendButton" >
-           <property name="text" >
-            <string>&amp;Send</string>
-           </property>
-           <property name="icon" >
-            <iconset>images/16x16/actions/send.png</iconset>
-           </property>
-           <property name="toolButtonStyle" >
-            <enum>Qt::ToolButtonTextBesideIcon</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" >
-          <spacer>
-           <property name="orientation" >
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" >
-            <size>
-             <width>16</width>
-             <height>29</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="1" column="5" >
-          <widget class="Line" name="line" >
-           <property name="orientation" >
-            <enum>Qt::Vertical</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2" >
-          <widget class="QToolButton" name="italicButton" >
-           <property name="focusPolicy" >
-            <enum>Qt::NoFocus</enum>
-           </property>
-           <property name="text" >
-            <string>Italic</string>
-           </property>
-           <property name="icon" >
-            <iconset>images/16x16/actions/format-text-italic.png</iconset>
-           </property>
-           <property name="checkable" >
-            <bool>true</bool>
-           </property>
-           <property name="toolButtonStyle" >
-            <enum>Qt::ToolButtonIconOnly</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="6" >
-          <widget class="QToolButton" name="smileys" >
-           <property name="toolTip" >
-            <string>You can add emoticons by clicking here</string>
-           </property>
-           <property name="icon" >
-            <iconset>images/16x16/emotes/biggrin.png</iconset>
-           </property>
-           <property name="checkable" >
-            <bool>true</bool>
-           </property>
-           <property name="popupMode" >
-            <enum>QToolButton::InstantPopup</enum>
-           </property>
-          </widget>
-         </item>
         </layout>
        </widget>
       </widget>
       <widget class="QWidget" name="layoutWidget" >
        <layout class="QVBoxLayout" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
         <property name="spacing" >
          <number>6</number>
-        </property>
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
-         <number>0</number>
         </property>
         <item>
          <widget class="QTreeWidget" name="users" >

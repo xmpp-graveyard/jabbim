@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Tue Jan 22 18:49:45 2008
+# Created: Sun Feb  3 11:24:12 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -98,6 +98,10 @@ class Ui_chatwidget(object):
         self.colorButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         self.colorButton.setObjectName("colorButton")
         self.hboxlayout1.addWidget(self.colorButton)
+
+        self.fontSize = QtGui.QComboBox(self.layoutWidget)
+        self.fontSize.setObjectName("fontSize")
+        self.hboxlayout1.addWidget(self.fontSize)
 
         self.line = QtGui.QFrame(self.layoutWidget)
         self.line.setFrameShape(QtGui.QFrame.VLine)

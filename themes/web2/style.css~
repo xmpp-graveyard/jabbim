@@ -14,7 +14,7 @@ QSplitter::handle {
 
 
 QMainWindow#MainWindow{
-background-color:#507390;
+background-color:#EFF8FF;
 /* border-color:#507390; */
 
 }
@@ -341,6 +341,13 @@ QCheckBox::indicator::unchecked {
 	image: url('themes/web2/blank.png');
 }
 
+QCheckBox::indicator::checked:hover {
+	border:0;
+}
+
+QCheckBox::indicator::unchecked:hover {
+	border:0;
+}
 
 
 
