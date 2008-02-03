@@ -11,7 +11,7 @@ from PyQt4 import QtCore, QtGui
 from twisted.python import log
 from time import time
 from twisted.internet import threads
-
+from twisted.words.xish.domish import escapeToXml
 try:
 	from hashlib import sha1
 except:
@@ -46,6 +46,8 @@ class Plugin(plugins.PluginBase):
 		print text, xhtml
 		if xhtml == None or xhtml.strip() == "" or xhtml.replace('<br />','\n') == text:
 			xhtml =xhtml.replace('<br />','\n')
+			text = escapeToXml(text)
+			print text
 			xhtml = self.formater(text.encode('utf-8'), **self.args)
 			print xhtml
 			if text == xhtml.replace('<p>','').replace('</p>',''):
@@ -58,6 +60,7 @@ class Plugin(plugins.PluginBase):
 	def on_messageSend(self,jid,text="",xhtml="",composite=""):
 		if xhtml == None or xhtml.strip() == "" or xhtml.replace('<br />','\n') == text:
 			xhtml =xhtml.replace('<br />','\n')
+			text = escapeToXml(text)
 			xhtml = self.formater(text.encode('utf-8'), **self.args)
 			print xhtml
 			if text == xhtml.replace('<p>','').replace('</p>',''):
