@@ -967,7 +967,7 @@ class rosterWidget(QtGui.QWidget):
 				#print useritem.privacy
 				# Item is selected
 				height=79
-				self.selectedHeight=height+20
+				self.selectedHeight=height+10
 	
 				# paint roster background
 				#painter.save()
