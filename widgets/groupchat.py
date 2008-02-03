@@ -157,6 +157,13 @@ class groupChatWidget(abstractChatWidget):
 		self.connecting=QtGui.QLabel(self.tr("Connecting to MUC. This can take a few seconds."),self.ui.textEdit)
 		self.connecting.adjustSize()
 
+		if self.main.selfAvatar:
+			result=self.main.getAvatar(self.main.selfAvatar,size="64x64",frame=True)
+			self.ui.selfAvatar.setPixmap(result)
+			self.ui.selfAvatar.setMaximumWidth(64)
+		else:
+			self.ui.selfAvatar.hide()
+
 		self.disco_features = [] #: list of room features
 		log.msg("REQUESTING ROOM INFO")
 		self._getInfo()
