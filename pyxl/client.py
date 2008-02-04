@@ -1290,8 +1290,11 @@ class Client(derived):
 
 	def onPrivacyPush(self, el):
 		name = el.firstChildElement().firstChildElement()["name"]
-		if name != self.privacy.active.name:
-			return			# Je nam to u prdele,  protoze jiny listy nez active nevedem
+		try:
+			if name != self.privacy.active.name:
+				return			# Je nam to u prdele,  protoze jiny listy nez active nevedem
+		except AttributeError:			# dokud nezjistim kde se bere ze active je None :/
+			return
 		iq	= IQ(self.xmlstream, "get")
 		query	= iq.addElement("query", "jabber:iq:privacy")
 		list_	= query.addElement("list")
