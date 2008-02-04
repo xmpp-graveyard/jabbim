@@ -1718,7 +1718,7 @@ class rosterWidget(QtGui.QWidget):
 				position = event.pos()
 				item=self.itemAt(position.x(),position.y())
 				if item.typ=="user":
-					self.main.showFiletransferDialog(file,jid)
+					self.main.showFiletransferDialog(file,item.jid)
 					#if item.jid=="album@disk.jabbim.cz":
 						#self.dialog=albumfiletransfer.albumFiletransferDialog(self.main,file,item.jid)
 					#else:
