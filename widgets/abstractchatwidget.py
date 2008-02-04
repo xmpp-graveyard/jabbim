@@ -259,14 +259,14 @@ class normalLineEditWidget(QtGui.QTextEdit):
 				#self.fontSize=b
 				#self.parent.ui.fontSize.setCurrentIndex(self.parent.ui.fontSize.findText(str(int(self.fontSize))))
 
-	def focusInEvent(self,event):
-		r=QtGui.QTextEdit.focusInEvent(self,event)
-		self.blockSignals(True)
-		if self.parent.xhtml:
-			self.reformat(self.currentCharFormat())
-			#QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
-		self.blockSignals(False)
-		return r
+	#def focusInEvent(self,event):
+		#r=QtGui.QTextEdit.focusInEvent(self,event)
+		#self.blockSignals(True)
+		#if self.parent.xhtml:
+			#self.reformat(self.currentCharFormat())
+			##QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
+		#self.blockSignals(False)
+		#return r
 
 	def formatChanged(self,format):
 		self.blockSignals(True)
