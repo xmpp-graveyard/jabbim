@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/mainWindow.ui'
+# Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created: Mon Feb  4 07:58:07 2008
+# Created: Mon Feb  4 12:00:21 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -42,8 +42,8 @@ class Ui_MainWindow(object):
         self.gridlayout1.addItem(spacerItem,5,0,1,1)
 
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(6)
+        self.hboxlayout.setMargin(0)
         self.hboxlayout.setObjectName("hboxlayout")
 
         spacerItem1 = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
@@ -58,13 +58,13 @@ class Ui_MainWindow(object):
         self.gridlayout1.addLayout(self.hboxlayout,4,0,1,1)
 
         self.vboxlayout = QtGui.QVBoxLayout()
-        self.vboxlayout.setMargin(15)
         self.vboxlayout.setSpacing(6)
+        self.vboxlayout.setMargin(15)
         self.vboxlayout.setObjectName("vboxlayout")
 
         self.vboxlayout1 = QtGui.QVBoxLayout()
-        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setSpacing(2)
+        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setObjectName("vboxlayout1")
 
         self.label = QtGui.QLabel(self.login)
@@ -90,7 +90,7 @@ class Ui_MainWindow(object):
 
         self.loginStatus = QtGui.QComboBox(self.login)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7),QtGui.QSizePolicy.Policy(0))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.loginStatus.sizePolicy().hasHeightForWidth())
@@ -130,8 +130,8 @@ class Ui_MainWindow(object):
         self.gridlayout1.addWidget(self.line,1,0,1,1)
 
         self.hboxlayout1 = QtGui.QHBoxLayout()
-        self.hboxlayout1.setMargin(0)
         self.hboxlayout1.setSpacing(6)
+        self.hboxlayout1.setMargin(0)
         self.hboxlayout1.setObjectName("hboxlayout1")
 
         spacerItem4 = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
@@ -148,8 +148,8 @@ class Ui_MainWindow(object):
         self.gridlayout1.addLayout(self.hboxlayout1,2,0,1,1)
 
         self.hboxlayout2 = QtGui.QHBoxLayout()
-        self.hboxlayout2.setMargin(0)
         self.hboxlayout2.setSpacing(6)
+        self.hboxlayout2.setMargin(0)
         self.hboxlayout2.setObjectName("hboxlayout2")
 
         spacerItem6 = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
@@ -199,7 +199,7 @@ class Ui_MainWindow(object):
 
         self.selfAvatarWidget = QtGui.QWidget(self.frame)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(0))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.selfAvatarWidget.sizePolicy().hasHeightForWidth())
@@ -211,13 +211,13 @@ class Ui_MainWindow(object):
         self.statusWidget2.setObjectName("statusWidget2")
 
         self.hboxlayout3 = QtGui.QHBoxLayout(self.statusWidget2)
-        self.hboxlayout3.setMargin(0)
         self.hboxlayout3.setSpacing(0)
+        self.hboxlayout3.setMargin(0)
         self.hboxlayout3.setObjectName("hboxlayout3")
 
         self.statusMessage = QtGui.QToolButton(self.statusWidget2)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7),QtGui.QSizePolicy.Policy(0))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.statusMessage.sizePolicy().hasHeightForWidth())
@@ -246,8 +246,8 @@ class Ui_MainWindow(object):
         self.gridlayout4.addWidget(self.selfName,0,1,1,4)
 
         self.hboxlayout4 = QtGui.QHBoxLayout()
-        self.hboxlayout4.setMargin(0)
         self.hboxlayout4.setSpacing(0)
+        self.hboxlayout4.setMargin(0)
         self.hboxlayout4.setObjectName("hboxlayout4")
 
         spacerItem8 = QtGui.QSpacerItem(50,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
@@ -296,8 +296,8 @@ class Ui_MainWindow(object):
         self.gridlayout5.setObjectName("gridlayout5")
 
         self.hboxlayout5 = QtGui.QHBoxLayout()
-        self.hboxlayout5.setMargin(0)
         self.hboxlayout5.setSpacing(6)
+        self.hboxlayout5.setMargin(0)
         self.hboxlayout5.setObjectName("hboxlayout5")
 
         self.rosterSearchLabel = QtGui.QLabel(self.rosterTab)
@@ -377,15 +377,14 @@ class Ui_MainWindow(object):
         self.splash.setObjectName("splash")
 
         self.vboxlayout2 = QtGui.QVBoxLayout(self.splash)
-        self.vboxlayout2.setMargin(9)
         self.vboxlayout2.setSpacing(6)
+        self.vboxlayout2.setMargin(9)
         self.vboxlayout2.setObjectName("vboxlayout2")
 
         spacerItem10 = QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
         self.vboxlayout2.addItem(spacerItem10)
 
         self.splashImage = QtGui.QLabel(self.splash)
-        self.splashImage.setPixmap(QtGui.QPixmap("images/logo.png"))
         self.splashImage.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
         self.splashImage.setObjectName("splashImage")
         self.vboxlayout2.addWidget(self.splashImage)
@@ -396,8 +395,8 @@ class Ui_MainWindow(object):
         self.vboxlayout2.addWidget(self.loginInfo)
 
         self.hboxlayout6 = QtGui.QHBoxLayout()
-        self.hboxlayout6.setMargin(0)
         self.hboxlayout6.setSpacing(6)
+        self.hboxlayout6.setMargin(0)
         self.hboxlayout6.setObjectName("hboxlayout6")
 
         self.splashProgress = QtGui.QProgressBar(self.splash)
@@ -420,7 +419,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0,0,335,24))
+        self.menubar.setGeometry(QtCore.QRect(0,0,335,27))
         self.menubar.setObjectName("menubar")
 
         self.menuPlugins = QtGui.QMenu(self.menubar)
@@ -478,7 +477,11 @@ class Ui_MainWindow(object):
 
         self.actionBrowse_rooms = QtGui.QAction(MainWindow)
         self.actionBrowse_rooms.setObjectName("actionBrowse_rooms")
+
+        self.actionSupport = QtGui.QAction(MainWindow)
+        self.actionSupport.setObjectName("actionSupport")
         self.menuHelp.addAction(self.actionAbout)
+        self.menuHelp.addAction(self.actionSupport)
         self.menuGroupchat.addAction(self.actionJoin_groupchat)
         self.menuGroupchat.addAction(self.actionBrowse_rooms)
         self.menuAkce.addAction(self.menuGroupchat.menuAction())
@@ -561,4 +564,5 @@ class Ui_MainWindow(object):
         self.actionProfiles.setText(QtGui.QApplication.translate("MainWindow", "Profiles", None, QtGui.QApplication.UnicodeUTF8))
         self.actionJoin_groupchat.setText(QtGui.QApplication.translate("MainWindow", "Join groupchat", None, QtGui.QApplication.UnicodeUTF8))
         self.actionBrowse_rooms.setText(QtGui.QApplication.translate("MainWindow", "Browse rooms", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionSupport.setText(QtGui.QApplication.translate("MainWindow", "Support", None, QtGui.QApplication.UnicodeUTF8))
 

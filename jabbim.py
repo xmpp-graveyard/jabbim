@@ -1501,6 +1501,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.statusLine, QtCore.SIGNAL("returnPressed ()"),self.statusLineFinished)
 		
 		QtCore.QObject.connect(self.ui.actionAbout, QtCore.SIGNAL("triggered ( bool )"),self.about)
+		QtCore.QObject.connect(self.ui.actionSupport, QtCore.SIGNAL("triggered ( bool )"),self.support)
 		QtCore.QObject.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
 		QtCore.QObject.connect(self.ui.actionPrivacy_list_editor, QtCore.SIGNAL("triggered ( bool )"),self.privacyListEditor)
 		QtCore.QObject.connect(self.ui.actionAdd_Contact, QtCore.SIGNAL("triggered ( bool )"),self.addContactMainWindow)
@@ -2189,6 +2190,11 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		about=aboutDialog(self)
 		about.exec_()
+	
+	def support(self, bool):
+		print 'support pressed'
+		if self.chat.addGroupChatTab("jabbim@conf.netlab.cz",self.client.jid.user):
+			self.client.joinGC("jabbim@conf.netlab.cz",self.client.jid.user)
 	
 	def sendCustomStatus(self, jid, show = None):
 		cs = customStatusWindow(jid, show)
