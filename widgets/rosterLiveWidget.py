@@ -2334,18 +2334,25 @@ class rosterWidget(QtGui.QWidget):
 		#action.setObjectName("vcard")
 		# filetransfer
 		if oneres:
-			action=contactMenu.addAction(self.tr("Send file"))
-			action.setData(QtCore.QVariant(jid))
-			action.setObjectName("send_file")
-			action.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
+			resource=contact.resources.keys()
+			if len(resource)!=0:
+				print contact.resources.keys()
+				print self.main.client.roster['users'][jid].resources[resource[0]].features
+				if self.main.client.roster['users'][jid].resources[resource[0]].hasFeature('http://jabber.org/protocol/si/profile/file-transfer'):
+					action=contactMenu.addAction(self.tr("Send file"))
+					action.setData(QtCore.QVariant(jid))
+					action.setObjectName("send_file")
+					action.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
 		else:
 			submenu = contactMenu.addMenu(self.tr("Send file"))
 			for resource in contact.resources.keys():
 				if resource != None:
-					action = submenu.addAction(resource)
-					action.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
-					action.setData(QtCore.QVariant("%s/%s" % (jid, resource)))
-					action.setObjectName("send_file")
+					if len(resource)!=0:
+						if self.main.client.roster['users'][jid].resources[resource].hasFeature('http://jabber.org/protocol/si/profile/file-transfer'):
+							action = submenu.addAction(resource)
+							action.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
+							action.setData(QtCore.QVariant("%s/%s" % (jid, resource)))
+							action.setObjectName("send_file")
 
 		for key,value in self.main.plugins.iteritems():
 			if value['module']:

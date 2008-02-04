@@ -152,13 +152,14 @@ class chatWidget(abstractChatWidget):
 			if value['module']:
 				self.main.runPluginCommand(value['module'].buildChatWidget,[unicode(jidT.JID(self.jid).userhost()),self.flowLayout,self])
 		
-		# sendFile buttons
-		self.ui.sendFile=QtGui.QToolButton()
-		self.ui.sendFile.setIconSize(QtCore.QSize(16,16))
-		self.ui.sendFile.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
-		self.ui.sendFile.setToolTip(self.tr("Send file"))
-		self.flowLayout.addWidget(self.ui.sendFile)
-		QtCore.QObject.connect(self.ui.sendFile, QtCore.SIGNAL("clicked ()"),self.sendFiles)
+		if main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/si/profile/file-transfer'):
+			# sendFile buttons
+			self.ui.sendFile=QtGui.QToolButton()
+			self.ui.sendFile.setIconSize(QtCore.QSize(16,16))
+			self.ui.sendFile.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
+			self.ui.sendFile.setToolTip(self.tr("Send file"))
+			self.flowLayout.addWidget(self.ui.sendFile)
+			QtCore.QObject.connect(self.ui.sendFile, QtCore.SIGNAL("clicked ()"),self.sendFiles)
 
 		self.ui.pluginWidget.setLayout(self.flowLayout)
 

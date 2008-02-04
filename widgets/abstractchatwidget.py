@@ -402,11 +402,11 @@ class abstractChatWidget(QtGui.QWidget):
 			self.ui.backgroundButton.hide()
 		else:
 			self.ui.fontSize.hide()
-			db=QtGui.QFontDatabase()
-			for size in db.standardSizes():
-				self.ui.fontSize.addItem(str(size))
-			self.ui.fontSize.setCurrentIndex(self.ui.fontSize.findText(str(QtGui.QApplication.font().pointSize())))
-			self.ui.line.fontSize=float(str(QtGui.QApplication.font().pointSize()))
+			#db=QtGui.QFontDatabase()
+			#for size in db.standardSizes():
+				#self.ui.fontSize.addItem(str(size))
+			#self.ui.fontSize.setCurrentIndex(self.ui.fontSize.findText(str(QtGui.QApplication.font().pointSize())))
+			#self.ui.line.fontSize=float(str(QtGui.QApplication.font().pointSize()))
 
 			self.defaultFormat=self.ui.line.currentCharFormat()
 			self.defaultColor=self.ui.line.textColor()
