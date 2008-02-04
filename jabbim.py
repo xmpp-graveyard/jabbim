@@ -169,6 +169,12 @@ class clientClass(pyxl.client.Client):
 							self.main.events.nextFTUploadEvent(sid,queueId)
 						else:
 							self.main.events.filetransferWidget[queueId].widget.complete=True
+							tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[queueId].jid)
+							if tab:
+								if tab.chat.filetransfer.has_key(queueId):
+									tab.chat.ui.ftwidget.layout().removeWidget(tab.chat.filetransfer[queueId])
+									tab.chat.filetransfer[queueId].setParent(None)
+									del tab.chat.filetransfer[queueId]
 					else:
 						log.msg(unicode(self.main.events.filetransferQueue))
 						#log.msg(unicode(self.main.events.filetransfer[sid].file))
