@@ -284,6 +284,7 @@ class Client(derived):
 		self.jid = jid.JID(jd)
 		
 	def disconnect(self):
+		self.xping.stop()
 		if self.connection:
 			self.connection.disconnect()
 		if self.factory:
