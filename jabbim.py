@@ -160,8 +160,8 @@ class clientClass(pyxl.client.Client):
 	
 	
 			for sid in toDel:
+				queueId=self.main.events.filetransfer[sid]['queueId'] # filetransfer queue ID
 				if widget.download==False:
-					queueId=self.main.events.filetransfer[sid]['queueId'] # filetransfer queue ID
 					if self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']]!=None:
 						# delete sent file from queue and start uploading next file in queue
 						del self.main.events.filetransferQueue[queueId][self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']].file]
