@@ -44,7 +44,7 @@ class FTAskWidget(QtGui.QWidget):
 		self.gridlayout.setSpacing(0)
 		self.gridlayout.setObjectName("gridlayout")
 		
-		self.label=QtGui.QLabel(self.tr("User is sending you file")+" <b>"+file+"</b> ."+self.tr("Do you want to receive this file?"),self)
+		self.label=QtGui.QLabel(" <b>"+file+"</b> "+self.tr("Receive this file?"),self)
 		self.label.setWordWrap(True)
 		self.preview=QtGui.QLabel(self)
 		self.preview.hide()
