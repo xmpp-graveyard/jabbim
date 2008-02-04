@@ -261,25 +261,30 @@ class normalLineEditWidget(QtGui.QTextEdit):
 
 	def focusInEvent(self,event):
 		r=QtGui.QTextEdit.focusInEvent(self,event)
+		self.blockSignals(True)
 		if self.parent.xhtml:
 			self.reformat(self.currentCharFormat())
 			#QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
+		self.blockSignals(False)
 		return r
 
 	def formatChanged(self,format):
+		self.blockSignals(True)
 		#QtCore.QObject.disconnect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
 		if len(unicode(self.toPlainText()))==0:
 			print "reformat"
 			self.reformat(format)
 			#QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
+			self.blockSignals(False)
 			return
 		print "setFormat"
 		self.setFormat(format)
+		self.blockSignals(False)
 		#QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
 
 	def reformat(self,fmt):
 		#QtCore.QObject.disconnect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
-		self.blockSignals(True)
+		
 		self.parent.underline(self.underline)
 		self.parent.bold(self.bold)
 		self.parent.italic(self.italic)
@@ -293,7 +298,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 				self.parent.background(unicode(self.backgroundBrush.color().name()))
 			else:
 				self.parent.background(unicode('no'))
-		self.blockSignals(False)
+		
 		#QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
 
 	def paused(self):
