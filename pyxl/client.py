@@ -926,7 +926,7 @@ class Client(derived):
 				return
 		if features == 'asked':
 			features = []
-		elif len(features) == 0:
+		elif features == None or len(features) == 0:
 			self.getFeatures(frm, None)
 
 		if self.groupchats.has_key(fromjid):

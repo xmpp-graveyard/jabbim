@@ -3001,17 +3001,17 @@ class mainWindow(QtGui.QMainWindow):
 		
 	def getImages(self, xhtml):
 		print xhtml
-		dom = parseString('<p>'+xhtml+'</p>')
+		dom = parseString(unicode('<p>'+xhtml+'</p>'))
 		#seznam = {}
 		for el in dom.getElementsByTagName('img'):
 			src = el.getAttribute('src')
 			if src != None and src.startswith('http'):
 				novy = self.realHomeDir+'/temp/'+sha1(src).hexdigest()
 				el.setAttribute('src', novy)
-				fp = open(novy,'w')
+				fp = open(novy,'wb')
 				d = downloadPage(str(src), fp)
 				d.addCallback(self._imageReceived, fp)
-		print unicode(dom.toxml(), 'utf-8')
+
 		return unicode(dom.toxml(), 'utf-8')
 	
 	def _imageReceived(self, fp, neco):
