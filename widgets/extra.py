@@ -74,8 +74,9 @@ class extraDialog(QtGui.QDialog):
 		if self.main.client.ft.has_key(sid):
 			if self.main.client.ft[sid].method==None:
 				#self.main.events.addFTDownloadEvent(unicode(self.main.client.ft[sid].tojid),unicode(self.main.client.ft[sid].tojid),"",sid)
-				self.main.events.filetransfer[sid]=self.progress
-				self.main.events.filetransfer[sid].typ='extra'
+				self.main.events.filetransferWidget[sid]=self.progress
+				self.main.events.filetransferWidget[sid].typ='extra'
+				self.main.events.filetransfer[sid]={'queueId':sid}
 				filename = self.main.realHomeDir+'/'+self.main.client.ft[sid].fileprops['name']
 				if 'http://jabber.org/protocol/bytestreams' in self.main.client.ft[sid].methods:
 					self.main.client.ft[sid].method = 'http://jabber.org/protocol/bytestreams'

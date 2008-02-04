@@ -130,7 +130,7 @@ class clientClass(pyxl.client.Client):
 
 	def on_ftTransfered(self, sid, bytes): # pocet prenesenych bajtu pro prenos se SID
 		toDel=[] # finished transfers
-		widget=self.main.events.filetransfer[sid] # event widget
+		widget=self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']] # event widget
 		mainWindow=self.main
 		if widget.typ=='normal':
 			if self.ft.has_key(sid):
@@ -145,8 +145,8 @@ class clientClass(pyxl.client.Client):
 				if widget.widget.complete==None:
 					# User wants to close transfer
 					toDel.append(sid)
-					widget.widget.complete=True
-					widget.widget.closeClicked()
+					#widget.widget.complete=True
+					#widget.widget.closeClicked()
 				else:
 					# transport finished
 					toDel.append(sid)
@@ -156,20 +156,24 @@ class clientClass(pyxl.client.Client):
 					else:
 						widget.widget.stats.setText(mainWindow.tr("Error")+" "+unicode(self.main.ftError[sid]))
 						self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" can't be sent/downloadeded "), QtGui.QSystemTrayIcon.Critical, 4000)
-					widget.widget.complete=True
+					#widget.widget.complete=True
 	
 	
 			for sid in toDel:
-				if self.main.events.filetransfer[sid].download==False:
-					queueId=self.main.events.filetransfer[sid].queueId # filetransfer queue ID
-					if queueId!=None:
+				if widget.download==False:
+					queueId=self.main.events.filetransfer[sid]['queueId'] # filetransfer queue ID
+					if self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']]!=None:
 						# delete sent file from queue and start uploading next file in queue
-						del self.main.events.filetransferQueue[queueId][self.main.events.filetransfer[sid].file]
+						del self.main.events.filetransferQueue[queueId][self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']].file]
 						if len(self.main.events.filetransferQueue[queueId])!=0:
 							self.main.events.nextFTUploadEvent(sid,queueId)
+						else:
+							self.main.events.filetransferWidget[queueId].widget.complete=True
 					else:
 						log.msg(unicode(self.main.events.filetransferQueue))
-						log.msg(unicode(self.main.events.filetransfer[sid].file))
+						#log.msg(unicode(self.main.events.filetransfer[sid].file))
+				else:
+					self.main.events.filetransferWidget[queueId].widget.complete=True
 				# delete this filetransfer
 				del self.main.events.filetransfer[sid]
 		else:
@@ -1226,7 +1230,7 @@ class clientClass(pyxl.client.Client):
 				filename = self.main.realHomeDir+'/'+self.ft[sid].fileprops['name']
 			if self.ft[sid].method!=None:
 				return
-			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),unicode(self.ft[sid].tojid),"",sid)
+			self.main.events.addFTDownloadEvent(basename(unicode(self.ft[sid].file)),unicode(self.ft[sid].tojid),"",sid)
 			
 			if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
 				self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
@@ -1251,7 +1255,7 @@ class clientClass(pyxl.client.Client):
 		mainWindow=self.main
 		filename = QtGui.QFileDialog.getSaveFileName(self.main, mainWindow.tr("Save File"),self.ft[sid].fileprops['name'],mainWindow.tr("*.*"))
 		log.msg(unicode(filename))
-		self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),unicode(self.ft[sid].tojid),"",sid)
+		self.main.events.addFTDownloadEvent(basename(unicode(self.ft[sid].file)),unicode(self.ft[sid].tojid),"",sid)
 		log.msg('receiving file: ' + sid)
 		if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
 			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
