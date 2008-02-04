@@ -517,6 +517,7 @@ class events:
 		item.widget=BooleanWidget(header,text,item,self.main,trueCall,trueDict,falseCall,falseDict,self.main.ui.eventsListWidget,height)
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 		self.addEvent(unicode(name),unicode(typ),icon,item.widget)
+		return item.widget
 
 	def addAddUserEvent(self,jid,status):
 		"""

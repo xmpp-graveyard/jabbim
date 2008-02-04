@@ -190,6 +190,19 @@ class clientClass(pyxl.client.Client):
 						#log.msg(unicode(self.main.events.filetransfer[sid].file))
 				else:
 					self.main.events.filetransferWidget[queueId].widget.complete=True
+					tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[queueId].jid)
+					if tab:
+						file=self.main.events.filetransferWidget[queueId].file
+						if self.main.ftError[sid]==None:
+							tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('has been downloaded')))
+						else:
+							tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('can\'t be downloaded:')+" "+unicode(self.main.ftError[sid])))
+						if tab.chat.filetransfer.has_key(queueId):
+							tab.chat.ui.ftwidget.layout().removeWidget(tab.chat.filetransfer[queueId])
+							tab.chat.filetransfer[queueId].setParent(None)
+							del tab.chat.filetransfer[queueId]
+
+
 				# delete this filetransfer
 				del self.main.events.filetransfer[sid]
 		else:
@@ -1263,7 +1276,11 @@ class clientClass(pyxl.client.Client):
 
 		else:
 			if unicode(self.ft[sid].tojid).find("rpc@jabbim.cz")==-1:
-				self.main.events.addBooleanEvent(self.ftStarted,[sid,id],None,[],self.main.tr("File transfer"),text= unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),height=40,name=unicode(self.ft[sid].tojid),typ="ftTransfer",icon=None)
+				eventWidget=self.main.events.addBooleanEvent(self.ftStarted,[sid,id],None,[],self.main.tr("File transfer"),text= unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),height=40,name=unicode(self.ft[sid].tojid),typ="ftTransfer",icon=None)
+				tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid))
+				if tab:
+					w=widgets.chatwidget.FTAskWidget(self.ft[sid].fileprops['name'],eventWidget,tab.chat,tab.chat.ui.ftwidget)
+					tab.chat.ui.ftwidget.layout().addWidget(w)
 
 	def ftStarted(self,sid,id):
 		#q = QtGui.QMessageBox.question(self.main,self.main.tr("File transfer"), unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
