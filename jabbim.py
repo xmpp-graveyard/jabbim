@@ -2310,9 +2310,11 @@ class mainWindow(QtGui.QMainWindow):
 		@type plugin: unicode
 		@param plugin: plugins name
 		"""
+
 		dir = self.plugins[plugin]['dir']
 		path = utils.path('%s/%s.py' % (dir, plugin))
 		log.msg("loading "+unicode(plugin)+" plugin...")
+
 		try: 
 			f=open((path))
 		except:
@@ -2322,6 +2324,7 @@ class mainWindow(QtGui.QMainWindow):
 			if not self.plugins[plugin]['module']:
 				plug = load_source(plugin, path, f).Plugin(self, self.homeDir, dir) # load plugin module
 				self.plugins[plugin]['module'] = plug 
+				return
 				self.runPluginCommand(self.plugins[plugin]['module'].buildRosterMenu,[]) # build menu for plugin
 			else:
 				print "plugin already loaded"
@@ -2342,7 +2345,16 @@ class mainWindow(QtGui.QMainWindow):
 		if self.plugins[plugin]['module']:
 			self.ui.menuPlugins.clear() # clear plugins menu
 			self.runPluginCommand(self.plugins[plugin]['module'].remove,[]) # inform plugin that it will be removed
-			self.plugins[plugin]['module'] = None
+			
+			l=gc.get_referents(self.plugins[plugin]['module'])
+			for x in range(len(l)):
+				del l[0]
+			l=gc.get_referrers()
+			for x in range(len(self.plugins[plugin]['module'])):
+				del l[0]
+			del self.plugins[plugin]['module']
+			self.plugins[plugin]['module']=None
+			#del self.plugins[plugin]
 			del gc.garbage[:] # delete plugin from python
 			# rebuild plugins menu
 			for plug in self.plugins.itervalues():
@@ -3171,6 +3183,8 @@ class mainWindow(QtGui.QMainWindow):
 		#MainWindow.plugins={}
 		for i in MainWindow.plugins.keys():
 			MainWindow.unloadPlugin(i)
+		#del self.plugins
+		#self.plugins={}
 		if self.client:
 			for jid in self.client.groupchats.keys():
 				for i in range(self.chat.ui.chatTab.count()):
