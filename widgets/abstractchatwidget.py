@@ -267,7 +267,6 @@ class normalLineEditWidget(QtGui.QTextEdit):
 
 	def formatChanged(self,format):
 		if len(unicode(self.toPlainText()))==0:
-			if not self.r:
 				print "reformat"
 				self.reformat(format)
 			return
@@ -275,7 +274,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.setFormat(format)
 
 	def reformat(self,fmt):
-		self.r=True
+		QtCore.QObject.disconnect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
 		self.parent.underline(self.underline)
 		self.parent.bold(self.bold)
 		self.parent.italic(self.italic)
@@ -289,7 +288,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 				self.parent.background(unicode(self.backgroundBrush.color().name()))
 			else:
 				self.parent.background(unicode('no'))
-		self.r=False
+		QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
 	def paused(self):
 		"""
 		Detects if user stops typing and sends 'paused' message if user stops.
