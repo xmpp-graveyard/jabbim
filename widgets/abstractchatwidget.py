@@ -254,10 +254,10 @@ class normalLineEditWidget(QtGui.QTextEdit):
 				painter.end()
 				self.parent.ui.backgroundButton.setIcon(QtGui.QIcon(colorIcon))
 
-			b=float(f.pointSize())
-			if self.fontSize!=b:
-				self.fontSize=b
-				self.parent.ui.fontSize.setCurrentIndex(self.parent.ui.fontSize.findText(str(int(self.fontSize))))
+			#b=float(f.pointSize())
+			#if self.fontSize!=b:
+				#self.fontSize=b
+				#self.parent.ui.fontSize.setCurrentIndex(self.parent.ui.fontSize.findText(str(int(self.fontSize))))
 
 	def focusInEvent(self,event):
 		r=QtGui.QTextEdit.focusInEvent(self,event)
@@ -279,10 +279,9 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.parent.underline(self.underline)
 		self.parent.bold(self.bold)
 		self.parent.italic(self.italic)
-		if self.fontSize:
-			#self.setFontPointSize(self.fontSize)
-			self.parent.fontSize(self.fontSize)
-			self.parent.ui.fontSize.setCurrentIndex(self.parent.ui.fontSize.findText(str(int(self.fontSize))))
+		#if self.fontSize:
+			#self.parent.fontSize(self.fontSize)
+			#self.parent.ui.fontSize.setCurrentIndex(self.parent.ui.fontSize.findText(str(int(self.fontSize))))
 		if self.color:
 			self.parent.color(unicode(self.color.name()))
 		if self.backgroundBrush:
@@ -383,7 +382,7 @@ class abstractChatWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.boldButton, QtCore.SIGNAL("toggled (bool)"),self.bold)
 		QtCore.QObject.connect(self.ui.italicButton, QtCore.SIGNAL("toggled (bool)"),self.italic)
 		QtCore.QObject.connect(self.ui.underlineButton, QtCore.SIGNAL("toggled (bool)"),self.underline)
-		QtCore.QObject.connect(self.ui.fontSize,QtCore.SIGNAL("activated(const QString &)"),self.fontSize)
+		#QtCore.QObject.connect(self.ui.fontSize,QtCore.SIGNAL("activated(const QString &)"),self.fontSize)
 		
 		self.ui.textEdit.setAcceptRichText(False)
 		# save init part from self.main.skin to the textEdit
@@ -402,6 +401,7 @@ class abstractChatWidget(QtGui.QWidget):
 			self.ui.fontSize.hide()
 			self.ui.backgroundButton.hide()
 		else:
+			self.ui.fontSize.hide()
 			db=QtGui.QFontDatabase()
 			for size in db.standardSizes():
 				self.ui.fontSize.addItem(str(size))
