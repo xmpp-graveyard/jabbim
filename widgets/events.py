@@ -573,17 +573,17 @@ class events:
 		j=self.main.getJid(jid)
 		feature=False
 		if self.main.client.roster['users'].has_key(j.userhost()):
-			print self.main.client.roster['users'][j.userhost()].resources,j.resource
+			#print self.main.client.roster['users'][j.userhost()].resources,j.resource
 			if self.main.client.roster['users'][j.userhost()].resources.has_key(j.resource):
-				print 'blabla',self.main.client.roster['users'][j.userhost()].resources[j.resource].features
+				#print 'blabla',self.main.client.roster['users'][j.userhost()].resources[j.resource].features
 				feature=self.main.client.roster['users'][j.userhost()].resources[j.resource].hasFeature('http://kopete.kde.org/protocol/file-preview')
 		print 'feature',feature
-		#if typ!=False and feature:
-			#print 'generating file preview'
-			#d=threads.deferToThread(self.makeFTPreview,files[0])
-			#d.addCallback(self._addFTUploadEvent,jid,files,descriptions,'image/png')
-		#else:
-			#self._addFTUploadEvent(None,jid,files,descriptions,None)
+		if typ!=False and feature:
+			print 'generating file preview'
+			d=threads.deferToThread(self.makeFTPreview,files[0])
+			d.addCallback(self._addFTUploadEvent,jid,files,descriptions,'image/png')
+		else:
+			self._addFTUploadEvent(None,jid,files,descriptions,None)
 
 	def _addFTUploadEvent(self,preview,jid,files,descriptions,previewType=None):
 		#print jid,previewType,preview
