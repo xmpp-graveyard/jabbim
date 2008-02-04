@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/vcardview.ui'
+# Form implementation generated from reading ui file 'vcardview.ui'
 #
-# Created: Tue Oct 30 19:58:22 2007
-#      by: PyQt4 UI code generator 4.3
+# Created: Mon Feb  4 12:10:00 2008
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -35,6 +35,7 @@ class Ui_vcardView(object):
 
         self.vcard = QtGui.QLabel(vcardView)
         self.vcard.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.vcard.setOpenExternalLinks(True)
         self.vcard.setObjectName("vcard")
         self.gridlayout.addWidget(self.vcard,0,0,2,2)
 

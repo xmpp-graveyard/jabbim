@@ -17,6 +17,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		self.ui=Ui_serviceDiscovery()
 		self.ui.setupUi(self)
 		self.main=main
+		self.ui.reload.setEnabled(False)
 		
 		#for category in self.getCategories():
 		self.ui.tree.header().hide()
@@ -48,6 +49,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 			#elif self.main.client.disco[key][None].has_key("err"):
 				#print key,"error"
 	def discoReload(self):
+		self.ui.reload.setEnabled(False)
 		self.server = unicode(self.ui.server.text())
 		self.ui.tree.clear()
 		self.main.client.getDiscoItems(self.server, callback = self.load)
@@ -180,6 +182,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		self.ui.tree.resizeColumnToContents(0)
 
 	def load(self,data=None):
+		self.ui.reload.setEnabled(True)
 		categories={}
 		self.services=QtGui.QTreeWidgetItem(self.ui.tree)
 		self.services.setText(0,self.tr("Services"))
