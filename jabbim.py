@@ -1282,10 +1282,11 @@ class clientClass(pyxl.client.Client):
 		else:
 			if unicode(self.ft[sid].tojid).find("rpc@jabbim.cz")==-1:
 				eventWidget=self.main.events.addBooleanEvent(self.ftStarted,[sid,id],None,[],self.main.tr("File transfer"),text= unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),height=40,name=unicode(self.ft[sid].tojid),typ="ftTransfer",icon=None)
-				
 				tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid))
 				if tab:
 					w=widgets.chatwidget.FTAskWidget(self.ft[sid].fileprops['name'],eventWidget,tab.chat,tab.chat.ui.ftwidget)
+					QtCore.QObject.connect(eventWidget.submitButton,QtCore.SIGNAL("clicked(bool)"),w.accept)
+					QtCore.QObject.connect(eventWidget.closeButton,QtCore.SIGNAL("clicked(bool)"),w.reject)
 					if self.ft[sid].fileprops.has_key('preview'):
 						image=base64.decodestring(str(unicode(self.ft[sid].fileprops['preview'])))
 						pixmap=QtGui.QPixmap()

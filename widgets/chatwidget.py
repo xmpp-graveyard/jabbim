@@ -62,13 +62,13 @@ class FTAskWidget(QtGui.QWidget):
 		self.preview.show()
 		self.preview.setPixmap(pixmap)
 
-	def accept(self):
+	def accept(self,b=None):
 		self.event.submitClicked()
 		self.chatwidget.ui.ftwidget.layout().removeWidget(self)
 		self.setParent(None)
 		self.deleteLater()
 
-	def reject(self):
+	def reject(self,b=None):
 		self.event.closeClicked()
 		self.chatwidget.ui.ftwidget.layout().removeWidget(self)
 		self.setParent(None)
