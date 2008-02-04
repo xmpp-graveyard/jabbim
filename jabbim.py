@@ -2987,7 +2987,8 @@ class mainWindow(QtGui.QMainWindow):
 		self._disconnect()
 		
 	def getImages(self, xhtml):
-		dom = parseString(xhtml)
+		print xhtml
+		dom = parseString('<p>'+xhtml+'</p>')
 		#seznam = {}
 		for el in dom.getElementsByTagName('img'):
 			src = el.getAttribute('src')
@@ -2997,9 +2998,10 @@ class mainWindow(QtGui.QMainWindow):
 				fp = open(novy,'w')
 				d = downloadPage(str(src), fp)
 				d.addCallback(self._imageReceived, fp)
+		print unicode(dom.toxml(), 'utf-8')
 		return unicode(dom.toxml(), 'utf-8')
 	
-	def _imageReceived(self, fp):
+	def _imageReceived(self, fp, neco):
 		print 'image downloaded'
 		fp.close()
 	
