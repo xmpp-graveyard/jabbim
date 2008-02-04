@@ -858,10 +858,13 @@ class Client(derived):
 				caps_node = child.getAttribute('node')
 
 				ext = child.getAttribute('ext')
-				if self.caps_cache.has_key(ext):
+				print frm.userhost(), ext
+				if self.caps_cache.has_key(ext) and ext != None:
 					features = self.caps_cache[ext]
+					print features
 				else:	
 					if typ !='unavailable':
+						features = 'asked'
 						self.getFeatures(frm, ext)
 			if child.name == 'x' and child.defaultUri == 'http://jabber.org/protocol/muc#user':
 				for item in child.elements():
@@ -920,6 +923,10 @@ class Client(derived):
 				show = 'offline'
 			else:
 				return
+		if features == 'asked':
+			features = []
+		elif len(features) == 0:
+			self.getFeatures(frm, None)
 
 		if self.groupchats.has_key(fromjid):
 			if show=="offline":
@@ -994,7 +1001,8 @@ class Client(derived):
 		for child in  query.elements():
 			if child.name == 'feature':
 				features.append(child['var'])
-		self.cacheCaps(ext, features)
+		if ext != None:
+			self.cacheCaps(ext, features)
 		frm = jid.JID(el['from'])
 		resource = frm.resource
 		if self.roster['users'].has_key(frm.userhost()):
