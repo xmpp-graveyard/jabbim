@@ -379,9 +379,9 @@ class abstractChatWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
-		QtCore.QObject.connect(self.ui.boldButton, QtCore.SIGNAL("toggled (bool)"),self.bold)
-		QtCore.QObject.connect(self.ui.italicButton, QtCore.SIGNAL("toggled (bool)"),self.italic)
-		QtCore.QObject.connect(self.ui.underlineButton, QtCore.SIGNAL("toggled (bool)"),self.underline)
+		QtCore.QObject.connect(self.ui.boldButton, QtCore.SIGNAL("clicked ( bool )"),self.bold)
+		QtCore.QObject.connect(self.ui.italicButton, QtCore.SIGNAL("clicked (bool)"),self.italic)
+		QtCore.QObject.connect(self.ui.underlineButton, QtCore.SIGNAL("clicked (bool)"),self.underline)
 		#QtCore.QObject.connect(self.ui.fontSize,QtCore.SIGNAL("activated(const QString &)"),self.fontSize)
 		
 		self.ui.textEdit.setAcceptRichText(False)
