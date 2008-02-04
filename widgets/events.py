@@ -24,6 +24,7 @@ from os.path import basename
 from twisted.python import log
 from os.path import basename
 import vcardeditor
+import chatwidget
 
 class abstractWidget(QtGui.QWidget):
 	def __init__(self,header,text,item,main,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40):
@@ -382,14 +383,15 @@ class FTWidget(QtGui.QWidget):
 		self.setMinimumHeight(60)
 
 	def closeClicked(self):
-		if not self.complete:
-			try:
-				self.main.client.ft[self.sid].protocol.unregisterProducer()
-				self.complete=None
-			except:
+		if self.item:
+			if not self.complete:
+				try:
+					self.main.client.ft[self.sid].protocol.unregisterProducer()
+					self.complete=None
+				except:
+					self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
+			elif self.complete==True:
 				self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
-		elif self.complete==True:
-			self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
 
 class fileClass:
 	def __init__(self,name,description):
@@ -569,11 +571,17 @@ class events:
 			jid, res = jid.split("/", 1)
 		if res==None:
 			sid=self.main.client.sendFile(jid, basename(file), file,descriptions[file])
+			tab,index=self.main.chat.findTab(jid)
 		else:
 			sid=self.main.client.sendFile(jid+'/'+res, basename(file), file,descriptions[file])
+			tab,index=self.main.chat.findTab(jid+'/'+res)
+		
 		mainWindow=self.main
 		mainWindow.tray.showMessage(mainWindow.tr("Sending file ")+basename(file)+mainWindow.tr(" to ")+unicode(jid), mainWindow.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
-
+		
+		if tab:
+			tab.chat.filetransfer[sid]=chatwidget.FTWidget(text,None,self.main,sid,tab.chat.ui.ftwidget)
+			tab.chat.ui.ftwidget.layout().addWidget(tab.chat.filetransfer[sid])
 		self.filetransferQueue[sid]=filesQueue
 		#self.main.filetransferDescriptions[sid]=descriptions
 		self.filetransferWidget[sid]=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
@@ -588,6 +596,8 @@ class events:
 		self.filetransferWidget[sid].typ='normal'
 		self.filetransferWidget[sid].widget=FTWidget(text,self.filetransferWidget[sid],self.main,sid,self.main.ui.eventsListWidget)
 		self.filetransferWidget[sid].widget.setMinimumHeight(height)
+		if tab:
+			QtCore.QObject.connect(self.filetransferWidget[sid].widget.progressBar,QtCore.SIGNAL("valueChanged(int)"),tab.chat.filetransfer[sid].progressBar.setValue)
 		self.main.ui.eventsListWidget.setItemWidget(self.filetransferWidget[sid],self.filetransferWidget[sid].widget)
 		#self.filetransfer[sid]=self.filetransferWidget[sid]
 		self.filetransfer[sid]={'queueId':sid}
@@ -634,7 +644,14 @@ class events:
 		file=unicode(file)
 		sid2=self.main.client.sendFile(jid, basename(file), file, description)
 		mainWindow.tray.showMessage(mainWindow.tr("Sending file ")+basename(file)+mainWindow.tr(" to ")+unicode(jid), mainWindow.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
-		#item=self.filetransfer[sid]#QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
+
+
+		tab,index=self.main.chat.findTab(jid)
+		if tab:
+			if tab.chat.filetransfer.has_key(queueId):
+				tab.chat.filetransfer[queueId].reinit(text,None,self.main,sid2,self.main.ui.eventsListWidget,"("+str(self.filetransferWidget[queueId].sent)+"/"+str(self.filetransferWidget[queueId].all)+")")#=FTWidget(text,item,self.main,sid2,self.main.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")
+				tab.chat.filetransfer[queueId].setMinimumHeight(height)
+
 		self.filetransferWidget[queueId].setSizeHint(QtCore.QSize(100,height))
 		self.filetransferWidget[queueId].file=file
 		self.filetransferWidget[queueId].jid=jid

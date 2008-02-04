@@ -32,6 +32,88 @@ import time
 from include import utils
 from abstractchatwidget import abstractChatWidget,abstractTextView
 
+class FTWidget(QtGui.QWidget):
+	def __init__(self,file,item,main,sid,parent=None,stats="",download=False):
+		apply(QtGui.QWidget.__init__,(self,parent))
+		self.setObjectName("FTWidget")
+		self.item=item
+		self.main=main
+		self.complete=False
+		self.sid=sid
+		self.gridlayout = QtGui.QGridLayout(self)
+		self.gridlayout.setMargin(0)
+		self.gridlayout.setSpacing(0)
+		self.gridlayout.setObjectName("gridlayout")
+	
+		self.gridlayout1 = QtGui.QGridLayout()
+		self.gridlayout1.setMargin(0)
+		self.gridlayout1.setSpacing(6)
+		self.gridlayout1.setObjectName("gridlayout1")
+
+		self.label_2 = QtGui.QLabel(file,self)
+		self.label_2.setObjectName("label_2")
+		self.label_2.setTextFormat(QtCore.Qt.RichText)
+		self.label_2.setWordWrap(True)
+
+
+		spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+		#self.hboxlayout.addStretch()
+		
+		#self.closeButton = QtGui.QPushButton(self)
+		#self.closeButton.setMaximumSize(16,16)
+		#self.closeButton.setObjectName("closeButton")
+		#self.closeButton.setFlat(True)
+		#self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
+		#self.hboxlayout.addWidget(self.closeButton)
+
+		#QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
+
+		#self.gridlayout1.addLayout(self.hboxlayout,0,0,1,1)
+	
+		self.stats = QtGui.QLabel(stats,self)
+
+		self.progressBar = QtGui.QProgressBar(self)
+	
+		sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7),QtGui.QSizePolicy.Policy(1))
+		sizePolicy.setHorizontalStretch(0)
+		sizePolicy.setVerticalStretch(0)
+		sizePolicy.setHeightForWidth(self.progressBar.sizePolicy().hasHeightForWidth())
+		self.progressBar.setSizePolicy(sizePolicy)
+		self.progressBar.setProperty("value",QtCore.QVariant(0))
+		self.progressBar.setOrientation(QtCore.Qt.Horizontal)
+		self.progressBar.setObjectName("progressBar")
+		self.gridlayout1.addWidget(self.stats,1,0,1,2)
+		self.gridlayout1.addWidget(self.progressBar,2,0,1,2)
+		if not download:
+			self.gridlayout1.addWidget(self.label_2,3,0,1,2)
+		self.gridlayout.addLayout(self.gridlayout1,0,0,1,1)
+		self.gridlayout.setMargin(1)
+		self.gridlayout.setSpacing(0)
+		self.gridlayout1.setMargin(1)
+		self.gridlayout1.setSpacing(0)
+		self.setMinimumHeight(60)
+
+	def reinit(self,file,item,main,sid,parent=None,stats=""):
+		self.complete=False
+		self.sid=sid
+		self.stats.setText(stats)
+		self.item=item
+		self.progressBar.setProperty("value",QtCore.QVariant(0))
+		self.label_2.setText(file)
+
+		self.setMinimumHeight(60)
+
+	def closeClicked(self):
+		if self.item:
+			if not self.complete:
+				try:
+					self.main.client.ft[self.sid].protocol.unregisterProducer()
+					self.complete=None
+				except:
+					self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
+			elif self.complete==True:
+				self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
+
 class flowLayout(QtGui.QLayout):
 	"""
 	Flow layout from Qt4 examples. Used for plugins buttons.
@@ -152,7 +234,8 @@ class chatWidget(abstractChatWidget):
 			if value['module']:
 				self.main.runPluginCommand(value['module'].buildChatWidget,[unicode(jidT.JID(self.jid).userhost()),self.flowLayout,self])
 		
-		if main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/si/profile/file-transfer'):
+		#if main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/si/profile/file-transfer'):
+		if 1:
 			# sendFile buttons
 			self.ui.sendFile=QtGui.QToolButton()
 			self.ui.sendFile.setIconSize(QtCore.QSize(16,16))
@@ -162,6 +245,8 @@ class chatWidget(abstractChatWidget):
 			QtCore.QObject.connect(self.ui.sendFile, QtCore.SIGNAL("clicked ()"),self.sendFiles)
 
 		self.ui.pluginWidget.setLayout(self.flowLayout)
+		self.ui.ftwidget.setLayout(QtGui.QVBoxLayout())
+		self.filetransfer={}
 
 		if self.main.selfAvatar:
 			result=self.main.getAvatar(self.main.selfAvatar,size="64x64",frame=True)

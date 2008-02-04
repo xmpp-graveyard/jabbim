@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Sun Feb  3 20:04:04 2008
+# Created: Mon Feb  4 05:22:42 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -155,6 +155,10 @@ class Ui_chatwidget(object):
         self.pluginWidget = QtGui.QWidget(self.layoutWidget1)
         self.pluginWidget.setObjectName("pluginWidget")
         self.vboxlayout1.addWidget(self.pluginWidget)
+
+        self.ftwidget = QtGui.QWidget(self.layoutWidget1)
+        self.ftwidget.setObjectName("ftwidget")
+        self.vboxlayout1.addWidget(self.ftwidget)
 
         spacerItem1 = QtGui.QSpacerItem(20,281,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
         self.vboxlayout1.addItem(spacerItem1)
