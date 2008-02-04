@@ -267,8 +267,8 @@ class normalLineEditWidget(QtGui.QTextEdit):
 
 	def formatChanged(self,format):
 		if len(unicode(self.toPlainText()))==0:
-				print "reformat"
-				self.reformat(format)
+			print "reformat"
+			self.reformat(format)
 			return
 		print "setFormat"
 		self.setFormat(format)
