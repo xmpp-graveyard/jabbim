@@ -490,6 +490,12 @@ class Receive(protocol.Protocol):
 			self.ft.connector.factory.delayed_timeout_call.cancel()
 		except:
 			pass
+		if self.ft.transfered == self.ft.size:
+#			self.ft.finish()
+			try:
+				self.ft.connector.factory.stopFactory()
+			except:
+				pass
 
 class FTSend:
 	def __init__(self, client, sid, filename, tojid, file, description= None, frmjid = None):
@@ -620,6 +626,7 @@ class FTReceive:
 		
 	
 	def finish(self):
+		print self.streamhosts
 		if len(self.streamhosts) == 0:
 			log.msg("konec prenosu")
 			if self.fp != None:
