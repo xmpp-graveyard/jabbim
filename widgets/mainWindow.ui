@@ -13,7 +13,7 @@
    <string>Jabbim</string>
   </property>
   <property name="windowIcon" >
-   <iconset>../../branch/jabbim-ng/widgets/images/16x16/apps/jabbim.png</iconset>
+   <iconset>images/16x16/apps/jabbim.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget" >
    <layout class="QGridLayout" >
