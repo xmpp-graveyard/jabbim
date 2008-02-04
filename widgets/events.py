@@ -570,11 +570,20 @@ class events:
 
 	def addFTUploadEvent(self,jid,files,descriptions):
 		typ=self.isImage(files[0])
-		if typ!=False:
-			d=threads.deferToThread(self.makeFTPreview,files[0])
-			d.addCallback(self._addFTUploadEvent,jid,files,descriptions,'image/png')
-		else:
-			self._addFTUploadEvent(self,None,jid,files,descriptions,None)
+		j=self.main.getJid(jid)
+		feature=False
+		if self.main.client.roster['users'].has_key(j.userhost()):
+			print self.main.client.roster['users'][j.userhost()].resources,j.resource
+			if self.main.client.roster['users'][j.userhost()].resources.has_key(j.resource):
+				print 'blabla',self.main.client.roster['users'][j.userhost()].resources[j.resource].features
+				feature=self.main.client.roster['users'][j.userhost()].resources[j.resource].hasFeature('http://kopete.kde.org/protocol/file-preview')
+		print 'feature',feature
+		#if typ!=False and feature:
+			#print 'generating file preview'
+			#d=threads.deferToThread(self.makeFTPreview,files[0])
+			#d.addCallback(self._addFTUploadEvent,jid,files,descriptions,'image/png')
+		#else:
+			#self._addFTUploadEvent(None,jid,files,descriptions,None)
 
 	def _addFTUploadEvent(self,preview,jid,files,descriptions,previewType=None):
 		#print jid,previewType,preview
@@ -675,7 +684,30 @@ class events:
 	def nextFTUploadEvent(self,sid,queueId):
 		jid=self.filetransferWidget[queueId].jid
 		file=self.filetransferQueue[queueId][self.filetransferQueue[queueId].keys()[0]].name
+		typ=self.isImage(file)
+		j=self.main.getJid(jid)
+		feature=False
+		if self.main.client.roster.has_key(j.userhost()):
+			if self.main.client.roster[j.userhost()].resources.has_key(j.resource):
+				feature=self.main.client.roster[j.userhost()].resources[j.resource].hasFeature('http://kopete.kde.org/protocol/file-preview')
+		if typ!=False and feature:
+			print 'generating file preview'
+			d=threads.deferToThread(self.makeFTPreview,files[0])
+			d.addCallback(self._nextFTUploadEvent,sid,queueId,'image/png')
+		else:
+			self._nextFTUploadEvent(None,sid,queueId,None)
+
+	def _nextFTUploadEvent(self,preview,sid,queueId,previewType=False):
+		jid=self.filetransferWidget[queueId].jid
+		file=self.filetransferQueue[queueId][self.filetransferQueue[queueId].keys()[0]].name
 		description=self.filetransferQueue[queueId][self.filetransferQueue[queueId].keys()[0]].description
+
+		if preview:
+			bytes=QtCore.QByteArray()
+			buf=QtCore.QBuffer(bytes)
+			buf.open(QtCore.QIODevice.WriteOnly)
+			preview.save(buf, "PNG")
+			preview=base64.encodestring(str(bytes))
 
 		text="<b>"+basename(file)+'</b><br/>'
 		for f in self.filetransferQueue[queueId].keys():
@@ -688,7 +720,7 @@ class events:
 
 		mainWindow=self.main
 		file=unicode(file)
-		sid2=self.main.client.sendFile(jid, basename(file), file, description)
+		sid2=self.main.client.sendFile(jid, basename(file), file, description,preview=preview,previewType=previewType)
 		mainWindow.tray.showMessage(mainWindow.tr("Sending file ")+basename(file)+mainWindow.tr(" to ")+unicode(jid), mainWindow.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
 
 

@@ -2625,6 +2625,9 @@ class rosterWidget(QtGui.QWidget):
 			# sends files to contact
 			jid=action.data()
 			jid=unicode(jid.toString())
+			res=self.main.client.roster['users'][jid].getHighestResource()
+			if res:
+				jid+="/"+unicode(res)
 			self.main.sendFiles(jid)
 			#file=QtGui.QFileDialog.getOpenFileNames(self.main,"Choose file")
 			#file=list(file)
