@@ -25,6 +25,8 @@ from twisted.python import log
 from os.path import basename
 import vcardeditor
 import chatwidget
+from twisted.internet import threads
+import base64
 
 class abstractWidget(QtGui.QWidget):
 	def __init__(self,header,text,item,main,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40):
@@ -546,8 +548,42 @@ class events:
 		mainWindow=self.main
 		self.addBooleanEvent(self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],header=mainWindow.tr('Subscribe request'),text=mainWindow.tr('From:')+" "+unicode(jid),name=jid,typ="subscribe")
 
+	def isImage(self,file):
+		if unicode(file).lower().endswith('.jpg'):
+			return 'image/jpeg'
+		if unicode(file).lower().endswith('.png'):
+			return 'image/png'
+		if unicode(file).lower().endswith('.gif'):
+			return 'image/gif'
+		if unicode(file).lower().endswith('.jpeg'):
+			return 'image/jpeg'
+		if unicode(file).lower().endswith('.bmp'):
+			return 'image/bmp'
+		if unicode(file).lower().endswith('.tiff'):
+			return 'image/tiff'
+		return False
+
+	def makeFTPreview(self,file):
+		img=QtGui.QImage(file)
+		image=img.scaled(128,128,QtCore.Qt.KeepAspectRatio)#,QtCore.Qt.SmoothTransformation)
+		return image
+
 	def addFTUploadEvent(self,jid,files,descriptions):
-		# descriptions['soubor']='popis'
+		typ=self.isImage(files[0])
+		if typ!=False:
+			d=threads.deferToThread(self.makeFTPreview,files[0])
+			d.addCallback(self._addFTUploadEvent,jid,files,descriptions,'image/png')
+		else:
+			self._addFTUploadEvent(self,None,jid,files,descriptions,None)
+
+	def _addFTUploadEvent(self,preview,jid,files,descriptions,previewType=None):
+		#print jid,previewType,preview
+		if preview:
+			bytes=QtCore.QByteArray()
+			buf=QtCore.QBuffer(bytes)
+			buf.open(QtCore.QIODevice.WriteOnly)
+			preview.save(buf, "PNG")
+			preview=base64.encodestring(str(bytes))
 		filesQueue={}
 		text=""
 		for name in files:
@@ -571,10 +607,10 @@ class events:
 		else:
 			jid, res = jid.split("/", 1)
 		if res==None:
-			sid=self.main.client.sendFile(jid, basename(file), file,descriptions[file])
+			sid=self.main.client.sendFile(jid, basename(file), file,descriptions[file],preview=preview,previewType='image/png')
 			tab,index=self.main.chat.findTab(jid)
 		else:
-			sid=self.main.client.sendFile(jid+'/'+res, basename(file), file,descriptions[file])
+			sid=self.main.client.sendFile(jid+'/'+res, basename(file), file,descriptions[file],preview=preview,previewType='image/png')
 			tab,index=self.main.chat.findTab(jid+'/'+res)
 		
 		mainWindow=self.main
@@ -677,6 +713,7 @@ class events:
 		#log.msg("SENDING "+str(item.sent)+"/"+str(item.all))
 		self.filetransferWidget[queueId].widget.reinit(text,self.filetransferWidget[queueId],self.main,sid2,self.main.ui.eventsListWidget,"("+str(self.filetransferWidget[queueId].sent)+"/"+str(self.filetransferWidget[queueId].all)+")")#=FTWidget(text,item,self.main,sid2,self.main.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")
 		self.filetransferWidget[queueId].widget.setMinimumHeight(height)
+		self.filetransferWidget[queueId].widget.setMaximumHeight(height)
 		#item.widget.reinit(text,item,self.main,sid2,self.main.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")#=FTWidget(text,item,self.main,sid2,self.main.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")
 		#item.widget.setMinimumHeight(height)
 		#self.main.ui.eventsListWidget.setItemWidget(self.filetransferWidget[queueId],self.filetransferWidget[queueId].widget)

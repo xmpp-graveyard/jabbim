@@ -1280,6 +1280,11 @@ class clientClass(pyxl.client.Client):
 				tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid))
 				if tab:
 					w=widgets.chatwidget.FTAskWidget(self.ft[sid].fileprops['name'],eventWidget,tab.chat,tab.chat.ui.ftwidget)
+					if self.ft[sid].fileprops.has_key('preview'):
+						image=base64.decodestring(str(unicode(self.ft[sid].fileprops['preview'])))
+						pixmap=QtGui.QPixmap()
+						pixmap.loadFromData(image)
+						w.setPreview(pixmap)
 					tab.chat.ui.ftwidget.layout().addWidget(w)
 
 	def ftStarted(self,sid,id):

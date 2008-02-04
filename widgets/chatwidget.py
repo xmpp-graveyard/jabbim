@@ -46,14 +46,21 @@ class FTAskWidget(QtGui.QWidget):
 		
 		self.label=QtGui.QLabel(self.tr("User is sending you file")+" <b>"+file+"</b> ."+self.tr("Do you want to receive this file?"),self)
 		self.label.setWordWrap(True)
+		self.preview=QtGui.QLabel(self)
+		self.preview.hide()
 		self.yes=QtGui.QPushButton(self.tr('Yes'),self)
 		self.no=QtGui.QPushButton(self.tr('No'),self)
 		self.gridlayout.addWidget(self.label,0,0,1,2)
-		self.gridlayout.addWidget(self.yes,1,0,1,1)
-		self.gridlayout.addWidget(self.no,1,1,1,1)
+		self.gridlayout.addWidget(self.preview,1,0,1,2)
+		self.gridlayout.addWidget(self.yes,2,0,1,1)
+		self.gridlayout.addWidget(self.no,2,1,1,1)
 		
 		QtCore.QObject.connect(self.yes,QtCore.SIGNAL("clicked()"),self.accept)
 		QtCore.QObject.connect(self.no,QtCore.SIGNAL("clicked()"),self.reject)
+
+	def setPreview(self,pixmap):
+		self.preview.show()
+		self.preview.setPixmap(pixmap)
 
 	def accept(self):
 		self.event.submitClicked()
@@ -66,68 +73,7 @@ class FTAskWidget(QtGui.QWidget):
 		self.chatwidget.ui.ftwidget.layout().removeWidget(self)
 		self.setParent(None)
 		self.deleteLater()
-		#self.gridlayout1 = QtGui.QGridLayout()
-		#self.gridlayout1.setMargin(0)
-		#self.gridlayout1.setSpacing(6)
-		#self.gridlayout1.setObjectName("gridlayout1")
-		
-		#self.hwidget=QtGui.QWidget(self)
-		#self.hwidget.palette().setColor(QtGui.QPalette.Base,parent.palette().color(QtGui.QPalette.AlternateBase))
-		#self.hwidget.setAutoFillBackground(True)
 
-		#self.hboxlayout = QtGui.QHBoxLayout(self.hwidget)
-		#self.hboxlayout.setMargin(0)
-		#self.hboxlayout.setSpacing(6)
-		#self.hboxlayout.setObjectName("hboxlayout")
-	
-		#self.label = QtGui.QLabel(header,self)
-		#self.label.setObjectName("label")
-		##self.label.setAutoFillBackground(False)
-		#self.label.setAutoFillBackground(False)
-		#self.hboxlayout.addWidget(self.label)
-	
-		#self.label_2 = QtGui.QLabel(text,self)
-		#self.label_2.setTextFormat(QtCore.Qt.RichText)
-		#self.label_2.setWordWrap(True)
-		#self.label_2.setObjectName("label_2")
-		#self.label_2.setAutoFillBackground(False)
-		##self.hboxlayout.addWidget(self.label_2)
-
-		##spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-		#self.hboxlayout.addStretch()
-
-
-		#self.gridlayout1.addWidget(self.hwidget,0,0,1,1)
-
-		#self.gridlayout1.addWidget(self.label_2,1,0,1,2)
-		#self.gridlayout.addLayout(self.gridlayout1,0,0,1,1)
-		#self.gridlayout.setMargin(1)
-		#self.gridlayout.setSpacing(0)
-		#self.gridlayout1.setMargin(1)
-		#self.gridlayout1.setSpacing(0)
-		#self.setMinimumHeight(height)
-
-	#def closeClicked(self):
-		#if self.falseCall!=None:
-			#self.falseCall(*self.falseDict)
-			#self.falseCall=None
-		#self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
-		#for event in self.main.events.events:
-			#if event['widget']==self:
-				#self.main.events.events.remove(event)
-				#break
-		#self.main.events.refreshTray()
-
-	#def submitClicked(self):
-		#if self.trueCall!=None:
-			#self.trueCall(*self.trueDict)
-			#self.trueCall=None
-		#self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
-		#for event in self.main.events.events:
-			#if event['widget']==self:
-				#self.main.events.events.remove(event)
-				#break
-		#self.main.events.refreshTray()
 
 class FTWidget(QtGui.QWidget):
 	def __init__(self,file,item,main,sid,parent=None,stats="",download=False):
