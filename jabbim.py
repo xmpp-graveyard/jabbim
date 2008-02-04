@@ -1287,19 +1287,20 @@ class clientClass(pyxl.client.Client):
 		#if q == QtGui.QMessageBox.Yes:
 		mainWindow=self.main
 		filename = QtGui.QFileDialog.getSaveFileName(self.main, mainWindow.tr("Save File"),self.ft[sid].fileprops['name'],mainWindow.tr("*.*"))
-		log.msg(unicode(filename))
-		self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),basename(self.ft[sid].fileprops['name']),"",sid)
-		log.msg('receiving file: ' + sid)
-		if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
-			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
-			self.ft[sid].file = filename
-			self.receiveFile(sid, id)
-		elif 'http://jabber.org/protocol/ibb' in self.ft[sid].methods:
-			log.msg('IBB offer')
-			self.ft[sid].method = 'http://jabber.org/protocol/ibb'
-			self.ft[sid].file = filename
-			self.ft[sid].fp = open(self.ft[sid].file, 'wb')
-			self.receiveFile(sid, id)
+		if filename and len(filename)!=0:
+			log.msg(unicode(filename))
+			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),basename(self.ft[sid].fileprops['name']),"",sid)
+			log.msg('receiving file: ' + sid)
+			if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
+				self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
+				self.ft[sid].file = filename
+				self.receiveFile(sid, id)
+			elif 'http://jabber.org/protocol/ibb' in self.ft[sid].methods:
+				log.msg('IBB offer')
+				self.ft[sid].method = 'http://jabber.org/protocol/ibb'
+				self.ft[sid].file = filename
+				self.ft[sid].fp = open(self.ft[sid].file, 'wb')
+				self.receiveFile(sid, id)
 		
 	
 	def on_verify(self, id, thread, props, frm, typ): #xep0070
