@@ -582,6 +582,7 @@ class events:
 		if tab:
 			tab.chat.filetransfer[sid]=chatwidget.FTWidget(text,None,self.main,sid,tab.chat.ui.ftwidget)
 			tab.chat.ui.ftwidget.layout().addWidget(tab.chat.filetransfer[sid])
+			tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("Sending file")+" "+basename(file)))
 		self.filetransferQueue[sid]=filesQueue
 		#self.main.filetransferDescriptions[sid]=descriptions
 		self.filetransferWidget[sid]=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
@@ -610,6 +611,12 @@ class events:
 		metrics=QtGui.QApplication.fontMetrics()
 		rect=metrics.boundingRect(0, 0,self.main.width(), self.main.height(), QtCore.Qt.TextWordWrap, text)
 		height=metrics.height()+rect.height()+metrics.height()+10
+		tab,index=self.main.chat.findTab(unicode(jid))
+		mainWindow=self.main
+		if tab:
+			tab.chat.filetransfer[sid]=chatwidget.FTWidget(text,None,self.main,sid,tab.chat.ui.ftwidget)
+			tab.chat.ui.ftwidget.layout().addWidget(tab.chat.filetransfer[sid])
+			tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("Receiving file")+" "+basename(file)))
 
 		self.filetransferWidget[sid]=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		self.filetransferWidget[sid].download=True
@@ -623,6 +630,8 @@ class events:
 		self.filetransferWidget[sid].typ='normal'
 		self.filetransferWidget[sid].widget=FTWidget(text,self.filetransferWidget[sid],self.main,sid,self.main.ui.eventsListWidget,download=True)
 		self.filetransferWidget[sid].widget.setMinimumHeight(height)
+		if tab:
+			QtCore.QObject.connect(self.filetransferWidget[sid].widget.progressBar,QtCore.SIGNAL("valueChanged(int)"),tab.chat.filetransfer[sid].progressBar.setValue)
 		self.main.ui.eventsListWidget.setItemWidget(self.filetransferWidget[sid],self.filetransferWidget[sid].widget)
 		self.filetransfer[sid]={'queueId':sid}
 
@@ -651,7 +660,7 @@ class events:
 			if tab.chat.filetransfer.has_key(queueId):
 				tab.chat.filetransfer[queueId].reinit(text,None,self.main,sid2,self.main.ui.eventsListWidget,"("+str(self.filetransferWidget[queueId].sent)+"/"+str(self.filetransferWidget[queueId].all)+")")#=FTWidget(text,item,self.main,sid2,self.main.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")
 				tab.chat.filetransfer[queueId].setMinimumHeight(height)
-
+				tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("Sending file")+" "+basename(file)))
 		self.filetransferWidget[queueId].setSizeHint(QtCore.QSize(100,height))
 		self.filetransferWidget[queueId].file=file
 		self.filetransferWidget[queueId].jid=jid

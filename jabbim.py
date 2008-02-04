@@ -166,11 +166,21 @@ class clientClass(pyxl.client.Client):
 						# delete sent file from queue and start uploading next file in queue
 						del self.main.events.filetransferQueue[queueId][self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']].file]
 						if len(self.main.events.filetransferQueue[queueId])!=0:
+							self.main.events.filetransferWidget[queueId].widget.complete=True
+							tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[queueId].jid)
+							if tab:
+								file=self.main.events.filetransferWidget[queueId].file
+								if self.main.ftError[sid]==None:
+									tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('has been sent')))
+								else:
+									tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('can\'t be sent:')+" "+unicode(self.main.ftError[sid])))
 							self.main.events.nextFTUploadEvent(sid,queueId)
+							
 						else:
 							self.main.events.filetransferWidget[queueId].widget.complete=True
 							tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[queueId].jid)
 							if tab:
+								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("All files have been sent ")))
 								if tab.chat.filetransfer.has_key(queueId):
 									tab.chat.ui.ftwidget.layout().removeWidget(tab.chat.filetransfer[queueId])
 									tab.chat.filetransfer[queueId].setParent(None)
@@ -1236,7 +1246,7 @@ class clientClass(pyxl.client.Client):
 				filename = self.main.realHomeDir+'/'+self.ft[sid].fileprops['name']
 			if self.ft[sid].method!=None:
 				return
-			self.main.events.addFTDownloadEvent(basename(unicode(self.ft[sid].file)),unicode(self.ft[sid].tojid),"",sid)
+			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),basename(self.ft[sid].fileprops['name']),"",sid)
 			
 			if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
 				self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
@@ -1261,7 +1271,7 @@ class clientClass(pyxl.client.Client):
 		mainWindow=self.main
 		filename = QtGui.QFileDialog.getSaveFileName(self.main, mainWindow.tr("Save File"),self.ft[sid].fileprops['name'],mainWindow.tr("*.*"))
 		log.msg(unicode(filename))
-		self.main.events.addFTDownloadEvent(basename(unicode(self.ft[sid].file)),unicode(self.ft[sid].tojid),"",sid)
+		self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),basename(self.ft[sid].fileprops['name']),"",sid)
 		log.msg('receiving file: ' + sid)
 		if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
 			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
