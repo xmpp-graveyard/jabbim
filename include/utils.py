@@ -28,6 +28,7 @@ from configobj import ConfigObj
 import zipfile
 from cStringIO import StringIO
 
+	
 def extractZip( filename, dir ):
 	zf = zipfile.ZipFile( filename )
 	namelist = zf.namelist()
@@ -92,7 +93,9 @@ def makeHomeDir(homeDir):
 		os.mkdir(homeDir+"/emoticons")
 	if not os.path.isdir(homeDir+"/chatskins"):
 		os.mkdir(homeDir+"/chatskins")
-
+	if not os.path.isdir(homeDir+"/temp"):
+		os.mkdir(homeDir+"/temp")
+		
 def loadConfig(main,status):
 	# loads config and repairs config file
 	configs={"jid":"",
@@ -416,5 +419,8 @@ def replace_url(text):
 		else:
 			text+=word+" "
 	return text[:-1]
+	
+
+		
 
 

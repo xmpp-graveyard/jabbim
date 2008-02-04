@@ -73,6 +73,8 @@ from twisted.words.protocols.jabber.xmlstream import IQ
 from twisted.words.xish.domish import Element
 from twisted.words.protocols.jabber import jid as jidT
 import ctypes
+from twisted.web.microdom import parseString
+from twisted.web.client import downloadPage
 
 class clientClass(pyxl.client.Client):
 
@@ -993,6 +995,9 @@ class clientClass(pyxl.client.Client):
 		else:
 			user=frm.userhost()
 		frm=frm.userhost()
+		#images in xhtml
+		if xhtml != None:
+			xhtml = self.main.getImages(xhtml)
 		if not body:
 			body=""
 		if len(body)!=0:
@@ -2974,7 +2979,24 @@ class mainWindow(QtGui.QMainWindow):
 		if self.client:
 			self.client.disconnect()
 		self._disconnect()
-
+		
+	def getImages(self, xhtml):
+		dom = parseString(xhtml)
+		#seznam = {}
+		for el in dom.getElementsByTagName('img'):
+			src = el.getAttribute('src')
+			if src != None and src.startswith('http'):
+				novy = self.realHomeDir+'/temp/'+sha1(src).hexdigest()
+				el.setAttribute('src', novy)
+				fp = open(novy,'w')
+				d = downloadPage(str(src), fp)
+				d.addCallback(self._imageReceived, fp)
+		return unicode(dom.toxml(), 'utf-8')
+	
+	def _imageReceived(self, fp):
+		print 'image downloaded'
+		fp.close()
+	
 	def connect(self):
 		# Connect to the server
 		jid=unicode(self.ui.login_jid.text()) 
