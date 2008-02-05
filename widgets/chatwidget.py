@@ -276,8 +276,13 @@ class chatWidget(abstractChatWidget):
 		for key,value in self.main.plugins.iteritems():
 			if value['module']:
 				self.main.runPluginCommand(value['module'].buildChatWidget,[unicode(jidT.JID(self.jid).userhost()),self.flowLayout,self])
-		
-		if main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/si/profile/file-transfer'):
+		hasFeature=False
+		if self.main.client.groupchats.has_key(jidt.userhost()):
+			print "features:",self.main.client.groupchats[jidt.userhost()].users[jidt.resource].features
+			hasFeature='http://jabber.org/protocol/si/profile/file-transfer' in self.main.client.groupchats[jidt.userhost()].users[jidt.resource].features
+		else:
+			hasFeature=main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/si/profile/file-transfer')
+		if hasFeature:
 			# sendFile buttons
 			self.ui.sendFile=QtGui.QToolButton()
 			self.ui.sendFile.setIconSize(QtCore.QSize(16,16))
