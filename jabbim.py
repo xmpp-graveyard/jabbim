@@ -246,30 +246,19 @@ class clientClass(pyxl.client.Client):
 					typ="jabber"
 				elif typ=="file":
 					typ="disk"
+				elif typ=='gadu-gadu':
+					typ='gadugadu'
+				elif typ=='x-tlen':
+					typ='tlen'
+				if jid.find("weather")!=-1:
+					typ='weather'
+				if self.main.transports.has_key(jid):
+					# don't show this contacts as transports in menu
+					if typ in ['weather','smtp','sms']:
+						del self.main.transports[jid]
+				print 'DISCO',jid,typ
 				self.main.hosts[jid]=typ
-				#if self.main.transports.has_key(jid):
-					#self.main.transports[jid]=typ
-					#self.menus=[]
-					#for jid,typ in self.main.transports.iteritems():
-						#jid=unicode(jid)
-						#menu=QtGui.QMenu(unicode(jid),self.main.statusMenu)
-						#menu.setIcon(self.main.getIcon("jid@"+unicode(jid),status="offline",size="16x16"))
-						#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="online",size="16x16"),self.main.status["online"])
-						#action.setData(QtCore.QVariant([jid,"online"]))
-						#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="chat",size="16x16"),self.main.status["chat"])
-						#action.setData(QtCore.QVariant([jid,"chat"]))
-						#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="away",size="16x16"),self.main.status["away"])
-						#action.setData(QtCore.QVariant([jid,"away"]))
-						#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="xa",size="16x16"),self.main.status["xa"])
-						#action.setData(QtCore.QVariant([jid,"xa"]))
-						#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="dnd",size="16x16"),self.main.status["dnd"])
-						#action.setData(QtCore.QVariant([jid,"dnd"]))
-						#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="offline",size="16x16"),self.main.status["offline"])
-						#action.setData(QtCore.QVariant([jid,"offline"]))
-						##app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.main.statusChanged)
-						#self.menus.append(menu)
-					#self.main.buildStatusMenu(self.menus)
-					#self.main.buildStatusWidgetMenu()
+
 				for host in self.main.hosts:
 					for i in self.main.ui.roster.getUserItems(host):
 						i.transport=True
@@ -297,11 +286,16 @@ class clientClass(pyxl.client.Client):
 			host=unicode(jid).rsplit("@")[1]
 		else:
 			host=unicode(jid)
-			#log.msg("Transport:"+jid)
-			self.main.transports[unicode(jid)]=None
-		if not self.disco.has_key(host) and not host in self.temp_hosts:
+			#if self.disco.has_key(host):
+			if self.main.hosts.has_key(host):
+				if not self.main.hosts[host] in ['weather','smtp','sms']:
+					self.main.transports[unicode(jid)]=None
+			#else:
+				#self.main.transports[unicode(jid)]=False
+		if not self.main.hosts.has_key(host) and not host in self.temp_hosts:
 			self.temp_hosts.append(host)
 			self.getDiscoInfo(host)
+
 		# user is not in any group
 		if len(groups)==0:
 			# add user item to Unknown group

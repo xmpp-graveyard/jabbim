@@ -538,7 +538,7 @@ class events:
 		# make event
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		item.setSizeHint(QtCore.QSize(100,height))
-		item.widget=AddUserWidget("<b>"+mainWindow.tr('Add contact?')+"</b>",text,item,self.main,self.main.client._onSubscribe,[jid,'online',True],self.main.client.sendPresence,[jid,None,'online',None,'unsubscribed'],self.main.ui.eventsListWidget,height)
+		item.widget=AddUserWidget("<b>"+mainWindow.tr('Add contact?')+"</b>",text,item,self.main,self.main.client._onSubscribe,[jid,'online',False],self.main.client.sendPresence,[jid,None,'online',None,'unsubscribed'],self.main.ui.eventsListWidget,height)
 		item.widget.jid=jid
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 		self.addEvent(unicode(jid),unicode('subscribe'),None,item.widget)

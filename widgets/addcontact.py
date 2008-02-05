@@ -8,13 +8,14 @@ from addcontact_ui import *
 from search import *
 
 class addContactDialog(QtGui.QDialog):
-	def __init__(self,main,parent=None,jid="",group=None,name="",add=True):
+	def __init__(self,main,parent=None,jid="",group=None,name="",add=True,check=True):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.setModal(False)
 		self.ui=Ui_addContact()
 		self.ui.setupUi(self)
 		self.main=main
 		self.add=add
+		print self.add
 		for k,v in self.main.client.roster['groups'].iteritems():
 			if k==group:
 				self.ui.add_group.insertItem(0,unicode(k))
@@ -29,7 +30,9 @@ class addContactDialog(QtGui.QDialog):
 			self.ui.add_messageLabel.hide()
 		self.jidChanged()
 		QtCore.QObject.connect(self.ui.search,QtCore.SIGNAL("clicked()"),self.search)
-		QtCore.QObject.connect(self.ui.add_jid,QtCore.SIGNAL("textEdited ( const QString & )"),self.jidChanged)
+		#if check:
+			#self.ui.add_jid.setEnabled(False)
+			#QtCore.QObject.connect(self.ui.add_jid,QtCore.SIGNAL("textEdited ( const QString & )"),self.jidChanged)
 
 		self.searchJid=None
 

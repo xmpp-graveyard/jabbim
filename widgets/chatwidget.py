@@ -277,8 +277,7 @@ class chatWidget(abstractChatWidget):
 			if value['module']:
 				self.main.runPluginCommand(value['module'].buildChatWidget,[unicode(jidT.JID(self.jid).userhost()),self.flowLayout,self])
 		
-		#if main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/si/profile/file-transfer'):
-		if 1:
+		if main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/si/profile/file-transfer'):
 			# sendFile buttons
 			self.ui.sendFile=QtGui.QToolButton()
 			self.ui.sendFile.setIconSize(QtCore.QSize(16,16))
