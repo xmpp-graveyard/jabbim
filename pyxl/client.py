@@ -115,7 +115,7 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/si/profile/file-transfer')
 		self.registerFeature('http://jabber.org/protocol/si')
 		self.registerFeature("urn:xmpp:receipts")
-		
+		self.registerFeature('http://www.xmpp.org/extensions/xep-0224.html#ns')
 		
 		
 		self.caps_cache = {} # 'node': [feature1, feature2]
@@ -707,7 +707,7 @@ class Client(derived):
 			frm=unicode(frmjid.userhost()).lower()+"/"+frmjid.resource
 		else:
 			frm=unicode(frm).lower()
-		body = subject =xhtml = chatstate = delay = error =  None
+		body = subject =xhtml = chatstate = delay = error = attention = None
 		for child in el.elements():
 			if child.name == "request":
 				if child.defaultUri == "urn:xmpp:receipts":
@@ -765,6 +765,13 @@ class Client(derived):
 
 			if child.name == 'confirm': # xep0070 - processed elsewhere
 				return
+			
+			if child.name == 'attention':
+				attention = True
+		
+		if attention == True and delay == None and typ == 'headline':
+			self.dispatcher.publishEvent('on_attention', frm, body, subject, xhtml, error)
+			return
 
 		if self.groupchats.has_key(jid.JID(frm).userhost()):
 			self.on_GCmessage(frm,typ,body,subject, xhtml,  chatstate,  delay)
