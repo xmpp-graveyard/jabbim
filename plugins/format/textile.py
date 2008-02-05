@@ -2393,9 +2393,9 @@ class Textiler:
         """
         glyphs = [(r'''"(?<!\w)\b''', r'''&#8220;'''),                              # double quotes
                   (r'''"''', r'''&#8221;'''),                                       # double quotes
-                  (r"""\b'""", r'''&#8217;'''),                                     # single quotes
-                  (r"""'(?<!\w)\b""", r'''&#8216;'''),                              # single quotes
-                  (r"""'""", r'''&#8217;'''),                                       # single single quote
+#                  (r"""\b'""", r'''&#8217;'''),                                     # single quotes
+#                  (r"""'(?<!\w)\b""", r'''&#8216;'''),                              # single quotes
+#                  (r"""'""", r'''&#8217;'''),                                       # single single quote
                   (r'''(\b|^)( )?\.{3}''', r'''\1&#8230;'''),                       # ellipsis
                   (r'''\b---\b''', r'''&#8212;&#8212;'''),                          # double em dash
                   (r'''\s?--\s?''', r'''&#8212;'''),                                # em dash
