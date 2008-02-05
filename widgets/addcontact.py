@@ -78,11 +78,11 @@ class addContactDialog(QtGui.QDialog):
 		nickname=unicode(self.ui.add_nickname.text())
 		group=unicode(self.ui.add_group.currentText())
 		message=unicode(self.ui.add_message.toPlainText())
-		if self.add:
-			self.main.client.addContact(jid,message,nickname,[group])
-		else:
-			contact=self.main.client.roster['users'][jid]
-			self.main.client.sendRosterUpdate(jid,nickname, contact.subscription, [group])
+		#if self.add:
+		self.main.client.addContact(jid,message,nickname,[group])
+		#else:
+			#contact=self.main.client.roster['users'][jid]
+			#self.main.client.sendRosterUpdate(jid,nickname, contact.subscription, [group])
 
 
 		self.done(1)
