@@ -2347,8 +2347,8 @@ class mainWindow(QtGui.QMainWindow):
 			l=gc.get_referents(self.plugins[plugin]['module'])
 			for x in range(len(l)):
 				del l[0]
-			l=gc.get_referrers()
-			for x in range(len(self.plugins[plugin]['module'])):
+			l=gc.get_referrers(self.plugins[plugin]['module'])
+			for x in range(len(l)):
 				del l[0]
 			del self.plugins[plugin]['module']
 			self.plugins[plugin]['module']=None
@@ -3007,13 +3007,16 @@ class mainWindow(QtGui.QMainWindow):
 			if src != None and src.startswith('http'):
 				novy = self.realHomeDir+'/temp/'+sha1(src).hexdigest()
 				el.setAttribute('src', novy)
+				if not el.hasAttribute('width') or not el.hasAttribute('height'):
+					el.setAttribute('width', '64')
+					el.setAttribute('height', '64')
 				fp = open(novy,'wb')
 				d = downloadPage(str(src), fp)
 				d.addCallback(self._imageReceived, fp)
 
 		return unicode(dom.toxml(), 'utf-8')
 	
-	def _imageReceived(self, fp, neco):
+	def _imageReceived(self,neco,fp):
 		print 'image downloaded'
 		fp.close()
 	
