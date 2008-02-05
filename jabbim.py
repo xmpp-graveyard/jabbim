@@ -993,7 +993,7 @@ class clientClass(pyxl.client.Client):
 		frm=frm.userhost()
 		#images in xhtml
 		if xhtml != None:
-			xhtml = self.main.getImages(xhtml)
+			xhtml = self.main.getImages(xhtml,frm)
 		if not body:
 			body=""
 		if len(body)!=0:
@@ -2998,7 +2998,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.client.disconnect()
 		self._disconnect()
 		
-	def getImages(self, xhtml):
+	def getImages(self, xhtml,frm):
 		print xhtml
 		dom = parseString(unicode('<p>'+xhtml+'</p>'))
 		#seznam = {}
@@ -3011,15 +3011,22 @@ class mainWindow(QtGui.QMainWindow):
 					el.setAttribute('width', '64')
 					el.setAttribute('height', '64')
 				fp = open(novy,'wb')
+				fp.close()
+				fp = open(novy+"_copy",'wb')
 				d = downloadPage(str(src), fp)
-				d.addCallback(self._imageReceived, fp)
+				d.addCallback(self._imageReceived, fp,novy,frm)
 
 		return unicode(dom.toxml(), 'utf-8')
 	
-	def _imageReceived(self,neco,fp):
+	def _imageReceived(self,neco,fp,file,frm):
 		print 'image downloaded'
 		fp.close()
-	
+		os.rename(file+"_copy",file)
+		for i in range(self.chat.ui.chatTab.count()):
+			w=self.chat.ui.chatTab.widget(i)
+			if unicode(w.jid) == frm:
+				w.chat.ui.textEdit.repaint()
+				#w.chat.ui.textEdit.textCursor().select(QtGui.QTextCursor.BlockUnderCursor)
 	def connect(self):
 		# Connect to the server
 		jid=unicode(self.ui.login_jid.text()) 
