@@ -70,10 +70,10 @@ from urllib import quote, unquote
 from include import plugins
 from os.path import basename,dirname
 from twisted.words.protocols.jabber.xmlstream import IQ
-from twisted.words.xish.domish import Element
+#from twisted.words.xish.domish import Element
 from twisted.words.protocols.jabber import jid as jidT
 import ctypes
-from twisted.web.microdom import parseString
+from twisted.web.microdom import parseString,Element
 from twisted.web.client import downloadPage
 
 class clientClass(pyxl.client.Client):
@@ -3010,13 +3010,19 @@ class mainWindow(QtGui.QMainWindow):
 				if not el.hasAttribute('width') or not el.hasAttribute('height'):
 					el.setAttribute('width', '64')
 					el.setAttribute('height', '64')
+				#newnode = parseString("<a href=\"http://seznam.cz\">"+unicode(el.toxml(),'utf-8')+"</a>").documentElement
+				newnode=Element('a')
+				newnode.setAttribute('href', unicode(src))
+				newnode.appendChild(el.cloneNode())
+				print unicode(newnode.toxml(),'utf-8')
+				el.parentNode.replaceChild(newnode,el)
 				fp = open(novy,'wb')
 				fp.close()
 				fp = open(novy+"_copy",'wb')
 				d = downloadPage(str(src), fp)
 				d.addCallback(self._imageReceived, fp,novy,frm)
-
-		return unicode(dom.toxml(), 'utf-8')
+		ret=unicode(dom.toxml(), 'utf-8').replace("<:img","<img")
+		return ret
 	
 	def _imageReceived(self,neco,fp,file,frm):
 		print 'image downloaded'
@@ -3025,8 +3031,9 @@ class mainWindow(QtGui.QMainWindow):
 		for i in range(self.chat.ui.chatTab.count()):
 			w=self.chat.ui.chatTab.widget(i)
 			if unicode(w.jid) == frm:
-				w.chat.ui.textEdit.repaint()
-				#w.chat.ui.textEdit.textCursor().select(QtGui.QTextCursor.BlockUnderCursor)
+				# update viewport to refresh image
+				w.chat.ui.textEdit.viewport().update()
+
 	def connect(self):
 		# Connect to the server
 		jid=unicode(self.ui.login_jid.text()) 
