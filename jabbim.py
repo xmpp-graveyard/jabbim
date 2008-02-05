@@ -1819,6 +1819,8 @@ class mainWindow(QtGui.QMainWindow):
 				config[status[0]].append([status[1],str(status[2])])
 
 		self.statusWidgetMenu=QtGui.QMenu(self.tr("Status"),self.ui.statusWidget)
+		if not self.client:
+			self.statusWidgetMenu.setEnabled(False)
 		# make global menu. If some show has custom message, add seperator between last custom message and next show
 		separator=False
 		for key in ['online','chat','away','xa','dnd']:
@@ -2807,6 +2809,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.actionAdd_Contact.setEnabled(True)
 		self.ui.actionJoin_groupchat.setEnabled(True)
 		self.ui.actionService_Discovery.setEnabled(True)
+		self.statusWidgetMenu.setEnabled(False)
 		self.ui.selfName.setText("<h3>"+unicode(self.client.jid.userhost()).split("@")[0]+"</h3>")
 		self.client.getVCard(unicode(self.client.jid.userhost()))
 		self.ui.showOffline.show()
@@ -3150,6 +3153,7 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.actionAdd_Contact.setEnabled(False)
 		MainWindow.ui.actionJoin_groupchat.setEnabled(False)
 		MainWindow.ui.actionService_Discovery.setEnabled(False)
+		self.statusWidgetMenu.setEnabled(False)
 		self.ui.login_cancel.show()
 		self.ui.profilesList.setEnabled(True)
 
@@ -3158,7 +3162,7 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.roster.users=[]
 		MainWindow.ui.roster.disconnect()
 		MainWindow.ui.login_connect.setEnabled(True)
-		self.main.ui.eventsListWidget.clear()
+		self.ui.eventsListWidget.clear()
 		for i in MainWindow.plugins.keys():
 			MainWindow.unloadPlugin(i)
 
