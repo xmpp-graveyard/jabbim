@@ -1296,6 +1296,7 @@ class clientClass(pyxl.client.Client):
 		mainWindow=self.main
 		filename = QtGui.QFileDialog.getSaveFileName(self.main, mainWindow.tr("Save File"),self.ft[sid].fileprops['name'],mainWindow.tr("*.*"))
 		if filename and len(filename)!=0:
+			filename=unicode(filename)
 			log.msg(unicode(filename))
 			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),basename(self.ft[sid].fileprops['name']),"",sid)
 			log.msg('receiving file: ' + sid)
