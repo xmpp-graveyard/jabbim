@@ -254,7 +254,7 @@ class clientClass(pyxl.client.Client):
 					typ='weather'
 				if self.main.transports.has_key(jid):
 					# don't show this contacts as transports in menu
-					if typ in ['weather','smtp','sms']:
+					if typ in ['weather','smtp','sms','rss']:
 						del self.main.transports[jid]
 				print 'DISCO',jid,typ
 				self.main.hosts[jid]=typ
@@ -288,7 +288,7 @@ class clientClass(pyxl.client.Client):
 			host=unicode(jid)
 			#if self.disco.has_key(host):
 			if self.main.hosts.has_key(host):
-				if not self.main.hosts[host] in ['weather','smtp','sms']:
+				if not self.main.hosts[host] in ['weather','smtp','sms','rss']:
 					self.main.transports[unicode(jid)]=None
 			else:
 				self.main.transports[unicode(jid)]=None
