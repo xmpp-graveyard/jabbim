@@ -290,6 +290,8 @@ class clientClass(pyxl.client.Client):
 			if self.main.hosts.has_key(host):
 				if not self.main.hosts[host] in ['weather','smtp','sms']:
 					self.main.transports[unicode(jid)]=None
+			else:
+				self.main.transports[unicode(jid)]=None
 			#else:
 				#self.main.transports[unicode(jid)]=False
 		if not self.main.hosts.has_key(host) and not host in self.temp_hosts:
