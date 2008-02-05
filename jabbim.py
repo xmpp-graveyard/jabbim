@@ -3139,25 +3139,12 @@ class mainWindow(QtGui.QMainWindow):
 		if self.client:
 			if error=="auth":
 				reactor.callLater(0,self._badJabberPassword)
-				#QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Bad Jabber ID or password.")),0,1)
 			elif error=="dns":
 				reactor.callLater(0,self._serverNotFound)
-				#QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Server is not found.")),0,1)
 			if self.client.factory:
 				self.client.factory.stopTrying()
 			self.reconnect = False
 
-# 		elif error == 'lost' and MainWindow.reconnect:
-# 			# connection lost, let's wait for a while and then reconnect
-
-# 			MainWindow.plugins=[]
-# 			MainWindow.client = None
-# # 			log.err('Connection Lost')
-# 			reactor.callLater(3, MainWindow.connect)
-		
-		#MainWindow.ui.statusButton.setText(unicode(MainWindow.status["offline"]))
-		#MainWindow.ui.statusButton.setIcon(MainWindow.getIcon("offline",size="16x16"))
-		#MainWindow.ui.statusButton.hide()
 		MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
 		MainWindow.ui.showOffline.hide()
 		MainWindow.ui.actionAdd_Contact.setEnabled(False)
@@ -3166,25 +3153,15 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.login_cancel.show()
 		self.ui.profilesList.setEnabled(True)
 
-		#MainWindow.client.roster = {'users':{},'groups':{}}
-		#MainWindow.client.roster_meta = {} # jid: {'tag':tag,  'order': 1}
-		#MainWindow.client.first_presence = []
-		#MainWindow.client.first_wait = True
-		#MainWindow.client.bookmarks = {'conference':{}, 'url': {}}
-		#MainWindow.client.roster['groups']['Unknown']=MainWindow.ui.roster.addGroup('Unknown')
-		#MainWindow.client.temp_hosts=[]
 		MainWindow.ui.roster.sortedGroups=[]
 		MainWindow.ui.roster.sorted={}
 		MainWindow.ui.roster.users=[]
-		#MainWindow.ui.roster.groups={}
 		MainWindow.ui.roster.disconnect()
-		#MainWindow.ui.roster.makeHiddenItem()
 		MainWindow.ui.login_connect.setEnabled(True)
-		#MainWindow.plugins={}
+		self.main.ui.eventsListWidget.clear()
 		for i in MainWindow.plugins.keys():
 			MainWindow.unloadPlugin(i)
-		#del self.plugins
-		#self.plugins={}
+
 		if self.client:
 			for jid in self.client.groupchats.keys():
 				for i in range(self.chat.ui.chatTab.count()):

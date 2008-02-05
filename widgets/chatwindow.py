@@ -267,8 +267,8 @@ class chatWindow(QtGui.QMainWindow):
 		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_8), self,self.tabEight)
 		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_9), self,self.tabNine)
 
-		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.ShiftModifier + QtCore.Qt.Key_Right), self,self.moveRight)
-		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.ShiftModifier + QtCore.Qt.Key_Left), self,self.moveLeft)
+		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.ShiftModifier + QtCore.Qt.Key_Right), self,self.moveRight)
+		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.ShiftModifier + QtCore.Qt.Key_Left), self,self.moveLeft)
 		#self.ui.chatTab.removeTab(0)
 		#self.ui.gridlayout.setMargin(1)
 		#self.ui.gridlayout.setSpacing(1)
@@ -366,35 +366,36 @@ class chatWindow(QtGui.QMainWindow):
 
 	def moveRight(self):
 		i=int(self.ui.chatTab.currentIndex())+1
-		#if i<=self.ui.chatTab.count():
-			#widget=self.ui.chatTab.currentWidget()
-			#text=unicode(self.ui.chatTab.tabText(i-1))
-			#oldtext=unicode(self.ui.chatTab.tabText(i))
-			#oldicon=self.ui.chatTab.tabIcon(i)
-			#self.ui.chatTab.insertTab(i,widget,self.ui.chatTab.tabIcon(i-1),text)
-			#self.ui.chatTab.setTabText(i-1,oldtext)
-			#self.ui.chatTab.setTabIcon(i-1,oldicon)
-			#QtCore.QObject.disconnect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
-			#self.ui.chatTab.setCurrentIndex(i)
-			#QtCore.QObject.connect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
-			#tab=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
-			#tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		if i<self.ui.chatTab.count():
+			widget=self.ui.chatTab.currentWidget()
+			text=unicode(self.ui.chatTab.tabText(i-1))
+			oldtext=unicode(self.ui.chatTab.tabText(i))
+			oldicon=self.ui.chatTab.tabIcon(i)
+			self.ui.chatTab.insertTab(i,widget,self.ui.chatTab.tabIcon(i-1),text)
+			self.ui.chatTab.setTabText(i-1,oldtext)
+			self.ui.chatTab.setTabIcon(i-1,oldicon)
+			self.ui.chatTab.setTabText(i,text)
+			QtCore.QObject.disconnect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
+			self.ui.chatTab.setCurrentIndex(i)
+			QtCore.QObject.connect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
+			tab=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
+			tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def moveLeft(self):
 		i=int(self.ui.chatTab.currentIndex())-1
-		#if i>=0:
-			#widget=self.ui.chatTab.currentWidget()
-			#text=unicode(self.ui.chatTab.tabText(i+1))
-			#oldtext=unicode(self.ui.chatTab.tabText(i))
-			#oldicon=self.ui.chatTab.tabIcon(i)
-			#self.ui.chatTab.insertTab(i,widget,self.ui.chatTab.tabIcon(i+1),text)
-			#self.ui.chatTab.setTabText(i+1,oldtext)
-			#self.ui.chatTab.setTabIcon(i+1,oldicon)
-			#QtCore.QObject.disconnect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
-			#self.ui.chatTab.setCurrentIndex(i)
-			#QtCore.QObject.connect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
-			#tab=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
-			#tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		if i>=0:
+			widget=self.ui.chatTab.currentWidget()
+			text=unicode(self.ui.chatTab.tabText(i+1))
+			oldtext=unicode(self.ui.chatTab.tabText(i))
+			oldicon=self.ui.chatTab.tabIcon(i)
+			self.ui.chatTab.insertTab(i,widget,self.ui.chatTab.tabIcon(i+1),text)
+			self.ui.chatTab.setTabText(i+1,oldtext)
+			self.ui.chatTab.setTabIcon(i+1,oldicon)
+			QtCore.QObject.disconnect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
+			self.ui.chatTab.setCurrentIndex(i)
+			QtCore.QObject.connect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
+			tab=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
+			tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def next(self):
 		i=int(self.ui.chatTab.currentIndex())+1
@@ -532,10 +533,11 @@ class chatWindow(QtGui.QMainWindow):
 		
 		for i in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(i)
-			if w.typ=="chat":
-				if w.active==True and w!=widget:
-					self.main.client.sendMessage(unicode(w.jid),"",composing="inactive")
-					w.active=False
+			if w:
+				if w.typ=="chat":
+					if w.active==True and w!=widget:
+						self.main.client.sendMessage(unicode(w.jid),"",composing="inactive")
+						w.active=False
 		#except:
 			#pass
 
