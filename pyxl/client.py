@@ -457,6 +457,7 @@ class Client(derived):
 						contact = self.roster['users'][itemjid]
 						contact.name = name
 						contact.groups = groups
+						contact.subscription = subscription
 						self.reactor.callFromThread(self.on_UpdateContact,itemjid)
 		iq = Element((None, 'iq'))
 		iq['from'] = self.jid.full()
