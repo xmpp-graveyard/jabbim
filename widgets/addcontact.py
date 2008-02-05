@@ -30,9 +30,10 @@ class addContactDialog(QtGui.QDialog):
 			self.ui.add_messageLabel.hide()
 		self.jidChanged()
 		QtCore.QObject.connect(self.ui.search,QtCore.SIGNAL("clicked()"),self.search)
+		QtCore.QObject.connect(self.ui.add_jid,QtCore.SIGNAL("textEdited ( const QString & )"),self.jidChanged)
+
 		#if check:
 			#self.ui.add_jid.setEnabled(False)
-			#QtCore.QObject.connect(self.ui.add_jid,QtCore.SIGNAL("textEdited ( const QString & )"),self.jidChanged)
 
 		self.searchJid=None
 
