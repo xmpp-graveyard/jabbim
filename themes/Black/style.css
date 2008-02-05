@@ -175,31 +175,30 @@ QMenuBar {
 /*whole roster - eg background is roster background*/
 QWidget#rosterView {
 
-  background-color:#141417; /*DONTKNOW*/
+  background: url(themes/Black/roster_background.png);  /*background of whole roster - images seem not working*/
 
-  alternate-background-color: black;
-  selection-background-color: black;
-  border: 1px solid black;
+ /* alternate-background-color: red;*/
+  /*selection-background-color: red;*/
+  border: 0px solid black;
   /*border: 0;*/
 }
 
 QWidget#selectedItemStyle{
-	color:#1b232c;/*outline of selected contact*/
-  	background-color:#1b232c;
+	color:#1b232c;	/*outline of selected contact*/
+  	background-color:#1b232c;	/*background of selected contact*/
+
 }
 
 QWidget#rosterTab{
-  background-color:#141417;  /*line around whole roster*/
+  background-color:#141417;		/*line around whole roster*/
   background-attachment: fixed;
-  border-style: inset;
-/*   width: 50px; */
+  border-style: none; 
 }
 
 QWidget#userStyleWidget {
  /* background-color: rgba(0,0,0,0);*/
-   background-color: rgb(26,26,26);
+   background-color: rgb(40,40,40);
   color:#888a85;       /*colour of contat's font*/
-  margin:0px;
 
 }
 
@@ -209,7 +208,16 @@ QWidget#groupStyleWidget {
   color:#888a85;
 }
 
+/*space with status in extended view*/
+QTextEdit#selectedContactStatus{
+	border: 0px none black;
+	color: #888a85;
+	background-color: #1b232c;
+}
 
+
+
+/*tabs start here*/
 
 QTabWidget > QFrame {
 border:0;  /*DONTKNOW*/
