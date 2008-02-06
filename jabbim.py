@@ -616,13 +616,14 @@ class clientClass(pyxl.client.Client):
 				message = message.replace("[message]",unicode(status))
 			message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', nick)
 			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
-
+			
 			w.chat.textEditWrite(message)
 		tab,index=self.main.chat.findTab(muc+"/"+nick)
 		if w and tab:
 			tab.chat.textEditWrite(message)
 			tab.ic=self.main.getIcon(unicode(muc),size="16x16",status=self.main.icons[self.main.shows[unicode(show)]])
 			self.main.chat.ui.chatTab.setTabIcon(index,tab.ic)
+		w.chat.lastMessageFrom=""
 
 	def on_presence(self,jid,show,error=None,first=False):
 		#print "presence",jid,show
@@ -677,6 +678,7 @@ class clientClass(pyxl.client.Client):
 
 						w.chat.textEditWrite(message)
 						w.chat.ui.chatstate.setText("")
+						w.chat.lastMessageFrom=""
 					break
 
 		else:
@@ -717,6 +719,7 @@ class clientClass(pyxl.client.Client):
 						message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', user)
 						message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
 						w.chat.textEditWrite(message)
+						w.chat.lastMessageFrom=""
 					break
 
 			if jid.resource:
