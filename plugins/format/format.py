@@ -36,6 +36,7 @@ class Plugin(plugins.PluginBase):
 		self.version = '0.02'
 		self.category = ['utils']
 		self.url = 'http://dev.jabbim.cz/jabbim'
+		self.plugindir = plugindir
 		self.configDialog=config(self)
 		
 		if main:
@@ -52,6 +53,17 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.loadConfig(homedir)
 	
+	def on_configChanged(self):
+		plugindir = self.plugindir
+		f=open(utils.path(plugindir+'/%s.py'%self.config['formater'])) 
+		textile = load_source(self.fname, plugindir+'/%s.py'%self.config['formater'], f)
+		f.close()
+		if self.config['formater'] == 'textile':
+			self.formater = textile.textile
+			self.args = {'encoding':'utf-8', 'output':'utf-8'}
+		elif self.config['formater'] == 'markdown':
+			self.formater = markdown
+			self.args = {}
 	
 	def on_groupchatMessageSend(self,jid,text="",xhtml="",composite=""):
 		print text, xhtml, self.formater
