@@ -1785,6 +1785,13 @@ class mainWindow(QtGui.QMainWindow):
 		print result
 
 	def getImage(self,file,size=None):
+		"""
+		Returns deffered where is QImage loaded.
+		@type file: unicode
+		@param file: path to file
+		@type size: list of integers
+		@param size: [width,height] which are used for resizing image
+		"""
 		d=threads.deferToThread(self._getImage,file,size)
 		return image
 
