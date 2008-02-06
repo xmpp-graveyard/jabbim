@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Mon Feb  4 05:22:42 2008
+# Created: Wed Feb  6 13:34:12 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -68,6 +68,13 @@ class Ui_chatwidget(object):
 
         spacerItem = QtGui.QSpacerItem(111,29,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.hboxlayout1.addItem(spacerItem)
+
+        self.linkButton = QtGui.QToolButton(self.layoutWidget)
+        self.linkButton.setIcon(QtGui.QIcon("images/16x16/actions/anchor.png"))
+        self.linkButton.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.linkButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
+        self.linkButton.setObjectName("linkButton")
+        self.hboxlayout1.addWidget(self.linkButton)
 
         self.boldButton = QtGui.QToolButton(self.layoutWidget)
         self.boldButton.setFocusPolicy(QtCore.Qt.NoFocus)

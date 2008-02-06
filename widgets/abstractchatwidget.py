@@ -13,6 +13,7 @@ from twisted.words.protocols.jabber import jid as jidT
 import time
 from include import utils
 from emoticonswidget import *
+from linkeditor import linkEditorDialog
 
 class abstractTextView(QtGui.QTextEdit):
 	"""
@@ -269,6 +270,8 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		#return r
 
 	def formatChanged(self,format):
+		if format.isAnchor():
+			return
 		self.blockSignals(True)
 		#QtCore.QObject.disconnect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
 		if len(unicode(self.toPlainText()))==0:
@@ -282,9 +285,8 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.blockSignals(False)
 		#QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
 
-	def reformat(self,fmt):
+	def reformat(self,fmt=None):
 		#QtCore.QObject.disconnect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
-		
 		self.parent.underline(self.underline)
 		self.parent.bold(self.bold)
 		self.parent.italic(self.italic)
@@ -393,6 +395,7 @@ class abstractChatWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.boldButton, QtCore.SIGNAL("clicked ( bool )"),self.bold)
 		QtCore.QObject.connect(self.ui.italicButton, QtCore.SIGNAL("clicked (bool)"),self.italic)
 		QtCore.QObject.connect(self.ui.underlineButton, QtCore.SIGNAL("clicked (bool)"),self.underline)
+		QtCore.QObject.connect(self.ui.linkButton, QtCore.SIGNAL("clicked (bool)"),self.link)
 		#QtCore.QObject.connect(self.ui.fontSize,QtCore.SIGNAL("activated(const QString &)"),self.fontSize)
 		
 		self.ui.textEdit.setAcceptRichText(False)
@@ -411,6 +414,7 @@ class abstractChatWidget(QtGui.QWidget):
 			self.ui.colorButton.hide()
 			self.ui.fontSize.hide()
 			self.ui.backgroundButton.hide()
+			self.ui.linkButton.hide()
 		else:
 			self.ui.fontSize.hide()
 			#db=QtGui.QFontDatabase()
@@ -421,6 +425,7 @@ class abstractChatWidget(QtGui.QWidget):
 
 			self.defaultFormat=self.ui.line.currentCharFormat()
 			self.defaultColor=self.ui.line.textColor()
+			self.ui.line.color=self.defaultColor
 			self.defaultBackgroundColor=QtGui.QColor(self.ui.line.palette().base().color())
 			colorMenu=QtGui.QMenu(self.ui.colorButton)
 			backgroundMenu=QtGui.QMenu(self.ui.backgroundButton)
@@ -490,6 +495,35 @@ class abstractChatWidget(QtGui.QWidget):
 			painter.end()
 			self.ui.backgroundButton.setIcon(QtGui.QIcon(colorIcon))
 	#fmt.setBackground(QtGui.QBrush(QtGui.QColor(QtCore.Qt.red)))
+
+	def isLink(self,text):
+		if text.find("://")!=-1:
+			return True
+		elif text.startswith("www."):
+			return True
+		return False
+
+	def link(self,bool=None):
+		text=unicode(self.ui.line.textCursor().selectedText())
+		clipboardText=unicode(QtGui.QApplication.clipboard().text())
+		url=None
+		linktext=None
+		if self.isLink(text):
+			url=text
+		elif self.isLink(clipboardText):
+			url=clipboardText
+			if len(text)!=0:
+				linktext=text
+		else:
+			if len(text)!=0:
+				linktext=text
+		
+		d=linkEditorDialog(self,url,linktext,self)
+		d.exec_()
+		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
+		#self.ui.line.textCursor().insertHtml("<a href=\"%s\">%s</a>"%(text,text))
+		
+		
 
 	def fontSize(self,size):
 		size=float(size)
@@ -607,7 +641,10 @@ class abstractChatWidget(QtGui.QWidget):
 		format=self.ui.line.currentCharFormat()
 		self.ui.line.clear()
 		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
-		self.ui.line.setCurrentCharFormat(format)
+		if format.isAnchor():
+			self.ui.line.reformat()
+		else:
+			self.ui.line.setCurrentCharFormat(format)
 		
 
 	def italic(self,bool):
@@ -633,6 +670,7 @@ class abstractChatWidget(QtGui.QWidget):
 		@param xhtml: Qt html
 		"""
 		# remove <style>
+		alinks=[]
 		a=parseString(unicode(xhtml))
 		for el in a.getElementsByTagName('p'):
 			if el.hasAttribute("style"):
@@ -640,6 +678,11 @@ class abstractChatWidget(QtGui.QWidget):
 		for el in a.getElementsByTagName('body'):
 			if el.hasAttribute("style"):
 				el.removeAttribute("style")
+		for el in a.getElementsByTagName('a'):
+			alinks.append(unicode(el.getAttribute('href')))
+			for x in el.getElementsByTagName("span"):
+				x.removeAttribute("style")
+				#print unicode(x.toxml())
 		# remove <body>
 		b=a.getElementsByTagName('body')
 		b=b[0]
@@ -669,16 +712,26 @@ class abstractChatWidget(QtGui.QWidget):
 		if xhtml.replace("<br/>",'\n').replace("<br />",'\n')==escape(text):
 			same=True
 		links=[]
+		print unicode(xhtml)
+		print alinks
 		temp=unicode(xhtml).replace(">","<")
 		for word in temp.split("<"):
 			for w in word.split(' '):
-				if not w in links:
+				alink=False
+				for l in alinks:
+					if w.find(l)!=-1:
+						alink=True
+						break
+				if not w in links and not alink:
+					print w
 					if w.find("://")!=-1:
 						links.append(w.strip())
 					elif w.startswith("www."):
 						links.append(w.strip())
+		print links
 		for link in links:
 			xhtml=xhtml.replace(link,'<a href="'+link+'">'+link+'</a>')
+		print xhtml
 		return xhtml,same
 	
 	def smileysClicked(self,bool):

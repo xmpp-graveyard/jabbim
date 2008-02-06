@@ -104,6 +104,19 @@
            </spacer>
           </item>
           <item>
+           <widget class="QToolButton" name="linkButton" >
+            <property name="icon" >
+             <iconset>images/16x16/actions/anchor.png</iconset>
+            </property>
+            <property name="popupMode" >
+             <enum>QToolButton::InstantPopup</enum>
+            </property>
+            <property name="toolButtonStyle" >
+             <enum>Qt::ToolButtonIconOnly</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QToolButton" name="boldButton" >
             <property name="focusPolicy" >
              <enum>Qt::NoFocus</enum>

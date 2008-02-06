@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Sun Feb  3 21:22:16 2008
+# Created: Wed Feb  6 13:44:18 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -53,10 +53,10 @@ class Ui_groupchatwidget(object):
         self.viewWidget = QtGui.QWidget(self.splitter)
         self.viewWidget.setObjectName("viewWidget")
 
-        self.widget = QtGui.QWidget(self.splitter)
-        self.widget.setObjectName("widget")
+        self.layoutWidget1 = QtGui.QWidget(self.splitter)
+        self.layoutWidget1.setObjectName("layoutWidget1")
 
-        self.gridlayout1 = QtGui.QGridLayout(self.widget)
+        self.gridlayout1 = QtGui.QGridLayout(self.layoutWidget1)
         self.gridlayout1.setMargin(0)
         self.gridlayout1.setSpacing(6)
         self.gridlayout1.setObjectName("gridlayout1")
@@ -69,7 +69,14 @@ class Ui_groupchatwidget(object):
         spacerItem = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.hboxlayout.addItem(spacerItem)
 
-        self.boldButton = QtGui.QToolButton(self.widget)
+        self.linkButton = QtGui.QToolButton(self.layoutWidget1)
+        self.linkButton.setIcon(QtGui.QIcon("images/16x16/actions/anchor.png"))
+        self.linkButton.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.linkButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
+        self.linkButton.setObjectName("linkButton")
+        self.hboxlayout.addWidget(self.linkButton)
+
+        self.boldButton = QtGui.QToolButton(self.layoutWidget1)
         self.boldButton.setFocusPolicy(QtCore.Qt.NoFocus)
         self.boldButton.setIcon(QtGui.QIcon("images/16x16/actions/format-text-bold.png"))
         self.boldButton.setCheckable(True)
@@ -77,7 +84,7 @@ class Ui_groupchatwidget(object):
         self.boldButton.setObjectName("boldButton")
         self.hboxlayout.addWidget(self.boldButton)
 
-        self.italicButton = QtGui.QToolButton(self.widget)
+        self.italicButton = QtGui.QToolButton(self.layoutWidget1)
         self.italicButton.setFocusPolicy(QtCore.Qt.NoFocus)
         self.italicButton.setIcon(QtGui.QIcon("images/16x16/actions/format-text-italic.png"))
         self.italicButton.setCheckable(True)
@@ -85,7 +92,7 @@ class Ui_groupchatwidget(object):
         self.italicButton.setObjectName("italicButton")
         self.hboxlayout.addWidget(self.italicButton)
 
-        self.underlineButton = QtGui.QToolButton(self.widget)
+        self.underlineButton = QtGui.QToolButton(self.layoutWidget1)
         self.underlineButton.setFocusPolicy(QtCore.Qt.NoFocus)
         self.underlineButton.setIcon(QtGui.QIcon("images/16x16/actions/format-text-underline.png"))
         self.underlineButton.setCheckable(True)
@@ -93,43 +100,43 @@ class Ui_groupchatwidget(object):
         self.underlineButton.setObjectName("underlineButton")
         self.hboxlayout.addWidget(self.underlineButton)
 
-        self.colorButton = QtGui.QToolButton(self.widget)
+        self.colorButton = QtGui.QToolButton(self.layoutWidget1)
         self.colorButton.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.colorButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         self.colorButton.setObjectName("colorButton")
         self.hboxlayout.addWidget(self.colorButton)
 
-        self.backgroundButton = QtGui.QToolButton(self.widget)
+        self.backgroundButton = QtGui.QToolButton(self.layoutWidget1)
         self.backgroundButton.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.backgroundButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         self.backgroundButton.setObjectName("backgroundButton")
         self.hboxlayout.addWidget(self.backgroundButton)
 
-        self.fontSize = QtGui.QComboBox(self.widget)
+        self.fontSize = QtGui.QComboBox(self.layoutWidget1)
         self.fontSize.setObjectName("fontSize")
         self.hboxlayout.addWidget(self.fontSize)
 
-        self.line = QtGui.QFrame(self.widget)
+        self.line = QtGui.QFrame(self.layoutWidget1)
         self.line.setFrameShape(QtGui.QFrame.VLine)
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
         self.line.setObjectName("line")
         self.hboxlayout.addWidget(self.line)
 
-        self.smileys = QtGui.QToolButton(self.widget)
+        self.smileys = QtGui.QToolButton(self.layoutWidget1)
         self.smileys.setIcon(QtGui.QIcon("images/16x16/emotes/biggrin.png"))
         self.smileys.setCheckable(True)
         self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.smileys.setObjectName("smileys")
         self.hboxlayout.addWidget(self.smileys)
 
-        self.sendButton = QtGui.QToolButton(self.widget)
+        self.sendButton = QtGui.QToolButton(self.layoutWidget1)
         self.sendButton.setIcon(QtGui.QIcon("images/16x16/actions/send.png"))
         self.sendButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.sendButton.setObjectName("sendButton")
         self.hboxlayout.addWidget(self.sendButton)
         self.gridlayout1.addLayout(self.hboxlayout,1,0,1,2)
 
-        self.selfAvatar = QtGui.QLabel(self.widget)
+        self.selfAvatar = QtGui.QLabel(self.layoutWidget1)
 
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(0))
         sizePolicy.setHorizontalStretch(0)
@@ -139,20 +146,20 @@ class Ui_groupchatwidget(object):
         self.selfAvatar.setObjectName("selfAvatar")
         self.gridlayout1.addWidget(self.selfAvatar,0,0,1,1)
 
-        self.lineWidget = QtGui.QWidget(self.widget)
+        self.lineWidget = QtGui.QWidget(self.layoutWidget1)
         self.lineWidget.setMinimumSize(QtCore.QSize(0,10))
         self.lineWidget.setObjectName("lineWidget")
         self.gridlayout1.addWidget(self.lineWidget,0,1,1,1)
 
-        self.layoutWidget1 = QtGui.QWidget(self.splitter_2)
-        self.layoutWidget1.setObjectName("layoutWidget1")
+        self.layoutWidget2 = QtGui.QWidget(self.splitter_2)
+        self.layoutWidget2.setObjectName("layoutWidget2")
 
-        self.vboxlayout1 = QtGui.QVBoxLayout(self.layoutWidget1)
+        self.vboxlayout1 = QtGui.QVBoxLayout(self.layoutWidget2)
         self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setSpacing(6)
         self.vboxlayout1.setObjectName("vboxlayout1")
 
-        self.users = QtGui.QTreeWidget(self.layoutWidget1)
+        self.users = QtGui.QTreeWidget(self.layoutWidget2)
         self.users.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.users.setIconSize(QtCore.QSize(32,32))
         self.users.setIndentation(0)
@@ -160,7 +167,7 @@ class Ui_groupchatwidget(object):
         self.users.setObjectName("users")
         self.vboxlayout1.addWidget(self.users)
 
-        self.pluginWidget = QtGui.QWidget(self.layoutWidget1)
+        self.pluginWidget = QtGui.QWidget(self.layoutWidget2)
         self.pluginWidget.setObjectName("pluginWidget")
         self.vboxlayout1.addWidget(self.pluginWidget)
         self.gridlayout.addWidget(self.splitter_3,0,0,1,1)
