@@ -20,30 +20,41 @@ except:
 from imp import load_source
 from include import utils
 
+class config:
+	def __init__(self,main):
+		self.main=main
+		self.config={}
+		self.config['formater']={'type':'list-single','label':self.main.tr("Formatter"), 'items':{'Textile':'textile', 'MarkDown':'markdown'}, 'value':'textile'}
+
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'format'
-		self.description = 'Formaters support'
+		self.description = 'Formatters support'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Format'
 		self.version = '0.02'
 		self.category = ['utils']
 		self.url = 'http://dev.jabbim.cz/jabbim'
-
+		self.configDialog=config(self)
+		
 		if main:
 			self.loadConfig()
-			f=open(utils.path(plugindir+'/textile.py')) 
-			textile = load_source(self.fname, plugindir+'/textile.py', f)
+			f=open(utils.path(plugindir+'/%s.py'%self.config['formater'])) 
+			textile = load_source(self.fname, plugindir+'/%s.py'%self.config['formater'], f)
 			f.close()
-			self.formater = textile.textile
-			self.args = {'encoding':'utf-8', 'output':'utf-8'}
+			if self.config['formater'] == 'textile':
+				self.formater = textile.textile
+				self.args = {'encoding':'utf-8', 'output':'utf-8'}
+			elif self.config['formater'] == 'markdown':
+				self.formater = markdown
+				self.args = {}
 		else:
 			self.loadConfig(homedir)
 	
 	
 	def on_groupchatMessageSend(self,jid,text="",xhtml="",composite=""):
-		print text, xhtml
+		print text, xhtml, self.formater
 		if xhtml == None or xhtml.strip() == "" or xhtml.replace('<br />','\n') == text:
 			xhtml =xhtml.replace('<br />','\n')
 			text = escapeToXml(text)
