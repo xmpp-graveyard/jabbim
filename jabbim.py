@@ -1896,6 +1896,8 @@ class mainWindow(QtGui.QMainWindow):
 						separator=False
 					else:
 						separator=True
+				action=menu.addAction(self.getIcon(status="offline",size="16x16"),self.tr("Log out"))
+				action.setData(QtCore.QVariant(['offline',unicode(transport)]))
 				if separator:
 					menu.addSeparator()
 				# We have to use status icon from previous instance of QMenu,
