@@ -27,13 +27,15 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Attention, please!'
 		self.author = "Josef 'PepeQ' Halicek"
 		self.name = 'Attention'
-		self.version = '0.007'
+		self.version = '0.018'
 		self.category = ['fun']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 
 		if main:
 			self.loadConfig()
 			self.registerHandler('on_attention', self.on_attention)
+			self.group=QtGui.QButtonGroup()
+			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 		else:
 			self.loadConfig(homedir)
 
@@ -42,4 +44,18 @@ class Plugin(plugins.PluginBase):
 		self.main.tray.showMessage(frm,self.tr("asks for attention!"), QtGui.QSystemTrayIcon.Information, 3000)
 
 
+	def buildChatWidget(self,jid,layout,widget):
+		button=QtGui.QToolButton()
+		button.setText(self.tr('Attention'))
+		button.setIconSize(QtCore.QSize(16,16))
+		button.setIcon(QtGui.QIcon("%s/attention.png" % self.pluginDir))
+		button.jid=unicode(jid)
+		button.setToolTip(self.tr('Attract the attention of the user!'))
 
+		
+		self.group.addButton(button)
+		layout.addWidget(button)
+		
+		
+	def buttonClicked(self, button):
+		self.main.client.sendAttention(button.jid, " ")
