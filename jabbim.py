@@ -1784,6 +1784,17 @@ class mainWindow(QtGui.QMainWindow):
 		log.msg( 'CHYBA V DATABAZI?!!! ')
 		print result
 
+	def getImage(self,file,size=None):
+		d=threads.deferToThread(self._getImage,file,size)
+		return image
+
+	def _getImage(self,file,size):
+		image=QtGui.QImage(file)
+		if size:
+			image=image.scaled(size[0],size[1],QtCore.Qt.KeepAspectRatio)#,QtCore.Qt.SmoothTransformation)
+		return image
+
+
 	def buildTrayMenu(self):
 		"""
 		Builds system tray menu.
