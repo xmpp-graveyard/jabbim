@@ -1729,7 +1729,7 @@ class Client(derived):
 		self.on_fileReceived(sid, el['id'])
 	
 	def declineFT(self, sid):
-		if not self.ft.has_key(sid)
+		if not self.ft.has_key(sid):
 			return False
 		obj = self.ft[sid]
 		iq = Element((None, 'iq'))
