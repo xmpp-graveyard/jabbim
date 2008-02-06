@@ -2508,16 +2508,16 @@ class mainWindow(QtGui.QMainWindow):
 		self.styleSheetText=text
 		self.ui.roster.reskin(text) # reskin roster
 
-	def addContactMainWindow(self):
+	def addContactMainWindow(self,jid=""):
 		"""
 		Shows Add Contact Dialog.
 		"""
 		if not self.addcontactdialog:
-			self.addcontactdialog=widgets.addcontact.addContactDialog(self,self)
+			self.addcontactdialog=widgets.addcontact.addContactDialog(self,self,jid=jid)
 			self.addcontactdialog.show()
 		else:
 			if self.addcontactdialog.isHidden()==True:
-				self.addcontactdialog=widgets.addcontact.addContactDialog(self,self)
+				self.addcontactdialog=widgets.addcontact.addContactDialog(self,self,jid=jid)
 				self.addcontactdialog.show()
 
 	def bookmarksClicked(self,item,i):

@@ -68,7 +68,7 @@ class addContactDialog(QtGui.QDialog):
 			return
 		jid,legacy,form=data
 		if form!=None:
-			self.dialog=searchDialog(self.main,jid,form,self)
+			self.dialog=searchDialog(self.main,jid,form,self,self)
 			self.dialog.show()
 
 
