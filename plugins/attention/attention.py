@@ -27,7 +27,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Attention, please!'
 		self.author = "Josef 'PepeQ' Halicek"
 		self.name = 'Attention'
-		self.version = '0.018'
+		self.version = '0.03'
 		self.category = ['fun']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 
@@ -41,7 +41,8 @@ class Plugin(plugins.PluginBase):
 
 
 	def on_attention(self, frm, body, subject, xhtml, error):
-		self.main.tray.showMessage(frm,self.tr("asks for attention!"), QtGui.QSystemTrayIcon.Information, 3000)
+		self.main.tray.showMessage(frm,self.tr("asks for attention!"), QtGui.QSystemTrayIcon.Information, 4000)
+		self.playsound()
 
 
 	def buildChatWidget(self,jid,layout,widget):
@@ -59,3 +60,9 @@ class Plugin(plugins.PluginBase):
 		
 	def buttonClicked(self, button):
 		self.main.client.sendAttention(button.jid, " ")
+	
+	def playsound(self):
+		if sys.platform == 'linux2': # linux sounds are produced using aplay
+			os.system('aplay -q '+self.pluginDir+'/attention.wav'+' &')
+		else:
+			QtGui.QSound.play(self.pluginDir+'/attention.wav')
