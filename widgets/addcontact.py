@@ -15,7 +15,11 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.setupUi(self)
 		self.main=main
 		self.add=add
-		print self.add
+		self.ui.save=self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok)
+		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
+		self.ui.save.setText(self.tr("Add"))
+		self.ui.search=QtGui.QPushButton(self.tr("Search User"))
+		self.ui.buttonBox.addButton(self.ui.search,QtGui.QDialogButtonBox.ActionRole)
 		for k,v in self.main.client.roster['groups'].iteritems():
 			if k==group:
 				self.ui.add_group.insertItem(0,unicode(k))
