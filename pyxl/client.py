@@ -1728,6 +1728,20 @@ class Client(derived):
 		self.ft[sid] = socks5.FTReceive(self, el['from'], sid, file, methods, el['to'],el['id'])
 		self.on_fileReceived(sid, el['id'])
 	
+	def declineFT(self, sid):
+		if not self.ft.has_key(sid)
+			return False
+		obj = self.ft[sid]
+		iq = Element((None, 'iq'))
+		iq['xml:lang'] = self.xmlLang
+		iq['to'] = obj.tojid
+		iq['id'] = obj.answerId
+		iq['type'] = 'error'
+		err = iq.addElement('error', content = 'Declined')
+		err['code'] = '403'
+		self.xmlstream.send(iq)
+		return True
+	
 # 	def on_FileReceived(self, sid, id):
 # 		if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
 # 			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
