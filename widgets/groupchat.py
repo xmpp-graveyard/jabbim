@@ -64,6 +64,7 @@ class groupChatWidget(abstractChatWidget):
 		self.tabWord=None #: when user press Tab, contains word where was Tab pressed
 		self.name_id=-1 # for tabPressed
 		self.ui.disco_info.hide()
+		self.lastMessageFrom=""
 
 		# signals
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.userClicked)

@@ -249,6 +249,7 @@ class chatWidget(abstractChatWidget):
 		# Maximum width of avatar Widget
 		self.ui.avatar.setMaximumWidth(128)
 		self.noColor=True
+		self.lastMessageFrom=""
 		
 		# get users avatar
 		self.file=self.main.homeDir+'/avatars/'+unicode(jidT.JID(jid).userhost()) #: path to users avatar
@@ -395,7 +396,13 @@ class chatWidget(abstractChatWidget):
 				if unicode(text).startswith("/me"):
 					message=self.main.skin["my_me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text[3:]).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 				else:
-					message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+					message=self.main.skin["my_message"]
+					if self.lastMessageFrom==unicode(self.main.client.jid.user):
+						if self.main.skin.has_key('message_continue'):
+							message=self.main.skin["message_continue"]
+					message=message.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+					print message
+			self.lastMessageFrom=unicode(self.main.client.jid.user)
 			# show message
 			if not False in ret:
 				self.textEditWrite(message)

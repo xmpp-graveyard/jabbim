@@ -584,6 +584,7 @@ class chatWindow(QtGui.QMainWindow):
 			body=xhtml
 			body=body.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 		countMessage=False
+		
 		if int(self.ui.chatTab.currentIndex())!=i:
 			if self.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
 				self.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
@@ -638,8 +639,14 @@ class chatWindow(QtGui.QMainWindow):
 				if unicode(body).startswith("/me"):
 					message=self.main.skin["my_me_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body)[3:])
 					body=unicode(body)[3:]
+					if w.chat.lastMessageFrom==unicode(user):
+						if self.main.skin.has_key('my_me_message_continue'):
+							message=self.main.skin["my_me_message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
 				else:
 					message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body))
+					if w.chat.lastMessageFrom==unicode(user):
+						if self.main.skin.has_key('my_message_continue'):
+							message=self.main.skin["my_message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
 			else:
 				# it's message for us
 				if utils.need_highlight(unicode(w.chat.nick), unicode(oldbody)) and not unicode(body).startswith("/me"):
@@ -648,12 +655,21 @@ class chatWindow(QtGui.QMainWindow):
 							self.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
 							self.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(255,0,0))
 					message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body))
+					if w.chat.lastMessageFrom==unicode(user):
+						if self.main.skin.has_key('message_for_me_continue'):
+							message=self.main.skin["message_for_me_continue"].replace("[time]",self.main.now()).replace("[user]",user)
 				else:
 					if unicode(body).startswith("/me"):
 						message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body)[3:])
 						body=unicode(body)[3:]
+						if w.chat.lastMessageFrom==unicode(user):
+							if self.main.skin.has_key('me_message_continue'):
+								message=self.main.skin["me_message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
 					else:
-						message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body))
+						message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user)
+						if w.chat.lastMessageFrom==unicode(user):
+							if self.main.skin.has_key('message_continue'):
+								message=self.main.skin["message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
 					colors=None
 					if len(w.chat.getUserItems(user))!=0:
 						item=w.chat.getUserItems(user)[0]
@@ -666,16 +682,15 @@ class chatWindow(QtGui.QMainWindow):
 						message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
 						if len(colors)==3:
 							message=message.replace("[additive]",colors[2])
-			
+		
 
-
-				
 			message=message.replace("[avatar]","<img src=\""+file+"\" height=\""+w.chat.sizes[file][1]+"\" width=\""+w.chat.sizes[file][0]+"\" />")
 			message=message.replace('[message]',body)
 			# write message
 			if countMessage:
 				w.chat.unread+=1
 			w.chat.textEditWrite(message)
+			w.chat.lastMessageFrom=unicode(user)
 			return
 		else:
 			# get delay from string
@@ -701,10 +716,9 @@ class chatWindow(QtGui.QMainWindow):
 				colors=self.main.getSkinColors(0)
 			if colors!=None:
 				message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
-
+			w.chat.lastMessageFrom=unicode(user)
 
 			w.chat.textEditWrite(message)
-
 	def addChatTab(self,jid,name,icon,message=None):
 		for i in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(i)

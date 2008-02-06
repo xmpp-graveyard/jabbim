@@ -1077,37 +1077,26 @@ class clientClass(pyxl.client.Client):
 				message=xhtml.replace("&quot;",'"')
 				message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 
-				#print 'xhtml=',unicode(message)
-			#file=self.main.homeDir+'/avatars/'+unicode(frm.userhost())
-			#<img src="[avatar]" width="32" height="32"/>
-			#if not os.path.isfile(file):
-				#file="images/32x32/apps/jabbim.png"
+
+			tab,tabIndex=self.main.chat.findTab(frm.full())
 			if unicode(body).startswith("/me"):
 				message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message[3:])
 			else:
-				message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message)
+				skin=self.main.skin["message"]
+				if tab:
+					if tab.chat.lastMessageFrom==unicode(user):
+						if self.main.skin.has_key('message_continue'):
+							skin=self.main.skin["message_continue"]
+				message=skin.replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message)
 			colors=self.main.getSkinColors(0)
 			if colors!=None:
 				message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
 				if len(colors)==3:
 					message=message.replace("[additive]",colors[2])
-			# find tab
-			#tab=None
-			#tabIndex=0
-			#for i in range(self.main.chat.ui.chatTab.count()):
-				#w=self.main.chat.ui.chatTab.widget(i)
-				#if unicode(w.jid)==unicode(frm):
-					#tab=w
-					#tabIndex=i
-					#break
-				#if unicode(w.jid).rsplit("/")[0]==unicode(frm).rsplit("/")[0]:
-					#tab=w
-					#tabIndex=i
-			tab,tabIndex=self.main.chat.findTab(frm.full())
 
-						
 			# we found tab
 			if tab!=None:
+				tab.chat.lastMessageFrom=unicode(user)
 				message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+str(tab.chat.avatarHeight)+"\" />")
 				# write message and set 'message' icon
 				if int(self.main.chat.ui.chatTab.currentIndex())!=tabIndex:
