@@ -535,7 +535,7 @@ class events:
 			height=metrics.height()+rect.height()+metrics.height()+pixmap.height()
 		else:
 			height=metrics.height()+rect.height()+metrics.height()
-		return self.addBooleanEvent(self.main.client.ftStarted,[sid,id],None,[],self.main.tr("File transfer"),text=text,height=height,name=unicode(jid),typ="ftTransfer",icon=None,pixmap=pixmap)
+		return self.addBooleanEvent(self.main.client.ftStarted,[sid,id],self.main.client.declineFT,[sid],self.main.tr("File transfer"),text=text,height=height,name=unicode(jid),typ="ftTransfer",icon=None,pixmap=pixmap)
 
 	def addAddUserEvent(self,jid,status):
 		"""
