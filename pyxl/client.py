@@ -119,11 +119,7 @@ class Client(derived):
 		
 		
 		self.caps_cache = {} # 'node': [feature1, feature2]
-		features = []
-		for f in self.discofeatures[None]:
-			features.append(f[0])
-		self.caps_ext = self.calcCapsExt(features = features)
- 		self.cacheCaps(self.caps_ext, features)
+		self.rebuildCaps()
 		self.evil = False
 		self.log = True
 		self.xmlLang = 'cs'
@@ -158,6 +154,12 @@ class Client(derived):
 				if line[1] not in features:
 					self.caps_cache[line[0]] = features.append(line[1])
 
+	def rebuildCaps(self):
+		features = []
+		for f in self.discofeatures[None]:
+			features.append(f[0])
+		self.caps_ext = self.calcCapsExt(features = features)
+ 		self.cacheCaps(self.caps_ext, features)
 			
 
 	def heartbeat(self):
@@ -397,6 +399,11 @@ class Client(derived):
 		else:
 			self.discofeatures[node] = []
 			self.discofeatures[node].append((feature, identity))
+	
+	def unregisterFeature(self, feature, node = None):
+		if self.discofeatures.has_key(node):
+			if (feature,) in self.discofeatures[node]:
+				self.discofeatures[node].remove((feature,))
 
 	#def registerItem(self, jid = None, name = None, node = None, parentnode = None):
 	#	log.msg("registering disco#item")
