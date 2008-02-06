@@ -282,7 +282,10 @@ class chatWidget(abstractChatWidget):
 			print "features:",self.main.client.groupchats[jidt.userhost()].users[jidt.resource].features
 			hasFeature='http://jabber.org/protocol/si/profile/file-transfer' in self.main.client.groupchats[jidt.userhost()].users[jidt.resource].features
 		else:
-			hasFeature=main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/si/profile/file-transfer')
+			try:
+				hasFeature=main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/si/profile/file-transfer')
+			except:
+				hasFeature=False
 		if hasFeature:
 			# sendFile buttons
 			self.ui.sendFile=QtGui.QToolButton()
