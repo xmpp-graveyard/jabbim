@@ -131,7 +131,7 @@ def loadConfig(main,status):
 			"saveGeometry":"True",
 			"saveExpandedGroups":"True",
 			"expandedGroups":[],
-			"plugins":['notification', 'archive'],
+			"plugins":['notification', 'archive', 'autoaway', 'autoupdate'],
 			"rosterMode":"normal",
 			"chatMode":"normal",
 			"statusMessages":list(status),
