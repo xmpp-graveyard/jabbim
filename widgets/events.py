@@ -245,7 +245,7 @@ class InfoWidget(abstractWidget):
 		#self.setMinimumHeight(40)
 
 class BooleanWidget(abstractWidget):
-	def __init__(self,header,text,item,main,trueCall,trueDict,falseCall,falseDict,parent=None,height=40):
+	def __init__(self,header,text,item,main,trueCall,trueDict,falseCall,falseDict,parent=None,height=40,pixmap=None):
 		apply(abstractWidget.__init__,(self,header,text,item,main,falseCall,falseDict,trueCall,trueDict,None,None,parent,40))
 
 		self.submitButton = QtGui.QPushButton(self)
@@ -263,6 +263,12 @@ class BooleanWidget(abstractWidget):
 
 		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
 		QtCore.QObject.connect(self.submitButton,QtCore.SIGNAL("clicked()"),self.submitClicked)
+		
+		if pixmap:
+			label=QtGui.QLabel()
+			label.setPixmap(pixmap)
+			label.setAlignment(QtCore.Qt.AlignCenter)
+			self.gridlayout.addWidget(label,1,0,1,1)
 
 class AddUserWidget(abstractWidget):
 	def __init__(self,header,text,item,main,trueCall,trueDict,falseCall,falseDict,parent=None,height=40):
@@ -513,13 +519,23 @@ class events:
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 		self.addEvent(unicode(name),unicode(typ),icon,item.widget,tooltip)
 
-	def addBooleanEvent(self,trueCall,trueDict,falseCall,falseDict,header="",text="",height=40,name="",typ="",icon=None):
+	def addBooleanEvent(self,trueCall,trueDict,falseCall,falseDict,header="",text="",height=40,name="",typ="",icon=None,pixmap=None):
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		item.setSizeHint(QtCore.QSize(100,height))
-		item.widget=BooleanWidget(header,text,item,self.main,trueCall,trueDict,falseCall,falseDict,self.main.ui.eventsListWidget,height)
+		item.widget=BooleanWidget(header,text,item,self.main,trueCall,trueDict,falseCall,falseDict,self.main.ui.eventsListWidget,height,pixmap=pixmap)
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 		self.addEvent(unicode(name),unicode(typ),icon,item.widget)
 		return item.widget
+
+	def addFTReceivedEvent(self,sid,id,jid,pixmap):
+		text=unicode(" %s is sending you file."%unicode(jid))
+		metrics=QtGui.QApplication.fontMetrics()
+		rect=metrics.boundingRect(0, 0,self.main.width(), self.main.height(), QtCore.Qt.TextWordWrap, text)
+		if pixmap:
+			height=metrics.height()+rect.height()+metrics.height()+pixmap.height()
+		else:
+			height=metrics.height()+rect.height()+metrics.height()
+		return self.addBooleanEvent(self.main.client.ftStarted,[sid,id],None,[],self.main.tr("File transfer"),text=text,height=height,name=unicode(jid),typ="ftTransfer",icon=None,pixmap=pixmap)
 
 	def addAddUserEvent(self,jid,status):
 		"""
