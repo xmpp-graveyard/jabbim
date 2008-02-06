@@ -478,6 +478,15 @@ class derived:
 		d = iq.send()
 		d.addCallback(self._bookmarksSet).addErrback(self.chyba)
 		
+	def sendAttention(self, to, body):
+		message = Element((None,'message'))
+		message['xml:lang'] = self.xmlLang
+		message['to'] = to
+		if body != None and body.strip() != '':
+			message.addElement('body', content = body)
+		message.addElement('attention', 'http://www.xmpp.org/extensions/xep-0224.html#ns')
+		message['type'] = 'headline'
+		self.xmlstream.send(message)
 
 	def getMetacontacts(self):
 		log.msg('get meta contacts')
