@@ -30,7 +30,7 @@ import dataforms
 from twisted.words.protocols.jabber import jid as jidT
 import vcardeditor
 from include import utils
-import filetransfer
+#import filetransfer
 from abstractchatwidget import abstractChatWidget,abstractTextView
 import addcontact
 
@@ -421,16 +421,7 @@ class groupChatWidget(abstractChatWidget):
 			self.ve.show()
 		elif cmd == "send_file":
 			jid=unicode(action.data().toString())
-
-			file=QtGui.QFileDialog.getOpenFileNames(self,"Choose file")
-			file=list(file)
-			if len(file)!=0:
-				new=[]
-				for f in file:
-					new.append(unicode(f))
-				file=new
-				self.dialog=filetransfer.filetransferDialog(self.main,file,jid)
-				self.dialog.show()
+			self.main.sendFiles(jid)
 		elif cmd == 'add-user':
 			jid, nick = [unicode(val.toString()) for val in action.data().toList()]
 			addcontact.addContactDialog(self.main,self.main, jid = jid, name = nick).show()
