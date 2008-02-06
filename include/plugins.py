@@ -44,6 +44,19 @@ class PluginBase:
 		self.loadedWindows=[]
 		self.showInPreferences=False
 		self.preferencesIcon=QtGui.QIcon()
+		self.registeredFeatures=[]
+
+	def registerFeature(self,feature):
+		if not feature in self.registeredFeatures:
+			self.main.client.registerFeature(feature)
+			self.main.client.rebuildCaps()
+			self.registeredFeatures.append(feature)
+
+	def unregisterFeature(self,feature):
+		if feature in self.registeredFeatures:
+			self.main.client.unregisterFeature(feature)
+			self.main.client.rebuildCaps()
+			self.registeredFeatures.remove(feature)
 
 	def connected(self):
 		pass
@@ -178,6 +191,9 @@ class PluginBase:
 		self.writeConfig()
 		for handler in self.handlers:
 			self.main.client.dispatcher.unregisterHandler(handler, unicode(self.name))
+		for i in range(len(self.registeredFeatures)):
+			self.unregisterFeature(self.registeredFeatures[0])
+		self.registeredFeatures=[]
 		self.main = None
 		self.config = None
 		self.configDialog = None
