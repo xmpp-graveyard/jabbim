@@ -156,10 +156,12 @@ class clientClass(pyxl.client.Client):
 						widget.widget.stats.setText(mainWindow.tr("Complete"))
 						self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" has been sent/downloaded "), QtGui.QSystemTrayIcon.Information, 4000)
 					elif self.main.ftError[sid].lower()=='canceled':
+						widget.widget.progressBar.setValue(0)
 						widget.widget.stats.setText(mainWindow.tr("File declined"))
 						if widget.download==False:
 							self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("user declined to receive file")+" "+basename(unicode(widget.file)), QtGui.QSystemTrayIcon.Critical, 4000)
 					else:
+						widget.widget.progressBar.setValue(0)
 						widget.widget.stats.setText(mainWindow.tr("Error")+" "+unicode(self.main.ftError[sid]))
 						self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" can't be sent/downloadeded "), QtGui.QSystemTrayIcon.Critical, 4000)
 					#widget.widget.complete=True
