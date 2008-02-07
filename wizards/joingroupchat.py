@@ -100,6 +100,7 @@ class joinGroupchatWizard(QtGui.QWizard):
 		#self.addPage(createFirstPage(self))
 		self.addPage(createSecondPage(self))
 		self.setWindowTitle(self.tr("Join Groupchat"))
+		self.setButtonText(QtGui.QWizard.FinishButton,self.tr("Join"))
 
 	#def initializePage(self,i):
 		#if i==1:
