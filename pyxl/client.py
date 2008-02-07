@@ -43,6 +43,7 @@ from base64 import b64encode, b64decode
 from privacy import *
 from adhoc import *
 import rc
+import traceback
 #from bosh import client as bclient
 #import bosh_wokkel
 try:
@@ -537,35 +538,40 @@ class Client(derived):
 		pass #no tak neprisly no
 	def _bookmarksReceived(self, el):
 		log.msg( 'bookmarks received')
-		for child in el.elements():
-			if child.name == 'query':
-				for els in child.elements():
-					if els.name == 'storage':
-						for bookmark in els.elements():
-							if bookmark.name == 'conference':
-								jid = bookmark['jid']
-								if bookmark.hasAttribute('name'):
-									name = bookmark['name']
-								else:
-									name = jid
-								autojoin = False
-								if bookmark.hasAttribute('autojoin'):
-									autojoin = bookmark['autojoin']
-								nick = self.jid.user
-								password = None
-								for elm in bookmark.elements():
-									if elm.name == 'nick':
-										nick = unicode(elm)
-									if elm.name == 'password':
-										password = unicode(elm)
-								self.bookmarks['conference'][name] = Bookmark(name, 'conference', jid, autojoin, nick,  password)
-							#if bookmark.name == 'url':
-								#url = bookmark['url']
-								#if bookmark.hasAttribute('name'):
-									#name = bookmark['name']
-								#else:
-									#name = url
-								#self.bookmarks['conference'][name] = Bookmark(name, 'url', url = url)
+		try:
+			for child in el.elements():
+				if child.name == 'query':
+					for els in child.elements():
+						if els.name == 'storage':
+							for bookmark in els.elements():
+								if bookmark.name == 'conference':
+									jid = bookmark['jid']
+									if bookmark.hasAttribute('name'):
+										name = bookmark['name']
+									else:
+										name = jid
+									autojoin = False
+									if bookmark.hasAttribute('autojoin'):
+										autojoin = bookmark['autojoin']
+									nick = self.jid.user
+									password = None
+									for elm in bookmark.elements():
+										if elm.name == 'nick':
+											nick = unicode(elm)
+										if elm.name == 'password':
+											password = unicode(elm)
+									self.bookmarks['conference'][name] = Bookmark(name, 'conference', jid, autojoin, nick,  password)
+								if bookmark.name == 'url':
+									url = bookmark['url']
+									if bookmark.hasAttribute('name'):
+										name = bookmark['name']
+									else:
+										name = url
+									self.bookmarks['conference'][name] = Bookmark(name, 'url', url = url)
+		except Exception, ex:
+			log.msg('Storage error: ' +unicode(ex))
+			message = traceback.format_exc()
+			log.msg(message)
 
 
 	
