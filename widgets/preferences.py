@@ -869,18 +869,20 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.config.write()
 		
 		for i in range(int(self.ui.plugins.topLevelItemCount())):
-			item=self.ui.plugins.topLevelItem(i)
-			data=item.data(32,0)
-			plugin=unicode(data.toString())
-			widget=self.ui.plugins.itemWidget(item,0)
-			if widget.isChecked()==True and not plugin in self.loadedPlugins:
-				#shutil.copytree("plugins/"+plugin, self.main.homeDir+"/.jabbim/plugins/"+plugin)
-				self.main.loadPlugin(plugin)
-				self.main.config['plugins'].append(plugin)
-			elif widget.isChecked()==False and plugin in self.loadedPlugins:
-				self.main.unloadPlugin(plugin)
-				self.main.config['plugins'].remove(plugin)
-				#shutil.rmtree(self.main.homeDir+"/.jabbim/plugins/"+plugin)
+			it=self.ui.plugins.topLevelItem(i)
+			for child in range(int(it.childCount())):
+				item=it.child(child)
+				data=item.data(32,0)
+				plugin=unicode(data.toString())
+				widget=self.ui.plugins.itemWidget(item,0)
+				if widget.isChecked()==True and not plugin in self.loadedPlugins:
+					#shutil.copytree("plugins/"+plugin, self.main.homeDir+"/.jabbim/plugins/"+plugin)
+					self.main.loadPlugin(plugin)
+					self.main.config['plugins'].append(plugin)
+				elif widget.isChecked()==False and plugin in self.loadedPlugins:
+					self.main.unloadPlugin(plugin)
+					self.main.config['plugins'].remove(plugin)
+					#shutil.rmtree(self.main.homeDir+"/.jabbim/plugins/"+plugin)
 		
 		#size=unicode(self.main.config['rosterIconSize']).rsplit("x")
 		#self.main.ui.roster.setIconSize(QtCore.QSize(int(size[0]),int(size[1])))
