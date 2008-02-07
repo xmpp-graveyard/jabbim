@@ -720,6 +720,25 @@ class chatWindow(QtGui.QMainWindow):
 			w.chat.lastMessageFrom=unicode(user)
 
 			w.chat.textEditWrite(message)
+
+	def openNewChatTab(jid,name,icon,message=None):
+		created=False
+		if self.isHidden():
+			created=True
+			self.showMinimized()
+		self.addChatTab(jid,unicode(user),icon,message)
+		if created:
+			self.setWindowState(self.windowState() & ~QtCore.Qt.WindowActive | QtCore.Qt.WindowMinimized )
+			self.setWindowState(self.windowState() & QtCore.Qt.WindowActive)
+
+		tab,tabIndex=self.findTab(jid)
+		if tab:
+			self.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
+			self.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
+			self.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)
+			if message:
+				tab.chat.unread+=1
+
 	def addChatTab(self,jid,name,icon,message=None):
 		for i in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(i)
