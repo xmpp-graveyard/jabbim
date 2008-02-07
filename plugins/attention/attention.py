@@ -27,7 +27,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Attention, please!'
 		self.author = "Josef 'PepeQ' Halicek"
 		self.name = 'Attention'
-		self.version = '0.03'
+		self.version = '0.04'
 		self.category = ['fun']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 
@@ -60,6 +60,7 @@ class Plugin(plugins.PluginBase):
 		
 	def buttonClicked(self, button):
 		self.main.client.sendAttention(button.jid, " ")
+		self.playsound()
 	
 	def playsound(self):
 		if sys.platform == 'linux2': # linux sounds are produced using aplay
