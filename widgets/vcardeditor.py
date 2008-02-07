@@ -22,6 +22,7 @@ class vcardEditorDialog(QtGui.QDialog):
 			self.setWindowTitle(self.tr("VCard Editor"))
 		
 		layout=QtGui.QHBoxLayout(self.ui.versionWidget)
+		layout.setMargin(0)
 		self.scroll=QtGui.QScrollArea(self.ui.versionWidget)
 		w=QtGui.QWidget()
 		l=QtGui.QVBoxLayout(w)
@@ -29,6 +30,7 @@ class vcardEditorDialog(QtGui.QDialog):
 		self.widget.setLayout(QtGui.QVBoxLayout())
 		l.addWidget(self.widget)
 		l.addStretch()
+		l.setMargin(0)
 		self.scroll.setWidget(w)
 		self.scroll.setWidgetResizable(True)
 		layout.addWidget(self.scroll)
@@ -44,8 +46,9 @@ class vcardEditorDialog(QtGui.QDialog):
 			resources=[]
 		if self.main.client.roster['users'].has_key(jidt.userhost()):
 			resources=self.main.client.roster['users'][jidt.userhost()].resources.keys()
+			while None in resources:
+				resources.remove(None)
 		for res in resources:
-			print 'version info for'+res
 			d=self.main.client.getVersion(jidt.userhost()+"/"+res)
 			d.addCallback(self.versionReceived,res)
 			d.addErrback(self.versionErrReceived,res)
