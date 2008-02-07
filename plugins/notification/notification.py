@@ -263,6 +263,8 @@ class Plugin(plugins.PluginBase):
 		# online = user_online.wav
 		# GChighlight = groupchat_highlight.wav
 		# for list of actions see loadSoundConfig()
+		self.showInPreferences=True
+		self.preferencesIcon=QtGui.QIcon(plugindir+"/audio.png")
 		self.loadSoundConfig("sounds/config")
 		self.osd=None
 		if main:
