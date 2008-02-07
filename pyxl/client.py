@@ -559,13 +559,13 @@ class Client(derived):
 									if elm.name == 'password':
 										password = unicode(elm)
 								self.bookmarks['conference'][name] = Bookmark(name, 'conference', jid, autojoin, nick,  password)
-							if bookmark.name == 'url':
-								url = bookmark['url']
-								if bookmark.hasAttribute('name'):
-									name = bookmark['name']
-								else:
-									name = url
-								self.bookmarks['conference'][name] = Bookmark(name, 'url', url = url)
+							#if bookmark.name == 'url':
+								#url = bookmark['url']
+								#if bookmark.hasAttribute('name'):
+									#name = bookmark['name']
+								#else:
+									#name = url
+								#self.bookmarks['conference'][name] = Bookmark(name, 'url', url = url)
 
 
 	
