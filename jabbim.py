@@ -275,6 +275,7 @@ class clientClass(pyxl.client.Client):
 		if jidT.JID(jid).userhost()==self.jid.userhost():
 			print 'self discoInfo'
 			self.main.buildOfflineMenu()
+
 	def on_rosterAddUser(self, contact):
 		# add user to the roster
 		groups=list(contact.groups)
@@ -312,10 +313,39 @@ class clientClass(pyxl.client.Client):
 			for group in groups:
 				# add user item to the group
 				self.main.ui.roster.addUser(jid,name,group)
+
 		# show avatar
 #		self.main.cache.get_avatar(jid, self.main._loadAvatar)
 		self.main._loadAvatar(self.main.homeDir+'/avatars/'+jid, self.avatars.get(jid), jid)
 
+	def renameByVcard(self,el,jid):
+		if el:
+			data=el.firstChildElement()
+			nickname=fullname=family=given=None
+			for x in data.elements():
+				name=unicode(x.name)
+				if name=="NICKNAME":
+					nickname=(unicode(x))
+				elif name=="FN":
+					fullname=(unicode(x))
+				else:
+					for y in x.elements():
+						child=unicode(y.name)
+						if name=="N" and child=="GIVEN":
+							given=unicode(y)
+						elif name=="N" and child=="FAMILY":
+							family=unicode(y)
+			newName=None
+			if nickname:
+				newName=nickname
+			elif fullname:
+				newName=fullname
+			elif given and family:
+				newName=given+" "+family
+			if newName:
+				contact=self.roster['users'][jid]
+				self.sendRosterUpdate(contact.jid, newName, contact.subscription, self.roster['users'][jid].groups)
+	
 	def on_discoItemsBookmarksReceived(self, jid):
 		# make user list for bookmarked groupchat
 		item=self.main.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1)[0]
@@ -1182,7 +1212,13 @@ class clientClass(pyxl.client.Client):
 	def on_vcardReceived(self,  jid, card):
 		#print card
 		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db
-		pass
+		print "VCARD"
+		if not self.roster['users'].has_key(jid):
+			return
+		contact=self.roster['users'][jid]
+		if (contact.name=="" or contact.name==contact.jid) or not contact.name:
+			self.renameByVcard(card,jid)
+		#pass
 		#log.msg("vcard "+unicode(jid))
 # 		log.msg(unicode(card))
 #		if card.has_key("BINVAL"):

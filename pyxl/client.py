@@ -524,7 +524,7 @@ class Client(derived):
 				#print 'chyba v updatu avatara'
 		else:
 			self.avatars[el['from']] = None
-		self.reactor.callFromThread(self.on_vcardReceived,el['from'], vcard)
+		self.reactor.callFromThread(self.on_vcardReceived,el['from'],el)
 		return vcard
 
 

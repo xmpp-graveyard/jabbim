@@ -2478,7 +2478,13 @@ class rosterWidget(QtGui.QWidget):
 		action=contactMenu.addAction(self.tr("Rename"))
 		action.setData(QtCore.QVariant(name))
 		action.setObjectName("rename")
+
+		action=contactMenu.addAction(self.tr("Rename by vCard"))
+		action.setData(QtCore.QVariant(name))
+		action.setObjectName("rename_by_vcard")
 		
+		contactMenu.addSeparator()
+
 		action=contactMenu.addAction(self.tr("Remove group"))
 		action.setData(QtCore.QVariant(name))
 		action.setObjectName("remove_group")
@@ -2502,6 +2508,14 @@ class rosterWidget(QtGui.QWidget):
 						self.main.client.roster['users'][jid].groups.remove(name)
 					self.main.client.roster['users'][jid].groups.append(group)
 					self.main.client.sendRosterUpdate(contact.jid, contact.name, contact.subscription,self.main.client.roster['users'][jid].groups)
+		elif cmd=="rename_by_vcard":
+			name=action.data()
+			name=unicode(name.toString())
+			for item in self.getAllGroupUsers(name):
+				jid=item.jid
+				contact=self.main.client.roster['users'][jid]
+				if (contact.name=="" or contact.name==contact.jid) or not contact.name:
+					self.main.client.getVCard(jid)
 		elif cmd=="remove_group":
 			name=action.data()
 			name=unicode(name.toString())
