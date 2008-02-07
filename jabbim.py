@@ -1728,18 +1728,19 @@ class mainWindow(QtGui.QMainWindow):
 		# add resources connected to the same JID (selfResources)
 		if len(self.selfResources)!=0:
 			for resource in self.selfResources:
-				menu=QtGui.QMenu(unicode(resource),self.offlineMenu)
-				# resource supports adhoc commands
-				if self.client.roster['users'][self.client.jid.userhost()].resources[resource].hasFeature('http://jabber.org/protocol/commands'):
-					action=menu.addAction(self.tr("Commands"))
-					action.setObjectName('commands')
+				if resource!=self.client.jid.resource:
+					menu=QtGui.QMenu(unicode(resource),self.offlineMenu)
+					# resource supports adhoc commands
+					if self.client.roster['users'][self.client.jid.userhost()].resources[resource].hasFeature('http://jabber.org/protocol/commands'):
+						action=menu.addAction(self.tr("Commands"))
+						action.setObjectName('commands')
+						action.setData(QtCore.QVariant(unicode(resource)))
+					# send file QAction
+					action=menu.addAction(self.tr("Send file"))
+					action.setObjectName('send_file')
 					action.setData(QtCore.QVariant(unicode(resource)))
-				# send file QAction
-				action=menu.addAction(self.tr("Send file"))
-				action.setObjectName('send_file')
-				action.setData(QtCore.QVariant(unicode(resource)))
-
-				self.offlineMenu.addMenu(menu)
+	
+					self.offlineMenu.addMenu(menu)
 			self.offlineMenu.addSeparator()
 
 		self.ui.showOffline.setMenu(self.offlineMenu)
