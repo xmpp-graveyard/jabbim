@@ -11,6 +11,7 @@ from twisted.python import log
 from time import time
 from twisted.internet import threads
 from twisted.words.xish.domish import escapeToXml
+import time
 try:
 	from hashlib import sha1
 except:
@@ -26,10 +27,13 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Attention, please!'
 		self.author = "Josef 'PepeQ' Halicek"
 		self.name = 'Attention'
-		self.version = '0.18'
+		self.version = '0.2'
 		self.category = ['fun']
 		self.url = 'http://dev.jabbim.cz/jabbim'
-
+		self.delay=30 # how frequently do we want to allow user send attentions
+		self.last_sent=int(time.time())-self.delay # sets "last sent atention" - as initial we use now-self.delay seconds, GLOBAL!
+		self.last_req=int(time.time())-self.delay # sets "last req. atention" - as initial we use now-self.delay seconds, GLOBAL!
+		
 		if main:
 			self.loadConfig()
 			self.registerHandler('on_attention', self.on_attention)
@@ -40,15 +44,13 @@ class Plugin(plugins.PluginBase):
 
 
 	def on_attention(self, frm, body, subject, xhtml, error):
-		self.main.tray.showMessage(frm,self.tr("asks for attention!"), QtGui.QSystemTrayIcon.Information, 4000)
-		self.playsound()
-		
-		tab,index=self.main.chat.findTab(frm)
-		if tab:
-			tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',self.tr('You have just received an attention.')))
-		print "dement"+unicode(tab)
-		print "dement"+unicode(index)
-		print "dement"+unicode(frm)
+		if ((int(time.time())-self.last_req)>self.delay):
+			self.main.tray.showMessage(frm,self.tr("requests attention!"), QtGui.QSystemTrayIcon.Information, 4000)
+			self.playsound()
+			tab,index=self.main.chat.findTab(frm)
+			if tab:
+				tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',self.tr('You have just received request for an attention.')))
+			self.last_req=int(time.time())
 
 
 	def buildChatWidget(self,jid,layout,widget):
@@ -57,7 +59,8 @@ class Plugin(plugins.PluginBase):
 		button.setIconSize(QtCore.QSize(16,16))
 		button.setIcon(QtGui.QIcon("%s/attention.png" % self.pluginDir))
 		button.jid=unicode(jid)
-		button.setToolTip(self.tr('Attract the attention of the user!'))
+		
+		button.setToolTip(self.tr('Request the attention of the user!'))
 
 		
 		self.group.addButton(button)
@@ -65,11 +68,15 @@ class Plugin(plugins.PluginBase):
 		
 		
 	def buttonClicked(self, button):
-		self.main.client.sendAttention(button.jid, " ")
-		self.playsound()
-		tab,index=self.main.chat.findTab(button.jid)
-		if tab:
-			tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',self.tr('You have just sent an attention.')))
+		tab,index=self.main.chat.findTab(button.jid) #trying to find out if the tab with contact is opened
+		if ((int(time.time())-self.last_sent)>self.delay):
+			self.main.client.sendAttention(button.jid, " ") # TODO: allow user to sed message acording to xep
+			self.playsound()
+			if tab:
+				tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',self.tr('You have just sent request for an attention.')))
+			self.last_sent=int(time.time())
+		else:
+			tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',self.tr("You shouldn't request attention so frequently.")))
 	
 	def playsound(self):
 		if sys.platform == 'linux2': # linux sounds are produced using aplay
