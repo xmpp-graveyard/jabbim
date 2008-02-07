@@ -256,7 +256,7 @@ class PluginBase:
 
 	def on_showPreferences(self,dialog):
 		"""
-		Called when this plugin preferences dialog is showed
+		Called when this plugin preferences dialog is showed.
 		@type dialog: QtGui.QWidget
 		@parem dialog: QWidget where are preferences showed
 		@see: L{on_endPreferences}
@@ -265,64 +265,109 @@ class PluginBase:
 
 	def on_endPreferences(self):
 		"""
-		Called when user rejected this plugin configuration
+		Called when user rejected this plugin configuration.
 		@see: L{on_showPreferences}
 		"""
 		pass
 
 	def on_messageSend(self,jid,text="",xhtml="",composite=""):
+		"""
+		Called when user wants to send normal (chat) message. If this function returns True, message will be send by Jabbim.
+		If it returns False, message will not be send and it's on plugin what to do.
+		@type jid: unicode
+		@param jid: Jabber ID of recipient
+		@type text: unicode
+		@param text: Plain text of message
+		@type xhtml: unicode
+		@param xhtml: XHTML part of message
+		@type composite: unicode
+		@param composite: string for U{chat state notification<http://www.xmpp.org/extensions/xep-0085.html>}
+		@rtype: boolean
+		@return: True - message will be processed by Jabbim too, False - message will be processed only by plugin
+		@see: L{on_groupchatMessageSend}
+		"""
 		return True
 
 	def on_groupchatMessageSend(self,jid,text="",xhtml="",composite=""):
+		"""
+		Called when user wants to send groupchat message. If this function returns True, message will be send by Jabbim.
+		If it returns False, message will not be send and it's on plugin what to do.
+		@type jid: unicode
+		@param jid: Jabber ID of recipient
+		@type text: unicode
+		@param text: Plain text of message
+		@type xhtml: unicode
+		@param xhtml: XHTML part of message
+		@type composite: unicode
+		@param composite: string for U{chat state notification<http://www.xmpp.org/extensions/xep-0085.html>}
+		@rtype: boolean
+		@return: True - message will be processed by Jabbim too, False - message will be processed only by plugin
+		@see: L{on_messageSend}
+		"""
 		return True
 
-
 	def loadConfig(self,homedir=None):
+		"""
+		Loads default plugin config. Config will be loaded to L{config} dict.
+		If it returns False, message will not be send and it's on plugin what to do.
+		@see: L{writeConfig}
+		"""
 		if homedir==None:
 			homedir=self.main.homeDir
-			
-# 		try:
-# 			self.confObj = ConfigObj(main.homeDir+'/.jabbim/plugins/'+self.fname+'/config.ini',encoding='UTF8')
-# 			
-# 		except:
-# 			log.msg('No config for: '+self.name)
-# # 			return False
+
 		self.config = ConfigObj(utils.path(homedir+'/'+self.fname+'-config.ini'),encoding='UTF8')
 		if self.configDialog:
+			# sets default values for variables which aren't in loaded config file
 			for k,v in self.configDialog.config.iteritems():
-				#try:
-					#self.config[k]['value'] = self.confObj[k]
-				#except:
 				if not self.config.has_key(k) and not k.startswith("__"):
 					self.config[k] = v['value']
-					#self.confObj[k] = self.config[k]['default']
 					self.config.write()
 	
 	def writeConfig(self):
-		#for k in self.config.iterkeys():
-			#self.confObj[k] = self.config[k]['value']
-		#self.confObj.write()
+		"""
+		Saves default config.
+		@see: L{loadConfig}
+		"""
 		if self.config:
 			self.config.write()
 	
 	def registerHandler(self, name, method, priority = 5):
+		"""
+		Registers Jabbim events handler. If Jabbim generates event, all plugins subscribed to this event will
+		be informed.
+		@type name: unicode
+		@param name: event name
+		@type method: function
+		@param method: function which will be called if the event is generated
+		"""
 		self.main.client.dispatcher.registerHandler(name, method, self.name, priority = priority)
 		self._handlers.append(name)
 	
 	def on_remove(self):
+		"""
+		Called before this plugin unload.
+		"""
 		pass
 	
-	def remove(self):
+	def _remove(self):
+		"""
+		Prepares plugin for unload. Deletes opened windows, unregister features etc...
+		"""
 		self.on_remove()
+		# delete windows
 		for window in self._loadedWidgets:
 			window.close()
 		for i in range(int(len(self._loadedWidgets))):
 			del self._loadedWidgets[0]
+		# save config
 		self.writeConfig()
+		# unregister pyxl handlers
 		for handler in self._handlers:
 			self.main.client.dispatcher.unregisterHandler(handler, unicode(self.name))
+		# unregister features
 		for i in range(len(self._registeredFeatures)):
 			self.unregisterFeature(self._registeredFeatures[0])
+		# depracted part
 		self._registeredFeatures=[]
 		self.main = None
 		self.config = None

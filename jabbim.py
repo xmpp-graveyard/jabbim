@@ -2402,7 +2402,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		if self.plugins[plugin]['module']:
 			self.ui.menuPlugins.clear() # clear plugins menu
-			self.runPluginCommand(self.plugins[plugin]['module'].remove,[]) # inform plugin that it will be removed
+			self.runPluginCommand(self.plugins[plugin]['module']._remove,[]) # inform plugin that it will be removed
 			
 			l=gc.get_referents(self.plugins[plugin]['module'])
 			for x in range(len(l)):
