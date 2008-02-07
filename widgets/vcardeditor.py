@@ -21,11 +21,35 @@ class vcardEditorDialog(QtGui.QDialog):
 		else:
 			self.setWindowTitle(self.tr("VCard Editor"))
 		
+		layout=QtGui.QHBoxLayout(self.ui.versionWidget)
+		self.scroll=QtGui.QScrollArea(self.ui.versionWidget)
+		w=QtGui.QWidget()
+		l=QtGui.QVBoxLayout(w)
+		self.widget=QtGui.QWidget(w)
+		self.widget.setLayout(QtGui.QVBoxLayout())
+		l.addWidget(self.widget)
+		l.addStretch()
+		self.scroll.setWidget(w)
+		self.scroll.setWidgetResizable(True)
+		layout.addWidget(self.scroll)
+		
 		self.data=None
 		d=self.main.client.getVCard(jid)
 		d.addCallback(self.vcardArrived)
 		d.addErrback(self.noVcard)
-		self.main.client.getVersion(jid, callback=self.versionReceived, errback=self.versionErrReceived)
+		jidt=self.main.getJid(jid)
+		if jidt.resource:
+			resources=[jidt.resource]
+		else:
+			resources=[]
+		if self.main.client.roster['users'].has_key(jidt.userhost()):
+			resources=self.main.client.roster['users'][jidt.userhost()].resources.keys()
+		for res in resources:
+			print 'version info for'+res
+			d=self.main.client.getVersion(jidt.userhost()+"/"+res)
+			d.addCallback(self.versionReceived,res)
+			d.addErrback(self.versionErrReceived,res)
+		
 		self.ui.tabWidget.setEnabled(False)
 
 		self.ui.avatar.setPixmap(QtGui.QPixmap())
@@ -139,26 +163,49 @@ class vcardEditorDialog(QtGui.QDialog):
 			if self.editable:
 				self.ui.download.hide()
 				self.ui.tabWidget.setEnabled(True)
-		
-	def versionReceived(self, el):
+	
+	def makeVersionWidget(self,res):
+		box=QtGui.QGroupBox(res,self.widget)
+		l=QtGui.QGridLayout(box)
+		labelName=QtGui.QLabel(self.tr('Name:'),box)
+		labelOs=QtGui.QLabel(self.tr('Operating System:'),box)
+		labelVersion=QtGui.QLabel(self.tr('Version:'),box)
+		lineName=QtGui.QLineEdit(box)
+		lineName.setReadOnly(True)
+		lineOs=QtGui.QLineEdit(box)
+		lineOs.setReadOnly(True)
+		lineVersion=QtGui.QLineEdit(box)
+		lineVersion.setReadOnly(True)
+		l.addWidget(labelName,0,0)
+		l.addWidget(lineName,0,1)
+		l.addWidget(labelVersion,1,0)
+		l.addWidget(lineVersion,1,1)
+		l.addWidget(labelOs,2,0)
+		l.addWidget(lineOs,2,1)
+		self.widget.layout().addWidget(box)
+		return lineName,lineOs,lineVersion
+	
+	def versionReceived(self, el,res):
+		lineName,lineOs,lineVersion=self.makeVersionWidget(res)
 		query = el.firstChildElement()
 		os = None
 		for x in query.elements():
 			if x.name == "name":
-				self.ui.ver_name.setText(unicode(x))
+				lineName.setText(unicode(x))
 			elif x.name == "version":
-				self.ui.ver_version.setText(unicode(x))
+				lineVersion.setText(unicode(x))
 			elif x.name == "os":
 				os = unicode(x)
 		if os != None:
-			self.ui.ver_os.setText(os)
+			lineOs.setText(os)
 		else:
-			self.ui.ver_os.setText(self.tr("Unable to retrieve."))
+			lineOs.setText(self.tr("Unable to retrieve."))
 
-	def versionErrReceived(self, err):
-		self.ui.ver_name.setText(self.tr("Unable to retrieve."))
-		self.ui.ver_version.setText(self.tr("Unable to retrieve."))
-		self.ui.ver_os.setText(self.tr("Unable to retrieve."))
+	def versionErrReceived(self, err,res):
+		lineName,lineOs,lineVersion=self.makeVersionWidget(res)
+		lineName.setText(self.tr("Unable to retrieve."))
+		lineVersion.setText(self.tr("Unable to retrieve."))
+		lineOs.setText(self.tr("Unable to retrieve."))
 
 	def clearAvatar(self):
 		self.ui.avatar.setPixmap(QtGui.QPixmap())

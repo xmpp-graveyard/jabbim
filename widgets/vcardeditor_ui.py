@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/vcardeditor.ui'
 #
-# Created: Sun Jan 27 15:53:08 2008
+# Created: Thu Feb  7 09:36:15 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,17 +12,12 @@ from PyQt4 import QtCore, QtGui
 class Ui_VCardEdit(object):
     def setupUi(self, VCardEdit):
         VCardEdit.setObjectName("VCardEdit")
-        VCardEdit.resize(QtCore.QSize(QtCore.QRect(0,0,374,402).size()).expandedTo(VCardEdit.minimumSizeHint()))
+        VCardEdit.resize(QtCore.QSize(QtCore.QRect(0,0,401,402).size()).expandedTo(VCardEdit.minimumSizeHint()))
 
         self.gridlayout = QtGui.QGridLayout(VCardEdit)
         self.gridlayout.setMargin(9)
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
-
-        self.download = QtGui.QLabel(VCardEdit)
-        self.download.setAlignment(QtCore.Qt.AlignCenter)
-        self.download.setObjectName("download")
-        self.gridlayout.addWidget(self.download,1,0,1,3)
 
         self.tabWidget = QtGui.QTabWidget(VCardEdit)
         self.tabWidget.setObjectName("tabWidget")
@@ -177,37 +172,16 @@ class Ui_VCardEdit(object):
         self.gridlayout5.setSpacing(6)
         self.gridlayout5.setObjectName("gridlayout5")
 
-        self.ver_label_name = QtGui.QLabel(self.tab_3)
-        self.ver_label_name.setObjectName("ver_label_name")
-        self.gridlayout5.addWidget(self.ver_label_name,0,0,1,1)
-
-        self.ver_name = QtGui.QLineEdit(self.tab_3)
-        self.ver_name.setReadOnly(True)
-        self.ver_name.setObjectName("ver_name")
-        self.gridlayout5.addWidget(self.ver_name,0,1,1,1)
-
-        self.ver_label_version = QtGui.QLabel(self.tab_3)
-        self.ver_label_version.setObjectName("ver_label_version")
-        self.gridlayout5.addWidget(self.ver_label_version,1,0,1,1)
-
-        self.ver_version = QtGui.QLineEdit(self.tab_3)
-        self.ver_version.setReadOnly(True)
-        self.ver_version.setObjectName("ver_version")
-        self.gridlayout5.addWidget(self.ver_version,1,1,1,1)
-
-        self.ver_label_os = QtGui.QLabel(self.tab_3)
-        self.ver_label_os.setObjectName("ver_label_os")
-        self.gridlayout5.addWidget(self.ver_label_os,2,0,1,1)
-
-        self.ver_os = QtGui.QLineEdit(self.tab_3)
-        self.ver_os.setReadOnly(True)
-        self.ver_os.setObjectName("ver_os")
-        self.gridlayout5.addWidget(self.ver_os,2,1,1,1)
-
-        spacerItem1 = QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout5.addItem(spacerItem1,3,1,1,1)
+        self.versionWidget = QtGui.QWidget(self.tab_3)
+        self.versionWidget.setObjectName("versionWidget")
+        self.gridlayout5.addWidget(self.versionWidget,0,0,1,1)
         self.tabWidget.addTab(self.tab_3,"")
         self.gridlayout.addWidget(self.tabWidget,0,0,1,3)
+
+        self.download = QtGui.QLabel(VCardEdit)
+        self.download.setAlignment(QtCore.Qt.AlignCenter)
+        self.download.setObjectName("download")
+        self.gridlayout.addWidget(self.download,1,0,1,3)
 
         self.pushButton = QtGui.QPushButton(VCardEdit)
         self.pushButton.setObjectName("pushButton")
@@ -217,8 +191,8 @@ class Ui_VCardEdit(object):
         self.pushButton_2.setObjectName("pushButton_2")
         self.gridlayout.addWidget(self.pushButton_2,2,1,1,1)
 
-        spacerItem2 = QtGui.QSpacerItem(71,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem2,2,0,1,1)
+        spacerItem1 = QtGui.QSpacerItem(71,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem1,2,0,1,1)
 
         self.retranslateUi(VCardEdit)
         self.tabWidget.setCurrentIndex(0)
@@ -239,7 +213,6 @@ class Ui_VCardEdit(object):
         VCardEdit.setTabOrder(self.pushButton_2,self.pushButton)
 
     def retranslateUi(self, VCardEdit):
-        self.download.setText(QtGui.QApplication.translate("VCardEdit", "Downloading vCard...", None, QtGui.QApplication.UnicodeUTF8))
         self.avatar.setText(QtGui.QApplication.translate("VCardEdit", "Avatar", None, QtGui.QApplication.UnicodeUTF8))
         self.setAvatar.setText(QtGui.QApplication.translate("VCardEdit", "Open", None, QtGui.QApplication.UnicodeUTF8))
         self.clearAvatar.setText(QtGui.QApplication.translate("VCardEdit", "Clear", None, QtGui.QApplication.UnicodeUTF8))
@@ -256,10 +229,8 @@ class Ui_VCardEdit(object):
         self.label_6.setText(QtGui.QApplication.translate("VCardEdit", "Street:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("VCardEdit", "Home address", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QtGui.QApplication.translate("VCardEdit", "About", None, QtGui.QApplication.UnicodeUTF8))
-        self.ver_label_name.setText(QtGui.QApplication.translate("VCardEdit", "Name:", None, QtGui.QApplication.UnicodeUTF8))
-        self.ver_label_version.setText(QtGui.QApplication.translate("VCardEdit", "Version:", None, QtGui.QApplication.UnicodeUTF8))
-        self.ver_label_os.setText(QtGui.QApplication.translate("VCardEdit", "Operating system:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QtGui.QApplication.translate("VCardEdit", "Software info", None, QtGui.QApplication.UnicodeUTF8))
+        self.download.setText(QtGui.QApplication.translate("VCardEdit", "Downloading vCard...", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("VCardEdit", "Save", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_2.setText(QtGui.QApplication.translate("VCardEdit", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
 

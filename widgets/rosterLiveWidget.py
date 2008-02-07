@@ -2314,24 +2314,24 @@ class rosterWidget(QtGui.QWidget):
 		# separator
 		contactMenu.addSeparator()
 		# vcard
-		if oneres:
-			action=contactMenu.addAction(QtGui.QIcon("images/16x16/categories/v-card.png"),self.tr("vCard"))
-			resource=contact.resources.keys()
-			if len(resource)!=0:
-				action.setData(QtCore.QVariant("%s/%s" % (jid, resource[0])))
-			else:
-				action.setData(QtCore.QVariant("%s" % (jid)))
-			action.setObjectName("vcard")
-		else:		# Potrebujeme resource pro Software Version, vCard je na nem nezavisla
-			submenu=contactMenu.addMenu(QtGui.QIcon("images/16x16/categories/v-card.png"),self.tr("vCard"))
-			for res in contact.resources.keys():
-				if res != None:
-					action=submenu.addAction(res)
-					action.setData(QtCore.QVariant("%s/%s" %(jid,res)))
-					action.setObjectName("vcard")
-		#action=contactMenu.addAction(self.tr("vCard"))
-		#action.setData(QtCore.QVariant(jid))
-		#action.setObjectName("vcard")
+		#if oneres:
+			#action=contactMenu.addAction(QtGui.QIcon("images/16x16/categories/v-card.png"),self.tr("vCard"))
+			#resource=contact.resources.keys()
+			#if len(resource)!=0:
+				#action.setData(QtCore.QVariant("%s/%s" % (jid, resource[0])))
+			#else:
+				#action.setData(QtCore.QVariant("%s" % (jid)))
+			#action.setObjectName("vcard")
+		#else:		# Potrebujeme resource pro Software Version, vCard je na nem nezavisla
+			#submenu=contactMenu.addMenu(QtGui.QIcon("images/16x16/categories/v-card.png"),self.tr("vCard"))
+			#for res in contact.resources.keys():
+				#if res != None:
+					#action=submenu.addAction(res)
+					#action.setData(QtCore.QVariant("%s/%s" %(jid,res)))
+					#action.setObjectName("vcard")
+		action=contactMenu.addAction(QtGui.QIcon("images/16x16/categories/v-card.png"),self.tr("vCard"))
+		action.setData(QtCore.QVariant(jid))
+		action.setObjectName("vcard")
 		# filetransfer
 		if oneres:
 			resource=contact.resources.keys()
