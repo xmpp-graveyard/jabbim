@@ -276,7 +276,7 @@ class chatWidget(abstractChatWidget):
 		self.flowLayout = flowLayout()
 		for key,value in self.main.plugins.iteritems():
 			if value['module']:
-				self.main.runPluginCommand(value['module'].buildChatWidget,[unicode(jidT.JID(self.jid).userhost()),self.flowLayout,self])
+				self.main.runPluginCommand(value['module'].buildChatWidget,[unicode(self.jid),self.flowLayout,self])
 		hasFeature=False
 		if self.main.client.groupchats.has_key(jidt.userhost()):
 			print "features:",self.main.client.groupchats[jidt.userhost()].users[jidt.resource].features
