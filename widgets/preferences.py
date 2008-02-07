@@ -23,6 +23,7 @@ except:
 import sys; sys.path.append('..')
 from preferences_ui import *
 from include import rot13
+from include import plugins as pluginTemplate
 from pref import jabbim,connection,chat,roster
 from preferences_bookmarks_ui import *
 from configobj import ConfigObj
@@ -368,6 +369,17 @@ class preferencesWindow(QtGui.QDialog):
 		self.justShowed=False
 		self.showedPlugins={}
 
+		self.globalCategories={}
+		self.globalCategories['notification']=self.tr('Notification')
+		self.globalCategories['archive']=self.tr('Archive')
+		self.globalCategories['log']=self.tr('Log')
+		self.globalCategories['misc']=self.tr('Misc')
+		self.globalCategories['jgames']=self.tr('jGames')
+		self.globalCategories['disk']=self.tr('Disk')
+		self.globalCategories['utils']=self.tr('Utils')
+		self.globalCategories['fun']=self.tr('Fun')
+		self.globalCategories['other']=self.tr('Other')
+
 		# Jabbim
 		layout=QtGui.QGridLayout(self.ui.jabbimWidget)
 		self.var.append(makePreferences(self.main.config,self.ui.jabbimWidget,layout,jabbim.preferences(self).config)[0])
@@ -585,6 +597,11 @@ class preferencesWindow(QtGui.QDialog):
 		self.ui.plugins.clear()
 		self.main.findPlugins()
 		plugins=self.main.plugins.keys()
+		
+		categories={}
+		for category,translation in self.globalCategories.iteritems():
+			categories[category]=QtGui.QTreeWidgetItem(self.ui.plugins)
+			categories[category].setText(0,translation)
 		for plugin in plugins:
 			dir = self.main.plugins[plugin]['dir']
 			path = '%s/%s.py' % (dir, plugin)
@@ -604,10 +621,14 @@ class preferencesWindow(QtGui.QDialog):
 				continue
 			
 			f.close()
-			item=QtGui.QTreeWidgetItem(self.ui.plugins)
+			if categories.has_key(plug.category[0]):
+				item=QtGui.QTreeWidgetItem(categories[plug.category[0]])
+			else:
+				item=QtGui.QTreeWidgetItem(categories['other'])
 			widget=QtGui.QCheckBox(self.ui.plugins)
 			if plugin in self.loadedPlugins:
 				widget.setChecked(True)
+				self.ui.plugins.setItemExpanded(item.parent(),True)
 			self.ui.plugins.setItemWidget(item,0,widget)
 			item.setText(1,plug.name)
 			item.setText(2,plug.description)
@@ -623,7 +644,9 @@ class preferencesWindow(QtGui.QDialog):
 			log.msg("plugin "+plugin+" loaded.")
 		self.ui.plugins.resizeColumnToContents (0)
 		self.ui.plugins.resizeColumnToContents (1)
-
+		for category,item in categories.iteritems():
+			if item.childCount()==0:
+				self.ui.plugins.setItemHidden(item, True)
 
 	def emoticonsListChanged(self,index):
 		path=unicode(self.ui.emoticonsList.itemData(index).toString())
@@ -664,6 +687,9 @@ class preferencesWindow(QtGui.QDialog):
 				self.reskin(file)
 
 	def pluginSelected(self,item,i):
+		if item.parent()==None:
+			self.ui.pluginConfiguration.setEnabled(False)
+			return
 		data=item.data(32,0)
 		name=unicode(data.toString())
 		plugin=self.plugins[name]
@@ -675,6 +701,8 @@ class preferencesWindow(QtGui.QDialog):
 	def pluginsContextMenu(self,pos):
 		# make groupchat bookmarks menu
 		item=self.ui.plugins.itemFromIndex(self.ui.plugins.indexAt(pos)) # get selected item
+		if item.parent()==None:
+			return
 		data=item.data(32,0)
 		name=unicode(data.toString())
 		plugin=self.plugins[name]

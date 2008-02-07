@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'preferences.ui'
+# Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Tue Jan 29 07:36:31 2008
-#      by: PyQt4 UI code generator 4.3.3
+# Created: Thu Feb  7 08:43:57 2008
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -239,7 +239,6 @@ class Ui_preferences(object):
         self.plugins = QtGui.QTreeWidget(self.page_5)
         self.plugins.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.plugins.setAlternatingRowColors(True)
-        self.plugins.setRootIsDecorated(False)
         self.plugins.setObjectName("plugins")
         self.plugins.headerItem().setText(0,"")
         self.gridlayout9.addWidget(self.plugins,2,0,1,2)
@@ -265,8 +264,8 @@ class Ui_preferences(object):
         self.gridlayout.addWidget(self.profile,0,1,1,2)
 
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setSpacing(6)
         self.hboxlayout.setMargin(0)
+        self.hboxlayout.setSpacing(6)
         self.hboxlayout.setObjectName("hboxlayout")
 
         self.saveButton = QtGui.QPushButton(preferences)
@@ -293,7 +292,7 @@ class Ui_preferences(object):
         self.gridlayout.addWidget(self.listWidget,0,0,3,1)
 
         self.retranslateUi(preferences)
-        self.stackedWidget.setCurrentIndex(4)
+        self.stackedWidget.setCurrentIndex(5)
         self.tabWidget.setCurrentIndex(2)
         QtCore.QObject.connect(self.cancelButton,QtCore.SIGNAL("clicked()"),preferences.reject)
         QtCore.QObject.connect(self.saveButton,QtCore.SIGNAL("clicked()"),preferences.accept)
