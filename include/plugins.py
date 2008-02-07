@@ -88,7 +88,7 @@ class PluginBase:
 		menu=self.main.ui.menuPlugins.addMenu(unicode(self.name))
 		return menu
 
-	def _loadUi(self,file,parent,wid):
+	def _loadUi(self,file,wid):
 		"""
 		Loads widget from ui file.
 		"""
@@ -121,7 +121,7 @@ class PluginBase:
 		@see: L{loadWindow}, L{loadDialog}, U{QtGui.QWidget<http://www.riverbankcomputing.com/Docs/PyQt4/html/qwidget.html>}
 		"""
 		wid=QtGui.QWidget(parent)
-		return self._loadUi(file,parent,wid)
+		return self._loadUi(file,wid)
 
 	def loadWindow(self,file,parent=None):
 		"""
@@ -134,7 +134,7 @@ class PluginBase:
 		@see: L{loadWidget}, L{loadDialog}, U{QtGui.QWidget<http://www.riverbankcomputing.com/Docs/PyQt4/html/qmainwindow.html>}
 		"""
 		wid=QtGui.QMainWindow(parent)
-		return self._loadUi(file,parent,wid)
+		return self._loadUi(file,wid)
 
 	def loadDialog(self,file,parent=None):
 		"""
@@ -147,7 +147,7 @@ class PluginBase:
 		@see: L{loadWidget}, L{loadWindow}, U{QtGui.QWidget<http://www.riverbankcomputing.com/Docs/PyQt4/html/qdialog.html>}
 		"""
 		wid=QtGui.QDialog(parent)
-		return self._loadUi(file,parent,wid)
+		return self._loadUi(file,wid)
 
 	def installTranslator(self):
 		"""
