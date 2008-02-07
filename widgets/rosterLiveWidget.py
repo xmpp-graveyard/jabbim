@@ -1518,7 +1518,7 @@ class rosterWidget(QtGui.QWidget):
 			return QtGui.QWidget.mouseReleaseEvent(self,event)
 		t=QtGui.QApplication.doubleClickInterval()/1000.0
 		timestamp=float(time.time())
-		if timestamp-self.timestamp<=t:
+		if timestamp-self.timestamp<=t and self.main.config['bigOnClick']=="True":
 			self.mouseDoubleClickEvent(event)
 		else:
 			if event.button() == QtCore.Qt.LeftButton:
@@ -1546,7 +1546,11 @@ class rosterWidget(QtGui.QWidget):
 		y=event.y()
 		item=self.itemAt(x,y)
 		if self.item!=item:
-			item=self.oldItem
+			if self.main.config['bigOnClick']=="False":
+				return self.mouseReleaseEvent(event)
+			else:
+				item=self.oldItem
+		
 		if item==None:
 			return QtGui.QWidget.mouseReleaseEvent(self,event)
 		if item.typ=='group' and item.main!='special':
