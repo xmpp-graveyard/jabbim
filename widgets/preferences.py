@@ -571,6 +571,20 @@ class preferencesWindow(QtGui.QDialog):
 					self.ui.themes.setCurrentItem(item)
 		QtCore.QObject.connect(self.ui.themes, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.themeChanged)
 
+	def reloadPlugins(self):
+		for i in range(6,int(self.ui.listWidget.count())):
+			self.ui.listWidget.takeItem(6)
+			widget=self.ui.stackedWidget.widget(6)
+			self.ui.stackedWidget.removeWidget(widget)
+			del widget
+		for plugin,plug in self.plugins.iteritems():
+			if plug.configDialog and plug.showInPreferences and plugin in self.loadedPlugins:
+				listItem=QtGui.QListWidgetItem(plug.name,self.ui.listWidget)
+				listItem.setData(32,QtCore.QVariant(plugin))
+				listItem.setIcon(plug.preferencesIcon)
+				widget=QtGui.QWidget()
+				self.ui.stackedWidget.addWidget(widget)
+				self.showedPlugins[plugin]=None
 
 	def reloadPreferences(self):
 		self.ui.stackedWidget.setCurrentIndex(0)
@@ -634,7 +648,7 @@ class preferencesWindow(QtGui.QDialog):
 			item.setText(2,plug.description)
 			item.setData(32,0,QtCore.QVariant(unicode(plugin)))
 			self.plugins[plugin]=plug
-			if plug.configDialog and plug.showInPreferences:
+			if plug.configDialog and plug.showInPreferences and plugin in self.loadedPlugins:
 				listItem=QtGui.QListWidgetItem(plug.name,self.ui.listWidget)
 				listItem.setData(32,QtCore.QVariant(plugin))
 				listItem.setIcon(plug.preferencesIcon)
@@ -867,7 +881,7 @@ class preferencesWindow(QtGui.QDialog):
 		self.main.ui.roster.setSize()
 		self.main.ui.roster.repaint()
 		self.main.config.write()
-		
+		load=False
 		for i in range(int(self.ui.plugins.topLevelItemCount())):
 			it=self.ui.plugins.topLevelItem(i)
 			for child in range(int(it.childCount())):
@@ -878,13 +892,13 @@ class preferencesWindow(QtGui.QDialog):
 				if widget.isChecked()==True and not plugin in self.loadedPlugins:
 					self.main.loadPlugin(plugin)
 					self.main.config['plugins'].append(plugin)
+					self.loadedPlugins=self.main.config['plugins']
+					load=True
 				elif widget.isChecked()==False and plugin in self.loadedPlugins:
 					self.main.unloadPlugin(plugin)
 					self.main.config['plugins'].remove(plugin)
-					#shutil.rmtree(self.main.homeDir+"/.jabbim/plugins/"+plugin)
-		
-		#size=unicode(self.main.config['rosterIconSize']).rsplit("x")
-		#self.main.ui.roster.setIconSize(QtCore.QSize(int(size[0]),int(size[1])))
+					load=True
+		self.reloadPlugins()
 
 	def accept(self):
 		self.save()
