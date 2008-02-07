@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainWindow.ui'
+# Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Mon Feb  4 12:00:21 2008
+# Created: Thu Feb  7 12:03:15 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -252,6 +252,14 @@ class Ui_MainWindow(object):
 
         spacerItem8 = QtGui.QSpacerItem(50,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.hboxlayout4.addItem(spacerItem8)
+
+        self.offlineButton = QtGui.QToolButton(self.frame)
+        self.offlineButton.setMaximumSize(QtCore.QSize(16777215,20))
+        self.offlineButton.setIcon(QtGui.QIcon("images/16x16/status/jabber-offline.png"))
+        self.offlineButton.setCheckable(True)
+        self.offlineButton.setArrowType(QtCore.Qt.NoArrow)
+        self.offlineButton.setObjectName("offlineButton")
+        self.hboxlayout4.addWidget(self.offlineButton)
 
         self.toggleInvisible = QtGui.QToolButton(self.frame)
         self.toggleInvisible.setMaximumSize(QtCore.QSize(16777215,20))
@@ -526,6 +534,7 @@ class Ui_MainWindow(object):
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\';\"><span style=\" font-size:13pt; font-weight:600;\">Profiles</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.statusMessage.setText(QtGui.QApplication.translate("MainWindow", "Online", None, QtGui.QApplication.UnicodeUTF8))
         self.statusWidget.setToolTip(QtGui.QApplication.translate("MainWindow", "Here you can change your status", None, QtGui.QApplication.UnicodeUTF8))
+        self.offlineButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Show offline contacts", None, QtGui.QApplication.UnicodeUTF8))
         self.toggleInvisible.setToolTip(QtGui.QApplication.translate("MainWindow", "Toggle Invisibility", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setToolTip(QtGui.QApplication.translate("MainWindow", "You can show/hide contats that are unavailable", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Here you can change your status", None, QtGui.QApplication.UnicodeUTF8))

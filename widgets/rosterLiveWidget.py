@@ -1653,8 +1653,8 @@ class rosterWidget(QtGui.QWidget):
 		elif key==QtCore.Qt.Key_F and event.modifiers() & QtCore.Qt.ControlModifier:
 			QtGui.QMessageBox.warning(self,':)',unicode(rot13.scramble("Frs fnzbmerwzr ifrpuab ivqv n wra gnx gb ararpun :C")),0,1)
 		elif key==QtCore.Qt.Key_O and event.modifiers() & QtCore.Qt.ControlModifier:
-			check=not self.main.ui.showOffline.isChecked()
-			self.main.ui.showOffline.setChecked(check)
+			check=not self.main.offline
+			#self.main.ui.showOffline.setChecked(check)
 			self.main.hideOffline(check)
 		elif key==QtCore.Qt.Key_E and event.modifiers() & QtCore.Qt.ControlModifier:
 			self.main.client.evil = not self.main.client.evil

@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 import gc
 #gc.set_debug(gc.DEBUG_LEAK|gc.DEBUG_UNCOLLECTABLE)
-#self.callRemote('rpc@jabbim.cz/service', 'getInfo', ('smileys/white',)).addCallback(pis)
 import sys,os
 sys.path.append('.')
 try: from PyQt4 import QtCore, QtGui
@@ -1565,6 +1564,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.mucBrowserButton, QtCore.SIGNAL("clicked ()"),self.mucBrowser)
 		QtCore.QObject.connect(self.ui.statusMessage, QtCore.SIGNAL("clicked (bool)"),self.statusMessageClicked)
 		QtCore.QObject.connect(self.ui.statusLine, QtCore.SIGNAL("returnPressed ()"),self.statusLineFinished)
+		QtCore.QObject.connect(self.ui.offlineButton, QtCore.SIGNAL("clicked ( bool)"),self.hideOffline)
 		
 		QtCore.QObject.connect(self.ui.actionAbout, QtCore.SIGNAL("triggered ( bool )"),self.about)
 		QtCore.QObject.connect(self.ui.actionSupport, QtCore.SIGNAL("triggered ( bool )"),self.support)
@@ -1709,7 +1709,7 @@ class mainWindow(QtGui.QMainWindow):
 		Builds menu with 'show offline', 'show away' etc. There are selfResources (if user is connected from more than one client) too.
 		"""
 		# make Show offline QAction
-		self.offlineMenu=QtGui.QMenu(self.ui.showOffline)
+		self.offlineMenu=QtGui.QMenu()
 		self.showOfflineAction=self.offlineMenu.addAction(self.tr("Show Offline"))
 		self.showOfflineAction.setCheckable(True)
 		self.showOfflineAction.setObjectName('show_offline')
@@ -1743,7 +1743,7 @@ class mainWindow(QtGui.QMainWindow):
 					self.offlineMenu.addMenu(menu)
 			self.offlineMenu.addSeparator()
 
-		self.ui.showOffline.setMenu(self.offlineMenu)
+		#self.ui.showOffline.setMenu(self.offlineMenu)
 		QtCore.QObject.connect(self.offlineMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.offlineMenuChanged)
 
 		# refresh selfAvatar tooltip, because some resource could be added
@@ -2200,7 +2200,7 @@ class mainWindow(QtGui.QMainWindow):
 		# set showOffline
 		if self.config['showOffline']=='True':
 			self.offline=False
-			self.buildOfflineMenu()
+			#self.buildOfflineMenu()
 			self.hideOffline(True)
 
 	def registerButtonClicked(self):
@@ -2812,6 +2812,8 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		#self.events.addAddUserEvent('hanzz@njs.netlab.cz','offline users are shown, False offline users are hidden')
 		self.config['showOffline']=unicode(bool)
+		self.showOfflineAction.setChecked(bool)
+		self.ui.offlineButton.setChecked(bool)
 		self.offline=bool
 		self.ui.roster.showOffline=bool
 		self.ui.roster.reshow=True
@@ -2859,7 +2861,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.statusWidgetMenu.setEnabled(False)
 		self.ui.selfName.setText("<h3>"+unicode(self.client.jid.userhost()).split("@")[0]+"</h3>")
 		self.client.getVCard(unicode(self.client.jid.userhost()))
-		self.ui.showOffline.show()
+		self.ui.showOffline.hide()
 		self.tray.showMessage(self.tr("Jabbim"),self.tr("Jabbim is ready! You are connected! :) "))
 		self.tray.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 		print 'end connected in main'

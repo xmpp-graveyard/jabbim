@@ -602,6 +602,34 @@ p, li { white-space: pre-wrap; }
                 </property>
                </spacer>
               </item>
+
+
+			  <item>
+				  <widget class="QToolButton" name="offlineButton" >
+					  <property name="maximumSize" >
+						  <size>
+							  <width>16777215</width>
+							  <height>20</height>
+						  </size>
+					  </property>
+					  <property name="toolTip" >
+						  <string>Show offline contacts</string>
+					  </property>
+					  <property name="text" >
+						  <string/>
+					  </property>
+					  <property name="icon" >
+						  <iconset>images/16x16/status/jabber-offline.png</iconset>
+					  </property>
+					  <property name="checkable" >
+						  <bool>true</bool>
+					  </property>
+					  <property name="arrowType" >
+						  <enum>Qt::NoArrow</enum>
+					  </property>
+				  </widget>
+              </item>
+			  
               <item>
                <widget class="QToolButton" name="toggleInvisible" >
                 <property name="maximumSize" >
