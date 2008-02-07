@@ -440,8 +440,8 @@ class Plugin(plugins.PluginBase):
 					#self.main.tray.showMessage(self.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 5000)
 					print unicode(user)
 					#self.startTrayBlink()
-				else:
-					self.playsound('message')
+				#else:
+					#self.playsound('message')
 		if self.config['osd_on_message']=="True" and not self.main.chat.isActiveWindow():
 			print "osd"
 			jid=jidT.JID(frm)
