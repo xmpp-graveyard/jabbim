@@ -77,8 +77,8 @@ class Plugin(plugins.PluginBase):
 				item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic-template.png"));  #preventivne pokud se netrefime
 			self.window.ui.list.addItem(item)
 
-	def buildRosterMenu(self):
-		menu=self.rosterMenu()
+	def buildMainWindowMenu(self):
+		menu=self.mainWindowMenu()
 		menu.addAction("Jabbim disk manager",self.showSlot)
 	
 	def call(self,jid="",type="public"):

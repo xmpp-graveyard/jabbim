@@ -34,8 +34,8 @@ class Plugin(plugins.PluginBase):
 		self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='jabber:iq:rpc'][@sid]", self.onRPC)
 		return True
 	
-	def buildRosterMenu(self):
-		menu=self.rosterMenu()
+	def buildMainWindowMenu(self):
+		menu=self.mainWindowMenu()
 		menu.addAction("Challenge!",self.showSlot)
 		
 	

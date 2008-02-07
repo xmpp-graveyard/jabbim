@@ -26,8 +26,8 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.loadConfig(homedir)
 
-	def buildRosterMenu(self):
-		menu=self.rosterMenu()
+	def buildMainWindowMenu(self):
+		menu=self.mainWindowMenu()
 		menu.addAction("Show count",self.showSlot)
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay,error=None):
 		if frm.find('icq')!=-1:

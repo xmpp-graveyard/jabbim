@@ -326,8 +326,8 @@ class Plugin(plugins.PluginBase):
 				else:
 					QtGui.QSound.play(self.soundDir+self.sounds[action].strip('\n'))
 
-	def buildRosterMenu(self):
-		menu=self.rosterMenu()
+	def buildMainWindowMenu(self):
+		menu=self.mainWindowMenu()
 		menu.addAction(self.tr("Notification test"),self.testSlot)
 
 	def testSlot(self):

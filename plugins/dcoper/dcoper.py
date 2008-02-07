@@ -54,8 +54,6 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.loadConfig(homedir)
 
-	def buildRosterMenu(self):
-		pass
 	def commandCalled(self, cmd, args, chat, typ):
 		if cmd != "amarok":
 			return

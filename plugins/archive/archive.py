@@ -221,8 +221,8 @@ class Plugin(plugins.PluginBase):
 	#def on_remove(self):
 		
 
-	def buildRosterMenu(self):
-		menu=self.rosterMenu()
+	def buildMainWindowMenu(self):
+		menu=self.mainWindowMenu()
 		menu.addAction("Archive browser",self.showSlot)
 	
 	def buildContactMenu(self,menu,contact):

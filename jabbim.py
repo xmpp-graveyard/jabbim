@@ -2383,7 +2383,7 @@ class mainWindow(QtGui.QMainWindow):
 			if not self.plugins[plugin]['module']:
 				plug = load_source(plugin, path, f).Plugin(self, self.homeDir, dir) # load plugin module
 				self.plugins[plugin]['module'] = plug 
-				self.runPluginCommand(self.plugins[plugin]['module'].buildRosterMenu,[]) # build menu for plugin
+				self.runPluginCommand(self.plugins[plugin]['module'].buildMainWindowMenu,[]) # build menu for plugin
 			else:
 				print "plugin already loaded"
 			f.close()
@@ -2417,7 +2417,7 @@ class mainWindow(QtGui.QMainWindow):
 			# rebuild plugins menu
 			for plug in self.plugins.itervalues():
 				if plug['module']:
-					self.runPluginCommand(plug['module'].buildRosterMenu,[])
+					self.runPluginCommand(plug['module'].buildMainWindowMenu,[])
 		else:
 			print "plugin is not loaded:",plugin
 		log.msg("PLUGINS:"+unicode(self.plugins))

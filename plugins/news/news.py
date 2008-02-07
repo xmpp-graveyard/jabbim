@@ -48,8 +48,8 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.loadConfig(homedir)
 			
-	def buildRosterMenu(self):
-		menu=self.rosterMenu()
+	def buildMainWindowMenu(self):
+		menu=self.mainWindowMenu()
 		menu.addAction(self.main.tr("Show news"),self.showSlot)
 	
 	def showSlot(self):
