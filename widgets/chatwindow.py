@@ -695,7 +695,7 @@ class chatWindow(QtGui.QMainWindow):
 		else:
 			# get delay from string
 			delay=unicode(delay)
-			delay="%s-%s-%s %s:%s:%s" % (delay[0:4],delay[4:6],delay[6:8],delay[9:11],delay[12:14],delay[15:17])
+			delay="%s-%s-%s&nbsp;%s:%s:%s" % (delay[0:4],delay[4:6],delay[6:8],delay[9:11],delay[12:14],delay[15:17])
 			# our delayed message
 			if unicode(w.chat.nick)==unicode(user):
 				message=self.main.skin["my_message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
