@@ -107,7 +107,7 @@ class groupChatWidget(abstractChatWidget):
 		# load plugins buttons
 		for key,value in self.main.plugins.iteritems():
 			if value['module']:
-				self.main.runPluginCommand(value['module'].buildGroupchatWidget,[unicode(jidT.JID(self.jid).userhost()),self.flowLayout,self])
+				self.main.runPluginCommand(value['module'].buildGroupchatWidget,[unicode(self.jid),self.flowLayout,self])
 
 		# make global buttons
 		self.ui.admin=QtGui.QToolButton()

@@ -245,6 +245,7 @@ class Plugin(plugins.PluginBase):
 
 	
 	def buildChatWidget(self,jid,layout,widget):
+		jid=self.main.getJid(jid).userhost()
 		button=QtGui.QToolButton()
 		#button.setText("History")
 		button.setIconSize(QtCore.QSize(16,16))
@@ -297,6 +298,7 @@ class Plugin(plugins.PluginBase):
 
 
 	def buildGroupchatWidget(self,jid,layout,widget):
+		jid=self.main.getJid(jid).userhost()
 		button=QtGui.QToolButton()
 		#button.setText("History")
 		button.setIconSize(QtCore.QSize(16,16))
