@@ -224,7 +224,7 @@ class PluginBase:
 
 	def buildGroupchatContactMenu(self,menu,jid,user):
 		"""
-		Called when menu above contact is building.
+		Called when menu above groupchat contact is building.
 		
 		C{}
 		@type menu: QtGui.QMenu
