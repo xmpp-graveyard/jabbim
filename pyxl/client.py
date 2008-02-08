@@ -534,6 +534,7 @@ class Client(derived):
 		log.msg('bookmarks set sucessfully')
 
 	def _bookmarksErrReceived(self, err):
+		print err
 		self.on_bookmarksFail()
 		pass #no tak neprisly no
 	def _bookmarksReceived(self, el):
