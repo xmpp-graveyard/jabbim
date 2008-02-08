@@ -233,6 +233,9 @@ class tabWidget(QtGui.QTabBar):
 		return QtGui.QTabBar.wheelEvent(self,event)
 
 class chatWindow(QtGui.QMainWindow):
+	"""
+	@group Plugins: openNewChatTab, addChatTab
+	"""
 	def __init__(self,parent,main):
 		apply(QtGui.QMainWindow.__init__,(self,None))
 		self.main=main
@@ -721,7 +724,7 @@ class chatWindow(QtGui.QMainWindow):
 
 			w.chat.textEditWrite(message)
 
-	def openNewChatTab(jid,name,icon,message=None):
+	def openNewChatTab(self,jid,name,icon,message=None):
 		created=False
 		if self.isHidden():
 			created=True

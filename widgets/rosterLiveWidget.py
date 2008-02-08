@@ -293,6 +293,7 @@ class special:
 class rosterWidget(QtGui.QWidget):
 	"""
 	RosterLiveWidget class.
+	@group Plugins: getNameByJID
 	"""
 	def __init__(self,parent=None,main=None):
 		QtGui.QWidget.__init__(self,parent)
