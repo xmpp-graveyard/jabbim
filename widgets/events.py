@@ -654,6 +654,7 @@ class events:
 		self.filetransferWidget[sid].jid=jid+'/'+res
 		self.filetransferWidget[sid].sent=1
 		self.filetransferWidget[sid].broken=[]
+		self.filetransferWidget[sid].errors=[]
 		self.filetransferWidget[sid].all=fileCount
 		self.filetransferWidget[sid].download=False
 		self.filetransferWidget[sid].typ='normal'
@@ -689,6 +690,7 @@ class events:
 		self.filetransferWidget[sid].sent=1
 		self.filetransferWidget[sid].broken=[]
 		self.filetransferWidget[sid].all=1
+		self.filetransferWidget[sid].errors=[]
 		self.filetransferWidget[sid].typ='normal'
 		self.filetransferWidget[sid].widget=FTWidget(text,self.filetransferWidget[sid],self.main,sid,self.main.ui.eventsListWidget,download=True)
 		self.filetransferWidget[sid].widget.setMinimumHeight(height)
@@ -737,7 +739,7 @@ class events:
 		mainWindow=self.main
 		file=unicode(file)
 		sid2=self.main.client.sendFile(jid, basename(file), file, description,preview=preview,previewType=previewType)
-		mainWindow.tray.showMessage(mainWindow.tr("Sending file ")+basename(file)+mainWindow.tr(" to ")+unicode(jid), mainWindow.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
+		#mainWindow.tray.showMessage(mainWindow.tr("Sending file ")+basename(file)+mainWindow.tr(" to ")+unicode(jid), mainWindow.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
 
 
 		tab,index=self.main.chat.findTab(jid)

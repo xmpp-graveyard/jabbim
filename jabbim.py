@@ -135,6 +135,7 @@ class clientClass(pyxl.client.Client):
 		widget=self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']] # event widget
 		mainWindow=self.main
 		if widget.typ=='normal':
+			queueId=self.main.events.filetransfer[sid]['queueId'] # filetransfer queue ID
 			if self.ft.has_key(sid):
 				# Filetransfer is alive
 				size=float(self.ft[sid].size)
@@ -151,68 +152,89 @@ class clientClass(pyxl.client.Client):
 					#widget.widget.closeClicked()
 				else:
 					# transport finished
-					toDel.append(sid)
-					if self.main.ftError[sid]==None:
-						widget.widget.stats.setText(mainWindow.tr("Complete"))
-						self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" has been sent/downloaded "), QtGui.QSystemTrayIcon.Information, 4000)
-					elif self.main.ftError[sid].lower()=='canceled':
-						widget.widget.progressBar.setValue(0)
-						widget.widget.stats.setText(mainWindow.tr("File declined"))
-						if widget.download==False:
-							self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("user declined to receive file")+" "+basename(unicode(widget.file)), QtGui.QSystemTrayIcon.Critical, 4000)
-					else:
-						widget.widget.progressBar.setValue(0)
-						widget.widget.stats.setText(mainWindow.tr("Error")+" "+unicode(self.main.ftError[sid]))
-						self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" can't be sent/downloadeded "), QtGui.QSystemTrayIcon.Critical, 4000)
-					#widget.widget.complete=True
-	
-	
-			for sid in toDel:
-				queueId=self.main.events.filetransfer[sid]['queueId'] # filetransfer queue ID
-				if widget.download==False:
-					if self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']]!=None:
-						# delete sent file from queue and start uploading next file in queue
+					#toDel.append(sid)
+					tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[queueId].jid)
+					self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']].errors.append(self.main.ftError[sid])
+					# file upload
+					if widget.download==False:
 						del self.main.events.filetransferQueue[queueId][self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']].file]
-						if len(self.main.events.filetransferQueue[queueId])!=0:
-							self.main.events.filetransferWidget[queueId].widget.complete=True
-							tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[queueId].jid)
+						emptyQueue=len(self.main.events.filetransferQueue[queueId])==0
+						# no error
+						if self.main.ftError[sid]==None:
+							widget.widget.stats.setText(mainWindow.tr("Complete"))
+							#self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" has been sent"), QtGui.QSystemTrayIcon.Information, 4000)
 							if tab:
 								file=self.main.events.filetransferWidget[queueId].file
-								if self.main.ftError[sid]==None:
-									tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('has been sent')))
-								else:
-									tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('can\'t be sent:')+" "+unicode(self.main.ftError[sid])))
-							self.main.events.nextFTUploadEvent(sid,queueId)
-							
-						else:
-							self.main.events.filetransferWidget[queueId].widget.complete=True
-							tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[queueId].jid)
+								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('has been sent')))
+						# file declined
+						elif self.main.ftError[sid].lower()=='canceled':
+							widget.widget.progressBar.setValue(0)
+							widget.widget.stats.setText(mainWindow.tr("File declined"))
+							self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("User declined to receive file")+" "+basename(unicode(widget.file)), QtGui.QSystemTrayIcon.Critical, 4000)
 							if tab:
-								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("All files have been sent ")))
+								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("User declined to receive file")+" "+basename(unicode(widget.file))))
+						# unknown error
+						else:
+							widget.widget.progressBar.setValue(0)
+							widget.widget.stats.setText(mainWindow.tr("Error")+" "+unicode(self.main.ftError[sid]))
+							self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" can't be sent "), QtGui.QSystemTrayIcon.Critical, 4000)
+							if tab:
+								file=self.main.events.filetransferWidget[queueId].file
+								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('can\'t be sent:')+" "+unicode(self.main.ftError[sid])))
+						# some files in queue
+						if not emptyQueue:
+							self.main.events.nextFTUploadEvent(sid,queueId)
+						else:
+							bug=False
+							for b in self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']].errors:
+								if b!=None:
+									bug=True
+									break
+							if not bug:
+								self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("All files for")+" "+widget.jid+" "+mainWindow.tr("have been sent"), QtGui.QSystemTrayIcon.Critical, 4000)
+							else:
+								self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("Some files for")+" "+widget.jid+" "+mainWindow.tr("haven't been sent"), QtGui.QSystemTrayIcon.Critical, 4000)
+							if tab:
+								if not bug:
+									tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("All files have been sent")))
+								else:
+									tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("Some files can't be sent")))
+								# remove progress bar from chatWidget
 								if tab.chat.filetransfer.has_key(queueId):
 									tab.chat.ui.ftwidget.layout().removeWidget(tab.chat.filetransfer[queueId])
 									tab.chat.filetransfer[queueId].setParent(None)
 									del tab.chat.filetransfer[queueId]
+					# file download
 					else:
-						log.msg(unicode(self.main.events.filetransferQueue))
-						#log.msg(unicode(self.main.events.filetransfer[sid].file))
-				else:
-					self.main.events.filetransferWidget[queueId].widget.complete=True
-					tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[queueId].jid)
-					if tab:
-						file=self.main.events.filetransferWidget[queueId].file
+						# no error
 						if self.main.ftError[sid]==None:
-							tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('has been downloaded')))
+							widget.widget.stats.setText(mainWindow.tr("Complete"))
+							self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" has been downloaded"), QtGui.QSystemTrayIcon.Information, 4000)
+							if tab:
+								file=self.main.events.filetransferWidget[queueId].file
+								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('has been downloaded')))
+								# remove progress bar from chatWidget
+								if tab.chat.filetransfer.has_key(queueId):
+									tab.chat.ui.ftwidget.layout().removeWidget(tab.chat.filetransfer[queueId])
+									tab.chat.filetransfer[queueId].setParent(None)
+									del tab.chat.filetransfer[queueId]
+						# unknown error
 						else:
-							tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('can\'t be downloaded:')+" "+unicode(self.main.ftError[sid])))
-						if tab.chat.filetransfer.has_key(queueId):
-							tab.chat.ui.ftwidget.layout().removeWidget(tab.chat.filetransfer[queueId])
-							tab.chat.filetransfer[queueId].setParent(None)
-							del tab.chat.filetransfer[queueId]
-
+							widget.widget.progressBar.setValue(0)
+							widget.widget.stats.setText(mainWindow.tr("Error")+" "+unicode(self.main.ftError[sid]))
+							self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" can't be downloaded "), QtGui.QSystemTrayIcon.Critical, 4000)
+							if tab:
+								file=self.main.events.filetransferWidget[queueId].file
+								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('can\'t be downloaded:')+" "+unicode(self.main.ftError[sid])))
+								# remove progress bar from chatWidget
+								if tab.chat.filetransfer.has_key(queueId):
+									tab.chat.ui.ftwidget.layout().removeWidget(tab.chat.filetransfer[queueId])
+									tab.chat.filetransfer[queueId].setParent(None)
+									del tab.chat.filetransfer[queueId]
+					del self.main.events.filetransfer[sid]
 
 				# delete this filetransfer
-				del self.main.events.filetransfer[sid]
+				#del self.main.events.filetransfer[sid]
 		else:
 			if self.ft.has_key(sid):
 				# Filetransfer is alive
