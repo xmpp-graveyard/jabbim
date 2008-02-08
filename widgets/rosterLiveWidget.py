@@ -740,6 +740,12 @@ class rosterWidget(QtGui.QWidget):
 			self.statusLabel.resize(self.width()-46,self.selectedHeight-32)
 		return QtGui.QWidget.resizeEvent(self,event)
 
+	def getNameByJID(self,jid):
+		jid=self.main.getJid(jid)
+		if self.main.client.roster['users'].has_key(jid.userhost()):
+			return self.main.client.roster['users'][jid.userhost()].name
+		return jid.full()
+
 	def paintCompactUserItem(self,painter,useritem,x,y):
 		if useritem==self.item:
 			if self.metaItems.has_key(useritem.metajid) or self.main.config['bigOnClick']=="True":
