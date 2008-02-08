@@ -2411,9 +2411,7 @@ class mainWindow(QtGui.QMainWindow):
 		try:
 			if not self.plugins[plugin]['module']:
 				#plug =  # load plugin module
-				if not self.plugins[plugin].has_key("_"):
-					self.plugins[plugin]["_"]=load_source(plugin, path, f)
-				self.plugins[plugin]['module']=self.plugins[plugin]["_"].Plugin(self, self.homeDir, dir)
+				self.plugins[plugin]['module']=load_source(plugin, path, f).Plugin(self, self.homeDir, dir)
 				self.runPluginCommand(self.plugins[plugin]['module'].buildMainWindowMenu,[]) # build menu for plugin
 			else:
 				print "plugin already loaded"
