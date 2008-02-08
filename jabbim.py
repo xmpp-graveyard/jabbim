@@ -1775,6 +1775,9 @@ class mainWindow(QtGui.QMainWindow):
 				self.dialog.show()
 		elif cmd=="show_transports":
 			self.config['showTransports']=unicode(action.isChecked())
+			self.ui.roster.setSize()
+			self.ui.roster.repaint()
+			
 		elif cmd=="toggle_invisible":
 			if self.toggleInv.text() == self.tr("Become invisible"):
 				self.toggleInv.setText(self.tr("Become visible"))
