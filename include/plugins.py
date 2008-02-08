@@ -215,10 +215,25 @@ class PluginBase:
 		
 		C{}
 		@type menu: QtGui.QMenu
-		@param feature: contact menu
+		@param menu: contact menu
 		@type contact: Pyxl.Contact
 		@param contact: contact for whom is menu created
-		@see: L{buildMainWindowMenu}, U{QtGui.QMenu<http://www.riverbankcomputing.com/Docs/PyQt4/html/qmenu.html>}
+		@see: L{buildMainWindowMenu}, L{buildGroupchatContactMenu}, U{QtGui.QMenu<http://www.riverbankcomputing.com/Docs/PyQt4/html/qmenu.html>}
+		"""
+		pass
+
+	def buildGroupchatContactMenu(self,menu,jid,user):
+		"""
+		Called when menu above contact is building.
+		
+		C{}
+		@type menu: QtGui.QMenu
+		@param menu: groupchat contact menu
+		@type jid: unicode
+		@param jid: groupchat contacts JID (for example jabbim@conf.netlab.cz/HanzZ)
+		@type user: pyxl.groupchat.MUCContact
+		@param user: contact for whom is menu created or None if user is not in pyxl evidence
+		@see: L{buildMainWindowMenu}, L{buildContactMenu}, U{QtGui.QMenu<http://www.riverbankcomputing.com/Docs/PyQt4/html/qmenu.html>}
 		"""
 		pass
 

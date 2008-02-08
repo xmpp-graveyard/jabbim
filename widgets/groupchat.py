@@ -352,6 +352,10 @@ class groupChatWidget(abstractChatWidget):
 			action.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
 			action.setObjectName("send_file")
 
+			for key,value in self.main.plugins.iteritems():
+				if value['module']:
+					self.main.runPluginCommand(value['module'].buildGroupchatContactMenu,[menu,jid,user])
+
 		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.usersContextMenuTriggered)
 		# set menu position and show
 		menu.popup(self.ui.users.mapToGlobal(pos))
