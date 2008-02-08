@@ -619,9 +619,13 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.rosterStackedWidget.setCurrentIndex(1)
 		#for key,value in self.main.plugins.iteritems():
 			#value.connected()
+		self.reactor.callLater(0.3,self.jl)
+
+	def jl(self):
 		self.main.findPlugins()
 		self.main.loadPlugins()
 		self.main.autoJoinGroupchat()
+		
 	def on_invite(self,jid, room, reason, cont = False):
 		print "invite",cont
 		if not cont:
@@ -2055,7 +2059,7 @@ class mainWindow(QtGui.QMainWindow):
 				self.client.factory.stopTrying()
 				self.reconnect = False
 				self.client.disconnect()
-				self._disconnect()
+				#self._disconnect()
 			else:
 				if not pri:
 					# get priority from config
@@ -2395,7 +2399,6 @@ class mainWindow(QtGui.QMainWindow):
 		@type plugin: unicode
 		@param plugin: plugins name
 		"""
-
 		dir = self.plugins[plugin]['dir']
 		path = utils.path('%s/%s.py' % (dir, plugin))
 		log.msg("loading "+unicode(plugin)+" plugin...")
@@ -2407,8 +2410,10 @@ class mainWindow(QtGui.QMainWindow):
 			return
 		try:
 			if not self.plugins[plugin]['module']:
-				plug = load_source(plugin, path, f).Plugin(self, self.homeDir, dir) # load plugin module
-				self.plugins[plugin]['module'] = plug 
+				#plug =  # load plugin module
+				if not self.plugins[plugin].has_key("_"):
+					self.plugins[plugin]["_"]=load_source(plugin, path, f)
+				self.plugins[plugin]['module']=self.plugins[plugin]["_"].Plugin(self, self.homeDir, dir)
 				self.runPluginCommand(self.plugins[plugin]['module'].buildMainWindowMenu,[]) # build menu for plugin
 			else:
 				print "plugin already loaded"
@@ -2436,7 +2441,7 @@ class mainWindow(QtGui.QMainWindow):
 			l=gc.get_referrers(self.plugins[plugin]['module'])
 			for x in range(len(l)):
 				del l[0]
-			del self.plugins[plugin]['module']
+			#del self.plugins[plugin]['module']
 			self.plugins[plugin]['module']=None
 			#del self.plugins[plugin]
 			del gc.garbage[:] # delete plugin from python
@@ -2444,9 +2449,9 @@ class mainWindow(QtGui.QMainWindow):
 			for plug in self.plugins.itervalues():
 				if plug['module']:
 					self.runPluginCommand(plug['module'].buildMainWindowMenu,[])
-		else:
-			print "plugin is not loaded:",plugin
-		log.msg("PLUGINS:"+unicode(self.plugins))
+		#else:
+			#print "plugin is not loaded:",plugin
+		#log.msg("PLUGINS:"+unicode(self.plugins))
 
 	def closeEvent(self,event):
 		"""

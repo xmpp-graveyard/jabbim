@@ -263,18 +263,19 @@ class Plugin(plugins.PluginBase):
 		# online = user_online.wav
 		# GChighlight = groupchat_highlight.wav
 		# for list of actions see loadSoundConfig()
-		self.showInPreferences=True
-		self.preferencesIcon=QtGui.QIcon(plugindir+"/audio.png")
+		#self.showInPreferences=True
+		#self.preferencesIcon=QtGui.QIcon(plugindir+"/audio.png")
 		self.loadSoundConfig("sounds/config")
 		self.osd=None
 		if main:
-			self.registerHandler('on_message', self.on_message)
-			self.registerHandler('on_GCmessage', self.on_GCmessage)
-			self.registerHandler('on_presence',self.on_presence)
-			self.registerHandler('on_evil',self.on_evil)
+			#self.registerHandler('on_message', self.on_message)
+			#self.registerHandler('on_GCmessage', self.on_GCmessage)
+			#self.registerHandler('on_presence',self.on_presence)
+			#self.registerHandler('on_evil',self.on_evil)
 			self.loadConfig()
 			self.playsound('start')
 			self.osd=osd(self)
+			self.registerWidget(self.osd)
 			self.osd.osdx=int(self.config['osd_x'])
 			self.osd.osdy=int(self.config['osd_y'])
 			if self.config['osd_transparent']!="True":
@@ -288,6 +289,7 @@ class Plugin(plugins.PluginBase):
 
 	def on_showPreferences(self,dialog):
 		self.osd=osd(self,dialog)
+		self.registerWidget(self.osd)
 		self.osd.osdx=int(self.config['osd_x'])
 		self.osd.osdy=int(self.config['osd_y'])
 		self.osd.transparent=False
@@ -296,16 +298,17 @@ class Plugin(plugins.PluginBase):
 		#dialog.setModal(False)
 
 	def on_endPreferences(self):
-		self.osd.hide()
+		self.unregisterWidget(self.osd)
 	
 	def on_saveConfig(self):
 		if self.osd:
-			self.osd.hide()
-			rect=self.osd.geometry()
-			x=int(rect.x())
-			y=int(rect.y())
-			self.config['osd_x']=str(x)
-			self.config['osd_y']=str(y)
+			self.unregisterWidget(self.osd)
+			#self.osd.hide()
+			#rect=self.osd.geometry()
+			#x=int(rect.x())
+			#y=int(rect.y())
+			#self.config['osd_x']=str(x)
+			#self.config['osd_y']=str(y)
 
 	def loadSoundConfig(self, configFile):
 		try:

@@ -581,7 +581,7 @@ class preferencesWindow(QtGui.QDialog):
 			if plug.configDialog and plug.showInPreferences and plugin in self.loadedPlugins:
 				listItem=QtGui.QListWidgetItem(plug.name,self.ui.listWidget)
 				listItem.setData(32,QtCore.QVariant(plugin))
-				listItem.setIcon(plug.preferencesIcon)
+				listItem.setIcon(QtGui.QIcon(plug.preferencesIcon))
 				widget=QtGui.QWidget()
 				self.ui.stackedWidget.addWidget(widget)
 				self.showedPlugins[plugin]=None
@@ -651,7 +651,7 @@ class preferencesWindow(QtGui.QDialog):
 			if plug.configDialog and plug.showInPreferences and plugin in self.loadedPlugins:
 				listItem=QtGui.QListWidgetItem(plug.name,self.ui.listWidget)
 				listItem.setData(32,QtCore.QVariant(plugin))
-				listItem.setIcon(plug.preferencesIcon)
+				listItem.setIcon(QtGui.QIcon(plug.preferencesIcon))
 				widget=QtGui.QWidget()
 				self.ui.stackedWidget.addWidget(widget)
 				self.showedPlugins[plugin]=None

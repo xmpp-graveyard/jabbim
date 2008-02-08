@@ -110,6 +110,27 @@ class PluginBase:
 		self._loadedWidgets.append(wid)
 		return wid
 
+	def registerWidget(self,widget):
+		if not widget in self._loadedWidgets:
+			self._loadedWidgets.append(widget)
+			return True
+		return False
+	
+	def unregisterWidget(self,widget):
+		if widget in self._loadedWidgets:
+			print "unload widget"
+			if widget.parent():
+				if widget.parent().layout():
+					widget.parent().layout().removeWidget(widget)
+				widget.setParent(None)
+			widget.hide()
+			widget.close()
+			self._loadedWidgets.remove(widget)
+			widget.deleteLater()
+			#del widget
+			return True
+		return False
+
 	def loadWidget(self,file,parent=None):
 		"""
 		Loads QtGui.QWidget from .py file created from .ui by pyuic4.
@@ -370,10 +391,11 @@ class PluginBase:
 		"""
 		self.on_remove()
 		# delete windows
-		for window in self._loadedWidgets:
-			window.close()
+		#for window in self._loadedWidgets:
+			#window.close()
 		for i in range(int(len(self._loadedWidgets))):
-			del self._loadedWidgets[0]
+			self.unregisterWidget(self._loadedWidgets[0])
+			#del self._loadedWidgets[0]
 		# save config
 		self.writeConfig()
 		# unregister pyxl handlers
