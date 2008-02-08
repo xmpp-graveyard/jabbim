@@ -74,6 +74,7 @@ from twisted.words.protocols.jabber import jid as jidT
 import ctypes
 from twisted.web.microdom import parseString,Element
 from twisted.web.client import downloadPage
+from twisted.web import xmlrpc, server #for xmlrpc plugin
 
 class clientClass(pyxl.client.Client):
 
