@@ -27,7 +27,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Attention, please!'
 		self.author = "Josef 'PepeQ' Halicek"
 		self.name = 'Attention'
-		self.version = '0.2'
+		self.version = '0.25'
 		self.category = ['fun']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.delay=30 # how frequently do we want to allow user send attentions
@@ -49,7 +49,7 @@ class Plugin(plugins.PluginBase):
 			self.playsound()
 			tab,index=self.main.chat.findTab(frm)
 			if tab:
-				tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',self.tr('You have just received request for an attention.')))
+				tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',self.main.ui.roster.getNameByJID(frm)+self.tr(' has just requested an attention.')))
 			self.last_req=int(time.time())
 
 
