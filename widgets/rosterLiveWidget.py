@@ -293,7 +293,6 @@ class special:
 class rosterWidget(QtGui.QWidget):
 	"""
 	RosterLiveWidget class.
-	@group Plugins: getNameByJID
 	"""
 	def __init__(self,parent=None,main=None):
 		QtGui.QWidget.__init__(self,parent)
@@ -349,6 +348,364 @@ class rosterWidget(QtGui.QWidget):
 		self.blinkJids=[]
 		self.main.ui.rosterSearch.hide()
 		self.main.ui.rosterSearchLabel.hide()
+
+	#{ Public functions
+
+	def addGroup(self,name):
+		"""
+		Adds new group to the roster.
+		@type name: unicode
+		@param name: groups name
+		@rtype: groupItem
+		@return: created groupItem
+		@see: L{AddUser}, L{getGroupUsers}, L{getAllGroupUsers}, L{getGroupSortedUsers}
+		"""
+		item=groupItem(name,QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png"),self)
+		self.groups[name]=item
+		self.repaint()
+		return item
+
+	def addUser(self,jid,name,group):
+		"""
+		Adds new user to the roster.
+		@type jid: unicode
+		@param jid: users Jabber ID
+		@type name: unicode
+		@param name: users name
+		@type group: unicode
+		@param group: group name or None for user without group
+		@see: L{addGroup}, L{getGroupUsers}, L{getAllGroupUsers}, L{getGroupSortedUsers}
+		"""
+		if len(name)==0:
+			name=jid
+		if not group:
+			group=self.specialName
+		item=userItem(name,group,jid,self)
+		item.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons["9"])
+		item.hidden=True
+		item.setAvatar(QtGui.QIcon("images/48x48/apps/jabbim.png"))
+		self.users.append(item)
+
+	def getGroupUsers(self,group):
+		"""
+		Returns user items according to show online. If L{showOffline} is False, only non-offline users are returned
+		@type group: unicode
+		@param group: name of group
+		@rtype: list
+		@return: list of userItems
+		@see: L{addGroup}, L{addUser}, L{getAllGroupUsers}, L{getGroupSortedUsers}
+		"""
+		ret=[]
+		for user in self.users:
+			if self.showOffline==True:
+				if user.group==group:
+					ret.append(user)
+			else:
+				if user.group==group and not user.hidden:
+					ret.append(user)
+		return ret
+
+	def getAllGroupUsers(self,group):
+		"""
+		Returns all user items from group.
+		@type group: unicode
+		@param group: name of group
+		@rtype: list
+		@return: list of userItems
+		@see: L{addGroup}, L{addUser}, L{getGroupUsers}, L{getGroupSortedUsers}
+		"""
+		ret=[]
+		for user in self.users:
+			if user.group==group:
+				ret.append(user)
+		return ret
+
+	def getGroupSortedUsers(self,group):
+		"""
+		Returns users from group. If L{showOffline} is False, only non-offline users are returned.
+		If C{self.main.config['showTransports']} is True, transports are returned too.
+		@type group: unicode
+		@param group: group name
+		@rtype: list
+		@return: sorted list of userItem
+		@see: L{addGroup}, L{addUser}, L{getGroupUsers}, L{getAllGroupUsers}
+		"""
+		ret=[]
+		transport=self.main.config['showTransports']
+		for key in self.sorted[group]:
+			user=key[1]
+			if self.showOffline==True and not user.hiddenBySearch:
+				if user.group==group:
+					if (transport=="False" and user.transport==False) or transport=="True":
+						ret.append(user)
+			else:
+				if user.group==group and not user.hidden and not user.hiddenBySearch:
+					if (transport=="False" and user.transport==False) or transport=="True":
+						ret.append(user)
+		return ret
+
+	def getIconByJID(self,jid,size="16x16"):
+		"""
+		Returns QtGui.QIcon according to users show. If user is not in roster, offline icon will be returned.
+		@type jid: unicode
+		@param jid: contacts Jabber ID
+		@rtype: QtGui.QIcon
+		@return: show iconf for this user
+		@see: L{getNameByJid}, U{QtGui.QIcon<http://www.riverbankcomputing.com/Docs/PyQt4/html/qicon.html>}
+		"""
+		jid=self.main.getJid(jid)
+		if self.main.client.roster['users'].has_key(jid.userhost()):
+			contact=self.main.client.roster['users'][jid.userhost()]
+			if len(contact.status)==2:
+				show=contact.status[0]
+				status=contact.status[1]
+			else:
+				if len(contact.status)==1:
+					show=contact.status[0]
+				else:
+					show="offline"
+				status=None
+			return self.main.getIcon(unicode(jid.userhost()),status=self.main.icons[str(show)],size=size)
+		return self.main.getIcon(unicode(jid.userhost()),status='offline',size=size)
+
+	def getNameByJID(self,jid):
+		"""
+		Returns name for jid. If jid is not in roster, returns the same JID instead of name.
+		@type jid: unicode
+		@param jid: contacts Jabber ID
+		@rtype: unicode
+		@return: users name
+		@see: L{getIconByJID}
+		"""
+		jid=self.main.getJid(jid)
+		if self.main.client.roster['users'].has_key(jid.userhost()):
+			return self.main.client.roster['users'][jid.userhost()].name
+		return jid.full()
+
+	def itemAt(self,x1,y1,count=None):
+		"""
+		Returns items with first item position x1,y1.
+		@type x1: int
+		@param x1: x position of item
+		@type x2: int
+		@param x2: y position of item
+		@type count: int
+		@param count: count of returned items. First item has position [x1,y1].
+		@rtype: list
+		@return: [list of userItem - groupItem - specialItem, X of last item, Y of last item]
+		@see: L{itemCoordinates}
+		"""
+		x=0
+		y=0
+		got=0
+		gotx=0
+		goty=0
+		ret=[]
+		if self.searchMode==False:
+			for key in self.sortedGroups:
+				item=self.groups[key]
+				items=self.getGroupSortedUsers(item.name)
+				if ((len(items)!=0 and not self.showOffline) or self.showOffline) and item.all!=0:
+					if got!=0 and not item in ret:
+						ret.append(item)
+						got+=1
+					if y1>=y and y1<=y+self.groupHeight:
+						if count and not item in ret:
+							ret.append(item)
+							got+=1
+							goty=y
+						if not count:
+							return item
+					if got==count:
+						return ret,0,goty
+					if item.expanded and len(items)!=0:
+						previous=None
+						for useritem in items:
+							y+=self.userHeight
+							if got!=0 and not useritem in ret:
+								ret.append(useritem)
+								got+=1
+	
+							if useritem==self.item:
+								if y1>=y and y1<=y+self.selectedHeight-28+self.userHeight:
+									if count and not useritem in ret:
+										ret.append(useritem)
+										got+=1
+										goty=y
+									if not count:
+										return useritem
+							else:
+								if y1>=y and y1<=y+self.userHeight:
+									if count and not useritem in ret:
+										ret.append(useritem)
+										got+=1
+										goty=y
+									if not count:
+										return useritem
+							if got==count:
+								return ret,0,goty
+							if useritem==self.item:
+								y+=self.selectedHeight-28
+					y+=self.groupHeight
+		else:
+			users=[]
+			for item in self.users:
+				if not self.metaItems.has_key(item.jid):
+					users.append([item.name.lower(),item])
+			for v in self.metaItems.itervalues():
+				for user in v:
+					users.append([user.name.lower(),user])
+			users.sort()
+			for item in users:
+				item=item[1]
+				if item.hiddenBySearch==False:
+					useritem=item
+					if got!=0 and not useritem in ret:
+						ret.append(useritem)
+						got+=1
+
+					if useritem==self.item:
+						if y1>=y and y1<=y+self.selectedHeight-28+self.userHeight:
+							if count and not useritem in ret:
+								ret.append(useritem)
+								got+=1
+								goty=y
+							if not count:
+								return useritem
+					else:
+						if y1>=y and y1<=y+self.userHeight:
+							if count and not useritem in ret:
+								ret.append(useritem)
+								got+=1
+								goty=y
+							if not count:
+								return useritem
+					if got==count:
+						return ret,0,goty
+					if useritem==self.item:
+						y+=self.selectedHeight-28
+					y+=self.userHeight
+
+		if got!=0:
+			return ret,0,goty
+
+		if count:
+			return [],None,None
+
+	def itemCoordinates(self,i):
+		"""
+		Returns left-top corners coordinates of userItem. If userItem is not founded, returns [None,None]
+		@type i: userItem
+		@param i: userItem
+		@rtype: list
+		@return: [X,Y]
+		@see: L{itemAt}
+		"""
+		x=0
+		y=0
+		if self.searchMode==False:
+			for key in self.sortedGroups:
+				item=self.groups[key]
+				items=self.getGroupSortedUsers(item.name)
+				if ((len(items)!=0 and not self.showOffline) or self.showOffline) and item.all!=0:
+					if item==i:
+						return x,y
+					if item.expanded and len(items)!=0:
+						previous=None
+						for useritem in items:
+							y+=self.userHeight
+							if useritem==i:
+								return x,y
+							if useritem==self.item:
+								y+=self.selectedHeight-28
+	
+						#if useritem==self.item:
+							#y-=32
+					y+=self.groupHeight
+		else:
+
+			users=[]
+			for item in self.users:
+				if not self.metaItems.has_key(item.jid):
+					users.append([item.name.lower(),item])
+			for v in self.metaItems.itervalues():
+				for user in v:
+					users.append([user.name.lower(),user])
+			users.sort()
+			for item in users:
+				item=item[1]
+				if item.hiddenBySearch==False:
+					useritem=item
+					if useritem==i:
+						return x,y
+					if useritem==self.item:
+						y+=self.selectedHeight-28
+					y+=self.userHeight
+
+		return None,None
+
+
+	def getHostItems(self,host):
+		"""
+		Returns all userItem with selected host.
+		@type host: unicode
+		@param host: host without @ (for example jabbim.cz, nsj.netlab.cz etc.)
+		@rtype: list
+		@return: list of userItem
+		"""
+		ret=[]
+		for user in self.users:
+			j=self.main.getJid(user.jid)
+			if j:
+				if j.host==host:
+					ret.append(user)
+		for mainjid,users in self.metaItems.iteritems():
+			for user in users:
+				j=self.main.getJid(user.jid)
+				if j:
+					if j.host==host:
+						ret.append(user)
+		return ret
+
+	def getUserItems(self,jid):
+		"""
+		Returns all userItems for JID.
+		@type jid: unicode
+		@param jid: Jabber ID without resource (test@njs.netlab.cz)
+		@rtype: list
+		@return: list of userItems
+		"""
+		ret=[]
+		for user in self.users:
+			if user.jid==jid:
+				ret.append(user)
+		return ret
+
+	def getMetaItems(self,jid):
+		"""
+		Returns all metaItems for JID.
+		@type jid: unicode
+		@param jid: metaItem Jabber ID
+		@rtype: list
+		@return: list of userItem
+		"""
+		ret=[]
+		for mainjid,users in self.metaItems.iteritems():
+			for user in users:
+				if user.jid==jid:
+					ret.append([user,mainjid])
+		return ret
+
+	#}
+	
+	#{ Private functions
+
+	def getMetaParents(self,jid):
+		ret=[]
+		for user in self.users:
+			if user.metajid==jid:
+				ret.append(user)
+		return ret
 
 	def disconnect(self):
 		"""
@@ -541,82 +898,6 @@ class rosterWidget(QtGui.QWidget):
 			else:
 				self.main.scroll.verticalScrollBar().setValue(self.main.scroll.verticalScrollBar().value()-10)
 
-	def addGroup(self,name):
-		"""
-		add new group
-		@type name: unicode
-		@rtype: groupItem
-		@return: created groupItem
-		"""
-		item=groupItem(name,QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png"),self)
-		self.groups[name]=item
-		self.repaint()
-		return item
-
-	def addUser(self,jid,name,group):
-		"""
-		add new user
-		@type jid: unicode
-		@type name: unicode
-		@type group: unicode
-		@rtype: userItem
-		@return: created userItem
-		"""
-		if len(name)==0:
-			name=jid
-		if not group:
-			group=self.specialName
-		item=userItem(name,group,jid,self)
-		item.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons["9"])
-		item.hidden=True
-		item.setAvatar(QtGui.QIcon("images/48x48/apps/jabbim.png"))
-		self.users.append(item)
-
-	def getGroupUsers(self,group):
-		"""
-		get user items according to show online from `group`
-		@type group: unicode
-		@rtype: list
-		@return: list of userItem
-		"""
-		ret=[]
-		for user in self.users:
-			if self.showOffline==True:
-				if user.group==group:
-					ret.append(user)
-			else:
-				if user.group==group and not user.hidden:
-					ret.append(user)
-		return ret
-
-	def getAllGroupUsers(self,group):
-		ret=[]
-		for user in self.users:
-			if user.group==group:
-				ret.append(user)
-		return ret
-
-	def getGroupSortedUsers(self,group):
-		"""
-		get all users from group. Returned list is sorted and depends on self.showOffline variable.
-		@type group: unicode
-		@rtype: list
-		@return: sorted list of userItem
-		"""
-		ret=[]
-		transport=self.main.config['showTransports']
-		for key in self.sorted[group]:
-			user=key[1]
-			if self.showOffline==True and not user.hiddenBySearch:
-				if user.group==group:
-					if (transport=="False" and user.transport==False) or transport=="True":
-						ret.append(user)
-			else:
-				if user.group==group and not user.hidden and not user.hiddenBySearch:
-					if (transport=="False" and user.transport==False) or transport=="True":
-						ret.append(user)
-		return ret
-
 	def paintCompactGroupItem(self,painter,item,x,y):
 		"""
 		paints group item in compact roster
@@ -740,28 +1021,6 @@ class rosterWidget(QtGui.QWidget):
 		if self.statusLabel:
 			self.statusLabel.resize(self.width()-46,self.selectedHeight-32)
 		return QtGui.QWidget.resizeEvent(self,event)
-
-	def getIconByJID(self,jid,size="16x16"):
-		jid=self.main.getJid(jid)
-		if self.main.client.roster['users'].has_key(jid.userhost()):
-			contact=self.main.client.roster['users'][jid.userhost()]
-			if len(contact.status)==2:
-				show=contact.status[0]
-				status=contact.status[1]
-			else:
-				if len(contact.status)==1:
-					show=contact.status[0]
-				else:
-					show="offline"
-				status=None
-			return self.main.getIcon(unicode(jid.userhost()),status=self.main.icons[str(show)],size=size)
-		return self.main.getIcon(unicode(jid.userhost()),status='offline',size=size)
-
-	def getNameByJID(self,jid):
-		jid=self.main.getJid(jid)
-		if self.main.client.roster['users'].has_key(jid.userhost()):
-			return self.main.client.roster['users'][jid.userhost()].name
-		return jid.full()
 
 	def paintCompactUserItem(self,painter,useritem,x,y):
 		if useritem==self.item:
@@ -1295,171 +1554,6 @@ class rosterWidget(QtGui.QWidget):
 					y+=self.userHeight
 		if self.reshow:
 			self.statusLabel.hide()
-
-	def itemAt(self,x1,y1,count=None):
-		"""
-		Get items at position x1,y1.
-		@type x1: number
-		@type x2: number
-		@type count: number
-		@param count: count of returned items. First item has position [x1,y1].
-		@rtype: list
-		@return: [list of userItem, groupItem, specialItem,X of last item, Y of last item]
-		"""
-		x=0
-		y=0
-		got=0
-		gotx=0
-		goty=0
-		ret=[]
-		if self.searchMode==False:
-			for key in self.sortedGroups:
-				item=self.groups[key]
-				items=self.getGroupSortedUsers(item.name)
-				if ((len(items)!=0 and not self.showOffline) or self.showOffline) and item.all!=0:
-					if got!=0 and not item in ret:
-						ret.append(item)
-						got+=1
-					if y1>=y and y1<=y+self.groupHeight:
-						if count and not item in ret:
-							ret.append(item)
-							got+=1
-							goty=y
-						if not count:
-							return item
-					if got==count:
-						return ret,0,goty
-					if item.expanded and len(items)!=0:
-						previous=None
-						for useritem in items:
-							y+=self.userHeight
-							if got!=0 and not useritem in ret:
-								ret.append(useritem)
-								got+=1
-	
-							if useritem==self.item:
-								if y1>=y and y1<=y+self.selectedHeight-28+self.userHeight:
-									if count and not useritem in ret:
-										ret.append(useritem)
-										got+=1
-										goty=y
-									if not count:
-										return useritem
-							else:
-								if y1>=y and y1<=y+self.userHeight:
-									if count and not useritem in ret:
-										ret.append(useritem)
-										got+=1
-										goty=y
-									if not count:
-										return useritem
-							if got==count:
-								return ret,0,goty
-							if useritem==self.item:
-								y+=self.selectedHeight-28
-					y+=self.groupHeight
-		else:
-			users=[]
-			for item in self.users:
-				if not self.metaItems.has_key(item.jid):
-					users.append([item.name.lower(),item])
-			for v in self.metaItems.itervalues():
-				for user in v:
-					users.append([user.name.lower(),user])
-			users.sort()
-			for item in users:
-				item=item[1]
-				if item.hiddenBySearch==False:
-					useritem=item
-					if got!=0 and not useritem in ret:
-						ret.append(useritem)
-						got+=1
-
-					if useritem==self.item:
-						if y1>=y and y1<=y+self.selectedHeight-28+self.userHeight:
-							if count and not useritem in ret:
-								ret.append(useritem)
-								got+=1
-								goty=y
-							if not count:
-								return useritem
-					else:
-						if y1>=y and y1<=y+self.userHeight:
-							if count and not useritem in ret:
-								ret.append(useritem)
-								got+=1
-								goty=y
-							if not count:
-								return useritem
-					if got==count:
-						return ret,0,goty
-					if useritem==self.item:
-						y+=self.selectedHeight-28
-					y+=self.userHeight
-
-		if got!=0:
-			return ret,0,goty
-
-		if count:
-			return [],None,None
-
-	def itemCoordinates(self,i):
-		"""
-		Return coordinates of userItem i
-		@type i: userItem
-		@rtype: list
-		@return: [X,Y]
-		"""
-		x=0
-		y=0
-		if self.searchMode==False:
-			for key in self.sortedGroups:
-				item=self.groups[key]
-				items=self.getGroupSortedUsers(item.name)
-				if ((len(items)!=0 and not self.showOffline) or self.showOffline) and item.all!=0:
-					if item==i:
-						return x,y
-					if item.expanded and len(items)!=0:
-						previous=None
-						for useritem in items:
-							y+=self.userHeight
-							if useritem==i:
-								return x,y
-							if useritem==self.item:
-								y+=self.selectedHeight-28
-	
-						#if useritem==self.item:
-							#y-=32
-					y+=self.groupHeight
-		else:
-			#for item in self.users:
-				#if item.hiddenBySearch==False:
-					#useritem=item
-					#if useritem==i:
-						#return x,y
-					#if useritem==self.item:
-						#y+=self.selectedHeight-28
-					#y+=self.userHeight
-
-			users=[]
-			for item in self.users:
-				if not self.metaItems.has_key(item.jid):
-					users.append([item.name.lower(),item])
-			for v in self.metaItems.itervalues():
-				for user in v:
-					users.append([user.name.lower(),user])
-			users.sort()
-			for item in users:
-				item=item[1]
-				if item.hiddenBySearch==False:
-					useritem=item
-					if useritem==i:
-						return x,y
-					if useritem==self.item:
-						y+=self.selectedHeight-28
-					y+=self.userHeight
-
-		return None,None
 
 	def setSize(self):
 		"""
@@ -2044,27 +2138,7 @@ class rosterWidget(QtGui.QWidget):
 	def getGroupItem(self,name):
 		return None
 
-	def getHostItems(self,host):
-		"""
-		Get all userItem with selected host
-		@type host: unicode
-		@rtype: list
-		@return: list of userItem
-		"""
-		ret=[]
-		for user in self.users:
-			j=self.main.getJid(user.jid)
-			if j:
-				if j.host==host:
-					ret.append(user)
-		for mainjid,users in self.metaItems.iteritems():
-			for user in users:
-				j=self.main.getJid(user.jid)
-				if j:
-					if j.host==host:
-						ret.append(user)
-		#print "HOSTITEMS:",ret
-		return ret
+
 
 	def search(self,text=""):
 		text=unicode(text).lower()
@@ -2117,41 +2191,6 @@ class rosterWidget(QtGui.QWidget):
 			self.selectItem(first)
 		self.setSize()
 		self.repaint()
-		
-
-	def getUserItems(self,jid):
-		"""
-		Get all userItems with JID jid
-		@type jid: unicode
-		@rtype: list
-		@return: list of userItem
-		"""
-		ret=[]
-		for user in self.users:
-			if user.jid==jid:
-				ret.append(user)
-		return ret
-
-	def getMetaParents(self,jid):
-		ret=[]
-		for user in self.users:
-			if user.metajid==jid:
-				ret.append(user)
-		return ret
-
-	def getMetaItems(self,jid):
-		"""
-		Get all metaItems with JID jid
-		@type jid: unicode
-		@rtype: list
-		@return: list of userItem
-		"""
-		ret=[]
-		for mainjid,users in self.metaItems.iteritems():
-			for user in users:
-				if user.jid==jid:
-					ret.append([user,mainjid])
-		return ret
 
 	def hidden(self,bool):
 		pass
@@ -2775,3 +2814,4 @@ class rosterWidget(QtGui.QWidget):
 			contactMenu=self.buildGroupMenu(item.name)
 			contactMenu.move(event.globalX(),event.globalY())
 			contactMenu.popup(QtCore.QPoint(event.globalX(),event.globalY()))
+	#}
