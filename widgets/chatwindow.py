@@ -724,7 +724,9 @@ class chatWindow(QtGui.QMainWindow):
 
 			w.chat.textEditWrite(message)
 
-	def openNewChatTab(self,jid,name,icon,message=None):
+	def openNewChatTab(self,jid,name,icon=None,message=None):
+		if not icon:
+			icon=self.main.ui.roster.getIconByJID(jid)
 		created=False
 		if self.isHidden():
 			created=True

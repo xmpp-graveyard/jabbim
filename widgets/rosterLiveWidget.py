@@ -741,6 +741,22 @@ class rosterWidget(QtGui.QWidget):
 			self.statusLabel.resize(self.width()-46,self.selectedHeight-32)
 		return QtGui.QWidget.resizeEvent(self,event)
 
+	def getIconByJID(self,jid,size="16x16"):
+		jid=self.main.getJid(jid)
+		if self.main.client.roster['users'].has_key(jid.userhost()):
+			contact=self.main.client.roster['users'][jid.userhost()]
+			if len(contact.status)==2:
+				show=contact.status[0]
+				status=contact.status[1]
+			else:
+				if len(contact.status)==1:
+					show=contact.status[0]
+				else:
+					show="offline"
+				status=None
+			return self.main.getIcon(unicode(jid.userhost()),status=self.main.icons[str(show)],size=size)
+		return self.main.getIcon(unicode(jid.userhost()),status='offline',size=size)
+
 	def getNameByJID(self,jid):
 		jid=self.main.getJid(jid)
 		if self.main.client.roster['users'].has_key(jid.userhost()):
