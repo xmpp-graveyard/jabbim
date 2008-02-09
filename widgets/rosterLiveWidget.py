@@ -456,15 +456,18 @@ class rosterWidget(QtGui.QWidget):
 		jid=self.main.getJid(jid)
 		if self.main.client.roster['users'].has_key(jid.userhost()):
 			contact=self.main.client.roster['users'][jid.userhost()]
-			if len(contact.status)==2:
-				show=contact.status[0]
-				status=contact.status[1]
+			if jid.resource in contact.resources:
+				show=contact.resources[jid.resources].show
 			else:
-				if len(contact.status)==1:
+				if len(contact.status)==2:
 					show=contact.status[0]
+					status=contact.status[1]
 				else:
-					show="offline"
-				status=None
+					if len(contact.status)==1:
+						show=contact.status[0]
+					else:
+						show="offline"
+					status=None
 			return self.main.getIcon(unicode(jid.userhost()),status=self.main.icons[str(show)],size=size)
 		return self.main.getIcon(unicode(jid.userhost()),status='offline',size=size)
 

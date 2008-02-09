@@ -434,9 +434,8 @@ class clientClass(pyxl.client.Client):
 					meta[user.tag]=[[jid,user.order]]
 				else:
 					meta[user.tag].append([jid,user.order])
-
 		#log.msg("META:"+unicode(meta))
-
+		self.meta=meta
 		for tag,jids in meta.iteritems():
 			if len(jids)>1:
 				mainJid=None # JID of main metacontact (parent of all other)

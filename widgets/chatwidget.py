@@ -281,11 +281,22 @@ class chatWidget(abstractChatWidget):
 		if self.main.client.groupchats.has_key(jidt.userhost()):
 			print "features:",self.main.client.groupchats[jidt.userhost()].users[jidt.resource].features
 			hasFeature='http://jabber.org/protocol/si/profile/file-transfer' in self.main.client.groupchats[jidt.userhost()].users[jidt.resource].features
+			self.ui.resourceButton.hide()
 		else:
 			try:
 				hasFeature=main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/si/profile/file-transfer')
 			except:
 				hasFeature=False
+			self.resourceMenu=QtGui.QMenu(self.ui.resourceButton)
+			
+			if main.client.roster['users'].has_key(jidt.userhost()):
+				for name,resource in main.client.roster['users'][jidt.userhost()].resources.iteritems():
+					action=self.resourceMenu.addAction(self.main.getIcon(unicode(jidT.JID(jid).userhost()),status=resource.show),name)
+					if jidt.resource==name:
+						self.ui.resourceButton.setText(action.text())
+						self.ui.resourceButton.setIcon(action.icon())
+			self.resourceMenu.connect(self.resourceMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.resourceMenuTriggered)
+			self.ui.resourceButton.setMenu(self.resourceMenu)
 		if hasFeature:
 			# sendFile buttons
 			self.ui.sendFile=QtGui.QToolButton()
@@ -305,6 +316,13 @@ class chatWidget(abstractChatWidget):
 			self.ui.selfAvatar.setMaximumWidth(64)
 		else:
 			self.ui.selfAvatar.hide()
+
+	def resourceMenuTriggered(self,action):
+		self.ui.resourceButton.setText(action.text())
+		self.ui.resourceButton.setIcon(action.icon())
+		jid=self.main.getJid(self.jid)
+		jid.resource=unicode(action.text())
+		self.jid=jid.full()
 
 	def sendFiles(self):
 		"""

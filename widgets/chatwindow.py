@@ -838,10 +838,7 @@ class chatWindow(QtGui.QMainWindow):
 			self.setWindowTitle(unicode(name))
 			tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
-		if jidT.JID(jid).resource:
-			tab.chat.ui.label.setText("<font size=\"3\"><b>"+name+"</b><br/>"+self.tr("Resource:")+" "+jidT.JID(jid).resource+"</font>")
-		else:
-			tab.chat.ui.label.setText("<font size=\"3\"><b>"+name+"</b></font>")
+		tab.chat.ui.label.setText("<font size=\"3\"><b>"+name+"</b></font>")
 		if message!=None:
 			message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+unicode(tab.chat.avatarHeight)+"\" />")
 			tab.chat.textEditWrite(message)
