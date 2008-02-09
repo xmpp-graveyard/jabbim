@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Sat Feb  9 06:09:57 2008
+# Created: Sat Feb  9 06:19:10 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -154,9 +154,26 @@ class Ui_chatwidget(object):
         self.label.setObjectName("label")
         self.vboxlayout1.addWidget(self.label)
 
-        self.label_2 = QtGui.QLabel(self.layoutWidget1)
-        self.label_2.setObjectName("label_2")
-        self.vboxlayout1.addWidget(self.label_2)
+        self.metaLabel = QtGui.QLabel(self.layoutWidget1)
+        self.metaLabel.setObjectName("metaLabel")
+        self.vboxlayout1.addWidget(self.metaLabel)
+
+        self.metaButton = QtGui.QToolButton(self.layoutWidget1)
+
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7),QtGui.QSizePolicy.Policy(0))
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.metaButton.sizePolicy().hasHeightForWidth())
+        self.metaButton.setSizePolicy(sizePolicy)
+        self.metaButton.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.metaButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+        self.metaButton.setArrowType(QtCore.Qt.NoArrow)
+        self.metaButton.setObjectName("metaButton")
+        self.vboxlayout1.addWidget(self.metaButton)
+
+        self.resourceLabel = QtGui.QLabel(self.layoutWidget1)
+        self.resourceLabel.setObjectName("resourceLabel")
+        self.vboxlayout1.addWidget(self.resourceLabel)
 
         self.resourceButton = QtGui.QToolButton(self.layoutWidget1)
 
@@ -199,5 +216,6 @@ class Ui_chatwidget(object):
         self.smileys.setText(QtGui.QApplication.translate("chatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.sendButton.setText(QtGui.QApplication.translate("chatwidget", "&Send", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("chatwidget", "name", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setText(QtGui.QApplication.translate("chatwidget", "Resource:", None, QtGui.QApplication.UnicodeUTF8))
+        self.metaLabel.setText(QtGui.QApplication.translate("chatwidget", "Metacontact:", None, QtGui.QApplication.UnicodeUTF8))
+        self.resourceLabel.setText(QtGui.QApplication.translate("chatwidget", "Resource:", None, QtGui.QApplication.UnicodeUTF8))
 

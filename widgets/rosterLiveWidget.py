@@ -468,7 +468,8 @@ class rosterWidget(QtGui.QWidget):
 					else:
 						show="offline"
 					status=None
-			return self.main.getIcon(unicode(jid.userhost()),status=self.main.icons[str(show)],size=size)
+			print show
+			return self.main.getIcon(unicode(jid.userhost()),status=str(show),size=size)
 		return self.main.getIcon(unicode(jid.userhost()),status='offline',size=size)
 
 	def getNameByJID(self,jid):
@@ -1248,7 +1249,7 @@ class rosterWidget(QtGui.QWidget):
 		paints user item in normal roster
 		"""
 		if useritem==self.item:
-			if self.metaItems.has_key(useritem.metajid) or self.main.config['bigOnClick']=="True":
+			if self.main.config['bigOnClick']=="True":
 				#print useritem.privacy
 				# Item is selected
 				height=79
@@ -1978,6 +1979,7 @@ class rosterWidget(QtGui.QWidget):
 							self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,[gr])
 						
 						self.main.client.setMetacontacts()
+						self.main.client.makeTempMeta()
 						name=unicode(self.main.client.roster['users'][jid].name)
 						contact=self.main.client.roster['users'][jid]
 						for it in self.getUserItems(contact.jid):
@@ -2101,6 +2103,7 @@ class rosterWidget(QtGui.QWidget):
 			self.setHighest(item.metajid)
 			self.main.client.roster_meta[oldItem.jid]={'tag':item.tag,'order':1}
 			self.main.client.setMetacontacts()
+			self.main.client.makeTempMeta()
 			
 			self.sortItems()
 			if self.item!=item:
@@ -2607,6 +2610,7 @@ class rosterWidget(QtGui.QWidget):
 			self.main.client.on_UpdateContact(it.jid)
 		del self.metaItems[metajid]
 		self.main.client.setMetacontacts()
+		self.main.client.makeTempMeta()
 
 	def contactMenuTriggered(self,action):
 		# contact menu action handler

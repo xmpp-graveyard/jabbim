@@ -278,25 +278,23 @@ class chatWidget(abstractChatWidget):
 			if value['module']:
 				self.main.runPluginCommand(value['module'].buildChatWidget,[unicode(self.jid),self.flowLayout,self])
 		hasFeature=False
+		self.ui.metaLabel.hide()
+		self.ui.metaButton.hide()
 		if self.main.client.groupchats.has_key(jidt.userhost()):
 			print "features:",self.main.client.groupchats[jidt.userhost()].users[jidt.resource].features
 			hasFeature='http://jabber.org/protocol/si/profile/file-transfer' in self.main.client.groupchats[jidt.userhost()].users[jidt.resource].features
 			self.ui.resourceButton.hide()
+			self.ui.resourceLabel.hide()
 		else:
 			try:
 				hasFeature=main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/si/profile/file-transfer')
 			except:
 				hasFeature=False
-			self.resourceMenu=QtGui.QMenu(self.ui.resourceButton)
-			
 			if main.client.roster['users'].has_key(jidt.userhost()):
-				for name,resource in main.client.roster['users'][jidt.userhost()].resources.iteritems():
-					action=self.resourceMenu.addAction(self.main.getIcon(unicode(jidT.JID(jid).userhost()),status=resource.show),name)
-					if jidt.resource==name:
-						self.ui.resourceButton.setText(action.text())
-						self.ui.resourceButton.setIcon(action.icon())
-			self.resourceMenu.connect(self.resourceMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.resourceMenuTriggered)
-			self.ui.resourceButton.setMenu(self.resourceMenu)
+				self.buildResourceMenu()
+				self.buildMetaMenu()
+
+	
 		if hasFeature:
 			# sendFile buttons
 			self.ui.sendFile=QtGui.QToolButton()
@@ -316,6 +314,65 @@ class chatWidget(abstractChatWidget):
 			self.ui.selfAvatar.setMaximumWidth(64)
 		else:
 			self.ui.selfAvatar.hide()
+
+	def buildMetaMenu(self):
+		jidt=self.main.getJid(self.jid)
+		if self.main.client.roster['users'][jidt.userhost()].tag!=None:
+			self.metaMenu=QtGui.QMenu(self.ui.metaButton)
+			self.ui.metaLabel.show()
+			self.ui.metaButton.show()
+			meta=[]
+			tag=self.main.client.roster['users'][jidt.userhost()].tag
+			for jid,user in self.main.client.roster['users'].iteritems():
+				if user.tag==tag:
+					meta.append(jid)
+			for mJid in meta:
+				
+				name=self.main.ui.roster.getNameByJID(mJid)
+				icon=self.main.ui.roster.getIconByJID(mJid)
+				action=self.metaMenu.addAction(icon,name)
+				action.setData(QtCore.QVariant(unicode(mJid)))
+				if mJid==jidt.userhost():
+					self.ui.metaButton.setText(action.text())
+					self.ui.metaButton.setIcon(action.icon())
+			self.metaMenu.connect(self.metaMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.metaMenuTriggered)
+			self.ui.metaButton.setMenu(self.metaMenu)
+
+
+	def buildResourceMenu(self):
+		jidt=self.main.getJid(self.jid)
+		self.resourceMenu=QtGui.QMenu(self.ui.resourceButton)
+		count=0
+		for name,resource in self.main.client.roster['users'][jidt.userhost()].resources.iteritems():
+			if name:
+				count+=1
+				action=self.resourceMenu.addAction(self.main.getIcon(unicode(jidt.userhost()),status=resource.show),name)
+				if jidt.resource==name:
+					self.ui.resourceButton.setText(action.text())
+					self.ui.resourceButton.setIcon(action.icon())
+		if count<1:
+			self.ui.resourceButton.hide()
+			self.ui.resourceLabel.hide()
+		else:
+			self.ui.resourceButton.show()
+			self.ui.resourceLabel.show()
+		self.resourceMenu.connect(self.resourceMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.resourceMenuTriggered)
+		self.ui.resourceButton.setMenu(self.resourceMenu)
+
+	def metaMenuTriggered(self,action):
+		self.ui.metaButton.setText(action.text())
+		self.ui.metaButton.setIcon(action.icon())
+		jidt=self.main.getJid(unicode(action.data().toString()))
+		res = self.main.client.roster['users'][jidt.userhost()].getHighestResource()
+		if res:
+			jidt.resource=unicode(res)
+		self.jid=unicode(jidt.full())
+		self.parent.jid=self.jid
+		self.buildResourceMenu()
+		self.parent.tabName=unicode(action.text())
+		currentIndex=self.main.chat.ui.chatTab.currentIndex()
+		self.main.chat.ui.chatTab.setTabText(currentIndex,self.parent.tabName)
+		self.main.chat.setWindowTitle(unicode(self.main.chat.ui.chatTab.tabText(currentIndex)).replace("&",""))
 
 	def resourceMenuTriggered(self,action):
 		self.ui.resourceButton.setText(action.text())

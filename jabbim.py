@@ -340,6 +340,18 @@ class clientClass(pyxl.client.Client):
 #		self.main.cache.get_avatar(jid, self.main._loadAvatar)
 		self.main._loadAvatar(self.main.homeDir+'/avatars/'+jid, self.avatars.get(jid), jid)
 
+	def makeTempMeta(self):
+		meta={} # temp variable for metacontacts - {userTag:userJid}
+		for jid,user in self.roster['users'].iteritems():
+			if jid == self.jid.userhost():
+				continue
+			if user.tag!=None:
+				if not meta.has_key(user.tag):
+					meta[user.tag]=[[jid,user.order]]
+				else:
+					meta[user.tag].append([jid,user.order])
+		self.meta=meta
+		return meta
 	def renameByVcard(self,el,jid):
 		if el:
 			data=el.firstChildElement()
@@ -425,17 +437,8 @@ class clientClass(pyxl.client.Client):
 		self.metaParents={}
 
 		## get metacontacts
-		meta={} # temp variable for metacontacts - {userTag:userJid}
-		for jid,user in self.roster['users'].iteritems():
-			if jid == self.jid.userhost():
-				continue
-			if user.tag!=None:
-				if not meta.has_key(user.tag):
-					meta[user.tag]=[[jid,user.order]]
-				else:
-					meta[user.tag].append([jid,user.order])
+		meta=self.makeTempMeta()
 		#log.msg("META:"+unicode(meta))
-		self.meta=meta
 		for tag,jids in meta.iteritems():
 			if len(jids)>1:
 				mainJid=None # JID of main metacontact (parent of all other)
@@ -716,6 +719,7 @@ class clientClass(pyxl.client.Client):
 				w=self.main.chat.ui.chatTab.widget(i)
 				if unicode(jidT.JID(w.jid).full())==unicode(jid.full()):
 					w.ic=self.main.getIcon(unicode(jid.userhost()),size="16x16",status="offline")
+					
 					self.main.chat.ui.chatTab.setTabIcon(i,w.ic)
 					user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
 					if len(user)==0:
@@ -783,6 +787,10 @@ class clientClass(pyxl.client.Client):
 						w.chat.lastMessageFrom=""
 					break
 
+			tab,index=self.main.chat.findTab(jid.full(),True)
+			if tab:
+				tab.chat.buildResourceMenu()
+				tab.chat.buildMetaMenu()
 			if jid.resource:
 				resource=jid.resource
 				jid=jid.userhost()
