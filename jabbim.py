@@ -687,11 +687,11 @@ class clientClass(pyxl.client.Client):
 			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
 			
 			w.chat.textEditWrite(message)
-		tab,index=self.main.chat.findTab(muc+"/"+nick)
-		if w and tab:
-			tab.chat.textEditWrite(message)
-			tab.ic=self.main.getIcon(unicode(muc),size="16x16",status=self.main.icons[self.main.shows[unicode(show)]])
-			self.main.chat.ui.chatTab.setTabIcon(index,tab.ic)
+		#tab,index=self.main.chat.findTab(muc+"/"+nick)
+		#if w and tab:
+			#tab.chat.textEditWrite(message)
+			#tab.ic=self.main.getIcon(unicode(muc),size="16x16",status=self.main.icons[self.main.shows[unicode(show)]])
+			#self.main.chat.ui.chatTab.setTabIcon(index,tab.ic)
 		w.chat.lastMessageFrom=""
 
 	def on_presence(self,jid,show,error=None,first=False):
