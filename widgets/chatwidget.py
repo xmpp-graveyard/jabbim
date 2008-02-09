@@ -355,7 +355,12 @@ class chatWidget(abstractChatWidget):
 		if count==0:
 			self.ui.resourceButton.hide()
 			self.ui.resourceLabel.hide()
+		elif count==1:
+			self.ui.resourceButton.show()
+			self.ui.resourceButton.setEnabled(False)
+			self.ui.resourceLabel.show()
 		else:
+			self.ui.resourceButton.setEnabled(True)
 			self.ui.resourceButton.show()
 			self.ui.resourceLabel.show()
 		self.resourceMenu.connect(self.resourceMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.resourceMenuTriggered)
