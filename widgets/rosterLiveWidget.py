@@ -457,7 +457,7 @@ class rosterWidget(QtGui.QWidget):
 		if self.main.client.roster['users'].has_key(jid.userhost()):
 			contact=self.main.client.roster['users'][jid.userhost()]
 			if jid.resource in contact.resources:
-				show=contact.resources[jid.resources].show
+				show=contact.resources[jid.resource].show
 			else:
 				if len(contact.status)==2:
 					show=contact.status[0]
