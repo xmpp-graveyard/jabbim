@@ -280,10 +280,12 @@ class clientClass(pyxl.client.Client):
 					typ='tlen'
 				if jid.find("weather")!=-1:
 					typ='weather'
-				if self.main.transports.has_key(jid):
+				if not self.main.transports.has_key(jid) and self.roster['users'].has_key(jid):
 					# don't show this contacts as transports in menu
-					if typ in ['weather','smtp','sms','rss']:
-						del self.main.transports[jid]
+					if not typ in ['weather','smtp','sms','rss']:
+						self.main.transports[jid]=None
+						#print 'delete',jid
+						self.main.buildOfflineMenu()
 				print 'DISCO',jid,typ
 				self.main.hosts[jid]=typ
 
@@ -316,11 +318,13 @@ class clientClass(pyxl.client.Client):
 		else:
 			host=unicode(jid)
 			#if self.disco.has_key(host):
-			if self.main.hosts.has_key(host):
-				if not self.main.hosts[host] in ['weather','smtp','sms','rss']:
-					self.main.transports[unicode(jid)]=None
-			else:
-				self.main.transports[unicode(jid)]=None
+		#if self.main.hosts.has_key(host):
+			#if not self.main.hosts[host] in ['weather','smtp','sms','rss']:
+				#self.main.transports[unicode(host)]=None
+			#elif self.main.transports.has_key(unicode(host)):
+				#del self.main.transports[unicode(host)]
+		#else:
+			#self.main.transports[unicode(host)]=None
 			#else:
 				#self.main.transports[unicode(jid)]=False
 		if not self.main.hosts.has_key(host) and not host in self.temp_hosts:
@@ -400,7 +404,8 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.roster.sortItems()
 		self.main.buildBookmarks() # build Bookmarks tab
 		self.main.chat.reconnect()
-		
+		print self.main.transports
+		self.main.buildOfflineMenu()
 		# HACK KVULI ICQ A AUTOMATICKEMU PRIHLASENI K NEMU:
 		#self.sendPresence("icq.jabbim.cz",show='available', status = "")
 
