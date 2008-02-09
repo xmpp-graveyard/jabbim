@@ -492,7 +492,12 @@ class chatWindow(QtGui.QMainWindow):
 		else:
 			for i in range(self.ui.chatTab.count()):
 				w=self.ui.chatTab.widget(i)
-				if unicode(w.jid)==jid:
+				if self.main.getJid(w.jid).full()==self.main.getJid(jid).full():
+					return w,i # tab, index
+
+			for i in range(self.ui.chatTab.count()):
+				w=self.ui.chatTab.widget(i)
+				if self.main.getJid(w.jid).userhost()==self.main.getJid(jid).userhost():
 					return w,i # tab, index
 		return None,0 # tab, index
 

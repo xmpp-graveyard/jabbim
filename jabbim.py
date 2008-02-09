@@ -1190,6 +1190,15 @@ class clientClass(pyxl.client.Client):
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(self.main.chat.ui.chatTab.currentIndex(),color)
 				tab.chat.ui.chatstate.setText("")
 				tab.chat.textEditWrite(message)
+				if tab.chat.first==True:
+					tab.chat.first=False
+				elif tab.chat.first==None:
+					tab.chat.first=True
+				if tab.chat.first==True:
+					if not self.main.getJid(tab.chat.jid).resource:
+						tab.chat.jid=frm.full()
+						tab.jid=frm.full()
+						tab.chat.buildResourceMenu()
 			else:
 				# add new chattab
 				created=False

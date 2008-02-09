@@ -1684,15 +1684,15 @@ class rosterWidget(QtGui.QWidget):
 			self.setSize()
 			self.repaint()
 		else:
-			jidt = jidT.JID(item.jid)
-			if jidt.resource:
-				res=jidt.resource
-			else:
-				res = self.main.client.roster['users'][item.jid].getHighestResource()
-			if res==None:
-				self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
-			else:
-				self.main.chat.addChatTab(item.jid+"/"+res,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+			#jidt = jidT.JID(item.jid)
+			#if jidt.resource:
+				#res=jidt.resource
+			#else:
+				#res = self.main.client.roster['users'][item.jid].getHighestResource()
+			#if res==None:
+			self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+			#else:
+				#self.main.chat.addChatTab(item.jid+"/"+res,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			self.main.chat.activate()
 
 	def keyPressEvent(self,event):
@@ -2690,11 +2690,11 @@ class rosterWidget(QtGui.QWidget):
 			jid=jidT.JID(jid)
 			if not jid.resource:
 				item=self.getUserItems(jid.userhost())[0]
-				res = self.main.client.roster['users'][jid.userhost()].getHighestResource()
-				if res==None:
-					self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
-				else:
-					self.main.chat.addChatTab(item.jid+"/"+res,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+				#res = self.main.client.roster['users'][jid.userhost()].getHighestResource()
+				#if res==None:
+				self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+				#else:
+					#self.main.chat.addChatTab(item.jid+"/"+res,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			else:
 				item=self.getUserItems(jid.userhost())[0]
 				self.main.chat.addChatTab(jid.full(),item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))

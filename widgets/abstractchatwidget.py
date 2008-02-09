@@ -815,11 +815,11 @@ class abstractChatWidget(QtGui.QWidget):
 		@param history: True if text is history message (has delay). In this case self.first will not be updated.
 		"""
 		# update information about first message of this chat
-		if not history:
-			if self.first==True:
-				self.first=False
-			elif self.first==None:
-				self.first=True
+		#if not history:
+			#if self.first==True:
+				#self.first=False
+			#elif self.first==None:
+				#self.first=True
 		self.ui.textEdit.setUpdatesEnabled(False) # disable updates because of performance
 		# move text cursor to the end of document
 		cursor=QtGui.QTextCursor(self.ui.textEdit.document())

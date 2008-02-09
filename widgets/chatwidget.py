@@ -342,6 +342,8 @@ class chatWidget(abstractChatWidget):
 	def buildResourceMenu(self):
 		jidt=self.main.getJid(self.jid)
 		self.resourceMenu=QtGui.QMenu(self.ui.resourceButton)
+		action=self.resourceMenu.addAction(self.tr("Automatic"))
+		self.ui.resourceButton.setText(action.text())
 		count=0
 		for name,resource in self.main.client.roster['users'][jidt.userhost()].resources.iteritems():
 			if name:
@@ -350,7 +352,7 @@ class chatWidget(abstractChatWidget):
 				if jidt.resource==name:
 					self.ui.resourceButton.setText(action.text())
 					self.ui.resourceButton.setIcon(action.icon())
-		if count<1:
+		if count==0:
 			self.ui.resourceButton.hide()
 			self.ui.resourceLabel.hide()
 		else:
@@ -378,7 +380,10 @@ class chatWidget(abstractChatWidget):
 		self.ui.resourceButton.setText(action.text())
 		self.ui.resourceButton.setIcon(action.icon())
 		jid=self.main.getJid(self.jid)
-		jid.resource=unicode(action.text())
+		if action.text()==self.tr("Automatic"):
+			jid.resource=None
+		else:
+			jid.resource=unicode(action.text())
 		self.jid=jid.full()
 
 	def sendFiles(self):
