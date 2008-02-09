@@ -745,7 +745,10 @@ class clientClass(pyxl.client.Client):
 						w.chat.ui.chatstate.setText("")
 						w.chat.lastMessageFrom=""
 					break
-
+			tab,index=self.main.chat.findTab(jid.full(),True)
+			if tab:
+				tab.chat.buildResourceMenu()
+				tab.chat.buildMetaMenu()
 		else:
 			#jid=jid.full() # get jid
 			# presence has resource
