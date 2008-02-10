@@ -110,6 +110,12 @@ class PluginBase:
 		self._loadedWidgets.append(wid)
 		return wid
 
+	def registerSound(self,name,path):
+		if not self.main.sounds.has_key(name):
+			self.main.sounds[name]=path
+			return True
+		return False
+
 	def registerWidget(self,widget):
 		if not widget in self._loadedWidgets:
 			self._loadedWidgets.append(widget)

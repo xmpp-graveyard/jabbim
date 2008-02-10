@@ -1,8 +1,0 @@
-message = chat2.wav
-new_message = chat1.wav
-ft_complete = ft_complete.wav
-ft_receive = ft_incoming.wav
-contact_offline = offline.wav
-contact_online = online.wav
-message_send = send.wav
-start = start.wav

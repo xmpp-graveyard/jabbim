@@ -1650,6 +1650,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.rosterSearch, QtCore.SIGNAL(" textEdited ( const QString & )"),self.ui.roster.search)
 
 		self.loadSkin() # load chat skin
+		self.loadSounds() # load chat skin
 		self.loadTheme() # load theme
 		self.ui.roster.reskin() # reskin roster
 		self.selfResources=[] #: Resources which are connected from the same JID as user
@@ -2812,6 +2813,27 @@ class mainWindow(QtGui.QMainWindow):
 		except:
 			config=ConfigObj(fallback,encoding='UTF8')
 			return False,config
+
+	def loadSounds(self):
+		src=dirname("sounds/"+self.config["soundPack"])
+		self.sounds=ConfigObj("sounds/"+self.config["soundPack"],encoding='UTF8')
+		if len(self.sounds)==0:
+			self.sounds=ConfigObj(self.realHomeDir+"/sounds/"+self.config["soundPack"],encoding='UTF8')
+			src=dirname(self.realHomeDir+"/sounds/"+self.config["soundPack"])
+		src+="/"
+		self.sounds=self.sounds['sounds']
+		for sound in self.sounds.keys():
+			self.sounds[sound]=src+self.sounds[sound]
+
+	def playsound(self,sound):
+		if self.sounds.has_key(sound):
+			if sys.platform == 'linux2': # linux sounds are produced using aplay
+				os.system('aplay -q '+self.sounds[sound].strip('\n')+' &')
+			else:
+				QtGui.QSound.play(self.sounds[sound].strip('\n'))
+			return True
+		return False
+
 
 	def loadSkin(self):
 		"""

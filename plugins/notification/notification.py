@@ -273,7 +273,7 @@ class Plugin(plugins.PluginBase):
 			#self.registerHandler('on_presence',self.on_presence)
 			#self.registerHandler('on_evil',self.on_evil)
 			self.loadConfig()
-			self.playsound('start')
+			self.main.playsound('start')
 			self.osd=osd(self)
 			self.registerWidget(self.osd)
 			self.osd.osdx=int(self.config['osd_x'])

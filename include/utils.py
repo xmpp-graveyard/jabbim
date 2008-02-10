@@ -88,11 +88,14 @@ def makeHomeDir(homeDir):
 		os.mkdir(homeDir)
 		os.mkdir(homeDir+"/emoticons")
 		os.mkdir(homeDir+"/chatskins")
+		os.mkdir(homeDir+"/sounds")
 		os.chmod(homeDir, 0700)
 	if not os.path.isdir(homeDir+"/emoticons"):
 		os.mkdir(homeDir+"/emoticons")
 	if not os.path.isdir(homeDir+"/chatskins"):
 		os.mkdir(homeDir+"/chatskins")
+	if not os.path.isdir(homeDir+"/sounds"):
+		os.mkdir(homeDir+"/sounds")
 	if not os.path.isdir(homeDir+"/temp"):
 		os.mkdir(homeDir+"/temp")
 		
@@ -145,7 +148,8 @@ def loadConfig(main,status):
 			"specifyHost":"False",
 			"connectHost": "",
 			"connectPort": "5222",
-			"showOffline":"True"
+			"showOffline":"True",
+			"soundPack":"default/default.cfg"
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:
