@@ -103,6 +103,7 @@ class Commands:
 		self.name 	= None
 		self.var = self.row = None
 		self.action = action
+		self.submenu = None
 		self.requestCommandsList()
 
 	def requestCommandsList(self):
@@ -119,6 +120,8 @@ class Commands:
 	def _commandsListRecieved(self, el):
 #		self.dialog.ui.label.setText(self.main.tr("Choose action to execute."))
 		log.msg("Ad-Hoc commands list recieved")
+		if self.submenu != None:
+			return
 		query	= el.firstChildElement()
 		commands = []
 		for item in query.elements():
@@ -131,16 +134,15 @@ class Commands:
 #			self.dialog.ui.line.hide()
 #			return
 		c = 0
-		submenu = QtGui.QMenu()
+		self.submenu = QtGui.QMenu()
 		for command in commands:
-			print command
-			action=submenu.addAction(command["name"])
+			action=self.submenu.addAction(command["name"])
 			action.setObjectName("ad_hoc_command")
+			action.setData(QtCore.QVariant([command['node'], command['name']]))
 
-		print submenu, self.action
 
-		self.action.setMenu(submenu)
-		print 'pridane menu'
+		self.action.setMenu(self.submenu)
+		self.submenu.connect(self.submenu, QtCore.SIGNAL("triggered ( QAction * )"),self.execute)
 #			button = QtGui.QPushButton(self.dialog)
 #			button.setText(unicode(command["name"]))
 #			#button.setObjectName(unicode(command["node"])) # ? + jid
@@ -151,6 +153,13 @@ class Commands:
 #			c += 1
 #		spacerItem = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
 #		self.dialog.ui.glayout.addItem(spacerItem,c,0)
+
+	def execute(self, action):
+		cmd = action.objectName()
+		if cmd == "ad_hoc_command":
+			self.dialog.show()
+			data = action.data().toList()
+			self.execCommand(data[0].toString(), data[1].toString())
 
 	def execCommand(self, node, name, jid = None):
 		if jid == None:

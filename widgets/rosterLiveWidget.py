@@ -2537,7 +2537,7 @@ class rosterWidget(QtGui.QWidget):
 				for res in contact.resources.keys():
 					if res != None:
 						action=submenu.addAction(res)
-						action.setData(QtCore.QVariant(("%s/%s" %(jid,res))))
+						action.setData(QtCore.QVariant("%s/%s" %(jid,res)))
 						action.setObjectName("ad_hoc")
 				
 		
@@ -2782,16 +2782,16 @@ class rosterWidget(QtGui.QWidget):
 			jid=unicode(action.data().toString())
 			self.main.client.privacy.active.unHideJID(jid)
 			log.msg("Unhiding jid %s." % jid)
-		elif cmd == "ad_hoc":
-			jid=unicode(action.data().toString())
-			self.cmds = commands.Commands(self.main, jid)
-			self.cmds.dialog.show()
+#		elif cmd == "ad_hoc":
+#			jid=unicode(action.data().toString())
+#			self.cmds = commands.Commands(self.main, jid)
+#			self.cmds.dialog.show()
 		log.msg("END CONTACT")
 	
 	def contactMenuHovered(self,action): #Work In Progress
 		print 'hover!'
 		cmd=action.objectName()
-		if cmd == "ad_hoc":
+		if cmd == "ad_hoc" and action.menu() == None:
 			jid=unicode(action.data().toString())
 			self.cmds = commands.Commands(self.main, jid, action)
 #			self.cmds.dialog.show()
