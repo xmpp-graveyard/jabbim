@@ -1145,7 +1145,11 @@ class Client(derived):
 		node = command["node"]
 		public = self.commands.nodes[node][3]
 		ji = jid.JID(el['from']).userhost()
-		allowed = public or (ji == self.jid.userhost())
+		if type(public) == bool:
+			allowed = public
+		else:
+			allowed = (ji in public) or (ji == self.jid.userhost())
+			
 		try:
 			lang = el["xml:lang"]
 		except:

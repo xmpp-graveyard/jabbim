@@ -2938,7 +2938,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.selfName.setText("<h3>"+unicode(self.client.jid.userhost()).split("@")[0]+"</h3>")
 		self.client.getVCard(unicode(self.client.jid.userhost()))
 		self.ui.showOffline.hide()
-		self.tray.showMessage(self.tr("Jabbim"),self.tr("Jabbim is ready! You are connected! :) "))
+#		self.tray.showMessage(self.tr("Jabbim"),self.tr("Jabbim is ready! You are connected! :) "))
 		self.tray.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 		print 'end connected in main'
 
