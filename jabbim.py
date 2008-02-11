@@ -1802,9 +1802,16 @@ class mainWindow(QtGui.QMainWindow):
 
 		#self.ui.showOffline.setMenu(self.offlineMenu)
 		QtCore.QObject.connect(self.offlineMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.offlineMenuChanged)
-
+		QtCore.QObject.connect(self.offlineMenu, QtCore.SIGNAL("hovered ( QAction *)"),self.offlineMenuHovered)
+		
 		# refresh selfAvatar tooltip, because some resource could be added
 		self.ui.selfAvatar.refreshToolTip()
+
+	def offlineMenuHovered(self, action):
+		cmd=unicode(action.objectName())
+		if cmd=='commands':
+			# show adhoc dialog
+			self.cmds = widgets.commands.Commands(self, unicode(self.client.jid.userhost())+"/"+unicode(action.data().toString()), action)
 
 	def offlineMenuChanged(self,action):
 		"""
@@ -1812,12 +1819,9 @@ class mainWindow(QtGui.QMainWindow):
 		@type action: QAction
 		@param action: QAction from self.offlineMenu
 		"""
-		cmd=unicode(action.objectName())
-		if cmd=='commands':
-			# show adhoc dialog
-			self.cmds = widgets.commands.Commands(self, unicode(self.client.jid.userhost())+"/"+unicode(action.data().toString()))
-			self.cmds.dialog.show()
-		elif cmd=='send_file':
+
+
+		if cmd=='send_file':
 			jid=unicode(self.client.jid.userhost())+"/"+unicode(action.data().toString()) # make jid from users jid + selected resource
 			file=QtGui.QFileDialog.getOpenFileNames(self,"Choose file") # get filenames
 			file=list(file)

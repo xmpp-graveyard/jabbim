@@ -93,7 +93,7 @@ class CommandsDialog(QtGui.QMainWindow):
 		
 
 class Commands:
-	def __init__(self, main, jid, action):
+	def __init__(self, main, jid, action = None):
 		self.main	= main
 		self.jid	= unicode(jid)
 		self.dialog	= CommandsDialog(self,self.main)
@@ -179,6 +179,7 @@ class Commands:
 	
 	def _errorRecieved(self, err):
 		print err
+		self.action.setEnabled(False)
 		self.dialog._reset()
 		self.dialog.ui.close.show()
 		self.dialog.ui.label.setText("<b>%s</b>" % self.main.tr("Error"))
