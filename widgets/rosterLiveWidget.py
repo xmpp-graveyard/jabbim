@@ -2542,6 +2542,7 @@ class rosterWidget(QtGui.QWidget):
 		
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
+#		contactMenu.connect(contactMenu, QtCore.SIGNAL("hovered ( QAction * )"),self.contactMenuHovered)
 		return contactMenu
 
 	def buildGroupMenu(self,name):
@@ -2785,7 +2786,14 @@ class rosterWidget(QtGui.QWidget):
 			self.cmds = commands.Commands(self.main, jid)
 			self.cmds.dialog.show()
 		log.msg("END CONTACT")
-
+	
+#	def contactMenuHovered(self,action): #Work In Progress
+#		cmd=action.objectName()
+#		if cmd == "ad_hoc":
+#			jid=unicode(action.data().toString())
+#			self.cmds = commands.Commands(self.main, jid)
+#			self.cmds.dialog.show()
+		#self.buildContactMenu()
 	#def vcardArrived(self,data):
 		#self.dialog=vcardview.vcardViewDialog(self.main,data,self)
 		#self.dialog.show()

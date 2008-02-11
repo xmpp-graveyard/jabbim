@@ -1177,7 +1177,12 @@ class clientClass(pyxl.client.Client):
 			# we found tab
 			if tab!=None:
 				tab.chat.lastMessageFrom=unicode(user)
-				message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+str(tab.chat.avatarHeight)+"\" />")
+				try:
+					link = tab.chat.file
+				except:
+					print 'wtf? no chat.tab.file!'
+					link = 'images/32x32/apps/jabbim.png'
+				message=message.replace("[avatar]","<img src=\""+link+"\" width=\"32\" height=\""+str(tab.chat.avatarHeight)+"\" />")
 				# write message and set 'message' icon
 				if int(self.main.chat.ui.chatTab.currentIndex())!=tabIndex:
 					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
