@@ -1407,7 +1407,7 @@ class clientClass(pyxl.client.Client):
 	
 	def on_connect(self):
 		mainWindow=self.main
-		self.main.ui.loginInfo.setText(mainWindow.tr("Jabbim is connected to the server."))
+		self.main.ui.loginInfo.setText(mainWindow.tr("Jabbim is connecting to the server."))
 		self.main.ui.splashProgress.setValue(20)
 	
 	def on_authd(self):
