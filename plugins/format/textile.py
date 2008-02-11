@@ -313,7 +313,7 @@ res = {
                      )?                                     # 
                      [-\w]+(?:\.\w[-\w]*)+                  #     hostname (sub.example.com)
                  |                                          #
-                     (?:mailto:)?                           #     Optional mailto:
+                   #  (?:mailto:)?                           #     Optional mailto:
                      [-\+\w]+                               #     username
                      \@                                     #     at
                      [-\w]+(?:\.\w[-\w]*)+                  #     hostname
@@ -2454,7 +2454,7 @@ class Textiler:
 
             # Linkify.
             text = re.sub(re.compile(url, re.VERBOSE), r'''<a href="\1">\1</a>''', text)
-            text = re.sub(re.compile(email, re.VERBOSE), r'''<a href="mailto:\1">\1</a>''', text)
+#            text = re.sub(re.compile(email, re.VERBOSE), r'''<a href="mailto:\1">\1</a>''', text)
 
         else:
             lines = []
@@ -2466,7 +2466,7 @@ class Textiler:
 
                     # Linkify.
                     line = re.sub(re.compile(url, re.VERBOSE), r'''<a href="\1">\1</a>''', line)
-                    line = re.sub(re.compile(email, re.VERBOSE), r'''<a href="mailto:\1">\1</a>''', line)
+#                    line = re.sub(re.compile(email, re.VERBOSE), r'''<a href="mailto:\1">\1</a>''', line)
 
                 lines.append(line)
 
