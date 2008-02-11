@@ -93,7 +93,7 @@ class CommandsDialog(QtGui.QMainWindow):
 		
 
 class Commands:
-	def __init__(self, main, jid):
+	def __init__(self, main, jid, action):
 		self.main	= main
 		self.jid	= unicode(jid)
 		self.dialog	= CommandsDialog(self,self.main)
@@ -102,6 +102,7 @@ class Commands:
 		self.form	= None
 		self.name 	= None
 		self.var = self.row = None
+		self.action = action
 		self.requestCommandsList()
 
 	def requestCommandsList(self):
@@ -116,7 +117,7 @@ class Commands:
 		log.msg("Sending request for Ad-Hoc Commands list")
 
 	def _commandsListRecieved(self, el):
-		self.dialog.ui.label.setText(self.main.tr("Choose action to execute."))
+#		self.dialog.ui.label.setText(self.main.tr("Choose action to execute."))
 		log.msg("Ad-Hoc commands list recieved")
 		query	= el.firstChildElement()
 		commands = []
@@ -124,23 +125,32 @@ class Commands:
 			if item.name != "item":
 				continue
 			commands.append(item.attributes)
-		if commands == []:
-			self.dialog.ui.label.setText(self.main.tr("Sorry. No extra actions available."))
-			self.dialog.ui.close.show()
-			self.dialog.ui.line.hide()
-			return
+#		if commands == []:
+#			self.dialog.ui.label.setText(self.main.tr("Sorry. No extra actions available."))
+#			self.dialog.ui.close.show()
+#			self.dialog.ui.line.hide()
+#			return
 		c = 0
+		submenu = QtGui.QMenu()
 		for command in commands:
-			button = QtGui.QPushButton(self.dialog)
-			button.setText(unicode(command["name"]))
-			#button.setObjectName(unicode(command["node"])) # ? + jid
-			button.node = unicode(command["node"])
-			button.jid = unicode(command["jid"])
-			self.dialog.group.addButton(button)
-			self.dialog.ui.glayout.addWidget(button, c, 0)
-			c += 1
-		spacerItem = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-		self.dialog.ui.glayout.addItem(spacerItem,c,0)
+			print command
+			action=submenu.addAction(command["name"])
+			action.setObjectName("ad_hoc_command")
+
+		print submenu, self.action
+
+		self.action.setMenu(submenu)
+		print 'pridane menu'
+#			button = QtGui.QPushButton(self.dialog)
+#			button.setText(unicode(command["name"]))
+#			#button.setObjectName(unicode(command["node"])) # ? + jid
+#			button.node = unicode(command["node"])
+#			button.jid = unicode(command["jid"])
+#			self.dialog.group.addButton(button)
+#			self.dialog.ui.glayout.addWidget(button, c, 0)
+#			c += 1
+#		spacerItem = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+#		self.dialog.ui.glayout.addItem(spacerItem,c,0)
 
 	def execCommand(self, node, name, jid = None):
 		if jid == None:
@@ -159,6 +169,7 @@ class Commands:
 		log.msg("Executing command %s." % node)
 	
 	def _errorRecieved(self, err):
+		print err
 		self.dialog._reset()
 		self.dialog.ui.close.show()
 		self.dialog.ui.label.setText("<b>%s</b>" % self.main.tr("Error"))

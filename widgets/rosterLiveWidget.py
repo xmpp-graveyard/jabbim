@@ -2537,12 +2537,13 @@ class rosterWidget(QtGui.QWidget):
 				for res in contact.resources.keys():
 					if res != None:
 						action=submenu.addAction(res)
-						action.setData(QtCore.QVariant("%s/%s" %(jid,res)))
+						action.setData(QtCore.QVariant(("%s/%s" %(jid,res))))
 						action.setObjectName("ad_hoc")
+				
 		
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
-#		contactMenu.connect(contactMenu, QtCore.SIGNAL("hovered ( QAction * )"),self.contactMenuHovered)
+		contactMenu.connect(contactMenu, QtCore.SIGNAL("hovered ( QAction * )"),self.contactMenuHovered)
 		return contactMenu
 
 	def buildGroupMenu(self,name):
@@ -2787,11 +2788,12 @@ class rosterWidget(QtGui.QWidget):
 			self.cmds.dialog.show()
 		log.msg("END CONTACT")
 	
-#	def contactMenuHovered(self,action): #Work In Progress
-#		cmd=action.objectName()
-#		if cmd == "ad_hoc":
-#			jid=unicode(action.data().toString())
-#			self.cmds = commands.Commands(self.main, jid)
+	def contactMenuHovered(self,action): #Work In Progress
+		print 'hover!'
+		cmd=action.objectName()
+		if cmd == "ad_hoc":
+			jid=unicode(action.data().toString())
+			self.cmds = commands.Commands(self.main, jid, action)
 #			self.cmds.dialog.show()
 		#self.buildContactMenu()
 	#def vcardArrived(self,data):
