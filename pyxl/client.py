@@ -140,6 +140,7 @@ class Client(derived):
 		self.dispatcher.registerHandler('on_authd', self.on_authd, 'on_authd')
 		self.dispatcher.registerHandler('on_message_send', self._sendMessage, 'on_message_send')
 		self.xping = LoopingCall(self.heartbeat)
+		self.hbFails = 0
 		
 	def chyba(self, err):
 		err.printBriefTraceback()
@@ -169,7 +170,7 @@ class Client(derived):
 		iq['xml:lang'] = self.xmlLang
 		q = iq.addElement('ping', 'urn:xmpp:ping')
 		self.disp(iq['id'])
-		iq.timeout = 60
+		iq.timeout = 30
 		d = iq.send()
 		d.addCallback(self._heartbeat)
 		d.addErrback(self._heartbeatErr)
@@ -181,10 +182,14 @@ class Client(derived):
 	def _heartbeatErr(self, err):
 		if err.type == TimeoutError:
 			log.msg('heartbeat failed')
-			self.xping.stop()
-#			if self.factory:
-#				self.factory.stopTrying()
-			self.connectionLost(self.connection)
+			self.hbFails += 1
+			if hbFails >= 3:
+				self.xping.stop()
+	#			if self.factory:
+	#				self.factory.stopTrying()
+				self.connectionLost(self.connection)
+			else:
+				log.msg('heartbeat fails count: '+ unicode(self.hbFails))
 
 
 	def connect(self, host = None, port = '5222'):
@@ -262,6 +267,10 @@ class Client(derived):
 			
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
+		try:
+			self.xping.stop()
+		except:
+			pass
 		if self.factory:
 			self.factory.stopTrying()
 		self.connection = None
@@ -287,7 +296,10 @@ class Client(derived):
 		self.jid = jid.JID(jd)
 		
 	def disconnect(self):
-		self.xping.stop()
+		try:
+			self.xping.stop()
+		except:
+			pass
 		if self.connection:
 			self.connection.disconnect()
 		if self.factory:
@@ -333,7 +345,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='jabber:iq:privacy']", self.onPrivacyPush, 1)
 		self.xmlstream.addObserver("/*/evil[@xmlns='http://jabber.org/protocol/evil']", self.onEvil, 1)
 	
-		self.xping.start(120, False)		
+		self.xping.start(100, False)		
 		self.getPrivacy()
 		self.getMetacontacts()
 		self.getBookmarks()
