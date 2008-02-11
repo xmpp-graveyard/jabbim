@@ -32,7 +32,7 @@ class osd(QtGui.QWidget):
 		self.desktop=QtGui.QPixmap()
 		self.leftPixmap=None
 		self.started=int(time.time())
-		self.dropTime=20
+		self.dropTime=10
 		self.changingPos=False
 		self.osdX=int(self.main.config['osd_x'])
 		self.osdY=int(self.main.config['osd_y'])
@@ -215,7 +215,7 @@ class osd(QtGui.QWidget):
 			self.osdY=self.screenHeight-(height+height2+10)-10
 		self.setGeometry(self.osdX,self.osdY,width+20,height+height2+10)
 		self.cl.setGeometry(self.width()-18,2,16,16)
-
+		print 'show'
 		self.show()
 		self.timer.start(int(self.main.config['osd_time'])*1000)
 		
@@ -265,13 +265,13 @@ class Plugin(plugins.PluginBase):
 		# for list of actions see loadSoundConfig()
 		#self.showInPreferences=True
 		#self.preferencesIcon=QtGui.QIcon(plugindir+"/audio.png")
-		self.loadSoundConfig("sounds/config")
+		#self.loadSoundConfig("sounds/config")
 		self.osd=None
 		if main:
-			#self.registerHandler('on_message', self.on_message)
-			#self.registerHandler('on_GCmessage', self.on_GCmessage)
-			#self.registerHandler('on_presence',self.on_presence)
-			#self.registerHandler('on_evil',self.on_evil)
+			self.registerHandler('on_message', self.on_message)
+			self.registerHandler('on_GCmessage', self.on_GCmessage)
+			self.registerHandler('on_presence',self.on_presence)
+			self.registerHandler('on_evil',self.on_evil)
 			self.loadConfig()
 			self.main.playsound('start')
 			self.osd=osd(self)
@@ -322,6 +322,7 @@ class Plugin(plugins.PluginBase):
 			print "Some error occured! (IOError loading sound config file %s)"%(configFile)
 
 	def playsound(self, action):
+		return
 		if self.soundAvailable:
 			if self.sounds.has_key(action): # if exist the action file
 				if sys.platform == 'linux2': # linux sounds are produced using aplay
@@ -361,7 +362,6 @@ class Plugin(plugins.PluginBase):
 	def on_presence(self,jid,show,error):
 		if error or self.config['osd_on_presence']=="False":
 			return
-
 		status=None
 		if jid.resource:
 			if self.main.client.roster['users'][jid.userhost()].resources.has_key(jid.resource):
@@ -369,7 +369,6 @@ class Plugin(plugins.PluginBase):
 				status=res.status
 		else:
 			status=self.main.client.roster['users'][unicode(jid.userhost())].status[1]
-
 
 		user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
 		if len(user)==0:
@@ -389,6 +388,7 @@ class Plugin(plugins.PluginBase):
 		if not status:
 			status=""
 		self.osd.view(pixmap,user+self.tr(" is now ")+self.main.status[unicode(show)],unicode(status),self.addChatTab,[it,jid])
+
 
 	def addChatTab(self,item,jid):
 		if item:
