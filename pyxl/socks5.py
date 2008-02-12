@@ -395,8 +395,11 @@ class ClientFactory (protocol.ClientFactory):
 		# If flag indicates that connection may not be lost
 		#
 		rmap = {"reason": reason, "socks": self.status}
-		if self.xmpp.ft[self.xmpp_sid].size > 	self.xmpp.ft[self.xmpp_sid].transfered:
-			self.xmpp.ft[self.xmpp_sid].error = "Connection lost"
+		try:
+			if self.xmpp.ft[self.xmpp_sid].size > 	self.xmpp.ft[self.xmpp_sid].transfered:
+				self.xmpp.ft[self.xmpp_sid].error = "Connection lost"
+		except:
+			print 'sid doesn\'t exist?'
 			
 		try:
 			if self.status != "established":
