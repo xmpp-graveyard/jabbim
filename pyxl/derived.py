@@ -203,7 +203,12 @@ class derived:
 				body.addRawXml(xhtml)
 
 		if composing:
-			if self.roster['users'].has_key(JID.userhost()):
+			try:
+				allowComposing = self.main.config['allowChatstate']
+			except:
+				allowComposing = 'True'
+			
+			if self.roster['users'].has_key(JID.userhost()) and allowComposing == 'True':
 				if self.roster['users'][JID.userhost()].resources.has_key(JID.resource):
 					#log.msg(unicode(self.roster['users'][JID.userhost()].resources[JID.resource].features))
 					if self.roster['users'][JID.userhost()].resources[JID.resource].hasFeature('http://jabber.org/protocol/chatstates'):
