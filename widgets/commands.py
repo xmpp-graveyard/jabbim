@@ -128,7 +128,7 @@ class Commands:
 			if item.name != "item":
 				continue
 			commands.append(item.attributes)
-#		if commands == []:
+
 #			self.dialog.ui.label.setText(self.main.tr("Sorry. No extra actions available."))
 #			self.dialog.ui.close.show()
 #			self.dialog.ui.line.hide()
@@ -143,6 +143,8 @@ class Commands:
 
 		self.action.setMenu(self.submenu)
 		self.submenu.connect(self.submenu, QtCore.SIGNAL("triggered ( QAction * )"),self.execute)
+		if len(commands) == 0 :
+			self.action.setEnabled(False)
 #			button = QtGui.QPushButton(self.dialog)
 #			button.setText(unicode(command["name"]))
 #			#button.setObjectName(unicode(command["node"])) # ? + jid
