@@ -110,12 +110,16 @@ class vcardEditorDialog(QtGui.QDialog):
 			self.ui.homepage_label.hide()
 	
 	def _vysledky(self, vysl):
+		print 'list end', vysl
 		if len(vysl) == 1:
 			#version info neprislo
 			if vysl[0][0] == 1:
 				self.ui.download.hide()
 				self.ui.tabWidget.setEnabled(True)
-			return
+				return
+			else:
+				self.ui.download.show()
+				self.ui.tabWidget.setEnabled(False)
 		else:
 			for res in vysl[1:]:
 				if res[0] == 1:

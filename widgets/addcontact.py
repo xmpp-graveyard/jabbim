@@ -6,6 +6,7 @@ except:
 
 from addcontact_ui import *
 from search import *
+import pyxl
 
 class addContactDialog(QtGui.QDialog):
 	def __init__(self,main,parent=None,jid="",group=None,name="",add=True,check=True):
@@ -40,6 +41,7 @@ class addContactDialog(QtGui.QDialog):
 			#self.ui.add_jid.setEnabled(False)
 
 		self.searchJid=None
+		self.muc = False
 
 		for key in self.main.client.disco.keys():
 			got=False
@@ -61,8 +63,31 @@ class addContactDialog(QtGui.QDialog):
 			jid=self.main.getJid(text)
 			if jid:
 				self.ui.save.setEnabled(True)
-				return
+#				return
+			if self.main.client.bookmarksEnabled:
+				host = text.split('@')[1]
+				self.muc = False
+				if self.main.client.disco.has_key(host) and self.main.client.disco[host][None].has_key('identities'):
+					for id in self.main.client.disco[host][None]['identities'].itervalues():
+						if id.get('category') == 'conference' and id.get('type') == 'text':
+							self.muc = True
+				if self.muc == True:
+					self.ui.save.setText(self.tr('Add bookmark'))
+					self.ui.add_group.setEnabled(False)
+					self.ui.search.setEnabled(False)
+					self.ui.add_message.hide()
+					self.ui.add_messageLabel.hide()
+				else:
+					self.ui.save.setText(self.tr('Add'))					
+					self.ui.add_group.setEnabled(True)
+					self.ui.search.setEnabled(True)
+					self.ui.add_message.show()
+					self.ui.add_messageLabel.show()
+			return
+
+		
 		self.ui.save.setEnabled(False)
+	
 	def search(self):
 		d=self.main.client.getSearchForm(self.searchJid)
 		d.addCallback(self._gotSearchForm)
@@ -82,11 +107,16 @@ class addContactDialog(QtGui.QDialog):
 		nickname=unicode(self.ui.add_nickname.text())
 		group=unicode(self.ui.add_group.currentText())
 		message=unicode(self.ui.add_message.toPlainText())
-		#if self.add:
-		self.main.client.addContact(jid,message,nickname,[group])
-		#else:
-			#contact=self.main.client.roster['users'][jid]
-			#self.main.client.sendRosterUpdate(jid,nickname, contact.subscription, [group])
+		if not self.muc:
+			self.main.client.addContact(jid,message,nickname,[group])
+		else:
+			if self.main.client.bookmarksEnabled:
+				if nickname == '':
+					nickname = jid.split('@')[0]
+				if  not self.main.client.bookmarks['conference'].has_key(nickname):
+					self.main.client.bookmarks['conference'][nickname] = pyxl.client.Bookmark(nickname, 'conference', jid, 'false')
+					self.main.client.setBookmarks()
+					self.main.buildBookmarks()
 
 
 		self.done(1)
