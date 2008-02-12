@@ -31,18 +31,15 @@ class SetStatus(Stage):
 		typ = None
 		show = self.data["show"][0]
 		if show =="available":
-			show = None
-			typ = show
+			show = 'online'
 			self.data["show"][0] = "online"
-		if show == "offline":
-			show = None
-			typ = "unavailable"
+
 		status = "\n".join(self.data["status"])
-		self.main.client.sendPresence(
-				typ = typ,
+		self.main.sendPresence(
+				jid = None,
 				show = show,
-				status = status,
-				priority = self.data["priority"][0],
+				message = status,
+				pri = self.data["priority"][0],
 				)
 		icon = self.main.getIcon(self.data["show"][0], size="16x16")
 		#self.main.ui.statusButton.setIcon(self.main.getIcon(status=self.data["show"][0], size="16x16"))
