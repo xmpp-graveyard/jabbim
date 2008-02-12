@@ -38,7 +38,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 #d=self.main.client.getRegisterForm(jid)
 		#self.load()
 
-		self.main.client.getDiscoItems(self.main.client.jid.host, callback = self.load)
+		self.main.client.getDiscoItems(self.main.client.jid.host, callback = self.load).addErrback(self._discoErr)
 
 		#for key in self.main.client.disco.keys():
 			#if self.main.client.disco[key][None].has_key("identities"):
@@ -48,11 +48,15 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 				
 			#elif self.main.client.disco[key][None].has_key("err"):
 				#print key,"error"
+	def _discoErr(self, err):
+		print 'disco error'
+		self.ui.reload.setEnabled(True)
+		
 	def discoReload(self):
 		self.ui.reload.setEnabled(False)
 		self.server = unicode(self.ui.server.text())
 		self.ui.tree.clear()
-		self.main.client.getDiscoItems(self.server, callback = self.load)
+		self.main.client.getDiscoItems(self.server, callback = self.load).addErrback(self._discoErr)
 
 	def buttonClicked(self,b):
 		if b.typ=="register":

@@ -1327,6 +1327,7 @@ class Client(derived):
 		node['err'] = el.firstChildElement().name
 		self.disco[jid][node_name] = node
 		self.reactor.callFromThread(self.on_discoInfoReceived, jid, node_name)
+		return err
 
 	def onPrivacyPush(self, el):
 		name = el.firstChildElement().firstChildElement()["name"]

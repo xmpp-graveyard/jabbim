@@ -584,6 +584,7 @@ class derived:
 		self.disp(iq['id'])
 		d.addCallback(self._discoItemsReceived, node, callback, callback_par)
 		d.addErrback(self._discoItemsErrReceived, (node, jid))
+		return d
 		
 	def getTime202(self, jid):
 		log.msg( 'requesting time202 info')
