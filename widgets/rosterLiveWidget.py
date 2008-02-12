@@ -2543,6 +2543,7 @@ class rosterWidget(QtGui.QWidget):
 							action.setData(QtCore.QVariant("%s/%s" %(jid,res)))
 							action.setObjectName("ad_hoc")
 				
+				submenu.connect(submenu, QtCore.SIGNAL("hovered ( QAction * )"),self.contactMenuHovered)
 		
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
