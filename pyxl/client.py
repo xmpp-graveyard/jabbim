@@ -508,6 +508,7 @@ class Client(derived):
 #		self.reactor.callFromThread(self.main.cache.set_avatar,jid, ['nic', 'nic'])
 		self.avatars[jid] = None
 		self.on_avatarUpdate(jid)
+		return err
 
 	def _vcardReceived(self, el):
 		log.msg('vcard received')

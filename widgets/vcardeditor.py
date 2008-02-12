@@ -7,6 +7,7 @@ except:
 from vcardeditor_ui import *
 import base64
 from twisted.words.xish.domish import Element
+from twisted.internet.defer import DeferredList 
 
 class vcardEditorDialog(QtGui.QDialog):
 	def __init__(self,main,jid,parent=None,editable=True):
@@ -36,9 +37,11 @@ class vcardEditorDialog(QtGui.QDialog):
 		layout.addWidget(self.scroll)
 		
 		self.data=None
+		vysledky = []
 		d=self.main.client.getVCard(jid)
 		d.addCallback(self.vcardArrived)
 		d.addErrback(self.noVcard)
+		vysledky.append(d)
 		jidt=self.main.getJid(jid)
 		if jidt.resource:
 			resources=[jidt.resource]
@@ -49,10 +52,12 @@ class vcardEditorDialog(QtGui.QDialog):
 			while None in resources:
 				resources.remove(None)
 		for res in resources:
-			d=self.main.client.getVersion(jidt.userhost()+"/"+res)
+
+			d = self.main.client.getVersion(jidt.userhost()+"/"+res)
 			d.addCallback(self.versionReceived,res)
 			d.addErrback(self.versionErrReceived,res)
-		
+			vysledky.append(d)
+		DeferredList(vysledky).addCallback(self._vysledky)
 		self.ui.tabWidget.setEnabled(False)
 
 		self.ui.avatar.setPixmap(QtGui.QPixmap())
@@ -104,7 +109,21 @@ class vcardEditorDialog(QtGui.QDialog):
 			QtCore.QObject.connect(self.ui.clearAvatar, QtCore.SIGNAL("clicked()"),self.clearAvatar)
 			self.ui.homepage_label.hide()
 	
+	def _vysledky(self, vysl):
+		if len(vysl) == 1:
+			#version info neprislo
+			if vysl[0][0] == 1:
+				self.ui.download.hide()
+				self.ui.tabWidget.setEnabled(True)
+			return
+		else:
+			for res in vysl[1:]:
+				if res[0] == 1:
+					self.ui.download.hide()
+					self.ui.tabWidget.setEnabled(True)
+	
 	def noVcard(self,data=None):
+		print 'no vcard', data
 		self.ui.download.setText(self.tr("Can't download vCard of this contact."))
 		
 	def vcardArrived(self,data):
@@ -208,6 +227,7 @@ class vcardEditorDialog(QtGui.QDialog):
 		self.ui.tabWidget.setEnabled(True)
 
 	def versionErrReceived(self, err,res):
+		print err
 		lineName,lineOs,lineVersion=self.makeVersionWidget(res)
 		lineName.setText(self.tr("Unable to retrieve."))
 		lineVersion.setText(self.tr("Unable to retrieve."))
