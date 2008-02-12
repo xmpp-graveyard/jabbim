@@ -1162,6 +1162,7 @@ class Client(derived):
 		else:
 			allowed = (ji in public) or (ji == self.jid.userhost())
 			
+		print public, allowed, ji
 		try:
 			lang = el["xml:lang"]
 		except:
@@ -1182,6 +1183,7 @@ class Client(derived):
 				return
 			if not allowed:
 				raise RuntimeError("forbidden")
+			print 'fire it up!'
 			self.commands.sessions[sid].execStage(
 					self.commands.sessions[sid].nextstages[action],
 					el["id"],
@@ -1192,7 +1194,7 @@ class Client(derived):
 
 
 		except KeyError, RuntimeError:
-			if jid.JID(el["from"]).userhost() == self.jid.userhost() or self.commands.nodes[node][3]:
+			if allowed:
 				self.commands.startSession(node, el["from"], el["id"])
 				log.msg("Starting new session")
 			else:
