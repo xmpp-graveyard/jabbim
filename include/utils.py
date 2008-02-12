@@ -150,7 +150,8 @@ def loadConfig(main,status):
 			"connectPort": "5222",
 			"showOffline":"True",
 			"soundPack":"default/default.cfg",
-			"allowChatstate": "True"
+			"allowChatstate": "True",
+			"adhocAllow": []
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:

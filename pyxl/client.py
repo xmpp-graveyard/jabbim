@@ -132,6 +132,7 @@ class Client(derived):
 			hash = sha1(fd.read()).hexdigest()
 			fd.close()
 			self.avatars[jd] = hash
+
 		self.reactor.callFromThread(self.on_init)
 		self.main.cache.get_caps().addCallback(self._cacheCaps)
 		self.dispatcher.registerHandler('on_message', self.on_message, 'on_message')
@@ -356,9 +357,14 @@ class Client(derived):
 		self.main._connected()
 		print 'pre commands'
 		self.commands = Commands(self.main)
-		self.commands.registerNode("http://jabber.org/protocol/rc#set-status", self.main.tr("Change status"), rc.fSetStatus)
-		self.commands.registerNode("http://jabber.org/protocol/rc#leave-groupchats", self.main.tr("Leave groupchats"), rc.fLeaveGC)
-		self.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#resend-file", self.main.tr("Resend file"), rc.ResendFile)
+		try:
+			public = self.main.config['adhocAllow']
+		except:
+			public = False
+			
+		self.commands.registerNode("http://jabber.org/protocol/rc#set-status", self.main.tr("Change status"), rc.fSetStatus, public = public)
+		self.commands.registerNode("http://jabber.org/protocol/rc#leave-groupchats", self.main.tr("Leave groupchats"), rc.fLeaveGC, public = public)
+		self.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#resend-file", self.main.tr("Resend file"), rc.ResendFile, public = public)
 #		print 'post commands'
 #		def pis(co):
 #			print co

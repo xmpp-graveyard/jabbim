@@ -141,10 +141,12 @@ class Commands:
 			action.setData(QtCore.QVariant([command['node'], command['name']]))
 
 
-		self.action.setMenu(self.submenu)
-		self.submenu.connect(self.submenu, QtCore.SIGNAL("triggered ( QAction * )"),self.execute)
+
 		if len(commands) == 0 :
 			self.action.setEnabled(False)
+		else:
+			self.action.setMenu(self.submenu)
+			self.submenu.connect(self.submenu, QtCore.SIGNAL("triggered ( QAction * )"),self.execute)
 #			button = QtGui.QPushButton(self.dialog)
 #			button.setText(unicode(command["name"]))
 #			#button.setObjectName(unicode(command["node"])) # ? + jid
