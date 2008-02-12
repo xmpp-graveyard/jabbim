@@ -828,7 +828,8 @@ class rosterWidget(QtGui.QWidget):
 						text+='<img src="images/16x16/status/jabber-%s.png">' % contact.resources[res].show # hodilo by se rozlisit k jakymu poatri transportu
 						if res != None:
 							text+='<b>%s</b> %s<br>' % (res, priority)
-						text+='<font size="-1">%s</font>' % (status)
+						if len(status) != 0:
+							text+='<font size="-1">%s</font><br />' % (status.replace('\n', '<br />'))
 					text+="</td></tr></table>"
 					self.setToolTip(text)
 		return QtGui.QWidget.event(self,event)
