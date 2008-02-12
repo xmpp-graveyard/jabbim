@@ -1157,8 +1157,10 @@ class clientClass(pyxl.client.Client):
 				message=xhtml.replace("&quot;",'"')
 				message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 
-
-			tab,tabIndex=self.main.chat.findTab(frm.full(),True)
+			if self.groupchats.has_key(frm.userhost()):
+				tab,tabIndex=self.main.chat.findTab(frm.full(),True)
+			else:
+				tab,tabIndex=self.main.chat.findTab(frm.full())
 			if unicode(body).startswith("/me"):
 				message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message[3:])
 			else:
