@@ -280,29 +280,30 @@ class chatWidget(abstractChatWidget):
 		hasFeature=False
 		self.ui.metaLabel.hide()
 		self.ui.metaButton.hide()
+		
+		# sendFile buttons
+		self.ui.sendFile=QtGui.QToolButton()
+		self.ui.sendFile.setIconSize(QtCore.QSize(16,16))
+		self.ui.sendFile.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
+		self.ui.sendFile.setToolTip(self.tr("Send file"))
+		self.ui.sendFile.hide()
+		self.flowLayout.addWidget(self.ui.sendFile)
+		QtCore.QObject.connect(self.ui.sendFile, QtCore.SIGNAL("clicked ()"),self.sendFiles)
+		
 		if self.main.client.groupchats.has_key(jidt.userhost()):
 			print "features:",self.main.client.groupchats[jidt.userhost()].users[jidt.resource].features
 			hasFeature='http://jabber.org/protocol/si/profile/file-transfer' in self.main.client.groupchats[jidt.userhost()].users[jidt.resource].features
 			self.ui.resourceButton.hide()
 			self.ui.resourceLabel.hide()
+			if hasFeature:
+				self.ui.sendFile.show()
 		else:
-			try:
-				hasFeature=main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/si/profile/file-transfer')
-			except:
-				hasFeature=False
 			if main.client.roster['users'].has_key(jidt.userhost()):
 				self.buildResourceMenu()
 				self.buildMetaMenu()
 
 	
-		if hasFeature:
-			# sendFile buttons
-			self.ui.sendFile=QtGui.QToolButton()
-			self.ui.sendFile.setIconSize(QtCore.QSize(16,16))
-			self.ui.sendFile.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
-			self.ui.sendFile.setToolTip(self.tr("Send file"))
-			self.flowLayout.addWidget(self.ui.sendFile)
-			QtCore.QObject.connect(self.ui.sendFile, QtCore.SIGNAL("clicked ()"),self.sendFiles)
+
 
 		self.ui.pluginWidget.setLayout(self.flowLayout)
 		self.ui.ftwidget.setLayout(QtGui.QVBoxLayout())
@@ -344,6 +345,10 @@ class chatWidget(abstractChatWidget):
 		self.resourceMenu=QtGui.QMenu(self.ui.resourceButton)
 		action=self.resourceMenu.addAction(self.tr("Automatic"))
 		self.ui.resourceButton.setText(action.text())
+		try:
+			hasFeature=self.main.client.roster['users'][jidt.userhost()].resources[self.main.client.roster['users'][jidt.userhost()].getHighestResource()].hasFeature('http://jabber.org/protocol/si/profile/file-transfer')
+		except:
+			hasFeature=False
 		count=0
 		for name,resource in self.main.client.roster['users'][jidt.userhost()].resources.iteritems():
 			if name:
@@ -352,6 +357,14 @@ class chatWidget(abstractChatWidget):
 				if jidt.resource==name:
 					self.ui.resourceButton.setText(action.text())
 					self.ui.resourceButton.setIcon(action.icon())
+					try:
+						hasFeature=self.main.client.roster['users'][jidt.userhost()].resources[name].hasFeature('http://jabber.org/protocol/si/profile/file-transfer')
+					except:
+						hasFeature=False
+		if hasFeature:
+			self.ui.sendFile.show()
+		else:
+			self.ui.sendFile.hide()
 		if count==0:
 			self.ui.resourceButton.hide()
 			self.ui.resourceLabel.hide()
