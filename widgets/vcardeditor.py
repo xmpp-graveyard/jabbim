@@ -106,6 +106,7 @@ class vcardEditorDialog(QtGui.QDialog):
 	
 	def noVcard(self,data=None):
 		self.ui.download.setText(self.tr("Can't download vCard of this contact."))
+		
 	def vcardArrived(self,data):
 		self.data=data
 		if self.data:
@@ -203,6 +204,8 @@ class vcardEditorDialog(QtGui.QDialog):
 			lineOs.setText(os)
 		else:
 			lineOs.setText(self.tr("Unable to retrieve."))
+		self.ui.download.hide()
+		self.ui.tabWidget.setEnabled(True)
 
 	def versionErrReceived(self, err,res):
 		lineName,lineOs,lineVersion=self.makeVersionWidget(res)
