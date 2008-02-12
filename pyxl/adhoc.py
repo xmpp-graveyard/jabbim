@@ -158,7 +158,7 @@ class Commands:
 @param desc: human-readable name of the node
 @type jid: unicode
 @param jid: full jid of node, if not set it is the same as client jid
-@type public: bool
+@type public: bool or list
 @param public: if other jids (not only resources) can execute the node"""
 		if jid == None:
 			jid = unicode(self.main.client.jid.full())

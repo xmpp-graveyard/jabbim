@@ -1139,12 +1139,23 @@ class Client(derived):
 			q["node"] = node
 		try:
 			for item in self.discoitems[node]:
-				i = q.addElement("item")
-				i["jid"] = item["jid"]
-				if item["name"] != None:
-					i["name"] = item["name"]
-				if item["node"] != None:
-					i["node"] = item["node"]
+				if node == "http://jabber.org/protocol/commands":
+					public = self.commands.nodes[item['node']][3]
+					ji = jid.JID(el['from']).userhost()
+					if type(public) == bool:
+						allowed = public
+					else:
+						allowed = (ji in public) or (ji == self.jid.userhost())
+				else:
+					allowed = True
+					
+				if allowed:
+					i = q.addElement("item")
+					i["jid"] = item["jid"]
+					if item["name"] != None:
+						i["name"] = item["name"]
+					if item["node"] != None:
+						i["node"] = item["node"]
 		except KeyError:
 			pass
 
