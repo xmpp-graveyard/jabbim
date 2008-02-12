@@ -750,7 +750,7 @@ class clientClass(pyxl.client.Client):
 						w.chat.ui.chatstate.setText("")
 						w.chat.lastMessageFrom=""
 					break
-			tab,index=self.main.chat.findTab(jid.full(),True)
+			tab,index=self.main.chat.findTab(jid.full(),False)
 			if tab:
 				tab.chat.buildResourceMenu()
 				tab.chat.buildMetaMenu()
@@ -795,7 +795,7 @@ class clientClass(pyxl.client.Client):
 						w.chat.lastMessageFrom=""
 					break
 
-			tab,index=self.main.chat.findTab(jid.full(),True)
+			tab,index=self.main.chat.findTab(jid.full(),False)
 			if tab:
 				tab.chat.buildResourceMenu()
 				tab.chat.buildMetaMenu()
@@ -1133,7 +1133,7 @@ class clientClass(pyxl.client.Client):
 			else:
 				icon=self.main.getIcon(status="offline",size="16x16")
 				user=frm.full()
-		tab,tabIndex=self.main.chat.findTab(frm.full())
+		tab,tabIndex=self.main.chat.findTab(frm.full(),True)
 		mainWindow=self.main
 		if error=="remote-server-not-found":
 			if tab!=None:
@@ -1158,7 +1158,7 @@ class clientClass(pyxl.client.Client):
 				message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 
 
-			tab,tabIndex=self.main.chat.findTab(frm.full())
+			tab,tabIndex=self.main.chat.findTab(frm.full(),True)
 			if unicode(body).startswith("/me"):
 				message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message[3:])
 			else:
@@ -1239,7 +1239,7 @@ class clientClass(pyxl.client.Client):
 					self.main.chat.setWindowState(self.main.chat.windowState() & ~QtCore.Qt.WindowActive | QtCore.Qt.WindowMinimized )
 					self.main.setWindowState(self.main.windowState() & QtCore.Qt.WindowActive)
 
-				tab,tabIndex=self.main.chat.findTab(frm.full())
+				tab,tabIndex=self.main.chat.findTab(frm.full(),True)
 				if tab:
 					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))

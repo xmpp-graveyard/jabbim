@@ -482,8 +482,13 @@ class chatWindow(QtGui.QMainWindow):
 				#pass
 		return count
 
-	def findTab(self,jid=None,userhost=False):
-		if userhost:
+	def findTab(self,jid=None,full=None):
+		if full==True:
+			for i in range(self.ui.chatTab.count()):
+				w=self.ui.chatTab.widget(i)
+				if self.main.getJid(w.jid).full()==self.main.getJid(jid).full():
+					return w,i # tab, index
+		elif full==False:
 			userhost=self.main.getJid(jid).userhost()
 			for i in range(self.ui.chatTab.count()):
 				w=self.ui.chatTab.widget(i)
