@@ -3346,7 +3346,11 @@ class XMLConsole(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.send,QtCore.SIGNAL("clicked()"),self.send)
 		QtCore.QObject.connect(self.ui.message,QtCore.SIGNAL("clicked()"),self.message)
 		QtCore.QObject.connect(self.ui.presence,QtCore.SIGNAL("clicked()"),self.presence)
-
+		QtCore.QObject.connect(self.ui.iq,QtCore.SIGNAL("clicked()"),self.iq)
+		
+	def iq(self):
+		self.ui.textEdit.setText("<iq to='USER@DOMAIN' from='"+MainWindow.client.jid.full()+"'>\n<query xmlns=''>\n</iq>")	
+		
 	def message(self):
 		self.ui.textEdit.setText("<message to='USER@DOMAIN' from='"+MainWindow.client.jid.full()+"'>\n<body>Body text</body>\n</message>")
 
