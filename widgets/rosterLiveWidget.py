@@ -2355,34 +2355,12 @@ class rosterWidget(QtGui.QWidget):
 							action.setData(QtCore.QVariant(["%s/%s" % (jid, res), gc]))
 							action.setObjectName("invite_gc")
 		# custom status
-		if oneres:
-			submenu=contactMenu.addMenu(self.tr("Custom status"))
+		submenu=contactMenu.addMenu(self.tr("Custom status"))
 
-			for status in ["online", "chat", "away", "xa", "dnd", "offline"]:
-				action=submenu.addAction(self.main.getIcon(status=status,size="32x32"),self.main.status[status])
-				action.setObjectName("custom_status")
-				action.setData(QtCore.QVariant([unicode(status), unicode(jid)]))
-		else:
-			submenu = contactMenu.addMenu(self.tr("Custom status"))
-			resmenu = submenu.addMenu(self.tr("All resources"))
-			submenu.addSeparator()
-			resources=contact.resources.keys()
-			resmenus=[]
-			for resource in resources:
-				if resource!=None:
-					resmenus.append((submenu.addMenu(res),resource))
-			resmenus.append((resmenu, ""))
-			for resm in resmenus:
-				resmenu, res = resm
-				for status in ["online", "chat", "away", "xa", "dnd", "offline"]:
-			                action=resmenu.addAction(self.main.getIcon(status=status,size="32x32"),self.main.status[status])
-					print "LOG 9"
-					action.setObjectName("custom_status")
-					if res:
-						jr = "%s/%s" % (jid, res)
-					else:
-						jr = jid
-					action.setData(QtCore.QVariant([unicode(status), unicode(jr)]))
+		for status in ["online", "chat", "away", "xa", "dnd", "offline"]:
+			action=submenu.addAction(self.main.getIcon(status=status,size="32x32"),self.main.status[status])
+			action.setObjectName("custom_status")
+			action.setData(QtCore.QVariant([unicode(status), unicode(jid)]))
 
 		# separator
 		contactMenu.addSeparator()
