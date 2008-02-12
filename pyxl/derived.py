@@ -493,8 +493,9 @@ class derived:
 		message['type'] = 'headline'
 		self.xmlstream.send(message)
 
-	def getMetacontacts(self):
+	def getMetacontacts(self, exprivacy = None):
 		log.msg('get meta contacts')
+		print exprivacy
 		iq = IQ(self.xmlstream, 'get')
 		iq['xml:lang'] = self.xmlLang
 		q = iq.addElement('query', 'jabber:iq:private')

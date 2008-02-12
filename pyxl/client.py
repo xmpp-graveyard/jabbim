@@ -347,8 +347,8 @@ class Client(derived):
 		self.xmlstream.addObserver("/*/evil[@xmlns='http://jabber.org/protocol/evil']", self.onEvil, 1)
 	
 		self.xping.start(100, False)		
-		self.getPrivacy()
-		self.getMetacontacts()
+		self.getPrivacy().addCallback(self.getMetacontacts).addErrback(self.getMetacontacts)
+#		self.getMetacontacts()
 		self.getBookmarks()
 		self.getDiscoInfo(self.jid.host)#,  callback = self._pepSupport)
 		self.getDiscoItems(self.jid.host, callback = self._gotServices)
