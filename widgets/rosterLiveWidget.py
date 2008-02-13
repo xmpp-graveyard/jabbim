@@ -2019,11 +2019,11 @@ class rosterWidget(QtGui.QWidget):
 				action.item=item
 				action.oldItem=oldItem
 				action.setObjectName("make_metacontact_nn")
-									
-				action=contactMenu.addAction(self.tr("Send contact"))
-				action.jid=oldItem.jid
-				action.item=item
-				action.setObjectName("send_contact")
+				if self.main.client.hasFeature(item.jid, 'http://jabber.org/protocol/rosterx'):					
+					action=contactMenu.addAction(self.tr("Send contact"))
+					action.jid=oldItem.jid
+					action.item=item
+					action.setObjectName("send_contact")
 				
 				if self.specialName!=item.group:
 					action=contactMenu.addAction(self.tr("Copy to group"))

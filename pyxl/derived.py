@@ -344,6 +344,8 @@ class derived:
 		return d
 	
 	def sendContact(self, komu, contact):
+		if not self.hasFeature(komu, 'http://jabber.org/protocol/rosterx'):
+			return
 		log.msg('sending roster contact')
 		iq = IQ(self.xmlstream, 'set')
 		iq['xml:lang'] = self.xmlLang
@@ -703,6 +705,14 @@ class derived:
 			contact = None
 		return contact
 	
+	def getMucContactByJid(self, injid):
+		jd = jid.JID(injid)
+		try:
+			contact = self.groupchats[jd.host].users[jd.resource]
+		except:
+			contact = None
+		return contact
+	
 	def getHighestJid(self, jd):
 		contact = self.getContactByJid(jd)
 		if contact != None:
@@ -710,3 +720,20 @@ class derived:
 			if res != None:
 				return contact.jid + '/' + res
 		return jd
+	
+	def hasFeature(self, injid, feature):
+		jd = jid.JID(injid)
+		contact = getContactByJid(injid)
+		f = False
+		if contact != None:
+			try:
+				f = contact.resources[jd.resource].hasFeature(feature)
+			except:
+				f = False
+		else:
+			contact = getMucContactByJid(injid)
+			try:
+				f = contact.hasFeature(feature)
+			except:
+				f = False
+		return f

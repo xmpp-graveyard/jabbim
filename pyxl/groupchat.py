@@ -127,7 +127,13 @@ class MUCContact:
 		self.item=None
 		self.truejid = jid
 		self.features = []
-
+	
+	def hasFeature(self, feature):
+		if feature in self.features:
+			return True
+		else:
+			return False
+			
 	def setStatus(self,  show,  status):
 		if show == 'offline':
 			del  self.muc.users[self.nick]
