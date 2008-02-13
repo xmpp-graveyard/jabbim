@@ -796,6 +796,8 @@ class Client(derived):
 						chatstate = elm.name
 				if child.defaultUri == 'http://jabber.org/protocol/muc#user': # invitation
 					return
+				if child.defaultUri == 'http://jabber.org/protocol/rosterx':
+					self._processRosterX(frm, child)
 
 
 			if child.name == 'confirm': # xep0070 - processed elsewhere
@@ -1993,7 +1995,8 @@ class Client(derived):
 		# for now only additions are processed
 		out = []
 		for item in x.elements():
-			if item['action'] == 'add':
+			action = item.getAttribute('action', 'add')
+			if action == 'add':
 				if self.getContactByJid(item['jid']) == None:
 					groups = []
 					for gr in item.elements():
