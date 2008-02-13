@@ -727,6 +727,8 @@ class derived:
 		f = False
 		if contact != None:
 			try:
+				if jd.resource == None:
+					jd = jid.JID(self.getHighestJid(injid))
 				f = contact.resources[jd.resource].hasFeature(feature)
 			except:
 				f = False
@@ -736,4 +738,5 @@ class derived:
 				f = contact.hasFeature(feature)
 			except:
 				f = False
+		print injid, feature, f
 		return f
