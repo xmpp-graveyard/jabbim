@@ -31,14 +31,7 @@
       <property name="spacing" >
        <number>6</number>
       </property>
-      <item row="0" column="4" >
-       <widget class="QPushButton" name="cancel" >
-        <property name="text" >
-         <string>Cancel</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" >
+      <item row="0" column="1" >
        <spacer>
         <property name="orientation" >
          <enum>Qt::Horizontal</enum>
@@ -51,31 +44,45 @@
         </property>
        </spacer>
       </item>
-      <item row="0" column="3" >
-       <widget class="QPushButton" name="next" >
+      <item row="0" column="5" >
+       <widget class="QPushButton" name="cancel" >
         <property name="text" >
-         <string>Next →</string>
+         <string>Cancel</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="2" >
+      <item row="0" column="3" >
        <widget class="QPushButton" name="complete" >
         <property name="text" >
          <string>Finish</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" >
+      <item row="0" column="4" >
+       <widget class="QPushButton" name="next" >
+        <property name="text" >
+         <string>Next →</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6" >
+       <widget class="QPushButton" name="close" >
+        <property name="text" >
+         <string>Close</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" >
        <widget class="QPushButton" name="previous" >
         <property name="text" >
          <string>← Back</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="5" >
-       <widget class="QPushButton" name="close" >
-        <property name="text" >
-         <string>Close</string>
+      <item row="0" column="0" >
+       <widget class="QPushButton" name="menuButton" >
+        <property name="icon" >
+         <iconset>images/16x16/actions/exec.png</iconset>
         </property>
        </widget>
       </item>

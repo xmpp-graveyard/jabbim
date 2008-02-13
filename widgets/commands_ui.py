@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/commands.ui'
 #
-# Created: Sun Nov 18 16:01:03 2007
-#      by: PyQt4 UI code generator 4.3
+# Created: Wed Feb 13 17:19:27 2008
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -28,28 +28,33 @@ class Ui_Dialog(object):
         self.gridlayout1.setSpacing(6)
         self.gridlayout1.setObjectName("gridlayout1")
 
+        spacerItem = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout1.addItem(spacerItem,0,1,1,1)
+
         self.cancel = QtGui.QPushButton(self.centralwidget)
         self.cancel.setObjectName("cancel")
-        self.gridlayout1.addWidget(self.cancel,0,4,1,1)
-
-        spacerItem = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout1.addItem(spacerItem,0,0,1,1)
-
-        self.next = QtGui.QPushButton(self.centralwidget)
-        self.next.setObjectName("next")
-        self.gridlayout1.addWidget(self.next,0,3,1,1)
+        self.gridlayout1.addWidget(self.cancel,0,5,1,1)
 
         self.complete = QtGui.QPushButton(self.centralwidget)
         self.complete.setObjectName("complete")
-        self.gridlayout1.addWidget(self.complete,0,2,1,1)
+        self.gridlayout1.addWidget(self.complete,0,3,1,1)
 
-        self.previous = QtGui.QPushButton(self.centralwidget)
-        self.previous.setObjectName("previous")
-        self.gridlayout1.addWidget(self.previous,0,1,1,1)
+        self.next = QtGui.QPushButton(self.centralwidget)
+        self.next.setObjectName("next")
+        self.gridlayout1.addWidget(self.next,0,4,1,1)
 
         self.close = QtGui.QPushButton(self.centralwidget)
         self.close.setObjectName("close")
-        self.gridlayout1.addWidget(self.close,0,5,1,1)
+        self.gridlayout1.addWidget(self.close,0,6,1,1)
+
+        self.previous = QtGui.QPushButton(self.centralwidget)
+        self.previous.setObjectName("previous")
+        self.gridlayout1.addWidget(self.previous,0,2,1,1)
+
+        self.menuButton = QtGui.QPushButton(self.centralwidget)
+        self.menuButton.setIcon(QtGui.QIcon("images/16x16/actions/exec.png"))
+        self.menuButton.setObjectName("menuButton")
+        self.gridlayout1.addWidget(self.menuButton,0,0,1,1)
         self.gridlayout.addLayout(self.gridlayout1,1,0,1,1)
 
         self.vboxlayout = QtGui.QVBoxLayout()
@@ -84,8 +89,8 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Extra action", None, QtGui.QApplication.UnicodeUTF8))
         self.cancel.setText(QtGui.QApplication.translate("Dialog", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
-        self.next.setText(QtGui.QApplication.translate("Dialog", "Next →", None, QtGui.QApplication.UnicodeUTF8))
         self.complete.setText(QtGui.QApplication.translate("Dialog", "Finish", None, QtGui.QApplication.UnicodeUTF8))
-        self.previous.setText(QtGui.QApplication.translate("Dialog", "← Back", None, QtGui.QApplication.UnicodeUTF8))
+        self.next.setText(QtGui.QApplication.translate("Dialog", "Next →", None, QtGui.QApplication.UnicodeUTF8))
         self.close.setText(QtGui.QApplication.translate("Dialog", "Close", None, QtGui.QApplication.UnicodeUTF8))
+        self.previous.setText(QtGui.QApplication.translate("Dialog", "← Back", None, QtGui.QApplication.UnicodeUTF8))
 
