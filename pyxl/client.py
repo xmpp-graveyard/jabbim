@@ -117,6 +117,7 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/si')
 		self.registerFeature("urn:xmpp:receipts")
 		self.registerFeature('http://www.xmpp.org/extensions/xep-0224.html#ns')
+		self.registerFeature('http://jabber.org/protocol/rosterx')
 		
 		
 		self.caps_cache = {} # 'node': [feature1, feature2]
