@@ -152,6 +152,14 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		jid=unicode(item.text(3))
 		if len(jid)==0:
 			return
+		if self.main.client.hasIdentity(jid, 'conference', 'text'):
+			self.done(1)
+			self.main.mucBrowser()
+			self.main.mucbrowser.server = jid
+			self.main.mucbrowser.ui.lineEdit.setText(jid)
+			self.main.mucbrowser.serverChanged()
+			return
+		
 		self.main.client.getDiscoItems(jid, callback = self._discoItemsReceived, callback_par = (item))
 
 	def hasFeature(self,item,feature):

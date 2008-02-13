@@ -740,3 +740,26 @@ class derived:
 				f = False
 		print injid, feature, f
 		return f
+	
+	def getIdentity(self, injid):
+		jd = jid.JID(injid)
+		if self.disco[jd.host][None].has_key("identities"):
+			return self.disco[jd.host][None]["identities"]
+		else:
+			return None
+	
+	def hasIdentity(self, injid, category, typ):
+
+		id = self.getIdentity(injid)
+
+		f = False
+		if id != None:
+			for identity in id.itervalues():
+
+				if identity.get('category', None) == category and identity.get('type', None) == typ:
+
+					f = True
+					break
+
+		return f
+			
