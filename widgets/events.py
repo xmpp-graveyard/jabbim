@@ -520,6 +520,11 @@ class events:
 		self.addEvent(unicode(name),unicode(typ),icon,item.widget,tooltip)
 
 	def addBooleanEvent(self,trueCall,trueDict,falseCall,falseDict,header="",text="",height=40,name="",typ="",icon=None,pixmap=None):
+		# get event height (based on font size)
+		metrics=QtGui.QApplication.fontMetrics()
+		rect=metrics.boundingRect(0, 0,self.main.width(), self.main.height(), QtCore.Qt.TextWordWrap, text)
+		height=metrics.height()+rect.height()+10
+		# add event
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		item.setSizeHint(QtCore.QSize(100,height))
 		item.widget=BooleanWidget(header,text,item,self.main,trueCall,trueDict,falseCall,falseDict,self.main.ui.eventsListWidget,height,pixmap=pixmap)
