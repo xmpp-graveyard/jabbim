@@ -434,13 +434,14 @@ class rosterWidget(QtGui.QWidget):
 		transport=self.main.config['showTransports']
 		for key in self.sorted[group]:
 			user=key[1]
-			if self.showOffline==True and not user.hiddenBySearch:
-				if user.group==group:
-					if (transport=="False" and user.transport==False) or transport=="True":
-						ret.append(user)
+			if transport=='True' and user.transport==True:
+				ret.append(user)
 			else:
-				if user.group==group and not user.hidden and not user.hiddenBySearch:
-					if (transport=="False" and user.transport==False) or transport=="True":
+				if self.showOffline==True and not user.hiddenBySearch:
+					if user.group==group:
+						ret.append(user)
+				else:
+					if user.group==group and not user.hidden and not user.hiddenBySearch:
 						ret.append(user)
 		return ret
 

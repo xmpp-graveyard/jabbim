@@ -3326,7 +3326,10 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.actionAdd_Contact.setEnabled(False)
 		MainWindow.ui.actionJoin_groupchat.setEnabled(False)
 		MainWindow.ui.actionService_Discovery.setEnabled(False)
-		self.statusWidgetMenu.setEnabled(False)
+		try:
+			self.statusWidgetMenu.setEnabled(False)
+		except:
+			pass
 		self.ui.login_cancel.show()
 		self.ui.profilesList.setEnabled(True)
 
