@@ -18,6 +18,10 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		self.ui.setupUi(self)
 		self.main=main
 		self.ui.reload.setEnabled(False)
+		if not self.main.client.jid.host in self.main.config['discoHistory']:
+			self.main.config['discoHistory'].append(self.main.client.jid.host)
+		for server in self.main.config['discoHistory']:
+			self.ui.server.addItem(server)
 		
 		#for category in self.getCategories():
 		self.ui.tree.header().hide()
@@ -32,7 +36,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 
 		QtCore.QObject.connect(self.ui.reload,QtCore.SIGNAL("clicked()"),self.discoReload)
-		self.ui.server.setText(self.main.client.jid.host)
+#		self.ui.server.setText(self.main.client.jid.host)
 		self.server = self.main.client.jid.host
 
 #d=self.main.client.getRegisterForm(jid)
@@ -54,7 +58,12 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		
 	def discoReload(self):
 		self.ui.reload.setEnabled(False)
-		self.server = unicode(self.ui.server.text())
+		self.server = unicode(self.ui.server.currentText())
+		if not self.server in self.main.config['discoHistory']:
+			self.main.config['discoHistory'].append(self.server)
+#			self.ui.server.addItem(self.server)
+#			self.ui.server.setCurrentIndex(len(self.main.config['discoHistory']))
+
 		self.ui.tree.clear()
 		self.main.client.getDiscoItems(self.server, callback = self.load).addErrback(self._discoErr)
 

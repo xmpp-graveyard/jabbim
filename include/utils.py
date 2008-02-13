@@ -151,7 +151,8 @@ def loadConfig(main,status):
 			"showOffline":"True",
 			"soundPack":"default/default.cfg",
 			"allowChatstate": "True",
-			"adhocAllow": []
+			"adhocAllow": [],
+			"discoHistory": []
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/servicediscovery.ui'
+# Form implementation generated from reading ui file 'servicediscovery.ui'
 #
-# Created: Wed Nov  7 15:36:32 2007
+# Created: Wed Feb 13 16:36:39 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -24,7 +24,14 @@ class Ui_serviceDiscovery(object):
         self.label.setObjectName("label")
         self.hboxlayout.addWidget(self.label)
 
-        self.server = QtGui.QLineEdit(serviceDiscovery)
+        self.server = QtGui.QComboBox(serviceDiscovery)
+
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.server.sizePolicy().hasHeightForWidth())
+        self.server.setSizePolicy(sizePolicy)
+        self.server.setEditable(True)
         self.server.setObjectName("server")
         self.hboxlayout.addWidget(self.server)
 
