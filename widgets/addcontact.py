@@ -28,7 +28,10 @@ class addContactDialog(QtGui.QDialog):
 				self.ui.add_group.addItem(unicode(k))
 		self.ui.add_group.setCurrentIndex(0)
 		self.ui.add_nickname.setText(unicode(name))
-		self.ui.add_jid.setText(unicode(jid))
+
+		if jid != '' and jid != False:
+			self.ui.add_jid.setText(unicode(jid))
+
 		if not self.add:
 			self.ui.add_jid.setEnabled(False)
 			self.ui.add_message.hide()

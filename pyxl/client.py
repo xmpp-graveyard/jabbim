@@ -1994,7 +1994,14 @@ class Client(derived):
 		out = []
 		for item in x.elements():
 			if item['action'] == 'add':
-				out.append(item.attributes)
+				if self.getContactByJid(item['jid']) == None:
+					groups = []
+					for gr in item.elements():
+						groups.append(unicode(gr))
+					itm = item.attributes
+					if len(groups)>0:
+						itm['group'] = groups[0]
+					out.append(itm)
 		if len(out)>0:
 			self.on_rosterx(frm, out, id)
 	

@@ -1920,6 +1920,7 @@ class rosterWidget(QtGui.QWidget):
 					action.jid=jid
 					action.item=item
 					action.setObjectName("copy_to_group_ng")
+
 				# signal
 				contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.dropMenuTriggered)
 				contactMenu.popup(self.mapToGlobal(position))
@@ -2018,6 +2019,12 @@ class rosterWidget(QtGui.QWidget):
 				action.item=item
 				action.oldItem=oldItem
 				action.setObjectName("make_metacontact_nn")
+									
+				action=contactMenu.addAction(self.tr("Send contact"))
+				action.jid=oldItem.jid
+				action.item=item
+				action.setObjectName("send_contact")
+				
 				if self.specialName!=item.group:
 					action=contactMenu.addAction(self.tr("Copy to group"))
 					action.jid=jid
@@ -2117,6 +2124,10 @@ class rosterWidget(QtGui.QWidget):
 				self.selectItem(item)
 			self.reshow=True
 			self.repaint()
+		
+		elif cmd == 'send_contact':
+			jid = unicode(action.jid)
+			self.main.client.sendContact(self.main.client.getHighestJid(action.item.jid), self.main.client.getContactByJid(jid))
 
 		elif cmd=="copy_to_group_nn":
 			item=action.item
