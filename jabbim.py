@@ -593,20 +593,29 @@ class clientClass(pyxl.client.Client):
 		mainWindow = self.main
 		if len(items)==1:
 			item = items[0]
-			self.main.events.addBooleanEvent(self.rosterx,[frm, item['jid'], item.get('name', None), item.get('group', None), id],None,[],mainWindow.tr("Receive contact?"),frm+mainWindow.tr(" is sending you a contact  ") + item['jid'],height=100,name=frm,typ="",icon=None)
+			self.main.events.addBooleanEvent(self.rosterx,[frm, items, id],None,[],mainWindow.tr("Receive contact?"),frm+mainWindow.tr(" is sending you a contact  ") + item['jid'],height=100,name=frm,typ="",icon=None)
+		else:
+			names = ''
+			for item in items:
+				names += item['jid']+'\n'
+			print names
+			self.main.events.addBooleanEvent(self.rosterx,[frm, items, id],None,[],mainWindow.tr("Receive contacts?"),frm+mainWindow.tr(" is sending you a contacts  ") + names,height=60*len(items),name=frm,typ="",icon=None)
 		pass
 
-	def rosterx(self, frm, jid, name, group, id):
+	def rosterx(self, frm, items, id):
 		mainWindow = self.main
 		msg = mainWindow.tr("Hi! I am adding you to my roster using the jabber client Jabbim! Please authorize me to see you when you are available. Thanks!") #from _ui file
 		print msg
-		if name == None:
-			name = ''
-		if group == None:
-			groups = []
-		else:
-			groups = [group]
-		self.addContact(jid, unicode(msg), name, groups)
+		for item in items:
+			jid, name, group = item['jid'], item.get('name', None), item.get('group', None),
+			if name == None:
+				name = ''
+			if group == None:
+				groups = []
+			else:
+				groups = [group]
+			self.addContact(jid, unicode(msg), name, groups)
+
 		if id != None:
 			self._rosterxResult(frm, id, True)
 
