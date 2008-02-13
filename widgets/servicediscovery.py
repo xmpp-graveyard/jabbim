@@ -10,6 +10,30 @@ import legacyforms
 from search import *
 import commands
 
+class table(QtGui.QTreeWidget):
+	def __init__(self,parent=None):
+		QtGui.QTreeWidget.__init__(self,parent)
+		self.setDragEnabled(True)
+		self.setIconSize(QtCore.QSize(48,48))
+		self.setObjectName("tree")
+		self.headerItem().setText(0,QtGui.QApplication.translate("serviceDiscovery", "name", None, QtGui.QApplication.UnicodeUTF8))
+		self.headerItem().setText(1,QtGui.QApplication.translate("serviceDiscovery", "search", None, QtGui.QApplication.UnicodeUTF8))
+		self.headerItem().setText(2,QtGui.QApplication.translate("serviceDiscovery", "register", None, QtGui.QApplication.UnicodeUTF8))
+		self.headerItem().setText(3,QtGui.QApplication.translate("serviceDiscovery", "jid", None, QtGui.QApplication.UnicodeUTF8))
+		self.headerItem().setText(4,QtGui.QApplication.translate("serviceDiscovery", "commands", None, QtGui.QApplication.UnicodeUTF8))
+
+	def startDrag(self,actions):
+		# start dragging selected contact
+		item=self.currentItem()
+		jid=unicode(item.text(3))
+		if len(jid)!=0:
+			self.drag=QtGui.QDrag(self)
+			mimeData=QtCore.QMimeData()
+			mimeData.setText(jid)
+			self.drag.setMimeData(mimeData)
+			self.action=self.drag.start(QtCore.Qt.CopyAction)
+
+
 class serviceDiscoveryDialog(QtGui.QDialog):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
@@ -22,6 +46,11 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 			self.main.config['discoHistory'].append(self.main.client.jid.host)
 		for server in self.main.config['discoHistory']:
 			self.ui.server.addItem(server)
+		
+		layout=QtGui.QHBoxLayout(self.ui.treeWidget)
+		layout.setMargin(0)
+		self.ui.tree=table(self.ui.treeWidget)
+		layout.addWidget(self.ui.tree)
 		
 		#for category in self.getCategories():
 		self.ui.tree.header().hide()

@@ -13,8 +13,43 @@
    <string>Service Discovery</string>
   </property>
   <layout class="QGridLayout" >
+   <property name="margin" >
+    <number>9</number>
+   </property>
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <item row="1" column="0" colspan="2" >
+    <widget class="QWidget" native="1" name="treeWidget" />
+   </item>
+   <item row="2" column="1" >
+    <widget class="QPushButton" name="close" >
+     <property name="text" >
+      <string>Close</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>621</width>
+       <height>27</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
    <item row="0" column="0" colspan="2" >
     <layout class="QHBoxLayout" >
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <property name="spacing" >
+      <number>6</number>
+     </property>
      <item>
       <widget class="QLabel" name="label" >
        <property name="text" >
@@ -25,7 +60,9 @@
      <item>
       <widget class="QComboBox" name="server" >
        <property name="sizePolicy" >
-        <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+        <sizepolicy>
+         <hsizetype>7</hsizetype>
+         <vsizetype>0</vsizetype>
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -43,61 +80,6 @@
       </widget>
      </item>
     </layout>
-   </item>
-   <item row="1" column="0" colspan="2" >
-    <widget class="QTreeWidget" name="tree" >
-     <property name="iconSize" >
-      <size>
-       <width>48</width>
-       <height>48</height>
-      </size>
-     </property>
-     <column>
-      <property name="text" >
-       <string>name</string>
-      </property>
-     </column>
-     <column>
-      <property name="text" >
-       <string>search</string>
-      </property>
-     </column>
-     <column>
-      <property name="text" >
-       <string>register</string>
-      </property>
-     </column>
-     <column>
-      <property name="text" >
-       <string>jid</string>
-      </property>
-     </column>
-     <column>
-      <property name="text" >
-       <string>commands</string>
-      </property>
-     </column>
-    </widget>
-   </item>
-   <item row="2" column="0" >
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" >
-      <size>
-       <width>621</width>
-       <height>27</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="2" column="1" >
-    <widget class="QPushButton" name="close" >
-     <property name="text" >
-      <string>Close</string>
-     </property>
-    </widget>
    </item>
   </layout>
  </widget>
