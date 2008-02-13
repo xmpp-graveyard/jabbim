@@ -769,11 +769,12 @@ class chatWindow(QtGui.QMainWindow):
 			#except:
 				#tabjid=""
 			#if tabjid==jid:
-		if self.findTab(jid,False)[0]:
+		tab=self.findTab(jid,False)[0]
+		if tab:
 			self.show()
 			self.raise_()
 			self.activateWindow()
-			w.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+			tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 			self.ui.chatTab.setCurrentIndex(i)
 			return
 		item=self.main.ui.roster.getUserItems(jidT.JID(jid).userhost())
