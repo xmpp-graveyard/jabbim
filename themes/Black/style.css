@@ -48,6 +48,11 @@ QMainWindow,QDialog {
 	color:#888a85;
 }
 
+QWidget{
+	background-color: #141417;
+	color:#888a85;
+}
+
 QSplitter::handle {
 	background-color: #141417;
 }
@@ -219,48 +224,54 @@ QTextEdit#selectedContactStatus{
 
 /*tabs start here*/
 
+QTabWidget {
+border:0;  /*DONTKNOW*/
+background-color: red;/*
+}
+
+
 QTabWidget > QFrame {
 border:0;  /*DONTKNOW*/
+background-color:#141417;/*
 }
 
 QTabWidget > QTabBar {
   background-color:#141417;/*background behind tab panel*/
-  margin-bottom:6px;
 
 }
 
      QTabWidget::pane { /* The tab widget frame */
          border: 0;
+         background-color:#141417;
          border-top: 1px solid black;
 
      }
 
   QTabWidget#tabWidget::tab-bar{
-  subcontrol-position:left center; /*DONTKNOW*/
+
 }
+
 
   QTabWidget > QTabBar::tab:middle {
 
 	border:1px solid black;
 	color: #888a85;
 	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #404040, stop:0.3 #222222,stop: 1 #222222);
-	padding:3px;
-	padding-left: 10px;
-	padding-right: 10px;
 	padding-top:5px;
+	padding-left: 0px;
+	padding-right: 10px;
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
 }
 
   QTabWidget > QTabBar::tab:last {
 	border:1px solid black;
-	padding-top:5px;
 	
 /*     color: black; */
 	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #404040, stop:0.3 #222222,stop: 1 #222222);
 	color: #888a85;
-	
-	padding-left: 10px;
+	padding-top:5px;
+	padding-left: 0px;
 	padding-right: 10px;
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
@@ -268,13 +279,12 @@ QTabWidget > QTabBar {
 
   QTabWidget > QTabBar::tab:first {
 	border:1px solid black;
-	padding-top:5px;
 	
 /*     color: black; */
 	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #404040, stop:0.3 #222222,stop: 1 #222222);
 	color: #888a85;
-	
-	padding-left: 10px;
+	padding-top:5px;
+	padding-left: 0px;
 	padding-right: 10px;
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
@@ -286,8 +296,8 @@ QTabWidget > QTabBar {
 /*     color: black; */
 	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #24344b, stop:0.3 #15263f,stop: 1 #15263f);
 	color: #888a85;
-	
-	padding-left: 10px;
+	padding-top:5px;
+	padding-left: 0px;
 	padding-right: 10px;
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
@@ -300,18 +310,19 @@ QTabWidget > QTabBar::tab:hover{
   QTabWidget > QTabBar::tab:only-one {
 	border:1px solid black;
 	padding-top:5px;
+	padding-left: 0px;
 	
 /*     color: black; */
 	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #24344b, stop:0.3 #15263f,stop: 1 #15263f);
 	color: #888a85;
 	
 	padding-left: 10px;
-	padding-right: 10px;
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
   }
     QTabBar::tab:first:selected {
-         margin-left: 0; /* the first selected tab has nothing to overlap with on the left */
+      margin-left: 0; /* the first selected tab has nothing to overlap with on the left */
+	
      }
 
      QTabBar::tab:last:selected {
@@ -335,7 +346,7 @@ QComboBox {
 QComboBox:focus{
 	border:1px solid #888a85;
 	border-radius: 6px;
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #89A0C6, stop: 1 #f6f7fa);
+	background-color: #141417;
 }
 
 QComboBox:editable {
@@ -376,8 +387,7 @@ QComboBox::down-arrow {
 }
 
 QComboBox::down-arrow:on { /* shift the arrow when popup is open */
-	top: 1px;
-	left: 1px;
+
 }
 
 /*popup used by QComboBox*/
@@ -419,7 +429,7 @@ QCheckBox:focus{
 /* 	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #CDEB8B, stop: 1 #f6f7fa); */
 }
 
-/*Malá oblast zaškrtávátka-checkboxu*/
+/*MalĂˇ oblast zaĹˇkrtĂˇvĂˇtka-checkboxu*/
 QCheckBox::indicator{
 	background-color: #141417;
 	border:1px solid #888a85;
@@ -631,7 +641,7 @@ QToolButton:hover{
 /* 	padding:5px; */
 }
 
-/* Přihlašovací tlačítko*/
+/* PĹ™ihlaĹˇovacĂ­ tlaÄŤĂ­tko*/
 QPushButton#login_connect{
 	min-width:100px;
 	font-weight: bold;
@@ -642,12 +652,12 @@ QPushButton#login_connect{
 	
 }
 
-/* Přihlašovací tlačítko při najetí myši*/
+/* PĹ™ihlaĹˇovacĂ­ tlaÄŤĂ­tko pĹ™i najetĂ­ myĹˇi*/
 QPushButton#login_connect:hover{
 	background: url(themes/Black/login_button_hover.png);
 	
 }
-/* Přihlašovací tlačítko při zmáčknutí*/
+/* PĹ™ihlaĹˇovacĂ­ tlaÄŤĂ­tko pĹ™i zmĂˇÄŤknutĂ­*/
 QPushButton#login_connect:pressed{
 	background: url(themes/Black/login_button_pressed.png);
 	
