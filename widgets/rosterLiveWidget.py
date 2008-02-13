@@ -397,12 +397,12 @@ class rosterWidget(QtGui.QWidget):
 		"""
 		ret=[]
 		for user in self.users:
-			if self.showOffline==True:
-				if user.group==group:
-					ret.append(user)
-			else:
-				if user.group==group and not user.hidden:
-					ret.append(user)
+			#if self.showOffline==True:
+			if user.group==group:
+				ret.append(user)
+			#else:
+				#if user.group==group and not user.hidden:
+					#ret.append(user)
 		return ret
 
 	def getAllGroupUsers(self,group):
@@ -510,7 +510,7 @@ class rosterWidget(QtGui.QWidget):
 			for key in self.sortedGroups:
 				item=self.groups[key]
 				items=self.getGroupSortedUsers(item.name)
-				if ((len(items)!=0 and not self.showOffline) or self.showOffline) and item.all!=0:
+				if len(items)!=0:
 					if got!=0 and not item in ret:
 						ret.append(item)
 						got+=1
@@ -612,7 +612,7 @@ class rosterWidget(QtGui.QWidget):
 			for key in self.sortedGroups:
 				item=self.groups[key]
 				items=self.getGroupSortedUsers(item.name)
-				if ((len(items)!=0 and not self.showOffline) or self.showOffline) and item.all!=0:
+				if len(items)!=0:
 					if item==i:
 						return x,y
 					if item.expanded and len(items)!=0:

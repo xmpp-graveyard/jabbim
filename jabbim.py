@@ -1839,7 +1839,7 @@ class mainWindow(QtGui.QMainWindow):
 		@param action: QAction from self.offlineMenu
 		"""
 
-
+		cmd=action.objectName()
 		if cmd=='send_file':
 			jid=unicode(self.client.jid.userhost())+"/"+unicode(action.data().toString()) # make jid from users jid + selected resource
 			file=QtGui.QFileDialog.getOpenFileNames(self,"Choose file") # get filenames
