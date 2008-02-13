@@ -345,7 +345,8 @@ class Client(derived):
 		self.xmlstream.addObserver("/message/x[@xmlns='http://jabber.org/protocol/muc#user']/invite", self.onInvite, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='jabber:iq:privacy']", self.onPrivacyPush, 1)
 		self.xmlstream.addObserver("/*/evil[@xmlns='http://jabber.org/protocol/evil']", self.onEvil, 1)
-	
+		self.xmlstream.addObserver("/iq[@type='set'][@id]/x[@xmlns='http://jabber.org/protocol/rosterx']", self.onRosterX, 1)
+		
 		self.xping.start(100, False)		
 		self.getPrivacy().addCallback(self.getMetacontacts).addErrback(self.getMetacontacts)
 #		self.getMetacontacts()
@@ -620,6 +621,7 @@ class Client(derived):
 		self.sendRosterUpdate(jid, name, 'none', groups, self._contactAdded, params = {'msg':msg, 'jid':jid})
 	
 	def _contactAdded(self, params):
+		print params
 		self.sendPresence(to = params['jid'], status = params['msg'], typ = 'subscribe')
 
 
@@ -1980,6 +1982,38 @@ class Client(derived):
 		frm = el['from'] 
 		typ = el.name
 		self.dispatcher.publishEvent('on_evil', frm, typ)
+	
+	def onRosterX(self, el):
+		self.disp(el['id'])
+		frm = el['from']
+		x = el.firstChildElement()
+		self._processRosterX(frm, x, el['id'])
+	
+	def _processRosterX(self, frm, x, id = None):
+		# for now only additions are processed
+		out = []
+		for item in x.elements():
+			if item['action'] == 'add':
+				out.append(item.attributes)
+		if len(out)>0:
+			self.on_rosterx(frm, out, id)
+	
+	def _rosterxResult(self, frm, id, ok = False):
+		if ok:
+			iq = Element((None,'iq'))
+			iq['to'] = frm
+			iq['id'] = id
+			iq['type'] = 'result'
+		else:
+			iq = Element((None,'iq'))
+			iq['to'] = frm
+			iq['id'] = id
+			iq['type'] = 'error'
+			error = iq.addElement('error')
+			error['type'] = 'cancel'
+			error['code'] = '501'
+			error.addElement('not-authorized')
+		self.xmlstream.send(iq)
 		
 	def disp(self, id):
 		self.idlist.append(id)

@@ -589,6 +589,27 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
 		self.main.ui.login_cancel.hide()
 
+	def on_rosterx(self, frm, items, id):
+		mainWindow = self.main
+		if len(items)==1:
+			item = items[0]
+			self.main.events.addBooleanEvent(self.rosterx,[frm, item['jid'], item.get('name', None), item.get('group', None), id],None,[],mainWindow.tr("Receive contact?"),frm+mainWindow.tr(" is sending you a contact  ") + item['jid'],height=100,name=frm,typ="",icon=None)
+		pass
+
+	def rosterx(self, frm, jid, name, group, id):
+		mainWindow = self.main
+		msg = mainWindow.tr("Hi! I am adding you to my roster using the jabber client Jabbim! Please authorize me to see you when you are available. Thanks!") #from _ui file
+		print msg
+		if name == None:
+			name = ''
+		if group == None:
+			groups = []
+		else:
+			groups = [group]
+		self.addContact(jid, unicode(msg), name, groups)
+		if id != None:
+			self._rosterxResult(frm, id, True)
+
 	def on_authFailed(self,xmlstream):
 		# Authentication error
 		self.main.ui.login_connect.setEnabled(True)

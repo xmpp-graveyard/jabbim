@@ -71,7 +71,7 @@ class Contact:
 			self.resources[resource].features = features
 			
 	def getHighestResource(self):
-		prio = None
+		prio = 0
 		try:
 			highest = self.resources.keys()[0]
 		except:

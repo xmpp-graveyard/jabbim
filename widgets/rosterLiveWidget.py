@@ -1859,16 +1859,22 @@ class rosterWidget(QtGui.QWidget):
 				gr=""
 				if item.typ=="group":
 					gr=item.name
+					ijid = False
 				elif item.typ=="user":
 					gr=item.group
+					ijid = item.jid
 				try:
 					jidT.JID(jid)
 					validJid=True
 				except:
 					validJid=False
 				if validJid:
-					dialog=addcontact.addContactDialog(self.main,self,jid=jid,group=gr,name=jid.split('@')[0])
-					dialog.exec_()
+					contact = self.main.client.getContactByJid(jid)
+					if contact == None or ijid == False:
+						dialog=addcontact.addContactDialog(self.main,self,jid=jid,group=gr,name=jid.split('@')[0])
+						dialog.exec_()
+					elif contact != None and ijid != False:
+						self.main.client.sendContact(self.main.client.getHighestJid(ijid), contact) #roster item exchange
 				#else:
 					
 				event.ignore()

@@ -140,6 +140,9 @@ class derived:
 	
 	def on_avatarUpdate(self, jid):
 		pass
+
+	def on_rosterx(frm, out, id):
+		pass
 	########################################################################################################################
 	
 	########################################################################################################################
@@ -339,6 +342,24 @@ class derived:
 		d = iq.send()
 #		self.on_xml(iq.toXml())
 		return d
+	
+	def sendContact(self, komu, contact):
+		log.msg('sending roster contact')
+		iq = IQ(self.xmlstream, 'set')
+		iq['xml:lang'] = self.xmlLang
+		iq['type'] = 'set'
+		iq['to'] = komu
+		x = iq.addElement('x', 'http://jabber.org/protocol/rosterx')
+		item = x.addElement('item')
+		item['jid'] = contact.jid
+		item['name'] = contact.name
+		item['action'] = 'add'
+
+		self.disp(iq['id'])
+		d = iq.send()
+#		self.on_xml(iq.toXml())
+		return d
+		
 
 	def getSearchForm(self, jid):
 		""" Posle zadost o formular pro hledani na dany jid """
@@ -670,4 +691,22 @@ class derived:
 		query = el.firstChildElement()
 		call = loads(query.firstChildElement().toXml())
 		return call
+		
 
+################# Utility ####################
+
+	def getContactByJid(self, injid):
+		jd = jid.JID(injid)
+		try:
+			contact = self.roster['users'].get(jd.userhost(), None)
+		except:
+			contact = None
+		return contact
+	
+	def getHighestJid(self, jd):
+		contact = self.getContactByJid(jd)
+		if contact != None:
+			res = contact.getHighestResource()
+			if res != None:
+				return contact.jid + '/' + res
+		return jd
