@@ -2372,6 +2372,28 @@ class rosterWidget(QtGui.QWidget):
 							action = submenu2.addAction(res)
 							action.setData(QtCore.QVariant(["%s/%s" % (jid, res), gc]))
 							action.setObjectName("invite_gc")
+		# one2one -> muc
+		lst = []
+		for i in range(self.main.chat.ui.chatTab.count()):
+			w=self.main.chat.ui.chatTab.widget(i)
+			if w.typ=='chat' and w.jid != contact.jid:
+				lst.append(w.jid)
+		if len(lst)>0:
+			submenu = contactMenu.addMenu(self.tr("Invite to chat with .."))
+			if oneres:
+				for name in lst:
+					action = submenu.addAction(self.getNameByJID(name))
+					action.setObjectName("invite_chat")
+					action.setData(QtCore.QVariant([unicode(name), jid]))
+			else:
+				for name in lst:
+					submenu2 = submenu.addMenu(self.getNameByJID(name))
+					for res in contact.resources.keys():
+						if res != None:
+							action = submenu2.addAction(res)
+							action.setObjectName("invite_chat")
+							action.setData(QtCore.QVariant([unicode(name),"%s/%s" % (jid, res) ])) # kam pozyvame, koho
+					
 		# custom status
 		submenu=contactMenu.addMenu(self.tr("Custom status"))
 
@@ -2705,6 +2727,35 @@ class rosterWidget(QtGui.QWidget):
 			user_jid, room_jid = [unicode(val.toString()) for val in action.data().toList()]
 			reason = self.tr("Hi! I'd love to see you in multichat at ") + room_jid
 			self.main.client.sendInvitation(user_jid, room_jid, reason)
+		
+		elif cmd == "invite_chat":
+			kam, koho = [unicode(val.toString()) for val in action.data().toList()]
+			
+			room=str(int(time.time())) # define room name
+			# find server when we can host the room
+			mucjid = None
+			for jid, node in self.main.client.disco.iteritems():
+				if not node[None].has_key('identities'):
+					continue
+				for id in node[None]['identities'].itervalues():
+					#print jid, id
+					if id.get('category') == 'conference' and id.get('type') == 'text' and jid.startswith('c'):
+						mucjid = jid
+						break
+				if mucjid:
+					break
+			room+="@"+mucjid # room jabber id
+			
+			name = self.getNameByJID(kam) # get name of tab where is this widget showed
+			tab, index = self.main.chat.findTab(kam)
+			rmIndex=int(index) # get index of this tab
+			# join to the room and send invitation
+			if self.main.chat.addGroupChatTab(room,self.main.client.jid.user,name=name):
+				tab,index=self.main.chat.findTab(room)
+				tab.chat.invitation=[unicode(koho),unicode(kam)]
+				self.main.client.joinGC(room, self.main.client.jid.user)
+			# remove old user2user conversation tab
+			self.main.chat.removeTab(rmIndex)
 
 		elif cmd=="custom_status":
 			show, jid = [unicode(val.toString()) for val in action.data().toList()]
