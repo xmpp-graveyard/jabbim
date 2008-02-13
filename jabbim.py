@@ -2098,6 +2098,8 @@ class mainWindow(QtGui.QMainWindow):
 				self.reconnect = False
 				self.client.disconnect()
 				#self._disconnect()
+				self.tray.setToolTip(self.tr('Your status:')+" "+self.status[show])
+				
 			else:
 				if not pri:
 					# get priority from config
@@ -2120,6 +2122,7 @@ class mainWindow(QtGui.QMainWindow):
 				self.selfStatus=show
 				# update tray icon
 				self.tray.setIcon(self.getCurrentTrayIcon())
+				self.tray.setToolTip(self.tr('Your status:')+" "+self.status[show])
 				
 				# send presence to the server
 				self.client.sendPresence(show = unicode(show), status = unicode(message),priority=pri)
