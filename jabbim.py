@@ -1138,33 +1138,21 @@ class clientClass(pyxl.client.Client):
 		# get user icon or name, if we have him in roster. Or use default icon and jid as name
 		if typ=="groupchat":
 			return
-		log.msg("CHATSTATE:"+unicode(chatstate))
-		log.msg("ERROR:"+unicode(error))
 		frm=jidT.JID(frm)
 		if not body:
 			body=""
-		user=self.main.ui.roster.getUserItems(frm.userhost())
-		if len(user)==0:
-			user=self.main.ui.roster.getMetaItems(frm.userhost())
-			if len(user)!=0:
-				user=user[0]
-		log.msg("tset")
-		if len(user)!=0:
-			#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
-			#icon=user[0].icon
-			icon=self.main.getIcon(unicode(frm.userhost()),status=self.main.icons[str(user[0].status)],size="16x16")
-			user=user[0].name
-		else:
-			#if self.groupchats[frm.host].users[nick].role
-			if self.groupchats.has_key(frm.userhost()):
-				user=frm.resource
-				icon=self.main.getIcon(unicode(frm.userhost()),size="16x16",status=self.main.icons[self.main.shows[self.groupchats[frm.userhost()].users[user].show]])
-				#icon=self.main.getIcon(status="online",size="16x16")
-			else:
-				icon=self.main.getIcon(status="offline",size="16x16")
-				user=frm.full()
-		tab,tabIndex=self.main.chat.findTab(frm.full(),True)
 		mainWindow=self.main
+
+		# get user name
+		user=self.main.ui.roster.getNameByJID(frm.full())
+
+		# get chatwidget of this conversation
+		if self.groupchats.has_key(frm.userhost()):
+			tab,tabIndex=self.main.chat.findTab(frm.full(),True)
+		else:
+			tab,tabIndex=self.main.chat.findTab(frm.full())
+
+		# handle errors
 		if error=="remote-server-not-found":
 			if tab!=None:
 				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent. Remote server not found."))
@@ -1177,20 +1165,16 @@ class clientClass(pyxl.client.Client):
 			return
 
 		if len(body)!=0:
-			# strip html tags and \n from messages
+			# parse message body/xhtml
 			if xhtml==None:
 				message=unicode(body).replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
 				message = utils.replace_url(message)
 				message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
-				
 			else:
 				message=xhtml.replace("&quot;",'"')
 				message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 
-			if self.groupchats.has_key(frm.userhost()):
-				tab,tabIndex=self.main.chat.findTab(frm.full(),True)
-			else:
-				tab,tabIndex=self.main.chat.findTab(frm.full())
+			# prepare message to be showed
 			if unicode(body).startswith("/me"):
 				message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message[3:])
 			else:
@@ -1206,9 +1190,10 @@ class clientClass(pyxl.client.Client):
 				if len(colors)==3:
 					message=message.replace("[additive]",colors[2])
 
-			# we found tab
+			# we have tab for this conversation opened
 			if tab!=None:
 				tab.chat.lastMessageFrom=unicode(user)
+				# i think we don't have to check this....
 				try:
 					link = tab.chat.file
 					height = str(tab.chat.avatarHeight)
@@ -1247,7 +1232,7 @@ class clientClass(pyxl.client.Client):
 						tab.jid=frm.full()
 						tab.chat.buildResourceMenu()
 			else:
-				# add new chattab
+				# we have to add new chattab
 				created=False
 				if self.main.chat.isHidden():
 					created=True
@@ -1278,26 +1263,21 @@ class clientClass(pyxl.client.Client):
 					self.main.chat.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)
 					tab.chat.unread+=1
 
-
-		
-		# we found tab
-		if chatstate=="composing":
-			if tab!=None:
+		if tab!=None:
+			# handle checkstate messages:
+			if chatstate=="composing":
 				if self.main.chat.ui.chatTab.tabBar().tabTextColor(tabIndex).name()!=QtGui.QColor(255,0,0).name():
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(0,128,0))
 				tab.chat.ui.chatstate.setText(mainWindow.tr("is typing..."))
-		elif chatstate=="active":
-			if tab!=None:
+			elif chatstate=="active":
 				tab.chat.ui.chatstate.setText(mainWindow.tr("gives attention to chat."))
-		elif chatstate=="paused":
-			if tab!=None:
+			elif chatstate=="paused":
 				tab.chat.ui.chatstate.setText(mainWindow.tr("stops typing."))
-		elif chatstate=="inactive":
-			if tab!=None:
+			elif chatstate=="inactive":
 				tab.chat.ui.chatstate.setText(mainWindow.tr("doesn't give attention to chat."))
-		elif chatstate=="gone":
-			if tab!=None:
+			elif chatstate=="gone":
 				tab.chat.ui.chatstate.setText(mainWindow.tr("closed the chat window."))
+
 	def on_vcardReceived(self,  jid, card):
 		#print card
 		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db

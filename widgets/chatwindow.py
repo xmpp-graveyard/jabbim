@@ -762,19 +762,20 @@ class chatWindow(QtGui.QMainWindow):
 				tab.chat.unread+=1
 
 	def addChatTab(self,jid,name,icon,message=None):
-		for i in range(self.ui.chatTab.count()):
-			w=self.ui.chatTab.widget(i)
-			try:
-				tabjid=w.jid
-			except:
-				tabjid=""
-			if tabjid==jid:
-				self.show()
-				self.raise_()
-				self.activateWindow()
-				w.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
-				self.ui.chatTab.setCurrentIndex(i)
-				return
+		#for i in range(self.ui.chatTab.count()):
+			#w=self.ui.chatTab.widget(i)
+			#try:
+				#tabjid=w.jid
+			#except:
+				#tabjid=""
+			#if tabjid==jid:
+		if self.findTab(jid,False)[0]:
+			self.show()
+			self.raise_()
+			self.activateWindow()
+			w.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+			self.ui.chatTab.setCurrentIndex(i)
+			return
 		item=self.main.ui.roster.getUserItems(jidT.JID(jid).userhost())
 		metaitem=self.main.ui.roster.getMetaItems(jidT.JID(jid).userhost())
 
