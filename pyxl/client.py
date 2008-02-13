@@ -1025,6 +1025,7 @@ class Client(derived):
 		fromjid = frm.userhost()
 		resource = jid.JID(el['from']).resource
 		if self.groupchats.has_key(fromjid):
+			del self.groupchats[fromjid]
 			for child in  el.elements():
 				if child.name == 'error':
 					text = name = ""
@@ -1037,7 +1038,7 @@ class Client(derived):
 					self.on_GCpresenceError(fromjid, child.getAttribute('code'),  child.getAttribute('type'),  name, text, resource)
 
 					self.dispatcher.publishEvent('on_GCpresenceError',child.getAttribute('code'),  child.getAttribute('type'),  name , text)
-			del self.groupchats[fromjid]		
+			
 
 
 	def _featuresReceived(self, el, ext, jd):

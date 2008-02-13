@@ -103,21 +103,25 @@ class clientClass(pyxl.client.Client):
 		log.msg("error")
 		#log.msg("RESOURCE: "+resource)
 		# find tab
-		tab=None
-		tabIndex=0
-		for i in range(self.main.chat.ui.chatTab.count()):
-			w=self.main.chat.ui.chatTab.widget(i)
-			if unicode(w.jid)==unicode(fromjid):
-				tab=w
-				tabIndex=i
-				break
-		# we found tab
-		if tab!=None:
-			self.main.chat.ui.chatTab.removeTab(tabIndex)
-			if int(self.main.chat.ui.chatTab.count())==0:
-				self.main.chat.hide()
 		if int(code)==409:
-			self.main.events.addLineEditEvent(maintext=unicode(fromjid)+"<br/>"+text,trueCall=self.main.joinGC,trueDict=[fromjid],falseCall=None,falseDict=None,header="Groupchat Error",text="New name:",name=unicode(fromjid),typ="groupchatError",icon=None,action=None,actionDict=None,height=100, value=resource)
+			tab=None
+			tabIndex=0
+			for i in range(self.main.chat.ui.chatTab.count()):
+				w=self.main.chat.ui.chatTab.widget(i)
+				if unicode(w.jid)==unicode(fromjid):
+					tab=w
+					tabIndex=i
+					break
+			# we found tab
+			#if tab!=None:
+				#self.main.chat.ui.chatTab.removeTab(tabIndex)
+				#if int(self.main.chat.ui.chatTab.count())==0:
+					#self.main.chat.hide()
+		if int(code)==409:
+			#self.main.events.addLineEditEvent(maintext=unicode(fromjid)+"<br/>"+text,trueCall=self.main.joinGC,trueDict=[fromjid],falseCall=None,falseDict=None,header="Groupchat Error",text="New name:",name=unicode(fromjid),typ="groupchatError",icon=None,action=None,actionDict=None,height=100, value=resource)
+			if tab:
+				tab.chat.nick=resource+"_"
+				self.joinGC(fromjid, resource+"_")
 		else:
 			self.main.events.addInfoEvent(header=mainWindow.tr("Groupchat error"),text=text,name=unicode(fromjid),typ='groupchatError')
 		#QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+unicode(code)+" "+unicode(name)+" "+unicode(text)),0,1)
