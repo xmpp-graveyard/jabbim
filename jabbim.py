@@ -1149,6 +1149,7 @@ class clientClass(pyxl.client.Client):
 
 		# get user name
 		user=self.main.ui.roster.getNameByJID(frm.full())
+		icon=self.main.ui.roster.getIconByJID(frm.full())
 
 		# get chatwidget of this conversation
 		if self.groupchats.has_key(frm.userhost()):
