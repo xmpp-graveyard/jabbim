@@ -723,7 +723,7 @@ class derived:
 	
 	def hasFeature(self, injid, feature):
 		jd = jid.JID(injid)
-		contact = getContactByJid(injid)
+		contact = self.getContactByJid(injid)
 		f = False
 		if contact != None:
 			try:
@@ -731,7 +731,7 @@ class derived:
 			except:
 				f = False
 		else:
-			contact = getMucContactByJid(injid)
+			contact = self.getMucContactByJid(injid)
 			try:
 				f = contact.hasFeature(feature)
 			except:
