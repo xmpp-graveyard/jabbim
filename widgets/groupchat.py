@@ -435,7 +435,7 @@ class groupChatWidget(abstractChatWidget):
 		if item.parent()==None:
 			return
 		icon=self.main.getIcon(status=self.main.icons[unicode(item.text(1))[0]],size="16x16")
-		self.main.chat.addChatTab(self.jid+"/"+unicode(item.text(0)),item.text(0),icon)
+		self.main.chat.addChatTab(self.jid+"/"+unicode(item.text(0)),item.text(0),icon,full=True)
 		self.main.chat.activate()
 	
 	def userSingleClicked(self,item,i):

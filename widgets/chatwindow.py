@@ -761,7 +761,7 @@ class chatWindow(QtGui.QMainWindow):
 			if message:
 				tab.chat.unread+=1
 
-	def addChatTab(self,jid,name,icon,message=None):
+	def addChatTab(self,jid,name,icon,message=None,full=False):
 		#for i in range(self.ui.chatTab.count()):
 			#w=self.ui.chatTab.widget(i)
 			#try:
@@ -769,7 +769,7 @@ class chatWindow(QtGui.QMainWindow):
 			#except:
 				#tabjid=""
 			#if tabjid==jid:
-		tab,index=self.findTab(jid,False)
+		tab,index=self.findTab(jid,full)
 		if tab:
 			self.show()
 			self.raise_()
