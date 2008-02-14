@@ -343,13 +343,14 @@ class chatWidget(abstractChatWidget):
 	def buildResourceMenu(self):
 		jidt=self.main.getJid(self.jid)
 		self.resourceMenu=QtGui.QMenu(self.ui.resourceButton)
-		action=self.resourceMenu.addAction(self.tr("Automatic"))
-		self.ui.resourceButton.setText(action.text())
+		#action=self.resourceMenu.addAction(self.tr("Automatic"))
+		#self.ui.resourceButton.setText(action.text())
 		try:
 			hasFeature=self.main.client.roster['users'][jidt.userhost()].resources[self.main.client.roster['users'][jidt.userhost()].getHighestResource()].hasFeature('http://jabber.org/protocol/si/profile/file-transfer')
 		except:
 			hasFeature=False
 		count=0
+		found=False
 		for name,resource in self.main.client.roster['users'][jidt.userhost()].resources.iteritems():
 			if name:
 				count+=1
@@ -357,21 +358,22 @@ class chatWidget(abstractChatWidget):
 				if jidt.resource==name:
 					self.ui.resourceButton.setText(action.text())
 					self.ui.resourceButton.setIcon(action.icon())
+					found=True
 					try:
 						hasFeature=self.main.client.roster['users'][jidt.userhost()].resources[name].hasFeature('http://jabber.org/protocol/si/profile/file-transfer')
 					except:
 						hasFeature=False
+		if not found:
+			self.ui.resourceButton.setText(self.tr("Automatic"))
+			self.jid=self.main.getJid(self.jid).userhost()
+			self.parent.jid=self.jid
 		if hasFeature:
 			self.ui.sendFile.show()
 		else:
 			self.ui.sendFile.hide()
-		if count==0:
+		if count<2:
 			self.ui.resourceButton.hide()
 			self.ui.resourceLabel.hide()
-		elif count==1:
-			self.ui.resourceButton.show()
-			self.ui.resourceButton.setEnabled(False)
-			self.ui.resourceLabel.show()
 		else:
 			self.ui.resourceButton.setEnabled(True)
 			self.ui.resourceButton.show()
@@ -403,6 +405,7 @@ class chatWidget(abstractChatWidget):
 		else:
 			jid.resource=unicode(action.text())
 		self.jid=jid.full()
+		self.parent.jid=self.jid
 
 	def sendFiles(self):
 		"""
