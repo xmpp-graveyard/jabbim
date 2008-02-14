@@ -85,63 +85,65 @@ class clientClass(pyxl.client.Client):
 		self.bookmarksEnabled=True
 		self.xmlCount=[]
 
-#	def on_GCpresenceError(self, fromjid, code, typ, name):
-#		log.msg("ERROR")
-#		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+code+" "+typ+" "+name),0,1)
-
 	def on_bookmarksFail(self):
+		"""
+		Called if bookmarks are not supported by server.
+		"""
 		self.main.ui.tabWidget.setTabEnabled(1,False)
 		self.bookmarksEnabled=False
 		mainWindow=self.main
 		self.main.tray.showMessage(MainWindow.tr("Error"),mainWindow.tr("Your server doesn't support Private XML Storage. Some functions will be disabled."))
 		
 	def on_privacyFail(self):
+		"""
+		Called if privacy lists are not supported by server.
+		"""
 		self.main.ui.actionPrivacy_list_editor.setEnabled(False)
 
 	def on_GCpresenceError(self, fromjid, code, typ, name, text, resource = ""):
+		"""
+		Called if there was error on joining the groupchat
+		"""
 		mainWindow=self.main
-		log.msg("error")
-		#log.msg("RESOURCE: "+resource)
-		# find tab
+		
 		if int(code)==409:
-			tab=None
-			tabIndex=0
-			for i in range(self.main.chat.ui.chatTab.count()):
-				w=self.main.chat.ui.chatTab.widget(i)
-				if unicode(w.jid)==unicode(fromjid):
-					tab=w
-					tabIndex=i
-					break
-			# we found tab
-			#if tab!=None:
-				#self.main.chat.ui.chatTab.removeTab(tabIndex)
-				#if int(self.main.chat.ui.chatTab.count())==0:
-					#self.main.chat.hide()
-		if int(code)==409:
-			#self.main.events.addLineEditEvent(maintext=unicode(fromjid)+"<br/>"+text,trueCall=self.main.joinGC,trueDict=[fromjid],falseCall=None,falseDict=None,header="Groupchat Error",text="New name:",name=unicode(fromjid),typ="groupchatError",icon=None,action=None,actionDict=None,height=100, value=resource)
+			# nickname conflict
+			# rejoin with oldNick_ if tab for this room exists
+			tab,index=self.main.chat.findTab(fromjid)
 			if tab:
 				tab.chat.nick=resource+"_"
 				self.joinGC(fromjid, resource+"_")
 		else:
+			# remove groupchatWidget from chatWindow
+			tab,index=self.main.chat.findTab(fromjid)
+			if tab:
+				self.main.chat.ui.chatTab.removeTab(index)
+				if int(self.main.chat.ui.chatTab.count())==0:
+					self.main.chat.hide()
+			# add event with detailed description of the error
 			self.main.events.addInfoEvent(header=mainWindow.tr("Groupchat error"),text=text,name=unicode(fromjid),typ='groupchatError')
-		#QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(fromjid+" "+unicode(code)+" "+unicode(name)+" "+unicode(text)),0,1)
 
 	def on_roleErr(self,  muc,  err,  nick):
-		log.msg("error")
-		#QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(muc+" "+err+" "+nick),0,1)
+		pass
 	
 	def on_affiliationErr(self,  muc,  err,  nick):
-		log.msg("error")
-		#QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(muc+" "+err+" "+nick),0,1)
+		pass
 
-	def on_ftTransfered(self, sid, bytes): # pocet prenesenych bajtu pro prenos se SID
-		toDel=[] # finished transfers
-		widget=self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']] # event widget
+	def on_ftTransfered(self, sid, bytes):
+		"""
+		Updates progress bars for filetransfer with id 'sid'.
+		@type sid: unicode
+		@param sid: filetransfer ID
+		@type bytes: integer
+		@param bytes: count of transfered bytes
+		"""
 		mainWindow=self.main
+		widget=self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']] # event widget
+		# normal widget => progress bars in events tab or in chatwidget
 		if widget.typ=='normal':
 			queueId=self.main.events.filetransfer[sid]['queueId'] # filetransfer queue ID
 			if self.ft.has_key(sid):
-				# Filetransfer is alive
+				# Filetransfer is alive, so we have to update progressbar
 				size=float(self.ft[sid].size)
 				sent=float(self.ft[sid].transfered)
 				widget.widget.progressBar.setValue(int((sent/size)*100))
@@ -151,22 +153,22 @@ class clientClass(pyxl.client.Client):
 				widget.widget.progressBar.setValue(100)
 				if widget.widget.complete==None:
 					# User wants to close transfer
-					toDel.append(sid)
-					#widget.widget.complete=True
-					#widget.widget.closeClicked()
+					# TODO: we have to do something here (inform user that transfer was stopped for example...)
+					pass
 				else:
-					# transport finished
-					#toDel.append(sid)
+					# file was sent/received :)
 					tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[queueId].jid)
+					# update errors list
 					self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']].errors.append(self.main.ftError[sid])
 					# file upload
 					if widget.download==False:
+						# delete this file from upload queue
 						del self.main.events.filetransferQueue[queueId][self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']].file]
 						emptyQueue=len(self.main.events.filetransferQueue[queueId])==0
 						# no error
 						if self.main.ftError[sid]==None:
 							widget.widget.stats.setText(mainWindow.tr("Complete"))
-							#self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" has been sent"), QtGui.QSystemTrayIcon.Information, 4000)
+							# inform user in chatwidget too, if there is some opened conversation with recipient
 							if tab:
 								file=self.main.events.filetransferWidget[queueId].file
 								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('has been sent')))
@@ -175,6 +177,7 @@ class clientClass(pyxl.client.Client):
 							widget.widget.progressBar.setValue(0)
 							widget.widget.stats.setText(mainWindow.tr("File declined"))
 							self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("User declined to receive file")+" "+basename(unicode(widget.file)), QtGui.QSystemTrayIcon.Critical, 4000)
+							# inform user in chatwidget too, if there is some opened conversation with recipient
 							if tab:
 								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("User declined to receive file")+" "+basename(unicode(widget.file))))
 						# unknown error
@@ -182,24 +185,28 @@ class clientClass(pyxl.client.Client):
 							widget.widget.progressBar.setValue(0)
 							widget.widget.stats.setText(mainWindow.tr("Error")+" "+unicode(self.main.ftError[sid]))
 							self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" can't be sent "), QtGui.QSystemTrayIcon.Critical, 4000)
+							# inform user in chatwidget too, if there is some opened conversation with recipient
 							if tab:
 								file=self.main.events.filetransferWidget[queueId].file
 								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('can\'t be sent:')+" "+unicode(self.main.ftError[sid])))
-						# some files in queue
+						# some files are in queue, so we have to start to upload next file
 						if not emptyQueue:
 							self.main.events.nextFTUploadEvent(sid,queueId)
+						# queue is empty => all files have been sent
 						else:
-							bug=False
+							# check this queues error list, if there is something different then None, some files haven't been sent
+							error=False
 							for b in self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']].errors:
 								if b!=None:
-									bug=True
+									error=True
 									break
-							if not bug:
+							if not error:
 								self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("All files for")+" "+widget.jid+" "+mainWindow.tr("have been sent"), QtGui.QSystemTrayIcon.Critical, 4000)
 							else:
 								self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("Some files for")+" "+widget.jid+" "+mainWindow.tr("haven't been sent"), QtGui.QSystemTrayIcon.Critical, 4000)
+							# inform user in chatwidget too, if there is some opened conversation with recipient
 							if tab:
-								if not bug:
+								if not error:
 									tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("All files have been sent")))
 								else:
 									tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("Some files can't be sent")))
@@ -214,6 +221,7 @@ class clientClass(pyxl.client.Client):
 						if self.main.ftError[sid]==None:
 							widget.widget.stats.setText(mainWindow.tr("Complete"))
 							self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" has been downloaded"), QtGui.QSystemTrayIcon.Information, 4000)
+							# inform user in chatwidget too, if there is some opened conversation with sender
 							if tab:
 								file=self.main.events.filetransferWidget[queueId].file
 								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('has been downloaded')))
@@ -227,6 +235,7 @@ class clientClass(pyxl.client.Client):
 							widget.widget.progressBar.setValue(0)
 							widget.widget.stats.setText(mainWindow.tr("Error")+" "+unicode(self.main.ftError[sid]))
 							self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" can't be downloaded "), QtGui.QSystemTrayIcon.Critical, 4000)
+							# inform user in chatwidget too, if there is some opened conversation with sender
 							if tab:
 								file=self.main.events.filetransferWidget[queueId].file
 								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('can\'t be downloaded:')+" "+unicode(self.main.ftError[sid])))
@@ -235,10 +244,9 @@ class clientClass(pyxl.client.Client):
 									tab.chat.ui.ftwidget.layout().removeWidget(tab.chat.filetransfer[queueId])
 									tab.chat.filetransfer[queueId].setParent(None)
 									del tab.chat.filetransfer[queueId]
+					# delete this filetransfer information
 					del self.main.events.filetransfer[sid]
-
-				# delete this filetransfer
-				#del self.main.events.filetransfer[sid]
+		# widget which shows progress of Jabbim Extra download
 		else:
 			if self.ft.has_key(sid):
 				# Filetransfer is alive
@@ -249,12 +257,14 @@ class clientClass(pyxl.client.Client):
 				# Filetransfer finished
 				log.msg("ft.finished")
 				widget.setValue(100)
-				# User wants to close transfer
 				del self.main.events.filetransfer[sid]
 
 	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
+		"""
+		Called when filetransfer finished
+		"""
 		self.main.ftError[sid]=error
-		print sid,self.main.allowedSids
+		# self.main.allowedSids contains SIDs which are used for transfering Jabbim Extra
 		if sid in self.main.allowedSids:
 			# continuing with jabbim extra
 			print "Part of jabbim extra has been downloaded"
@@ -266,7 +276,9 @@ class clientClass(pyxl.client.Client):
 		self.on_ftTransfered(sid, 0) # we have to delete filetransfer and etc
 
 	def on_discoInfoReceived(self, jid, node):
-		# save type of host, it not exist
+		"""
+		Called when disco#info arrived.
+		"""
 		if not self.main.hosts.has_key(jid):
 			try:
 				name=self.disco[jid][node]['identities'].keys()[0]
@@ -274,6 +286,7 @@ class clientClass(pyxl.client.Client):
 			except:
 				typ=None
 			if typ!=None:
+				# parse types
 				if typ=="pep" or typ=="im":
 					typ="jabber"
 				elif typ=="file":
@@ -288,7 +301,6 @@ class clientClass(pyxl.client.Client):
 					# don't show this contacts as transports in menu
 					if not typ in ['weather','smtp','sms','rss']:
 						self.main.transports[jid]=None
-						#print 'delete',jid
 						self.main.buildOfflineMenu()
 				print 'DISCO',jid,typ
 				self.main.hosts[jid]=typ
@@ -305,14 +317,17 @@ class clientClass(pyxl.client.Client):
 			self.main.buildOfflineMenu()
 
 	def on_rosterAddUser(self, contact):
-		# add user to the roster
+		"""
+		Called when adds user to the roster
+		"""
 		groups=list(contact.groups)
 		name=unicode(contact.name)
 		jid=unicode(contact.jid)
+		# remove empty groups
 		while u'' in groups:
 			groups.remove('')
-		#log.msg("Adding user JID: "+jid+" "+contact.subscription+" "+unicode(groups))
-		# add group item if we haven't it
+
+		# add groupItem if we haven't it
 		for gr in groups:
 			if not self.roster['groups'].has_key(gr):
 				self.roster['groups'][gr]=self.main._addGroup(gr)
@@ -321,16 +336,6 @@ class clientClass(pyxl.client.Client):
 			host=unicode(jid).rsplit("@")[1]
 		else:
 			host=unicode(jid)
-			#if self.disco.has_key(host):
-		#if self.main.hosts.has_key(host):
-			#if not self.main.hosts[host] in ['weather','smtp','sms','rss']:
-				#self.main.transports[unicode(host)]=None
-			#elif self.main.transports.has_key(unicode(host)):
-				#del self.main.transports[unicode(host)]
-		#else:
-			#self.main.transports[unicode(host)]=None
-			#else:
-				#self.main.transports[unicode(jid)]=False
 		if not self.main.hosts.has_key(host) and not host in self.temp_hosts:
 			self.temp_hosts.append(host)
 			self.getDiscoInfo(host)
@@ -344,11 +349,13 @@ class clientClass(pyxl.client.Client):
 				# add user item to the group
 				self.main.ui.roster.addUser(jid,name,group)
 
-		# show avatar
-#		self.main.cache.get_avatar(jid, self.main._loadAvatar)
+		# load avatar
 		self.main._loadAvatar(self.main.homeDir+'/avatars/'+jid, self.avatars.get(jid), jid)
 
 	def makeTempMeta(self):
+		"""
+		@depracted
+		"""
 		meta={} # temp variable for metacontacts - {userTag:userJid}
 		for jid,user in self.roster['users'].iteritems():
 			if jid == self.jid.userhost():
@@ -360,6 +367,7 @@ class clientClass(pyxl.client.Client):
 					meta[user.tag].append([jid,user.order])
 		self.meta=meta
 		return meta
+
 	def renameByVcard(self,el,jid):
 		if el:
 			data=el.firstChildElement()
