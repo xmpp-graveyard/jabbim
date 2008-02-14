@@ -483,7 +483,7 @@ class clientClass(pyxl.client.Client):
 								self.main.ui.roster.users.remove(i)
 		log.msg("METAITEMS:"+unicode(self.main.ui.roster.metaItems))
 
-		if self.privacy != False or self.privacy != None:
+		if self.privacy != False:
 			for item in self.privacy.active.items:
 				if item.value and item.typ == "jid":
 					for useritem in self.main.ui.roster.getUserItems(item.value):
