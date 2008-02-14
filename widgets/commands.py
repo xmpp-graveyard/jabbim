@@ -19,7 +19,8 @@ class CommandsDialog(QtGui.QMainWindow):
 
 		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked) 
 		QtCore.QObject.connect(self.tbg,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.tbgButtonClicked) 
-		#QtCore.QObject.connect(self.ui.next,QtCore.SIGNAL("clicked ()"),self.cmds.submit) 
+		QtCore.QObject.connect(self.ui.menuButton,QtCore.SIGNAL("clicked ()"),self.exClicked) 
+		#QtCore.QObject.connect(self.ui.next,QtCore.SIGNAL("clicked ()"),self.cmds.submit)
 		#QtCore.QObject.connect(self.ui.previous,QtCore.SIGNAL("clicked ()"),self.cmds.submit) 
 		#QtCore.QObject.connect(self.ui.complete,QtCore.SIGNAL("clicked ()"),self.cmds.submit) 
 
@@ -87,6 +88,10 @@ class CommandsDialog(QtGui.QMainWindow):
 
 	def tbgButtonClicked(self, button):
 		self.cmds.submit(button.action)
+	
+	def exClicked(self):
+		self._reset()
+		self.cmds.requestCommandsList()
 
 	def reject(self):
 		self.close()
@@ -118,10 +123,9 @@ class Commands:
 		log.msg("Sending request for Ad-Hoc Commands list")
 
 	def _commandsListRecieved(self, el):
-#		self.dialog.ui.label.setText(self.main.tr("Choose action to execute."))
 		log.msg("Ad-Hoc commands list recieved")
-		if self.submenu != None:
-			return
+		#if self.submenu != None:
+			#return
 		query	= el.firstChildElement()
 		commands = []
 		for item in query.elements():
@@ -129,34 +133,33 @@ class Commands:
 				continue
 			commands.append(item.attributes)
 
-#			self.dialog.ui.label.setText(self.main.tr("Sorry. No extra actions available."))
-#			self.dialog.ui.close.show()
-#			self.dialog.ui.line.hide()
-#			return
 		c = 0
 		self.submenu = QtGui.QMenu()
 		for command in commands:
 			action=self.submenu.addAction(command["name"])
 			action.setObjectName("ad_hoc_command")
 			action.setData(QtCore.QVariant([command['node'], command['name']]))
-
+			button = QtGui.QPushButton(self.dialog)
+			button.setText(unicode(command["name"]))
+			#button.setObjectName(unicode(command["node"])) # ? + jid
+			button.node = unicode(command["node"])
+			button.jid = unicode(command["jid"])
+			self.dialog.group.addButton(button)
+			self.dialog.ui.glayout.addWidget(button, c, 0)
+			c += 1
+			spacerItem = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+			self.dialog.ui.glayout.addItem(spacerItem,c,0)
 
 
 		if len(commands) == 0 :
 			self.action.setEnabled(False)
+			self.dialog.ui.label.setText(self.main.tr("Sorry. No extra actions available."))
+			self.dialog.ui.close.show()
+			self.dialog.ui.line.hide()
 		else:
 			self.action.setMenu(self.submenu)
 			self.submenu.connect(self.submenu, QtCore.SIGNAL("triggered ( QAction * )"),self.execute)
-#			button = QtGui.QPushButton(self.dialog)
-#			button.setText(unicode(command["name"]))
-#			#button.setObjectName(unicode(command["node"])) # ? + jid
-#			button.node = unicode(command["node"])
-#			button.jid = unicode(command["jid"])
-#			self.dialog.group.addButton(button)
-#			self.dialog.ui.glayout.addWidget(button, c, 0)
-#			c += 1
-#		spacerItem = QtGui.QSpacerItem(40,20,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-#		self.dialog.ui.glayout.addItem(spacerItem,c,0)
+			self.dialog.ui.label.setText(self.main.tr("Choose action to execute."))
 
 	def execute(self, action):
 		cmd = action.objectName()
