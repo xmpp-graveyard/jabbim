@@ -2379,7 +2379,7 @@ class rosterWidget(QtGui.QWidget):
 			if w.typ=='chat' and w.jid != contact.jid:
 				lst.append(w.jid)
 		if len(lst)>0:
-			submenu = contactMenu.addMenu(self.tr("Invite to chat with .."))
+			submenu = contactMenu.addMenu(self.tr("Invite to chat with"))
 			if oneres:
 				for name in lst:
 					action = submenu.addAction(self.getNameByJID(name))
