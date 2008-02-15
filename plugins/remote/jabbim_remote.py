@@ -60,14 +60,19 @@ def scanports(): #
 def handleuri(argv):
 	print 'handle uri!'
 	print argv
-	if not argv[0].startswith('xmpp:'):
+	argv = argv[1]
+	print argv
+	if not argv.startswith('xmpp:'):
 		return 'wrong uri'
-	uri = ' '.join(argv)[5:]
+	uri = argv[5:]
 	parts = uri.split('?', 1)
 	if len (parts) == 1:
-		return server.startChat(parts[0], porty[1])
+		print 'message'
+		print porty
+		return server.startChat(parts[0].replace('%40', '@'), porty[1])
 	elif parts[1] == 'join':
-		return server.joinMUC(parts[0], porty[1])
+		print 'muc'
+		return server.joinMUC(parts[0].replace('%40', '@'), porty[1])
 
 porty = scanports()	
 functions = {'uri': handleuri}#, 'setStatus':setStatus}

@@ -46,6 +46,7 @@ class Plugin(plugins.PluginBase):
 			pfile = open(self.pfilename, "a")
 			pfile.write("%s:%s:%s\n" % (time(), port, self.cookie)) # timstamp (float): port (int) : cookie (str)
 			pfile.close()
+			set_xmpp_handler()
 
 		else:
 			self.loadConfig(homedir)
@@ -63,6 +64,7 @@ def generateCookie():
 def checkCookie(incoming, mine):
 	if incoming != mine:
 		print 'bad cookie'
+		print mine, incoming
 		return False
 	else:
 		return True
@@ -82,7 +84,9 @@ class Remote(xmlrpc.XMLRPC):
 	def xmlrpc_startChat(self, jid, cookie, nick = None):
 		print 'startChat from RPC'
 		if not checkCookie(cookie, self.cookie):
+			print 'bad cookie'
 			return False
+		print jid
 		jid = self.main.getJid(jid)
 		if  jid :
 			if nick == None:
@@ -113,3 +117,59 @@ class Remote(xmlrpc.XMLRPC):
 			return True
 		else:
 			return False
+
+
+def set_xmpp_handler():
+	'''registers (by default only the first time) xmmp: to Jabbim.'''
+	path_to_dot_kde = os.path.expanduser('~/.kde')
+	if os.path.exists(path_to_dot_kde):
+		path_to_kde_file = os.path.join(path_to_dot_kde, 
+			'share/services/xmpp.protocol')
+	else:
+		path_to_kde_file = None
+
+	def set_jabbim_as_xmpp_handler(is_checked=None):
+
+			command = 'jabbim_remote.py --u %s'
+
+			# setting for GNOME/Gconf
+			client.set_bool('/desktop/gnome/url-handlers/xmpp/enabled', True)
+			client.set_string('/desktop/gnome/url-handlers/xmpp/command', command)
+			client.set_bool('/desktop/gnome/url-handlers/xmpp/needs_terminal', False)
+
+			# setting for KDE
+			if path_to_kde_file is not None: # user has run kde at least once
+				try:
+					f = open(path_to_kde_file, 'a')
+					f.write('''\
+[Protocol]
+exec=%s "%%u"
+protocol=xmpp
+input=none
+output=none
+helper=true
+listing=false
+reading=false
+writing=false
+makedir=false
+deleting=false
+icon=jabbim
+Description=xmpp
+''' % command)
+					f.close()
+				except IOError:
+					log.debug("I/O Error writing settings to %s", repr(path_to_kde_file))
+
+
+	try:
+		import gconf
+		# in try because daemon may not be there
+		client = gconf.client_get_default()
+	except:
+		return
+
+	we_set = True
+
+
+	if we_set:
+		set_jabbim_as_xmpp_handler()
