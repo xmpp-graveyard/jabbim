@@ -369,6 +369,9 @@ class clientClass(pyxl.client.Client):
 		return meta
 
 	def renameByVcard(self,el,jid):
+		"""
+		Renames contact with 'jid' acording to vcard.
+		"""
 		if el:
 			data=el.firstChildElement()
 			nickname=fullname=family=given=None
@@ -397,8 +400,10 @@ class clientClass(pyxl.client.Client):
 				self.sendRosterUpdate(contact.jid, newName, contact.subscription, self.roster['users'][jid].groups)
 	
 	def on_discoItemsBookmarksReceived(self, jid):
-		# make user list for bookmarked groupchat
-		item=self.main.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1)[0]
+		"""
+		Called when disco#items of bookmarked groupchat arrived.
+		"""
+		item=self.main.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1)[0] # find item
 		for i in range(item.childCount()):
 			item.takeChild(0)
 		for name in self.disco[jid][None]['items'].keys():
@@ -408,54 +413,24 @@ class clientClass(pyxl.client.Client):
 			user.setIcon(0,self.main.getIcon(size="16x16"))
 
 	def on_rosterArrived(self):
+		"""
+		Called when roster arrived.
+		"""
 		print 'we got roster'
 		self.main.ui.splashProgress.setValue(60)
 		mainWindow=self.main
 		self.main.ui.loginInfo.setText(mainWindow.tr("Roster arrived."))
-		self.main.ui.roster.repaint()
-		self.main.ui.roster.sortItems()
 		self.main.buildBookmarks() # build Bookmarks tab
 		self.main.chat.reconnect()
-		print self.main.transports
 		self.main.buildOfflineMenu()
-		# HACK KVULI ICQ A AUTOMATICKEMU PRIHLASENI K NEMU:
-		#self.sendPresence("icq.jabbim.cz",show='available', status = "")
-
-		self.menus=[]
-		#print "TTTTTTTTTTTTTT:",self.main.transports
-		#for jid,typ in self.main.transports.iteritems():
-			#menu=QtGui.QMenu(unicode(jid),self.main.statusMenu)
-			#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="online",size="16x16"),self.main.status["online"])
-			#action.setData(QtCore.QVariant(jid+"/online"))
-			#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="chat",size="16x16"),self.main.status["chat"])
-			#action.setData(QtCore.QVariant(jid+"/chat"))
-			#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="away",size="16x16"),self.main.status["away"])
-			#action.setData(QtCore.QVariant(jid+"/away"))
-			#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="xa",size="16x16"),self.main.status["xa"])
-			#action.setData(QtCore.QVariant(jid+"/xa"))
-			#action=menu.addAction(self.main.getIcon("jid@"+unicode(jid),status="dnd",size="16x16"),self.main.status["dnd"])
-			#action.setData(QtCore.QVariant(jid+"/dnd"))
-			#action=menu.addAction(self.main.getIcon(status="offline",size="16x16"),self.main.status["offline"])
-			#action.setData(QtCore.QVariant(jid+"/offline"))
-			##app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.main.statusChanged)
-			#self.menus.append(menu)
 		self.main.buildStatusWidgetMenu()
-		
-		
-		
-		# vymazani metakontaktu
-		#self.roster_meta={}
-		#self.setMetacontacts()
-
-		# hide Unknown group, if has not users
-		#if int(self.main.ui.roster.getGroupItem("Unknown").childCount())==0:
-			#self.main.ui.roster.setItemHidden(self.roster['groups']['Unknown'],True)
 
 		self.metaParents={}
 
-		## get metacontacts
+		# get metacontacts in better form
 		meta=self.makeTempMeta()
-		#log.msg("META:"+unicode(meta))
+
+		# handle metacontacts... this will be replaced in the future...
 		for tag,jids in meta.iteritems():
 			if len(jids)>1:
 				mainJid=None # JID of main metacontact (parent of all other)
@@ -489,8 +464,10 @@ class clientClass(pyxl.client.Client):
 						if value[0]!=mainJid:
 							for i in self.main.ui.roster.getUserItems(value[0]):
 								self.main.ui.roster.users.remove(i)
+
 		log.msg("METAITEMS:"+unicode(self.main.ui.roster.metaItems))
 
+		# update privacy list of userItems in roster widget
 		if self.privacy != False:
 			for item in self.privacy.active.items:
 				if item.value and item.typ == "jid":
@@ -499,99 +476,11 @@ class clientClass(pyxl.client.Client):
 						useritem.privacy["allow"] = self.privacy.active.isAllowedJID(item.value)
 						useritem.privacy["hide"] = self.privacy.active.isHiddenJID(item.value)
 
-
-		#toDelJid=[] # contacts to delete
-		#toDelIndex=[] # contacts to delete
-		## process metacontacts
-		#for tag,jids in meta.iteritems():
-			## get main metacontact (first metacontact)
-			#if len(jids)>1:
-				#mainJid=None # JID of main metacontact (parent of all other)
-				#highestNum=0
-				#highest=[]
-				#for value in jids:
-					#jid=value[0]
-					#order=int(value[1])
-					#if jid!=tag:
-						#mainJid=jid
-					#if order>=highestNum:
-						#highest.append(jid)
-	
-				#if mainJid!=None and len(self.main.ui.roster.getUserItems(mainJid))!=0:
-					#log.msg(mainJid +" "+unicode(self.main.ui.roster.getUserItems(mainJid)))
-					#self.metaParents[tag]=self.main.ui.roster.addMetaParent(tag,self.main.ui.roster.getUserItems(mainJid)[0].parent(),True)
-					##self.metaParents[tag].
-					#for value in jids:
-						#jid=value[0]
-						#order=int(value[1])
-	
-						#self.main.ui.roster.addMetaContact(jid,self.roster['users'][jid].name,self.metaParents[tag],True)
-						#items=self.main.ui.roster.getUserItems(jid,"contact")
-						#lenght=int(len(items))
-						#for contact in range(lenght):
-							#item=self.main.ui.roster.getUserItems(jid,"contact")[0]
-							#log.msg("DELETE ITEM:"+unicode(item.text(1)))
-							#if item.childCount()==0:
-								#parent=item.parent()
-								#if parent:
-									#index=parent.indexOfChild(item)
-									#if index>-1:
-										#it=parent.takeChild(index)
-							##toDelJid.append(jid)
-								##toDelIndex.append(self.roster['users'][jid].rosterItems.index(contact))
-								##parent=contact.parent()
-								##parent.takeChild(parent.indexOfChild(contact))
-							##self.roster['users'][jid].rosterItems.remove(item)
-					#self.main.ui.roster.cloneContact(self.metaParents[tag],self.main.ui.roster.getUserItems(jid)[0])
-		##for i in range(len(toDelIndex)):
-			##jid=toDelJid[i]
-			##index=toDelIndex[i]
-			##del self.roster['users'][jid].rosterItems[index]
-
-			###If we had some others metacontacts
-			##if mainJid!=None:
-				##self.metaParents[tag]=self.main.ui.roster.addMetaParent(tag,self.roster['users'][mainJid].rosterItems[0].parent(),True)
-				##main=[None,None]
-				##for value in jids:
-					##jid=value[0]
-					##order=int(value[1])
-					##toDel=[] # contacts to delete
-					### add metacontat to the all items of mainJid in roster
-					###for item in self.roster['users'][mainJid].rosterItems:
-					##self.roster['users'][jid].rosterItems.append(self.main.ui.roster.addMetaContact(jid,self.roster['users'][jid].name,self.metaParents[tag],True))
-					### Delete metacontacts' top level items from roster
-					##for contact in self.roster['users'][jid].rosterItems:
-						##it=contact.data(32,0)
-						##it=it.toList()
-						##if unicode(it[1].toString())=="contact":
-							##toDel.append(contact)
-							##parent=contact.parent()
-							##parent.takeChild(parent.indexOfChild(contact))
-					### delete metacontacts top level items from pyxl
-					##for item in toDel:
-						##self.roster['users'][jid].rosterItems.remove(item)
-				##self.main.ui.roster.cloneContact(self.metaParents[tag],self.roster['users'][jid].rosterItems[-1])
-		##print self.roster['users']['sef@njs.netlab.cz'].rosterItems
-		# sort roster items and refresh group stats
-		#self.main.rosterHideOffline(True)
-		#self.main.ui.roster.refreshStats()
+		# update roster
 		self.main.ui.roster.sortItems()
+		self.main.ui.roster.repaint()
 
-
-		# set the priority
-		if MainWindow.config.has_key('autoPriority'):
-			if MainWindow.config['autoPriority']=='True':
-				pri="20"
-			else:
-				if self.main.config.has_key('priority'):
-					pri=self.main.config['priority']
-				else:
-					pri="0"
-		else:
-			if self.main.config.has_key('priority'):
-				pri=self.main.config['priority']
-			else:
-				pri="0"
+		# send first presence to server
 		show=unicode(self.main.ui.loginStatus.itemData(int(self.main.ui.loginStatus.currentIndex())).toString())
 		self.main.selfStatus=show
 		self.main.tray.setToolTip(mainWindow.tr('Your status:')+" "+self.main.status[show])
@@ -600,7 +489,7 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.statusButton.setText(unicode(""))
 		self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
 		self.main.ui.login_cancel.hide()
-
+	
 	def on_rosterx(self, frm, items, id):
 		mainWindow = self.main
 		if len(items)==1:
@@ -632,16 +521,16 @@ class clientClass(pyxl.client.Client):
 			self._rosterxResult(frm, id, True)
 
 	def on_authFailed(self,xmlstream):
-		# Authentication error
+		"""
+		Authentication error.
+		"""
 		self.main.ui.login_connect.setEnabled(True)
-# 		QtGui.QMessageBox.warning(self.main,self.main.tr("Error"),unicode(self.main.tr("Bad Jabber ID or password.")),0,1)
 	
 	def on_firstpresence(self,  bulk):
-		# process all first presences at once
-		#log.msg(unicode(bulk))
-		#print "PRESENCESSSSSS"
+		"""
+		Process all first presences at once.
+		"""
 		for presence in bulk:
-			#print presence
 			jid=presence[0]
 			show=presence[1]
 			if len(presence)==3:
@@ -649,25 +538,20 @@ class clientClass(pyxl.client.Client):
 			else:
 				error=None
 			self.on_presence(jid,show,error,True)
-		# refresh and sort and so on
-		#self.main.rosterHideOffline(True)
-		self.main.ui.roster.refreshStats()
-		self.main.ui.roster.sortItems (1,QtCore.Qt.AscendingOrder)
-		self.main.ui.roster.statusLabel.hide()
-		#if self.main.ui.roster.statusLabel:
-			#self.main.ui.roster.statusLabel.setParent(None)
-			#self.main.ui.roster.statusLabel=None
-		#if self.main.ui.roster.buttonWidget:
-			#self.main.ui.roster.buttonWidget.setParent(None)
-			#self.main.ui.roster.buttonWidget=None
-		self.main.ui.roster.repaint()
-		self.main.ui.splashProgress.setValue(100)
+
 		mainWindow=self.main
 
+		# update roster
+		self.main.ui.roster.sortItems()
+		self.main.ui.roster.statusLabel.hide()
+		self.main.ui.roster.repaint()
+
+		# update splash window
+		self.main.ui.splashProgress.setValue(100)
 		self.main.ui.loginInfo.setText(mainWindow.tr("Jabbim is ready."))
 		self.main.ui.rosterStackedWidget.setCurrentIndex(1)
-		#for key,value in self.main.plugins.iteritems():
-			#value.connected()
+
+		# load plugins, autoconnect
 		self.reactor.callLater(0.3,self.jl)
 
 	def jl(self):
