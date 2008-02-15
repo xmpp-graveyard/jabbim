@@ -336,7 +336,7 @@ class Plugin(plugins.PluginBase):
 
 	def testSlot(self):
 		self.main.tray.showMessage(self.tr("Notification "),self.tr("Notification plugin test :)"), QtGui.QSystemTrayIcon.Information, 2000)
-		self.playsound('new_message')
+		self.main.playsound('new_message')
 		self.osd.test(self.tr("Notification test"))
 	
 	def on_evil(self, frm, typ):
@@ -419,60 +419,38 @@ class Plugin(plugins.PluginBase):
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay, error=None):
 		if body == None:
 			return
-		self.playsound('message')
-		if self.main.client.roster['users'].has_key(unicode(frm).rsplit("/")[0]):
-			user=self.main.client.roster['users'][unicode(frm).rsplit("/")[0]].name
-		else:
-			user=frm
+		# get user name from JID
+		user=self.main.ui.roster.getNameByJID(frm)
+		# cut message if it's too long
 		if len(body)>40:
 				traytext=body[:40]+" ..."
 		else:
 				traytext=body
-		if self.config['on_first_message']=="True":
-			tab=None
-			for i in range(self.main.chat.ui.chatTab.count()):
-				w=self.main.chat.ui.chatTab.widget(i)
-				if unicode(w.jid)==unicode(frm):
-					tab=w
-					break
-				if unicode(w.jid).rsplit("/")[0]==unicode(frm).rsplit("/")[0]:
-					tab=w
-				# we found tab
-			if tab!=None:
+
+		# get avatar for OSD
+		jid=jidT.JID(frm)
+		pixmap=self.main.getAvatar(jid.userhost().replace('/','%'),frame=False,size="64x64")
+		events=self.main.events.getEvents(unicode(jid.full()),'message')
+		# get action from Events
+		if len(events)!=0:
+			event=events[-1]
+			onClick=event['widget'].action
+			onClickDict=event['widget'].actionDict
+		else:
+			onClick=None
+			onClickDict=None
+
+		# inform user about newly opened tab
+		if self.config['on_first_message']=="True" and not self.main.chat.isActiveWindow():
+			tab,index=self.main.chat.findTab(frm)
+			if tab:
 				if tab.chat.first==None or tab.chat.first==True:
-					self.playsound('new_message')
-					
-					#self.main.tray.showMessage(self.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 5000)
-					print unicode(user)
-					#self.startTrayBlink()
-				#else:
-					#self.playsound('message')
+					self.main.playsound('new_message')
+					self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),onClick,onClickDict)
+					return
+		# inform user about new message
 		if self.config['osd_on_message']=="True" and not self.main.chat.isActiveWindow():
-			print "osd"
-			jid=jidT.JID(frm)
-			user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
-			if len(user)==0:
-				user=self.main.ui.roster.getMetaItems(jid.userhost())
-				if len(user)!=0:
-					user=user[0]
-			if len(user)!=0:
-				#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
-				user=user[0].name
-			else:
-				user=unicode(jid.full())
-	
-			pixmap=self.main.getAvatar(jid.userhost().replace('/','%'),frame=False,size="64x64")
-			events=self.main.events.getEvents(unicode(jid.full()),'message')
-			print events
-			if len(events)!=0:
-				event=events[-1]
-				onClick=event['widget'].action
-				onClickDict=event['widget'].actionDict
-				print "onclick:",onClick
-				print "onclickdict:",onClickDict
-			else:
-				onClick=None
-				onClickDict=None
+			self.main.playsound('message')
 			self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),onClick,onClickDict)
 
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
@@ -498,5 +476,5 @@ class Plugin(plugins.PluginBase):
 								text=body
 						traytext=unicode(user)+": "+text
 						if self.config['sound_gc_message']=="True":
-							self.playsound('message')
+							self.main.playsound('message')
 						self.main.tray.showMessage(self.tr("New groupchat message for you"), traytext, QtGui.QSystemTrayIcon.Information, 5000)
