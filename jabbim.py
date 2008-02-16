@@ -626,22 +626,27 @@ class clientClass(pyxl.client.Client):
 		# get tab for this contact
 		tabFull,indexFull=self.main.chat.findTab(jid.full(),True) # tab with resource
 		tab,index=self.main.chat.findTab(jid.full(),False) # tab without resource
+		if tab and not tabFull:
+			tabFull=tab
 
 		# show info about status change in conversation textEdit
 		if str(self.main.config["showChatStatusChanges"])=="True" and tabFull:
 			# get senders username
 			user=self.main.ui.roster.getNameByJID(jid.userhost())
 			# append message to textEdit
+			message="[nick] "+unicode(mainWindow.tr('is now'))+" [show] [[message]]"
+			message=message.replace("[[message]]",'')
+			message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', user)
 			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
 			tabFull.chat.textEditWrite(message)
 			# refresh variables
 			tabFull.chat.ui.chatstate.setText("")
 			tabFull.chat.lastMessageFrom=""
 
-			# we have opened conversation with this JID (no only with this resource)
-			if tab:
-				tab.chat.buildResourceMenu()
-				tab.chat.buildMetaMenu()
+		# we have opened conversation with this JID (no only with this resource)
+		if tab:
+			tab.chat.buildResourceMenu()
+			tab.chat.buildMetaMenu()
 
 		if show=="offline":
 			# self presence
