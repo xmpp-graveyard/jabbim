@@ -851,33 +851,19 @@ class clientClass(pyxl.client.Client):
 
 
 	def on_DeleteContact(self,jid):
-		# delete contact from roster
-		log.msg("delete contact")
-		#contact=self.roster['users'][jid]
+		"""
+		Called when contact is deleted from roster.
+		"""
+		# go through all contact userItems and remove them
 		for i in self.main.ui.roster.getUserItems(jid):
 			if self.main.ui.roster.item==i:
 				self.main.ui.roster.statusLabel.hide()
 			self.main.ui.roster.users.remove(i)
+		# update roster
 		self.main.ui.roster.sortItems()
 		self.main.ui.roster.repaint()
-						## delete group, if it's empty
-		#items=self.main.ui.roster.getUserItems(jid,'contact')
-		#lenght=int(len(items))
-		#for i in range(lenght):
-			#item=self.main.ui.roster.getUserItems(jid)[0]
-			#if item.childCount()==0:
-				##log.msg("DELETE ITEM:"+unicode(item.text(1)))
-				#parent=item.parent()
-				#if parent:
-					#index=parent.indexOfChild(item)
-					#if index>-1:
-						#it=parent.takeChild(index)
-		log.msg("DELETE COMPLETE")
-		self.main.ui.roster.refreshStats()
 
 	def on_subscribe(self, frm,status):
-		#self.main.events.addSubscribeEvent(frm,status)
-		#if len(self.main.ui.roster.getUserItems(frm))==0 and len(self.main.ui.roster.getMetaItems(frm)):
 		mainWindow=self.main
 		if self.roster['users'].has_key(frm):
 			self.main.events.addBooleanEvent(self.sendPresence,[frm,None,status,None,'subscribed'],self.sendPresence,[frm,None,status,None,'unsubscribed'],header=mainWindow.tr('Authorize contact?'),text=mainWindow.tr('user ')+" "+unicode(frm)+' '+mainWindow.tr("wants to see your status."),name=frm,typ="subscribe",height=80)
@@ -893,7 +879,9 @@ class clientClass(pyxl.client.Client):
 
 
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
-		# handle messages from groupchat
+		"""
+		Handles messages from groupchat.
+		"""
 		# get user (resource) and MUC jid (saved in frm)
 		if typ=="chat":
 			return self.on_message(frm, typ, body, subject, xhtml,chatstate,delay,error)
@@ -936,7 +924,9 @@ class clientClass(pyxl.client.Client):
 
 
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None, error = None):
-		# handle normal 'chat' messages
+		"""
+		Handles normal 'chat' messages.
+		"""
 		# get user icon or name, if we have him in roster. Or use default icon and jid as name
 		if typ=="groupchat":
 			return
@@ -1082,66 +1072,44 @@ class clientClass(pyxl.client.Client):
 				tab.chat.ui.chatstate.setText(mainWindow.tr("closed the chat window."))
 
 	def on_vcardReceived(self,  jid, card):
-		#print card
+		"""
+		Called when vcard is received.
+		"""
 		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db
-		print "VCARD"
 		if not self.roster['users'].has_key(jid):
 			return
+		# Rename contact if he havent got nickname
 		contact=self.roster['users'][jid]
 		if (contact.name=="" or contact.name==contact.jid) or not contact.name:
 			self.renameByVcard(card,jid)
-		#pass
-		#log.msg("vcard "+unicode(jid))
-# 		log.msg(unicode(card))
-#		if card.has_key("BINVAL"):
-#			typ=None
-#			if card.has_key("TYPE"):
-#				typ=str(card['TYPE'].split("/")[1])
-#			pixmap=QtGui.QPixmap()
-#			image=base64.decodestring(str(card["BINVAL"]))
-#			f=open(self.main.homeDir+'/avatars/'+jid,"wb")
-#			f.write(image)
-#			f.close()
-#			if typ:
-#				pixmap.loadFromData(image,typ)
-#			else:
-#				pixmap.loadFromData(image)
-#			log.msg(unicode(self.jid.userhost())+" "+unicode(jid))
-#			if unicode(self.jid.userhost())==unicode(jid):
-#				print "Setting avatar"
-#				self.main.ui.selfAvatar.setPixmap(pixmap.scaledToHeight(48))
-#			for item in self.main.ui.roster.getUserItems(jid):
-#				item.setAvatar(QtGui.QIcon(pixmap))
-#			for item in self.main.ui.roster.getMetaItems(jid):
-#				item[0].setAvatar(QtGui.QIcon(pixmap))
-#			sha=sha1(image).hexdigest()
-#			self.main.cache.set_avatar(jid, ['avatars/'+jid, sha])
-#			self.main._loadAvatar('avatars/'+jid, sha, jid)
-#		else:
-#			self.main.cache.set_avatar(jid, ['nic', 'nic'])
 
 	def on_avatarUpdate(self, jid):
+		"""
+		Called when avatar is upated.
+		"""
 		print "AVATAR:",[unicode(jid)]
-		#pixmap=QtGui.QPixmap()
 		if not self.avatars.has_key(jid.replace('/','%')):
 			return
 		if self.avatars[jid.replace('/','%')]==None:
 			return
-
+		# get avatar for this jid
 		pixmap=self.main.getAvatar(jid.replace('/','%'),frame=False,status=None)
 
+		# self avatar
 		if unicode(self.jid.userhost())==unicode(jid):
 			print "Setting avatar"
-			#avatar=pixmap.scaledToHeight(48,QtCore.Qt.SmoothTransformation)
 			avatar=self.main.getAvatar(pixmap,size="64x64",frame=True)
 			self.main.selfAvatar=pixmap
 			self.main.ui.selfAvatar.setPixmap(avatar)
 			self.main.ui.selfAvatar.setMinimumWidth(avatar.width()+3)
+
+		# set avatar for userItems in roster
 		for item in self.main.ui.roster.getUserItems(jid):
 			item.setAvatar(QtGui.QIcon(pixmap))
 		for item in self.main.ui.roster.getMetaItems(jid):
 			item[0].setAvatar(QtGui.QIcon(pixmap))
 
+		# set avatar for contacts in MUC
 		jid = jidT.JID(jid)
 		w,i=self.main.chat.findTab(jid.userhost())
 		if w:
@@ -1152,10 +1120,6 @@ class clientClass(pyxl.client.Client):
 					result=self.main.getAvatar(pixmap,size="32x32",frame=False,status=self.main.icons[text[0]])
 					item.setIcon(0,QtGui.QIcon(result))
 					w.chat.setTooltip(item,jid.full())
-			
-		
-		
-			
 
 	def on_fileReceived(self, sid, id):
 		if self.main.config['autoDownload'] == 'True' or unicode(sid) in self.main.allowedSids:
