@@ -16,90 +16,92 @@ from twisted.words.protocols.jabber.xmlstream import IQ
 import base64
 
 servers=["jabbim.cz","jabbim.sk","jabbim.pl","jabbim.com","jabber.cz","njs.netlab.cz"]
-def createFirstPage(registrationWizard):
-	# language and server
-	page=QtGui.QWizardPage()
-	page.setTitle(registrationWizard.tr("Introduction"))
 
-	label=QtGui.QLabel(registrationWizard.trUtf8("Server je místo, kde jsou uložena Vaše uživatelská data."))
-	label.setWordWrap(True)
-
-	label2=QtGui.QLabel(registrationWizard.trUtf8("Jabber ID (JID) je obdoba emailové adresy. Je to Váš identifikátor v sítich jabber a ostatní uživatelé Vám na tuto adresu mohou pomocí jabberu psát."))
-	label2.setWordWrap(True)
-
-	registrationWizard.label=QtGui.QLabel("")
-	registrationWizard.label.setWordWrap(True)
-
-	#label2=QtGui.QLabel(registrationWizard.tr("Server je místo, kde jsou uložena Vaše uživatelská data.")
-	#label2.setWordWrap(True)
-
-	#registrationWizard.serverLab=QtGui.QLabel()
-	registrationWizard.jidLabel=QtGui.QLabel()
-
-	nicknameLabel=QtGui.QLabel(registrationWizard.tr("Nickname:"))
-	registrationWizard.nicknameLineEdit=QtGui.QLineEdit()
-	#registrationWizard.serverLabel=QtGui.QLabel()
+class firstPage(QtGui.QWizardPage):
+	def __init__(self,registrationWizard):
+		QtGui.QWizardPage.__init__(self)
+		self.setTitle(registrationWizard.tr("Introduction"))
+		label=QtGui.QLabel(registrationWizard.trUtf8("Server je místo, kde jsou uložena Vaše uživatelská data."))
+		label.setWordWrap(True)
 	
-	passwordLabel=QtGui.QLabel(registrationWizard.tr("Password:"))
-	passwordLineEdit=QtGui.QLineEdit()
-	passwordLineEdit.setEchoMode(QtGui.QLineEdit.Password)
+		label2=QtGui.QLabel(registrationWizard.trUtf8("Jabber ID (JID) je obdoba emailové adresy. Je to Váš identifikátor v sítich jabber a ostatní uživatelé Vám na tuto adresu mohou pomocí jabberu psát."))
+		label2.setWordWrap(True)
+		self.registrationWizard=registrationWizard
+		registrationWizard.label=QtGui.QLabel("")
+		registrationWizard.label.setWordWrap(True)
+	
+		registrationWizard.jidLabel=QtGui.QLineEdit()
+		registrationWizard.jidLabel.setReadOnly(True)
+		
+	
+		nicknameLabel=QtGui.QLabel(registrationWizard.tr("Nickname:"))
+		registrationWizard.nicknameLineEdit=QtGui.QLineEdit()
+		
+		passwordLabel=QtGui.QLabel(registrationWizard.tr("Password:"))
+		passwordLineEdit=QtGui.QLineEdit()
+		passwordLineEdit.setEchoMode(QtGui.QLineEdit.Password)
+	
+		password2Label=QtGui.QLabel(registrationWizard.tr("Password again:"))
+		password2LineEdit=QtGui.QLineEdit()
+		password2LineEdit.setEchoMode(QtGui.QLineEdit.Password)
+		
+		serverLabel=QtGui.QLabel(registrationWizard.tr("Server:"))
+		registrationWizard.serverComboBox=QtGui.QComboBox()
+		registrationWizard.serverComboBox.addItems(QtCore.QStringList([registrationWizard.tr("Choose server")]+servers))
+		registrationWizard.serverComboBox.setEditable(True)
+		QtCore.QObject.connect(registrationWizard.serverComboBox,QtCore.SIGNAL("activated ( const QString & )"),registrationWizard.serverComboBoxActivated)
+		QtCore.QObject.connect(registrationWizard.serverComboBox,QtCore.SIGNAL("editTextChanged ( const QString & )"),registrationWizard.serverComboBoxActivated)
+		QtCore.QObject.connect(registrationWizard.nicknameLineEdit,QtCore.SIGNAL("textEdited ( const QString & )"),registrationWizard.nicknameChanged)
+		
+		layout=QtGui.QGridLayout()
+		layout.addWidget(registrationWizard.label,0,0,1,2)
+		layout.addWidget(label,1,0,1,2)
+		layout.addWidget(serverLabel,2,0,1,1)
+		layout.addWidget(registrationWizard.serverComboBox,2,1,1,1)
+		layout.addWidget(nicknameLabel,3,0,1,1)
+		layout.addWidget(registrationWizard.nicknameLineEdit,3,1,1,1)
+		layout.addWidget(passwordLabel,4,0,1,1)
+		layout.addWidget(passwordLineEdit,4,1,1,1)
+		layout.addWidget(password2Label,5,0,1,1)
+		layout.addWidget(password2LineEdit,5,1,1,1)
+		layout.addWidget(label2,6,0,1,2)
+		layout.addWidget(QtGui.QLabel(registrationWizard.trUtf8("Vaše Jabber ID:")),7,0,1,1)
+		layout.addWidget(registrationWizard.jidLabel,7,1,1,1)
+		self.registerField("server",registrationWizard.serverComboBox)
+		self.registerField("nickname*",registrationWizard.nicknameLineEdit)
+		self.registerField("password*",passwordLineEdit)
+		self.registerField("password2*",password2LineEdit)
+		self.registerField("jabberid*",registrationWizard.jidLabel)
+		self.setTitle(registrationWizard.trUtf8("Registrace Jabber účtu"))
+		self.setSubTitle(registrationWizard.trUtf8("Vyberte server, na kterém chcete účet zaregistrovat a svoji přezdívku."))
+		self.setLayout(layout)
 
-	password2Label=QtGui.QLabel(registrationWizard.tr("Password again:"))
-	password2LineEdit=QtGui.QLineEdit()
-	password2LineEdit.setEchoMode(QtGui.QLineEdit.Password)
-	
-	serverLabel=QtGui.QLabel(registrationWizard.tr("Server:"))
-	registrationWizard.serverComboBox=QtGui.QComboBox()
-	registrationWizard.serverComboBox.addItems(QtCore.QStringList([registrationWizard.tr("Choose server")]+servers))
-	registrationWizard.serverComboBox.setEditable(True)
-	QtCore.QObject.connect(registrationWizard.serverComboBox,QtCore.SIGNAL("activated ( const QString & )"),registrationWizard.serverComboBoxActivated)
-	QtCore.QObject.connect(registrationWizard.serverComboBox,QtCore.SIGNAL("editTextChanged ( const QString & )"),registrationWizard.serverComboBoxActivated)
-	QtCore.QObject.connect(registrationWizard.nicknameLineEdit,QtCore.SIGNAL("textEdited ( const QString & )"),registrationWizard.nicknameChanged)
-	
-	layout=QtGui.QGridLayout()
-	layout.addWidget(registrationWizard.label,0,0,1,2)
-	layout.addWidget(label,1,0,1,2)
-	layout.addWidget(serverLabel,2,0,1,1)
-	layout.addWidget(registrationWizard.serverComboBox,2,1,1,1)
-	layout.addWidget(nicknameLabel,3,0,1,1)
-	layout.addWidget(registrationWizard.nicknameLineEdit,3,1,1,1)
-	layout.addWidget(passwordLabel,4,0,1,1)
-	layout.addWidget(passwordLineEdit,4,1,1,1)
-	layout.addWidget(password2Label,5,0,1,1)
-	layout.addWidget(password2LineEdit,5,1,1,1)
-	layout.addWidget(label2,6,0,1,2)
-	layout.addWidget(QtGui.QLabel(registrationWizard.trUtf8("Vaše Jabber ID:")),7,0,1,1)
-	layout.addWidget(registrationWizard.jidLabel,7,1,1,1)
-	page.registerField("server",registrationWizard.serverComboBox)
-	page.registerField("nickname*",registrationWizard.nicknameLineEdit)
-	page.registerField("password*",passwordLineEdit)
-	page.registerField("password2*",password2LineEdit)
-	page.setTitle(registrationWizard.trUtf8("Registrace Jabber účtu"))
-	page.setSubTitle(registrationWizard.trUtf8("Vyberte server, na kterém chcete účet zaregistrovat a svoji přezdívku."))
-	
+	def isComplete(self):
+		if not self.registrationWizard.main.getJid(self.registrationWizard.jid) or unicode(self.field("password").toString())!=unicode(self.field("password2").toString()):
+			return False
+		else:
+			r=QtGui.QWizardPage.isComplete(self)
+			return r
+			
 
-	page.setLayout(layout)
-	return page
 
-def createWaitPage(registrationWizard):
-	
-	page=QtGui.QWizardPage()
-	page.setTitle(registrationWizard.trUtf8("Registrace Jabber účtu"))
-	page.setSubTitle(registrationWizard.trUtf8("Právě probíhá registrace Vašeho účtu. Prosím vyčkejte."))
-	#label=QtGui.QLabel(registrationWizard.tr("Registering your account."))
-	#label.setWordWrap(True)
-	
-	#layout=QtGui.QGridLayout()
-	#layout.addWidget(label,0,0,1,1)
-	
-	#page.setLayout(layout)
-	return page
+class waitPage(QtGui.QWizardPage):
+	def __init__(self,registrationWizard):
+		QtGui.QWizardPage.__init__(self)
+		self.registrationWizard=registrationWizard
+		self.setTitle(registrationWizard.trUtf8("Registrace Jabber účtu"))
+		self.setSubTitle(registrationWizard.trUtf8("Právě probíhá registrace Vašeho účtu. Prosím vyčkejte."))
+
+	def isComplete(self):
+		self.registrationWizard.button(QtGui.QWizard.BackButton).setEnabled(False)
+		return False
 
 def createFinishPage(registrationWizard):
 	
 	page=QtGui.QWizardPage()
 	page.setTitle(registrationWizard.trUtf8("Registrace Jabber účtu"))
 	page.setSubTitle(registrationWizard.trUtf8("Vaše registrace byla úspěšně dokončena."))
+	
 
 	#label=QtGui.QLabel(registrationWizard.tr("Your account is registered."))
 	#label.setWordWrap(True)
@@ -239,9 +241,9 @@ class registrationWizard(QtGui.QWizard):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QWizard.__init__,(self,parent))
 		self.main=main
-		self.addPage(createFirstPage(self))
+		self.addPage(firstPage(self))
 		#self.addPage(createThirdPage(self))
-		self.addPage(createWaitPage(self))
+		self.addPage(waitPage(self))
 		self.addPage(createSecondPage(self))
 		self.addPage(createFinishPage(self))
 		self.setWindowTitle(self.tr("Registration Wizard"))
@@ -249,6 +251,11 @@ class registrationWizard(QtGui.QWizard):
 		self.error=None
 		self.registered=False
 		self.jid=""
+		QtCore.QObject.connect(self,QtCore.SIGNAL("currentIdChanged ( int ) "),self.idChanged)
+		#self.setOption(QtGui.QWizard.IndependentPages,True)
+
+	def idChanged(self,i):
+		self.button(QtGui.QWizard.BackButton).setEnabled(False)
 
 	def setAvatar(self):
 		file=list(QtGui.QFileDialog.getOpenFileNames(self,self.tr("Choose avatar")))
@@ -266,16 +273,17 @@ class registrationWizard(QtGui.QWizard):
 
 
 	def nicknameChanged(self,nickname):
-		self.jid=nickname+"@"+self.serverComboBox.currentText()
-		self.jidLabel.setText(self.jid)
+		if self.main.getJid(unicode(nickname+"@"+self.serverComboBox.currentText())):
+			self.jid=unicode(nickname+"@"+self.serverComboBox.currentText())
+			self.jidLabel.setText(self.jid)
 
 	def serverComboBoxActivated(self,server):
 		server=unicode(server)
 		nickname=unicode(self.field("nickname").toString())
 		self.jid=nickname+"@"+server
 		self.jidLabel.setText(self.jid)
-		
-		
+		self.page(0).emit(QtCore.SIGNAL("completeChanged()"))
+
 	def initializePage(self,i):
 		#page=self.page(i)
 		#print i,self.error
@@ -290,6 +298,7 @@ class registrationWizard(QtGui.QWizard):
 			#server=servers[int(self.field("server").toString())-1]
 			#jid=unicode(self.field("jid").toString())
 			#password=unicode(self.field("password").toString())
+			self.button(QtGui.QWizard.BackButton).setEnabled(False)
 			j=self.jid.split("@")
 			name=j[0]
 			server=j[1]
@@ -300,8 +309,10 @@ class registrationWizard(QtGui.QWizard):
 			self.cl.connect()
 			reactor.run()
 		elif i==2:
+			self.button(QtGui.QWizard.BackButton).setEnabled(False)
 			self.registered=True
 		elif i==3:
+			self.button(QtGui.QWizard.BackButton).setEnabled(False)
 			card={}
 			card["N-GIVEN"]=unicode(self.field("firstname").toString())
 			card["N-FAMILY"]=unicode(self.field("surname").toString())
