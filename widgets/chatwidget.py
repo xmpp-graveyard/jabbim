@@ -234,10 +234,11 @@ class flowLayout(QtGui.QLayout):
 class chatWidget(abstractChatWidget):
 	def __init__(self,main,jid,parent=None):
 		jidt=jidT.JID(jid)
-		try:
-			xhtml=main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/xhtml-im') #: True if user supports xhtml, otherwise False
-		except:
-			xhtml=False
+		#try:
+			#xhtml=main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/xhtml-im') #: True if user supports xhtml, otherwise False
+		#except:
+			#xhtml=False
+		xhtml=main.client.hasFeature(jid,'http://jabber.org/protocol/xhtml-im')
 		abstractChatWidget.__init__(self,Ui_chatwidget,abstractTextView,main,jid,xhtml,parent)
 
 		# set splitters sizes

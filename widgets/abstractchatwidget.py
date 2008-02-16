@@ -680,6 +680,7 @@ class abstractChatWidget(QtGui.QWidget):
 				el.removeAttribute("style")
 		for el in a.getElementsByTagName('a'):
 			alinks.append(unicode(el.getAttribute('href')))
+			alinks.append(unicode(gatherTextNodes(el)))
 			for x in el.getElementsByTagName("span"):
 				x.removeAttribute("style")
 				#print unicode(x.toxml())
