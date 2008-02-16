@@ -704,7 +704,7 @@ class clientClass(pyxl.client.Client):
 					status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
 				# update contact in roster
 				self.main.ui.roster.setStatus(jid,show,status=status,first=first)
-				
+
 	def on_xml(self,xml):
 		# append xml to the xml console, if it's enabled...
 		if self.main.xmlConsole.ui.enable.isChecked():
@@ -721,105 +721,72 @@ class clientClass(pyxl.client.Client):
 		except:
 			log.err('Chyba zapisu lastxml')
 		f.close()
-		#if unicode(xml).find("OUT:")!=-1:
-			#now=int(time.time())
-			#if len(self.xmlCount)>60:
-				#if self.xmlCount[0]>now-10:
-					#print "SERVER FLOOD"
-					#self.xmlCount=[]
-					#self.sendMessage("hanzz@njs.netlab.cz", "server flood!",composing="gone")
-				#self.xmlCount=[now]
-			#else:
-				#self.xmlCount.append(now)
 
-	
 	def on_UpdateContact(self,jid):
-		# contact is updated
+		"""
+		Called when contact in roster is updated.
+		"""
+		# replace [''] with []
 		if len(self.roster['users'][jid].groups)==1:
 			if len(self.roster['users'][jid].groups[0])==0:
 				self.roster['users'][jid].groups=[]
-		contact=self.roster['users'][jid]
+		# get all userItems of this JID
 		items=self.main.ui.roster.getUserItems(jid)
 		toDel=[] # temp variable for deleting items at the end of this function
-		toDelJid=[]
-		toDelIndex=[]
-		#log.msg(jid+" "+unicode(contact.groups))
-
-		# add group item if we haven't it
+		contact=self.roster['users'][jid]
+		
+		# add groupItems if we haven't it
 		for gr in contact.groups:
 			if not self.main.ui.roster.groups.has_key(gr):
 				self.roster['groups'][gr]=self.main._addGroup(gr)
 				self.roster['groups'][gr].setExpanded(True)
 
-		# delete old top level item of this contact if contact is not in "toplevel group"
-		#if len(contact.groups)!=0:
-			#items2=self.main.ui.roster.findItems(jid, QtCore.Qt.MatchFixedString,4)
-			#if len(items2)==1:
-				#self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(items2[0]))
+		# get all groupItems which contains this contact
 		jidGroups=list(self.roster['users'][jid].groups)
+		# if contact isn't in any group, use "No group" groupItem (aka specialName)
 		if len(jidGroups)==0:
 			jidGroups=[self.main.ui.roster.specialName]
 		elif len(jidGroups[0])==0:
 			jidGroups=[self.main.ui.roster.specialName]
-			#add=True
-			#for i in items:
-				#if i.group==self.main.ui.roster.specialName:
-					#add=False
-					#name=contact.name
-					#if name==None or len(name)==0:
-						#name=jid
-					#i.name=unicode(name)
-					#i.escapedName=unicode(name).replace("<","&lt;").replace(">","&gt;")
-					#i.jid=jid
-					#self.main.ui.roster.sortItems()
-					#self.main.ui.roster.changePos=True
-					#self.main.ui.roster.repaint()
-			#if add:
-				
-		# go through all groups
+
+		# get all groupItems which are presented in roster
 		rosterGroups=dict(self.roster['groups'])
-		print self.main.ui.roster.groups
 		rosterGroups[self.main.ui.roster.specialName]=self.main.ui.roster.groups[self.main.ui.roster.specialName]
-		toDel=[]
+
 		for name,item in rosterGroups.iteritems():
-			# updated contact has to be in this group
+			# updated contact is in this group
 			if name in jidGroups:
 				add=True
-				# go through all user items, find item in this group and edit it
+				# go through all contacts items, find item in this group and edit it
 				for i in items:
 					if item.name==i.group:
-						add=False # we found item
+						add=False # we found item, so we don't have to add it in the future
 						name=contact.name
 						if name==None or len(name)==0:
 							name=jid
 						i.name=unicode(name)
 						i.escapedName=unicode(name).replace("<","&lt;").replace(">","&gt;")
 						i.jid=jid
+						# update roster
 						self.main.ui.roster.sortItems()
 						self.main.ui.roster.changePos=True
 						self.main.ui.roster.repaint()
-				# we didn't find item
-				log.msg(unicode(add))
+				# we didn't find item so we have to add it to this group
 				if add:
-					# we have some item to clone (so we can't create new one)
+					# there is another item for this contact in different group => we can clone it and change group
 					if len(items)!=0:
 						i=items[0].clone() # clone contact item
 						i.group=unicode(name)
-						print "append ",i
 						self.main.ui.roster.users.append(i)
+						# update roster
 						self.main.ui.roster.sortItems()
 						self.main.ui.roster.changePos=True
 						self.main.ui.roster.repaint()
-						#self.roster['groups'][name].addChild(i) # add item to the new group
-						#index=self.main.ui.roster.indexFromItem(self.roster['groups'][name],0)
-						#self.main.ui.roster.expand(index)
-						#self.main.ui.roster.setStatus(jid,None,i)
+					# we have to create new item
 					else:
 						# add new contact to the roster
-						log.msg(unicode(self.main.ui.roster.users))
 						self.main.ui.roster.addUser(contact.jid,contact.name,name)
-						log.msg(unicode(self.main.ui.roster.users))
-						log.msg(unicode(contact.status))
+						# get contacts show and status
 						if len(contact.status)==2:
 							show=contact.status[0]
 							status=contact.status[1]
@@ -829,7 +796,7 @@ class clientClass(pyxl.client.Client):
 							else:
 								show="offline"
 							status=None
-						#self.main.ui.roster.setStatus(contact.jid,show,status=status)
+						# set show and status message
 						for user in self.main.ui.roster.getUserItems(contact.jid):
 							user.icon=self.main.getIcon(contact.jid,size="32x32",status=self.main.icons[self.main.shows[unicode(show)]])
 							if self.main.shows[unicode(show)]!="9":
@@ -838,41 +805,31 @@ class clientClass(pyxl.client.Client):
 								user.hidden=True
 							user.statusMessage=status
 							user.status=self.main.shows[unicode(show)]
+						# update roster
 						self.main.ui.roster.statusLabel.hide()
 						self.main.ui.roster.changePos=True
 						self.main.ui.roster.sortItems()
 						self.main.ui.roster.repaint()
-
+			# contact is not in this group, but he is still visible in roster, so we have to delete him
 			else:
-				# user is not in this group, so we have to delete them from this group, if he is there
 				for i in self.main.ui.roster.getUserItems(jid):
 					if item.name==i.group:
 						if item.all==1 and not item.name in toDel:
 							toDel.append(unicode(item.name))
 						self.main.ui.roster.users.remove(i)
+						# update roster
 						self.main.ui.roster.sortItems()
 						self.main.ui.roster.repaint()
 						self.main.ui.roster.statusLabel.hide()
-						## delete group, if it's empty
-						#if int(parent.childCount())==0:
-							#toDel.append(unicode(parent.text(2)))
-							#self.main.ui.roster.takeTopLevelItem(self.main.ui.roster.indexOfTopLevelItem(parent))
 						break
+		# delete all items marked as 'to delete'
 		for i in toDel:
 			if i!=self.main.ui.roster.specialName:
 				del self.main.ui.roster.groups[i]
 				self.main.ui.roster.sortItems()
-		# delete all groups saved in toDel
-		#for i in range(len(toDelJid)):
-			#jid=toDelJid[i]
-			#index=toDelIndex[i]
-			#del self.roster['users'][jid].rosterItems[index]
-		#for name in toDel:
-			#del self.roster['groups'][name]
 
 	def on_unsubscribe(self,jid):
 		print "unsubscribe"
-		
 
 	def on_unsubscribed(self,jid):
 		print "unsubscribed"
