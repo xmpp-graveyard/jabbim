@@ -957,7 +957,7 @@ class clientClass(pyxl.client.Client):
 				tab.chat.textEditWrite(message)
 			return
 
-		if len(body)!=0:
+		if True:
 			# parse message body/xhtml
 			if xhtml==None:
 				message=unicode(body).replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
@@ -1044,7 +1044,10 @@ class clientClass(pyxl.client.Client):
 				text+="</td></tr></table>"
 				self.main.events.addInfoEvent(header=mainWindow.tr("New message"),text=mainWindow.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[],tooltip=text)
 				self.main.tray.showMessage(mainWindow.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
-				self.main.chat.addChatTab(frm.full(),unicode(user),icon,message)
+				if self.groupchats.has_key(frm.userhost()):
+					self.main.chat.addChatTab(frm.full(),unicode(user),icon,message,full=True)
+				else:
+					self.main.chat.addChatTab(frm.full(),unicode(user),icon,message)
 				if created:
 					self.main.chat.setWindowState(self.main.chat.windowState() & ~QtCore.Qt.WindowActive | QtCore.Qt.WindowMinimized )
 					self.main.setWindowState(self.main.windowState() & QtCore.Qt.WindowActive)
