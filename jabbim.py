@@ -574,34 +574,32 @@ class clientClass(pyxl.client.Client):
 				self.main.showInvitation(jid, room, reason, cont)
 
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = [], reason = '', actor = None, n=None):
-		
-		show = unicode(show) #!
-		# presence in groupchat
+		"""
+		Called when groupchat presence arrived.
+		"""
+		show = unicode(show)
+		# we are not in this room
 		if not self.groupchats.has_key(muc):
 			log.msg("bad GC presence:"+unicode(muc)+"; we are not connected there")
 			return
-		print 'reason,actor=',[reason],[actor]
+		
+		# find tab for this room
+		tab,index=self.main.chat.findTab(muc,True)
+		if not tab:
+			# we don't have opened tab for this room => nothing to do...
+			return
+		
 		if show=="offline":
-			# get user role
-			# find good tab according to jid
-			for i in range(self.main.chat.ui.chatTab.count()):
-				w=self.main.chat.ui.chatTab.widget(i)
-				if unicode(w.jid)==unicode(muc):
-					# edit user item
-					w.chat.removeUser(nick,codes,reason,actor,n)
-					break
+			# remove user from contact list
+			tab.chat.removeUser(nick,codes,reason,actor,n)
 		else:
-			# get user role
+			# get user role and affiliation
 			role=self.groupchats[muc].users[nick].role
 			affiliation=self.groupchats[muc].users[nick].affiliation
-			# find good tab according to jid
-			for i in range(self.main.chat.ui.chatTab.count()):
-				w=self.main.chat.ui.chatTab.widget(i)
-				if unicode(w.jid)==unicode(muc):
-					# edit user item
-					w.chat.editUser(nick,show,role,affiliation)
-					break
-		# message skin
+			# edit user item in contact list
+			tab.chat.editUser(nick,show,role,affiliation)
+			
+		# show status message in conversation textEdit
 		if not u'303' in codes:
 			mainWindow=self.main
 			message="[nick] "+unicode(mainWindow.tr('is now'))+" [show] [[message]]"
@@ -612,148 +610,94 @@ class clientClass(pyxl.client.Client):
 			message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', nick)
 			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
 			
-			w.chat.textEditWrite(message)
-		#tab,index=self.main.chat.findTab(muc+"/"+nick)
-		#if w and tab:
-			#tab.chat.textEditWrite(message)
-			#tab.ic=self.main.getIcon(unicode(muc),size="16x16",status=self.main.icons[self.main.shows[unicode(show)]])
-			#self.main.chat.ui.chatTab.setTabIcon(index,tab.ic)
-		w.chat.lastMessageFrom=""
+			tab.chat.textEditWrite(message)
+		# refresh lastMessageFrom
+		tab.chat.lastMessageFrom=""
 
 	def on_presence(self,jid,show,error=None,first=False):
-		#print "presence",jid,show
-		# normal presence handler
-		#log.msg("PRESENCE "+unicode(jid.full())+" "+unicode(show))
-		print 'error: ', [error]
+		"""
+		Called when normal presence arrived.
+		"""
 		if error!=None:
 			print "PRESENCE ERROR:"+unicode(error)
 			return
 		mainWindow=self.main
-		#else:
-			#print jid.userhost(),self.jid.userhost()
+
+		# get tab for this contact
+		tabFull,indexFull=self.main.chat.findTab(jid.full(),True) # tab with resource
+		tab,index=self.main.chat.findTab(jid.full(),False) # tab without resource
+
+		# show info about status change in conversation textEdit
+		if str(self.main.config["showChatStatusChanges"])=="True" and tabFull:
+			# get senders username
+			user=self.main.ui.roster.getNameByJID(jid.userhost())
+			# append message to textEdit
+			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
+			tabFull.chat.textEditWrite(message)
+			# refresh variables
+			tabFull.chat.ui.chatstate.setText("")
+			tabFull.chat.lastMessageFrom=""
+
+			# we have opened conversation with this JID (no only with this resource)
+			if tab:
+				tab.chat.buildResourceMenu()
+				tab.chat.buildMetaMenu()
+
 		if show=="offline":
+			# self presence
 			if jid.userhost()==self.jid.userhost():
-				print 'self presence'
+				# rebuild self contacts menu
 				if jid.resource in self.main.selfResources:
 					self.main.selfResources.remove(jid.resource)
 					self.main.buildOfflineMenu()
-			#jid=jid.full() # get jid
-			# presence has resource
-			#if len(unicode(jid).rsplit("/"))!=1:
-				#resource=unicode(jid).rsplit("/")[1]
-				#jid=unicode(jid).rsplit("/")[0]
-				#self.main.ui.roster.setStatus(jid,show,first=first)
-			#else:
+			# set status in roster
 			self.main.ui.roster.setStatus(jid.userhost(),show,first=first)
 
-			for i in range(self.main.chat.ui.chatTab.count()):
-				w=self.main.chat.ui.chatTab.widget(i)
-				if unicode(jidT.JID(w.jid).full())==unicode(jid.full()):
-					w.ic=self.main.getIcon(unicode(jid.userhost()),size="16x16",status="offline")
-					
-					self.main.chat.ui.chatTab.setTabIcon(i,w.ic)
-					user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
-					if len(user)==0:
-						user=self.main.ui.roster.getMetaItems(jid.userhost())
-						if len(user)!=0:
-							user=user[0]
-					if len(user)!=0:
-						#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
-						user=user[0].name
-					else:
-						user=unicode(jid.full())
-					if str(self.main.config["showChatStatusChanges"])=="True":
-						#message=self.main.skin["gc_status_message"].replace("[time]",self.main.now()).replace("[show]",mainWindow.tr("offline")).replace('[nick]', user)
-						#message = message.replace("[[message]]",'')
+			# we have opened conversation with this resource
+			if tabFull:
+				# update tab icon
+				tabFull.ic=self.main.getIcon(unicode(jid.userhost()),size="16x16",status="offline")
+				self.main.chat.ui.chattabFull.settabFullIcon(indexFull,tabFull.ic)
 
-						mainWindow=self.main
-						message="[nick] "+unicode(mainWindow.tr('is now'))+" [show] [[message]]"
-						message = message.replace("[[message]]",'')
-						message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', user)
-						message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
-
-						w.chat.textEditWrite(message)
-						w.chat.ui.chatstate.setText("")
-						w.chat.lastMessageFrom=""
-					break
-			tab,index=self.main.chat.findTab(jid.full(),False)
-			if tab:
-				tab.chat.buildResourceMenu()
-				tab.chat.buildMetaMenu()
 		else:
-			#jid=jid.full() # get jid
-			# presence has resource
+			# self presence
 			if jid.userhost()==self.jid.userhost():
-				print 'self presence'
+				# rebuild self contacts menu
 				if not jid.resource in self.main.selfResources:
 					self.main.selfResources.append(jid.resource)
 					self.main.buildOfflineMenu()
-			status=None
-			if jid.resource:
-				if self.roster['users'][jid.userhost()].resources.has_key(jid.resource):
-					res=self.roster['users'][jid.userhost()].resources[jid.resource]
-					status=res.status
-			else:
-				status=self.roster['users'][unicode(jid.userhost())].status[1]
 
-			for i in range(self.main.chat.ui.chatTab.count()):
-				w=self.main.chat.ui.chatTab.widget(i)
-				if unicode(jidT.JID(w.jid).full())==unicode(jid.full()):
-					w.ic=self.main.getIcon(unicode(jid.userhost()),size="16x16",status=self.main.icons[self.main.shows[unicode(show)]])
-					self.main.chat.ui.chatTab.setTabIcon(i,w.ic)
-					user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
-					if len(user)==0:
-						user=self.main.ui.roster.getMetaItems(jid.userhost())
-						if len(user)!=0:
-							user=user[0]
-					if len(user)!=0:
-						#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
-						user=user[0].name
-					else:
-						user=unicode(jid.full())
-					if str(self.main.config["showChatStatusChanges"])=="True":
-						mainWindow=self.main
-						message="[nick] "+unicode(mainWindow.tr('is now'))+" [show] [[message]]"
-						message = message.replace("[[message]]",'')
-						message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', user)
-						message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
-						w.chat.textEditWrite(message)
-						w.chat.lastMessageFrom=""
-					break
+			# we have opened conversation with this resource
+			if tabFull:
+				# update tab icon
+				tabFull.ic=self.main.getIcon(unicode(jid.userhost()),size="16x16",status=self.main.icons[self.main.shows[unicode(show)]])
+				self.main.chat.ui.chatTab.setTabIcon(indexFull,tabFull.ic)
 
-			tab,index=self.main.chat.findTab(jid.full(),False)
-			if tab:
-				tab.chat.buildResourceMenu()
-				tab.chat.buildMetaMenu()
 			if jid.resource:
 				resource=jid.resource
 				jid=jid.userhost()
-				# get highest resource and status
+				# get highest resource
 				try:
 					highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
 					status=highest.status
 				except:
+					status=None
 					print 'error in resource', [jid]
-				#if highest.status!=None:
-					#status=highest.status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
-				# set status
-				#self.main.ui.roster.setStatus(jid,highest.show,status=status,first=first)
-				# get user status
-				#status=self.roster['users'][jid].status[1]
+				# get status message
 				if status!=None:
 					status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
-				# set status
+				# update contact in roster
 				try:
 					self.main.ui.roster.setStatus(jid,highest.show,status=highest.status,first=first)
 				except:
 					print 'Error in resource ', jid
 			else:
-				# get user status
+				# get status message
 				jid=jid.userhost()
 				status=self.roster['users'][jid].status[1]
 				if status!=None:
 					status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
-				# set status
+				# update contact in roster
 				self.main.ui.roster.setStatus(jid,show,status=status,first=first)
 				
 	def on_xml(self,xml):
