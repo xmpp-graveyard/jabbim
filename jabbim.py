@@ -331,11 +331,13 @@ class clientClass(pyxl.client.Client):
 		for gr in groups:
 			if not self.roster['groups'].has_key(gr):
 				self.roster['groups'][gr]=self.main._addGroup(gr)
+		transport=False
 		# get host info if we haven't it
 		if len(unicode(jid).rsplit("@"))!=1:
 			host=unicode(jid).rsplit("@")[1]
 		else:
 			host=unicode(jid)
+			transport=True
 		if not self.main.hosts.has_key(host) and not host in self.temp_hosts:
 			self.temp_hosts.append(host)
 			self.getDiscoInfo(host)
@@ -347,7 +349,9 @@ class clientClass(pyxl.client.Client):
 		else:
 			for group in groups:
 				# add user item to the group
-				self.main.ui.roster.addUser(jid,name,group)
+				it=self.main.ui.roster.addUser(jid,name,group)
+				if transport:
+					it.transport=True
 
 		# load avatar
 		self.main._loadAvatar(self.main.homeDir+'/avatars/'+jid, self.avatars.get(jid), jid)

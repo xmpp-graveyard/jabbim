@@ -385,6 +385,7 @@ class rosterWidget(QtGui.QWidget):
 		item.hidden=True
 		item.setAvatar(QtGui.QIcon("images/48x48/apps/jabbim.png"))
 		self.users.append(item)
+		return item
 
 	def getGroupUsers(self,group):
 		"""
