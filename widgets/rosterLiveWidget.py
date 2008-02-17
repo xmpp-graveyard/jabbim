@@ -436,7 +436,7 @@ class rosterWidget(QtGui.QWidget):
 			user=key[1]
 			if transport=='True' and user.transport==True:
 				ret.append(user)
-			else:
+			elif not user.transport:
 				if self.showOffline==True and not user.hiddenBySearch:
 					if user.group==group:
 						ret.append(user)
