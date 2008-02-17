@@ -480,6 +480,10 @@ class clientClass(pyxl.client.Client):
 						useritem.privacy["allow"] = self.privacy.active.isAllowedJID(item.value)
 						useritem.privacy["hide"] = self.privacy.active.isHiddenJID(item.value)
 
+		for host in self.main.hosts.keys():
+			for i in self.main.ui.roster.getUserItems(host):
+				i.transport=True
+
 		# update roster
 		self.main.ui.roster.sortItems()
 		self.main.ui.roster.repaint()
