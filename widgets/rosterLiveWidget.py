@@ -2472,6 +2472,21 @@ class rosterWidget(QtGui.QWidget):
 		action=contactMenu.addAction(self.tr("Delete from roster"))
 		action.setData(QtCore.QVariant(jid))
 		action.setObjectName("delete_action")
+
+		value = contact.subscription
+		if value in ["ask"]:
+			action = contactMenu.addAction(self.tr("Authorize"))
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("a_authorize")
+		if value in ["from", "both",'ask']:
+			action = contactMenu.addAction(self.tr("Remove authorization"))	
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("a_unauthorize")
+		if value in ["none", "from"]:
+			action = contactMenu.addAction(self.tr("Request authorization"))
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("a_ask")
+
 		# separator
 		contactMenu.addSeparator()
 		# groups . submenu
@@ -2504,21 +2519,6 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					action.setData(QtCore.QVariant([unicode(jid),u"+"+unicode(k)]))
 				
-		#subscription = contactMenu.addMenu(self.tr("Authorization"))
-		value = contact.subscription
-		if value in ["none", "to"]:
-			action = contactMenu.addAction(self.tr("Authorize"))
-			action.setData(QtCore.QVariant(jid))
-			action.setObjectName("a_authorize")
-		if value in ["from", "both"]:
-			action = contactMenu.addAction(self.tr("Remove authorization"))	
-			action.setData(QtCore.QVariant(jid))
-			action.setObjectName("a_unauthorize")
-		if value in ["none", "from"]:
-			action = contactMenu.addAction(self.tr("Request authorization"))
-			action.setData(QtCore.QVariant(jid))
-			action.setObjectName("a_ask")
-		
 		if self.main.client.privacy:
 			if self.main.client.privacy.active:
 				submenu = contactMenu.addMenu(self.tr("Privacy"))
