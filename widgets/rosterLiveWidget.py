@@ -2504,18 +2504,18 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					action.setData(QtCore.QVariant([unicode(jid),u"+"+unicode(k)]))
 				
-		subscription = contactMenu.addMenu(self.tr("Authorization"))
+		#subscription = contactMenu.addMenu(self.tr("Authorization"))
 		value = contact.subscription
 		if value in ["none", "to"]:
-			action = subscription.addAction(self.tr("Send authorization to contact"))
+			action = contactMenu.addAction(self.tr("Authorize"))
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("a_authorize")
 		if value in ["from", "both"]:
-			action = subscription.addAction(self.tr("Remove authorization from contact"))	
+			action = contactMenu.addAction(self.tr("Remove authorization"))	
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("a_unauthorize")
 		if value in ["none", "from"]:
-			action = subscription.addAction(self.tr("Request authorization from contact"))	
+			action = contactMenu.addAction(self.tr("Request authorization"))
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("a_ask")
 		
