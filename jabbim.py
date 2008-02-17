@@ -302,7 +302,8 @@ class clientClass(pyxl.client.Client):
 					if not typ in ['weather','smtp','sms','rss']:
 						self.main.transports[jid]=None
 						self.main.buildOfflineMenu()
-				print 'DISCO',jid,typ
+				print 'DISCO',jid,typ,self.main.transports.has_key(jid),self.roster['users'].has_key(jid)
+				print 'DISCO',self.main.transports
 				self.main.hosts[jid]=typ
 
 				for host in self.main.hosts.keys():
