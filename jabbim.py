@@ -305,7 +305,7 @@ class clientClass(pyxl.client.Client):
 				print 'DISCO',jid,typ
 				self.main.hosts[jid]=typ
 
-				for host in self.main.hosts:
+				for host in self.main.hosts.keys():
 					for i in self.main.ui.roster.getUserItems(host):
 						i.transport=True
 		# set icons for users with this host
