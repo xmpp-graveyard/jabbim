@@ -36,6 +36,7 @@ class firstPage(QtGui.QWizardPage):
 	
 		nicknameLabel=QtGui.QLabel(registrationWizard.tr("Nickname:"))
 		registrationWizard.nicknameLineEdit=QtGui.QLineEdit()
+		registrationWizard.nicknameLineEdit.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp("^([!#$%(-.0-9;=?a-zA-Z]+)$"),registrationWizard.nicknameLineEdit))
 		
 		passwordLabel=QtGui.QLabel(registrationWizard.tr("Password:"))
 		passwordLineEdit=QtGui.QLineEdit()
@@ -128,7 +129,7 @@ def createSecondPage(registrationWizard):
 	emailLabel=QtGui.QLabel(registrationWizard.tr("Email:"))
 	emailLineEdit=QtGui.QLineEdit()
 	emailLineEdit.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp("^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.(([0-9]{1,3})|([a-zA-Z]{2,3})|(aero|coop|info|museum|name))$"),emailLineEdit))
-	
+
 	avatarLabel=QtGui.QLabel(registrationWizard.tr("Avatar:"))
 	registrationWizard.avatar=QtGui.QLabel("")
 	button=QtGui.QPushButton(registrationWizard.tr("Open"))

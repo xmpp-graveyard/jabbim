@@ -957,7 +957,7 @@ class clientClass(pyxl.client.Client):
 				tab.chat.textEditWrite(message)
 			return
 
-		if not chatstate:
+		if len(body)!=0:
 			# parse message body/xhtml
 			if xhtml==None:
 				message=unicode(body).replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
