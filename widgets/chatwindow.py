@@ -492,7 +492,7 @@ class chatWindow(QtGui.QMainWindow):
 			userhost=self.main.getJid(jid).userhost()
 			for i in range(self.ui.chatTab.count()):
 				w=self.ui.chatTab.widget(i)
-				if self.main.getJid(w.jid).userhost()==userhost:
+				if self.main.getJid(w.jid).userhost()==userhost and not self.main.getJid(w.jid).resource:
 					return w,i # tab, index
 		else:
 			for i in range(self.ui.chatTab.count()):
