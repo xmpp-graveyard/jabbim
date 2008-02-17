@@ -302,8 +302,6 @@ class clientClass(pyxl.client.Client):
 					if not typ in ['weather','smtp','sms','rss']:
 						self.main.transports[jid]=None
 						self.main.buildOfflineMenu()
-				print 'DISCO',jid,typ,self.main.transports.has_key(jid),self.roster['users']
-				print 'DISCO',self.main.transports
 				self.main.hosts[jid]=typ
 
 				for host in self.main.hosts.keys():
@@ -342,7 +340,15 @@ class clientClass(pyxl.client.Client):
 		if not self.main.hosts.has_key(host) and not host in self.temp_hosts:
 			self.temp_hosts.append(host)
 			self.getDiscoInfo(host)
-
+		if transport:
+			try:
+				name=self.disco[host][None]['identities'].keys()[0]
+				typ=self.disco[host][None]['identities'][name]['type']
+			except:
+				typ=None
+			if typ and not typ in ['weather','smtp','sms','rss']:
+				self.main.transports[jid]=None
+				self.main.buildOfflineMenu()
 		# user is not in any group
 		if len(groups)==0:
 			# add user item to Unknown group
