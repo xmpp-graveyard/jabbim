@@ -644,9 +644,9 @@ class clientClass(pyxl.client.Client):
 			tabFull.chat.lastMessageFrom=""
 
 		# we have opened conversation with this JID (no only with this resource)
-		if tab:
-			tab.chat.buildResourceMenu()
-			tab.chat.buildMetaMenu()
+		if tabFull:
+			tabFull.chat.buildResourceMenu()
+			tabFull.chat.buildMetaMenu()
 
 		if show=="offline":
 			# self presence
@@ -662,7 +662,7 @@ class clientClass(pyxl.client.Client):
 			if tabFull:
 				# update tab icon
 				tabFull.ic=self.main.getIcon(unicode(jid.userhost()),size="16x16",status="offline")
-				self.main.chat.ui.chattabFull.settabFullIcon(indexFull,tabFull.ic)
+				self.main.chat.ui.chatTab.setTabIcon(indexFull,tabFull.ic)
 
 		else:
 			# self presence
