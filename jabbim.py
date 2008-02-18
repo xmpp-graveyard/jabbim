@@ -1789,14 +1789,16 @@ class mainWindow(QtGui.QMainWindow):
 				# because transport doesn't need to have the same show in roster as we send him before
 				# So FE we sent away, but in roster we have still online...
 				if self.transports[transport]:
-					ic=QtGui.QIcon(self.transports[transport].icon())
-					self.ui.hboxlayout4.removeWidget(self.transports[transport])
-					self.transports[transport].setParent(None)
-					self.transports[transport].deleteLater()
+					return
+					#ic=QtGui.QIcon(self.transports[transport].icon())
+					#self.ui.hboxlayout4.removeWidget(self.transports[transport])
+					#self.transports[transport].setParent(None)
+					#self.transports[transport].deleteLater()
 				else:
 					ic=self.getIcon("1@"+transport,status=show,size="16x16")
 
 				self.transports[transport]=QtGui.QToolButton(self.ui.offlineButton.parent())
+				self.transports[transport].setMaximumSize(QtCore.QSize(16777215,20))
 				self.transports[transport].setIcon(ic)
 				menu=QtGui.QMenu(transport,self.transports[transport])
 				menu.setIcon(self.getIcon(status=show,size="16x16"))
