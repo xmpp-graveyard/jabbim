@@ -129,9 +129,12 @@ class Session:
 	def execStage(self, stageC, id, data = None, xmllang=None):
 		"Runs stageC.exec_() and stageC.send()"
 		stage = stageC(self.main, id, self, data, xmllang)
-		stage.exec_()
+		d = stage.exec_()
 		log.msg("Executing stage")
-		stage.send()
+		if d != None:
+			d.addCallback(stage.send)
+		else:
+			stage.send()
 		log.msg("Stage executed")
 
 	def addCallbackStages(self, stages):
