@@ -68,7 +68,7 @@ str self.status = <command> status attribute, probably "executing" or "completed
 dict self.actions = {"action":Stage} - "action" is the action chosen by responder (prev, next, execute), Stage is derived a class (not instance)"""
 		pass
 
-	def send(self):
+	def send(self, value = None):
 		"Sends the result of stage with values set in __init__ and exec_"
 		iq = IQ(self.main.client.xmlstream, "result")
 		iq["to"] = self.session.jid
