@@ -301,7 +301,7 @@ class clientClass(pyxl.client.Client):
 					# don't show this contacts as transports in menu
 					if not typ in ['weather','smtp','sms','rss']:
 						self.main.transports[jid]=None
-						self.main.buildOfflineMenu()
+						self.main.buildStatusWidgetMenu()
 				self.main.hosts[jid]=typ
 
 				for host in self.main.hosts.keys():
@@ -346,9 +346,22 @@ class clientClass(pyxl.client.Client):
 				typ=self.disco[host][None]['identities'][name]['type']
 			except:
 				typ=None
+			if typ!=None:
+				# parse types
+				if typ=="pep" or typ=="im":
+					typ="jabber"
+				elif typ=="file":
+					typ="disk"
+				elif typ=='gadu-gadu':
+					typ='gadugadu'
+				elif typ=='x-tlen':
+					typ='tlen'
+				if jid.find("weather")!=-1:
+					typ='weather'
 			if typ and not typ in ['weather','smtp','sms','rss']:
 				self.main.transports[jid]=None
 				self.main.buildOfflineMenu()
+				self.main.buildStatusWidgetMenu()
 		# user is not in any group
 		if len(groups)==0:
 			# add user item to Unknown group
@@ -1771,7 +1784,21 @@ class mainWindow(QtGui.QMainWindow):
 					show='offline'
 				else:
 					show=show[0]
-				menu=QtGui.QMenu(transport,self.statusWidgetMenu)
+
+				# We have to use status icon from previous instance of QMenu,
+				# because transport doesn't need to have the same show in roster as we send him before
+				# So FE we sent away, but in roster we have still online...
+				if self.transports[transport]:
+					ic=QtGui.QIcon(self.transports[transport].icon())
+					self.ui.hboxlayout4.removeWidget(self.transports[transport])
+					self.transports[transport].setParent(None)
+					self.transports[transport].deleteLater()
+				else:
+					ic=self.getIcon("1@"+transport,status=show,size="16x16")
+
+				self.transports[transport]=QtGui.QToolButton(self.ui.offlineButton.parent())
+				self.transports[transport].setIcon(ic)
+				menu=QtGui.QMenu(transport,self.transports[transport])
 				menu.setIcon(self.getIcon(status=show,size="16x16"))
 				# add custom messages and shows QActions to the transports QMenu
 				# it's the same code (principle) as above, but it uses different QAction.data(),
@@ -1780,16 +1807,16 @@ class mainWindow(QtGui.QMainWindow):
 				for key in ['online','chat','away','xa','dnd']:
 					if separator and len(config[key])!=0:
 						menu.addSeparator()
-					action=menu.addAction(self.getIcon(status=key,size="16x16"),self.status[key])
+					action=menu.addAction(self.getIcon("1@"+transport,status=key,size="16x16"),self.status[key])
 					action.setData(QtCore.QVariant([key,unicode(transport)]))
 					if len(config[key])!=0:
 						for val in config[key]:
 							status=val[0]
 							index=val[1]
 							if len(status)>20:
-								action=menu.addAction(self.getIcon(status=key,size="16x16"),unicode(status)[:20]+"...")
+								action=menu.addAction(self.getIcon("1@"+transport,status=key,size="16x16"),unicode(status)[:20]+"...")
 							else:
-								action=menu.addAction(self.getIcon(status=key,size="16x16"),unicode(status))
+								action=menu.addAction(self.getIcon("1@"+transport,status=key,size="16x16"),unicode(status))
 							# [show_idOfMessage,jidOfTransport]
 							action.setData(QtCore.QVariant([key+"_"+unicode(index),unicode(transport)]))
 						menu.addSeparator()
@@ -1800,15 +1827,18 @@ class mainWindow(QtGui.QMainWindow):
 				action.setData(QtCore.QVariant(['offline',unicode(transport)]))
 				if separator:
 					menu.addSeparator()
-				# We have to use status icon from previous instance of QMenu,
-				# because transport doesn't need to have the same show in roster as we send him before
-				# So FE we sent away, but in roster we have still online...
-				if self.transports[transport]:
-					menu.setIcon(self.transports[transport].icon())
+
 				# updates transport menu in self.transports and add it to the self.statusWidgetMenu
-				self.transports[transport]=menu
-				self.statusWidgetMenu.addMenu(menu)
-			self.statusWidgetMenu.addSeparator()
+				#self.transports[transport]=menu
+				
+				
+				self.transports[transport].setPopupMode(QtGui.QToolButton.InstantPopup)
+				self.transports[transport].setArrowType(QtCore.Qt.NoArrow)
+				app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusWidgetChanged)
+				self.transports[transport].setMenu(menu)
+				self.ui.hboxlayout4.addWidget(self.transports[transport])
+				#self.statusWidgetMenu.addMenu(menu)
+			#self.statusWidgetMenu.addSeparator()
 
 		# other actions
 		action=self.statusWidgetMenu.addAction(self.getIcon(status="online",size="16x16"),self.tr("Add message"))
@@ -1938,7 +1968,7 @@ class mainWindow(QtGui.QMainWindow):
 			# update transport's icon in statusWidgetMenu
 			if self.transports.has_key(jid):
 				if self.transports[jid]!=None:
-					self.transports[jid].setIcon(self.getIcon(status=unicode(show),size="16x16"))
+					self.transports[jid].setIcon(self.getIcon('1@'+jid,status=unicode(show),size="16x16"))
 			# send presence
 			self.client.sendPresence(to=jid,show = unicode(show), status = unicode(message),priority=pri)
 
