@@ -145,6 +145,37 @@ def makeDataForm(parent,layout,form,row=1):
 					if d.name == "desc":
 						widget.setToolTip(unicode(d))
 				row+=1
+			elif x['type']=="list-multi":
+				#<field var='userlist' type='list-single' label='Userlist on GG server'><value>get</value><option label='ignore'><value>ignore</value></option><option label='retrieve'><value>get</value></option></field>
+				try:
+					label=QtGui.QLabel(x['label'],parent)
+				except KeyError:
+					label=None
+				layout.addWidget(label,row,0)
+				widget=QtGui.QListWidget(parent)
+				widget.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
+				default=""
+				cur=None
+				for child in x.elements():
+					if child.name == 'value':
+						default=unicode(child)
+					elif child.name=="option":
+						for ch in child.elements():
+							if ch.name=="value":
+								item=QtGui.QListWidgetItem(unicode(child['label']))
+								item.setData(32,QtCore.QVariant(unicode(ch)))
+								if unicode(ch)==default:
+									cur=item
+								widget.addItem(item)
+				#widget.setCurrentIndex(0)
+				if cur:
+					widget.setCurrentItem(cur)
+				layout.addWidget(widget,row,1)
+				var[x['var']]={'widget':widget,'type':x['type']}
+				for d in x.elements():
+					if d.name == "desc":
+						widget.setToolTip(unicode(d))
+				row+=1
 	return var,row
 
 def getVarData(var):
@@ -165,6 +196,11 @@ def getVarData(var):
 			ret[key]=unicode(text)
 		elif typ=="list-single":
 			ret[key]=unicode(widget.itemData(widget.currentIndex()).toString())
+		elif typ=='list-multi':
+			selected=[]
+			for item in widget.selectedItems():
+				selected.append(unicode(item.data(32).toString()))
+			ret[key]=selected
 	return ret
 
 def sendDataForm(main,jid,form,var,t,unregister=False):
@@ -199,6 +235,23 @@ def sendDataForm(main,jid,form,var,t,unregister=False):
 									text.remove(text[0])
 						for t in text:
 							x.addElement('value', content = unicode(t))
+					elif typ=="list-multi":
+						make=True
+						#text=unicode(widget.toPlainText())
+						#text=text.split('\n')
+						selected=[]
+						for item in widget.selectedItems():
+							selected.append(unicode(item.data(32).toString()))
+						
+						for child in x.elements():
+							if child.name == 'value':
+								make=False
+								child.children = []
+								if len(selected)!=0:
+									child.children.append(selected[0])
+									selected.remove(selected[0])
+						for text in selected:
+							x.addElement('value', content = unicode(text))
 						#if make:
 							#x.addElement('value', content = unicode(widget.toPlainText()))
 					elif typ=="boolean":
