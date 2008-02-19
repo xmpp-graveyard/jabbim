@@ -484,27 +484,27 @@ class chatWindow(QtGui.QMainWindow):
 				#pass
 		return count
 
-	def findTab(self,jid=None,full=None):
+	def findTab(self,jid=None,full=None,typ=['chat','groupchat']):
 		if full==True:
 			for i in range(self.ui.chatTab.count()):
 				w=self.ui.chatTab.widget(i)
-				if self.main.getJid(w.jid).full()==self.main.getJid(jid).full():
+				if self.main.getJid(w.jid).full()==self.main.getJid(jid).full() and w.typ in typ:
 					return w,i # tab, index
 		elif full==False:
 			userhost=self.main.getJid(jid).userhost()
 			for i in range(self.ui.chatTab.count()):
 				w=self.ui.chatTab.widget(i)
-				if self.main.getJid(w.jid).userhost()==userhost and not self.main.getJid(w.jid).resource:
+				if self.main.getJid(w.jid).userhost()==userhost and not self.main.getJid(w.jid).resource and w.typ in typ:
 					return w,i # tab, index
 		else:
 			for i in range(self.ui.chatTab.count()):
 				w=self.ui.chatTab.widget(i)
-				if self.main.getJid(w.jid).full()==self.main.getJid(jid).full():
+				if self.main.getJid(w.jid).full()==self.main.getJid(jid).full() and w.typ in typ:
 					return w,i # tab, index
 
 			for i in range(self.ui.chatTab.count()):
 				w=self.ui.chatTab.widget(i)
-				if self.main.getJid(w.jid).userhost()==self.main.getJid(jid).userhost():
+				if self.main.getJid(w.jid).userhost()==self.main.getJid(jid).userhost() and w.typ in typ:
 					return w,i # tab, index
 		return None,0 # tab, index
 

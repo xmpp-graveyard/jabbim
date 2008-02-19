@@ -613,21 +613,31 @@ class clientClass(pyxl.client.Client):
 			return
 		
 		# find tab for this room
-		tab,index=self.main.chat.findTab(muc,True)
+		tab,index=self.main.chat.findTab(muc,True,['groupchat'])
 		if not tab:
 			# we don't have opened tab for this room => nothing to do...
 			return
-		
+		tabFull,indexFull=self.main.chat.findTab(muc+'/'+nick,True,['chat'])
+		# we have opened conversation with this resource
+
 		if show=="offline":
 			# remove user from contact list
 			tab.chat.removeUser(nick,codes,reason,actor,n)
+			if tabFull:
+				# update tab icon
+				tabFull.ic=self.main.getIcon(size="16x16",status="offline")
+				self.main.chat.ui.chatTab.setTabIcon(indexFull,tabFull.ic)
 		else:
 			# get user role and affiliation
 			role=self.groupchats[muc].users[nick].role
 			affiliation=self.groupchats[muc].users[nick].affiliation
 			# edit user item in contact list
 			tab.chat.editUser(nick,show,role,affiliation)
-			
+			if tabFull:
+				# update tab icon
+				tabFull.ic=self.main.getIcon(size="16x16",status=show)
+				self.main.chat.ui.chatTab.setTabIcon(indexFull,tabFull.ic)
+
 		# show status message in conversation textEdit
 		if not u'303' in codes:
 			mainWindow=self.main
@@ -640,6 +650,10 @@ class clientClass(pyxl.client.Client):
 			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
 			
 			tab.chat.textEditWrite(message)
+			if tabFull:
+				tabFull.chat.textEditWrite(message)
+				tabFull.chat.lastMessageFrom=""
+
 		# refresh lastMessageFrom
 		tab.chat.lastMessageFrom=""
 
@@ -653,8 +667,8 @@ class clientClass(pyxl.client.Client):
 		mainWindow=self.main
 
 		# get tab for this contact
-		tabFull,indexFull=self.main.chat.findTab(jid.full(),True) # tab with resource
-		tab,index=self.main.chat.findTab(jid.full(),False) # tab without resource
+		tabFull,indexFull=self.main.chat.findTab(jid.full(),True,typ=['chat']) # tab with resource
+		tab,index=self.main.chat.findTab(jid.full(),False,typ=['chat']) # tab without resource
 		if tab and not tabFull:
 			tabFull=tab
 
