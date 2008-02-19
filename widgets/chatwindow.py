@@ -454,9 +454,11 @@ class chatWindow(QtGui.QMainWindow):
 					ev2=list(self.main.events.events)
 					r=False
 					for event in ev2:
-						if event['name']==widget.jid and (event['type']=="newMessage" or event['type']=="message"):
-							event['widget'].closeClicked()
-							r=True
+						jid=self.main.getJid(event['name'])
+						if jid:
+							if jid.userhost()==self.main.getJid(widget.jid).userhost() and (event['type']=="newMessage" or event['type']=="message"):
+								event['widget'].closeClicked()
+								r=True
 					if r:
 						print "some events were removed"
 						self.flashStatus=False
@@ -543,10 +545,12 @@ class chatWindow(QtGui.QMainWindow):
 
 		ev=list(self.main.events.events)
 		for event in ev:
-			if event['name']==widget.jid and (event['type']=="newMessage" or event['type']=="message"):
-				event['widget'].closeClicked()
-				#break
-				self.main.events.refreshTray()
+			jid=self.main.getJid(event['name'])
+			if jid:
+				if jid.userhost()==self.main.getJid(widget.jid).userhost() and (event['type']=="newMessage" or event['type']=="message"):
+					event['widget'].closeClicked()
+					#break
+					self.main.events.refreshTray()
 		if widget.typ=="chat":
 			self.main.client.sendMessage(unicode(widget.jid),"",composing="active")
 			widget.active=True
