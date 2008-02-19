@@ -773,7 +773,10 @@ class chatWindow(QtGui.QMainWindow):
 			#except:
 				#tabjid=""
 			#if tabjid==jid:
-		tab,index=self.findTab(jid,full)
+		if full:
+			tab,index=self.findTab(jid,full)
+		else:
+			tab,index=self.findTab(jid,None)
 		if tab:
 			self.show()
 			self.raise_()
