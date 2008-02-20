@@ -152,7 +152,8 @@ def loadConfig(main,status):
 			"soundPack":"default/default.cfg",
 			"allowChatstate": "True",
 			"adhocAllow": [],
-			"discoHistory": []
+			"discoHistory": [],
+			"startInTray": "False"
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:

@@ -220,6 +220,9 @@ class derived:
 					if len(self.roster['users'][JID.userhost()].resources)>0:
 						if self.roster['users'][JID.userhost()].resources[self.roster['users'][JID.userhost()].getHighestResource()].hasFeature('http://jabber.org/protocol/chatstates'):
 							message.addElement(composing, 'http://jabber.org/protocol/chatstates' )
+		if subject != None:
+			s = message.addElement('subject')
+			s.addContent(subject)
 		if len(message.children) == 0:
 			return
 #		self.on_xml(message.toXml())

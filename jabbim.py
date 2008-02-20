@@ -1377,6 +1377,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.filetransferQueue={}
 		self.allowedSids=[]
 		
+		
 		# preparing chat window
 		if self.config['oneWindow']=="True":
 			self.workspace=QtGui.QWorkspace(self.ui.mdiWidget)
