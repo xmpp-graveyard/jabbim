@@ -62,31 +62,32 @@ class addContactDialog(QtGui.QDialog):
 
 	def jidChanged(self,text=""):
 		text=unicode(self.ui.add_jid.text())
-		if text.find('@')!=-1:
+		if text.find('@')!=-1 and text.count('@') == 1:
 			jid=self.main.getJid(text)
+			print jid
 			if jid:
 				self.ui.save.setEnabled(True)
 #				return
-			if self.main.client.bookmarksEnabled:
-				host = text.split('@')[1]
-				self.muc = False
-				if self.main.client.disco.has_key(host) and self.main.client.disco[host][None].has_key('identities'):
-					for id in self.main.client.disco[host][None]['identities'].itervalues():
-						if id.get('category') == 'conference' and id.get('type') == 'text':
-							self.muc = True
-				if self.muc == True:
-					self.ui.save.setText(self.tr('Add bookmark'))
-					self.ui.add_group.setEnabled(False)
-					self.ui.search.setEnabled(False)
-					self.ui.add_message.hide()
-					self.ui.add_messageLabel.hide()
-				else:
-					self.ui.save.setText(self.tr('Add'))					
-					self.ui.add_group.setEnabled(True)
-					self.ui.search.setEnabled(True)
-					self.ui.add_message.show()
-					self.ui.add_messageLabel.show()
-			return
+				if self.main.client.bookmarksEnabled:
+					host = text.split('@')[1]
+					self.muc = False
+					if self.main.client.disco.has_key(host) and self.main.client.disco[host][None].has_key('identities'):
+						for id in self.main.client.disco[host][None]['identities'].itervalues():
+							if id.get('category') == 'conference' and id.get('type') == 'text':
+								self.muc = True
+					if self.muc == True:
+						self.ui.save.setText(self.tr('Add bookmark'))
+						self.ui.add_group.setEnabled(False)
+						self.ui.search.setEnabled(False)
+						self.ui.add_message.hide()
+						self.ui.add_messageLabel.hide()
+					else:
+						self.ui.save.setText(self.tr('Add'))					
+						self.ui.add_group.setEnabled(True)
+						self.ui.search.setEnabled(True)
+						self.ui.add_message.show()
+						self.ui.add_messageLabel.show()
+				return
 
 		
 		self.ui.save.setEnabled(False)
