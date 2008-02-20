@@ -1153,7 +1153,10 @@ class Client(derived):
 		try:
 			for item in self.discoitems[node]:
 				if node == "http://jabber.org/protocol/commands":
-					public = self.commands.nodes[item['node']][3]
+					try:
+						public = self.commands.nodes[item['node']][3]
+					except KeyError:
+						public = False
 					ji = jid.JID(el['from']).userhost()
 					if type(public) == bool:
 						allowed = public
@@ -1179,7 +1182,11 @@ class Client(derived):
 		log.msg("On command event")
 		command = el.firstChildElement()
 		node = command["node"]
-		public = self.commands.nodes[node][3]
+		try:
+			public = self.commands.nodes[node][3]
+		except KeyError:
+			#pokud se pta na node co nemame
+			public = False
 		ji = jid.JID(el['from']).userhost()
 		if type(public) == bool:
 			allowed = public
@@ -1613,7 +1620,7 @@ class Client(derived):
 		
 
 	
-	def sendFile(self, outjid, filename, fp, desc = None, preview = None, previewType = 'image/jpeg', typ = 'ibb'): #typ = None/ibb/socks5
+	def sendFile(self, outjid, filename, fp, desc = None, preview = None, previewType = 'image/jpeg', typ = 'None'): #typ = None/ibb/socks5
 		sid = str(random.randint(1000, sys.maxint))
 		
 		log.msg('sending file to '+ outjid)
