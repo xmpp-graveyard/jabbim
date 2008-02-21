@@ -428,6 +428,27 @@ def replace_url(text):
 			text+=word+" "
 	return text[:-1]
 	
+def getFilenameFromLnk(name)
+	if sys.platform == 'win32' :
+
+		from win32com.shell import shell
+		import pythoncom
+
+		class Win32Shortcut:
+		    def __init__(self, lnkname):
+		        self.shortcut = pythoncom.CoCreateInstance(
+		            shell.CLSID_ShellLink, None,
+		            pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
+		        self.shortcut.QueryInterface(pythoncom.IID_IPersistFile).Load(lnkname)
+
+		    def __getattr__(self, name):
+		        return getattr(self.shortcut, name)
+
+		s = Win32Shortcut(name)
+		return s.GetPath(0)[0]
+	else:
+		return name
+
 
 		
 
