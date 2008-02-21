@@ -153,7 +153,8 @@ def loadConfig(main,status):
 			"allowChatstate": "True",
 			"adhocAllow": [],
 			"discoHistory": [],
-			"startInTray": "False"
+			"startInTray": "False",
+			"sendOSInfo": "True"
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:

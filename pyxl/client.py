@@ -1075,7 +1075,8 @@ class Client(derived):
 		q = iq.addElement('query', 'jabber:iq:version')
 		q.addElement('name', content = self.client_name)
 		q.addElement('version', content = self.version)
-		q.addElement('os', content = self.client_os)
+		if len(self.client_os)>0:
+			q.addElement('os', content = self.client_os)
 #		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
 
