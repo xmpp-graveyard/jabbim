@@ -1568,14 +1568,15 @@ class mainWindow(QtGui.QMainWindow):
 		dialog.setResolveSymlinks(True)
 		file=dialog.getOpenFileNames(self,self.tr("Choose files"))
 		file=list(file)
+
+		new=[]
+		for f in file:
+			if unicode(f).endswith('.lnk'):
+				f = utils.getFilenameFromLnk(unicode(f))
+			if isfile(unicode(f)):
+				new.append(unicode(f))
+		file=new
 		if len(file)!=0:
-			new=[]
-			for f in file:
-				if unicode(f).endswith('.lnk'):
-					f = utils.getFilenameFromLnk(unicode(f))
-				if isfile(unicode(f)):
-					new.append(unicode(f))
-			file=new
 			self.showFiletransferDialog(file,jid)
 			#self.senddialog=filetransfer.filetransferDialog(self.main,file,jid)
 			#self.senddialog.show()
