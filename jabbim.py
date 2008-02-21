@@ -1564,7 +1564,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusLine.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def sendFiles(self,jid):
-		file=QtGui.QFileDialog.getOpenFileNames(self,self.tr("Choose files"))
+		dialog = QtGui.QFileDialog()
+		dialog.setResolveSymlinks(True)
+		file=dialog.getOpenFileNames(self,self.tr("Choose files"))
 		file=list(file)
 		if len(file)!=0:
 			new=[]
