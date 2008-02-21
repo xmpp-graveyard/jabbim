@@ -219,7 +219,8 @@ class Commands:
 				for elem in element.elements():
 					if elem.name == "title":
 						title = unicode(elem)
-#					if elem.name == 'instructions'
+					if elem.name == 'instructions':
+						self.dialog.ui.label.setText(unicode(elem))
 				if command["status"] == "completed":
 					self.dialog.ui.close.show()
 					self.var, self.row = dataforms.makeDataForm(
