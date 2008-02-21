@@ -1620,7 +1620,7 @@ class Client(derived):
 		
 
 	
-	def sendFile(self, outjid, filename, fp, desc = None, preview = None, previewType = 'image/jpeg', typ = 'None'): #typ = None/ibb/socks5
+	def sendFile(self, outjid, filename, fp, desc = None, preview = None, previewType = 'image/jpeg', typ = None): #typ = None/ibb/socks5
 		sid = str(random.randint(1000, sys.maxint))
 		
 		log.msg('sending file to '+ outjid)
