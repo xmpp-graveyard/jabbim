@@ -1572,7 +1572,7 @@ class mainWindow(QtGui.QMainWindow):
 			new=[]
 			for f in file:
 				if unicode(f).endswith('.lnk'):
-					f = util.getFilenameFromLnk(unicode(f))
+					f = utils.getFilenameFromLnk(unicode(f))
 				new.append(unicode(f))
 			file=new
 			self.showFiletransferDialog(file,jid)
