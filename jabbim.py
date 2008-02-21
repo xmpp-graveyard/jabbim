@@ -67,7 +67,7 @@ import urllib, random, xmlrpclib
 from imp import load_source
 from urllib import quote, unquote
 from include import plugins
-from os.path import basename,dirname
+from os.path import basename,dirname, isfile
 from twisted.words.protocols.jabber.xmlstream import IQ
 #from twisted.words.xish.domish import Element
 from twisted.words.protocols.jabber import jid as jidT
@@ -1573,7 +1573,8 @@ class mainWindow(QtGui.QMainWindow):
 			for f in file:
 				if unicode(f).endswith('.lnk'):
 					f = utils.getFilenameFromLnk(unicode(f))
-				new.append(unicode(f))
+				if isfile(unicode(f)):
+					new.append(unicode(f))
 			file=new
 			self.showFiletransferDialog(file,jid)
 			#self.senddialog=filetransfer.filetransferDialog(self.main,file,jid)
