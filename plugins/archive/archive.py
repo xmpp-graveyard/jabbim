@@ -170,7 +170,7 @@ class config:
 		self.main=main
 		self.config={}
 		self.config['messagesNumber']={'type':'number-spin','label':self.main.tr("Number of messages from last conversation, which are show in chat:"),'value':'5'}
-		self.config['messagesTime']={'type':'time-interval','label':self.main.tr("Cas, po kterem se zpravy z posledni konverzace nezobrazi:"),'value':'1:0:0'}
+		self.config['messagesTime']={'type':'time-interval','label':self.main.tr("How 'old' is last conversation (hours):"),'value':'1:0:0'}
 
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
