@@ -428,7 +428,7 @@ def replace_url(text):
 			text+=word+" "
 	return text[:-1]
 	
-def getFilenameFromLnk(name)
+def getFilenameFromLnk(name):
 	if sys.platform == 'win32' :
 
 		from win32com.shell import shell
