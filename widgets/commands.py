@@ -205,10 +205,10 @@ class Commands:
 			self.dialog.ui.label.setText(self.main.tr("Completed!"))
 			log.msg("Completed command with sessionid %s." % self.sessionid)
 		elif command["status"] == "executing":
-			self.dialog.ui.label.setText(self.main.tr("In progress."))
+#			self.dialog.ui.label.setText(self.main.tr("In progress."))
 			log.msg("Executing command with sessionid %s." % self.sessionid)
 		elif command["status"] == "canceled":
-			self.dialog.ui.label.setText("Canceled.")
+#			self.dialog.ui.label.setText("Canceled.")
 			log.msg("Canceled command with sessionid %s." % self.sessionid)
 		for element in command.elements():
 			if element.name == "actions":
@@ -219,6 +219,7 @@ class Commands:
 				for elem in element.elements():
 					if elem.name == "title":
 						title = unicode(elem)
+#					if elem.name == 'instructions'
 				if command["status"] == "completed":
 					self.dialog.ui.close.show()
 					self.var, self.row = dataforms.makeDataForm(

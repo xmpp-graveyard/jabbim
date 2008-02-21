@@ -3009,7 +3009,11 @@ class mainWindow(QtGui.QMainWindow):
 				fp = open(novy+"_copy",'wb')
 				d = downloadPage(str(src), fp)
 				d.addCallback(self._imageReceived, fp,novy,frm)
-		ret=unicode(dom.toxml(), 'utf-8').replace("<:img","<img")
+		try:
+			ret=unicode(dom.toxml(), 'utf-8').replace("<:img","<img")
+		except:
+			print 'wtf?'
+			ret = None
 		return ret
 	
 	def _imageReceived(self,neco,fp,file,frm):
