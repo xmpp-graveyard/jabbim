@@ -364,9 +364,9 @@ class Client(derived):
 		except:
 			public = False
 			
-		self.commands.registerNode("http://jabber.org/protocol/rc#set-status", self.main.tr("Change status"), rc.fSetStatus, public = public)
-		self.commands.registerNode("http://jabber.org/protocol/rc#leave-groupchats", self.main.tr("Leave groupchats"), rc.fLeaveGC, public = public)
-		self.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#resend-file", self.main.tr("Resend file"), rc.ResendFile, public = public)
+		self.commands.registerNode("http://jabber.org/protocol/rc#set-status", "Change status", rc.fSetStatus, public = public)
+		self.commands.registerNode("http://jabber.org/protocol/rc#leave-groupchats", "Leave groupchats", rc.fLeaveGC, public = public)
+		self.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#resend-file", "Resend file", rc.ResendFile, public = public)
 #		print 'post commands'
 #		def pis(co):
 #			print co
@@ -1170,7 +1170,10 @@ class Client(derived):
 					i = q.addElement("item")
 					i["jid"] = item["jid"]
 					if item["name"] != None:
-						i["name"] = item["name"]
+						try:
+							i["name"] = self.main.tr(item["name"])
+						except:
+							i["name"] = item["name"]
 					if item["node"] != None:
 						i["node"] = item["node"]
 		except KeyError:
