@@ -1140,16 +1140,17 @@ class Client(derived):
 		log.msg( 'received disco#items request')
 		log.msg("ITEMS: "+`self.discoitems`)
 		self.disp(el['id'])
+		try:
+			lang = el["xml:lang"]
+		except:
+			lang = None
+
 		iq = Element((None,'iq'))
 		iq['to'] = el['from']
 		iq['type'] = 'result'
 		iq['id'] = el['id']
 		q = iq.addElement('query', 'http://jabber.org/protocol/disco#items')
 		node = None
-		try:
-			lang = el["xml:lang"]
-		except:
-			lang = None
 		for child in el.elements():
 			if child.name == "query":
 				if child.hasAttribute("node"):
