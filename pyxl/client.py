@@ -1146,6 +1146,10 @@ class Client(derived):
 		iq['id'] = el['id']
 		q = iq.addElement('query', 'http://jabber.org/protocol/disco#items')
 		node = None
+		try:
+			lang = el["xml:lang"]
+		except:
+			lang = None
 		for child in el.elements():
 			if child.name == "query":
 				if child.hasAttribute("node"):
@@ -1172,7 +1176,7 @@ class Client(derived):
 					i["jid"] = item["jid"]
 					if item["name"] != None:
 						try:
-							i["name"] = self.main.tr(item["name"], el.getAttribute('xml:lang'))
+							i["name"] = self.main.tr(item["name"], lang)
 						except:
 							i["name"] = item["name"]
 					if item["node"] != None:
