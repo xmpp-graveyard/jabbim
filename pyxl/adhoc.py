@@ -4,6 +4,7 @@ from twisted.words.protocols.jabber.xmlstream import IQ
 from twisted.words.xish.domish import Element
 from twisted.python import log
 #from xdata import *
+#test
 
 def x2dict(x):
 	'''Creates dict in format {"var": [value1, value2...]} from jabber:x:data element.
