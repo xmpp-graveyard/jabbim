@@ -1465,6 +1465,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered ( bool )"),self.trayQuit)
 		QtCore.QObject.connect(self.ui.actionService_Discovery, QtCore.SIGNAL("triggered ( bool )"),self.serviceDiscovery)
 		QtCore.QObject.connect(self.ui.actionIdentity, QtCore.SIGNAL("triggered ( bool )"),self.identityEditor)
+		QtCore.QObject.connect(self.ui.actionStart_Chat, QtCore.SIGNAL("triggered ( bool )"), self.startChatDialog)
 
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
 		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.bookmarksCurrentChanged)
@@ -2176,6 +2177,10 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		self.ple=widgets.privacy.PrivacyListEditorDialog(self,self)
 		self.ple.show()
+
+	def startChatDialog(self, b=False):
+		self.startchat = widgets.startchat.StartChatDialog(self, self)
+		self.startchat.show()
 
 	def identityEditor(self,bool=False):
 		"""
@@ -3110,7 +3115,10 @@ class mainWindow(QtGui.QMainWindow):
 				try:
 					self.client.xmlLang= unicode(QtCore.QLocale.system().name())[:2]
 				except:
-					log.err('error in setting locale')
+					try:
+						self.client.xmlLang = unicode(os.environ["LANG"][:2])
+					except:
+						log.err('error in setting locale')
 				self.client.log=True
 			f=open(self.realHomeDir+"/config",'w')
 			self.config.write(f)

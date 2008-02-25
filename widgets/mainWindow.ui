@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>335</width>
-    <height>746</height>
+    <height>682</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -602,34 +602,31 @@ p, li { white-space: pre-wrap; }
                 </property>
                </spacer>
               </item>
-
-
-			  <item>
-				  <widget class="QToolButton" name="offlineButton" >
-					  <property name="maximumSize" >
-						  <size>
-							  <width>16777215</width>
-							  <height>20</height>
-						  </size>
-					  </property>
-					  <property name="toolTip" >
-						  <string>Show offline contacts</string>
-					  </property>
-					  <property name="text" >
-						  <string/>
-					  </property>
-					  <property name="icon" >
-						  <iconset>images/16x16/status/jabber-offline.png</iconset>
-					  </property>
-					  <property name="checkable" >
-						  <bool>true</bool>
-					  </property>
-					  <property name="arrowType" >
-						  <enum>Qt::NoArrow</enum>
-					  </property>
-				  </widget>
+              <item>
+               <widget class="QToolButton" name="offlineButton" >
+                <property name="maximumSize" >
+                 <size>
+                  <width>16777215</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="toolTip" >
+                 <string>Show offline contacts</string>
+                </property>
+                <property name="text" >
+                 <string/>
+                </property>
+                <property name="icon" >
+                 <iconset>images/16x16/status/jabber-offline.png</iconset>
+                </property>
+                <property name="checkable" >
+                 <bool>true</bool>
+                </property>
+                <property name="arrowType" >
+                 <enum>Qt::NoArrow</enum>
+                </property>
+               </widget>
               </item>
-			  
               <item>
                <widget class="QToolButton" name="toggleInvisible" >
                 <property name="maximumSize" >
@@ -1062,6 +1059,7 @@ p, li { white-space: pre-wrap; }
     </widget>
     <addaction name="menuGroupchat" />
     <addaction name="actionAdd_Contact" />
+    <addaction name="actionStart_Chat" />
     <addaction name="actionService_Discovery" />
     <addaction name="actionShow_XML" />
     <addaction name="actionPrivacy_list_editor" />
@@ -1160,6 +1158,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionSupport" >
    <property name="text" >
     <string>Support</string>
+   </property>
+  </action>
+  <action name="actionStart_Chat" >
+   <property name="text" >
+    <string>Start Chat</string>
    </property>
   </action>
  </widget>

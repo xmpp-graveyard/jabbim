@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Thu Feb  7 12:03:15 2008
-#      by: PyQt4 UI code generator 4.3.1
+# Created: Fri Feb 22 15:38:09 2008
+#      by: PyQt4 UI code generator 4.3.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,335,746).size()).expandedTo(MainWindow.minimumSizeHint()))
+        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,335,682).size()).expandedTo(MainWindow.minimumSizeHint()))
         MainWindow.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.centralwidget = QtGui.QWidget(MainWindow)
@@ -488,12 +488,16 @@ class Ui_MainWindow(object):
 
         self.actionSupport = QtGui.QAction(MainWindow)
         self.actionSupport.setObjectName("actionSupport")
+
+        self.actionStart_Chat = QtGui.QAction(MainWindow)
+        self.actionStart_Chat.setObjectName("actionStart_Chat")
         self.menuHelp.addAction(self.actionAbout)
         self.menuHelp.addAction(self.actionSupport)
         self.menuGroupchat.addAction(self.actionJoin_groupchat)
         self.menuGroupchat.addAction(self.actionBrowse_rooms)
         self.menuAkce.addAction(self.menuGroupchat.menuAction())
         self.menuAkce.addAction(self.actionAdd_Contact)
+        self.menuAkce.addAction(self.actionStart_Chat)
         self.menuAkce.addAction(self.actionService_Discovery)
         self.menuAkce.addAction(self.actionShow_XML)
         self.menuAkce.addAction(self.actionPrivacy_list_editor)
@@ -574,4 +578,5 @@ class Ui_MainWindow(object):
         self.actionJoin_groupchat.setText(QtGui.QApplication.translate("MainWindow", "Join groupchat", None, QtGui.QApplication.UnicodeUTF8))
         self.actionBrowse_rooms.setText(QtGui.QApplication.translate("MainWindow", "Browse rooms", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSupport.setText(QtGui.QApplication.translate("MainWindow", "Support", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionStart_Chat.setText(QtGui.QApplication.translate("MainWindow", "Start Chat", None, QtGui.QApplication.UnicodeUTF8))
 
