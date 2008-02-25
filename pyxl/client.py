@@ -1145,6 +1145,10 @@ class Client(derived):
 		except:
 			lang = None
 			print el.toXml()
+			try:
+				lang = el[(u'http://www.w3.org/XML/1998/namespace', u'lang')]
+			except:
+				pass
 
 		iq = Element((None,'iq'))
 		iq['to'] = el['from']
