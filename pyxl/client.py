@@ -1213,6 +1213,10 @@ class Client(derived):
 			lang = el["xml:lang"]
 		except:
 			lang = None
+			try:
+				lang = el[(u'http://www.w3.org/XML/1998/namespace', u'lang')]
+			except:
+				pass
 		try:
 			try:
 				action = command["action"]
