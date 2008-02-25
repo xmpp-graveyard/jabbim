@@ -634,4 +634,4 @@ class FTReceive:
 			log.msg("konec prenosu")
 			if self.fp != None:
 				self.fp.close()
-			self.client.on_ftEnd(self.sid, self.error)
+				self.client.on_ftEnd(self.sid, self.error)
