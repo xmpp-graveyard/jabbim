@@ -1144,6 +1144,7 @@ class Client(derived):
 			lang = el["xml:lang"]
 		except:
 			lang = None
+			print el.toXml()
 
 		iq = Element((None,'iq'))
 		iq['to'] = el['from']
