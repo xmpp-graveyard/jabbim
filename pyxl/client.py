@@ -44,8 +44,8 @@ from privacy import *
 from adhoc import *
 import rc
 import traceback
-from bosh import client as bclient
-import bosh_wokkel
+#from bosh import client as bclient
+#import bosh_wokkel
 try:
 	from hashlib import sha1
 except:
@@ -234,7 +234,7 @@ class Client(derived):
 	def _connect(self, host, port): 
 		
 		self.factory = client.XMPPClientFactory(self.jid,self.password)
-		self.factory = bclient.BOSHClientFactory(self.jid, self.password, 'http://localhost:5280/http-bind', bosh_attrs = {"wait": "5", 'xml:lang':self.xmlLang})
+#		self.factory = bclient.BOSHClientFactory(self.jid, self.password, 'http://localhost:5280/http-bind', bosh_attrs = {"wait": "5", 'xml:lang':self.xmlLang})
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
 ##		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
 ##		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
@@ -245,9 +245,9 @@ class Client(derived):
 		
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
-#		self.connection = self.reactor.connectTCP(host,port,self.factory)
+		self.connection = self.reactor.connectTCP(host,port,self.factory)
 		print host,port
-		self.connection = self.reactor.connectTCP('localhost',5280,self.factory)
+#		self.connection = self.reactor.connectTCP('localhost',5280,self.factory)
 		self.on_connect()
 #		print dir(self.factory)
 #		p = self.factory.buildProtocol('tcp:localhost:8080')
