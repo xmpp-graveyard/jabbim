@@ -273,6 +273,8 @@ class derived:
 		d = iq.send()
 #		self.on_xml(iq.toXml())
 		d.addCallback(self._onRosterArrive).addErrback(self.chyba)
+		print 'poslana zadost o roster'
+		print d
 	
 	def getMUCConfig(self, jid, callback = None):
 		""" Posle zadost o registracni formular na dany jid """
