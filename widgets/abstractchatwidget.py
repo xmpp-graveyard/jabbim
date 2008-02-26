@@ -391,7 +391,7 @@ class abstractChatWidget(QtGui.QWidget):
 		# signals
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
 		QtCore.QObject.connect(self.ui.line, QtCore.SIGNAL("returnPressed ()"),self.sendButtonClicked)
-		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("clicked (bool)"),self.smileysClicked)
+		QtCore.QObject.connect(self.ui.smileys, QtCore.SIGNAL("toggled (bool)"),self.smileysClicked)
 		QtCore.QObject.connect(self.ui.boldButton, QtCore.SIGNAL("clicked ( bool )"),self.bold)
 		QtCore.QObject.connect(self.ui.italicButton, QtCore.SIGNAL("clicked (bool)"),self.italic)
 		QtCore.QObject.connect(self.ui.underlineButton, QtCore.SIGNAL("clicked (bool)"),self.underline)
@@ -735,7 +735,7 @@ class abstractChatWidget(QtGui.QWidget):
 		print xhtml
 		return xhtml,same
 	
-	def smileysClicked(self,bool):
+	def smileysClicked(self, checked):
 		"""
 		Shows self.s (QFrame with emoticons).
 		"""
@@ -744,11 +744,9 @@ class abstractChatWidget(QtGui.QWidget):
 		y=pos.y()
 		self.main.emoticonsWidget.acceptor=self
 		self.main.emoticonsWidget.setGeometry(x-self.main.emoticonsWidget.pixmap.width()/2,y-self.main.emoticonsWidget.pixmap.height(), self.main.emoticonsWidget.pixmap.width(), self.main.emoticonsWidget.pixmap.height())
-		if self.main.emoticonsWidget.isVisible():
-			self.main.emoticonsWidget.setVisible(False)
-		else:
-			self.main.emoticonsWidget.setVisible(True)
 
+		self.main.emoticonsWidget.setVisible(checked) 
+		
 	def underline(self,bool):
 		"""
 		Sets underline font according to bool.
