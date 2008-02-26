@@ -28,15 +28,14 @@ class MUCBrowserDialog(QtGui.QDialog):
 		if not self.main.client.bookmarksEnabled:
 			self.ui.groupBox_3.setEnabled(False)
 
+		print self.main.client.disco[self.main.client.jid.host]
 		mucjid = None
-		for jid, node in self.main.client.disco.iteritems():
-			if not node[None].has_key('identities'):
-				continue
-			for id in node[None]['identities'].itervalues():
-				print jid, id
-				if id.get('category') == 'conference' and id.get('type') == 'text' and jid.startswith('c'):
-					mucjid = jid
-					break
+		for jid in self.main.client.disco[self.main.client.jid.host][None]['items'].iterkeys():
+			print jid
+			print self.main.client.disco[self.main.client.jid.host][None]['items'][jid]
+			if self.main.client.hasIdentity(jid, 'conference', 'text') and jid.startswith('c'):
+				mucjid = jid
+				break
 		self.server=mucjid
 		if mucjid:
 			self.ui.serverLabel.setText(self.tr("Server: ")+self.server)
