@@ -336,12 +336,12 @@ class groupChatWidget(abstractChatWidget):
 
 			if user != None:
 				if user.truejid != None:
-					jid = jidT.JID(user.truejid).userhost()
+					tjid = jidT.JID(user.truejid).userhost()
 					action=menu.addAction(self.tr("Add to roster"))
-					action.setData(QtCore.QVariant([jid, name]))
+					action.setData(QtCore.QVariant([tjid, name]))
 					action.setIcon(QtGui.QIcon("images/16x16/actions/add-user.png"))
 					action.setObjectName("add-user")
-			
+
 			action=menu.addAction(self.tr("vCard"))
 			action.setData(QtCore.QVariant(jid))
 			action.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
