@@ -2807,6 +2807,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.actionAdd_Contact.setEnabled(True)
 		self.ui.actionJoin_groupchat.setEnabled(True)
 		self.ui.actionService_Discovery.setEnabled(True)
+		self.buildStatusWidgetMenu()
 		self.statusWidgetMenu.setEnabled(False)
 		self.ui.selfName.setText("<h3>"+unicode(self.client.jid.userhost()).split("@")[0]+"</h3>")
 		self.client.getVCard(unicode(self.client.jid.userhost()))
