@@ -57,7 +57,15 @@ class FileBackend:
 	def __init__(self,archive):
 		#self.archive=archive
 		self.homeDir=unicode(archive.main.homeDir)
-		self.jid=unicode(archive.jid)
+		self.jid=archive.jid
+
+		if not os.path.isdir(self.homeDir+'/archive'):
+			os.mkdir(self.homeDir+'/archive')
+
+		if not os.path.isdir(self.homeDir+'/archive/'+self.jid):
+			os.mkdir(self.homeDir+'/archive/'+self.jid)
+
+		self.convertOldHistoryFiles()
 
 	def getJidList(self):
 		return os.listdir(self.homeDir+'/archive/'+self.jid)
@@ -164,6 +172,76 @@ class FileBackend:
 			return []
 		return messages[-count:]
 
+	def convertOldHistoryFiles(self):
+		# Convert old (URL-quoted JIDs) history directories to new-style. Merge files if both forms are present.
+
+		quoted_dir_name = self.homeDir+'/archive/'+quote(self.jid)
+		if not os.path.isdir(quoted_dir_name):
+			return   # Nothing to convert
+
+		try:
+			for q in os.listdir(quoted_dir_name):
+				old_dirname = quoted_dir_name+'/'+q
+				new_dirname = self.homeDir+'/archive/'+self.jid+'/'+unicode(unquote(q))
+				if not os.path.isdir(new_dirname):
+					# For this JID we have old history only.
+					os.mkdir(new_dirname)
+
+				old_histories = os.listdir(old_dirname)
+				new_histories = os.listdir(new_dirname)
+				for file in old_histories:
+					old_filename = old_dirname+'/'+file
+					new_filename = new_dirname+'/'+file
+					if file in new_histories:
+						new_messages = open(new_filename).readlines()
+					else:
+						new_messages = []
+
+					old_file = open(old_filename)
+					# Merge the two files into one.
+					merged_filename = new_filename + '.tmpmerge'
+					merged_file = open(merged_filename, 'w')
+					j = 0
+					old_line = None
+					old_eof = False
+					while not old_eof or j < len(new_messages):
+						if not old_eof and not old_line:
+							try:
+								parts = old_file.xreadlines().next().split('|')
+								old_line = '|'.join([parts[0],parts[1],unquote(parts[2]),parts[3],parts[4],parts[5]])
+							except StopIteration:
+								old_eof = True
+								continue
+
+						if not old_eof and j < len(new_messages):
+								new_line = new_messages[j]
+								# compare message timestamps
+								take_next_from_old = (float(parts[0]) < float(new_line.split('|')[0]))
+						elif not old_eof:
+							take_next_from_old = True
+						else:
+							new_line = new_messages[j]
+							take_next_from_old = False
+
+						if take_next_from_old:
+							merged_file.write(old_line)
+							old_line = None
+						else:
+							merged_file.write(new_line)
+							j += 1
+					merged_file.close()
+					os.rename(merged_filename, new_filename)
+					os.unlink(old_filename)
+
+				# Everything for this JID has been moved away?
+				if os.listdir(old_dirname) == []:
+					os.rmdir(old_dirname)
+
+			# Everything moved successfully? Remove the old dir completely then.
+			if os.listdir(quoted_dir_name) == []:
+				os.rmdir(quoted_dir_name)
+		except Exception, ex:
+			log.err('convertOldHistoryFiles failure: ' + unicode(ex))
 
 class config:
 	def __init__(self,main):
@@ -190,14 +268,9 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.loadConfig(homedir)
 
-			self.jid = unicode(unicode(self.main.client.jid.userhost()))
+			self.jid = unicode(self.main.client.jid.userhost())
 			self.backend=FileBackend(self)
 
-			if not os.path.isdir(self.main.homeDir+'/archive'):
-				os.mkdir(self.main.homeDir+'/archive')
-					
-			if not os.path.isdir(self.main.homeDir+'/archive/'+self.jid):
-				os.mkdir(self.main.homeDir+'/archive/'+self.jid)
 			self.registerHandler('on_message', self.on_message)
 			self.registerHandler('on_GCmessage', self.on_message)
 			self.registerHandler('on_message_send', self.on_message_send)
@@ -282,7 +355,6 @@ class Plugin(plugins.PluginBase):
 	
 			
 			jid=unicode(jid.userhost())
-			jid = unicode(jid)
 			d=threads.deferToThread(self.getLastMessages,jid,int(self.config['messagesNumber']),me,user,unicode(self.main.skin["my_message_history"]),unicode(self.main.skin["message_history"]),self.main.skin['color1'],avatar,selfavatar,self.config['messagesTime'])
 			d.addCallback(self.gotLastMessages,widget)
 			#html=self.getLastMessages(jid,5,me,user,unicode(self.main.skin["my_message"]),unicode(self.main.skin["message"]),self.main.skin['color1'])
@@ -324,26 +396,23 @@ class Plugin(plugins.PluginBase):
 		self.window.ui.seznam.expandItem(others)
 		contact.setBackground(0,QtGui.QBrush(self.window.ui.seznam.palette().color(QtGui.QPalette.AlternateBase)))
 		others.setBackground(0,QtGui.QBrush(self.window.ui.seznam.palette().color(QtGui.QPalette.AlternateBase)))
-		seznam = os.listdir(self.main.homeDir+'/archive/'+self.jid)
+		seznam = self.backend.getJidList()
 		click=None
 		for jid in seznam:
-			if os.path.isdir(self.main.homeDir+'/archive/'+self.jid+'/'+jid):
-				if self.main.client.roster['users'].has_key(unicode(unicode(jid).split('.history')[0])):
-					item=QtGui.QTreeWidgetItem(contact)
-					name=self.main.client.roster['users'][unicode(unicode(jid).split('.history')[0])].name
-					if not name or len(name)==0:
-						item.setText(0,unicode(unicode(jid).split('.history')[0]))
-					else:
-						item.setText(0,name)
+			if self.main.client.roster['users'].has_key(unicode(jid)):
+				item=QtGui.QTreeWidgetItem(contact)
+				name=self.main.client.roster['users'][unicode(jid)].name
+				if not name or len(name)==0:
+					item.setText(0,unicode(jid))
 				else:
-					item=QtGui.QTreeWidgetItem(others)
-					item.setText(0,unicode(jid).split('.history')[0])
-				item.setData(0,32,QtCore.QVariant(unicode(unicode(jid).split('.history')[0])))
-				#self.window.ui.seznam.addItem(item)
-				if unicode(unicode(jid).split('.history')[0])==unicode(j):
-					click=item
+					item.setText(0,name)
 			else:
-				continue
+				item=QtGui.QTreeWidgetItem(others)
+				item.setText(0,unicode(jid))
+			item.setData(0,32,QtCore.QVariant(unicode(jid)))
+			#self.window.ui.seznam.addItem(item)
+			if unicode(jid)==unicode(j):
+				click=item
 		if click:
 			self.window.ui.seznam.setCurrentItem(click)
 			self.itemClicked(click)
@@ -365,7 +434,7 @@ class Plugin(plugins.PluginBase):
 				all.append(qdate)
 		self.window.ui.calendar.setDates(all)
 		item=self.window.ui.seznam.currentItem()
-		jid = unicode(unicode(item.data(0,32).toString()))
+		jid = unicode(item.data(0,32).toString())
 		
 		self.window.ui.text.setText('')
 		datum=self.window.ui.calendar.selectedDate()
@@ -435,7 +504,7 @@ class Plugin(plugins.PluginBase):
 		self.window.ui.text.setHtml(html)
 
 	def itemClicked(self, item,column=0,setDate=True):
-		jid = unicode(unicode(item.data(0,32).toString()))
+		jid = unicode(item.data(0,32).toString())
 		if setDate:
 			self.getDates(jid)
 		else:
