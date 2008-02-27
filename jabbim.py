@@ -1647,7 +1647,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def offlineMenuHovered(self, action):
 		cmd=unicode(action.objectName())
-		if cmd=='commands':
+		if cmd=='commands' and action.menu() == None:
 			# show adhoc dialog
 			self.cmds = widgets.commands.Commands(self, unicode(self.client.jid.userhost())+"/"+unicode(action.data().toString()), action)
 
