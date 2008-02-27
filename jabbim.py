@@ -3276,7 +3276,13 @@ class customStatusWindow(QtGui.QDialog):
 			self.accept()
 			self.timer.stop()
 	def accept(self):
-		MainWindow.client.sendPresence(to=self.jid,show = unicode(self.show), status = unicode(self.ui.status.toPlainText ()))
+		if type(self.jid) != list:
+			MainWindow.client.sendPresence(to=self.jid,show = unicode(self.show), status = unicode(self.ui.status.toPlainText ()))
+		else:
+			show = unicode(self.show)
+			status = unicode(self.ui.status.toPlainText())
+			for jid in self.jid:
+				MainWindow.client.sendPresence(to=jid, show = show, status = status)
 		self.done(1)
 
 

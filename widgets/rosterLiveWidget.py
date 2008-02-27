@@ -2383,7 +2383,7 @@ class rosterWidget(QtGui.QWidget):
 			if w.typ=='chat' and w.jid != contact.jid:
 				lst.append(w.jid)
 		if len(lst)>0:
-			submenu = contactMenu.addMenu(self.tr("Invite to chat with .."))
+			submenu = contactMenu.addMenu(self.tr("Invite to chat"))
 			if oneres:
 				for name in lst:
 					action = submenu.addAction(self.getNameByJID(name))
@@ -2588,6 +2588,14 @@ class rosterWidget(QtGui.QWidget):
 		action=contactMenu.addAction(self.tr("Remove group"))
 		action.setData(QtCore.QVariant(name))
 		action.setObjectName("remove_group")
+		
+		submenu=contactMenu.addMenu(self.tr("Custom status"))
+
+		for status in ["online", "chat", "away", "xa", "dnd", "offline"]:
+			action=submenu.addAction(self.main.getIcon(status=status,size="32x32"),self.main.status[status])
+			action.setObjectName("custom_status")
+			action.setData(QtCore.QVariant([unicode(status), unicode(name)]))
+		
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.groupMenuTriggered)
 		return contactMenu
@@ -2616,6 +2624,12 @@ class rosterWidget(QtGui.QWidget):
 				contact=self.main.client.roster['users'][jid]
 				if (contact.name=="" or contact.name==contact.jid) or not contact.name:
 					self.main.client.getVCard(jid)
+		elif cmd =='custom_status':
+			show, name = [unicode(val.toString()) for val in action.data().toList()]
+			seznam = []
+			for itm in self.getAllGroupUsers(name):
+				seznam.append(itm.jid)
+			self.main.sendCustomStatus(seznam, show)
 		elif cmd=="remove_group":
 			name=action.data()
 			name=unicode(name.toString())
