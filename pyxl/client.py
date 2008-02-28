@@ -44,7 +44,7 @@ from privacy import *
 from adhoc import *
 import rc
 import traceback
-from bosh import client as bclient
+
 #import bosh_wokkel
 try:
 	from hashlib import sha1
@@ -249,6 +249,7 @@ class Client(derived):
 		
 		if boshURL != '':
 			print '.'+boshURL+'.'
+			from bosh import client as bclient
 			self.factory = bclient.BOSHClientFactory(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang})
 			print self.factory
 		else:
@@ -266,7 +267,7 @@ class Client(derived):
 		print '-'+host+'?', port
 		self.connection = self.reactor.connectTCP(host,port,self.factory)
 		self.on_connect()
-#		print dir(self.factory)
+		print dir(self.factory)
 #		p = self.factory.buildProtocol('tcp:localhost:8080')
 #		print dir(p)
 #		self.connection = self.reactor.connectTCP('conn443.netlab.cz',443,self.factory)
