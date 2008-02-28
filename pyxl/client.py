@@ -44,7 +44,7 @@ from privacy import *
 from adhoc import *
 import rc
 import traceback
-#from bosh import client as bclient
+from bosh import client as bclient
 #import bosh_wokkel
 try:
 	from hashlib import sha1
@@ -198,9 +198,20 @@ class Client(derived):
 				log.msg('heartbeat fails count: '+ unicode(self.hbFails))
 
 
-	def connect(self, host = None, port = '5222'):
+	def connect(self, host = None, port = '5222', boshURL = ''):
+		if boshURL != '':
+			try:
+				from urlparse import urlparse
+				parts = urlparse(boshURL)[1].split(':')
+				bhost = parts[0]
+				bport = parts[1]
+			except:
+				boshURL = ''
 		if host != None:
 			self._connect(host, int(port))
+		elif boshURL != '':
+			print 'going bosh: ', bhost, int(bport), boshURL
+			self._connect(bhost, int(bport), boshURL)
 		else:
 			log.msg('dns - ' + unicode(time.time()) + '_xmpp-client._tcp.'+self.jid.host)
 			if sys.platform == 'win32':
@@ -234,10 +245,14 @@ class Client(derived):
 		#self._connect('talk.google.com', self.port)
 
 				
-	def _connect(self, host, port): 
+	def _connect(self, host, port, boshURL = ''): 
 		
-		self.factory = client.XMPPClientFactory(self.jid,self.password)
-#		self.factory = bclient.BOSHClientFactory(self.jid, self.password, 'http://localhost:5280/http-bind', bosh_attrs = {"wait": "5", 'xml:lang':self.xmlLang})
+		if boshURL != '':
+			print '.'+boshURL+'.'
+			self.factory = bclient.BOSHClientFactory(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang})
+			print self.factory
+		else:
+			self.factory = client.XMPPClientFactory(self.jid,self.password)
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
 ##		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
 ##		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
@@ -248,9 +263,8 @@ class Client(derived):
 		
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
-		self.connection = self.reactor.connectTCP(host,port,self.factory)
-		print host,port
-#		self.connection = self.reactor.connectTCP('localhost',5280,self.factory)
+		print '-'+host+'?', port
+		self.connection = self.reactor.connectTCP('tcp:'+host,port,self.factory)
 		self.on_connect()
 #		print dir(self.factory)
 #		p = self.factory.buildProtocol('tcp:localhost:8080')

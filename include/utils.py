@@ -154,7 +154,8 @@ def loadConfig(main,status):
 			"adhocAllow": [],
 			"discoHistory": [],
 			"startInTray": "False",
-			"sendOSInfo": "True"
+			"sendOSInfo": "True",
+			"boshURL": ''
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:

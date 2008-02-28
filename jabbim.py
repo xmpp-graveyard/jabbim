@@ -3172,6 +3172,8 @@ class mainWindow(QtGui.QMainWindow):
 			self.reconnect = True
 			if self.config['specifyHost'] == 'True':
 				self.client.connect(self.config['connectHost'], self.config['connectPort'])
+			elif self.config['boshURL'] != '':
+				self.client.connect(boshURL = self.config['boshURL'])
 			else:
 				self.client.connect()
 	
