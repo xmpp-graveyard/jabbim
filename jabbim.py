@@ -2029,8 +2029,8 @@ class mainWindow(QtGui.QMainWindow):
 					self.client.sendPresence(show = unicode(show), status = unicode(message), to = '%s/%s'%(muc.jid, muc.nick))
 				
 				# send presence to all transports
-				for transport in self.transports.keys():
-					self.client.sendPresence(show = unicode(show), status = unicode(message), to = transport)
+				#for transport in self.transports.keys():
+					#self.client.sendPresence(show = unicode(show), status = unicode(message), to = transport)
 				
 				# update statusWidget
 				if len(message)>20:
