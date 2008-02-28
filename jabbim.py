@@ -369,7 +369,7 @@ class clientClass(pyxl.client.Client):
 		# user is not in any group
 		if len(groups)==0:
 			# add user item to Unknown group
-			self.main.ui.roster.addUser(jid,name,None)
+			it=self.main.ui.roster.addUser(jid,name,None)
 		else:
 			for group in groups:
 				# add user item to the group
@@ -507,6 +507,9 @@ class clientClass(pyxl.client.Client):
 		for host in self.main.hosts.keys():
 			for i in self.main.ui.roster.getUserItems(host):
 				i.transport=True
+				i.icon=self.main.getIcon("jid@"+jid,size=self.main.ui.roster.iconSize,status=self.main.icons[i.status])
+			for i in self.main.ui.roster.getHostItems(host):
+				i.icon=self.main.getIcon("jid@"+jid,size=self.main.ui.roster.iconSize,status=self.main.icons[i.status])
 
 		# update roster
 		self.main.ui.roster.sortItems()
@@ -2179,7 +2182,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ple.show()
 
 	def startChatDialog(self, b=False):
-		self.startchat = widgets.startchat.StartChatDialog(self, self)
+		self.startchat = widgets.startchat.Ui_StartChatDialog(self, self)
 		self.startchat.show()
 
 	def identityEditor(self,bool=False):
