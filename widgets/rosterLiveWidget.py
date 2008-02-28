@@ -1259,7 +1259,7 @@ class rosterWidget(QtGui.QWidget):
 				#print useritem.privacy
 				# Item is selected
 				height=79
-				self.selectedHeight=height+10
+				self.selectedHeight=height+11
 	
 				# paint roster background
 				#painter.save()
@@ -1344,7 +1344,7 @@ class rosterWidget(QtGui.QWidget):
 						self.changePos=False
 			elif self.main.config['bigOnClick']=="False":
 				height=32
-				self.selectedHeight=30
+				self.selectedHeight=28
 				#painter.save()
 				#painter.translate(x,y)
 				#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
