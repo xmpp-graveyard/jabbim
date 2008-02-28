@@ -264,7 +264,7 @@ class Client(derived):
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
 		print '-'+host+'?', port
-		self.connection = self.reactor.connectTCP('tcp:'+host,port,self.factory)
+		self.connection = self.reactor.connectTCP(host,port,self.factory)
 		self.on_connect()
 #		print dir(self.factory)
 #		p = self.factory.buildProtocol('tcp:localhost:8080')
