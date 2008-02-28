@@ -2028,6 +2028,10 @@ class mainWindow(QtGui.QMainWindow):
 				for muc in self.client.groupchats.itervalues():
 					self.client.sendPresence(show = unicode(show), status = unicode(message), to = '%s/%s'%(muc.jid, muc.nick))
 				
+				# send presence to all transports
+				for transport in self.transports.keys():
+					self.client.sendPresence(show = unicode(show), status = unicode(message), to = transport)
+				
 				# update statusWidget
 				if len(message)>20:
 					self.ui.statusMessage.setText(unicode(message)[:20]+"...")
@@ -2037,34 +2041,6 @@ class mainWindow(QtGui.QMainWindow):
 					self.ui.statusMessage.setText(unicode(message))
 				self.ui.statusMessage.setIcon(self.getIcon(status=show,size="16x16"))
 		else:
-			## update transport's icon in statusWidgetMenu
-			#if self.transports.has_key(jid):
-				#if self.transports[jid]!=None:
-					#self.transports[jid].setIcon(self.getIcon('1@'+jid,status=unicode(show),size="16x16"))
-
-					#text='<table><tr>'
-					#if os.path.isfile(self.homeDir+'/avatars/'+unicode(self.config['jid'])):
-						#pixmap=QtGui.QIcon(self.homeDir+'/avatars/'+unicode(self.config['jid'])).pixmap(64,64)
-						#text+='<td><img src="'+self.homeDir+'/avatars/'+unicode(self.config['jid'])+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
-					##text+='<td><b>'+self.tr("Name:")+'</b> '+item.escapedName+'<br/>'
-					#text+='<td><b>'+self.tr("JID:")+'</b> '+unicode(self.config['jid'])+'<br/>'
-
-					#status = unicode(message)
-					#priority = pri
-					#if priority != None:
-						#priority = "(%s: %s)" % (self.tr("Priority"),priority)
-					#else:
-						#priority = ""
-					#usertype=unicode(self.client.getHostType(jid,jid))
-					#if os.path.isfile('images/16x16/status/'+usertype+"-"+show+".png"):
-						#text+='<img src="images/16x16/status/'+usertype+"-"+show+'.png" />'
-					#else:
-						#text+='<img src="images/16x16/status/jabber-%s.png">' % show
-					#if len(priority)!=0:
-						#text+='%s<br/>' % priority
-					#text+='<font size="-1">%s</font>' % (status)
-					#text+="</td></tr></table>"
-					#self.transports[jid].setToolTip(text)
 
 			# send presence
 			self.client.sendPresence(to=jid,show = unicode(show), status = unicode(message),priority=pri)
