@@ -1133,9 +1133,9 @@ class Client(derived):
 			q['node'] = node
 		else:
 			id = q.addElement('identity')
-			id['category'] = 'client'
+			id['category'] = self.identity.split('/')[0]
 			id['name'] = self.client_name
-			id['type'] = 'pc'
+			id['type'] = self.identity.split('/')[1]
 		for feature in self.discofeatures[node]:
 			f = q.addElement('feature')
 			f['var'] = feature[0]
