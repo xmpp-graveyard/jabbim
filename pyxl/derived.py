@@ -158,7 +158,12 @@ class derived:
 		if status:
 			presence.addElement('status', content = status)
 		if show:
-			presence.addElement('show', content = show)
+			if show == 'offline':
+				typ = 'unavailable'
+			elif show == 'online':
+				pass
+			else:
+				presence.addElement('show', content = show)
 		if priority:
 			presence.addElement('priority', content = unicode(priority))
 		if typ:
