@@ -677,6 +677,7 @@ class Client(derived):
 	def _onRosterArrive(self, el):
 		log.msg( 'roster arrived')
 		ln = 0
+		hosts = [] #for disco info
 		for child in el.elements():
 			if child.name == "query":
 				allGroups=['Unknown']
@@ -705,10 +706,17 @@ class Client(derived):
 					if self.roster_meta.has_key(item['jid']):
 						tag = self.roster_meta[item['jid']]['tag']
 						order = self.roster_meta[item['jid']]['order']
+					host = jid.JID(item['jid']).host
+					if not host in hosts:
+						hosts.append(host)
 					contact = Contact(self, item['jid'], name, item['subscription'], [], groups, tag =  tag, order =  order, ask = ask)
 					self.roster['users'][item['jid']] = contact
 					self.reactor.callFromThread(self.on_rosterAddUser,contact)
-		
+
+		for host in hosts:
+			if self.getIdentity(host) == None:
+				self.getDiscoInfo(host)
+				
 		self.roster['users'][self.jid.userhost()] = Contact(self, self.jid.userhost(), self.jid.user, 'both', [], [])
 		
 		log.msg( 'roster arrived')

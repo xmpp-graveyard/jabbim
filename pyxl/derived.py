@@ -753,9 +753,12 @@ class derived:
 	
 	def getIdentity(self, injid):
 		jd = jid.JID(injid)
-		if self.disco.has_key(jd.host) and self.disco[jd.host][None].has_key("identities"):
-			return self.disco[jd.host][None]["identities"]
-		else:
+		try:
+			if self.disco[jd.host][None].has_key("identities"):
+				return self.disco[jd.host][None]["identities"]
+			else:
+				return None
+		except KeyError:
 			return None
 	
 	def hasIdentity(self, injid, category, typ):
