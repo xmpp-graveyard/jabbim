@@ -283,32 +283,16 @@ class clientClass(pyxl.client.Client):
 		"""
 		Called when disco#info arrived.
 		"""
-		if not self.main.hosts.has_key(jid):
-			try:
-				name=self.disco[jid][node]['identities'].keys()[0]
-				typ=self.disco[jid][node]['identities'][name]['type']
-			except:
-				typ=None
-			if typ!=None:
-				# parse types
-				if typ=="pep" or typ=="im":
-					typ="jabber"
-				elif typ=="file":
-					typ="disk"
-				elif typ=='gadu-gadu':
-					typ='gadugadu'
-				elif typ=='x-tlen':
-					typ='tlen'
-				if jid.find("weather")!=-1:
-					typ='weather'
+		if True:
+			typ=self.getHostType(jid,jid)
+			if typ:
 				if not self.main.transports.has_key(jid) and self.roster['users'].has_key(jid):
 					# don't show this contacts as transports in menu
 					if not typ in ['weather','smtp','sms','rss']:
 						self.main.transports[jid]=None
 						self.main.buildStatusWidgetMenu()
-				self.main.hosts[jid]=typ
 
-				for host in self.main.hosts.keys():
+				for host in self.disco.keys():
 					for i in self.main.ui.roster.getUserItems(host):
 						i.transport=True
 		# set icons for users with this host
@@ -318,6 +302,26 @@ class clientClass(pyxl.client.Client):
 		if jidT.JID(jid).userhost()==self.jid.userhost():
 			print 'self discoInfo'
 			self.main.buildOfflineMenu()
+
+	def getHostType(self,host,jid):
+		try:
+			name=self.disco[host][None]['identities'].keys()[0]
+			typ=self.disco[host][None]['identities'][name]['type']
+		except:
+			typ=None
+		if typ!=None:
+			# parse types
+			if typ=="pep" or typ=="im":
+				typ="jabber"
+			elif typ=="file":
+				typ="disk"
+			elif typ=='gadu-gadu':
+				typ='gadugadu'
+			elif typ=='x-tlen':
+				typ='tlen'
+			if jid.find("weather")!=-1:
+				typ='weather'
+		return typ
 
 	def on_rosterAddUser(self, contact):
 		"""
@@ -341,27 +345,12 @@ class clientClass(pyxl.client.Client):
 		else:
 			host=unicode(jid)
 			transport=True
-		if not self.main.hosts.has_key(host) and not host in self.temp_hosts:
+		identity=self.getIdentity(jid)
+		if not identity and not host in self.temp_hosts:
 			self.temp_hosts.append(host)
 			self.getDiscoInfo(host)
 		if transport:
-			try:
-				name=self.disco[host][None]['identities'].keys()[0]
-				typ=self.disco[host][None]['identities'][name]['type']
-			except:
-				typ=None
-			if typ!=None:
-				# parse types
-				if typ=="pep" or typ=="im":
-					typ="jabber"
-				elif typ=="file":
-					typ="disk"
-				elif typ=='gadu-gadu':
-					typ='gadugadu'
-				elif typ=='x-tlen':
-					typ='tlen'
-				if jid.find("weather")!=-1:
-					typ='weather'
+			typ=self.getHostType(host,jid)
 			if typ and not typ in ['weather','smtp','sms','rss']:
 				self.main.transports[jid]=None
 				self.main.buildOfflineMenu()
@@ -504,12 +493,12 @@ class clientClass(pyxl.client.Client):
 						useritem.privacy["allow"] = self.privacy.active.isAllowedJID(item.value)
 						useritem.privacy["hide"] = self.privacy.active.isHiddenJID(item.value)
 
-		for host in self.main.hosts.keys():
+		for host in self.disco.keys():
 			for i in self.main.ui.roster.getUserItems(host):
 				i.transport=True
-				i.icon=self.main.getIcon("jid@"+jid,size=self.main.ui.roster.iconSize,status=self.main.icons[i.status])
+				i.icon=self.main.getIcon("jid@"+host,size=self.main.ui.roster.iconSize,status=self.main.icons[str(i.status)])
 			for i in self.main.ui.roster.getHostItems(host):
-				i.icon=self.main.getIcon("jid@"+jid,size=self.main.ui.roster.iconSize,status=self.main.icons[i.status])
+				i.icon=self.main.getIcon("jid@"+host,size=self.main.ui.roster.iconSize,status=self.main.icons[str(i.status)])
 
 		# update roster
 		self.main.ui.roster.sortItems()
@@ -2957,9 +2946,9 @@ class mainWindow(QtGui.QMainWindow):
 			if len(jid.split("@"))>1:
 				host=jid.split("@")[1]
 			else:
-				host=None
-			if self.hosts.has_key(host):
-				usertype=self.hosts[host]
+				host=jid
+			if self.client.disco.has_key(host):
+				usertype=unicode(self.client.getHostType(host,jid))
 				file=path+usertype+"-"+status+".png"
 				if os.path.exists(file):
 					icon=QtGui.QIcon(file)
