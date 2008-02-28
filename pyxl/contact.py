@@ -63,12 +63,14 @@ class Contact:
 		else:
 			self.resources[resource] = Resource(self, resource, priority = priority)
 			
-	def setFeatures(self, resource, features):
+	def setFeatures(self, resource, features, identity = 'client/pc'):
 		if self.resources.has_key(resource):
 			self.resources[resource].features = features
+			self.resources[resource].identity = identity
 		else:
 			self.resources[resource] = Resource(self, resource)
 			self.resources[resource].features = features
+			self.resources[resource].identity = identity
 			
 	def getHighestResource(self):
 		prio = 0
@@ -96,8 +98,9 @@ class Resource:
 		self.name = name
 		self.priority = priority
 		self.show = show
-		self. status = status
+		self.status = status
 		self.features = []
+		self.identity = 'client/pc'
 		self.contact = contact
 	
 	def hasFeature(self, feature):

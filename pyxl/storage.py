@@ -32,7 +32,7 @@ class Cache:
 				log.msg('Unknown DB error')
 				
 	def create_tables(self):
-		t1 = self.db.runQuery('create table caps (node text, feature text);').addCallback(self.table_created, 'caps')#.addErrback(self.table_present)
+		t1 = self.db.runQuery('create table caps (node text, feature text, identity text);').addCallback(self.table_created, 'caps')#.addErrback(self.table_present)
 		t2 = self.db.runQuery('create table status (show text, desc text, id integer primary key);').addCallback(self.table_created, 'status')#.addErrback(self.table_present)
 		t3 = self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created, 'avatars')#.addErrback(self.table_present)
 		return DeferredList([t1,t3,t2], consumeErrors = False)
@@ -69,9 +69,9 @@ class Cache:
 		else:
 			self.db.runOperation('update avatars set file="%s", hash="%s" where jid="%s"'%(dbutil.safe(avatar[0]), avatar[1], dbutil.safe(jid)))
 	
-	def set_caps(self, node, features):
+	def set_caps(self, node, features, identity):
 		for feature in features:
-			self.db.runOperation('insert into caps (node, feature) values ("%s", "%s")'%(node, feature))
+			self.db.runOperation('insert into caps (node, feature, identity) values ("%s", "%s", "%s" )'%(node, feature, identity))
 	
 	def get_caps(self):
 		return self.db.runQuery('select * from caps;')

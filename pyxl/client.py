@@ -118,9 +118,9 @@ class Client(derived):
 		self.registerFeature("urn:xmpp:receipts")
 		self.registerFeature('http://www.xmpp.org/extensions/xep-0224.html#ns')
 		self.registerFeature('http://jabber.org/protocol/rosterx')
+		self.identity = 'client/pc'
 		
-		
-		self.caps_cache = {} # 'node': [feature1, feature2]
+		self.caps_cache = {} # 'ext': (identity,[feature1, feature2])
 		self.rebuildCaps()
 		self.evil = False
 		self.log = True
@@ -148,23 +148,26 @@ class Client(derived):
 		print err
 		err.printBriefTraceback()
 	
-	def cacheCaps(self, ext, features):
-		self.caps_cache[ext] = features
-		self.main.cache.set_caps(ext, features)
+	def cacheCaps(self, ext, features, identity):
+		self.caps_cache[ext] = (identity,features)
+		self.main.cache.set_caps(ext, features, identity)
 
 	def _cacheCaps(self, result):
 		for line in result:
 			if line != None:
-				features = self.caps_cache.get(line[0], [])
-				if line[1] not in features:
-					self.caps_cache[line[0]] = features.append(line[1])
-
+				caps = self.caps_cache.get(line[0], ('',[]))
+				if line[1] not in caps[1]:
+					caps[1].append(line[1])
+				if caps[0] == '':
+					caps[0] = line[2]
+				self.caps_cache[line[0]] = caps
+				
 	def rebuildCaps(self):
 		features = []
 		for f in self.discofeatures[None]:
 			features.append(f[0])
-		self.caps_ext = self.calcCapsExt(features = features)
- 		self.cacheCaps(self.caps_ext, features)
+		self.caps_ext = self.calcCapsExt(features = features, identity = [self.identity])
+ 		self.cacheCaps(self.caps_ext, features, self.identity)
 			
 
 	def heartbeat(self):
@@ -884,7 +887,7 @@ class Client(derived):
 		fromjid = frm.userhost()
 		resource = frm.resource
 		print "PRESENCE"
-		show = status = priority = nick = typ = affiliation = role = truejid = hash = error = reason = actor = None
+		show = status = priority = nick = typ = affiliation = role = truejid = hash = error = reason = actor = identity = None
 		codes = []
 		if el.hasAttribute('type'):
 		#	if el['type'] != 'unavailable':
@@ -914,10 +917,9 @@ class Client(derived):
 				caps_node = child.getAttribute('node')
 
 				ext = child.getAttribute('ext')
-				print frm.userhost(), ext
 				if self.caps_cache.has_key(ext) and ext != None:
-					features = self.caps_cache[ext]
-					print features
+					features = self.caps_cache[ext][0]
+					identity = self.caps_cache[ext][1]
 				else:	
 					if typ !='unavailable':
 						features = 'asked'
@@ -1001,7 +1003,7 @@ class Client(derived):
 			first = self.roster['users'][unicode(fromjid)].setStatus(resource, show,status)
 			if self.roster['users'][fromjid].resources.has_key(resource):
 				self.roster['users'][fromjid].setPriority(resource, priority)
-				self.roster['users'][fromjid].setFeatures(resource, features)
+				self.roster['users'][fromjid].setFeatures(resource, features, identity)
 
 #			chci_card = True 
 #			if self.roster['users'][fromjid].avatar_hash == 'nic': 
@@ -1054,16 +1056,19 @@ class Client(derived):
 		log.msg( 'features received')
 ##		self.disp(el['id'])
 		features = []
+		identity = ''
 		query = el.firstChildElement()
 		for child in  query.elements():
 			if child.name == 'feature':
 				features.append(child['var'])
+			if child.name == 'identity':
+				identity = '%s/%s'%(child['category'], child['type'])
 		if ext != None:
-			self.cacheCaps(ext, features)
+			self.cacheCaps(ext, features, identity)
 		frm = jid.JID(el['from'])
 		resource = frm.resource
 		if self.roster['users'].has_key(frm.userhost()):
-			self.roster['users'][frm.userhost()].setFeatures(resource, features)
+			self.roster['users'][frm.userhost()].setFeatures(resource, features, identity)
 	
 	def calcCapsExt(self, identity = ['client/pc'], features = []):
 		identity.sort()
