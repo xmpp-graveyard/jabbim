@@ -709,6 +709,8 @@ class clientClass(pyxl.client.Client):
 				if not jid.resource in self.main.selfResources:
 					self.main.selfResources.append(jid.resource)
 					self.main.buildOfflineMenu()
+				else:
+					self.main.ui.selfAvatar.refreshToolTip()
 
 			# we have opened conversation with this resource
 			if tabFull:
@@ -1285,7 +1287,7 @@ class AvatarLabel(QtGui.QLabel):
 						show='online'
 					text+='<img src="images/16x16/status/jabber-%s.png">' % show # hodilo by se rozlisit k jakymu poatri transportu
 					if res != None:
-						text+='<b>%s</b> %s<br>' % (res, priority)
+						text+='<b>%s</b> %s<br/>' % (res, priority)
 					text+='<font size="-1">%s</font>' % (status)
 			text+="</td></tr></table>"
 			self.setToolTip(text)
@@ -1807,7 +1809,7 @@ class mainWindow(QtGui.QMainWindow):
 				# because transport doesn't need to have the same show in roster as we send him before
 				# So FE we sent away, but in roster we have still online...
 				if self.transports[transport]:
-					return
+					continue
 					#ic=QtGui.QIcon(self.transports[transport].icon())
 					#self.ui.hboxlayout4.removeWidget(self.transports[transport])
 					#self.transports[transport].setParent(None)
@@ -1818,6 +1820,23 @@ class mainWindow(QtGui.QMainWindow):
 				self.transports[transport]=QtGui.QToolButton(self.ui.offlineButton.parent())
 				self.transports[transport].setMaximumSize(QtCore.QSize(16777215,20))
 				self.transports[transport].setIcon(ic)
+
+				text='<table><tr>'
+				if os.path.isfile(self.homeDir+'/avatars/'+unicode(self.config['jid'])):
+					pixmap=QtGui.QIcon(self.homeDir+'/avatars/'+unicode(self.config['jid'])).pixmap(64,64)
+					text+='<td><img src="'+self.homeDir+'/avatars/'+unicode(self.config['jid'])+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
+				#text+='<td><b>'+self.tr("Name:")+'</b> '+item.escapedName+'<br/>'
+				text+='<td><b>'+self.tr("JID:")+'</b> '+unicode(self.config['jid'])+'<br/>'
+
+				usertype=unicode(self.client.getHostType(transport,transport))
+				if os.path.isfile('images/16x16/status/'+usertype+"-offline.png"):
+					text+='<img src="images/16x16/status/'+usertype+'-offline.png" />'
+				else:
+					text+='<img src="images/16x16/status/jabber-offline.png">'
+				#text+='<font size="-1">%s</font>' % (status)
+				text+="</td></tr></table>"
+				self.transports[transport].setToolTip(text)
+
 				menu=QtGui.QMenu(transport,self.transports[transport])
 				menu.setIcon(self.getIcon(status=show,size="16x16"))
 				# add custom messages and shows QActions to the transports QMenu
@@ -1989,6 +2008,31 @@ class mainWindow(QtGui.QMainWindow):
 			if self.transports.has_key(jid):
 				if self.transports[jid]!=None:
 					self.transports[jid].setIcon(self.getIcon('1@'+jid,status=unicode(show),size="16x16"))
+
+					text='<table><tr>'
+					if os.path.isfile(self.homeDir+'/avatars/'+unicode(self.config['jid'])):
+						pixmap=QtGui.QIcon(self.homeDir+'/avatars/'+unicode(self.config['jid'])).pixmap(64,64)
+						text+='<td><img src="'+self.homeDir+'/avatars/'+unicode(self.config['jid'])+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
+					#text+='<td><b>'+self.tr("Name:")+'</b> '+item.escapedName+'<br/>'
+					text+='<td><b>'+self.tr("JID:")+'</b> '+unicode(self.config['jid'])+'<br/>'
+
+					status = unicode(message)
+					priority = pri
+					if priority != None:
+						priority = "(%s: %s)" % (self.tr("Priority"),priority)
+					else:
+						priority = ""
+					usertype=unicode(self.client.getHostType(jid,jid))
+					if os.path.isfile('images/16x16/status/'+usertype+"-"+show+".png"):
+						text+='<img src="images/16x16/status/'+usertype+"-"+show+'.png" />'
+					else:
+						text+='<img src="images/16x16/status/jabber-%s.png">' % show
+					if len(priority)!=0:
+						text+='%s<br/>' % priority
+					text+='<font size="-1">%s</font>' % (status)
+					text+="</td></tr></table>"
+					self.transports[jid].setToolTip(text)
+
 			# send presence
 			self.client.sendPresence(to=jid,show = unicode(show), status = unicode(message),priority=pri)
 
