@@ -149,13 +149,13 @@ class Client(derived):
 		err.printBriefTraceback()
 	
 	def cacheCaps(self, ext, features, identity):
-		self.caps_cache[ext] = (identity,features)
+		self.caps_cache[ext] = [identity,features]
 		self.main.cache.set_caps(ext, features, identity)
 
 	def _cacheCaps(self, result):
 		for line in result:
 			if line != None:
-				caps = self.caps_cache.get(line[0], ('',[]))
+				caps = self.caps_cache.get(line[0], ['',[]])
 				if line[1] not in caps[1]:
 					caps[1].append(line[1])
 				if caps[0] == '':
@@ -918,8 +918,8 @@ class Client(derived):
 
 				ext = child.getAttribute('ext')
 				if self.caps_cache.has_key(ext) and ext != None:
-					features = self.caps_cache[ext][0]
-					identity = self.caps_cache[ext][1]
+					features = self.caps_cache[ext][1]
+					identity = self.caps_cache[ext][0]
 				else:	
 					if typ !='unavailable':
 						features = 'asked'

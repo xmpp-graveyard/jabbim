@@ -818,7 +818,7 @@ class rosterWidget(QtGui.QWidget):
 						text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" to")+'<br/>'
 					elif unicode(contact.subscription) == 'none':
 						text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" none")+'<br/>'	
-						
+					n =0
 					for res in contact.resources.keys():
 						status = contact.resources[res].status
 						if not status:
@@ -830,13 +830,20 @@ class rosterWidget(QtGui.QWidget):
 							priority = "(%s: %s)" % (self.tr("Priority"),priority)
 						else:
 							priority = ""
+						if n>0:
+							text+='<br />'
 						text+='<img src="images/16x16/status/jabber-%s.png">' % contact.resources[res].show # hodilo by se rozlisit k jakymu poatri transportu
 						text	+=	'<b>%s</b> '%self.main.status[contact.resources[res].show]
 						if res != None:
 #							text+='<b>%s</b> %s<br>' % ( res, priority)
 							text+='%s' % (priority)
+						identity = contact.resources[res].identity
+						if identity != '' and identity != None and identity != 'client/pc' and identity.startswith('client'):							
+							text+=' %s' % (identity)
 						if len(status) != 0:
-							text+='<br /><font size="-1">%s</font><br />' % (status.replace('\n', '<br />'))
+							text+='<br /><font size="-1">%s</font>' % (status.replace('\n', '<br />'))
+
+						n+=1
 					text+="</td></tr></table>"
 					self.setToolTip(text)
 		return QtGui.QWidget.event(self,event)
