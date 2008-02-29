@@ -3242,6 +3242,12 @@ class mainWindow(QtGui.QMainWindow):
 		for i in MainWindow.plugins.keys():
 			MainWindow.unloadPlugin(i)
 
+		for transport in self.transports.keys():
+			self.ui.hboxlayout4.removeWidget(self.transports[transport])
+			self.transports[transport].setParent(None)
+			self.transports[transport].deleteLater()
+		self.transports={}
+
 		if self.client:
 			for jid in self.client.groupchats.keys():
 				for i in range(self.chat.ui.chatTab.count()):
