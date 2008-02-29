@@ -1547,8 +1547,13 @@ class Client(derived):
 		iq['type'] = 'result'
 		iq['id'] = el['id']
 		q = iq.addElement('query', 'jabber:iq:time')
-		q.addElement('utc', content = time.strftime("%Y%m%dT%T", time.gmtime()))
-		q.addElement('tz', content = time.strftime("%Z", time.gmtime()))
+		q.addElement('utc', content = unicode(time.strftime("%Y%m%dT%T", time.gmtime())))
+		timezone=time.strftime("%Z", time.gmtime())
+		try:
+			timezone=unicode(timezone, 'utf-8')
+		except:
+			timezone=unicode(timezone)
+		q.addElement('tz', content = timezone)
 ##		q.addElement('display', content = unicode(time.strftime(u"%c", time.localtime())))
 #		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
