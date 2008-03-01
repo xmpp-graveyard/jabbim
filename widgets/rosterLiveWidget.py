@@ -1596,7 +1596,10 @@ class rosterWidget(QtGui.QWidget):
 					if useritem==self.item:
 						y+=self.selectedHeight-28
 					y+=self.userHeight
-		size=y+self.selectedHeight-28
+		if self.main.config['bigOnClick']=='True':
+			size=y+self.selectedHeight-28
+		else:
+			size=y
 		if size<self.parent().height()-20:
 			if self.parent().height()-20>0:
 				self.setMinimumHeight(self.parent().height()-20)
