@@ -613,6 +613,8 @@ class clientClass(pyxl.client.Client):
 			# we don't have opened tab for this room => nothing to do...
 			return
 		tabFull,indexFull=self.main.chat.findTab(muc+'/'+nick,True,['chat'])
+		if tabFull:
+			print "gc_presence",tabFull.typ,tabFull.jid
 		# we have opened conversation with this resource
 
 		if show=="offline":
