@@ -304,6 +304,7 @@ class clientClass(pyxl.client.Client):
 			self.main.buildOfflineMenu()
 
 	def getHostType(self,host,jid):
+		host=host.split('/')[0]
 		try:
 			name=self.disco[host][None]['identities'].keys()[0]
 			typ=self.disco[host][None]['identities'][name]['type']
@@ -341,9 +342,9 @@ class clientClass(pyxl.client.Client):
 		transport=False
 		# get host info if we haven't it
 		if len(unicode(jid).rsplit("@"))!=1:
-			host=unicode(jid).rsplit("@")[1]
+			host=unicode(jid).rsplit("@")[1].split('/')[0]
 		else:
-			host=unicode(jid)
+			host=unicode(jid).split('/')[0]
 			transport=True
 		identity=self.getIdentity(jid)
 		if not identity and not host in self.temp_hosts:
@@ -2999,9 +3000,9 @@ class mainWindow(QtGui.QMainWindow):
 		if jid!=None:
 			#file=path+self.getUserType(jid)+"-"+self.icons[self.show[typ]]+".png"
 			if len(jid.split("@"))>1:
-				host=jid.split("@")[1]
+				host=jid.split("@")[1].split('/')[0]
 			else:
-				host=jid
+				host=jid.split('/')[0]
 			if self.client.disco.has_key(host):
 				usertype=unicode(self.client.getHostType(host,jid))
 				file=path+usertype+"-"+status+".png"
