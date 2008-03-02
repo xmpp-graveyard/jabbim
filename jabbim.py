@@ -158,7 +158,7 @@ class clientClass(pyxl.client.Client):
 				if widget.widget.complete==None:
 					# User wants to close transfer
 					# TODO: we have to do something here (inform user that transfer was stopped for example...)
-					pass
+					widget.widget.complete=True
 				else:
 					# file was sent/received :)
 					tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[queueId].jid)
@@ -196,6 +196,7 @@ class clientClass(pyxl.client.Client):
 						# some files are in queue, so we have to start to upload next file
 						if not emptyQueue:
 							self.main.events.nextFTUploadEvent(sid,queueId)
+							widget.widget.complete==True
 						# queue is empty => all files have been sent
 						else:
 							# check this queues error list, if there is something different then None, some files haven't been sent
@@ -221,6 +222,7 @@ class clientClass(pyxl.client.Client):
 									del tab.chat.filetransfer[queueId]
 					# file download
 					else:
+						widget.widget.complete==True
 						# no error
 						if self.main.ftError[sid]==None:
 							widget.widget.stats.setText(mainWindow.tr("Complete"))

@@ -316,6 +316,7 @@ class FTWidget(QtGui.QWidget):
 		self.item=item
 		self.main=main
 		self.complete=False
+		self.queueId=sid
 		self.sid=sid
 		self.gridlayout = QtGui.QGridLayout(self)
 		self.gridlayout.setMargin(0)
@@ -392,14 +393,21 @@ class FTWidget(QtGui.QWidget):
 
 	def closeClicked(self):
 		if self.item:
+			tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[self.queueId].jid)
 			if not self.complete:
 				try:
 					self.main.client.ft[self.sid].protocol.unregisterProducer()
 					self.complete=None
+					return
 				except:
-					self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
-			elif self.complete==True:
+					pass
+			else:
 				self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
+			if tab:
+				if tab.chat.filetransfer.has_key(self.queueId):
+					tab.chat.ui.ftwidget.layout().removeWidget(tab.chat.filetransfer[self.queueId])
+					tab.chat.filetransfer[self.queueId].setParent(None)
+					del tab.chat.filetransfer[self.queueId]
 
 class fileClass:
 	def __init__(self,name,description):
