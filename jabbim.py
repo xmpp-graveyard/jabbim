@@ -747,7 +747,6 @@ class clientClass(pyxl.client.Client):
 				# update contact in roster
 				self.main.ui.roster.setStatus(jid.userhost(),show,status=status,first=first)
 		# presence is from transport
-		print "lol",jid.full(),self.main.transports
 		if self.main.transports.has_key(jid.full()):
 			if self.main.transports[jid.full()]!=None:
 				self.main.transports[jid.full()].setIcon(self.main.getIcon('1@'+jid.userhost(),status=unicode(show),size="16x16"))
