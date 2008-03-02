@@ -485,7 +485,8 @@ class rosterWidget(QtGui.QWidget):
 		"""
 		jid=self.main.getJid(jid)
 		if self.main.client.roster['users'].has_key(jid.userhost()):
-			return self.main.client.roster['users'][jid.userhost()].name
+			if len(self.main.client.roster['users'][jid.userhost()].name)!=0:
+				return self.main.client.roster['users'][jid.userhost()].name
 		return jid.full()
 
 	def itemAt(self,x1,y1,count=None):
