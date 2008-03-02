@@ -724,36 +724,33 @@ class clientClass(pyxl.client.Client):
 
 			if jid.resource:
 				resource=jid.resource
-				jid=jid.userhost()
 				# get highest resource
 				try:
-					highest=self.roster['users'][jid].resources[self.roster['users'][jid].getHighestResource()]
+					highest=self.roster['users'][jid.userhost()].resources[self.roster['users'][jid.userhost()].getHighestResource()]
 					status=highest.status
 				except:
 					status=None
-					print 'error in resource', [jid]
+					print 'error in resource', [jid.userhost()]
 				# get status message
 				if status!=None:
 					status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
 				# update contact in roster
 				try:
-					self.main.ui.roster.setStatus(jid,highest.show,status=highest.status,first=first)
+					self.main.ui.roster.setStatus(jid.userhost(),highest.show,status=highest.status,first=first)
 				except:
-					print 'Error in resource ', jid
+					print 'Error in resource ', jid.userhost()
 			else:
 				# get status message
-				jid=jid.userhost()
-				status=self.roster['users'][jid].status[1]
+				status=self.roster['users'][jid.userhost()].status[1]
 				if status!=None:
 					status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
 				# update contact in roster
-				self.main.ui.roster.setStatus(jid,show,status=status,first=first)
-		if not isinstance(jid,unicode):
-			jid=jid.userhost()
+				self.main.ui.roster.setStatus(jid.userhost(),show,status=status,first=first)
 		# presence is from transport
-		if self.main.transports.has_key(jid):
-			if self.main.transports[jid]!=None:
-				self.main.transports[jid].setIcon(self.main.getIcon('1@'+jid,status=unicode(show),size="16x16"))
+		print "lol",jid.full(),self.main.transports
+		if self.main.transports.has_key(jid.full()):
+			if self.main.transports[jid.full()]!=None:
+				self.main.transports[jid.full()].setIcon(self.main.getIcon('1@'+jid.userhost(),status=unicode(show),size="16x16"))
 
 				text='<table><tr>'
 				if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(self.main.config['jid'])):
@@ -768,7 +765,7 @@ class clientClass(pyxl.client.Client):
 					#priority = "(%s: %s)" % (self.main.tr("Priority"),priority)
 				#else:
 					#priority = ""
-				usertype=unicode(self.getHostType(jid,jid))
+				usertype=unicode(self.getHostType(jid.userhost(),jid.userhost()))
 				if os.path.isfile('images/16x16/status/'+usertype+"-"+show+".png"):
 					text+='<img src="images/16x16/status/'+usertype+"-"+show+'.png" />'
 				else:
@@ -778,7 +775,7 @@ class clientClass(pyxl.client.Client):
 				if status:
 					text+='<font size="-1">%s</font>' % (status)
 				text+="</td></tr></table>"
-				self.main.transports[jid].setToolTip(text)
+				self.main.transports[jid.full()].setToolTip(text)
 		
 
 	def on_xml(self,xml):
@@ -2044,7 +2041,34 @@ class mainWindow(QtGui.QMainWindow):
 					self.ui.statusMessage.setText(unicode(message))
 				self.ui.statusMessage.setIcon(self.getIcon(status=show,size="16x16"))
 		else:
+			if self.transports[jid]!=None:
+				self.transports[jid].setIcon(self.getIcon('1@'+jid,status=unicode(show),size="16x16"))
 
+				text='<table><tr>'
+				if os.path.isfile(self.homeDir+'/avatars/'+unicode(self.config['jid'])):
+					pixmap=QtGui.QIcon(self.homeDir+'/avatars/'+unicode(self.config['jid'])).pixmap(64,64)
+					text+='<td><img src="'+self.homeDir+'/avatars/'+unicode(self.config['jid'])+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
+				#text+='<td><b>'+self.tr("Name:")+'</b> '+item.escapedName+'<br/>'
+				text+='<td><b>'+self.tr("JID:")+'</b> '+unicode(self.config['jid'])+'<br/>'
+
+				#status = unicode(message)
+				#priority = pri
+				#if priority != None:
+					#priority = "(%s: %s)" % (self.tr("Priority"),priority)
+				#else:
+					#priority = ""
+				usertype=unicode(self.client.getHostType(jid,jid))
+				if os.path.isfile('images/16x16/status/'+usertype+"-"+show+".png"):
+					text+='<img src="images/16x16/status/'+usertype+"-"+show+'.png" />'
+				else:
+					text+='<img src="images/16x16/status/jabber-%s.png">' % show
+				#if len(priority)!=0:
+					#text+='%s<br/>' % priority
+				if message:
+					text+='<font size="-1">%s</font>' % (message)
+				text+="</td></tr></table>"
+				self.transports[jid].setToolTip(text)
+				
 			# send presence
 			self.client.sendPresence(to=jid,show = unicode(show), status = unicode(message),priority=pri)
 
