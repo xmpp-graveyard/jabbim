@@ -395,6 +395,8 @@ class FTWidget(QtGui.QWidget):
 		if self.item:
 			tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[self.queueId].jid)
 			if not self.complete:
+				if self.main.events.filetransferQueue.has_key(self.queueId):
+					self.main.events.filetransferQueue[self.queueId]=[]
 				try:
 					self.main.client.ft[self.sid].protocol.unregisterProducer()
 					self.complete=None
