@@ -1476,7 +1476,7 @@ class rosterWidget(QtGui.QWidget):
 				painter.save()
 				painter.translate(x,y)
 				painter.setPen(QtCore.Qt.transparent)
-				linearGrad=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(15, 0))
+				linearGrad=QtGui.QRadialGradient(QtCore.QPointF(2,16),14)
 				if self.theme:
 					linearGrad.setColorAt(0,self.main.ui.selectedItemStyle.palette().window().color())
 				else:
