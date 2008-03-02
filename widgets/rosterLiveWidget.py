@@ -1455,6 +1455,7 @@ class rosterWidget(QtGui.QWidget):
 
 			painter.save()
 			painter.translate(x,y)
+			background=None
 			if useritem==self.selected:
 				if self.theme:
 					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.main.ui.selectedItemStyle.palette().window()))
@@ -1465,26 +1466,37 @@ class rosterWidget(QtGui.QWidget):
 					brush=QtGui.QBrush(self.main.ui.userStyleWidget.palette().window())
 					if brush.color().alpha()!=0:
 						painter.fillRect(0,0,self.width(),32,brush)
+					background=brush.color()
 					#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.main.ui.userStyleWidget.palette().window()))
 				else:
 					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
+					background=self.palet.color(QtGui.QPalette.Base)
 			painter.restore()
-			if self.metaItems.has_key(useritem.metajid):
+			if self.metaItems.has_key(useritem.metajid) and background:
 				painter.save()
 				painter.translate(x,y)
+				painter.setPen(QtCore.Qt.transparent)
+				linearGrad=QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(15, 0))
 				if self.theme:
-					painter.setBrush(self.main.ui.selectedItemStyle.palette().window())
+					linearGrad.setColorAt(0,self.main.ui.selectedItemStyle.palette().window().color())
 				else:
-					painter.setBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight))
-				painter.rect(0,0,5,32)
-					if self.theme:
-					painter.setBrush(QtGui.QBrush(self.main.ui.selectedItemStyle.palette().window()))
+					linearGrad.setColorAt(0,self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight))
+				linearGrad.setColorAt(1, background)
+				painter.setBrush(linearGrad)
+				painter.drawRect(0,0,15,32)
+				if self.theme:
+					painter.setPen(QtGui.QPen(self.main.ui.selectedItemStyle.palette().text().color()))
 				else:
-					painter.setBrush(QtGui.QBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight)))
-				painter.drawPoint(1,16)
-				painter.drawPoint(2,15)
+					painter.setPen(QtGui.QPen(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.HighlightedText)))
 				painter.drawPoint(2,16)
-				painter.drawPoint(2,17)
+				painter.drawPoint(3,15)
+				painter.drawPoint(3,16)
+				painter.drawPoint(3,17)
+				painter.drawPoint(4,14)
+				painter.drawPoint(4,15)
+				painter.drawPoint(4,16)
+				painter.drawPoint(4,17)
+				painter.drawPoint(4,18)
 				painter.restore()
 				
 			if useritem in self.events:
@@ -1672,7 +1684,7 @@ class rosterWidget(QtGui.QWidget):
 		item=self.itemAt(x,y)
 		if item==None:
 			return QtGui.QWidget.mouseReleaseEvent(self,event)
-		if x<5:
+		if x<12:
 			# sets item properties according to metaItem, which is represented by button
 			if self.metaItems.has_key(item.metajid):
 				index=0
@@ -1691,6 +1703,7 @@ class rosterWidget(QtGui.QWidget):
 				item.statusMessage=meta.statusMessage
 				item.jid=meta.jid
 				self.repaint()
+				return
 		else:
 			t=QtGui.QApplication.doubleClickInterval()/1000.0
 			timestamp=float(time.time())
@@ -1723,7 +1736,9 @@ class rosterWidget(QtGui.QWidget):
 		item=self.itemAt(x,y)
 		if self.item!=item:
 			if self.main.config['bigOnClick']=="False":
-				return self.mouseReleaseEvent(event)
+				if x>12:
+					return self.mouseReleaseEvent(event)
+				return
 			else:
 				item=self.oldItem
 		
