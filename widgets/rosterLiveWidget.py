@@ -1469,7 +1469,24 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
 			painter.restore()
-			
+			if self.metaItems.has_key(useritem.metajid):
+				painter.save()
+				painter.translate(x,y)
+				if self.theme:
+					painter.setBrush(self.main.ui.selectedItemStyle.palette().window())
+				else:
+					painter.setBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight))
+				painter.rect(0,0,5,32)
+					if self.theme:
+					painter.setBrush(QtGui.QBrush(self.main.ui.selectedItemStyle.palette().window()))
+				else:
+					painter.setBrush(QtGui.QBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight)))
+				painter.drawPoint(1,16)
+				painter.drawPoint(2,15)
+				painter.drawPoint(2,16)
+				painter.drawPoint(2,17)
+				painter.restore()
+				
 			if useritem in self.events:
 				if self.bl:
 					painter.drawPixmap(x+7,y,useritem.icon.pixmap(32,32))
@@ -1655,29 +1672,49 @@ class rosterWidget(QtGui.QWidget):
 		item=self.itemAt(x,y)
 		if item==None:
 			return QtGui.QWidget.mouseReleaseEvent(self,event)
-		t=QtGui.QApplication.doubleClickInterval()/1000.0
-		timestamp=float(time.time())
-		if timestamp-self.timestamp<=t and self.main.config['bigOnClick']=="True":
-			self.mouseDoubleClickEvent(event)
+		if x<5:
+			# sets item properties according to metaItem, which is represented by button
+			if self.metaItems.has_key(item.metajid):
+				index=0
+				for i in self.metaItems[item.metajid]:
+					if i.jid==item.jid:
+						index=self.metaItems[item.metajid].index(i)-1
+						break
+				meta=self.metaItems[item.metajid][index]
+				item.name=meta.name
+				item.escapedName=meta.escapedName
+				item.frameAvatar=meta.frameAvatar
+				item.selectedFrameAvatar=meta.selectedFrameAvatar
+				item.icon=meta.icon
+				item.avatar=meta.avatar
+				item.status=meta.status
+				item.statusMessage=meta.statusMessage
+				item.jid=meta.jid
+				self.repaint()
 		else:
-			if event.button() == QtCore.Qt.LeftButton:
-				self.oldItem=self.item
-				if item.typ=='group':
-					self.selectItem(item)
-				else:
-					self.selectItem(item)
-	
-				if item.typ=='group' and item.main!='special':
-					if item.expanded:
-						item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png")
-						item.expanded=False
+			t=QtGui.QApplication.doubleClickInterval()/1000.0
+			timestamp=float(time.time())
+			if timestamp-self.timestamp<=t and self.main.config['bigOnClick']=="True":
+				self.mouseDoubleClickEvent(event)
+			else:
+				if event.button() == QtCore.Qt.LeftButton:
+					self.oldItem=self.item
+					if item.typ=='group':
+						self.selectItem(item)
 					else:
-						item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-open.png")
-						item.expanded=True
-					self.setSize()
-					self.statusLabel.hide()
-					self.repaint()
-		self.timestamp=float(timestamp)
+						self.selectItem(item)
+		
+					if item.typ=='group' and item.main!='special':
+						if item.expanded:
+							item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png")
+							item.expanded=False
+						else:
+							item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-open.png")
+							item.expanded=True
+						self.setSize()
+						self.statusLabel.hide()
+						self.repaint()
+			self.timestamp=float(timestamp)
 		QtGui.QWidget.mouseReleaseEvent(self,event)
 
 	def mouseDoubleClickEvent(self,event):
