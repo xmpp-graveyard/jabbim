@@ -287,6 +287,39 @@ def sendDataForm(main,jid,form,var,t,unregister=False):
 	form["type"] = "submit"
 	return form
 
+class abstractDataFormsDialog(QtGui.QDialog):
+	def __init__(self,main,form,jid,typ,parent=None):
+		apply(QtGui.QDialog.__init__,(self,parent))
+		self.setModal(False)
+		self.main=main
+		self.typ=typ
+		self.jid=jid
+		self.form=form
+		layout=QtGui.QGridLayout(self)
+		
+		self.setMaximumWidth(400)
+		self.var={}
+		row=0
+		for x in form.elements():
+			if unicode(x.name)=="title":
+				self.setWindowTitle(unicode(x))
+
+		self.var,row=makeDataForm(self,layout,form)
+
+		self.ok=QtGui.QPushButton(self.tr("OK"),self)
+		self.cancel=QtGui.QPushButton(self.tr("Cancel"),self)
+
+		QtCore.QObject.connect(self.ok,QtCore.SIGNAL("clicked()"),self.accept)
+		QtCore.QObject.connect(self.cancel,QtCore.SIGNAL("clicked()"),self.reject)
+		
+		layout.addWidget(self.ok,row+1,0)
+		layout.addWidget(self.cancel,row+1,1)
+
+	def getForm(self):
+		return sendDataForm(self.main,"",self.form,self.var,None)
+
+
+
 class dataFormsDialog(QtGui.QDialog):
 	def __init__(self,main,form,jid,typ,parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
