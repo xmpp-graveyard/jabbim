@@ -1016,6 +1016,7 @@ class clientClass(pyxl.client.Client):
 		# get chatwidget of this conversation
 		if self.groupchats.has_key(frm.userhost()):
 			tab,tabIndex=self.main.chat.findTab(frm.full(),True)
+			user=frm.resource
 		else:
 			tab,tabIndex=self.main.chat.findTab(frm.full())
 
