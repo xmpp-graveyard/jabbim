@@ -276,14 +276,16 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			return
 		self.blockSignals(True)
 		#QtCore.QObject.disconnect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
-		if len(unicode(self.toPlainText()))==0 and not self.reformated:
-			print "reformat"
-			self.reformated=True
-			self.reformat(format)
-			#QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
+		if len(unicode(self.toPlainText()))==0:
+			if not self.reformated:
+				print "reformat"
+				self.reformated=True
+				self.reformat(format)
+				#QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
+			else:
+				self.reformated=False
 			self.blockSignals(False)
 			return
-		self.reformated=False
 		print "setFormat"
 		self.setFormat(format)
 		self.blockSignals(False)
@@ -566,9 +568,10 @@ class abstractChatWidget(QtGui.QWidget):
 			format.setFontUnderline(self.ui.line.fontUnderline())
 			format.setFontWeight(self.ui.line.fontWeight())
 			fmt=self.ui.line.currentCharFormat()
-			print fmt.background().isOpaque()
+			#print 'opaque',fmt.background().isOpaque()
 			if fmt.background().isOpaque():
 				format.setBackground(QtGui.QBrush(fmt.background()))
+				self.ui.line.backgroundBrush=fmt.background()
 
 			self.ui.line.setCurrentCharFormat(format)
 			colorIcon=QtGui.QPixmap(16,16)
