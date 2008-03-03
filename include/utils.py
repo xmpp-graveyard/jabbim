@@ -155,7 +155,26 @@ def loadConfig(main,status):
 			"discoHistory": [],
 			"startInTray": "False",
 			"sendOSInfo": "True",
-			"boshURL": ''
+			"boshURL": '',
+			"tabCycling" : "True", #cyklovanie medzi tabmi...
+		
+ 			##shortcuts
+ 			"nextTab" : "Ctrl+Tab",
+ 			"previousTab" : "Ctrl+Shift+Tab",
+ 			
+ 			"removeTab" : "Ctrl+F4",
+ 			"tabOne" : "Alt+1",
+ 			"tabTwo" : "Alt+2",
+ 			"tabThree" : "Alt+3",
+ 			"tabFour" : "Alt+4",
+ 			"tabFive" : "Alt+5",
+ 			"tabSix" : "Alt+6",
+ 			"tabSeven" : "Alt+7",
+ 			"tabEight" : "Alt+8",
+ 			"tabNine" : "Alt+9",
+ 			
+ 			"moveRight" : "Alt+Right",
+ 			"moveLeft" : "Alt+Left"
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:

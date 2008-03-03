@@ -1434,6 +1434,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.addcontactdialog=None
 		self.statusPath="images/xxxxx/status/"
 		self.transports={}
+		self.setupShortcuts()
 		#: {show:ID}
 		self.shows={u"online":u"1",
 					u"available":u"1",
@@ -1577,6 +1578,24 @@ class mainWindow(QtGui.QMainWindow):
 		if self.config['autoJoin']=='True':
 			self.connect()
 		
+	def setupShortcuts(self):
+ 		QtGui.QShortcut(QtGui.QKeySequence(self.config["nextTab"]), self.chat,self.chat.next)
+ 		QtGui.QShortcut(QtGui.QKeySequence(self.config["previousTab"]), self.chat,self.chat.previous)
+ 		
+ 		QtGui.QShortcut(QtGui.QKeySequence(self.config["removeTab"]), self.chat,self.chat.removeTab)
+ 
+ 		QtGui.QShortcut(QtGui.QKeySequence(self.config["tabOne"]), self.chat,self.chat.tabOne)
+ 		QtGui.QShortcut(QtGui.QKeySequence(self.config["tabTwo"]), self.chat,self.chat.tabTwo)
+ 		QtGui.QShortcut(QtGui.QKeySequence(self.config["tabThree"]), self.chat,self.chat.tabThree)
+ 		QtGui.QShortcut(QtGui.QKeySequence(self.config["tabFour"]), self.chat,self.chat.tabFour)
+ 		QtGui.QShortcut(QtGui.QKeySequence(self.config["tabFive"]), self.chat,self.chat.tabFive)
+ 		QtGui.QShortcut(QtGui.QKeySequence(self.config["tabSix"]), self.chat,self.chat.tabSix)
+ 		QtGui.QShortcut(QtGui.QKeySequence(self.config["tabSeven"]), self.chat,self.chat.tabSeven)
+ 		QtGui.QShortcut(QtGui.QKeySequence(self.config["tabEight"]), self.chat,self.chat.tabEight)
+ 		QtGui.QShortcut(QtGui.QKeySequence(self.config["tabNine"]), self.chat,self.chat.tabNine)
+ 
+ 		QtGui.QShortcut(QtGui.QKeySequence(self.config["moveRight"]), self.chat,self.chat.moveRight)
+		QtGui.QShortcut(QtGui.QKeySequence(self.config["moveLeft"]), self.chat,self.chat.moveLeft)
 
 	def statusLineCanceled(self):
 		self.ui.statusLine.hide()
