@@ -646,7 +646,9 @@ class abstractChatWidget(QtGui.QWidget):
 		self.ui.line.clear()
 		self.ui.line.setFocus(QtCore.Qt.OtherFocusReason)
 		if format.isAnchor():
+			self.ui.line.blockSignals(True)
 			self.ui.line.reformat()
+			self.ui.line.blockSignals(False)
 		else:
 			self.ui.line.setCurrentCharFormat(format)
 		
