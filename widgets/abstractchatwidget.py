@@ -213,6 +213,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.backgroundBrush=None
 		self.fontSize=None
 		self.changeFormat=True
+		self.reformated=False
 		if self.parent.xhtml:
 			QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
 			#QtCore.QObject.connect(self,QtCore.SIGNAL("cursorPositionChanged ()"),self.setFormat)
@@ -270,16 +271,19 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		#return r
 
 	def formatChanged(self,format):
-		if format.isAnchor():
+		if format.isAnchor() or self.signalsBlocked():
+			print 'blocked'
 			return
 		self.blockSignals(True)
 		#QtCore.QObject.disconnect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
-		if len(unicode(self.toPlainText()))==0:
+		if len(unicode(self.toPlainText()))==0 and not self.reformated:
 			print "reformat"
+			self.reformated=True
 			self.reformat(format)
 			#QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
 			self.blockSignals(False)
 			return
+		self.reformated=False
 		print "setFormat"
 		self.setFormat(format)
 		self.blockSignals(False)
