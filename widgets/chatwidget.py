@@ -249,6 +249,8 @@ class chatWidget(abstractChatWidget):
 		
 		# Maximum width of avatar Widget
 		self.ui.avatar.setMaximumWidth(128)
+		self.ui.avatar.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+		QtCore.QObject.connect(self.ui.avatar,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.contactMenu)
 		self.noColor=True
 		self.lastMessageFrom=""
 		
@@ -316,6 +318,16 @@ class chatWidget(abstractChatWidget):
 			self.ui.selfAvatar.setMaximumWidth(64)
 		else:
 			self.ui.selfAvatar.hide()
+
+	def contactMenu(self,pos):
+		items=self.main.ui.roster.getUserItems(self.main.getJid(self.jid).userhost())
+		if len(items)==0:
+			return
+		item=items[0]
+		group=item.group
+		jid=item.jid
+		contactMenu=self.main.ui.roster.buildContactMenu(unicode(jid),group)
+		contactMenu.popup(self.ui.avatar.mapToGlobal(pos))
 
 	def buildMetaMenu(self):
 		jidt=self.main.getJid(self.jid)

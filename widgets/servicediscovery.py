@@ -215,6 +215,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		jid=unicode(item.text(3))
 		for i in range(item.childCount()):
 			item.takeChild(0)
+		print self.main.client.disco[jid]
 		for key,values in self.main.client.disco[jid][None]['items'].iteritems():
 			#print values
 			it=QtGui.QTreeWidgetItem(item)
