@@ -99,6 +99,29 @@ class Plugin(plugins.PluginBase):
 		q = el.firstChildElement()
 		s = q.firstChildElement()
 		return s['gid'], s['muc']
+		
+	def listGames(self, game):
+		iq = IQ(self.main.client.xmlstream, 'get')
+		iq['xml:lang'] = self.main.client.xmlLang
+		iq['type'] = 'get'
+		iq['to'] = 'games.jabbim.cz'
+		q = iq.addElement('query')
+		q['xmlns']='games.jabbim.cz'
+		s = q.addElement('list')
+		s['game'] = game
+		s['action'] = 'list'
+		self.main.client.disp(iq['id'])
+		d = iq.send()
+		d.addCallback(self._gameList)
+		return d
+	
+	def _gameList(self, el):
+		q = el.firstChildElement()
+		l = q.firstChildElement()
+		out = {}
+		for item in l.elements():
+			out.append(item.attributes)
+		return out
 
 	def buildMainWindowMenu(self):
 		menu=self.mainWindowMenu()
