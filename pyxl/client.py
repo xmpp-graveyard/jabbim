@@ -724,7 +724,7 @@ class Client(derived):
 					if self.roster_meta.has_key(item['jid']):
 						tag = self.roster_meta[item['jid']]['tag']
 						order = self.roster_meta[item['jid']]['order']
-					host = jid.JID(item['jid']).host
+					host = jid.JID(item['jid'].strip()).host
 					if not host in hosts:
 						hosts.append(host)
 					contact = Contact(self, item['jid'], name, item['subscription'], [], groups, tag =  tag, order =  order, ask = ask)

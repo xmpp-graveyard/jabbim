@@ -116,10 +116,13 @@ class Plugin(plugins.PluginBase):
 		return d
 	
 	def _gameList(self, el):
+		print 'received gamelist'
 		q = el.firstChildElement()
 		l = q.firstChildElement()
-		out = {}
+		print l.toXml()
+		out = []
 		for item in l.elements():
+			print item.toXml()
 			out.append(item.attributes)
 		return out
 
@@ -152,6 +155,10 @@ class Plugin(plugins.PluginBase):
 	def sendConfig(self):
 		form=self.dialog.getForm()
 		self.setConfig(self.dialog.gid,form)
+		self.listGames('basic').addCallback(self.test)
+
+	def test(self, res):
+		print res
 
 	def buildContactMenu(self,menu,contact):
 		return
