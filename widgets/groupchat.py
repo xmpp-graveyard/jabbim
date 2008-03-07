@@ -437,14 +437,13 @@ class groupChatWidget(abstractChatWidget):
 		icon=self.main.getIcon(status=self.main.icons[unicode(item.text(1))[0]],size="16x16")
 		tab=self.main.chat.addChatTab(self.jid+"/"+unicode(item.text(0)),item.text(0),icon,full=True)
 		self.main.chat.activate()
-		#tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 		self.main.client.reactor.callLater(0.2,tab.chat.ui.line.setFocus,QtCore.Qt.MouseFocusReason)
 
 	def userSingleClicked(self,item,i):
 		if item.parent()==None:
 			return
-		text = unicode(self.ui.line.text)
-		if len(text) == 0:
+		text = unicode(self.ui.line.text())
+		if len(text) == 0 or text.strip()[:-1] in self.main.client.groupchats[self.jid].users.keys():
 			self.ui.line.setText(unicode(item.text(0))+': ')
 			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 			cur=self.ui.line.textCursor()
