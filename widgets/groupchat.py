@@ -442,13 +442,21 @@ class groupChatWidget(abstractChatWidget):
 	def userSingleClicked(self,item,i):
 		if item.parent()==None:
 			return
-		text = unicode(self.ui.line.text())
+		text = unicode(self.ui.line.toPlainText())
 		if len(text) == 0 or text.strip()[:-1] in self.main.client.groupchats[self.jid].users.keys():
 			self.ui.line.setText(unicode(item.text(0))+': ')
-			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		else:
 			cur=self.ui.line.textCursor()
-			cur.movePosition(QtGui.QTextCursor.End)
+			if text[-1]==" ":
+				cur.insertText(unicode(item.text(0))+" ")
+			else:
+				cur.insertText(" "+unicode(item.text(0))+" ")
 			self.ui.line.setTextCursor(cur)
+		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		cur=self.ui.line.textCursor()
+		cur.movePosition(QtGui.QTextCursor.End)
+		self.ui.line.setTextCursor(cur)
+			
 		
 	def clearChat(self):
 		self.init=""
