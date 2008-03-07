@@ -783,7 +783,7 @@ class chatWindow(QtGui.QMainWindow):
 			self.activateWindow()
 			tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 			self.ui.chatTab.setCurrentIndex(index)
-			return
+			return tab
 		item=self.main.ui.roster.getUserItems(jidT.JID(jid).userhost())
 		metaitem=self.main.ui.roster.getMetaItems(jidT.JID(jid).userhost())
 
@@ -868,6 +868,7 @@ class chatWindow(QtGui.QMainWindow):
 		if message!=None:
 			message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+unicode(tab.chat.avatarHeight)+"\" />")
 			tab.chat.textEditWrite(message)
+		return tab
 		#self.show()
 		#self.raise_()
 		#self.activateWindow()
