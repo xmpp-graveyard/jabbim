@@ -101,7 +101,7 @@ class Plugin(plugins.PluginBase):
 	def _gameCreated(self, el):
 		q = el.firstChildElement()
 		s = q.firstChildElement()
-		return s['gid'], s['muc']
+		return s['gid'], s['muc'], s['owner']
 		
 	def listGames(self, game):
 		iq = IQ(self.main.client.xmlstream, 'get')
@@ -158,39 +158,54 @@ class Plugin(plugins.PluginBase):
 	def gameCreated(self,data):
 		if not data:
 			return
-		gid,muc=data
+		gid,muc,owner=data
 		print "game created",gid,muc
 		print "requesting config"
 		d=self.getConfig(gid)
-		d.addCallback(self.configReceived,gid)
+		d.addCallback(self.configReceived,gid,muc)
 	
-	def configReceived(self,form,gid):
+	def configReceived(self,form,gid,muc):
 		print form,gid
 		if form!=None:
 			self.dialog=dataforms.abstractDataFormsDialog(self.main,form,"games.jabbim.cz",None,self.main)
 			QtCore.QObject.connect(self.dialog,QtCore.SIGNAL("accepted()"),self.sendConfig)
 			self.dialog.gid=gid
+			self.dialog.muc=muc
 			self.dialog.show()
 
 	def sendConfig(self):
 		form=self.dialog.getForm()
 		self.setConfig(self.dialog.gid,form)
+		self.joinGame(self.dialog.muc)
 		#self.listGames('basic').addCallback(self.test)
 
-	def joinGame(self):
-		item=self.browser.ui.treeWidget.currentItem()
-		if not item:
-			return
-		muc=unicode(item.data(0,32).toString())
+	def joinGame(self,muc=None):
+		if not muc:
+			item=self.browser.ui.treeWidget.currentItem()
+			if not item:
+				return
+			muc=unicode(item.data(0,32).toString())
 		if self.main.chat.addGroupChatTab(muc,self.main.client.jid.user,name="Game"):
-			tab=self.main.chat.findTab(muc,True,['groupchat'])
-			button=QtGui.QToolButton(self.tr('Start game'))
+			tab,index=self.main.chat.findTab(muc,True,['groupchat'])
+			widget=QtGui.QWidget(tab.chat.ui.pluginWidget.parent())
+			l=QtGui.QHBoxLayout(widget)
+			
+			button=QtGui.QToolButton()
+			button.setText(self.tr('Configure game'))
+			button.setToolTip(self.tr("Configure game"))
+			button.setMinimumHeight(tab.chat.ui.sendButton.height())
+			button.setMaximumHeight(tab.chat.ui.sendButton.height())
+			l.addWidget(button)
+			
+			button=QtGui.QToolButton()
+			button.setText(self.tr('Start game'))
 			button.setToolTip(self.tr("Start game"))
 			button.setMinimumHeight(tab.chat.ui.sendButton.height())
 			button.setMaximumHeight(tab.chat.ui.sendButton.height())
-			tab.chat.ui.pluginWidget.parent().layout().addWidget(button)
+			l.addWidget(button)
 
-			self.joinGC(muc,self.main.client.jid.user)
+			tab.chat.ui.pluginWidget.parent().layout().addWidget(widget)
+			self.main.client.joinGC(muc,self.main.client.jid.user)
 
 	def test(self, res):
 		print res
