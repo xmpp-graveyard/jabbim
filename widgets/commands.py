@@ -152,12 +152,14 @@ class Commands:
 
 
 		if len(commands) == 0 :
-			self.action.setEnabled(False)
+			if self.action:
+				self.action.setEnabled(False)
 			self.dialog.ui.label.setText(self.main.tr("Sorry. No extra actions available."))
 			self.dialog.ui.close.show()
 			self.dialog.ui.line.hide()
 		else:
-			self.action.setMenu(self.submenu)
+			if self.action:
+				self.action.setMenu(self.submenu)
 			self.submenu.connect(self.submenu, QtCore.SIGNAL("triggered ( QAction * )"),self.execute)
 			self.dialog.ui.label.setText(self.main.tr("Choose action to execute."))
 
@@ -185,13 +187,21 @@ class Commands:
 		log.msg("Executing command %s." % node)
 	
 	def _errorRecieved(self, err):
-		print err
-		self.action.setEnabled(False)
+		mainWindow=self.main
+		el=err.value.getElement()
+		code=None
+		if el.hasAttribute('code'):
+			code=int(el['code'])
+		if self.action:
+			self.action.setEnabled(False)
 		self.dialog._reset()
 		self.dialog.ui.close.show()
-		self.dialog.ui.label.setText("<b>%s</b>" % self.main.tr("Error"))
+		self.dialog.ui.label.setText("<b>%s</b>" % mainWindow.tr("Error"))
 		self.dialog.ui.label_2.show()
-		self.dialog.ui.label_2.setText(unicode(err.value))
+		if code==401:
+			self.dialog.ui.label_2.setText(mainWindow.tr("You don't have authorization for executing this command."))
+		else:
+			self.dialog.ui.label_2.setText(unicode(err.value))
 		self.dialog.ui.line.hide()
 
 	def _formRecieved(self, el):
