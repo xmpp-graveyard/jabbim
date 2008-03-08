@@ -92,8 +92,14 @@ class Plugin(plugins.PluginBase):
 			self.group=QtGui.QButtonGroup(self.main)
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 			self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/update", self.onUpdate)
+			self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/start", self.onStart)
 		else:
 			self.loadConfig(homedir)
+	
+	def onStart(self, el):
+		self.main.client.disp(el['id'])
+		q = el.firstChildElement()
+		gid = q['gid']
 			
 	def getSession(self, gid):
 		return self.games.get(gid, None)
