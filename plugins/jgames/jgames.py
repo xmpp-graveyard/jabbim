@@ -51,7 +51,6 @@ class gameObj:
 		self.functions = {'test':self.test} # function name:method
 		self.dialog=board()
 		self.dialog.img=QtGui.QPixmap(self.plugin.pluginDir+'/img.png')
-		self.dialog.show()
 	
 	def test(self,neco,data):
 		x,y=data
@@ -100,6 +99,7 @@ class Plugin(plugins.PluginBase):
 		self.main.client.disp(el['id'])
 		q = el.firstChildElement()
 		gid = q['gid']
+		self.games[gid].dialog.show()
 			
 	def getSession(self, gid):
 		return self.games.get(gid, None)
