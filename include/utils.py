@@ -163,8 +163,8 @@ def loadConfig(main,status):
 			"tabCycling" : "True", #cyklovanie medzi tabmi...
 		
  			##shortcuts
- 			"nextTab" : "Ctrl+Tab",
- 			"previousTab" : "Ctrl+Shift+Tab",
+ 			"nextTab" : "Alt+Right",
+ 			"previousTab" : "Alt+Left",
  			
  			"removeTab" : "Ctrl+F4",
  			"tabOne" : "Alt+1",
@@ -177,8 +177,8 @@ def loadConfig(main,status):
  			"tabEight" : "Alt+8",
  			"tabNine" : "Alt+9",
  			
- 			"moveRight" : "Alt+Right",
- 			"moveLeft" : "Alt+Left"
+ 			"moveRight" : "Ctrl+Right",
+ 			"moveLeft" : "Ctrl+Left"
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:

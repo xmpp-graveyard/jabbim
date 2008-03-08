@@ -9,6 +9,7 @@ from include import plugins, utils
 from widgets import dataforms
 import time
 from twisted.words.protocols.jabber.xmlstream import IQ
+from pyxl.xmlrpclib import loads, dumps
 
 #class config:
 	#def __init__(self,main):
@@ -27,6 +28,22 @@ from twisted.words.protocols.jabber.xmlstream import IQ
 		#self.config['osd_x']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD')}
 		#self.config['osd_y']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD')}
 
+class gameObj:
+	def __init__(self, gid, plugin):
+		self.gid = gid
+		self.plugin = plugin
+		self.functions = {} # function name:method
+	
+	def dispatchUpdate(self, call, id, frm):
+		if call[1] in self.functions:
+			d = self.functions[call[1]](frm,call[0])
+			if d:
+				d.addCallback(self.plugin._replyUpdate, call[1], frm, id)
+			else:
+				print 'chyba!', d
+	
+	
+
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
@@ -41,6 +58,7 @@ class Plugin(plugins.PluginBase):
 		#self.configDialog=config(self)
 		#self.showInPreferences=True
 		#self.preferencesIcon=QtGui.QIcon(plugindir+"/audio.png")
+		self.games = {} # gid:GameObj
 		if main:
 			self.loadConfig()
 			self.browser=self.loadDialog(self.pluginDir+"/browser_ui.py",self.main)
@@ -48,8 +66,34 @@ class Plugin(plugins.PluginBase):
 			self.browser.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setText(self.tr("Join"))
 			self.group=QtGui.QButtonGroup(self.main)
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
+			self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/update", self.onUpdate)
 		else:
 			self.loadConfig(homedir)
+			
+	def getSession(self, gid):
+		return self.games.get(gid, None)
+	
+	def onUpdate(self, el):
+		self.main.client.disp(el['id'])
+		q = el.firstChildElement()
+		l = q.firstChildElement()
+		call = loads(l.firstChildElement().toXml())
+		ss = self.getSession(q['gid'])
+		if ss!=None:
+			ss.dispatchUpdate(call, el['id'], el['from'])
+	
+	def _replyUpdate(self, result, func, frm, id):
+		iq = Element((None, 'iq'))
+		iq ['to'] = frm
+		iq['type'] = 'result'
+		iq['id'] = id
+
+		q = iq.addElement('query', 'games.jabbim.cz')
+		q['gid'] = self.gid
+		i = q.addElement('input')
+		i.addRawXml(dumps(result, methodresponse = True))
+		print iq.toXml()
+		self.main.client.xmlstream.send(iq)
 	
 	def getConfig(self, gid):
 		iq = IQ(self.main.client.xmlstream, 'get')
@@ -85,7 +129,7 @@ class Plugin(plugins.PluginBase):
 		d = iq.send()
 		return d
 	
-	def createGame(self, game, description):
+	def createGame(self, game, description = None):
 		iq = IQ(self.main.client.xmlstream, 'set')
 		iq['xml:lang'] = self.main.client.xmlLang
 		iq['type'] = 'set'
@@ -94,7 +138,8 @@ class Plugin(plugins.PluginBase):
 		q['xmlns']='games.jabbim.cz'
 		s = q.addElement('session')
 		s['game'] = game
-		s['desc'] = description
+		if description != None:
+			s['desc'] = description
 		self.main.client.disp(iq['id'])
 		d = iq.send()
 		d.addCallback(self._gameCreated)
@@ -155,7 +200,7 @@ class Plugin(plugins.PluginBase):
 
 	def testSlot(self):
 		print "new game slot"
-		d=self.createGame('basic','popis hry')
+		d=self.createGame('basic')
 		d.addCallback(self.gameCreated)
 
 	def gameCreated(self,data):
@@ -164,6 +209,7 @@ class Plugin(plugins.PluginBase):
 		gid,muc,owner=data
 		print "game created",gid,muc
 		print "requesting config"
+		self.games[gid] = gameObj(gid, self)
 		d=self.getConfig(gid)
 		d.addCallback(self.configReceived,gid,muc)
 	

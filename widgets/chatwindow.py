@@ -270,8 +270,8 @@ class chatWindow(QtGui.QMainWindow):
 		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_8), self,self.tabEight)
 		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_9), self,self.tabNine)
 
-		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.ShiftModifier + QtCore.Qt.Key_Right), self,self.moveRight)
-		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.ShiftModifier + QtCore.Qt.Key_Left), self,self.moveLeft)
+		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.ShiftModifier + QtCore.Qt.Key_Right), self,self.moveRight)
+		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.ShiftModifier + QtCore.Qt.Key_Left), self,self.moveLeft)
 		#self.ui.chatTab.removeTab(0)
 		#self.ui.gridlayout.setMargin(1)
 		#self.ui.gridlayout.setSpacing(1)
@@ -400,15 +400,35 @@ class chatWindow(QtGui.QMainWindow):
 			tab=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
 			tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
+
+	
 	def next(self):
 		i=int(self.ui.chatTab.currentIndex())+1
-		if i<=self.ui.chatTab.count():
+		if i<self.ui.chatTab.count():
 			self.ui.chatTab.setCurrentIndex(i)
+		if i>=self.ui.chatTab.count() and self.main.config['tabCycling'] == 'True':
+			self.ui.chatTab.setCurrentIndex(0)
 
 	def previous(self):
 		i=int(self.ui.chatTab.currentIndex())-1
 		if i>=0:
 			self.ui.chatTab.setCurrentIndex(i)
+		if i < 0 and self.main.config['tabCycling'] == 'True':
+			self.ui.chatTab.setCurrentIndex(self.ui.chatTab.count()-1)
+	
+	## end of edit
+	
+	#original
+	#def next(self):
+	#	i=int(self.ui.chatTab.currentIndex())+1
+	#	if i<=self.ui.chatTab.count():
+	#		self.ui.chatTab.setCurrentIndex(i)
+	#
+	#def previous(self):
+	#	i=int(self.ui.chatTab.currentIndex())-1
+	#	if i>=0:
+	#		self.ui.chatTab.setCurrentIndex(i)
+	##
 
 	def inactive(self):
 		if self.active==False:
