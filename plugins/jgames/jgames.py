@@ -43,6 +43,8 @@ class Plugin(plugins.PluginBase):
 		#self.preferencesIcon=QtGui.QIcon(plugindir+"/audio.png")
 		if main:
 			self.loadConfig()
+			self.browser=self.loadDialog(self.pluginDir+"/browser_ui.py",self.main)
+			self.browser.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setText(self.tr("Join"))
 		else:
 			self.loadConfig(homedir)
 	
@@ -129,6 +131,22 @@ class Plugin(plugins.PluginBase):
 	def buildMainWindowMenu(self):
 		menu=self.mainWindowMenu()
 		menu.addAction(self.tr("Create new game"),self.testSlot)
+		menu.addAction(self.tr("Browse games"),self.gameList)
+
+	def gameList(self):
+		d=self.listGames('basic')
+		d.addCallback(self._gamesList)
+
+	def _gamesList(self,data):
+		# [{u'status': u'pregame', u'gid': u'b2f321292c7eaa57d702a1f9d48aa5bd261453cf', u'muc': u'b2f321292c7eaa57d702a1f9d48aa5bd261453cf@conf.netlab.cz', u'desc': u'popis hry'},
+		# {u'status': u'pregame', u'gid': u'72f0c572afba24fdaf5504f19bafa26e14f81491', u'muc': u'72f0c572afba24fdaf5504f19bafa26e14f81491@conf.netlab.cz', u'desc': u'popis hry'},
+		# {u'status': u'pregame', u'gid': u'8a2ea894693e5599a7f6640b68f28f24b01ae502', u'muc': u'8a2ea894693e5599a7f6640b68f28f24b01ae502@conf.netlab.cz', u'desc': u'popis hry'}]
+		self.browser.ui.treeWidget.clear()
+		for game in data:
+			item=QtGui.QTreeWidgetItem(self.browser.ui.treeWidget)
+			item.setText(0,game['status'])
+			item.setText(1,game['desc'])
+		self.browser.show()
 
 	def testSlot(self):
 		print "new game slot"
@@ -155,7 +173,7 @@ class Plugin(plugins.PluginBase):
 	def sendConfig(self):
 		form=self.dialog.getForm()
 		self.setConfig(self.dialog.gid,form)
-		self.listGames('basic').addCallback(self.test)
+		#self.listGames('basic').addCallback(self.test)
 
 	def test(self, res):
 		print res

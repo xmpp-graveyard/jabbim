@@ -82,7 +82,7 @@ class addContactDialog(QtGui.QDialog):
 						self.ui.add_message.hide()
 						self.ui.add_messageLabel.hide()
 					else:
-						self.ui.save.setText(self.tr('Add'))					
+						self.ui.save.setText(self.tr('Add'))
 						self.ui.add_group.setEnabled(True)
 						self.ui.search.setEnabled(True)
 						self.ui.add_message.show()
