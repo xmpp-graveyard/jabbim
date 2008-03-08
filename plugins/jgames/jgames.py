@@ -95,6 +95,10 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.loadConfig(homedir)
 	
+	def on_remove(self):
+		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/update", self.onUpdate)
+		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/start", self.onStart)
+	
 	def onStart(self, el):
 		self.main.client.disp(el['id'])
 		q = el.firstChildElement()
@@ -125,6 +129,27 @@ class Plugin(plugins.PluginBase):
 		i.addRawXml(dumps(result, methodresponse = True))
 		print iq.toXml()
 		self.main.client.xmlstream.send(iq)
+	
+	
+	def sendInput(self, func, params, komu, gid):
+		iq = IQ(self.main.client.xmlstream, 'set')
+		iq['type'] = 'set'
+		iq['to'] = komu
+		q = iq.addElement('query')
+		q['xmlns']='games.jabbim.cz'
+		q['gid'] = gid
+		up = q.addElement('input')
+		up.addRawXml(dumps(params, func, False))
+		self.disp(iq['id'])
+		d = iq.send().addCallback(self._onInputResult)
+		return d
+		
+	def _onInputResult(self, el):
+		query = el.firstChildElement()
+		up = query.firstChildElement()
+		call = loads(up.firstChildElement().toXml())
+		return call
+	
 	
 	def getConfig(self, gid):
 		iq = IQ(self.main.client.xmlstream, 'get')
