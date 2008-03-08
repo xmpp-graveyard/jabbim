@@ -1868,6 +1868,11 @@ class rosterWidget(QtGui.QWidget):
 		else:
 			event.ignore()
 
+	def dragLeaveEvent(self, event):
+		self.selected=None
+		self.repaint()
+		event.acceptProposedAction()
+
 	def dragMoveEvent(self, event):
 		#log.msg('DRAG MOVE')
 		pos=event.pos()
