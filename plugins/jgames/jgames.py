@@ -44,6 +44,7 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.loadConfig()
 			self.browser=self.loadDialog(self.pluginDir+"/browser_ui.py",self.main)
+			QtCore.QObject.connect(self.browser,QtCore.SIGNAL("accepted()"),self.joinGame)
 			self.browser.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setText(self.tr("Join"))
 		else:
 			self.loadConfig(homedir)
@@ -146,6 +147,7 @@ class Plugin(plugins.PluginBase):
 			item=QtGui.QTreeWidgetItem(self.browser.ui.treeWidget)
 			item.setText(0,game['status'])
 			item.setText(1,game['desc'])
+			item.setData(0,32,QtCore.QVariant(unicode(game['muc'])))
 		self.browser.show()
 
 	def testSlot(self):
@@ -174,6 +176,21 @@ class Plugin(plugins.PluginBase):
 		form=self.dialog.getForm()
 		self.setConfig(self.dialog.gid,form)
 		#self.listGames('basic').addCallback(self.test)
+
+	def joinGame(self):
+		item=self.browser.ui.treeWidget.currentItem()
+		if not item:
+			return
+		muc=unicode(item.data(0,32).toString())
+		if self.main.chat.addGroupChatTab(muc,self.main.client.jid.user,name="Game"):
+			tab=self.main.chat.findTab(muc,True,['groupchat'])
+			button=QtGui.QToolButton(self.tr('Start game'))
+			button.setToolTip(self.tr("Start game"))
+			button.setMinimumHeight(tab.chat.ui.sendButton.height())
+			button.setMaximumHeight(tab.chat.ui.sendButton.height())
+			tab.chat.ui.pluginWidget.parent().layout().addWidget(button)
+
+			self.joinGC(muc,self.main.client.jid.user)
 
 	def test(self, res):
 		print res
