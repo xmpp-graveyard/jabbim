@@ -28,11 +28,36 @@ from pyxl.xmlrpclib import loads, dumps
 		#self.config['osd_x']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD')}
 		#self.config['osd_y']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD')}
 
+class board(QtGui.QMainWindow):
+	def __init__(self):
+		QtGui.QMainWindow.__init__(self,None)
+		self.x=None
+		self.y=None
+		self.setMinimumWidth(480)
+		self.setMinimumHeight(480)
+	
+	def paintEvent(self,event):
+		if self.x:
+			QtGui.QWidget.paintEvent(self,event)
+			painter=QtGui.QPainter(self)
+			painter.setClipping(True)
+			painter.setClipRegion(event.region())
+			painter.drawPixmap(self.x,self.y,self.img)
+
 class gameObj:
 	def __init__(self, gid, plugin):
 		self.gid = gid
 		self.plugin = plugin
-		self.functions = {} # function name:method
+		self.functions = {'test':self.test} # function name:method
+		self.dialog=board()
+		self.dialog.img=QtGui.QPixmap(self.plugin.pluginDir+'/img.png')
+		self.dialog.show()
+	
+	def test(self,neco,data):
+		x,y=data
+		self.dialog.x=int(x)
+		self.dialog.y=int(x)
+		self.dialog.repaint()
 	
 	def dispatchUpdate(self, call, id, frm):
 		if call[1] in self.functions:
