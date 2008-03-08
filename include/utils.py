@@ -23,11 +23,14 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
-import os,sys, re
+import os,sys, re,platform
 from configobj import ConfigObj
 import zipfile
 from cStringIO import StringIO
-
+try:
+	from PyQt4 import QtCore, QtGui
+except:
+	print "PyQt4 is not installed."
 	
 def extractZip( filename, dir ):
 	zf = zipfile.ZipFile( filename )
@@ -101,6 +104,7 @@ def makeHomeDir(homeDir):
 		
 def loadConfig(main,status):
 	# loads config and repairs config file
+	w=QtGui.QDesktopWidget()
 	configs={"jid":"",
 			"passwd":"",
 			"savePasswd":"",
@@ -122,8 +126,8 @@ def loadConfig(main,status):
 			"autoPriority_xa":10,
 			"autoPriority_dnd":5,
 			"logfile":"jabbim.log",
-			"windowGeometry":[0,0,None,None],
-			"chatGeometry":[0,0,None,None],
+			"windowGeometry":[w.availableGeometry().x(),w.availableGeometry().y(),None,w.availableGeometry().height()],
+			"chatGeometry":[w.availableGeometry().x(),w.availableGeometry().y(),None,None],
 			"chatSplitterSizes":[500,70],
 			"chatSplitter2Sizes":[500,128],
 			"groupchatSplitterSizes":[500,120],
@@ -338,6 +342,8 @@ def get_os_info():
 		else:
 			return 'Windows'
 	elif os.name == 'posix':
+		if platform.system() == 'Darwin' and platform.mac_ver()[0] != '':
+			return 'Mac OS X' + ' ' + platform.mac_ver()[0]
 		executable = 'lsb_release'
 		params = ' --id --codename --release --short'
 		full_path_to_executable = is_in_path(executable, return_abs_path = True)
