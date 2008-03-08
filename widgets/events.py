@@ -394,17 +394,17 @@ class FTWidget(QtGui.QWidget):
 	def closeClicked(self):
 		if self.item:
 			tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[self.queueId].jid)
+			self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
 			if not self.complete:
 				if self.main.events.filetransferQueue.has_key(self.queueId):
 					self.main.events.filetransferQueue[self.queueId]=[]
-				try:
+				if self.main.client.ft.has_key(self.sid):
+					print 'stopping filetransfer sid =',self.sid
 					self.main.client.ft[self.sid].protocol.unregisterProducer()
 					self.complete=None
 					return
-				except:
-					pass
-			else:
-				self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
+			#else:
+				#self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
 			if tab:
 				if tab.chat.filetransfer.has_key(self.queueId):
 					tab.chat.ui.ftwidget.layout().removeWidget(tab.chat.filetransfer[self.queueId])
