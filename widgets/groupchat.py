@@ -109,45 +109,30 @@ class groupChatWidget(abstractChatWidget):
 			if value['module']:
 				self.main.runPluginCommand(value['module'].buildGroupchatWidget,[unicode(self.jid),self.flowLayout,self])
 
+		# Make "Room Configuration" Menu
+
 		# make global buttons
-		self.ui.admin=QtGui.QToolButton()
-		self.ui.admin.setIconSize(QtCore.QSize(16,16))
-		self.ui.admin.setIcon(QtGui.QIcon("images/32x32/actions/register.png"))
-		self.ui.admin.setToolTip(self.tr("Room administration"))
-		self.ui.admin.setMinimumHeight(self.ui.sendButton.height())
-		self.ui.admin.setMaximumHeight(self.ui.sendButton.height())
-		self.flowLayout.addWidget(self.ui.admin)
-		QtCore.QObject.connect(self.ui.admin, QtCore.SIGNAL("clicked ()"),self.roomConfigClicked)
+		self.ui.configButton=QtGui.QToolButton()
 
-		self.ui.clearChat=QtGui.QToolButton()
-		self.ui.clearChat.setIconSize(QtCore.QSize(16,16))
-		self.ui.clearChat.setIcon(QtGui.QIcon("images/32x32/actions/clear.png"))
-		self.ui.clearChat.setToolTip(self.tr("Clear chat"))
-		self.ui.clearChat.setMinimumHeight(self.ui.sendButton.height())
-		self.ui.clearChat.setMaximumHeight(self.ui.sendButton.height())
-		self.flowLayout.addWidget(self.ui.clearChat)
-		QtCore.QObject.connect(self.ui.clearChat, QtCore.SIGNAL("clicked ()"),self.clearChat)
-						
-		self.ui.changeNick=QtGui.QToolButton()
-		self.ui.changeNick.setIconSize(QtCore.QSize(16,16))
-		self.ui.changeNick.setIcon(QtGui.QIcon("images/16x16/actions/edit.png"))
-		self.ui.changeNick.setToolTip(self.tr("Change nickname"))
-		self.ui.changeNick.setMinimumHeight(self.ui.sendButton.height())
-		self.ui.changeNick.setMaximumHeight(self.ui.sendButton.height())
-		self.flowLayout.addWidget(self.ui.changeNick)
-		QtCore.QObject.connect(self.ui.changeNick, QtCore.SIGNAL("clicked ()"),self.changeNick)
-						
-		self.ui.toggleInfo=QtGui.QToolButton()
-		self.ui.toggleInfo.setIconSize(QtCore.QSize(16,16))
-		self.ui.toggleInfo.setIcon(QtGui.QIcon("images/16x16/actions/info.png"))
-		self.ui.toggleInfo.setCheckable(True)
-		self.ui.toggleInfo.setToolTip(self.tr("Show room info"))
-		self.ui.toggleInfo.setMinimumHeight(self.ui.sendButton.height())
-		self.ui.toggleInfo.setMaximumHeight(self.ui.sendButton.height())
-		self.flowLayout.addWidget(self.ui.toggleInfo)
-		QtCore.QObject.connect(self.ui.toggleInfo, QtCore.SIGNAL("toggled(bool)"),self.toggleInfo)
+		menu=QtGui.QMenu(self.tr("Room configuration"),self.ui.configButton)
+		self.ui.admin=menu.addAction(QtGui.QIcon("images/32x32/actions/register.png"),self.tr("Room administration"),self.roomConfigClicked)
+		menu.addAction(QtGui.QIcon("images/32x32/actions/clear.png"),self.tr("Clear chat"),self.clearChat)
+		menu.addAction(QtGui.QIcon("images/16x16/actions/edit.png"),self.tr("Change nickname"),self.changeNick)
+		action=menu.addAction(QtGui.QIcon("images/16x16/actions/info.png"),self.tr("Show room info"))
+		action.setCheckable(True)
+		QtCore.QObject.connect(action,QtCore.SIGNAL("toggled ( bool )"),self.toggleInfo)
 
-		self.ui.admin.hide()
+		self.ui.configButton.setIconSize(QtCore.QSize(16,16))
+		self.ui.configButton.setIcon(QtGui.QIcon("images/32x32/actions/register.png"))
+		self.ui.configButton.setToolTip(self.tr("Configuration"))
+		self.ui.configButton.setMinimumHeight(self.ui.sendButton.height())
+		self.ui.configButton.setMaximumHeight(self.ui.sendButton.height())
+		self.ui.configButton.setMenu(menu)
+		self.ui.configButton.setPopupMode(QtGui.QToolButton.InstantPopup)
+		self.ui.configButton.setArrowType(QtCore.Qt.NoArrow)
+		self.flowLayout.addWidget(self.ui.configButton)
+
+		self.ui.admin.setEnabled(False)
 		self.flowLayout.addStretch()
 		self.ui.pluginWidget.setLayout(self.flowLayout)
 
@@ -459,10 +444,12 @@ class groupChatWidget(abstractChatWidget):
 			
 		
 	def clearChat(self):
-		self.init=""
-		if self.main.skin.has_key("on_init"):
-			self.init=self.main.skin["on_init"]
-		self.ui.textEdit.setHtml("<br/>"+self.init)
+		ret=QtGui.QMessageBox.question(self,self.tr("Clear chat?"), self.tr("Do you want to clear this conversation? "),QtGui.QMessageBox.Yes|QtGui.QMessageBox.No, QtGui.QMessageBox.Yes)
+		if ret==QtGui.QMessageBox.Yes:
+			self.init=""
+			if self.main.skin.has_key("on_init"):
+				self.init=self.main.skin["on_init"]
+			self.ui.textEdit.setHtml("<br/>"+self.init)
 
 	def toggleInfo(self, b):
 		log.msg("Info toggled:"+`b`)
@@ -618,13 +605,10 @@ class groupChatWidget(abstractChatWidget):
 		if self.main.client.groupchats[self.jid].nick==nick:
 			self.affiliation=affiliation
 			self.role=role
-			#print "affiliation:",affiliation,"role:",role
 			if affiliation=="owner":
-				self.ui.admin.show()
+				self.ui.admin.setEnabled(True)
 			if role=='moderator':
-				#self.ui.info.setReadOnly(False)
-				self.ui.admin.show()
-				#self.ui.editSubject.show()
+				self.ui.admin.setEnabled(True)
 		
 
 		#if self.ui.users.verticalScrollBar().isVisible():
