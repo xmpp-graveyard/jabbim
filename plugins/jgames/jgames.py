@@ -39,6 +39,21 @@ class board(QtGui.QMainWindow):
 		self.desk=[]
 		self.x=QtGui.QPixmap("images/piskvorky/x.png")
 		self.o=QtGui.QPixmap("images/piskvorky/o.png")
+		self.turn=""
+		self.variable=0
+	
+	def mouseReleaseEvent(self,qe):
+		if self.gameObj.plugin.main.getJid(self.turn).userhost()==self.gameObj.plugin.main.client.jid.userhost():
+			x=qe.x()/self.side
+			y=qe.y()/self.side
+			if (x+1>self.countX or y+1>self.countY) or (x+1<0 or y+1<0):
+				print "You clicked out of desk."
+			elif self.desk[y][x]!=0:
+				print "Field is not free."
+			else:
+				self.desk[y][x]=self.variable
+				self.repaint()
+				self.sendInput('update', ((x,y,self.variable),), 'games.jabbim.cz', gid)
 	
 	def paintEvent(self,event):
 		if self.countX:
@@ -73,9 +88,15 @@ class gameObj:
 		self.plugin = plugin
 		self.functions = {}
 		self.functions['updateStatus']=self.updateStatus
+		self.functions['turn']=self.turn
 		self.dialog=board()
+		self.dialog.gameObj=self
 		self.dialog.img=QtGui.QPixmap(self.plugin.pluginDir+'/img.png')
 	
+	def turn(self,jid,data):
+		jid=data[0]
+		self.dialog.turn=jid
+		
 	def updateStatus(self,jid,data):
 		# data=({'y': 25, 'x': 25, 'second': 'hanzz@njs.netlab.cz/jabbimKubuntu', 'first': 'pyjim@jabber.cz/jabbimSvn'},)
 		data=data[0]
@@ -87,6 +108,11 @@ class gameObj:
 			self.dialog.first=data['first']
 		if data.has_key('second'):
 			self.dialog.first=data['second']
+
+		if self.plugin.main.getJid(self.dialog.first).userhost()==self.plugin.main.client.jid.userhost():
+			self.dialog.variable=-1
+		else:
+			self.dialog.variable=1
 
 		if len(self.dialog.desk)==0:
 			for y in range(self.dialog.countY):
