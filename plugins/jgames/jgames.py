@@ -189,7 +189,7 @@ class Plugin(plugins.PluginBase):
 		d = iq.send()
 		return d
 	
-	def createGame(self, game, description = None):
+	def createGame(self, game, description = None, gid = None):
 		iq = IQ(self.main.client.xmlstream, 'set')
 		iq['xml:lang'] = self.main.client.xmlLang
 		iq['type'] = 'set'
@@ -200,6 +200,8 @@ class Plugin(plugins.PluginBase):
 		s['game'] = game
 		if description != None:
 			s['desc'] = description
+		if gid != None:
+			s['gid'] = gid
 		self.main.client.disp(iq['id'])
 		d = iq.send()
 		d.addCallback(self._gameCreated)
@@ -339,6 +341,7 @@ class Plugin(plugins.PluginBase):
 			tab.chat.on_owner=self.showAdminButtons
 			tab.chat.gid=gid
 			self.main.client.joinGC(muc,self.main.client.jid.user)
+			self.createGame(game = 'piskvorky',gid=gid) #nekde predavej typ hry ..
 
 	def showAdminButtons(self,tab):
 		print "owner"
