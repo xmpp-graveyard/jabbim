@@ -135,6 +135,7 @@ class groupChatWidget(abstractChatWidget):
 		self.ui.admin.setEnabled(False)
 		self.flowLayout.addStretch()
 		self.ui.pluginWidget.setLayout(self.flowLayout)
+		self.on_owner=None
 
 
 		self.unread=0 #: number of unread message
@@ -607,6 +608,8 @@ class groupChatWidget(abstractChatWidget):
 			self.role=role
 			if affiliation=="owner":
 				self.ui.admin.setEnabled(True)
+				if self.on_owner:
+					self.on_owner(self)
 			if role=='moderator':
 				self.ui.admin.setEnabled(True)
 		
