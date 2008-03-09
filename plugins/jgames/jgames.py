@@ -49,6 +49,7 @@ class gameObj:
 		self.gid = gid
 		self.plugin = plugin
 		self.functions = {'test':self.test} # function name:method
+		self.functions['updateStatus']=self.updateStatus
 		self.dialog=board()
 		self.dialog.img=QtGui.QPixmap(self.plugin.pluginDir+'/img.png')
 	
@@ -57,6 +58,9 @@ class gameObj:
 		self.dialog.x=int(x)
 		self.dialog.y=int(x)
 		self.dialog.repaint()
+	
+	def updateStatus(self,jid,data):
+		print jid,data
 	
 	def dispatchUpdate(self, call, id, frm):
 		if call[1] in self.functions:
@@ -238,7 +242,7 @@ class Plugin(plugins.PluginBase):
 		menu.addAction(self.tr("Browse games"),self.gameList)
 
 	def gameList(self):
-		d=self.listGames('basic')
+		d=self.listGames('piskvorky')
 		d.addCallback(self._gamesList)
 
 	def _gamesList(self,data):
@@ -256,7 +260,7 @@ class Plugin(plugins.PluginBase):
 
 	def testSlot(self):
 		print "new game slot"
-		d=self.createGame('basic')
+		d=self.createGame('piskvorky')
 		d.addCallback(self.gameCreated)
 
 	def gameCreated(self,data):
@@ -282,7 +286,7 @@ class Plugin(plugins.PluginBase):
 		form=self.dialog.getForm()
 		self.setConfig(self.dialog.gid,form)
 		self.joinGame(self.dialog.muc,self.dialog.gid)
-		#self.listGames('basic').addCallback(self.test)
+		#self.listGames('piskvorky').addCallback(self.test)
 
 	def startGame(self,gid):
 		iq = IQ(self.main.client.xmlstream, 'set')
