@@ -282,6 +282,22 @@ class Plugin(plugins.PluginBase):
 			self.dialog.muc=muc
 			self.dialog.show()
 
+	def showConfigDialog(self,gid):
+		d=self.getConfig(gid)
+		d.addCallback(self.configReceived2,gid)
+
+	def configReceived2(self,form,gid):
+		if form!=None:
+			self.dialog=dataforms.abstractDataFormsDialog(self.main,form,"games.jabbim.cz",None,self.main)
+			QtCore.QObject.connect(self.dialog,QtCore.SIGNAL("accepted()"),self.sendConfig2)
+			self.dialog.gid=gid
+			self.dialog.muc=muc
+			self.dialog.show()
+
+	def sendConfig2(self):
+		form=self.dialog.getForm()
+		self.setConfig(self.dialog.gid,form)
+
 	def sendConfig(self):
 		form=self.dialog.getForm()
 		self.setConfig(self.dialog.gid,form)
@@ -305,6 +321,9 @@ class Plugin(plugins.PluginBase):
 	def buttonClicked(self,button):
 		if button.typ=='start':
 			self.startGame(button.gid)
+		elif button.typ=='config':
+			self.showConfigDialog(button.gid)
+			
 
 	def joinGame(self,muc=None,gid=None):
 		owner=True
@@ -325,7 +344,10 @@ class Plugin(plugins.PluginBase):
 				button.setToolTip(self.tr("Configure game"))
 				button.setMinimumHeight(tab.chat.ui.sendButton.height())
 				button.setMaximumHeight(tab.chat.ui.sendButton.height())
+				button.typ='config'
+				button.gid=gid
 				l.addWidget(button)
+				self.group.addButton(button)
 				
 				button=QtGui.QToolButton()
 				button.setText(self.tr('Start game'))
@@ -336,6 +358,7 @@ class Plugin(plugins.PluginBase):
 				button.gid=gid
 				l.addWidget(button)
 				self.group.addButton(button)
+				
 
 	
 				tab.chat.ui.pluginWidget.parent().layout().addWidget(widget)
