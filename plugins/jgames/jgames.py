@@ -53,7 +53,8 @@ class board(QtGui.QMainWindow):
 			else:
 				self.desk[y][x]=self.variable
 				self.repaint()
-				self.sendInput('update', ((x,y,self.variable),), 'games.jabbim.cz', gid)
+				self.turn=""
+				self.gameObj.plugin.sendInput('update', ((x,y,self.variable),), 'games.jabbim.cz', gid)
 	
 	def paintEvent(self,event):
 		if self.countX:
