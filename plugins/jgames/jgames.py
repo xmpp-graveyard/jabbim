@@ -31,36 +31,73 @@ from pyxl.xmlrpclib import loads, dumps
 class board(QtGui.QMainWindow):
 	def __init__(self):
 		QtGui.QMainWindow.__init__(self,None)
-		self.x=None
-		self.y=None
-		self.setMinimumWidth(480)
-		self.setMinimumHeight(480)
+		self.side=20
+		self.first=None
+		self.second=None
+		self.countX=None
+		self.countY=None
+		self.desk=[]
+		self.x=QtGui.QPixmap("images/piskvorky/x.png")
+		self.o=QtGui.QPixmap("images/piskvorky/o.png")
 	
 	def paintEvent(self,event):
-		if self.x:
+		if self.countX:
 			QtGui.QWidget.paintEvent(self,event)
 			painter=QtGui.QPainter(self)
 			painter.setClipping(True)
 			painter.setClipRegion(event.region())
-			painter.drawPixmap(self.x,self.y,self.img)
+			painter.setRenderHint(painter.Antialiasing)
+
+			painter.setPen(QtGui.QPen(QtGui.QColor(200,200,200), 1))
+			painter.fillRect(0,0,self.countX*self.side,self.countY*self.side,QtGui.QBrush(QtGui.QColor(255,255,255)))
+
+			for x in range(self.countX+1):
+				painter.drawLine(x*self.side,0,x*self.side,self.countY*self.side)
+			for y in range(self.countY+1):
+				painter.drawLine(0,y*self.side,self.countX*self.side,y*self.side)
+			for y in range(len(self.desk)):
+				for x in range(len(self.desk[y])):
+					if self.desk[y][x]==-1:
+						painter.drawPixmap(x*self.side,y*self.side,self.x)
+					elif self.desk[y][x]==1:
+						painter.drawPixmap(x*self.side,y*self.side,self.o)
+	
+			#painter.setPen(QtGui.QPen(QtCore.Qt.green, 3))
+			#if len(self.last)!=0:
+				#painter.drawRect(self.last[0]*self.side,self.last[1]*self.side,self.side,self.side)
+
 
 class gameObj:
 	def __init__(self, gid, plugin):
 		self.gid = gid
 		self.plugin = plugin
-		self.functions = {'test':self.test} # function name:method
+		self.functions = {}
 		self.functions['updateStatus']=self.updateStatus
 		self.dialog=board()
 		self.dialog.img=QtGui.QPixmap(self.plugin.pluginDir+'/img.png')
 	
-	def test(self,neco,data):
-		x,y=data
-		self.dialog.x=int(x)
-		self.dialog.y=int(x)
-		self.dialog.repaint()
-	
 	def updateStatus(self,jid,data):
-		print jid,data
+		# data=({'y': 25, 'x': 25, 'second': 'hanzz@njs.netlab.cz/jabbimKubuntu', 'first': 'pyjim@jabber.cz/jabbimSvn'},)
+		data=data[0]
+		if data.has_key('y'):
+			self.dialog.countY=data['y']
+		elif data.has_key('x'):
+			self.dialog.countX=data['x']
+		elif data.has_key('first'):
+			self.dialog.first=data['first']
+		elif data.has_key('second'):
+			self.dialog.first=data['second']
+
+		if len(self.dialog.desk)==0:
+			for y in range(self.dialog.countY):
+				ar=[]
+				for x in range(self.dialog.countX):
+					ar.append(0)
+				self.dialog.desk.append(ar)
+		self.dialog.setMinimumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
+		self.dialog.setMaximumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
+		self.dialog.show()
+		self.dialog.repaint()
 	
 	def dispatchUpdate(self, call, id, frm):
 		if call[1] in self.functions:
@@ -341,6 +378,7 @@ class Plugin(plugins.PluginBase):
 			tab.chat.on_owner=self.showAdminButtons
 			tab.chat.gid=gid
 			self.main.client.joinGC(muc,self.main.client.jid.user)
+			self.games[gid] = gameObj(gid, self)
 			self.createGame(game = 'piskvorky',gid=gid) #nekde predavej typ hry ..
 
 	def showAdminButtons(self,tab):
