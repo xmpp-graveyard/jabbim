@@ -100,14 +100,12 @@ class gameObj:
 		self.dialog.turn=jid
 
 	def update(self,jid,data):
-		print data
-		for var in data:
-			x=data[0]
-			y=data[1]
-			var=data[2]
+		for change in data:
+			x=change[0]
+			y=change[1]
+			var=change[2]
 			self.dialog.desk[y][x]=var
 		self.dialog.repaint()
-			
 
 	def updateStatus(self,jid,data):
 		# data=({'y': 25, 'x': 25, 'second': 'hanzz@njs.netlab.cz/jabbimKubuntu', 'first': 'pyjim@jabber.cz/jabbimSvn'},)
