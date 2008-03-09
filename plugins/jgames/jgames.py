@@ -89,6 +89,7 @@ class gameObj:
 		self.plugin = plugin
 		self.functions = {}
 		self.functions['updateStatus']=self.updateStatus
+		self.functions['update']=self.update
 		self.functions['turn']=self.turn
 		self.dialog=board()
 		self.dialog.gameObj=self
@@ -97,7 +98,17 @@ class gameObj:
 	def turn(self,jid,data):
 		jid=data[0]
 		self.dialog.turn=jid
-		
+
+	def update(self,jid,data):
+		print data
+		for var in data:
+			x=data[0]
+			y=data[1]
+			var=data[2]
+			self.dialog.desk[y][x]=var
+		self.dialog.repaint()
+			
+
 	def updateStatus(self,jid,data):
 		# data=({'y': 25, 'x': 25, 'second': 'hanzz@njs.netlab.cz/jabbimKubuntu', 'first': 'pyjim@jabber.cz/jabbimSvn'},)
 		data=data[0]
