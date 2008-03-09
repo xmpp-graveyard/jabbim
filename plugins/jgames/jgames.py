@@ -81,11 +81,11 @@ class gameObj:
 		data=data[0]
 		if data.has_key('y'):
 			self.dialog.countY=data['y']
-		elif data.has_key('x'):
+		if data.has_key('x'):
 			self.dialog.countX=data['x']
-		elif data.has_key('first'):
+		if data.has_key('first'):
 			self.dialog.first=data['first']
-		elif data.has_key('second'):
+		if data.has_key('second'):
 			self.dialog.first=data['second']
 
 		if len(self.dialog.desk)==0:
