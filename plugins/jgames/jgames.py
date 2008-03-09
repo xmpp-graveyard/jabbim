@@ -208,7 +208,7 @@ class Plugin(plugins.PluginBase):
 		q['gid'] = gid
 		up = q.addElement('input')
 		up.addRawXml(dumps(params, func, False))
-		self.disp(iq['id'])
+		self.main.client.disp(iq['id'])
 		d = iq.send().addCallback(self._onInputResult)
 		return d
 		
