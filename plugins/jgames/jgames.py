@@ -221,7 +221,7 @@ class Plugin(plugins.PluginBase):
 		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/finish", self.onFinish)
 		
 	def onStart(self, el):
-		frm = jid.JID(el['from'])
+		frm = self.main.getJid(el['from'])
 		if frm.host != 'games.jabbim.cz':
 			return
 		self.main.client.disp(el['id'])
@@ -230,7 +230,7 @@ class Plugin(plugins.PluginBase):
 		self.games[gid].dialog.show()
 	
 	def onFinish(self, el):
-		frm = jid.JID(el['from'])
+		frm = self.main.getJid(el['from'])
 		if frm.host != 'games.jabbim.cz':
 			return
 		self.main.client.disp(el['id'])
@@ -246,7 +246,7 @@ class Plugin(plugins.PluginBase):
 	
 	def onUpdate(self, el):
 		print 'update received'
-		frm = jid.JID(el['from'])
+		frm = self.main.getJid(el['from'])
 		if frm.host != 'games.jabbim.cz':
 			return
 		self.main.client.disp(el['id'])
