@@ -155,6 +155,8 @@ class gameObj:
 			d = self.functions[call[1]](frm,call[0])
 			if d:
 				d.addCallback(self.plugin._replyUpdate, call[1], frm, id)
+			elif d == None:
+				self.plugin._replyUpdate((True,), call[1], frm, id)
 			else:
 				print 'chyba!', d
 	
@@ -202,6 +204,7 @@ class Plugin(plugins.PluginBase):
 		return self.games.get(gid, None)
 	
 	def onUpdate(self, el):
+		print 'update received'
 		self.main.client.disp(el['id'])
 		q = el.firstChildElement()
 		l = q.firstChildElement()
