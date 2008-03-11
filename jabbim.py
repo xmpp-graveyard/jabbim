@@ -2392,7 +2392,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		dir = self.plugins[plugin]['dir']
 		path = utils.path('%s/%s.py' % (dir, plugin))
-		log.msg("loading "+unicode(plugin)+" plugin...")
+		log.msg("loading "+unicode(plugin)+" plugin")
 
 		try: 
 			f=open((path))
@@ -2412,7 +2412,7 @@ class mainWindow(QtGui.QMainWindow):
 					traceback.print_exc()
 					f.close()
 					pass
-		log.msg("PLUGINS:"+unicode(self.plugins))
+		#log.msg("PLUGINS:"+unicode(self.plugins))
 
 	def unloadPlugin(self,plugin):
 		"""

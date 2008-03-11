@@ -96,14 +96,17 @@ class board(QtGui.QWidget):
 
 
 class gameObj:
-	def __init__(self, gid, plugin,gameWidget):
+	def __init__(self, gid, plugin,tab):
 		self.gid = gid
 		self.plugin = plugin
 		self.functions = {}
 		self.functions['updateStatus']=self.updateStatus
 		self.functions['update']=self.update
 		self.functions['turn']=self.turn
+		self.tab=tab
+		gameWidget=tab.ui.gameWidget
 		l=QtGui.QHBoxLayout(gameWidget)
+		
 		
 		self.dialog=board(gameWidget)
 		self.dialog.gameObj=self
@@ -115,6 +118,9 @@ class gameObj:
 	def turn(self,jid,data):
 		jid=data[0]
 		self.dialog.turn=jid
+		message=jid+' (<img src="%s"/>) is on the turn'%("images/piskvorky/x.png")
+		message=self.plugin.main.skin["status_message"].replace("[time]",self.plugin.main.now()).replace('[message]',message)
+		self.tab.textEditWrite(message)
 
 	def update(self,jid,data):
 		for change in data:
@@ -463,7 +469,7 @@ class Plugin(plugins.PluginBase):
 			tab.chat.on_owner=self.showAdminButtons
 			tab.chat.gid=gid
 			self.main.client.joinGC(muc,self.main.client.jid.user)
-			self.games[gid] = gameObj(gid, self,tab.chat.ui.gameWidget)
+			self.games[gid] = gameObj(gid, self,tab.chat)
 			self.createGame(game = 'piskvorky',gid=gid) #nekde predavej typ hry ..
 
 	def showAdminButtons(self,tab):
