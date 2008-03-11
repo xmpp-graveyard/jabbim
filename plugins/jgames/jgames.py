@@ -6,11 +6,10 @@ import sys
 import os
 sys.path.append('.')
 from include import plugins, utils
-from widgets import dataforms
+from widgets import dataforms,groupchat
 import time
 from twisted.words.protocols.jabber.xmlstream import IQ
 from pyxl.xmlrpclib import loads, dumps
-
 #class config:
 	#def __init__(self,main):
 		#self.main=main
@@ -28,14 +27,25 @@ from pyxl.xmlrpclib import loads, dumps
 		#self.config['osd_x']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD')}
 		#self.config['osd_y']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD')}
 
-class board(QtGui.QMainWindow):
-	def __init__(self):
-		QtGui.QMainWindow.__init__(self,None)
+class gameWidget(groupchat.groupChatWidget):
+	def __init__(self,main,jid,tab,nickname="",parent=None,ui=None):
+		groupchat.groupChatWidget.__init__(self,main,jid,tab,nickname="",parent=None,ui=ui)
+		self.ui.info.hide()
+		self.ui.selfAvatar.hide()
+	
+	def editUser(self,nick,status,role=None,affiliation=None):
+		groupchat.groupChatWidget.editUser(self,nick,status,role,affiliation)
+		self.ui.users.setMinimumHeight((len(self.main.client.groupchats[self.jid].users)+self.ui.users.topLevelItemCount())*32)
+		self.ui.users.setMaximumHeight((len(self.main.client.groupchats[self.jid].users)+self.ui.users.topLevelItemCount())*32)
+
+class board(QtGui.QWidget):
+	def __init__(self,parent):
+		QtGui.QWidget.__init__(self,parent)
 		self.side=20
 		self.first=None
 		self.second=None
-		self.countX=None
-		self.countY=None
+		self.countX=25
+		self.countY=25
 		self.desk=[]
 		self.x=QtGui.QPixmap("images/piskvorky/x.png")
 		self.o=QtGui.QPixmap("images/piskvorky/o.png")
@@ -77,24 +87,29 @@ class board(QtGui.QMainWindow):
 						painter.drawPixmap(x*self.side,y*self.side,self.x)
 					elif self.desk[y][x]==1:
 						painter.drawPixmap(x*self.side,y*self.side,self.o)
-	
+			
 			#painter.setPen(QtGui.QPen(QtCore.Qt.green, 3))
 			#if len(self.last)!=0:
 				#painter.drawRect(self.last[0]*self.side,self.last[1]*self.side,self.side,self.side)
 
 
 class gameObj:
-	def __init__(self, gid, plugin):
+	def __init__(self, gid, plugin,gameWidget):
 		self.gid = gid
 		self.plugin = plugin
 		self.functions = {}
 		self.functions['updateStatus']=self.updateStatus
 		self.functions['update']=self.update
 		self.functions['turn']=self.turn
-		self.dialog=board()
+		l=QtGui.QHBoxLayout(gameWidget)
+		
+		self.dialog=board(gameWidget)
 		self.dialog.gameObj=self
 		self.dialog.img=QtGui.QPixmap(self.plugin.pluginDir+'/img.png')
-	
+		l.addWidget(self.dialog)
+		self.dialog.setMinimumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
+		self.dialog.setMaximumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
+
 	def turn(self,jid,data):
 		jid=data[0]
 		self.dialog.turn=jid
@@ -166,6 +181,7 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.browser,QtCore.SIGNAL("accepted()"),self.joinGame)
 			self.browser.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setText(self.tr("Join"))
 			self.group=QtGui.QButtonGroup(self.main)
+			self.jgamesWidget=self.loadModule(self.pluginDir+"/jgameswidget_ui.py")
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 			self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/update", self.onUpdate)
 			self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/start", self.onStart)
@@ -345,7 +361,7 @@ class Plugin(plugins.PluginBase):
 		gid,muc,owner=data
 		print "game created",gid,muc
 		print "requesting config"
-		self.games[gid] = gameObj(gid, self)
+		#self.games[gid] = gameObj(gid, self)
 		d=self.getConfig(gid)
 		d.addCallback(self.configReceived,gid,muc)
 	
@@ -409,18 +425,22 @@ class Plugin(plugins.PluginBase):
 			muc=unicode(item.data(0,32).toString())
 			gid=unicode(item.data(1,32).toString())
 			owner=False
-		if self.main.chat.addGroupChatTab(muc,self.main.client.jid.user,name="Game"):
+		#def __init__(self,main,jid,tab,nickname="",parent=None,ui=Ui_groupchatwidget):
+		if self.main.chat.addCustomTab(muc,self.main.client.jid.user,"Game",gameWidget,[self.main,muc,None,self.main.client.jid.user,None,self.jgamesWidget.Ui_groupchatwidget],'groupchat'):
+			self.main.chat.activate()
 			tab,index=self.main.chat.findTab(muc,True,['groupchat'])
+			tab.chat.ui.nickname=self.main.client.jid.user
 			tab.chat.on_owner=self.showAdminButtons
 			tab.chat.gid=gid
 			self.main.client.joinGC(muc,self.main.client.jid.user)
-			self.games[gid] = gameObj(gid, self)
+			self.games[gid] = gameObj(gid, self,tab.chat.ui.gameWidget)
 			self.createGame(game = 'piskvorky',gid=gid) #nekde predavej typ hry ..
 
 	def showAdminButtons(self,tab):
 		print "owner"
-		widget=QtGui.QWidget(tab.ui.pluginWidget.parent())
-		l=QtGui.QHBoxLayout(widget)
+		#widget=QtGui.QWidget(tab.ui.pluginWidget.parent())
+		#l=QtGui.QHBoxLayout(widget)
+		l=tab.ui.pluginWidget.layout()
 		button=QtGui.QToolButton()
 		button.setText(self.tr('Configure game'))
 		button.setToolTip(self.tr("Configure game"))
@@ -441,7 +461,7 @@ class Plugin(plugins.PluginBase):
 		l.addWidget(button)
 		self.group.addButton(button)
 
-		tab.ui.pluginWidget.parent().layout().addWidget(widget)
+		#tab.ui.pluginWidget.parent().layout().addWidget(widget)
 
 	def test(self, res):
 		print res

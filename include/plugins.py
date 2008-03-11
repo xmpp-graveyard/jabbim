@@ -88,6 +88,12 @@ class PluginBase:
 		menu=self.main.ui.menuPlugins.addMenu(unicode(self.name))
 		return menu
 
+	def loadModule(self,file):
+		f=open(utils.path(file))
+		ui=load_source(self.fname, utils.path(file), f)
+		f.close()
+		return ui
+
 	def _loadUi(self,file,wid):
 		"""
 		Loads widget from ui file.

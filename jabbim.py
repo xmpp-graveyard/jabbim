@@ -2490,9 +2490,12 @@ class mainWindow(QtGui.QMainWindow):
 				for i in range(self.chat.ui.chatTab.count()):
 					w=self.chat.ui.chatTab.widget(i)
 					if w.typ=="groupchat":
-						self.config['groupchatSplitSizes1']=list(w.chat.ui.splitter.sizes())
-						self.config['groupchatSplitSizes2']=list(w.chat.ui.splitter_2.sizes())
-						self.config['groupchatSplitSizes3']=list(w.chat.ui.splitter_3.sizes())
+						try:
+							self.config['groupchatSplitSizes1']=list(w.chat.ui.splitter.sizes())
+							self.config['groupchatSplitSizes2']=list(w.chat.ui.splitter_2.sizes())
+							self.config['groupchatSplitSizes3']=list(w.chat.ui.splitter_3.sizes())
+						except:
+							pass
 	
 						break
 				self.config.write()

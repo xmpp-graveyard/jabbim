@@ -234,102 +234,34 @@ class tabWidget(QtGui.QTabBar):
 
 class chatWindow(QtGui.QMainWindow):
 	"""
-	@group Plugins: openNewChatTab, addChatTab
+	MainWindow for conversations (chat)
 	"""
 	def __init__(self,parent,main):
 		apply(QtGui.QMainWindow.__init__,(self,None))
-		self.main=main
+		self.main=main #: Jabbim mainWindow
 		self.ui=Ui_chatWindow()
 		self.ui.setupUi(self)
-		self.tabBar=tabWidget(self,self)
+
+		# make QTabWidget
+		self.tabBar=tabWidget(self,self) #: QTabWidget for conversations
 		self.ui.chatTab.setTabBar(self.tabBar)
 		self.ui.chatTab.removeTab(0)
-		## tab
-		#self.ui.chatTab = mainTab(main,self.ui.centralwidget)
-		#self.ui.chatTab.setObjectName("chatTab")
-		#self.ui.gridlayout.addWidget(self.ui.chatTab,0,0,1,1)
-
 		self.ui.tabCloseButton=QtGui.QPushButton(QtGui.QIcon("images/icons/close.png"),"",self.ui.chatTab)
 		self.ui.chatTab.setCornerWidget(self.ui.tabCloseButton)
+		self.active=False #: depracted
+		self.timer=QtCore.QTimer() #: depracted
+		self.flashStatus=False #: True if window is flashing in windows bar
+
 		QtCore.QObject.connect(self.ui.tabCloseButton, QtCore.SIGNAL("clicked ()"),self.removeTab)
 		QtCore.QObject.connect(self.ui.chatTab, QtCore.SIGNAL("currentChanged ( int )"),self.changeTab)
-		self.active=False
-		self.timer=QtCore.QTimer()
 		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.inactive)
-		#nextTab=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_Right), self,self.next)
-		#previousTab=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_Left), self,self.previous)
-		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.ControlModifier + QtCore.Qt.Key_W), self,self.removeTab)
 
-		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_1), self,self.tabOne)
-		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_2), self,self.tabTwo)
-		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_3), self,self.tabThree)
-		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_4), self,self.tabFour)
-		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_5), self,self.tabFive)
-		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_6), self,self.tabSix)
-		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_7), self,self.tabSeven)
-		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_8), self,self.tabEight)
-		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.Key_9), self,self.tabNine)
-
-		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.ShiftModifier + QtCore.Qt.Key_Right), self,self.moveRight)
-		#QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.AltModifier + QtCore.Qt.ShiftModifier + QtCore.Qt.Key_Left), self,self.moveLeft)
-		#self.ui.chatTab.removeTab(0)
-		#self.ui.gridlayout.setMargin(1)
-		#self.ui.gridlayout.setSpacing(1)
-		#palette=self.palette()
-		#palette,images=loadPalette(palette,self.main.palette["chatwindow"])
-		#self.setPalette(palette)
-		#self.pixmap=images['bgImage']
-
-	#def paintEvent(self,event):
-		## paintEvent handler
-		#if self.pixmap!=None:
-			#viewport=self
-			#painter=QtGui.QPainter(viewport)
-			#for x in range(int(int(viewport.width())//self.pixmap.width())+1):
-				#for y in range(int(int(viewport.height())/self.pixmap.height())+1):
-					#painter.drawPixmap(x*int(self.pixmap.width()),y*self.pixmap.height(),self.pixmap)
-		#QtGui.QMainWindow.paintEvent(self,event)
-		#self.show()
-		#self._flash()
-	#def _flash(self):
-		#window=self
-		#yes=True
-		#X11 = ctypes.cdll.LoadLibrary(find_library("X11"))
-		#xdisplay = X11.XOpenDisplay(os.environ['DISPLAY'])
-		#rootwin = X11.XDefaultRootWindow(xdisplay)
-		#winId = int(self.winId())
-		
-		##try:
-			##X11 = ctypes.cdll.X11
-		##except:
-			##print "no ctypes.cdll.X11"
-			##pass
-		##else:
-		#demandsAttention = X11.XInternAtom( xdisplay, "_NET_WM_STATE_DEMANDS_ATTENTION", 1 )
-		#wmState = X11.XInternAtom( xdisplay, "_NET_WM_STATE", 1 )
-		#e = XEvent()
-		#e.xclient.type = ClientMessage
-		#e.xclient.message_type = wmState
-		#e.xclient.display = xdisplay
-		#e.xclient.window = winId
-		#e.xclient.format = 32
-		#e.xclient.data.l[1] = demandsAttention
-		#e.xclient.data.l[2] = 0
-		#e.xclient.data.l[3] = 0
-		#e.xclient.data.l[4] = 0
-		#if yes :
-			#e.xclient.data.l[0] = 1
-		#else :
-			#e.xclient.data.l[0] = 0
-		#X11.XSendEvent( xdisplay, rootwin, 0, (SubstructureRedirectmask |
-											#SubstructureNotifyMask),
-						#ctypes.pointer(e) )
-		#self.flash=False
-		self.flashStatus=False
-		
-
+	#{ Private functions
 
 	def startFlash(self):
+		"""
+		Starts windows flashing
+		"""
 		print 'flash!'
 		self.flashStatus=True
 		if sys.platform == 'win32':
@@ -338,15 +270,54 @@ class chatWindow(QtGui.QMainWindow):
 			self.main.client.reactor.callLater(1,self.flash)
 
 	def flash(self):
+		"""
+		Called by flash timer, changes flash state
+		"""
 		print 'flash timer...'
-		#ctypes.windll.user32.FlashWindow(int(self.winId()),False)
 		ctypes.windll.user32.FlashWindow(int(self.winId()),True)
 		if self.flashStatus:
 			self.main.client.reactor.callLater(1,self.flash)
-		#else:
-			#ctypes.windll.user32.FlashWindow(int(self.winId()),False)
 
+	def inactive(self):
+		"""
+		Sends incative composing message when chat window is inactive
+		"""
+		if self.active==False:
+			print "sending inactive chatstate to all tabs"
+			for i in range(self.ui.chatTab.count()):
+				w=self.ui.chatTab.widget(i)
+				if w.typ=="chat":
+					w.active=False
+					self.main.client.sendMessage(unicode(w.jid),"",composing="inactive")
+			self.active=None
 
+	def event(self,ev):
+		"""
+		QWidgets event handler
+		"""
+		handler=QtGui.QMainWindow.event(self,ev)
+		# activated
+		if int(ev.type())==24 or int(ev.type())==17:
+			if self.isActiveWindow():
+				widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
+				if widget:
+					# sends activity event to current tab, if we sent inactive before
+					if self.active==None and widget.typ=="chat":
+						widget.active=True
+						self.main.client.sendMessage(unicode(widget.jid),"",composing="active")
+					index=int(self.ui.chatTab.currentIndex())
+					self.changeTab(index)
+					self.active=True
+
+				self.timer.stop()
+		# inactive
+		elif int(ev.type())==25:
+			if self.active:
+				self.active=False
+				self.timer.start(30000)
+		return handler
+
+	#{ Shortcuts
 
 	def tabOne(self):
 		self.ui.chatTab.setCurrentIndex(0)
@@ -416,83 +387,8 @@ class chatWindow(QtGui.QMainWindow):
 		if i < 0 and self.main.config['tabCycling'] == 'True':
 			self.ui.chatTab.setCurrentIndex(self.ui.chatTab.count()-1)
 	
-	## end of edit
-	
-	#original
-	#def next(self):
-	#	i=int(self.ui.chatTab.currentIndex())+1
-	#	if i<=self.ui.chatTab.count():
-	#		self.ui.chatTab.setCurrentIndex(i)
-	#
-	#def previous(self):
-	#	i=int(self.ui.chatTab.currentIndex())-1
-	#	if i>=0:
-	#		self.ui.chatTab.setCurrentIndex(i)
-	##
 
-	def inactive(self):
-		if self.active==False:
-			print "sending inactive chatstate to all tabs"
-			for i in range(self.ui.chatTab.count()):
-				w=self.ui.chatTab.widget(i)
-				if w.typ=="chat":
-					w.active=False
-					self.main.client.sendMessage(unicode(w.jid),"",composing="inactive")
-			self.active=None
-		if self.active==None and self.main.active==False:
-			print "publishing onInactivity event"
-			self.main.client.dispatcher.publishEvent('onInactivity', 30)
-
-	def event(self,ev):
-		# WindowActivated
-		#print int(ev.type())
-		handler=QtGui.QMainWindow.event(self,ev)
-		if int(ev.type())==24 or int(ev.type())==17:
-			if self.isActiveWindow():
-				widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
-				if widget:
-					if self.active==None and widget.typ=="chat":
-						#for i in range(self.ui.chatTab.count()):
-							#w=self.ui.chatTab.widget(i)
-							#if w.typ=="chat":
-								#self.main.client.sendMessage(unicode(w.jid),"",composing="active")
-						widget.active=True
-						self.main.client.sendMessage(unicode(widget.jid),"",composing="active")
-						self.main.client.dispatcher.publishEvent('onActivity')
-						print "publishing onActivity event"
-					if self.active==False:
-						self.main.client.dispatcher.publishEvent('onActivity')
-						print "publishing onActivity event"
-					index=int(self.ui.chatTab.currentIndex())
-					self.changeTab(index)
-					widget=self.ui.chatTab.widget(index)
-					widget.chat.unread=0
-					self.setWindowTitle(unicode(self.ui.chatTab.tabText(index)).replace("&",""))
-					self.active=True
-					print "activated..........."
-					
-					ev2=list(self.main.events.events)
-					r=False
-					for event in ev2:
-						jid=self.main.getJid(event['name'])
-						if jid:
-							if jid.userhost()==self.main.getJid(widget.jid).userhost() and (event['type']=="newMessage" or event['type']=="message"):
-								event['widget'].closeClicked()
-								r=True
-					if r:
-						print "some events were removed"
-						self.flashStatus=False
-							#break
-					self.main.events.refreshTray()
-					color=self.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
-					self.ui.chatTab.tabBar().setTabTextColor(self.ui.chatTab.currentIndex(),color)
-				self.timer.stop()
-		elif int(ev.type())==25:
-			if self.active:
-				print "INACTIVE"
-				self.active=False
-				self.timer.start(30000)
-		return handler
+	#{ Public Functions
 
 	def getUnreadMessages(self):
 		count=0
@@ -570,7 +466,9 @@ class chatWindow(QtGui.QMainWindow):
 				if jid.userhost()==self.main.getJid(widget.jid).userhost() and (event['type']=="newMessage" or event['type']=="message"):
 					event['widget'].closeClicked()
 					#break
+					self.flashStatus=False
 					self.main.events.refreshTray()
+
 		if widget.typ=="chat":
 			self.main.client.sendMessage(unicode(widget.jid),"",composing="active")
 			widget.active=True
@@ -917,6 +815,10 @@ class chatWindow(QtGui.QMainWindow):
 		layout.setMargin(1)
 		layout.setSpacing(1)
 		tab.chat=groupChatWidget(self.main,room,tab,nickname)
+		# splitter size
+		tab.chat.ui.splitter.setSizes(list(self.main.config['groupchatSplitSizes1']))
+		tab.chat.ui.splitter_2.setSizes(list(self.main.config['groupchatSplitSizes2']))
+		tab.chat.ui.splitter_3.setSizes(list(self.main.config['groupchatSplitSizes3']))
 		#tab.chat.ui.admin.hide()
 		layout.addWidget(tab.chat)
 		jmeno = room
@@ -938,6 +840,37 @@ class chatWindow(QtGui.QMainWindow):
 		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 		return True
 
+	def addCustomTab(self,jid,nickname,name,widget,widgetList,typ="chat",full=False,icon=None):
+		if full:
+			tab,index=self.findTab(jid,full)
+		else:
+			tab,index=self.findTab(jid,None)
+		if tab:
+			self.show()
+			self.raise_()
+			self.activateWindow()
+			#tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+			#self.ui.chatTab.setCurrentIndex(index)
+			return tab
+		if not icon:
+			icon=QtGui.QIcon("images/16x16/categories/muc.png")
+		tab=QtGui.QWidget(self.ui.chatTab)
+		tab.jid=jid
+		tab.typ=typ
+		tab.ic=icon
+		tab.active=True
+		layout=QtGui.QHBoxLayout(tab)
+		layout.setMargin(1)
+		layout.setSpacing(1)
+		tab.chat=widget(*widgetList)
+
+		layout.addWidget(tab.chat)
+		print "adding new custom tab", icon
+		tab.tabName=unicode("&"+unicode(name))
+		self.ui.chatTab.addTab(tab,icon,"&"+unicode(name))
+		self.setWindowTitle(unicode(name))
+
+		return tab
 
 	def closeEvent(self,e):
 		ask=False
@@ -972,9 +905,12 @@ class chatWindow(QtGui.QMainWindow):
 		
 
 		if w.typ=="groupchat":
-			self.main.config['groupchatSplitSizes1']=list(w.chat.ui.splitter.sizes())
-			self.main.config['groupchatSplitSizes2']=list(w.chat.ui.splitter_2.sizes())
-			self.main.config['groupchatSplitSizes3']=list(w.chat.ui.splitter_3.sizes())
+			try:
+				self.main.config['groupchatSplitSizes1']=list(w.chat.ui.splitter.sizes())
+				self.main.config['groupchatSplitSizes2']=list(w.chat.ui.splitter_2.sizes())
+				self.main.config['groupchatSplitSizes3']=list(w.chat.ui.splitter_3.sizes())
+			except:
+				pass
 		removed=False
 		if unicode(w.typ)=="groupchat" and self.main.client!=None:
 			print self.main.config["askBeforeQuitMUC"]

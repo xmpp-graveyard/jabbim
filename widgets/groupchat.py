@@ -52,8 +52,8 @@ class textView(abstractTextView):
 			event.ignore()
 
 class groupChatWidget(abstractChatWidget):
-	def __init__(self,main,jid,jab,nickname,parent=None):
-		abstractChatWidget.__init__(self,Ui_groupchatwidget,textView,main,jid,True,parent)
+	def __init__(self,main,jid,tab,nickname="",parent=None,ui=Ui_groupchatwidget):
+		abstractChatWidget.__init__(self,ui,textView,main,jid,True,parent)
 		self.nick = nickname #: MUC Jabber ID
 		self.affiliation="" #: user affiliation
 		self.role="" #: user role
@@ -84,10 +84,7 @@ class groupChatWidget(abstractChatWidget):
 		self.ui.users.hideColumn(1)
 		self.ui.users.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 
-		# splitter size
-		self.ui.splitter.setSizes(list(self.main.config['groupchatSplitSizes1']))
-		self.ui.splitter_2.setSizes(list(self.main.config['groupchatSplitSizes2']))
-		self.ui.splitter_3.setSizes(list(self.main.config['groupchatSplitSizes3']))
+
 
 		self.sizes={} #: sizes of avatars of other occupants
 		self.colors=[] #: colors of other occupants
