@@ -98,7 +98,7 @@ class board(QtGui.QWidget):
 				painter.drawRect(self.last[0]*self.side,self.last[1]*self.side,self.side,self.side)
 			if self.state[0]:
 				f=painter.font()
-				f.setPixelSize(30)
+				f.setPixelSize(60)
 				painter.setFont(f)
 				painter.setPen(QtGui.QPen(QtCore.Qt.red, 3))
 				if self.state[0]=='victory':
