@@ -24,13 +24,26 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call)
 			QtCore.QObject.connect(self.window.ui.list, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.clicked)
 			self.window.ui.list.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+			self.window.ui.list.startDrag=self.startDrag
 			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.fileMenu)
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
 			self.obsah=[]
-
+			self.dnd={}
 		else:
 			self.loadConfig(homedir)
+
+	def startDrag(self,actions):
+		# start dragging selected contact
+		item=self.window.ui.list.currentItem()
+
+		self.drag=QtGui.QDrag(self.window.ui.list)
+		mimeData=QtCore.QMimeData()
+		mimeData.setText("http://disk.jabbim.cz/"+self.main.client.jid.userhost()+"/"+item.text())
+		mimeData.setUrls([QtCore.QUrl("http://disk.jabbim.cz/"+self.main.client.jid.userhost()+"/"+item.text())])
+		self.dnd=item
+		self.drag.setMimeData(mimeData)
+		self.action=self.drag.start(QtCore.Qt.CopyAction)
 
 	def fileMenu(self,pos):
 		print "menu"
