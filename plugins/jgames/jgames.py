@@ -370,6 +370,20 @@ class Plugin(plugins.PluginBase):
 		d.addCallback(self._gameCreated)
 		return d
 	
+	def leaveGame(self, gid):
+		iq = IQ(self.main.client.xmlstream, 'set')
+		iq['xml:lang'] = self.main.client.xmlLang
+		iq['type'] = 'set'
+		iq['to'] = 'games.jabbim.cz'
+		q = iq.addElement('query')
+		q['xmlns']='games.jabbim.cz'
+		s = q.addElement('session')
+		s['gid'] = gid
+		s.addElement('leave')
+		self.main.client.disp(iq['id'])
+		d = iq.send()
+		return d		
+	
 	def _gameCreated(self, el):
 		q = el.firstChildElement()
 		s = q.firstChildElement()
