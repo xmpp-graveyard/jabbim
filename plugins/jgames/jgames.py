@@ -158,16 +158,22 @@ class gameObj:
 		data=data[0]
 		if data.has_key('y'):
 			self.dialog.countY=data['y']
+			print "Y:",data['y']
 		if data.has_key('x'):
 			self.dialog.countX=data['x']
+			print "X:",data['x']
 		if data.has_key('first'):
 			self.dialog.first=data['first']
+			print "first:",data['first']
 		if data.has_key('second'):
-			self.dialog.first=data['second']
+			self.dialog.second=data['second']
+			print "second:",data['second']
 		if data.has_key('firstSymbol'):
 			self.dialog.firstSymbol=int(data['firstSymbol'])
+			print "firstSymbol:",data['firstSymbol']
 		if data.has_key('secondSymbol'):
 			self.dialog.secondSymbol=int(data['secondSymbol'])
+			print "secondSymbol:",data['secondSymbol']
 		if self.plugin.main.getJid(self.dialog.first).userhost()==self.plugin.main.client.jid.userhost():
 			self.dialog.variable=self.dialog.firstSymbol
 		else:
