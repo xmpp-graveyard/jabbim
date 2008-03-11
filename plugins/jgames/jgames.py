@@ -155,9 +155,9 @@ class gameObj:
 		if call[1] in self.functions:
 			d = self.functions[call[1]](frm,call[0])
 			if d:
-				d.addCallback(self.plugin._replyUpdate, call[1], frm, id)
+				d.addCallback(self.plugin._replyUpdate, call[1], frm, id, self.gid)
 			elif d == None:
-				self.plugin._replyUpdate((True,), call[1], frm, id)
+				self.plugin._replyUpdate((True,), call[1], frm, id, self.gid)
 			else:
 				print 'chyba!', d
 	
@@ -214,14 +214,14 @@ class Plugin(plugins.PluginBase):
 		if ss!=None:
 			ss.dispatchUpdate(call, el['id'], el['from'])
 	
-	def _replyUpdate(self, result, func, frm, id):
+	def _replyUpdate(self, result, func, frm, id, gid):
 		iq = Element((None, 'iq'))
 		iq ['to'] = frm
 		iq['type'] = 'result'
 		iq['id'] = id
 
 		q = iq.addElement('query', 'games.jabbim.cz')
-		q['gid'] = self.gid
+		q['gid'] = gid
 		i = q.addElement('input')
 		i.addRawXml(dumps(result, methodresponse = True))
 		print iq.toXml()
