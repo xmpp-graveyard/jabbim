@@ -100,7 +100,7 @@ class board(QtGui.QWidget):
 				f=painter.font()
 				f.setPixelSize(60)
 				painter.setFont(f)
-				painter.setPen(QtGui.QPen(QtCore.Qt.red, 3))
+				painter.setPen(QtGui.QPen(QtCore.Qt.black, 3))
 				if self.state[0]=='victory':
 					if self.gameObj.plugin.main.getJid(self.state[1]).userhost()==self.gameObj.plugin.main.client.jid.userhost():
 						painter.drawText(0,0,self.width(),self.height(), QtCore.Qt.AlignCenter, "You WIN!")
