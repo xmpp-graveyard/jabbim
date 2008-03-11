@@ -53,6 +53,8 @@ class board(QtGui.QWidget):
 		self.turn=""
 		self.variable=0
 		self.last=[]
+		self.firstSymbol=None
+		self.secondSymbol=None
 	
 	def mouseReleaseEvent(self,qe):
 		if self.gameObj.plugin.main.getJid(self.turn).userhost()==self.gameObj.plugin.main.client.jid.userhost():
@@ -118,7 +120,11 @@ class gameObj:
 	def turn(self,jid,data):
 		jid=data[0]
 		self.dialog.turn=jid
-		message=jid+' (<img src="%s"/>) is on the turn'%("images/piskvorky/x.png")
+		if self.dialog.variable==-1:
+			file="images/piskvorky/x.png"
+		else:
+			file="images/piskvorky/o.png"
+		message=jid+' (<img src="%s"/>) is on the turn'%(file)
 		message=self.plugin.main.skin["status_message"].replace("[time]",self.plugin.main.now()).replace('[message]',message)
 		self.tab.textEditWrite(message)
 
@@ -142,11 +148,14 @@ class gameObj:
 			self.dialog.first=data['first']
 		if data.has_key('second'):
 			self.dialog.first=data['second']
-
+		if data.has_key('firstSymbol'):
+			self.dialog.firstSymbol=int(data['firstSymbol'])
+		if data.has_key('secondSymbol'):
+			self.dialog.secondSymbol=int(data['secondSymbol'])
 		if self.plugin.main.getJid(self.dialog.first).userhost()==self.plugin.main.client.jid.userhost():
-			self.dialog.variable=-1
+			self.dialog.variable=self.dialog.firstSymbol
 		else:
-			self.dialog.variable=1
+			self.dialog.variable=self.dialog.secondSymbol
 
 		if len(self.dialog.desk)==0:
 			for y in range(self.dialog.countY):
@@ -170,6 +179,8 @@ class gameObj:
 				print 'chyba!', d
 	def finish(self, attr, reason):
 		#v attr je type, value: typ = victory/error/restart, value= JID .. nebo tak neco ;)
+		print attr,reason
+		print dir(attr)
 		pass
 	
 	
