@@ -113,8 +113,11 @@ class Plugin(plugins.PluginBase):
 		self.window.show()
 		self.call()
 	
-	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None):
-		pass
+	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None,error=None):
+		if unicode(frm).find("public@disk.jabbim.cz")!=-1:
+			if not self.window.isHidden():
+				return False
+		return True
 		
 	def clicked(self,item,old):
 		print 'click',item

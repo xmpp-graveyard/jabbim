@@ -88,6 +88,7 @@ class clientClass(pyxl.client.Client):
 		self.version = '0.4SVN'
 		self.bookmarksEnabled=True
 		self.xmlCount=[]
+		self.bannedJids=[]
 
 	def on_bookmarksFail(self):
 		"""
@@ -1016,6 +1017,8 @@ class clientClass(pyxl.client.Client):
 		if typ=="groupchat":
 			return
 		frm=jidT.JID(frm)
+		if frm.userhost() in self.bannedJids:
+			return
 		if not body:
 			body=""
 		mainWindow=self.main
