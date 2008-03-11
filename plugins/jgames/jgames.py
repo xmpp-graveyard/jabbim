@@ -52,6 +52,7 @@ class board(QtGui.QWidget):
 		self.o=QtGui.QPixmap("images/piskvorky/o.png")
 		self.turn=""
 		self.variable=0
+		self.last=[]
 	
 	def mouseReleaseEvent(self,qe):
 		if self.gameObj.plugin.main.getJid(self.turn).userhost()==self.gameObj.plugin.main.client.jid.userhost():
@@ -89,9 +90,9 @@ class board(QtGui.QWidget):
 					elif self.desk[y][x]==1:
 						painter.drawPixmap(x*self.side,y*self.side,self.o)
 			
-			#painter.setPen(QtGui.QPen(QtCore.Qt.green, 3))
-			#if len(self.last)!=0:
-				#painter.drawRect(self.last[0]*self.side,self.last[1]*self.side,self.side,self.side)
+			painter.setPen(QtGui.QPen(QtCore.Qt.green, 3))
+			if len(self.last)!=0:
+				painter.drawRect(self.last[0]*self.side,self.last[1]*self.side,self.side,self.side)
 
 
 class gameObj:
@@ -120,6 +121,7 @@ class gameObj:
 			x=change[0]
 			y=change[1]
 			var=change[2]
+			self.dialog.last=[x,y]
 			self.dialog.desk[y][x]=var
 		self.dialog.repaint()
 
@@ -192,6 +194,7 @@ class Plugin(plugins.PluginBase):
 			self.loadConfig(homedir)
 	
 	def on_remove(self):
+		print "REMOVING JGAMES PLUGIN"
 		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/update", self.onUpdate, priority = 1)
 		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/start", self.onStart, priority = 1)
 	
