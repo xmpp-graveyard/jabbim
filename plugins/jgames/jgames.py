@@ -432,7 +432,7 @@ class Plugin(plugins.PluginBase):
 		if self.main.chat.addCustomTab(muc,self.main.client.jid.user,"Game",gameWidget,[self.main,muc,None,self.main.client.jid.user,None,self.jgamesWidget.Ui_groupchatwidget],'groupchat'):
 			self.main.chat.activate()
 			tab,index=self.main.chat.findTab(muc,True,['groupchat'])
-			tab.chat.ui.nickname=self.main.client.jid.user
+			tab.chat.nick=self.main.client.jid.user
 			tab.chat.on_owner=self.showAdminButtons
 			tab.chat.gid=gid
 			self.main.client.joinGC(muc,self.main.client.jid.user)

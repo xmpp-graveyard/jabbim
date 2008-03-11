@@ -906,9 +906,9 @@ class chatWindow(QtGui.QMainWindow):
 
 		if w.typ=="groupchat":
 			try:
+				self.main.config['groupchatSplitSizes3']=list(w.chat.ui.splitter_3.sizes())
 				self.main.config['groupchatSplitSizes1']=list(w.chat.ui.splitter.sizes())
 				self.main.config['groupchatSplitSizes2']=list(w.chat.ui.splitter_2.sizes())
-				self.main.config['groupchatSplitSizes3']=list(w.chat.ui.splitter_3.sizes())
 			except:
 				pass
 		removed=False
