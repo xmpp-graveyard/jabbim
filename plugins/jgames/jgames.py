@@ -10,6 +10,7 @@ from widgets import dataforms,groupchat
 import time
 from twisted.words.protocols.jabber.xmlstream import IQ
 from pyxl.xmlrpclib import loads, dumps
+from twisted.words.xish.domish import Element
 #class config:
 	#def __init__(self,main):
 		#self.main=main
