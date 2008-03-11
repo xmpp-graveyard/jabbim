@@ -859,6 +859,7 @@ class chatWindow(QtGui.QMainWindow):
 		tab.typ=typ
 		tab.ic=icon
 		tab.active=True
+		tab.name=nickname
 		layout=QtGui.QHBoxLayout(tab)
 		layout.setMargin(1)
 		layout.setSpacing(1)
