@@ -68,7 +68,7 @@ class board(QtGui.QWidget):
 			else:
 				self.desk[y][x]=self.variable
 				self.repaint()
-				self.turn=""
+				self.turn="a@b.cz"
 				self.gameObj.plugin.sendInput('update', ((x,y,self.variable),), 'games.jabbim.cz', self.gameObj.gid)
 	
 	def paintEvent(self,event):
