@@ -55,6 +55,7 @@ class board(QtGui.QWidget):
 		self.last=[]
 		self.firstSymbol=None
 		self.secondSymbol=None
+		self.state=[None,""]
 	
 	def mouseReleaseEvent(self,qe):
 		if self.gameObj.plugin.main.getJid(self.turn).userhost()==self.gameObj.plugin.main.client.jid.userhost():
@@ -95,7 +96,16 @@ class board(QtGui.QWidget):
 			painter.setPen(QtGui.QPen(QtCore.Qt.green, 3))
 			if len(self.last)!=0:
 				painter.drawRect(self.last[0]*self.side,self.last[1]*self.side,self.side,self.side)
-
+			if self.state[0]:
+				f=painter.font()
+				f.setPixelSize(30)
+				painter.setFont(f)
+				painter.setPen(QtGui.QPen(QtCore.Qt.red, 3))
+				if self.state[0]=='victory':
+					if self.gameObj.plugin.main.getJid(self.state[1]).userhost()==self.gameObj.plugin.main.client.jid.userhost():
+						painter.drawText(0,0,self.width(),self.height(), QtCore.Qt.AlignCenter, "You WIN!")
+					else:
+						painter.drawText(0,0,self.width(),self.height(), QtCore.Qt.AlignCenter, "You LOSE!")
 
 class gameObj:
 	def __init__(self, gid, plugin,tab):
@@ -120,11 +130,17 @@ class gameObj:
 	def turn(self,jid,data):
 		jid=data[0]
 		self.dialog.turn=jid
-		if self.dialog.variable==-1:
-			file="images/piskvorky/x.png"
+		if self.plugin.main.getJid(self.dialog.first).userhost()==self.plugin.main.getJid(self.dialog.turn).userhost():
+			if self.dialog.firstSymbol==-1:
+				file="images/piskvorky/x.png"
+			else:
+				file="images/piskvorky/o.png"
 		else:
-			file="images/piskvorky/o.png"
-		message=jid+' (<img src="%s"/>) is on the turn'%(file)
+			if self.dialog.secondSymbol==-1:
+				file="images/piskvorky/x.png"
+			else:
+				file="images/piskvorky/o.png"
+		message=' <img src="%s"/> '%(file)+jid+' is on the turn'
 		message=self.plugin.main.skin["status_message"].replace("[time]",self.plugin.main.now()).replace('[message]',message)
 		self.tab.textEditWrite(message)
 
@@ -179,9 +195,9 @@ class gameObj:
 				print 'chyba!', d
 	def finish(self, attr, reason):
 		#v attr je type, value: typ = victory/error/restart, value= JID .. nebo tak neco ;)
-		print attr,reason
-		print dir(attr)
-		pass
+		#2008/03/11 14:44 +0200 [-] {u'type': u'victory', u'value': u'pyjim@jabber.cz/jabbimSvn'}
+		#2008/03/11 14:44 +0200 [-] ['__class__', '__cmp__', '__contains__', '__delattr__', '__delitem__', '__doc__', '__eq__', '__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__init__', '__iter__', '__le__', '__len__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__setitem__', '__str__', 'clear', 'copy', 'fromkeys', 'get', 'has_key', 'items', 'iteritems', 'iterkeys', 'itervalues', 'keys', 'pop', 'popitem', 'setdefault', 'update', 'values']
+		self.dialog.state=[attr['type'],attr['value']]
 	
 	
 
