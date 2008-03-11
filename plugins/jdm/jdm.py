@@ -23,13 +23,31 @@ class Plugin(plugins.PluginBase):
 			self.window.setWindowIcon(self.main.windowIcon())
 			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call)
 			QtCore.QObject.connect(self.window.ui.list, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.clicked)
+			self.window.ui.list.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.fileMenu)
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
-
 			self.obsah=[]
 
 		else:
 			self.loadConfig(homedir)
+
+	def fileMenu(self,pos):
+		print "menu"
+		item=self.window.ui.list.currentItem()
+		if not item:
+			return
+		self.menu=QtGui.QMenu()
+		self.menu.addAction(self.tr("Remove file"),self.removeCurrentFile)
+		self.menu.popup(self.window.ui.list.mapToGlobal(pos))
+	
+	def removeCurrentFile(self):
+		item=self.window.ui.list.currentItem()
+		if not item:
+			return
+		self.main.client.sendMessage("public@disk.jabbim.cz", u"rm "+unicode(item.text()))
+		item=self.window.ui.list.takeItem(self.window.ui.list.currentRow())
+		del item
 
 	def toNormalSize(self,size):
 		original=int(size)

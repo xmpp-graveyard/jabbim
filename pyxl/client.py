@@ -747,7 +747,6 @@ class Client(derived):
 
 
 
-
 	def _authfailed(self,xmlstream):
 		log.msg( "auth_failed")
 		print unicode(xmlstream)

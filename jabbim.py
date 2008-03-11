@@ -97,7 +97,7 @@ class clientClass(pyxl.client.Client):
 		self.bookmarksEnabled=False
 		mainWindow=self.main
 		self.main.tray.showMessage(MainWindow.tr("Error"),mainWindow.tr("Your server doesn't support Private XML Storage. Some functions will be disabled."))
-		
+
 	def on_privacyFail(self):
 		"""
 		Called if privacy lists are not supported by server.
@@ -330,6 +330,7 @@ class clientClass(pyxl.client.Client):
 		"""
 		Called when adds user to the roster
 		"""
+		start=time.time()
 		groups=list(contact.groups)
 		name=unicode(contact.name)
 		jid=unicode(contact.jid)
@@ -371,6 +372,7 @@ class clientClass(pyxl.client.Client):
 
 		# load avatar
 		self.main._loadAvatar(self.main.homeDir+'/avatars/'+jid, self.avatars.get(jid), jid)
+		print "addUser lasts",time.time()-start,'seconds'
 
 	def makeTempMeta(self):
 		"""
@@ -436,6 +438,7 @@ class clientClass(pyxl.client.Client):
 		"""
 		Called when roster arrived.
 		"""
+		start=time.time()
 		print 'we got roster'
 		self.main.ui.splashProgress.setValue(60)
 		mainWindow=self.main
@@ -516,7 +519,8 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.statusButton.setText(unicode(""))
 		self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
 		self.main.ui.login_cancel.hide()
-	
+		print "onRosterarrived lasts",time.time()-start,'seconds'
+
 	def on_rosterx(self, frm, items, id):
 		mainWindow = self.main
 		if len(items)==1:
@@ -557,6 +561,7 @@ class clientClass(pyxl.client.Client):
 		"""
 		Process all first presences at once.
 		"""
+		start=time.time()
 		for presence in bulk:
 			jid=presence[0]
 			show=presence[1]
@@ -577,14 +582,16 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.splashProgress.setValue(100)
 		self.main.ui.loginInfo.setText(mainWindow.tr("Jabbim is ready."))
 		self.main.ui.rosterStackedWidget.setCurrentIndex(1)
-
+		print "firstpresence lasts",time.time()-start,'seconds'
 		# load plugins, autoconnect
 		self.reactor.callLater(0.3,self.jl)
 
 	def jl(self):
+		start=time.time()
 		self.main.findPlugins()
 		self.main.loadPlugins()
 		self.main.autoJoinGroupchat()
+		print "loadPlugins lasts",time.time()-start,'seconds'
 		
 	def on_invite(self,jid, room, reason, cont = False):
 		print "invite",cont
@@ -957,6 +964,7 @@ class clientClass(pyxl.client.Client):
 		Handles messages from groupchat.
 		"""
 		# get user (resource) and MUC jid (saved in frm)
+		start=time.time()
 		if typ=="chat":
 			return self.on_message(frm, typ, body, subject, xhtml,chatstate,delay,error)
 		frm=jidT.JID(frm)
@@ -981,11 +989,13 @@ class clientClass(pyxl.client.Client):
 						if w!=None:
 							message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent. Remote server not found."))
 							w.chat.textEditWrite(message)
+						print "gcmessage lasts",time.time()-start
 						return
 					elif error!=None:
 						if w!=None:
 							message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent.")+" "+unicode(error))
 							w.chat.textEditWrite(message)
+						print "gcmessage lasts",time.time()-start
 						return
 					if xhtml==None:
 						body=unicode(body).replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
@@ -994,6 +1004,7 @@ class clientClass(pyxl.client.Client):
 					else:
 						xhtml=xhtml.replace("&quot;",'"')
 					self.main.chat.onGCMessage(w,i,body,delay,subject,user,xhtml)
+					print "gcmessage lasts",time.time()-start
 					return
 
 
@@ -1008,7 +1019,6 @@ class clientClass(pyxl.client.Client):
 		if not body:
 			body=""
 		mainWindow=self.main
-
 		# get user name
 		user=self.main.ui.roster.getNameByJID(frm.full())
 		icon=self.main.ui.roster.getIconByJID(frm.full())
@@ -3231,13 +3241,8 @@ class mainWindow(QtGui.QMainWindow):
 	def _loadAvatar(self,file, hash, jid):
 		if os.path.isfile(unicode(file)):
 			jid=jidT.JID(jid).userhost()
-			pixmap=QtGui.QPixmap()
-			f=open(unicode(file),"rb")
-			image=f.read()
-			f.close()
-			pixmap.loadFromData(image)
+			pixmap=QtGui.QPixmap(unicode(file))
 			for item in self.ui.roster.getUserItems(jid):
-##				log.msg(utils.cprint("yellow","setting icon: "+jid))
 				item.setAvatar(QtGui.QIcon(pixmap))
 			for item in self.ui.roster.getMetaItems(jid):
 				item[0].setAvatar(QtGui.QIcon(pixmap))
