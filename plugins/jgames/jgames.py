@@ -185,6 +185,10 @@ class gameObj:
 				for x in range(self.dialog.countX):
 					ar.append(0)
 				self.dialog.desk.append(ar)
+
+		if data.has_key('history'):
+			self.update('',data['history'])
+
 		self.dialog.setMinimumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
 		self.dialog.setMaximumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
 		self.dialog.show()
