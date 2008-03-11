@@ -162,6 +162,9 @@ class gameObj:
 				self.plugin._replyUpdate((True,), call[1], frm, id, self.gid)
 			else:
 				print 'chyba!', d
+	def finish(self, attr, reason):
+		#v attr je type, value: typ = victory/error/restart, value= JID .. nebo tak neco ;)
+		pass
 	
 	
 
@@ -197,18 +200,37 @@ class Plugin(plugins.PluginBase):
 		print "REMOVING JGAMES PLUGIN"
 		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/update", self.onUpdate)
 		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/start", self.onStart)
-	
+		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/finish", self.onFinish)
+		
 	def onStart(self, el):
+		frm = jid.JID(el['from'])
+		if frm.host != 'games.jabbim.cz':
+			return
 		self.main.client.disp(el['id'])
 		q = el.firstChildElement()
 		gid = q['gid']
 		self.games[gid].dialog.show()
+	
+	def onFinish(self, el):
+		frm = jid.JID(el['from'])
+		if frm.host != 'games.jabbim.cz':
+			return
+		self.main.client.disp(el['id'])
+		q = el.firstChildElement()
+		gid = q['gid']
+		f = q.firstChildElement()
+		ss = self.getSession(q['gid'])
+		if ss!=None:
+			ss.finish(f.attributes, unicode(f))
 			
 	def getSession(self, gid):
 		return self.games.get(gid, None)
 	
 	def onUpdate(self, el):
 		print 'update received'
+		frm = jid.JID(el['from'])
+		if frm.host != 'games.jabbim.cz':
+			return
 		self.main.client.disp(el['id'])
 		q = el.firstChildElement()
 		l = q.firstChildElement()
