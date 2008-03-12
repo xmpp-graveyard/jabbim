@@ -256,6 +256,7 @@ class Plugin(plugins.PluginBase):
 			self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/update", self.onUpdate, priority = 1)
 			self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/start", self.onStart, priority = 1)
 			self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/finish", self.onFinish, priority = 1)
+			self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/session/invite", self.onInvite, priority = 1)
 		else:
 			self.loadConfig(homedir)
 	
@@ -264,6 +265,7 @@ class Plugin(plugins.PluginBase):
 		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/update", self.onUpdate)
 		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/start", self.onStart)
 		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/finish", self.onFinish)
+		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/session/invite", self.onInvite)
 		
 	def onStart(self, el):
 		frm = self.main.getJid(el['from'])
@@ -285,6 +287,22 @@ class Plugin(plugins.PluginBase):
 		ss = self.getSession(q['gid'])
 		if ss!=None:
 			ss.finish(f.attributes, unicode(f))
+	
+	def onInvite(self, el):
+		self.main.client.disp(el['id'])
+		q = el.firstChildElement()
+		s = q.firstChildElement()
+		gid = s['gid']
+		game = s['game']
+		id = el['id']
+		
+	def _invite(self, id, jid, typ='result'):
+		iq = Element((None, 'iq'))
+		iq ['to'] = jid
+		iq['type'] = typ
+		iq['id'] = id
+		self.main.client.xmlstream.send(iq)
+		
 			
 	def getSession(self, gid):
 		return self.games.get(gid, None)
@@ -401,6 +419,22 @@ class Plugin(plugins.PluginBase):
 		self.main.client.disp(iq['id'])
 		d = iq.send()
 		return d		
+	
+	def sendInvite(jid, gid, game):
+		iq = IQ(self.main.client.xmlstream, 'set')
+		iq['xml:lang'] = self.main.client.xmlLang
+		iq['type'] = 'set'
+		iq['to'] = jid
+		q = iq.addElement('query')
+		q['xmlns']='games.jabbim.cz'
+		s = q.addElement('session')
+		s['gid'] = gid
+		s['game'] = game
+		s['muc'] = muc
+		s.addElement('invite')
+		self.main.client.disp(iq['id'])
+		d = iq.send()
+		return d
 	
 	def _gameCreated(self, el):
 		q = el.firstChildElement()
