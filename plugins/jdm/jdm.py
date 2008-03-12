@@ -30,6 +30,7 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('on_message', self.on_message, priority=4)
 			self.obsah=[]
 			self.dnd={}
+			self.window.ui.line_jid.setText(self.main.client.jid.userhost())
 		else:
 			self.loadConfig(homedir)
 
@@ -50,10 +51,19 @@ class Plugin(plugins.PluginBase):
 		item=self.window.ui.list.currentItem()
 		if not item:
 			return
+		
 		self.menu=QtGui.QMenu()
-		self.menu.addAction(self.tr("Remove file"),self.removeCurrentFile)
+		self.menu.addAction(self.tr("Download file"),self.downloadCurrentFile)
+		if self.jid==self.main.client.jid.userhost():
+			self.menu.addAction(self.tr("Remove file"),self.removeCurrentFile)
 		self.menu.popup(self.window.ui.list.mapToGlobal(pos))
-	
+
+	def downloadCurrentFile(self):
+		item=self.window.ui.list.currentItem()
+		if not item:
+			return
+		self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+
 	def removeCurrentFile(self):
 		item=self.window.ui.list.currentItem()
 		if not item:
@@ -112,11 +122,12 @@ class Plugin(plugins.PluginBase):
 		menu=self.mainWindowMenu()
 		menu.addAction("Jabbim disk manager",self.showSlot)
 	
-	def call(self,jid="",type="public"):
-		if jid=="":
-			self.jid=self.main.client.jid.userhost()
-		else:
-			self.jid=jid
+	def call(self,jid=None,type="public"):
+		#if not jid:
+			#self.jid=self.main.client.jid.userhost()
+		#else:
+			#self.jid=jid
+		self.jid=unicode(self.window.ui.line_jid.text())
 		self.type=type
 		if self.type=="public":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.jid,)).addCallback(self.updateView, 'public')
