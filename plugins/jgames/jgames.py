@@ -197,7 +197,7 @@ class gameObj:
 		self.dialog.state=[None,""]
 		if data.has_key('x') and data.has_key('y'):
 			self.dialog.desk=[]
-			self.last=[]
+			self.dialog.last=[]
 			for y in range(self.dialog.countY):
 				ar=[]
 				for x in range(self.dialog.countX):
