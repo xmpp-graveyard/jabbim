@@ -47,11 +47,16 @@ class configWidget(QtGui.QWidget):
 		self.var,row=dataforms.makeDataForm(self,layout,form)
 
 		self.ok=QtGui.QPushButton(self.tr("Save"),self)
+		self.start=QtGui.QPushButton()
+		self.start.setText(self.tr('Start game'))
+		self.start.setToolTip(self.tr("Start game"))
+
 		#self.cancel=QtGui.QPushButton(self.tr("Cancel"),self)
 
 		#QtCore.QObject.connect(self.cancel,QtCore.SIGNAL("clicked()"),self.reject)
 		
 		layout.addWidget(self.ok,row+1,0)
+		layout.addWidget(self.start,row+1,1)
 		#layout.addWidget(self.cancel,row+1,1)
 		self.setEnabled(False)
 
@@ -70,6 +75,7 @@ class gameWidget(groupchat.groupChatWidget):
 		groupchat.groupChatWidget.__init__(self,main,jid,tab,nickname="",parent=None,ui=ui)
 		self.ui.info.hide()
 		self.ui.selfAvatar.hide()
+		self.ui.pluginWidget.hide()
 	
 	def editUser(self,nick,status,role=None,affiliation=None):
 		groupchat.groupChatWidget.editUser(self,nick,status,role,affiliation)
@@ -93,8 +99,8 @@ class board(QtGui.QWidget):
 		self.side=20
 		self.first=None
 		self.second=None
-		self.countX=25
-		self.countY=25
+		self.countX=20
+		self.countY=20
 		self.desk=[]
 		self.x=QtGui.QPixmap("images/piskvorky/x.png")
 		self.o=QtGui.QPixmap("images/piskvorky/o.png")
@@ -172,7 +178,7 @@ class gameObj:
 		self.dialog=board(gameWidget)
 		self.dialog.gameObj=self
 		self.dialog.img=QtGui.QPixmap(self.plugin.pluginDir+'/img.png')
-		self.l.addWidget(self.dialog)
+		self.l.addWidget(self.dialog,0,QtCore.Qt.AlignCenter)
 		self.dialog.setMinimumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
 		self.dialog.setMaximumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
 		self.configDialog=None
@@ -194,14 +200,21 @@ class gameObj:
 				if self.enabled:
 					self.configDialog.setEnabled(True)
 				QtCore.QObject.connect(self.configDialog.ok,QtCore.SIGNAL("clicked()"),self.sendConfig2)
+				QtCore.QObject.connect(self.configDialog.start,QtCore.SIGNAL("clicked()"),self.startGame)
 				self.configDialog.gid=gid
 				self.configDialog.show()
-				self.l.addWidget(self.configDialog)
+				self.l.addWidget(self.configDialog,0,QtCore.Qt.AlignCenter)
 				self.configDialog.show()
+				#self.info.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Expanded,QtGui.QSizePolicy.Expanded))
+
 				self.dialog.hide()
 				self.l.addStretch()
 			else:
 				dataforms.updateDataForm(self.configDialog.var,form)
+
+	def startGame(self):
+		self.plugin.startGame(self.gid)
+
 
 	def sendConfig2(self):
 		form=self.configDialog.getForm()
@@ -663,26 +676,26 @@ class Plugin(plugins.PluginBase):
 		print "owner"
 		#widget=QtGui.QWidget(tab.ui.pluginWidget.parent())
 		#l=QtGui.QHBoxLayout(widget)
-		l=tab.ui.pluginWidget.layout()
-		button=QtGui.QToolButton()
-		button.setText(self.tr('Configure game'))
-		button.setToolTip(self.tr("Configure game"))
-		button.setMinimumHeight(tab.ui.sendButton.height())
-		button.setMaximumHeight(tab.ui.sendButton.height())
-		button.typ='config'
-		button.gid=tab.gid
-		l.addWidget(button)
-		self.group.addButton(button)
+		#l=tab.ui.pluginWidget.layout()
+		#button=QtGui.QToolButton()
+		#button.setText(self.tr('Configure game'))
+		#button.setToolTip(self.tr("Configure game"))
+		#button.setMinimumHeight(tab.ui.sendButton.height())
+		#button.setMaximumHeight(tab.ui.sendButton.height())
+		#button.typ='config'
+		#button.gid=tab.gid
+		#l.addWidget(button)
+		#self.group.addButton(button)
 		
-		button=QtGui.QToolButton()
-		button.setText(self.tr('Start game'))
-		button.setToolTip(self.tr("Start game"))
-		button.setMinimumHeight(tab.ui.sendButton.height())
-		button.setMaximumHeight(tab.ui.sendButton.height())
-		button.typ='start'
-		button.gid=tab.gid
-		l.addWidget(button)
-		self.group.addButton(button)
+		#button=QtGui.QToolButton()
+		#button.setText(self.tr('Start game'))
+		#button.setToolTip(self.tr("Start game"))
+		#button.setMinimumHeight(tab.ui.sendButton.height())
+		#button.setMaximumHeight(tab.ui.sendButton.height())
+		#button.typ='start'
+		#button.gid=tab.gid
+		#l.addWidget(button)
+		#self.group.addButton(button)
 		tab.on_owner=None
 		self.games[tab.gid].enabled=True
 		if self.games[tab.gid].configDialog:
