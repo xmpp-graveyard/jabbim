@@ -139,6 +139,7 @@ class gameObj:
 		self.dialog.setMinimumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
 		self.dialog.setMaximumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
 		self.info.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Fixed))
+		l.addStretch()
 	def turn(self,jid,data):
 		jid=data[0]
 		self.dialog.turn=jid
@@ -196,6 +197,7 @@ class gameObj:
 		self.dialog.state=[None,""]
 		if data.has_key('x') and data.has_key('y'):
 			self.dialog.desk=[]
+			self.last=[]
 			for y in range(self.dialog.countY):
 				ar=[]
 				for x in range(self.dialog.countX):
