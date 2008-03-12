@@ -41,6 +41,12 @@ class gameWidget(groupchat.groupChatWidget):
 
 	def on_remove(self):
 		self.gameObj.plugin.leaveGame(self.gameObj.gid)
+		self.gameObj.dialog.hide()
+		self.gameObj.dialog.parent().layout().removeWidget(self.gameObj.dialog)
+		self.gameObj.dialog.setParent(None)
+		self.gameObj.dialog.deleteLater()
+		del self.gameObj.dialog
+		
 
 class board(QtGui.QWidget):
 	def __init__(self,parent):
