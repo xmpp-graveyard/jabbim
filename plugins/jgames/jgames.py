@@ -59,7 +59,7 @@ class board(QtGui.QWidget):
 		self.firstSymbol=None
 		self.secondSymbol=None
 		self.state=[None,""]
-	
+		self.score={}
 	def mouseReleaseEvent(self,qe):
 		if self.gameObj.plugin.main.getJid(self.turn).userhost()==self.gameObj.plugin.main.client.jid.userhost():
 			x=qe.x()/self.side
@@ -120,8 +120,9 @@ class gameObj:
 		self.functions['turn']=self.turn
 		self.tab=tab
 		gameWidget=tab.ui.gameWidget
-		l=QtGui.QHBoxLayout(gameWidget)
-		
+		l=QtGui.QVBoxLayout(gameWidget)
+		self.info=QtGui.QLabel(gameWidget)
+		l.addWidget(self.info)
 		tab.gameObj=self
 		self.dialog=board(gameWidget)
 		self.dialog.gameObj=self
@@ -143,9 +144,10 @@ class gameObj:
 				file="images/piskvorky/x.png"
 			else:
 				file="images/piskvorky/o.png"
-		message=' <img src="%s"/> '%(file)+jid+' is on the turn'
-		message=self.plugin.main.skin["status_message"].replace("[time]",self.plugin.main.now()).replace('[message]',message)
-		self.tab.textEditWrite(message)
+		message=' <img src="%s"/> '%(file)+jid+' is on the turn<br/>'
+		for jid,score in self.dialog.score.iteritems():
+			message+="<b>"+jid+"</b>: "+str(score)+"</br>"
+		self.info.setText(message)
 
 	def update(self,jid,data):
 		for change in data:
@@ -177,12 +179,15 @@ class gameObj:
 		if data.has_key('secondSymbol'):
 			self.dialog.secondSymbol=int(data['secondSymbol'])
 			print "secondSymbol:",data['secondSymbol']
+		if data.has_key('score'):
+			self.dialog.score=data['score']
 		if self.plugin.main.getJid(self.dialog.first).userhost()==self.plugin.main.client.jid.userhost():
 			self.dialog.variable=self.dialog.firstSymbol
 		else:
 			self.dialog.variable=self.dialog.secondSymbol
 		self.dialog.state=[None,""]
 		if data.has_key('x') and data.has_key('y'):
+			self.dialog.desk=[]
 			for y in range(self.dialog.countY):
 				ar=[]
 				for x in range(self.dialog.countX):
