@@ -178,6 +178,70 @@ def makeDataForm(parent,layout,form,row=1):
 				row+=1
 	return var,row
 
+def updateDataForm(var,form,row=1):
+	for x in form.elements():
+		if unicode(x.name)=="field":
+			if x['type']=="text-single":
+				widget=var[x['var']]['widget']
+				for child in x.elements():
+					if child.name == 'value':
+						widget.setText(unicode(child))
+			elif x['type']=="text-multi":
+				widget=var[x['var']]['widget']
+				text=""
+				for child in x.elements():
+					if child.name == 'value':
+						text+=unicode(child)+"\n"
+				widget.setText(unicode(text))
+			elif x['type']=="boolean":
+				widget=var[x['var']]['widget']
+				for child in x.elements():
+					if child.name == 'value':
+						if unicode(child)=="0" or unicode(child).lower()=="false":
+							widget.setChecked(False)
+						elif unicode(child)=="1" or unicode(child).lower()=="true":
+							widget.setChecked(True)
+			elif x['type']=="text-private":
+				widget=var[x['var']]['widget']
+				for child in x.elements():
+					if child.name == 'value':
+						widget.setText(unicode(child))
+			elif x['type']=="list-single":
+				widget=var[x['var']]['widget']
+				widget.clear()
+				default=""
+				for child in x.elements():
+					if child.name == 'value':
+						default=unicode(child)
+					elif child.name=="option":
+						for ch in child.elements():
+							if ch.name=="value":
+								if unicode(ch)==default:
+									widget.insertItem(0,unicode(child['label']),QtCore.QVariant(unicode(ch)))
+								else:
+									widget.addItem(child['label'], QtCore.QVariant(unicode(ch)))
+				widget.setCurrentIndex(0)
+			elif x['type']=="list-multi":
+				widget=var[x['var']]['widget']
+				widget.clear()
+				default=""
+				cur=None
+				for child in x.elements():
+					if child.name == 'value':
+						default=unicode(child)
+					elif child.name=="option":
+						for ch in child.elements():
+							if ch.name=="value":
+								item=QtGui.QListWidgetItem(unicode(child['label']))
+								item.setData(32,QtCore.QVariant(unicode(ch)))
+								if unicode(ch)==default:
+									cur=item
+								widget.addItem(item)
+				#widget.setCurrentIndex(0)
+				if cur:
+					widget.setCurrentItem(cur)
+	return var,row
+
 def getVarData(var):
 	ret={}
 	for key,value in var.iteritems():

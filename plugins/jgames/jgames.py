@@ -28,6 +28,43 @@ from twisted.words.xish.domish import Element
 		#self.config['osd_x']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD')}
 		#self.config['osd_y']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD')}
 
+class configWidget(QtGui.QWidget):
+	def __init__(self,main,form,jid,typ,parent=None):
+		apply(QtGui.QWidget.__init__,(self,parent))
+		self.main=main
+		self.typ=typ
+		self.jid=jid
+		self.form=form
+		layout=QtGui.QGridLayout(self)
+		
+		self.setMaximumWidth(400)
+		self.var={}
+		row=0
+		for x in form.elements():
+			if unicode(x.name)=="title":
+				self.setWindowTitle(unicode(x))
+
+		self.var,row=dataforms.makeDataForm(self,layout,form)
+
+		self.ok=QtGui.QPushButton(self.tr("Save"),self)
+		#self.cancel=QtGui.QPushButton(self.tr("Cancel"),self)
+
+		#QtCore.QObject.connect(self.cancel,QtCore.SIGNAL("clicked()"),self.reject)
+		
+		layout.addWidget(self.ok,row+1,0)
+		#layout.addWidget(self.cancel,row+1,1)
+		self.setEnabled(False)
+
+	def getForm(self):
+		return dataforms.sendDataForm(self.main,"",self.form,self.var,None)
+
+	def accept(self):
+		pass
+	
+	def reject(self):
+		pass
+
+
 class gameWidget(groupchat.groupChatWidget):
 	def __init__(self,main,jid,tab,nickname="",parent=None,ui=None):
 		groupchat.groupChatWidget.__init__(self,main,jid,tab,nickname="",parent=None,ui=ui)
@@ -128,18 +165,48 @@ class gameObj:
 		self.functions['turn']=self.turn
 		self.tab=tab
 		gameWidget=tab.ui.gameWidget
-		l=QtGui.QVBoxLayout(gameWidget)
+		self.l=QtGui.QVBoxLayout(gameWidget)
 		self.info=QtGui.QLabel(gameWidget)
-		l.addWidget(self.info)
+		self.l.addWidget(self.info)
 		tab.gameObj=self
 		self.dialog=board(gameWidget)
 		self.dialog.gameObj=self
 		self.dialog.img=QtGui.QPixmap(self.plugin.pluginDir+'/img.png')
-		l.addWidget(self.dialog)
+		self.l.addWidget(self.dialog)
 		self.dialog.setMinimumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
 		self.dialog.setMaximumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
+		self.configDialog=None
+		self.dialog.hide()
+		
 		self.info.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Fixed))
-		l.addStretch()
+		self.enabled=None
+		self.getConfig()
+
+	def getConfig(self):
+		d=self.plugin.getConfig(self.gid)
+		d.addCallback(self.configReceived2,self.gid)
+
+	def configReceived2(self,form,gid):
+		print "config received....."
+		if form!=None:
+			if not self.configDialog:
+				self.configDialog=configWidget(self.plugin.main,form,"games.jabbim.cz",None,self.info.parent())
+				if self.enabled:
+					self.configDialog.setEnabled(True)
+				QtCore.QObject.connect(self.configDialog.ok,QtCore.SIGNAL("clicked()"),self.sendConfig2)
+				self.configDialog.gid=gid
+				self.configDialog.show()
+				self.l.addWidget(self.configDialog)
+				self.configDialog.show()
+				self.dialog.hide()
+				self.l.addStretch()
+			else:
+				dataforms.updateDataForm(self.configDialog.var,form)
+
+	def sendConfig2(self):
+		form=self.configDialog.getForm()
+		self.plugin.setConfig(self.gid,form)
+
 	def turn(self,jid,data):
 		jid=data[0]
 		self.dialog.turn=jid
@@ -155,7 +222,7 @@ class gameObj:
 				file="images/piskvorky/o.png"
 		message=' <img src="%s"/> '%(file)+jid+' is on the turn<br/>'
 		for jid,score in self.dialog.score.iteritems():
-			message+="<b>"+jid+"</b>: "+str(score)+"</br>"
+			message+="<b>"+jid+"</b>: "+str(score)+"<br/>"
 		self.info.setText(message)
 
 	def update(self,jid,data):
@@ -169,6 +236,8 @@ class gameObj:
 
 	def updateStatus(self,jid,data):
 		# data=({'y': 25, 'x': 25, 'second': 'hanzz@njs.netlab.cz/jabbimKubuntu', 'first': 'pyjim@jabber.cz/jabbimSvn'},)
+		self.configDialog.hide()
+		self.dialog.show()
 		data=data[0]
 		if data.has_key('y'):
 			self.dialog.countY=data['y']
@@ -306,6 +375,7 @@ class Plugin(plugins.PluginBase):
 		self.main.client.xmlstream.send(iq)
 		
 	def onConfigChange(self, el):
+		print "config change"
 		self.main.client.disp(el['id'])
 		q = el.firstChildElement()
 		gid = q['gid']
@@ -315,6 +385,7 @@ class Plugin(plugins.PluginBase):
 		iq['type'] = 'result'
 		iq['id'] = id
 		self.main.client.xmlstream.send(iq)
+		self.games[gid].getConfig()
 			
 	def getSession(self, gid):
 		return self.games.get(gid, None)
@@ -613,6 +684,9 @@ class Plugin(plugins.PluginBase):
 		l.addWidget(button)
 		self.group.addButton(button)
 		tab.on_owner=None
+		self.games[tab.gid].enabled=True
+		if self.games[tab.gid].configDialog:
+			self.games[tab.gid].configDialog.setEnabled(True)
 		#tab.ui.pluginWidget.parent().layout().addWidget(widget)
 
 	def test(self, res):
