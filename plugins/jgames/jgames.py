@@ -46,6 +46,8 @@ class gameWidget(groupchat.groupChatWidget):
 		self.gameObj.dialog.setParent(None)
 		self.gameObj.dialog.deleteLater()
 		del self.gameObj.dialog
+		del self.gameObj.plugin.games[self.gid]
+		del self.gameObj
 		
 
 class board(QtGui.QWidget):
