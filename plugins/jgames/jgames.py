@@ -181,7 +181,7 @@ class gameObj:
 			self.dialog.variable=self.dialog.firstSymbol
 		else:
 			self.dialog.variable=self.dialog.secondSymbol
-
+		self.dialog.state=[None,""]
 		if len(self.dialog.desk)==0:
 			for y in range(self.dialog.countY):
 				ar=[]
