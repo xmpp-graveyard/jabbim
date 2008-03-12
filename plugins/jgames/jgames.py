@@ -551,7 +551,7 @@ class Plugin(plugins.PluginBase):
 		button.gid=tab.gid
 		l.addWidget(button)
 		self.group.addButton(button)
-
+		tab.on_owner=None
 		#tab.ui.pluginWidget.parent().layout().addWidget(widget)
 
 	def test(self, res):
