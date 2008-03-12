@@ -19,18 +19,25 @@ class Plugin(plugins.PluginBase):
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		if main:
 			self.installTranslator()
+			
 			self.window = self.loadWindow("%s/jdm_ui.py" % self.pluginDir)
 			self.window.setWindowIcon(self.main.windowIcon())
-			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call)
-			QtCore.QObject.connect(self.window.ui.list, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.clicked)
 			self.window.ui.list.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 			self.window.ui.list.startDrag=self.startDrag
+			self.window.ui.line_jid.setText(self.main.client.jid.userhost())
+			self.window.ui.buttonDownload.setIcon(QtGui.QIcon("%s/document-save.png" % self.pluginDir))
+			self.window.ui.buttonUpload.setIcon(QtGui.QIcon("%s/upload.png" % self.pluginDir))
+			self.window.ui.buttonDelete.setIcon(QtGui.QIcon("%s/edit-delete.png" % self.pluginDir))
+			
+			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call)
+			QtCore.QObject.connect(self.window.ui.list, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.clicked)
 			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.fileMenu)
+			
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
 			self.obsah=[]
 			self.dnd={}
-			self.window.ui.line_jid.setText(self.main.client.jid.userhost())
+			
 		else:
 			self.loadConfig(homedir)
 
@@ -136,6 +143,7 @@ class Plugin(plugins.PluginBase):
 	def showSlot(self):
 		self.window.show()
 		self.call()
+		self.window.ui.buttonDownload.setEnabled(False)
 	
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None,error=None):
 		if unicode(frm).find("public@disk.jabbim.cz")!=-1:
@@ -144,13 +152,9 @@ class Plugin(plugins.PluginBase):
 		return True
 		
 	def clicked(self,item,old):
-		print 'click',item
 		self.window.ui.label_name.setText(item.text())
 		data=item.data(32).toList()
 		size=int(data[0].toString())
 		self.window.ui.label_size.setText(self.toNormalSize(size))
-		#self.window.ui.log.append(unicode(self.obsah[self.obsah.index(item.text())][2]))
-		#self.window.ui.log.append(unicode(item.text()))
-		
-
-	
+		self.window.ui.buttonDelete.setEnabled(self.jid==self.main.client.jid.userhost())
+		self.window.ui.buttonDownload.setEnabled(True)

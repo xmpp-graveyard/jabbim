@@ -912,7 +912,7 @@ class chatWindow(QtGui.QMainWindow):
 				self.main.config['groupchatSplitSizes2']=list(w.chat.ui.splitter_2.sizes())
 			except:
 				pass
-		w.chat.ui.on_remove()
+		w.chat.on_remove()
 		removed=False
 		if unicode(w.typ)=="groupchat" and self.main.client!=None:
 			print self.main.config["askBeforeQuitMUC"]

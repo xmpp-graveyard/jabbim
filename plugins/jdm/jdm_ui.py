@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'jdm_ui.ui'
+# Form implementation generated from reading ui file 'plugins/jdm/jdm_ui.ui'
 #
-# Created: Sun Jan 27 12:55:08 2008
-#      by: PyQt4 UI code generator 4.3.3
+# Created: Wed Mar 12 08:12:45 2008
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,636,404).size()).expandedTo(MainWindow.minimumSizeHint()))
+        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,626,405).size()).expandedTo(MainWindow.minimumSizeHint()))
 
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -22,6 +22,9 @@ class Ui_MainWindow(object):
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
 
+        spacerItem = QtGui.QSpacerItem(20,161,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout.addItem(spacerItem,3,1,1,1)
+
         self.list = QtGui.QListWidget(self.centralwidget)
         self.list.setMinimumSize(QtCore.QSize(480,0))
         self.list.setIconSize(QtCore.QSize(32,32))
@@ -30,21 +33,16 @@ class Ui_MainWindow(object):
         self.list.setViewMode(QtGui.QListView.IconMode)
         self.list.setWordWrap(True)
         self.list.setObjectName("list")
-        self.gridlayout.addWidget(self.list,1,0,2,1)
-
-        self.log = QtGui.QTextEdit(self.centralwidget)
-        self.log.setMaximumSize(QtCore.QSize(150,16777215))
-        self.log.setObjectName("log")
-        self.gridlayout.addWidget(self.log,2,1,1,1)
+        self.gridlayout.addWidget(self.list,1,0,3,1)
 
         self.vboxlayout = QtGui.QVBoxLayout()
-        self.vboxlayout.setSpacing(6)
         self.vboxlayout.setMargin(0)
+        self.vboxlayout.setSpacing(6)
         self.vboxlayout.setObjectName("vboxlayout")
 
         self.label_3 = QtGui.QLabel(self.centralwidget)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Preferred)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(0))
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
@@ -60,7 +58,7 @@ class Ui_MainWindow(object):
 
         self.label_4 = QtGui.QLabel(self.centralwidget)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Preferred)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(0))
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
@@ -70,7 +68,7 @@ class Ui_MainWindow(object):
 
         self.label_name = QtGui.QLabel(self.centralwidget)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Preferred)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(0))
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_name.sizePolicy().hasHeightForWidth())
@@ -81,7 +79,7 @@ class Ui_MainWindow(object):
 
         self.label_6 = QtGui.QLabel(self.centralwidget)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Preferred)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(0))
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
@@ -91,7 +89,7 @@ class Ui_MainWindow(object):
 
         self.label_size = QtGui.QLabel(self.centralwidget)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Preferred)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(0),QtGui.QSizePolicy.Policy(0))
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_size.sizePolicy().hasHeightForWidth())
@@ -102,16 +100,16 @@ class Ui_MainWindow(object):
         self.gridlayout.addLayout(self.vboxlayout,1,1,1,1)
 
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setSpacing(6)
         self.hboxlayout.setMargin(0)
+        self.hboxlayout.setSpacing(6)
         self.hboxlayout.setObjectName("hboxlayout")
 
         self.label_description = QtGui.QLabel(self.centralwidget)
         self.label_description.setObjectName("label_description")
         self.hboxlayout.addWidget(self.label_description)
 
-        spacerItem = QtGui.QSpacerItem(20,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.hboxlayout.addItem(spacerItem)
+        spacerItem1 = QtGui.QSpacerItem(20,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.hboxlayout.addItem(spacerItem1)
 
         self.line_jid = QtGui.QLineEdit(self.centralwidget)
         self.line_jid.setMinimumSize(QtCore.QSize(250,0))
@@ -129,6 +127,36 @@ class Ui_MainWindow(object):
         self.reload.setObjectName("reload")
         self.hboxlayout.addWidget(self.reload)
         self.gridlayout.addLayout(self.hboxlayout,0,0,1,2)
+
+        self.hboxlayout1 = QtGui.QHBoxLayout()
+        self.hboxlayout1.setMargin(0)
+        self.hboxlayout1.setSpacing(0)
+        self.hboxlayout1.setObjectName("hboxlayout1")
+
+        self.buttonUpload = QtGui.QToolButton(self.centralwidget)
+        self.buttonUpload.setIcon(QtGui.QIcon("upload.png"))
+        self.buttonUpload.setIconSize(QtCore.QSize(32,32))
+        self.buttonUpload.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
+        self.buttonUpload.setAutoRaise(True)
+        self.buttonUpload.setObjectName("buttonUpload")
+        self.hboxlayout1.addWidget(self.buttonUpload)
+
+        self.buttonDownload = QtGui.QToolButton(self.centralwidget)
+        self.buttonDownload.setIcon(QtGui.QIcon("document-save.png"))
+        self.buttonDownload.setIconSize(QtCore.QSize(32,32))
+        self.buttonDownload.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
+        self.buttonDownload.setAutoRaise(True)
+        self.buttonDownload.setObjectName("buttonDownload")
+        self.hboxlayout1.addWidget(self.buttonDownload)
+
+        self.buttonDelete = QtGui.QToolButton(self.centralwidget)
+        self.buttonDelete.setIcon(QtGui.QIcon("edit-delete.png"))
+        self.buttonDelete.setIconSize(QtCore.QSize(32,32))
+        self.buttonDelete.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
+        self.buttonDelete.setAutoRaise(True)
+        self.buttonDelete.setObjectName("buttonDelete")
+        self.hboxlayout1.addWidget(self.buttonDelete)
+        self.gridlayout.addLayout(self.hboxlayout1,2,1,1,1)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.statusbar = QtGui.QStatusBar(MainWindow)
@@ -139,7 +167,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "MainWindow", None, QtGui.QApplication.UnicodeUTF8))
+        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Jabber Disk Manager", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("MainWindow", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
@@ -154,4 +182,7 @@ class Ui_MainWindow(object):
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">File size:</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.label_description.setText(QtGui.QApplication.translate("MainWindow", "Enter JID of disk owner:", None, QtGui.QApplication.UnicodeUTF8))
         self.reload.setText(QtGui.QApplication.translate("MainWindow", "Reload", None, QtGui.QApplication.UnicodeUTF8))
+        self.buttonUpload.setText(QtGui.QApplication.translate("MainWindow", "Upload", None, QtGui.QApplication.UnicodeUTF8))
+        self.buttonDownload.setText(QtGui.QApplication.translate("MainWindow", "Download", None, QtGui.QApplication.UnicodeUTF8))
+        self.buttonDelete.setText(QtGui.QApplication.translate("MainWindow", "Delete", None, QtGui.QApplication.UnicodeUTF8))
 
