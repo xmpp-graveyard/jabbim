@@ -362,6 +362,7 @@ class Plugin(plugins.PluginBase):
 	def on_presence(self,jid,show,error):
 		if error or self.config['osd_on_presence']=="False":
 			return
+		start=time.time()
 		status=None
 		if jid.resource:
 			if self.main.client.roster['users'][jid.userhost()].resources.has_key(jid.resource):
@@ -388,7 +389,7 @@ class Plugin(plugins.PluginBase):
 		if not status:
 			status=""
 		self.osd.view(pixmap,user+self.tr(" is now ")+self.main.status[unicode(show)],unicode(status),self.addChatTab,[it,jid])
-
+		print "notification_presence lasts",time.time()-start
 
 	def addChatTab(self,item,jid):
 		if item:

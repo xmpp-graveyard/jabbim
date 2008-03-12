@@ -672,6 +672,7 @@ class clientClass(pyxl.client.Client):
 		if error!=None:
 			print "PRESENCE ERROR:"+unicode(error)
 			return
+		start=time.time()
 		mainWindow=self.main
 		status=None
 
@@ -785,7 +786,7 @@ class clientClass(pyxl.client.Client):
 					text+='<font size="-1">%s</font>' % (status)
 				text+="</td></tr></table>"
 				self.main.transports[jid.full()].setToolTip(text)
-		
+		print "on_presence lasts",time.time()-start
 
 	def on_xml(self,xml):
 		# append xml to the xml console, if it's enabled...
@@ -3163,13 +3164,13 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.rosterStackedWidget.setCurrentIndex(2)
 		self.ui.login_connect.setEnabled(False)
 		self.ui.profilesList.setEnabled(False)
-		#if not os.path.isfile(self.main.homeDir+'/lastxml':
-		reactor.callLater(0.1,self.connect__)
+		self.ui.loginInfo.setText(self.tr("Connecting to the server..."))
+		reactor.callLater(0,self.connect__)
 	
 	def connect__(self):
+		start=time.time()
 		jid=unicode(self.ui.login_jid.text())
 		password=unicode(self.ui.login_password.text())
-		self.ui.loginInfo.setText(self.tr("Connecting to the server..."))
 		profiles=utils.getProfiles(self.realHomeDir)
 		if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
 	
@@ -3240,7 +3241,7 @@ class mainWindow(QtGui.QMainWindow):
 				self.client.connect(boshURL = self.config['boshURL'])
 			else:
 				self.client.connect()
-	
+		
 	def _loadAvatar(self,file, hash, jid):
 		if os.path.isfile(unicode(file)):
 			jid=jidT.JID(jid).userhost()
