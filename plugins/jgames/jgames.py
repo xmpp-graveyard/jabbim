@@ -39,6 +39,9 @@ class gameWidget(groupchat.groupChatWidget):
 		self.ui.users.setMinimumHeight((len(self.main.client.groupchats[self.jid].users)+self.ui.users.topLevelItemCount())*32)
 		self.ui.users.setMaximumHeight((len(self.main.client.groupchats[self.jid].users)+self.ui.users.topLevelItemCount())*32)
 
+	def on_remove(self):
+		self.gameObj.plugin.leaveGame(self.gameObj.gid)
+
 class board(QtGui.QWidget):
 	def __init__(self,parent):
 		QtGui.QWidget.__init__(self,parent)
@@ -119,7 +122,7 @@ class gameObj:
 		gameWidget=tab.ui.gameWidget
 		l=QtGui.QHBoxLayout(gameWidget)
 		
-		
+		tab.gameObj=self
 		self.dialog=board(gameWidget)
 		self.dialog.gameObj=self
 		self.dialog.img=QtGui.QPixmap(self.plugin.pluginDir+'/img.png')

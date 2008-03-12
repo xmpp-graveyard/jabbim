@@ -874,5 +874,8 @@ class abstractChatWidget(QtGui.QWidget):
 	
 	def sendButtonClicked(self):
 		pass
+	
+	def on_remove(self):
+		pass
 
 
