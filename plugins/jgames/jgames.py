@@ -215,7 +215,6 @@ class gameObj:
 	def startGame(self):
 		self.plugin.startGame(self.gid)
 
-
 	def sendConfig2(self):
 		form=self.configDialog.getForm()
 		self.plugin.setConfig(self.gid,form)

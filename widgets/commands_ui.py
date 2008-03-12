@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/commands.ui'
 #
-# Created: Wed Feb 13 17:19:27 2008
+# Created: Wed Mar 12 18:52:49 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -64,10 +64,14 @@ class Ui_Dialog(object):
 
         self.label = QtGui.QLabel(self.centralwidget)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setWordWrap(True)
+        self.label.setOpenExternalLinks(True)
         self.label.setObjectName("label")
         self.vboxlayout.addWidget(self.label)
 
         self.label_2 = QtGui.QLabel(self.centralwidget)
+        self.label_2.setWordWrap(True)
+        self.label_2.setOpenExternalLinks(True)
         self.label_2.setObjectName("label_2")
         self.vboxlayout.addWidget(self.label_2)
 
