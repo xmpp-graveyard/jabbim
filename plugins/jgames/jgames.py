@@ -182,7 +182,7 @@ class gameObj:
 		else:
 			self.dialog.variable=self.dialog.secondSymbol
 		self.dialog.state=[None,""]
-		if len(self.dialog.desk)==0:
+		if data.has_key('x') and data.has_key('y'):
 			for y in range(self.dialog.countY):
 				ar=[]
 				for x in range(self.dialog.countX):
