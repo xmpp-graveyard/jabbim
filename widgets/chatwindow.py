@@ -937,7 +937,7 @@ class chatWindow(QtGui.QMainWindow):
 			if int(self.ui.chatTab.count())==0:
 				self.hide()
 			removed=True
-		#w.deleteLater()
+		w.deleteLater()
 		if removed:
 			l=gc.get_referents(w)
 			for x in range(len(l)):
