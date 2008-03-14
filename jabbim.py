@@ -3153,6 +3153,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def connect(self):
 		# Connect to the server
+		print 'connectiong'
 		jid=unicode(self.ui.login_jid.text()) 
 		if not re.match(r'.+@.+', jid): 
 			self.ui.login_jid.setFocus(QtCore.Qt.OtherFocusReason) 

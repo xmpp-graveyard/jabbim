@@ -44,6 +44,7 @@ from privacy import *
 from adhoc import *
 import rc
 import traceback
+from configobj import ConfigObj
 
 #import bosh_wokkel
 try:
@@ -127,12 +128,32 @@ class Client(derived):
 		self.xmlLang = 'cs'
 		self.dispatcher = events.EventDispatcher()
 		self.avatars = {} # jid:hash
+#		path = self.main.homeDir+'/avatars/'
+#		for jd in os.listdir(path):
+#			fd = open(path+jd, 'rb')
+#			hash = sha1(fd.read()).hexdigest()
+#			fd.close()
+#			self.avatars[jd] = hash
+		self.avatars = {}
+		self.avatarDef = ConfigObj(self.main.homeDir+'/avatars/avatars.def',encoding='UTF8')
+		self.avatarImg = {} #hash:QPixmap
 		path = self.main.homeDir+'/avatars/'
 		for jd in os.listdir(path):
+			if jd == 'avatars.def':
+				continue
 			fd = open(path+jd, 'rb')
 			hash = sha1(fd.read()).hexdigest()
 			fd.close()
-			self.avatars[jd] = hash
+			if jd == hash:
+				try:
+					self.avatarImg[jd] = self.main.getAvatar(jd)
+				except:
+					self.avatarImg[jd] = None
+			else:
+				try:
+					os.remove(path+'jd')
+				except:
+					log.err('Unable to delete invalid file.')
 
 		self.reactor.callFromThread(self.on_init)
 		self.main.cache.get_caps().addCallback(self._cacheCaps)
@@ -147,6 +168,16 @@ class Client(derived):
 	def chyba(self, err):
 		print err
 		err.printBriefTraceback()
+	
+	def getAvatarImg(self, jd):
+		#vrati QPixmap nebo None
+		jd = jid.JID(jd)
+		if self.groupchats.has_key(jd.userhost):
+			jid = jd.full()
+		else:
+			jid = jd.userhost()
+		if self.avatarDef.has_key(jid):
+			return self.avatarImg.get(self.avatarDef[jid], None)
 	
 	def cacheCaps(self, ext, features, identity):
 		self.caps_cache[ext] = [identity,features]
@@ -189,7 +220,7 @@ class Client(derived):
 		if err.type == TimeoutError:
 			log.msg('heartbeat failed')
 			self.hbFails += 1
-			if hbFails >= 3:
+			if self.hbFails >= 3:
 				self.xping.stop()
 	#			if self.factory:
 	#				self.factory.stopTrying()
@@ -456,6 +487,9 @@ class Client(derived):
 		log.msg("roster item add")
 		self.disp(el['id'])
 		#log.msg(el.toXml())
+		if el == None:
+			print 'wtf?', el
+			return
 		for child in el.elements():
 			if child.name == "query":
 				allGroups=[]
@@ -553,18 +587,25 @@ class Client(derived):
 				
 		if card.has_key("PHOTO-BINVAL"):
 			image=base64.decodestring(str(card["PHOTO-BINVAL"]))
-			f=open(self.main.homeDir+'/avatars/'+unicode(el['from']).replace('/', '%'),"wb")
+			hash = sha1(image).hexdigest()
+			f=open(self.main.homeDir+'/avatars/'+hash,"wb")
 
 			f.write(image)
 			f.close()
 
-			self.avatars[el['from'].replace("/","%")] = sha1(image).hexdigest()
+			self.avatarDef[el['from']] = hash
+			self.avatarDef.write()
+			try:
+				self.avatarImg[hash] = self.main.getAvatar(hash)
+			except:
+				self.avatarImg[hash] = None
 			#try:
 			self.on_avatarUpdate(el['from'])
 			#except:
 				#print 'chyba v updatu avatara'
 		else:
-			self.avatars[el['from']] = None
+			self.avatarDef[el['from']] = None
+			self.avatarDef.write()
 		self.reactor.callFromThread(self.on_vcardReceived,el['from'],el)
 		return vcard
 
@@ -929,7 +970,6 @@ class Client(derived):
 					log.msg( el.toXml())
 			elif child.name == 'c':
 				caps_node = child.getAttribute('node')
-
 				ext = child.getAttribute('ext')
 				if self.caps_cache.has_key(ext) and ext != None:
 					features = self.caps_cache[ext][1]
@@ -970,15 +1010,15 @@ class Client(derived):
 								wantAvatar=False
 
 		if wantAvatar:
-			if self.avatars.has_key(fromjid):
-				if self.avatars[fromjid] == hash:
+			if self.avatarDef.has_key(fromjid):
+				if self.avatarDef[fromjid] == hash:
 					pass #vsechno je ok, mame spravneho avatara
-				elif self.avatars[fromjid] != hash and hash != None:
+				elif self.avatarDef[fromjid] != hash and hash != None:
 					self.getVCard(fromjid)
-			elif self.avatars.has_key(frm.full()):
-				if self.avatars[frm.full()] == hash:
+			elif self.avatarDef.has_key(frm.full()):
+				if self.avatarDef[frm.full()] == hash:
 					pass #vsechno je ok, mame spravneho avatara
-				elif self.avatars[frm.full()] != hash and hash != None:
+				elif self.avatarDef[frm.full()] != hash and hash != None:
 					self.getVCard(frm.full())
 			else:
 				if self.groupchats.has_key(fromjid):
