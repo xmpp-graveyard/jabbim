@@ -34,6 +34,55 @@ from leaveroom_ui import *
 import ctypes
 from ctypes.util import find_library
 import sys
+# Recursively expand slist's objects
+# into olist, using seen to track
+# already processed objects.
+def _getr(slist, olist, seen):
+  for e in slist:
+    if id(e) in seen:
+      continue
+    seen[id(e)] = None
+    olist.append(e)
+    tl = gc.get_referents(e)
+    if tl:
+      _getr(tl, olist, seen)
+
+# The public function.
+def get_all_objects():
+  """Return a list of all live Python
+  objects, not including the list itself."""
+  gcl = gc.get_objects()
+  olist = []
+  seen = {}
+  # Just in case:
+  seen[id(gcl)] = None
+  seen[id(olist)] = None
+  seen[id(seen)] = None
+  # _getr does the real work.
+  _getr(gcl, olist, seen)
+  return olist
+import types
+
+def get_refcounts():
+    d = {}
+    sys.modules
+    # collect all classes
+    for m in sys.modules.values():
+        for sym in dir(m):
+            o = getattr (m, sym)
+            if type(o) is types.ClassType:
+                d[o] = sys.getrefcount (o)
+    # sort by refcount
+    pairs = map (lambda x: (x[1],x[0]), d.items())
+    pairs.sort()
+    pairs.reverse()
+    return pairs
+
+def print_top_100():
+    for n, c in get_refcounts()[:100]:
+        print '%10d %s' % (n, c.__name__)
+
+
 #if sys.platform == 'win32' :
 	#def _flash( window, yes ) :
 		#ctypes.windll.user32.FlashWindow( int(window.winId()), yes )
@@ -937,21 +986,26 @@ class chatWindow(QtGui.QMainWindow):
 			if int(self.ui.chatTab.count())==0:
 				self.hide()
 			removed=True
-		w.deleteLater()
 		if removed:
-			l=gc.get_referents(w)
-			for x in range(len(l)):
-				del l[0]
-			l=gc.get_referrers(w)
-			for x in range(len(l)):
-				del l[0]
-			print gc.get_referrers(w)
+			w.deleteLater()
 			w.setParent(None)
+			w.close()
+			w.chat.parent=None
+			w.chat.main=None
+			del w.chat.parent
+			del w.chat.ui
+			del w.chat
+			del w.jid
+			del w.typ
 			del w
-	
-			print "GARBAGE:",gc.garbage
-			del gc.garbage[:]
-			print "GARBAGE:",gc.garbage
-			print "UNREACHABLE OBJECTS:",gc.collect()
 
-		#del
+			del gc.garbage[:]
+			gc.collect()
+
+			#from guppy import hpy; h=hpy()
+			#print h.heap()
+			#f=open(unicode(time.time()),'w')
+			#for obj in get_all_objects():
+				#f.write(str(type(obj))+" "+str(id(obj))+"\n")
+			#f.close
+			#print_top_100()

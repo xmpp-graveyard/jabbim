@@ -18,7 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 import gc
-#gc.set_debug(gc.DEBUG_LEAK|gc.DEBUG_UNCOLLECTABLE)
 import sys,os
 sys.path.append('.')
 try: from PyQt4 import QtCore, QtGui
@@ -372,7 +371,7 @@ class clientClass(pyxl.client.Client):
 					it.transport=True
 
 		# load avatar
-		self.main._loadAvatar(self.main.homeDir+'/avatars/'+jid, self.avatars.get(jid), jid)
+		#self.main._loadAvatar(self.main.homeDir+'/avatars/'+jid, self.avatars.get(jid), jid)
 		print "addUser lasts",time.time()-start,'seconds'
 
 	def makeTempMeta(self):

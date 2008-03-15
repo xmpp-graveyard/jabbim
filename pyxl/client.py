@@ -137,17 +137,9 @@ class Client(derived):
 		self.avatars = {}
 		self.avatarDef = ConfigObj(self.main.homeDir+'/avatars/avatars.def',encoding='UTF8')
 		self.avatarImg = {} #hash:QPixmap
-		hashe = []
-		for hash in self.avatarDef.itervalues():
-			if not hash in hashe:
-				hashe.append(hash)
-#		path = self.main.homeDir+'/avatars/'
-		for hash in hashe:
-			try:
-				self.avatarImg[hash] = self.main.getAvatar(hash)
-			except:
-				self.avatarImg[hash] = None
-
+		path = self.main.homeDir+'/avatars/'
+		d=threads.deferToThread(self.loadAvatars,path,self.avatarDef)
+		d.addCallback(self.gotAvatars)
 		self.reactor.callFromThread(self.on_init)
 		self.main.cache.get_caps().addCallback(self._cacheCaps)
 		self.dispatcher.registerHandler('on_message', self.on_message, 'on_message')
@@ -157,7 +149,72 @@ class Client(derived):
 		self.dispatcher.registerHandler('on_message_send', self._sendMessage, 'on_message_send')
 		self.xping = LoopingCall(self.heartbeat)
 		self.hbFails = 0
-		
+
+	def loadAvatars(self,path,avatarDef):
+		from PyQt4 import QtGui,QtCore
+		avatarImg={}
+
+		hashe = []
+		for hash in avatarDef.itervalues():
+			if not hash in hashe:
+				hashe.append(hash)
+#		path = self.main.homeDir+'/avatars/'
+		for hash in hashe:
+			try:
+				#self.avatarImg[hash] = self.main.getAvatar(hash)
+				avatar=QtGui.QImage(path+'/'+hash).scaled(25,25,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
+				result=QtGui.QImage(32,32,QtGui.QImage.Format_ARGB32)
+				result.fill(QtCore.Qt.transparent)
+				#if os.path.exists("themes/"+self.config['theme']+"/frame-32.png"):
+					#frame=QtGui.QImage("themes/"+self.config['theme']+"/frame-32.png")
+				#else:
+				frame=QtGui.QImage("images/32x32/frame.png")
+				painter=QtGui.QPainter(result)
+				painter.drawImage((32-avatar.width())/2,(32-avatar.height())/2,avatar)
+				painter.drawImage(0,0,frame)
+				painter.end()
+				avatarImg[hash] = result
+			except:
+				avatarImg[hash] = None
+
+		#for jd in os.listdir(path):
+			#if jd == 'avatars.def':
+				#continue
+			#fd = open(path+jd, 'rb')
+			#hash = sha1(fd.read()).hexdigest()
+			#fd.close()
+			#if jd == hash:
+				#try:
+					#avatar=QtGui.QImage(path+jd).scaled(25,25,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
+					#result=QtGui.QImage(32,32,QtGui.QImage.Format_ARGB32)
+					#result.fill(QtCore.Qt.transparent)
+					##if os.path.exists("themes/"+self.config['theme']+"/frame-32.png"):
+						##frame=QtGui.QImage("themes/"+self.config['theme']+"/frame-32.png")
+					##else:
+					#frame=QtGui.QImage("images/32x32/frame.png")
+					#painter=QtGui.QPainter(result)
+					#painter.drawImage((32-avatar.width())/2,(32-avatar.height())/2,avatar)
+					#painter.drawImage(0,0,frame)
+					#painter.end()
+					#avatarImg[jd] = result
+				#except:
+					#avatarImg[jd] = None
+			#else:
+				#try:
+					#os.remove(path+'jd')
+				#except:
+					#log.err('Unable to delete invalid file.')
+
+		return avatarImg
+
+	def gotAvatars(self,avatarImg):
+		from PyQt4 import QtGui
+		self.avatarImg=avatarImg
+		for key in self.avatarImg.keys():
+			self.avatarImg[key]=QtGui.QPixmap.fromImage(self.avatarImg[key])
+		self.avatarImg[None]=self.main.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True)
+		print 'LOADED AVATARS',self.avatarImg
+
 	def chyba(self, err):
 		print err
 		err.printBriefTraceback()
