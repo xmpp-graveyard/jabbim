@@ -137,23 +137,16 @@ class Client(derived):
 		self.avatars = {}
 		self.avatarDef = ConfigObj(self.main.homeDir+'/avatars/avatars.def',encoding='UTF8')
 		self.avatarImg = {} #hash:QPixmap
-		path = self.main.homeDir+'/avatars/'
-		for jd in os.listdir(path):
-			if jd == 'avatars.def':
-				continue
-			fd = open(path+jd, 'rb')
-			hash = sha1(fd.read()).hexdigest()
-			fd.close()
-			if jd == hash:
-				try:
-					self.avatarImg[jd] = self.main.getAvatar(jd)
-				except:
-					self.avatarImg[jd] = None
-			else:
-				try:
-					os.remove(path+'jd')
-				except:
-					log.err('Unable to delete invalid file.')
+		hashe = []
+		for hash in self.avatarDef.itervalues():
+			if not hash in hashe:
+				hashe.append(hash)
+#		path = self.main.homeDir+'/avatars/'
+		for hash in hashe:
+			try:
+				self.avatarImg[hash] = self.main.getAvatar(hash)
+			except:
+				self.avatarImg[hash] = None
 
 		self.reactor.callFromThread(self.on_init)
 		self.main.cache.get_caps().addCallback(self._cacheCaps)
