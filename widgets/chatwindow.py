@@ -764,15 +764,15 @@ class chatWindow(QtGui.QMainWindow):
 		layout.setSpacing(1)
 		tab.chat=chatWidget(self.main,jid,tab)
 		it=[]
-		if len(item)!=0:
-			it=item
-		elif len(metaitem)!=0:
-			it=metaitem[0]
+		#if len(item)!=0:
+			#it=item
+		#elif len(metaitem)!=0:
+			#it=metaitem[0]
 
-		if len(it)!=0:
-			it=it[0]
-			avatar=it.avatar
-			if avatar:
+		#if len(it)!=0:
+			#it=it[0]
+			#avatar=it.avatar
+			#if avatar:
 				#avatar=avatar.pixmap(100,112)
 				#print "avatar:",unicode(avatar.width())+"x"+unicode(avatar.height())
 				#if avatar.width()<=58 and avatar.height()<=58:
@@ -787,35 +787,38 @@ class chatWindow(QtGui.QMainWindow):
 				#painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
 				#painter.drawPixmap(0,0,frame)
 				#painter.end()
-				result=self.main.getAvatar(avatar,size="128x128",frame=True)
-				if result:
-					tab.chat.ui.avatar.setPixmap(result)
-		else:
-			result=self.main.getAvatar(unicode(jid).replace("/","%"),size="128x128",frame=True)
-			if result:
-			#if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")):
-				#f=open(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
-				#image = f.read()
-				#f.close()
-				#pixmap=QtGui.QPixmap()
-				#pixmap.loadFromData(image)
-				#avatar=QtGui.QIcon(pixmap)
-				#avatar=avatar.pixmap(100,112)
-				#if avatar.width()<=58 and avatar.height()<=58:
-					#size=64
-				#else:
-					#size=128
-				#result=QtGui.QPixmap(size,size)
-				#result.fill(QtCore.Qt.transparent)
-				#frame=QtGui.QPixmap("images/"+unicode(size)+"x"+unicode(size)+"/frame.png")
-				#painter=QtGui.QPainter(result)
-				##painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
+				#result=self.main.getAvatar(self.main.getJid(unicode(jid)).userhost(),size="128x128",frame=True)
+				#if result:
+					#tab.chat.ui.avatar.setPixmap(result)
+		#else:
+			#result=self.main.getAvatar(self.main.getJid(unicode(jid)).userhost(),size="128x128",frame=True)
+			#if result:
+			##if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")):
+				##f=open(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
+				##image = f.read()
+				##f.close()
+				##pixmap=QtGui.QPixmap()
+				##pixmap.loadFromData(image)
+				##avatar=QtGui.QIcon(pixmap)
+				##avatar=avatar.pixmap(100,112)
+				##if avatar.width()<=58 and avatar.height()<=58:
+					##size=64
+				##else:
+					##size=128
+				##result=QtGui.QPixmap(size,size)
+				##result.fill(QtCore.Qt.transparent)
+				##frame=QtGui.QPixmap("images/"+unicode(size)+"x"+unicode(size)+"/frame.png")
+				##painter=QtGui.QPainter(result)
+				###painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
 				
-				#painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
-				#painter.drawPixmap(0,0,frame)
-				#painter.end()
-				tab.chat.ui.avatar.setPixmap(result)
-
+				##painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
+				##painter.drawPixmap(0,0,frame)
+				##painter.end()
+				#tab.chat.ui.avatar.setPixmap(result)
+		result=self.main.getAvatar(self.main.getJid(unicode(jid)).userhost(),size="128x128",frame=True)
+		if not result:
+			result=self.main.getAvatar(QtGui.QPixmap("images/48x48/apps/jabbim.png"),size="64x64",frame=True)
+		tab.chat.ui.avatar.setPixmap(result)
 				
 		layout.addWidget(tab.chat)
 		print "adding new tab...", icon

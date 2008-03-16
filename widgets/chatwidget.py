@@ -31,7 +31,7 @@ from twisted.words.protocols.jabber import jid as jidT
 import time
 from include import utils
 from abstractchatwidget import abstractChatWidget,abstractTextView
-
+import sys
 class FTAskWidget(QtGui.QWidget):
 	def __init__(self,file,event,chatwidget,parent=None):
 		apply(QtGui.QWidget.__init__,(self,parent))
@@ -311,10 +311,13 @@ class chatWidget(abstractChatWidget):
 		self.ui.pluginWidget.setLayout(self.flowLayout)
 		self.ui.ftwidget.setLayout(QtGui.QVBoxLayout())
 		self.filetransfer={}
-
-		if self.main.selfAvatar:
-			result=self.main.getAvatar(self.main.selfAvatar,size="64x64",frame=True)
+		
+		result=self.main.getAvatar(self.main.client.jid.userhost(),size="64x64",frame=True)
+		if result:
+			print 'COUNT1',sys.getrefcount(result)
+			self.blabla=result
 			self.ui.selfAvatar.setPixmap(result)
+			print 'COUNT2',sys.getrefcount(result)
 			self.ui.selfAvatar.setMaximumWidth(64)
 		else:
 			self.ui.selfAvatar.hide()

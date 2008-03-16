@@ -2161,21 +2161,23 @@ class mainWindow(QtGui.QMainWindow):
 			for profile in profiles:
 				jid=profile.replace('-profile','')
 				# load profile avatar
-				if os.path.isfile(self.realHomeDir+"/"+profile+"/avatars/"+unicode(jid)):
-					avatar=QtGui.QPixmap(self.realHomeDir+"/"+profile+"/avatars/"+unicode(jid)).scaled(22,22,QtCore.Qt.KeepAspectRatio)
-					result=QtGui.QPixmap(22,22)
-					result.fill(QtCore.Qt.transparent)
-					painter=QtGui.QPainter(result)
-					painter.drawPixmap((22-avatar.width())/2,(22-avatar.height())/2,avatar)
-					painter.end()
-					result=QtGui.QIcon(result)
-				else:
-					result=QtGui.QIcon("images/22x22/apps/jabbim.png")
+				#if os.path.isfile(self.realHomeDir+"/"+profile+"/avatars/"+unicode(jid)):
+					#avatar=QtGui.QPixmap(self.realHomeDir+"/"+profile+"/avatars/"+unicode(jid)).scaled(22,22,QtCore.Qt.KeepAspectRatio)
+					#result=QtGui.QPixmap(22,22)
+					#result.fill(QtCore.Qt.transparent)
+					#painter=QtGui.QPainter(result)
+					#painter.drawPixmap((22-avatar.width())/2,(22-avatar.height())/2,avatar)
+					#painter.end()
+					#result=QtGui.QIcon(result)
+				#else:
+				#result=QtGui.QIcon(self.getAvatar(unicode(jid),size="32x32",frame=False))
+				#if not result:
+					#result=QtGui.QIcon("images/22x22/apps/jabbim.png")
 
 				if self.config['jid']==jid:
-					self.ui.profilesList.insertItem(0,result,jid)
+					self.ui.profilesList.insertItem(0,jid)
 				else:
-					self.ui.profilesList.addItem(result,jid)
+					self.ui.profilesList.addItem(jid)
 			self.ui.profilesList.setCurrentIndex(0)
 			QtCore.QObject.connect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
 		
@@ -2191,7 +2193,6 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.ui.login_savePassword.setChecked(False)
 			self.ui.login_autoconnect.setEnabled(False)
-
 		if os.path.isfile(self.homeDir+'/avatars/'+unicode(self.config['jid'])):
 			pixmap=QtGui.QIcon(self.homeDir+'/avatars/'+unicode(self.config['jid']))
 			avatar=pixmap.pixmap(100,112)
@@ -2946,11 +2947,48 @@ class mainWindow(QtGui.QMainWindow):
 		@rtype: QtGui.QPixmap
 		@return: avatar
 		"""
+		if not self.client:
+			return None
+		keysToDel=[]
+		for key,avatar in self.client.avatarImg.iteritems():
+			if len(unicode(key).split('/'))!=1:
+				if sys.getrefcount(avatar)==4:
+					print "Unused chached avatar",key,avatar,sys.getrefcount(avatar)
+					keysToDel.append(str(key))
+		for key in keysToDel:
+			del self.client.avatarImg[key]
 		if not pixmap:
 			return None
+		hash=""
+		if self.client.avatarDef.has_key(pixmap):
+			hash=self.client.avatarDef[pixmap]
+		isHash=False
 		if isinstance(pixmap,unicode) or isinstance(pixmap,str):
-			file=self.homeDir+'/avatars/'+unicode(pixmap)
+			isHash=pixmap.find('@')==-1
+			print "ishash",isHash,pixmap
+			if isHash:
+				if hash=="":
+					hash=pixmap
+			if hash!="":
+				if size=="32x32" and frame:
+					if self.client.avatarImg.has_key(hash):
+						return self.client.avatarImg[hash]
+				else:
+					print "trying to load avatar from cache"
+					print hash+'/'+size+'/'+str(frame)
+					#print self.client.avatarImg.keys()
+					if self.client.avatarImg.has_key(hash+'/'+size+'/'+str(frame)):
+						print 'using chached avatar',hash+'/'+size+'/'+str(frame)
+						return self.client.avatarImg[hash+'/'+size+'/'+str(frame)]
+			if self.client.avatarDef.has_key(pixmap):
+				file=self.homeDir+'/avatars/'+unicode(self.client.avatarDef[pixmap])
+			else:
+				if isHash:
+					self.client.avatarImg[pixmap]=None
+				return None
 			if not os.path.isfile(file):
+				if isHash:
+					self.client.avatarImg[pixmap]=None
 				return None
 			icon=QtGui.QIcon(file)
 		elif isinstance(pixmap,QtGui.QPixmap):
@@ -2973,17 +3011,19 @@ class mainWindow(QtGui.QMainWindow):
 			elif size=="32x32":
 				avatar=icon.pixmap(25,25)
 			else:
+				if isHash:
+					self.client.avatarImg[pixmap]=None
 				return False
 	
 			result=QtGui.QPixmap(x,y)
 			result.fill(QtCore.Qt.transparent)
 			if os.path.exists("themes/"+self.config['theme']+"/frame-"+str(size)+".png"):
-				frame=QtGui.QPixmap("themes/"+self.config['theme']+"/frame-"+str(size)+".png")
+				frame1=QtGui.QPixmap("themes/"+self.config['theme']+"/frame-"+str(size)+".png")
 			else:
-				frame=QtGui.QPixmap("images/"+str(size)+"/frame.png")
+				frame1=QtGui.QPixmap("images/"+str(size)+"/frame.png")
 			painter=QtGui.QPainter(result)
 			painter.drawPixmap((x-avatar.width())/2,(y-avatar.height())/2,avatar)
-			painter.drawPixmap(0,0,frame)
+			painter.drawPixmap(0,0,frame1)
 			painter.end()
 		elif size!="auto" and not frame:
 
@@ -2998,6 +3038,8 @@ class mainWindow(QtGui.QMainWindow):
 			elif size=="32x32":
 				avatar=icon.pixmap(25,25)
 			else:
+				if isHash:
+					self.client.avatarImg[pixmap]=None
 				return False
 
 			result=QtGui.QPixmap(x,y)
@@ -3010,8 +3052,13 @@ class mainWindow(QtGui.QMainWindow):
 					painter.drawPixmap(16,16,icon.pixmap(16,16))
 			painter.end()
 		elif size=="auto" and not frame:
-			return QtGui.QPixmap(file)
-			
+			result=QtGui.QPixmap(file)
+		if hash!="":
+			if size=="32x32" and frame:
+				self.client.avatarImg[hash]=result
+			else:
+				print 'chaching avatar',hash+'/'+size+'/'+str(frame)
+				self.client.avatarImg[hash+'/'+size+'/'+str(frame)]=result
 		return result
 
 	def getCurrentTrayIcon(self):

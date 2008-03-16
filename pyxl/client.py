@@ -606,7 +606,6 @@ class Client(derived):
 					card[x.name]=unicode(x)
 			else:
 				card[x.name]=unicode(x)
-				
 		if card.has_key("PHOTO-BINVAL"):
 			image=base64.decodestring(str(card["PHOTO-BINVAL"]))
 			hash = sha1(image).hexdigest()
@@ -618,7 +617,8 @@ class Client(derived):
 			self.avatarDef[el['from']] = hash
 			self.avatarDef.write()
 			try:
-				self.avatarImg[hash] = self.main.getAvatar(hash)
+				#self.avatarImg[hash] = 
+				self.main.getAvatar(hash,size="32x32",frame=True)
 			except:
 				self.avatarImg[hash] = None
 			#try:
