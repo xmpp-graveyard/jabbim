@@ -172,7 +172,7 @@ class Plugin(plugins.PluginBase):
 			self.currentMessage=""
 		if self.main.selfStatus=="online":
 			#self.main.ui.statusButton.setIcon(self.main.getIcon(status='away', size="16x16"))
-			now=self.main.now()
+			now=self.main.now(-int(self.config['awayTime'])*60000)
 			#self.main.ui.showWidget.setText(self.config['awayMessage'].replace('[time]',self.config['awayTime']).replace("[last]",unicode(now)))
 			#self.main.client.sendPresence(show = 'away', status = self.config['awayMessage'].replace('[time]',self.config['awayTime']).replace("[last]",unicode(now)))
 			#for muc in self.main.client.groupchats.itervalues():

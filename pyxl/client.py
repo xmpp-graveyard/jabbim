@@ -176,35 +176,6 @@ class Client(derived):
 				avatarImg[hash] = result
 			except:
 				avatarImg[hash] = None
-
-		#for jd in os.listdir(path):
-			#if jd == 'avatars.def':
-				#continue
-			#fd = open(path+jd, 'rb')
-			#hash = sha1(fd.read()).hexdigest()
-			#fd.close()
-			#if jd == hash:
-				#try:
-					#avatar=QtGui.QImage(path+jd).scaled(25,25,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
-					#result=QtGui.QImage(32,32,QtGui.QImage.Format_ARGB32)
-					#result.fill(QtCore.Qt.transparent)
-					##if os.path.exists("themes/"+self.config['theme']+"/frame-32.png"):
-						##frame=QtGui.QImage("themes/"+self.config['theme']+"/frame-32.png")
-					##else:
-					#frame=QtGui.QImage("images/32x32/frame.png")
-					#painter=QtGui.QPainter(result)
-					#painter.drawImage((32-avatar.width())/2,(32-avatar.height())/2,avatar)
-					#painter.drawImage(0,0,frame)
-					#painter.end()
-					#avatarImg[jd] = result
-				#except:
-					#avatarImg[jd] = None
-			#else:
-				#try:
-					#os.remove(path+'jd')
-				#except:
-					#log.err('Unable to delete invalid file.')
-
 		return avatarImg
 
 	def gotAvatars(self,avatarImg):
