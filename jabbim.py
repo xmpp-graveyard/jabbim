@@ -2949,14 +2949,14 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		if not self.client:
 			return None
-		keysToDel=[]
-		for key,avatar in self.client.avatarImg.iteritems():
-			if len(unicode(key).split('/'))!=1:
-				if sys.getrefcount(avatar)==4:
-					print "Unused chached avatar",key,avatar,sys.getrefcount(avatar)
-					keysToDel.append(str(key))
-		for key in keysToDel:
-			del self.client.avatarImg[key]
+		#keysToDel=[]
+		#for key,avatar in self.client.avatarImg.iteritems():
+			#if len(unicode(key).split('/'))!=1:
+				#if sys.getrefcount(avatar)==4:
+					#print "Unused chached avatar",key,avatar,sys.getrefcount(avatar)
+					#keysToDel.append(str(key))
+		#for key in keysToDel:
+			#del self.client.avatarImg[key]
 		if not pixmap:
 			return None
 		hash=""
@@ -2965,21 +2965,21 @@ class mainWindow(QtGui.QMainWindow):
 		isHash=False
 		if isinstance(pixmap,unicode) or isinstance(pixmap,str):
 			isHash=pixmap.find('@')==-1
-			print "ishash",isHash,pixmap
+			#print "ishash",isHash,pixmap
 			if isHash:
 				if hash=="":
 					hash=pixmap
-			if hash!="":
-				if size=="32x32" and frame:
-					if self.client.avatarImg.has_key(hash):
-						return self.client.avatarImg[hash]
-				else:
-					print "trying to load avatar from cache"
-					print hash+'/'+size+'/'+str(frame)
-					#print self.client.avatarImg.keys()
-					if self.client.avatarImg.has_key(hash+'/'+size+'/'+str(frame)):
-						print 'using chached avatar',hash+'/'+size+'/'+str(frame)
-						return self.client.avatarImg[hash+'/'+size+'/'+str(frame)]
+			#if hash!="":
+				#if size=="32x32" and frame:
+					#if self.client.avatarImg.has_key(hash):
+						#return self.client.avatarImg[hash]
+				#else:
+					#print "trying to load avatar from cache"
+					#print hash+'/'+size+'/'+str(frame)
+					##print self.client.avatarImg.keys()
+					#if self.client.avatarImg.has_key(hash+'/'+size+'/'+str(frame)):
+						#print 'using chached avatar',hash+'/'+size+'/'+str(frame)
+						#return self.client.avatarImg[hash+'/'+size+'/'+str(frame)]
 			if self.client.avatarDef.has_key(pixmap):
 				file=self.homeDir+'/avatars/'+unicode(self.client.avatarDef[pixmap])
 			else:
@@ -3056,9 +3056,9 @@ class mainWindow(QtGui.QMainWindow):
 		if hash!="":
 			if size=="32x32" and frame:
 				self.client.avatarImg[hash]=result
-			else:
-				print 'chaching avatar',hash+'/'+size+'/'+str(frame)
-				self.client.avatarImg[hash+'/'+size+'/'+str(frame)]=result
+			#else:
+				#print 'chaching avatar',hash+'/'+size+'/'+str(frame)
+				#self.client.avatarImg[hash+'/'+size+'/'+str(frame)]=result
 		return result
 
 	def getCurrentTrayIcon(self):
