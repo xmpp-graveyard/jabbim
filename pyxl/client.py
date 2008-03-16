@@ -212,6 +212,7 @@ class Client(derived):
 		self.avatarImg=avatarImg
 		for key in self.avatarImg.keys():
 			self.avatarImg[key]=QtGui.QPixmap.fromImage(self.avatarImg[key])
+			print 'avatarSize',self.avatarImg[key].width(),self.avatarImg[key].height()
 		self.avatarImg[None]=self.main.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True)
 		print 'LOADED AVATARS',self.avatarImg
 
