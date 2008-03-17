@@ -255,7 +255,9 @@ class chatWidget(abstractChatWidget):
 		self.lastMessageFrom=""
 		
 		# get users avatar
-		self.file=self.main.homeDir+'/avatars/'+unicode(jidT.JID(jid).userhost()) #: path to users avatar
+		self.file=""
+		if self.main.client.avatarDef.has_key(unicode(jidT.JID(jid).userhost())):
+			self.file=self.main.homeDir+'/avatars/'+self.main.client.avatarDef[unicode(jidT.JID(jid).userhost())] #: path to users avatar
 		self.avatarHeight=32 #: avatars height
 		if not os.path.isfile(self.file):
 			# use default avatar if users avatar doesn't exist
@@ -268,11 +270,14 @@ class chatWidget(abstractChatWidget):
 
 		# get self avatar
 		self.selfHeight=32 #: height of self avatar
-		f=self.main.homeDir+'/avatars/'+self.main.client.jid.userhost()
+		f=""
+		if self.main.client.avatarDef.has_key(self.main.client.jid.userhost()):
+			f=self.main.homeDir+'/avatars/'+self.main.client.avatarDef[self.main.client.jid.userhost()]
 		if not os.path.isfile(f):
-			self.file="images/32x32/apps/jabbim.png"
+			self.selfFile="images/32x32/apps/jabbim.png"
 		else:
 			pixmap=QtGui.QPixmap(f).scaledToWidth(32)
+			self.selfFile=f
 			self.selfHeight=int(pixmap.height())
 
 		# plugins buttons
@@ -496,14 +501,14 @@ class chatWidget(abstractChatWidget):
 				
 				# prepare message for showing in GUI
 				message=xhtml.replace("&quot;",'"')
-				file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
-				if not os.path.isfile(file):
-					file="images/32x32/apps/jabbim.png"
+				#file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
+				#if not os.path.isfile(file):
+					#file="images/32x32/apps/jabbim.png"
 				skin=self.main.skin["my_message"]
 				if self.lastMessageFrom==unicode(self.main.client.jid.user):
 					if self.main.skin.has_key('my_message_continue'):
 						skin=self.main.skin["my_message_continue"]
-				message=skin.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",message).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+				message=skin.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",message).replace("[avatar]","<img src=\""+self.selfFile+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 			else:
 				# send message
 				#text=unescape(text)
@@ -517,21 +522,21 @@ class chatWidget(abstractChatWidget):
 				text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
 				text=utils.replace_url(text)
 				text=text.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
-				file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
-				if not os.path.isfile(file):
-					file="images/32x32/apps/jabbim.png"
+				#file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
+				#if not os.path.isfile(file):
+					#file="images/32x32/apps/jabbim.png"
 				if unicode(text).startswith("/me"):
 					message=self.main.skin["my_me_message"]#.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text[3:]).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 					if self.lastMessageFrom==unicode(self.main.client.jid.user):
 						if self.main.skin.has_key('my_me_message_continue'):
 							message=self.main.skin["my_me_message_continue"]
-					message=message.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text[3:]).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+					message=message.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text[3:]).replace("[avatar]","<img src=\""+self.selfFile+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 				else:
 					message=self.main.skin["my_message"]
 					if self.lastMessageFrom==unicode(self.main.client.jid.user):
 						if self.main.skin.has_key('my_message_continue'):
 							message=self.main.skin["my_message_continue"]
-					message=message.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+					message=message.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+self.selfFile+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 			self.lastMessageFrom=unicode(self.main.client.jid.user)
 			# show message
 			if not False in ret:
