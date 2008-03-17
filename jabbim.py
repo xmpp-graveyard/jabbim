@@ -2857,7 +2857,7 @@ class mainWindow(QtGui.QMainWindow):
 		@rtype: unicode
 		@return: current time in format hh:mm:ss
 		"""
-		h,m,s=time.localtime(time.time()-shift)[3:6]
+		h,m,s=time.localtime(time.time()+shift)[3:6]
 		return "%02d:%02d:%02d" % (h,m,s)
 
 	def showXml(self,bool):
