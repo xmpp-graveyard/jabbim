@@ -1108,11 +1108,11 @@ class clientClass(pyxl.client.Client):
 					tab.chat.first=False
 				elif tab.chat.first==None:
 					tab.chat.first=True
-				if tab.chat.first==True:
-					if not self.main.getJid(tab.chat.jid).resource:
-						tab.chat.jid=frm.full()
-						tab.jid=frm.full()
-						tab.chat.buildResourceMenu()
+				#if tab.chat.first==True:
+				if not self.main.getJid(tab.chat.jid).resource:
+					tab.chat.jid=frm.full()
+					tab.jid=frm.full()
+					tab.chat.buildResourceMenu()
 			else:
 				# we have to add new chattab
 				created=False
