@@ -590,7 +590,8 @@ class clientClass(pyxl.client.Client):
 		start=time.time()
 		self.main.findPlugins()
 		self.main.loadPlugins()
-		self.main.autoJoinGroupchat()
+		if self.main.config['autoJoinMUC'] == 'True':
+			self.main.autoJoinGroupchat()
 		print "loadPlugins lasts",time.time()-start,'seconds'
 		
 	def on_invite(self,jid, room, reason, cont = False):
@@ -3290,11 +3291,13 @@ class mainWindow(QtGui.QMainWindow):
 		if self.client:
 			if error=="auth":
 				reactor.callLater(0,self._badJabberPassword)
+				self.reconnect = False
 			elif error=="dns":
 				reactor.callLater(0,self._serverNotFound)
+				self.reconnect = False
 			if self.client.factory:
 				self.client.factory.stopTrying()
-			self.reconnect = False
+			
 
 		MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
 		MainWindow.ui.showOffline.hide()

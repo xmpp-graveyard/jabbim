@@ -160,6 +160,7 @@ def loadConfig(main,status):
 			"startInTray": "False",
 			"sendOSInfo": "True",
 			"boshURL": '',
+			"autoJoinMUC": 'True',
 			"tabCycling" : "True", #cyklovanie medzi tabmi...
 		
  			##shortcuts
