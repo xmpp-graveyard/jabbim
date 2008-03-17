@@ -1179,26 +1179,24 @@ class clientClass(pyxl.client.Client):
 		Called when avatar is upated.
 		"""
 		print "AVATAR:",[unicode(jid)]
-		if not self.avatars.has_key(jid.replace('/','%')):
-			return
-		if self.avatars[jid.replace('/','%')]==None:
-			return
+		if not self.avatarDef.has_key(jid):
+			return None
 		# get avatar for this jid
-		pixmap=self.main.getAvatar(jid.replace('/','%'),frame=False,status=None)
-
+		pixmap=self.main.getAvatar(jid,frame=False,status=None)
+		if pixmap==None:
+			return None
 		# self avatar
 		if unicode(self.jid.userhost())==unicode(jid):
-			print "Setting avatar"
 			avatar=self.main.getAvatar(pixmap,size="64x64",frame=True)
 			self.main.selfAvatar=pixmap
 			self.main.ui.selfAvatar.setPixmap(avatar)
 			self.main.ui.selfAvatar.setMinimumWidth(avatar.width()+3)
 
 		# set avatar for userItems in roster
-		for item in self.main.ui.roster.getUserItems(jid):
-			item.setAvatar(QtGui.QIcon(pixmap))
-		for item in self.main.ui.roster.getMetaItems(jid):
-			item[0].setAvatar(QtGui.QIcon(pixmap))
+		#for item in self.main.ui.roster.getUserItems(jid):
+			#item.setAvatar(QtGui.QIcon(pixmap))
+		#for item in self.main.ui.roster.getMetaItems(jid):
+			#item[0].setAvatar(QtGui.QIcon(pixmap))
 
 		# set avatar for contacts in MUC
 		jid = jidT.JID(jid)
@@ -1208,6 +1206,7 @@ class clientClass(pyxl.client.Client):
 				text=unicode(item.text(1))
 				if len(text)!=0:
 					item.setIcon(1,QtGui.QIcon(pixmap))
+					
 					result=self.main.getAvatar(pixmap,size="32x32",frame=False,status=self.main.icons[text[0]])
 					item.setIcon(0,QtGui.QIcon(result))
 					w.chat.setTooltip(item,jid.full())
@@ -2959,36 +2958,15 @@ class mainWindow(QtGui.QMainWindow):
 			#del self.client.avatarImg[key]
 		if not pixmap:
 			return None
-		hash=""
-		if self.client.avatarDef.has_key(pixmap):
-			hash=self.client.avatarDef[pixmap]
-		isHash=False
 		if isinstance(pixmap,unicode) or isinstance(pixmap,str):
-			isHash=pixmap.find('@')==-1
-			#print "ishash",isHash,pixmap
-			if isHash:
-				if hash=="":
-					hash=pixmap
-			#if hash!="":
-				#if size=="32x32" and frame:
-					#if self.client.avatarImg.has_key(hash):
-						#return self.client.avatarImg[hash]
-				#else:
-					#print "trying to load avatar from cache"
-					#print hash+'/'+size+'/'+str(frame)
-					##print self.client.avatarImg.keys()
-					#if self.client.avatarImg.has_key(hash+'/'+size+'/'+str(frame)):
-						#print 'using chached avatar',hash+'/'+size+'/'+str(frame)
-						#return self.client.avatarImg[hash+'/'+size+'/'+str(frame)]
+			hash=""
 			if self.client.avatarDef.has_key(pixmap):
-				file=self.homeDir+'/avatars/'+unicode(self.client.avatarDef[pixmap])
+				hash=self.client.avatarDef[pixmap]
+			if hash=="":
+				file=self.homeDir+'/avatars/'+unicode(pixmap)
 			else:
-				if isHash:
-					self.client.avatarImg[pixmap]=None
-				return None
+				file=self.homeDir+'/avatars/'+unicode(hash)
 			if not os.path.isfile(file):
-				if isHash:
-					self.client.avatarImg[pixmap]=None
 				return None
 			icon=QtGui.QIcon(file)
 		elif isinstance(pixmap,QtGui.QPixmap):
@@ -3011,8 +2989,6 @@ class mainWindow(QtGui.QMainWindow):
 			elif size=="32x32":
 				avatar=icon.pixmap(25,25)
 			else:
-				if isHash:
-					self.client.avatarImg[pixmap]=None
 				return False
 	
 			result=QtGui.QPixmap(x,y)
@@ -3038,10 +3014,7 @@ class mainWindow(QtGui.QMainWindow):
 			elif size=="32x32":
 				avatar=icon.pixmap(25,25)
 			else:
-				if isHash:
-					self.client.avatarImg[pixmap]=None
 				return False
-
 			result=QtGui.QPixmap(x,y)
 			result.fill(QtCore.Qt.transparent)
 			painter=QtGui.QPainter(result)
@@ -3053,12 +3026,7 @@ class mainWindow(QtGui.QMainWindow):
 			painter.end()
 		elif size=="auto" and not frame:
 			result=QtGui.QPixmap(file)
-		if hash!="":
-			if size=="32x32" and frame:
-				self.client.avatarImg[hash]=result
-			#else:
-				#print 'chaching avatar',hash+'/'+size+'/'+str(frame)
-				#self.client.avatarImg[hash+'/'+size+'/'+str(frame)]=result
+
 		return result
 
 	def getCurrentTrayIcon(self):

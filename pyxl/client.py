@@ -616,11 +616,10 @@ class Client(derived):
 
 			self.avatarDef[el['from']] = hash
 			self.avatarDef.write()
-			try:
-				#self.avatarImg[hash] = 
-				self.main.getAvatar(hash,size="32x32",frame=True)
-			except:
-				self.avatarImg[hash] = None
+			#try:
+			self.avatarImg[hash] = self.main.getAvatar(hash,size="32x32",frame=True)
+			#except:
+				#self.avatarImg[hash] = None
 			#try:
 			self.on_avatarUpdate(el['from'])
 			#except:
