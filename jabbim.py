@@ -3258,17 +3258,17 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				self.client.connect()
 		
-	def _loadAvatar(self,file, hash, jid):
-		if os.path.isfile(unicode(file)):
-			jid=jidT.JID(jid).userhost()
-			pixmap=QtGui.QPixmap(unicode(file))
-			for item in self.ui.roster.getUserItems(jid):
-				item.setAvatar(QtGui.QIcon(pixmap))
-			for item in self.ui.roster.getMetaItems(jid):
-				item[0].setAvatar(QtGui.QIcon(pixmap))
-		else:
-			log.msg("BAD FILE FOR AVATAR:"+unicode(file))
-		self.client.roster['users'][jid].setAvatar(file, hash)
+	#def _loadAvatar(self,file, hash, jid):
+		#if os.path.isfile(unicode(file)):
+			#jid=jidT.JID(jid).userhost()
+			#pixmap=QtGui.QPixmap(unicode(file))
+			#for item in self.ui.roster.getUserItems(jid):
+				#item.setAvatar(QtGui.QIcon(pixmap))
+			#for item in self.ui.roster.getMetaItems(jid):
+				#item[0].setAvatar(QtGui.QIcon(pixmap))
+		#else:
+			#log.msg("BAD FILE FOR AVATAR:"+unicode(file))
+		#self.client.roster['users'][jid].setAvatar(file, hash)
 	
 	def _addGroup(self, group):
 		item=self.ui.roster.addGroup(unicode(group))

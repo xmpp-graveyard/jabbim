@@ -383,7 +383,7 @@ class rosterWidget(QtGui.QWidget):
 		item=userItem(name,group,jid,self)
 		item.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons["9"])
 		item.hidden=True
-		item.setAvatar(QtGui.QIcon("images/48x48/apps/jabbim.png"))
+		#item.setAvatar(QtGui.QIcon("images/48x48/apps/jabbim.png"))
 		self.users.append(item)
 		return item
 
