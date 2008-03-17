@@ -1109,7 +1109,7 @@ class clientClass(pyxl.client.Client):
 				elif tab.chat.first==None:
 					tab.chat.first=True
 				#if tab.chat.first==True:
-				if not self.main.getJid(tab.chat.jid).resource:
+				if self.main.getJid(tab.chat.jid).resource !=frm.resource:
 					tab.chat.jid=frm.full()
 					tab.jid=frm.full()
 					tab.chat.buildResourceMenu()
