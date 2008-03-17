@@ -604,10 +604,10 @@ class chatWindow(QtGui.QMainWindow):
 
 		file = None
 		#print self.main.client.avatars
-		if self.main.client.avatars.has_key(w.jid+'%'+user):
-			file = self.main.homeDir+'/avatars/'+unicode(w.jid+'%'+user)
-		elif truejid != None and self.main.client.avatars.has_key(truejid):
-			file = self.main.homeDir+'/avatars/'+unicode(truejid)
+		if self.main.client.avatarDef.has_key(w.jid+'/'+user):
+			file = self.main.realHomeDir+'/avatars/'+self.main.client.avatarDef[w.jid+'/'+user]
+		elif truejid != None and self.main.client.avatarDef.has_key(truejid):
+			file = self.main.realHomeDir+'/avatars/'+self.main.client.avatarDef(truejid)
 		else:
 			#self.getVCard(frm+'/'+user) #tohle asi neni potreba
 			pass
