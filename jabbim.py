@@ -2964,9 +2964,9 @@ class mainWindow(QtGui.QMainWindow):
 			if self.client.avatarDef.has_key(pixmap):
 				hash=self.client.avatarDef[pixmap]
 			if hash=="":
-				file=self.homeDir+'/avatars/'+unicode(pixmap)
+				file=self.realHomeDir+'/avatars/'+unicode(pixmap)
 			else:
-				file=self.homeDir+'/avatars/'+unicode(hash)
+				file=self.realHomeDir+'/avatars/'+unicode(hash)
 			if not os.path.isfile(file):
 				return None
 			icon=QtGui.QIcon(file)

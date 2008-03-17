@@ -135,9 +135,9 @@ class Client(derived):
 #			fd.close()
 #			self.avatars[jd] = hash
 		self.avatars = {}
-		self.avatarDef = ConfigObj(self.main.homeDir+'/avatars/avatars.def',encoding='UTF8')
+		self.avatarDef = ConfigObj(self.main.realHomeDir+'/avatars/avatars.def',encoding='UTF8')
 		self.avatarImg = {} #hash:QPixmap
-		path = self.main.homeDir+'/avatars/'
+		path = self.main.realHomeDir+'/avatars/'
 		d=threads.deferToThread(self.loadAvatars,path,self.avatarDef)
 		d.addCallback(self.gotAvatars)
 		self.reactor.callFromThread(self.on_init)
@@ -609,7 +609,7 @@ class Client(derived):
 		if card.has_key("PHOTO-BINVAL"):
 			image=base64.decodestring(str(card["PHOTO-BINVAL"]))
 			hash = sha1(image).hexdigest()
-			f=open(self.main.homeDir+'/avatars/'+hash,"wb")
+			f=open(self.main.realHomeDir+'/avatars/'+hash,"wb")
 
 			f.write(image)
 			f.close()

@@ -24,6 +24,7 @@ try:
 except:
 	print "PyQt4 is not installed."
 import utils
+from os.path import basename
 
 class PluginBase:
 	def __init__(self, main, homedir, plugindir):
@@ -90,9 +91,10 @@ class PluginBase:
 
 	def loadModule(self,file):
 		f=open(utils.path(file))
-		ui=load_source(self.fname, utils.path(file), f)
+		u=None
+		u=load_source(self.fname, utils.path(file), f)
 		f.close()
-		return ui
+		return u
 
 	def _loadUi(self,file,wid):
 		"""

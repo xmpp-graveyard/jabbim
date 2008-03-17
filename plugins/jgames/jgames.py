@@ -344,6 +344,8 @@ class Plugin(plugins.PluginBase):
 	
 	def on_remove(self):
 		print "REMOVING JGAMES PLUGIN"
+		del self.jgamesWidget
+		del sys.modules['jgames']
 		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/update", self.onUpdate)
 		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/start", self.onStart)
 		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/finish", self.onFinish)
