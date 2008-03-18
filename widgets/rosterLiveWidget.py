@@ -235,6 +235,8 @@ class userItem:
 		self.hiddenBySearch=False
 		self.transport=False
 		self.escapedName=name.replace("<","&lt;").replace(">","&gt;")
+		self.frameAvatar=None
+		self.selectedFrameAvatar=None
 
 	def clone(self):
 		"""
