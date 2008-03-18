@@ -1124,10 +1124,10 @@ class clientClass(pyxl.client.Client):
 				else:
 						traytext=body
 				text='<table><tr>'
-				if len(self.main.ui.roster.getUserItems(frm.userhost()))>0 and os.path.isfile(self.main.homeDir+'/avatars/'+unicode(frm.userhost())):
-					item=self.main.ui.roster.getUserItems(frm.userhost())[0]
-					pixmap=item.avatar.pixmap(64,64)
-					text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(item.jid)+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
+				#if len(self.main.ui.roster.getUserItems(frm.userhost()))>0 and os.path.isfile(self.main.homeDir+'/avatars/'+unicode(frm.userhost())):
+					#item=self.main.ui.roster.getUserItems(frm.userhost())[0]
+					#pixmap=item.avatar.pixmap(64,64)
+					#text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(item.jid)+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
 				text+='<td><b>'+mainWindow.tr("New message from ")+unicode(user)+'</b><br/>'
 				text+='<font size="-1">'+traytext+'<br/>'
 				text+="</td></tr></table>"
