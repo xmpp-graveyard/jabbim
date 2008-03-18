@@ -2143,7 +2143,7 @@ class mainWindow(QtGui.QMainWindow):
 		Fill login form according to config file and existing profiles
 		"""
 		profiles=utils.getProfiles(self.realHomeDir)
-		
+		avatarDef = ConfigObj(self.realHomeDir+'/avatars/avatars.def',encoding='UTF8')
 		# show profiles only if their count is more than 1
 		if len(profiles)<=1:
 			self.ui.profilesList.hide()
@@ -2161,23 +2161,26 @@ class mainWindow(QtGui.QMainWindow):
 			for profile in profiles:
 				jid=profile.replace('-profile','')
 				# load profile avatar
-				#if os.path.isfile(self.realHomeDir+"/"+profile+"/avatars/"+unicode(jid)):
-					#avatar=QtGui.QPixmap(self.realHomeDir+"/"+profile+"/avatars/"+unicode(jid)).scaled(22,22,QtCore.Qt.KeepAspectRatio)
-					#result=QtGui.QPixmap(22,22)
-					#result.fill(QtCore.Qt.transparent)
-					#painter=QtGui.QPainter(result)
-					#painter.drawPixmap((22-avatar.width())/2,(22-avatar.height())/2,avatar)
-					#painter.end()
-					#result=QtGui.QIcon(result)
-				#else:
-				#result=QtGui.QIcon(self.getAvatar(unicode(jid),size="32x32",frame=False))
-				#if not result:
-					#result=QtGui.QIcon("images/22x22/apps/jabbim.png")
+				file=""
+				if avatarDef.has_key(unicode(jid)):
+					file=self.realHomeDir+"/avatars/"+avatarDef[unicode(jid)]
+				if os.path.isfile(file):
+					avatar=QtGui.QPixmap(file).scaled(22,22,QtCore.Qt.KeepAspectRatio)
+					result=QtGui.QPixmap(22,22)
+					result.fill(QtCore.Qt.transparent)
+					painter=QtGui.QPainter(result)
+					painter.drawPixmap((22-avatar.width())/2,(22-avatar.height())/2,avatar)
+					painter.end()
+					result=QtGui.QIcon(result)
+				else:
+					#result=QtGui.QIcon(self.getAvatar(unicode(jid),size="32x32",frame=False))
+					#if not result:
+					result=QtGui.QIcon("images/22x22/apps/jabbim.png")
 
 				if self.config['jid']==jid:
-					self.ui.profilesList.insertItem(0,jid)
+					self.ui.profilesList.insertItem(0,result,jid)
 				else:
-					self.ui.profilesList.addItem(jid)
+					self.ui.profilesList.addItem(result,jid)
 			self.ui.profilesList.setCurrentIndex(0)
 			QtCore.QObject.connect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
 		
@@ -2193,8 +2196,11 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.ui.login_savePassword.setChecked(False)
 			self.ui.login_autoconnect.setEnabled(False)
-		if os.path.isfile(self.homeDir+'/avatars/'+unicode(self.config['jid'])):
-			pixmap=QtGui.QIcon(self.homeDir+'/avatars/'+unicode(self.config['jid']))
+		file=""
+		if avatarDef.has_key(self.config['jid']):
+			file=self.realHomeDir+"/avatars/"+avatarDef[self.config['jid']]
+		if os.path.isfile(file):
+			pixmap=QtGui.QIcon(file)
 			avatar=pixmap.pixmap(100,112)
 			if avatar.width()<=58 and avatar.height()<=58:
 				size=64
