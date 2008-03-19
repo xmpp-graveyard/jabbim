@@ -29,11 +29,18 @@ from twisted.internet import threads
 import base64
 
 class event:
-	def __init__(self,trueCall,trueDict,falseCall,falseDict):
+	def __init__(self,parent=None,trueCall=None,trueDict=None,falseCall=None,falseDict=None):
+		self.parent=parent
 		self.trueCall=trueCall
 		self.trueDict=trueDict
 		self.falseCall=falseCall
 		self.falseDict=falseDict
+
+	def acceptParent(self):
+		self.parent.submitClicked()
+	
+	def rejectParent(self):
+		self.parent.closeClicked()
 
 	def accept(self):
 		if self.trueCall!=None:
@@ -49,7 +56,7 @@ class abstractWidget(QtGui.QWidget):
 	def __init__(self,header,text,item,main,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40):
 		apply(QtGui.QWidget.__init__,(self,parent))
 		self.setObjectName("abstractWidget")
-		self.event=event(trueCall,trueDict,falseCall,falseDict)
+		self.event=event(self,trueCall,trueDict,falseCall,falseDict)
 		self.item=item
 		self.main=main
 		#self.trueCall=trueCall
@@ -535,6 +542,7 @@ class events:
 
 	def addChildEvent(self,parentID,eventClass):
 		if parentID<=len(self.events):
+			eventclass.parent=self.events[parentID]['widget']
 			self.events[parentID]['childs'].append(eventClass)
 
 	def addEvent(self,name,typ,icon,widget,tooltip=''):
