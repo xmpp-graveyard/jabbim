@@ -679,8 +679,13 @@ class clientClass(pyxl.client.Client):
 		# get tab for this contact
 		tabFull,indexFull=self.main.chat.findTab(jid.full(),True,typ=['chat']) # tab with resource
 		tab,index=self.main.chat.findTab(jid.full(),False,typ=['chat']) # tab without resource
+		if tab:
+			print "TAB",tab.jid
+		if tabFull:
+			print "TABFULL",tabFull.jid
 		if tab and not tabFull:
 			tabFull=tab
+			indexFull=index
 
 		# show info about status change in conversation textEdit
 		if str(self.main.config["showChatStatusChanges"])=="True" and tabFull:
