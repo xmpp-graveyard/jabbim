@@ -28,16 +28,34 @@ import chatwidget
 from twisted.internet import threads
 import base64
 
-class abstractWidget(QtGui.QWidget):
-	def __init__(self,header,text,item,main,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40):
-		apply(QtGui.QWidget.__init__,(self,parent))
-		self.setObjectName("abstractWidget")
-		self.item=item
-		self.main=main
+class event:
+	def __init__(self,trueCall,trueDict,falseCall,falseDict):
 		self.trueCall=trueCall
 		self.trueDict=trueDict
 		self.falseCall=falseCall
 		self.falseDict=falseDict
+
+	def accept(self):
+		if self.trueCall!=None:
+			self.trueCall(*self.trueDict)
+			self.trueCall=None
+
+	def reject(self):
+		if self.falseCall!=None:
+			self.falseCall(*self.falseDict)
+			self.falseCall=None
+
+class abstractWidget(QtGui.QWidget):
+	def __init__(self,header,text,item,main,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40):
+		apply(QtGui.QWidget.__init__,(self,parent))
+		self.setObjectName("abstractWidget")
+		self.event=event(trueCall,trueDict,falseCall,falseDict)
+		self.item=item
+		self.main=main
+		#self.trueCall=trueCall
+		#self.trueDict=trueDict
+		#self.falseCall=falseCall
+		#self.falseDict=falseDict
 		self.action=action
 		self.actionDict=actionDict
 		self.gridlayout = QtGui.QGridLayout(self)
@@ -88,33 +106,39 @@ class abstractWidget(QtGui.QWidget):
 
 	def closeClicked(self):
 		for item in self.main.ui.eventsListWidget.selectedItems():
-			if item.widget.falseCall!=None:
-				item.widget.falseCall(*item.widget.falseDict)
-				item.widget.falseCall=None
+			item.widget.event.reject()
+			#if item.widget.trueCall!=None:
+				#item.widget.trueCall(*item.widget.trueDict)
+				#item.widget.trueCall=None
 			self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(item))
-		if self.falseCall!=None:
-			self.falseCall(*self.falseDict)
-			self.falseCall=None
+
+		self.event.reject()
 		self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
 		for event in self.main.events.events:
 			if event['widget']==self:
+				for eventClass in event['childs']:
+					eventClass.reject()
 				self.main.events.events.remove(event)
 				break
 		self.main.events.refreshTray()
 
 	def submitClicked(self):
 		for item in self.main.ui.eventsListWidget.selectedItems():
-			if item.widget.trueCall!=None:
-				item.widget.trueCall(*item.widget.trueDict)
-				item.widget.trueCall=None
+			item.widget.event.accept()
+			#if item.widget.trueCall!=None:
+				#item.widget.trueCall(*item.widget.trueDict)
+				#item.widget.trueCall=None
 			self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(item))
 
-		if self.trueCall!=None:
-			self.trueCall(*self.trueDict)
-			self.trueCall=None
+		self.event.accept()
+		#if self.trueCall!=None:
+			#self.trueCall(*self.trueDict)
+			#self.trueCall=None
 		self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
 		for event in self.main.events.events:
 			if event['widget']==self:
+				for eventClass in event['childs']:
+					eventClass.accept()
 				self.main.events.events.remove(event)
 				break
 		self.main.events.refreshTray()
@@ -509,6 +533,10 @@ class events:
 				ret.append(event)
 		return ret
 
+	def addChildEvent(self,parentID,eventClass):
+		if parentID<=len(self.events):
+			self.events[parentID]['childs'].append(eventClass)
+
 	def addEvent(self,name,typ,icon,widget,tooltip=''):
 		if icon==None:
 			iconName=""
@@ -516,7 +544,7 @@ class events:
 		else:
 			iconName=unicode(icon)
 			icon=QtGui.QIcon(unicode(icon).replace("xxxxx","16x16"))
-		self.events.append({'name':name,'type':typ,'icon':icon,'iconName':iconName,'widget':widget,'tooltip':tooltip})
+		self.events.append({'name':name,'type':typ,'icon':icon,'iconName':iconName,'widget':widget,'tooltip':tooltip,'childs':[]})
 		if typ!="message":
 			self.main.ui.tabWidget.setCurrentIndex(2)
 		#self.main.ui.roster.refreshEvents()
