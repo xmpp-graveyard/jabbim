@@ -87,6 +87,11 @@ class abstractWidget(QtGui.QWidget):
 		self.setMinimumHeight(height)
 
 	def closeClicked(self):
+		for item in self.main.ui.eventsListWidget.selectedItems():
+			if item.widget.falseCall!=None:
+				item.widget.falseCall(*item.widget.falseDict)
+				item.widget.falseCall=None
+			self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(item))
 		if self.falseCall!=None:
 			self.falseCall(*self.falseDict)
 			self.falseCall=None
@@ -98,6 +103,12 @@ class abstractWidget(QtGui.QWidget):
 		self.main.events.refreshTray()
 
 	def submitClicked(self):
+		for item in self.main.ui.eventsListWidget.selectedItems():
+			if item.widget.trueCall!=None:
+				item.widget.trueCall(*item.widget.trueDict)
+				item.widget.trueCall=None
+			self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(item))
+
 		if self.trueCall!=None:
 			self.trueCall(*self.trueDict)
 			self.trueCall=None
@@ -428,6 +439,7 @@ class events:
 		self.timer=QtCore.QTimer()
 		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.timeout)
 		QtCore.QObject.connect(self.main.ui.eventsListWidget, QtCore.SIGNAL("itemDoubleClicked ( QListWidgetItem * )"),self.itemClicked)
+		self.main.ui.eventsListWidget.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
 
 	def itemClicked(self,item):
 		widget=item.widget
