@@ -481,6 +481,11 @@ class Send(protocol.Protocol):
 # 		return self.factory.transport.write(data)
 	
 class Receive(protocol.Protocol):
+
+	def unregisterProducer(self):
+		self.transport.unregisterProducer()
+		self.transport.loseConnection()
+
 	def dataReceived(self, data):
 		if self.ft.fp != None:
 			self.ft.fp.write(data)

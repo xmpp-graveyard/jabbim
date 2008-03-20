@@ -150,6 +150,7 @@ class Client(derived):
 		self.dispatcher.registerHandler('on_message_send', self._sendMessage, 'on_message_send')
 		self.xping = LoopingCall(self.heartbeat)
 		self.hbFails = 0
+		self.connections = [] # [(host1, port1), (host2, port2), ..]
 
 	def loadAvatars(self,path,avatarDef):
 		from PyQt4 import QtGui,QtCore
@@ -289,7 +290,10 @@ class Client(derived):
 	def _dnsLookup(self, resp):
 
 		r = random.choice(resp[0])
-		self._connect(unicode(r.payload.target), int(r.payload.port))
+		for r in resp[0]:
+			self.connections.append((unicode(r.payload.target), int(r.payload.port)))
+		host, port = self.connections.pop(0)
+		self._connect(host,port)
 #		self._connect(unicode(r[4][0]), int(r[4][1]))
 	
 	def _dnsLookupErr(self, resp):
@@ -368,8 +372,13 @@ class Client(derived):
 	
 	def connectionFailed(self, connector, reason=protocol.connectionDone):
 		log.msg('connection failed!')
-		self.main._disconnect(error = 'failed')
-		self.on_disconnect()
+		print self.connections
+		if len(self.connections)>0:
+			host, port = self.connections.pop(0)
+			self._connect(host,port)
+		else:
+			self.main._disconnect(error = 'failed')
+			self.on_disconnect()
 
 	def _streamEnd(self, el):
 		self.xping.stop()
