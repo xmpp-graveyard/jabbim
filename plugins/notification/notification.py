@@ -159,9 +159,12 @@ class osd(QtGui.QWidget):
 		self.show()
 		self.timer.start(int(self.main.config['osd_time'])*1000)
 
-	def view(self,leftPixmap,headline,text,event):
+	def view(self,leftPixmap,headline,text,event,neco=None):
 		t=int(time.time())
 		self.event=event
+		if neco:
+			self.event=None
+		
 		#print t,self.started,self.dropTime
 		#self.onClick=onClick
 		#self.onClickDict=onClickDict
