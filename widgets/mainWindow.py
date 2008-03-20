@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Fri Feb 22 15:38:09 2008
-#      by: PyQt4 UI code generator 4.3.3
+# Created: Thu Mar 20 19:39:04 2008
+#      by: PyQt4 UI code generator 4.3.4-snapshot-20080307
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -521,11 +521,21 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Jabbim", None, QtGui.QApplication.UnicodeUTF8))
+        self.login_connect.setAccessibleName(QtGui.QApplication.translate("MainWindow", "Connect", None, QtGui.QApplication.UnicodeUTF8))
+        self.login_connect.setAccessibleDescription(QtGui.QApplication.translate("MainWindow", "Connect", None, QtGui.QApplication.UnicodeUTF8))
         self.login_connect.setText(QtGui.QApplication.translate("MainWindow", "Connect", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("MainWindow", "Jabber ID:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("MainWindow", "Password:", None, QtGui.QApplication.UnicodeUTF8))
+        self.login_password.setAccessibleName(QtGui.QApplication.translate("MainWindow", "Password", None, QtGui.QApplication.UnicodeUTF8))
+        self.login_password.setAccessibleDescription(QtGui.QApplication.translate("MainWindow", "Type your password here", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("MainWindow", "Status:", None, QtGui.QApplication.UnicodeUTF8))
+        self.loginStatus.setAccessibleName(QtGui.QApplication.translate("MainWindow", "Status for connection", None, QtGui.QApplication.UnicodeUTF8))
+        self.loginStatus.setAccessibleDescription(QtGui.QApplication.translate("MainWindow", "Choose your status which will be used after connection", None, QtGui.QApplication.UnicodeUTF8))
+        self.login_autoconnect.setAccessibleName(QtGui.QApplication.translate("MainWindow", "Auto connect", None, QtGui.QApplication.UnicodeUTF8))
+        self.login_autoconnect.setAccessibleDescription(QtGui.QApplication.translate("MainWindow", "Auto connect", None, QtGui.QApplication.UnicodeUTF8))
         self.login_autoconnect.setText(QtGui.QApplication.translate("MainWindow", "Auto connect", None, QtGui.QApplication.UnicodeUTF8))
+        self.login_savePassword.setAccessibleName(QtGui.QApplication.translate("MainWindow", "Save password", None, QtGui.QApplication.UnicodeUTF8))
+        self.login_savePassword.setAccessibleDescription(QtGui.QApplication.translate("MainWindow", "Save password", None, QtGui.QApplication.UnicodeUTF8))
         self.login_savePassword.setText(QtGui.QApplication.translate("MainWindow", "Save Password", None, QtGui.QApplication.UnicodeUTF8))
         self.registerButton.setText(QtGui.QApplication.translate("MainWindow", "Register", None, QtGui.QApplication.UnicodeUTF8))
         self.login_headerLabel.setText(QtGui.QApplication.translate("MainWindow", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -536,6 +546,8 @@ class Ui_MainWindow(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\';\"><span style=\" font-size:13pt; font-weight:600;\">Profiles</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.profilesList.setAccessibleName(QtGui.QApplication.translate("MainWindow", "Profiles list", None, QtGui.QApplication.UnicodeUTF8))
+        self.profilesList.setAccessibleDescription(QtGui.QApplication.translate("MainWindow", "You can choose profile here", None, QtGui.QApplication.UnicodeUTF8))
         self.statusMessage.setText(QtGui.QApplication.translate("MainWindow", "Online", None, QtGui.QApplication.UnicodeUTF8))
         self.statusWidget.setToolTip(QtGui.QApplication.translate("MainWindow", "Here you can change your status", None, QtGui.QApplication.UnicodeUTF8))
         self.offlineButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Show offline contacts", None, QtGui.QApplication.UnicodeUTF8))

@@ -109,6 +109,12 @@
            </item>
            <item>
             <widget class="QPushButton" name="login_connect" >
+				<property name="accessibleName" >
+					<string>Connect</string>
+				</property>
+				<property name="accessibleDescription" >
+					<string >Connect</string>
+				  </property>
              <property name="text" >
               <string>Connect</string>
              </property>
@@ -172,6 +178,12 @@
              </item>
              <item>
               <widget class="QLineEdit" name="login_jid" />
+			  <property name="accessibleName" >
+				  <string>Jabber ID</string>
+			  </property>
+			  <property name="accessibleDescription" >
+				  <string >Type your Jabber ID here</string>
+             </property>
              </item>
              <item>
               <widget class="QLabel" name="label_2" >
@@ -182,7 +194,13 @@
              </item>
              <item>
               <widget class="QLineEdit" name="login_password" >
-               <property name="echoMode" >
+				  <property name="accessibleName" >
+					  <string>Password</string>
+				  </property>
+				  <property name="accessibleDescription" >
+				  <string >Type your password here</string>
+			  </property>
+				  <property name="echoMode" >
                 <enum>QLineEdit::Password</enum>
                </property>
               </widget>
@@ -196,6 +214,12 @@
              </item>
              <item>
               <widget class="QComboBox" name="loginStatus" >
+				  <property name="accessibleName" >
+					  <string>Status for connection</string>
+				  </property>
+				  <property name="accessibleDescription" >
+				  	<string >Choose your status which will be used after connection</string>
+				  </property>
                <property name="sizePolicy" >
                 <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
                  <horstretch>0</horstretch>
@@ -241,14 +265,26 @@
              </item>
              <item row="1" column="1" >
               <widget class="QCheckBox" name="login_autoconnect" >
-               <property name="text" >
+				  <property name="accessibleName" >
+					  <string>Auto connect</string>
+				  </property>
+				  <property name="accessibleDescription" >
+					  <string >Auto connect</string>
+				  </property>
+				  <property name="text" >
                 <string>Auto connect</string>
                </property>
               </widget>
              </item>
              <item row="0" column="1" >
               <widget class="QCheckBox" name="login_savePassword" >
-               <property name="text" >
+				  <property name="accessibleName" >
+					  <string>Save password</string>
+				  </property>
+				  <property name="accessibleDescription" >
+					  <string >Save password</string>
+				  </property>
+				  <property name="text" >
                 <string>Save Password</string>
                </property>
               </widget>
@@ -415,6 +451,12 @@ p, li { white-space: pre-wrap; }
          </item>
          <item row="8" column="0" >
           <widget class="QComboBox" name="profilesList" >
+			  <property name="accessibleName" >
+				  <string>Profiles list</string>
+			  </property>
+			  <property name="accessibleDescription" >
+				  <string >You can choose profile here</string>
+				  </property>
            <property name="iconSize" >
             <size>
              <width>22</width>
