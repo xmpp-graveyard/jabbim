@@ -986,25 +986,26 @@ class clientClass(pyxl.client.Client):
 			xhtml = self.main.getImages(xhtml,frm)
 		if not body:
 			body=""
-		if len(body)!=0:
-			# find MUC tab
-			for i in range(self.main.chat.ui.chatTab.count()):
-				w=self.main.chat.ui.chatTab.widget(i)
-				countMessage=False
-				if unicode(w.jid) == frm:
-					mainWindow=self.main
-					if error=="remote-server-not-found":
-						if w!=None:
-							message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent. Remote server not found."))
-							w.chat.textEditWrite(message)
-						print "gcmessage lasts",time.time()-start
-						return
-					elif error!=None:
-						if w!=None:
-							message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent.")+" "+unicode(error))
-							w.chat.textEditWrite(message)
-						print "gcmessage lasts",time.time()-start
-						return
+
+		# find MUC tab
+		for i in range(self.main.chat.ui.chatTab.count()):
+			w=self.main.chat.ui.chatTab.widget(i)
+			countMessage=False
+			if unicode(w.jid) == frm:
+				mainWindow=self.main
+				if error=="remote-server-not-found":
+					if w!=None:
+						message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent. Remote server not found."))
+						w.chat.textEditWrite(message)
+					print "gcmessage lasts",time.time()-start
+					return
+				elif error!=None:
+					if w!=None:
+						message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent.")+" "+unicode(error))
+						w.chat.textEditWrite(message)
+					print "gcmessage lasts",time.time()-start
+					return
+				if len(body)!=0:
 					if xhtml==None:
 						body=unicode(body).replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
 						body = utils.replace_url(body)
@@ -1012,8 +1013,8 @@ class clientClass(pyxl.client.Client):
 					else:
 						xhtml=xhtml.replace("&quot;",'"')
 					self.main.chat.onGCMessage(w,i,body,delay,subject,user,xhtml)
-					print "gcmessage lasts",time.time()-start
-					return
+				print "gcmessage lasts",time.time()-start
+				return
 
 
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None, error = None):
