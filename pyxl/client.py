@@ -146,6 +146,7 @@ class Client(derived):
 		self.dispatcher.registerHandler('on_message', self.on_message, 'on_message')
 		self.dispatcher.registerHandler('on_presence', self.on_presence, 'on_presence')
 		self.dispatcher.registerHandler('on_GCpresence', self.on_GCpresence, 'on_GCpresence')
+		self.dispatcher.registerHandler('on_GCmessage', self.on_GCmessage, 'on_GCmessage')
 		self.dispatcher.registerHandler('on_authd', self.on_authd, 'on_authd')
 		self.dispatcher.registerHandler('on_message_send', self._sendMessage, 'on_message_send')
 		self.xping = LoopingCall(self.heartbeat)
@@ -925,7 +926,7 @@ class Client(derived):
 			return
 
 		if self.groupchats.has_key(jid.JID(frm).userhost()):
-			self.on_GCmessage(frm,typ,body,subject, xhtml,  chatstate,  delay)
+#			self.on_GCmessage(frm,typ,body,subject, xhtml,  chatstate,  delay)
 			self.dispatcher.publishEvent('on_GCmessage', frm,typ,body,subject, xhtml,  chatstate,  delay, error)
 		else:
 # 			self.on_message(frm,typ,body,subject, xhtml,  chatstate,  delay)
