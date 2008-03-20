@@ -104,7 +104,7 @@ class CancelStage(Stage):
 
 class Session:
 	"Session class that manages stages"
-	def __init__(self, main, node, firststage, jid, sessionid, fid):
+	def __init__(self, main, node, firststage, jid, sessionid, fid, args):
 		"""@type main: Main
 @param main: Main instance
 @type node: unicode
@@ -120,6 +120,7 @@ class Session:
 		self.main	= main
 		self.node	= unicode(node)
 		self.jid 	= unicode(jid)
+		self.args = args
 
 		self.sessionid	= sessionid
 		self.nextstages = {}
@@ -154,7 +155,7 @@ class Commands:
 		self.sessionids = 0
 		self.main = main
 
-	def registerNode(self, name, desc, firststage, jid = None, public=False):
+	def registerNode(self, name, desc, firststage, jid = None, public=False, args = {}):
 		"""Registers a commands node to client
 @type name: unicode
 @param name: name of the node
@@ -170,12 +171,24 @@ class Commands:
 		self.main.client.registerFeature("jabber:x:data", name)
 		self.main.client.discoitems["http://jabber.org/protocol/commands"].append({"jid":jid,"name":desc,"node":name})
 		self.main.client.discoitems[name] = []
-		self.nodes[name] = [desc, firststage, jid, public]
+		self.nodes[name] = [desc, firststage, jid, public, args]
+	
+	def unregisterNode(self, name, desc, jid = None):
+		if jid == None:
+			jid = unicode(self.main.client.jid.full())
+		try:
+			del self.nodes[name]
+			self.main.client.discoitems["http://jabber.org/protocol/commands"].remove({"jid":jid,"name":desc,"node":name})
+			del self.main.client.discoitems[name]
+			self.main.client.unregisterFeature("http://jabber.org/protocol/commands", name)
+		except:
+			log.err('unregistering command unsuccesful')
+		
 
 	def startSession(self, node, jid, fid):
 		"Starts new session (node)"
 		self.sessionids += 1
-		self.sessions[unicode(self.sessionids)] = Session(self.main, node, self.nodes[node][1], jid, unicode(self.sessionids), fid)
+		self.sessions[unicode(self.sessionids)] = Session(self.main, node, self.nodes[node][1], jid, unicode(self.sessionids), fid, self.nodes[node][4])
 
 	#def commandsList(self, el):
 	#	self.main.client.disp(el["id"])

@@ -12,45 +12,7 @@ STREAM_START_EVENT = intern("//event/stream/start")
 STREAM_END_EVENT = intern("//event/stream/end")
 STREAM_ERROR_EVENT = intern("//event/stream/error")
 
-class XmlStreamFactoryMixin(object):  
-	""" 
-	XmlStream factory mixin that takes care of event handlers.  
-	 
-	To make sure certain event observers are set up before incoming data is  
-	processed, you can set up bootstrap event observers using C{addBootstrap}.  
-	 
-	The C{event} and C{fn} parameters correspond with the C{event} and  
-	C{observerfn} arguments to L{utility.EventDispatcher.addObserver}.  
-	""" 
  
-	def __init__(self, *args, **kwargs):  
-		self.bootstraps = []  
-		self.args = args  
-		self.kwargs = kwargs  
- 
-	def buildProtocol(self, addr):  
-		""" 
-		Create an instance of XmlStream.  
-		 
-		The returned instance will have bootstrap event observers registered  
-		and will proceed to handle input on an incoming connection.  
-		""" 
-		xs = self.protocol(*self.args, **self.kwargs)  
-		xs.factory = self  
-		for event, fn in self.bootstraps:  
-			xs.addObserver(event, fn)  
-		return xs 
-	def addBootstrap(self, event, fn):  
-		""" 
-		Add a bootstrap event handler.  
-		""" 
-		self.bootstraps.append((event, fn))  
- 
-	def removeBootstrap(self, event, fn):  
-		""" 
-		Remove a bootstrap event handler.  
-		""" 
-		self.bootstraps.remove((event, fn)) 
 
 class BOSHParser:
     """
@@ -106,6 +68,7 @@ class BOSHStream(utility.EventDispatcher):
         self.resend_queue = [] # bodies that must be resent
         self.initialized = False
         self.reconnect_interval = 0
+
     
     def _build_first_request(self):
         url = urlparse.urlparse(self.factory.bosh_url)
@@ -124,6 +87,7 @@ class BOSHStream(utility.EventDispatcher):
         for k,v in self.factory.bosh_attrs.items():
             body[k] = v.encode("utf-8")
         self.resend_queue.append(body)
+        print 'first request'
 
 
     def send(self, obj):
@@ -145,12 +109,13 @@ class BOSHStream(utility.EventDispatcher):
         """
         """
         # check if there are too many packets out
+        print 'to send'
         if len(self.out_queue) >= 2:
             return
-        
+        print 'to send1'
         if not self.resend_queue and len(self.send_queue) == 0 and len(self.out_queue) == 1:
             return
-        
+        print 'to send2'
         if self.resend_queue:
             body = self.resend_queue.pop(0)
         else:
@@ -170,6 +135,7 @@ class BOSHStream(utility.EventDispatcher):
         
         if self.rawDataOutFn:
             self.rawDataOutFn(body.toXml())
+        print body.toXml()
 
         req = ClientRequest(
             "POST", 
@@ -181,9 +147,10 @@ class BOSHStream(utility.EventDispatcher):
         self.proto.submitRequest(req, False)\
             .addCallback(self.got_response).addErrback(self.got_error)
         self.out_queue.append(body)
+        print 'send'
     
     def got_response(self, resp):
-        # read the body
+        print 'read the body'
         d = defer.maybeDeferred(resp.stream.read)
         d.addCallback(self.got_data, resp).addErrback(self.got_error)
    
@@ -236,8 +203,10 @@ class BOSHStream(utility.EventDispatcher):
         ).connectTCP(self.host, self.port)
         d.addCallback(self.connect_done)
         d.addErrback(self.connect_failed)
+        print 'connect!'
     
     def connect_done(self, proto):
+        print proto
         if not self.initialized:
             self._build_first_request()
         self.proto = proto
@@ -265,7 +234,47 @@ class BOSHStream(utility.EventDispatcher):
         self.resend_queue.append(body)
         self._try_to_send()
  
-
+class XmlStreamFactoryMixin(object):  
+	""" 
+	XmlStream factory mixin that takes care of event handlers.  
+	 
+	To make sure certain event observers are set up before incoming data is  
+	processed, you can set up bootstrap event observers using C{addBootstrap}.  
+	 
+	The C{event} and C{fn} parameters correspond with the C{event} and  
+	C{observerfn} arguments to L{utility.EventDispatcher.addObserver}.  
+	""" 
+# 	protocol = BOSHStream
+ 
+	def __init__(self, *args, **kwargs):  
+		self.bootstraps = []  
+		self.args = args  
+		self.kwargs = kwargs  
+ 
+	def buildProtocol(self, addr):  
+		""" 
+		Create an instance of XmlStream.  
+		 
+		The returned instance will have bootstrap event observers registered  
+		and will proceed to handle input on an incoming connection.  
+		""" 
+		xs = self.protocol(*self.args, **self.kwargs)  
+		xs.factory = self  
+		for event, fn in self.bootstraps:  
+			xs.addObserver(event, fn)  
+		return xs 
+	def addBootstrap(self, event, fn):  
+		""" 
+		Add a bootstrap event handler.  
+		""" 
+		self.bootstraps.append((event, fn))  
+ 
+	def removeBootstrap(self, event, fn):  
+		""" 
+		Remove a bootstrap event handler.  
+		""" 
+		self.bootstraps.remove((event, fn))
+		
 class BOSHTTPClient(HTTPClientProtocol):
     
     def connectionMade(self):

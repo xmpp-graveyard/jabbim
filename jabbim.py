@@ -3350,6 +3350,11 @@ class mainWindow(QtGui.QMainWindow):
 						w.chat.textEditWrite(message)
 		MainWindow.client = None
 		if error == 'lost' and MainWindow.reconnect:
+			self.reconnect = False
+			try:
+				MainWindow.client.xping.stop()
+			except:
+				print 'can\'t stop xping'
  			# connection lost, let's wait for a while and then reconnect
 			MainWindow.tray.showMessage(self.tr("Connection lost! "),self.tr("Trying to reconnect ..  ") , QtGui.QSystemTrayIcon.Warning, 5000)
  			MainWindow.plugins={}

@@ -20,7 +20,7 @@ class BOSHFactory(xmlstream.XmlStreamFactory):
     """
 
     def stopTrying(self):
-	print 'tak ja to balim'
+        print 'tak ja to balim'
     
 
 def BOSHClientFactory(jid, password, bosh_url, bosh_attrs = {}):

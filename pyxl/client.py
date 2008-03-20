@@ -25,7 +25,7 @@ from twisted.internet import protocol, error
 from twisted.names import client as dns
 from socket import getaddrinfo
 import socket
-from twisted.internet import threads, defer
+from twisted.internet import threads, defer, reactor
 from twisted.words.protocols import jabber
 from twisted.words.protocols.jabber import client,jid
 from twisted.words.xish import domish
@@ -119,6 +119,7 @@ class Client(derived):
 		self.registerFeature("urn:xmpp:receipts")
 		self.registerFeature('http://www.xmpp.org/extensions/xep-0224.html#ns')
 		self.registerFeature('http://jabber.org/protocol/rosterx')
+		self.registerFeature('http://jabber.org/protocol/muc')
 		self.identity = 'client/pc'
 		
 		self.caps_cache = {} # 'ext': (identity,[feature1, feature2])
@@ -303,7 +304,9 @@ class Client(derived):
 		if boshURL != '':
 			print '.'+boshURL+'.'
 			from bosh import client as bclient
+#			import bosh_wokkel
 			self.factory = bclient.BOSHClientFactory(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang})
+#			self.factory = bosh_wokkel.BOSHClient(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang})
 			print self.factory
 		else:
 			self.factory = client.XMPPClientFactory(self.jid,self.password)
@@ -318,9 +321,19 @@ class Client(derived):
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
 		print '-'+host+'?', port
-		self.connection = self.reactor.connectTCP(host,port,self.factory)
+		self.connection = reactor.connectTCP(host,port,self.factory)
 		self.on_connect()
 		print dir(self.factory)
+		print dir(self.connection)
+		print self.factory.protocol
+#		self.connection.buildProtocol()
+#		self.factory.buildProtocol()
+#		self.factory.protocol.factory = self.factory
+#		self.factory.protocol.host = host
+#		self.factory.protocol.port = port
+#		self.factory.protocol.connect(self.factory.protocol)
+		
+
 #		p = self.factory.buildProtocol('tcp:localhost:8080')
 #		print dir(p)
 #		self.connection = self.reactor.connectTCP('conn443.netlab.cz',443,self.factory)
