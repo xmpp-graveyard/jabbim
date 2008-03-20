@@ -8,6 +8,12 @@ sys.path.append('.')
 from include import plugins, utils
 import time
 from twisted.words.protocols.jabber import jid as jidT
+from widgets.events import event as _eventClass
+
+#class eventClass(_eventClass):
+	#def __init__(self,parent=None,trueCall=None,trueDict=None,falseCall=None,falseDict=None):
+		#_eventClass.__init__(self,parent,trueCall,trueDict,falseCall,falseDict)
+
 class osd(QtGui.QWidget):
 	def __init__(self,main,parent=None):
 		QtGui.QWidget.__init__(self,parent,QtCore.Qt.Tool | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint | QtCore.Qt.CustomizeWindowHint)
@@ -45,9 +51,8 @@ class osd(QtGui.QWidget):
 		self.cl.setMaximumSize(16,16)
 		self.cl.setFlat(True)
 		QtCore.QObject.connect(self.cl,QtCore.SIGNAL("clicked()"),self.hide)
-		self.onClick=None
-		self.onClickDict=None
-
+		self.event=None
+		
 	def paintEvent(self,event):
 		painter=QtGui.QPainter(self)
 		painter.setClipping(True)
@@ -105,8 +110,8 @@ class osd(QtGui.QWidget):
 				self.dragPosition = event.globalPos() - self.frameGeometry().topLeft()
 				event.accept()
 		else:
-			if self.onClick!=None and event.button() != QtCore.Qt.LeftButton:
-				self.onClick(*self.onClickDict)
+			if event.button() != QtCore.Qt.LeftButton:
+				self.event.acceptParent()
 			self.hide()
 			event.accept()
 	
@@ -154,11 +159,12 @@ class osd(QtGui.QWidget):
 		self.show()
 		self.timer.start(int(self.main.config['osd_time'])*1000)
 
-	def view(self,leftPixmap,headline,text,onClick=None,onClickDict=None):
+	def view(self,leftPixmap,headline,text,event):
 		t=int(time.time())
+		self.event=event
 		#print t,self.started,self.dropTime
-		self.onClick=onClick
-		self.onClickDict=onClickDict
+		#self.onClick=onClick
+		#self.onClickDict=onClickDict
 		if t<self.started+self.dropTime:
 			return
 		self.text=headline
@@ -268,7 +274,8 @@ class Plugin(plugins.PluginBase):
 		#self.loadSoundConfig("sounds/config")
 		self.osd=None
 		if main:
-			self.registerHandler('on_message', self.on_message)
+			#self.registerHandler('on_message', self.on_message)
+			self.registerHandler('firstMessage',self.on_firstMessage)
 			self.registerHandler('on_GCmessage', self.on_GCmessage)
 			self.registerHandler('on_presence',self.on_presence)
 			self.registerHandler('on_evil',self.on_evil)
@@ -417,42 +424,29 @@ class Plugin(plugins.PluginBase):
 			self.ico=True
 			self.main.tray.setIcon(self.trayIcon)
 
-	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay, error=None):
+	def on_firstMessage(self, jid,user,typ,body,subject, xhtml,  chatstate,  delay, error=None,eventID=None):
 		if body == None:
 			return
-		# get user name from JID
-		user=self.main.ui.roster.getNameByJID(frm)
 		# cut message if it's too long
 		if len(body)>40:
 				traytext=body[:40]+" ..."
 		else:
 				traytext=body
-
 		# get avatar for OSD
-		jid=jidT.JID(frm)
-		pixmap=self.main.getAvatar(jid.userhost().replace('/','%'),frame=False,size="64x64")
-		events=self.main.events.getEvents(unicode(jid.full()),'message')
-		# get action from Events
-		if len(events)!=0:
-			event=events[-1]
-			onClick=event['widget'].action
-			onClickDict=event['widget'].actionDict
-		else:
-			onClick=None
-			onClickDict=None
+		pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
+		# add child event
+		event=_eventClass()
+		self.main.events.addChildEvent(eventID,event)
 
 		# inform user about newly opened tab
 		if self.config['on_first_message']=="True" and not self.main.chat.isActiveWindow():
-			tab,index=self.main.chat.findTab(frm)
-			if tab:
-				if tab.chat.first==None or tab.chat.first==True:
-					self.main.playsound('new_message')
-					self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),onClick,onClickDict)
-					return
-		# inform user about new message
-		if self.config['osd_on_message']=="True" and not self.main.chat.isActiveWindow():
-			self.main.playsound('message')
-			self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),onClick,onClickDict)
+			self.main.playsound('new_message')
+			self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),event)
+			return
+		## inform user about new message
+		#if self.config['osd_on_message']=="True" and not self.main.chat.isActiveWindow():
+			#self.main.playsound('message')
+			#self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),onClick,onClickDict)
 
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
 		if delay != None:

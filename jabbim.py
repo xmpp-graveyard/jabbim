@@ -1152,6 +1152,7 @@ class clientClass(pyxl.client.Client):
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
 					self.main.chat.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)
 					tab.chat.unread+=1
+				self.dispatcher.publishEvent('firstMessage', frm,user,typ,body,subject, xhtml,  chatstate,  delay, error,len(self.main.events.events))
 
 		if tab!=None:
 			# handle checkstate messages:

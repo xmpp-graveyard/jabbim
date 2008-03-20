@@ -35,22 +35,39 @@ class event:
 		self.trueDict=trueDict
 		self.falseCall=falseCall
 		self.falseDict=falseDict
+		self.alive=True
 
 	def acceptParent(self):
+		if not self.alive:
+			return
 		self.parent.submitClicked()
+		print "Child event accepted"
+		self.alive=False
 	
 	def rejectParent(self):
+		if not self.alive:
+			return
 		self.parent.closeClicked()
+		print "Parent event rejected"
+		self.alive=False
 
 	def accept(self):
+		if not self.alive:
+			return
 		if self.trueCall!=None:
+			print "Child event accepted"
 			self.trueCall(*self.trueDict)
 			self.trueCall=None
+		self.alive=False
 
 	def reject(self):
+		if not self.alive:
+			return
 		if self.falseCall!=None:
+			print "Child event rejected"
 			self.falseCall(*self.falseDict)
 			self.falseCall=None
+		self.alive=False
 
 class abstractWidget(QtGui.QWidget):
 	def __init__(self,header,text,item,main,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40):
@@ -136,7 +153,7 @@ class abstractWidget(QtGui.QWidget):
 				#item.widget.trueCall(*item.widget.trueDict)
 				#item.widget.trueCall=None
 			self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(item))
-
+		print "submitclicked"
 		self.event.accept()
 		#if self.trueCall!=None:
 			#self.trueCall(*self.trueDict)
@@ -542,7 +559,7 @@ class events:
 
 	def addChildEvent(self,parentID,eventClass):
 		if parentID<=len(self.events):
-			eventclass.parent=self.events[parentID]['widget']
+			eventClass.parent=self.events[parentID]['widget']
 			self.events[parentID]['childs'].append(eventClass)
 
 	def addEvent(self,name,typ,icon,widget,tooltip=''):
@@ -557,6 +574,7 @@ class events:
 			self.main.ui.tabWidget.setCurrentIndex(2)
 		#self.main.ui.roster.refreshEvents()
 		self.refreshTray()
+		return len(self.events)
 
 	def addLineEditEvent(self,trueCall=None,trueDict=None,falseCall=None,falseDict=None,maintext="",header="",text="",name="",typ="",icon=None,action=None,actionDict=None,height=40,value=u""):
 		if icon==None:
