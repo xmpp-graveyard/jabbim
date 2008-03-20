@@ -490,7 +490,8 @@ class events:
 		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.timeout)
 		QtCore.QObject.connect(self.main.ui.eventsListWidget, QtCore.SIGNAL("itemDoubleClicked ( QListWidgetItem * )"),self.itemClicked)
 		self.main.ui.eventsListWidget.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
-
+		self.ID=0
+		
 	def itemClicked(self,item):
 		widget=item.widget
 		if widget.action!=None:
@@ -558,11 +559,18 @@ class events:
 			if event['type']==typ and event['name']==name:
 				ret.append(event)
 		return ret
+	
+	def getEventByID(self,ID):
+		for event in self.events:
+			if event['ID']==ID:
+				return event
+		return None
 
 	def addChildEvent(self,parentID,eventClass):
-		if parentID<=len(self.events):
-			eventClass.parent=self.events[parentID]['widget']
-			self.events[parentID]['childs'].append(eventClass)
+		parent=self.getEventByID(parentID)
+		if parent:
+			eventClass.parent=parent['widget']
+			parent['childs'].append(eventClass)
 
 	def addEvent(self,name,typ,icon,widget,tooltip=''):
 		if icon==None:
@@ -571,12 +579,13 @@ class events:
 		else:
 			iconName=unicode(icon)
 			icon=QtGui.QIcon(unicode(icon).replace("xxxxx","16x16"))
-		self.events.append({'name':name,'type':typ,'icon':icon,'iconName':iconName,'widget':widget,'tooltip':tooltip,'childs':[]})
+		self.events.append({'ID':self.ID,'name':name,'type':typ,'icon':icon,'iconName':iconName,'widget':widget,'tooltip':tooltip,'childs':[]})
 		if typ!="message":
 			self.main.ui.tabWidget.setCurrentIndex(2)
 		#self.main.ui.roster.refreshEvents()
 		self.refreshTray()
-		return len(self.events)
+		self.ID+=1
+		return self.ID-1
 
 	def addLineEditEvent(self,trueCall=None,trueDict=None,falseCall=None,falseDict=None,maintext="",header="",text="",name="",typ="",icon=None,action=None,actionDict=None,height=40,value=u""):
 		if icon==None:

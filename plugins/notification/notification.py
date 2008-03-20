@@ -278,7 +278,8 @@ class Plugin(plugins.PluginBase):
 		self.osd=None
 		if main:
 			#self.registerHandler('on_message', self.on_message)
-			self.registerHandler('firstMessage',self.on_firstMessage)
+			self.registerHandler('firstMessageEvent',self.on_firstMessageEvent)
+			self.registerHandler('chatMessageEvent',self.on_chatMessageEvent)
 			self.registerHandler('on_GCmessage', self.on_GCmessage)
 			self.registerHandler('on_presence',self.on_presence)
 			self.registerHandler('on_evil',self.on_evil)
@@ -427,29 +428,42 @@ class Plugin(plugins.PluginBase):
 			self.ico=True
 			self.main.tray.setIcon(self.trayIcon)
 
-	def on_firstMessage(self, jid,user,typ,body,subject, xhtml,  chatstate,  delay, error=None,eventID=None):
+	def on_firstMessageEvent(self, jid,user,typ,body,subject, xhtml,  chatstate,  delay, error=None,eventID=None):
 		if body == None:
 			return
-		# cut message if it's too long
-		if len(body)>40:
-				traytext=body[:40]+" ..."
-		else:
-				traytext=body
-		# get avatar for OSD
-		pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
-		# add child event
-		event=_eventClass()
-		self.main.events.addChildEvent(eventID,event)
-
-		# inform user about newly opened tab
+		print 'first message',self.config['on_first_message'],self.main.chat.isActiveWindow()
 		if self.config['on_first_message']=="True" and not self.main.chat.isActiveWindow():
+			# cut message if it's too long
+			if len(body)>40:
+					traytext=body[:40]+" ..."
+			else:
+					traytext=body
+			# get avatar for OSD
+			pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
+			# add child event
+			event=_eventClass()
+			self.main.events.addChildEvent(eventID,event)
+			# inform user about newly opened tab
 			self.main.playsound('new_message')
 			self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),event)
+
+	def on_chatMessageEvent(self,jid,user,typ,body,subject, xhtml,  chatstate,  delay, error=None,eventID=None):
+		if body == None:
 			return
-		## inform user about new message
-		#if self.config['osd_on_message']=="True" and not self.main.chat.isActiveWindow():
-			#self.main.playsound('message')
-			#self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),onClick,onClickDict)
+		# inform user about new message
+		if self.config['osd_on_message']=="True" and not self.main.chat.isActiveWindow():
+			if len(body)>40:
+					traytext=body[:40]+" ..."
+			else:
+					traytext=body
+			# get avatar for OSD
+			pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
+			# add child event
+			event=_eventClass()
+			self.main.events.addChildEvent(eventID,event)
+			# inform user about newly opened tab
+			self.main.playsound('new_message')
+			self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),event)
 
 	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
 		if delay != None:

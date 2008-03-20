@@ -1098,11 +1098,13 @@ class clientClass(pyxl.client.Client):
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
 					self.main.chat.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)
 					self.main.events.addInfoEvent(header=mainWindow.tr("Message"),text=mainWindow.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()],tooltip=mainWindow.tr("New message from ")+unicode(user))
+					self.dispatcher.publishEvent('chatMessageEvent', frm,user,typ,body,subject, xhtml,  chatstate,  delay, error,self.main.events.ID-1)
 					tab.chat.unread+=1
 					if not self.main.chat.isActiveWindow():
 						self.main.chat.setWindowTitle("("+str(int(self.main.chat.getUnreadMessages()))+") "+tab.tabName.replace("&",""))
 				elif not self.main.chat.isActiveWindow():
 					self.main.events.addInfoEvent(header=mainWindow.tr("Message"),text=mainWindow.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()],tooltip=mainWindow.tr("New message from ")+unicode(user))
+					self.dispatcher.publishEvent('chatMessageEvent', frm,user,typ,body,subject, xhtml,  chatstate,  delay, error,self.main.events.ID-1)
 					#if int(self.main.chat.ui.chatTab.currentIndex())==tabIndex:
 					self.main.chat.setWindowTitle("("+str(int(self.main.chat.getUnreadMessages())+1)+") "+tab.tabName.replace("&",""))
 					tab.chat.unread+=1
@@ -1155,7 +1157,7 @@ class clientClass(pyxl.client.Client):
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
 					self.main.chat.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)
 					tab.chat.unread+=1
-				self.dispatcher.publishEvent('firstMessage', frm,user,typ,body,subject, xhtml,  chatstate,  delay, error,len(self.main.events.events))
+				self.dispatcher.publishEvent('firstMessageEvent', frm,user,typ,body,subject, xhtml,  chatstate,  delay, error,self.main.events.ID-1)
 
 		if tab!=None:
 			# handle checkstate messages:
