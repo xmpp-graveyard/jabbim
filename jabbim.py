@@ -993,6 +993,7 @@ class clientClass(pyxl.client.Client):
 			countMessage=False
 			if unicode(w.jid) == frm:
 				mainWindow=self.main
+				print 'error',error
 				if error=="remote-server-not-found":
 					if w!=None:
 						message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent. Remote server not found."))
