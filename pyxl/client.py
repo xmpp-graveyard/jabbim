@@ -917,6 +917,9 @@ class Client(derived):
 			if child.name == 'attention':
 				attention = True
 		
+		if error == None and el['type'] == 'error':
+			error = 'Unknown Error'
+		
 		if attention == True and delay == None and typ == 'headline':
 			self.dispatcher.publishEvent('on_attention', frm, body, subject, xhtml, error)
 			return
