@@ -809,9 +809,13 @@ class rosterWidget(QtGui.QWidget):
 				item=item[0]
 				if item!=None and item.typ=="user": # tooltips are only for contacts (not for groups)
 					text='<table><tr>'
-					if item.avatar!=None and os.path.isfile(self.main.homeDir+'/avatars/'+unicode(item.jid)):
-						pixmap=item.avatar.pixmap(64,64)
-						text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(item.jid)+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
+					if self.main.client.avatarDef.has_key(item.jid):
+						if self.main.client.avatarDef[item.jid]:
+							if self.main.client.avatarImg[self.main.client.avatarDef[item.jid]]:
+								width=self.main.client.avatarImg[self.main.client.avatarDef[item.jid]][1]
+								height=self.main.client.avatarImg[self.main.client.avatarDef[item.jid]][2]
+								height=height/(float(width)/64)
+								text+='<td><img src="'+self.main.realHomeDir+'/avatars/'+unicode(self.main.client.avatarDef[item.jid])+'" width="64" height="'+str(height)+'"/></td>'
 					text+='<td><b>'+self.tr("Name:")+'</b> '+item.escapedName+'<br/>'
 					text+='<b>'+self.tr("JID:")+'</b> '+item.jid+'<br/>'
 					contact = self.main.client.roster["users"][item.jid]
@@ -872,7 +876,7 @@ class rosterWidget(QtGui.QWidget):
 					metrics=QtGui.QFontMetrics(f)
 					width=int(metrics.width(item[0].name))
 					
-					avatar=item[0].avatar.pixmap(64,64)
+					avatar=self.main.getAvatar(item[0].jid,size="64x64")
 					
 					result=QtGui.QPixmap(avatar.width()+width+6,avatar.height()+4)
 					result.fill(QtGui.QColor(0,0,0))
@@ -1198,9 +1202,9 @@ class rosterWidget(QtGui.QWidget):
 				avatar=None
 				if self.main.client.avatarDef.has_key(useritem.jid):
 					if self.main.client.avatarDef[useritem.jid] and self.main.client.avatarDef[useritem.jid]!='None':
-						avatar=self.main.client.avatarImg[self.main.client.avatarDef[useritem.jid]]
+						avatar=self.main.client.avatarImg[self.main.client.avatarDef[useritem.jid]][0]
 				if not avatar:
-					avatar=self.main.client.avatarImg[None]
+					avatar=self.main.client.avatarImg[None][0]
 				avatar=avatar.scaled(22,22,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
 				#if useritem.avatar:
 					#pixmap=useritem.avatar.pixmap(22,22)
@@ -1258,9 +1262,9 @@ class rosterWidget(QtGui.QWidget):
 			avatar=None
 			if self.main.client.avatarDef.has_key(useritem.jid):
 				if self.main.client.avatarDef[useritem.jid] and self.main.client.avatarDef[useritem.jid]!='None':
-					avatar=self.main.client.avatarImg[self.main.client.avatarDef[useritem.jid]]
+					avatar=self.main.client.avatarImg[self.main.client.avatarDef[useritem.jid]][0]
 			if not avatar:
-				avatar=self.main.client.avatarImg[None]
+				avatar=self.main.client.avatarImg[None][0]
 			avatar=avatar.scaled(22,22,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
 
 			#if useritem.avatar:
@@ -1434,9 +1438,9 @@ class rosterWidget(QtGui.QWidget):
 				avatar=None
 				if self.main.client.avatarDef.has_key(useritem.jid):
 					if self.main.client.avatarDef[useritem.jid] and self.main.client.avatarDef[useritem.jid]!='None':
-						avatar=self.main.client.avatarImg[self.main.client.avatarDef[useritem.jid]]
+						avatar=self.main.client.avatarImg[self.main.client.avatarDef[useritem.jid]][0]
 				if not avatar:
-					avatar=self.main.client.avatarImg[None]
+					avatar=self.main.client.avatarImg[None][0]
 
 				if useritem.statusMessage:
 					if self.theme:
@@ -1551,9 +1555,9 @@ class rosterWidget(QtGui.QWidget):
 			avatar=None
 			if self.main.client.avatarDef.has_key(useritem.jid):
 				if self.main.client.avatarDef[useritem.jid] and self.main.client.avatarDef[useritem.jid]!='None':
-					avatar=self.main.client.avatarImg[self.main.client.avatarDef[useritem.jid]]
+					avatar=self.main.client.avatarImg[self.main.client.avatarDef[useritem.jid]][0]
 			if not avatar:
-				avatar=self.main.client.avatarImg[None]
+				avatar=self.main.client.avatarImg[None][0]
 				#if avatar:
 					#avatar=avatar.scaled(32,32,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
 			#if avatar:
