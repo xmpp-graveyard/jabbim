@@ -202,7 +202,7 @@ class Client(derived):
 		painter.drawImage((32-avatar.width())/2,(32-avatar.height())/2,avatar)
 		painter.drawImage(0,0,frame)
 		painter.end()
-		return [result,width,height]
+		return [QtGui.QPixmap.fromImage(result),width,height]
 
 	def gotAvatars(self,avatarImg):
 		from PyQt4 import QtGui
