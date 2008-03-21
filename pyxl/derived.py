@@ -187,6 +187,8 @@ class derived:
 	
 	def _sendMessage(self, to, body=None, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
 		#hack kvuli moznosti zpracovat odchozi zpravu
+		args = locals()
+		del args['self']
 		message = Element((None,'message'))
 		message['xml:lang'] = self.xmlLang
 		message['to'] = to
@@ -233,6 +235,12 @@ class derived:
 #		self.on_xml(message.toXml())
 		if self.evil and body != None and body.strip() != '' :
 			message.addElement('evil', 'http://jabber.org/protocol/evil')
+		
+		if self.hasFeature(to, 'urn:xmpp:receipts') and body != None and typ!='groupchat':
+			message.addUniqueId()
+			message.addElement('request', 'urn:xmpp:receipts')
+			self.messageReceipts[message['id']] = args
+		
 		self.xmlstream.send(message)
 
 

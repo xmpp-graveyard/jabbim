@@ -152,6 +152,7 @@ class Client(derived):
 		self.xping = LoopingCall(self.heartbeat)
 		self.hbFails = 0
 		self.connections = [] # [(host1, port1), (host2, port2), ..]
+		self.messageReceipts = {} # id:(zprava)
 
 	def loadAvatars(self,path,avatarDef):
 		from PyQt4 import QtGui,QtCore
@@ -875,7 +876,7 @@ class Client(derived):
 			frm=unicode(frmjid.userhost()).lower()+"/"+frmjid.resource
 		else:
 			frm=unicode(frm).lower()
-		body = subject =xhtml = chatstate = delay = error = attention = None
+		body = subject =xhtml = chatstate = delay = error = attention = receipts = None
 		for child in el.elements():
 			if child.name == "request":
 				if child.defaultUri == "urn:xmpp:receipts":
@@ -938,8 +939,15 @@ class Client(derived):
 			
 			if child.name == 'attention':
 				attention = True
+			if child.name == 'received':
+				try:
+					del self.messageReceipts[el['id']]
+				except:
+					log.err('Couldn\'t remove nonexisten message id')
+				print self.messageReceipts
+				return
 		
-		if error == None and el['type'] == 'error':
+		if error == None and el.getAttribute('type') == 'error':
 			error = 'Unknown Error'
 		
 		if attention == True and delay == None and typ == 'headline':
