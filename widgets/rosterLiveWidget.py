@@ -877,7 +877,9 @@ class rosterWidget(QtGui.QWidget):
 					width=int(metrics.width(item[0].name))
 					
 					avatar=self.main.getAvatar(item[0].jid,size="64x64")
-					
+					if not avatar:
+						avatar=QtGui.QPixmap("images/32x32/apps/jabbim.png")
+
 					result=QtGui.QPixmap(avatar.width()+width+6,avatar.height()+4)
 					result.fill(QtGui.QColor(0,0,0))
 					painter=QtGui.QPainter(result)

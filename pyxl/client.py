@@ -184,7 +184,7 @@ class Client(derived):
 				avatarImg[hash] = None
 		return avatarImg
 
-	def loadAvatar(hash):
+	def loadAvatar(self,hash):
 		path=self.main.realHomeDir+"/avatars"
 		avatar=QtGui.QImage(path+'/'+hash)
 		width=int(avatar.width())
