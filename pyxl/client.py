@@ -160,7 +160,7 @@ class Client(derived):
 
 		hashe = []
 		for hash in avatarDef.itervalues():
-			if not hash in hashe:
+			if not hash in hashe and hash and hash!="None":
 				hashe.append(hash)
 #		path = self.main.homeDir+'/avatars/'
 		for hash in hashe:
@@ -211,6 +211,7 @@ class Client(derived):
 			self.avatarImg[key][0]=QtGui.QPixmap.fromImage(self.avatarImg[key][0])
 			#print 'avatarSize',self.avatarImg[key].width(),self.avatarImg[key][0].height()
 		self.avatarImg[None]=[self.main.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
+		self.avatarImg[u'None']=[self.main.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
 		print 'LOADED AVATARS',self.avatarImg
 
 	def chyba(self, err):

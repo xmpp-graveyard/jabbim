@@ -811,10 +811,10 @@ class rosterWidget(QtGui.QWidget):
 					text='<table><tr>'
 					if self.main.client.avatarDef.has_key(item.jid):
 						if self.main.client.avatarDef[item.jid]:
-							if self.main.client.avatarImg[self.main.client.avatarDef[item.jid]]:
+							if self.main.client.avatarImg[self.main.client.avatarDef[item.jid]] and self.main.client.avatarDef[item.jid]!="None":
 								width=self.main.client.avatarImg[self.main.client.avatarDef[item.jid]][1]
 								height=self.main.client.avatarImg[self.main.client.avatarDef[item.jid]][2]
-								height=height/(float(width)/64)
+								height=height/(float(width)/64.0)
 								text+='<td><img src="'+self.main.realHomeDir+'/avatars/'+unicode(self.main.client.avatarDef[item.jid])+'" width="64" height="'+str(height)+'"/></td>'
 					text+='<td><b>'+self.tr("Name:")+'</b> '+item.escapedName+'<br/>'
 					text+='<b>'+self.tr("JID:")+'</b> '+item.jid+'<br/>'
