@@ -911,6 +911,13 @@ class preferencesWindow(QtGui.QDialog):
 				self.reskin(self.currentTheme)
 			else:
 				self.main.loadTheme()
+		item=self.ui.listWidget.currentItem()
+		print item
+		if item:
+			name=unicode(item.data(32).toString())
+			print name,self.showedPlugins
+			if self.showedPlugins.has_key(name):
+				self.plugins[name].on_endPreferences()
 		self.close()
 class editBookmark(QtGui.QDialog):
 	def __init__(self,main,room,server,name,nickname,password,autojoin,parent,edit=True):

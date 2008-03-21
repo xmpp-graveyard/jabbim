@@ -121,25 +121,78 @@ class osd(QtGui.QWidget):
 			event.accept()
 
 
-	def pos(self,text="Notification test"):
+	def pos(self,text="Notification test",headline="Notification test"):
 		self.changingPos=True
-		self.text=text
-		metrics=QtGui.QFontMetrics(self.f)
-		height=int(metrics.height())
-		width=int(metrics.width(text))
+		#self.text=text
+		#metrics=QtGui.QFontMetrics(self.f)
+		#height=int(metrics.height())
+		#width=int(metrics.width(text))
 		#if self.main.config['osd_transparent']:
 			#self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
 		#else:
+		#self.desktop=QtGui.QPixmap()
+		#self.leftPixmap=None
+		#self.smallText=""
+		#self.smallTextHeight=self.smallfont
+		#if height<54:
+			#height=54
+		#self.setGeometry(int(self.main.config['osd_y']),int(self.main.config['osd_x']),width+20,height+10)
+		#self.show()
+		self.setMouseTracking(True)
+		#self.cl.hide()
+		
+		self.text=headline
+		
+		metrics=QtGui.QFontMetrics(self.f)
+		height=int(metrics.height())
+		width=int(metrics.width(headline))
+		
+		metrics2=QtGui.QFontMetrics(self.f2)
+		height2=int(metrics2.height())
+		width2=int(metrics2.width(text))
+		#if width2>width:
+			#while width2>width:
+				#text=text[:-1]
+				#width2=int(metrics2.width(text+"..."))
+			#text+="..."
+		t=""
+
+		if width2>width:
+			x=0
+			for word in text.split(' '):
+				xx=int(metrics2.width(word))
+				if x+xx>width+20-65:
+					t+="\n"+word+" "
+					x=0
+				else:
+					t+=word+" "
+					x+=xx
+		else:
+			t=text
+		height2=int(metrics2.height())*len(t.split("\n"))
+		self.smallTextHeight=height2
+		self.smallText=text
 		self.desktop=QtGui.QPixmap()
 		self.leftPixmap=None
-		self.smallText=""
-		self.smallTextHeight=self.smallfont
-		if height<54:
+
+
+		if height+height2<54:
 			height=54
-		self.setGeometry(int(self.main.config['osd_y']),int(self.main.config['osd_x']),width+20,height+10)
-		self.show()
-		self.setMouseTracking(True)
+			height2=0
+		osdx=int(self.main.config['osd_x'])
+		osdy=int(self.main.config['osd_y'])
+		self.osdX=osdx
+		self.osdY=osdy
+		if osdx+width+20>self.screenWidth:
+			self.osdX=self.screenWidth-(width+20)-10
+		if osdy+height+height2+10>self.screenHeight:
+			self.osdY=self.screenHeight-(height+height2+10)-10
+		self.setGeometry(self.osdX,self.osdY,width+20,height+height2+10)
+		#self.cl.setGeometry(self.width()-18,2,16,16)
 		self.cl.hide()
+		print 'show'
+		self.show()
+
 
 	def test(self,text="Notification test"):
 		self.text=text
@@ -313,13 +366,13 @@ class Plugin(plugins.PluginBase):
 	
 	def on_saveConfig(self):
 		if self.osd:
+			rect=self.osd.geometry()
+			x=int(rect.x())
+			y=int(rect.y())
+			self.config['osd_x']=str(x)
+			self.config['osd_y']=str(y)
 			self.unregisterWidget(self.osd)
 			#self.osd.hide()
-			#rect=self.osd.geometry()
-			#x=int(rect.x())
-			#y=int(rect.y())
-			#self.config['osd_x']=str(x)
-			#self.config['osd_y']=str(y)
 
 	def loadSoundConfig(self, configFile):
 		try:
