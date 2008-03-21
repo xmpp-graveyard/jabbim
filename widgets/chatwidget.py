@@ -257,7 +257,7 @@ class chatWidget(abstractChatWidget):
 		# get users avatar
 		self.file=""
 		if self.main.client.avatarDef.has_key(unicode(jidT.JID(jid).userhost())):
-			self.file=self.main.homeDir+'/avatars/'+str(self.main.client.avatarDef[unicode(jidT.JID(jid).userhost())]) #: path to users avatar
+			self.file=self.main.realHomeDir+'/avatars/'+str(self.main.client.avatarDef[unicode(jidT.JID(jid).userhost())]) #: path to users avatar
 		self.avatarHeight=32 #: avatars height
 		if not os.path.isfile(self.file):
 			# use default avatar if users avatar doesn't exist
@@ -272,7 +272,7 @@ class chatWidget(abstractChatWidget):
 		self.selfHeight=32 #: height of self avatar
 		f=""
 		if self.main.client.avatarDef.has_key(self.main.client.jid.userhost()):
-			f=self.main.homeDir+'/avatars/'+str(self.main.client.avatarDef[self.main.client.jid.userhost()])
+			f=self.main.realHomeDir+'/avatars/'+str(self.main.client.avatarDef[self.main.client.jid.userhost()])
 		if not os.path.isfile(f):
 			self.selfFile="images/32x32/apps/jabbim.png"
 		else:
