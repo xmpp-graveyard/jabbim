@@ -919,6 +919,7 @@ class preferencesWindow(QtGui.QDialog):
 			if self.showedPlugins.has_key(name):
 				self.plugins[name].on_endPreferences()
 		self.close()
+
 class editBookmark(QtGui.QDialog):
 	def __init__(self,main,room,server,name,nickname,password,autojoin,parent,edit=True):
 		apply(QtGui.QDialog.__init__,(self,parent))
