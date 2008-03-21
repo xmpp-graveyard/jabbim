@@ -593,6 +593,9 @@ class clientClass(pyxl.client.Client):
 		self.main.loadPlugins()
 		if self.main.config['autoJoinMUC'] == 'True':
 			self.main.autoJoinGroupchat()
+		if self.main.delayedMessages != None:
+			for msg in self.main.delayedMessages.itervalues():
+				self.sendMessage(**msg)
 		print "loadPlugins lasts",time.time()-start,'seconds'
 		
 	def on_invite(self,jid, room, reason, cont = False):
@@ -1460,6 +1463,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.statusPath="images/xxxxx/status/"
 		self.transports={}
 		self.setupShortcuts()
+		self.delayedMessages = None
 		#: {show:ID}
 		self.shows={u"online":u"1",
 					u"available":u"1",
@@ -3356,8 +3360,10 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.client = None
 		if error == 'lost' and MainWindow.reconnect:
 			self.reconnect = False
+			msg = None
 			try:
 				MainWindow.client.xping.stop()
+				msg = MainWindow.client.messageReceipts
 			except:
 				print 'can\'t stop xping'
  			# connection lost, let's wait for a while and then reconnect
@@ -3365,6 +3371,8 @@ class mainWindow(QtGui.QMainWindow):
  			MainWindow.plugins={}
  			MainWindow.client = None
 			log.err('Connection Lost')
+			if msg != None and len(msg)>0:
+				MainWindow.delayedMessages = msg
  			reactor.callLater(3, MainWindow.connect)
 		print "disconnected....."
 
