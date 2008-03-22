@@ -1676,7 +1676,7 @@ class Client(derived):
 			try:
 				timezone=unicode(timezone)
 			except:
-				timezone="Unkown"
+				timezone="Unknown"
 		q.addElement('tz', content = timezone)
 ##		q.addElement('display', content = unicode(time.strftime(u"%c", time.localtime())))
 #		self.on_xml(iq.toXml())
