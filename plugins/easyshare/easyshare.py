@@ -162,7 +162,7 @@ class Plugin(plugins.PluginBase):
 		self.action=menu.addAction(self.tr("EasyShare"))
 		self.action.setData(QtCore.QVariant(unicode(contact.jid)))
 		self.action.setObjectName("easyshare")
-#		self.action.setIcon(QtGui.QIcon("%s/history.png" % self.pluginDir))
+		self.action.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
 		self.action.setCheckable(True)
 		if unicode(contact.jid) in self.public:
 			self.action.setChecked(True)
