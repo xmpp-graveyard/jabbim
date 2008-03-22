@@ -1206,7 +1206,8 @@ class rosterWidget(QtGui.QWidget):
 					if self.main.client.avatarDef[useritem.jid] and self.main.client.avatarDef[useritem.jid]!='None':
 						avatar=self.main.client.avatarImg[self.main.client.avatarDef[useritem.jid]][0]
 				if not avatar:
-					avatar=self.main.client.avatarImg[None][0]
+					if self.main.client.avatarImg.has_key(None):
+						avatar=self.main.client.avatarImg[None][0]
 				avatar=avatar.scaled(22,22,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
 				#if useritem.avatar:
 					#pixmap=useritem.avatar.pixmap(22,22)
@@ -1266,7 +1267,8 @@ class rosterWidget(QtGui.QWidget):
 				if self.main.client.avatarDef[useritem.jid] and self.main.client.avatarDef[useritem.jid]!='None':
 					avatar=self.main.client.avatarImg[self.main.client.avatarDef[useritem.jid]][0]
 			if not avatar:
-				avatar=self.main.client.avatarImg[None][0]
+				if self.main.client.avatarImg.has_key(None):
+					avatar=self.main.client.avatarImg[None][0]
 			avatar=avatar.scaled(22,22,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
 
 			#if useritem.avatar:
@@ -1442,7 +1444,8 @@ class rosterWidget(QtGui.QWidget):
 					if self.main.client.avatarDef[useritem.jid] and self.main.client.avatarDef[useritem.jid]!='None':
 						avatar=self.main.client.avatarImg[self.main.client.avatarDef[useritem.jid]][0]
 				if not avatar:
-					avatar=self.main.client.avatarImg[None][0]
+					if self.main.client.avatarImg.has_key(None):
+						avatar=self.main.client.avatarImg[None][0]
 
 				if useritem.statusMessage:
 					if self.theme:
@@ -1559,7 +1562,8 @@ class rosterWidget(QtGui.QWidget):
 				if self.main.client.avatarDef[useritem.jid] and self.main.client.avatarDef[useritem.jid]!='None':
 					avatar=self.main.client.avatarImg[self.main.client.avatarDef[useritem.jid]][0]
 			if not avatar:
-				avatar=self.main.client.avatarImg[None][0]
+				if self.main.client.avatarImg.has_key(None):
+					avatar=self.main.client.avatarImg[None][0]
 				#if avatar:
 					#avatar=avatar.scaled(32,32,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
 			#if avatar:
