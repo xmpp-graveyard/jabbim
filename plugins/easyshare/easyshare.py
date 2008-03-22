@@ -145,6 +145,7 @@ class Plugin(plugins.PluginBase):
 			self.loadConfig(homedir)
 	
 	def on_configChanged(self):
+			self.public = []
 			self.main.client.commands.unregisterNode("http://dev.jabbim.cz/jabbim/rc#easyshare", "Get file")
 			self.home = self.config['sharepath']
 			jids = self.config['sharejids'].strip()

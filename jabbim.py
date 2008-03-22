@@ -594,7 +594,9 @@ class clientClass(pyxl.client.Client):
 		if self.main.config['autoJoinMUC'] == 'True':
 			self.main.autoJoinGroupchat()
 		if self.main.delayedMessages != None:
+			print 'delayed!'
 			for msg in self.main.delayedMessages.itervalues():
+				print msg
 				self.sendMessage(**msg)
 		print "loadPlugins lasts",time.time()-start,'seconds'
 		
@@ -3362,8 +3364,9 @@ class mainWindow(QtGui.QMainWindow):
 			self.reconnect = False
 			msg = None
 			try:
-				MainWindow.client.xping.stop()
 				msg = MainWindow.client.messageReceipts
+				MainWindow.client.xping.stop()
+				
 			except:
 				print 'can\'t stop xping'
  			# connection lost, let's wait for a while and then reconnect
