@@ -391,6 +391,10 @@ class Client(derived):
 			self.factory.stopTrying()
 		self.connection = None
 		self.factory = None
+		try:
+			self.main.delayedMessages = self.messageReceipts
+		except:
+			pass
 		self.main._disconnect(error = 'lost')
 
 		self.on_disconnect()

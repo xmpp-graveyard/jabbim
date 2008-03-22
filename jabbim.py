@@ -3364,7 +3364,6 @@ class mainWindow(QtGui.QMainWindow):
 			self.reconnect = False
 			msg = None
 			try:
-				msg = MainWindow.client.messageReceipts
 				MainWindow.client.xping.stop()
 				
 			except:
