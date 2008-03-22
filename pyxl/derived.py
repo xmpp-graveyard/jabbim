@@ -236,7 +236,7 @@ class derived:
 		if self.evil and body != None and body.strip() != '' :
 			message.addElement('evil', 'http://jabber.org/protocol/evil')
 		
-		if self.hasFeature(to, 'urn:xmpp:receipts') and body != None and typ!='groupchat':
+		if self.hasFeature(to, 'urn:xmpp:receipts') and body != None  and body != '' and typ!='groupchat':
 			message.addUniqueId()
 			message.addElement('request', 'urn:xmpp:receipts')
 			self.messageReceipts[message['id']] = args
