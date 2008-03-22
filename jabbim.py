@@ -3340,6 +3340,9 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.roster.disconnect()
 		MainWindow.ui.login_connect.setEnabled(True)
 		self.ui.eventsListWidget.clear()
+		del self.events.events
+		self.events.events={}
+		self.events.refreshTray()
 		for i in MainWindow.plugins.keys():
 			MainWindow.unloadPlugin(i)
 
