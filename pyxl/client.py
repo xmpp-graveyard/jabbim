@@ -45,7 +45,7 @@ from adhoc import *
 import rc
 import traceback
 from configobj import ConfigObj
-
+import locale
 #import bosh_wokkel
 try:
 	from hashlib import sha1
@@ -1674,7 +1674,7 @@ class Client(derived):
 			timezone=unicode(timezone, 'utf-8')
 		except:
 			try:
-				timezone=unicode(timezone)
+				timezone=unicode(timezone,locale.getpreferredencoding())
 			except:
 				timezone="Unknown"
 		q.addElement('tz', content = timezone)
