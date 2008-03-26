@@ -1201,13 +1201,13 @@ class rosterWidget(QtGui.QWidget):
 				#font.setWeight(18)
 				#doc.setDefaultFont(font)
 
-				avatar=None
-				if self.main.client.avatarDef.has_key(useritem.jid):
-					if self.main.client.avatarDef[useritem.jid] and self.main.client.avatarDef[useritem.jid]!='None':
-						avatar=self.main.client.avatarImg[self.main.client.avatarDef[useritem.jid]][0]
-				if not avatar:
-					if self.main.client.avatarImg.has_key(None):
-						avatar=self.main.client.avatarImg[None][0]
+				avatar=self.main.client.getAvatarImg(useritem.jid)
+				if avatar:
+					avatar=avatar[0]
+				else:
+					avatar=self.main.client.getAvatarImg(None)
+					if avatar:
+						avatar=avatar[0]
 				avatar=avatar.scaled(22,22,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
 				#if useritem.avatar:
 					#pixmap=useritem.avatar.pixmap(22,22)
@@ -1262,13 +1262,13 @@ class rosterWidget(QtGui.QWidget):
 			#font.setWeight(18)
 			#doc.setDefaultFont(font)
 
-			avatar=None
-			if self.main.client.avatarDef.has_key(useritem.jid):
-				if self.main.client.avatarDef[useritem.jid] and self.main.client.avatarDef[useritem.jid]!='None':
-					avatar=self.main.client.avatarImg[self.main.client.avatarDef[useritem.jid]][0]
-			if not avatar:
-				if self.main.client.avatarImg.has_key(None):
-					avatar=self.main.client.avatarImg[None][0]
+			avatar=self.main.client.getAvatarImg(useritem.jid)
+			if avatar:
+				avatar=avatar[0]
+			else:
+				avatar=self.main.client.getAvatarImg(None)
+				if avatar:
+					avatar=avatar[0]
 			avatar=avatar.scaled(22,22,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
 
 			#if useritem.avatar:
@@ -1439,13 +1439,13 @@ class rosterWidget(QtGui.QWidget):
 				if len(self.main.client.roster['users'][useritem.jid].resources)>1:
 					res=" ("+str(len(self.main.client.roster['users'][useritem.jid].resources))+")"
 
-				avatar=None
-				if self.main.client.avatarDef.has_key(useritem.jid):
-					if self.main.client.avatarDef[useritem.jid] and self.main.client.avatarDef[useritem.jid]!='None':
-						avatar=self.main.client.avatarImg[self.main.client.avatarDef[useritem.jid]][0]
-				if not avatar:
-					if self.main.client.avatarImg.has_key(None):
-						avatar=self.main.client.avatarImg[None][0]
+				avatar=self.main.client.getAvatarImg(useritem.jid)
+				if avatar:
+					avatar=avatar[0]
+				else:
+					avatar=self.main.client.getAvatarImg(None)
+					if avatar:
+						avatar=avatar[0]
 
 				if useritem.statusMessage:
 					if self.theme:
@@ -1557,17 +1557,15 @@ class rosterWidget(QtGui.QWidget):
 			res=""
 			if len(self.main.client.roster['users'][useritem.jid].resources)>1:
 				res=" ("+str(len(self.main.client.roster['users'][useritem.jid].resources))+")"
-			avatar=None
-			if self.main.client.avatarDef.has_key(useritem.jid):
-				if self.main.client.avatarDef[useritem.jid] and self.main.client.avatarDef[useritem.jid]!='None':
-					avatar=self.main.client.avatarImg[self.main.client.avatarDef[useritem.jid]][0]
-			if not avatar:
-				if self.main.client.avatarImg.has_key(None):
-					avatar=self.main.client.avatarImg[None][0]
-				#if avatar:
-					#avatar=avatar.scaled(32,32,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
-			#if avatar:
-				#pixmap=useritem.frameAvatar.pixmap(32,32)
+			
+			avatar=self.main.client.getAvatarImg(useritem.jid)
+			if avatar:
+				avatar=avatar[0]
+			else:
+				avatar=self.main.client.getAvatarImg(None)
+				if avatar:
+					avatar=avatar[0]
+
 			if useritem==self.selected:
 				if self.theme:
 					fontcolor=self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()

@@ -220,8 +220,10 @@ class Client(derived):
 	
 	def getAvatarImg(self, jd):
 		#vrati QPixmap nebo None
-		jd = jid.JID(jd)
-		if self.groupchats.has_key(jd.userhost):
+		if not jd or jd=="None":
+			return self.avatarImg.get(None, None)
+		jd = self.main.getJid(jd)
+		if self.groupchats.has_key(jd.userhost()):
 			jid = jd.full()
 		else:
 			jid = jd.userhost()
