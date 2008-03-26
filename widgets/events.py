@@ -73,7 +73,7 @@ class abstractWidget(QtGui.QWidget):
 	def __init__(self,header,text,item,main,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40):
 		apply(QtGui.QWidget.__init__,(self,parent))
 		self.setObjectName("abstractWidget")
-		self.event=event(self,trueCall,trueDict,falseCall,falseDict)
+		self.eventClass=event(self,trueCall,trueDict,falseCall,falseDict)
 		self.item=item
 		self.main=main
 		#self.trueCall=trueCall
@@ -130,13 +130,11 @@ class abstractWidget(QtGui.QWidget):
 
 	def closeClicked(self):
 		for item in self.main.ui.eventsListWidget.selectedItems():
-			item.widget.event.reject()
-			#if item.widget.trueCall!=None:
-				#item.widget.trueCall(*item.widget.trueDict)
-				#item.widget.trueCall=None
-			self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(item))
+			if hasattr(item.widget,"eventClass"):
+				item.widget.eventClass.reject()
+				self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(item))
 
-		self.event.reject()
+		self.eventClass.reject()
 		self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
 		for event in self.main.events.events:
 			if event['widget']==self:
@@ -148,13 +146,11 @@ class abstractWidget(QtGui.QWidget):
 
 	def submitClicked(self):
 		for item in self.main.ui.eventsListWidget.selectedItems():
-			item.widget.event.accept()
-			#if item.widget.trueCall!=None:
-				#item.widget.trueCall(*item.widget.trueDict)
-				#item.widget.trueCall=None
-			self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(item))
+			if hasattr(item.widget,"eventClass"):
+				item.widget.eventClass.accept()
+				self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(item))
 		print "submitclicked"
-		self.event.accept()
+		self.eventClass.accept()
 		#if self.trueCall!=None:
 			#self.trueCall(*self.trueDict)
 			#self.trueCall=None

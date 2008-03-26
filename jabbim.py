@@ -2069,6 +2069,16 @@ class mainWindow(QtGui.QMainWindow):
 							pri="0"
 				self.selfStatus=show
 				# update tray icon
+				icon=QtGui.QIcon("images/16x16/apps/jabbim.png")
+				if self.selfStatus!='online':
+					result=icon.pixmap(16,16)
+					painter=QtGui.QPainter(result)
+					icon=self.getIcon(status=unicode(self.selfStatus),size="16x16")
+					painter.drawPixmap(0,0,icon.pixmap(16,16))
+					painter.end()
+				else:
+					result=icon
+				self.currentTrayIcon=QtGui.QIcon(result)
 				self.tray.setIcon(self.getCurrentTrayIcon())
 				self.tray.setToolTip(self.tr('Your status:')+" "+self.status[show])
 				
@@ -2091,6 +2101,7 @@ class mainWindow(QtGui.QMainWindow):
 				else:
 					self.ui.statusMessage.setText(unicode(message))
 				self.ui.statusMessage.setIcon(self.getIcon(status=show,size="16x16"))
+
 		else:
 			if self.transports[jid]!=None:
 				self.transports[jid].setIcon(self.getIcon('1@'+jid,status=unicode(show),size="16x16"))
@@ -3059,16 +3070,7 @@ class mainWindow(QtGui.QMainWindow):
 		@rtype: QtGui.QIcon
 		@return: current tray icon
 		"""
-		icon=QtGui.QIcon("images/16x16/apps/jabbim.png")
-		if self.selfStatus!='online':
-			result=icon.pixmap(16,16)
-			painter=QtGui.QPainter(result)
-			icon=self.getIcon(status=unicode(self.selfStatus),size="16x16")
-			painter.drawPixmap(0,0,icon.pixmap(16,16))
-			painter.end()
-		else:
-			result=icon
-		return QtGui.QIcon(result)
+		return self.currentTrayIcon
 
 	def getIcon(self,jid=None,typ=None,size="32x32",status=None,usertype=None):
 		"""
