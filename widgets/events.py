@@ -607,7 +607,10 @@ class events:
 		# get event height (based on font size)
 		metrics=QtGui.QApplication.fontMetrics()
 		rect=metrics.boundingRect(0, 0,self.main.width(), self.main.height(), QtCore.Qt.TextWordWrap, text)
-		height=metrics.height()+rect.height()+10
+		if pixmap:
+			height=metrics.height()+rect.height()+metrics.height()+pixmap.height()
+		else:
+			height=metrics.height()+rect.height()+metrics.height()
 		# add event
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		item.setSizeHint(QtCore.QSize(100,height))
