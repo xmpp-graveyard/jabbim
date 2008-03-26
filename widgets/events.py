@@ -459,7 +459,8 @@ class FTWidget(QtGui.QWidget):
 					self.main.events.filetransferQueue[self.queueId]=[]
 				if self.main.client.ft.has_key(self.sid):
 					print 'stopping filetransfer sid =',self.sid
-					self.main.client.ft[self.sid].protocol.unregisterProducer()
+					if self.main.client.ft[self.sid].protocol:
+						self.main.client.ft[self.sid].protocol.unregisterProducer()
 					self.complete=None
 					return
 			else:
