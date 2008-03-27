@@ -3349,9 +3349,10 @@ class mainWindow(QtGui.QMainWindow):
 			MainWindow.unloadPlugin(i)
 
 		for transport in self.transports.keys():
-			self.ui.hboxlayout4.removeWidget(self.transports[transport])
-			self.transports[transport].setParent(None)
-			self.transports[transport].deleteLater()
+			if self.transports[transport]:
+				self.ui.hboxlayout4.removeWidget(self.transports[transport])
+				self.transports[transport].setParent(None)
+				self.transports[transport].deleteLater()
 		self.transports={}
 
 		if self.client:

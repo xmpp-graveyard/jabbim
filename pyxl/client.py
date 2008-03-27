@@ -481,7 +481,8 @@ class Client(derived):
 		self.getDiscoItems(self.jid.host, callback = self._gotServices)
 #		self.reactor.callFromThread(self.on_authd)
 		self.dispatcher.publishEvent('on_authd')
-		self.main._connected()
+		self.reactor.callLater(0,self.main._connected)
+		#self.main._connected()
 		print 'pre commands'
 		self.commands = Commands(self.main)
 		try:
