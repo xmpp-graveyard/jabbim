@@ -1838,6 +1838,7 @@ class Client(derived):
 			prev['type'] = previewType
 		if desc != None:
 			file.addElement('desc', content = unicode(desc))
+		file.addElement('range')
 		feature = si.addElement('feature', 'http://jabber.org/protocol/feature-neg')
 		x = feature.addElement('x', 'jabber:x:data')
 		x['type'] = 'form'
@@ -1998,6 +1999,10 @@ class Client(derived):
 					if elm.name == 'preview':
 						file['preview'] = unicode(elm)
 						file['previewType'] = elm.getAttribute('type', 'image/jpeg')
+					elif elm.name == 'desc':
+						file['desc'] = unicode(elm)
+					elif elm.name == 'range':
+						file['range'] = True
 			elif e.name == 'feature':
 				x = e.firstChildElement()
 				for field in x.elements():
@@ -2034,7 +2039,7 @@ class Client(derived):
 # 			self.ft[sid].fp = open(self.ft[sid].file, 'w')
 # 			self.receiveFile(sid, id)
 	
-	def receiveFile(self, sid, id):
+	def receiveFile(self, sid, id, rang = False):
 		iq = Element((None,'iq'))
 		obj = self.ft[sid]
 		iq['to'] = obj.tojid
