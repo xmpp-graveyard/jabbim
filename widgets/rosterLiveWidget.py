@@ -534,7 +534,9 @@ class rosterWidget(QtGui.QWidget):
 						for useritem in items:
 							if useritem.expanded:
 								if self.metaItems.has_key(useritem.metajid):
-									_items+=self.metaItems[useritem.metajid]
+									for contact in self.metaItems[useritem.metajid]:
+										if contact.jid!=useritem.jid:
+											_items+=[contact]
 						items+=_items
 						for useritem in items:
 							y+=self.userHeight
@@ -632,7 +634,9 @@ class rosterWidget(QtGui.QWidget):
 						for useritem in items:
 							if useritem.expanded:
 								if self.metaItems.has_key(useritem.metajid):
-									_items+=self.metaItems[useritem.metajid]
+									for contact in self.metaItems[useritem.metajid]:
+										if contact.jid!=useritem.jid:
+											_items+=[contact]
 						items+=_items
 						for useritem in items:
 							y+=self.userHeight
