@@ -1481,10 +1481,6 @@ class rosterWidget(QtGui.QWidget):
 			doc=QtGui.QTextDocument()
 			font=QtGui.QApplication.fontMetrics()
 			fontHeight=int(font.height())
-			#font=doc.defaultFont()
-			#font.setPixelSize(12)
-			#font.setWeight(18)
-			#doc.setDefaultFont(font)
 
 			res=""
 			if len(self.main.client.roster['users'][useritem.jid].resources)>1:
@@ -1509,7 +1505,7 @@ class rosterWidget(QtGui.QWidget):
 				doc.setHtml("<font color=\""+fontcolor+"\">"+useritem.escapedName+res+"</font>")
 				painter.save()
 				painter.translate(x+41,y+2)
-				if useritem.avatar:
+				if avatar:
 					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-43-32,y+32))
 				else:
 					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-41,y+32))
@@ -1517,7 +1513,7 @@ class rosterWidget(QtGui.QWidget):
 				doc.setHtml("<font size=\"-1\" color=\""+fontcolor+"\"><i>"+useritem.statusMessage+"</i></font>")
 				painter.save()
 				painter.translate(x+41,y+16)
-				if useritem.avatar:
+				if avatar:
 					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-43-32,y+32))
 				else:
 					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-41,y+32))
@@ -1526,7 +1522,7 @@ class rosterWidget(QtGui.QWidget):
 				doc.setHtml("<font color=\""+fontcolor+"\">"+useritem.escapedName+res+"</font>")
 				painter.save()
 				painter.translate(x+41,y+(32-fontHeight)/2)
-				if useritem.avatar:
+				if avatar:
 					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38-32,y+28))
 				else:
 					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38,y+28))
