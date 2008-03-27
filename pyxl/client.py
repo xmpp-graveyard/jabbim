@@ -1908,9 +1908,16 @@ class Client(derived):
 	def _ftreplyReceived(self, el, sid):
 		typ = None
 		si = el.firstChildElement()
+		offset = 0
 		for elem in si.elements():
 			if elem.name == 'feature':
 				typ = unicode(elem.firstChildElement().firstChildElement().firstChildElement())
+			elif elem.name == 'file':
+				if len(elem.children)==1:
+					r = elem.firstChildElement()
+					offset = int(r.getAttribute('offset', 0))
+					self.ft[sid].fp.seek(offset)
+					
 		log.msg('FT: ' + typ)
 		if typ == 'http://jabber.org/protocol/ibb':
 			self.ibbSend(sid)
@@ -2047,7 +2054,11 @@ class Client(derived):
 		iq['id'] = id
 		iq['type'] = 'result'
 		si = iq.addElement('si', 'http://jabber.org/protocol/si')
-		si.addElement('file', 'http://jabber.org/protocol/si/profile/file-transfer')
+		f = si.addElement('file', 'http://jabber.org/protocol/si/profile/file-transfer')
+		if rang == True:
+			size = os.stat(obj.file).st_size
+			r = f.addElement('range')
+			r['offset'] = size
 		feature = si.addElement('feature', 'http://jabber.org/protocol/feature-neg')
 		x = feature.addElement('x', 'jabber:x:data')
 		x['type'] = 'submit'
