@@ -1378,7 +1378,7 @@ class rosterWidget(QtGui.QWidget):
 
 			if useritem.statusMessage:
 				# show contact name
-				doc.setHtml("<font color=\""+fontcolor+"\">"+useritem.escapedName+res+"</font>")
+				doc.setHtml("<font color=\""+fontColor+"\">"+useritem.escapedName+res+"</font>")
 				painter.save()
 				painter.translate(x+41,y+2)
 				if avatar:
