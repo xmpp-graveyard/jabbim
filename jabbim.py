@@ -162,7 +162,7 @@ class clientClass(pyxl.client.Client):
 					widget.widget.complete=True
 				else:
 					# file was sent/received :)
-					tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[queueId].jid)
+					tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[queueId].jid,typ=['chat'])
 					# update errors list
 					self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']].errors.append(self.main.ftError[sid])
 					# file upload
@@ -1262,7 +1262,7 @@ class clientClass(pyxl.client.Client):
 					pixmap=None
 				#eventWidget=self.main.events.addBooleanEvent(self.ftStarted,[sid,id],None,[],self.main.tr("File transfer"),text= unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),height=40,name=unicode(self.ft[sid].tojid),typ="ftTransfer",icon=None)
 				eventWidget=self.main.events.addFTReceivedEvent(sid,id,unicode(self.ft[sid].tojid),pixmap)
-				tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid))
+				tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid),typ=['chat'])
 				if tab:
 					w=widgets.chatwidget.FTAskWidget(self.ft[sid].fileprops['name'],eventWidget,tab.chat,tab.chat.ui.ftwidget)
 					QtCore.QObject.connect(eventWidget.submitButton,QtCore.SIGNAL("clicked(bool)"),w.accept)

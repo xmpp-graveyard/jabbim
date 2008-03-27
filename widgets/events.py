@@ -448,7 +448,7 @@ class FTWidget(QtGui.QWidget):
 
 	def closeClicked(self):
 		if self.item:
-			tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[self.queueId].jid)
+			tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[self.queueId].jid,typ=['chat'])
 			
 			if self.complete==False:
 				if self.main.events.filetransferQueue.has_key(self.queueId):
@@ -725,10 +725,10 @@ class events:
 			jid, res = jid.split("/", 1)
 		if res==None:
 			sid=self.main.client.sendFile(jid, basename(file), file,descriptions[file],preview=preview,previewType='image/png')
-			tab,index=self.main.chat.findTab(jid)
+			tab,index=self.main.chat.findTab(jid,typ=['chat'])
 		else:
 			sid=self.main.client.sendFile(jid+'/'+res, basename(file), file,descriptions[file],preview=preview,previewType='image/png')
-			tab,index=self.main.chat.findTab(jid+'/'+res)
+			tab,index=self.main.chat.findTab(jid+'/'+res,typ=['chat'])
 		
 		mainWindow=self.main
 		mainWindow.tray.showMessage(mainWindow.tr("Sending file ")+basename(file)+mainWindow.tr(" to ")+unicode(jid), mainWindow.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
@@ -766,7 +766,7 @@ class events:
 		metrics=QtGui.QApplication.fontMetrics()
 		rect=metrics.boundingRect(0, 0,self.main.width(), self.main.height(), QtCore.Qt.TextWordWrap, text)
 		height=metrics.height()+rect.height()+metrics.height()+10
-		tab,index=self.main.chat.findTab(unicode(jid))
+		tab,index=self.main.chat.findTab(unicode(jid),typ=['chat'])
 		mainWindow=self.main
 		if tab:
 			tab.chat.filetransfer[sid]=chatwidget.FTWidget(text,None,self.main,sid,tab.chat.ui.ftwidget)
@@ -834,7 +834,7 @@ class events:
 		#mainWindow.tray.showMessage(mainWindow.tr("Sending file ")+basename(file)+mainWindow.tr(" to ")+unicode(jid), mainWindow.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
 
 
-		tab,index=self.main.chat.findTab(jid)
+		tab,index=self.main.chat.findTab(jid,typ=['chat'])
 		if tab:
 			if tab.chat.filetransfer.has_key(queueId):
 				tab.chat.filetransfer[queueId].reinit(text,None,self.main,sid2,self.main.ui.eventsListWidget,"("+str(self.filetransferWidget[queueId].sent)+"/"+str(self.filetransferWidget[queueId].all)+")")#=FTWidget(text,item,self.main,sid2,self.main.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")
