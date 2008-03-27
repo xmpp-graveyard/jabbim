@@ -25,8 +25,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 import os,sys, re,platform
 from configobj import ConfigObj
-import zipfile
+import zipfile, socket
 from cStringIO import StringIO
+from twisted.internet import  threads
 try:
 	from PyQt4 import QtCore, QtGui
 except:
@@ -161,6 +162,8 @@ def loadConfig(main,status):
 			"sendOSInfo": "True",
 			"boshURL": '',
 			"autoJoinMUC": 'True',
+			"FTHost": '',
+			"FTPort": '',
 			"tabCycling" : "True", #cyklovanie medzi tabmi...
 		
  			##shortcuts
@@ -478,6 +481,38 @@ def getFilenameFromLnk(name):
 		return name
 
 
+def getIPAddr(hostname = 'default'):
+	return(threads.deferToThread(getipaddr, hostname))
+
+def getipaddr(hostname='default'):
+	if hostname == 'default':
+		hostname = socket.gethostname()
+	ips = socket.gethostbyname_ex(hostname)[2]
+	ips = [i for i in ips if i.split('.')[0] != '127']
+	if len(ips) != 0:
+		# check if we have succes in determining outside IP
+		ip = ips[0]
+	elif len(ips) == 0 and hostname == socket.gethostname():
+		# when we want to determine local IP and did not have succes
+		# with gethostbyname_ex then we would like to connect to say... 
+		
+		# google.com and determine the local ip address bound to the
+		# local socket.
+		try:
+			s = socket.socket()
+			s.connect(('google.com', 80))
+			print ('___ connecting to internet to determine local ip')
+			ip = s.getsockname()[0]
+			del s
+		except:
+			print ('*** cannot connect to internet in order to \
+			determine outside IP address')
+			raise Exception
+	if len(ip) != 0:
+		return ip
+	else:
+		print ('*** unable to determine outside IP address')
+		raise Exception
 		
 
 

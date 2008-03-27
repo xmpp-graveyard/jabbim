@@ -32,9 +32,10 @@ from twisted.words.xish import domish
 from twisted.words.xish.domish import Element
 ##from twisted.internet import reactor, address
 from twisted.words.protocols.jabber.xmlstream import IQ, TimeoutError
-from twisted.internet.protocol import Protocol, ClientFactory
+from twisted.internet.protocol import Protocol, ClientFactory, Factory
 from twisted.protocols import socks
 from twisted.internet.task import LoopingCall
+
 
 from derived import derived
 from contact import *
@@ -94,7 +95,7 @@ class Client(derived):
 		self.discofeatures = {} # node: [feature1, feature2]
 		self.discoitems = {None:[],"http://jabber.org/protocol/commands":[]}
 		self.ft_proxies = {
-		'proxy.netlab.cz':["77.48.19.1", "7777"] 
+	#	'proxy.netlab.cz':["77.48.19.1", "7777"] 
 		}
 		self.ft = {}
 		self.last = 0
@@ -153,6 +154,9 @@ class Client(derived):
 		self.hbFails = 0
 		self.connections = [] # [(host1, port1), (host2, port2), ..]
 		self.messageReceipts = {} # id:(zprava)
+		
+		self.socks5Srv = None
+		self.socks5IP = [('127.0.0.1', '33333')] #
 
 	def loadAvatars(self,path,avatarDef):
 		from PyQt4 import QtGui,QtCore
@@ -313,6 +317,9 @@ class Client(derived):
 				d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
 			d.addCallback(self._dnsLookup)
 			d.addErrback(self._dnsLookupErr)
+			dns.getHostByName('localhost').addCallback(self.tst)
+	def tst(self, resp):
+		print resp
 	
 	def _dnsLookup(self, resp):
 
@@ -393,6 +400,7 @@ class Client(derived):
 			self.factory.stopTrying()
 		self.connection = None
 		self.factory = None
+		print 'receipts ' + unicode(self.messageReceipts)
 		try:
 			self.main.delayedMessages = self.messageReceipts
 		except:
@@ -1911,11 +1919,29 @@ class Client(derived):
 			q = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
 			q['sid'] = sid
 			q['mode'] = 'tcp'
+			if self.socks5Srv == None:
+				try:
+					factory = socks5.SOCKSv5Factory(self)
+					self.socks5Srv = self.reactor.listenTCP(int(self.socks5IP[0][1]), factory)
+
+				except:
+					print 'unable to connect to port'
+				
+			addr = sha1("%s%s%s" % (sid, self.jid.full(), el['from'])).hexdigest()
+			self.socks5Srv.factory.sessions[addr] = sid
+			for data in self.socks5IP:
+				streamhost = q.addElement('streamhost')
+				streamhost['host'] = data[0]
+				streamhost['jid'] = self.jid.full()
+				streamhost['port'] = data[1]
+
 			for proxy, data in self.ft_proxies.iteritems():
 				streamhost = q.addElement('streamhost')
 				streamhost['host'] = data[0]
 				streamhost['jid'] = proxy
 				streamhost['port'] = data[1]
+
+
 #			self.on_xml(iq.toXml())
 			d = iq.send()
 			self.disp(iq['id'])
@@ -1930,16 +1956,27 @@ class Client(derived):
 		self.ft[sid].streamhost = host
 		self.ft[sid].medium = time.time()
 		addr = sha1("%s%s%s" % (sid, self.jid.full(), el['from'])).hexdigest()
-		
-		f = ClientFactory()
-		f.protocol = socks5.Send
+		if host != self.jid.full():
+			try:
+				if len(self.socks5Srv.factory.sessions)==0:
+					self.socks5Srv.loseConnection()
+			except:
+				pass
+			f = ClientFactory()
+			f.protocol = socks5.Send
 
-		factory = socks5.ClientFactory(self.ft_proxies[host][0], int(self.ft_proxies[host][1]),addr, 0,  f, xmpp = self, xmpp_sid = sid) 
-		self.ft[sid].connector = self.reactor.connectTCP(self.ft_proxies[host][0], int(self.ft_proxies[host][1]), factory)
+			factory = socks5.ClientFactory(self.ft_proxies[host][0], int(self.ft_proxies[host][1]),addr, 0,  f, xmpp = self, xmpp_sid = sid) 
+			self.ft[sid].connector = self.reactor.connectTCP(self.ft_proxies[host][0], int(self.ft_proxies[host][1]), factory)
+		else:
+			print 'tady se to usmazi'
+#			print socks5.Send()
+
+			self.ft[sid]._activated()
+		
 
 	def _ftreplyhostErrReceived(self, err, sid):
 		print 'replyhost', err
-		self.on_ftEnd(self.sid, 'replyhost error')
+		self.on_ftEnd(sid, 'replyhost error')
 	
 	def ftStart(self, sid, protocol):
 		log.msg(sid)

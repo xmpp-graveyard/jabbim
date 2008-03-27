@@ -36,6 +36,231 @@ _ip_regex = re.compile ("\d\d?\d?\.\d\d?\d?\.\d\d?\d?\.\d\d?\d?")
 from twisted.protocols.basic  import FileSender
 import  os.path, time
 from base64 import b64encode, b64decode
+from twisted.internet import protocol, reactor
+import struct
+try:
+	from hashlib import sha1
+except:
+	log.msg('Please upgrade to python2.5')
+	from sha import new as sha1
+	
+STATE_INITIAL = 0
+STATE_AUTH    = 1
+STATE_REQUEST = 2
+STATE_READY   = 3
+STATE_AUTH_USERPASS = 4
+STATE_LAST    = 5
+
+STATE_CONNECT_PENDING = STATE_LAST + 1
+
+SOCKS5_VER = 0x05
+
+ADDR_IPV4 = 0x01
+ADDR_DOMAINNAME = 0x03
+ADDR_IPV6 = 0x04
+
+CMD_CONNECT = 0x01
+CMD_BIND = 0x02
+CMD_UDPASSOC = 0x03
+
+AUTHMECH_ANON = 0x00
+AUTHMECH_USERPASS = 0x02
+AUTHMECH_INVALID = 0xFF
+
+REPLY_SUCCESS = 0x00
+REPLY_GENERAL_FAILUR = 0x01
+REPLY_CONN_NOT_ALLOWED = 0x02
+REPLY_NETWORK_UNREACHABLE = 0x03
+REPLY_HOST_UNREACHABLE = 0x04
+REPLY_CONN_REFUSED = 0x05
+REPLY_TTL_EXPIRED = 0x06
+REPLY_CMD_NOT_SUPPORTED = 0x07
+REPLY_ADDR_NOT_SUPPORTED = 0x08
+
+class SOCKSv5Factory(protocol.Factory):
+
+	def __init__(self, client):
+		self.client = client
+		self.sessions = {}
+		
+		
+	def buildProtocol(self, addr):
+		print dir(self)
+		print addr
+		p = SOCKSv5('neco')
+		p.factory = self
+		return p
+        
+class SOCKSv5(protocol.Protocol):
+   def __init__(self, tr = 'nic'):
+       self.state = STATE_INITIAL
+       self.buf = ""
+       self.supportedAuthMechs = [ AUTHMECH_ANON ]
+       self.supportedAddrs = [ ADDR_IPV4, ADDR_DOMAINNAME ]
+       self.enabledCommands = [ CMD_CONNECT, CMD_BIND ]
+       self.peersock = None
+       self.addressType = 0
+       self.requestType = 0
+       self.tr = tr
+       print self.transport
+       print dir(self.transport)
+       print locals()
+       
+
+   def _parseNegotiation(self):
+       try:
+           # Parse out data
+           ver, nmethod = struct.unpack('!BB', self.buf[:2])
+           methods = struct.unpack('%dB' % nmethod, self.buf[2:nmethod+2])
+
+           # Ensure version is correct
+           if ver != 5:
+               self.transport.write(struct.pack('!BB', SOCKS5_VER, AUTHMECH_INVALID))
+               self.transport.loseConnection()
+               return
+
+           # Trim off front of the buffer
+           self.buf = self.buf[nmethod+2:]
+           
+           # Check for supported auth mechs
+           for m in self.supportedAuthMechs:
+               if m in methods:
+                   # Update internal state, according to selected method
+                   if m == AUTHMECH_ANON:
+                       self.state = STATE_REQUEST
+                   elif m == AUTHMECH_USERPASS:
+                       self.state = STATE_AUTH_USERPASS
+                   # Complete negotiation w/ this method
+                   self.transport.write(struct.pack('!BB', SOCKS5_VER, m))
+                   return
+
+           # No supported mechs found, notify client and close the connection
+           self.transport.write(struct.pack('!BB', SOCKS5_VER, AUTHMECH_INVALID))
+           self.transport.loseConnection()
+       except struct.error:
+           pass
+
+   def _parseUserPass(self):
+       try:
+           # Parse out data
+           ver, ulen = struct.unpack('BB', self.buf[:2])
+           uname, = struct.unpack('%ds' % ulen, self.buf[2:ulen + 2])
+           plen, = struct.unpack('B', self.buf[ulen + 2])
+           password, = struct.unpack('%ds' % plen, self.buf[ulen + 3:ulen + 3 + plen])
+           # Trim off fron of the buffer
+           self.buf = self.buf[3 + ulen + plen:]
+           # Fire event to authenticate user
+           if self.authenticateUserPass(uname, password):
+               # Signal success
+               self.state = STATE_REQUEST
+               self.transport.write(struct.pack('!BB', SOCKS5_VER, 0x00))
+           else:
+               # Signal failure
+               self.transport.write(struct.pack('!BB', SOCKS5_VER, 0x01))
+               self.transport.loseConnection()
+       except struct.error:
+           pass
+
+   def sendErrorReply(self, errorcode):
+       # Any other address types are not supported
+       result = struct.pack('!BBBBIH', SOCKS5_VER, errorcode, 0, 1, 0, 0)
+       self.transport.write(result)
+       self.transport.loseConnection()
+
+   def _parseRequest(self):
+       try:
+           # Parse out data and trim buffer accordingly
+           ver, cmd, rsvd, self.addressType = struct.unpack('!BBBB', self.buf[:4])
+
+           # Ensure we actually support the requested address type
+           if self.addressType not in self.supportedAddrs:
+               self.sendErrorReply(REPLY_ADDR_NOT_SUPPORTED)
+               return
+
+           # Deal with addresses
+           if self.addressType == ADDR_IPV4:
+               addr, port = struct.unpack('!IH', self.buf[4:10])
+               self.buf = self.buf[10:]
+           elif self.addressType == ADDR_DOMAINNAME:            
+               nlen = ord(self.buf[4])
+               addr, port = struct.unpack('!%dsH' % nlen, self.buf[5:])
+               self.buf = self.buf[7 + len(addr):]
+           else:
+               # Any other address types are not supported
+               self.sendErrorReply(REPLY_ADDR_NOT_SUPPORTED)
+               return
+
+           # Ensure command is supported
+           if cmd not in self.enabledCommands:
+               # Send a not supported error
+               self.sendErrorReply(REPLY_CMD_NOT_SUPPORTED)
+               return
+
+           # Process the command
+           if cmd == CMD_CONNECT:
+               self.connectRequested(addr, port)
+           elif cmd == CMD_BIND:
+               self.bindRequested(addr, port)
+           else:
+               # Any other command is not supported
+               self.sendErrorReply(REPLY_CMD_NOT_SUPPORTED)
+
+       except struct.error, why:
+           return None
+
+
+   def connectRequested(self, addr, port):
+       print 'on connect'
+       print self.transport
+       print dir(self)
+       if self.factory.sessions.has_key(addr):
+	       self.transport.stopReading()
+	       self.state = STATE_CONNECT_PENDING
+	#       protocol.ClientCreator(reactor, SOCKSv5Outgoing, self).connectTCP(addr, port)
+
+	       print self.factory.sessions
+	       print addr
+	       sid = self.factory.sessions[addr]
+	       self.factory.client.ft[sid].protocol = Send()
+	       self.factory.client.ft[sid].protocol.transport = self.transport
+	       self.factory.client.ft[sid].protocol.ft = self.factory.client.ft[sid]
+	       self.factory.client.ft[sid].ftstart = time.time()
+	       self.connectCompleted(addr, port)
+       else:
+          self.sendErrorReply(REPLY_CONN_REFUSED)
+
+   def connectCompleted(self, remotehost, remoteport):
+       if self.addressType == ADDR_IPV4:
+           result = struct.pack('!BBBBIH', SOCKS5_VER, REPLY_SUCCESS, 0, 1, remotehost, remoteport)
+       elif self.addressType == ADDR_DOMAINNAME:
+           result = struct.pack('!BBBBB%dsH' % len(remotehost), SOCKS5_VER, REPLY_SUCCESS, 0,
+                                ADDR_DOMAINNAME, len(remotehost), remotehost, remoteport)
+       self.transport.write(result)
+       self.state = STATE_READY
+       self.transport.startReading()
+   
+   def bindRequested(self, addr, port):
+       pass
+   
+   def authenticateUserPass(self, user, passwd):
+       print "User/pass: ", user, passwd
+       return True
+
+
+   def dataReceived(self, buf):
+       if self.state == STATE_READY:
+           self.transport.write(buf)
+           return
+
+       self.buf = self.buf + buf
+       if self.state == STATE_INITIAL:
+           self._parseNegotiation()
+       if self.state == STATE_AUTH_USERPASS:
+           self._parseUserPass()
+       if self.state == STATE_REQUEST:
+           self._parseRequest()
+
+
 
 class ClientProtocol (protocol.Protocol):
 	""" This protocol that talks to SOCKS5 server from client side.
@@ -448,6 +673,9 @@ class ProxyClientCreator(protocol.ClientCreator):
 class Send(protocol.Protocol):
 	implements(interfaces.IConsumer)
 	
+	def __init__(self):
+		pass
+	
 	def registerProducer(self, producer, streaming):
 		return self.transport.registerProducer(producer, streaming)
 	
@@ -456,7 +684,8 @@ class Send(protocol.Protocol):
 		self.transport.loseConnection()
 
 	def write(self, data):
-##		print 'prenasim: ', len(data)
+#		print 'prenasim: ', len(data)
+		self.transport.write(data)
 		try:
 			self.ft.connector.factory.delayed_timeout_call.cancel()
 		except:
@@ -464,7 +693,9 @@ class Send(protocol.Protocol):
 		if self.ft:
 			self.ft.transfered = self.ft.transfered + len(data)
 			self.ft.client.on_ftTransfered(self.ft.sid, len(data))
-		return self.transport.write(data)
+			if self.ft.transfered == self.ft.size:
+				self.ft.finish()
+
 
 # class IBBSend:
 # 	implements(interfaces.IConsumer)
@@ -543,8 +774,10 @@ class FTSend:
 		log.msg('activate failed with: ' + unicode(err))
 		self.client.on_ftEnd(self.sid, 'activate error')
 		
-	def _activated(self, el):
-		FileSender().beginFileTransfer(self. fp, self.protocol)#. addCallback(self._finished)
+	def _activated(self, el = None):
+		print '_'
+		print self.protocol
+		FileSender().beginFileTransfer(self.fp, self.protocol)#. addCallback(self._finished)
 	
 	def _finished(self, last):
 		log.msg('finished transfer for ' + self.filename)
@@ -554,6 +787,17 @@ class FTSend:
 		log.msg("konec prenosu")
 		if self.fp != None:
 			self.fp.close()
+		addr = sha1("%s%s%s" % (self.sid, self.client.jid.full(), self.tojid)).hexdigest()
+		try:
+			self.protocol.transport.loseConnection()
+			del self.client.socks5Srv.factory.sessions[addr]
+			if len(self.client.socks5Srv.factory.sessions)==0:
+				self.client.socks5Srv.loseConnection()
+		except:
+			print 'unable to finish socks5'
+			print self.client.socks5Srv.factory.sessions
+			pass
+
 		self.client.on_ftEnd(self.sid, self.error)
 
 	def connectFailure(self):
