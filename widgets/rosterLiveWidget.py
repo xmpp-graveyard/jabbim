@@ -229,6 +229,7 @@ class userItem:
 		self.hidden=False
 		#self.test=None
 		self.metajid="" #: contains parent jid of this item, if this contact is member of metacontacts
+		self.expanded=False
 		self.blink=None # if True, icon blinks
 		self.jid = jid
 		self.privacy = {"block":False, "allow":False, "hide":False}
@@ -529,6 +530,12 @@ class rosterWidget(QtGui.QWidget):
 						return ret,0,goty
 					if item.expanded and len(items)!=0:
 						previous=None
+						_items=[]
+						for useritem in items:
+							if useritem.expanded:
+								if self.metaItems.has_key(useritem.metajid):
+									_items+=self.metaItems[useritem.metajid]
+						items+=_items
 						for useritem in items:
 							y+=self.userHeight
 							if got!=0 and not useritem in ret:
@@ -621,6 +628,12 @@ class rosterWidget(QtGui.QWidget):
 						return x,y
 					if item.expanded and len(items)!=0:
 						previous=None
+						_items=[]
+						for useritem in items:
+							if useritem.expanded:
+								if self.metaItems.has_key(useritem.metajid):
+									_items+=self.metaItems[useritem.metajid]
+						items+=_items
 						for useritem in items:
 							y+=self.userHeight
 							if useritem==i:
@@ -1509,31 +1522,43 @@ class rosterWidget(QtGui.QWidget):
 					background=self.palet.color(QtGui.QPalette.Base)
 			painter.restore()
 			if self.metaItems.has_key(useritem.metajid) and background:
-				painter.save()
-				painter.translate(x,y)
-				painter.setPen(QtCore.Qt.transparent)
-				linearGrad=QtGui.QRadialGradient(QtCore.QPointF(2,16),14)
-				if self.theme:
-					linearGrad.setColorAt(0,self.main.ui.selectedItemStyle.palette().window().color())
-				else:
-					linearGrad.setColorAt(0,self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight))
-				linearGrad.setColorAt(1, background)
-				painter.setBrush(linearGrad)
-				painter.drawRect(0,0,15,32)
-				if self.theme:
-					painter.setPen(QtGui.QPen(self.main.ui.selectedItemStyle.palette().text().color()))
-				else:
-					painter.setPen(QtGui.QPen(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.HighlightedText)))
-				painter.drawPoint(2,16)
-				painter.drawPoint(3,15)
-				painter.drawPoint(3,16)
-				painter.drawPoint(3,17)
-				painter.drawPoint(4,14)
-				painter.drawPoint(4,15)
-				painter.drawPoint(4,16)
-				painter.drawPoint(4,17)
-				painter.drawPoint(4,18)
-				painter.restore()
+				if not useritem in self.metaItems[useritem.metajid]:
+					painter.save()
+					painter.translate(x,y)
+					painter.setPen(QtCore.Qt.transparent)
+					linearGrad=QtGui.QRadialGradient(QtCore.QPointF(2,16),14)
+					if self.theme:
+						linearGrad.setColorAt(0,self.main.ui.selectedItemStyle.palette().window().color())
+					else:
+						linearGrad.setColorAt(0,self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight))
+					linearGrad.setColorAt(1, background)
+					painter.setBrush(linearGrad)
+					painter.drawRect(0,0,15,32)
+					if self.theme:
+						painter.setPen(QtGui.QPen(self.main.ui.selectedItemStyle.palette().text().color()))
+					else:
+						painter.setPen(QtGui.QPen(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.HighlightedText)))
+					if useritem.expanded:
+						painter.drawPoint(2,15)# 00000
+						painter.drawPoint(3,15)#  000
+						painter.drawPoint(4,15)#   0
+						painter.drawPoint(5,15)
+						painter.drawPoint(6,15)
+						painter.drawPoint(3,16)
+						painter.drawPoint(4,16)
+						painter.drawPoint(5,16)
+						painter.drawPoint(4,17)
+					else:
+						painter.drawPoint(5,16)
+						painter.drawPoint(4,15)
+						painter.drawPoint(4,16)
+						painter.drawPoint(4,17)
+						painter.drawPoint(3,14)
+						painter.drawPoint(3,15)
+						painter.drawPoint(3,16)
+						painter.drawPoint(3,17)
+						painter.drawPoint(3,18)
+					painter.restore()
 				
 			if useritem in self.events:
 				if self.bl:
@@ -1729,21 +1754,22 @@ class rosterWidget(QtGui.QWidget):
 		if x<12:
 			# sets item properties according to metaItem, which is represented by button
 			if self.metaItems.has_key(item.metajid):
-				index=0
-				for i in self.metaItems[item.metajid]:
-					if i.jid==item.jid:
-						index=self.metaItems[item.metajid].index(i)-1
-						break
-				meta=self.metaItems[item.metajid][index]
-				item.name=meta.name
-				item.escapedName=meta.escapedName
-				item.frameAvatar=meta.frameAvatar
-				item.selectedFrameAvatar=meta.selectedFrameAvatar
-				item.icon=meta.icon
-				item.avatar=meta.avatar
-				item.status=meta.status
-				item.statusMessage=meta.statusMessage
-				item.jid=meta.jid
+				#index=0
+				#for i in self.metaItems[item.metajid]:
+					#if i.jid==item.jid:
+						#index=self.metaItems[item.metajid].index(i)-1
+						#break
+				#meta=self.metaItems[item.metajid][index]
+				#item.name=meta.name
+				#item.escapedName=meta.escapedName
+				#item.frameAvatar=meta.frameAvatar
+				#item.selectedFrameAvatar=meta.selectedFrameAvatar
+				#item.icon=meta.icon
+				#item.avatar=meta.avatar
+				#item.status=meta.status
+				#item.statusMessage=meta.statusMessage
+				#item.jid=meta.jid
+				item.expanded=not item.expanded
 				self.repaint()
 				return
 		else:
