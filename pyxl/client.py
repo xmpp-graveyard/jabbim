@@ -121,6 +121,10 @@ class Client(derived):
 		self.registerFeature('http://www.xmpp.org/extensions/xep-0224.html#ns')
 		self.registerFeature('http://jabber.org/protocol/rosterx')
 		self.registerFeature('http://jabber.org/protocol/muc')
+		self.registerFeature('http://jabber.org/protocol/tune')
+		self.registerFeature('http://jabber.org/protocol/tune+notify')
+		self.registerFeature('http://jabber.org/protocol/mood')
+		self.registerFeature('http://jabber.org/protocol/mood+notify')
 		self.identity = 'client/pc'
 		
 		self.caps_cache = {} # 'ext': (identity,[feature1, feature2])
@@ -150,13 +154,15 @@ class Client(derived):
 		self.dispatcher.registerHandler('on_GCmessage', self.on_GCmessage, 'on_GCmessage')
 		self.dispatcher.registerHandler('on_authd', self.on_authd, 'on_authd')
 		self.dispatcher.registerHandler('on_message_send', self._sendMessage, 'on_message_send')
+		self.dispatcher.registerHandler('on_pep', self.on_pep, 'on_pep') #docasne
 		self.xping = LoopingCall(self.heartbeat)
 		self.hbFails = 0
 		self.connections = [] # [(host1, port1), (host2, port2), ..]
 		self.messageReceipts = {} # id:(zprava)
 		
 		self.socks5Srv = None
-		self.socks5IP = [('127.0.0.1', '33333')] #
+		self.socks5Port = '33333'
+		self.socks5IP = [] #
 
 	def loadAvatars(self,path,avatarDef):
 		from PyQt4 import QtGui,QtCore
@@ -270,6 +276,7 @@ class Client(derived):
 	
 	def _heartbeat(self, el):
 		log.msg('heartbeat ok')
+		self.hbFails = 0
 	
 	def _heartbeatErr(self, err):
 		if err.type == TimeoutError:
@@ -279,6 +286,10 @@ class Client(derived):
 				self.xping.stop()
 	#			if self.factory:
 	#				self.factory.stopTrying()
+				try:
+					self.connection.loseConnection()
+				except:
+					print 'chyba v loseConnection(nejsme pripojeni?)'
 				self.connectionLost(self.connection)
 			else:
 				log.msg('heartbeat fails count: '+ unicode(self.hbFails))
@@ -485,7 +496,7 @@ class Client(derived):
 		self.getPrivacy().addCallback(self.getMetacontacts).addErrback(self.getMetacontacts)
 #		self.getMetacontacts()
 		self.getBookmarks()
-		self.getDiscoInfo(self.jid.host)#,  callback = self._pepSupport)
+		self.getDiscoInfo(self.jid.host, callback = self._pepSupport)
 		self.getDiscoItems(self.jid.host, callback = self._gotServices)
 #		self.reactor.callFromThread(self.on_authd)
 		self.dispatcher.publishEvent('on_authd')
@@ -512,15 +523,14 @@ class Client(derived):
 			self.getDiscoInfo(jid)
 			print jid
 		
-	def _pepSupport(self):
+	def _pepSupport(self, res):
 		log.msg('pep support arrived')
 		for key,  val in self.disco[self.jid.host][None]['identities'].iteritems():
 			log.msg(key+ unicode(val))
 			if val['type'] == 'pep' :
 				log.msg( 'we got a PEP support')
 				self.pep = True
-				self.registerFeature('http://jabber.org/protocol/tune')
-				self.registerFeature('http://jabber.org/protocol/tune+notify')
+#				self.sendPEP('tune', {})
 	
 	def sendPEP(self,  typ,  attrs):
 		iq = IQ(self.xmlstream, 'set')
@@ -530,8 +540,8 @@ class Client(derived):
 		for key, val in attrs.iteritems():
 			tune.addElement(key,  content = val)
 #		self.on_xml(iq.toXml())
-		d = iq.send()
 		self.disp(iq['id'])
+		d = iq.send()
 		d.addCallback(self._pepReceived).addErrback(self.chyba)
 
 	def _pepReceived(self,  el):
@@ -893,7 +903,7 @@ class Client(derived):
 			frm=unicode(frmjid.userhost()).lower()+"/"+frmjid.resource
 		else:
 			frm=unicode(frm).lower()
-		body = subject =xhtml = chatstate = delay = error = attention = receipts = None
+		body = subject =xhtml = chatstate = delay = error = attention = receipts = pep = event = None
 		for child in el.elements():
 			if child.name == "request":
 				if child.defaultUri == "urn:xmpp:receipts":
@@ -963,6 +973,19 @@ class Client(derived):
 					log.err('Couldn\'t remove nonexisten message id')
 				print self.messageReceipts
 				return
+			
+			if child.name == 'event' and child.defaultUri == 'http://jabber.org/protocol/pubsub#event':
+				items = child.firstChildElement()
+				itm = items.firstChildElement()
+				payload = itm.firstChildElement()
+				pep = payload.name
+				event = {}
+				for at in payload.elements():
+					event[at.name] = unicode(at)
+				c = self.getContactByJid(frm)
+				if c != None:
+					c.setPEP(pep, event) #zapisem si to do kontaktu
+				self.dispatcher.publishEvent('on_pep', frm, pep, event)				
 		
 		if error == None and el.getAttribute('type') == 'error':
 			error = 'Unknown Error'
@@ -1070,7 +1093,12 @@ class Client(derived):
 				else:	
 					if typ !='unavailable':
 						features = 'asked'
-						self.getFeatures(frm, ext)
+						print 'nocaps ' + unicode(self.getIdentity(frm.host))
+						print self.hasIdentity(frm.host, 'conference'), self.hasIdentity(frm.host, 'gateway')
+						if  self.hasIdentity(frm.host, 'conference') or self.hasIdentity(frm.host, 'gateway'):
+							print 'konference nebo gateway'
+						else:
+							self.getFeatures(frm, ext)
 			if child.name == 'x' and child.defaultUri == 'http://jabber.org/protocol/muc#user':
 				for item in child.elements():
 					if item.name == 'item':
@@ -1201,6 +1229,7 @@ class Client(derived):
 
 	def _featuresReceived(self, el, ext, jd):
 		log.msg( 'features received')
+		print el.toXml()
 ##		self.disp(el['id'])
 		features = []
 		identity = ''
@@ -1854,6 +1883,16 @@ class Client(derived):
 			field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
 #		self.on_xml(iq.toXml())
 		
+		if self.socks5Srv == None:
+			try:
+				factory = socks5.SOCKSv5Factory(self)
+				self.socks5Srv = self.reactor.listenTCP(int(self.socks5Port), factory)
+				self.socks5IP = []
+				self.socks5IP.append(('127.0.0.1', '33333'))
+
+			except:
+				print 'unable to connect to port'
+					
 		self.disp(iq['id'])
 		d = self._checkProxies()
 		def _doSend(self, iq, client):
@@ -1862,12 +1901,45 @@ class Client(derived):
 			d.addCallback(client._ftreplyReceived, sid).addErrback(client._ftFailed, sid)#addErrback(self.chyba)
 		
 		if d != None:
-			d.addCallback(_doSend, iq, self)
+			d.addCallback(self.getIPAddr).addCallback(self._onIPAddr).addCallback(_doSend, iq, self)
 		else:
+			self.getIPAddr().addCallback(self._onIPAddr)
 			_doSend(None, iq, self)
 			
 		return sid
+
 	
+	def _onIPAddr(self, addr):
+		self.socks5IP.append((unicode(addr),self.socks5Port))
+		if self.main.config['FTHost'] != '':
+			if self.main.config['FTPort'] != '':
+				self.socks5IP.append((self.main.config['FTHost'],self.main.config['FTPort'] ))
+			else:
+				self.socks5IP.append((self.main.config['FTHost'], self.socks5Port))
+		print self.socks5IP
+		
+		try:
+			from nattraverso.portmapper import get_port_mapper
+		except:
+			log.msg('nattraverso not found, UPnP mapping is not available')
+			return
+		
+		return get_port_mapper().addCallbacks(self.got_port_mapper, self.error_occured)
+
+	def got_port_mapper(self, mapper):
+		print "\tGot port mapper:", mapper
+		print "Retreiving existing mappings"
+		return mapper.get_port_mappings().addCallback(self.got_mappings).addErrback(self.error_occured)
+	
+	def error_occured(self, err):
+		print "\tError occured:", err
+	
+	def got_mappings(self, mappings):
+		print '\tExisting mappings:\n\t', mappings
+		
+
+			
+		
 	def _checkProxies(self):
 		print 'checking list of proxies', self.ft_proxies
 		dlist = []
@@ -1927,13 +1999,7 @@ class Client(derived):
 			q = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
 			q['sid'] = sid
 			q['mode'] = 'tcp'
-			if self.socks5Srv == None:
-				try:
-					factory = socks5.SOCKSv5Factory(self)
-					self.socks5Srv = self.reactor.listenTCP(int(self.socks5IP[0][1]), factory)
 
-				except:
-					print 'unable to connect to port'
 				
 			addr = sha1("%s%s%s" % (sid, self.jid.full(), el['from'])).hexdigest()
 			self.socks5Srv.factory.sessions[addr] = sid

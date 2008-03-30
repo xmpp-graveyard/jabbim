@@ -88,17 +88,7 @@ class clientClass(pyxl.client.Client):
 		self.bookmarksEnabled=True
 		self.xmlCount=[]
 		self.bannedJids=[]
-		utils.getIPAddr().addCallback(self._onIPAddr)
 	
-	def _onIPAddr(self, addr):
-		self.socks5IP.append((unicode(addr),self.socks5IP[0][1]))
-		if self.main.config['FTHost'] != '':
-			if self.main.config['FTPort'] != '':
-				self.socks5IP.append((self.main.config['FTHost'],self.main.config['FTPort'] ))
-			else:
-				self.socks5IP.append((self.main.config['FTHost'], self.socks5IP[0][1]))
-		print self.socks5IP
-		
 		
 
 	def on_bookmarksFail(self):
@@ -3393,7 +3383,7 @@ class mainWindow(QtGui.QMainWindow):
 			log.err('Connection Lost')
 			if msg != None and len(msg)>0:
 				MainWindow.delayedMessages = msg
- 			reactor.callLater(3, MainWindow.connect)
+ 			reactor.callLater(5, MainWindow.connect)
 		print "disconnected....."
 
 

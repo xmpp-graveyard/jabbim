@@ -34,7 +34,13 @@ class Contact:
 		self.avatar_file = ''
 		self.avatar_hash = ''
 		self.ask = ask
+		self.pep = {}
 
+	def setPEP(self, typ, payload):
+		self.pep[typ] = payload
+	
+	def getPEP(self, typ):
+		return self.pep.get(typ, None)
 
 	def setStatus(self, resource, show, status):
 		first = False

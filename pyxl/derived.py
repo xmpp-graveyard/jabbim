@@ -28,6 +28,8 @@ from twisted.internet import defer
 from contact import *
 from groupchat import  *
 from xmlrpclib import loads, dumps
+from twisted.internet import  threads
+import socket 
 
 MUCLISTTYPES = {
 'voice': ('http://jabber.org/protocol/muc#admin', 'participant', 'role'),
@@ -141,8 +143,12 @@ class derived:
 	def on_avatarUpdate(self, jid):
 		pass
 
-	def on_rosterx(frm, out, id):
+	def on_rosterx(self,frm, out, id):
 		pass
+	
+	def on_pep(self, frm, ns, payload):
+		print frm, ns
+		print payload
 	########################################################################################################################
 	
 	########################################################################################################################
@@ -570,7 +576,7 @@ class derived:
 			self.setMetacontacts()
 
 	def getFeatures(self, jid, ext = None):
-		log.msg('requesting features'+ unicode(ext))
+		log.msg('requesting features'+ unicode(jid.full()))
 		iq = IQ(self.xmlstream, 'get')
 		iq['xml:lang'] = self.xmlLang
 		iq['to'] = jid.full()
@@ -769,18 +775,54 @@ class derived:
 		except KeyError:
 			return None
 	
-	def hasIdentity(self, injid, category, typ):
+	def hasIdentity(self, injid, category, typ = None):
 
 		id = self.getIdentity(injid)
 
 		f = False
 		if id != None:
 			for identity in id.itervalues():
-
-				if identity.get('category', None) == category and identity.get('type', None) == typ:
-
-					f = True
+				if typ != None:
+					if identity.get('category', None) == category and identity.get('type', None) == typ:
+						f = True
+				else:
+					if identity.get('category', None) == category:
+						f = True
 					break
 
 		return f
+
+	def getIPAddr(self, hostname = 'default'):
+		return(threads.deferToThread(self.getipaddr, hostname))
+
+	def getipaddr(self, hostname='default'):
+		if hostname == 'default' or hostname == None:
+			hostname = socket.gethostname()
+		print hostname
+		ips = socket.gethostbyname_ex(hostname)[2]
+		ips = [i for i in ips if i.split('.')[0] != '127']
+		if len(ips) != 0:
+			# check if we have succes in determining outside IP
+			ip = ips[0]
+		elif len(ips) == 0 and hostname == socket.gethostname():
+			# when we want to determine local IP and did not have succes
+			# with gethostbyname_ex then we would like to connect to say... 
+			
+			# google.com and determine the local ip address bound to the
+			# local socket.
+			try:
+				s = socket.socket()
+				s.connect(('google.com', 80))
+				print ('___ connecting to internet to determine local ip')
+				ip = s.getsockname()[0]
+				del s
+			except:
+				print ('*** cannot connect to internet in order to \
+				determine outside IP address')
+				raise Exception
+		if len(ip) != 0:
+			return ip
+		else:
+			print ('*** unable to determine outside IP address')
+			raise Exception
 			
