@@ -180,6 +180,12 @@ class derived:
 			c['ver'] = self.caps_version
 			if self.caps_ext != None:
 				c['ext'] = self.caps_ext
+		
+		x = presence.addElement('x', 'vcard-temp:x:update')
+		if self.avatarDef[self.jid.userhost()] != 'None':
+			x.addElement('photo', content = self.avatarDef[self.jid.userhost()])
+		else:
+			x.addElement('photo')
 
 		log.msg('sending out presence to: ' + unicode(to))
 #		self.on_xml(presence.toXml())
