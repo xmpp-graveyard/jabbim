@@ -89,7 +89,9 @@ class clientClass(pyxl.client.Client):
 		self.xmlCount=[]
 		self.bannedJids=[]
 	
-		
+	def on_pep(self, frm, ns, payload):	
+		if frm == self.jid.userhost():
+			self.main.ui.selfAvatar.refreshToolTip()
 
 	def on_bookmarksFail(self):
 		"""
@@ -1356,7 +1358,7 @@ class AvatarLabel(QtGui.QLabel):
 						text+='<b>%s</b> %s<br/>' % (res, priority)
 					text+='<font size="-1">%s</font>' % (status)
 				tune = contact.getPEP('http://jabber.org/protocol/tune')
-				print tune
+				print 'tune'
 				if tune != None:
 					artist = title = ''						
 					for el in tune.elements():
@@ -1369,7 +1371,7 @@ class AvatarLabel(QtGui.QLabel):
 						text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">%s</font>' % (t) #ikonka se este muze menit ;)
 		
 				mood = contact.getPEP('http://jabber.org/protocol/mood')
-				print mood
+				print 'mood'
 				if mood != None:
 					t = ''
 					m = txt = ''
@@ -1377,7 +1379,7 @@ class AvatarLabel(QtGui.QLabel):
 						if el.name == 'text':
 							txt = unicode(el)
 						else :
-							m = self.moods.get(el.name)
+							m = self.main.moods.get(el.name)
 					if txt != '':
 						t = m+ ' - %s'%txt
 					else:
@@ -1385,7 +1387,7 @@ class AvatarLabel(QtGui.QLabel):
 					text+='<br /><font size="-1">%s</font>' % (t)	
 				
 				activity = contact.getPEP('http://jabber.org/protocol/activity')
-				print activity
+				print 'activity'
 				if activity != None:
 					print activity.toXml()
 					txt = ''
