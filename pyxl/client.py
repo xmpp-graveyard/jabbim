@@ -125,6 +125,8 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/tune+notify')
 		self.registerFeature('http://jabber.org/protocol/mood')
 		self.registerFeature('http://jabber.org/protocol/mood+notify')
+		self.registerFeature('http://jabber.org/protocol/activity')
+		self.registerFeature('http://jabber.org/protocol/activity+notify')
 		self.identity = 'client/pc'
 		
 		self.caps_cache = {} # 'ext': (identity,[feature1, feature2])
@@ -536,13 +538,14 @@ class Client(derived):
 				self.pep = True
 #				self.sendPEP('tune', {})
 	
-	def sendPEP(self,  typ,  attrs):
+	def sendPEP(self,  ns,  payload): #paylod is Element node
 		iq = IQ(self.xmlstream, 'set')
 		pb = iq.addElement('pubsub', 'http://jabber.org/protocol/pubsub' ).addElement('publish')
-		pb['node'] = 'http://jabber.org/protocol/' + typ
-		tune = pb.addElement('item').addElement(typ, 'http://jabber.org/protocol/' + typ)
-		for key, val in attrs.iteritems():
-			tune.addElement(key,  content = val)
+		pb['node'] = ns
+		p = pb.addElement('item').addChild(payload)
+#		for key, val in attrs.iteritems():
+#			tune.addElement(key,  content = val)
+
 #		self.on_xml(iq.toXml())
 		self.disp(iq['id'])
 		d = iq.send()
@@ -551,17 +554,6 @@ class Client(derived):
 	def _pepReceived(self,  el):
 		log.msg(el.toXml())
 	
-	def registerPEP(self,  to,  typ): #typ = tune|mood|activity
-		iq = IQ(self.xmlstream, 'set')
-		iq['to'] = to
-		sb = iq.addElement('pubsub',  'http://jabber.org/protocol/pubsub').addElement('subscribe')
-		sb['jid'] = self.jid.userhost()
-		sb['node'] ='http://jabber.org/protocol/'+typ
-#		self.on_xml(iq.toXml())
-		d = iq.send()
-		self.disp(iq['id'])
-		d.addCallback(self._pepReceived).addErrback(self.chyba)
-
 	def registerFeature(self, feature, node = None, identity = None):#{"category":None,"type":None,"name":None}):
 		if self.discofeatures.has_key(node):
 			self.discofeatures[node].append((feature,))
@@ -981,14 +973,16 @@ class Client(derived):
 			if child.name == 'event' and child.defaultUri == 'http://jabber.org/protocol/pubsub#event':
 				items = child.firstChildElement()
 				itm = items.firstChildElement()
+				pep = items.getAttribute('node')
+
 				if itm != None:
 					payload = itm.firstChildElement()
-					pep = payload.name
+					
 					event = {}
 #					for at in payload.elements():
 #						event[at.name] = unicode(at)
 				else:
-					pep = items.defaultUri.split('/')[-1]
+					
 					payload = None
 					print el.toXml()
 				c = self.getContactByJid(frm)
@@ -1166,10 +1160,12 @@ class Client(derived):
 				show = 'offline'
 			else:
 				return
+		if features == None or len(features) == 0:
+			self.getFeatures(frm, None)
+		
 		if features == 'asked':
 			features = []
-		elif features == None or len(features) == 0:
-			self.getFeatures(frm, None)
+
 
 		if self.groupchats.has_key(fromjid):
 			if show=="offline":

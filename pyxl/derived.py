@@ -148,7 +148,7 @@ class derived:
 	
 	def on_pep(self, frm, ns, payload):
 		print frm, ns
-		print payload
+		print payload.toXml()
 	########################################################################################################################
 	
 	########################################################################################################################
@@ -826,3 +826,9 @@ class derived:
 			print ('*** unable to determine outside IP address')
 			raise Exception
 			
+	def getMoodPayload(self, mood, text = None):
+		m = Element(('http://jabber.org/protocol/mood', 'mood'))
+		m.addElement(mood)
+		if text != None and len(text) > 0 :
+			m.addElement('text', content = text)
+		return m

@@ -867,7 +867,7 @@ class rosterWidget(QtGui.QWidget):
 						if len(status) != 0:
 							text+='<br /><font size="-1">%s</font>' % (status.replace('\n', '<br />'))
 						n+=1
-					tune = contact.getPEP('tune')
+					tune = contact.getPEP('http://jabber.org/protocol/tune')
 					if tune != None:
 						artist = title = ''						
 						for el in tune.elements():
@@ -879,17 +879,42 @@ class rosterWidget(QtGui.QWidget):
 						if len(t.strip())>0:
 							text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">%s</font>' % (t) #ikonka se este muze menit ;)
 					
-					mood = contact.getPEP('mood')
+					mood = contact.getPEP('http://jabber.org/protocol/mood')
 					if mood != None:
+						t = ''
 						m = txt = ''
 						for el in mood.elements():
 							if el.name == 'text':
 								txt = unicode(el)
 							else :
-								m = el.name
+								m = self.main.moods.get(el.name)
 						if txt != '':
-							m += ' - %s'%txt
-						text+='<br /><font size="-1">%s</font>' % (m)	
+							t = m+ ' - %s'%txt
+						else:
+							t = m
+						text+='<br /><font size="-1">%s</font>' % (t)	
+					
+					activity = contact.getPEP('http://jabber.org/protocol/activity')
+					if activity != None:
+						txt = ''
+						general = ''
+						spec = ''
+						for el in activity.elements():
+							if el.name == 'text':
+								txt = unicode(el)
+							else :
+								general = el.name
+								spec = el.firstChildElement().name
+
+#						t = ''
+#						if spec == None or '':
+#							t = general
+#						else:
+#							t = spec
+#						if txt != '':
+#							t += 
+						text+='<br /><font size="-1">%s - %s</font>' % (spec or general, txt)
+					
 					text+="</td></tr></table>"
 					self.setToolTip(text)
 		return QtGui.QWidget.event(self,event)

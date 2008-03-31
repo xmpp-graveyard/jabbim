@@ -1499,6 +1499,70 @@ class mainWindow(QtGui.QMainWindow):
 					"offline":self.tr("Offline"),
 					"invisible":self.tr("Invisible")
 					}
+		#mood:translation
+		self.moods = {
+"afraid":self.tr("afraid"),
+"amazed":self.tr("amazed"),
+"angry":self.tr("angry"),
+"annoyed":self.tr("annoyed"),
+"anxious":self.tr("anxious"),
+"aroused":self.tr("aroused"),
+"ashamed":self.tr("ashamed"),
+"bored":self.tr("bored"),
+"brave":self.tr("brave"),
+"calm":self.tr("calm"),
+"cold":self.tr("cold"),
+"confused":self.tr("confused"),
+"contented":self.tr("contented"),
+"cranky":self.tr("cranky"),
+"curious":self.tr("curious"),
+"depressed":self.tr("depressed"),
+"disappointed":self.tr("disappointed"),
+"disgusted":self.tr("disgusted"),
+"distracted":self.tr("distracted"),
+"embarrassed":self.tr("embarrassed"),
+"excited":self.tr("excited"),
+"flirtatious":self.tr("flirtatious"),
+"frustrated":self.tr("frustrated"),
+"grumpy":self.tr("grumpy"),
+"guilty":self.tr("guilty"),
+"happy":self.tr("happy"),
+"hot":self.tr("hot"),
+"humbled":self.tr("humbled"),
+"humiliated":self.tr("humiliated"),
+"hungry":self.tr("hungry"),
+"hurt":self.tr("hurt"),
+"impressed":self.tr("impressed"),
+"in_awe":self.tr("in_awe"),
+"in_love":self.tr("in_love"),
+"indignant":self.tr("indignant"),
+"interested":self.tr("interested"),
+"intoxicated":self.tr("intoxicated"),
+"invincible":self.tr("invincible"),
+"jealous":self.tr("jealous"),
+"lonely":self.tr("lonely"),
+"mean":self.tr("mean"),
+"moody":self.tr("moody"),
+"nervous":self.tr("nervous"),
+"neutral":self.tr("neutral"),
+"offended":self.tr("offended"),
+"playful":self.tr("playful"),
+"proud":self.tr("proud"),
+"relieved":self.tr("relieved"),
+"remorseful":self.tr("remorseful"),
+"restless":self.tr("restless"),
+"sad":self.tr("sad"),
+"sarcastic":self.tr("sarcastic"),
+"serious":self.tr("serious"),
+"shocked":self.tr("shocked"),
+"shy":self.tr("shy"),
+"sick":self.tr("sick"),
+"sleepy":self.tr("sleepy"),
+"stressed":self.tr("stressed"),
+"surprised":self.tr("surprised"),
+"thirsty":self.tr("thirsty"),
+"worried":self.tr("worried")
+		}
 		self.offline=False
 		self.xmlConsole=XMLConsole(self)
 		self.ui.showOffline.hide()
@@ -1881,6 +1945,13 @@ class mainWindow(QtGui.QMainWindow):
 		if separator:
 			self.statusWidgetMenu.addSeparator()
 		
+		# User Mood hack
+		mood = self.statusWidgetMenu.addMenu(self.tr('Mood'))
+		for m, txt in self.moods.iteritems():
+			action = mood.addAction(txt)
+			action.setData(QtCore.QVariant(m))
+			action.setObjectName('mood')
+		
 		# make menu for transports
 		if len(self.transports)!=0:
 			for transport in list(self.transports.keys()):
@@ -1984,6 +2055,13 @@ class mainWindow(QtGui.QMainWindow):
 		@param action: QAction from self.statusWidgetMenu. if QAction.data() is string, presence is sent to the server or one of other commands is executed. If it's list, then it's in format [show,JID] and presence is sent to the JID. Show is in format "show_idOfStatusMessage" or just "show".
 		"""
 		data=action.data()
+		cmd = action.objectName()
+		if cmd == 'mood':
+			m = unicode(data.toString())
+			log.msg('setting mood to '+m)
+			self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(m))
+			return
+			
 		if len(data.toList())==0:
 			# We are sending presence to the server
 			data=unicode(data.toString())
