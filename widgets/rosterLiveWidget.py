@@ -913,7 +913,7 @@ class rosterWidget(QtGui.QWidget):
 #							t = spec
 #						if txt != '':
 #							t += 
-						text+='<br /><font size="-1">%s - %s</font>' % (spec or general, txt)
+						text+='<br /><font size="-1"><b>%s</b> %s %s</font>' % (general, spec, txt)
 					
 					text+="</td></tr></table>"
 					self.setToolTip(text)

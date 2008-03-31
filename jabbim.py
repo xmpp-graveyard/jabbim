@@ -1563,6 +1563,80 @@ class mainWindow(QtGui.QMainWindow):
 "thirsty":self.tr("thirsty"),
 "worried":self.tr("worried")
 		}
+		self.activities = {"buying_groceries":self.tr("buying_groceries"),
+"cleaning":self.tr("cleaning"),
+"cooking":self.tr("cooking"),
+"doing_maintenance":self.tr("doing_maintenance"),
+"doing_the_dishes":self.tr("doing_the_dishes"),
+"doing_the_laundry":self.tr("doing_the_laundry"),
+"gardening":self.tr("gardening"),
+"running_an_errand":self.tr("running_an_errand"),
+"walking_the_dog":self.tr("walking_the_dog"),
+"having_a_beer":self.tr("having_a_beer"),
+"having_coffee":self.tr("having_coffee"),
+"having_tea":self.tr("having_tea"),
+"having_a_snack":self.tr("having_a_snack"),
+"having_breakfast":self.tr("having_breakfast"),
+"having_dinner":self.tr("having_dinner"),
+"having_lunch":self.tr("having_lunch"),
+"cycling":self.tr("cycling"),
+"hiking":self.tr("hiking"),
+"jogging":self.tr("jogging"),
+"playing_sports":self.tr("playing_sports"),
+"running":self.tr("running"),
+"skiing":self.tr("skiing"),
+"swimming":self.tr("swimming"),
+"working_out":self.tr("working_out"),
+"at_the_spa":self.tr("at_the_spa"),
+"brushing_teeth":self.tr("brushing_teeth"),
+"getting_a_haircut":self.tr("getting_a_haircut"),
+"shaving":self.tr("shaving"),
+"taking_a_bath":self.tr("taking_a_bath"),
+"taking_a_shower":self.tr("taking_a_shower"),
+"day_off":self.tr("day_off"),
+"hanging_out":self.tr("hanging_out"),
+"on_vacation":self.tr("on_vacation"),
+"scheduled_holiday":self.tr("scheduled_holiday"),
+"sleeping":self.tr("sleeping"),
+"gaming":self.tr("gaming"),
+"going_out":self.tr("going_out"),
+"partying":self.tr("partying"),
+"reading":self.tr("reading"),
+"rehearsing":self.tr("rehearsing"),
+"shopping":self.tr("shopping"),
+"socializing":self.tr("socializing"),
+"sunbathing":self.tr("sunbathing"),
+"watching_tv":self.tr("watching_tv"),
+"watching_a_movie":self.tr("watching_a_movie"),
+"in_real_life":self.tr("in_real_life"),
+"on_the_phone":self.tr("on_the_phone"),
+"on_video_phone":self.tr("on_video_phone"),
+"commuting":self.tr("commuting"),
+"cycling":self.tr("cycling"),
+"driving":self.tr("driving"),
+"in_a_car":self.tr("in_a_car"),
+"on_a_bus":self.tr("on_a_bus"),
+"on_a_plane":self.tr("on_a_plane"),
+"on_a_train":self.tr("on_a_train"),
+"on_a_trip":self.tr("on_a_trip"),
+"walking":self.tr("walking"),
+"coding":self.tr("coding"),
+"in_a_meeting":self.tr("in_a_meeting"),
+"studying":self.tr("studying"),
+"writing":self.tr("writing")}
+
+		self.activityGroups = {"doing_chores":self.tr("doing_chores"),
+"drinking":self.tr("drinking"),
+"eating":self.tr("eating"),
+"exercising":self.tr("exercising"),
+"grooming":self.tr("grooming"),
+"having_appointment":self.tr("having_appointment"),
+"inactive":self.tr("inactive"),
+"relaxinge":self.tr("relaxinge"),
+"talking":self.tr("talking"),
+"traveling":self.tr("traveling"),
+"working":self.tr("working")}
+
 		self.offline=False
 		self.xmlConsole=XMLConsole(self)
 		self.ui.showOffline.hide()
@@ -1945,12 +2019,23 @@ class mainWindow(QtGui.QMainWindow):
 		if separator:
 			self.statusWidgetMenu.addSeparator()
 		
-		# User Mood hack
-		mood = self.statusWidgetMenu.addMenu(self.tr('Mood'))
-		for m, txt in self.moods.iteritems():
-			action = mood.addAction(txt)
-			action.setData(QtCore.QVariant(m))
-			action.setObjectName('mood')
+
+		if self.client.pep :
+			# User Mood hack
+			mood = self.statusWidgetMenu.addMenu(self.tr('Mood'))
+			for m, txt in self.moods.iteritems():
+				action = mood.addAction(txt)
+				action.setData(QtCore.QVariant(m))
+				action.setObjectName('mood')
+			
+			activity =  self.statusWidgetMenu.addMenu(self.tr('Activity'))
+			for group, txt in self.activityGroups.iteritems():
+				menu = activity.addMenu(txt)
+				for a, txt in self.activities.iteritems():
+					action = menu.addAction(txt)
+					action.setObjectName('activity')
+					action.setData(QtCore.QVariant([group, a]))
+			
 		
 		# make menu for transports
 		if len(self.transports)!=0:
@@ -2060,6 +2145,14 @@ class mainWindow(QtGui.QMainWindow):
 			m = unicode(data.toString())
 			log.msg('setting mood to '+m)
 			self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(m))
+			return
+		
+		elif cmd == 'activity':
+			data = data.toList()
+			group = unicode(data[0].toString())
+			a = unicode(data[1].toString())
+			log.msg('setting activity to %s/%s'%(group, a))
+			self.client.sendPEP('http://jabber.org/protocol/activity', self.client.getActivityPayload(group, a))
 			return
 			
 		if len(data.toList())==0:

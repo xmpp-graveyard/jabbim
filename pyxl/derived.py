@@ -832,3 +832,12 @@ class derived:
 		if text != None and len(text) > 0 :
 			m.addElement('text', content = text)
 		return m
+	
+	def getActivityPayload(self, group, spec = None, text = None):
+		a = Element(('http://jabber.org/protocol/activity', 'activity'))
+		g = a.addElement(group)
+		if spec != None:
+			g.addElement(spec)
+		if text != None and len(text) > 0 :
+			a.addElement('text', content = text)
+		return a
