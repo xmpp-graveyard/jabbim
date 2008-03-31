@@ -1632,7 +1632,7 @@ class mainWindow(QtGui.QMainWindow):
 "grooming":self.tr("grooming"),
 "having_appointment":self.tr("having_appointment"),
 "inactive":self.tr("inactive"),
-"relaxinge":self.tr("relaxinge"),
+"relaxing":self.tr("relaxing"),
 "talking":self.tr("talking"),
 "traveling":self.tr("traveling"),
 "working":self.tr("working")}

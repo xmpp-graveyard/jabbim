@@ -165,6 +165,7 @@ class Client(derived):
 		self.socks5Srv = None
 		self.socks5Port = '33333'
 		self.socks5IP = [] #
+		self.pep = False
 
 	def loadAvatars(self,path,avatarDef):
 		from PyQt4 import QtGui,QtCore
