@@ -1355,6 +1355,49 @@ class AvatarLabel(QtGui.QLabel):
 					if res != None:
 						text+='<b>%s</b> %s<br/>' % (res, priority)
 					text+='<font size="-1">%s</font>' % (status)
+				tune = contact.getPEP('http://jabber.org/protocol/tune')
+				print tune
+				if tune != None:
+					artist = title = ''						
+					for el in tune.elements():
+						if el.name == 'artist':
+							artist = unicode(el)
+						elif el.name == 'title':
+							title = unicode(el)
+					t = '%s  %s'%(artist, title)
+					if len(t.strip())>0:
+						text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">%s</font>' % (t) #ikonka se este muze menit ;)
+		
+				mood = contact.getPEP('http://jabber.org/protocol/mood')
+				print mood
+				if mood != None:
+					t = ''
+					m = txt = ''
+					for el in mood.elements():
+						if el.name == 'text':
+							txt = unicode(el)
+						else :
+							m = self.moods.get(el.name)
+					if txt != '':
+						t = m+ ' - %s'%txt
+					else:
+						t = m
+					text+='<br /><font size="-1">%s</font>' % (t)	
+				
+				activity = contact.getPEP('http://jabber.org/protocol/activity')
+				print activity
+				if activity != None:
+					print activity.toXml()
+					txt = ''
+					general = ''
+					spec = ''
+					for el in activity.elements():
+						if el.name == 'text':
+							txt = unicode(el)
+						else :
+							general = el.name
+							spec = el.firstChildElement().name
+					text+='<br /><font size="-1"><b>%s</b> %s %s</font>' % (general, spec, txt)
 			text+="</td></tr></table>"
 			self.setToolTip(text)
 
