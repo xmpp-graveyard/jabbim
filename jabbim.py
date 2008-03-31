@@ -2065,10 +2065,13 @@ class mainWindow(QtGui.QMainWindow):
 			self.statusWidgetMenu.addSeparator()
 		
 
-		if self.client.pep :
+		if self.client != None and self.client.pep :
 			# User Mood hack
 			mood = self.statusWidgetMenu.addMenu(self.tr('Mood'))
-			for m, txt in self.moods.iteritems():
+			keys = self.moods.keys()
+			keys.sort()
+			for m in keys:
+				txt = self.moods[m]
 				action = mood.addAction(txt)
 				action.setData(QtCore.QVariant(m))
 				action.setObjectName('mood')
@@ -2076,7 +2079,10 @@ class mainWindow(QtGui.QMainWindow):
 			activity =  self.statusWidgetMenu.addMenu(self.tr('Activity'))
 			for group, txt in self.activityGroups.iteritems():
 				menu = activity.addMenu(txt)
-				for a, txt in self.activities.iteritems():
+				keys = self.activities.keys()
+				keys.sort()
+				for a in keys:
+					txt = self.activities[a]
 					action = menu.addAction(txt)
 					action.setObjectName('activity')
 					action.setData(QtCore.QVariant([group, a]))
