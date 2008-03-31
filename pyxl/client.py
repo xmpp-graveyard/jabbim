@@ -424,6 +424,10 @@ class Client(derived):
 		log.msg('connection failed!')
 		print self.connections
 		if len(self.connections)>0:
+			try:
+				self.connection.loseConnection()
+			except:
+				pass
 			host, port = self.connections.pop(0)
 			self._connect(host,port)
 		else:
@@ -977,15 +981,21 @@ class Client(derived):
 			if child.name == 'event' and child.defaultUri == 'http://jabber.org/protocol/pubsub#event':
 				items = child.firstChildElement()
 				itm = items.firstChildElement()
-				payload = itm.firstChildElement()
-				pep = payload.name
-				event = {}
-				for at in payload.elements():
-					event[at.name] = unicode(at)
+				if itm != None:
+					payload = itm.firstChildElement()
+					pep = payload.name
+					event = {}
+#					for at in payload.elements():
+#						event[at.name] = unicode(at)
+				else:
+					pep = items.defaultUri.split('/')[-1]
+					payload = None
+					print el.toXml()
 				c = self.getContactByJid(frm)
 				if c != None:
-					c.setPEP(pep, event) #zapisem si to do kontaktu
-				self.dispatcher.publishEvent('on_pep', frm, pep, event)				
+					c.setPEP(pep, payload) #zapisem si to do kontaktu
+				self.dispatcher.publishEvent('on_pep', frm, pep, payload)
+						
 		
 		if error == None and el.getAttribute('type') == 'error':
 			error = 'Unknown Error'

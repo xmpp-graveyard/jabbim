@@ -866,8 +866,30 @@ class rosterWidget(QtGui.QWidget):
 							text+=' %s' % (identity)
 						if len(status) != 0:
 							text+='<br /><font size="-1">%s</font>' % (status.replace('\n', '<br />'))
-
 						n+=1
+					tune = contact.getPEP('tune')
+					if tune != None:
+						artist = title = ''						
+						for el in tune.elements():
+							if el.name == 'artist':
+								artist = unicode(el)
+							elif el.name == 'title':
+								title = unicode(el)
+						t = '%s  %s'%(artist, title)
+						if len(t.strip())>0:
+							text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">%s</font>' % (t) #ikonka se este muze menit ;)
+					
+					mood = contact.getPEP('mood')
+					if mood != None:
+						m = txt = ''
+						for el in mood.elements():
+							if el.name == 'text':
+								txt = unicode(el)
+							else :
+								m = el.name
+						if txt != '':
+							m += ' - %s'%txt
+						text+='<br /><font size="-1">%s</font>' % (m)	
 					text+="</td></tr></table>"
 					self.setToolTip(text)
 		return QtGui.QWidget.event(self,event)
