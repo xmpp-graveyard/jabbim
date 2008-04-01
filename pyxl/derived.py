@@ -220,6 +220,7 @@ class derived:
 #						body = html.addElement('body', 'http://www.w3.org/1999/xhtml')
 #						body.addRawXml(xhtml)
 #			elif muc:
+			if self.hasFeature(to, 'http://jabber.org/protocol/xhtml-im') or typ == 'groupchat':
 				html = message.addElement('html','http://jabber.org/protocol/xhtml-im')
 				body = html.addElement('body', 'http://www.w3.org/1999/xhtml')
 				body.addRawXml(xhtml)

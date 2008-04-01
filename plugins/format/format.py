@@ -89,7 +89,7 @@ class Plugin(plugins.PluginBase):
 			if text == xhtml.replace('<p>','').replace('</p>',''):
 				return True
 
-			self.main.client.sendMessage(jid, strip_html(xhtml), 'chat', composing = composite, xhtml = xhtml,  muc = False)
+			self.main.client.sendMessage(jid, strip_html(xhtml).strip(), 'chat', composing = composite, xhtml = xhtml,  muc = False)
 			tab,tabIndex=self.main.chat.findTab(unicode(jid)) 
 			if tab: 
 				tab.chat.appendXhtml(xhtml)
