@@ -46,7 +46,7 @@ class Plugin(plugins.PluginBase):
     		out = {}
     		if output.find('\n[playing]') != -1:
     			text = output.split('\n')[0]
-    			text = text.split(' - ')
+    			text = text.split(' - ', 1)
     			out['artist'] = text[0]
     			out['title'] = text[1]
     			out['lenght'] = output.split('\n')[1].split('/')[-1].split('(')[0].strip()

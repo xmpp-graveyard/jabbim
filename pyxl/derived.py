@@ -739,7 +739,7 @@ class derived:
 	def getMucContactByJid(self, injid):
 		jd = jid.JID(injid)
 		try:
-			contact = self.groupchats[jd.host].users[jd.resource]
+			contact = self.groupchats[jd.userhost()].users[jd.resource]
 		except:
 			contact = None
 		return contact

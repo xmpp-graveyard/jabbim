@@ -475,9 +475,12 @@ class groupChatWidget(abstractChatWidget):
 
 	def roomConfigClicked(self):
 		nick=self.main.client.groupchats[self.jid].nick
-		if self.main.client.groupchats[self.jid].users[nick].affiliation=="owner":
+		if self.main.client.groupchats[self.jid].users[nick].affiliation=="owner" :
 			d=self.main.client.getMUCConfig(self.jid)
 			d.addCallback(self._onRoomConfig)
+		elif self.main.client.groupchats[self.jid].users[nick].affiliation=="admin":
+			self.dialog=groupchatAdminDialog(self.main,self.jid,None,self,subject=unicode(self.ui.info.toPlainText()), admin = True)
+			self.dialog.show()
 		elif self.role=='moderator':
 			self.dialog=groupchatAdminDialog(self.main,self.jid,None,self,subject=unicode(self.ui.info.toPlainText()))
 			self.dialog.show()
@@ -486,7 +489,7 @@ class groupChatWidget(abstractChatWidget):
 		jid=data[0]
 		form=data[1]
 		if form!=None:
-			self.dialog=groupchatAdminDialog(self.main,jid,form,self,subject=unicode(self.ui.info.toPlainText()))
+			self.dialog=groupchatAdminDialog(self.main,jid,form,self,subject=unicode(self.ui.info.toPlainText()), admin = True)
 			self.dialog.show()
 
 	def roomAdminClicked(self):

@@ -26,7 +26,7 @@ from groupchatadmin_ui import *
 from twisted.python import log
 import dataforms
 class groupchatAdminDialog(QtGui.QDialog):
-	def __init__(self,main,jid,form,parent=None,subject=""):
+	def __init__(self,main,jid,form,parent=None,subject="", admin = False):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.setModal(False)
 		self.ui=Ui_groupchatAdmin()
@@ -35,20 +35,33 @@ class groupchatAdminDialog(QtGui.QDialog):
 		self.jid=jid
 		self.form=form
 		self.subject=subject
+
+		self.admin = admin
+
 		if self.form:
 			layout=QtGui.QGridLayout(self.ui.config)
 			self.var,row=dataforms.makeDataForm(self.ui.config,layout,self.form)
-			
-			d=self.main.client.getMUCLists(self.jid, types = ['ban', 'member', 'admin', 'owner'])
-			d.addCallback(self._gotLists)
-			self.items={}
+
 			self.ui.subject.setPlainText(subject)
 		else:
 			self.ui.groupchatAdminTab.setTabEnabled(0,False)
 			self.ui.groupchatAdminTab.setTabEnabled(1,False)
 			self.ui.groupchatAdminTab.setCurrentIndex(2)
 			self.ui.subject.setPlainText(subject)
-			
+
+		if admin == True:
+			self.items={}
+			nick = self.main.client.groupchats[self.jid].nick
+			print self.jid+'/'+nick
+			contact = self.main.client.getMucContactByJid(self.jid+'/'+nick)
+			if contact != None:
+				if contact.affiliation == 'owner':
+					d=self.main.client.getMUCLists(self.jid, types = ['ban', 'member', 'admin', 'owner'])
+					d.addCallback(self._gotLists)
+				elif contact.affiliation == 'admin':
+					d=self.main.client.getMUCLists(self.jid, types = ['ban', 'member'])
+					d.addCallback(self._gotLists)		
+				self.ui.groupchatAdminTab.setTabEnabled(1,True)	
 			
 
 	def _gotLists(self,data):
@@ -180,7 +193,7 @@ class groupchatAdminDialog(QtGui.QDialog):
 	def accept(self):
 		
 		#{i:{"reason":reason,"jid":jid,"affiliation":affiliation},}
-		if self.form:
+		if self.admin:
 			for aff in ['outcast', 'member', 'admin', 'owner']:
 				x=0
 				items={}
@@ -195,6 +208,7 @@ class groupchatAdminDialog(QtGui.QDialog):
 				if len(items)!=0:
 					print items
 					self.main.client.setMUCList(self.jid, items,"")
+		if self.form:
 			dataforms.sendDataForm(self.main,self.jid,self.form,self.var,"muc")
 		if unicode(self.ui.subject.toPlainText())!=unicode(self.subject):
 			self.main.client.sendMessage(self.jid, typ='groupchat',body=unicode(self.tr('/me has set subject to: '))+unicode(self.ui.subject.toPlainText()),subject=unicode(self.ui.subject.toPlainText()))
