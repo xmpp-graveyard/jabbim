@@ -847,3 +847,9 @@ class derived:
 		if text != None and len(text) > 0 :
 			a.addElement('text', content = text)
 		return a
+	
+	def getTunePayload(self, args):
+		t = Element(('http://jabber.org/protocol/tune', 'tune'))
+		for k,v in args.iteritems():
+			t.addElement(k, content = v)
+		return t

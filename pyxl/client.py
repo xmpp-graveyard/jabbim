@@ -1073,6 +1073,7 @@ class Client(derived):
 			typ = el['type']
 		if typ == 'error':
 			error = 'error'
+		
 		features = []
 		for child in el.elements():
 			if child.name == 'error':
@@ -1095,8 +1096,8 @@ class Client(derived):
 				if self.caps_cache.has_key(ext) and ext != None:
 					features = self.caps_cache[ext][1]
 					identity = self.caps_cache[ext][0]
-				else:	
-					if typ !='unavailable':
+				elif ext == None:	
+					if typ !='unavailable' and not self.hasFeature(frm.full(), 'http://jabber.org/protocol/disco#info'):
 						features = 'asked'
 						print 'nocaps ' + unicode(self.getIdentity(frm.host))
 						print self.hasIdentity(frm.host, 'conference'), self.hasIdentity(frm.host, 'gateway')
@@ -1104,6 +1105,9 @@ class Client(derived):
 							print 'konference nebo gateway'
 						else:
 							self.getFeatures(frm, ext)
+				else:
+					features = 'asked'
+					self.getFeatures(frm, ext)
 			if child.name == 'x' and child.defaultUri == 'http://jabber.org/protocol/muc#user':
 				for item in child.elements():
 					if item.name == 'item':
