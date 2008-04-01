@@ -833,6 +833,12 @@ class Client(derived):
 				for item in child.elements():
 					ln = ln + 1
 					groups = []
+					try:
+						item['jid'] = item['jid'].strip()
+						j = jid.JID(item['jid'])
+					except jid.InvalidFormat:
+						log.err('invalid jid in roster: '+item['jid'])
+						continue
 					for group in item.elements():
 						if group.name == 'group':
 							groups.append(unicode(group))
