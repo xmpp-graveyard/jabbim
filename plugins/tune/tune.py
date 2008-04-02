@@ -9,11 +9,14 @@ from twisted.python import log
 from include import plugins
 from twisted.internet.task import LoopingCall
 
+WM_COMMAND = 0x0111
+WM_USER    = 0x400
+
 class config:
 	def __init__(self,main):
 		self.main=main
 		self.config={}
-		self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', }, 'value':'mpd'}
+		self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Winamp':'winamp' }, 'value':'mpd'}
 
 class Plugin(plugins.PluginBase):
     def __init__(self, main, homedir, plugindir):
@@ -41,9 +44,9 @@ class Plugin(plugins.PluginBase):
     	self.loop.stop()
     
     def check(self):
+  		out = {}
     	if self.config['player'] == 'mpd':
     		output = commands.getoutput('mpc status 2>/dev/null')
-    		out = {}
     		if output.find('\n[playing]') != -1:
     			text = output.split('\n')[0]
     			text = text.split(' - ', 1)
@@ -51,68 +54,19 @@ class Plugin(plugins.PluginBase):
     			out['title'] = text[1]
     			out['lenght'] = output.split('\n')[1].split('/')[-1].split('(')[0].strip()
     		
-    		if out != self.last:
-    			self.main.client.sendPEP('http://jabber.org/protocol/tune', self.main.client.getTunePayload(out))
-    			self.last = out
+    	if self.config['player'] == 'winamp':
+    		import win32gui
+#			import win32api
+    		hWinamp = win32gui.FindWindow('Winamp v1.x', None)
+    		text = win32gui.GetWindowText(hWinamp)
+    		print text
+#    		out['artist'] = 
+    		
+
+		if out != self.last:
+			self.main.client.sendPEP('http://jabber.org/protocol/tune', self.main.client.getTunePayload(out))
+			self.last = out
     			
-
-    def buildRosterMenu(self):
-        pass
-
-    def commandCalled(self, cmd, args, chat, type):
-        if cmd != 'mpd':
-            return
-
-        if len(args) != 0:
-            self.logMsg('Args: ', args)
-            self.parseArgs(args)
-            return
-
-        # FIXME: not clear (?)
-        self.chat = chat
-        self.type = type
-
-        #output = unicode(commands.getoutput('mpc status 2>/dev/null'), self.ENCODING)
-        output = commands.getoutput('mpc status 2>/dev/null')
-        
-        if output.find('\n[paused]') != -1:
-        # any more elegant solution for this?
-            self.logMsg('PAUSED')
-            self.sendAnswer(self.PAUSED)
-            return
-
-        output = output.split('\n')
-        if len(output) <= 1:
-            self.logMsg('STOPPED')
-            self.sendAnswer(self.STOPPED)
-            return
-        else:
-            msg = self.PLAYING + output[0]
-
-        self.logMsg('Sending: ', msg)
-        self.sendAnswer(msg)
-
-    def parseArgs(self, args):
-        pos_args = [u'next', u'prev', u'stop', u'pause', u'volume']
-        req_another = [pos_args[2]]
-
-        # FIXME: error msgs (?) + comments
-        if args[0] not in pos_args:
-            return
-        if args[0] in req_another and len(args) < 2:
-            return
-
-        try:
-            status = commands.getstatusoutput(u'mpc %s %s 2>/dev/null' % (args[0], args[1]))[0]
-        except IndexError:
-            status = commands.getstatusoutput(u'mpc %s 2>/dev/null' % args[0])[0]
-
-        if status != 0:
-            # omg, something failed...
-            pass
-
-
-
 
 
 # EOF
