@@ -58,12 +58,12 @@ class Plugin(plugins.PluginBase):
 			import win32gui
 			hWinamp = win32gui.FindWindow('Winamp v1.x', None)
 			text = win32gui.GetWindowText(hWinamp)
-			print text
-			parts = text.split(' - ')
-			out['artist'] = parts[0].split(' ', 1)[1]
-			out['title'] = parts[1]
-			if text.find('[Stopped]')!= -1:
-				out = {}
+			if len(text) > 0:
+				parts = text.split(' - ')
+				out['artist'] = parts[0].split(' ', 1)[1]
+				out['title'] = parts[1]
+				if text.find('[Stopped]')!= -1:
+					out = {}
 
     		
 
