@@ -69,13 +69,18 @@ class autoAwayThreadX11(autoAwayThread):
 
 	def load_libraries(self):
 		xlib = ctypes.cdll.LoadLibrary(find_library("X11"))
-		self.dpy = xlib.XOpenDisplay(os.environ['DISPLAY'])
+		xlib.XOpenDisplay.restype = ctypes.c_void_p # Display*
+		xlib.XOpenDisplay.argtypes = [ ctypes.c_char_p ]
+		self.dpy = xlib.XOpenDisplay(None)
+		xlib.XDefaultRootWindow.restype = ctypes.c_ulong # Window/XID
+		xlib.XDefaultRootWindow.argtypes = [ ctypes.c_void_p ]
 		self.root = xlib.XDefaultRootWindow(self.dpy)
 		self.xss = ctypes.cdll.LoadLibrary(find_library("Xss"))
 
 	def get_idle_time(self):
 		self.xss.XScreenSaverAllocInfo.restype = ctypes.POINTER(XScreenSaverInfo)
 		xss_info = self.xss.XScreenSaverAllocInfo()
+		self.xss.XScreenSaverQueryInfo.argtypes = [ ctypes.c_void_p, ctypes.c_ulong, ctypes.POINTER(XScreenSaverInfo) ]
 		self.xss.XScreenSaverQueryInfo(self.dpy, self.root, xss_info)
 		return int(xss_info.contents.idle)
 		

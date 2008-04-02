@@ -9,9 +9,6 @@ from twisted.python import log
 from include import plugins
 from twisted.internet.task import LoopingCall
 
-WM_COMMAND = 0x0111
-WM_USER    = 0x400
-
 class config:
 	def __init__(self,main):
 		self.main=main
@@ -46,7 +43,10 @@ class Plugin(plugins.PluginBase):
     def check(self):
   		out = {}
 		if self.config['player'] == 'mpd':
-			output = commands.getoutput('mpc status 2>/dev/null')
+			try:
+				output = commands.getoutput('mpc status 2>/dev/null')
+			except:
+				pass
 			if output.find('\n[playing]') != -1:
 					text = output.split('\n')[0]
 					text = text.split(' - ', 1)
@@ -55,12 +55,15 @@ class Plugin(plugins.PluginBase):
 					out['lenght'] = output.split('\n')[1].split('/')[-1].split('(')[0].strip()
 
 		elif self.config['player'] == 'winamp':
-			import win32gui
+			
 			try:
+				import win32gui
 				hWinamp = win32gui.FindWindow('Winamp v1.x', None)
 				text = win32gui.GetWindowText(hWinamp)
 			except:
 				text = ''
+				out = {}
+				
 			if len(text) > 0:
 				parts = text.split(' - ')
 				out['artist'] = parts[0].split(' ', 1)[1]
