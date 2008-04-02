@@ -318,7 +318,8 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		except:pass
 		if self.text==unicode(self.toPlainText()):
 			# text from previous loop is the same as currently typed text => user stops typing
-			self.main.main.client.sendMessage(self.main.jid, "",composing="paused")
+			if len(self.text)!=0:
+				self.main.main.client.sendMessage(self.main.jid, "",composing="paused")
 			self.composing=False
 		else:
 			# text from previous loop is diffrent from currently typed text => user is typing
