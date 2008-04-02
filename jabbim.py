@@ -1318,6 +1318,7 @@ class AvatarLabel(QtGui.QLabel):
 		self.setObjectName("selfAvatar")
 		self.main=main
 		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
+		self.setMinimumWidth(64)
 	
 	def mouseDoubleClickEvent(self,event):
 		self.main.identityEditor()
@@ -1400,8 +1401,37 @@ class AvatarLabel(QtGui.QLabel):
 							general = el.name
 							spec = el.firstChildElement().name
 					text+='<br /><font size="-1"><b>%s</b> %s %s</font>' % (general, spec, txt)
+				
+				chat = contact.getPEP('http://www.xmpp.org/extensions/xep-0194.html#ns')
+				if chat != None:
+#					print chat
+					text+='<br /><b>User is chatting in:</b>'
+					if type(chat) == list:
+						print 'vice roomu'
+						for itm in chat:
+							uri = name = ''
+							for el in itm.elements():
+								if el.name == 'uri':
+									uri = unicode(el)
+									if uri.startswith('xmpp:'):
+										uri = uri.replace('xmpp:', '')
+								elif el.name == 'name':
+									name = unicode(el)
+							text+= '<br /><font size="-1">%s %s</font>'%(name, uri)
+					else:
+						print 'jeden room'
+						uri = name = ''
+						for el in chat.elements():
+							if el.name == 'uri':
+								uri = unicode(el)
+								if uri.startswith('xmpp:'):
+									uri = uri.replace('xmpp:', '')
+							elif el.name == 'name':
+								name = unicode(el)
+						text+= '<br /><font size="-1">%s %s</font>'%(name, uri)
 			text+="</td></tr></table>"
 			self.setToolTip(text)
+			print contact.pep
 
 
 class mainWindow(QtGui.QMainWindow):
@@ -3536,6 +3566,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Server is not found.")),0,1)
 
 	def _disconnect(self, error = None): # error = None | dns | lost | auth | failed
+		print 'disconnect reason '+error
 		self.tray.setIcon(QtGui.QIcon(QtGui.QIcon("images/16x16/apps/jabbim.png").pixmap(16,16,QtGui.QIcon.Disabled)))
 		if self.client:
 			if error=="auth":

@@ -656,12 +656,16 @@ class derived:
 		gc = Groupchat(self,  jid, nick)
 		self.groupchats[jid] = gc
 		gc.join()
+		self.sendPEP('http://www.xmpp.org/extensions/xep-0194.html#ns', self.getChattingPayload())
+		
 
 
 	def leaveGC(self,  jid):
 		self.groupchats[jid].leave()
 		del self.groupchats[jid]
 		log.msg( 'left MUC: '+ jid)
+		self.sendPEP('http://www.xmpp.org/extensions/xep-0194.html#ns', self.getChattingPayload())
+		
 ############## MUC admin ##################
 	def getMUCList(self, jid, typ = 'voice'):
 		log.msg('get muc list')
@@ -854,3 +858,13 @@ class derived:
 		for k,v in args.iteritems():
 			t.addElement(k, content = v)
 		return t
+	
+	def getChattingPayload(self):
+		p = []
+		for room in self.groupchats.iterkeys():
+			r = Element(('http://www.xmpp.org/extensions/xep-0194.html#ns', 'room'))
+			r.addElement('uri', content = 'xmpp:'+room)
+			p.append(r)
+		if len(p) ==0:
+			p = r = Element(('http://www.xmpp.org/extensions/xep-0194.html#ns', 'room'))
+		return p

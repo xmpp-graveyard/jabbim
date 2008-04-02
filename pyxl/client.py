@@ -127,6 +127,8 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/mood+notify')
 		self.registerFeature('http://jabber.org/protocol/activity')
 		self.registerFeature('http://jabber.org/protocol/activity+notify')
+		self.registerFeature('http://www.xmpp.org/extensions/xep-0194.html#ns')
+		self.registerFeature('http://www.xmpp.org/extensions/xep-0194.html#ns+notify')
 		self.identity = 'client/pc'
 		
 		self.caps_cache = {} # 'ext': (identity,[feature1, feature2])
@@ -539,11 +541,17 @@ class Client(derived):
 				self.pep = True
 #				self.sendPEP('tune', {})
 	
-	def sendPEP(self,  ns,  payload): #paylod is Element node
+	def sendPEP(self,  ns,  payload): #paylod is Element node or list of nodes
 		iq = IQ(self.xmlstream, 'set')
 		pb = iq.addElement('pubsub', 'http://jabber.org/protocol/pubsub' ).addElement('publish')
 		pb['node'] = ns
-		p = pb.addElement('item').addChild(payload)
+		p = pb.addElement('item')
+		print payload
+		if type(payload) == list:
+			for itm in payload:
+				p.addChild(itm)
+		else:
+			p.addChild(payload)
 #		for key, val in attrs.iteritems():
 #			tune.addElement(key,  content = val)
 
@@ -983,7 +991,10 @@ class Client(derived):
 				pep = items.getAttribute('node')
 
 				if itm != None:
-					payload = itm.firstChildElement()
+					if len(itm.children)==1:
+						payload = itm.firstChildElement()
+					else:
+						payload = itm.children
 					
 					event = {}
 #					for at in payload.elements():
