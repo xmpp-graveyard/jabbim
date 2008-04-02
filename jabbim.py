@@ -1405,9 +1405,10 @@ class AvatarLabel(QtGui.QLabel):
 				chat = contact.getPEP('http://www.xmpp.org/extensions/xep-0194.html#ns')
 				if chat != None:
 #					print chat
-					text+='<br /><b>User is chatting in:</b>'
+					
 					if type(chat) == list:
 						print 'vice roomu'
+						text+='<br /><b>User is chatting in:</b>'
 						for itm in chat:
 							uri = name = ''
 							for el in itm.elements():
@@ -1421,14 +1422,16 @@ class AvatarLabel(QtGui.QLabel):
 					else:
 						print 'jeden room'
 						uri = name = ''
-						for el in chat.elements():
-							if el.name == 'uri':
-								uri = unicode(el)
-								if uri.startswith('xmpp:'):
-									uri = uri.replace('xmpp:', '')
-							elif el.name == 'name':
-								name = unicode(el)
-						text+= '<br /><font size="-1">%s %s</font>'%(name, uri)
+						if len(chat.children)>0:
+							text+='<br /><b>User is chatting in:</b>'
+							for el in chat.elements():
+								if el.name == 'uri':
+									uri = unicode(el)
+									if uri.startswith('xmpp:'):
+										uri = uri.replace('xmpp:', '')
+								elif el.name == 'name':
+									name = unicode(el)
+							text+= '<br /><font size="-1">%s %s</font>'%(name, uri)
 			text+="</td></tr></table>"
 			self.setToolTip(text)
 			print contact.pep
