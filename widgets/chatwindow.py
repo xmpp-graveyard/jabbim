@@ -819,6 +819,7 @@ class chatWindow(QtGui.QMainWindow):
 		if not result:
 			result=self.main.getAvatar(QtGui.QPixmap("images/48x48/apps/jabbim.png"),size="64x64",frame=True)
 		tab.chat.ui.avatar.setPixmap(result)
+
 				
 		layout.addWidget(tab.chat)
 		print "adding new tab...", icon

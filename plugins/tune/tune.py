@@ -13,7 +13,7 @@ class config:
 	def __init__(self,main):
 		self.main=main
 		self.config={}
-		self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Winamp':'winamp' }, 'value':'mpd'}
+		self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Winamp':'winamp', 'Amarok':'amarok' }, 'value':'mpd'}
 
 class Plugin(plugins.PluginBase):
     def __init__(self, main, homedir, plugindir):
@@ -73,6 +73,15 @@ class Plugin(plugins.PluginBase):
 				out['title'] = parts[1]
 				if text.find('[Stopped]')!= -1:
 					out = {}
+		elif self.config['player'] == 'amarok':
+			try:
+				out['artist'] = unicode(commands.getoutput("dcop amarok player artist"), "utf-8")
+				out['title'] = unicode(commands.getoutput("dcop amarok player title"), "utf-8")
+			except:
+				out = {}
+			
+			if len(out['title'].strip()) == 0 and len(out['artist'].strip()) == 0:
+				out = {}
 
     		
 
