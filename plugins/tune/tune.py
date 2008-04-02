@@ -45,16 +45,16 @@ class Plugin(plugins.PluginBase):
     
     def check(self):
   		out = {}
-    	if self.config['player'] == 'mpd':
-    		output = commands.getoutput('mpc status 2>/dev/null')
-    		if output.find('\n[playing]') != -1:
-    			text = output.split('\n')[0]
-    			text = text.split(' - ', 1)
-    			out['artist'] = text[0]
-    			out['title'] = text[1]
-    			out['lenght'] = output.split('\n')[1].split('/')[-1].split('(')[0].strip()
-    		
-    	if self.config['player'] == 'winamp':
+		if self.config['player'] == 'mpd':
+			output = commands.getoutput('mpc status 2>/dev/null')
+			if output.find('\n[playing]') != -1:
+					text = output.split('\n')[0]
+					text = text.split(' - ', 1)
+					out['artist'] = text[0]
+					out['title'] = text[1]
+					out['lenght'] = output.split('\n')[1].split('/')[-1].split('(')[0].strip()
+
+		elif self.config['player'] == 'winamp':
     		import win32gui
 #			import win32api
     		hWinamp = win32gui.FindWindow('Winamp v1.x', None)
