@@ -15,7 +15,7 @@ class Plugin(plugins.PluginBase):
 		self.author = u"Josef 'Pepeq' Halíček"
 		self.name = 'JDM Plugin'
 		self.version = '0.1147'
-		self.category = ['disk']
+		self.category = ['utils']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		if main:
 			self.installTranslator()
@@ -24,7 +24,12 @@ class Plugin(plugins.PluginBase):
 			self.window.setWindowIcon(self.main.windowIcon())
 			self.window.ui.list.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 			self.window.ui.list.startDrag=self.startDrag
+			self.window.ui.list.setAcceptDrops(True)
+			self.window.ui.list.dropEvent = self.dropEvent
+			self.window.ui.list.dragMoveEvent = self.dragMoveEvent
+			self.window.ui.list.dragEnterEvent = self.dragEnterEvent
 			self.window.ui.line_jid.setText(self.main.client.jid.userhost())
+			self.jid = self.main.client.jid.userhost()
 			self.window.ui.buttonDownload.setIcon(QtGui.QIcon("%s/document-save.png" % self.pluginDir))
 			self.window.ui.buttonUpload.setIcon(QtGui.QIcon("%s/upload.png" % self.pluginDir))
 			self.window.ui.buttonDelete.setIcon(QtGui.QIcon("%s/edit-delete.png" % self.pluginDir))
@@ -32,14 +37,21 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call)
 			QtCore.QObject.connect(self.window.ui.list, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.clicked)
 			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.fileMenu)
-			
+			QtCore.QObject.connect(self.window.ui.buttonDownload,QtCore.SIGNAL("clicked()"),self.downloadCurrentFile)
+			QtCore.QObject.connect(self.window.ui.buttonDelete,QtCore.SIGNAL("clicked()"),self.removeCurrentFile)
+			QtCore.QObject.connect(self.window.ui.buttonUpload,QtCore.SIGNAL("clicked()"),self.sendFile)
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
+			self.registerHandler('on_ftEnd', self.on_ftEnd, priority = 4)
 			self.obsah=[]
 			self.dnd={}
 			
 		else:
 			self.loadConfig(homedir)
+
+	def sendFile(self):
+		self.main.sendFiles('public@disk.jabbim.cz')
+		#a nejakou moznost updatovat view po uspesnem FT?
 
 	def startDrag(self,actions):
 		# start dragging selected contact
@@ -52,7 +64,29 @@ class Plugin(plugins.PluginBase):
 		self.dnd=item
 		self.drag.setMimeData(mimeData)
 		self.action=self.drag.start(QtCore.Qt.CopyAction)
+	
+	def dropEvent(self, event):
+		if (event.mimeData().hasUrls()):
+			urlList=event.mimeData().urls()
+			if len(urlList)>0:
+				new=[]
+				for url in urlList:
+					f=unicode(url.toLocalFile())
+					if len(f)!=0:
+						new.append(f)
+				file=new
+				print file
+				self.main.showFiletransferDialog(file, 'public@disk.jabbim.cz')
+			event.acceptProposedAction()
 
+	def dragMoveEvent(self, event):
+		event.acceptProposedAction()
+	def dragEnterEvent(self, event):
+		if event.mimeData().hasText() or event.mimeData().hasFormat("text/uri-list"):
+			event.acceptProposedAction()
+		else:
+			event.ignore()	
+			
 	def fileMenu(self,pos):
 		print "menu"
 		item=self.window.ui.list.currentItem()
@@ -138,6 +172,13 @@ class Plugin(plugins.PluginBase):
 		self.type=type
 		if self.type=="public":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.jid,)).addCallback(self.updateView, 'public')
+		
+		if self.jid != self.main.client.jid.userhost():
+			self.window.ui.buttonDelete.setEnabled(False)
+			self.window.ui.buttonUpload.setEnabled(False)
+		else:
+			self.window.ui.buttonDelete.setEnabled(True)
+			self.window.ui.buttonUpload.setEnabled(True)
 	
 	
 	def showSlot(self):
@@ -151,6 +192,15 @@ class Plugin(plugins.PluginBase):
 				return False
 		return True
 		
+	
+	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
+	
+		if error == None and self.main.client.ft[sid].tojid.find("public@disk.jabbim.cz")!=-1:
+			self.call()
+		
+		print sid, error
+			
+	
 	def clicked(self,item,old):
 		self.window.ui.label_name.setText(item.text())
 		data=item.data(32).toList()

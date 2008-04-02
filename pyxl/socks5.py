@@ -693,8 +693,8 @@ class Send(protocol.Protocol):
 		if self.ft:
 			self.ft.transfered = self.ft.transfered + len(data)
 			self.ft.client.on_ftTransfered(self.ft.sid, len(data))
-			if self.ft.transfered == self.ft.size:
-				self.ft.finish()
+#			if self.ft.transfered == self.ft.size:
+#				self.ft.finish()
 
 
 # class IBBSend:

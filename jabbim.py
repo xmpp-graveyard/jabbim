@@ -274,6 +274,7 @@ class clientClass(pyxl.client.Client):
 		"""
 		Called when filetransfer finished
 		"""
+		self.dispatcher.publishEvent('on_ftEnd', sid, error)
 		self.main.ftError[sid]=error
 		# self.main.allowedSids contains SIDs which are used for transfering Jabbim Extra
 		if sid in self.main.allowedSids:
