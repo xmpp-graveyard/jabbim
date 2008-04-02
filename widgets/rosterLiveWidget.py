@@ -2786,6 +2786,17 @@ class rosterWidget(QtGui.QWidget):
 			ret=QtGui.QMessageBox.question(self,self.tr("Delete contact?"), self.tr("Do you want to delete this contact from your roster?"),QtGui.QMessageBox.Yes|QtGui.QMessageBox.No, QtGui.QMessageBox.Yes)
 			if ret==QtGui.QMessageBox.Yes:
 				self.main.client.delContact(jid)
+				j = jidT.JID(jid)
+				if j.userhost() == j.host:
+					if self.main.client.hasIdentity(j.userhost(), 'gateway'):
+						ret=QtGui.QMessageBox.question(self,self.tr("Delete gateway?"), self.tr("Do you want to delete associated contacts from your roster?"),QtGui.QMessageBox.Yes|QtGui.QMessageBox.No, QtGui.QMessageBox.Yes)
+						if ret==QtGui.QMessageBox.Yes:
+							for jd in self.main.client.roster['users'].iterkeys():
+								if jd.find(j.host) != -1:
+									self.main.client.delContact(jd)
+				
+			
+
 		elif cmd=="break_up_meta":
 			# break up metacontact
 			jid=action.data()
