@@ -50,8 +50,11 @@ class Plugin(plugins.PluginBase):
 			if output.find('\n[playing]') != -1:
 					text = output.split('\n')[0]
 					text = text.split(' - ', 1)
-					out['artist'] = text[0]
-					out['title'] = text[1]
+					if len(text)>1:
+						out['artist'] = text[0]
+						out['title'] = text[1]
+					else:
+						out['title'] = output.split('\n')[0].split('/')[-1]
 					out['lenght'] = output.split('\n')[1].split('/')[-1].split('(')[0].strip()
 
 		elif self.config['player'] == 'winamp':
