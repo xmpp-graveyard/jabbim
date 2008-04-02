@@ -56,8 +56,11 @@ class Plugin(plugins.PluginBase):
 
 		elif self.config['player'] == 'winamp':
 			import win32gui
-			hWinamp = win32gui.FindWindow('Winamp v1.x', None)
-			text = win32gui.GetWindowText(hWinamp)
+			try:
+				hWinamp = win32gui.FindWindow('Winamp v1.x', None)
+				text = win32gui.GetWindowText(hWinamp)
+			except:
+				text = ''
 			if len(text) > 0:
 				parts = text.split(' - ')
 				out['artist'] = parts[0].split(' ', 1)[1]
