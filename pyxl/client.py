@@ -1002,7 +1002,7 @@ class Client(derived):
 				else:
 					
 					payload = None
-					print el.toXml()
+				print el.toXml()
 				c = self.getContactByJid(frm)
 				if c != None:
 					c.setPEP(pep, payload) #zapisem si to do kontaktu
@@ -1120,6 +1120,7 @@ class Client(derived):
 						print self.hasIdentity(frm.host, 'conference'), self.hasIdentity(frm.host, 'gateway')
 						if  self.hasIdentity(frm.host, 'conference') or self.hasIdentity(frm.host, 'gateway'):
 							print 'konference nebo gateway'
+							features = ['-']
 						else:
 							self.getFeatures(frm, ext)
 				else:
@@ -1183,7 +1184,11 @@ class Client(derived):
 			else:
 				return
 		if features == None or len(features) == 0:
-			self.getFeatures(frm, None)
+			if  self.hasIdentity(frm.host, 'conference') or self.hasIdentity(frm.host, 'gateway'):
+				print 'konference nebo gateway'
+				features = ['-']
+			else:
+				self.getFeatures(frm, None)
 		
 		if features == 'asked':
 			features = []

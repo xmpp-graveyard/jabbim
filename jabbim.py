@@ -686,6 +686,7 @@ class clientClass(pyxl.client.Client):
 		start=time.time()
 		mainWindow=self.main
 		status=None
+		contact = self.getContactByJid(jid.userhost())
 
 		# get tab for this contact
 		tabFull,indexFull=self.main.chat.findTab(jid.full(),True,typ=['chat']) # tab with resource
@@ -704,7 +705,10 @@ class clientClass(pyxl.client.Client):
 			user=self.main.ui.roster.getNameByJID(jid.userhost())
 			# append message to textEdit
 			message="[nick] "+unicode(mainWindow.tr('is now'))+" [show] [[message]]"
-			message=message.replace("[[message]]",'')
+			s = ''
+			if contact != None:
+				s = contact.resources[jid.resource].status
+			message=message.replace("[message]",s)
 			message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', user)
 			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
 			tabFull.chat.textEditWrite(message)
@@ -716,6 +720,7 @@ class clientClass(pyxl.client.Client):
 		if tabFull:
 			tabFull.chat.buildResourceMenu()
 			tabFull.chat.buildMetaMenu()
+			tabFull.chat.refreshToolTip()
 
 		if show=="offline":
 			# self presence
@@ -1332,110 +1337,9 @@ class AvatarLabel(QtGui.QLabel):
 	
 	def refreshToolTip(self):
 		if self.main.client:
-			text='<table><tr>'
-			if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(self.main.config['jid'])):
-				pixmap=QtGui.QIcon(self.main.homeDir+'/avatars/'+unicode(self.main.config['jid'])).pixmap(64,64)
-				text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(self.main.config['jid'])+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
-			#text+='<td><b>'+self.tr("Name:")+'</b> '+item.escapedName+'<br/>'
-			text+='<td><b>'+self.tr("JID:")+'</b> '+unicode(self.main.config['jid'])+'<br/>'
-			if self.main.client.roster["users"].has_key(unicode(self.main.config['jid'])):
-				contact = self.main.client.roster["users"][unicode(self.main.config['jid'])]
-		
-				for res in contact.resources.keys():
-					status = contact.resources[res].status
-					if not status:
-						status = ""
-					priority = contact.resources[res].priority
-					#if priority == None:
-					#	priority = self.tr("Unknown")
-					if priority != None:
-						priority = "(%s: %s)" % (self.tr("Priority"),priority)
-					else:
-						priority = ""
-					show=contact.resources[res].show
-					if not show:
-						show='online'
-					text+='<img src="images/16x16/status/jabber-%s.png">' % show # hodilo by se rozlisit k jakymu poatri transportu
-					if res != None:
-						text+='<b>%s</b> %s<br/>' % (res, priority)
-					text+='<font size="-1">%s</font>' % (status)
-				tune = contact.getPEP('http://jabber.org/protocol/tune')
-				print 'tune'
-				if tune != None:
-					artist = title = ''						
-					for el in tune.elements():
-						if el.name == 'artist':
-							artist = unicode(el)
-						elif el.name == 'title':
-							title = unicode(el)
-					t = '%s  %s'%(artist, title)
-					if len(t.strip())>0:
-						text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">%s</font>' % (t) #ikonka se este muze menit ;)
-		
-				mood = contact.getPEP('http://jabber.org/protocol/mood')
-				print 'mood'
-				if mood != None:
-					t = ''
-					m = txt = ''
-					for el in mood.elements():
-						if el.name == 'text':
-							txt = unicode(el)
-						else :
-							m = self.main.moods.get(el.name)
-					if txt != '':
-						t = m+ ' - %s'%txt
-					else:
-						t = m
-					text+='<br /><font size="-1">%s</font>' % (t)	
-				
-				activity = contact.getPEP('http://jabber.org/protocol/activity')
-				print 'activity'
-				if activity != None:
-					print activity.toXml()
-					txt = ''
-					general = ''
-					spec = ''
-					for el in activity.elements():
-						if el.name == 'text':
-							txt = unicode(el)
-						else :
-							general = el.name
-							spec = el.firstChildElement().name
-					text+='<br /><font size="-1"><b>%s</b> %s %s</font>' % (general, spec, txt)
-				
-				chat = contact.getPEP('http://www.xmpp.org/extensions/xep-0194.html#ns')
-				if chat != None:
-#					print chat
-					
-					if type(chat) == list:
-						print 'vice roomu'
-						text+='<br /><b>User is chatting in:</b>'
-						for itm in chat:
-							uri = name = ''
-							for el in itm.elements():
-								if el.name == 'uri':
-									uri = unicode(el)
-									if uri.startswith('xmpp:'):
-										uri = uri.replace('xmpp:', '')
-								elif el.name == 'name':
-									name = unicode(el)
-							text+= '<br /><font size="-1">%s %s</font>'%(name, uri)
-					else:
-						print 'jeden room'
-						uri = name = ''
-						if len(chat.children)>0:
-							text+='<br /><b>User is chatting in:</b>'
-							for el in chat.elements():
-								if el.name == 'uri':
-									uri = unicode(el)
-									if uri.startswith('xmpp:'):
-										uri = uri.replace('xmpp:', '')
-								elif el.name == 'name':
-									name = unicode(el)
-							text+= '<br /><font size="-1">%s %s</font>'%(name, uri)
-			text+="</td></tr></table>"
+			text = self.main.getToolTip(self.main.client.jid.userhost())
 			self.setToolTip(text)
-			print contact.pep
+
 
 
 class mainWindow(QtGui.QMainWindow):
@@ -2037,6 +1941,132 @@ class mainWindow(QtGui.QMainWindow):
 		if size:
 			image=image.scaled(size[0],size[1],QtCore.Qt.KeepAspectRatio)#,QtCore.Qt.SmoothTransformation)
 		return image
+
+	def getToolTip(self,jid, name = None):
+		"""
+		returns html for setToolTip
+		@type jid: unicode
+		@param jid: jid of contact 
+		"""
+		text='<table><tr>'
+		if self.client.avatarDef.has_key(jid):
+			if self.client.avatarDef[jid]:
+				if self.client.avatarImg[self.client.avatarDef[jid]] and self.client.avatarDef[jid]!="None":
+					width=self.client.avatarImg[self.client.avatarDef[jid]][1]
+					height=self.client.avatarImg[self.client.avatarDef[jid]][2]
+					height=height/(float(width)/64.0)
+					text+='<td><img src="'+self.realHomeDir+'/avatars/'+unicode(self.client.avatarDef[jid])+'" width="64" height="'+str(height)+'"/></td>'
+		if name != None:
+			text+='<td><b>'+self.tr("Name:")+'</b> '+name+'<br/>'
+		else:
+			text+='<td>'
+		text+='<b>'+self.tr("JID:")+'</b> '+jid+'<br/>'
+		contact = self.client.roster["users"][jid] #FIXME
+		if unicode(contact.subscription) == 'from':
+			text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" from")+'<br/>'
+		elif unicode(contact.subscription) == 'to':
+			text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" to")+'<br/>'
+		elif unicode(contact.subscription) == 'none':
+			text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" none")+'<br/>'	
+		n =0
+		for res in contact.resources.keys():
+			status = contact.resources[res].status
+			if not status:
+				status = ""
+			priority = contact.resources[res].priority
+			#if priority == None:
+			#	priority = self.tr("Unknown")
+			if priority != None:
+				priority = "(%s: %s)" % (self.tr("Priority"),priority)
+			else:
+				priority = ""
+			if n>0:
+				text+='<br />'
+			text+='<img src="images/16x16/status/jabber-%s.png">' % contact.resources[res].show # hodilo by se rozlisit k jakymu poatri transportu
+			text	+=	'<b>%s</b> '%self.status[contact.resources[res].show]
+			if res != None:
+#							text+='<b>%s</b> %s<br>' % ( res, priority)
+				text+='%s' % (priority)
+			identity = contact.resources[res].identity
+			if identity != '' and identity != None and identity != 'client/pc' and identity.startswith('client'):							
+				text+=' %s' % (identity)
+			if len(status) != 0:
+				text+='<br /><font size="-1">%s</font>' % (status.replace('\n', '<br />'))
+			n+=1
+		tune = contact.getPEP('http://jabber.org/protocol/tune')
+		if type(tune) == list:
+			for x in tune:
+				print x
+		elif tune!=None:
+			artist = title = ''						
+			for el in tune.elements():
+				if el.name == 'artist':
+					artist = unicode(el)
+				elif el.name == 'title':
+					title = unicode(el)
+			t = '%s  %s'%(artist, title)
+			if len(t.strip())>0:
+				text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">%s</font>' % (t) #ikonka se este muze menit ;)
+		
+		mood = contact.getPEP('http://jabber.org/protocol/mood')
+		if mood != None:
+			t = ''
+			m = txt = ''
+			for el in mood.elements():
+				if el.name == 'text':
+					txt = unicode(el)
+				else :
+					m = self.moods.get(el.name)
+			if txt != '':
+				t = m+ ' - %s'%txt
+			else:
+				t = m
+			text+='<br /><font size="-1">%s</font>' % (t)	
+		
+		activity = contact.getPEP('http://jabber.org/protocol/activity')
+		if activity != None:
+			txt = ''
+			general = ''
+			spec = ''
+			for el in activity.elements():
+				if el.name == 'text':
+					txt = unicode(el)
+				else :
+					general = el.name
+					spec = el.firstChildElement().name
+
+			text+='<br /><font size="-1"><b>%s</b> %s %s</font>' % (general, spec, txt)
+		chat = contact.getPEP('http://www.xmpp.org/extensions/xep-0194.html#ns')
+		if chat != None:
+#					print chat
+			if type(chat) == list:
+				print 'vice roomu'
+				text+='<br /><b>User is chatting in:</b>'
+				for itm in chat:
+					uri = name = ''
+					for el in itm.elements():
+						if el.name == 'uri':
+							uri = unicode(el)
+							if uri.startswith('xmpp:'):
+								uri = uri.replace('xmpp:', '')
+						elif el.name == 'name':
+							name = unicode(el)
+					text+= '<br /><font size="-1">%s %s</font>'%(name, uri)
+			else:
+				print 'jeden room'
+				uri = name = ''
+				if len(chat.children)>0:
+					text+='<br /><b>User is chatting in:</b>'
+					for el in chat.elements():
+						if el.name == 'uri':
+							uri = unicode(el)
+							if uri.startswith('xmpp:'):
+								uri = uri.replace('xmpp:', '')
+						elif el.name == 'name':
+							name = unicode(el)
+						text+= '<br /><font size="-1">%s %s</font>'%(name, uri)					
+		text+="</td></tr></table>"
+		return text
 
 
 	def buildTrayMenu(self):

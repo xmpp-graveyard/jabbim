@@ -326,6 +326,7 @@ class chatWidget(abstractChatWidget):
 			self.ui.selfAvatar.setMaximumWidth(64)
 		else:
 			self.ui.selfAvatar.hide()
+		self.refreshToolTip()
 
 	def contactMenu(self,pos):
 		items=self.main.ui.roster.getUserItems(self.main.getJid(self.jid).userhost())
@@ -427,6 +428,11 @@ class chatWidget(abstractChatWidget):
 			jid.resource=unicode(action.text())
 		self.jid=jid.full()
 		self.parent.jid=self.jid
+	
+	def refreshToolTip(self):
+		if self.main.client:
+			text = self.main.getToolTip(self.main.client.jid.userhost())
+			self.ui.avatar.setToolTip(text)
 
 	def sendFiles(self):
 		"""
