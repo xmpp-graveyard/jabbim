@@ -2695,8 +2695,10 @@ class mainWindow(QtGui.QMainWindow):
 				path = '%s/%s.py' % (dir, plugin_name)
 
 				try:
-					f=open(utils.path(path))
-					plug = load_source(plugin_name, path, f).Plugin(False, self.homeDir, dir)
+					f = open(utils.path(path))
+					module = load_source(plugin_name, path, f)
+					f.close()
+					plug = module.Plugin(False, self.homeDir, dir)
 					version = float(plug.version)
 				except Exception, ex:
 					log.msg(path+': BAD PLUGIN!')
@@ -2753,11 +2755,13 @@ class mainWindow(QtGui.QMainWindow):
 		try:
 			if not self.plugins[plugin]['module']:
 				#plug =  # load plugin module
-				self.plugins[plugin]['module']=load_source(plugin, path, f).Plugin(self, self.homeDir, dir)
+				module = load_source(plugin, path, f)
+				f.close()
+				self.plugins[plugin]['module']=module.Plugin(self, self.homeDir, dir)
 				self.runPluginCommand(self.plugins[plugin]['module'].buildMainWindowMenu,[]) # build menu for plugin
 			else:
 				print "plugin already loaded"
-			f.close()
+				f.close()
 		except Exception, ex:
 					#log.msg(unicode(plugin)+u': '+unicode(ex))
 					traceback.print_exc()
