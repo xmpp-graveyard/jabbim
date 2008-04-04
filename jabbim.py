@@ -1948,6 +1948,7 @@ class mainWindow(QtGui.QMainWindow):
 		@type jid: unicode
 		@param jid: jid of contact 
 		"""
+		jid = jidT.JID(jid).userhost()
 		text='<table><tr>'
 		if self.client.avatarDef.get(jid, False):
 			if self.client.avatarImg[self.client.avatarDef[jid]] and self.client.avatarDef[jid]!="None":
