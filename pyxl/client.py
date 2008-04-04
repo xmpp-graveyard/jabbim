@@ -660,7 +660,9 @@ class Client(derived):
 		print jid, 'no vcard available' 
 		log.msg('chci ulozit ' + jid )
 #		self.reactor.callFromThread(self.main.cache.set_avatar,jid, ['nic', 'nic'])
-		self.avatars[jid] = None
+#		self.avatars[jid] = None
+		self.avatarDef[jid] = None
+		self.avatarDef.write()
 		self.on_avatarUpdate(jid)
 		return err
 
@@ -1080,8 +1082,9 @@ class Client(derived):
 		fromjid = frm.userhost()
 		resource = frm.resource
 		print "PRESENCE"
-		show = status = priority = nick = typ = affiliation = role = truejid = hash = error = reason = actor = identity = None
+		show = status = priority = nick = typ = affiliation = role = truejid = error = reason = actor = identity = None
 		codes = []
+		hash = 'None'
 		if el.hasAttribute('type'):
 		#	if el['type'] != 'unavailable':
 		#		return
