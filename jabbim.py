@@ -1982,6 +1982,7 @@ class mainWindow(QtGui.QMainWindow):
 		elif unicode(contact.subscription) == 'none':
 			text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" none")+'<br/>'	
 		n =0
+
 		for res in contact.resources.keys():
 			status = contact.resources[res].status
 			if not status:
@@ -1996,7 +1997,7 @@ class mainWindow(QtGui.QMainWindow):
 			if n>0:
 				text+='<br />'
 			text+='<img src="images/16x16/status/jabber-%s.png">' % contact.resources[res].show # hodilo by se rozlisit k jakymu poatri transportu
-			text	+=	'<b>%s</b> '%self.status[contact.resources[res].show]
+			text	+=	'<b>%s</b> '%self.status.get(contact.resources[res].show, '')
 			if res != None:
 #							text+='<b>%s</b> %s<br>' % ( res, priority)
 				text+='%s' % (priority)
