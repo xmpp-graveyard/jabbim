@@ -82,6 +82,8 @@ class Plugin(plugins.PluginBase):
 			
 			if len(out['title'].strip()) == 0 and len(out['artist'].strip()) == 0:
 				out = {}
+			elif out['title'].strip() == "call failed" or out['artist'] == "call failed":
+				out = {}
 
     		
 
