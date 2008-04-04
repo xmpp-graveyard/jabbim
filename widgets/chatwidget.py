@@ -431,7 +431,7 @@ class chatWidget(abstractChatWidget):
 	
 	def refreshToolTip(self):
 		if self.main.client:
-			text = self.main.getToolTip(self.main.client.jid.userhost())
+			text = self.main.getToolTip(self.jid)
 			self.ui.avatar.setToolTip(text)
 
 	def sendFiles(self):
