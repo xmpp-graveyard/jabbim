@@ -1960,7 +1960,8 @@ class mainWindow(QtGui.QMainWindow):
 			meta = self.ui.roster.getMetaItems(jid)
 			print meta
 			for itm in meta:
-				j = itm[0].jid
+				j = itm[1]
+				print j
 				if self.client.avatarDef.get(j, False):
 					if self.client.avatarImg[self.client.avatarDef[j]] and self.client.avatarDef[j]!="None":
 						width=self.client.avatarImg[self.client.avatarDef[j]][1]
