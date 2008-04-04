@@ -991,12 +991,15 @@ class Client(derived):
 				items = child.firstChildElement()
 				itm = items.firstChildElement()
 				pep = items.getAttribute('node')
-
+				
 				if itm != None:
-					if len(itm.children)==1:
-						payload = itm.firstChildElement()
+					children = []
+					for elm in itm.elements():
+						children.append(elm)
+					if len(children)==1:
+						payload = children[0]
 					else:
-						payload = itm.children
+						payload = children
 					
 					event = {}
 #					for at in payload.elements():

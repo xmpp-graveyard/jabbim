@@ -1948,7 +1948,9 @@ class mainWindow(QtGui.QMainWindow):
 		@type jid: unicode
 		@param jid: jid of contact 
 		"""
+		jidfull = jid
 		jid = jidT.JID(jid).userhost()
+ 
 		text='<table><tr>'
 		if self.client.avatarDef.get(jid, False):
 			if self.client.avatarImg[self.client.avatarDef[jid]] and self.client.avatarDef[jid]!="None":
@@ -1975,8 +1977,21 @@ class mainWindow(QtGui.QMainWindow):
 			text+='<td><b>'+self.tr("Name:")+'</b> '+name+'<br/>'
 		else:
 			text+='<td>'
-		text+='<b>'+self.tr("JID:")+'</b> '+jid+'<br/>'
-		contact = self.client.roster["users"][jid] #FIXME
+		text+='<b>'+self.tr("JID:")+'</b> '+jidfull+'<br/>'
+		contact = self.client.getContactByJid(jid)
+		if contact == None:
+			contact = self.client.getMucContactByJid(jidfull)
+			if contact != None:
+				status = contact.status
+				if not status:
+					status = ""
+				text+='<img src="images/16x16/status/jabber-%s.png">' % contact.show 
+				text	+=	'<b>%s</b> '%self.status.get(contact.show, '')
+				if len(status) != 0:
+					text+='<br /><font size="-1">%s</font>' % (status.replace('\n', '<br />'))
+			text+="</td></tr></table>"
+			return text
+			
 		if unicode(contact.subscription) == 'from':
 			text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" from")+'<br/>'
 		elif unicode(contact.subscription) == 'to':
