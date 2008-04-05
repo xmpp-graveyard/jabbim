@@ -24,7 +24,7 @@ import sys; sys.path.append('..')
 from preferences_ui import *
 from include import rot13
 from include import plugins as pluginTemplate
-from pref import jabbim,connection,chat,roster
+from pref import jabbim,connection,chat,roster,privacy
 from preferences_bookmarks_ui import *
 from configobj import ConfigObj
 import os
@@ -380,6 +380,7 @@ class preferencesWindow(QtGui.QDialog):
 		self.globalCategories['fun']=self.tr('Fun')
 		self.globalCategories['other']=self.tr('Other')
 
+		self.preferencesCount=6
 		# Jabbim
 		layout=QtGui.QGridLayout(self.ui.jabbimWidget)
 		self.var.append(makePreferences(self.main.config,self.ui.jabbimWidget,layout,jabbim.preferences(self).config)[0])
@@ -395,6 +396,10 @@ class preferencesWindow(QtGui.QDialog):
 		# connection
 		layout=QtGui.QGridLayout(self.ui.connectionWidget)
 		self.var.append(makePreferences(self.main.config,self.ui.connectionWidget,layout,connection.preferences(self).config)[0])
+
+		# privacy
+		layout=QtGui.QGridLayout(self.ui.privacyWidget)
+		self.var.append(makePreferences(self.main.config,self.ui.privacyWidget,layout,privacy.preferences(self).config)[0])
 
 		QtCore.QObject.connect(self.ui.emoticonsList,QtCore.SIGNAL('activated ( int )'),self.emoticonsListChanged)
 		QtCore.QObject.connect(self.ui.chatSkin_list, QtCore.SIGNAL("activated ( int )"),self.chatSkin_listChanged)
@@ -418,7 +423,7 @@ class preferencesWindow(QtGui.QDialog):
 	def currentItemChanged(self,item,previous):
 		row=self.ui.listWidget.row(item)
 		if self.justShowed:
-			if row==4:
+			if row==self.preferencesCount-1:
 				self.reloadView()
 				self.justShowed=False
 				return
@@ -572,9 +577,9 @@ class preferencesWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.themes, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.themeChanged)
 
 	def reloadPlugins(self):
-		for i in range(6,int(self.ui.listWidget.count())):
-			self.ui.listWidget.takeItem(6)
-			widget=self.ui.stackedWidget.widget(6)
+		for i in range(self.preferencesCount+1,int(self.ui.listWidget.count())):
+			self.ui.listWidget.takeItem(self.preferencesCount+1)
+			widget=self.ui.stackedWidget.widget(self.preferencesCount+1)
 			self.ui.stackedWidget.removeWidget(widget)
 			del widget
 		for plugin,plug in self.plugins.iteritems():
@@ -599,9 +604,9 @@ class preferencesWindow(QtGui.QDialog):
 			self.ui.profile.setText("<b>"+self.tr("Profile:")+"</b> "+unicode(self.main.config['jid']))
 			self.ui.profile.show()
 		
-		for i in range(6,int(self.ui.listWidget.count())):
-			self.ui.listWidget.takeItem(6)
-			widget=self.ui.stackedWidget.widget(6)
+		for i in range(self.preferencesCount+1,int(self.ui.listWidget.count())):
+			self.ui.listWidget.takeItem(self.preferencesCount+1)
+			widget=self.ui.stackedWidget.widget(self.preferencesCount+1)
 			self.ui.stackedWidget.removeWidget(widget)
 			del widget
 

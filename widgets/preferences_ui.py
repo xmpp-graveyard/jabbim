@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Thu Feb  7 08:43:57 2008
-#      by: PyQt4 UI code generator 4.3.1
+# Created: Sat Apr  5 14:13:42 2008
+#      by: PyQt4 UI code generator 4.3.4-snapshot-20080307
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -127,13 +127,39 @@ class Ui_preferences(object):
         self.gridlayout4.addWidget(self.label_6,0,0,1,2)
         self.stackedWidget.addWidget(self.page)
 
-        self.page_3 = QtGui.QWidget()
-        self.page_3.setObjectName("page_3")
+        self.page_6 = QtGui.QWidget()
+        self.page_6.setObjectName("page_6")
 
-        self.gridlayout5 = QtGui.QGridLayout(self.page_3)
+        self.gridlayout5 = QtGui.QGridLayout(self.page_6)
         self.gridlayout5.setMargin(9)
         self.gridlayout5.setSpacing(6)
         self.gridlayout5.setObjectName("gridlayout5")
+
+        self.privacyWidget = QtGui.QWidget(self.page_6)
+        self.privacyWidget.setObjectName("privacyWidget")
+        self.gridlayout5.addWidget(self.privacyWidget,2,0,1,1)
+
+        spacerItem4 = QtGui.QSpacerItem(20,241,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout5.addItem(spacerItem4,3,0,1,1)
+
+        self.label_9 = QtGui.QLabel(self.page_6)
+        self.label_9.setObjectName("label_9")
+        self.gridlayout5.addWidget(self.label_9,0,0,1,1)
+
+        self.line_4 = QtGui.QFrame(self.page_6)
+        self.line_4.setFrameShape(QtGui.QFrame.HLine)
+        self.line_4.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line_4.setObjectName("line_4")
+        self.gridlayout5.addWidget(self.line_4,1,0,1,1)
+        self.stackedWidget.addWidget(self.page_6)
+
+        self.page_3 = QtGui.QWidget()
+        self.page_3.setObjectName("page_3")
+
+        self.gridlayout6 = QtGui.QGridLayout(self.page_3)
+        self.gridlayout6.setMargin(9)
+        self.gridlayout6.setSpacing(6)
+        self.gridlayout6.setObjectName("gridlayout6")
 
         self.tabWidget = QtGui.QTabWidget(self.page_3)
         self.tabWidget.setObjectName("tabWidget")
@@ -141,120 +167,120 @@ class Ui_preferences(object):
         self.tab = QtGui.QWidget()
         self.tab.setObjectName("tab")
 
-        self.gridlayout6 = QtGui.QGridLayout(self.tab)
-        self.gridlayout6.setMargin(9)
-        self.gridlayout6.setSpacing(6)
-        self.gridlayout6.setObjectName("gridlayout6")
+        self.gridlayout7 = QtGui.QGridLayout(self.tab)
+        self.gridlayout7.setMargin(9)
+        self.gridlayout7.setSpacing(6)
+        self.gridlayout7.setObjectName("gridlayout7")
 
         self.useThemes = QtGui.QCheckBox(self.tab)
         self.useThemes.setChecked(True)
         self.useThemes.setObjectName("useThemes")
-        self.gridlayout6.addWidget(self.useThemes,0,0,1,1)
+        self.gridlayout7.addWidget(self.useThemes,0,0,1,1)
 
         self.themes = QtGui.QListWidget(self.tab)
         self.themes.setIconSize(QtCore.QSize(128,128))
         self.themes.setObjectName("themes")
-        self.gridlayout6.addWidget(self.themes,1,0,1,1)
+        self.gridlayout7.addWidget(self.themes,1,0,1,1)
         self.tabWidget.addTab(self.tab,"")
 
         self.tab_2 = QtGui.QWidget()
         self.tab_2.setObjectName("tab_2")
 
-        self.gridlayout7 = QtGui.QGridLayout(self.tab_2)
-        self.gridlayout7.setMargin(9)
-        self.gridlayout7.setSpacing(6)
-        self.gridlayout7.setObjectName("gridlayout7")
+        self.gridlayout8 = QtGui.QGridLayout(self.tab_2)
+        self.gridlayout8.setMargin(9)
+        self.gridlayout8.setSpacing(6)
+        self.gridlayout8.setObjectName("gridlayout8")
 
         self.chatSkin_preview = QtGui.QTextBrowser(self.tab_2)
         self.chatSkin_preview.setObjectName("chatSkin_preview")
-        self.gridlayout7.addWidget(self.chatSkin_preview,2,0,1,1)
+        self.gridlayout8.addWidget(self.chatSkin_preview,2,0,1,1)
 
         self.chatSkin_list = QtGui.QComboBox(self.tab_2)
         self.chatSkin_list.setMinimumSize(QtCore.QSize(130,0))
         self.chatSkin_list.setObjectName("chatSkin_list")
-        self.gridlayout7.addWidget(self.chatSkin_list,0,0,1,1)
+        self.gridlayout8.addWidget(self.chatSkin_list,0,0,1,1)
 
         self.chatSkinInfo = QtGui.QLabel(self.tab_2)
         self.chatSkinInfo.setTextFormat(QtCore.Qt.RichText)
         self.chatSkinInfo.setObjectName("chatSkinInfo")
-        self.gridlayout7.addWidget(self.chatSkinInfo,1,0,1,1)
+        self.gridlayout8.addWidget(self.chatSkinInfo,1,0,1,1)
         self.tabWidget.addTab(self.tab_2,"")
 
         self.tab_3 = QtGui.QWidget()
         self.tab_3.setObjectName("tab_3")
 
-        self.gridlayout8 = QtGui.QGridLayout(self.tab_3)
-        self.gridlayout8.setMargin(9)
-        self.gridlayout8.setSpacing(6)
-        self.gridlayout8.setObjectName("gridlayout8")
+        self.gridlayout9 = QtGui.QGridLayout(self.tab_3)
+        self.gridlayout9.setMargin(9)
+        self.gridlayout9.setSpacing(6)
+        self.gridlayout9.setObjectName("gridlayout9")
 
-        spacerItem4 = QtGui.QSpacerItem(271,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout8.addItem(spacerItem4,3,0,1,1)
+        spacerItem5 = QtGui.QSpacerItem(271,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout9.addItem(spacerItem5,3,0,1,1)
 
         self.moreEmoticons = QtGui.QPushButton(self.tab_3)
         self.moreEmoticons.setObjectName("moreEmoticons")
-        self.gridlayout8.addWidget(self.moreEmoticons,3,1,1,1)
+        self.gridlayout9.addWidget(self.moreEmoticons,3,1,1,1)
 
         self.emoticonsPreview = QtGui.QTextEdit(self.tab_3)
         self.emoticonsPreview.setUndoRedoEnabled(False)
         self.emoticonsPreview.setReadOnly(True)
         self.emoticonsPreview.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
         self.emoticonsPreview.setObjectName("emoticonsPreview")
-        self.gridlayout8.addWidget(self.emoticonsPreview,2,0,1,2)
+        self.gridlayout9.addWidget(self.emoticonsPreview,2,0,1,2)
 
         self.emoticonsList = QtGui.QComboBox(self.tab_3)
         self.emoticonsList.setObjectName("emoticonsList")
-        self.gridlayout8.addWidget(self.emoticonsList,0,0,1,2)
+        self.gridlayout9.addWidget(self.emoticonsList,0,0,1,2)
 
         self.emoticonsInfo = QtGui.QLabel(self.tab_3)
         self.emoticonsInfo.setTextFormat(QtCore.Qt.RichText)
         self.emoticonsInfo.setObjectName("emoticonsInfo")
-        self.gridlayout8.addWidget(self.emoticonsInfo,1,0,1,2)
+        self.gridlayout9.addWidget(self.emoticonsInfo,1,0,1,2)
         self.tabWidget.addTab(self.tab_3,"")
-        self.gridlayout5.addWidget(self.tabWidget,2,0,1,1)
+        self.gridlayout6.addWidget(self.tabWidget,2,0,1,1)
 
         self.line_6 = QtGui.QFrame(self.page_3)
         self.line_6.setFrameShape(QtGui.QFrame.HLine)
         self.line_6.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_6.setObjectName("line_6")
-        self.gridlayout5.addWidget(self.line_6,1,0,1,1)
+        self.gridlayout6.addWidget(self.line_6,1,0,1,1)
 
         self.label_7 = QtGui.QLabel(self.page_3)
         self.label_7.setObjectName("label_7")
-        self.gridlayout5.addWidget(self.label_7,0,0,1,1)
+        self.gridlayout6.addWidget(self.label_7,0,0,1,1)
         self.stackedWidget.addWidget(self.page_3)
 
         self.page_5 = QtGui.QWidget()
         self.page_5.setObjectName("page_5")
 
-        self.gridlayout9 = QtGui.QGridLayout(self.page_5)
-        self.gridlayout9.setMargin(9)
-        self.gridlayout9.setSpacing(6)
-        self.gridlayout9.setObjectName("gridlayout9")
+        self.gridlayout10 = QtGui.QGridLayout(self.page_5)
+        self.gridlayout10.setMargin(9)
+        self.gridlayout10.setSpacing(6)
+        self.gridlayout10.setObjectName("gridlayout10")
 
         self.pluginConfiguration = QtGui.QPushButton(self.page_5)
         self.pluginConfiguration.setObjectName("pluginConfiguration")
-        self.gridlayout9.addWidget(self.pluginConfiguration,3,1,1,1)
+        self.gridlayout10.addWidget(self.pluginConfiguration,3,1,1,1)
 
         self.plugins = QtGui.QTreeWidget(self.page_5)
         self.plugins.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.plugins.setAlternatingRowColors(True)
         self.plugins.setObjectName("plugins")
         self.plugins.headerItem().setText(0,"")
-        self.gridlayout9.addWidget(self.plugins,2,0,1,2)
+        self.gridlayout10.addWidget(self.plugins,2,0,1,2)
 
-        spacerItem5 = QtGui.QSpacerItem(261,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout9.addItem(spacerItem5,3,0,1,1)
+        spacerItem6 = QtGui.QSpacerItem(261,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout10.addItem(spacerItem6,3,0,1,1)
 
         self.label_8 = QtGui.QLabel(self.page_5)
         self.label_8.setObjectName("label_8")
-        self.gridlayout9.addWidget(self.label_8,0,0,1,2)
+        self.gridlayout10.addWidget(self.label_8,0,0,1,2)
 
         self.line_7 = QtGui.QFrame(self.page_5)
         self.line_7.setFrameShape(QtGui.QFrame.HLine)
         self.line_7.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_7.setObjectName("line_7")
-        self.gridlayout9.addWidget(self.line_7,1,0,1,2)
+        self.gridlayout10.addWidget(self.line_7,1,0,1,2)
         self.stackedWidget.addWidget(self.page_5)
         self.gridlayout.addWidget(self.stackedWidget,1,1,1,2)
 
@@ -281,8 +307,8 @@ class Ui_preferences(object):
         self.hboxlayout.addWidget(self.cancelButton)
         self.gridlayout.addLayout(self.hboxlayout,2,2,1,1)
 
-        spacerItem6 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem6,2,1,1,1)
+        spacerItem7 = QtGui.QSpacerItem(141,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem7,2,1,1,1)
 
         self.listWidget = QtGui.QListWidget(preferences)
         self.listWidget.setMinimumSize(QtCore.QSize(190,0))
@@ -292,7 +318,7 @@ class Ui_preferences(object):
         self.gridlayout.addWidget(self.listWidget,0,0,3,1)
 
         self.retranslateUi(preferences)
-        self.stackedWidget.setCurrentIndex(5)
+        self.stackedWidget.setCurrentIndex(4)
         self.tabWidget.setCurrentIndex(2)
         QtCore.QObject.connect(self.cancelButton,QtCore.SIGNAL("clicked()"),preferences.reject)
         QtCore.QObject.connect(self.saveButton,QtCore.SIGNAL("clicked()"),preferences.accept)
@@ -318,6 +344,10 @@ class Ui_preferences(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">Roster</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_9.setText(QtGui.QApplication.translate("preferences", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        "p, li { white-space: pre-wrap; }\n"
+        "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:10pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
+        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\'; font-size:9pt;\"><span style=\" font-size:12pt; font-weight:600;\">Privacy</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.useThemes.setText(QtGui.QApplication.translate("preferences", "Use themes", None, QtGui.QApplication.UnicodeUTF8))
         self.themes.setToolTip(QtGui.QApplication.translate("preferences", "Choose whe theme of Jabbim, then restart the client", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("preferences", "Themes", None, QtGui.QApplication.UnicodeUTF8))
@@ -362,10 +392,14 @@ class Ui_preferences(object):
         item3.setIcon(QtGui.QIcon("images/32x32/categories/system-users.png"))
 
         item4 = QtGui.QListWidgetItem(self.listWidget)
-        item4.setText(QtGui.QApplication.translate("preferences", "Appearance", None, QtGui.QApplication.UnicodeUTF8))
-        item4.setIcon(QtGui.QIcon("images/32x32/categories/preferences-desktop-theme.png"))
+        item4.setText(QtGui.QApplication.translate("preferences", "Privacy", None, QtGui.QApplication.UnicodeUTF8))
+        item4.setIcon(QtGui.QIcon("images/32x32/apps/jabbim.png"))
 
         item5 = QtGui.QListWidgetItem(self.listWidget)
-        item5.setText(QtGui.QApplication.translate("preferences", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
-        item5.setIcon(QtGui.QIcon("images/32x32/categories/applications-accessories.png"))
+        item5.setText(QtGui.QApplication.translate("preferences", "Appearance", None, QtGui.QApplication.UnicodeUTF8))
+        item5.setIcon(QtGui.QIcon("images/32x32/categories/preferences-desktop-theme.png"))
+
+        item6 = QtGui.QListWidgetItem(self.listWidget)
+        item6.setText(QtGui.QApplication.translate("preferences", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
+        item6.setIcon(QtGui.QIcon("images/32x32/categories/applications-accessories.png"))
 
