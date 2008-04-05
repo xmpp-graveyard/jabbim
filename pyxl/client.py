@@ -509,6 +509,7 @@ class Client(derived):
 		self.getDiscoItems(self.jid.host, callback = self._gotServices)
 #		self.reactor.callFromThread(self.on_authd)
 		self.dispatcher.publishEvent('on_authd')
+		self.roster['users'][self.jid.userhost()] = Contact(self, self.jid.userhost(), '', 'both', [], []) #add selfcontact to our representation of roster
 		self.reactor.callLater(0,self.main._connected)
 		#self.main._connected()
 		print 'pre commands'
@@ -661,7 +662,7 @@ class Client(derived):
 		log.msg('chci ulozit ' + jid )
 #		self.reactor.callFromThread(self.main.cache.set_avatar,jid, ['nic', 'nic'])
 #		self.avatars[jid] = None
-		self.avatarDef[jid] = None
+		self.avatarDef[jid] = 'None'
 		self.avatarDef.write()
 		self.on_avatarUpdate(jid)
 		return err
@@ -882,7 +883,7 @@ class Client(derived):
 			if self.getIdentity(host) == None:
 				self.getDiscoInfo(host)
 				
-		self.roster['users'][self.jid.userhost()] = Contact(self, self.jid.userhost(), self.jid.user, 'both', [], [])
+		
 		
 		log.msg( 'roster arrived')
 		self.sendPresence()
@@ -1167,12 +1168,12 @@ class Client(derived):
 			if self.avatarDef.has_key(fromjid):
 				if self.avatarDef[fromjid] == hash:
 					pass #vsechno je ok, mame spravneho avatara
-				elif self.avatarDef[fromjid] != hash and hash != None:
+				elif self.avatarDef[fromjid] != hash and hash != 'None':
 					self.getVCard(fromjid)
 			elif self.avatarDef.has_key(frm.full()):
 				if self.avatarDef[frm.full()] == hash:
 					pass #vsechno je ok, mame spravneho avatara
-				elif self.avatarDef[frm.full()] != hash and hash != None:
+				elif self.avatarDef[frm.full()] != hash and hash != 'None':
 					self.getVCard(frm.full())
 			else:
 				if self.groupchats.has_key(fromjid):

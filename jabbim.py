@@ -423,9 +423,11 @@ class clientClass(pyxl.client.Client):
 				newName=fullname
 			elif given and family:
 				newName=given+" "+family
-			if newName:
+			if newName and jid != self.jid.userhost():
 				contact=self.roster['users'][jid]
 				self.sendRosterUpdate(contact.jid, newName, contact.subscription, self.roster['users'][jid].groups)
+			elif newName and jid == self.jid.userhost():
+				self.main.ui.selfName.setText('<h3>'+newName+'</h3>') #we need to set name in roster
 	
 	def on_discoItemsBookmarksReceived(self, jid):
 		"""
@@ -1195,10 +1197,12 @@ class clientClass(pyxl.client.Client):
 		"""
 		#TODO: zpracovat ukladani vcardu .. hash a cesta k souboru se ulozi do db
 		if not self.roster['users'].has_key(jid):
+			print jid+' is not in roster'
 			return
 		# Rename contact if he havent got nickname
 		contact=self.roster['users'][jid]
 		if (contact.name=="" or contact.name==contact.jid) or not contact.name:
+			print 'trying to rename '+jid
 			self.renameByVcard(card,jid)
 
 	def on_avatarUpdate(self, jid):
