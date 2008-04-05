@@ -4,7 +4,7 @@ class preferences:
 		self.config['saveGeometry']={'type':'boolean','label':preferencesWindow.tr("Save Jabbim position on close"),'value':'True'}
 		#self.config['resource']={'type':'text-single','label':preferencesWindow.tr("Resource:"),'value':'jabbim'}
 		self.config['autoDownload']={'type':'boolean','label':preferencesWindow.tr("Download incomming files automatically"),'value':'False','groupbox':preferencesWindow.tr('Incoming files'),'enable':['autoDownloadPath']}
-		self.config['autoDownloadPath']={'type':'text-single','label':preferencesWindow.tr("Path for automatic download:"),'value':'','groupbox':preferencesWindow.tr('Incoming files')}
+		self.config['autoDownloadPath']={'type':'directory','label':preferencesWindow.tr("Path for automatic download:"),'value':'','groupbox':preferencesWindow.tr('Incoming files')}
 		self.config['autoPriority']={'type':'boolean','label':preferencesWindow.tr("Set priority according to status"),'value':'True','groupbox':preferencesWindow.tr('Priority'),'disable':['priority'],'enable':['autoPriority_chat','autoPriority_online','autoPriority_away','autoPriority_xa','autoPriority_dnd']}
 		self.config['priority']={'type':'number-spin','label':preferencesWindow.tr("Priority:"),'value':'0','groupbox':preferencesWindow.tr('Priority')}
 		self.config['autoPriority_chat']={'type':'number-spin','label':preferencesWindow.tr("Chat:"),'value':'25','groupbox':preferencesWindow.tr('Priority')}

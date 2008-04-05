@@ -100,6 +100,12 @@ def getVarData(var):
 			ret[key]=unicode(widget.checkedButton().data)
 	return ret
 
+class directoryWidget(QtGui.QLineEdit):
+	def getDirectory(self):
+		directory=unicode(QtGui.QFileDialog.getExistingDirectory(self,self.tr("Choose directory"),self.text(),QtGui.QFileDialog.ShowDirsOnly| QtGui.QFileDialog.DontResolveSymlinks))
+		if len(directory)!=0:
+			self.setText(directory)
+
 def makePreferences(main,parent,layout,form,row=1):
 	var={}
 	boxes={}
@@ -144,9 +150,24 @@ def makePreferences(main,parent,layout,form,row=1):
 			lay.addWidget(widget,row,1)
 			var[key]={'widget':widget,'type':x['type']}
 			row+=1
-			#for d in x.elements():
-				#if d.name == "desc":
-					#widget.setToolTip(unicode(d))
+		elif x['type']=="directory":
+			try:
+				label=QtGui.QLabel(x['label'],par)
+				label.setOpenExternalLinks(True)
+				label.setWordWrap(True)
+			except KeyError:
+				label=None
+			lay.addWidget(label,row,0)
+			widget=directoryWidget(par)
+			widget.setText(unicode(val))
+			chooser=QtGui.QPushButton("...")
+			QtCore.QObject.connect(chooser,QtCore.SIGNAL("clicked()"),widget.getDirectory)
+			l_=QtGui.QHBoxLayout()
+			l_.addWidget(widget)
+			l_.addWidget(chooser)
+			lay.addLayout(l_,row,1)
+			var[key]={'widget':widget,'type':x['type'],'widgets':[chooser]}
+			row+=1
 		elif x['type']=="time-interval":
 			try:
 				label=QtGui.QLabel(x['label'],par)
@@ -323,32 +344,48 @@ def makePreferences(main,parent,layout,form,row=1):
 		if x['type']=="boolean":
 			if x.has_key("enable"):
 				for w in x['enable']:
-					QtCore.QObject.connect(var[key]['widget'],QtCore.SIGNAL("toggled (bool)"),var[w]['widget'].setEnabled)
-					if unicode(val)=="0" or unicode(val).lower()=="false":
-						var[w]['widget'].setEnabled(False)
-					elif unicode(val)=="1" or unicode(val).lower()=="true":
-						var[w]['widget'].setEnabled(True)
+					widgets=[var[w]['widget']]
+					if var[w].has_key("widgets"):
+						widgets+=var[w]['widgets']
+					for widget in widgets:
+						QtCore.QObject.connect(var[key]['widget'],QtCore.SIGNAL("toggled (bool)"),widget.setEnabled)
+						if unicode(val)=="0" or unicode(val).lower()=="false":
+							widget.setEnabled(False)
+						elif unicode(val)=="1" or unicode(val).lower()=="true":
+							widget.setEnabled(True)
 			if x.has_key("disable"):
 				for w in x['disable']:
-					QtCore.QObject.connect(var[key]['widget'],QtCore.SIGNAL("toggled (bool)"),var[w]['widget'].setDisabled)
-					if unicode(val)=="0" or unicode(val).lower()=="false":
-						var[w]['widget'].setDisabled(False)
-					elif unicode(val)=="1" or unicode(val).lower()=="true":
-						var[w]['widget'].setDisabled(True)
+					widgets=[var[w]['widget']]
+					if var[w].has_key("widgets"):
+						widgets+=var[w]['widgets']
+					for widget in widgets:
+						QtCore.QObject.connect(var[key]['widget'],QtCore.SIGNAL("toggled (bool)"),widget.setDisabled)
+						if unicode(val)=="0" or unicode(val).lower()=="false":
+							widget.setDisabled(False)
+						elif unicode(val)=="1" or unicode(val).lower()=="true":
+							widget.setDisabled(True)
 			if x.has_key("show"):
 				for w in x['show']:
-					QtCore.QObject.connect(var[key]['widget'],QtCore.SIGNAL("toggled (bool)"),var[w]['widget'].setVisible)
-					if unicode(val)=="0" or unicode(val).lower()=="false":
-						var[w]['widget'].setVisible(False)
-					elif unicode(val)=="1" or unicode(val).lower()=="true":
-						var[w]['widget'].setVisible(True)
+					widgets=[var[w]['widget']]
+					if var[w].has_key("widgets"):
+						widgets+=var[w]['widgets']
+					for widget in widgets:
+						QtCore.QObject.connect(var[key]['widget'],QtCore.SIGNAL("toggled (bool)"),widget.setVisible)
+						if unicode(val)=="0" or unicode(val).lower()=="false":
+							widget.setVisible(False)
+						elif unicode(val)=="1" or unicode(val).lower()=="true":
+							widget.setVisible(True)
 			if x.has_key("hide"):
 				for w in x['hide']:
-					QtCore.QObject.connect(var[key]['widget'],QtCore.SIGNAL("toggled (bool)"),var[w]['widget'].setHidden)
-					if unicode(val)=="0" or unicode(val).lower()=="false":
-						var[w]['widget'].setHidden(False)
-					elif unicode(val)=="1" or unicode(val).lower()=="true":
-						var[w]['widget'].setHidden(True)
+					widgets=[var[w]['widget']]
+					if var[w].has_key("widgets"):
+						widgets+=var[w]['widgets']
+					for widget in widgets:
+						QtCore.QObject.connect(var[key]['widget'],QtCore.SIGNAL("toggled (bool)"),widget.setHidden)
+						if unicode(val)=="0" or unicode(val).lower()=="false":
+							widget.setHidden(False)
+						elif unicode(val)=="1" or unicode(val).lower()=="true":
+							widget.setHidden(True)
 
 
 
