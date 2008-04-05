@@ -106,6 +106,8 @@ def getVarData(var):
 				item=widget.jids.item(i)
 				jids.append(unicode(item.text()))
 			ret[key]=jids
+		elif typ=="custom":
+			ret[key]=widget.getWidgetValue()
 	return ret
 
 class directoryWidget(QtGui.QLineEdit):
@@ -198,6 +200,23 @@ def makePreferences(main,parent,layout,form,row=1):
 			widget=QtGui.QLineEdit(par)
 			widget.setText(unicode(val))
 			lay.addWidget(widget,row,1)
+			var[key]={'widget':widget,'type':x['type']}
+			row+=1
+		elif x['type']=="custom":
+			try:
+				label=QtGui.QLabel(x['label'],par)
+				label.setOpenExternalLinks(True)
+				label.setWordWrap(True)
+			except KeyError:
+				label=None
+			lay.addWidget(label,row,0)
+			
+			widget=x['widget'](par)
+			widget.setWidgetValue(val)
+			if not label:
+				lay.addWidget(widget,row,0,1,2)
+			else:
+				lay.addWidget(widget,row,1)
 			var[key]={'widget':widget,'type':x['type']}
 			row+=1
 		elif x['type']=="directory":
