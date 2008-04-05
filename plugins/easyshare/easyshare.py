@@ -113,7 +113,7 @@ class config:
 		self.main=main
 		self.config={}
 		self.config['sharepath']={'type':'text-single','label':self.main.tr("Path"),'value':self.main.homeDir}
-		self.config['sharejids']={'type':'text-single','label':self.main.tr("Allow JIDs"),'value':''}
+		self.config['sharejids']={'type':'jid-list','label':self.main.tr("Allow JIDs"),'value':[]}
 
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
@@ -134,8 +134,8 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.loadConfig()
 			self.home = self.config['sharepath']
-			jids = self.config['sharejids'].strip()
-			jids = jids.split(',')
+			jids = self.config['sharejids']#.strip()
+			#jids = jids.split(',')
 			for jd in jids:  #tohle chce predelat asi
 				if jd.strip() != '':
 					self.public.append(jd.strip())
@@ -148,8 +148,8 @@ class Plugin(plugins.PluginBase):
 			self.public = []
 			self.main.client.commands.unregisterNode("http://dev.jabbim.cz/jabbim/rc#easyshare", "Get file")
 			self.home = self.config['sharepath']
-			jids = self.config['sharejids'].strip()
-			jids = jids.split(',')
+			jids = self.config['sharejids']
+			#jids = jids.split(',')
 			for jd in jids:  #tohle chce predelat asi
 				if jd.strip() != '':
 					self.public.append(jd.strip())
@@ -178,7 +178,7 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.public.append(jid)
 			self.action.setChecked(True)
-		self.config['sharejids'] = ','.join(self.public)
+		self.config['sharejids'].append(''.join(self.public))
 		self.writeConfig()
 		self.on_configChanged()
 		self.action.deleteLater()

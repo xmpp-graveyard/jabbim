@@ -38,6 +38,8 @@ from twisted.words.xish import domish
 import traceback
 from extra import extraDialog
 from os.path import basename
+from twisted.words.protocols.jabber import jid as jidT
+
 
 class pluginConfiguration(QtGui.QDialog):
 	def __init__(self,plugin,parent):
@@ -65,7 +67,7 @@ class pluginConfiguration(QtGui.QDialog):
 	def accept(self):
 		self.plugin.on_saveConfig()
 		for key,value in getVarData(self.var).iteritems():
-			self.plugin.config[key]=unicode(value)
+			self.plugin.config[key]=value
 			print key,"=",unicode(value)
 		self.plugin.writeConfig()
 		self.done(1)
@@ -98,6 +100,12 @@ def getVarData(var):
 			ret[key]=unicode(widget.value())
 		elif typ=="boolean-radio":
 			ret[key]=unicode(widget.checkedButton().data)
+		elif typ=="jid-list":
+			jids=[]
+			for i in range(widget.jids.count()):
+				item=widget.jids.item(i)
+				jids.append(unicode(item.text()))
+			ret[key]=jids
 	return ret
 
 class directoryWidget(QtGui.QLineEdit):
@@ -105,6 +113,48 @@ class directoryWidget(QtGui.QLineEdit):
 		directory=unicode(QtGui.QFileDialog.getExistingDirectory(self,self.tr("Choose directory"),self.text(),QtGui.QFileDialog.ShowDirsOnly| QtGui.QFileDialog.DontResolveSymlinks))
 		if len(directory)!=0:
 			self.setText(directory)
+
+class jidListWidget(QtGui.QWidget):
+	"""
+	Widget for displaying jid-list type in configAPI
+	"""
+	def __init__(self,parent=None):
+		QtGui.QWidget.__init__(self,parent)
+		# layout
+		layout=QtGui.QGridLayout(self)
+		self.jids=QtGui.QListWidget(self)
+		add=QtGui.QPushButton(self.tr("Add"),self)
+		remove=QtGui.QPushButton(self.tr("Remove"),self)
+		layout.addWidget(self.jids,0,0,1,2)
+		layout.addWidget(add,1,0,1,1)
+		layout.addWidget(remove,1,1,1,1)
+		# signals
+		QtCore.QObject.connect(add,QtCore.SIGNAL("clicked()"),self.addJid)
+		QtCore.QObject.connect(remove,QtCore.SIGNAL("clicked()"),self.removeJid)
+	
+	def removeJid(self):
+		items=self.jids.selectedItems()
+		if len(items)==0:
+			return
+		# TODO => allow to remove more items
+		self.jids.takeItem(self.jids.row(items[0]))
+		del items[0]
+		
+	def addJid(self):
+		jid=""
+		while 1:
+			jid,b=QtGui.QInputDialog.getText(self,self.tr("Add Jabber ID"),self.tr("Enter Jabber ID:"), QtGui.QLineEdit.Normal, jid)
+			jid=unicode(jid)
+			if b==True and len(jid)!=0:
+				try:
+					isJid=jidT.JID(jid)
+				except:
+					isJid=None
+				if isJid:
+					QtGui.QListWidgetItem(jid,self.jids)
+					break
+			else:
+				break
 
 def makePreferences(main,parent,layout,form,row=1):
 	var={}
@@ -167,6 +217,22 @@ def makePreferences(main,parent,layout,form,row=1):
 			l_.addWidget(chooser)
 			lay.addLayout(l_,row,1)
 			var[key]={'widget':widget,'type':x['type'],'widgets':[chooser]}
+			row+=1
+		elif x['type']=="jid-list":
+			try:
+				label=QtGui.QLabel(x['label'],par)
+				label.setOpenExternalLinks(True)
+				label.setWordWrap(True)
+			except KeyError:
+				label=None
+			lay.addWidget(label,row,0)
+			widget=jidListWidget(par)
+			print "variables lol:",type(val)
+			if isinstance(val,list):
+				for jid in val:
+					QtGui.QListWidgetItem(unicode(jid),widget.jids)
+			lay.addWidget(widget,row,1)
+			var[key]={'widget':widget,'type':x['type']}
 			row+=1
 		elif x['type']=="time-interval":
 			try:
@@ -777,7 +843,7 @@ class preferencesWindow(QtGui.QDialog):
 		plugin=self.plugins[name]
 		plugin.on_saveConfig()
 		for key,value in getVarData(var).iteritems():
-			plugin.config[key]=unicode(value)
+			plugin.config[key]=value
 			print key,"=",unicode(value)
 		plugin.writeConfig()
 		if self.main.plugins.has_key(name):
@@ -882,7 +948,7 @@ class preferencesWindow(QtGui.QDialog):
 				if key=='passwd':
 					self.main.config[key]=rot13.scramble(unicode(value))
 				else:
-					self.main.config[key]=unicode(value)
+					self.main.config[key]=value
 					print key,"=",unicode(value)
 		if not self.justShowed:
 			self.main.config['chatSkin']=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())
