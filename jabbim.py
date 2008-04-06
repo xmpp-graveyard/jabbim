@@ -1246,7 +1246,8 @@ class clientClass(pyxl.client.Client):
 					
 					result=self.main.getAvatar(pixmap,size="32x32",frame=False,status=self.main.icons[text[0]])
 					item.setIcon(0,QtGui.QIcon(result))
-					w.chat.setTooltip(item,jid.full())
+					item.setToolTip(0,w.chat.getGroupchatTooltip(jid.full(),item))
+					#w.chat.setTooltip(item,jid.full())
 
 	def on_fileReceived(self, sid, id):
 		if self.main.config['autoDownload'] == 'True' or unicode(sid) in self.main.allowedSids:

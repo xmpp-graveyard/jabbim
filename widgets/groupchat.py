@@ -635,32 +635,15 @@ class groupChatWidget(abstractChatWidget):
 			self.main.client.on_avatarUpdate(self.jid+"/"+unicode(item.text(0)))
 
 		jid=self.jid+"/"+nick
-		text='<table><tr>'
-		if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")):
-			f=open(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
-			image = f.read()
-			f.close()
-			pixmap=QtGui.QPixmap()
-			pixmap.loadFromData(image)
-			pixmap=QtGui.QIcon(pixmap)
-			pixmap=pixmap.pixmap(64,64)
-			text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
-		text+='<td><b>'+self.tr("Name:")+'</b> '+nick+'<br/>'
-		if self.main.client.groupchats[self.jid].users[nick].truejid:
-			text+='<b>'+self.tr("JID:")+'</b> '+self.main.client.groupchats[self.jid].users[nick].truejid+'<br/>'
-		else:
-			text+='<b>'+self.tr("JID:")+'</b> '+unicode(self.jid)+'/'+nick+'<br/>'
-		text+='<img src="images/16x16/status/jabber-%s.png">' % status # hodilo by se rozlisit k jakymu poatri transportu
-		text+='<font size="-1">%s</font><br>' % unicode(self.main.client.groupchats[self.jid].users[nick].status).replace("None","")
-		text+="</td></tr></table>"
-		item.setToolTip(0,text)
-
+		item.setToolTip(0,self.getGroupchatTooltip(jid,item))
+		
 		avatar=item.icon(1)
 		if not avatar.isNull():
 			#avatar=avatar.pixmap(28,28)
 			result=self.main.getAvatar(avatar,size="32x32",frame=False,status=self.main.icons[unicode(item.text(1))[0]])
 			item.setIcon(0,QtGui.QIcon(result))
 
+		
 
 		# Tooltip
 		#user.setToolTip('<font color="blue"><b>'+unicode(user.text(2))+'</b></font><hr>'+unicode(e[2].getStatus())+'<br/><b>Jabber ID: </b>'+str(jid)+'')
@@ -668,21 +651,25 @@ class groupChatWidget(abstractChatWidget):
 		self.ui.users.sortItems (1,QtCore.Qt.AscendingOrder)
 		self.refreshStats()
 
-	def setTooltip(self,item,jid):
-		#jid=self.jid+"/"+nick
-		nick=unicode(jidT.JID(jid).resource)
-		status=self.main.client.groupchats[self.jid].users[nick].show
-		item=self.getUserItems(nick)[0]
+	def getGroupchatTooltip(self,jid,item):
 		text='<table><tr>'
-		if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")):
-			f=open(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
-			image = f.read()
-			f.close()
-			pixmap=QtGui.QPixmap()
-			pixmap.loadFromData(image)
-			pixmap=QtGui.QIcon(pixmap)
-			pixmap=pixmap.pixmap(64,64)
-			text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
+		nick=self.main.getJid(jid).resource
+		status=self.main.icons[unicode(item.text(1))[0]]
+		if self.main.client.avatarDef.get(jid, False):
+			if self.main.client.avatarImg[self.main.client.avatarDef[jid]] and self.main.client.avatarDef[jid]!="None":
+				width=self.main.client.avatarImg[self.main.client.avatarDef[jid]][1]
+				height=self.main.client.avatarImg[self.main.client.avatarDef[jid]][2]
+				height=height/(float(width)/64.0)
+				text+='<td><img src="'+self.main.realHomeDir+'/avatars/'+unicode(self.main.client.avatarDef[jid])+'" width="64" height="'+str(height)+'"/></td>'
+		#if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")):
+			#f=open(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
+			#image = f.read()
+			#f.close()
+			#pixmap=QtGui.QPixmap()
+			#pixmap.loadFromData(image)
+			#pixmap=QtGui.QIcon(pixmap)
+			#pixmap=pixmap.pixmap(64,64)
+			#text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
 		text+='<td><b>'+self.tr("Name:")+'</b> '+nick+'<br/>'
 		if self.main.client.groupchats[self.jid].users[nick].truejid:
 			text+='<b>'+self.tr("JID:")+'</b> '+self.main.client.groupchats[self.jid].users[nick].truejid+'<br/>'
@@ -691,7 +678,32 @@ class groupChatWidget(abstractChatWidget):
 		text+='<img src="images/16x16/status/jabber-%s.png">' % status # hodilo by se rozlisit k jakymu poatri transportu
 		text+='<font size="-1">%s</font><br>' % unicode(self.main.client.groupchats[self.jid].users[nick].status).replace("None","")
 		text+="</td></tr></table>"
-		item.setToolTip(0,text)
+		return text
+
+	#def setTooltip(self,item,jid):
+		##jid=self.jid+"/"+nick
+		#nick=unicode(jidT.JID(jid).resource)
+		#status=self.main.client.groupchats[self.jid].users[nick].show
+		#item=self.getUserItems(nick)[0]
+		#text='<table><tr>'
+		#if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")):
+			#f=open(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
+			#image = f.read()
+			#f.close()
+			#pixmap=QtGui.QPixmap()
+			#pixmap.loadFromData(image)
+			#pixmap=QtGui.QIcon(pixmap)
+			#pixmap=pixmap.pixmap(64,64)
+			#text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
+		#text+='<td><b>'+self.tr("Name:")+'</b> '+nick+'<br/>'
+		#if self.main.client.groupchats[self.jid].users[nick].truejid:
+			#text+='<b>'+self.tr("JID:")+'</b> '+self.main.client.groupchats[self.jid].users[nick].truejid+'<br/>'
+		#else:
+			#text+='<b>'+self.tr("JID:")+'</b> '+unicode(self.jid)+'/'+nick+'<br/>'
+		#text+='<img src="images/16x16/status/jabber-%s.png">' % status # hodilo by se rozlisit k jakymu poatri transportu
+		#text+='<font size="-1">%s</font><br>' % unicode(self.main.client.groupchats[self.jid].users[nick].status).replace("None","")
+		#text+="</td></tr></table>"
+		#item.setToolTip(0,text)
 
 	def logButton(self,button):
 		if button==self.actual:
