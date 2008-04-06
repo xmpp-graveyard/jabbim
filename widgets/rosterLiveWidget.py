@@ -536,8 +536,11 @@ class rosterWidget(QtGui.QWidget):
 								if self.metaItems.has_key(useritem.metajid):
 									for contact in self.metaItems[useritem.metajid]:
 										if contact.jid!=useritem.jid:
-											_items+=[contact]
-						items+=_items
+											_items.append([items.index(useritem),contact])
+						_items.reverse()
+						for useritem in _items:
+							items.insert(useritem[0]+1,useritem[1])
+						#items+=_items
 						for useritem in items:
 							y+=self.userHeight
 							if got!=0 and not useritem in ret:
@@ -1556,14 +1559,14 @@ class rosterWidget(QtGui.QWidget):
 			size=y+self.selectedHeight-28
 		else:
 			size=y
-		if size<self.parent().height()-20:
-			if self.parent().height()-20>0:
-				self.setMinimumHeight(self.parent().height()-20)
-		else:
-			if y+self.selectedHeight-28>0 and self.selectedHeight!=0 and not self.statusLabel.isHidden():
-				self.setMinimumHeight(size)
-			else:
-				self.setMinimumHeight(size)
+		#if size<self.parent().height()-20:
+			#if self.parent().height()-20>0:
+				#self.setMinimumHeight(self.parent().height()-20)
+		#else:
+		#if y+self.selectedHeight-28>0 and self.selectedHeight!=0 and not self.statusLabel.isHidden():
+			#self.setMinimumHeight(size)
+		#else:
+		self.setMinimumHeight(size)
 		#self.setMinimumHeight(1500)
 
 
