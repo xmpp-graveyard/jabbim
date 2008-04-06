@@ -1349,6 +1349,8 @@ class AvatarLabel(QtGui.QLabel):
 		if self.main.client:
 			text = self.main.getToolTip(self.main.client.jid.userhost())
 			self.setToolTip(text)
+			# set tooltip also for tray icon
+			self.main.tray.setToolTip(text)
 
 
 
