@@ -394,6 +394,7 @@ class abstractChatWidget(QtGui.QWidget):
 		self.jid=jid #: users JID
 		self.sent = []
 		self.hindex = 0
+		self.featuredWidget=[]
 
 		# signals
 		QtCore.QObject.connect(self.ui.sendButton, QtCore.SIGNAL("clicked ()"),self.sendButtonClicked)
@@ -502,6 +503,29 @@ class abstractChatWidget(QtGui.QWidget):
 			painter.end()
 			self.ui.backgroundButton.setIcon(QtGui.QIcon(colorIcon))
 	#fmt.setBackground(QtGui.QBrush(QtGui.QColor(QtCore.Qt.red)))
+
+	def registerFeatureForWidget(self,feature,widget):
+		self.featuredWidget.append([feature,widget])
+		if self.main.client.hasFeature(self.jid,feature):
+			widget.show()
+		else:
+			widget.hide()
+
+	def unregisterFeatureForWidget(self,widget):
+		for item in self.featuredWidget:
+			if widget==item[1]:
+				self.featuredWidget.remove(item)
+				break
+
+	def showFeaturedWidgets(self):
+		for item in self.featuredWidget:
+			feature=item[0]
+			widget=item[1]
+			print "checking ",feature," = ",self.main.client.hasFeature(self.jid,feature)
+			if self.main.client.hasFeature(self.jid,feature):
+				widget.show()
+			else:
+				widget.hide()
 
 	def isLink(self,text):
 		if text.find("://")!=-1:
