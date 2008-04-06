@@ -334,7 +334,7 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('firstChatMessageEvent',self.on_firstChatMessageEvent)
 			self.registerHandler('chatMessageEvent',self.on_chatMessageEvent)
 			self.registerHandler('on_GCmessage', self.on_GCmessage)
-			self.registerHandler('on_presence',self.on_presence)
+			self.registerHandler('presenceEvent',self.on_presence)
 			self.registerHandler('on_evil',self.on_evil)
 			self.loadConfig()
 			self.main.playsound('start')
@@ -423,39 +423,17 @@ class Plugin(plugins.PluginBase):
 		pixmap=self.main.getAvatar(jid.userhost().replace('/','%'),frame=False,size="64x64")
 		self.osd.view(pixmap,self.tr('WARNING!'),unicode('Evil '+typ+' from '+jid.userhost()),self.addChatTab,[it,jid])
 		
-	def on_presence(self,jid,show,error):
-		if error or self.config['osd_on_presence']=="False":
+	def on_presence(self,jid,user,show,status,first):
+		if first or self.config['osd_on_presence']=="False":
 			return
-		start=time.time()
-		status=None
-		if jid.resource:
-			if self.main.client.roster['users'][jid.userhost()].resources.has_key(jid.resource):
-				res=self.main.client.roster['users'][jid.userhost()].resources[jid.resource]
-				status=res.status
-		else:
-			status=self.main.client.roster['users'][unicode(jid.userhost())].status[1]
 
-		user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
-		if len(user)==0:
-			user=self.main.ui.roster.getMetaItems(jid.userhost())
-			if len(user)!=0:
-				user=user[0]
-		if len(user)!=0:
-			#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
-			it=user[0]
-			user=user[0].name
-			
-		else:
-			it=None
-			user=unicode(jid.full())
-
-		pixmap=self.main.getAvatar(jid.userhost().replace('/','%'),frame=False,size="64x64")
+		pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
 		if not status:
 			status=""
-		self.osd.view(pixmap,user+self.tr(" is now ")+self.main.status[unicode(show)],unicode(status),self.addChatTab,[it,jid])
-		print "notification_presence lasts",time.time()-start
+		self.osd.view(pixmap,user+self.tr(" is now ")+self.main.status[unicode(show)],unicode(status),self.addChatTab,[jid])
 
-	def addChatTab(self,item,jid):
+	def addChatTab(self,jid):
+		item=self.main.ui.roster.getUserItems(jid.userhost())
 		if item:
 			res = self.main.client.roster['users'][item.jid].getHighestResource()
 			

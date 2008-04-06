@@ -723,7 +723,7 @@ class clientClass(pyxl.client.Client):
 			tabFull.chat.buildResourceMenu()
 			tabFull.chat.buildMetaMenu()
 			tabFull.chat.refreshToolTip()
-
+		status_=None
 		if show=="offline":
 			# self presence
 			if jid.userhost()==self.jid.userhost():
@@ -767,6 +767,7 @@ class clientClass(pyxl.client.Client):
 					print 'error in resource', [jid.userhost()]
 				# get status message
 				if status!=None:
+					status_=status
 					status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
 				# update contact in roster
 				try:
@@ -778,6 +779,7 @@ class clientClass(pyxl.client.Client):
 				status=self.roster['users'][jid.userhost()].status[1]
 				if status!=None:
 					status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
+					status_=status
 				# update contact in roster
 				self.main.ui.roster.setStatus(jid.userhost(),show,status=status,first=first)
 		# presence is from transport
@@ -809,6 +811,7 @@ class clientClass(pyxl.client.Client):
 					text+='<font size="-1">%s</font>' % (status)
 				text+="</td></tr></table>"
 				self.main.transports[jid.full()].setToolTip(text)
+		self.dispatcher.publishEvent('presenceEvent', jid, self.main.ui.roster.getNameByJID(jid.full()), show, status_, first)
 		print "on_presence lasts",time.time()-start
 
 	def on_xml(self,xml):
