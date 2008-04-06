@@ -112,7 +112,7 @@ class config:
 	def __init__(self,main):
 		self.main=main
 		self.config={}
-		self.config['sharepath']={'type':'text-single','label':self.main.tr("Path"),'value':self.main.homeDir}
+		self.config['sharepath']={'type':'directory','label':self.main.tr("Path"),'value':self.main.homeDir}
 		self.config['sharejids']={'type':'jid-list','label':self.main.tr("Allow JIDs"),'value':[]}
 
 class Plugin(plugins.PluginBase):
@@ -178,7 +178,7 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.public.append(jid)
 			self.action.setChecked(True)
-		self.config['sharejids'].append(''.join(self.public))
+		self.config['sharejids'] = self.public
 		self.writeConfig()
 		self.on_configChanged()
 		self.action.deleteLater()
