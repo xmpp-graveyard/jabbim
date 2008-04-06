@@ -869,7 +869,7 @@ class chatWindow(QtGui.QMainWindow):
 		layout.setSpacing(1)
 		tab.chat=groupChatWidget(self.main,room,tab,nickname)
 		# splitter size
-		tab.chat.ui.splitter.setSizes(list(self.main.config['groupchatSplitSizes1']))
+		tab.chat.ui.splitter.setSizes([800,64])
 		tab.chat.ui.splitter_2.setSizes(list(self.main.config['groupchatSplitSizes2']))
 		tab.chat.ui.splitter_3.setSizes(list(self.main.config['groupchatSplitSizes3']))
 		#tab.chat.ui.admin.hide()
