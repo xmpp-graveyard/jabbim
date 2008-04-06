@@ -331,7 +331,7 @@ class Plugin(plugins.PluginBase):
 		self.osd=None
 		if main:
 			#self.registerHandler('on_message', self.on_message)
-			self.registerHandler('firstMessageEvent',self.on_firstMessageEvent)
+			self.registerHandler('firstChatMessageEvent',self.on_firstChatMessageEvent)
 			self.registerHandler('chatMessageEvent',self.on_chatMessageEvent)
 			self.registerHandler('on_GCmessage', self.on_GCmessage)
 			self.registerHandler('on_presence',self.on_presence)
@@ -481,7 +481,7 @@ class Plugin(plugins.PluginBase):
 			self.ico=True
 			self.main.tray.setIcon(self.trayIcon)
 
-	def on_firstMessageEvent(self, jid,user,typ,body,subject, xhtml,  chatstate,  delay, error=None,eventID=None):
+	def on_firstChatMessageEvent(self, jid,user,body,subject, xhtml, chatstate, delay, eventID=None):
 		if body == None:
 			return
 		print 'first message',self.config['on_first_message'],self.main.chat.isActiveWindow()
@@ -500,7 +500,7 @@ class Plugin(plugins.PluginBase):
 			self.main.playsound('new_message')
 			self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),event)
 
-	def on_chatMessageEvent(self,jid,user,typ,body,subject, xhtml,  chatstate,  delay, error=None,eventID=None):
+	def on_chatMessageEvent(self,jid,user,body,subject, xhtml,  chatstate,  delay,eventID=None):
 		if body == None:
 			return
 		# inform user about new message
