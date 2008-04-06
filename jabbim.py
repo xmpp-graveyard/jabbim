@@ -710,7 +710,10 @@ class clientClass(pyxl.client.Client):
 			s = ''
 			if contact != None:
 				s = contact.resources[jid.resource].status
-			message=message.replace("[message]",unicode(s))
+			if s:
+				message=message.replace("[message]",unicode(s))
+			else:
+				message=message.replace("[[message]]","")
 			message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', user)
 			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
 			tabFull.chat.textEditWrite(message)
