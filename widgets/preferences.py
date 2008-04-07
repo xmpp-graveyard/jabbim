@@ -161,30 +161,63 @@ class jidListWidget(QtGui.QWidget):
 def makePreferences(main,parent,layout,form,row=1):
 	var={}
 	boxes={}
+	tabs={}
 	getBox=False
+	getTab=False
 	par=parent
 	lay=layout
 	keys=form.keys()
 	if "__sort__" in keys:
 		keys=form['__sort__']
+	usingTabs=False
+	for key in keys:
+		if form[key].has_key("tab"):
+			if not usingTabs:
+				usingTabs=True
+				tabWidget=QtGui.QTabWidget(parent)
+				layout.addWidget(tabWidget,row,0,1,2)
+				row+=1
+			if not tabs.has_key(form[key]['tab']):
+				tabs[form[key]['tab']]=[QtGui.QWidget(tabWidget)]
+				tabs[form[key]['tab']].append(QtGui.QGridLayout(tabs[form[key]['tab']][0]))
+				tabs[form[key]['tab']].append(0)
+				tabWidget.addTab(tabs[form[key]['tab']][0],form[key]['tab'])
+	row_=int(row)
 	for key in keys:
 		x=form[key]
 		val=x['value']
+		if x.has_key('tab'):
+			par=tabs[x['tab']][0]
+			lay=tabs[x['tab']][1]
+			getTab=True
+			row=tabs[x['tab']][2]
+			tabs[x['tab']][2]+=1
 		if x.has_key('groupbox'):
 			if not boxes.has_key(x['groupbox']):
-				boxes[x['groupbox']]=[QtGui.QGroupBox(x['groupbox'],parent)]
-				boxes[x['groupbox']].append(QtGui.QGridLayout(boxes[x['groupbox']][0]))
-				layout.addWidget(boxes[x['groupbox']][0],row,0,1,2)
-				row+=1
+				if x.has_key('tab'):
+					boxes[x['groupbox']]=[QtGui.QGroupBox(x['groupbox'],tabs[x['tab']][0])]
+					boxes[x['groupbox']].append(QtGui.QGridLayout(boxes[x['groupbox']][0]))
+					tabs[x['tab']][1].addWidget(boxes[x['groupbox']][0],row,0,1,2)
+				else:
+					boxes[x['groupbox']]=[QtGui.QGroupBox(x['groupbox'],parent)]
+					boxes[x['groupbox']].append(QtGui.QGridLayout(boxes[x['groupbox']][0]))
+					layout.addWidget(boxes[x['groupbox']][0],row,0,1,2)
+					row+=1
+				boxes[x['groupbox']].append(0)
 				oldrow=int(row)
+			boxes[x['groupbox']][2]+=1
+			row=boxes[x['groupbox']][2]
 			par=boxes[x['groupbox']][0]
 			lay=boxes[x['groupbox']][1]
 			getBox=True
 		elif getBox:
 			getBox=False
-			row=int(oldrow)
-			par=parent
-			lay=layout
+			if not usingTabs:
+				row=int(oldrow)
+				par=parent
+				lay=layout
+			#if not tabs.has_key(x['tab']):
+				#tabs[x['tab']]=[QtGui.QGroupBox(x['groupbox'],parent)]
 		if main.has_key(key):
 			val=main[key]
 			if key=="passwd":
@@ -473,8 +506,10 @@ def makePreferences(main,parent,layout,form,row=1):
 							widget.setHidden(True)
 
 
-
-	return var,row
+	if usingTabs:
+		return var,row_
+	else:
+		return var,row
 
 
 class preferencesWindow(QtGui.QDialog):
