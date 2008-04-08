@@ -1165,7 +1165,6 @@ class clientClass(pyxl.client.Client):
 				text+='<font size="-1">'+traytext+'<br/>'
 				text+="</td></tr></table>"
 				self.main.events.addInfoEvent(header=mainWindow.tr("New message"),text=mainWindow.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[],tooltip=text)
-				self.main.tray.showMessage(mainWindow.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
 				if self.groupchats.has_key(frm.userhost()):
 					self.main.chat.addChatTab(frm.full(),unicode(user),icon,message,full=True)
 				else:

@@ -286,18 +286,19 @@ class config:
 	def __init__(self,main):
 		self.main=main
 		self.config={}
-		self.config['on_first_message']={'type':'boolean','label':self.main.tr("Notify on first message from user"),'value':'True','groupbox':self.main.tr('Tray icon'),'tab':self.main.tr("Tray Icon")}
-		self.config['on_muc_highlight']={'type':'boolean','label':self.main.tr("Notify if groupchat message contains your nickname"),'value':'True','groupbox':self.main.tr('Tray icon'),'tab':self.main.tr("Tray Icon")}
+		self.config['tray_first_message']={'type':'boolean','label':self.main.tr("Notify on first message from user"),'value':'True','groupbox':self.main.tr('Tray icon'),'tab':self.main.tr("Tray Icon")}
+		self.config['tray_muc_highlight']={'type':'boolean','label':self.main.tr("Notify if groupchat message contains your nickname"),'value':'True','groupbox':self.main.tr('Tray icon'),'tab':self.main.tr("Tray Icon")}
 		
-		self.config['sound_on_login']={'type':'boolean','label':self.main.tr("Play sound on login"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
+		self.config['sound_login']={'type':'boolean','label':self.main.tr("Play sound on login"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
 		self.config['sound_first_message']={'type':'boolean','label':self.main.tr("Play sound on first message from user"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
 		self.config['sound_message']={'type':'boolean','label':self.main.tr("Play sound on other messages from user"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
 		self.config['sound_gc_message']={'type':'boolean','label':self.main.tr("Play sound if groupchat message contains your nickname"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
 		
 		self.config['osd_transparent']={'type':'boolean','label':self.main.tr("Use transparent background"),'value':'False','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_time']={'type':'number-spin','label':self.main.tr("Display time (seconds):"),'value':'2','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
+		self.config['osd_first_message']={'type':'boolean','label':self.main.tr("Use OSD for first message"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
+		self.config['osd_on_message']={'type':'boolean','label':self.main.tr("Use OSD for other messages"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_on_presence']={'type':'boolean','label':self.main.tr("Use OSD for presences"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
-		self.config['osd_on_message']={'type':'boolean','label':self.main.tr("Use OSD for messages"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_x']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_y']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 
@@ -318,7 +319,7 @@ class Plugin(plugins.PluginBase):
 		#self.config['on_muc_highlight'] = {'description':'Notify if groupchat message contains your nickname', 'default':'True', 'value': '','type':'boolean'}
 		#self.config['sound_first_message'] = {'description':'Play sound on first message from user', 'default':'True', 'value': '','type':'boolean'}
 		#self.config['sound_gc'] = {'description':'Play sound if groupchat message contains your nickname', 'default':'True', 'value': '','type':'boolean'}
-		#self.config['sound_on_login'] = {'description':'Play sound on login', 'default':'True', 'value': '','type':'boolean'}
+		#self.config['sound_login'] = {'description':'Play sound on login', 'default':'True', 'value': '','type':'boolean'}
 		self.soundDir="sounds/" #for now lets say we have no option to change it (but it will change :)
 		self.soundAvailable=1 # well, we suppose there is sundsupport
 		self.sounds={} # ditictionary of playable actions, will fill in later
@@ -335,11 +336,11 @@ class Plugin(plugins.PluginBase):
 			#self.registerHandler('on_message', self.on_message)
 			self.registerHandler('firstChatMessageEvent',self.on_firstChatMessageEvent)
 			self.registerHandler('chatMessageEvent',self.on_chatMessageEvent)
-			self.registerHandler('on_GCmessage', self.on_GCmessage)
+			self.registerHandler('groupchatMessageForMeEvent',self.on_groupchatMessageForMeEvent)
 			self.registerHandler('presenceEvent',self.on_presence)
 			self.registerHandler('on_evil',self.on_evil)
 			self.loadConfig()
-			if self.config['sound_on_login']=="True":
+			if self.config['sound_login']=="True":
 				self.main.playsound('start')
 			self.osd=osd(self)
 			self.registerWidget(self.osd)
@@ -465,13 +466,12 @@ class Plugin(plugins.PluginBase):
 	def on_firstChatMessageEvent(self, jid,user,body,subject, xhtml, chatstate, delay, eventID=None):
 		if body == None:
 			return
-		print 'first message',self.config['on_first_message'],self.main.chat.isActiveWindow()
-		if self.config['on_first_message']=="True" and not self.main.chat.isActiveWindow():
-			# cut message if it's too long
-			if len(body)>40:
-					traytext=body[:40]+" ..."
-			else:
-					traytext=body
+		# cut message if it's too long
+		if len(body)>40:
+				traytext=body[:40]+" ..."
+		else:
+				traytext=body
+		if self.config['osd_first_message']=="True" and not self.main.chat.isActiveWindow():
 			# get avatar for OSD
 			pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
 			# add child event
@@ -481,6 +481,9 @@ class Plugin(plugins.PluginBase):
 			self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),event)
 		if self.config['sound_first_message']=="True":
 			self.main.playsound('new_message')
+		if self.config['tray_first_message']=='True':
+			self.main.tray.showMessage(self.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
+
 	def on_chatMessageEvent(self,jid,user,body,subject, xhtml,  chatstate,  delay,eventID=None):
 		if body == None:
 			return
@@ -498,30 +501,16 @@ class Plugin(plugins.PluginBase):
 			# inform user about newly opened tab
 			self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),event)
 		if self.config['sound_message']=="True":
-			self.main.playsound('new_message')
+			self.main.playsound('message')
 
-	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
-		if delay != None:
-			return
-		if len(unicode(frm).rsplit("/"))==2:
-			user=unicode(frm).rsplit("/")[1]
-			frm=unicode(frm).rsplit("/")[0]
-		else:
-			user=frm
-		#print self.config['on_muc_highlight']
-		if self.config['on_muc_highlight']=="True" or self.config['sound_gc_message']=="True":
-			for i in range(self.main.chat.ui.chatTab.count()):
-				w=self.main.chat.ui.chatTab.widget(i)
-				if unicode(w.jid)==frm:
-					if user == w.name:
-						continue
-					#print "test"
-					if utils.need_highlight(unicode(w.name), unicode(body)):
-						if len(body)>40:
-								text=body[:40]+" ..."
-						else:
-								text=body
-						traytext=unicode(user)+": "+text
-						if self.config['sound_gc_message']=="True":
-							self.main.playsound('message')
-						self.main.tray.showMessage(self.tr("New groupchat message for you"), traytext, QtGui.QSystemTrayIcon.Information, 5000)
+	def on_groupchatMessageForMeEvent(self,frm,user,body,subject, xhtml):
+		if self.config['tray_muc_highlight']=="True" and not self.main.chat.isActiveWindow():
+			if len(body)>40:
+				text=body[:40]+" ..."
+			else:
+				text=body
+			traytext=unicode(user)+": "+text
+			self.main.tray.showMessage(self.tr("New groupchat message for you"), traytext, QtGui.QSystemTrayIcon.Information, 4000)
+
+		if self.config['sound_gc_message']=="True":
+			self.main.playsound('message')
