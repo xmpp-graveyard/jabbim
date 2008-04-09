@@ -304,23 +304,35 @@ class Plugin(plugins.PluginBase):
 
 
 	def buildMainWindowMenu(self):
+		"""
+		Builds menu for Jabbim MainWindow
+		"""
 		menu=self.mainWindowMenu()
 		menu.addAction("Archive browser",self.showSlot)
 	
 	def buildContactMenu(self,menu,contact):
+		"""
+		Adds QAction to the menu above contact 
+		"""
 		if unicode(contact.jid) in self.jidList:
 			self.action=menu.addAction(self.tr("History"))
 			self.action.setData(QtCore.QVariant(unicode(contact.jid)))
 			self.action.setObjectName("history")
 			self.action.setIcon(QtGui.QIcon("%s/history.png" % self.pluginDir))
-			QtCore.QObject.connect(self.action,QtCore.SIGNAL("triggered ( bool )"),self.toggled)
+			QtCore.QObject.connect(self.action,QtCore.SIGNAL("triggered ( bool )"),self.contactMenuToggled)
 	
-	def toggled(self,b):
+	def contactMenuToggled(self,b):
+		"""
+		User choose our QAction from contactMenu (menu above contact)
+		"""
 		jid=unicode(self.action.data().toString())
 		self.showSlot(jid)
 		self.action.deleteLater()
 	
 	def buttonClicked(self,button):
+		"""
+		Handles buttons from chatWidgets
+		"""
 		jid=button.jid
 		self.showSlot(jid)
 
@@ -332,6 +344,7 @@ class Plugin(plugins.PluginBase):
 		button.setIcon(QtGui.QIcon("%s/history.png" % self.pluginDir))
 		button.jid=unicode(jid.userhost())
 		button.setToolTip("History")
+		# add button to buttonGroup
 		self.group.addButton(button)
 		layout.addWidget(button)
 		
@@ -349,8 +362,48 @@ class Plugin(plugins.PluginBase):
 			d=threads.deferToThread(self.getLastMessages,jid,int(self.config['messagesNumber']),me,user,unicode(self.main.skin["my_message_history"]),unicode(self.main.skin["message_history"]),self.main.skin['color1'],avatar,selfavatar,self.config['messagesTime'])
 			d.addCallback(self.gotLastMessages,widget)
 
+	def getLastMessages(self,jid,count,me,user,my_message,message,color,avatar,selfavatar,maxTime):
+		"""
+		Returns last X xhtml formated messages from contact. Called in thread by buildChatWidget.
+		"""
+		action=["",jid,count,me,user,my_message,message,color,avatar]
+		# get last messages
+		messages=self.backend.getLastMessages(jid,count,maxTime)
+		if not messages:
+			return ""
+		
+		html=""
+		for msg in messages:
+			d=time.localtime(msg[0]) # date
+			t=self.formatTime(d[3],d[4],d[5]) # formated time
+			if msg[1]=='to':
+				who=me
+				html+=my_message.replace("[time]",t).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("<br/><br/>","<br/>").replace('[avatar]',selfavatar)
+			else:
+				if user:
+					who=user
+				else:
+					who=msg[2]
+				html+=message.replace("[time]",t).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("[foreground]",color[0]).replace("[background]",color[1]).replace("<br/><br/>","<br/>").replace('[avatar]',avatar)
+		return html
+
+	def formatTime(self,h,m,s):
+		"""
+		Returns formated time in format hh:mm:ss from integers.
+		"""
+		text=""
+		for item in [h,m,s]:
+			if item<10:
+				text+="0"+str(item)+":"
+			else:
+				text+=str(item)+":"
+		return text[:-1]
+		
+
 	def gotLastMessages(self,html,widget):
-		print "got last messages"
+		"""
+		Write history messages to the chatWidget. Called when getLastMessages finished.
+		"""
 		old=widget.ui.textEdit.toHtml()
 		widget.ui.textEdit.setHtml("")
 		widget.textEditWrite(html,True)
@@ -374,20 +427,31 @@ class Plugin(plugins.PluginBase):
 
 	
 	def showSlot(self,j=None):
+		"""
+		Called when user wants to see archive browser main window
+		@type j: unicode
+		@param jid: Jabber ID of contact whos history is showed at first
+		"""
+		# clear widgets
 		self.window.ui.seznam.clear()
 		self.window.ui.calendar.setDates([])
 		self.window.ui.text.setText('')
+		# add top level items to the JID list
 		contact=QtGui.QTreeWidgetItem(self.window.ui.seznam)
 		contact.setText(0,self.tr("Contacts in roster"))
 		others=QtGui.QTreeWidgetItem(self.window.ui.seznam)
 		others.setText(0,self.tr("Others"))
+		# expand them
 		self.window.ui.seznam.expandItem(contact)
 		self.window.ui.seznam.expandItem(others)
+		# change background 
 		contact.setBackground(0,QtGui.QBrush(self.window.ui.seznam.palette().color(QtGui.QPalette.AlternateBase)))
 		others.setBackground(0,QtGui.QBrush(self.window.ui.seznam.palette().color(QtGui.QPalette.AlternateBase)))
+		# get list of JIDs
 		seznam = self.backend.getJidList()
-		click=None
+		choosedItem=None
 		for jid in seznam:
+			# we have this JID in roster
 			if self.main.client.roster['users'].has_key(unicode(jid)):
 				item=QtGui.QTreeWidgetItem(contact)
 				name=self.main.client.roster['users'][unicode(jid)].name
@@ -395,22 +459,23 @@ class Plugin(plugins.PluginBase):
 					item.setText(0,unicode(jid))
 				else:
 					item.setText(0,name)
+			# this contact is unkown, so we will use Others group
 			else:
 				item=QtGui.QTreeWidgetItem(others)
 				item.setText(0,unicode(jid))
 			item.setData(0,32,QtCore.QVariant(unicode(jid)))
-			#self.window.ui.seznam.addItem(item)
+			# if user wants to see this contact just now, we save its item
 			if unicode(jid)==unicode(j):
-				click=item
-		if click:
-			self.window.ui.seznam.setCurrentItem(click)
-			self.itemClicked(click)
-			
+				choosedItem=item
+		# we've got item which user wants to see
+		if choosedItem:
+			self.window.ui.seznam.setCurrentItem(choosedItem)
+			self.itemClicked(choosedItem)
+		# show main window
 		self.window.show()
 	
 	def calChanged(self):	
 		self.itemClicked(self.window.ui.seznam.currentItem(),setDate=False)
-	
 	
 	def getDates(self,jid):
 		dates=self.backend.getDates(jid)
@@ -436,32 +501,6 @@ class Plugin(plugins.PluginBase):
 			user=None
 		d=threads.deferToThread(self.getMessages,jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'])
 		d.addCallback(self.gotMessages)
-
-	def getLastMessages(self,jid,count,me,user,my_message,message,color,avatar,selfavatar,maxTime):
-		action=["",jid,count,me,user,my_message,message,color,avatar]
-		messages=self.backend.getLastMessages(action[1],action[2],maxTime)
-		if not messages:
-			return ""
-		
-		html=""
-		me=action[3]
-		user=action[4]
-
-		for msg in messages:
-			d=time.localtime(msg[0])
-			#qdate=QtCore.QDate(d[0],d[1],d[2])
-			#if datum==qdate:
-			if msg[1]=='to':
-				who=me
-				html+=action[5].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("<br/><br/>","<br/>").replace('[avatar]',selfavatar)
-			else:
-				if user:
-					who=user
-				else:
-					who=msg[2]
-				html+=action[6].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("[foreground]",action[7][0]).replace("[background]",action[7][1]).replace("<br/><br/>","<br/>").replace('[avatar]',avatar)
-		return html
-
 
 	def getMessages(self,jid,datum,me,user,my_message,message,color):
 		action=["",jid,datum,me,user,my_message,message,color]
