@@ -509,20 +509,6 @@ class Plugin(plugins.PluginBase):
 			d=threads.deferToThread(self.getMessages,jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'])
 			d.addCallback(self.gotMessages)
 
-	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay, error=None):
-		if body != None:
-			#jid = unicode(frm.split('/')[0])
-			if typ=='groupchat':
-				if delay!=None:
-					return
-				tab,index=self.main.chat.findTab(frm.split('/')[0])
-				if tab:
-					res=frm.split('/')
-					if len(res)>1:
-						if tab.name==res[1]:
-							return
-			self.backend.saveMessage(frm, body, typ, subject, xhtml, "from")
-
 	def on_groupchatMessageEvent(self,jid,user,body,subject, xhtml):
 		if body == None:
 			return
