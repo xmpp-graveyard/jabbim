@@ -120,6 +120,27 @@ class FileBackend:
 				ret.append(dat)
 		return ret
 
+	def findText(self,jid,text):
+		dates=self.getDates(jid)
+		if len(dates)==0:
+			return {}
+		ret={} #: {date:[[timestamp,direction,from,message],]}
+		for date in dates:
+			# open history file
+			try:
+				fp = open(self.homeDir+'/archive/'+self.jid+'/'+jid+'/'+date+'.history')
+			except:
+				log.err('no history file')
+				continue
+			for msg in fp.xreadlines():
+				parsed=msg.split('|')
+				if unicode(parsed[5],"utf8").find(text)!=-1:
+					if not ret.has_key(date):
+						ret[date]=[]
+					ret[date].append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
+			fp.close()
+		return ret
+
 	def getMessages(self,jid,date,maxTime=None):
 		# open history file
 		try:
@@ -414,7 +435,6 @@ class Plugin(plugins.PluginBase):
 	def buildGroupchatWidget(self,jid,layout,widget):
 		jid=self.main.getJid(jid).userhost()
 		button=QtGui.QToolButton()
-		#button.setText("History")
 		button.setIconSize(QtCore.QSize(16,16))
 		button.setIcon(QtGui.QIcon("%s/history.png" % self.pluginDir))
 		button.jid=unicode(jid)
