@@ -626,7 +626,6 @@ class chatWindow(QtGui.QMainWindow):
 		# no delay message
 		if delay==None or len(delay)==0:
 			# it's our message
-			self.main.client.dispatcher.publishEvent('groupchatMessageEvent', w.jid,user,body,subject, xhtml)
 			if unicode(w.chat.nick)==unicode(user):
 				if unicode(body).startswith("/me"):
 					message=self.main.skin["my_me_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body)[3:])
@@ -640,9 +639,10 @@ class chatWindow(QtGui.QMainWindow):
 						if self.main.skin.has_key('my_message_continue'):
 							message=self.main.skin["my_message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
 			else:
+				self.main.client.dispatcher.publishEvent('groupchatMessageEvent', self.main.getJid(w.jid),user,body,subject, xhtml)
 				# it's message for us
 				if utils.need_highlight(unicode(w.chat.nick), unicode(oldbody)) and not unicode(body).startswith("/me"):
-					self.main.client.dispatcher.publishEvent('groupchatMessageForMeEvent', w.jid,user,body,subject, xhtml)
+					self.main.client.dispatcher.publishEvent('groupchatMessageForMeEvent', self.main.getJid(w.jid),user,body,subject, xhtml)
 					if int(self.ui.chatTab.currentIndex())!=i:
 						if self.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
 							self.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))

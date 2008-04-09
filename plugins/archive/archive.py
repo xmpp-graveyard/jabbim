@@ -281,10 +281,9 @@ class Plugin(plugins.PluginBase):
 			self.jid = unicode(self.main.client.jid.userhost())
 			self.backend=FileBackend(self)
 
-			#self.registerHandler('on_message', self.on_message)
-			#self.registerHandler('on_GCmessage', self.on_message)
 			self.registerHandler('firstChatMessageEvent',self.on_firstChatMessageEvent)
 			self.registerHandler('chatMessageEvent',self.on_chatMessageEvent)
+			self.registerHandler('groupchatMessageEvent',self.on_groupchatMessageEvent)
 			self.registerHandler('on_message_send', self.on_message_send)
 			self.loadConfig()
 			self.window = self.loadWindow("%s/historyBrowser.ui.py" % self.pluginDir, self.main)
@@ -524,6 +523,11 @@ class Plugin(plugins.PluginBase):
 							return
 			self.backend.saveMessage(frm, body, typ, subject, xhtml, "from")
 
+	def on_groupchatMessageEvent(self,jid,user,body,subject, xhtml):
+		if body == None:
+			return
+		jid.resource=user
+		self.backend.saveMessage(jid, body, "groupchat", subject, xhtml, "from")
 
 	def on_firstChatMessageEvent(self, jid,user,body,subject, xhtml, chatstate, delay, eventID=None):
 		if body == None:
