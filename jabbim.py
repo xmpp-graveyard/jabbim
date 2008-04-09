@@ -2027,12 +2027,12 @@ class mainWindow(QtGui.QMainWindow):
 			if n>0:
 				text+='<br />'
 			text+='<img src="images/16x16/status/jabber-%s.png">' % contact.resources[res].show # hodilo by se rozlisit k jakymu poatri transportu
-			text	+=	'<b>%s</b> '%self.status.get(contact.resources[res].show, '')
+			text+='<b>%s</b> ' % unicode(self.status.get(contact.resources[res].show, ''))
 			if res != None:
 #							text+='<b>%s</b> %s<br>' % ( res, priority)
 				text+='%s' % (priority)
 			identity = contact.resources[res].identity
-			if identity != '' and identity != None and identity != 'client/pc' and identity.startswith('client'):							
+			if identity != '' and identity != None and identity != 'client/pc' and identity.startswith('client'):
 				text+=' %s' % (identity)
 			if len(status) != 0:
 				text+='<br /><font size="-1">%s</font>' % (status.replace('\n', '<br />'))
@@ -2042,7 +2042,7 @@ class mainWindow(QtGui.QMainWindow):
 			for x in tune:
 				print x
 		elif tune!=None:
-			artist = title = ''						
+			artist = title = ''
 			for el in tune.elements():
 				if el.name == 'artist':
 					artist = unicode(el)
