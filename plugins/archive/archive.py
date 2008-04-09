@@ -68,37 +68,51 @@ class FileBackend:
 		self.convertOldHistoryFiles()
 
 	def getJidList(self):
+		"""
+		Returns list of jids which are archived.
+		@rtype: list of unicode
+		@return: list of JabberIDs
+		"""
 		return os.listdir(self.homeDir+'/archive/'+self.jid)
 
 	def saveMessage(self, to, body, typ, subject, xhtml, direction):
-		jid = unicode(to.split('/')[0])
+		jid = to.userhost()
+		# get local time
 		t=time.time()
+		# get date in format YYYY-MM-DD
 		d=time.localtime(t)
 		dat=str(d[0])+"-"+str(d[1])+"-"+str(d[2])
+		# open history file or create it
 		try:
 			fp = open(self.homeDir+'/archive/'+self.jid+'/'+jid+'/'+dat+'.history', 'a')
 		except:
 			os.mkdir(self.homeDir+'/archive/'+self.jid+'/'+jid)
 			fp = open(self.homeDir+'/archive/'+self.jid+'/'+jid+'/'+dat+'.history', 'a')
 	
+		# prepare message to be saved
 		if xhtml != None:
 			telo = xhtml.replace('|', '&#124;').replace("\n","<br/>")
 		else:
 			telo = body.replace('|', '&#124;').replace("\n","<br/>")
-		if typ=="groupchat":
-			if len(to.split('/'))>1:
-				jid=to.split('/')[1]
-
+		# saves only user name (resource) for groupchats, because userhost is the same as MUC JID
+		if typ=="groupchat" and to.resource:
+			jid=to.resource
+		# prepare subject to be saved
 		if subject==None:
 			subject=""
-		subject=subject.replace('|', '&#124;').replace("\n","<br/>")
-		#print unicode(subject)
+		else:
+			subject=subject.replace('|', '&#124;').replace("\n","<br/>")
+		# save message
 		msg = '|'.join([unicode(t), direction, jid, typ, unicode(subject), telo])
 		msg = msg.encode('utf8')
 		fp.write(msg+'\n')
 		fp.close()
+		print "message saved",to,typ,direction
 
 	def getDates(self,jid):
+		"""
+		Returns list of dates in YYYY-MM-DD format
+		"""
 		ret=[]
 		for file in os.listdir(self.homeDir+'/archive/'+self.jid+'/'+jid):
 			if file.split('.')[1]=="history":
@@ -107,22 +121,19 @@ class FileBackend:
 		return ret
 
 	def getMessages(self,jid,date,maxTime=None):
+		# open history file
 		try:
 			fp = open(self.homeDir+'/archive/'+self.jid+'/'+jid+'/'+date+'.history')
 		except:
 			log.err('no history file')
 			return None
-		ret=[] # timestamp,direction,from,message
-		#zpravy = fp.readlines()
-		#print zpravy
-		#for msg in zpravy:
-			#print msg
-		#msg=fp.readline()
-		#while len(msg)==0:
+		ret=[] #: [timestamp,direction,from,message]
+		# if there is no maxTime, we can return all messages
 		if not maxTime:
 			for msg in fp.xreadlines():
 				parsed=msg.split('|')
 				ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
+		# return only messages which is younger that maxTime
 		else:
 			maxTime=maxTime.split(":") # [20,0,0]
 			now=time.localtime()
@@ -133,12 +144,6 @@ class FileBackend:
 				intervalHour=abs(int(d[3])-int(now[3])) # 20
 				intervalMin=abs(int(d[4])-int(now[4])) # 2
 				intervalSec=abs(int(d[5])-int(now[5]))
-				#if intervalHour>=24:
-					#intervalHour-=24
-				#if intervalMin>=60:
-					#intervalMin-=60
-				#if intervalSec>=60:
-					#intervalSec-=60
 				if intervalHour<int(maxTime[0]):
 					ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
 				elif intervalHour<=int(maxTime[0]) and intervalMin<=int(maxTime[1]):
@@ -147,12 +152,15 @@ class FileBackend:
 		return ret
 
 	def getLastMessages(self,jid,count,maxTime):
+		# get dates
 		dates=self.getDates(jid)
-		print dates
 		if len(dates)==0:
 			return ""
+		# get newest date
 		d=dates[0]
+		print "MAXTIME",maxTime
 		if maxTime=="0:0:0":
+			# we have to find newest date
 			newestStr=unicode(d)
 			d=unicode(d).split('-')
 			newest=QtCore.QDate(int(d[0]),int(d[1]),int(d[2]))
@@ -162,7 +170,9 @@ class FileBackend:
 				if d>newest:
 					newest=d
 					newestStr=unicode(date)
+			maxTime=None
 		else:
+			# we want only message from today, becase maxTime is not 0:0:0.
 			d=time.localtime()
 			newestStr=str(d[0])+"-"+str(d[1])+"-"+str(d[2])
 
@@ -271,8 +281,10 @@ class Plugin(plugins.PluginBase):
 			self.jid = unicode(self.main.client.jid.userhost())
 			self.backend=FileBackend(self)
 
-			self.registerHandler('on_message', self.on_message)
-			self.registerHandler('on_GCmessage', self.on_message)
+			#self.registerHandler('on_message', self.on_message)
+			#self.registerHandler('on_GCmessage', self.on_message)
+			self.registerHandler('firstChatMessageEvent',self.on_firstChatMessageEvent)
+			self.registerHandler('chatMessageEvent',self.on_chatMessageEvent)
 			self.registerHandler('on_message_send', self.on_message_send)
 			self.loadConfig()
 			self.window = self.loadWindow("%s/historyBrowser.ui.py" % self.pluginDir, self.main)
@@ -291,8 +303,6 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.loadConfig(homedir)
 
-	#def on_remove(self):
-		
 
 	def buildMainWindowMenu(self):
 		menu=self.mainWindowMenu()
@@ -314,51 +324,31 @@ class Plugin(plugins.PluginBase):
 	def buttonClicked(self,button):
 		jid=button.jid
 		self.showSlot(jid)
-		
 
-	
 	def buildChatWidget(self,jid,layout,widget):
-		jid=self.main.getJid(jid).userhost()
+		jid=self.main.getJid(jid)
+		# create Archive button
 		button=QtGui.QToolButton()
-		#button.setText("History")
 		button.setIconSize(QtCore.QSize(16,16))
 		button.setIcon(QtGui.QIcon("%s/history.png" % self.pluginDir))
-		button.jid=unicode(jid)
+		button.jid=unicode(jid.userhost())
 		button.setToolTip("History")
-
 		self.group.addButton(button)
 		layout.addWidget(button)
-		jid = jidT.JID(jid)
+		
 		if os.path.isdir(self.main.homeDir+'/archive/'+self.jid+'/'+unicode(jid.userhost())):
+			# get user names
 			me=unicode(self.main.client.jid.user)
-	
-			
-			user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
-			if len(user)==0:
-				user=self.main.ui.roster.getMetaItems(jid.userhost())
-				if len(user)!=0:
-					user=user[0]
-			if len(user)!=0:
-				#user=self.roster['users'][unicode(frm).rsplit("/")[0]].rosterItems[0]
-				it=user[0]
-				user=user[0].name
-			else:
-				it=None
-				user=unicode(jid.full())
-			
+			user=self.main.ui.roster.getNameByJID(jid.userhost())
+
+			# get user avatars
 			avatar="<img src=\""+widget.file+"\" width=\"16\" height=\""+str(widget.avatarHeight/2)+"\" />"
-			
-			file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
-			if not os.path.isfile(file):
-				file="images/32x32/apps/jabbim.png"
-			selfavatar="<img src=\""+file+"\" width=\"16\" height=\""+str(widget.selfHeight/2)+"\" />"
-	
-			
+			selfavatar="<img src=\""+widget.selfFile+"\" width=\"16\" height=\""+str(widget.selfHeight/2)+"\" />"
+
 			jid=unicode(jid.userhost())
+			# call getLastMessages in thread
 			d=threads.deferToThread(self.getLastMessages,jid,int(self.config['messagesNumber']),me,user,unicode(self.main.skin["my_message_history"]),unicode(self.main.skin["message_history"]),self.main.skin['color1'],avatar,selfavatar,self.config['messagesTime'])
 			d.addCallback(self.gotLastMessages,widget)
-			#html=self.getLastMessages(jid,5,me,user,unicode(self.main.skin["my_message"]),unicode(self.main.skin["message"]),self.main.skin['color1'])
-			#self.gotLastMessages(html,widget)
 
 	def gotLastMessages(self,html,widget):
 		print "got last messages"
@@ -519,6 +509,7 @@ class Plugin(plugins.PluginBase):
 				user=None
 			d=threads.deferToThread(self.getMessages,jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'])
 			d.addCallback(self.gotMessages)
+
 	def on_message(self,frm,typ,body,subject, xhtml,  chatstate,  delay, error=None):
 		if body != None:
 			#jid = unicode(frm.split('/')[0])
@@ -533,8 +524,18 @@ class Plugin(plugins.PluginBase):
 							return
 			self.backend.saveMessage(frm, body, typ, subject, xhtml, "from")
 
-		
+
+	def on_firstChatMessageEvent(self, jid,user,body,subject, xhtml, chatstate, delay, eventID=None):
+		if body == None:
+			return
+		self.backend.saveMessage(jid, body, "chat", subject, xhtml, "from")
+
+	def on_chatMessageEvent(self,jid,user,body,subject, xhtml,  chatstate,  delay,eventID=None):
+		if body == None:
+			return
+		self.backend.saveMessage(jid, body, "chat", subject, xhtml, "from")
+
 	def on_message_send (self, to, body, typ, subject,composing, xhtml,  muc):
 		if not muc and body != None and len(body)!=0:
-			self.backend.saveMessage(to, body, typ, subject, xhtml, "to")
+			self.backend.saveMessage(self.main.getJid(to), body, typ, subject, xhtml, "to")
 

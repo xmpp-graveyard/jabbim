@@ -1135,6 +1135,7 @@ class clientClass(pyxl.client.Client):
 					color=self.main.chat.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
 					self.main.chat.ui.chatTab.setTabText(tabIndex,tab.tabName)
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(self.main.chat.ui.chatTab.currentIndex(),color)
+					self.dispatcher.publishEvent('chatMessageEvent', frm,user,body,subject, xhtml, chatstate, delay,None)
 				tab.chat.ui.chatstate.setText("")
 				tab.chat.textEditWrite(message)
 				if tab.chat.first==True:
