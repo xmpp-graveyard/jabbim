@@ -319,6 +319,8 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.search, QtCore.SIGNAL("clicked()"),self.searchClicked)
 			QtCore.QObject.connect(self.window.ui.searchText, QtCore.SIGNAL("returnPressed ()"),self.searchClicked)
 			self.window.ui.searchList.hide()
+			self.window.ui.search.hide()
+			self.window.ui.searchText.hide()
 			self.group=QtGui.QButtonGroup(self.window)
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 			self.skin=self.getConfig("skins/gajim.conf")
@@ -358,6 +360,7 @@ class Plugin(plugins.PluginBase):
 				i.setText(0,date)
 				i.setText(1,item[3])
 				i.jid=jid
+				i.highlight=unicode(self.window.ui.searchText.text())
 		self.window.ui.searchList.show()
 		self.window.ui.searchText.setText("")
 
@@ -365,7 +368,7 @@ class Plugin(plugins.PluginBase):
 		date=unicode(item.text(0)).split("-")
 		jid=item.jid
 		self.window.ui.calendar.setSelectedDate(QtCore.QDate(int(date[0]),int(date[1]),int(date[2])))
-		self.calChanged()
+		self.itemClicked(self.window.ui.seznam.currentItem(),setDate=False,highlight=item.highlight)
 
 	def buildMainWindowMenu(self):
 		"""
@@ -562,10 +565,10 @@ class Plugin(plugins.PluginBase):
 			user=user[0].name
 		else:
 			user=None
-		d=threads.deferToThread(self.getMessages,jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'])
+		d=threads.deferToThread(self.getMessages,jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'],self.window.palette().color(QtGui.QPalette.HighlightedText).name(),self.window.palette().color(QtGui.QPalette.Highlight).name())
 		d.addCallback(self.gotMessages)
 
-	def getMessages(self,jid,datum,me,user,my_message,message,color):
+	def getMessages(self,jid,datum,me,user,my_message,message,color,fg="",bg="",highlight=None):
 		action=["",jid,datum,me,user,my_message,message,color]
 		messages=self.backend.getMessages(action[1],action[2])
 		if not messages:
@@ -574,31 +577,36 @@ class Plugin(plugins.PluginBase):
 		html=""
 		me=action[3]
 		user=action[4]
-
+		print "get_messages",highlight,fg,bg
 		for msg in messages:
 			d=time.localtime(msg[0])
 			#qdate=QtCore.QDate(d[0],d[1],d[2])
 			#if datum==qdate:
+			message_=msg[3]
+			if highlight:
+				message_=message_.replace(highlight,"<font color=\""+fg+"\" style=\"background-color:"+bg+";\">"+highlight+"</font>")
 			if msg[1]=='to':
 				who=me
-				html+=action[5].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("<br/><br/>","<br/>")
+				html+=action[5].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message_).replace("<br/><br/>","<br/>")
 			else:
 				if user:
 					who=user
 				else:
 					who=msg[2]
-				html+=action[6].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("[foreground]",action[7][0]).replace("[background]",action[7][1]).replace("<br/><br/>","<br/>")
+				html+=action[6].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message_).replace("[foreground]",action[7][0]).replace("[background]",action[7][1]).replace("<br/><br/>","<br/>")
 		return html
 
 	def gotMessages(self,html):
 		print "got messages"
 		self.window.ui.text.setHtml(html)
 
-	def itemClicked(self, item,column=0,setDate=True):
+	def itemClicked(self, item,column=0,setDate=True,highlight=None):
 		jid = unicode(item.data(0,32).toString())
 		if setDate:
 			self.getDates(jid)
 			self.window.ui.searchList.hide()
+			self.window.ui.searchText.show()
+			self.window.ui.search.show()
 		else:
 			self.window.ui.text.setText('')
 			datum=self.window.ui.calendar.selectedDate()
@@ -609,7 +617,7 @@ class Plugin(plugins.PluginBase):
 				user=user[0].name
 			else:
 				user=None
-			d=threads.deferToThread(self.getMessages,jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'])
+			d=threads.deferToThread(self.getMessages,jid,str(datum.year())+"-"+str(datum.month())+"-"+str(datum.day()),me,user,unicode(self.skin["my_message"]),unicode(self.skin["message"]),self.skin['color1'],self.window.palette().color(QtGui.QPalette.HighlightedText).name(),self.window.palette().color(QtGui.QPalette.Highlight).name(),highlight)
 			d.addCallback(self.gotMessages)
 
 	def on_groupchatMessageEvent(self,jid,user,body,subject, xhtml):
