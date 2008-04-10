@@ -315,6 +315,7 @@ class Plugin(plugins.PluginBase):
 			#log.msg(unicode(dir(self.window)))
 			QtCore.QObject.connect(self.window.ui.seznam, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int ) "),self.itemClicked)
 			QtCore.QObject.connect(self.window.ui.calendar, QtCore.SIGNAL("selectionChanged()"),self.calChanged)
+			QtCore.QObject.connect(self.window.ui.search, QtCore.SIGNAL("clicked()"),self.searchClicked)
 			self.group=QtGui.QButtonGroup(self.window)
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 			self.skin=self.getConfig("skins/gajim.conf")
@@ -323,6 +324,26 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.loadConfig(homedir)
 
+
+	def searchClicked(self):
+		text=unicode(self.window.ui.searchText.text())
+		if len(text)==0:
+			return
+		item=self.window.ui.seznam.currentItem()
+		if not item:
+			return
+		if not item.parent():
+			return
+		jid = unicode(item.data(0,32).toString())
+
+		d=threads.deferToThread(self.searchText,jid,text)
+		d.addCallback(self.gotSearchedText,jid)
+
+	def searchText(self,jid,text):
+		return self.backend.findText(jid,text)
+
+	def gotSearchedText(self,data,jid):
+		print jid,data
 
 	def buildMainWindowMenu(self):
 		"""
