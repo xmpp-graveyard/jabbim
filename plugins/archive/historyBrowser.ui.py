@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'plugins/archive/historyBrowser.ui'
 #
-# Created: Thu Apr 10 19:14:15 2008
+# Created: Thu Apr 10 19:41:06 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -22,11 +22,11 @@ class Ui_MainWindow(object):
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
 
-        self.splitter_2 = QtGui.QSplitter(self.centralwidget)
-        self.splitter_2.setOrientation(QtCore.Qt.Horizontal)
-        self.splitter_2.setObjectName("splitter_2")
+        self.splitter_3 = QtGui.QSplitter(self.centralwidget)
+        self.splitter_3.setOrientation(QtCore.Qt.Horizontal)
+        self.splitter_3.setObjectName("splitter_3")
 
-        self.splitter = QtGui.QSplitter(self.splitter_2)
+        self.splitter = QtGui.QSplitter(self.splitter_3)
         self.splitter.setOrientation(QtCore.Qt.Vertical)
         self.splitter.setObjectName("splitter")
 
@@ -54,9 +54,16 @@ class Ui_MainWindow(object):
         self.searchText.setObjectName("searchText")
         self.gridlayout1.addWidget(self.searchText,0,0,1,1)
 
+        self.splitter_2 = QtGui.QSplitter(self.splitter_3)
+        self.splitter_2.setOrientation(QtCore.Qt.Vertical)
+        self.splitter_2.setObjectName("splitter_2")
+
+        self.searchList = QtGui.QTreeWidget(self.splitter_2)
+        self.searchList.setObjectName("searchList")
+
         self.text = QtGui.QTextBrowser(self.splitter_2)
         self.text.setObjectName("text")
-        self.gridlayout.addWidget(self.splitter_2,0,0,1,1)
+        self.gridlayout.addWidget(self.splitter_3,0,0,1,1)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtGui.QMenuBar(MainWindow)
@@ -74,4 +81,6 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Archive browser", None, QtGui.QApplication.UnicodeUTF8))
         self.search.setText(QtGui.QApplication.translate("MainWindow", "Search", None, QtGui.QApplication.UnicodeUTF8))
+        self.searchList.headerItem().setText(0,QtGui.QApplication.translate("MainWindow", "Date", None, QtGui.QApplication.UnicodeUTF8))
+        self.searchList.headerItem().setText(1,QtGui.QApplication.translate("MainWindow", "Message", None, QtGui.QApplication.UnicodeUTF8))
 

@@ -314,8 +314,11 @@ class Plugin(plugins.PluginBase):
 			layout.addWidget(self.window.ui.calendar)
 			#log.msg(unicode(dir(self.window)))
 			QtCore.QObject.connect(self.window.ui.seznam, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int ) "),self.itemClicked)
+			QtCore.QObject.connect(self.window.ui.searchList, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int ) "),self.searchListClicked)
 			QtCore.QObject.connect(self.window.ui.calendar, QtCore.SIGNAL("selectionChanged()"),self.calChanged)
 			QtCore.QObject.connect(self.window.ui.search, QtCore.SIGNAL("clicked()"),self.searchClicked)
+			QtCore.QObject.connect(self.window.ui.searchText, QtCore.SIGNAL("returnPressed ()"),self.searchClicked)
+			self.window.ui.searchList.hide()
 			self.group=QtGui.QButtonGroup(self.window)
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 			self.skin=self.getConfig("skins/gajim.conf")
@@ -336,14 +339,33 @@ class Plugin(plugins.PluginBase):
 			return
 		jid = unicode(item.data(0,32).toString())
 
-		d=threads.deferToThread(self.searchText,jid,text)
+		d=threads.deferToThread(self.searchText,jid,text,self.window.palette().color(QtGui.QPalette.HighlightedText).name(),self.window.palette().color(QtGui.QPalette.Highlight).name())
 		d.addCallback(self.gotSearchedText,jid)
 
-	def searchText(self,jid,text):
-		return self.backend.findText(jid,text)
+	def searchText(self,jid,text,fg,bg):
+		data=self.backend.findText(jid,text)
+		#for date in data.keys():
+			#for i in range(len(data[date])):
+				#data[date][i][3]=data[date][i][3].replace(text,"<font color=\""+fg+"\" bgcolor=\""+bg+"\">"+text+"</font>")
+		return data
 
 	def gotSearchedText(self,data,jid):
-		print jid,data
+		#print jid,data
+		self.window.ui.searchList.clear()
+		for date,items in data.iteritems():
+			for item in items:
+				i=QtGui.QTreeWidgetItem(self.window.ui.searchList)
+				i.setText(0,date)
+				i.setText(1,item[3])
+				i.jid=jid
+		self.window.ui.searchList.show()
+		self.window.ui.searchText.setText("")
+
+	def searchListClicked(self,item,index):
+		date=unicode(item.text(0)).split("-")
+		jid=item.jid
+		self.window.ui.calendar.setSelectedDate(QtCore.QDate(int(date[0]),int(date[1]),int(date[2])))
+		self.calChanged()
 
 	def buildMainWindowMenu(self):
 		"""
@@ -576,6 +598,7 @@ class Plugin(plugins.PluginBase):
 		jid = unicode(item.data(0,32).toString())
 		if setDate:
 			self.getDates(jid)
+			self.window.ui.searchList.hide()
 		else:
 			self.window.ui.text.setText('')
 			datum=self.window.ui.calendar.selectedDate()
