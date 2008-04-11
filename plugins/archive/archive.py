@@ -351,12 +351,16 @@ class Plugin(plugins.PluginBase):
 				index=data[date][i][3].find(text)
 				if index!=-1:
 					start=index-20
+					sText="..."
 					if start<0:
 						start=0
+						sText=""
 					end=index+20
+					eText="..."
 					if end>len(data[date][i][3]):
 						end=len(data[date][i][3])
-					data[date][i][3]="..."+data[date][i][3][start:end]+"..."
+						eText=""
+					data[date][i][3]=sText+data[date][i][3][start:end].replace("\n","; ")+eText
 		return data
 
 	def gotSearchedText(self,data,jid):
