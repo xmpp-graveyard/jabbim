@@ -373,6 +373,7 @@ class Plugin(plugins.PluginBase):
 				i.setText(1,item[3])
 				i.jid=jid
 				i.highlight=unicode(self.window.ui.searchText.text())
+		self.window.ui.searchList.sortItems(0,QtCore.Qt.AscendingOrder)
 		self.window.ui.searchList.show()
 		self.window.ui.searchText.setText("")
 
@@ -619,6 +620,7 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.searchList.hide()
 			self.window.ui.searchText.show()
 			self.window.ui.search.show()
+			self.window.ui.searchText.setFocus(QtCore.Qt.MouseFocusReason)
 		else:
 			self.window.ui.text.setText('')
 			datum=self.window.ui.calendar.selectedDate()
