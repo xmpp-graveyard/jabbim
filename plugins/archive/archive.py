@@ -346,9 +346,17 @@ class Plugin(plugins.PluginBase):
 
 	def searchText(self,jid,text,fg,bg):
 		data=self.backend.findText(jid,text)
-		#for date in data.keys():
-			#for i in range(len(data[date])):
-				#data[date][i][3]=data[date][i][3].replace(text,"<font color=\""+fg+"\" bgcolor=\""+bg+"\">"+text+"</font>")
+		for date in data.keys():
+			for i in range(len(data[date])):
+				index=data[date][i][3].find(text)
+				if index!=-1:
+					start=index-20
+					if start<0:
+						start=0
+					end=index+20
+					if end>len(data[date][i][3]):
+						end=len(data[date][i][3])
+					data[date][i][3]="..."+data[date][i][3][start:end]+"..."
 		return data
 
 	def gotSearchedText(self,data,jid):
