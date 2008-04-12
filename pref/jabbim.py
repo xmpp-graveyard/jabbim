@@ -1,7 +1,7 @@
 class preferences:
 	def __init__(self,preferencesWindow):
 		self.config={}
-		self.config['startInTray']={'type':'boolean','label':preferencesWindow.tr("Start Jabbim minimalized to the tray"),'value':'True'}
+		self.config['startInTray']={'type':'boolean','label':preferencesWindow.tr("Start Jabbim minimalized to the tray"),'value':'False'}
 		#self.config['resource']={'type':'text-single','label':preferencesWindow.tr("Resource:"),'value':'jabbim'}
 		self.config['autoDownload']={'type':'boolean','label':preferencesWindow.tr("Download incomming files automatically"),'value':'False','groupbox':preferencesWindow.tr('Incoming files'),'enable':['autoDownloadPath']}
 		self.config['autoDownloadPath']={'type':'directory','label':preferencesWindow.tr("Path for automatic download:"),'value':'','groupbox':preferencesWindow.tr('Incoming files')}
