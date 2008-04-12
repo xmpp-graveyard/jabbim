@@ -33,6 +33,7 @@ from include import utils
 #import filetransfer
 from abstractchatwidget import abstractChatWidget,abstractTextView
 import addcontact
+import pyxl
 
 class textView(abstractTextView):
 	"""
@@ -115,6 +116,14 @@ class groupChatWidget(abstractChatWidget):
 		self.ui.admin=menu.addAction(QtGui.QIcon("images/32x32/actions/register.png"),self.tr("Room administration"),self.roomConfigClicked)
 		menu.addAction(QtGui.QIcon("images/32x32/actions/clear.png"),self.tr("Clear chat"),self.clearChat)
 		menu.addAction(QtGui.QIcon("images/16x16/actions/edit.png"),self.tr("Change nickname"),self.changeNick)
+		isBookmarked=False
+		self.bookmarkAction=None
+		for bookmark in self.main.client.bookmarks['conference'].values():
+			if bookmark.jid.userhost()==jid:
+				isBookmarked=True
+				break
+		if not isBookmarked:
+			self.bookmarkAction=menu.addAction(QtGui.QIcon("images/16x16/categories/bookmarks.png"),self.tr("Add to bookmark"),self.addToBookmark)
 		action=menu.addAction(QtGui.QIcon("images/16x16/actions/info.png"),self.tr("Show room info"))
 		action.setCheckable(True)
 		QtCore.QObject.connect(action,QtCore.SIGNAL("toggled ( bool )"),self.toggleInfo)
@@ -151,6 +160,12 @@ class groupChatWidget(abstractChatWidget):
 		self.disco_features = [] #: list of room features
 		log.msg("REQUESTING ROOM INFO")
 		self._getInfo()
+
+	def addToBookmark(self):
+		self.main.client.bookmarks['conference'][self.jid]=pyxl.client.Bookmark(self.jid, 'conference', self.jid, False, self.nick, "")
+		self.main.client.setBookmarks()
+		self.main.buildBookmarks()
+		self.bookmarkAction.setEnabled(False)
 
 	def _getInfo(self):
 		"""
