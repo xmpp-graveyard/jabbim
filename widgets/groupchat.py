@@ -162,6 +162,9 @@ class groupChatWidget(abstractChatWidget):
 		self._getInfo()
 
 	def addToBookmark(self):
+		"""
+		Bookmarks this groupchat.
+		"""
 		self.main.client.bookmarks['conference'][self.jid]=pyxl.client.Bookmark(self.jid, 'conference', self.jid, False, self.nick, "")
 		self.main.client.setBookmarks()
 		self.main.buildBookmarks()

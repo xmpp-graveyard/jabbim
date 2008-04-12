@@ -1,7 +1,7 @@
 class preferences:
 	def __init__(self,preferencesWindow):
 		self.config={}
-		self.config['saveGeometry']={'type':'boolean','label':preferencesWindow.tr("Save Jabbim position on close"),'value':'True'}
+		self.config['startInTray']={'type':'boolean','label':preferencesWindow.tr("Start Jabbim minimalized to the tray"),'value':'True'}
 		#self.config['resource']={'type':'text-single','label':preferencesWindow.tr("Resource:"),'value':'jabbim'}
 		self.config['autoDownload']={'type':'boolean','label':preferencesWindow.tr("Download incomming files automatically"),'value':'False','groupbox':preferencesWindow.tr('Incoming files'),'enable':['autoDownloadPath']}
 		self.config['autoDownloadPath']={'type':'directory','label':preferencesWindow.tr("Path for automatic download:"),'value':'','groupbox':preferencesWindow.tr('Incoming files')}
@@ -12,4 +12,4 @@ class preferences:
 		self.config['autoPriority_away']={'type':'number-spin','label':preferencesWindow.tr("Away:"),'value':'15','groupbox':preferencesWindow.tr('Priority')}
 		self.config['autoPriority_xa']={'type':'number-spin','label':preferencesWindow.tr("Extended away:"),'value':'10','groupbox':preferencesWindow.tr('Priority')}
 		self.config['autoPriority_dnd']={'type':'number-spin','label':preferencesWindow.tr("DND:"),'value':'5','groupbox':preferencesWindow.tr('Priority')}
-		self.config['__sort__']=['saveGeometry','autoDownload','autoDownloadPath','autoPriority','priority','autoPriority_chat','autoPriority_online','autoPriority_away','autoPriority_xa','autoPriority_dnd']
+		self.config['__sort__']=['startInTray','autoDownload','autoDownloadPath','autoPriority','priority','autoPriority_chat','autoPriority_online','autoPriority_away','autoPriority_xa','autoPriority_dnd']

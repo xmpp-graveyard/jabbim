@@ -3915,5 +3915,8 @@ if __name__ == "__main__":
 	app.installTranslator(translator)
 	#app.setStyle(style())
 	MainWindow = mainWindow()
-	MainWindow.show()
+	if MainWindow.config['startInTray']=="True":
+		MainWindow.close()
+	else:
+		MainWindow.show()
 	reactor.run()
