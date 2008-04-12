@@ -2183,6 +2183,24 @@ class mainWindow(QtGui.QMainWindow):
 				action = mood.addAction(txt)
 				action.setData(QtCore.QVariant(m))
 				action.setObjectName('mood')
+				#highlight current mood if any
+				contact = self.client.getContactByJid(self.client.jid.userhost())
+				current = False #this mood is currently set if True
+				if contact != None:
+					moods = contact.getPEP('http://jabber.org/protocol/mood')
+					if moods != None:
+						for el in moods.elements():
+							if el.name == m:
+								current = True
+				if current:
+					font = QtGui.QFont()
+					font.setBold(True)
+				else:
+					font = QtGui.QFont()
+					font.setBold(False)
+				
+				action.setFont(font)
+								
 			
 			activity =  self.statusWidgetMenu.addMenu(self.tr('Activity'))
 			for group, txt in self.activityGroups.iteritems():

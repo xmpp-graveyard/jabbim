@@ -399,7 +399,8 @@ class Plugin(plugins.PluginBase):
 		iq['type'] = 'result'
 		iq['id'] = id
 		self.main.client.xmlstream.send(iq)
-		self.games[gid].getConfig()
+		if self.games.has_key(gid):
+			self.games[gid].getConfig()
 			
 	def getSession(self, gid):
 		return self.games.get(gid, None)

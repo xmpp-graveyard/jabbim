@@ -230,7 +230,7 @@ class Client(derived):
 		print 'LOADED AVATARS',self.avatarImg
 
 	def chyba(self, err):
-		print err
+#		print err
 		err.printBriefTraceback()
 	
 	def getAvatarImg(self, jd):
@@ -370,6 +370,7 @@ class Client(derived):
 		self.factory.addBootstrap("//event/xmpp/initfailed", self._authfailed)
 		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
 		self.factory.addBootstrap('//event/stream/error', self._streamEnd)
+		self.factory.addBootstrap('//event/stream/end', self._streamEnd)
 		self.factory.addBootstrap('/*', self.bootLog)
 		
 		self.factory.clientConnectionLost = self.connectionLost
@@ -440,7 +441,10 @@ class Client(derived):
 			self.on_disconnect()
 
 	def _streamEnd(self, el):
+		print 'stream end'
 		self.xping.stop()
+		if self.factory:
+			self.factory.stopTrying()
 		pass
 		
 	def _bind(self, el):
@@ -897,8 +901,10 @@ class Client(derived):
 
 	def _authfailed(self,xmlstream):
 		log.msg( "auth_failed")
+		print 'init failed!'
 		print unicode(xmlstream)
-		self.main._disconnect(error = 'auth')
+#		self.main._disconnect(error = 'auth')
+		self.disconnect()
 		self.on_authFailed(xmlstream)
 
 	def _invaliduser(self,xmlstream):
