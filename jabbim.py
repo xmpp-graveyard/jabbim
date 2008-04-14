@@ -3014,10 +3014,11 @@ class mainWindow(QtGui.QMainWindow):
 		lst=data.toList()
 		jid=unicode(lst[0].toString()) # get jid
 		nickname=unicode(lst[1].toString()) # get nickname
+		password = unicode(lst[2].toString()) # get password
 		# send jabber command
 		if self.chat.addGroupChatTab(jid,nickname):
 			#self.main.groupchat[room+"@"+server]=[nickname,[]]
-			self.client.joinGC(jid, nickname)
+			self.client.joinGC(jid, nickname, password)
 
 	def buildBookmarks(self):
 		"""
@@ -3052,7 +3053,8 @@ class mainWindow(QtGui.QMainWindow):
 				jid=unicode(v.jid.full())
 				nickname=v.nick
 				if self.chat.addGroupChatTab(jid,nickname):
-					self.client.joinGC(jid, nickname)
+
+					self.client.joinGC(jid, nickname, v.password)
 
 	def joinGroupchat(self,bool):
 		"""
@@ -3667,7 +3669,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Server is not found.")),0,1)
 
 	def _disconnect(self, error = None): # error = None | dns | lost | auth | failed
-		print 'disconnect reason '+error
+		print 'disconnect reason '+unicode(error)
 		self.tray.setIcon(QtGui.QIcon(QtGui.QIcon("images/16x16/apps/jabbim.png").pixmap(16,16,QtGui.QIcon.Disabled)))
 		if self.client:
 			if error=="auth":

@@ -273,11 +273,12 @@ class Client(derived):
 		iq['xml:lang'] = self.xmlLang
 		q = iq.addElement('ping', 'urn:xmpp:ping')
 		self.disp(iq['id'])
-		iq.timeout = 30
-		d = iq.send()
-		d.addCallback(self._heartbeat)
-		d.addErrback(self._heartbeatErr)
-		return d
+		iq.timeout = 60
+		if self.connection != None:
+			d = iq.send()
+			d.addCallback(self._heartbeat)
+			d.addErrback(self._heartbeatErr)
+			return d
 	
 	def _heartbeat(self, el):
 		log.msg('heartbeat ok')

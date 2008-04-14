@@ -652,8 +652,8 @@ class derived:
 		self.disp(iq['id'])
 		d.addCallback(self._time202Received).addErrback(self.chyba)
 		
-	def joinGC(self,  jid, nick):
-		gc = Groupchat(self,  jid, nick)
+	def joinGC(self,  jid, nick, password = None):
+		gc = Groupchat(self,  jid, nick, password = password)
 		self.groupchats[jid] = gc
 		gc.join()
 		self.sendPEP('http://www.xmpp.org/extensions/xep-0194.html#ns', self.getChattingPayload())

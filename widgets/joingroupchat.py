@@ -125,7 +125,7 @@ class joinGroupChatWindow(QtGui.QDialog):
 		#print "joining",room,nickname
 		self.main.chat.addGroupChatTab(room+"@"+server,nickname)
 		#self.main.groupchat[room+"@"+server]=[nickname,[]]
-		self.main.client.joinGC(room+"@"+server, nickname)
+		self.main.client.joinGC(room+"@"+server, nickname, password)
 		self.done(1)
 
 	def reject(self):

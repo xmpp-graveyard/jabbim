@@ -21,10 +21,11 @@ from twisted.words.protocols.jabber import jid as jidT
 from twisted.words.protocols.jabber.xmlstream import IQ
 
 class Groupchat:
-	def __init__(self,  client,  JID,  nick):
+	def __init__(self,  client,  JID,  nick, password = None):
 		self.client = client
 		self.jid = JID
 		self.nick = nick
+		self.password = password
 		self.users = {} #nick: MUCContact
 	
 	def setRole(self, nick, role,  reason = None):
@@ -90,7 +91,9 @@ class Groupchat:
 		print 'joining MUC: ',  self.jid
 		presence = domish.Element((None, 'presence'))
 		presence['to'] = '%s/%s'%(self.jid,  self.nick)
-		presence.addElement('x', 'http://jabber.org/protocol/muc')
+		x = presence.addElement('x', 'http://jabber.org/protocol/muc')
+		if self.password != None and self.password != '':
+			x.addElement('password', content = self.password)
 		#self.client.on_xml(presence.toXml())
 		self.client.xmlstream.send(presence)
 
