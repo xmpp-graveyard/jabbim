@@ -709,7 +709,8 @@ class clientClass(pyxl.client.Client):
 			message="[nick] "+unicode(mainWindow.tr('is now'))+" [show] [[message]]"
 			s = ''
 			if contact != None:
-				s = contact.resources[jid.resource].status
+				if contact.resources.has_key(jid.resource):
+					s = contact.resources[jid.resource].status
 			if s:
 				message=message.replace("[message]",unicode(s))
 			else:
