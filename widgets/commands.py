@@ -135,6 +135,15 @@ class Commands:
 
 		c = 0
 		self.submenu = QtGui.QMenu()
+		mainWindow=self.main
+		if unicode(self.jid) in self.main.config['commandsInTray']:
+			action=self.submenu.addAction(mainWindow.tr("Remove this menu from Tray"))
+			action.setObjectName("remove_from_tray")
+		else:
+			action=self.submenu.addAction(mainWindow.tr("Add this menu to Tray"))
+			action.setObjectName("add_to_tray")
+		self.submenu.addSeparator()
+
 		for command in commands:
 			action=self.submenu.addAction(command["name"])
 			action.setObjectName("ad_hoc_command")
@@ -169,6 +178,12 @@ class Commands:
 			self.dialog.show()
 			data = action.data().toList()
 			self.execCommand(data[0].toString(), data[1].toString())
+		elif cmd == "add_to_tray":
+			self.main.config['commandsInTray'].append(unicode(self.jid))
+			self.main.buildTrayMenu()
+		elif cmd == "remove_from_tray":
+			self.main.config['commandsInTray'].remove(unicode(self.jid))
+			self.main.buildTrayMenu()
 
 	def execCommand(self, node, name, jid = None):
 		if jid == None:

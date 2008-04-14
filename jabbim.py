@@ -1377,6 +1377,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.plugins = {}
 		self.config=None #: config dict (loaded by configObj)
 
+		self.loadRoster() # load roster widget
+		QtCore.QObject.connect(self.ui.rosterSearch, QtCore.SIGNAL(" textEdited ( const QString & )"),self.ui.roster.search)
+
 		# get homedir
 		self.homeDir=utils.getHomeDir() #: Jabbim home directory + profile directory
 		for x in range(0,len(sys.argv)):
@@ -1680,8 +1683,6 @@ class mainWindow(QtGui.QMainWindow):
 		
 		# set up stacked widget (0==login,1==roster, 2==events and etc..)
 		self.ui.rosterStackedWidget.setCurrentIndex(0)
-		self.loadRoster() # load roster widget
-		QtCore.QObject.connect(self.ui.rosterSearch, QtCore.SIGNAL(" textEdited ( const QString & )"),self.ui.roster.search)
 
 		self.loadSkin() # load chat skin
 		self.loadSounds() # load chat skin
@@ -2120,10 +2121,23 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		menu=QtGui.QMenu(self)
 		menu.addMenu(self.statusWidgetMenu)
+		if len(self.config['commandsInTray'])!=0 and self.client:
+			menu.addSeparator()
+			for jid in self.config['commandsInTray']:
+				action=menu.addAction(self.ui.roster.getNameByJID(jid))
+				action.setObjectName("cmd"+unicode(jid))
+				action.setData(QtCore.QVariant(jid))
 		menu.addSeparator()
 		action=menu.addAction(self.tr("Hide / Show"),self.trayActivated)
 		menu.addAction(self.tr("Quit"),self.trayQuit)
+		menu.connect(menu, QtCore.SIGNAL("hovered ( QAction * )"),self.trayMenuHovered)
 		self.tray.setContextMenu(menu)
+
+	def trayMenuHovered(self,action):
+		cmd=unicode(action.objectName())
+		if cmd.startswith("cmd") and action.menu() == None:
+			jid=unicode(action.data().toString())
+			self.cmdMenu = widgets.commands.Commands(self, jid, action)
 
 	def buildStatusWidgetMenu(self,data=None):
 		"""

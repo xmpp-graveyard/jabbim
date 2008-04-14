@@ -166,6 +166,7 @@ def loadConfig(main,status):
 			"FTPort": '',
 			"tabCycling" : "True", #cyklovanie medzi tabmi...
 			'startInTray':"False",
+			'commandsInTray':[],
  			##shortcuts
  			"nextTab" : "Alt+Right",
  			"previousTab" : "Alt+Left",
