@@ -213,6 +213,8 @@ class osd(QtGui.QWidget):
 		self.timer.start(int(self.main.config['osd_time'])*1000)
 
 	def view(self,leftPixmap,headline,text,event,neco=None):
+		if not self.isHidden():
+			return
 		t=int(time.time())
 		self.event=event
 		if neco:
