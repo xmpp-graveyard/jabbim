@@ -218,6 +218,15 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
 			#QtCore.QObject.connect(self,QtCore.SIGNAL("cursorPositionChanged ()"),self.setFormat)
 
+	#def event(self,ev):
+		#if ev.type()==QtCore.QEvent.Shortcut or ev.type()==QtCore.QEvent.ShortcutOverride:
+			#sequence=unicode(ev.key().toString()).lower()
+			#for shortcut in self.main.config['activeShortcuts']:
+				#print self.main.config[shortcut].lower(),sequence
+				#if self.main.config[shortcut].lower()==sequence:
+					#return False
+		#return QtGui.QTextEdit.event(self,ev)
+
 	def setFormat(self,fmt=None):
 		# detect format of current character
 		f=fmt.font()

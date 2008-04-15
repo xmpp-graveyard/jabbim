@@ -183,7 +183,8 @@ def loadConfig(main,status):
  			"tabNine" : "Alt+9",
  			
  			"moveRight" : "Ctrl+Right",
- 			"moveLeft" : "Ctrl+Left"
+ 			"moveLeft" : "Ctrl+Left",
+			'activeShortcuts':['nextTab','previousTab','removeTab','tabOne','tabTwo','tabThree','tabFour','tabFive','tabSix','tabSeven','tabEight','tabNine','moveRight','moveLeft']
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:
