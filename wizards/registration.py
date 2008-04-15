@@ -377,7 +377,7 @@ class registrationWizard(QtGui.QWizard):
 			self.main.config['jid']=name+"@"+server
 			self.main.config['savePasswd']="True"
 			self.main.fillLoginForm()
-			self.main.connect()
+			self.main.connect(delay=0.5)
 		return QtGui.QWizard.accept(self)
 
 	def finished(self,result):

@@ -3563,9 +3563,13 @@ class mainWindow(QtGui.QMainWindow):
 				# update viewport to refresh image
 				w.chat.ui.textEdit.viewport().update()
 
-	def connect(self):
+	def connect(self,delay=None):
 		# Connect to the server
-		print 'connectiong'
+		if delay:
+			reactor.callLater(delay,self.connect)
+			return
+
+		print 'connecting'
 		jid=unicode(self.ui.login_jid.text()) 
 		if not re.match(r'.+@.+', jid): 
 			self.ui.login_jid.setFocus(QtCore.Qt.OtherFocusReason) 
