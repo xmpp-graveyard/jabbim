@@ -447,7 +447,10 @@ class Client(derived):
 
 	def _streamEnd(self, el):
 		print 'stream end'
-		self.xping.stop()
+		try:
+			self.xping.stop()
+		except:
+			pass
 		if self.factory:
 			self.factory.stopTrying()
 		pass
