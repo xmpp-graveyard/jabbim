@@ -1763,8 +1763,8 @@ class mainWindow(QtGui.QMainWindow):
  		QtGui.QShortcut(QtGui.QKeySequence(self.config["tabEight"]), self.chat,self.chat.tabEight)
  		QtGui.QShortcut(QtGui.QKeySequence(self.config["tabNine"]), self.chat,self.chat.tabNine)
  
- 		QtGui.QShortcut(QtGui.QKeySequence(self.config["moveRight"]), self.chat,self.chat.moveRight)
-		QtGui.QShortcut(QtGui.QKeySequence(self.config["moveLeft"]), self.chat,self.chat.moveLeft)
+ 		QtGui.QShortcut(QtGui.QKeySequence(self.config["moveRight"]), self.chat,self.chat.moveRight,self.chat.moveRight)
+		QtGui.QShortcut(QtGui.QKeySequence(self.config["moveLeft"]), self.chat,self.chat.moveLeft,self.chat.moveLeft)
 
 	def statusLineCanceled(self):
 		self.ui.statusLine.hide()

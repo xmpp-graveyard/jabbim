@@ -502,7 +502,6 @@ class abstractChatWidget(QtGui.QWidget):
 			painter.drawPixmap(0,0,p)
 			painter.end()
 			self.ui.backgroundButton.setIcon(QtGui.QIcon(colorIcon))
-	#fmt.setBackground(QtGui.QBrush(QtGui.QColor(QtCore.Qt.red)))
 
 	def registerFeatureForWidget(self,feature,widget):
 		self.featuredWidget.append([feature,widget])
