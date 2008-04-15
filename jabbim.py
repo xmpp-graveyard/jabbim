@@ -2586,6 +2586,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.login_autoconnect.setChecked(False)
 		if self.config['savePasswd']=="True":
 			self.ui.login_savePassword.setChecked(True)
+			self.ui.login_autoconnect.setEnabled(True)
 		else:
 			self.ui.login_savePassword.setChecked(False)
 			self.ui.login_autoconnect.setEnabled(False)

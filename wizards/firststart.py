@@ -118,7 +118,7 @@ class firstStartWizard(QtGui.QWizard):
 		#self.addPage(createWaitPage(self))
 		self.addPage(createSecondPage(self))
 		#self.addPage(createFinishPage(self))
-		self.setWindowTitle(self.tr("Add contact"))
+		self.setWindowTitle(self.tr("Jabbim Wizard"))
 		#self.cl=None
 		#self.error=None
 		#self.registered=False
