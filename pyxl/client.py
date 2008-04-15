@@ -147,7 +147,11 @@ class Client(derived):
 		self.avatars = {}
 		self.avatarDef = ConfigObj(self.main.realHomeDir+'/avatars/avatars.def',encoding='UTF8')
 		self.avatarImg = {} #hash:QPixmap
+		
 		path = self.main.realHomeDir+'/avatars/'
+		if self.avatarDef.has_key(self.jid.userhost()):
+			self.avatarImg[self.avatarDef[self.jid.userhost()]] = self.loadAvatar(self.avatarDef[self.jid.userhost()])
+
 		d=threads.deferToThread(self.loadAvatars,path,self.avatarDef)
 		d.addCallback(self.gotAvatars)
 		self.reactor.callFromThread(self.on_init)
