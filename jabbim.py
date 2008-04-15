@@ -1471,7 +1471,7 @@ class mainWindow(QtGui.QMainWindow):
 		#: {show:ID}
 		self.shows={u"online":u"1",
 					u"available":u"1",
-					u"chat":u"2",
+					u"chat":u"0",
 					u"away":u"3",
 					u"xa":u"4",
 					u"dnd":u"5",
@@ -1482,7 +1482,7 @@ class mainWindow(QtGui.QMainWindow):
 					}
 		#: {ID:icon_text}
 		self.icons={u"1":u"online",
-					u"2":u"chat",
+					u"0":u"chat",
 					u"3":u"away",
 					u"4":u"xa",
 					u"5":u"dnd",
