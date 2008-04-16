@@ -521,7 +521,7 @@ class clientClass(pyxl.client.Client):
 		# send first presence to server
 		show=unicode(self.main.ui.loginStatus.itemData(int(self.main.ui.loginStatus.currentIndex())).toString())
 		self.main.selfStatus=show
-		self.main.tray.setToolTip(mainWindow.tr('Your status:')+" "+self.main.status[show])
+		#self.main.tray.setToolTip(mainWindow.tr('Your status:')+" "+self.main.status[show])
 		self.main.ui.selfAvatar.refreshToolTip()
 		self.main.sendPresence(None,show,"")
 		self.main.ui.statusButton.setText(unicode(""))
@@ -2410,9 +2410,8 @@ class mainWindow(QtGui.QMainWindow):
 				self.client.factory.stopTrying()
 				self.reconnect = False
 				self.client.disconnect()
-				#self._disconnect()
-				self.tray.setToolTip(self.tr('Your status:')+" "+self.status[show])
-				
+				# update avatar tooltip and tray tooltip
+				self.ui.selfAvatar.refreshToolTip()
 			else:
 				if not pri:
 					# get priority from config
@@ -2445,7 +2444,8 @@ class mainWindow(QtGui.QMainWindow):
 					result=icon
 				self.currentTrayIcon=QtGui.QIcon(result)
 				self.tray.setIcon(self.getCurrentTrayIcon())
-				self.tray.setToolTip(self.tr('Your status:')+" "+self.status[show])
+				# update avatar tooltip and tray tooltip
+				self.ui.selfAvatar.refreshToolTip()
 				
 				# send presence to the server
 				self.client.sendPresence(show = unicode(show), status = unicode(message),priority=pri)
