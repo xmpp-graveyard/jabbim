@@ -16,7 +16,7 @@ from widgets.events import event as _eventClass
 
 class osd(QtGui.QWidget):
 	def __init__(self,main,parent=None):
-		QtGui.QWidget.__init__(self,parent,QtCore.Qt.Tool | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint | QtCore.Qt.CustomizeWindowHint)
+		QtGui.QWidget.__init__(self,parent,QtCore.Qt.ToolTip | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint | QtCore.Qt.CustomizeWindowHint)
 		self.timer=QtCore.QTimer()
 		self.timer.setSingleShot(True)
 		QtCore.QObject.connect(self.timer,QtCore.SIGNAL("timeout()"),self.hide)
