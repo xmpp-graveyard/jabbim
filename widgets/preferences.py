@@ -81,7 +81,7 @@ def getVarData(var):
 	for key,value in var.iteritems():
 		typ=value['type']
 		widget=value['widget']
-		if typ=="text-single" or typ=="text-private":
+		if (typ=="text-single" or typ=="text-private") or typ=='directory':
 			ret[key]=unicode(widget.text())
 		elif typ=="time-interval":
 			ret[key]=unicode(widget.time().toString("H:m:s"))
