@@ -341,6 +341,9 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		if event.matches(QtGui.QKeySequence.NextChild):
 			self.main.main.chat.event(event)
 			return
+		elif event.matches(QtGui.QKeySequence.PreviousChild):
+			self.main.main.chat.event(event)
+			return
 		if not self.composing:
 			# user starts typing
 			self.main.main.client.sendMessage(self.main.jid, "",composing="composing")
