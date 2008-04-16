@@ -33,7 +33,9 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.buttonDownload.setIcon(QtGui.QIcon("%s/document-save.png" % self.pluginDir))
 			self.window.ui.buttonUpload.setIcon(QtGui.QIcon("%s/upload.png" % self.pluginDir))
 			self.window.ui.buttonDelete.setIcon(QtGui.QIcon("%s/edit-delete.png" % self.pluginDir))
-			
+			self.group=QtGui.QButtonGroup(self.window)
+
+			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call)
 			QtCore.QObject.connect(self.window.ui.list, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.clicked)
 			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.fileMenu)
@@ -48,6 +50,60 @@ class Plugin(plugins.PluginBase):
 			
 		else:
 			self.loadConfig(homedir)
+
+	def buttonClicked(self,button):
+		pass
+
+	def chatMenuItemTriggered(self,action):
+		cmd=unicode(action.objectName())
+		if cmd=="show_my_disk":
+			anchor="http://disk.jabbim.cz/%s/"%(unicode(self.main.client.jid.userhost()))
+			QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
+		elif cmd=="show_users_disk":
+			anchor="http://disk.jabbim.cz/%s/"%(unicode(action.parent().parent().jid))
+			QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
+		elif cmd=="show_my_disk_jdm":
+			self.showSlot(self.main.client.jid.userhost())
+		elif cmd=="show_users_disk_jdm":
+			self.showSlot(unicode(action.parent().parent().jid))
+		elif cmd=="show_my_album":
+			anchor="http://album.jabbim.cz/%s/"%(unicode(self.main.client.jid.userhost()))
+			QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
+		elif cmd=="show_users_album":
+			anchor="http://album.jabbim.cz/%s/"%(unicode(action.parent().parent().jid))
+			QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
+
+	def buildChatWidget(self,jid,layout,widget):
+		jid=self.main.getJid(jid)
+		# create Archive button
+		button=QtGui.QToolButton()
+		button.setPopupMode(QtGui.QToolButton.InstantPopup)
+		button.setArrowType(QtCore.Qt.NoArrow)
+		button.setIconSize(QtCore.QSize(16,16))
+		button.setIcon(QtGui.QIcon("%s/jdisk-public.png" % self.pluginDir))
+		button.jid=unicode(jid.userhost())
+		button.setToolTip("Jabbim Album")
+		# add button to buttonGroup
+		menu=QtGui.QMenu(button)
+		action=menu.addAction(self.tr("Show my Jdisk in JDM"))
+		action.setObjectName("show_my_disk_jdm")
+		action=menu.addAction(self.tr("Show users Jdisk in JDM"))
+		action.setObjectName("show_users_disk_jdm")
+		menu.addSeparator()
+		action=menu.addAction(self.tr("Show my Jdisk in browser"))
+		action.setObjectName("show_my_disk")
+		action=menu.addAction(self.tr("Show users Jdisk in browser"))
+		action.setObjectName("show_users_disk")
+		menu.addSeparator()
+		action=menu.addAction(self.tr("Show my Album in browser"))
+		action.setObjectName("show_my_album")
+		action=menu.addAction(self.tr("Show users Album in browser"))
+		action.setObjectName("show_users_album")
+		QtCore.QObject.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.chatMenuItemTriggered)
+		button.setMenu(menu)
+		layout.addWidget(button)
+
+
 
 	def sendFile(self):
 		self.main.sendFiles('public@disk.jabbim.cz')
@@ -168,7 +224,11 @@ class Plugin(plugins.PluginBase):
 			#self.jid=self.main.client.jid.userhost()
 		#else:
 			#self.jid=jid
-		self.jid=unicode(self.window.ui.line_jid.text())
+		if jid:
+			self.jid=jid
+			self.window.ui.line_jid.setText(self.jid)
+		else:
+			self.jid=unicode(self.window.ui.line_jid.text())
 		self.type=type
 		if self.type=="public":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.jid,)).addCallback(self.updateView, 'public')
@@ -181,9 +241,9 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.buttonUpload.setEnabled(True)
 	
 	
-	def showSlot(self):
+	def showSlot(self,jid=None):
 		self.window.show()
-		self.call()
+		self.call(jid)
 		self.window.ui.buttonDownload.setEnabled(False)
 	
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None,error=None):
@@ -194,7 +254,6 @@ class Plugin(plugins.PluginBase):
 		
 	
 	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
-	
 		if error == None and self.main.client.ft[sid].tojid.find("public@disk.jabbim.cz")!=-1:
 			self.call()
 		
