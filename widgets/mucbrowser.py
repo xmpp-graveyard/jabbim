@@ -7,6 +7,43 @@ except:
 from mucbrowser_ui import *
 import pyxl
 
+class delegate(QtGui.QItemDelegate):
+	def __init__(self,parent=None):
+		QtGui.QItemDelegate.__init__(self,parent)
+	
+	def paint(self,painter,option,index):
+		# selected item
+		if option.state & QtGui.QStyle.State_Selected and index.column()==2:
+			#option.rect.setHeight(50)
+			option.displayAlignment=QtCore.Qt.AlignTop
+			text=unicode(index.data(32).toString())
+			QtGui.QItemDelegate.paint(self,painter,option,index)
+			#metrics=QtGui.QFontMetrics(option.font)
+			painter.save()
+			painter.setPen(option.palette.highlightedText().color())
+			#print option.fontMetrics.height(),option.rect.y()
+			#painter.drawText(option.rect.x()+QtGui.QApplication.style().pixelMetric(QtGui.QStyle.PM_FocusFrameHMargin) + 1,option.rect.y()+option.fontMetrics.height(),option.rect.width(),option.rect.height(),QtCore.Qt.TextWordWrap,users)
+			doc=QtGui.QTextDocument()
+			opt=doc.defaultTextOption()
+			opt.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
+			doc.setDefaultTextOption(opt)
+			doc.setDefaultFont(option.font)
+			doc.setPageSize(QtCore.QSizeF(option.rect.width(),option.rect.height()-option.fontMetrics.height()))
+			doc.setHtml("<font color=\"%s\">"%option.palette.highlightedText().color().name()+text+"</font>")
+			painter.translate(option.rect.x()+1,option.rect.y()+option.fontMetrics.height())
+			print option.rect.height()
+			doc.drawContents(painter, QtCore.QRectF(0,0,option.rect.width(),option.rect.height()))
+			painter.restore()
+			return
+
+		QtGui.QItemDelegate.paint(self,painter,option,index)
+	
+	def sizeHint(self,option,index):
+		# selected item
+		if option.state & QtGui.QStyle.State_Selected:
+			return QtCore.QSize(100,50)
+		return QtGui.QItemDelegate.sizeHint(self,option,index)
+
 class MUCBrowserDialog(QtGui.QDialog):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
@@ -15,6 +52,7 @@ class MUCBrowserDialog(QtGui.QDialog):
 		self.ui.setupUi(self)
 		self.main=main
 		self.ui.nickname.setText(main.client.jid.user)
+		self.ui.groupchats.setItemDelegate(delegate(self.ui.groupchats))
 		QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.selectionChanged)
 		QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.CE)
 		QtCore.QObject.connect(self.ui.showJid, QtCore.SIGNAL("stateChanged ( int )"),self.showJid)
@@ -107,7 +145,12 @@ class MUCBrowserDialog(QtGui.QDialog):
 			self.ui.roomLabel.setText(self.tr("Room: ")+r)
 			self.room=r
 			self.ui.name.setText(r)
-	
+
+		if old:
+			old.setData(0,QtCore.Qt.SizeHintRole,QtCore.QVariant())
+		if item:
+			item.setSizeHint(0,QtCore.QSize(100,50))
+
 	def _participantsReceived(self, par):
 		item = par[1]
 		for i in range(int(item.childCount())):
@@ -115,21 +158,23 @@ class MUCBrowserDialog(QtGui.QDialog):
 		users="<b>Users:</b> "
 		for usr in self.main.client.disco[unicode(par[0])][None]['items'].itervalues():
 			users+=usr['name']+", "
-			user=QtGui.QTreeWidgetItem(item)
+			#user=QtGui.QTreeWidgetItem(item)
 			#user.setText(1, usr['name'])
-			if self.ui.showJid.isChecked():
-				user.setText(1, usr['name'])
-				user.setIcon(1,self.main.getIcon(size="16x16"))
-			else:
-				user.setText(2, usr['name'])
-				user.setIcon(2,self.main.getIcon(size="16x16"))
+			#if self.ui.showJid.isChecked():
+				#user.setText(1, usr['name'])
+				#user.setIcon(1,self.main.getIcon(size="16x16"))
+			#else:
+				#user.setText(2, usr['name'])
+				#user.setIcon(2,self.main.getIcon(size="16x16"))
 
 			#user.setIcon(1,self.main.getIcon(size="16x16"))
 
-		item.setToolTip(0,users)
+		item.setData(2,32,QtCore.QVariant(users))
+
+		#item.setToolTip(0,users)
 		#self.ui.groupchats.setItemExpanded(item,True)
-		if self.ui.groupchats.sortColumn()==3:
-			self.ui.groupchats.sortByColumn(3,QtCore.Qt.DescendingOrder)
+		#if self.ui.groupchats.sortColumn()==3:
+			#self.ui.groupchats.sortByColumn(3,QtCore.Qt.DescendingOrder)
 	def getNum(self, string):
 		def reverse(s):
 			s = list(s)
