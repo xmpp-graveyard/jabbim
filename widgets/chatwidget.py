@@ -325,7 +325,7 @@ class chatWidget(abstractChatWidget):
 			self.ui.selfAvatar.setMaximumWidth(64)
 		else:
 			self.ui.selfAvatar.hide()
-			self.ui.splitter.widget(1).setMinimumSize(100,64)
+			self.ui.lineWidget.setMinimumSize(100,64)
 		self.refreshToolTip()
 
 	def contactMenu(self,pos):
