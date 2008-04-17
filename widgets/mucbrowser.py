@@ -30,8 +30,8 @@ class delegate(QtGui.QItemDelegate):
 			doc.setDefaultFont(option.font)
 			doc.setPageSize(QtCore.QSizeF(option.rect.width(),option.rect.height()-option.fontMetrics.height()))
 			doc.setHtml("<font color=\"%s\">"%option.palette.highlightedText().color().name()+text+"</font>")
+			print option.rect.y(),option.fontMetrics.height()
 			painter.translate(option.rect.x()+1,option.rect.y()+option.fontMetrics.height())
-			print option.rect.height()
 			doc.drawContents(painter, QtCore.QRectF(0,0,option.rect.width(),option.rect.height()))
 			painter.restore()
 			return
@@ -138,18 +138,20 @@ class MUCBrowserDialog(QtGui.QDialog):
 			self.ui.groupchats.expandItem(item)
 
 	def selectionChanged(self,item,old):
+		if item and old:
+			item.setSizeHint(0,old.sizeHint(0))
+
+		if old:
+			old.setData(0,QtCore.Qt.SizeHintRole,QtCore.QVariant())
+
 		if item.parent()==None:
 			room = item.data(0, 32).toString()
-			self.main.client.getDiscoItems(room, callback = self._participantsReceived, callback_par = (room, item))
+			self.main.client.getDiscoItems(room, callback = self._participantsReceived, callback_par = (room, item,old))
 			r = room.split('@')[0]
 			self.ui.roomLabel.setText(self.tr("Room: ")+r)
 			self.room=r
 			self.ui.name.setText(r)
 
-		if old:
-			old.setData(0,QtCore.Qt.SizeHintRole,QtCore.QVariant())
-		if item:
-			item.setSizeHint(0,QtCore.QSize(100,50))
 
 	def _participantsReceived(self, par):
 		item = par[1]
@@ -168,9 +170,13 @@ class MUCBrowserDialog(QtGui.QDialog):
 				#user.setIcon(2,self.main.getIcon(size="16x16"))
 
 			#user.setIcon(1,self.main.getIcon(size="16x16"))
-
-		item.setData(2,32,QtCore.QVariant(users))
-
+		if item in self.ui.groupchats.selectedItems():
+			item.setData(2,32,QtCore.QVariant(users))
+			metrics=QtGui.QApplication.fontMetrics()
+			print self.ui.groupchats.columnWidth(2),self.ui.groupchats.columnWidth(1)
+			rect=metrics.boundingRect(0, 0,self.ui.groupchats.columnWidth(2), self.main.height(), QtCore.Qt.TextWordWrap, "Users: "+unicode(item.data(2,32).toString()))
+			print 'aa',metrics.height(),rect.height()
+			item.setSizeHint(0,QtCore.QSize(100,metrics.height()*2+rect.height()))
 		#item.setToolTip(0,users)
 		#self.ui.groupchats.setItemExpanded(item,True)
 		#if self.ui.groupchats.sortColumn()==3:
