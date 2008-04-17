@@ -243,7 +243,7 @@ class chatWidget(abstractChatWidget):
 
 		# set splitters sizes
 		#self.ui.splitter.setSizes(list(self.main.config['chatSplitterSizes']))
-		self.ui.splitter.setSizes([800,64])
+		#self.ui.splitter.setSizes([64,64])
 		self.ui.splitter_2.setSizes(list(self.main.config['chatSplitter2Sizes']))
 		widget=self.ui.splitter_2.widget(1)
 		widget.setMaximumWidth(128)
@@ -325,6 +325,7 @@ class chatWidget(abstractChatWidget):
 			self.ui.selfAvatar.setMaximumWidth(64)
 		else:
 			self.ui.selfAvatar.hide()
+		self.ui.splitter.widget(1).setMinimumSize(100,64)
 		self.refreshToolTip()
 
 	def contactMenu(self,pos):
