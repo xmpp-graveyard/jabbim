@@ -243,7 +243,7 @@ class chatWidget(abstractChatWidget):
 
 		# set splitters sizes
 		#self.ui.splitter.setSizes(list(self.main.config['chatSplitterSizes']))
-		#self.ui.splitter.setSizes([64,64])
+		self.ui.splitter.setSizes([800,64])
 		self.ui.splitter_2.setSizes(list(self.main.config['chatSplitter2Sizes']))
 		widget=self.ui.splitter_2.widget(1)
 		widget.setMaximumWidth(128)
