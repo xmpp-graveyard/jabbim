@@ -3574,7 +3574,7 @@ class mainWindow(QtGui.QMainWindow):
 		if not re.match(r'.+@.+', jid): 
 			self.ui.login_jid.setFocus(QtCore.Qt.OtherFocusReason) 
 			if jid.find('@') == -1: 
-				self.ui.login_jid.setText(jid + '@') 
+				self.ui.login_jid.setText(jid + '@')
 			return 
 		if len(unicode(self.ui.login_password.text())) == 0:
 			return
@@ -3586,78 +3586,86 @@ class mainWindow(QtGui.QMainWindow):
 	
 	def connect__(self):
 		start=time.time()
+		# get variables
 		jid=unicode(self.ui.login_jid.text())
 		password=unicode(self.ui.login_password.text())
+		# get profiles
 		profiles=utils.getProfiles(self.realHomeDir)
-		if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
 	
-			if jid+"-profile" in profiles:
-				self.homeDir=self.realHomeDir+"/"+jid+"-profile"
-				utils.loadConfig(self,[]) # load config files
-				if len(jid)!=0 and len(jid.split("@"))==2 and len(password)!=0:
-					
-					if (jid!=self.config['jid'] or ( unicode(self.ui.login_savePassword.isChecked())=="True" and unicode(rot13.scramble(password))!=unicode(self.config['passwd']))) or (unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked()) or unicode(self.ui.login_autoconnect.isChecked())!=self.config['autoJoin']):
-						ret=QtGui.QMessageBox.question(self,self.tr("Login information"), self.tr("Save current login information?"),3,4)
-						if ret==3:
-							self.config['savePasswd']=self.ui.login_savePassword.isChecked()
-							if self.ui.login_savePassword.isChecked()==True:
-								self.config['passwd']=rot13.scramble(password)
-							else:
-								self.config['passwd']=""
-							self.config['jid']=jid
-							if self.ui.login_autoconnect.isEnabled():
-								self.config['autoJoin']=unicode(self.ui.login_autoconnect.isChecked())
-							else:
-								self.config['autoJoin']="False"
-							self.config.write()
+		# this profile exists
+		if jid+"-profile" in profiles:
+			self.homeDir=self.realHomeDir+"/"+jid+"-profile"
+			utils.loadConfig(self,[]) # load config files
+			# login informations have been updated
+			if (jid!=self.config['jid'] or (unicode(self.ui.login_savePassword.isChecked())=="True" and unicode(rot13.scramble(password))!=unicode(self.config['passwd']))) or (unicode(self.config['savePasswd'])!=unicode(self.ui.login_savePassword.isChecked()) or unicode(self.ui.login_autoconnect.isChecked())!=self.config['autoJoin']):
+				ret=QtGui.QMessageBox.question(self,self.tr("Login information"), self.tr("Save current login information?"),3,4)
+				if ret==3:
+					# update config file
+					self.config['savePasswd']=self.ui.login_savePassword.isChecked()
+					if self.ui.login_savePassword.isChecked()==True:
+						self.config['passwd']=rot13.scramble(password)
+					else:
+						self.config['passwd']=""
+					self.config['jid']=jid
+					if self.ui.login_autoconnect.isEnabled():
+						self.config['autoJoin']=unicode(self.ui.login_autoconnect.isChecked())
+					else:
+						self.config['autoJoin']="False"
+					self.config.write()
+		# this profile not exists, so we have to create it
+		else:
+			#ret=QtGui.QMessageBox.question(self,self.tr("New profile"), self.tr("Profile for this JID doesn't exist. Do you want to create it?"),3,4)
+			#if ret==3:
+			self.homeDir=self.realHomeDir+"/"+jid+"-profile"
+			utils.makeHomeDir(self.homeDir)
+			# copy actual config to new profile dir
+			f=open(self.homeDir+"/config",'w')
+			self.config.write(f)
+			f.close()
+			# load config file
+			utils.loadConfig(self,[])
+			# update config file
+			self.config['savePasswd']=self.ui.login_savePassword.isChecked()
+			if self.ui.login_savePassword.isChecked()==True:
+				self.config['passwd']=rot13.scramble(password)
 			else:
-				#ret=QtGui.QMessageBox.question(self,self.tr("New profile"), self.tr("Profile for this JID doesn't exist. Do you want to create it?"),3,4)
-				#if ret==3:
-				self.homeDir=self.realHomeDir+"/"+jid+"-profile"
-				utils.makeHomeDir(self.homeDir)
-				#if not os.path.isdir(self.homeDir):
-					#os.mkdir(self.homeDir)
-				f=open(self.homeDir+"/config",'w')
-				self.config.write(f)
-				f.close()
-				utils.loadConfig(self,[]) # load config files
-				self.config['savePasswd']=self.ui.login_savePassword.isChecked()
-				if self.ui.login_savePassword.isChecked()==True:
-					self.config['passwd']=rot13.scramble(password)
-				else:
-					self.config['passwd']=""
-				self.config['jid']=jid
-				self.config.write()
-	
+				self.config['passwd']=""
+			self.config['jid']=jid
+			if self.ui.login_autoconnect.isEnabled():
+				self.config['autoJoin']=unicode(self.ui.login_autoconnect.isChecked())
+			else:
+				self.config['autoJoin']="False"
+			self.config.write()
 
-			f=open(self.realHomeDir+"/config",'w')
-			self.config.write(f)
-			f.close()
-			
-			if self.client==None:
-				if self.config.has_key('resource'):
-					resource=''.join(self.config['resource'])
-				else:
-					resource='jabbim'
-				self.client = clientClass(unicode(jid).lower()+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
-				try:
-					self.client.xmlLang= unicode(QtCore.QLocale.system().name())[:2]
-				except:
-					try:
-						self.client.xmlLang = unicode(os.environ["LANG"][:2])
-					except:
-						log.err('error in setting locale')
-				self.client.log=True
-			f=open(self.realHomeDir+"/config",'w')
-			self.config.write(f)
-			f.close()
-			self.reconnect = True
-			if self.config['specifyHost'] == 'True':
-				self.client.connect(self.config['connectHost'], self.config['connectPort'])
-			elif self.config['boshURL'] != '':
-				self.client.connect(boshURL = self.config['boshURL'])
+		# save last used config to real homedir (no profile homedir)
+		f=open(self.realHomeDir+"/config",'w')
+		self.config.write(f)
+		f.close()
+		
+		# create clientClass
+		if self.client==None:
+			if self.config.has_key('resource'):
+				resource=''.join(self.config['resource'])
 			else:
-				self.client.connect()
+				resource='jabbim'
+			self.client = clientClass(unicode(jid).lower()+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
+			try:
+				self.client.xmlLang= unicode(QtCore.QLocale.system().name())[:2]
+			except:
+				try:
+					self.client.xmlLang = unicode(os.environ["LANG"][:2])
+				except:
+					log.err('error in setting locale')
+			self.client.log=True
+
+		# connect
+		self.reconnect = True
+		if self.config['specifyHost'] == 'True':
+			self.client.connect(self.config['connectHost'], self.config['connectPort'])
+		elif self.config['boshURL'] != '':
+			self.client.connect(boshURL = self.config['boshURL'])
+		else:
+			self.client.connect()
 		
 	#def _loadAvatar(self,file, hash, jid):
 		#if os.path.isfile(unicode(file)):
