@@ -208,6 +208,8 @@ class registrationClass(register.RegisteringClient):
 						self.main.label.setText("<b><font color=\"red\">"+registrationWizard.tr("This Jabber ID is already registered by someone else.")+"</font></b>")
 						self.main.registered=False
 						self.main.back()
+			else:
+				print unicode.x.name()
 	def _authd(self, el):
 		self.main.registered=True
 		self.main.next()

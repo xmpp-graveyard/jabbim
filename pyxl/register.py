@@ -92,7 +92,7 @@ class RegisteringClient:
 		log.msg('reg failed')
 		print el.toXml()
 	
-	def _authd(self, el):
+	#def _authd(self, el):
 
 		log.msg('we are lucky, indeed')
 
@@ -104,4 +104,6 @@ class RegisteringClient:
 	
 	def _invaliduser(self, el):
 		log.msg('invalid user')
+		self.factory.authenticator.registerAccount(self.jid.user, self.password)
+		print 'trying to register'
 		print el.toXml()
