@@ -74,7 +74,8 @@ class pluginConfiguration(QtGui.QDialog):
 
 	def reject(self):
 		self.plugin.on_endPreferences()
-		self.close()
+		#self.close()
+		return QtGui.QDialog.reject(self)
 
 def getVarData(var):
 	ret={}
@@ -1082,7 +1083,7 @@ class preferencesWindow(QtGui.QDialog):
 			print name,self.showedPlugins
 			if self.showedPlugins.has_key(name):
 				self.plugins[name].on_endPreferences()
-		self.close()
+		return QtGui.QDialog.reject(self)
 
 class editBookmark(QtGui.QDialog):
 	def __init__(self,main,room,server,name,nickname,password,autojoin,parent,edit=True):

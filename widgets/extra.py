@@ -102,5 +102,5 @@ class extraDialog(QtGui.QDialog):
 		self.main.client.callRemote('rpc@jabbim.cz/service','getFile',('emoticons/'+name+'.zip',)).addCallback(self._getFile)
 		#self.done(1)
 
-	def reject(self):
-		self.close()
+	#def reject(self):
+		#self.close()
