@@ -1052,12 +1052,14 @@ class preferencesWindow(QtGui.QDialog):
 				plugin=unicode(data.toString())
 				widget=self.ui.plugins.itemWidget(item,0)
 				if widget.isChecked()==True and not plugin in self.loadedPlugins:
-					self.main.loadPlugin(plugin)
+					if self.main.client:
+						self.main.loadPlugin(plugin)
 					self.main.config['plugins'].append(plugin)
 					self.loadedPlugins=self.main.config['plugins']
 					load=True
 				elif widget.isChecked()==False and plugin in self.loadedPlugins:
-					self.main.unloadPlugin(plugin)
+					if self.main.client:
+						self.main.unloadPlugin(plugin)
 					self.main.config['plugins'].remove(plugin)
 					load=True
 		self.reloadPlugins()
