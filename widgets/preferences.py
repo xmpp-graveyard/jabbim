@@ -1042,7 +1042,6 @@ class preferencesWindow(QtGui.QDialog):
 			self.main.ui.roster.statusLabel.hide()
 		self.main.ui.roster.setSize()
 		self.main.ui.roster.repaint()
-		self.main.config.write()
 		load=False
 		for i in range(int(self.ui.plugins.topLevelItemCount())):
 			it=self.ui.plugins.topLevelItem(i)
@@ -1062,6 +1061,7 @@ class preferencesWindow(QtGui.QDialog):
 						self.main.unloadPlugin(plugin)
 					self.main.config['plugins'].remove(plugin)
 					load=True
+		self.main.config.write()
 		self.reloadPlugins()
 
 	def accept(self):
