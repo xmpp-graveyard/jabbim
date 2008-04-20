@@ -38,6 +38,12 @@ def extractZip( filename, dir ):
 	namelist = zf.namelist()
 	dirlist = filter( lambda x: x.endswith( '/' ), namelist )
 	filelist = filter( lambda x: not x.endswith( '/' ), namelist )
+	if len(dirlist)==0:
+		for d in namelist:
+			if not os.path.dirname(d) in dirlist and os.path.dirname(d)!='':
+				dirlist.append(os.path.dirname(d))
+	print "directories to extract:",dirlist
+	print "files to extract:",filelist
 	# make base
 	pushd = os.getcwd()
 	if not os.path.isdir( dir ):
@@ -46,6 +52,7 @@ def extractZip( filename, dir ):
 	# create directory structure
 	dirlist.sort()
 	root=dirlist[0]
+
 	for dirs in dirlist:
 		dirs = dirs.split( '/' )
 		prefix = ''

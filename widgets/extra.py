@@ -37,15 +37,22 @@ class extraDialog(QtGui.QDialog):
 		if typ=="emoticons":
 			self.ui.label.setText("<h3>"+self.tr("Emoticons")+"</h3>")
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'getList', ('emoticons/',)).addCallback(self._emoticonsListArrived)#.addErrback(self._emoticonsListError)
-			QtCore.QObject.connect(self.ui.listWidget,QtCore.SIGNAL("currentItemChanged( QListWidgetItem *, QListWidgetItem *)"),self.selectionChanged)
+			self.directory='emoticons/'
+		elif typ=="plugins":
+			self.ui.label.setText("<h3>"+self.tr("Plugins")+"</h3>")
+			self.main.client.callRemote('rpc@jabbim.cz/service', 'getList', ('plugins/',)).addCallback(self._emoticonsListArrived)#.addErrback(self._emoticonsListError)
+			self.directory='plugins/'
+
+		QtCore.QObject.connect(self.ui.listWidget,QtCore.SIGNAL("currentItemChanged( QListWidgetItem *, QListWidgetItem *)"),self.selectionChanged)
 		self.ui.preview.hide()
 
 	def selectionChanged(self,item,old):
 		if item:
 			name=unicode(item.text())
-			self.main.client.callRemote('rpc@jabbim.cz/service', 'getInfo', ('emoticons/'+name,)).addCallback(self._emoticonArrived)
+			self.main.client.callRemote('rpc@jabbim.cz/service', 'getInfo', (self.directory+name,)).addCallback(self._emoticonArrived).addErrback(self._emoticonsListError)
 	
 	def _emoticonArrived(self,data):
+		print data
 		data=data[0][0]
 		self.ui.textBrowser.setPlainText(data[1])
 		pixmap=QtGui.QPixmap()
@@ -99,7 +106,7 @@ class extraDialog(QtGui.QDialog):
 		self.progress=QtGui.QProgressDialog(self.tr('Downloading emoticons pack:')+" "+name,"", 0, 100, self.main.preferencesWindow)
 		self.progress.setCancelButton(b)
 		b.hide()
-		self.main.client.callRemote('rpc@jabbim.cz/service','getFile',('emoticons/'+name+'.zip',)).addCallback(self._getFile)
+		self.main.client.callRemote('rpc@jabbim.cz/service','getFile',(self.directory+name+'.zip',)).addCallback(self._getFile)
 		#self.done(1)
 
 	#def reject(self):

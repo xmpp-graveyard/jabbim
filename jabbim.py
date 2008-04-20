@@ -281,9 +281,15 @@ class clientClass(pyxl.client.Client):
 			# continuing with jabbim extra
 			print "Part of jabbim extra has been downloaded"
 			file=self.ft[sid].file
-			root=utils.extractZip(file,dirname(file))
+			print "extracting",file,'to',dirname(file)
+			try:
+				root=utils.extractZip(file,dirname(file))
+			except:
+				message = unicode(traceback.format_exc(), 'utf-8')
+				print message
 			self.main.allowedSids.remove(sid)
 			self.main.preferencesWindow.reloadView(file,root)
+			self.main.preferencesWindow.reloadPlugins_()
 		del self.ft[sid]
 		self.on_ftTransfered(sid, 0) # we have to delete filetransfer and etc
 
@@ -2750,12 +2756,12 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		if len(self.plugins) != 0:
 			return  # we've done this already
-		plugin_paths = ['plugins/', self.homeDir + '/plugins/']
+		plugin_paths = ['plugins/', self.realHomeDir + '/plugins/']
 		for plugin_path in plugin_paths:
 			for plugin_name in os.listdir(plugin_path):
-				if plugin_name == '.svn':
-					continue
 				dir = '%s/%s' % (plugin_path, plugin_name)
+				if plugin_name == '.svn' or isfile(dir):
+					continue
 				path = '%s/%s.py' % (dir, plugin_name)
 
 				try:

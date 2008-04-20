@@ -573,9 +573,14 @@ class preferencesWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.listWidget, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.currentItemChanged)
 		
 		QtCore.QObject.connect(self.ui.moreEmoticons, QtCore.SIGNAL("clicked()"),self.getMoreEmoticons)
+		QtCore.QObject.connect(self.ui.morePlugins, QtCore.SIGNAL("clicked()"),self.getMorePlugins)
 	
 	def getMoreEmoticons(self):
 		d=extraDialog("emoticons",self.main,self.main)
+		d.exec_()
+
+	def getMorePlugins(self):
+		d=extraDialog("plugins",self.main,self.main)
 		d.exec_()
 
 	def currentItemChanged(self,item,previous):
@@ -762,12 +767,14 @@ class preferencesWindow(QtGui.QDialog):
 			self.ui.profile.setText("<b>"+self.tr("Profile:")+"</b> "+unicode(self.main.config['jid']))
 			self.ui.profile.show()
 		
+		self.reloadPlugins_()
+		
+	def reloadPlugins_(self):
 		for i in range(self.preferencesCount+1,int(self.ui.listWidget.count())):
 			self.ui.listWidget.takeItem(self.preferencesCount+1)
 			widget=self.ui.stackedWidget.widget(self.preferencesCount+1)
 			self.ui.stackedWidget.removeWidget(widget)
 			del widget
-
 		self.loadedPlugins=self.main.config['plugins']
 		self.plugins={}
 		self.showedPlugins={}
