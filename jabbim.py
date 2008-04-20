@@ -1337,6 +1337,7 @@ class AvatarLabel(QtGui.QLabel):
 		self.main=main
 		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
 		self.setMinimumWidth(64)
+		self.setAlignment(QtCore.Qt.AlignCenter)
 	
 	def mouseDoubleClickEvent(self,event):
 		self.main.identityEditor()
@@ -3578,6 +3579,7 @@ class mainWindow(QtGui.QMainWindow):
 			return 
 		if len(unicode(self.ui.login_password.text())) == 0:
 			return
+		self.ui.selfAvatar.setPixmap(QtGui.QPixmap('images/32x32/apps/jabbim.png'))
 		self.ui.rosterStackedWidget.setCurrentIndex(2)
 		self.ui.login_connect.setEnabled(False)
 		self.ui.profilesList.setEnabled(False)
