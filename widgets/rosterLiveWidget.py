@@ -31,6 +31,24 @@ import vcardeditor
 import commands
 from include import rot13
 
+class emptyRosterWidget(QtGui.QWidget):
+	def __init__(self,parent=None):
+		QtGui.QWidget.__init__(self,parent)
+		layout=QtGui.QVBoxLayout(self)
+		label=QtGui.QLabel(self)
+		text="<b>"+self.tr("Welcome to Jabbim!")+"</b><br/>"
+		text+=self.tr("Your contact list is empty. You can add or find your friends by clicking on button below or by Add contact from menu Actions.")
+		label.setText(text)
+		label.setWordWrap(True)
+		layout.addWidget(label)
+		
+		add=QtGui.QPushButton(self.tr("Add contact"),self)
+		layout.addWidget(add)
+		
+		layout.addStretch()
+		
+		QtCore.QObject.connect(add,QtCore.SIGNAL("clicked()"),parent.main.addContactMainWindow)
+
 class activeWidget(QtGui.QWidget):
 	def __init__(self,parent=None):
 		QtGui.QWidget.__init__(self,parent)
@@ -351,6 +369,8 @@ class rosterWidget(QtGui.QWidget):
 		self.blinkJids=[]
 		self.main.ui.rosterSearch.hide()
 		self.main.ui.rosterSearchLabel.hide()
+		
+		self.emptyRosterWidget=emptyRosterWidget(self)
 
 	#{ Public functions
 
@@ -1023,8 +1043,10 @@ class rosterWidget(QtGui.QWidget):
 		"""
 		resizes activeWidget if roster is resized
 		"""
-		if self.statusLabel:
-			self.statusLabel.resize(self.width()-46,self.selectedHeight-32)
+		#if self.statusLabel:
+			#self.statusLabel.resize(self.width()-46,self.selectedHeight-32)
+		if not self.emptyRosterWidget.isHidden():
+			self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
 		return QtGui.QWidget.resizeEvent(self,event)
 
 	def paintCompactUserItem(self,painter,useritem,x,y):
@@ -1511,9 +1533,14 @@ class rosterWidget(QtGui.QWidget):
 				#doc.setDefaultTextOption(option)
 				#doc.setHtml(self.tr("You haven't any contacts in your contact list. You can add them with Add contact from menu Actions."))
 				if len(self.users)==0:
-					painter.drawText(QtCore.QRectF(10,10,self.width()-20,100),QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap,self.tr("You haven't any contacts in your contact list. You can add them with Add contact from menu Actions."))
+					if self.emptyRosterWidget.isHidden():
+						self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
+						self.emptyRosterWidget.show()
 				else:
 					painter.drawText(QtCore.QRectF(10,10,self.width()-20,100),QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap,self.tr("You haven't any online contact in your contact list. To see offline contacts, you have to click Show Offline button, which is above this message."))
+			else:
+				if not self.emptyRosterWidget.isHidden():
+					self.emptyRosterWidget.hide()
 				#doc.drawContents(painter,)
 			for item in items:
 				if item.typ=="group":
