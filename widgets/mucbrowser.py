@@ -56,6 +56,7 @@ class MUCBrowserDialog(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.selectionChanged)
 		QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.CE)
 		QtCore.QObject.connect(self.ui.showJid, QtCore.SIGNAL("stateChanged ( int )"),self.showJid)
+		QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem *, int)"),self.accept)
 		#QtCore.QObject.connect(self.ui.lineEdit, QtCore.SIGNAL("textChanged ( const QString & )"),self.filterChanged)
 		QtCore.QObject.connect(self.ui.serverChangeButton, QtCore.SIGNAL("clicked()"),self.serverChanged)
 		self.room=""
@@ -80,7 +81,7 @@ class MUCBrowserDialog(QtGui.QDialog):
 			self.ui.lineEdit.setText(self.server)
 			self.main.client.getDiscoItems(mucjid, callback = self._roomsReceived)
 		self.ui.splitter.setSizes([500,150])
-
+		self.ui.bookmark.setChecked(False)
 		#self.ui.lineEdit.hide()
 		#self.ui.label_5.hide()
 
@@ -132,10 +133,11 @@ class MUCBrowserDialog(QtGui.QDialog):
 		#self.ui.groupchats.setColumnWidth(0,36)
 
 	def CE(self,item,i):
-		if item.isExpanded():
-			self.ui.groupchats.collapseItem(item)
-		else:
-			self.ui.groupchats.expandItem(item)
+		pass
+		#if item.isExpanded():
+			#self.ui.groupchats.collapseItem(item)
+		#else:
+			#self.ui.groupchats.expandItem(item)
 
 	def selectionChanged(self,item,old):
 		if item and old:
@@ -219,7 +221,7 @@ class MUCBrowserDialog(QtGui.QDialog):
 			#item.setIcon(1,QtGui.QIcon("images/16x16/categories/muc.png"))
 			self.ui.groupchats.insertTopLevelItem(0, item)
 		self.ui.groupchats.sortByColumn(3,QtCore.Qt.DescendingOrder)
-	def accept(self):
+	def accept(self,item=None,index=None):
 		room=unicode(self.room)#unicode(self.ui.room.text())
 		server=unicode(self.server)#unicode(self.ui.server.text())
 		name=unicode(self.ui.name.text())
