@@ -277,7 +277,7 @@ class Client(derived):
 		iq['xml:lang'] = self.xmlLang
 		q = iq.addElement('ping', 'urn:xmpp:ping')
 		self.disp(iq['id'])
-		iq.timeout = 60
+		iq.timeout = 90
 		if self.connection != None:
 			d = iq.send()
 			d.addCallback(self._heartbeat)
