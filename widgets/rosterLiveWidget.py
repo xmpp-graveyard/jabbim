@@ -1546,17 +1546,6 @@ class rosterWidget(QtGui.QWidget):
 						painter.drawPoint(3,18)
 					painter.restore()
 				
-			if useritem in self.events:
-				if self.bl:
-					painter.drawPixmap(x+7,y,useritem.icon.pixmap(32,32))
-				else:
-					painter.drawPixmap(x+7,y,useritem.blink.pixmap(32,32))
-			else:
-				if useritem.privacy['block'] or useritem.privacy['hide']:
-					painter.drawPixmap(x+7,y,self.main.getIcon(status="error",size="32x32").pixmap(32,32))
-				else:
-					painter.drawPixmap(x+7,y,useritem.icon.pixmap(32,32))
-
 			doc=QtGui.QTextDocument()
 			font=QtGui.QApplication.fontMetrics()
 			fontHeight=int(font.height())
@@ -1607,9 +1596,20 @@ class rosterWidget(QtGui.QWidget):
 					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38,y+28))
 				painter.restore()
 			if avatar:
-				painter.drawPixmap(self.width()-4-32+(int((32-avatar.width())/2)),y,avatar)
+				painter.drawPixmap(x+7,y,avatar)
 				if useritem.mood:
-					painter.drawPixmap(self.width()-4-48,y+2,useritem.mood)
+					painter.drawPixmap(self.width()-4-16,y+2,useritem.mood)
+
+			if useritem in self.events:
+				if self.bl:
+					painter.drawPixmap(x+7+16,y+16,useritem.icon.pixmap(16,16))
+				else:
+					painter.drawPixmap(x+7+16,y+16,useritem.blink.pixmap(16,16))
+			else:
+				if useritem.privacy['block'] or useritem.privacy['hide']:
+					painter.drawPixmap(x+7+16,y+16,self.main.getIcon(status="error",size="16x16").pixmap(16,16))
+				else:
+					painter.drawPixmap(x+7+16,y+16,useritem.icon.pixmap(16,16))
 
 	def paintEvent(self,event):
 		QtGui.QWidget.paintEvent(self,event)
