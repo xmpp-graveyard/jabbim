@@ -3255,8 +3255,13 @@ class mainWindow(QtGui.QMainWindow):
 			return False
 		if not config['header'].has_key('type'):
 			print "error, config doesn't have 'type' key in 'header' section"
-			return False
-		typ=unicode(config['header']['type'])
+			##############################################################
+			# We're tolerant for RPC emoticons, so I have to enable them #
+			##############################################################
+			typ='emoticons'
+			#return False
+		else:
+			typ=unicode(config['header']['type'])
 		keys=['name','license','author','version','description']
 		if typ=="moodIcons":
 			keys.append('frontImage')
@@ -3265,6 +3270,10 @@ class mainWindow(QtGui.QMainWindow):
 				return False
 		elif typ=="emoticons":
 			keys.append('frontImage')
+			##############################################################
+			# We're tolerant for RPC emoticons, so I have to enable them #
+			##############################################################
+			keys=[]
 			if not config.has_key('emoticons'):
 				print "error, config doesn't have 'emoticons' section"
 				return False
