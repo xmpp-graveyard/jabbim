@@ -1417,17 +1417,17 @@ class rosterWidget(QtGui.QWidget):
 			painter.setBrush(b)
 			painter.setPen(p)
 
-			# events... TODO: this have to be rewrited in some better way
-			if useritem in self.events:
-				if self.bl:
-					painter.drawPixmap(x+7,y,useritem.icon.pixmap(32,32))
-				else:
-					painter.drawPixmap(x+7,y,useritem.blink.pixmap(32,32))
-			else:
-				if useritem.privacy['block'] or useritem.privacy['hide']:
-					painter.drawPixmap(x+7,y,self.main.getIcon(status="error",size="32x32").pixmap(32,32))
-				else:
-					painter.drawPixmap(x+7,y,useritem.icon.pixmap(32,32))
+			## events... TODO: this have to be rewrited in some better way
+			#if useritem in self.events:
+				#if self.bl:
+					#painter.drawPixmap(x+7,y,useritem.icon.pixmap(32,32))
+				#else:
+					#painter.drawPixmap(x+7,y,useritem.blink.pixmap(32,32))
+			#else:
+				#if useritem.privacy['block'] or useritem.privacy['hide']:
+					#painter.drawPixmap(x+7,y,self.main.getIcon(status="error",size="32x32").pixmap(32,32))
+				#else:
+					#painter.drawPixmap(x+7,y,useritem.icon.pixmap(32,32))
 			
 			# get font height
 			doc=QtGui.QTextDocument()
@@ -1483,9 +1483,21 @@ class rosterWidget(QtGui.QWidget):
 					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38,y+28))
 				painter.restore()
 			if avatar:
-				painter.drawPixmap(self.width()-4-32+(int((32-avatar.width())/2)),y,avatar)
+				painter.drawPixmap(x+7,y,avatar)
 				if useritem.mood:
-					painter.drawPixmap(self.width()-4-48,y+2,useritem.mood)
+					painter.drawPixmap(self.width()-4-16,y+2,useritem.mood)
+
+			if useritem in self.events:
+				if self.bl:
+					painter.drawPixmap(x+7+16,y+16,useritem.icon.pixmap(16,16))
+				else:
+					painter.drawPixmap(x+7+16,y+16,useritem.blink.pixmap(16,16))
+			else:
+				if useritem.privacy['block'] or useritem.privacy['hide']:
+					painter.drawPixmap(x+7+16,y+16,self.main.getIcon(status="error",size="16x16").pixmap(16,16))
+				else:
+					painter.drawPixmap(x+7+16,y+16,useritem.icon.pixmap(16,16))
+					
 		else:
 
 			painter.save()
