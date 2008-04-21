@@ -107,6 +107,29 @@ class clientClass(pyxl.client.Client):
 				for item in self.main.ui.roster.getUserItems(frm):
 					item.mood=None
 			self.main.ui.roster.repaint()
+		elif ns=='http://jabber.org/protocol/tune':
+			tune=payload
+			listening=False
+			if type(tune) == list:
+				for x in tune:
+					print x
+			elif tune!=None:
+				artist = title = ''
+				for el in tune.elements():
+					if el.name == 'artist':
+						artist = unicode(el)
+					elif el.name == 'title':
+						title = unicode(el)
+				t = '%s  %s'%(artist, title)
+				if len(t.strip())>0:
+					listening=True
+			if listening:
+				listening=QtGui.QIcon("images/22x22/icons/headphones.png").pixmap(16,16)
+			for item in self.main.ui.roster.getUserItems(frm):
+				item.tune=listening
+			self.main.ui.roster.repaint()
+
+
 
 
 	def on_bookmarksFail(self):

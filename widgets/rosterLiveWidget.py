@@ -257,6 +257,7 @@ class userItem:
 		self.frameAvatar=None
 		self.selectedFrameAvatar=None
 		self.mood=None
+		self.tune=False
 
 	def clone(self):
 		"""
@@ -275,6 +276,7 @@ class userItem:
 		item.privacy['hide']=self.privacy['hide']
 		item.selectedFrameAvatar=self.selectedFrameAvatar
 		item.mood=self.mood
+		item.tune=self.tune
 		return item
 
 	def setIcon(self,icon):
@@ -1485,7 +1487,9 @@ class rosterWidget(QtGui.QWidget):
 			if avatar:
 				painter.drawPixmap(x+7,y,avatar)
 				if useritem.mood:
-					painter.drawPixmap(self.width()-4-16,y+2,useritem.mood)
+					painter.drawPixmap(self.width()-4-16,y,useritem.mood)
+				if useritem.tune:
+					painter.drawPixmap(self.width()-4-16,y+16,useritem.tune)
 
 			if useritem in self.events:
 				if self.bl:
@@ -1610,7 +1614,9 @@ class rosterWidget(QtGui.QWidget):
 			if avatar:
 				painter.drawPixmap(x+7,y,avatar)
 				if useritem.mood:
-					painter.drawPixmap(self.width()-4-16,y+2,useritem.mood)
+					painter.drawPixmap(self.width()-4-16,y,useritem.mood)
+				if useritem.tune:
+					painter.drawPixmap(self.width()-4-16,y+16,useritem.tune)
 
 			if useritem in self.events:
 				if self.bl:
