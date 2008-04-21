@@ -351,7 +351,7 @@ class rosterWidget(QtGui.QWidget):
 		self.changePos=False
 		self.searchMode=False
 		self.reshow=False
-		self.userHeight=64
+		self.userHeight=32
 		self.groupHeight=32
 		self.theme=True
 		self.timestamp=0
