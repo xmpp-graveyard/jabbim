@@ -3249,18 +3249,63 @@ class mainWindow(QtGui.QMainWindow):
 			self.preferencesWindow.show()
 			self.preferencesWindow.reloadPreferences()
 
+	def isValidExtraPart(self,config):
+		if not config.has_key('header'):
+			print "error, config doesn't have 'header' section"
+			return False
+		if not config['header'].has_key('type'):
+			print "error, config doesn't have 'type' key in 'header' section"
+			return False
+		typ=unicode(config['header']['type'])
+		keys=['name','license','author','version','description']
+		if typ=="moodIcons":
+			keys.append('frontImage')
+			if not config.has_key('moods'):
+				print "error, config doesn't have 'moods' section"
+				return False
+		elif typ=="emoticons":
+			keys.append('frontImage')
+			if not config.has_key('emoticons'):
+				print "error, config doesn't have 'emoticons' section"
+				return False
+		elif typ=='chatskin':
+			if not config.has_key('chatskin'):
+				print "error, config doesn't have 'chatskin' section"
+				return False
+		for key in keys:
+			if not config['header'].has_key(key):
+				print "error, config doesn't have '"+key+"' key in 'header' section"
+				return False
+		return True
+
 	def loadJabbimExtraConfig(self,config,fallback):
+		print 'loading JabbimExtra config',config
+		# try to load config
 		try:
 			config=ConfigObj(config,encoding='UTF8')
-			config['header']
-			return True,config
+			loaded=True
 		except:
+			loaded=False
+		# check config validity
+		if loaded:
+			loaded=self.isValidExtraPart(config)
+		# config is valid
+		if loaded:
+			return True,config
+		else:
+			# try to load fallback config
 			try:
 				config=ConfigObj(fallback,encoding='UTF8')
-				config['header']
-				return False,config
+				loaded=True
 			except:
-				return None.None
+				loaded=False
+			# check config validity
+			if loaded:
+				loaded=self.isValidExtraPart(config)
+			if loaded:
+				return False,config
+			else:
+				return None,None
 
 	def loadMoods(self):
 		"""
@@ -3297,15 +3342,11 @@ class mainWindow(QtGui.QMainWindow):
 			return True
 		return False
 
-
 	def loadSkin(self):
 		"""
 		Loads chat skin. Skin is loaded to self.skin.
 		"""
-		self.skin=ConfigObj("chatskins/"+self.config["chatSkin"],encoding='UTF8')
-		if len(self.skin)==0:
-			self.skin=ConfigObj(self.realHomeDir+"/chatskins/"+self.config["chatSkin"],encoding='UTF8')
-		self.skin=self.skin['chatskin']
+		loaded,self.skin=self.loadJabbimExtraConfig("chatskins/"+self.config['chatSkin'],self.realHomeDir+"/chatskins/"+self.config['chatSkin'])
 		if not self.skin.has_key("spaces_between_lines"):
 			self.skin["spaces_between_lines"]='0'
 	

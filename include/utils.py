@@ -212,20 +212,16 @@ def loadConfig(main,status):
 			main.config[k]=v
 			rewrite=True
 	# emoticon test
-	loaded,cf=main.loadJabbimExtraConfig("emoticons/"+main.config['emoticons'],'emoticons/default/smileys.cfg')
-	if len(cf)==0 or not loaded:
-		loaded,cf=main.loadJabbimExtraConfig(main.realHomeDir+"/emoticons/"+main.config['emoticons'],'emoticons/default/smileys.cfg')
-		if len(cf)==0 or not loaded:
-			main.config['emoticons']="default/smileys.cfg"
-			rewrite=True
-	
+	loaded,cf=main.loadJabbimExtraConfig("emoticons/"+main.config['emoticons'],main.realHomeDir+"/emoticons/"+main.config['emoticons'])
+	if loaded==None and not cf:
+		main.config['emoticons']="default/smileys.cfg"
+		rewrite=True
+
 	# chatskin test
-	loaded,cf=main.loadJabbimExtraConfig("chatskins/"+main.config['chatSkin'],'chatskins/cool/cool.cfg')
-	if len(cf)==0 or not loaded:
-		loaded,cf=main.loadJabbimExtraConfig(main.realHomeDir+"/chatskins/"+main.config['chatSkin'],'chatskins/cool/cool.cfg')
-		if len(cf)==0 or not loaded:
-			main.config['chatSkin']="cool/cool.cfg"
-			rewrite=True
+	loaded,cf=main.loadJabbimExtraConfig("chatskins/"+main.config['chatSkin'],main.realHomeDir+"/chatskins/"+main.config['chatSkin'])
+	if loaded==None and not cf:
+		main.config['chatSkin']="cool/cool.cfg"
+		rewrite=True
 
 	
 	if rewrite==True:
