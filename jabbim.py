@@ -3258,10 +3258,10 @@ class mainWindow(QtGui.QMainWindow):
 			##############################################################
 			# We're tolerant for RPC emoticons, so I have to enable them #
 			##############################################################
-			typ='emoticons'
-			#return False
-		else:
-			typ=unicode(config['header']['type'])
+			typ='emoticons' # will be commented
+			#return False # will be uncommented
+		else: # will be commented
+			typ=unicode(config['header']['type']) # will be commented
 		keys=['name','license','author','version','description']
 		if typ=="moodIcons":
 			keys.append('frontImage')
@@ -3273,7 +3273,7 @@ class mainWindow(QtGui.QMainWindow):
 			##############################################################
 			# We're tolerant for RPC emoticons, so I have to enable them #
 			##############################################################
-			keys=[]
+			keys=[] # will be commented
 			if not config.has_key('emoticons'):
 				print "error, config doesn't have 'emoticons' section"
 				return False
