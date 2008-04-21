@@ -174,6 +174,7 @@ def loadConfig(main,status):
 			"tabCycling" : "True", #cyklovanie medzi tabmi...
 			'startInTray':"False",
 			'commandsInTray':[],
+			'moods':'default/default.cfg',
  			##shortcuts
  			"nextTab" : "Alt+Right",
  			"previousTab" : "Alt+Left",

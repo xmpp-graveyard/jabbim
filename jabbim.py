@@ -88,10 +88,26 @@ class clientClass(pyxl.client.Client):
 		self.bookmarksEnabled=True
 		self.xmlCount=[]
 		self.bannedJids=[]
-	
-	def on_pep(self, frm, ns, payload):	
+
+	def on_pep(self, frm, ns, payload):
 		if frm == self.jid.userhost():
 			self.main.ui.selfAvatar.refreshToolTip()
+		if ns=="http://jabber.org/protocol/mood":
+			t = ''
+			m = txt = ''
+			for el in payload.elements():
+				if el.name == 'text':
+					txt = unicode(el)
+				else :
+					m = el.name
+			if self.main.moodIcons.has_key(m):
+				for item in self.main.ui.roster.getUserItems(frm):
+					item.mood=self.main.moodIcons[m].pixmap(16,16)
+			else:
+				for item in self.main.ui.roster.getUserItems(frm):
+					item.mood=None
+			self.main.ui.roster.repaint()
+
 
 	def on_bookmarksFail(self):
 		"""
@@ -1694,6 +1710,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.loadSkin() # load chat skin
 		self.loadSounds() # load chat skin
 		self.loadTheme() # load theme
+		self.loadMoods() # load user moods icon
 		self.ui.roster.reskin() # reskin roster
 		self.selfResources=[] #: Resources which are connected from the same JID as user
 		self.buildOfflineMenu() # build menu with 'show offline', 'show away'
@@ -2203,6 +2220,8 @@ class mainWindow(QtGui.QMainWindow):
 			for m in keys:
 				txt = self.moods[m]
 				action = mood.addAction(txt)
+				if self.moodIcons.has_key(m):
+					action.setIcon(self.moodIcons[m])
 				action.setData(QtCore.QVariant(m))
 				action.setObjectName('mood')
 				#highlight current mood if any
@@ -3205,10 +3224,29 @@ class mainWindow(QtGui.QMainWindow):
 	def loadJabbimExtraConfig(self,config,fallback):
 		try:
 			config=ConfigObj(config,encoding='UTF8')
+			config['header']
 			return True,config
 		except:
-			config=ConfigObj(fallback,encoding='UTF8')
-			return False,config
+			try:
+				config=ConfigObj(fallback,encoding='UTF8')
+				config['header']
+				return False,config
+			except:
+				return None.None
+
+	def loadMoods(self):
+		"""
+		Loads user mood icons
+		"""
+		loaded,config=self.loadJabbimExtraConfig('moods/'+self.config['moods'],'moods/default/default.cfg')
+		if loaded!=None:
+			if loaded:
+				src=dirname("moods/"+self.config["moods"])+"/"
+			else:
+				src=dirname("moods/default/")
+			self.moodIcons=config['moods']
+			for mood in self.moodIcons.keys():
+				self.moodIcons[mood]=QtGui.QIcon(src+self.moodIcons[mood])
 
 	def loadSounds(self):
 		src=dirname("sounds/"+self.config["soundPack"])
