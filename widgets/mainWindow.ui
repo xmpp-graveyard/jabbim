@@ -722,6 +722,28 @@ p, li { white-space: pre-wrap; }
                 </property>
                </widget>
               </item>
+			  <item>
+				  <widget class="QToolButton" name="moodButton" >
+					  <property name="maximumSize" >
+						  <size>
+							  <width>16777215</width>
+							  <height>20</height>
+						  </size>
+					  </property>
+					  <property name="toolTip" >
+						  <string>Here you can change your mood</string>
+					  </property>
+					  <property name="text" >
+						  <string/>
+					  </property>
+					  <property name="popupMode" >
+						  <enum>QToolButton::InstantPopup</enum>
+					  </property>
+					  <property name="toolButtonStyle" >
+						  <enum>Qt::ToolButtonTextBesideIcon</enum>
+					  </property>
+				  </widget>
+              </item>
               <item>
                <widget class="QToolButton" name="statusButton" >
                 <property name="maximumSize" >
@@ -744,6 +766,7 @@ p, li { white-space: pre-wrap; }
                 </property>
                </widget>
               </item>
+			  
              </layout>
             </item>
             <item row="1" column="2" >

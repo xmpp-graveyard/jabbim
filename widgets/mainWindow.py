@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Thu Mar 20 19:39:04 2008
-#      by: PyQt4 UI code generator 4.3.4-snapshot-20080307
+# Created: Mon Apr 21 15:16:53 2008
+#      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -277,6 +277,13 @@ class Ui_MainWindow(object):
         self.showOffline.setArrowType(QtCore.Qt.NoArrow)
         self.showOffline.setObjectName("showOffline")
         self.hboxlayout4.addWidget(self.showOffline)
+
+        self.moodButton = QtGui.QToolButton(self.frame)
+        self.moodButton.setMaximumSize(QtCore.QSize(16777215,20))
+        self.moodButton.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.moodButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+        self.moodButton.setObjectName("moodButton")
+        self.hboxlayout4.addWidget(self.moodButton)
 
         self.statusButton = QtGui.QToolButton(self.frame)
         self.statusButton.setMaximumSize(QtCore.QSize(16777215,20))
@@ -553,6 +560,7 @@ class Ui_MainWindow(object):
         self.offlineButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Show offline contacts", None, QtGui.QApplication.UnicodeUTF8))
         self.toggleInvisible.setToolTip(QtGui.QApplication.translate("MainWindow", "Toggle Invisibility", None, QtGui.QApplication.UnicodeUTF8))
         self.showOffline.setToolTip(QtGui.QApplication.translate("MainWindow", "You can show/hide contats that are unavailable", None, QtGui.QApplication.UnicodeUTF8))
+        self.moodButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Here you can change your mood", None, QtGui.QApplication.UnicodeUTF8))
         self.statusButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Here you can change your status", None, QtGui.QApplication.UnicodeUTF8))
         self.rosterSearchLabel.setText(QtGui.QApplication.translate("MainWindow", "User search:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.rosterTab), QtGui.QApplication.translate("MainWindow", " r", None, QtGui.QApplication.UnicodeUTF8))

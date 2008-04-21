@@ -2236,6 +2236,7 @@ class mainWindow(QtGui.QMainWindow):
 		
 
 		if self.client != None and self.client.pep :
+			self.ui.moodButton.show()
 			# User Mood hack
 			mood = self.statusWidgetMenu.addMenu(self.tr('Mood'))
 			keys = self.moods.keys()
@@ -2264,7 +2265,8 @@ class mainWindow(QtGui.QMainWindow):
 					font.setBold(False)
 				
 				action.setFont(font)
-								
+			app.connect(mood, QtCore.SIGNAL("triggered ( QAction *)"),self.statusWidgetChanged)
+			self.ui.moodButton.setMenu(mood)
 			
 			activity =  self.statusWidgetMenu.addMenu(self.tr('Activity'))
 			for group, txt in self.activityGroups.iteritems():
@@ -2276,7 +2278,8 @@ class mainWindow(QtGui.QMainWindow):
 					action = menu.addAction(txt)
 					action.setObjectName('activity')
 					action.setData(QtCore.QVariant([group, a]))
-			
+		else:
+			self.ui.moodButton.hide()
 		
 		# make menu for transports
 		if len(self.transports)!=0:
@@ -3267,6 +3270,7 @@ class mainWindow(QtGui.QMainWindow):
 				src=dirname("moods/"+self.config["moods"])+"/"
 			else:
 				src=dirname("moods/default/")
+			self.ui.moodButton.setIcon(QtGui.QIcon(src+config['header']['frontImage']))
 			self.moodIcons=config['moods']
 			for mood in self.moodIcons.keys():
 				self.moodIcons[mood]=QtGui.QIcon(src+self.moodIcons[mood])
