@@ -2389,6 +2389,8 @@ class mainWindow(QtGui.QMainWindow):
 			m = unicode(data.toString())
 			log.msg('setting mood to '+m)
 			self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(m))
+			if self.moodIcons.has_key(m):
+				self.ui.moodButton.setIcon(self.moodIcons[m])
 			return
 		
 		elif cmd == 'activity':
