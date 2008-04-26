@@ -473,6 +473,15 @@ class chatWindow(QtGui.QMainWindow):
 					return w,i # tab, index
 		return None,0 # tab, index
 
+	def findTabByMeta(self,jid):
+		userhost=self.main.getJid(jid).userhost()
+		for i in range(self.ui.chatTab.count()):
+			w=self.ui.chatTab.widget(i)
+			if w.chat.hasMetacontact(userhost):
+				return w,i # tab, index
+		return None,0
+
+
 	def changeTab(self,index):
 		try:
 			self.ui.chatTab.widget(index).chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)

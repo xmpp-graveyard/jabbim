@@ -767,11 +767,16 @@ class clientClass(pyxl.client.Client):
 			tabFull.chat.ui.chatstate.setText("")
 			tabFull.chat.lastMessageFrom=""
 
+		if not tabFull:
+			metaTab,metaIndex=self.main.chat.findTabByMeta(jid.full())
+		else:
+			metaTab=tabFull
+
 		# we have opened conversation with this JID (no only with this resource)
-		if tabFull:
-			tabFull.chat.buildResourceMenu()
-			tabFull.chat.buildMetaMenu()
-			tabFull.chat.refreshToolTip()
+		if metaTab:
+			metaTab.chat.buildResourceMenu()
+			metaTab.chat.buildMetaMenu()
+			metaTab.chat.refreshToolTip()
 		status_=None
 		if show=="offline":
 			# self presence

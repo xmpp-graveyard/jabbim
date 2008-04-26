@@ -241,6 +241,7 @@ class chatWidget(abstractChatWidget):
 		xhtml=main.client.hasFeature(jid,'http://jabber.org/protocol/xhtml-im')
 		abstractChatWidget.__init__(self,Ui_chatwidget,abstractTextView,main,jid,xhtml,parent)
 
+		self.metaJids=[]
 		# set splitters sizes
 		#self.ui.splitter.setSizes(list(self.main.config['chatSplitterSizes']))
 		self.ui.splitter.setSizes([800,64])
@@ -338,6 +339,9 @@ class chatWidget(abstractChatWidget):
 		contactMenu=self.main.ui.roster.buildContactMenu(unicode(jid),group)
 		contactMenu.popup(self.ui.avatar.mapToGlobal(pos))
 
+	def hasMetacontact(self,metacontact):
+		return metacontact in self.metaJids
+
 	def buildMetaMenu(self):
 		jidt=self.main.getJid(self.jid)
 		if self.main.client.roster['users'][jidt.userhost()].tag!=None:
@@ -349,6 +353,7 @@ class chatWidget(abstractChatWidget):
 			for jid,user in self.main.client.roster['users'].iteritems():
 				if user.tag==tag:
 					meta.append(jid)
+			self.metaJids=meta
 			for mJid in meta:
 				
 				name=self.main.ui.roster.getNameByJID(mJid)
