@@ -415,7 +415,9 @@ class chatWidget(abstractChatWidget):
 		self.parent.jid=self.jid
 		self.buildResourceMenu()
 		self.parent.tabName=unicode(action.text())
+		self.parent.ic=action.icon()
 		currentIndex=self.main.chat.ui.chatTab.currentIndex()
+		self.main.chat.ui.chatTab.setTabIcon(currentIndex,self.parent.ic)
 		self.main.chat.ui.chatTab.setTabText(currentIndex,self.parent.tabName)
 		self.main.chat.setWindowTitle(unicode(self.main.chat.ui.chatTab.tabText(currentIndex)).replace("&",""))
 
