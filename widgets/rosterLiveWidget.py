@@ -2492,7 +2492,172 @@ class rosterWidget(QtGui.QWidget):
 	def cloneContact(self,parent,item):
 		pass
 
+	def buildJidMenu(self,jid):
+		# build contact menu
+		contactMenu=QtGui.QMenu(self)
+		jid=self.main.getJid(jid)
 		
+
+		action=contactMenu.addAction(QtGui.QIcon("images/16x16/actions/add-user.png"),self.tr("Add to roster"))
+		action.setData(QtCore.QVariant(jid.userhost()))
+		action.setObjectName("add_contact")
+				
+		if self.main.client.groupchats != {}:	# Mozna zobrazit i kdyz v mucu nejsme aby to bylo vic videt :)
+			submenu = contactMenu.addMenu(QtGui.QIcon("images/16x16/categories/muc.png"),self.tr("Invite to conference"))
+			for gc in self.main.client.groupchats.keys():
+				action = submenu.addAction(gc)
+				action.setData(QtCore.QVariant([jid.full(), gc]))
+				action.setObjectName("invite_gc")
+
+
+
+		# custom status
+		submenu=contactMenu.addMenu(self.tr("Custom status"))
+
+
+		for status in ["online", "chat", "away", "xa", "dnd", "offline"]:
+			action=submenu.addAction(self.main.getIcon(status=status,size="32x32"),self.main.status[status])
+			action.setObjectName("custom_status")
+			action.setData(QtCore.QVariant([unicode(status), unicode(jid.userhost())]))
+
+		# separator
+		contactMenu.addSeparator()
+
+		action=contactMenu.addAction(QtGui.QIcon("images/16x16/categories/v-card.png"),self.tr("vCard"))
+		action.setData(QtCore.QVariant(jid.userhost()))
+		action.setObjectName("vcard")
+		# filetransfer
+		#resource=jid.resource
+		#if len(resource)!=0:
+			#if self.main.client.roster['users'][jid].resources[resource[0]].hasFeature('http://jabber.org/protocol/si/profile/file-transfer'):
+				#action=contactMenu.addAction(self.tr("Send file"))
+				#action.setData(QtCore.QVariant(jid))
+				#action.setObjectName("send_file")
+				#action.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
+
+		#for key,value in self.main.plugins.iteritems():
+			#if value['module']:
+				#self.main.runPluginCommand(value['module'].buildContactMenu,[contactMenu,contact])
+		# separator
+		contactMenu.addSeparator()
+		
+		## break up metacontact
+		#if self.main.client.roster_meta.has_key(jid):
+			#action=contactMenu.addAction(self.tr("Break up metacontact"))
+			#action.setData(QtCore.QVariant(jid))
+			#action.setObjectName("break_up_meta")
+		## rename
+		#action=contactMenu.addAction(self.tr("Rename"))
+		#action.setData(QtCore.QVariant(jid))
+		#action.setObjectName("rename")
+		## delete from group
+		#if group!=None and len(self.main.client.roster['users'][jid].groups)>1:
+			#action=contactMenu.addAction(self.tr("Delete from group"))
+			#action.setData(QtCore.QVariant([unicode(jid),u"-"+group]))
+			#action.setObjectName("check_group")
+		## delete from roster
+		#action=contactMenu.addAction(self.tr("Delete from roster"))
+		#action.setData(QtCore.QVariant(jid))
+		#action.setObjectName("delete_action")
+
+		#value = contact.subscription
+		#if value in ["ask"]:
+			#action = contactMenu.addAction(self.tr("Authorize"))
+			#action.setData(QtCore.QVariant(jid))
+			#action.setObjectName("a_authorize")
+		#if value in ["from", "both",'ask']:
+			#action = contactMenu.addAction(self.tr("Remove authorization"))	
+			#action.setData(QtCore.QVariant(jid))
+			#action.setObjectName("a_unauthorize")
+		#if value in ["none", "from"]:
+			#action = contactMenu.addAction(self.tr("Request authorization"))
+			#action.setData(QtCore.QVariant(jid))
+			#action.setObjectName("a_ask")
+
+		## separator
+		#contactMenu.addSeparator()
+		## groups . submenu
+		#group=contactMenu.addMenu (self.tr("Groups"))
+		## groups . new group
+		#action=group.addAction(self.tr("New Group"))
+		#action.setData(QtCore.QVariant(jid))
+		#action.setObjectName("new_group")
+		## groups . separator
+		#group.addSeparator()
+		## groups . groups list
+		##g=self.getGroups(str(jid))
+		#for k,v in self.groups.iteritems():
+			#if k!="Unknown" and k!=self.specialName:
+				#action=group.addAction(unicode(k))
+				#action.setObjectName("check_group")
+				#action.setCheckable(True)
+			##if len(self.main.client.roster['users'][jid].groups)==0:
+				##if k=="Unknown":
+					##action.setChecked(True)
+					##action.setData(QtCore.QVariant([unicode(jid),u"-"+unicode(k)]))
+				##else:
+					##action.setData(QtCore.QVariant([unicode(jid),u"+"+unicode(k)]))
+			##else:
+				#if k in self.main.client.roster['users'][jid].groups:
+					#action.setChecked(True)
+					#action.setData(QtCore.QVariant([unicode(jid),u"-"+unicode(k)]))
+					#if len(self.main.client.roster['users'][jid].groups)<=1:
+						#action.setEnabled(False)
+				#else:
+					#action.setData(QtCore.QVariant([unicode(jid),u"+"+unicode(k)]))
+				
+		if self.main.client.privacy:
+			if self.main.client.privacy.active:
+				submenu = contactMenu.addMenu(self.tr("Privacy"))
+				if not self.main.client.privacy.active.isBlockedJID(jid.userhost()):
+					action = submenu.addAction(self.tr("Block contact"))
+					action.setData(QtCore.QVariant(jid.userhost()))
+					action.setObjectName("privacy_block")
+				else:
+					action = submenu.addAction(self.tr("Unblock contact"))
+					action.setData(QtCore.QVariant(jid.userhost()))
+					action.setObjectName("privacy_unblock")
+				
+				# Sekci nemazat
+				#if not self.main.client.privacy.active.isAllowedJID(jid):
+				#	action = submenu.addAction(self.tr("Allow contact to see my status when I am invisible"))
+				#	action.setData(QtCore.QVariant(jid))
+				#	action.setObjectName("privacy_allow")
+				#else:
+				#	action = submenu.addAction(self.tr("Disallow contact to see my status when I am invisible"))
+				#	action.setData(QtCore.QVariant(jid))
+				#	action.setObjectName("privacy_disallow")
+				
+				if not self.main.client.privacy.active.isHiddenJID(jid.userhost()):
+					action = submenu.addAction(self.tr("Always hide my status to contact"))
+					action.setData(QtCore.QVariant(jid.userhost()))
+					action.setObjectName("privacy_hide")
+				else:
+					action = submenu.addAction(self.tr("Don't hide my status to contact"))
+					action.setData(QtCore.QVariant(jid.userhost()))
+					action.setObjectName("privacy_unhide")
+		#if len(contact.resources)!=0:
+			#if oneres:
+				#if self.main.client.roster['users'][jid].resources[resource[0]].hasFeature('http://jabber.org/protocol/commands'):
+					#action=contactMenu.addAction(QtGui.QIcon("images/16x16/actions/exec.png"),self.tr("Extra actions"))
+					#action.setData(QtCore.QVariant("%s/%s" % (jid, contact.resources.keys()[0])))
+					#action.setObjectName("ad_hoc")
+			#else:
+				#submenu=contactMenu.addMenu(QtGui.QIcon("images/16x16/actions/exec.png"),self.tr("Extra actions"))
+				#for res in contact.resources.keys():
+					#if res != None:
+						#if self.main.client.roster['users'][jid].resources[res].hasFeature('http://jabber.org/protocol/commands'):
+							#action=submenu.addAction(res)
+							#action.setData(QtCore.QVariant("%s/%s" %(jid,res)))
+							#action.setObjectName("ad_hoc")
+				
+				submenu.connect(submenu, QtCore.SIGNAL("hovered ( QAction * )"),self.contactMenuHovered)
+		
+		# signal
+		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
+		contactMenu.connect(contactMenu, QtCore.SIGNAL("hovered ( QAction * )"),self.contactMenuHovered)
+		return contactMenu
+
 	def buildContactMenu(self,jid,group):
 		# build contact menu
 		contactMenu=QtGui.QMenu(self)
@@ -2825,6 +2990,12 @@ class rosterWidget(QtGui.QWidget):
 									self.main.client.delContact(jd)
 				
 			
+
+		elif cmd=='add_contact':
+			jid=action.data()
+			jid=unicode(jid.toString())
+			dialog=addcontact.addContactDialog(self.main,self.main,jid=jid,group="",name=jid.split('@')[0])
+			dialog.exec_()
 
 		elif cmd=="break_up_meta":
 			# break up metacontact

@@ -41,7 +41,7 @@ class event:
 		if not self.alive:
 			return
 		self.parent.submitClicked()
-		print "Child event accepted"
+		print "Parent event accepted"
 		self.alive=False
 	
 	def rejectParent(self):
@@ -149,7 +149,6 @@ class abstractWidget(QtGui.QWidget):
 			if hasattr(item.widget,"eventClass"):
 				item.widget.eventClass.accept()
 				self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(item))
-		print "submitclicked"
 		self.eventClass.accept()
 		#if self.trueCall!=None:
 			#self.trueCall(*self.trueDict)
@@ -288,14 +287,13 @@ class lineEditWidget(QtGui.QWidget):
 
 class InfoWidget(abstractWidget):
 	def __init__(self,header,text,item,main,falseCall,falseDict,action,actionDict,parent=None):
-		apply(abstractWidget.__init__,(self,header,text,item,main,falseCall,falseDict,None,None,action,actionDict,parent))
+		apply(abstractWidget.__init__,(self,header,text,item,main,falseCall,falseDict,action,actionDict,action,actionDict,parent))
 		self.closeButton = QtGui.QPushButton(self)
 		self.closeButton.setMaximumSize(16,16)
 		self.closeButton.setObjectName("closeButton")
 		self.closeButton.setFlat(True)
 		self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
 		self.hboxlayout.addWidget(self.closeButton)
-
 		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
 		#self.setMinimumHeight(40)
 
@@ -564,10 +562,12 @@ class events:
 		return None
 
 	def addChildEvent(self,parentID,eventClass):
+		print 'addChildEvent',parentID
 		parent=self.getEventByID(parentID)
 		if parent:
 			eventClass.parent=parent['widget']
 			parent['childs'].append(eventClass)
+			print 'added',parentID
 
 	def addEvent(self,name,typ,icon,widget,tooltip=''):
 		if icon==None:

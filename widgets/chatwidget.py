@@ -332,11 +332,12 @@ class chatWidget(abstractChatWidget):
 	def contactMenu(self,pos):
 		items=self.main.ui.roster.getUserItems(self.main.getJid(self.jid).userhost())
 		if len(items)==0:
-			return
-		item=items[0]
-		group=item.group
-		jid=item.jid
-		contactMenu=self.main.ui.roster.buildContactMenu(unicode(jid),group)
+			contactMenu=self.main.ui.roster.buildJidMenu(self.jid)
+		else:
+			item=items[0]
+			group=item.group
+			jid=item.jid
+			contactMenu=self.main.ui.roster.buildContactMenu(unicode(jid),group)
 		contactMenu.popup(self.ui.avatar.mapToGlobal(pos))
 
 	def hasMetacontact(self,metacontact):
