@@ -17,8 +17,10 @@ class rosterStyle:
 			doc.setTextWidth(self.roster.main.width()-64)
 			doc.setHtml("<font size=\"-1\">"+unicode(item.statusMessage)+"</font>")
 			height=doc.documentLayout().documentSize().height()
-			if height-16>=0:
-				return 16+height
+			font=QtGui.QApplication.fontMetrics()
+			fontHeight=int(font.height())
+			if height-fontHeight>=0:
+				return fontHeight+height
 			else:
 				return 32
 		# groupItem
