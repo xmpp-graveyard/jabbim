@@ -20,7 +20,10 @@ class rosterStyle:
 			font=QtGui.QApplication.fontMetrics()
 			fontHeight=int(font.height())
 			if height-fontHeight>=0:
-				return fontHeight+height
+				if fontHeight+height<32:
+					return 32
+				else:
+					return fontHeight+height
 			else:
 				return 32
 		# groupItem
