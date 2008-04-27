@@ -1508,6 +1508,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.chat=widgets.chatwindow.chatWindow(self,self) #: chat window
 		
 		# variables
+		self.moodIcons={}
 		self.hosts={} #: {host:type_of_host}
 		self.client=None #: Pyxl client instance
 		self.events=widgets.events.events(self) #: events class
