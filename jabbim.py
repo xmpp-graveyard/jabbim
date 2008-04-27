@@ -88,6 +88,7 @@ class clientClass(pyxl.client.Client):
 		self.bookmarksEnabled=True
 		self.xmlCount=[]
 		self.bannedJids=[]
+		self.loadPlugins()
 
 	def on_pep(self, frm, ns, payload):
 		if frm == self.jid.userhost():
@@ -637,12 +638,13 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.rosterStackedWidget.setCurrentIndex(1)
 		print "firstpresence lasts",time.time()-start,'seconds'
 		# load plugins, autoconnect
-		self.reactor.callLater(0.3,self.jl)
+		self.reactor.callLater(2,self.autoJoin)
 
-	def jl(self):
-		start=time.time()
+	def loadPlugins(self):
 		self.main.findPlugins()
 		self.main.loadPlugins()
+
+	def autoJoin(self):
 		if self.main.config['autoJoinMUC'] == 'True':
 			self.main.autoJoinGroupchat()
 		if self.main.delayedMessages != None:
@@ -650,7 +652,6 @@ class clientClass(pyxl.client.Client):
 			for msg in self.main.delayedMessages.itervalues():
 				print msg
 				self.sendMessage(**msg)
-		print "loadPlugins lasts",time.time()-start,'seconds'
 		
 	def on_invite(self,jid, room, reason, cont = False):
 		print "invite",cont
