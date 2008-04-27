@@ -584,7 +584,7 @@ class rosterWidget(QtGui.QWidget):
 						for useritem in _items:
 							items.insert(useritem[0]+1,useritem[1])
 						# go through all userItems
-						y+=useritem.height
+						y+=items[0].height
 						for index in range(len(items)):
 							useritem=items[index]
 							if got!=0 and not useritem in ret:
@@ -669,7 +669,7 @@ class rosterWidget(QtGui.QWidget):
 										if contact.jid!=useritem.jid:
 											_items+=[contact]
 						items+=_items
-						y+=useritem.height
+						y+=items[0].height
 						for useritem in items:
 							if useritem==i:
 								return x,y
