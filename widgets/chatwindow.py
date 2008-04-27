@@ -477,8 +477,9 @@ class chatWindow(QtGui.QMainWindow):
 		userhost=self.main.getJid(jid).userhost()
 		for i in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(i)
-			if w.chat.hasMetacontact(userhost):
-				return w,i # tab, index
+			if w.typ=="chat":
+				if w.chat.hasMetacontact(userhost):
+					return w,i # tab, index
 		return None,0
 
 

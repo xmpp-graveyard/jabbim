@@ -29,6 +29,7 @@ import albumfiletransfer
 import addcontact
 import vcardeditor
 import commands
+import defaultrosterstyle
 from include import rot13
 
 class emptyRosterWidget(QtGui.QWidget):
@@ -223,6 +224,7 @@ class groupItem:
 		self.online=0
 		self.all=0
 		self.escapedName=name.replace("<","&lt;").replace(">","&gt;")
+		self.height=0
 
 	def setExpanded(self,bool):
 		self.expanded=bool
@@ -258,6 +260,7 @@ class userItem:
 		self.selectedFrameAvatar=None
 		self.mood=None
 		self.tune=False
+		self.height=0
 
 	def clone(self):
 		"""
@@ -277,6 +280,7 @@ class userItem:
 		item.selectedFrameAvatar=self.selectedFrameAvatar
 		item.mood=self.mood
 		item.tune=self.tune
+		item.height=self.height
 		return item
 
 	def setIcon(self,icon):
@@ -376,7 +380,13 @@ class rosterWidget(QtGui.QWidget):
 		
 		self.emptyRosterWidget=emptyRosterWidget(self)
 
+		self.setRosterStyle(defaultrosterstyle.rosterStyle)
+
 	#{ Public functions
+
+	def setRosterStyle(self,styleClass):
+		self.rosterStyle=styleClass(self)
+		self.repaint()
 
 	def addGroup(self,name):
 		"""
@@ -388,6 +398,7 @@ class rosterWidget(QtGui.QWidget):
 		@see: L{AddUser}, L{getGroupUsers}, L{getAllGroupUsers}, L{getGroupSortedUsers}
 		"""
 		item=groupItem(name,QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png"),self)
+		item.height=self.groupHeight
 		self.groups[name]=item
 		self.repaint()
 		return item
@@ -409,6 +420,7 @@ class rosterWidget(QtGui.QWidget):
 			group=self.specialName
 		item=userItem(name,group,jid,self)
 		item.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons["9"])
+		item.height=self.userHeight
 		item.hidden=True
 		#item.setAvatar(QtGui.QIcon("images/48x48/apps/jabbim.png"))
 		self.users.append(item)
@@ -1389,245 +1401,7 @@ class rosterWidget(QtGui.QWidget):
 		"""
 		paints user item in normal roster
 		"""
-		if useritem==self.item:
-
-			height=32
-			self.selectedHeight=28
-
-			# set pen and brush for item background
-			b=painter.brush()
-			p=painter.pen()
-			if self.theme:
-				painter.setBrush(self.main.ui.selectedItemStyle.palette().window())
-				pen=QtGui.QPen(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Text))
-			else:
-				painter.setBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight))
-				color=self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight)
-				# Qt4.2 uses .light() but Qt4.3 uses lighter(), so we have to try both of them because of compatibility
-				try:
-					pen=QtGui.QPen(color.lighter())
-				except:
-					pen=QtGui.QPen(color.light())
-			pen.setWidth(0)
-			painter.setPen(pen)
-
-			# paint item background and border
-			painter.save()
-			painter.translate(x,y-2)
-			painter.drawRect(1,0,self.width()-2,height+2)
-			painter.restore()
-			painter.setBrush(b)
-			painter.setPen(p)
-
-			## events... TODO: this have to be rewrited in some better way
-			#if useritem in self.events:
-				#if self.bl:
-					#painter.drawPixmap(x+7,y,useritem.icon.pixmap(32,32))
-				#else:
-					#painter.drawPixmap(x+7,y,useritem.blink.pixmap(32,32))
-			#else:
-				#if useritem.privacy['block'] or useritem.privacy['hide']:
-					#painter.drawPixmap(x+7,y,self.main.getIcon(status="error",size="32x32").pixmap(32,32))
-				#else:
-					#painter.drawPixmap(x+7,y,useritem.icon.pixmap(32,32))
-			
-			# get font height
-			doc=QtGui.QTextDocument()
-			font=QtGui.QApplication.fontMetrics()
-			fontHeight=int(font.height())
-			
-			# show resources count
-			res=""
-			if len(self.main.client.roster['users'][useritem.jid].resources)>1:
-				res=" ("+str(len(self.main.client.roster['users'][useritem.jid].resources))+")"
-
-			# get avatar
-			avatar=self.main.client.getAvatarImg(useritem.jid)
-			if avatar:
-				avatar=avatar[0]
-			else:
-				avatar=self.main.client.getAvatarImg(None)
-				if avatar:
-					avatar=avatar[0]
-			
-			# get foreground font color
-			if self.theme:
-				fontColor=self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()
-			else:
-				fontColor=self.palet.color(QtGui.QPalette.HighlightedText).name()
-
-			if useritem.statusMessage:
-				# show contact name
-				doc.setHtml("<font color=\""+fontColor+"\">"+useritem.escapedName+res+"</font>")
-				painter.save()
-				painter.translate(x+41,y+2)
-				if avatar:
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-43-32,y+32))
-				else:
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-41,y+32))
-				painter.restore()
-				# show contact status message
-				doc.setHtml("<font size=\"-1\" color=\""+fontColor+"\"><i>"+useritem.statusMessage+"</i></font>")
-				painter.save()
-				painter.translate(x+41,y+16)
-				if avatar:
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-43-32,y+32))
-				else:
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-41,y+32))
-				painter.restore()
-			else:
-				doc.setHtml("<font color=\""+fontColor+"\">"+useritem.escapedName+res+"</font>")
-				painter.save()
-				painter.translate(x+41,y+(32-fontHeight)/2)
-				if useritem.avatar:
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38-32,y+28))
-				else:
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38,y+28))
-				painter.restore()
-			if avatar:
-				painter.drawPixmap(x+7,y,avatar)
-				if useritem.mood:
-					painter.drawPixmap(self.width()-4-16,y,useritem.mood)
-				if useritem.tune:
-					painter.drawPixmap(self.width()-4-16,y+16,useritem.tune)
-
-			if useritem in self.events:
-				if self.bl:
-					painter.drawPixmap(x+7+16,y+16,useritem.icon.pixmap(16,16))
-				else:
-					painter.drawPixmap(x+7+16,y+16,useritem.blink.pixmap(16,16))
-			else:
-				if useritem.privacy['block'] or useritem.privacy['hide']:
-					painter.drawPixmap(x+7+16,y+16,self.main.getIcon(status="error",size="16x16").pixmap(16,16))
-				else:
-					painter.drawPixmap(x+7+16,y+16,useritem.icon.pixmap(16,16))
-					
-		else:
-
-			painter.save()
-			painter.translate(x,y)
-			background=None
-			if useritem==self.selected:
-				if self.theme:
-					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.main.ui.selectedItemStyle.palette().window()))
-				else:
-					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight)))
-			else:
-				if self.theme:
-					brush=QtGui.QBrush(self.main.ui.userStyleWidget.palette().window())
-					if brush.color().alpha()!=0:
-						painter.fillRect(0,0,self.width(),32,brush)
-					background=brush.color()
-					#painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.main.ui.userStyleWidget.palette().window()))
-				else:
-					painter.fillRect(0,0,self.width(),32,QtGui.QBrush(self.palet.color(QtGui.QPalette.Base)))
-					background=self.palet.color(QtGui.QPalette.Base)
-			painter.restore()
-			if self.metaItems.has_key(useritem.metajid) and background:
-				if not useritem in self.metaItems[useritem.metajid]:
-					painter.save()
-					painter.translate(x,y)
-					painter.setPen(QtCore.Qt.transparent)
-					linearGrad=QtGui.QRadialGradient(QtCore.QPointF(2,16),14)
-					if self.theme:
-						linearGrad.setColorAt(0,self.main.ui.selectedItemStyle.palette().window().color())
-					else:
-						linearGrad.setColorAt(0,self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight))
-					linearGrad.setColorAt(1, background)
-					painter.setBrush(linearGrad)
-					painter.drawRect(0,0,15,32)
-					if self.theme:
-						painter.setPen(QtGui.QPen(self.main.ui.selectedItemStyle.palette().text().color()))
-					else:
-						painter.setPen(QtGui.QPen(self.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.HighlightedText)))
-					if useritem.expanded:
-						painter.drawPoint(2,15)# 00000
-						painter.drawPoint(3,15)#  000
-						painter.drawPoint(4,15)#   0
-						painter.drawPoint(5,15)
-						painter.drawPoint(6,15)
-						painter.drawPoint(3,16)
-						painter.drawPoint(4,16)
-						painter.drawPoint(5,16)
-						painter.drawPoint(4,17)
-					else:
-						painter.drawPoint(5,16)
-						painter.drawPoint(4,15)
-						painter.drawPoint(4,16)
-						painter.drawPoint(4,17)
-						painter.drawPoint(3,14)
-						painter.drawPoint(3,15)
-						painter.drawPoint(3,16)
-						painter.drawPoint(3,17)
-						painter.drawPoint(3,18)
-					painter.restore()
-				
-			doc=QtGui.QTextDocument()
-			font=QtGui.QApplication.fontMetrics()
-			fontHeight=int(font.height())
-
-			res=""
-			if len(self.main.client.roster['users'][useritem.jid].resources)>1:
-				res=" ("+str(len(self.main.client.roster['users'][useritem.jid].resources))+")"
-			
-			avatar=self.main.client.getAvatarImg(useritem.jid)
-			if avatar:
-				avatar=avatar[0]
-			else:
-				avatar=self.main.client.getAvatarImg(None)
-				if avatar:
-					avatar=avatar[0]
-
-			if useritem==self.selected:
-				if self.theme:
-					fontcolor=self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()
-				else:
-					fontcolor=self.palet.color(QtGui.QPalette.HighlightedText).name()
-			else:
-				fontcolor=self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()
-			if useritem.statusMessage:
-				doc.setHtml("<font color=\""+fontcolor+"\">"+useritem.escapedName+res+"</font>")
-				painter.save()
-				painter.translate(x+41,y+2)
-				if avatar:
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-43-32,y+32))
-				else:
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-41,y+32))
-				painter.restore()
-				doc.setHtml("<font size=\"-1\" color=\""+fontcolor+"\"><i>"+useritem.statusMessage+"</i></font>")
-				painter.save()
-				painter.translate(x+41,y+16)
-				if avatar:
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-43-32,y+32))
-				else:
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-41,y+32))
-				painter.restore()
-			else:
-				doc.setHtml("<font color=\""+fontcolor+"\">"+useritem.escapedName+res+"</font>")
-				painter.save()
-				painter.translate(x+41,y+(32-fontHeight)/2)
-				if avatar:
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38-32,y+28))
-				else:
-					doc.drawContents(painter, QtCore.QRectF(0,0,self.width()-38,y+28))
-				painter.restore()
-			if avatar:
-				painter.drawPixmap(x+7,y,avatar)
-				if useritem.mood:
-					painter.drawPixmap(self.width()-4-16,y,useritem.mood)
-				if useritem.tune:
-					painter.drawPixmap(self.width()-4-16,y+16,useritem.tune)
-
-			if useritem in self.events:
-				if self.bl:
-					painter.drawPixmap(x+7+16,y+16,useritem.icon.pixmap(16,16))
-				else:
-					painter.drawPixmap(x+7+16,y+16,useritem.blink.pixmap(16,16))
-			else:
-				if useritem.privacy['block'] or useritem.privacy['hide']:
-					painter.drawPixmap(x+7+16,y+16,self.main.getIcon(status="error",size="16x16").pixmap(16,16))
-				else:
-					painter.drawPixmap(x+7+16,y+16,useritem.icon.pixmap(16,16))
+		self.rosterStyle.paintUserItem(painter,useritem,x,y)
 
 	def paintEvent(self,event):
 		QtGui.QWidget.paintEvent(self,event)
@@ -1665,7 +1439,7 @@ class rosterWidget(QtGui.QWidget):
 						self.paintCompactGroupItem(painter,item,0,y)
 					else:
 						self.paintGroupItem(painter,item,0,y)
-					y+=self.groupHeight
+					y+=item.height
 				else:
 					if self.compact:
 						self.paintCompactUserItem(painter,item,0,y)
@@ -1673,7 +1447,7 @@ class rosterWidget(QtGui.QWidget):
 						self.paintUserItem(painter,item,0,y)
 					if self.item==item:
 						y+=self.selectedHeight-28
-					y+=self.userHeight
+					y+=item.height
 		if self.reshow:
 			self.statusLabel.hide()
 
@@ -2391,6 +2165,7 @@ class rosterWidget(QtGui.QWidget):
 					self.statusLabel.hide()
 			user.statusMessage=status
 			user.status=self.main.shows[unicode(show)]
+			user.height=self.rosterStyle.heightForItem(user)
 
 		for couple in self.getMetaItems(jid):
 			user=couple[0]
