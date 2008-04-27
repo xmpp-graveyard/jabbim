@@ -559,14 +559,15 @@ class rosterWidget(QtGui.QWidget):
 						ret.append(item)
 						got+=1
 					if y1>=y and y1<=y+item.height:
-						if count and not item in ret:
+						if y1-y<count and not item in ret:
 							ret.append(item)
 							got+=1
 							goty=y
 						if not count:
 							return item
 					# we got items which we want
-					if got==count:
+					#if got==count:
+					if count and y1>count:
 						return ret,0,goty
 					# groupItem has some items and it's expanded
 					if item.expanded and len(items)!=0:
@@ -582,20 +583,24 @@ class rosterWidget(QtGui.QWidget):
 						for useritem in _items:
 							items.insert(useritem[0]+1,useritem[1])
 						# go through all userItems
+						print "--------"
+						y+=useritem.height
 						for useritem in items:
-							y+=useritem.height
 							if got!=0 and not useritem in ret:
 								ret.append(useritem)
 								got+=1
 							if y1>=y and y1<=y+useritem.height:
-								if count and not useritem in ret:
+								print useritem.height
+								if y1-y<count and not useritem in ret:
 									ret.append(useritem)
 									got+=1
 									goty=y
 								if not count:
 									return useritem
-							if got==count:
+							#if got==count:
+							if count and y1>count:
 								return ret,0,goty
+							y+=useritem.height
 					y+=item.height
 		else:
 			users=[]
@@ -1396,13 +1401,13 @@ class rosterWidget(QtGui.QWidget):
 		#painter.setRenderHint(painter.Antialiasing)
 		painter.setClipRegion(event.region())
 		for rect in event.region().rects():
-			count=int(rect.height()/self.userHeight)
-			if float(rect.height())/float(self.userHeight)>float(count):
-				count+=1
+			#count=int(rect.height()/self.userHeight)
+			#if float(rect.height())/float(self.userHeight)>float(count):
+				#count+=1
 			#if self.searchMode:
 				#items,x,y=self.searchtemAt(1,rect.y(),count+1)
 			#else:
-			items,x,y=self.itemAt(1,rect.y(),count+1)
+			items,x,y=self.itemAt(1,rect.y(),rect.height())
 			if len(items)==0 and not self.searchMode:
 				#doc=QtGui.QTextDocument()
 				#option=doc.defaultTextOption()
