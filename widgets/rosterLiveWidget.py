@@ -381,7 +381,7 @@ class rosterWidget(QtGui.QWidget):
 		self.emptyRosterWidget=emptyRosterWidget(self)
 
 		self.setRosterStyle(defaultrosterstyle.rosterStyle)
-
+		self.groups[self.specialName].height=self.rosterStyle.heightForItem(self.groups[self.specialName])
 	#{ Public functions
 
 	def setRosterStyle(self,styleClass):
@@ -398,7 +398,7 @@ class rosterWidget(QtGui.QWidget):
 		@see: L{AddUser}, L{getGroupUsers}, L{getAllGroupUsers}, L{getGroupSortedUsers}
 		"""
 		item=groupItem(name,QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png"),self)
-		item.height=self.groupHeight
+		item.height=self.rosterStyle.heightForItem(item)
 		self.groups[name]=item
 		self.repaint()
 		return item
@@ -420,7 +420,7 @@ class rosterWidget(QtGui.QWidget):
 			group=self.specialName
 		item=userItem(name,group,jid,self)
 		item.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons["9"])
-		item.height=self.userHeight
+		item.height=self.rosterStyle.heightForItem(item)
 		item.hidden=True
 		#item.setAvatar(QtGui.QIcon("images/48x48/apps/jabbim.png"))
 		self.users.append(item)
@@ -548,25 +548,30 @@ class rosterWidget(QtGui.QWidget):
 		goty=0
 		ret=[]
 		if self.searchMode==False:
+			# go through all groups
 			for key in self.sortedGroups:
-				item=self.groups[key]
-				items=self.getGroupSortedUsers(item.name)
+				item=self.groups[key] # groupItem
+				items=self.getGroupSortedUsers(item.name) # list of userItems
+				# group is not empty
 				if len(items)!=0:
+					# we want to save this groupItem
 					if got!=0 and not item in ret:
 						ret.append(item)
 						got+=1
-					if y1>=y and y1<=y+self.groupHeight:
+					if y1>=y and y1<=y+item.height:
 						if count and not item in ret:
 							ret.append(item)
 							got+=1
 							goty=y
 						if not count:
 							return item
+					# we got items which we want
 					if got==count:
 						return ret,0,goty
+					# groupItem has some items and it's expanded
 					if item.expanded and len(items)!=0:
-						previous=None
-						_items=[]
+						_items=[] # temp variable
+						# handle expanded metacontacts
 						for useritem in items:
 							if useritem.expanded:
 								if self.metaItems.has_key(useritem.metajid):
@@ -576,42 +581,32 @@ class rosterWidget(QtGui.QWidget):
 						_items.reverse()
 						for useritem in _items:
 							items.insert(useritem[0]+1,useritem[1])
-						#items+=_items
+						# go through all userItems
 						for useritem in items:
-							y+=self.userHeight
+							y+=useritem.height
 							if got!=0 and not useritem in ret:
 								ret.append(useritem)
 								got+=1
-	
-							if useritem==self.item:
-								if y1>=y and y1<=y+self.selectedHeight-28+self.userHeight:
-									if count and not useritem in ret:
-										ret.append(useritem)
-										got+=1
-										goty=y
-									if not count:
-										return useritem
-							else:
-								if y1>=y and y1<=y+self.userHeight:
-									if count and not useritem in ret:
-										ret.append(useritem)
-										got+=1
-										goty=y
-									if not count:
-										return useritem
+							if y1>=y and y1<=y+useritem.height:
+								if count and not useritem in ret:
+									ret.append(useritem)
+									got+=1
+									goty=y
+								if not count:
+									return useritem
 							if got==count:
 								return ret,0,goty
-							if useritem==self.item:
-								y+=self.selectedHeight-28
-					y+=self.groupHeight
+					y+=item.height
 		else:
 			users=[]
+			# append all userItems to one list
 			for item in self.users:
 				if not self.metaItems.has_key(item.jid):
 					users.append([item.name.lower(),item])
 			for v in self.metaItems.itervalues():
 				for user in v:
 					users.append([user.name.lower(),user])
+			# sort them
 			users.sort()
 			for item in users:
 				item=item[1]
@@ -621,27 +616,17 @@ class rosterWidget(QtGui.QWidget):
 						ret.append(useritem)
 						got+=1
 
-					if useritem==self.item:
-						if y1>=y and y1<=y+self.selectedHeight-28+self.userHeight:
-							if count and not useritem in ret:
-								ret.append(useritem)
-								got+=1
-								goty=y
-							if not count:
-								return useritem
-					else:
-						if y1>=y and y1<=y+self.userHeight:
-							if count and not useritem in ret:
-								ret.append(useritem)
-								got+=1
-								goty=y
-							if not count:
-								return useritem
+
+					if y1>=y and y1<=y+item.height:
+						if count and not useritem in ret:
+							ret.append(useritem)
+							got+=1
+							goty=y
+						if not count:
+							return useritem
 					if got==count:
 						return ret,0,goty
-					if useritem==self.item:
-						y+=self.selectedHeight-28
-					y+=self.userHeight
+					y+=item.height
 
 		if got!=0:
 			return ret,0,goty
@@ -678,15 +663,15 @@ class rosterWidget(QtGui.QWidget):
 											_items+=[contact]
 						items+=_items
 						for useritem in items:
-							y+=self.userHeight
+							y+=useritem.height
 							if useritem==i:
 								return x,y
-							if useritem==self.item:
-								y+=self.selectedHeight-28
+							#if useritem==self.item:
+								#y+=self.selectedHeight-28
 	
 						#if useritem==self.item:
 							#y-=32
-					y+=self.groupHeight
+					y+=item.height
 		else:
 
 			users=[]
@@ -703,9 +688,9 @@ class rosterWidget(QtGui.QWidget):
 					useritem=item
 					if useritem==i:
 						return x,y
-					if useritem==self.item:
-						y+=self.selectedHeight-28
-					y+=self.userHeight
+					#if useritem==self.item:
+						#y+=self.selectedHeight-28
+					y+=useritem.height
 
 		return None,None
 
@@ -780,6 +765,7 @@ class rosterWidget(QtGui.QWidget):
 		#self.specialName=".#$%^&*()_.@#$%^&*(((((((((("
 		self.specialName="zzzzzzzzzzzzzzzzzzzzzz%%%$@#@^&"
 		self.groups[self.specialName]=special()
+		self.groups[self.specialName].height=self.rosterStyle.heightForItem(self.groups[self.specialName])
 
 	def refreshEvents(self):
 		"""
@@ -1445,8 +1431,6 @@ class rosterWidget(QtGui.QWidget):
 						self.paintCompactUserItem(painter,item,0,y)
 					else:
 						self.paintUserItem(painter,item,0,y)
-					if self.item==item:
-						y+=self.selectedHeight-28
 					y+=item.height
 		if self.reshow:
 			self.statusLabel.hide()
@@ -2155,7 +2139,6 @@ class rosterWidget(QtGui.QWidget):
 			status=res.status
 
 		for user in self.getUserItems(jid):
-			
 			user.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons[self.main.shows[unicode(show)]])
 			if self.main.shows[unicode(show)]!="9":
 				user.hidden=False
@@ -2177,6 +2160,7 @@ class rosterWidget(QtGui.QWidget):
 				user.hidden=True
 			user.statusMessage=status
 			user.status=self.main.shows[unicode(show)]
+			user.height=self.rosterStyle.heightForItem(user)
 			highest=None
 			print "-------"
 			allOffline=True
@@ -2221,6 +2205,7 @@ class rosterWidget(QtGui.QWidget):
 							item.hidden=False
 						else:
 							item.hidden=True
+						item.height=self.rosterStyle.heightForItem(item)
 		if not first:
 			#self.statusLabel.hide()
 			self.changePos=True

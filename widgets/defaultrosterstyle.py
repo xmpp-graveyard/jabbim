@@ -9,24 +9,28 @@ class rosterStyle:
 		self.roster=roster
 
 	def heightForItem(self,item):
-		#doc=QtGui.QTextDocument()
-		#doc.setHtml("<font size=\"-1\">font test</font>")
-		#cursor=doc.find("test")
-		#metrics=QtGui.QFontMetrics(cursor.charFormat().font())
-		#doc.setPageSize(QtCore.QSizeF(0,0,self.roster.width()-64),metrics.height())
-		#height=
-
-		##rect=metrics.boundingRect(0, 0,self.roster.width()-64, self.roster.height(), QtCore.Qt.TextWordWrap, unicode(item.statusMessage))
-		##height=rect.height()
-		#print height,metrics.height(),QtGui.QApplication.fontMetrics().height(),cursor.isNull()
-		#if height-16>=0:
-			#return 32+height-16
-		#else:
-		return 32
+		# normal userItem
+		if item.typ=="user":
+			doc=QtGui.QTextDocument()
+			option=doc.defaultTextOption()
+			option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
+			doc.setTextWidth(self.roster.main.width()-64)
+			doc.setHtml("<font size=\"-1\">"+unicode(item.statusMessage)+"</font>")
+			height=doc.documentLayout().documentSize().height()
+			if height-16>=0:
+				return 16+height
+			else:
+				return 32
+		# groupItem
+		elif item.typ=="group" and item.main!="special":
+			return 32
+		# specialItem => used for blank space between users in group and users without group
+		else:
+			return 32
 
 	def paintSelectedUserItem(self,painter,useritem,x,y):
-		height=32
-		self.roster.selectedHeight=28
+		height=useritem.height
+		#self.roster.selectedHeight=28
 
 		# set pen and brush for item background
 		b=painter.brush()
@@ -104,10 +108,17 @@ class rosterStyle:
 			doc.setHtml("<font size=\"-1\" color=\""+fontColor+"\"><i>"+useritem.statusMessage+"</i></font>")
 			painter.save()
 			painter.translate(x+41,y+16)
-			if avatar:
-				doc.drawContents(painter, QtCore.QRectF(0,0,self.roster.width()-43-32,y+32))
-			else:
-				doc.drawContents(painter, QtCore.QRectF(0,0,self.roster.width()-41,y+32))
+			#if avatar:
+				#doc.drawContents(painter, QtCore.QRectF(0,0,self.roster.width()-43-32,y+32))
+			#else:
+				#doc.drawContents(painter, QtCore.QRectF(0,0,self.roster.width()-41,y+32))
+			opt=doc.defaultTextOption()
+			opt.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
+			doc.setDefaultTextOption(opt)
+			doc.setPageSize(QtCore.QSizeF(self.roster.width()-41,useritem.height-16))
+			doc.drawContents(painter, QtCore.QRectF(0,0,self.roster.width()-41,y+32))
+
+
 			painter.restore()
 		else:
 			doc.setHtml("<font color=\""+fontColor+"\">"+useritem.escapedName+res+"</font>")
