@@ -601,6 +601,7 @@ class rosterWidget(QtGui.QWidget):
 							if count and y1>count:
 								return ret,0,goty
 							y+=useritem.height
+						y-=useritem.height
 					y+=item.height
 		else:
 			users=[]
@@ -667,10 +668,12 @@ class rosterWidget(QtGui.QWidget):
 										if contact.jid!=useritem.jid:
 											_items+=[contact]
 						items+=_items
+						y+=useritem.height
 						for useritem in items:
-							y+=useritem.height
 							if useritem==i:
 								return x,y
+							y+=useritem.height
+						y-=useritem.height
 							#if useritem==self.item:
 								#y+=self.selectedHeight-28
 	
@@ -850,10 +853,9 @@ class rosterWidget(QtGui.QWidget):
 	def event(self,event):
 		# tooltip request:
 		if int(event.type())==110:
-			item=self.itemAt(int(event.x()),int(event.y()),1)[0] # get item in coordinates
+			item=self.itemAt(int(event.x()),int(event.y())) # get item in coordinates
 			self.setToolTip("")
-			if len(item)!=0:
-				item=item[0]
+			if item:
 				if item!=None and item.typ=="user": # tooltips are only for contacts (not for groups)
 					text = self.main.getToolTip(item.jid, item.escapedName)
 					self.setToolTip(text)
@@ -863,8 +865,9 @@ class rosterWidget(QtGui.QWidget):
 		"""
 		starts drag and drop if mouse button is pressed
 		"""
-		item,x,y=self.itemAt(int(event.x()),int(event.y()),1)
+		item=self.itemAt(int(event.x()),int(event.y()))
 		if item:
+			item=[item]
 			if event.buttons()!=QtCore.Qt.NoButton:
 				if item[0].typ=='user' and len(self.data)==0:
 					mimeData = QtCore.QMimeData()
@@ -1608,17 +1611,17 @@ class rosterWidget(QtGui.QWidget):
 		if key==QtCore.Qt.Key_Down:
 			if self.item:
 				x,y=self.itemCoordinates(self.item)
-				if self.item.typ=="group" or self.item.typ=="special":
-					item=self.itemAt(x,y+self.userHeight+5)
-				else:
-					if not self.compact:
-						item=self.itemAt(x,y+self.selectedHeight+33)
-					else:
-						item=self.itemAt(x,y+self.selectedHeight+1)
-					print item.typ
-					if item.main=="special":
-						x,y=self.itemCoordinates(item)
-						item=self.itemAt(x,y+1+self.groupHeight)
+				#if self.item.typ=="group" or self.item.typ=="special":
+				item=self.itemAt(x,y+self.item.height+5)
+				#else:
+					#if not self.compact:
+						#item=self.itemAt(x,y+self.selectedHeight+33)
+					#else:
+						#item=self.itemAt(x,y+self.selectedHeight+1)
+					#print item.typ
+				if item.main=="special":
+					x,y=self.itemCoordinates(item)
+					item=self.itemAt(x,y+item.height+5)
 	
 				self.selectItem(item)
 			#self.timer.start(40)
