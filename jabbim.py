@@ -205,7 +205,7 @@ class clientClass(pyxl.client.Client):
 					self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
 					widget.widget.complete=True
 				else:
-					# file was sent/received :)
+					# file has been sent/received :)
 					tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[queueId].jid,typ=['chat'])
 					# update errors list
 					self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']].errors.append(self.main.ftError[sid])
@@ -267,7 +267,7 @@ class clientClass(pyxl.client.Client):
 									del tab.chat.filetransfer[queueId]
 					# file download
 					else:
-						widget.widget.complete==True
+						widget.widget.complete=True
 						# no error
 						if self.main.ftError[sid]==None:
 							widget.widget.stats.setText(mainWindow.tr("Complete"))
