@@ -447,7 +447,7 @@ class FTWidget(QtGui.QWidget):
 	def closeClicked(self):
 		if self.item:
 			tab,index=self.main.chat.findTab(self.main.events.filetransferWidget[self.queueId].jid,typ=['chat'])
-			
+			print 'trying to close FTWidget',self.complete
 			if self.complete==False:
 				if self.main.events.filetransferQueue.has_key(self.queueId):
 					self.main.events.filetransferQueue[self.queueId]=[]
