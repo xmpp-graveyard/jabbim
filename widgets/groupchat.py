@@ -434,10 +434,15 @@ class groupChatWidget(abstractChatWidget):
 			
 
 	def userClicked(self,item,i):
+		print "userclicked"
 		if item.parent()==None:
 			return
+		print [unicode(item.text(1))]
+		print self.main.icons
 		icon=self.main.getIcon(status=self.main.icons[unicode(item.text(1))[0]],size="16x16")
+		print icon
 		tab=self.main.chat.addChatTab(self.jid+"/"+unicode(item.text(0)),item.text(0),icon,full=True)
+		print tab.jid
 		self.main.chat.activate()
 		self.main.client.reactor.callLater(0.2,tab.chat.ui.line.setFocus,QtCore.Qt.MouseFocusReason)
 
