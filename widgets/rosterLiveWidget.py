@@ -383,6 +383,8 @@ class rosterWidget(QtGui.QWidget):
 
 		self.setRosterStyle(defaultrosterstyle.rosterStyle)
 		self.groups[self.specialName].height=self.rosterStyle.heightForItem(self.groups[self.specialName])
+		self.lastMove=[0,0]
+		
 	#{ Public functions
 
 	def setRosterStyle(self,styleClass):
@@ -872,7 +874,12 @@ class rosterWidget(QtGui.QWidget):
 		starts drag and drop if mouse button is pressed
 		"""
 		item=self.itemAt(int(event.x()),int(event.y()))
-		if item:
+		if self.lastMove[0]==0 and event.buttons()!=QtCore.Qt.NoButton:
+			self.lastMove=[event.x(),event.y()]
+		elif self.lastMove[0]!=0 and event.buttons()==QtCore.Qt.NoButton:
+			self.lastMove=[0,0]
+
+		if item and (abs(event.x()-self.lastMove[0])>10 or abs(event.y()-self.lastMove[1])>10):
 			item=[item]
 			if event.buttons()!=QtCore.Qt.NoButton:
 				if item[0].typ=='user' and len(self.data)==0:
@@ -907,6 +914,7 @@ class rosterWidget(QtGui.QWidget):
 					dropAction = self.drag.start(QtCore.Qt.CopyAction | QtCore.Qt.MoveAction)
 			elif len(self.data)!=0:
 				self.data={}
+				self.lastMove=[0,0]
 				
 		return QtGui.QWidget.mouseMoveEvent(self,event)
 
