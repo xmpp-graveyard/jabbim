@@ -893,6 +893,8 @@ class chatWindow(QtGui.QMainWindow):
 					jmeno = nick
 		if name:
 			jmeno=name
+		if len(jmeno)>22:
+			jmeno=jmeno[:22]+"..."
 		tab.tabName=unicode(jmeno)
 		self.ui.chatTab.addTab(tab,QtGui.QIcon("images/16x16/categories/muc.png"), jmeno)
 		self.setWindowTitle(unicode(jmeno))
