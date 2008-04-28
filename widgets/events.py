@@ -163,7 +163,7 @@ class abstractWidget(QtGui.QWidget):
 		self.main.events.refreshTray()
 
 class lineEditWidget(QtGui.QWidget):
-	def __init__(self,header,text,maintext,item,main,icon=None,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40,value=u""):
+	def __init__(self,header,text,maintext,item,main,icon=None,falseCall=None,falseDict=None,trueCall=None,trueDict=None,action=None,actionDict=None,parent=None,height=40,value=u"",falseText=None,trueText=None):
 		apply(QtGui.QWidget.__init__,(self,parent))
 		self.setObjectName("lineEditWidget")
 		self.item=item
@@ -231,9 +231,14 @@ class lineEditWidget(QtGui.QWidget):
 		#spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
 		self.hboxlayout.addStretch()
 
+		connect=QtGui.QPushButton(unicode(trueText))
+		decline=QtGui.QPushButton(unicode(falseText))
 
-		self.gridlayout1.addWidget(self.hwidget,0,0,1,1)
+		self.gridlayout1.addWidget(self.hwidget,0,0,1,2)
 		self.gridlayout1.addWidget(self.label_3,2,0,1,2)
+
+		self.gridlayout1.addWidget(connect,3,0,1,1)
+		self.gridlayout1.addWidget(decline,3,1,1,1)
 
 		self.gridlayout1.addLayout(self.layout2,1,0,1,2)
 		self.gridlayout.addLayout(self.gridlayout1,0,0,1,1)
@@ -264,6 +269,9 @@ class lineEditWidget(QtGui.QWidget):
 
 		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
 		QtCore.QObject.connect(self.submitButton,QtCore.SIGNAL("clicked()"),self.submitClicked)
+
+		QtCore.QObject.connect(decline,QtCore.SIGNAL("clicked()"),self.closeClicked)
+		QtCore.QObject.connect(connect,QtCore.SIGNAL("clicked()"),self.submitClicked)
 
 	def closeClicked(self):
 		if self.falseCall!=None:
@@ -584,14 +592,14 @@ class events:
 		self.ID+=1
 		return self.ID-1
 
-	def addLineEditEvent(self,trueCall=None,trueDict=None,falseCall=None,falseDict=None,maintext="",header="",text="",name="",typ="",icon=None,action=None,actionDict=None,height=40,value=u""):
+	def addLineEditEvent(self,trueCall=None,trueDict=None,falseCall=None,falseDict=None,maintext="",header="",text="",name="",typ="",icon=None,action=None,actionDict=None,height=40,value=u"",trueText=None,falseText=None):
 		if icon==None:
 			icon2=QtGui.QIcon("images/16x16/categories/event.png")
 		else:
 			icon2=QtGui.QIcon(unicode(icon).replace("xxxxx","16x16"))
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		item.setSizeHint(QtCore.QSize(100,height))
-		item.widget=lineEditWidget(header,text,maintext,item,self.main,icon=icon2,falseCall=falseCall,falseDict=falseDict,trueCall=trueCall,trueDict=trueDict,action=action,actionDict=actionDict,parent=self.main.ui.eventsListWidget,height=height,value=value)
+		item.widget=lineEditWidget(header,text,maintext,item,self.main,icon=icon2,falseCall=falseCall,falseDict=falseDict,trueCall=trueCall,trueDict=trueDict,action=action,actionDict=actionDict,parent=self.main.ui.eventsListWidget,height=height,value=value,trueText=trueText,falseText=falseText)
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 		self.addEvent(unicode(name),unicode(typ),icon,item.widget)
 
