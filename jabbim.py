@@ -2756,8 +2756,22 @@ class mainWindow(QtGui.QMainWindow):
 		self.ple.show()
 
 	def startChatDialog(self, b=False):
-		self.startchat = widgets.startchat.Ui_StartChatDialog(self, self)
-		self.startchat.show()
+		message=jid=""
+		while 1:
+			jid,b=QtGui.QInputDialog.getText(self,self.tr("Chat with new user"),message+self.tr("Enter Jabber ID:"), QtGui.QLineEdit.Normal, jid)
+			jid=unicode(jid)
+			if b==True and len(jid)!=0:
+				try:
+					isJid=jidT.JID(jid)
+				except:
+					isJid=None
+					message=jid+" "+self.tr("is not valid Jabber ID")+"\n"
+				if isJid:
+					self.chat.addChatTab(jid,jid,self.getIcon(jid,status='offline',size="16x16"))
+					self.chat.activate()
+					break
+			else:
+				break
 
 	def identityEditor(self,bool=False):
 		"""
