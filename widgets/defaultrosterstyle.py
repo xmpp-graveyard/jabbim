@@ -15,7 +15,7 @@ class rosterStyle:
 				doc=QtGui.QTextDocument()
 				option=doc.defaultTextOption()
 				option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
-				doc.setTextWidth(self.roster.main.width()-61)
+				doc.setTextWidth(self.roster.width()-41)
 				doc.setHtml("<font size=\"-1\">"+unicode(item.statusMessage)+"</font>")
 				height=doc.documentLayout().documentSize().height()
 				if height>64:

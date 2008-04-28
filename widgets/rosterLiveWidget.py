@@ -945,9 +945,12 @@ class rosterWidget(QtGui.QWidget):
 		"""
 		#if self.statusLabel:
 			#self.statusLabel.resize(self.width()-46,self.selectedHeight-32)
-		print 'resize'
 		if not self.emptyRosterWidget.isHidden():
 			self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
+		for user in self.users:
+			user.height=self.rosterStyle.heightForItem(user)
+		for item in self.groups.iteritems():
+			item[1].height=self.rosterStyle.heightForItem(item[1])
 		return QtGui.QWidget.resizeEvent(self,event)
 
 	def paintGroupItem(self,painter,item,x,y):
