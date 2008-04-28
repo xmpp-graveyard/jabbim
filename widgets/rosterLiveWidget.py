@@ -577,6 +577,7 @@ class rosterWidget(QtGui.QWidget):
 					if count and y-y1>count:
 						return ret,0,goty
 					# groupItem has some items and it's expanded
+					y+=item.height
 					if item.expanded and len(items)!=0:
 						_items=[] # temp variable
 						# handle expanded metacontacts
@@ -590,7 +591,7 @@ class rosterWidget(QtGui.QWidget):
 						for useritem in _items:
 							items.insert(useritem[0]+1,useritem[1])
 						# go through all userItems
-						y+=items[0].height
+						#y+=items[0].height
 						for index in range(len(items)):
 							useritem=items[index]
 							if got!=0 and not useritem in ret:
@@ -608,8 +609,7 @@ class rosterWidget(QtGui.QWidget):
 							if count and y-y1>count:
 								return ret,0,goty
 							y+=useritem.height
-						y-=useritem.height
-					y+=item.height
+						#y-=useritem.height
 		else:
 			users=[]
 			# append all userItems to one list
