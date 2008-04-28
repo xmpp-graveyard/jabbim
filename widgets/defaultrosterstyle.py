@@ -15,9 +15,20 @@ class rosterStyle:
 				doc=QtGui.QTextDocument()
 				option=doc.defaultTextOption()
 				option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
-				doc.setTextWidth(self.roster.main.width()-32)
+				doc.setTextWidth(self.roster.main.width()-61)
 				doc.setHtml("<font size=\"-1\">"+unicode(item.statusMessage)+"</font>")
 				height=doc.documentLayout().documentSize().height()
+				if height>64:
+					text=""
+					for word in item.statusMessage.split(' '):
+						
+						doc.setHtml("<font size=\"-1\">"+unicode(text+word+" ...")+"</font>")
+						
+						if doc.documentLayout().documentSize().height()>64:
+							item.statusMessage=text+"..."
+							break
+						height=doc.documentLayout().documentSize().height()
+						text+=word+" "
 			else:
 				return 32
 			if height-16>=0:
@@ -122,7 +133,7 @@ class rosterStyle:
 			opt.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
 			doc.setDefaultTextOption(opt)
 			doc.setPageSize(QtCore.QSizeF(self.roster.width()-41,useritem.height-16))
-			doc.drawContents(painter, QtCore.QRectF(0,0,self.roster.width()-41,y+32))
+			doc.drawContents(painter, QtCore.QRectF(0,0,self.roster.width()-41,y+useritem.height))
 
 
 			painter.restore()
@@ -254,7 +265,7 @@ class rosterStyle:
 			opt.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
 			doc.setDefaultTextOption(opt)
 			doc.setPageSize(QtCore.QSizeF(self.roster.width()-41,useritem.height-16))
-			doc.drawContents(painter, QtCore.QRectF(0,0,self.roster.width()-41,y+32))
+			doc.drawContents(painter, QtCore.QRectF(0,0,self.roster.width()-41,y+useritem.height))
 			painter.restore()
 		else:
 			doc.setHtml("<font color=\""+fontcolor+"\">"+useritem.escapedName+res+"</font>")
