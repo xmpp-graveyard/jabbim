@@ -945,6 +945,7 @@ class rosterWidget(QtGui.QWidget):
 		"""
 		#if self.statusLabel:
 			#self.statusLabel.resize(self.width()-46,self.selectedHeight-32)
+		print 'resize'
 		if not self.emptyRosterWidget.isHidden():
 			self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
 		return QtGui.QWidget.resizeEvent(self,event)
