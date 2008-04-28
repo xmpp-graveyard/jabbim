@@ -19,7 +19,7 @@ class rosterStyle:
 			height=doc.documentLayout().documentSize().height()
 			font=QtGui.QApplication.fontMetrics()
 			fontHeight=int(font.height())
-			print height
+			print height,item.jid
 			if height-16>=0:
 				if 16+height<32:
 					return 32

@@ -554,7 +554,6 @@ class rosterWidget(QtGui.QWidget):
 		gotx=0
 		goty=0
 		ret=[]
-		print "----------"
 		if self.searchMode==False:
 			# go through all groups
 			for key in self.sortedGroups:
@@ -598,7 +597,6 @@ class rosterWidget(QtGui.QWidget):
 								ret.append(useritem)
 								got+=1
 							if y1>=y and y1<=y+useritem.height and got==0:
-								print useritem.height
 								if not useritem in ret:
 									ret.append(useritem)
 									got+=1
