@@ -24,3 +24,5 @@ import statuseditor
 import emoticonswidget
 #import eventsFTWidget_ui
 import startchat_ui as startchat
+import defaultrosterstyle
+import compactrosterstyle

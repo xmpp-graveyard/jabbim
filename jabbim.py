@@ -1779,13 +1779,13 @@ class mainWindow(QtGui.QMainWindow):
 		self.active=True
 		
 		# set roster mode
-		if self.config['rosterMode'] == "compact" :
-			self.ui.roster.userHeight=22
-			self.ui.roster.groupHeight=22
-			self.scroll.verticalScrollBar().setPageStep(22)
-			self.scroll.verticalScrollBar().setSingleStep(22)
-			self.ui.roster.compact=True
-			self.ui.roster.repaint()
+		#if self.config['rosterMode'] == "compact" :
+			#self.ui.roster.userHeight=22
+			#self.ui.roster.groupHeight=22
+			#self.scroll.verticalScrollBar().setPageStep(22)
+			#self.scroll.verticalScrollBar().setSingleStep(22)
+			#self.ui.roster.compact=True
+			#self.ui.roster.repaint()
 
 		# fill login form
 		self.fillLoginForm()
@@ -1796,6 +1796,11 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.loginStatus.addItem(self.getIcon(status="dnd",size="16x16"), self.status["dnd"],QtCore.QVariant("dnd"))
 
 		self.emoticonsWidget=widgets.emoticonswidget.emoticonsWidget(self,self)
+
+		if self.config['rosterMode'] == "compact":
+			self.ui.roster.setRosterStyle(widgets.compactrosterstyle.rosterStyle)
+		else:
+			self.ui.roster.setRosterStyle(widgets.defaultrosterstyle.rosterStyle)
 
 		# join if we can :)
 		if self.config['autoJoin']=='True':
@@ -2583,6 +2588,10 @@ class mainWindow(QtGui.QMainWindow):
 		self.fillLoginForm()
 		self.loadTheme()
 		self.ui.roster.reskin()
+		if self.config['rosterMode'] == "compact":
+			self.ui.roster.setRosterStyle(widgets.compactrosterstyle.rosterStyle)
+		else:
+			self.ui.roster.setRosterStyle(widgets.defaultrosterstyle.rosterStyle)
 		# change cache
 		if self.cache:
 			self.cache.close()

@@ -282,6 +282,62 @@ class rosterStyle:
 			else:
 				painter.drawPixmap(x+7+16,y+16,useritem.icon.pixmap(16,16))
 
+	def paintGroupItem(self,painter,item,x,y):
+		"""
+		paints group item in normal roster
+		"""
+		if item.main=="special":
+			return
+		
+		# set font
+		doc=QtGui.QTextDocument()
+		font=QtGui.QApplication.fontMetrics()
+		fontHeight=int(font.height())
+		#font.setPixelSize(12)
+		#doc.setDefaultFont(font)
+
+		# paint background
+		painter.save()
+		painter.translate(x,y)
+
+		if item==self.roster.selected:
+			if self.roster.theme:
+				painter.fillRect(0,0,self.roster.width(),30,QtGui.QBrush(self.roster.main.ui.selectedItemStyle.palette().window()))
+			else:
+				painter.fillRect(0,0,self.roster.width(),30,QtGui.QBrush(self.roster.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight)))
+		else:
+			if self.roster.theme:
+				painter.fillRect(0,0,self.roster.width(),30,QtGui.QBrush(self.roster.main.ui.groupStyleWidget.palette().window()))
+			else:
+				painter.fillRect(0,0,self.roster.width(),30,QtGui.QBrush(self.roster.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.AlternateBase)))
+		
+		painter.restore()
+		
+		# draw status icon of item
+		if item.icon:
+			painter.drawPixmap(x,y,item.icon.pixmap(32,32))
+
+		if item==self.roster.selected:
+			if self.roster.theme:
+				fontcolor=self.roster.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name()
+			else:
+				fontcolor=self.roster.palet.color(QtGui.QPalette.HighlightedText).name()
+		else:
+			fontcolor=self.roster.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name()
+
+
+		# write the name of the group
+		doc.setHtml("<font color=\""+fontcolor+"\">"+item.escapedName+"</font>")
+		painter.save()
+		painter.translate(x+30,y+(32-fontHeight)/2)
+		doc.drawContents(painter, QtCore.QRectF(0,0,self.roster.width(),y+32))
+		painter.restore()
+		width=int(font.width("("+str(item.online)+"/"+str(item.all)+")"))
+		doc.setHtml("<font color=\""+fontcolor+"\">("+str(item.online)+"/"+str(item.all)+")</font>")
+		painter.save()
+		painter.translate((int(self.roster.width())-width-6),y+(32-fontHeight)/2)
+		doc.drawContents(painter, QtCore.QRectF(0,0,width+15,y+32))
+		painter.restore()
 
 	def paintUserItem(self,painter,useritem,x,y):
 		"""

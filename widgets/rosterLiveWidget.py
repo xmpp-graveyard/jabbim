@@ -30,6 +30,7 @@ import addcontact
 import vcardeditor
 import commands
 import defaultrosterstyle
+import compactrosterstyle
 from include import rot13
 
 class emptyRosterWidget(QtGui.QWidget):
@@ -386,7 +387,13 @@ class rosterWidget(QtGui.QWidget):
 
 	def setRosterStyle(self,styleClass):
 		self.rosterStyle=styleClass(self)
+		for user in self.users:
+			user.height=self.rosterStyle.heightForItem(user)
+		for item in self.groups.iteritems():
+			item[1].height=self.rosterStyle.heightForItem(item[1])
 		self.repaint()
+		
+		
 
 	def addGroup(self,name):
 		"""
@@ -997,6 +1004,8 @@ class rosterWidget(QtGui.QWidget):
 		"""
 		paints group item in normal roster
 		"""
+		self.rosterStyle.paintGroupItem(painter,item,x,y)
+		return
 		if item.main=="special":
 			return
 		
@@ -1434,16 +1443,16 @@ class rosterWidget(QtGui.QWidget):
 				#doc.drawContents(painter,)
 			for item in items:
 				if item.typ=="group":
-					if self.compact:
-						self.paintCompactGroupItem(painter,item,0,y)
-					else:
-						self.paintGroupItem(painter,item,0,y)
+					#if self.compact:
+						#self.paintCompactGroupItem(painter,item,0,y)
+					#else:
+					self.paintGroupItem(painter,item,0,y)
 					y+=item.height
 				else:
-					if self.compact:
-						self.paintCompactUserItem(painter,item,0,y)
-					else:
-						self.paintUserItem(painter,item,0,y)
+					#if self.compact:
+						#self.paintCompactUserItem(painter,item,0,y)
+					#else:
+					self.paintUserItem(painter,item,0,y)
 					y+=item.height
 		if self.reshow:
 			self.statusLabel.hide()
