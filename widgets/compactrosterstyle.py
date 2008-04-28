@@ -9,30 +9,7 @@ class rosterStyle:
 		self.roster=roster
 
 	def heightForItem(self,item):
-		# normal userItem
 		return 22
-		if item.typ=="user":
-			doc=QtGui.QTextDocument()
-			option=doc.defaultTextOption()
-			option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
-			doc.setTextWidth(self.roster.main.width()-64)
-			doc.setHtml("<font size=\"-1\">"+unicode(item.statusMessage)+"</font>")
-			height=doc.documentLayout().documentSize().height()
-			font=QtGui.QApplication.fontMetrics()
-			fontHeight=int(font.height())
-			if height-fontHeight>=0:
-				if fontHeight+height<32:
-					return 32
-				else:
-					return fontHeight+height
-			else:
-				return 32
-		# groupItem
-		elif item.typ=="group" and item.main!="special":
-			return 32
-		# specialItem => used for blank space between users in group and users without group
-		else:
-			return 32
 
 	def paintGroupItem(self,painter,item,x,y):
 		"""

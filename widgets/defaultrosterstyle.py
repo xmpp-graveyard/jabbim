@@ -20,7 +20,6 @@ class rosterStyle:
 				height=doc.documentLayout().documentSize().height()
 			else:
 				return 32
-			print height,item.jid
 			if height-16>=0:
 				if 16+height<32:
 					return 32
