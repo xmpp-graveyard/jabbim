@@ -1035,19 +1035,9 @@ class preferencesWindow(QtGui.QDialog):
 			else:
 				self.main.config['theme']=unicode(self.ui.themes.currentItem().data(32).toString())
 		if self.main.config['rosterMode']=="compact":
-			#self.main.ui.roster.userHeight=22
-			#self.main.ui.roster.groupHeight=22
-			#self.main.ui.roster.compact=True
-			#self.main.ui.roster.reshow=True
-			#self.main.ui.roster.statusLabel.hide()
 			import compactrosterstyle
 			self.main.ui.roster.setRosterStyle(compactrosterstyle.rosterStyle)
 		elif self.main.config['rosterMode']=='normal':
-			#self.main.ui.roster.userHeight=32
-			#self.main.ui.roster.groupHeight=32
-			#self.main.ui.roster.compact=False
-			#self.main.ui.roster.reshow=True
-			#self.main.ui.roster.statusLabel.hide()
 			import defaultrosterstyle
 			self.main.ui.roster.setRosterStyle(defaultrosterstyle.rosterStyle)
 		self.main.ui.roster.setSize()
