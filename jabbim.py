@@ -2060,7 +2060,7 @@ class mainWindow(QtGui.QMainWindow):
 				if not status:
 					status = ""
 				text+='<img src="images/16x16/status/jabber-%s.png">' % contact.show 
-				text	+=	'<b>%s</b> '%self.status.get(contact.show, '')
+				text+='<b>%s</b> '%unicode(self.status.get(contact.show, ''))
 				if len(status) != 0:
 					text+='<br /><font size="-1">%s</font>' % (status.replace('\n', '<br />'))
 			text+="</td></tr></table>"
