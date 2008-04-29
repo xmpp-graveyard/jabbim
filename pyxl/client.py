@@ -698,7 +698,7 @@ class Client(derived):
 					card[x.name]=unicode(x)
 			else:
 				card[x.name]=unicode(x)
-		if card.has_key("PHOTO-BINVAL"):
+		if card.has_key("PHOTO-BINVAL") and len(card["PHOTO-BINVAL"])!=0:
 			image=base64.decodestring(str(card["PHOTO-BINVAL"]))
 			hash = sha1(image).hexdigest()
 			f=open(self.main.realHomeDir+'/avatars/'+hash,"wb")

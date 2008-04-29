@@ -2528,7 +2528,7 @@ class mainWindow(QtGui.QMainWindow):
 				if len(message)>20:
 					self.ui.statusMessage.setText(unicode(message)[:20]+"...")
 				elif len(message)==0:
-					self.ui.statusMessage.setText(self.status[show])
+					self.ui.statusMessage.setText(unicode(self.status[show]))
 				else:
 					self.ui.statusMessage.setText(unicode(message))
 				self.ui.statusMessage.setIcon(self.getIcon(status=show,size="16x16"))
@@ -2628,13 +2628,17 @@ class mainWindow(QtGui.QMainWindow):
 				if avatarDef.has_key(unicode(jid)):
 					file=self.realHomeDir+"/avatars/"+avatarDef[unicode(jid)]
 				if os.path.isfile(file):
-					avatar=QtGui.QPixmap(file).scaled(22,22,QtCore.Qt.KeepAspectRatio)
-					result=QtGui.QPixmap(22,22)
-					result.fill(QtCore.Qt.transparent)
-					painter=QtGui.QPainter(result)
-					painter.drawPixmap((22-avatar.width())/2,(22-avatar.height())/2,avatar)
-					painter.end()
-					result=QtGui.QIcon(result)
+					avatar=QtGui.QPixmap(file)
+					if avatar.isNull():
+						result=QtGui.QIcon("images/22x22/apps/jabbim.png")
+					else:
+						avatar=avatar.scaled(22,22,QtCore.Qt.KeepAspectRatio)
+						result=QtGui.QPixmap(22,22)
+						result.fill(QtCore.Qt.transparent)
+						painter=QtGui.QPainter(result)
+						painter.drawPixmap((22-avatar.width())/2,(22-avatar.height())/2,avatar)
+						painter.end()
+						result=QtGui.QIcon(result)
 				else:
 					#result=QtGui.QIcon(self.getAvatar(unicode(jid),size="32x32",frame=False))
 					#if not result:

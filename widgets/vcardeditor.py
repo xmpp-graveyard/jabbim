@@ -174,7 +174,7 @@ class vcardEditorDialog(QtGui.QDialog):
 							self.ui.name.setText(unicode(y))
 						elif name=="N" and child=="FAMILY":
 							self.ui.surname.setText(unicode(y))
-						elif name=="PHOTO" and child=="BINVAL":
+						elif name=="PHOTO" and child=="BINVAL" and len(str(unicode(y)))!=0:
 							image=base64.decodestring(str(unicode(y)))
 							pixmap=QtGui.QPixmap()
 							pixmap.loadFromData(image)
