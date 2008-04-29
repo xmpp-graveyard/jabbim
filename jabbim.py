@@ -1081,7 +1081,7 @@ class clientClass(pyxl.client.Client):
 						w.chat.textEditWrite(message)
 					print "gcmessage lasts",time.time()-start
 					return
-				if len(body)!=0:
+				if len(body)!=0 and subject==None:
 					if xhtml==None:
 						body=unicode(body).replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
 						body = utils.replace_url(body)
@@ -1089,6 +1089,25 @@ class clientClass(pyxl.client.Client):
 					else:
 						xhtml=xhtml.replace("&quot;",'"')
 					self.main.chat.onGCMessage(w,i,body,delay,subject,user,xhtml)
+				if subject != None:
+					
+					w.chat.changeTopic(subject.replace("\n","<br/> "))
+					
+					if user != frm:
+						message = unicode(subject)
+					else:
+						message = unicode(body)
+					
+					message=message.replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
+					message=utils.replace_url(message)
+					message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
+					
+					if user != frm:
+						message = "%s has set the subject to: %s" % (user, message)
+					
+					message = w.chat.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",message)
+					
+					w.chat.textEditWrite(message)
 				print "gcmessage lasts",time.time()-start
 				return
 
