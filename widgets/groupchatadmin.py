@@ -211,7 +211,7 @@ class groupchatAdminDialog(QtGui.QDialog):
 		if self.form:
 			dataforms.sendDataForm(self.main,self.jid,self.form,self.var,"muc")
 		if unicode(self.ui.subject.toPlainText())!=unicode(self.subject):
-			self.main.client.sendMessage(self.jid, typ='groupchat',body=unicode(self.tr('/me has set subject to: '))+unicode(self.ui.subject.toPlainText()),subject=unicode(self.ui.subject.toPlainText()))
+			self.main.client.sendMessage(self.jid, typ='groupchat', body=None, subject=unicode(self.ui.subject.toPlainText()))
 		self.done(1)
 
 	def reject(self):
