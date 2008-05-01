@@ -159,9 +159,12 @@ class MUCBrowserDialog(QtGui.QDialog):
 		item = par[1]
 		for i in range(int(item.childCount())):
 			item.takeChild(0)
-		users="<b>Users:</b> "
-		for usr in self.main.client.disco[unicode(par[0])][None]['items'].itervalues():
-			users+=usr['name']+", "
+		if len(self.main.client.disco[unicode(par[0])][None]['items'].itervalues())!=0:
+			users="<b>Users:</b> "
+			for usr in self.main.client.disco[unicode(par[0])][None]['items'].itervalues():
+				users+=usr['name']+", "
+		else:
+			users="There is no user"
 			#user=QtGui.QTreeWidgetItem(item)
 			#user.setText(1, usr['name'])
 			#if self.ui.showJid.isChecked():
