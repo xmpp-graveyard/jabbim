@@ -240,7 +240,9 @@ class MUCBrowserDialog(QtGui.QDialog):
 				self.main.client.setBookmarks()
 				self.main.buildBookmarks()
 
+		if len(password)==0:
+			password=None
 		#print "joining",room,nickname
 		if self.main.chat.addGroupChatTab(room+"@"+server,nickname):
-			self.main.client.joinGC(room+"@"+server, nickname)
+			self.main.client.joinGC(room+"@"+server, nickname,password)
 		self.done(1)

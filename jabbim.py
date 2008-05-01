@@ -3241,9 +3241,13 @@ class mainWindow(QtGui.QMainWindow):
 			lst=data.toList()
 			jid=unicode(lst[0].toString()) # get jid
 			nickname=unicode(lst[1].toString()) # get nickname
+			password=unicode(lst[2].toString()) # get password
+			if len(password)==0:
+				password=None
 			# send jabber command
 			if self.chat.addGroupChatTab(jid,nickname):
-				self.client.joinGC(jid, nickname)
+				self.client.joinGC(jid, nickname,password)
+				#self.client.joinGC(jid, nickname, v.password)
 		elif cmd=="edit_bookmark":
 			item=self.ui.bookmarks.currentItem()
 			data=action.data()

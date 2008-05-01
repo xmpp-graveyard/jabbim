@@ -101,7 +101,15 @@ class joinGroupchatWizard(QtGui.QWizard):
 		self.addPage(createSecondPage(self))
 		self.setWindowTitle(self.tr("Join Groupchat"))
 		self.setButtonText(QtGui.QWizard.FinishButton,self.tr("Join"))
-
+		mucjid = None
+		for jid in self.main.client.disco[self.main.client.jid.host][None]['items'].iterkeys():
+			print jid
+			print self.main.client.disco[self.main.client.jid.host][None]['items'][jid]
+			if self.main.client.hasIdentity(jid, 'conference', 'text') and jid.startswith('c'):
+				mucjid = jid
+				break
+		if mucjid:
+			self.jid.setText("@"+mucjid)
 	#def initializePage(self,i):
 		#if i==1:
 			#if self.browser.isChecked():
@@ -139,9 +147,11 @@ class joinGroupchatWizard(QtGui.QWizard):
 			self.main.client.setBookmarks()
 			self.main.buildBookmarks()
 
+		if len(password)==0:
+			password=None
 		#print "joining",room,nickname
 		if self.main.chat.addGroupChatTab(jid,nickname):
-			self.main.client.joinGC(jid, nickname)
+			self.main.client.joinGC(jid, nickname, password)
 
 		return QtGui.QWizard.accept(self)
 
