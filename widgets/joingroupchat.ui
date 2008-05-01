@@ -5,279 +5,191 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>612</width>
-    <height>264</height>
+    <width>375</width>
+    <height>380</height>
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Join Group Chat</string>
+   <string>Join Chat Room</string>
   </property>
-  <layout class="QHBoxLayout" >
+  <layout class="QGridLayout" >
+   <property name="margin" >
+    <number>9</number>
+   </property>
    <property name="spacing" >
     <number>6</number>
    </property>
-   <property name="leftMargin" >
-    <number>9</number>
-   </property>
-   <property name="topMargin" >
-    <number>9</number>
-   </property>
-   <property name="rightMargin" >
-    <number>9</number>
-   </property>
-   <property name="bottomMargin" >
-    <number>9</number>
-   </property>
-   <item>
-    <layout class="QGridLayout" >
-     <property name="leftMargin" >
-      <number>0</number>
+   <item row="3" column="0" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
      </property>
-     <property name="topMargin" >
-      <number>0</number>
+     <property name="sizeHint" >
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
      </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
-      <number>0</number>
-     </property>
-     <property name="horizontalSpacing" >
-      <number>6</number>
-     </property>
-     <property name="verticalSpacing" >
-      <number>6</number>
-     </property>
-     <item row="1" column="1" >
-      <widget class="QCheckBox" name="bookmark" >
-       <property name="toolTip" >
-        <string>Adds this room to your bookmarks. Bookmarks &lt;br>are stored on the server.</string>
-       </property>
-       <property name="text" >
-        <string>Bookmark this room</string>
-       </property>
-       <property name="checked" >
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0" colspan="2" >
-      <widget class="Line" name="line" >
-       <property name="orientation" >
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1" >
-      <layout class="QHBoxLayout" >
-       <property name="spacing" >
-        <number>6</number>
-       </property>
-       <property name="leftMargin" >
-        <number>0</number>
-       </property>
-       <property name="topMargin" >
-        <number>0</number>
-       </property>
-       <property name="rightMargin" >
-        <number>0</number>
-       </property>
-       <property name="bottomMargin" >
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QPushButton" name="pushButton" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-         <property name="text" >
-          <string>Join</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_2" >
-         <property name="text" >
-          <string>Cancel</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="1" column="0" >
-      <spacer>
-       <property name="orientation" >
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" >
-        <size>
-         <width>93</width>
-         <height>23</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="0" column="0" colspan="2" >
-      <layout class="QHBoxLayout" >
-       <property name="spacing" >
-        <number>6</number>
-       </property>
-       <property name="leftMargin" >
-        <number>0</number>
-       </property>
-       <property name="topMargin" >
-        <number>0</number>
-       </property>
-       <property name="rightMargin" >
-        <number>0</number>
-       </property>
-       <property name="bottomMargin" >
-        <number>0</number>
-       </property>
-       <item>
-        <layout class="QVBoxLayout" >
-         <property name="spacing" >
-          <number>6</number>
-         </property>
-         <property name="leftMargin" >
-          <number>0</number>
-         </property>
-         <property name="topMargin" >
-          <number>0</number>
-         </property>
-         <property name="rightMargin" >
-          <number>0</number>
-         </property>
-         <property name="bottomMargin" >
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QLabel" name="label" >
-           <property name="text" >
-            <string>Room:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_3" >
-           <property name="text" >
-            <string>Server:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_4" >
-           <property name="text" >
-            <string>Conference name:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_2" >
-           <property name="text" >
-            <string>Nickname:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_5" >
-           <property name="text" >
-            <string>Password:</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QVBoxLayout" >
-         <property name="spacing" >
-          <number>6</number>
-         </property>
-         <property name="leftMargin" >
-          <number>0</number>
-         </property>
-         <property name="topMargin" >
-          <number>0</number>
-         </property>
-         <property name="rightMargin" >
-          <number>0</number>
-         </property>
-         <property name="bottomMargin" >
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QLineEdit" name="room" >
-           <property name="toolTip" >
-            <string>Here fill in the name of the room you want to join in</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="server" >
-           <property name="toolTip" >
-            <string>Server where the chat room is (e.g. conf.netlab.cz)</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="name" >
-           <property name="toolTip" >
-            <string>This serves only for your orientation</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="nickname" >
-           <property name="toolTip" >
-            <string>Under what name do you want to be &lt;br>known to other participants</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="password" >
-           <property name="toolTip" >
-            <string>You need password if the room is locked</string>
-           </property>
-           <property name="echoMode" >
-            <enum>QLineEdit::Password</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </item>
-     <item row="3" column="0" >
-      <spacer>
-       <property name="orientation" >
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" >
-        <size>
-         <width>93</width>
-         <height>29</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
+    </spacer>
    </item>
-   <item>
-    <widget class="QTreeWidget" name="roomList" >
-     <property name="frameShadow" >
-      <enum>QFrame::Sunken</enum>
+   <item row="0" column="0" >
+    <widget class="QLabel" name="label" >
+     <property name="maximumSize" >
+      <size>
+       <width>48</width>
+       <height>48</height>
+      </size>
      </property>
-     <property name="rootIsDecorated" >
+     <property name="text" >
+      <string/>
+     </property>
+     <property name="pixmap" >
+      <pixmap>images/48x48/categories/conferences.png</pixmap>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" >
+    <widget class="QLabel" name="label_2" >
+     <property name="text" >
+      <string>Chat rooms allow you to chat with more users in one window.</string>
+     </property>
+     <property name="wordWrap" >
       <bool>true</bool>
      </property>
-     <property name="columnCount" >
-      <number>1</number>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2" >
+    <widget class="QGroupBox" name="groupBox" >
+     <property name="title" >
+      <string>Join the chat room</string>
      </property>
-     <column>
-      <property name="text" >
-       <string>1</string>
+     <layout class="QVBoxLayout" >
+      <property name="margin" >
+       <number>9</number>
       </property>
-     </column>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item>
+       <layout class="QHBoxLayout" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
+        <property name="spacing" >
+         <number>6</number>
+        </property>
+        <item>
+         <layout class="QVBoxLayout" >
+          <property name="margin" >
+           <number>0</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_3" >
+            <property name="text" >
+             <string>Your nickname:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_4" >
+            <property name="text" >
+             <string>Room name:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_5" >
+            <property name="text" >
+             <string>Room server:</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" >
+          <property name="margin" >
+           <number>0</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item>
+           <widget class="QLineEdit" name="nickname" />
+          </item>
+          <item>
+           <widget class="QLineEdit" name="roomName" />
+          </item>
+          <item>
+           <widget class="QLineEdit" name="serverName" />
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2" >
+    <widget class="QGroupBox" name="groupBox_2" >
+     <property name="title" >
+      <string>Bookmark</string>
+     </property>
+     <layout class="QGridLayout" >
+      <property name="margin" >
+       <number>9</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item row="1" column="0" >
+       <layout class="QHBoxLayout" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
+        <property name="spacing" >
+         <number>6</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="bookmarkNameLabel" >
+          <property name="text" >
+           <string>Bookmark name:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="bookmarkName" />
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="0" >
+       <widget class="QCheckBox" name="bookmarkChat" >
+        <property name="text" >
+         <string>Bookmark this chat room</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" >
+       <widget class="QCheckBox" name="autojoin" >
+        <property name="text" >
+         <string>Join this chat room automaticaly at login</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="2" >
+    <widget class="QDialogButtonBox" name="buttonBox" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
+     </property>
     </widget>
    </item>
   </layout>
@@ -285,114 +197,66 @@
  <resources/>
  <connections>
   <connection>
-   <sender>pushButton</sender>
-   <signal>clicked()</signal>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
    <receiver>joingroupchat</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>149</x>
-     <y>156</y>
+     <x>237</x>
+     <y>355</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>85</x>
-     <y>131</y>
+     <x>368</x>
+     <y>258</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_2</sender>
-   <signal>clicked()</signal>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
    <receiver>joingroupchat</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>262</x>
-     <y>148</y>
+     <x>319</x>
+     <y>355</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>296</x>
-     <y>111</y>
+     <x>367</x>
+     <y>205</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>room</sender>
-   <signal>returnPressed()</signal>
-   <receiver>joingroupchat</receiver>
-   <slot>accept()</slot>
+   <sender>bookmarkChat</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>bookmarkName</receiver>
+   <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>217</x>
-     <y>28</y>
+     <x>114</x>
+     <y>213</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>305</x>
-     <y>131</y>
+     <x>162</x>
+     <y>249</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>server</sender>
-   <signal>returnPressed()</signal>
-   <receiver>joingroupchat</receiver>
-   <slot>accept()</slot>
+   <sender>bookmarkChat</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>autojoin</receiver>
+   <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>217</x>
-     <y>57</y>
+     <x>119</x>
+     <y>218</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>305</x>
-     <y>131</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>name</sender>
-   <signal>returnPressed()</signal>
-   <receiver>joingroupchat</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>217</x>
-     <y>86</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>305</x>
-     <y>131</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nickname</sender>
-   <signal>returnPressed()</signal>
-   <receiver>joingroupchat</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>217</x>
-     <y>115</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>305</x>
-     <y>131</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>password</sender>
-   <signal>returnPressed()</signal>
-   <receiver>joingroupchat</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>217</x>
-     <y>144</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>305</x>
-     <y>131</y>
+     <x>120</x>
+     <y>272</y>
     </hint>
    </hints>
   </connection>

@@ -21,6 +21,7 @@ try:
 except:
 	print "PyQt4 is not installed."
 from joingroupchat_ui import *
+from mucbrowser import MUCBrowserDialog
 import pyxl
 
 from twisted.python import log
@@ -32,101 +33,60 @@ class joinGroupChatWindow(QtGui.QDialog):
 		self.ui=Ui_joingroupchat()
 		self.ui.setupUi(self)
 		self.main=main
-		self.ui.room.setText(room)
-		self.ui.server.setText(server)
-		self.ui.nickname.setText(main.client.jid.user)
-		self.ui.roomList.setHeaderLabel(main.tr('Rooms'))
-		self.ui.roomList.setSortingEnabled(False)
-		self.server = server
-		self.rooms = [] # [(roomname, roomjid, usercount), ]
-		if self.server != '':
-			self.main.client.getDiscoItems(server, callback = self._roomsReceived)
+		self.ui.bookmarkName.setEnabled(False)
+		self.ui.autojoin.setEnabled(False)
+		if not self.main.client.bookmarksEnabled:
+			self.ui.bookmarkChat.setEnabled(False)
 		
-		QtCore.QObject.connect(self.ui.roomList,QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem *, int )"), self.roomSelected)
-		QtCore.QObject.connect(self.ui.roomList,QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"), self.roomChanged)
-		QtCore.QObject.connect(self.ui.room,QtCore.SIGNAL("textChanged ( const QString & )"), self.textChanged)
-	
-	def textChanged(self, text):
-		print 'pip'
-		if unicode(text).strip() != '':
-			self.ui.pushButton.setEnabled(True)
-		else:
-			self.ui.pushButton.setDisabled(True)
+		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
+		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setText(self.tr("Join"))
+		self.ui.browser=QtGui.QPushButton(self.tr("Browse chat rooms"))
+		self.ui.buttonBox.addButton(self.ui.browser,QtGui.QDialogButtonBox.ActionRole)
+
+		self.ui.nickname.setText(self.main.selfName)
+		mucjid = None
+		for jid in self.main.client.disco[self.main.client.jid.host][None]['items'].iterkeys():
+			if self.main.client.hasIdentity(jid, 'conference', 'text') and jid.startswith('c'):
+				mucjid = jid
+				break
+		if mucjid:
+			self.ui.serverName.setText(mucjid)
 		
-	def getNum(self, string):
-		def reverse(s):
-			s = list(s)
-			s.reverse()
-			return "".join(s)
-		s = reverse(string)
-		i1, i2 = s.find(")"), s.find("(")
-		try:
-			cislo = int(reverse(s[i1+1:i2]))
-		except:
-			cislo = 0
-		return cislo
+		QtCore.QObject.connect(self.ui.roomName,QtCore.SIGNAL(" textChanged ( const QString &)"),self.ui.bookmarkName.setText)
+		QtCore.QObject.connect(self.ui.browser,QtCore.SIGNAL("clicked()"),self.mucBrowser)
 
-	def sortRooms(self, x, y):
-		if x[2] > y[2]:
-			return 1
-		elif x[2] == y[2]:
-			return 0
-		elif x[2] < y[2]:
-			return -1
-	
-	def _roomsReceived(self, res):
-		log.msg( 'rooms received!')
-		self.rooms = []
-		self.ui.roomList.clear()
-		for room in self.main.client.disco[self.server][None]['items'].itervalues():
-			self.rooms.append((room['name'], room['jid'], self.getNum(room['name'])))
+		self.ui.roomName.setFocus(QtCore.Qt.MouseFocusReason)
 
-		self.rooms.sort(self.sortRooms)
-		for room in self.rooms:
-			item = QtGui.QTreeWidgetItem([room[0]], 0)
-			item.setData(0, 32, QtCore.QVariant(room[1]))
-			self.ui.roomList.insertTopLevelItem(0, item)
+	def mucBrowser(self):
+		self.d=MUCBrowserDialog(self.main,unicode(self.ui.serverName.text()),self,self)
+		self.d.show()
 
-	def roomSelected(self, item, column):
-		roomjid =  item.data(0, 32).toString()
-		room = roomjid.split('@')[0]
-		self.ui.room.setText(room)
-		self.ui.name.setText(item.text(0))
-	
-	def roomChanged(self, item, lastitem):
-		room = item.data(0, 32).toString()
-		self.main.client.getDiscoItems(room, callback = self._participantsReceived, callback_par = (room, item))
-	
-	def _participantsReceived(self, par):
-		item = par[1]
-		for usr in self.main.client.disco[unicode(par[0])][None]['items'].itervalues():
-			user=QtGui.QTreeWidgetItem(item)
-			user.setText(0, usr['name'])
-		self.ui.roomList.setItemExpanded(item,True)
-		
 	def accept(self):
-		room=unicode(self.ui.room.text())
-		server=unicode(self.ui.server.text())
-		name=unicode(self.ui.name.text())
+		jid=unicode(self.ui.roomName.text())+"@"+unicode(self.ui.serverName.text())
+		if not self.main.getJid(jid):
+			return
 		nickname=unicode(self.ui.nickname.text())
-		password=unicode(self.ui.password.text())
+		#password=unicode(self.password.text())
+		password=""
+		saveRoom=self.ui.bookmarkChat.isChecked()
+		autojoin=unicode(self.ui.autojoin.isChecked()).lower()
+		bookmarkName=unicode(self.ui.bookmarkName.text())
 
-		if not name:
-			name = room
-			for bkey in self.main.client.bookmarks['conference'].keys():
-				if self.main.client.bookmarks['conference'][bkey].jid.userhost() == "%s@%s" % (room, server):
-					name = self.main.client.bookmarks['conference'][bkey].name
-
-		if self.ui.bookmark.isChecked() and not self.main.client.bookmarks['conference'].has_key(name):
-			self.main.client.bookmarks['conference'][name]=pyxl.client.Bookmark(name, 'conference', room+"@"+server, 'false', nickname, password)
+		if saveRoom and not self.main.client.bookmarks['conference'].has_key(bookmarkName):
+			self.main.client.bookmarks['conference'][bookmarkName]=pyxl.client.Bookmark(bookmarkName, 'conference', jid, autojoin, nickname, password)
 			self.main.client.setBookmarks()
 			self.main.buildBookmarks()
 
-		#print "joining",room,nickname
-		self.main.chat.addGroupChatTab(room+"@"+server,nickname)
-		#self.main.groupchat[room+"@"+server]=[nickname,[]]
-		self.main.client.joinGC(room+"@"+server, nickname, password)
+		if len(password)==0:
+			password=None
+		if self.main.chat.addGroupChatTab(jid,nickname):
+			self.main.client.joinGC(jid, nickname, password)
 		self.done(1)
 
-	def reject(self):
-		self.close()
+	#def roomNameChanged(self,name):
+		#old=unicode(self.ui.bookmarkName.text())
+		#change=False
+		#if len(old)==0:
+			#change=True
+		#elif len()
+		

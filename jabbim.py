@@ -474,7 +474,8 @@ class clientClass(pyxl.client.Client):
 				self.sendRosterUpdate(contact.jid, newName, contact.subscription, self.roster['users'][jid].groups)
 			elif newName and jid == self.jid.userhost():
 				self.main.ui.selfName.setText('<h3>'+newName+'</h3>') #we need to set name in roster
-	
+				self.main.selfName=newName
+
 	def on_discoItemsBookmarksReceived(self, jid):
 		"""
 		Called when disco#items of bookmarked groupchat arrived.
@@ -3183,9 +3184,11 @@ class mainWindow(QtGui.QMainWindow):
 		Called when user activate Join Groupchat QAction from main menu.
 		"""
 		#self.mucBrowser(bool)
-		if USE_WIZARDS:
-			self.joingroupchatwizard=wizards.joingroupchat.joinGroupchatWizard(self,self)
-			self.joingroupchatwizard.show()
+		#if USE_WIZARDS:
+			#self.joingroupchatwizard=wizards.joingroupchat.joinGroupchatWizard(self,self)
+			#self.joingroupchatwizard.show()
+		self.joingroupchatwizard=widgets.joingroupchat.joinGroupChatWindow(self,parent=self)
+		self.joingroupchatwizard.show()
 
 
 	def deleteCurrentBookmark(self):
@@ -3508,6 +3511,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.buildStatusWidgetMenu()
 		self.statusWidgetMenu.setEnabled(False)
 		self.ui.selfName.setText("<h3>"+unicode(self.client.jid.userhost()).split("@")[0]+"</h3>")
+		self.selfName=unicode(self.client.jid.userhost()).split("@")[0]
 		self.client.getVCard(unicode(self.client.jid.userhost()))
 		self.ui.showOffline.hide()
 #		self.tray.showMessage(self.tr("Jabbim"),self.tr("Jabbim is ready! You are connected! :) "))

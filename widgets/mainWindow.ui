@@ -1115,14 +1115,7 @@ p, li { white-space: pre-wrap; }
     <property name="title" >
      <string>Actions</string>
     </property>
-    <widget class="QMenu" name="menuGroupchat" >
-     <property name="title" >
-      <string>Groupchat</string>
-     </property>
      <addaction name="actionJoin_groupchat" />
-     <addaction name="actionBrowse_rooms" />
-    </widget>
-    <addaction name="menuGroupchat" />
     <addaction name="actionAdd_Contact" />
     <addaction name="actionStart_Chat" />
     <addaction name="actionService_Discovery" />

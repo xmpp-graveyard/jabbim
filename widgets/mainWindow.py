@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Mon Apr 21 15:16:53 2008
+# Created: Thu May  1 19:56:57 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -445,9 +445,6 @@ class Ui_MainWindow(object):
 
         self.menuAkce = QtGui.QMenu(self.menubar)
         self.menuAkce.setObjectName("menuAkce")
-
-        self.menuGroupchat = QtGui.QMenu(self.menuAkce)
-        self.menuGroupchat.setObjectName("menuGroupchat")
         MainWindow.setMenuBar(self.menubar)
 
         self.actionShow_XML = QtGui.QAction(MainWindow)
@@ -500,9 +497,7 @@ class Ui_MainWindow(object):
         self.actionStart_Chat.setObjectName("actionStart_Chat")
         self.menuHelp.addAction(self.actionAbout)
         self.menuHelp.addAction(self.actionSupport)
-        self.menuGroupchat.addAction(self.actionJoin_groupchat)
-        self.menuGroupchat.addAction(self.actionBrowse_rooms)
-        self.menuAkce.addAction(self.menuGroupchat.menuAction())
+        self.menuAkce.addAction(self.actionJoin_groupchat)
         self.menuAkce.addAction(self.actionAdd_Contact)
         self.menuAkce.addAction(self.actionStart_Chat)
         self.menuAkce.addAction(self.actionService_Discovery)
@@ -584,7 +579,6 @@ class Ui_MainWindow(object):
         self.menuPlugins.setTitle(QtGui.QApplication.translate("MainWindow", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAkce.setTitle(QtGui.QApplication.translate("MainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuGroupchat.setTitle(QtGui.QApplication.translate("MainWindow", "Groupchat", None, QtGui.QApplication.UnicodeUTF8))
         self.actionShow_XML.setText(QtGui.QApplication.translate("MainWindow", "Show XML", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setText(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))

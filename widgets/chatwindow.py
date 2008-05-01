@@ -901,10 +901,10 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 		
 		self.show()
-		tab.chat.showConnecting()
 		self.raise_()
 		self.activateWindow()
 		tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		tab.chat.showConnecting()
 		return True
 
 	def addCustomTab(self,jid,nickname,name,widget,widgetList,typ="chat",full=False,icon=None):

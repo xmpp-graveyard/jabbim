@@ -229,7 +229,7 @@ class groupChatWidget(abstractChatWidget):
 		pos=self.ui.textEdit.mapToGlobal(QtCore.QPoint(0,0))
 		x=pos.x()
 		y=pos.y()
-		self.connecting.setGeometry((x+self.ui.textEdit.width())/2-self.connecting.width()/2,(y+self.ui.textEdit.height())/2-self.connecting.height()/2, self.connecting.width(), self.connecting.height())
+		self.connecting.setGeometry(self.ui.textEdit.width()/2-self.connecting.width()/2,self.ui.textEdit.height()/2-self.connecting.height()/2, self.connecting.width(), self.connecting.height())
 		self.connecting.show()
 		
 	def addRoles(self):
