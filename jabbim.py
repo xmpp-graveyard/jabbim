@@ -2129,7 +2129,7 @@ class mainWindow(QtGui.QMainWindow):
 					artist = unicode(el)
 				elif el.name == 'title':
 					title = unicode(el)
-			t = '%s  %s'%(artist, title)
+			t = '%s: %s'%(artist, title)
 			if len(t.strip())>0:
 				text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">%s</font>' % (t) #ikonka se este muze menit ;)
 		
