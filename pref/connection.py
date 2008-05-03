@@ -3,7 +3,7 @@ class preferences:
 	def __init__(self,preferencesWindow):
 		self.config={}
 		self.config['passwd']={'type':'text-private','label':preferencesWindow.tr("Password:"),'value':'','groupbox':preferencesWindow.tr('Connection')}
-		self.config['jid']={'type':'text-single','label':preferencesWindow.tr("Jabber ID:"),'value':'','groupbox':preferencesWindow.tr('Connection')}
+		self.config['jid']={'type':'text-single','disabled':'','label':preferencesWindow.tr("Jabber ID:"),'value':'','groupbox':preferencesWindow.tr('Connection')}
 		self.config['autoJoin']={'type':'boolean','label':preferencesWindow.tr("Automatically join at startup."),'value':'False','groupbox':preferencesWindow.tr('Connection')}
 		self.config['autoJoinMUC']={'type':'boolean','label':preferencesWindow.tr("Join groupchats at startup."),'value':'True','groupbox':preferencesWindow.tr('Connection')}
 		self.config['resource']={'type':'text-single','label':preferencesWindow.tr('Resource :'),'value':'jabbim','groupbox':preferencesWindow.tr('Advanced')}

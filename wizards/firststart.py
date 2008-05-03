@@ -200,7 +200,8 @@ class firstStartWizard(QtGui.QWizard):
 			savePassword=self.savePassword.isChecked()
 			password=unicode(self.password.text())
 			self.main.newProfile(jid,password,savePassword)
-			self.main.fillLoginForm()
+			self.main.profileChanged(jid)
+			
 		return QtGui.QWizard.accept(self)
 
 	#def finished(self,result):

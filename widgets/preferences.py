@@ -77,6 +77,49 @@ class pluginConfiguration(QtGui.QDialog):
 		#self.close()
 		return QtGui.QDialog.reject(self)
 
+def updateVarData(var,main):
+	for key,value in var.iteritems():
+		if main.has_key(key):
+			val=main[key]
+			if key=="passwd":
+				val=rot13.scramble(val)
+		else:
+			continue
+		
+		typ=value['type']
+		widget=value['widget']
+		if (typ=="text-single" or typ=="text-private") or typ=='directory':
+			widget.setText(val)
+		elif typ=="time-interval":
+			d=val.split(":")
+			t=QtCore.QTime(int(d[0]),int(d[1]),int(d[2]))
+			widget.setTime(t)
+		elif typ=="text-multi":
+			widget.setText(unicode(val))
+		elif typ=="boolean":
+			if unicode(val)=="0" or unicode(val).lower()=="false":
+				widget.setChecked(False)
+			elif unicode(val)=="1" or unicode(val).lower()=="true":
+				widget.setChecked(True)
+		elif typ=="list-single":
+			if widget.findData(QtCore.QVariant(unicode(val)))!=None:
+				widget.setCurrentIndex(widget.findData(QtCore.QVariant(unicode(val))))
+		elif typ=="number-spin":
+			widget.setValue(int(val))
+		elif typ=="boolean-radio":
+			data=widget.checkedButton().data
+			if unicode(val)==unicode(data):
+				widget.checkedButton().setChecked(True)
+			else:
+				widget.checkedButton().setChecked(False)
+		elif typ=="jid-list":
+			widget.jids.clear()
+			if isinstance(val,list):
+				for jid in val:
+					QtGui.QListWidgetItem(unicode(jid),widget.jids)
+		elif typ=="custom":
+			widget.setWidgetValue(val)
+
 def getVarData(var):
 	ret={}
 	for key,value in var.iteritems():
@@ -460,6 +503,8 @@ def makePreferences(main,parent,layout,form,row=1):
 			val=main[key]
 			if key=="passwd":
 				val=rot13.scramble(val)
+		if x.has_key("disabled"):
+			var[key]['widget'].setDisabled(True)
 		if x['type']=="boolean":
 			if x.has_key("enable"):
 				for w in x['enable']:
@@ -766,7 +811,9 @@ class preferencesWindow(QtGui.QDialog):
 		else:
 			self.ui.profile.setText("<b>"+self.tr("Profile:")+"</b> "+unicode(self.main.config['jid']))
 			self.ui.profile.show()
-		
+		for cfg in self.var:
+			updateVarData(cfg,self.main.config)
+
 		self.reloadPlugins_()
 		
 	def reloadPlugins_(self):
