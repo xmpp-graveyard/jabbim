@@ -53,6 +53,7 @@ try:
 except:
 	log.msg('Please upgrade to python2.5')
 	from sha import new as sha1
+	from PyQt4 import QtGui,QtCore
 
 class Bookmark:
 	def __init__(self, name, typ, JID = None, autojoin = False, nick = None, password = None, url = None):
@@ -174,7 +175,6 @@ class Client(derived):
 		self.pep = False
 
 	def loadAvatars(self,path,avatarDef):
-		from PyQt4 import QtGui,QtCore
 		avatarImg={}
 
 		hashe = []
@@ -205,7 +205,6 @@ class Client(derived):
 		return avatarImg
 
 	def loadAvatar(self,hash):
-		from PyQt4 import QtGui,QtCore
 		path=self.main.realHomeDir+"/avatars"
 		avatar=QtGui.QImage(path+'/'+hash)
 		width=int(avatar.width())
