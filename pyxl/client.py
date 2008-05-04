@@ -153,7 +153,7 @@ class Client(derived):
 		if self.avatarDef.has_key(self.jid.userhost()):
 			self.avatarImg[self.avatarDef[self.jid.userhost()]] = self.loadAvatar(self.avatarDef[self.jid.userhost()])
 
-		d=threads.deferToThread(self.loadAvatars,repr(path),repr(self.avatarDef))
+		d=threads.deferToThread(self.loadAvatars,unicode(path),dict(self.avatarDef))
 		d.addCallback(self.gotAvatars)
 		self.reactor.callFromThread(self.on_init)
 		self.main.cache.get_caps().addCallback(self._cacheCaps)
@@ -178,10 +178,15 @@ class Client(derived):
 		avatarImg={}
 
 		hashe = []
-		for hash in avatarDef.itervalues():
-			if not hash in hashe and hash and hash!="None":
-				hashe.append(unicode(str(hash)))
+		try:
+			for hash in avatarDef.itervalues():
+				if not hash in hashe and hash and hash!="None":
+					hashe.append(unicode(str(hash)))
+		except:
+			message = unicode(traceback.format_exc(), 'utf-8')
+			print message
 #		path = self.main.homeDir+'/avatars/'
+		print "loadAvatars",hashe
 		for hash in hashe:
 			try:
 				#self.avatarImg[hash] = self.main.getAvatar(hash)
@@ -202,6 +207,8 @@ class Client(derived):
 				avatarImg[hash] = [result,width,height]
 			except:
 				avatarImg[hash] = None
+				message = unicode(traceback.format_exc(), 'utf-8')
+				print message
 		return avatarImg
 
 	def loadAvatar(self,hash):
@@ -223,7 +230,6 @@ class Client(derived):
 		return [QtGui.QPixmap.fromImage(result),width,height]
 
 	def gotAvatars(self,avatarImg):
-		from PyQt4 import QtGui
 		self.avatarImg=avatarImg
 		for key in self.avatarImg.keys():
 			self.avatarImg[key][0]=QtGui.QPixmap.fromImage(self.avatarImg[key][0])
