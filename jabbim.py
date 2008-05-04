@@ -849,7 +849,7 @@ class clientClass(pyxl.client.Client):
 					pixmap=QtGui.QIcon(self.main.homeDir+'/avatars/'+unicode(self.main.config['jid'])).pixmap(64,64)
 					text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(self.main.config['jid'])+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
 				#text+='<td><b>'+self.main.tr("Name:")+'</b> '+item.escapedName+'<br/>'
-				text+='<td><b>'+self.main.tr("JID:")+'</b> '+unicode(self.main.config['jid'])+'<br/>'
+				text+='<td><b>'+self.main.tr("JID:")+'</b> '+unicode(jid.full())+'<br/>'
 
 				#status = unicode(message)
 				#priority = pri
@@ -2349,7 +2349,7 @@ class mainWindow(QtGui.QMainWindow):
 					pixmap=QtGui.QIcon(self.homeDir+'/avatars/'+unicode(self.config['jid'])).pixmap(64,64)
 					text+='<td><img src="'+self.homeDir+'/avatars/'+unicode(self.config['jid'])+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
 				#text+='<td><b>'+self.tr("Name:")+'</b> '+item.escapedName+'<br/>'
-				text+='<td><b>'+self.tr("JID:")+'</b> '+unicode(self.config['jid'])+'<br/>'
+				text+='<td><b>'+self.tr("JID:")+'</b> '+unicode(transport)+'<br/>'
 
 				usertype=unicode(self.client.getHostType(transport,transport))
 				if os.path.isfile('images/16x16/status/'+usertype+"-offline.png"):
@@ -2567,7 +2567,7 @@ class mainWindow(QtGui.QMainWindow):
 					pixmap=QtGui.QIcon(self.homeDir+'/avatars/'+unicode(self.config['jid'])).pixmap(64,64)
 					text+='<td><img src="'+self.homeDir+'/avatars/'+unicode(self.config['jid'])+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
 				#text+='<td><b>'+self.tr("Name:")+'</b> '+item.escapedName+'<br/>'
-				text+='<td><b>'+self.tr("JID:")+'</b> '+unicode(self.config['jid'])+'<br/>'
+				text+='<td><b>'+self.tr("JID:")+'</b> '+unicode(jid)+'<br/>'
 
 				#status = unicode(message)
 				#priority = pri
