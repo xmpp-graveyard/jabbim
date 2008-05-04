@@ -329,6 +329,47 @@ class chatWidget(abstractChatWidget):
 			self.ui.lineWidget.setMinimumSize(100,64)
 		self.refreshToolTip()
 
+	def refreshLabel(self):
+		text="<font size=\"3\"><b>"+self.name+"</b></font>"
+		contact=self.main.client.getContactByJid(self.jid)
+		if not contact:
+			return
+		mood = contact.getPEP('http://jabber.org/protocol/mood')
+		if mood != None:
+			t = ''
+			m = txt = ''
+			for el in mood.elements():
+				if el.name == 'text':
+					txt = unicode(el)
+				else:
+					m = self.main.moods.get(el.name)
+					if self.main.moodIcons.has_key(el.name):
+						icon="<img src=\"%s\" />" % self.main.moodIcons[el.name].src
+					else:
+						icon=""
+			if txt != '':
+				t = m+ ' - %s'%txt
+			else:
+				t = m
+			text+='<br />%s <font size="-1">&nbsp; %s</font>' % (icon,t)
+
+		tune = contact.getPEP('http://jabber.org/protocol/tune')
+		if type(tune) == list:
+			for x in tune:
+				print x
+		elif tune!=None:
+			artist = title = ''
+			for el in tune.elements():
+				if el.name == 'artist':
+					artist = unicode(el)
+				elif el.name == 'title':
+					title = unicode(el)
+			t = '%s: %s'%(artist, title)
+			if len(t.strip())>1:
+				text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">&nbsp; %s</font>' % (t) #ikonka se este muze menit ;)
+
+		self.ui.label.setText(text)
+
 	def contactMenu(self,pos):
 		items=self.main.ui.roster.getUserItems(self.main.getJid(self.jid).userhost())
 		if len(items)==0:

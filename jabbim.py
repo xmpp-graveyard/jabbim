@@ -93,6 +93,9 @@ class clientClass(pyxl.client.Client):
 	def on_pep(self, frm, ns, payload):
 		if frm == self.jid.userhost():
 			self.main.ui.selfAvatar.refreshToolTip()
+		tab,index=self.main.chat.findTab(frm,typ=['chat'])
+		if tab:
+			tab.chat.refreshLabel()
 		if ns=="http://jabber.org/protocol/mood":
 			t = ''
 			m = txt = ''
