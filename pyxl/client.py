@@ -153,7 +153,7 @@ class Client(derived):
 		if self.avatarDef.has_key(self.jid.userhost()):
 			self.avatarImg[self.avatarDef[self.jid.userhost()]] = self.loadAvatar(self.avatarDef[self.jid.userhost()])
 
-		d=threads.deferToThread(self.loadAvatars,path,self.avatarDef)
+		d=threads.deferToThread(self.loadAvatars,repr(path),repr(self.avatarDef))
 		d.addCallback(self.gotAvatars)
 		self.reactor.callFromThread(self.on_init)
 		self.main.cache.get_caps().addCallback(self._cacheCaps)
