@@ -175,6 +175,7 @@ def loadConfig(main,status):
 			'startInTray':"False",
 			'commandsInTray':[],
 			'moods':'default/default.cfg',
+			'rosterScrollBar':"True",
  			##shortcuts
  			"nextTab" : "Alt+Right",
  			"previousTab" : "Alt+Left",

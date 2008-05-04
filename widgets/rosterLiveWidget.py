@@ -385,6 +385,12 @@ class rosterWidget(QtGui.QWidget):
 		self.groups[self.specialName].height=self.rosterStyle.heightForItem(self.groups[self.specialName])
 		self.lastMove=[0,0]
 		
+		#QtCore.QObject.connect(self.main.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.sliderChanged)
+		
+		
+	def sliderChanged(self,i):
+		if self.main.config['rosterScrollBar']=='False':
+			self.repaint()
 	#{ Public functions
 
 	def setRosterStyle(self,styleClass):
@@ -1003,8 +1009,41 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					self.paintUserItem(painter,item,0,y)
 				y+=item.height
-		if self.reshow:
-			self.statusLabel.hide()
+		if self.main.config['rosterScrollBar']=='False':
+			if self.height()>self.main.scroll.height():
+				if self.main.scroll.verticalScrollBar().value()>0:
+					painter.save()
+					x=self.width()-8
+					y=self.main.scroll.verticalScrollBar().value()+8
+					painter.setPen(QtGui.QPen(QtCore.Qt.black))
+					painter.drawPoint(x-4,y+2)# 00000
+					painter.drawPoint(x-3,y+2)#  000
+					painter.drawPoint(x-2,y+2)#   0
+					painter.drawPoint(x-1,y+2)
+					painter.drawPoint(x,y+2)
+					painter.drawPoint(x-3,y+1)
+					painter.drawPoint(x-2,y+1)
+					painter.drawPoint(x-1,y+1)
+					painter.drawPoint(x-2,y)
+					painter.restore()
+				if self.main.scroll.verticalScrollBar().value()!=self.main.scroll.verticalScrollBar().maximum():
+					painter.save()
+					x=self.width()-8
+					y=self.main.scroll.verticalScrollBar().value()+self.main.scroll.height()-8
+					painter.setPen(QtGui.QPen(QtCore.Qt.black))
+					painter.drawPoint(x-4,y)# 00000
+					painter.drawPoint(x-3,y)#  000
+					painter.drawPoint(x-2,y)#   0
+					painter.drawPoint(x-1,y)
+					painter.drawPoint(x,y)
+					painter.drawPoint(x-3,y+1)
+					painter.drawPoint(x-2,y+1)
+					painter.drawPoint(x-1,y+1)
+					painter.drawPoint(x-2,y+2)
+					painter.restore()
+
+		#if self.reshow:
+			#self.statusLabel.hide()
 
 	def setSize(self):
 		"""

@@ -1826,6 +1826,13 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.roster.setRosterStyle(widgets.compactrosterstyle.rosterStyle)
 		else:
 			self.ui.roster.setRosterStyle(widgets.defaultrosterstyle.rosterStyle)
+		if self.config['rosterScrollBar']=="True":
+			self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+			QtCore.QObject.disconnect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
+		else:
+			self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+			QtCore.QObject.connect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
+		
 
 		# join if we can :)
 		if self.config['autoJoin']=='True':
@@ -2621,6 +2628,12 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.roster.setRosterStyle(widgets.compactrosterstyle.rosterStyle)
 		else:
 			self.ui.roster.setRosterStyle(widgets.defaultrosterstyle.rosterStyle)
+		if self.config['rosterScrollBar']=="True":
+			self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+			QtCore.QObject.disconnect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
+		else:
+			self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+			QtCore.QObject.connect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
 		# change cache
 		if self.cache:
 			self.cache.close()

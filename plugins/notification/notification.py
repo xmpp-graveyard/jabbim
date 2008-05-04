@@ -369,6 +369,7 @@ class Plugin(plugins.PluginBase):
 
 	def on_endPreferences(self):
 		self.unregisterWidget(self.osd)
+		self.osd=None
 	
 	def on_saveConfig(self):
 		if self.osd:
@@ -378,6 +379,7 @@ class Plugin(plugins.PluginBase):
 			self.config['osd_x']=str(x)
 			self.config['osd_y']=str(y)
 			self.unregisterWidget(self.osd)
+			self.osd=None
 			#self.osd.hide()
 
 	def loadSoundConfig(self, configFile):
