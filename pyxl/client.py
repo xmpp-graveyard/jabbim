@@ -180,7 +180,7 @@ class Client(derived):
 		hashe = []
 		for hash in avatarDef.itervalues():
 			if not hash in hashe and hash and hash!="None":
-				hashe.append(hash)
+				hashe.append(unicode(str(hash)))
 #		path = self.main.homeDir+'/avatars/'
 		for hash in hashe:
 			try:
