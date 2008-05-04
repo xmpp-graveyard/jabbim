@@ -2141,13 +2141,17 @@ class mainWindow(QtGui.QMainWindow):
 			for el in mood.elements():
 				if el.name == 'text':
 					txt = unicode(el)
-				else :
+				else:
 					m = self.moods.get(el.name)
+					if self.moodIcons.has_key(el.name):
+						icon="<img src=\"%s\" />" % self.moodIcons[el.name].src
+					else:
+						icon=""
 			if txt != '':
 				t = m+ ' - %s'%txt
 			else:
 				t = m
-			text+='<br /><font size="-1">%s</font>' % (t)	
+			text+='<br />%s<font size="-1">%s</font>' % (icon,t)
 		
 		activity = contact.getPEP('http://jabber.org/protocol/activity')
 		if activity != None:
@@ -3390,7 +3394,9 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.moodButton.setIcon(QtGui.QIcon(src+config['header']['frontImage']))
 			self.moodIcons=config['moods']
 			for mood in self.moodIcons.keys():
-				self.moodIcons[mood]=QtGui.QIcon(src+self.moodIcons[mood])
+				path=unicode(src+self.moodIcons[mood])
+				self.moodIcons[mood]=QtGui.QIcon(path)
+				self.moodIcons[mood].src=unicode(path)
 
 	def loadSounds(self):
 		src=dirname("sounds/"+self.config["soundPack"])
