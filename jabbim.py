@@ -96,6 +96,7 @@ class clientClass(pyxl.client.Client):
 		tab,index=self.main.chat.findTab(frm,typ=['chat'])
 		if tab:
 			tab.chat.refreshLabel()
+			tab.chat.refreshToolTip()
 		if ns=="http://jabber.org/protocol/mood":
 			t = ''
 			m = txt = ''
