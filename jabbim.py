@@ -2131,7 +2131,7 @@ class mainWindow(QtGui.QMainWindow):
 				elif el.name == 'title':
 					title = unicode(el)
 			t = '%s: %s'%(artist, title)
-			if len(t.strip())>0:
+			if len(t.strip())>1:
 				text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">%s</font>' % (t) #ikonka se este muze menit ;)
 		
 		mood = contact.getPEP('http://jabber.org/protocol/mood')
