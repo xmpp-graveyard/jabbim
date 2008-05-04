@@ -53,7 +53,7 @@ try:
 except:
 	log.msg('Please upgrade to python2.5')
 	from sha import new as sha1
-	from PyQt4 import QtGui,QtCore
+from PyQt4 import QtGui,QtCore
 
 class Bookmark:
 	def __init__(self, name, typ, JID = None, autojoin = False, nick = None, password = None, url = None):
