@@ -517,7 +517,7 @@ class Client(derived):
 		self.getPrivacy().addCallback(self.getMetacontacts).addErrback(self.getMetacontacts)
 #		self.getMetacontacts()
 		self.getBookmarks()
-		self.getDiscoInfo(self.jid.host, callback = self._pepSupport)
+		d=self.getDiscoInfo(self.jid.host, callback = self._pepSupport)
 		self.getDiscoItems(self.jid.host, callback = self._gotServices)
 #		self.reactor.callFromThread(self.on_authd)
 		self.dispatcher.publishEvent('on_authd')
@@ -538,7 +538,6 @@ class Client(derived):
 #		def pis(co):
 #			print co
 #		self.callRemote('rpc@jabbim.cz/service', 'getFile', ('smileys/white.zip',)).addCallback(pis)
-
 
 	def _gotServices(self, res):
 		for jid in self.disco[self.jid.host][None]['items'].iterkeys():

@@ -402,6 +402,7 @@ class clientClass(pyxl.client.Client):
 			host=unicode(jid).split('/')[0]
 			transport=True
 		identity=self.getIdentity(jid)
+		print identity
 		if not identity and not host in self.temp_hosts:
 			self.temp_hosts.append(host)
 			self.getDiscoInfo(host)

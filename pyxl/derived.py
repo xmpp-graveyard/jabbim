@@ -610,11 +610,12 @@ class derived:
 		#d.addCallback(self._versionReceived).addErrback(self.chyba)
 		return d
 
-	def getDiscoInfo(self, jid, node = None,  callback = None, callback_par = None):
+	def getDiscoInfo(self, injid, node = None,  callback = None, callback_par = None):
 		#log.msg( 'requesting disco#info: '+jid)
+		jd = jid.JID(injid).host
 		iq = IQ(self.xmlstream, 'get')
 		iq['xml:lang'] = self.xmlLang
-		iq['to'] = jid
+		iq['to'] = jd
 		iq['from'] = self.jid.full()
 		q = iq.addElement('query', 'http://jabber.org/protocol/disco#info')
 		if node != None:
@@ -623,7 +624,8 @@ class derived:
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._discoInfoReceived, node,  callback, callback_par)
-		d.addErrback(self._discoInfoErrReceived, (node, jid))
+		d.addErrback(self._discoInfoErrReceived, (node, jd))
+		return d
 		
 	def getDiscoItems(self, jid, node = None, callback = None, callback_par = None):
 		log.msg('requesting disco#items ')
@@ -790,8 +792,9 @@ class derived:
 
 		id = self.getIdentity(injid)
 
-		f = False
+		f = None
 		if id != None:
+			f=False
 			for identity in id.itervalues():
 				if typ != None:
 					if identity.get('category', None) == category and identity.get('type', None) == typ:
