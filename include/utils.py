@@ -151,6 +151,8 @@ def loadConfig(main,status):
 			"chatMode":"normal",
 			"statusMessages":list(status),
 			"showChatStatusChanges":"True",
+			"showMoodChanges":"True",
+			"showTuneChanges":"True",
 			"useMUCNames":"True",
 			"sendByCtrl":"False",
 			"showTransports":"False",

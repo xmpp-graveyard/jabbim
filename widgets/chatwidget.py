@@ -352,7 +352,10 @@ class chatWidget(abstractChatWidget):
 			else:
 				t = m
 			text+='<br />%s <font size="-1">&nbsp; %s</font>' % (icon,t)
-
+			if self.main.config['showMoodChanges']=='True':
+				user=unicode(self.main.ui.roster.getNameByJID(self.jid))
+				message=icon+"&nbsp;"+user+" "+self.tr("is now")+" "+ t
+				self.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message))
 		tune = contact.getPEP('http://jabber.org/protocol/tune')
 		if type(tune) == list:
 			for x in tune:
@@ -367,6 +370,10 @@ class chatWidget(abstractChatWidget):
 			t = '%s: %s'%(artist, title)
 			if len(t.strip())>1:
 				text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">&nbsp; %s</font>' % (t) #ikonka se este muze menit ;)
+				if self.main.config['showTuneChanges']=='True':
+					user=unicode(self.main.ui.roster.getNameByJID(self.jid))
+					message='<img src="images/22x22/icons/headphones.png" />&nbsp;'+user+" "+self.tr("is now listening:")+" "+icon+" "+ t
+					self.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message))
 
 		self.ui.label.setText(text)
 

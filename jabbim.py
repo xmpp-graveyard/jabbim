@@ -2313,7 +2313,7 @@ class mainWindow(QtGui.QMainWindow):
 					font.setBold(False)
 				
 				action.setFont(font)
-			app.connect(mood, QtCore.SIGNAL("triggered ( QAction *)"),self.statusWidgetChanged)
+			app.connect(mood, QtCore.SIGNAL("triggered ( QAction *)"),self.moodChanged)
 			self.ui.moodButton.setMenu(mood)
 			
 			activity =  self.statusWidgetMenu.addMenu(self.tr('Activity'))
@@ -2425,6 +2425,22 @@ class mainWindow(QtGui.QMainWindow):
 		app.connect(self.statusWidgetMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusWidgetChanged)
 		self.buildTrayMenu()
 
+	def moodChanged(self,action):
+		"""
+		Executes command according to action.objectName(). Called when user choose one of QAction from self.mood menu, which si created by self.buildStatusWidgetMenu().
+		@type action: QAction
+		@param action: QAction from self.statusWidgetMenu.
+		"""
+		data=action.data()
+		cmd = action.objectName()
+
+		if cmd == 'mood':
+			m = unicode(data.toString())
+			log.msg('setting mood to '+m)
+			self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(m))
+			if self.moodIcons.has_key(m):
+				self.ui.moodButton.setIcon(self.moodIcons[m])
+
 	def statusWidgetChanged(self,action):
 		"""
 		Executes command according to action.objectName(). Called when user choose one of QAction from self.statusWidgetMenu, which si created by self.buildStatusWidgetMenu().
@@ -2433,15 +2449,9 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		data=action.data()
 		cmd = action.objectName()
-		if cmd == 'mood':
-			m = unicode(data.toString())
-			log.msg('setting mood to '+m)
-			self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(m))
-			if self.moodIcons.has_key(m):
-				self.ui.moodButton.setIcon(self.moodIcons[m])
+		if cmd=="mood":
 			return
-		
-		elif cmd == 'activity':
+		if cmd == 'activity':
 			data = data.toList()
 			group = unicode(data[0].toString())
 			a = unicode(data[1].toString())
