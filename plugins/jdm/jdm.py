@@ -229,6 +229,7 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.line_jid.setText(self.jid)
 		else:
 			self.jid=unicode(self.window.ui.line_jid.text())
+		print "call",self.jid
 		self.type=type
 		if self.type=="public":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.jid,)).addCallback(self.updateView, 'public')

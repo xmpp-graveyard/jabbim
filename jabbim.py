@@ -3072,6 +3072,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.config.write(f)
 		f.close()
 		# close windows, hide tray :)
+		app.shutdown=True
 		app.closeAllWindows()
 		self.tray.hide()
 		# stop reactor
