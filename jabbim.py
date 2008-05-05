@@ -720,7 +720,7 @@ class clientClass(pyxl.client.Client):
 			else:
 				message = message.replace("[message]",unicode(status))
 
-			if self.main.client.groupchats[muc].users[nick].truejid!="": 
+			if self.main.client.groupchats[muc].users[nick].truejid!="" and self.main.client.groupchats[muc].users[nick].truejid!=None:
 				message=message.replace("[jid]",'('+unicode(self.main.client.groupchats[muc].users[nick].truejid)+') ')
 			else:
 				message=message.replace("[jid]","")
