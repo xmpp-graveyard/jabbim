@@ -155,7 +155,7 @@ class Client(derived):
 
 		d=threads.deferToThread(self.loadAvatars,unicode(path),dict(self.avatarDef))
 		d.addCallback(self.gotAvatars)
-		self.on_init()
+		self.reactor.callFromThread(self.on_init)
 		self.main.cache.get_caps().addCallback(self._cacheCaps)
 		self.dispatcher.registerHandler('on_message', self.on_message, 'on_message')
 		self.dispatcher.registerHandler('on_presence', self.on_presence, 'on_presence')
@@ -387,7 +387,7 @@ class Client(derived):
 		self.factory.clientConnectionFailed = self.connectionFailed
 		print '-'+host+'?', port
 		self.connection = reactor.connectTCP(host,port,self.factory)
-		self.on_connect()
+		self.reactor.callFromThread(self.on_connect)
 		print dir(self.factory)
 		print dir(self.connection)
 		print self.factory.protocol
@@ -415,7 +415,7 @@ class Client(derived):
 	
 	def bootLog(self, el):
 		if self.log:
-			self.on_xml(u'BOOT: ' + el.toXml())
+			self.reactor.callFromThread(self.on_xml,u'BOOT: ' + el.toXml())
 			
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
@@ -432,9 +432,9 @@ class Client(derived):
 			self.main.delayedMessages = self.messageReceipts
 		except:
 			pass
-		self.main._disconnect(error = 'lost')
+		self.reactor.callFromThread(self.main._disconnect,'lost')
 
-		self.on_disconnect()
+		self.reactor.callFromThread(self.on_disconnect)
 	
 	def connectionFailed(self, connector, reason=protocol.connectionDone):
 		log.msg('connection failed!')
@@ -448,7 +448,7 @@ class Client(derived):
 			self._connect(host,port)
 		else:
 			self.main._disconnect(error = 'failed')
-			self.on_disconnect()
+			self.reactor.callFromThread(self.on_disconnect)
 
 	def _streamEnd(self, el):
 		print 'stream end'
@@ -478,7 +478,7 @@ class Client(derived):
 			self.factory.stopTrying()
 		self.connection = None
 		self.factory = None
-		self.on_disconnect()
+		self.reactor.callFromThread(self.on_disconnect)
 
 	def _authd(self, xmlstream):
 		log.msg('authed')
@@ -680,7 +680,8 @@ class Client(derived):
 #		self.avatars[jid] = None
 		self.avatarDef[jid] = 'None'
 		self.avatarDef.write()
-		self.on_avatarUpdate(jid)
+		self.reactor.callFromThread(self.on_avatarUpdate,jid)
+		
 		return err
 
 	def _vcardReceived(self, el):
@@ -717,7 +718,7 @@ class Client(derived):
 			#except:
 				#self.avatarImg[hash] = None
 			#try:
-			self.on_avatarUpdate(el['from'])
+			self.reactor.callFromThread(self.on_avatarUpdate,el['from'])
 			#except:
 				#print 'chyba v updatu avatara'
 		else:
@@ -733,7 +734,7 @@ class Client(derived):
 
 	def _bookmarksErrReceived(self, err):
 		print err
-		self.on_bookmarksFail()
+		self.reactor.callFromThread(self.on_bookmarksFail)
 		pass #no tak neprisly no
 	def _bookmarksReceived(self, el):
 		log.msg( 'bookmarks received')
@@ -777,7 +778,7 @@ class Client(derived):
 	def _metacontactsErrReceived(self,  err):
 		log.msg('meta error')
 		self.getRoster()
-		self.on_metaFail(err)
+		self.reactor.callFromThread(self.on_metaFail,err)
 		
 	def _metacontactsReceived(self,  el):
 		log.msg( 'metacontacts received')
@@ -839,16 +840,16 @@ class Client(derived):
 	def rawDataIn(self, buf):
 		if self.log:
 			try:
-				self.on_xml(u'IN: ' + unicode(buf, 'utf8', 'replace'))
+				self.reactor.callFromThread(self.on_xml,u'IN: ' + unicode(buf, 'utf8', 'replace'))
 			except:
-				self.on_xml(u'IN: ' + buf)
+				self.reactor.callFromThread(self.on_xml,u'IN: ' + buf)
 	
 	def rawDataOut(self, buf):
 		if self.log:
 			try:
-				self.on_xml(u'OUT: ' + unicode(buf, 'utf8', 'replace'))
+				self.reactor.callFromThread(self.on_xml,u'OUT: ' + unicode(buf, 'utf8', 'replace'))
 			except:
-				self.on_xml(u'OUT: ' + buf)
+				self.reactor.callFromThread(self.on_xml,u'OUT: ' + buf)
 			
 	def _onRosterArrive(self, el):
 		log.msg( 'roster arrived')
@@ -1063,7 +1064,7 @@ class Client(derived):
 			if child.name == "continue":
 				cont = True
 		log.msg("invitation recieved to: %s; from %s; reason: %s" % (room, jid, reason))
-		self.on_invite(jid, room, reason, cont)
+		self.reactor.callFromThread(self.on_invite,jid, room, reason, cont)
 #		self.main.showInvitation(jid, room, reason, cont)
 
 	def onSubscribe(self, el):
