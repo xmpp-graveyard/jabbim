@@ -76,6 +76,7 @@ class Client(derived):
 		self.factory = None
 		self.connection = None
 		self.main=main # mainWindow
+		self.reactor.callFromThread(self.on_init)
 		self.ssl = SSL
 		self.lastxml=10
 		self.roster = {'users':{},'groups':{}}
@@ -155,7 +156,6 @@ class Client(derived):
 
 		d=threads.deferToThread(self.loadAvatars,unicode(path),dict(self.avatarDef))
 		d.addCallback(self.gotAvatars)
-		self.reactor.callFromThread(self.on_init)
 		self.main.cache.get_caps().addCallback(self._cacheCaps)
 		self.dispatcher.registerHandler('on_message', self.on_message, 'on_message')
 		self.dispatcher.registerHandler('on_presence', self.on_presence, 'on_presence')
