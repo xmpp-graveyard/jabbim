@@ -714,11 +714,16 @@ class clientClass(pyxl.client.Client):
 		# show status message in conversation textEdit
 		if not u'303' in codes:
 			mainWindow=self.main
-			message="[nick] "+unicode(mainWindow.tr('is now'))+" [show] [[message]]"
+			message="[nick] [jid]"+unicode(mainWindow.tr('is now'))+" [show] [[message]]"
 			if status == None:
 				message = message.replace("[[message]]",'')
 			else:
 				message = message.replace("[message]",unicode(status))
+
+			if self.main.client.groupchats[muc].users[nick].truejid!="": 
+				message=message.replace("[jid]",'('+unicode(self.main.client.groupchats[muc].users[nick].truejid)+') ')
+			else:
+				message=message.replace("[jid]","")
 			message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', nick)
 			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
 			
