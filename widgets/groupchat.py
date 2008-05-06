@@ -554,6 +554,8 @@ class groupChatWidget(abstractChatWidget):
 			v.setText(0,unicode(v.text(1))+" ("+str(v.childCount())+")")
 			if int(v.childCount())>0:
 				self.ui.users.setItemHidden(v,False)
+			else:
+				self.ui.users.setItemHidden(v,True)
 
 	def isUser(self,nick):
 		if len(self.getUserItems(nick))==0:
@@ -598,6 +600,7 @@ class groupChatWidget(abstractChatWidget):
 		item=self.getUserItems(nick)[0]
 		parent=item.parent()
 		parent.takeChild(int(parent.indexOfChild(item)))
+
 		self.refreshStats()
 
 	def editUser(self,nick,status,role=None,affiliation=None):
