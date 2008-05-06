@@ -242,7 +242,7 @@ class groupChatWidget(abstractChatWidget):
 
 	def usersContextMenu(self,pos):
 		item=self.ui.users.itemFromIndex(self.ui.users.indexAt(pos)) # get selected item
-		if not item:
+		if not item or item.parent()==None:
 			return
 		name=unicode(item.text(0)) # get contact name
 		menu=QtGui.QMenu(self.ui.users) # make menu
