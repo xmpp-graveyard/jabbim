@@ -685,6 +685,7 @@ class events:
 		return image
 
 	def addFTUploadEvent(self,jid,files,descriptions):
+		print "addFTUploadEvent"
 		typ=self.isImage(files[0])
 		j=self.main.getJid(jid)
 		feature=False
@@ -699,10 +700,12 @@ class events:
 			d=threads.deferToThread(self.makeFTPreview,files[0])
 			d.addCallback(self._addFTUploadEvent,jid,files,descriptions,'image/png')
 		else:
+			print "starting ft upload"
 			self._addFTUploadEvent(None,jid,files,descriptions,None)
 
 	def _addFTUploadEvent(self,preview,jid,files,descriptions,previewType=None):
 		#print jid,previewType,preview
+		print "_addFTUploadEvent"
 		if preview:
 			bytes=QtCore.QByteArray()
 			buf=QtCore.QBuffer(bytes)
