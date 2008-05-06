@@ -1143,6 +1143,7 @@ class editBookmark(QtGui.QDialog):
 		self.parent=parent
 		self.room=room
 		self.server=server
+		self.jid="%s@%s" % (room,server)
 		self.main=main
 		self.edit=edit
 		self.name=name
@@ -1171,13 +1172,13 @@ class editBookmark(QtGui.QDialog):
 			name = room
 		edited=False
 		if name==self.name:
-			self.main.client.bookmarks['conference'][name]=pyxl.client.Bookmark(name, 'conference', room+"@"+server, autojoin, nickname, password)
+			self.main.client.bookmarks['conference'][self.jid]=pyxl.client.Bookmark(name, 'conference', room+"@"+server, autojoin, nickname, password)
 			#self.done(1)
 			edited=True
 		else:
 			if self.edit==True:
-				del self.main.client.bookmarks['conference'][self.name]
-			self.main.client.bookmarks['conference'][name]=pyxl.client.Bookmark(name, 'conference', room+"@"+server, autojoin, nickname, password)
+				del self.main.client.bookmarks['conference'][self.jid]
+			self.main.client.bookmarks['conference'][self.jid]=pyxl.client.Bookmark(name, 'conference', room+"@"+server, autojoin, nickname, password)
 			edited=True
 		if edited:
 			#self.main.bookmarks=self.bookmarks

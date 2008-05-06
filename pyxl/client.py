@@ -760,7 +760,7 @@ class Client(derived):
 											nick = unicode(elm)
 										if elm.name == 'password':
 											password = unicode(elm)
-									self.bookmarks['conference'][name] = Bookmark(name, 'conference', jid, autojoin, nick,  password)
+									self.bookmarks['conference'][jid] = Bookmark(name, 'conference', jid, autojoin, nick,  password)
 								if bookmark.name == 'url':
 									url = bookmark['url']
 									if bookmark.hasAttribute('name'):

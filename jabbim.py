@@ -1917,6 +1917,15 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		# make Show offline QAction
 		self.offlineMenu=QtGui.QMenu()
+
+		self.showChangeAvatar=self.offlineMenu.addAction(self.tr("Change profile photo"))
+		self.showChangeAvatar.setCheckable(False)
+		self.showChangeAvatar.setObjectName('change_avatar')
+		self.showChangeAvatar.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
+		#QtCore.QObject.connect(self.showOfflineAction,QtCore.SIGNAL("clicked()")
+		QtCore.QObject.connect(self.showChangeAvatar, QtCore.SIGNAL("triggered ( bool )"),self.identityEditor)
+		self.offlineMenu.addSeparator()
+
 		self.showOfflineAction=self.offlineMenu.addAction(self.tr("Show Offline"))
 		self.showOfflineAction.setCheckable(True)
 		self.showOfflineAction.setObjectName('show_offline')
@@ -3302,7 +3311,7 @@ class mainWindow(QtGui.QMainWindow):
 			name=unicode(item.text(0))
 			nickname=unicode(lst[1].toString()) # get nickname
 			password=unicode(lst[2].toString()) # get password
-			autojoin=self.client.bookmarks['conference'][name].autojoin
+			autojoin=self.client.bookmarks['conference'][unicode(item.text(1))].autojoin
 			if password=="None":
 				password=""
 			edit=widgets.preferences.editBookmark(self,room,server,name,nickname,password,autojoin,self)
@@ -3310,7 +3319,7 @@ class mainWindow(QtGui.QMainWindow):
 		elif cmd=="delete_bookmark":
 			item=self.ui.bookmarks.currentItem()
 			#self.ui.bookmarks.takeTopLevelItem(self.ui.bookmarks.indexOfTopLevelItem(item))
-			del self.client.bookmarks['conference'][unicode(item.text(0))]
+			del self.client.bookmarks['conference'][unicode(item.text(1))]
 			self.client.setBookmarks()
 			self.buildBookmarks()
 		elif cmd=="show_users":
@@ -3548,6 +3557,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.actionAdd_Contact.setEnabled(True)
 		self.ui.actionJoin_groupchat.setEnabled(True)
 		self.ui.actionService_Discovery.setEnabled(True)
+		self.ui.actionStart_Chat.setEnabled(True)
+		self.ui.actionPrivacy_list_editor.setEnabled(True)
+		self.ui.actionIdentity.setEnabled(True)
 		self.buildStatusWidgetMenu()
 		self.statusWidgetMenu.setEnabled(False)
 		self.ui.selfName.setText("<h3>"+unicode(self.client.jid.userhost()).split("@")[0]+"</h3>")
@@ -3940,6 +3952,9 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.showOffline.hide()
 		MainWindow.ui.actionAdd_Contact.setEnabled(False)
 		MainWindow.ui.actionJoin_groupchat.setEnabled(False)
+		MainWindow.ui.actionStart_Chat.setEnabled(False)
+		MainWindow.ui.actionPrivacy_list_editor.setEnabled(False)
+		MainWindow.ui.actionIdentity.setEnabled(False)
 		MainWindow.ui.actionService_Discovery.setEnabled(False)
 		try:
 			self.statusWidgetMenu.setEnabled(False)
