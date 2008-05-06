@@ -11,49 +11,17 @@ import sys
 
 def createFirstPage(firstStartWizard):
 	# language and server
-	page=QtGui.QWizardPage()
+	page=QtGui.QWizardPage(firstStartWizard)
 	page.setTitle(firstStartWizard.tr("Welcome"))
 
-	firstStartWizard.label=QtGui.QLabel(firstStartWizard.trUtf8("Vítejte ........."))
+	firstStartWizard.label=QtGui.QLabel(firstStartWizard.trUtf8("Vítejte ........."),page)
 	firstStartWizard.label.setWordWrap(True)
-
-	#label2=QtGui.QLabel(firstStartWizard.trUtf8("Jabber ID (JID) je obdoba emailové adresy. Je to Váš identifikátor v sítich jabber a ostatní uživatelé Vám na tuto adresu mohou pomocí jabberu psát."))
-	#label2.setWordWrap(True)
-
-	#firstStartWizard.label=QtGui.QLabel("")
-	#firstStartWizard.label.setWordWrap(True)
-
-	#label2=QtGui.QLabel(firstStartWizard.tr("Server je místo, kde jsou uložena Vaše uživatelská data.")
-	#label2.setWordWrap(True)
-
-	#firstStartWizard.serverLab=QtGui.QLabel()
-	#firstStartWizard.jidLabel=QtGui.QLabel()
-
-	#nicknameLabel=QtGui.QLabel(firstStartWizard.tr("Nickname:"))
-	#firstStartWizard.nicknameLineEdit=QtGui.QLineEdit()
-	##firstStartWizard.serverLabel=QtGui.QLabel()
-	
-	#passwordLabel=QtGui.QLabel(firstStartWizard.tr("Password:"))
-	#passwordLineEdit=QtGui.QLineEdit()
-	#passwordLineEdit.setEchoMode(QtGui.QLineEdit.Password)
-
-	#password2Label=QtGui.QLabel(firstStartWizard.tr("Password again:"))
-	#password2LineEdit=QtGui.QLineEdit()
-	#password2LineEdit.setEchoMode(QtGui.QLineEdit.Password)
-	
-	#serverLabel=QtGui.QLabel(firstStartWizard.tr("Server:"))
-	#firstStartWizard.serverComboBox=QtGui.QComboBox()
-	#firstStartWizard.serverComboBox.addItems(QtCore.QStringList([firstStartWizard.tr("Choose server")]+servers))
-	#firstStartWizard.serverComboBox.setEditable(True)
-	#QtCore.QObject.connect(firstStartWizard.serverComboBox,QtCore.SIGNAL("activated ( const QString & )"),firstStartWizard.serverComboBoxActivated)
-	#QtCore.QObject.connect(firstStartWizard.serverComboBox,QtCore.SIGNAL("editTextChanged ( const QString & )"),firstStartWizard.serverComboBoxActivated)
-	#QtCore.QObject.connect(firstStartWizard.nicknameLineEdit,QtCore.SIGNAL("textEdited ( const QString & )"),firstStartWizard.nicknameChanged)
-	
+	#firstStartWizard.label.setMinimumHeight(firstStartWizard.label.sizeHint().height())
 	firstStartWizard.newAccount=QtGui.QRadioButton(firstStartWizard.tr("Create new Jabber account"))
 	firstStartWizard.newAccount.setChecked(True)
 	firstStartWizard.oldAccount=QtGui.QRadioButton(firstStartWizard.tr("Use existing Jabber account"))
 	
-	layout=QtGui.QGridLayout()
+	layout=QtGui.QGridLayout(page)
 	layout.addWidget(firstStartWizard.label,0,0,1,2)
 	layout.addWidget(firstStartWizard.newAccount,1,0,1,2)
 	layout.addWidget(firstStartWizard.oldAccount,2,0,1,2)
@@ -65,7 +33,6 @@ def createFirstPage(firstStartWizard):
 	page.setTitle(firstStartWizard.trUtf8("Vitejte...."))
 	page.setSubTitle(firstStartWizard.trUtf8("Vyberte jednu z moznosti."))
 	
-
 	page.setLayout(layout)
 	return page
 

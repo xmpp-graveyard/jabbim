@@ -891,7 +891,7 @@ class chatWindow(QtGui.QMainWindow):
 		if unicode(self.main.config["useMUCNames"])=="True":
 			for nick, bookmark  in self.main.client.bookmarks['conference'].iteritems():
 				if bookmark.jid.userhost() == room:
-					jmeno = nick
+					jmeno = bookmark.name
 		if name:
 			jmeno=name
 		if len(jmeno)>22:
