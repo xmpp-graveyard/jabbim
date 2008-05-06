@@ -2313,12 +2313,12 @@ class mainWindow(QtGui.QMainWindow):
 						for el in moods.elements():
 							if el.name == m:
 								current = True
-				if current:
-					font = QtGui.QFont()
-					font.setBold(True)
-				else:
-					font = QtGui.QFont()
-					font.setBold(False)
+				#if current:
+				font = QtGui.QFont()
+				font.setBold(True)
+				#else:
+					#font = QtGui.QFont()
+					#font.setBold(False)
 				
 				action.setFont(font)
 			app.connect(mood, QtCore.SIGNAL("triggered ( QAction *)"),self.moodChanged)
