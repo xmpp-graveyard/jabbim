@@ -2297,25 +2297,25 @@ class mainWindow(QtGui.QMainWindow):
 		if self.client != None and self.client.pep :
 			self.ui.moodButton.show()
 			# User Mood hack
-			mood = self.statusWidgetMenu.addMenu(self.tr('Mood'))
+			self.moodMenu = self.statusWidgetMenu.addMenu(self.tr('Mood'))
 			keys = self.moods.keys()
 			keys.sort()
+			#highlight current mood if any
+			contact = self.client.getContactByJid(self.client.jid.userhost())
+			current = False #this mood is currently set if True
 			for m in keys:
 				txt = self.moods[m]
-				action = mood.addAction(txt)
+				action = self.moodMenu.addAction(txt)
 				if self.moodIcons.has_key(m):
 					action.setIcon(self.moodIcons[m])
 				action.setData(QtCore.QVariant(m))
 				action.setObjectName('mood')
-				#highlight current mood if any
-				contact = self.client.getContactByJid(self.client.jid.userhost())
-				current = False #this mood is currently set if True
 				if contact != None:
 					moods = contact.getPEP('http://jabber.org/protocol/mood')
 					if moods != None:
 						for el in moods.elements():
 							if el.name == m:
-								current = True
+								current = action
 				if current:
 					font = QtGui.QFont()
 					font.setBold(True)
@@ -2324,8 +2324,9 @@ class mainWindow(QtGui.QMainWindow):
 					font.setBold(False)
 				
 				action.setFont(font)
-			app.connect(mood, QtCore.SIGNAL("triggered ( QAction *)"),self.moodChanged)
-			self.ui.moodButton.setMenu(mood)
+			self.moodMenu.currentAction=current
+			app.connect(self.moodMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.moodChanged)
+			self.ui.moodButton.setMenu(self.moodMenu)
 			
 			activity =  self.statusWidgetMenu.addMenu(self.tr('Activity'))
 			for group, txt in self.activityGroups.iteritems():
@@ -2454,6 +2455,14 @@ class mainWindow(QtGui.QMainWindow):
 			self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(m))
 			if self.moodIcons.has_key(m):
 				self.ui.moodButton.setIcon(self.moodIcons[m])
+			if self.moodMenu.currentAction:
+				font=self.moodMenu.currentAction.font()
+				font.setBold(False)
+				self.moodMenu.currentAction.setFont(font)
+			self.moodMenu.currentAction=action
+			font=self.moodMenu.currentAction.font()
+			font.setBold(True)
+			self.moodMenu.currentAction.setFont(font)
 
 	def statusWidgetChanged(self,action):
 		"""
