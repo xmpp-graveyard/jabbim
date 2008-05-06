@@ -2283,6 +2283,9 @@ class mainWindow(QtGui.QMainWindow):
 					else:
 						action=self.statusWidgetMenu.addAction(self.getIcon(status=key,size="16x16"),unicode(status))
 					action.setData(QtCore.QVariant(key+"_"+unicode(index)))
+					font=action.font()
+					font.setItalic(True)
+					action.setFont(font)
 				self.statusWidgetMenu.addSeparator()
 				separator=False
 			else:
@@ -2313,12 +2316,12 @@ class mainWindow(QtGui.QMainWindow):
 						for el in moods.elements():
 							if el.name == m:
 								current = True
-				#if current:
-				font = QtGui.QFont()
-				font.setBold(True)
-				#else:
-					#font = QtGui.QFont()
-					#font.setBold(False)
+				if current:
+					font = QtGui.QFont()
+					font.setBold(True)
+				else:
+					font = QtGui.QFont()
+					font.setBold(False)
 				
 				action.setFont(font)
 			app.connect(mood, QtCore.SIGNAL("triggered ( QAction *)"),self.moodChanged)
@@ -2400,6 +2403,9 @@ class mainWindow(QtGui.QMainWindow):
 								action=menu.addAction(self.getIcon("1@"+transport,status=key,size="16x16"),unicode(status))
 							# [show_idOfMessage,jidOfTransport]
 							action.setData(QtCore.QVariant([key+"_"+unicode(index),unicode(transport)]))
+							font=action.font()
+							font.setItalic(True)
+							action.setFont(font)
 						menu.addSeparator()
 						separator=False
 					else:
