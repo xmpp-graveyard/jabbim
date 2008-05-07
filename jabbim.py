@@ -2866,13 +2866,14 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Shows MUC Browser.
 		"""
-		if not self.mucbrowser:
-			self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
-			self.mucbrowser.show()
-		else:
-			if self.mucbrowser.isHidden()==True:
-				self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
-				self.mucbrowser.show()
+		#if not self.mucbrowser:
+			#self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
+			#self.mucbrowser.show()
+		#else:
+			#if self.mucbrowser.isHidden()==True:
+				#self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
+				#self.mucbrowser.show()
+		self.joinGroupchat(bool)
 
 	def about(self,bool):
 		"""
