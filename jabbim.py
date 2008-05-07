@@ -3323,8 +3323,8 @@ class mainWindow(QtGui.QMainWindow):
 			name=unicode(item.text(0))
 			nickname=unicode(lst[1].toString()) # get nickname
 			password=unicode(lst[2].toString()) # get password
-			autojoin=self.client.bookmarks['conference'][name].autojoin
-			if password=="None":
+			autojoin=self.client.bookmarks['conference'][jid].autojoin
+			if password=="None" or not password:
 				password=""
 			edit=widgets.preferences.editBookmark(self,room,server,name,nickname,password,autojoin,self)
 			edit.exec_()
