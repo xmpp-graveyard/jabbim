@@ -233,7 +233,10 @@ class leaveMucDialog(QtGui.QDialog):
 		self.ui.setupUi(self)
 		self.main=main
 		self.ui.leaveroom.setText(self.tr("You are trying to leave room ")+unicode(jid)+"<br/>"+self.tr("Do you realy want to leave this room?"))
-
+		policy=self.ui.leaveroom.sizePolicy()
+		policy.setHeightForWidth(True)
+		policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
+		self.ui.leaveroom.setSizePolicy(policy)
 	def accept(self):
 		if self.ui.checkBox.isChecked():
 			if self.main.config['askBeforeQuitMUC']!="False":

@@ -16,6 +16,10 @@ def createFirstPage(firstStartWizard):
 
 	firstStartWizard.label=QtGui.QLabel(firstStartWizard.trUtf8("Vítejte ........."),page)
 	firstStartWizard.label.setWordWrap(True)
+	policy=firstStartWizard.label.sizePolicy()
+	policy.setHeightForWidth(True)
+	policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
+	firstStartWizard.label.setSizePolicy(policy)
 	#firstStartWizard.label.setMinimumHeight(firstStartWizard.label.sizeHint().height())
 	firstStartWizard.newAccount=QtGui.QRadioButton(firstStartWizard.tr("Create new Jabber account"))
 	firstStartWizard.newAccount.setChecked(True)
@@ -44,6 +48,10 @@ def createSecondPage(firstStartWizard):
 
 	firstStartWizard.label=QtGui.QLabel(firstStartWizard.trUtf8("K vytvoreni noveho profilu je potreba vyplnit nasledujici formular."))
 	firstStartWizard.label.setWordWrap(True)
+	policy=firstStartWizard.label.sizePolicy()
+	policy.setHeightForWidth(True)
+	policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
+	firstStartWizard.label.setSizePolicy(policy)
 
 	jidLabel=QtGui.QLabel(firstStartWizard.tr("Jabber ID:"))
 	firstStartWizard.jid=QtGui.QLineEdit()

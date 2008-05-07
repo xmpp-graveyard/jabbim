@@ -271,6 +271,10 @@ def makePreferences(main,parent,layout,form,row=1):
 				label=QtGui.QLabel(x['label'],par)
 				label.setOpenExternalLinks(True)
 				label.setWordWrap(True)
+				policy=label.sizePolicy()
+				policy.setHeightForWidth(True)
+				policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
+				label.setSizePolicy(policy)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
@@ -284,6 +288,10 @@ def makePreferences(main,parent,layout,form,row=1):
 				label=QtGui.QLabel(x['label'],par)
 				label.setOpenExternalLinks(True)
 				label.setWordWrap(True)
+				policy=label.sizePolicy()
+				policy.setHeightForWidth(True)
+				policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
+				label.setSizePolicy(policy)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
@@ -301,6 +309,10 @@ def makePreferences(main,parent,layout,form,row=1):
 				label=QtGui.QLabel(x['label'],par)
 				label.setOpenExternalLinks(True)
 				label.setWordWrap(True)
+				policy=label.sizePolicy()
+				policy.setHeightForWidth(True)
+				policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
+				label.setSizePolicy(policy)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
@@ -319,6 +331,10 @@ def makePreferences(main,parent,layout,form,row=1):
 				label=QtGui.QLabel(x['label'],par)
 				label.setOpenExternalLinks(True)
 				label.setWordWrap(True)
+				policy=label.sizePolicy()
+				policy.setHeightForWidth(True)
+				policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
+				label.setSizePolicy(policy)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
@@ -335,6 +351,10 @@ def makePreferences(main,parent,layout,form,row=1):
 				label=QtGui.QLabel(x['label'],par)
 				label.setOpenExternalLinks(True)
 				label.setWordWrap(True)
+				policy=label.sizePolicy()
+				policy.setHeightForWidth(True)
+				policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
+				label.setSizePolicy(policy)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
@@ -350,6 +370,10 @@ def makePreferences(main,parent,layout,form,row=1):
 				label=QtGui.QLabel(x['label'],par)
 				label.setOpenExternalLinks(True)
 				label.setWordWrap(True)
+				policy=label.sizePolicy()
+				policy.setHeightForWidth(True)
+				policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
+				label.setSizePolicy(policy)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
@@ -362,6 +386,10 @@ def makePreferences(main,parent,layout,form,row=1):
 			label=QtGui.QLabel(par)
 			label.setOpenExternalLinks(True)
 			label.setWordWrap(True)
+			policy=label.sizePolicy()
+			policy.setHeightForWidth(True)
+			policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
+			label.setSizePolicy(policy)
 			label.setText(unicode(val))
 			lay.addWidget(label,row,0,1,2)
 			#for d in x.elements():
@@ -373,6 +401,10 @@ def makePreferences(main,parent,layout,form,row=1):
 				label=QtGui.QLabel(x['label'],par)
 				label.setOpenExternalLinks(True)
 				label.setWordWrap(True)
+				policy=label.sizePolicy()
+				policy.setHeightForWidth(True)
+				policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
+				label.setSizePolicy(policy)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
@@ -436,6 +468,10 @@ def makePreferences(main,parent,layout,form,row=1):
 				label=QtGui.QLabel(x['label'],par)
 				label.setOpenExternalLinks(True)
 				label.setWordWrap(True)
+				policy=label.sizePolicy()
+				policy.setHeightForWidth(True)
+				policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
+				label.setSizePolicy(policy)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)
@@ -455,6 +491,10 @@ def makePreferences(main,parent,layout,form,row=1):
 				label=QtGui.QLabel(x['label'],par)
 				label.setOpenExternalLinks(True)
 				label.setWordWrap(True)
+				policy=label.sizePolicy()
+				policy.setHeightForWidth(True)
+				policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
+				label.setSizePolicy(policy)
 			except KeyError:
 				label=None
 			lay.addWidget(label,row,0)

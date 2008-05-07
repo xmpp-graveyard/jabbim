@@ -23,9 +23,17 @@ class firstPage(QtGui.QWizardPage):
 		self.setTitle(registrationWizard.tr("Introduction"))
 		label=QtGui.QLabel(registrationWizard.trUtf8("Server je místo, kde jsou uložena Vaše uživatelská data."))
 		label.setWordWrap(True)
+		policy=label.sizePolicy()
+		policy.setHeightForWidth(True)
+		policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
+		label.setSizePolicy(policy)
 	
 		label2=QtGui.QLabel(registrationWizard.trUtf8("Jabber ID (JID) je obdoba emailové adresy. Je to Váš identifikátor v sítich jabber a ostatní uživatelé Vám na tuto adresu mohou pomocí jabberu psát."))
 		label2.setWordWrap(True)
+		policy=label2.sizePolicy()
+		policy.setHeightForWidth(True)
+		policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
+		label2.setSizePolicy(policy)
 		self.registrationWizard=registrationWizard
 		registrationWizard.label=QtGui.QLabel("")
 		registrationWizard.label.setWordWrap(True)
