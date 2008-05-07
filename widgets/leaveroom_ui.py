@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/leaveroom.ui'
 #
-# Created: Mon May  5 20:27:18 2008
+# Created: Wed May  7 06:46:23 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -32,7 +32,7 @@ class Ui_leaveroom(object):
         self.gridlayout.addWidget(self.pushButton,2,2,1,1)
 
         self.label_2 = QtGui.QLabel(leaveroom)
-        self.label_2.setMaximumSize(QtCore.QSize(48,48))
+        self.label_2.setMaximumSize(QtCore.QSize(48,16200))
         self.label_2.setPixmap(QtGui.QPixmap("images/48x48/categories/conferences.png"))
         self.label_2.setObjectName("label_2")
         self.gridlayout.addWidget(self.label_2,0,0,1,1)
