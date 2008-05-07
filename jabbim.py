@@ -2343,6 +2343,7 @@ class mainWindow(QtGui.QMainWindow):
 		
 		# make menu for transports
 		if len(self.transports)!=0:
+			self.ui.line1.show()
 			for transport in list(self.transports.keys()):
 				# make transports QMenu and use icon according to transports type and show
 				show=self.client.roster['users'][transport].status
@@ -2427,6 +2428,8 @@ class mainWindow(QtGui.QMainWindow):
 				self.ui.hboxlayout4.addWidget(self.transports[transport])
 				#self.statusWidgetMenu.addMenu(menu)
 			#self.statusWidgetMenu.addSeparator()
+		else:
+			self.ui.line1.hide()
 
 		# other actions
 		action=self.statusWidgetMenu.addAction(self.getIcon(status="online",size="16x16"),self.tr("Add message"))

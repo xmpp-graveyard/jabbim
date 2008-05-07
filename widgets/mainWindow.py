@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Thu May  1 19:56:57 2008
+# Created: Wed May  7 08:18:41 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -284,6 +284,13 @@ class Ui_MainWindow(object):
         self.moodButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.moodButton.setObjectName("moodButton")
         self.hboxlayout4.addWidget(self.moodButton)
+
+        self.line1 = QtGui.QFrame(self.frame)
+        self.line1.setFrameShape(QtGui.QFrame.VLine)
+        self.line1.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line1.setMinimumSize(QtCore.QSize(10,1))
+        self.line1.setObjectName("line1")
+        self.hboxlayout4.addWidget(self.line1)
 
         self.statusButton = QtGui.QToolButton(self.frame)
         self.statusButton.setMaximumSize(QtCore.QSize(16777215,20))
