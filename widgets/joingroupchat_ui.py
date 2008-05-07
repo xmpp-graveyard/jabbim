@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/joingroupchat.ui'
 #
-# Created: Thu May  1 18:40:33 2008
+# Created: Wed May  7 15:13:37 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -62,6 +62,10 @@ class Ui_joingroupchat(object):
         self.label_5 = QtGui.QLabel(self.groupBox)
         self.label_5.setObjectName("label_5")
         self.vboxlayout1.addWidget(self.label_5)
+
+        self.label_6 = QtGui.QLabel(self.groupBox)
+        self.label_6.setObjectName("label_6")
+        self.vboxlayout1.addWidget(self.label_6)
         self.hboxlayout.addLayout(self.vboxlayout1)
 
         self.vboxlayout2 = QtGui.QVBoxLayout()
@@ -80,6 +84,10 @@ class Ui_joingroupchat(object):
         self.serverName = QtGui.QLineEdit(self.groupBox)
         self.serverName.setObjectName("serverName")
         self.vboxlayout2.addWidget(self.serverName)
+
+        self.password = QtGui.QLineEdit(self.groupBox)
+        self.password.setObjectName("password")
+        self.vboxlayout2.addWidget(self.password)
         self.hboxlayout.addLayout(self.vboxlayout2)
         self.vboxlayout.addLayout(self.hboxlayout)
         self.gridlayout.addWidget(self.groupBox,1,0,1,2)
@@ -127,6 +135,13 @@ class Ui_joingroupchat(object):
         QtCore.QObject.connect(self.bookmarkChat,QtCore.SIGNAL("toggled(bool)"),self.bookmarkName.setEnabled)
         QtCore.QObject.connect(self.bookmarkChat,QtCore.SIGNAL("toggled(bool)"),self.autojoin.setEnabled)
         QtCore.QMetaObject.connectSlotsByName(joingroupchat)
+        joingroupchat.setTabOrder(self.nickname,self.roomName)
+        joingroupchat.setTabOrder(self.roomName,self.serverName)
+        joingroupchat.setTabOrder(self.serverName,self.password)
+        joingroupchat.setTabOrder(self.password,self.bookmarkChat)
+        joingroupchat.setTabOrder(self.bookmarkChat,self.bookmarkName)
+        joingroupchat.setTabOrder(self.bookmarkName,self.autojoin)
+        joingroupchat.setTabOrder(self.autojoin,self.buttonBox)
 
     def retranslateUi(self, joingroupchat):
         joingroupchat.setWindowTitle(QtGui.QApplication.translate("joingroupchat", "Join Chat Room", None, QtGui.QApplication.UnicodeUTF8))
@@ -135,6 +150,7 @@ class Ui_joingroupchat(object):
         self.label_3.setText(QtGui.QApplication.translate("joingroupchat", "Your nickname:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("joingroupchat", "Room name:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("joingroupchat", "Room server:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_6.setText(QtGui.QApplication.translate("joingroupchat", "Password:", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_2.setTitle(QtGui.QApplication.translate("joingroupchat", "Bookmark", None, QtGui.QApplication.UnicodeUTF8))
         self.bookmarkNameLabel.setText(QtGui.QApplication.translate("joingroupchat", "Bookmark name:", None, QtGui.QApplication.UnicodeUTF8))
         self.bookmarkChat.setText(QtGui.QApplication.translate("joingroupchat", "Bookmark this chat room", None, QtGui.QApplication.UnicodeUTF8))

@@ -66,8 +66,7 @@ class joinGroupChatWindow(QtGui.QDialog):
 		if not self.main.getJid(jid):
 			return
 		nickname=unicode(self.ui.nickname.text())
-		#password=unicode(self.password.text())
-		password=""
+		password=unicode(self.ui.password.text())
 		saveRoom=self.ui.bookmarkChat.isChecked()
 		autojoin=unicode(self.ui.autojoin.isChecked()).lower()
 		bookmarkName=unicode(self.ui.bookmarkName.text())

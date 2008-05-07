@@ -107,6 +107,13 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QLabel" name="label_6" >
+            <property name="text" >
+             <string>Password:</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>
@@ -125,6 +132,9 @@
           </item>
           <item>
            <widget class="QLineEdit" name="serverName" />
+          </item>
+          <item>
+           <widget class="QLineEdit" name="password" />
           </item>
          </layout>
         </item>
@@ -194,6 +204,16 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>nickname</tabstop>
+  <tabstop>roomName</tabstop>
+  <tabstop>serverName</tabstop>
+  <tabstop>password</tabstop>
+  <tabstop>bookmarkChat</tabstop>
+  <tabstop>bookmarkName</tabstop>
+  <tabstop>autojoin</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
