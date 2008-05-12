@@ -245,7 +245,7 @@ class clientClass(pyxl.client.Client):
 						# some files are in queue, so we have to start to upload next file
 						if not emptyQueue:
 							self.main.events.nextFTUploadEvent(sid,queueId)
-							widget.widget.complete==True
+							widget.widget.complete=True
 						# queue is empty => all files have been sent
 						else:
 							# check this queues error list, if there is something different then None, some files haven't been sent
