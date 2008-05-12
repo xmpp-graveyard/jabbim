@@ -201,7 +201,8 @@ class clientClass(pyxl.client.Client):
 				widget.widget.progressBar.setValue(int((sent/size)*100))
 			else:
 				# Filetransfer finished
-				log.msg("ft.finished")
+				print 'ft.finished'
+				
 				widget.widget.progressBar.setValue(100)
 				if widget.widget.complete==None:
 					# User wants to close transfer
@@ -249,6 +250,7 @@ class clientClass(pyxl.client.Client):
 						# queue is empty => all files have been sent
 						else:
 							# check this queues error list, if there is something different then None, some files haven't been sent
+							widget.widget.complete=True
 							error=False
 							for b in self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']].errors:
 								if b!=None:
