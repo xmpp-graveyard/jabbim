@@ -71,8 +71,8 @@ class joinGroupChatWindow(QtGui.QDialog):
 		autojoin=unicode(self.ui.autojoin.isChecked()).lower()
 		bookmarkName=unicode(self.ui.bookmarkName.text())
 
-		if saveRoom and not self.main.client.bookmarks['conference'].has_key(bookmarkName):
-			self.main.client.bookmarks['conference'][bookmarkName]=pyxl.client.Bookmark(bookmarkName, 'conference', jid, autojoin, nickname, password)
+		if saveRoom and not self.main.client.bookmarks['conference'].has_key(jid):
+			self.main.client.bookmarks['conference'][jid]=pyxl.client.Bookmark(bookmarkName, 'conference', jid, autojoin, nickname, password)
 			self.main.client.setBookmarks()
 			self.main.buildBookmarks()
 

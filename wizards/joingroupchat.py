@@ -142,8 +142,8 @@ class joinGroupchatWizard(QtGui.QWizard):
 				#if self.main.client.bookmarks['conference'][bkey].jid.userhost() == jid:
 					#bookmarkName = self.main.client.bookmarks['conference'][bkey].name
 
-		if saveRoom and not self.main.client.bookmarks['conference'].has_key(bookmarkName):
-			self.main.client.bookmarks['conference'][bookmarkName]=pyxl.client.Bookmark(bookmarkName, 'conference', jid, autojoin, nickname, password)
+		if saveRoom and not self.main.client.bookmarks['conference'].has_key(jid):
+			self.main.client.bookmarks['conference'][jid]=pyxl.client.Bookmark(bookmarkName, 'conference', jid, autojoin, nickname, password)
 			self.main.client.setBookmarks()
 			self.main.buildBookmarks()
 
