@@ -163,8 +163,14 @@ class clientClass(pyxl.client.Client):
 			# rejoin with oldNick_ if tab for this room exists
 			tab,index=self.main.chat.findTab(fromjid)
 			if tab:
-				tab.chat.nick=resource+"_"
-				self.joinGC(fromjid, resource+"_")
+				if str(self.main.config["autochangenickMUC"])=="True":
+					tab.chat.nick=resource+"_"
+					self.joinGC(fromjid, resource+"_")
+				else:
+					self.main.chat.ui.chatTab.removeTab(index)
+					if int(self.main.chat.ui.chatTab.count())==0:
+						self.main.chat.hide()
+					self.main.events.addLineEditEvent(maintext=unicode(fromjid)+"<br/>"+text,trueCall=self.main.joinGC,trueDict=[fromjid],falseCall=None,falseDict=None,header=mainWindow.tr("Groupchat Error"),text=mainWindow.tr("New name:"),name=unicode(fromjid),typ="groupchatError",icon=None,action=None,actionDict=None,height=150, value=resource,trueText=mainWindow.tr("Join"),falseText=mainWindow.tr("Decline"))
 		else:
 			# remove groupchatWidget from chatWindow
 			tab,index=self.main.chat.findTab(fromjid)
@@ -1922,6 +1928,15 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		# make Show offline QAction
 		self.offlineMenu=QtGui.QMenu()
+		
+		self.showChangeAvatar=self.offlineMenu.addAction(self.tr("Change profile photo"))
+		self.showChangeAvatar.setCheckable(False)
+		self.showChangeAvatar.setObjectName('change_avatar')
+		self.showChangeAvatar.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
+		#QtCore.QObject.connect(self.showOfflineAction,QtCore.SIGNAL("clicked()")
+		QtCore.QObject.connect(self.showChangeAvatar, QtCore.SIGNAL("triggered ( bool )"),self.identityEditor)
+		self.offlineMenu.addSeparator()
+		
 		self.showOfflineAction=self.offlineMenu.addAction(self.tr("Show Offline"))
 		self.showOfflineAction.setCheckable(True)
 		self.showOfflineAction.setObjectName('show_offline')
@@ -3334,7 +3349,7 @@ class mainWindow(QtGui.QMainWindow):
 		elif cmd=="delete_bookmark":
 			item=self.ui.bookmarks.currentItem()
 			#self.ui.bookmarks.takeTopLevelItem(self.ui.bookmarks.indexOfTopLevelItem(item))
-			del self.client.bookmarks['conference'][unicode(item.text(0))]
+			del self.client.bookmarks['conference'][unicode(item.text(1))]
 			self.client.setBookmarks()
 			self.buildBookmarks()
 		elif cmd=="show_users":
@@ -3572,6 +3587,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.actionAdd_Contact.setEnabled(True)
 		self.ui.actionJoin_groupchat.setEnabled(True)
 		self.ui.actionService_Discovery.setEnabled(True)
+		self.ui.actionStart_Chat.setEnabled(True) 
+		self.ui.actionPrivacy_list_editor.setEnabled(True) 
+		self.ui.actionIdentity.setEnabled(True)
 		self.buildStatusWidgetMenu()
 		self.statusWidgetMenu.setEnabled(False)
 		self.ui.selfName.setText("<h3>"+unicode(self.client.jid.userhost()).split("@")[0]+"</h3>")
@@ -3965,6 +3983,9 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.actionAdd_Contact.setEnabled(False)
 		MainWindow.ui.actionJoin_groupchat.setEnabled(False)
 		MainWindow.ui.actionService_Discovery.setEnabled(False)
+		MainWindow.ui.actionStart_Chat.setEnabled(False) 
+		MainWindow.ui.actionPrivacy_list_editor.setEnabled(False) 
+		MainWindow.ui.actionIdentity.setEnabled(False)
 		try:
 			self.statusWidgetMenu.setEnabled(False)
 		except:

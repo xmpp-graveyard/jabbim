@@ -7,3 +7,4 @@ class preferences:
 		self.config["showTuneChanges"]={'type':'boolean','label':preferencesWindow.tr("Show messages about user tune."),'value':'True','groupbox':preferencesWindow.tr('Normal chat')}
 		self.config['useMUCNames']={'type':'boolean','label':preferencesWindow.tr("Use names for tabs."),'value':'True','groupbox':preferencesWindow.tr('Groupchat')}
 		self.config["askBeforeQuitMUC"]={'type':'boolean','label':preferencesWindow.tr("Ask before quit room."),'value':'True','groupbox':preferencesWindow.tr('Groupchat')}
+		self.config["autochangenickMUC"]={'type':'boolean','label':preferencesWindow.tr("Auto change nick if nick conflict join to room"),'value':'True','groupbox':preferencesWindow.tr('Groupchat')}

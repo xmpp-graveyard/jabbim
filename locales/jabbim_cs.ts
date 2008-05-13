@@ -2080,7 +2080,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="2246"/>
         <source> invites you to conference </source>
-        <translation> vás zve do místnosti</translation>
+        <translation> vás zve do místnosti </translation>
     </message>
     <message>
         <location filename="" line="72"/>

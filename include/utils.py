@@ -171,6 +171,7 @@ def loadConfig(main,status):
 			"sendOSInfo": "True",
 			"boshURL": '',
 			"autoJoinMUC": 'True',
+			"autochangenickMUC": 'True',
 			"FTHost": '',
 			"FTPort": '',
 			"tabCycling" : "True", #cyklovanie medzi tabmi...
