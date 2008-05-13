@@ -907,7 +907,9 @@ class preferencesWindow(QtGui.QDialog):
 			else:
 				item=QtGui.QTreeWidgetItem(categories['other'])
 			widget=QtGui.QCheckBox(self.ui.plugins)
+			print plugin,self.loadedPlugins
 			if plugin in self.loadedPlugins:
+				print "setChecked True"
 				widget.setChecked(True)
 				self.ui.plugins.setItemExpanded(item.parent(),True)
 			self.ui.plugins.setItemWidget(item,0,widget)
