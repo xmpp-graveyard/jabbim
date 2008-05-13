@@ -13,16 +13,16 @@ class config:
 	def __init__(self,main):
 		self.main=main
 		self.config={}
-		self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Winamp':'winamp', 'Amarok':'amarok' }, 'value':'mpd'}
+		self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Winamp':'winamp', 'Amarok':'amarok','Exaile':'exaile' }, 'value':'mpd'}
 
 class Plugin(plugins.PluginBase):
     def __init__(self, main, homedir, plugindir):
         plugins.PluginBase.__init__(self, main, homedir, plugindir)
         self.fname = 'tune'
         self.description = 'Plugin for User Tune'
-        self.author = "Jiri 'Sef' Gabrys"
+        self.author = "Jiri 'Sef' Gabrys + Josef 'PepeQ' Halicek"
         self.name = 'tune'
-        self.version = '0.1'
+        self.version = '0.23'
         self.category = ['utils']
         self.configDialog=config(self)
         self.url = 'http://dev.jabbim.cz/jabbim'
@@ -57,6 +57,23 @@ class Plugin(plugins.PluginBase):
 						out['title'] = output.split('\n')[0].split('/')[-1]
 					out['lenght'] = output.split('\n')[1].split('/')[-1].split('(')[0].strip()
 
+		elif self.config['player'] == 'exaile':
+			
+			try:
+				import dbus
+				bus = dbus.SessionBus()
+				obj = bus.get_object("org.exaile.DBusInterface","/DBusInterfaceObject")
+				exa = dbus.Interface(obj,"org.exaile.DBusInterface")
+				out['artist'] = exa.get_artist()
+				if exa.get_title() !='':
+					out['title'] = exa.get_title() #nebudu zavadet novou promenou, zbytecne.
+				else:	
+					out = {}
+			except:
+				text = ''
+				out = {}
+				
+		
 		elif self.config['player'] == 'winamp':
 			
 			try:
