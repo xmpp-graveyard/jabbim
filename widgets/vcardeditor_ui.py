@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/vcardeditor.ui'
 #
-# Created: Thu Feb  7 09:36:15 2008
+# Created: Wed May 14 14:33:20 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -54,6 +54,7 @@ class Ui_VCardEdit(object):
         self.hboxlayout.setObjectName("hboxlayout")
 
         self.homepage_label = QtGui.QLabel(self.tab)
+        self.homepage_label.setOpenExternalLinks(True)
         self.homepage_label.setObjectName("homepage_label")
         self.hboxlayout.addWidget(self.homepage_label)
 
