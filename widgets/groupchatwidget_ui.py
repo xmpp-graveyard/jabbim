@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/groupchatwidget.ui'
 #
-# Created: Wed Feb  6 13:44:18 2008
+# Created: Wed May 14 06:24:59 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -178,10 +178,18 @@ class Ui_groupchatwidget(object):
     def retranslateUi(self, groupchatwidget):
         groupchatwidget.setWindowTitle(QtGui.QApplication.translate("groupchatwidget", "Form", None, QtGui.QApplication.UnicodeUTF8))
         self.info.setToolTip(QtGui.QApplication.translate("groupchatwidget", "Every multi-user chat can have topic of its discussion", None, QtGui.QApplication.UnicodeUTF8))
+        self.linkButton.setToolTip(QtGui.QApplication.translate("groupchatwidget", "Anchor", None, QtGui.QApplication.UnicodeUTF8))
+        self.boldButton.setToolTip(QtGui.QApplication.translate("groupchatwidget", "Bold", None, QtGui.QApplication.UnicodeUTF8))
         self.boldButton.setText(QtGui.QApplication.translate("groupchatwidget", "Bold", None, QtGui.QApplication.UnicodeUTF8))
+        self.italicButton.setToolTip(QtGui.QApplication.translate("groupchatwidget", "Italic", None, QtGui.QApplication.UnicodeUTF8))
         self.italicButton.setText(QtGui.QApplication.translate("groupchatwidget", "Italic", None, QtGui.QApplication.UnicodeUTF8))
+        self.underlineButton.setToolTip(QtGui.QApplication.translate("groupchatwidget", "Underline", None, QtGui.QApplication.UnicodeUTF8))
         self.underlineButton.setText(QtGui.QApplication.translate("groupchatwidget", "Underline", None, QtGui.QApplication.UnicodeUTF8))
+        self.colorButton.setToolTip(QtGui.QApplication.translate("groupchatwidget", "Font color", None, QtGui.QApplication.UnicodeUTF8))
+        self.backgroundButton.setToolTip(QtGui.QApplication.translate("groupchatwidget", "Background color", None, QtGui.QApplication.UnicodeUTF8))
+        self.fontSize.setToolTip(QtGui.QApplication.translate("groupchatwidget", "Font size", None, QtGui.QApplication.UnicodeUTF8))
         self.smileys.setToolTip(QtGui.QApplication.translate("groupchatwidget", "You can add emoticons by clicking here", None, QtGui.QApplication.UnicodeUTF8))
+        self.sendButton.setToolTip(QtGui.QApplication.translate("groupchatwidget", "Send Message", None, QtGui.QApplication.UnicodeUTF8))
         self.sendButton.setText(QtGui.QApplication.translate("groupchatwidget", "&Send", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(0,QtGui.QApplication.translate("groupchatwidget", "user", None, QtGui.QApplication.UnicodeUTF8))
         self.users.headerItem().setText(1,QtGui.QApplication.translate("groupchatwidget", "jid", None, QtGui.QApplication.UnicodeUTF8))

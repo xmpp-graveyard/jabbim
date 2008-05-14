@@ -100,6 +100,9 @@
            </item>
            <item>
             <widget class="QToolButton" name="linkButton" >
+             <property name="toolTip" >
+              <string>Anchor</string>
+             </property>
              <property name="icon" >
               <iconset>images/16x16/actions/anchor.png</iconset>
              </property>
@@ -115,6 +118,9 @@
             <widget class="QToolButton" name="boldButton" >
              <property name="focusPolicy" >
               <enum>Qt::NoFocus</enum>
+             </property>
+             <property name="toolTip" >
+              <string>Bold</string>
              </property>
              <property name="text" >
               <string>Bold</string>
@@ -135,6 +141,9 @@
              <property name="focusPolicy" >
               <enum>Qt::NoFocus</enum>
              </property>
+             <property name="toolTip" >
+              <string>Italic</string>
+             </property>
              <property name="text" >
               <string>Italic</string>
              </property>
@@ -154,6 +163,9 @@
              <property name="focusPolicy" >
               <enum>Qt::NoFocus</enum>
              </property>
+             <property name="toolTip" >
+              <string>Underline</string>
+             </property>
              <property name="text" >
               <string>Underline</string>
              </property>
@@ -170,6 +182,9 @@
            </item>
            <item>
             <widget class="QToolButton" name="colorButton" >
+             <property name="toolTip" >
+              <string>Font color</string>
+             </property>
              <property name="popupMode" >
               <enum>QToolButton::InstantPopup</enum>
              </property>
@@ -180,6 +195,9 @@
            </item>
            <item>
             <widget class="QToolButton" name="backgroundButton" >
+             <property name="toolTip" >
+              <string>Background color</string>
+             </property>
              <property name="popupMode" >
               <enum>QToolButton::InstantPopup</enum>
              </property>
@@ -189,7 +207,11 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="fontSize" />
+            <widget class="QComboBox" name="fontSize" >
+             <property name="toolTip" >
+              <string>Font size</string>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="Line" name="line" >
@@ -216,6 +238,9 @@
            </item>
            <item>
             <widget class="QToolButton" name="sendButton" >
+             <property name="toolTip" >
+              <string>Send Message</string>
+             </property>
              <property name="text" >
               <string>&amp;Send</string>
              </property>

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Sat Feb  9 06:19:10 2008
+# Created: Wed May 14 06:24:48 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -210,10 +210,19 @@ class Ui_chatwidget(object):
 
     def retranslateUi(self, chatwidget):
         chatwidget.setWindowTitle(QtGui.QApplication.translate("chatwidget", "Form", None, QtGui.QApplication.UnicodeUTF8))
+        self.linkButton.setToolTip(QtGui.QApplication.translate("chatwidget", "Anchor", None, QtGui.QApplication.UnicodeUTF8))
+        self.boldButton.setToolTip(QtGui.QApplication.translate("chatwidget", "Bold", None, QtGui.QApplication.UnicodeUTF8))
         self.boldButton.setText(QtGui.QApplication.translate("chatwidget", "Bold", None, QtGui.QApplication.UnicodeUTF8))
+        self.italicButton.setToolTip(QtGui.QApplication.translate("chatwidget", "Italic", None, QtGui.QApplication.UnicodeUTF8))
         self.italicButton.setText(QtGui.QApplication.translate("chatwidget", "Italic", None, QtGui.QApplication.UnicodeUTF8))
+        self.underlineButton.setToolTip(QtGui.QApplication.translate("chatwidget", "Underline", None, QtGui.QApplication.UnicodeUTF8))
         self.underlineButton.setText(QtGui.QApplication.translate("chatwidget", "Underline", None, QtGui.QApplication.UnicodeUTF8))
+        self.colorButton.setToolTip(QtGui.QApplication.translate("chatwidget", "Font color", None, QtGui.QApplication.UnicodeUTF8))
+        self.backgroundButton.setToolTip(QtGui.QApplication.translate("chatwidget", "Background color", None, QtGui.QApplication.UnicodeUTF8))
+        self.fontSize.setToolTip(QtGui.QApplication.translate("chatwidget", "Font size", None, QtGui.QApplication.UnicodeUTF8))
+        self.smileys.setToolTip(QtGui.QApplication.translate("chatwidget", "Emoticons", None, QtGui.QApplication.UnicodeUTF8))
         self.smileys.setText(QtGui.QApplication.translate("chatwidget", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.sendButton.setToolTip(QtGui.QApplication.translate("chatwidget", "Send message", None, QtGui.QApplication.UnicodeUTF8))
         self.sendButton.setText(QtGui.QApplication.translate("chatwidget", "&Send", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("chatwidget", "name", None, QtGui.QApplication.UnicodeUTF8))
         self.metaLabel.setText(QtGui.QApplication.translate("chatwidget", "Metacontact:", None, QtGui.QApplication.UnicodeUTF8))
