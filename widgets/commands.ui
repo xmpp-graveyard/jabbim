@@ -81,6 +81,9 @@
       </item>
       <item row="0" column="0" >
        <widget class="QPushButton" name="menuButton" >
+        <property name="text" >
+         <string>Menu</string>
+        </property>
         <property name="icon" >
          <iconset>images/16x16/actions/exec.png</iconset>
         </property>

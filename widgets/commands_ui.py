@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/commands.ui'
 #
-# Created: Wed Mar 12 18:52:49 2008
+# Created: Wed May 14 08:54:34 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -97,4 +97,5 @@ class Ui_Dialog(object):
         self.next.setText(QtGui.QApplication.translate("Dialog", "Next →", None, QtGui.QApplication.UnicodeUTF8))
         self.close.setText(QtGui.QApplication.translate("Dialog", "Close", None, QtGui.QApplication.UnicodeUTF8))
         self.previous.setText(QtGui.QApplication.translate("Dialog", "← Back", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuButton.setText(QtGui.QApplication.translate("Dialog", "Menu", None, QtGui.QApplication.UnicodeUTF8))
 
