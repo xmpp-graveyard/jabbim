@@ -2901,8 +2901,12 @@ class mainWindow(QtGui.QMainWindow):
 	
 	def support(self, bool):
 		print 'support pressed'
-		if self.chat.addGroupChatTab("jabbim@conf.netlab.cz",self.client.jid.user):
-			self.client.joinGC("jabbim@conf.netlab.cz",self.client.jid.user)
+		if self.client:
+			if self.chat.addGroupChatTab("jabbim@conf.netlab.cz",self.client.jid.user):
+				self.client.joinGC("jabbim@conf.netlab.cz",self.client.jid.user)
+		else:
+			anchor="http://live.jabbim.cz/muckl/muckl.html?conf_room=jabbim&nick="
+			QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
 	
 	def sendCustomStatus(self, jid, show = None):
 		cs = customStatusWindow(jid, show)
