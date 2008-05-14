@@ -9,18 +9,28 @@ import dataforms
 import legacyforms
 from search import *
 import commands
+import addcontact
 
 class table(QtGui.QTreeWidget):
-	def __init__(self,parent=None):
+	def __init__(self,parent=None,service=None):
 		QtGui.QTreeWidget.__init__(self,parent)
 		self.setDragEnabled(True)
 		self.setIconSize(QtCore.QSize(48,48))
-		self.setObjectName("tree")
+		self.setObjectName("serviceDiscoveryTree")
 		self.headerItem().setText(0,QtGui.QApplication.translate("serviceDiscovery", "name", None, QtGui.QApplication.UnicodeUTF8))
 		self.headerItem().setText(1,QtGui.QApplication.translate("serviceDiscovery", "search", None, QtGui.QApplication.UnicodeUTF8))
 		self.headerItem().setText(2,QtGui.QApplication.translate("serviceDiscovery", "register", None, QtGui.QApplication.UnicodeUTF8))
 		self.headerItem().setText(3,QtGui.QApplication.translate("serviceDiscovery", "jid", None, QtGui.QApplication.UnicodeUTF8))
 		self.headerItem().setText(4,QtGui.QApplication.translate("serviceDiscovery", "commands", None, QtGui.QApplication.UnicodeUTF8))
+		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
+		self.service=service
+
+	def hasFeature(self,item,feature):
+		for data in item.data(32,0).toList():
+			if unicode(data.toString())==feature:
+				return True
+		return False
+
 
 	def startDrag(self,actions):
 		# start dragging selected contact
@@ -32,6 +42,47 @@ class table(QtGui.QTreeWidget):
 			mimeData.setText(jid)
 			self.drag.setMimeData(mimeData)
 			self.action=self.drag.start(QtCore.Qt.CopyAction)
+
+	def contextMenuEvent(self,event):
+		print "context menu"
+		item=self.itemFromIndex(self.indexAt(QtCore.QPoint(event.x(),event.y())))
+		jid=unicode(item.text(3))
+		if len(jid)==0:
+			return
+		menu=QtGui.QMenu(self)
+		if self.service.main.getJid(jid):
+			action=menu.addAction(self.tr("Add to roster"))
+			action.setObjectName("add_to_roster")
+			menu.addSeparator()
+		if self.hasFeature(item,"jabber:iq:register"):
+			action=menu.addAction(self.tr("Register / Unregister"))
+			action.setObjectName("register")
+		if self.hasFeature(item,"jabber:iq:search"):
+			action=menu.addAction(self.tr("Search service for users"))
+			action.setObjectName("search")
+		if self.hasFeature(item,"http://jabber.org/protocol/commands"):
+			action=menu.addAction(self.tr("Execute extra action"))
+			action.setObjectName("command")
+		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.menuTriggered)
+		menu.popup(QtCore.QPoint(event.globalX(),event.globalY()))
+
+
+	def menuTriggered(self,action):
+		cmd=action.objectName()
+		jid=unicode(self.currentItem().text(3))
+		if cmd=="add_to_roster":
+			dialog=addcontact.addContactDialog(self.service.main,self.service.main,jid=jid,name=jid.split('@')[0])
+			dialog.exec_()
+		elif cmd=="register":
+			d=self.service.main.client.getRegisterForm(unicode(jid))
+			d.addCallback(self.service._onRegister)
+		elif cmd=="search":
+			d=self.service.main.client.getSearchForm(jid)
+			d.addCallback(self.service._gotSearchForm)
+		elif cmd=="command":
+			cmds = commands.Commands(self.service.main, jid)
+			cmds.dialog.show()
+
 
 
 class serviceDiscoveryDialog(QtGui.QDialog):
@@ -49,7 +100,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		
 		layout=QtGui.QHBoxLayout(self.ui.treeWidget)
 		layout.setMargin(0)
-		self.ui.tree=table(self.ui.treeWidget)
+		self.ui.tree=table(self.ui.treeWidget,self)
 		layout.addWidget(self.ui.tree)
 		
 		#for category in self.getCategories():
@@ -58,7 +109,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemExpanded ( QTreeWidgetItem * )"),self.expanded)
 		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemCollapsed ( QTreeWidgetItem * )"),self.collapsed)
 		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.itemClicked)
-		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int)"),self.itemSelected)
+		QtCore.QObject.connect(self.ui.tree, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem *  )"),self.itemSelected)
 		#QtCore.QObject.connect(self.ui.register, QtCore.SIGNAL("clicked()"),self.register)
 		#QtCore.QObject.connect(self.ui.search, QtCore.SIGNAL("clicked()"),self.search)
 		self.group=QtGui.QButtonGroup(self)
@@ -153,25 +204,22 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		if len(jid)==0:
 			return
 		if self.main.client.hasIdentity(jid, 'conference', 'text'):
-			self.done(1)
+			#self.done(1)
 			self.main.mucBrowser()
-			self.main.mucbrowser.server = jid
-			self.main.mucbrowser.ui.lineEdit.setText(jid)
-			self.main.mucbrowser.serverChanged()
+			self.main.joingroupchatwizard.server=jid
+			self.main.joingroupchatwizard.ui.serverName.setText(jid)
 			return
 		
-		self.main.client.getDiscoItems(jid, callback = self._discoItemsReceived, callback_par = (item))
+		#self.main.client.getDiscoItems(jid, callback = self._discoItemsReceived, callback_par = (item,True))
 
-	def hasFeature(self,item,feature):
-		for data in item.data(32,0).toList():
-			if unicode(data.toString())==feature:
-				return True
-		return False
+	def itemSelected(self,item,old):
+		jid=unicode(item.text(3))
+		if len(jid)==0:
+			return
+		if self.main.client.hasIdentity(jid, 'conference', 'text'):
+			return
 
-	def itemSelected(self,item,i):
-		pass
-		#self.ui.register.setEnabled(self.hasFeature(item,"jabber:iq:register"))
-		#self.ui.search.setEnabled(self.hasFeature(item,"jabber:iq:search"))
+		self.main.client.getDiscoItems(jid, callback = self._discoItemsReceived, callback_par = (item,False))
 
 	def _discoinfo(self,item):
 		key=unicode(item.text(3))
@@ -209,9 +257,13 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 				cmds.typ="cmds"
 				self.group.addButton(cmds)
 				self.ui.tree.setItemWidget(item,4,cmds)
+			item.setData(32,0,QtCore.QVariant(list(self.main.client.disco[key][None]['features'])))
+		else:
+			item.setData(32,0,QtCore.QVariant(list([])))
 
-
-	def _discoItemsReceived(self,item):
+	def _discoItemsReceived(self,data):
+		item=data[0]
+		expand=data[1]
 		jid=unicode(item.text(3))
 		for i in range(item.childCount()):
 			item.takeChild(0)
@@ -228,7 +280,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 			it.setToolTip(0,values['jid'])
 			self.main.client.getDiscoInfo(values['jid'],callback=self._discoinfo, callback_par = (it))
 		self.ui.tree.sortItems(0,QtCore.Qt.AscendingOrder)
-		item.setExpanded(True)
+		item.setExpanded(expand)
 		
 		self.ui.tree.resizeColumnToContents(0)
 
@@ -324,6 +376,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 							self.ui.tree.setItemWidget(parentitem,1,search)
 						if "http://jabber.org/protocol/commands" in list(self.main.client.disco[key][None]['features']):
 							cmds=QtGui.QPushButton(self.ui.tree)
+							cmds.setMaximumWidth(34)
 							cmds.setIcon(QtGui.QIcon("images/32x32/actions/exec.png"))
 							cmds.setIconSize(QtCore.QSize(32,32))
 							cmds.setFlat(True)

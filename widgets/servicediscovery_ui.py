@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/servicediscovery.ui'
 #
-# Created: Wed Feb 13 17:13:46 2008
+# Created: Wed May 14 06:52:25 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_serviceDiscovery(object):
     def setupUi(self, serviceDiscovery):
         serviceDiscovery.setObjectName("serviceDiscovery")
-        serviceDiscovery.resize(QtCore.QSize(QtCore.QRect(0,0,439,407).size()).expandedTo(serviceDiscovery.minimumSizeHint()))
+        serviceDiscovery.resize(QtCore.QSize(QtCore.QRect(0,0,551,556).size()).expandedTo(serviceDiscovery.minimumSizeHint()))
 
         self.gridlayout = QtGui.QGridLayout(serviceDiscovery)
         self.gridlayout.setMargin(9)
@@ -63,5 +63,5 @@ class Ui_serviceDiscovery(object):
         serviceDiscovery.setWindowTitle(QtGui.QApplication.translate("serviceDiscovery", "Service Discovery", None, QtGui.QApplication.UnicodeUTF8))
         self.close.setText(QtGui.QApplication.translate("serviceDiscovery", "Close", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("serviceDiscovery", "Server:", None, QtGui.QApplication.UnicodeUTF8))
-        self.reload.setText(QtGui.QApplication.translate("serviceDiscovery", "Ok", None, QtGui.QApplication.UnicodeUTF8))
+        self.reload.setText(QtGui.QApplication.translate("serviceDiscovery", "OK", None, QtGui.QApplication.UnicodeUTF8))
 
