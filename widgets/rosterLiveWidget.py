@@ -1000,6 +1000,8 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					painter.drawText(QtCore.QRectF(10,10,self.width()-20,100),QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap,self.tr("You haven't any online contact in your contact list. To see offline contacts, you have to click Show Offline button, which is above this message."))
 			else:
+				if len(items)==0 and self.searchMode:
+					painter.drawText(QtCore.QRectF(10,10,self.width()-20,100),QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap,self.tr("No search results for your keywords"))
 				if not self.emptyRosterWidget.isHidden():
 					self.emptyRosterWidget.hide()
 				#doc.drawContents(painter,)
@@ -1009,6 +1011,7 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					self.paintUserItem(painter,item,0,y)
 				y+=item.height
+
 		if self.main.config['rosterScrollBar']=='False':
 			if self.height()>self.main.scroll.height():
 				if self.main.scroll.verticalScrollBar().value()>0:
@@ -1243,6 +1246,21 @@ class rosterWidget(QtGui.QWidget):
 				self.main.chat.addChatTab(item.jid+"/"+res,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 
 			#self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+
+			self.item = None
+			#self.selected = None
+			if self.searchMode==True:
+				self.searchMode=False
+				for user in self.users:
+					user.hiddenBySearch=False
+				self.main.ui.rosterSearch.setText("")
+				self.main.ui.rosterSearch.hide()
+				self.main.ui.rosterSearchLabel.hide()
+
+			self.statusLabel.hide()
+			self.reshow=True
+			self.setSize()
+			self.repaint()
 			self.main.chat.activate()
 		elif key==QtCore.Qt.Key_Escape:
 			self.item = None
@@ -1681,16 +1699,12 @@ class rosterWidget(QtGui.QWidget):
 			for user in self.users:
 				if user.name.lower().find(text)!=-1:
 					user.hiddenBySearch=False
-					if not first:
-						first=user
 				else:
 					user.hiddenBySearch=True
 			for v in self.metaItems.itervalues():
 				for user in v:
 					if user.name.lower().find(text)!=-1:
 						user.hiddenBySearch=False
-						if not first:
-							first=user
 					else:
 						user.hiddenBySearch=True
 			
@@ -1701,24 +1715,12 @@ class rosterWidget(QtGui.QWidget):
 			self.statusLabel.hide()
 			for user in self.users:
 				user.hiddenBySearch=False
-				if not first:
-					first=user
 			for v in self.metaItems.itervalues():
 				for user in v:
 					user.hiddenBySearch=False
-					if not first:
-						first=user
-		if self.item:
-			if self.item.typ=="user":
-				if self.item.hiddenBySearch==True:
-					self.statusLabel.hide()
-					self.selectItem(first)
-				else:
-					self.reshow=True
-			else:
-				self.statusLabel.hide()
-				self.selectItem(first)
-		else:
+
+		first=self.itemAt(1,1)
+		if self.item!=first:
 			self.selectItem(first)
 		self.setSize()
 		self.repaint()
