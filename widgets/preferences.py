@@ -906,16 +906,22 @@ class preferencesWindow(QtGui.QDialog):
 				item=QtGui.QTreeWidgetItem(categories[plug.category[0]])
 			else:
 				item=QtGui.QTreeWidgetItem(categories['other'])
-			widget=QtGui.QCheckBox(self.ui.plugins)
+			#widget=QtGui.QCheckBox(self.ui.plugins)
 			print plugin,self.loadedPlugins
+			item.setFlags(item.flags()|QtCore.Qt.ItemIsUserCheckable)
 			if plugin in self.loadedPlugins:
 				print "setChecked True"
-				widget.setChecked(True)
+				#widget.setChecked(True)
+				item.setCheckState(0,QtCore.Qt.Checked)
 				self.ui.plugins.setItemExpanded(item.parent(),True)
-			self.ui.plugins.setItemWidget(item,0,widget)
+			else:
+				item.setCheckState(0,QtCore.Qt.Unchecked)
+			#self.ui.plugins.setItemWidget(item,0,widget)
 			item.setText(1,plug.name)
 			item.setText(2,plug.description)
 			item.setData(32,0,QtCore.QVariant(unicode(plugin)))
+			
+			
 			self.plugins[plugin]=plug
 			if plug.configDialog and plug.showInPreferences and plugin in self.loadedPlugins:
 				listItem=QtGui.QListWidgetItem(plug.name,self.ui.listWidget)
@@ -1154,14 +1160,14 @@ class preferencesWindow(QtGui.QDialog):
 				item=it.child(child)
 				data=item.data(32,0)
 				plugin=unicode(data.toString())
-				widget=self.ui.plugins.itemWidget(item,0)
-				if widget.isChecked()==True and not plugin in self.loadedPlugins:
+				#widget=self.ui.plugins.itemWidget(item,0)
+				if item.checkState(0)==QtCore.Qt.Checked and not plugin in self.loadedPlugins:
 					if self.main.client:
 						self.main.loadPlugin(plugin)
 					self.main.config['plugins'].append(plugin)
 					self.loadedPlugins=self.main.config['plugins']
 					load=True
-				elif widget.isChecked()==False and plugin in self.loadedPlugins:
+				elif item.checkState(0)==QtCore.Qt.Unchecked and plugin in self.loadedPlugins:
 					if self.main.client:
 						self.main.unloadPlugin(plugin)
 					self.main.config['plugins'].remove(plugin)
