@@ -383,7 +383,7 @@ class rosterWidget(QtGui.QWidget):
 
 		self.setRosterStyle(defaultrosterstyle.rosterStyle)
 		self.groups[self.specialName].height=self.rosterStyle.heightForItem(self.groups[self.specialName])
-		self.lastMove=[0,0]
+		self.lastMove=[0,0,None]
 		
 		#QtCore.QObject.connect(self.main.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.sliderChanged)
 		
@@ -881,12 +881,12 @@ class rosterWidget(QtGui.QWidget):
 		"""
 		item=self.itemAt(int(event.x()),int(event.y()))
 		if self.lastMove[0]==0 and event.buttons()!=QtCore.Qt.NoButton:
-			self.lastMove=[event.x(),event.y()]
+			self.lastMove=[event.x(),event.y(),item]
 		elif self.lastMove[0]!=0 and event.buttons()==QtCore.Qt.NoButton:
-			self.lastMove=[0,0]
+			self.lastMove=[0,0,None]
 
 		if item and (abs(event.x()-self.lastMove[0])>10 or abs(event.y()-self.lastMove[1])>10):
-			item=[item]
+			item=[self.lastMove[2]]
 			if event.buttons()!=QtCore.Qt.NoButton:
 				if item[0].typ=='user' and len(self.data)==0:
 					mimeData = QtCore.QMimeData()
@@ -920,7 +920,7 @@ class rosterWidget(QtGui.QWidget):
 					dropAction = self.drag.start(QtCore.Qt.CopyAction | QtCore.Qt.MoveAction)
 			elif len(self.data)!=0:
 				self.data={}
-				self.lastMove=[0,0]
+				self.lastMove=[0,0,None]
 				
 		return QtGui.QWidget.mouseMoveEvent(self,event)
 
@@ -1321,7 +1321,7 @@ class rosterWidget(QtGui.QWidget):
 	def dragLeaveEvent(self, event):
 		self.selected=None
 		self.repaint()
-		event.acceptProposedAction()
+		event.accept()
 
 	def dragMoveEvent(self, event):
 		#log.msg('DRAG MOVE')
@@ -1355,7 +1355,7 @@ class rosterWidget(QtGui.QWidget):
 		if self.selected:
 			self.selected=None
 			self.repaint()
-
+		print "drop"
 		if (event.mimeData().hasUrls()):
 			urlList=event.mimeData().urls()
 			if len(urlList)>0:
@@ -1380,7 +1380,9 @@ class rosterWidget(QtGui.QWidget):
 			jid = unicode(event.mimeData().text())
 			position = event.pos()
 			item=self.itemAt(position.x(),position.y())
+			print "has text"
 			if not self.data.has_key(event.mimeData()):
+				print "has not data"
 				gr=""
 				if item.typ=="group":
 					gr=item.name
@@ -1618,6 +1620,7 @@ class rosterWidget(QtGui.QWidget):
 			if len(g)!=0:
 				g.remove(unicode(self.groups[oldItem.group].name))
 			else:
+				g=[]
 				for yy in self.getUserItems(contact.jid):
 					self.users.remove(yy)
 			self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,g+[unicode(item.group)])
@@ -2316,7 +2319,23 @@ class rosterWidget(QtGui.QWidget):
 					jid=item.jid
 					contact=self.main.client.roster['users'][jid]
 					g=contact.groups
-					g.remove(name)
+					try:
+						g.remove(name)
+					except:
+						pass
+					if self.metaItems.has_key(item.metajid):
+						for metaItem in self.metaItems[item.metajid]:
+							jid=metaItem.jid
+							contact=self.main.client.roster['users'][jid]
+							g=contact.groups
+							try:
+								g.remove(name)
+							except:
+								pass
+							self.main.client.sendRosterUpdate(contact.jid, contact.name, contact.subscription,g)
+
+								
+
 					self.main.client.sendRosterUpdate(contact.jid, contact.name, contact.subscription,g)
 
 	def breakMetaContacts(self,jid):
