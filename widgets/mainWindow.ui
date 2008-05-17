@@ -856,6 +856,20 @@ p, li { white-space: pre-wrap; }
                <item>
                 <widget class="QLineEdit" name="rosterSearch" />
                </item>
+			   <item>
+				   <widget class="QToolButton" name="rosterSearchClose" >
+
+					   <property name="text" >
+						   <string/>
+					   </property>
+					   <property name="toolButtonStyle" >
+						   <enum>Qt::ToolButtonTextBesideIcon</enum>
+					   </property>
+					   <property name="icon" >
+						   <iconset>images/16x16/actions/process-stop.png</iconset>
+                </property>
+             </widget>
+			   </item>
               </layout>
              </item>
              <item row="0" column="0" >

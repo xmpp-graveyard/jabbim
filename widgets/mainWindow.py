@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Wed May  7 08:18:41 2008
+# Created: Sat May 17 05:44:16 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -329,6 +329,12 @@ class Ui_MainWindow(object):
         self.rosterSearch = QtGui.QLineEdit(self.rosterTab)
         self.rosterSearch.setObjectName("rosterSearch")
         self.hboxlayout5.addWidget(self.rosterSearch)
+
+        self.rosterSearchClose = QtGui.QToolButton(self.rosterTab)
+        self.rosterSearchClose.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+        self.rosterSearchClose.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
+        self.rosterSearchClose.setObjectName("rosterSearchClose")
+        self.hboxlayout5.addWidget(self.rosterSearchClose)
         self.gridlayout5.addLayout(self.hboxlayout5,3,0,1,1)
 
         self.selectedItemStyle = QtGui.QWidget(self.rosterTab)

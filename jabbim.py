@@ -1469,6 +1469,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		self.loadRoster() # load roster widget
 		QtCore.QObject.connect(self.ui.rosterSearch, QtCore.SIGNAL(" textEdited ( const QString & )"),self.ui.roster.search)
+		QtCore.QObject.connect(self.ui.rosterSearchClose, QtCore.SIGNAL("clicked()"),self.ui.roster.search)
 
 		# get homedir
 		self.homeDir=utils.getHomeDir() #: Jabbim home directory + profile directory

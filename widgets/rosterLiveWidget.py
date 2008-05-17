@@ -378,6 +378,7 @@ class rosterWidget(QtGui.QWidget):
 		self.blinkJids=[]
 		self.main.ui.rosterSearch.hide()
 		self.main.ui.rosterSearchLabel.hide()
+		self.main.ui.rosterSearchClose.hide()
 		
 		self.emptyRosterWidget=emptyRosterWidget(self)
 
@@ -1256,6 +1257,7 @@ class rosterWidget(QtGui.QWidget):
 				self.main.ui.rosterSearch.setText("")
 				self.main.ui.rosterSearch.hide()
 				self.main.ui.rosterSearchLabel.hide()
+				self.main.ui.rosterSearchClose.hide()
 
 			self.statusLabel.hide()
 			self.reshow=True
@@ -1272,6 +1274,7 @@ class rosterWidget(QtGui.QWidget):
 				self.main.ui.rosterSearch.setText("")
 				self.main.ui.rosterSearch.hide()
 				self.main.ui.rosterSearchLabel.hide()
+				self.main.ui.rosterSearchClose.hide()
 
 			self.statusLabel.hide()
 			self.reshow=True
@@ -1698,6 +1701,7 @@ class rosterWidget(QtGui.QWidget):
 		if len(text)!=0:
 			self.main.ui.rosterSearch.show()
 			self.main.ui.rosterSearchLabel.show()
+			self.main.ui.rosterSearchClose.show()
 			self.searchMode=True
 			for user in self.users:
 				if user.name.lower().find(text)!=-1:
@@ -1714,6 +1718,7 @@ class rosterWidget(QtGui.QWidget):
 		else:
 			self.main.ui.rosterSearch.hide()
 			self.main.ui.rosterSearchLabel.hide()
+			self.main.ui.rosterSearchClose.hide()
 			self.searchMode=False
 			self.statusLabel.hide()
 			for user in self.users:
