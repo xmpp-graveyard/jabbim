@@ -4141,98 +4141,6 @@ class customStatusWindow(QtGui.QDialog):
 				MainWindow.client.sendPresence(to=jid, show = show, status = status)
 		self.done(1)
 
-
-#class statusWindow(QtGui.QDialog):
-	#def __init__(self,data,show=None,parent=None):
-		#apply(QtGui.QDialog.__init__,(self,MainWindow))
-		#self.setModal(False)
-		#self.ui=widgets.status.Ui_status()
-		#self.ui.setupUi(self)
-		#self.timer=QtCore.QTimer()
-		#app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.timeout)
-		#app.connect(self.ui.status, QtCore.SIGNAL("cursorPositionChanged ()"),self.timerStop)
-		#app.connect(self.ui.status, QtCore.SIGNAL("textChanged ()"),self.timerStop)
-		#self.ui.status.setFocus()
-		#self.timer.start(1000)
-		#self.i=4
-		#self.data=data
-		#self.show=show
-		#self.timeout()
-		#for s in MainWindow.config['statusMessages']:
-			#self.ui.statusBox.addItem(unicode(s))
-		#app.connect(self.ui.statusBox, QtCore.SIGNAL("activated ( const QString & )"),self.ui.status.setPlainText)
-		#app.connect(self.ui.statusBox, QtCore.SIGNAL("highlighted ( int)"),self.timerStop)
-
-
-	#def timerStop(self):
-		#self.timer.stop()
-		#self.ui.time.setText("")
-	
-	#def timeout(self,data=None):
-		#if self.i!=0:
-			#self.ui.time.setText(self.tr("Window will be closed in ")+unicode(self.i)+self.tr(" seconds."))
-			#self.i-=1
-		#else:
-			#self.timer.stop()
-			#self.accept()
-	#def accept(self):
-		#if not unicode(self.ui.status.toPlainText()) in MainWindow.config['statusMessages'] and len(unicode(self.ui.status.toPlainText()))!=0 and self.ui.save.isChecked():
-			#MainWindow.config['statusMessages'].append(unicode(self.ui.status.toPlainText()))
-		#if self.data=="offline":
-			#MainWindow.client.sendPresence(typ = "unavailable", status = unicode(self.ui.status.toPlainText ()))
-			#MainWindow.client.factory.stopTrying()
-			#MainWindow.reconnect = False
-			#MainWindow.client.disconnect()
-			#MainWindow._disconnect()
-
-		#else:
-			#jid=None
-			#if self.show:
-				#jid=self.data
-				#self.data=self.show
-			#icon=QtGui.QIcon("images/16x16/apps/jabbim.png")
-			#if self.data!='online':
-				#result=icon.pixmap(16,16)
-				#painter=QtGui.QPainter(result)
-				#icon=MainWindow.getIcon(status=unicode(self.data),size="16x16")
-				#painter.drawPixmap(0,0,icon.pixmap(16,16))
-				#painter.end()
-			#else:
-				#result=icon
-			#MainWindow.tray.setIcon(QtGui.QIcon(result))
-			##app.postEvent(jab,customEvent(["set_status",self.groupchat,self.data,unicode(self.ui.status.toPlainText ())]))
-			##jab.setStatus(MainWindow.groupchat,self.data,unicode(self.ui.status.toPlainText ()))
-			#if MainWindow.config.has_key('autoPriority'):
-				#if MainWindow.config['autoPriority']=='True':
-					##priors={"chat":"25","online":"20","away":"15","xa":"10","dnd":"5"}
-					#pri=priors[str(self.data)]
-				#else:
-					#if MainWindow.config.has_key('priority'):
-						#pri=MainWindow.config['priority']
-					#else:
-						#pri="0"
-			#else:
-				#if MainWindow.config.has_key('priority'):
-						#pri=MainWindow.config['priority']
-				#else:
-					#pri="0"
-			##if not jid:
-				##MainWindow.ui.showWidget.label.setText(unicode(self.ui.status.toPlainText()).replace("\n"," ")[:25])
-			#if jid:
-				##typ="available"
-				##if self.data=="offline":
-					##typ="unavailable"
-				#print self.data
-				#MainWindow.client.sendPresence(to=jid,show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()),priority=pri)
-			#else:
-				#MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()),priority=pri)
-			##musime updatovat MUCy
-			#if not jid:
-				#for muc in MainWindow.client.groupchats.itervalues():
-					#MainWindow.client.sendPresence(show = unicode(self.data), status = unicode(self.ui.status.toPlainText ()), to = '%s/%s'%(muc.jid, muc.nick))
-
-		#self.done(1)
-
 class aboutDialog(QtGui.QDialog):
 	def __init__(self,parent):
 		QtGui.QDialog.__init__(self,parent)
@@ -4249,23 +4157,12 @@ class scrollBar(QtGui.QScrollArea):
 		self.verticalScrollBar().setPageStep(32)
 		self.verticalScrollBar().setSingleStep(32)
 		self.setObjectName("scroll")
-	#def updateScrollBars(self):
-		#QtGui.QScrollArea.updateScrollBars(self)
-		#self.verticalScrollBar().setPageStep(32)
-
-#look=QtGui.QStyleFactory.create("cleanlooks")
-#class style(QtGui.QStyle):
-	#def polish(self,palette):
-		#palette.setBrush(QtGui.QPalette.Button, QtCore.Qt.red);
-	#def drawPrimitive(self, element,option, painter,widget=None):
-		#return look.drawPrimitive(self, element,option, painter,widget)
 
 if __name__ == "__main__":
 	translator=QtCore.QTranslator()
 	translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
 	print "trying to load locales:","locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm"
 	app.installTranslator(translator)
-	#app.setStyle(style())
 	MainWindow = mainWindow()
 	if MainWindow.config['startInTray']=="True":
 		MainWindow.close()
