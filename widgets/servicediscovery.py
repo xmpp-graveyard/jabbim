@@ -332,7 +332,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 								parentitem=QtGui.QTreeWidgetItem(self.services)
 							elif values['category'] in ['conference']:
 								parentitem=QtGui.QTreeWidgetItem(self.conferences)
-							elif values['category'] in ['gateway','proxy']:
+							elif values['category'] in ['gateway']:
 								parentitem=QtGui.QTreeWidgetItem(self.transports)
 							if parentitem:
 								parentitem.setText(0,values['name'])
