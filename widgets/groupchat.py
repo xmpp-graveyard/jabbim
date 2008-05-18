@@ -847,7 +847,10 @@ class groupChatWidget(abstractChatWidget):
 	def tabPressed(self):
 		# nick completion
 		original=unicode(self.ui.line.toPlainText())
-		t=unicode(self.ui.line.toPlainText()).lower()
+		users=self.main.client.groupchats[self.jid].users.keys()
+		for user in users:
+			original=original.replace(user,user.replace(" ","/"))
+		t=unicode(original).lower()
 		text=t
 		if len(text)==0:
 			return
@@ -871,7 +874,6 @@ class groupChatWidget(abstractChatWidget):
 		#text=unicode(cur.selectedText()).lower()
 		#text=text[0]
 		repeat=False
-		users=self.main.client.groupchats[self.jid].users.keys()
 		users.remove(self.nick)
 		#print text
 		for i in range(len(users)):
@@ -893,7 +895,7 @@ class groupChatWidget(abstractChatWidget):
 						if cur.position()>x and cur.position()<=x+1+len(word) and len(word)!=0:
 							if x == 0: #if the nick is the first word in string, ending will be ": ", example - "Sef: "
 								ending = ": "
-							newt+=users[i]+ending
+							newt+=users[i].replace(" ","/")+ending
 							pos=x+len(users[i]+ending)
 						else:
 							newt+=word+" "
@@ -901,7 +903,8 @@ class groupChatWidget(abstractChatWidget):
 					if len(word)==0:
 						newt=newt[:-1]
 					#cur.movePosition(QtGui.QTextCursor.NextWord, QtGui.QTextCursor.KeepAnchor)
-	
+					for user in users:
+						newt=newt.replace(user.replace(" ","/"),user)
 					self.ui.line.setPlainText(newt)
 					cur.setPosition(pos)
 					self.ui.line.setTextCursor(cur)
