@@ -31,11 +31,17 @@ except:
 import qt4reactor
 
 class jabbimApplication(QtGui.QApplication):
+	"""
+	Main Jabbim application class.
+	"""
 	def __init__(self,args=[]):
 		QtGui.QApplication.__init__(self,args)
 		self.shutdown=False
 	
 	def commitData(self,manager):
+		"""
+		Called when application is closed by Window manager
+		"""
 		print "data commited"
 		self.shutdown=True
 		manager.release()
@@ -68,7 +74,6 @@ from urllib import quote, unquote
 from include import plugins
 from os.path import basename,dirname, isfile
 from twisted.words.protocols.jabber.xmlstream import IQ
-#from twisted.words.xish.domish import Element
 from twisted.words.protocols.jabber import jid as jidT
 import ctypes
 from twisted.web.microdom import parseString,Element
@@ -77,26 +82,38 @@ from twisted.web import xmlrpc, server #for xmlrpc plugin
 import shutil #xmlrpc
 
 class clientClass(pyxl.client.Client):
-
+	"""
+	Pyxl client class.
+	"""
 	def on_init(self):
-		self.temp_hosts=[]
+		"""
+		Called in pyxl __init__ function. Initializes all variables for Jabbim side of pyxl
+		"""
+		self.temp_hosts=[] #: contains hosts which are probed for disco#info
+		# set OS informations
 		if self.main.config['sendOSInfo'] == 'True':
 			self.client_os = utils.get_os_info()
 		else:
 			self.client_os = ''
-		self.version = '0.4SVN'
-		self.bookmarksEnabled=True
+		self.version = '0.4SVN' #: version string
+		self.bookmarksEnabled=True #: True if bookmarks is enabled by server
 		self.xmlCount=[]
-		self.bannedJids=[]
+		# load plugins
 		self.loadPlugins()
 
 	def on_pep(self, frm, ns, payload):
+		"""
+		Called when PEP informations of contact frm is changed.
+		"""
+		# it's our own pep
 		if frm == self.jid.userhost():
 			self.main.ui.selfAvatar.refreshToolTip()
+		# change information in chat tab if we have opened it
 		tab,index=self.main.chat.findTab(frm,typ=['chat'])
 		if tab:
 			tab.chat.refreshLabel()
 			tab.chat.refreshToolTip()
+		# user mood
 		if ns=="http://jabber.org/protocol/mood":
 			t = ''
 			m = txt = ''
@@ -105,6 +122,7 @@ class clientClass(pyxl.client.Client):
 					txt = unicode(el)
 				else :
 					m = el.name
+			# set user mood for contacts in roster
 			if self.main.moodIcons.has_key(m):
 				for item in self.main.ui.roster.getUserItems(frm):
 					item.mood=self.main.moodIcons[m].pixmap(16,16)
@@ -112,6 +130,7 @@ class clientClass(pyxl.client.Client):
 				for item in self.main.ui.roster.getUserItems(frm):
 					item.mood=None
 			self.main.ui.roster.repaint()
+		# user tune
 		elif ns=='http://jabber.org/protocol/tune':
 			tune=payload
 			listening=False
@@ -128,14 +147,12 @@ class clientClass(pyxl.client.Client):
 				t = '%s  %s'%(artist, title)
 				if len(t.strip())>0:
 					listening=True
+			# set user tune information for contacts in roster
 			if listening:
 				listening=QtGui.QIcon("images/22x22/icons/headphones.png").pixmap(16,16)
 			for item in self.main.ui.roster.getUserItems(frm):
 				item.tune=listening
 			self.main.ui.roster.repaint()
-
-
-
 
 	def on_bookmarksFail(self):
 		"""
@@ -1139,8 +1156,6 @@ class clientClass(pyxl.client.Client):
 		if typ=="groupchat":
 			return
 		frm=jidT.JID(frm)
-		if frm.userhost() in self.bannedJids:
-			return
 		if not body:
 			body=""
 		mainWindow=self.main
@@ -1596,141 +1611,141 @@ class mainWindow(QtGui.QMainWindow):
 					}
 		#mood:translation
 		self.moods = {
-"afraid":self.tr("afraid"),
-"amazed":self.tr("amazed"),
-"angry":self.tr("angry"),
-"annoyed":self.tr("annoyed"),
-"anxious":self.tr("anxious"),
-"aroused":self.tr("aroused"),
-"ashamed":self.tr("ashamed"),
-"bored":self.tr("bored"),
-"brave":self.tr("brave"),
-"calm":self.tr("calm"),
-"cold":self.tr("cold"),
-"confused":self.tr("confused"),
-"contented":self.tr("contented"),
-"cranky":self.tr("cranky"),
-"curious":self.tr("curious"),
-"depressed":self.tr("depressed"),
-"disappointed":self.tr("disappointed"),
-"disgusted":self.tr("disgusted"),
-"distracted":self.tr("distracted"),
-"embarrassed":self.tr("embarrassed"),
-"excited":self.tr("excited"),
-"flirtatious":self.tr("flirtatious"),
-"frustrated":self.tr("frustrated"),
-"grumpy":self.tr("grumpy"),
-"guilty":self.tr("guilty"),
-"happy":self.tr("happy"),
-"hot":self.tr("hot"),
-"humbled":self.tr("humbled"),
-"humiliated":self.tr("humiliated"),
-"hungry":self.tr("hungry"),
-"hurt":self.tr("hurt"),
-"impressed":self.tr("impressed"),
-"in_awe":self.tr("in_awe"),
-"in_love":self.tr("in_love"),
-"indignant":self.tr("indignant"),
-"interested":self.tr("interested"),
-"intoxicated":self.tr("intoxicated"),
-"invincible":self.tr("invincible"),
-"jealous":self.tr("jealous"),
-"lonely":self.tr("lonely"),
-"mean":self.tr("mean"),
-"moody":self.tr("moody"),
-"nervous":self.tr("nervous"),
-"neutral":self.tr("neutral"),
-"offended":self.tr("offended"),
-"playful":self.tr("playful"),
-"proud":self.tr("proud"),
-"relieved":self.tr("relieved"),
-"remorseful":self.tr("remorseful"),
-"restless":self.tr("restless"),
-"sad":self.tr("sad"),
-"sarcastic":self.tr("sarcastic"),
-"serious":self.tr("serious"),
-"shocked":self.tr("shocked"),
-"shy":self.tr("shy"),
-"sick":self.tr("sick"),
-"sleepy":self.tr("sleepy"),
-"stressed":self.tr("stressed"),
-"surprised":self.tr("surprised"),
-"thirsty":self.tr("thirsty"),
-"worried":self.tr("worried")
+					"afraid":self.tr("afraid"),
+					"amazed":self.tr("amazed"),
+					"angry":self.tr("angry"),
+					"annoyed":self.tr("annoyed"),
+					"anxious":self.tr("anxious"),
+					"aroused":self.tr("aroused"),
+					"ashamed":self.tr("ashamed"),
+					"bored":self.tr("bored"),
+					"brave":self.tr("brave"),
+					"calm":self.tr("calm"),
+					"cold":self.tr("cold"),
+					"confused":self.tr("confused"),
+					"contented":self.tr("contented"),
+					"cranky":self.tr("cranky"),
+					"curious":self.tr("curious"),
+					"depressed":self.tr("depressed"),
+					"disappointed":self.tr("disappointed"),
+					"disgusted":self.tr("disgusted"),
+					"distracted":self.tr("distracted"),
+					"embarrassed":self.tr("embarrassed"),
+					"excited":self.tr("excited"),
+					"flirtatious":self.tr("flirtatious"),
+					"frustrated":self.tr("frustrated"),
+					"grumpy":self.tr("grumpy"),
+					"guilty":self.tr("guilty"),
+					"happy":self.tr("happy"),
+					"hot":self.tr("hot"),
+					"humbled":self.tr("humbled"),
+					"humiliated":self.tr("humiliated"),
+					"hungry":self.tr("hungry"),
+					"hurt":self.tr("hurt"),
+					"impressed":self.tr("impressed"),
+					"in_awe":self.tr("in_awe"),
+					"in_love":self.tr("in_love"),
+					"indignant":self.tr("indignant"),
+					"interested":self.tr("interested"),
+					"intoxicated":self.tr("intoxicated"),
+					"invincible":self.tr("invincible"),
+					"jealous":self.tr("jealous"),
+					"lonely":self.tr("lonely"),
+					"mean":self.tr("mean"),
+					"moody":self.tr("moody"),
+					"nervous":self.tr("nervous"),
+					"neutral":self.tr("neutral"),
+					"offended":self.tr("offended"),
+					"playful":self.tr("playful"),
+					"proud":self.tr("proud"),
+					"relieved":self.tr("relieved"),
+					"remorseful":self.tr("remorseful"),
+					"restless":self.tr("restless"),
+					"sad":self.tr("sad"),
+					"sarcastic":self.tr("sarcastic"),
+					"serious":self.tr("serious"),
+					"shocked":self.tr("shocked"),
+					"shy":self.tr("shy"),
+					"sick":self.tr("sick"),
+					"sleepy":self.tr("sleepy"),
+					"stressed":self.tr("stressed"),
+					"surprised":self.tr("surprised"),
+					"thirsty":self.tr("thirsty"),
+					"worried":self.tr("worried")
 		}
 		self.activities = {"buying_groceries":self.tr("buying_groceries"),
-"cleaning":self.tr("cleaning"),
-"cooking":self.tr("cooking"),
-"doing_maintenance":self.tr("doing_maintenance"),
-"doing_the_dishes":self.tr("doing_the_dishes"),
-"doing_the_laundry":self.tr("doing_the_laundry"),
-"gardening":self.tr("gardening"),
-"running_an_errand":self.tr("running_an_errand"),
-"walking_the_dog":self.tr("walking_the_dog"),
-"having_a_beer":self.tr("having_a_beer"),
-"having_coffee":self.tr("having_coffee"),
-"having_tea":self.tr("having_tea"),
-"having_a_snack":self.tr("having_a_snack"),
-"having_breakfast":self.tr("having_breakfast"),
-"having_dinner":self.tr("having_dinner"),
-"having_lunch":self.tr("having_lunch"),
-"cycling":self.tr("cycling"),
-"hiking":self.tr("hiking"),
-"jogging":self.tr("jogging"),
-"playing_sports":self.tr("playing_sports"),
-"running":self.tr("running"),
-"skiing":self.tr("skiing"),
-"swimming":self.tr("swimming"),
-"working_out":self.tr("working_out"),
-"at_the_spa":self.tr("at_the_spa"),
-"brushing_teeth":self.tr("brushing_teeth"),
-"getting_a_haircut":self.tr("getting_a_haircut"),
-"shaving":self.tr("shaving"),
-"taking_a_bath":self.tr("taking_a_bath"),
-"taking_a_shower":self.tr("taking_a_shower"),
-"day_off":self.tr("day_off"),
-"hanging_out":self.tr("hanging_out"),
-"on_vacation":self.tr("on_vacation"),
-"scheduled_holiday":self.tr("scheduled_holiday"),
-"sleeping":self.tr("sleeping"),
-"gaming":self.tr("gaming"),
-"going_out":self.tr("going_out"),
-"partying":self.tr("partying"),
-"reading":self.tr("reading"),
-"rehearsing":self.tr("rehearsing"),
-"shopping":self.tr("shopping"),
-"socializing":self.tr("socializing"),
-"sunbathing":self.tr("sunbathing"),
-"watching_tv":self.tr("watching_tv"),
-"watching_a_movie":self.tr("watching_a_movie"),
-"in_real_life":self.tr("in_real_life"),
-"on_the_phone":self.tr("on_the_phone"),
-"on_video_phone":self.tr("on_video_phone"),
-"commuting":self.tr("commuting"),
-"cycling":self.tr("cycling"),
-"driving":self.tr("driving"),
-"in_a_car":self.tr("in_a_car"),
-"on_a_bus":self.tr("on_a_bus"),
-"on_a_plane":self.tr("on_a_plane"),
-"on_a_train":self.tr("on_a_train"),
-"on_a_trip":self.tr("on_a_trip"),
-"walking":self.tr("walking"),
-"coding":self.tr("coding"),
-"in_a_meeting":self.tr("in_a_meeting"),
-"studying":self.tr("studying"),
-"writing":self.tr("writing")}
+					"cleaning":self.tr("cleaning"),
+					"cooking":self.tr("cooking"),
+					"doing_maintenance":self.tr("doing_maintenance"),
+					"doing_the_dishes":self.tr("doing_the_dishes"),
+					"doing_the_laundry":self.tr("doing_the_laundry"),
+					"gardening":self.tr("gardening"),
+					"running_an_errand":self.tr("running_an_errand"),
+					"walking_the_dog":self.tr("walking_the_dog"),
+					"having_a_beer":self.tr("having_a_beer"),
+					"having_coffee":self.tr("having_coffee"),
+					"having_tea":self.tr("having_tea"),
+					"having_a_snack":self.tr("having_a_snack"),
+					"having_breakfast":self.tr("having_breakfast"),
+					"having_dinner":self.tr("having_dinner"),
+					"having_lunch":self.tr("having_lunch"),
+					"cycling":self.tr("cycling"),
+					"hiking":self.tr("hiking"),
+					"jogging":self.tr("jogging"),
+					"playing_sports":self.tr("playing_sports"),
+					"running":self.tr("running"),
+					"skiing":self.tr("skiing"),
+					"swimming":self.tr("swimming"),
+					"working_out":self.tr("working_out"),
+					"at_the_spa":self.tr("at_the_spa"),
+					"brushing_teeth":self.tr("brushing_teeth"),
+					"getting_a_haircut":self.tr("getting_a_haircut"),
+					"shaving":self.tr("shaving"),
+					"taking_a_bath":self.tr("taking_a_bath"),
+					"taking_a_shower":self.tr("taking_a_shower"),
+					"day_off":self.tr("day_off"),
+					"hanging_out":self.tr("hanging_out"),
+					"on_vacation":self.tr("on_vacation"),
+					"scheduled_holiday":self.tr("scheduled_holiday"),
+					"sleeping":self.tr("sleeping"),
+					"gaming":self.tr("gaming"),
+					"going_out":self.tr("going_out"),
+					"partying":self.tr("partying"),
+					"reading":self.tr("reading"),
+					"rehearsing":self.tr("rehearsing"),
+					"shopping":self.tr("shopping"),
+					"socializing":self.tr("socializing"),
+					"sunbathing":self.tr("sunbathing"),
+					"watching_tv":self.tr("watching_tv"),
+					"watching_a_movie":self.tr("watching_a_movie"),
+					"in_real_life":self.tr("in_real_life"),
+					"on_the_phone":self.tr("on_the_phone"),
+					"on_video_phone":self.tr("on_video_phone"),
+					"commuting":self.tr("commuting"),
+					"cycling":self.tr("cycling"),
+					"driving":self.tr("driving"),
+					"in_a_car":self.tr("in_a_car"),
+					"on_a_bus":self.tr("on_a_bus"),
+					"on_a_plane":self.tr("on_a_plane"),
+					"on_a_train":self.tr("on_a_train"),
+					"on_a_trip":self.tr("on_a_trip"),
+					"walking":self.tr("walking"),
+					"coding":self.tr("coding"),
+					"in_a_meeting":self.tr("in_a_meeting"),
+					"studying":self.tr("studying"),
+					"writing":self.tr("writing")}
 
 		self.activityGroups = {"doing_chores":self.tr("doing_chores"),
-"drinking":self.tr("drinking"),
-"eating":self.tr("eating"),
-"exercising":self.tr("exercising"),
-"grooming":self.tr("grooming"),
-"having_appointment":self.tr("having_appointment"),
-"inactive":self.tr("inactive"),
-"relaxing":self.tr("relaxing"),
-"talking":self.tr("talking"),
-"traveling":self.tr("traveling"),
-"working":self.tr("working")}
+					"drinking":self.tr("drinking"),
+					"eating":self.tr("eating"),
+					"exercising":self.tr("exercising"),
+					"grooming":self.tr("grooming"),
+					"having_appointment":self.tr("having_appointment"),
+					"inactive":self.tr("inactive"),
+					"relaxing":self.tr("relaxing"),
+					"talking":self.tr("talking"),
+					"traveling":self.tr("traveling"),
+					"working":self.tr("working")}
 
 		self.offline=False
 		self.xmlConsole=XMLConsole(self)
@@ -1820,15 +1835,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.reconnect = True # :# True = Jabbim will reconnect after disconnect
 		self.active=True
 		
-		# set roster mode
-		#if self.config['rosterMode'] == "compact" :
-			#self.ui.roster.userHeight=22
-			#self.ui.roster.groupHeight=22
-			#self.scroll.verticalScrollBar().setPageStep(22)
-			#self.scroll.verticalScrollBar().setSingleStep(22)
-			#self.ui.roster.compact=True
-			#self.ui.roster.repaint()
-
 		# fill login form
 		self.fillLoginForm()
 		self.ui.loginStatus.addItem(self.getIcon(status="online",size="16x16"), self.status["online"],QtCore.QVariant("online"))
@@ -1875,10 +1881,16 @@ class mainWindow(QtGui.QMainWindow):
 		QtGui.QShortcut(QtGui.QKeySequence(self.config["moveLeft"]), self.chat,self.chat.moveLeft,self.chat.moveLeft)
 
 	def statusLineCanceled(self):
+		"""
+		Called when user cancels to change topic by statusLine
+		"""
 		self.ui.statusLine.hide()
 		self.ui.statusMessage.show()
 
 	def statusLineFinished(self):
+		"""
+		Called when user finish with changing status message by statusLine
+		"""
 		status=unicode(self.ui.statusLine.text())
 		if len(status)!=0:
 			self.sendPresence(None,self.selfStatus,status)
@@ -1886,28 +1898,35 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusMessage.show()
 
 	def statusMessageClicked(self,b):
+		"""
+		Called when user click on statusMessage.
+		"""
 		self.ui.statusMessage.hide()
 		self.ui.statusLine.setText("")
 		self.ui.statusLine.show()
 		self.ui.statusLine.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def sendFiles(self,jid):
+		"""
+		Opens dialog for sending files.
+		@type jid: unicode
+		@param jid: JID
+		"""
+		# get files
 		dialog = QtGui.QFileDialog()
 		dialog.setResolveSymlinks(True)
 		file=dialog.getOpenFileNames(self,self.tr("Choose files"))
 		file=list(file)
 
-		new=[]
+		new=[] # temp variable
 		for f in file:
 			if unicode(f).endswith('.lnk'):
 				f = utils.getFilenameFromLnk(unicode(f))
 			if isfile(unicode(f)):
 				new.append(unicode(f))
-		file=new
+		file=new # path to files
 		if len(file)!=0:
 			self.showFiletransferDialog(file,jid)
-			#self.senddialog=filetransfer.filetransferDialog(self.main,file,jid)
-			#self.senddialog.show()
 
 	def showFiletransferDialog(self,files,jid):
 		"""
@@ -1930,21 +1949,22 @@ class mainWindow(QtGui.QMainWindow):
 		# make Show offline QAction
 		self.offlineMenu=QtGui.QMenu()
 		
+		# change vcard action
 		self.showChangeAvatar=self.offlineMenu.addAction(self.tr("Change profile photo"))
 		self.showChangeAvatar.setCheckable(False)
 		self.showChangeAvatar.setObjectName('change_avatar')
 		self.showChangeAvatar.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
-		#QtCore.QObject.connect(self.showOfflineAction,QtCore.SIGNAL("clicked()")
 		QtCore.QObject.connect(self.showChangeAvatar, QtCore.SIGNAL("triggered ( bool )"),self.identityEditor)
 		self.offlineMenu.addSeparator()
 		
+		# show offline contacts action
 		self.showOfflineAction=self.offlineMenu.addAction(self.tr("Show Offline"))
 		self.showOfflineAction.setCheckable(True)
 		self.showOfflineAction.setObjectName('show_offline')
 		self.showOfflineAction.setChecked(self.offline)
 		QtCore.QObject.connect(self.showOfflineAction,QtCore.SIGNAL("toggled ( bool )"),self.hideOffline)
 
-		# make Show transports QAction
+		# show transports action
 		action=self.offlineMenu.addAction(self.tr("Show transports"))
 		action.setCheckable(True)
 		action.setObjectName('show_transports')
@@ -1953,16 +1973,16 @@ class mainWindow(QtGui.QMainWindow):
 		# make Toggle Invisibility QAction
 		#self.toggleInv=self.offlineMenu.addAction(self.tr("Become invisible"))
 		#self.toggleInv.setObjectName("toggle_invisible")
-		# add resources connected to the same JID (selfResources)
+		
+		# add resources connected to the our JID (selfResources)
 		if len(self.selfResources)!=0:
 			for resource in self.selfResources:
 				if resource!=self.client.jid.resource:
 					menu=QtGui.QMenu(unicode(resource),self.offlineMenu)
 					# resource supports adhoc commands
-					if self.client.roster['users'][self.client.jid.userhost()].resources[resource].hasFeature('http://jabber.org/protocol/commands'):
-						action=menu.addAction(self.tr("Commands"))
-						action.setObjectName('commands')
-						action.setData(QtCore.QVariant(unicode(resource)))
+					action=menu.addAction(self.tr("Commands"))
+					action.setObjectName('commands')
+					action.setData(QtCore.QVariant(unicode(resource)))
 					# send file QAction
 					action=menu.addAction(self.tr("Send file"))
 					action.setObjectName('send_file')
@@ -1979,9 +1999,12 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.selfAvatar.refreshToolTip()
 
 	def offlineMenuHovered(self, action):
+		"""
+		Called when offline menu is hovered.
+		"""
 		cmd=unicode(action.objectName())
 		if cmd=='commands' and action.menu() == None:
-			# show adhoc dialog
+			# show adhoc menu
 			self.cmds = widgets.commands.Commands(self, unicode(self.client.jid.userhost())+"/"+unicode(action.data().toString()), action)
 
 	def offlineMenuChanged(self,action):
@@ -1990,7 +2013,6 @@ class mainWindow(QtGui.QMainWindow):
 		@type action: QAction
 		@param action: QAction from self.offlineMenu
 		"""
-
 		cmd=action.objectName()
 		if cmd=='send_file':
 			jid=unicode(self.client.jid.userhost())+"/"+unicode(action.data().toString()) # make jid from users jid + selected resource
@@ -2008,7 +2030,6 @@ class mainWindow(QtGui.QMainWindow):
 			self.config['showTransports']=unicode(action.isChecked())
 			self.ui.roster.setSize()
 			self.ui.roster.repaint()
-			
 		elif cmd=="toggle_invisible":
 			if self.toggleInv.text() == self.tr("Become invisible"):
 				self.toggleInv.setText(self.tr("Become visible"))
@@ -2016,7 +2037,6 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				self.toggleInv.setText(self.tr("Become invisible"))
 				self.toggleInvisibility(False)
-
 
 	def tables_created(self,data=None):
 		"""
