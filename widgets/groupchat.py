@@ -241,13 +241,18 @@ class groupChatWidget(abstractChatWidget):
 		self.addRole("visitor",self.tr("Visitors"))
 
 	def usersContextMenu(self,pos):
+		"""
+		Called when wants to see context menu.
+		"""
 		item=self.ui.users.itemFromIndex(self.ui.users.indexAt(pos)) # get selected item
 		if not item or item.parent()==None:
 			return
 		name=unicode(item.text(0)) # get contact name
 		menu=QtGui.QMenu(self.ui.users) # make menu
-		jid="%s/%s" % (self.jid, name)
+		jid="%s/%s" % (self.jid, name) # contats JID
+		# if it's not group item
 		if item.parent()!=None:
+			# get self affiliation, self role and self contact (user) item
 			affiliation=""
 			role=""
 			user = None
@@ -256,9 +261,9 @@ class groupChatWidget(abstractChatWidget):
 					user = self.main.client.groupchats[self.jid].users[name]
 					affiliation=self.main.client.groupchats[self.jid].users[name].affiliation
 					role=self.main.client.groupchats[self.jid].users[name].role
-			
+			# temp array to set priority of affiliations
 			affiliations={'none':0,'member':1,'admin':2,'owner':3}
-			
+			# make kick, ban action and separator
 			separator=False
 			if (self.role=="moderator" or self.affiliation=="owner") and affiliations[self.affiliation]>affiliations[affiliation]:
 				action=menu.addAction(self.tr("Kick"))
@@ -272,9 +277,8 @@ class groupChatWidget(abstractChatWidget):
 				separator=True
 			if separator:
 				menu.addSeparator()
-			
 			separator=False
-
+			# make other actions
 			if self.affiliation=="owner":
 				if affiliation=='owner':
 					action=menu.addAction(self.tr("Revoke ownership"))
@@ -332,10 +336,9 @@ class groupChatWidget(abstractChatWidget):
 							action.setData(QtCore.QVariant(name))
 							action.setObjectName("grant_voice")
 							separator=True
-
 			if separator:
 				menu.addSeparator()
-
+			# add "add user to roster" action if we know true JID
 			if user != None:
 				if user.truejid != None:
 					tjid = jidT.JID(user.truejid).userhost()
@@ -343,17 +346,17 @@ class groupChatWidget(abstractChatWidget):
 					action.setData(QtCore.QVariant([tjid, name]))
 					action.setIcon(QtGui.QIcon("images/16x16/actions/add-user.png"))
 					action.setObjectName("add-user")
-
+			# vcard action
 			action=menu.addAction(self.tr("vCard"))
 			action.setData(QtCore.QVariant(jid))
 			action.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
 			action.setObjectName("vcard")
-			
+			# send file action
 			action=menu.addAction(self.tr("Send file"))
 			action.setData(QtCore.QVariant(jid))
 			action.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
 			action.setObjectName("send_file")
-
+			# add other actions from plugins
 			for key,value in self.main.plugins.iteritems():
 				if value['module']:
 					self.main.runPluginCommand(value['module'].buildGroupchatContactMenu,[menu,jid,user])
@@ -363,13 +366,15 @@ class groupChatWidget(abstractChatWidget):
 		menu.popup(self.ui.users.mapToGlobal(pos))
 	
 	def usersContextMenuTriggered(self,action):
+		"""
+		Called when user choose item from contextMenu.
+		"""
 		cmd=action.objectName()
 		if cmd=="kick":
 			name=unicode(action.data().toString())
 			if self.main.client.groupchats.has_key(self.jid):
 				reason,b=QtGui.QInputDialog.getText(self,self.tr("Reason"),self.tr("Enter reason:"), QtGui.QLineEdit.Normal, "")
 				reason=unicode(reason)
-				# if user set new name of group
 				if b==True:
 					self.main.client.groupchats[self.jid].setRole(name, 'none',  reason)
 		elif cmd=='ban':
@@ -377,7 +382,6 @@ class groupChatWidget(abstractChatWidget):
 			if self.main.client.groupchats.has_key(self.jid):
 				reason,b=QtGui.QInputDialog.getText(self,self.tr("Reason"),self.tr("Enter reason:"), QtGui.QLineEdit.Normal, "")
 				reason=unicode(reason)
-				# if user set new name of group
 				if b==True:
 					self.main.client.groupchats[self.jid].setAffiliation(name, 'outcast',  reason)
 		elif cmd=='grant_moderator':
@@ -434,19 +438,20 @@ class groupChatWidget(abstractChatWidget):
 			
 
 	def userClicked(self,item,i):
-		print "userclicked"
+		"""
+		Called when user doucble clicked on item.
+		"""
 		if item.parent()==None:
 			return
-		print [unicode(item.text(1))]
-		print self.main.icons
 		icon=self.main.getIcon(status=self.main.icons[unicode(item.text(1))[0]],size="16x16")
-		print icon
 		tab=self.main.chat.addChatTab(self.jid+"/"+unicode(item.text(0)),item.text(0),icon,full=True)
-		print tab.jid
 		self.main.chat.activate()
 		self.main.client.reactor.callLater(0.2,tab.chat.ui.line.setFocus,QtCore.Qt.MouseFocusReason)
 
 	def userSingleClicked(self,item,i):
+		"""
+		Called when user single clicked on item.
+		"""
 		if item.parent()==None:
 			return
 		text = unicode(self.ui.line.toPlainText())
@@ -466,6 +471,9 @@ class groupChatWidget(abstractChatWidget):
 			
 		
 	def clearChat(self):
+		"""
+		Called when user wants to clear chat.
+		"""
 		ret=QtGui.QMessageBox.question(self,self.tr("Clear chat?"), self.tr("Do you want to clear this conversation? "),QtGui.QMessageBox.Yes|QtGui.QMessageBox.No, QtGui.QMessageBox.Yes)
 		if ret==QtGui.QMessageBox.Yes:
 			self.ui.textEdit.clear()
@@ -475,6 +483,9 @@ class groupChatWidget(abstractChatWidget):
 			self.ui.textEdit.setHtml("<br/>"+self.init)
 
 	def toggleInfo(self, b):
+		"""
+		depracted?
+		"""
 		log.msg("Info toggled:"+`b`)
 		if b:
 			self._getInfo()
@@ -485,6 +496,9 @@ class groupChatWidget(abstractChatWidget):
 			self.ui.toggleInfo.setToolTip(self.tr("Show room info"))
 
 	def changeNick(self):
+		"""
+		Called when user wants to change his nickname.
+		"""
 		nick, b = QtGui.QInputDialog.getText(self,self.tr("Change nick"),self.tr("Enter new nickname:"), QtGui.QLineEdit.Normal, "")
 		if nick and b:
 			if nick not in self.main.client.groupchats[self.jid].users.keys():
@@ -494,10 +508,12 @@ class groupChatWidget(abstractChatWidget):
 			else:
 				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("Nickname is used by somebody else.")))
 				self.textEditWrite(message)
-
 		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def roomConfigClicked(self):
+		"""
+		Called when user wants to change configuration of room.
+		"""
 		nick=self.main.client.groupchats[self.jid].nick
 		if self.main.client.groupchats[self.jid].users[nick].affiliation=="owner" :
 			d=self.main.client.getMUCConfig(self.jid)
@@ -510,37 +526,45 @@ class groupChatWidget(abstractChatWidget):
 			self.dialog.show()
 
 	def _onRoomConfig(self,data):
+		"""
+		Called when configuration form arrived.
+		"""
 		jid=data[0]
 		form=data[1]
 		if form!=None:
 			self.dialog=groupchatAdminDialog(self.main,jid,form,self,subject=unicode(self.ui.info.toPlainText()), admin = True)
 			self.dialog.show()
 
-	def roomAdminClicked(self):
-		pass
-		#self.jab.getGroupchatConfig(self.jid)
-
-	#def deleteUser(self,jid,nick):
-		#user=self.main.getGroupChatMember(jid,unicode(nick))
-		#parent=user.parent()
-		#parent.takeChild(int(parent.indexOfChild(user)))
-		#self.main.groupchat[jid][1].remove(user)
-		#self.refreshStats()
-
 	def getUserItems(self,name):
+		"""
+		Returns user items according to name.
+		@type name: unicode
+		@param name: Name of contact in room
+		@rtype: list of QTreeWidgetItem
+		@return: list of QTreeWidgetItems or empty list
+		"""
 		items=self.ui.users.findItems(unicode(name), QtCore.Qt.MatchFixedString| QtCore.Qt.MatchCaseSensitive|QtCore.Qt.MatchRecursive,0)
 		if len(items)!=0:
 			return items
 		return []
 
 	def getUserName(self,jid):
-		#if self.main.client.groupchats[self.jid].users[nick].truejid:
+		"""
+		Return username of contact according to his true jid.
+		@type jid:unicode
+		@param jid: True JID of contact
+		@rtype: unicode
+		@return: nickname or the same jid as first param (jid)
+		"""
 		for nick,user in self.main.client.groupchats[self.jid].users.iteritems():
 			if user.truejid==jid:
 				return nick
 		return jid
 
 	def addRole(self,role,name):
+		"""
+		Adds role to the user list.
+		"""
 		self.roles[role]=QtGui.QTreeWidgetItem(self.ui.users)
 		self.roles[role].setBackground(0,QtGui.QBrush(self.ui.users.palette().color(QtGui.QPalette.AlternateBase)))
 		self.roles[role].setIcon(0,QtGui.QIcon("images/32x32/categories/system-users.png"))
@@ -550,6 +574,9 @@ class groupChatWidget(abstractChatWidget):
 		self.ui.users.setItemHidden(self.roles[role],True)
 
 	def refreshStats(self):
+		"""
+		Recount number of users in groups.
+		"""
 		for k,v in self.roles.iteritems():
 			v.setText(0,unicode(v.text(1))+" ("+str(v.childCount())+")")
 			if int(v.childCount())>0:
@@ -558,6 +585,13 @@ class groupChatWidget(abstractChatWidget):
 				self.ui.users.setItemHidden(v,True)
 
 	def isUser(self,nick):
+		"""
+		Returns True if user is in room.
+		@type nick: unicode
+		@param nick: user name
+		@rtype: boolean
+		@return: True if user is in room, otherwise False
+		"""
 		if len(self.getUserItems(nick))==0:
 			return False
 		return True
