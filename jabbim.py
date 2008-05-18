@@ -1860,7 +1860,557 @@ class mainWindow(QtGui.QMainWindow):
 		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.connect()
+
+	#{ Public functions
+
+	def getJid(self,jid):
+		"""
+		Returns Twisted Jabber ID or None if JID is in bad format.
+		@type jid: unicode
+		@param jid: profiles Jabber ID
+		@rtype: twisted JID
+		@return: Twisted Jabber ID or None
+		"""
+		try:
+			jidt=jidT.JID(jid)
+		except:
+			return None
+		return jidt
+
+	def sendFiles(self,jid):
+		"""
+		Opens dialog for sending files.
+		@type jid: unicode
+		@param jid: JID
+		"""
+		# get files
+		dialog = QtGui.QFileDialog()
+		dialog.setResolveSymlinks(True)
+		file=dialog.getOpenFileNames(self,self.tr("Choose files"))
+		file=list(file)
+
+		new=[] # temp variable
+		for f in file:
+			if unicode(f).endswith('.lnk'):
+				f = utils.getFilenameFromLnk(unicode(f))
+			if isfile(unicode(f)):
+				new.append(unicode(f))
+		file=new # path to files
+		if len(file)!=0:
+			self.showFiletransferDialog(file,jid)
+
+	def showFiletransferDialog(self,files,jid):
+		"""
+		Shows filetransfer dialog.
+		@type files: list of unicode
+		@param files: list of files (full path)
+		@type jid: unicode
+		@param jid: JID
+		"""
+		#if jid=="album@disk.jabbim.cz":
+		self.senddialog=widgets.albumfiletransfer.albumFiletransferDialog(self,files,jid)
+		#else:
+			#self.senddialog=widgets.filetransfer.filetransferDialog(self,files,jid)
+		self.senddialog.show()
+
+	
+	def getImage(self,file,size=None):
+		"""
+		Returns deffered where is QImage loaded.
+		@type file: unicode
+		@param file: path to file
+		@type size: list of integers
+		@param size: [width,height] which are used for resizing image
+		"""
+		d=threads.deferToThread(self._getImage,file,size)
+		return d
+	
+	def getToolTip(self,jid, name = None):
+		"""
+		returns html for setToolTip
+		@type jid: unicode
+		@param jid: jid of contact 
+		"""
+		jidfull = jid
+		jid = jidT.JID(jid).userhost()
+ 
+		text='<table><tr>'
+		if self.client.avatarDef.get(jid, False):
+			if self.client.avatarImg[self.client.avatarDef[jid]] and self.client.avatarDef[jid]!="None":
+				width=self.client.avatarImg[self.client.avatarDef[jid]][1]
+				height=self.client.avatarImg[self.client.avatarDef[jid]][2]
+				height=height/(float(width)/64.0)
+				text+='<td><img src="'+self.realHomeDir+'/avatars/'+unicode(self.client.avatarDef[jid])+'" width="64" height="'+str(height)+'"/></td>'
+		else:
+			#if there is no avatar for given JID, then try to use avatar from any metacontact
+			meta = self.ui.roster.getMetaItems(jid)
+			print meta
+			for itm in meta:
+				j = itm[1]
+				print j
+				if self.client.avatarDef.get(j, False):
+					if self.client.avatarImg[self.client.avatarDef[j]] and self.client.avatarDef[j]!="None":
+						width=self.client.avatarImg[self.client.avatarDef[j]][1]
+						height=self.client.avatarImg[self.client.avatarDef[j]][2]
+						height=height/(float(width)/64.0)
+						text+='<td><img src="'+self.realHomeDir+'/avatars/'+unicode(self.client.avatarDef[j])+'" width="64" height="'+str(height)+'"/></td>'
+						break
+						
+		if name != None:
+			text+='<td><b>'+self.tr("Name:")+'</b> '+name+'<br/>'
+		else:
+			text+='<td>'
+		text+='<b>'+self.tr("JID:")+'</b> '+jidfull+'<br/>'
+		contact = self.client.getContactByJid(jid)
+		if contact == None:
+			contact = self.client.getMucContactByJid(jidfull)
+			if contact != None:
+				status = contact.status
+				if not status:
+					status = ""
+				text+='<img src="images/16x16/status/jabber-%s.png">' % contact.show 
+				text+='<b>%s</b> '%unicode(self.status.get(contact.show, ''))
+				if len(status) != 0:
+					text+='<br /><font size="-1">%s</font>' % (status.replace('\n', '<br />'))
+			text+="</td></tr></table>"
+			return text
+			
+		if unicode(contact.subscription) == 'from':
+			text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" from")+'<br/>'
+		elif unicode(contact.subscription) == 'to':
+			text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" to")+'<br/>'
+		elif unicode(contact.subscription) == 'none':
+			text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" none")+'<br/>'	
+		n =0
+
+		for res in contact.resources.keys():
+			status = contact.resources[res].status
+			if not status:
+				status = ""
+			priority = contact.resources[res].priority
+			#if priority == None:
+			#	priority = self.tr("Unknown")
+			if priority != None:
+				priority = "(%s: %s)" % (self.tr("Priority"),priority)
+			else:
+				priority = ""
+			if n>0:
+				text+='<br />'
+			text+='<img src="images/16x16/status/jabber-%s.png">' % contact.resources[res].show # hodilo by se rozlisit k jakymu poatri transportu
+			text+='<b>%s</b> ' % unicode(self.status.get(contact.resources[res].show, ''))
+			if res != None:
+#							text+='<b>%s</b> %s<br>' % ( res, priority)
+				text+='%s' % (priority)
+			identity = contact.resources[res].identity
+			if identity != '' and identity != None and identity != 'client/pc' and identity.startswith('client'):
+				text+=' %s' % (identity)
+			if len(status) != 0:
+				text+='<br /><font size="-1">%s</font>' % (status.replace('\n', '<br />'))
+			n+=1
+		tune = contact.getPEP('http://jabber.org/protocol/tune')
+		if type(tune) == list:
+			for x in tune:
+				print x
+		elif tune!=None:
+			artist = title = ''
+			for el in tune.elements():
+				if el.name == 'artist':
+					artist = unicode(el)
+				elif el.name == 'title':
+					title = unicode(el)
+			t = '%s: %s'%(artist, title)
+			if len(t.strip())>1:
+				text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">%s</font>' % (t) #ikonka se este muze menit ;)
 		
+		mood = contact.getPEP('http://jabber.org/protocol/mood')
+		if mood != None:
+			t = ''
+			m = txt = ''
+			for el in mood.elements():
+				if el.name == 'text':
+					txt = unicode(el)
+				else:
+					m = self.moods.get(el.name)
+					if self.moodIcons.has_key(el.name):
+						icon="<img src=\"%s\" />" % self.moodIcons[el.name].src
+					else:
+						icon=""
+			if txt != '':
+				t = m+ ' - %s'%txt
+			else:
+				t = m
+			text+='<br />%s<font size="-1">%s</font>' % (icon,t)
+		
+		activity = contact.getPEP('http://jabber.org/protocol/activity')
+		if activity != None:
+			txt = ''
+			general = ''
+			spec = ''
+			for el in activity.elements():
+				if el.name == 'text':
+					txt = unicode(el)
+				else :
+					general = el.name
+					spec = el.firstChildElement().name
+
+			text+='<br /><font size="-1"><b>%s</b> %s %s</font>' % (general, spec, txt)
+		chat = contact.getPEP('http://www.xmpp.org/extensions/xep-0194.html#ns')
+		if chat != None:
+			if type(chat) == list:
+				print 'vice roomu'
+				text+='<br /><b>User is chatting in:</b>'
+				for itm in chat:
+					uri = name = ''
+					for el in itm.elements():
+						if el.name == 'uri':
+							uri = unicode(el)
+							if uri.startswith('xmpp:'):
+								uri = uri.replace('xmpp:', '')
+						elif el.name == 'name':
+							name = unicode(el)
+					text+= '<br /><font size="-1">%s %s</font>'%(name, uri)
+			else:
+				print 'jeden room'
+				uri = name = ''
+				if len(chat.children)>0:
+					text+='<br /><b>User is chatting in:</b>'
+					for el in chat.elements():
+						if el.name == 'uri':
+							uri = unicode(el)
+							if uri.startswith('xmpp:'):
+								uri = uri.replace('xmpp:', '')
+						elif el.name == 'name':
+							name = unicode(el)
+						text+= '<br /><font size="-1">%s %s</font>'%(name, uri)					
+		text+="</td></tr></table>"
+		return text
+
+	def sendPresence(self,jid,show,message="",pri=None):
+		"""
+		Sends presence and update GUI.
+		@type jid: unicode
+		@param jid: JID or None for sending presence to server
+		@type show: unicode
+		@param show: String from this list: ["online","chat","away","xa","dnd","offline"]
+		@type message: unicode
+		@param message: Status message
+		@type pri: integer
+		@param pri: Priority
+		"""
+		print "sending presence",jid,show
+		if not jid:
+			# global presence => presence will be send to server
+			if show=="offline":
+				self.client.sendPresence(typ = "unavailable", status = unicode(message))
+				self.client.factory.stopTrying()
+				self.reconnect = False
+				self.client.disconnect()
+				# update avatar tooltip and tray tooltip
+				self.ui.selfAvatar.refreshToolTip()
+			else:
+				if not pri:
+					# get priority from config
+					if self.config.has_key('autoPriority'):
+						if self.config['autoPriority']=='True':
+							#priors={"chat":"25","online":"20","away":"15","xa":"10","dnd":"5"}
+							#'autoPriority_chat','autoPriority_online','autoPriority_away','autoPriority_xa','autoPriority_dnd'
+							
+							pri=str(self.config["autoPriority_"+str(show)])
+						else:
+							if self.config.has_key('priority'):
+								pri=self.config['priority']
+							else:
+								pri="0"
+					else:
+						if self.config.has_key('priority'):
+							pri=self.config['priority']
+						else:
+							pri="0"
+				self.selfStatus=show
+				# update tray icon
+				icon=QtGui.QIcon("images/16x16/apps/jabbim.png")
+				if self.selfStatus!='online':
+					result=icon.pixmap(16,16)
+					painter=QtGui.QPainter(result)
+					icon=self.getIcon(status=unicode(self.selfStatus),size="16x16")
+					painter.drawPixmap(0,0,icon.pixmap(16,16))
+					painter.end()
+				else:
+					result=icon
+				self.currentTrayIcon=QtGui.QIcon(result)
+				self.tray.setIcon(self.getCurrentTrayIcon())
+				# update avatar tooltip and tray tooltip
+				self.ui.selfAvatar.refreshToolTip()
+				
+				# send presence to the server
+				self.client.sendPresence(show = unicode(show), status = unicode(message),priority=pri)
+				
+				# send presence to groupchats
+				for muc in self.client.groupchats.itervalues():
+					self.client.sendPresence(show = unicode(show), status = unicode(message), to = '%s/%s'%(muc.jid, muc.nick))
+				
+				# send presence to all transports
+				#for transport in self.transports.keys():
+					#self.client.sendPresence(show = unicode(show), status = unicode(message), to = transport)
+				
+				# update statusWidget
+				if len(message)>20:
+					self.ui.statusMessage.setText(unicode(message)[:20]+"...")
+				elif len(message)==0:
+					self.ui.statusMessage.setText(unicode(self.status[show]))
+				else:
+					self.ui.statusMessage.setText(unicode(message))
+				self.ui.statusMessage.setIcon(self.getIcon(status=show,size="16x16"))
+
+		else:
+			if self.transports[jid]!=None:
+				self.transports[jid].setIcon(self.getIcon('1@'+jid,status=unicode(show),size="16x16"))
+
+				text='<table><tr>'
+				if os.path.isfile(self.homeDir+'/avatars/'+unicode(self.config['jid'])):
+					pixmap=QtGui.QIcon(self.homeDir+'/avatars/'+unicode(self.config['jid'])).pixmap(64,64)
+					text+='<td><img src="'+self.homeDir+'/avatars/'+unicode(self.config['jid'])+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
+				#text+='<td><b>'+self.tr("Name:")+'</b> '+item.escapedName+'<br/>'
+				text+='<td><b>'+self.tr("JID:")+'</b> '+unicode(jid)+'<br/>'
+
+				#status = unicode(message)
+				#priority = pri
+				#if priority != None:
+					#priority = "(%s: %s)" % (self.tr("Priority"),priority)
+				#else:
+					#priority = ""
+				usertype=unicode(self.client.getHostType(jid,jid))
+				if os.path.isfile('images/16x16/status/'+usertype+"-"+show+".png"):
+					text+='<img src="images/16x16/status/'+usertype+"-"+show+'.png" />'
+				else:
+					text+='<img src="images/16x16/status/jabber-%s.png">' % show
+				#if len(priority)!=0:
+					#text+='%s<br/>' % priority
+				if message:
+					text+='<font size="-1">%s</font>' % (message)
+				text+="</td></tr></table>"
+				self.transports[jid].setToolTip(text)
+				
+			# send presence
+			self.client.sendPresence(to=jid,show = unicode(show), status = unicode(message),priority=pri)
+
+	def runPluginCommand(self,command,args):
+		"""
+		Safely runs plugins command.
+		@type command: pointer to function
+		@param command: pointer to plugins function
+		@type args: list
+		@param args: list of arguments for function
+		"""
+		try:
+			ret=command(*args)
+			return ret
+		except Exception, ex:
+			log.msg('Plugin error: ' +unicode(ex))
+			message = unicode(traceback.format_exc())
+			log.msg(message)
+
+	def getAvatar(self,pixmap,size="auto",frame=False,status=None):
+		"""
+		Returns avatar of contact.
+		@type pixmap: unicode or QtGui.QIcon or QtGui.QPixmap
+		@param pixmap: unicode - Jabber ID of contact with "@" replaced with "%";
+		@type size: unicode
+		@param size: auto, 16x16, 32x32, 64x64, 128x128
+		@type frame: boolean
+		@param frame: True - Frame is painted around the avatar.
+		@type status: unicode or None
+		@param status: String from this list: ["online","chat","away","xa","dnd","offline"]. Status icon will be painted to the corner.
+		@rtype: QtGui.QPixmap
+		@return: avatar
+		"""
+		if not self.client:
+			return None
+		#keysToDel=[]
+		#for key,avatar in self.client.avatarImg.iteritems():
+			#if len(unicode(key).split('/'))!=1:
+				#if sys.getrefcount(avatar)==4:
+					#print "Unused chached avatar",key,avatar,sys.getrefcount(avatar)
+					#keysToDel.append(str(key))
+		#for key in keysToDel:
+			#del self.client.avatarImg[key]
+		if not pixmap:
+			return None
+		if isinstance(pixmap,unicode) or isinstance(pixmap,str):
+			hash=""
+			if self.client.avatarDef.has_key(pixmap):
+				hash=self.client.avatarDef[pixmap]
+			if hash=="":
+				file=self.realHomeDir+'/avatars/'+unicode(pixmap)
+			else:
+				file=self.realHomeDir+'/avatars/'+unicode(hash)
+			if not os.path.isfile(file):
+				return None
+			icon=QtGui.QIcon(file)
+		elif isinstance(pixmap,QtGui.QPixmap):
+			icon=QtGui.QIcon(pixmap)
+		else:
+			icon=pixmap
+		if size!="auto":
+			x=int(size.split('x')[0])
+			y=int(size.split('x')[1])
+		
+		if frame and size!='auto':
+			if size=="128x128":
+				avatar=icon.pixmap(100,100)
+				if avatar.width()<=50 and avatar.height()<=50:
+					size="64x64"
+				x=int(size.split('x')[0])
+				y=int(size.split('x')[1])
+			elif size=="64x64":
+				avatar=icon.pixmap(50,50)
+			elif size=="32x32":
+				avatar=icon.pixmap(25,25)
+			else:
+				return False
+	
+			result=QtGui.QPixmap(x,y)
+			result.fill(QtCore.Qt.transparent)
+			if os.path.exists("themes/"+self.config['theme']+"/frame-"+str(size)+".png"):
+				frame1=QtGui.QPixmap("themes/"+self.config['theme']+"/frame-"+str(size)+".png")
+			else:
+				frame1=QtGui.QPixmap("images/"+str(size)+"/frame.png")
+			painter=QtGui.QPainter(result)
+			painter.drawPixmap((x-avatar.width())/2,(y-avatar.height())/2,avatar)
+			painter.drawPixmap(0,0,frame1)
+			painter.end()
+		elif size!="auto" and not frame:
+
+			if size=="128x128":
+				avatar=icon.pixmap(100,100)
+				if avatar.width()<=50 and avatar.height()<=50:
+					size="64x64"
+				x=int(size.split('x')[0])
+				y=int(size.split('x')[1])
+			elif size=="64x64":
+				avatar=icon.pixmap(50,50)
+			elif size=="32x32":
+				avatar=icon.pixmap(25,25)
+			else:
+				return False
+			result=QtGui.QPixmap(x,y)
+			result.fill(QtCore.Qt.transparent)
+			painter=QtGui.QPainter(result)
+			painter.drawPixmap((x-avatar.width())/2,(y-avatar.height())/2,avatar)
+			if status:
+				icon=self.getIcon(status=unicode(status),size="16x16")
+				if icon:
+					painter.drawPixmap(16,16,icon.pixmap(16,16))
+			painter.end()
+		elif size=="auto" and not frame:
+			result=QtGui.QPixmap(file)
+
+		return result
+
+	def getCurrentTrayIcon(self):
+		"""
+		Returns current tray icon according to show.
+		@rtype: QtGui.QIcon
+		@return: current tray icon
+		"""
+		return self.currentTrayIcon
+
+	def getIcon(self,jid=None,typ=None,size="32x32",status=None,usertype=None):
+		"""
+		Returns status icon.
+		@type jid: unicode
+		@param jid: Jabber ID
+		@type size: unicode
+		@param size: 16x16 or 32x32
+		@type status: unicode
+		@param status: String from this list: ["online","chat","away","xa","dnd","offline"]
+		@rtype: QtGui.QIcon
+		@return: status icon
+		"""
+		if size=="22x22":
+			size="32x32"
+		# return status icon
+		#print "geticon",jid,typ,size,status,usertype
+		path=self.statusPath.replace("xxxxx",size)
+		typ=unicode(typ)
+		
+		if usertype!=None:
+			file=path+usertype+"-online.png"
+			if os.path.exists(file):
+				icon=QtGui.QIcon(file)
+				return icon
+		
+		if status==None:
+			status=self.icons[self.shows[typ]]
+		if jid!=None:
+			#file=path+self.getUserType(jid)+"-"+self.icons[self.show[typ]]+".png"
+			if len(jid.split("@"))>1:
+				host=jid.split("@")[1].split('/')[0]
+			else:
+				host=jid.split('/')[0]
+			if self.client.disco.has_key(host):
+				usertype=unicode(self.client.getHostType(host,jid))
+				file=path+usertype+"-"+status+".png"
+				if os.path.exists(file):
+					icon=QtGui.QIcon(file)
+				else:
+					#print "File not exist",file," <-",jid,typ
+					#print "using",path+"jabber-"+self.icons[self.shows[status]]+".png"
+					icon=QtGui.QIcon(path+"jabber-"+self.icons[self.shows[status]]+".png")
+			else:
+				#print "using",path+"jabber-"+self.icons[self.shows[status]]+".png"
+				icon=QtGui.QIcon(path+"jabber-"+self.icons[self.shows[status]]+".png")
+		else:
+			if status==None:
+				icon=QtGui.QIcon(path+"jabber-online.png")
+			else:
+				icon=QtGui.QIcon(path+"jabber-"+status+".png")
+		return icon
+
+	def now(self,shift=0):
+		"""
+		Returns current time in format hh:mm:ss
+		@rtype: unicode
+		@return: current time in format hh:mm:ss
+		"""
+		h,m,s=time.localtime(time.time()+shift)[3:6]
+		return "%02d:%02d:%02d" % (h,m,s)
+
+	def joinGC(self,jid,nickname):
+		"""
+		Joins to groupchat.
+		@type jid: unicode
+		@param jid: Groupchats Jabber ID
+		@type nickname: unicode
+		@param nickname: users nickname
+		"""
+		if self.chat.addGroupChatTab(jid,nickname):
+			self.client.joinGC(jid, nickname)
+
+	def getSkinColors(self,i):
+		"""
+		Returns colors from chat skins. This is useful for using different colors for different nicknames in Groupchat.
+		Every user in groupchat have his own ID and according to ID is choosen one color.
+		@type i: integer
+		@param i: ID of user (color)
+		@rtype: list
+		@return: list of colors [#000000,#FFFFFF,#EFEFEF]
+		"""
+		colors=[]
+		for key,value in self.skin.iteritems():
+			if key.startswith("color"):
+				colors.append(value)
+		if len(colors)==0:
+			return None
+		if len(colors)==1:
+			return colors[0]
+		if i>len(colors)-1:
+			return colors[i%(len(colors)-1)]
+		else:
+			return colors[i]
+
+	#{ Private functions
+
 	def setupShortcuts(self):
  		QtGui.QShortcut(QtGui.QKeySequence(self.config["nextTab"]), self.chat,self.chat.next)
  		QtGui.QShortcut(QtGui.QKeySequence(self.config["previousTab"]), self.chat,self.chat.previous)
@@ -1905,42 +2455,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusLine.setText("")
 		self.ui.statusLine.show()
 		self.ui.statusLine.setFocus(QtCore.Qt.MouseFocusReason)
-
-	def sendFiles(self,jid):
-		"""
-		Opens dialog for sending files.
-		@type jid: unicode
-		@param jid: JID
-		"""
-		# get files
-		dialog = QtGui.QFileDialog()
-		dialog.setResolveSymlinks(True)
-		file=dialog.getOpenFileNames(self,self.tr("Choose files"))
-		file=list(file)
-
-		new=[] # temp variable
-		for f in file:
-			if unicode(f).endswith('.lnk'):
-				f = utils.getFilenameFromLnk(unicode(f))
-			if isfile(unicode(f)):
-				new.append(unicode(f))
-		file=new # path to files
-		if len(file)!=0:
-			self.showFiletransferDialog(file,jid)
-
-	def showFiletransferDialog(self,files,jid):
-		"""
-		Shows filetransfer dialog.
-		@type files: list of unicode
-		@param files: list of files (full path)
-		@type jid: unicode
-		@param jid: JID
-		"""
-		#if jid=="album@disk.jabbim.cz":
-		self.senddialog=widgets.albumfiletransfer.albumFiletransferDialog(self,files,jid)
-		#else:
-			#self.senddialog=widgets.filetransfer.filetransferDialog(self,files,jid)
-		self.senddialog.show()
 
 	def buildOfflineMenu(self):
 		"""
@@ -2077,184 +2591,11 @@ class mainWindow(QtGui.QMainWindow):
 		log.msg( 'CHYBA V DATABAZI?!!! ')
 		print result
 
-	def getImage(self,file,size=None):
-		"""
-		Returns deffered where is QImage loaded.
-		@type file: unicode
-		@param file: path to file
-		@type size: list of integers
-		@param size: [width,height] which are used for resizing image
-		"""
-		d=threads.deferToThread(self._getImage,file,size)
-		return d
-
 	def _getImage(self,file,size):
 		image=QtGui.QImage(file)
 		if size:
 			image=image.scaled(size[0],size[1],QtCore.Qt.KeepAspectRatio)#,QtCore.Qt.SmoothTransformation)
 		return image
-
-	def getToolTip(self,jid, name = None):
-		"""
-		returns html for setToolTip
-		@type jid: unicode
-		@param jid: jid of contact 
-		"""
-		jidfull = jid
-		jid = jidT.JID(jid).userhost()
- 
-		text='<table><tr>'
-		if self.client.avatarDef.get(jid, False):
-			if self.client.avatarImg[self.client.avatarDef[jid]] and self.client.avatarDef[jid]!="None":
-				width=self.client.avatarImg[self.client.avatarDef[jid]][1]
-				height=self.client.avatarImg[self.client.avatarDef[jid]][2]
-				height=height/(float(width)/64.0)
-				text+='<td><img src="'+self.realHomeDir+'/avatars/'+unicode(self.client.avatarDef[jid])+'" width="64" height="'+str(height)+'"/></td>'
-		else:
-			#if there is no avatar for given JID, then try to use avatar from any metacontact
-			meta = self.ui.roster.getMetaItems(jid)
-			print meta
-			for itm in meta:
-				j = itm[1]
-				print j
-				if self.client.avatarDef.get(j, False):
-					if self.client.avatarImg[self.client.avatarDef[j]] and self.client.avatarDef[j]!="None":
-						width=self.client.avatarImg[self.client.avatarDef[j]][1]
-						height=self.client.avatarImg[self.client.avatarDef[j]][2]
-						height=height/(float(width)/64.0)
-						text+='<td><img src="'+self.realHomeDir+'/avatars/'+unicode(self.client.avatarDef[j])+'" width="64" height="'+str(height)+'"/></td>'
-						break
-						
-		if name != None:
-			text+='<td><b>'+self.tr("Name:")+'</b> '+name+'<br/>'
-		else:
-			text+='<td>'
-		text+='<b>'+self.tr("JID:")+'</b> '+jidfull+'<br/>'
-		contact = self.client.getContactByJid(jid)
-		if contact == None:
-			contact = self.client.getMucContactByJid(jidfull)
-			if contact != None:
-				status = contact.status
-				if not status:
-					status = ""
-				text+='<img src="images/16x16/status/jabber-%s.png">' % contact.show 
-				text+='<b>%s</b> '%unicode(self.status.get(contact.show, ''))
-				if len(status) != 0:
-					text+='<br /><font size="-1">%s</font>' % (status.replace('\n', '<br />'))
-			text+="</td></tr></table>"
-			return text
-			
-		if unicode(contact.subscription) == 'from':
-			text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" from")+'<br/>'
-		elif unicode(contact.subscription) == 'to':
-			text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" to")+'<br/>'
-		elif unicode(contact.subscription) == 'none':
-			text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" none")+'<br/>'	
-		n =0
-
-		for res in contact.resources.keys():
-			status = contact.resources[res].status
-			if not status:
-				status = ""
-			priority = contact.resources[res].priority
-			#if priority == None:
-			#	priority = self.tr("Unknown")
-			if priority != None:
-				priority = "(%s: %s)" % (self.tr("Priority"),priority)
-			else:
-				priority = ""
-			if n>0:
-				text+='<br />'
-			text+='<img src="images/16x16/status/jabber-%s.png">' % contact.resources[res].show # hodilo by se rozlisit k jakymu poatri transportu
-			text+='<b>%s</b> ' % unicode(self.status.get(contact.resources[res].show, ''))
-			if res != None:
-#							text+='<b>%s</b> %s<br>' % ( res, priority)
-				text+='%s' % (priority)
-			identity = contact.resources[res].identity
-			if identity != '' and identity != None and identity != 'client/pc' and identity.startswith('client'):
-				text+=' %s' % (identity)
-			if len(status) != 0:
-				text+='<br /><font size="-1">%s</font>' % (status.replace('\n', '<br />'))
-			n+=1
-		tune = contact.getPEP('http://jabber.org/protocol/tune')
-		if type(tune) == list:
-			for x in tune:
-				print x
-		elif tune!=None:
-			artist = title = ''
-			for el in tune.elements():
-				if el.name == 'artist':
-					artist = unicode(el)
-				elif el.name == 'title':
-					title = unicode(el)
-			t = '%s: %s'%(artist, title)
-			if len(t.strip())>1:
-				text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">%s</font>' % (t) #ikonka se este muze menit ;)
-		
-		mood = contact.getPEP('http://jabber.org/protocol/mood')
-		if mood != None:
-			t = ''
-			m = txt = ''
-			for el in mood.elements():
-				if el.name == 'text':
-					txt = unicode(el)
-				else:
-					m = self.moods.get(el.name)
-					if self.moodIcons.has_key(el.name):
-						icon="<img src=\"%s\" />" % self.moodIcons[el.name].src
-					else:
-						icon=""
-			if txt != '':
-				t = m+ ' - %s'%txt
-			else:
-				t = m
-			text+='<br />%s<font size="-1">%s</font>' % (icon,t)
-		
-		activity = contact.getPEP('http://jabber.org/protocol/activity')
-		if activity != None:
-			txt = ''
-			general = ''
-			spec = ''
-			for el in activity.elements():
-				if el.name == 'text':
-					txt = unicode(el)
-				else :
-					general = el.name
-					spec = el.firstChildElement().name
-
-			text+='<br /><font size="-1"><b>%s</b> %s %s</font>' % (general, spec, txt)
-		chat = contact.getPEP('http://www.xmpp.org/extensions/xep-0194.html#ns')
-		if chat != None:
-#					print chat
-			if type(chat) == list:
-				print 'vice roomu'
-				text+='<br /><b>User is chatting in:</b>'
-				for itm in chat:
-					uri = name = ''
-					for el in itm.elements():
-						if el.name == 'uri':
-							uri = unicode(el)
-							if uri.startswith('xmpp:'):
-								uri = uri.replace('xmpp:', '')
-						elif el.name == 'name':
-							name = unicode(el)
-					text+= '<br /><font size="-1">%s %s</font>'%(name, uri)
-			else:
-				print 'jeden room'
-				uri = name = ''
-				if len(chat.children)>0:
-					text+='<br /><b>User is chatting in:</b>'
-					for el in chat.elements():
-						if el.name == 'uri':
-							uri = unicode(el)
-							if uri.startswith('xmpp:'):
-								uri = uri.replace('xmpp:', '')
-						elif el.name == 'name':
-							name = unicode(el)
-						text+= '<br /><font size="-1">%s %s</font>'%(name, uri)					
-		text+="</td></tr></table>"
-		return text
-
 
 	def buildTrayMenu(self):
 		"""
@@ -2566,115 +2907,6 @@ class mainWindow(QtGui.QMainWindow):
 			return
 		self.sendPresence(jid,result[0][0],result[0][1])
 
-	def sendPresence(self,jid,show,message="",pri=None):
-		"""
-		Sends presence and update GUI.
-		@type jid: unicode
-		@param jid: JID or None for sending presence to server
-		@type show: unicode
-		@param show: String from this list: ["online","chat","away","xa","dnd","offline"]
-		@type message: unicode
-		@param message: Status message
-		@type pri: integer
-		@param pri: Priority
-		"""
-		print "sending presence",jid,show
-		if not jid:
-			# global presence => presence will be send to server
-			if show=="offline":
-				self.client.sendPresence(typ = "unavailable", status = unicode(message))
-				self.client.factory.stopTrying()
-				self.reconnect = False
-				self.client.disconnect()
-				# update avatar tooltip and tray tooltip
-				self.ui.selfAvatar.refreshToolTip()
-			else:
-				if not pri:
-					# get priority from config
-					if self.config.has_key('autoPriority'):
-						if self.config['autoPriority']=='True':
-							#priors={"chat":"25","online":"20","away":"15","xa":"10","dnd":"5"}
-							#'autoPriority_chat','autoPriority_online','autoPriority_away','autoPriority_xa','autoPriority_dnd'
-							
-							pri=str(self.config["autoPriority_"+str(show)])
-						else:
-							if self.config.has_key('priority'):
-								pri=self.config['priority']
-							else:
-								pri="0"
-					else:
-						if self.config.has_key('priority'):
-							pri=self.config['priority']
-						else:
-							pri="0"
-				self.selfStatus=show
-				# update tray icon
-				icon=QtGui.QIcon("images/16x16/apps/jabbim.png")
-				if self.selfStatus!='online':
-					result=icon.pixmap(16,16)
-					painter=QtGui.QPainter(result)
-					icon=self.getIcon(status=unicode(self.selfStatus),size="16x16")
-					painter.drawPixmap(0,0,icon.pixmap(16,16))
-					painter.end()
-				else:
-					result=icon
-				self.currentTrayIcon=QtGui.QIcon(result)
-				self.tray.setIcon(self.getCurrentTrayIcon())
-				# update avatar tooltip and tray tooltip
-				self.ui.selfAvatar.refreshToolTip()
-				
-				# send presence to the server
-				self.client.sendPresence(show = unicode(show), status = unicode(message),priority=pri)
-				
-				# send presence to groupchats
-				for muc in self.client.groupchats.itervalues():
-					self.client.sendPresence(show = unicode(show), status = unicode(message), to = '%s/%s'%(muc.jid, muc.nick))
-				
-				# send presence to all transports
-				#for transport in self.transports.keys():
-					#self.client.sendPresence(show = unicode(show), status = unicode(message), to = transport)
-				
-				# update statusWidget
-				if len(message)>20:
-					self.ui.statusMessage.setText(unicode(message)[:20]+"...")
-				elif len(message)==0:
-					self.ui.statusMessage.setText(unicode(self.status[show]))
-				else:
-					self.ui.statusMessage.setText(unicode(message))
-				self.ui.statusMessage.setIcon(self.getIcon(status=show,size="16x16"))
-
-		else:
-			if self.transports[jid]!=None:
-				self.transports[jid].setIcon(self.getIcon('1@'+jid,status=unicode(show),size="16x16"))
-
-				text='<table><tr>'
-				if os.path.isfile(self.homeDir+'/avatars/'+unicode(self.config['jid'])):
-					pixmap=QtGui.QIcon(self.homeDir+'/avatars/'+unicode(self.config['jid'])).pixmap(64,64)
-					text+='<td><img src="'+self.homeDir+'/avatars/'+unicode(self.config['jid'])+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
-				#text+='<td><b>'+self.tr("Name:")+'</b> '+item.escapedName+'<br/>'
-				text+='<td><b>'+self.tr("JID:")+'</b> '+unicode(jid)+'<br/>'
-
-				#status = unicode(message)
-				#priority = pri
-				#if priority != None:
-					#priority = "(%s: %s)" % (self.tr("Priority"),priority)
-				#else:
-					#priority = ""
-				usertype=unicode(self.client.getHostType(jid,jid))
-				if os.path.isfile('images/16x16/status/'+usertype+"-"+show+".png"):
-					text+='<img src="images/16x16/status/'+usertype+"-"+show+'.png" />'
-				else:
-					text+='<img src="images/16x16/status/jabber-%s.png">' % show
-				#if len(priority)!=0:
-					#text+='%s<br/>' % priority
-				if message:
-					text+='<font size="-1">%s</font>' % (message)
-				text+="</td></tr></table>"
-				self.transports[jid].setToolTip(text)
-				
-			# send presence
-			self.client.sendPresence(to=jid,show = unicode(show), status = unicode(message),priority=pri)
-
 	def profileChanged(self,jid):
 		"""
 		Changes profile. Called when user changes profile in Login Window. Profile can be changed only if Jabbim is not connected.
@@ -2831,18 +3063,6 @@ class mainWindow(QtGui.QMainWindow):
 			self.regwiz.show()
 		return
 
-	def getJid(self,jid):
-		"""
-		Returns Twisted Jabber ID or None if JID is in bad format.
-		@type jid: unicode
-		@param jid: profiles Jabber ID
-		"""
-		try:
-			jidt=jidT.JID(jid)
-		except:
-			return None
-		return jidt
-
 	def serviceDiscovery(self,b):
 		"""
 		Shows Service Discovery Dialog. Called by QAction from main menu.
@@ -2992,22 +3212,6 @@ class mainWindow(QtGui.QMainWindow):
 				except Exception, ex:
 					log.msg(plugin_name+': '+unicode(ex))
 		#log.msg("PLUGINS:"+unicode(self.plugins))
-	
-	def runPluginCommand(self,command,args):
-		"""
-		Safely runs plugins command.
-		@type command: pointer to function
-		@param command: pointer to plugins function
-		@type args: list
-		@param args: list of arguments for function
-		"""
-		try:
-			ret=command(*args)
-			return ret
-		except Exception, ex:
-			log.msg('Plugin error: ' +unicode(ex))
-			message = unicode(traceback.format_exc())
-			log.msg(message)
 	
 	def loadPlugin(self,plugin):
 		"""
@@ -3257,17 +3461,6 @@ class mainWindow(QtGui.QMainWindow):
 			item.setText(1,unicode(v.jid.full()))
 			item.setData(0,32,QtCore.QVariant([unicode(v.jid.full()),unicode(v.nick),unicode(v.password)]))
 			item.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
-
-	def joinGC(self,jid,nickname):
-		"""
-		Joins to groupchat.
-		@type jid: unicode
-		@param jid: Groupchats Jabber ID
-		@type nickname: unicode
-		@param nickname: users nickname
-		"""
-		if self.chat.addGroupChatTab(jid,nickname):
-			self.client.joinGC(jid, nickname)
 
 	def autoJoinGroupchat(self):
 		"""
@@ -3524,37 +3717,6 @@ class mainWindow(QtGui.QMainWindow):
 		if not self.skin.has_key("spaces_between_lines"):
 			self.skin["spaces_between_lines"]='0'
 	
-	def getSkinColors(self,i):
-		"""
-		Returns colors from chat skins. This is useful for using different colors for different nicknames in Groupchat.
-		Every user in groupchat have his own ID and according to ID is choosen one color.
-		@type i: integer
-		@param i: ID of user (color)
-		@rtype: list
-		@return: list of colors [#000000,#FFFFFF,#EFEFEF]
-		"""
-		colors=[]
-		for key,value in self.skin.iteritems():
-			if key.startswith("color"):
-				colors.append(value)
-		if len(colors)==0:
-			return None
-		if len(colors)==1:
-			return colors[0]
-		if i>len(colors)-1:
-			return colors[i%(len(colors)-1)]
-		else:
-			return colors[i]
-
-	def now(self,shift=0):
-		"""
-		Returns current time in format hh:mm:ss
-		@rtype: unicode
-		@return: current time in format hh:mm:ss
-		"""
-		h,m,s=time.localtime(time.time()+shift)[3:6]
-		return "%02d:%02d:%02d" % (h,m,s)
-
 	def showXml(self,bool):
 		self.xmlConsole.show()
 
@@ -3631,163 +3793,6 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		#if self.client!=None:
 		reactor.stop2()
-
-	def getAvatar(self,pixmap,size="auto",frame=False,status=None):
-		"""
-		Returns avatar of contact.
-		@type pixmap: unicode or QtGui.QIcon or QtGui.QPixmap
-		@param pixmap: unicode - Jabber ID of contact with "@" replaced with "%";
-		@type size: unicode
-		@param size: auto, 16x16, 32x32, 64x64, 128x128
-		@type frame: boolean
-		@param frame: True - Frame is painted around the avatar.
-		@type status: unicode or None
-		@param status: String from this list: ["online","chat","away","xa","dnd","offline"]. Status icon will be painted to the corner.
-		@rtype: QtGui.QPixmap
-		@return: avatar
-		"""
-		if not self.client:
-			return None
-		#keysToDel=[]
-		#for key,avatar in self.client.avatarImg.iteritems():
-			#if len(unicode(key).split('/'))!=1:
-				#if sys.getrefcount(avatar)==4:
-					#print "Unused chached avatar",key,avatar,sys.getrefcount(avatar)
-					#keysToDel.append(str(key))
-		#for key in keysToDel:
-			#del self.client.avatarImg[key]
-		if not pixmap:
-			return None
-		if isinstance(pixmap,unicode) or isinstance(pixmap,str):
-			hash=""
-			if self.client.avatarDef.has_key(pixmap):
-				hash=self.client.avatarDef[pixmap]
-			if hash=="":
-				file=self.realHomeDir+'/avatars/'+unicode(pixmap)
-			else:
-				file=self.realHomeDir+'/avatars/'+unicode(hash)
-			if not os.path.isfile(file):
-				return None
-			icon=QtGui.QIcon(file)
-		elif isinstance(pixmap,QtGui.QPixmap):
-			icon=QtGui.QIcon(pixmap)
-		else:
-			icon=pixmap
-		if size!="auto":
-			x=int(size.split('x')[0])
-			y=int(size.split('x')[1])
-		
-		if frame and size!='auto':
-			if size=="128x128":
-				avatar=icon.pixmap(100,100)
-				if avatar.width()<=50 and avatar.height()<=50:
-					size="64x64"
-				x=int(size.split('x')[0])
-				y=int(size.split('x')[1])
-			elif size=="64x64":
-				avatar=icon.pixmap(50,50)
-			elif size=="32x32":
-				avatar=icon.pixmap(25,25)
-			else:
-				return False
-	
-			result=QtGui.QPixmap(x,y)
-			result.fill(QtCore.Qt.transparent)
-			if os.path.exists("themes/"+self.config['theme']+"/frame-"+str(size)+".png"):
-				frame1=QtGui.QPixmap("themes/"+self.config['theme']+"/frame-"+str(size)+".png")
-			else:
-				frame1=QtGui.QPixmap("images/"+str(size)+"/frame.png")
-			painter=QtGui.QPainter(result)
-			painter.drawPixmap((x-avatar.width())/2,(y-avatar.height())/2,avatar)
-			painter.drawPixmap(0,0,frame1)
-			painter.end()
-		elif size!="auto" and not frame:
-
-			if size=="128x128":
-				avatar=icon.pixmap(100,100)
-				if avatar.width()<=50 and avatar.height()<=50:
-					size="64x64"
-				x=int(size.split('x')[0])
-				y=int(size.split('x')[1])
-			elif size=="64x64":
-				avatar=icon.pixmap(50,50)
-			elif size=="32x32":
-				avatar=icon.pixmap(25,25)
-			else:
-				return False
-			result=QtGui.QPixmap(x,y)
-			result.fill(QtCore.Qt.transparent)
-			painter=QtGui.QPainter(result)
-			painter.drawPixmap((x-avatar.width())/2,(y-avatar.height())/2,avatar)
-			if status:
-				icon=self.getIcon(status=unicode(status),size="16x16")
-				if icon:
-					painter.drawPixmap(16,16,icon.pixmap(16,16))
-			painter.end()
-		elif size=="auto" and not frame:
-			result=QtGui.QPixmap(file)
-
-		return result
-
-	def getCurrentTrayIcon(self):
-		"""
-		Returns current tray icon according to show.
-		@rtype: QtGui.QIcon
-		@return: current tray icon
-		"""
-		return self.currentTrayIcon
-
-	def getIcon(self,jid=None,typ=None,size="32x32",status=None,usertype=None):
-		"""
-		Returns status icon.
-		@type jid: unicode
-		@param jid: Jabber ID
-		@type size: unicode
-		@param size: 16x16 or 32x32
-		@type status: unicode
-		@param status: String from this list: ["online","chat","away","xa","dnd","offline"]
-		@rtype: QtGui.QIcon
-		@return: status icon
-		"""
-		if size=="22x22":
-			size="32x32"
-		# return status icon
-		#print "geticon",jid,typ,size,status,usertype
-		path=self.statusPath.replace("xxxxx",size)
-		typ=unicode(typ)
-		
-		if usertype!=None:
-			file=path+usertype+"-online.png"
-			if os.path.exists(file):
-				icon=QtGui.QIcon(file)
-				return icon
-		
-		if status==None:
-			status=self.icons[self.shows[typ]]
-		if jid!=None:
-			#file=path+self.getUserType(jid)+"-"+self.icons[self.show[typ]]+".png"
-			if len(jid.split("@"))>1:
-				host=jid.split("@")[1].split('/')[0]
-			else:
-				host=jid.split('/')[0]
-			if self.client.disco.has_key(host):
-				usertype=unicode(self.client.getHostType(host,jid))
-				file=path+usertype+"-"+status+".png"
-				if os.path.exists(file):
-					icon=QtGui.QIcon(file)
-				else:
-					#print "File not exist",file," <-",jid,typ
-					#print "using",path+"jabber-"+self.icons[self.shows[status]]+".png"
-					icon=QtGui.QIcon(path+"jabber-"+self.icons[self.shows[status]]+".png")
-			else:
-				#print "using",path+"jabber-"+self.icons[self.shows[status]]+".png"
-				icon=QtGui.QIcon(path+"jabber-"+self.icons[self.shows[status]]+".png")
-		else:
-			if status==None:
-				icon=QtGui.QIcon(path+"jabber-online.png")
-			else:
-				icon=QtGui.QIcon(path+"jabber-"+status+".png")
-		return icon
 
 	def newProfile(self,jid,password,savePassword):
 		self.homeDir=self.realHomeDir+"/"+jid+"-profile"
