@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sat May 17 05:44:16 2008
+# Created: Mon May 19 20:49:59 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -506,10 +506,14 @@ class Ui_MainWindow(object):
         self.actionSupport = QtGui.QAction(MainWindow)
         self.actionSupport.setObjectName("actionSupport")
 
+        self.actionSendJabbimLog = QtGui.QAction(MainWindow)
+        self.actionSendJabbimLog.setObjectName("actionSendJabbimLog")
+
         self.actionStart_Chat = QtGui.QAction(MainWindow)
         self.actionStart_Chat.setObjectName("actionStart_Chat")
         self.menuHelp.addAction(self.actionAbout)
         self.menuHelp.addAction(self.actionSupport)
+        self.menuHelp.addAction(self.actionSendJabbimLog)
         self.menuAkce.addAction(self.actionJoin_groupchat)
         self.menuAkce.addAction(self.actionAdd_Contact)
         self.menuAkce.addAction(self.actionStart_Chat)
@@ -605,5 +609,6 @@ class Ui_MainWindow(object):
         self.actionJoin_groupchat.setText(QtGui.QApplication.translate("MainWindow", "Join groupchat", None, QtGui.QApplication.UnicodeUTF8))
         self.actionBrowse_rooms.setText(QtGui.QApplication.translate("MainWindow", "Browse rooms", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSupport.setText(QtGui.QApplication.translate("MainWindow", "Support", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionSendJabbimLog.setText(QtGui.QApplication.translate("MainWindow", "Send Jabbim Log", None, QtGui.QApplication.UnicodeUTF8))
         self.actionStart_Chat.setText(QtGui.QApplication.translate("MainWindow", "Start Chat", None, QtGui.QApplication.UnicodeUTF8))
 

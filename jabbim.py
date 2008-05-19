@@ -1747,6 +1747,7 @@ class mainWindow(QtGui.QMainWindow):
 		
 		QtCore.QObject.connect(self.ui.actionAbout, QtCore.SIGNAL("triggered ( bool )"),self.about)
 		QtCore.QObject.connect(self.ui.actionSupport, QtCore.SIGNAL("triggered ( bool )"),self.support)
+		QtCore.QObject.connect(self.ui.actionSendJabbimLog, QtCore.SIGNAL("triggered ( bool )"),self.sendLog)
 		QtCore.QObject.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
 		QtCore.QObject.connect(self.ui.actionPrivacy_list_editor, QtCore.SIGNAL("triggered ( bool )"),self.privacyListEditor)
 		QtCore.QObject.connect(self.ui.actionAdd_Contact, QtCore.SIGNAL("triggered ( bool )"),self.addContactMainWindow)
@@ -3130,6 +3131,19 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			anchor="http://live.jabbim.cz/muckl/muckl.html?conf_room=jabbim&nick="
 			QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
+	
+	def sendLog(self, bool):
+		from twisted.web.microdom import unescape
+		if self.client:
+			try:
+				log=open(self.homeDir+'/'+self.config['logfile'], 'r')
+			except:
+				print "can't open",self.homeDir+'/'+self.config['logfile']
+				return
+			text=unicode(log.read())
+			log.close()
+			text=unescape(text)
+			self.client.sendMessage("paste@jabbim.cz",self.config['jid'].replace("@",".")+" Jabbim.log\n"+text)
 	
 	def sendCustomStatus(self, jid, show = None):
 		cs = customStatusWindow(jid, show)

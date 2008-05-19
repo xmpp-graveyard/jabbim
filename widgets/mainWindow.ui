@@ -1138,6 +1138,7 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="actionAbout" />
     <addaction name="actionSupport" />
+	<addaction name="actionSendJabbimLog" />
    </widget>
    <widget class="QMenu" name="menuAkce" >
     <property name="title" >
@@ -1246,6 +1247,12 @@ p, li { white-space: pre-wrap; }
     <string>Support</string>
    </property>
   </action>
+  <action name="actionSendJabbimLog" >
+	  <property name="text" >
+		  <string>Send Jabbim Log</string>
+	  </property>
+  </action>
+  
   <action name="actionStart_Chat" >
    <property name="text" >
     <string>Start Chat</string>
