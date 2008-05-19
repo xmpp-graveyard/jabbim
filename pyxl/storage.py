@@ -30,11 +30,18 @@ class Cache:
 				self.db = adbapi.ConnectionPool('pysqlite2.dbapi2', db)
 			except:
 				log.msg('Unknown DB error')
+			try:
+				self.db.runQuery('select typeof(identity) from caps')
+			except:
+				try:
+					self.db.runQuery('drop table caps')
+				except:
+					pass
 				
 	def create_tables(self):
-		t1 = self.db.runQuery('create table caps (node text, feature text, identity text);').addCallback(self.table_created, 'caps')#.addErrback(self.table_present)
-		t2 = self.db.runQuery('create table status (show text, desc text, id integer primary key);').addCallback(self.table_created, 'status')#.addErrback(self.table_present)
-		t3 = self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created, 'avatars')#.addErrback(self.table_present)
+		t1 = self.db.runQuery('create table if not exists caps (node text, feature text, identity text);').addCallback(self.table_created, 'caps')#.addErrback(self.table_present)
+		t2 = self.db.runQuery('create table if not exists status (show text, desc text, id integer primary key);').addCallback(self.table_created, 'status')#.addErrback(self.table_present)
+		t3 = self.db.runQuery('create table if not exists avatars (file text, hash text, jid text);').addCallback(self.table_created, 'avatars')#.addErrback(self.table_present)
 		return DeferredList([t1,t3,t2], consumeErrors = False)
 		
 	def table_created(self, res, table):

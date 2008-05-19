@@ -1515,12 +1515,6 @@ class mainWindow(QtGui.QMainWindow):
 			self.homeDir=self.realHomeDir+"/"+self.config['jid']+"-profile"
 			utils.loadConfig(self,[])
 		
-		# load cache and create tables
-		if sys.platform != 'win32':
-			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
-		else:
-			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
-		self.cache.create_tables().addCallback(self.tables_created).addErrback(self.tables_loaded)
 		
 		# look & feel :)
 		self.ui.gridlayout.setMargin(1)
@@ -3905,6 +3899,13 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.profilesList.setEnabled(False)
 		self.ui.loginInfo.setText(self.tr("Connecting to the server..."))
 		reactor.callLater(0,self.connect__)
+		
+		# load cache and create tables
+		if sys.platform != 'win32':
+			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
+		else:
+			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
+		self.cache.create_tables().addCallback(self.tables_created).addErrback(self.tables_loaded)
 	
 	def connect__(self):
 		start=time.time()
