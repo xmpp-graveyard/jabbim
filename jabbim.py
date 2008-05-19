@@ -3421,16 +3421,17 @@ class mainWindow(QtGui.QMainWindow):
 			theme.close()
 		else:
 			# use text for stylesheet css
-			conf=ConfigObj("themes/"+file+"/theme.ini",encoding='UTF8')
-			style=False
-			if conf!=None and len(conf)!=0:
-				if conf.has_key('style'):
-					if conf['style'] in self.qtStyles:
-						app.setStyle(QtGui.QStyleFactory.create(conf['style']))
-						style=True
-			if not style:
-				print "setting default style"
-				app.setStyle(self.qtStylesDefault)
+			if file:
+				conf=ConfigObj("themes/"+file+"/theme.ini",encoding='UTF8')
+				style=False
+				if conf!=None and len(conf)!=0:
+					if conf.has_key('style'):
+						if conf['style'] in self.qtStyles:
+							app.setStyle(QtGui.QStyleFactory.create(conf['style']))
+							style=True
+				if not style:
+					print "setting default style"
+					app.setStyle(self.qtStylesDefault)
 			self.setStyleSheet(text)
 			self.xmlConsole.setStyleSheet(text)
 			self.chat.setStyleSheet(text)
