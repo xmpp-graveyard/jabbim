@@ -1772,10 +1772,8 @@ class rosterWidget(QtGui.QWidget):
 			user.status=self.main.shows[unicode(show)]
 			user.height=self.rosterStyle.heightForItem(user)
 			highest=None
-			print "-------"
 			allOffline=True
 			for item in self.metaItems[mainjid]:
-				print jid,item.jid,item.status
 				if str(item.status)!="9":
 					allOffline=False
 				if highest:
@@ -1791,8 +1789,6 @@ class rosterWidget(QtGui.QWidget):
 						highest=item
 				else:
 					highest=item
-			print highest.jid
-			print "-------"
 			item=self.getMetaParents(mainjid)
 			if allOffline:
 				item[0].hidden=True
@@ -1800,7 +1796,6 @@ class rosterWidget(QtGui.QWidget):
 			if highest:
 				if len(item)!=0:
 					item=item[0]
-					print item.jid,highest.jid
 					if item.jid!=highest.jid:
 						item.name=highest.name
 						item.escapedName=highest.escapedName

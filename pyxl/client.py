@@ -925,7 +925,6 @@ class Client(derived):
 		#self.on_invalidUser(self)
 
 	def onMessage(self, el):
-		log.msg( 'message received')
 		try:
 			typ = el['type']
 		except:
@@ -1104,7 +1103,6 @@ class Client(derived):
 		frm = jid.JID(el['from'])
 		fromjid = frm.userhost()
 		resource = frm.resource
-		print "PRESENCE"
 		show = status = priority = nick = typ = affiliation = role = truejid = error = reason = actor = identity = None
 		codes = []
 		hash = 'None'
@@ -1287,8 +1285,8 @@ class Client(derived):
 
 
 	def _featuresReceived(self, el, ext, jd):
-		log.msg( 'features received')
-		print el.toXml()
+		#log.msg( 'features received')
+		#print el.toXml()
 ##		self.disp(el['id'])
 		features = []
 		identity = ''
@@ -1386,7 +1384,7 @@ class Client(derived):
 
 	def onDiscoItems(self, el):
 		log.msg( 'received disco#items request')
-		log.msg("ITEMS: "+`self.discoitems`)
+		#log.msg("ITEMS: "+`self.discoitems`)
 		self.disp(el['id'])
 		try:
 			lang = el["xml:lang"]
@@ -1542,7 +1540,7 @@ class Client(derived):
 					name = child['name']
 				else:
 					name = frm
-				log.msg(unicode(node))
+				#log.msg(unicode(node))
 				node['identities'][name] = child.attributes
 				cat = child.getAttribute('category')
 				typ = child.getAttribute('type')

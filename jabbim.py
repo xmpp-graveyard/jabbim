@@ -454,7 +454,6 @@ class clientClass(pyxl.client.Client):
 
 		# load avatar
 		#self.main._loadAvatar(self.main.homeDir+'/avatars/'+jid, self.avatars.get(jid), jid)
-		print "addUser lasts",time.time()-start,'seconds'
 
 	def makeTempMeta(self):
 		"""
@@ -604,7 +603,6 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.statusButton.setText(unicode(""))
 		self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
 		self.main.ui.login_cancel.hide()
-		print "onRosterarrived lasts",time.time()-start,'seconds'
 
 	def on_rosterx(self, frm, items, id):
 		mainWindow = self.main
@@ -667,7 +665,6 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.splashProgress.setValue(100)
 		self.main.ui.loginInfo.setText(mainWindow.tr("Jabbim is ready."))
 		self.main.ui.rosterStackedWidget.setCurrentIndex(1)
-		print "firstpresence lasts",time.time()-start,'seconds'
 		# load plugins, autoconnect
 		self.reactor.callLater(2,self.autoJoin)
 
@@ -714,8 +711,6 @@ class clientClass(pyxl.client.Client):
 			# we don't have opened tab for this room => nothing to do...
 			return
 		tabFull,indexFull=self.main.chat.findTab(muc+'/'+nick,True,['chat'])
-		if tabFull:
-			print "gc_presence",tabFull.typ,tabFull.jid
 		# we have opened conversation with this resource
 
 		if show=="offline":
@@ -775,10 +770,6 @@ class clientClass(pyxl.client.Client):
 		# get tab for this contact
 		tabFull,indexFull=self.main.chat.findTab(jid.full(),True,typ=['chat']) # tab with resource
 		tab,index=self.main.chat.findTab(jid.full(),False,typ=['chat']) # tab without resource
-		if tab:
-			print "TAB",tab.jid
-		if tabFull:
-			print "TABFULL",tabFull.jid
 		if tab and not tabFull:
 			tabFull=tab
 			indexFull=index
@@ -903,7 +894,6 @@ class clientClass(pyxl.client.Client):
 				text+="</td></tr></table>"
 				self.main.transports[jid.full()].setToolTip(text)
 		self.dispatcher.publishEvent('presenceEvent', jid, self.main.ui.roster.getNameByJID(jid.full()), show, status_, first)
-		print "on_presence lasts",time.time()-start
 
 	def on_xml(self,xml):
 		# append xml to the xml console, if it's enabled...
@@ -1109,13 +1099,11 @@ class clientClass(pyxl.client.Client):
 					if w!=None:
 						message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent. Remote server not found."))
 						w.chat.textEditWrite(message)
-					print "gcmessage lasts",time.time()-start
 					return
 				elif error!=None:
 					if w!=None:
 						message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent.")+" "+unicode(error))
 						w.chat.textEditWrite(message)
-					print "gcmessage lasts",time.time()-start
 					return
 				if len(body)!=0 and subject==None:
 					if xhtml==None:
@@ -1144,7 +1132,6 @@ class clientClass(pyxl.client.Client):
 					message = w.chat.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",message)
 					
 					w.chat.textEditWrite(message)
-				print "gcmessage lasts",time.time()-start
 				return
 
 
@@ -1320,7 +1307,6 @@ class clientClass(pyxl.client.Client):
 		"""
 		Called when avatar is upated.
 		"""
-		print "AVATAR:",[unicode(jid)]
 		if not self.avatarDef.has_key(jid):
 			return None
 		# get avatar for this jid
