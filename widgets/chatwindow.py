@@ -339,7 +339,11 @@ class chatWindow(QtGui.QMainWindow):
 					self.flashStatus=False
 					self.main.events.refreshTray()
 
-		self.setWindowTitle("("+str(int(self.getUnreadMessages()))+") "+unicode(self.ui.chatTab.tabText(index)).replace("&",""))
+		unread=int(self.getUnreadMessages())
+		if unread>0:
+			self.setWindowTitle("("+str(unread)+") "+unicode(self.ui.chatTab.tabText(index)).replace("&",""))
+		else:
+			self.setWindowTitle(unicode(self.ui.chatTab.tabText(index)).replace("&",""))
 
 		if widget.typ=="chat":
 			self.main.client.sendMessage(unicode(widget.jid),"",composing="active")
@@ -505,7 +509,7 @@ class chatWindow(QtGui.QMainWindow):
 			# write message
 			if countMessage:
 				w.chat.unread+=1
-			print unicode(message)
+			#print unicode(message)
 			w.chat.textEditWrite(message)
 			w.chat.lastMessageFrom=unicode(user)
 			return
