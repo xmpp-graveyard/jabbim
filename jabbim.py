@@ -1468,6 +1468,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.setupUi(self)
 		self.ui.toggleInvisible.hide()
 		self.ui.statusButton.hide()
+		self.qtStyles=map(unicode,list(QtGui.QStyleFactory.keys()))
+		self.qtStylesDefault=app.style()
 		layout=QtGui.QHBoxLayout(self.ui.selfAvatarWidget)
 		layout.setMargin(0)
 		layout.setSpacing(0)
@@ -3390,7 +3392,7 @@ class mainWindow(QtGui.QMainWindow):
 				else:
 					self.hide()
 
-	def loadTheme(self,text=None):
+	def loadTheme(self,text=None,file=None):
 		"""
 		Loads theme. If text==None, self.config['theme'] is used. Otherwise is stylesheet sets to `text`.
 		@type text: unicode
@@ -3402,10 +3404,21 @@ class mainWindow(QtGui.QMainWindow):
 			# theme isn't used
 			text=""
 			self.ui.roster.theme=False
+			app.setStyle(self.qtStylesDefault)
 		else:
 			self.ui.roster.theme=True
 		if text==None:
 			# open theme according to self.config
+			conf=ConfigObj("themes/"+self.config['theme']+"/theme.ini",encoding='UTF8')
+			style=False
+			if conf!=None and len(conf)!=0:
+				if conf.has_key('style'):
+					if conf['style'] in self.qtStyles:
+						app.setStyle(QtGui.QStyleFactory.create(conf['style']))
+						style=True
+			if not style:
+				print "setting default style"
+				app.setStyle(self.qtStylesDefault)
 			theme=open("themes/"+self.config['theme']+"/style.css")
 			text=theme.read()
 			self.setStyleSheet(text)
@@ -3414,6 +3427,16 @@ class mainWindow(QtGui.QMainWindow):
 			theme.close()
 		else:
 			# use text for stylesheet css
+			conf=ConfigObj("themes/"+file+"/theme.ini",encoding='UTF8')
+			style=False
+			if conf!=None and len(conf)!=0:
+				if conf.has_key('style'):
+					if conf['style'] in self.qtStyles:
+						app.setStyle(QtGui.QStyleFactory.create(conf['style']))
+						style=True
+			if not style:
+				print "setting default style"
+				app.setStyle(self.qtStylesDefault)
 			self.setStyleSheet(text)
 			self.xmlConsole.setStyleSheet(text)
 			self.chat.setStyleSheet(text)

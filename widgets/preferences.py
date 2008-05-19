@@ -816,10 +816,13 @@ class preferencesWindow(QtGui.QDialog):
 					#text="<b>"+self.tr("Name: ")+"</b> "+conf['name']+'<br/>'
 					#text+="<b>"+self.tr("Author: ")+"</b> "+conf['author']+'<br/>'
 					#text+="<b>"+self.tr("Version: ")+"</b> "+conf['version']
-					text = self.tr("Name: %1\nAuthor: %2\nVersion: %3") \
+					try:
+						text = self.tr("Name: %1\nAuthor: %2\nVersion: %3") \
 											.arg(conf['name']) \
 											.arg(conf['author']) \
 											.arg(conf['version'])
+					except:
+						text = self.tr("Name: ") + skin
 				else:
 					text = self.tr("Name: ") + skin
 
@@ -1056,7 +1059,7 @@ class preferencesWindow(QtGui.QDialog):
 			text=style.read()
 			self.setStyleSheet(text)
 			style.close()
-			self.main.loadTheme(text)
+			self.main.loadTheme(text,file)
 
 	def themeChanged(self,item,old):
 		data=item.data(32)

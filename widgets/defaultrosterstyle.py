@@ -170,9 +170,9 @@ class rosterStyle:
 		background=None
 		if useritem==self.roster.selected:
 			if self.roster.theme:
-				painter.fillRect(0,0,self.roster.width(),32,QtGui.QBrush(self.roster.main.ui.selectedItemStyle.palette().window()))
+				painter.fillRect(0,0,self.roster.width(),useritem.height,QtGui.QBrush(self.roster.main.ui.selectedItemStyle.palette().window()))
 			else:
-				painter.fillRect(0,0,self.roster.width(),32,QtGui.QBrush(self.roster.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight)))
+				painter.fillRect(0,0,self.roster.width(),useritem.height,QtGui.QBrush(self.roster.main.ui.selectedItemStyle.palette().color(QtGui.QPalette.Highlight)))
 		else:
 			if self.roster.theme:
 				brush=QtGui.QBrush(self.roster.main.ui.userStyleWidget.palette().window())
@@ -272,7 +272,7 @@ class rosterStyle:
 			painter.save()
 			painter.translate(x+41,y+(32-fontHeight)/2)
 			if avatar:
-				doc.drawContents(painter, QtCore.QRectF(0,0,self.roster.width()-38-32,y+28))
+				doc.drawContents(painter, QtCore.QRectF(0,0,self.roster.width()-38,y+28))
 			else:
 				doc.drawContents(painter, QtCore.QRectF(0,0,self.roster.width()-38,y+28))
 			painter.restore()
