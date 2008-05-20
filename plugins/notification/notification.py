@@ -275,11 +275,6 @@ class Plugin(plugins.PluginBase):
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.installTranslator()
 		self.configDialog=config(self)
-		#self.config['on_first_message'] = {'description':'Notify on first message from user', 'default':'True', 'value': '','type':'boolean'}
-		#self.config['on_muc_highlight'] = {'description':'Notify if groupchat message contains your nickname', 'default':'True', 'value': '','type':'boolean'}
-		#self.config['sound_first_message'] = {'description':'Play sound on first message from user', 'default':'True', 'value': '','type':'boolean'}
-		#self.config['sound_gc'] = {'description':'Play sound if groupchat message contains your nickname', 'default':'True', 'value': '','type':'boolean'}
-		#self.config['sound_login'] = {'description':'Play sound on login', 'default':'True', 'value': '','type':'boolean'}
 		self.soundDir="sounds/" #for now lets say we have no option to change it (but it will change :)
 		self.soundAvailable=1 # well, we suppose there is sundsupport
 		self.sounds={} # ditictionary of playable actions, will fill in later
@@ -290,7 +285,6 @@ class Plugin(plugins.PluginBase):
 		# for list of actions see loadSoundConfig()
 		self.showInPreferences=True
 		self.preferencesIcon=QtGui.QIcon(plugindir+"/audio.png")
-		#self.loadSoundConfig("sounds/config")
 		self.osd=None
 		if main:
 			#self.registerHandler('on_message', self.on_message)
@@ -308,9 +302,6 @@ class Plugin(plugins.PluginBase):
 			self.osd.osdy=int(self.config['osd_y'])
 			if self.config['osd_transparent']!="True":
 				self.osd.transparent=False
-			#self.timer=QtCore.QTimer()
-			#QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.changeIcon)
-			#self.main.tray.showMessage(self.tr("Notification"),self.tr("Notification plugin is activated"), QtGui.QSystemTrayIcon.Information, 2000)
 		else:
 			self.loadConfig(homedir)
 
@@ -323,8 +314,6 @@ class Plugin(plugins.PluginBase):
 		self.osd.osdy=int(self.config['osd_y'])
 		self.osd.transparent=False
 		self.osd.pos(self.tr("Notification test - can drag"))
-
-		#dialog.setModal(False)
 
 	def on_endPreferences(self):
 		if not self.main.client:
@@ -346,26 +335,6 @@ class Plugin(plugins.PluginBase):
 			else:
 				self.osd.hide()
 				self.osd.setFontSize()
-
-	def loadSoundConfig(self, configFile):
-		try:
-			soubor = open(configFile,'r')
-			lines = soubor.readlines()
-			for line in lines:
-					self.sounds[line.split(' = ')[0]]=line.split(' = ')[1] # so ... now, we have a dictionary
-			soubor.close() # thats all we need
-		except IOError:
-			self.soundAvailable=0
-			print "Some error occured! (IOError loading sound config file %s)"%(configFile)
-
-	def playsound(self, action):
-		return
-		if self.soundAvailable:
-			if self.sounds.has_key(action): # if exist the action file
-				if sys.platform == 'linux2': # linux sounds are produced using aplay
-					os.system('aplay -q '+self.soundDir+self.sounds[action].strip('\n')+' &')
-				else:
-					QtGui.QSound.play(self.soundDir+self.sounds[action].strip('\n'))
 
 	def buildMainWindowMenu(self):
 		menu=self.mainWindowMenu()
@@ -417,12 +386,6 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.main.chat.addChatTab(jid.full(),jid.full(),self.main.getIcon(jid.userhost(),"offline",size="16x16"))
 		self.main.chat.activate()
-
-	#def startTrayBlink(self,icon="images/16x16/actions/message.png"):
-		#self.trayIcon=QtGui.QIcon(icon)
-		#self.ico=True
-		#self.timer.start(500)
-		#self.main.tray.setIcon(self.trayIcon)
 
 	def changeIcon(self):
 		if self.ico:
