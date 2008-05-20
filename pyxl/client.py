@@ -2142,6 +2142,7 @@ class Client(derived):
 		sid = si['id']
 		self.ft[sid] = socks5.FTReceive(self, el['from'], sid, file, methods, el['to'],el['id'])
 		self.on_fileReceived(sid, el['id'])
+		self.dispatcher.publishEvent('FTStartedEvent', sid, el['id'])
 	
 	def declineFT(self, sid):
 		if not self.ft.has_key(sid):

@@ -361,6 +361,7 @@ class clientClass(pyxl.client.Client):
 			self.main.preferencesWindow.reloadPlugins_()
 		del self.ft[sid]
 		self.on_ftTransfered(sid, 0) # we have to delete filetransfer and etc
+		self.dispatcher.publishEvent('FTFinishedEvent', sid, error)
 
 	def on_discoInfoReceived(self, jid, node):
 		"""

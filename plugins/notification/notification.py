@@ -252,7 +252,8 @@ class config:
 		self.config['sound_message']={'type':'boolean','label':self.main.tr("Play sound on other messages from user"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
 		self.config['sound_gc_message']={'type':'boolean','label':self.main.tr("Play sound if groupchat message contains your nickname"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
 		self.config['sound_presence']={'type':'boolean','label':self.main.tr("Play sound on new presence"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
-		
+		self.config['sound_ft']={'type':'boolean','label':self.main.tr("Play sound on file transfer"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
+
 		self.config['osd_transparent']={'type':'boolean','label':self.main.tr("Use transparent background"),'value':'False','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_time']={'type':'number-spin','label':self.main.tr("Display time (seconds):"),'value':'2','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_first_message']={'type':'boolean','label':self.main.tr("Use OSD for first message"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
@@ -286,6 +287,8 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('groupchatMessageForMeEvent',self.on_groupchatMessageForMeEvent)
 			self.registerHandler('presenceEvent',self.on_presence)
 			self.registerHandler('on_evil',self.on_evil)
+			self.registerHandler('FTStartedEvent',self.on_FTStarted)
+			self.registerHandler('FTFinishedEvent',self.on_FTFinished)
 			self.loadConfig()
 			if self.config['sound_login']=="True":
 				self.main.playsound('start')
@@ -298,6 +301,13 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.loadConfig(homedir)
 
+	def on_FTStarted(self,sid,el):
+		if self.config['sound_ft']=='True':
+			self.main.playsound('ft_start')
+	
+	def on_FTFinished(self,sid,error):
+		if self.config['sound_ft']=='True':
+			self.main.playsound('ft_finish')
 
 	def on_showPreferences(self,dialog):
 		if not self.osd:
