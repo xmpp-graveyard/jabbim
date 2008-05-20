@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>626</width>
+    <width>742</width>
     <height>405</height>
    </rect>
   </property>
@@ -196,19 +196,6 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item>
-       <spacer>
-        <property name="orientation" >
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" >
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
        <widget class="QLineEdit" name="line_jid" >
         <property name="minimumSize" >
          <size>
@@ -237,6 +224,59 @@ p, li { white-space: pre-wrap; }
         </property>
         <property name="icon" >
          <iconset>home.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line" >
+        <property name="orientation" >
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="publicButton" >
+        <property name="maximumSize" >
+         <size>
+          <width>30</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="icon" >
+         <iconset>jdisk-public-24.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="privateButton" >
+        <property name="maximumSize" >
+         <size>
+          <width>30</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="icon" >
+         <iconset>jdisk-private-24.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="albumButton" >
+        <property name="maximumSize" >
+         <size>
+          <width>30</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="icon" >
+         <iconset>jalbum-32.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line_3" >
+        <property name="orientation" >
+         <enum>Qt::Vertical</enum>
         </property>
        </widget>
       </item>

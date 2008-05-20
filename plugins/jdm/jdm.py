@@ -20,7 +20,7 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.installTranslator()
 			
-			self.window = self.loadWindow("%s/jdm_ui.py" % self.pluginDir)
+			self.window = self.loadWindow("%s/jdm_ui.py" % self.pluginDir,self.main)
 			self.window.setWindowIcon(self.main.windowIcon())
 			self.window.ui.list.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 			self.window.ui.list.startDrag=self.startDrag
@@ -30,10 +30,14 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.list.dragEnterEvent = self.dragEnterEvent
 			self.window.ui.line_jid.setText(self.main.client.jid.userhost())
 			self.jid = self.main.client.jid.userhost()
+			self.typ = "public"
 			self.window.ui.buttonDownload.setIcon(QtGui.QIcon("%s/document-save.png" % self.pluginDir))
 			self.window.ui.buttonUpload.setIcon(QtGui.QIcon("%s/upload.png" % self.pluginDir))
 			self.window.ui.buttonDelete.setIcon(QtGui.QIcon("%s/edit-delete.png" % self.pluginDir))
 			self.window.ui.buttonHome.setIcon(QtGui.QIcon("%s/home.png" % self.pluginDir))
+			self.window.ui.publicButton.setIcon(QtGui.QIcon("%s/jdisk-public-24.png" % self.pluginDir))
+			self.window.ui.privateButton.setIcon(QtGui.QIcon("%s/jdisk-private-24.png" % self.pluginDir))
+			self.window.ui.albumButton.setIcon(QtGui.QIcon("%s/jalbum-32.png" % self.pluginDir))
 			self.group=QtGui.QButtonGroup(self.window)
 
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
@@ -44,6 +48,9 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.buttonDelete,QtCore.SIGNAL("clicked()"),self.removeCurrentFile)
 			QtCore.QObject.connect(self.window.ui.buttonUpload,QtCore.SIGNAL("clicked()"),self.sendFile)
 			QtCore.QObject.connect(self.window.ui.buttonHome,QtCore.SIGNAL("clicked()"),self.home)
+			QtCore.QObject.connect(self.window.ui.publicButton,QtCore.SIGNAL("clicked()"),self.public)
+			QtCore.QObject.connect(self.window.ui.privateButton,QtCore.SIGNAL("clicked()"),self.private)
+			QtCore.QObject.connect(self.window.ui.albumButton,QtCore.SIGNAL("clicked()"),self.album)
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
 			self.registerHandler('on_ftEnd', self.on_ftEnd, priority = 4)
@@ -52,6 +59,15 @@ class Plugin(plugins.PluginBase):
 			
 		else:
 			self.loadConfig(homedir)
+
+	def public(self):
+		self.call(typ='public')
+
+	def private(self):
+		self.call(typ='private')
+
+	def album(self):
+		self.call(typ='album')
 
 	def home(self):
 		self.call(self.main.client.jid.userhost())
@@ -111,8 +127,12 @@ class Plugin(plugins.PluginBase):
 
 
 	def sendFile(self):
-		self.main.sendFiles('public@disk.jabbim.cz')
-		#a nejakou moznost updatovat view po uspesnem FT?
+		if self.typ=="public":
+			self.main.sendFiles('public@disk.jabbim.cz')
+		elif self.typ=="private":
+			self.main.sendFiles('private@disk.jabbim.cz')
+		elif self.typ=="album":
+			self.main.sendFiles('album@disk.jabbim.cz')
 
 	def startDrag(self,actions):
 		# start dragging selected contact
@@ -136,8 +156,12 @@ class Plugin(plugins.PluginBase):
 					if len(f)!=0:
 						new.append(f)
 				file=new
-				print file
-				self.main.showFiletransferDialog(file, 'public@disk.jabbim.cz')
+				if self.typ=="public":
+					self.main.showFiletransferDialog(file, 'public@disk.jabbim.cz')
+				elif self.typ=="private":
+					self.main.showFiletransferDialog(file, 'private@disk.jabbim.cz')
+				elif self.typ=="album":
+					self.main.showFiletransferDialog(file, 'album@disk.jabbim.cz')
 			event.acceptProposedAction()
 
 	def dragMoveEvent(self, event):
@@ -164,13 +188,23 @@ class Plugin(plugins.PluginBase):
 		item=self.window.ui.list.currentItem()
 		if not item:
 			return
-		self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+		if self.typ=="public":
+			self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+		elif self.typ=="private":
+			self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+		elif self.typ=="album":
+			self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
 
 	def removeCurrentFile(self):
 		item=self.window.ui.list.currentItem()
 		if not item:
 			return
-		self.main.client.sendMessage("public@disk.jabbim.cz", u"rm "+unicode(item.text()))
+		if self.typ=="public":
+			self.main.client.sendMessage("public@disk.jabbim.cz", u"rm "+unicode(item.text()))
+		elif self.typ=="private":
+			self.main.client.sendMessage("private@disk.jabbim.cz", u"rm "+unicode(item.text()))
+		elif self.typ=="album":
+			self.main.client.sendMessage("album@disk.jabbim.cz", u"rm "+unicode(item.text()))
 		item=self.window.ui.list.takeItem(self.window.ui.list.currentRow())
 		del item
 
@@ -185,7 +219,7 @@ class Plugin(plugins.PluginBase):
 			return str(round(original/1000.0,2))+" kB" # kB
 		return str(round(original/1000000.0,2))+" MB" # MB
 
-	def updateView(self, data, typ = 'public'):
+	def updateView(self, data):
 		self.window.ui.list.clear()
 		#self.window.ui.log.clear()
 		data=data[0][0]
@@ -224,21 +258,20 @@ class Plugin(plugins.PluginBase):
 		menu=self.mainWindowMenu()
 		menu.addAction("Jabbim disk manager",self.showSlot)
 	
-	def call(self,jid=None,type="public"):
-		#if not jid:
-			#self.jid=self.main.client.jid.userhost()
-		#else:
-			#self.jid=jid
+	def call(self,jid=None,typ="public"):
+		self.typ=typ
 		if jid:
 			self.jid=jid
 			self.window.ui.line_jid.setText(self.jid)
 		else:
 			self.jid=unicode(self.window.ui.line_jid.text())
-		print "call",self.jid
-		self.type=type
-		if self.type=="public":
-			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.jid,)).addCallback(self.updateView, 'public')
-		
+		print "call",self.jid,self.typ
+		if self.typ=="public":
+			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.jid,)).addCallback(self.updateView)
+		elif self.typ=="private":
+			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPrivate', (self.jid,)).addCallback(self.updateView)
+		elif self.typ=="album":
+			self.main.client.callRemote('rpc@jabbim.cz/service', 'listAlbum', (self.jid,)).addCallback(self.updateView)
 		if self.jid != self.main.client.jid.userhost():
 			self.window.ui.buttonDelete.setEnabled(False)
 			self.window.ui.buttonUpload.setEnabled(False)
@@ -261,7 +294,7 @@ class Plugin(plugins.PluginBase):
 	
 	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
 		if error == None and self.main.client.ft[sid].tojid.find("public@disk.jabbim.cz")!=-1:
-			self.call()
+			self.call(typ=self.typ)
 		
 		print sid, error
 			

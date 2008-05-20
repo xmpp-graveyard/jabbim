@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'plugins/jdm/jdm_ui.ui'
 #
-# Created: Tue May 20 16:21:27 2008
+# Created: Tue May 20 19:40:20 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,626,405).size()).expandedTo(MainWindow.minimumSizeHint()))
+        MainWindow.resize(QtCore.QSize(QtCore.QRect(0,0,742,405).size()).expandedTo(MainWindow.minimumSizeHint()))
 
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -109,9 +109,6 @@ class Ui_MainWindow(object):
         self.label_description.setObjectName("label_description")
         self.hboxlayout.addWidget(self.label_description)
 
-        spacerItem1 = QtGui.QSpacerItem(20,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.hboxlayout.addItem(spacerItem1)
-
         self.line_jid = QtGui.QLineEdit(self.centralwidget)
         self.line_jid.setMinimumSize(QtCore.QSize(250,0))
         self.line_jid.setObjectName("line_jid")
@@ -123,6 +120,36 @@ class Ui_MainWindow(object):
         self.buttonHome.setIcon(QtGui.QIcon("home.png"))
         self.buttonHome.setObjectName("buttonHome")
         self.hboxlayout.addWidget(self.buttonHome)
+
+        self.line = QtGui.QFrame(self.centralwidget)
+        self.line.setFrameShape(QtGui.QFrame.VLine)
+        self.line.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line.setObjectName("line")
+        self.hboxlayout.addWidget(self.line)
+
+        self.publicButton = QtGui.QPushButton(self.centralwidget)
+        self.publicButton.setMaximumSize(QtCore.QSize(30,16777215))
+        self.publicButton.setIcon(QtGui.QIcon("jdisk-public-24.png"))
+        self.publicButton.setObjectName("publicButton")
+        self.hboxlayout.addWidget(self.publicButton)
+
+        self.privateButton = QtGui.QPushButton(self.centralwidget)
+        self.privateButton.setMaximumSize(QtCore.QSize(30,16777215))
+        self.privateButton.setIcon(QtGui.QIcon("jdisk-private-24.png"))
+        self.privateButton.setObjectName("privateButton")
+        self.hboxlayout.addWidget(self.privateButton)
+
+        self.albumButton = QtGui.QPushButton(self.centralwidget)
+        self.albumButton.setMaximumSize(QtCore.QSize(30,16777215))
+        self.albumButton.setIcon(QtGui.QIcon("jalbum-32.png"))
+        self.albumButton.setObjectName("albumButton")
+        self.hboxlayout.addWidget(self.albumButton)
+
+        self.line_3 = QtGui.QFrame(self.centralwidget)
+        self.line_3.setFrameShape(QtGui.QFrame.VLine)
+        self.line_3.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line_3.setObjectName("line_3")
+        self.hboxlayout.addWidget(self.line_3)
 
         self.reload = QtGui.QPushButton(self.centralwidget)
         self.reload.setMinimumSize(QtCore.QSize(123,0))
