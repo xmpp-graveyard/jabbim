@@ -387,14 +387,6 @@ class Plugin(plugins.PluginBase):
 			self.main.chat.addChatTab(jid.full(),jid.full(),self.main.getIcon(jid.userhost(),"offline",size="16x16"))
 		self.main.chat.activate()
 
-	def changeIcon(self):
-		if self.ico:
-			self.main.tray.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
-			self.ico=False
-		else:
-			self.ico=True
-			self.main.tray.setIcon(self.trayIcon)
-
 	def on_firstChatMessageEvent(self, jid,user,body,subject, xhtml, chatstate, delay, eventID=None):
 		if body == None:
 			return
