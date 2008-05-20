@@ -10,10 +10,6 @@ import time
 from twisted.words.protocols.jabber import jid as jidT
 from widgets.events import event as _eventClass
 
-#class eventClass(_eventClass):
-	#def __init__(self,parent=None,trueCall=None,trueDict=None,falseCall=None,falseDict=None):
-		#_eventClass.__init__(self,parent,trueCall,trueDict,falseCall,falseDict)
-
 class osd(QtGui.QWidget):
 	def __init__(self,main,parent=None):
 		QtGui.QWidget.__init__(self,parent,QtCore.Qt.ToolTip | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint | QtCore.Qt.CustomizeWindowHint)
@@ -21,20 +17,10 @@ class osd(QtGui.QWidget):
 		self.timer.setSingleShot(True)
 		QtCore.QObject.connect(self.timer,QtCore.SIGNAL("timeout()"),self.hide)
 		self.main=main
-		font=QtGui.QApplication.fontMetrics()
-		self.f=QtGui.QApplication.font()
-		self.bigfont=20
-		self.smallfont=11
-		self.f.setPixelSize(20)
-		self.f.setBold(True)
 
-		self.f2=QtGui.QApplication.font()
-		self.f2.setPixelSize(11)
-		self.f2.setBold(True)
-
+		self.setFontSize()
 		self.text=""
 		self.smallText=""
-		self.transparent=True
 		self.desktop=QtGui.QPixmap()
 		self.leftPixmap=None
 		self.started=int(time.time())
@@ -45,14 +31,20 @@ class osd(QtGui.QWidget):
 		g=QtGui.QApplication.desktop().screenGeometry()
 		self.screenWidth=int(g.width())
 		self.screenHeight=int(g.height())
-		
-		self.cl=QtGui.QPushButton(self)
-		self.cl.setIcon(QtGui.QIcon("images/icons/close.png"))
-		self.cl.setMaximumSize(16,16)
-		self.cl.setFlat(True)
-		QtCore.QObject.connect(self.cl,QtCore.SIGNAL("clicked()"),self.hide)
+
 		self.event=None
-		
+
+	def setFontSize(self):
+		font=QtGui.QApplication.fontMetrics()
+		self.f=QtGui.QApplication.font()
+		self.f.setPixelSize(int(self.main.config['osd_bigfont']))
+		self.f.setBold(True)
+
+		self.f2=QtGui.QApplication.font()
+		self.f2.setPixelSize(int(self.main.config['osd_smallfont']))
+		self.f2.setBold(True)
+
+
 	def paintEvent(self,event):
 		painter=QtGui.QPainter(self)
 		painter.setClipping(True)
@@ -81,9 +73,8 @@ class osd(QtGui.QWidget):
 		metrics=QtGui.QFontMetrics(self.f)
 		height=int(metrics.height())
 		
-		bigpart=int((float(self.height())/float(self.bigfont+self.smallTextHeight))*self.bigfont)
-		smallpart=int((float(self.height())/float(self.bigfont+self.smallTextHeight))*self.smallTextHeight)
-		print bigpart,smallpart,self.height()
+		bigpart=int((float(self.height())/float(int(self.main.config['osd_bigfont'])+self.smallTextHeight))*int(self.main.config['osd_bigfont']))
+		smallpart=int((float(self.height())/float(int(self.main.config['osd_bigfont'])+self.smallTextHeight))*self.smallTextHeight)
 		
 		if self.leftPixmap:
 			if self.smallText:
@@ -123,26 +114,9 @@ class osd(QtGui.QWidget):
 
 	def pos(self,text="Notification test",headline="Notification test"):
 		self.changingPos=True
-		#self.text=text
-		#metrics=QtGui.QFontMetrics(self.f)
-		#height=int(metrics.height())
-		#width=int(metrics.width(text))
-		#if self.main.config['osd_transparent']:
-			#self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
-		#else:
-		#self.desktop=QtGui.QPixmap()
-		#self.leftPixmap=None
-		#self.smallText=""
-		#self.smallTextHeight=self.smallfont
-		#if height<54:
-			#height=54
-		#self.setGeometry(int(self.main.config['osd_y']),int(self.main.config['osd_x']),width+20,height+10)
-		#self.show()
 		self.setMouseTracking(True)
-		#self.cl.hide()
-		
 		self.text=headline
-		
+		# get width and height of text
 		metrics=QtGui.QFontMetrics(self.f)
 		height=int(metrics.height())
 		width=int(metrics.width(headline))
@@ -150,11 +124,7 @@ class osd(QtGui.QWidget):
 		metrics2=QtGui.QFontMetrics(self.f2)
 		height2=int(metrics2.height())
 		width2=int(metrics2.width(text))
-		#if width2>width:
-			#while width2>width:
-				#text=text[:-1]
-				#width2=int(metrics2.width(text+"..."))
-			#text+="..."
+
 		t=""
 
 		if width2>width:
@@ -188,18 +158,14 @@ class osd(QtGui.QWidget):
 		if osdy+height+height2+10>self.screenHeight:
 			self.osdY=self.screenHeight-(height+height2+10)-10
 		self.setGeometry(self.osdX,self.osdY,width+20,height+height2+10)
-		#self.cl.setGeometry(self.width()-18,2,16,16)
-		self.cl.hide()
-		print 'show'
 		self.show()
-
 
 	def test(self,text="Notification test"):
 		self.text=text
 		metrics=QtGui.QFontMetrics(self.f)
 		height=int(metrics.height())
 		width=int(metrics.width(text))
-		self.smallTextHeight=self.smallfont
+		self.smallTextHeight=int(self.main.config['osd_smallfont'])
 		if self.main.config['osd_transparent']=="True":
 			self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
 		else:
@@ -219,10 +185,6 @@ class osd(QtGui.QWidget):
 		self.event=event
 		if neco:
 			self.event=None
-		
-		#print t,self.started,self.dropTime
-		#self.onClick=onClick
-		#self.onClickDict=onClickDict
 		if t<self.started+self.dropTime:
 			return
 		self.text=headline
@@ -234,11 +196,7 @@ class osd(QtGui.QWidget):
 		metrics2=QtGui.QFontMetrics(self.f2)
 		height2=int(metrics2.height())
 		width2=int(metrics2.width(text))
-		#if width2>width:
-			#while width2>width:
-				#text=text[:-1]
-				#width2=int(metrics2.width(text+"..."))
-			#text+="..."
+
 		t=""
 
 		if leftPixmap:
@@ -265,7 +223,6 @@ class osd(QtGui.QWidget):
 			self.desktop=QtGui.QPixmap()
 		self.leftPixmap=leftPixmap
 
-
 		if height+height2<54:
 			height=54
 			height2=0
@@ -278,7 +235,6 @@ class osd(QtGui.QWidget):
 		if osdy+height+height2+10>self.screenHeight:
 			self.osdY=self.screenHeight-(height+height2+10)-10
 		self.setGeometry(self.osdX,self.osdY,width+20,height+height2+10)
-		self.cl.setGeometry(self.width()-18,2,16,16)
 		print 'show'
 		self.show()
 		self.timer.start(int(self.main.config['osd_time'])*1000)
@@ -303,6 +259,8 @@ class config:
 		self.config['osd_on_presence']={'type':'boolean','label':self.main.tr("Use OSD for presences"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_x']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_y']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
+		self.config['osd_bigfont']={'type':'number-spin','label':self.main.tr("Headline font size"),'value':'20','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
+		self.config['osd_smallfont']={'type':'number-spin','label':self.main.tr("Text font size"),'value':'11','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 
 
 class Plugin(plugins.PluginBase):
@@ -358,8 +316,9 @@ class Plugin(plugins.PluginBase):
 
 
 	def on_showPreferences(self,dialog):
-		self.osd=osd(self,dialog)
-		self.registerWidget(self.osd)
+		if not self.osd:
+			self.osd=osd(self,dialog)
+			self.registerWidget(self.osd)
 		self.osd.osdx=int(self.config['osd_x'])
 		self.osd.osdy=int(self.config['osd_y'])
 		self.osd.transparent=False
@@ -368,8 +327,11 @@ class Plugin(plugins.PluginBase):
 		#dialog.setModal(False)
 
 	def on_endPreferences(self):
-		self.unregisterWidget(self.osd)
-		self.osd=None
+		if not self.main.client:
+			self.unregisterWidget(self.osd)
+			self.osd=None
+		else:
+			self.osd.hide()
 	
 	def on_saveConfig(self):
 		if self.osd:
@@ -378,9 +340,12 @@ class Plugin(plugins.PluginBase):
 			y=int(rect.y())
 			self.config['osd_x']=str(x)
 			self.config['osd_y']=str(y)
-			self.unregisterWidget(self.osd)
-			self.osd=None
-			#self.osd.hide()
+			if not self.main.client:
+				self.unregisterWidget(self.osd)
+				self.osd=None
+			else:
+				self.osd.hide()
+				self.osd.setFontSize()
 
 	def loadSoundConfig(self, configFile):
 		try:

@@ -903,7 +903,7 @@ class preferencesWindow(QtGui.QDialog):
 				print message
 				f.close()
 				continue
-			
+			plug.main=self.main
 			f.close()
 			if categories.has_key(plug.category[0]):
 				item=QtGui.QTreeWidgetItem(categories[plug.category[0]])
