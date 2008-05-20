@@ -251,6 +251,7 @@ class config:
 		self.config['sound_first_message']={'type':'boolean','label':self.main.tr("Play sound on first message from user"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
 		self.config['sound_message']={'type':'boolean','label':self.main.tr("Play sound on other messages from user"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
 		self.config['sound_gc_message']={'type':'boolean','label':self.main.tr("Play sound if groupchat message contains your nickname"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
+		self.config['sound_presence']={'type':'boolean','label':self.main.tr("Play sound on new presence"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
 		
 		self.config['osd_transparent']={'type':'boolean','label':self.main.tr("Use transparent background"),'value':'False','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_time']={'type':'number-spin','label':self.main.tr("Display time (seconds):"),'value':'2','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
@@ -275,14 +276,6 @@ class Plugin(plugins.PluginBase):
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.installTranslator()
 		self.configDialog=config(self)
-		self.soundDir="sounds/" #for now lets say we have no option to change it (but it will change :)
-		self.soundAvailable=1 # well, we suppose there is sundsupport
-		self.sounds={} # ditictionary of playable actions, will fill in later
-		# a few words to sounds directory structure: it has to contains file called simply "config"
-		# this file has to contain lines in format: action=filename.wav next line for example:
-		# online = user_online.wav
-		# GChighlight = groupchat_highlight.wav
-		# for list of actions see loadSoundConfig()
 		self.showInPreferences=True
 		self.preferencesIcon=QtGui.QIcon(plugindir+"/audio.png")
 		self.osd=None
@@ -366,13 +359,18 @@ class Plugin(plugins.PluginBase):
 		self.osd.view(pixmap,self.tr('WARNING!'),unicode('Evil '+typ+' from '+jid.userhost()),self.addChatTab,[it,jid])
 		
 	def on_presence(self,jid,user,show,status,first):
-		if first or self.config['osd_on_presence']=="False":
+		if first:
 			return
-
-		pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
-		if not status:
-			status=""
-		self.osd.view(pixmap,user+self.tr(" is now ")+self.main.status[unicode(show)],unicode(status),self.addChatTab,[jid])
+		if self.config['osd_on_presence']=="True":
+			pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
+			if not status:
+				status=""
+			self.osd.view(pixmap,user+self.tr(" is now ")+self.main.status[unicode(show)],unicode(status),self.addChatTab,[jid])
+		if self.config['sound_presence']=="True":
+			if show=="offline":
+				self.main.playsound("contact_offline")
+			else:
+				self.main.playsound("contact_online")
 
 	def addChatTab(self,jid):
 		item=self.main.ui.roster.getUserItems(jid.userhost())
