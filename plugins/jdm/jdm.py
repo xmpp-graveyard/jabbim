@@ -33,6 +33,7 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.buttonDownload.setIcon(QtGui.QIcon("%s/document-save.png" % self.pluginDir))
 			self.window.ui.buttonUpload.setIcon(QtGui.QIcon("%s/upload.png" % self.pluginDir))
 			self.window.ui.buttonDelete.setIcon(QtGui.QIcon("%s/edit-delete.png" % self.pluginDir))
+			self.window.ui.buttonHome.setIcon(QtGui.QIcon("%s/home.png" % self.pluginDir))
 			self.group=QtGui.QButtonGroup(self.window)
 
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
@@ -42,6 +43,7 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.buttonDownload,QtCore.SIGNAL("clicked()"),self.downloadCurrentFile)
 			QtCore.QObject.connect(self.window.ui.buttonDelete,QtCore.SIGNAL("clicked()"),self.removeCurrentFile)
 			QtCore.QObject.connect(self.window.ui.buttonUpload,QtCore.SIGNAL("clicked()"),self.sendFile)
+			QtCore.QObject.connect(self.window.ui.buttonHome,QtCore.SIGNAL("clicked()"),self.home)
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
 			self.registerHandler('on_ftEnd', self.on_ftEnd, priority = 4)
@@ -50,6 +52,9 @@ class Plugin(plugins.PluginBase):
 			
 		else:
 			self.loadConfig(homedir)
+
+	def home(self):
+		self.call(self.main.client.jid.userhost())
 
 	def buttonClicked(self,button):
 		pass

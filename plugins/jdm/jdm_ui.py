@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'plugins/jdm/jdm_ui.ui'
 #
-# Created: Wed Mar 12 08:12:45 2008
+# Created: Tue May 20 16:21:27 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -27,6 +27,7 @@ class Ui_MainWindow(object):
 
         self.list = QtGui.QListWidget(self.centralwidget)
         self.list.setMinimumSize(QtCore.QSize(480,0))
+        self.list.setAcceptDrops(True)
         self.list.setIconSize(QtCore.QSize(32,32))
         self.list.setTextElideMode(QtCore.Qt.ElideMiddle)
         self.list.setGridSize(QtCore.QSize(128,96))
@@ -119,6 +120,7 @@ class Ui_MainWindow(object):
         self.buttonHome = QtGui.QPushButton(self.centralwidget)
         self.buttonHome.setMinimumSize(QtCore.QSize(30,0))
         self.buttonHome.setMaximumSize(QtCore.QSize(30,16777215))
+        self.buttonHome.setIcon(QtGui.QIcon("home.png"))
         self.buttonHome.setObjectName("buttonHome")
         self.hboxlayout.addWidget(self.buttonHome)
 
