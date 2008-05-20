@@ -494,7 +494,9 @@ class events:
 		QtCore.QObject.connect(self.main.ui.eventsListWidget, QtCore.SIGNAL("itemDoubleClicked ( QListWidgetItem * )"),self.itemClicked)
 		self.main.ui.eventsListWidget.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
 		self.ID=0
-		
+		self.blankIcon=QtGui.QPixmap(16,16)
+		self.blankIcon.fill(QtCore.Qt.transparent)
+
 	def itemClicked(self,item):
 		widget=item.widget
 		if widget.action!=None:
@@ -502,15 +504,12 @@ class events:
 		widget.submitClicked()
 
 	def timeout(self):
-		mainWindow=self.main
 		if self.jabbimIcon:
-			mainWindow.tray.setIcon(self.trayIcon)
+			self.main.tray.setIcon(self.trayIcon)
 			self.main.ui.tabWidget.setTabIcon(2,self.trayIcon)
 		else:
-			mainWindow.tray.setIcon(self.main.getCurrentTrayIcon())
-			result=QtGui.QPixmap(16,16)
-			result.fill(QtCore.Qt.transparent)
-			self.main.ui.tabWidget.setTabIcon(2,QtGui.QIcon(result))
+			self.main.tray.setIcon(self.main.getCurrentTrayIcon())
+			self.main.ui.tabWidget.setTabIcon(2,QtGui.QIcon(self.blankIcon))
 		self.jabbimIcon=not self.jabbimIcon
 
 	def trayClicked(self):
@@ -548,10 +547,10 @@ class events:
 				self.jabbimIcon=None
 		elif len(types)==1:
 			self.trayIcon=self.events[0]['icon']
-			self.timer.start(500)
+			self.timer.start(1000)
 		else:
 			self.trayIcon=QtGui.QIcon("images/16x16/categories/event.png")
-			self.timer.start(500)
+			self.timer.start(1000)
 		if not 'message' in types and not 'newMessage' in types:
 			self.main.chat.flashStatus=False
 		self.main.ui.roster.refreshEvents()
