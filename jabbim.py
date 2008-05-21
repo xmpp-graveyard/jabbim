@@ -3804,6 +3804,13 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.showOffline.hide()
 #		self.tray.showMessage(self.tr("Jabbim"),self.tr("Jabbim is ready! You are connected! :) "))
 		self.tray.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
+		pixmap=self.main.getAvatar(self.client.jid.userhost(),frame=False,status=None)
+		if pixmap:
+			avatar=self.getAvatar(pixmap,size="64x64",frame=True)
+			self.selfAvatar=pixmap
+			self.ui.selfAvatar.setPixmap(avatar)
+			self.ui.selfAvatar.setMinimumWidth(avatar.width()+3)
+
 		print 'end connected in main'
 
 	def disconnect(self):
