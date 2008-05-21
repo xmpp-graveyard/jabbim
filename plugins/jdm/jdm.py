@@ -72,7 +72,10 @@ class Plugin(plugins.PluginBase):
 
 	def setIconMode(self,bool):
 		if bool:
-			self.window.ui.list.setGridSize(QtCore.QSize(128,96))
+			if self.typ=="album":
+				self.window.ui.list.setGridSize(QtCore.QSize(160,160))
+			else:
+				self.window.ui.list.setGridSize(QtCore.QSize(128,96))
 			self.window.ui.list.setViewMode(QtGui.QListView.IconMode)
 			self.config["iconMode"]='True'
 		else:
