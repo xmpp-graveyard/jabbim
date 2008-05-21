@@ -208,11 +208,27 @@ class Plugin(plugins.PluginBase):
 				self.menu.addAction(self.tr("Download files"),self.downloadCurrentFile)
 				if self.jid==self.main.client.jid.userhost():
 					self.menu.addAction(self.tr("Remove files"),self.removeCurrentFile)
+				if self.typ!="private":
+					self.menu.addAction(self.tr("Copy links to clipboard"),self.copyToClipboard)
 			else:
 				self.menu.addAction(self.tr("Download file"),self.downloadCurrentFile)
 				if self.jid==self.main.client.jid.userhost():
 					self.menu.addAction(self.tr("Remove file"),self.removeCurrentFile)
+				if self.typ!="private":
+					self.menu.addAction(self.tr("Copy link to clipboard"),self.copyToClipboard)
 		self.menu.popup(self.window.ui.list.mapToGlobal(pos))
+
+	def copyToClipboard(self):
+		items=self.window.ui.list.selectedItems()
+		if len(items)==0:
+			return
+		text=""
+		for item in items:
+			if self.typ=="public":
+				text+="http://disk.jabbim.cz/"+self.jid+"/"+unicode(item.text())+"\n"
+			elif self.typ=="album":
+				text+="http://album.jabbim.cz/"+self.jid+"/"+unicode(item.text())+"\n"
+		QtGui.QApplication.clipboard().setText(text[:-1])
 
 	def downloadCurrentFile(self):
 		items=self.window.ui.list.selectedItems()
@@ -307,8 +323,9 @@ class Plugin(plugins.PluginBase):
 		if len(data)==0:
 			self.thumbs={}
 		else:
+			cacheFile="%s/%s.jpg" % (self.cache,self.jid+data[0][0])
 			if os.path.isfile(cacheFile):
-				self.main.client.reactor.callLater(0.2,self.thumbArrived,None,data)
+				self.main.client.reactor.callLater(0.1,self.thumbArrived,None,data)
 			else:
 				self.main.client.callRemote('rpc@jabbim.cz/service', 'getThumb', (self.jid,data[0][0])).addCallback(self.thumbArrived,data)
 
