@@ -328,7 +328,7 @@ class Plugin(plugins.PluginBase):
 		else:
 			cacheFile="%s/%s.jpg" % (self.cache,self.jid+data[0][0])
 			if os.path.isfile(cacheFile):
-				self.main.client.reactor.callLater(0.1,self.thumbArrived,None,data)
+				self.main.client.reactor.callLater(0,self.thumbArrived,None,data)
 			else:
 				self.main.client.callRemote('rpc@jabbim.cz/service', 'getThumb', (self.jid,data[0][0])).addCallback(self.thumbArrived,data)
 
