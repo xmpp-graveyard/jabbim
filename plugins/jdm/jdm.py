@@ -7,6 +7,11 @@ from urllib import quote, unquote
 from twisted.python import log
 from include import utils
 import base64
+try:
+	from hashlib import md5
+except:
+	log.msg('Please upgrade to python2.5')
+	from md5 import new as md5
 
 class config:
 	def __init__(self,main):
@@ -47,6 +52,7 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.privateButton.setIcon(QtGui.QIcon("%s/jdisk-private-24.png" % self.pluginDir))
 			self.window.ui.albumButton.setIcon(QtGui.QIcon("%s/jalbum-32.png" % self.pluginDir))
 			self.group=QtGui.QButtonGroup(self.window)
+			self.update=False
 
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call)
@@ -67,6 +73,7 @@ class Plugin(plugins.PluginBase):
 			if not os.path.exists(self.main.realHomeDir+"/jdmcache"):
 				os.mkdir(self.main.realHomeDir+"/jdmcache")
 			self.cache=self.main.realHomeDir+"/jdmcache"
+			self.cacheList=self.getConfig(self.cache+"/list.cfg")
 		else:
 			self.loadConfig(homedir)
 
@@ -272,11 +279,15 @@ class Plugin(plugins.PluginBase):
 		return str(round(original/1000000.0,2))+" MB" # MB
 
 	def updateView(self, data):
-		self.window.ui.list.clear()
-		#self.window.ui.log.clear()
+		if not self.update:
+			self.window.ui.list.clear()
 		data=data[0][0]
 		self.thumbs={}
 		for file in data:
+			if self.update:
+				items=self.window.ui.list.findItems(file[0],QtCore.Qt.MatchExactly)
+				if len(items)!=0:
+					continue
 			name=file[0]
 			size=file[1]
 			ext=name.split('.')[-1]
@@ -307,30 +318,55 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.list.addItem(item)
 			if self.typ=="album":
 				self.thumbs[name]=item
+		data=self.thumbs.keys()
 		if self.typ=="album":
-			self.main.client.callRemote('rpc@jabbim.cz/service', 'getThumb', (self.jid,data[0][0])).addCallback(self.thumbArrived,data)
+			self.main.client.callRemote('rpc@jabbim.cz/service', 'getThumb', (self.jid,data[0])).addCallback(self.thumbArrived,data)
+		if self.update==True:
+			self.update=False
 
-	def thumbArrived(self,thumb,data):
-		cacheFile="%s/%s.jpg" % (self.cache,self.jid+data[0][0])
+	def thumbArrived(self,thumb,data,check=True):
+		cacheFile="%s/%s.jpg" % (self.cache,self.jid+data[0])
 		if thumb:
-			image=base64.decodestring(str(thumb[0][0]))
+			print "saving",data[0],check
+			image=base64.decodestring(str(thumb[0]))
 			pixmap=QtGui.QPixmap()
 			pixmap.loadFromData(image)
-			self.thumbs[data[0][0]].setIcon(QtGui.QIcon(pixmap))
+			self.thumbs[data[0]].setIcon(QtGui.QIcon(pixmap))
 			f=open(cacheFile,"wb")
 			f.write(image)
 			f.close()
+			self.cacheList[cacheFile] = md5(image).hexdigest()
+			self.cacheList.write()
 		else:
-			self.thumbs[data[0][0]].setIcon(QtGui.QIcon(cacheFile))
+			self.thumbs[data[0]].setIcon(QtGui.QIcon(cacheFile))
 		del data[0]
 		if len(data)==0:
 			self.thumbs={}
+			#if check:
+				#data=self.thumbs.keys()
+				#self.main.client.callRemote('rpc@jabbim.cz/service', 'getHash', (self.jid,data[0])).addCallback(self.hashArrived,data)
 		else:
-			cacheFile="%s/%s.jpg" % (self.cache,self.jid+data[0][0])
+			cacheFile="%s/%s.jpg" % (self.cache,self.jid+data[0])
 			if os.path.isfile(cacheFile):
 				self.main.client.reactor.callLater(0,self.thumbArrived,None,data)
 			else:
-				self.main.client.callRemote('rpc@jabbim.cz/service', 'getThumb', (self.jid,data[0][0])).addCallback(self.thumbArrived,data)
+				self.main.client.callRemote('rpc@jabbim.cz/service', 'getThumb', (self.jid,data[0])).addCallback(self.thumbArrived,data)
+
+	def hashArrived(self,hs,data):
+		hs=hs[0][0]
+		cacheFile="%s/%s.jpg" % (self.cache,self.jid+data[0])
+		download=True
+		if self.cacheList.has_key(cacheFile):
+			print data[0],hs,self.cacheList[cacheFile]
+			if self.cacheList[cacheFile]==hs:
+				download=False
+		if download:
+			self.main.client.callRemote('rpc@jabbim.cz/service', 'getThumb', (self.jid,data[0])).addCallback(self.thumbArrived,[data[0]],False)
+		del data[0]
+		if len(data)!=0:
+			cacheFile="%s/%s.jpg" % (self.cache,self.jid+data[0])
+			self.main.client.callRemote('rpc@jabbim.cz/service', 'getHash', (self.jid,data[0])).addCallback(self.hashArrived,data)
+		
 
 	def buildMainWindowMenu(self):
 		menu=self.mainWindowMenu()
@@ -394,10 +430,8 @@ class Plugin(plugins.PluginBase):
 		elif self.typ=="album":
 			text="album@disk.jabbim.cz"
 		if error == None and self.main.client.ft[sid].tojid.find(text)!=-1:
+			self.update=True
 			self.call(typ=self.typ)
-		
-		print sid, error
-			
 	
 	def clicked(self,item,old):
 		self.window.ui.label_name.setText(item.text())
