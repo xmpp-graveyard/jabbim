@@ -7,6 +7,12 @@ from urllib import quote, unquote
 from twisted.python import log
 from include import utils
 
+class config:
+	def __init__(self,main):
+		self.main=main
+		self.config={}
+		self.config['iconMode']={'type':'boolean','label':self.main.tr("Show files as icons"),'value':'True'}
+
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
@@ -17,9 +23,10 @@ class Plugin(plugins.PluginBase):
 		self.version = '0.1147'
 		self.category = ['utils']
 		self.url = 'http://dev.jabbim.cz/jabbim'
+		self.installTranslator()
+		self.configDialog=config(self)
 		if main:
-			self.installTranslator()
-			
+			self.loadConfig()
 			self.window = self.loadWindow("%s/jdm_ui.py" % self.pluginDir,self.main)
 			self.window.setWindowIcon(self.main.windowIcon())
 			self.window.ui.list.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
@@ -56,9 +63,19 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('on_ftEnd', self.on_ftEnd, priority = 4)
 			self.obsah=[]
 			self.dnd={}
-			
 		else:
 			self.loadConfig(homedir)
+
+	def setIconMode(self,bool):
+		if bool:
+			self.window.ui.list.setGridSize(QtCore.QSize(128,96))
+			self.window.ui.list.setViewMode(QtGui.QListView.IconMode)
+			self.config["iconMode"]='True'
+		else:
+			self.window.ui.list.setGridSize(QtCore.QSize())
+			self.window.ui.list.setViewMode(QtGui.QListView.ListMode)
+			self.config["iconMode"]='False'
+		self.config.write()
 
 	def public(self):
 		self.call(typ='public')
@@ -173,40 +190,52 @@ class Plugin(plugins.PluginBase):
 			event.ignore()	
 			
 	def fileMenu(self,pos):
-		print "menu"
-		item=self.window.ui.list.currentItem()
-		if not item:
-			return
-		
+		items=self.window.ui.list.selectedItems()
 		self.menu=QtGui.QMenu()
-		self.menu.addAction(self.tr("Download file"),self.downloadCurrentFile)
-		if self.jid==self.main.client.jid.userhost():
-			self.menu.addAction(self.tr("Remove file"),self.removeCurrentFile)
+		action=self.menu.addAction(self.tr("Show files as icons"))
+		action.setCheckable(True)
+		if self.config['iconMode']=="True":
+			action.setChecked(True)
+		else:
+			action.setChecked(False)
+		QtCore.QObject.connect(action,QtCore.SIGNAL("triggered ( bool)"),self.setIconMode)
+		if len(items)!=0:
+			if len(items)>1:
+				self.menu.addAction(self.tr("Download files"),self.downloadCurrentFile)
+				if self.jid==self.main.client.jid.userhost():
+					self.menu.addAction(self.tr("Remove files"),self.removeCurrentFile)
+			else:
+				self.menu.addAction(self.tr("Download file"),self.downloadCurrentFile)
+				if self.jid==self.main.client.jid.userhost():
+					self.menu.addAction(self.tr("Remove file"),self.removeCurrentFile)
 		self.menu.popup(self.window.ui.list.mapToGlobal(pos))
 
 	def downloadCurrentFile(self):
-		item=self.window.ui.list.currentItem()
-		if not item:
+		items=self.window.ui.list.selectedItems()
+		if len(items)==0:
 			return
-		if self.typ=="public":
-			self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
-		elif self.typ=="private":
-			self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
-		elif self.typ=="album":
-			self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+		for item in items:
+			if self.typ=="public":
+				self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+			elif self.typ=="private":
+				self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+			elif self.typ=="album":
+				self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
 
 	def removeCurrentFile(self):
-		item=self.window.ui.list.currentItem()
-		if not item:
+		items=self.window.ui.list.selectedItems()
+		if len(items)==0:
 			return
-		if self.typ=="public":
-			self.main.client.sendMessage("public@disk.jabbim.cz", u"rm "+unicode(item.text()))
-		elif self.typ=="private":
-			self.main.client.sendMessage("private@disk.jabbim.cz", u"rm "+unicode(item.text()))
-		elif self.typ=="album":
-			self.main.client.sendMessage("album@disk.jabbim.cz", u"rm "+unicode(item.text()))
-		item=self.window.ui.list.takeItem(self.window.ui.list.currentRow())
-		del item
+		for item in items:
+			if self.typ=="public":
+				self.main.client.sendMessage("public@disk.jabbim.cz", u"rm "+unicode(item.text()))
+			elif self.typ=="private":
+				self.main.client.sendMessage("private@disk.jabbim.cz", u"rm "+unicode(item.text()))
+			elif self.typ=="album":
+				self.main.client.sendMessage("album@disk.jabbim.cz", u"rm "+unicode(item.text()))
+		for i in range(len(items)):
+			self.window.ui.list.takeItem(self.window.ui.list.row(items[0]))
+			del items[0]
 
 	def toNormalSize(self,size):
 		original=int(size)
@@ -275,9 +304,11 @@ class Plugin(plugins.PluginBase):
 		if self.jid != self.main.client.jid.userhost():
 			self.window.ui.buttonDelete.setEnabled(False)
 			self.window.ui.buttonUpload.setEnabled(False)
+			self.window.ui.privateButton.setEnabled(False)
 		else:
 			self.window.ui.buttonDelete.setEnabled(True)
 			self.window.ui.buttonUpload.setEnabled(True)
+			self.window.ui.privateButton.setEnabled(True)
 	
 	
 	def showSlot(self,jid=None):
@@ -286,14 +317,26 @@ class Plugin(plugins.PluginBase):
 		self.window.ui.buttonDownload.setEnabled(False)
 	
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None,error=None):
-		if unicode(frm).find("public@disk.jabbim.cz")!=-1:
+		if self.typ=="public":
+			text="public@disk.jabbim.cz"
+		elif self.typ=="private":
+			text="private@disk.jabbim.cz"
+		elif self.typ=="album":
+			text="album@disk.jabbim.cz"
+		if unicode(frm).find(text)!=-1:
 			if not self.window.isHidden():
 				return False
 		return True
 		
 	
 	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
-		if error == None and self.main.client.ft[sid].tojid.find("public@disk.jabbim.cz")!=-1:
+		if self.typ=="public":
+			text="public@disk.jabbim.cz"
+		elif self.typ=="private":
+			text="private@disk.jabbim.cz"
+		elif self.typ=="album":
+			text="album@disk.jabbim.cz"
+		if error == None and self.main.client.ft[sid].tojid.find(text)!=-1:
 			self.call(typ=self.typ)
 		
 		print sid, error

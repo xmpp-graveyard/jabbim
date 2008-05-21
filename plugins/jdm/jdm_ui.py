@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'plugins/jdm/jdm_ui.ui'
 #
-# Created: Tue May 20 19:40:20 2008
+# Created: Wed May 21 05:32:11 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -28,8 +28,11 @@ class Ui_MainWindow(object):
         self.list = QtGui.QListWidget(self.centralwidget)
         self.list.setMinimumSize(QtCore.QSize(480,0))
         self.list.setAcceptDrops(True)
+        self.list.setSelectionMode(QtGui.QAbstractItemView.ContiguousSelection)
         self.list.setIconSize(QtCore.QSize(32,32))
         self.list.setTextElideMode(QtCore.Qt.ElideMiddle)
+        self.list.setMovement(QtGui.QListView.Free)
+        self.list.setLayoutMode(QtGui.QListView.Batched)
         self.list.setGridSize(QtCore.QSize(128,96))
         self.list.setViewMode(QtGui.QListView.IconMode)
         self.list.setWordWrap(True)
