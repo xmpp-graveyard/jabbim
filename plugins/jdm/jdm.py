@@ -6,6 +6,7 @@ from PyQt4 import QtCore, QtGui
 from urllib import quote, unquote
 from twisted.python import log
 from include import utils
+import base64
 
 class config:
 	def __init__(self,main):
@@ -63,6 +64,9 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('on_ftEnd', self.on_ftEnd, priority = 4)
 			self.obsah=[]
 			self.dnd={}
+			if not os.path.exists(self.main.realHomeDir+"/jdmcache"):
+				os.mkdir(self.main.realHomeDir+"/jdmcache")
+			self.cache=self.main.realHomeDir+"/jdmcache"
 		else:
 			self.loadConfig(homedir)
 
@@ -252,7 +256,7 @@ class Plugin(plugins.PluginBase):
 		self.window.ui.list.clear()
 		#self.window.ui.log.clear()
 		data=data[0][0]
-		print data #2 - white.zip [37.5KiB] - 38438
+		self.thumbs={}
 		for file in data:
 			name=file[0]
 			size=file[1]
@@ -282,13 +286,39 @@ class Plugin(plugins.PluginBase):
 			else:
 				item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic-template.png"));  #preventivne pokud se netrefime
 			self.window.ui.list.addItem(item)
+			if self.typ=="album":
+				self.thumbs[name]=item
+		if self.typ=="album":
+			self.main.client.callRemote('rpc@jabbim.cz/service', 'getThumb', (self.jid,data[0][0])).addCallback(self.thumbArrived,data)
+
+	def thumbArrived(self,thumb,data):
+		cacheFile="%s/%s.jpg" % (self.cache,self.jid+data[0][0])
+		if thumb:
+			image=base64.decodestring(str(thumb[0][0]))
+			pixmap=QtGui.QPixmap()
+			pixmap.loadFromData(image)
+			self.thumbs[data[0][0]].setIcon(QtGui.QIcon(pixmap))
+			f=open(cacheFile,"wb")
+			f.write(image)
+			f.close()
+		else:
+			self.thumbs[data[0][0]].setIcon(QtGui.QIcon(cacheFile))
+		del data[0]
+		if len(data)==0:
+			self.thumbs={}
+		else:
+			if os.path.isfile(cacheFile):
+				self.main.client.reactor.callLater(0.2,self.thumbArrived,None,data)
+			else:
+				self.main.client.callRemote('rpc@jabbim.cz/service', 'getThumb', (self.jid,data[0][0])).addCallback(self.thumbArrived,data)
 
 	def buildMainWindowMenu(self):
 		menu=self.mainWindowMenu()
 		menu.addAction("Jabbim disk manager",self.showSlot)
 	
-	def call(self,jid=None,typ="public"):
-		self.typ=typ
+	def call(self,jid=None,typ=None):
+		if typ:
+			self.typ=typ
 		if jid:
 			self.jid=jid
 			self.window.ui.line_jid.setText(self.jid)
@@ -297,10 +327,17 @@ class Plugin(plugins.PluginBase):
 		print "call",self.jid,self.typ
 		if self.typ=="public":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.jid,)).addCallback(self.updateView)
+			self.window.ui.list.setIconSize(QtCore.QSize(32,32))
+			self.window.ui.list.setGridSize(QtCore.QSize(128,96))
 		elif self.typ=="private":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPrivate', (self.jid,)).addCallback(self.updateView)
+			self.window.ui.list.setIconSize(QtCore.QSize(32,32))
+			self.window.ui.list.setGridSize(QtCore.QSize(128,96))
 		elif self.typ=="album":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listAlbum', (self.jid,)).addCallback(self.updateView)
+			self.window.ui.list.setIconSize(QtCore.QSize(128,128))
+			self.window.ui.list.setGridSize(QtCore.QSize(160,160))
+
 		if self.jid != self.main.client.jid.userhost():
 			self.window.ui.buttonDelete.setEnabled(False)
 			self.window.ui.buttonUpload.setEnabled(False)
