@@ -7,11 +7,14 @@ from urllib import quote, unquote
 from twisted.python import log
 from include import utils
 import base64
+from widgets import dataforms,legacyforms
 try:
 	from hashlib import md5
 except:
 	log.msg('Please upgrade to python2.5')
 	from md5 import new as md5
+if sys.platform == 'win32':
+	from win32api import ShellExecute
 
 class config:
 	def __init__(self,main):
@@ -67,6 +70,8 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.privateButton,QtCore.SIGNAL("clicked()"),self.private)
 			QtCore.QObject.connect(self.window.ui.albumButton,QtCore.SIGNAL("clicked()"),self.album)
 			QtCore.QObject.connect(self.window.ui.showMiniRoster,QtCore.SIGNAL("clicked()"),self.showMiniRoster)
+			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("itemDoubleClicked ( QListWidgetItem * )"),self.doubleClicked)
+
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
 			self.registerHandler('on_ftEnd', self.on_ftEnd, priority = 4)
@@ -76,6 +81,7 @@ class Plugin(plugins.PluginBase):
 				os.mkdir(self.main.realHomeDir+"/jdmcache")
 			self.cache=self.main.realHomeDir+"/jdmcache"
 			self.cacheList=self.getConfig(self.cache+"/list.cfg")
+			self.filesToOpen=[]
 			self.window.ui.progress=QtGui.QProgressBar(self.window.ui.statusbar)
 			self.window.ui.statusbar.addWidget(self.window.ui.progress,1)
 			self.window.ui.progress.hide()
@@ -424,8 +430,22 @@ class Plugin(plugins.PluginBase):
 	
 	def showSlot(self,jid=None):
 		self.window.show()
+		if (not self.main.client.roster['users'].has_key("public@disk.jabbim.cz") or not self.main.client.roster['users'].has_key("private@disk.jabbim.cz")) or not self.main.client.roster['users'].has_key("album@disk.jabbim.cz"):
+			d=self.main.client.getRegisterForm("disk.jabbim.cz")
+			d.addCallback(self._onRegister)
 		self.call(jid)
 		self.window.ui.buttonDownload.setEnabled(False)
+
+	def _onRegister(self,data):
+		if not data:
+			return
+		jid,legacy,form=data
+		if form!=None:
+			self.dialog=dataforms.dataFormsDialog(self.main,form,jid,"register",self)
+			self.dialog.show()
+		else:
+			self.dialog=legacyforms.legacyFormsDialog(self.main,legacy,jid,"disco",self.window)
+			self.dialog.show()
 	
 	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None,error=None):
 		if self.typ=="public":
@@ -449,6 +469,17 @@ class Plugin(plugins.PluginBase):
 		if error == None and self.main.client.ft[sid].tojid.find(text)!=-1:
 			self.update=True
 			self.call(typ=self.typ)
+		filename=self.main.client.ft[sid].file
+		if filename in self.filesToOpen:
+			self.filesToOpen.remove(filename)
+			if self.main.allowedJids.has_key(text+"/"+self.main.client.ft[sid].fileprops['name']):
+				del self.main.allowedJids[text+"/"+self.main.client.ft[sid].fileprops['name']]
+			print "open",filename
+			if sys.platform == 'win32':
+				ShellExecute(0, "open" , filename ,None ,os.path.dirname(filename) , 0)
+			else:
+				os.system("xdg-open %s" % filename)
+			
 
 	def clicked(self,item,old):
 		if item:
@@ -461,4 +492,16 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.window.ui.buttonDelete.setEnabled(False)
 			self.window.ui.buttonDownload.setEnabled(False)
-			
+
+	def doubleClicked(self,item):
+		if self.typ=="public":
+			self.main.allowedJids["public@disk.jabbim.cz/"+unicode(item.text())]=self.cache
+			self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+		elif self.typ=="private":
+			self.main.allowedJids["private@disk.jabbim.cz/"+unicode(item.text())]=self.cache
+			self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+			print "private@disk.jabbim.cz", [u"get "+self.jid+" "+unicode(item.text())]
+		elif self.typ=="album":
+			self.main.allowedJids["album@disk.jabbim.cz/"+unicode(item.text())]=self.cache
+			self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+		self.filesToOpen.append(self.cache+"/"+unicode(item.text()))

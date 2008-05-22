@@ -80,6 +80,8 @@ from twisted.web.microdom import parseString,Element
 from twisted.web.client import downloadPage
 from twisted.web import xmlrpc, server #for xmlrpc plugin
 import shutil #xmlrpc
+if sys.platform == 'win32':
+	import win32api
 
 class clientClass(pyxl.client.Client):
 	"""
@@ -1342,7 +1344,7 @@ class clientClass(pyxl.client.Client):
 					#w.chat.setTooltip(item,jid.full())
 
 	def on_fileReceived(self, sid, id):
-		if self.main.config['autoDownload'] == 'True' or unicode(sid) in self.main.allowedSids:
+		if (self.main.config['autoDownload'] == 'True' or unicode(sid) in self.main.allowedSids) or self.main.allowedJids.has_key(self.main.getJid(unicode(self.ft[sid].tojid)).userhost()+"/"+self.ft[sid].fileprops['name']):
 			filename = self.main.config['autoDownloadPath']+'/'+self.ft[sid].fileprops['name']
 			if unicode(self.ft[sid].tojid).find("rpc@jabbim.cz")!=-1 and not unicode(sid) in self.main.allowedSids:
 				return
@@ -1350,6 +1352,8 @@ class clientClass(pyxl.client.Client):
 				filename = self.main.realHomeDir+'/'+self.ft[sid].fileprops['name']
 			if self.ft[sid].method!=None:
 				return
+			if self.main.allowedJids.has_key(self.main.getJid(unicode(self.ft[sid].tojid)).userhost()+"/"+self.ft[sid].fileprops['name']):
+				filename=self.main.allowedJids[self.main.getJid(unicode(self.ft[sid].tojid)).userhost()+"/"+self.ft[sid].fileprops['name']]+"/"+self.ft[sid].fileprops['name']
 			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),basename(self.ft[sid].fileprops['name']),"",sid)
 			
 			if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
@@ -1532,6 +1536,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.filetransfer={}
 		self.filetransferQueue={}
 		self.allowedSids=[]
+		self.allowedJids={} # {jid:path_to_download_files}
 		
 		
 		# preparing chat window
