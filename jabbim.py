@@ -1470,6 +1470,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.log=None
 		self.plugins = {}
 		self.config=None #: config dict (loaded by configObj)
+		self.cache=None
 
 		self.loadRoster() # load roster widget
 		QtCore.QObject.connect(self.ui.rosterSearch, QtCore.SIGNAL(" textEdited ( const QString & )"),self.ui.roster.search)
