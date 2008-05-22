@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'plugins/jdm/jdm_ui.ui'
 #
-# Created: Wed May 21 05:32:11 2008
+# Created: Thu May 22 14:11:40 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -22,9 +22,6 @@ class Ui_MainWindow(object):
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
 
-        spacerItem = QtGui.QSpacerItem(20,161,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout.addItem(spacerItem,3,1,1,1)
-
         self.list = QtGui.QListWidget(self.centralwidget)
         self.list.setMinimumSize(QtCore.QSize(480,0))
         self.list.setAcceptDrops(True)
@@ -38,6 +35,68 @@ class Ui_MainWindow(object):
         self.list.setWordWrap(True)
         self.list.setObjectName("list")
         self.gridlayout.addWidget(self.list,1,0,3,1)
+
+        self.hboxlayout = QtGui.QHBoxLayout()
+        self.hboxlayout.setMargin(0)
+        self.hboxlayout.setSpacing(3)
+        self.hboxlayout.setObjectName("hboxlayout")
+
+        self.label_description = QtGui.QLabel(self.centralwidget)
+        self.label_description.setObjectName("label_description")
+        self.hboxlayout.addWidget(self.label_description)
+
+        self.line_jid = QtGui.QLineEdit(self.centralwidget)
+        self.line_jid.setMinimumSize(QtCore.QSize(0,0))
+        self.line_jid.setObjectName("line_jid")
+        self.hboxlayout.addWidget(self.line_jid)
+
+        self.showMiniRoster = QtGui.QPushButton(self.centralwidget)
+        self.showMiniRoster.setMaximumSize(QtCore.QSize(30,16777215))
+        self.showMiniRoster.setIcon(QtGui.QIcon("view-refresh.png"))
+        self.showMiniRoster.setObjectName("showMiniRoster")
+        self.hboxlayout.addWidget(self.showMiniRoster)
+
+        self.buttonHome = QtGui.QPushButton(self.centralwidget)
+        self.buttonHome.setMaximumSize(QtCore.QSize(30,16777215))
+        self.buttonHome.setIcon(QtGui.QIcon("home.png"))
+        self.buttonHome.setObjectName("buttonHome")
+        self.hboxlayout.addWidget(self.buttonHome)
+
+        self.line = QtGui.QFrame(self.centralwidget)
+        self.line.setFrameShape(QtGui.QFrame.VLine)
+        self.line.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line.setObjectName("line")
+        self.hboxlayout.addWidget(self.line)
+
+        self.publicButton = QtGui.QPushButton(self.centralwidget)
+        self.publicButton.setMaximumSize(QtCore.QSize(30,16777215))
+        self.publicButton.setIcon(QtGui.QIcon("jdisk-public-24.png"))
+        self.publicButton.setObjectName("publicButton")
+        self.hboxlayout.addWidget(self.publicButton)
+
+        self.privateButton = QtGui.QPushButton(self.centralwidget)
+        self.privateButton.setMaximumSize(QtCore.QSize(30,16777215))
+        self.privateButton.setIcon(QtGui.QIcon("jdisk-private-24.png"))
+        self.privateButton.setObjectName("privateButton")
+        self.hboxlayout.addWidget(self.privateButton)
+
+        self.albumButton = QtGui.QPushButton(self.centralwidget)
+        self.albumButton.setMaximumSize(QtCore.QSize(30,16777215))
+        self.albumButton.setIcon(QtGui.QIcon("jalbum-32.png"))
+        self.albumButton.setObjectName("albumButton")
+        self.hboxlayout.addWidget(self.albumButton)
+
+        self.line_3 = QtGui.QFrame(self.centralwidget)
+        self.line_3.setFrameShape(QtGui.QFrame.VLine)
+        self.line_3.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line_3.setObjectName("line_3")
+        self.hboxlayout.addWidget(self.line_3)
+
+        self.reload = QtGui.QPushButton(self.centralwidget)
+        self.reload.setMinimumSize(QtCore.QSize(123,0))
+        self.reload.setObjectName("reload")
+        self.hboxlayout.addWidget(self.reload)
+        self.gridlayout.addLayout(self.hboxlayout,0,0,1,2)
 
         self.vboxlayout = QtGui.QVBoxLayout()
         self.vboxlayout.setMargin(0)
@@ -103,63 +162,6 @@ class Ui_MainWindow(object):
         self.vboxlayout.addWidget(self.label_size)
         self.gridlayout.addLayout(self.vboxlayout,1,1,1,1)
 
-        self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setMargin(0)
-        self.hboxlayout.setSpacing(6)
-        self.hboxlayout.setObjectName("hboxlayout")
-
-        self.label_description = QtGui.QLabel(self.centralwidget)
-        self.label_description.setObjectName("label_description")
-        self.hboxlayout.addWidget(self.label_description)
-
-        self.line_jid = QtGui.QLineEdit(self.centralwidget)
-        self.line_jid.setMinimumSize(QtCore.QSize(250,0))
-        self.line_jid.setObjectName("line_jid")
-        self.hboxlayout.addWidget(self.line_jid)
-
-        self.buttonHome = QtGui.QPushButton(self.centralwidget)
-        self.buttonHome.setMinimumSize(QtCore.QSize(30,0))
-        self.buttonHome.setMaximumSize(QtCore.QSize(30,16777215))
-        self.buttonHome.setIcon(QtGui.QIcon("home.png"))
-        self.buttonHome.setObjectName("buttonHome")
-        self.hboxlayout.addWidget(self.buttonHome)
-
-        self.line = QtGui.QFrame(self.centralwidget)
-        self.line.setFrameShape(QtGui.QFrame.VLine)
-        self.line.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line.setObjectName("line")
-        self.hboxlayout.addWidget(self.line)
-
-        self.publicButton = QtGui.QPushButton(self.centralwidget)
-        self.publicButton.setMaximumSize(QtCore.QSize(30,16777215))
-        self.publicButton.setIcon(QtGui.QIcon("jdisk-public-24.png"))
-        self.publicButton.setObjectName("publicButton")
-        self.hboxlayout.addWidget(self.publicButton)
-
-        self.privateButton = QtGui.QPushButton(self.centralwidget)
-        self.privateButton.setMaximumSize(QtCore.QSize(30,16777215))
-        self.privateButton.setIcon(QtGui.QIcon("jdisk-private-24.png"))
-        self.privateButton.setObjectName("privateButton")
-        self.hboxlayout.addWidget(self.privateButton)
-
-        self.albumButton = QtGui.QPushButton(self.centralwidget)
-        self.albumButton.setMaximumSize(QtCore.QSize(30,16777215))
-        self.albumButton.setIcon(QtGui.QIcon("jalbum-32.png"))
-        self.albumButton.setObjectName("albumButton")
-        self.hboxlayout.addWidget(self.albumButton)
-
-        self.line_3 = QtGui.QFrame(self.centralwidget)
-        self.line_3.setFrameShape(QtGui.QFrame.VLine)
-        self.line_3.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line_3.setObjectName("line_3")
-        self.hboxlayout.addWidget(self.line_3)
-
-        self.reload = QtGui.QPushButton(self.centralwidget)
-        self.reload.setMinimumSize(QtCore.QSize(123,0))
-        self.reload.setObjectName("reload")
-        self.hboxlayout.addWidget(self.reload)
-        self.gridlayout.addLayout(self.hboxlayout,0,0,1,2)
-
         self.hboxlayout1 = QtGui.QHBoxLayout()
         self.hboxlayout1.setMargin(0)
         self.hboxlayout1.setSpacing(0)
@@ -189,6 +191,9 @@ class Ui_MainWindow(object):
         self.buttonDelete.setObjectName("buttonDelete")
         self.hboxlayout1.addWidget(self.buttonDelete)
         self.gridlayout.addLayout(self.hboxlayout1,2,1,1,1)
+
+        spacerItem = QtGui.QSpacerItem(20,161,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        self.gridlayout.addItem(spacerItem,3,1,1,1)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.statusbar = QtGui.QStatusBar(MainWindow)
@@ -200,6 +205,8 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Jabber Disk Manager", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_description.setText(QtGui.QApplication.translate("MainWindow", "Enter JID of disk owner:", None, QtGui.QApplication.UnicodeUTF8))
+        self.reload.setText(QtGui.QApplication.translate("MainWindow", "Reload", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("MainWindow", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
@@ -212,8 +219,6 @@ class Ui_MainWindow(object):
         "p, li { white-space: pre-wrap; }\n"
         "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">File size:</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_description.setText(QtGui.QApplication.translate("MainWindow", "Enter JID of disk owner:", None, QtGui.QApplication.UnicodeUTF8))
-        self.reload.setText(QtGui.QApplication.translate("MainWindow", "Reload", None, QtGui.QApplication.UnicodeUTF8))
         self.buttonUpload.setText(QtGui.QApplication.translate("MainWindow", "Upload", None, QtGui.QApplication.UnicodeUTF8))
         self.buttonDownload.setText(QtGui.QApplication.translate("MainWindow", "Download", None, QtGui.QApplication.UnicodeUTF8))
         self.buttonDelete.setText(QtGui.QApplication.translate("MainWindow", "Delete", None, QtGui.QApplication.UnicodeUTF8))

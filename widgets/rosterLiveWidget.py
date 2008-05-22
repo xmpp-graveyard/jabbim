@@ -32,6 +32,7 @@ import commands
 import defaultrosterstyle
 import compactrosterstyle
 from include import rot13
+import miniroster
 
 class emptyRosterWidget(QtGui.QWidget):
 	def __init__(self,parent=None):
@@ -393,6 +394,10 @@ class rosterWidget(QtGui.QWidget):
 		if self.main.config['rosterScrollBar']=='False':
 			self.repaint()
 	#{ Public functions
+
+	def showMiniRoster(self,call):
+		d=miniroster.miniRosterDialog(self.main,call,False,self.main)
+		d.exec_()
 
 	def setRosterStyle(self,styleClass):
 		self.rosterStyle=styleClass(self)

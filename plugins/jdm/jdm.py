@@ -51,6 +51,7 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.publicButton.setIcon(QtGui.QIcon("%s/jdisk-public-24.png" % self.pluginDir))
 			self.window.ui.privateButton.setIcon(QtGui.QIcon("%s/jdisk-private-24.png" % self.pluginDir))
 			self.window.ui.albumButton.setIcon(QtGui.QIcon("%s/jalbum-32.png" % self.pluginDir))
+			self.window.ui.showMiniRoster.setIcon(self.main.ui.tabWidget.tabIcon(0))
 			self.group=QtGui.QButtonGroup(self.window)
 			self.update=False
 
@@ -65,6 +66,7 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.publicButton,QtCore.SIGNAL("clicked()"),self.public)
 			QtCore.QObject.connect(self.window.ui.privateButton,QtCore.SIGNAL("clicked()"),self.private)
 			QtCore.QObject.connect(self.window.ui.albumButton,QtCore.SIGNAL("clicked()"),self.album)
+			QtCore.QObject.connect(self.window.ui.showMiniRoster,QtCore.SIGNAL("clicked()"),self.showMiniRoster)
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
 			self.registerHandler('on_ftEnd', self.on_ftEnd, priority = 4)
@@ -74,8 +76,18 @@ class Plugin(plugins.PluginBase):
 				os.mkdir(self.main.realHomeDir+"/jdmcache")
 			self.cache=self.main.realHomeDir+"/jdmcache"
 			self.cacheList=self.getConfig(self.cache+"/list.cfg")
+			self.window.ui.progress=QtGui.QProgressBar(self.window.ui.statusbar)
+			self.window.ui.statusbar.addWidget(self.window.ui.progress,1)
+			self.window.ui.progress.hide()
 		else:
 			self.loadConfig(homedir)
+
+	def showMiniRoster(self):
+		self.main.ui.roster.showMiniRoster(self.miniRosterAccepted)
+	
+	def miniRosterAccepted(self,jid):
+		self.call(jid,'public')
+		
 
 	def setIconMode(self,bool):
 		if bool:
@@ -320,6 +332,9 @@ class Plugin(plugins.PluginBase):
 				self.thumbs[name]=item
 		data=self.thumbs.keys()
 		if self.typ=="album":
+			self.window.ui.progress.setValue(0)
+			self.window.ui.progress.setMaximum(len(data))
+			self.window.ui.progress.show()
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'getThumb', (self.jid,data[0])).addCallback(self.thumbArrived,data)
 		if self.update==True:
 			self.update=False
@@ -339,9 +354,12 @@ class Plugin(plugins.PluginBase):
 			self.cacheList.write()
 		else:
 			self.thumbs[data[0]].setIcon(QtGui.QIcon(cacheFile))
+		self.window.ui.progress.setValue(self.window.ui.progress.value()+1)
 		del data[0]
 		if len(data)==0:
 			self.thumbs={}
+			self.window.ui.progress.hide()
+
 			#if check:
 				#data=self.thumbs.keys()
 				#self.main.client.callRemote('rpc@jabbim.cz/service', 'getHash', (self.jid,data[0])).addCallback(self.hashArrived,data)
@@ -420,8 +438,7 @@ class Plugin(plugins.PluginBase):
 			if not self.window.isHidden():
 				return False
 		return True
-		
-	
+
 	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
 		if self.typ=="public":
 			text="public@disk.jabbim.cz"
@@ -432,11 +449,16 @@ class Plugin(plugins.PluginBase):
 		if error == None and self.main.client.ft[sid].tojid.find(text)!=-1:
 			self.update=True
 			self.call(typ=self.typ)
-	
+
 	def clicked(self,item,old):
-		self.window.ui.label_name.setText(item.text())
-		data=item.data(32).toList()
-		size=int(data[0].toString())
-		self.window.ui.label_size.setText(self.toNormalSize(size))
-		self.window.ui.buttonDelete.setEnabled(self.jid==self.main.client.jid.userhost())
-		self.window.ui.buttonDownload.setEnabled(True)
+		if item:
+			self.window.ui.label_name.setText(item.text())
+			data=item.data(32).toList()
+			size=int(data[0].toString())
+			self.window.ui.label_size.setText(self.toNormalSize(size))
+			self.window.ui.buttonDelete.setEnabled(self.jid==self.main.client.jid.userhost())
+			self.window.ui.buttonDownload.setEnabled(True)
+		else:
+			self.window.ui.buttonDelete.setEnabled(False)
+			self.window.ui.buttonDownload.setEnabled(False)
+			
