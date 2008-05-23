@@ -134,8 +134,12 @@ class Plugin(plugins.PluginBase):
 			QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
 		elif cmd=="show_my_disk_jdm":
 			self.showSlot(self.main.client.jid.userhost())
+		elif cmd=="show_my_album_jdm":
+			self.showSlot(self.main.client.jid.userhost(),typ='album')
 		elif cmd=="show_users_disk_jdm":
 			self.showSlot(unicode(action.parent().parent().jid))
+		elif cmd=="show_users_album_jdm":
+			self.showSlot(unicode(action.parent().parent().jid),typ="album")
 		elif cmd=="show_my_album":
 			anchor="http://album.jabbim.cz/%s/"%(unicode(self.main.client.jid.userhost()))
 			QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
@@ -155,18 +159,23 @@ class Plugin(plugins.PluginBase):
 		button.setToolTip("Jabbim Album")
 		# add button to buttonGroup
 		menu=QtGui.QMenu(button)
+		# my
 		action=menu.addAction(self.tr("Show my Jdisk in JDM"))
 		action.setObjectName("show_my_disk_jdm")
-		action=menu.addAction(self.tr("Show users Jdisk in JDM"))
-		action.setObjectName("show_users_disk_jdm")
-		menu.addSeparator()
+		action=menu.addAction(self.tr("Show my Album in JDM"))
+		action.setObjectName("show_my_album_jdm")
 		action=menu.addAction(self.tr("Show my Jdisk in browser"))
 		action.setObjectName("show_my_disk")
-		action=menu.addAction(self.tr("Show users Jdisk in browser"))
-		action.setObjectName("show_users_disk")
-		menu.addSeparator()
 		action=menu.addAction(self.tr("Show my Album in browser"))
 		action.setObjectName("show_my_album")
+		menu.addSeparator()
+		# users
+		action=menu.addAction(self.tr("Show users Jdisk in JDM"))
+		action.setObjectName("show_users_disk_jdm")
+		action=menu.addAction(self.tr("Show users Album in JDM"))
+		action.setObjectName("show_users_album_jdm")
+		action=menu.addAction(self.tr("Show users Jdisk in browser"))
+		action.setObjectName("show_users_disk")
 		action=menu.addAction(self.tr("Show users Album in browser"))
 		action.setObjectName("show_users_album")
 		QtCore.QObject.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.chatMenuItemTriggered)
@@ -428,12 +437,12 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.privateButton.setEnabled(True)
 	
 	
-	def showSlot(self,jid=None):
+	def showSlot(self,jid=None,typ='public'):
 		self.window.show()
 		if (not self.main.client.roster['users'].has_key("public@disk.jabbim.cz") or not self.main.client.roster['users'].has_key("private@disk.jabbim.cz")) or not self.main.client.roster['users'].has_key("album@disk.jabbim.cz"):
 			d=self.main.client.getRegisterForm("disk.jabbim.cz")
 			d.addCallback(self._onRegister)
-		self.call(jid)
+		self.call(jid,typ)
 		self.window.ui.buttonDownload.setEnabled(False)
 
 	def _onRegister(self,data):
