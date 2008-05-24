@@ -85,6 +85,24 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.progress.hide()
 		else:
 			self.loadConfig(homedir)
+	
+	def buildContactMenu(self,menu,contact):
+		"""
+		Adds QAction to the menu above contact 
+		"""
+		self.action=menu.addAction(self.tr("Jabber Disk"))
+		self.action.setData(QtCore.QVariant(unicode(contact.jid)))
+		self.action.setObjectName("jdm_show_jdisk")
+		self.action.setIcon(QtGui.QIcon("%s/jdisk-public-24.png" % self.pluginDir))
+		QtCore.QObject.connect(self.action,QtCore.SIGNAL("triggered ( bool )"),self.contactMenuToggled)
+
+	def contactMenuToggled(self,b):
+		"""
+		User choose our QAction from contactMenu (menu above contact)
+		"""
+		jid=unicode(self.action.data().toString())
+		self.showSlot(jid)
+		self.action.deleteLater()
 
 	def showMiniRoster(self):
 		self.main.ui.roster.showMiniRoster(self.miniRosterAccepted)
