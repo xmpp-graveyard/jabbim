@@ -1,11 +1,20 @@
 SOURCES         = jabbim.py \
 widgets/about.py \
+widgets/abstractchatwidget.py \
 widgets/addcontact.py \
 widgets/addcontact_ui.py \
+widgets/albumfiletransfer.py \
+widgets/albumfiletransfer_ui.py \
 widgets/commands.py \
 widgets/commands_ui.py \
+widgets/compactrosterstyle.py \
+widgets/compatrosterstyle.py \
 widgets/dataforms.py \
+widgets/defaultrosterstyle.py \
+widgets/emoticonswidget.py \
 widgets/events.py \
+widgets/extra.py \
+widgets/extra_ui.py \
 widgets/filetransfer.py \
 widgets/filetransfer_ui.py \
 widgets/groupchatadmin.py \
@@ -20,7 +29,11 @@ widgets/joingroupchat.py \
 widgets/joingroupchat_ui.py \
 widgets/leaveroom_ui.py \
 widgets/legacyforms.py \
+widgets/linkeditor.py \
+widgets/linkeditor_ui.py \
 widgets/mainWindow.py \
+widgets/miniroster.py \
+widgets/miniroster_ui.py \
 widgets/mucbrowser.py \
 widgets/mucbrowser_ui.py \
 widgets/preferences_bookmarks_ui.py \
@@ -31,12 +44,16 @@ widgets/privacy_ui.py \
 widgets/profiles.py \
 widgets/profiles_ui.py \
 widgets/rosterLiveWidget.py \
-widgets/rosterWidget.py \
 widgets/search.py \
 widgets/servicediscovery.py \
 widgets/servicediscovery_ui.py \
 widgets/show.py \
+widgets/startchat_ui.py \
+widgets/statuseditor.py \
+widgets/statuseditor_ui.py \
+widgets/statuseditor.ui.py \
 widgets/status.py \
+widgets/statuswidget_ui.py \
 widgets/subscription.py \
 widgets/tooltip_ui.py \
 widgets/vcardeditor.py \
@@ -47,10 +64,12 @@ widgets/waitdialog.py \
 widgets/xmlConsole.py \
 wizards/firststart.py \
 wizards/registration.py \
+
 pref/connection.py \
 pref/chat.py \
 pref/jabbim.py \
-pref/roster.py
+pref/roster.py \
+pref/privacy.py
 
 TRANSLATIONS    = locales/jabbim_cs.ts \
 				locales/jabbim_en.ts \
