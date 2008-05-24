@@ -499,11 +499,12 @@ class Plugin(plugins.PluginBase):
 			self.filesToOpen.remove(filename)
 			if self.main.allowedJids.has_key(text+"/"+self.main.client.ft[sid].fileprops['name']):
 				del self.main.allowedJids[text+"/"+self.main.client.ft[sid].fileprops['name']]
-			print "open",filename
-			if sys.platform == 'win32':
-				os.startfile(filename)
-			else:
-				os.system("xdg-open %s" % filename)
+			if error==None:
+				print "open",filename
+				if sys.platform == 'win32':
+					os.startfile(filename)
+				else:
+					os.system("xdg-open %s" % filename)
 			
 
 	def clicked(self,item,old):
