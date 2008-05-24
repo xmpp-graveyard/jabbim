@@ -1828,6 +1828,12 @@ class mainWindow(QtGui.QMainWindow):
 		
 		# fill login form
 		self.fillLoginForm()
+		# load cache and create tables
+		if sys.platform != 'win32':
+			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
+		else:
+			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
+		self.cache.create_tables().addCallback(self.tables_created).addErrback(self.tables_loaded)		
 		self.ui.loginStatus.addItem(self.getIcon(status="online",size="16x16"), self.status["online"],QtCore.QVariant("online"))
 		self.ui.loginStatus.addItem(self.getIcon(status="chat",size="16x16"), self.status["chat"],QtCore.QVariant("chat"))
 		self.ui.loginStatus.addItem(self.getIcon(status="away",size="16x16"), self.status["away"],QtCore.QVariant("away"))
@@ -2550,7 +2556,7 @@ class mainWindow(QtGui.QMainWindow):
 		if not data[1][0]:
 			self.buildStatusWidgetMenu()
 			return
-		print data
+		print "tables_created"
 		t1=self.cache.set_status('online',self.tr("I'm here"))
 		t2=self.cache.set_status('dnd',self.tr("Doing something important. Message me later."))
 		t3=self.cache.set_status('chat',self.tr("Chat with me!"))
@@ -2935,10 +2941,12 @@ class mainWindow(QtGui.QMainWindow):
 		if self.cache:
 			self.cache.close()
 			del self.cache
+		# load cache and create tables
 		if sys.platform != 'win32':
 			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
 		else:
 			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
+		self.cache.create_tables().addCallback(self.tables_created).addErrback(self.tables_loaded)
 
 	def fillLoginForm(self):
 		"""
@@ -3916,13 +3924,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.loginInfo.setText(self.tr("Connecting to the server..."))
 		reactor.callLater(0,self.connect__)
 		
-		# load cache and create tables
-		if sys.platform != 'win32':
-			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
-		else:
-			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
-		self.cache.create_tables().addCallback(self.tables_created).addErrback(self.tables_loaded)
-	
 	def connect__(self):
 		start=time.time()
 		# get variables
