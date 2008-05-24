@@ -145,6 +145,10 @@ class PluginBase:
 			return True
 		return False
 
+	#def _translate("MainWindow", "Upload", None, QtGui.QApplication.UnicodeUTF8)):
+	def _translate(self,context, text, temp, encoding):
+		return self.tr(text,context)
+
 	def loadWidget(self,file,parent=None):
 		"""
 		Loads QtGui.QWidget from .py file created from .ui by pyuic4.
@@ -156,6 +160,7 @@ class PluginBase:
 		@see: L{loadWindow}, L{loadDialog}, U{QtGui.QWidget<http://www.riverbankcomputing.com/Docs/PyQt4/html/qwidget.html>}
 		"""
 		wid=QtGui.QWidget(parent)
+		wid.translate=self._translate
 		return self._loadUi(file,wid)
 
 	def loadWindow(self,file,parent=None):
@@ -169,6 +174,7 @@ class PluginBase:
 		@see: L{loadWidget}, L{loadDialog}, U{QtGui.QWidget<http://www.riverbankcomputing.com/Docs/PyQt4/html/qmainwindow.html>}
 		"""
 		wid=QtGui.QMainWindow(parent)
+		wid.translate=self._translate
 		return self._loadUi(file,wid)
 
 	def loadDialog(self,file,parent=None):
@@ -182,6 +188,7 @@ class PluginBase:
 		@see: L{loadWidget}, L{loadWindow}, U{QtGui.QWidget<http://www.riverbankcomputing.com/Docs/PyQt4/html/qdialog.html>}
 		"""
 		wid=QtGui.QDialog(parent)
+		wid.translate=self._translate
 		return self._loadUi(file,wid)
 
 	def installTranslator(self):
