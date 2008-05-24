@@ -13,8 +13,6 @@ try:
 except:
 	log.msg('Please upgrade to python2.5')
 	from md5 import new as md5
-if sys.platform == 'win32':
-	from win32api import ShellExecute
 
 class config:
 	def __init__(self,main):
@@ -485,7 +483,7 @@ class Plugin(plugins.PluginBase):
 				del self.main.allowedJids[text+"/"+self.main.client.ft[sid].fileprops['name']]
 			print "open",filename
 			if sys.platform == 'win32':
-				ShellExecute(0, "open" , filename ,None ,os.path.dirname(filename) , 0)
+				os.startfile(filename)
 			else:
 				os.system("xdg-open %s" % filename)
 			
