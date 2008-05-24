@@ -807,14 +807,15 @@ class rosterWidget(QtGui.QWidget):
 					self.blinkJids.append(JID)
 				events.append(JID)
 				for item in self.getUserItems(JID):
-					item.blink=QtGui.QIcon(event['iconName'].replace("xxxxx","32x32"))
-					self.events.append(item)
+					if not item in self.events:
+						item.blink=QtGui.QIcon(event['iconName'].replace("xxxxx","32x32"))
+						self.events.append(item)
 		for jid in self.blinkJids:
 			if not jid in events:
 				for item in self.getUserItems(jid):
 					if item in self.events:
 						self.events.remove(item)
-		self.timerBlink.start(500)
+		self.timerBlink.start(1000)
 
 	def blink(self):
 		self.bl=not self.bl

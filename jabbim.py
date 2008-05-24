@@ -1852,7 +1852,6 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 			QtCore.QObject.connect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
-		
 
 		# join if we can :)
 		if self.config['autoJoin']=='True':
