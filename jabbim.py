@@ -230,7 +230,7 @@ class clientClass(pyxl.client.Client):
 				if widget.widget.complete==None:
 					# User wants to close transfer
 					# TODO: we have to do something here (inform user that transfer was stopped for example...)
-					self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.item))
+					self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(widget.widget.item))
 					widget.widget.complete=True
 				else:
 					# file has been sent/received :)
