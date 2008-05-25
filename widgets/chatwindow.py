@@ -658,7 +658,7 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.chatTab.addTab(tab,icon,"&"+unicode(name))
 		if message:
 			tab.unread=1
-			self.setWindowTitle("("+unicode(self.getUnreadMessages(self)+1)+") "+unicode(name))
+			self.setWindowTitle("("+unicode(self.getUnreadMessages()+1)+") "+unicode(name))
 			if not self.isActiveWindow() or self.windowState() & QtCore.Qt.WindowMinimized:
 				self.startFlash()
 		else:
