@@ -430,6 +430,8 @@ class Plugin(plugins.PluginBase):
 	
 	def call(self,jid=None,typ=None):
 		self.stopDownload=True
+		self.window.ui.label_size.setText("")
+		self.window.ui.label_name.setText("")
 		if typ:
 			self.typ=typ
 		if jid:
@@ -526,6 +528,8 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.window.ui.buttonDelete.setEnabled(False)
 			self.window.ui.buttonDownload.setEnabled(False)
+			self.window.ui.label_size.setText("")
+			self.window.ui.label_name.setText("")
 
 	def doubleClicked(self,item):
 		if self.typ=="public":
