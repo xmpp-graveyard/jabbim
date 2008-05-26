@@ -83,6 +83,7 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.progress=QtGui.QProgressBar(self.window.ui.statusbar)
 			self.window.ui.statusbar.addWidget(self.window.ui.progress,1)
 			self.window.ui.progress.hide()
+			self.stopDownload=False
 		else:
 			self.loadConfig(homedir)
 	
@@ -363,6 +364,7 @@ class Plugin(plugins.PluginBase):
 				self.thumbs[name]=item
 		data=self.thumbs.keys()
 		if self.typ=="album":
+			self.stopDownload=False
 			self.window.ui.progress.setValue(0)
 			self.window.ui.progress.setMaximum(len(data))
 			self.window.ui.progress.show()
@@ -395,11 +397,16 @@ class Plugin(plugins.PluginBase):
 				#data=self.thumbs.keys()
 				#self.main.client.callRemote('rpc@jabbim.cz/service', 'getHash', (self.jid,data[0])).addCallback(self.hashArrived,data)
 		else:
-			cacheFile="%s/%s.jpg" % (self.cache,self.jid+data[0])
-			if os.path.isfile(cacheFile):
-				self.main.client.reactor.callLater(0,self.thumbArrived,None,data)
+			if not self.stopDownload:
+				cacheFile="%s/%s.jpg" % (self.cache,self.jid+data[0])
+				if os.path.isfile(cacheFile):
+					self.main.client.reactor.callLater(0,self.thumbArrived,None,data)
+				else:
+					self.main.client.callRemote('rpc@jabbim.cz/service', 'getThumb', (self.jid,data[0])).addCallback(self.thumbArrived,data)
 			else:
-				self.main.client.callRemote('rpc@jabbim.cz/service', 'getThumb', (self.jid,data[0])).addCallback(self.thumbArrived,data)
+				self.stopDownload=False
+				self.thumbs={}
+				self.window.ui.progress.hide()
 
 	def hashArrived(self,hs,data):
 		hs=hs[0][0]
@@ -422,6 +429,7 @@ class Plugin(plugins.PluginBase):
 		menu.addAction("Jabbim disk manager",self.showSlot)
 	
 	def call(self,jid=None,typ=None):
+		self.stopDownload=True
 		if typ:
 			self.typ=typ
 		if jid:
