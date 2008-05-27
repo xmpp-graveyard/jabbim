@@ -35,9 +35,12 @@ class Plugin(plugins.PluginBase):
 		
 		if main:
 			self.loadConfig()
-			self.main.client.callRemote('rpc@jabbim.cz/service', 'updateCore', (self.main.client.jid.host, sha1(self.main.client.jid.userhost()).hexdigest(), self.main.client.client_os, self.main.client.version)).addCallback(self._update)
+			self.registerHandler('on_authd',self.on_authd)
 		else:
 			self.loadConfig(homedir)
+
+	def on_authd(self):
+		self.main.client.callRemote('rpc@jabbim.cz/service', 'updateCore', (self.main.client.jid.host, sha1(self.main.client.jid.userhost()).hexdigest(), self.main.client.client_os, self.main.client.version)).addCallback(self._update)
 
 	def _update(self, vysledek):
 		print vysledek
