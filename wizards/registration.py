@@ -21,14 +21,14 @@ class firstPage(QtGui.QWizardPage):
 	def __init__(self,registrationWizard):
 		QtGui.QWizardPage.__init__(self)
 		self.setTitle(registrationWizard.tr("Introduction"))
-		label=QtGui.QLabel(registrationWizard.trUtf8("Server je místo, kde jsou uložena Vaše uživatelská data."))
+		label=QtGui.QLabel(registrationWizard.trUtf8("Server is where user data are stored."))
 		label.setWordWrap(True)
 		policy=label.sizePolicy()
 		policy.setHeightForWidth(True)
 		policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
 		label.setSizePolicy(policy)
 	
-		label2=QtGui.QLabel(registrationWizard.trUtf8("Jabber ID (JID) je obdoba emailové adresy. Je to Váš identifikátor v sítich jabber a ostatní uživatelé Vám na tuto adresu mohou pomocí jabberu psát."))
+		label2=QtGui.QLabel(registrationWizard.trUtf8("Jabber ID is like email address. It is your identity in Jabber network."))
 		label2.setWordWrap(True)
 		policy=label2.sizePolicy()
 		policy.setHeightForWidth(True)
@@ -81,8 +81,8 @@ class firstPage(QtGui.QWizardPage):
 		self.registerField("password*",passwordLineEdit)
 		self.registerField("password2*",password2LineEdit)
 		self.registerField("jabberid*",registrationWizard.jidLabel)
-		self.setTitle(registrationWizard.trUtf8("Registrace Jabber účtu"))
-		self.setSubTitle(registrationWizard.trUtf8("Vyberte server, na kterém chcete účet zaregistrovat a svoji přezdívku."))
+		self.setTitle(registrationWizard.trUtf8("Jabber account registration"))
+		self.setSubTitle(registrationWizard.trUtf8("Choose server, where you want to register."))
 		self.setLayout(layout)
 
 	def isComplete(self):
@@ -98,8 +98,8 @@ class waitPage(QtGui.QWizardPage):
 	def __init__(self,registrationWizard):
 		QtGui.QWizardPage.__init__(self)
 		self.registrationWizard=registrationWizard
-		self.setTitle(registrationWizard.trUtf8("Registrace Jabber účtu"))
-		self.setSubTitle(registrationWizard.trUtf8("Právě probíhá registrace Vašeho účtu. Prosím vyčkejte."))
+		self.setTitle(registrationWizard.trUtf8("Jabber account registration"))
+		self.setSubTitle(registrationWizard.trUtf8("Registration in progress, please wait."))
 
 	def isComplete(self):
 		self.registrationWizard.button(QtGui.QWizard.BackButton).setEnabled(False)
@@ -109,8 +109,8 @@ class secondPage(QtGui.QWizardPage):
 	def __init__(self,registrationWizard):
 		QtGui.QWizardPage.__init__(self)
 		self.registrationWizard=registrationWizard
-		self.setTitle(registrationWizard.trUtf8("Registrace Jabber účtu"))
-		self.setSubTitle(registrationWizard.trUtf8("Váš účet byl zaregistrován. Nyní stačí jen vyplnit informace o Vás."))
+		self.setTitle(registrationWizard.trUtf8("Jabber account registration"))
+		self.setSubTitle(registrationWizard.trUtf8("Your accont was registered. Now it is recomended to fill in some info about you."))
 		
 		firstnameLabel=QtGui.QLabel(registrationWizard.tr("Firstname:"))
 		firstnameLineEdit=QtGui.QLineEdit()
@@ -154,8 +154,8 @@ def createSecondPage(registrationWizard):
 	
 	page=QtGui.QWizardPage()
 	#page.setTitle(registrationWizard.tr("Email and Nickname"))
-	page.setTitle(registrationWizard.trUtf8("Registrace Jabber účtu"))
-	page.setSubTitle(registrationWizard.trUtf8("Váš účet byl zaregistrován. Nyní stačí jen vyplnit informace o Vás."))
+	page.setTitle(registrationWizard.trUtf8("Jabber account registration"))
+	page.setSubTitle(registrationWizard.trUtf8("Your accont was registered. Now it is recomended to fill in some info about you."))
 	
 	firstnameLabel=QtGui.QLabel(registrationWizard.tr("Firstname:"))
 	firstnameLineEdit=QtGui.QLineEdit()
@@ -194,8 +194,8 @@ def createSecondPage(registrationWizard):
 def createFinishPage(registrationWizard):
 	
 	page=QtGui.QWizardPage()
-	page.setTitle(registrationWizard.trUtf8("Registrace Jabber účtu"))
-	page.setSubTitle(registrationWizard.trUtf8("Vaše registrace byla úspěšně dokončena."))
+	page.setTitle(registrationWizard.trUtf8("Jabber account registration"))
+	page.setSubTitle(registrationWizard.trUtf8("Your registration was successfully completed."))
 	return page
 
 class registrationClass(register.RegisteringClient):
