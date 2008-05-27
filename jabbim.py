@@ -3906,9 +3906,10 @@ class mainWindow(QtGui.QMainWindow):
 		if delay:
 			reactor.callLater(delay,self.connect)
 			return
-
+		
+		
 		print 'connecting'
-		jid=unicode(self.ui.login_jid.text()) 
+		jid=unicode(self.ui.login_jid.text()).strip()
 		if not re.match(r'.+@.+', jid): 
 			self.ui.login_jid.setFocus(QtCore.Qt.OtherFocusReason) 
 			if jid.find('@') == -1: 
@@ -3916,17 +3917,24 @@ class mainWindow(QtGui.QMainWindow):
 			return 
 		if len(unicode(self.ui.login_password.text())) == 0:
 			return
+		if not self.getJid(jid):
+			reactor.callLater(0,self.jidError)
+			return
+			
 		self.ui.selfAvatar.setPixmap(QtGui.QPixmap('images/32x32/apps/jabbim.png'))
 		self.ui.rosterStackedWidget.setCurrentIndex(2)
 		self.ui.login_connect.setEnabled(False)
 		self.ui.profilesList.setEnabled(False)
 		self.ui.loginInfo.setText(self.tr("Connecting to the server..."))
 		reactor.callLater(0,self.connect__)
-		
+
+	def jidError(self):
+		QtGui.QMessageBox.critical(self, self.tr("Bad JID"),self.tr("You have an error in your Jabber ID."))
+
 	def connect__(self):
 		start=time.time()
 		# get variables
-		jid=unicode(self.ui.login_jid.text())
+		jid=unicode(self.ui.login_jid.text()).strip()
 		password=unicode(self.ui.login_password.text())
 		# get profiles
 		profiles=utils.getProfiles(self.realHomeDir)
