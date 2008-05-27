@@ -1271,6 +1271,7 @@ class Client(derived):
 				print "onPresenceError, jid mallformed",[el['from']]
 			except:
 				print "onPresenceError, jid mallformed"
+			return
 			
 		fromjid = frm.userhost()
 		resource = jid.JID(el['from']).resource
