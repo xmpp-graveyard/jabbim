@@ -14,7 +14,7 @@ def createFirstPage(firstStartWizard):
 	page=QtGui.QWizardPage(firstStartWizard)
 	page.setTitle(firstStartWizard.tr("Welcome"))
 
-	firstStartWizard.label=QtGui.QLabel(firstStartWizard.trUtf8("Vítejte ........."),page)
+	firstStartWizard.label=QtGui.QLabel(firstStartWizard.trUtf8("Welcome to the open world of Jabber. This wizzard will help you with creating your account, so you can chat with your friends in no time."),page)
 	firstStartWizard.label.setWordWrap(True)
 	policy=firstStartWizard.label.sizePolicy()
 	policy.setHeightForWidth(True)
@@ -34,8 +34,7 @@ def createFirstPage(firstStartWizard):
 	
 	page.registerField("newAccount",firstStartWizard.newAccount)
 	page.registerField("oldAccount",firstStartWizard.oldAccount)
-	page.setTitle(firstStartWizard.trUtf8("Vitejte...."))
-	page.setSubTitle(firstStartWizard.trUtf8("Vyberte jednu z moznosti."))
+	page.setSubTitle(firstStartWizard.trUtf8("Choose one option."))
 	
 	page.setLayout(layout)
 	return page
@@ -46,7 +45,7 @@ def createSecondPage(firstStartWizard):
 	page=QtGui.QWizardPage()
 	page.setTitle(firstStartWizard.tr("Welcome"))
 
-	firstStartWizard.label=QtGui.QLabel(firstStartWizard.trUtf8("K vytvoreni noveho profilu je potreba vyplnit nasledujici formular."))
+	firstStartWizard.label=QtGui.QLabel(firstStartWizard.trUtf8("Before new profile will be created, you must fill in folowing form."))
 	firstStartWizard.label.setWordWrap(True)
 	policy=firstStartWizard.label.sizePolicy()
 	policy.setHeightForWidth(True)
@@ -77,8 +76,7 @@ def createSecondPage(firstStartWizard):
 	page.registerField("savePassword",firstStartWizard.savePassword)
 	page.registerField("password",firstStartWizard.password)
 	
-	page.setTitle(firstStartWizard.trUtf8("Vitejte...."))
-	page.setSubTitle(firstStartWizard.trUtf8("Prihlaseni"))
+	page.setSubTitle(firstStartWizard.trUtf8("Login"))
 	
 
 	page.setLayout(layout)
