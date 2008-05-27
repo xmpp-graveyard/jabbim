@@ -1264,7 +1264,14 @@ class Client(derived):
 	def onPresenceError(self,  el):
 		#zatim jenom GC errory .. ani nevim jestli ma smysl zachytavat i jine ..
 #		self.on_xml(el.toXml())
-		frm = jid.JID(el['from'])
+		try:
+			frm = jid.JID(el['from'])
+		except:
+			try:
+				print "onPresenceError, jid mallformed",[el['from']]
+			except:
+				print "onPresenceError, jid mallformed"
+			
 		fromjid = frm.userhost()
 		resource = jid.JID(el['from']).resource
 		if self.groupchats.has_key(fromjid):
