@@ -410,9 +410,10 @@ class chatWindow(QtGui.QMainWindow):
 			self.main.chat.ui.chatTab.setTabText(i,"("+unicode(w.chat.unread+1)+") "+w.tabName)
 			countMessage=True
 		if not self.main.chat.isActiveWindow():
-			current=self.ui.chatTab.currentWidget()
-			if current:
-				self.main.chat.setWindowTitle("("+unicode(int(self.getUnreadMessages())+1)+") "+current.tabName.replace("&",""))
+			self.main.chat.setWindowTitle("("+unicode(int(self.getUnreadMessages())+1)+") "+w.tabName.replace("&",""))
+			#current=self.ui.chatTab.currentWidget()
+			#if current:
+				#self.main.chat.setWindowTitle("("+unicode(int(self.getUnreadMessages())+1)+") "+current.tabName.replace("&",""))
 			countMessage=True
 		# set room topic
 		if subject!=None:
