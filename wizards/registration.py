@@ -74,7 +74,7 @@ class firstPage(QtGui.QWizardPage):
 		layout.addWidget(password2Label,5,0,1,1)
 		layout.addWidget(password2LineEdit,5,1,1,1)
 		layout.addWidget(label2,6,0,1,2)
-		layout.addWidget(QtGui.QLabel(registrationWizard.trUtf8("Vaše Jabber ID:")),7,0,1,1)
+		layout.addWidget(QtGui.QLabel(registrationWizard.trUtf8("Your Jabber ID")),7,0,1,1)
 		layout.addWidget(registrationWizard.jidLabel,7,1,1,1)
 		self.registerField("server",registrationWizard.serverComboBox)
 		self.registerField("nickname*",registrationWizard.nicknameLineEdit)
@@ -351,7 +351,7 @@ class registrationWizard(QtGui.QWizard):
 			if unicode(self.field("password").toString())==unicode(self.field("password2").toString()):
 				return True
 			else:
-				self.label.setText(self.trUtf8("Hesla nejsou stejná."))
+				self.label.setText(self.trUtf8("Passwords are not same."))
 				return False
 		else:
 			return self.currentPage().validatePage()
