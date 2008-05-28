@@ -80,6 +80,7 @@ from twisted.web.microdom import parseString,Element
 from twisted.web.client import downloadPage
 from twisted.web import xmlrpc, server #for xmlrpc plugin
 import shutil #xmlrpc
+from widgets.extra import extraDialog
 
 class clientClass(pyxl.client.Client):
 	"""
@@ -204,7 +205,7 @@ class clientClass(pyxl.client.Client):
 	def on_affiliationErr(self,  muc,  err,  nick):
 		pass
 
-	def on_ftTransfered(self, sid, bytes):
+	def on_ftTransfered(self, sid, bytes,end=False):
 		"""
 		Updates progress bars for filetransfer with id 'sid'.
 		@type sid: unicode
@@ -217,7 +218,7 @@ class clientClass(pyxl.client.Client):
 		# normal widget => progress bars in events tab or in chatwidget
 		if widget.typ=='normal':
 			queueId=self.main.events.filetransfer[sid]['queueId'] # filetransfer queue ID
-			if self.ft.has_key(sid):
+			if not end:
 				# Filetransfer is alive, so we have to update progressbar
 				size=float(self.ft[sid].size)
 				sent=float(self.ft[sid].transfered)
@@ -328,7 +329,7 @@ class clientClass(pyxl.client.Client):
 					del self.main.events.filetransfer[sid]
 		# widget which shows progress of Jabbim Extra download
 		else:
-			if self.ft.has_key(sid):
+			if not end:
 				# Filetransfer is alive
 				size=float(self.ft[sid].size)
 				sent=float(self.ft[sid].transfered)
@@ -359,9 +360,10 @@ class clientClass(pyxl.client.Client):
 			self.main.allowedSids.remove(sid)
 			self.main.preferencesWindow.reloadView(file,root)
 			self.main.preferencesWindow.reloadPlugins_()
-		del self.ft[sid]
-		self.on_ftTransfered(sid, 0) # we have to delete filetransfer and etc
 		self.dispatcher.publishEvent('FTFinishedEvent', sid, error)
+		#del self.ft[sid]
+		self.on_ftTransfered(sid, 0,True) # we have to delete filetransfer and etc
+		
 
 	def on_discoInfoReceived(self, jid, node):
 		"""
@@ -3213,6 +3215,10 @@ class mainWindow(QtGui.QMainWindow):
 
 				if not self.plugins.has_key(plugin_name) or version > self.plugins[plugin_name]['version']:
 					self.plugins[plugin_name] = { 'dir': dir, 'version': version, 'module': None }
+
+	def startExtraDonwload(self,file):
+		d=extraDialog("",self,self,file)
+		d.exec_()
 
 	def loadPlugins(self):
 		"""

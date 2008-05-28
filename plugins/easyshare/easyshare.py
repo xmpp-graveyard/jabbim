@@ -140,9 +140,13 @@ class Plugin(plugins.PluginBase):
 				if jd.strip() != '':
 					self.public.append(jd.strip())
 			print self.public
-			self.main.client.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#easyshare", "Get file", ResendFile, public = self.public, args = {'home':self.home})
+			self.registerHandler('on_authd',self.on_authd)
+
 		else:
 			self.loadConfig(homedir)
+	
+	def on_authd(self):
+		self.main.client.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#easyshare", "Get file", ResendFile, public = self.public, args = {'home':self.home})
 	
 	def on_configChanged(self):
 			self.public = []

@@ -36,15 +36,39 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.loadConfig()
 			self.registerHandler('on_authd',self.on_authd)
+			self.registerHandler('on_ftEnd', self.on_ftEnd, priority = 4)
 		else:
 			self.loadConfig(homedir)
 
+	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
+		if error == None and self.main.client.ft[sid].tojid.find("rpc")!=-1:
+			if self.main.client.ft[sid].file.find("plugins/")!=-1:
+				QtGui.QMessageBox.information(self.main,self.tr("Plugin updated"), self.tr("Please restart Jabbim to apply changes."))
+			
+
 	def on_authd(self):
 		self.main.client.callRemote('rpc@jabbim.cz/service', 'updateCore', (self.main.client.jid.host, sha1(self.main.client.jid.userhost()).hexdigest(), self.main.client.client_os, self.main.client.version)).addCallback(self._update)
+		self.main.client.reactor.callLater(1,self.checkPlugins)
+
+	def checkPlugins(self):
+		self.main.client.callRemote('rpc@jabbim.cz/service', 'getList', ('plugins/',)).addCallback(self._listArrived)
+
+	def _listArrived(self,data):
+		plugins=data[0][0]
+		for name,desc in plugins.iteritems():
+			version=float(desc[0].replace(",","."))
+			plugin=name
+
+			if name in self.main.config['plugins'] and self.main.plugins.has_key(plugin):
+				if self.main.plugins[plugin]['module']:
+					if float(self.main.plugins[plugin]['module'].version)<version:
+						self.main.tray.showMessage(self.tr("Autoupdate"),self.tr("New version of plugin")+" "+plugin+" "+self.tr('is available'), QtGui.QSystemTrayIcon.Information, 3000)
+						self.main.events.addBooleanEvent(self.main.startExtraDonwload,["plugins/"+name],None,[],name+self.main.tr("update"),text=self.tr("Do you want to update this plugin?"),name=unicode("update")+name,typ="update")
+						#self.addBooleanEvent(self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],header=mainWindow.tr('Subscribe request'),text=mainWindow.tr('From:')+" "+unicode(jid),name=jid,typ="subscribe")
 
 	def _update(self, vysledek):
 		print vysledek
 		if vysledek[0][0] == False:
 			#nemame posledni verzi
-			self.main.tray.showMessage(frm,self.tr("New version of Jabbim is available!"), QtGui.QSystemTrayIcon.Information, 3000)
+			self.main.tray.showMessage(self.tr("Autoupdate"),self.tr("New version of Jabbim is available!"), QtGui.QSystemTrayIcon.Information, 3000)
 	

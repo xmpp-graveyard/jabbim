@@ -28,23 +28,27 @@ class extraDialog(QtGui.QDialog):
 	"""
 	Jabbim Extra Dialog
 	"""
-	def __init__(self,typ,main,parent=None):
+	def __init__(self,typ,main,parent=None,download=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.setModal(True)
 		self.ui=Ui_Extra()
 		self.ui.setupUi(self)
 		self.main=main
-		if typ=="emoticons":
-			self.ui.label.setText("<h3>"+self.tr("Emoticons")+"</h3>")
-			self.main.client.callRemote('rpc@jabbim.cz/service', 'getList', ('emoticons/',)).addCallback(self._emoticonsListArrived)#.addErrback(self._emoticonsListError)
-			self.directory='emoticons/'
-		elif typ=="plugins":
-			self.ui.label.setText("<h3>"+self.tr("Plugins")+"</h3>")
-			self.main.client.callRemote('rpc@jabbim.cz/service', 'getList', ('plugins/',)).addCallback(self._emoticonsListArrived)#.addErrback(self._emoticonsListError)
-			self.directory='plugins/'
+		if not download:
+			if typ=="emoticons":
+				self.ui.label.setText("<h3>"+self.tr("Emoticons")+"</h3>")
+				self.main.client.callRemote('rpc@jabbim.cz/service', 'getList', ('emoticons/',)).addCallback(self._emoticonsListArrived)#.addErrback(self._emoticonsListError)
+				self.directory='emoticons/'
+			elif typ=="plugins":
+				self.ui.label.setText("<h3>"+self.tr("Plugins")+"</h3>")
+				self.main.client.callRemote('rpc@jabbim.cz/service', 'getList', ('plugins/',)).addCallback(self._emoticonsListArrived)#.addErrback(self._emoticonsListError)
+				self.directory='plugins/'
 
 		QtCore.QObject.connect(self.ui.listWidget,QtCore.SIGNAL("currentItemChanged( QListWidgetItem *, QListWidgetItem *)"),self.selectionChanged)
 		self.ui.preview.hide()
+		self.download=download
+		if self.download:
+			self.accept()
 
 	def selectionChanged(self,item,old):
 		if item:
@@ -101,12 +105,20 @@ class extraDialog(QtGui.QDialog):
 		self.done(1)
 
 	def accept(self):
-		name=unicode(self.ui.listWidget.currentItem().text())
-		b=QtGui.QPushButton()
-		self.progress=QtGui.QProgressDialog(self.tr('Downloading emoticons pack:')+" "+name,"", 0, 100, self.main.preferencesWindow)
-		self.progress.setCancelButton(b)
-		b.hide()
-		self.main.client.callRemote('rpc@jabbim.cz/service','getFile',(self.directory+name+'.zip',)).addCallback(self._getFile)
+		if self.download:
+			b=QtGui.QPushButton()
+			self.progress=QtGui.QProgressDialog(self.tr('Downloading file:')+" "+self.download,"", 0, 100, self.main.preferencesWindow)
+			self.progress.setCancelButton(b)
+			b.hide()
+			self.main.client.callRemote('rpc@jabbim.cz/service','getFile',(self.download+'.zip',)).addCallback(self._getFile)
+
+		else:
+			name=unicode(self.ui.listWidget.currentItem().text())
+			b=QtGui.QPushButton()
+			self.progress=QtGui.QProgressDialog(self.tr('Downloading emoticons pack:')+" "+name,"", 0, 100, self.main.preferencesWindow)
+			self.progress.setCancelButton(b)
+			b.hide()
+			self.main.client.callRemote('rpc@jabbim.cz/service','getFile',(self.directory+name+'.zip',)).addCallback(self._getFile)
 		#self.done(1)
 
 	#def reject(self):
