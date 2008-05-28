@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs">
+<defaultcodec></defaultcodec>
 <context>
     <name>AddUserWidget</name>
     <message>
@@ -4559,42 +4560,42 @@ Version: %3</source>
     <message>
         <location filename="pref/connection.py" line="8"/>
         <source>Join groupchats at startup.</source>
-        <translation type="unfinished"></translation>
+        <translation>Připojit se ke konferenci po přihlášení.</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="6"/>
         <source>Show messages about users mood.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazovat zprávy o náladě uživatelů.</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="7"/>
         <source>Show messages about user tune.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazovat zprávy o tom, co kontakty poslouchají.</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="10"/>
         <source>Auto change nick if there&apos;s a conflict when joining the room</source>
-        <translation type="unfinished"></translation>
+        <translation>Automaticky změnit přezdívku při konfliktu v konferenci</translation>
     </message>
     <message>
         <location filename="pref/jabbim.py" line="4"/>
         <source>Start Jabbim minimalized to the tray</source>
-        <translation type="unfinished"></translation>
+        <translation>Spustit Jabbim minimalizovaný do oznamovací oblasti (ikona u hodin)</translation>
     </message>
     <message>
         <location filename="pref/roster.py" line="8"/>
         <source>Display scroll bar</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit posuvníky</translation>
     </message>
     <message>
         <location filename="pref/privacy.py" line="5"/>
         <source>Send chatstate notifications.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zasílat oznámení o stavu psaní zprávy (píše, přestal psát, zavřel okno).</translation>
     </message>
     <message>
         <location filename="pref/privacy.py" line="6"/>
         <source>Send OS info.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zasílat informaci o operačním systému.</translation>
     </message>
 </context>
 <context>
