@@ -1729,17 +1729,17 @@ class mainWindow(QtGui.QMainWindow):
 					"studying":self.tr("studying"),
 					"writing":self.tr("writing")}
 
-		self.activityGroups = {"doing_chores":self.tr("doing_chores"),
-					"drinking":self.tr("drinking"),
-					"eating":self.tr("eating"),
-					"exercising":self.tr("exercising"),
-					"grooming":self.tr("grooming"),
-					"having_appointment":self.tr("having_appointment"),
-					"inactive":self.tr("inactive"),
-					"relaxing":self.tr("relaxing"),
-					"talking":self.tr("talking"),
-					"traveling":self.tr("traveling"),
-					"working":self.tr("working")}
+		self.activityGroups = {"doing_chores":[self.tr("doing_chores"),"buying_groceries","cleaning","cooking","doing_maintenance","doing_the_dishes","doing_the_laundry","gardening","running_an_errand","walking_the_dog"],
+					"drinking":[self.tr("drinking"),"having_a_beer","having_coffee","having_tea"],
+					"eating":[self.tr("eating"),"having_a_snack","having_breakfast","having_dinner","having_lunch"],
+					"exercising":[self.tr("exercising"),"cycling","hiking","jogging","playing_sports","running","skiing","swimming","working_out"],
+					"grooming":[self.tr("grooming"),"at_the_spa","brushing_teeth","getting_a_haircut","shaving","taking_a_bath","taking_a_shower"],
+					# no substate... we don't allow it<= "having_appointment":self.tr("having_appointment"),
+					"inactive":[self.tr("inactive"),"day_off","hanging_out","on_vacation","scheduled_holiday","sleeping"],
+					"relaxing":[self.tr("relaxing"),"gaming","going_out","partying","reading","rehearsing","shopping","socializing","sunbathing","watching_tv","watching_a_movie"],
+					"talking":[self.tr("talking"),"in_real_life","on_the_phone","on_video_phone"],
+					"traveling":[self.tr("traveling"),"commuting","cycling","driving","in_a_car","on_a_bus","on_a_plane","on_a_train","on_a_trip","walking"],
+					"working":[self.tr("working"),"coding","in_a_meeting","studying","writing"]}
 
 		self.offline=False
 		self.xmlConsole=XMLConsole(self)
@@ -2709,12 +2709,12 @@ class mainWindow(QtGui.QMainWindow):
 			
 			activity =  self.statusWidgetMenu.addMenu(self.tr('Activity'))
 			for group, txt in self.activityGroups.iteritems():
-				menu = activity.addMenu(txt)
-				keys = self.activities.keys()
-				keys.sort()
-				for a in keys:
-					txt = self.activities[a]
-					action = menu.addAction(txt)
+				menu = activity.addMenu(txt[0])
+				#keys = self.activities.keys()
+				#keys.sort()
+				for a in txt[1:]:
+					t = self.activities[a]
+					action = menu.addAction(t)
 					action.setObjectName('activity')
 					action.setData(QtCore.QVariant([group, a]))
 		else:
