@@ -2051,14 +2051,18 @@ class mainWindow(QtGui.QMainWindow):
 					txt = unicode(el)
 				else :
 					general = el.name
+					if self.activityGroups.has_key(general):
+						general=self.activityGroups[general][0]
 					spec = el.firstChildElement().name
+					if self.activities.has_key(spec):
+						spec=self.activities[spec]
 
 			text+='<br /><font size="-1"><b>%s</b> %s %s</font>' % (general, spec, txt)
 		chat = contact.getPEP('http://www.xmpp.org/extensions/xep-0194.html#ns')
 		if chat != None:
 			if type(chat) == list:
 				print 'vice roomu'
-				text+='<br /><b>User is chatting in:</b>'
+				text+='<br /><b>'+self.tr('User is chatting in:')+'</b>'
 				for itm in chat:
 					uri = name = ''
 					for el in itm.elements():
@@ -2073,7 +2077,7 @@ class mainWindow(QtGui.QMainWindow):
 				print 'jeden room'
 				uri = name = ''
 				if len(chat.children)>0:
-					text+='<br /><b>User is chatting in:</b>'
+					text+='<br /><b>'+self.tr('User is chatting in:')+'</b>'
 					for el in chat.elements():
 						if el.name == 'uri':
 							uri = unicode(el)
