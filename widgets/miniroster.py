@@ -26,8 +26,8 @@ class miniRosterDialog(QtGui.QDialog):
 		groups={}
 		keys=[]
 		for group in self.main().ui.roster.groups.keys():
-			groups[group.replace(self.main().ui.roster.specialName,self.tr('Unknown')).lower()]=group
-			keys.append(group.replace(self.main().ui.roster.specialName,self.tr('Unknown')).lower())
+			groups[group.replace(self.main().ui.roster.specialName,unicode(self.tr('Unknown')).lower())]=group
+			keys.append(group.replace(self.main().ui.roster.specialName,unicode(self.tr('Unknown')).lower()))
 		keys.sort()
 		selected=False
 		for g in sorted(keys):
@@ -35,7 +35,7 @@ class miniRosterDialog(QtGui.QDialog):
 			groupItem=self.main().ui.roster.groups[group]
 			users=[]
 			parent=QtGui.QTreeWidgetItem(self.ui.users)
-			parent.setText(0,unicode(groupItem.name).replace(self.main().ui.roster.specialName,self.tr('Unknown')))
+			parent.setText(0,unicode(groupItem.name).replace(self.main().ui.roster.specialName,unicode(self.tr('Unknown'))))
 			self.ui.users.setItemExpanded(parent,True)
 			for user in self.main().ui.roster.users:
 				if user.group==group and user in allowedUsers:
