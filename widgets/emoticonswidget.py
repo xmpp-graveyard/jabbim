@@ -127,12 +127,15 @@ class emoticonsWidget(QtGui.QLabel):
 					self.l.append([])
 					y=0
 					x+=1
-		# count width and height for all images
-		width=6*(self.emoWidth+2)+10
-		height=(x+1)*(self.emoHeight+2)+10
-		# make QPixmap with counted width and height
-		self.pixmap=QtGui.QPixmap(width,height)
-		self.pixmap.fill(self.palette().base().color())
+		if self.emoWidth:
+			# count width and height for all images
+			width=6*(self.emoWidth+2)+10
+			height=(x+1)*(self.emoHeight+2)+10
+			# make QPixmap with counted width and height
+			self.pixmap=QtGui.QPixmap(width,height)
+			self.pixmap.fill(self.palette().base().color())
+		else:
+			self.pixmap=QtGui.QPixmap(1,1)
 		
 		added=[]
 		x=0
