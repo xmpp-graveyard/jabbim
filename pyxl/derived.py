@@ -840,9 +840,10 @@ class derived:
 			print ('*** unable to determine outside IP address')
 			raise Exception
 			
-	def getMoodPayload(self, mood, text = None):
+	def getMoodPayload(self, mood=None, text = None):
 		m = Element(('http://jabber.org/protocol/mood', 'mood'))
-		m.addElement(mood)
+		if mood:
+			m.addElement(mood)
 		if text != None and len(text) > 0 :
 			m.addElement('text', content = text)
 		return m

@@ -1605,6 +1605,7 @@ class mainWindow(QtGui.QMainWindow):
 					}
 		#mood:translation
 		self.moods = {
+					"none":self.tr("None"),
 					"afraid":self.tr("afraid"),
 					"amazed":self.tr("amazed"),
 					"angry":self.tr("angry"),
@@ -2686,25 +2687,30 @@ class mainWindow(QtGui.QMainWindow):
 			#highlight current mood if any
 			contact = self.client.getContactByJid(self.client.jid.userhost())
 			current = False #this mood is currently set if True
+			action = self.moodMenu.addAction(self.moods['none'])
+			action.setData(QtCore.QVariant("none"))
+			action.setObjectName('mood')
+			self.moodMenu.addSeparator()
 			for m in keys:
-				txt = self.moods[m]
-				action = self.moodMenu.addAction(txt)
-				if self.moodIcons.has_key(m):
-					action.setIcon(self.moodIcons[m])
-				action.setData(QtCore.QVariant(m))
-				action.setObjectName('mood')
-				if contact != None:
-					moods = contact.getPEP('http://jabber.org/protocol/mood')
-					if moods != None:
-						for el in moods.elements():
-							if el.name == m:
-								current = action
-				if current:
-					font = QtGui.QFont()
-					font.setBold(True)
-				else:
-					font = QtGui.QFont()
-					font.setBold(False)
+				if m!="none":
+					txt = self.moods[m]
+					action = self.moodMenu.addAction(txt)
+					if self.moodIcons.has_key(m):
+						action.setIcon(self.moodIcons[m])
+					action.setData(QtCore.QVariant(m))
+					action.setObjectName('mood')
+					if contact != None:
+						moods = contact.getPEP('http://jabber.org/protocol/mood')
+						if moods != None:
+							for el in moods.elements():
+								if el.name == m:
+									current = action
+					if current:
+						font = QtGui.QFont()
+						font.setBold(True)
+					else:
+						font = QtGui.QFont()
+						font.setBold(False)
 				
 				action.setFont(font)
 			self.moodMenu.currentAction=current
@@ -2842,7 +2848,10 @@ class mainWindow(QtGui.QMainWindow):
 		if cmd == 'mood':
 			m = unicode(data.toString())
 			log.msg('setting mood to '+m)
-			self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(m))
+			if m=="none":
+				self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(None))
+			else:
+				self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(m))
 			if self.moodIcons.has_key(m):
 				self.ui.moodButton.setIcon(self.moodIcons[m])
 			if self.moodMenu.currentAction:
@@ -3747,6 +3756,7 @@ class mainWindow(QtGui.QMainWindow):
 				path=unicode(src+self.moodIcons[mood])
 				self.moodIcons[mood]=QtGui.QIcon(path)
 				self.moodIcons[mood].src=unicode(path)
+			self.moodIcons["none"]=QtGui.QIcon(self.moodIcons[mood].pixmap(16,16,QtGui.QIcon.Disabled))
 
 	def loadSounds(self):
 		src=dirname("sounds/"+self.config["soundPack"])
