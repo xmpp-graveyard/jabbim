@@ -1135,6 +1135,7 @@ class clientClass(pyxl.client.Client):
 					message = w.chat.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",message)
 					
 					w.chat.textEditWrite(message)
+					w.chat.lastMessageFrom=user
 				return
 
 
