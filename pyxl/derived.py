@@ -728,7 +728,7 @@ class derived:
 	
 	def _onCallResult(self, el):
 		query = el.firstChildElement()
-		call = loads(query.firstChildElement().toXml())
+		call = loads(query.firstChildElement().toXml().encode('utf8'))
 		return call
 		
 
