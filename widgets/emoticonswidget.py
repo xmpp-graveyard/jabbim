@@ -71,15 +71,16 @@ class emoticonsWidget(QtGui.QLabel):
 		"""
 		Calls acceptors function addEmoticon(choosed_emoticon) and unchecks acceptors ui,smileys button.
 		"""
-		x=event.x()
-		y=event.y()
-		if x>0 and y>0 and x<self.pixmap.width()-5 and y<self.pixmap.height()-5:
-			x=int(x/(self.emoWidth+2))
-			y=int(y/(self.emoHeight+2))
+		if self.emoWidth:
+			x=event.x()
+			y=event.y()
+			if x>0 and y>0 and x<self.pixmap.width()-5 and y<self.pixmap.height()-5:
+				x=int(x/(self.emoWidth+2))
+				y=int(y/(self.emoHeight+2))
+				if self.acceptor:
+					self.acceptor.addEmoticon(self.l[y][x])
 			if self.acceptor:
-				self.acceptor.addEmoticon(self.l[y][x])
-		if self.acceptor:
-			self.acceptor.ui.smileys.setChecked(False)
+				self.acceptor.ui.smileys.setChecked(False)
 		self.hide()
 
 	def reinit(self):
@@ -134,29 +135,28 @@ class emoticonsWidget(QtGui.QLabel):
 			# make QPixmap with counted width and height
 			self.pixmap=QtGui.QPixmap(width,height)
 			self.pixmap.fill(self.palette().base().color())
-		else:
-			self.pixmap=QtGui.QPixmap(1,1)
+
 		
-		added=[]
-		x=0
-		y=0
-		# paint emoticons to the self.pixmap
-		painter=QtGui.QPainter(self.pixmap)
-		for k,v in smileys['emoticons'].iteritems():
-			if added.count(v)==0:
-				added.append(v)
-				p=QtGui.QPixmap(src+os.path.dirname(self.main.config['emoticons'])+"/"+v)
-				em=p.scaled(self.emoWidth,self.emoHeight,QtCore.Qt.KeepAspectRatio)
-				painter.drawPixmap(5+y*self.emoWidth+y*2,5+x*self.emoHeight+x*2,em)
-				y+=1
-				if y==6:
-					y=0
-					x+=1
-		pen=QtGui.QPen()
-		pen.setWidth(2)
-		pen.setBrush(QtGui.QBrush(self.palette().dark().color()))
-		painter.setPen(pen)
-		painter.drawRect(0,0,width,height)
-		painter.end()
-		# set self.pixmap as background for QLabel
-		self.setPixmap(self.pixmap)
+			added=[]
+			x=0
+			y=0
+			# paint emoticons to the self.pixmap
+			painter=QtGui.QPainter(self.pixmap)
+			for k,v in smileys['emoticons'].iteritems():
+				if added.count(v)==0:
+					added.append(v)
+					p=QtGui.QPixmap(src+os.path.dirname(self.main.config['emoticons'])+"/"+v)
+					em=p.scaled(self.emoWidth,self.emoHeight,QtCore.Qt.KeepAspectRatio)
+					painter.drawPixmap(5+y*self.emoWidth+y*2,5+x*self.emoHeight+x*2,em)
+					y+=1
+					if y==6:
+						y=0
+						x+=1
+			pen=QtGui.QPen()
+			pen.setWidth(2)
+			pen.setBrush(QtGui.QBrush(self.palette().dark().color()))
+			painter.setPen(pen)
+			painter.drawRect(0,0,width,height)
+			painter.end()
+			# set self.pixmap as background for QLabel
+			self.setPixmap(self.pixmap)
