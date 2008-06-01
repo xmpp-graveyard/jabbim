@@ -68,7 +68,7 @@ class Bookmark:
 class Client(derived):
 	def __init__(self, JID, password, host, port, main,  reactor = None, SSL = True):
 		#derived.__init__(self)
-		self. reactor = reactor
+		self.reactor = reactor
 		self.jid = jid.JID(JID)
 		self.password  = password
 		self.host = self.jid.host
@@ -76,7 +76,7 @@ class Client(derived):
 		self.factory = None
 		self.connection = None
 		self.main=main # mainWindow
-		self.reactor.callFromThread(self.on_init)
+		self.xmlstream = None
 		self.ssl = SSL
 		self.lastxml=10
 		self.roster = {'users':{},'groups':{}}
@@ -173,7 +173,8 @@ class Client(derived):
 		self.socks5Port = '33333'
 		self.socks5IP = [] #
 		self.pep = False
-
+		self.reactor.callFromThread(self.on_init)	
+		
 	def loadAvatars(self,path,avatarDef):
 		avatarImg={}
 
@@ -311,6 +312,7 @@ class Client(derived):
 
 
 	def connect(self, host = None, port = '5222', boshURL = ''):
+		
 		if boshURL != '':
 			try:
 				from urlparse import urlparse

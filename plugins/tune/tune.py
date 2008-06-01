@@ -104,7 +104,7 @@ class Plugin(plugins.PluginBase):
 
     		
 
-		if out != self.last:
+		if out != self.last and self.main.client.xmlstream != None:
 			self.main.client.sendPEP('http://jabber.org/protocol/tune', self.main.client.getTunePayload(out))
 			self.last = out
     			
