@@ -2705,9 +2705,11 @@ class mainWindow(QtGui.QMainWindow):
 				action.setFont(font)
 			self.moodMenu.currentAction=current
 			app.connect(self.moodMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.moodChanged)
-			self.ui.moodButton.setMenu(self.moodMenu)
-			
+			moodButtonRoot=QtGui.QMenu(self.ui.moodButton)
+			moodButtonRoot.addMenu(self.moodMenu)
 			activity =  self.statusWidgetMenu.addMenu(self.tr('Activity'))
+			app.connect(activity, QtCore.SIGNAL("triggered ( QAction *)"),self.activityChanged)
+
 			for group, txt in self.activityGroups.iteritems():
 				menu = activity.addMenu(txt[0])
 				#keys = self.activities.keys()
@@ -2717,6 +2719,8 @@ class mainWindow(QtGui.QMainWindow):
 					action = menu.addAction(t)
 					action.setObjectName('activity')
 					action.setData(QtCore.QVariant([group, a]))
+			moodButtonRoot.addMenu(activity)
+			self.ui.moodButton.setMenu(moodButtonRoot)
 		else:
 			self.ui.moodButton.hide()
 		
@@ -2846,6 +2850,22 @@ class mainWindow(QtGui.QMainWindow):
 			font.setBold(True)
 			self.moodMenu.currentAction.setFont(font)
 
+	def activityChanged(self,action):
+		"""
+		Executes command according to action.objectName(). Called when user choose one of QAction from self.mood menu, which si created by self.buildStatusWidgetMenu().
+		@type action: QAction
+		@param action: QAction from self.statusWidgetMenu.
+		"""
+		data=action.data()
+		cmd = action.objectName()
+
+		if cmd == 'activity':
+			data = data.toList()
+			group = unicode(data[0].toString())
+			a = unicode(data[1].toString())
+			log.msg('setting activity to %s/%s'%(group, a))
+			self.client.sendPEP('http://jabber.org/protocol/activity', self.client.getActivityPayload(group, a))
+
 	def statusWidgetChanged(self,action):
 		"""
 		Executes command according to action.objectName(). Called when user choose one of QAction from self.statusWidgetMenu, which si created by self.buildStatusWidgetMenu().
@@ -2857,11 +2877,6 @@ class mainWindow(QtGui.QMainWindow):
 		if cmd=="mood":
 			return
 		if cmd == 'activity':
-			data = data.toList()
-			group = unicode(data[0].toString())
-			a = unicode(data[1].toString())
-			log.msg('setting activity to %s/%s'%(group, a))
-			self.client.sendPEP('http://jabber.org/protocol/activity', self.client.getActivityPayload(group, a))
 			return
 			
 		if len(data.toList())==0:
