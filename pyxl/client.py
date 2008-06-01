@@ -918,7 +918,7 @@ class Client(derived):
 		log.msg( "auth_failed")
 		print 'init failed!'
 		print unicode(xmlstream)
-#		self.main._disconnect(error = 'auth')
+		self.main._disconnect(error = 'auth')
 		self.disconnect()
 		self.on_authFailed(xmlstream)
 
