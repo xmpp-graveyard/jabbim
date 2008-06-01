@@ -2026,7 +2026,7 @@ class mainWindow(QtGui.QMainWindow):
 		mood = contact.getPEP('http://jabber.org/protocol/mood')
 		if mood != None:
 			t = ''
-			m = txt,icon = ''
+			m = txt = icon = ''
 			for el in mood.elements():
 				if el.name == 'text':
 					txt = unicode(el)
