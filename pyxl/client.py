@@ -1102,7 +1102,14 @@ class Client(derived):
 	
 	def onPresence(self, el):
 		#log.msg('presence > ')
-		frm = jid.JID(el['from'])
+		try:
+			frm = jid.JID(el['from'])
+		except:
+			try:
+				print "onPresence, jid mallformed",[el['from']]
+			except:
+				print "onPresence, jid mallformed"
+			return
 		fromjid = frm.userhost()
 		resource = frm.resource
 		show = status = priority = nick = typ = affiliation = role = truejid = error = reason = actor = identity = None
