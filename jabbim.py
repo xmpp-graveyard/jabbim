@@ -131,6 +131,16 @@ class clientClass(pyxl.client.Client):
 				for item in self.main.ui.roster.getUserItems(frm):
 					item.mood=None
 			self.main.ui.roster.repaint()
+			if self.main.moodIcons.has_key(m):
+				self.main.ui.moodButton.setIcon(self.main.moodIcons[m])
+			#if self.main.moodMenu.currentAction:
+				#font=self.main.moodMenu.currentAction.font()
+				#font.setBold(False)
+				#self.main.moodMenu.currentAction.setFont(font)
+			#self.main.moodMenu.currentAction=action
+			#font=self.main.moodMenu.currentAction.font()
+			#font.setBold(True)
+			#self.main.moodMenu.currentAction.setFont(font)
 		# user tune
 		elif ns=='http://jabber.org/protocol/tune':
 			tune=payload
