@@ -501,10 +501,10 @@ class Plugin(plugins.PluginBase):
 			text="private@disk.jabbim.cz"
 		elif self.typ=="album":
 			text="album@disk.jabbim.cz"
-		if error == None and self.main.client.ft[sid].tojid.find(text)!=-1:
+		filename=self.main.client.ft[sid].file
+		if error == None and self.main.client.ft[sid].tojid.find(text)!=-1 and not filename in self.filesToOpen:
 			self.update=True
 			self.call(typ=self.typ)
-		filename=self.main.client.ft[sid].file
 		if filename in self.filesToOpen:
 			self.filesToOpen.remove(filename)
 			if self.main.allowedJids.has_key(text+"/"+self.main.client.ft[sid].fileprops['name']):

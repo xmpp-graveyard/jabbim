@@ -740,6 +740,7 @@ class FTSend:
 	def __init__(self, client, sid, filename, tojid, file, description= None, frmjid = None):
 		self.sid = sid
 		self.filename = filename
+		self.file=filename
 		self.fp = open(file, 'rb')
 		self.size = os.path.getsize(file)
 		self.description = description
