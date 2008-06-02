@@ -2608,7 +2608,10 @@ class mainWindow(QtGui.QMainWindow):
 		Builds system tray menu.
 		"""
 		menu=QtGui.QMenu(self)
-		menu.addMenu(self.statusWidgetMenu)
+		if self.client:
+			menu.addMenu(self.statusWidgetMenu)
+		else:
+			menu.addAction(self.tr("Connect"),self.connect)
 		if len(self.config['commandsInTray'])!=0 and self.client:
 			menu.addSeparator()
 			for jid in self.config['commandsInTray']:
@@ -4139,6 +4142,7 @@ class mainWindow(QtGui.QMainWindow):
 						message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",unicode(self.tr("You are now offline.")))
 						w.chat.textEditWrite(message)
 		MainWindow.client = None
+		self.buildTrayMenu()
 		if error == 'lost' and MainWindow.reconnect:
 			self.reconnect = False
 			msg = None
