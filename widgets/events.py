@@ -781,7 +781,7 @@ class events:
 		if tab:
 			tab.chat.filetransfer[sid]=chatwidget.FTWidget(text,None,self.main,sid,tab.chat.ui.ftwidget)
 			tab.chat.ui.ftwidget.layout().addWidget(tab.chat.filetransfer[sid])
-			tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("Receiving file")+" "+basename(file)))
+			tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("Receiving file")+" "+unicode(basename(file))))
 
 		self.filetransferWidget[sid]=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		self.filetransferWidget[sid].download=True
