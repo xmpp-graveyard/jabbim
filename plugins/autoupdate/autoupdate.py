@@ -5,7 +5,7 @@ sys.path.append('.')
 from include import plugins
 from twisted.python import log
 from configobj import ConfigObj
-from twisted.words.protocols.jabber import jid as jidT
+from pyxl import jid as jidT
 from twisted.web import xmlrpc, server
 from PyQt4 import QtCore, QtGui
 from twisted.python import log

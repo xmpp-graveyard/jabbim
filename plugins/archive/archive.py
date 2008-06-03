@@ -6,7 +6,7 @@ from urllib import quote, unquote
 from twisted.python import log
 from configobj import ConfigObj
 from twisted.internet import threads
-from twisted.words.protocols.jabber import jid as jidT
+from pyxl import jid as jidT
 
 class calendar(QtGui.QCalendarWidget):
 	def __init__(self,parent):
