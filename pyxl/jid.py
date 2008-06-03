@@ -1,4 +1,5 @@
 from twisted.words.protocols.jabber import jid
+import copy
 InvalidFormat = jid.InvalidFormat
 
 def JID(jidstring):
@@ -6,4 +7,5 @@ def JID(jidstring):
 		j =  jid.internJID(jidstring.strip())
 	except:
 			raise InvalidFormat
-	return j
+			return
+	return copy.copy(j)
