@@ -238,12 +238,26 @@ class Plugin(plugins.PluginBase):
 				elif self.typ=="album":
 					self.main.showFiletransferDialog(file, 'album@disk.jabbim.cz')
 			event.acceptProposedAction()
+		elif event.mimeData().hasText():
+			# test if it is JID
+			jid2=self.main.getJid(unicode(event.mimeData().text()))
+			if not jid2:
+				event.ignore()
+				return
+			else:
+				self.window.ui.line_jid.setText(unicode(jid2.userhost()))
+				event.acceptProposedAction()
 
 	def dragMoveEvent(self, event):
 		event.acceptProposedAction()
 	def dragEnterEvent(self, event):
 		if event.mimeData().hasText() or event.mimeData().hasFormat("text/uri-list"):
 			event.acceptProposedAction()
+		elif event.mimeData().hasText():
+			if self.main.getJid(unicode(event.mimeData().text())):
+				event.acceptProposedAction()
+			else:
+				event.ignore()
 		else:
 			event.ignore()	
 			
@@ -514,7 +528,7 @@ class Plugin(plugins.PluginBase):
 				if sys.platform == 'win32':
 					os.startfile(filename)
 				else:
-					os.system("xdg-open %s" % filename.encode('utf8'))
+					os.system(u"xdg-open %s" % filename.encode('utf8'))
 			
 
 	def clicked(self,item,old):
