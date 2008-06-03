@@ -525,10 +525,11 @@ class Plugin(plugins.PluginBase):
 			if self.main.allowedJids.has_key(text+"/"+self.main.client.ft[sid].fileprops['name']):
 				del self.main.allowedJids[text+"/"+self.main.client.ft[sid].fileprops['name']]
 			if error==None:
-				print "open",filename
 				if sys.platform == 'win32':
+					print "open win32",filename
 					os.startfile(filename)
 				else:
+					print "open linux",filename
 					os.system(u"xdg-open \"%s\"" % filename.encode('utf8'))
 			
 
