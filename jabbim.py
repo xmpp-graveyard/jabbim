@@ -1166,6 +1166,7 @@ class clientClass(pyxl.client.Client):
 
 		# get chatwidget of this conversation
 		if self.groupchats.has_key(frm.userhost()):
+			print "looking for",frm.full()
 			tab,tabIndex=self.main.chat.findTab(frm.full(),True)
 			user=frm.resource
 		else:
@@ -1333,6 +1334,7 @@ class clientClass(pyxl.client.Client):
 		if pixmap==None:
 			return None
 		# self avatar
+		print "update avatar for",[jid]
 		if unicode(self.jid.userhost())==unicode(jid):
 			avatar=self.main.getAvatar(pixmap,size="64x64",frame=True)
 			self.main.selfAvatar=pixmap
