@@ -906,9 +906,9 @@ class Client(derived):
 		
 		log.msg( 'roster arrived')
 		self.sendPresence()
-		cekej = 20
-		if ln*0.05 < cekej:
-			cekej = ln*0.05
+		cekej = 1
+#		if ln*0.05 < cekej:
+#			cekej = ln*0.05
 		self.reactor.callFromThread(self.on_rosterArrived)
 		self.reactor.callLater(cekej,  self.onFirstPresence)
 
