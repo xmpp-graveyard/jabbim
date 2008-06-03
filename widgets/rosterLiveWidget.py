@@ -1747,7 +1747,8 @@ class rosterWidget(QtGui.QWidget):
 		pass
 
 	def setStatus(self,jid,show,i=None,status=None,first=False):
-
+		if not self.main.client.roster['users'].has_key(jid):
+			return
 		res = self.main.client.roster['users'][jid].getHighestResource()
 		if res!=None:
 			res=self.main.client.roster['users'][jid].resources[res]

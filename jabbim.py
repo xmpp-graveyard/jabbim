@@ -828,6 +828,8 @@ class clientClass(pyxl.client.Client):
 					self.main.buildOfflineMenu()
 			# set status in roster
 			self.main.ui.roster.setStatus(jid.userhost(),show,first=first)
+			if jid.resource:
+				self.main.ui.roster.setStatus(jid.full(),show,first=first)
 
 			# we have opened conversation with this resource
 			if tabFull:
@@ -867,6 +869,7 @@ class clientClass(pyxl.client.Client):
 				# update contact in roster
 				try:
 					self.main.ui.roster.setStatus(jid.userhost(),highest.show,status=highest.status,first=first)
+					self.main.ui.roster.setStatus(jid.full(),highest.show,status=highest.status,first=first)
 				except:
 					print 'Error in resource ', jid.userhost()
 			else:
