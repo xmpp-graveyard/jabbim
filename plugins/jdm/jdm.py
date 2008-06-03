@@ -464,8 +464,9 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.list.setGridSize(QtCore.QSize(128,96))
 		elif self.typ=="album":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listAlbum', (self.jid,)).addCallback(self.updateView)
-			self.window.ui.list.setIconSize(QtCore.QSize(128,128))
-			self.window.ui.list.setGridSize(QtCore.QSize(160,160))
+			if self.config['iconMode']=="True":
+				self.window.ui.list.setIconSize(QtCore.QSize(128,128))
+				self.window.ui.list.setGridSize(QtCore.QSize(160,160))
 
 		if self.jid != self.main.client.jid.userhost():
 			self.window.ui.buttonDelete.setEnabled(False)
