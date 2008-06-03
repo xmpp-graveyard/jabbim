@@ -30,6 +30,7 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.add_nickname.setText(unicode(name))
 
 		if jid != '' and jid != False:
+			jid=self.main.getJid(jid).userhost()
 			self.ui.add_jid.setText(unicode(jid))
 
 		if not self.add:
