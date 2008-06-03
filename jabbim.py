@@ -1349,8 +1349,11 @@ class clientClass(pyxl.client.Client):
 
 		# set avatar for contacts in MUC
 		jid = jidT.JID(jid)
+		print "avatar look for",jid.userhost()
 		w,i=self.main.chat.findTab(jid.userhost(),False,['groupchat'])
+		print w
 		if w:
+			print [jid.resource]
 			for item in w.chat.getUserItems(jid.resource):
 				text=unicode(item.text(1))
 				if len(text)!=0:

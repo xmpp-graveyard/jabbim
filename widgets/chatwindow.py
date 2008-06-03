@@ -266,6 +266,8 @@ class chatWindow(QtGui.QMainWindow):
 		if full==True:
 			for i in range(self.ui.chatTab.count()):
 				w=self.ui.chatTab.widget(i)
+				print w.tabName,w.jid
+				print "compare",self.main.getJid(w.jid).full(),self.main.getJid(jid).full(),self.main.getJid(w.jid).full()==self.main.getJid(jid).full()
 				if self.main.getJid(w.jid).full()==self.main.getJid(jid).full() and w.typ in typ:
 					return w,i # tab, index
 		elif full==False:
@@ -573,9 +575,13 @@ class chatWindow(QtGui.QMainWindow):
 				#tabjid=""
 			#if tabjid==jid:
 		if full:
+			print "finding",jid
 			tab,index=self.findTab(jid,full)
+			print tab
 		else:
+			print "finding",jid
 			tab,index=self.findTab(jid,None)
+			print tab
 		if tab:
 			self.show()
 			self.raise_()
