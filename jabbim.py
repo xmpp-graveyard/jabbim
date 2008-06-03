@@ -4055,6 +4055,12 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				resource='jabbim'
 			self.client = clientClass(unicode(jid).lower()+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
+			path = self.realHomeDir+'/avatars/'
+			if self.client.avatarDef.has_key(self.client.jid.userhost()):
+				self.client.avatarImg[self.client.avatarDef[self.client.jid.userhost()]] = self.loadAvatar(self.client.avatarDef[self.client.jid.userhost()])
+
+			d=threads.deferToThread(self.loadAvatars,unicode(path),dict(self.client.avatarDef))
+			d.addCallback(self.gotAvatars)
 			try:
 				self.client.xmlLang= unicode(QtCore.QLocale.system().name())[:2]
 			except:
@@ -4084,6 +4090,72 @@ class mainWindow(QtGui.QMainWindow):
 		#else:
 			#log.msg("BAD FILE FOR AVATAR:"+unicode(file))
 		#self.client.roster['users'][jid].setAvatar(file, hash)
+
+
+	def loadAvatars(self,path,avatarDef):
+		avatarImg={}
+
+		hashe = []
+		try:
+			for hash in avatarDef.itervalues():
+				if not hash in hashe and hash and hash!="None":
+					hashe.append(unicode(str(hash)))
+		except:
+			message = unicode(traceback.format_exc(), 'utf-8')
+			print message
+#		path = self.main.homeDir+'/avatars/'
+		print "loadAvatars",hashe
+		for hash in hashe:
+			try:
+				#self.avatarImg[hash] = self.main.getAvatar(hash)
+				avatar=QtGui.QImage(path+'/'+hash)
+				width=int(avatar.width())
+				height=int(avatar.height())
+				avatar=avatar.scaled(25,25,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
+				result=QtGui.QImage(32,32,QtGui.QImage.Format_ARGB32)
+				result.fill(QtCore.Qt.transparent)
+				#if os.path.exists("themes/"+self.config['theme']+"/frame-32.png"):
+					#frame=QtGui.QImage("themes/"+self.config['theme']+"/frame-32.png")
+				#else:
+				frame=QtGui.QImage("images/32x32/frame.png")
+				painter=QtGui.QPainter(result)
+				painter.drawImage((32-avatar.width())/2,(32-avatar.height())/2,avatar)
+				painter.drawImage(0,0,frame)
+				painter.end()
+				avatarImg[hash] = [result,width,height]
+			except:
+				avatarImg[hash] = None
+				message = unicode(traceback.format_exc(), 'utf-8')
+				print message
+		return avatarImg
+
+	def loadAvatar(self,hash):
+		path=self.realHomeDir+"/avatars"
+		avatar=QtGui.QImage(path+'/'+hash)
+		width=int(avatar.width())
+		height=int(avatar.height())
+		avatar=avatar.scaled(25,25,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
+		result=QtGui.QImage(32,32,QtGui.QImage.Format_ARGB32)
+		result.fill(QtCore.Qt.transparent)
+		#if os.path.exists("themes/"+self.config['theme']+"/frame-32.png"):
+			#frame=QtGui.QImage("themes/"+self.config['theme']+"/frame-32.png")
+		#else:
+		frame=QtGui.QImage("images/32x32/frame.png")
+		painter=QtGui.QPainter(result)
+		painter.drawImage((32-avatar.width())/2,(32-avatar.height())/2,avatar)
+		painter.drawImage(0,0,frame)
+		painter.end()
+		return [QtGui.QPixmap.fromImage(result),width,height]
+
+	def gotAvatars(self,avatarImg):
+		self.client.avatarImg=avatarImg
+		for key in self.client.avatarImg.keys():
+			self.client.avatarImg[key][0]=QtGui.QPixmap.fromImage(self.client.avatarImg[key][0])
+			#print 'avatarSize',self.client.avatarImg[key].width(),self.client.avatarImg[key][0].height()
+		self.client.avatarImg[None]=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
+		self.client.avatarImg[u'None']=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
+		print 'LOADED AVATARS',self.client.avatarImg
+
 	
 	def _addGroup(self, group):
 		item=self.ui.roster.addGroup(unicode(group))
