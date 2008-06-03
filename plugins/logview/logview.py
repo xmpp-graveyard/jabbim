@@ -64,6 +64,7 @@ class Plugin(plugins.PluginBase):
 	
 	def execute(self):
 		code = unicode(self.window.ui.input.toPlainText ())
+		self.window.ui.logView.append(self.window.ui.input.toPlainText ())
 		self.history.append(code)
 		self.window.ui.input.setText('')
 		exec(code)

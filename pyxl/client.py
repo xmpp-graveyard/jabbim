@@ -97,7 +97,7 @@ class Client(derived):
 		self.discofeatures = {} # node: [feature1, feature2]
 		self.discoitems = {None:[],"http://jabber.org/protocol/commands":[]}
 		self.ft_proxies = {
-		'proxy.jabbim.cz':["77.93.199.141", "7777"] 
+		'proxy.jabbim.cz':[] 
 		}
 		self.ft = {}
 		self.last = 0
