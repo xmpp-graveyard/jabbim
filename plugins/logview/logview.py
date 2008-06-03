@@ -4,6 +4,12 @@ from include import plugins
 from PyQt4 import QtCore, QtGui
 from twisted.python import log
 
+class config:
+	def __init__(self,main):
+		self.main=main
+		self.config={}
+		self.config['notify']={'type':'boolean','label':self.main.tr("Notify on error?"),'value':'False'}
+		
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
@@ -11,11 +17,11 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Extra debug window'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'LogView Plugin'
-		self.version = '0.04'
+		self.version = '0.042'
 		self.category = ['log', 'misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.history = []
-		#self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
+		self.configDialog=config(self)
 		if main:
 			self.loadConfig()
 			self.window = self.loadWindow("%s/logWindow.ui.py" % self.pluginDir)
@@ -50,7 +56,7 @@ class Plugin(plugins.PluginBase):
 	
 	def observer(self, msg):
 		self.window.ui.logView.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']))))
-		if msg['isError']:
+		if msg['isError'] and self.config['notify'] == 'True':
 			self.main.tray.showMessage(self.main.tr("Log"),unicode(' '.join(msg['message'])), QtGui.QSystemTrayIcon.Warning, 2000)
 	
 	def clearLog(self):
