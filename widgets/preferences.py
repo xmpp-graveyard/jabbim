@@ -38,7 +38,7 @@ from twisted.words.xish import domish
 import traceback
 from extra import extraDialog
 from os.path import basename
-from twisted.words.protocols.jabber import jid as jidT
+from pyxl import jid as jidT
 
 
 class pluginConfiguration(QtGui.QDialog):

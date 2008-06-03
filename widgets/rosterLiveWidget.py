@@ -22,7 +22,7 @@ try: from PyQt4 import QtCore, QtGui
 except: print "PyQt4 is not installed."
 from os.path import basename
 from twisted.python import log
-from twisted.words.protocols.jabber import jid as jidT
+from pyxl import jid as jidT
 import time
 import filetransfer
 import albumfiletransfer

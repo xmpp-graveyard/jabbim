@@ -26,7 +26,7 @@ from chatwidget import *
 from groupchat import *
 from include import utils
 import os
-from twisted.words.protocols.jabber import jid as jidT
+from pyxl import jid as jidT
 from leaveroom_ui import *
 import ctypes
 from ctypes.util import find_library

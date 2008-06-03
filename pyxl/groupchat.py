@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 from twisted.words.xish import domish
-from twisted.words.protocols.jabber import jid as jidT
+import jid as jidT
 from twisted.words.protocols.jabber.xmlstream import IQ
 
 class Groupchat:

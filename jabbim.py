@@ -74,7 +74,7 @@ from urllib import quote, unquote
 from include import plugins
 from os.path import basename,dirname, isfile
 from twisted.words.protocols.jabber.xmlstream import IQ
-from twisted.words.protocols.jabber import jid as jidT
+from pyxl import jid as jidT
 import ctypes
 from twisted.web.microdom import parseString,Element
 from twisted.web.client import downloadPage

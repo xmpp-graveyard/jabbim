@@ -9,7 +9,7 @@ import urllib,re,os
 from twisted.web.microdom import *
 from twisted.web.domhelpers import gatherTextNodes
 import filetransfer
-from twisted.words.protocols.jabber import jid as jidT
+from pyxl import jid as jidT
 import time
 from include import utils
 from emoticonswidget import *
