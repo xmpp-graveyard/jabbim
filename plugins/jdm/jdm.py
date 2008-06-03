@@ -514,7 +514,7 @@ class Plugin(plugins.PluginBase):
 				if sys.platform == 'win32':
 					os.startfile(filename)
 				else:
-					os.system("xdg-open %s" % filename)
+					os.system("xdg-open %s" % filename.encode('utf8'))
 			
 
 	def clicked(self,item,old):
