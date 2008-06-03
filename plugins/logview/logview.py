@@ -14,6 +14,7 @@ class Plugin(plugins.PluginBase):
 		self.version = '0.04'
 		self.category = ['log', 'misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
+		self.history = []
 		#self.config['notify'] = {'description':'', 'default':'True', 'value': '','type':'boolean'}
 		if main:
 			self.loadConfig()
@@ -22,6 +23,7 @@ class Plugin(plugins.PluginBase):
 			self.log = False
 			QtCore.QObject.connect(self.window.ui.enableBox, QtCore.SIGNAL("stateChanged(int)"),self.enableToggled)
 			QtCore.QObject.connect(self.window.ui.clearButton, QtCore.SIGNAL("clicked()"),self.clearLog)
+			QtCore.QObject.connect(self.window.ui.execute, QtCore.SIGNAL("clicked()"),self.execute)
 		else:
 			self.loadConfig(homedir)
 	
@@ -53,3 +55,9 @@ class Plugin(plugins.PluginBase):
 	
 	def clearLog(self):
 		self.window.ui.logView.setText('')
+	
+	def execute(self):
+		code = unicode(self.window.ui.input.toPlainText ())
+		self.history.append(code)
+		self.window.ui.input.setText('')
+		exec(code)
