@@ -264,13 +264,13 @@ class Plugin(plugins.PluginBase):
 	def fileMenu(self,pos):
 		items=self.window.ui.list.selectedItems()
 		self.menu=QtGui.QMenu()
-		action=self.menu.addAction(self.tr("Show files as icons"))
-		action.setCheckable(True)
-		if self.config['iconMode']=="True":
-			action.setChecked(True)
-		else:
-			action.setChecked(False)
-		QtCore.QObject.connect(action,QtCore.SIGNAL("triggered ( bool)"),self.setIconMode)
+		#action=self.menu.addAction(self.tr("Show files as icons"))
+		#action.setCheckable(True)
+		#if self.config['iconMode']=="True":
+			#action.setChecked(True)
+		#else:
+			#action.setChecked(False)
+		#QtCore.QObject.connect(action,QtCore.SIGNAL("triggered ( bool)"),self.setIconMode)
 		if len(items)!=0:
 			if len(items)>1:
 				self.menu.addAction(self.tr("Download files"),self.downloadCurrentFile)
@@ -284,7 +284,7 @@ class Plugin(plugins.PluginBase):
 					self.menu.addAction(self.tr("Remove file"),self.removeCurrentFile)
 				if self.typ!="private":
 					self.menu.addAction(self.tr("Copy link to clipboard"),self.copyToClipboard)
-		self.menu.popup(self.window.ui.list.mapToGlobal(pos))
+			self.menu.popup(self.window.ui.list.mapToGlobal(pos))
 
 	def copyToClipboard(self):
 		items=self.window.ui.list.selectedItems()
