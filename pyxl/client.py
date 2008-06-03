@@ -27,7 +27,8 @@ from socket import getaddrinfo
 import socket
 from twisted.internet import threads, defer, reactor
 from twisted.words.protocols import jabber
-from twisted.words.protocols.jabber import client,jid
+from twisted.words.protocols.jabber import client
+import jid
 from twisted.words.xish import domish
 from twisted.words.xish.domish import Element
 ##from twisted.internet import reactor, address

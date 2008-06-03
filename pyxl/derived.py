@@ -19,7 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 from twisted.python import log
 from twisted.words.protocols import jabber
-from twisted.words.protocols.jabber import client,jid
+from twisted.words.protocols.jabber import client
+import jid
 from twisted.words.xish import domish
 from twisted.words.xish.domish import Element
 from twisted.words.protocols.jabber.xmlstream import IQ
