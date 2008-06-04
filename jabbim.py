@@ -131,7 +131,7 @@ class clientClass(pyxl.client.Client):
 				for item in self.main.ui.roster.getUserItems(frm):
 					item.mood=None
 			self.main.ui.roster.repaint()
-			if self.main.moodIcons.has_key(m):
+			if self.main.moodIcons.has_key(m) and frm == self.jid.userhost() : #our own mood
 				self.main.ui.moodButton.setIcon(self.main.moodIcons[m])
 			#if self.main.moodMenu.currentAction:
 				#font=self.main.moodMenu.currentAction.font()
