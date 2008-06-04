@@ -516,7 +516,7 @@ class Plugin(plugins.PluginBase):
 			text="private@disk.jabbim.cz"
 		elif self.typ=="album":
 			text="album@disk.jabbim.cz"
-		filename=self.main.client.ft[sid].file
+		filename=unicode(self.main.client.ft[sid].file)
 		if error == None and self.main.client.ft[sid].tojid.find(text)!=-1 and not filename in self.filesToOpen:
 			self.update=True
 			self.call(typ=self.typ)
@@ -526,10 +526,10 @@ class Plugin(plugins.PluginBase):
 				del self.main.allowedJids[text+"/"+self.main.client.ft[sid].fileprops['name']]
 			if error==None:
 				if sys.platform == 'win32':
-					print "open win32",filename
+					print "open win32",[filename]
 					os.startfile(filename)
 				else:
-					print "open linux",filename
+					print "open linux",[filename]
 					os.system(u"xdg-open \"%s\"" % filename.encode('utf8'))
 			
 

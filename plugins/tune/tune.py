@@ -96,6 +96,7 @@ class Plugin(plugins.PluginBase):
 					out = {}
 		elif self.config['player'] == 'amarok':
 			try:
+				#commands.getoutput("sleep 15")
 				out['artist'] = unicode(commands.getoutput("dcop amarok player artist"), "utf-8")
 				out['title'] = unicode(commands.getoutput("dcop amarok player title"), "utf-8")
 			except:
