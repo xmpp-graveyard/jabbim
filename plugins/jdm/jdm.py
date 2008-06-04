@@ -377,7 +377,7 @@ class Plugin(plugins.PluginBase):
 			if self.typ=="album":
 				self.thumbs[name]=item
 		data=self.thumbs.keys()
-		if self.typ=="album":
+		if self.typ=="album" and len(data)!=0:
 			self.stopDownload=False
 			self.window.ui.progress.setValue(0)
 			self.window.ui.progress.setMaximum(len(data))
@@ -464,9 +464,9 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.list.setGridSize(QtCore.QSize(128,96))
 		elif self.typ=="album":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listAlbum', (self.jid,)).addCallback(self.updateView)
-			if self.config['iconMode']=="True":
-				self.window.ui.list.setIconSize(QtCore.QSize(128,128))
-				self.window.ui.list.setGridSize(QtCore.QSize(160,160))
+			#if self.config['iconMode']=="True":
+			self.window.ui.list.setIconSize(QtCore.QSize(128,128))
+			self.window.ui.list.setGridSize(QtCore.QSize(160,160))
 
 		if self.jid != self.main.client.jid.userhost():
 			self.window.ui.buttonDelete.setEnabled(False)
