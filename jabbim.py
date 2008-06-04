@@ -29,6 +29,9 @@ try:
 except:
 	USE_WIZARDS=False
 import qt4reactor
+if sys.platform=="win32":
+	import win32gui
+
 
 class jabbimApplication(QtGui.QApplication):
 	"""
