@@ -16,36 +16,33 @@ class config:
 		self.config={}
 		if sys.platform == 'win32':
 			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'Winamp':'winamp' }, 'value':'winamp'}
+			
 		else:
 			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Winamp':'winamp', 'Amarok':'amarok','Exaile':'exaile' }, 'value':'amarok'}
 
 class Plugin(plugins.PluginBase):
-    def __init__(self, main, homedir, plugindir):
-        plugins.PluginBase.__init__(self, main, homedir, plugindir)
-        self.fname = 'tune'
-        self.description = 'Plugin for User Tune'
-        self.author = "Jiri 'Sef' Gabrys + Josef 'PepeQ' Halicek"
-        self.name = 'tune'
-        self.version = '0.23'
-        self.category = ['utils']
-        self.configDialog=config(self)
-        self.url = 'http://dev.jabbim.cz/jabbim'
-        self.loop = LoopingCall(self.check)
-        self.last = {}
+	def __init__(self, main, homedir, plugindir):
+		plugins.PluginBase.__init__(self, main, homedir, plugindir)
+		self.fname = 'tune'
+		self.description = 'Plugin for User Tune'
+		self.author = "Jiri 'Sef' Gabrys + Josef 'PepeQ' Halicek"
+		self.name = 'tune'
+		self.version = '0.23'
+		self.category = ['utils']
+		self.configDialog=config(self)
+		self.url = 'http://dev.jabbim.cz/jabbim'
+		self.loop = LoopingCall(self.check)
+		self.last = {}
+		if main:
+			self.loadConfig()
+			self.loop.start(30)
+		else:
+			self.loadConfig(homedir)
 
-        if main:
-
-            self.loadConfig()
-            self.loop.start(30)
-
-        else:
-            self.loadConfig(homedir)
-    
-    def on_remove(self):
-    	self.loop.stop()
-    
-    def check(self):
-  		out = {}
+	def on_remove(self):
+		self.loop.stop()
+	def check(self):
+		out = {}
 		if self.config['player'] == 'mpd':
 			try:
 				output = commands.getoutput('mpc status 2>/dev/null')
@@ -94,6 +91,7 @@ class Plugin(plugins.PluginBase):
 				out['title'] = parts[1]
 				if text.find('[Stopped]')!= -1:
 					out = {}
+
 		elif self.config['player'] == 'amarok':
 			try:
 				#commands.getoutput("sleep 15")
@@ -112,7 +110,6 @@ class Plugin(plugins.PluginBase):
 		if out != self.last and self.main.client.xmlstream != None:
 			self.main.client.sendPEP('http://jabber.org/protocol/tune', self.main.client.getTunePayload(out))
 			self.last = out
-    			
 
 
 # EOF
