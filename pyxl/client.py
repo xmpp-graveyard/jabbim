@@ -461,7 +461,6 @@ class Client(derived):
 		d=self.getDiscoInfo(self.jid.host, callback = self._pepSupport)
 		self.getDiscoItems(self.jid.host, callback = self._gotServices)
 #		self.reactor.callFromThread(self.on_authd)
-		self.dispatcher.publishEvent('on_authd')
 		self.roster['users'][self.jid.userhost()] = Contact(self, self.jid.userhost(), '', 'both', [], []) #add selfcontact to our representation of roster
 		self.reactor.callLater(0,self.main._connected)
 		#self.main._connected()
@@ -479,6 +478,7 @@ class Client(derived):
 #		def pis(co):
 #			print co
 #		self.callRemote('rpc@jabbim.cz/service', 'getFile', ('smileys/white.zip',)).addCallback(pis)
+		self.dispatcher.publishEvent('on_authd')
 
 	def _gotServices(self, res):
 		for jid in self.disco[self.jid.host][None]['items'].iterkeys():
