@@ -526,6 +526,7 @@ class Plugin(plugins.PluginBase):
 				del self.main.allowedJids[text+"/"+self.main.client.ft[sid].fileprops['name']]
 			if error==None:
 				if sys.platform == 'win32':
+					filename=filename.replace("/","\\")
 					print "open win32",[filename]
 					os.startfile(filename)
 				else:
