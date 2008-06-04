@@ -1472,7 +1472,12 @@ class AvatarLabel(QtGui.QLabel):
 			text = self.main.getToolTip(self.main.client.jid.userhost())
 			self.setToolTip(text)
 			# set tooltip also for tray icon
-			self.main.tray.setToolTip(text)
+			if sys.platform == 'win32':
+				#contact = self.main.client.getContactByJid(jid)
+				text=unicode(self.main.status.get(self.main.selfStatus, ''))
+				self.main.tray.setToolTip(text)
+			else:
+				self.main.tray.setToolTip(text)
 
 
 
