@@ -27,7 +27,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Jabbim disk manager'
 		self.author = u"Josef 'Pepeq' Halíček"
 		self.name = 'JDM Plugin'
-		self.version = '0.1147'
+		self.version = '0.1148'
 		self.category = ['utils']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.installTranslator()
@@ -293,9 +293,9 @@ class Plugin(plugins.PluginBase):
 		text=""
 		for item in items:
 			if self.typ=="public":
-				text+="http://disk.jabbim.cz/"+self.jid+"/"+unicode(item.text())+"\n"
+				text+="http://disk.jabbim.cz/"+self.jid+"/"+unicode(item.text().replace(" ", "%20"))+"\n"
 			elif self.typ=="album":
-				text+="http://album.jabbim.cz/"+self.jid+"/"+unicode(item.text())+"\n"
+				text+="http://album.jabbim.cz/"+self.jid+"/"+unicode(item.text().replace(" ", "%20"))+"\n"
 		QtGui.QApplication.clipboard().setText(text[:-1])
 
 	def downloadCurrentFile(self):
