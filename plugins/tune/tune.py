@@ -2,7 +2,8 @@
 
 import sys, os, time
 sys.path.append('.')
-import commands
+if sys.platform != 'win32':
+	import commands
 
 from PyQt4 import QtCore, QtGui
 from twisted.python import log
@@ -13,7 +14,10 @@ class config:
 	def __init__(self,main):
 		self.main=main
 		self.config={}
-		self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Winamp':'winamp', 'Amarok':'amarok','Exaile':'exaile' }, 'value':'mpd'}
+		if sys.platform == 'win32':
+			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'Winamp':'winamp' }, 'value':'winamp'}
+		else:
+			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Winamp':'winamp', 'Amarok':'amarok','Exaile':'exaile' }, 'value':'amarok'}
 
 class Plugin(plugins.PluginBase):
     def __init__(self, main, homedir, plugindir):
