@@ -170,7 +170,7 @@ class Client(derived):
 		self.socks5Port = '33333'
 		self.socks5IP = [] #
 		self.pep = False
-		self.reactor.callFromThread(self.on_init)	
+		#self.reactor.callFromThread(self.on_init)
 
 
 	def chyba(self, err):
@@ -254,6 +254,7 @@ class Client(derived):
 		self.idlist = []
 		self.hbFails = 0
 		self.discoitems = {None:[],"http://jabber.org/protocol/commands":[]}
+		self.reactor.callFromThread(self.on_init)
 
 		
 		if boshURL != '':
