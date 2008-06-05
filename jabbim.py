@@ -4195,7 +4195,7 @@ class mainWindow(QtGui.QMainWindow):
 			if self.client.factory:
 				self.client.factory.stopTrying()
 			
-
+		self.config.write()
 		MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
 		MainWindow.ui.showOffline.hide()
 		MainWindow.ui.actionAdd_Contact.setEnabled(False)
