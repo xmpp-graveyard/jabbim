@@ -94,6 +94,7 @@ class Client(derived):
 		self.client_os = ''
 		self.caps_node = 'http://dev.jabbim.cz/jabbim/caps'
 		self.caps_version = self.version
+		self.isVip=False
 		
 		self.discofeatures = {} # node: [feature1, feature2]
 		self.discoitems = {None:[],"http://jabber.org/protocol/commands":[]}
@@ -254,6 +255,7 @@ class Client(derived):
 		self.idlist = []
 		self.hbFails = 0
 		self.discoitems = {None:[],"http://jabber.org/protocol/commands":[]}
+		self.isVip=False
 		self.reactor.callFromThread(self.on_init)
 
 		
@@ -487,8 +489,11 @@ class Client(derived):
 #		print 'post commands'
 #		def pis(co):
 #			print co
-#		self.callRemote('rpc@jabbim.cz/service', 'getFile', ('smileys/white.zip',)).addCallback(pis)
+		self.callRemote('rpc@jabbim.cz/service', 'isVIP', (self.jid.userhost(),)).addCallback(self._isVip)
 		self.dispatcher.publishEvent('on_authd')
+
+	def _isVip(self,data):
+		print 'vip',data
 
 	def _gotServices(self, res):
 		for jid in self.disco[self.jid.host][None]['items'].iterkeys():
