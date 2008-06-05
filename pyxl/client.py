@@ -246,6 +246,15 @@ class Client(derived):
 
 
 	def connect(self, host = None, port = '5222', boshURL = ''):
+		#cleanup
+		self.roster = {'users':{},'groups':{}}
+		self.first_presence = []
+		self.first_wait = True
+		self.bookmarks = {'conference':{}, 'url': {}}
+		self.idlist = []
+		self.hbFails = 0
+		self.discoitems = {None:[],"http://jabber.org/protocol/commands":[]}
+
 		
 		if boshURL != '':
 			try:
@@ -791,6 +800,7 @@ class Client(derived):
 		log.msg( 'roster arrived')
 		ln = 0
 		hosts = [] #for disco info
+		
 		for child in el.elements():
 			if child.name == "query":
 				allGroups=['Unknown']

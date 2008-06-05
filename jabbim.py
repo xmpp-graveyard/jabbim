@@ -4240,7 +4240,7 @@ class mainWindow(QtGui.QMainWindow):
 						w.chat.addRoles()
 						message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",unicode(self.tr("You are now offline.")))
 						w.chat.textEditWrite(message)
-		MainWindow.client = None
+#		MainWindow.client = None
 		self.buildTrayMenu()
 		if error == 'lost' and MainWindow.reconnect:
 			self.reconnect = False
@@ -4253,7 +4253,7 @@ class mainWindow(QtGui.QMainWindow):
  			# connection lost, let's wait for a while and then reconnect
 			MainWindow.tray.showMessage(self.tr("Connection lost! "),self.tr("Trying to reconnect ..  ") , QtGui.QSystemTrayIcon.Warning, 5000)
  			MainWindow.plugins={}
- 			MainWindow.client = None
+# 			MainWindow.client = None
 			log.err('Connection Lost')
 			if msg != None and len(msg)>0:
 				MainWindow.delayedMessages = msg
