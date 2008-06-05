@@ -493,7 +493,8 @@ class Client(derived):
 		self.dispatcher.publishEvent('on_authd')
 
 	def _isVip(self,data):
-		print 'vip',data
+		if int(data[0][0])==1:
+			self.isVip=True
 
 	def _gotServices(self, res):
 		for jid in self.disco[self.jid.host][None]['items'].iterkeys():
