@@ -531,7 +531,7 @@ class events:
 		else:
 			if self.main.selfStatus!="":
 				data=self.main.selfStatus
-				mainWindow.tray.setToolTip(mainWindow.tr('Your status:')+" "+self.main.status[data])
+				mainWindow.tray.setToolTip(unicode(mainWindow.tr('Your status:'))+" "+unicode(self.main.status[data]))
 			else:
 				mainWindow.tray.setToolTip('')
 		for event in self.events:
@@ -647,13 +647,13 @@ class events:
 		# get event height (based on font size)
 		metrics=QtGui.QApplication.fontMetrics()
 		mainWindow=self.main
-		text=mainWindow.tr('JID:')+" "+unicode(jid)+"<br/>"+mainWindow.tr("Message: ")+"<i>"+unicode(status)+'</i>'
+		text=mainWindow.tr('JID:')+" "+unicode(jid)+"<br/>"+unicode(mainWindow.tr("Message: "))+"<i>"+unicode(status)+'</i>'
 		rect=metrics.boundingRect(0, 0,self.main.width(), self.main.height(), QtCore.Qt.TextWordWrap, text)
 		height=metrics.height()+rect.height()+metrics.height()+10
 		# make event
 		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		item.setSizeHint(QtCore.QSize(100,height))
-		item.widget=AddUserWidget("<b>"+mainWindow.tr('Add contact?')+"</b>",text,item,self.main,self.main.client._onSubscribe,[jid,'online',False],self.main.client.sendPresence,[jid,None,'online',None,'unsubscribed'],self.main.ui.eventsListWidget,height)
+		item.widget=AddUserWidget("<b>"+unicode(mainWindow.tr('Add contact?'))+"</b>",text,item,self.main,self.main.client._onSubscribe,[jid,'online',False],self.main.client.sendPresence,[jid,None,'online',None,'unsubscribed'],self.main.ui.eventsListWidget,height)
 		item.widget.jid=jid
 		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
 		self.addEvent(unicode(jid),unicode('subscribe'),None,item.widget)
@@ -661,7 +661,7 @@ class events:
 	def addSubscribeEvent(self,jid,status):
 		#	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None, caps = True):
 		mainWindow=self.main
-		self.addBooleanEvent(self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],header=mainWindow.tr('Subscribe request'),text=mainWindow.tr('From:')+" "+unicode(jid),name=jid,typ="subscribe")
+		self.addBooleanEvent(self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],header=unicode(mainWindow.tr('Subscribe request')),text=unicode(mainWindow.tr('From:'))+" "+unicode(jid),name=jid,typ="subscribe")
 
 	def isImage(self,file):
 		if unicode(file).lower().endswith('.jpg'):
@@ -741,12 +741,12 @@ class events:
 			tab,index=self.main.chat.findTab(jid+'/'+res,typ=['chat'])
 		
 		mainWindow=self.main
-		mainWindow.tray.showMessage(mainWindow.tr("Sending file ")+basename(file)+mainWindow.tr(" to ")+unicode(jid), mainWindow.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
+		mainWindow.tray.showMessage(unicode(mainWindow.tr("Sending file "))+basename(file)+mainWindow.tr(" to ")+unicode(jid), mainWindow.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
 		
 		if tab:
 			tab.chat.filetransfer[sid]=chatwidget.FTWidget(text,None,self.main,sid,tab.chat.ui.ftwidget)
 			tab.chat.ui.ftwidget.layout().addWidget(tab.chat.filetransfer[sid])
-			tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("Sending file")+" "+basename(file)))
+			tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',unicode(mainWindow.tr("Sending file"))+" "+basename(file)))
 		self.filetransferQueue[sid]=filesQueue
 		#self.main.filetransferDescriptions[sid]=descriptions
 		self.filetransferWidget[sid]=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
@@ -781,7 +781,7 @@ class events:
 		if tab:
 			tab.chat.filetransfer[sid]=chatwidget.FTWidget(text,None,self.main,sid,tab.chat.ui.ftwidget)
 			tab.chat.ui.ftwidget.layout().addWidget(tab.chat.filetransfer[sid])
-			tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("Receiving file")+" "+unicode(basename(file))))
+			tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',unicode(mainWindow.tr("Receiving file"))+" "+unicode(basename(file))))
 
 		self.filetransferWidget[sid]=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		self.filetransferWidget[sid].download=True
@@ -849,7 +849,7 @@ class events:
 			if tab.chat.filetransfer.has_key(queueId):
 				tab.chat.filetransfer[queueId].reinit(text,None,self.main,sid2,self.main.ui.eventsListWidget,"("+str(self.filetransferWidget[queueId].sent)+"/"+str(self.filetransferWidget[queueId].all)+")")#=FTWidget(text,item,self.main,sid2,self.main.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")
 				tab.chat.filetransfer[queueId].setMinimumHeight(height)
-				tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("Sending file")+" "+basename(file)))
+				tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',unicode(mainWindow.tr("Sending file"))+" "+unicode(basename(file))))
 		self.filetransferWidget[queueId].setSizeHint(QtCore.QSize(100,height))
 		self.filetransferWidget[queueId].file=file
 		self.filetransferWidget[queueId].jid=jid

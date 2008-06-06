@@ -267,19 +267,19 @@ class clientClass(pyxl.client.Client):
 						elif self.main.ftError[sid].lower()=='canceled':
 							widget.widget.progressBar.setValue(0)
 							widget.widget.stats.setText(mainWindow.tr("File declined"))
-							self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("User declined to receive file")+" "+basename(unicode(widget.file)), QtGui.QSystemTrayIcon.Critical, 4000)
+							self.main.tray.showMessage(mainWindow.tr('File transfer'),unicode(mainWindow.tr("User declined to receive file"))+" "+basename(unicode(widget.file)), QtGui.QSystemTrayIcon.Critical, 4000)
 							# inform user in chatwidget too, if there is some opened conversation with recipient
 							if tab:
-								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("User declined to receive file")+" "+basename(unicode(widget.file))))
+								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',unicode(mainWindow.tr("User declined to receive file"))+" "+basename(unicode(widget.file))))
 						# unknown error
 						else:
 							widget.widget.progressBar.setValue(0)
 							widget.widget.stats.setText(mainWindow.tr("Error")+" "+unicode(self.main.ftError[sid]))
-							self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+mainWindow.tr(" can't be sent "), QtGui.QSystemTrayIcon.Critical, 4000)
+							self.main.tray.showMessage(mainWindow.tr('File transfer'),unicode(mainWindow.tr("File "))+unicode(widget.file)+unicode(mainWindow.tr(" can't be sent ")), QtGui.QSystemTrayIcon.Critical, 4000)
 							# inform user in chatwidget too, if there is some opened conversation with recipient
 							if tab:
 								file=self.main.events.filetransferWidget[queueId].file
-								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('can\'t be sent:')+" "+unicode(self.main.ftError[sid])))
+								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',unicode(mainWindow.tr("File "))+" "+basename(file)+" "+unicode(mainWindow.tr('can\'t be sent:'))+" "+unicode(self.main.ftError[sid])))
 						# some files are in queue, so we have to start to upload next file
 						if not emptyQueue:
 							self.main.events.nextFTUploadEvent(sid,queueId)
@@ -294,15 +294,15 @@ class clientClass(pyxl.client.Client):
 									error=True
 									break
 							if not error:
-								self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("All files for")+" "+widget.jid+" "+mainWindow.tr("have been sent"), QtGui.QSystemTrayIcon.Critical, 4000)
+								self.main.tray.showMessage(mainWindow.tr('File transfer'),unicode(mainWindow.tr("All files for"))+" "+widget.jid+" "+unicode(mainWindow.tr("have been sent")), QtGui.QSystemTrayIcon.Information, 4000)
 							else:
-								self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("Some files for")+" "+widget.jid+" "+mainWindow.tr("haven't been sent"), QtGui.QSystemTrayIcon.Critical, 4000)
+								self.main.tray.showMessage(mainWindow.tr('File transfer'),unicode(mainWindow.tr("Some files for"))+" "+widget.jid+" "+unicode(mainWindow.tr("haven't been sent")), QtGui.QSystemTrayIcon.Critical, 4000)
 							# inform user in chatwidget too, if there is some opened conversation with recipient
 							if tab:
 								if not error:
-									tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("All files have been sent")))
+									tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',unicode(mainWindow.tr("All files have been sent"))))
 								else:
-									tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("Some files can't be sent")))
+									tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',unicode(mainWindow.tr("Some files can't be sent"))))
 								# remove progress bar from chatWidget
 								if tab.chat.filetransfer.has_key(queueId):
 									tab.chat.ui.ftwidget.layout().removeWidget(tab.chat.filetransfer[queueId])
@@ -314,7 +314,7 @@ class clientClass(pyxl.client.Client):
 						# no error
 						if self.main.ftError[sid]==None:
 							widget.widget.stats.setText(mainWindow.tr("Complete"))
-							self.main.tray.showMessage(mainWindow.tr('File transfer'),unicode(mainWindow.tr("File "))+unicode(widget.file)+mainWindow.tr(" has been downloaded"), QtGui.QSystemTrayIcon.Information, 4000)
+							self.main.tray.showMessage(mainWindow.tr('File transfer'),unicode(mainWindow.tr("File "))+unicode(widget.file)+unicode(mainWindow.tr(" has been downloaded")), QtGui.QSystemTrayIcon.Information, 4000)
 							# inform user in chatwidget too, if there is some opened conversation with sender
 							if tab:
 								file=self.main.events.filetransferWidget[queueId].file
@@ -327,12 +327,12 @@ class clientClass(pyxl.client.Client):
 						# unknown error
 						else:
 							widget.widget.progressBar.setValue(0)
-							widget.widget.stats.setText(mainWindow.tr("Error")+" "+unicode(self.main.ftError[sid]))
-							self.main.tray.showMessage(mainWindow.tr('File transfer'),mainWindow.tr("File ")+unicode(widget.file)+unicode(mainWindow.tr(" can't be downloaded ")), QtGui.QSystemTrayIcon.Critical, 4000)
+							widget.widget.stats.setText(unicode(mainWindow.tr("Error"))+" "+unicode(self.main.ftError[sid]))
+							self.main.tray.showMessage(mainWindow.tr('File transfer'),unicode(mainWindow.tr("File "))+unicode(widget.file)+unicode(mainWindow.tr(" can't be downloaded ")), QtGui.QSystemTrayIcon.Critical, 4000)
 							# inform user in chatwidget too, if there is some opened conversation with sender
 							if tab:
 								file=self.main.events.filetransferWidget[queueId].file
-								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ mainWindow.tr('can\'t be downloaded:')+" "+unicode(self.main.ftError[sid])))
+								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',unicode(mainWindow.tr("File "))+" "+basename(file)+" "+unicode(mainWindow.tr('can\'t be downloaded:'))+" "+unicode(self.main.ftError[sid])))
 								# remove progress bar from chatWidget
 								if tab.chat.filetransfer.has_key(queueId):
 									tab.chat.ui.ftwidget.layout().removeWidget(tab.chat.filetransfer[queueId])
@@ -1056,7 +1056,7 @@ class clientClass(pyxl.client.Client):
 		else:
 			user=unicode(jid.full())
 		jid=unicode(jid.full())
-		self.main.events.addBooleanEvent(self.delContact,[jid],None,[],mainWindow.tr("Remove contact?"),jid+mainWindow.tr(" removed your authorization. You won't see his status. Do you want to remove him/her from your contact list?"),height=100,name=jid,typ="unsubcsribed",icon=None)
+		self.main.events.addBooleanEvent(self.delContact,[jid],None,[],mainWindow.tr("Remove contact?"),jid+unicode(mainWindow.tr(" removed your authorization. You won't see his status. Do you want to remove him/her from your contact list?")),height=100,name=jid,typ="unsubcsribed",icon=None)
 
 
 	def on_DeleteContact(self,jid):
