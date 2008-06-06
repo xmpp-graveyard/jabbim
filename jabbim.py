@@ -318,7 +318,7 @@ class clientClass(pyxl.client.Client):
 							# inform user in chatwidget too, if there is some opened conversation with sender
 							if tab:
 								file=self.main.events.filetransferWidget[queueId].file
-								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',mainWindow.tr("File ")+" "+basename(file)+" "+ unicode(mainWindow.tr('has been downloaded'))))
+								tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',unicode(mainWindow.tr("File "))+" "+basename(file)+" "+ unicode(mainWindow.tr('has been downloaded'))))
 								# remove progress bar from chatWidget
 								if tab.chat.filetransfer.has_key(queueId):
 									tab.chat.ui.ftwidget.layout().removeWidget(tab.chat.filetransfer[queueId])
