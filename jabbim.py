@@ -3879,7 +3879,10 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.actionPrivacy_list_editor.setEnabled(True) 
 		self.ui.actionIdentity.setEnabled(True)
 		self.buildStatusWidgetMenu()
-		self.statusWidgetMenu.setEnabled(False)
+		try:
+			self.statusWidgetMenu.setEnabled(False)
+		except:
+			pass
 		self.ui.selfName.setText("<h3>"+unicode(self.client.jid.userhost()).split("@")[0]+"</h3>")
 		self.selfName=unicode(self.client.jid.userhost()).split("@")[0]
 		self.client.getVCard(unicode(self.client.jid.userhost()))
