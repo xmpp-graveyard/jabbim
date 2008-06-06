@@ -76,7 +76,7 @@ class Plugin(plugins.PluginBase):
 				
 		
 		elif self.config['player'] == 'winamp':
-			
+			print "getting current song from winamp"
 			try:
 				import win32gui
 				hWinamp = win32gui.FindWindow('Winamp v1.x', None)
@@ -87,7 +87,7 @@ class Plugin(plugins.PluginBase):
 				print message
 				text = ''
 				out = {}
-				
+			print "got:",[text]
 			if len(text) > 0:
 				parts = text.split(' - ')
 				out['artist'] = parts[0].split(' ', 1)[1]
