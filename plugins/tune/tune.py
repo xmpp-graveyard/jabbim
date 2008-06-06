@@ -4,7 +4,7 @@ import sys, os, time
 sys.path.append('.')
 if sys.platform != 'win32':
 	import commands
-
+import traceback
 from PyQt4 import QtCore, QtGui
 from twisted.python import log
 from include import plugins
@@ -81,7 +81,10 @@ class Plugin(plugins.PluginBase):
 				import win32gui
 				hWinamp = win32gui.FindWindow('Winamp v1.x', None)
 				text = win32gui.GetWindowText(hWinamp)
-			except:
+			except Exception, ex:
+				print 'Tune error: ' +unicode(ex)
+				message = unicode(traceback.format_exc())
+				print message
 				text = ''
 				out = {}
 				
