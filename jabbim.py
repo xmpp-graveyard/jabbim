@@ -1371,16 +1371,23 @@ class clientClass(pyxl.client.Client):
 					#w.chat.setTooltip(item,jid.full())
 
 	def on_fileReceived(self, sid, id):
-		if (self.main.config['autoDownload'] == 'True' or unicode(sid) in self.main.allowedSids) or self.main.allowedJids.has_key(self.main.getJid(unicode(self.ft[sid].tojid)).userhost()+"/"+self.ft[sid].fileprops['name']):
-			filename = self.main.config['autoDownloadPath']+'/'+self.ft[sid].fileprops['name']
+		autoDownload=False
+		if unicode(sid) in self.main.allowedSids:
 			if unicode(self.ft[sid].tojid).find("rpc@jabbim.cz")!=-1 and not unicode(sid) in self.main.allowedSids:
 				return
 			else:
 				filename = self.main.realHomeDir+'/'+self.ft[sid].fileprops['name']
+			autoDownload=True
+		elif self.main.allowedJids.has_key(self.main.getJid(unicode(self.ft[sid].tojid)).userhost()+"/"+self.ft[sid].fileprops['name']):
+			filename=self.main.allowedJids[self.main.getJid(unicode(self.ft[sid].tojid)).userhost()+"/"+self.ft[sid].fileprops['name']]+"/"+self.ft[sid].fileprops['name']
+			autoDownload=True
+		elif self.main.config['autoDownload'] == 'True':
+			filename = self.main.config['autoDownloadPath']+'/'+self.ft[sid].fileprops['name']
+			autoDownload=True
+			
+		if autoDownload:
 			if self.ft[sid].method!=None:
 				return
-			if self.main.allowedJids.has_key(self.main.getJid(unicode(self.ft[sid].tojid)).userhost()+"/"+self.ft[sid].fileprops['name']):
-				filename=self.main.allowedJids[self.main.getJid(unicode(self.ft[sid].tojid)).userhost()+"/"+self.ft[sid].fileprops['name']]+"/"+self.ft[sid].fileprops['name']
 			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),basename(self.ft[sid].fileprops['name']),"",sid)
 			
 			if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
@@ -1393,9 +1400,6 @@ class clientClass(pyxl.client.Client):
 				self.ft[sid].file = filename
 				self.ft[sid].fp = open(self.ft[sid].file, 'wb')
 				self.receiveFile(sid, id)
-			#if unicode(sid) in self.main.allowedSids:
-				#self.main.allowedSids.remove(unicode(sid))
-
 		else:
 			if unicode(self.ft[sid].tojid).find("rpc@jabbim.cz")==-1:
 				if self.ft[sid].fileprops.has_key('preview'):
