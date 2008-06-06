@@ -4070,7 +4070,8 @@ class mainWindow(QtGui.QMainWindow):
 			path = self.realHomeDir+'/avatars/'
 			if self.client.avatarDef.has_key(self.client.jid.userhost()):
 				self.client.avatarImg[self.client.avatarDef[self.client.jid.userhost()]] = self.loadAvatar(self.client.avatarDef[self.client.jid.userhost()])
-
+			self.client.avatarImg[None]=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
+			self.client.avatarImg[u'None']=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
 			d=threads.deferToThread(self.loadAvatars,unicode(path),dict(self.client.avatarDef))
 			d.addCallback(self.gotAvatars)
 			try:
