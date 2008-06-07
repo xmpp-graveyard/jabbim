@@ -373,7 +373,10 @@ class Client(derived):
 			pass
 		if self.factory:
 			self.factory.stopTrying()
-		self.connection = None
+		if self.connection:
+			self.connection.disconnect()
+		else:
+			self.connection = None
 		self.factory = None
 		print 'receipts ' + unicode(self.messageReceipts)
 		try:

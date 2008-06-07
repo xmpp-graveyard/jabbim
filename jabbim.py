@@ -2139,7 +2139,7 @@ class mainWindow(QtGui.QMainWindow):
 			# global presence => presence will be send to server
 			if show=="offline":
 				self.client.sendPresence(typ = "unavailable", status = unicode(message))
-				self.client.factory.stopTrying()
+#				self.client.factory.stopTrying()
 				self.reconnect = False
 				self.client.disconnect()
 				# update avatar tooltip and tray tooltip

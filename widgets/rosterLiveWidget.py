@@ -1798,7 +1798,10 @@ class rosterWidget(QtGui.QWidget):
 					highest=item
 			item=self.getMetaParents(mainjid)
 			if allOffline:
-				item[0].hidden=True
+				try:
+					item[0].hidden=True
+				except:
+					print 'BUG!!! ',  item[0]
 			
 			if highest:
 				if len(item)!=0:

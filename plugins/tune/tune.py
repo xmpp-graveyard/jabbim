@@ -41,6 +41,7 @@ class Plugin(plugins.PluginBase):
 
 	def on_remove(self):
 		self.loop.stop()
+		self.main.client.sendPEP('http://jabber.org/protocol/tune', self.main.client.getTunePayload({}))
 	def check(self):
 		out = {}
 		if self.config['player'] == 'mpd':
