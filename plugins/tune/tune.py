@@ -90,8 +90,11 @@ class Plugin(plugins.PluginBase):
 			print "got:",[text]
 			if len(text) > 0:
 				parts = text.split(' - ')
-				out['artist'] = parts[0].split(' ', 1)[1]
-				out['title'] = parts[1]
+				if len(parts)>1:
+					out['artist'] = parts[0].split(' ', 1)[1]
+					out['title'] = parts[1]
+				else:
+					out={}
 				if text.find('[Stopped]')!= -1:
 					out = {}
 
