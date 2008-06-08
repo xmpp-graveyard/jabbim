@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/about.ui'
+# Form implementation generated from reading ui file 'about.ui'
 #
-# Created: Thu May  1 07:17:50 2008
-#      by: PyQt4 UI code generator 4.3.1
+# Created: Sun Jun  8 23:34:52 2008
+#      by: PyQt4 UI code generator 4.3.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_about_window(object):
     def setupUi(self, about_window):
         about_window.setObjectName("about_window")
-        about_window.resize(QtCore.QSize(QtCore.QRect(0,0,346,544).size()).expandedTo(about_window.minimumSizeHint()))
+        about_window.resize(QtCore.QSize(QtCore.QRect(0,0,346,674).size()).expandedTo(about_window.minimumSizeHint()))
         about_window.setWindowIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 
         self.gridlayout = QtGui.QGridLayout(about_window)
@@ -20,19 +20,17 @@ class Ui_about_window(object):
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
 
-        self.widget = QtGui.QScrollArea(about_window)
+        self.widget = QtGui.QWidget(about_window)
         self.widget.setObjectName("widget")
 
-        #self.gridlayout1 = QtGui.QGridLayout(self.widget)
-        #self.gridlayout1.setMargin(0)
-        #self.gridlayout1.setSpacing(0)
-        #self.gridlayout1.setObjectName("gridlayout1")
+        self.gridlayout1 = QtGui.QGridLayout(self.widget)
+        self.gridlayout1.setMargin(0)
+        self.gridlayout1.setSpacing(0)
+        self.gridlayout1.setObjectName("gridlayout1")
 
         self.widget_2 = QtGui.QWidget(self.widget)
         self.widget_2.setObjectName("widget_2")
-        self.widget.setWidgetResizable (True)
 
-        self.widget.setWidget(self.widget_2)
         self.gridlayout2 = QtGui.QGridLayout(self.widget_2)
         self.gridlayout2.setMargin(0)
         self.gridlayout2.setSpacing(6)
@@ -112,7 +110,7 @@ class Ui_about_window(object):
         self.label_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_3.setObjectName("label_3")
         self.gridlayout2.addWidget(self.label_3,5,0,1,1)
-        #self.gridlayout1.addWidget(self.widget_2,0,0,1,1)
+        self.gridlayout1.addWidget(self.widget_2,0,0,1,1)
         self.gridlayout.addWidget(self.widget,0,0,1,1)
 
         self.pushButton = QtGui.QPushButton(about_window)
@@ -142,9 +140,12 @@ class Ui_about_window(object):
         "     </style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
         "     <p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Version:</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.label_6.setText(QtGui.QApplication.translate("about_window", "Josef \'Cornelius\' Vybí­ral\n"
-        "     Josef \'Pepeq\' Halíček\n"
-        "     Peter \'Chio\' Habčák\n"
-        "Jáchym \'kamahl\' Barvínek", None, QtGui.QApplication.UnicodeUTF8))
+        "Josef \'Pepeq\' Halíček\n"
+        "Jáchym \'Kamahl\' Barvínek\n"
+        "Michal \'Michich\' Schmidt\n"
+        "Jan \'Pinky\' Pinkas\n"
+        "Zenon \'Zenek\' Kuder\n"
+        "and many translators", None, QtGui.QApplication.UnicodeUTF8))
         self.label_8.setText(QtGui.QApplication.translate("about_window", "GNU GPL version 2\n"
         "     ", None, QtGui.QApplication.UnicodeUTF8))
         self.label_9.setText(QtGui.QApplication.translate("about_window", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"

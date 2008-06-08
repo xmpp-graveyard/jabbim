@@ -263,6 +263,7 @@ class config:
 		self.config['osd_y']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_bigfont']={'type':'number-spin','label':self.main.tr("Headline font size"),'value':'20','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_smallfont']={'type':'number-spin','label':self.main.tr("Text font size"),'value':'11','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
+		self.config['buddyjids']={'type':'jid-list','label':self.main.tr("Buddy pounce jids (special notification)"),'value':[],'groupbox':self.main.tr('Buddy pounce (special notification)'),'tab':self.main.tr("Buddy pounce")}
 
 
 class Plugin(plugins.PluginBase):
@@ -272,7 +273,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'System tray and sound notification'
 		self.author = "Jan 'HanzZ' Kaluza & Josef 'PepeQ' Halicek"
 		self.name = 'Notification Plugin'
-		self.version = '0.666'
+		self.version = '0.667'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.installTranslator()
