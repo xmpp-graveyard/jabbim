@@ -1202,14 +1202,24 @@ class clientClass(pyxl.client.Client):
 
 			# prepare message to be showed
 			if unicode(body).startswith("/me"):
-				message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message[3:])
+				if delay==None or len(delay)==0:
+					message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message[3:])
+				else:
+					delay=unicode(delay)
+					delay="%s-%s-%s&nbsp;%s:%s:%s" % (delay[0:4],delay[4:6],delay[6:8],delay[9:11],delay[12:14],delay[15:17])
+					message=self.main.skin["me_message"].replace("[time]",delay).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message[3:])
 			else:
 				skin=self.main.skin["message"]
 				if tab:
 					if tab.chat.lastMessageFrom==unicode(user):
 						if self.main.skin.has_key('message_continue'):
 							skin=self.main.skin["message_continue"]
-				message=skin.replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message)
+				if delay==None or len(delay)==0:
+					message=skin.replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message)
+				else:
+					delay=unicode(delay)
+					delay="%s-%s-%s&nbsp;%s:%s:%s" % (delay[0:4],delay[4:6],delay[6:8],delay[9:11],delay[12:14],delay[15:17])
+					message=skin.replace("[time]",delay).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message)
 			colors=self.main.getSkinColors(0)
 			if colors!=None:
 				message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
