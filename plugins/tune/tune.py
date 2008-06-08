@@ -101,15 +101,14 @@ class Plugin(plugins.PluginBase):
 
 		elif self.config['player'] == 'amarok':
 			try:
-				#commands.getoutput("sleep 15")
-				out['artist'] = unicode(commands.getoutput("dcop amarok player artist"), "utf-8")
-				out['title'] = unicode(commands.getoutput("dcop amarok player title"), "utf-8")
+				for field in ['artist', 'title']:
+					(err, cmd_output) = commands.getstatusoutput("dcop amarok player %s" % field)
+					if err != 0:
+						raise Exception
+					out[field] = unicode(cmd_output, "utf-8")
+				if len(out['title'].strip()) == 0 and len(out['artist'].strip()) == 0:
+					out = {}
 			except:
-				out = {}
-			
-			if len(out['title'].strip()) == 0 and len(out['artist'].strip()) == 0:
-				out = {}
-			elif out['title'].strip() == "call failed" or out['artist'] == "call failed":
 				out = {}
 
     		
