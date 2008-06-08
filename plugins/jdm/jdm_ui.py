@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'plugins/jdm/jdm_ui.ui'
 #
-# Created: Sun Jun  8 11:06:55 2008
+# Created: Sun Jun  8 19:25:01 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -215,7 +215,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Jabber Disk Manager", None, QtGui.QApplication.UnicodeUTF8))
-        self.vipInfo.setText(QtGui.QApplication.translate("MainWindow", "Jabbim VIP advert", None, QtGui.QApplication.UnicodeUTF8))
+        self.vipInfo.setText(QtGui.QApplication.translate("MainWindow", "You can get as much as 1500 MB storage capacity with Jabbim VIP. <a href=\"http://www.jabbim.cz/vip.html\">Subscribe now!</a>", None, QtGui.QApplication.UnicodeUTF8))
         self.buttonUpload.setText(QtGui.QApplication.translate("MainWindow", "Upload", None, QtGui.QApplication.UnicodeUTF8))
         self.buttonDownload.setText(QtGui.QApplication.translate("MainWindow", "Download", None, QtGui.QApplication.UnicodeUTF8))
         self.buttonDelete.setText(QtGui.QApplication.translate("MainWindow", "Delete", None, QtGui.QApplication.UnicodeUTF8))
