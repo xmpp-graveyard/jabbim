@@ -4122,6 +4122,7 @@ class mainWindow(QtGui.QMainWindow):
 			print message
 #		path = self.main.homeDir+'/avatars/'
 		print "loadAvatars",hashe
+		frame=QtGui.QImage("images/32x32/frame.png")
 		for hash in hashe:
 			try:
 				#self.avatarImg[hash] = self.main.getAvatar(hash)
@@ -4134,7 +4135,6 @@ class mainWindow(QtGui.QMainWindow):
 				#if os.path.exists("themes/"+self.config['theme']+"/frame-32.png"):
 					#frame=QtGui.QImage("themes/"+self.config['theme']+"/frame-32.png")
 				#else:
-				frame=QtGui.QImage("images/32x32/frame.png")
 				painter=QtGui.QPainter(result)
 				painter.drawImage((32-avatar.width())/2,(32-avatar.height())/2,avatar)
 				painter.drawImage(0,0,frame)
