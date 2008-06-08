@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
-import sys, time, random, os
+import sys, time, random, os, re
 import socks5, events, base64
 from twisted import names
 from twisted.python import log
@@ -36,6 +36,7 @@ from twisted.words.protocols.jabber.xmlstream import IQ, TimeoutError
 from twisted.internet.protocol import Protocol, ClientFactory, Factory
 from twisted.protocols import socks
 from twisted.internet.task import LoopingCall
+from calendar import timegm
 
 
 from derived import derived
@@ -935,10 +936,23 @@ class Client(derived):
 				except:
 					pass #proste user neni v rosteru, nebo je to muc, nebo cojavim ;)
 			if child.name == 'delay':
-				delay = child['stamp']
+				# xep-0203:
+				#  The format MUST adhere to the dateTime format specified in XEP-0082
+				#  and MUST be expressed in UTC.
+				stamp = child.getAttribute('stamp')
+				m = re.match(r'(\d\d\d\d)-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)(\.\d+)?Z', stamp)
+				if m:
+					delay = timegm( map(int, m.groups()[0:6]) + [0,0,0] )
 			if child.name == 'x':
 				if child.defaultUri == 'jabber:x:delay' :
-					delay = child.getAttribute('stamp')
+					# xep-0091:
+					#   The format SHOULD be "CCYYMMDDThh:mm:ss"
+					#   ... not the format defined in XEP-0082.
+					#   The timezone is be understood as UTC.
+					stamp = child.getAttribute('stamp')
+					m = re.match(r'(\d\d\d\d)(\d\d)(\d\d)T(\d\d):(\d\d):(\d\d)', stamp)
+					if m:
+						delay = timegm( map(int, m.groups()[0:6]) + [0,0,0] )
 				if child.defaultUri == 'jabber:x:event':
 					elm = child.firstChildElement()
 					if elm:

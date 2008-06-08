@@ -96,43 +96,39 @@ class searchDialog(QtGui.QDialog):
 		#self.widget.hide()
 		self.splitter.setSizes([(self.width()/3),(self.width()/3)*2])
 		jid,legacy,form=data
-		empty=[]
-		for i in range(int(self.table.columnCount())):
-			self.table.headerItem().setText(i,"")
-			empty.append(i)
-		#self.tree.headerItem().setText(3,QtGui.QApplication.translate("serviceDiscovery", "jid", None, QtGui.QApplication.UnicodeUTF8))
 		#<x xmlns='jabber:x:data' type='result'><title>Search Results for users.netlab.cz</title><reported><field var='jid' label='Jabber ID'/><field var='fn' label='Full Name'/><field var='given' label='Name'/><field var='middle' label='Middle Name'/><field var='family' label='Family Name'/><field var='nickname' label='Nickname'/><field var='bday' label='Birthday'/><field var='ctry' label='Country'/><field var='locality' label='City'/><field var='email' label='Email'/><field var='orgname' label='Organization Name'/><field var='orgunit' label='Organization Unit'/></reported>
 		#<item><field var='jid'><value>hanzz@jabbim.pl</value></field><field var='fn'><value/></field><field var='family'><value/></field><field var='given'><value/></field><field var='middle'><value/></field><field var='nickname'><value/></field><field var='bday'><value/></field><field var='ctry'><value/></field><field var='locality'><value/></field><field var='email'><value/></field><field var='orgname'><value/></field><field var='orgunit'><value/></field></item></x>
-		fields=[]
+		fields={}
 		
 		i=0
 		for x in form.elements():
 			if x.name=="reported":
 				for field in x.elements():
 					if field.name=="field":
-						fields.append(field['var'])
+						fields[field['var']] = { 'index': i, 'empty': True }
 						self.table.headerItem().setText(i,field['label'])
 						i+=1
 			elif x.name=="item":
 				item=QtGui.QTreeWidgetItem(self.table)
 				for field in x.elements():
 					if field.name=="field":
-						text=""
+						text=u""
 						for y in field.elements():
 							if y.name=="value":
-								text=unicode(y)
-						item.setText(fields.index(field['var']),unicode(text))
-						if int(fields.index(field['var'])) in empty:
-							empty.remove(int(fields.index(field['var'])))
+								text=unicode(y).strip()
+						item.setText(fields[field['var']]['index'], text)
+						if len(text) > 0:
+							fields[field['var']]['empty'] = False;
 						if not self.table.jidIndex:
 							if field['var']=='jid':
-								self.table.jidIndex=int(fields.index(field['var']))
+								self.table.jidIndex=fields[field['var']]['index']
+		# set all columns' visibility before resizing any of them
+		for f in fields.itervalues():
+			self.table.setColumnHidden(f['index'], f['empty'])
+		for f in fields.itervalues():
+			if not f['empty']:
+				self.table.resizeColumnToContents(f['index'])
 		self.table.header().show()
-		for i in range(int(self.table.columnCount())):
-			if i in empty:
-				self.ui.groupchats.setColumnWidth(i,0)
-			else:
-				self.table.resizeColumnToContents(i)
 
 	def search(self):
 		self.table.jidIndex=None
