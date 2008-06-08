@@ -480,6 +480,10 @@ class Plugin(plugins.PluginBase):
 	
 	def showSlot(self,jid=None,typ='public'):
 		self.window.show()
+		if self.main.client.isVip:
+			self.window.ui.vipInfo.show()
+		else:
+			self.window.ui.vipInfo.hide()
 		if (not self.main.client.roster['users'].has_key("public@disk.jabbim.cz") or not self.main.client.roster['users'].has_key("private@disk.jabbim.cz")) or not self.main.client.roster['users'].has_key("album@disk.jabbim.cz"):
 			d=self.main.client.getRegisterForm("disk.jabbim.cz")
 			d.addCallback(self._onRegister)
