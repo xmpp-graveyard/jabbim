@@ -247,7 +247,7 @@ class Client(derived):
 				log.msg('heartbeat fails count: '+ unicode(self.hbFails))
 
 
-	def connect(self, host = None, port = '5222', boshURL = ''):
+	def connect(self, host = None, port = '5222', boshURL = '',JID='',password='',server=''):
 		#cleanup
 		self.roster = {'users':{},'groups':{}}
 		self.first_presence = []
@@ -258,7 +258,10 @@ class Client(derived):
 		self.discoitems = {None:[],"http://jabber.org/protocol/commands":[]}
 		self.isVip=False
 		self.reactor.callFromThread(self.on_init)
-
+		self.jid = jid.JID(JID)
+		self.password  = password
+		self.host = self.jid.host
+		self.port = port
 		
 		if boshURL != '':
 			try:

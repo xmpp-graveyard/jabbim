@@ -4098,11 +4098,11 @@ class mainWindow(QtGui.QMainWindow):
 		# connect
 		self.reconnect = True
 		if self.config['specifyHost'] == 'True':
-			self.client.connect(self.config['connectHost'], self.config['connectPort'])
+			self.client.connect(self.config['connectHost'], self.config['connectPort'],JID=unicode(jid).lower()+"/"+resource,password=password,server=jid.split("@")[1])
 		elif self.config['boshURL'] != '':
-			self.client.connect(boshURL = self.config['boshURL'])
+			self.client.connect(boshURL = self.config['boshURL'],JID=unicode(jid).lower()+"/"+resource,password=password,server=jid.split("@")[1])
 		else:
-			self.client.connect()
+			self.client.connect(JID=unicode(jid).lower()+"/"+resource,password=password,server=jid.split("@")[1])
 		
 	#def _loadAvatar(self,file, hash, jid):
 		#if os.path.isfile(unicode(file)):
@@ -4272,8 +4272,8 @@ class mainWindow(QtGui.QMainWindow):
 			if msg != None and len(msg)>0:
 				MainWindow.delayedMessages = msg
  			reactor.callLater(5, MainWindow.connect)
-		else:
-			MainWindow.client = None
+		#else:
+			 #= None
 		self.buildTrayMenu()
 		print "disconnected....."
 
