@@ -28,7 +28,7 @@ QTextBrowser { background: rgba(255,255,255,20%); }
 
 /* menu */
 QWidget QMenuBar::item, QMenuBar#menubar::item { background: transparent; font-weight: bold; }
-QWidget QMenu { background: transparent; } 
+QWidget QMenu { background: #fff url(themes/Aluminium/metal.png) top center; } 
 QWidget QMenu:selected { background: #52b6ff; }
 QWidget QMenu::separator { background: #ddd; height: 1px; margin: 0px 5px; }
 
@@ -63,5 +63,6 @@ QTabWidget#tabWidget > QTabBar::tab:only-one, QTabBar::tab:only-one { margin: 0;
 QTextBrowser#info { border: 0px; color: #555; }
 QLabel#selfName { margin-left:15px; }
 QWidget#frame, #statusWidget { border: 0px; }
+#statusMessage { border: 2px groove #bbb; border-radius: 6px; padding: 2px; }
+QToolButton#statusWidget::menu-indicator { image: url(); }
 QTextEdit#line { background: rgba(255,255,255,40%); }
-
