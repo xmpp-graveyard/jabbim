@@ -4065,27 +4065,27 @@ class mainWindow(QtGui.QMainWindow):
 		f.close()
 		
 		# create clientClass
+		if self.config.has_key('resource'):
+			resource=''.join(self.config['resource'])
+		else:
+			resource='jabbim'
 		if self.client==None:
-			if self.config.has_key('resource'):
-				resource=''.join(self.config['resource'])
-			else:
-				resource='jabbim'
 			self.client = clientClass(unicode(jid).lower()+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
-			path = self.realHomeDir+'/avatars/'
-			if self.client.avatarDef.has_key(self.client.jid.userhost()):
-				self.client.avatarImg[self.client.avatarDef[self.client.jid.userhost()]] = self.loadAvatar(self.client.avatarDef[self.client.jid.userhost()])
-			self.client.avatarImg[None]=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
-			self.client.avatarImg[u'None']=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
-			d=threads.deferToThread(self.loadAvatars,unicode(path),dict(self.client.avatarDef))
-			d.addCallback(self.gotAvatars)
+		path = self.realHomeDir+'/avatars/'
+		if self.client.avatarDef.has_key(self.client.jid.userhost()):
+			self.client.avatarImg[self.client.avatarDef[self.client.jid.userhost()]] = self.loadAvatar(self.client.avatarDef[self.client.jid.userhost()])
+		self.client.avatarImg[None]=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
+		self.client.avatarImg[u'None']=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
+		d=threads.deferToThread(self.loadAvatars,unicode(path),dict(self.client.avatarDef))
+		d.addCallback(self.gotAvatars)
+		try:
+			self.client.xmlLang= unicode(QtCore.QLocale.system().name())[:2]
+		except:
 			try:
-				self.client.xmlLang= unicode(QtCore.QLocale.system().name())[:2]
+				self.client.xmlLang = unicode(os.environ["LANG"][:2])
 			except:
-				try:
-					self.client.xmlLang = unicode(os.environ["LANG"][:2])
-				except:
-					log.err('error in setting locale')
-			self.client.log=True
+				log.err('error in setting locale')
+		self.client.log=True
 
 		# connect
 		self.reconnect = True
@@ -4248,8 +4248,6 @@ class mainWindow(QtGui.QMainWindow):
 						w.chat.addRoles()
 						message=self.skin["status_message"].replace("[time]",self.now()).replace("[message]",unicode(self.tr("You are now offline.")))
 						w.chat.textEditWrite(message)
-#		MainWindow.client = None
-		self.buildTrayMenu()
 		if error == 'lost' and MainWindow.reconnect:
 			self.reconnect = False
 			msg = None
@@ -4266,6 +4264,9 @@ class mainWindow(QtGui.QMainWindow):
 			if msg != None and len(msg)>0:
 				MainWindow.delayedMessages = msg
  			reactor.callLater(5, MainWindow.connect)
+		else:
+			MainWindow.client = None
+		self.buildTrayMenu()
 		print "disconnected....."
 
 
