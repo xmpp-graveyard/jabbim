@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs">
+<defaultcodec></defaultcodec>
 <context>
     <name>AddUserWidget</name>
     <message>
@@ -1556,7 +1557,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/extra.py" line="110"/>
         <source>Downloading file:</source>
-        <translation type="unfinished"></translation>
+        <translation>Stahuji soubor:</translation>
     </message>
 </context>
 <context>
@@ -3036,27 +3037,27 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1610"/>
         <source>afraid</source>
-        <translation>Nejistý</translation>
+        <translation>Vylekaný</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1611"/>
         <source>amazed</source>
-        <translation>Okouzlený</translation>
+        <translation>Užaslý</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1612"/>
         <source>angry</source>
-        <translation>Zuřivý</translation>
+        <translation>Rozzlobený</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1613"/>
         <source>annoyed</source>
-        <translation>Znepokojený</translation>
+        <translation>Mrzutý</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1614"/>
         <source>anxious</source>
-        <translation>Nedočkavý</translation>
+        <translation>Znepokojený</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1615"/>
@@ -3076,7 +3077,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1618"/>
         <source>brave</source>
-        <translation>Hrdinský</translation>
+        <translation>Odvážný</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1619"/>
@@ -3101,12 +3102,12 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1623"/>
         <source>cranky</source>
-        <translation>Zlostný</translation>
+        <translation>Potrhlý</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1624"/>
         <source>curious</source>
-        <translation>Nepochopitelný</translation>
+        <translation>Zvědavý</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1625"/>
@@ -3136,22 +3137,22 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1630"/>
         <source>excited</source>
-        <translation>Vzrušený</translation>
+        <translation>Nadšený</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1631"/>
         <source>flirtatious</source>
-        <translation>Flirtující</translation>
+        <translation>Záletný</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1632"/>
         <source>frustrated</source>
-        <translation>Frustrovaný</translation>
+        <translation>Rozčarovaný</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1633"/>
         <source>grumpy</source>
-        <translation>Mrzutý</translation>
+        <translation>Nevrlý</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1634"/>
@@ -3161,22 +3162,22 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1635"/>
         <source>happy</source>
-        <translation>Veselý</translation>
+        <translation>Šťastný</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1636"/>
         <source>hot</source>
-        <translation>Celý žhavý</translation>
+        <translation>Vášnivý</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1637"/>
         <source>humbled</source>
-        <translation>Ponížený</translation>
+        <translation>Pokorný</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1638"/>
         <source>humiliated</source>
-        <translation>Velmi ponížený</translation>
+        <translation>Ponížený</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1639"/>
@@ -3186,17 +3187,17 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1640"/>
         <source>hurt</source>
-        <translation>Zraněný</translation>
+        <translation>Raněný</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1641"/>
         <source>impressed</source>
-        <translation>Zaujatý</translation>
+        <translation>Ohromený</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1642"/>
         <source>in_awe</source>
-        <translation>Zděšený</translation>
+        <translation>S respektem</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1643"/>
@@ -3211,17 +3212,17 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1645"/>
         <source>interested</source>
-        <translation>Zaujmutý</translation>
+        <translation>Zaujatý</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1646"/>
         <source>intoxicated</source>
-        <translation>Otrávený</translation>
+        <translation>Opilý</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1647"/>
         <source>invincible</source>
-        <translation>Nepřemožitelný</translation>
+        <translation>Nepřekonatelný</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1648"/>
@@ -3231,7 +3232,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1649"/>
         <source>lonely</source>
-        <translation>Osamocený</translation>
+        <translation>Osamělý</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1650"/>
@@ -3276,12 +3277,12 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1658"/>
         <source>remorseful</source>
-        <translation>Litující</translation>
+        <translation>Kajícný</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1659"/>
         <source>restless</source>
-        <translation>Neúnavný</translation>
+        <translation>Netrpělivý</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1660"/>
@@ -3291,7 +3292,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1661"/>
         <source>sarcastic</source>
-        <translation>Sarkastický</translation>
+        <translation>Jízlivý</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1662"/>
@@ -3336,7 +3337,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1672"/>
         <source>worried</source>
-        <translation>Strachující se</translation>
+        <translation>Ustaraný</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1672"/>
@@ -3376,12 +3377,12 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1679"/>
         <source>running_an_errand</source>
-        <translation>Dělám poslíčka</translation>
+        <translation>Vyřizuji</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1680"/>
         <source>walking_the_dog</source>
-        <translation>Na procházce se psem</translation>
+        <translation>Venčím psa</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1681"/>
@@ -3401,7 +3402,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1684"/>
         <source>having_a_snack</source>
-        <translation>Dávám si mňamku</translation>
+        <translation>Svačím</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1685"/>
@@ -3456,7 +3457,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1695"/>
         <source>working_out</source>
-        <translation>Pracuji venku</translation>
+        <translation>Posiluji</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1696"/>
@@ -3491,12 +3492,12 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1702"/>
         <source>day_off</source>
-        <translation>Mám dovolenou</translation>
+        <translation>Den volna</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1703"/>
         <source>hanging_out</source>
-        <translation>Relaxuji</translation>
+        <translation>Venku za zábavou</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1704"/>
@@ -3506,7 +3507,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1705"/>
         <source>scheduled_holiday</source>
-        <translation>Naplánovaná dovolená</translation>
+        <translation>Plánovaná dovolená</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1706"/>
@@ -3516,7 +3517,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1707"/>
         <source>gaming</source>
-        <translation>Hraji si</translation>
+        <translation>Hraji hry</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1708"/>
@@ -3546,7 +3547,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1713"/>
         <source>socializing</source>
-        <translation>Socializuji se</translation>
+        <translation>Ve společnosti</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1714"/>
@@ -3566,12 +3567,12 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1717"/>
         <source>in_real_life</source>
-        <translation>Pryč od PC</translation>
+        <translation>Ve skutečném světě</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1718"/>
         <source>on_the_phone</source>
-        <translation>Mám telefon</translation>
+        <translation>Telefonuji</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1719"/>
@@ -3641,12 +3642,12 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1734"/>
         <source>doing_chores</source>
-        <translation>Zpívám si</translation>
+        <translation>Domácí práce</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1735"/>
         <source>drinking</source>
-        <translation>Drink</translation>
+        <translation>Piju</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1736"/>
@@ -3661,7 +3662,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1738"/>
         <source>grooming</source>
-        <translation>U koní</translation>
+        <translation>Pečuji o sebe</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1735"/>
@@ -3681,7 +3682,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1742"/>
         <source>talking</source>
-        <translation>Vykládám si</translation>
+        <translation>Povídám si</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1743"/>
@@ -3781,17 +3782,17 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1609"/>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation>Žádný</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2082"/>
         <source>User is chatting in:</source>
-        <translation type="unfinished"></translation>
+        <translation>Uživatel se účastní konferencí:</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2614"/>
         <source>Connect</source>
-        <translation type="unfinished">Připojit</translation>
+        <translation>Připojit</translation>
     </message>
 </context>
 <context>
