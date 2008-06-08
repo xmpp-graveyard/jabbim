@@ -456,7 +456,7 @@ class chatWindow(QtGui.QMainWindow):
 			w.chat.sizes[file]=[unicode(pixmap.width()),unicode(pixmap.height())]
 
 		# no delay message
-		if delay==None or len(delay)==0:
+		if delay==None:
 			# it's our message
 			if unicode(w.chat.nick)==unicode(user):
 				if unicode(body).startswith("/me"):
@@ -519,9 +519,7 @@ class chatWindow(QtGui.QMainWindow):
 			w.chat.lastMessageFrom=unicode(user)
 			return
 		else:
-			# get delay from string
-			delay=unicode(delay)
-			delay="%s-%s-%s&nbsp;%s:%s:%s" % (delay[0:4],delay[4:6],delay[6:8],delay[9:11],delay[12:14],delay[15:17])
+			delay=time.strftime('%Y-%m-%d&nbsp;%H:%M:%S', time.localtime(delay))
 			# our delayed message
 			if unicode(w.chat.nick)==unicode(user):
 				message=self.main.skin["my_message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
