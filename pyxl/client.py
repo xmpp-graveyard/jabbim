@@ -497,6 +497,7 @@ class Client(derived):
 #		def pis(co):
 #			print co
 		self.callRemote('rpc@jabbim.cz/service', 'isVIP', (self.jid.userhost(),)).addCallback(self._isVip)
+		print "calling on_authd"
 		self.dispatcher.publishEvent('on_authd')
 
 	def _isVip(self,data):
