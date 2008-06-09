@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="fr">
+<!DOCTYPE TS><TS version="1.1">
 <context>
     <name>Plugin</name>
     <message>
         <location filename="notification.py" line="319"/>
         <source>Notification test - can drag</source>
-        <translation>Test de notification - peut être déplacé</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="notification.py" line="349"/>
         <source>Notification test</source>
-        <translation>Test de notification</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="notification.py" line="347"/>
         <source>Notification </source>
-        <translation>Notification </translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="notification.py" line="347"/>
         <source>Notification plugin test :)</source>
-        <translation>Test du plugin de notification :)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="notification.py" line="369"/>
         <source>WARNING!</source>
-        <translation>ATTENTION!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="notification.py" line="378"/>
         <source> is now </source>
-        <translation> est maintenant </translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="notification.py" line="434"/>
         <source>New message from </source>
-        <translation>Nouveau message de </translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="notification.py" line="445"/>
         <source>New groupchat message for you</source>
-        <translation>Nouveau message de groupe de discution pour vous</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -48,62 +48,12 @@
     <message>
         <location filename="notification.py" line="247"/>
         <source>Notify on first message from user</source>
-        <translation>Notifier le premier message de l&apos;utilisateur</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="notification.py" line="248"/>
         <source>Tray icon</source>
-        <translation>Icone dans la barre système</translation>
-    </message>
-    <message>
-        <location filename="notification.py" line="248"/>
-        <source>Notify if groupchat message contains your nickname</source>
-        <translation>Notifier si un message d&apos;un groupe de discution contient votre pseudo</translation>
-    </message>
-    <message>
-        <location filename="notification.py" line="251"/>
-        <source>Play sound on first message from user</source>
-        <translation>Jouer un son au premier message de l&apos;utilisateur</translation>
-    </message>
-    <message>
-        <location filename="notification.py" line="257"/>
-        <source>Sounds</source>
-        <translation>Sons</translation>
-    </message>
-    <message>
-        <location filename="notification.py" line="253"/>
-        <source>Play sound if groupchat message contains your nickname</source>
-        <translation>Jouer un son si un message d&apos;un groupe de discution contient votre pseudo</translation>
-    </message>
-    <message>
-        <location filename="notification.py" line="250"/>
-        <source>Play sound on login</source>
-        <translation>Jouer un son à l&apos;ouverture de session</translation>
-    </message>
-    <message>
-        <location filename="notification.py" line="257"/>
-        <source>Use transparent background</source>
-        <translation>Utiliser un arrière plan transparent</translation>
-    </message>
-    <message>
-        <location filename="notification.py" line="268"/>
-        <source>OSD</source>
-        <translation>OSD</translation>
-    </message>
-    <message>
-        <location filename="notification.py" line="258"/>
-        <source>Display time (seconds):</source>
-        <translation>Durée d&apos;affichage (secondes):</translation>
-    </message>
-    <message>
-        <location filename="notification.py" line="263"/>
-        <source>Use OSD for presences</source>
-        <translation>Utiliser l&apos;OSD pour les présences</translation>
-    </message>
-    <message>
-        <location filename="notification.py" line="235"/>
-        <source>Use OSD for messages</source>
-        <translation type="obsolete">Utiliser l&apos;OSD pour les messages</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="notification.py" line="250"/>
@@ -111,8 +61,33 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="notification.py" line="248"/>
+        <source>Notify if groupchat message contains your nickname</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="250"/>
+        <source>Play sound on login</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="257"/>
+        <source>Sounds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="251"/>
+        <source>Play sound on first message from user</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="notification.py" line="252"/>
         <source>Play sound on other messages from user</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="253"/>
+        <source>Play sound if groupchat message contains your nickname</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -126,6 +101,21 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="notification.py" line="257"/>
+        <source>Use transparent background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="268"/>
+        <source>OSD</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="258"/>
+        <source>Display time (seconds):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="notification.py" line="259"/>
         <source>Use OSD for first message</source>
         <translation type="unfinished"></translation>
@@ -133,6 +123,11 @@
     <message>
         <location filename="notification.py" line="260"/>
         <source>Use OSD for other messages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="263"/>
+        <source>Use OSD for presences</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
