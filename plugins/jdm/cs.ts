@@ -68,7 +68,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="jdm_ui.py" line="218"/>
         <source>You can get as much as 1500 MB storage capacity with Jabbim VIP. &lt;a href=&quot;http://www.jabbim.cz/vip.html&quot;&gt;Subscribe now!&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Můžete získat až 1500MB volného místa pokud se stanete Jabbim VIP. &lt;a href=&quot;http://www.jabbim.cz/vip.html&quot;&gt;Získat nyní!&lt;/a&gt;</translation>
     </message>
 </context>
 <context>
