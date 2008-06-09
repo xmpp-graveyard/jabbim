@@ -1,143 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1">
+<!DOCTYPE TS><TS version="1.1" language="fr_FR">
+<defaultcodec></defaultcodec>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="jdm_ui.py" line="217"/>
+        <location filename="jdm_ui.py" line="207"/>
         <source>Jabber Disk Manager</source>
-        <translation type="unfinished"></translation>
+        <translation>Gestionnaire de disques Jabbim</translation>
     </message>
     <message>
-        <location filename="jdm_ui.py" line="234"/>
+        <location filename="jdm_ui.py" line="208"/>
         <source>Enter JID of disk owner:</source>
-        <translation type="unfinished"></translation>
+        <translation>Entrer l&apos; identifiant et le propriétaire du disque:</translation>
     </message>
     <message>
-        <location filename="jdm_ui.py" line="235"/>
+        <location filename="jdm_ui.py" line="209"/>
         <source>Reload</source>
-        <translation type="unfinished"></translation>
+        <translation>Recharger</translation>
     </message>
     <message>
-        <location filename="jdm_ui.py" line="225"/>
+        <location filename="jdm_ui.py" line="213"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;File info:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;￼p, li { white-space: pre-wrap; }￼&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;￼&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Infos fichier:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="jdm_ui.py" line="229"/>
+        <location filename="jdm_ui.py" line="217"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;File name:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;￼p, li { white-space: pre-wrap; }￼&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;￼&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Nom fichier:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="jdm_ui.py" line="233"/>
+        <location filename="jdm_ui.py" line="221"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;File size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;￼p, li { white-space: pre-wrap; }￼&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;￼&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Taille fichier:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="jdm_ui.py" line="219"/>
+        <location filename="jdm_ui.py" line="222"/>
         <source>Upload</source>
-        <translation type="unfinished"></translation>
+        <translation>Envoyer</translation>
     </message>
     <message>
-        <location filename="jdm_ui.py" line="220"/>
+        <location filename="jdm_ui.py" line="223"/>
         <source>Download</source>
-        <translation type="unfinished"></translation>
+        <translation>Télécharger</translation>
     </message>
     <message>
-        <location filename="jdm_ui.py" line="221"/>
+        <location filename="jdm_ui.py" line="224"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="jdm_ui.py" line="218"/>
-        <source>You can get as much as 1500 MB storage capacity with Jabbim VIP. &lt;a href=&quot;http://www.jabbim.cz/vip.html&quot;&gt;Subscribe now!&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer</translation>
     </message>
 </context>
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="jdm.py" line="94"/>
+        <location filename="jdm.py" line="93"/>
         <source>Jabber Disk</source>
-        <translation type="unfinished"></translation>
+        <translation>Disque Jabber</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="180"/>
+        <location filename="jdm.py" line="179"/>
         <source>Show my Jdisk in JDM</source>
-        <translation type="unfinished"></translation>
+        <translation>Montrer mon Jdisk dans le JDM</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="182"/>
+        <location filename="jdm.py" line="181"/>
         <source>Show my Album in JDM</source>
-        <translation type="unfinished"></translation>
+        <translation>Montrer mon album dans le JDM</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="184"/>
+        <location filename="jdm.py" line="183"/>
         <source>Show my Jdisk in browser</source>
-        <translation type="unfinished"></translation>
+        <translation>Montrer mon Jdisk dans le navigateur</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="186"/>
+        <location filename="jdm.py" line="185"/>
         <source>Show my Album in browser</source>
-        <translation type="unfinished"></translation>
+        <translation>Montrer mon album dans le navigateur</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="190"/>
+        <location filename="jdm.py" line="189"/>
         <source>Show users Jdisk in JDM</source>
-        <translation type="unfinished"></translation>
+        <translation>Montrer les utilisateurs de Jdisk dans le JDM</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="192"/>
+        <location filename="jdm.py" line="191"/>
         <source>Show users Album in JDM</source>
-        <translation type="unfinished"></translation>
+        <translation>Montrer les utilisateurs d&apos; Album dans le JDM</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="194"/>
+        <location filename="jdm.py" line="193"/>
         <source>Show users Jdisk in browser</source>
-        <translation type="unfinished"></translation>
+        <translation>Montrer les utilisateurs de Jdisk dans le navigateur</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="196"/>
+        <location filename="jdm.py" line="195"/>
         <source>Show users Album in browser</source>
-        <translation type="unfinished"></translation>
+        <translation>Montrer les utilisateurs d&apos; Album dans le navigateur</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="276"/>
+        <location filename="jdm.py" line="252"/>
+        <source>Show files as icons</source>
+        <translation>Montrer les fichiers sous forme d&apos; icônes</translation>
+    </message>
+    <message>
+        <location filename="jdm.py" line="261"/>
         <source>Download files</source>
-        <translation type="unfinished"></translation>
+        <translation>Télécharger les fichiers</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="278"/>
+        <location filename="jdm.py" line="263"/>
         <source>Remove files</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer les fichiers</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="280"/>
+        <location filename="jdm.py" line="265"/>
         <source>Copy links to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Copier les liens dans le bloc-note</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="282"/>
+        <location filename="jdm.py" line="267"/>
         <source>Download file</source>
-        <translation type="unfinished"></translation>
+        <translation>Télécharger le fichier</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="284"/>
+        <location filename="jdm.py" line="269"/>
         <source>Remove file</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer le fichier</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="286"/>
+        <location filename="jdm.py" line="271"/>
         <source>Copy link to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Copier le lien dans le bloc-note</translation>
     </message>
 </context>
 <context>
@@ -145,7 +146,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="jdm.py" line="21"/>
         <source>Show files as icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Montrer les fichiers sous forme d&apos; icônes</translation>
     </message>
 </context>
 </TS>
