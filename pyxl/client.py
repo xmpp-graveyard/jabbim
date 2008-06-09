@@ -261,7 +261,7 @@ class Client(derived):
 		self.jid = jid.JID(JID)
 		self.password  = password
 		self.host = self.jid.host
-		self.port = port
+		self.port = int(port)
 		
 		if boshURL != '':
 			try:
