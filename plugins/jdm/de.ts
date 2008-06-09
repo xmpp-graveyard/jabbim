@@ -8,13 +8,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jdm_ui.py" line="234"/>
-        <source>Enter JID of disk owner:</source>
+        <location filename="jdm_ui.py" line="218"/>
+        <source>You can get as much as 1500 MB storage capacity with Jabbim VIP. &lt;a href=&quot;http://www.jabbim.cz/vip.html&quot;&gt;Subscribe now!&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jdm_ui.py" line="235"/>
-        <source>Reload</source>
+        <location filename="jdm_ui.py" line="219"/>
+        <source>Upload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="jdm_ui.py" line="220"/>
+        <source>Download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="jdm_ui.py" line="221"/>
+        <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -42,23 +52,13 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jdm_ui.py" line="219"/>
-        <source>Upload</source>
+        <location filename="jdm_ui.py" line="234"/>
+        <source>Enter JID of disk owner:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jdm_ui.py" line="220"/>
-        <source>Download</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="jdm_ui.py" line="221"/>
-        <source>Delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="jdm_ui.py" line="218"/>
-        <source>You can get as much as 1500 MB storage capacity with Jabbim VIP. &lt;a href=&quot;http://www.jabbim.cz/vip.html&quot;&gt;Subscribe now!&lt;/a&gt;</source>
+        <location filename="jdm_ui.py" line="235"/>
+        <source>Reload</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
