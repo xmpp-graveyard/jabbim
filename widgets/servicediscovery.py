@@ -222,7 +222,8 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		self.main.client.getDiscoItems(jid, callback = self._discoItemsReceived, callback_par = (item,False))
 
 	def _discoinfo(self,item):
-		key=unicode(item.text(3))
+		key=self.main.getJid(unicode(item.text(3))).host
+		#print key,self.main.client.disco.keys()
 		if self.main.client.disco[key][None].has_key("features"):
 			if "jabber:iq:register" in list(self.main.client.disco[key][None]['features']):
 				register=QtGui.QPushButton(self.ui.tree)
@@ -271,7 +272,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		for key,values in self.main.client.disco[jid][None]['items'].iteritems():
 			#print values
 			it=QtGui.QTreeWidgetItem(item)
-			it.setText(3,values['jid'])
+			it.setText(3,self.main.getJid(values['jid']).full())
 			if values.has_key("name"):
 				it.setText(0,values["name"])
 			else:
