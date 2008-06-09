@@ -1464,7 +1464,7 @@ class clientClass(pyxl.client.Client):
 		mainWindow=self.main
 		self.main.ui.loginInfo.setText(mainWindow.tr("Jabbim is logged in."))
 		self.main.ui.splashProgress.setValue(40)
-		print "i'm on_authd end..."
+		print "i'm on_authd end...z"
 
 class AvatarLabel(QtGui.QLabel):
 	def __init__(self,main,parent):
@@ -4368,7 +4368,7 @@ class scrollBar(QtGui.QScrollArea):
 
 if __name__ == "__main__":
 	translator=QtCore.QTranslator()
-	translator.load("locales/jabbim_fr.qm")
+	translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
 	print "trying to load locales:","locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm"
 	app.installTranslator(translator)
 	MainWindow = mainWindow()
