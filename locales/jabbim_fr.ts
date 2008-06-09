@@ -2755,32 +2755,32 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="1611"/>
         <source>amazed</source>
-        <translation>être étonné</translation>
+        <translation>est étonné</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1612"/>
         <source>angry</source>
-        <translation>être en colère</translation>
+        <translation>est en colère</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1613"/>
         <source>annoyed</source>
-        <translation>être ennuyé</translation>
+        <translation>est ennuyé</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1614"/>
         <source>anxious</source>
-        <translation>être anxieux</translation>
+        <translation>est anxieux</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1615"/>
         <source>aroused</source>
-        <translation>être excité</translation>
+        <translation>est excité</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1616"/>
         <source>ashamed</source>
-        <translation>être honteux</translation>
+        <translation>est honteux</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1617"/>
@@ -2790,12 +2790,12 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="1618"/>
         <source>brave</source>
-        <translation>être courageux</translation>
+        <translation>est courageux</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1619"/>
         <source>calm</source>
-        <translation>être serein</translation>
+        <translation>est serein</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1620"/>
@@ -2805,92 +2805,92 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="1621"/>
         <source>confused</source>
-        <translation>être confus</translation>
+        <translation>est confus</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1622"/>
         <source>contented</source>
-        <translation>être satifait</translation>
+        <translation>est satifait</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1623"/>
         <source>cranky</source>
-        <translation>être grincheux</translation>
+        <translation>est grincheux</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1624"/>
         <source>curious</source>
-        <translation>être curieux</translation>
+        <translation>est curieux</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1625"/>
         <source>depressed</source>
-        <translation>être déprimé</translation>
+        <translation>est déprimé</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1626"/>
         <source>disappointed</source>
-        <translation>être déçu</translation>
+        <translation>est déçu</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1627"/>
         <source>disgusted</source>
-        <translation>être dégouté</translation>
+        <translation>est dégouté</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1628"/>
         <source>distracted</source>
-        <translation>être distrait</translation>
+        <translation>est distrait</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1629"/>
         <source>embarrassed</source>
-        <translation>être embarrassé</translation>
+        <translation>est embarrassé</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1630"/>
         <source>excited</source>
-        <translation>être enthousiaste</translation>
+        <translation>est enthousiaste</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1631"/>
         <source>flirtatious</source>
-        <translation>être galant</translation>
+        <translation>est galant</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1632"/>
         <source>frustrated</source>
-        <translation>être frustré</translation>
+        <translation>est frustré</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1633"/>
         <source>grumpy</source>
-        <translation>être grognon</translation>
+        <translation>est grognon</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1634"/>
         <source>guilty</source>
-        <translation>être coupable</translation>
+        <translation>est coupable</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1635"/>
         <source>happy</source>
-        <translation>être heureux</translation>
+        <translation>est heureux</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1636"/>
         <source>hot</source>
-        <translation>être bouillant</translation>
+        <translation>est bouillant</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1637"/>
         <source>humbled</source>
-        <translation>être humilié</translation>
+        <translation>est humilié</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1638"/>
         <source>humiliated</source>
-        <translation>être cassé</translation>
+        <translation>est humilié</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1639"/>
@@ -2900,157 +2900,157 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="1640"/>
         <source>hurt</source>
-        <translation>être blessé</translation>
+        <translation>est blessé</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1641"/>
         <source>impressed</source>
-        <translation>être impressionné</translation>
+        <translation>est impressionné</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1642"/>
         <source>in_awe</source>
-        <translation>être intimidé</translation>
+        <translation>est intimidé</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1643"/>
         <source>in_love</source>
-        <translation>être amoureux</translation>
+        <translation>est amoureux</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1644"/>
         <source>indignant</source>
-        <translation>être indigné</translation>
+        <translation>est indigné</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1645"/>
         <source>interested</source>
-        <translation>être intéressé</translation>
+        <translation>est intéressé</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1646"/>
         <source>intoxicated</source>
-        <translation>être intoxiqué</translation>
+        <translation>est intoxiqué</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1647"/>
         <source>invincible</source>
-        <translation>être invincible</translation>
+        <translation>est invincible</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1648"/>
         <source>jealous</source>
-        <translation>être jaloux</translation>
+        <translation>est jaloux</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1649"/>
         <source>lonely</source>
-        <translation>être seul</translation>
+        <translation>est seul</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1650"/>
         <source>mean</source>
-        <translation>être malicieux</translation>
+        <translation>est malicieux</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1651"/>
         <source>moody</source>
-        <translation>être morose</translation>
+        <translation>est morose</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1652"/>
         <source>nervous</source>
-        <translation>être nerveux</translation>
+        <translation>est nerveux</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1653"/>
         <source>neutral</source>
-        <translation>être neutre</translation>
+        <translation>est neutre</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1654"/>
         <source>offended</source>
-        <translation>être offensé</translation>
+        <translation>est offensé</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1655"/>
         <source>playful</source>
-        <translation>être enjoué</translation>
+        <translation>est enjoué</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1656"/>
         <source>proud</source>
-        <translation>être fier</translation>
+        <translation>est fier</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1657"/>
         <source>relieved</source>
-        <translation>être soulagé</translation>
+        <translation>est soulagé</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1658"/>
         <source>remorseful</source>
-        <translation>être plein de remords</translation>
+        <translation>est plein de remords</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1659"/>
         <source>restless</source>
-        <translation>être impatient</translation>
+        <translation>est impatient</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1660"/>
         <source>sad</source>
-        <translation>être triste</translation>
+        <translation>est triste</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1661"/>
         <source>sarcastic</source>
-        <translation>être sarcartique</translation>
+        <translation>est sarcartique</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1662"/>
         <source>serious</source>
-        <translation>être sérieux</translation>
+        <translation>est sérieux</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1663"/>
         <source>shocked</source>
-        <translation>être choqué</translation>
+        <translation>est choqué</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1664"/>
         <source>shy</source>
-        <translation>être timide</translation>
+        <translation>est timide</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1665"/>
         <source>sick</source>
-        <translation>être malade</translation>
+        <translation>est malade</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1666"/>
         <source>sleepy</source>
-        <translation>être endormi</translation>
+        <translation>est endormi</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1667"/>
         <source>stressed</source>
-        <translation>être stressé</translation>
+        <translation>est stressé</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1668"/>
         <source>surprised</source>
-        <translation>être étonné</translation>
+        <translation>est étonné</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1669"/>
         <source>thirsty</source>
-        <translation>être assoiffé</translation>
+        <translation>est assoiffé</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1672"/>
         <source>worried</source>
-        <translation>être inquiet</translation>
+        <translation>est inquiet</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1672"/>
@@ -3100,37 +3100,37 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="1681"/>
         <source>having_a_beer</source>
-        <translation>prend une bière</translation>
+        <translation>une bière</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1682"/>
         <source>having_coffee</source>
-        <translation>prend un café</translation>
+        <translation>un café</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1683"/>
         <source>having_tea</source>
-        <translation>prend un thé</translation>
+        <translation>un thé</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1684"/>
         <source>having_a_snack</source>
-        <translation>prend un repas</translation>
+        <translation>un repas</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1685"/>
         <source>having_breakfast</source>
-        <translation>prend le petit déjeuner</translation>
+        <translation>le petit déjeuner</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1686"/>
         <source>having_dinner</source>
-        <translation>prend le dîner</translation>
+        <translation>le dîner</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1687"/>
         <source>having_lunch</source>
-        <translation>prend le déjeuner</translation>
+        <translation>le déjeuner</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1721"/>
@@ -3280,7 +3280,7 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="1717"/>
         <source>in_real_life</source>
-        <translation>dans la vraie vie</translation>
+        <translation>de tout et rien</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1718"/>
@@ -3375,7 +3375,7 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="1738"/>
         <source>grooming</source>
-        <translation>fait du toilettage</translation>
+        <translation>fait sa toilette</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1740"/>
