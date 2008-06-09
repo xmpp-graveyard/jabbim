@@ -131,42 +131,42 @@
     <message>
         <location filename="notification.py" line="250"/>
         <source>Tray Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Tray ikona</translation>
     </message>
     <message>
         <location filename="notification.py" line="252"/>
         <source>Play sound on other messages from user</source>
-        <translation type="unfinished"></translation>
+        <translation>Přehrávat zvuk při ostatních zprávách</translation>
     </message>
     <message>
         <location filename="notification.py" line="254"/>
         <source>Play sound on new presence</source>
-        <translation type="unfinished"></translation>
+        <translation>Přehrávat zvuk při změně stavu</translation>
     </message>
     <message>
         <location filename="notification.py" line="255"/>
         <source>Play sound on file transfer</source>
-        <translation type="unfinished"></translation>
+        <translation>Přehrávat zvuk při příjmu a odeslání souboru</translation>
     </message>
     <message>
         <location filename="notification.py" line="259"/>
         <source>Use OSD for first message</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit OSD při první zprávě rozhovoru</translation>
     </message>
     <message>
         <location filename="notification.py" line="260"/>
         <source>Use OSD for other messages</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit OSD při ostatních zprávách</translation>
     </message>
     <message>
         <location filename="notification.py" line="264"/>
         <source>Headline font size</source>
-        <translation type="unfinished"></translation>
+        <translation>Velikost písma nadpisu</translation>
     </message>
     <message>
         <location filename="notification.py" line="265"/>
         <source>Text font size</source>
-        <translation type="unfinished"></translation>
+        <translation>Velikost písma popisu</translation>
     </message>
 </context>
 </TS>
