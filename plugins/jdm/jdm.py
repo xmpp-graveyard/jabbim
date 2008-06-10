@@ -514,28 +514,29 @@ class Plugin(plugins.PluginBase):
 		return True
 
 	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
-		if self.typ=="public":
-			text="public@disk.jabbim.cz"
-		elif self.typ=="private":
-			text="private@disk.jabbim.cz"
-		elif self.typ=="album":
-			text="album@disk.jabbim.cz"
-		filename=unicode(self.main.client.ft[sid].file)
-		if error == None and self.main.client.ft[sid].tojid.find(text)!=-1 and not filename in self.filesToOpen:
-			self.update=True
-			self.call(typ=self.typ)
-		if filename in self.filesToOpen:
-			self.filesToOpen.remove(filename)
-			if self.main.allowedJids.has_key(text+"/"+self.main.client.ft[sid].fileprops['name']):
-				del self.main.allowedJids[text+"/"+self.main.client.ft[sid].fileprops['name']]
-			if error==None:
-				if sys.platform == 'win32':
-					filename=filename.replace("/","\\")
-					print "open win32",[filename]
-					os.startfile(filename)
-				else:
-					print "open linux",[filename]
-					os.system(u"xdg-open \"%s\"" % filename.encode('utf8'))
+		if not self.window.isHidden():
+			if self.typ=="public":
+				text="public@disk.jabbim.cz"
+			elif self.typ=="private":
+				text="private@disk.jabbim.cz"
+			elif self.typ=="album":
+				text="album@disk.jabbim.cz"
+			filename=unicode(self.main.client.ft[sid].file)
+			if error == None and self.main.client.ft[sid].tojid.find(text)!=-1 and not filename in self.filesToOpen:
+				self.update=True
+				self.call(typ=self.typ)
+			if filename in self.filesToOpen:
+				self.filesToOpen.remove(filename)
+				if self.main.allowedJids.has_key(text+"/"+self.main.client.ft[sid].fileprops['name']):
+					del self.main.allowedJids[text+"/"+self.main.client.ft[sid].fileprops['name']]
+				if error==None:
+					if sys.platform == 'win32':
+						filename=filename.replace("/","\\")
+						print "open win32",[filename]
+						os.startfile(filename)
+					else:
+						print "open linux",[filename]
+						os.system(u"xdg-open \"%s\"" % filename.encode('utf8'))
 			
 
 	def clicked(self,item,old):
