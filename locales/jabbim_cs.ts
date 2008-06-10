@@ -3077,7 +3077,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="1618"/>
         <source>brave</source>
-        <translation>Odvážný</translation>
+        <translation type="unfinished">Statečný</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1619"/>
