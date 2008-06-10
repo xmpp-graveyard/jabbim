@@ -7,6 +7,7 @@ from twisted.python import log
 from configobj import ConfigObj
 from twisted.internet import threads
 from pyxl import jid as jidT
+import traceback
 
 class calendar(QtGui.QCalendarWidget):
 	def __init__(self,parent):
@@ -272,7 +273,9 @@ class FileBackend:
 			if os.listdir(quoted_dir_name) == []:
 				os.rmdir(quoted_dir_name)
 		except Exception, ex:
-			log.err('convertOldHistoryFiles failure: ' + unicode(ex))
+			log.msg('convertOldHistoryFiles failure: ' +unicode(ex))
+			message = unicode(traceback.format_exc())
+			log.msg(message)
 
 class config:
 	def __init__(self,main):
