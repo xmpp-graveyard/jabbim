@@ -139,6 +139,16 @@ p, li { white-space: pre-wrap; }
         <source>Copy link to clipboard</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="jdm.py" line="29"/>
+        <source>Jabbim disk manager</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="jdm.py" line="31"/>
+        <source>JDM Plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>self.main</name>

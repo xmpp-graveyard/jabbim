@@ -29,6 +29,19 @@
     </message>
 </context>
 <context>
+    <name>Plugin</name>
+    <message>
+        <location filename="logview.py" line="19"/>
+        <source>Extra debug window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="logview.py" line="21"/>
+        <source>LogView Plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>self.main</name>
     <message>
         <location filename="logview.py" line="11"/>
@@ -36,7 +49,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="logview.py" line="60"/>
+        <location filename="logview.py" line="61"/>
         <source>Log</source>
         <translation type="unfinished"></translation>
     </message>

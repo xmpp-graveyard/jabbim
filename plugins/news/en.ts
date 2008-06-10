@@ -8,12 +8,12 @@
         <translation type="obsolete">Show news</translation>
     </message>
     <message>
-        <location filename="news.py" line="77"/>
+        <location filename="news.py" line="76"/>
         <source>News: </source>
         <translation>News: </translation>
     </message>
     <message>
-        <location filename="news.py" line="77"/>
+        <location filename="news.py" line="76"/>
         <source>From: </source>
         <translation>From: </translation>
     </message>
@@ -31,7 +31,7 @@
         <translation>Show window on new</translation>
     </message>
     <message>
-        <location filename="news.py" line="54"/>
+        <location filename="news.py" line="53"/>
         <source>Show news</source>
         <translation type="unfinished">Show news</translation>
     </message>

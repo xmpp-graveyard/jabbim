@@ -26,19 +26,29 @@
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="archive.py" line="529"/>
+        <location filename="archive.py" line="523"/>
         <source>Contacts in roster</source>
         <translation>Kontakty v seznamu kontaktů</translation>
     </message>
     <message>
-        <location filename="archive.py" line="531"/>
+        <location filename="archive.py" line="525"/>
         <source>Others</source>
         <translation>Ostatní</translation>
     </message>
     <message>
-        <location filename="archive.py" line="407"/>
+        <location filename="archive.py" line="401"/>
         <source>History</source>
         <translation>Historie</translation>
+    </message>
+    <message>
+        <location filename="archive.py" line="292"/>
+        <source>Message Archiving</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="archive.py" line="294"/>
+        <source>Archive Plugin</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -49,12 +59,12 @@
         <translation type="obsolete">Počet zpráv z archivu, které jsou načteny do rozhovoru:</translation>
     </message>
     <message>
-        <location filename="archive.py" line="290"/>
+        <location filename="archive.py" line="283"/>
         <source>Number of last messages shown:</source>
         <translation>Počet zpráv z archivu, které jsou načteny do rozhovoru:</translation>
     </message>
     <message>
-        <location filename="archive.py" line="291"/>
+        <location filename="archive.py" line="284"/>
         <source>Don&apos;t show messages older than:</source>
         <translation>Nezobrazovat v rozhovoru zprávy starší než:</translation>
     </message>

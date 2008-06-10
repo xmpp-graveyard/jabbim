@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs_CZ">
 <context>
+    <name>Plugin</name>
+    <message>
+        <location filename="autoaway.py" line="121"/>
+        <source>Auto away</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="autoaway.py" line="123"/>
+        <source>Autoaway Plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>self.main</name>
     <message>
         <location filename="autoaway.py" line="111"/>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs_CZ">
-<defaultcodec></defaultcodec>
 <context>
     <name>Plugin</name>
     <message>
@@ -9,12 +8,12 @@
         <translation type="obsolete">Zobrazit novinky</translation>
     </message>
     <message>
-        <location filename="news.py" line="77"/>
+        <location filename="news.py" line="76"/>
         <source>News: </source>
         <translation>Novinky: </translation>
     </message>
     <message>
-        <location filename="news.py" line="77"/>
+        <location filename="news.py" line="76"/>
         <source>From: </source>
         <translation>Zdroj: </translation>
     </message>
@@ -32,7 +31,7 @@
         <translation>Zobrazit okno při nové zprávě</translation>
     </message>
     <message>
-        <location filename="news.py" line="54"/>
+        <location filename="news.py" line="53"/>
         <source>Show news</source>
         <translation>Zobrazit novinky</translation>
     </message>
