@@ -24,13 +24,13 @@ class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'jdm'
-		self.description = 'Jabbim disk manager'
+		self.installTranslator()
+		self.description = self.tr('Jabbim disk manager')
 		self.author = u"Josef 'Pepeq' Halíček"
-		self.name = 'JDM Plugin'
+		self.name = self.tr('JDM Plugin')
 		self.version = '0.1148'
 		self.category = ['utils']
 		self.url = 'http://dev.jabbim.cz/jabbim'
-		self.installTranslator()
 		self.configDialog=config(self)
 		if main:
 			self.loadConfig()

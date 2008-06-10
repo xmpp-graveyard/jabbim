@@ -287,9 +287,10 @@ class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'archive'
-		self.description = 'Message Archiving'
+		self.installTranslator()
+		self.description = self.tr('Message Archiving')
 		self.author = "Jiri 'Sef' Gabrys"
-		self.name = 'Archive Plugin'
+		self.name = self.tr('Archive Plugin')
 		self.version = '0.189'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'

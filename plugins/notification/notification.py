@@ -269,13 +269,14 @@ class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'notification'
-		self.description = 'System tray and sound notification'
+		self.installTranslator()
+		self.description = self.tr('System tray and sound notification')
 		self.author = "Jan 'HanzZ' Kaluza & Josef 'PepeQ' Halicek"
-		self.name = 'Notification Plugin'
+		self.name = self.tr('Notification Plugin')
 		self.version = '0.666'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
-		self.installTranslator()
+		
 		self.configDialog=config(self)
 		self.showInPreferences=True
 		self.preferencesIcon=QtGui.QIcon(plugindir+"/audio.png")

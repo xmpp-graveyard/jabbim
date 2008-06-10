@@ -24,9 +24,10 @@ class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'tune'
-		self.description = 'Plugin for User Tune'
+		self.installTranslator()
+		self.description = self.tr('Plugin for User Tune')
 		self.author = "Jiri 'Sef' Gabrys + Josef 'PepeQ' Halicek"
-		self.name = 'tune'
+		self.name = self.tr('tune')
 		self.version = '0.23'
 		self.category = ['utils']
 		self.configDialog=config(self)

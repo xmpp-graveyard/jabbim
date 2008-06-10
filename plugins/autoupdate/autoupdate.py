@@ -24,9 +24,10 @@ class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'autoupdate'
-		self.description = 'Autoupdate'
+		self.installTranslator()
+		self.description = self.tr('Updates plugins')
 		self.author = "Jiri 'Sef' Gabrys"
-		self.name = 'Autoupdate'
+		self.name = self.tr('Autoupdate')
 		self.version = '0.02'
 		self.category = ['utils']
 		self.url = 'http://dev.jabbim.cz/jabbim'

@@ -14,9 +14,10 @@ class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'logview'
-		self.description = 'Extra debug window'
+		self.installTranslator()
+		self.description = self.tr('Extra debug window')
 		self.author = "Jiri 'Sef' Gabrys"
-		self.name = 'LogView Plugin'
+		self.name = self.tr('LogView Plugin')
 		self.version = '0.042'
 		self.category = ['log', 'misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'

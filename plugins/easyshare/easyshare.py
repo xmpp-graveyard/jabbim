@@ -119,9 +119,10 @@ class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'easyshare'
-		self.description = 'Easy filesharing'
+		self.installTranslator()
+		self.description = self.tr('Easy filesharing')
 		self.author = "Jiri 'Sef' Gabrys"
-		self.name = 'EasyShare'
+		self.name = self.tr('EasyShare')
 		self.version = '0.01'
 		self.category = ['utils']
 		self.url = 'http://dev.jabbim.cz/jabbim'

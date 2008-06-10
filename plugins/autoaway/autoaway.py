@@ -116,9 +116,10 @@ class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'autoaway'
-		self.description = 'Auto away'
+		self.installTranslator()
+		self.description = self.tr('Auto away')
 		self.author = u"Jan 'HanzZ' Kaluža"
-		self.name = 'Autoaway Plugin'
+		self.name = self.tr('Autoaway Plugin')
 		self.version = '0.022'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
@@ -128,7 +129,6 @@ class Plugin(plugins.PluginBase):
 		#self.config['preserve_show'] = {'description':"Change only status message", 'default':'True', 'value': '','type':'boolean'}
 		self.threadRun=True
 		self.awayTime=1
-		self.installTranslator()
 		self.configDialog=config(self)
 		if main:
 			self.loadConfig()
