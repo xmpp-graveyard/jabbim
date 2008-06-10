@@ -273,7 +273,13 @@ class FileBackend:
 			if os.listdir(quoted_dir_name) == []:
 				os.rmdir(quoted_dir_name)
 		except Exception, ex:
-			log.msg('convertOldHistoryFiles failure: ' +unicode(ex))
+			try:
+				log.msg('convertOldHistoryFiles failure: ' +unicode(ex))
+			except:
+				try:
+					log.msg('convertOldHistoryFiles failure: ' +unicode(ex,'utf-8'))
+				except:
+					pass
 			message = unicode(traceback.format_exc())
 			log.msg(message)
 
