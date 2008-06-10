@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="fr">
+<defaultcodec></defaultcodec>
 <context>
     <name>Plugin</name>
     <message>
@@ -108,42 +109,42 @@
     <message>
         <location filename="notification.py" line="250"/>
         <source>Tray Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Icone dans la barre système</translation>
     </message>
     <message>
         <location filename="notification.py" line="252"/>
         <source>Play sound on other messages from user</source>
-        <translation type="unfinished"></translation>
+        <translation>Jouer un son au premier message de l&apos;utilisateur</translation>
     </message>
     <message>
         <location filename="notification.py" line="254"/>
         <source>Play sound on new presence</source>
-        <translation type="unfinished"></translation>
+        <translation>Jouer un son pour une nouvelle présence</translation>
     </message>
     <message>
         <location filename="notification.py" line="255"/>
         <source>Play sound on file transfer</source>
-        <translation type="unfinished"></translation>
+        <translation>Jouer un son pour le transfert de fichier</translation>
     </message>
     <message>
         <location filename="notification.py" line="259"/>
         <source>Use OSD for first message</source>
-        <translation type="unfinished"></translation>
+        <translation>Utiliser l&apos; OSD pour le premier message </translation>
     </message>
     <message>
         <location filename="notification.py" line="260"/>
         <source>Use OSD for other messages</source>
-        <translation type="unfinished"></translation>
+        <translation>Utiliser l&apos; OSD pour les autres messages </translation>
     </message>
     <message>
         <location filename="notification.py" line="264"/>
         <source>Headline font size</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille de la police du titre</translation>
     </message>
     <message>
         <location filename="notification.py" line="265"/>
         <source>Text font size</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille de la police du texte</translation>
     </message>
 </context>
 </TS>
