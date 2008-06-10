@@ -262,6 +262,7 @@ class FileBackend:
 							merged_file.write(new_line)
 							j += 1
 					merged_file.close()
+					old_file.close()
 					os.rename(merged_filename, new_filename)
 					os.unlink(old_filename)
 
@@ -273,15 +274,7 @@ class FileBackend:
 			if os.listdir(quoted_dir_name) == []:
 				os.rmdir(quoted_dir_name)
 		except Exception, ex:
-			try:
-				log.msg('convertOldHistoryFiles failure: ' +unicode(ex))
-			except:
-				try:
-					log.msg('convertOldHistoryFiles failure: ' +unicode(ex,'utf-8'))
-				except:
-					pass
-			message = unicode(traceback.format_exc())
-			log.msg(message)
+			log.msg('convertOldHistoryFiles failure: ' + str(ex))
 
 class config:
 	def __init__(self,main):
