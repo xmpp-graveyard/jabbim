@@ -84,6 +84,7 @@ from twisted.web.client import downloadPage
 from twisted.web import xmlrpc, server #for xmlrpc plugin
 import shutil #xmlrpc
 from widgets.extra import extraDialog
+from locale import strcoll
 
 class clientClass(pyxl.client.Client):
 	"""
@@ -1709,7 +1710,9 @@ class mainWindow(QtGui.QMainWindow):
 					"thirsty":self.tr("thirsty"),
 					"worried":self.tr("worried")
 		}
-		self.activities = {"buying_groceries":self.tr("buying_groceries"),
+		self.activities = {
+					"none":self.tr("None"),
+					"buying_groceries":self.tr("buying_groceries"),
 					"cleaning":self.tr("cleaning"),
 					"cooking":self.tr("cooking"),
 					"doing_maintenance":self.tr("doing_maintenance"),
@@ -2729,8 +2732,9 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.moodButton.show()
 			# User Mood hack
 			self.moodMenu = self.statusWidgetMenu.addMenu(self.tr('Mood'))
-			keys = self.moods.keys()
-			keys.sort()
+ 			items = self.moods.items()
+ 			items.sort(cmp=lambda a,b: strcoll(unicode(a[1]),unicode(b[1])))
+ 			keys = [ k for k,_ in items ]
 			#highlight current mood if any
 			contact = self.client.getContactByJid(self.client.jid.userhost())
 			current = False #this mood is currently set if True
@@ -2767,6 +2771,11 @@ class mainWindow(QtGui.QMainWindow):
 			activity =  self.statusWidgetMenu.addMenu(self.tr('Activity'))
 			app.connect(activity, QtCore.SIGNAL("triggered ( QAction *)"),self.activityChanged)
 
+			t = self.activities['none']
+			action = activity.addAction(t)
+			action.setObjectName('activity')
+			action.setData(QtCore.QVariant(['none']))
+			activity.addSeparator()
 			for group, txt in self.activityGroups.iteritems():
 				menu = activity.addMenu(txt[0])
 				#keys = self.activities.keys()
@@ -2922,7 +2931,10 @@ class mainWindow(QtGui.QMainWindow):
 		if cmd == 'activity':
 			data = data.toList()
 			group = unicode(data[0].toString())
-			a = unicode(data[1].toString())
+			if group == "none":
+				a = group = None
+			else:
+				a = unicode(data[1].toString())
 			log.msg('setting activity to %s/%s'%(group, a))
 			self.client.sendPEP('http://jabber.org/protocol/activity', self.client.getActivityPayload(group, a))
 

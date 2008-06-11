@@ -849,11 +849,12 @@ class derived:
 	
 	def getActivityPayload(self, group, spec = None, text = None):
 		a = Element(('http://jabber.org/protocol/activity', 'activity'))
-		g = a.addElement(group)
-		if spec != None:
-			g.addElement(spec)
-		if text != None and len(text) > 0 :
-			a.addElement('text', content = text)
+		if group:
+			g = a.addElement(group)
+			if spec != None:
+				g.addElement(spec)
+			if text != None and len(text) > 0 :
+				a.addElement('text', content = text)
 		return a
 	
 	def getTunePayload(self, args):

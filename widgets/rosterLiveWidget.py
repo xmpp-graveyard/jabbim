@@ -33,6 +33,7 @@ import defaultrosterstyle
 import compactrosterstyle
 from include import rot13
 import miniroster
+from locale import strcoll
 
 class emptyRosterWidget(QtGui.QWidget):
 	def __init__(self,parent=None):
@@ -848,7 +849,7 @@ class rosterWidget(QtGui.QWidget):
 		Sort groups and users in groups and count online/offline users
 		"""
 		self.sortedGroups=self.groups.keys()
-		self.sortedGroups.sort()
+		self.sortedGroups.sort(cmp=strcoll)
 		if self.specialName in self.sortedGroups:
 			self.sortedGroups.remove(self.specialName)
 			self.sortedGroups.append(self.specialName)
@@ -856,7 +857,7 @@ class rosterWidget(QtGui.QWidget):
 			temp=[]
 			for user in self.getGroupUsers(group):
 				temp.append([unicode(user.status)+user.name,user])
-			temp.sort()
+			temp.sort(cmp=lambda a,b: strcoll(a[0],b[0]))
 			self.sorted[group]=temp
 
 			all=0
