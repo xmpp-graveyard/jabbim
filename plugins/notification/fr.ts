@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="fr">
+<defaultcodec></defaultcodec>
 <context>
     <name>Plugin</name>
     <message>
@@ -45,12 +46,12 @@
     <message>
         <location filename="notification.py" line="274"/>
         <source>System tray and sound notification</source>
-        <translation type="unfinished"></translation>
+        <translation>Barre système et notification du son</translation>
     </message>
     <message>
         <location filename="notification.py" line="276"/>
         <source>Notification Plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>Plugin de notification</translation>
     </message>
 </context>
 <context>
