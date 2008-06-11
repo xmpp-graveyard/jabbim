@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'plugins/archive/historyBrowser.ui'
 #
-# Created: Thu Apr 10 19:41:06 2008
+# Created: Wed Jun 11 08:45:05 2008
 #      by: PyQt4 UI code generator 4.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -79,8 +79,8 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Archive browser", None, QtGui.QApplication.UnicodeUTF8))
-        self.search.setText(QtGui.QApplication.translate("MainWindow", "Search", None, QtGui.QApplication.UnicodeUTF8))
-        self.searchList.headerItem().setText(0,QtGui.QApplication.translate("MainWindow", "Date", None, QtGui.QApplication.UnicodeUTF8))
-        self.searchList.headerItem().setText(1,QtGui.QApplication.translate("MainWindow", "Message", None, QtGui.QApplication.UnicodeUTF8))
+        MainWindow.setWindowTitle(MainWindow.translate("MainWindow", "Archive browser", None, QtGui.QApplication.UnicodeUTF8))
+        self.search.setText(MainWindow.translate("MainWindow", "Search", None, QtGui.QApplication.UnicodeUTF8))
+        self.searchList.headerItem().setText(0,MainWindow.translate("MainWindow", "Date", None, QtGui.QApplication.UnicodeUTF8))
+        self.searchList.headerItem().setText(1,MainWindow.translate("MainWindow", "Message", None, QtGui.QApplication.UnicodeUTF8))
 
