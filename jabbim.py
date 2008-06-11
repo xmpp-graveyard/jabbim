@@ -135,16 +135,20 @@ class clientClass(pyxl.client.Client):
 				for item in self.main.ui.roster.getUserItems(frm):
 					item.mood=None
 			self.main.ui.roster.repaint()
-			if self.main.moodIcons.has_key(m) and frm == self.jid.userhost() : #our own mood
-				self.main.ui.moodButton.setIcon(self.main.moodIcons[m])
-			#if self.main.moodMenu.currentAction:
-				#font=self.main.moodMenu.currentAction.font()
-				#font.setBold(False)
-				#self.main.moodMenu.currentAction.setFont(font)
-			#self.main.moodMenu.currentAction=action
-			#font=self.main.moodMenu.currentAction.font()
-			#font.setBold(True)
-			#self.main.moodMenu.currentAction.setFont(font)
+			if frm == self.jid.userhost() : #our own mood
+				if m == '':
+					m = 'none'
+				if self.main.moodIcons.has_key(m):
+					self.main.ui.moodButton.setIcon(self.main.moodIcons[m])
+				if self.main.moodMenu.currentAction:
+					font=self.main.moodMenu.currentAction.font()
+					font.setBold(False)
+					self.main.moodMenu.currentAction.setFont(font)
+				if self.main.moodActions.has_key(m):
+					self.main.moodMenu.currentAction = self.main.moodActions[m]
+					font=self.main.moodMenu.currentAction.font()
+					font.setBold(True)
+					self.main.moodMenu.currentAction.setFont(font)
 		# user tune
 		elif ns=='http://jabber.org/protocol/tune':
 			tune=payload
@@ -1710,6 +1714,7 @@ class mainWindow(QtGui.QMainWindow):
 					"thirsty":self.tr("thirsty"),
 					"worried":self.tr("worried")
 		}
+		self.moodActions = {}
 		self.activities = {
 					"none":self.tr("None"),
 					"buying_groceries":self.tr("buying_groceries"),
@@ -2676,6 +2681,22 @@ class mainWindow(QtGui.QMainWindow):
 			jid=unicode(action.data().toString())
 			self.cmdMenu = widgets.commands.Commands(self, jid, action)
 
+	def buildMoodMenuAction(self, m, current_mood):
+		action = self.moodMenu.addAction(self.moods[m])
+		if m != 'none' and self.moodIcons.has_key(m):
+			action.setIcon(self.moodIcons[m])
+		action.setData(QtCore.QVariant(m))
+		action.setObjectName('mood')
+ 		if current_mood == m:
+ 			font = QtGui.QFont()
+ 			font.setBold(True)
+ 		else:
+ 			font = QtGui.QFont()
+ 			font.setBold(False)
+ 		action.setFont(font)
+		self.moodActions[m] = action
+		return action
+
 	def buildStatusWidgetMenu(self,data=None):
 		"""
 		Rebuilds (updates) status menu. Must be called without parametrs.
@@ -2735,36 +2756,31 @@ class mainWindow(QtGui.QMainWindow):
  			items = self.moods.items()
  			items.sort(cmp=lambda a,b: strcoll(unicode(a[1]),unicode(b[1])))
  			keys = [ k for k,_ in items ]
-			#highlight current mood if any
+ 			current_mood = 'none'
+			# XXX: getPEP always returns None here for me. I only receive
+			# the initial mood later in on_pep. If it's always like that,
+			# we can remove the following code and simplify some more.
 			contact = self.client.getContactByJid(self.client.jid.userhost())
-			current = False #this mood is currently set if True
-			action = self.moodMenu.addAction(self.moods['none'])
-			action.setData(QtCore.QVariant("none"))
-			action.setObjectName('mood')
+ 			if contact != None:
+ 				moods = contact.getPEP('http://jabber.org/protocol/mood')
+ 				log.msg("buildStatusWidgetMenu getPEP moods=%s" % str(moods))
+ 				if moods != None:
+ 					for el in moods.elements():
+ 						if el.name in self.moods.keys():
+ 							current_mood = el.name
+ 							break
+
+			current_action = self.buildMoodMenuAction('none', current_mood)
 			self.moodMenu.addSeparator()
 			for m in keys:
-				if m!="none":
-					txt = self.moods[m]
-					action = self.moodMenu.addAction(txt)
-					if self.moodIcons.has_key(m):
-						action.setIcon(self.moodIcons[m])
-					action.setData(QtCore.QVariant(m))
-					action.setObjectName('mood')
-					if contact != None:
-						moods = contact.getPEP('http://jabber.org/protocol/mood')
-						if moods != None:
-							for el in moods.elements():
-								if el.name == m:
-									current = action
-					if current:
-						font = QtGui.QFont()
-						font.setBold(True)
-					else:
-						font = QtGui.QFont()
-						font.setBold(False)
-				
-				action.setFont(font)
-			self.moodMenu.currentAction=current
+				if m != "none":
+					action = self.buildMoodMenuAction(m, current_mood)
+					if current_mood == m:
+						current_action = action
+
+			self.moodMenu.currentAction=current_action
+			if self.moodIcons.has_key(current_mood):
+				self.ui.moodButton.setIcon(self.moodIcons[current_mood])
 			app.connect(self.moodMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.moodChanged)
 			moodButtonRoot=QtGui.QMenu(self.ui.moodButton)
 			moodButtonRoot.addMenu(self.moodMenu)
