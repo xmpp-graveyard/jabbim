@@ -43,12 +43,12 @@
     <message>
         <location filename="archive.py" line="292"/>
         <source>Message Archiving</source>
-        <translation type="unfinished"></translation>
+        <translation>Plugin umožňující ukládání zpráv do historie</translation>
     </message>
     <message>
         <location filename="archive.py" line="294"/>
         <source>Archive Plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>Historie zpráv</translation>
     </message>
 </context>
 <context>
