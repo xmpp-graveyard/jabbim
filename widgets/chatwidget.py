@@ -372,7 +372,7 @@ class chatWidget(abstractChatWidget):
 				text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">&nbsp; %s</font>' % (t) #ikonka se este muze menit ;)
 				if self.main.config['showTuneChanges']=='True':
 					user=unicode(self.main.ui.roster.getNameByJID(self.jid))
-					message='<img src="images/22x22/icons/headphones.png" />&nbsp;'+user+" "+unicode(self.tr("is now listening:"))+" "+icon+" "+ t
+					message='<img src="images/22x22/icons/headphones.png" />&nbsp;'+user+" "+unicode(self.tr("is now listening:"))+" "+ t
 					self.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',unicode(message)))
 
 		self.ui.label.setText(text)
