@@ -5,12 +5,12 @@
     <message>
         <location filename="autoaway.py" line="121"/>
         <source>Auto away</source>
-        <translation type="unfinished"></translation>
+        <translation>Změní automaticky stav, pokud nepracujete s PC</translation>
     </message>
     <message>
         <location filename="autoaway.py" line="123"/>
         <source>Autoaway Plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatická nepřítomnost</translation>
     </message>
 </context>
 <context>

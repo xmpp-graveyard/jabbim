@@ -40,7 +40,7 @@
     <message>
         <location filename="autoupdate.py" line="29"/>
         <source>Updates plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>Automaticky aktualizuje pluginy</translation>
     </message>
 </context>
 <context>

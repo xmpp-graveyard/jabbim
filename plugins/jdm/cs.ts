@@ -161,7 +161,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="jdm.py" line="31"/>
         <source>JDM Plugin</source>
-        <translation>Jabbim Disk Manager</translation>
+        <translation>Jabbim Disk Manažer</translation>
     </message>
 </context>
 <context>

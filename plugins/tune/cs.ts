@@ -5,12 +5,12 @@
     <message>
         <location filename="tune.py" line="29"/>
         <source>Plugin for User Tune</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazí informace o právě přehráváné skladbě</translation>
     </message>
     <message>
         <location filename="tune.py" line="31"/>
         <source>tune</source>
-        <translation type="unfinished"></translation>
+        <translation>Právě poslouchám</translation>
     </message>
 </context>
 <context>

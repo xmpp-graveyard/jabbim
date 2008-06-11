@@ -33,12 +33,12 @@
     <message>
         <location filename="logview.py" line="19"/>
         <source>Extra debug window</source>
-        <translation type="unfinished"></translation>
+        <translation>Speciální okno pro zobrazení logu Jabbimu</translation>
     </message>
     <message>
         <location filename="logview.py" line="21"/>
         <source>LogView Plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazení logu</translation>
     </message>
 </context>
 <context>
