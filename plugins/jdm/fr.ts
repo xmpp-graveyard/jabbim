@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="fr_FR">
+<defaultcodec></defaultcodec>
 <context>
     <name>MainWindow</name>
     <message>
@@ -59,7 +60,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="jdm_ui.py" line="218"/>
         <source>You can get as much as 1500 MB storage capacity with Jabbim VIP. &lt;a href=&quot;http://www.jabbim.cz/vip.html&quot;&gt;Subscribe now!&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous pouvez obtenir plus de 1500 MB de capacité de stockage avec jabbim VIP. &lt;a href=&quot;http://www.jabbim.cz/vip.html&quot;&gt;Souscrivez maintenant!&lt;/a&gt;</translation>
     </message>
 </context>
 <context>
@@ -147,12 +148,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="jdm.py" line="29"/>
         <source>Jabbim disk manager</source>
-        <translation type="unfinished"></translation>
+        <translation>Gestionnaire de disques Jabbim</translation>
     </message>
     <message>
         <location filename="jdm.py" line="31"/>
         <source>JDM Plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>Gestionnaire de disques Jabbim Plugin</translation>
     </message>
 </context>
 <context>
