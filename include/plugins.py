@@ -223,6 +223,7 @@ class PluginBase:
 			if len(trans)==0:
 				trans=self._translator.translate("self.main",text)
 				if len(trans)==0:
+					print "cant translate'",text,"'"
 					return text
 		return trans
 

@@ -6,14 +6,16 @@ try:
 	if os.path.exists(sys.argv[1]) and sys.argv[2]:
 		os.system('/usr/bin/pyuic4 '+sys.argv[1]+' -o '+sys.argv[2])
 	else:
-		print 'usage:',sys.argv[1]," file.ui file.py"
+		print 'usage:',sys.argv[0]," file.ui file.py"
+		exit()
 except:
-	print 'usage:',sys.argv[1]," file.ui file.py"
+	print 'usage:',sys.argv[0]," file.ui file.py"
+	exit()
 try:
 	f=open(sys.argv[2],'r')
 except:
 	print "can't open file"
-	print 'usage:',sys.argv[1]," file.ui file.py"
+	print 'usage:',sys.argv[0]," file.ui file.py"
 	exit()
 data=f.read()
 f.close()
