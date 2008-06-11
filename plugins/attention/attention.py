@@ -37,11 +37,14 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.loadConfig()
 			self.registerHandler('on_attention', self.on_attention)
+			self.registerHandler('on_authd',self.on_authd)
 			self.group=QtGui.QButtonGroup()
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 		else:
 			self.loadConfig(homedir)
 
+	def on_authd(self):
+		self.registerFeature("http://www.xmpp.org/extensions/xep-0224.html#ns")
 
 	def on_attention(self, frm, body, subject, xhtml, error):
 		if ((int(time.time())-self.last_req)>self.delay):
@@ -54,17 +57,18 @@ class Plugin(plugins.PluginBase):
 
 
 	def buildChatWidget(self,jid,layout,widget):
-		button=QtGui.QToolButton()
-		button.setText(self.tr('Attention'))
-		button.setIconSize(QtCore.QSize(16,16))
-		button.setIcon(QtGui.QIcon("%s/attention.png" % self.pluginDir))
-		button.jid=unicode(jid)
-		
-		button.setToolTip(self.tr('Request the attention of the user!'))
-
-		
-		self.group.addButton(button)
-		layout.addWidget(button)
+		if self.main.client.hasFeature(self.main.getJid(jid).userhost(),"http://www.xmpp.org/extensions/xep-0224.html#ns"):
+			button=QtGui.QToolButton()
+			button.setText(self.tr('Attention'))
+			button.setIconSize(QtCore.QSize(16,16))
+			button.setIcon(QtGui.QIcon("%s/attention.png" % self.pluginDir))
+			button.jid=unicode(jid)
+			
+			button.setToolTip(self.tr('Request the attention of the user!'))
+	
+			
+			self.group.addButton(button)
+			layout.addWidget(button)
 		
 		
 	def buttonClicked(self, button):
