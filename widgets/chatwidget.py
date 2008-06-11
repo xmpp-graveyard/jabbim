@@ -260,6 +260,8 @@ class chatWidget(abstractChatWidget):
 		self.file=""
 		if self.main.client.avatarDef.has_key(unicode(jidT.JID(jid).userhost())):
 			self.file=self.main.realHomeDir+'/avatars/'+str(self.main.client.avatarDef[unicode(jidT.JID(jid).userhost())]) #: path to users avatar
+		elif self.main.client.avatarDef.has_key(unicode(jidT.JID(jid).full())):
+			self.file=self.main.realHomeDir+'/avatars/'+str(self.main.client.avatarDef[unicode(jidT.JID(jid).full())]) #: path to users avatar
 		self.avatarHeight=32 #: avatars height
 		if not os.path.isfile(self.file):
 			# use default avatar if users avatar doesn't exist
@@ -330,9 +332,11 @@ class chatWidget(abstractChatWidget):
 		self.refreshToolTip()
 
 	def refreshLabel(self):
+		print "ref"
 		text="<font size=\"3\"><b>"+self.name+"</b></font>"
 		contact=self.main.client.getContactByJid(self.jid)
 		if not contact:
+			self.ui.label.setText(text)
 			return
 		mood = contact.getPEP('http://jabber.org/protocol/mood')
 		if mood != None:

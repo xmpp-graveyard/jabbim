@@ -653,7 +653,9 @@ class chatWindow(QtGui.QMainWindow):
 				#tab.chat.ui.avatar.setPixmap(result)
 		result=self.main.getAvatar(self.main.getJid(unicode(jid)).userhost(),size="128x128",frame=True)
 		if not result:
-			result=self.main.getAvatar(QtGui.QPixmap("images/48x48/apps/jabbim.png"),size="64x64",frame=True)
+			result=self.main.getAvatar(self.main.getJid(unicode(jid)).full(),size="128x128",frame=True)
+			if not result:
+				result=self.main.getAvatar(QtGui.QPixmap("images/48x48/apps/jabbim.png"),size="64x64",frame=True)
 		tab.chat.ui.avatar.setPixmap(result)
 
 				
