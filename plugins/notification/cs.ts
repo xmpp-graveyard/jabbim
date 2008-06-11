@@ -50,7 +50,7 @@
     <message>
         <location filename="notification.py" line="276"/>
         <source>Notification Plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>Upozorňování</translation>
     </message>
 </context>
 <context>

@@ -156,12 +156,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="jdm.py" line="29"/>
         <source>Jabbim disk manager</source>
-        <translation type="unfinished"></translation>
+        <translation>Umožňuje zobrazovat Jabber Disk a Album jiných kontaktu a spravovat Vaše Album a Jabber Disk</translation>
     </message>
     <message>
         <location filename="jdm.py" line="31"/>
         <source>JDM Plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>Jabbim Disk Manager</translation>
     </message>
 </context>
 <context>
