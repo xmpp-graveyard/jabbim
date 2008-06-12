@@ -100,7 +100,7 @@ class clientClass(pyxl.client.Client):
 			self.client_os = utils.get_os_info()
 		else:
 			self.client_os = ''
-		self.version = '0.4SVN' #: version string
+		self.version = '0.4' #: version string
 		self.bookmarksEnabled=True #: True if bookmarks is enabled by server
 		self.xmlCount=[]
 		# load plugins
@@ -2966,7 +2966,8 @@ class mainWindow(QtGui.QMainWindow):
 			return
 		if cmd == 'activity':
 			return
-			
+		print 'presence'
+		print data.toList(),unicode(data.toString())
 		if len(data.toList())==0:
 			# We are sending presence to the server
 			data=unicode(data.toString())
@@ -2976,7 +2977,7 @@ class mainWindow(QtGui.QMainWindow):
 			data=data.toList()
 			jid=unicode(data[1].toString())
 			data=unicode(data[0].toString())
-
+			print jid,data
 		if data=='custom_message':
 			# show 'add custom message' dialog
 			cs = widgets.statuseditor.statusWidgetWindow(None,self,self)

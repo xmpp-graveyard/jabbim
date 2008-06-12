@@ -200,7 +200,7 @@ and many translators</string>
          <item row="2" column="0" >
           <widget class="QLabel" name="version" >
            <property name="text" >
-            <string>0.4 SVN</string>
+            <string>0.4</string>
            </property>
            <property name="alignment" >
             <set>Qt::AlignCenter</set>
