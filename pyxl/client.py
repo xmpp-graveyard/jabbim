@@ -364,7 +364,8 @@ class Client(derived):
 #		
 #		self.connection = sfact.buildProtocol('f').connectClass(host, port, client.XMPPClientFactory, self.jid,self.password)
 		log.msg('started - ' + unicode(time.time()))
-	
+		
+		
 	def bootLog(self, el):
 		if self.log:
 			self.reactor.callFromThread(self.on_xml,u'BOOT: ' + el.toXml())

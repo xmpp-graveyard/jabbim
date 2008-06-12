@@ -29,6 +29,7 @@ import sys
 # Twisted Imports
 from twisted.python import log, failure
 from twisted.internet import posixbase
+#import weakref
 
 
 
@@ -139,12 +140,14 @@ class QTReactor(posixbase.PosixReactorBase):
     def removeReader(self, reader):
         if reader in self._reads:
             self._reads[reader].shutdown()
+            self._reads[reader].deleteLater()
             del self._reads[reader]
 
 
     def removeWriter(self, writer):
         if writer in self._writes:
             self._writes[writer].shutdown()
+            self._writes[writer].deleteLater()
             del self._writes[writer]
 
 
@@ -163,6 +166,8 @@ class QTReactor(posixbase.PosixReactorBase):
     def simulate(self):
         if self._timer is not None:
             self._timer.stop()
+            self._timer.deleteLater()
+            del self._timer
             self._timer = None
 
         if not self.running:
@@ -182,6 +187,7 @@ class QTReactor(posixbase.PosixReactorBase):
         if self._timer is None:
             self._timer = QTimer()
             QObject.connect(self._timer, SIGNAL("timeout()"), self.simulate)
+
         self._timer.start(timeout)
 
 
