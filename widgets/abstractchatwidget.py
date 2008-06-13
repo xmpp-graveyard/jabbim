@@ -431,6 +431,7 @@ class abstractChatWidget(QtGui.QWidget):
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style type="text/css" media="screen,print"> @import url( "main.css" ); </style>
 <style id="mainStyle" type="text/css" media="screen,print"> %s </style>
 <script>
 function addMessage() {

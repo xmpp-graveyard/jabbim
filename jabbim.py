@@ -3875,7 +3875,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Loads chat skin. Skin is loaded to self.skin.
 		"""
-		loaded,self.skin=self.loadJabbimExtraConfig("chatskins/"+self.config['chatSkin'],self.realHomeDir+"/chatskins/"+self.config['chatSkin'])
+		loaded,self.skin=self.loadJabbimExtraConfig("chatskins/"+self.config['chatSkin'],"chatskins/cool/cool.cfg")
 		self.skin=self.skin['chatskin']
 		if not self.skin.has_key("spaces_between_lines"):
 			self.skin["spaces_between_lines"]='0'
