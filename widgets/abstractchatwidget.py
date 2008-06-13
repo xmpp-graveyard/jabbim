@@ -426,6 +426,7 @@ class abstractChatWidget(QtGui.QWidget):
 			stylesheet=self.main.webkitThemeFactory.genGroupchatStyleSheet()
 		else:
 			stylesheet=self.main.webkitThemeFactory.genChatStyleSheet()
+			#if (messageObject.scroll()==1) setTimeout(window.location='#bottom', 0);
 		html="""
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
@@ -435,6 +436,7 @@ class abstractChatWidget(QtGui.QWidget):
 <style id="mainStyle" type="text/css" media="screen,print"> %s </style>
 <script>
 function addMessage() {
+shouldScroll = nearBottom();
 //Remove any existing insertion point
 insert = document.getElementById("insert");
 if(insert) insert.parentNode.removeChild(insert);
@@ -448,10 +450,12 @@ var newdiv = document.createElement('div');
 newdiv.setAttribute("id",divIdName);
 newdiv.innerHTML = messageObject.msg();
 ni.appendChild(newdiv);
+if (shouldScroll) scrollToBottom();
 
-if (messageObject.scroll()==1) setTimeout(window.location='#bottom', 0);
 }
 function insertMessage() {
+shouldScroll = nearBottom();
+
                         //Locate the insertion point
                         var insert = document.getElementById("insert");
 
@@ -462,7 +466,18 @@ function insertMessage() {
 
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);
+if (shouldScroll) scrollToBottom();
+
 }
+//Auto-scroll to bottom.  Use nearBottom to determine if a scrollToBottom is desired.
+function nearBottom() {
+		return ( document.body.scrollTop >= ( document.body.offsetHeight - ( window.innerHeight * 1.2 ) ) );
+}
+function scrollToBottom() {
+		document.body.scrollTop = document.body.offsetHeight;
+}
+
+
 </script>
 </head>
 <body>
