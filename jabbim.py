@@ -1110,8 +1110,8 @@ class clientClass(pyxl.client.Client):
 			user=frm.userhost()
 		frm=frm.userhost()
 		#images in xhtml
-		if xhtml != None:
-			xhtml = self.main.getImages(xhtml,frm)
+		#if xhtml != None:
+			#xhtml = self.main.getImages(xhtml,frm)
 		if not body:
 			body=""
 
