@@ -2886,7 +2886,7 @@ class mainWindow(QtGui.QMainWindow):
 							else:
 								action=menu.addAction(self.getIcon("1@"+transport,status=key,size="16x16"),unicode(status))
 							# [show_idOfMessage,jidOfTransport]
-							action.setData(QtCore.QStringList(QtCore.QVariant([key+"_"+unicode(index),unicode(transport)])))
+							action.setData(QtCore.QVariant(QtCore.QStringList([key+"_"+unicode(index),unicode(transport)])))
 							font=action.font()
 							font.setItalic(True)
 							action.setFont(font)
