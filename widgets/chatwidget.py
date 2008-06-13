@@ -578,6 +578,7 @@ class chatWidget(abstractChatWidget):
 						#skin=self.main.skin["my_message_continue"]
 				#message=skin.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",message).replace("[avatar]","<img src=\""+self.selfFile+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 				message=self.main.webkitThemeFactory.genOutgoingContent(self.main.client.jid.user,message,self.main.now(),self.selfFile)
+				insert=False
 			else:
 				# send message
 				#text=unescape(text)
@@ -608,14 +609,16 @@ class chatWidget(abstractChatWidget):
 					#message=message.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+self.selfFile+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 				if self.lastMessageFrom==unicode(self.main.client.jid.user):
 					message=self.main.webkitThemeFactory.genOutgoingNextContent(self.main.client.jid.user,text,self.main.now(),self.selfFile)
+					insert=True
 				else:
 					message=self.main.webkitThemeFactory.genOutgoingContent(self.main.client.jid.user,text,self.main.now(),self.selfFile)
+					insert=False
 
 					
 			self.lastMessageFrom=unicode(self.main.client.jid.user)
 			# show message
 			if not False in ret:
-				self.textEditWrite(message)
+				self.textEditWrite(message,insert)
 			# add message to 'sent messages history'
 			self.sent.append(text)
 			self.hindex = len(self.sent)

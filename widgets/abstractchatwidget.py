@@ -435,6 +435,10 @@ class abstractChatWidget(QtGui.QWidget):
 <style id="mainStyle" type="text/css" media="screen,print"> %s </style>
 <script>
 function addMessage() {
+//Remove any existing insertion point
+insert = document.getElementById("insert");
+if(insert) insert.parentNode.removeChild(insert);
+
 var ni = document.getElementById('myDiv');
 var numi = document.getElementById('theValue');
 var num = (document.getElementById('theValue').value -1)+ 2;
@@ -444,7 +448,20 @@ var newdiv = document.createElement('div');
 newdiv.setAttribute("id",divIdName);
 newdiv.innerHTML = messageObject.msg();
 ni.appendChild(newdiv);
+
 if (messageObject.scroll()==1) setTimeout(window.location='#bottom', 0);
+}
+function insertMessage() {
+                        //Locate the insertion point
+                        var insert = document.getElementById("insert");
+
+                        //make new node
+                        range = document.createRange();
+                        range.selectNode(insert.parentNode);
+                        newNode = range.createContextualFragment(messageObject.msg());
+
+                        //swap
+                        insert.parentNode.replaceChild(newNode,insert);
 }
 </script>
 </head>
@@ -936,7 +953,7 @@ if (messageObject.scroll()==1) setTimeout(window.location='#bottom', 0);
 		self.textEditWrite(message)
 
 	
-	def webkitWrite(self,text):
+	def webkitWrite(self,text,insert=False):
 		for k,v in self.main.emoticonsWidget.smileys.iteritems():
 			text=text.replace(" "+k,'&nbsp;<img src="'+v+'"/>')
 			text=text.replace("&nbsp;"+k,'&nbsp;<img src="'+v+'"/>')
@@ -946,9 +963,12 @@ if (messageObject.scroll()==1) setTimeout(window.location='#bottom', 0);
 			self.messageObject.scr=1
 		else:
 			self.messageObject.scr=0
-		self.ui.webkit.page().mainFrame().evaluateJavaScript("addMessage();")
+		if not insert:
+			self.ui.webkit.page().mainFrame().evaluateJavaScript("addMessage();")
+		else:
+			self.ui.webkit.page().mainFrame().evaluateJavaScript("insertMessage();")
 
-	def textEditWrite(self,text,history=False):
+	def textEditWrite(self,text,insert=False):
 		"""
 		Appends formated message to the chat view (self.ui.textEdit).
 		@type text: unicode
@@ -956,7 +976,7 @@ if (messageObject.scroll()==1) setTimeout(window.location='#bottom', 0);
 		@type history: boolean
 		@param history: True if text is history message (has delay). In this case self.first will not be updated.
 		"""
-		self.webkitWrite(text)
+		self.webkitWrite(text,insert)
 		return 
 		# update information about first message of this chat
 		#if not history:
