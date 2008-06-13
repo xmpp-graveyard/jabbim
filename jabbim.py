@@ -2807,7 +2807,7 @@ class mainWindow(QtGui.QMainWindow):
 			t = self.activities['none']
 			action = activity.addAction(t)
 			action.setObjectName('activity')
-			action.setData(QtCore.QVariant(['none']))
+			action.setData(QtCore.QVariant(QtCore.QStringList(['none'])))
 			activity.addSeparator()
 			for group, txt in self.activityGroups.iteritems():
 				menu = activity.addMenu(txt[0])
@@ -2817,7 +2817,7 @@ class mainWindow(QtGui.QMainWindow):
 					t = self.activities[a]
 					action = menu.addAction(t)
 					action.setObjectName('activity')
-					action.setData(QtCore.QVariant([group, a]))
+					action.setData(QtCore.QVariant(QtCore.QStringList([group, a])))
 			moodButtonRoot.addMenu(activity)
 			self.ui.moodButton.setMenu(moodButtonRoot)
 		else:
@@ -2876,7 +2876,7 @@ class mainWindow(QtGui.QMainWindow):
 					if separator and len(config[key])!=0:
 						menu.addSeparator()
 					action=menu.addAction(self.getIcon("1@"+transport,status=key,size="16x16"),self.status[key])
-					action.setData(QtCore.QVariant([key,unicode(transport)]))
+					action.setData(QtCore.QVariant(QtCore.QStringList([key,unicode(transport)])))
 					if len(config[key])!=0:
 						for val in config[key]:
 							status=val[0]
@@ -2886,7 +2886,7 @@ class mainWindow(QtGui.QMainWindow):
 							else:
 								action=menu.addAction(self.getIcon("1@"+transport,status=key,size="16x16"),unicode(status))
 							# [show_idOfMessage,jidOfTransport]
-							action.setData(QtCore.QVariant([key+"_"+unicode(index),unicode(transport)]))
+							action.setData(QtCore.QStringList(QtCore.QVariant([key+"_"+unicode(index),unicode(transport)])))
 							font=action.font()
 							font.setItalic(True)
 							action.setFont(font)
@@ -2895,7 +2895,7 @@ class mainWindow(QtGui.QMainWindow):
 					else:
 						separator=True
 				action=menu.addAction(self.getIcon('1@'+transport,status="offline",size="16x16"),self.tr("Log out"))
-				action.setData(QtCore.QVariant(['offline',unicode(transport)]))
+				action.setData(QtCore.QVariant(QtCore.QStringList(['offline',unicode(transport)])))
 				if separator:
 					menu.addSeparator()
 
