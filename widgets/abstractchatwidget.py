@@ -938,7 +938,7 @@ if (messageObject.scroll()==1) setTimeout(window.location='#bottom', 0);
 	def webkitWrite(self,text):
 		for k,v in self.main.emoticonsWidget.smileys.iteritems():
 			text=text.replace(" "+k,'&nbsp;<img src="'+v+'"/>')
-			text=text.replace("&nbsp;"+k,'&nbsp;<img src="'v+'"/>')
+			text=text.replace("&nbsp;"+k,'&nbsp;<img src="'+v+'"/>')
 			text=text.replace(">"+k,'><img src="'+v+'"/>')
 		self.messageObject.message=unicode(text)
 		if self.ui.webkit.page().mainFrame().scrollBarValue(QtCore.Qt.Vertical)==self.ui.webkit.page().mainFrame().scrollBarMaximum(QtCore.Qt.Vertical):
