@@ -766,9 +766,10 @@ class clientClass(pyxl.client.Client):
 			else:
 				message=message.replace("[jid]","")
 			message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', nick)
-			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
-			
-			tab.chat.textEditWrite(message)
+			#message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
+			message=self.main.webkitThemeFactory.genGroupchatStatus(message,self.main.now())
+			if len(message)!=0:
+				tab.chat.textEditWrite(message)
 			if tabFull:
 				tabFull.chat.textEditWrite(message)
 				tabFull.chat.lastMessageFrom=""
@@ -810,8 +811,10 @@ class clientClass(pyxl.client.Client):
 			else:
 				message=message.replace("[[message]]","")
 			message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', user)
-			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
-			tabFull.chat.textEditWrite(message)
+			message=self.main.webkitThemeFactory.genChatStatus(message,self.main.now())
+			#message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
+			if len(message)!=0:
+				tabFull.chat.textEditWrite(message)
 			# refresh variables
 			tabFull.chat.ui.chatstate.setText("")
 			tabFull.chat.lastMessageFrom=""
@@ -1204,30 +1207,44 @@ class clientClass(pyxl.client.Client):
 			else:
 				message=xhtml.replace("&quot;",'"')
 				message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
-
+			#xxx=message # nechce se mi
 			# prepare message to be showed
-			if unicode(body).startswith("/me"):
-				if delay==None:
-					message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message[3:])
-				else:
-					delay=time.strftime('%Y-%m-%d&nbsp;%H:%M:%S', time.localtime(delay))
-					message=self.main.skin["me_message"].replace("[time]",delay).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message[3:])
+			#if unicode(body).startswith("/me"):
+				#if delay==None:
+					#message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message[3:])
+				#else:
+					#delay=time.strftime('%Y-%m-%d&nbsp;%H:%M:%S', time.localtime(delay))
+					#message=self.main.skin["me_message"].replace("[time]",delay).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message[3:])
+			#else:
+				#skin=self.main.skin["message"]
+				#if tab:
+					#if tab.chat.lastMessageFrom==unicode(user):
+						#if self.main.skin.has_key('message_continue'):
+							#skin=self.main.skin["message_continue"]
+				#if delay==None:
+					#message=skin.replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message)
+				#else:
+					#delay=time.strftime('%Y-%m-%d&nbsp;%H:%M:%S', time.localtime(delay))
+					#message=skin.replace("[time]",delay).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message)
+			if delay==None:
+				timeText=self.main.now()
 			else:
-				skin=self.main.skin["message"]
-				if tab:
-					if tab.chat.lastMessageFrom==unicode(user):
-						if self.main.skin.has_key('message_continue'):
-							skin=self.main.skin["message_continue"]
-				if delay==None:
-					message=skin.replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message)
-				else:
-					delay=time.strftime('%Y-%m-%d&nbsp;%H:%M:%S', time.localtime(delay))
-					message=skin.replace("[time]",delay).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message)
-			colors=self.main.getSkinColors(0)
-			if colors!=None:
-				message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
-				if len(colors)==3:
-					message=message.replace("[additive]",colors[2])
+				timeText=time.strftime('%Y-%m-%d&nbsp;%H:%M:%S', time.localtime(delay))
+
+			next=False
+			if tab:
+				if tab.chat.lastMessageFrom==unicode(user):
+					message=self.main.webkitThemeFactory.genIncomingNextContent(user,message,timeText,tab.chat.file)
+					next=True
+			if not next:
+				message=self.main.webkitThemeFactory.genIncomingContent(user,message,timeText,tab.chat.file)
+				
+
+			#colors=self.main.getSkinColors(0)
+			#if colors!=None:
+				#message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
+				#if len(colors)==3:
+					#message=message.replace("[additive]",colors[2])
 
 			# we have tab for this conversation opened
 			if tab!=None:
@@ -1240,7 +1257,7 @@ class clientClass(pyxl.client.Client):
 					print 'wtf? no chat.tab.file!'
 					link = 'images/32x32/apps/jabbim.png'
 					height = '32'
-				message=message.replace("[avatar]","<img src=\""+link+"\" width=\"32\" height=\""+height+"\" />")
+				#message=message.replace("[avatar]","<img src=\""+link+"\" width=\"32\" height=\""+height+"\" />")
 				current=self.main.chat.ui.chatTab.currentWidget()
 				# write message and set 'message' icon
 				if int(self.main.chat.ui.chatTab.currentIndex())!=tabIndex:
@@ -3604,7 +3621,7 @@ class mainWindow(QtGui.QMainWindow):
 			item=QtGui.QTreeWidgetItem(self.ui.bookmarks)
 			item.setText(0,unicode(v.name))
 			item.setText(1,unicode(v.jid.full()))
-			item.setData(0,32,QtCore.QVariant([unicode(v.jid.full()),unicode(v.nick),unicode(v.password)]))
+			item.setData(0,32,QtCore.QVariant(QtCore.QStringList([unicode(v.jid.full()),unicode(v.nick),unicode(v.password)])))
 			item.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
 
 	def autoJoinGroupchat(self):
@@ -3862,6 +3879,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.skin=self.skin['chatskin']
 		if not self.skin.has_key("spaces_between_lines"):
 			self.skin["spaces_between_lines"]='0'
+		self.webkitThemeFactory=widgets.webkitthemes.webkitThemeFactory(self.config['chatTheme'],self.config['groupchatTheme'])
 	
 	def showXml(self,bool):
 		self.xmlConsole.show()

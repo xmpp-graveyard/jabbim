@@ -54,6 +54,7 @@ class textView(abstractTextView):
 
 class groupChatWidget(abstractChatWidget):
 	def __init__(self,main,jid,tab,nickname="",parent=None,ui=Ui_groupchatwidget):
+		self.typ="groupchat"
 		abstractChatWidget.__init__(self,ui,textView,main,jid,True,parent)
 		self.nick = nickname #: MUC Jabber ID
 		self.affiliation="" #: user affiliation

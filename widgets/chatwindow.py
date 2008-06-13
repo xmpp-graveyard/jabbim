@@ -451,7 +451,7 @@ class chatWindow(QtGui.QMainWindow):
 		if unicode(user)==unicode(w.jid):
 			file = "images/32x32/categories/conferences.png"
 		if not w.chat.sizes.has_key(file):
-			#pixmap=QtGui.QPixmap(file).scaledToHeight(32)
+			pixmap=QtGui.QPixmap(file).scaledToHeight(32)
 			pixmap=QtGui.QPixmap(file).scaled(32,32,QtCore.Qt.KeepAspectRatio)
 			w.chat.sizes[file]=[unicode(pixmap.width()),unicode(pixmap.height())]
 
@@ -459,17 +459,21 @@ class chatWindow(QtGui.QMainWindow):
 		if delay==None:
 			# it's our message
 			if unicode(w.chat.nick)==unicode(user):
-				if unicode(body).startswith("/me"):
-					message=self.main.skin["my_me_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body)[3:])
-					body=unicode(body)[3:]
-					if w.chat.lastMessageFrom==unicode(user):
-						if self.main.skin.has_key('my_me_message_continue'):
-							message=self.main.skin["my_me_message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
+				if w.chat.lastMessageFrom==unicode(user):
+					message=self.main.webkitThemeFactory.genGroupchatOutgoingNextContent(user,body,self.main.now(),file)
 				else:
-					message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body))
-					if w.chat.lastMessageFrom==unicode(user):
-						if self.main.skin.has_key('my_message_continue'):
-							message=self.main.skin["my_message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
+					message=self.main.webkitThemeFactory.genGroupchatOutgoingContent(user,body,self.main.now(),file)
+				#if unicode(body).startswith("/me"):
+					#message=self.main.skin["my_me_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body)[3:])
+					#body=unicode(body)[3:]
+					#if w.chat.lastMessageFrom==unicode(user):
+						#if self.main.skin.has_key('my_me_message_continue'):
+							#message=self.main.skin["my_me_message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
+				#else:
+					#message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body))
+					#if w.chat.lastMessageFrom==unicode(user):
+						#if self.main.skin.has_key('my_message_continue'):
+							#message=self.main.skin["my_message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
 			else:
 				self.main.client.dispatcher.publishEvent('groupchatMessageEvent', self.main.getJid(w.jid),user,oldbody,subject, xhtml)
 				# it's message for us
@@ -479,38 +483,46 @@ class chatWindow(QtGui.QMainWindow):
 						if self.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
 							self.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
 							self.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(255,0,0))
-					message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body))
 					if w.chat.lastMessageFrom==unicode(user):
-						if self.main.skin.has_key('message_for_me_continue'):
-							message=self.main.skin["message_for_me_continue"].replace("[time]",self.main.now()).replace("[user]",user)
+						message=self.main.webkitThemeFactory.genGroupchatIncomingNextContent(user,body,self.main.now(),file)
+					else:
+						message=self.main.webkitThemeFactory.genGroupchatIncomingContent(user,body,self.main.now(),file)
+					#message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body))
+					#if w.chat.lastMessageFrom==unicode(user):
+						#if self.main.skin.has_key('message_for_me_continue'):
+							#message=self.main.skin["message_for_me_continue"].replace("[time]",self.main.now()).replace("[user]",user)
 				else:
-					if unicode(body).startswith("/me"):
-						message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body)[3:])
-						body=unicode(body)[3:]
-						if w.chat.lastMessageFrom==unicode(user):
-							if self.main.skin.has_key('me_message_continue'):
-								message=self.main.skin["me_message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
+					#if unicode(body).startswith("/me"):
+						#message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body)[3:])
+						#body=unicode(body)[3:]
+						#if w.chat.lastMessageFrom==unicode(user):
+							#if self.main.skin.has_key('me_message_continue'):
+								#message=self.main.skin["me_message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
+					#else:
+						#message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user)
+						#if w.chat.lastMessageFrom==unicode(user):
+							#if self.main.skin.has_key('message_continue'):
+								#message=self.main.skin["message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
+					if w.chat.lastMessageFrom==unicode(user):
+						message=self.main.webkitThemeFactory.genGroupchatIncomingNextContent(user,body,self.main.now(),file)
 					else:
-						message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user)
-						if w.chat.lastMessageFrom==unicode(user):
-							if self.main.skin.has_key('message_continue'):
-								message=self.main.skin["message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
-					colors=None
-					if len(w.chat.getUserItems(user))!=0:
-						item=w.chat.getUserItems(user)[0]
-						if item in w.chat.colors:
-							cIndex=w.chat.colors.index(item)
-							colors=self.main.getSkinColors(cIndex)
-					else:
-						colors=self.main.getSkinColors(0)
-					if colors!=None:
-						message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
-						if len(colors)==3:
-							message=message.replace("[additive]",colors[2])
+						message=self.main.webkitThemeFactory.genGroupchatIncomingContent(user,body,self.main.now(),file)
+					#colors=None
+					#if len(w.chat.getUserItems(user))!=0:
+						#item=w.chat.getUserItems(user)[0]
+						#if item in w.chat.colors:
+							#cIndex=w.chat.colors.index(item)
+							#colors=self.main.getSkinColors(cIndex)
+					#else:
+						#colors=self.main.getSkinColors(0)
+					#if colors!=None:
+						#message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
+						#if len(colors)==3:
+							#message=message.replace("[additive]",colors[2])
 		
 
-			message=message.replace("[avatar]","<img src=\""+file+"\" height=\""+w.chat.sizes[file][1]+"\" width=\""+w.chat.sizes[file][0]+"\" />")
-			message=message.replace('[message]',body)
+			#message=message.replace("[avatar]","<img src=\""+file+"\" height=\""+w.chat.sizes[file][1]+"\" width=\""+w.chat.sizes[file][0]+"\" />")
+			#message=message.replace('[message]',body)
 			# write message
 			if countMessage:
 				w.chat.unread+=1
@@ -522,24 +534,32 @@ class chatWindow(QtGui.QMainWindow):
 			delay=time.strftime('%Y-%m-%d&nbsp;%H:%M:%S', time.localtime(delay))
 			# our delayed message
 			if unicode(w.chat.nick)==unicode(user):
-				message=self.main.skin["my_message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
-			else:
-				# delayed message for us
-				if utils.need_highlight(unicode(w.chat.nick), unicode(body)):
-					message=self.main.skin["message_for_me_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
+				#message=self.main.skin["my_message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
+				if w.chat.lastMessageFrom==unicode(user):
+					message=self.main.webkitThemeFactory.genGroupchatOutgoingNextContent(user,body,delay,file)
 				else:
-					message=self.main.skin["message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
-			message=message.replace("[avatar]","<img src=\""+file+"\" height=\""+unicode(int(w.chat.sizes[file][1])/2)+"\" width=\""+unicode(int(w.chat.sizes[file][0])/2)+"\" />")
-			colors=None
-			if len(w.chat.getUserItems(user))!=0:
-				item=w.chat.getUserItems(user)[0]
-				if item in w.chat.colors:
-					cIndex=w.chat.colors.index(item)
-					colors=self.main.getSkinColors(cIndex)
+					message=self.main.webkitThemeFactory.genGroupchatOutgoingContent(user,body,delay,file)
 			else:
-				colors=self.main.getSkinColors(0)
-			if colors!=None:
-				message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
+				if w.chat.lastMessageFrom==unicode(user):
+					message=self.main.webkitThemeFactory.genGroupchatIncomingNextContent(user,body,delay,file)
+				else:
+					message=self.main.webkitThemeFactory.genGroupchatIncomingContent(user,body,delay,file)
+				# delayed message for us
+				#if utils.need_highlight(unicode(w.chat.nick), unicode(body)):
+					#message=self.main.skin["message_for_me_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
+				#else:
+					#message=self.main.skin["message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
+			#message=message.replace("[avatar]","<img src=\""+file+"\" height=\""+unicode(int(w.chat.sizes[file][1])/2)+"\" width=\""+unicode(int(w.chat.sizes[file][0])/2)+"\" />")
+			#colors=None
+			#if len(w.chat.getUserItems(user))!=0:
+				#item=w.chat.getUserItems(user)[0]
+				#if item in w.chat.colors:
+					#cIndex=w.chat.colors.index(item)
+					#colors=self.main.getSkinColors(cIndex)
+			#else:
+				#colors=self.main.getSkinColors(0)
+			#if colors!=None:
+				#message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
 			w.chat.lastMessageFrom=unicode(user)
 
 			w.chat.textEditWrite(message)
@@ -676,8 +696,9 @@ class chatWindow(QtGui.QMainWindow):
 		tab.chat.refreshLabel()
 		#tab.chat.ui.label.setText("<font size=\"3\"><b>"+name+"</b></font>")
 		if message!=None:
-			message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+unicode(tab.chat.avatarHeight)+"\" />")
-			tab.chat.textEditWrite(message)
+			#message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+unicode(tab.chat.avatarHeight)+"\" />")
+			self.main.client.reactor.callLater(1,tab.chat.textEditWrite,message)
+			#tab.chat.textEditWrite(message)
 		return tab
 		#self.show()
 		#self.raise_()

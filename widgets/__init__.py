@@ -26,3 +26,4 @@ import emoticonswidget
 import startchat_ui as startchat
 import defaultrosterstyle
 import compactrosterstyle
+import webkitthemes

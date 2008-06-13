@@ -1,7 +1,8 @@
 try:
-	from PyQt4 import QtCore, QtGui
+	from PyQt4 import QtCore, QtGui,QtWebKit
 except:
 	print "PyQt4 is not installed."
+
 
 from configobj import ConfigObj
 #from palette import *
@@ -14,6 +15,21 @@ import time
 from include import utils
 from emoticonswidget import *
 from linkeditor import linkEditorDialog
+
+class message(QtCore.QObject):
+	def __init__(self,message):
+		QtCore.QObject.__init__(self)
+		self.message=message
+		self.scr=1
+		self.setObjectName("messageObject")
+
+	@QtCore.pyqtSignature("",result="QString")
+	def msg(self):
+		return self.message
+	
+	@QtCore.pyqtSignature("",result="int")
+	def scroll(self):
+		return self.scr
 
 class abstractTextView(QtGui.QTextEdit):
 	"""
@@ -398,9 +414,68 @@ class abstractChatWidget(QtGui.QWidget):
 		l=QtGui.QHBoxLayout(self.ui.viewWidget)
 		l.setMargin(0)
 		l.setSpacing(0)
-		self.ui.textEdit=textEditClass(self,self.ui.viewWidget)#textView(self,self.ui.viewWidget)
-		l.addWidget(self.ui.textEdit)
+		self.ui.textEdit=textEditClass(self,self.ui.viewWidget)
+		self.ui.textEdit.hide()
+		self.ui.webkit=QtWebKit.QWebView(self)
+		self.ui.webkit.settings().setAttribute(QtWebKit.QWebSettings.JavascriptEnabled,True)
+		try:
+			typ=self.typ
+		except:
+			typ="chat"
+		if typ=="groupchat":
+			stylesheet=self.main.webkitThemeFactory.genGroupchatStyleSheet()
+		else:
+			stylesheet=self.main.webkitThemeFactory.genChatStyleSheet()
+		html="""
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style id="mainStyle" type="text/css" media="screen,print"> %s </style>
+<script>
+function addMessage() {
+var ni = document.getElementById('myDiv');
+var numi = document.getElementById('theValue');
+var num = (document.getElementById('theValue').value -1)+ 2;
+numi.value = num;
+var divIdName = "my"+num+"Div";
+var newdiv = document.createElement('div');
+newdiv.setAttribute("id",divIdName);
+newdiv.innerHTML = messageObject.msg();
+ni.appendChild(newdiv);
+if (messageObject.scroll()==1) setTimeout(window.location='#bottom', 0);
+}
+</script>
+</head>
+<body>
+<div id="Chat">
+<input type="hidden" value="0" id="theValue" />
+<div id="myDiv"> </div>
+</div>
+<a name='bottom'></a>
+</body>
+</html>
+		""" % stylesheet
 
+
+
+		#f=open("/home/hanzz/svn/jabbim/trunk/test.html","w")
+		#f.write(html)
+		#f.close()
+
+		#f=open(os.getcwd()+"/chatskins/candy/Incoming/Content.html","r")
+		#self.incoming=f.read()
+		#f.close()
+		if typ=="groupchat":
+			self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl(self.main.webkitThemeFactory.groupchatPath()))
+		else:
+			self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl(self.main.webkitThemeFactory.chatPath()))
+		self.messageObject=message("")
+		self.ui.webkit.page().mainFrame().addToJavaScriptWindowObject("messageObject",self.messageObject)
+
+		#self.ui.webkit.load(QtCore.QUrl("file:///home/hanzz/svn/jabbim/trunk/test.html"))
+		l.addWidget(self.ui.webkit)
+		self.ui.webkit.show()
 		# chat editor widget (self.ui.line)
 		layout=QtGui.QHBoxLayout(self.ui.lineWidget)
 		layout.setMargin(0)
@@ -857,6 +932,19 @@ class abstractChatWidget(QtGui.QWidget):
 			message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 		self.textEditWrite(message)
 
+	
+	def webkitWrite(self,text):
+		for k,v in self.main.emoticonsWidget.smileys.iteritems():
+			text=text.replace(" "+k,'&nbsp;<img src="'+os.getcwd()+"/"+v+'"/>')
+			text=text.replace("&nbsp;"+k,'&nbsp;<img src="'+os.getcwd()+"/"+v+'"/>')
+			text=text.replace(">"+k,'><img src="'+os.getcwd()+"/"+v+'"/>')
+		self.messageObject.message=unicode(text)
+		if self.ui.webkit.page().mainFrame().scrollBarValue(QtCore.Qt.Vertical)==self.ui.webkit.page().mainFrame().scrollBarMaximum(QtCore.Qt.Vertical):
+			self.messageObject.scr=1
+		else:
+			self.messageObject.scr=0
+		self.ui.webkit.page().mainFrame().evaluateJavaScript("addMessage();")
+
 	def textEditWrite(self,text,history=False):
 		"""
 		Appends formated message to the chat view (self.ui.textEdit).
@@ -865,6 +953,8 @@ class abstractChatWidget(QtGui.QWidget):
 		@type history: boolean
 		@param history: True if text is history message (has delay). In this case self.first will not be updated.
 		"""
+		self.webkitWrite(text)
+		return 
 		# update information about first message of this chat
 		#if not history:
 			#if self.first==True:

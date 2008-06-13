@@ -145,6 +145,8 @@ def loadConfig(main,status):
 			"groupchatSplitSizes3":[45,500],
 			"saveGeometry":"True",
 			"saveExpandedGroups":"True",
+			"chatTheme":"candy/Blue vs Green.css",
+			"groupchatTheme":"candy/Blue vs Green.css",
 			"expandedGroups":[],
 			"plugins":['notification', 'archive', 'autoaway', 'autoupdate'],
 			"rosterMode":"normal",

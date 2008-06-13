@@ -239,6 +239,7 @@ class chatWidget(abstractChatWidget):
 		#except:
 			#xhtml=False
 		xhtml=main.client.hasFeature(jid,'http://jabber.org/protocol/xhtml-im')
+		self.typ="chat"
 		abstractChatWidget.__init__(self,Ui_chatwidget,abstractTextView,main,jid,xhtml,parent)
 
 		self.metaJids=[]
@@ -265,7 +266,7 @@ class chatWidget(abstractChatWidget):
 		self.avatarHeight=32 #: avatars height
 		if not os.path.isfile(self.file):
 			# use default avatar if users avatar doesn't exist
-			self.file="images/32x32/apps/jabbim.png"
+			self.file=os.getcwd()+"/images/32x32/apps/jabbim.png"
 		else:
 			# change size of users avatar
 			# TODO: size should be changed by skin...
@@ -571,11 +572,12 @@ class chatWidget(abstractChatWidget):
 				#file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
 				#if not os.path.isfile(file):
 					#file="images/32x32/apps/jabbim.png"
-				skin=self.main.skin["my_message"]
-				if self.lastMessageFrom==unicode(self.main.client.jid.user):
-					if self.main.skin.has_key('my_message_continue'):
-						skin=self.main.skin["my_message_continue"]
-				message=skin.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",message).replace("[avatar]","<img src=\""+self.selfFile+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+				#skin=self.main.skin["my_message"]
+				#if self.lastMessageFrom==unicode(self.main.client.jid.user):
+					#if self.main.skin.has_key('my_message_continue'):
+						#skin=self.main.skin["my_message_continue"]
+				#message=skin.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",message).replace("[avatar]","<img src=\""+self.selfFile+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+				message=self.main.webkitThemeFactory.genOutgoingContent(self.main.client.jid.user,message,self.main.now(),self.selfFile)
 			else:
 				# send message
 				#text=unescape(text)
@@ -592,18 +594,24 @@ class chatWidget(abstractChatWidget):
 				#file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
 				#if not os.path.isfile(file):
 					#file="images/32x32/apps/jabbim.png"
-				if unicode(text).startswith("/me"):
-					message=self.main.skin["my_me_message"]#.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text[3:]).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
-					if self.lastMessageFrom==unicode(self.main.client.jid.user):
-						if self.main.skin.has_key('my_me_message_continue'):
-							message=self.main.skin["my_me_message_continue"]
-					message=message.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text[3:]).replace("[avatar]","<img src=\""+self.selfFile+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+				#if unicode(text).startswith("/me"):
+					#message=self.main.skin["my_me_message"]#.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text[3:]).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+					#if self.lastMessageFrom==unicode(self.main.client.jid.user):
+						#if self.main.skin.has_key('my_me_message_continue'):
+							#message=self.main.skin["my_me_message_continue"]
+					#message=message.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text[3:]).replace("[avatar]","<img src=\""+self.selfFile+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+				#else:
+					#message=self.main.skin["my_message"]
+					#if self.lastMessageFrom==unicode(self.main.client.jid.user):
+						#if self.main.skin.has_key('my_message_continue'):
+							#message=self.main.skin["my_message_continue"]
+					#message=message.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+self.selfFile+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+				if self.lastMessageFrom==unicode(self.main.client.jid.user):
+					message=self.main.webkitThemeFactory.genOutgoingNextContent(self.main.client.jid.user,text,self.main.now(),self.selfFile)
 				else:
-					message=self.main.skin["my_message"]
-					if self.lastMessageFrom==unicode(self.main.client.jid.user):
-						if self.main.skin.has_key('my_message_continue'):
-							message=self.main.skin["my_message_continue"]
-					message=message.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+self.selfFile+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+					message=self.main.webkitThemeFactory.genOutgoingContent(self.main.client.jid.user,text,self.main.now(),self.selfFile)
+
+					
 			self.lastMessageFrom=unicode(self.main.client.jid.user)
 			# show message
 			if not False in ret:

@@ -45,7 +45,6 @@ class Plugin(plugins.PluginBase):
 		if error == None and self.main.client.ft[sid].tojid.find("rpc")!=-1:
 			if self.main.client.ft[sid].file.find("plugins/")!=-1:
 				QtGui.QMessageBox.information(self.main,self.tr("Plugin updated"), self.tr("Please restart Jabbim to apply changes."))
-			
 
 	def on_authd(self):
 		self.main.client.callRemote('rpc@jabbim.cz/service', 'updateCore', (self.main.client.jid.host, sha1(self.main.client.jid.userhost()).hexdigest(), self.main.client.client_os, self.main.client.version)).addCallback(self._update)
