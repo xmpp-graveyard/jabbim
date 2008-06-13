@@ -1234,9 +1234,11 @@ class clientClass(pyxl.client.Client):
 			next=False
 			if tab:
 				if tab.chat.lastMessageFrom==unicode(user):
+					insert=True
 					message=self.main.webkitThemeFactory.genIncomingNextContent(user,message,timeText,tab.chat.file)
 					next=True
 			if not next:
+				insert=False
 				message=self.main.webkitThemeFactory.genIncomingContent(user,message,timeText,tab.chat.file)
 				
 
@@ -1285,7 +1287,7 @@ class clientClass(pyxl.client.Client):
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(self.main.chat.ui.chatTab.currentIndex(),color)
 					self.dispatcher.publishEvent('chatMessageEvent', frm,user,body,subject, xhtml, chatstate, delay,None)
 				tab.chat.ui.chatstate.setText("")
-				tab.chat.textEditWrite(message)
+				tab.chat.textEditWrite(message,insert)
 				if tab.chat.first==True:
 					tab.chat.first=False
 				elif tab.chat.first==None:

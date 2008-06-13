@@ -460,8 +460,10 @@ class chatWindow(QtGui.QMainWindow):
 			# it's our message
 			if unicode(w.chat.nick)==unicode(user):
 				if w.chat.lastMessageFrom==unicode(user):
+					insert=True
 					message=self.main.webkitThemeFactory.genGroupchatOutgoingNextContent(user,body,self.main.now(),file)
 				else:
+					insert=False
 					message=self.main.webkitThemeFactory.genGroupchatOutgoingContent(user,body,self.main.now(),file)
 				#if unicode(body).startswith("/me"):
 					#message=self.main.skin["my_me_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body)[3:])
@@ -484,8 +486,10 @@ class chatWindow(QtGui.QMainWindow):
 							self.ui.chatTab.setTabIcon(i,QtGui.QIcon("images/16x16/actions/message.png"))
 							self.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(255,0,0))
 					if w.chat.lastMessageFrom==unicode(user):
+						insert=True
 						message=self.main.webkitThemeFactory.genGroupchatIncomingNextContent(user,body,self.main.now(),file)
 					else:
+						insert=False
 						message=self.main.webkitThemeFactory.genGroupchatIncomingContent(user,body,self.main.now(),file)
 					#message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body))
 					#if w.chat.lastMessageFrom==unicode(user):
@@ -504,8 +508,10 @@ class chatWindow(QtGui.QMainWindow):
 							#if self.main.skin.has_key('message_continue'):
 								#message=self.main.skin["message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
 					if w.chat.lastMessageFrom==unicode(user):
+						insert=True
 						message=self.main.webkitThemeFactory.genGroupchatIncomingNextContent(user,body,self.main.now(),file)
 					else:
+						insert=False
 						message=self.main.webkitThemeFactory.genGroupchatIncomingContent(user,body,self.main.now(),file)
 					#colors=None
 					#if len(w.chat.getUserItems(user))!=0:
@@ -527,7 +533,7 @@ class chatWindow(QtGui.QMainWindow):
 			if countMessage:
 				w.chat.unread+=1
 			#print unicode(message)
-			w.chat.textEditWrite(message)
+			w.chat.textEditWrite(message,insert)
 			w.chat.lastMessageFrom=unicode(user)
 			return
 		else:
@@ -536,13 +542,17 @@ class chatWindow(QtGui.QMainWindow):
 			if unicode(w.chat.nick)==unicode(user):
 				#message=self.main.skin["my_message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
 				if w.chat.lastMessageFrom==unicode(user):
+					insert=True
 					message=self.main.webkitThemeFactory.genGroupchatOutgoingNextContent(user,body,delay,file)
 				else:
+					insert=False
 					message=self.main.webkitThemeFactory.genGroupchatOutgoingContent(user,body,delay,file)
 			else:
 				if w.chat.lastMessageFrom==unicode(user):
+					insert=True
 					message=self.main.webkitThemeFactory.genGroupchatIncomingNextContent(user,body,delay,file)
 				else:
+					insert=False
 					message=self.main.webkitThemeFactory.genGroupchatIncomingContent(user,body,delay,file)
 				# delayed message for us
 				#if utils.need_highlight(unicode(w.chat.nick), unicode(body)):
@@ -562,7 +572,7 @@ class chatWindow(QtGui.QMainWindow):
 				#message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
 			w.chat.lastMessageFrom=unicode(user)
 
-			w.chat.textEditWrite(message)
+			w.chat.textEditWrite(message,insert)
 
 	def openNewChatTab(self,jid,name,icon=None,message=None):
 		if not icon:
