@@ -1,0 +1,13 @@
+@import "../common.css";
+
+.msgIn .msgContainer {
+	background-color: RGB(36,165,255);
+	position: relative;
+	left: 35px;
+}
+
+.msgOut .msgContainer {
+	background-color: RGB(255,128,0);
+	position: relative;
+	right: 35px;
+}

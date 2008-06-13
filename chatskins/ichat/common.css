@@ -1,0 +1,207 @@
+	body {
+		margin-top: 20px;
+		background-color: white;
+		color: black;
+	}
+
+	.msgContainer, .msgContainerContext {
+		background: url("images/TopLeft.png") top left no-repeat;
+		position: relative;
+		min-height: 27px;
+	}
+
+	.msgTopRight {
+		background: url("images/TopRight.png") top right no-repeat;
+		position: absolute;
+		z-index: 1;
+		top: 0px;
+		right: 0px;
+		width: 20px;
+		height: 13px;
+	}
+
+	.msgTop {
+		background: url("images/Top.png") top left repeat-x;
+		height: 13px;
+		margin: 0px 20px;
+	}
+
+	.msgLeft {
+		background: url("images/Left.png") top left repeat-y;
+		position: absolute;
+		z-index: 1;
+		top: 8px;
+		left: 5px;
+		bottom: 5px;
+		width: 11px;
+	}
+
+	.msg {
+		background-color: transparent;
+		position: relative;
+		z-index: 10;
+		padding: 1px 9px 0px 20px;
+		top: -10px;
+		left: -5px;
+	}
+
+	.msgMiddle {
+		background: url("images/Middle.png") top left repeat;
+		position: absolute;
+		z-index: -1;
+		top: 8px;
+		left: 16px;
+		bottom: 5px;
+		right: 6px;
+	}
+
+	.msgRight {
+		background: url("images/Right.png") top right repeat-y;
+		position: absolute;
+		z-index: 1;
+		top: 8px;
+		right: -5px;
+		bottom: 5px;
+		width: 11px;
+	}
+
+	.msgBottom {
+		background: url("images/Bottom.png") bottom left repeat-x;
+		position: absolute;
+		z-index: 1;
+		left: 20px;
+		bottom: 2px;
+		height: 13px;
+		right: 20px;
+	}
+
+	.msgBottomRight, .msgBottomRightSpeaking {
+		background: url("images/BottomRight.png") bottom right no-repeat;
+		position: absolute;
+		z-index: 1;
+		bottom: 2px;
+		right: 0px;
+		width: 20px;
+		height: 13px;
+		//border: solid black 1px;
+	}
+
+	.msgBottomRightSpeaking {
+		background: url("images/BottomRightArrow.png") bottom right no-repeat;
+	}
+
+	.msgBottomLeft, .msgBottomLeftSpeaking {
+		background: url("images/BottomLeft.png") bottom left no-repeat;
+		position: absolute;
+		z-index: 1;
+		bottom: 2px;
+		left: 0px;
+		width: 20px;
+		height: 13px;
+		//border: solid black 1px;
+	}
+
+	.msgBottomLeftSpeaking {
+		background: url("images/BottomLeftArrow.png") bottom left no-repeat;
+	}
+
+	.msgBottomCheater {
+		background-color: white;
+		position: absolute;
+		bottom: 0px;
+		left: 0px;
+		right: 0px;
+		height: 3px;
+	}
+
+	.msgIn .buddy, .msgOut .buddy {
+		width: 32px;
+		height:32px;
+		position: absolute;
+		bottom: 10px;
+	}
+
+	.msgIn, .msgOut {
+		position: relative;
+		padding-bottom: 8px;
+		clear: both;
+	}
+
+	.msgIn {
+		float: left;
+		margin-right: 95px;
+		//border: solid black 1px;
+	}
+
+	.msgIn .buddy {
+		left: 0px;
+	}
+
+	.msgOut {
+		float: right;
+		margin-left: 95px;
+		//border: solid black 1px;
+	}
+
+	.msgOut .buddy {
+		right: 0px;
+	}
+
+	.status {
+		position: relative;
+		top: -5px;
+		clear: both;
+		color: rgba(0, 0, 0, 0.5);
+		//text-shadow: rgba(0, 0, 0, 0.5) 1px 1px 2px;
+		text-align: center;
+		margin-top: -12px;
+		margin-bottom: -12px;
+	}
+
+	.msgIn .msgContainerContext {
+		background-color: lightgray;
+		position: relative;
+		left: 35px;
+	}
+
+	.msgOut .msgContainerContext {
+		background-color: lightgray;
+		position: relative;
+		right: 35px;
+	}
+
+	.followUp {
+		margin-top: 3px;
+		border-top: groove black 1px;
+		margin: 3px 5px 0px;
+	}
+
+	.msg img {
+		vertical-align: middle;
+		position: relative;
+		top: -1px;
+	}
+
+	.msgIn .msg .time, .msgOut .msg .time {
+		color: rgba(0, 0, 0, 0.5);
+		font-size: .8em;
+		position: absolute;
+		top: 50%;
+		margin-top: -3px;
+		visibility: hidden;
+		width: 75px;
+	}
+
+	.msgIn:hover .msg .time, .msgOut:hover .msg .time {
+		visibility: visible;
+	}
+
+	.msgOut .msg .time {
+	text-align: right;
+		left: -8em;
+	}
+
+	.msgIn .msg .time {
+		right: -9em;
+	}
+
