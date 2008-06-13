@@ -476,6 +476,8 @@ if (messageObject.scroll()==1) setTimeout(window.location='#bottom', 0);
 		#self.ui.webkit.load(QtCore.QUrl("file:///home/hanzz/svn/jabbim/trunk/test.html"))
 		l.addWidget(self.ui.webkit)
 		self.ui.webkit.show()
+		self.ui.webkit.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
+		QtCore.QObject.connect(self.ui.webkit,QtCore.SIGNAL("linkClicked ( const QUrl &)"),QtGui.QDesktopServices.openUrl)
 		# chat editor widget (self.ui.line)
 		layout=QtGui.QHBoxLayout(self.ui.lineWidget)
 		layout.setMargin(0)
