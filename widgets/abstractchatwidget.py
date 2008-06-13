@@ -974,10 +974,6 @@ function scrollToBottom() {
 			text=text.replace("&nbsp;"+k,'&nbsp;<img src="'+v+'"/>')
 			text=text.replace(">"+k,'><img src="'+v+'"/>')
 		self.messageObject.message=unicode(text)
-		if self.ui.webkit.page().mainFrame().scrollBarValue(QtCore.Qt.Vertical)==self.ui.webkit.page().mainFrame().scrollBarMaximum(QtCore.Qt.Vertical):
-			self.messageObject.scr=1
-		else:
-			self.messageObject.scr=0
 		if not insert:
 			self.ui.webkit.page().mainFrame().evaluateJavaScript("addMessage();")
 		else:
