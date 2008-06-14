@@ -1081,9 +1081,9 @@ function showLastMessages(){
 			toEnd=True
 		# replace emoticons by images
 		for k,v in self.main.emoticonsWidget.smileys.iteritems():
-			text=text.replace(" "+k,'&nbsp;<img src="'+v+'"/>')
-			text=text.replace("&nbsp;"+k,'&nbsp;<img src="'+v+'"/>')
-			text=text.replace(">"+k,'><img src="'+v+'"/>')
+			text=text.replace(" "+k,'&nbsp;<img alt="'+k+'" src="'+v+'"/>')
+			text=text.replace("&nbsp;"+k,'&nbsp;<img alt="'+k+'" src="'+v+'"/>')
+			text=text.replace(">"+k,'><img alt="'+k+'" src="'+v+'"/>')
 		# insert text to the self.ui.textEdit
 		cursor.insertFragment(QtGui.QTextDocumentFragment.fromHtml(text))
 		cursor.endEditBlock()
