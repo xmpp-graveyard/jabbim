@@ -453,7 +453,7 @@ var newdiv = document.createElement('div');
 newdiv.setAttribute("id",divIdName);
 newdiv.innerHTML = messageObject.msg();
 ni.appendChild(newdiv);
-if (shouldScroll) scrollToBottom();
+if (shouldScroll) setTimeout("scrollToBottom()", 100);
 
 }
 function insertMessage() {
@@ -469,12 +469,12 @@ shouldScroll = nearBottom();
 
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);
-if (shouldScroll) scrollToBottom();
+if (shouldScroll) setTimeout("scrollToBottom()", 100);
 
 }
 //Auto-scroll to bottom.  Use nearBottom to determine if a scrollToBottom is desired.
 function nearBottom() {
-		return ( document.body.scrollTop >= ( document.body.offsetHeight - ( window.innerHeight * 1.2 ) ) );
+		return ( (document.body.scrollTop+100) >= ( document.body.offsetHeight - ( window.innerHeight * 1.2 ) ) );
 }
 function scrollToBottom() {
 		document.body.scrollTop = document.body.offsetHeight;
