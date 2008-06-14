@@ -1043,10 +1043,13 @@ function showLastMessages(){
 
 	
 	def webkitWrite(self,text,insert=False):
+		print text
 		for k,v in self.main.emoticonsWidget.smileys.iteritems():
-			text=text.replace(" "+k,'&nbsp;<img src="'+v+'"/>')
-			text=text.replace("&nbsp;"+k,'&nbsp;<img src="'+v+'"/>')
-			text=text.replace(">"+k,'><img src="'+v+'"/>')
+			text=text.replace(" "+k,'&nbsp;<img alt="'+k+'" src="'+v+'"/>')
+			text=text.replace("&nbsp;"+k,'&nbsp;<img alt="'+k+'" src="'+v+'"/>')
+			text=text.replace(">"+k,'><img alt="'+k+'" src="'+v+'"/>')
+			text=text.replace("	"+k,'<img alt="'+k+'" src="'+v+'"/>')
+			text=text.replace("\t"+k,'<img alt="'+k+'" src="'+v+'"/>')
 		self.messageObject.message=unicode(text)
 		if not insert:
 			self.ui.webkit.page().mainFrame().evaluateJavaScript("addMessage(-1);")
