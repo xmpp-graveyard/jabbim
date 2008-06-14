@@ -32,6 +32,8 @@ class webkitThemeFactory:
 		cwd=os.getcwd()
 		self.chatTheme,self.chatStyle=self.fullChatTheme.split("/")
 		self.groupchatTheme,self.groupchatStyle=self.fullGroupchatTheme.split("/")
+		print "loading chatTheme",self.chatTheme,self.chatStyle
+		print "loading groupchatTheme",self.groupchatTheme,self.groupchatStyle
 
 		self.incomingContent=None
 		if os.path.exists(cwd+"/chatskins/%s/Incoming/Content.html"%self.chatTheme):
@@ -93,6 +95,50 @@ class webkitThemeFactory:
 			f=open(cwd+"/chatskins/%s/Status.html"%self.chatTheme,"r")
 			self.chatStatus=f.read()
 			f.close()
+
+		self.chatFooter=None
+		if os.path.exists(cwd+"/chatskins/%s/Footer.html"%self.chatTheme):
+			f=open(cwd+"/chatskins/%s/Footer.html"%self.chatTheme,"r")
+			self.chatFooter=f.read()
+			f.close()
+
+		self.groupchatFooter=None
+		if os.path.exists(cwd+"/chatskins/%s/Footer.html"%self.groupchatTheme):
+			f=open(cwd+"/chatskins/%s/Footer.html"%self.groupchatTheme,"r")
+			self.groupchatFooter=f.read()
+			f.close()
+
+		self.chatHeader=None
+		if os.path.exists(cwd+"/chatskins/%s/Header.html"%self.chatTheme):
+			f=open(cwd+"/chatskins/%s/Header.html"%self.chatTheme,"r")
+			self.chatHeader=f.read()
+			f.close()
+
+		self.groupchatHeader=None
+		if os.path.exists(cwd+"/chatskins/%s/Header.html"%self.groupchatTheme):
+			f=open(cwd+"/chatskins/%s/Header.html"%self.groupchatTheme,"r")
+			self.groupchatHeader=f.read()
+			f.close()
+
+	def genChatHeader(self,name="",avatar=""):
+		if not self.chatHeader:
+			return ""
+		return unicode(self.chatHeader).replace("%chatName%",name).replace("%incomingIconPath%",avatar)
+
+	def genGroupchatHeader(self,name=""):
+		if not self.groupchatHeader:
+			return ""
+		return unicode(self.groupchatHeader).replace("%chatName%",name)
+
+	def genChatFooter(self):
+		if not self.chatFooter:
+			return ""
+		return self.chatFooter
+
+	def genGroupchatFooter(self):
+		if not self.groupchatFooter:
+			return ""
+		return self.groupchatFooter
 
 	def chatPath(self):
 		return os.getcwd()+"/chatskins/%s/" % self.chatTheme

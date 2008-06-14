@@ -628,7 +628,7 @@ class chatWindow(QtGui.QMainWindow):
 		layout=QtGui.QHBoxLayout(tab)
 		layout.setMargin(1)
 		layout.setSpacing(1)
-		tab.chat=chatWidget(self.main,jid,tab)
+		tab.chat=chatWidget(self.main,jid,tab,name)
 		it=[]
 		#if len(item)!=0:
 			#it=item

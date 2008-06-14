@@ -1413,10 +1413,9 @@ class clientClass(pyxl.client.Client):
 		elif self.main.allowedJids.has_key(self.main.getJid(unicode(self.ft[sid].tojid)).userhost()+"/"+self.ft[sid].fileprops['name']):
 			filename=self.main.allowedJids[self.main.getJid(unicode(self.ft[sid].tojid)).userhost()+"/"+self.ft[sid].fileprops['name']]+"/"+self.ft[sid].fileprops['name']
 			autoDownload=True
-		elif self.main.config['autoDownload'] == 'True':
+		elif self.main.config['autoDownload'] == 'True' and unicode(self.ft[sid].tojid).find("rpc@jabbim.cz")==-1:
 			filename = self.main.config['autoDownloadPath']+'/'+self.ft[sid].fileprops['name']
 			autoDownload=True
-			
 		if autoDownload:
 			if self.ft[sid].method!=None:
 				return
@@ -1564,6 +1563,7 @@ class mainWindow(QtGui.QMainWindow):
 				self.startwiz=wizards.firststart.firstStartWizard(self,self)
 				self.startwiz.show()
 
+		self.reactor=reactor
 		# load last profile according to ~/config
 		utils.loadConfig(self,[])
 		if not self.config['jid']+"-profile" in profiles:

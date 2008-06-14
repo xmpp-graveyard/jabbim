@@ -424,9 +424,12 @@ class abstractChatWidget(QtGui.QWidget):
 			typ="chat"
 		if typ=="groupchat":
 			stylesheet=self.main.webkitThemeFactory.genGroupchatStyleSheet()
+			footer=self.main.webkitThemeFactory.genGroupchatFooter()
+			header=self.main.webkitThemeFactory.genGroupchatHeader()
 		else:
 			stylesheet=self.main.webkitThemeFactory.genChatStyleSheet()
-			#if (messageObject.scroll()==1) setTimeout(window.location='#bottom', 0);
+			footer=self.main.webkitThemeFactory.genChatFooter()
+			header=self.main.webkitThemeFactory.genChatHeader(self.name,self.file)
 		html="""
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
@@ -482,13 +485,15 @@ function scrollToBottom() {
 </head>
 <body>
 <div id="Chat">
+%s
 <input type="hidden" value="0" id="theValue" />
 <div id="myDiv"> </div>
+%s
 </div>
 <a name='bottom'></a>
 </body>
 </html>
-		""" % stylesheet
+		""" % (stylesheet,header,footer)
 
 
 

@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>676</width>
-    <height>537</height>
+    <height>556</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -14,7 +14,7 @@
   </property>
   <property name="windowIcon" >
    <iconset>
-    <normaloff>images/16x16/apps/jabbim.png</normaloff>images/16x16/apps/jabbim.png</iconset>
+    <normaloff>../../../../.designer/backup/images/16x16/apps/jabbim.png</normaloff>../../../../.designer/backup/images/16x16/apps/jabbim.png</iconset>
   </property>
   <layout class="QGridLayout" >
    <property name="margin" >
@@ -23,6 +23,98 @@
    <property name="spacing" >
     <number>6</number>
    </property>
+   <item rowspan="3" row="0" column="0" >
+    <widget class="QListWidget" name="listWidget" >
+     <property name="minimumSize" >
+      <size>
+       <width>190</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="iconSize" >
+      <size>
+       <width>32</width>
+       <height>32</height>
+      </size>
+     </property>
+     <property name="viewMode" >
+      <enum>QListView::ListMode</enum>
+     </property>
+     <item>
+      <property name="text" >
+       <string>Jabbim</string>
+      </property>
+      <property name="icon" >
+       <iconset>
+        <normaloff>../../../../.designer/backup/images/32x32/apps/jabbim.png</normaloff>../../../../.designer/backup/images/32x32/apps/jabbim.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text" >
+       <string>Connection</string>
+      </property>
+      <property name="icon" >
+       <iconset>
+        <normaloff>../../../../.designer/backup/images/32x32/categories/applications-internet.png</normaloff>../../../../.designer/backup/images/32x32/categories/applications-internet.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text" >
+       <string>Chat</string>
+      </property>
+      <property name="icon" >
+       <iconset>
+        <normaloff>../../../../.designer/backup/images/32x32/apps/jabbim.png</normaloff>../../../../.designer/backup/images/32x32/apps/jabbim.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text" >
+       <string>Roster</string>
+      </property>
+      <property name="icon" >
+       <iconset>
+        <normaloff>../../../../.designer/backup/images/32x32/categories/system-users.png</normaloff>../../../../.designer/backup/images/32x32/categories/system-users.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text" >
+       <string>Privacy</string>
+      </property>
+      <property name="icon" >
+       <iconset>
+        <normaloff>../../../../.designer/backup/images/32x32/apps/jabbim.png</normaloff>../../../../.designer/backup/images/32x32/apps/jabbim.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text" >
+       <string>Appearance</string>
+      </property>
+      <property name="icon" >
+       <iconset>
+        <normaloff>../../../../.designer/backup/images/32x32/categories/preferences-desktop-theme.png</normaloff>../../../../.designer/backup/images/32x32/categories/preferences-desktop-theme.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text" >
+       <string>Plugins</string>
+      </property>
+      <property name="icon" >
+       <iconset>
+        <normaloff>../../../../.designer/backup/images/32x32/categories/applications-accessories.png</normaloff>../../../../.designer/backup/images/32x32/categories/applications-accessories.png</iconset>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="2" >
+    <widget class="QLabel" name="profile" >
+     <property name="frameShape" >
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="text" >
+      <string>profile</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="1" colspan="2" >
     <widget class="QStackedWidget" name="stackedWidget" >
      <property name="currentIndex" >
@@ -289,7 +381,7 @@ p, li { white-space: pre-wrap; }
         <x>0</x>
         <y>0</y>
         <width>462</width>
-        <height>446</height>
+        <height>465</height>
        </rect>
       </property>
       <layout class="QGridLayout" >
@@ -299,6 +391,23 @@ p, li { white-space: pre-wrap; }
        <property name="spacing" >
         <number>6</number>
        </property>
+       <item row="1" column="0" >
+        <widget class="Line" name="line_6" >
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" >
+        <widget class="QLabel" name="label_7" >
+         <property name="text" >
+          <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Sans Serif';">&lt;span style=" font-size:12pt; font-weight:600;">View&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+         </property>
+        </widget>
+       </item>
        <item row="2" column="0" >
         <widget class="QTabWidget" name="tabWidget" >
          <property name="currentIndex" >
@@ -310,7 +419,7 @@ p, li { white-space: pre-wrap; }
             <x>0</x>
             <y>0</y>
             <width>440</width>
-            <height>361</height>
+            <height>380</height>
            </rect>
           </property>
           <attribute name="title" >
@@ -348,33 +457,148 @@ p, li { white-space: pre-wrap; }
            </item>
           </layout>
          </widget>
+         <widget class="QWidget" name="tab_4" >
+          <attribute name="title" >
+           <string>Groupchat skin</string>
+          </attribute>
+          <layout class="QGridLayout" name="gridLayout" >
+           <item row="0" column="0" >
+            <layout class="QHBoxLayout" name="horizontalLayout_2" >
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_3" >
+               <item>
+                <widget class="QLabel" name="label_10" >
+                 <property name="enabled" >
+                  <bool>true</bool>
+                 </property>
+                 <property name="sizePolicy" >
+                  <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text" >
+                  <string>Style:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_11" >
+                 <property name="text" >
+                  <string>Variant:</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_4" >
+               <item>
+                <widget class="QComboBox" name="groupchatskinStyle" >
+                 <property name="sizePolicy" >
+                  <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize" >
+                  <size>
+                   <width>130</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="groupchatskinVariant" />
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="0" >
+            <widget class="QLabel" name="groupchatskinInfo" >
+             <property name="text" >
+              <string>info</string>
+             </property>
+             <property name="textFormat" >
+              <enum>Qt::RichText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" >
+            <widget class="QWebView" name="groupchatskinPreview" />
+           </item>
+          </layout>
+         </widget>
          <widget class="QWidget" name="tab_2" >
           <property name="geometry" >
            <rect>
             <x>0</x>
             <y>0</y>
             <width>440</width>
-            <height>361</height>
+            <height>380</height>
            </rect>
           </property>
           <attribute name="title" >
-           <string>Chat skins</string>
+           <string>Chat skin</string>
           </attribute>
-          <layout class="QGridLayout" name="gridLayout" >
+          <layout class="QGridLayout" name="gridLayout_2" >
            <item row="0" column="0" >
-            <widget class="QComboBox" name="chatSkin_list" >
-             <property name="minimumSize" >
-              <size>
-               <width>130</width>
-               <height>0</height>
-              </size>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout" >
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout" >
+               <item>
+                <widget class="QLabel" name="label_2" >
+                 <property name="enabled" >
+                  <bool>true</bool>
+                 </property>
+                 <property name="sizePolicy" >
+                  <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text" >
+                  <string>Style:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_3" >
+                 <property name="text" >
+                  <string>Variant:</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_2" >
+               <item>
+                <widget class="QComboBox" name="chatSkin_list" >
+                 <property name="sizePolicy" >
+                  <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize" >
+                  <size>
+                   <width>130</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="chatskinVariant" />
+               </item>
+              </layout>
+             </item>
+            </layout>
            </item>
            <item row="1" column="0" >
-            <widget class="QComboBox" name="chatskinVariant" />
-           </item>
-           <item row="2" column="0" >
             <widget class="QLabel" name="chatSkinInfo" >
              <property name="text" >
               <string>info</string>
@@ -384,7 +608,7 @@ p, li { white-space: pre-wrap; }
              </property>
             </widget>
            </item>
-           <item row="3" column="0" >
+           <item row="2" column="0" >
             <widget class="QWebView" name="chatskinPreview" />
            </item>
           </layout>
@@ -395,7 +619,7 @@ p, li { white-space: pre-wrap; }
             <x>0</x>
             <y>0</y>
             <width>440</width>
-            <height>361</height>
+            <height>380</height>
            </rect>
           </property>
           <attribute name="title" >
@@ -458,24 +682,10 @@ p, li { white-space: pre-wrap; }
          </widget>
         </widget>
        </item>
-       <item row="1" column="0" >
-        <widget class="Line" name="line_6" >
-         <property name="orientation" >
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" >
-        <widget class="QLabel" name="label_7" >
-         <property name="text" >
-          <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
-p, li { white-space: pre-wrap; }
-&lt;/style>&lt;/head>&lt;body style=" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;">
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Sans Serif';">&lt;span style=" font-size:12pt; font-weight:600;">View&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
-         </property>
-        </widget>
-       </item>
       </layout>
+      <zorder>line_6</zorder>
+      <zorder>label_7</zorder>
+      <zorder>tabWidget</zorder>
      </widget>
      <widget class="QWidget" name="page_5" >
       <property name="geometry" >
@@ -569,88 +779,6 @@ p, li { white-space: pre-wrap; }
      </widget>
     </widget>
    </item>
-   <item rowspan="3" row="0" column="0" >
-    <widget class="QListWidget" name="listWidget" >
-     <property name="minimumSize" >
-      <size>
-       <width>190</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="iconSize" >
-      <size>
-       <width>32</width>
-       <height>32</height>
-      </size>
-     </property>
-     <property name="viewMode" >
-      <enum>QListView::ListMode</enum>
-     </property>
-     <item>
-      <property name="text" >
-       <string>Jabbim</string>
-      </property>
-      <property name="icon" >
-       <iconset>
-        <normaloff>images/32x32/apps/jabbim.png</normaloff>images/32x32/apps/jabbim.png</iconset>
-      </property>
-     </item>
-     <item>
-      <property name="text" >
-       <string>Connection</string>
-      </property>
-      <property name="icon" >
-       <iconset>
-        <normaloff>images/32x32/categories/applications-internet.png</normaloff>images/32x32/categories/applications-internet.png</iconset>
-      </property>
-     </item>
-     <item>
-      <property name="text" >
-       <string>Chat</string>
-      </property>
-      <property name="icon" >
-       <iconset>
-        <normaloff>images/32x32/apps/jabbim.png</normaloff>images/32x32/apps/jabbim.png</iconset>
-      </property>
-     </item>
-     <item>
-      <property name="text" >
-       <string>Roster</string>
-      </property>
-      <property name="icon" >
-       <iconset>
-        <normaloff>images/32x32/categories/system-users.png</normaloff>images/32x32/categories/system-users.png</iconset>
-      </property>
-     </item>
-     <item>
-      <property name="text" >
-       <string>Privacy</string>
-      </property>
-      <property name="icon" >
-       <iconset>
-        <normaloff>images/32x32/apps/jabbim.png</normaloff>images/32x32/apps/jabbim.png</iconset>
-      </property>
-     </item>
-     <item>
-      <property name="text" >
-       <string>Appearance</string>
-      </property>
-      <property name="icon" >
-       <iconset>
-        <normaloff>images/32x32/categories/preferences-desktop-theme.png</normaloff>images/32x32/categories/preferences-desktop-theme.png</iconset>
-      </property>
-     </item>
-     <item>
-      <property name="text" >
-       <string>Plugins</string>
-      </property>
-      <property name="icon" >
-       <iconset>
-        <normaloff>images/32x32/categories/applications-accessories.png</normaloff>images/32x32/categories/applications-accessories.png</iconset>
-      </property>
-     </item>
-    </widget>
-   </item>
    <item row="2" column="1" >
     <spacer>
      <property name="orientation" >
@@ -694,16 +822,6 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
     </layout>
-   </item>
-   <item row="0" column="1" colspan="2" >
-    <widget class="QLabel" name="profile" >
-     <property name="frameShape" >
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="text" >
-      <string>profile</string>
-     </property>
-    </widget>
    </item>
   </layout>
  </widget>

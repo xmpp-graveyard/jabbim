@@ -41,6 +41,21 @@ from os.path import basename
 from pyxl import jid as jidT
 import webkitthemes
 
+class message(QtCore.QObject):
+	def __init__(self,message):
+		QtCore.QObject.__init__(self)
+		self.messages=message
+		self.scr=1
+		self.setObjectName("messageObject")
+
+	@QtCore.pyqtSignature("int",result="QString")
+	def msg(self,i):
+		return self.messages[i]
+
+	@QtCore.pyqtSignature("",result="int")
+	def scroll(self):
+		return self.scr
+
 class pluginConfiguration(QtGui.QDialog):
 	def __init__(self,plugin,parent):
 		apply(QtGui.QDialog.__init__,(self,parent))
@@ -656,10 +671,22 @@ class preferencesWindow(QtGui.QDialog):
 
 		QtCore.QObject.connect(self.ui.emoticonsList,QtCore.SIGNAL('activated ( int )'),self.emoticonsListChanged)
 		QtCore.QObject.connect(self.ui.chatskinVariant,QtCore.SIGNAL('activated ( int )'),self.chatskinVariantChanged)
+		QtCore.QObject.connect(self.ui.groupchatskinVariant,QtCore.SIGNAL('activated ( int )'),self.groupchatskinVariantChanged)
+		QtCore.QObject.connect(self.ui.groupchatskinStyle,QtCore.SIGNAL('activated ( int )'),self.groupchatskinStyleChanged)
 		QtCore.QObject.connect(self.ui.chatSkin_list, QtCore.SIGNAL("activated ( int )"),self.chatSkin_listChanged)
 
 		QtCore.QObject.connect(self.ui.useThemes,QtCore.SIGNAL("stateChanged ( int )"),self.useThemesChanged)
 		QtCore.QObject.connect(self.ui.themes, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.themeChanged)
+
+		self.chatMessageObject=message("")
+		QtCore.QObject.connect(self.ui.chatskinPreview,QtCore.SIGNAL("loadFinished ( bool)"),self.chatskinPreviewFinished)
+		QtCore.QObject.connect(self.ui.chatskinPreview.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.chatskinPreviewCleared)
+		
+
+		self.groupchatMessageObject=message("")
+		QtCore.QObject.connect(self.ui.groupchatskinPreview,QtCore.SIGNAL("loadFinished ( bool)"),self.groupchatskinPreviewFinished)
+		QtCore.QObject.connect(self.ui.groupchatskinPreview.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.groupchatskinPreviewCleared)
+
 
 		# Plugins
 		QtCore.QObject.connect(self.ui.applyButton, QtCore.SIGNAL("clicked()"),self.save)
@@ -707,6 +734,7 @@ class preferencesWindow(QtGui.QDialog):
 	def reloadView(self,extraPart='',extraRoot=''):
 		self.ui.emoticonsList.clear()
 		self.ui.chatSkin_list.clear()
+		self.ui.groupchatskinStyle.clear()
 		self.ui.themes.clear()
 		if extraPart.find("emoticons/")!=-1:
 			pack=os.listdir(self.main.realHomeDir+'/emoticons/'+extraRoot)
@@ -756,7 +784,7 @@ class preferencesWindow(QtGui.QDialog):
 		# chat skins from Jabbim root directory
 		packs=os.listdir("chatskins/")
 		for pack in packs:
-			if os.path.isdir('chatskins/'+pack):
+			if os.path.isdir('chatskins/'+pack) and os.path.isdir('chatskins/'+pack+"/Incoming"):
 				#skins=os.listdir('chatskins/'+pack+"/")
 				#for skin in skins:
 				path=pack
@@ -764,22 +792,24 @@ class preferencesWindow(QtGui.QDialog):
 					self.ui.chatSkin_list.insertItem(0,path,QtCore.QVariant(path))
 				else:
 					self.ui.chatSkin_list.addItem(path,QtCore.QVariant(path))
+				if path==self.main.config["groupchatTheme"].split("/")[0]:
+					self.ui.groupchatskinStyle.insertItem(0,path,QtCore.QVariant(path))
+				else:
+					self.ui.groupchatskinStyle.addItem(path,QtCore.QVariant(path))
 
-		# chat skins from Jabbim root directory
+		# chat skins from Jabbim home directory
 		packs=os.listdir(self.main.realHomeDir+"/chatskins/")
 		for pack in packs:
-			if os.path.isdir(self.main.realHomeDir+'/chatskins/'+pack):
-				skins=os.listdir(self.main.realHomeDir+'/chatskins/'+pack+"/")
-				for skin in skins:
-					if skin.endswith('.cfg'):
-						path=pack+"/"+skin
-						#config=ConfigObj(self.main.realHomeDir+"/chatskins/"+path,encoding='UTF8')
-						loaded,config=self.main.loadJabbimExtraConfig(self.main.realHomeDir+"/chatskins/"+path,'chatskins/cool/cool.cfg')
-						if loaded:
-							if path==self.main.config["chatSkin"]:
-								self.ui.chatSkin_list.insertItem(0,unicode(config['header']['name']),QtCore.QVariant(path))
-							else:
-								self.ui.chatSkin_list.addItem(unicode(config['header']['name']),QtCore.QVariant(path))
+			if os.path.isdir(self.main.realHomeDir+'/chatskins/'+pack) and os.path.isdir(self.main.realHomeDir+'/chatskins/'+pack+'/Incoming'):
+				path=pack
+				if path==self.main.config["chatTheme"].split("/")[0]:
+					self.ui.chatSkin_list.insertItem(0,path,QtCore.QVariant(path))
+				else:
+					self.ui.chatSkin_list.addItem(path,QtCore.QVariant(path))
+				if path==self.main.config["groupchatTheme"].split("/")[0]:
+					self.ui.groupchatskinStyle.insertItem(0,path,QtCore.QVariant(path))
+				else:
+					self.ui.groupchatskinStyle.addItem(path,QtCore.QVariant(path))
 
 		#skins=os.listdir("skins/")
 		#for skin in skins:
@@ -790,7 +820,9 @@ class preferencesWindow(QtGui.QDialog):
 				#else:
 					#self.ui.chatSkin_list.addItem(unicode(skin))
 		self.chatSkin_listChanged(0)
+		self.groupchatskinStyleChanged(0)
 		self.ui.chatSkin_list.setCurrentIndex(0)
+		self.ui.groupchatskinStyle.setCurrentIndex(0)
 
 		# Themes
 		skins=os.listdir("themes/")
@@ -1067,46 +1099,49 @@ class preferencesWindow(QtGui.QDialog):
 		path=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())
 		v=unicode(self.ui.chatskinVariant.itemData(index).toString())
 		self.generateChatskinPreview(path+"/"+v)
-
-	def chatSkin_listChanged(self,index):
-		path=unicode(self.ui.chatSkin_list.itemData(index).toString())
-		#src='chatskins/'
-
-		#loaded,config=self.main.loadJabbimExtraConfig("chatskins/"+path,'chatskins/cool/cool.cfg')
-		#if len(config)==0 or not loaded:
-			#src=self.main.realHomeDir+'/chatskins/'
-			##config=ConfigObj(self.main.realHomeDir+"/emoticons/"+path,encoding='UTF8')
-			#loaded,config=self.main.loadJabbimExtraConfig(self.main.realHomeDir+"/chatskins/"+path,'chatskins/cool/cool.cfg')
-			#if not loaded:
-				#return
-		#html=""
-		#html+=self.tr("Name: ")+unicode(config['header']['name'])+"<br/>"
-		#if config['header'].has_key('license'):
-			#html+=self.tr("License: ")+unicode(config['header']['license'])+"<br/>"
-		#self.ui.chatSkinInfo.setText(html)
+	
+	def groupchatskinStyleChanged(self,index):
+		self.chatSkin_listChanged(index,"groupchat")
 		
-		#self.ui.chatSkin_preview.clear()
-		#self.chatSkinPreviewtextEditWrite(config['chatskin']["message_history"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("This is test message send in past."))).replace('[background]',config['chatskin']['color1'][0]).replace('[foreground]',config['chatskin']['color1'][1]).replace("[avatar]","<img src=\"images/16x16/apps/jabbim.png\" width=\"16\" height=\"16\" />"))
-		#self.chatSkinPreviewtextEditWrite(config['chatskin']["my_message_history"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("Me"))).replace("[message]",unicode(self.tr("This is my test message send in past."))).replace("[avatar]","<img src=\"images/16x16/apps/jabbim.png\" width=\"16\" height=\"16\" />"))
-		#self.chatSkinPreviewtextEditWrite(config['chatskin']["message_for_me_history"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("Me"))+", "+unicode(self.tr("this is message contains my name send in past."))).replace("[avatar]","<img src=\"images/16x16/apps/jabbim.png\" width=\"16\" height=\"16\" />"))
-		#self.chatSkinPreviewtextEditWrite(config['chatskin']["message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("This is test message."))).replace('[background]',config['chatskin']['color1'][0]).replace('[foreground]',config['chatskin']['color1'][1]).replace("[avatar]","<img src=\"images/32x32/apps/jabbim.png\" width=\"32\" height=\"32\" />"))
-		#self.chatSkinPreviewtextEditWrite(config['chatskin']["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("Me"))).replace("[message]",unicode(self.tr("This is my test message."))).replace("[avatar]","<img src=\"images/32x32/apps/jabbim.png\" width=\"32\" height=\"32\" />"))
-		#self.chatSkinPreviewtextEditWrite(config['chatskin']["message_for_me"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("Me"))+", "+unicode(self.tr("this is message contains my name."))).replace("[avatar]","<img src=\"images/32x32/apps/jabbim.png\" width=\"32\" height=\"32\" />"))
-		#self.chatSkinPreviewtextEditWrite(config['chatskin']["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("User has set the subject to: Subject"))))
-
+	def groupchatskinVariantChanged(self,index):
+		path=unicode(self.ui.groupchatskinStyle.itemData(self.ui.groupchatskinStyle.currentIndex()).toString())
+		v=unicode(self.ui.groupchatskinVariant.itemData(index).toString())
+		self.generateChatskinPreview(path+"/"+v,'groupchat')
+		
+	def chatSkin_listChanged(self,index,typ='chat'):
+		if typ=="chat":
+			path=unicode(self.ui.chatSkin_list.itemData(index).toString())
+			self.ui.chatskinVariant.clear()
+		else:
+			path=unicode(self.ui.groupchatskinStyle.itemData(index).toString())
+			self.ui.groupchatskinVariant.clear()
 		variants=os.listdir("chatskins/"+path+"/Variants")
-		self.ui.chatskinVariant.clear()
 		v=""
+		default=""
 		for variant in variants:
 			if variant.endswith(".css"):
-				v=unicode(variant)
-				if variant==self.main.config["chatTheme"].split("/")[1]:
-					self.ui.chatskinVariant.insertItem(0,variant[:-4],QtCore.QVariant(variant))
+				default=unicode(variant)
+				if typ=="chat":
+					if variant==self.main.config["chatTheme"].split("/")[1]:
+						self.ui.chatskinVariant.insertItem(0,variant[:-4],QtCore.QVariant(variant))
+						v=unicode(variant)
+					else:
+						self.ui.chatskinVariant.addItem(variant[:-4],QtCore.QVariant(variant))
 				else:
-					self.ui.chatskinVariant.addItem(variant[:-4],QtCore.QVariant(variant))
-		self.generateChatskinPreview(path+"/"+v)
+					if variant==self.main.config["groupchatTheme"].split("/")[1]:
+						self.ui.groupchatskinVariant.insertItem(0,variant[:-4],QtCore.QVariant(variant))
+						v=unicode(variant)
+					else:
+						self.ui.groupchatskinVariant.addItem(variant[:-4],QtCore.QVariant(variant))
+		if len(v)==0:
+			v=default
+		if typ=="chat":
+			self.ui.chatskinVariant.setCurrentIndex(0)
+		else:
+			self.ui.groupchatskinVariant.setCurrentIndex(0)
+		self.generateChatskinPreview(path+"/"+v,typ)
 
-	def generateChatskinPreview(self,skin):
+	def generateChatskinPreview(self,skin,typ="chat"):
 		factory=webkitthemes.webkitThemeFactory(skin,skin)
 		stylesheet=factory.genChatStyleSheet()
 		html="""
@@ -1117,7 +1152,12 @@ class preferencesWindow(QtGui.QDialog):
 <style type="text/css" media="screen,print"> @import url( "main.css" ); </style>
 <style id="mainStyle" type="text/css" media="screen,print"> %s </style>
 <script>
-function addMessage() {
+function addMessage(index) {
+shouldScroll = nearBottom();
+//Remove any existing insertion point
+insert = document.getElementById("insert");
+if(insert) insert.parentNode.removeChild(insert);
+
 var ni = document.getElementById('myDiv');
 var numi = document.getElementById('theValue');
 var num = (document.getElementById('theValue').value -1)+ 2;
@@ -1125,10 +1165,44 @@ numi.value = num;
 var divIdName = "my"+num+"Div";
 var newdiv = document.createElement('div');
 newdiv.setAttribute("id",divIdName);
-newdiv.innerHTML = messageObject.msg();
+newdiv.innerHTML = messageObject.msg(index);
 ni.appendChild(newdiv);
-if (messageObject.scroll()==1) setTimeout(window.location='#bottom', 0);
+if (shouldScroll) scrollToBottom();
+
 }
+function insertMessage(index) {
+shouldScroll = nearBottom();
+
+                        //Locate the insertion point
+                        var insert = document.getElementById("insert");
+
+                        //make new node
+                        range = document.createRange();
+                        range.selectNode(insert.parentNode);
+                        newNode = range.createContextualFragment(messageObject.msg(index));
+
+                        //swap
+                        insert.parentNode.replaceChild(newNode,insert);
+
+if (shouldScroll) scrollToBottom();
+
+}
+//Auto-scroll to bottom.  Use nearBottom to determine if a scrollToBottom is desired.
+function nearBottom() {
+		return ( document.body.scrollTop >= ( document.body.offsetHeight - ( window.innerHeight * 1.2 ) ) );
+}
+function scrollToBottom() {
+		document.body.scrollTop = document.body.offsetHeight;
+}
+
+function makePreview(){
+	addMessage(0);
+	insertMessage(1);
+	addMessage(2);
+	addMessage(3);
+	insertMessage(4);
+}
+
 </script>
 </head>
 <body>
@@ -1137,26 +1211,41 @@ if (messageObject.scroll()==1) setTimeout(window.location='#bottom', 0);
 <div id="myDiv"> </div>
 		""" % stylesheet
 		
-		html+=factory.genIncomingContent(unicode(self.tr("User")),unicode(self.tr("Message for me")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png")
-		html+=factory.genIncomingNextContent(unicode(self.tr("User")),unicode(self.tr("Second message for me")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png")
-		html+=factory.genChatStatus(unicode(self.tr("User is now away")),self.main.now())
-		html+=factory.genOutgoingContent(unicode(self.tr("Me")),unicode(self.tr("Message for user")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png")
-		html+=factory.genOutgoingNextContent(unicode(self.tr("Me")),unicode(self.tr("Second message for user")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png")
-		#self.chatSkinPreviewtextEditWrite(config['chatskin']["message_history"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("This is test message send in past."))).replace('[background]',config['chatskin']['color1'][0]).replace('[foreground]',config['chatskin']['color1'][1]).replace("[avatar]","<img src=\"images/16x16/apps/jabbim.png\" width=\"16\" height=\"16\" />"))
-		#self.chatSkinPreviewtextEditWrite(config['chatskin']["my_message_history"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("Me"))).replace("[message]",unicode(self.tr("This is my test message send in past."))).replace("[avatar]","<img src=\"images/16x16/apps/jabbim.png\" width=\"16\" height=\"16\" />"))
-		#self.chatSkinPreviewtextEditWrite(config['chatskin']["message_for_me_history"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("Me"))+", "+unicode(self.tr("this is message contains my name send in past."))).replace("[avatar]","<img src=\"images/16x16/apps/jabbim.png\" width=\"16\" height=\"16\" />"))
-		#self.chatSkinPreviewtextEditWrite(config['chatskin']["message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("This is test message."))).replace('[background]',config['chatskin']['color1'][0]).replace('[foreground]',config['chatskin']['color1'][1]).replace("[avatar]","<img src=\"images/32x32/apps/jabbim.png\" width=\"32\" height=\"32\" />"))
-		#self.chatSkinPreviewtextEditWrite(config['chatskin']["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("Me"))).replace("[message]",unicode(self.tr("This is my test message."))).replace("[avatar]","<img src=\"images/32x32/apps/jabbim.png\" width=\"32\" height=\"32\" />"))
-		#self.chatSkinPreviewtextEditWrite(config['chatskin']["message_for_me"].replace("[time]",self.main.now()).replace("[user]",unicode(self.tr("User"))).replace("[message]",unicode(self.tr("Me"))+", "+unicode(self.tr("this is message contains my name."))).replace("[avatar]","<img src=\"images/32x32/apps/jabbim.png\" width=\"32\" height=\"32\" />"))
-		#self.chatSkinPreviewtextEditWrite(config['chatskin']["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("User has set the subject to: Subject"))))
-		
+
 		html+="""
 </div>
 <a name='bottom'></a>
 </body>
 </html>
 		"""
-		self.ui.chatskinPreview.page().mainFrame().setHtml(html,QtCore.QUrl(factory.chatPath()))
+		
+		self.messages=[]
+		self.messages.append(factory.genIncomingContent(unicode(self.tr("User")),unicode(self.tr("Message for me")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
+		self.messages.append(factory.genIncomingNextContent(unicode(self.tr("User")),unicode(self.tr("Second message for me")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
+		self.messages.append(factory.genChatStatus(unicode(self.tr("User is now away")),self.main.now()))
+		self.messages.append(factory.genOutgoingContent(unicode(self.tr("Me")),unicode(self.tr("Message for user")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
+		self.messages.append(factory.genOutgoingNextContent(unicode(self.tr("Me")),unicode(self.tr("Second message for user")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
+
+		
+		if typ=="chat":
+			self.ui.chatskinPreview.page().mainFrame().setHtml(html,QtCore.QUrl(factory.chatPath()))
+		else:
+			self.ui.groupchatskinPreview.page().mainFrame().setHtml(html,QtCore.QUrl(factory.chatPath()))
+
+	def chatskinPreviewCleared(self):
+		print "cleared"
+		self.ui.chatskinPreview.page().mainFrame().addToJavaScriptWindowObject("messageObject",self.chatMessageObject)
+
+	def groupchatskinPreviewCleared(self):
+		self.ui.groupchatskinPreview.page().mainFrame().addToJavaScriptWindowObject("messageObject",self.groupchatMessageObject)
+
+	def chatskinPreviewFinished(self,ok,later=False):
+		self.chatMessageObject.messages=list(self.messages)
+		self.ui.chatskinPreview.page().mainFrame().evaluateJavaScript("makePreview();")
+
+	def groupchatskinPreviewFinished(self,ok,later=False):
+		self.groupchatMessageObject.messages=list(self.messages)
+		self.ui.groupchatskinPreview.page().mainFrame().evaluateJavaScript("makePreview();")
 
 	def save(self):
 		#if not self.justShowed:
@@ -1179,6 +1268,7 @@ if (messageObject.scroll()==1) setTimeout(window.location='#bottom', 0);
 		if not self.justShowed:
 			self.main.config['chatSkin']=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())
 			self.main.config['chatTheme']=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())+"/"+unicode(self.ui.chatskinVariant.itemData(self.ui.chatskinVariant.currentIndex()).toString())
+			self.main.config['groupchatTheme']=unicode(self.ui.groupchatskinStyle.itemData(self.ui.groupchatskinStyle.currentIndex()).toString())+"/"+unicode(self.ui.groupchatskinVariant.itemData(self.ui.groupchatskinVariant.currentIndex()).toString())
 			self.main.loadSkin()
 			self.main.config['emoticons']=unicode(self.ui.emoticonsList.itemData(self.ui.emoticonsList.currentIndex()).toString())
 			self.main.emoticonsWidget.reinit()

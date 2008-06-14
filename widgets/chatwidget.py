@@ -232,14 +232,31 @@ class flowLayout(QtGui.QLayout):
 		return y + lineHeight - rect.y()
 
 class chatWidget(abstractChatWidget):
-	def __init__(self,main,jid,parent=None):
+	def __init__(self,main,jid,parent=None,name=""):
 		jidt=jidT.JID(jid)
+		self.name=name
+		self.main=main
 		#try:
 			#xhtml=main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/xhtml-im') #: True if user supports xhtml, otherwise False
 		#except:
 			#xhtml=False
 		xhtml=main.client.hasFeature(jid,'http://jabber.org/protocol/xhtml-im')
 		self.typ="chat"
+		# get users avatar
+		self.file=""
+		if self.main.client.avatarDef.has_key(unicode(jidT.JID(jid).userhost())):
+			self.file=self.main.realHomeDir+'/avatars/'+str(self.main.client.avatarDef[unicode(jidT.JID(jid).userhost())]) #: path to users avatar
+		elif self.main.client.avatarDef.has_key(unicode(jidT.JID(jid).full())):
+			self.file=self.main.realHomeDir+'/avatars/'+str(self.main.client.avatarDef[unicode(jidT.JID(jid).full())]) #: path to users avatar
+		self.avatarHeight=32 #: avatars height
+		if not os.path.isfile(self.file):
+			# use default avatar if users avatar doesn't exist
+			self.file=os.getcwd()+"/images/32x32/apps/jabbim.png"
+		else:
+			# change size of users avatar
+			# TODO: size should be changed by skin...
+			pixmap=QtGui.QPixmap(self.file).scaledToWidth(32)
+			self.avatarHeight=int(pixmap.height())
 		abstractChatWidget.__init__(self,Ui_chatwidget,abstractTextView,main,jid,xhtml,parent)
 
 		self.metaJids=[]
@@ -257,21 +274,6 @@ class chatWidget(abstractChatWidget):
 		self.noColor=True
 		self.lastMessageFrom=""
 		
-		# get users avatar
-		self.file=""
-		if self.main.client.avatarDef.has_key(unicode(jidT.JID(jid).userhost())):
-			self.file=self.main.realHomeDir+'/avatars/'+str(self.main.client.avatarDef[unicode(jidT.JID(jid).userhost())]) #: path to users avatar
-		elif self.main.client.avatarDef.has_key(unicode(jidT.JID(jid).full())):
-			self.file=self.main.realHomeDir+'/avatars/'+str(self.main.client.avatarDef[unicode(jidT.JID(jid).full())]) #: path to users avatar
-		self.avatarHeight=32 #: avatars height
-		if not os.path.isfile(self.file):
-			# use default avatar if users avatar doesn't exist
-			self.file=os.getcwd()+"/images/32x32/apps/jabbim.png"
-		else:
-			# change size of users avatar
-			# TODO: size should be changed by skin...
-			pixmap=QtGui.QPixmap(self.file).scaledToWidth(32)
-			self.avatarHeight=int(pixmap.height())
 
 		# get self avatar
 		self.selfHeight=32 #: height of self avatar
