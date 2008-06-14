@@ -413,24 +413,17 @@ class chatWindow(QtGui.QMainWindow):
 			countMessage=True
 		if not self.main.chat.isActiveWindow():
 			self.main.chat.setWindowTitle("("+unicode(int(self.getUnreadMessages())+1)+") "+w.tabName.replace("&",""))
-			#current=self.ui.chatTab.currentWidget()
-			#if current:
-				#self.main.chat.setWindowTitle("("+unicode(int(self.getUnreadMessages())+1)+") "+current.tabName.replace("&",""))
 			countMessage=True
 		# set room topic
 		if subject!=None:
 			w.chat.changeTopic(unicode(subject))
 			#w.chat.ui.info.setCursorPosition(0)
-		# set links, if we found them
 
-		# avatar
-
+		# get truejid
 		if self.main.client.groupchats[w.jid].users.has_key(user):
 			truejid = self.main.client.groupchats[w.jid].users[user].truejid
-			print truejid
 			if truejid:
 				truejid=unicode(jidT.JID(truejid).userhost())
-				print truejid
 		else:
 			truejid = None
 
@@ -450,10 +443,6 @@ class chatWindow(QtGui.QMainWindow):
 			file="images/32x32/apps/jabbim.png"
 		if unicode(user)==unicode(w.jid):
 			file = "images/32x32/categories/conferences.png"
-		if not w.chat.sizes.has_key(file):
-			pixmap=QtGui.QPixmap(file).scaledToHeight(32)
-			pixmap=QtGui.QPixmap(file).scaled(32,32,QtCore.Qt.KeepAspectRatio)
-			w.chat.sizes[file]=[unicode(pixmap.width()),unicode(pixmap.height())]
 
 		# no delay message
 		if delay==None:
@@ -466,17 +455,6 @@ class chatWindow(QtGui.QMainWindow):
 					insert=False
 					message=self.main.webkitThemeFactory.genGroupchatOutgoingContent(user,body,self.main.now(),file)
 				w.chat.appendLastMessage(["out",user,body,self.main.now(),file])
-				#if unicode(body).startswith("/me"):
-					#message=self.main.skin["my_me_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body)[3:])
-					#body=unicode(body)[3:]
-					#if w.chat.lastMessageFrom==unicode(user):
-						#if self.main.skin.has_key('my_me_message_continue'):
-							#message=self.main.skin["my_me_message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
-				#else:
-					#message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body))
-					#if w.chat.lastMessageFrom==unicode(user):
-						#if self.main.skin.has_key('my_message_continue'):
-							#message=self.main.skin["my_message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
 			else:
 				w.chat.appendLastMessage(["in",user,body,self.main.now(),file])
 				self.main.client.dispatcher.publishEvent('groupchatMessageEvent', self.main.getJid(w.jid),user,oldbody,subject, xhtml)
@@ -493,22 +471,7 @@ class chatWindow(QtGui.QMainWindow):
 					else:
 						insert=False
 						message=self.main.webkitThemeFactory.genGroupchatIncomingContent(user,body,self.main.now(),file)
-					#message=self.main.skin["message_for_me"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body))
-					#if w.chat.lastMessageFrom==unicode(user):
-						#if self.main.skin.has_key('message_for_me_continue'):
-							#message=self.main.skin["message_for_me_continue"].replace("[time]",self.main.now()).replace("[user]",user)
 				else:
-					#if unicode(body).startswith("/me"):
-						#message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body)[3:])
-						#body=unicode(body)[3:]
-						#if w.chat.lastMessageFrom==unicode(user):
-							#if self.main.skin.has_key('me_message_continue'):
-								#message=self.main.skin["me_message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
-					#else:
-						#message=self.main.skin["message"].replace("[time]",self.main.now()).replace("[user]",user)
-						#if w.chat.lastMessageFrom==unicode(user):
-							#if self.main.skin.has_key('message_continue'):
-								#message=self.main.skin["message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
 					if w.chat.lastMessageFrom==unicode(user):
 						insert=True
 						message=self.main.webkitThemeFactory.genGroupchatIncomingNextContent(user,body,self.main.now(),file)
@@ -528,14 +491,10 @@ class chatWindow(QtGui.QMainWindow):
 						#if len(colors)==3:
 							#message=message.replace("[additive]",colors[2])
 		
-
-			#message=message.replace("[avatar]","<img src=\""+file+"\" height=\""+w.chat.sizes[file][1]+"\" width=\""+w.chat.sizes[file][0]+"\" />")
-			#message=message.replace('[message]',body)
 			# write message
 			if countMessage:
 				w.chat.unread+=1
-			#print unicode(message)
-			
+		
 			w.chat.textEditWrite(message,insert)
 			w.chat.lastMessageFrom=unicode(user)
 			return
