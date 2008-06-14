@@ -1231,16 +1231,17 @@ class clientClass(pyxl.client.Client):
 			else:
 				timeText=time.strftime('%Y-%m-%d&nbsp;%H:%M:%S', time.localtime(delay))
 
-			tab.chat.appendLastMessage(['in',user,message,timeText,tab.chat.file])
+			
 			next=False
 			if tab:
+				tab.chat.appendLastMessage(['in',user,message,timeText,tab.chat.file])
 				if tab.chat.lastMessageFrom==unicode(user):
 					insert=True
 					message=self.main.webkitThemeFactory.genIncomingNextContent(user,message,timeText,tab.chat.file)
 					next=True
-			if not next:
-				insert=False
-				message=self.main.webkitThemeFactory.genIncomingContent(user,message,timeText,tab.chat.file)
+				if not next:
+					insert=False
+					message=self.main.webkitThemeFactory.genIncomingContent(user,message,timeText,tab.chat.file)
 				
 
 			#colors=self.main.getSkinColors(0)
@@ -1330,6 +1331,7 @@ class clientClass(pyxl.client.Client):
 					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
 					self.main.chat.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)
+					tab.chat.appendLastMessage(['in',user,message,timeText,tab.chat.file])
 					tab.chat.unread+=1
 				self.dispatcher.publishEvent('firstChatMessageEvent', frm,user,body,subject, xhtml, chatstate,  delay, self.main.events.ID-1)
 

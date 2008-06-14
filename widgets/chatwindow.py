@@ -673,6 +673,7 @@ class chatWindow(QtGui.QMainWindow):
 			tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 		tab.chat.name=name
 		tab.chat.refreshLabel()
+		message=self.main.webkitThemeFactory.genIncomingContent(name,message,self.main.now(),tab.chat.file)
 		#tab.chat.ui.label.setText("<font size=\"3\"><b>"+name+"</b></font>")
 		if message!=None:
 			#message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+unicode(tab.chat.avatarHeight)+"\" />")
