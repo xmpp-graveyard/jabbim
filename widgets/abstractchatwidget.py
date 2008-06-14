@@ -20,12 +20,17 @@ class message(QtCore.QObject):
 	def __init__(self,message):
 		QtCore.QObject.__init__(self)
 		self.message=message
+		self.messages=[]
 		self.scr=1
 		self.setObjectName("messageObject")
 
 	@QtCore.pyqtSignature("",result="QString")
 	def msg(self):
 		return self.message
+	
+	@QtCore.pyqtSignature("int",result="QString")
+	def msg_(self,i):
+		return self.messages[i]
 	
 	@QtCore.pyqtSignature("",result="int")
 	def scroll(self):
@@ -409,7 +414,8 @@ class abstractChatWidget(QtGui.QWidget):
 		self.main=main
 		self.parent=parent
 		self.xhtml=xhtml
-
+		self.lastMessages=[]
+		
 		# chat view widget (self.ui.textEdit)
 		l=QtGui.QHBoxLayout(self.ui.viewWidget)
 		l.setMargin(0)
@@ -418,98 +424,11 @@ class abstractChatWidget(QtGui.QWidget):
 		self.ui.textEdit.hide()
 		self.ui.webkit=QtWebKit.QWebView(self)
 		self.ui.webkit.settings().setAttribute(QtWebKit.QWebSettings.JavascriptEnabled,True)
-		try:
-			typ=self.typ
-		except:
-			typ="chat"
-		if typ=="groupchat":
-			stylesheet=self.main.webkitThemeFactory.genGroupchatStyleSheet()
-			footer=self.main.webkitThemeFactory.genGroupchatFooter()
-			header=self.main.webkitThemeFactory.genGroupchatHeader()
-		else:
-			stylesheet=self.main.webkitThemeFactory.genChatStyleSheet()
-			footer=self.main.webkitThemeFactory.genChatFooter()
-			header=self.main.webkitThemeFactory.genChatHeader(self.name,self.file)
-		html="""
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<style type="text/css" media="screen,print"> @import url( "main.css" ); </style>
-<style id="mainStyle" type="text/css" media="screen,print"> %s </style>
-<script>
-function addMessage() {
-shouldScroll = nearBottom();
-//Remove any existing insertion point
-insert = document.getElementById("insert");
-if(insert) insert.parentNode.removeChild(insert);
-
-var ni = document.getElementById('myDiv');
-var numi = document.getElementById('theValue');
-var num = (document.getElementById('theValue').value -1)+ 2;
-numi.value = num;
-var divIdName = "my"+num+"Div";
-var newdiv = document.createElement('div');
-newdiv.setAttribute("id",divIdName);
-newdiv.innerHTML = messageObject.msg();
-ni.appendChild(newdiv);
-if (shouldScroll) setTimeout("scrollToBottom()", 100);
-
-}
-function insertMessage() {
-shouldScroll = nearBottom();
-
-                        //Locate the insertion point
-                        var insert = document.getElementById("insert");
-
-                        //make new node
-                        range = document.createRange();
-                        range.selectNode(insert.parentNode);
-                        newNode = range.createContextualFragment(messageObject.msg());
-
-                        //swap
-                        insert.parentNode.replaceChild(newNode,insert);
-if (shouldScroll) setTimeout("scrollToBottom()", 100);
-
-}
-//Auto-scroll to bottom.  Use nearBottom to determine if a scrollToBottom is desired.
-function nearBottom() {
-		return ( (document.body.scrollTop+100) >= ( document.body.offsetHeight - ( window.innerHeight * 1.2 ) ) );
-}
-function scrollToBottom() {
-		document.body.scrollTop = document.body.offsetHeight;
-}
-
-
-</script>
-</head>
-<body>
-<div id="Chat">
-%s
-<input type="hidden" value="0" id="theValue" />
-<div id="myDiv"> </div>
-%s
-</div>
-<a name='bottom'></a>
-</body>
-</html>
-		""" % (stylesheet,header,footer)
-
-
-
-		#f=open("/home/hanzz/svn/jabbim/trunk/test.html","w")
-		#f.write(html)
-		#f.close()
-
-		#f=open(os.getcwd()+"/chatskins/candy/Incoming/Content.html","r")
-		#self.incoming=f.read()
-		#f.close()
-		if typ=="groupchat":
-			self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl(self.main.webkitThemeFactory.groupchatPath()))
-		else:
-			self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl(self.main.webkitThemeFactory.chatPath()))
 		self.messageObject=message("")
-		self.ui.webkit.page().mainFrame().addToJavaScriptWindowObject("messageObject",self.messageObject)
+		QtCore.QObject.connect(self.ui.webkit,QtCore.SIGNAL("loadFinished ( bool)"),self.webkitLoaded)
+		QtCore.QObject.connect(self.ui.webkit.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.webkitCleared)
+
+		self.loadWebkit()
 
 		#self.ui.webkit.load(QtCore.QUrl("file:///home/hanzz/svn/jabbim/trunk/test.html"))
 		l.addWidget(self.ui.webkit)
@@ -636,6 +555,151 @@ function scrollToBottom() {
 			painter.drawPixmap(0,0,p)
 			painter.end()
 			self.ui.backgroundButton.setIcon(QtGui.QIcon(colorIcon))
+
+	def webkitCleared(self):
+		self.ui.webkit.page().mainFrame().addToJavaScriptWindowObject("messageObject",self.messageObject)
+
+	def webkitLoaded(self):
+		self.ui.webkit.page().mainFrame().evaluateJavaScript("showLastMessages();")
+
+	def loadWebkit(self):
+		try:
+			typ=self.typ
+		except:
+			typ="chat"
+		if typ=="groupchat":
+			stylesheet=self.main.webkitThemeFactory.genGroupchatStyleSheet()
+			footer=self.main.webkitThemeFactory.genGroupchatFooter()
+			header=self.main.webkitThemeFactory.genGroupchatHeader()
+		else:
+			stylesheet=self.main.webkitThemeFactory.genChatStyleSheet()
+			footer=self.main.webkitThemeFactory.genChatFooter()
+			header=self.main.webkitThemeFactory.genChatHeader(self.name,self.file)
+		code=""
+		self.messageObject.messages=[]
+		i=0
+		previousName=""
+		if typ=="groupchat":
+			for m in self.lastMessages:
+				out=m[0]=="out"
+				if out:
+					if m[1]==previousName:
+						self.messageObject.messages.append(self.main.webkitThemeFactory.genGroupchatOutgoingNextContent(m[1],m[2],m[3],m[4]))
+						code+="insertMessage(%s);\n" % str(i)
+					else:
+						self.messageObject.messages.append(self.main.webkitThemeFactory.genGroupchatOutgoingContent(m[1],m[2],m[3],m[4]))
+						code+="addMessage(%s);\n" % str(i)
+				else:
+					if m[1]==previousName:
+						self.messageObject.messages.append(self.main.webkitThemeFactory.genGroupchatIncomingNextContent(m[1],m[2],m[3],m[4]))
+						code+="insertMessage(%s);\n" % str(i)
+					else:
+						self.messageObject.messages.append(self.main.webkitThemeFactory.genGroupchatIncomingContent(m[1],m[2],m[3],m[4]))
+						code+="addMessage(%s);\n" % str(i)
+				previousName=unicode(m[1])
+				i+=1
+		else:
+			for m in self.lastMessages:
+				out=m[0]=="out"
+				if out:
+					if m[1]==previousName:
+						self.messageObject.messages.append(self.main.webkitThemeFactory.genOutgoingNextContent(m[1],m[2],m[3],m[4]))
+						code+="insertMessage(%s);\n" % str(i)
+					else:
+						self.messageObject.messages.append(self.main.webkitThemeFactory.genOutgoingContent(m[1],m[2],m[3],m[4]))
+						code+="addMessage(%s);\n" % str(i)
+				else:
+					if m[1]==previousName:
+						self.messageObject.messages.append(self.main.webkitThemeFactory.genIncomingNextContent(m[1],m[2],m[3],m[4]))
+						code+="insertMessage(%s);\n" % str(i)
+					else:
+						self.messageObject.messages.append(self.main.webkitThemeFactory.genIncomingContent(m[1],m[2],m[3],m[4]))
+						code+="addMessage(%s);\n" % str(i)
+				previousName=unicode(m[1])
+				i+=1
+		html="""
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style type="text/css" media="screen,print"> @import url( "main.css" ); </style>
+<style id="mainStyle" type="text/css" media="screen,print"> %s </style>
+<script>
+function addMessage(index) {
+shouldScroll = nearBottom();
+//Remove any existing insertion point
+insert = document.getElementById("insert");
+if(insert) insert.parentNode.removeChild(insert);
+
+var ni = document.getElementById('myDiv');
+var numi = document.getElementById('theValue');
+var num = (document.getElementById('theValue').value -1)+ 2;
+numi.value = num;
+var divIdName = "my"+num+"Div";
+var newdiv = document.createElement('div');
+newdiv.setAttribute("id",divIdName);
+if (index==-1) newdiv.innerHTML = messageObject.msg();
+else newdiv.innerHTML = messageObject.msg_(index);
+ni.appendChild(newdiv);
+if (shouldScroll) setTimeout("scrollToBottom()", 100);
+
+}
+function insertMessage(index) {
+shouldScroll = nearBottom();
+
+                        //Locate the insertion point
+                        var insert = document.getElementById("insert");
+
+                        //make new node
+                        range = document.createRange();
+                        range.selectNode(insert.parentNode);
+                        if (index==-1) {newNode = range.createContextualFragment(messageObject.msg());}
+						else {newNode = range.createContextualFragment(messageObject.msg_(index));}
+
+                        //swap
+                        insert.parentNode.replaceChild(newNode,insert);
+if (shouldScroll) setTimeout("scrollToBottom()", 100);
+
+}
+//Auto-scroll to bottom.  Use nearBottom to determine if a scrollToBottom is desired.
+function nearBottom() {
+		return ( (document.body.scrollTop+100) >= ( document.body.offsetHeight - ( window.innerHeight * 1.2 ) ) );
+}
+function scrollToBottom() {
+		document.body.scrollTop = document.body.offsetHeight;
+}
+
+function showLastMessages(){
+%s
+}
+
+</script>
+</head>
+<body>
+<div id="Chat">
+%s
+<input type="hidden" value="0" id="theValue" />
+<div id="myDiv"> </div>
+%s
+</div>
+<a name='bottom'></a>
+</body>
+</html>
+		""" % (stylesheet,code,header,footer)
+
+
+
+		#f=open("/home/hanzz/svn/jabbim/trunk/test.html","w")
+		#f.write(html)
+		#f.close()
+
+		#f=open(os.getcwd()+"/chatskins/candy/Incoming/Content.html","r")
+		#self.incoming=f.read()
+		#f.close()
+		if typ=="groupchat":
+			self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl(self.main.webkitThemeFactory.groupchatPath()))
+		else:
+			self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl(self.main.webkitThemeFactory.chatPath()))
 
 	def registerFeatureForWidget(self,feature,widget):
 		self.featuredWidget.append([feature,widget])
@@ -951,6 +1015,11 @@ function scrollToBottom() {
 		self.ui.line.setTextCursor(cursor)
 		self.ui.line.mergeCurrentCharFormat(fmt)
 
+	def appendLastMessage(self,msg):
+		self.lastMessages.append(msg)
+		if len(self.lastMessages)>10:
+			del self.lastMessages[0]
+
 	def appendXhtml(self,xhtml):
 		message=xhtml.replace("&quot;",'"')
 		file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
@@ -980,9 +1049,9 @@ function scrollToBottom() {
 			text=text.replace(">"+k,'><img src="'+v+'"/>')
 		self.messageObject.message=unicode(text)
 		if not insert:
-			self.ui.webkit.page().mainFrame().evaluateJavaScript("addMessage();")
+			self.ui.webkit.page().mainFrame().evaluateJavaScript("addMessage(-1);")
 		else:
-			self.ui.webkit.page().mainFrame().evaluateJavaScript("insertMessage();")
+			self.ui.webkit.page().mainFrame().evaluateJavaScript("insertMessage(-1);")
 
 	def textEditWrite(self,text,insert=False):
 		"""

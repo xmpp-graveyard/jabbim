@@ -1231,6 +1231,7 @@ class clientClass(pyxl.client.Client):
 			else:
 				timeText=time.strftime('%Y-%m-%d&nbsp;%H:%M:%S', time.localtime(delay))
 
+			tab.chat.appendLastMessage(['in',user,message,timeText,tab.chat.file])
 			next=False
 			if tab:
 				if tab.chat.lastMessageFrom==unicode(user):
@@ -3882,6 +3883,9 @@ class mainWindow(QtGui.QMainWindow):
 		if not self.skin.has_key("spaces_between_lines"):
 			self.skin["spaces_between_lines"]='0'
 		self.webkitThemeFactory=widgets.webkitthemes.webkitThemeFactory(self.config['chatTheme'],self.config['groupchatTheme'])
+		for i in range(self.chat.ui.chatTab.count()):
+			w=self.chat.ui.chatTab.widget(i)
+			w.chat.loadWebkit()
 	
 	def showXml(self,bool):
 		self.xmlConsole.show()

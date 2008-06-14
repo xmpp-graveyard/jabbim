@@ -579,6 +579,7 @@ class chatWidget(abstractChatWidget):
 					#if self.main.skin.has_key('my_message_continue'):
 						#skin=self.main.skin["my_message_continue"]
 				#message=skin.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",message).replace("[avatar]","<img src=\""+self.selfFile+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+				self.appendLastMessage(['out',self.main.client.jid.user,message,self.main.now(),self.selfFile])
 				message=self.main.webkitThemeFactory.genOutgoingContent(self.main.client.jid.user,message,self.main.now(),self.selfFile)
 				insert=False
 			else:
@@ -609,6 +610,7 @@ class chatWidget(abstractChatWidget):
 						#if self.main.skin.has_key('my_message_continue'):
 							#message=self.main.skin["my_message_continue"]
 					#message=message.replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+self.selfFile+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+				self.appendLastMessage(['out',self.main.client.jid.user,text,self.main.now(),self.selfFile])
 				if self.lastMessageFrom==unicode(self.main.client.jid.user):
 					message=self.main.webkitThemeFactory.genOutgoingNextContent(self.main.client.jid.user,text,self.main.now(),self.selfFile)
 					insert=True

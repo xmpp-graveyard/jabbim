@@ -465,6 +465,7 @@ class chatWindow(QtGui.QMainWindow):
 				else:
 					insert=False
 					message=self.main.webkitThemeFactory.genGroupchatOutgoingContent(user,body,self.main.now(),file)
+				w.chat.appendLastMessage(["out",user,body,self.main.now(),file])
 				#if unicode(body).startswith("/me"):
 					#message=self.main.skin["my_me_message"].replace("[time]",self.main.now()).replace("[user]",user)#.replace("[message]",unicode(body)[3:])
 					#body=unicode(body)[3:]
@@ -477,6 +478,7 @@ class chatWindow(QtGui.QMainWindow):
 						#if self.main.skin.has_key('my_message_continue'):
 							#message=self.main.skin["my_message_continue"].replace("[time]",self.main.now()).replace("[user]",user)
 			else:
+				w.chat.appendLastMessage(["in",user,body,self.main.now(),file])
 				self.main.client.dispatcher.publishEvent('groupchatMessageEvent', self.main.getJid(w.jid),user,oldbody,subject, xhtml)
 				# it's message for us
 				if utils.need_highlight(unicode(w.chat.nick), unicode(oldbody)) and not unicode(body).startswith("/me"):
@@ -533,6 +535,7 @@ class chatWindow(QtGui.QMainWindow):
 			if countMessage:
 				w.chat.unread+=1
 			#print unicode(message)
+			
 			w.chat.textEditWrite(message,insert)
 			w.chat.lastMessageFrom=unicode(user)
 			return
@@ -540,6 +543,7 @@ class chatWindow(QtGui.QMainWindow):
 			delay=time.strftime('%Y-%m-%d&nbsp;%H:%M:%S', time.localtime(delay))
 			# our delayed message
 			if unicode(w.chat.nick)==unicode(user):
+				w.chat.appendLastMessage(["out",user,body,delay,file])
 				#message=self.main.skin["my_message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
 				if w.chat.lastMessageFrom==unicode(user):
 					insert=True
@@ -548,6 +552,7 @@ class chatWindow(QtGui.QMainWindow):
 					insert=False
 					message=self.main.webkitThemeFactory.genGroupchatOutgoingContent(user,body,delay,file)
 			else:
+				w.chat.appendLastMessage(["in",user,body,delay,file])
 				if w.chat.lastMessageFrom==unicode(user):
 					insert=True
 					message=self.main.webkitThemeFactory.genGroupchatIncomingNextContent(user,body,delay,file)

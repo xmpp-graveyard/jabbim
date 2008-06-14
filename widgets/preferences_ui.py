@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Sat Jun 14 04:45:35 2008
+# Created: Sat Jun 14 06:28:59 2008
 #      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,29 +26,31 @@ class Ui_preferences(object):
         self.listWidget.setViewMode(QtGui.QListView.ListMode)
         self.listWidget.setObjectName("listWidget")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("../../../../.designer/backup/images/32x32/apps/jabbim.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("images/32x32/apps/jabbim.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.listWidget)
         item.setIcon(icon1)
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap("../../../../.designer/backup/images/32x32/categories/applications-internet.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.listWidget)
         item.setIcon(icon2)
-        item = QtGui.QListWidgetItem(self.listWidget)
-        item.setIcon(icon1)
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("../../../../.designer/backup/images/32x32/categories/system-users.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap("../../../../.designer/backup/images/32x32/apps/jabbim.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.listWidget)
         item.setIcon(icon3)
-        item = QtGui.QListWidgetItem(self.listWidget)
-        item.setIcon(icon1)
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("../../../../.designer/backup/images/32x32/categories/preferences-desktop-theme.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap("../../../../.designer/backup/images/32x32/categories/system-users.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.listWidget)
         item.setIcon(icon4)
+        item = QtGui.QListWidgetItem(self.listWidget)
+        item.setIcon(icon3)
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap("../../../../.designer/backup/images/32x32/categories/applications-accessories.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap("../../../../.designer/backup/images/32x32/categories/preferences-desktop-theme.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.listWidget)
         item.setIcon(icon5)
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap("../../../../.designer/backup/images/32x32/categories/applications-accessories.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        item = QtGui.QListWidgetItem(self.listWidget)
+        item.setIcon(icon6)
         self.gridlayout.addWidget(self.listWidget, 0, 0, 3, 1)
         self.profile = QtGui.QLabel(preferences)
         self.profile.setFrameShape(QtGui.QFrame.StyledPanel)
@@ -195,6 +197,7 @@ class Ui_preferences(object):
         self.gridlayout7.addWidget(self.themes, 1, 0, 1, 1)
         self.tabWidget.addTab(self.tab, "")
         self.tab_4 = QtGui.QWidget()
+        self.tab_4.setGeometry(QtCore.QRect(0, 0, 440, 380))
         self.tab_4.setObjectName("tab_4")
         self.gridLayout = QtGui.QGridLayout(self.tab_4)
         self.gridLayout.setObjectName("gridLayout")
