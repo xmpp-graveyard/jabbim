@@ -443,6 +443,11 @@ class chatWindow(QtGui.QMainWindow):
 			file="images/32x32/apps/jabbim.png"
 		if unicode(user)==unicode(w.jid):
 			file = "images/32x32/categories/conferences.png"
+		cIndex=None
+		if len(w.chat.getUserItems(user))!=0:
+			item=w.chat.getUserItems(user)[0]
+			if item in w.chat.colors:
+				cIndex=w.chat.colors.index(item)
 
 		# no delay message
 		if delay==None:
@@ -467,17 +472,17 @@ class chatWindow(QtGui.QMainWindow):
 							self.ui.chatTab.tabBar().setTabTextColor(i,QtGui.QColor(255,0,0))
 					if w.chat.lastMessageFrom==unicode(user):
 						insert=True
-						message=self.main.webkitThemeFactory.genGroupchatIncomingNextContent(user,body,self.main.now(),file)
+						message=self.main.webkitThemeFactory.genGroupchatIncomingNextContent(user,body,self.main.now(),file,cIndex)
 					else:
 						insert=False
-						message=self.main.webkitThemeFactory.genGroupchatIncomingContent(user,body,self.main.now(),file)
+						message=self.main.webkitThemeFactory.genGroupchatIncomingContent(user,body,self.main.now(),file,cIndex)
 				else:
 					if w.chat.lastMessageFrom==unicode(user):
 						insert=True
-						message=self.main.webkitThemeFactory.genGroupchatIncomingNextContent(user,body,self.main.now(),file)
+						message=self.main.webkitThemeFactory.genGroupchatIncomingNextContent(user,body,self.main.now(),file,cIndex)
 					else:
 						insert=False
-						message=self.main.webkitThemeFactory.genGroupchatIncomingContent(user,body,self.main.now(),file)
+						message=self.main.webkitThemeFactory.genGroupchatIncomingContent(user,body,self.main.now(),file,cIndex)
 					#colors=None
 					#if len(w.chat.getUserItems(user))!=0:
 						#item=w.chat.getUserItems(user)[0]
@@ -506,18 +511,18 @@ class chatWindow(QtGui.QMainWindow):
 				#message=self.main.skin["my_message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
 				if w.chat.lastMessageFrom==unicode(user):
 					insert=True
-					message=self.main.webkitThemeFactory.genGroupchatOutgoingNextContent(user,body,delay,file)
+					message=self.main.webkitThemeFactory.genGroupchatOutgoingNextContent(user,body,delay,file,cIndex)
 				else:
 					insert=False
-					message=self.main.webkitThemeFactory.genGroupchatOutgoingContent(user,body,delay,file)
+					message=self.main.webkitThemeFactory.genGroupchatOutgoingContent(user,body,delay,file,cIndex)
 			else:
 				w.chat.appendLastMessage(["in",user,body,delay,file])
 				if w.chat.lastMessageFrom==unicode(user):
 					insert=True
-					message=self.main.webkitThemeFactory.genGroupchatIncomingNextContent(user,body,delay,file)
+					message=self.main.webkitThemeFactory.genGroupchatIncomingNextContent(user,body,delay,file,cIndex)
 				else:
 					insert=False
-					message=self.main.webkitThemeFactory.genGroupchatIncomingContent(user,body,delay,file)
+					message=self.main.webkitThemeFactory.genGroupchatIncomingContent(user,body,delay,file,cIndex)
 				# delayed message for us
 				#if utils.need_highlight(unicode(w.chat.nick), unicode(body)):
 					#message=self.main.skin["message_for_me_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))

@@ -120,6 +120,23 @@ class webkitThemeFactory:
 			self.groupchatHeader=f.read()
 			f.close()
 
+		self.groupchatSenderColors=["#a34526","#c000ff","#045723","#7c7c7c","#ff8a00","#94452d"]
+		if os.path.exists(cwd+"/chatskins/%s/Incoming/SenderColors.txt"%self.groupchatTheme):
+			f=open(cwd+"/chatskins/%s/Incoming/SenderColors.txt"%self.groupchatTheme,"r")
+			self.groupchatSenderColors=f.read().replace("\n","").split(":")
+			f.close()
+
+	def getGroupchatSenderColor(self,i):
+		if not i:
+			return ""
+		colors=self.groupchatSenderColors
+		if len(colors)==1:
+			return colors[0]
+		if i>len(colors)-1:
+			return colors[i%(len(colors)-1)]
+		else:
+			return colors[i]
+
 	def genChatHeader(self,name="",avatar=""):
 		if not self.chatHeader:
 			return ""
@@ -162,17 +179,21 @@ class webkitThemeFactory:
 	def genGroupchatStyleSheet(self):
 		return '@import url( "Variants/%s" );' % self.groupchatStyle
 
-	def genGroupchatIncomingContent(self,user,message,time,avatar=""):
-		return unicode(self.incomingGroupchatContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar)
+	# Groupchat format
 
-	def genGroupchatIncomingNextContent(self,user,message,time,avatar=""):
-		return unicode(self.incomingGroupchatNextContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar)
+	def genGroupchatIncomingContent(self,user,message,time,avatar="",color=None):
+		return unicode(self.incomingGroupchatContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color))
 
-	def genGroupchatOutgoingNextContent(self,user,message,time,avatar=""):
-		return unicode(self.outgoingGroupchatNextContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar)
+	def genGroupchatIncomingNextContent(self,user,message,time,avatar="",color=None):
+		return unicode(self.incomingGroupchatNextContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color))
+
+	def genGroupchatOutgoingNextContent(self,user,message,time,avatar="",color=None):
+		return unicode(self.outgoingGroupchatNextContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color))
 	
-	def genGroupchatOutgoingContent(self,user,message,time,avatar=""):
-		return unicode(self.outgoingGroupchatContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar)
+	def genGroupchatOutgoingContent(self,user,message,time,avatar="",color=None):
+		return unicode(self.outgoingGroupchatContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color))
+
+	# Chat format
 
 	def genIncomingContent(self,user,message,time,avatar=""):
 		return unicode(self.incomingContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar)
