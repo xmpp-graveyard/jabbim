@@ -283,7 +283,7 @@ class Client(derived):
 				srv = IPConfig.IPConfig().get_dns()
 				dnssrv = []
 				for server in srv:
-					if len(server.strip())>0:
+					if len(server.strip())>0 and server.strip() != '0.0.0.0':
 						dnssrv.append((server, 53))
 				if len(dnssrv) > 0:
 					r = dns.Resolver(servers=dnssrv)
