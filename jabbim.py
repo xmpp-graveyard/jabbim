@@ -701,6 +701,8 @@ class clientClass(pyxl.client.Client):
 			for msg in self.main.delayedMessages.itervalues():
 				print msg
 				self.sendMessage(**msg)
+			self.main.delayedMessages = None
+			self.messageReceipts = {}
 		
 	def on_invite(self,jid, room, reason, cont = False):
 		print "invite",cont

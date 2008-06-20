@@ -33,7 +33,7 @@ class Plugin(plugins.PluginBase):
 		self.configDialog=config(self)
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.loop = LoopingCall(self.check)
-		self.last = {}
+		self.last = None
 		if main:
 			self.loadConfig()
 			self.loop.start(30)
