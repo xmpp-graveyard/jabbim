@@ -291,7 +291,7 @@ class Plugin(plugins.PluginBase):
 		self.description = self.tr('Message Archiving')
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = self.tr('Archive Plugin')
-		self.version = '0.189'
+		self.version = '0.190'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 
@@ -326,7 +326,8 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.searchText.hide()
 			self.group=QtGui.QButtonGroup(self.window)
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
-			self.skin=self.getConfig("skins/gajim.conf")
+			self.skin=self.getConfig("chatskins/gajim/gajim.cfg")
+			self.skin=self.skin['chatskin']
 			self.window.ui.seznam.header().hide()
 			self.jidList=self.backend.getJidList()
 		else:
