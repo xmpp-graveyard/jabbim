@@ -688,13 +688,9 @@ function showLastMessages(){
 		""" % (stylesheet,code,header,footer)
 
 
-
+		# debug... we don't need it anymore
 		#f=open(self.main.webkitThemeFactory.chatPath()+"/test.html","w")
 		#f.write(html)
-		#f.close()
-
-		#f=open(os.getcwd()+"/chatskins/candy/Incoming/Content.html","r")
-		#self.incoming=f.read()
 		#f.close()
 		if typ=="groupchat":
 			self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+self.main.webkitThemeFactory.groupchatPath()))
