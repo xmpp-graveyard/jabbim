@@ -3337,7 +3337,7 @@ class mainWindow(QtGui.QMainWindow):
 
 				try:
 					f = open(utils.path(path))
-					module = load_source(plugin_name, path, f)
+					module = load_source(plugin_name, path.encode(sys.getfilesystemencoding()), f)
 					f.close()
 					plug = module.Plugin(False, self.homeDir, dir)
 					version = float(plug.version)
