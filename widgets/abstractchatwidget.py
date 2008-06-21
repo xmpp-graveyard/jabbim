@@ -689,9 +689,9 @@ function showLastMessages(){
 
 
 
-		#f=open("/home/hanzz/svn/jabbim/trunk/test.html","w")
-		#f.write(html)
-		#f.close()
+		f=open(self.main.webkitThemeFactory.chatPath()+"/test.html","w")
+		f.write(html)
+		f.close()
 
 		#f=open(os.getcwd()+"/chatskins/candy/Incoming/Content.html","r")
 		#self.incoming=f.read()
@@ -700,6 +700,7 @@ function showLastMessages(){
 			self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl(self.main.webkitThemeFactory.groupchatPath()))
 		else:
 			self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl(self.main.webkitThemeFactory.chatPath()))
+		
 
 	def registerFeatureForWidget(self,feature,widget):
 		self.featuredWidget.append([feature,widget])
