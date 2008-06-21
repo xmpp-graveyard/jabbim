@@ -1228,9 +1228,9 @@ function makePreview(){
 
 		
 		if typ=="chat":
-			self.ui.chatskinPreview.page().mainFrame().setHtml(html,QtCore.QUrl(factory.chatPath()))
+			self.ui.chatskinPreview.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+factory.chatPath()))
 		else:
-			self.ui.groupchatskinPreview.page().mainFrame().setHtml(html,QtCore.QUrl(factory.chatPath()))
+			self.ui.groupchatskinPreview.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+factory.chatPath()))
 
 	def chatskinPreviewCleared(self):
 		print "cleared"
