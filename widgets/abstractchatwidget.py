@@ -201,7 +201,6 @@ class lineEditWidget(QtGui.QTextEdit):
 				event.accept()
 			else:
 				return QtGui.QTextEdit.keyPressEvent(self,event)
-		
 		else:
 			return QtGui.QTextEdit.keyPressEvent(self,event)
 			text=unicode(self.toPlainText())

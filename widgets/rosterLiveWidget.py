@@ -39,19 +39,32 @@ class emptyRosterWidget(QtGui.QWidget):
 	def __init__(self,parent=None):
 		QtGui.QWidget.__init__(self,parent)
 		layout=QtGui.QVBoxLayout(self)
-		label=QtGui.QLabel(self)
-		text="<b>"+self.tr("Welcome to Jabbim!")+"</b><br/>"
-		text+=self.tr("Your contact list is empty. You can add or find your friends by clicking on button below or by Add contact from menu Actions.")
-		label.setText(text)
-		label.setWordWrap(True)
-		layout.addWidget(label)
+		self.label=QtGui.QLabel(self)
+		self.label.setWordWrap(True)
+		layout.addWidget(self.label)
 		
-		add=QtGui.QPushButton(self.tr("Add contact"),self)
-		layout.addWidget(add)
+		self.add=QtGui.QPushButton(self.tr("Add contact"),self)
+		layout.addWidget(self.add)
 		
 		layout.addStretch()
 		
-		QtCore.QObject.connect(add,QtCore.SIGNAL("clicked()"),parent.main.addContactMainWindow)
+		QtCore.QObject.connect(self.add,QtCore.SIGNAL("clicked()"),parent.main.addContactMainWindow)
+	
+	def emptyRoster(self):
+		text="<b>"+self.tr("Welcome to Jabbim!")+"</b><br/>"
+		text+=self.tr("Your contact list is empty. You can add or find your friends by clicking on button below or by Add contact from menu Actions.")
+		self.label.setText(text)
+		self.add.show()
+
+	def noOnline(self):
+		text=self.tr("You haven't any online contact in your contact list. To see offline contacts, you have to click Show Offline button, which is above this message.")
+		self.label.setText(text)
+		self.add.hide()
+
+	def noSearch(self):
+		text=self.tr("No search results for your keywords")
+		self.label.setText(text)
+		self.add.hide()
 
 class activeWidget(QtGui.QWidget):
 	def __init__(self,parent=None):
@@ -1004,14 +1017,24 @@ class rosterWidget(QtGui.QWidget):
 				if len(self.users)==0:
 					if self.emptyRosterWidget.isHidden():
 						self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
+						self.emptyRosterWidget.emptyRoster()
 						self.emptyRosterWidget.show()
 				else:
-					painter.drawText(QtCore.QRectF(10,10,self.width()-20,100),QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap,self.tr("You haven't any online contact in your contact list. To see offline contacts, you have to click Show Offline button, which is above this message."))
+					if self.emptyRosterWidget.isHidden():
+						self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
+						self.emptyRosterWidget.noOnline()
+						self.emptyRosterWidget.show()
+					#painter.drawText(QtCore.QRectF(10,10,self.width()-20,100),QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap,self.tr("You haven't any online contact in your contact list. To see offline contacts, you have to click Show Offline button, which is above this message."))
 			else:
 				if len(items)==0 and self.searchMode:
-					painter.drawText(QtCore.QRectF(10,10,self.width()-20,100),QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap,self.tr("No search results for your keywords"))
-				if not self.emptyRosterWidget.isHidden():
-					self.emptyRosterWidget.hide()
+					#painter.drawText(QtCore.QRectF(10,10,self.width()-20,100),QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap,self.tr("No search results for your keywords"))
+					if self.emptyRosterWidget.isHidden():
+						self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
+						self.emptyRosterWidget.noSearch()
+						self.emptyRosterWidget.show()
+				else:
+					if not self.emptyRosterWidget.isHidden():
+						self.emptyRosterWidget.hide()
 				#doc.drawContents(painter,)
 			for item in items:
 				if item.typ=="group":
