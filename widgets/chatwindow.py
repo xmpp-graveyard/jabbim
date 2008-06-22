@@ -440,9 +440,9 @@ class chatWindow(QtGui.QMainWindow):
 		if not os.path.isfile(unicode(file)):
 			print truejid, w.jid, user
 			#sef@njs.netlab.cz/Doma jabber@conf.netlab.cz Sef 
-			file="images/32x32/apps/jabbim.png"
+			file=os.getcwd()+"/images/32x32/apps/jabbim.png"
 		if unicode(user)==unicode(w.jid):
-			file = "images/32x32/categories/conferences.png"
+			file = os.getcwd()+"images/32x32/categories/conferences.png"
 		cIndex=None
 		if len(w.chat.getUserItems(user))!=0:
 			item=w.chat.getUserItems(user)[0]
