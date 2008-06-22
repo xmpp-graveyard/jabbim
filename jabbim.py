@@ -100,7 +100,7 @@ class clientClass(pyxl.client.Client):
 			self.client_os = utils.get_os_info()
 		else:
 			self.client_os = ''
-		self.version = '0.4' #: version string
+		self.version = '0.5 SVN' #: version string
 		self.bookmarksEnabled=True #: True if bookmarks is enabled by server
 		self.xmlCount=[]
 		# load plugins
