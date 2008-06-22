@@ -1111,6 +1111,10 @@ class clientClass(pyxl.client.Client):
 		else:
 			user=frm.userhost()
 		frm=frm.userhost()
+		if xhtml:
+			sXhtml=xhtml.strip().lower()
+			if sXhtml.find("<script"):
+				return
 		#images in xhtml
 		#if xhtml != None:
 			#xhtml = self.main.getImages(xhtml,frm)
@@ -1179,6 +1183,11 @@ class clientClass(pyxl.client.Client):
 		# get user name
 		user=self.main.ui.roster.getNameByJID(frm.full())
 		icon=self.main.ui.roster.getIconByJID(frm.full())
+
+		if xhtml:
+			sXhtml=xhtml.strip().lower()
+			if sXhtml.find("<script"):
+				return
 
 		# get chatwidget of this conversation
 		if self.groupchats.has_key(frm.userhost()):

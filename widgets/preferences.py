@@ -42,7 +42,6 @@ from pyxl import jid as jidT
 import webkitthemes
 
 class message(QtCore.QObject):
-	__pyqtSignals__ = ("em()")
 	def __init__(self,message):
 		QtCore.QObject.__init__(self)
 		self.messages=message
@@ -56,7 +55,7 @@ class message(QtCore.QObject):
 	@QtCore.pyqtSignature("",result="int")
 	def scroll(self):
 		return self.scr
-	
+
 class pluginConfiguration(QtGui.QDialog):
 	def __init__(self,plugin,parent):
 		apply(QtGui.QDialog.__init__,(self,parent))
@@ -1204,10 +1203,6 @@ function makePreview(){
 	insertMessage(4);
 }
 
-function save(){
-	insertMessage(4);
-}
-
 </script>
 </head>
 <body>
@@ -1247,7 +1242,6 @@ function save(){
 	def chatskinPreviewFinished(self,ok,later=False):
 		self.chatMessageObject.messages=list(self.messages)
 		self.ui.chatskinPreview.page().mainFrame().evaluateJavaScript("makePreview();")
-		self.ui.chatskinPreview.page().mainFrame().evaluateJavaScript("messageObject.em.connect(this,this.save)")
 
 	def groupchatskinPreviewFinished(self,ok,later=False):
 		self.groupchatMessageObject.messages=list(self.messages)
@@ -1259,7 +1253,7 @@ function save(){
 			#self.main.skin=ConfigObj("skins/"+unicode(self.ui.chatSkin_list.currentText()),encoding='UTF8')
 			#if not self.main.skin.has_key("spaces_between_lines"):
 				#self.main.skin["spaces_between_lines"]='0'
-		self.chatMessageObject.emit(QtCore.SIGNAL("em()"))
+
 		for name,var in self.showedPlugins.iteritems():
 			if var:
 				self.savePluginConfiguration(name,var)
