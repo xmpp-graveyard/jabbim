@@ -140,5 +140,5 @@ class searchDialog(QtGui.QDialog):
 		#dataforms.sendDataForm(self.main,self.jid,self.form,self.var,"muc")
 		#self.done(1)
 
-	def reject(self):
-		self.close()
+	#def reject(self):
+		#self.close()
