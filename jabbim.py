@@ -2533,6 +2533,8 @@ class mainWindow(QtGui.QMainWindow):
 		Called when user finish with changing status message by statusLine
 		"""
 		status=unicode(self.ui.statusLine.text())
+		if len(status)==0:
+			status=None
 		contact = self.client.roster['users'][self.client.jid.userhost()]
 		if contact.resources[self.client.jid.resource].status!=status:
 			self.sendPresence(None,self.selfStatus,status)
