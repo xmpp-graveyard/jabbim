@@ -1837,7 +1837,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
 		QtCore.QObject.connect(self.ui.mucBrowserButton, QtCore.SIGNAL("clicked ()"),self.mucBrowser)
 		QtCore.QObject.connect(self.ui.statusMessage, QtCore.SIGNAL("clicked (bool)"),self.statusMessageClicked)
-		QtCore.QObject.connect(self.ui.statusLine, QtCore.SIGNAL("returnPressed ()"),self.statusLineFinished)
+		#QtCore.QObject.connect(self.ui.statusLine, QtCore.SIGNAL("returnPressed ()"),self.statusLineFinished)
 		QtCore.QObject.connect(self.ui.statusLine, QtCore.SIGNAL("editingFinished () "),self.statusLineFinished)
 		QtCore.QObject.connect(self.ui.offlineButton, QtCore.SIGNAL("clicked ( bool)"),self.hideOffline)
 		
@@ -2533,9 +2533,11 @@ class mainWindow(QtGui.QMainWindow):
 		Called when user finish with changing status message by statusLine
 		"""
 		status=unicode(self.ui.statusLine.text())
-		if len(status)==0:
-			status=None
 		contact = self.client.roster['users'][self.client.jid.userhost()]
+		print [status,contact.resources[self.client.jid.resource].status]
+		if len(status)==0 and not contact.resources[self.client.jid.resource].status:
+			status=None
+		
 		if contact.resources[self.client.jid.resource].status!=status:
 			self.sendPresence(None,self.selfStatus,status)
 		self.ui.statusLine.hide()
