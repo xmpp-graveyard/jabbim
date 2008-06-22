@@ -15,10 +15,10 @@ class config:
 		self.main=main
 		self.config={}
 		if sys.platform == 'win32':
-			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'Winamp':'winamp' }, 'value':'winamp'}
+			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'Winamp':'winamp', 'Foobar 2000':'fb2k' }, 'value':'winamp'}
 			
 		else:
-			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Winamp':'winamp', 'Amarok':'amarok','Exaile':'exaile' }, 'value':'amarok'}
+			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Amarok':'amarok','Exaile':'exaile' }, 'value':'amarok'}
 
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
@@ -28,7 +28,7 @@ class Plugin(plugins.PluginBase):
 		self.description = self.tr('Plugin for User Tune')
 		self.author = "Jiri 'Sef' Gabrys + Josef 'PepeQ' Halicek"
 		self.name = self.tr('tune')
-		self.version = '0.23'
+		self.version = '0.24'
 		self.category = ['utils']
 		self.configDialog=config(self)
 		self.url = 'http://dev.jabbim.cz/jabbim'
@@ -111,6 +111,29 @@ class Plugin(plugins.PluginBase):
 					out = {}
 			except:
 				out = {}
+		
+		elif self.config['player'] == 'fb2k':
+			print "getting current song from foobar"
+			try:
+				import win32gui
+				hfb2k = win32gui.FindWindow('{97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}', None)
+				text = win32gui.GetWindowText(hfb2k)
+			except Exception, ex:
+				print 'Tune error: ' +unicode(ex)
+				message = unicode(traceback.format_exc())
+				print message
+				text = ''
+				out = {}
+			print "got:",[text]
+			if len(text) > 0:
+				parts = text.split(' - ')
+				if len(parts)>1:
+					out['artist'] = parts[0]
+					out['title'] = parts[1].split('[foobar2000 v', 1)[0]
+				else:
+					out={}
+				if text.find('[foobar2000 v')!= -1:
+					out = {}
 
     		
 
