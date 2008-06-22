@@ -13,67 +13,32 @@
    <string>About Jabbim</string>
   </property>
   <property name="windowIcon" >
-   <iconset>images/16x16/apps/jabbim.png</iconset>
+   <iconset>
+    <normaloff>images/16x16/apps/jabbim.png</normaloff>images/16x16/apps/jabbim.png</iconset>
   </property>
   <layout class="QGridLayout" >
-   <property name="leftMargin" >
+   <property name="margin" >
     <number>9</number>
    </property>
-   <property name="topMargin" >
-    <number>9</number>
-   </property>
-   <property name="rightMargin" >
-    <number>9</number>
-   </property>
-   <property name="bottomMargin" >
-    <number>9</number>
-   </property>
-   <property name="horizontalSpacing" >
-    <number>6</number>
-   </property>
-   <property name="verticalSpacing" >
+   <property name="spacing" >
     <number>6</number>
    </property>
    <item row="0" column="0" >
     <widget class="QWidget" native="1" name="widget" >
      <layout class="QGridLayout" >
-      <property name="leftMargin" >
+      <property name="margin" >
        <number>0</number>
       </property>
-      <property name="topMargin" >
-       <number>0</number>
-      </property>
-      <property name="rightMargin" >
-       <number>0</number>
-      </property>
-      <property name="bottomMargin" >
-       <number>0</number>
-      </property>
-      <property name="horizontalSpacing" >
-       <number>0</number>
-      </property>
-      <property name="verticalSpacing" >
+      <property name="spacing" >
        <number>0</number>
       </property>
       <item row="0" column="0" >
        <widget class="QWidget" native="1" name="widget_2" >
         <layout class="QGridLayout" >
-         <property name="leftMargin" >
+         <property name="margin" >
           <number>0</number>
          </property>
-         <property name="topMargin" >
-          <number>0</number>
-         </property>
-         <property name="rightMargin" >
-          <number>0</number>
-         </property>
-         <property name="bottomMargin" >
-          <number>0</number>
-         </property>
-         <property name="horizontalSpacing" >
-          <number>6</number>
-         </property>
-         <property name="verticalSpacing" >
+         <property name="spacing" >
           <number>6</number>
          </property>
          <item row="12" column="0" >
@@ -94,7 +59,7 @@
            <property name="orientation" >
             <enum>Qt::Vertical</enum>
            </property>
-           <property name="sizeHint" >
+           <property name="sizeHint" stdset="0" >
             <size>
              <width>243</width>
              <height>186</height>
@@ -143,7 +108,7 @@ Jáchym 'Kamahl' Barvínek
 Michal 'Michich' Schmidt
 Jan 'Pinky' Pinkas
 Zenon 'Zenek' Kuder
-and many translators</string>
+and many translators and patchers</string>
            </property>
            <property name="alignment" >
             <set>Qt::AlignCenter</set>
@@ -200,7 +165,7 @@ and many translators</string>
          <item row="2" column="0" >
           <widget class="QLabel" name="version" >
            <property name="text" >
-            <string>0.4</string>
+            <string>0.5 SVN</string>
            </property>
            <property name="alignment" >
             <set>Qt::AlignCenter</set>
