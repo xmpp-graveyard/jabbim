@@ -667,16 +667,45 @@ shouldScroll = nearBottom();
 
                         //Locate the insertion point
                         var insert = document.getElementById(imageId);
-
                         //make new node
                         range = document.createRange();
                         range.selectNode(insert.parentNode);
-                        newNode = range.createContextualFragment('<a href="'+link+'"><img src="'+link+'"/></a>');
+                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+link+'\\');")>[Hide Image]</a></div><div id="loaded'+imageId+'"><a href="'+link+'"><img src="'+link+'"/></a></div>');
 
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);
 if (shouldScroll) setTimeout("scrollToBottom()", 100);
 
+}
+
+function reshowImage(imageId,link) {
+shouldScroll = nearBottom();
+document.getElementById('loaded'+imageId).style.display = 'inline';
+                        //Locate the insertion point
+                        var insert = document.getElementById(imageId);
+                        //make new node
+                        range = document.createRange();
+                        range.selectNode(insert.parentNode);
+                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+link+'\\');")>[Hide Image]</a></div>');
+
+                        //swap
+                        insert.parentNode.replaceChild(newNode,insert);
+if (shouldScroll) setTimeout("scrollToBottom()", 100);
+
+}
+
+function hideImage(imageId,link){
+   document.getElementById('loaded'+imageId).style.display = 'none';
+                        //Locate the insertion point
+                        var insert = document.getElementById(imageId);
+
+                        //make new node
+                        range = document.createRange();
+                        range.selectNode(insert.parentNode);
+                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="reshowImage(\\''+imageId+'\\',\\''+link+'\\');")>[Show Image]</a></div>');
+
+                        //swap
+                        insert.parentNode.replaceChild(newNode,insert);
 }
 
 //Auto-scroll to bottom.  Use nearBottom to determine if a scrollToBottom is desired.
