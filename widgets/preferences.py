@@ -697,6 +697,12 @@ class preferencesWindow(QtGui.QDialog):
 		
 		QtCore.QObject.connect(self.ui.moreEmoticons, QtCore.SIGNAL("clicked()"),self.getMoreEmoticons)
 		QtCore.QObject.connect(self.ui.morePlugins, QtCore.SIGNAL("clicked()"),self.getMorePlugins)
+		QtCore.QObject.connect(self.ui.moreChatSkins, QtCore.SIGNAL("clicked()"),self.getMoreChatskins)
+		QtCore.QObject.connect(self.ui.moreGroupchatSkins, QtCore.SIGNAL("clicked()"),self.getMoreChatskins)
+	
+	def getMoreChatskins(self):
+		d=extraDialog("chatskins",self.main,self.main)
+		d.exec_()
 	
 	def getMoreEmoticons(self):
 		d=extraDialog("emoticons",self.main,self.main)
@@ -1115,7 +1121,10 @@ class preferencesWindow(QtGui.QDialog):
 		else:
 			path=unicode(self.ui.groupchatskinStyle.itemData(index).toString())
 			self.ui.groupchatskinVariant.clear()
-		variants=os.listdir("chatskins/"+path+"/Variants")
+		if os.path.exists("chatskins/"+path+"/Variants"):
+			variants=os.listdir("chatskins/"+path+"/Variants")
+		else:
+			variants=os.listdir(self.main.realHomeDir+"/chatskins/"+path+"/Variants")
 		v=""
 		default=""
 		for variant in variants:
@@ -1142,7 +1151,7 @@ class preferencesWindow(QtGui.QDialog):
 		self.generateChatskinPreview(path+"/"+v,typ)
 
 	def generateChatskinPreview(self,skin,typ="chat"):
-		factory=webkitthemes.webkitThemeFactory(skin,skin)
+		factory=webkitthemes.webkitThemeFactory(skin,skin,self.main.realHomeDir)
 		stylesheet=factory.genChatStyleSheet()
 		html="""
 <?xml version="1.0" encoding="utf-8"?>

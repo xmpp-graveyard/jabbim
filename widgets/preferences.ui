@@ -13,14 +13,25 @@
    <string>Jabbim - Preferences</string>
   </property>
   <property name="windowIcon" >
-   <iconset>
-    <normaloff>../../../../.designer/backup/images/16x16/apps/jabbim.png</normaloff>../../../../.designer/backup/images/16x16/apps/jabbim.png</iconset>
+   <iconset>../../../../.designer/backup/images/16x16/apps/jabbim.png</iconset>
   </property>
   <layout class="QGridLayout" >
-   <property name="margin" >
+   <property name="leftMargin" >
     <number>9</number>
    </property>
-   <property name="spacing" >
+   <property name="topMargin" >
+    <number>9</number>
+   </property>
+   <property name="rightMargin" >
+    <number>9</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>9</number>
+   </property>
+   <property name="horizontalSpacing" >
+    <number>6</number>
+   </property>
+   <property name="verticalSpacing" >
     <number>6</number>
    </property>
    <item rowspan="3" row="0" column="0" >
@@ -45,8 +56,7 @@
        <string>Jabbim</string>
       </property>
       <property name="icon" >
-       <iconset>
-        <normaloff>images/32x32/apps/jabbim.png</normaloff>images/32x32/apps/jabbim.png</iconset>
+       <iconset>images/32x32/apps/jabbim.png</iconset>
       </property>
      </item>
      <item>
@@ -54,8 +64,7 @@
        <string>Connection</string>
       </property>
       <property name="icon" >
-       <iconset>
-        <normaloff>../../../../.designer/backup/images/32x32/categories/applications-internet.png</normaloff>../../../../.designer/backup/images/32x32/categories/applications-internet.png</iconset>
+       <iconset>../../../../.designer/backup/images/32x32/categories/applications-internet.png</iconset>
       </property>
      </item>
      <item>
@@ -63,8 +72,7 @@
        <string>Chat</string>
       </property>
       <property name="icon" >
-       <iconset>
-        <normaloff>../../../../.designer/backup/images/32x32/apps/jabbim.png</normaloff>../../../../.designer/backup/images/32x32/apps/jabbim.png</iconset>
+       <iconset>../../../../.designer/backup/images/32x32/apps/jabbim.png</iconset>
       </property>
      </item>
      <item>
@@ -72,8 +80,7 @@
        <string>Roster</string>
       </property>
       <property name="icon" >
-       <iconset>
-        <normaloff>../../../../.designer/backup/images/32x32/categories/system-users.png</normaloff>../../../../.designer/backup/images/32x32/categories/system-users.png</iconset>
+       <iconset>../../../../.designer/backup/images/32x32/categories/system-users.png</iconset>
       </property>
      </item>
      <item>
@@ -81,8 +88,7 @@
        <string>Privacy</string>
       </property>
       <property name="icon" >
-       <iconset>
-        <normaloff>../../../../.designer/backup/images/32x32/apps/jabbim.png</normaloff>../../../../.designer/backup/images/32x32/apps/jabbim.png</iconset>
+       <iconset>../../../../.designer/backup/images/32x32/apps/jabbim.png</iconset>
       </property>
      </item>
      <item>
@@ -90,8 +96,7 @@
        <string>Appearance</string>
       </property>
       <property name="icon" >
-       <iconset>
-        <normaloff>../../../../.designer/backup/images/32x32/categories/preferences-desktop-theme.png</normaloff>../../../../.designer/backup/images/32x32/categories/preferences-desktop-theme.png</iconset>
+       <iconset>../../../../.designer/backup/images/32x32/categories/preferences-desktop-theme.png</iconset>
       </property>
      </item>
      <item>
@@ -99,8 +104,7 @@
        <string>Plugins</string>
       </property>
       <property name="icon" >
-       <iconset>
-        <normaloff>../../../../.designer/backup/images/32x32/categories/applications-accessories.png</normaloff>../../../../.designer/backup/images/32x32/categories/applications-accessories.png</iconset>
+       <iconset>../../../../.designer/backup/images/32x32/categories/applications-accessories.png</iconset>
       </property>
      </item>
     </widget>
@@ -121,19 +125,23 @@
       <number>5</number>
      </property>
      <widget class="QWidget" name="page_4" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>462</width>
-        <height>329</height>
-       </rect>
-      </property>
       <layout class="QGridLayout" >
-       <property name="margin" >
+       <property name="leftMargin" >
         <number>9</number>
        </property>
-       <property name="spacing" >
+       <property name="topMargin" >
+        <number>9</number>
+       </property>
+       <property name="rightMargin" >
+        <number>9</number>
+       </property>
+       <property name="bottomMargin" >
+        <number>9</number>
+       </property>
+       <property name="horizontalSpacing" >
+        <number>6</number>
+       </property>
+       <property name="verticalSpacing" >
         <number>6</number>
        </property>
        <item row="0" column="0" >
@@ -161,7 +169,7 @@ p, li { white-space: pre-wrap; }
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" >
           <size>
            <width>20</width>
            <height>261</height>
@@ -172,19 +180,23 @@ p, li { white-space: pre-wrap; }
       </layout>
      </widget>
      <widget class="QWidget" name="userPreferences" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>100</width>
-        <height>30</height>
-       </rect>
-      </property>
       <layout class="QGridLayout" >
-       <property name="margin" >
+       <property name="leftMargin" >
         <number>9</number>
        </property>
-       <property name="spacing" >
+       <property name="topMargin" >
+        <number>9</number>
+       </property>
+       <property name="rightMargin" >
+        <number>9</number>
+       </property>
+       <property name="bottomMargin" >
+        <number>9</number>
+       </property>
+       <property name="horizontalSpacing" >
+        <number>6</number>
+       </property>
+       <property name="verticalSpacing" >
         <number>6</number>
        </property>
        <item row="2" column="0" >
@@ -212,7 +224,7 @@ p, li { white-space: pre-wrap; }
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" >
           <size>
            <width>20</width>
            <height>16</height>
@@ -223,19 +235,23 @@ p, li { white-space: pre-wrap; }
       </layout>
      </widget>
      <widget class="QWidget" name="page_2" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>100</width>
-        <height>30</height>
-       </rect>
-      </property>
       <layout class="QGridLayout" >
-       <property name="margin" >
+       <property name="leftMargin" >
         <number>9</number>
        </property>
-       <property name="spacing" >
+       <property name="topMargin" >
+        <number>9</number>
+       </property>
+       <property name="rightMargin" >
+        <number>9</number>
+       </property>
+       <property name="bottomMargin" >
+        <number>9</number>
+       </property>
+       <property name="horizontalSpacing" >
+        <number>6</number>
+       </property>
+       <property name="verticalSpacing" >
         <number>6</number>
        </property>
        <item row="0" column="0" >
@@ -260,7 +276,7 @@ p, li { white-space: pre-wrap; }
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" >
           <size>
            <width>20</width>
            <height>171</height>
@@ -274,19 +290,23 @@ p, li { white-space: pre-wrap; }
       </layout>
      </widget>
      <widget class="QWidget" name="page" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>100</width>
-        <height>30</height>
-       </rect>
-      </property>
       <layout class="QGridLayout" >
-       <property name="margin" >
+       <property name="leftMargin" >
         <number>9</number>
        </property>
-       <property name="spacing" >
+       <property name="topMargin" >
+        <number>9</number>
+       </property>
+       <property name="rightMargin" >
+        <number>9</number>
+       </property>
+       <property name="bottomMargin" >
+        <number>9</number>
+       </property>
+       <property name="horizontalSpacing" >
+        <number>6</number>
+       </property>
+       <property name="verticalSpacing" >
         <number>6</number>
        </property>
        <item row="1" column="0" colspan="2" >
@@ -304,7 +324,7 @@ p, li { white-space: pre-wrap; }
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" >
           <size>
            <width>20</width>
            <height>221</height>
@@ -325,19 +345,23 @@ p, li { white-space: pre-wrap; }
       </layout>
      </widget>
      <widget class="QWidget" name="page_6" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>100</width>
-        <height>30</height>
-       </rect>
-      </property>
       <layout class="QGridLayout" >
-       <property name="margin" >
+       <property name="leftMargin" >
         <number>9</number>
        </property>
-       <property name="spacing" >
+       <property name="topMargin" >
+        <number>9</number>
+       </property>
+       <property name="rightMargin" >
+        <number>9</number>
+       </property>
+       <property name="bottomMargin" >
+        <number>9</number>
+       </property>
+       <property name="horizontalSpacing" >
+        <number>6</number>
+       </property>
+       <property name="verticalSpacing" >
         <number>6</number>
        </property>
        <item row="2" column="0" >
@@ -348,7 +372,7 @@ p, li { white-space: pre-wrap; }
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" >
           <size>
            <width>20</width>
            <height>241</height>
@@ -376,19 +400,23 @@ p, li { white-space: pre-wrap; }
       </layout>
      </widget>
      <widget class="QWidget" name="page_3" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>462</width>
-        <height>465</height>
-       </rect>
-      </property>
       <layout class="QGridLayout" >
-       <property name="margin" >
+       <property name="leftMargin" >
         <number>9</number>
        </property>
-       <property name="spacing" >
+       <property name="topMargin" >
+        <number>9</number>
+       </property>
+       <property name="rightMargin" >
+        <number>9</number>
+       </property>
+       <property name="bottomMargin" >
+        <number>9</number>
+       </property>
+       <property name="horizontalSpacing" >
+        <number>6</number>
+       </property>
+       <property name="verticalSpacing" >
         <number>6</number>
        </property>
        <item row="1" column="0" >
@@ -409,27 +437,31 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="2" column="0" >
-        <widget class="QTabWidget" name="tabWidget" >
+        <widget class="QTabWidget" name="moreChatSkins" >
          <property name="currentIndex" >
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="tab" >
-          <property name="geometry" >
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>440</width>
-            <height>380</height>
-           </rect>
-          </property>
           <attribute name="title" >
            <string>Themes</string>
           </attribute>
           <layout class="QGridLayout" >
-           <property name="margin" >
+           <property name="leftMargin" >
             <number>9</number>
            </property>
-           <property name="spacing" >
+           <property name="topMargin" >
+            <number>9</number>
+           </property>
+           <property name="rightMargin" >
+            <number>9</number>
+           </property>
+           <property name="bottomMargin" >
+            <number>9</number>
+           </property>
+           <property name="horizontalSpacing" >
+            <number>6</number>
+           </property>
+           <property name="verticalSpacing" >
             <number>6</number>
            </property>
            <item row="0" column="0" >
@@ -458,22 +490,14 @@ p, li { white-space: pre-wrap; }
           </layout>
          </widget>
          <widget class="QWidget" name="tab_4" >
-          <property name="geometry" >
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>440</width>
-            <height>380</height>
-           </rect>
-          </property>
           <attribute name="title" >
            <string>Groupchat skin</string>
           </attribute>
-          <layout class="QGridLayout" name="gridLayout" >
-           <item row="0" column="0" >
-            <layout class="QHBoxLayout" name="horizontalLayout_2" >
+          <layout class="QGridLayout" >
+           <item row="0" column="0" colspan="2" >
+            <layout class="QHBoxLayout" >
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_3" >
+              <layout class="QVBoxLayout" >
                <item>
                 <widget class="QLabel" name="label_10" >
                  <property name="enabled" >
@@ -500,7 +524,7 @@ p, li { white-space: pre-wrap; }
               </layout>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_4" >
+              <layout class="QVBoxLayout" >
                <item>
                 <widget class="QComboBox" name="groupchatskinStyle" >
                  <property name="sizePolicy" >
@@ -524,7 +548,7 @@ p, li { white-space: pre-wrap; }
              </item>
             </layout>
            </item>
-           <item row="1" column="0" >
+           <item row="1" column="0" colspan="2" >
             <widget class="QLabel" name="groupchatskinInfo" >
              <property name="text" >
               <string>info</string>
@@ -534,28 +558,40 @@ p, li { white-space: pre-wrap; }
              </property>
             </widget>
            </item>
-           <item row="2" column="0" >
-            <widget class="QWebView" name="groupchatskinPreview" />
+           <item row="2" column="0" colspan="2" >
+            <widget class="QWebView" native="1" name="groupchatskinPreview" />
+           </item>
+           <item row="3" column="0" >
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>201</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="3" column="1" >
+            <widget class="QPushButton" name="moreGroupchatSkins" >
+             <property name="text" >
+              <string>Get more groupchat skins</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
          <widget class="QWidget" name="tab_2" >
-          <property name="geometry" >
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>440</width>
-            <height>380</height>
-           </rect>
-          </property>
           <attribute name="title" >
            <string>Chat skin</string>
           </attribute>
-          <layout class="QGridLayout" name="gridLayout_2" >
-           <item row="0" column="0" >
-            <layout class="QHBoxLayout" name="horizontalLayout" >
+          <layout class="QGridLayout" >
+           <item row="0" column="0" colspan="2" >
+            <layout class="QHBoxLayout" >
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout" >
+              <layout class="QVBoxLayout" >
                <item>
                 <widget class="QLabel" name="label_2" >
                  <property name="enabled" >
@@ -582,7 +618,7 @@ p, li { white-space: pre-wrap; }
               </layout>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_2" >
+              <layout class="QVBoxLayout" >
                <item>
                 <widget class="QComboBox" name="chatSkin_list" >
                  <property name="sizePolicy" >
@@ -606,7 +642,7 @@ p, li { white-space: pre-wrap; }
              </item>
             </layout>
            </item>
-           <item row="1" column="0" >
+           <item row="1" column="0" colspan="2" >
             <widget class="QLabel" name="chatSkinInfo" >
              <property name="text" >
               <string>info</string>
@@ -616,28 +652,52 @@ p, li { white-space: pre-wrap; }
              </property>
             </widget>
            </item>
-           <item row="2" column="0" >
-            <widget class="QWebView" name="chatskinPreview" />
+           <item row="2" column="0" colspan="2" >
+            <widget class="QWebView" native="1" name="chatskinPreview" />
+           </item>
+           <item row="3" column="0" >
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>201</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="3" column="1" >
+            <widget class="QPushButton" name="moreEmoticons_2" >
+             <property name="text" >
+              <string>Get more chat skins</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
          <widget class="QWidget" name="tab_3" >
-          <property name="geometry" >
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>440</width>
-            <height>380</height>
-           </rect>
-          </property>
           <attribute name="title" >
            <string>Emoticons</string>
           </attribute>
           <layout class="QGridLayout" >
-           <property name="margin" >
+           <property name="leftMargin" >
             <number>9</number>
            </property>
-           <property name="spacing" >
+           <property name="topMargin" >
+            <number>9</number>
+           </property>
+           <property name="rightMargin" >
+            <number>9</number>
+           </property>
+           <property name="bottomMargin" >
+            <number>9</number>
+           </property>
+           <property name="horizontalSpacing" >
+            <number>6</number>
+           </property>
+           <property name="verticalSpacing" >
             <number>6</number>
            </property>
            <item row="3" column="0" >
@@ -645,7 +705,7 @@ p, li { white-space: pre-wrap; }
              <property name="orientation" >
               <enum>Qt::Horizontal</enum>
              </property>
-             <property name="sizeHint" stdset="0" >
+             <property name="sizeHint" >
               <size>
                <width>271</width>
                <height>20</height>
@@ -693,19 +753,23 @@ p, li { white-space: pre-wrap; }
       </layout>
      </widget>
      <widget class="QWidget" name="page_5" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>462</width>
-        <height>329</height>
-       </rect>
-      </property>
       <layout class="QGridLayout" >
-       <property name="margin" >
+       <property name="leftMargin" >
         <number>9</number>
        </property>
-       <property name="spacing" >
+       <property name="topMargin" >
+        <number>9</number>
+       </property>
+       <property name="rightMargin" >
+        <number>9</number>
+       </property>
+       <property name="bottomMargin" >
+        <number>9</number>
+       </property>
+       <property name="horizontalSpacing" >
+        <number>6</number>
+       </property>
+       <property name="verticalSpacing" >
         <number>6</number>
        </property>
        <item row="3" column="0" >
@@ -713,7 +777,7 @@ p, li { white-space: pre-wrap; }
          <property name="orientation" >
           <enum>Qt::Horizontal</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" >
           <size>
            <width>261</width>
            <height>20</height>
@@ -789,7 +853,7 @@ p, li { white-space: pre-wrap; }
      <property name="orientation" >
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="sizeHint" stdset="0" >
+     <property name="sizeHint" >
       <size>
        <width>141</width>
        <height>20</height>
@@ -802,7 +866,16 @@ p, li { white-space: pre-wrap; }
      <property name="spacing" >
       <number>6</number>
      </property>
-     <property name="margin" >
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
       <number>0</number>
      </property>
      <item>

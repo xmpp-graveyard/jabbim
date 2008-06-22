@@ -43,6 +43,10 @@ class extraDialog(QtGui.QDialog):
 				self.ui.label.setText("<h3>"+self.tr("Plugins")+"</h3>")
 				self.main.client.callRemote('rpc@jabbim.cz/service', 'getList', ('plugins/',)).addCallback(self._emoticonsListArrived)#.addErrback(self._emoticonsListError)
 				self.directory='plugins/'
+			elif typ=="chatskins":
+				self.ui.label.setText("<h3>"+self.tr("Chatskins")+"</h3>")
+				self.main.client.callRemote('rpc@jabbim.cz/service', 'getList', ('chatskins/',)).addCallback(self._emoticonsListArrived)#.addErrback(self._emoticonsListError)
+				self.directory='chatskins/'
 
 		QtCore.QObject.connect(self.ui.listWidget,QtCore.SIGNAL("currentItemChanged( QListWidgetItem *, QListWidgetItem *)"),self.selectionChanged)
 		self.ui.preview.hide()
@@ -115,7 +119,7 @@ class extraDialog(QtGui.QDialog):
 		else:
 			name=unicode(self.ui.listWidget.currentItem().text())
 			b=QtGui.QPushButton()
-			self.progress=QtGui.QProgressDialog(self.tr('Downloading emoticons pack:')+" "+name,"", 0, 100, self.main.preferencesWindow)
+			self.progress=QtGui.QProgressDialog(self.tr('Downloading pack:')+" "+name,"", 0, 100, self.main.preferencesWindow)
 			self.progress.setCancelButton(b)
 			b.hide()
 			self.main.client.callRemote('rpc@jabbim.cz/service','getFile',(self.directory+name+'.zip',)).addCallback(self._getFile)

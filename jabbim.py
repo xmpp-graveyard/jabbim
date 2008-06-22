@@ -3901,7 +3901,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.skin=self.skin['chatskin']
 		if not self.skin.has_key("spaces_between_lines"):
 			self.skin["spaces_between_lines"]='0'
-		self.webkitThemeFactory=widgets.webkitthemes.webkitThemeFactory(self.config['chatTheme'],self.config['groupchatTheme'])
+		self.webkitThemeFactory=widgets.webkitthemes.webkitThemeFactory(self.config['chatTheme'],self.config['groupchatTheme'],self.realHomeDir)
 		for i in range(self.chat.ui.chatTab.count()):
 			w=self.chat.ui.chatTab.widget(i)
 			w.chat.loadWebkit()

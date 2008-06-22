@@ -23,9 +23,10 @@ except:
 import os
 
 class webkitThemeFactory:
-	def __init__(self,chatTheme,groupchatTheme):
+	def __init__(self,chatTheme,groupchatTheme,realHomeDir):
 		self.fullChatTheme=chatTheme
 		self.fullGroupchatTheme=groupchatTheme
+		self.realHomeDir=realHomeDir
 		self.load()
 
 	def load(self):
@@ -35,94 +36,103 @@ class webkitThemeFactory:
 		print "loading chatTheme",self.chatTheme,self.chatStyle
 		print "loading groupchatTheme",self.groupchatTheme,self.groupchatStyle
 
-		self.incomingContent=None
 		if os.path.exists(cwd+"/chatskins/%s/Incoming/Content.html"%self.chatTheme):
-			f=open(cwd+"/chatskins/%s/Incoming/Content.html"%self.chatTheme,"r")
+			self.cPath=os.getcwd()+"/chatskins/%s/" % self.chatTheme
+		else:
+			self.cPath=self.realHomeDir+"/chatskins/%s/" % self.chatTheme
+		if os.path.exists(cwd+"/chatskins/%s/Incoming/Content.html"%self.groupchatTheme):
+			self.gPath=os.getcwd()+"/chatskins/%s/" % self.groupchatTheme
+		else:
+			self.gPath=self.realHomeDir+"/chatskins/%s/" % self.groupchatTheme
+
+		self.incomingContent=None
+		if os.path.exists(self.cPath+"Incoming/Content.html"):
+			f=open(self.cPath+"Incoming/Content.html","r")
 			self.incomingContent=f.read()
 			f.close()
 
 		self.incomingNextContent=None
-		if os.path.exists(cwd+"/chatskins/%s/Incoming/NextContent.html"%self.chatTheme):
-			f=open(cwd+"/chatskins/%s/Incoming/NextContent.html"%self.chatTheme,"r")
+		if os.path.exists(self.cPath+"Incoming/NextContent.html"):
+			f=open(self.cPath+"Incoming/NextContent.html","r")
 			self.incomingNextContent=f.read()
 			f.close()
 
 		self.outgoingContent=None
-		if os.path.exists(cwd+"/chatskins/%s/Outgoing/Content.html"%self.chatTheme):
-			f=open(cwd+"/chatskins/%s/Outgoing/Content.html"%self.chatTheme,"r")
+		if os.path.exists(self.cPath+"Outgoing/Content.html"):
+			f=open(self.cPath+"Outgoing/Content.html","r")
 			self.outgoingContent=f.read()
 			f.close()
 
 		self.outgoingNextContent=None
-		if os.path.exists(cwd+"/chatskins/%s/Outgoing/NextContent.html"%self.chatTheme):
-			f=open(cwd+"/chatskins/%s/Outgoing/NextContent.html"%self.chatTheme,"r")
+		if os.path.exists(self.cPath+"Outgoing/NextContent.html"):
+			f=open(self.cPath+"Outgoing/NextContent.html","r")
 			self.outgoingNextContent=f.read()
 			f.close()
 
 
 		self.incomingGroupchatContent=None
-		if os.path.exists(cwd+"/chatskins/%s/Incoming/Content.html"%self.groupchatTheme):
-			f=open(cwd+"/chatskins/%s/Incoming/Content.html"%self.groupchatTheme,"r")
+		if os.path.exists(self.gPath+"Incoming/Content.html"):
+			f=open(self.gPath+"Incoming/Content.html","r")
 			self.incomingGroupchatContent=f.read()
 			f.close()
 
 		self.incomingGroupchatNextContent=None
-		if os.path.exists(cwd+"/chatskins/%s/Incoming/NextContent.html"%self.groupchatTheme):
-			f=open(cwd+"/chatskins/%s/Incoming/NextContent.html"%self.groupchatTheme,"r")
+		if os.path.exists(self.gPath+"Incoming/NextContent.html"):
+			f=open(self.gPath+"Incoming/NextContent.html","r")
 			self.incomingGroupchatNextContent=f.read()
 			f.close()
 
 		self.outgoingGroupchatContent=None
-		if os.path.exists(cwd+"/chatskins/%s/Outgoing/Content.html"%self.groupchatTheme):
-			f=open(cwd+"/chatskins/%s/Outgoing/Content.html"%self.groupchatTheme,"r")
+		if os.path.exists(self.gPath+"Outgoing/Content.html"):
+			f=open(self.gPath+"Outgoing/Content.html","r")
 			self.outgoingGroupchatContent=f.read()
 			f.close()
 
 		self.outgoingGroupchatNextContent=None
-		if os.path.exists(cwd+"/chatskins/%s/Outgoing/NextContent.html"%self.groupchatTheme):
-			f=open(cwd+"/chatskins/%s/Outgoing/NextContent.html"%self.groupchatTheme,"r")
+		if os.path.exists(self.gPath+"Outgoing/NextContent.html"):
+			f=open(self.gPath+"Outgoing/NextContent.html","r")
 			self.outgoingGroupchatNextContent=f.read()
 			f.close()
 		
 		self.groupchatStatus=None
-		if os.path.exists(cwd+"/chatskins/%s/Status.html"%self.groupchatTheme):
-			f=open(cwd+"/chatskins/%s/Status.html"%self.groupchatTheme,"r")
+		if os.path.exists(self.gPath+"Status.html"):
+			f=open(self.gPath+"Status.html","r")
 			self.groupchatStatus=f.read()
 			f.close()
 
 		self.chatStatus=None
-		if os.path.exists(cwd+"/chatskins/%s/Status.html"%self.chatTheme):
-			f=open(cwd+"/chatskins/%s/Status.html"%self.chatTheme,"r")
+		if os.path.exists(self.cPath+"Status.html"):
+			f=open(self.cPath+"Status.html","r")
 			self.chatStatus=f.read()
 			f.close()
 
 		self.chatFooter=None
-		if os.path.exists(cwd+"/chatskins/%s/Footer.html"%self.chatTheme):
-			f=open(cwd+"/chatskins/%s/Footer.html"%self.chatTheme,"r")
+		if os.path.exists(self.cPath+"Footer.html"):
+			f=open(self.cPath+"Footer.html","r")
 			self.chatFooter=f.read()
 			f.close()
 
 		self.groupchatFooter=None
-		if os.path.exists(cwd+"/chatskins/%s/Footer.html"%self.groupchatTheme):
-			f=open(cwd+"/chatskins/%s/Footer.html"%self.groupchatTheme,"r")
+		if os.path.exists(self.gPath+"Footer.html"):
+			f=open(self.gPath+"Footer.html","r")
 			self.groupchatFooter=f.read()
 			f.close()
 
 		self.chatHeader=None
-		if os.path.exists(cwd+"/chatskins/%s/Header.html"%self.chatTheme):
-			f=open(cwd+"/chatskins/%s/Header.html"%self.chatTheme,"r")
+		if os.path.exists(self.cPath+"Header.html"):
+			f=open(self.cPath+"Header.html","r")
 			self.chatHeader=f.read()
 			f.close()
 
 		self.groupchatHeader=None
-		if os.path.exists(cwd+"/chatskins/%s/Header.html"%self.groupchatTheme):
-			f=open(cwd+"/chatskins/%s/Header.html"%self.groupchatTheme,"r")
+		if os.path.exists(self.gPath+"Header.html"):
+			f=open(self.gPath+"Header.html","r")
 			self.groupchatHeader=f.read()
 			f.close()
 
 		self.groupchatSenderColors=["#a34526","#c000ff","#045723","#7c7c7c","#ff8a00","#94452d"]
-		if os.path.exists(cwd+"/chatskins/%s/Incoming/SenderColors.txt"%self.groupchatTheme):
-			f=open(cwd+"/chatskins/%s/Incoming/SenderColors.txt"%self.groupchatTheme,"r")
+		if os.path.exists(self.gPath+"Incoming/SenderColors.txt"):
+			f=open(self.gPath+"Incoming/SenderColors.txt","r")
 			self.groupchatSenderColors=f.read().replace("\n","").split(":")
 			f.close()
 
@@ -158,10 +168,10 @@ class webkitThemeFactory:
 		return self.groupchatFooter
 
 	def chatPath(self):
-		return os.getcwd()+"/chatskins/%s/" % self.chatTheme
+		return self.cPath
 
 	def groupchatPath(self):
-		return os.getcwd()+"/chatskins/%s/" % self.groupchatTheme
+		return self.gPath
 
 	def genChatStatus(self,message,time):
 		if not self.chatStatus:
