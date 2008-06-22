@@ -93,5 +93,5 @@ class PrivacyListEditorDialog(QtGui.QDialog):
 				self.main.client.privacy.active.unHideJID(jid)
 		self.done(1)
 
-	def reject(self):
-		self.close()
+	#def reject(self):
+		#self.close()

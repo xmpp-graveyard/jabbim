@@ -308,7 +308,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		if len(unicode(self.toPlainText()))==0:
 			if not self.reformated:
 				print "reformat"
-				self.reformated=True
+				#self.reformated=True
 				self.reformat(format)
 				#QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
 			else:
@@ -1093,6 +1093,7 @@ function showLastMessages(){
 			text=text.replace(">"+k,'><img alt="'+k+'" src="'+v+'"/>')
 			text=text.replace("	"+k,'<img alt="'+k+'" src="'+v+'"/>')
 			text=text.replace("\t"+k,'<img alt="'+k+'" src="'+v+'"/>')
+		#print text
 		self.messageObject.message=unicode(text)
 		if not insert:
 			self.ui.webkit.page().mainFrame().evaluateJavaScript("addMessage(-1);")

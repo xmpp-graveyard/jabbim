@@ -1113,7 +1113,7 @@ class clientClass(pyxl.client.Client):
 		frm=frm.userhost()
 		if xhtml:
 			sXhtml=xhtml.strip().lower()
-			if sXhtml.find("<script"):
+			if sXhtml.find("<script")!=-1:
 				return
 		#images in xhtml
 		#if xhtml != None:
@@ -1127,7 +1127,7 @@ class clientClass(pyxl.client.Client):
 			countMessage=False
 			if unicode(w.jid) == frm:
 				mainWindow=self.main
-				print 'error',error
+				#print 'error',error
 				if error=="remote-server-not-found":
 					if w!=None:
 						message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",mainWindow.tr("Your message can't be sent. Remote server not found."))
