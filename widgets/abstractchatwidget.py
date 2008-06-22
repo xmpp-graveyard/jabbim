@@ -661,6 +661,24 @@ shouldScroll = nearBottom();
 if (shouldScroll) setTimeout("scrollToBottom()", 100);
 
 }
+
+function showImage(imageId,link) {
+shouldScroll = nearBottom();
+
+                        //Locate the insertion point
+                        var insert = document.getElementById(imageId);
+
+                        //make new node
+                        range = document.createRange();
+                        range.selectNode(insert.parentNode);
+                        newNode = range.createContextualFragment('<a href="'+link+'"><img src="'+link+'"/></a>');
+
+                        //swap
+                        insert.parentNode.replaceChild(newNode,insert);
+if (shouldScroll) setTimeout("scrollToBottom()", 100);
+
+}
+
 //Auto-scroll to bottom.  Use nearBottom to determine if a scrollToBottom is desired.
 function nearBottom() {
 		return ( (document.body.scrollTop+100) >= ( document.body.offsetHeight - ( window.innerHeight * 1.2 ) ) );
@@ -687,6 +705,7 @@ function showLastMessages(){
 </html>
 		""" % (stylesheet,code,header,footer)
 
+		self.imageId=0
 
 		# debug... we don't need it anymore
 		#f=open(self.main.webkitThemeFactory.chatPath()+"/test.html","w")

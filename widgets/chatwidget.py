@@ -593,7 +593,7 @@ class chatWidget(abstractChatWidget):
 				
 				# prepare message for showing in GUI
 				text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
-				text=utils.replace_url(text)
+				text=utils.replace_url(text,self)
 				text=text.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 				#file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
 				#if not os.path.isfile(file):
