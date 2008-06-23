@@ -669,7 +669,7 @@ shouldScroll = nearBottom();
                         //make new node
                         range = document.createRange();
                         range.selectNode(insert.parentNode);
-                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+link+'\\');")>[Hide Image]</a></div><div id="loaded'+imageId+'"><a href="'+link+'"><img src="'+link+'"/></a></div>');
+                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+link+'\\');")>[Hide Image]</a></div><div id="loaded'+imageId+'"><a href="'+link+'"><img src="'+link+'" style="width:100%%;height:100%%;"/></a></div>');
 
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);
@@ -834,12 +834,14 @@ function showLastMessages(){
 			format.setFontUnderline(self.ui.line.fontUnderline())
 			format.setFontWeight(self.ui.line.fontWeight())
 			fmt=self.ui.line.currentCharFormat()
-			#print 'opaque',fmt.background().isOpaque()
+			print 'opaque',fmt.background().isOpaque()
 			if fmt.background().isOpaque():
 				format.setBackground(QtGui.QBrush(fmt.background()))
 				self.ui.line.backgroundBrush=fmt.background()
-
+			#self.ui.line.blockSignals(True)
+			self.ui.line.reformated=True
 			self.ui.line.setCurrentCharFormat(format)
+			#self.ui.line.blockSignals(False)
 			colorIcon=QtGui.QPixmap(16,16)
 			colorIcon.fill(self.defaultFormat.foreground().color())
 			self.ui.colorButton.setIcon(QtGui.QIcon(colorIcon))

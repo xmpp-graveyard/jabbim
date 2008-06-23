@@ -1186,7 +1186,7 @@ class clientClass(pyxl.client.Client):
 
 		if xhtml:
 			sXhtml=xhtml.strip().lower()
-			if sXhtml.find("<script"):
+			if sXhtml.find("<script")!=-1:
 				return
 
 		# get chatwidget of this conversation
