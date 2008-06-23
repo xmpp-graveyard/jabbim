@@ -191,28 +191,28 @@ class webkitThemeFactory:
 
 	# Groupchat format
 
-	def genGroupchatIncomingContent(self,user,message,time,avatar="",color=None):
-		return unicode(self.incomingGroupchatContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color))
+	def genGroupchatIncomingContent(self,user,message,time,avatar="",color=None,highlight=""):
+		return unicode(self.incomingGroupchatContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%highlight%",highlight)
 
-	def genGroupchatIncomingNextContent(self,user,message,time,avatar="",color=None):
+	def genGroupchatIncomingNextContent(self,user,message,time,avatar="",color=None,highlight=""):
 		return unicode(self.incomingGroupchatNextContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color))
 
 	def genGroupchatOutgoingNextContent(self,user,message,time,avatar="",color=None):
-		return unicode(self.outgoingGroupchatNextContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color))
+		return unicode(self.outgoingGroupchatNextContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%highlight%","")
 	
 	def genGroupchatOutgoingContent(self,user,message,time,avatar="",color=None):
-		return unicode(self.outgoingGroupchatContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color))
+		return unicode(self.outgoingGroupchatContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%highlight%","")
 
 	# Chat format
 
 	def genIncomingContent(self,user,message,time,avatar=""):
-		return unicode(self.incomingContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar)
+		return unicode(self.incomingContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%highlight%","")
 
 	def genIncomingNextContent(self,user,message,time,avatar=""):
-		return unicode(self.incomingNextContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar)
+		return unicode(self.incomingNextContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%highlight%","")
 
 	def genOutgoingNextContent(self,user,message,time,avatar=""):
-		return unicode(self.outgoingNextContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar)
+		return unicode(self.outgoingNextContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%highlight%","")
 	
 	def genOutgoingContent(self,user,message,time,avatar=""):
-		return unicode(self.outgoingContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar)
+		return unicode(self.outgoingContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%highlight%","")
