@@ -43,7 +43,14 @@ class jabbimApplication(QtGui.QApplication):
 
 	def winEventFilter(self,msg):
 		print msg,msg.message
+		# WM_POWERBROADCAST
 		if msg.message==536:
+			# PBT_APMSUSPEND
+			if msg.wParam==4:
+				QtCore.QObject.emit("sleep()")
+			# PBT_APMRESUMESUSPEND
+			elif msg.wParam==7:
+				QtCore.QObject.emit("wakeUp()")
 			print "odpojuju"
 			return (True,1)
 		return (False,1)
@@ -1570,6 +1577,9 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.rosterSearch, QtCore.SIGNAL(" textEdited ( const QString & )"),self.ui.roster.search)
 		QtCore.QObject.connect(self.ui.rosterSearchClose, QtCore.SIGNAL("clicked()"),self.ui.roster.search)
 
+		QtCore.QObject.connect(app, QtCore.SIGNAL("sleep()"),self.systemSleep)
+		QtCore.QObject.connect(app, QtCore.SIGNAL("wakeUp()"),self.systemWakeUp)
+
 		# get homedir
 		self.homeDir=utils.getHomeDir() #: Jabbim home directory + profile directory
 		for x in range(0,len(sys.argv)):
@@ -1952,6 +1962,12 @@ class mainWindow(QtGui.QMainWindow):
 		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.connect()
+
+	def systemSleep(self):
+		self.sendPresence(None,"offline",self.tr("Sytem is suspended"))
+	
+	def systemWakeUp(self):
+		self.connect()
 
 	#{ Public functions
 
