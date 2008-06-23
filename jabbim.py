@@ -45,8 +45,8 @@ class jabbimApplication(QtGui.QApplication):
 		#print msg,msg.message
 		if msg.message==0x0218:
 			print "odpojuju"
-			#return True
-		#return False
+			#return (True
+		return (False,1)
 
 	def commitData(self,manager):
 		"""
