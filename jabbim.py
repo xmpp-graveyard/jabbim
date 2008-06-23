@@ -40,16 +40,19 @@ class jabbimApplication(QtGui.QApplication):
 	def __init__(self,args=[]):
 		QtGui.QApplication.__init__(self,args)
 		self.shutdown=False
+		self.sleep=False
 
 	def winEventFilter(self,msg):
 		# WM_POWERBROADCAST
 		if msg.message==536:
 			# PBT_APMSUSPEND
-			if msg.wParam==4:
+			if msg.wParam==4 and not self.sleep:
 				self.emit(QtCore.SIGNAL("sleep()"))
+				self.sleep=True
 			# PBT_APMRESUMESUSPEND
-			elif msg.wParam==7:
+			elif msg.wParam==7 and self.sleep:
 				self.emit(QtCore.SIGNAL("wakeUp()"))
+				self.sleep=False
 			return (True,1)
 		return (False,1)
 
