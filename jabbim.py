@@ -42,10 +42,10 @@ class jabbimApplication(QtGui.QApplication):
 		self.shutdown=False
 
 	def winEventFilter(self,msg):
-		#print msg,msg.message
-		if msg.message==0x0218:
+		print msg,msg.message
+		if msg.message==536:
 			print "odpojuju"
-			#return (True
+			return (True,1)
 		return (False,1)
 
 	def commitData(self,manager):
