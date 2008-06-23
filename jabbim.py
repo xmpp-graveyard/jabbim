@@ -46,10 +46,10 @@ class jabbimApplication(QtGui.QApplication):
 		if msg.message==536:
 			# PBT_APMSUSPEND
 			if msg.wParam==4:
-				QtCore.QObject.emit(QtCore.SIGNAL("sleep()"))
+				self.emit(QtCore.SIGNAL("sleep()"))
 			# PBT_APMRESUMESUSPEND
 			elif msg.wParam==7:
-				QtCore.QObject.emit(QtCore.SIGNAL("wakeUp()"))
+				self.emit(QtCore.SIGNAL("wakeUp()"))
 			return (True,1)
 		return (False,1)
 
