@@ -41,7 +41,8 @@ class jabbimApplication(QtGui.QApplication):
 		QtGui.QApplication.__init__(self,args)
 		self.shutdown=False
 
-	def winEventFilter(msg,result):
+	def winEventFilter(self,msg):
+		print msg,msg.message
 		if msg.message==0x0218:
 			print "odpojuju"
 			return True
