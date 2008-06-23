@@ -45,6 +45,7 @@ class Plugin(plugins.PluginBase):
 		if error == None and self.main.client.ft[sid].tojid.find("rpc")!=-1:
 			if self.main.client.ft[sid].file.find("plugins/")!=-1:
 				QtGui.QMessageBox.information(self.main,self.tr("Plugin updated"), self.tr("Please restart Jabbim to apply changes."))
+			
 
 	def on_authd(self):
 		self.main.client.callRemote('rpc@jabbim.cz/service', 'updateCore', (self.main.client.jid.host, sha1(self.main.client.jid.userhost()).hexdigest(), self.main.client.client_os, self.main.client.version)).addCallback(self._update)
@@ -70,5 +71,9 @@ class Plugin(plugins.PluginBase):
 		print vysledek
 		if vysledek[0][0] == False:
 			#nemame posledni verzi
-			self.main.tray.showMessage(self.tr("Autoupdate"),self.tr("New version of Jabbim is available!"), QtGui.QSystemTrayIcon.Information, 3000)
+			self.main.tray.showMessage(self.tr("Autoupdate"),self.tr("New version of Jabbim is available! Get it from www.jabbim.cz"), QtGui.QSystemTrayIcon.Information, 5000)
+			self.main.events.addBooleanEvent(self.getNewVersion, [], None, [], self.tr('Jabbim update'), text = self.tr("Do you want to download new version?"), name = u'updateJabbim', typ='update')
+	
+	def getNewVersion(self):
+		QtGui.QDesktopServices.openUrl(QtCore.QUrl('http://dev.jabbim.cz/releases/detect.php?rel='+self.main.client.version))
 	
