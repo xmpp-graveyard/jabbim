@@ -44,8 +44,8 @@ class jabbimApplication(QtGui.QApplication):
 	def winEventFilter(self,msg):
 		if msg.message==0x0218:
 			print "odpojuju"
-			return True
-		return False
+			return 1
+		return 0
 
 	def commitData(self,manager):
 		"""
