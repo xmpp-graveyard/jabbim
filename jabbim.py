@@ -1226,32 +1226,6 @@ class clientClass(pyxl.client.Client):
 
 		if len(body)!=0:
 			# parse message body/xhtml
-			if xhtml==None:
-				message=unicode(body).replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
-				message = utils.replace_url(message,tab.chat)
-				message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
-			else:
-				message=xhtml.replace("&quot;",'"')
-				message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
-			#xxx=message # nechce se mi
-			# prepare message to be showed
-			#if unicode(body).startswith("/me"):
-				#if delay==None:
-					#message=self.main.skin["me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message[3:])
-				#else:
-					#delay=time.strftime('%Y-%m-%d&nbsp;%H:%M:%S', time.localtime(delay))
-					#message=self.main.skin["me_message"].replace("[time]",delay).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message[3:])
-			#else:
-				#skin=self.main.skin["message"]
-				#if tab:
-					#if tab.chat.lastMessageFrom==unicode(user):
-						#if self.main.skin.has_key('message_continue'):
-							#skin=self.main.skin["message_continue"]
-				#if delay==None:
-					#message=skin.replace("[time]",self.main.now()).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message)
-				#else:
-					#delay=time.strftime('%Y-%m-%d&nbsp;%H:%M:%S', time.localtime(delay))
-					#message=skin.replace("[time]",delay).replace("[user]",unicode(user).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message)
 			if delay==None:
 				timeText=self.main.now()
 			else:
@@ -1260,6 +1234,13 @@ class clientClass(pyxl.client.Client):
 			
 			next=False
 			if tab:
+				if xhtml==None:
+					message=unicode(body).replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
+					message = utils.replace_url(message,tab.chat)
+					message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
+				else:
+					message=xhtml.replace("&quot;",'"')
+					message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 				tab.chat.appendLastMessage(['in',user,message,timeText,tab.chat.file])
 				if tab.chat.lastMessageFrom==unicode(user):
 					insert=True
@@ -1345,15 +1326,25 @@ class clientClass(pyxl.client.Client):
 				text+="</td></tr></table>"
 				self.main.events.addInfoEvent(header=mainWindow.tr("New message"),text=mainWindow.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[],tooltip=text)
 				if self.groupchats.has_key(frm.userhost()):
-					self.main.chat.addChatTab(frm.full(),unicode(user),icon,message,full=True)
+					self.main.chat.addChatTab(frm.full(),unicode(user),icon,None,full=True)
 				else:
-					self.main.chat.addChatTab(frm.full(),unicode(user),icon,message)
+					self.main.chat.addChatTab(frm.full(),unicode(user),icon,None)
 				if created:
 					self.main.chat.setWindowState(self.main.chat.windowState() & ~QtCore.Qt.WindowActive | QtCore.Qt.WindowMinimized )
 					self.main.setWindowState(self.main.windowState() & QtCore.Qt.WindowActive)
 
 				tab,tabIndex=self.main.chat.findTab(frm.full(),True)
 				if tab:
+					if xhtml==None:
+						message=unicode(body).replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
+						message = utils.replace_url(message,tab.chat)
+						message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
+					else:
+						message=xhtml.replace("&quot;",'"')
+						message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
+					message=self.main.webkitThemeFactory.genIncomingContent(unicode(user),message,self.main.now(),tab.chat.file)
+					#message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+unicode(tab.chat.avatarHeight)+"\" />")
+					self.main.client.reactor.callLater(1,tab.chat.textEditWrite,message)
 					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
 					self.main.chat.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)

@@ -19,14 +19,17 @@ from linkeditor import linkEditorDialog
 class message(QtCore.QObject):
 	def __init__(self,message):
 		QtCore.QObject.__init__(self)
-		self.message=message
+		self.message=[]
 		self.messages=[]
+		self.messageCache=[]
 		self.scr=1
 		self.setObjectName("messageObject")
 
 	@QtCore.pyqtSignature("",result="QString")
 	def msg(self):
-		return self.message
+		if len(self.message)!=0:
+			return self.message.pop()
+		return ""
 	
 	@QtCore.pyqtSignature("int",result="QString")
 	def msg_(self,i):
@@ -424,7 +427,7 @@ class abstractChatWidget(QtGui.QWidget):
 		self.ui.webkit=QtWebKit.QWebView(self)
 		self.ui.webkit.settings().setAttribute(QtWebKit.QWebSettings.JavascriptEnabled,True)
 		self.messageObject=message("")
-		QtCore.QObject.connect(self.ui.webkit,QtCore.SIGNAL("loadFinished ( bool)"),self.webkitLoaded)
+		QtCore.QObject.connect(self.ui.webkit,QtCore.SIGNAL("loadFinished ( bool)"),self.webkitLoaded_)
 		QtCore.QObject.connect(self.ui.webkit.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.webkitCleared)
 
 		self.loadWebkit()
@@ -558,10 +561,19 @@ class abstractChatWidget(QtGui.QWidget):
 	def webkitCleared(self):
 		self.ui.webkit.page().mainFrame().addToJavaScriptWindowObject("messageObject",self.messageObject)
 
-	def webkitLoaded(self):
+	def webkitLoaded_(self):
 		self.ui.webkit.page().mainFrame().evaluateJavaScript("showLastMessages();")
+		cmds=""
+		for msg in self.messageObject.messageCache:
+			if msg[0]:
+				cmds+="addMessage(-1);"
+			else:
+				cmds+="insertMessage(-1);"
+		self.ui.webkit.page().mainFrame().evaluateJavaScript(cmds)
+		self.webkitLoaded=True
 
 	def loadWebkit(self):
+		self.webkitLoaded=False
 		try:
 			typ=self.typ
 		except:
@@ -1096,11 +1108,15 @@ function showLastMessages(){
 			text=text.replace("	"+k,'<img alt="'+k+'" src="'+v+'"/>')
 			text=text.replace("\t"+k,'<img alt="'+k+'" src="'+v+'"/>')
 		#print text
-		self.messageObject.message=unicode(text)
-		if not insert:
-			self.ui.webkit.page().mainFrame().evaluateJavaScript("addMessage(-1);")
+		if self.webkitLoaded:
+			self.messageObject.message.append(unicode(text))
+			if not insert:
+				self.ui.webkit.page().mainFrame().evaluateJavaScript("addMessage(-1);")
+			else:
+				self.ui.webkit.page().mainFrame().evaluateJavaScript("insertMessage(-1);")
 		else:
-			self.ui.webkit.page().mainFrame().evaluateJavaScript("insertMessage(-1);")
+			self.messageObject.message.append(unicode(text))
+			self.messageObject.messageCache.append([insert,text])
 
 	def textEditWrite(self,text,insert=False):
 		"""
