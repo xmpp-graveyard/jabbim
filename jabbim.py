@@ -40,7 +40,13 @@ class jabbimApplication(QtGui.QApplication):
 	def __init__(self,args=[]):
 		QtGui.QApplication.__init__(self,args)
 		self.shutdown=False
-	
+
+	def winEventFilter(self,msg,result):
+		if msg.message==0x0218:
+			print "odpojuju"
+			return True
+		return False
+
 	def commitData(self,manager):
 		"""
 		Called when application is closed by Window manager
