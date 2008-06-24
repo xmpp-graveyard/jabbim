@@ -52,7 +52,8 @@ class message(QtCore.QObject):
 	def ready(self):
 		#self.emit(QtCore.SIGNAL("ready()"))
 		print "READY!"
-		self.main.client.reactor.callLater(1,self.main.messageObjectReady)
+		#self.main.client.reactor.callLater(1,self.main.messageObjectReady)
+		self.main.messageObjectReady()
 
 	@QtCore.pyqtSignature("QString")
 	def log(self,test):
@@ -1167,7 +1168,7 @@ function showLastMessages(){
 			self.messageObject.messageCache.insert(0,[1,text])
 		else:
 			self.messageObject.messageCache.insert(0,[0,text])
-		if len(self.messageObject.messageCache)==1 and self.webkitLoaded:
+		if self.webkitLoaded:
 			self.messageObjectReady()
 
 	def textEditWrite(self,text,insert=False):
