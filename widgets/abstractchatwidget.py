@@ -593,9 +593,8 @@ class abstractChatWidget(QtGui.QWidget):
 	def webkitLoaded_(self):
 		self.ui.webkit.page().mainFrame().evaluateJavaScript("showLastMessages();")
 		#self.main.client.reactor.callLater(1,self.writeWebkitCache)
-		self.messageObjectReady()
 		self.webkitLoaded=True
-
+		self.main.client.reactor.callLater(1,self.messageObjectReady)
 
 	def writeWebkitCache(self):
 		cmds=""
@@ -1168,7 +1167,7 @@ function showLastMessages(){
 			self.messageObject.messageCache.insert(0,[1,text])
 		else:
 			self.messageObject.messageCache.insert(0,[0,text])
-		if self.webkitLoaded:
+		if len(self.messageObject.messageCache)==1 and self.webkitLoaded:
 			self.messageObjectReady()
 
 	def textEditWrite(self,text,insert=False):
