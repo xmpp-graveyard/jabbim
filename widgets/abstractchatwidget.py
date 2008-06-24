@@ -25,10 +25,19 @@ class message(QtCore.QObject):
 		self.scr=1
 		self.setObjectName("messageObject")
 
+	@QtCore.pyqtSignature("",result="int")
+	def messageDirection(self):
+		if len(self.messageCache)!=0:
+			ret=self.messageCache[-1][0]
+			return ret
+		return 0
+
 	@QtCore.pyqtSignature("",result="QString")
 	def msg(self):
-		if len(self.message)!=0:
-			return self.message.pop()
+		if len(self.messageCache)!=0:
+			ret=self.messageCache.pop()[1]
+			print "RET",[ret]
+			return ret
 		return ""
 	
 	@QtCore.pyqtSignature("int",result="QString")
@@ -38,6 +47,10 @@ class message(QtCore.QObject):
 	@QtCore.pyqtSignature("",result="int")
 	def scroll(self):
 		return self.scr
+
+	@QtCore.pyqtSignature("")
+	def ready(self):
+		self.emit(QtCore.SIGNAL("ready()"))
 
 class abstractTextView(QtGui.QTextEdit):
 	"""
@@ -427,6 +440,7 @@ class abstractChatWidget(QtGui.QWidget):
 		self.ui.webkit=QtWebKit.QWebView(self)
 		self.ui.webkit.settings().setAttribute(QtWebKit.QWebSettings.JavascriptEnabled,True)
 		self.messageObject=message("")
+		QtCore.QObject.connect(self.messageObject,QtCore.SIGNAL("ready()"),self.messageObjectReady)
 		QtCore.QObject.connect(self.ui.webkit,QtCore.SIGNAL("loadFinished ( bool)"),self.webkitLoaded_)
 		QtCore.QObject.connect(self.ui.webkit.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.webkitCleared)
 
@@ -558,17 +572,31 @@ class abstractChatWidget(QtGui.QWidget):
 			painter.end()
 			self.ui.backgroundButton.setIcon(QtGui.QIcon(colorIcon))
 
+	def messageObjectReady(self):
+		print "messageObjectReady",self.messageObject.messageCache
+		if len(self.messageObject.messageCache)!=0:
+			self.ui.webkit.page().mainFrame().evaluateJavaScript("addNextMessage();")
+
 	def webkitCleared(self):
 		self.ui.webkit.page().mainFrame().addToJavaScriptWindowObject("messageObject",self.messageObject)
 
 	def webkitLoaded_(self):
 		self.ui.webkit.page().mainFrame().evaluateJavaScript("showLastMessages();")
+		#self.main.client.reactor.callLater(1,self.writeWebkitCache)
+		self.messageObjectReady()
+		self.webkitLoaded=True
+
+
+	def writeWebkitCache(self):
 		cmds=""
+		print "CACHE:",self.messageObject.messageCache
+		print "CACHE:",self.messageObject.message
 		for msg in self.messageObject.messageCache:
-			if msg[0]:
+			if not msg[0]:
 				cmds+="addMessage(-1);"
 			else:
 				cmds+="insertMessage(-1);"
+		print 'CMDS',cmds
 		self.ui.webkit.page().mainFrame().evaluateJavaScript(cmds)
 		self.webkitLoaded=True
 
@@ -636,6 +664,12 @@ class abstractChatWidget(QtGui.QWidget):
 <style type="text/css" media="screen,print"> @import url( "main.css" ); </style>
 <style id="mainStyle" type="text/css" media="screen,print"> %s </style>
 <script>
+function addNextMessage() {
+var b = messageObject.messageDirection();
+if (b==1) addMessage(-1);
+else insertMessage(-1);
+}
+
 function addMessage(index) {
 shouldScroll = nearBottom();
 //Remove any existing insertion point
@@ -653,7 +687,7 @@ if (index==-1) newdiv.innerHTML = messageObject.msg();
 else newdiv.innerHTML = messageObject.msg_(index);
 ni.appendChild(newdiv);
 if (shouldScroll) setTimeout("scrollToBottom()", 100);
-
+messageObject.ready();
 }
 function insertMessage(index) {
 shouldScroll = nearBottom();
@@ -670,7 +704,7 @@ shouldScroll = nearBottom();
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);
 if (shouldScroll) setTimeout("scrollToBottom()", 100);
-
+messageObject.ready();
 }
 
 function showImage(imageId,link) {
@@ -1108,15 +1142,20 @@ function showLastMessages(){
 			text=text.replace("	"+k,'<img alt="'+k+'" src="'+v+'"/>')
 			text=text.replace("\t"+k,'<img alt="'+k+'" src="'+v+'"/>')
 		#print text
-		if self.webkitLoaded:
-			self.messageObject.message.append(unicode(text))
-			if not insert:
-				self.ui.webkit.page().mainFrame().evaluateJavaScript("addMessage(-1);")
-			else:
-				self.ui.webkit.page().mainFrame().evaluateJavaScript("insertMessage(-1);")
+		#if self.webkitLoaded:
+			#self.messageObject.message.insert(0,unicode(text))
+			#if not insert:
+				#self.ui.webkit.page().mainFrame().evaluateJavaScript("addMessage(-1);")
+			#else:
+				#self.ui.webkit.page().mainFrame().evaluateJavaScript("insertMessage(-1);")
+		#else:
+			#self.messageObject.message.insert(0,unicode(text))
+		if not insert:
+			self.messageObject.messageCache.insert(0,[1,text])
 		else:
-			self.messageObject.message.append(unicode(text))
-			self.messageObject.messageCache.append([insert,text])
+			self.messageObject.messageCache.insert(0,[0,text])
+		if len(self.messageObject.messageCache)==1 and self.webkitLoaded:
+			self.messageObjectReady()
 
 	def textEditWrite(self,text,insert=False):
 		"""

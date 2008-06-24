@@ -514,10 +514,10 @@ class chatWindow(QtGui.QMainWindow):
 				#message=self.main.skin["my_message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
 				if w.chat.lastMessageFrom==unicode(user):
 					insert=True
-					message=self.main.webkitThemeFactory.genGroupchatOutgoingNextContent(user,body,delay,file,cIndex,highlight)
+					message=self.main.webkitThemeFactory.genGroupchatOutgoingNextContent(user,body,delay,file,cIndex)
 				else:
 					insert=False
-					message=self.main.webkitThemeFactory.genGroupchatOutgoingContent(user,body,delay,file,cIndex,highlight)
+					message=self.main.webkitThemeFactory.genGroupchatOutgoingContent(user,body,delay,file,cIndex)
 			else:
 				w.chat.appendLastMessage(["in",user,body,delay,file])
 				if w.chat.lastMessageFrom==unicode(user):
@@ -681,7 +681,8 @@ class chatWindow(QtGui.QMainWindow):
 		if message!=None:
 			message=self.main.webkitThemeFactory.genIncomingContent(name,message,self.main.now(),tab.chat.file)
 			#message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+unicode(tab.chat.avatarHeight)+"\" />")
-			self.main.client.reactor.callLater(1,tab.chat.textEditWrite,message)
+			#self.main.client.reactor.callLater(1,tab.chat.textEditWrite,message)
+			tab.chat.textEditWrite(message)
 			#tab.chat.textEditWrite(message)
 		return tab
 		#self.show()

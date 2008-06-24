@@ -1327,14 +1327,17 @@ class clientClass(pyxl.client.Client):
 				self.main.events.addInfoEvent(header=mainWindow.tr("New message"),text=mainWindow.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[],tooltip=text)
 				if self.groupchats.has_key(frm.userhost()):
 					self.main.chat.addChatTab(frm.full(),unicode(user),icon,None,full=True)
+					tab,tabIndex=self.main.chat.findTab(frm.full(),True)
 				else:
 					self.main.chat.addChatTab(frm.full(),unicode(user),icon,None)
+					tab,tabIndex=self.main.chat.findTab(frm.full())
 				if created:
 					self.main.chat.setWindowState(self.main.chat.windowState() & ~QtCore.Qt.WindowActive | QtCore.Qt.WindowMinimized )
 					self.main.setWindowState(self.main.windowState() & QtCore.Qt.WindowActive)
 
-				tab,tabIndex=self.main.chat.findTab(frm.full(),True)
+				
 				if tab:
+					tab.chat.lastMessageFrom=unicode(user)
 					if xhtml==None:
 						message=unicode(body).replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
 						message = utils.replace_url(message,tab.chat)
@@ -1344,7 +1347,7 @@ class clientClass(pyxl.client.Client):
 						message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 					message=self.main.webkitThemeFactory.genIncomingContent(unicode(user),message,self.main.now(),tab.chat.file)
 					#message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+unicode(tab.chat.avatarHeight)+"\" />")
-					self.main.client.reactor.callLater(1,tab.chat.textEditWrite,message)
+					tab.chat.textEditWrite(message)
 					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
 					self.main.chat.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)
