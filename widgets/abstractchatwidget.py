@@ -52,7 +52,7 @@ class message(QtCore.QObject):
 	def ready(self):
 		#self.emit(QtCore.SIGNAL("ready()"))
 		print "READY!"
-		self.main.messageObjectReady()
+		self.main.client.reactor.callLater(1,self.main.messageObjectReady)
 
 	@QtCore.pyqtSignature("QString")
 	def log(self,test):
