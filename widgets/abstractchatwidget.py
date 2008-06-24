@@ -51,6 +51,7 @@ class message(QtCore.QObject):
 	@QtCore.pyqtSignature("")
 	def ready(self):
 		#self.emit(QtCore.SIGNAL("ready()"))
+		print "READY!'
 		self.main.messageObjectReady()
 
 class abstractTextView(QtGui.QTextEdit):
@@ -677,6 +678,7 @@ shouldScroll = nearBottom();
 //Remove any existing insertion point
 insert = document.getElementById("insert");
 if(insert) insert.parentNode.removeChild(insert);
+messageObject.ready();
 
 var ni = document.getElementById('myDiv');
 var numi = document.getElementById('theValue');
@@ -688,12 +690,12 @@ newdiv.setAttribute("id",divIdName);
 if (index==-1) newdiv.innerHTML = messageObject.msg();
 else newdiv.innerHTML = messageObject.msg_(index);
 ni.appendChild(newdiv);
-messageObject.ready();
 if (shouldScroll) setTimeout("scrollToBottom()", 100);
 
 }
 function insertMessage(index) {
 shouldScroll = nearBottom();
+messageObject.ready();
 
                         //Locate the insertion point
                         var insert = document.getElementById("insert");
@@ -706,7 +708,6 @@ shouldScroll = nearBottom();
 
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);
-messageObject.ready();
 if (shouldScroll) setTimeout("scrollToBottom()", 100);
 
 }
