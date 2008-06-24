@@ -56,7 +56,7 @@ class Plugin(plugins.PluginBase):
 			log.removeObserver(self.observer)
 	
 	def observer(self, msg):
-		self.window.ui.logView.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']))))
+		self.window.ui.logView.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
 		if msg['isError'] and self.config['notify'] == 'True':
 			self.main.tray.showMessage(self.main.tr("Log"),unicode(' '.join(msg['message'])), QtGui.QSystemTrayIcon.Warning, 2000)
 	

@@ -28,7 +28,7 @@ class Plugin(plugins.PluginBase):
 		self.description = self.tr('Updates plugins')
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = self.tr('Autoupdate')
-		self.version = '0.02'
+		self.version = '0.021'
 		self.category = ['utils']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.plugindir = plugindir
