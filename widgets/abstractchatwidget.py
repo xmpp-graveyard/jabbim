@@ -51,7 +51,7 @@ class message(QtCore.QObject):
 	@QtCore.pyqtSignature("")
 	def ready(self):
 		#self.emit(QtCore.SIGNAL("ready()"))
-		print "READY!'
+		print "READY!"
 		self.main.messageObjectReady()
 
 class abstractTextView(QtGui.QTextEdit):
