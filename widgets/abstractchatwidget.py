@@ -17,6 +17,8 @@ from emoticonswidget import *
 from linkeditor import linkEditorDialog
 
 class message(QtCore.QObject):
+    #__pyqtSignals__= ("addNextMessage()", )
+
 	def __init__(self,message):
 		QtCore.QObject.__init__(self)
 		self.message=[]
@@ -25,12 +27,15 @@ class message(QtCore.QObject):
 		self.scr=1
 		self.setObjectName("messageObject")
 
+	#def nextMessage(self):
+		#self.emit(QtCore.SIGNAL("addNextMessage()"))
+
 	@QtCore.pyqtSignature("",result="int")
 	def messageDirection(self):
 		if len(self.messageCache)!=0:
 			ret=self.messageCache[-1][0]
 			return ret
-		return 0
+		return -1
 
 	@QtCore.pyqtSignature("",result="QString")
 	def msg(self):
@@ -53,7 +58,7 @@ class message(QtCore.QObject):
 		#self.emit(QtCore.SIGNAL("ready()"))
 		print "READY!"
 		#self.main.client.reactor.callLater(1,self.main.messageObjectReady)
-		self.main.messageObjectReady()
+		#self.main.messageObjectReady()
 
 	@QtCore.pyqtSignature("QString")
 	def log(self,test):
@@ -594,7 +599,7 @@ class abstractChatWidget(QtGui.QWidget):
 		self.ui.webkit.page().mainFrame().evaluateJavaScript("showLastMessages();")
 		#self.main.client.reactor.callLater(1,self.writeWebkitCache)
 		self.webkitLoaded=True
-		self.main.client.reactor.callLater(1,self.messageObjectReady)
+		self.messageObjectReady()
 
 	def writeWebkitCache(self):
 		cmds=""
@@ -677,7 +682,9 @@ function addNextMessage() {
 var b = messageObject.messageDirection();
 messageObject.log("1")
 if (b==1) addMessage(-1);
-else insertMessage(-1);
+if (b==0) insertMessage(-1);
+b = messageObject.messageDirection();
+if (b!=-1) addNextMessage();
 messageObject.log("2")
 }
 
