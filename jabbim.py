@@ -1003,7 +1003,7 @@ class clientClass(pyxl.client.Client):
 						i.jid=jid
 						# update roster
 						self.main.ui.roster.sortItems()
-						self.main.ui.roster.changePos=True
+						#self.main.ui.roster.changePos=True
 						self.main.ui.roster.repaint()
 				# we didn't find item so we have to add it to this group
 				if add:
@@ -1014,7 +1014,7 @@ class clientClass(pyxl.client.Client):
 						self.main.ui.roster.users.append(i)
 						# update roster
 						self.main.ui.roster.sortItems()
-						self.main.ui.roster.changePos=True
+						#self.main.ui.roster.changePos=True
 						self.main.ui.roster.repaint()
 					# we have to create new item
 					else:
@@ -1041,7 +1041,7 @@ class clientClass(pyxl.client.Client):
 							user.status=self.main.shows[unicode(show)]
 						# update roster
 						#self.main.ui.roster.statusLabel.hide()
-						self.main.ui.roster.changePos=True
+						#self.main.ui.roster.changePos=True
 						self.main.ui.roster.sortItems()
 						self.main.ui.roster.repaint()
 			# contact is not in this group, but he is still visible in roster, so we have to delete him

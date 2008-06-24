@@ -203,15 +203,15 @@ class rosterWidget(QtGui.QWidget):
 		self.sortedGroups=[]
 		self.sorted={}
 		#self.statusLabel=activeWidget(self)
-		self.buttonWidget=None
-		self.bigAvatar=False
+		#self.buttonWidget=None
+		#self.bigAvatar=False
 		self.data={}
 		self.metaItems={}
 		self.events=[]
 		self.bl=True
-		self.changePos=False
+		#self.changePos=False
 		self.searchMode=False
-		self.reshow=False
+		#self.reshow=False
 		self.userHeight=32
 		self.groupHeight=32
 		self.theme=True
@@ -975,7 +975,7 @@ class rosterWidget(QtGui.QWidget):
 		if self.item!=item and item!=None and item.main!='special':
 			#self.selected=item
 			self.item=item
-			self.reshow=True
+			#self.reshow=True
 			self.repaint()
 			self.setSize()
 			#self.main.client.reactor.callLater(0.2,self.sel)
@@ -984,7 +984,7 @@ class rosterWidget(QtGui.QWidget):
 			self.item = None
 			#self.selected = None
 			#self.statusLabel.hide()
-			self.reshow=True
+			#self.reshow=True
 			self.repaint()
 			self.setSize()
 		#if item!=None:
@@ -1129,7 +1129,7 @@ class rosterWidget(QtGui.QWidget):
 				self.main.ui.rosterSearchClose.hide()
 
 			#self.statusLabel.hide()
-			self.reshow=True
+			#self.reshow=True
 			self.setSize()
 			self.repaint()
 			self.main.chat.activate()
@@ -1146,7 +1146,7 @@ class rosterWidget(QtGui.QWidget):
 				self.main.ui.rosterSearchClose.hide()
 
 			#self.statusLabel.hide()
-			self.reshow=True
+			#self.reshow=True
 			self.setSize()
 			self.repaint()
 
@@ -1522,7 +1522,7 @@ class rosterWidget(QtGui.QWidget):
 			self.sortItems()
 			if self.item!=item:
 				self.selectItem(item)
-			self.reshow=True
+			#self.reshow=True
 			self.repaint()
 		
 		elif cmd == 'send_contact':
@@ -1686,7 +1686,7 @@ class rosterWidget(QtGui.QWidget):
 						item.height=self.rosterStyle.heightForItem(item)
 		if not first:
 			#self.statusLabel.hide()
-			self.changePos=True
+			#self.changePos=True
 			self.sortItems()
 		#for user in self.getUserItems(jid):
 			#log.msg("hidden:"+unicode(user.hidden))
