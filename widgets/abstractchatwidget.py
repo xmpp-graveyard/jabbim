@@ -686,8 +686,9 @@ newdiv.setAttribute("id",divIdName);
 if (index==-1) newdiv.innerHTML = messageObject.msg();
 else newdiv.innerHTML = messageObject.msg_(index);
 ni.appendChild(newdiv);
-if (shouldScroll) setTimeout("scrollToBottom()", 100);
 messageObject.ready();
+if (shouldScroll) setTimeout("scrollToBottom()", 100);
+
 }
 function insertMessage(index) {
 shouldScroll = nearBottom();
@@ -703,8 +704,9 @@ shouldScroll = nearBottom();
 
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);
-if (shouldScroll) setTimeout("scrollToBottom()", 100);
 messageObject.ready();
+if (shouldScroll) setTimeout("scrollToBottom()", 100);
+
 }
 
 function showImage(imageId,link) {
