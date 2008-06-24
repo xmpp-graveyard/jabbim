@@ -1957,12 +1957,15 @@ class Client(derived):
 
 	
 	def _onIPAddr(self, addr):
-		self.socks5IP.append((unicode(addr),self.socks5Port))
+		if not (unicode(addr),self.socks5Port) in self.socks5IP:
+			self.socks5IP.append((unicode(addr),self.socks5Port))
 		if self.main.config['FTHost'] != '':
-			if self.main.config['FTPort'] != '':
-				self.socks5IP.append((self.main.config['FTHost'],self.main.config['FTPort'] ))
+			if self.main.config['FTPort'] != '' :
+				if not (self.main.config['FTHost'],self.main.config['FTPort'] ) in self.socks5IP:			
+					self.socks5IP.append((self.main.config['FTHost'],self.main.config['FTPort'] ))
 			else:
-				self.socks5IP.append((self.main.config['FTHost'], self.socks5Port))
+				if not (self.main.config['FTHost'],self.socks5Port ) in self.socks5IP:
+					self.socks5IP.append((self.main.config['FTHost'], self.socks5Port))
 		print self.socks5IP
 		
 		try:
