@@ -50,7 +50,8 @@ class message(QtCore.QObject):
 
 	@QtCore.pyqtSignature("")
 	def ready(self):
-		self.emit(QtCore.SIGNAL("ready()"))
+		#self.emit(QtCore.SIGNAL("ready()"))
+		self.main.messageObjectReady()
 
 class abstractTextView(QtGui.QTextEdit):
 	"""
@@ -440,6 +441,7 @@ class abstractChatWidget(QtGui.QWidget):
 		self.ui.webkit=QtWebKit.QWebView(self)
 		self.ui.webkit.settings().setAttribute(QtWebKit.QWebSettings.JavascriptEnabled,True)
 		self.messageObject=message("")
+		self.messageObject.main=self
 		QtCore.QObject.connect(self.messageObject,QtCore.SIGNAL("ready()"),self.messageObjectReady)
 		QtCore.QObject.connect(self.ui.webkit,QtCore.SIGNAL("loadFinished ( bool)"),self.webkitLoaded_)
 		QtCore.QObject.connect(self.ui.webkit.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.webkitCleared)
