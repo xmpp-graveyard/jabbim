@@ -54,6 +54,12 @@ class message(QtCore.QObject):
 		print "READY!"
 		self.main.messageObjectReady()
 
+	@QtCore.pyqtSignature("QString")
+	def log(self,test):
+		#self.emit(QtCore.SIGNAL("ready()"))
+		print test
+
+
 class abstractTextView(QtGui.QTextEdit):
 	"""
 	Text view for chat conversation.
@@ -669,8 +675,10 @@ class abstractChatWidget(QtGui.QWidget):
 <script>
 function addNextMessage() {
 var b = messageObject.messageDirection();
+messageObject.log("1")
 if (b==1) addMessage(-1);
 else insertMessage(-1);
+messageObject.log("2")
 }
 
 function addMessage(index) {
@@ -679,7 +687,7 @@ shouldScroll = nearBottom();
 insert = document.getElementById("insert");
 if(insert) insert.parentNode.removeChild(insert);
 messageObject.ready();
-
+messageObject.log("addMessage")
 var ni = document.getElementById('myDiv');
 var numi = document.getElementById('theValue');
 var num = (document.getElementById('theValue').value -1)+ 2;
@@ -696,7 +704,7 @@ if (shouldScroll) setTimeout("scrollToBottom()", 100);
 function insertMessage(index) {
 shouldScroll = nearBottom();
 messageObject.ready();
-
+messageObject.log("insertMessage")
                         //Locate the insertion point
                         var insert = document.getElementById("insert");
 
