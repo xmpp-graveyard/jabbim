@@ -41,7 +41,7 @@ class message(QtCore.QObject):
 	def msg(self):
 		if len(self.messageCache)!=0:
 			ret=self.messageCache.pop()[1]
-			print "RET",[ret]
+			#print "RET",[ret]
 			return ret
 		return ""
 	
@@ -56,14 +56,16 @@ class message(QtCore.QObject):
 	@QtCore.pyqtSignature("")
 	def ready(self):
 		#self.emit(QtCore.SIGNAL("ready()"))
-		print "READY!"
+		#print "READY!"
 		#self.main.client.reactor.callLater(1,self.main.messageObjectReady)
 		#self.main.messageObjectReady()
+		pass
 
 	@QtCore.pyqtSignature("QString")
 	def log(self,test):
 		#self.emit(QtCore.SIGNAL("ready()"))
 		print test
+		#pass
 
 
 class abstractTextView(QtGui.QTextEdit):
@@ -588,7 +590,7 @@ class abstractChatWidget(QtGui.QWidget):
 			self.ui.backgroundButton.setIcon(QtGui.QIcon(colorIcon))
 
 	def messageObjectReady(self):
-		print "messageObjectReady",self.messageObject.messageCache
+		#print "messageObjectReady",self.messageObject.messageCache
 		if len(self.messageObject.messageCache)!=0:
 			self.ui.webkit.page().mainFrame().evaluateJavaScript("addNextMessage();")
 
@@ -603,14 +605,14 @@ class abstractChatWidget(QtGui.QWidget):
 
 	def writeWebkitCache(self):
 		cmds=""
-		print "CACHE:",self.messageObject.messageCache
-		print "CACHE:",self.messageObject.message
+		#print "CACHE:",self.messageObject.messageCache
+		#print "CACHE:",self.messageObject.message
 		for msg in self.messageObject.messageCache:
 			if not msg[0]:
 				cmds+="addMessage(-1);"
 			else:
 				cmds+="insertMessage(-1);"
-		print 'CMDS',cmds
+		#print 'CMDS',cmds
 		self.ui.webkit.page().mainFrame().evaluateJavaScript(cmds)
 		self.webkitLoaded=True
 
@@ -828,7 +830,7 @@ function showLastMessages(){
 		for item in self.featuredWidget:
 			feature=item[0]
 			widget=item[1]
-			print "checking ",feature," = ",self.main.client.hasFeature(self.jid,feature)
+			#print "checking ",feature," = ",self.main.client.hasFeature(self.jid,feature)
 			if self.main.client.hasFeature(self.jid,feature):
 				widget.show()
 			else:
@@ -900,7 +902,7 @@ function showLastMessages(){
 			format.setFontUnderline(self.ui.line.fontUnderline())
 			format.setFontWeight(self.ui.line.fontWeight())
 			fmt=self.ui.line.currentCharFormat()
-			print 'opaque',fmt.background().isOpaque()
+			#print 'opaque',fmt.background().isOpaque()
 			if fmt.background().isOpaque():
 				format.setBackground(QtGui.QBrush(fmt.background()))
 				self.ui.line.backgroundBrush=fmt.background()
@@ -1056,8 +1058,8 @@ function showLastMessages(){
 		if xhtml.replace("<br/>",'\n').replace("<br />",'\n')==escape(text):
 			same=True
 		links=[]
-		print unicode(xhtml)
-		print alinks
+		#print unicode(xhtml)
+		#print alinks
 		temp=unicode(xhtml).replace(">","<")
 		for word in temp.split("<"):
 			for w in word.split(' '):
@@ -1067,15 +1069,15 @@ function showLastMessages(){
 						alink=True
 						break
 				if not w in links and not alink:
-					print w
+					#print w
 					if w.find("://")!=-1:
 						links.append(w.strip())
 					elif w.startswith("www."):
 						links.append(w.strip())
-		print links
+		#print links
 		for link in links:
 			xhtml=xhtml.replace(link,'<a href="'+link+'">'+link+'</a>')
-		print xhtml
+		#print xhtml
 		return xhtml,same
 	
 	def smileysClicked(self, checked):
