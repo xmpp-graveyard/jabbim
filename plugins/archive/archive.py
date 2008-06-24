@@ -488,10 +488,10 @@ class Plugin(plugins.PluginBase):
 		"""
 		Write history messages to the chatWidget. Called when getLastMessages finished.
 		"""
-		old=widget.ui.textEdit.toHtml()
-		widget.ui.textEdit.setHtml("")
-		widget.textEditWrite(html,True)
-		widget.textEditWrite(old)
+		#old=widget.ui.textEdit.toHtml()
+		#widget.ui.textEdit.setHtml("")
+		#widget.textEditWrite(html,True)
+		#widget.textEditWrite(old)
 		self.jidList=self.backend.getJidList()
 
 
