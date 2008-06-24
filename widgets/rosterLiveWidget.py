@@ -54,181 +54,20 @@ class emptyRosterWidget(QtGui.QWidget):
 		text="<b>"+self.tr("Welcome to Jabbim!")+"</b><br/>"
 		text+=self.tr("Your contact list is empty. You can add or find your friends by clicking on button below or by Add contact from menu Actions.")
 		self.label.setText(text)
+		self.label.show()
 		self.add.show()
 
 	def noOnline(self):
 		text=self.tr("You haven't any online contact in your contact list. To see offline contacts, you have to click Show Offline button, which is above this message.")
 		self.label.setText(text)
+		self.label.show()
 		self.add.hide()
 
 	def noSearch(self):
 		text=self.tr("No search results for your keywords")
 		self.label.setText(text)
+		self.label.show()
 		self.add.hide()
-
-class activeWidget(QtGui.QWidget):
-	def __init__(self,parent=None):
-		QtGui.QWidget.__init__(self,parent)
-		self.setObjectName("selectedContact")
-		self.parent=parent
-		
-		# main layout
-		l=QtGui.QGridLayout(self)
-		l.setMargin(2)
-		l.setSpacing(0)
-		self.setAutoFillBackground(False)
-		
-		# layout for JID, jidLabel is virtual widget for resizing layout row to 22px
-		l4=QtGui.QHBoxLayout()
-		self.jidLabel=QtGui.QWidget(self)
-		self.jidLabel.setMinimumHeight(30)
-		self.jidLabel.setMaximumHeight(30)
-		self.jidLabel.setMinimumWidth(1)
-		self.jidLabel.setMaximumWidth(1)
-
-		# adding jidLabel to the main layout
-		l4.addStretch()
-		l4.addWidget(self.jidLabel)
-		l.addLayout(l4,0,0)
-
-		# QTextEdit for status message
-		self.statusLabel=QtGui.QTextEdit(self)
-		self.statusLabel.setObjectName("selectedContactStatus")
-		self.statusLabel.hide()
-		self.statusLabel.setFrameShape(QtGui.QFrame.NoFrame)
-		self.statusLabel.setFrameShadow(QtGui.QFrame.Plain)
-		self.statusLabel.setMaximumHeight(30)
-		self.statusLabel.setReadOnly(True)
-		self.statusLabel.viewport().setAutoFillBackground(False)
-		self.statusLabel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-		l.addWidget(self.statusLabel,1,0)
-
-		# layout and buttonGroup for buttons if contact is metacontact
-		self.layout2=QtGui.QHBoxLayout()
-		self.layout2.setMargin(0)
-		self.layout2.setSpacing(0)
-		self.buttons={}
-		self.group=QtGui.QButtonGroup(self)
-		
-		self.layout2.addStretch()
-		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.clicked)
-		l.addLayout(self.layout2,3,0,QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-
-		# menu button, maybe we can delete this part in future
-		self.menu=QtGui.QPushButton(self)
-		self.menu.setIcon(QtGui.QIcon("images/22x22/apps/jabbim.png"))
-		self.menu.setMinimumHeight(26)
-		self.menu.setMaximumHeight(26)
-		self.menu.setFocusPolicy(QtCore.Qt.NoFocus)
-		self.menu.setFlat(True)
-		l.addWidget(self.menu,2,0,QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-		self.menu.setObjectName("rosterMenu")
-
-		# label for avatar
-		self.label=QtGui.QLabel(self)
-		l.addWidget(self.label,0,1,5,1,QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
-
-		l.setRowStretch(4,10)
-
-
-	def setData(self,item,buttons):
-		# sets new data for activeWidget
-		self.item=item
-		# sets new menu (in future delete this part?)
-		menu=self.parent.buildContactMenu(item.jid,item.group)
-		self.menu.setMenu(menu)
-		self.menu.hide()
-		
-		# sets status message
-		status=self.item.statusMessage
-		if status:
-			self.statusLabel.show()
-			if self.parent.theme:
-				self.statusLabel.setHtml("<font size=\"-1\">"+unicode(status)+"</font>")
-			else:
-				self.statusLabel.setHtml("<font size=\"-1\" color=\""+self.parent.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+unicode(status)+"</font>")
-		else:
-			self.statusLabel.hide()
-		#print "privacy2"
-		# delete old metacontact buttons
-		for button,meta in self.buttons.iteritems():
-			self.layout2.removeWidget(button)
-			self.group.removeButton(button)
-			button.setParent(None)
-		for i in range(len(self.buttons.values())):
-			del self.buttons.values()[0]
-		self.buttons={}
-		#print "privacy3"
-		# add new metacontact buttons
-		for b in buttons:
-			meta=b[0]
-			icon=b[1]
-			#if b=="separator":
-				#line = QtGui.QFrame(self)
-				#line.setFrameShape(QtGui.QFrame.VLine)
-				#line.setFrameShadow(QtGui.QFrame.Sunken)
-				#layout2.addWidget(line)
-			#else:
-			button = QtGui.QPushButton(self)
-			#button.setGeometry(0,y+16,16,16)
-			button.setFocusPolicy(QtCore.Qt.NoFocus)
-			button.setMaximumSize(16,16)
-			button.setFlat(True)
-			button.setIcon(icon)
-			self.layout2.insertWidget(0,button)
-			self.group.addButton(button)
-			self.buttons[button]=meta
-		#print "privacy4"
-		# sets avatar
-		size=64
-		#if len(buttons)==0 and not status:
-			#size=32
-		self.label.setMaximumSize(size,size)
-		if self.item.avatar:
-			pixmap=self.item.selectedFrameAvatar.pixmap(size,size)
-			self.label.setPixmap(pixmap)
-			self.label.setMinimumHeight(pixmap.height())
-			self.label.show()
-		else:
-			self.label.hide()
-		#print "privacy5"
-		# resize activeWidget according to userItem size
-		self.resize(self.parent.width()-46,self.parent.selectedHeight+32)
-
-	def refreshData(self):
-		# sets changed data (changed by clicked() slot)
-		# sets status message
-		status=self.item.statusMessage
-		if status:
-			self.statusLabel.show()
-			self.statusLabel.setHtml("<font size=\"-1\">"+unicode(status)+"</font>")
-		else:
-			self.statusLabel.hide()
-
-		# sets avatar
-		size=64
-		self.label.setMaximumSize(size,size)
-		if self.item.avatar:
-			pixmap=self.item.selectedFrameAvatar.pixmap(size,size)
-			self.label.setPixmap(pixmap)
-
-		# resize activeWidget according to userItem size
-		self.resize(self.parent.width()-46,self.parent.selectedHeight-32)
-
-	def clicked(self,button):
-		# sets item properties according to metaItem, which is represented by button
-		meta=self.buttons[button]
-		self.item.name=meta.name
-		self.item.escapedName=meta.escapedName
-		self.item.frameAvatar=meta.frameAvatar
-		self.item.selectedFrameAvatar=meta.selectedFrameAvatar
-		self.item.icon=meta.icon
-		self.item.avatar=meta.avatar
-		self.item.status=meta.status
-		self.item.statusMessage=meta.statusMessage
-		self.item.jid=meta.jid
-		self.parent.repaint()
-		self.refreshData()
 
 class groupItem:
 	def __init__(self,name,icon,main):
@@ -363,7 +202,7 @@ class rosterWidget(QtGui.QWidget):
 		self.item=None
 		self.sortedGroups=[]
 		self.sorted={}
-		self.statusLabel=activeWidget(self)
+		#self.statusLabel=activeWidget(self)
 		self.buttonWidget=None
 		self.bigAvatar=False
 		self.data={}
@@ -1144,13 +983,13 @@ class rosterWidget(QtGui.QWidget):
 		elif self.item == item and self.item != None and item.main!='special':
 			self.item = None
 			#self.selected = None
-			self.statusLabel.hide()
+			#self.statusLabel.hide()
 			self.reshow=True
 			self.repaint()
 			self.setSize()
-		if item!=None:
-			if item.typ=='group' and item.main!='special':
-				self.statusLabel.hide()
+		#if item!=None:
+			#if item.typ=='group' and item.main!='special':
+				#self.statusLabel.hide()
 
 	def mouseReleaseEvent(self,event):
 		x=event.x()
@@ -1200,7 +1039,7 @@ class rosterWidget(QtGui.QWidget):
 							item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-open.png")
 							item.expanded=True
 						self.setSize()
-						self.statusLabel.hide()
+						#self.statusLabel.hide()
 						self.repaint()
 			self.timestamp=float(timestamp)
 		QtGui.QWidget.mouseReleaseEvent(self,event)
@@ -1289,7 +1128,7 @@ class rosterWidget(QtGui.QWidget):
 				self.main.ui.rosterSearchLabel.hide()
 				self.main.ui.rosterSearchClose.hide()
 
-			self.statusLabel.hide()
+			#self.statusLabel.hide()
 			self.reshow=True
 			self.setSize()
 			self.repaint()
@@ -1306,7 +1145,7 @@ class rosterWidget(QtGui.QWidget):
 				self.main.ui.rosterSearchLabel.hide()
 				self.main.ui.rosterSearchClose.hide()
 
-			self.statusLabel.hide()
+			#self.statusLabel.hide()
 			self.reshow=True
 			self.setSize()
 			self.repaint()
@@ -1553,7 +1392,7 @@ class rosterWidget(QtGui.QWidget):
 						for it in self.getUserItems(contact.jid):
 							it.metajid=""
 						self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,[unicode(item.group)])
-						self.statusLabel.hide()
+						#self.statusLabel.hide()
 						self.sortItems()
 						self.repaint()
 						
@@ -1750,7 +1589,7 @@ class rosterWidget(QtGui.QWidget):
 			self.main.ui.rosterSearchLabel.hide()
 			self.main.ui.rosterSearchClose.hide()
 			self.searchMode=False
-			self.statusLabel.hide()
+			#self.statusLabel.hide()
 			for user in self.users:
 				user.hiddenBySearch=False
 			for v in self.metaItems.itervalues():
@@ -1785,8 +1624,8 @@ class rosterWidget(QtGui.QWidget):
 				user.hidden=False
 			elif len(self.main.client.roster['users'][jid].resources)==0:
 				user.hidden=True
-				if self.item==user:
-					self.statusLabel.hide()
+				#if self.item==user:
+					#self.statusLabel.hide()
 			user.statusMessage=status
 			user.status=self.main.shows[unicode(show)]
 			user.height=self.rosterStyle.heightForItem(user)

@@ -694,7 +694,7 @@ class clientClass(pyxl.client.Client):
 
 		# update roster
 		self.main.ui.roster.sortItems()
-		self.main.ui.roster.statusLabel.hide()
+		#self.main.ui.roster.statusLabel.hide()
 		self.main.ui.roster.repaint()
 
 		# update splash window
@@ -1040,7 +1040,7 @@ class clientClass(pyxl.client.Client):
 							user.statusMessage=status
 							user.status=self.main.shows[unicode(show)]
 						# update roster
-						self.main.ui.roster.statusLabel.hide()
+						#self.main.ui.roster.statusLabel.hide()
 						self.main.ui.roster.changePos=True
 						self.main.ui.roster.sortItems()
 						self.main.ui.roster.repaint()
@@ -1054,7 +1054,7 @@ class clientClass(pyxl.client.Client):
 						# update roster
 						self.main.ui.roster.sortItems()
 						self.main.ui.roster.repaint()
-						self.main.ui.roster.statusLabel.hide()
+						#self.main.ui.roster.statusLabel.hide()
 						break
 		# delete all items marked as 'to delete'
 		for i in toDel:
@@ -1090,8 +1090,8 @@ class clientClass(pyxl.client.Client):
 		"""
 		# go through all contact userItems and remove them
 		for i in self.main.ui.roster.getUserItems(jid):
-			if self.main.ui.roster.item==i:
-				self.main.ui.roster.statusLabel.hide()
+			#if self.main.ui.roster.item==i:
+				#self.main.ui.roster.statusLabel.hide()
 			self.main.ui.roster.users.remove(i)
 		# update roster
 		self.main.ui.roster.sortItems()
@@ -3944,10 +3944,10 @@ class mainWindow(QtGui.QMainWindow):
 		self.offline=bool
 		self.ui.roster.showOffline=bool
 		self.ui.roster.reshow=True
-		if self.ui.roster.item:
-			if self.ui.roster.item.typ=="user":
-				if int(self.ui.roster.item.status)==9 and not bool:
-					self.ui.roster.statusLabel.hide()
+		#if self.ui.roster.item:
+			#if self.ui.roster.item.typ=="user":
+				#if int(self.ui.roster.item.status)==9 and not bool:
+					#self.ui.roster.statusLabel.hide()
 		self.ui.roster.sortItems()
 		self.ui.roster.repaint()
 
