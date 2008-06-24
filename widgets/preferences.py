@@ -147,6 +147,9 @@ class preferencesWindow(QtGui.QDialog):
 		d.exec_()
 
 	def currentItemChanged(self,item,previous):
+		"""
+		Called when current preferences item is changed
+		"""
 		row=self.ui.listWidget.row(item)
 		if self.justShowed:
 			if row==self.preferencesCount-1:
@@ -170,8 +173,10 @@ class preferencesWindow(QtGui.QDialog):
 				self.showedPlugins[name]=var
 			self.plugins[name].on_showPreferences(self.ui.stackedWidget.widget(row))
 
-
 	def reloadView(self,extraPart='',extraRoot=''):
+		"""
+		Reload view preferences
+		"""
 		self.ui.emoticonsList.clear()
 		self.ui.chatSkin_list.clear()
 		self.ui.groupchatskinStyle.clear()
@@ -251,14 +256,6 @@ class preferencesWindow(QtGui.QDialog):
 				else:
 					self.ui.groupchatskinStyle.addItem(path,QtCore.QVariant(path))
 
-		#skins=os.listdir("skins/")
-		#for skin in skins:
-			#if skin.endswith(".conf"):
-				#if skin==self.main.config["chat_skin"]:
-					#self.ui.chatSkin_list.insertItem(0,unicode(skin))
-					#self.chatSkin_listChanged(skin)
-				#else:
-					#self.ui.chatSkin_list.addItem(unicode(skin))
 		self.chatSkin_listChanged(0)
 		self.groupchatskinStyleChanged(0)
 		self.ui.chatSkin_list.setCurrentIndex(0)

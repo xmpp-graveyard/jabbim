@@ -1199,6 +1199,7 @@ class clientClass(pyxl.client.Client):
 		user=self.main.ui.roster.getNameByJID(frm.full())
 		icon=self.main.ui.roster.getIconByJID(frm.full())
 
+		# test if xhtml contains dangerous tags
 		if xhtml:
 			sXhtml=xhtml.strip().lower()
 			if sXhtml.find("<script")!=-1:
@@ -1206,7 +1207,6 @@ class clientClass(pyxl.client.Client):
 
 		# get chatwidget of this conversation
 		if self.groupchats.has_key(frm.userhost()):
-			print "looking for",frm.full()
 			tab,tabIndex=self.main.chat.findTab(frm.full(),True)
 			user=frm.resource
 		else:

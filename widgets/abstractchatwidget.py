@@ -737,7 +737,7 @@ shouldScroll = nearBottom();
                         //make new node
                         range = document.createRange();
                         range.selectNode(insert.parentNode);
-                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+link+'\\');")>[Hide Image]</a></div><div id="loaded'+imageId+'"><a href="'+link+'"><img src="'+link+'" style="width:100%%;height:100%%;"/></a></div>');
+                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+link+'\\');")>[Hide Image]</a></div><div id="loaded'+imageId+'"><a href="'+link+'"><img src="'+link+'" /></a></div>');
 
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);
