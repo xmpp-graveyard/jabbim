@@ -214,5 +214,5 @@ class groupchatAdminDialog(QtGui.QDialog):
 			self.main.client.sendMessage(self.jid, typ='groupchat', body=None, subject=unicode(self.ui.subject.toPlainText()))
 		self.done(1)
 
-	def reject(self):
-		self.close()
+#	def reject(self):
+#		self.close()
