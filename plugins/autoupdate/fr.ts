@@ -36,12 +36,27 @@
     <message>
         <location filename="autoupdate.py" line="74"/>
         <source>New version of Jabbim is available!</source>
-        <translation>Nouvelle version de jabbim disponible!</translation>
+        <translation type="obsolete">Nouvelle version de jabbim disponible!</translation>
     </message>
     <message>
         <location filename="autoupdate.py" line="29"/>
         <source>Updates plugins</source>
         <translation>Mettre à jour les plugins</translation>
+    </message>
+    <message>
+        <location filename="autoupdate.py" line="74"/>
+        <source>New version of Jabbim is available! Get it from www.jabbim.cz</source>
+        <translation type="unfinished">Nouvelle version de jabbim disponible! www.jabbim.cz</translation>
+    </message>
+    <message>
+        <location filename="autoupdate.py" line="75"/>
+        <source>Jabbim update</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="autoupdate.py" line="75"/>
+        <source>Do you want to download new version?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
