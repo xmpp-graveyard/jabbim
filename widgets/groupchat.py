@@ -820,10 +820,13 @@ class groupChatWidget(abstractChatWidget):
 					cmd = services
 					args = []
 				cmd = cmd[1:]
-				self.main.client.dispatcher.publishEvent("onCommand", cmd, args, self, "groupchat")
-				self.ui.line.clear()
-				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
-				return
+				passed = self.main.client.dispatcher.publishEvent("onCommand", cmd, args, self, "groupchat")
+				if not passed:
+					# it was a recognized command and a subscriber handled the event
+					self.ui.line.clear()
+					self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+					return
+				# Otherwise it's a normal message. Proceed.
 
 			if self.main.config['chatMode']=="normal":
 				text=unicode(self.ui.line.toPlainText())

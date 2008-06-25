@@ -537,12 +537,16 @@ class chatWidget(abstractChatWidget):
 					cmd = services
 					args = []
 				cmd = cmd[1:]
-				# publish onCommnad event for events subscribers (mainly plugins)
-				self.main.client.dispatcher.publishEvent("onCommand", cmd, args, self, "chat")
-				self.ui.line.clear()
-				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
-				self.ui.line.composing=False
-				return
+				# publish onCommand event for events subscribers (mainly plugins)
+				passed = self.main.client.dispatcher.publishEvent("onCommand", cmd, args, self, "chat")
+				if not passed:
+					# A plugin stopped the event propagation.
+					# It must have recognized the command and handled it.
+					self.ui.line.clear()
+					self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+					self.ui.line.composing=False
+					return
+				# Otherwise it was not a recognized command. Let's behave like it's a normal message.
 			
 			# get plain text message
 			text=unicode(self.ui.line.toPlainText())
