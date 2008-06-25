@@ -1962,7 +1962,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def systemSleep(self):
 		print "sleep emitted, disconnecting"
-		self.sendPresence(None,"offline",self.tr("Sytem is suspended"))
+		self.sendPresence(None,"offline",self.tr("System is suspended"))
 	
 	def systemWakeUp(self):
 		print "wakeUp emitted, connecting"
