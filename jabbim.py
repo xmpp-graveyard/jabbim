@@ -47,10 +47,12 @@ class jabbimApplication(QtGui.QApplication):
 		if msg.message==536:
 			# PBT_APMSUSPEND
 			if msg.wParam==4 and not self.sleep:
+				print "emit sleep()"
 				self.emit(QtCore.SIGNAL("sleep()"))
 				self.sleep=True
 			# PBT_APMRESUMESUSPEND
 			elif msg.wParam==7 and self.sleep:
+				print "emit wakeup()"
 				self.emit(QtCore.SIGNAL("wakeUp()"))
 				self.sleep=False
 			return (True,1)
@@ -1959,9 +1961,11 @@ class mainWindow(QtGui.QMainWindow):
 			self.connect()
 
 	def systemSleep(self):
+		print "sleep emitted, disconnecting"
 		self.sendPresence(None,"offline",self.tr("Sytem is suspended"))
 	
 	def systemWakeUp(self):
+		print "wakeUp emitted, connecting"
 		self.connect()
 
 	#{ Public functions
