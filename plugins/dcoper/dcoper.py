@@ -74,4 +74,6 @@ class Plugin(plugins.PluginBase):
 		#playing=unicode(commands.getoutput("dcop amarok player nowPlaying"), "utf-8")
 		log.msg("Playing: "+`msg`)
 		self.main.client.sendMessage(unicode(chat.jid), msg, typ)
+		# We handled the command. Do not propagate the event further:
+		return False
 
