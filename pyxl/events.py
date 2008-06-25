@@ -44,12 +44,12 @@ class EventDispatcher:
 				try:
 					vysl = cb['method'](*args, **kwargs)
 					if vysl == False:
-						return
+						return False
 				except Exception, ex:
 					log.msg('Plugin error: ' +unicode(ex))
 					message = traceback.format_exc()
 					log.msg(message)
-					
-	
+		return True
+
 	def k(self, key):
 		return key['prio']
