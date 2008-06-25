@@ -307,18 +307,22 @@ QComboBox::down-arrow:on { /* shift the arrow when popup is open */
 	top: 1px;
 	left: 1px;
 }
-QCheckBox{
+
+QCheckBox {
 	padding-left:3px;
 	padding-right:3px;
 }
-QCheckBox:disabled{
+
+QCheckBox:disabled {
 	color:gray
 }
 
-QCheckBox:hover{
+QCheckBox:hover {
 	border:2px solid #89A0C6;
 	border-radius: 6px;
 	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #89A0C6);
+	padding-left: 1px;
+	padding-right: 1px;
 }
 
 QCheckBox::indicator::checked {
@@ -333,14 +337,13 @@ QCheckBox::indicator::checked:disabled {
 	image: url('themes/web2/unchecked.png');
 }
 
-
-
 QCheckBox::indicator::unchecked {
 	border:2px solid #C3D9FF;
 	border-radius: 6px;
 	image: url('themes/web2/blank.png');
 }
 
+/*
 QCheckBox::indicator::checked:hover {
 	border:0;
 }
@@ -348,8 +351,7 @@ QCheckBox::indicator::checked:hover {
 QCheckBox::indicator::unchecked:hover {
 	border:0;
 }
-
-
+*/
 
 QSpinBox {
 	border:2px solid #C3D9FF;
