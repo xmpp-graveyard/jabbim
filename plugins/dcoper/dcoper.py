@@ -59,11 +59,11 @@ class Plugin(plugins.PluginBase):
 			return
 		title = unicode(commands.getoutput("dcop amarok player title"), "utf-8")
 		if title == u"call failed":
-			msg = unicode(self.config["amarok_off"], "utf-8")
+			msg = self.config["amarok_off"]
 		if title == u"":
-			msg = unicode(self.config["amarok_paused"], "utf-8")
+			msg = self.config["amarok_paused"]
 		else:
-			msg = unicode(self.config["format"], "utf-8")
+			msg = self.config["format"]
 			msg = msg.replace("%title", title)
 			msg = msg.replace("%artist", unicode(commands.getoutput("dcop amarok player artist"),"utf-8"))
 			msg = msg.replace("%album", unicode(commands.getoutput("dcop amarok player album"),"utf-8"))
