@@ -163,6 +163,19 @@ class groupChatWidget(abstractChatWidget):
 		log.msg("REQUESTING ROOM INFO")
 		self._getInfo()
 
+		known_commands = [
+			# command,  handler, need_param?
+			('/google', self.commandGoogle, False),
+			('/nick',   self.commandNick,   True ),
+			('/join',   self.commandJoin,   True ),
+			('/leave',  self.commandLeave,  False),
+			('/say',    self.commandSay,    True ),
+			('/me',     self.commandMe,     False),
+		]
+		self.commands_regexps = []
+		for cmd in known_commands:
+			self.commands_regexps.append( (re.compile(cmd[0]+r'(\s+(?P<param>\S.*)?)?$'), cmd[1], cmd[2]) )
+
 	def addToBookmark(self):
 		"""
 		Bookmarks this groupchat.
@@ -774,48 +787,73 @@ class groupChatWidget(abstractChatWidget):
 			time=unicode(button.text())
 			self.cache['actual']=self.ui.textEdit.toHtml()
 			self.ui.textEdit.setHtml(self.cache[time])
+
+	def commandGoogle(self, query):
+		if query:
+			anchor="http://www.google.com/search?q="+query
+		else:
+			anchor="http://www.google.com/"
+		QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
+		self.ui.line.clear()
+		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		return False
+
+	def commandNick(self, nick):
+		if not self.main.client.groupchats[self.jid].users.has_key(nick):
+			self.main.client.sendPresence(to=self.jid+"/"+nick)
+			self.main.client.groupchats[self.jid].nick = nick
+			self.nick = nick
+		else:
+			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("Nickname is used by somebody else.")))
+			self.textEditWrite(message)
+		self.ui.line.clear()
+		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		return False
+
+	def commandJoin(self, roomname):
+		#self.main.client.sendPresence(to=self.jid+"/"+nick)
+		#self.main.client.groupchats[self.jid].nick=nick
+		if self.main.chat.addGroupChatTab(roomname,self.main.client.groupchats[self.jid].nick):
+			self.main.client.joinGC(roomname, self.main.client.groupchats[self.jid].nick)
+		self.ui.line.clear()
+		#self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		return False
+
+	def commandLeave(self, dummy):
+		tab,tabIndex=self.main.chat.findTab(unicode(self.jid))
+		self.main.chat.removeTab(tabIndex, False)
+		self.ui.line.clear()
+		return False
+
+	def commandSay(self, text):
+		self.ui.line.setPlainText(text)
+		return True  # continue like it's a normal message text
+
+	def commandMe(self, text):
+		# Don't do anything, '/me' is handled by the receiver
+		return True  # continue, it's a normal message text
+
 	def sendButtonClicked(self):
 		# sends message
 		if len(unicode(self.ui.line.toPlainText()))!=0:
 			services=unicode(self.ui.line.toPlainText())
-			m = re.match(r'/google(\s+(\S.*)?)?$', services)
-			if m:
-				if m.group(2):
-					anchor="http://www.google.com/search?q="+m.group(2)
-				else:
-					anchor="http://www.google.com/"
-				QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
-				self.ui.line.clear()
-				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
-				return
-			elif services.startswith("/nick "):
-				if not self.main.client.groupchats[self.jid].users.has_key(services.replace("/nick ","")):
-					self.main.client.sendPresence(to=self.jid+"/"+services.replace("/nick ",""))
-					self.main.client.groupchats[self.jid].nick=services.replace("/nick ","")
-					self.nick=services.replace("/nick ","")
-				else:
-					message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("Nickname is used by somebody else.")))
-					self.textEditWrite(message)
-				self.ui.line.clear()
-				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
-				return
-			elif services.startswith("/join "):
-				#self.main.client.sendPresence(to=self.jid+"/"+services.replace("/nick ",""))
-				#self.main.client.groupchats[self.jid].nick=services.replace("/nick ","")
-				if self.main.chat.addGroupChatTab(services.replace("/join ",""),self.main.client.groupchats[self.jid].nick):
-					self.main.client.joinGC(services.replace("/join ",""), self.main.client.groupchats[self.jid].nick)
-				self.ui.line.clear()
-				#self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
-				return
-			elif services.startswith("/leave"):
-				tab,tabIndex=self.main.chat.findTab(unicode(self.jid))
-				self.main.chat.removeTab(tabIndex, False)
-				self.ui.line.clear()
-				return
-			elif services.startswith("/say"):
-				self.ui.line.setPlainText(services.replace("/say ",""))
 
-			elif services.startswith("/") and not services.startswith("/me"):
+			# Handle known commands '/...'
+			command_handled = False
+			for command in self.commands_regexps:
+				m = command[0].match(services)
+				if m:
+					# does this command require a param?
+					if command[2] and not m.group('param'):
+						return  # do nothing, let the user complete the command
+					go_on = command[1](m.group('param'))
+					if not go_on:
+						return  # command fully handled
+					command_handled = True
+					break
+
+			if not command_handled and services.startswith("/"):
+				# maybe a plugin will know the command
 				try:
 					cmd, args = services.split(" ", 1)
 					args = args.split(" ")
