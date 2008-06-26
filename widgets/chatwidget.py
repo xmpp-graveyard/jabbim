@@ -521,8 +521,12 @@ class chatWidget(abstractChatWidget):
 		if len(unicode(self.ui.line.toPlainText()))!=0:
 			# execute commands if message starts with "/"
 			services=unicode(self.ui.line.toPlainText())
-			if services.startswith("/google"):
-				anchor="http://www.google.com/search?q="+services.replace("/google ","")
+			m = re.match(r'/google(\s+(\S.*)?)?$', services)
+			if m:
+				if m.group(2):
+					anchor="http://www.google.com/search?q="+m.group(2)
+				else:
+					anchor="http://www.google.com/"
 				QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
 				self.ui.line.clear()
 				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
