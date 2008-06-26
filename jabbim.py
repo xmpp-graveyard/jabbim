@@ -1605,7 +1605,12 @@ class mainWindow(QtGui.QMainWindow):
 			self.homeDir=self.realHomeDir+"/"+self.config['jid']+"-profile"
 			utils.loadConfig(self,[])
 		
-		
+		self.ui.tabWidgetButton=QtGui.QToolButton(self.ui.tabWidget)
+		self.ui.tabWidgetButton.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
+		self.ui.tabWidgetButton.setPopupMode(QtGui.QToolButton.InstantPopup)
+		self.ui.tabWidgetButton.setArrowType(QtCore.Qt.NoArrow)
+		self.ui.tabWidget.setCornerWidget(self.ui.tabWidgetButton)
+
 		# look & feel :)
 		self.ui.gridlayout.setMargin(1)
 		self.ui.gridlayout.setSpacing(1)
@@ -1841,7 +1846,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.offline=False
 		self.xmlConsole=XMLConsole(self)
 		self.ui.showOffline.hide()
-
+		self.ui.offlineButton.hide()
 
 		# signals
 		QtCore.QObject.connect(self.ui.login_connect, QtCore.SIGNAL("clicked()"),self.connect)
@@ -2633,6 +2638,7 @@ class mainWindow(QtGui.QMainWindow):
 		
 		# refresh selfAvatar tooltip, because some resource could be added
 		self.ui.selfAvatar.refreshToolTip()
+		self.ui.tabWidgetButton.setMenu(self.offlineMenu)
 
 	def offlineMenuHovered(self, action):
 		"""
@@ -2817,7 +2823,8 @@ class mainWindow(QtGui.QMainWindow):
 		if self.client != None and self.client.pep :
 			self.ui.moodButton.show()
 			# User Mood hack
-			self.moodMenu = self.statusWidgetMenu.addMenu(self.tr('Mood'))
+			#self.moodMenu = self.statusWidgetMenu.addMenu(self.tr('Mood'))
+			self.moodMenu = QtGui.QMenu(self.tr('Mood'))
  			items = self.moods.items()
  			items.sort(cmp=lambda a,b: strcoll(unicode(a[1]),unicode(b[1])))
  			keys = [ k for k,_ in items ]
@@ -2849,7 +2856,8 @@ class mainWindow(QtGui.QMainWindow):
 			app.connect(self.moodMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.moodChanged)
 			moodButtonRoot=QtGui.QMenu(self.ui.moodButton)
 			moodButtonRoot.addMenu(self.moodMenu)
-			activity =  self.statusWidgetMenu.addMenu(self.tr('Activity'))
+			activity =  QtGui.QMenu(self.tr('Activity'),moodButtonRoot)
+			#activity =  self.statusWidgetMenu.addMenu(self.tr('Activity'))
 			app.connect(activity, QtCore.SIGNAL("triggered ( QAction *)"),self.activityChanged)
 
 			t = self.activities['none']
