@@ -235,14 +235,14 @@ class lineEditWidget(QtGui.QTextEdit):
 				return QtGui.QTextEdit.keyPressEvent(self,event)
 		else:
 			return QtGui.QTextEdit.keyPressEvent(self,event)
-			text=unicode(self.toPlainText())
-			for k,v in self.parent.smileys.iteritems():
-				if text.find(" "+k)!=-1:
-					html=self.toHtml()
-					html.replace(k,'<img src="'+v+'"/> ')
-					cur=self.textCursor()
-					self.setHtml(html)
-					self.setTextCursor(cur)
+#			text=unicode(self.toPlainText())
+#			for k,v in self.parent.smileys.iteritems():
+#				if text.find(" "+k)!=-1:
+#					html=self.toHtml()
+#					html.replace(k,'<img src="'+v+'"/> ')
+#					cur=self.textCursor()
+#					self.setHtml(html)
+#					self.setTextCursor(cur)
 
 class normalLineEditWidget(QtGui.QTextEdit):
 	"""
@@ -1189,34 +1189,34 @@ function showLastMessages(){
 		"""
 		self.webkitWrite(text,insert)
 		return 
-		# update information about first message of this chat
-		#if not history:
-			#if self.first==True:
-				#self.first=False
-			#elif self.first==None:
-				#self.first=True
-		self.ui.textEdit.setUpdatesEnabled(False) # disable updates because of performance
-		# move text cursor to the end of document
-		cursor=QtGui.QTextCursor(self.ui.textEdit.document())
-		cursor.beginEditBlock()
-		cursor.movePosition(QtGui.QTextCursor.End)
-		
-		# if scrollbar is in the end, we have to scroll it to the end as well when we finish
-		toEnd=False
-		if self.ui.textEdit.verticalScrollBar().value()==self.ui.textEdit.verticalScrollBar().maximum():
-			toEnd=True
-		# replace emoticons by images
-		for k,v in self.main.emoticonsWidget.smileys.iteritems():
-			text=text.replace(" "+k,'&nbsp;<img alt="'+k+'" src="'+v+'"/>')
-			text=text.replace("&nbsp;"+k,'&nbsp;<img alt="'+k+'" src="'+v+'"/>')
-			text=text.replace(">"+k,'><img alt="'+k+'" src="'+v+'"/>')
-		# insert text to the self.ui.textEdit
-		cursor.insertFragment(QtGui.QTextDocumentFragment.fromHtml(text))
-		cursor.endEditBlock()
-		if toEnd:
-			# scroll to the end
-			self.ui.textEdit.verticalScrollBar().setValue(self.ui.textEdit.verticalScrollBar().maximum())
-		self.ui.textEdit.setUpdatesEnabled(True)
+#		# update information about first message of this chat
+#		#if not history:
+#			#if self.first==True:
+#				#self.first=False
+#			#elif self.first==None:
+#				#self.first=True
+#		self.ui.textEdit.setUpdatesEnabled(False) # disable updates because of performance
+#		# move text cursor to the end of document
+#		cursor=QtGui.QTextCursor(self.ui.textEdit.document())
+#		cursor.beginEditBlock()
+#		cursor.movePosition(QtGui.QTextCursor.End)
+#
+#		# if scrollbar is in the end, we have to scroll it to the end as well when we finish
+#		toEnd=False
+#		if self.ui.textEdit.verticalScrollBar().value()==self.ui.textEdit.verticalScrollBar().maximum():
+#			toEnd=True
+#		# replace emoticons by images
+#		for k,v in self.main.emoticonsWidget.smileys.iteritems():
+#			text=text.replace(" "+k,'&nbsp;<img alt="'+k+'" src="'+v+'"/>')
+#			text=text.replace("&nbsp;"+k,'&nbsp;<img alt="'+k+'" src="'+v+'"/>')
+#			text=text.replace(">"+k,'><img alt="'+k+'" src="'+v+'"/>')
+#		# insert text to the self.ui.textEdit
+#		cursor.insertFragment(QtGui.QTextDocumentFragment.fromHtml(text))
+#		cursor.endEditBlock()
+#		if toEnd:
+#			# scroll to the end
+#			self.ui.textEdit.verticalScrollBar().setValue(self.ui.textEdit.verticalScrollBar().maximum())
+#		self.ui.textEdit.setUpdatesEnabled(True)
 
 	def addEmoticon(self,action):
 		"""
