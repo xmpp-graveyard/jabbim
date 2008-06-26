@@ -334,7 +334,7 @@ class chatWidget(abstractChatWidget):
 			self.ui.lineWidget.setMinimumSize(100,64)
 		self.refreshToolTip()
 
-	def refreshLabel(self):
+	def refreshLabel(self,change=[]):
 		text="<font size=\"3\"><b>"+self.name+"</b></font>"
 		contact=self.main.client.getContactByJid(self.jid)
 		if not contact:
@@ -358,7 +358,7 @@ class chatWidget(abstractChatWidget):
 			else:
 				t = m
 			text+='<br />%s <font size="-1">&nbsp; %s</font>' % (icon.replace("file:///",""),t)
-			if self.main.config['showMoodChanges']=='True':
+			if self.main.config['showMoodChanges']=='True' and "mood" in change:
 				user=unicode(self.main.ui.roster.getNameByJID(self.jid))
 				message=icon+"&nbsp;"+user+" "+unicode(self.tr("is now"))+" "+ t
 				self.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(message),self.main.now()))
@@ -376,7 +376,7 @@ class chatWidget(abstractChatWidget):
 			t = '%s: %s'%(artist, title)
 			if len(t.strip())>1:
 				text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">&nbsp; %s</font>' % (t) #ikonka se este muze menit ;)
-				if self.main.config['showTuneChanges']=='True':
+				if self.main.config['showTuneChanges']=='True' and "tune" in change:
 					user=unicode(self.main.ui.roster.getNameByJID(self.jid))
 					message='<img src="file:///'+os.getcwd()+'/images/22x22/icons/headphones.png" />&nbsp;'+user+" "+unicode(self.tr("is now listening:"))+" "+ t
 					self.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(message),self.main.now()))

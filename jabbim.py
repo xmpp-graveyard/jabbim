@@ -132,11 +132,10 @@ class clientClass(pyxl.client.Client):
 			self.main.ui.selfAvatar.refreshToolTip()
 		# change information in chat tab if we have opened it
 		tab,index=self.main.chat.findTab(frm,typ=['chat'])
-		if tab:
-			tab.chat.refreshLabel()
-			tab.chat.refreshToolTip()
+		change=[]
 		# user mood
 		if ns=="http://jabber.org/protocol/mood":
+			change.append("mood")
 			t = ''
 			m = txt = ''
 			for el in payload.elements():
@@ -168,6 +167,7 @@ class clientClass(pyxl.client.Client):
 					self.main.moodMenu.currentAction.setFont(font)
 		# user tune
 		elif ns=='http://jabber.org/protocol/tune':
+			change.append("tune")
 			tune=payload
 			listening=False
 			if type(tune) == list:
@@ -189,7 +189,9 @@ class clientClass(pyxl.client.Client):
 			for item in self.main.ui.roster.getUserItems(frm):
 				item.tune=listening
 			self.main.ui.roster.repaint()
-
+		if tab:
+			tab.chat.refreshLabel(change)
+			tab.chat.refreshToolTip()
 	def on_bookmarksFail(self):
 		"""
 		Called if bookmarks are not supported by server.
