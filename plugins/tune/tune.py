@@ -18,7 +18,7 @@ class config:
 			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'Winamp':'winamp', 'Foobar 2000':'fb2k' }, 'value':'winamp'}
 			
 		else:
-			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Amarok':'amarok','Exaile':'exaile' }, 'value':'amarok'}
+			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Amarok':'amarok','Exaile':'exaile','Banshee':'banshee','Rhythmbox':'rhythmbox' }, 'value':'amarok'}
 
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
@@ -26,9 +26,9 @@ class Plugin(plugins.PluginBase):
 		self.fname = 'tune'
 		self.installTranslator()
 		self.description = self.tr('Plugin for User Tune')
-		self.author = "Jiri 'Sef' Gabrys + Josef 'PepeQ' Halicek"
+		self.author = "Jiri 'Sef' Gabrys + Josef 'PepeQ' Halicek + Krzysztof 'Grom' K."
 		self.name = self.tr('tune')
-		self.version = '0.24'
+		self.version = '0.26'
 		self.category = ['utils']
 		self.configDialog=config(self)
 		self.url = 'http://dev.jabbim.cz/jabbim'
@@ -77,6 +77,19 @@ class Plugin(plugins.PluginBase):
 				out = {}
 				
 		
+		elif self.config['player'] == 'banshee':
+			
+			try:
+				import dbus
+				bus = dbus.SessionBus()
+				banshee = bus.get_object("org.bansheeproject.Banshee", "/org/bansheeproject/Banshee/PlayerEngine")
+				currentTrack = banshee.GetCurrentTrack()
+				out['artist'] = currentTrack['artist']
+				out['title'] = currentTrack['name']
+			except:
+				text = ''
+				out = {}
+
 		elif self.config['player'] == 'winamp':
 			print "getting current song from winamp"
 			try:
@@ -99,6 +112,21 @@ class Plugin(plugins.PluginBase):
 					out={}
 				if text.find('[Stopped]')!= -1:
 					out = {}
+
+
+		elif self.config['player'] == 'rhythmbox':
+			
+			try:
+				import dbus
+				bus = dbus.SessionBus()
+				rhythmboxplayer = bus.get_object("org.gnome.Rhythmbox", "/org/gnome/Rhythmbox/Player")
+				rhythmboxshell = bus.get_object("org.gnome.Rhythmbox", "/org/gnome/Rhythmbox/Shell")
+				currentTrackInfo = rhythmboxshell.getSongProperties(rhythmboxplayer.getPlayingUri())
+				out['title'] = currentTrackInfo['title']
+				out['artist'] = currentTrackInfo['artist']
+			except:
+				text = ''
+				out = {}
 
 		elif self.config['player'] == 'amarok':
 			try:
@@ -129,11 +157,9 @@ class Plugin(plugins.PluginBase):
 				parts = text.split(' - ')
 				if len(parts)>1:
 					out['artist'] = parts[0]
-					out['title'] = parts[1].split('[foobar2000 v', 1)[0]
+					out['title'] = parts[1].split('[foobar2000 v', 1)[0].strip()
 				else:
 					out={}
-				if text.find('[foobar2000 v')!= -1:
-					out = {}
 
     		
 
