@@ -335,7 +335,6 @@ class chatWidget(abstractChatWidget):
 		self.refreshToolTip()
 
 	def refreshLabel(self):
-		print "ref"
 		text="<font size=\"3\"><b>"+self.name+"</b></font>"
 		contact=self.main.client.getContactByJid(self.jid)
 		if not contact:
@@ -351,18 +350,18 @@ class chatWidget(abstractChatWidget):
 				else:
 					m = self.main.moods.get(el.name)
 					if self.main.moodIcons.has_key(el.name):
-						icon="<img src=\"%s\" />" % self.main.moodIcons[el.name].src
+						icon="<img src=\"file:///%s\" />" % self.main.moodIcons[el.name].src
 					else:
 						icon=""
 			if txt != '':
 				t = m+ ' - %s'%txt
 			else:
 				t = m
-			text+='<br />%s <font size="-1">&nbsp; %s</font>' % (icon,t)
+			text+='<br />%s <font size="-1">&nbsp; %s</font>' % (icon.replace("file:///",""),t)
 			if self.main.config['showMoodChanges']=='True':
 				user=unicode(self.main.ui.roster.getNameByJID(self.jid))
 				message=icon+"&nbsp;"+user+" "+unicode(self.tr("is now"))+" "+ t
-				self.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',unicode(message)))
+				self.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(message),self.main.now()))
 		tune = contact.getPEP('http://jabber.org/protocol/tune')
 		if type(tune) == list:
 			for x in tune:
@@ -379,8 +378,8 @@ class chatWidget(abstractChatWidget):
 				text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">&nbsp; %s</font>' % (t) #ikonka se este muze menit ;)
 				if self.main.config['showTuneChanges']=='True':
 					user=unicode(self.main.ui.roster.getNameByJID(self.jid))
-					message='<img src="images/22x22/icons/headphones.png" />&nbsp;'+user+" "+unicode(self.tr("is now listening:"))+" "+ t
-					self.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',unicode(message)))
+					message='<img src="file:///'+os.getcwd()+'/images/22x22/icons/headphones.png" />&nbsp;'+user+" "+unicode(self.tr("is now listening:"))+" "+ t
+					self.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(message),self.main.now()))
 
 		self.ui.label.setText(text)
 
