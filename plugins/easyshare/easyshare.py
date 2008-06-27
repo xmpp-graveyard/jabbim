@@ -22,6 +22,8 @@ from include import utils
 from pyxl.xdata import *
 from pyxl.adhoc import Stage, CancelStage
 from twisted.python import log
+import os.path
+
 class ResendFile(Stage):
 	def exec_(self):
 		self.status = "executing"
@@ -149,7 +151,8 @@ class Plugin(plugins.PluginBase):
 		
 		self.main.client.rpc.registerHandler('getShares', self.getShares)
 		self.main.client.rpc.registerHandler('listShare', self.listShare)
-	
+		self.main.client.rpc.registerHandler('getFiles', self.getFiles)
+		
 	def getShares(self, frm, par):
 		frm = jidT.JID(frm).userhost()
 		available = []
@@ -164,15 +167,34 @@ class Plugin(plugins.PluginBase):
 		addr = share.split('/')[0]
 		if addr in self.config['dirs']:
 			if frm in self.config[addr+'-sharejids']:
-				return self.listdir(par[0].replace(addr, self.config[addr+'-sharepath']))
+				return threads.deferToThread(self.listdirpar[0].replace(addr, self.config[addr+'-sharepath']))
 		return
 	
 	def listdir(self, dir):
 		out = []
 		for f in os.listdir(dir):
-			t = (f.encode('utf8', 'xmlcharrefreplace'), os.stat(dir+'/'+f).st_size)
+			if os.path.isdir(dir+'/'+f):
+				t = (f.encode('utf8', 'xmlcharrefreplace'), -1)
+			else:
+				t = (f.encode('utf8', 'xmlcharrefreplace'), os.stat(dir+'/'+f).st_size)
 			out.append(t)
 		return (out,)
+	
+	
+	def getFiles(self, frm, par):
+		fr = jidT.JID(frm).userhost()
+		files = par[0]
+		fajly = []
+		for f in files:
+			addr = f.split('/')[0]
+			if addr in self.config['dirs']:
+				if fr in self.config[addr+'-sharejids']:
+					fajly.append(f.replace(addr, self.config[addr+'-sharepath']))
+		if len(fajly)>0:
+			self.main.events.addFTUploadEvent(frm, fajly, '%s >> %s'%('EasyShare',fr))
+			return (True, )
+		else:
+			return
 		
 	def on_configChanged(self):
 		for addr in self.config['dirs']:
