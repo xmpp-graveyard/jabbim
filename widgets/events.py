@@ -746,7 +746,7 @@ class events:
 		if tab:
 			tab.chat.filetransfer[sid]=chatwidget.FTWidget(text,None,self.main,sid,tab.chat.ui.ftwidget)
 			tab.chat.ui.ftwidget.layout().addWidget(tab.chat.filetransfer[sid])
-			tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',unicode(mainWindow.tr("Sending file"))+" "+basename(file)))
+			tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Sending file"))+" "+basename(file),self.main.now()))
 		self.filetransferQueue[sid]=filesQueue
 		#self.main.filetransferDescriptions[sid]=descriptions
 		self.filetransferWidget[sid]=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
@@ -781,7 +781,7 @@ class events:
 		if tab:
 			tab.chat.filetransfer[sid]=chatwidget.FTWidget(text,None,self.main,sid,tab.chat.ui.ftwidget)
 			tab.chat.ui.ftwidget.layout().addWidget(tab.chat.filetransfer[sid])
-			tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',unicode(mainWindow.tr("Receiving file"))+" "+unicode(basename(file))))
+			tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Receiving file"))+" "+unicode(basename(file)),self.main.now()))
 
 		self.filetransferWidget[sid]=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		self.filetransferWidget[sid].download=True
@@ -849,7 +849,7 @@ class events:
 			if tab.chat.filetransfer.has_key(queueId):
 				tab.chat.filetransfer[queueId].reinit(text,None,self.main,sid2,self.main.ui.eventsListWidget,"("+str(self.filetransferWidget[queueId].sent)+"/"+str(self.filetransferWidget[queueId].all)+")")#=FTWidget(text,item,self.main,sid2,self.main.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")
 				tab.chat.filetransfer[queueId].setMinimumHeight(height)
-				tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',unicode(mainWindow.tr("Sending file"))+" "+unicode(basename(file))))
+				tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Sending file"))+" "+unicode(basename(file)),self.main.now()))
 		self.filetransferWidget[queueId].setSizeHint(QtCore.QSize(100,height))
 		self.filetransferWidget[queueId].file=file
 		self.filetransferWidget[queueId].jid=jid
