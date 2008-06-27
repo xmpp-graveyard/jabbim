@@ -112,8 +112,8 @@ class config:
 	def __init__(self,main):
 		self.main=main
 		self.config={}
-		self.config['sharepath']={'type':'directory','label':self.main.tr("Path"),'value':''}
-		self.config['sharejids']={'type':'jid-list','label':self.main.tr("Allow JIDs"),'value':[]}
+		self.config['default-sharepath']={'type':'directory','label':self.main.tr("Path"),'value':''}
+		self.config['default-sharejids']={'type':'jid-list','label':self.main.tr("Allow JIDs"),'value':[]}
 
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
@@ -123,67 +123,102 @@ class Plugin(plugins.PluginBase):
 		self.description = self.tr('Easy filesharing')
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = self.tr('EasyShare')
-		self.version = '0.01'
+		self.version = '0.02'
 		self.category = ['utils']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.plugindir = plugindir
-		self.configDialog=config(self)
-		self.public = []
-		self.home = ''
-		
-		
+#		self.configDialog=config(self)
+
 		if main:
 			self.loadConfig()
-			self.home = self.config['sharepath']
-			jids = self.config['sharejids']#.strip()
-			#jids = jids.split(',')
-			for jd in jids:  #tohle chce predelat asi
-				if jd.strip() != '':
-					self.public.append(jd.strip())
-			print self.public
 			self.registerHandler('on_authd',self.on_authd)
 
 		else:
 			self.loadConfig(homedir)
+		
+	
+	def addDir(self, dir):
+		self.config['dirs'].append(dir)
+		self.config[dir+'-sharejids'] = []
+		self.config[dir+'-sharepath'] = self.plugindir
+		self.writeConfig()
 	
 	def on_authd(self):
-		self.main.client.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#easyshare", "Get file", ResendFile, public = self.public, args = {'home':self.home})
+		for addr in self.config['dirs']:
+			self.main.client.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#easyshare-%s"%addr, addr, ResendFile, public = self.config[addr+'-sharejids'], args = {'home':self.config[addr+'-sharepath']})
+		
+		self.main.client.rpc.registerHandler('getShares', self.getShares)
+		self.main.client.rpc.registerHandler('listShare', self.listShare)
 	
+	def getShares(self, frm, par):
+		frm = jidT.JID(frm).userhost()
+		available = []
+		for addr in self.config['dirs']:
+			if frm in self.config[addr+'-sharejids']:
+				available.append(addr)
+		return (available,)
+	
+	def listShare(self, frm, par):
+		frm = jidT.JID(frm).userhost()
+		share = par[0]
+		addr = share.split('/')[0]
+		if addr in self.config['dirs']:
+			if frm in self.config[addr+'-sharejids']:
+				return self.listdir(par[0].replace(addr, self.config[addr+'-sharepath']))
+		return
+	
+	def listdir(self, dir):
+		out = []
+		for f in os.listdir(dir):
+			t = (f.encode('utf8', 'xmlcharrefreplace'), os.stat(dir+'/'+f).st_size)
+			out.append(t)
+		return (out,)
+		
 	def on_configChanged(self):
-			self.public = []
-			self.main.client.commands.unregisterNode("http://dev.jabbim.cz/jabbim/rc#easyshare", "Get file")
-			self.home = self.config['sharepath']
-			jids = self.config['sharejids']
-			#jids = jids.split(',')
-			for jd in jids:  #tohle chce predelat asi
-				if jd.strip() != '':
-					self.public.append(jd.strip())
-			self.main.client.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#easyshare", "Get file", ResendFile, public = self.public, args = {'home':self.home})
+		for addr in self.config['dirs']:
+			self.main.client.commands.unregisterNode("http://dev.jabbim.cz/jabbim/rc#easyshare-%s"%addr, addr)
+
+		for addr in self.config['dirs']:
+			self.main.client.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#easyshare-%s"%addr, addr, ResendFile, public = self.config[addr+'-sharejids'], args = {'home':self.config[addr+'-sharepath']})
 	
 	def on_remove(self):
-		self.main.client.commands.unregisterNode("http://dev.jabbim.cz/jabbim/rc#easyshare", "Get file")
+		for addr in self.config['dirs']:
+			self.main.client.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#easyshare-%s"%addr, addr, ResendFile, public = self.config[addr+'-sharejids'], args = {'home':self.config[addr+'-sharepath']})
 	
 	def buildContactMenu(self, menu, contact):
-		self.action=menu.addAction(self.tr("EasyShare"))
-		self.action.setData(QtCore.QVariant(unicode(contact.jid)))
-		self.action.setObjectName("easyshare")
-		self.action.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
-		self.action.setCheckable(True)
-		if unicode(contact.jid) in self.public:
-			self.action.setChecked(True)
-		else:
-			self.action.setChecked(False)
-		QtCore.QObject.connect(self.action,QtCore.SIGNAL("triggered ( bool )"),self.toggled)
+		self.menu=menu.addMenu(self.tr("EasyShare"))
+		for addr in self.config['dirs']:
+			action = self.menu.addAction(addr)
+			action.setData(QtCore.QVariant([unicode(contact.jid), unicode(addr)]))
+			action.setObjectName(addr+"share")
+			action.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
+			action.setCheckable(True)
+			if unicode(contact.jid) in self.config[addr+'-sharejids']:
+				action.setChecked(True)
+			else:
+				action.setChecked(False)
+		QtCore.QObject.connect(self.menu,QtCore.SIGNAL("triggered ( QAction * )"),self.toggled)
 		
 	def toggled(self, b):
-		jid=unicode(self.action.data().toString())
-		if jid in self.public:
-			self.public.remove(jid)
-			self.action.setChecked(False)
+		print 'kliknuto'
+		jid, addr = [unicode(val.toString()) for val in b.data().toList()]
+		print jid,addr
+		print self.config
+		if jid in self.config[addr+'-sharejids']:
+			self.config[addr+'-sharejids'].remove(jid)
+#			self.action.setChecked(False)
 		else:
-			self.public.append(jid)
-			self.action.setChecked(True)
-		self.config['sharejids'] = self.public
+			self.config[addr+'-sharejids'].append(jid)
+#			self.action.setChecked(True)
+#		self.config['sharejids'] = self.public
+		print self.config
 		self.writeConfig()
 		self.on_configChanged()
-		self.action.deleteLater()
+		self.menu.deleteLater()
+
+	def listdir(self, dir):
+		out = []
+		for f in os.listdir(dir):
+			t = (f.encode('utf8', 'xmlcharrefreplace'), os.stat(dir+'/'+f).st_size)
+			out.append(t)
+		return (out,)

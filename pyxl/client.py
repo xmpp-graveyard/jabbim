@@ -49,6 +49,7 @@ import rc
 import traceback
 from configobj import ConfigObj
 import locale
+import rpc
 #import bosh_wokkel
 try:
 	from hashlib import sha1
@@ -174,6 +175,7 @@ class Client(derived):
 		self.pep = False
 		#self.reactor.callFromThread(self.on_init)
 
+		self.rpc = rpc.rpc(self)
 
 	def chyba(self, err):
 #		print err
@@ -473,7 +475,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='jabber:iq:privacy']", self.onPrivacyPush, 1)
 		self.xmlstream.addObserver("/*/evil[@xmlns='http://jabber.org/protocol/evil']", self.onEvil, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/x[@xmlns='http://jabber.org/protocol/rosterx']", self.onRosterX, 1)
-		
+		self.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='jabber:iq:rpc']", self.rpc.onRPC, 1)
 		self.xping.start(100, False)		
 		self.getPrivacy().addCallback(self.getMetacontacts).addErrback(self.getMetacontacts)
 #		self.getMetacontacts()
