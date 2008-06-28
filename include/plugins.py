@@ -427,7 +427,6 @@ class PluginBase:
 		# unregister features
 		for i in range(len(self._registeredFeatures)):
 			self.unregisterFeature(self._registeredFeatures[0])
-		# depracted part
 		self._registeredFeatures=[]
 		self.main = None
 		self.config = None

@@ -17,18 +17,22 @@ from emoticonswidget import *
 from linkeditor import linkEditorDialog
 
 class message(QtCore.QObject):
-    #__pyqtSignals__= ("addNextMessage()", )
-
 	def __init__(self,message):
 		QtCore.QObject.__init__(self)
 		self.message=[]
 		self.messages=[]
 		self.messageCache=[]
+		self.ft={}
 		self.scr=1
 		self.setObjectName("messageObject")
 
-	#def nextMessage(self):
-		#self.emit(QtCore.SIGNAL("addNextMessage()"))
+	@QtCore.pyqtSignature("QString")
+	def acceptFT(self,sid):
+		self.ft[unicode(sid)].submitClicked()
+
+	@QtCore.pyqtSignature("QString")
+	def rejectFT(self,sid):
+		self.ft[unicode(sid)].closeClicked()
 
 	@QtCore.pyqtSignature("",result="int")
 	def messageDirection(self):
@@ -682,12 +686,10 @@ class abstractChatWidget(QtGui.QWidget):
 <script>
 function addNextMessage() {
 var b = messageObject.messageDirection();
-messageObject.log("1")
 if (b==1) addMessage(-1);
 if (b==0) insertMessage(-1);
 b = messageObject.messageDirection();
 if (b!=-1) addNextMessage();
-messageObject.log("2")
 }
 
 function addMessage(index) {
@@ -696,7 +698,6 @@ shouldScroll = nearBottom();
 insert = document.getElementById("insert");
 if(insert) insert.parentNode.removeChild(insert);
 messageObject.ready();
-messageObject.log("addMessage")
 var ni = document.getElementById('myDiv');
 var numi = document.getElementById('theValue');
 var num = (document.getElementById('theValue').value -1)+ 2;
@@ -713,7 +714,6 @@ if (shouldScroll) setTimeout("scrollToBottom()", 100);
 function insertMessage(index) {
 shouldScroll = nearBottom();
 messageObject.ready();
-messageObject.log("insertMessage")
                         //Locate the insertion point
                         var insert = document.getElementById("insert");
 
@@ -726,6 +726,20 @@ messageObject.log("insertMessage")
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);
 if (shouldScroll) setTimeout("scrollToBottom()", 100);
+
+}
+
+function removeById(index) {
+
+                        //Locate the insertion point
+                        var insert = document.getElementById(index);
+                        //make new node
+                        range = document.createRange();
+                        range.selectNode(insert.parentNode);
+                        newNode = range.createContextualFragment('');
+
+                        //swap
+                        insert.parentNode.replaceChild(newNode,insert);
 
 }
 

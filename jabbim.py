@@ -1470,18 +1470,34 @@ class clientClass(pyxl.client.Client):
 				eventWidget=self.main.events.addFTReceivedEvent(sid,id,unicode(self.ft[sid].tojid),pixmap)
 				tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid),typ=['chat'])
 				if tab:
-					w=widgets.chatwidget.FTAskWidget(self.ft[sid].fileprops['name'],eventWidget,tab.chat,tab.chat.ui.ftwidget)
-					QtCore.QObject.connect(eventWidget.submitButton,QtCore.SIGNAL("clicked(bool)"),w.accept)
-					QtCore.QObject.connect(eventWidget.closeButton,QtCore.SIGNAL("clicked(bool)"),w.reject)
-					if pixmap:
-						w.setPreview(pixmap)
-					tab.chat.ui.ftwidget.layout().addWidget(w)
+					mainWindow=self.main
+					#w=widgets.chatwidget.FTAskWidget(self.ft[sid].fileprops['name'],eventWidget,tab.chat,tab.chat.ui.ftwidget)
+					#QtCore.QObject.connect(eventWidget.submitButton,QtCore.SIGNAL("clicked(bool)"),w.accept)
+					#QtCore.QObject.connect(eventWidget.closeButton,QtCore.SIGNAL("clicked(bool)"),w.reject)
+					#if pixmap:
+						#w.setPreview(pixmap)
+					#tab.chat.ui.ftwidget.layout().addWidget(w)
+					message=mainWindow.tr("User is sending you file")+" "+unicode(self.ft[sid].fileprops['name'])+". <a href=\"javascript:messageObject.acceptFT('"+unicode(sid)+"');\">["+mainWindow.tr("Accept")+"]</a> <a href=\"javascript:messageObject.rejectFT('"+unicode(sid)+"');\">["+mainWindow.tr("Decline")+"]</a>"
+					tab.chat.messageObject.ft[unicode(sid)]=eventWidget
+					tab.chat.textEditWrite('<div id="ft'+unicode(sid)+'">'+self.main.webkitThemeFactory.genChatStatus(unicode(message),self.main.now())+"</div>")
+					tab.chat.lastMessageFrom=""
+
+	def _declineFT(self,sid):
+		tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid),typ=['chat'])
+		if tab:
+			tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById('ft"+unicode(sid)+"');")
+			del tab.chat.messageObject.ft[unicode(sid)]
+		return self.declineFT(sid)
 
 	def ftStarted(self,sid,id):
 		#q = QtGui.QMessageBox.question(self.main,self.main.tr("File transfer"), unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
 		#if q == QtGui.QMessageBox.Yes:
 		mainWindow=self.main
 		filename = QtGui.QFileDialog.getSaveFileName(self.main, mainWindow.tr("Save File"),self.ft[sid].fileprops['name'],mainWindow.tr("*.*"))
+		tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid),typ=['chat'])
+		if tab:
+			tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById('ft"+unicode(sid)+"');")
+			del tab.chat.messageObject.ft[unicode(sid)]
 		if filename and len(filename)!=0:
 			filename=unicode(filename)
 			log.msg(unicode(filename))
@@ -1497,7 +1513,6 @@ class clientClass(pyxl.client.Client):
 				self.ft[sid].file = filename
 				self.ft[sid].fp = open(self.ft[sid].file, 'wb')
 				self.receiveFile(sid, id)
-		
 	
 	def on_verify(self, id, thread, props, frm, typ): #xep0070
 # 		self.replyVerify(id, thread, props, frm, typ, False)

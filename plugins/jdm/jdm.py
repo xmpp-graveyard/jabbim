@@ -354,13 +354,22 @@ class Plugin(plugins.PluginBase):
 		items=self.window.ui.list.selectedItems()
 		if len(items)==0:
 			return
-		for item in items:
-			if self.typ=="public":
-				self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
-			elif self.typ=="private":
-				self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
-			elif self.typ=="album":
-				self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+		if self.typ=="easyshare":
+			contact = self.main.client.getContactByJid(self.jid)
+			if contact:
+				jid=self.jid+"/"+contact.getHighestResource()
+				data=[]
+				for item in items:
+					data.append(self.esPath+unicode(item.text()))
+				self.main.client.callRemote(jid, 'getFiles',(tuple(data)))
+		else:
+			for item in items:
+				if self.typ=="public":
+					self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+				elif self.typ=="private":
+					self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+				elif self.typ=="album":
+					self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
 
 	def removeCurrentFile(self):
 		items=self.window.ui.list.selectedItems()
