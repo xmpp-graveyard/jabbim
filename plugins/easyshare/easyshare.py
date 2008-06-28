@@ -239,7 +239,7 @@ class Plugin(plugins.PluginBase):
 		self.category = ['utils']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.plugindir = plugindir
-		self.configDialog=config(self)
+		#self.configDialog=config(self)
 
 		if main:
 			self.loadConfig()
