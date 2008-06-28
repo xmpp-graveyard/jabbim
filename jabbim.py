@@ -4366,7 +4366,7 @@ class mainWindow(QtGui.QMainWindow):
 						w.chat.ui.line.setEnabled(False)
 						w.chat.ui.users.clear()
 						w.chat.addRoles()
-						message=self.main.webkitThemeFactory.genChatStatus(unicode(self.tr("You are now offline.")),self.now())
+						message=self.webkitThemeFactory.genChatStatus(unicode(self.tr("You are now offline.")),self.now())
 						w.chat.textEditWrite(message)
 		if error == 'lost' and MainWindow.reconnect:
 			self.reconnect = False
