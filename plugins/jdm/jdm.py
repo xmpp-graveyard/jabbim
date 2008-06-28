@@ -594,5 +594,5 @@ class Plugin(plugins.PluginBase):
 			contact = self.main.client.getContactByJid(self.jid)
 			if contact:
 				jid=self.jid+"/"+contact.getHighestResource()
-				self.main.client.callRemote(jid, 'listShares',(unicode(item.text()))).addCallback(self.updateView)
+				self.main.client.callRemote(jid, 'listShares',(unicode(item.text()),)).addCallback(self.updateView)
 		
