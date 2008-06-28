@@ -52,6 +52,7 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.publicButton.setIcon(QtGui.QIcon("%s/jdisk-public-24.png" % self.pluginDir))
 			self.window.ui.privateButton.setIcon(QtGui.QIcon("%s/jdisk-private-24.png" % self.pluginDir))
 			self.window.ui.albumButton.setIcon(QtGui.QIcon("%s/jalbum-32.png" % self.pluginDir))
+			self.window.ui.easyshareButton.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
 			self.window.ui.showMiniRoster.setIcon(self.main.ui.tabWidget.tabIcon(0))
 			self.group=QtGui.QButtonGroup(self.window)
 			self.update=False
@@ -67,6 +68,7 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.publicButton,QtCore.SIGNAL("clicked()"),self.public)
 			QtCore.QObject.connect(self.window.ui.privateButton,QtCore.SIGNAL("clicked()"),self.private)
 			QtCore.QObject.connect(self.window.ui.albumButton,QtCore.SIGNAL("clicked()"),self.album)
+			QtCore.QObject.connect(self.window.ui.easyshareButton,QtCore.SIGNAL("clicked()"),self.easyshare)
 			QtCore.QObject.connect(self.window.ui.showMiniRoster,QtCore.SIGNAL("clicked()"),self.showMiniRoster)
 			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("itemDoubleClicked ( QListWidgetItem * )"),self.doubleClicked)
 
@@ -86,6 +88,23 @@ class Plugin(plugins.PluginBase):
 			self.stopDownload=False
 		else:
 			self.loadConfig(homedir)
+	
+	def easyshare(self):
+		contact = self.main.client.getContactByJid(self.jid)
+		if contact:
+			jid=self.jid+"/"+contact.getHighestResource()
+			self.main.client.callRemote(jid, 'getShares',()).addCallback(self.esGotShares)
+			self.typ='easyshare'
+	
+	def esGotShares(self,data):
+		data=data[0][0]
+		self.window.ui.list.clear()
+		icon=QtGui.QIcon(self.pluginDir+"/folder.png")
+		for d in data:
+			item=QtGui.QListWidgetItem(self.window.ui.list)
+			item.setData(32,QtCore.QVariant(QtCore.QStringList([u"-1"])))
+			item.setText(unicode(d))
+			item.setIcon(icon)
 	
 	def buildContactMenu(self,menu,contact):
 		"""
@@ -350,7 +369,7 @@ class Plugin(plugins.PluginBase):
 			size=file[1]
 			ext=name.split('.')[-1]
 			item=QtGui.QListWidgetItem(unicode(name))
-			item.setData(32,QtCore.QVariant([unicode(size)]))
+			item.setData(32,QtCore.QVariant(QtCore.QStringList([unicode(size)])))
 			if ext in ["exe","run","sh","bin"]: 
 				item.setIcon(QtGui.QIcon(self.pluginDir+"/application-x-executable.png"))
 			elif ext in ["svg","jpg","png","gif","tif","tiff","bmp","ico","xcf"]: 
@@ -544,9 +563,14 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.label_name.setText(item.text())
 			data=item.data(32).toList()
 			size=int(data[0].toString())
-			self.window.ui.label_size.setText(self.toNormalSize(size))
-			self.window.ui.buttonDelete.setEnabled(self.jid==self.main.client.jid.userhost())
-			self.window.ui.buttonDownload.setEnabled(True)
+			if size==-1:
+				self.window.ui.label_size.setText(self.tr("Folder"))
+				self.window.ui.buttonDelete.setEnabled(self.jid==self.main.client.jid.userhost())
+				self.window.ui.buttonDownload.setEnabled(True)
+			else:
+				self.window.ui.label_size.setText(self.toNormalSize(size))
+				self.window.ui.buttonDelete.setEnabled(False)
+				self.window.ui.buttonDownload.setEnabled(False)
 		else:
 			self.window.ui.buttonDelete.setEnabled(False)
 			self.window.ui.buttonDownload.setEnabled(False)
@@ -557,11 +581,18 @@ class Plugin(plugins.PluginBase):
 		if self.typ=="public":
 			self.main.allowedJids["public@disk.jabbim.cz/"+unicode(item.text())]=self.cache
 			self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+			self.filesToOpen.append(self.cache+"/"+unicode(item.text()))
 		elif self.typ=="private":
 			self.main.allowedJids["private@disk.jabbim.cz/"+unicode(item.text())]=self.cache
 			self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
-			print "private@disk.jabbim.cz", [u"get "+self.jid+" "+unicode(item.text())]
+			self.filesToOpen.append(self.cache+"/"+unicode(item.text()))
 		elif self.typ=="album":
 			self.main.allowedJids["album@disk.jabbim.cz/"+unicode(item.text())]=self.cache
 			self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
-		self.filesToOpen.append(self.cache+"/"+unicode(item.text()))
+			self.filesToOpen.append(self.cache+"/"+unicode(item.text()))
+		elif self.typ=="easyshare":
+			contact = self.main.client.getContactByJid(self.jid)
+			if contact:
+				jid=self.jid+"/"+contact.getHighestResource()
+				self.main.client.callRemote(jid, 'listShares',(unicode(item.text()))).addCallback(self.updateView)
+		
