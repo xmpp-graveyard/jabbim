@@ -22,7 +22,10 @@ class rpc:
 		query = el.firstChildElement()
 		call = loads(query.firstChildElement().toXml())
 		if self.handlers.has_key(call[1]):
-			d = self.handlers[call[1]](el['from'],call[0])
+			try:
+				d = self.handlers[call[1]](el['from'],call[0])
+			except Exception, ex:
+				self.chyba(ex,call[1], el['from'], el['id'])
 			if isinstance(d, defer.Deferred):
 				d.addCallback(self.rpcResult, call[1], el['from'], el['id']).addErrback(self.chyba, call[1], el['from'], el['id'])
 			elif type(d) == tuple:
@@ -42,6 +45,7 @@ class rpc:
 		self.client.xmlstream.send(iq)
 	
 	def chyba(self, result, func, frm, id):
+		print 'chyba: ',result
 		iq = Element((None, 'iq'))
 		iq ['to'] = frm
 		iq['type'] = 'error'

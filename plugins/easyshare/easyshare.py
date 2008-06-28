@@ -267,10 +267,15 @@ class Plugin(plugins.PluginBase):
 	def getShares(self, frm, par):
 		frm = jidT.JID(frm).userhost()
 		available = []
-		for addr in self.config['dirs']:
-			if frm in self.config[addr+'-sharejids'] or frm == self.main.client.jid.userhost():
-				available.append(addr)
-		return (available,)
+		try:
+			for addr in self.config['dirs']:
+				if frm in self.config[addr+'-sharejids'] or frm == self.main.client.jid.userhost():
+					available.append(addr)
+			return (available,)
+		except:
+			print 'getshare problem'
+			print frm, par, self.config
+			return
 	
 	def listShare(self, frm, par):
 		frm = jidT.JID(frm).userhost()
@@ -284,14 +289,17 @@ class Plugin(plugins.PluginBase):
 	
 	def listdir(self, dr):
 		print dr
+
 		out = []
-		for f in os.listdir(dr):
-			cesta =  os.path.join(dr, f)
+		for f in os.listdir(unicode(dr)):
+			print type(dr), type(f)
+			cesta = dr+'/'+ f
 			if os.path.isdir(cesta):
-				t = (f.encode('utf8', 'xmlcharrefreplace'), -1)
+				t = (f.encode('utf8', 'xmlcharrefreplace'), '-1')
 			else:
-				t = (f.encode('utf8', 'xmlcharrefreplace'), os.stat(cesta).st_size)
+				t = (f.encode('utf8', 'xmlcharrefreplace'), unicode(os.stat(cesta).st_size))
 			out.append(t)
+		print out
 		return (out,)
 	
 	
@@ -324,11 +332,11 @@ class Plugin(plugins.PluginBase):
 	
 	def buildContactMenu(self, menu, contact):
 		self.menu=menu.addMenu(self.tr("EasyShare"))
+		self.menu.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
 		for addr in self.config['dirs']:
 			action = self.menu.addAction(addr)
 			action.setData(QtCore.QVariant([unicode(contact.jid), unicode(addr)]))
 			action.setObjectName(addr+"share")
-			action.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
 			action.setCheckable(True)
 			if unicode(contact.jid) in self.config[addr+'-sharejids']:
 				action.setChecked(True)
@@ -337,18 +345,12 @@ class Plugin(plugins.PluginBase):
 		QtCore.QObject.connect(self.menu,QtCore.SIGNAL("triggered ( QAction * )"),self.toggled)
 		
 	def toggled(self, b):
-		print 'kliknuto'
 		jid, addr = [unicode(val.toString()) for val in b.data().toList()]
-		print jid,addr
-		print self.config
 		if jid in self.config[addr+'-sharejids']:
 			self.config[addr+'-sharejids'].remove(jid)
-#			self.action.setChecked(False)
+
 		else:
 			self.config[addr+'-sharejids'].append(jid)
-#			self.action.setChecked(True)
-#		self.config['sharejids'] = self.public
-		print self.config
 		self.writeConfig()
 		self.on_configChanged()
 		self.menu.deleteLater()
