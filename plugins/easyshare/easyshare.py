@@ -277,7 +277,8 @@ class Plugin(plugins.PluginBase):
 		addr = share.split('/')[0]
 		if addr in self.config['dirs']:
 			if frm in self.config[addr+'-sharejids']:
-				return threads.deferToThread(self.listdir(par[0].replace(addr, self.config[addr+'-sharepath'])))
+				#return threads.deferToThread(self.listdir(par[0].replace(addr, self.config[addr+'-sharepath'])))
+				return self.listdir(par[0].replace(addr, self.config[addr+'-sharepath']))
 		return
 	
 	def listdir(self, dir):
