@@ -259,7 +259,7 @@ class Plugin(plugins.PluginBase):
 	def on_authd(self):
 		for addr in self.config['dirs']:
 			self.main.client.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#easyshare-%s"%addr, addr, ResendFile, public = self.config[addr+'-sharejids'], args = {'home':self.config[addr+'-sharepath']})
-		
+		self.registerFeature("http://dev.jabbim.cz/jabbim/easyshare")
 		self.main.client.rpc.registerHandler('getShares', self.getShares)
 		self.main.client.rpc.registerHandler('listShare', self.listShare)
 		self.main.client.rpc.registerHandler('getFiles', self.getFiles)
@@ -320,6 +320,7 @@ class Plugin(plugins.PluginBase):
 	def on_remove(self):
 		for addr in self.config['dirs']:
 			self.main.client.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#easyshare-%s"%addr, addr, ResendFile, public = self.config[addr+'-sharejids'], args = {'home':self.config[addr+'-sharepath']})
+		self.unregisterFeature("http://dev.jabbim.cz/jabbim/easyshare")
 	
 	def buildContactMenu(self, menu, contact):
 		self.menu=menu.addMenu(self.tr("EasyShare"))
