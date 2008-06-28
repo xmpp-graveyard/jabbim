@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Sun Jun 22 15:28:35 2008
+# Created: Sat Jun 28 14:06:59 2008
 #      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
 #
 # WARNING! All changes made in this file will be lost!
@@ -42,6 +42,7 @@ class Ui_preferences(object):
         self.gridlayout.addWidget(self.listWidget, 0, 0, 3, 1)
         self.profile = QtGui.QLabel(preferences)
         self.profile.setFrameShape(QtGui.QFrame.StyledPanel)
+        self.profile.setAlignment(QtCore.Qt.AlignCenter)
         self.profile.setObjectName("profile")
         self.gridlayout.addWidget(self.profile, 0, 1, 1, 2)
         self.stackedWidget = QtGui.QStackedWidget(preferences)

@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
+import sys
 from configobj import ConfigObj
 from twisted.python import log
 from imp import load_source
@@ -434,7 +435,6 @@ class PluginBase:
 		self.description = 'basic plugin class'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'Basic plugin'
-		self.fname = ''
 		self.version = '0.1'
 		self.category = ['test', 'misc']
 		self.url = 'dev.jabbim.cz/jabbim'
@@ -442,4 +442,7 @@ class PluginBase:
 		self.homeDir = None
 		self._translator=None
 		self._loadedWidgets=[]
-		
+		if sys.modules.has_key(self.fname):
+			print "deleting plugin %s from sys.modules" % self.fname
+			del sys.modules[self.fname]
+		self.fname = ''
