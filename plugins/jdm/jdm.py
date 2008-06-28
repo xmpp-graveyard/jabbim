@@ -45,6 +45,7 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.line_jid.setText(self.main.client.jid.userhost())
 			self.jid = self.main.client.jid.userhost()
 			self.typ = "public"
+			self.esPath=""
 			self.window.ui.buttonDownload.setIcon(QtGui.QIcon("%s/document-save.png" % self.pluginDir))
 			self.window.ui.buttonUpload.setIcon(QtGui.QIcon("%s/upload.png" % self.pluginDir))
 			self.window.ui.buttonDelete.setIcon(QtGui.QIcon("%s/edit-delete.png" % self.pluginDir))
@@ -59,6 +60,8 @@ class Plugin(plugins.PluginBase):
 
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call)
+			QtCore.QObject.connect(self.window.ui.esUp,QtCore.SIGNAL("clicked()"),self.esUp)
+			QtCore.QObject.connect(self.window.ui.esPath,QtCore.SIGNAL("returnPressed()"),self.esPathFinished)
 			QtCore.QObject.connect(self.window.ui.list, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.clicked)
 			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.fileMenu)
 			QtCore.QObject.connect(self.window.ui.buttonDownload,QtCore.SIGNAL("clicked()"),self.downloadCurrentFile)
@@ -89,12 +92,38 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.loadConfig(homedir)
 	
+	def esPathFinished(self):
+		self.esPath=unicode(self.window.ui.esPath.text())
+		if not self.esPath.endswith("/") and self.esPath!="":
+			self.espath+="/"
+		if self.esPath=="":
+			self.easyshare()
+		else:
+			contact = self.main.client.getContactByJid(self.jid)
+			jid=self.jid+"/"+contact.getHighestResource()
+			self.window.ui.esPath.setText(self.esPath)
+			self.main.client.callRemote(jid, 'listShare',(unicode(self.esPath),)).addCallback(self.updateView)	
+
+	def esUp(self):
+		d=self.esPath.split("/")
+		if len(d)>2:
+			self.esPath='/'.join(d[:-2])+"/"
+			contact = self.main.client.getContactByJid(self.jid)
+			jid=self.jid+"/"+contact.getHighestResource()
+			self.window.ui.esPath.setText(self.esPath)
+			self.main.client.callRemote(jid, 'listShare',(unicode(self.esPath),)).addCallback(self.updateView)
+		elif len(self.esPath)!=0:
+			self.easyshare()
+	
 	def easyshare(self):
 		contact = self.main.client.getContactByJid(self.jid)
 		if contact:
 			jid=self.jid+"/"+contact.getHighestResource()
 			self.main.client.callRemote(jid, 'getShares',()).addCallback(self.esGotShares)
 			self.typ='easyshare'
+			self.esPath=""
+			self.window.ui.esPath.setText(self.esPath)
+			self.window.ui.esWidget.show()
 	
 	def esGotShares(self,data):
 		data=data[0][0]
@@ -146,12 +175,15 @@ class Plugin(plugins.PluginBase):
 		self.config.write()
 
 	def public(self):
+		self.window.ui.esWidget.hide()
 		self.call(typ='public')
 
 	def private(self):
+		self.window.ui.esWidget.hide()
 		self.call(typ='private')
 
 	def album(self):
+		self.window.ui.esWidget.hide()
 		self.call(typ='album')
 
 	def home(self):
@@ -480,15 +512,18 @@ class Plugin(plugins.PluginBase):
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.jid,)).addCallback(self.updateView)
 			self.window.ui.list.setIconSize(QtCore.QSize(32,32))
 			self.window.ui.list.setGridSize(QtCore.QSize(128,96))
+			self.window.ui.esWidget.hide()
 		elif self.typ=="private":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPrivate', (self.jid,)).addCallback(self.updateView)
 			self.window.ui.list.setIconSize(QtCore.QSize(32,32))
 			self.window.ui.list.setGridSize(QtCore.QSize(128,96))
+			self.window.ui.esWidget.hide()
 		elif self.typ=="album":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listAlbum', (self.jid,)).addCallback(self.updateView)
 			#if self.config['iconMode']=="True":
 			self.window.ui.list.setIconSize(QtCore.QSize(128,128))
 			self.window.ui.list.setGridSize(QtCore.QSize(160,160))
+			self.window.ui.esWidget.hide()
 
 		if self.jid != self.main.client.jid.userhost():
 			self.window.ui.buttonDelete.setEnabled(False)
@@ -530,6 +565,8 @@ class Plugin(plugins.PluginBase):
 			text="private@disk.jabbim.cz"
 		elif self.typ=="album":
 			text="album@disk.jabbim.cz"
+		else:
+			return True
 		if unicode(frm).find(text)!=-1:
 			if not self.window.isHidden():
 				return False
@@ -597,5 +634,8 @@ class Plugin(plugins.PluginBase):
 			contact = self.main.client.getContactByJid(self.jid)
 			if contact:
 				jid=self.jid+"/"+contact.getHighestResource()
-				self.main.client.callRemote(jid, 'listShare',(unicode(item.text()),)).addCallback(self.updateView)
+				self.esPath+=unicode(item.text())+"/"
+				self.window.ui.esPath.setText(self.esPath)
+				self.main.client.callRemote(jid, 'listShare',(unicode(self.esPath),)).addCallback(self.updateView)
+
 		
