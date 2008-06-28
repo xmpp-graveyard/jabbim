@@ -46,6 +46,8 @@ class pluginConfiguration(QtGui.QDialog):
 		return QtGui.QDialog.reject(self)
 
 def updateVarData(var,main):
+	if var.has_key("__widget__"):
+		return var['__widget__'].updateData(main)
 	for key,value in var.iteritems():
 		if main.has_key(key):
 			val=main[key]
@@ -90,6 +92,8 @@ def updateVarData(var,main):
 
 def getVarData(var):
 	ret={}
+	if var.has_key("__widget__"):
+		return var['__widget__'].getData()
 	for key,value in var.iteritems():
 		typ=value['type']
 		widget=value['widget']
@@ -179,6 +183,10 @@ def makePreferences(main,parent,layout,form,row=1):
 	par=parent
 	lay=layout
 	keys=form.keys()
+	if "__widget__" in keys:
+		var['__widget__']=form['__widget__'](main,form,parent)
+		layout.addWidget(var['__widget__'],row,0,1,2)
+		return var,row+1
 	if "__sort__" in keys:
 		keys=form['__sort__']
 	usingTabs=False
@@ -311,7 +319,6 @@ def makePreferences(main,parent,layout,form,row=1):
 				label=None
 			lay.addWidget(label,row,0)
 			widget=jidListWidget(par)
-			print "variables lol:",type(val)
 			if isinstance(val,list):
 				for jid in val:
 					QtGui.QListWidgetItem(unicode(jid),widget.jids)

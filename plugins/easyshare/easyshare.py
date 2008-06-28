@@ -22,6 +22,7 @@ from include import utils
 from pyxl.xdata import *
 from pyxl.adhoc import Stage, CancelStage
 from twisted.python import log
+from widgets.configlib import jidListWidget
 import os.path
 
 class ResendFile(Stage):
@@ -114,8 +115,117 @@ class config:
 	def __init__(self,main):
 		self.main=main
 		self.config={}
-		self.config['default-sharepath']={'type':'directory','label':self.main.tr("Path"),'value':''}
-		self.config['default-sharejids']={'type':'jid-list','label':self.main.tr("Allow JIDs"),'value':[]}
+		self.config['__widget__']=customConfigWidget
+		#self.config['default-sharepath']={'type':'directory','label':self.main.tr("Path"),'value':''}
+		#self.config['default-sharejids']={'type':'jid-list','label':self.main.tr("Allow JIDs"),'value':[]}
+		self.config['dirs']={'type':'hidden','label':self.main.tr("Allow JIDs"),'value':[]}
+
+class customConfigWidget(QtGui.QWidget):
+	def __init__(self,main,form,parent=None):
+		QtGui.QWidget.__init__(self,parent)
+		self.form=dict(form)
+		for key,value in main.iteritems():
+			self.form[key]={'value':value}
+		self.currentFolder=None
+		# UI
+		layout=QtGui.QGridLayout(self)
+		
+		self.folders=QtGui.QListWidget(self)
+		self.folders.setMaximumWidth(175)
+		layout.addWidget(self.folders,0,0,1,1)
+		
+		self.addFolderButton=QtGui.QPushButton(self)
+		self.addFolderButton.setText(self.tr("Add folder"))
+		layout.addWidget(self.addFolderButton,1,0,1,1)
+
+		self.removeFolderButton=QtGui.QPushButton(self)
+		self.removeFolderButton.setText(self.tr("Remove folder"))
+		layout.addWidget(self.removeFolderButton,2,0,1,1)
+
+		self.groupbox=QtGui.QGroupBox(self.tr("Folder info"),self)
+		layout.addWidget(self.groupbox,0,1,3,1)
+		
+		glayout=QtGui.QGridLayout(self.groupbox)
+		
+		l=QtGui.QHBoxLayout()
+		label=QtGui.QLabel(self.tr("Path:"))
+		l.addWidget(label)
+		self.path=QtGui.QLineEdit()
+		l.addWidget(self.path)
+		glayout.addLayout(l,0,0)
+		
+		self.jids=jidListWidget(self.groupbox)
+		#if isinstance(val,list):
+			#for jid in val:
+				#QtGui.QListWidgetItem(unicode(jid),widget.jids)
+		glayout.addWidget(self.jids,1,0)
+		
+		self.groupbox.setEnabled(False)
+		
+		# SIGNALS
+		QtCore.QObject.connect(self.addFolderButton,QtCore.SIGNAL("clicked()"),self.addFolder)
+		QtCore.QObject.connect(self.removeFolderButton,QtCore.SIGNAL("clicked()"),self.removeFolder)
+		QtCore.QObject.connect(self.folders,QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.folderChanged)
+		
+		# DATA
+		for key in self.form['dirs']['value']:
+			item=QtGui.QListWidgetItem(self.folders)
+			item.setText(key)
+
+	def folderChanged(self,current,previous):
+		if previous and self.currentFolder:
+			self.form[self.currentFolder+"-sharepath"]['value']=unicode(self.path.text())
+			val=[]
+			for i in range(self.jids.jids.count()):
+				item=self.jids.jids.item(i)
+				val.append(unicode(item.text()))
+			self.form[self.currentFolder+"-sharejids"]['value']=val
+
+		if current:
+			self.currentFolder=unicode(current.text())
+			self.path.setText(self.form[self.currentFolder+"-sharepath"]['value'])
+			self.jids.jids.clear()
+			for jid in self.form[self.currentFolder+"-sharejids"]['value']:
+				QtGui.QListWidgetItem(unicode(jid),self.jids.jids)
+			self.groupbox.setEnabled(True)
+			self.groupbox.setTitle(self.tr("Folder")+" "+self.currentFolder+" "+self.tr("info"))
+
+	def removeFolder(self):
+		item=self.folders.currentItem()
+		name=unicode(item.text())
+		if item:
+			item=self.folders.takeItem(self.folders.row(item))
+			del item
+			del self.form[name+"-sharepath"]
+			del self.form[name+"-sharejids"]
+			self.form['dirs']['value'].remove(name)
+			self.path.setText("")
+			self.jids.jids.clear()
+
+	def addFolder(self):
+		name,b=QtGui.QInputDialog.getText(self,self.tr("Add folder"), self.tr("Choose folder name"))
+		name=unicode(name)
+		if len(name)!=0 and b==True:
+			item=QtGui.QListWidgetItem(self.folders)
+			item.setText(name)
+			self.form[name+"-sharepath"]={'value':''}
+			self.form[name+"-sharejids"]={'value':[]}
+			self.form['dirs']['value'].append(name)
+			#self.main.plugins['easyshare']['plugin'].addDir(name)
+
+	def getData(self):
+		# returns dict in format {configKey:value}
+		self.folderChanged(None,self.folders.currentItem())
+		ret={}
+		for key,value in self.form.iteritems():
+			if not key.startswith("__"):
+				val=value['value']
+				ret[key]=val
+		return ret
+
+	def updateData(self,form):
+		#updates data
+		pass
 
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
@@ -129,7 +239,7 @@ class Plugin(plugins.PluginBase):
 		self.category = ['utils']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.plugindir = plugindir
-#		self.configDialog=config(self)
+		self.configDialog=config(self)
 
 		if main:
 			self.loadConfig()
