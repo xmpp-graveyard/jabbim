@@ -284,7 +284,6 @@ class Plugin(plugins.PluginBase):
 	def listdir(self, dir):
 		out = []
 		for f in os.listdir(dir):
-			print dir+'/'+f,os.path.isdir(dir+'/'+f)
 			if os.path.isdir(dir+'/'+f):
 				t = (f.encode('utf8', 'xmlcharrefreplace'), -1)
 			else:
