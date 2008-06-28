@@ -367,31 +367,34 @@ class Plugin(plugins.PluginBase):
 					continue
 			name=file[0]
 			size=file[1]
-			ext=name.split('.')[-1]
 			item=QtGui.QListWidgetItem(unicode(name))
 			item.setData(32,QtCore.QVariant(QtCore.QStringList([unicode(size)])))
-			if ext in ["exe","run","sh","bin"]: 
-				item.setIcon(QtGui.QIcon(self.pluginDir+"/application-x-executable.png"))
-			elif ext in ["svg","jpg","png","gif","tif","tiff","bmp","ico","xcf"]: 
-				item.setIcon(QtGui.QIcon(self.pluginDir+"/image-x-generic.png"))
-			elif ext in ["wav","mp3","ogg","mp4","flac"]:
-				item.setIcon(QtGui.QIcon(self.pluginDir+"/audio-x-generic.png"))
-			elif ext in ["rar","zip","gz","bz","tgz","deb","rpm","tar","pkg","7z","ace"]:
-				item.setIcon(QtGui.QIcon(self.pluginDir+"/package-x-generic.png"))
-			elif ext in ["htm","html","xml"]:
-				item.setIcon(QtGui.QIcon(self.pluginDir+"/text-html.png"))
-			elif ext in ["txt","c","py","log"]:
-				item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic.png"))
-			elif ext in ["mov","avi","mpg","swf","dv"]:
-				item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic.png"))
-			elif ext in ["odt","doc","pdf","docx"]:
-				item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-document.png"))
-			elif ext in ["ods","xls","cvs"]:
-				item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-spreadsheet.png"))
-			elif ext in ["pts","ppt","odp"]:
-				item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-presentation.png"))
+			if int(size)==-1:
+				item.setIcon(QtGui.QIcon(self.pluginDir+"/folder.png"))
 			else:
-				item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic-template.png"));  #preventivne pokud se netrefime
+				ext=name.split('.')[-1]
+				if ext in ["exe","run","sh","bin"]: 
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/application-x-executable.png"))
+				elif ext in ["svg","jpg","png","gif","tif","tiff","bmp","ico","xcf"]: 
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/image-x-generic.png"))
+				elif ext in ["wav","mp3","ogg","mp4","flac"]:
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/audio-x-generic.png"))
+				elif ext in ["rar","zip","gz","bz","tgz","deb","rpm","tar","pkg","7z","ace"]:
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/package-x-generic.png"))
+				elif ext in ["htm","html","xml"]:
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/text-html.png"))
+				elif ext in ["txt","c","py","log"]:
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic.png"))
+				elif ext in ["mov","avi","mpg","swf","dv"]:
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic.png"))
+				elif ext in ["odt","doc","pdf","docx"]:
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-document.png"))
+				elif ext in ["ods","xls","cvs"]:
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-spreadsheet.png"))
+				elif ext in ["pts","ppt","odp"]:
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-presentation.png"))
+				else:
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic-template.png"));  #preventivne pokud se netrefime
 			self.window.ui.list.addItem(item)
 			if self.typ=="album":
 				self.thumbs[name]=item
