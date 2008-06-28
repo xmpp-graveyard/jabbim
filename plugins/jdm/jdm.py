@@ -101,7 +101,7 @@ class Plugin(plugins.PluginBase):
 		else:
 			contact = self.main.client.getContactByJid(self.jid)
 			jid=self.jid+"/"+contact.getHighestResource()
-			self.window.ui.esPath.setText(self.esPath)
+			#self.window.ui.esPath.setText(self.esPath)
 			self.main.client.callRemote(jid, 'listShare',(unicode(self.esPath),)).addCallback(self.updateView)	
 
 	def esUp(self):
@@ -122,11 +122,12 @@ class Plugin(plugins.PluginBase):
 			self.main.client.callRemote(jid, 'getShares',()).addCallback(self.esGotShares)
 			self.typ='easyshare'
 			self.esPath=""
-			self.window.ui.esPath.setText(self.esPath)
+			#self.window.ui.esPath.setText(self.esPath)
 			self.window.ui.esWidget.show()
 	
 	def esGotShares(self,data):
 		data=data[0][0]
+		self.window.ui.esPath.setText(self.esPath)
 		self.window.ui.list.clear()
 		icon=QtGui.QIcon(self.pluginDir+"/folder.png")
 		for d in data:
@@ -390,6 +391,7 @@ class Plugin(plugins.PluginBase):
 	def updateView(self, data):
 		if not self.update:
 			self.window.ui.list.clear()
+		self.window.ui.esPath.setText(self.esPath)
 		data=data[0][0]
 		self.thumbs={}
 		for file in data:
@@ -635,7 +637,6 @@ class Plugin(plugins.PluginBase):
 			if contact:
 				jid=self.jid+"/"+contact.getHighestResource()
 				self.esPath+=unicode(item.text())+"/"
-				self.window.ui.esPath.setText(self.esPath)
 				self.main.client.callRemote(jid, 'listShare',(unicode(self.esPath),)).addCallback(self.updateView)
 
 		
