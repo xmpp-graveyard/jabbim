@@ -251,9 +251,10 @@ class Plugin(plugins.PluginBase):
 	
 	def addDir(self, dir):
 		self.config['dirs'].append(dir)
-		self.config[dir+'-sharejids'] = []
+		self.config[dir+'-sharejids'] = [self.main.client.jid.userhost()]
 		self.config[dir+'-sharepath'] = self.plugindir
 		self.writeConfig()
+	
 	
 	def on_authd(self):
 		for addr in self.config['dirs']:
@@ -267,7 +268,7 @@ class Plugin(plugins.PluginBase):
 		frm = jidT.JID(frm).userhost()
 		available = []
 		for addr in self.config['dirs']:
-			if frm in self.config[addr+'-sharejids']:
+			if frm in self.config[addr+'-sharejids'] or frm == self.main.client.jid.userhost():
 				available.append(addr)
 		return (available,)
 	
@@ -276,7 +277,7 @@ class Plugin(plugins.PluginBase):
 		share = par[0]
 		addr = share.split('/')[0]
 		if addr in self.config['dirs']:
-			if frm in self.config[addr+'-sharejids']:
+			if frm in self.config[addr+'-sharejids'] or frm == self.main.client.jid.userhost():
 				return threads.deferToThread(self.listdir, par[0].replace(addr, self.config[addr+'-sharepath']))
 #				return self.listdir(par[0].replace(addr, self.config[addr+'-sharepath']))
 		return
@@ -301,7 +302,7 @@ class Plugin(plugins.PluginBase):
 		for f in files:
 			addr = f.split('/')[0]
 			if addr in self.config['dirs']:
-				if fr in self.config[addr+'-sharejids']:
+				if fr in self.config[addr+'-sharejids'] or frm == self.main.client.jid.userhost():
 					fajly.append(f.replace(addr, self.config[addr+'-sharepath']))
 		if len(fajly)>0:
 			self.main.events.addFTUploadEvent(frm, fajly, '%s >> %s'%('EasyShare',fr))
