@@ -1,6 +1,7 @@
 from xmlrpclib import loads, dumps	
 from twisted.internet import threads, defer, reactor
 from twisted.words.xish.domish import Element
+import traceback
 
 class rpc:
 	def __init__(self, client):
@@ -26,6 +27,8 @@ class rpc:
 				d = self.handlers[call[1]](el['from'],call[0])
 			except Exception, ex:
 				self.chyba(ex,call[1], el['from'], el['id'])
+				print traceback.format_exc()
+				return
 			if isinstance(d, defer.Deferred):
 				d.addCallback(self.rpcResult, call[1], el['from'], el['id']).addErrback(self.chyba, call[1], el['from'], el['id'])
 			elif type(d) == tuple:

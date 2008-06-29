@@ -293,7 +293,7 @@ class Plugin(plugins.PluginBase):
 		out = []
 		for f in os.listdir(unicode(dr)):
 			print type(dr), type(f)
-			cesta = dr+'/'+ f
+			cesta = dr+'/'+ f.encode(sys.getfilesystemencoding())
 			if os.path.isdir(cesta):
 				t = (f.encode('utf8', 'xmlcharrefreplace'), '-1')
 			else:
@@ -304,16 +304,22 @@ class Plugin(plugins.PluginBase):
 	
 	
 	def getFiles(self, frm, par):
+		print frm, par
 		fr = jidT.JID(frm).userhost()
 		files = par[0]
 		fajly = []
+		desc = {}
 		for f in files:
 			addr = f.split('/')[0]
+			print addr
 			if addr in self.config['dirs']:
-				if fr in self.config[addr+'-sharejids'] or frm == self.main.client.jid.userhost():
+				if (fr in self.config[addr+'-sharejids']) or frm == self.main.client.jid.userhost():
 					fajly.append(f.replace(addr, self.config[addr+'-sharepath']))
+					desc[fajly[-1]] = '%s >> %s'%('EasyShare',fr)
+		print fajly
+		print desc
 		if len(fajly)>0:
-			self.main.events.addFTUploadEvent(frm, fajly, '%s >> %s'%('EasyShare',fr))
+			self.main.events.addFTUploadEvent(frm, fajly, desc)
 			return (True, )
 		else:
 			return
