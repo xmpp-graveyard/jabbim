@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/vcardeditor.ui'
 #
-# Created: Wed May 14 14:33:20 2008
-#      by: PyQt4 UI code generator 4.3.1
+# Created: Sun Jun 29 11:35:24 2008
+#      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,206 +12,164 @@ from PyQt4 import QtCore, QtGui
 class Ui_VCardEdit(object):
     def setupUi(self, VCardEdit):
         VCardEdit.setObjectName("VCardEdit")
-        VCardEdit.resize(QtCore.QSize(QtCore.QRect(0,0,401,402).size()).expandedTo(VCardEdit.minimumSizeHint()))
-
+        VCardEdit.resize(401, 402)
         self.gridlayout = QtGui.QGridLayout(VCardEdit)
         self.gridlayout.setMargin(9)
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
-
         self.tabWidget = QtGui.QTabWidget(VCardEdit)
         self.tabWidget.setObjectName("tabWidget")
-
         self.tab = QtGui.QWidget()
         self.tab.setObjectName("tab")
-
         self.gridlayout1 = QtGui.QGridLayout(self.tab)
         self.gridlayout1.setMargin(9)
         self.gridlayout1.setSpacing(6)
         self.gridlayout1.setObjectName("gridlayout1")
-
         self.gridlayout2 = QtGui.QGridLayout()
         self.gridlayout2.setMargin(0)
         self.gridlayout2.setSpacing(6)
         self.gridlayout2.setObjectName("gridlayout2")
-
         self.avatar = QtGui.QLabel(self.tab)
         self.avatar.setObjectName("avatar")
-        self.gridlayout2.addWidget(self.avatar,0,0,2,2)
-
+        self.gridlayout2.addWidget(self.avatar, 0, 0, 2, 2)
         self.setAvatar = QtGui.QPushButton(self.tab)
         self.setAvatar.setObjectName("setAvatar")
-        self.gridlayout2.addWidget(self.setAvatar,0,2,1,1)
-
+        self.gridlayout2.addWidget(self.setAvatar, 0, 2, 1, 1)
         self.clearAvatar = QtGui.QPushButton(self.tab)
         self.clearAvatar.setObjectName("clearAvatar")
-        self.gridlayout2.addWidget(self.clearAvatar,1,2,1,1)
-        self.gridlayout1.addLayout(self.gridlayout2,5,1,1,1)
-
+        self.gridlayout2.addWidget(self.clearAvatar, 1, 2, 1, 1)
+        self.gridlayout1.addLayout(self.gridlayout2, 5, 1, 1, 1)
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(6)
+        self.hboxlayout.setMargin(0)
         self.hboxlayout.setObjectName("hboxlayout")
-
         self.homepage_label = QtGui.QLabel(self.tab)
         self.homepage_label.setOpenExternalLinks(True)
         self.homepage_label.setObjectName("homepage_label")
         self.hboxlayout.addWidget(self.homepage_label)
-
         self.homepage_edit = QtGui.QLineEdit(self.tab)
         self.homepage_edit.setObjectName("homepage_edit")
         self.hboxlayout.addWidget(self.homepage_edit)
-        self.gridlayout1.addLayout(self.hboxlayout,4,1,1,1)
-
+        self.gridlayout1.addLayout(self.hboxlayout, 4, 1, 1, 1)
         self.label_10 = QtGui.QLabel(self.tab)
         self.label_10.setObjectName("label_10")
-        self.gridlayout1.addWidget(self.label_10,4,0,1,1)
-
+        self.gridlayout1.addWidget(self.label_10, 4, 0, 1, 1)
         self.label_3 = QtGui.QLabel(self.tab)
+        self.label_3.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.label_3.setObjectName("label_3")
-        self.gridlayout1.addWidget(self.label_3,5,0,1,1)
-
+        self.gridlayout1.addWidget(self.label_3, 5, 0, 1, 1)
         self.nickname = QtGui.QLineEdit(self.tab)
         self.nickname.setObjectName("nickname")
-        self.gridlayout1.addWidget(self.nickname,3,1,1,1)
-
+        self.gridlayout1.addWidget(self.nickname, 3, 1, 1, 1)
         self.label_4 = QtGui.QLabel(self.tab)
         self.label_4.setObjectName("label_4")
-        self.gridlayout1.addWidget(self.label_4,3,0,1,1)
-
+        self.gridlayout1.addWidget(self.label_4, 3, 0, 1, 1)
         self.fullname = QtGui.QLineEdit(self.tab)
         self.fullname.setObjectName("fullname")
-        self.gridlayout1.addWidget(self.fullname,2,1,1,1)
-
+        self.gridlayout1.addWidget(self.fullname, 2, 1, 1, 1)
         self.label_5 = QtGui.QLabel(self.tab)
         self.label_5.setObjectName("label_5")
-        self.gridlayout1.addWidget(self.label_5,2,0,1,1)
-
+        self.gridlayout1.addWidget(self.label_5, 2, 0, 1, 1)
         self.surname = QtGui.QLineEdit(self.tab)
         self.surname.setObjectName("surname")
-        self.gridlayout1.addWidget(self.surname,1,1,1,1)
-
+        self.gridlayout1.addWidget(self.surname, 1, 1, 1, 1)
         self.label_2 = QtGui.QLabel(self.tab)
         self.label_2.setObjectName("label_2")
-        self.gridlayout1.addWidget(self.label_2,1,0,1,1)
-
+        self.gridlayout1.addWidget(self.label_2, 1, 0, 1, 1)
         self.name = QtGui.QLineEdit(self.tab)
         self.name.setObjectName("name")
-        self.gridlayout1.addWidget(self.name,0,1,1,1)
-
+        self.gridlayout1.addWidget(self.name, 0, 1, 1, 1)
         self.label = QtGui.QLabel(self.tab)
         self.label.setObjectName("label")
-        self.gridlayout1.addWidget(self.label,0,0,1,1)
-        self.tabWidget.addTab(self.tab,"")
-
+        self.gridlayout1.addWidget(self.label, 0, 0, 1, 1)
+        self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QtGui.QWidget()
         self.tab_2.setObjectName("tab_2")
-
         self.gridlayout3 = QtGui.QGridLayout(self.tab_2)
         self.gridlayout3.setMargin(9)
         self.gridlayout3.setSpacing(6)
         self.gridlayout3.setObjectName("gridlayout3")
-
-        spacerItem = QtGui.QSpacerItem(20,61,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout3.addItem(spacerItem,5,1,1,1)
-
+        spacerItem = QtGui.QSpacerItem(20, 61, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.gridlayout3.addItem(spacerItem, 5, 1, 1, 1)
         self.label_9 = QtGui.QLabel(self.tab_2)
         self.label_9.setObjectName("label_9")
-        self.gridlayout3.addWidget(self.label_9,4,0,1,1)
-
+        self.gridlayout3.addWidget(self.label_9, 4, 0, 1, 1)
         self.label_8 = QtGui.QLabel(self.tab_2)
         self.label_8.setObjectName("label_8")
-        self.gridlayout3.addWidget(self.label_8,3,0,1,1)
-
+        self.gridlayout3.addWidget(self.label_8, 3, 0, 1, 1)
         self.homepcode = QtGui.QLineEdit(self.tab_2)
         self.homepcode.setObjectName("homepcode")
-        self.gridlayout3.addWidget(self.homepcode,4,1,1,1)
-
+        self.gridlayout3.addWidget(self.homepcode, 4, 1, 1, 1)
         self.homecountry = QtGui.QLineEdit(self.tab_2)
         self.homecountry.setObjectName("homecountry")
-        self.gridlayout3.addWidget(self.homecountry,3,1,1,1)
-
+        self.gridlayout3.addWidget(self.homecountry, 3, 1, 1, 1)
         self.homelocality = QtGui.QLineEdit(self.tab_2)
         self.homelocality.setObjectName("homelocality")
-        self.gridlayout3.addWidget(self.homelocality,2,1,1,1)
-
+        self.gridlayout3.addWidget(self.homelocality, 2, 1, 1, 1)
         self.label_7 = QtGui.QLabel(self.tab_2)
         self.label_7.setObjectName("label_7")
-        self.gridlayout3.addWidget(self.label_7,2,0,1,1)
-
+        self.gridlayout3.addWidget(self.label_7, 2, 0, 1, 1)
         self.homestreet = QtGui.QLineEdit(self.tab_2)
         self.homestreet.setObjectName("homestreet")
-        self.gridlayout3.addWidget(self.homestreet,0,1,1,1)
-
+        self.gridlayout3.addWidget(self.homestreet, 0, 1, 1, 1)
         self.homeextadd = QtGui.QLineEdit(self.tab_2)
         self.homeextadd.setObjectName("homeextadd")
-        self.gridlayout3.addWidget(self.homeextadd,1,1,1,1)
-
+        self.gridlayout3.addWidget(self.homeextadd, 1, 1, 1, 1)
         self.label_6 = QtGui.QLabel(self.tab_2)
         self.label_6.setObjectName("label_6")
-        self.gridlayout3.addWidget(self.label_6,0,0,1,1)
-        self.tabWidget.addTab(self.tab_2,"")
-
+        self.gridlayout3.addWidget(self.label_6, 0, 0, 1, 1)
+        self.tabWidget.addTab(self.tab_2, "")
         self.tab_4 = QtGui.QWidget()
         self.tab_4.setObjectName("tab_4")
-
         self.gridlayout4 = QtGui.QGridLayout(self.tab_4)
         self.gridlayout4.setMargin(9)
         self.gridlayout4.setSpacing(6)
         self.gridlayout4.setObjectName("gridlayout4")
-
         self.about = QtGui.QTextEdit(self.tab_4)
         self.about.setObjectName("about")
-        self.gridlayout4.addWidget(self.about,0,0,1,1)
-        self.tabWidget.addTab(self.tab_4,"")
-
+        self.gridlayout4.addWidget(self.about, 0, 0, 1, 1)
+        self.tabWidget.addTab(self.tab_4, "")
         self.tab_3 = QtGui.QWidget()
         self.tab_3.setObjectName("tab_3")
-
         self.gridlayout5 = QtGui.QGridLayout(self.tab_3)
         self.gridlayout5.setMargin(9)
         self.gridlayout5.setSpacing(6)
         self.gridlayout5.setObjectName("gridlayout5")
-
         self.versionWidget = QtGui.QWidget(self.tab_3)
         self.versionWidget.setObjectName("versionWidget")
-        self.gridlayout5.addWidget(self.versionWidget,0,0,1,1)
-        self.tabWidget.addTab(self.tab_3,"")
-        self.gridlayout.addWidget(self.tabWidget,0,0,1,3)
-
+        self.gridlayout5.addWidget(self.versionWidget, 0, 0, 1, 1)
+        self.tabWidget.addTab(self.tab_3, "")
+        self.gridlayout.addWidget(self.tabWidget, 0, 0, 1, 3)
         self.download = QtGui.QLabel(VCardEdit)
         self.download.setAlignment(QtCore.Qt.AlignCenter)
         self.download.setObjectName("download")
-        self.gridlayout.addWidget(self.download,1,0,1,3)
-
+        self.gridlayout.addWidget(self.download, 1, 0, 1, 3)
         self.pushButton = QtGui.QPushButton(VCardEdit)
         self.pushButton.setObjectName("pushButton")
-        self.gridlayout.addWidget(self.pushButton,2,2,1,1)
-
+        self.gridlayout.addWidget(self.pushButton, 2, 2, 1, 1)
         self.pushButton_2 = QtGui.QPushButton(VCardEdit)
         self.pushButton_2.setObjectName("pushButton_2")
-        self.gridlayout.addWidget(self.pushButton_2,2,1,1,1)
-
-        spacerItem1 = QtGui.QSpacerItem(71,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem1,2,0,1,1)
+        self.gridlayout.addWidget(self.pushButton_2, 2, 1, 1, 1)
+        spacerItem1 = QtGui.QSpacerItem(71, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem1, 2, 0, 1, 1)
 
         self.retranslateUi(VCardEdit)
         self.tabWidget.setCurrentIndex(0)
-        QtCore.QObject.connect(self.pushButton,QtCore.SIGNAL("clicked()"),VCardEdit.accept)
-        QtCore.QObject.connect(self.pushButton_2,QtCore.SIGNAL("clicked()"),VCardEdit.reject)
+        QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("clicked()"), VCardEdit.accept)
+        QtCore.QObject.connect(self.pushButton_2, QtCore.SIGNAL("clicked()"), VCardEdit.reject)
         QtCore.QMetaObject.connectSlotsByName(VCardEdit)
-        VCardEdit.setTabOrder(self.tabWidget,self.name)
-        VCardEdit.setTabOrder(self.name,self.surname)
-        VCardEdit.setTabOrder(self.surname,self.fullname)
-        VCardEdit.setTabOrder(self.fullname,self.nickname)
-        VCardEdit.setTabOrder(self.nickname,self.setAvatar)
-        VCardEdit.setTabOrder(self.setAvatar,self.homestreet)
-        VCardEdit.setTabOrder(self.homestreet,self.homeextadd)
-        VCardEdit.setTabOrder(self.homeextadd,self.homelocality)
-        VCardEdit.setTabOrder(self.homelocality,self.homecountry)
-        VCardEdit.setTabOrder(self.homecountry,self.homepcode)
-        VCardEdit.setTabOrder(self.homepcode,self.pushButton_2)
-        VCardEdit.setTabOrder(self.pushButton_2,self.pushButton)
+        VCardEdit.setTabOrder(self.tabWidget, self.name)
+        VCardEdit.setTabOrder(self.name, self.surname)
+        VCardEdit.setTabOrder(self.surname, self.fullname)
+        VCardEdit.setTabOrder(self.fullname, self.nickname)
+        VCardEdit.setTabOrder(self.nickname, self.setAvatar)
+        VCardEdit.setTabOrder(self.setAvatar, self.homestreet)
+        VCardEdit.setTabOrder(self.homestreet, self.homeextadd)
+        VCardEdit.setTabOrder(self.homeextadd, self.homelocality)
+        VCardEdit.setTabOrder(self.homelocality, self.homecountry)
+        VCardEdit.setTabOrder(self.homecountry, self.homepcode)
+        VCardEdit.setTabOrder(self.homepcode, self.pushButton_2)
+        VCardEdit.setTabOrder(self.pushButton_2, self.pushButton)
 
     def retranslateUi(self, VCardEdit):
         self.avatar.setText(QtGui.QApplication.translate("VCardEdit", "Avatar", None, QtGui.QApplication.UnicodeUTF8))

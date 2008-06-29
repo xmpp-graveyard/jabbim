@@ -236,10 +236,6 @@ class chatWidget(abstractChatWidget):
 		jidt=jidT.JID(jid)
 		self.name=name
 		self.main=main
-		#try:
-			#xhtml=main.client.roster['users'][jidt.userhost()].resources[jidt.resource].hasFeature('http://jabber.org/protocol/xhtml-im') #: True if user supports xhtml, otherwise False
-		#except:
-			#xhtml=False
 		xhtml=main.client.hasFeature(jid,'http://jabber.org/protocol/xhtml-im')
 		self.typ="chat"
 		# get users avatar
