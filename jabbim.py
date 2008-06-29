@@ -1276,13 +1276,13 @@ class clientClass(pyxl.client.Client):
 			if tab!=None:
 				tab.chat.lastMessageFrom=unicode(user)
 				# i think we don't have to check this....
-				try:
-					link = tab.chat.file
-					height = str(tab.chat.avatarHeight)
-				except:
-					print 'wtf? no chat.tab.file!'
-					link = 'images/32x32/apps/jabbim.png'
-					height = '32'
+				#try:
+					#link = tab.chat.file
+					#height = str(tab.chat.avatarHeight)
+				#except:
+					#print 'wtf? no chat.tab.file!'
+					#link = 'images/32x32/apps/jabbim.png'
+					#height = '32'
 				#message=message.replace("[avatar]","<img src=\""+link+"\" width=\"32\" height=\""+height+"\" />")
 				current=self.main.chat.ui.chatTab.currentWidget()
 				# write message and set 'message' icon

@@ -34,6 +34,7 @@ from include import utils
 from abstractchatwidget import abstractChatWidget,abstractTextView
 import addcontact
 import pyxl
+import weakref
 
 class textView(abstractTextView):
 	"""
@@ -55,7 +56,9 @@ class textView(abstractTextView):
 class groupChatWidget(abstractChatWidget):
 	def __init__(self,main,jid,tab,nickname="",parent=None,ui=Ui_groupchatwidget):
 		self.typ="groupchat"
+		self.main=weakref.ref(main)
 		abstractChatWidget.__init__(self,ui,textView,main,jid,True,parent)
+		self.loadWebkit()
 		self.nick = nickname #: MUC Jabber ID
 		self.affiliation="" #: user affiliation
 		self.role="" #: user role
@@ -104,9 +107,9 @@ class groupChatWidget(abstractChatWidget):
 		self.ui.smileys.setMaximumHeight(self.ui.sendButton.height())
 
 		# load plugins buttons
-		for key,value in self.main.plugins.iteritems():
+		for key,value in self.main().plugins.iteritems():
 			if value['module']:
-				self.main.runPluginCommand(value['module'].buildGroupchatWidget,[unicode(self.jid),self.flowLayout,self])
+				self.main().runPluginCommand(value['module'].buildGroupchatWidget,[unicode(self.jid),self.flowLayout,self])
 
 		# Make "Room Configuration" Menu
 
@@ -119,7 +122,7 @@ class groupChatWidget(abstractChatWidget):
 		menu.addAction(QtGui.QIcon("images/16x16/actions/edit.png"),self.tr("Change nickname"),self.changeNick)
 		isBookmarked=False
 		self.bookmarkAction=None
-		for bookmark in self.main.client.bookmarks['conference'].values():
+		for bookmark in self.main().client.bookmarks['conference'].values():
 			if bookmark.jid.userhost()==jid:
 				isBookmarked=True
 				break
@@ -151,8 +154,8 @@ class groupChatWidget(abstractChatWidget):
 		self.connecting=QtGui.QLabel(self.tr("Connecting to MUC. This can take a few seconds."),self.ui.textEdit)
 		self.connecting.adjustSize()
 
-		if self.main.selfAvatar:
-			result=self.main.getAvatar(self.main.selfAvatar,size="64x64",frame=True)
+		if self.main().selfAvatar:
+			result=self.main().getAvatar(self.main().selfAvatar,size="64x64",frame=True)
 			self.ui.selfAvatar.setPixmap(result)
 			self.ui.selfAvatar.setMaximumWidth(64)
 		else:
@@ -180,16 +183,16 @@ class groupChatWidget(abstractChatWidget):
 		"""
 		Bookmarks this groupchat.
 		"""
-		self.main.client.bookmarks['conference'][self.jid]=pyxl.client.Bookmark(self.jid, 'conference', self.jid, False, self.nick, "")
-		self.main.client.setBookmarks()
-		self.main.buildBookmarks()
+		self.main().client.bookmarks['conference'][self.jid]=pyxl.client.Bookmark(self.jid, 'conference', self.jid, False, self.nick, "")
+		self.main().client.setBookmarks()
+		self.main().buildBookmarks()
 		self.bookmarkAction.setEnabled(False)
 
 	def _getInfo(self):
 		"""
 		Gets room disco#info.
 		"""
-		self.main.client.getDiscoInfo(self.jid, callback=self._infoReceived)
+		self.main().client.getDiscoInfo(self.jid, callback=self._infoReceived)
 
 	def changeTopic(self,topic):
 		"""
@@ -204,7 +207,7 @@ class groupChatWidget(abstractChatWidget):
 		"""
 		Called By pyxl when disco#info is received
 		"""
-		self.disco_features = self.main.client.disco[self.jid][None]["features"]
+		self.disco_features = self.main().client.disco[self.jid][None]["features"]
 		features = []
 		possible_features = {
 				# http://jabber.org/protocol/muc#register
@@ -270,11 +273,11 @@ class groupChatWidget(abstractChatWidget):
 			affiliation=""
 			role=""
 			user = None
-			if self.main.client.groupchats.has_key(self.jid):
-				if self.main.client.groupchats[self.jid].users.has_key(name):
-					user = self.main.client.groupchats[self.jid].users[name]
-					affiliation=self.main.client.groupchats[self.jid].users[name].affiliation
-					role=self.main.client.groupchats[self.jid].users[name].role
+			if self.main().client.groupchats.has_key(self.jid):
+				if self.main().client.groupchats[self.jid].users.has_key(name):
+					user = self.main().client.groupchats[self.jid].users[name]
+					affiliation=self.main().client.groupchats[self.jid].users[name].affiliation
+					role=self.main().client.groupchats[self.jid].users[name].role
 			# temp array to set priority of affiliations
 			affiliations={'none':0,'member':1,'admin':2,'owner':3}
 			# make kick, ban action and separator
@@ -371,9 +374,9 @@ class groupChatWidget(abstractChatWidget):
 			action.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
 			action.setObjectName("send_file")
 			# add other actions from plugins
-			for key,value in self.main.plugins.iteritems():
+			for key,value in self.main().plugins.iteritems():
 				if value['module']:
-					self.main.runPluginCommand(value['module'].buildGroupchatContactMenu,[menu,jid,user])
+					self.main().runPluginCommand(value['module'].buildGroupchatContactMenu,[menu,jid,user])
 
 		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.usersContextMenuTriggered)
 		# set menu position and show
@@ -386,69 +389,69 @@ class groupChatWidget(abstractChatWidget):
 		cmd=action.objectName()
 		if cmd=="kick":
 			name=unicode(action.data().toString())
-			if self.main.client.groupchats.has_key(self.jid):
+			if self.main().client.groupchats.has_key(self.jid):
 				reason,b=QtGui.QInputDialog.getText(self,self.tr("Reason"),self.tr("Enter reason:"), QtGui.QLineEdit.Normal, "")
 				reason=unicode(reason)
 				if b==True:
-					self.main.client.groupchats[self.jid].setRole(name, 'none',  reason)
+					self.main().client.groupchats[self.jid].setRole(name, 'none',  reason)
 		elif cmd=='ban':
 			name=unicode(action.data().toString())
-			if self.main.client.groupchats.has_key(self.jid):
+			if self.main().client.groupchats.has_key(self.jid):
 				reason,b=QtGui.QInputDialog.getText(self,self.tr("Reason"),self.tr("Enter reason:"), QtGui.QLineEdit.Normal, "")
 				reason=unicode(reason)
 				if b==True:
-					self.main.client.groupchats[self.jid].setAffiliation(name, 'outcast',  reason)
+					self.main().client.groupchats[self.jid].setAffiliation(name, 'outcast',  reason)
 		elif cmd=='grant_moderator':
 			name=unicode(action.data().toString())
-			if self.main.client.groupchats.has_key(self.jid):
-				self.main.client.groupchats[self.jid].setRole(name, 'moderator')
+			if self.main().client.groupchats.has_key(self.jid):
+				self.main().client.groupchats[self.jid].setRole(name, 'moderator')
 		elif cmd=='revoke_moderator':
 			name=unicode(action.data().toString())
-			if self.main.client.groupchats.has_key(self.jid):
-				self.main.client.groupchats[self.jid].setRole(name, 'participant')
+			if self.main().client.groupchats.has_key(self.jid):
+				self.main().client.groupchats[self.jid].setRole(name, 'participant')
 		elif cmd=='grant_voice':
 			name=unicode(action.data().toString())
-			if self.main.client.groupchats.has_key(self.jid):
-				self.main.client.groupchats[self.jid].setRole(name, 'participant')
+			if self.main().client.groupchats.has_key(self.jid):
+				self.main().client.groupchats[self.jid].setRole(name, 'participant')
 		elif cmd=='revoke_voice':
 			name=unicode(action.data().toString())
-			if self.main.client.groupchats.has_key(self.jid):
-				self.main.client.groupchats[self.jid].setRole(name, 'visitor')
+			if self.main().client.groupchats.has_key(self.jid):
+				self.main().client.groupchats[self.jid].setRole(name, 'visitor')
 		elif cmd=='grant_member':
 			name=unicode(action.data().toString())
-			if self.main.client.groupchats.has_key(self.jid):
-				self.main.client.groupchats[self.jid].setAffiliation(name, 'member')
+			if self.main().client.groupchats.has_key(self.jid):
+				self.main().client.groupchats[self.jid].setAffiliation(name, 'member')
 		elif cmd=='revoke_member':
 			name=unicode(action.data().toString())
-			if self.main.client.groupchats.has_key(self.jid):
-				self.main.client.groupchats[self.jid].setAffiliation(name, 'none')
+			if self.main().client.groupchats.has_key(self.jid):
+				self.main().client.groupchats[self.jid].setAffiliation(name, 'none')
 		elif cmd=='grant_owner':
 			name=unicode(action.data().toString())
-			if self.main.client.groupchats.has_key(self.jid):
-				self.main.client.groupchats[self.jid].setAffiliation(name, 'owner')
+			if self.main().client.groupchats.has_key(self.jid):
+				self.main().client.groupchats[self.jid].setAffiliation(name, 'owner')
 		elif cmd=='revoke_owner':
 			name=unicode(action.data().toString())
-			if self.main.client.groupchats.has_key(self.jid):
-				self.main.client.groupchats[self.jid].setAffiliation(name, 'none')
+			if self.main().client.groupchats.has_key(self.jid):
+				self.main().client.groupchats[self.jid].setAffiliation(name, 'none')
 		elif cmd=='grant_admin':
 			name=unicode(action.data().toString())
-			if self.main.client.groupchats.has_key(self.jid):
-				self.main.client.groupchats[self.jid].setAffiliation(name, 'admin')
+			if self.main().client.groupchats.has_key(self.jid):
+				self.main().client.groupchats[self.jid].setAffiliation(name, 'admin')
 		elif cmd=='revoke_admin':
 			name=unicode(action.data().toString())
-			if self.main.client.groupchats.has_key(self.jid):
-				self.main.client.groupchats[self.jid].setAffiliation(name, 'none')
+			if self.main().client.groupchats.has_key(self.jid):
+				self.main().client.groupchats[self.jid].setAffiliation(name, 'none')
 		elif cmd == "vcard":
 			jid=action.data()
 			jid=unicode(jid.toString())
-			self.ve=vcardeditor.vcardEditorDialog(self.main,jid,self,False)
+			self.ve=vcardeditor.vcardEditorDialog(self.main(),jid,self,False)
 			self.ve.show()
 		elif cmd == "send_file":
 			jid=unicode(action.data().toString())
-			self.main.sendFiles(jid)
+			self.main().sendFiles(jid)
 		elif cmd == 'add-user':
 			jid, nick = [unicode(val.toString()) for val in action.data().toList()]
-			addcontact.addContactDialog(self.main,self.main, jid = jid, name = nick).show()
+			addcontact.addContactDialog(self.main(),self.main(), jid = jid, name = nick).show()
 			
 
 	def userClicked(self,item,i):
@@ -457,10 +460,10 @@ class groupChatWidget(abstractChatWidget):
 		"""
 		if item.parent()==None:
 			return
-		icon=self.main.getIcon(status=self.main.icons[unicode(item.text(1))[0]],size="16x16")
-		tab=self.main.chat.addChatTab(self.jid+"/"+unicode(item.text(0)),item.text(0),icon,full=True)
-		self.main.chat.activate()
-		self.main.client.reactor.callLater(0.2,tab.chat.ui.line.setFocus,QtCore.Qt.MouseFocusReason)
+		icon=self.main().getIcon(status=self.main().icons[unicode(item.text(1))[0]],size="16x16")
+		tab=self.main().chat.addChatTab(self.jid+"/"+unicode(item.text(0)),item.text(0),icon,full=True)
+		self.main().chat.activate()
+		self.main().client.reactor.callLater(0.2,tab.chat.ui.line.setFocus,QtCore.Qt.MouseFocusReason)
 
 	def userSingleClicked(self,item,i):
 		"""
@@ -469,7 +472,7 @@ class groupChatWidget(abstractChatWidget):
 		if item.parent()==None:
 			return
 		text = unicode(self.ui.line.toPlainText())
-		if len(text) == 0 or text.strip()[:-1] in self.main.client.groupchats[self.jid].users.keys():
+		if len(text) == 0 or text.strip()[:-1] in self.main().client.groupchats[self.jid].users.keys():
 			self.ui.line.setText(unicode(item.text(0))+': ')
 		else:
 			cur=self.ui.line.textCursor()
@@ -492,8 +495,8 @@ class groupChatWidget(abstractChatWidget):
 		if ret==QtGui.QMessageBox.Yes:
 			self.ui.textEdit.clear()
 			self.init=""
-			if self.main.skin.has_key("on_init"):
-				self.init=self.main.skin["on_init"]
+			if self.main().skin.has_key("on_init"):
+				self.init=self.main().skin["on_init"]
 			self.ui.textEdit.setHtml("<br/>"+self.init)
 
 	def toggleInfo(self, b):
@@ -515,12 +518,12 @@ class groupChatWidget(abstractChatWidget):
 		"""
 		nick, b = QtGui.QInputDialog.getText(self,self.tr("Change nick"),self.tr("Enter new nickname:"), QtGui.QLineEdit.Normal, "")
 		if nick and b:
-			if nick not in self.main.client.groupchats[self.jid].users.keys():
-				self.main.client.sendPresence(to=self.jid+"/"+nick)
-				self.main.client.groupchats[self.jid].nick=nick
+			if nick not in self.main().client.groupchats[self.jid].users.keys():
+				self.main().client.sendPresence(to=self.jid+"/"+nick)
+				self.main().client.groupchats[self.jid].nick=nick
 				self.nick=nick
 			else:
-				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("Nickname is used by somebody else.")))
+				message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",unicode(self.tr("Nickname is used by somebody else.")))
 				self.textEditWrite(message)
 		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
@@ -528,15 +531,15 @@ class groupChatWidget(abstractChatWidget):
 		"""
 		Called when user wants to change configuration of room.
 		"""
-		nick=self.main.client.groupchats[self.jid].nick
-		if self.main.client.groupchats[self.jid].users[nick].affiliation=="owner" :
-			d=self.main.client.getMUCConfig(self.jid)
+		nick=self.main().client.groupchats[self.jid].nick
+		if self.main().client.groupchats[self.jid].users[nick].affiliation=="owner" :
+			d=self.main().client.getMUCConfig(self.jid)
 			d.addCallback(self._onRoomConfig)
-		elif self.main.client.groupchats[self.jid].users[nick].affiliation=="admin":
-			self.dialog=groupchatAdminDialog(self.main,self.jid,None,self,subject=unicode(self.ui.info.toPlainText()), admin = True)
+		elif self.main().client.groupchats[self.jid].users[nick].affiliation=="admin":
+			self.dialog=groupchatAdminDialog(self.main(),self.jid,None,self,subject=unicode(self.ui.info.toPlainText()), admin = True)
 			self.dialog.show()
 		elif self.role=='moderator':
-			self.dialog=groupchatAdminDialog(self.main,self.jid,None,self,subject=unicode(self.ui.info.toPlainText()))
+			self.dialog=groupchatAdminDialog(self.main(),self.jid,None,self,subject=unicode(self.ui.info.toPlainText()))
 			self.dialog.show()
 
 	def _onRoomConfig(self,data):
@@ -546,7 +549,7 @@ class groupChatWidget(abstractChatWidget):
 		jid=data[0]
 		form=data[1]
 		if form!=None:
-			self.dialog=groupchatAdminDialog(self.main,jid,form,self,subject=unicode(self.ui.info.toPlainText()), admin = True)
+			self.dialog=groupchatAdminDialog(self.main(),jid,form,self,subject=unicode(self.ui.info.toPlainText()), admin = True)
 			self.dialog.show()
 
 	def getUserItems(self,name):
@@ -570,7 +573,7 @@ class groupChatWidget(abstractChatWidget):
 		@rtype: unicode
 		@return: nickname or the same jid as first param (jid)
 		"""
-		for nick,user in self.main.client.groupchats[self.jid].users.iteritems():
+		for nick,user in self.main().client.groupchats[self.jid].users.iteritems():
 			if user.truejid==jid:
 				return nick
 		return jid
@@ -612,38 +615,38 @@ class groupChatWidget(abstractChatWidget):
 
 	def removeUser(self,nick,codes=[],reason="",actor=None,n=None):
 		nick=unicode(nick)
-		if self.main.client.groupchats[self.jid].nick==nick:
+		if self.main().client.groupchats[self.jid].nick==nick:
 			if u'307' in codes:
 				self.ui.line.setEnabled(False)
 				self.ui.users.clear()
 				self.addRoles()
 				if actor and len(reason)!=0:
 					name=self.getUserName(actor)
-					message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("You have been kicked from the room by %s. Reason: %s.")) % (unicode(name),unicode(reason)))
+					message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",unicode(self.tr("You have been kicked from the room by %s. Reason: %s.")) % (unicode(name),unicode(reason)))
 				elif actor:
 					name=self.getUserName(actor)
-					message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("You have been kicked from the room by %s.")) % unicode(name))
+					message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",unicode(self.tr("You have been kicked from the room by %s.")) % unicode(name))
 				elif len(reason)!=0:
-					message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("You have been kicked from the room. Reason: %s.")) % unicode(reason))
+					message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",unicode(self.tr("You have been kicked from the room. Reason: %s.")) % unicode(reason))
 				else:
-					message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("You have been kicked from the room.")))
+					message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",unicode(self.tr("You have been kicked from the room.")))
 				self.textEditWrite(message)
 				return
 			elif u'301' in codes:
 				self.ui.line.setEnabled(False)
 				self.ui.users.clear()
 				self.addRoles()
-				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("You have been banned for the room.")))
+				message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",unicode(self.tr("You have been banned for the room.")))
 				self.textEditWrite(message)
 				return
 		if u'307' in codes:
-			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",nick+unicode(self.tr(" has been kicked from this room.")))
+			message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",nick+unicode(self.tr(" has been kicked from this room.")))
 			self.textEditWrite(message)
 		elif u'301' in codes:
-			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",nick+unicode(self.tr(" has been banned for this room.")))
+			message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",nick+unicode(self.tr(" has been banned for this room.")))
 			self.textEditWrite(message)
 		elif u'303' in codes:
-			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",nick+unicode(self.tr(" has been renamed to "))+unicode(n)+".")
+			message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",nick+unicode(self.tr(" has been renamed to "))+unicode(n)+".")
 			self.textEditWrite(message)
 		item=self.getUserItems(nick)[0]
 		parent=item.parent()
@@ -656,7 +659,7 @@ class groupChatWidget(abstractChatWidget):
 			self.connecting.hide()
 			for inv in self.invitation:
 				reason = self.tr("Hi! I'd love to see you in multichat at ") + self.jid
-				self.main.client.sendInvitation(inv, self.jid,reason, cont=True)
+				self.main().client.sendInvitation(inv, self.jid,reason, cont=True)
 		new=False
 		if self.isUser(unicode(nick))==False:
 			new=True
@@ -679,7 +682,7 @@ class groupChatWidget(abstractChatWidget):
 				self.colors.append(item)
 
 
-		if self.main.client.groupchats[self.jid].nick==nick:
+		if self.main().client.groupchats[self.jid].nick==nick:
 			self.affiliation=affiliation
 			self.role=role
 			if affiliation=="owner":
@@ -698,16 +701,16 @@ class groupChatWidget(abstractChatWidget):
 		# Nastaveni stavu
 		status = unicode(status)
 		if status!="None":
-			item.setIcon(0,self.main.getIcon(status=status,size="32x32"))
-			item.setText(1,self.main.shows[status]+unicode(nick.lower()))
+			item.setIcon(0,self.main().getIcon(status=status,size="32x32"))
+			item.setText(1,self.main().shows[status]+unicode(nick.lower()))
 		else:
-			item.setIcon(0,self.main.getIcon(status="online",size="32x32"))
-			item.setText(1,self.main.shows['online']+unicode(nick.lower()))
+			item.setIcon(0,self.main().getIcon(status="online",size="32x32"))
+			item.setText(1,self.main().shows['online']+unicode(nick.lower()))
 			status="online"
 
 		if new:
 			item.setIcon(1,QtGui.QIcon("images/32x32/apps/jabbim.png"))
-			self.main.client.on_avatarUpdate(self.jid+"/"+unicode(item.text(0)))
+			self.main().client.on_avatarUpdate(self.jid+"/"+unicode(item.text(0)))
 
 		jid=self.jid+"/"+nick
 		item.setToolTip(0,self.getGroupchatTooltip(jid,item))
@@ -715,7 +718,7 @@ class groupChatWidget(abstractChatWidget):
 		avatar=item.icon(1)
 		if not avatar.isNull():
 			#avatar=avatar.pixmap(28,28)
-			result=self.main.getAvatar(avatar,size="32x32",frame=False,status=self.main.icons[unicode(item.text(1))[0]])
+			result=self.main().getAvatar(avatar,size="32x32",frame=False,status=self.main().icons[unicode(item.text(1))[0]])
 			item.setIcon(0,QtGui.QIcon(result))
 
 		
@@ -728,55 +731,55 @@ class groupChatWidget(abstractChatWidget):
 
 	def getGroupchatTooltip(self,jid,item):
 		text='<table><tr>'
-		nick=self.main.getJid(jid).resource
-		status=self.main.icons[unicode(item.text(1))[0]]
-		if self.main.client.avatarDef.get(jid, False):
-			if self.main.client.avatarImg[self.main.client.avatarDef[jid]] and self.main.client.avatarDef[jid]!="None":
-				width=self.main.client.avatarImg[self.main.client.avatarDef[jid]][1]
-				height=self.main.client.avatarImg[self.main.client.avatarDef[jid]][2]
+		nick=self.main().getJid(jid).resource
+		status=self.main().icons[unicode(item.text(1))[0]]
+		if self.main().client.avatarDef.get(jid, False):
+			if self.main().client.avatarImg[self.main().client.avatarDef[jid]] and self.main().client.avatarDef[jid]!="None":
+				width=self.main().client.avatarImg[self.main().client.avatarDef[jid]][1]
+				height=self.main().client.avatarImg[self.main().client.avatarDef[jid]][2]
 				height=height/(float(width)/64.0)
-				text+='<td><img src="'+self.main.realHomeDir+'/avatars/'+unicode(self.main.client.avatarDef[jid])+'" width="64" height="'+str(height)+'"/></td>'
-		#if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")):
-			#f=open(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
+				text+='<td><img src="'+self.main().realHomeDir+'/avatars/'+unicode(self.main().client.avatarDef[jid])+'" width="64" height="'+str(height)+'"/></td>'
+		#if os.path.isfile(self.main().homeDir+'/avatars/'+unicode(jid).replace("/","%")):
+			#f=open(self.main().homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
 			#image = f.read()
 			#f.close()
 			#pixmap=QtGui.QPixmap()
 			#pixmap.loadFromData(image)
 			#pixmap=QtGui.QIcon(pixmap)
 			#pixmap=pixmap.pixmap(64,64)
-			#text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
+			#text+='<td><img src="'+self.main().homeDir+'/avatars/'+unicode(jid).replace("/","%")+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
 		text+='<td><b>'+self.tr("Name:")+'</b> '+nick+'<br/>'
-		if self.main.client.groupchats[self.jid].users[nick].truejid:
-			text+='<b>'+self.tr("JID:")+'</b> '+self.main.client.groupchats[self.jid].users[nick].truejid+'<br/>'
+		if self.main().client.groupchats[self.jid].users[nick].truejid:
+			text+='<b>'+self.tr("JID:")+'</b> '+self.main().client.groupchats[self.jid].users[nick].truejid+'<br/>'
 		else:
 			text+='<b>'+self.tr("JID:")+'</b> '+unicode(self.jid)+'/'+nick+'<br/>'
 		text+='<img src="images/16x16/status/jabber-%s.png">' % status # hodilo by se rozlisit k jakymu poatri transportu
-		text+='<font size="-1">%s</font><br>' % unicode(self.main.client.groupchats[self.jid].users[nick].status).replace("None","")
+		text+='<font size="-1">%s</font><br>' % unicode(self.main().client.groupchats[self.jid].users[nick].status).replace("None","")
 		text+="</td></tr></table>"
 		return text
 
 	#def setTooltip(self,item,jid):
 		##jid=self.jid+"/"+nick
 		#nick=unicode(jidT.JID(jid).resource)
-		#status=self.main.client.groupchats[self.jid].users[nick].show
+		#status=self.main().client.groupchats[self.jid].users[nick].show
 		#item=self.getUserItems(nick)[0]
 		#text='<table><tr>'
-		#if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")):
-			#f=open(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
+		#if os.path.isfile(self.main().homeDir+'/avatars/'+unicode(jid).replace("/","%")):
+			#f=open(self.main().homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
 			#image = f.read()
 			#f.close()
 			#pixmap=QtGui.QPixmap()
 			#pixmap.loadFromData(image)
 			#pixmap=QtGui.QIcon(pixmap)
 			#pixmap=pixmap.pixmap(64,64)
-			#text+='<td><img src="'+self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
+			#text+='<td><img src="'+self.main().homeDir+'/avatars/'+unicode(jid).replace("/","%")+'" width="'+str(pixmap.width())+'" height="'+str(pixmap.height())+'"/></td>'
 		#text+='<td><b>'+self.tr("Name:")+'</b> '+nick+'<br/>'
-		#if self.main.client.groupchats[self.jid].users[nick].truejid:
-			#text+='<b>'+self.tr("JID:")+'</b> '+self.main.client.groupchats[self.jid].users[nick].truejid+'<br/>'
+		#if self.main().client.groupchats[self.jid].users[nick].truejid:
+			#text+='<b>'+self.tr("JID:")+'</b> '+self.main().client.groupchats[self.jid].users[nick].truejid+'<br/>'
 		#else:
 			#text+='<b>'+self.tr("JID:")+'</b> '+unicode(self.jid)+'/'+nick+'<br/>'
 		#text+='<img src="images/16x16/status/jabber-%s.png">' % status # hodilo by se rozlisit k jakymu poatri transportu
-		#text+='<font size="-1">%s</font><br>' % unicode(self.main.client.groupchats[self.jid].users[nick].status).replace("None","")
+		#text+='<font size="-1">%s</font><br>' % unicode(self.main().client.groupchats[self.jid].users[nick].status).replace("None","")
 		#text+="</td></tr></table>"
 		#item.setToolTip(0,text)
 
@@ -799,29 +802,29 @@ class groupChatWidget(abstractChatWidget):
 		return False
 
 	def commandNick(self, nick):
-		if not self.main.client.groupchats[self.jid].users.has_key(nick):
-			self.main.client.sendPresence(to=self.jid+"/"+nick)
-			self.main.client.groupchats[self.jid].nick = nick
+		if not self.main().client.groupchats[self.jid].users.has_key(nick):
+			self.main().client.sendPresence(to=self.jid+"/"+nick)
+			self.main().client.groupchats[self.jid].nick = nick
 			self.nick = nick
 		else:
-			message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",unicode(self.tr("Nickname is used by somebody else.")))
+			message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",unicode(self.tr("Nickname is used by somebody else.")))
 			self.textEditWrite(message)
 		self.ui.line.clear()
 		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 		return False
 
 	def commandJoin(self, roomname):
-		#self.main.client.sendPresence(to=self.jid+"/"+nick)
-		#self.main.client.groupchats[self.jid].nick=nick
-		if self.main.chat.addGroupChatTab(roomname,self.main.client.groupchats[self.jid].nick):
-			self.main.client.joinGC(roomname, self.main.client.groupchats[self.jid].nick)
+		#self.main().client.sendPresence(to=self.jid+"/"+nick)
+		#self.main().client.groupchats[self.jid].nick=nick
+		if self.main().chat.addGroupChatTab(roomname,self.main().client.groupchats[self.jid].nick):
+			self.main().client.joinGC(roomname, self.main().client.groupchats[self.jid].nick)
 		self.ui.line.clear()
 		#self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 		return False
 
 	def commandLeave(self, dummy):
-		tab,tabIndex=self.main.chat.findTab(unicode(self.jid))
-		self.main.chat.removeTab(tabIndex, False)
+		tab,tabIndex=self.main().chat.findTab(unicode(self.jid))
+		self.main().chat.removeTab(tabIndex, False)
 		self.ui.line.clear()
 		return False
 
@@ -861,7 +864,7 @@ class groupChatWidget(abstractChatWidget):
 					cmd = services
 					args = []
 				cmd = cmd[1:]
-				passed = self.main.client.dispatcher.publishEvent("onCommand", cmd, args, self, "groupchat")
+				passed = self.main().client.dispatcher.publishEvent("onCommand", cmd, args, self, "groupchat")
 				if not passed:
 					# it was a recognized command and a subscriber handled the event
 					self.ui.line.clear()
@@ -869,7 +872,7 @@ class groupChatWidget(abstractChatWidget):
 					return
 				# Otherwise it's a normal message. Proceed.
 
-			if self.main.config['chatMode']=="normal":
+			if self.main().config['chatMode']=="normal":
 				text=unicode(self.ui.line.toPlainText())
 				#text=unicode(text, 'utf-8')
 				text=unescape(text)
@@ -898,35 +901,35 @@ class groupChatWidget(abstractChatWidget):
 			xhtml,same=self.qtHtmlToXhtml(xhtml,text)
 			ret=[]
 			if same:
-				for key,value in self.main.plugins.iteritems():
+				for key,value in self.main().plugins.iteritems():
 					if value['module']:
-						ret.append(self.main.runPluginCommand(value['module'].on_groupchatMessageSend,[unicode(self.jid),text,'',"active"]))
+						ret.append(self.main().runPluginCommand(value['module'].on_groupchatMessageSend,[unicode(self.jid),text,'',"active"]))
 				if not False in ret:
-					self.main.client.sendMessage(unicode(self.jid),text,'groupchat',composing="active")
+					self.main().client.sendMessage(unicode(self.jid),text,'groupchat',composing="active")
 			else:
-				for key,value in self.main.plugins.iteritems():
+				for key,value in self.main().plugins.iteritems():
 					if value['module']:
-						ret.append(self.main.runPluginCommand(value['module'].on_groupchatMessageSend,[unicode(self.jid),text,xhtml,"active"]))
+						ret.append(self.main().runPluginCommand(value['module'].on_groupchatMessageSend,[unicode(self.jid),text,xhtml,"active"]))
 				if not False in ret:
-					self.main.client.sendMessage(unicode(self.jid),text,'groupchat',xhtml=xhtml,composing="active")
+					self.main().client.sendMessage(unicode(self.jid),text,'groupchat',xhtml=xhtml,composing="active")
 
-			#self.main.client.sendMessage(self.jid, text, 'groupchat')
+			#self.main().client.sendMessage(self.jid, text, 'groupchat')
 			self.sent.append(text)
 			self.hindex = len(self.sent)
 			#self.ui.line.clear()
 			#self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 			self.clearLine()
-			if self.main.chat.active==False:
-				self.main.client.dispatcher.publishEvent('onActivity')
-				self.main.chat.active=True
-				self.main.chat.timer.stop()
+			if self.main().chat.active==False:
+				self.main().client.dispatcher.publishEvent('onActivity')
+				self.main().chat.active=True
+				self.main().chat.timer.stop()
 
 			#self.ui.line.setMaximumHeight(int(self.ui.line.currentFont().pointSize())+15)
 
 	def tabPressed(self):
 		# nick completion
 		original=unicode(self.ui.line.toPlainText())
-		users=self.main.client.groupchats[self.jid].users.keys()
+		users=self.main().client.groupchats[self.jid].users.keys()
 		for user in users:
 			original=original.replace(user,user.replace(" ","/"))
 		t=unicode(original).lower()

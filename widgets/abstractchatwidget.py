@@ -15,6 +15,7 @@ import time
 from include import utils
 from emoticonswidget import *
 from linkeditor import linkEditorDialog
+import weakref
 
 class message(QtCore.QObject):
 	def __init__(self,message):
@@ -213,40 +214,6 @@ class abstractTextView(QtGui.QTextEdit):
 		#self.data[-1].setText(unicode(text).replace("&gt;",">").replace("&lt;","<").replace("&amp;","&").replace("&quot;","\""))
 		#return self.data[-1]
 
-class lineEditWidget(QtGui.QTextEdit):
-	def __init__(self,main,parent=None):
-		apply(QtGui.QTextEdit.__init__,(self,parent))
-		self.main=main
-		self.parent=parent
-		self.setObjectName("line")
-
-
-
-	def keyPressEvent(self,event):
-		key=event.key()
-		self.main.tabWord=None
-		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier):
-			if self.main.main.config['sendByCtrl']=="True":
-				self.main.sendButtonClicked()
-				event.accept()
-			else:
-				return QtGui.QTextEdit.keyPressEvent(self,event)
-		elif key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
-			if self.main.main.config['sendByCtrl']=="False":
-				self.main.sendButtonClicked()
-				event.accept()
-			else:
-				return QtGui.QTextEdit.keyPressEvent(self,event)
-		else:
-			return QtGui.QTextEdit.keyPressEvent(self,event)
-#			text=unicode(self.toPlainText())
-#			for k,v in self.parent.smileys.iteritems():
-#				if text.find(" "+k)!=-1:
-#					html=self.toHtml()
-#					html.replace(k,'<img src="'+v+'"/> ')
-#					cur=self.textCursor()
-#					self.setHtml(html)
-#					self.setTextCursor(cur)
 
 class normalLineEditWidget(QtGui.QTextEdit):
 	"""
@@ -254,7 +221,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 	"""
 	def __init__(self,main,parent=None):
 		apply(QtGui.QTextEdit.__init__,(self,parent))
-		self.main=main #: MainWindow pointer
+		self.main=weakref.ref(main) #: abstractChatWidget pointer
 		self.parent=parent #: parent
 		self.setObjectName("line")
 		self.composing=False #: True if user is typing
@@ -277,9 +244,9 @@ class normalLineEditWidget(QtGui.QTextEdit):
 	#def event(self,ev):
 		#if ev.type()==QtCore.QEvent.Shortcut or ev.type()==QtCore.QEvent.ShortcutOverride:
 			#sequence=unicode(ev.key().toString()).lower()
-			#for shortcut in self.main.config['activeShortcuts']:
-				#print self.main.config[shortcut].lower(),sequence
-				#if self.main.config[shortcut].lower()==sequence:
+			#for shortcut in self.main().config['activeShortcuts']:
+				#print self.main().config[shortcut].lower(),sequence
+				#if self.main().config[shortcut].lower()==sequence:
 					#return False
 		#return QtGui.QTextEdit.event(self,ev)
 
@@ -384,7 +351,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		if self.text==unicode(self.toPlainText()):
 			# text from previous loop is the same as currently typed text => user stops typing
 			if len(self.text)!=0:
-				self.main.main.client.sendMessage(self.main.jid, "",composing="paused")
+				self.main().main().client.sendMessage(self.main().jid, "",composing="paused")
 			self.composing=False
 		else:
 			# text from previous loop is diffrent from currently typed text => user is typing
@@ -395,38 +362,38 @@ class normalLineEditWidget(QtGui.QTextEdit):
 	
 	def keyPressEvent(self,event):
 		if event.matches(QtGui.QKeySequence.NextChild):
-			self.main.main.chat.event(event)
+			self.main().main().chat.event(event)
 			return
 		elif event.matches(QtGui.QKeySequence.PreviousChild):
-			self.main.main.chat.event(event)
+			self.main().main().chat.event(event)
 			return
 		if not self.composing:
 			# user starts typing
-			self.main.main.client.sendMessage(self.main.jid, "",composing="composing")
+			self.main().main().client.sendMessage(self.main().jid, "",composing="composing")
 		key=event.key()
 		if key!=QtCore.Qt.Key_Tab:
-			self.main.tabWord=None
+			self.main().tabWord=None
 		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier):
-			if self.main.main.config['sendByCtrl']=="True":
-				self.main.sendButtonClicked()
+			if self.main().main().config['sendByCtrl']=="True":
+				self.main().sendButtonClicked()
 				event.accept()
 			else:
 				return QtGui.QTextEdit.keyPressEvent(self,event)
 		elif key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
-			if self.main.main.config['sendByCtrl']=="False":
-				self.main.sendButtonClicked()
+			if self.main().main().config['sendByCtrl']=="False":
+				self.main().sendButtonClicked()
 				event.accept()
 			else:
 				return QtGui.QTextEdit.keyPressEvent(self,event)
-		elif key == QtCore.Qt.Key_Up and  self.main.hindex > 0 and (event.modifiers() & QtCore.Qt.ControlModifier): 
-			self.main.hindex = self.main.hindex-1
-			self.main.ui.line.setText(self.main.sent[self.main.hindex])
-		elif key == QtCore.Qt.Key_Down and  self.main.hindex < len(self.main.sent) and (event.modifiers() & QtCore.Qt.ControlModifier): 
+		elif key == QtCore.Qt.Key_Up and  self.main().hindex > 0 and (event.modifiers() & QtCore.Qt.ControlModifier): 
+			self.main().hindex = self.main().hindex-1
+			self.main().ui.line.setText(self.main().sent[self.main().hindex])
+		elif key == QtCore.Qt.Key_Down and  self.main().hindex < len(self.main().sent) and (event.modifiers() & QtCore.Qt.ControlModifier): 
 
-			self.main.hindex = self.main.hindex+1
-			self.main.ui.line.setText(self.main.sent[self.main.hindex])
+			self.main().hindex = self.main().hindex+1
+			self.main().ui.line.setText(self.main().sent[self.main().hindex])
 		elif key==QtCore.Qt.Key_Tab:
-			self.main.tabPressed()
+			self.main().tabPressed()
 			return
 		else:
 			QtGui.QTextEdit.keyPressEvent(self,event)
@@ -446,7 +413,7 @@ class abstractChatWidget(QtGui.QWidget):
 		apply(QtGui.QWidget.__init__,(self,parent))
 		self.ui=initClass()
 		self.ui.setupUi(self)
-		self.main=main
+		#self.main=main
 		self.parent=parent
 		self.xhtml=xhtml
 		self.lastMessages=[]
@@ -465,7 +432,7 @@ class abstractChatWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.webkit,QtCore.SIGNAL("loadFinished ( bool)"),self.webkitLoaded_)
 		QtCore.QObject.connect(self.ui.webkit.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.webkitCleared)
 
-		self.loadWebkit()
+		#self.loadWebkit()
 
 		#self.ui.webkit.load(QtCore.QUrl("file:///home/hanzz/svn/jabbim/trunk/test.html"))
 		l.addWidget(self.ui.webkit)
@@ -497,10 +464,10 @@ class abstractChatWidget(QtGui.QWidget):
 		#QtCore.QObject.connect(self.ui.fontSize,QtCore.SIGNAL("activated(const QString &)"),self.fontSize)
 		
 		self.ui.textEdit.setAcceptRichText(False)
-		# save init part from self.main.skin to the textEdit
+		# save init part from self.main().skin to the textEdit
 		self.init=""
-		if self.main.skin.has_key("on_init"):
-			self.init=self.main.skin["on_init"]
+		if self.main().skin.has_key("on_init"):
+			self.init=self.main().skin["on_init"]
 		self.ui.textEdit.setHtml("<br/>"+self.init)
 		
 		self.unread=0 #: number of unread messages
@@ -603,7 +570,7 @@ class abstractChatWidget(QtGui.QWidget):
 
 	def webkitLoaded_(self):
 		self.ui.webkit.page().mainFrame().evaluateJavaScript("showLastMessages();")
-		#self.main.client.reactor.callLater(1,self.writeWebkitCache)
+		#self.main().client.reactor.callLater(1,self.writeWebkitCache)
 		self.webkitLoaded=True
 		self.messageObjectReady()
 
@@ -627,13 +594,13 @@ class abstractChatWidget(QtGui.QWidget):
 		except:
 			typ="chat"
 		if typ=="groupchat":
-			stylesheet=self.main.webkitThemeFactory.genGroupchatStyleSheet()
-			footer=self.main.webkitThemeFactory.genGroupchatFooter()
-			header=self.main.webkitThemeFactory.genGroupchatHeader()
+			stylesheet=self.main().webkitThemeFactory.genGroupchatStyleSheet()
+			footer=self.main().webkitThemeFactory.genGroupchatFooter()
+			header=self.main().webkitThemeFactory.genGroupchatHeader()
 		else:
-			stylesheet=self.main.webkitThemeFactory.genChatStyleSheet()
-			footer=self.main.webkitThemeFactory.genChatFooter()
-			header=self.main.webkitThemeFactory.genChatHeader(self.name,self.file)
+			stylesheet=self.main().webkitThemeFactory.genChatStyleSheet()
+			footer=self.main().webkitThemeFactory.genChatFooter()
+			header=self.main().webkitThemeFactory.genChatHeader(self.name,self.file)
 		code=""
 		self.messageObject.messages=[]
 		i=0
@@ -643,17 +610,17 @@ class abstractChatWidget(QtGui.QWidget):
 				out=m[0]=="out"
 				if out:
 					if m[1]==previousName:
-						self.messageObject.messages.append(self.main.webkitThemeFactory.genGroupchatOutgoingNextContent(m[1],m[2],m[3],m[4]))
+						self.messageObject.messages.append(self.main().webkitThemeFactory.genGroupchatOutgoingNextContent(m[1],m[2],m[3],m[4]))
 						code+="insertMessage(%s);\n" % str(i)
 					else:
-						self.messageObject.messages.append(self.main.webkitThemeFactory.genGroupchatOutgoingContent(m[1],m[2],m[3],m[4]))
+						self.messageObject.messages.append(self.main().webkitThemeFactory.genGroupchatOutgoingContent(m[1],m[2],m[3],m[4]))
 						code+="addMessage(%s);\n" % str(i)
 				else:
 					if m[1]==previousName:
-						self.messageObject.messages.append(self.main.webkitThemeFactory.genGroupchatIncomingNextContent(m[1],m[2],m[3],m[4]))
+						self.messageObject.messages.append(self.main().webkitThemeFactory.genGroupchatIncomingNextContent(m[1],m[2],m[3],m[4]))
 						code+="insertMessage(%s);\n" % str(i)
 					else:
-						self.messageObject.messages.append(self.main.webkitThemeFactory.genGroupchatIncomingContent(m[1],m[2],m[3],m[4]))
+						self.messageObject.messages.append(self.main().webkitThemeFactory.genGroupchatIncomingContent(m[1],m[2],m[3],m[4]))
 						code+="addMessage(%s);\n" % str(i)
 				previousName=unicode(m[1])
 				i+=1
@@ -662,17 +629,17 @@ class abstractChatWidget(QtGui.QWidget):
 				out=m[0]=="out"
 				if out:
 					if m[1]==previousName:
-						self.messageObject.messages.append(self.main.webkitThemeFactory.genOutgoingNextContent(m[1],m[2],m[3],m[4]))
+						self.messageObject.messages.append(self.main().webkitThemeFactory.genOutgoingNextContent(m[1],m[2],m[3],m[4]))
 						code+="insertMessage(%s);\n" % str(i)
 					else:
-						self.messageObject.messages.append(self.main.webkitThemeFactory.genOutgoingContent(m[1],m[2],m[3],m[4]))
+						self.messageObject.messages.append(self.main().webkitThemeFactory.genOutgoingContent(m[1],m[2],m[3],m[4]))
 						code+="addMessage(%s);\n" % str(i)
 				else:
 					if m[1]==previousName:
-						self.messageObject.messages.append(self.main.webkitThemeFactory.genIncomingNextContent(m[1],m[2],m[3],m[4]))
+						self.messageObject.messages.append(self.main().webkitThemeFactory.genIncomingNextContent(m[1],m[2],m[3],m[4]))
 						code+="insertMessage(%s);\n" % str(i)
 					else:
-						self.messageObject.messages.append(self.main.webkitThemeFactory.genIncomingContent(m[1],m[2],m[3],m[4]))
+						self.messageObject.messages.append(self.main().webkitThemeFactory.genIncomingContent(m[1],m[2],m[3],m[4]))
 						code+="addMessage(%s);\n" % str(i)
 				previousName=unicode(m[1])
 				i+=1
@@ -818,18 +785,18 @@ function showLastMessages(){
 		self.imageId=0
 
 		# debug... we don't need it anymore
-		#f=open(self.main.webkitThemeFactory.chatPath()+"/test.html","w")
+		#f=open(self.main().webkitThemeFactory.chatPath()+"/test.html","w")
 		#f.write(html)
 		#f.close()
 		if typ=="groupchat":
-			self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+self.main.webkitThemeFactory.groupchatPath()))
+			self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+self.main().webkitThemeFactory.groupchatPath()))
 		else:
-			self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+self.main.webkitThemeFactory.chatPath()))
+			self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+self.main().webkitThemeFactory.chatPath()))
 		
 
 	def registerFeatureForWidget(self,feature,widget):
 		self.featuredWidget.append([feature,widget])
-		if self.main.client.hasFeature(self.jid,feature):
+		if self.main().client.hasFeature(self.jid,feature):
 			widget.show()
 		else:
 			widget.hide()
@@ -844,8 +811,8 @@ function showLastMessages(){
 		for item in self.featuredWidget:
 			feature=item[0]
 			widget=item[1]
-			#print "checking ",feature," = ",self.main.client.hasFeature(self.jid,feature)
-			if self.main.client.hasFeature(self.jid,feature):
+			#print "checking ",feature," = ",self.main().client.hasFeature(self.jid,feature)
+			if self.main().client.hasFeature(self.jid,feature):
 				widget.show()
 			else:
 				widget.hide()
@@ -1101,10 +1068,10 @@ function showLastMessages(){
 		pos=self.ui.smileys.mapToGlobal(QtCore.QPoint(0,0))
 		x=pos.x()
 		y=pos.y()
-		self.main.emoticonsWidget.acceptor=self
-		self.main.emoticonsWidget.setGeometry(x-self.main.emoticonsWidget.pixmap.width()/2,y-self.main.emoticonsWidget.pixmap.height(), self.main.emoticonsWidget.pixmap.width(), self.main.emoticonsWidget.pixmap.height())
+		self.main().emoticonsWidget.acceptor=self
+		self.main().emoticonsWidget.setGeometry(x-self.main().emoticonsWidget.pixmap.width()/2,y-self.main().emoticonsWidget.pixmap.height(), self.main().emoticonsWidget.pixmap.width(), self.main().emoticonsWidget.pixmap.height())
 
-		self.main.emoticonsWidget.setVisible(checked) 
+		self.main().emoticonsWidget.setVisible(checked) 
 		
 	def underline(self,bool):
 		"""
@@ -1150,30 +1117,30 @@ function showLastMessages(){
 
 	def appendXhtml(self,xhtml):
 		message=xhtml.replace("&quot;",'"')
-		file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
+		file=self.main().homeDir+'/avatars/'+unicode(self.main().client.jid.userhost())
 		if not os.path.isfile(file):
 			file="images/32x32/apps/jabbim.png"
-		message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",message).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+		message=self.main().skin["my_message"].replace("[time]",self.main().now()).replace("[user]",unicode(self.main().client.jid.user)).replace("[message]",message).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 		self.textEditWrite(message)
 
 	def appendPlainText(self,text):
 		text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
 		text=utils.replace_url(text)
 		text=text.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
-		file=self.main.homeDir+'/avatars/'+unicode(self.main.client.jid.userhost())
+		file=self.main().homeDir+'/avatars/'+unicode(self.main().client.jid.userhost())
 		if not os.path.isfile(file):
 			file="images/32x32/apps/jabbim.png"
 		if unicode(text).startswith("/me"):
-			message=self.main.skin["my_me_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text[3:]).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+			message=self.main().skin["my_me_message"].replace("[time]",self.main().now()).replace("[user]",unicode(self.main().client.jid.user)).replace("[message]",text[3:]).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 		else:
-			message=self.main.skin["my_message"].replace("[time]",self.main.now()).replace("[user]",unicode(self.main.client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
+			message=self.main().skin["my_message"].replace("[time]",self.main().now()).replace("[user]",unicode(self.main().client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
 		self.textEditWrite(message)
 
 	
 	def webkitWrite(self,text,insert=False):
 		# look for longest-string first; e.g. for styles where both ':)' and ':)]' smileys are defined
-		for k in sorted(self.main.emoticonsWidget.smileys.iterkeys(), key=len, reverse=True):
-			v = self.main.emoticonsWidget.smileys[k]
+		for k in sorted(self.main().emoticonsWidget.smileys.iterkeys(), key=len, reverse=True):
+			v = self.main().emoticonsWidget.smileys[k]
 			text=text.replace(" "+k,'&nbsp;<img alt="'+k+'" src="'+v+'"/>')
 			text=text.replace("&nbsp;"+k,'&nbsp;<img alt="'+k+'" src="'+v+'"/>')
 			text=text.replace(">"+k,'><img alt="'+k+'" src="'+v+'"/>')
@@ -1222,7 +1189,7 @@ function showLastMessages(){
 #		if self.ui.textEdit.verticalScrollBar().value()==self.ui.textEdit.verticalScrollBar().maximum():
 #			toEnd=True
 #		# replace emoticons by images
-#		for k,v in self.main.emoticonsWidget.smileys.iteritems():
+#		for k,v in self.main().emoticonsWidget.smileys.iteritems():
 #			text=text.replace(" "+k,'&nbsp;<img alt="'+k+'" src="'+v+'"/>')
 #			text=text.replace("&nbsp;"+k,'&nbsp;<img alt="'+k+'" src="'+v+'"/>')
 #			text=text.replace(">"+k,'><img alt="'+k+'" src="'+v+'"/>')
@@ -1245,7 +1212,7 @@ function showLastMessages(){
 		else:
 			data=action.data()
 			data=data.toString()
-		if self.main.config['chatMode']=="normal":
+		if self.main().config['chatMode']=="normal":
 			cur=self.ui.line.textCursor()
 			cur.insertText(" "+data)
 			self.ui.line.setTextCursor(cur)
