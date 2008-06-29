@@ -747,6 +747,7 @@ class events:
 			tab.chat.filetransfer[sid]=chatwidget.FTWidget(text,None,self.main,sid,tab.chat.ui.ftwidget)
 			tab.chat.ui.ftwidget.layout().addWidget(tab.chat.filetransfer[sid])
 			tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Sending file"))+" "+basename(file),self.main.now()))
+			tab.chat.lastMessageFrom=""
 		self.filetransferQueue[sid]=filesQueue
 		#self.main.filetransferDescriptions[sid]=descriptions
 		self.filetransferWidget[sid]=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
@@ -782,6 +783,7 @@ class events:
 			tab.chat.filetransfer[sid]=chatwidget.FTWidget(text,None,self.main,sid,tab.chat.ui.ftwidget)
 			tab.chat.ui.ftwidget.layout().addWidget(tab.chat.filetransfer[sid])
 			tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Receiving file"))+" "+unicode(basename(file)),self.main.now()))
+			tab.chat.lastMessageFrom=""
 
 		self.filetransferWidget[sid]=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
 		self.filetransferWidget[sid].download=True
@@ -850,6 +852,7 @@ class events:
 				tab.chat.filetransfer[queueId].reinit(text,None,self.main,sid2,self.main.ui.eventsListWidget,"("+str(self.filetransferWidget[queueId].sent)+"/"+str(self.filetransferWidget[queueId].all)+")")#=FTWidget(text,item,self.main,sid2,self.main.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")
 				tab.chat.filetransfer[queueId].setMinimumHeight(height)
 				tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Sending file"))+" "+unicode(basename(file)),self.main.now()))
+				tab.chat.lastMessageFrom=""
 		self.filetransferWidget[queueId].setSizeHint(QtCore.QSize(100,height))
 		self.filetransferWidget[queueId].file=file
 		self.filetransferWidget[queueId].jid=jid

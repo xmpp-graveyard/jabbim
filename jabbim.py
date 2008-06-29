@@ -287,6 +287,7 @@ class clientClass(pyxl.client.Client):
 							if tab:
 								file=self.main.events.filetransferWidget[queueId].file
 								tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("File "))+" "+unicode(basename(file))+" "+ unicode(mainWindow.tr('has been sent')),self.main.now()))
+								tab.chat.lastMessageFrom=""
 						# file declined
 						elif self.main.ftError[sid].lower()=='canceled':
 							widget.widget.progressBar.setValue(0)
@@ -295,6 +296,7 @@ class clientClass(pyxl.client.Client):
 							# inform user in chatwidget too, if there is some opened conversation with recipient
 							if tab:
 								tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("User declined to receive file"))+" "+basename(unicode(widget.file)),self.main.now()))
+								tab.chat.lastMessageFrom=""
 						# unknown error
 						else:
 							widget.widget.progressBar.setValue(0)
@@ -304,6 +306,7 @@ class clientClass(pyxl.client.Client):
 							if tab:
 								file=self.main.events.filetransferWidget[queueId].file
 								tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("File "))+" "+basename(file)+" "+unicode(mainWindow.tr('can\'t be sent:'))+" "+unicode(self.main.ftError[sid]),self.main.now()))
+								tab.chat.lastMessageFrom=""
 						# some files are in queue, so we have to start to upload next file
 						if not emptyQueue:
 							self.main.events.nextFTUploadEvent(sid,queueId)
@@ -325,8 +328,10 @@ class clientClass(pyxl.client.Client):
 							if tab:
 								if not error:
 									tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("All files have been sent")),self.main.now()))
+									tab.chat.lastMessageFrom=""
 								else:
 									tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Some files can't be sent")),self.main.now()))
+									tab.chat.lastMessageFrom=""
 								# remove progress bar from chatWidget
 								if tab.chat.filetransfer.has_key(queueId):
 									tab.chat.ui.ftwidget.layout().removeWidget(tab.chat.filetransfer[queueId])
@@ -343,6 +348,7 @@ class clientClass(pyxl.client.Client):
 							if tab:
 								file=self.main.events.filetransferWidget[queueId].file
 								tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("File "))+" "+basename(file)+" "+ unicode(mainWindow.tr('has been downloaded')),self.main.now()))
+								tab.chat.lastMessageFrom=""
 								# remove progress bar from chatWidget
 								if tab.chat.filetransfer.has_key(queueId):
 									tab.chat.ui.ftwidget.layout().removeWidget(tab.chat.filetransfer[queueId])
@@ -357,6 +363,7 @@ class clientClass(pyxl.client.Client):
 							if tab:
 								file=self.main.events.filetransferWidget[queueId].file
 								tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("File "))+" "+basename(file)+" "+unicode(mainWindow.tr('can\'t be downloaded:'))+" "+unicode(self.main.ftError[sid]),self.main.now()))
+								tab.chat.lastMessageFrom=""
 								# remove progress bar from chatWidget
 								if tab.chat.filetransfer.has_key(queueId):
 									tab.chat.ui.ftwidget.layout().removeWidget(tab.chat.filetransfer[queueId])
@@ -1151,11 +1158,13 @@ class clientClass(pyxl.client.Client):
 					if w!=None:
 						message=self.main.webkitThemeFactory.genChatStatus(mainWindow.tr("Your message can't be sent. Remote server not found."),self.main.now())
 						w.chat.textEditWrite(message)
+						w.chat.lastMessageFrom=""
 					return
 				elif error!=None:
 					if w!=None:
 						self.main.webkitThemeFactory.genChatStatus(mainWindow.tr("Your message can't be sent.")+" "+unicode(error),self.main.now())
 						w.chat.textEditWrite(message)
+						w.chat.lastMessageFrom=""
 					return
 				if len(body)!=0 and subject==None:
 					if xhtml==None:
@@ -1221,11 +1230,13 @@ class clientClass(pyxl.client.Client):
 			if tab!=None:
 				message=self.main.webkitThemeFactory.genChatStatus(mainWindow.tr("Your message can't be sent. Remote server not found."),self.main.now())
 				tab.chat.textEditWrite(message)
+				tab.chat.lastMessageFrom=""
 			return
 		elif error!=None:
 			if tab!=None:
 				message=self.main.webkitThemeFactory.genChatStatus(mainWindow.tr("Your message can't be sent.")+" "+unicode(error),self.main.now())
 				tab.chat.textEditWrite(message)
+				tab.chat.lastMessageFrom=""
 			return
 
 		if len(body)!=0:
@@ -4386,6 +4397,7 @@ class mainWindow(QtGui.QMainWindow):
 						w.chat.addRoles()
 						message=self.webkitThemeFactory.genChatStatus(unicode(self.tr("You are now offline.")),self.now())
 						w.chat.textEditWrite(message)
+						w.chat.lastMessageFrom=""
 		if error == 'lost' and MainWindow.reconnect:
 			self.reconnect = False
 			msg = None
