@@ -42,21 +42,21 @@ class jabbimApplication(QtGui.QApplication):
 		self.shutdown=False
 		self.sleep=False
 
-	#def winEventFilter(self,msg):
-		## WM_POWERBROADCAST
-		#if msg.message==536:
-			## PBT_APMSUSPEND
-			#if msg.wParam==4 and not self.sleep:
-				#print "emit sleep()"
-				#self.emit(QtCore.SIGNAL("sleep()"))
-				#self.sleep=True
-			## PBT_APMRESUMESUSPEND
-			#elif msg.wParam==7 and self.sleep:
-				#print "emit wakeup()"
-				#self.emit(QtCore.SIGNAL("wakeUp()"))
-				#self.sleep=False
-			#return (True,1)
-		#return (False,1)
+	def winEventFilter(self,msg):
+		# WM_POWERBROADCAST
+		if msg.message==536:
+			# PBT_APMSUSPEND
+			if msg.wParam==4 and not self.sleep:
+				print "emit sleep()"
+				self.emit(QtCore.SIGNAL("sleep()"))
+				self.sleep=True
+			# PBT_APMRESUMESUSPEND
+			elif msg.wParam==7 and self.sleep:
+				print "emit wakeup()"
+				self.emit(QtCore.SIGNAL("wakeUp()"))
+				self.sleep=False
+			return (True,1)
+		return (False,1)
 
 	def commitData(self,manager):
 		"""
