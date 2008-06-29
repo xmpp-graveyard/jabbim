@@ -18,7 +18,7 @@ class config:
 			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'Winamp':'winamp', 'Foobar 2000':'fb2k' }, 'value':'winamp'}
 			
 		else:
-			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Amarok':'amarok','Exaile':'exaile','Banshee':'banshee','Rhythmbox':'rhythmbox' }, 'value':'amarok'}
+			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Amarok':'amarok','Exaile':'exaile','Banshee':'banshee','Rhythmbox':'rhythmbox', 'Audacious':'audacious' }, 'value':'amarok'}
 
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
@@ -28,7 +28,7 @@ class Plugin(plugins.PluginBase):
 		self.description = self.tr('Plugin for User Tune')
 		self.author = "Jiri 'Sef' Gabrys + Josef 'PepeQ' Halicek + Krzysztof 'Grom' K."
 		self.name = self.tr('tune')
-		self.version = '0.26'
+		self.version = '0.261'
 		self.category = ['utils']
 		self.configDialog=config(self)
 		self.url = 'http://dev.jabbim.cz/jabbim'
@@ -160,6 +160,17 @@ class Plugin(plugins.PluginBase):
 					out['title'] = parts[1].split('[foobar2000 v', 1)[0].strip()
 				else:
 					out={}
+
+		elif self.config['player'] == 'audacious':
+			try:
+				output = commands.getoutput('audtool playback-status')
+				if output.find('playing') != -1:
+					text = text = commands.getoutput('audtool current-song')
+					text = text.split(' - ', 1)
+					out['artists'] = text[0]
+					out['title'] = text[1]
+			except:
+				out = {}
 
     		
 
