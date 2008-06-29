@@ -4222,8 +4222,9 @@ class mainWindow(QtGui.QMainWindow):
 			self.client.avatarImg[self.client.avatarDef[self.client.jid.userhost()]] = self.loadAvatar(self.client.avatarDef[self.client.jid.userhost()])
 		self.client.avatarImg[None]=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
 		self.client.avatarImg[u'None']=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
-		d=threads.deferToThread(self.loadAvatars,unicode(path),dict(self.client.avatarDef))
-		d.addCallback(self.gotAvatars)
+		#d=threads.deferToThread(self.loadAvatars,unicode(path),dict(self.client.avatarDef))
+		#d.addCallback(self.gotAvatars)
+		self.gotAvatars(self.loadAvatars(unicode(path),dict(self.client.avatarDef)))
 		try:
 			self.client.xmlLang= unicode(QtCore.QLocale.system().name())[:2]
 		except:
