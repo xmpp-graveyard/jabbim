@@ -468,6 +468,16 @@ class derived:
 		log.msg("END: getVCard")
 		return d
 	
+	def getLast(self, jid):
+		iq = IQ(self.xmlstream, 'get')
+		iq['to'] = jid
+		iq.addElement('query', 'jabber:iq:last')
+		self.disp(iq['id'])
+		#iq.timeout = 60
+		log.msg("Sending LastActivity IQ")
+		d = iq.send()
+		return d
+	
 	def setVCard(self,card):
 		""" Posle vlastni vcard """
 #		log.msg( 'requesting vcard for ' + unicode(jid))

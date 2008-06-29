@@ -4347,6 +4347,9 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.actionStart_Chat.setEnabled(False) 
 		MainWindow.ui.actionPrivacy_list_editor.setEnabled(False) 
 		MainWindow.ui.actionIdentity.setEnabled(False)
+		self.client=None
+		self.selfResources=[]
+		
 		try:
 			self.statusWidgetMenu.setEnabled(False)
 		except:

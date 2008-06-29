@@ -8,6 +8,7 @@ from vcardeditor_ui import *
 import base64
 from twisted.words.xish.domish import Element
 from twisted.internet.defer import DeferredList 
+from include import utils
 
 class vcardEditorDialog(QtGui.QDialog):
 	def __init__(self,main,jid,parent=None,editable=True):
@@ -52,11 +53,18 @@ class vcardEditorDialog(QtGui.QDialog):
 			while None in resources:
 				resources.remove(None)
 		for res in resources:
-
+			#s = self.main.client.getLast(jidt.userhost()+"/"+res)
+			#s.addCallback(self.lastReceived,res)
+			#s.addErrback(self.lastErrReceived,res)
 			d = self.main.client.getVersion(jidt.userhost()+"/"+res)
 			d.addCallback(self.versionReceived,res)
 			d.addErrback(self.versionErrReceived,res)
 			vysledky.append(d)
+		if len(resources)==0:
+			s = self.main.client.getLast(jidt.userhost())
+			s.addCallback(self.lastReceived,None)
+			s.addErrback(self.lastErrReceived,None)
+			
 		DeferredList(vysledky).addCallback(self._vysledky)
 		self.ui.tabWidget.setEnabled(False)
 
@@ -212,6 +220,27 @@ class vcardEditorDialog(QtGui.QDialog):
 		self.widget.layout().addWidget(box)
 		return lineName,lineOs,lineVersion
 	
+	def makeLastWidget(self,res):
+		if res==None:
+			res=self.tr("Offline Information")
+			box=QtGui.QGroupBox(res,self.widget)
+			l=QtGui.QGridLayout(box)
+			labelLast=QtGui.QLabel(self.tr('Last Active:'),box)
+			lineLast=QtGui.QLineEdit(box)
+			lineLast.setReadOnly(True)
+			l.addWidget(labelLast,0,0)
+			l.addWidget(lineLast,0,1)
+		#else:
+			#box=QtGui.QGroupBox(res,self.widget)
+			#l=QtGui.QGridLayout(box)
+			#labelLast=QtGui.QLabel(self.tr('Last Active:'),box)
+			#lineLast=QtGui.QLineEdit(box)
+			#lineLast.setReadOnly(True)
+			#l.addWidget(labelLast,3,0)
+			#l.addWidget(lineLast,3,1)
+		self.widget.layout().addWidget(box)
+		return lineLast
+	
 	def versionReceived(self, el,res):
 		lineName,lineOs,lineVersion=self.makeVersionWidget(res)
 		query = el.firstChildElement()
@@ -229,6 +258,14 @@ class vcardEditorDialog(QtGui.QDialog):
 			lineOs.setText(self.tr("Unable to retrieve."))
 		self.ui.download.hide()
 		self.ui.tabWidget.setEnabled(True)
+	
+	def lastReceived(self, el,res):
+		lineLast=self.makeLastWidget(res)
+		#lineName,lineOs,lineVersion=self.makeVersionWidget(res)
+		query = el.firstChildElement()
+		lineLast.setText(unicode(utils.elapsed_time(int(query['seconds']),[self.tr('year'),self.tr('week'),self.tr('day'),self.tr('hour'),self.tr('minute'),self.tr(' second')],separator=', ')))
+		self.ui.download.hide()
+		self.ui.tabWidget.setEnabled(True)
 
 	def versionErrReceived(self, err,res):
 		print err
@@ -236,7 +273,12 @@ class vcardEditorDialog(QtGui.QDialog):
 		lineName.setText(self.tr("Unable to retrieve."))
 		lineVersion.setText(self.tr("Unable to retrieve."))
 		lineOs.setText(self.tr("Unable to retrieve."))
-
+	
+	def lastErrReceived(self, err,res):
+		print err
+		lineLast=self.makeLastWidget(res)
+		lineLast.setText(self.tr("Unable to retrieve."))
+		
 	def clearAvatar(self):
 		self.ui.avatar.setPixmap(QtGui.QPixmap())
 		self.ui.clearAvatar.hide()
