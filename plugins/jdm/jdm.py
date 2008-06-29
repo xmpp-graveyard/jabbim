@@ -361,7 +361,7 @@ class Plugin(plugins.PluginBase):
 				data=[]
 				for item in items:
 					data.append(self.esPath+unicode(item.text()))
-				self.main.client.callRemote(jid, 'getFiles',(tuple(data)))
+				self.main.client.callRemote(jid, 'getFiles',(data,))
 		else:
 			for item in items:
 				if self.typ=="public":
