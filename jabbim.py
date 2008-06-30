@@ -1489,7 +1489,7 @@ class clientClass(pyxl.client.Client):
 						#w.setPreview(pixmap)
 					#tab.chat.ui.ftwidget.layout().addWidget(w)
 					message=mainWindow.tr("User is sending you file")+" "+unicode(self.ft[sid].fileprops['name'])+". <a href=\"javascript:messageObject.acceptFT('"+unicode(sid)+"');\">["+mainWindow.tr("Accept")+"]</a> <a href=\"javascript:messageObject.rejectFT('"+unicode(sid)+"');\">["+mainWindow.tr("Decline")+"]</a>"
-					tab.chat.messageObject.ft[unicode(sid)]=eventWidget
+					tab.chat.ui.webkit.messageObject.ft[unicode(sid)]=eventWidget
 					tab.chat.textEditWrite('<div id="ft'+unicode(sid)+'">'+self.main.webkitThemeFactory.genChatStatus(unicode(message),self.main.now())+"</div>")
 					tab.chat.lastMessageFrom=""
 
@@ -1497,7 +1497,7 @@ class clientClass(pyxl.client.Client):
 		tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid),typ=['chat'])
 		if tab:
 			tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById('ft"+unicode(sid)+"');")
-			del tab.chat.messageObject.ft[unicode(sid)]
+			del tab.chat.ui.webkit.messageObject.ft[unicode(sid)]
 		return self.declineFT(sid)
 
 	def ftStarted(self,sid,id):
@@ -1508,7 +1508,7 @@ class clientClass(pyxl.client.Client):
 		tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid),typ=['chat'])
 		if tab:
 			tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById('ft"+unicode(sid)+"');")
-			del tab.chat.messageObject.ft[unicode(sid)]
+			del tab.chat.ui.webkit.messageObject.ft[unicode(sid)]
 		if filename and len(filename)!=0:
 			filename=unicode(filename)
 			log.msg(unicode(filename))

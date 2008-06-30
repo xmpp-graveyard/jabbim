@@ -16,61 +16,62 @@ from include import utils
 from emoticonswidget import *
 from linkeditor import linkEditorDialog
 import weakref
+from webkitchatwidget import webkitChatWidget
 
-class message(QtCore.QObject):
-	def __init__(self,message):
-		QtCore.QObject.__init__(self)
-		self.message=[]
-		self.messages=[]
-		self.messageCache=[]
-		self.ft={}
-		self.scr=1
-		self.setObjectName("messageObject")
+#class message(QtCore.QObject):
+	#def __init__(self,message):
+		#QtCore.QObject.__init__(self)
+		#self.message=[]
+		#self.messages=[]
+		#self.messageCache=[]
+		#self.ft={}
+		#self.scr=1
+		#self.setObjectName("messageObject")
 
-	@QtCore.pyqtSignature("QString")
-	def acceptFT(self,sid):
-		self.ft[unicode(sid)].submitClicked()
+	#@QtCore.pyqtSignature("QString")
+	#def acceptFT(self,sid):
+		#self.ft[unicode(sid)].submitClicked()
 
-	@QtCore.pyqtSignature("QString")
-	def rejectFT(self,sid):
-		self.ft[unicode(sid)].closeClicked()
+	#@QtCore.pyqtSignature("QString")
+	#def rejectFT(self,sid):
+		#self.ft[unicode(sid)].closeClicked()
 
-	@QtCore.pyqtSignature("",result="int")
-	def messageDirection(self):
-		if len(self.messageCache)!=0:
-			ret=self.messageCache[-1][0]
-			return ret
-		return -1
+	#@QtCore.pyqtSignature("",result="int")
+	#def messageDirection(self):
+		#if len(self.messageCache)!=0:
+			#ret=self.messageCache[-1][0]
+			#return ret
+		#return -1
 
-	@QtCore.pyqtSignature("",result="QString")
-	def msg(self):
-		if len(self.messageCache)!=0:
-			ret=self.messageCache.pop()[1]
-			#print "RET",[ret]
-			return ret
-		return ""
+	#@QtCore.pyqtSignature("",result="QString")
+	#def msg(self):
+		#if len(self.messageCache)!=0:
+			#ret=self.messageCache.pop()[1]
+			##print "RET",[ret]
+			#return ret
+		#return ""
 	
-	@QtCore.pyqtSignature("int",result="QString")
-	def msg_(self,i):
-		return self.messages[i]
+	#@QtCore.pyqtSignature("int",result="QString")
+	#def msg_(self,i):
+		#return self.messages[i]
 	
-	@QtCore.pyqtSignature("",result="int")
-	def scroll(self):
-		return self.scr
+	#@QtCore.pyqtSignature("",result="int")
+	#def scroll(self):
+		#return self.scr
 
-	@QtCore.pyqtSignature("")
-	def ready(self):
-		#self.emit(QtCore.SIGNAL("ready()"))
-		#print "READY!"
-		#self.main.client.reactor.callLater(1,self.main.messageObjectReady)
-		#self.main.messageObjectReady()
-		pass
-
-	@QtCore.pyqtSignature("QString")
-	def log(self,test):
-		#self.emit(QtCore.SIGNAL("ready()"))
-		print test
+	#@QtCore.pyqtSignature("")
+	#def ready(self):
+		##self.emit(QtCore.SIGNAL("ready()"))
+		##print "READY!"
+		##self.main.client.reactor.callLater(1,self.main.messageObjectReady)
+		##self.main.messageObjectReady()
 		#pass
+
+	#@QtCore.pyqtSignature("QString")
+	#def log(self,test):
+		##self.emit(QtCore.SIGNAL("ready()"))
+		#print test
+		##pass
 
 
 class abstractTextView(QtGui.QTextEdit):
@@ -424,21 +425,17 @@ class abstractChatWidget(QtGui.QWidget):
 		l.setSpacing(0)
 		self.ui.textEdit=textEditClass(self,self.ui.viewWidget)
 		self.ui.textEdit.hide()
-		self.ui.webkit=QtWebKit.QWebView(self)
-		self.ui.webkit.settings().setAttribute(QtWebKit.QWebSettings.JavascriptEnabled,True)
-		self.messageObject=message("")
-		self.messageObject.main=self
-		QtCore.QObject.connect(self.messageObject,QtCore.SIGNAL("ready()"),self.messageObjectReady)
-		QtCore.QObject.connect(self.ui.webkit,QtCore.SIGNAL("loadFinished ( bool)"),self.webkitLoaded_)
-		QtCore.QObject.connect(self.ui.webkit.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.webkitCleared)
+		#self.ui.webkit=QtWebKit.QWebView(self)
+		self.ui.webkit=webkitChatWidget(self,self)
+		#self.ui.webkit.settings().setAttribute(QtWebKit.QWebSettings.JavascriptEnabled,True)
 
 		#self.loadWebkit()
 
 		#self.ui.webkit.load(QtCore.QUrl("file:///home/hanzz/svn/jabbim/trunk/test.html"))
 		l.addWidget(self.ui.webkit)
 		self.ui.webkit.show()
-		self.ui.webkit.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
-		QtCore.QObject.connect(self.ui.webkit,QtCore.SIGNAL("linkClicked ( const QUrl &)"),QtGui.QDesktopServices.openUrl)
+		#self.ui.webkit.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
+		#QtCore.QObject.connect(self.ui.webkit,QtCore.SIGNAL("linkClicked ( const QUrl &)"),QtGui.QDesktopServices.openUrl)
 		# chat editor widget (self.ui.line)
 		layout=QtGui.QHBoxLayout(self.ui.lineWidget)
 		layout.setMargin(0)
@@ -560,238 +557,239 @@ class abstractChatWidget(QtGui.QWidget):
 			painter.end()
 			self.ui.backgroundButton.setIcon(QtGui.QIcon(colorIcon))
 
-	def messageObjectReady(self):
-		#print "messageObjectReady",self.messageObject.messageCache
-		if len(self.messageObject.messageCache)!=0:
-			self.ui.webkit.page().mainFrame().evaluateJavaScript("addNextMessage();")
+	#def messageObjectReady(self):
+		##print "messageObjectReady",self.messageObject.messageCache
+		#if len(self.messageObject.messageCache)!=0:
+			#self.ui.webkit.page().mainFrame().evaluateJavaScript("addNextMessage();")
 
-	def webkitCleared(self):
-		self.ui.webkit.page().mainFrame().addToJavaScriptWindowObject("messageObject",self.messageObject)
+	#def webkitCleared(self):
+		#self.ui.webkit.page().mainFrame().addToJavaScriptWindowObject("messageObject",self.messageObject)
 
-	def webkitLoaded_(self):
-		self.ui.webkit.page().mainFrame().evaluateJavaScript("showLastMessages();")
-		#self.main().client.reactor.callLater(1,self.writeWebkitCache)
-		self.webkitLoaded=True
-		self.messageObjectReady()
+	#def webkitLoaded_(self):
+		#self.ui.webkit.page().mainFrame().evaluateJavaScript("showLastMessages();")
+		##self.main().client.reactor.callLater(1,self.writeWebkitCache)
+		#self.webkitLoaded=True
+		#self.messageObjectReady()
 
-	def writeWebkitCache(self):
-		cmds=""
-		#print "CACHE:",self.messageObject.messageCache
-		#print "CACHE:",self.messageObject.message
-		for msg in self.messageObject.messageCache:
-			if not msg[0]:
-				cmds+="addMessage(-1);"
-			else:
-				cmds+="insertMessage(-1);"
-		#print 'CMDS',cmds
-		self.ui.webkit.page().mainFrame().evaluateJavaScript(cmds)
-		self.webkitLoaded=True
+	#def writeWebkitCache(self):
+		#cmds=""
+		##print "CACHE:",self.messageObject.messageCache
+		##print "CACHE:",self.messageObject.message
+		#for msg in self.messageObject.messageCache:
+			#if not msg[0]:
+				#cmds+="addMessage(-1);"
+			#else:
+				#cmds+="insertMessage(-1);"
+		##print 'CMDS',cmds
+		#self.ui.webkit.page().mainFrame().evaluateJavaScript(cmds)
+		#self.webkitLoaded=True
 
 	def loadWebkit(self):
-		self.webkitLoaded=False
-		try:
-			typ=self.typ
-		except:
-			typ="chat"
-		if typ=="groupchat":
-			stylesheet=self.main().webkitThemeFactory.genGroupchatStyleSheet()
-			footer=self.main().webkitThemeFactory.genGroupchatFooter()
-			header=self.main().webkitThemeFactory.genGroupchatHeader()
-		else:
-			stylesheet=self.main().webkitThemeFactory.genChatStyleSheet()
-			footer=self.main().webkitThemeFactory.genChatFooter()
-			header=self.main().webkitThemeFactory.genChatHeader(self.name,self.file)
-		code=""
-		self.messageObject.messages=[]
-		i=0
-		previousName=""
-		if typ=="groupchat":
-			for m in self.lastMessages:
-				out=m[0]=="out"
-				if out:
-					if m[1]==previousName:
-						self.messageObject.messages.append(self.main().webkitThemeFactory.genGroupchatOutgoingNextContent(m[1],m[2],m[3],m[4]))
-						code+="insertMessage(%s);\n" % str(i)
-					else:
-						self.messageObject.messages.append(self.main().webkitThemeFactory.genGroupchatOutgoingContent(m[1],m[2],m[3],m[4]))
-						code+="addMessage(%s);\n" % str(i)
-				else:
-					if m[1]==previousName:
-						self.messageObject.messages.append(self.main().webkitThemeFactory.genGroupchatIncomingNextContent(m[1],m[2],m[3],m[4]))
-						code+="insertMessage(%s);\n" % str(i)
-					else:
-						self.messageObject.messages.append(self.main().webkitThemeFactory.genGroupchatIncomingContent(m[1],m[2],m[3],m[4]))
-						code+="addMessage(%s);\n" % str(i)
-				previousName=unicode(m[1])
-				i+=1
-		else:
-			for m in self.lastMessages:
-				out=m[0]=="out"
-				if out:
-					if m[1]==previousName:
-						self.messageObject.messages.append(self.main().webkitThemeFactory.genOutgoingNextContent(m[1],m[2],m[3],m[4]))
-						code+="insertMessage(%s);\n" % str(i)
-					else:
-						self.messageObject.messages.append(self.main().webkitThemeFactory.genOutgoingContent(m[1],m[2],m[3],m[4]))
-						code+="addMessage(%s);\n" % str(i)
-				else:
-					if m[1]==previousName:
-						self.messageObject.messages.append(self.main().webkitThemeFactory.genIncomingNextContent(m[1],m[2],m[3],m[4]))
-						code+="insertMessage(%s);\n" % str(i)
-					else:
-						self.messageObject.messages.append(self.main().webkitThemeFactory.genIncomingContent(m[1],m[2],m[3],m[4]))
-						code+="addMessage(%s);\n" % str(i)
-				previousName=unicode(m[1])
-				i+=1
-		html="""
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<style type="text/css" media="screen,print"> @import url( "main.css" ); </style>
-<style id="mainStyle" type="text/css" media="screen,print"> %s </style>
-<script>
-function addNextMessage() {
-var b = messageObject.messageDirection();
-if (b==1) addMessage(-1);
-if (b==0) insertMessage(-1);
-b = messageObject.messageDirection();
-if (b!=-1) addNextMessage();
-}
+		self.ui.webkit.loadWebkit()
+		#self.webkitLoaded=False
+		#try:
+			#typ=self.typ
+		#except:
+			#typ="chat"
+		#if typ=="groupchat":
+			#stylesheet=self.main().webkitThemeFactory.genGroupchatStyleSheet()
+			#footer=self.main().webkitThemeFactory.genGroupchatFooter()
+			#header=self.main().webkitThemeFactory.genGroupchatHeader()
+		#else:
+			#stylesheet=self.main().webkitThemeFactory.genChatStyleSheet()
+			#footer=self.main().webkitThemeFactory.genChatFooter()
+			#header=self.main().webkitThemeFactory.genChatHeader(self.name,self.file)
+		#code=""
+		#self.messageObject.messages=[]
+		#i=0
+		#previousName=""
+		#if typ=="groupchat":
+			#for m in self.lastMessages:
+				#out=m[0]=="out"
+				#if out:
+					#if m[1]==previousName:
+						#self.messageObject.messages.append(self.main().webkitThemeFactory.genGroupchatOutgoingNextContent(m[1],m[2],m[3],m[4]))
+						#code+="insertMessage(%s);\n" % str(i)
+					#else:
+						#self.messageObject.messages.append(self.main().webkitThemeFactory.genGroupchatOutgoingContent(m[1],m[2],m[3],m[4]))
+						#code+="addMessage(%s);\n" % str(i)
+				#else:
+					#if m[1]==previousName:
+						#self.messageObject.messages.append(self.main().webkitThemeFactory.genGroupchatIncomingNextContent(m[1],m[2],m[3],m[4]))
+						#code+="insertMessage(%s);\n" % str(i)
+					#else:
+						#self.messageObject.messages.append(self.main().webkitThemeFactory.genGroupchatIncomingContent(m[1],m[2],m[3],m[4]))
+						#code+="addMessage(%s);\n" % str(i)
+				#previousName=unicode(m[1])
+				#i+=1
+		#else:
+			#for m in self.lastMessages:
+				#out=m[0]=="out"
+				#if out:
+					#if m[1]==previousName:
+						#self.messageObject.messages.append(self.main().webkitThemeFactory.genOutgoingNextContent(m[1],m[2],m[3],m[4]))
+						#code+="insertMessage(%s);\n" % str(i)
+					#else:
+						#self.messageObject.messages.append(self.main().webkitThemeFactory.genOutgoingContent(m[1],m[2],m[3],m[4]))
+						#code+="addMessage(%s);\n" % str(i)
+				#else:
+					#if m[1]==previousName:
+						#self.messageObject.messages.append(self.main().webkitThemeFactory.genIncomingNextContent(m[1],m[2],m[3],m[4]))
+						#code+="insertMessage(%s);\n" % str(i)
+					#else:
+						#self.messageObject.messages.append(self.main().webkitThemeFactory.genIncomingContent(m[1],m[2],m[3],m[4]))
+						#code+="addMessage(%s);\n" % str(i)
+				#previousName=unicode(m[1])
+				#i+=1
+		#html="""
+#<?xml version="1.0" encoding="utf-8"?>
+#<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+#<html xmlns="http://www.w3.org/1999/xhtml">
+#<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+#<style type="text/css" media="screen,print"> @import url( "main.css" ); </style>
+#<style id="mainStyle" type="text/css" media="screen,print"> %s </style>
+#<script>
+#function addNextMessage() {
+#var b = messageObject.messageDirection();
+#if (b==1) addMessage(-1);
+#if (b==0) insertMessage(-1);
+#b = messageObject.messageDirection();
+#if (b!=-1) addNextMessage();
+#}
 
-function addMessage(index) {
-shouldScroll = nearBottom();
-//Remove any existing insertion point
-insert = document.getElementById("insert");
-if(insert) insert.parentNode.removeChild(insert);
-messageObject.ready();
-var ni = document.getElementById('myDiv');
-var numi = document.getElementById('theValue');
-var num = (document.getElementById('theValue').value -1)+ 2;
-numi.value = num;
-var divIdName = "my"+num+"Div";
-var newdiv = document.createElement('div');
-newdiv.setAttribute("id",divIdName);
-if (index==-1) newdiv.innerHTML = messageObject.msg();
-else newdiv.innerHTML = messageObject.msg_(index);
-ni.appendChild(newdiv);
-if (shouldScroll) setTimeout("scrollToBottom()", 100);
+#function addMessage(index) {
+#shouldScroll = nearBottom();
+#//Remove any existing insertion point
+#insert = document.getElementById("insert");
+#if(insert) insert.parentNode.removeChild(insert);
+#messageObject.ready();
+#var ni = document.getElementById('myDiv');
+#var numi = document.getElementById('theValue');
+#var num = (document.getElementById('theValue').value -1)+ 2;
+#numi.value = num;
+#var divIdName = "my"+num+"Div";
+#var newdiv = document.createElement('div');
+#newdiv.setAttribute("id",divIdName);
+#if (index==-1) newdiv.innerHTML = messageObject.msg();
+#else newdiv.innerHTML = messageObject.msg_(index);
+#ni.appendChild(newdiv);
+#if (shouldScroll) setTimeout("scrollToBottom()", 100);
 
-}
-function insertMessage(index) {
-shouldScroll = nearBottom();
-messageObject.ready();
-                        //Locate the insertion point
-                        var insert = document.getElementById("insert");
+#}
+#function insertMessage(index) {
+#shouldScroll = nearBottom();
+#messageObject.ready();
+                        #//Locate the insertion point
+                        #var insert = document.getElementById("insert");
 
-                        //make new node
-                        range = document.createRange();
-                        range.selectNode(insert.parentNode);
-                        if (index==-1) {newNode = range.createContextualFragment(messageObject.msg());}
-						else {newNode = range.createContextualFragment(messageObject.msg_(index));}
+                        #//make new node
+                        #range = document.createRange();
+                        #range.selectNode(insert.parentNode);
+                        #if (index==-1) {newNode = range.createContextualFragment(messageObject.msg());}
+						#else {newNode = range.createContextualFragment(messageObject.msg_(index));}
 
-                        //swap
-                        insert.parentNode.replaceChild(newNode,insert);
-if (shouldScroll) setTimeout("scrollToBottom()", 100);
+                        #//swap
+                        #insert.parentNode.replaceChild(newNode,insert);
+#if (shouldScroll) setTimeout("scrollToBottom()", 100);
 
-}
+#}
 
-function removeById(index) {
+#function removeById(index) {
 
-                        //Locate the insertion point
-                        var insert = document.getElementById(index);
-                        //make new node
-                        range = document.createRange();
-                        range.selectNode(insert.parentNode);
-                        newNode = range.createContextualFragment('');
+                        #//Locate the insertion point
+                        #var insert = document.getElementById(index);
+                        #//make new node
+                        #range = document.createRange();
+                        #range.selectNode(insert.parentNode);
+                        #newNode = range.createContextualFragment('');
 
-                        //swap
-                        insert.parentNode.replaceChild(newNode,insert);
+                        #//swap
+                        #insert.parentNode.replaceChild(newNode,insert);
 
-}
+#}
 
-function showImage(imageId,link) {
-shouldScroll = nearBottom();
+#function showImage(imageId,link) {
+#shouldScroll = nearBottom();
 
-                        //Locate the insertion point
-                        var insert = document.getElementById(imageId);
-                        //make new node
-                        range = document.createRange();
-                        range.selectNode(insert.parentNode);
-                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+link+'\\');")>[Hide Image]</a></div><div id="loaded'+imageId+'"><a href="'+link+'"><img src="'+link+'" /></a></div>');
+                        #//Locate the insertion point
+                        #var insert = document.getElementById(imageId);
+                        #//make new node
+                        #range = document.createRange();
+                        #range.selectNode(insert.parentNode);
+                        #newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+link+'\\');")>[Hide Image]</a></div><div id="loaded'+imageId+'"><a href="'+link+'"><img src="'+link+'" /></a></div>');
 
-                        //swap
-                        insert.parentNode.replaceChild(newNode,insert);
-if (shouldScroll) setTimeout("scrollToBottom()", 100);
+                        #//swap
+                        #insert.parentNode.replaceChild(newNode,insert);
+#if (shouldScroll) setTimeout("scrollToBottom()", 100);
 
-}
+#}
 
-function reshowImage(imageId,link) {
-shouldScroll = nearBottom();
-document.getElementById('loaded'+imageId).style.display = 'inline';
-                        //Locate the insertion point
-                        var insert = document.getElementById(imageId);
-                        //make new node
-                        range = document.createRange();
-                        range.selectNode(insert.parentNode);
-                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+link+'\\');")>[Hide Image]</a></div>');
+#function reshowImage(imageId,link) {
+#shouldScroll = nearBottom();
+#document.getElementById('loaded'+imageId).style.display = 'inline';
+                        #//Locate the insertion point
+                        #var insert = document.getElementById(imageId);
+                        #//make new node
+                        #range = document.createRange();
+                        #range.selectNode(insert.parentNode);
+                        #newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+link+'\\');")>[Hide Image]</a></div>');
 
-                        //swap
-                        insert.parentNode.replaceChild(newNode,insert);
-if (shouldScroll) setTimeout("scrollToBottom()", 100);
+                        #//swap
+                        #insert.parentNode.replaceChild(newNode,insert);
+#if (shouldScroll) setTimeout("scrollToBottom()", 100);
 
-}
+#}
 
-function hideImage(imageId,link){
-   document.getElementById('loaded'+imageId).style.display = 'none';
-                        //Locate the insertion point
-                        var insert = document.getElementById(imageId);
+#function hideImage(imageId,link){
+   #document.getElementById('loaded'+imageId).style.display = 'none';
+                        #//Locate the insertion point
+                        #var insert = document.getElementById(imageId);
 
-                        //make new node
-                        range = document.createRange();
-                        range.selectNode(insert.parentNode);
-                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="reshowImage(\\''+imageId+'\\',\\''+link+'\\');")>[Show Image]</a></div>');
+                        #//make new node
+                        #range = document.createRange();
+                        #range.selectNode(insert.parentNode);
+                        #newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="reshowImage(\\''+imageId+'\\',\\''+link+'\\');")>[Show Image]</a></div>');
 
-                        //swap
-                        insert.parentNode.replaceChild(newNode,insert);
-}
+                        #//swap
+                        #insert.parentNode.replaceChild(newNode,insert);
+#}
 
-//Auto-scroll to bottom.  Use nearBottom to determine if a scrollToBottom is desired.
-function nearBottom() {
-		return ( (document.body.scrollTop+100) >= ( document.body.offsetHeight - ( window.innerHeight * 1.2 ) ) );
-}
-function scrollToBottom() {
-		document.body.scrollTop = document.body.offsetHeight;
-}
+#//Auto-scroll to bottom.  Use nearBottom to determine if a scrollToBottom is desired.
+#function nearBottom() {
+		#return ( (document.body.scrollTop+100) >= ( document.body.offsetHeight - ( window.innerHeight * 1.2 ) ) );
+#}
+#function scrollToBottom() {
+		#document.body.scrollTop = document.body.offsetHeight;
+#}
 
-function showLastMessages(){
-%s
-}
+#function showLastMessages(){
+#%s
+#}
 
-</script>
-</head>
-<body>
-<div id="Chat">
-%s
-<input type="hidden" value="0" id="theValue" />
-<div id="myDiv"> </div>
-%s
-</div>
-<a name='bottom'></a>
-</body>
-</html>
-		""" % (stylesheet,code,header,footer)
+#</script>
+#</head>
+#<body>
+#<div id="Chat">
+#%s
+#<input type="hidden" value="0" id="theValue" />
+#<div id="myDiv"> </div>
+#%s
+#</div>
+#<a name='bottom'></a>
+#</body>
+#</html>
+		#""" % (stylesheet,code,header,footer)
 
-		self.imageId=0
+		#self.imageId=0
 
-		# debug... we don't need it anymore
-		#f=open(self.main().webkitThemeFactory.chatPath()+"/test.html","w")
-		#f.write(html)
-		#f.close()
-		if typ=="groupchat":
-			self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+self.main().webkitThemeFactory.groupchatPath()))
-		else:
-			self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+self.main().webkitThemeFactory.chatPath()))
+		## debug... we don't need it anymore
+		##f=open(self.main().webkitThemeFactory.chatPath()+"/test.html","w")
+		##f.write(html)
+		##f.close()
+		#if typ=="groupchat":
+			#self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+self.main().webkitThemeFactory.groupchatPath()))
+		#else:
+			#self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+self.main().webkitThemeFactory.chatPath()))
 		
 
 	def registerFeatureForWidget(self,feature,widget):
@@ -1156,11 +1154,11 @@ function showLastMessages(){
 		#else:
 			#self.messageObject.message.insert(0,unicode(text))
 		if not insert:
-			self.messageObject.messageCache.insert(0,[1,text])
+			self.ui.webkit.messageObject.messageCache.insert(0,[1,text])
 		else:
-			self.messageObject.messageCache.insert(0,[0,text])
-		if len(self.messageObject.messageCache)==1 and self.webkitLoaded:
-			self.messageObjectReady()
+			self.ui.webkit.messageObject.messageCache.insert(0,[0,text])
+		if len(self.ui.webkit.messageObject.messageCache)==1 and self.ui.webkit.webkitLoaded:
+			self.ui.webkit.messageObjectReady()
 
 	def textEditWrite(self,text,insert=False):
 		"""
