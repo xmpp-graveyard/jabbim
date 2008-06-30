@@ -20,6 +20,21 @@ except:
 from imp import load_source
 from include import utils
 
+class config:
+	def __init__(self, main):
+		self.main=main
+		self.config = {}
+		self.config['check_jabbim'] = {
+			'type':'boolean',
+			'label':self.main.tr("Notify about new versions of Jabbim"),
+			'value':'True'
+		}
+		self.config['check_plugins'] = {
+			'type':'boolean',
+			'label':self.main.tr("Notify about plugin updates"),
+			'value':'True'
+		}
+
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
@@ -28,11 +43,11 @@ class Plugin(plugins.PluginBase):
 		self.description = self.tr('Updates plugins')
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = self.tr('Autoupdate')
-		self.version = '0.021'
+		self.version = '0.022'
 		self.category = ['utils']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.plugindir = plugindir
-
+		self.configDialog = config(self)
 		
 		if main:
 			self.loadConfig()
@@ -49,7 +64,8 @@ class Plugin(plugins.PluginBase):
 
 	def on_authd(self):
 		self.main.client.callRemote('rpc@jabbim.cz/service', 'updateCore', (self.main.client.jid.host, sha1(self.main.client.jid.userhost()).hexdigest(), self.main.client.client_os, self.main.client.version)).addCallback(self._update)
-		self.main.client.reactor.callLater(1,self.checkPlugins)
+		if self.config['check_plugins'] == 'True':
+			self.main.client.reactor.callLater(1,self.checkPlugins)
 
 	def checkPlugins(self):
 		self.main.client.callRemote('rpc@jabbim.cz/service', 'getList', ('plugins/',)).addCallback(self._listArrived)
@@ -69,6 +85,8 @@ class Plugin(plugins.PluginBase):
 
 	def _update(self, vysledek):
 		print vysledek
+		if self.config['check_jabbim'] != 'True':
+			return
 		if vysledek[0][0] == False:
 			#nemame posledni verzi
 			self.main.tray.showMessage(self.tr("Autoupdate"),self.tr("New version of Jabbim is available! Get it from www.jabbim.cz"), QtGui.QSystemTrayIcon.Information, 5000)
