@@ -1572,7 +1572,7 @@ class AvatarLabel(QtGui.QLabel):
 			else:
 				self.main.tray.setToolTip(text)
 
-class imageLoader(QtCore.QThread):
+class avatarLoader(QtCore.QThread):
 	def __init__(self,parent,path,avatarDef):
 		QtCore.QThread.__init__(self,parent)
 		self.path=path
@@ -1581,8 +1581,6 @@ class imageLoader(QtCore.QThread):
 	def run(self):
 		path=unicode(self.path)
 		avatarDef=dict(self.avatarDef)
-		avatarImg={}
-
 		hashe = []
 		try:
 			for hash in avatarDef.itervalues():
@@ -1591,18 +1589,17 @@ class imageLoader(QtCore.QThread):
 		except:
 			message = unicode(traceback.format_exc(), 'utf-8')
 			print message
-#		path = self.main.homeDir+'/avatars/'
-		print "loadAvatars",hashe
+		print "avatarLoader started",hashe
 		frame=QtGui.QImage("images/32x32/frame.png")
 		for hash in hashe:
 			try:
-				#self.avatarImg[hash] = self.main.getAvatar(hash)
 				avatar=QtGui.QImage(path+'/'+hash)
 				width=int(avatar.width())
 				height=int(avatar.height())
 				avatar=avatar.scaled(25,25,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
 				result=QtGui.QImage(32,32,QtGui.QImage.Format_ARGB32)
 				result.fill(QtCore.Qt.transparent)
+				# we have to implement this one:
 				#if os.path.exists("themes/"+self.config['theme']+"/frame-32.png"):
 					#frame=QtGui.QImage("themes/"+self.config['theme']+"/frame-32.png")
 				#else:
@@ -1610,11 +1607,8 @@ class imageLoader(QtCore.QThread):
 				painter.drawImage((32-avatar.width())/2,(32-avatar.height())/2,avatar)
 				painter.drawImage(0,0,frame)
 				painter.end()
-				avatarImg[hash] = [result,width,height]
 				self.emit(QtCore.SIGNAL("imageLoaded(QString,QImage,int,int)"),QtCore.QString(hash),QtGui.QImage(result),int(width),int(height))
-
 			except:
-				avatarImg[hash] = None
 				message = unicode(traceback.format_exc(), 'utf-8')
 				print message
 		
@@ -4269,16 +4263,19 @@ class mainWindow(QtGui.QMainWindow):
 		self.client.avatarImg[u'None']=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
 		#d=threads.deferToThread(self.loadAvatars,unicode(path),dict(self.client.avatarDef))
 		#d.addCallback(self.gotAvatars)
+		
+		# sets None for all avatars
 		hashe = []
 		for hash in self.client.avatarDef.itervalues():
 			if not hash in hashe and hash and hash!="None":
 				hashe.append(unicode(str(hash)))
 		for key in hashe:
 			self.client.avatarImg[key]=None
-			#print 'avatarSize',self.client.avatarImg[key].width(),self.client.avatarImg[key][0].height()
-		self.imageLoader=imageLoader(self,unicode(path),dict(self.client.avatarDef))
-		QtCore.QObject.connect(self.imageLoader,QtCore.SIGNAL("imageLoaded(QString,QImage,int,int)"),self.imageLoaded,QtCore.Qt.QueuedConnection)
+		# load avatars
+		self.imageLoader=avatarLoader(self,unicode(path),dict(self.client.avatarDef))
+		QtCore.QObject.connect(self.imageLoader,QtCore.SIGNAL("imageLoaded(QString,QImage,int,int)"),self.avatarLoaded,QtCore.Qt.QueuedConnection)
 		self.imageLoader.start()
+		
 		#self.gotAvatars(self.loadAvatars(unicode(path),dict(self.client.avatarDef)))
 		try:
 			self.client.xmlLang= unicode(QtCore.QLocale.system().name())[:2]
@@ -4310,45 +4307,48 @@ class mainWindow(QtGui.QMainWindow):
 			#log.msg("BAD FILE FOR AVATAR:"+unicode(file))
 		#self.client.roster['users'][jid].setAvatar(file, hash)
 
-	def imageLoaded(self,key,image,width,height):
+	def avatarLoaded(self,key,image,width,height):
+		"""
+		Called by avatarLoader when image with hash 'key' is loaded.
+		"""
 		self.client.avatarImg[unicode(key)]=[QtGui.QPixmap.fromImage(image),int(width),int(height)]
 
-	def loadAvatars(self,path,avatarDef):
-		avatarImg={}
+	#def loadAvatars(self,path,avatarDef):
+		#avatarImg={}
 
-		hashe = []
-		try:
-			for hash in avatarDef.itervalues():
-				if not hash in hashe and hash and hash!="None":
-					hashe.append(unicode(str(hash)))
-		except:
-			message = unicode(traceback.format_exc(), 'utf-8')
-			print message
-#		path = self.main.homeDir+'/avatars/'
-		print "loadAvatars",hashe
-		frame=QtGui.QImage("images/32x32/frame.png")
-		for hash in hashe:
-			try:
-				#self.avatarImg[hash] = self.main.getAvatar(hash)
-				avatar=QtGui.QImage(path+'/'+hash)
-				width=int(avatar.width())
-				height=int(avatar.height())
-				avatar=avatar.scaled(25,25,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
-				result=QtGui.QImage(32,32,QtGui.QImage.Format_ARGB32)
-				result.fill(QtCore.Qt.transparent)
-				#if os.path.exists("themes/"+self.config['theme']+"/frame-32.png"):
-					#frame=QtGui.QImage("themes/"+self.config['theme']+"/frame-32.png")
-				#else:
-				painter=QtGui.QPainter(result)
-				painter.drawImage((32-avatar.width())/2,(32-avatar.height())/2,avatar)
-				painter.drawImage(0,0,frame)
-				painter.end()
-				avatarImg[hash] = [result,width,height]
-			except:
-				avatarImg[hash] = None
-				message = unicode(traceback.format_exc(), 'utf-8')
-				print message
-		return avatarImg
+		#hashe = []
+		#try:
+			#for hash in avatarDef.itervalues():
+				#if not hash in hashe and hash and hash!="None":
+					#hashe.append(unicode(str(hash)))
+		#except:
+			#message = unicode(traceback.format_exc(), 'utf-8')
+			#print message
+##		path = self.main.homeDir+'/avatars/'
+		#print "loadAvatars",hashe
+		#frame=QtGui.QImage("images/32x32/frame.png")
+		#for hash in hashe:
+			#try:
+				##self.avatarImg[hash] = self.main.getAvatar(hash)
+				#avatar=QtGui.QImage(path+'/'+hash)
+				#width=int(avatar.width())
+				#height=int(avatar.height())
+				#avatar=avatar.scaled(25,25,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
+				#result=QtGui.QImage(32,32,QtGui.QImage.Format_ARGB32)
+				#result.fill(QtCore.Qt.transparent)
+				##if os.path.exists("themes/"+self.config['theme']+"/frame-32.png"):
+					##frame=QtGui.QImage("themes/"+self.config['theme']+"/frame-32.png")
+				##else:
+				#painter=QtGui.QPainter(result)
+				#painter.drawImage((32-avatar.width())/2,(32-avatar.height())/2,avatar)
+				#painter.drawImage(0,0,frame)
+				#painter.end()
+				#avatarImg[hash] = [result,width,height]
+			#except:
+				#avatarImg[hash] = None
+				#message = unicode(traceback.format_exc(), 'utf-8')
+				#print message
+		#return avatarImg
 
 	def loadAvatar(self,hash):
 		path=self.realHomeDir+"/avatars"
@@ -4368,14 +4368,14 @@ class mainWindow(QtGui.QMainWindow):
 		painter.end()
 		return [QtGui.QPixmap.fromImage(result),width,height]
 
-	def gotAvatars(self,avatarImg):
-		self.client.avatarImg=avatarImg
-		for key in self.client.avatarImg.keys():
-			self.client.avatarImg[key][0]=QtGui.QPixmap.fromImage(self.client.avatarImg[key][0])
-			#print 'avatarSize',self.client.avatarImg[key].width(),self.client.avatarImg[key][0].height()
-		self.client.avatarImg[None]=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
-		self.client.avatarImg[u'None']=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
-		print 'LOADED AVATARS',self.client.avatarImg
+	#def gotAvatars(self,avatarImg):
+		#self.client.avatarImg=avatarImg
+		#for key in self.client.avatarImg.keys():
+			#self.client.avatarImg[key][0]=QtGui.QPixmap.fromImage(self.client.avatarImg[key][0])
+			##print 'avatarSize',self.client.avatarImg[key].width(),self.client.avatarImg[key][0].height()
+		#self.client.avatarImg[None]=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
+		#self.client.avatarImg[u'None']=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
+		#print 'LOADED AVATARS',self.client.avatarImg
 
 	
 	def _addGroup(self, group):
