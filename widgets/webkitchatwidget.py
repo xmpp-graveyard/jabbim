@@ -105,6 +105,12 @@ class webkitChatWidget(QtWebKit.QWebView):
 		self.page().mainFrame().evaluateJavaScript("showLastMessages();")
 		self.webkitLoaded=True
 		self.messageObjectReady()
+		try:
+			typ=self.chatwidget().typ
+		except:
+			typ="chat"
+		if typ=="groupchat":
+			self.chatwidget().refreshStats()
 
 	def loadWebkit(self):
 		self.webkitLoaded=False

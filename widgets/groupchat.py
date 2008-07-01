@@ -76,7 +76,7 @@ class groupChatWidget(abstractChatWidget):
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int )"),self.userSingleClicked)
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.usersContextMenu)
 
-		## shortcuts
+		# shortcuts
 		#short=QtGui.QShortcut("tab",self.ui.line)
 		#QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.tabPressed)
 		
@@ -88,8 +88,6 @@ class groupChatWidget(abstractChatWidget):
 		self.ui.users.header().hide()
 		self.ui.users.hideColumn(1)
 		self.ui.users.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-
-
 
 		self.sizes={} #: sizes of avatars of other occupants
 		self.colors=[] #: colors of other occupants
