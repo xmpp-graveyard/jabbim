@@ -9,6 +9,8 @@ from PyQt4 import QtCore, QtGui
 from twisted.python import log
 from include import plugins
 from twisted.internet.task import LoopingCall
+from twisted.internet.protocol import ProcessProtocol
+from twisted.internet.error import ProcessDone
 
 class config:
 	def __init__(self,main):
@@ -20,6 +22,32 @@ class config:
 		else:
 			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Amarok':'amarok','Exaile':'exaile','Banshee':'banshee','Rhythmbox':'rhythmbox', 'Audacious':'audacious' }, 'value':'amarok'}
 
+class AmarokProcessProtocol(ProcessProtocol):
+	def __init__(self, plugin, out, field):
+		self.plugin = plugin
+		self.out = out
+		self.field = field
+
+	# Will get called when the subprocess has data on stdout
+	def outReceived(self, data):
+		self.out[self.field] = unicode(data, "utf-8").strip()
+
+	# Will get called when the subprocess has data on stderr
+	def errReceived(self, data):
+		pass
+
+	# Will get called when the subprocess starts
+	def connectionMade(self):
+		pass
+
+	# Will get called when the subprocess ends
+	def processEnded(self, reason):
+		# ProcessDone indicates successful exit
+		if not isinstance(reason.value, ProcessDone):
+			self.out = {}
+		if (len(self.out) == 2 or self.out == {}):
+			self.plugin.sendPEP(self.out)
+
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
@@ -28,7 +56,7 @@ class Plugin(plugins.PluginBase):
 		self.description = self.tr('Plugin for User Tune')
 		self.author = "Jiri 'Sef' Gabrys + Josef 'PepeQ' Halicek + Krzysztof 'Grom' K."
 		self.name = self.tr('tune')
-		self.version = '0.261'
+		self.version = '0.262'
 		self.category = ['utils']
 		self.configDialog=config(self)
 		self.url = 'http://dev.jabbim.cz/jabbim'
@@ -42,7 +70,13 @@ class Plugin(plugins.PluginBase):
 
 	def on_remove(self):
 		self.loop.stop()
-		self.main.client.sendPEP('http://jabber.org/protocol/tune', self.main.client.getTunePayload({}))
+		self.sendPEP({})
+
+	def sendPEP(self, out):
+		if out != self.last and self.main.client.xmlstream != None:
+			self.main.client.sendPEP('http://jabber.org/protocol/tune', self.main.client.getTunePayload(out))
+			self.last = out
+
 	def check(self):
 		out = {}
 		if self.config['player'] == 'mpd':
@@ -131,12 +165,11 @@ class Plugin(plugins.PluginBase):
 		elif self.config['player'] == 'amarok':
 			try:
 				for field in ['artist', 'title']:
-					(err, cmd_output) = commands.getstatusoutput("dcop amarok player %s" % field)
-					if err != 0:
-						raise Exception
-					out[field] = unicode(cmd_output, "utf-8")
-				if len(out['title'].strip()) == 0 and len(out['artist'].strip()) == 0:
-					out = {}
+					self.main.reactor.spawnProcess(
+						AmarokProcessProtocol(self, out, field),
+						'dcop', ['dcop', 'amarok', 'player', field],
+						env=os.environ)
+				return  # PEP will be sent when the spawned processes exit
 			except:
 				out = {}
 		
@@ -172,11 +205,7 @@ class Plugin(plugins.PluginBase):
 			except:
 				out = {}
 
-    		
-
-		if out != self.last and self.main.client.xmlstream != None:
-			self.main.client.sendPEP('http://jabber.org/protocol/tune', self.main.client.getTunePayload(out))
-			self.last = out
+		self.sendPEP(out)
 
 
 # EOF
