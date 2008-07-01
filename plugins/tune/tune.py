@@ -11,6 +11,7 @@ from include import plugins
 from twisted.internet.task import LoopingCall
 from twisted.internet.protocol import ProcessProtocol
 from twisted.internet.error import ProcessDone
+from twisted.internet import reactor
 
 class config:
 	def __init__(self,main):
@@ -165,7 +166,7 @@ class Plugin(plugins.PluginBase):
 		elif self.config['player'] == 'amarok':
 			try:
 				for field in ['artist', 'title']:
-					self.main.reactor.spawnProcess(
+					reactor.spawnProcess(
 						AmarokProcessProtocol(self, out, field),
 						'dcop', ['dcop', 'amarok', 'player', field],
 						env=os.environ)
