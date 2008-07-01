@@ -73,7 +73,8 @@ class groupChatWidget(abstractChatWidget):
 
 		# signals
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.userClicked)
-		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int )"),self.userSingleClicked)
+		#QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int )"),self.userSingleClicked)
+		self.ui.users.mouseReleaseEvent=self.userSingleClicked
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.usersContextMenu)
 
 		# shortcuts
@@ -461,28 +462,32 @@ class groupChatWidget(abstractChatWidget):
 		icon=self.main().getIcon(status=self.main().icons[unicode(item.text(1))[0]],size="16x16")
 		tab=self.main().chat.addChatTab(self.jid+"/"+unicode(item.text(0)),item.text(0),icon,full=True)
 		self.main().chat.activate()
-		self.main().client.reactor.callLater(0.2,tab.chat.ui.line.setFocus,QtCore.Qt.MouseFocusReason)
 
-	def userSingleClicked(self,item,i):
+	def userSingleClicked(self,event):
 		"""
 		Called when user single clicked on item.
 		"""
-		if item.parent()==None:
-			return
-		text = unicode(self.ui.line.toPlainText())
-		if len(text) == 0 or text.strip()[:-1] in self.main().client.groupchats[self.jid].users.keys():
-			self.ui.line.setText(unicode(item.text(0))+': ')
-		else:
-			cur=self.ui.line.textCursor()
-			if text[-1]==" ":
-				cur.insertText(unicode(item.text(0))+" ")
+		if event.button()==QtCore.Qt.MidButton:
+			item=self.ui.users.itemAt(event.pos())
+			if not item:
+				return
+			if item.parent()==None:
+				return
+			text = unicode(self.ui.line.toPlainText())
+			if len(text) == 0 or text.strip()[:-1] in self.main().client.groupchats[self.jid].users.keys():
+				self.ui.line.setText(unicode(item.text(0))+': ')
 			else:
-				cur.insertText(" "+unicode(item.text(0))+" ")
+				cur=self.ui.line.textCursor()
+				if text[-1]==" ":
+					cur.insertText(unicode(item.text(0))+" ")
+				else:
+					cur.insertText(" "+unicode(item.text(0))+" ")
+				self.ui.line.setTextCursor(cur)
+			self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+			cur=self.ui.line.textCursor()
+			cur.movePosition(QtGui.QTextCursor.End)
 			self.ui.line.setTextCursor(cur)
-		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
-		cur=self.ui.line.textCursor()
-		cur.movePosition(QtGui.QTextCursor.End)
-		self.ui.line.setTextCursor(cur)
+		return QtGui.QListWidget.mouseReleaseEvent(self,event)
 			
 		
 	def clearChat(self):
