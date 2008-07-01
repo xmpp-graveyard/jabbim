@@ -339,6 +339,25 @@ distro_info = {
 	'Redhat Linux': '/etc/redhat-release'
 }
 
+def getWindowsVersion():
+	if os.name == 'nt':
+		ver = os.sys.getwindowsversion()
+		ver_format = ver[3], ver[0], ver[1]
+		win_version = {
+			(1, 4, 0): '95',
+			(1, 4, 10): '98',
+			(1, 4, 90): 'me',
+			(2, 4, 0): 'nt',
+			(2, 5, 0): '2000',
+			(2, 5, 1): 'xp',
+			(2, 5, 2): '2003',
+			(2, 6, 0): 'vista',
+		}
+		if win_version.has_key(ver_format):
+			return win_version[ver_format]
+		else:
+			return 'unknown'
+		
 def get_os_info():
 	if os.name == 'nt':
 		ver = os.sys.getwindowsversion()

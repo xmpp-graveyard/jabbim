@@ -4,10 +4,18 @@ try:
 except:
 	print "PyQt4 is not installed."
 
+import newprofile_ui
 from twisted.internet import reactor
 from twisted.python import log
+from pyxl import register
 import registration
 import sys
+import base64
+from twisted.web.client import getPage
+from include import rot13
+from twisted.words.xish import domish
+from twisted.words.xish.domish import Element
+from twisted.words.protocols.jabber.xmlstream import IQ
 
 def createFirstPage(firstStartWizard):
 	# language and server
@@ -82,100 +90,227 @@ def createSecondPage(firstStartWizard):
 	page.setLayout(layout)
 	return page
 
-class firstStartWizard(QtGui.QWizard):
-	def __init__(self,main,parent=None):
-		apply(QtGui.QWizard.__init__,(self,parent))
+servers=["jabbim.cz","jabbim.sk","jabbim.pl","jabbim.com","jabber.cz","njs.netlab.cz"]
+
+class registrationClass(register.RegisteringClient):
+	def __init__(self,main, username, server, resource,password, port, reactor):
+		register.RegisteringClient.__init__(self, username, server, resource,password, port, reactor)
 		self.main=main
-		self.addPage(createFirstPage(self))
-		#self.addPage(createThirdPage(self))
-		#self.addPage(createWaitPage(self))
-		self.addPage(createSecondPage(self))
-		#self.addPage(createFinishPage(self))
-		self.setWindowTitle(self.tr("Jabbim Wizard"))
-		#self.cl=None
-		#self.error=None
-		#self.registered=False
-		#self.jid=""
 
-
+	def nicknameConflict(self):
+		firstStartWizard=self.main
+		self.main.ui.error.setText("<b><font color=\"red\">"+firstStartWizard.tr("This Jabber ID is already registered by someone else.")+"</font></b>")
+		self.main.state="pre"
+		self.main.ui.stackedWidget_2.setCurrentIndex(0)
+		self.main.ui.movie.stop()
 		
-	def initializePage(self,i):
-		##page=self.page(i)
-		##print i,self.error
-		##if i==2 and self.error!=None:
-			##if self.error=="409":
+		
+	def _regfailed(self, el):
+		for x in el.elements():
+			#print unicode(x.toXml())
+			if unicode(x.name)=="error":
+				if x.hasAttribute("code"):
+					if x['code']=="409":
+						print "nickname conflict"
+						self.reactor.callFromThread(self.nicknameConflict)
+						#self.main.error="409"
+#						registrationWizard=self.main
+						#self.main.label.setTextFormat(QtCore.Qt.RichText)
+#						self.main.label.setText("<b><font color=\"red\">"+registrationWizard.tr("This Jabber ID is already registered by someone else.")+"</font></b>")
+						#self.main.registered=False
+						#self.main.back()
+
+	
+	def registered(self):
+		self.main.state="registered"
+		self.main.ui.stackedWidget_2.setCurrentIndex(3)
+		self.main.ui.registerButton.setEnabled(True)
+		self.main.ui.registerButton.setText("Finish")
+		self.main.ui.movie.stop()
+		
+	def _authd(self, el):
+		self.reactor.callFromThread(self.registered)
+
+	def setVCard(self, card):
+		""" Posle vlastni vcard """
+#		log.msg( 'requesting vcard for ' + unicode(jid))
+		iq = IQ(self.xmlstream, 'set')
+#		iq['to'] = jid
+		vcard = iq.addElement('vCard', 'vcard-temp')
+		for k,v in card.iteritems():
+			s = k.split('-')
+			if len(s)>1:
+				found = False
+				for el in vcard.elements():
+					if el.name == s[0]:
+						el.addElement(s[1], content = v)
+						found = True
+						break
+				if not found:
+					el = vcard.addElement(s[0])
+					el.addElement(s[1], content = v)
+			else:
+				el = vcard.addElement(k, content = v)
 				
-			##self.error=None
-		##if i==2:
-			##server=servers[int(self.field("server").toString())-1]
-			##self.serverLabel.setText("@"+server)
-		if i==1:
-			if self.newAccount.isChecked():
-				self.accept()
-			##server=servers[int(self.field("server").toString())-1]
-			##jid=unicode(self.field("jid").toString())
-			##password=unicode(self.field("password").toString())
-			#j=self.jid.split("@")
-			#name=j[0]
-			#server=j[1]
-			#password=unicode(self.field("password").toString())
+					
+		#self.disp(iq['id'])
+		iq.timeout = 60
+		d = iq.send()
+		d.addCallback(self.vcard_set).addErrback(self.vcard_set)
+	
+	def vcard_set(self,data=None):
+		self.reactor.callFromThread(self.finished)
+	
+	def finished(self):
+		self.main.state="done"
+		self.main.accept()
 
-			#self.cl = registrationClass(self,name,server, 'jab',password, 5222, reactor)
-			##log.startLogging(sys.stdout)
-			#self.cl.connect()
-			#reactor.run()
-		#elif i==2:
-			#self.registered=True
-		#elif i==3:
-			#card={}
-			#card["N-GIVEN"]=unicode(self.field("firstname").toString())
-			#card["N-FAMILY"]=unicode(self.field("surname").toString())
-			#card["EMAIL-INTERNET"]=unicode(self.field("email").toString())
-			#avatar=self.avatar.pixmap()
-			#if avatar:
-				#bytes=QtCore.QByteArray()
-				#buf=QtCore.QBuffer(bytes)
-				#buf.open(QtCore.QIODevice.WriteOnly)
-				#avatar.save(buf, "PNG")
-				#card["PHOTO-BINVAL"]=base64.encodestring(str(bytes))
-			#self.cl.setVCard(card)
-		#return
-
-	#def validateCurrentPage(self):
-		#if int(self.currentId())==1:
-			#if self.registered==True:
-				#return True
-			#else:
-				#return False
-		#elif int(self.currentId())==0:
-			#if unicode(self.field("password").toString())==unicode(self.field("password2").toString()):
-				#return True
-			#else:
-				#self.label.setText(self.trUtf8("Hesla nejsou stejná."))
-				#return False
-		#else:
-			#return self.currentPage().validatePage()
-
-	#def reject(self):
+	
+class firstStartWizard(QtGui.QDialog):
+	def __init__(self,main,parent=None):
+		apply(QtGui.QDialog.__init__,(self,parent))
+		self.ui=newprofile_ui.Ui_newProfile()
+		self.ui.setupUi(self)
+		self.main=main
+		self.jid=""
+		self.state="pre"
 		
-		#if self.cl:
-			#self.cl.disconnect()
-		#return QtGui.QWizard.reject(self)
-
-	def accept(self):
-		if self.newAccount.isChecked():
-			self.hide()
-			self.regwiz=registration.registrationWizard(self.main,self.main)
-			self.regwiz.setGeometry(self.geometry())
-			self.regwiz.exec_()
+		self.ui.servers.addItems(QtCore.QStringList([self.tr("Choose server")]+servers))
+		self.ui.nickname.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp("^([!#$%(-.0-9;=?a-zA-Z]+)$"),self.ui.nickname))
+		self.ui.registerButton.setEnabled(False)
+		
+		self.ui.movieLabel=QtGui.QLabel(self.ui.waitWidget)
+		self.ui.movieLabel.setFrameShape(QtGui.QFrame.Box)
+		self.ui.movieLabel.setFrameStyle(QtGui.QFrame.Plain)
+		self.ui.movie=QtGui.QMovie("images/loading.gif")
+		
+		self.ui.movieLabel.setMovie(self.ui.movie)
+		l=QtGui.QHBoxLayout(self.ui.waitWidget)
+		l.addWidget(self.ui.movieLabel,0,QtCore.Qt.AlignCenter)
+		self.cl=None
+		
+		QtCore.QObject.connect(self.ui.createAccount,QtCore.SIGNAL("toggled(bool)"),self.showCreateAccount)
+		QtCore.QObject.connect(self.ui.useAccount,QtCore.SIGNAL("toggled(bool)"),self.showUseAccount)
+		QtCore.QObject.connect(self.ui.servers,QtCore.SIGNAL("activated ( const QString & )"),self.serverChanged)
+		QtCore.QObject.connect(self.ui.loadAvatar,QtCore.SIGNAL("clicked ( )"),self.setAvatar)
+		QtCore.QObject.connect(self.ui.servers,QtCore.SIGNAL("editTextChanged ( const QString & )"),self.serverChanged)
+		QtCore.QObject.connect(self.ui.nickname,QtCore.SIGNAL("textEdited ( const QString & )"),self.nicknameChanged)
+		QtCore.QObject.connect(self.ui.password,QtCore.SIGNAL("textEdited ( const QString & )"),self.passwordEdited)
+		QtCore.QObject.connect(self.ui.password2,QtCore.SIGNAL("textEdited ( const QString & )"),self.passwordEdited)
+		
+	def passwordEdited(self,p):
+		self.enableRegister()
+	
+	def enableRegister(self):
+		samePass=self.ui.password.text()==self.ui.password2.text()
+		if self.main.getJid(self.jid) and samePass:
+			self.ui.registerButton.setEnabled(True)
+			self.ui.error.setText("")
 		else:
-			jid=unicode(self.jid.text())
-			savePassword=self.savePassword.isChecked()
-			password=unicode(self.password.text())
-			self.main.newProfile(jid,password,savePassword)
-			self.main.profileChanged(jid)
+			if not samePass:
+				self.ui.error.setText(self.tr("Passwords are not the same."))
+			else:
+				self.ui.error.setText("")
+			self.ui.registerButton.setEnabled(False)
+	
+	def nicknameChanged(self,nickname):
+		if self.main.getJid(unicode(nickname+"@"+self.ui.servers.currentText())):
+			self.jid=unicode(nickname+"@"+self.ui.servers.currentText())
+			self.ui.jidLabel.setText("<b>"+self.jid+"</b>")
+		else:
+			self.ui.jidLabel.setText(self.tr("Nickname or server contains incorrent characters"))
+		self.enableRegister()
+	
+	def serverChanged(self,server):
+		server=unicode(server)
+		nickname=unicode(self.ui.nickname.text())
+		if self.main.getJid(unicode(nickname+"@"+self.ui.servers.currentText())):
+			self.jid=nickname+"@"+server
+			self.ui.jidLabel.setText("<b>"+self.jid+"</b>")
+		else:
+			self.ui.jidLabel.setText(self.tr("Nickname or server contains incorrent characters"))
+		self.enableRegister()
+	
+	def showCreateAccount(self):
+		self.ui.stackedWidget_2.setCurrentIndex(0)
+	
+	def showUseAccount(self):
+		self.ui.stackedWidget_2.setCurrentIndex(1)
+
+	def setAvatar(self):
+		file=list(QtGui.QFileDialog.getOpenFileNames(self,self.tr("Choose avatar")))
+		if len(file)!=0:
+			resized=False
+			file=unicode(file[0])
+			avatar=QtGui.QPixmap(file)
+			print int(avatar.width()), int(avatar.height())
+			if int(avatar.width())>128 or int(avatar.height())>128:
+				avatar=avatar.scaled(128,128,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
+				resized=True
+			self.ui.avatarLabel.setPixmap(avatar)
+			if resized:
+				QtGui.QMessageBox.information(self,self.tr("Avatar"),self.tr("Your avatar was too big. He had to be resized to smaller size."))
+
+	def _register(self,data):
+			if unicode(data)[0]=="1":
+				self.ui.error.setText("<b><font color=\"red\">"+self.tr("This Jabber ID is already registered by someone else.")+"</font></b>")
+				self.state="pre"
+				#self.ui.stackedWidget_2.setCurrentIndex(0)
+				#self.ui.movie.stop()
+				self.ui.cancel.setEnabled(True)
+			elif unicode(data)[0]=="0":
+				j=self.jid.split("@")
+				name=j[0]
+				server=j[1]
+				password=unicode(self.ui.password.text())
+				self.cl = registrationClass(self,name,server, 'jab',password, 5222, reactor)
+				self.cl.connect()
 			
-		return QtGui.QWizard.accept(self)
+	def accept(self):
+		if self.state=='pre':
+			if self.cl:
+				self.cl.disconnect()
+			self.ui.registerButton.setEnabled(False)
+			self.ui.cancel.setEnabled(False)
+			self.state="registering"
+			#self.ui.stackedWidget_2.setCurrentIndex(2)
+			#self.ui.movie.start()
+			#self.ui.movieLabel.show()
+			self.ui.createAccount.hide()
+			self.ui.useAccount.hide()
+			j=self.jid.split("@")
+			name=j[0]
+			server=j[1]
+			if server in servers:
+				url = "http://content.jabbim.com/client/check.php?jid=%s" % self.jid
+				d = getPage(str(url),timeout=5)
+				d.addCallback(self._register)
+			else:
+				self._register("0")
+		elif self.state=="registered":
+			card={}
+			card["N-GIVEN"]=unicode(self.ui.firstname.text())
+			card["N-FAMILY"]=unicode(self.ui.surname.text())
+			card["EMAIL-INTERNET"]=unicode(self.ui.email.text())
+			avatar=self.ui.avatarLabel.pixmap()
+			if avatar:
+				bytes=QtCore.QByteArray()
+				buf=QtCore.QBuffer(bytes)
+				buf.open(QtCore.QIODevice.WriteOnly)
+				avatar.save(buf, "PNG")
+				card["PHOTO-BINVAL"]=base64.encodestring(str(bytes))
+			self.cl.setVCard(card)
+		elif self.state=="done":
+			if self.cl:
+				self.cl.disconnect()
+			self.done(1)
+
+
+	def reject(self):
+		if self.state=="pre" or self.state=="done":
+			if self.cl:
+				self.cl.disconnect()
+			return QtGui.QDialog.reject(self)
 
 	#def finished(self,result):
 		#print "finished"
