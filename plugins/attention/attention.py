@@ -52,23 +52,25 @@ class Plugin(plugins.PluginBase):
 			self.playsound()
 			tab,index=self.main.chat.findTab(frm)
 			if tab:
-				tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',self.main.ui.roster.getNameByJID(frm)+self.tr(' has just requested an attention.')))
+				message=self.main.webkitThemeFactory.genChatStatus(self.main.ui.roster.getNameByJID(frm)+self.tr(' has just requested an attention.'),self.main.now())
+				tab.chat.textEditWrite(message)
+				tab.chat.lastMessageFrom=""
 			self.last_req=int(time.time())
 
 
 	def buildChatWidget(self,jid,layout,widget):
-		if self.main.client.hasFeature(self.main.getJid(jid).userhost(),"http://www.xmpp.org/extensions/xep-0224.html#ns"):
-			button=QtGui.QToolButton()
-			button.setText(self.tr('Attention'))
-			button.setIconSize(QtCore.QSize(16,16))
-			button.setIcon(QtGui.QIcon("%s/attention.png" % self.pluginDir))
-			button.jid=unicode(jid)
-			
-			button.setToolTip(self.tr('Request the attention of the user!'))
-	
-			
-			self.group.addButton(button)
-			layout.addWidget(button)
+		button=QtGui.QToolButton()
+		button.setText(self.tr('Attention'))
+		button.setIconSize(QtCore.QSize(16,16))
+		button.setIcon(QtGui.QIcon("%s/attention.png" % self.pluginDir))
+		button.jid=unicode(jid)
+		
+		button.setToolTip(self.tr('Request the attention of the user!'))
+
+		
+		self.group.addButton(button)
+		layout.addWidget(button)
+		widget.registerFeatureForWidget("http://www.xmpp.org/extensions/xep-0224.html#ns",button)
 		
 		
 	def buttonClicked(self, button):
@@ -77,10 +79,14 @@ class Plugin(plugins.PluginBase):
 			self.main.client.sendAttention(button.jid, " ") # TODO: allow user to sed message acording to xep
 			self.playsound()
 			if tab:
-				tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',self.tr('You have just sent request for an attention.')))
+				message=self.main.webkitThemeFactory.genChatStatus(self.tr('You have just sent request for an attention.'),self.main.now())
+				tab.chat.textEditWrite(message)
+				tab.chat.lastMessageFrom=""
 			self.last_sent=int(time.time())
 		else:
-			tab.chat.textEditWrite(self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',self.tr("You shouldn't request attention so frequently.")))
+			message=self.main.webkitThemeFactory.genChatStatus(self.tr("You shouldn't request attention so frequently."),self.main.now())
+			tab.chat.textEditWrite(message)
+			tab.chat.lastMessageFrom=""
 	
 	def playsound(self):
 		if sys.platform == 'linux2': # linux sounds are produced using aplay

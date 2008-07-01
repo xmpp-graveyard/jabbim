@@ -793,27 +793,38 @@ class abstractChatWidget(QtGui.QWidget):
 		
 
 	def registerFeatureForWidget(self,feature,widget):
+		widget=weakref.ref(widget)
 		self.featuredWidget.append([feature,widget])
 		if self.main().client.hasFeature(self.jid,feature):
-			widget.show()
+			widget().show()
 		else:
-			widget.hide()
+			widget().hide()
 
 	def unregisterFeatureForWidget(self,widget):
 		for item in self.featuredWidget:
-			if widget==item[1]:
+			if widget()==item[1]:
 				self.featuredWidget.remove(item)
 				break
 
 	def showFeaturedWidgets(self):
+		print "showFeaturedWidgets",self.featuredWidget
+		# test if all widgets are alive
+		x=0
+		for i in range(len(self.featuredWidget)):
+			if self.featuredWidget[x][1]()==None:
+				print "Deleting widget for",self.featuredWidget[x][0],"because of inactivity"
+				del self.featuredWidget[x]
+			else:
+				x+=1
+		
 		for item in self.featuredWidget:
 			feature=item[0]
 			widget=item[1]
 			#print "checking ",feature," = ",self.main().client.hasFeature(self.jid,feature)
 			if self.main().client.hasFeature(self.jid,feature):
-				widget.show()
+				widget().show()
 			else:
-				widget.hide()
+				widget().hide()
 
 	def isLink(self,text):
 		if text.find("://")!=-1:
