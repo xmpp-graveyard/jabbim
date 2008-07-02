@@ -38,8 +38,8 @@ def createFirstPage(firstStartWizard):
 	layout.addWidget(firstStartWizard.newAccount,1,0,1,2)
 	layout.addWidget(firstStartWizard.oldAccount,2,0,1,2)
 	
-
 	
+
 	page.registerField("newAccount",firstStartWizard.newAccount)
 	page.registerField("oldAccount",firstStartWizard.oldAccount)
 	page.setSubTitle(firstStartWizard.trUtf8("Choose one option."))
@@ -260,11 +260,21 @@ class firstStartWizard(QtGui.QDialog):
 				self.ui.cancel.setEnabled(True)
 			elif unicode(data)[0]=="0":
 				j=self.jid.split("@")
+				self.ui.stackedWidget_2.setCurrentIndex(2)
+				self.ui.movie.start()
 				name=j[0]
 				server=j[1]
 				password=unicode(self.ui.password.text())
 				self.cl = registrationClass(self,name,server, 'jab',password, 5222, reactor)
 				self.cl.connect()
+
+	def _registerFailed(self,data):
+		self.ui.error.setText("<b><font color=\"red\">"+self.tr("Can't connect the server")+"</font></b>")
+		self.state="pre"
+		#self.ui.stackedWidget_2.setCurrentIndex(0)
+		#self.ui.movie.stop()
+		self.ui.cancel.setEnabled(True)
+
 			
 	def accept(self):
 		if self.state=='pre':
@@ -273,9 +283,6 @@ class firstStartWizard(QtGui.QDialog):
 			self.ui.registerButton.setEnabled(False)
 			self.ui.cancel.setEnabled(False)
 			self.state="registering"
-			#self.ui.stackedWidget_2.setCurrentIndex(2)
-			#self.ui.movie.start()
-			#self.ui.movieLabel.show()
 			self.ui.createAccount.hide()
 			self.ui.useAccount.hide()
 			j=self.jid.split("@")
@@ -285,9 +292,16 @@ class firstStartWizard(QtGui.QDialog):
 				url = "http://content.jabbim.com/client/check.php?jid=%s" % self.jid
 				d = getPage(str(url),timeout=5)
 				d.addCallback(self._register)
+				d.addErrback(self._registerFailed)
 			else:
+				self.ui.stackedWidget_2.setCurrentIndex(2)
+				self.ui.movie.start()
 				self._register("0")
 		elif self.state=="registered":
+			self.ui.registerButton.setEnabled(False)
+			self.ui.cancel.setEnabled(False)
+			self.ui.stackedWidget_2.setCurrentIndex(2)
+			self.ui.movie.start()
 			card={}
 			card["N-GIVEN"]=unicode(self.ui.firstname.text())
 			card["N-FAMILY"]=unicode(self.ui.surname.text())
@@ -303,6 +317,12 @@ class firstStartWizard(QtGui.QDialog):
 		elif self.state=="done":
 			if self.cl:
 				self.cl.disconnect()
+			name=j[0]
+			server=j[1]
+			password=unicode(self.ui.password.text())
+			self.main.newProfile(name+"@"+server,password,"True")
+			self.main.fillLoginForm()
+			self.main.connect(delay=1.0)
 			self.done(1)
 
 

@@ -1341,10 +1341,10 @@ class clientClass(pyxl.client.Client):
 				text+="</td></tr></table>"
 				self.main.events.addInfoEvent(header=mainWindow.tr("New message"),text=mainWindow.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[],tooltip=text)
 				if self.groupchats.has_key(frm.userhost()):
-					self.main.chat.addChatTab(frm.full(),unicode(user),icon,None,full=True)
+					self.main.chat.addChatTab(frm.full(),unicode(user),icon,True,full=True)
 					tab,tabIndex=self.main.chat.findTab(frm.full(),True)
 				else:
-					self.main.chat.addChatTab(frm.full(),unicode(user),icon,None)
+					self.main.chat.addChatTab(frm.full(),unicode(user),icon,True)
 					tab,tabIndex=self.main.chat.findTab(frm.full())
 				if created:
 					self.main.chat.setWindowState(self.main.chat.windowState() & ~QtCore.Qt.WindowActive | QtCore.Qt.WindowMinimized )

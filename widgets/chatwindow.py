@@ -139,6 +139,8 @@ class chatWindow(QtGui.QMainWindow):
 		ctypes.windll.user32.FlashWindow(int(self.winId()),True)
 		if self.flashStatus:
 			self.main.client.reactor.callLater(1,self.flash)
+		else:
+			ctypes.windll.user32.FlashWindow(int(self.winId()),False)
 
 	def inactive(self):
 		"""
@@ -336,9 +338,8 @@ class chatWindow(QtGui.QMainWindow):
 				if jid.userhost()==self.main.getJid(widget.jid).userhost() and (event['type']=="newMessage" or event['type']=="message"):
 					event['widget'].closeClicked()
 					#break
-					self.flashStatus=False
 					self.main.events.refreshTray()
-
+		self.flashStatus=False
 		unread=int(self.getUnreadMessages())
 		if unread>0:
 			self.setWindowTitle("("+str(unread)+") "+unicode(self.ui.chatTab.tabText(index)).replace("&",""))
@@ -544,14 +545,14 @@ class chatWindow(QtGui.QMainWindow):
 
 			w.chat.textEditWrite(message,insert)
 
-	def openNewChatTab(self,jid,name,icon=None,message=None):
+	def openNewChatTab(self,jid,name,icon=None,new=None):
 		if not icon:
 			icon=self.main.ui.roster.getIconByJID(jid)
 		created=False
 		if self.isHidden():
 			created=True
 			self.showMinimized()
-		self.addChatTab(jid,unicode(user),icon,message)
+		self.addChatTab(jid,unicode(user),icon,new)
 		if created:
 			self.setWindowState(self.windowState() & ~QtCore.Qt.WindowActive | QtCore.Qt.WindowMinimized )
 			self.setWindowState(self.windowState() & QtCore.Qt.WindowActive)
@@ -564,7 +565,7 @@ class chatWindow(QtGui.QMainWindow):
 			if message:
 				tab.chat.unread+=1
 
-	def addChatTab(self,jid,name,icon,message=None,full=False):
+	def addChatTab(self,jid,name,icon,new=None,full=False):
 		#for i in range(self.ui.chatTab.count()):
 			#w=self.ui.chatTab.widget(i)
 			#try:
@@ -663,9 +664,7 @@ class chatWindow(QtGui.QMainWindow):
 		print "adding new tab...", icon
 		tab.tabName=unicode("&"+unicode(name))
 		self.ui.chatTab.addTab(tab,icon,"&"+unicode(name))
-		if message:
-			tab.unread=1
-			self.setWindowTitle("("+unicode(self.getUnreadMessages()+1)+") "+unicode(name))
+		if new:
 			if not self.isActiveWindow() or self.windowState() & QtCore.Qt.WindowMinimized:
 				self.startFlash()
 		else:

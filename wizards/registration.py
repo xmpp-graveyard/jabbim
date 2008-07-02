@@ -381,7 +381,7 @@ class registrationWizard(QtGui.QWizard):
 			name=j[0]
 			server=j[1]
 			password=unicode(self.field("password").toString())
-			
+
 			#self.main.config['passwd']=rot13.scramble(password)
 			#self.main.config['jid']=name+"@"+server
 			#self.main.config['savePasswd']="True"
