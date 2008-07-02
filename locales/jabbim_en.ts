@@ -3564,6 +3564,162 @@ Do you realy want to leave this room?</translation>
     </message>
 </context>
 <context>
+    <name>newProfile</name>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="260"/>
+        <source>New Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="261"/>
+        <source>Register</source>
+        <translation type="unfinished">Register</translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="262"/>
+        <source>Online help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="263"/>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancel</translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="268"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt; font-weight:600;&quot;&gt;&lt;span style=&quot; font-size:x-large;&quot;&gt;New Jabbim Profile&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="269"/>
+        <source>Welcome to the open world of Jabber. This wizzard will help you with creating your account, so you can chat with your friends in no time.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="270"/>
+        <source>Create new Jabber account</source>
+        <translation type="unfinished">Create new Jabber account</translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="271"/>
+        <source>Use existing Jabber account</source>
+        <translation type="unfinished">Use existing Jabber account</translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="272"/>
+        <source>Register new Jabber Account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="273"/>
+        <source>Jabber server:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="274"/>
+        <source>Nickname:</source>
+        <translation type="unfinished">Nickname:</translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="286"/>
+        <source>Password:</source>
+        <translation type="unfinished">Password:</translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="276"/>
+        <source>Password again:</source>
+        <translation type="unfinished">Password again:</translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="277"/>
+        <source>Your Jabber ID will be:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="282"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;example@jabbim.cz&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="283"/>
+        <source>Use existing Jabber Account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="284"/>
+        <source>Jabber ID:</source>
+        <translation type="unfinished">Jabber ID:</translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="285"/>
+        <source>Save password</source>
+        <translation type="unfinished">Save password</translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="287"/>
+        <source>First name:</source>
+        <translation type="unfinished">First name:</translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="288"/>
+        <source>Surname:</source>
+        <translation type="unfinished">Surname:</translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="289"/>
+        <source>Email:</source>
+        <translation type="unfinished">Email:</translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="290"/>
+        <source>Avatar</source>
+        <translation type="unfinished">Avatar</translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="296"/>
+        <source>Sunset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="302"/>
+        <source>Ship</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="308"/>
+        <source>Kitten</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="314"/>
+        <source>Dog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="320"/>
+        <source>Car</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="325"/>
+        <source>Ball</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/newprofile_ui.py" line="327"/>
+        <source>Load avatar from file</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>passwordChangeDialog</name>
     <message>
         <location filename="widgets/profiles.py" line="39"/>

@@ -63,6 +63,7 @@ widgets/waitdialog.py \
 widgets/xmlConsole.py \
 wizards/firststart.py \
 wizards/registration.py \
+wizards/newprofile_ui.py \
 pref/connection.py \
 pref/chat.py \
 pref/jabbim.py \
