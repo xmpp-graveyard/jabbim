@@ -8,7 +8,6 @@ widgets/albumfiletransfer_ui.py \
 widgets/commands.py \
 widgets/commands_ui.py \
 widgets/compactrosterstyle.py \
-widgets/compatrosterstyle.py \
 widgets/dataforms.py \
 widgets/defaultrosterstyle.py \
 widgets/emoticonswidget.py \
