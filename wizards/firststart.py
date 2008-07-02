@@ -194,11 +194,22 @@ class firstStartWizard(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.useAccount,QtCore.SIGNAL("toggled(bool)"),self.showUseAccount)
 		QtCore.QObject.connect(self.ui.servers,QtCore.SIGNAL("activated ( const QString & )"),self.serverChanged)
 		QtCore.QObject.connect(self.ui.loadAvatar,QtCore.SIGNAL("clicked ( )"),self.setAvatar)
+		QtCore.QObject.connect(self.ui.pushButton_3,QtCore.SIGNAL("clicked ( )"),self.onlineHelp)
 		QtCore.QObject.connect(self.ui.servers,QtCore.SIGNAL("editTextChanged ( const QString & )"),self.serverChanged)
 		QtCore.QObject.connect(self.ui.nickname,QtCore.SIGNAL("textEdited ( const QString & )"),self.nicknameChanged)
 		QtCore.QObject.connect(self.ui.password,QtCore.SIGNAL("textEdited ( const QString & )"),self.passwordEdited)
 		QtCore.QObject.connect(self.ui.password2,QtCore.SIGNAL("textEdited ( const QString & )"),self.passwordEdited)
 		QtCore.QObject.connect(self.ui.useJid,QtCore.SIGNAL("textEdited ( const QString & )"),self.useJidEdited)
+		QtCore.QObject.connect(self.ui.avatars,QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.avatarChanged)
+		self.ui.stackedWidget_2.setCurrentIndex(0)
+
+	def onlineHelp(self):
+ 		anchor="http://live.jabbim.cz/muckl/muckl.html?conf_room=jabbim&nick="
+		QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
+
+	def avatarChanged(self,current,old):
+	    pixmap=QtGui.QPixmap(current.icon().pixmap(128,128))
+	    self.ui.avatarLabel.setPixmap(pixmap)
 
 	def useJidEdited(self,jid):
 		if self.main.getJid(unicode(jid)):

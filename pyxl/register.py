@@ -22,6 +22,7 @@ class RegisteringClient:
 		self.factory = None
 		self.connection = None
 		self.reactor = reactor
+		self.tryNum=0
 		pass
 	
 	def connect(self):
@@ -66,6 +67,10 @@ class RegisteringClient:
 	
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
+		self.tryNum+=1
+		if self.tryNum<2:
+			self.connect()
+		
 
 	
 	def connectionFailed(self, connector, reason=protocol.connectionDone):
