@@ -675,11 +675,11 @@ class chatWindow(QtGui.QMainWindow):
 		tab.chat.refreshLabel()
 		
 		#tab.chat.ui.label.setText("<font size=\"3\"><b>"+name+"</b></font>")
-		if message!=None:
-			message=self.main.webkitThemeFactory.genIncomingContent(name,message,self.main.now(),tab.chat.file)
+		#if message!=None:
+			#message=self.main.webkitThemeFactory.genIncomingContent(name,message,self.main.now(),tab.chat.file)
 			#message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+unicode(tab.chat.avatarHeight)+"\" />")
 			#self.main.client.reactor.callLater(1,tab.chat.textEditWrite,message)
-			tab.chat.textEditWrite(message)
+			#tab.chat.textEditWrite(message)
 			#tab.chat.textEditWrite(message)
 		return tab
 		#self.show()
