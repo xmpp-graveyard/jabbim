@@ -124,9 +124,10 @@ class registrationClass(register.RegisteringClient):
 	
 	def registered(self):
 		self.main.state="registered"
+		firstStartWizard=self.main
 		self.main.ui.stackedWidget_2.setCurrentIndex(3)
 		self.main.ui.registerButton.setEnabled(True)
-		self.main.ui.registerButton.setText("Finish")
+		self.main.ui.registerButton.setText(firstStartWizard.tr("Finish"))
 		self.main.ui.movie.stop()
 		
 	def _authd(self, el):

@@ -1241,54 +1241,59 @@ p, li { white-space: pre-wrap; }
         <translation>Login</translation>
     </message>
     <message>
-        <location filename="wizards/firststart.py" line="279"/>
+        <location filename="wizards/firststart.py" line="280"/>
         <source>This Jabber ID is already registered by someone else.</source>
         <translation type="unfinished">Ten Jabber ID jest już zarejestrowany przez kogoś innego.</translation>
     </message>
     <message>
-        <location filename="wizards/firststart.py" line="179"/>
+        <location filename="wizards/firststart.py" line="180"/>
         <source>Choose server</source>
         <translation type="unfinished">Wybierz serwer</translation>
     </message>
     <message>
-        <location filename="wizards/firststart.py" line="230"/>
+        <location filename="wizards/firststart.py" line="231"/>
         <source>Passwords are not the same.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wizards/firststart.py" line="250"/>
+        <location filename="wizards/firststart.py" line="251"/>
         <source>Nickname or server contains incorrent characters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wizards/firststart.py" line="255"/>
+        <location filename="wizards/firststart.py" line="256"/>
         <source>Register</source>
         <translation type="unfinished">Zarejestruj</translation>
     </message>
     <message>
-        <location filename="wizards/firststart.py" line="260"/>
+        <location filename="wizards/firststart.py" line="261"/>
         <source>Create</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wizards/firststart.py" line="264"/>
+        <location filename="wizards/firststart.py" line="265"/>
         <source>Choose avatar</source>
         <translation type="unfinished">Wybierz avatar</translation>
     </message>
     <message>
-        <location filename="wizards/firststart.py" line="275"/>
+        <location filename="wizards/firststart.py" line="276"/>
         <source>Avatar</source>
         <translation type="unfinished">Avatar</translation>
     </message>
     <message>
-        <location filename="wizards/firststart.py" line="275"/>
+        <location filename="wizards/firststart.py" line="276"/>
         <source>Your avatar was too big. He had to be resized to smaller size.</source>
         <translation type="unfinished">Twój avatar jest za duży. Musisz go pomniejszyć.</translation>
     </message>
     <message>
-        <location filename="wizards/firststart.py" line="295"/>
+        <location filename="wizards/firststart.py" line="296"/>
         <source>Can&apos;t connect the server</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/firststart.py" line="130"/>
+        <source>Finish</source>
+        <translation type="unfinished">Zakończ</translation>
     </message>
 </context>
 <context>
