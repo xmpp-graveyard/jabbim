@@ -4569,7 +4569,7 @@ class scrollBar(QtGui.QScrollArea):
 
 if __name__ == "__main__":
 	translator=QtCore.QTranslator()
-	translator.load("locales/jabbim_cs.qm")
+	translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
 	print "trying to load locales:","locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm"
 	app.installTranslator(translator)
 	MainWindow = mainWindow()
