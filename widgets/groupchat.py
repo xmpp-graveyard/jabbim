@@ -487,9 +487,8 @@ class groupChatWidget(abstractChatWidget):
 			cur=self.ui.line.textCursor()
 			cur.movePosition(QtGui.QTextCursor.End)
 			self.ui.line.setTextCursor(cur)
-		return QtGui.QListWidget.mouseReleaseEvent(self,event)
-			
-		
+		return QtGui.QTreeWidget.mouseReleaseEvent(self.ui.users, event)
+
 	def clearChat(self):
 		"""
 		Called when user wants to clear chat.
