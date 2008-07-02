@@ -16,6 +16,7 @@ from include import rot13
 from twisted.words.xish import domish
 from twisted.words.xish.domish import Element
 from twisted.words.protocols.jabber.xmlstream import IQ
+import weakref
 
 def createFirstPage(firstStartWizard):
 	# language and server
@@ -95,7 +96,7 @@ servers=["jabbim.cz","jabbim.sk","jabbim.pl","jabbim.com","jabber.cz","njs.netla
 class registrationClass(register.RegisteringClient):
 	def __init__(self,main, username, server, resource,password, port, reactor):
 		register.RegisteringClient.__init__(self, username, server, resource,password, port, reactor)
-		self.main=main
+		self.main=weakref.proxy(main)
 
 	def nicknameConflict(self):
 		firstStartWizard=self.main
@@ -171,7 +172,7 @@ class firstStartWizard(QtGui.QDialog):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.ui=newprofile_ui.Ui_newProfile()
 		self.ui.setupUi(self)
-		self.main=main
+		self.main=weakref.proxy(main)
 		self.jid=""
 		self.state="pre"
 		
@@ -197,7 +198,14 @@ class firstStartWizard(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.nickname,QtCore.SIGNAL("textEdited ( const QString & )"),self.nicknameChanged)
 		QtCore.QObject.connect(self.ui.password,QtCore.SIGNAL("textEdited ( const QString & )"),self.passwordEdited)
 		QtCore.QObject.connect(self.ui.password2,QtCore.SIGNAL("textEdited ( const QString & )"),self.passwordEdited)
-		
+		QtCore.QObject.connect(self.ui.useJid,QtCore.SIGNAL("textEdited ( const QString & )"),self.useJidEdited)
+
+	def useJidEdited(self,jid):
+		if self.main.getJid(unicode(jid)):
+			self.ui.registerButton.setEnabled(True)
+		else:
+			self.ui.registerButton.setEnabled(False)
+
 	def passwordEdited(self,p):
 		self.enableRegister()
 	
@@ -233,9 +241,13 @@ class firstStartWizard(QtGui.QDialog):
 	
 	def showCreateAccount(self):
 		self.ui.stackedWidget_2.setCurrentIndex(0)
+		self.ui.registerButton.setText(self.tr("Register"))
+		self.state="pre"
 	
 	def showUseAccount(self):
 		self.ui.stackedWidget_2.setCurrentIndex(1)
+		self.ui.registerButton.setText(self.tr("Create"))
+		self.state="existed"
 
 	def setAvatar(self):
 		file=list(QtGui.QFileDialog.getOpenFileNames(self,self.tr("Choose avatar")))
@@ -297,6 +309,15 @@ class firstStartWizard(QtGui.QDialog):
 				self.ui.stackedWidget_2.setCurrentIndex(2)
 				self.ui.movie.start()
 				self._register("0")
+		elif self.state=="existed":
+			jid=unicode(self.ui.useJid.text()).strip()
+			savePass=self.ui.useSavepass.isChecked()
+			password=unicode(self.ui.usePass.text())
+			self.main.newProfile(jid,password,savePass)
+			self.main.fillLoginForm()
+			if savePass:
+				self.main.connect(delay=1.0)
+   			self.done(1)
 		elif self.state=="registered":
 			self.ui.registerButton.setEnabled(False)
 			self.ui.cancel.setEnabled(False)
@@ -317,17 +338,18 @@ class firstStartWizard(QtGui.QDialog):
 		elif self.state=="done":
 			if self.cl:
 				self.cl.disconnect()
+			j=self.jid.split("@")
 			name=j[0]
 			server=j[1]
 			password=unicode(self.ui.password.text())
-			self.main.newProfile(name+"@"+server,password,"True")
+			self.main.newProfile(name+"@"+server,password,True)
 			self.main.fillLoginForm()
-			self.main.connect(delay=1.0)
+   			self.main.connect(delay=1.0)
 			self.done(1)
 
 
 	def reject(self):
-		if self.state=="pre" or self.state=="done":
+		if (self.state=="pre" or self.state=="done") or self.state=="existed":
 			if self.cl:
 				self.cl.disconnect()
 			return QtGui.QDialog.reject(self)

@@ -377,7 +377,7 @@ class Plugin(plugins.PluginBase):
 			if not status:
 				status=""
 			self.osd.view(pixmap,user+self.tr(" is now ")+self.main.status[unicode(show)],unicode(status),self.addChatTab,[jid])
-		if self.config['sound_presence']=="True":
+		if self.config['sound_presence']=="True" and int(time.time())>self.main.connectStarted+20:
 			if show=="offline":
 				self.main.playsound("contact_offline")
 			else:

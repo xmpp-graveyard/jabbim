@@ -137,7 +137,7 @@ p, li { white-space: pre-wrap; }
        <item row="2" column="0" >
         <widget class="QStackedWidget" name="stackedWidget_2" >
          <property name="currentIndex" >
-          <number>3</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="page_3" >
           <property name="geometry" >
@@ -320,10 +320,10 @@ p, li { white-space: pre-wrap; }
                </widget>
               </item>
               <item row="0" column="1" >
-               <widget class="QLineEdit" name="lineEdit" />
+               <widget class="QLineEdit" name="useJid" />
               </item>
               <item row="1" column="0" colspan="2" >
-               <widget class="QCheckBox" name="checkBox" >
+               <widget class="QCheckBox" name="useSavepass" >
                 <property name="text" >
                  <string>Save password</string>
                 </property>
@@ -340,7 +340,7 @@ p, li { white-space: pre-wrap; }
                </widget>
               </item>
               <item row="2" column="1" >
-               <widget class="QLineEdit" name="lineEdit_2" />
+               <widget class="QLineEdit" name="usePass" />
               </item>
               <item row="3" column="1" >
                <spacer name="verticalSpacer" >
@@ -361,6 +361,14 @@ p, li { white-space: pre-wrap; }
           </layout>
          </widget>
          <widget class="QWidget" name="page_5" >
+          <property name="geometry" >
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>464</width>
+            <height>246</height>
+           </rect>
+          </property>
           <layout class="QGridLayout" name="gridLayout_8" >
            <item row="0" column="0" >
             <widget class="QWidget" native="1" name="waitWidget" />
@@ -368,6 +376,14 @@ p, li { white-space: pre-wrap; }
           </layout>
          </widget>
          <widget class="QWidget" name="page_6" >
+          <property name="geometry" >
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>464</width>
+            <height>246</height>
+           </rect>
+          </property>
           <layout class="QGridLayout" name="gridLayout_10" >
            <item row="0" column="0" >
             <layout class="QHBoxLayout" name="horizontalLayout_4" >
@@ -493,14 +509,13 @@ p, li { white-space: pre-wrap; }
   <zorder>cancel</zorder>
   <zorder>label</zorder>
   <zorder>stackedWidget</zorder>
-  <zorder>firstname</zorder>
  </widget>
  <resources/>
  <connections>
   <connection>
-   <sender>checkBox</sender>
+   <sender>useSavepass</sender>
    <signal>clicked(bool)</signal>
-   <receiver>lineEdit_2</receiver>
+   <receiver>usePass</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -514,7 +529,7 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>checkBox</sender>
+   <sender>useSavepass</sender>
    <signal>clicked(bool)</signal>
    <receiver>label_5</receiver>
    <slot>setVisible(bool)</slot>

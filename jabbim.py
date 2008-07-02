@@ -1637,6 +1637,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.plugins = {}
 		self.config=None #: config dict (loaded by configObj)
 		self.cache=None
+		self.connectStarted=0
 
 		self.loadRoster() # load roster widget
 		QtCore.QObject.connect(self.ui.rosterSearch, QtCore.SIGNAL(" textEdited ( const QString & )"),self.ui.roster.search)
@@ -4170,6 +4171,7 @@ class mainWindow(QtGui.QMainWindow):
 		
 		
 		print 'connecting'
+		self.connectStarted=int(time.time())
 		jid=unicode(self.ui.login_jid.text()).strip()
 		if not re.match(r'.+@.+', jid): 
 			self.ui.login_jid.setFocus(QtCore.Qt.OtherFocusReason) 
