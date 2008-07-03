@@ -30,32 +30,31 @@ class Cache:
 				self.db = adbapi.ConnectionPool('pysqlite2.dbapi2', db)
 			except:
 				log.msg('Unknown DB error')
-			try:
-				self.db.runQuery('select typeof(identity) from caps')
-			except:
-				try:
-					self.db.runQuery('drop table caps')
-				except:
-					pass
-				
+
+	def drop_caps(self, res):
+		return self.db.runQuery('drop table caps')
+
+	def check_caps_table(self):
+		# if the caps table does not have the identity column, it was
+		# created with an old version of Jabbim, so let's drop it.
+		return self.db.runQuery('select typeof(identity) from caps').addErrback(self.drop_caps)
+
+	def _create_tables(self, res):
+		t1 = self.db.runQuery('create table caps (node text, feature text, identity text);').addCallback(self.table_created, 'caps').addErrback(self.table_present, 'caps')
+		t2 = self.db.runQuery('create table status (show text, desc text, id integer primary key);').addCallback(self.table_created, 'status').addErrback(self.table_present, 'status')
+		t3 = self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created, 'avatars').addErrback(self.table_present, 'avatars')
+		return DeferredList([t1,t2,t3], consumeErrors = False)
+
 	def create_tables(self):
-		t1 = self.db.runQuery('create table caps (node text, feature text, identity text);').addCallback(self.table_created, 'caps')#.addErrback(self.table_present)
-		t2 = self.db.runQuery('create table status (show text, desc text, id integer primary key);').addCallback(self.table_created, 'status')#.addErrback(self.table_present)
-		t3 = self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created, 'avatars')#.addErrback(self.table_present)
-		return DeferredList([t1,t3,t2], consumeErrors = False)
+		return self.check_caps_table().addBoth(self._create_tables)
 		
-	def table_created(self, res, table):
+	def table_created(self, result, table):
 		log.msg( 'created '+table)
-# 		self.db.runOperation('create table caps (node text, feature text);')
-		#self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created2).addErrback(self.table_present)
-	
-	def table_created2(self, res):
-		print 'avatars created'
-		#self.db.runQuery('create table status (show text, desc text, id int auto_increment primary key);').addErrback(self.table_present)
-		
-	def table_present(self, result):
-		print result
-		log.msg( 'table here? ')
+		return { 'created': True, 'table_name': table }
+
+	def table_present(self, result, table):
+		log.msg( 'table "%s" already here' % table)
+		return { 'created': False, 'table_name': table }
 	
 	def get_avatar(self, jid, handler):
 		self.db.runQuery('select file, hash, jid from avatars where jid = "%s"'%(dbutil.safe(jid),)).addCallback(self.got_avatar, handler)

@@ -62,7 +62,7 @@ class statusWidgetWindow(QtGui.QDialog):
 		#config.write()
 		if not self.ID:
 			d=self.main.cache.set_status(show,unicode(self.ui.status.toPlainText ()))
-			d.addCallback(self.main.tables_loaded)
+			d.addCallback(self.main.status_table_updated)
 			self.main.sendPresence(self.jid,show,unicode(self.ui.status.toPlainText ()))
 		else:
 			d=self.main.cache.update_status(show,unicode(self.ui.status.toPlainText ()),self.ID)

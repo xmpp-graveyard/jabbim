@@ -2010,7 +2010,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
 		else:
 			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
-		self.cache.create_tables().addCallback(self.tables_created).addErrback(self.tables_loaded)		
+		self.cache.create_tables().addCallback(self.tables_created)
 		self.ui.loginStatus.addItem(self.getIcon(status="online",size="16x16"), self.status["online"],QtCore.QVariant("online"))
 		self.ui.loginStatus.addItem(self.getIcon(status="chat",size="16x16"), self.status["chat"],QtCore.QVariant("chat"))
 		self.ui.loginStatus.addItem(self.getIcon(status="away",size="16x16"), self.status["away"],QtCore.QVariant("away"))
@@ -2749,36 +2749,31 @@ class mainWindow(QtGui.QMainWindow):
 				self.toggleInv.setText(self.tr("Become invisible"))
 				self.toggleInvisibility(False)
 
-	def tables_created(self,data=None):
+	def tables_created(self,data):
 		"""
 		Called on __init__ when new sqlite tables were created. If tables were empty, adds default values (default status messages etc.), otherwise calls self.buildStatusWidgetMenu().
 		"""
-		if not data[1][0]:
-			self.buildStatusWidgetMenu()
-			return
 		print "tables_created"
-		t1=self.cache.set_status('online',self.tr("I'm here"))
-		t2=self.cache.set_status('dnd',self.tr("Doing something important. Message me later."))
-		t3=self.cache.set_status('chat',self.tr("Chat with me!"))
-		t4=self.cache.set_status('xa',self.tr("Leave a message. Beep"))
-		t5=self.cache.set_status('away',self.tr("Doing something else for a moment."))
-		d=DeferredList([t1,t2,t3,t4,t5], consumeErrors = False)
-		d.addCallback(self._defaultMsg).addErrback(self._error)
+		d = None
+		for result in data:
+			assert result[0]
+			print "table '%s' was %s" % (result[1]['table_name'], ('loaded','created')[result[1]['created']])
+			if result[1]['created'] and result[1]['table_name'] == 'status':
+				t1=self.cache.set_status('online',self.tr("I'm here"))
+				t2=self.cache.set_status('dnd',self.tr("Doing something important. Message me later."))
+				t3=self.cache.set_status('chat',self.tr("Chat with me!"))
+				t4=self.cache.set_status('xa',self.tr("Leave a message. Beep"))
+				t5=self.cache.set_status('away',self.tr("Doing something else for a moment."))
+				d = DeferredList([t1,t2,t3,t4,t5], consumeErrors = False)
+				d.addCallback(self.status_table_updated).addErrback(self._error)
+		if d == None:
+			self.buildStatusWidgetMenu()
 
-	def _defaultMsg(self, data):
+	def status_table_updated(self, data=None):
 		"""
-		Called when default status message have been added. Calls self.buildStatusWidgetMenu().
+		Called when status table is modified. Calls self.buildStatusWidgetMenu().
 		"""
-		for x in data:
-			if not x[0]:
-				print x[1], dir(x[1])
-		self.buildStatusWidgetMenu()
-
-	def tables_loaded(self,data=None):
-		"""
-		Called when sqlite db has been loaded. Calls self.buildStatusWidgetMenu().
-		"""
-		print 'tables present'
+		print 'status table updated'
 		self.buildStatusWidgetMenu()
 
 	def _error(self,result):
@@ -3195,7 +3190,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.cache = storage.Cache(db=utils.path(self.homeDir+u'/cache.db'))
 		else:
 			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
-		self.cache.create_tables().addCallback(self.tables_created).addErrback(self.tables_loaded)
+		self.cache.create_tables().addCallback(self.tables_created)
 
 	def fillLoginForm(self):
 		"""
