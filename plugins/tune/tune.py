@@ -1,6 +1,6 @@
 # -*-coding: utf-8 -*-
 
-import sys, os, time
+import sys, os, time, locale
 sys.path.append('.')
 if sys.platform != 'win32':
 	import commands
@@ -55,9 +55,9 @@ class Plugin(plugins.PluginBase):
 		self.fname = 'tune'
 		self.installTranslator()
 		self.description = self.tr('Plugin for User Tune')
-		self.author = "Jiri 'Sef' Gabrys + Josef 'PepeQ' Halicek + Krzysztof 'Grom' K."
+		self.author = "Jiri 'Sef' Gabrys + Josef 'PepeQ' Halicek + Krzysztof 'Grom' K. + Pinky"
 		self.name = self.tr('tune')
-		self.version = '0.262'
+		self.version = '0.263'
 		self.category = ['utils']
 		self.configDialog=config(self)
 		self.url = 'http://dev.jabbim.cz/jabbim'
@@ -113,7 +113,6 @@ class Plugin(plugins.PluginBase):
 				
 		
 		elif self.config['player'] == 'banshee':
-			
 			try:
 				import dbus
 				bus = dbus.SessionBus()
@@ -130,7 +129,7 @@ class Plugin(plugins.PluginBase):
 			try:
 				import win32gui
 				hWinamp = win32gui.FindWindow('Winamp v1.x', None)
-				text = win32gui.GetWindowText(hWinamp)
+				text = win32gui.GetWindowText(hWinamp).decode(locale.getpreferredencoding())
 			except Exception, ex:
 				print 'Tune error: ' +unicode(ex)
 				message = unicode(traceback.format_exc())
@@ -150,7 +149,6 @@ class Plugin(plugins.PluginBase):
 
 
 		elif self.config['player'] == 'rhythmbox':
-			
 			try:
 				import dbus
 				bus = dbus.SessionBus()
@@ -173,13 +171,13 @@ class Plugin(plugins.PluginBase):
 				return  # PEP will be sent when the spawned processes exit
 			except:
 				out = {}
-		
+
 		elif self.config['player'] == 'fb2k':
 			print "getting current song from foobar"
 			try:
 				import win32gui
 				hfb2k = win32gui.FindWindow('{97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}', None)
-				text = win32gui.GetWindowText(hfb2k)
+				text = win32gui.GetWindowText(hfb2k).decode(locale.getpreferredencoding())
 			except Exception, ex:
 				print 'Tune error: ' +unicode(ex)
 				message = unicode(traceback.format_exc())
