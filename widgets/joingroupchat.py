@@ -40,6 +40,7 @@ class joinGroupChatWindow(QtGui.QDialog):
 		
 		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
 		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setText(self.tr("Join"))
+		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setEnabled(False)
 		self.ui.browser=QtGui.QPushButton(self.tr("Browse chat rooms"))
 		self.ui.buttonBox.addButton(self.ui.browser,QtGui.QDialogButtonBox.ActionRole)
 
@@ -53,6 +54,8 @@ class joinGroupChatWindow(QtGui.QDialog):
 			self.ui.serverName.setText(mucjid)
 		
 		QtCore.QObject.connect(self.ui.roomName,QtCore.SIGNAL(" textChanged ( const QString &)"),self.ui.bookmarkName.setText)
+		QtCore.QObject.connect(self.ui.roomName,QtCore.SIGNAL(" textChanged ( const QString &)"),self.NameChanged)
+		QtCore.QObject.connect(self.ui.serverName,QtCore.SIGNAL(" textChanged ( const QString &)"),self.NameChanged)
 		QtCore.QObject.connect(self.ui.browser,QtCore.SIGNAL("clicked()"),self.mucBrowser)
 
 		self.ui.roomName.setFocus(QtCore.Qt.MouseFocusReason)
@@ -82,10 +85,17 @@ class joinGroupChatWindow(QtGui.QDialog):
 			self.main.client.joinGC(jid, nickname, password)
 		self.done(1)
 
-	#def roomNameChanged(self,name):
-		#old=unicode(self.ui.bookmarkName.text())
-		#change=False
-		#if len(old)==0:
-			#change=True
-		#elif len()
+	def NameChanged(self,name):
+		jid=unicode(self.ui.roomName.text()) + '@' + unicode(self.ui.serverName.text()) 
+		notjid = False
+		try:
+			jd = pyxl.jid.JID(jid)
+		except:
+			notjid = True
+		if notjid:
+			self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setEnabled(False)
+		else:
+			self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setEnabled(True)
 		
+
+	
