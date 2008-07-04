@@ -24,6 +24,7 @@ from pyxl.adhoc import Stage, CancelStage
 from twisted.python import log
 from widgets.configlib import jidListWidget
 import os.path
+from twisted.python.filepath import FilePath
 
 class ResendFile(Stage):
 	def exec_(self):
@@ -111,6 +112,12 @@ class ResendFile(Stage):
 #		field2 = Field("pwd", "hidden", values=[pwd])
 		self.xform = Xform("form", fields=[field], title=self.main.tr("Resend file"),instructions=[self.main.tr("Choose file you want to resend from remote system or directory you want to browse."),"PWD: %s" % unicode(pwd)]).buildElement()
 
+class directoryWidget(QtGui.QLineEdit):
+	def getDirectory(self):
+		directory=unicode(QtGui.QFileDialog.getExistingDirectory(self,self.tr("Choose directory"),self.text(),QtGui.QFileDialog.ShowDirsOnly| QtGui.QFileDialog.DontResolveSymlinks))
+		if len(directory)!=0:
+			self.setText(directory)
+
 class config:
 	def __init__(self,main):
 		self.main=main
@@ -150,8 +157,11 @@ class customConfigWidget(QtGui.QWidget):
 		l=QtGui.QHBoxLayout()
 		label=QtGui.QLabel(self.tr("Path:"))
 		l.addWidget(label)
-		self.path=QtGui.QLineEdit()
+		self.path=directoryWidget(parent)
+		self.path.setText(unicode('Choose directory'))
+		chooser=QtGui.QPushButton("...")
 		l.addWidget(self.path)
+		l.addWidget(chooser)
 		glayout.addLayout(l,0,0)
 		
 		self.jids=jidListWidget(self.groupbox)
@@ -166,6 +176,7 @@ class customConfigWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.addFolderButton,QtCore.SIGNAL("clicked()"),self.addFolder)
 		QtCore.QObject.connect(self.removeFolderButton,QtCore.SIGNAL("clicked()"),self.removeFolder)
 		QtCore.QObject.connect(self.folders,QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.folderChanged)
+		QtCore.QObject.connect(chooser,QtCore.SIGNAL("clicked()"),self.path.getDirectory)
 		
 		# DATA
 		for key in self.form['dirs']['value']:
@@ -289,15 +300,18 @@ class Plugin(plugins.PluginBase):
 	
 	def listdir(self, dr):
 		print dr
-
+		path = FilePath(dr.encode(sys.getfilesystemencoding()))
 		out = []
-		for f in os.listdir(unicode(dr)):
+		for f in path.listdir():
 			print type(dr), type(f)
-			cesta = dr+'/'+ f.encode(sys.getfilesystemencoding())
-			if os.path.isdir(cesta):
+			try:
+				cesta = path.child(unicode(f).encode(sys.getfilesystemencoding()))
+			except:
+				continue
+			if cesta.isdir():
 				t = (f.encode('utf8', 'xmlcharrefreplace'), '-1')
 			else:
-				t = (f.encode('utf8', 'xmlcharrefreplace'), unicode(os.stat(cesta).st_size))
+				t = (f.encode('utf8', 'xmlcharrefreplace'), unicode(cesta.getsize()))
 			out.append(t)
 		print out
 		return (out,)
