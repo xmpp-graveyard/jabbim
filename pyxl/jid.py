@@ -3,6 +3,9 @@ import copy
 InvalidFormat = jid.InvalidFormat
 
 def JID(jidstring):
+	if jidstring.startwith('@'):
+		raise InvalidFormat
+		return
 	try:
 		j =  jid.internJID(jidstring.strip())
 	except:
