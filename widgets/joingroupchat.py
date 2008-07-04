@@ -86,16 +86,10 @@ class joinGroupChatWindow(QtGui.QDialog):
 		self.done(1)
 
 	def NameChanged(self,name):
-		jid=unicode(self.ui.roomName.text()) + '@' + unicode(self.ui.serverName.text()) 
-		notjid = False
+		jid=unicode(self.ui.roomName.text()) + '@' + unicode(self.ui.serverName.text())
+		valid_jid = True
 		try:
 			jd = pyxl.jid.JID(jid)
 		except:
-			notjid = True
-		if notjid:
-			self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setEnabled(False)
-		else:
-			self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setEnabled(True)
-		
-
-	
+			valid_jid = False
+		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setEnabled(valid_jid)
