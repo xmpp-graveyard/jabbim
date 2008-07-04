@@ -527,25 +527,6 @@ class Client(derived):
 				self.pep = True
 #				self.sendPEP('tune', {})
 	
-	def sendPEP(self,  ns,  payload): #paylod is Element node or list of nodes
-		iq = IQ(self.xmlstream, 'set')
-		pb = iq.addElement('pubsub', 'http://jabber.org/protocol/pubsub' ).addElement('publish')
-		pb['node'] = ns
-		p = pb.addElement('item')
-		print payload
-		if type(payload) == list:
-			for itm in payload:
-				p.addChild(itm)
-		else:
-			p.addChild(payload)
-#		for key, val in attrs.iteritems():
-#			tune.addElement(key,  content = val)
-
-#		self.on_xml(iq.toXml())
-		self.disp(iq['id'])
-		d = iq.send()
-		d.addCallback(self._pepReceived).addErrback(self.chyba)
-
 	def _pepReceived(self,  el):
 		log.msg(el.toXml())
 	
@@ -1165,6 +1146,7 @@ class Client(derived):
 			elif child.name == 'x' and child.defaultUri == 'vcard-temp:x:update':
 				hash = unicode(child.firstChildElement())
 				print fromjid, hash
+		
 
 #avatars
 		wantAvatar=True
@@ -1175,7 +1157,7 @@ class Client(derived):
 						for identity,values in self.main.client.disco[frm.host][None]["identities"].iteritems():
 							if values['type']=='irc':
 								wantAvatar=False
-
+		
 		if wantAvatar:
 			if self.avatarDef.has_key(fromjid):
 				if self.avatarDef[fromjid] == hash:
@@ -1216,11 +1198,19 @@ class Client(derived):
 		if self.groupchats.has_key(fromjid):
 			if show=="offline":
 #				self.reactor.callFromThread(self.on_GCpresence, fromjid, resource,  show,  status,  codes)
+				print 'PART!'
+				codes.append('PART')
 				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor, nick)
-			self.groupchats[fromjid].setStatus(resource,  show,  status)
+			
 			if self.groupchats[fromjid].users.has_key(resource):
 				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid, features)
+				self.groupchats[fromjid].setStatus(resource,  show,  status)
 				#self.groupchats[fromjid]
+			else:
+				print 'JOIN!'
+				codes.append('JOIN')
+				self.groupchats[fromjid].setStatus(resource,  show,  status)
+				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid, features)
 			if show!="offline":
 #				self.reactor.callFromThread(self.on_GCpresence,fromjid, resource,  show,  status,  codes)
 				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor, nick)

@@ -285,6 +285,20 @@ class derived:
 #		self.on_xml(message.toXml())
 		self.xmlstream.send(message)
 
+	def sendPEP(self,  ns,  payload): #paylod is Element node or list of nodes
+		iq = IQ(self.xmlstream, 'set')
+		pb = iq.addElement('pubsub', 'http://jabber.org/protocol/pubsub' ).addElement('publish')
+		pb['node'] = ns
+		p = pb.addElement('item')
+		print payload
+		if type(payload) == list:
+			for itm in payload:
+				p.addChild(itm)
+		else:
+			p.addChild(payload)
+		self.disp(iq['id'])
+		d = iq.send()
+		d.addCallback(self._pepReceived).addErrback(self.chyba)
 
 	def getRoster(self):
 		""" Posle zadost o roster na server """

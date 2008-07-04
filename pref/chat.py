@@ -8,3 +8,4 @@ class preferences:
 		self.config['useMUCNames']={'type':'boolean','label':preferencesWindow.tr("Use names for tabs."),'value':'True','groupbox':preferencesWindow.tr('Groupchat')}
 		self.config["askBeforeQuitMUC"]={'type':'boolean','label':preferencesWindow.tr("Ask before quit room."),'value':'True','groupbox':preferencesWindow.tr('Groupchat')}
 		self.config["autochangenickMUC"]={'type':'boolean','label':preferencesWindow.tr("Auto change nick if there's a conflict when joining the room"),'value':'True','groupbox':preferencesWindow.tr('Groupchat')}
+		self.config["showMucStatus"]={'type':'boolean','label':preferencesWindow.tr("Show status changes in groupchat"),'value':'True','groupbox':preferencesWindow.tr('Groupchat')}
