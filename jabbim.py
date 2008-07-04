@@ -100,6 +100,7 @@ from twisted.web.microdom import parseString,Element
 from twisted.web.client import downloadPage
 from twisted.web import xmlrpc, server #for xmlrpc plugin
 import shutil #xmlrpc
+from twisted.python.filepath import FilePath
 from widgets.extra import extraDialog
 from locale import strcoll
 
@@ -642,11 +643,14 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.roster.repaint()
 
 		# send first presence to server
-		show=unicode(self.main.ui.loginStatus.itemData(int(self.main.ui.loginStatus.currentIndex())).toString())
+		lst=self.main.ui.loginStatus.itemData(int(self.main.ui.loginStatus.currentIndex())).toList()
+
+		show, status = [unicode(val.toString()) for val in lst]
 		self.main.selfStatus=show
 		#self.main.tray.setToolTip(mainWindow.tr('Your status:')+" "+self.main.status[show])
 		self.main.ui.selfAvatar.refreshToolTip()
-		self.main.sendPresence(None,show,"")
+		print 'old ',  self.oldstatus
+		self.main.sendPresence(None,show,status)
 		self.main.ui.statusButton.setText(unicode(""))
 		self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
 		self.main.ui.login_cancel.hide()
@@ -2011,11 +2015,11 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
 		self.cache.create_tables().addCallback(self.tables_created)
-		self.ui.loginStatus.addItem(self.getIcon(status="online",size="16x16"), self.status["online"],QtCore.QVariant("online"))
-		self.ui.loginStatus.addItem(self.getIcon(status="chat",size="16x16"), self.status["chat"],QtCore.QVariant("chat"))
-		self.ui.loginStatus.addItem(self.getIcon(status="away",size="16x16"), self.status["away"],QtCore.QVariant("away"))
-		self.ui.loginStatus.addItem(self.getIcon(status="xa",size="16x16"), self.status["xa"],QtCore.QVariant("xa"))
-		self.ui.loginStatus.addItem(self.getIcon(status="dnd",size="16x16"), self.status["dnd"],QtCore.QVariant("dnd"))
+		self.ui.loginStatus.addItem(self.getIcon(status="online",size="16x16"), self.status["online"],QtCore.QVariant(["online",  '']))
+		self.ui.loginStatus.addItem(self.getIcon(status="chat",size="16x16"), self.status["chat"],QtCore.QVariant(["chat", '']))
+		self.ui.loginStatus.addItem(self.getIcon(status="away",size="16x16"), self.status["away"],QtCore.QVariant(["away", '']))
+		self.ui.loginStatus.addItem(self.getIcon(status="xa",size="16x16"), self.status["xa"],QtCore.QVariant(["xa", '']))
+		self.ui.loginStatus.addItem(self.getIcon(status="dnd",size="16x16"), self.status["dnd"],QtCore.QVariant(["dnd", '']))
 
 		self.emoticonsWidget=widgets.emoticonswidget.emoticonsWidget(self,self)
 
@@ -2295,6 +2299,7 @@ class mainWindow(QtGui.QMainWindow):
 				# update avatar tooltip and tray tooltip
 				self.ui.selfAvatar.refreshToolTip()
 			else:
+				self.client.oldstatus = (show, message)
 				if not pri:
 					# get priority from config
 					if self.config.has_key('autoPriority'):
@@ -4414,8 +4419,10 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.actionStart_Chat.setEnabled(False) 
 		MainWindow.ui.actionPrivacy_list_editor.setEnabled(False) 
 		MainWindow.ui.actionIdentity.setEnabled(False)
-		self.client=None
+#		self.client=None
 		self.selfResources=[]
+		self.ui.loginStatus.setItemData(MainWindow.ui.loginStatus.findText(MainWindow.status[self.client.oldstatus[0]]),  QtCore.QVariant([self.client.oldstatus[0], self.client.oldstatus[1]]))
+		self.ui.loginStatus.setCurrentIndex(MainWindow.ui.loginStatus.findText(MainWindow.status[self.client.oldstatus[0]]))
 		
 		try:
 			self.statusWidgetMenu.setEnabled(False)
@@ -4455,6 +4462,7 @@ class mainWindow(QtGui.QMainWindow):
 						w.chat.textEditWrite(message)
 						w.chat.lastMessageFrom=""
 		if error == 'lost' and MainWindow.reconnect:
+#			self.client.oldstatus = self.client.getContactByJid(self.client.jid.full()).status
 			self.reconnect = False
 			msg = None
 			try:
