@@ -1592,6 +1592,7 @@ class Client(derived):
 		else:
 			self.disco[frm] = {}
 			node = {'features':[], 'identities':{},'items':{}}
+		node['items'] = {}
 
 		query = el.firstChildElement()
 		for child in query.elements():
