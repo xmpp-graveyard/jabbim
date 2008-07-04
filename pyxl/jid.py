@@ -3,7 +3,7 @@ import copy
 InvalidFormat = jid.InvalidFormat
 
 def JID(jidstring):
-	if jidstring.startwith('@'):
+	if jidstring.startswith('@'):
 		raise InvalidFormat
 		return
 	try:
