@@ -176,7 +176,7 @@ class derived:
 		if caps:
 			c = presence.addElement('c', 'http://jabber.org/protocol/caps')
 			c['node'] = self.caps_node
-			c['ver'] = self.caps_version
+			c['ver'] = self.version
 			if self.caps_ext != None:
 				c['ext'] = self.caps_ext
 		

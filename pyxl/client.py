@@ -95,7 +95,7 @@ class Client(derived):
 		self.version = '0.4SVN' # tohle asi neni nejlepsi zpusob
 		self.client_os = ''
 		self.caps_node = 'http://dev.jabbim.cz/jabbim/caps'
-		self.caps_version = self.version
+
 		self.isVip=False
 		
 		self.discofeatures = {} # node: [feature1, feature2]
@@ -168,7 +168,7 @@ class Client(derived):
 		self.hbFails = 0
 		self.connections = [] # [(host1, port1), (host2, port2), ..]
 		self.messageReceipts = {} # id:(zprava)
-		
+		self.oldstatus = None
 		self.socks5Srv = None
 		self.socks5Port = '33333'
 		self.socks5IP = [] #
@@ -260,6 +260,10 @@ class Client(derived):
 		self.discoitems = {None:[],"http://jabber.org/protocol/commands":[]}
 		self.isVip=False
 		self.reactor.callFromThread(self.on_init)
+		print 'XXXX ', JID,  self.jid.full(),  self.oldstatus
+		if JID != self.jid.full():
+			self.oldstatus = None
+			print 'deleted'
 		self.jid = jid.JID(JID)
 		self.password  = password
 		self.host = self.jid.host
@@ -426,6 +430,8 @@ class Client(derived):
 		self.jid = jid.JID(jd)
 		
 	def disconnect(self):
+		
+		print self.oldstatus
 		try:
 			self.xping.stop()
 		except:
@@ -867,7 +873,12 @@ class Client(derived):
 		
 		
 		log.msg( 'roster arrived')
-		self.sendPresence()
+#		print self.oldstatus
+#		if self.oldstatus != None:
+#			show,  status = self.oldstatus
+#			self.sendPresence(show = show,  status = status)
+#		else:
+#			self.sendPresence()
 		cekej = 1
 #		if ln*0.05 < cekej:
 #			cekej = ln*0.05
@@ -1349,7 +1360,7 @@ class Client(derived):
 					node = child['node']
 				else:
 					node = None
-		if node == '%s#%s'%(self.caps_node, self.caps_version): #magie: pokud se nas nekdo zepta na caps nasi verze, tak mu rekneme default
+		if node == '%s#%s'%(self.caps_node, self.version): #magie: pokud se nas nekdo zepta na caps nasi verze, tak mu rekneme default
 			node == None
 
 		if not self.discofeatures.has_key(node):
