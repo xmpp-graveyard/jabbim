@@ -50,6 +50,7 @@ import traceback
 from configobj import ConfigObj
 import locale
 import rpc
+import presence,  message
 #import bosh_wokkel
 try:
 	from hashlib import sha1
@@ -176,6 +177,8 @@ class Client(derived):
 		#self.reactor.callFromThread(self.on_init)
 
 		self.rpc = rpc.rpc(self)
+		self.presence = presence.PresenceInit(self)
+		self.message = message.MessageInit(self)
 
 	def chyba(self, err):
 #		print err
@@ -212,7 +215,7 @@ class Client(derived):
 		for f in self.discofeatures[None]:
 			features.append(f[0])
 		self.caps_ext = self.calcCapsExt(features = features, identity = [self.identity])
- 		self.cacheCaps(self.caps_ext, features, self.identity)
+		self.cacheCaps(self.caps_ext, features, self.identity)
 			
 
 	def heartbeat(self):
@@ -451,16 +454,15 @@ class Client(derived):
 		self.xmlstream.removeObserver('/*', self.bootLog)
 		self.xmlstream.rawDataInFn = self.rawDataIn
 		self.xmlstream.rawDataOutFn = self.rawDataOut
-		self.xmlstream.addObserver("/presence", self.onPresence, 1)
-		self.xmlstream.addObserver("/message", self.onMessage, 1)
+		self.xmlstream.addObserver("/presence", self.presence.onPresence, 1)
+		self.xmlstream.addObserver("/message", self.message.onMessage, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='jabber:iq:roster']", self.onRosterAdd, 1)
 		self.xmlstream.addObserver("/*", self.onXML)
-		self.xmlstream.addObserver("/presence[@type='subscribe']", self.onSubscribe, 1)
-		self.xmlstream.addObserver("/presence[@type='unsubscribe']", self.onUnSubscribe, 1)
-		self.xmlstream.addObserver("/presence[@type='subscribed']", self.onSubscribed, 1)
-		self.xmlstream.addObserver("/presence[@type='unsubscribed']", self.onUnSubscribed, 1)
-		self.xmlstream.addObserver("/presence[@type='error']", self.onPresenceError, 1)
-		#self.xmlstream.addObserver("/presence[@type='unavailable']", self.onUnavailable, 1)
+		self.xmlstream.addObserver("/presence[@type='subscribe']", self.presence.onSubscribe, 1)
+		self.xmlstream.addObserver("/presence[@type='unsubscribe']", self.presence.onUnSubscribe, 1)
+		self.xmlstream.addObserver("/presence[@type='subscribed']", self.presence.onSubscribed, 1)
+		self.xmlstream.addObserver("/presence[@type='unsubscribed']", self.presence.onUnSubscribed, 1)
+		self.xmlstream.addObserver("/presence[@type='error']", self.presence.onPresenceError, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:version']", self.onVersion, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#info']", self.onDiscoInfo, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#items']", self.onDiscoItems, 1) 
@@ -477,7 +479,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/confirm[@xmlns='http://jabber.org/protocol/http-auth']", self.onVerify, 1)
 		self.xmlstream.addObserver("/message/confirm[@xmlns='http://jabber.org/protocol/http-auth']", self.onVerify, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/ping[@xmlns='urn:xmpp:ping']", self.onPing, 1)
-		self.xmlstream.addObserver("/message/x[@xmlns='http://jabber.org/protocol/muc#user']/invite", self.onInvite, 1)
+		self.xmlstream.addObserver("/message/x[@xmlns='http://jabber.org/protocol/muc#user']/invite", self.message.onInvite, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='jabber:iq:privacy']", self.onPrivacyPush, 1)
 		self.xmlstream.addObserver("/*/evil[@xmlns='http://jabber.org/protocol/evil']", self.onEvil, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/x[@xmlns='http://jabber.org/protocol/rosterx']", self.onRosterX, 1)
@@ -864,7 +866,7 @@ class Client(derived):
 #		if ln*0.05 < cekej:
 #			cekej = ln*0.05
 		self.reactor.callFromThread(self.on_rosterArrived)
-		self.reactor.callLater(cekej,  self.onFirstPresence)
+		self.reactor.callLater(cekej,  self.presence.onFirstPresence)
 
 
 
@@ -879,403 +881,6 @@ class Client(derived):
 	def _invaliduser(self,xmlstream):
 		log.msg( "invalid_user")
 		#self.on_invalidUser(self)
-
-	def onMessage(self, el):
-		try:
-			typ = el['type']
-		except:
-			typ = 'normal'
-		frm = el['from']
-		frmjid = jid.JID(frm)
-		if frmjid.resource:
-			frm=unicode(frmjid.userhost()).lower()+"/"+frmjid.resource
-		else:
-			frm=unicode(frm).lower()
-		body = subject =xhtml = chatstate = delay = error = attention = receipts = pep = event = None
-		for child in el.elements():
-			if child.name == "request":
-				if child.defaultUri == "urn:xmpp:receipts":
-					message=Element((None, "message"))
-					message["to"] = el["from"]
-					message["from"] = self.jid.full()
-					try:
-						message["id"] = el["id"]
-					except KeyError:
-						pass # kdyby to nejakej chytrak poslal bez id, muze jabbim shodit
-					message.addElement("received", "urn:xmpp:receipts")
-					self.xmlstream.send(message)
-			if child.name == "body":
-				body = unicode(child)
-			if child.name == 'error':
-				error = 'error'
-				for x in child.elements():
-					if x.name != 'text':
-						error = x.name
-			if child.name == "subject":
-				subject = unicode(child)
-			if child.name == 'html':
-				xbody = child.firstChildElement()
-#				xbdy = ''
-#				for elm in xbody.elements():
-#					xbdy = xbdy + elm.toXml()
-#				log.msg(xbdy)
-#				if len(xbdy) == 0:
-#					xhtml = unicode(xbody)
-#				else:
-#					xhtml = xbdy
-				xbody.attributes = {}
-				del(xbody.defaultUri)
-				del(xbody.uri)
-				xhtml = xbody.toXml().replace('<body>','').replace('</body>', '')
-			if child.name in ['active',  'inactive',  'composing',  'paused',  'gone']:
-				chatstate = child.name
-				try:
-					if not 'http://jabber.org/protocol/chatstates' in self.roster['users'][frmjid.userhost()].resources[frmjid.resource].features:
-						self.roster['users'][frmjid.userhost()].resources[frmjid.resource].features.append('http://jabber.org/protocol/chatstates')
-				except:
-					pass #proste user neni v rosteru, nebo je to muc, nebo cojavim ;)
-			if child.name == 'delay':
-				# xep-0203:
-				#  The format MUST adhere to the dateTime format specified in XEP-0082
-				#  and MUST be expressed in UTC.
-				stamp = child.getAttribute('stamp')
-				m = re.match(r'(\d\d\d\d)-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)(\.\d+)?Z', stamp)
-				if m:
-					delay = timegm( map(int, m.groups()[0:6]) + [0,0,0] )
-			if child.name == 'x':
-				if child.defaultUri == 'jabber:x:delay' :
-					# xep-0091:
-					#   The format SHOULD be "CCYYMMDDThh:mm:ss"
-					#   ... not the format defined in XEP-0082.
-					#   The timezone is be understood as UTC.
-					stamp = child.getAttribute('stamp')
-					m = re.match(r'(\d\d\d\d)(\d\d)(\d\d)T(\d\d):(\d\d):(\d\d)', stamp)
-					if m:
-						delay = timegm( map(int, m.groups()[0:6]) + [0,0,0] )
-				if child.defaultUri == 'jabber:x:event':
-					elm = child.firstChildElement()
-					if elm:
-						chatstate = elm.name
-				if child.defaultUri == 'http://jabber.org/protocol/muc#user': # invitation
-					return
-				if child.defaultUri == 'http://jabber.org/protocol/rosterx':
-					self._processRosterX(frm, child)
-
-
-			if child.name == 'confirm': # xep0070 - processed elsewhere
-				return
-			
-			if child.name == 'attention':
-				attention = True
-			if child.name == 'received':
-				try:
-					del self.messageReceipts[el['id']]
-				except:
-					log.err('Couldn\'t remove nonexisten message id')
-				print self.messageReceipts
-				return
-			
-			if child.name == 'event' and child.defaultUri == 'http://jabber.org/protocol/pubsub#event':
-				items = child.firstChildElement()
-				itm = items.firstChildElement()
-				pep = items.getAttribute('node')
-				
-				if itm != None:
-					children = []
-					for elm in itm.elements():
-						children.append(elm)
-					if len(children)==1:
-						payload = children[0]
-					else:
-						payload = children
-					
-					event = {}
-#					for at in payload.elements():
-#						event[at.name] = unicode(at)
-				else:
-					
-					payload = None
-				print el.toXml()
-				c = self.getContactByJid(frm)
-				if c != None:
-					c.setPEP(pep, payload) #zapisem si to do kontaktu
-				self.dispatcher.publishEvent('on_pep', frm, pep, payload)
-						
-		
-		if error == None and el.getAttribute('type') == 'error':
-			error = 'Unknown Error'
-		
-		if attention == True and delay == None and typ == 'headline':
-			self.dispatcher.publishEvent('on_attention', frm, body, subject, xhtml, error)
-			return
-
-		if self.groupchats.has_key(jid.JID(frm).userhost()):
-#			self.on_GCmessage(frm,typ,body,subject, xhtml,  chatstate,  delay)
-			self.dispatcher.publishEvent('on_GCmessage', frm,typ,body,subject, xhtml,  chatstate,  delay, error)
-		else:
-# 			self.on_message(frm,typ,body,subject, xhtml,  chatstate,  delay)
-			if typ!="groupchat":
-				self.dispatcher.publishEvent('on_message', frm,typ,body,subject, xhtml,  chatstate,  delay, error)
-
-	def onInvite(self, el):
-		room = el["from"]
-		for child in el.children:
-			if child.name == "x":
-				invite = child.firstChildElement()
-				break
-		jid = invite["from"]
-		reason = None
-		cont = False
-		for child in invite.children:
-			if child.name == "reason":
-				reason = unicode(child)
-			if child.name == "continue":
-				cont = True
-		log.msg("invitation recieved to: %s; from %s; reason: %s" % (room, jid, reason))
-		self.reactor.callFromThread(self.on_invite,jid, room, reason, cont)
-#		self.main.showInvitation(jid, room, reason, cont)
-
-	def onSubscribe(self, el):
-		log.msg( 'on subscribe')
-		status = ''
-		for child in el.elements():
-			if child.name == 'status':
-				status = unicode(child)
-		self.on_subscribe(el['from'], status)
-
-	def onUnavailable(self, el):
-		log.msg( 'on subscribed')
-		self.on_unavailable(el['from'])
-
-	def onSubscribed(self, el):
-		log.msg( 'on subscribed')
-		self.on_subscribed(el['from'])
-
-	def onUnSubscribe(self, el):
-		log.msg('on unsubscribe')
-		self.on_unsubscribe(el['from'])
-
-	def onUnSubscribed(self, el):
-		log.msg( 'on unsubscribed')
-##		self.sendRosterUpdate(jid, '', 'remove', [])
-		self.on_unsubscribed(el['from'])	
-
-	
-	def onFirstPresence(self):
-		log.msg( 'first presences')
-		self.first_wait = False
-		self.reactor.callFromThread(self.on_firstpresence, self.first_presence)
-		self.dispatcher.publishEvent('first presence')
-	
-	def onPresence(self, el):
-		#log.msg('presence > ')
-		try:
-			frm = jid.JID(el['from'])
-		except:
-			try:
-				print "onPresence, jid mallformed",[el['from']]
-			except:
-				print "onPresence, jid mallformed"
-			return
-		fromjid = frm.userhost()
-		resource = frm.resource
-		show = status = priority = nick = typ = affiliation = role = truejid = error = reason = actor = identity = None
-		codes = []
-		hash = 'None'
-		if el.hasAttribute('type'):
-		#	if el['type'] != 'unavailable':
-		#		return
-		#	else:
-		#		typ = 'unavailable'
-			typ = el['type']
-		if typ == 'error':
-			error = 'error'
-		
-		features = []
-		for child in el.elements():
-			if child.name == 'error':
-				error = 'error'
-				for x in child.elements():
-					if x.name != 'text':
-						error = x.name
-			if child.name == 'show':
-				show = child.__str__()
-			elif child.name == 'status':
-				status = child.__str__()
-				pass
-			elif child.name == 'priority':
-				priority = child.__str__()
-				if priority == None:
-					log.msg( el.toXml())
-			elif child.name == 'c':
-				caps_node = child.getAttribute('node')
-				ext = child.getAttribute('ext')
-				if self.caps_cache.has_key(ext) and ext != None:
-					features = self.caps_cache[ext][1]
-					identity = self.caps_cache[ext][0]
-				elif ext == None:	
-					if typ !='unavailable' and not self.hasFeature(frm.full(), 'http://jabber.org/protocol/disco#info'):
-						features = 'asked'
-						print 'nocaps ' + unicode(self.getIdentity(frm.host))
-						print self.hasIdentity(frm.host, 'conference'), self.hasIdentity(frm.host, 'gateway')
-						if  self.hasIdentity(frm.host, 'conference') or self.hasIdentity(frm.host, 'gateway'):
-							print 'konference nebo gateway'
-							features = ['-']
-						else:
-							self.getFeatures(frm, ext)
-				else:
-					features = 'asked'
-					self.getFeatures(frm, ext)
-			if child.name == 'x' and child.defaultUri == 'http://jabber.org/protocol/muc#user':
-				for item in child.elements():
-					if item.name == 'item':
-						affiliation = item['affiliation']
-						role = item['role']
-						if item.hasAttribute('nick'):
-							nick=unicode(item['nick'])
-						if item.hasAttribute('jid'):
-							truejid = item['jid']
-						for itm in item.elements():
-							if itm.name == 'reason':
-								reason = unicode(itm)
-							elif itm.name == 'actor':
-								actor = itm.getAttribute('jid')
-						print reason, actor
-					if item.name == 'status' :
-						codes.append(item['code'])
-			elif child.name == 'x' and child.defaultUri == 'vcard-temp:x:update':
-				hash = unicode(child.firstChildElement())
-				print fromjid, hash
-		
-
-#avatars
-		wantAvatar=True
-		if self.groupchats.has_key(fromjid):
-			if self.main.client.disco.has_key(frm.host):
-				if self.main.client.disco[frm.host][None].has_key("identities"):
-					if self.main.client.disco[frm.host][None].has_key("identities"):
-						for identity,values in self.main.client.disco[frm.host][None]["identities"].iteritems():
-							if values['type']=='irc':
-								wantAvatar=False
-		
-		if wantAvatar:
-			if self.avatarDef.has_key(fromjid):
-				if self.avatarDef[fromjid] == hash:
-					pass #vsechno je ok, mame spravneho avatara
-				elif self.avatarDef[fromjid] != hash and hash != 'None':
-					self.getVCard(fromjid)
-			elif self.avatarDef.has_key(frm.full()):
-				if self.avatarDef[frm.full()] == hash:
-					pass #vsechno je ok, mame spravneho avatara
-				elif self.avatarDef[frm.full()] != hash and hash != 'None':
-					self.getVCard(frm.full())
-			else:
-				if self.groupchats.has_key(fromjid):
-					self.getVCard(frm.full())
-				else:
-					self.getVCard(fromjid)
-				
-
-
-		if show == None and not el.hasAttribute('type'):
-			show = 'online'
-		elif el.hasAttribute('type'):
-			if el['type'] =='unavailable':
-				show = 'offline'
-			else:
-				return
-		if features == None or len(features) == 0:
-			if  self.hasIdentity(frm.host, 'conference') or self.hasIdentity(frm.host, 'gateway'):
-				print 'konference nebo gateway'
-				features = ['-']
-			else:
-				self.getFeatures(frm, None)
-		
-		if features == 'asked':
-			features = []
-
-
-		if self.groupchats.has_key(fromjid):
-			if show=="offline":
-#				self.reactor.callFromThread(self.on_GCpresence, fromjid, resource,  show,  status,  codes)
-				print 'PART!'
-				codes.append('PART')
-				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor, nick)
-			
-			if self.groupchats[fromjid].users.has_key(resource):
-				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid, features)
-				self.groupchats[fromjid].setStatus(resource,  show,  status)
-				#self.groupchats[fromjid]
-			else:
-				print 'JOIN!'
-				codes.append('JOIN')
-				self.groupchats[fromjid].setStatus(resource,  show,  status)
-				self.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid, features)
-			if show!="offline":
-#				self.reactor.callFromThread(self.on_GCpresence,fromjid, resource,  show,  status,  codes)
-				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor, nick)
-			return
-
-		elif self.roster['users'].has_key(fromjid):
-			first = self.roster['users'][unicode(fromjid)].setStatus(resource, show,status)
-			if self.roster['users'][fromjid].resources.has_key(resource):
-				self.roster['users'][fromjid].setPriority(resource, priority)
-				self.roster['users'][fromjid].setFeatures(resource, features, identity)
-
-#			chci_card = True 
-#			if self.roster['users'][fromjid].avatar_hash == 'nic': 
-#				chci_card = False 
-#			elif hash == None and self.roster['users'][fromjid].avatar_hash !='': 
-#				chci_card = False 
-#				pass 
-#			elif self.roster['users'][fromjid].avatar_hash == hash: 
-#				## print fromjid, 'ma spravneho avatara' 
-#				chci_card = False 
-#				pass  
-#			if chci_card :
-###				print fromjid, hash, self.roster['users'][fromjid].avatar_hash 
-#				self.getVCard(fromjid)
-
-			if first and self.first_wait:
-				self.first_presence.append((frm,show, error))
-			else:
-#				self.reactor.callFromThread(self.on_presence,frm,show, error)
-				self.dispatcher.publishEvent('on_presence',frm,show, error)
-
-		else:
-##			print 'contact not in roster'
-			pass
-
-	def onPresenceError(self,  el):
-		#zatim jenom GC errory .. ani nevim jestli ma smysl zachytavat i jine ..
-#		self.on_xml(el.toXml())
-		try:
-			frm = jid.JID(el['from'])
-		except:
-			try:
-				print "onPresenceError, jid mallformed",[el['from']]
-			except:
-				print "onPresenceError, jid mallformed"
-			return
-			
-		fromjid = frm.userhost()
-		resource = jid.JID(el['from']).resource
-		if self.groupchats.has_key(fromjid):
-			del self.groupchats[fromjid]
-			for child in  el.elements():
-				if child.name == 'error':
-					text = name = ""
-					for elm in child.elements():
-
-						if elm.name == 'text':
-							text = unicode(elm)
-						else:
-							text = unicode(elm.name)
-					self.on_GCpresenceError(fromjid, child.getAttribute('code'),  child.getAttribute('type'),  name, text, resource)
-
-					self.dispatcher.publishEvent('on_GCpresenceError',child.getAttribute('code'),  child.getAttribute('type'),  name , text)
-			
-
 
 	def _featuresReceived(self, el, ext, jd):
 		#log.msg( 'features received')
