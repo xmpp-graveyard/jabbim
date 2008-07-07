@@ -93,6 +93,33 @@ class webkitChatWidget(QtWebKit.QWebView):
 		QtCore.QObject.connect(self.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.webkitCleared)
 		QtCore.QObject.connect(self,QtCore.SIGNAL("linkClicked ( const QUrl &)"),QtGui.QDesktopServices.openUrl)
 
+	def contextMenuEvent(self,event):
+		menu=QtGui.QMenu(self)
+		hit=self.page().mainFrame().hitTestContent(event.pos())
+		show=False
+		if len(hit.linkText())!=0:
+			show=True
+			action=menu.addAction(self.tr("Open"))
+			action.setObjectName("open")
+			action.setData(QtCore.QVariant(hit.linkUrl()))
+			menu.addAction(action)
+			action=self.pageAction(QtWebKit.QWebPage.CopyLinkToClipboard)
+			action.setText(self.tr("Copy link to clipboard"))
+			menu.addAction(action)
+		if len(self.selectedText())!=0:
+			show=True
+			action=self.pageAction(QtWebKit.QWebPage.Copy)
+			action.setText(self.tr("Copy text"))
+			menu.addAction(action)
+		if show:
+			menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.contextMenuTriggered)
+			menu.popup(event.globalPos())
+
+	def contextMenuTriggered(self,action):
+		cmd=action.objectName()
+		if cmd=="open":
+			QtGui.QDesktopServices.openUrl(action.data().toUrl())
+
 	def messageObjectReady(self):
 		#print "messageObjectReady",self.messageObject.messageCache
 		if len(self.messageObject.messageCache)!=0:
