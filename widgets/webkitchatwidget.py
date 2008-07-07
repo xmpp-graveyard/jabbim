@@ -61,6 +61,7 @@ class searchWidget(QtGui.QWidget):
 	def find(self,text,flags=QtWebKit.QWebPage.FindWrapsAroundDocument):
 	    self.webkit().findText(text,flags)
 
+
 class message(QtCore.QObject):
 	def __init__(self,message):
 		QtCore.QObject.__init__(self)
@@ -130,7 +131,7 @@ class webkitChatWidget(QtWebKit.QWebView):
 		QtCore.QObject.connect(self,QtCore.SIGNAL("loadFinished ( bool)"),self.webkitLoaded_)
 		QtCore.QObject.connect(self.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.webkitCleared)
 		QtCore.QObject.connect(self,QtCore.SIGNAL("linkClicked ( const QUrl &)"),QtGui.QDesktopServices.openUrl)
-		self.palette().setColor(QtGui.QPalette.Inactive, QtGui.QPalette.Highlight,QtGui.QColor(self.palette().color(QtGui.QPalette.Inactive, QtGui.QPalette.Highlight)))
+		self.palette().setColor(QtGui.QPalette.Inactive, QtGui.QPalette.Highlight,QtGui.QColor(self.palette().color(QtGui.QPalette.Active, QtGui.QPalette.Highlight)))
 		#self.palette().setColor(QtGui.QPalette.Inactive, QtGui.QPalette.HighlightedText,self.palette().highlightedText().color())
 
 		self.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding))
@@ -238,6 +239,8 @@ class webkitChatWidget(QtWebKit.QWebView):
 						code+="addMessage(%s);\n" % str(i)
 				previousName=unicode(m[1])
 				i+=1
+		style="::selection{background:%s;color:%s;}" %(self.palette().color(QtGui.QPalette.Active, QtGui.QPalette.Highlight).name(),self.palette().color(QtGui.QPalette.Active, QtGui.QPalette.HighlightedText).name())
+		print "style:",style
 		html="""
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
@@ -245,6 +248,7 @@ class webkitChatWidget(QtWebKit.QWebView):
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <style type="text/css" media="screen,print"> @import url( "main.css" ); </style>
 <style id="mainStyle" type="text/css" media="screen,print"> %s </style>
+<style type="text/css"><!-- %s --></style>
 <script>
 function addNextMessage() {
 var b = messageObject.messageDirection();
@@ -375,7 +379,7 @@ function showLastMessages(){
 <a name='bottom'></a>
 </body>
 </html>
-		""" % (stylesheet,code,header,footer)
+		""" % (stylesheet,style,code,header,footer)
 
 		self.chatwidget().imageId=0
 
