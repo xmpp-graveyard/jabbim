@@ -136,6 +136,17 @@ class webkitChatWidget(QtWebKit.QWebView):
 
 		self.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding))
 
+	def event(self,event):
+		# tooltip request:
+		if int(event.type())==110:
+			hit=self.page().mainFrame().hitTestContent(event.pos())
+			url=hit.linkUrl()
+			if url and not url.isEmpty():
+  				self.setToolTip(url.toString())
+			else:
+			    self.setToolTip("")
+		return QtGui.QWidget.event(self,event)
+
 	def contextMenuEvent(self,event):
 		menu=QtGui.QMenu(self)
 		hit=self.page().mainFrame().hitTestContent(event.pos())
