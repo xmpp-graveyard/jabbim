@@ -21,8 +21,9 @@ try:
 except:
 	print "PyQt4 is not installed."
 from albumfiletransfer_ui import *
-from os.path import basename
+from os.path import basename,isfile
 from twisted.internet import threads
+from include import utils
 
 class albumFiletransferDialog(QtGui.QDialog):
 	def __init__(self,main,files,jid,parent=None):
@@ -40,6 +41,28 @@ class albumFiletransferDialog(QtGui.QDialog):
 		self.currentFile=None
 		self.ui.photo.setText("")
 		QtCore.QObject.connect(self.ui.files,QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.itemChanged)
+		QtCore.QObject.connect(self.ui.addFiles,QtCore.SIGNAL("clicked()"),self.addFiles)
+
+	def addFiles(self):
+		# get files
+		dialog = QtGui.QFileDialog()
+		dialog.setResolveSymlinks(True)
+		file=dialog.getOpenFileNames(self,self.tr("Choose files"))
+		file=list(file)
+
+		new=[] # temp variable
+		for f in file:
+			if unicode(f).endswith('.lnk'):
+				f = utils.getFilenameFromLnk(unicode(f))
+			if isfile(unicode(f)):
+				new.append(unicode(f))
+		file=new # path to files
+		if len(file)!=0:
+			self.files+=file
+			for f in file:
+				item=QtGui.QListWidgetItem(self.ui.files)
+				item.setText(basename(unicode(f)))
+				item.setData(32,QtCore.QVariant(unicode(f)))
 
 	def loadPhoto(self,file):
 		img=QtGui.QImage(file)
