@@ -23,6 +23,44 @@ except:
 import os
 import weakref
 
+class searchWidget(QtGui.QWidget):
+	def __init__(self,webkit,parent=None):
+		QtGui.QWidget.__init__(self,parent)
+		self.webkit=weakref.ref(webkit)
+		
+		l=QtGui.QHBoxLayout(self)
+
+		label=QtGui.QLabel(self.tr("Search:"))
+		l.addWidget(label)
+
+		self.searchText=QtGui.QLineEdit(self)
+		l.addWidget(self.searchText)
+		
+		self.closeButton=QtGui.QPushButton(QtGui.QIcon("images/icons/close.png"),"",self)
+		l.addWidget(self.closeButton)
+		
+		QtCore.QObject.connect(self.searchText, QtCore.SIGNAL("returnPressed () "),self.searchTextFinished)
+		QtCore.QObject.connect(self.closeButton, QtCore.SIGNAL("clicked () "),self.hideMe)
+
+		short=QtGui.QShortcut("escape",self.searchText)
+		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.hideMe)
+
+		self.hide()
+
+	def showMe(self):
+		self.show()
+		self.searchText.selectAll()
+		self.searchText.setFocus(QtCore.Qt.MouseFocusReason)
+
+	def hideMe(self):
+		self.hide()
+
+	def searchTextFinished(self):
+		self.find(unicode(self.searchText.text()))
+
+	def find(self,text,flags=QtWebKit.QWebPage.FindWrapsAroundDocument):
+	    self.webkit().findText(text,flags)
+
 class message(QtCore.QObject):
 	def __init__(self,message):
 		QtCore.QObject.__init__(self)
@@ -92,13 +130,15 @@ class webkitChatWidget(QtWebKit.QWebView):
 		QtCore.QObject.connect(self,QtCore.SIGNAL("loadFinished ( bool)"),self.webkitLoaded_)
 		QtCore.QObject.connect(self.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.webkitCleared)
 		QtCore.QObject.connect(self,QtCore.SIGNAL("linkClicked ( const QUrl &)"),QtGui.QDesktopServices.openUrl)
+		self.palette().setColor(QtGui.QPalette.Inactive, QtGui.QPalette.Highlight,QtGui.QColor(self.palette().color(QtGui.QPalette.Inactive, QtGui.QPalette.Highlight)))
+		#self.palette().setColor(QtGui.QPalette.Inactive, QtGui.QPalette.HighlightedText,self.palette().highlightedText().color())
+
+		self.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding))
 
 	def contextMenuEvent(self,event):
 		menu=QtGui.QMenu(self)
 		hit=self.page().mainFrame().hitTestContent(event.pos())
-		show=False
 		if len(hit.linkText())!=0:
-			show=True
 			action=menu.addAction(self.tr("Open"))
 			action.setObjectName("open")
 			action.setData(QtCore.QVariant(hit.linkUrl()))
@@ -107,18 +147,21 @@ class webkitChatWidget(QtWebKit.QWebView):
 			action.setText(self.tr("Copy link to clipboard"))
 			menu.addAction(action)
 		if len(self.selectedText())!=0:
-			show=True
 			action=self.pageAction(QtWebKit.QWebPage.Copy)
 			action.setText(self.tr("Copy text"))
 			menu.addAction(action)
-		if show:
-			menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.contextMenuTriggered)
-			menu.popup(event.globalPos())
+		menu.addSeparator()
+		action=menu.addAction(self.tr("Search"))
+		action.setObjectName("search")
+		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.contextMenuTriggered)
+		menu.popup(event.globalPos())
 
 	def contextMenuTriggered(self,action):
 		cmd=action.objectName()
 		if cmd=="open":
 			QtGui.QDesktopServices.openUrl(action.data().toUrl())
+		elif cmd=="search":
+		    self.chatwidget().ui.searchWidget.showMe()
 
 	def messageObjectReady(self):
 		#print "messageObjectReady",self.messageObject.messageCache

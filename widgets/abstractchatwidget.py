@@ -16,7 +16,7 @@ from include import utils
 from emoticonswidget import *
 from linkeditor import linkEditorDialog
 import weakref
-from webkitchatwidget import webkitChatWidget
+from webkitchatwidget import webkitChatWidget,searchWidget
 
 #class message(QtCore.QObject):
 	#def __init__(self,message):
@@ -420,7 +420,7 @@ class abstractChatWidget(QtGui.QWidget):
 		self.lastMessages=[]
 		
 		# chat view widget (self.ui.textEdit)
-		l=QtGui.QHBoxLayout(self.ui.viewWidget)
+		l=QtGui.QVBoxLayout(self.ui.viewWidget)
 		l.setMargin(0)
 		l.setSpacing(0)
 		self.ui.textEdit=textEditClass(self,self.ui.viewWidget)
@@ -434,6 +434,8 @@ class abstractChatWidget(QtGui.QWidget):
 		#self.ui.webkit.load(QtCore.QUrl("file:///home/hanzz/svn/jabbim/trunk/test.html"))
 		l.addWidget(self.ui.webkit)
 		self.ui.webkit.show()
+		self.ui.searchWidget=searchWidget(self.ui.webkit,self)
+		l.addWidget(self.ui.searchWidget)
 		#self.ui.webkit.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
 		#QtCore.QObject.connect(self.ui.webkit,QtCore.SIGNAL("linkClicked ( const QUrl &)"),QtGui.QDesktopServices.openUrl)
 		# chat editor widget (self.ui.line)
