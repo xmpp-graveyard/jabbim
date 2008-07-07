@@ -3068,9 +3068,9 @@ class mainWindow(QtGui.QMainWindow):
 			m = unicode(data.toString())
 			log.msg('setting mood to '+m)
 			if m=="none":
-				self.client.sendRooms('http://jabber.org/protocol/mood', self.client.getMoodPayload(None))
+				self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(None))
 			else:
-				self.client.sendRooms('http://jabber.org/protocol/mood', self.client.getMoodPayload(m))
+				self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(m))
 			if self.moodIcons.has_key(m):
 				self.ui.moodButton.setIcon(self.moodIcons[m])
 			if self.moodMenu.currentAction:
@@ -3099,7 +3099,7 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				a = unicode(data[1].toString())
 			log.msg('setting activity to %s/%s'%(group, a))
-			self.client.sendRooms('http://jabber.org/protocol/activity', self.client.getActivityPayload(group, a))
+			self.client.sendPEP('http://jabber.org/protocol/activity', self.client.getActivityPayload(group, a))
 
 	def statusWidgetChanged(self,action):
 		"""

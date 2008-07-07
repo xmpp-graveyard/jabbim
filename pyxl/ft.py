@@ -178,6 +178,9 @@ class FTInit:
 		if typ == 'http://jabber.org/protocol/ibb':
 			self.ibbSend(sid)
 		elif typ == 'http://jabber.org/protocol/bytestreams':
+			self.socksSend(sid,  el['from'])
+
+	def socksSend(self,  sid,  frm):
 			if self.socks5Srv == None:
 				try:
 					factory = socks5.SOCKSv5Factory(self)
@@ -190,12 +193,12 @@ class FTInit:
 			d = self._checkProxies()
 			def _doSend(self, client):
 				iq = IQ(client.client.xmlstream, 'set')
-				iq['to'] = el['from']
+				iq['to'] = frm
 				q = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
 				q['sid'] = sid
 				q['mode'] = 'tcp'
 					
-				addr = sha1("%s%s%s" % (sid, client.client.jid.full(), el['from'])).hexdigest()
+				addr = sha1("%s%s%s" % (sid, client.client.jid.full(), frm)).hexdigest()
 				client.socks5Srv.factory.sessions[addr] = sid
 				for data in client.socks5IP:
 					streamhost = q.addElement('streamhost')
