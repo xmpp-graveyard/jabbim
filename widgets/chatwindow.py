@@ -395,7 +395,7 @@ class chatWindow(QtGui.QMainWindow):
 				w.chat.ui.line.setEnabled(True)
 				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.tr("You are now online."))
 				w.chat.textEditWrite(message)
-				self.main.client.joinGC(w.jid, w.chat.nick)
+				self.main.client.joinGC(w.jid, w.chat.nick,sendRooms=self.main.config['sendRooms']=="True")
 
 	def onGCMessage(self,w,i,body,delay,subject,user,xhtml):
 		oldbody=body

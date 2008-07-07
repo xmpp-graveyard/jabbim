@@ -213,7 +213,6 @@ class clientClass(pyxl.client.Client):
 		Called if there was error on joining the groupchat
 		"""
 		mainWindow=self.main
-		
 		if int(code)==409:
 			# nickname conflict
 			# rejoin with oldNick_ if tab for this room exists
@@ -221,7 +220,7 @@ class clientClass(pyxl.client.Client):
 			if tab:
 				if str(self.main.config["autochangenickMUC"])=="True":
 					tab.chat.nick=resource+"_"
-					self.joinGC(fromjid, resource+"_")
+					self.joinGC(fromjid, resource+"_",sendRooms=self.main.config['sendRooms']==True)
 				else:
 					self.main.chat.ui.chatTab.removeTab(index)
 					if int(self.main.chat.ui.chatTab.count())==0:
@@ -2580,7 +2579,7 @@ class mainWindow(QtGui.QMainWindow):
 		@param nickname: users nickname
 		"""
 		if self.chat.addGroupChatTab(jid,nickname):
-			self.client.joinGC(jid, nickname)
+			self.client.joinGC(jid, nickname,sendRooms=self.config['sendRooms']=="True")
 
 	def getSkinColors(self,i):
 		"""
@@ -3069,9 +3068,9 @@ class mainWindow(QtGui.QMainWindow):
 			m = unicode(data.toString())
 			log.msg('setting mood to '+m)
 			if m=="none":
-				self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(None))
+				self.client.sendRooms('http://jabber.org/protocol/mood', self.client.getMoodPayload(None))
 			else:
-				self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(m))
+				self.client.sendRooms('http://jabber.org/protocol/mood', self.client.getMoodPayload(m))
 			if self.moodIcons.has_key(m):
 				self.ui.moodButton.setIcon(self.moodIcons[m])
 			if self.moodMenu.currentAction:
@@ -3100,7 +3099,7 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				a = unicode(data[1].toString())
 			log.msg('setting activity to %s/%s'%(group, a))
-			self.client.sendPEP('http://jabber.org/protocol/activity', self.client.getActivityPayload(group, a))
+			self.client.sendRooms('http://jabber.org/protocol/activity', self.client.getActivityPayload(group, a))
 
 	def statusWidgetChanged(self,action):
 		"""
@@ -3398,7 +3397,7 @@ class mainWindow(QtGui.QMainWindow):
 		print 'support pressed'
 		if self.client:
 			if self.chat.addGroupChatTab("jabbim@conf.netlab.cz",self.client.jid.user):
-				self.client.joinGC("jabbim@conf.netlab.cz",self.client.jid.user)
+				self.client.joinGC("jabbim@conf.netlab.cz",self.client.jid.user,self.config['sendRooms']=="True")
 		else:
 			anchor="http://live.jabbim.cz/muckl/muckl.html?conf_room=jabbim&nick="
 			QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
@@ -3740,7 +3739,7 @@ class mainWindow(QtGui.QMainWindow):
 		# send jabber command
 		if self.chat.addGroupChatTab(jid,nickname):
 			#self.main.groupchat[room+"@"+server]=[nickname,[]]
-			self.client.joinGC(jid, nickname, password)
+			self.client.joinGC(jid, nickname, password,self.config['sendRooms']=="True")
 
 	def buildBookmarks(self):
 		"""
@@ -3765,7 +3764,7 @@ class mainWindow(QtGui.QMainWindow):
 				nickname=v.nick
 				if self.chat.addGroupChatTab(jid,nickname):
 
-					self.client.joinGC(jid, nickname, v.password)
+					self.client.joinGC(jid, nickname, v.password,self.config['sendRooms']=="True")
 
 	def joinGroupchat(self,bool):
 		"""
@@ -3837,7 +3836,7 @@ class mainWindow(QtGui.QMainWindow):
 				password=None
 			# send jabber command
 			if self.chat.addGroupChatTab(jid,nickname):
-				self.client.joinGC(jid, nickname,password)
+				self.client.joinGC(jid, nickname,password,self.config['sendRooms']=="True")
 				#self.client.joinGC(jid, nickname, v.password)
 		elif cmd=="edit_bookmark":
 			item=self.ui.bookmarks.currentItem()

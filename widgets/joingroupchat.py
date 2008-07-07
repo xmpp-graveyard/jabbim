@@ -82,7 +82,7 @@ class joinGroupChatWindow(QtGui.QDialog):
 		if len(password)==0:
 			password=None
 		if self.main.chat.addGroupChatTab(jid,nickname):
-			self.main.client.joinGC(jid, nickname, password)
+			self.main.client.joinGC(jid, nickname, password,self.main.config['sendRooms']=="True")
 		self.done(1)
 
 	def NameChanged(self,name):

@@ -819,7 +819,7 @@ class groupChatWidget(abstractChatWidget):
 		#self.main().client.sendPresence(to=self.jid+"/"+nick)
 		#self.main().client.groupchats[self.jid].nick=nick
 		if self.main().chat.addGroupChatTab(roomname,self.main().client.groupchats[self.jid].nick):
-			self.main().client.joinGC(roomname, self.main().client.groupchats[self.jid].nick)
+			self.main().client.joinGC(roomname, self.main().client.groupchats[self.jid].nick,sendRooms=self.main().config['sendRooms']=="True")
 		self.ui.line.clear()
 		#self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 		return False

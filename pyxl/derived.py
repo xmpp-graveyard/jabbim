@@ -677,19 +677,23 @@ class derived:
 		self.disp(iq['id'])
 		d.addCallback(self._time202Received).addErrback(self.chyba)
 		
-	def joinGC(self,  jid, nick, password = None):
+	def joinGC(self,  jid, nick, password = None,sendRooms=True):
 		gc = Groupchat(self,  jid, nick, password = password)
 		self.groupchats[jid] = gc
 		gc.join()
-		self.sendPEP('http://www.xmpp.org/extensions/xep-0194.html#ns', self.getChattingPayload())
+		if sendRooms:
+			self.sendPEP('http://www.xmpp.org/extensions/xep-0194.html#ns', self.getChattingPayload())
+		else:
+		    self.sendPEP('http://www.xmpp.org/extensions/xep-0194.html#ns', Element(('http://www.xmpp.org/extensions/xep-0194.html#ns', 'room')))
 		
 
 
-	def leaveGC(self,  jid):
+	def leaveGC(self,  jid,sendRooms=True):
 		self.groupchats[jid].leave()
 		del self.groupchats[jid]
 		log.msg( 'left MUC: '+ jid)
-		self.sendPEP('http://www.xmpp.org/extensions/xep-0194.html#ns', self.getChattingPayload())
+		if sendRooms:
+			self.sendPEP('http://www.xmpp.org/extensions/xep-0194.html#ns', self.getChattingPayload())
 		
 ############## MUC admin ##################
 	def getMUCList(self, jid, typ = 'voice'):

@@ -135,7 +135,7 @@ class abstractTextView(QtGui.QTextEdit):
 			if self.main.chat.addGroupChatTab(room,self.main.client.jid.user,name=name):
 				tab,index=self.main.chat.findTab(room)
 				tab.chat.invitation=[unicode(jid2.full()),unicode(self.parent.jid)]
-				self.main.client.joinGC(room, self.main.client.jid.user)
+				self.main.client.joinGC(room, self.main.client.jid.user,sendRooms=self.main.config['sendRooms']=="True")
 			# remove old user2user conversation tab
 			self.main.chat.removeTab(rmIndex)
 			event.acceptProposedAction()
