@@ -172,6 +172,7 @@ class Ui_newProfile(object):
         self.gridLayout_5.addWidget(self.label_5,2,0,1,1)
         self.usePass = QtGui.QLineEdit(self.groupBox_2)
         self.usePass.setObjectName("usePass")
+        self.usePass.setEchoMode(QtGui.QLineEdit.Password)
         self.gridLayout_5.addWidget(self.usePass,2,1,1,1)
         spacerItem2 = QtGui.QSpacerItem(20,133,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
         self.gridLayout_5.addItem(spacerItem2,3,1,1,1)
