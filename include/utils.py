@@ -151,6 +151,7 @@ def loadConfig(main,status):
 			"expandedGroups":[],
 			"plugins":['notification', 'archive', 'autoaway', 'autoupdate', 'jdm', 'tune'],
 			"rosterMode":"normal",
+			"rosterStyle":"",
 			"chatMode":"normal",
 			"statusMessages":list(status),
 			"showChatStatusChanges":"True",

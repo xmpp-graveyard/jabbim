@@ -103,6 +103,7 @@ import shutil #xmlrpc
 from twisted.python.filepath import FilePath
 from widgets.extra import extraDialog
 from locale import strcoll
+import weakref
 
 class clientClass(pyxl.client.Client):
 	"""
@@ -1968,6 +1969,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.rosterStackedWidget.setCurrentIndex(0)
 
 		self.loadSkin() # load chat skin
+		self.loadRosterStyle() # load roster style
 		self.loadSounds() # load chat skin
 		self.loadTheme() # load theme
 		self.loadMoods() # load user moods icon
@@ -4000,6 +4002,25 @@ class mainWindow(QtGui.QMainWindow):
 				QtGui.QSound.play(self.sounds[sound].strip('\n'))
 			return True
 		return False
+
+	def loadRosterStyle(self):
+		self.rosterStyle=None
+		path="rosterstyles/"+unicode(self.config['rosterStyle'])+"/style.py"
+		if isfile(path):
+			try:
+				f=open((path))
+			except:
+				return
+			try:
+				#plug =  # load plugin module
+				module = load_source('rosterStyle', path, f)
+				f.close()
+				self.ui.roster.setRosterStyle(module.rosterStyle)
+			except Exception, ex:
+						#log.msg(unicode(plugin)+u': '+unicode(ex))
+						traceback.print_exc()
+						f.close()
+						pass
 
 	def loadSkin(self):
 		"""
