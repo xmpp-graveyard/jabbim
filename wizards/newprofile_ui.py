@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'newprofile.ui'
+# Form implementation generated from reading ui file 'wizards/newprofile.ui'
 #
-# Created: Wed Jul 02 13:25:56 2008
+# Created: Tue Jul  8 17:41:54 2008
 #      by: PyQt4 UI code generator 4.4.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,15 +12,18 @@ from PyQt4 import QtCore, QtGui
 class Ui_newProfile(object):
     def setupUi(self, newProfile):
         newProfile.setObjectName("newProfile")
-        newProfile.resize(489,448)
+        newProfile.resize(489,469)
         self.gridLayout = QtGui.QGridLayout(newProfile)
         self.gridLayout.setObjectName("gridLayout")
         self.registerButton = QtGui.QPushButton(newProfile)
+        self.registerButton.setAutoDefault(True)
+        self.registerButton.setDefault(True)
         self.registerButton.setObjectName("registerButton")
         self.gridLayout.addWidget(self.registerButton,3,3,1,1)
         spacerItem = QtGui.QSpacerItem(230,22,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.gridLayout.addItem(spacerItem,3,1,1,1)
         self.pushButton_3 = QtGui.QPushButton(newProfile)
+        self.pushButton_3.setAutoDefault(False)
         self.pushButton_3.setObjectName("pushButton_3")
         self.gridLayout.addWidget(self.pushButton_3,3,0,1,1)
         self.line = QtGui.QFrame(newProfile)
@@ -29,6 +32,7 @@ class Ui_newProfile(object):
         self.line.setObjectName("line")
         self.gridLayout.addWidget(self.line,2,0,1,4)
         self.cancel = QtGui.QPushButton(newProfile)
+        self.cancel.setAutoDefault(False)
         self.cancel.setObjectName("cancel")
         self.gridLayout.addWidget(self.cancel,3,2,1,1)
         self.label = QtGui.QLabel(newProfile)
@@ -37,7 +41,7 @@ class Ui_newProfile(object):
         self.stackedWidget = QtGui.QStackedWidget(newProfile)
         self.stackedWidget.setObjectName("stackedWidget")
         self.page = QtGui.QWidget()
-        self.page.setGeometry(QtCore.QRect(0,0,471,362))
+        self.page.setGeometry(QtCore.QRect(0,0,471,372))
         self.page.setObjectName("page")
         self.gridLayout_4 = QtGui.QGridLayout(self.page)
         self.gridLayout_4.setObjectName("gridLayout_4")
@@ -183,7 +187,7 @@ class Ui_newProfile(object):
         self.gridLayout_8.addWidget(self.waitWidget,0,0,1,1)
         self.stackedWidget_2.addWidget(self.page_5)
         self.page_6 = QtGui.QWidget()
-        self.page_6.setGeometry(QtCore.QRect(0,0,453,262))
+        self.page_6.setGeometry(QtCore.QRect(0,0,453,259))
         self.page_6.setObjectName("page_6")
         self.gridLayout_10 = QtGui.QGridLayout(self.page_6)
         self.gridLayout_10.setObjectName("gridLayout_10")
@@ -230,7 +234,6 @@ class Ui_newProfile(object):
         self.avatars.setViewMode(QtGui.QListView.IconMode)
         self.avatars.setWordWrap(True)
         self.avatars.setObjectName("avatars")
-
         self.gridLayout_9.addWidget(self.avatars,0,1,1,3)
         spacerItem3 = QtGui.QSpacerItem(156,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.gridLayout_9.addItem(spacerItem3,1,2,1,1)
@@ -293,8 +296,10 @@ class Ui_newProfile(object):
         icon.addPixmap(QtGui.QPixmap("images/avatars/sunset.png"),QtGui.QIcon.Normal,QtGui.QIcon.Off)
 
         item = QtGui.QListWidgetItem(self.avatars)
+
         item.setText(QtGui.QApplication.translate("newProfile", "Sunset", None, QtGui.QApplication.UnicodeUTF8))
         item.setIcon(icon)
+
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("images/avatars/ship.png"),QtGui.QIcon.Normal,QtGui.QIcon.Off)
 
