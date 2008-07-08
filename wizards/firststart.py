@@ -148,7 +148,8 @@ class firstStartWizard(QtGui.QDialog):
 		self.enableRegister()
 	
 	def enableRegister(self):
-		samePass=self.ui.password.text()==self.ui.password2.text()
+		# FIXME: Tell user that password is zero-length
+		samePass=self.ui.password.text()==self.ui.password2.text() and len(self.ui.password.text())!=0
 		if self.main.getJid(self.jid) and samePass:
 			self.ui.registerButton.setEnabled(True)
 			self.ui.error.setText("")
