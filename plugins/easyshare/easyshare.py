@@ -255,7 +255,8 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.loadConfig()
 			self.registerHandler('on_authd',self.on_authd)
-
+			if self.main.client.xmlstream:
+				self.on_authd()
 		else:
 			self.loadConfig(homedir)
 		
@@ -274,8 +275,10 @@ class Plugin(plugins.PluginBase):
 		self.main.client.rpc.registerHandler('getShares', self.getShares)
 		self.main.client.rpc.registerHandler('listShare', self.listShare)
 		self.main.client.rpc.registerHandler('getFiles', self.getFiles)
-		
+
 	def getShares(self, frm, par):
+		print jidT
+		print sys.modules
 		frm = jidT.JID(frm).userhost()
 		available = []
 		try:
@@ -349,6 +352,10 @@ class Plugin(plugins.PluginBase):
 		for addr in self.config['dirs']:
 			self.main.client.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#easyshare-%s"%addr, addr, ResendFile, public = self.config[addr+'-sharejids'], args = {'home':self.config[addr+'-sharepath']})
 		self.unregisterFeature("http://dev.jabbim.cz/jabbim/easyshare")
+		self.main.client.rpc.unregisterHandler('getShares')
+		self.main.client.rpc.unregisterHandler('listShare')
+		self.main.client.rpc.unregisterHandler('getFiles')
+
 	
 	def buildContactMenu(self, menu, contact):
 		self.menu=menu.addMenu(self.tr("EasyShare"))

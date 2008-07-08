@@ -142,6 +142,7 @@ class PluginBase:
 			widget.close()
 			self._loadedWidgets.remove(widget)
 			widget.deleteLater()
+			del widget
 			#del widget
 			return True
 		return False
