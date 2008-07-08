@@ -155,8 +155,9 @@ class webkitChatWidget(QtWebKit.QWebView):
 			action.setObjectName("open")
 			action.setData(QtCore.QVariant(hit.linkUrl()))
 			menu.addAction(action)
-			action=self.pageAction(QtWebKit.QWebPage.CopyLinkToClipboard)
-			action.setText(self.tr("Copy link to clipboard"))
+			action=menu.addAction(self.tr("Copy link to clipboard"))
+			action.setObjectName("copy_to_clipboard")
+			action.setData(QtCore.QVariant(hit.linkUrl()))
 			menu.addAction(action)
 		if len(self.selectedText())!=0:
 			action=self.pageAction(QtWebKit.QWebPage.Copy)
@@ -174,6 +175,8 @@ class webkitChatWidget(QtWebKit.QWebView):
 			QtGui.QDesktopServices.openUrl(action.data().toUrl())
 		elif cmd=="search":
 		    self.chatwidget().ui.searchWidget.showMe()
+		elif cmd=="copy_to_clipboard":
+			QtGui.QApplication.clipboard().setText(action.data().toUrl().toString())
 
 	def messageObjectReady(self):
 		#print "messageObjectReady",self.messageObject.messageCache
