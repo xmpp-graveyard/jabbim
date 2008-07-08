@@ -93,8 +93,8 @@ class CommandsDialog(QtGui.QMainWindow):
 		self._reset()
 		self.cmds.requestCommandsList()
 
-	def reject(self):
-		self.close()
+	#def reject(self):
+		#self.close()
 		
 
 class Commands:

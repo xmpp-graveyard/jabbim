@@ -477,5 +477,5 @@ class dataFormsDialog(QtGui.QDialog):
 
 		self.done(1)
 
-	def reject(self):
-		self.close()
+	#def reject(self):
+	#	self.close()

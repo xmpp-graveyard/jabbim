@@ -104,5 +104,5 @@ class legacyFormsDialog(QtGui.QDialog):
 			#print form
 		self.done(1)
 
-	def reject(self):
-		self.close()
+	#def reject(self):
+		#self.close()
