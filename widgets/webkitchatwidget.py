@@ -68,6 +68,7 @@ class message(QtCore.QObject):
 		self.message=[]
 		self.messages=[]
 		self.messageCache=[]
+		self.historyMessages=[]
 		self.ft={}
 		self.scr=1
 		self.setObjectName("messageObject")
@@ -94,6 +95,23 @@ class message(QtCore.QObject):
 			#print "RET",[ret]
 			return ret
 		return ""
+
+	@QtCore.pyqtSignature("",result="int")
+	def historyMessageDirection(self):
+		if len(self.historyMessages)!=0:
+			ret=self.historyMessages[-1][0]
+			print "RET",ret
+			return ret
+		return -1
+
+
+	@QtCore.pyqtSignature("",result="QString")
+	def historyMsg(self):
+		if len(self.historyMessages)!=0:
+			ret=self.historyMessages.pop()[1]
+			return ret
+		return ""
+
 	
 	@QtCore.pyqtSignature("int",result="QString")
 	def msg_(self,i):
@@ -188,6 +206,7 @@ class webkitChatWidget(QtWebKit.QWebView):
 
 	def webkitLoaded_(self):
 		self.page().mainFrame().evaluateJavaScript("showLastMessages();")
+		self.page().mainFrame().evaluateJavaScript("addHistoryMessages();")
 		self.webkitLoaded=True
 		self.messageObjectReady()
 		try:
@@ -264,12 +283,59 @@ class webkitChatWidget(QtWebKit.QWebView):
 <style id="mainStyle" type="text/css" media="screen,print"> %s </style>
 <style type="text/css"><!-- %s --></style>
 <script>
+
+function addHistoryMessages() {
+var b = messageObject.historyMessageDirection();
+if (b==1) addHistory(-1);
+if (b==0) insertHistory(-1);
+b = messageObject.historyMessageDirection();
+if (b!=-1) addHistoryMessages();
+}
+
 function addNextMessage() {
 var b = messageObject.messageDirection();
 if (b==1) addMessage(-1);
 if (b==0) insertMessage(-1);
 b = messageObject.messageDirection();
 if (b!=-1) addNextMessage();
+}
+
+function addHistory(index) {
+shouldScroll = nearBottom();
+//Remove any existing insertion point
+insert = document.getElementById("insert2");
+if(insert) insert.parentNode.removeChild(insert);
+messageObject.ready();
+var ni = document.getElementById('history');
+var numi = document.getElementById('theValue');
+var num = (document.getElementById('theValue').value -1)+ 2;
+numi.value = num;
+var divIdName = "my"+num+"Div";
+var newdiv = document.createElement('div');
+newdiv.setAttribute("id",divIdName);
+if (index==-1) newdiv.innerHTML = messageObject.historyMsg();
+else newdiv.innerHTML = messageObject.msg_(index);
+ni.appendChild(newdiv);
+if (shouldScroll) setTimeout("scrollToBottom()", 100);
+
+}
+
+function insertHistory(index) {
+shouldScroll = nearBottom();
+messageObject.ready();
+                        //Locate the insertion point
+                        var insert = document.getElementById("insert2");
+
+                        //make new node
+                        range = document.createRange();
+                        range.selectNode(insert.parentNode);
+                        if (index==-1) {newNode = range.createContextualFragment(messageObject.historyMsg());}
+						else {newNode = range.createContextualFragment(messageObject.msg_(index));}
+
+                        //swap
+                        insert.parentNode.replaceChild(newNode,insert);
+if (shouldScroll) setTimeout("scrollToBottom()", 100);
+
 }
 
 function addMessage(index) {
@@ -387,6 +453,7 @@ function showLastMessages(){
 <div id="Chat">
 %s
 <input type="hidden" value="0" id="theValue" />
+<div id="history"></div>
 <div id="myDiv"> </div>
 %s
 </div>

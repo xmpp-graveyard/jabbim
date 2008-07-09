@@ -438,13 +438,13 @@ class Plugin(plugins.PluginBase):
 			user=self.main.ui.roster.getNameByJID(jid.userhost())
 
 			# get user avatars
-			avatar="<img src=\""+widget.file+"\" width=\"16\" height=\""+str(widget.avatarHeight/2)+"\" />"
-			selfavatar="<img src=\""+widget.selfFile+"\" width=\"16\" height=\""+str(widget.selfHeight/2)+"\" />"
+			avatar=widget.file
+			selfavatar=widget.selfFile
 
 			jid=unicode(jid.userhost())
 			# call getLastMessages in thread
 			d=threads.deferToThread(self.getLastMessages,jid,int(self.config['messagesNumber']),me,user,unicode(self.main.skin["my_message_history"]),unicode(self.main.skin["message_history"]),self.main.skin['color1'],avatar,selfavatar,self.config['messagesTime'])
-			d.addCallback(self.gotLastMessages,widget)
+			d.addCallback(self.gotLastMessages,widget,me,user,selfavatar,avatar)
 
 	def getLastMessages(self,jid,count,me,user,my_message,message,color,avatar,selfavatar,maxTime):
 		"""
@@ -455,21 +455,21 @@ class Plugin(plugins.PluginBase):
 		messages=self.backend.getLastMessages(jid,count,maxTime)
 		if not messages:
 			return ""
-		
-		html=""
-		for msg in messages:
-			d=time.localtime(msg[0]) # date
-			t=self.formatTime(d[3],d[4],d[5]) # formated time
-			if msg[1]=='to':
-				who=me
-				html+=my_message.replace("[time]",t).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("<br/><br/>","<br/>").replace('[avatar]',selfavatar)
-			else:
-				if user:
-					who=user
-				else:
-					who=msg[2]
-				html+=message.replace("[time]",t).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("[foreground]",color[0]).replace("[background]",color[1]).replace("<br/><br/>","<br/>").replace('[avatar]',avatar)
-		return html
+		return messages
+#		html=""
+	#	for msg in messages:
+		#	d=time.localtime(msg[0]) # date
+#			t=self.formatTime(d[3],d[4],d[5]) # formated time
+	#		if msg[1]=='to':
+		#		who=me
+			#	html+=my_message.replace("[time]",t).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("<br/><br/>","<br/>").replace('[avatar]',selfavatar)
+#			else:
+	#			if user:
+		#			who=user
+			#	else:
+				#	who=msg[2]
+#				html+=message.replace("[time]",t).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("[foreground]",color[0]).replace("[background]",color[1]).replace("<br/><br/>","<br/>").replace('[avatar]',avatar)
+	#	return html
 
 	def formatTime(self,h,m,s):
 		"""
@@ -484,10 +484,12 @@ class Plugin(plugins.PluginBase):
 		return text[:-1]
 		
 
-	def gotLastMessages(self,html,widget):
+	def gotLastMessages(self,messages,widget,me,user,selfavatar,avatar):
 		"""
 		Write history messages to the chatWidget. Called when getLastMessages finished.
 		"""
+		if len(messages)!=0:
+			self.main.webkitThemeFactory.genChatHtml(messages,me,user,selfavatar,avatar,widget)
 		#old=widget.ui.textEdit.toHtml()
 		#widget.ui.textEdit.setHtml("")
 		#widget.textEditWrite(html,True)
@@ -518,7 +520,7 @@ class Plugin(plugins.PluginBase):
 		# clear widgets
 		self.window.ui.seznam.clear()
 		self.window.ui.calendar.setDates([])
-		self.window.ui.text.setText('')
+		self.window.ui.text.setHtml('')
 		# add top level items to the JID list
 		contact=QtGui.QTreeWidgetItem(self.window.ui.seznam)
 		contact.setText(0,self.tr("Contacts in roster"))

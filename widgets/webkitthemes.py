@@ -20,7 +20,8 @@ try:
 	from PyQt4 import QtCore, QtGui
 except:
 	print "PyQt4 is not installed."
-import os
+import os,time
+from twisted.internet import threads
 
 class webkitThemeFactory:
 	def __init__(self,chatTheme,groupchatTheme,realHomeDir):
@@ -28,6 +29,55 @@ class webkitThemeFactory:
 		self.fullGroupchatTheme=groupchatTheme
 		self.realHomeDir=realHomeDir
 		self.load()
+
+	def genChatHtml(self,messages,me,user,myAvatar,userAvatar,widget):
+		templates={}
+		templates['incomingContent']=unicode(self.incomingContent).replace("%sender%",user).replace("%userIconPath%",userAvatar).replace("%highlight%","").replace('id="insert"','id="insert2"')
+		templates['incomingNextContent']=unicode(self.incomingNextContent).replace("%sender%",user).replace("%userIconPath%",userAvatar).replace("%highlight%","").replace('id="insert"','id="insert2"')
+		templates['outgoingContent']=unicode(self.outgoingContent).replace("%sender%",me).replace("%userIconPath%",myAvatar).replace("%highlight%","").replace('id="insert"','id="insert2"')
+		templates['outgoingNextContent']=unicode(self.outgoingNextContent).replace("%sender%",me).replace("%userIconPath%",myAvatar).replace("%highlight%","").replace('id="insert"','id="insert2"')
+		# call getLastMessages in thread
+		#d=threads.deferToThread(self._genChatHtml,messages,templates)
+		#return d
+
+	#def _genChatHtml(self,messages,templates):
+		html=""
+		lastFromMe=None
+		for msg in messages:
+			d=time.localtime(msg[0]) # date
+			t=self.formatTime(d[3],d[4],d[5]) # formated time
+			if msg[1]!='to':
+				if lastFromMe==True:
+					widget.ui.webkit.messageObject.historyMessages.insert(0,[0,templates['incomingNextContent'].replace("%message%",msg[3]).replace("%time%",t)])
+				else:
+					lastFromMe=True
+					widget.ui.webkit.messageObject.historyMessages.insert(0,[1,templates['incomingContent'].replace("%message%",msg[3]).replace("%time%",t)])
+				#html+=my_message.replace("[time]",t).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("<br/><br/>","<br/>").replace('[avatar]',selfavatar)
+			else:
+				#if user:
+				#	who=user
+				#else:
+				#	who=msg[2]
+				#html+=message.replace("[time]",t).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",msg[3]).replace("[foreground]",color[0]).replace("[background]",color[1]).replace("<br/><br/>","<br/>").replace('[avatar]',avatar)
+				if lastFromMe==False:
+					widget.ui.webkit.messageObject.historyMessages.insert(0,[0,templates['outgoingNextContent'].replace("%message%",msg[3]).replace("%time%",t)])
+				else:
+					lastFromMe=False
+					widget.ui.webkit.messageObject.historyMessages.insert(0,[1,templates['outgoingContent'].replace("%message%",msg[3]).replace("%time%",t)])
+		if widget.ui.webkit.webkitLoaded:
+			widget.ui.webkit.page().mainFrame().evaluateJavaScript("addHistoryMessages();")
+
+	def formatTime(self,h,m,s):
+		"""
+		Returns formated time in format hh:mm:ss from integers.
+		"""
+		text=""
+		for item in [h,m,s]:
+			if item<10:
+				text+="0"+str(item)+":"
+			else:
+				text+=str(item)+":"
+		return text[:-1]
 
 	def load(self):
 		cwd=os.getcwd()
