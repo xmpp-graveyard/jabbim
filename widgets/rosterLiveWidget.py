@@ -115,6 +115,7 @@ class userItem:
 		self.selectedFrameAvatar=None
 		self.mood=None
 		self.tune=False
+		self.song=""
 		self.height=0
 
 	def clone(self):

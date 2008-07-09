@@ -282,6 +282,13 @@ class Plugin(plugins.PluginBase):
 		self.preferencesIcon=QtGui.QIcon(plugindir+"/audio.png")
 		self.osd=None
 		if main:
+			self.started=int(time.time())
+			if sys.platform == 'win32':
+				self.snarl=self.loadModule(plugindir+"/PySnarl.py")
+				if not self.snarl.snGetVersion() != False:
+					self.snarl=None
+			else:
+				self.snarl=None
 			#self.registerHandler('on_message', self.on_message)
 			self.registerHandler('firstChatMessageEvent',self.on_firstChatMessageEvent)
 			self.registerHandler('chatMessageEvent',self.on_chatMessageEvent)
@@ -347,7 +354,13 @@ class Plugin(plugins.PluginBase):
 	def testSlot(self):
 		self.main.tray.showMessage(self.tr("Notification "),self.tr("Notification plugin test :)"), QtGui.QSystemTrayIcon.Information, 2000)
 		self.main.playsound('new_message')
-		self.osd.test(self.tr("Notification test"))
+		if self.snarl:
+			file=self.main.getAvatarSrc("jabbimicon")
+			s = self.snarl.SnarlMessage(unicode(self.tr("Notification test")),unicode(self.tr("Notification test")))
+			s.timeout=int(self.config['osd_time'])
+			s.show(icon=file,replyWindow=int(self.main.winId()),replyMsg=1025)
+		else:
+			self.osd.test(self.tr("Notification test"))
 	
 	def on_evil(self, frm, typ):
 		jid = jidT.JID(frm)
@@ -373,10 +386,19 @@ class Plugin(plugins.PluginBase):
 		if first:
 			return
 		if self.config['osd_on_presence']=="True":
-			pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
 			if not status:
 				status=""
-			self.osd.view(pixmap,user+self.tr(" is now ")+self.main.status[unicode(show)],unicode(status),self.addChatTab,[jid])
+			if self.snarl:
+				t=int(time.time())
+				if t>self.started+20:
+					file=self.main.getAvatarSrc(jid.userhost())
+					s = self.snarl.SnarlMessage(unicode(user)+unicode(self.tr(" is now "))+unicode(self.main.status[unicode(show)]),unicode(status))
+					s.timeout=int(self.config['osd_time'])
+					s.show(icon=file,replyWindow=int(self.main.winId()),replyMsg=1025)
+					self.main.snarlMessages[int(s.getID())]=[self.addChatTab,[jid]]
+			else:
+				pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
+				self.osd.view(pixmap,user+self.tr(" is now ")+self.main.status[unicode(show)],unicode(status),self.addChatTab,[jid])
 		if self.config['sound_presence']=="True" and int(time.time())>self.main.connectStarted+30:
 			if show=="offline":
 				self.main.playsound("contact_offline")
@@ -386,6 +408,7 @@ class Plugin(plugins.PluginBase):
 	def addChatTab(self,jid):
 		item=self.main.ui.roster.getUserItems(jid.userhost())
 		if item:
+			item=item[0]
 			res = self.main.client.roster['users'][item.jid].getHighestResource()
 			
 			if res==None:
@@ -405,13 +428,20 @@ class Plugin(plugins.PluginBase):
 		else:
 				traytext=body
 		if self.config['osd_first_message']=="True" and not self.main.chat.isActiveWindow():
-			# get avatar for OSD
-			pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
-			# add child event
-			event=_eventClass()
-			self.main.events.addChildEvent(eventID,event)
-			# inform user about newly opened tab
-			self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),event)
+			if self.snarl:
+				file=self.main.getAvatarSrc(jid.userhost())
+				s = self.snarl.SnarlMessage(unicode(self.tr("New message from "))+unicode(user),unicode(traytext))
+				s.timeout=int(self.config['osd_time'])
+				s.show(icon=file,replyWindow=int(self.main.winId()),replyMsg=1025)
+				self.main.snarlMessages[int(s.getID())]=[self.main.events.getEventByID(eventID)['widget'].submitClicked,[]]
+			else:
+				# get avatar for OSD
+				pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
+				# add child event
+				event=_eventClass()
+				self.main.events.addChildEvent(eventID,event)
+				# inform user about newly opened tab
+				self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),event)
 		if self.config['sound_first_message']=="True":
 			self.main.playsound('new_message')
 		if self.config['tray_first_message']=='True':
@@ -423,16 +453,23 @@ class Plugin(plugins.PluginBase):
 		# inform user about new message
 		if self.config['osd_on_message']=="True" and not self.main.chat.isActiveWindow():
 			if len(body)>40:
-					traytext=body[:40]+" ..."
+				traytext=body[:40]+" ..."
 			else:
-					traytext=body
-			# get avatar for OSD
-			pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
-			# add child event
-			event=_eventClass()
-			self.main.events.addChildEvent(eventID,event)
-			# inform user about newly opened tab
-			self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),event)
+				traytext=body
+			if self.snarl:
+				file=self.main.getAvatarSrc(jid.userhost())
+				s = self.snarl.SnarlMessage(unicode(self.tr("New message from "))+unicode(user),unicode(traytext))
+				s.timeout=int(self.config['osd_time'])
+				s.show(icon=file,replyWindow=int(self.main.winId()),replyMsg=1025)
+				self.main.snarlMessages[int(s.getID())]=[self.main.events.getEventByID(eventID)['widget'].submitClicked,[]]
+			else:
+				# get avatar for OSD
+				pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
+				# add child event
+				event=_eventClass()
+				self.main.events.addChildEvent(eventID,event)
+				# inform user about newly opened tab
+				self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),event)
 		if self.config['sound_message']=="True":
 			self.main.playsound('message')
 
@@ -443,7 +480,14 @@ class Plugin(plugins.PluginBase):
 			else:
 				text=body
 			traytext=unicode(user)+": "+text
-			self.main.tray.showMessage(self.tr("New groupchat message for you"), traytext, QtGui.QSystemTrayIcon.Information, 4000)
+			if self.snarl:
+				file=self.main.getAvatarSrc("jabbimicon")
+				s = self.snarl.SnarlMessage(unicode(self.tr("New groupchat message for you")),unicode(traytext))
+				s.timeout=int(self.config['osd_time'])
+				s.show(icon=file,replyWindow=int(self.main.winId()),replyMsg=1025)
+				#self.main.snarlMessages[int(s.getID())]=[self.main.events.getEventByID(eventID).accept,[]]
+			else:
+				self.main.tray.showMessage(self.tr("New groupchat message for you"), traytext, QtGui.QSystemTrayIcon.Information, 4000)
 
 		if self.config['sound_gc_message']=="True":
 			self.main.playsound('message')

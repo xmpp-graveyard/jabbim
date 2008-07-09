@@ -50,11 +50,16 @@ class jabbimApplication(QtGui.QApplication):
 				print "emit sleep()"
 				self.emit(QtCore.SIGNAL("sleep()"))
 				self.sleep=True
-			# PBT_APMRESUMESUSPEND
 			elif msg.wParam==7 and self.sleep:
 				print "emit wakeup()"
 				self.emit(QtCore.SIGNAL("wakeUp()"))
 				self.sleep=False
+			return (True,1)
+		# Snarl clicked (notification.py hook)
+		elif msg.message==1025:
+			if self.main.snarlMessages.has_key(int(msg.lParam)):
+				self.main.snarlMessages[int(msg.lParam)][0](*self.main.snarlMessages[int(msg.lParam)][1])
+				del self.main.snarlMessages[int(msg.lParam)]
 			return (True,1)
 		return (False,1)
 
@@ -172,6 +177,7 @@ class clientClass(pyxl.client.Client):
 			change.append("tune")
 			tune=payload
 			listening=False
+			song=""
 			if type(tune) == list:
 				for x in tune:
 					print x
@@ -188,8 +194,11 @@ class clientClass(pyxl.client.Client):
 			# set user tune information for contacts in roster
 			if listening:
 				listening=QtGui.QIcon("images/22x22/icons/headphones.png").pixmap(16,16)
+				song=t
 			for item in self.main.ui.roster.getUserItems(frm):
 				item.tune=listening
+				item.song=song
+				item.height=self.main.ui.roster.rosterStyle.heightForItem(item)
 			self.main.ui.roster.repaint()
 		if tab:
 			tab.chat.refreshLabel(change)
@@ -1630,6 +1639,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusButton.hide()
 		self.qtStyles=map(unicode,list(QtGui.QStyleFactory.keys()))
 		self.qtStylesDefault=app.style()
+		app.main=self
 		layout=QtGui.QHBoxLayout(self.ui.selfAvatarWidget)
 		layout.setMargin(0)
 		layout.setSpacing(0)
@@ -1645,7 +1655,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.config=None #: config dict (loaded by configObj)
 		self.cache=None
 		self.connectStarted=0
-
+		self.snarlMessages={}
+		
 		self.loadRoster() # load roster widget
 		QtCore.QObject.connect(self.ui.rosterSearch, QtCore.SIGNAL(" textEdited ( const QString & )"),self.ui.roster.search)
 		QtCore.QObject.connect(self.ui.rosterSearchClose, QtCore.SIGNAL("clicked()"),self.ui.roster.search)
@@ -1969,7 +1980,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.rosterStackedWidget.setCurrentIndex(0)
 
 		self.loadSkin() # load chat skin
-		self.loadRosterStyle() # load roster style
 		self.loadSounds() # load chat skin
 		self.loadTheme() # load theme
 		self.loadMoods() # load user moods icon
@@ -2037,6 +2047,8 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 			QtCore.QObject.connect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
+
+		self.loadRosterStyle() # load roster style
 
 		# join if we can :)
 		if self.config['autoJoin']=='True':
@@ -2406,6 +2418,16 @@ class mainWindow(QtGui.QMainWindow):
 			message = unicode(traceback.format_exc())
 			log.msg(message)
 
+	def getAvatarSrc(self,jid):
+		hash=""
+		if self.client.avatarDef.has_key(jid):
+			hash=self.client.avatarDef[jid]
+		if hash=="":
+			file=os.getcwd()+"/images/32x32/apps/jabbim.png"
+		else:
+			file=self.realHomeDir+'/avatars/'+unicode(hash)
+		return file
+			
 	def getAvatar(self,pixmap,size="auto",frame=False,status=None):
 		"""
 		Returns avatar of contact.
