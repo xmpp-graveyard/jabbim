@@ -2029,11 +2029,11 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
 		self.cache.create_tables().addCallback(self.tables_created)
-		self.ui.loginStatus.addItem(self.getIcon(status="online",size="16x16"), self.status["online"],QtCore.QVariant(["online",  '']))
-		self.ui.loginStatus.addItem(self.getIcon(status="chat",size="16x16"), self.status["chat"],QtCore.QVariant(["chat", '']))
-		self.ui.loginStatus.addItem(self.getIcon(status="away",size="16x16"), self.status["away"],QtCore.QVariant(["away", '']))
-		self.ui.loginStatus.addItem(self.getIcon(status="xa",size="16x16"), self.status["xa"],QtCore.QVariant(["xa", '']))
-		self.ui.loginStatus.addItem(self.getIcon(status="dnd",size="16x16"), self.status["dnd"],QtCore.QVariant(["dnd", '']))
+		self.ui.loginStatus.addItem(self.getIcon(status="online",size="16x16"), self.status["online"],QtCore.QVariant(QtCore.QStringList(["online",  ''])))
+		self.ui.loginStatus.addItem(self.getIcon(status="chat",size="16x16"), self.status["chat"],QtCore.QVariant(QtCore.QStringList(["chat", ''])))
+		self.ui.loginStatus.addItem(self.getIcon(status="away",size="16x16"), self.status["away"],QtCore.QVariant(QtCore.QStringList(["away", ''])))
+		self.ui.loginStatus.addItem(self.getIcon(status="xa",size="16x16"), self.status["xa"],QtCore.QVariant(QtCore.QStringList(["xa", ''])))
+		self.ui.loginStatus.addItem(self.getIcon(status="dnd",size="16x16"), self.status["dnd"],QtCore.QVariant(QtCore.QStringList(["dnd", ''])))
 
 		self.emoticonsWidget=widgets.emoticonswidget.emoticonsWidget(self,self)
 
