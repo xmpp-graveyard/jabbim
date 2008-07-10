@@ -3591,6 +3591,8 @@ class mainWindow(QtGui.QMainWindow):
 		if privacy:
 			
 			self.client.privacy.active.unsetInvisible(available=False) # hack
+		for i in MainWindow.plugins.keys():
+			MainWindow.unloadPlugin(i)
 		if os.path.isfile(self.config.filename):
 			# save windows geometry and sizes of splitters in chat window
 			if str(self.config["saveGeometry"])=="True":

@@ -287,6 +287,12 @@ class Plugin(plugins.PluginBase):
 				self.snarl=self.loadModule(plugindir+"/PySnarl.py")
 				if not self.snarl.snGetVersion() != False:
 					self.snarl=None
+				#else:
+					#self.snarl.snRegisterConfig2(int(self.main.winId()), "Jabbim",1025,os.getcwd()+"/images/32x32/apps/jabbim.png")
+#					self.snarl.snRegisterAlert("Jabbim", unicode(self.tr("Presences")))
+					#self.snarl.snRegisterAlert("Jabbim", unicode(self.tr("New first chat messages")))
+#					self.snarl.snRegisterAlert("Jabbim", unicode(self.tr("Chat messages")))
+					#self.snarl.snRegisterAlert("Jabbim", unicode(self.tr("Groupchat highlights")))
 			else:
 				self.snarl=None
 			#self.registerHandler('on_message', self.on_message)
@@ -309,6 +315,10 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.loadConfig(homedir)
 
+	#def on_remove(self):
+		#if self.snarl:
+			#self.snarl.snRevokeConfig(int(self.main.winId()))
+			
 	def on_FTStarted(self,sid,el):
 		if self.config['sound_ft']=='True':
 			self.main.playsound('ft_start')
