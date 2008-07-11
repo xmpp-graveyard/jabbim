@@ -143,6 +143,14 @@ class MessageInit:
 				self.dispatcher.publishEvent('on_message', frm,typ,body,subject, xhtml,  chatstate,  delay, error)
 
 	def onInvite(self, el):
+		if el['type'] =='error':
+			for child in el.elements():
+				error = 'error'
+				for x in child.elements():
+					if x.name != 'text':
+						error = x.name
+			self.dispatcher.publishEvent('on_GCmessage', el['from'],'error','',None, None,  None, None, error)
+			return 
 		room = el["from"]
 		for child in el.children:
 			if child.name == "x":
