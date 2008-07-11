@@ -157,5 +157,5 @@ class MessageInit:
 			if child.name == "continue":
 				cont = True
 		log.msg("invitation recieved to: %s; from %s; reason: %s" % (room, jid, reason))
-		self.client.reactor.callFromThread(self.on_invite,jid, room, reason, cont)
+		self.client.reactor.callFromThread(self.client.on_invite,jid, room, reason, cont)
 #		self.main.showInvitation(jid, room, reason, cont)
