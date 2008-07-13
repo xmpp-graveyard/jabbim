@@ -3084,7 +3084,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="330"/>
         <source>All files have been sent</source>
-        <translation>Všechyn soubory zaslány</translation>
+        <translation>Všechny soubory zaslány</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="333"/>
