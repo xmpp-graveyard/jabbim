@@ -124,6 +124,8 @@ class Plugin(plugins.PluginBase):
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.kontakty = {} # jid:contact
+		self.showInPreferences=True
+		self.preferencesIcon=QtGui.QIcon(plugindir+"/autoaway.png")
 		#self.config['away_time'] = {'description':'Minutes to autoaway', 'default':'10', 'value': '','type':'text'}
 		#self.config['away_text'] = {'description':'Text to show while auto away', 'default':'User is away for %i minutes.', 'value': '','type':'text'}
 		#self.config['preserve_show'] = {'description':"Change only status message", 'default':'True', 'value': '','type':'boolean'}
