@@ -1340,7 +1340,7 @@ class clientClass(pyxl.client.Client):
 					#if int(self.main.chat.ui.chatTab.currentIndex())==tabIndex:
 					#if current:
 						#self.main.chat.setWindowTitle("("+str(int(self.main.chat.getUnreadMessages())+1)+") "+current.tabName.replace("&",""))
-					self.main.chat.setWindowTitle("("+str(int(self.main.chat.getUnreadMessages())+1)+") "+current.tabName.replace("&","")) 
+					self.main.chat.setWindowTitle("("+str(int(self.main.chat.getUnreadMessages())+1)+") "+tab.tabName.replace("&","")) 
 					tab.chat.unread+=1
 				else:
 					color=self.main.chat.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
