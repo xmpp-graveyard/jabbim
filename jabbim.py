@@ -3371,7 +3371,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		self.discovery=widgets.servicediscovery.serviceDiscoveryDialog(self,self)
 		self.discovery.show()
-		if USE_WIZARDS:
+		if USE_WIZARDS and self.client.jid.host in ['jabbim.cz','jabber.cz','njs.netlab.cz','jabbim.com','jabbim.pl']:
 			self.discovery2=wizards.jabbimservicemanager.jabbimServiceManager(self,self)
 			self.discovery2.show()
 
