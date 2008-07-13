@@ -427,6 +427,7 @@ class clientClass(pyxl.client.Client):
 		"""
 		Called when disco#info arrived.
 		"""
+		jid=self.main.getJid(jid).userhost()
 		if True:
 			typ=self.getHostType(jid,jid)
 			if typ:
