@@ -60,7 +60,7 @@ class jabbimApplication(QtGui.QApplication):
 				self.sleep=False
 			return (True,1)
 		# Snarl clicked (notification.py hook)
-		elif msg.message==1025:
+		elif msg.message==1025 and msg.wParam==34:
 			if self.main.snarlMessages.has_key(int(msg.lParam)):
 				self.main.snarlMessages[int(msg.lParam)][0](*self.main.snarlMessages[int(msg.lParam)][1])
 				del self.main.snarlMessages[int(msg.lParam)]
