@@ -361,7 +361,10 @@ class chatWindow(QtGui.QMainWindow):
 			#pass
 
 	def isActiveWindow(self):
-		return self.isVisible() and not self.windowState() & QtCore.Qt.WindowMinimized and QtGui.QApplication.activeWindow()==self
+		if sys.platform=="win32":
+			return self.isVisible() and not self.windowState() & QtCore.Qt.WindowMinimized and QtGui.QApplication.activeWindow()==self
+		else:
+			return QtGui.QMainWindow.isActiveWindow(self)
 			
 	def activate(self,jid=None):
 		print "activate"
