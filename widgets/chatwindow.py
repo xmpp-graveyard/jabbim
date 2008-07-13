@@ -360,6 +360,9 @@ class chatWindow(QtGui.QMainWindow):
 		#except:
 			#pass
 
+	def isActiveWindow(self):
+		return self.isVisible() and not self.windowState() & QtCore.Qt.WindowMinimized and QtGui.QApplication.activeWindow()==self
+			
 	def activate(self,jid=None):
 		print "activate"
 		self.show()
