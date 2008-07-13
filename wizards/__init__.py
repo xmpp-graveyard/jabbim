@@ -1,3 +1,4 @@
 import registration
 import firststart
 import joingroupchat
+import jabbimservicemanager
