@@ -23,6 +23,9 @@ sys.path.append('.')
 try: from PyQt4 import QtCore, QtGui
 except: print "PyQt4 is not installed."
 
+#if sys.argv[1]=="remote":
+#	app=QtCore.QCoreApplication([])
+
 try:
 	QtGui.QWizard
 	USE_WIZARDS=True
@@ -41,7 +44,8 @@ class jabbimApplication(QtGui.QApplication):
 		QtGui.QApplication.__init__(self,args)
 		self.shutdown=False
 		self.sleep=False
-
+		self.setApplicationName("Jabbim")
+		
 	def winEventFilter(self,msg):
 		# WM_POWERBROADCAST
 		if msg.message==536:
@@ -1127,9 +1131,26 @@ class clientClass(pyxl.client.Client):
 	def on_subscribe(self, frm,status):
 		mainWindow=self.main
 		if self.roster['users'].has_key(frm):
-			self.main.events.addBooleanEvent(self.sendPresence,[frm,None,status,None,'subscribed'],self.sendPresence,[frm,None,status,None,'unsubscribed'],header=mainWindow.tr('Authorize contact?'),text=mainWindow.tr('user ')+" "+unicode(frm)+' '+mainWindow.tr("wants to see your status."),name=frm,typ="subscribe",height=80)
+			frm=self.main.getJid(frm)
+			if frm.userhost() in self.main.autoAdd.keys():
+				self.sendPresence(frm.userhost(),None,status,None,'subscribed')
+				del self.main.autoAdd[frm.userhost()]
+			else:
+				frm=frm.userhost()
+				self.main.events.addBooleanEvent(self.sendPresence,[frm,None,status,None,'subscribed'],self.sendPresence,[frm,None,status,None,'unsubscribed'],header=mainWindow.tr('Authorize contact?'),text=mainWindow.tr('user ')+" "+unicode(frm)+' '+mainWindow.tr("wants to see your status."),name=frm,typ="subscribe",height=80)
 		else:
-			self.main.events.addAddUserEvent(frm,status)
+			frm=self.main.getJid(frm)
+			if frm.host in self.main.autoAdd.keys():
+				self.addContact(frm.userhost(),"","",[self.main.autoAdd[frm.host]['group']])
+				self.sendPresence(frm.userhost(),None,status,None,'subscribe')
+				self.sendPresence(frm.userhost(),None,status,None,'subscribed')
+			elif frm.userhost() in self.main.autoAdd.keys():
+				self.addContact(frm.userhost(),"",self.main.autoAdd[frm.userhost()]['name'],[self.main.autoAdd[frm.userhost()]['group']])
+				self.sendPresence(frm.userhost(),None,status,None,'subscribe')
+				self.sendPresence(frm.userhost(),None,status,None,'subscribed')
+				del self.main.autoAdd[frm.userhost()]
+			else:
+				self.main.events.addAddUserEvent(frm.userhost(),status)
 
 	def _onSubscribe(self,frm,status,add=False):
 		#def __init__(self,main,parent=None,jid="",group=None,name="",add=True):
@@ -1172,13 +1193,13 @@ class clientClass(pyxl.client.Client):
 				#print 'error',error
 				if error=="remote-server-not-found":
 					if w!=None:
-						message=self.main.webkitThemeFactory.genChatStatus(mainWindow.tr("Your message can't be sent. Remote server not found."),self.main.now())
+						message=self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Your message can't be sent. Remote server not found.")),self.main.now())
 						w.chat.textEditWrite(message)
 						w.chat.lastMessageFrom=""
 					return
 				elif error!=None:
 					if w!=None:
-						self.main.webkitThemeFactory.genChatStatus(mainWindow.tr("Your message can't be sent.")+" "+unicode(error),self.main.now())
+						self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Your message can't be sent."))+" "+unicode(error),self.main.now())
 						w.chat.textEditWrite(message)
 						w.chat.lastMessageFrom=""
 					return
@@ -1635,6 +1656,7 @@ class mainWindow(QtGui.QMainWindow):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
+		self.setObjectName("Jabbim class")
 		self.ui.toggleInvisible.hide()
 		self.ui.statusButton.hide()
 		self.qtStyles=map(unicode,list(QtGui.QStyleFactory.keys()))
@@ -1656,6 +1678,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.cache=None
 		self.connectStarted=0
 		self.snarlMessages={}
+		self.autoAdd={}
+		#self.setWindowOpacity (0.5) 
 		
 		self.loadRoster() # load roster widget
 		QtCore.QObject.connect(self.ui.rosterSearch, QtCore.SIGNAL(" textEdited ( const QString & )"),self.ui.roster.search)
@@ -1707,7 +1731,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.tabWidget.setTabText(3,"")
 		self.ui.actionAdd_Contact.setEnabled(False)
 		self.ui.actionJoin_groupchat.setEnabled(False)
-		self.ui.actionService_Discovery.setEnabled(False)
+		#self.ui.actionService_Discovery.setEnabled(False)
 		self.ui.actionStart_Chat.setEnabled(False)
 		self.ui.actionPrivacy_list_editor.setEnabled(False)
 		self.ui.actionIdentity.setEnabled(False)
@@ -3346,6 +3370,10 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		self.discovery=widgets.servicediscovery.serviceDiscoveryDialog(self,self)
 		self.discovery.show()
+		if USE_WIZARDS:
+			self.discovery2=wizards.jabbimservicemanager.jabbimServiceManager(self,self)
+			self.discovery2.show()
+
 
 	def event(self,ev):
 		# depracted
