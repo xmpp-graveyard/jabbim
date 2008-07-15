@@ -128,7 +128,7 @@ class clientClass(pyxl.client.Client):
 			self.client_os = utils.get_os_info()
 		else:
 			self.client_os = ''
-		self.version = '0.5 SVN' #: version string
+		self.version=self.main.version
 		self.bookmarksEnabled=True #: True if bookmarks is enabled by server
 		self.xmlCount=[]
 		# load plugins
@@ -1680,6 +1680,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.connectStarted=0
 		self.snarlMessages={}
 		self.autoAdd={}
+		self.version = '0.5 SVN' + utils.getSvnVersion() #: version string
 		#self.setWindowOpacity (0.5) 
 		
 		self.loadRoster() # load roster widget
@@ -4639,7 +4640,7 @@ class aboutDialog(QtGui.QDialog):
 		QtGui.QDialog.__init__(self,parent)
 		self.setModal(True)
 		self.ui=widgets.about.Ui_about_window()
-		self.ui.setupUi(self)
+		self.ui.setupUi(self,parent.version)
 		self.ui.version.setTextFormat(QtCore.Qt.RichText)
 		self.ui.version.setText(self.ui.version.text()+"<br/>"+"PyQt: "+unicode(QtCore.PYQT_VERSION_STR)+"<br/>Qt: "+unicode(QtCore.QT_VERSION_STR))
 		

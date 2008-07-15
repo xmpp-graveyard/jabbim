@@ -10,7 +10,8 @@
 from PyQt4 import QtCore, QtGui
 
 class Ui_about_window(object):
-    def setupUi(self, about_window):
+    def setupUi(self, about_window, version=''):
+        self.version_string=version
         about_window.setObjectName("about_window")
         about_window.resize(346,674)
         icon = QtGui.QIcon()
@@ -135,7 +136,8 @@ class Ui_about_window(object):
 "     <p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Where you find us:</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.label_11.setText(QtGui.QApplication.translate("about_window", "Conference: jabbim@conf.netlab.cz", None, QtGui.QApplication.UnicodeUTF8))
         self.label_12.setText(QtGui.QApplication.translate("about_window", "Web <a href=\"http://dev.jabbim.cz/jabbim\">http://dev.jabbim.cz/jabbim</a>", None, QtGui.QApplication.UnicodeUTF8))
-        self.version.setText(QtGui.QApplication.translate("about_window", "0.5 SVN", None, QtGui.QApplication.UnicodeUTF8))
+        #self.version.setText(QtGui.QApplication.translate("about_window", self.version, None, QtGui.QApplication.UnicodeUTF8))
+        self.version.setText(self.version_string)
         self.label_4.setText(QtGui.QApplication.translate("about_window", "Jan \'HanzZ\' Kaluža\n"
 "     Jiří­ \'Sef\' Gabryš", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("about_window", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -148,4 +150,5 @@ class Ui_about_window(object):
 "     </style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
 "     <p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Main developers:</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("about_window", "OK", None, QtGui.QApplication.UnicodeUTF8))
+
 

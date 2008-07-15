@@ -81,9 +81,21 @@ class Ui_joingroupchat(object):
         self.roomName.setObjectName("roomName")
         self.vboxlayout2.addWidget(self.roomName)
 
-        self.serverName = QtGui.QLineEdit(self.groupBox)
+        #self.serverName = QtGui.QLineEdit(self.groupBox)
+        #self.serverName.setObjectName("serverName")
+        #self.vboxlayout2.addWidget(self.serverName)
+
+        self.serverName = QtGui.QComboBox(self.groupBox)
+
+        #sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7),QtGui.QSizePolicy.Policy(0))
+        #sizePolicy.setHorizontalStretch(0)
+        #sizePolicy.setVerticalStretch(0)
+        #sizePolicy.setHeightForWidth(self.server.sizePolicy().hasHeightForWidth())
+        #self.server.setSizePolicy(sizePolicy)
+        self.serverName.setEditable(True)
         self.serverName.setObjectName("serverName")
         self.vboxlayout2.addWidget(self.serverName)
+
 
         self.password = QtGui.QLineEdit(self.groupBox)
         self.password.setObjectName("password")
@@ -155,4 +167,5 @@ class Ui_joingroupchat(object):
         self.bookmarkNameLabel.setText(QtGui.QApplication.translate("joingroupchat", "Bookmark name:", None, QtGui.QApplication.UnicodeUTF8))
         self.bookmarkChat.setText(QtGui.QApplication.translate("joingroupchat", "Bookmark this chat room", None, QtGui.QApplication.UnicodeUTF8))
         self.autojoin.setText(QtGui.QApplication.translate("joingroupchat", "Join this chat room automaticaly at login", None, QtGui.QApplication.UnicodeUTF8))
+
 

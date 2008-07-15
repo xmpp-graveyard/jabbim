@@ -1126,6 +1126,9 @@ class Client(derived):
 		if self.disco.has_key(frm):
 			if self.disco[frm].has_key(node_name):
 				node = self.disco[frm][node_name]
+				if node.has_key('err'):
+					self.disco[frm] = {}
+					node = {'features':[], 'identities':{},  'items': {}}
 		else:
 			self.disco[frm] = {}
 			node = {'features':[], 'identities':{},  'items': {}}
@@ -1548,4 +1551,5 @@ class Client(derived):
 		
 	def disp(self, id):
 		self.idlist.append(id)
+
 

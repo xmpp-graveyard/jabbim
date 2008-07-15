@@ -143,6 +143,7 @@ def loadConfig(main,status):
 			"groupchatSplitSizes1":[500,70],
 			"groupchatSplitSizes2":[500,120],
 			"groupchatSplitSizes3":[45,500],
+			"groupchatServerHistory": [],
 			"sendPep":"True",
 			"saveGeometry":"True",
 			"saveExpandedGroups":"True",
@@ -552,3 +553,12 @@ def elapsed_time(seconds, suffixes=['y','w','d','h','m','s'], add_s=False, separ
 			break
  
 	return separator.join(time)
+
+def getSvnVersion():
+	try:
+		f=open('.svn/entries')
+		file=f.readlines()
+		f.close()
+		return ' - rev. ' + file[3].strip()
+	except:
+		return ''

@@ -45,13 +45,25 @@ class joinGroupChatWindow(QtGui.QDialog):
 		self.ui.buttonBox.addButton(self.ui.browser,QtGui.QDialogButtonBox.ActionRole)
 
 		self.ui.nickname.setText(self.main.selfName)
-		mucjid = None
+		mucjid = []
 		for jid in self.main.client.disco[self.main.client.jid.host][None]['items'].iterkeys():
-			if self.main.client.hasIdentity(jid, 'conference', 'text') and jid.startswith('c'):
-				mucjid = jid
-				break
-		if mucjid:
-			self.ui.serverName.setText(mucjid)
+			if not self.main.client.disco.get(jid):
+				continue
+			#print jid," : ",self.main.client.disco[jid]
+			if 'http://jabber.org/protocol/muc' in self.main.client.disco[jid][None].get('features',[]):
+				mucjid.append(jid)
+				self.ui.serverName.addItem(jid)
+				if self.main.client.hasIdentity(jid, 'conference', 'text') and jid.startswith('c'):
+					self.ui.serverName.setCurrentIndex(len(mucjid)-1)
+				
+		separator=False
+		for server in self.main.config['groupchatServerHistory']:
+			if server not in mucjid:
+				if separator == False:
+					self.ui.serverName.insertSeparator(len(mucjid))
+					separator == True
+				self.ui.serverName.addItem(server)
+				
 		
 		QtCore.QObject.connect(self.ui.roomName,QtCore.SIGNAL(" textChanged ( const QString &)"),self.ui.bookmarkName.setText)
 		QtCore.QObject.connect(self.ui.roomName,QtCore.SIGNAL(" textChanged ( const QString &)"),self.NameChanged)
@@ -61,11 +73,11 @@ class joinGroupChatWindow(QtGui.QDialog):
 		self.ui.roomName.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def mucBrowser(self):
-		self.d=MUCBrowserDialog(self.main,unicode(self.ui.serverName.text()),self,self)
+		self.d=MUCBrowserDialog(self.main,unicode(self.ui.serverName.currentText()),self,self)
 		self.d.show()
 
 	def accept(self):
-		jid=unicode(self.ui.roomName.text())+"@"+unicode(self.ui.serverName.text())
+		jid=unicode(self.ui.roomName.text())+"@"+unicode(self.ui.serverName.currentText())
 		if not self.main.getJid(jid):
 			return
 		nickname=unicode(self.ui.nickname.text())
@@ -73,6 +85,9 @@ class joinGroupChatWindow(QtGui.QDialog):
 		saveRoom=self.ui.bookmarkChat.isChecked()
 		autojoin=unicode(self.ui.autojoin.isChecked()).lower()
 		bookmarkName=unicode(self.ui.bookmarkName.text())
+
+		if self.ui.serverName.currentText() not in self.main.config['groupchatServerHistory']:
+			self.main.config['groupchatServerHistory'].append(self.ui.serverName.currentText())
 
 		if saveRoom and not self.main.client.bookmarks['conference'].has_key(jid):
 			self.main.client.bookmarks['conference'][jid]=pyxl.client.Bookmark(bookmarkName, 'conference', jid, autojoin, nickname, password)
@@ -86,7 +101,7 @@ class joinGroupChatWindow(QtGui.QDialog):
 		self.done(1)
 
 	def NameChanged(self,name):
-		jid=unicode(self.ui.roomName.text()) + '@' + unicode(self.ui.serverName.text())
+		jid=unicode(self.ui.roomName.text()) + '@' + unicode(self.ui.serverName.currentText())
 		valid_jid = True
 		try:
 			jd = pyxl.jid.JID(jid)
