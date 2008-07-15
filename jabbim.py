@@ -4488,7 +4488,8 @@ class mainWindow(QtGui.QMainWindow):
 				self.reconnect = False
 			if self.client.factory:
 				self.client.factory.stopTrying()
-			
+		else:
+			return
 		self.config.write()
 		MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
 		MainWindow.ui.showOffline.hide()
@@ -4500,8 +4501,9 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.actionIdentity.setEnabled(False)
 #		self.client=None
 		self.selfResources=[]
-		self.ui.loginStatus.setItemData(MainWindow.ui.loginStatus.findText(MainWindow.status[self.client.oldstatus[0]]),  QtCore.QVariant([self.client.oldstatus[0], self.client.oldstatus[1]]))
-		self.ui.loginStatus.setCurrentIndex(MainWindow.ui.loginStatus.findText(MainWindow.status[self.client.oldstatus[0]]))
+		if self.client.oldstatus:
+			self.ui.loginStatus.setItemData(MainWindow.ui.loginStatus.findText(MainWindow.status[self.client.oldstatus[0]]),  QtCore.QVariant([self.client.oldstatus[0], self.client.oldstatus[1]]))
+			self.ui.loginStatus.setCurrentIndex(MainWindow.ui.loginStatus.findText(MainWindow.status[self.client.oldstatus[0]]))
 		
 		try:
 			self.statusWidgetMenu.setEnabled(False)
