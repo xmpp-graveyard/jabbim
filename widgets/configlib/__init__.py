@@ -359,6 +359,10 @@ def makePreferences(main,parent,layout,form,row=1):
 				label=None
 			lay.addWidget(label,row,0)
 			widget=QtGui.QSpinBox(par)
+			if x.has_key("min"):
+				widget.setMinimum(int(x['min']))
+			if x.has_key("max"):
+				widget.setMaximum(int(x['max']))
 			widget.setValue(int(val))
 			lay.addWidget(widget,row,1)
 			var[key]={'widget':widget,'type':x['type']}
