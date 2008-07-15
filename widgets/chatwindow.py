@@ -408,6 +408,7 @@ class chatWindow(QtGui.QMainWindow):
 		if xhtml:
 			body=xhtml
 			body=body.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
+			print body
 		countMessage=False
 		if int(self.ui.chatTab.currentIndex())!=i:
 			if self.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
@@ -503,7 +504,7 @@ class chatWindow(QtGui.QMainWindow):
 			# write message
 			if countMessage:
 				w.chat.unread+=1
-		
+			print message
 			w.chat.textEditWrite(message,insert)
 			w.chat.lastMessageFrom=unicode(user)
 			return
@@ -548,7 +549,7 @@ class chatWindow(QtGui.QMainWindow):
 			#if colors!=None:
 				#message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
 			w.chat.lastMessageFrom=unicode(user)
-
+			
 			w.chat.textEditWrite(message,insert)
 
 	def openNewChatTab(self,jid,name,icon=None,new=None):

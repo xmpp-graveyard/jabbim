@@ -80,6 +80,11 @@ class gameWidget(groupchat.groupChatWidget):
 		self.ui.lineWidget.setMaximumHeight(45)
 		self.ui.lineWidget.setMinimumHeight(45)
 	
+	#def editUser(self,nick,status,role=None,affiliation=None):
+	#	groupchat.groupChatWidget.editUser(self,nick,status,role,affiliation)
+		#self.ui.users.setMinimumHeight((len(self.main.client.groupchats[self.jid].users)+self.ui.users.topLevelItemCount())*32)
+		#self.ui.users.setMaximumHeight((len(self.main.client.groupchats[self.jid].users)+self.ui.users.topLevelItemCount())*32)
+
 	def on_remove(self):
 		self.gameObj.plugin.leaveGame(self.gameObj.gid)
 		self.gameObj.dialog.hide()
