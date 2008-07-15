@@ -528,7 +528,7 @@ def makePreferences(main,parent,layout,form,row=1):
 			val=main[key]
 			if key=="passwd":
 				val=rot13.scramble(val)
-		if x.has_key("disabled"):
+		if x.has_key("disabled") and var.has_key(key):
 			var[key]['widget'].setDisabled(True)
 		if x['type']=="boolean":
 			if x.has_key("enable"):

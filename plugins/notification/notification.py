@@ -276,25 +276,33 @@ class Plugin(plugins.PluginBase):
 		self.version = '0.666'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
-		
+
+		if sys.platform == 'win32':
+			self.snarl=self.loadModule(plugindir+"/PySnarl.py")
+			if not self.snarl.snGetVersion() != False:
+				self.snarl=None
+		else:
+			self.snarl=None
+
 		self.configDialog=config(self)
+		if self.snarl:
+			self.configDialog.config['osd_transparent']['disabled']=True
+			self.configDialog.config['osd_x']['disabled']=True
+			self.configDialog.config['osd_y']['disabled']=True
+			self.configDialog.config['osd_bigfont']['disabled']=True
+			self.configDialog.config['osd_smallfont']['disabled']=True
 		self.showInPreferences=True
 		self.preferencesIcon=QtGui.QIcon(plugindir+"/audio.png")
 		self.osd=None
+
 		if main:
 			self.started=int(time.time())
-			if sys.platform == 'win32':
-				self.snarl=self.loadModule(plugindir+"/PySnarl.py")
-				if not self.snarl.snGetVersion() != False:
-					self.snarl=None
 				#else:
 					#self.snarl.snRegisterConfig2(int(self.main.winId()), "Jabbim",1025,os.getcwd()+"/images/32x32/apps/jabbim.png")
 #					self.snarl.snRegisterAlert("Jabbim", unicode(self.tr("Presences")))
 					#self.snarl.snRegisterAlert("Jabbim", unicode(self.tr("New first chat messages")))
 #					self.snarl.snRegisterAlert("Jabbim", unicode(self.tr("Chat messages")))
 					#self.snarl.snRegisterAlert("Jabbim", unicode(self.tr("Groupchat highlights")))
-			else:
-				self.snarl=None
 			#self.registerHandler('on_message', self.on_message)
 			self.registerHandler('firstChatMessageEvent',self.on_firstChatMessageEvent)
 			self.registerHandler('chatMessageEvent',self.on_chatMessageEvent)
@@ -328,20 +336,22 @@ class Plugin(plugins.PluginBase):
 			self.main.playsound('ft_finish')
 
 	def on_showPreferences(self,dialog):
-		if not self.osd:
-			self.osd=osd(self,dialog)
-			self.registerWidget(self.osd)
-		self.osd.osdx=int(self.config['osd_x'])
-		self.osd.osdy=int(self.config['osd_y'])
-		self.osd.transparent=False
-		self.osd.pos(self.tr("Notification test - can drag"))
+		if not self.snarl:
+			if not self.osd:
+				self.osd=osd(self,dialog)
+				self.registerWidget(self.osd)
+			self.osd.osdx=int(self.config['osd_x'])
+			self.osd.osdy=int(self.config['osd_y'])
+			self.osd.transparent=False
+			self.osd.pos(self.tr("Notification test - can drag"))
 
 	def on_endPreferences(self):
-		if not self.main.client:
-			self.unregisterWidget(self.osd)
-			self.osd=None
-		else:
-			self.osd.hide()
+		if not self.snarl:
+			if not self.main.client:
+				self.unregisterWidget(self.osd)
+				self.osd=None
+			else:
+				self.osd.hide()
 	
 	def on_saveConfig(self):
 		if self.osd:
