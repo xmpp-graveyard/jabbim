@@ -2166,9 +2166,10 @@ class mainWindow(QtGui.QMainWindow):
 			if self.client.avatarImg.has_key(self.client.avatarDef[jid]):
 				if self.client.avatarImg[self.client.avatarDef[jid]] and self.client.avatarDef[jid]!="None":
 					width=self.client.avatarImg[self.client.avatarDef[jid]][1]
-					height=self.client.avatarImg[self.client.avatarDef[jid]][2]
-					height=height/(float(width)/64.0)
-					text+='<td><img src="'+self.realHomeDir+'/avatars/'+unicode(self.client.avatarDef[jid])+'" width="64" height="'+str(height)+'"/></td>'
+					if width!=0:
+						height=self.client.avatarImg[self.client.avatarDef[jid]][2]
+						height=height/(float(width)/64.0)
+						text+='<td><img src="'+self.realHomeDir+'/avatars/'+unicode(self.client.avatarDef[jid])+'" width="64" height="'+str(height)+'"/></td>'
 		else:
 			#if there is no avatar for given JID, then try to use avatar from any metacontact
 			meta = self.ui.roster.getMetaItems(jid)
@@ -2180,10 +2181,11 @@ class mainWindow(QtGui.QMainWindow):
 					if self.client.avatarImg.has_key(self.client.avatarDef[j]):
 						if self.client.avatarImg[self.client.avatarDef[j]] and self.client.avatarDef[j]!="None":
 							width=self.client.avatarImg[self.client.avatarDef[j]][1]
-							height=self.client.avatarImg[self.client.avatarDef[j]][2]
-							height=height/(float(width)/64.0)
-							text+='<td><img src="'+self.realHomeDir+'/avatars/'+unicode(self.client.avatarDef[j])+'" width="64" height="'+str(height)+'"/></td>'
-							break
+							if width!=0:
+								height=self.client.avatarImg[self.client.avatarDef[j]][2]
+								height=height/(float(width)/64.0)
+								text+='<td><img src="'+self.realHomeDir+'/avatars/'+unicode(self.client.avatarDef[j])+'" width="64" height="'+str(height)+'"/></td>'
+								break
 						
 		if name != None:
 			text+='<td><b>'+self.tr("Name:")+'</b> '+name+'<br/>'
