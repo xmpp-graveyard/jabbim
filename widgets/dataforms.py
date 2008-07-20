@@ -128,17 +128,17 @@ def makeDataForm(parent,layout,form,row=1):
 				layout.addWidget(label,row,0)
 				widget=QtGui.QComboBox(parent)
 				default=""
+				cur=0
 				for child in x.elements():
 					if child.name == 'value':
 						default=unicode(child)
 					elif child.name=="option":
 						for ch in child.elements():
 							if ch.name=="value":
+								widget.addItem(child['label'], QtCore.QVariant(unicode(ch)))
 								if unicode(ch)==default:
-									widget.insertItem(0,unicode(child['label']),QtCore.QVariant(unicode(ch)))
-								else:
-									widget.addItem(child['label'], QtCore.QVariant(unicode(ch)))
-				widget.setCurrentIndex(0)
+									widget.setCurrentIndex(cur)
+								cur=cur+1
 				layout.addWidget(widget,row,1)
 				var[x['var']]={'widget':widget,'type':x['type']}
 				for d in x.elements():
@@ -154,9 +154,9 @@ def makeDataForm(parent,layout,form,row=1):
 				layout.addWidget(label,row,0)
 				widget=QtGui.QListWidget(parent)
 				widget.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
-				default=""
-				cur=None
+				cur=[]
 				for child in x.elements():
+					default=''
 					if child.name == 'value':
 						default=unicode(child)
 					elif child.name=="option":
@@ -164,12 +164,12 @@ def makeDataForm(parent,layout,form,row=1):
 							if ch.name=="value":
 								item=QtGui.QListWidgetItem(unicode(child['label']))
 								item.setData(32,QtCore.QVariant(unicode(ch)))
-								if unicode(ch)==default:
-									cur=item
+								if unicode(ch) == default:
+									cur.append(item)
 								widget.addItem(item)
 				#widget.setCurrentIndex(0)
-				if cur:
-					widget.setCurrentItem(cur)
+				for ite in cur:
+					ite.setSelected(True)
 				layout.addWidget(widget,row,1)
 				var[x['var']]={'widget':widget,'type':x['type']}
 				for d in x.elements():

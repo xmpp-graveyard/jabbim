@@ -606,7 +606,7 @@ class derived:
 			self.setMetacontacts()
 
 	def getFeatures(self, jid, ext = None):
-		log.msg('requesting features'+ unicode(jid.full()))
+		log.msg('requesting features '+ unicode(jid.full()))
 		iq = IQ(self.xmlstream, 'get')
 		iq['xml:lang'] = self.xmlLang
 		iq['to'] = jid.full()

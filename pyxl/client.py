@@ -159,6 +159,7 @@ class Client(derived):
 		self.dispatcher.registerHandler('on_message', self.on_message, 'on_message')
 		self.dispatcher.registerHandler('on_presence', self.on_presence, 'on_presence')
 		self.dispatcher.registerHandler('on_GCpresence', self.on_GCpresence, 'on_GCpresence')
+		self.dispatcher.registerHandler('on_GCpresenceError', self.on_GCpresenceError, 'on_GCpresenceError')
 		self.dispatcher.registerHandler('on_GCmessage', self.on_GCmessage, 'on_GCmessage')
 		self.dispatcher.registerHandler('on_authd', self.on_authd, 'on_authd')
 		self.dispatcher.registerHandler('on_message_send', self._sendMessage, 'on_message_send')
@@ -1551,5 +1552,6 @@ class Client(derived):
 		
 	def disp(self, id):
 		self.idlist.append(id)
+
 
 

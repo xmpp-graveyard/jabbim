@@ -56,12 +56,10 @@ class joinGroupChatWindow(QtGui.QDialog):
 				if self.main.client.hasIdentity(jid, 'conference', 'text') and jid.startswith('c'):
 					self.ui.serverName.setCurrentIndex(len(mucjid)-1)
 				
-		separator=False
 		for server in self.main.config['groupchatServerHistory']:
 			if server not in mucjid:
-				if separator == False:
+				if len(mucjid) == self.ui.serverName.count():
 					self.ui.serverName.insertSeparator(len(mucjid))
-					separator == True
 				self.ui.serverName.addItem(server)
 				
 		

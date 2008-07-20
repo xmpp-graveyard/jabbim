@@ -239,7 +239,55 @@ class clientClass(pyxl.client.Client):
 					self.main.chat.ui.chatTab.removeTab(index)
 					if int(self.main.chat.ui.chatTab.count())==0:
 						self.main.chat.hide()
-					self.main.events.addLineEditEvent(maintext=unicode(fromjid)+"<br/>"+text,trueCall=self.main.joinGC,trueDict=[fromjid],falseCall=None,falseDict=None,header=mainWindow.tr("Groupchat Error"),text=mainWindow.tr("New name:"),name=unicode(fromjid),typ="groupchatError",icon=None,action=None,actionDict=None,height=150, value=resource,trueText=mainWindow.tr("Join"),falseText=mainWindow.tr("Decline"))
+					self.main.events.addLineEditEvent(maintext=unicode(fromjid)+"<br/>"+mainWindow.tr('This nickname is used by someone else. Please choose another.'), trueCall=self.main.joinGC, trueDict=[fromjid], falseCall=None,falseDict=None,header=mainWindow.tr("Nickname conflict"),text=mainWindow.tr("New name:"),name=unicode(fromjid),typ="groupchatError",icon=None,action=None,actionDict=None,height=150, value=resource,trueText=mainWindow.tr("Join"),falseText=mainWindow.tr("Decline"))
+		elif int(code)==401:
+			log.msg("room is password protected")
+			tab,index=self.main.chat.findTab(fromjid)
+			if tab:
+				self.main.chat.ui.chatTab.removeTab(index)
+				if int(self.main.chat.ui.chatTab.count())==0:
+						self.main.chat.hide()
+				self.main.events.addInfoEvent(header=mainWindow.tr("Wrong password"),text=mainWindow.tr("Room is password protected"),name=unicode(fromjid),typ='groupchatError')
+		elif int(code)==407:
+			log.msg("room is member only")
+			tab,index=self.main.chat.findTab(fromjid)
+			if tab:
+				self.main.chat.ui.chatTab.removeTab(index)
+				if int(self.main.chat.ui.chatTab.count())==0:
+						self.main.chat.hide()
+				self.main.events.addInfoEvent(header=mainWindow.tr("Member only"),text=mainWindow.tr("Room is only for members"),name=unicode(fromjid),typ='groupchatError')
+		elif int(code)==403:
+			log.msg("room user benned")
+			tab,index=self.main.chat.findTab(fromjid)
+			if tab:
+				self.main.chat.ui.chatTab.removeTab(index)
+				if int(self.main.chat.ui.chatTab.count())==0:
+						self.main.chat.hide()
+				self.main.events.addInfoEvent(header=mainWindow.tr("Banned"),text=mainWindow.tr("You are banned from entering this room."),name=unicode(fromjid),typ='groupchatError')
+		elif int(code)==503:
+			log.msg("Room Occupant Limit Has Been Reached")
+			tab,index=self.main.chat.findTab(fromjid)
+			if tab:
+				self.main.chat.ui.chatTab.removeTab(index)
+				if int(self.main.chat.ui.chatTab.count())==0:
+						self.main.chat.hide()
+				self.main.events.addInfoEvent(header=mainWindow.tr("Max Users"),text=mainWindow.tr("Room occupant limit has been reached"),name=unicode(fromjid),typ='groupchatError')
+		elif int(code)==404:
+			log.msg("Room not exist")
+			tab,index=self.main.chat.findTab(fromjid)
+			if tab:
+				self.main.chat.ui.chatTab.removeTab(index)
+				if int(self.main.chat.ui.chatTab.count())==0:
+						self.main.chat.hide()
+				self.main.events.addInfoEvent(header=mainWindow.tr("Room not exist"),text=mainWindow.tr("Room is creating try it again"),name=unicode(fromjid),typ='groupchatError')
+		elif int(code)==405:
+			log.msg("Room is reserved")
+			tab,index=self.main.chat.findTab(fromjid)
+			if tab:
+				self.main.chat.ui.chatTab.removeTab(index)
+				if int(self.main.chat.ui.chatTab.count())==0:
+						self.main.chat.hide()
+				self.main.events.addInfoEvent(header=mainWindow.tr("Room reserved"),text=mainWindow.tr("Not allowed create room"),name=unicode(fromjid),typ='groupchatError')
 		else:
 			# remove groupchatWidget from chatWindow
 			tab,index=self.main.chat.findTab(fromjid)
@@ -248,7 +296,7 @@ class clientClass(pyxl.client.Client):
 				if int(self.main.chat.ui.chatTab.count())==0:
 					self.main.chat.hide()
 			# add event with detailed description of the error
-			self.main.events.addInfoEvent(header=mainWindow.tr("Groupchat error"),text=text,name=unicode(fromjid),typ='groupchatError')
+			self.main.events.addInfoEvent(header=mainWindow.tr("Groupchat Error"),text=text,name=unicode(fromjid),typ='groupchatError')
 
 	def on_roleErr(self,  muc,  err,  nick):
 		pass
@@ -802,6 +850,17 @@ class clientClass(pyxl.client.Client):
 		if not u'303' in codes:
 			print codes
 			mainWindow=self.main
+			if u'201' in codes:
+				message=self.main.webkitThemeFactory.genGroupchatAction(unicode(mainWindow.tr("You are created this room.")),self.main.now())
+				tab.chat.textEditWrite(message)
+			if u'170' in codes:
+				message=self.main.webkitThemeFactory.genGroupchatAction(unicode(mainWindow.tr("This room is logged")))
+				tab.chat.textEditWrite(message)
+			if u'100' in codes:
+				message=self.main.webkitThemeFactory.genGroupchatAction(unicode(mainWindow.tr("Room is not anonymous")))
+				tab.chat.textEditWrite(message)
+			
+				
 			if self.main.config['showMucStatus'] == 'False' and  (not 'PART' in codes) and (not 'JOIN' in codes):
 				return
 			message="[nick] [jid]"+unicode(mainWindow.tr('is now'))+" [show] [[message]]"
@@ -822,7 +881,6 @@ class clientClass(pyxl.client.Client):
 			if tabFull:
 				tabFull.chat.textEditWrite(message)
 				tabFull.chat.lastMessageFrom=""
-
 		# refresh lastMessageFrom
 		tab.chat.lastMessageFrom=""
 
@@ -1226,12 +1284,13 @@ class clientClass(pyxl.client.Client):
 					message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 					
 					if user != frm:
-						message = "%s has set the subject to: %s" % (user, message)
+						message = "%s %s %s" % (user, unicode(mainWindow.tr("has set the subject to:")), message)
 					
 					message = self.main.webkitThemeFactory.genChatStatus(message,self.main.now())
 					
 					w.chat.textEditWrite(message)
 					w.chat.lastMessageFrom=user
+				
 				return
 
 

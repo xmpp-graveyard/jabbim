@@ -233,6 +233,11 @@ class webkitThemeFactory:
 			return ""
 		return unicode(self.groupchatStatus).replace("%status%","online").replace("%time%",time).replace("%message%",message)
 
+	def genGroupchatAction(self,message,time):
+		if not self.groupchatStatus:
+			return ""
+		return unicode(self.groupchatStatus).replace("%status%","").replace("%time%",time).replace("%message%",message)
+
 	def genChatStyleSheet(self):
 		return '@import url( "Variants/%s" );' % self.chatStyle
 
