@@ -1,0 +1,124 @@
+try:
+	from PyQt4 import QtCore, QtGui
+except:
+	print "PyQt4 is not installed."
+import sys
+import os
+sys.path.append('.')
+from include import plugins, utils
+from widgets import dataforms,groupchat
+import time
+from twisted.words.protocols.jabber.xmlstream import IQ
+from pyxl.xmlrpclib import loads, dumps
+from twisted.words.xish.domish import Element
+
+class Plugin(plugins.PluginBase):
+	def __init__(self, main, homedir, plugindir):
+		plugins.PluginBase.__init__(self, main, homedir, plugindir)
+		self.fname = 'styler'
+		self.description = 'Roster Styler'
+		self.author = "Jan 'HanzZ' Kaluza"
+		self.name = 'Roster Styler'
+		self.version = '0.1'
+		self.category = ['roster']
+		self.url = 'http://dev.jabbim.cz/jabbim'
+		self.installTranslator()
+		if main:
+			self.loadConfig()
+			self.window=self.loadWindow(self.pluginDir+"/window_ui.py",self.main)
+			QtCore.QObject.connect(self.window.ui.gHeight,QtCore.SIGNAL("valueChanged ( int )"),self.gHeightChanged)
+			QtCore.QObject.connect(self.window.ui.gFontSize,QtCore.SIGNAL("valueChanged ( int )"),self.gFontSize)
+			QtCore.QObject.connect(self.window.ui.gTextCoordinates0,QtCore.SIGNAL("valueChanged ( int )"),self.gTextCoordinates0Changed)
+			QtCore.QObject.connect(self.window.ui.gTextCoordinates1,QtCore.SIGNAL("valueChanged ( int )"),self.gTextCoordinates1Changed)
+			QtCore.QObject.connect(self.window.ui.gIconCoordinates0,QtCore.SIGNAL("valueChanged ( int )"),self.gIconCoordinates0Changed)
+			QtCore.QObject.connect(self.window.ui.gIconCoordinates1,QtCore.SIGNAL("valueChanged ( int )"),self.gIconCoordinates1Changed)
+			QtCore.QObject.connect(self.window.ui.pushButton,QtCore.SIGNAL("clicked()"),self.preview)
+			QtCore.QObject.connect(self.window.ui.save,QtCore.SIGNAL("clicked()"),self.save)
+			QtCore.QObject.connect(self.window.ui.cancel,QtCore.SIGNAL("clicked()"),self.window.close)
+			QtCore.QObject.connect(self.window.ui.gBackgroundColor,QtCore.SIGNAL("clicked()"),self.gBackgroundColor)
+			QtCore.QObject.connect(self.window.ui.gFontColor,QtCore.SIGNAL("clicked()"),self.gFontColor)
+			self.loadRosterStyle()
+		else:
+			self.loadConfig(homedir)
+
+	def save(self):
+		self.preview()
+		self.main.ui.roster.rosterStyle.config.write()
+
+	def preview(self):
+		self.main.ui.roster.rosterStyle.config['groupitem']['height']=str(self.window.ui.gHeight.value())
+		self.main.ui.roster.rosterStyle.config['groupitem']['fontSize']=str(self.window.ui.gFontSize.value())
+		self.main.ui.roster.rosterStyle.config['groupitem']['textCoordinates'][0]=str(self.window.ui.gTextCoordinates0.value())
+		self.main.ui.roster.rosterStyle.config['groupitem']['textCoordinates'][1]=str(self.window.ui.gTextCoordinates1.value())
+		self.main.ui.roster.rosterStyle.config['groupitem']['openedIcon'][0]=str(self.window.ui.gIconCoordinates0.value())
+		self.main.ui.roster.rosterStyle.config['groupitem']['openedIcon'][1]=str(self.window.ui.gIconCoordinates1.value())
+		self.main.ui.roster.rosterStyle.config['groupitem']['closedIcon'][0]=str(self.window.ui.gIconCoordinates0.value())
+		self.main.ui.roster.rosterStyle.config['groupitem']['closedIcon'][1]=str(self.window.ui.gIconCoordinates1.value())
+		self.main.ui.roster.rosterStyle.config['groupitem']['textFormat']=unicode(self.window.ui.textFormat.toPlainText())
+		
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+			
+	
+	def gFontColor(self):
+		color=QtGui.QColorDialog.getColor(self.main.ui.roster.rosterStyle.colors[self.main.ui.roster.rosterStyle.config['groupitem']['fontColor']])
+		if color.isValid():
+			self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config['groupitem']['fontColor']]=[str(color.red()),str(color.green()),str(color.blue())]
+			self.main.ui.roster.rosterStyle.reloadResources()
+			self.main.ui.roster.repaint()
+	
+	def gBackgroundColor(self):
+		color=QtGui.QColorDialog.getColor(self.main.ui.roster.rosterStyle.colors[self.main.ui.roster.rosterStyle.config['groupitem']['backgroundColor'][4]])
+		if color.isValid():
+			self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config['groupitem']['backgroundColor'][4]]=[str(color.red()),str(color.green()),str(color.blue())]
+			self.main.ui.roster.rosterStyle.reloadResources()
+			self.main.ui.roster.repaint()
+	
+	def loadRosterStyle(self):
+		self.window.ui.gHeight.setValue(int(self.main.ui.roster.rosterStyle.config['groupitem']['height']))
+		self.window.ui.gFontSize.setValue(int(self.main.ui.roster.rosterStyle.config['groupitem']['fontSize']))
+		self.window.ui.gTextCoordinates0.setValue(int(self.main.ui.roster.rosterStyle.config['groupitem']['textCoordinates'][0]))
+		self.window.ui.gTextCoordinates1.setValue(int(self.main.ui.roster.rosterStyle.config['groupitem']['textCoordinates'][1]))
+		self.window.ui.gIconCoordinates0.setValue(int(self.main.ui.roster.rosterStyle.config['groupitem']['openedIcon'][0]))
+		self.window.ui.gIconCoordinates1.setValue(int(self.main.ui.roster.rosterStyle.config['groupitem']['openedIcon'][1]))
+		self.window.ui.textFormat.setPlainText(self.main.ui.roster.rosterStyle.config['groupitem']['textFormat'])
+
+	def gFontSize(self,value):
+		self.main.ui.roster.rosterStyle.config['groupitem']['fontSize']=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+		
+	def gHeightChanged(self,value):
+		self.main.ui.roster.rosterStyle.config['groupitem']['height']=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+
+	def gIconCoordinates0Changed(self,value):
+		self.main.ui.roster.rosterStyle.config['groupitem']['openedIcon'][0]=str(value)
+		self.main.ui.roster.rosterStyle.config['groupitem']['closedIcon'][0]=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+	
+	def gIconCoordinates1Changed(self,value):
+		self.main.ui.roster.rosterStyle.config['groupitem']['openedIcon'][1]=str(value)
+		self.main.ui.roster.rosterStyle.config['groupitem']['closedIcon'][1]=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+		
+	def gTextCoordinates0Changed(self,value):
+		self.main.ui.roster.rosterStyle.config['groupitem']['textCoordinates'][0]=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+	
+	def gTextCoordinates1Changed(self,value):
+		self.main.ui.roster.rosterStyle.config['groupitem']['textCoordinates'][1]=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+		
+		
+	def testSlot(self):
+		self.window.show()
+	
+	def buildMainWindowMenu(self):
+		menu=self.mainWindowMenu()
+		menu.addAction(self.tr("Edit current roster style"),self.testSlot)
