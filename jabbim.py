@@ -288,6 +288,14 @@ class clientClass(pyxl.client.Client):
 				if int(self.main.chat.ui.chatTab.count())==0:
 						self.main.chat.hide()
 				self.main.events.addInfoEvent(header=mainWindow.tr("Room reserved"),text=mainWindow.tr("Not allowed create room"),name=unicode(fromjid),typ='groupchatError')
+		elif int(code)==406:
+			log.msg("Roomnicks are locked")
+			tab,index=self.main.chat.findTab(fromjid)
+			if tab:
+				self.main.chat.ui.chatTab.removeTab(index)
+				if int(self.main.chat.ui.chatTab.count())==0:
+						self.main.chat.hide()
+				self.main.events.addInfoEvent(header=mainWindow.tr("Locked Nicknames"),text=mainWindow.tr("Not allowed change nickname"),name=unicode(fromjid),typ='groupchatError')
 		else:
 			# remove groupchatWidget from chatWindow
 			tab,index=self.main.chat.findTab(fromjid)
@@ -1792,7 +1800,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.tabWidget.setTabText(3,"")
 		self.ui.actionAdd_Contact.setEnabled(False)
 		self.ui.actionJoin_groupchat.setEnabled(False)
-		#self.ui.actionService_Discovery.setEnabled(False)
+		self.ui.actionService_Discovery.setEnabled(False)
 		self.ui.actionStart_Chat.setEnabled(False)
 		self.ui.actionPrivacy_list_editor.setEnabled(False)
 		self.ui.actionIdentity.setEnabled(False)
@@ -3466,7 +3474,14 @@ class mainWindow(QtGui.QMainWindow):
 	def startChatDialog(self, b=False):
 		message=jid=""
 		while 1:
-			jid,b=QtGui.QInputDialog.getText(self,self.tr("Chat with new user"),message+self.tr("Enter Jabber ID:"), QtGui.QLineEdit.Normal, jid)
+			items=QtCore.QStringList ()
+			items.append(jid)
+			pole=self.config['chatDialogHistory']
+			pole.reverse()
+			for j in pole:
+				items.append(j)
+			jid,b=QtGui.QInputDialog.getItem(self,self.tr("Chat with new user"),message+self.tr("Enter Jabber ID:"), items, 0, True)
+			#jid,b=QtGui.QInputDialog.getText(self,self.tr("Chat with new user"),message+self.tr("Enter Jabber ID:"), QtGui.QLineEdit.Normal, jid)
 			jid=unicode(jid)
 			if b==True and len(jid)!=0:
 				try:
@@ -3476,6 +3491,8 @@ class mainWindow(QtGui.QMainWindow):
 					message=jid+" "+self.tr("is not valid Jabber ID")+"\n"
 				if isJid:
 					self.chat.addChatTab(jid,jid,self.getIcon(jid,status='offline',size="16x16"))
+					if isJid.userhost() not in self.config['chatDialogHistory']:
+						self.config['chatDialogHistory'].append(isJid.userhost())
 					self.chat.activate()
 					break
 			else:

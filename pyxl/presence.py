@@ -229,5 +229,5 @@ class PresenceInit:
 							text = unicode(elm)
 						else:
 							text = unicode(elm.name)
-					self.dispatcher.publishEvent('on_GCpresenceError',child.getAttribute('code'),  child.getAttribute('type'),  name , text)
+					self.dispatcher.publishEvent('on_GCpresenceError',fromjid,child.getAttribute('code'),  child.getAttribute('type'),  name , text, resource)
 			

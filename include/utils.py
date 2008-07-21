@@ -144,6 +144,7 @@ def loadConfig(main,status):
 			"groupchatSplitSizes2":[500,120],
 			"groupchatSplitSizes3":[45,500],
 			"groupchatServerHistory": [],
+			"chatDialogHistory": [],
 			"sendPep":"True",
 			"saveGeometry":"True",
 			"saveExpandedGroups":"True",
