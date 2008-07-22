@@ -7,6 +7,7 @@ except:
 class rosterStyle:
 	def __init__(self,roster):
 		self.roster=roster
+		self.spaceBetweenGroups=0
 
 	def heightForItem(self,item):
 		# normal userItem

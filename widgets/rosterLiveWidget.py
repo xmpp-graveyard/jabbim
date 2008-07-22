@@ -102,6 +102,7 @@ class userItem:
 		self.main=main #: rosterWidget
 		self.avatar=None
 		self.hidden=False
+		self.last=False
 		#self.test=None
 		self.metajid="" #: contains parent jid of this item, if this contact is member of metacontacts
 		self.expanded=False
@@ -358,6 +359,7 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					if user.group==group and not user.hidden and not user.hiddenBySearch and user.jid in self.main.client.roster['users'].keys():
 						ret.append(user)
+
 		return ret
 
 	def getIconByJID(self,jid,size="16x16"):
@@ -445,7 +447,7 @@ class rosterWidget(QtGui.QWidget):
 					if count and y-y1>count:
 						return ret,0,goty
 					# groupItem has some items and it's expanded
-					y+=item.height
+					y+=item.height+self.rosterStyle.spaceBetweenGroups
 					if item.expanded and len(items)!=0:
 						_items=[] # temp variable
 						# handle expanded metacontacts
@@ -542,7 +544,7 @@ class rosterWidget(QtGui.QWidget):
 										if contact.jid!=useritem.jid:
 											_items+=[contact]
 						items+=_items
-						y+=items[0].height
+						y+=items[0].height+self.rosterStyle.spaceBetweenGroups
 						for useritem in items:
 							if useritem==i:
 								return x,y
@@ -884,6 +886,7 @@ class rosterWidget(QtGui.QWidget):
 				#doc.drawContents(painter,)
 			for item in items:
 				if item.typ=="group":
+					y+=self.rosterStyle.spaceBetweenGroups
 					self.paintGroupItem(painter,item,0,y)
 				else:
 					self.paintUserItem(painter,item,0,y)
@@ -939,7 +942,7 @@ class rosterWidget(QtGui.QWidget):
 					if item.expanded and len(items)!=0:
 						for useritem in items:
 							y+=useritem.height
-					y+=item.height
+					y+=item.height+self.rosterStyle.spaceBetweenGroups
 		else:
 			for item in self.users:
 				if item.hiddenBySearch==False:
