@@ -2061,7 +2061,7 @@ class rosterWidget(QtGui.QWidget):
 		# groups . groups list
 		#g=self.getGroups(str(jid))
 		for k,v in self.groups.iteritems():
-			if k!="Unknown" and k!=self.specialName:
+			if k!="Unknown" and k!=self.specialName and len(k)!=0:
 				action=group.addAction(unicode(k))
 				action.setObjectName("check_group")
 				action.setCheckable(True)

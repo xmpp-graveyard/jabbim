@@ -1266,7 +1266,7 @@ class clientClass(pyxl.client.Client):
 					return
 				elif error!=None:
 					if w!=None:
-						self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Your message can't be sent."))+" "+unicode(error),self.main.now())
+						message=self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Your message can't be sent."))+" "+unicode(error),self.main.now())
 						w.chat.textEditWrite(message)
 						w.chat.lastMessageFrom=""
 					return
@@ -3310,6 +3310,7 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 			QtCore.QObject.connect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
+		self.loadRosterStyle() # load roster style
 		# change cache
 		if self.cache:
 			self.cache.close()

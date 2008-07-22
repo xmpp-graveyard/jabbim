@@ -37,6 +37,21 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.cancel,QtCore.SIGNAL("clicked()"),self.window.close)
 			QtCore.QObject.connect(self.window.ui.gBackgroundColor,QtCore.SIGNAL("clicked()"),self.gBackgroundColor)
 			QtCore.QObject.connect(self.window.ui.gFontColor,QtCore.SIGNAL("clicked()"),self.gFontColor)
+			
+			QtCore.QObject.connect(self.window.ui.uHeight,QtCore.SIGNAL("valueChanged ( int )"),self.uHeightChanged)
+			QtCore.QObject.connect(self.window.ui.uBackgroundColor,QtCore.SIGNAL("clicked()"),self.uBackgroundColor)
+			QtCore.QObject.connect(self.window.ui.uIconCoordinates0,QtCore.SIGNAL("valueChanged ( int )"),self.uIconCoordinates0Changed)
+			QtCore.QObject.connect(self.window.ui.uIconCoordinates1,QtCore.SIGNAL("valueChanged ( int )"),self.uIconCoordinates1Changed)
+			QtCore.QObject.connect(self.window.ui.uFontSize,QtCore.SIGNAL("valueChanged ( int )"),self.uFontSize)
+			QtCore.QObject.connect(self.window.ui.uTextCoordinates0,QtCore.SIGNAL("valueChanged ( int )"),self.uTextCoordinates0Changed)
+			QtCore.QObject.connect(self.window.ui.uTextCoordinates1,QtCore.SIGNAL("valueChanged ( int )"),self.uTextCoordinates1Changed)
+			QtCore.QObject.connect(self.window.ui.uIconSize0,QtCore.SIGNAL("valueChanged ( int )"),self.uIconSize0Changed)
+			QtCore.QObject.connect(self.window.ui.uIconSize1,QtCore.SIGNAL("valueChanged ( int )"),self.uIconSize1Changed)
+			QtCore.QObject.connect(self.window.ui.uFontColor,QtCore.SIGNAL("clicked()"),self.uFontColor)
+			QtCore.QObject.connect(self.window.ui.uAvatarSize0,QtCore.SIGNAL("valueChanged ( int )"),self.uAvatarSize0Changed)
+			QtCore.QObject.connect(self.window.ui.uAvatarSize1,QtCore.SIGNAL("valueChanged ( int )"),self.uAvatarSize1Changed)
+			QtCore.QObject.connect(self.window.ui.uAvatarCoordinates0,QtCore.SIGNAL("valueChanged ( int )"),self.uAvatarCoordinates0Changed)
+			QtCore.QObject.connect(self.window.ui.uAvatarCoordinates1,QtCore.SIGNAL("valueChanged ( int )"),self.uAvatarCoordinates1Changed)
 			self.loadRosterStyle()
 		else:
 			self.loadConfig(homedir)
@@ -56,6 +71,12 @@ class Plugin(plugins.PluginBase):
 		self.main.ui.roster.rosterStyle.config['groupitem']['closedIcon'][1]=str(self.window.ui.gIconCoordinates1.value())
 		self.main.ui.roster.rosterStyle.config['groupitem']['textFormat']=unicode(self.window.ui.textFormat.toPlainText())
 		
+		self.main.ui.roster.rosterStyle.config['useritem']['height']=str(self.window.ui.uHeight.value())
+		self.main.ui.roster.rosterStyle.config['useritem']['iconCoordinates'][0]=str(self.window.ui.uIconCoordinates0.value())
+		self.main.ui.roster.rosterStyle.config['useritem']['iconCoordinates'][1]=str(self.window.ui.uIconCoordinates1.value())
+		self.main.ui.roster.rosterStyle.config['useritem']['textFormat']=unicode(self.window.ui.uTextFormat.toPlainText())
+
+		
 		self.main.ui.roster.refreshSizes()
 		self.main.ui.roster.repaint()
 			
@@ -66,11 +87,25 @@ class Plugin(plugins.PluginBase):
 			self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config['groupitem']['fontColor']]=[str(color.red()),str(color.green()),str(color.blue())]
 			self.main.ui.roster.rosterStyle.reloadResources()
 			self.main.ui.roster.repaint()
-	
+
+	def uFontColor(self):
+		color=QtGui.QColorDialog.getColor(self.main.ui.roster.rosterStyle.colors[self.main.ui.roster.rosterStyle.config['useritem']['fontColor']])
+		if color.isValid():
+			self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config['useritem']['fontColor']]=[str(color.red()),str(color.green()),str(color.blue())]
+			self.main.ui.roster.rosterStyle.reloadResources()
+			self.main.ui.roster.repaint()
+			
 	def gBackgroundColor(self):
 		color=QtGui.QColorDialog.getColor(self.main.ui.roster.rosterStyle.colors[self.main.ui.roster.rosterStyle.config['groupitem']['backgroundColor'][4]])
 		if color.isValid():
 			self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config['groupitem']['backgroundColor'][4]]=[str(color.red()),str(color.green()),str(color.blue())]
+			self.main.ui.roster.rosterStyle.reloadResources()
+			self.main.ui.roster.repaint()
+	
+	def uBackgroundColor(self):
+		color=QtGui.QColorDialog.getColor(self.main.ui.roster.rosterStyle.colors[self.main.ui.roster.rosterStyle.config['useritem']['backgroundColor'][4]])
+		if color.isValid():
+			self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config['useritem']['backgroundColor'][4]]=[str(color.red()),str(color.green()),str(color.blue())]
 			self.main.ui.roster.rosterStyle.reloadResources()
 			self.main.ui.roster.repaint()
 	
@@ -82,9 +117,33 @@ class Plugin(plugins.PluginBase):
 		self.window.ui.gIconCoordinates0.setValue(int(self.main.ui.roster.rosterStyle.config['groupitem']['openedIcon'][0]))
 		self.window.ui.gIconCoordinates1.setValue(int(self.main.ui.roster.rosterStyle.config['groupitem']['openedIcon'][1]))
 		self.window.ui.textFormat.setPlainText(self.main.ui.roster.rosterStyle.config['groupitem']['textFormat'])
+		
+		self.window.ui.uHeight.setValue(int(self.main.ui.roster.rosterStyle.config['useritem']['height']))
+		self.window.ui.uIconCoordinates0.setValue(int(self.main.ui.roster.rosterStyle.config['useritem']['iconCoordinates'][0]))
+		self.window.ui.uIconCoordinates1.setValue(int(self.main.ui.roster.rosterStyle.config['useritem']['iconCoordinates'][1]))
+		self.window.ui.uTextFormat.setPlainText(self.main.ui.roster.rosterStyle.config['useritem']['textFormat'])
+		self.window.ui.uFontSize.setValue(int(self.main.ui.roster.rosterStyle.config['useritem']['fontSize']))
+		self.window.ui.uTextCoordinates0.setValue(int(self.main.ui.roster.rosterStyle.config['useritem']['textCoordinates'][0]))
+		self.window.ui.uTextCoordinates1.setValue(int(self.main.ui.roster.rosterStyle.config['useritem']['textCoordinates'][1]))
+		self.window.ui.uIconSize0.setValue(int(self.main.ui.roster.rosterStyle.config['useritem']['iconSize'][0]))
+		self.window.ui.uIconSize1.setValue(int(self.main.ui.roster.rosterStyle.config['useritem']['iconSize'][1]))
+		self.window.ui.uAvatarSize0.setValue(int(self.main.ui.roster.rosterStyle.config['useritem']['avatarSize'][0]))
+		self.window.ui.uAvatarSize1.setValue(int(self.main.ui.roster.rosterStyle.config['useritem']['avatarSize'][1]))
+		self.window.ui.uAvatarCoordinates0.setValue(int(self.main.ui.roster.rosterStyle.config['useritem']['avatarCoordinates'][0]))
+		self.window.ui.uAvatarCoordinates1.setValue(int(self.main.ui.roster.rosterStyle.config['useritem']['avatarCoordinates'][1]))
 
 	def gFontSize(self,value):
 		self.main.ui.roster.rosterStyle.config['groupitem']['fontSize']=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+
+	def uFontSize(self,value):
+		self.main.ui.roster.rosterStyle.config['useritem']['fontSize']=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+		
+	def uHeightChanged(self,value):
+		self.main.ui.roster.rosterStyle.config['useritem']['height']=str(value)
 		self.main.ui.roster.refreshSizes()
 		self.main.ui.roster.repaint()
 		
@@ -104,6 +163,46 @@ class Plugin(plugins.PluginBase):
 		self.main.ui.roster.rosterStyle.config['groupitem']['closedIcon'][1]=str(value)
 		self.main.ui.roster.refreshSizes()
 		self.main.ui.roster.repaint()
+
+	def uIconSize0Changed(self,value):
+		self.main.ui.roster.rosterStyle.config['useritem']['iconSize'][0]=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+	
+	def uIconSize1Changed(self,value):
+		self.main.ui.roster.rosterStyle.config['useritem']['iconSize'][1]=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+		
+	def uAvatarSize0Changed(self,value):
+		self.main.ui.roster.rosterStyle.config['useritem']['avatarSize'][0]=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+	
+	def uAvatarSize1Changed(self,value):
+		self.main.ui.roster.rosterStyle.config['useritem']['avatarSize'][1]=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+		
+	def uAvatarCoordinates0Changed(self,value):
+		self.main.ui.roster.rosterStyle.config['useritem']['avatarCoordinates'][0]=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+	
+	def uAvatarCoordinates1Changed(self,value):
+		self.main.ui.roster.rosterStyle.config['useritem']['avatarCoordinates'][1]=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+		
+	def uIconCoordinates0Changed(self,value):
+		self.main.ui.roster.rosterStyle.config['useritem']['iconCoordinates'][0]=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+	
+	def uIconCoordinates1Changed(self,value):
+		self.main.ui.roster.rosterStyle.config['useritem']['iconCoordinates'][1]=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
 		
 	def gTextCoordinates0Changed(self,value):
 		self.main.ui.roster.rosterStyle.config['groupitem']['textCoordinates'][0]=str(value)
@@ -115,6 +214,15 @@ class Plugin(plugins.PluginBase):
 		self.main.ui.roster.refreshSizes()
 		self.main.ui.roster.repaint()
 		
+	def uTextCoordinates0Changed(self,value):
+		self.main.ui.roster.rosterStyle.config['useritem']['textCoordinates'][0]=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
+	
+	def uTextCoordinates1Changed(self,value):
+		self.main.ui.roster.rosterStyle.config['useritem']['textCoordinates'][1]=str(value)
+		self.main.ui.roster.refreshSizes()
+		self.main.ui.roster.repaint()
 		
 	def testSlot(self):
 		self.window.show()

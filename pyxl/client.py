@@ -1128,8 +1128,11 @@ class Client(derived):
 			if self.disco[frm].has_key(node_name):
 				node = self.disco[frm][node_name]
 				if node.has_key('err'):
+					if node.has_key('items'):
+						node = {'features':[], 'identities':{},  'items': node['items']}
+					else:
+						node = {'features':[], 'identities':{},  'items': {}}
 					self.disco[frm] = {}
-					node = {'features':[], 'identities':{},  'items': {}}
 		else:
 			self.disco[frm] = {}
 			node = {'features':[], 'identities':{},  'items': {}}
@@ -1188,6 +1191,17 @@ class Client(derived):
 		if self.disco.has_key(frm):
 			if self.disco[frm].has_key(node_name):
 				node = self.disco[frm][node_name]
+				if node.has_key('err'):
+					if node.has_key('features'):
+						features = node['features']
+					else:
+						features = []
+					if node.has_key('identities'):
+						identities = node['identities']
+					else:
+						identities = {}
+					node = {'features':features, 'identities':identities,  'items': {}}
+					self.disco[frm] = {}
 		else:
 			self.disco[frm] = {}
 			node = {'features':[], 'identities':{},'items':{}}
@@ -1552,6 +1566,7 @@ class Client(derived):
 		
 	def disp(self, id):
 		self.idlist.append(id)
+
 
 
 

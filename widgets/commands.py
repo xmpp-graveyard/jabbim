@@ -222,7 +222,7 @@ class Commands:
 	def _formRecieved(self, el):
 		log.msg(`el`+str(dir(el)))
 		command = el.firstChildElement()
-		self.sessionid = command["sessionid"]
+		self.sessionid = command.getAttribute('sessionid')
 		self.dialog._reset()
 		actions =[]
 		title = unicode(self.dialog.windowTitle()) + " - " + self.name

@@ -291,38 +291,83 @@ def path(cesta):
   return cesta.encode(sys.getfilesystemencoding())
 
 def need_highlight(nick, text):
-	# upraveno z gajimu
-		special_words = []
-		special_words.append(nick)
-		# Strip empties: ''.split(';') == [''] and would highlight everything.
-		# Also lowercase everything for case insensitive compare.
-		special_words = [word.lower() for word in special_words if word]
-		text = text.lower()
-
-		text_splitted = text.split()
-		for word in text_splitted: # get each word of the text
-			for special_word in special_words:
-				if word.startswith(special_word):
-					# get char after the word that highlight us
-					char_position = len(special_word)
-					refer_to_nick_char = \
-						word[char_position:char_position+1]
+		n=len(nick)
+		t=len(text)
+		if t-n<0:
+			return False
+		
+		for c in range(0,t):
+			found=text.find(nick,c)#,(t-n+1)
+			if found!=-1:
+				#start nick
+				if found==0: #at the start of text
+					s=True
+				else:
+					refer_to_nick_char=text[found-1:found]
 					if (refer_to_nick_char != ''):
 						refer_to_nick_char_code = ord(refer_to_nick_char)
 						if ((refer_to_nick_char_code < 65 or \
 						refer_to_nick_char_code > 123) or \
 						(refer_to_nick_char_code < 97 and \
 						refer_to_nick_char_code > 90)):
-							return True
-						else: 
-							# This is A->Z or a->z, we can be sure our nick is the
-							# beginning of a real word, do not highlight. Note that we
-							# can probably do a better detection of non-punctuation
-							# characters
-							return False
-					else: # Special word == word, no char after in word
-						return True 
+							s=True
+						else:
+							s=False
+							continue
+					else:
+						s=True
+				
+				#end nick
+				refer_to_nick_char=text[found+n:found+n+1]
+				if (refer_to_nick_char != ''):
+					refer_to_nick_char_code = ord(refer_to_nick_char)
+					if ((refer_to_nick_char_code < 65 or \
+					refer_to_nick_char_code > 123) or \
+					(refer_to_nick_char_code < 97 and \
+					refer_to_nick_char_code > 90)):
+						e=True
+					else:
+						e=False
+						continue
+				else:
+					e=True
+				if s==True and e==True:
+					return True
 		return False
+		
+		
+		# upraveno z gajimu - need edit to more words nicks
+		#special_words = []
+		#special_words.append(nick)
+		## Strip empties: ''.split(';') == [''] and would highlight everything.
+		## Also lowercase everything for case insensitive compare.
+		#special_words = [word.lower() for word in special_words if word]
+		#text = text.lower()
+
+		#text_splitted = text.split()
+		#for word in text_splitted: # get each word of the text
+			#for special_word in special_words:
+				#if word.startswith(special_word):
+					## get char after the word that highlight us
+					#char_position = len(special_word)
+					#refer_to_nick_char = \
+						#word[char_position:char_position+1]
+					#if (refer_to_nick_char != ''):
+						#refer_to_nick_char_code = ord(refer_to_nick_char)
+						#if ((refer_to_nick_char_code < 65 or \
+						#refer_to_nick_char_code > 123) or \
+						#(refer_to_nick_char_code < 97 and \
+						#refer_to_nick_char_code > 90)):
+							#return True
+						#else: 
+							## This is A->Z or a->z, we can be sure our nick is the
+							## beginning of a real word, do not highlight. Note that we
+							## can probably do a better detection of non-punctuation
+							## characters
+							#return False
+					#else: # Special word == word, no char after in word
+						#return True 
+		#return False
 
 distro_info = {
 	'Arch Linux': '/etc/arch-release',
