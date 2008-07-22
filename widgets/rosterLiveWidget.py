@@ -238,8 +238,9 @@ class rosterWidget(QtGui.QWidget):
 		
 		self.emptyRosterWidget=emptyRosterWidget(self)
 
-		self.setRosterStyle(defaultrosterstyle.rosterStyle)
-		self.groups[self.specialName].height=self.rosterStyle.heightForItem(self.groups[self.specialName])
+		#self.setRosterStyle(defaultrosterstyle.rosterStyle)
+		
+		#self.groups[self.specialName].height=self.rosterStyle.heightForItem(self.groups[self.specialName])
 		self.lastMove=[0,0,None]
 		
 		#QtCore.QObject.connect(self.main.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.sliderChanged)
@@ -254,8 +255,8 @@ class rosterWidget(QtGui.QWidget):
 		d=miniroster.miniRosterDialog(self.main,call,False,self.main)
 		d.exec_()
 
-	def setRosterStyle(self,styleClass):
-		self.rosterStyle=styleClass(self)
+	def setRosterStyle(self,styleClass,config):
+		self.rosterStyle=styleClass(self,config)
 		for user in self.users:
 			user.height=self.rosterStyle.heightForItem(user)
 		for item in self.groups.iteritems():

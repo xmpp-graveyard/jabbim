@@ -109,6 +109,8 @@ class preferencesWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.groupchatskinStyle,QtCore.SIGNAL('activated ( int )'),self.groupchatskinStyleChanged)
 		QtCore.QObject.connect(self.ui.chatSkin_list, QtCore.SIGNAL("activated ( int )"),self.chatSkin_listChanged)
 
+		QtCore.QObject.connect(self.ui.rosterStyle,QtCore.SIGNAL('activated ( int )'),self.rosterStyleChanged)
+		
 		QtCore.QObject.connect(self.ui.useThemes,QtCore.SIGNAL("stateChanged ( int )"),self.useThemesChanged)
 		QtCore.QObject.connect(self.ui.themes, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.themeChanged)
 
@@ -180,6 +182,7 @@ class preferencesWindow(QtGui.QDialog):
 		self.ui.emoticonsList.clear()
 		self.ui.chatSkin_list.clear()
 		self.ui.groupchatskinStyle.clear()
+		self.ui.rosterStyle.clear()
 		self.ui.themes.clear()
 		if extraPart.find("emoticons/")!=-1:
 			pack=os.listdir(self.main.realHomeDir+'/emoticons/'+extraRoot)
@@ -191,6 +194,8 @@ class preferencesWindow(QtGui.QDialog):
 			self.ui.tabWidget.setCurrentIndex(2)
 		else:
 			currentEmoticons=self.main.config["emoticons"]
+
+
 		# emoticons from Jabbim root directory
 		packs=os.listdir("emoticons/")
 		for pack in packs:
@@ -226,6 +231,18 @@ class preferencesWindow(QtGui.QDialog):
 		self.emoticonsListChanged(0)
 		self.ui.emoticonsList.setCurrentIndex(0)
 
+
+		packs=os.listdir("rosterstyles/")
+		for pack in packs:
+			if os.path.isdir('rosterstyles/'+pack):
+				#skins=os.listdir('chatskins/'+pack+"/")
+				#for skin in skins:
+				path=pack
+				if path==self.main.config["rosterStyle"].split("/")[0]:
+					self.ui.rosterStyle.insertItem(0,path,QtCore.QVariant(path))
+				else:
+					self.ui.rosterStyle.addItem(path,QtCore.QVariant(path))
+		
 		# chat skins from Jabbim root directory
 		packs=os.listdir("chatskins/")
 		for pack in packs:
@@ -260,6 +277,7 @@ class preferencesWindow(QtGui.QDialog):
 		self.groupchatskinStyleChanged(0)
 		self.ui.chatSkin_list.setCurrentIndex(0)
 		self.ui.groupchatskinStyle.setCurrentIndex(0)
+		self.ui.rosterStyle.setCurrentIndex(0)
 
 		# Themes
 		skins=os.listdir("themes/")
@@ -537,7 +555,7 @@ class preferencesWindow(QtGui.QDialog):
 		path=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())
 		v=unicode(self.ui.chatskinVariant.itemData(index).toString())
 		self.generateChatskinPreview(path+"/"+v)
-	
+
 	def groupchatskinStyleChanged(self,index):
 		self.chatSkin_listChanged(index,"groupchat")
 		
@@ -545,7 +563,25 @@ class preferencesWindow(QtGui.QDialog):
 		path=unicode(self.ui.groupchatskinStyle.itemData(self.ui.groupchatskinStyle.currentIndex()).toString())
 		v=unicode(self.ui.groupchatskinVariant.itemData(index).toString())
 		self.generateChatskinPreview(path+"/"+v,'groupchat')
-		
+	
+	def rosterStyleChanged(self,index):
+		path=unicode(self.ui.rosterStyle.itemData(index).toString())
+		self.ui.rosterVariant.clear()
+		variants=os.listdir("rosterstyles/"+path)
+		v=""
+		default=""
+		for variant in variants:
+			if variant.endswith(".cfg"):
+				default=unicode(variant)
+				if variant==self.main.config["rosterStyle"].split("/")[1]:
+					self.ui.rosterVariant.insertItem(0,variant[:-4],QtCore.QVariant(variant))
+					v=unicode(variant)
+				else:
+					self.ui.rosterVariant.addItem(variant[:-4],QtCore.QVariant(variant))
+		if len(v)==0:
+			v=default
+		self.ui.rosterVariant.setCurrentIndex(0)
+	
 	def chatSkin_listChanged(self,index,typ='chat'):
 		if typ=="chat":
 			path=unicode(self.ui.chatSkin_list.itemData(index).toString())
@@ -710,6 +746,8 @@ function makePreview(){
 			self.main.config['chatSkin']=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())
 			self.main.config['chatTheme']=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())+"/"+unicode(self.ui.chatskinVariant.itemData(self.ui.chatskinVariant.currentIndex()).toString())
 			self.main.config['groupchatTheme']=unicode(self.ui.groupchatskinStyle.itemData(self.ui.groupchatskinStyle.currentIndex()).toString())+"/"+unicode(self.ui.groupchatskinVariant.itemData(self.ui.groupchatskinVariant.currentIndex()).toString())
+			self.main.config['rosterStyle']=unicode(self.ui.rosterStyle.itemData(self.ui.rosterStyle.currentIndex()).toString())+"/"+unicode(self.ui.rosterVariant.itemData(self.ui.rosterVariant.currentIndex()).toString())
+			self.main.loadRosterStyle()
 			self.main.loadSkin()
 			self.main.config['emoticons']=unicode(self.ui.emoticonsList.itemData(self.ui.emoticonsList.currentIndex()).toString())
 			self.main.emoticonsWidget.reinit()
@@ -730,12 +768,12 @@ function makePreview(){
 				self.main.loadTheme()
 			else:
 				self.main.config['theme']=unicode(self.ui.themes.currentItem().data(32).toString())
-		if self.main.config['rosterMode']=="compact":
-			import compactrosterstyle
-			self.main.ui.roster.setRosterStyle(compactrosterstyle.rosterStyle)
-		elif self.main.config['rosterMode']=='normal':
-			import defaultrosterstyle
-			self.main.ui.roster.setRosterStyle(defaultrosterstyle.rosterStyle)
+		#if self.main.config['rosterMode']=="compact":
+		#	import compactrosterstyle
+		#	self.main.ui.roster.setRosterStyle(compactrosterstyle.rosterStyle)
+		#elif self.main.config['rosterMode']=='normal':
+		#	import defaultrosterstyle
+		#	self.main.ui.roster.setRosterStyle(defaultrosterstyle.rosterStyle)
 		if self.main.config['rosterScrollBar']=="True":
 			self.main.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
 			QtCore.QObject.disconnect(self.main.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.main.ui.roster.sliderChanged)

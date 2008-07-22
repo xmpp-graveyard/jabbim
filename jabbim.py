@@ -1750,9 +1750,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.version = '0.5 SVN' + utils.getSvnVersion() #: version string
 		#self.setWindowOpacity (0.5) 
 		
-		self.loadRoster() # load roster widget
-		QtCore.QObject.connect(self.ui.rosterSearch, QtCore.SIGNAL(" textEdited ( const QString & )"),self.ui.roster.search)
-		QtCore.QObject.connect(self.ui.rosterSearchClose, QtCore.SIGNAL("clicked()"),self.ui.roster.search)
 
 		QtCore.QObject.connect(app, QtCore.SIGNAL("sleep()"),self.systemSleep)
 		QtCore.QObject.connect(app, QtCore.SIGNAL("wakeUp()"),self.systemWakeUp)
@@ -1784,7 +1781,13 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.homeDir=self.realHomeDir+"/"+self.config['jid']+"-profile"
 			utils.loadConfig(self,[])
-		
+
+		self.loadRoster() # load roster widget
+		self.loadRosterStyle()
+		QtCore.QObject.connect(self.ui.rosterSearch, QtCore.SIGNAL(" textEdited ( const QString & )"),self.ui.roster.search)
+		QtCore.QObject.connect(self.ui.rosterSearchClose, QtCore.SIGNAL("clicked()"),self.ui.roster.search)
+
+			
 		self.ui.tabWidgetButton=QtGui.QToolButton(self.ui.tabWidget)
 		self.ui.tabWidgetButton.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 		self.ui.tabWidgetButton.setPopupMode(QtGui.QToolButton.InstantPopup)
@@ -2130,10 +2133,10 @@ class mainWindow(QtGui.QMainWindow):
 
 		self.emoticonsWidget=widgets.emoticonswidget.emoticonsWidget(self,self)
 
-		if self.config['rosterMode'] == "compact":
-			self.ui.roster.setRosterStyle(widgets.compactrosterstyle.rosterStyle)
-		else:
-			self.ui.roster.setRosterStyle(widgets.defaultrosterstyle.rosterStyle)
+		#if self.config['rosterMode'] == "compact":
+		#	self.ui.roster.setRosterStyle(widgets.compactrosterstyle.rosterStyle)
+		#else:
+#			self.ui.roster.setRosterStyle(widgets.defaultrosterstyle.rosterStyle)
 		if self.config['rosterScrollBar']=="True":
 			self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
 			QtCore.QObject.disconnect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
@@ -2141,7 +2144,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 			QtCore.QObject.connect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
 
-		self.loadRosterStyle() # load roster style
+		#self.loadRosterStyle() # load roster style
 
 		# join if we can :)
 		if self.config['autoJoin']=='True':
@@ -3300,10 +3303,10 @@ class mainWindow(QtGui.QMainWindow):
 		self.fillLoginForm()
 		self.loadTheme()
 		self.ui.roster.reskin()
-		if self.config['rosterMode'] == "compact":
-			self.ui.roster.setRosterStyle(widgets.compactrosterstyle.rosterStyle)
-		else:
-			self.ui.roster.setRosterStyle(widgets.defaultrosterstyle.rosterStyle)
+		#if self.config['rosterMode'] == "compact":
+		#	self.ui.roster.setRosterStyle(widgets.compactrosterstyle.rosterStyle)
+		#else:
+		#	self.ui.roster.setRosterStyle(widgets.defaultrosterstyle.rosterStyle)
 		if self.config['rosterScrollBar']=="True":
 			self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
 			QtCore.QObject.disconnect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
@@ -4138,22 +4141,30 @@ class mainWindow(QtGui.QMainWindow):
 
 	def loadRosterStyle(self):
 		self.rosterStyle=None
-		path="rosterstyles/"+unicode(self.config['rosterStyle'])+"/style.py"
-		if isfile(path):
-			try:
-				f=open((path))
-			except:
-				return
-			try:
-				#plug =  # load plugin module
-				module = load_source('rosterStyle', path, f)
-				f.close()
-				self.ui.roster.setRosterStyle(module.rosterStyle)
-			except Exception, ex:
-						#log.msg(unicode(plugin)+u': '+unicode(ex))
-						traceback.print_exc()
-						f.close()
-						pass
+		if len(self.config['rosterStyle'])==0:
+			self.config['rosterStyle']="ng/config.cfg"
+			self.config.write()
+		path="rosterstyles/"+unicode(self.config['rosterStyle'].split("/")[0])+"/style.py"
+		variant="rosterstyles/"+unicode(self.config['rosterStyle'])
+		if not isfile(path):
+			path="rosterstyles/ng/style.py"
+		if not isfile(variant):
+			variant="rosterstyles/ng/config.cfg"
+		
+		try:
+			f=open(unicode(path))
+		except:
+			return
+		try:
+			#plug =  # load plugin module
+			module = load_source('rosterStyle', path, f)
+			f.close()
+			self.ui.roster.setRosterStyle(module.rosterStyle,variant)
+		except Exception, ex:
+					#log.msg(unicode(plugin)+u': '+unicode(ex))
+					traceback.print_exc()
+					f.close()
+					pass
 
 	def loadSkin(self):
 		"""
