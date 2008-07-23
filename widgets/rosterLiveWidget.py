@@ -1093,7 +1093,7 @@ class rosterWidget(QtGui.QWidget):
 			if self.item:
 				x,y=self.itemCoordinates(self.item)
 				#if self.item.typ=="group" or self.item.typ=="special":
-				item=self.itemAt(x,y+self.item.height+5)
+				item=self.itemAt(x,y+self.item.height+16)
 				#else:
 					#if not self.compact:
 						#item=self.itemAt(x,y+self.selectedHeight+33)
