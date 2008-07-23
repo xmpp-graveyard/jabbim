@@ -1725,7 +1725,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
 		self.setObjectName("Jabbim class")
-		self.setWindowFlags(QtCore.Qt.Tool)
+		self.setWindowFlags(QtCore.Qt.Tool)#|QtCore.Qt.FramelessWindowHint)
 		self.ui.toggleInvisible.hide()
 		self.ui.statusButton.hide()
 		self.qtStyles=map(unicode,list(QtGui.QStyleFactory.keys()))
@@ -2115,6 +2115,10 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.chat.setGeometry(int(self.config['chatGeometry'][0]),int(self.config['chatGeometry'][1]),int(w),int(h))
 
+#		rect=QtGui.QDesktopWidget().availableGeometry()
+		#self.setGeometry(rect.width()-250,rect.y(),250,rect.y()+rect.height())
+#		self.setWindowOpacity(0.5)
+			
 		self.reconnect = True # :# True = Jabbim will reconnect after disconnect
 		self.active=True
 		

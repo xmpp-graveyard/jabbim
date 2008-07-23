@@ -898,7 +898,6 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					self.paintUserItem(painter,item,0,y)
 				y+=item.height
-
 		if self.main.config['rosterScrollBar']=='False':
 			if self.height()>self.main.scroll.height():
 				if self.main.scroll.verticalScrollBar().value()>0:
