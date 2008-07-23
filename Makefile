@@ -4,9 +4,9 @@
 PREFIX = /usr/local
 
 # But you'd better leave these alone
-bindir := $(PREFIX)/bin
-datadir := $(PREFIX)/share
-jabbimdata := $(datadir)/jabbim
+bindir = $(PREFIX)/bin
+datadir = $(PREFIX)/share
+jabbimdata = $(datadir)/jabbim
 
 # Builds generated files
 ts_files := $(shell find . -name '*.ts')
@@ -29,26 +29,30 @@ jabbim: jabbim.in
 # This variable can be overridden on the command line, eg.:
 #    make install DESTDIR=/var/tmp/buildroot
 DESTDIR =
+
 configured_prefix = $(shell cat .configured-prefix)
+inst_bindir = $(DESTDIR)$(configured_prefix)/bin
+inst_datadir = $(DESTDIR)$(configured_prefix)/share
+inst_jabbimdata = $(inst_datadir)/jabbim
 .PHONY: install
 install: build
 	@echo "configured prefix is $(configured_prefix)"
-	@echo "bindir is $(bindir)"
-	@echo "datadir is $(datadir)"
-	@echo "jabbimdata is $(jabbimdata)"
 	@[ -n "$(DESTDIR)" ] && echo "DESTDIR is $(DESTDIR)" ||:
-	python install-files.py -v -b installation-blacklist . "$(DESTDIR)$(jabbimdata)"
-	@#cp -dR --preserve=mode,timestamps,context,links . "$(DESTDIR)$(jabbimdata)"
-	install -D -p -m 755 jabbim "$(DESTDIR)$(bindir)/jabbim"
-	install -D -p -m 644 jabbim.desktop "$(DESTDIR)$(datadir)/applications/jabbim.desktop"
+	@echo "installation bindir is $(inst_bindir)"
+	@echo "installation datadir is $(inst_datadir)"
+	@echo "installation jabbimdata is $(inst_jabbimdata)"
+	python install-files.py -v -b installation-blacklist . "$(inst_jabbimdata)"
+	@#cp -dR --preserve=mode,timestamps,context,links . "$(DESTDIR)$(inst_jabbimdata)"
+	install -D -p -m 755 jabbim "$(inst_bindir)/jabbim"
+	install -D -p -m 644 jabbim.desktop "$(inst_datadir)/applications/jabbim.desktop"
 	for i in 16 22 32 48 ; do \
-        	d="$(DESTDIR)$(datadir)/icons/hicolor/$${i}x$${i}/apps" ;\
-        	install -D -m 644 -p images/$${i}x$${i}/apps/jabbim.png "$$d/jabbim.png" ;\
+		d="$(inst_datadir)/icons/hicolor/$${i}x$${i}/apps" ;\
+		install -D -m 644 -p images/$${i}x$${i}/apps/jabbim.png "$$d/jabbim.png" ;\
 	done
-	d="$(DESTDIR)$(datadir)/icons/hicolor/scalable/apps" ;\
+	d="$(inst_datadir)/icons/hicolor/scalable/apps" ;\
 	install -D -m 644 -p images/scalable/apps/jabbim.svg "$$d/jabbim.svg"
-	install -dm 755 $(DESTDIR)$(datadir)/pixmaps
-	pushd $(DESTDIR)$(datadir)/pixmaps ;\
+	install -dm 755 $(inst_datadir)/pixmaps
+	pushd $(inst_datadir)/pixmaps ;\
 	ln -sf ../icons/hicolor/48x48/apps/jabbim.png . ;\
 	ln -sf ../icons/hicolor/scalable/apps/jabbim.svg . ;\
 	popd
