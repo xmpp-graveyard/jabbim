@@ -440,7 +440,7 @@ class rosterWidget(QtGui.QWidget):
 						if not item in ret:
 							ret.append(item)
 							got+=1
-							goty=y
+							goty=y#+self.rosterStyle.spaceBetweenGroups
 						if not count:
 							return item
 					# we got items which we want
@@ -448,7 +448,7 @@ class rosterWidget(QtGui.QWidget):
 					if count and y-y1>count:
 						return ret,0,goty
 					# groupItem has some items and it's expanded
-					y+=item.height+self.rosterStyle.spaceBetweenGroups
+					y+=item.height
 					if item.expanded and len(items)!=0:
 						_items=[] # temp variable
 						# handle expanded metacontacts
@@ -481,6 +481,7 @@ class rosterWidget(QtGui.QWidget):
 								return ret,0,goty
 							y+=useritem.height
 						#y-=useritem.height
+				
 		else:
 			users=[]
 			# append all userItems to one list
@@ -545,7 +546,7 @@ class rosterWidget(QtGui.QWidget):
 										if contact.jid!=useritem.jid:
 											_items+=[contact]
 						items+=_items
-						y+=items[0].height+self.rosterStyle.spaceBetweenGroups
+						y+=items[0].height
 						for useritem in items:
 							if useritem==i:
 								return x,y
@@ -706,6 +707,7 @@ class rosterWidget(QtGui.QWidget):
 		"""
 		self.sortedGroups=self.groups.keys()
 		self.sortedGroups.sort(cmp=strcoll)
+		somebodyOnline=False
 		if self.specialName in self.sortedGroups:
 			self.sortedGroups.remove(self.specialName)
 			self.sortedGroups.append(self.specialName)
@@ -723,9 +725,41 @@ class rosterWidget(QtGui.QWidget):
 					all+=1
 					if unicode(user.status)!="9":
 						online+=1
+						if not somebodyOnline:
+							somebodyOnline=True
 			self.groups[group].online=online
 			self.groups[group].all=all
-
+		if not somebodyOnline and not self.searchMode:
+			#doc=QtGui.QTextDocument()
+			#option=doc.defaultTextOption()
+			#option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
+			#doc.setDefaultTextOption(option)
+			#doc.setHtml(self.tr("You haven't any contacts in your contact list. You can add them with Add contact from menu Actions."))
+			if len(self.users)==0:
+				if self.emptyRosterWidget.isHidden():
+					self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
+					self.emptyRosterWidget.emptyRoster()
+					self.emptyRosterWidget.show()
+			else:
+				if self.emptyRosterWidget.isHidden():
+					self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
+					self.emptyRosterWidget.noOnline()
+					self.emptyRosterWidget.show()
+		else:
+			if not self.emptyRosterWidget.isHidden():
+				self.emptyRosterWidget.hide()
+				#painter.drawText(QtCore.QRectF(10,10,self.width()-20,100),QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap,self.tr("You haven't any online contact in your contact list. To see offline contacts, you have to click Show Offline button, which is above this message."))
+#		else:
+#			if not somebodyOnline and self.searchMode:
+				#painter.drawText(QtCore.QRectF(10,10,self.width()-20,100),QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap,self.tr("No search results for your keywords"))
+				#if self.emptyRosterWidget.isHidden():
+					#self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
+					#self.emptyRosterWidget.noSearch()
+					#self.emptyRosterWidget.show()
+#			else:
+				#if not self.emptyRosterWidget.isHidden():
+					#self.emptyRosterWidget.hide()
+			#doc.drawContents(painter,)
 		self.setSize()
 
 	def event(self,event):
@@ -857,37 +891,9 @@ class rosterWidget(QtGui.QWidget):
 		painter.setClipRegion(event.region())
 		for rect in event.region().rects():
 			items,x,y=self.itemAt(1,rect.y(),rect.height())
-			if len(items)==0 and not self.searchMode:
-				#doc=QtGui.QTextDocument()
-				#option=doc.defaultTextOption()
-				#option.setWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
-				#doc.setDefaultTextOption(option)
-				#doc.setHtml(self.tr("You haven't any contacts in your contact list. You can add them with Add contact from menu Actions."))
-				if len(self.users)==0:
-					if self.emptyRosterWidget.isHidden():
-						self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
-						self.emptyRosterWidget.emptyRoster()
-						self.emptyRosterWidget.show()
-				else:
-					if self.emptyRosterWidget.isHidden():
-						self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
-						self.emptyRosterWidget.noOnline()
-						self.emptyRosterWidget.show()
-					#painter.drawText(QtCore.QRectF(10,10,self.width()-20,100),QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap,self.tr("You haven't any online contact in your contact list. To see offline contacts, you have to click Show Offline button, which is above this message."))
-			else:
-				if len(items)==0 and self.searchMode:
-					#painter.drawText(QtCore.QRectF(10,10,self.width()-20,100),QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap,self.tr("No search results for your keywords"))
-					if self.emptyRosterWidget.isHidden():
-						self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
-						self.emptyRosterWidget.noSearch()
-						self.emptyRosterWidget.show()
-				else:
-					if not self.emptyRosterWidget.isHidden():
-						self.emptyRosterWidget.hide()
-				#doc.drawContents(painter,)
 			for item in items:
 				if item.typ=="group":
-					y+=self.rosterStyle.spaceBetweenGroups
+					#y+=self.rosterStyle.spaceBetweenGroups
 					self.paintGroupItem(painter,item,0,y)
 				else:
 					self.paintUserItem(painter,item,0,y)
@@ -943,7 +949,7 @@ class rosterWidget(QtGui.QWidget):
 					if item.expanded and len(items)!=0:
 						for useritem in items:
 							y+=useritem.height
-					y+=item.height+self.rosterStyle.spaceBetweenGroups
+					y+=item.height#+self.rosterStyle.spaceBetweenGroups
 		else:
 			for item in self.users:
 				if item.hiddenBySearch==False:
