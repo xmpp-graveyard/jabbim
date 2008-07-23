@@ -233,16 +233,32 @@ class preferencesWindow(QtGui.QDialog):
 
 
 		packs=os.listdir("rosterstyles/")
+		loaded=[]
 		for pack in packs:
 			if os.path.isdir('rosterstyles/'+pack):
 				#skins=os.listdir('chatskins/'+pack+"/")
 				#for skin in skins:
 				path=pack
-				if path==self.main.config["rosterStyle"].split("/")[0]:
-					self.ui.rosterStyle.insertItem(0,path,QtCore.QVariant(path))
-				else:
-					self.ui.rosterStyle.addItem(path,QtCore.QVariant(path))
-		
+				if not path in loaded:
+					loaded.append(path)
+					if path==self.main.config["rosterStyle"].split("/")[0]:
+						self.ui.rosterStyle.insertItem(0,path,QtCore.QVariant(path))
+					else:
+						self.ui.rosterStyle.addItem(path,QtCore.QVariant(path))
+
+		packs=os.listdir(self.main.realHomeDir+'/rosterstyles/')
+		for pack in packs:
+			if os.path.isdir(self.main.realHomeDir+'/rosterstyles/'+pack):
+				#skins=os.listdir('chatskins/'+pack+"/")
+				#for skin in skins:
+				path=pack
+				if not path in loaded:
+					loaded.append(path)
+					if path==self.main.config["rosterStyle"].split("/")[0]:
+						self.ui.rosterStyle.insertItem(0,path,QtCore.QVariant(path))
+					else:
+						self.ui.rosterStyle.addItem(path,QtCore.QVariant(path))
+						
 		# chat skins from Jabbim root directory
 		packs=os.listdir("chatskins/")
 		for pack in packs:
@@ -567,7 +583,11 @@ class preferencesWindow(QtGui.QDialog):
 	def rosterStyleChanged(self,index):
 		path=unicode(self.ui.rosterStyle.itemData(index).toString())
 		self.ui.rosterVariant.clear()
-		variants=os.listdir("rosterstyles/"+path)
+		variants=[]
+		if os.path.isdir("rosterstyles/"+path):
+			variants+=os.listdir("rosterstyles/"+path)
+		if os.path.isdir(self.main.realHomeDir+"/rosterstyles/"+path):
+			variants+=os.listdir(self.main.realHomeDir+"/rosterstyles/"+path)
 		v=""
 		default=""
 		for variant in variants:
@@ -744,13 +764,16 @@ function makePreview(){
 					print key,"=",unicode(value)
 		if not self.justShowed:
 			self.main.config['chatSkin']=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())
-			self.main.config['chatTheme']=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())+"/"+unicode(self.ui.chatskinVariant.itemData(self.ui.chatskinVariant.currentIndex()).toString())
-			self.main.config['groupchatTheme']=unicode(self.ui.groupchatskinStyle.itemData(self.ui.groupchatskinStyle.currentIndex()).toString())+"/"+unicode(self.ui.groupchatskinVariant.itemData(self.ui.groupchatskinVariant.currentIndex()).toString())
-			self.main.config['rosterStyle']=unicode(self.ui.rosterStyle.itemData(self.ui.rosterStyle.currentIndex()).toString())+"/"+unicode(self.ui.rosterVariant.itemData(self.ui.rosterVariant.currentIndex()).toString())
-			self.main.loadRosterStyle()
-			self.main.loadSkin()
-			self.main.config['emoticons']=unicode(self.ui.emoticonsList.itemData(self.ui.emoticonsList.currentIndex()).toString())
-			self.main.emoticonsWidget.reinit()
+			if self.main.config['rosterStyle']!=unicode(self.ui.rosterStyle.itemData(self.ui.rosterStyle.currentIndex()).toString())+"/"+unicode(self.ui.rosterVariant.itemData(self.ui.rosterVariant.currentIndex()).toString()):
+				self.main.config['rosterStyle']=unicode(self.ui.rosterStyle.itemData(self.ui.rosterStyle.currentIndex()).toString())+"/"+unicode(self.ui.rosterVariant.itemData(self.ui.rosterVariant.currentIndex()).toString())
+				self.main.loadRosterStyle()
+			if self.main.config['chatTheme']!=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())+"/"+unicode(self.ui.chatskinVariant.itemData(self.ui.chatskinVariant.currentIndex()).toString()) or self.main.config['groupchatTheme']!=unicode(self.ui.groupchatskinStyle.itemData(self.ui.groupchatskinStyle.currentIndex()).toString())+"/"+unicode(self.ui.groupchatskinVariant.itemData(self.ui.groupchatskinVariant.currentIndex()).toString()):
+				self.main.config['chatTheme']=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())+"/"+unicode(self.ui.chatskinVariant.itemData(self.ui.chatskinVariant.currentIndex()).toString())
+				self.main.config['groupchatTheme']=unicode(self.ui.groupchatskinStyle.itemData(self.ui.groupchatskinStyle.currentIndex()).toString())+"/"+unicode(self.ui.groupchatskinVariant.itemData(self.ui.groupchatskinVariant.currentIndex()).toString())
+				self.main.loadSkin()
+			if self.main.config['emoticons']!=unicode(self.ui.emoticonsList.itemData(self.ui.emoticonsList.currentIndex()).toString()):
+				self.main.config['emoticons']=unicode(self.ui.emoticonsList.itemData(self.ui.emoticonsList.currentIndex()).toString())
+				self.main.emoticonsWidget.reinit()
 			#for i in range(self.main.chat.ui.chatTab.count()):
 				#w=self.main.chat.ui.chatTab.widget(i)
 				#w.chat.loadSmileys()

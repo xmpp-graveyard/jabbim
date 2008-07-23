@@ -108,6 +108,9 @@ class Plugin(plugins.PluginBase):
 		self.main.ui.roster.rosterStyle.config[self.typ]['textFormat']=unicode(self.window.ui.uTextFormat.toPlainText())
 		self.main.ui.roster.rosterStyle.config[self.typ]['statusTextFormat']=unicode(self.window.ui.uStatusTextFormat.toPlainText())
 
+		self.main.ui.roster.rosterStyle.config['header']['name']=unicode(self.window.ui.styleName.text())
+		self.main.ui.roster.rosterStyle.config['header']['author']=unicode(self.window.ui.styleAuthor.text())
+		self.main.ui.roster.rosterStyle.config['header']['version']=unicode(self.window.ui.styleVersion.text())
 		
 		self.main.ui.roster.refreshSizes()
 		self.main.ui.roster.repaint()
@@ -152,6 +155,10 @@ class Plugin(plugins.PluginBase):
 	def loadRosterStyle(self):
 		self.window.ui.styleDirectory.setText(self.main.ui.roster.rosterStyle.configPath.split("/")[-2])
 		self.window.ui.styleConfig.setText(self.main.ui.roster.rosterStyle.configPath.split("/")[-1].replace(".cfg",""))
+		self.window.ui.styleName.setText(self.main.ui.roster.rosterStyle.config['header']['name'])
+		self.window.ui.styleAuthor.setText(self.main.ui.roster.rosterStyle.config['header']['author'])
+		self.window.ui.styleVersion.setText(self.main.ui.roster.rosterStyle.config['header']['version'])
+		
 		self.window.ui.gHeight.setValue(int(self.main.ui.roster.rosterStyle.config['groupitem']['height']))
 		self.window.ui.gFontSize.setValue(int(self.main.ui.roster.rosterStyle.config['groupitem']['fontSize']))
 		self.window.ui.gTextCoordinates0.setValue(int(self.main.ui.roster.rosterStyle.config['groupitem']['textCoordinates'][0]))
