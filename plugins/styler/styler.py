@@ -79,7 +79,17 @@ class Plugin(plugins.PluginBase):
 			
 	def save(self):
 		self.preview()
-		self.main.ui.roster.rosterStyle.config.write()
+		d=self.main.realHomeDir+"/rosterstyles/"+unicode(self.window.ui.styleDirectory.text())
+		c=unicode(self.window.ui.styleConfig.text())
+		if not os.path.isdir(d):
+			os.mkdir(d)
+		
+		self.window.ui.styleConfig.setText(self.main.ui.roster.rosterStyle.configPath.split("/")[-1])
+		f=open(d+"/"+c+".cfg",'w')
+		self.main.ui.roster.rosterStyle.config.write(f)
+		f.close()
+
+		#self.main.ui.roster.rosterStyle.config.write()
 
 	def preview(self):
 		self.main.ui.roster.rosterStyle.config['groupitem']['height']=str(self.window.ui.gHeight.value())
@@ -140,6 +150,8 @@ class Plugin(plugins.PluginBase):
 			self.main.ui.roster.repaint()
 	
 	def loadRosterStyle(self):
+		self.window.ui.styleDirectory.setText(self.main.ui.roster.rosterStyle.configPath.split("/")[-2])
+		self.window.ui.styleConfig.setText(self.main.ui.roster.rosterStyle.configPath.split("/")[-1].replace(".cfg",""))
 		self.window.ui.gHeight.setValue(int(self.main.ui.roster.rosterStyle.config['groupitem']['height']))
 		self.window.ui.gFontSize.setValue(int(self.main.ui.roster.rosterStyle.config['groupitem']['fontSize']))
 		self.window.ui.gTextCoordinates0.setValue(int(self.main.ui.roster.rosterStyle.config['groupitem']['textCoordinates'][0]))

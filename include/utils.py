@@ -109,6 +109,10 @@ def makeHomeDir(homeDir):
 		os.mkdir(homeDir+"/sounds")
 	if not os.path.isdir(homeDir+"/temp"):
 		os.mkdir(homeDir+"/temp")
+	if not os.path.isdir(homeDir+"/rosterstyles"):
+		os.mkdir(homeDir+"/rosterstyles")
+	if not os.path.isdir(homeDir+"/rosterstyles/ng"):
+		os.mkdir(homeDir+"/rosterstyles/ng")
 		
 def loadConfig(main,status):
 	# loads config and repairs config file

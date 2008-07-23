@@ -4150,11 +4150,17 @@ class mainWindow(QtGui.QMainWindow):
 			self.config['rosterStyle']="ng/config.cfg"
 			self.config.write()
 		path="rosterstyles/"+unicode(self.config['rosterStyle'].split("/")[0])+"/style.py"
-		variant="rosterstyles/"+unicode(self.config['rosterStyle'])
 		if not isfile(path):
-			path="rosterstyles/ng/style.py"
+			path=self.realHomeDir+"/rosterstyles/"+unicode(self.config['rosterStyle'].split("/")[0])+"/style.py"
+			if not isfile(path):
+				path="rosterstyles/ng/style.py"
+
+		
+		variant=self.realHomeDir+"/rosterstyles/"+unicode(self.config['rosterStyle'])
 		if not isfile(variant):
-			variant="rosterstyles/ng/config.cfg"
+			variant="rosterstyles/"+unicode(self.config['rosterStyle'])
+			if not isfile(variant):
+				variant="rosterstyles/ng/config.cfg"
 		
 		try:
 			f=open(unicode(path))
