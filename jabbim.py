@@ -1725,6 +1725,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
 		self.setObjectName("Jabbim class")
+		self.setWindowFlags(QtCore.Qt.Tool)
 		self.ui.toggleInvisible.hide()
 		self.ui.statusButton.hide()
 		self.qtStyles=map(unicode,list(QtGui.QStyleFactory.keys()))

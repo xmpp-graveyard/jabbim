@@ -525,8 +525,10 @@ class groupChatWidget(abstractChatWidget):
 				self.main().client.groupchats[self.jid].nick=nick
 				self.nick=nick
 			else:
-				message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",unicode(self.tr("Nickname is used by somebody else.")))
+				#message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",unicode(self.tr("Nickname is used by somebody else.")))
+				message=self.main().webkitThemeFactory.genChatStatus(unicode(self.tr("Nickname is used by somebody else.")),self.main().now())
 				self.textEditWrite(message)
+				self.lastMessageFrom=""
 		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def roomConfigClicked(self):
@@ -624,32 +626,37 @@ class groupChatWidget(abstractChatWidget):
 				self.addRoles()
 				if actor and len(reason)!=0:
 					name=self.getUserName(actor)
-					message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",unicode(self.tr("You have been kicked from the room by %s. Reason: %s.")) % (unicode(name),unicode(reason)))
+					message=self.main().webkitThemeFactory.genChatStatus(unicode(self.tr("You have been kicked from the room by %s. Reason: %s.")) % (unicode(name),unicode(reason)),self.main().now())
 				elif actor:
 					name=self.getUserName(actor)
-					message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",unicode(self.tr("You have been kicked from the room by %s.")) % unicode(name))
+					message=self.main().webkitThemeFactory.genChatStatus(unicode(self.tr("You have been kicked from the room by %s.")) % unicode(name),self.main().now())
 				elif len(reason)!=0:
-					message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",unicode(self.tr("You have been kicked from the room. Reason: %s.")) % unicode(reason))
+					message=self.main().webkitThemeFactory.genChatStatus(unicode(self.tr("You have been kicked from the room. Reason: %s.")) % unicode(reason),self.main().now())
 				else:
-					message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",unicode(self.tr("You have been kicked from the room.")))
+					message=self.main().webkitThemeFactory.genChatStatus(unicode(self.tr("You have been kicked from the room.")),self.main().now())
 				self.textEditWrite(message)
+				self.lastMessageFrom=""
 				return
 			elif u'301' in codes:
 				self.ui.line.setEnabled(False)
 				self.ui.users.clear()
 				self.addRoles()
-				message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",unicode(self.tr("You have been banned for the room.")))
+				message=self.main().webkitThemeFactory.genChatStatus(unicode(self.tr("You have been banned for the room.")),self.main().now())
 				self.textEditWrite(message)
+				self.lastMessageFrom=""
 				return
 		if u'307' in codes:
-			message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",nick+unicode(self.tr(" has been kicked from this room.")))
+			message=self.main().webkitThemeFactory.genChatStatus(nick+unicode(self.tr(" has been kicked from this room.")),self.main().now())
 			self.textEditWrite(message)
+			self.lastMessageFrom=""
 		elif u'301' in codes:
-			message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",nick+unicode(self.tr(" has been banned for this room.")))
+			message=self.main().webkitThemeFactory.genChatStatus(nick+unicode(self.tr(" has been banned for this room.")),self.main().now())
 			self.textEditWrite(message)
+			self.lastMessageFrom=""
 		elif u'303' in codes:
-			message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",nick+unicode(self.tr(" has been renamed to "))+unicode(n)+".")
+			message=self.main().webkitThemeFactory.genChatStatus(nick+unicode(self.tr(" has been renamed to "))+unicode(n)+".",self.main().now())
 			self.textEditWrite(message)
+			self.lastMessageFrom=""
 		item=self.getUserItems(nick)[0]
 		parent=item.parent()
 		parent.takeChild(int(parent.indexOfChild(item)))
@@ -809,8 +816,9 @@ class groupChatWidget(abstractChatWidget):
 			self.main().client.groupchats[self.jid].nick = nick
 			self.nick = nick
 		else:
-			message=self.main().skin["status_message"].replace("[time]",self.main().now()).replace("[message]",unicode(self.tr("Nickname is used by somebody else.")))
+			message=self.main().webkitThemeFactory.genChatStatus(unicode(self.tr("Nickname is used by somebody else.")),self.main().now())
 			self.textEditWrite(message)
+			self.lastMessageFrom=""
 		self.ui.line.clear()
 		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 		return False
