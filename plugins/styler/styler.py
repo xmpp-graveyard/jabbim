@@ -60,6 +60,8 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.uStatusTextCoordinates1,QtCore.SIGNAL("valueChanged ( int )"),self.uStatusTextCoordinates1Changed)
 			QtCore.QObject.connect(self.window.ui.uStatusTextCoordinates2,QtCore.SIGNAL("valueChanged ( int )"),self.uStatusTextCoordinates2Changed)
 			QtCore.QObject.connect(self.window.ui.uStatusTextCoordinates3,QtCore.SIGNAL("valueChanged ( int )"),self.uStatusTextCoordinates3Changed)
+			QtCore.QObject.connect(self.window.ui.uBackgroundAlpha,QtCore.SIGNAL("valueChanged ( int )"),self.uBackgroundAlphaChanged)
+			QtCore.QObject.connect(self.window.ui.gBackgroundAlpha,QtCore.SIGNAL("valueChanged ( int )"),self.gBackgroundAlphaChanged)
 			QtCore.QObject.connect(self.window.ui.uStatusFontColor,QtCore.SIGNAL("clicked()"),self.uStatusFontColor)
 			QtCore.QObject.connect(self.window.ui.uStatusHeight,QtCore.SIGNAL("valueChanged ( int )"),self.uStatusHeight)
 			QtCore.QObject.connect(self.window.ui.comboBox,QtCore.SIGNAL("activated ( int )"),self.typChanged)
@@ -114,8 +116,23 @@ class Plugin(plugins.PluginBase):
 		
 		self.main.ui.roster.refreshSizes()
 		self.main.ui.roster.repaint()
-			
-	
+
+	def gBackgroundAlphaChanged(self,value):
+		if len(self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config['groupitem']['backgroundColor'][4]])==4:
+			self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config['groupitem']['backgroundColor'][4]][3]=str(value)
+		else:
+			self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config['groupitem']['backgroundColor'][4]].append(str(value))
+		self.main.ui.roster.rosterStyle.reloadResources()
+		self.main.ui.roster.repaint()
+
+	def uBackgroundAlphaChanged(self,value):
+		if len(self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config[self.typ]['backgroundColor'][4]])==4:
+			self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config[self.typ]['backgroundColor'][4]][3]=str(value)
+		else:
+			self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config[self.typ]['backgroundColor'][4]].append(str(value))
+		self.main.ui.roster.rosterStyle.reloadResources()
+		self.main.ui.roster.repaint()
+		
 	def gFontColor(self):
 		color=QtGui.QColorDialog.getColor(self.main.ui.roster.rosterStyle.colors[self.main.ui.roster.rosterStyle.config['groupitem']['fontColor']])
 		if color.isValid():
@@ -182,6 +199,14 @@ class Plugin(plugins.PluginBase):
 		self.window.ui.uAvatarSize1.setValue(int(self.main.ui.roster.rosterStyle.config[self.typ]['avatarSize'][1]))
 		self.window.ui.uAvatarCoordinates0.setValue(int(self.main.ui.roster.rosterStyle.config[self.typ]['avatarCoordinates'][0]))
 		self.window.ui.uAvatarCoordinates1.setValue(int(self.main.ui.roster.rosterStyle.config[self.typ]['avatarCoordinates'][1]))
+		if len(self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config[self.typ]['backgroundColor'][4]])==4:
+			self.window.ui.uBackgroundAlpha.setValue(int(self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config[self.typ]['backgroundColor'][4]])[3])
+		else:
+			self.window.ui.uBackgroundAlpha.setValue(255)
+		if len(self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config['groupitem']['backgroundColor'][4]])==4:
+			self.window.ui.gBackgroundAlpha.setValue(int(self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config['groupitem']['backgroundColor'][4]])[3])
+		else:
+			self.window.ui.gBackgroundAlpha.setValue(255)
 		
 		self.window.ui.uStatusTextFormat.setPlainText(self.main.ui.roster.rosterStyle.config[self.typ]['statusTextFormat'])
 		self.window.ui.uStatusTextCoordinates0.setValue(int(self.main.ui.roster.rosterStyle.config[self.typ]['statusTextCoordinates'][0]))
@@ -190,6 +215,7 @@ class Plugin(plugins.PluginBase):
 		self.window.ui.uStatusTextCoordinates3.setValue(int(self.main.ui.roster.rosterStyle.config[self.typ]['statusTextCoordinates'][3]))
 		self.window.ui.uStatusFontSize.setValue(int(self.main.ui.roster.rosterStyle.config[self.typ]['statusFontSize']))
 		self.window.ui.uStatusHeight.setValue(int(self.main.ui.roster.rosterStyle.config[self.typ]['statusHeight']))
+
 		
 	def uStatusHeight(self,value):
 		self.main.ui.roster.rosterStyle.config[self.typ]['statusHeight']=str(value)
