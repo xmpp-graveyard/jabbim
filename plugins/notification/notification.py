@@ -283,7 +283,7 @@ class Plugin(plugins.PluginBase):
 				self.snarl=None
 		else:
 			self.snarl=None
-
+		self.snarl=None
 		self.configDialog=config(self)
 		if self.snarl:
 			self.configDialog.config['osd_transparent']['disabled']=True
