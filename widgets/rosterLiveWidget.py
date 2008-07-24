@@ -877,11 +877,11 @@ class rosterWidget(QtGui.QWidget):
 		"""
 		self.rosterStyle.paintGroupItem(painter,item,x,y)
 
-	def paintUserItem(self,painter,useritem,x,y):
+	def paintUserItem(self,painter,useritem,x,y,last):
 		"""
 		paints user item in normal roster
 		"""
-		self.rosterStyle.paintUserItem(painter,useritem,x,y)
+		self.rosterStyle.paintUserItem(painter,useritem,x,y,last)
 
 	def paintEvent(self,event):
 		QtGui.QWidget.paintEvent(self,event)
@@ -891,12 +891,19 @@ class rosterWidget(QtGui.QWidget):
 		painter.setClipRegion(event.region())
 		for rect in event.region().rects():
 			items,x,y=self.itemAt(1,rect.y(),rect.height())
-			for item in items:
+			for i in range(len(items)):
+				item=items[i]
+				last=False
+				if i+1!=len(items):
+					if items[i+1].typ=="group":
+						last=True
+				else:
+					last=True
 				if item.typ=="group":
 					#y+=self.rosterStyle.spaceBetweenGroups
 					self.paintGroupItem(painter,item,0,y)
 				else:
-					self.paintUserItem(painter,item,0,y)
+					self.paintUserItem(painter,item,0,y,last)
 				y+=item.height
 		if self.main.config['rosterScrollBar']=='False':
 			if self.height()>self.main.scroll.height():
