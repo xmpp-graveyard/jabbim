@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'window.ui'
 #
-# Created: Thu Jul 24 07:05:17 2008
+# Created: Thu Jul 24 09:08:11 2008
 #      by: PyQt4 UI code generator 4.4.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -110,27 +110,31 @@ class Ui_MainWindow(object):
         self.gridLayout_26.setObjectName("gridLayout_26")
         self.horizontalLayout_27 = QtGui.QHBoxLayout()
         self.horizontalLayout_27.setObjectName("horizontalLayout_27")
-        self.radioButton = QtGui.QRadioButton(self.groupBox_10)
-        self.radioButton.setChecked(True)
-        self.radioButton.setObjectName("radioButton")
-        self.horizontalLayout_27.addWidget(self.radioButton)
+        self.rBackgroundColor1 = QtGui.QRadioButton(self.groupBox_10)
+        self.rBackgroundColor1.setChecked(True)
+        self.rBackgroundColor1.setObjectName("rBackgroundColor1")
+        self.horizontalLayout_27.addWidget(self.rBackgroundColor1)
         self.rBackgroundColor = QtGui.QPushButton(self.groupBox_10)
         self.rBackgroundColor.setObjectName("rBackgroundColor")
         self.horizontalLayout_27.addWidget(self.rBackgroundColor)
         spacerItem2 = QtGui.QSpacerItem(138,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_27.addItem(spacerItem2)
-        self.gridLayout_26.addLayout(self.horizontalLayout_27,0,0,1,2)
-        self.radioButton_2 = QtGui.QRadioButton(self.groupBox_10)
-        self.radioButton_2.setObjectName("radioButton_2")
-        self.gridLayout_26.addWidget(self.radioButton_2,1,0,1,1)
+        self.gridLayout_26.addLayout(self.horizontalLayout_27,1,0,1,2)
+        self.rBackgroundImage1 = QtGui.QRadioButton(self.groupBox_10)
+        self.rBackgroundImage1.setObjectName("rBackgroundImage1")
+        self.gridLayout_26.addWidget(self.rBackgroundImage1,3,0,1,1)
         self.rBackgroundImage = QtGui.QLineEdit(self.groupBox_10)
+        self.rBackgroundImage.setEnabled(False)
         self.rBackgroundImage.setObjectName("rBackgroundImage")
-        self.gridLayout_26.addWidget(self.rBackgroundImage,1,1,1,1)
+        self.gridLayout_26.addWidget(self.rBackgroundImage,3,1,1,1)
         self.label_50 = QtGui.QLabel(self.groupBox_10)
         self.label_50.setObjectName("label_50")
-        self.gridLayout_26.addWidget(self.label_50,2,0,1,2)
+        self.gridLayout_26.addWidget(self.label_50,4,0,1,2)
+        self.rBackground = QtGui.QCheckBox(self.groupBox_10)
+        self.rBackground.setObjectName("rBackground")
+        self.gridLayout_26.addWidget(self.rBackground,0,0,1,1)
         self.gridLayout_27.addWidget(self.groupBox_10,0,0,1,1)
-        spacerItem3 = QtGui.QSpacerItem(20,150,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+        spacerItem3 = QtGui.QSpacerItem(20,126,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
         self.gridLayout_27.addItem(spacerItem3,1,0,1,1)
         self.tabWidget.addTab(self.tab_10,"")
         self.gridLayout_25.addWidget(self.tabWidget,0,0,1,1)
@@ -650,8 +654,10 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.tabWidge.setCurrentIndex(0)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         self.tabWidget_2.setCurrentIndex(0)
+        QtCore.QObject.connect(self.rBackgroundColor1,QtCore.SIGNAL("toggled(bool)"),self.rBackgroundColor.setEnabled)
+        QtCore.QObject.connect(self.rBackgroundImage1,QtCore.SIGNAL("toggled(bool)"),self.rBackgroundImage.setEnabled)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -668,10 +674,11 @@ class Ui_MainWindow(object):
         self.d.setText(QtGui.QApplication.translate("MainWindow", "Version:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_9), QtGui.QApplication.translate("MainWindow", "Style Information", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_10.setTitle(QtGui.QApplication.translate("MainWindow", "Roster background", None, QtGui.QApplication.UnicodeUTF8))
-        self.radioButton.setText(QtGui.QApplication.translate("MainWindow", "Color", None, QtGui.QApplication.UnicodeUTF8))
+        self.rBackgroundColor1.setText(QtGui.QApplication.translate("MainWindow", "Color", None, QtGui.QApplication.UnicodeUTF8))
         self.rBackgroundColor.setText(QtGui.QApplication.translate("MainWindow", "Change", None, QtGui.QApplication.UnicodeUTF8))
-        self.radioButton_2.setText(QtGui.QApplication.translate("MainWindow", "Image", None, QtGui.QApplication.UnicodeUTF8))
+        self.rBackgroundImage1.setText(QtGui.QApplication.translate("MainWindow", "Image", None, QtGui.QApplication.UnicodeUTF8))
         self.label_50.setText(QtGui.QApplication.translate("MainWindow", "Image has to be in the same directory as this variants config file", None, QtGui.QApplication.UnicodeUTF8))
+        self.rBackground.setText(QtGui.QApplication.translate("MainWindow", "Set roster background", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_10), QtGui.QApplication.translate("MainWindow", "Roster style", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidge.setTabText(self.tabWidge.indexOf(self.tab), QtGui.QApplication.translate("MainWindow", "Roster", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_2.setTitle(QtGui.QApplication.translate("MainWindow", "Item", None, QtGui.QApplication.UnicodeUTF8))

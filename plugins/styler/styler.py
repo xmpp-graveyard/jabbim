@@ -36,6 +36,8 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.save,QtCore.SIGNAL("clicked()"),self.save)
 			QtCore.QObject.connect(self.window.ui.cancel,QtCore.SIGNAL("clicked()"),self.window.close)
 			QtCore.QObject.connect(self.window.ui.gBackgroundColor,QtCore.SIGNAL("clicked()"),self.gBackgroundColor)
+			QtCore.QObject.connect(self.window.ui.rBackgroundColor,QtCore.SIGNAL("clicked()"),self.rBackgroundColor)
+			QtCore.QObject.connect(self.window.ui.rBackground,QtCore.SIGNAL("clicked(bool)"),self.rBackground)
 			QtCore.QObject.connect(self.window.ui.gFontColor,QtCore.SIGNAL("clicked()"),self.gFontColor)
 			
 			QtCore.QObject.connect(self.window.ui.uHeight,QtCore.SIGNAL("valueChanged ( int )"),self.uHeightChanged)
@@ -113,10 +115,28 @@ class Plugin(plugins.PluginBase):
 		self.main.ui.roster.rosterStyle.config['header']['name']=unicode(self.window.ui.styleName.text())
 		self.main.ui.roster.rosterStyle.config['header']['author']=unicode(self.window.ui.styleAuthor.text())
 		self.main.ui.roster.rosterStyle.config['header']['version']=unicode(self.window.ui.styleVersion.text())
+		if self.window.ui.rBackgroundImage.isEnabled():
+			if self.main.ui.roster.rosterStyle.config['colors'].has_key('rosterBackground'):
+				del self.main.ui.roster.rosterStyle.config['colors']['rosterBackground']
+			self.main.ui.roster.rosterStyle.config['images']['rosterBackground']=unicode(self.window.ui.rBackgroundImage.text())
+		else:
+			if self.main.ui.roster.rosterStyle.config['images'].has_key('rosterBackground'):
+				del self.main.ui.roster.rosterStyle.config['images']['rosterBackground']
 		
+		self.main.ui.roster.rosterStyle.reloadResources()
 		self.main.ui.roster.refreshSizes()
 		self.main.ui.roster.repaint()
 
+	def rBackground(self,value):
+		if value:
+			self.main.ui.roster.rosterStyle.config['colors']['rosterBackground']=["0","0","0"]
+			self.main.ui.roster.rosterStyle.reloadResources()
+			self.main.ui.roster.repaint()
+		else:
+			if self.main.ui.roster.rosterStyle.config['colors'].has_key("rosterBackground"):
+				del self.main.ui.roster.rosterStyle.config['colors']['rosterBackground']
+			self.main.ui.roster.rosterStyle.reloadResources()
+			self.main.ui.roster.repaint()		
 	def gBackgroundAlphaChanged(self,value):
 		if len(self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config['groupitem']['backgroundColor'][4]])==4:
 			self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config['groupitem']['backgroundColor'][4]][3]=str(value)
@@ -132,6 +152,18 @@ class Plugin(plugins.PluginBase):
 			self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config[self.typ]['backgroundColor'][4]].append(str(value))
 		self.main.ui.roster.rosterStyle.reloadResources()
 		self.main.ui.roster.repaint()
+
+	def rBackgroundColor(self):
+		if self.main.ui.roster.rosterStyle.colors.has_key("rosterBackground"):
+			color=QtGui.QColorDialog.getColor(self.main.ui.roster.rosterStyle.colors["rosterBackground"])
+		else:
+			color=QtGui.QColorDialog.getColor()
+		if self.main.ui.roster.rosterStyle.config['images'].has_key('rosterBackground'):
+			del self.main.ui.roster.rosterStyle.config['images']['rosterBackground']
+		if color.isValid():
+			self.main.ui.roster.rosterStyle.config['colors']["rosterBackground"]=[str(color.red()),str(color.green()),str(color.blue())]
+			self.main.ui.roster.rosterStyle.reloadResources()
+			self.main.ui.roster.repaint()
 		
 	def gFontColor(self):
 		color=QtGui.QColorDialog.getColor(self.main.ui.roster.rosterStyle.colors[self.main.ui.roster.rosterStyle.config['groupitem']['fontColor']])
@@ -200,11 +232,11 @@ class Plugin(plugins.PluginBase):
 		self.window.ui.uAvatarCoordinates0.setValue(int(self.main.ui.roster.rosterStyle.config[self.typ]['avatarCoordinates'][0]))
 		self.window.ui.uAvatarCoordinates1.setValue(int(self.main.ui.roster.rosterStyle.config[self.typ]['avatarCoordinates'][1]))
 		if len(self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config[self.typ]['backgroundColor'][4]])==4:
-			self.window.ui.uBackgroundAlpha.setValue(int(self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config[self.typ]['backgroundColor'][4]])[3])
+			self.window.ui.uBackgroundAlpha.setValue(int(self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config[self.typ]['backgroundColor'][4]][3]))
 		else:
 			self.window.ui.uBackgroundAlpha.setValue(255)
 		if len(self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config['groupitem']['backgroundColor'][4]])==4:
-			self.window.ui.gBackgroundAlpha.setValue(int(self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config['groupitem']['backgroundColor'][4]])[3])
+			self.window.ui.gBackgroundAlpha.setValue(int(self.main.ui.roster.rosterStyle.config['colors'][self.main.ui.roster.rosterStyle.config['groupitem']['backgroundColor'][4]][3]))
 		else:
 			self.window.ui.gBackgroundAlpha.setValue(255)
 		
@@ -215,7 +247,16 @@ class Plugin(plugins.PluginBase):
 		self.window.ui.uStatusTextCoordinates3.setValue(int(self.main.ui.roster.rosterStyle.config[self.typ]['statusTextCoordinates'][3]))
 		self.window.ui.uStatusFontSize.setValue(int(self.main.ui.roster.rosterStyle.config[self.typ]['statusFontSize']))
 		self.window.ui.uStatusHeight.setValue(int(self.main.ui.roster.rosterStyle.config[self.typ]['statusHeight']))
-
+		#pozadi_okrove_srafovane.png
+		if self.main.ui.roster.rosterStyle.config['images'].has_key("rosterBackground"):
+			self.window.ui.rBackgroundImage.setText(self.main.ui.roster.rosterStyle.config['images']['rosterBackground'])
+			self.window.ui.rBackground.setChecked(True)
+			self.window.ui.rBackgroundImage1.setChecked(True)
+			self.window.ui.rBackgroundColor1.setChecked(False)
+		if self.main.ui.roster.rosterStyle.config['colors'].has_key("rosterBackground"):
+			self.window.ui.rBackground.setChecked(True)
+			self.window.ui.rBackgroundImage1.setChecked(False)
+			self.window.ui.rBackgroundColor1.setChecked(True)
 		
 	def uStatusHeight(self,value):
 		self.main.ui.roster.rosterStyle.config[self.typ]['statusHeight']=str(value)

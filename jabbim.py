@@ -1724,6 +1724,7 @@ class mainWindow(QtGui.QMainWindow):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
+		self.reator=reactor
 		self.setObjectName("Jabbim class")
 		self.setWindowFlags(QtCore.Qt.Tool)#|QtCore.Qt.FramelessWindowHint)
 		self.ui.toggleInvisible.hide()
@@ -4364,7 +4365,6 @@ class mainWindow(QtGui.QMainWindow):
 		if not self.getJid(jid):
 			reactor.callLater(0,self.jidError)
 			return
-			
 		self.ui.selfAvatar.setPixmap(QtGui.QPixmap('images/32x32/apps/jabbim.png'))
 		self.ui.rosterStackedWidget.setCurrentIndex(2)
 		self.ui.login_connect.setEnabled(False)
