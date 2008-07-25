@@ -2116,7 +2116,6 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.chat.setGeometry(int(self.config['chatGeometry'][0]),int(self.config['chatGeometry'][1]),int(w),int(h))
 
-#		rect=QtGui.QDesktopWidget().availableGeometry()
 		#self.setGeometry(rect.width()-250,rect.y(),250,rect.y()+rect.height())
 #		self.setWindowOpacity(0.5)
 			

@@ -68,10 +68,13 @@ class jabbimServiceManager(QtGui.QDialog):
 				self.registeredLayout.removeItem(item)
 
 		dict=False
+		weather=False
 		for jd in self.main.client.roster['users'].keys():
 			if jd.find("dict.jabbim.cz")!=-1:
 				dict=True
-				break
+			if jd.find("weather.netlab.cz"):
+				weather=True
+
 		# Jabber disk
 		info="""
 		<h3>Jabber Disk informations</h3>
@@ -89,12 +92,28 @@ class jabbimServiceManager(QtGui.QDialog):
 			menu.addAction(self.tr("Unregister"),self._unregisterJabberDisk)
 			button.setMenu(menu)
 
+		# Weather
+		info="""
+		<h3>Jabber Weather Informations</h3>
+		"""
+		if weather:
+			button=serviceButton(self,self.tr("Weather"),QtGui.QIcon("images/32x32/status/weather-online.png"),info,self.ui.registerService)
+			self.registerLayout.addWidget(button)
+			QtCore.QObject.connect(button,QtCore.SIGNAL("clicked()"),self.registerWeather)
+		else:
+			button=serviceButton(self,self.tr("Weather"),QtGui.QIcon("images/32x32/status/weather-online.png"),info,self.ui.registeredServices)
+			button.setPopupMode(QtGui.QToolButton.InstantPopup)
+			self.registeredLayout.addWidget(button)
+			menu=QtGui.QMenu(button)
+			menu.addAction(self.tr("Unregister"),self._unregisterWeather)
+			button.setMenu(menu)
+			
 		#ICQ JIT
 		self.loadICQService()
 		#DICT
 		if dict:
 			info="""
-			<h3>Jabber ICQ Transport Informations</h3>
+			<h3>Jabber Dictionaries Informations</h3>
 			"""
 			button=serviceButton(self,self.tr("Dictionaries"),QtGui.QIcon("images/32x32/apps/jabbim.png"),info,self.ui.registeredServices)
 			button.setPopupMode(QtGui.QToolButton.InstantPopup)
@@ -105,7 +124,7 @@ class jabbimServiceManager(QtGui.QDialog):
 			button.setMenu(menu)
 		else:
 			info="""
-			<h3>Jabber ICQ Transport Informations</h3>
+			<h3>Jabber Dictionaries Informations</h3>
 			"""
 			button=serviceButton(self,self.tr("Dictionaries"),QtGui.QIcon("images/32x32/apps/jabbim.png"),info,self.ui.registerService)
 			self.registerLayout.addWidget(button)
@@ -114,6 +133,12 @@ class jabbimServiceManager(QtGui.QDialog):
 		self.registerLayout.addStretch()
 		self.registeredLayout.addStretch()
 
+	def registerWeather(self):
+		pass
+		
+	def unregisterWeather(self):
+		pass
+		
 	def _unregisterDict(self):
 		jid="dict.jabbim.cz"
 		j = self.main.getJid(jid)
