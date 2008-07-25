@@ -862,10 +862,10 @@ class clientClass(pyxl.client.Client):
 				message=self.main.webkitThemeFactory.genGroupchatAction(unicode(mainWindow.tr("You are created this room.")),self.main.now())
 				tab.chat.textEditWrite(message)
 			if u'170' in codes:
-				message=self.main.webkitThemeFactory.genGroupchatAction(unicode(mainWindow.tr("This room is logged")))
+				message=self.main.webkitThemeFactory.genGroupchatAction(unicode(mainWindow.tr("This room is logged")),self.main.now())
 				tab.chat.textEditWrite(message)
 			if u'100' in codes:
-				message=self.main.webkitThemeFactory.genGroupchatAction(unicode(mainWindow.tr("Room is not anonymous")))
+				message=self.main.webkitThemeFactory.genGroupchatAction(unicode(mainWindow.tr("Room is not anonymous")),self.main.now())
 				tab.chat.textEditWrite(message)
 			
 				
