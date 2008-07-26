@@ -423,11 +423,12 @@ class Plugin(plugins.PluginBase):
 	def buildChatWidget(self,jid,layout,widget):
 		jid=self.main.getJid(jid)
 		# create Archive button
-		button=QtGui.QToolButton()
+		button=QtGui.QPushButton()
 		button.setIconSize(QtCore.QSize(16,16))
 		button.setIcon(QtGui.QIcon("%s/history.png" % self.pluginDir))
 		button.jid=unicode(jid.userhost())
 		button.setToolTip("History")
+		button.setText(self.tr("History"))
 		# add button to buttonGroup
 		self.group.addButton(button)
 		layout.addWidget(button)
