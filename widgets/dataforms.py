@@ -181,7 +181,6 @@ def makeDataForm(parent,layout,form,row=1):
 def updateDataForm(var,form,row=1):
 	for x in form.elements():
 		if unicode(x.name)=="field":
-			print x['type']
 			if x['type']=="text-single":
 				widget=var[x['var']]['widget']
 				for child in x.elements():

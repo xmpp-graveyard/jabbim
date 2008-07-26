@@ -347,6 +347,7 @@ class Plugin(plugins.PluginBase):
 		self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/finish", self.onFinish, priority = 1)
 		self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/session/invite", self.onInvite, priority = 1)
 		self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/config", self.onConfigChange, priority = 1)
+		self.registerFeature("http://def.jabbim.cz/jabbim/jgames")
 
 	def on_remove(self):
 		print "REMOVING JGAMES PLUGIN"
@@ -357,6 +358,20 @@ class Plugin(plugins.PluginBase):
 		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/finish", self.onFinish)
 		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/session/invite", self.onInvite)
 		self.main.client.xmlstream.removeObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/config", self.onConfigChange)
+
+	def buildChatWidget(self,jid,layout,widget):
+		# create Archive button
+		button=QtGui.QPushButton()
+		button.setIconSize(QtCore.QSize(16,16))
+		button.setIcon(QtGui.QIcon("%s/img.png" % self.pluginDir))
+		button.jid=unicode(jid.userhost())
+		button.setToolTip("Games")
+		button.setText(self.tr("Games"))
+		# add button to buttonGroup
+		self.group.addButton(button)
+		layout.addWidget(button)
+		widget.registerFeatureForWidget("http://def.jabbim.cz/jabbim/jgames",button)
+	
 		
 	def onStart(self, el):
 		frm = self.main.getJid(el['from'])
