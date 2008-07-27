@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Game Browser</string>
+   <string>Games</string>
   </property>
   <layout class="QGridLayout" >
    <property name="margin" >
@@ -21,6 +21,9 @@
    </property>
    <item row="0" column="0" >
     <widget class="QTreeWidget" name="treeWidget" >
+     <property name="sortingEnabled" >
+      <bool>true</bool>
+     </property>
      <column>
       <property name="text" >
        <string>Status</string>
@@ -28,7 +31,7 @@
      </column>
      <column>
       <property name="text" >
-       <string>Description</string>
+       <string>Name</string>
       </property>
      </column>
     </widget>
@@ -39,7 +42,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons" >
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>

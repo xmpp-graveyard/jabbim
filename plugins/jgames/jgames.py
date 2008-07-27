@@ -347,7 +347,7 @@ class Plugin(plugins.PluginBase):
 		self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/finish", self.onFinish, priority = 1)
 		self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/session/invite", self.onInvite, priority = 1)
 		self.main.client.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='games.jabbim.cz']/config", self.onConfigChange, priority = 1)
-		self.registerFeature("http://def.jabbim.cz/jabbim/jgames")
+		self.registerFeature("http://dev.jabbim.cz/jabbim/jgames")
 
 	def on_remove(self):
 		print "REMOVING JGAMES PLUGIN"
@@ -365,12 +365,13 @@ class Plugin(plugins.PluginBase):
 		button.setIconSize(QtCore.QSize(16,16))
 		button.setIcon(QtGui.QIcon("%s/img.png" % self.pluginDir))
 		button.jid=unicode(jid.userhost())
+		button.typ="invite"
 		button.setToolTip("Games")
 		button.setText(self.tr("Games"))
 		# add button to buttonGroup
 		self.group.addButton(button)
 		layout.addWidget(button)
-		widget.registerFeatureForWidget("http://def.jabbim.cz/jabbim/jgames",button)
+		widget.registerFeatureForWidget("http://dev.jabbim.cz/jabbim/jgames",button)
 	
 		
 	def onStart(self, el):
@@ -395,13 +396,19 @@ class Plugin(plugins.PluginBase):
 			ss.finish(f.attributes, unicode(f))
 	
 	def onInvite(self, el):
+		jid = self.main.getJid(el['from']).userhost()
 		self.main.client.disp(el['id'])
 		q = el.firstChildElement()
 		s = q.firstChildElement()
 		gid = s['gid']
 		game = s['game']
 		id = el['id']
+		muc = s['muc']
+		self.main.events.addBooleanEvent(self.acceptInvitation,[game,gid,muc],None,None,header=unicode(self.tr('Game invitation')),text=unicode(self.tr('From:'))+" "+unicode(jid),name=jid,typ="gameInvitation")
 		
+	def acceptInvitation(self,game,gid,muc):
+		self.joinGame(muc,gid,game)
+	
 	def _invite(self, id, jid, typ='result'):
 		iq = Element((None, 'iq'))
 		iq ['to'] = jid
@@ -539,7 +546,7 @@ class Plugin(plugins.PluginBase):
 		d = iq.send()
 		return d		
 	
-	def sendInvite(jid, gid, game):
+	def sendInvite(self,jid, gid, game,muc):
 		iq = IQ(self.main.client.xmlstream, 'set')
 		iq['xml:lang'] = self.main.client.xmlLang
 		iq['type'] = 'set'
@@ -614,12 +621,14 @@ class Plugin(plugins.PluginBase):
 		d=self.createGame('piskvorky')
 		d.addCallback(self.gameCreated)
 
-	def gameCreated(self,data):
+	def gameCreated(self,data,jid=None):
 		if not data:
 			return
 		gid,muc,owner=data
 		print "game created",gid,muc
 		print "requesting config"
+		if jid:
+			self.sendInvite(jid, gid, 'piskvorky',muc)
 		#self.games[gid] = gameObj(gid, self)
 		d=self.getConfig(gid)
 		d.addCallback(self.configReceived,gid,muc)
@@ -673,9 +682,15 @@ class Plugin(plugins.PluginBase):
 			self.startGame(button.gid)
 		elif button.typ=='config':
 			self.showConfigDialog(button.gid)
+		elif button.typ=="invite":
+			d=self.createGame('piskvorky')
+			d.addCallback(self.gameCreated,button.jid)
 			
 
-	def joinGame(self,muc=None,gid=None):
+		
+			
+
+	def joinGame(self,muc=None,gid=None,game="piskvorky"):
 		owner=True
 		if not muc:
 			item=self.browser.ui.treeWidget.currentItem()
@@ -693,7 +708,7 @@ class Plugin(plugins.PluginBase):
 			tab.chat.gid=gid
 			self.main.client.joinGC(muc,self.main.client.jid.user)
 			self.games[gid] = gameObj(gid, self,tab.chat)
-			self.createGame(game = 'piskvorky',gid=gid) #nekde predavej typ hry ..
+			self.createGame(game = game,gid=gid) #nekde predavej typ hry ..
 
 	def showAdminButtons(self,tab):
 		print "owner"
