@@ -1297,7 +1297,7 @@ class clientClass(pyxl.client.Client):
 					message = self.main.webkitThemeFactory.genChatStatus(message,self.main.now())
 					
 					w.chat.textEditWrite(message)
-					w.chat.lastMessageFrom=user
+					w.chat.lastMessageFrom=""
 				
 				return
 
