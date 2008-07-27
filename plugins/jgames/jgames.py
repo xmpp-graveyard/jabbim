@@ -186,10 +186,18 @@ class gameObj:
 		self.dialog.setMaximumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
 		self.configDialog=None
 		self.dialog.hide()
+		self.restartButton=QtGui.QPushButton(gameWidget)
+		self.restartButton.setText("Restart game")
+		QtCore.QObject.connect(self.restartButton,QtCore.SIGNAL("clicked()"),self.restartGame)
+		self.l.addWidget(self.restartButton)
 		
 		self.info.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Fixed))
 		self.enabled=None
 		self.getConfig()
+		self.restartButton.hide()
+
+	def restartGame(self):
+		self.plugin.startGame(self.gid)
 
 	def getConfig(self):
 		d=self.plugin.getConfig(self.gid)
@@ -252,6 +260,7 @@ class gameObj:
 	def updateStatus(self,jid,data):
 		# data=({'y': 25, 'x': 25, 'second': 'hanzz@njs.netlab.cz/jabbimKubuntu', 'first': 'pyjim@jabber.cz/jabbimSvn'},)
 		self.configDialog.hide()
+		self.restartButton.hide()
 		self.dialog.show()
 		data=data[0]
 		if data.has_key('y'):
@@ -311,6 +320,8 @@ class gameObj:
 		#2008/03/11 14:44 +0200 [-] ['__class__', '__cmp__', '__contains__', '__delattr__', '__delitem__', '__doc__', '__eq__', '__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__init__', '__iter__', '__le__', '__len__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__setitem__', '__str__', 'clear', 'copy', 'fromkeys', 'get', 'has_key', 'items', 'iteritems', 'iterkeys', 'itervalues', 'keys', 'pop', 'popitem', 'setdefault', 'update', 'values']
 		self.dialog.state=[attr['type'],attr['value']]
 		self.dialog.repaint()
+		if self.enabled:
+			self.restartButton.show()
 	
 	
 
