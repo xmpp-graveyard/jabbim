@@ -364,7 +364,7 @@ class Plugin(plugins.PluginBase):
 		button=QtGui.QPushButton()
 		button.setIconSize(QtCore.QSize(16,16))
 		button.setIcon(QtGui.QIcon("%s/img.png" % self.pluginDir))
-		button.jid=unicode(jid.userhost())
+		button.jid=unicode(self.main.getJid(jid).userhost())
 		button.typ="invite"
 		button.setToolTip("Games")
 		button.setText(self.tr("Games"))
