@@ -361,10 +361,13 @@ class Plugin(plugins.PluginBase):
 
 	def buildChatWidget(self,jid,layout,widget):
 		# create Archive button
+		jd=self.main.getJid(jid)
+		if not jd.resource:
+			jd=self.main.client.getHighestJid(jd.userhost())
 		button=QtGui.QPushButton()
 		button.setIconSize(QtCore.QSize(16,16))
 		button.setIcon(QtGui.QIcon("%s/img.png" % self.pluginDir))
-		button.jid=unicode(self.main.getJid(jid).userhost())
+		button.jid=unicode(jd)
 		button.typ="invite"
 		button.setToolTip("Games")
 		button.setText(self.tr("Games"))
