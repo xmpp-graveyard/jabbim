@@ -2089,6 +2089,7 @@ class mainWindow(QtGui.QMainWindow):
 		if self.config['log'] == 'true':
 			self.logfile = open(self.homeDir+'/'+self.config['logfile'], 'w')
 			self.log=log.FileLogObserver(self.logfile)
+			self.log.timeFormat = '%Y-%m-%d %H:%M:%S'
 			log.startLoggingWithObserver(self.log.emit)
 		
 		# show tray icon
