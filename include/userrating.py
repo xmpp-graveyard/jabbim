@@ -27,8 +27,8 @@ class RatingAssigner:
 		self.last_reward = 1.0
 
 	def reward(self, jid):
-		self.users[jid].rating = self.users[jid].rating / self.QUOTIENT + self.last_reward
 		self.last_reward /= self.QUOTIENT
+		self.users[jid].rating = self.users[jid].rating / self.QUOTIENT + self.last_reward
 
 		if self.last_reward > self.RENORMALIZE_THRESH:
 			self.renormalize()
