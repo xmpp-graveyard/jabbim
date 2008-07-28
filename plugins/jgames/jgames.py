@@ -11,27 +11,12 @@ import time
 from twisted.words.protocols.jabber.xmlstream import IQ
 from pyxl.xmlrpclib import loads, dumps
 from twisted.words.xish.domish import Element
-#class config:
-	#def __init__(self,main):
-		#self.main=main
-		#self.config={}
-		#self.config['on_first_message']={'type':'boolean','label':self.main.tr("Notify on first message from user"),'value':'True','groupbox':self.main.tr('Tray icon')}
-		#self.config['on_muc_highlight']={'type':'boolean','label':self.main.tr("Notify if groupchat message contains your nickname"),'value':'True','groupbox':self.main.tr('Tray icon')}
-		#self.config['sound_first_message']={'type':'boolean','label':self.main.tr("Play sound on first message from user"),'value':'True','groupbox':self.main.tr('Sounds')}
-		#self.config['sound_gc_message']={'type':'boolean','label':self.main.tr("Play sound if groupchat message contains your nickname"),'value':'True','groupbox':self.main.tr('Sounds')}
-		#self.config['sound_on_login']={'type':'boolean','label':self.main.tr("Play sound on login"),'value':'True','groupbox':self.main.tr('Sounds')}
-		#self.config['osd_transparent']={'type':'boolean','label':self.main.tr("Use transparent background"),'value':'False','groupbox':self.main.tr('OSD')}
-		#self.config['osd_time']={'type':'number-spin','label':self.main.tr("Display time (seconds):"),'value':'2','groupbox':self.main.tr('OSD')}
-		#self.config['osd_on_presence']={'type':'boolean','label':self.main.tr("Use OSD for presences"),'value':'True','groupbox':self.main.tr('OSD')}
-		#self.config['osd_on_message']={'type':'boolean','label':self.main.tr("Use OSD for messages"),'value':'True','groupbox':self.main.tr('OSD')}
-
-		#self.config['osd_x']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD')}
-		#self.config['osd_y']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD')}
+import weakref
 
 class configWidget(QtGui.QWidget):
 	def __init__(self,main,form,jid,typ,parent=None):
 		apply(QtGui.QWidget.__init__,(self,parent))
-		self.main=main
+		self.main=weakref.proxy(main)
 		self.typ=typ
 		self.jid=jid
 		self.form=form
@@ -51,13 +36,8 @@ class configWidget(QtGui.QWidget):
 		self.start.setText(self.tr('Start game'))
 		self.start.setToolTip(self.tr("Start game"))
 
-		#self.cancel=QtGui.QPushButton(self.tr("Cancel"),self)
-
-		#QtCore.QObject.connect(self.cancel,QtCore.SIGNAL("clicked()"),self.reject)
-		
 		layout.addWidget(self.ok,row+1,0)
 		layout.addWidget(self.start,row+1,1)
-		#layout.addWidget(self.cancel,row+1,1)
 		self.setEnabled(False)
 
 	def getForm(self):
@@ -87,11 +67,11 @@ class gameWidget(groupchat.groupChatWidget):
 
 	def on_remove(self):
 		self.gameObj.plugin.leaveGame(self.gameObj.gid)
-		self.gameObj.dialog.hide()
-		self.gameObj.dialog.parent().layout().removeWidget(self.gameObj.dialog)
-		self.gameObj.dialog.setParent(None)
-		self.gameObj.dialog.deleteLater()
-		del self.gameObj.dialog
+		self.gameObj.board.hide()
+		self.gameObj.board.parent().layout().removeWidget(self.gameObj.board)
+		self.gameObj.board.setParent(None)
+		self.gameObj.board.deleteLater()
+		del self.gameObj.board
 		del self.gameObj.plugin.games[self.gid]
 		del self.gameObj
 		
@@ -167,58 +147,62 @@ class board(QtGui.QWidget):
 class gameObj:
 	def __init__(self, gid, plugin,tab):
 		self.gid = gid
-		self.plugin = plugin
+		self.plugin = weakref.proxy(plugin)
+		self.tab=weakref.proxy(tab)
 		self.functions = {}
 		self.functions['updateStatus']=self.updateStatus
 		self.functions['update']=self.update
 		self.functions['turn']=self.turn
-		self.tab=tab
+		
 		gameWidget=tab.ui.gameWidget
 		self.l=QtGui.QVBoxLayout(gameWidget)
 		self.info=QtGui.QLabel(gameWidget)
 		self.l.addWidget(self.info)
+
 		tab.gameObj=self
-		self.dialog=board(gameWidget)
-		self.dialog.gameObj=self
-		self.dialog.img=QtGui.QPixmap(self.plugin.pluginDir+'/img.png')
-		self.l.addWidget(self.dialog,0,QtCore.Qt.AlignCenter)
-		self.dialog.setMinimumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
-		self.dialog.setMaximumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
+
+		self.board=board(gameWidget)
+		self.board.gameObj=weakref.proxy(self)
+		self.board.img=QtGui.QPixmap(self.plugin.pluginDir+'/img.png')
+		self.l.addWidget(self.board,0,QtCore.Qt.AlignCenter)
+		self.board.setMinimumSize(self.board.countX*self.board.side+2,self.board.countY*self.board.side+2)
+		self.board.setMaximumSize(self.board.countX*self.board.side+2,self.board.countY*self.board.side+2)
+		self.board.hide()
+
 		self.configDialog=None
-		self.dialog.hide()
+		
 		self.restartButton=QtGui.QPushButton(gameWidget)
 		self.restartButton.setText("Restart game")
 		QtCore.QObject.connect(self.restartButton,QtCore.SIGNAL("clicked()"),self.restartGame)
 		self.l.addWidget(self.restartButton)
 		
 		self.info.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Fixed))
-		self.enabled=None
-		self.getConfig()
+		self.owner=None
 		self.restartButton.hide()
+
+		self.getConfig()
 
 	def restartGame(self):
 		self.plugin.startGame(self.gid)
 
 	def getConfig(self):
 		d=self.plugin.getConfig(self.gid)
-		d.addCallback(self.configReceived2,self.gid)
+		d.addCallback(self.configReceived,self.gid)
 
-	def configReceived2(self,form,gid):
+	def configReceived(self,form,gid):
 		print "config received....."
 		if form!=None:
 			if not self.configDialog:
 				self.configDialog=configWidget(self.plugin.main,form,"games.jabbim.cz",None,self.info.parent())
-				if self.enabled:
+				if self.owner:
 					self.configDialog.setEnabled(True)
-				QtCore.QObject.connect(self.configDialog.ok,QtCore.SIGNAL("clicked()"),self.sendConfig2)
+				QtCore.QObject.connect(self.configDialog.ok,QtCore.SIGNAL("clicked()"),self.sendConfig)
 				QtCore.QObject.connect(self.configDialog.start,QtCore.SIGNAL("clicked()"),self.startGame)
 				self.configDialog.gid=gid
-				self.configDialog.show()
 				self.l.addWidget(self.configDialog,0,QtCore.Qt.AlignCenter)
 				self.configDialog.show()
-				#self.info.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Expanded,QtGui.QSizePolicy.Expanded))
 
-				self.dialog.hide()
+				self.board.hide()
 				self.l.addStretch()
 			else:
 				dataforms.updateDataForm(self.configDialog.var,form)
@@ -226,25 +210,25 @@ class gameObj:
 	def startGame(self):
 		self.plugin.startGame(self.gid)
 
-	def sendConfig2(self):
+	def sendConfig(self):
 		form=self.configDialog.getForm()
 		self.plugin.setConfig(self.gid,form)
 
 	def turn(self,jid,data):
 		jid=data[0]
-		self.dialog.turn=jid
-		if self.plugin.main.getJid(self.dialog.first).userhost()==self.plugin.main.getJid(self.dialog.turn).userhost():
-			if self.dialog.firstSymbol==-1:
+		self.board.turn=jid
+		if self.plugin.main.getJid(self.board.first).userhost()==self.plugin.main.getJid(self.board.turn).userhost():
+			if self.board.firstSymbol==-1:
 				file="images/piskvorky/x.png"
 			else:
 				file="images/piskvorky/o.png"
 		else:
-			if self.dialog.secondSymbol==-1:
+			if self.board.secondSymbol==-1:
 				file="images/piskvorky/x.png"
 			else:
 				file="images/piskvorky/o.png"
 		message=' <img src="%s"/> '%(file)+jid+' is on the turn<br/>'
-		for jid,score in self.dialog.score.iteritems():
+		for jid,score in self.board.score.iteritems():
 			message+="<b>"+jid+"</b>: "+str(score)+"<br/>"
 		self.info.setText(message)
 
@@ -253,57 +237,57 @@ class gameObj:
 			x=change[0]
 			y=change[1]
 			var=change[2]
-			self.dialog.last=[x,y]
-			self.dialog.desk[y][x]=var
-		self.dialog.repaint()
+			self.board.last=[x,y]
+			self.board.desk[y][x]=var
+		self.board.repaint()
 
 	def updateStatus(self,jid,data):
 		# data=({'y': 25, 'x': 25, 'second': 'hanzz@njs.netlab.cz/jabbimKubuntu', 'first': 'pyjim@jabber.cz/jabbimSvn'},)
 		self.configDialog.hide()
 		self.restartButton.hide()
-		self.dialog.show()
+		self.board.show()
 		data=data[0]
 		if data.has_key('y'):
-			self.dialog.countY=data['y']
+			self.board.countY=data['y']
 			print "Y:",data['y']
 		if data.has_key('x'):
-			self.dialog.countX=data['x']
+			self.board.countX=data['x']
 			print "X:",data['x']
 		if data.has_key('first'):
-			self.dialog.first=data['first']
+			self.board.first=data['first']
 			print "first:",data['first']
 		if data.has_key('second'):
-			self.dialog.second=data['second']
+			self.board.second=data['second']
 			print "second:",data['second']
 		if data.has_key('firstSymbol'):
-			self.dialog.firstSymbol=int(data['firstSymbol'])
+			self.board.firstSymbol=int(data['firstSymbol'])
 			print "firstSymbol:",data['firstSymbol']
 		if data.has_key('secondSymbol'):
-			self.dialog.secondSymbol=int(data['secondSymbol'])
+			self.board.secondSymbol=int(data['secondSymbol'])
 			print "secondSymbol:",data['secondSymbol']
 		if data.has_key('score'):
-			self.dialog.score=data['score']
-		if self.plugin.main.getJid(self.dialog.first).userhost()==self.plugin.main.client.jid.userhost():
-			self.dialog.variable=self.dialog.firstSymbol
+			self.board.score=data['score']
+		if self.plugin.main.getJid(self.board.first).userhost()==self.plugin.main.client.jid.userhost():
+			self.board.variable=self.board.firstSymbol
 		else:
-			self.dialog.variable=self.dialog.secondSymbol
-		self.dialog.state=[None,""]
+			self.board.variable=self.board.secondSymbol
+		self.board.state=[None,""]
 		if data.has_key('x') and data.has_key('y'):
-			self.dialog.desk=[]
-			self.dialog.last=[]
-			for y in range(self.dialog.countY):
+			self.board.desk=[]
+			self.board.last=[]
+			for y in range(self.board.countY):
 				ar=[]
-				for x in range(self.dialog.countX):
+				for x in range(self.board.countX):
 					ar.append(0)
-				self.dialog.desk.append(ar)
+				self.board.desk.append(ar)
 
 		if data.has_key('history'):
 			self.update('',data['history'])
 
-		self.dialog.setMinimumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
-		self.dialog.setMaximumSize(self.dialog.countX*self.dialog.side+2,self.dialog.countY*self.dialog.side+2)
-		self.dialog.show()
-		self.dialog.repaint()
+		self.board.setMinimumSize(self.board.countX*self.board.side+2,self.board.countY*self.board.side+2)
+		self.board.setMaximumSize(self.board.countX*self.board.side+2,self.board.countY*self.board.side+2)
+		self.board.show()
+		self.board.repaint()
 	
 	def dispatchUpdate(self, call, id, frm):
 		if call[1] in self.functions:
@@ -317,10 +301,9 @@ class gameObj:
 	def finish(self, attr, reason):
 		#v attr je type, value: typ = victory/error/restart, value= JID .. nebo tak neco ;)
 		#2008/03/11 14:44 +0200 [-] {u'type': u'victory', u'value': u'pyjim@jabber.cz/jabbimSvn'}
-		#2008/03/11 14:44 +0200 [-] ['__class__', '__cmp__', '__contains__', '__delattr__', '__delitem__', '__doc__', '__eq__', '__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__init__', '__iter__', '__le__', '__len__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__setitem__', '__str__', 'clear', 'copy', 'fromkeys', 'get', 'has_key', 'items', 'iteritems', 'iterkeys', 'itervalues', 'keys', 'pop', 'popitem', 'setdefault', 'update', 'values']
-		self.dialog.state=[attr['type'],attr['value']]
-		self.dialog.repaint()
-		if self.enabled:
+		self.board.state=[attr['type'],attr['value']]
+		self.board.repaint()
+		if self.owner:
 			self.restartButton.show()
 	
 	
@@ -342,13 +325,17 @@ class Plugin(plugins.PluginBase):
 		self.games = {} # gid:GameObj
 		if main:
 			self.loadConfig()
+			# load game browser
 			self.browser=self.loadDialog(self.pluginDir+"/browser_ui.py",self.main)
 			QtCore.QObject.connect(self.browser,QtCore.SIGNAL("accepted()"),self.joinGame)
 			self.browser.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setText(self.tr("Join"))
-			self.group=QtGui.QButtonGroup(self.main)
+			# load jgamesWidget
 			self.jgamesWidget=self.loadModule(self.pluginDir+"/jgameswidget_ui.py")
-			self.registerHandler('on_authd',self.on_authd)
+			# load QButtonGroup for buttons in chat
+			self.group=QtGui.QButtonGroup(self.main)
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
+			# handlers
+			self.registerHandler('on_authd',self.on_authd)
 		else:
 			self.loadConfig(homedir)
 
@@ -395,7 +382,7 @@ class Plugin(plugins.PluginBase):
 		self.main.client.disp(el['id'])
 		q = el.firstChildElement()
 		gid = q['gid']
-		self.games[gid].dialog.show()
+		self.games[gid].board.show()
 	
 	def onFinish(self, el):
 		frm = self.main.getJid(el['from'])
@@ -647,35 +634,25 @@ class Plugin(plugins.PluginBase):
 		d=self.getConfig(gid)
 		d.addCallback(self.configReceived,gid,muc)
 	
-	def configReceived(self,form,gid,muc):
+	def configReceived(self,form,gid,muc=None):
 		print form,gid
 		if form!=None:
-			self.dialog=dataforms.abstractDataFormsDialog(self.main,form,"games.jabbim.cz",None,self.main)
+			self.dialog=dataforms.abstractDataFormsDialog(self.main,form,"games.jabbim.cz",None,self.main.chat)
 			QtCore.QObject.connect(self.dialog,QtCore.SIGNAL("accepted()"),self.sendConfig)
 			self.dialog.gid=gid
-			self.dialog.muc=muc
+			if muc:
+				self.dialog.muc=muc
 			self.dialog.show()
 
 	def showConfigDialog(self,gid):
 		d=self.getConfig(gid)
-		d.addCallback(self.configReceived2,gid)
-
-	def configReceived2(self,form,gid):
-		if form!=None:
-			self.dialog=dataforms.abstractDataFormsDialog(self.main,form,"games.jabbim.cz",None,self.main.chat)
-			QtCore.QObject.connect(self.dialog,QtCore.SIGNAL("accepted()"),self.sendConfig2)
-			self.dialog.gid=gid
-			self.dialog.show()
-
-	def sendConfig2(self):
-		form=self.dialog.getForm()
-		self.setConfig(self.dialog.gid,form)
+		d.addCallback(self.configReceived,gid)
 
 	def sendConfig(self):
 		form=self.dialog.getForm()
 		self.setConfig(self.dialog.gid,form)
-		self.joinGame(self.dialog.muc,self.dialog.gid)
-		#self.listGames('piskvorky').addCallback(self.test)
+		if hasattr(self.dialog,"muc"):
+			self.joinGame(self.dialog.muc,self.dialog.gid)
 
 	def startGame(self,gid):
 		iq = IQ(self.main.client.xmlstream, 'set')
@@ -725,31 +702,8 @@ class Plugin(plugins.PluginBase):
 			self.createGame(game = game,gid=gid) #nekde predavej typ hry ..
 
 	def showAdminButtons(self,tab):
-		print "owner"
-		#widget=QtGui.QWidget(tab.ui.pluginWidget.parent())
-		#l=QtGui.QHBoxLayout(widget)
-		#l=tab.ui.pluginWidget.layout()
-		#button=QtGui.QToolButton()
-		#button.setText(self.tr('Configure game'))
-		#button.setToolTip(self.tr("Configure game"))
-		#button.setMinimumHeight(tab.ui.sendButton.height())
-		#button.setMaximumHeight(tab.ui.sendButton.height())
-		#button.typ='config'
-		#button.gid=tab.gid
-		#l.addWidget(button)
-		#self.group.addButton(button)
-		
-		#button=QtGui.QToolButton()
-		#button.setText(self.tr('Start game'))
-		#button.setToolTip(self.tr("Start game"))
-		#button.setMinimumHeight(tab.ui.sendButton.height())
-		#button.setMaximumHeight(tab.ui.sendButton.height())
-		#button.typ='start'
-		#button.gid=tab.gid
-		#l.addWidget(button)
-		#self.group.addButton(button)
 		tab.on_owner=None
-		self.games[tab.gid].enabled=True
+		self.games[tab.gid].owner=True
 		if self.games[tab.gid].configDialog:
 			self.games[tab.gid].configDialog.setEnabled(True)
 		#tab.ui.pluginWidget.parent().layout().addWidget(widget)
