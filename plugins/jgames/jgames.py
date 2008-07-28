@@ -758,10 +758,20 @@ class Plugin(plugins.PluginBase):
 		print res
 
 	def buildContactMenu(self,menu,contact):
-		return
-		self.action=menu.addAction(self.tr("Play Piskvorky"))
-		self.action.setData(QtCore.QVariant(unicode(contact.jid)))
-		self.action.setObjectName("jgames_piskvorky")
-		#self.action.setIcon(QtGui.QIcon("%s/history.png" % self.pluginDir))
-		QtCore.QObject.connect(self.action,QtCore.SIGNAL("triggered ( bool )"),self.testSlot)
+		jid=unicode(contact.jid)
+		if self.main.client.hasFeature(jid,"http://dev.jabbim.cz/jabbim/jgames"):
+			jd=self.main.getJid(jid)
+			if not jd.resource:
+				jd=self.main.client.getHighestJid(jd.userhost())
+
+			self.action=menu.addAction(self.tr("Play Piskvorky"))
+			self.action.setData(QtCore.QVariant(jd))
+			self.action.setObjectName("jgames_piskvorky")
+			#self.action.setIcon(QtGui.QIcon("%s/history.png" % self.pluginDir))
+			QtCore.QObject.connect(self.action,QtCore.SIGNAL("triggered ( bool )"),self.actionClicked)
+	
+	def actionClicked(self,b):
+		d=self.createGame('piskvorky')
+		d.addCallback(self.gameCreated,unicode(self.action.data().toString()))
+
 	
