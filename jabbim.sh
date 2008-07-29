@@ -5,5 +5,4 @@ if [ -L $dir_name ]; then
 fi
 dir_name=`dirname $dir_name`
 cd $dir_name
-ulimit -s 1024
 python -OO jabbim.py $@

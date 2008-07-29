@@ -1,4 +1,3 @@
 #!/bin/sh
 cd "@JABBIMDATA@"
-ulimit -s 1024
 exec python -OO jabbim.py $@
