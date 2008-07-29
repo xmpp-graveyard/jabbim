@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 dir_name=$0
 if [ -L $dir_name ]; then
   dir_name=`readlink $dir_name`
