@@ -51,7 +51,7 @@ class TwistedSocketNotifier(QSocketNotifier):
 
 
     def shutdown(self):
-        QObject.disconnect(self, SIGNAL("activated(int)"), self.fn)
+        #QObject.disconnect(self, SIGNAL("activated(int)"), self.fn)
         self.setEnabled(0)
         self.fn = self.watcher = None
 
@@ -66,6 +66,7 @@ class TwistedSocketNotifier(QSocketNotifier):
             log.msg('Error in %s.doRead()' % w)
             log.deferr()
         if why:
+            print why
             self.reactor._disconnectSelectable(w, why, True)
         self.reactor.simulate()
 

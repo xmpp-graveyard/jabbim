@@ -2,17 +2,30 @@ from twisted.web2.client.http import HTTPClientProtocol, ClientRequest
 from twisted.web2.client.interfaces import IHTTPClientManager
 from twisted.internet import reactor, protocol, defer
 from twisted.words.xish import domish, utility, xmlstream
+from twisted.web2 import http_headers
 
 from zope.interface import implements
 import urlparse
 import random
+from hashlib import sha1
 
 STREAM_CONNECTED_EVENT = intern("//event/stream/connected")
 STREAM_START_EVENT = intern("//event/stream/start")
 STREAM_END_EVENT = intern("//event/stream/end")
 STREAM_ERROR_EVENT = intern("//event/stream/error")
 
- 
+FILTER=''.join([(len(repr(chr(x)))==3) and chr(x) or '.' for x in range(256)])
+
+def dump(src, length=8):
+    N=0; result=''
+    while src:
+       s,src = src[:length],src[length:]
+       hexa = ' '.join(["%02X"%ord(x) for x in s])
+       s = s.translate(FILTER)
+       result += "%04X   %-*s   %s\n" % (N, length*3, hexa, s)
+       N+=length
+    return result
+
 
 class BOSHParser:
     """
@@ -47,192 +60,214 @@ class BOSHParser:
 
 
 class BOSHStream(utility.EventDispatcher):
-    """
-    Transport implementing a bidirectional stream over an HTTP channel
-    as in XEP-0124 (http://www.xmpp.org/extensions/xep-0124.html)
-    """
-    
-    implements(IHTTPClientManager)
+	"""
+	Transport implementing a bidirectional stream over an HTTP channel
+	as in XEP-0124 (http://www.xmpp.org/extensions/xep-0124.html)
+	"""
 
-    MAX_RECONNECT_INTERVAL = 10
+	implements(IHTTPClientManager)
 
-    def __init__(self):
-        utility.EventDispatcher.__init__(self)
-        self.parser = BOSHParser()
-        self.rawDataOutFn = None
-        self.rawDataInFn = None
-        self.sid = None
-        self.rid = random.randint(0, 1000000)
-        self.send_queue = [] # objects awaiting for being sent
-        self.out_queue = [] # objects awaiting for ack
-        self.resend_queue = [] # bodies that must be resent
-        self.initialized = False
-        self.reconnect_interval = 0
+	MAX_RECONNECT_INTERVAL = 10
 
-    
-    def _build_first_request(self):
-        url = urlparse.urlparse(self.factory.bosh_url)
-        try:
-            self.host, port = url[1].split(":")
-            self.port = int(port)
-        except:
-            self.host = url[1]
-            self.port = 80
-        self.path = url[2]
-        self.bosh_attrs = self.factory.bosh_attrs
-        # now queue the first body for initializing the session
-        body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
-        body["rid"] = `self.rid`
-        self.rid += 1
-        for k,v in self.factory.bosh_attrs.items():
-            body[k] = v.encode("utf-8")
-        self.resend_queue.append(body)
-        print 'first request'
+	def __init__(self):
+		utility.EventDispatcher.__init__(self)
+		self.parser = BOSHParser()
+		self.rawDataOutFn = None
+		self.rawDataInFn = None
+		self.sid = None
+		self.rid = random.randint(0, 1000000)
+		self.send_queue = [] # objects awaiting for being sent
+		self.out_queue = [] # objects awaiting for ack
+		self.resend_queue = [] # bodies that must be resent
+		self.initialized = False
+		self.reconnect_interval = 0
+		self.seed=random.randint(1000, 1000000)
+		self.n=random.randint(0, 1000000)
 
 
-    def send(self, obj):
-        """
-        Send some payload to the server
-        @param obj: a valid xml chunk or a L{domish.Element} that must be sent to the server
-        """
-        #if domish.IElement.providedBy(obj):
-        #    obj = obj.toXml()
+	def _build_first_request(self):
+		url = urlparse.urlparse(self.factory.bosh_url)
+		try:
+			self.host, port = url[1].split(":")
+			self.port = int(port)
+		except:
+			self.host = url[1]
+			self.port = 80
+		self.path = url[2].encode("utf-8")
+		self.bosh_attrs = self.factory.bosh_attrs
+		# now queue the first body for initializing the session
+		body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
+		body["rid"] = `self.rid`
+		#body['newkey'] = str(sha1(str(self.seed)).hexdigest())
+		
+		self.rid += 1
+		for k,v in self.factory.bosh_attrs.items():
+			body[k.encode('utf-8')] = v.encode("utf-8")
+		body['route']="xmpp:"+body['to']+":5222"
+		body['wait']="300"
+		self.resend_queue.append(body)
+		print 'first request'
 
-        #if self.rawDataOutFn:
-        #    self.rawDataOutFn(obj)
-        
-        self.send_queue.append(obj)
-        self._try_to_send()
 
-    
-    def _try_to_send(self):
-        """
-        """
-        # check if there are too many packets out
-        print 'to send'
-        if len(self.out_queue) >= 2:
-            return
-        print 'to send1'
-        if not self.resend_queue and len(self.send_queue) == 0 and len(self.out_queue) == 1:
-            return
-        print 'to send2'
-        if self.resend_queue:
-            body = self.resend_queue.pop(0)
-        else:
-            # ok, we can send a request
-            body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
-        
-            if self.sid: body["sid"] = self.sid
-            body["rid"] = `self.rid`
-            self.rid += 1
-        
-            while self.send_queue:
-                obj = self.send_queue.pop(0)
-                if domish.IElement.providedBy(obj):
-                    body.addChild(obj)
-                else:
-                    body.addRawXml(obj)
-        
-        if self.rawDataOutFn:
-            self.rawDataOutFn(body.toXml())
-        print body.toXml()
+	def send(self, obj):
+		"""
+		Send some payload to the server
+		@param obj: a valid xml chunk or a L{domish.Element} that must be sent to the server
+		"""
+		#if domish.IElement.providedBy(obj):
+		#    obj = obj.toXml()
 
-        req = ClientRequest(
-            "POST", 
-            self.path, 
-            {'Host': self.host}, 
-            body.toXml().encode("utf-8")
-        )
+		#if self.rawDataOutFn:
+		#    self.rawDataOutFn(obj)
+		
+		self.send_queue.append(obj)
+		self._try_to_send()
 
-        self.proto.submitRequest(req, False)\
-            .addCallback(self.got_response).addErrback(self.got_error)
-        self.out_queue.append(body)
-        print 'send'
-    
-    def got_response(self, resp):
-        print 'read the body'
-        d = defer.maybeDeferred(resp.stream.read)
-        d.addCallback(self.got_data, resp).addErrback(self.got_error)
-   
-    def got_data(self, data, resp): 
-        try:
-            if self.rawDataInFn: self.rawDataInFn(data)
-            body, xmpp_elements = self.parser.parse(data)
-            if not self.initialized:
-                self.session_created(body)
-            for el in xmpp_elements:
-                if domish.IElement.providedBy(el):
-                    self.dispatch(el)    
-            # this is an ack for the outgoing packets
-            self.out_queue.pop(0)
-        except domish.ParserError:
-            # i'm unsure about this because if we receive only part
-            # of the message we send it (but in this case I'm not sure that
-            #got_data is called)
-            self.dispatch(self, STREAM_ERROR_EVENT)
-            self.transport.loseConnection()
 
-    def got_error(self, fault):
-        self.dispatch(self, STREAM_ERROR_EVENT)
-        self.transport.loseConnection()
-    
-    def session_created(self, body):
-        if body.hasAttribute("sid"):
-            self.sid = body["sid"]
-            self.dispatch(self, STREAM_START_EVENT)
-            self.initialized = True
-        else:
-            self.dispatch(self, STREAM_ERROR_EVENT)
+	def _try_to_send(self):
+		"""
+		"""
+		# check if there are too many packets out
+		print 'to send'
+		if len(self.out_queue) >= 2:
+			return
+		print 'to send1'
+		if not self.resend_queue and len(self.send_queue) == 0 and len(self.out_queue) == 1:
+			return
+		print 'to send2'
+		if self.resend_queue:
+			body = self.resend_queue.pop(0)
+		else:
+			# ok, we can send a request
+			body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
+		
+			if self.sid: body["sid"] = self.sid
+			body["rid"] = `self.rid`
+			self.rid += 1
+		
+			while self.send_queue:
+				obj = self.send_queue.pop(0)
+				if domish.IElement.providedBy(obj):
+					body.addChild(obj)
+				else:
+					body.addRawXml(obj)
+	
+		if self.rawDataOutFn:
+			self.rawDataOutFn(body.toXml())
+		thead = http_headers.Headers()
+		thead.addRawHeader("Content-Type", "text/xml; charset=utf-8")
+		#thead.addRawHeader("Accept-Encoding", "gzip, deflate")
+		thead.addRawHeader("Host", self.host.encode("utf-8"))
 
-    def clientBusy(self, proto):
-        pass
-    
-    def clientIdle(self, proto):
-        reactor.callLater(0, self._try_to_send)
+		print body.toXml().encode("ascii")
+		#print dump(buffer(body.toXml().encode("ascii"),0))
+		
+		req = ClientRequest(
+			"POST", 
+			"/", 
+			thead,
+			unicode(body.toXml()).encode("utf-8")
+		)
+		self.proto.submitRequest(req, False).addCallback(self.got_response).addErrback(self.got_error)
+		self.out_queue.append(body)
+		print 'send'
 
-    def clientPipelining(self, proto):
-        reactor.callLater(0, self._try_to_send)
-    
-    def clientGone(self, proto):
-        """ try to reconnect """
-        reactor.callLater(0, self.connect)
+	def got_response(self, resp):
+		print 'read the body'
+		temp=resp.stream.read()
+		temp.addCallback(self.got_data,resp).addErrback(self.got_error)
+		return
 
-    def connect(self):
-        d = protocol.ClientCreator(
-            reactor, HTTPClientProtocol, manager = self
-        ).connectTCP(self.host, self.port)
-        d.addCallback(self.connect_done)
-        d.addErrback(self.connect_failed)
-        print 'connect!'
-    
-    def connect_done(self, proto):
-        print proto
-        if not self.initialized:
-            self._build_first_request()
-        self.proto = proto
-        if not self.initialized:
-            self.dispatch(self, STREAM_CONNECTED_EVENT)
-            # XXX I don't like this: we should find some more elegant way
-            #if hasattr(self, "connectionMade"):
-            #    self.connectionMade()
-        self.reconnect_interval = 0
-        reactor.callLater(0, self._try_to_send)
+	def got_data(self, d, resp,data=""): 
+		if d:
+			data+=d
+		temp=resp.stream.read()
+		if temp:
+			temp.addCallback(self.got_data,resp,data)
+			return
+	
+		try:
+			if self.rawDataInFn: self.rawDataInFn(data)
+			body, xmpp_elements = self.parser.parse(data)
+			if not self.initialized:
+				self.session_created(body)
+			for el in xmpp_elements:
+				if domish.IElement.providedBy(el):
+					self.dispatch(el)    
+			# this is an ack for the outgoing packets
+			self.out_queue.pop(0)
+		except domish.ParserError:
+			# i'm unsure about this because if we receive only part
+			# of the message we send it (but in this case I'm not sure that
+			#got_data is called)
+			print "dispatch error"
+			self.dispatch(self, STREAM_ERROR_EVENT)
+			self.transport.loseConnection()
 
-    def connect_failed(self, fault):
-        reactor.callLater(self.reconnect_interval, self.connect)
-        if self.reconnect_interval < self.MAX_RECONNECT_INTERVAL:
-            self.reconnect_interval += 1
-    
-    def restart(self):
-        body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
-        
-        body["xmlns:xmpp"] = "urn:xmpp:xbosh"
-        body["xmpp:restart"] = "true"
-        body["sid"] = self.sid
-        body["rid"] = `self.rid`
-        self.rid += 1
-        self.resend_queue.append(body)
-        self._try_to_send()
+	def got_error(self, fault):
+		print "FUCK",fault,unicode(fault),dir(fault)
+		self.dispatch(self, STREAM_ERROR_EVENT)
+		self.transport.loseConnection()
+
+	def session_created(self, body):
+		print "session created"
+		print type(body)
+		if body.hasAttribute("sid"):
+			self.sid = body["sid"]
+			self.dispatch(self, STREAM_START_EVENT)
+			self.initialized = True
+		else:
+			self.dispatch(self, STREAM_ERROR_EVENT)
+
+	def clientBusy(self, proto):
+		pass
+
+	def clientIdle(self, proto):
+		reactor.callLater(0, self._try_to_send)
+
+	def clientPipelining(self, proto):
+		reactor.callLater(0, self._try_to_send)
+
+	def clientGone(self, proto):
+		""" try to reconnect """
+		reactor.callLater(0, self.connect)
+
+	def connect(self):
+		d = protocol.ClientCreator(
+			reactor, HTTPClientProtocol, manager = self
+		).connectTCP(self.host, self.port)
+		d.addCallback(self.connect_done)
+		d.addErrback(self.connect_failed)
+		print 'connect!'
+
+	def connect_done(self, proto):
+		print "PROTO",proto,type(proto)
+		if not self.initialized:
+			self._build_first_request()
+		self.proto = proto
+		if not self.initialized:
+			self.dispatch(self, STREAM_CONNECTED_EVENT)
+			# XXX I don't like this: we should find some more elegant way
+			#if hasattr(self, "connectionMade"):
+			#    self.connectionMade()
+		self.reconnect_interval = 0
+		reactor.callLater(0, self._try_to_send)
+
+	def connect_failed(self, fault):
+		reactor.callLater(self.reconnect_interval, self.connect)
+		if self.reconnect_interval < self.MAX_RECONNECT_INTERVAL:
+			self.reconnect_interval += 1
+
+	def restart(self):
+		body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
+		
+		body["xmlns:xmpp"] = "urn:xmpp:xbosh"
+		body["xmpp:restart"] = "true"
+		body["sid"] = self.sid
+		body["rid"] = `self.rid`
+		self.rid += 1
+		self.resend_queue.append(body)
+		self._try_to_send()
  
 class XmlStreamFactoryMixin(object):  
 	""" 

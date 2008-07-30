@@ -1695,7 +1695,6 @@ class avatarLoader(QtCore.QThread):
 		except:
 			message = unicode(traceback.format_exc(), 'utf-8')
 			print message
-		print "avatarLoader started",hashe
 		frame=QtGui.QImage("images/32x32/frame.png")
 		for hash in hashe:
 			try:
