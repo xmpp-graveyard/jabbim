@@ -8,6 +8,7 @@ from zope.interface import implements
 import urlparse
 import random
 from hashlib import sha1
+import time
 
 STREAM_CONNECTED_EVENT = intern("//event/stream/connected")
 STREAM_START_EVENT = intern("//event/stream/start")
@@ -83,6 +84,7 @@ class BOSHStream(utility.EventDispatcher):
 		self.reconnect_interval = 0
 		self.seed=random.randint(1000, 1000000)
 		self.n=random.randint(0, 1000000)
+		self.timestamp=time.time()
 
 
 	def _build_first_request(self):
@@ -107,6 +109,7 @@ class BOSHStream(utility.EventDispatcher):
 		body['wait']="300"
 		self.resend_queue.append(body)
 		print 'first request'
+		
 
 
 	def send(self, obj):
@@ -128,13 +131,22 @@ class BOSHStream(utility.EventDispatcher):
 		"""
 		"""
 		# check if there are too many packets out
+		if time.time()-self.timestamp<2:
+			reactor.callLater(2,self._try_to_send)
+			return
+		
 		print 'to send'
 		if len(self.out_queue) >= 2:
+			for b in self.out_queue:
+				print [b.toXml().encode("utf-8")]
 			return
 		print 'to send1'
-		if not self.resend_queue and len(self.send_queue) == 0 and len(self.out_queue) == 1:
+		if not self.resend_queue and len(self.send_queue) == 0:
 			return
+
 		print 'to send2'
+
+		self.timestamp=time.time()
 		if self.resend_queue:
 			body = self.resend_queue.pop(0)
 		else:

@@ -253,7 +253,7 @@ class Client(derived):
 				log.msg('heartbeat fails count: '+ unicode(self.hbFails))
 
 
-	def connect(self, host = None, port = '5222', boshURL = '',JID='',password='',server=''):
+	def connect(self, host = None, port = '5222', boshURL = '',JID='',password='',server=''):#http://bind.jabbim.cz:80
 		#cleanup
 		self.roster = {'users':{},'groups':{}}
 		self.first_presence = []
