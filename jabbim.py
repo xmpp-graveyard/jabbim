@@ -149,6 +149,9 @@ class clientClass(pyxl.client.Client):
 			change.append("mood")
 			t = ''
 			m = txt = ''
+			if isintance(payload,list):
+				print "mood is list",mood
+				payload=payload[0]
 			for el in payload.elements():
 				if el.name == 'text':
 					txt = unicode(el)
@@ -2333,6 +2336,9 @@ class mainWindow(QtGui.QMainWindow):
 		
 		mood = contact.getPEP('http://jabber.org/protocol/mood')
 		if mood != None:
+			if isintance(mood,list):
+				print "mood is list",mood
+				mood=mood[0]
 			t = ''
 			m = txt = icon = ''
 			for el in mood.elements():
