@@ -4,7 +4,7 @@ import xmlstream
 
 _default_bosh_attrs = {
 	"wait": "20",
-	"hold": "1",
+	"hold": "2",
 	#    "inactivity": "60",
 	"content": "text/xml; charset=utf-8",
 	"xml:lang": "en",

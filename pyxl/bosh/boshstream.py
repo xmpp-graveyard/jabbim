@@ -85,6 +85,7 @@ class BOSHStream(utility.EventDispatcher):
 		self.seed=random.randint(1000, 1000000)
 		self.n=random.randint(0, 1000000)
 		self.timestamp=time.time()
+		self.ready=False
 
 
 	def _build_first_request(self):
@@ -132,20 +133,23 @@ class BOSHStream(utility.EventDispatcher):
 		"""
 		# check if there are too many packets out
 		if time.time()-self.timestamp<2:
-			reactor.callLater(2,self._try_to_send)
+			if not self.ready:
+				self.ready=True
+				reactor.callLater(2,self._try_to_send)
 			return
 		
+
 		print 'to send'
 		if len(self.out_queue) >= 2:
 			for b in self.out_queue:
 				print [b.toXml().encode("utf-8")]
 			return
 		print 'to send1'
-		if not self.resend_queue and len(self.send_queue) == 0:
+		if not self.resend_queue and len(self.send_queue) == 0 and len(self.out_queue)!=0:
 			return
 
 		print 'to send2'
-
+		self.ready=False
 		self.timestamp=time.time()
 		if self.resend_queue:
 			body = self.resend_queue.pop(0)
@@ -187,7 +191,11 @@ class BOSHStream(utility.EventDispatcher):
 	def got_response(self, resp):
 		print 'read the body'
 		temp=resp.stream.read()
-		temp.addCallback(self.got_data,resp).addErrback(self.got_error)
+		if temp:
+			temp.addCallback(self.got_data,resp).addErrback(self.got_error)
+		else:
+			print "None readed?!"
+			print self.out_queue.pop(0)
 		return
 
 	def got_data(self, d, resp,data=""): 
@@ -238,6 +246,7 @@ class BOSHStream(utility.EventDispatcher):
 		reactor.callLater(0, self._try_to_send)
 
 	def clientPipelining(self, proto):
+		print "PIPELINE",proto
 		reactor.callLater(0, self._try_to_send)
 
 	def clientGone(self, proto):

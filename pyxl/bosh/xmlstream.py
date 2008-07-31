@@ -130,6 +130,7 @@ class XmlStream(boshstream.BOSHStream):
 		After sending the stream error, the stream is closed and the transport
 		connection dropped.
 		"""
+		print 'bug',streamError
 		if not self._headerSent and not self.initiating:
 			self.sendHeader()
 
