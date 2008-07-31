@@ -121,32 +121,7 @@ class PresenceInit:
 				print fromjid, hash
 		
 	
-	#avatars
-		wantAvatar=True
-		if self.client.groupchats.has_key(fromjid):
-			if self.client.disco.has_key(frm.host):
-				if self.client.disco[frm.host][None].has_key("identities"):
-					if self.client.disco[frm.host][None].has_key("identities"):
-						for identity,values in self.client.disco[frm.host][None]["identities"].iteritems():
-							if values['type']=='irc':
-								wantAvatar=False
-		
-		if wantAvatar:
-			if self.client.avatarDef.has_key(fromjid):
-				if self.client.avatarDef[fromjid] == hash:
-					pass #vsechno je ok, mame spravneho avatara
-				elif self.client.avatarDef[fromjid] != hash and hash != 'None':
-					self.client.getVCard(fromjid)
-			elif self.client.avatarDef.has_key(frm.full()):
-				if self.client.avatarDef[frm.full()] == hash:
-					pass #vsechno je ok, mame spravneho avatara
-				elif self.client.avatarDef[frm.full()] != hash and hash != 'None':
-					self.client.getVCard(frm.full())
-			else:
-				if self.client.groupchats.has_key(fromjid):
-					self.client.getVCard(frm.full())
-				else:
-					self.client.getVCard(fromjid)
+
 				
 	
 	
@@ -166,7 +141,36 @@ class PresenceInit:
 		
 		if features == 'asked':
 			features = []
-	
+
+		#avatars
+		if show=="offline":
+			wantAvatar=False
+		else:
+			wantAvatar=True
+			if self.client.groupchats.has_key(fromjid):
+				if self.client.disco.has_key(frm.host):
+					if self.client.disco[frm.host][None].has_key("identities"):
+						if self.client.disco[frm.host][None].has_key("identities"):
+							for identity,values in self.client.disco[frm.host][None]["identities"].iteritems():
+								if values['type']=='irc':
+									wantAvatar=False
+		
+		if wantAvatar:
+			if self.client.avatarDef.has_key(fromjid):
+				if self.client.avatarDef[fromjid] == hash:
+					pass #vsechno je ok, mame spravneho avatara
+				elif self.client.avatarDef[fromjid] != hash and hash != 'None':
+					self.client.getVCard(fromjid)
+			elif self.client.avatarDef.has_key(frm.full()):
+				if self.client.avatarDef[frm.full()] == hash:
+					pass #vsechno je ok, mame spravneho avatara
+				elif self.client.avatarDef[frm.full()] != hash and hash != 'None':
+					self.client.getVCard(frm.full())
+			else:
+				if self.client.groupchats.has_key(fromjid):
+					self.client.getVCard(frm.full())
+				else:
+					self.client.getVCard(fromjid)
 	
 		if self.client.groupchats.has_key(fromjid):
 			if show=="offline":
