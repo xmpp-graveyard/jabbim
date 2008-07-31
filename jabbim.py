@@ -1701,6 +1701,9 @@ class avatarLoader(QtCore.QThread):
 				avatar=QtGui.QImage(path+'/'+hash)
 				width=int(avatar.width())
 				height=int(avatar.height())
+				if avatar.isNull():
+					print "avatar",path+'/'+hash,"cannot be loaded"
+					continue
 				avatar=avatar.scaled(25,25,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
 				result=QtGui.QImage(32,32,QtGui.QImage.Format_ARGB32)
 				result.fill(QtCore.Qt.transparent)
