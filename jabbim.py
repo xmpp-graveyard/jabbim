@@ -4585,6 +4585,8 @@ class mainWindow(QtGui.QMainWindow):
 
 	def _serverNotFound(self):
 		QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Server is not found.")),0,1)
+	def _connectionFailed(self):
+		QtGui.QMessageBox.warning(self,self.tr("Error"),unicode(self.tr("Connection to server failed. Check your Jabberd ID and try it again.")),0,1)
 
 	def _disconnect(self, error = None): # error = None | dns | lost | auth | failed
 		print 'disconnect reason '+unicode(error)
@@ -4595,6 +4597,9 @@ class mainWindow(QtGui.QMainWindow):
 				self.reconnect = False
 			elif error=="dns":
 				reactor.callLater(0,self._serverNotFound)
+				self.reconnect = False
+			elif error=="failed":
+				reactor.callLater(0,self._connectionFailed)
 				self.reconnect = False
 			if self.client.factory:
 				self.client.factory.stopTrying()
