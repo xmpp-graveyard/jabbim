@@ -8,6 +8,8 @@ class User:
 	def __init__(self, jid):
 		self.jid = jid
 		self.rating = 0.0
+		self.messages = 0
+		self.changed=False
 
 # Before trying to understand this algorithm, make yourself familiar with
 # OldRatingAssigner first. They really produce equivalent results.
@@ -22,13 +24,19 @@ class RatingAssigner:
 	# a while.
 	RENORMALIZE_THRESH = 10.0
 
-	def __init__(self, users):
-		self.users = users
+	def __init__(self):
+		self.users = {}
 		self.last_reward = 1.0
 
 	def reward(self, jid):
+		# we have to create new user because reward can be called for user which
+		# is not in roster, so he is not created by default.
+		if not self.users.has_key(jid):
+			self.users[jid]=User(jid)
 		self.last_reward /= self.QUOTIENT
 		self.users[jid].rating = self.users[jid].rating / self.QUOTIENT + self.last_reward
+		self.users[jid].messages+=1
+		self.users[jid].changed=True
 
 		if self.last_reward > self.RENORMALIZE_THRESH:
 			self.renormalize()
@@ -36,6 +44,7 @@ class RatingAssigner:
 	def renormalize(self):
 		for k in self.users.keys():
 			self.users[k].rating /= self.last_reward
+			self.users[k].changed=True
 		self.last_reward = 1.0
 
 # This algorithm produces equivalent results, but it is inefficient as it
@@ -54,51 +63,51 @@ class OldRatingAssigner(RatingAssigner):
 				self.users[k].rating *= self.QUOTIENT
 
 
+if __name__ == "__main__":
+	# Let's test how the two RatingAssigners work.
+	# They must always produce the same ordering of users.
 
-# Let's test how the two RatingAssigners work.
-# They must always produce the same ordering of users.
+	import sys
+	import operator
 
-import sys
-import operator
+	users_1 = {}
+	users_2 = {}
+	for i in xrange(9):
+		jid = 'user%d@jabbim.cz' % (i+1)
+		users_1[jid] = User(jid)
+		users_2[jid] = User(jid)
 
-users_1 = {}
-users_2 = {}
-for i in xrange(9):
-	jid = 'user%d@jabbim.cz' % (i+1)
-	users_1[jid] = User(jid)
-	users_2[jid] = User(jid)
+	ra1 = RatingAssigner(users_1)
+	ra2 = OldRatingAssigner(users_2)
 
-ra1 = RatingAssigner(users_1)
-ra2 = OldRatingAssigner(users_2)
-
-while True:
-	print 'Zadej cislo uzivatele: '
-	line = sys.stdin.readline()
-	if line.strip() == '':
-		break
-	try:
-		v = int(line)
-		jid = 'user%d@jabbim.cz' % v
-		ra1.reward(jid)
-		ra2.reward(jid)
-	except:
-		continue
-
-	# verify the algorithms give equivalent results
-	sorted_1 = sorted(users_1.values(), key=operator.attrgetter('rating'), reverse=True)
-	sorted_2 = sorted(users_2.values(), key=operator.attrgetter('rating'), reverse=True)
-	jids_1 = [u.jid for u in sorted_1 ]
-	jids_2 = [u.jid for u in sorted_2 ]
-	if jids_1 != jids_2:
-		print "ERROR: sort orders do not match"
-		sys.exit(1)
-
-	print "%15s |%11s |%11s |%9s" % ('JID','Rating','R.algor.#2','ratio')
-	for jid in jids_1:
+	while True:
+		print 'Zadej cislo uzivatele: '
+		line = sys.stdin.readline()
+		if line.strip() == '':
+			break
 		try:
-			ratio = users_1[jid].rating / users_2[jid].rating
-			ratio = "%9.6f" % ratio
+			v = int(line)
+			jid = 'user%d@jabbim.cz' % v
+			ra1.reward(jid)
+			ra2.reward(jid)
 		except:
-			ratio = "%9s" % 'N/A'
-		print "%15s |%11.6f |%11.6f |%s" % (jid, users_1[jid].rating, users_2[jid].rating, ratio)
+			continue
+
+		# verify the algorithms give equivalent results
+		sorted_1 = sorted(users_1.values(), key=operator.attrgetter('rating'), reverse=True)
+		sorted_2 = sorted(users_2.values(), key=operator.attrgetter('rating'), reverse=True)
+		jids_1 = [u.jid for u in sorted_1 ]
+		jids_2 = [u.jid for u in sorted_2 ]
+		if jids_1 != jids_2:
+			print "ERROR: sort orders do not match"
+			sys.exit(1)
+
+		print "%15s |%11s |%11s |%9s" % ('JID','Rating','R.algor.#2','ratio')
+		for jid in jids_1:
+			try:
+				ratio = users_1[jid].rating / users_2[jid].rating
+				ratio = "%9.6f" % ratio
+			except:
+				ratio = "%9s" % 'N/A'
+			print "%15s |%11.6f |%11.6f |%s" % (jid, users_1[jid].rating, users_2[jid].rating, ratio)
 

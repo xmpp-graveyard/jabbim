@@ -22,6 +22,7 @@ class table(QtGui.QTreeWidget):
 		self.headerItem().setText(2,QtGui.QApplication.translate("serviceDiscovery", "register", None, QtGui.QApplication.UnicodeUTF8))
 		self.headerItem().setText(3,QtGui.QApplication.translate("serviceDiscovery", "jid", None, QtGui.QApplication.UnicodeUTF8))
 		self.headerItem().setText(4,QtGui.QApplication.translate("serviceDiscovery", "commands", None, QtGui.QApplication.UnicodeUTF8))
+		self.headerItem().setText(5,QtGui.QApplication.translate("serviceDiscovery", "node", None, QtGui.QApplication.UnicodeUTF8))
 		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
 		self.service=service
 
@@ -214,12 +215,16 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 
 	def itemSelected(self,item,old):
 		jid=unicode(item.text(3))
+		node=unicode(item.text(5))
+		if len(node)==0:
+			node = None
+			
 		if len(jid)==0:
 			return
 		if self.main.client.hasIdentity(jid, 'conference', 'text'):
 			return
 
-		self.main.client.getDiscoItems(jid, callback = self._discoItemsReceived, callback_par = (item,False))
+		self.main.client.getDiscoItems(jid, node = node, callback = self._discoItemsReceived, callback_par = (item,False))
 
 	def _discoinfo(self,item):
 		key=self.main.getJid(unicode(item.text(3))).host
@@ -277,6 +282,8 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 				it.setText(0,values["name"])
 			else:
 				it.setText(0,key)
+			if values.has_key("node"):
+				it.setText(5,values["node"])
 			it.setIcon(0,item.icon(0))
 			it.setToolTip(0,values['jid'])
 			self.main.client.getDiscoInfo(values['jid'],callback=self._discoinfo, callback_par = (it))
@@ -393,4 +400,5 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		self.ui.tree.setColumnWidth (4,34)
 	def accept(self):
 		self.done(1)
+
 

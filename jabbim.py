@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- 
+﻿# -*- coding: utf-8 -*- 
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -95,7 +95,7 @@ import pyxl
 from pyxl import storage
 import traceback
 from configobj import ConfigObj
-from include import utils
+from include import utils, userrating
 from include import rot13
 import urllib, random, xmlrpclib
 from imp import load_source
@@ -722,11 +722,15 @@ class clientClass(pyxl.client.Client):
 		self.main.selfStatus=show
 		#self.main.tray.setToolTip(mainWindow.tr('Your status:')+" "+self.main.status[show])
 		self.main.ui.selfAvatar.refreshToolTip()
-		print 'old ',  self.oldstatus
 		self.main.sendPresence(None,show,status)
 		self.main.ui.statusButton.setText(unicode(""))
 		self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
 		self.main.ui.login_cancel.hide()
+		print "loading users for userRating"
+		for jid,user in self.roster['users'].iteritems():
+			self.main.userRating.users[jid]=userrating.User(jid)
+		print "users for userRating loaded:",self.main.userRating.users
+		self.main.loadUserRating()
 
 	def on_rosterx(self, frm, items, id):
 		mainWindow = self.main
@@ -2156,7 +2160,7 @@ class mainWindow(QtGui.QMainWindow):
 			QtCore.QObject.connect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
 
 		#self.loadRosterStyle() # load roster style
-
+		self.userRating=userrating.RatingAssigner()
 		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.connect()
@@ -2894,7 +2898,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def tables_created(self,data):
 		"""
-		Called on __init__ when new sqlite tables were created. If tables were empty, adds default values (default status messages etc.), otherwise calls self.buildStatusWidgetMenu().
+		Called on __init__ when new sqlite tables were created. If tables were empty, adds default values (default status messages etc.), otherwise calls self.buildStatusWidgetMenu() and other functions to get data from tables.
 		"""
 		print "tables_created"
 		d = None
@@ -2911,6 +2915,28 @@ class mainWindow(QtGui.QMainWindow):
 				d.addCallback(self.status_table_updated).addErrback(self._error)
 		if d == None:
 			self.buildStatusWidgetMenu()
+			# load rating for userRating
+			
+
+	def loadUserRating(self,data=None):
+		return
+		if not data:
+			d=self.cache.get_rating()
+			d.addCallback(self.loadUserRating)
+			d.addErrback(self._error)
+		else:
+			print "userRatingLoaded:",data
+			users={}
+			for user in data:
+				users[user[0]]=[user[1],user[2]]
+			for user in self.userRating.users.values():
+				if user.jid in users.keys():
+					self.userRating.users[user.jid].message=users[user.jid][0]
+					self.userRating.users[user.jid].rating=users[user.jid][1]
+				else:
+					self.cache.insert_rating(user.jid, user.messages,user.rating)
+				
+				
 
 	def status_table_updated(self, data=None):
 		"""
@@ -3314,6 +3340,7 @@ class mainWindow(QtGui.QMainWindow):
 			if start:
 				log.startLoggingWithObserver(self.log.emit, setStdout=0)
 		# change GUI according to new config
+  		self.userRating.last_reward=float(self.config['ratingLastReward'])
 		self.fillLoginForm()
 		self.loadTheme()
 		self.ui.roster.reskin()
@@ -3719,7 +3746,31 @@ class mainWindow(QtGui.QMainWindow):
 			self.client.privacy.active.unsetInvisible(available=False) # hack
 		for i in MainWindow.plugins.keys():
 			MainWindow.unloadPlugin(i)
+		self.saveConfigBeforeQuit()
+		tmp=[]
+		#for user in self.userRating.users.values():
+		#	if user.changed:
+			#	print "saving",user.jid,"to rating table"
+				#tmp.append(self.cache.set_rating(user.jid, user.messages,user.rating))
+		#print tmp
+#		d = DeferredList(tmp, consumeErrors = True)
+	#	d.addCallback(self._trayQuit).addErrback(self._trayQuit)
+
+
+		# close windows, hide tray :)
+		try:
+			self.cache.close()
+		except:
+			pass
+		app.shutdown=True
+		app.closeAllWindows()
+		self.tray.hide()
+		# stop reactor
+		reactor.stop2()
+
+	def saveConfigBeforeQuit(self):
 		if os.path.isfile(self.config.filename):
+			self.config['ratingLastReward']=str(self.userRating.last_reward)
 			# save windows geometry and sizes of splitters in chat window
 			if str(self.config["saveGeometry"])=="True":
 				rect=self.geometry()
@@ -3749,9 +3800,9 @@ class mainWindow(QtGui.QMainWindow):
 							self.config['groupchatSplitSizes2']=list(w.chat.ui.splitter_2.sizes())
 						except:
 							pass
-	
+
 						break
-				self.config.write()
+				#self.config.write()
 			# save expanded groups
 			if str(self.config['saveExpandedGroups'])=='True':
 				expanded=[]
@@ -3760,19 +3811,13 @@ class mainWindow(QtGui.QMainWindow):
 						if item.expanded==True:
 							expanded.append(name)
 					self.config['expandedGroups']=expanded
-					self.config.write()
+					#self.config.write()
+			self.config.write()
 		# save config to the ~/.jabbim/
 		# we cat detect last loged user (=> last used profile) from it
 		f=open(self.realHomeDir+"/config",'w')
 		self.config.write(f)
 		f.close()
-		# close windows, hide tray :)
-		app.shutdown=True
-		app.closeAllWindows()
-		self.tray.hide()
-		# stop reactor
-		reactor.stop2()
-
 	def trayActivated(self,reason=QtGui.QSystemTrayIcon.Trigger):
 		"""
 		Shows or hides mainWindow. Called when is tray activated.

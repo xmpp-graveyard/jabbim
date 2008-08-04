@@ -152,6 +152,7 @@ def loadConfig(main,status):
 			"sendPep":"True",
 			"saveGeometry":"True",
 			"saveExpandedGroups":"True",
+			"ratingLastReward":"0.0",
 			"chatTheme":"candy/Blue vs Green.css",
 			"groupchatTheme":"candy/Blue vs Green.css",
 			"expandedGroups":[],

@@ -43,7 +43,7 @@ class Cache:
 		t1 = self.db.runQuery('create table caps (node text, feature text, identity text);').addCallback(self.table_created, 'caps').addErrback(self.table_present, 'caps')
 		t2 = self.db.runQuery('create table status (show text, desc text, id integer primary key);').addCallback(self.table_created, 'status').addErrback(self.table_present, 'status')
 		t3 = self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created, 'avatars').addErrback(self.table_present, 'avatars')
-		t4 = self.db.runQuery('create table stats (jid text, messages integer);').addCallback(self.table_created, 'stats').addErrback(self.table_present, 'stats')
+		t4 = self.db.runQuery('create table rating (jid text, messages integer,rating real);').addCallback(self.table_created, 'rating').addErrback(self.table_present, 'rating')
 		return DeferredList([t1,t2,t3,t4], consumeErrors = False)
 
 	def create_tables(self):
@@ -99,20 +99,17 @@ class Cache:
 	def update_status(self,show,message,ID):
 		return self.db.runOperation('update status set show=?, desc=? where id=?',(unicode(show), unicode(message), int(ID)))
 
-	def get_stats(self):
-		return self.db.runQuery('select jid,messages from stats order by messages desc')
+	def get_rating(self):
+		return self.db.runQuery('select jid,messages,rating from rating order by messages desc')
 		
-	def get_stats_by_jid(self, jid):
-		return self.db.runQuery('select messages from stats where jid = "%s";'%dbutil.safe(jid))
+	def get_rating_by_jid(self, jid):
+		return self.db.runQuery('select messages from rating where jid = "%s";'%dbutil.safe(jid))
 
-	def set_stats(self, jid, messages=1): #avatar = (file,hash)
-		return self.db.runQuery('select messages from stats where jid = "%s"'%(dbutil.safe(jid),)).addCallback(self._has_stats, jid, messages)
+	def set_rating(self, jid, messages,rating): #avatar = (file,hash)
+		return self.db.runOperation('update rating set messages=%s,rating=%s where jid="%s"'%(str(messages),str(rating), dbutil.safe(jid)))
 
-	def _has_stats(self, result, jid, messages):
-		if len(result)==0:
-			self.db.runOperation('insert into stats (jid, messages) values("%s",%s)'%(dbutil.safe(jid), str(messages)))
-		else:
-			self.db.runOperation('update stats set messages=%s where jid="%s"'%(str(int(result[0][0])+1), dbutil.safe(jid)))
+	def insert_rating(self,jid, messages,rating):
+		self.db.runOperation('insert into rating (jid, messages, rating) values("%s",%s,%s)'%(dbutil.safe(jid), str(messages), str(rating)))
 	
 	def close(self):
 		self.db.close()

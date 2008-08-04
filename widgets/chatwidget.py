@@ -259,7 +259,7 @@ class chatWidget(abstractChatWidget):
 		QtCore.QObject.connect(self.ui.avatar,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.contactMenu)
 		self.noColor=True
 		self.lastMessageFrom=""
-		self.main().cache.get_stats_by_jid(unicode(jidt.userhost())).addCallback(self._gotMessagesCount).addErrback(self.main()._error)
+		#self.main().cache.get_rating_by_jid(unicode(jidt.userhost())).addCallback(self._gotMessagesCount).addErrback(self.main()._error)
 
 
 
@@ -303,7 +303,7 @@ class chatWidget(abstractChatWidget):
 		self.refreshToolTip()
 
 	def _gotMessagesCount(self,result):
-		if len(result)!=0:
+		if result and len(result)!=0:
 			self.textEditWrite(self.main().webkitThemeFactory.genChatStatus(self.tr("Do you know that you've sent ")+str(result[0][0])+self.tr(" messages to this contact?"),self.main().now()))
 		
 	def loadAvatars(self):
@@ -551,8 +551,9 @@ class chatWidget(abstractChatWidget):
 					self.ui.line.composing=False
 					return
 				# Otherwise it was not a recognized command. Let's behave like it's a normal message.
-			d=self.main().cache.set_stats(self.main().getJid(self.jid).userhost())
-			d.addErrback(self.main()._error)
+			#d=self.main().cache.set_stats(self.main().getJid(self.jid).userhost())
+			#d.addErrback(self.main()._error)
+			self.main().userRating.reward(self.main().getJid(self.jid).userhost())
 			# get plain text message
 			text=unicode(self.ui.line.toPlainText())
 			text=unescape(text)

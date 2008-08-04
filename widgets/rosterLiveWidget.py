@@ -34,6 +34,7 @@ import compactrosterstyle
 from include import rot13
 import miniroster
 from locale import strcoll
+import operator
 
 class emptyRosterWidget(QtGui.QWidget):
 	def __init__(self,parent=None):
@@ -213,6 +214,7 @@ class rosterWidget(QtGui.QWidget):
 		self.bl=True
 		#self.changePos=False
 		self.searchMode=False
+		self.favouriteMode=False
 		#self.reshow=False
 		self.userHeight=32
 		self.groupHeight=32
@@ -426,62 +428,92 @@ class rosterWidget(QtGui.QWidget):
 		goty=0
 		ret=[]
 		if self.searchMode==False:
-			# go through all groups
-			for key in self.sortedGroups:
-				item=self.groups[key] # groupItem
-				items=self.getGroupSortedUsers(item.name) # list of userItems
-				# group is not empty
-				if len(items)!=0:
-					# we want to save this groupItem
-					if got!=0 and not item in ret:
-						ret.append(item)
-						got+=1
-					if y1>=y and y1<=y+item.height and got==0:
-						if not item in ret:
+			if self.favouriteMode==False:
+				# go through all groups
+				for key in self.sortedGroups:
+					item=self.groups[key] # groupItem
+					items=self.getGroupSortedUsers(item.name) # list of userItems
+					# group is not empty
+					if len(items)!=0:
+						# we want to save this groupItem
+						if got!=0 and not item in ret:
 							ret.append(item)
 							got+=1
-							goty=y#+self.rosterStyle.spaceBetweenGroups
-						if not count:
-							return item
-					# we got items which we want
-					#if got==count:
-					if count and y-y1>count:
-						return ret,0,goty
-					# groupItem has some items and it's expanded
-					y+=item.height
-					if item.expanded and len(items)!=0:
-						_items=[] # temp variable
-						# handle expanded metacontacts
-						for useritem in items:
-							if useritem.expanded:
-								if self.metaItems.has_key(useritem.metajid):
-									for contact in self.metaItems[useritem.metajid]:
-										if contact.jid!=useritem.jid:
-											_items.append([items.index(useritem),contact])
-						_items.reverse()
-						for useritem in _items:
-							items.insert(useritem[0]+1,useritem[1])
-						# go through all userItems
-						#y+=items[0].height
-						for index in range(len(items)):
-							useritem=items[index]
+						if y1>=y and y1<=y+item.height and got==0:
+							if not item in ret:
+								ret.append(item)
+								got+=1
+								goty=y#+self.rosterStyle.spaceBetweenGroups
+							if not count:
+								return item
+						# we got items which we want
+						#if got==count:
+						if count and y-y1>count:
+							return ret,0,goty
+						# groupItem has some items and it's expanded
+						y+=item.height
+						if item.expanded and len(items)!=0:
+							_items=[] # temp variable
+							# handle expanded metacontacts
+							for useritem in items:
+								if useritem.expanded:
+									if self.metaItems.has_key(useritem.metajid):
+										for contact in self.metaItems[useritem.metajid]:
+											if contact.jid!=useritem.jid:
+												_items.append([items.index(useritem),contact])
+							_items.reverse()
+							for useritem in _items:
+								items.insert(useritem[0]+1,useritem[1])
+							# go through all userItems
+							#y+=items[0].height
+							for index in range(len(items)):
+								useritem=items[index]
+								if got!=0 and not useritem in ret:
+									ret.append(useritem)
+									got+=1
+								if y1>=y and y1<=y+useritem.height and got==0:
+									if not useritem in ret:
+										ret.append(useritem)
+										got+=1
+										goty=y
+									if not count:
+										return useritem
+
+								#if got==count:
+								if count and y-y1>count:
+									return ret,0,goty
+								y+=useritem.height
+							#y-=useritem.height
+			else:
+				users = sorted(self.main.userRating.users.values(), key=operator.attrgetter('rating'), reverse=True)
+				jids = [u.jid for u in users ]
+				items={}
+				u=[]
+				for v in self.metaItems.itervalues():
+					for user in v:
+						u.append(user)
+				for user in self.users+u:
+					if user.jid in jids:
+						items[user.jid]=user
+				for jid in jids:
+					if  items.has_key(jid):
+						item=items[jid]
+						if item.hiddenBySearch==False:
+							useritem=item
 							if got!=0 and not useritem in ret:
 								ret.append(useritem)
 								got+=1
-							if y1>=y and y1<=y+useritem.height and got==0:
-								if not useritem in ret:
+
+							if y1>=y and y1<=y+item.height:
+								if count and not useritem in ret:
 									ret.append(useritem)
 									got+=1
 									goty=y
 								if not count:
 									return useritem
-
-							#if got==count:
-							if count and y-y1>count:
+							if got==count:
 								return ret,0,goty
-							y+=useritem.height
-						#y-=useritem.height
-				
+							y+=item.height
 		else:
 			users=[]
 			# append all userItems to one list
@@ -948,14 +980,32 @@ class rosterWidget(QtGui.QWidget):
 		x=0
 		y=0
 		if self.searchMode==False:
-			for key in self.sortedGroups:
-				item=self.groups[key]
-				items=self.getGroupSortedUsers(item.name)
-				if (len(items)!=0 and not self.showOffline) or self.showOffline:
-					if item.expanded and len(items)!=0:
-						for useritem in items:
-							y+=useritem.height
-					y+=item.height#+self.rosterStyle.spaceBetweenGroups
+			if self.favouriteMode:
+				for key in self.sortedGroups:
+					item=self.groups[key]
+					items=self.getGroupSortedUsers(item.name)
+					if (len(items)!=0 and not self.showOffline) or self.showOffline:
+						if item.expanded and len(items)!=0:
+							for useritem in items:
+								y+=useritem.height
+						y+=item.height#+self.rosterStyle.spaceBetweenGroups
+			else:
+				users = sorted(self.main.userRating.users.values(), key=operator.attrgetter('rating'), reverse=True)
+				jids = [u.jid for u in users ]
+				items={}
+				u=[]
+				for v in self.metaItems.itervalues():
+					for user in v:
+						u.append(user)
+				for user in self.users+u:
+					if user.jid in jids:
+						items[user.jid]=user
+				for jid in jids:
+					if items.has_key(jid):
+						if y+items[jid].height<self.parent().height()-20:
+							y+=items[jid].height
+						else:
+							break
 		else:
 			for item in self.users:
 				if item.hiddenBySearch==False:

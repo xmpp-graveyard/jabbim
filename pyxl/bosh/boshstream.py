@@ -459,7 +459,7 @@ class BOSHStream(utility.EventDispatcher):
 		self._try_to_send()
 
 
-	def _try_to_send(self,check=True):
+	def _try_to_send(self,check=False):
 		"""
 		"""
 		# check if there are too many packets out
@@ -504,6 +504,7 @@ class BOSHStream(utility.EventDispatcher):
 			self.rawDataOutFn(body.toXml())
 		thead = http_headers.Headers()
 		thead.addRawHeader("Content-Type", "text/xml; charset=utf-8")
+		thead.addRawHeader("Proxy-Connection","keep-alive")
 		thead.addRawHeader("Host", self.host.encode("utf-8"))
 
 		print body.toXml().encode("ascii")
@@ -515,20 +516,20 @@ class BOSHStream(utility.EventDispatcher):
 			thead,
 			unicode(body.toXml()).encode("utf-8")
 		)
-		for i in range(2):
-			if not self.slot[i]:
-				if i==0:
-					self.slot[0]=True
-					self.proto.submitRequest(req, False).addCallback(self.got_response,int(i)).addErrback(self.got_error)
-					self.out_queue.append(body)
-					print 'send submitRequest'
-				else:
-					self.slot[1]=True
-					url = 'http://bind.jabbim.cz:80'
-					self.secondFactory.p.submitRequest(req, False).addCallback(self.got_response,int(i)).addErrback(self.got_error)
-					self.out_queue.append(body)
-					print 'send getPage'
-				break
+#		for i in range(2):
+#			if not self.slot[i]:
+#				if i==0:
+		self.slot[0]=True
+		self.proto.submitRequest(req, False).addCallback(self.got_response,int(0)).addErrback(self.got_error)
+		self.out_queue.append(body)
+		print 'send submitRequest'
+#				else:
+#					self.slot[1]=True
+#					url = 'http://bind.jabbim.cz:80'
+#					self.secondFactory.p.submitRequest(req, False).addCallback(self.got_response,int(i)).addErrback(self.got_error)
+#					self.out_queue.append(body)
+#					print 'send getPage'
+#				break
 
 
 	def got_data2(self, data,x): 
@@ -555,6 +556,43 @@ class BOSHStream(utility.EventDispatcher):
 					
 	def got_response(self, resp,x):
 		self.slot[x]=False
+		# this is an ack for the outgoing packets
+		self.out_queue.pop(0)
+		if len(self.out_queue)==0 and not self.initiating:
+			body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
+	
+			if self.sid: body["sid"] = self.sid
+			body["rid"] = `self.rid`
+			self.rid += 1
+			thead = http_headers.Headers()
+			thead.addRawHeader("Content-Type", "text/xml; charset=utf-8")
+			thead.addRawHeader("Proxy-Connection","keep-alive")
+			
+			thead.addRawHeader("Host", self.host.encode("utf-8"))
+
+			print body.toXml().encode("ascii")
+			#print dump(buffer(body.toXml().encode("ascii"),0))
+			
+			req = ClientRequest(
+				"POST", 
+				"/", 
+				thead,
+				unicode(body.toXml()).encode("utf-8")
+			)
+			#for i in range(2):
+			#	if not self.slot[i]:
+			#		if i==0:
+			#			self.slot[0]=True
+			self.proto.submitRequest(req, False).addCallback(self.got_response,int(0)).addErrback(self.got_error)
+			self.out_queue.append(body)
+			print 'send submitRequest'
+			#		else:
+			#			self.slot[1]=True
+			#			url = 'http://bind.jabbim.cz:80'
+			#			self.secondFactory.p.submitRequest(req, False).addCallback(self.got_response,int(i)).addErrback(self.got_error)
+			#			self.out_queue.append(body)
+			#			print 'send getPage'
+			#		break
 		print 'read the body'
 		temp=resp.stream.read()
 		if temp:
@@ -571,51 +609,16 @@ class BOSHStream(utility.EventDispatcher):
 		if temp:
 			temp.addCallback(self.got_data,resp,data)
 			return
-	
+		print [data]
 		try:
+
 			if self.rawDataInFn: self.rawDataInFn(data)
 			body, xmpp_elements = self.parser.parse(data)
 			if not self.initialized:
 				self.session_created(body)
 			for el in xmpp_elements:
 				if domish.IElement.providedBy(el):
-					self.dispatch(el)    
-			# this is an ack for the outgoing packets
-			self.out_queue.pop(0)
-			if len(self.out_queue)==0 and not self.initiating:
-				body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
-		
-				if self.sid: body["sid"] = self.sid
-				body["rid"] = `self.rid`
-				self.rid += 1
-				thead = http_headers.Headers()
-				thead.addRawHeader("Content-Type", "text/xml; charset=utf-8")
-				thead.addRawHeader("Host", self.host.encode("utf-8"))
-
-				print body.toXml().encode("ascii")
-				#print dump(buffer(body.toXml().encode("ascii"),0))
-				
-				req = ClientRequest(
-					"POST", 
-					"/", 
-					thead,
-					unicode(body.toXml()).encode("utf-8")
-				)
-				for i in range(2):
-					if not self.slot[i]:
-						if i==0:
-							self.slot[0]=True
-							self.proto.submitRequest(req, False).addCallback(self.got_response,int(i)).addErrback(self.got_error)
-							self.out_queue.append(body)
-							print 'send submitRequest'
-						else:
-							self.slot[1]=True
-							url = 'http://bind.jabbim.cz:80'
-							self.secondFactory.p.submitRequest(req, False).addCallback(self.got_response,int(i)).addErrback(self.got_error)
-							self.out_queue.append(body)
-							print 'send getPage'
-						break
-
+					self.dispatch(el)
 		except domish.ParserError:
 			# i'm unsure about this because if we receive only part
 			# of the message we send it (but in this case I'm not sure that
@@ -664,7 +667,7 @@ class BOSHStream(utility.EventDispatcher):
 
 	def connect_done(self, proto):
 		self.secondFactory = HTTPClientFactory()
-		reactor.connectTCP("bind.jabbim.cz", 80, self.secondFactory)
+		#reactor.connectTCP("bind.jabbim.cz", 80, self.secondFactory)
 		print "secondFactory",self.secondFactory
 		print "PROTO",proto,type(proto)
 		if not self.initialized:
