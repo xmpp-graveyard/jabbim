@@ -46,6 +46,10 @@ class searchWidget(QtGui.QWidget):
 		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.hideMe)
 
 		self.hide()
+		short=QtGui.QShortcut("ctrl+f",webkit)
+		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.showMe)
+		short=QtGui.QShortcut("ctrl+c",parent)
+		QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),webkit.copySelectedText)
 
 	def showMe(self):
 		self.show()
@@ -195,6 +199,11 @@ class webkitChatWidget(QtWebKit.QWebView):
 		    self.chatwidget().ui.searchWidget.showMe()
 		elif cmd=="copy_to_clipboard":
 			QtGui.QApplication.clipboard().setText(action.data().toUrl().toString())
+
+	def copySelectedText(self):
+		text=self.selectedText()
+		if len(text)!=0:
+			QtGui.QApplication.clipboard().setText(unicode(text))
 
 	def messageObjectReady(self):
 		#print "messageObjectReady",self.messageObject.messageCache

@@ -2342,7 +2342,7 @@ class mainWindow(QtGui.QMainWindow):
 		if mood != None:
 			if isinstance(mood,list):
 				print "mood is list",mood
-				mood=mood[0]
+		  		mood=mood[0]
 			t = ''
 			m = txt = icon = ''
 			for el in mood.elements():
