@@ -980,7 +980,7 @@ class rosterWidget(QtGui.QWidget):
 		x=0
 		y=0
 		if self.searchMode==False:
-			if self.favouriteMode:
+			if self.favouriteMode==False:
 				for key in self.sortedGroups:
 					item=self.groups[key]
 					items=self.getGroupSortedUsers(item.name)
