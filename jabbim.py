@@ -145,13 +145,17 @@ class clientClass(pyxl.client.Client):
 		tab,index=self.main.chat.findTab(frm,typ=['chat'])
 		change=[]
 		# user mood
+		if isinstance(payload,list):
+			print "mood list"
+			if len(payload)!=0:
+				payload=payload[0]
+			else:
+				return
 		if ns=="http://jabber.org/protocol/mood":
+			print "mood received"
 			change.append("mood")
 			t = ''
 			m = txt = ''
-			if isinstance(payload,list):
-				print "mood is list",mood
-				payload=payload[0]
 			for el in payload.elements():
 				if el.name == 'text':
 					txt = unicode(el)
@@ -2340,25 +2344,29 @@ class mainWindow(QtGui.QMainWindow):
 		
 		mood = contact.getPEP('http://jabber.org/protocol/mood')
 		if mood != None:
-			if isinstance(mood,list):
-				print "mood is list",mood
-		  		mood=mood[0]
-			t = ''
-			m = txt = icon = ''
-			for el in mood.elements():
-				if el.name == 'text':
-					txt = unicode(el)
-				else:
-					m = self.moods.get(el.name)
-					if self.moodIcons.has_key(el.name):
-						icon="<img src=\"%s\" />" % self.moodIcons[el.name].src
+				if isinstance(mood,list):
+					print "mood is list",mood
+					if len(mood)!=0:
+			  			mood=mood[0]
 					else:
-						icon=""
-			if txt != '':
-				t = m+ ' - %s'%txt
-			else:
-				t = m
-			text+='<br />%s<font size="-1">%s</font>' % (icon,t)
+						mood=None
+				if mood:
+					t = ''
+					m = txt = icon = ''
+					for el in mood.elements():
+						if el.name == 'text':
+							txt = unicode(el)
+						else:
+							m = self.moods.get(el.name)
+							if self.moodIcons.has_key(el.name):
+								icon="<img src=\"%s\" />" % self.moodIcons[el.name].src
+							else:
+								icon=""
+					if txt != '':
+						t = m+ ' - %s'%txt
+					else:
+						t = m
+					text+='<br />%s<font size="-1">%s</font>' % (icon,t)
 		
 		activity = contact.getPEP('http://jabber.org/protocol/activity')
 		if activity != None:
