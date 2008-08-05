@@ -66,7 +66,18 @@ class JingleInit:
 			contents.append(self.getContent(e))
 		self.sessions[sid].onAcceptSession(contents)
 		self.sessions[sid].ack(el['id'])
-	
+
+	def onJingleContentReplace(self,   el):
+		print 'jingle content-replace received'
+		self.disp(el['id'])
+		payload = el.firstChildElement()
+		sid =  payload['sid']
+		contents = []
+		for e in payload.elements():
+			contents.append(self.getContent(e))
+		self.sessions[sid].onContentReplace(contents)
+		self.sessions[sid].ack(el['id'])
+
 	def onJingleTerminate(self,   el):
 		print 'jingle session-terminate received'
 		self.disp(el['id'])
@@ -232,6 +243,24 @@ class JingleSession:
 				self.init.client.FT.on_ftEnd(self.sid,  reason)
 			elif self.contents[0].transport == 'urn:xmpp:tmp:jingle:transports:ibb':
 				self.init.client.FT.on_ftEnd(self.sid,  reason)	
+		
+		def contentReplace(self,  content):
+			iq = IQ(self.init.client.xmlstream, 'set')
+			iq['to'] = self.fromjid.full()
+			iq['from'] = self.tojid.full()
+			jingle = iq.addElement('jingle', 'urn:xmpp:tmp:jingle' )
+			jingle['action'] = 'content-replace'
+			jingle['initiator'] = self.fromjid.full()
+			jingle['sid'] = self.sid
+			jingle.addChild(content.toXml())
+			self.init.disp(iq['id'])
+			print iq.toXml()
+			d = iq.send()
+		
+		def onContentReplace(self,  contents):
+			self.contents = contents
+			if self.contents[0].transport == 'urn:xmpp:tmp:jingle:transports:ibb':
+				self.init.client.FT.ibbSend(self.sid)
 				
 		def ack(self,  id):
 			print 'ack'

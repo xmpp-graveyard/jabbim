@@ -493,6 +493,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='session-initiate']", self.jingle.onJingleInitiate, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='session-accept']", self.jingle.onJingleAccept, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='session-terminate']", self.jingle.onJingleTerminate, 1)
+		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='content-replace']", self.jingle.onJingleContentReplace, 1)
 
 		self.xping.start(100, False)		
 		self.getPrivacy().addCallback(self.getMetacontacts).addErrback(self.getMetacontacts)

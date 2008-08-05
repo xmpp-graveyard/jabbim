@@ -186,8 +186,8 @@ class FTInit:
 					streamhost['host'] = data[0]
 					streamhost['jid'] = proxy
 					streamhost['port'] = data[1]
-	
 
+				
 				d = iq.send()
 				client.disp(iq['id'])
 				d.addCallback(client._ftreplyhostReceived, sid)
@@ -226,7 +226,7 @@ class FTInit:
 
 	def _ftreplyhostErrReceived(self, err, sid):
 		print 'replyhost', err
-		self.on_ftEnd(sid, 'replyhost error')
+#		self.on_ftEnd(sid, 'replyhost error')
 	
 	def ftStart(self, sid, protocol):
 		log.msg(sid)
@@ -540,7 +540,7 @@ class SI:
 		if self.state == 'accepted':
 			if self.ft.protocol:
 				self.ft.protocol.unregisterProducer()
-			pass
+		return False
 	
 
 class Jingle:
@@ -588,12 +588,21 @@ class Jingle:
 	
 	def delete(self,  error):
 		self.br = True
+		if error == 'activate error' or error == 'connect failed' :
+			props = self.fileprops
+			props['type'] = 'request'
+			content = jingle.Content('responder',  'file offer',  'urn:xmpp:tmp:jingle:apps:file-transfer',  'urn:xmpp:tmp:jingle:transports:ibb',  props)
+			self.jingleSession.contentReplace(content)
+			self.transportReady = True
+			return True
+		if error != 'decline':
+			error = None
 		if self.jingleSession.state != 'ENDED':
 			self.jingleSession.terminateSession(error)
 		#HACK!
 		if self.ft.protocol:
-				self.ft.protocol.unregisterProducer()
-		
+			self.ft.protocol.unregisterProducer()
+		return False
 
 class FT:
 	def __init__(self,  tojid,  fromjid,  init,  fileprops,  filepath=None, sid = None, typ='ft'):
@@ -639,9 +648,13 @@ class FT:
 	
 	def delete(self,  error):
 		if self.sessionObj != None:
-			self.sessionObj.delete(error)
-		del self.init.client.ft[self.sid]
-		self = None
+			ret = self.sessionObj.delete(error)
+			if not ret:
+				del self.init.client.ft[self.sid]
+				self = None
+		else:
+			del self.init.client.ft[self.sid]
+			self = None
 	
 	
 	def activate(self,  activated = False):
@@ -696,8 +709,7 @@ class FT:
 
 		self.init.on_ftEnd(self.sid, self.error)
 
-	def connectFailure(self):
-		pass
+
 
 	def receive(self,  id,  filepath,  range = False):
 		self.mode = 'receive'
@@ -720,13 +732,14 @@ class FT:
 	
 	def connectFailure(self):
 		log.msg('connect failed')
-
+		
 		if len(self.streamhosts)>0:
 			self.connector = None
 			self.activeStreamhost = None
 			self.connectStreamHost()
 		else:
 			log.msg('nemuzu se spojit')
+			self.delete('connect failed')
 	
 	def activateReceive(self):
 		print 'activate!'
