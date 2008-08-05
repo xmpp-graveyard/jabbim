@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*- 
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -1745,6 +1745,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.connectStarted=0
 		self.snarlMessages={}
 		self.autoAdd={}
+		self.utils=utils
 		self.version = '0.5 SVN' + utils.getSvnVersion() #: version string
 		#self.setWindowOpacity (0.5) 
 		
@@ -2838,6 +2839,9 @@ class mainWindow(QtGui.QMainWindow):
 					action=menu.addAction(self.tr("Send file"))
 					action.setObjectName('send_file')
 					action.setData(QtCore.QVariant(unicode(resource)))
+					action=menu.addAction(self.tr("Send message"))
+					action.setObjectName('send_message')
+					action.setData(QtCore.QVariant(unicode(resource)))
 	
 					self.offlineMenu.addMenu(menu)
 			self.offlineMenu.addSeparator()
@@ -2889,6 +2893,16 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				self.toggleInv.setText(self.tr("Become invisible"))
 				self.toggleInvisibility(False)
+		elif cmd=='send_message':
+			chatjid=unicode(self.client.jid.userhost())+"/"+unicode(action.data().toString())
+			#tab,tabIndex=self.chat.findTab(full=jid)
+			ico=self.ui.roster.getIconByJID(self.client.jid.userhost())
+			tab=self.chat.addChatTab(chatjid,chatjid,icon=ico,full=chatjid)
+			self.chat.activate()
+			print "opening tab",tab
+			if tab==None:
+				return
+			#self.chat.openNewChatTab(jid,jid)
 
 	def tables_created(self,data):
 		"""
@@ -4500,7 +4514,7 @@ class mainWindow(QtGui.QMainWindow):
 		if self.client==None:
 			self.client = clientClass(unicode(jid).lower()+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
 		path = self.realHomeDir+'/avatars/'
-		if self.client.avatarDef.has_key(self.client.jid.userhost()):
+		if self.client.avatarDef.get(self.client.jid.userhost())!=None:
 			self.client.avatarImg[self.client.avatarDef[self.client.jid.userhost()]] = self.loadAvatar(self.client.avatarDef[self.client.jid.userhost()])
 		self.client.avatarImg[None]=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
 		self.client.avatarImg[u'None']=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]

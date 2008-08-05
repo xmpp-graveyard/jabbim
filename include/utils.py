@@ -23,7 +23,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
-import os,sys, re,platform
+import os,sys, re,platform,time
 from configobj import ConfigObj
 import zipfile, socket
 from cStringIO import StringIO
@@ -580,7 +580,7 @@ def elapsed_time(seconds, suffixes=['y','w','d','h','m','s'], add_s=False, separ
 	Takes an amount of seconds and turns it into a human-readable amount of time.
 	"""
 	# the formatted time string to be returned
-	time = []
+	tim = []
  
 	# the pieces of time to iterate over (days, hours, minutes, etc)
 	# - the first piece in each tuple is the suffix (d, h, w)
@@ -598,12 +598,12 @@ def elapsed_time(seconds, suffixes=['y','w','d','h','m','s'], add_s=False, separ
 		value = seconds / length
 		if value > 0:
 			seconds = seconds % length
-			time.append('%s %s' % (str(value),
+			tim.append('%s %s' % (str(value),
 					       (suffix, (suffix, suffix + 's')[value > 1])[add_s]))
 		if seconds < 1:
 			break
  
-	return separator.join(time)
+	return separator.join(tim)
 
 def getSvnVersion():
 	try:
@@ -613,3 +613,40 @@ def getSvnVersion():
 		return ' - rev. ' + file[3].strip()
 	except:
 		return ''
+
+def getNormalSize(byte, kmg = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB'], index = 0): 
+	"""Convert Bytes to human readable form"""
+	cislo = float(byte)
+	while cislo >= 1024:
+		cislo = cislo/1024
+		index += 1
+	return "%.1f %s" % (cislo, kmg[index])
+	
+def getStampFromFormat(datetime, format): # format e.g. "%d.%m.%Y %H:%M"
+	"""Conver datetime by format to time by xep-0082"""
+	if format==None or datetime==None:
+		(year, month, day, hour, minut, seconds, nic , nic , nic) = time.gmtime(time.mktime(time.localtime()))
+	elif format == 'sec':
+		try:
+			datetime=float(datetime)
+			(year, month, day, hour, minut, seconds, nic , nic , nic) = time.gmtime(time.mktime(time.localtime(datetime)))
+		except Exception,ex:
+			print ex
+			(year, month, day, hour, minut, seconds, nic , nic , nic) = time.gmtime(time.mktime(time.localtime()))
+	else:
+		(year, month, day, hour, minut, seconds, nic , nic , nic) = time.gmtime(time.mktime(time.strptime(datetime, format)))
+	
+	if day<10:
+		day="O%s" % day
+	if month<10:
+		month="O%s" % month
+	if year<100:
+		year="2O%s" % year
+	if hour<10:
+		hour="O%s" % hour
+	if minut<10:
+		minut="O%s" % minut
+	if seconds<10:
+		seconds="O%s" % seconds
+	return  "%s-%s-%sT%s:%s:%sZ" % (year, month, day, hour, minut, seconds)
+	

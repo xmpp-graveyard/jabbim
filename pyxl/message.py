@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*- 
 import sys,  re
 from calendar import timegm
 from twisted.python import log
@@ -86,7 +87,6 @@ class MessageInit:
 				if child.defaultUri == 'http://jabber.org/protocol/rosterx':
 					self.client._processRosterX(frm, child)
 
-
 			if child.name == 'confirm': # xep0070 - processed elsewhere
 				return
 			
@@ -125,7 +125,18 @@ class MessageInit:
 				if c != None:
 					c.setPEP(pep, payload) #zapisem si to do kontaktu
 				self.dispatcher.publishEvent('on_pep', frm, pep, payload)
-						
+				
+			if child.name == 'addresses' and error==None: #xep-0033 - only for remote control (xep-0146) 'ofrom'
+				for ads in child.elements():
+					if ads.hasAttribute('type') and ads.hasAttribute('jid'):
+						if ads.getAttribute('type') == 'ofrom':
+							ofrom=ads.getAttribute('jid')
+							if frmjid.userhost()==self.client.jid.userhost():#from own jid
+								body=u"→→→ %s" % body 
+							else:
+								body=u"→ %s → %s" % (frmjid.full(),body)
+							self.dispatcher.publishEvent('on_message', ofrom,typ,body,subject, xhtml,  chatstate,  delay, error)
+							return
 		
 		if error == None and el.getAttribute('type') == 'error':
 			error = 'Unknown Error'
