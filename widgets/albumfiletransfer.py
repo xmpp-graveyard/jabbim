@@ -108,6 +108,7 @@ class albumFiletransferDialog(QtGui.QDialog):
 		self.currentFile=file
 
 	def accept(self):
+		print 'accept'
 		if self.currentFile:
 			description=unicode(self.ui.description.toPlainText())
 			self.descriptions[self.currentFile]=description

@@ -297,8 +297,8 @@ def sendDataForm(main,jid,form,var,t,unregister=False):
 								if len(text)!=0:
 									child.children.append(text[0])
 									text.remove(text[0])
-						for t in text:
-							x.addElement('value', content = unicode(t))
+						for tx in text:
+							x.addElement('value', content = unicode(tx))
 					elif typ=="list-multi":
 						make=True
 						#text=unicode(widget.toPlainText())

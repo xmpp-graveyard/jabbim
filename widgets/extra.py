@@ -86,23 +86,14 @@ class extraDialog(QtGui.QDialog):
 		self.main.allowedSids.append(sid)
 		print "GOT SID",sid
 		print "KEYS ARE",self.main.client.ft.keys()
-		if self.main.client.ft.has_key(sid):
-			if self.main.client.ft[sid].method==None:
-				#self.main.events.addFTDownloadEvent(unicode(self.main.client.ft[sid].tojid),unicode(self.main.client.ft[sid].tojid),"",sid)
-				self.main.events.filetransferWidget[sid]=self.progress
-				self.main.events.filetransferWidget[sid].typ='extra'
-				self.main.events.filetransfer[sid]={'queueId':sid}
-				filename = self.main.realHomeDir+'/'+self.main.client.ft[sid].fileprops['name']
-				if 'http://jabber.org/protocol/bytestreams' in self.main.client.ft[sid].methods:
-					self.main.client.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
-					self.main.client.ft[sid].file = filename
-					self.main.client.receiveFile(sid, self.main.client.ft[sid].answerId)
-				elif 'http://jabber.org/protocol/ibb' in self.main.client.ft[sid].methods:
-					log.msg('IBB offer')
-					self.main.client.ft[sid].method = 'http://jabber.org/protocol/ibb'
-					self.main.client.ft[sid].file = filename
-					self.main.client.ft[sid].fp = open(self.main.client.ft[sid].file, 'wb')
-					self.main.client.receiveFile(sid, self.main.client.ft[sid].answerId)
+#		if self.main.client.ft.has_key(sid):
+#			if self.main.client.ft[sid].method==None:
+#				#self.main.events.addFTDownloadEvent(unicode(self.main.client.ft[sid].tojid),unicode(self.main.client.ft[sid].tojid),"",sid)
+#				self.main.events.filetransferWidget[sid]=self.progress
+#				self.main.events.filetransferWidget[sid].typ='extra'
+#				self.main.events.filetransfer[sid]={'queueId':sid}
+#				filename = self.main.realHomeDir+'/'+self.main.client.ft[sid].fileprops['name']
+#				self.main.client.receiveFile(sid, self.main.client.ft[sid].answerId,  filename)
 				#self.main.allowedSids.remove(sid)
 		#else:
 			#self.main.allowedSids.remove(sid)

@@ -31,6 +31,7 @@ from groupchat import  *
 from xmlrpclib import loads, dumps
 from twisted.internet import  threads
 import socket 
+from xdata import *
 
 MUCLISTTYPES = {
 'voice': ('http://jabber.org/protocol/muc#admin', 'participant', 'role'),
@@ -900,3 +901,82 @@ class derived:
 		if len(p) ==0:
 			p = r = Element(('http://www.xmpp.org/extensions/xep-0194.html#ns', 'room'))
 		return p
+
+
+	def createRatingList(self):
+		def _subscribe (el):
+			iq = IQ(self.main.client.xmlstream, "set")
+			pubsub = iq.addElement('pubsub',  'http://jabber.org/protocol/pubsub#owner')
+			subscriptions = pubsub.addElement('subscriptions')
+			subscriptions['node'] = 'http://dev.jabbim.cz/jabbim#favroster'
+			subscription =subscriptions.addElement('subscription')
+			subscription['jid'] = self.jid.userhost()
+			subscription['subscription'] = 'subscribed'
+			
+			self.disp(iq['id'])
+			return iq.send()
+		iq = IQ(self.main.client.xmlstream, "set")
+		pubsub = iq.addElement('pubsub',  'http://jabber.org/protocol/pubsub')
+		create = pubsub.addElement('create')
+		create['node'] = 'http://dev.jabbim.cz/jabbim#favroster'
+		config = pubsub.addElement('configure')
+		type = Field('FORM_TYPE', 'hidden', values=['http://jabber.org/protocol/pubsub#node_config'])
+		model = Field('pubsub#access_model',  values=['whitelist'])
+		persistence = Field('pubsub#persist_items',  values=['1'])
+		notif = Field('pubsub#deliver_notifications', values=['1'])
+		notif_pay = Field('pubsub#deliver_payloads', values=['1'])
+		cfg = Xform("submit",fields=[type,  model,  persistence,  notif,  notif_pay]).buildElement()
+		config.addChild(cfg)
+		self.disp(iq['id'])
+		d = iq.send()
+		d.addCallback(_subscribe)
+		return d
+		
+	def deleteRatingList(self):
+		iq = IQ(self.main.client.xmlstream, "set")
+		pubsub = iq.addElement('pubsub',  'http://jabber.org/protocol/pubsub#owner')
+		delete = pubsub.addElement('delete')
+		delete['node'] = 'http://dev.jabbim.cz/jabbim#favroster'
+		self.disp(iq['id'])
+		d = iq.send()
+	
+	def sendUserRating(self,  jid):
+		iq = IQ(self.main.client.xmlstream, "set")
+		pubsub = iq.addElement('pubsub',  'http://jabber.org/protocol/pubsub')
+		publish = pubsub.addElement('publish')
+		publish['node'] = 'http://dev.jabbim.cz/jabbim#favroster'
+		item = publish.addElement('item')
+		item['id'] = jid
+		rating = item.addElement('rating')
+		rating['jid'] = jid
+		rating['val'] = unicode(self.main.userRating.users[jid].rating)
+		rating['messages'] = unicode(self.main.userRating.users[jid].messages)
+		rating['reward'] = unicode(self.main.userRating.last_reward)
+		self.disp(iq['id'])
+		d = iq.send()
+		return d
+		
+	def getUserRating(self,  users = None):
+		def _gotRatings(el):
+			print 'we got it!'
+			ratings = {}
+			items = el.firstChildElement().firstChildElement()
+			for item in items.elements():
+				rating = item.firstChildElement()
+				ratings[rating['jid']] = rating.attributes
+			print ratings
+			return ratings
+		iq = IQ(self.main.client.xmlstream, "get")
+		pubsub = iq.addElement('pubsub',  'http://jabber.org/protocol/pubsub')
+		items = pubsub.addElement('items')
+		items['node'] = 'http://dev.jabbim.cz/jabbim#favroster'
+		if users != None:
+			for jid in users:
+				item = items.addElement('item')
+				item['id'] = jid
+		self.disp(iq['id'])
+		d = iq.send().addCallback(_gotRatings)
+		return d
+	
+	
+		

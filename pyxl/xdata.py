@@ -3,7 +3,7 @@
 from twisted.words.xish.domish import Element
 
 class Field:
-	def __init__(self, var, typ, label=None, desc=None, required=False, values=[], options=[]):
+	def __init__(self, var, typ = None, label=None, desc=None, required=False, values=[], options=[]):
 		self.var = unicode(var)
 		self.typ = typ
 		self.label = label
@@ -15,7 +15,8 @@ class Field:
 	def buildElement(self):
 		el = Element((None,"field"))
 		el["var"] = self.var
-		el["type"] = self.typ
+		if self.typ != None:
+			el["type"] = self.typ
 		if self.label:
 			el["label"] = unicode(self.label)
 		if self.desc:

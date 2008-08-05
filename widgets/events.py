@@ -461,8 +461,8 @@ class FTWidget(QtGui.QWidget):
 					self.main.events.filetransferQueue[self.queueId]=[]
 				if self.main.client.ft.has_key(self.sid):
 					print 'stopping filetransfer sid =',self.sid
-					if self.main.client.ft[self.sid].protocol:
-						self.main.client.ft[self.sid].protocol.unregisterProducer()
+					if self.main.client.ft[self.sid]:
+						self.main.client.ft[self.sid].delete()
 					self.complete=None
 					return
 			else:
@@ -634,7 +634,7 @@ class events:
 			height=metrics.height()+rect.height()+metrics.height()+pixmap.height()
 		else:
 			height=metrics.height()+rect.height()+metrics.height()
-		return self.addBooleanEvent(self.main.client.ftStarted,[sid,id],self.main.client._declineFT,[sid],self.main.tr("File transfer"),text=text,height=height,name=unicode(jid),typ="ftTransfer",icon=None,pixmap=pixmap)
+		return self.addBooleanEvent(self.main.client.ftStarted,[sid,id],self.main.client._declineFT,[sid,  id],self.main.tr("File transfer"),text=text,height=height,name=unicode(jid),typ="ftTransfer",icon=None,pixmap=pixmap)
 
 	def addAddUserEvent(self,jid,status):
 		"""

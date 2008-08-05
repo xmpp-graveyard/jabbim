@@ -464,7 +464,7 @@ class clientClass(pyxl.client.Client):
 		"""
 		Called when filetransfer finished
 		"""
-		self.dispatcher.publishEvent('on_ftEnd', sid, error)
+		
 		self.main.ftError[sid]=error
 		# self.main.allowedSids contains SIDs which are used for transfering Jabbim Extra
 		if sid in self.main.allowedSids:
@@ -1563,7 +1563,7 @@ class clientClass(pyxl.client.Client):
 			else:
 				filename = self.main.realHomeDir+'/'+self.ft[sid].fileprops['name']
 			autoDownload=True
-		elif self.main.allowedJids.has_key(self.main.getJid(unicode(self.ft[sid].tojid)).userhost()+"/"+self.ft[sid].fileprops['name']):
+		elif self.main.allowedJids.has_key(self.ft[sid].tojid.userhost()+"/"+self.ft[sid].fileprops['name']):
 			filename=self.main.allowedJids[self.main.getJid(unicode(self.ft[sid].tojid)).userhost()+"/"+self.ft[sid].fileprops['name']]+"/"+self.ft[sid].fileprops['name']
 			autoDownload=True
 		elif self.main.config['autoDownload'] == 'True' and unicode(self.ft[sid].tojid).find("rpc@jabbim.cz")==-1:
@@ -1593,8 +1593,8 @@ class clientClass(pyxl.client.Client):
 				else:
 					pixmap=None
 				#eventWidget=self.main.events.addBooleanEvent(self.ftStarted,[sid,id],None,[],self.main.tr("File transfer"),text= unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),height=40,name=unicode(self.ft[sid].tojid),typ="ftTransfer",icon=None)
-				eventWidget=self.main.events.addFTReceivedEvent(sid,id,unicode(self.ft[sid].tojid),pixmap)
-				tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid),typ=['chat'])
+				eventWidget=self.main.events.addFTReceivedEvent(sid,id,unicode(self.ft[sid].tojid.userhost()),pixmap)
+				tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid.userhost()),typ=['chat'])
 				if tab:
 					mainWindow=self.main
 					#w=widgets.chatwidget.FTAskWidget(self.ft[sid].fileprops['name'],eventWidget,tab.chat,tab.chat.ui.ftwidget)
@@ -1608,12 +1608,12 @@ class clientClass(pyxl.client.Client):
 					tab.chat.textEditWrite('<div id="ft'+unicode(sid)+'">'+self.main.webkitThemeFactory.genChatStatus(unicode(message),self.main.now())+"</div>")
 					tab.chat.lastMessageFrom=""
 
-	def _declineFT(self,sid):
+	def _declineFT(self,sid,  id):
 		tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid),typ=['chat'])
 		if tab:
 			tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById('ft"+unicode(sid)+"');")
 			del tab.chat.ui.webkit.messageObject.ft[unicode(sid)]
-		return self.declineFT(sid)
+		return self.declineFT(sid,  id)
 
 	def ftStarted(self,sid,id):
 		#q = QtGui.QMessageBox.question(self.main,self.main.tr("File transfer"), unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
@@ -1629,16 +1629,11 @@ class clientClass(pyxl.client.Client):
 			log.msg(unicode(filename))
 			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),basename(self.ft[sid].fileprops['name']),"",sid)
 			log.msg('receiving file: ' + sid)
-			if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
-				self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
-				self.ft[sid].file = filename
-				self.receiveFile(sid, id)
-			elif 'http://jabber.org/protocol/ibb' in self.ft[sid].methods:
-				log.msg('IBB offer')
-				self.ft[sid].method = 'http://jabber.org/protocol/ibb'
-				self.ft[sid].file = filename
-				self.ft[sid].fp = open(self.ft[sid].file, 'wb')
-				self.receiveFile(sid, id)
+
+			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
+			self.ft[sid].file = filename
+			self.receiveFile(sid, id, filename)
+
 	
 	def on_verify(self, id, thread, props, frm, typ): #xep0070
 # 		self.replyVerify(id, thread, props, frm, typ, False)
@@ -2198,6 +2193,7 @@ class mainWindow(QtGui.QMainWindow):
 		@type jid: unicode
 		@param jid: JID
 		"""
+		print 'send files'
 		# get files
 		dialog = QtGui.QFileDialog()
 		dialog.setResolveSymlinks(True)

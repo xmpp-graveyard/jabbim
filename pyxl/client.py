@@ -48,7 +48,7 @@ import traceback
 from configobj import ConfigObj
 import locale
 import rpc
-import presence,  message,  ft
+import presence,  message,  ft,  jingle
 #import bosh_wokkel
 try:
 	from hashlib import sha1
@@ -134,6 +134,10 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/activity+notify')
 		self.registerFeature('http://www.xmpp.org/extensions/xep-0194.html#ns')
 		self.registerFeature('http://www.xmpp.org/extensions/xep-0194.html#ns+notify')
+		self.registerFeature('http://dev.jabbim.cz/jabbim#favroster')
+		self.registerFeature('urn:xmpp:tmp:jingle')
+		self.registerFeature('urn:xmpp:tmp:jingle:apps:file-transfer')
+		self.registerFeature('urn:xmpp:tmp:jingle:transports:bytestreams')
 		self.identity = 'client/pc'
 		
 		self.caps_cache = {} # 'ext': (identity,[feature1, feature2])
@@ -179,6 +183,7 @@ class Client(derived):
 		self.presence = presence.PresenceInit(self)
 		self.message = message.MessageInit(self)
 		self.FT = ft.FTInit(self)
+		self.jingle = jingle.JingleInit(self)
 		
 
 	def chyba(self, err):
@@ -485,6 +490,10 @@ class Client(derived):
 		self.xmlstream.addObserver("/*/evil[@xmlns='http://jabber.org/protocol/evil']", self.onEvil, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/x[@xmlns='http://jabber.org/protocol/rosterx']", self.onRosterX, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/query[@xmlns='jabber:iq:rpc']", self.rpc.onRPC, 1)
+		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='session-initiate']", self.jingle.onJingleInitiate, 1)
+		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='session-accept']", self.jingle.onJingleAccept, 1)
+		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='session-terminate']", self.jingle.onJingleTerminate, 1)
+
 		self.xping.start(100, False)		
 		self.getPrivacy().addCallback(self.getMetacontacts).addErrback(self.getMetacontacts)
 #		self.getMetacontacts()

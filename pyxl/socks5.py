@@ -698,19 +698,6 @@ class Send(protocol.Protocol):
 #				self.ft.finish()
 
 
-# class IBBSend:
-# 	implements(interfaces.IConsumer)
-# 	
-# 	def registerProducer(self, producer, streaming):
-# 		return self.factory.transport.registerProducer(producer, streaming)
-# 	
-# 	def unregisterProducer(self):
-# 		self.factory.transport.unregisterProducer()
-# 	
-# 	def write(self, data):
-# 		if self.ft:
-# 			self.ft.transfered = self.ft.transfered + len(data)
-# 		return self.factory.transport.write(data)
 	
 class Receive(protocol.Protocol):
 
@@ -719,6 +706,7 @@ class Receive(protocol.Protocol):
 		self.transport.loseConnection()
 
 	def dataReceived(self, data):
+		print len(data)
 		if self.ft.fp != None:
 			self.ft.fp.write(data)
 			self.ft.transfered = self.ft.transfered + len(data)

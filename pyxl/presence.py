@@ -95,10 +95,11 @@ class PresenceInit:
 							print 'konference nebo gateway'
 							features = ['-']
 						else:
-							self.client.getFeatures(frm, ext)
+#							self.client.getFeatures(frm, ext)
+							pass
 				else:
 					features = 'asked'
-					self.client.getFeatures(frm, ext)
+#					self.client.getFeatures(frm, ext)
 			if child.name == 'x' and child.defaultUri == 'http://jabber.org/protocol/muc#user':
 				for item in child.elements():
 					if item.name == 'item':
@@ -223,6 +224,7 @@ class PresenceInit:
 		fromjid = frm.userhost()
 		resource = jid.JID(el['from']).resource
 		if self.client.groupchats.has_key(fromjid):
+			print 'GCPRESENCEERROR'
 			del self.client.groupchats[fromjid]
 			for child in  el.elements():
 				if child.name == 'error':
