@@ -940,18 +940,23 @@ class derived:
 		self.disp(iq['id'])
 		d = iq.send()
 	
-	def sendUserRating(self,  jid):
+	def sendUserRating(self,  jid=None):
 		iq = IQ(self.main.client.xmlstream, "set")
 		pubsub = iq.addElement('pubsub',  'http://jabber.org/protocol/pubsub')
 		publish = pubsub.addElement('publish')
 		publish['node'] = 'http://dev.jabbim.cz/jabbim#favroster'
-		item = publish.addElement('item')
-		item['id'] = jid
-		rating = item.addElement('rating')
-		rating['jid'] = jid
-		rating['val'] = unicode(self.main.userRating.users[jid].rating)
-		rating['messages'] = unicode(self.main.userRating.users[jid].messages)
-		rating['reward'] = unicode(self.main.userRating.last_reward)
+		if jid:
+			users=[self.main.userRating.users[jid]]
+		else:
+			users=list(self.main.userRating.users.values())
+		for user in users:
+			item = publish.addElement('item')
+			item['id'] = user.jid
+			rating = item.addElement('rating')
+			rating['jid'] = user.jid
+			rating['val'] = unicode(user.rating)
+			rating['messages'] = unicode(user.messages)
+			rating['reward'] = unicode(self.main.userRating.last_reward)
 		self.disp(iq['id'])
 		d = iq.send()
 		return d
@@ -961,9 +966,13 @@ class derived:
 			print 'we got it!'
 			ratings = {}
 			items = el.firstChildElement().firstChildElement()
+			lastReward=None
 			for item in items.elements():
 				rating = item.firstChildElement()
+				if not lastReward:
+					lastReward=rating['reward']
 				ratings[rating['jid']] = rating.attributes
+			ratings['lastReward']=lastReward
 			print ratings
 			return ratings
 		iq = IQ(self.main.client.xmlstream, "get")

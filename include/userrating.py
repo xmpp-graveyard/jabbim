@@ -2,14 +2,13 @@
 # We'll probably want to call the 'reward' method either:
 #  - on sending a message to a contact, or
 #  - on initiating a conversation with a contact.
-
+import weakref
 
 class User:
 	def __init__(self, jid):
 		self.jid = jid
 		self.rating = 0.0
 		self.messages = 0
-		self.changed=False
 
 # Before trying to understand this algorithm, make yourself familiar with
 # OldRatingAssigner first. They really produce equivalent results.
@@ -24,9 +23,12 @@ class RatingAssigner:
 	# a while.
 	RENORMALIZE_THRESH = 10.0
 
-	def __init__(self):
+	def __init__(self,main):
 		self.users = {}
 		self.last_reward = 1.0
+		self.counter=0
+		self.main=weakref.proxy(main)
+		self.changed=[]
 
 	def reward(self, jid):
 		# we have to create new user because reward can be called for user which
@@ -36,7 +38,16 @@ class RatingAssigner:
 		self.last_reward /= self.QUOTIENT
 		self.users[jid].rating = self.users[jid].rating / self.QUOTIENT + self.last_reward
 		self.users[jid].messages+=1
-		self.users[jid].changed=True
+		self.counter+=1
+		self.main.ui.roster.repaint()
+		if self.counter>10:
+			self.counter=0
+			for j in self.changed:
+				self.main.client.sendUserRating(j)
+			self.changed=[]
+		else:
+			if jid not in self.changed:
+				self.changed.append(jid)
 
 		if self.last_reward > self.RENORMALIZE_THRESH:
 			self.renormalize()
@@ -44,7 +55,8 @@ class RatingAssigner:
 	def renormalize(self):
 		for k in self.users.keys():
 			self.users[k].rating /= self.last_reward
-			self.users[k].changed=True
+		self.main.client.sendUserRating()
+		self.changed=[]
 		self.last_reward = 1.0
 
 # This algorithm produces equivalent results, but it is inefficient as it

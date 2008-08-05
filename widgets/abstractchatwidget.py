@@ -444,7 +444,12 @@ class abstractChatWidget(QtGui.QWidget):
 		layout.setSpacing(0)
 		self.ui.line=normalLineEditWidget(self,self)
 		self.ui.line.setAcceptRichText(False)
+		# tiny mc test :)
+		#self.ui.line=QtWebKit.QWebView(self)
+  		#file="file:///"+os.getcwd()+"/index.html"
+  		#self.ui.line.load(QtCore.QUrl(file))
 		layout.addWidget(self.ui.line)
+		self.ui.line.show()
 
 		self.first=None #: True if first message arrived; False if arrived more than one message. Otherwise None.
 		self.jid=jid #: users JID

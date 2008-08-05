@@ -9,6 +9,7 @@ import urlparse
 import random
 from hashlib import sha1
 import time
+from twisted.words.protocols.jabber.xmlstream import StreamManager
 #from twisted.web.client import getPage
 
 # -*- test-case-name: twisted.web.test.test_webclient -*-
@@ -746,9 +747,26 @@ class BOSHTTPClient(HTTPClientProtocol):
 
 class BOSHStreamFactory(XmlStreamFactoryMixin, protocol.ClientFactory):
 
-    def buildProtocol(self, addr):
-        xs = XmlStreamFactoryMixin.buildProtocol(self, addr)
-        bosh_client = BOSHTTPClient(manager = xs)
-        bosh_client.factory = self
-        return bosh_client
+	def __init__(self,authenticator):
+		xmlStreamFactoryMixin.__init__(self,authenticator)
+		protocol.ClientFactory.__init__(self,authenticator)
+		self.streamManager = StreamManager(self)
+
+	def addHandler(self, handler):
+		"""
+		Add a subprotocol handler to the stream manager.
+		"""
+		self.streamManager.addHandler(handler)
+
+	def removeHandler(self, handler):
+		"""
+		Add a subprotocol handler to the stream manager.
+		"""
+		self.streamManager.removeHandler(handler)
+
+	def buildProtocol(self, addr):
+		xs = XmlStreamFactoryMixin.buildProtocol(self, addr)
+		bosh_client = BOSHTTPClient(manager = xs)
+		bosh_client.factory = self
+		return bosh_client
 

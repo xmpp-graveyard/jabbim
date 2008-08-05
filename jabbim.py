@@ -2147,7 +2147,7 @@ class mainWindow(QtGui.QMainWindow):
 			QtCore.QObject.connect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
 
 		#self.loadRosterStyle() # load roster style
-		self.userRating=userrating.RatingAssigner()
+		self.userRating=userrating.RatingAssigner(self)
 		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.connect()
@@ -2908,9 +2908,21 @@ class mainWindow(QtGui.QMainWindow):
 		if d == None:
 			self.buildStatusWidgetMenu()
 			# load rating for userRating
-			
+
+	def loadUserRatingFailed(self,data=None):
+		self.client.createRatingList()
 
 	def loadUserRating(self,data=None):
+		if not data:
+			self.client.getUserRating().addCallback(self.loadUserRating).addErrback(self.loadUserRatingFailed)
+		else:
+			print "RATING ARRIVED:",data
+			self.userRating.last_reward=float(data['lastReward'])
+			del data['lastReward']
+			for user in self.userRating.users.values():
+				if user.jid in data.keys():
+					self.userRating.users[user.jid].messages=int(data[user.jid]['messages'])
+					self.userRating.users[user.jid].rating=float(data[user.jid]['reward'])
 		return
 		if not data:
 			d=self.cache.get_rating()
@@ -3750,10 +3762,10 @@ class mainWindow(QtGui.QMainWindow):
 
 
 		# close windows, hide tray :)
-		try:
-			self.cache.close()
-		except:
-			pass
+##		try:
+##			self.cache.close()
+##		except:
+##			pass
 		app.shutdown=True
 		app.closeAllWindows()
 		self.tray.hide()
