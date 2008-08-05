@@ -1570,20 +1570,9 @@ class clientClass(pyxl.client.Client):
 			filename = self.main.config['autoDownloadPath']+'/'+self.ft[sid].fileprops['name']
 			autoDownload=True
 		if autoDownload:
-			if self.ft[sid].method!=None:
-				return
 			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),basename(self.ft[sid].fileprops['name']),"",sid)
 			
-			if 'http://jabber.org/protocol/bytestreams' in self.ft[sid].methods:
-				self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
-				self.ft[sid].file = filename
-				self.receiveFile(sid, id)
-			elif 'http://jabber.org/protocol/ibb' in self.ft[sid].methods:
-				log.msg('IBB offer')
-				self.ft[sid].method = 'http://jabber.org/protocol/ibb'
-				self.ft[sid].file = filename
-				self.ft[sid].fp = open(self.ft[sid].file, 'wb')
-				self.receiveFile(sid, id)
+			self.receiveFile(sid, id,  filename)
 		else:
 			if unicode(self.ft[sid].tojid).find("rpc@jabbim.cz")==-1:
 				if self.ft[sid].fileprops.has_key('preview'):

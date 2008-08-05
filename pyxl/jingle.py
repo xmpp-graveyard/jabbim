@@ -50,6 +50,8 @@ class JingleInit:
 			print self.client.jid.full(), el['from']
 			self.client.ft[sid] = ft.FT( self.client.jid.full(), el['from'] , self.client.FT,  contents[0].fileprops,  filepath=None, sid =sid, typ='jingle')
 			self.ft[sid].sessionObj = ft.Jingle(self.ft[sid])
+			if contents[0].transport == 'urn:xmpp:tmp:jingle:transports:ibb':
+				self.ft[sid].sessionObj.transportReady = True
 			self.ft[sid].mode = 'receive'
 			self.client.on_fileReceived(sid, el['id'])
 			self.dispatcher.publishEvent('FTStartedEvent', sid, el['id'])
@@ -182,6 +184,9 @@ class JingleSession:
 			print 'ack received'
 			if self.contents[0].transport == 'urn:xmpp:tmp:jingle:transports:bytestreams':
 				self.init.client.FT.socksSend(self.sid)
+			elif self.contents[0].transport == 'urn:xmpp:tmp:jingle:transports:ibb':
+				self.init.client.FT.ibbSend(self.sid)
+				
 		
 		def acceptSession(self):
 			iq = IQ(self.init.client.xmlstream, 'set')
@@ -217,11 +222,16 @@ class JingleSession:
 			print self.contents, contents
 			if self.contents[0].transport == 'urn:xmpp:tmp:jingle:transports:bytestreams':
 				self.init.client.ft[self.sid].sessionObj.humanReady = True
+			elif self.contents[0].transport == 'urn:xmpp:tmp:jingle:transports:ibb':
+				self.init.client.ft[self.sid].sessionObj.humanReady = True
+				
 		
 		def onTerminateSession(self,  reason):
 			self.state = 'ENDED'
 			if self.contents[0].transport == 'urn:xmpp:tmp:jingle:transports:bytestreams':
 				self.init.client.FT.on_ftEnd(self.sid,  reason)
+			elif self.contents[0].transport == 'urn:xmpp:tmp:jingle:transports:ibb':
+				self.init.client.FT.on_ftEnd(self.sid,  reason)	
 				
 		def ack(self,  id):
 			print 'ack'

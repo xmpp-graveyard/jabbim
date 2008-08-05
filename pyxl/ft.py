@@ -316,27 +316,37 @@ class FTInit:
 		self.ft[sid].finish()
 	
 	def _ftIBBStart(self,el, sid):
-		iq = IQ(self.client.xmlstream, 'set')
-		iq['to'] = self.ft[sid].tojid.full()
-		iq['from'] = self.ft[sid].fromjid.full()
-		data = iq.addElement('data', 'http://jabber.org/protocol/ibb')
-		data['sid'] = sid
-		data['seq'] = unicode(self.ft[sid].ibbSeq)
-		dt = ''
-		dt = self.ft[sid].fp.read(4096)
-		if not dt:
-			self.ft[sid].error = 'IBB cannot start.'
-			self.ft[sid].finish()
-			return
-		data.addContent(b64encode(dt))		
-#		self.on_xml(iq.toXml())
-		d = iq.send()
-		self.disp(iq['id'])
-		self.ft[sid].ibbSeq = self.ft[sid].ibbSeq +1
-		self.ft[sid].transfered = self.ft[sid].transfered + len(dt)
-		self.client.on_ftTransfered(sid, len(dt))
-		d.addCallback(self._ftIBBContinue, sid)
-		d.addErrback(self._ftIBBError, sid)
+		obj =self.ft[sid]
+		ready = obj.sessionObj.ready()
+		print 'waiting for  IBB start'
+		if obj.typ == 'jingle':
+			if obj.sessionObj.br:
+				return
+		if ready:
+			print 'ready'
+			iq = IQ(self.client.xmlstream, 'set')
+			iq['to'] = self.ft[sid].tojid.full()
+			iq['from'] = self.ft[sid].fromjid.full()
+			data = iq.addElement('data', 'http://jabber.org/protocol/ibb')
+			data['sid'] = sid
+			data['seq'] = unicode(self.ft[sid].ibbSeq)
+			dt = ''
+			dt = self.ft[sid].fp.read(4096)
+			if not dt:
+				self.ft[sid].error = 'IBB cannot start.'
+				self.ft[sid].finish()
+				return
+			data.addContent(b64encode(dt))		
+	#		self.on_xml(iq.toXml())
+			d = iq.send()
+			self.disp(iq['id'])
+			self.ft[sid].ibbSeq = self.ft[sid].ibbSeq +1
+			self.ft[sid].transfered = self.ft[sid].transfered + len(dt)
+			self.client.on_ftTransfered(sid, len(dt))
+			d.addCallback(self._ftIBBContinue, sid)
+			d.addErrback(self._ftIBBError, sid)
+		else:
+			reactor.callLater(1, self._ftIBBStart, el, sid)
 		
 	def _ftIBBContinue(self,el, sid):
 		iq = IQ(self.client.xmlstream, 'set')
@@ -370,13 +380,6 @@ class FTInit:
 		d.addCallback(self._ftIBBContinue, sid)
 		d.addErrback(self._ftIBBError, sid)
 		
-	def receiveFileIBB(self, sid, id):
-		iq = Element((None,'iq'))
-		iq['to'] = self.ft[sid].fromjid.full()
-		iq['from'] = self.ft[sid].tojid.full()
-		iq['id'] = id
-		iq['type'] = 'result'
-		self.send(iq)
 	
 	def onIBBStart(self, el):
 		log.msg('IBB start')
@@ -559,13 +562,13 @@ class Jingle:
 		jingleSession = jingle.JingleSession(self.ft.init.client.jingle,self.ft.tojid,  self.ft.fromjid, self.ft.sid)
 		self.jingleSession = jingleSession
 		jingleSession.createFTContent('urn:xmpp:tmp:jingle:transports:bytestreams',  fileprops)
+#		jingleSession.createFTContent('urn:xmpp:tmp:jingle:transports:ibb',  fileprops)
 		print jingleSession.contents
 		jingleSession.initSession()
 		self.ft.init.client.jingle.sessions[self.ft.sid] = jingleSession
 	
 	def receive(self,  id,  rang = False):
 		print 'doing jingle receive '+self.ft.sid
-		
 		self.humanReady = True
 		if self.transportReady:
 			self.jingleSession.acceptSession()
@@ -639,7 +642,6 @@ class FT:
 			self.sessionObj.delete(error)
 		del self.init.client.ft[self.sid]
 		self = None
-		
 	
 	
 	def activate(self,  activated = False):
