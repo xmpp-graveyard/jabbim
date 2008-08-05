@@ -515,6 +515,7 @@ class Client(derived):
 		self.commands.registerNode("http://jabber.org/protocol/rc#set-status", "Change status", rc.fSetStatus, public = public)
 		self.commands.registerNode("http://jabber.org/protocol/rc#leave-groupchats", "Leave groupchats", rc.fLeaveGC, public = public)
 		self.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#resend-file", "Resend file", rc.ResendFile, public = public)
+		self.commands.registerNode("http://jabber.org/protocol/rc#forward", "Forward unread messages", rc.ForwardMsg, public = public)
 #		print 'post commands'
 #		def pis(co):
 #			print co

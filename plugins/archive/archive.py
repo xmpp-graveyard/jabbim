@@ -78,6 +78,8 @@ class FileBackend:
 
 	def saveMessage(self, to, body, typ, subject, xhtml, direction):
 		jid = to.userhost()
+		if typ=='groupchat':
+			jid=to.userhost()+"@"+to.resource
 		# get local time
 		t=time.time()
 		# get date in format YYYY-MM-DD
@@ -198,7 +200,6 @@ class FileBackend:
 			d=time.localtime()
 			newestStr=str(d[0])+"-"+str(d[1])+"-"+str(d[2])
 
-		
 		messages=self.getMessages(jid,newestStr,maxTime)
 		if not messages:
 			return []
