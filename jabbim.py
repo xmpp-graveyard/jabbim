@@ -2364,7 +2364,9 @@ class mainWindow(QtGui.QMainWindow):
 					general = el.name
 					if self.activityGroups.has_key(general):
 						general=self.activityGroups[general][0]
-					spec = el.firstChildElement().name
+					spec = el.firstChildElement()
+					if spec:
+						spec=spec.name
 					if self.activities.has_key(spec):
 						spec=self.activities[spec]
 
