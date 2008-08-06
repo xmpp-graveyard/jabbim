@@ -637,16 +637,16 @@ def getStampFromFormat(datetime, format): # format e.g. "%d.%m.%Y %H:%M"
 		(year, month, day, hour, minut, seconds, nic , nic , nic) = time.gmtime(time.mktime(time.strptime(datetime, format)))
 	
 	if day<10:
-		day="O%s" % day
+		day="0%s" % day
 	if month<10:
-		month="O%s" % month
+		month="0%s" % month
 	if year<100:
-		year="2O%s" % year
+		year="20%s" % year
 	if hour<10:
-		hour="O%s" % hour
+		hour="0%s" % hour
 	if minut<10:
-		minut="O%s" % minut
+		minut="0%s" % minut
 	if seconds<10:
-		seconds="O%s" % seconds
+		seconds="0%s" % seconds
 	return  "%s-%s-%sT%s:%s:%sZ" % (year, month, day, hour, minut, seconds)
-	
+
