@@ -165,11 +165,7 @@ class XmlStream(boshstream.BOSHStream):
 		self.authenticator.connectionMade()
 
 		self.addObserver("/features", self.onFeatures)
-		#self.addBootstrap('//event/stream/authd',self._authd)
 
-	#def _authd(self,test=None):
-		#self.initiating=False
-		
 	def got_first_element(self, body):
 		"""
 		Called when the first ansawer from the BOSH server has been received.
