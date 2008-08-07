@@ -310,19 +310,33 @@ class Client(derived):
 					d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
 			else:
 				d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
-			d.addCallback(self._dnsLookup)
-			d.addErrback(self._dnsLookupErr)
-			dns.getHostByName('localhost').addCallback(self.tst)
-	def tst(self, resp):
-		print resp
-	
-	def _dnsLookup(self, resp):
 
-		r = random.choice(resp[0])
+#			d.addCallback(self._dnsLookup)
+#			d.addErrback(self._dnsLookupErr)
+#			dns.getHostByName('localhost').addCallback(self.tst)
+			txt = dns.lookupText('_xmppconnect.'+self.jid.host, timeout = [2,10])
+			defer.DeferredList([d, txt]).addCallback(self._dnsLookup).addErrback(self._dnsLookupErr)
+	def tst(self, resp):
+		print 'TXT!!!!'
+		print resp
+		for r in resp[0]:
+#			print  r.payload,  dir(r.payload)
+			print r.payload.data
+	def _dnsLookup(self, results):
+		self.connections = []
+		resp = results[0][1]
 		for r in resp[0]:
 			self.connections.append((unicode(r.payload.target), int(r.payload.port)))
-		host, port = self.connections.pop(0)
-		self._connect(host,port)
+			print (unicode(r.payload.target), int(r.payload.port))
+		
+		txt =results[1][1]
+
+		for r in txt[0]:
+			parts= r.payload.data[0].split('=')
+			if parts[0] == '_xmpp-client-xbosh':
+				self.connections.append((parts[1], ))
+		
+		self.doConnect()
 #		self._connect(unicode(r[4][0]), int(r[4][1]))
 	
 	def _dnsLookupErr(self, resp):
@@ -330,6 +344,32 @@ class Client(derived):
 		print dir(resp)
 		self._connect(self.host, self.port)
 		#self._connect('talk.google.com', self.port)
+
+	def doConnect(self):
+		#pops first connection from list and tries to connect to it
+		if len(self.connections) == 0:
+			self.main._disconnect(error = 'failed')
+			self.reactor.callFromThread(self.on_disconnect)
+			return
+		pop = self.connections.pop(0)
+		if len(pop) ==2:
+			host = pop[0]
+			port = pop[1]
+			self._connect(host,port)
+		elif len(pop) == 1:
+			boshURL = pop[0]
+			try:
+				from urlparse import urlparse
+				parts = urlparse(boshURL)[1].split(':')
+				bhost = parts[0]
+				if len(parts) ==1:
+					bport = 80
+				else:
+					bport = parts[1]
+			except:
+				print 'bosh parse failure'
+				self.doConnect()
+			self._connect(bhost, int(bport), boshURL)
 
 				
 	def _connect(self, host, port, boshURL = ''): 
@@ -417,12 +457,7 @@ class Client(derived):
 		log.msg('connection failed!')
 		print self.connections
 		if len(self.connections)>0:
-			try:
-				self.connection.loseConnection()
-			except:
-				pass
-			host, port = self.connections.pop(0)
-			self._connect(host,port)
+			self.doConnect()
 		else:
 			self.main._disconnect(error = 'failed')
 			self.reactor.callFromThread(self.on_disconnect)

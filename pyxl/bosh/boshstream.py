@@ -177,7 +177,7 @@ class BOSHStream(utility.EventDispatcher):
 		thead.addRawHeader("Content-Type", "text/xml; charset=utf-8")
 		#thead.addRawHeader("Accept-Encoding", "gzip, deflate")
 		thead.addRawHeader("Host", self.host.encode("utf-8"))
-		thead.addRawHeader("Proxy-Connection", "Keepalive")
+		thead.addRawHeader("Proxy-Connection", "Keep-Alive")
 		print body.toXml().encode("ascii")
 		#print dump(buffer(body.toXml().encode("ascii"),0))
 		
