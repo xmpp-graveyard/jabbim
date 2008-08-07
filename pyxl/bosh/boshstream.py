@@ -107,7 +107,8 @@ class BOSHStream(utility.EventDispatcher):
 		for k,v in self.factory.bosh_attrs.items():
 			body[k.encode('utf-8')] = v.encode("utf-8")
 		body['route']="xmpp:"+body['to']+":5222"
-		body['wait']="300"
+		body['wait']="2"
+		body['hold']="1"
 		self.resend_queue.append(body)
 		print 'first request'
 		
@@ -174,7 +175,7 @@ class BOSHStream(utility.EventDispatcher):
 		thead.addRawHeader("Content-Type", "text/xml; charset=utf-8")
 		#thead.addRawHeader("Accept-Encoding", "gzip, deflate")
 		thead.addRawHeader("Host", self.host.encode("utf-8"))
-
+		thead.addRawHeader("Proxy-Connection", "Keepalive")
 		print body.toXml().encode("ascii")
 		#print dump(buffer(body.toXml().encode("ascii"),0))
 		

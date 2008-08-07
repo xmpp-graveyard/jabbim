@@ -177,6 +177,7 @@ class Client(derived):
 		self.socks5Port = '33333'
 		self.socks5IP = [] #
 		self.pep = False
+		self.IBBonly = False #use only IBB in SI transfers if this is True [we are in restricted enviroment]
 		#self.reactor.callFromThread(self.on_init)
 
 		self.rpc = rpc.rpc(self)
@@ -285,6 +286,7 @@ class Client(derived):
 				bhost = parts[0]
 				bport = parts[1]
 			except:
+				print 'bosh parse failure'
 				boshURL = ''
 		if host != None:
 			self._connect(host, int(port))
@@ -331,7 +333,7 @@ class Client(derived):
 
 				
 	def _connect(self, host, port, boshURL = ''): 
-		
+
 		if boshURL != '':
 			print '.'+boshURL+'.'
 			from bosh import client as bclient
@@ -339,8 +341,11 @@ class Client(derived):
 			self.factory = bclient.BOSHClientFactory(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang})
 #			self.factory = bosh_wokkel.BOSHClient(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang})
 			print self.factory
+			self.IBBonly = True
 		else:
 			self.factory = client.XMPPClientFactory(self.jid,self.password)
+			if unicode(port) == '443':
+				self.IBBonly = True
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
 ##		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
 ##		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
@@ -353,7 +358,8 @@ class Client(derived):
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
 		print '-'+host+'?', port
-		self.connection = reactor.connectTCP(host,port,self.factory)
+#		self.connection = reactor.connectTCP('localhost',3128, self.factory)
+		self.connection = reactor.connectTCP(host,port, self.factory)
 		self.reactor.callFromThread(self.on_connect)
 		print dir(self.factory)
 		print dir(self.connection)
@@ -495,7 +501,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='session-terminate']", self.jingle.onJingleTerminate, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='content-replace']", self.jingle.onJingleContentReplace, 1)
 
-#		self.xping.start(100, False)		
+		self.xping.start(100, False)		
 		self.getPrivacy().addCallback(self.getMetacontacts).addErrback(self.getMetacontacts)
 #		self.getMetacontacts()
 		self.getBookmarks()

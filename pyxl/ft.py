@@ -463,8 +463,11 @@ class SI:
 		field = x.addElement('field')
 		field['var'] = 'stream-method'
 		field['type'] = 'list-single'
-		field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
-		field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
+		if not self.ft.init.client.IBBonly:
+			field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
+			field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
+		else:
+			field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
 
 		self.ft.init.client.disp(iq['id'])
 		d = iq.send()
@@ -494,12 +497,14 @@ class SI:
 	def _ftFailed(self, err, sid):
 		print err
 		self.state = 'declined'
-		self.on_ftEnd(sid, 'Canceled')
+		self.ft.init.on_ftEnd(sid, 'Canceled')
 
 	def receive(self,  id,  rang = False):
 		self.state = 'accepted'
-		if 'http://jabber.org/protocol/bytestreams' in self.methods:
+		if 'http://jabber.org/protocol/bytestreams' in self.methods and not self.ft.init.client.IBBonly:
 			method = 'http://jabber.org/protocol/bytestreams'
+		elif self.ft.init.client.IBBonly :
+			method = 'http://jabber.org/protocol/ibb'
 		else:
 			method = self.methods[0]
 		iq = Element((None,'iq'))
