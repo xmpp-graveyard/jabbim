@@ -97,6 +97,8 @@ class BOSHStream(utility.EventDispatcher):
 			self.host = url[1]
 			self.port = 80
 		self.path = url[2].encode("utf-8")
+		if not self.path.endswith('/'):
+			self.path += '/'
 		self.bosh_attrs = self.factory.bosh_attrs
 		# now queue the first body for initializing the session
 		body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
