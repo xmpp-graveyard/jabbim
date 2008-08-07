@@ -422,6 +422,7 @@ class BOSHStream(utility.EventDispatcher):
 
 	def _build_first_request(self):
 		url = urlparse.urlparse(self.factory.bosh_url)
+		print url
 		try:
 			self.host, port = url[1].split(":")
 			self.port = int(port)
@@ -429,6 +430,7 @@ class BOSHStream(utility.EventDispatcher):
 			self.host = url[1]
 			self.port = 80
 		self.path = url[2].encode("utf-8")
+		
 		self.bosh_attrs = self.factory.bosh_attrs
 		# now queue the first body for initializing the session
 		body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
@@ -439,7 +441,8 @@ class BOSHStream(utility.EventDispatcher):
 		for k,v in self.factory.bosh_attrs.items():
 			body[k.encode('utf-8')] = v.encode("utf-8")
 		body['route']="xmpp:"+body['to']+":5222"
-		body['wait']="300"
+		body['wait']="5"
+		body['hold'] = '1'
 		self.resend_queue.append(body)
 		print 'first request'
 		
@@ -504,6 +507,7 @@ class BOSHStream(utility.EventDispatcher):
 		if self.rawDataOutFn:
 			self.rawDataOutFn(body.toXml())
 		thead = http_headers.Headers()
+
 		thead.addRawHeader("Content-Type", "text/xml; charset=utf-8")
 		thead.addRawHeader("Proxy-Connection","keep-alive")
 		thead.addRawHeader("Host", self.host.encode("utf-8"))
@@ -513,7 +517,7 @@ class BOSHStream(utility.EventDispatcher):
 		
 		req = ClientRequest(
 			"POST", 
-			"/", 
+			self.path, 
 			thead,
 			unicode(body.toXml()).encode("utf-8")
 		)
@@ -604,6 +608,10 @@ class BOSHStream(utility.EventDispatcher):
 		return
 
 	def got_data(self, d, resp,data=""): 
+		try:
+			print d, resp,data
+		except:
+			print 'encoding?'
 		if d:
 			data+=d
 		temp=resp.stream.read()
@@ -625,17 +633,18 @@ class BOSHStream(utility.EventDispatcher):
 			# of the message we send it (but in this case I'm not sure that
 			#got_data is called)
 			print "dispatch error"
-			self.dispatch(self, STREAM_ERROR_EVENT)
-			self.transport.loseConnection()
+#			self.dispatch(self7, STREAM_ERROR_EVENT)
+#			self.transport.loseConnection()
 
 	def got_error(self, fault):
 		print "FUCK",fault,unicode(fault),dir(fault)
 		self.dispatch(self, STREAM_ERROR_EVENT)
-		self.transport.loseConnection()
+#		self.transport.loseConnection()
 
 	def session_created(self, body):
 		print "session created"
 		print type(body)
+		print body
 		if body.hasAttribute("sid"):
 			self.sid = body["sid"]
 			self.dispatch(self, STREAM_START_EVENT)
@@ -655,6 +664,7 @@ class BOSHStream(utility.EventDispatcher):
 
 	def clientGone(self, proto):
 		""" try to reconnect """
+		print 'client gone!'
 		reactor.callLater(0, self.connect)
 
 	def connect(self):

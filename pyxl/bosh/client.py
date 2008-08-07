@@ -5,7 +5,7 @@ import xmlstream
 _default_bosh_attrs = {
 	"wait": "300",
 	"hold": "1",
-	#    "inactivity": "60",
+#	"inactivity": "60",
 	"content": "text/xml; charset=utf-8",
 	"xml:lang": "en",
 	"xmpp:version": "1.0",
