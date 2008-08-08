@@ -100,6 +100,7 @@ class BOSHStream(utility.EventDispatcher):
 		if not self.path.endswith('/'):
 			self.path += '/'
 		self.bosh_attrs = self.factory.bosh_attrs
+		print dir(self)
 		# now queue the first body for initializing the session
 		body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
 		body["rid"] = `self.rid`
@@ -177,7 +178,8 @@ class BOSHStream(utility.EventDispatcher):
 		thead.addRawHeader("Content-Type", "text/xml; charset=utf-8")
 		#thead.addRawHeader("Accept-Encoding", "gzip, deflate")
 		thead.addRawHeader("Host", self.host.encode("utf-8"))
-		thead.addRawHeader("Proxy-Connection", "Keep-Alive")
+#		thead.addRawHeader("Proxy-Connection", "Keep-Alive")
+#		thead.addRawHeader("Connection", "Keep-Alive")
 		print body.toXml().encode("ascii")
 		#print dump(buffer(body.toXml().encode("ascii"),0))
 		
@@ -249,12 +251,13 @@ class BOSHStream(utility.EventDispatcher):
 		reactor.callLater(0, self._try_to_send)
 
 	def clientPipelining(self, proto):
-		print "PIPELINE",proto
+#		print "PIPELINE",proto
 		reactor.callLater(0, self._try_to_send)
 
 	def clientGone(self, proto):
 		""" try to reconnect """
-		reactor.callLater(0, self.connect)
+#		reactor.callLater(0, self.connect)
+		self.reset()
 
 	def connect(self):
 		d = protocol.ClientCreator(
@@ -317,6 +320,7 @@ class XmlStreamFactoryMixin(object):
 		The returned instance will have bootstrap event observers registered  
 		and will proceed to handle input on an incoming connection.  
 		""" 
+		
 		xs = self.protocol(*self.args, **self.kwargs)  
 		xs.factory = self  
 		for event, fn in self.bootstraps:  

@@ -323,6 +323,7 @@ class Client(derived):
 #			print  r.payload,  dir(r.payload)
 			print r.payload.data
 	def _dnsLookup(self, results):
+		print 'DNS'
 		self.connections = []
 		resp = results[0][1]
 		for r in resp[0]:
@@ -347,6 +348,7 @@ class Client(derived):
 
 	def doConnect(self):
 		#pops first connection from list and tries to connect to it
+		print 'do connect ',  self.connections
 		if len(self.connections) == 0:
 			self.main._disconnect(error = 'failed')
 			self.reactor.callFromThread(self.on_disconnect)
@@ -398,7 +400,6 @@ class Client(derived):
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
 		print '-'+host+'?', port
-#		self.connection = reactor.connectTCP('localhost',3128, self.factory)
 		self.connection = reactor.connectTCP(host,port, self.factory)
 		self.reactor.callFromThread(self.on_connect)
 		print dir(self.factory)
@@ -433,6 +434,13 @@ class Client(derived):
 			
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
+		if self.IBBonly:
+			print dir( self.connection.factory)
+			print dir(self.xmlstream)
+			self.xmlstream.restart()
+#			print dir( self.factory.buildProtocol())
+#			self.connection.connect()
+#			return
 		try:
 			self.xping.stop()
 		except:
@@ -920,7 +928,6 @@ class Client(derived):
 #			cekej = ln*0.05
 		self.reactor.callFromThread(self.on_rosterArrived)
 		self.reactor.callLater(cekej,  self.presence.onFirstPresence)
-
 
 
 	def _authfailed(self,xmlstream):
