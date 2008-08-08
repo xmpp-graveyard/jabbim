@@ -9,9 +9,32 @@ from twisted.words.protocols import jabber
 from twisted.words.protocols.jabber import client,jid
 from twisted.words.xish import domish
 from twisted.words.xish.domish import Element
-##from twisted.internet import reactor, address
+from twisted.internet import reactor
 from twisted.words.protocols.jabber.xmlstream import IQ
 from twisted.internet.protocol import Protocol, ClientFactory
+from twisted.words.protocols.jabber.client import *
+
+def basicClientFactory(jid, secret):
+    a = RegisteringAuthenticator(jid, secret)
+    return xmlstream.XmlStreamFactory(a)
+
+class RegisteringAuthenticator(BasicAuthenticator):
+	def _registerResultEvent(self, iq):
+		print dir(self)
+		if iq["type"] == "result":
+			# Registration succeeded -- go ahead and auth
+			self.streamStarted(self.rootElement)
+		else:
+			# Registration failed
+			if iq.error['code'] == '500':
+				reactor.callLater(5,  self.registerAccount,  self.jid.user,  self.password)
+				print 'wait error, trying in 5 seconds'
+			self.xmlstream.dispatch(iq, self.REGISTER_FAILED_EVENT)
+	
+	def streamStarted(self, rootElement):
+		BasicAuthenticator.streamStarted(self, rootElement)
+		self.rootElement = rootElement
+
 
 class RegisteringClient:
 	def __init__(self, username, server, resource,password, port, reactor):
@@ -42,11 +65,13 @@ class RegisteringClient:
 
 
 	def _connect(self, host, port): 
-		self.factory = client.basicClientFactory(self.jid,self.password)
+		self.factory = basicClientFactory(self.jid,self.password)
+#		self.factory.authenticator = RegisteringAuthenticator(self.jid,  self.password)
 		self.factory.addBootstrap('//event/stream/start',self._streamstart)
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
-		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
+#		self.factory.addBootstrap("//event/client/basicauth/invaliduser", self._invaliduser)
 		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
+		self.factory.addBootstrap("//event/xmpp/initfailed", self._authfailed)
 		self.factory.addBootstrap("//event/client/basicauth/registerfailed", self._regfailed)
 		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
 #		print dir(self.factory.protocol)
@@ -103,7 +128,8 @@ class RegisteringClient:
 
 	def _authfailed(self, el):
 		log.msg('auth failed')
-		print el.toXml()
+#		print el.toXml()
+		print dir(self)
 		self.factory.authenticator.registerAccount(self.jid.user, self.password)
 		print 'trying to register'
 	
