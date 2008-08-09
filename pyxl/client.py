@@ -167,6 +167,7 @@ class Client(derived):
 		self.dispatcher.registerHandler('on_GCmessage', self.on_GCmessage, 'on_GCmessage')
 		self.dispatcher.registerHandler('on_authd', self.on_authd, 'on_authd')
 		self.dispatcher.registerHandler('on_message_send', self._sendMessage, 'on_message_send')
+		self.dispatcher.registerHandler('on_ftEnd', self.on_ftEnd, 'on_ftEnd')
 		self.dispatcher.registerHandler('on_pep', self.on_pep, 'on_pep') #docasne
 		self.xping = LoopingCall(self.heartbeat)
 		self.hbFails = 0
@@ -185,6 +186,9 @@ class Client(derived):
 		self.message = message.MessageInit(self)
 		self.FT = ft.FTInit(self)
 		self.jingle = jingle.JingleInit(self)
+		
+		self.proxy = None
+
 		
 
 	def chyba(self, err):
@@ -380,7 +384,7 @@ class Client(derived):
 			print '.'+boshURL+'.'
 			from bosh import client as bclient
 #			import bosh_wokkel
-			self.factory = bclient.BOSHClientFactory(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang})
+			self.factory = bclient.BOSHClientFactory(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang},  proxy  = self.proxy)
 #			self.factory = bosh_wokkel.BOSHClient(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang})
 			print self.factory
 			self.IBBonly = True
@@ -400,7 +404,13 @@ class Client(derived):
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
 		print '-'+host+'?', port
-		self.connection = reactor.connectTCP(host,port, self.factory)
+		#self.connection = reactor.connectTCP(host,port, self.factory)
+
+		if self.proxy != None:
+			self.connection = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory)
+			print self.proxy
+		else:
+			self.connection = reactor.connectTCP(host,port, self.factory)
 		self.reactor.callFromThread(self.on_connect)
 		print dir(self.factory)
 		print dir(self.connection)
@@ -433,14 +443,13 @@ class Client(derived):
 			self.reactor.callFromThread(self.on_xml,u'BOOT: ' + el.toXml())
 			
 	def connectionLost(self, connector, reason=protocol.connectionDone):
-		log.msg('connection lost!')
+		
 		if self.IBBonly:
-			print dir( self.connection.factory)
-			print dir(self.xmlstream)
-			self.xmlstream.restart()
-#			print dir( self.factory.buildProtocol())
-#			self.connection.connect()
-#			return
+			self.connection.connect()
+#			self.connection.factory.bosh_client.manager.restart()
+
+			return
+		log.msg('connection lost!')
 		try:
 			self.xping.stop()
 		except:

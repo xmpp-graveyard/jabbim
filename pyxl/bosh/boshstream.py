@@ -18,46 +18,46 @@ STREAM_ERROR_EVENT = intern("//event/stream/error")
 FILTER=''.join([(len(repr(chr(x)))==3) and chr(x) or '.' for x in range(256)])
 
 def dump(src, length=8):
-    N=0; result=''
-    while src:
-       s,src = src[:length],src[length:]
-       hexa = ' '.join(["%02X"%ord(x) for x in s])
-       s = s.translate(FILTER)
-       result += "%04X   %-*s   %s\n" % (N, length*3, hexa, s)
-       N+=length
-    return result
+	N=0; result=''
+	while src:
+	   s,src = src[:length],src[length:]
+	   hexa = ' '.join(["%02X"%ord(x) for x in s])
+	   s = s.translate(FILTER)
+	   result += "%04X   %-*s   %s\n" % (N, length*3, hexa, s)
+	   N+=length
+	return result
 
 
 class BOSHParser:
-    """
-    Wrapping an element stream for parsing <body/> documents
-    """
+	"""
+	Wrapping an element stream for parsing <body/> documents
+	"""
 
-    def parse(self, buf):
-        self._reset()
-        self.stream.parse(buf)
-        return self.body, self.xmpp_elements
-    
-    def onDocumentStart(self, rootelem):
-        if rootelem.name == 'body':
-            self.body = rootelem
+	def parse(self, buf):
+		self._reset()
+		self.stream.parse(buf)
+		return self.body, self.xmpp_elements
+	
+	def onDocumentStart(self, rootelem):
+		if rootelem.name == 'body':
+			self.body = rootelem
 
-    def onElement(self, element):
-        if isinstance(element, domish.Element):
-            self.xmpp_elements.append(element)
-        else:
-            pass
+	def onElement(self, element):
+		if isinstance(element, domish.Element):
+			self.xmpp_elements.append(element)
+		else:
+			pass
 
-    def _reset(self):
-        self.stream = domish.elementStream()
-        self.stream.DocumentStartEvent = self.onDocumentStart
-        self.stream.ElementEvent = self.onElement
-        self.stream.DocumentEndEvent = self.onDocumentEnd
-        self.body = ""
-        self.xmpp_elements = []
+	def _reset(self):
+		self.stream = domish.elementStream()
+		self.stream.DocumentStartEvent = self.onDocumentStart
+		self.stream.ElementEvent = self.onElement
+		self.stream.DocumentEndEvent = self.onDocumentEnd
+		self.body = ""
+		self.xmpp_elements = []
 
-    def onDocumentEnd(self):
-        pass
+	def onDocumentEnd(self):
+		pass
 
 
 class BOSHStream(utility.EventDispatcher):
@@ -97,10 +97,18 @@ class BOSHStream(utility.EventDispatcher):
 			self.host = url[1]
 			self.port = 80
 		self.path = url[2].encode("utf-8")
+
+		self.bosh_attrs = self.factory.bosh_attrs
+		print self.factory.proxy
+		if self.factory.proxy != None:
+			self.host = self.factory.proxy['host']
+			self.port = int(self.factory.proxy['port'])
+			self.path = self.factory.bosh_url.replace(':80',  '').encode("utf-8") #hack!
+	
+		
 		if not self.path.endswith('/'):
 			self.path += '/'
-		self.bosh_attrs = self.factory.bosh_attrs
-		print dir(self)
+		print self.host , 	self.port , self.path
 		# now queue the first body for initializing the session
 		body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
 		body["rid"] = `self.rid`
@@ -226,13 +234,13 @@ class BOSHStream(utility.EventDispatcher):
 			# of the message we send it (but in this case I'm not sure that
 			#got_data is called)
 			print "dispatch error"
-			self.dispatch(self, STREAM_ERROR_EVENT)
-			self.transport.loseConnection()
+#			self.dispatch(self, STREAM_ERROR_EVENT)
+#			self.transport.loseConnection()
 
 	def got_error(self, fault):
 		print "FUCK",fault,unicode(fault),dir(fault)
-		self.dispatch(self, STREAM_ERROR_EVENT)
-		self.transport.loseConnection()
+#		self.dispatch(self, STREAM_ERROR_EVENT)
+#		self.transport.loseConnection()
 
 	def session_created(self, body):
 		print "session created"
@@ -268,7 +276,6 @@ class BOSHStream(utility.EventDispatcher):
 		print 'connect!'
 
 	def connect_done(self, proto):
-		print "PROTO",proto,type(proto)
 		if not self.initialized:
 			self._build_first_request()
 		self.proto = proto
@@ -339,16 +346,20 @@ class XmlStreamFactoryMixin(object):
 		self.bootstraps.remove((event, fn))
 		
 class BOSHTTPClient(HTTPClientProtocol):
-    
-    def connectionMade(self):
-        self.manager.connect_done(self)
+	
+	def connectionMade(self):
+		self.manager.connect_done(self)
 
 
 class BOSHStreamFactory(XmlStreamFactoryMixin, protocol.ClientFactory):
+	bosh_client = None
+	def buildProtocol(self, addr):
+		if self.bosh_client != None:
+			return self.bosh_client
 
-    def buildProtocol(self, addr):
-        xs = XmlStreamFactoryMixin.buildProtocol(self, addr)
-        bosh_client = BOSHTTPClient(manager = xs)
-        bosh_client.factory = self
-        return bosh_client
+		xs = XmlStreamFactoryMixin.buildProtocol(self, addr)
+		bosh_client = BOSHTTPClient(manager = xs)
+		bosh_client.factory = self
+		self.bosh_client = bosh_client
+		return bosh_client
 
