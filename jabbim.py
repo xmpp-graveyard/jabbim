@@ -1570,7 +1570,7 @@ class clientClass(pyxl.client.Client):
 			filename = self.main.config['autoDownloadPath']+'/'+self.ft[sid].fileprops['name']
 			autoDownload=True
 		if autoDownload:
-			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),basename(self.ft[sid].fileprops['name']),"",sid)
+			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid.full()),basename(self.ft[sid].fileprops['name']),"",sid)
 			
 			self.receiveFile(sid, id,  filename)
 		else:
@@ -1747,6 +1747,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.autoAdd={}
 		self.utils=utils
 		self.version = '0.5 SVN' + utils.getSvnVersion() #: version string
+		print unicode(self.version) #for logs
 		#self.setWindowOpacity (0.5) 
 		
 
