@@ -1609,14 +1609,14 @@ class clientClass(pyxl.client.Client):
 		#if q == QtGui.QMessageBox.Yes:
 		mainWindow=self.main
 		filename = QtGui.QFileDialog.getSaveFileName(self.main, mainWindow.tr("Save File"),self.ft[sid].fileprops['name'],mainWindow.tr("*.*"))
-		tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid),typ=['chat'])
+		tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid.full()),typ=['chat'])
 		if tab:
 			tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById('ft"+unicode(sid)+"');")
 			del tab.chat.ui.webkit.messageObject.ft[unicode(sid)]
 		if filename and len(filename)!=0:
 			filename=unicode(filename)
 			log.msg(unicode(filename))
-			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid),basename(self.ft[sid].fileprops['name']),"",sid)
+			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid.full()),basename(self.ft[sid].fileprops['name']),"",sid)
 			log.msg('receiving file: ' + sid)
 
 			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
