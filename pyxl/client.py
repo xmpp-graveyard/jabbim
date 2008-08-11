@@ -188,8 +188,7 @@ class Client(derived):
 		self.jingle = jingle.JingleInit(self)
 		
 		self.proxy = None
-
-		
+	
 
 	def chyba(self, err):
 #		print err
@@ -320,12 +319,7 @@ class Client(derived):
 #			dns.getHostByName('localhost').addCallback(self.tst)
 			txt = dns.lookupText('_xmppconnect.'+self.jid.host, timeout = [2,10])
 			defer.DeferredList([d, txt]).addCallback(self._dnsLookup).addErrback(self._dnsLookupErr)
-	def tst(self, resp):
-		print 'TXT!!!!'
-		print resp
-		for r in resp[0]:
-#			print  r.payload,  dir(r.payload)
-			print r.payload.data
+
 	def _dnsLookup(self, results):
 		print 'DNS'
 		self.connections = []
@@ -406,7 +400,7 @@ class Client(derived):
 		print '-'+host+'?', port
 		#self.connection = reactor.connectTCP(host,port, self.factory)
 
-		if self.proxy != None:
+		if self.proxy != None and self.IBBonly:
 			self.connection = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory)
 			print self.proxy
 		else:

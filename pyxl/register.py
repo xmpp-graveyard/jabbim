@@ -14,6 +14,11 @@ from twisted.words.protocols.jabber.xmlstream import IQ
 from twisted.internet.protocol import Protocol, ClientFactory
 from twisted.words.protocols.jabber.client import *
 
+from twisted.words.protocols.jabber.client import *
+from twisted.internet import reactor
+import bosh.xmlstream
+from bosh import client as bclient
+
 def basicClientFactory(jid, secret):
     a = RegisteringAuthenticator(jid, secret)
     return xmlstream.XmlStreamFactory(a)
@@ -36,6 +41,21 @@ class RegisteringAuthenticator(BasicAuthenticator):
 		self.rootElement = rootElement
 
 
+
+def RegisteringBOSHClientFactory(jid, password, bosh_url, bosh_attrs = {},  proxy = None):
+    """
+    @param jid: authenticatiing jis
+    @param password: user's password
+    """
+    a = RegisteringAuthenticator(jid, password)
+    f = bclient.BOSHFactory(a)
+    f.bosh_url = bosh_url
+    f.bosh_attrs = bclient._default_bosh_attrs.copy()
+    f.bosh_attrs["to"] = jid.host.encode("utf-8")
+    f.bosh_attrs.update(bosh_attrs)
+    f.proxy = proxy
+    return f
+
 class RegisteringClient:
 	def __init__(self, username, server, resource,password, port, reactor):
 		self.jid = jid.JID('%s@%s/%s'%(username, server, resource))
@@ -46,26 +66,96 @@ class RegisteringClient:
 		self.connection = None
 		self.reactor = reactor
 		self.tryNum=0
+		self.connections = []
+		self.proxy = None
+		self.IBBonly = False
+		self.xmlLang = 'cs'
 		pass
 	
 	def connect(self):
 		log.msg('dns - ' + unicode(time.time()) + '_xmpp-client._tcp.'+self.jid.host)
-		d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
-		d.addCallback(self._dnsLookup)
-		d.addErrback(self._dnsLookupErr)
+		if sys.platform == 'win32':
+			import IPConfig
+			srv = IPConfig.IPConfig().get_dns()
+			dnssrv = []
+			for server in srv:
+				if len(server.strip())>0 and server.strip() != '0.0.0.0':
+					dnssrv.append((server, 53))
+			if len(dnssrv) > 0:
+				r = dns.Resolver(servers=dnssrv)
+				d = r.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
+			else:
+				log.msg('using root resolver')
+				d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
+		else:
+			d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
+
+#			d.addCallback(self._dnsLookup)
+#			d.addErrback(self._dnsLookupErr)
+#			dns.getHostByName('localhost').addCallback(self.tst)
+		txt = dns.lookupText('_xmppconnect.'+self.jid.host, timeout = [2,10])
+		defer.DeferredList([d, txt]).addCallback(self._dnsLookup).addErrback(self._dnsLookupErr)
 	
-	def _dnsLookup(self, resp):
-		r = random.choice(resp[0])
-		self._connect(unicode(r.payload.target), int(r.payload.port))
+	def _dnsLookup(self, results):
+		print 'DNS'
+		self.connections = []
+		resp = results[0][1]
+		for r in resp[0]:
+			self.connections.append((unicode(r.payload.target), int(r.payload.port)))
+			print (unicode(r.payload.target), int(r.payload.port))
+		
+		txt =results[1][1]
+
+		for r in txt[0]:
+			parts= r.payload.data[0].split('=')
+			if parts[0] == '_xmpp-client-xbosh':
+				self.connections.append((parts[1], ))
+		
+		self.doConnect()
+#		self._connect(unicode(r[4][0]), int(r[4][1]))
 	
 	def _dnsLookupErr(self, resp):
-#		print 'err:', resp
+		print 'err:', resp
+		print dir(resp)
 		self._connect(self.host, self.port)
+		#self._connect('talk.google.com', self.port)
+
+	def doConnect(self):
+		#pops first connection from list and tries to connect to it
+		print 'do connect ',  self.connections
+		if len(self.connections) == 0:
+			self.main._disconnect(error = 'failed')
+			self.reactor.callFromThread(self.on_disconnect)
+			return
+		pop = self.connections.pop(0)
+		if len(pop) ==2:
+			host = pop[0]
+			port = pop[1]
+			self._connect(host,port)
+		elif len(pop) == 1:
+			boshURL = pop[0]
+			try:
+				from urlparse import urlparse
+				parts = urlparse(boshURL)[1].split(':')
+				bhost = parts[0]
+				if len(parts) ==1:
+					bport = 80
+				else:
+					bport = parts[1]
+			except:
+				print 'bosh parse failure'
+				self.doConnect()
+			self._connect(bhost, int(bport), boshURL)
 
 
 
-	def _connect(self, host, port): 
-		self.factory = basicClientFactory(self.jid,self.password)
+	def _connect(self, host, port,  boshURL = None): 
+		if boshURL == None:
+			self.factory = basicClientFactory(self.jid,self.password)
+			self.IBBonly = False
+		else:
+			self.IBBonly = True
+			self.factory = RegisteringBOSHClientFactory(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang},  proxy  = self.proxy)
 #		self.factory.authenticator = RegisteringAuthenticator(self.jid,  self.password)
 		self.factory.addBootstrap('//event/stream/start',self._streamstart)
 		self.factory.addBootstrap('//event/stream/authd',self._authd)
@@ -88,10 +178,14 @@ class RegisteringClient:
 		self.xmlstream.rawDataOutFn = self.xml
 	
 	def xml(self, buf):
-		log.msg(u'XML: ' + unicode(buf, 'utf8', 'replace'))
+#		log.msg(u'XML: ' + unicode(buf, 'utf8', 'replace'))
+		pass
 	
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
+		if self.IBBonly:
+			self.connection.connect()
+			return
 		self.tryNum+=1
 		if self.tryNum<2:
 			self.connect()
@@ -100,6 +194,8 @@ class RegisteringClient:
 	
 	def connectionFailed(self, connector, reason=protocol.connectionDone):
 		log.msg('connection failed!')
+		if len(self.connections)>0:
+			self.doConnect()
 
 
 	def _streamEnd(self, el):
