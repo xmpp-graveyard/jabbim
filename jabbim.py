@@ -1621,12 +1621,7 @@ class clientClass(pyxl.client.Client):
 			filename = self.main.config['autoDownloadPath']+'/'+self.ft[sid].fileprops['name']
 			autoDownload=True
 		if autoDownload:
-<<<<<<< .mine
-			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].fromjid),basename(self.ft[sid].fileprops['name']),"",sid)
-=======
 			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid.full()),basename(self.ft[sid].fileprops['name']),"",sid)
->>>>>>> .r3305
-			
 			self.receiveFile(sid, id,  filename)
 		else:
 			if unicode(self.ft[sid].fromjid).find("rpc@jabbim.cz")==-1:
@@ -1674,22 +1669,15 @@ class clientClass(pyxl.client.Client):
 		#if q == QtGui.QMessageBox.Yes:
 		mainWindow=self.main
 		filename = QtGui.QFileDialog.getSaveFileName(self.main, mainWindow.tr("Save File"),self.ft[sid].fileprops['name'],mainWindow.tr("*.*"))
-<<<<<<< .mine
-		tab,index=self.main.chat.findTab(unicode(self.ft[sid].fromjid),typ=['chat'])
-=======
 		tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid.full()),typ=['chat'])
->>>>>>> .r3305
+
 		if tab:
 			tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById('ft"+unicode(sid)+"');")
 			del tab.chat.ui.webkit.messageObject.ft[unicode(sid)]
 		if filename and len(filename)!=0:
 			filename=unicode(filename)
 			log.msg(unicode(filename))
-<<<<<<< .mine
-			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].fromjid),basename(self.ft[sid].fileprops['name']),"",sid,self.ft[sid].fileprops['size'])
-=======
 			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid.full()),basename(self.ft[sid].fileprops['name']),"",sid)
->>>>>>> .r3305
 			log.msg('receiving file: ' + sid)
 
 			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
