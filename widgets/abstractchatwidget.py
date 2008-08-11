@@ -475,6 +475,7 @@ class abstractChatWidget(QtGui.QWidget):
 		self.ui.textEdit.setHtml("<br/>"+self.init)
 		
 		self.unread=0 #: number of unread messages
+		self.unreadEvent=None
 
 		if not self.xhtml:
 			self.ui.boldButton.hide()

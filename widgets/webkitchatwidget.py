@@ -79,11 +79,11 @@ class message(QtCore.QObject):
 
 	@QtCore.pyqtSignature("QString")
 	def acceptFT(self,sid):
-		self.ft[unicode(sid)].submitClicked()
+		self.ft[unicode(sid)].accept()
 
 	@QtCore.pyqtSignature("QString")
 	def rejectFT(self,sid):
-		self.ft[unicode(sid)].closeClicked()
+		self.ft[unicode(sid)].reject()
 
 	@QtCore.pyqtSignature("",result="int")
 	def messageDirection(self):

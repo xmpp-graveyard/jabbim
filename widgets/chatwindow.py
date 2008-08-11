@@ -331,14 +331,18 @@ class chatWindow(QtGui.QMainWindow):
 		widget.chat.unread=0
 		self.ui.chatTab.setTabText(index,widget.tabName)
 
-		ev=list(self.main.events.events)
-		for event in ev:
-			jid=self.main.getJid(event['name'])
-			if jid:
-				if jid.userhost()==self.main.getJid(widget.jid).userhost() and (event['type']=="newMessage" or event['type']=="message"):
-					event['widget'].closeClicked()
-					#break
-					self.main.events.refreshTray()
+		if widget.chat.unreadEvent:
+			widget.chat.unreadEvent.reject()
+			widget.chat.unreadEvent=None
+
+##		ev=list(self.main.events.events)
+##		for event in ev:
+##			jid=self.main.getJid(event['name'])
+##			if jid:
+##				if jid.userhost()==self.main.getJid(widget.jid).userhost() and (event['type']=="newMessage" or event['type']=="message"):
+##					event['widget'].closeClicked()
+##					#break
+##					self.main.events.refreshTray()
 		self.flashStatus=False
 		unread=int(self.getUnreadMessages())
 		if unread>0:
