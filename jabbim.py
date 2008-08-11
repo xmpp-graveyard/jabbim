@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- 
+﻿# -*- coding: utf-8 -*- 
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -263,7 +263,7 @@ class clientClass(pyxl.client.Client):
 						self.main.chat.hide()
 				self.main.events.addInfoEvent(header=mainWindow.tr("Member only"),text=mainWindow.tr("Room is only for members"),name=unicode(fromjid),typ='groupchatError')
 		elif int(code)==403:
-			log.msg("room user benned")
+			log.msg("room user banned")
 			tab,index=self.main.chat.findTab(fromjid)
 			if tab:
 				self.main.chat.ui.chatTab.removeTab(index)
@@ -327,6 +327,21 @@ class clientClass(pyxl.client.Client):
 		@param bytes: count of transfered bytes
 		"""
 		mainWindow=self.main
+		event=self.main.events.ftEvents[sid]
+		if not end:
+			event.setFileTransfered(int(self.ft[sid].transfered))
+		else:
+			print "ft.finished"
+			if event.typ=="ftUpload":
+				if len(event.queue)!=0:
+					self.main.events.nextFTUploadEvent(sid)
+				else:
+					event.transferFinished()
+					
+			else:
+				event.transferFinished()
+				
+		return
 		widget=self.main.events.filetransferWidget[self.main.events.filetransfer[sid]['queueId']] # event widget
 		# normal widget => progress bars in events tab or in chatwidget
 		if widget.typ=='normal':
@@ -344,7 +359,7 @@ class clientClass(pyxl.client.Client):
 				if widget.widget.complete==None:
 					# User wants to close transfer
 					# TODO: we have to do something here (inform user that transfer was stopped for example...)
-					self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(widget.widget.item))
+					#self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(widget.widget.item))
 					widget.widget.complete=True
 				else:
 					# file has been sent/received :)
@@ -464,7 +479,7 @@ class clientClass(pyxl.client.Client):
 		"""
 		Called when filetransfer finished
 		"""
-		
+		print "ftEnd"
 		self.main.ftError[sid]=error
 		# self.main.allowedSids contains SIDs which are used for transfering Jabbim Extra
 		if sid in self.main.allowedSids:
@@ -1246,6 +1261,7 @@ class clientClass(pyxl.client.Client):
 		if typ=="chat":
 			return self.on_message(frm, typ, body, subject, xhtml,chatstate,delay,error)
 		frm=jidT.JID(frm)
+		mainWindow=self.main
 		if frm.resource:
 			user=frm.resource
 		else:
@@ -1266,7 +1282,6 @@ class clientClass(pyxl.client.Client):
 			w=self.main.chat.ui.chatTab.widget(i)
 			countMessage=False
 			if unicode(w.jid) == frm:
-				mainWindow=self.main
 				#print 'error',error
 				if error=="remote-server-not-found":
 					if w!=None:
@@ -1405,7 +1420,21 @@ class clientClass(pyxl.client.Client):
 					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
 					self.main.chat.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)
-					self.main.events.addInfoEvent(header=mainWindow.tr("Message"),text=mainWindow.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()],tooltip=mainWindow.tr("New message from ")+unicode(user))
+
+					# MESSAGE EVENT
+					if not tab.chat.unreadEvent:
+						tab.chat.unreadEvent=self.main.events.addBooleanEvent()
+					tab.chat.unreadEvent.setAcceptHandler(self.main.chat.activate,[frm.full()])
+					#tab.chat.unreadEvent.setRejectHandler(self.main.events.removeEvent,[int(tab.chat.unreadEvent.ID)])
+					widget=tab.chat.unreadEvent.getWidgets()[0]
+					c=str(tab.chat.unread+1)
+					if c=="1":
+						widget.setText(unicode(mainWindow.tr("New message from:"))+" "+unicode(user))
+					else:
+						widget.setText(unicode(mainWindow.tr("New messages")) +" ("+c+") "+unicode(mainWindow.tr("from:"))+" "+unicode(user))
+					widget.setAcceptText(unicode(mainWindow.tr("Read")))
+					widget.setRejectText(unicode(mainWindow.tr("Ignore")))
+
 					self.dispatcher.publishEvent('chatMessageEvent', frm,user,body,subject, xhtml, chatstate, delay,self.main.events.ID-1)
 					tab.chat.unread+=1
 					if not self.main.chat.isActiveWindow():
@@ -1413,7 +1442,20 @@ class clientClass(pyxl.client.Client):
 							#self.main.chat.setWindowTitle("("+str(int(self.main.chat.getUnreadMessages()))+") "+current.tabName.replace("&",""))
 						self.main.chat.setWindowTitle("("+str(int(self.main.chat.getUnreadMessages()))+") "+tab.tabName.replace("&","")) 
 				elif not self.main.chat.isActiveWindow():
-					self.main.events.addInfoEvent(header=mainWindow.tr("Message"),text=mainWindow.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[frm.full()],tooltip=mainWindow.tr("New message from ")+unicode(user))
+					# MESSAGE EVENT
+					if not tab.chat.unreadEvent:
+						tab.chat.unreadEvent=self.main.events.addBooleanEvent()
+					tab.chat.unreadEvent.setAcceptHandler(self.main.chat.activate,[frm.full()])
+					#tab.chat.unreadEvent.setRejectHandler(self.main.events.removeEvent,[int(tab.chat.unreadEvent.ID)])
+					widget=tab.chat.unreadEvent.getWidgets()[0]
+					c=str(tab.chat.unread+1)
+					if c=="1":
+						widget.setText(unicode(mainWindow.tr("New message from:"))+" "+unicode(user))
+					else:
+						widget.setText(unicode(mainWindow.tr("New messages")) +" ("+c+") "+unicode(mainWindow.tr("from:"))+" "+unicode(user))
+					widget.setAcceptText(unicode(mainWindow.tr("Read")))
+					widget.setRejectText(unicode(mainWindow.tr("Ignore")))
+
 					self.dispatcher.publishEvent('chatMessageEvent', frm,user,body,subject, xhtml, chatstate, delay,self.main.events.ID-1)
 					#if int(self.main.chat.ui.chatTab.currentIndex())==tabIndex:
 					#if current:
@@ -1454,7 +1496,6 @@ class clientClass(pyxl.client.Client):
 				text+='<td><b>'+mainWindow.tr("New message from ")+unicode(user)+'</b><br/>'
 				text+='<font size="-1">'+traytext+'<br/>'
 				text+="</td></tr></table>"
-				self.main.events.addInfoEvent(header=mainWindow.tr("New message"),text=mainWindow.tr("From: ")+unicode(user),name=unicode(frm.full()),typ='message',icon="images/xxxxx/actions/message.png",action=self.main.chat.activate,actionDict=[],tooltip=text)
 				if self.groupchats.has_key(frm.userhost()):
 					self.main.chat.addChatTab(frm.full(),unicode(user),icon,True,full=True)
 					tab,tabIndex=self.main.chat.findTab(frm.full(),True)
@@ -1467,6 +1508,15 @@ class clientClass(pyxl.client.Client):
 
 				
 				if tab:
+					# MESSAGE EVENT
+					tab.chat.unreadEvent=self.main.events.addBooleanEvent()
+					tab.chat.unreadEvent.setAcceptHandler(self.main.chat.activate,[frm.full()])
+					#tab.chat.unreadEvent.setRejectHandler(self.main.events.removeEvent,[int(tab.chat.unreadEvent.ID)])
+					widget=tab.chat.unreadEvent.getWidgets()[0]
+					widget.setText(unicode(mainWindow.tr("New message from:"))+" "+unicode(user))
+					widget.setAcceptText(unicode(mainWindow.tr("Read")))
+					widget.setRejectText(unicode(mainWindow.tr("Ignore")))
+
 					tab.chat.lastMessageFrom=unicode(user)
 					if xhtml==None:
 						message=unicode(body).replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
@@ -1556,25 +1606,30 @@ class clientClass(pyxl.client.Client):
 					#w.chat.setTooltip(item,jid.full())
 
 	def on_fileReceived(self, sid, id):
+		mainWindow=self.main
 		autoDownload=False
 		if unicode(sid) in self.main.allowedSids:
-			if unicode(self.ft[sid].tojid).find("rpc@jabbim.cz")!=-1 and not unicode(sid) in self.main.allowedSids:
+			if unicode(self.ft[sid].fromjid).find("rpc@jabbim.cz")!=-1 and not unicode(sid) in self.main.allowedSids:
 				return
 			else:
 				filename = self.main.realHomeDir+'/'+self.ft[sid].fileprops['name']
 			autoDownload=True
-		elif self.main.allowedJids.has_key(self.ft[sid].tojid.userhost()+"/"+self.ft[sid].fileprops['name']):
-			filename=self.main.allowedJids[self.main.getJid(unicode(self.ft[sid].tojid)).userhost()+"/"+self.ft[sid].fileprops['name']]+"/"+self.ft[sid].fileprops['name']
+		elif self.main.allowedJids.has_key(self.ft[sid].fromjid.userhost()+"/"+self.ft[sid].fileprops['name']):
+			filename=self.main.allowedJids[self.main.getJid(unicode(self.ft[sid].fromjid)).userhost()+"/"+self.ft[sid].fileprops['name']]+"/"+self.ft[sid].fileprops['name']
 			autoDownload=True
-		elif self.main.config['autoDownload'] == 'True' and unicode(self.ft[sid].tojid).find("rpc@jabbim.cz")==-1:
+		elif self.main.config['autoDownload'] == 'True' and unicode(self.ft[sid].fromjid).find("rpc@jabbim.cz")==-1:
 			filename = self.main.config['autoDownloadPath']+'/'+self.ft[sid].fileprops['name']
 			autoDownload=True
 		if autoDownload:
+<<<<<<< .mine
+			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].fromjid),basename(self.ft[sid].fileprops['name']),"",sid)
+=======
 			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid.full()),basename(self.ft[sid].fileprops['name']),"",sid)
+>>>>>>> .r3305
 			
 			self.receiveFile(sid, id,  filename)
 		else:
-			if unicode(self.ft[sid].tojid).find("rpc@jabbim.cz")==-1:
+			if unicode(self.ft[sid].fromjid).find("rpc@jabbim.cz")==-1:
 				if self.ft[sid].fileprops.has_key('preview'):
 					image=base64.decodestring(str(unicode(self.ft[sid].fileprops['preview'])))
 					pixmap=QtGui.QPixmap()
@@ -1582,8 +1637,17 @@ class clientClass(pyxl.client.Client):
 				else:
 					pixmap=None
 				#eventWidget=self.main.events.addBooleanEvent(self.ftStarted,[sid,id],None,[],self.main.tr("File transfer"),text= unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),height=40,name=unicode(self.ft[sid].tojid),typ="ftTransfer",icon=None)
-				eventWidget=self.main.events.addFTReceivedEvent(sid,id,unicode(self.ft[sid].tojid.userhost()),pixmap)
-				tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid.userhost()),typ=['chat'])
+				#eventWidget=self.main.events.addFTReceivedEvent(sid,id,unicode(self.ft[sid].tojid.userhost()),pixmap)
+				event=self.main.events.addBooleanEvent('fileDownload','filetransfers')
+				event.setAcceptHandler(self.ftStarted,[sid,id])
+				event.setRejectHandler(self._declineFT,[sid,id])
+				widget=event.getWidgets()[0]
+				user=self.main.ui.roster.getNameByJID(self.ft[sid].fromjid.userhost())
+				widget.setText(unicode(user)+" "+unicode(mainWindow.tr("is sending you file"))+" "+unicode(self.ft[sid].fileprops['name']))
+				widget.setAcceptText(unicode(mainWindow.tr("Acceot")))
+				widget.setRejectText(unicode(mainWindow.tr("Reject")))
+
+				tab,index=self.main.chat.findTab(unicode(self.ft[sid].fromjid.userhost()),typ=['chat'])
 				if tab:
 					mainWindow=self.main
 					#w=widgets.chatwidget.FTAskWidget(self.ft[sid].fileprops['name'],eventWidget,tab.chat,tab.chat.ui.ftwidget)
@@ -1593,12 +1657,13 @@ class clientClass(pyxl.client.Client):
 						#w.setPreview(pixmap)
 					#tab.chat.ui.ftwidget.layout().addWidget(w)
 					message=mainWindow.tr("User is sending you file")+" "+unicode(self.ft[sid].fileprops['name'])+". <a href=\"javascript:messageObject.acceptFT('"+unicode(sid)+"');\">["+mainWindow.tr("Accept")+"]</a> <a href=\"javascript:messageObject.rejectFT('"+unicode(sid)+"');\">["+mainWindow.tr("Decline")+"]</a>"
-					tab.chat.ui.webkit.messageObject.ft[unicode(sid)]=eventWidget
+					tab.chat.ui.webkit.messageObject.ft[unicode(sid)]=event
 					tab.chat.textEditWrite('<div id="ft'+unicode(sid)+'">'+self.main.webkitThemeFactory.genChatStatus(unicode(message),self.main.now())+"</div>")
 					tab.chat.lastMessageFrom=""
 
 	def _declineFT(self,sid,  id):
-		tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid),typ=['chat'])
+		print "_declineFT"
+		tab,index=self.main.chat.findTab(unicode(self.ft[sid].fromjid),typ=['chat'])
 		if tab:
 			tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById('ft"+unicode(sid)+"');")
 			del tab.chat.ui.webkit.messageObject.ft[unicode(sid)]
@@ -1609,14 +1674,22 @@ class clientClass(pyxl.client.Client):
 		#if q == QtGui.QMessageBox.Yes:
 		mainWindow=self.main
 		filename = QtGui.QFileDialog.getSaveFileName(self.main, mainWindow.tr("Save File"),self.ft[sid].fileprops['name'],mainWindow.tr("*.*"))
+<<<<<<< .mine
+		tab,index=self.main.chat.findTab(unicode(self.ft[sid].fromjid),typ=['chat'])
+=======
 		tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid.full()),typ=['chat'])
+>>>>>>> .r3305
 		if tab:
 			tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById('ft"+unicode(sid)+"');")
 			del tab.chat.ui.webkit.messageObject.ft[unicode(sid)]
 		if filename and len(filename)!=0:
 			filename=unicode(filename)
 			log.msg(unicode(filename))
+<<<<<<< .mine
+			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].fromjid),basename(self.ft[sid].fileprops['name']),"",sid,self.ft[sid].fileprops['size'])
+=======
 			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid.full()),basename(self.ft[sid].fileprops['name']),"",sid)
+>>>>>>> .r3305
 			log.msg('receiving file: ' + sid)
 
 			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
@@ -1720,6 +1793,7 @@ class mainWindow(QtGui.QMainWindow):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
+		self.ui.Form.setWidget(self.ui.scrollAreaWidgetContents)
 		self.reator=reactor
 		self.setObjectName("Jabbim class")
 		#self.setWindowFlags(QtCore.Qt.Tool)#|QtCore.Qt.FramelessWindowHint)
@@ -1745,7 +1819,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.connectStarted=0
 		self.snarlMessages={}
 		self.autoAdd={}
-		self.utils=utils
 		self.version = '0.5 SVN' + utils.getSvnVersion() #: version string
 		print unicode(self.version) #for logs
 		#self.setWindowOpacity (0.5) 
@@ -2840,9 +2913,6 @@ class mainWindow(QtGui.QMainWindow):
 					action=menu.addAction(self.tr("Send file"))
 					action.setObjectName('send_file')
 					action.setData(QtCore.QVariant(unicode(resource)))
-					action=menu.addAction(self.tr("Send message"))
-					action.setObjectName('send_message')
-					action.setData(QtCore.QVariant(unicode(resource)))
 	
 					self.offlineMenu.addMenu(menu)
 			self.offlineMenu.addSeparator()
@@ -2894,16 +2964,6 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				self.toggleInv.setText(self.tr("Become invisible"))
 				self.toggleInvisibility(False)
-		elif cmd=='send_message':
-			chatjid=unicode(self.client.jid.userhost())+"/"+unicode(action.data().toString())
-			#tab,tabIndex=self.chat.findTab(full=jid)
-			ico=self.ui.roster.getIconByJID(self.client.jid.userhost())
-			tab=self.chat.addChatTab(chatjid,chatjid,icon=ico,full=chatjid)
-			self.chat.activate()
-			print "opening tab",tab
-			if tab==None:
-				return
-			#self.chat.openNewChatTab(jid,jid)
 
 	def tables_created(self,data):
 		"""
@@ -4515,7 +4575,7 @@ class mainWindow(QtGui.QMainWindow):
 		if self.client==None:
 			self.client = clientClass(unicode(jid).lower()+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
 		path = self.realHomeDir+'/avatars/'
-		if self.client.avatarDef.get(self.client.jid.userhost())!=None:
+		if self.client.avatarDef.has_key(self.client.jid.userhost()):
 			self.client.avatarImg[self.client.avatarDef[self.client.jid.userhost()]] = self.loadAvatar(self.client.avatarDef[self.client.jid.userhost()])
 		self.client.avatarImg[None]=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
 		self.client.avatarImg[u'None']=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
@@ -4698,7 +4758,7 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.roster.users=[]
 		MainWindow.ui.roster.disconnect()
 		MainWindow.ui.login_connect.setEnabled(True)
-		self.ui.eventsListWidget.clear()
+		#self.ui.eventsListWidget.clear()
 		del self.events.events
 		self.events.events=[]
 		self.events.refreshTray()
