@@ -168,6 +168,7 @@ class Client(derived):
 		self.dispatcher.registerHandler('on_authd', self.on_authd, 'on_authd')
 		self.dispatcher.registerHandler('on_message_send', self._sendMessage, 'on_message_send')
 		self.dispatcher.registerHandler('on_ftEnd', self.on_ftEnd, 'on_ftEnd')
+		self.dispatcher.registerHandler('on_ftTransfered', self.on_ftTransfered, 'on_ftTransfered')
 		self.dispatcher.registerHandler('on_pep', self.on_pep, 'on_pep') #docasne
 		self.xping = LoopingCall(self.heartbeat)
 		self.hbFails = 0

@@ -693,7 +693,7 @@ class Send(protocol.Protocol):
 			pass
 		if self.ft:
 			self.ft.transfered = self.ft.transfered + len(data)
-			self.ft.client.on_ftTransfered(self.ft.sid, len(data))
+			self.ft.client.dispatcher.publishEvent('on_ftTransfered', self.ft.sid, len(data))
 #			if self.ft.transfered == self.ft.size:
 #				self.ft.finish()
 
@@ -711,7 +711,8 @@ class Receive(protocol.Protocol):
 			self.ft.fp.write(data)
 			self.ft.transfered = self.ft.transfered + len(data)
 			try:
-				self.ft.client.on_ftTransfered(self.ft.sid, len(data))
+
+				self.ft.client.dispatcher.publishEvent('on_ftTransfered', self.ft.sid, len(data))
 			except:
 				pass
 		try:
