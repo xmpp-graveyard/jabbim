@@ -1669,15 +1669,14 @@ class clientClass(pyxl.client.Client):
 		#if q == QtGui.QMessageBox.Yes:
 		mainWindow=self.main
 		filename = QtGui.QFileDialog.getSaveFileName(self.main, mainWindow.tr("Save File"),self.ft[sid].fileprops['name'],mainWindow.tr("*.*"))
-		tab,index=self.main.chat.findTab(unicode(self.ft[sid].tojid.full()),typ=['chat'])
-
+		tab,index=self.main.chat.findTab(unicode(self.ft[sid].fromjid),typ=['chat'])
 		if tab:
 			tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById('ft"+unicode(sid)+"');")
 			del tab.chat.ui.webkit.messageObject.ft[unicode(sid)]
 		if filename and len(filename)!=0:
 			filename=unicode(filename)
 			log.msg(unicode(filename))
-			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid.full()),basename(self.ft[sid].fileprops['name']),"",sid)
+			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].fromjid),basename(self.ft[sid].fileprops['name']),"",sid,self.ft[sid].fileprops['size'])
 			log.msg('receiving file: ' + sid)
 
 			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
@@ -1808,7 +1807,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.snarlMessages={}
 		self.autoAdd={}
 		self.version = '0.5 SVN' + utils.getSvnVersion() #: version string
-		print unicode(self.version) #for logs
 		#self.setWindowOpacity (0.5) 
 		
 
@@ -4731,7 +4729,7 @@ class mainWindow(QtGui.QMainWindow):
 #		self.client=None
 		self.selfResources=[]
 		if self.client.oldstatus:
-			self.ui.loginStatus.setItemData(MainWindow.ui.loginStatus.findText(MainWindow.status[self.client.oldstatus[0]]),  QtCore.QVariant([self.client.oldstatus[0], self.client.oldstatus[1]]))
+			self.ui.loginStatus.setItemData(MainWindow.ui.loginStatus.findText(MainWindow.status[self.client.oldstatus[0]]),  QtCore.QVariant(QtCore.QStringList([self.client.oldstatus[0], self.client.oldstatus[1]])))
 			self.ui.loginStatus.setCurrentIndex(MainWindow.ui.loginStatus.findText(MainWindow.status[self.client.oldstatus[0]]))
 		
 		try:
@@ -4747,9 +4745,7 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.roster.disconnect()
 		MainWindow.ui.login_connect.setEnabled(True)
 		#self.ui.eventsListWidget.clear()
-		del self.events.events
-		self.events.events=[]
-		self.events.refreshTray()
+		self.events.removeAll()
 		for i in MainWindow.plugins.keys():
 			MainWindow.unloadPlugin(i)
 

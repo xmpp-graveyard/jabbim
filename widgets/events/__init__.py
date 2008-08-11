@@ -728,6 +728,10 @@ class events:
 		del self.events[ID]
 		self.refreshTray()
 
+	def removeAll(self):
+		for i in range(len(self.events.keys())):
+			self.removeEvent(self.events.keys()[0])
+
 	def addWidget(self,widget,group="messages"):
 		if group=="messages":
 			widget.setParent(self.main.ui.messages)
