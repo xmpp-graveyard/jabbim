@@ -31,6 +31,7 @@ import ftwidget
 import weakref
 from booleanwidget import booleanWidget
 from ftwidget import FTDownloadWidget,FTUploadWidget
+from adduserwidget import addUserWidget
 
 class abstractEvent:
 	def __init__(self,parent):
@@ -64,7 +65,7 @@ class abstractEvent:
 		for widget in self.widgets:
 			widget().eventAccepted()
 		self.alive=False
-		
+
 		return True
 
 	def reject(self):
@@ -86,7 +87,7 @@ class booleanEvent(abstractEvent):
 	def setAcceptHandler(self,acceptHandler,acceptDict=[]):
 		self.acceptHandler=acceptHandler
 		self.acceptDict=acceptDict
-		
+
 	def setRejectHandler(self,rejectHandler,rejectDict=[]):
 		self.rejectHandler=rejectHandler
 		self.rejectDict=rejectDict
@@ -102,7 +103,7 @@ class booleanEvent(abstractEvent):
 			if self.rejectHandler:
 				self.rejectHandler(*self.rejectDict)
 			self.parent.main.reactor.callLater(0,self.parent.removeEvent,int(self.ID))
-##
+
 class FTDownloadEvent(abstractEvent):
 	def __init__(self,parent):
 		abstractEvent.__init__(self,parent)
@@ -430,43 +431,43 @@ class InfoWidget(abstractWidget):
 ##			label.setAlignment(QtCore.Qt.AlignCenter)
 ##			self.gridlayout.addWidget(label,1,0,1,1)
 
-class AddUserWidget(abstractWidget):
-	def __init__(self,header,text,item,main,trueCall,trueDict,falseCall,falseDict,parent=None,height=40):
-		apply(abstractWidget.__init__,(self,header,text,item,main,falseCall,falseDict,trueCall,trueDict,None,None,parent,40))
-
-		self.submitButton = QtGui.QPushButton(self)
-		self.submitButton.setMaximumSize(16,16)
-		self.submitButton.setFlat(True)
-		self.submitButton.setIcon(QtGui.QIcon("images/16x16/actions/ok.png"))
-		self.hboxlayout.addWidget(self.submitButton)
-		#self.label_2.setWordWrap(False)
-		self.closeButton = QtGui.QPushButton(self)
-		self.closeButton.setMaximumSize(16,16)
-		self.closeButton.setObjectName("closeButton")
-		self.closeButton.setFlat(True)
-		self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
-		self.hboxlayout.addWidget(self.closeButton)
-
-		self.vcard=QtGui.QPushButton(self.tr("Vcard"))
-		self.chat=QtGui.QPushButton(self.tr("Chat"))
-
-		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
-		QtCore.QObject.connect(self.submitButton,QtCore.SIGNAL("clicked()"),self.submitClicked)
-		QtCore.QObject.connect(self.vcard,QtCore.SIGNAL("clicked()"),self.vcardClicked)
-		QtCore.QObject.connect(self.chat,QtCore.SIGNAL("clicked()"),self.chatClicked)
-
-		l=QtGui.QHBoxLayout()
-		l.addWidget(self.vcard)
-		l.addWidget(self.chat)
-		self.gridlayout1.addLayout(l,2,0)
-
-	def vcardClicked(self,b=False):
-		self.ve=vcardeditor.vcardEditorDialog(self.main,self.jid,self.main,False)
-		self.ve.show()
-
-	def chatClicked(self,b=False):
-		self.main.chat.addChatTab(self.jid,self.jid,self.main.getIcon(self.jid,'online',size="16x16"))
-		self.main.chat.activate()
+##class AddUserWidget(abstractWidget):
+##	def __init__(self,header,text,item,main,trueCall,trueDict,falseCall,falseDict,parent=None,height=40):
+##		apply(abstractWidget.__init__,(self,header,text,item,main,falseCall,falseDict,trueCall,trueDict,None,None,parent,40))
+##
+##		self.submitButton = QtGui.QPushButton(self)
+##		self.submitButton.setMaximumSize(16,16)
+##		self.submitButton.setFlat(True)
+##		self.submitButton.setIcon(QtGui.QIcon("images/16x16/actions/ok.png"))
+##		self.hboxlayout.addWidget(self.submitButton)
+##		#self.label_2.setWordWrap(False)
+##		self.closeButton = QtGui.QPushButton(self)
+##		self.closeButton.setMaximumSize(16,16)
+##		self.closeButton.setObjectName("closeButton")
+##		self.closeButton.setFlat(True)
+##		self.closeButton.setIcon(QtGui.QIcon("images/16x16/actions/process-stop.png"))
+##		self.hboxlayout.addWidget(self.closeButton)
+##
+##		self.vcard=QtGui.QPushButton(self.tr("Vcard"))
+##		self.chat=QtGui.QPushButton(self.tr("Chat"))
+##
+##		QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
+##		QtCore.QObject.connect(self.submitButton,QtCore.SIGNAL("clicked()"),self.submitClicked)
+##		QtCore.QObject.connect(self.vcard,QtCore.SIGNAL("clicked()"),self.vcardClicked)
+##		QtCore.QObject.connect(self.chat,QtCore.SIGNAL("clicked()"),self.chatClicked)
+##
+##		l=QtGui.QHBoxLayout()
+##		l.addWidget(self.vcard)
+##		l.addWidget(self.chat)
+##		self.gridlayout1.addLayout(l,2,0)
+##
+##	def vcardClicked(self,b=False):
+##		self.ve=vcardeditor.vcardEditorDialog(self.main,self.jid,self.main,False)
+##		self.ve.show()
+##
+##	def chatClicked(self,b=False):
+##		self.main.chat.addChatTab(self.jid,self.jid,self.main.getIcon(self.jid,'online',size="16x16"))
+##		self.main.chat.activate()
 
 
 class FTWidget(QtGui.QWidget):
@@ -613,8 +614,8 @@ class events:
 		colors.deleteLater()
 		del colors
 		self.ftEvents={}
-		
-		
+
+
 
 	def itemClicked(self,item):
 		widget=item.widget
@@ -721,6 +722,13 @@ class events:
 			del widget
 			if self.filetransfersLayout.count()==0:
 				self.main.ui.fileTransfers.hide()
+		elif category=="authorizations":
+			self.authorizationsLayout.removeWidget(widget)
+			widget.setParent(None)
+			widget.deleteLater()
+			del widget
+			if self.authorizationsLayout.count()==0:
+				self.main.ui.authorizations.hide()
 		if hasattr(self.events[ID],"SID"):
 			if self.ftEvents.has_key(self.events[ID].SID):
 				del self.ftEvents[self.events[ID].SID]
@@ -742,6 +750,11 @@ class events:
 			widget.setParent(self.main.ui.fileTransfers)
 			self.filetransfersLayout.addWidget(widget)
 			self.main.ui.fileTransfers.show()
+			return widget
+		elif group=="authorizations":
+			widget.setParent(self.main.ui.authorizations)
+			self.authorizationsLayout.addWidget(widget)
+			self.main.ui.authorizations.show()
 			return widget
 
 ##		if icon==None:
@@ -780,22 +793,6 @@ class events:
 		return self.addEvent(event)
 		#return event
 
-##	def addBooleanEvent(self,trueCall,trueDict,falseCall,falseDict,header="",text="",height=40,name="",typ="",icon=None,pixmap=None):
-##		# get event height (based on font size)
-##		metrics=QtGui.QApplication.fontMetrics()
-##		rect=metrics.boundingRect(0, 0,self.main.width(), self.main.height(), QtCore.Qt.TextWordWrap, text)
-##		if pixmap:
-##			height=metrics.height()+rect.height()+metrics.height()+pixmap.height()
-##		else:
-##			height=metrics.height()+rect.height()+metrics.height()
-##		# add event
-##		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
-##		item.setSizeHint(QtCore.QSize(100,height))
-##		item.widget=BooleanWidget(header,text,item,self.main,trueCall,trueDict,falseCall,falseDict,self.main.ui.eventsListWidget,height,pixmap=pixmap)
-##		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
-##		self.addEvent(unicode(name),unicode(typ),icon,item.widget)
-##		return item.widget
-
 	def addFTReceivedEvent(self,sid,id,jid,pixmap):
 		text=unicode(" %s is sending you file."%unicode(jid))
 		metrics=QtGui.QApplication.fontMetrics()
@@ -814,19 +811,16 @@ class events:
 		@type status: unicode
 		@param status: senders status message
 		"""
-		# get event height (based on font size)
-		metrics=QtGui.QApplication.fontMetrics()
-		mainWindow=self.main
-		text=mainWindow.tr('JID:')+" "+unicode(jid)+"<br/>"+unicode(mainWindow.tr("Message: "))+"<i>"+unicode(status)+'</i>'
-		rect=metrics.boundingRect(0, 0,self.main.width(), self.main.height(), QtCore.Qt.TextWordWrap, text)
-		height=metrics.height()+rect.height()+metrics.height()+10
-		# make event
-		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
-		item.setSizeHint(QtCore.QSize(100,height))
-		item.widget=AddUserWidget("<b>"+unicode(mainWindow.tr('Add contact?'))+"</b>",text,item,self.main,self.main.client._onSubscribe,[jid,'online',False],self.main.client.sendPresence,[jid,None,'online',None,'unsubscribed'],self.main.ui.eventsListWidget,height)
-		item.widget.jid=jid
-		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
-		self.addEvent(unicode(jid),unicode('subscribe'),None,item.widget)
+		event=booleanEvent(self)
+		event.setType("addUser")
+		event.setCategory("authorizations")
+		widget=addUserWidget(event)
+		widget.setData(jid,status)
+		widget=self.addWidget(widget,"authorizations")
+		event.addWidget(widget)
+		event.setAcceptHandler(self.main.client._onSubscribe,[jid,'online',False])
+		event.setRejectHandler(self.main.client.sendPresence,[jid,None,'online',None,'unsubscribed'])
+		return self.addEvent(event)
 
 	def addSubscribeEvent(self,jid,status):
 		#	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None, caps = True):
@@ -907,13 +901,13 @@ class events:
 		widget=FTUploadWidget(event)
 		widget=self.addWidget(widget,"filetransfers")
 		event.addWidget(widget)
-		
+
 
 		file=files
 		fileCount=len(file)
 		file=file[0]
 		file=unicode(file)
-		
+
 		event.setCurrentFile(file)
 
 		if res==None:
@@ -1024,7 +1018,7 @@ class events:
 		file=event.queue[event.queue.keys()[0]].name
 		description=event.queue[event.queue.keys()[0]].description
 		del event.queue[event.queue.keys()[0]]
-		
+
 
 		if preview:
 			bytes=QtCore.QByteArray()
