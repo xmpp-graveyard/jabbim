@@ -842,7 +842,7 @@ class Client(derived):
 			print el.toXml()
 			return
 		if el.hasAttribute('id') and el.name == 'iq':
-			if not el['id'] in self.idlist:
+			if not el['id'] in self.idlist and (el['type'] != 'result' or el['type'] != 'error'):
 				log.msg('nezpracovane iq '+ el.toXml())
 				el['type']  = 'error'
 				el['to'] = el['from']
