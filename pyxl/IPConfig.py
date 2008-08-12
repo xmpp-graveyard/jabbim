@@ -21,6 +21,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import _winreg
 
+def getProxy():
+	hkcu = _winreg.ConnectRegistry(None, _winreg.HKEY_CURRENT_USER)
+	settings=_winreg.OpenKey(hkcu, r'Software\Microsoft\Windows\CurrentVersion\Internet Settings')
+	try:
+		(proxy, typ) = _winreg.QueryValueEx(settings, "ProxyServer")
+		print "Proxy according to IE:",[proxy]
+	except WindowsError:
+		print "no proxy in IE settings"
+		proxy=None
+	return proxy
+
 class Adapter:
 	def __init__(self, interfaces_key, nic_uuid):
 		try:
@@ -45,7 +56,7 @@ class Adapter:
 		except WindowsError:
 			print "Adapter: a key is not present"
 			self.nameservers = []
-	
+
 	def get_dns(self):
 		return self.nameservers
 
