@@ -335,6 +335,8 @@ class Client(derived):
 		self.connections = []
 		resp = results[0][1]
 		print resp
+		if len(resp[0]) ==0:
+			self._dnsLookupErr(resp)
 		for r in resp[0]:
 			self.connections.append((unicode(r.payload.target), int(r.payload.port)))
 			print (unicode(r.payload.target), int(r.payload.port))
