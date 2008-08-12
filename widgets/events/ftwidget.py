@@ -29,10 +29,10 @@ class FTDownloadWidget(QtGui.QWidget):
 
 	def eventAccepted(self):
 		pass
-	
+
 	def eventRejected(self):
 		pass
-	
+
 	def accept(self):
 		filename=unicode(self.file)
 		if sys.platform == 'win32':
@@ -81,6 +81,9 @@ class FTUploadWidget(QtGui.QWidget):
 		QtGui.QWidget.__init__(self,None)
 		self.ui=Ui_FTUploadWidget()
 		self.ui.setupUi(self)
+		self.metrics=QtGui.QFontMetrics(self.ui.filename.font())
+		self.text=""
+		self.queue={}
 		self.size=0
 		self.timestamp=time.time()
 		self.transfered=0
@@ -90,7 +93,16 @@ class FTUploadWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.reject,QtCore.SIGNAL("clicked()"),self.reject)
 		#self.ui.accept.hide()
 		self.setQueue(self.event.queue)
+
 		#self.transfered=0
+
+	def resizeEvent(self,event):
+		self.ui.filename.setText(self.metrics.elidedText(self.text,QtCore.Qt.ElideMiddle, self.width()-10-self.ui.toolButton.width()))
+		text=""
+		for file in self.queue.keys():
+			text+=unicode(self.metrics.elidedText(basename(file),QtCore.Qt.ElideMiddle, self.width()-10))+'<br/>'
+		self.ui.more.setText(text)
+		return QtGui.QWidget.resizeEvent(self,event)
 
 	def eventAccepted(self):
 		pass
@@ -102,12 +114,14 @@ class FTUploadWidget(QtGui.QWidget):
 		self.event.reject()
 
 	def setText(self,text):
-		self.ui.filename.setText(text)
+		self.text=unicode(text)
+		self.ui.filename.setText(self.metrics.elidedText(text,QtCore.Qt.ElideMiddle, self.width()-10-self.ui.toolButton.width()))
 
 	def setQueue(self,queue):
+		self.queue=queue
 		text=""
-		for file in queue.keys():
-			text+=basename(file)+'<br/>'
+		for file in self.queue.keys():
+			text+=unicode(self.metrics.elidedText(basename(file),QtCore.Qt.ElideMiddle, self.width()-10))+'<br/>'
 		self.ui.more.setText(text)
 
 	def setCurrentFile(self,file):
