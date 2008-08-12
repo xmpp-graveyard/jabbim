@@ -203,7 +203,10 @@ class BOSHStream(utility.EventDispatcher):
 
 	def got_response(self, resp):
 		print 'read the body'
+		print dir (resp)
+		print resp.headers
 		temp=resp.stream.read()
+		print temp
 		if temp:
 			temp.addCallback(self.got_data,resp).addErrback(self.got_error)
 		else:

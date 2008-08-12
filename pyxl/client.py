@@ -334,7 +334,7 @@ class Client(derived):
 		print 'DNS'
 		self.connections = []
 		resp = results[0][1]
-		
+		print resp
 		for r in resp[0]:
 			self.connections.append((unicode(r.payload.target), int(r.payload.port)))
 			print (unicode(r.payload.target), int(r.payload.port))
@@ -352,7 +352,9 @@ class Client(derived):
 	def _dnsLookupErr(self, resp):
 		print 'err:', resp
 		print dir(resp)
-		self._connect(self.host, self.port)
+		self.connections.append((self.host, self.port))
+		self.connections.append(('http://bind.jabbim.cz:80/', )) #just give them chance
+		self.doConnect()
 		#self._connect('talk.google.com', self.port)
 
 	def doConnect(self):
