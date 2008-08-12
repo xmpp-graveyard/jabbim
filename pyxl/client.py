@@ -301,6 +301,15 @@ class Client(derived):
 			log.msg('dns - ' + unicode(time.time()) + '_xmpp-client._tcp.'+self.jid.host)
 			if sys.platform == 'win32':
 				import IPConfig
+				proxy = IPConfig.getProxy()
+				if proxy != None:
+					casti =proxy.split(':')
+					if len(casti) ==1:
+						p = '80'
+					else:
+							p = casti[1]
+					h = casti[0]
+					self.proxy = {'host':h,  'port': p,  'type': 'http'}
 				srv = IPConfig.IPConfig().get_dns()
 				dnssrv = []
 				for server in srv:
@@ -325,6 +334,7 @@ class Client(derived):
 		print 'DNS'
 		self.connections = []
 		resp = results[0][1]
+		
 		for r in resp[0]:
 			self.connections.append((unicode(r.payload.target), int(r.payload.port)))
 			print (unicode(r.payload.target), int(r.payload.port))
@@ -378,7 +388,7 @@ class Client(derived):
 		if boshURL != '':
 			print '.'+boshURL+'.'
 			from bosh import client as bclient
-#			import bosh_wokkel
+
 			self.factory = bclient.BOSHClientFactory(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang},  proxy  = self.proxy)
 #			self.factory = bosh_wokkel.BOSHClient(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang})
 			print self.factory
