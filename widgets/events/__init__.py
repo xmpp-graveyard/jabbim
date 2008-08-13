@@ -243,7 +243,7 @@ class events:
 		for event in self.events.values():
 			if not event.category in categories:
 				categories.append(event.category)
-		if len(categories)==0:
+		if len(categories)==0 or (len(categories)==1 and categories==["filetransfers"]):
 			self.timer.stop()
 			if self.jabbimIcon!=None:
 				mainWindow.tray.setIcon(self.main.getCurrentTrayIcon())

@@ -3696,8 +3696,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		maintext =unicode(jid)+self.tr(" invites you to conference ")+unicode(room)+"."
 		if reason != None:
-			maintext += "<br/>" + self.tr("Reason: ") + unicode(reason)
-		#self.events.addLineEditEvent(maintext = maintext ,trueCall=self.joinGC, trueDict=[room], falseCall=self.client.declineInvitation, falseDict=[jid, room],header="Groupchat Invitation",text="Nickname:",name=unicode(jid),typ="groupchatInvitation",icon=None,action=None,actionDict=None,height=150,value=self.client.jid.userhost().split("@")[0],trueText=self.tr("Join"),falseText=self.tr("Decline"))
+			maintext += " <br/> " + self.tr("Reason: ") + unicode(reason)
 		event=self.events.addLineEditEvent()
 		event.setAcceptHandler(self.joinGC,[room])
 		event.setRejectHandler(self.client.declineInvitation,[jid, room])
