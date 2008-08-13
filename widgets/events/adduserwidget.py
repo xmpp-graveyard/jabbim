@@ -13,12 +13,19 @@ class addUserWidget(QtGui.QWidget):
 		self.event=weakref.proxy(event)
 		self.ui=Ui_Form()
 		self.ui.setupUi(self)
+		self.metrics=QtGui.QFontMetrics(self.ui.text.font())
 		self.ui.accept.setText(self.tr("Yes"))
 		self.ui.reject.setText(self.tr("No"))
 		QtCore.QObject.connect(self.ui.accept,QtCore.SIGNAL("clicked()"),self.accept)
 		QtCore.QObject.connect(self.ui.reject,QtCore.SIGNAL("clicked()"),self.reject)
 		QtCore.QObject.connect(self.ui.text,QtCore.SIGNAL("linkActivated ( const QString & )"),self.showUserMenu)
 		self.jid=""
+
+	def getSafeText(self,text,width):
+		ret=""
+		for word in text.split(' '):
+			ret+=unicode(self.metrics.elidedText(word,QtCore.Qt.ElideMiddle, width))+" "
+		return ret[:-1]
 
 	def showUserMenu(self,link):
 		menu=QtGui.QMenu(self)
@@ -37,10 +44,10 @@ class addUserWidget(QtGui.QWidget):
 	def setData(self,jid,message=None):
 		self.jid=unicode(jid)
 		text=unicode(self.tr("Do you want to add user"))
-		text+=" <a href=\"http://jid\">"+self.jid+"</a> "
+		text+=" <a href=\"http://jid\">"+self.getSafeText(self.jid,self.width()-10)+"</a> "
 		text+=unicode(self.tr("to you roster?"))
 		if message:
-			text+="<br/><i>"+unicode(message)+"</i>"
+			text+="<br/><i>"+self.getSafeText(unicode(message),self.width()-10)+"</i>"
 		self.ui.text.setText(text)
 
 	def setAcceptText(self,text):

@@ -12,11 +12,18 @@ class booleanWidget(QtGui.QWidget):
 		self.event=weakref.proxy(event)
 		self.ui=Ui_Form()
 		self.ui.setupUi(self)
+		self.metrics=QtGui.QFontMetrics(self.ui.text.font())
 		QtCore.QObject.connect(self.ui.accept,QtCore.SIGNAL("clicked()"),self.accept)
 		QtCore.QObject.connect(self.ui.reject,QtCore.SIGNAL("clicked()"),self.reject)
 
+	def getSafeText(self,text,width):
+		ret=""
+		for word in text.split(' '):
+			ret+=unicode(self.metrics.elidedText(word,QtCore.Qt.ElideMiddle, width))+" "
+		return ret[:-1]
+
 	def setText(self,text):
-		self.ui.text.setText(text)
+		self.ui.text.setText(self.getSafeText(text,self.width()-10))
 
 	def setAcceptText(self,text):
 		self.ui.accept.setText(text)

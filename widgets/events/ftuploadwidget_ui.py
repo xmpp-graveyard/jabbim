@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ftuploadwidget.ui'
 #
-# Created: Mon Aug 11 07:47:49 2008
+# Created: Wed Aug 13 10:53:49 2008
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,11 +12,12 @@ from PyQt4 import QtCore, QtGui
 class Ui_FTUploadWidget(object):
     def setupUi(self, FTUploadWidget):
         FTUploadWidget.setObjectName("FTUploadWidget")
-        FTUploadWidget.resize(274, 146)
+        FTUploadWidget.resize(120, 146)
         self.gridLayout = QtGui.QGridLayout(FTUploadWidget)
         self.gridLayout.setMargin(0)
         self.gridLayout.setObjectName("gridLayout")
         self.transferInfo = QtGui.QLabel(FTUploadWidget)
+        self.transferInfo.setWordWrap(True)
         self.transferInfo.setObjectName("transferInfo")
         self.gridLayout.addWidget(self.transferInfo, 2, 0, 1, 3)
         self.progressBar = QtGui.QProgressBar(FTUploadWidget)

@@ -16,6 +16,7 @@ class FTDownloadWidget(QtGui.QWidget):
 		QtGui.QWidget.__init__(self,None)
 		self.ui=Ui_FTWidget()
 		self.ui.setupUi(self)
+		self.metrics=QtGui.QFontMetrics(self.ui.filename.font())
 		self.size=0
 		self.timestamp=time.time()
 		self.transfered=0
@@ -26,6 +27,11 @@ class FTDownloadWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.reject,QtCore.SIGNAL("clicked()"),self.reject)
 		self.file=""
 		#self.transfered=0
+
+	def resizeEvent(self,event):
+		print "WIDTH",self.width()
+		self.ui.filename.setText(unicode(self.metrics.elidedText(basename(self.file),QtCore.Qt.ElideMiddle, self.width()-10)))
+		return QtGui.QWidget.resizeEvent(self,event)
 
 	def eventAccepted(self):
 		pass
@@ -48,14 +54,17 @@ class FTDownloadWidget(QtGui.QWidget):
 		self.event.reject()
 
 	def setText(self,text):
+		return
 		self.ui.filename.setText(text)
 
 	def setFileSize(self,size):
 		self.size=int(size)
 
 	def setCurrentFile(self,file):
-		self.setText("<b>"+basename(file)+"</b>")
 		self.file=file
+		print "WIDTH",self.width()
+		self.ui.filename.setText(unicode(self.metrics.elidedText(basename(self.file),QtCore.Qt.ElideMiddle, self.width()-10)))
+		
 
 	def transferFinished(self):
 		self.ui.progressBar.hide()
@@ -125,7 +134,7 @@ class FTUploadWidget(QtGui.QWidget):
 		self.ui.more.setText(text)
 
 	def setCurrentFile(self,file):
-		self.setText("<b>"+basename(file)+"</b>")
+		self.setText(basename(file))
 
 	def setFileSize(self,size):
 		self.size=int(size)

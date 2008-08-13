@@ -1211,7 +1211,7 @@ class clientClass(pyxl.client.Client):
 		user=self.main.ui.roster.getNameByJID(jid)
 		widget.setText(user+unicode(mainWindow.tr(" removed your authorization. You won't see his status. Do you want to remove him/her from your contact list?")))
 		widget.setAcceptText(mainWindow.tr("Yes"))
-		widget.setAcceptText(mainWindow.tr("No"))
+		widget.setRejectText(mainWindow.tr("No"))
 
 
 
@@ -1245,7 +1245,7 @@ class clientClass(pyxl.client.Client):
 				user=self.main.ui.roster.getNameByJID(frm)
 				widget.setText(mainWindow.tr('User ')+" "+unicode(user)+' '+mainWindow.tr("wants to see your status. Do you want to authorize this user?"))
 				widget.setAcceptText(mainWindow.tr("Yes"))
-				widget.setAcceptText(mainWindow.tr("No"))
+				widget.setRejectText(mainWindow.tr("No"))
 		else:
 			frm=self.main.getJid(frm)
 			if frm.host in self.main.autoAdd.keys():
@@ -1797,6 +1797,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
 		self.ui.Form.setWidget(self.ui.scrollAreaWidgetContents)
+		self.ui.Form.setWidgetResizable(True)
 		self.reator=reactor
 		self.setObjectName("Jabbim class")
 		#self.setWindowFlags(QtCore.Qt.Tool)#|QtCore.Qt.FramelessWindowHint)
