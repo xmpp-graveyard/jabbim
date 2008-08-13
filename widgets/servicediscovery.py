@@ -207,8 +207,9 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		if self.main.client.hasIdentity(jid, 'conference', 'text'):
 			#self.done(1)
 			self.main.mucBrowser()
-			self.main.joingroupchatwizard.server=jid
-			self.main.joingroupchatwizard.ui.serverName.setText(jid)
+			self.main.joingroupchatwizard.ui.serverName.addItem(jid)
+			self.main.joingroupchatwizard.ui.serverName.setCurrentIndex(self.main.joingroupchatwizard.ui.serverName.count()-1)
+
 			return
 		
 		#self.main.client.getDiscoItems(jid, callback = self._discoItemsReceived, callback_par = (item,True))
