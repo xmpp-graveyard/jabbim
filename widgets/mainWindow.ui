@@ -1061,6 +1061,19 @@ p, li { white-space: pre-wrap; }
      </widget>
     </item>
     <item row="2" column="0" >
+     <widget class="QGroupBox" name="other" >
+      <property name="minimumSize" >
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="title" >
+       <string>Other</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0" >
      <widget class="QGroupBox" name="messages" >
       <property name="minimumSize" >
        <size>
@@ -1073,7 +1086,7 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </item>
-    <item row="3" column="0" >
+    <item row="4" column="0" >
      <spacer name="verticalSpacer" >
       <property name="orientation" >
        <enum>Qt::Vertical</enum>

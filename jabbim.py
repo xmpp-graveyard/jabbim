@@ -1655,7 +1655,7 @@ class clientClass(pyxl.client.Client):
 				widget=event.getWidgets()[0]
 				user=self.main.ui.roster.getNameByJID(self.ft[sid].fromjid.userhost())
 				widget.setText(unicode(user)+" "+unicode(mainWindow.tr("is sending you file"))+" "+unicode(self.ft[sid].fileprops['name']))
-				widget.setAcceptText(unicode(mainWindow.tr("Acceot")))
+				widget.setAcceptText(unicode(mainWindow.tr("Accept")))
 				widget.setRejectText(unicode(mainWindow.tr("Reject")))
 
 				tab,index=self.main.chat.findTab(unicode(self.ft[sid].fromjid.userhost()),typ=['chat'])
@@ -3696,8 +3696,17 @@ class mainWindow(QtGui.QMainWindow):
 
 		maintext =unicode(jid)+self.tr(" invites you to conference ")+unicode(room)+"."
 		if reason != None:
-			maintext += "<br>" + self.tr("Reason: ") + unicode(reason)
-		self.events.addLineEditEvent(maintext = maintext ,trueCall=self.joinGC, trueDict=[room], falseCall=self.client.declineInvitation, falseDict=[jid, room],header="Groupchat Invitation",text="Nickname:",name=unicode(jid),typ="groupchatInvitation",icon=None,action=None,actionDict=None,height=150,value=self.client.jid.userhost().split("@")[0],trueText=self.tr("Join"),falseText=self.tr("Decline"))
+			maintext += "<br/>" + self.tr("Reason: ") + unicode(reason)
+		#self.events.addLineEditEvent(maintext = maintext ,trueCall=self.joinGC, trueDict=[room], falseCall=self.client.declineInvitation, falseDict=[jid, room],header="Groupchat Invitation",text="Nickname:",name=unicode(jid),typ="groupchatInvitation",icon=None,action=None,actionDict=None,height=150,value=self.client.jid.userhost().split("@")[0],trueText=self.tr("Join"),falseText=self.tr("Decline"))
+		event=self.events.addLineEditEvent()
+		event.setAcceptHandler(self.joinGC,[room])
+		event.setRejectHandler(self.client.declineInvitation,[jid, room])
+		widget=event.getWidgets()[0]
+		widget.setText(maintext)
+		widget.setLabel(self.tr("Nickname:"))
+		widget.setAcceptText(self.tr("Join"))
+		widget.setRejectText(self.tr("Decline"))
+
 
 	def findPlugins(self):
 		"""

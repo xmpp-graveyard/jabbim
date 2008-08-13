@@ -32,6 +32,7 @@ import weakref
 from booleanwidget import booleanWidget
 from ftwidget import FTDownloadWidget,FTUploadWidget
 from adduserwidget import addUserWidget
+from lineeditwidget import lineeditWidget
 
 class abstractEvent:
 	def __init__(self,parent):
@@ -92,16 +93,16 @@ class booleanEvent(abstractEvent):
 		self.rejectHandler=rejectHandler
 		self.rejectDict=rejectDict
 
-	def accept(self):
+	def accept(self,data=[]):
 		if abstractEvent.accept(self):
 			if self.acceptHandler:
-				self.acceptHandler(*self.acceptDict)
+				self.acceptHandler(*self.acceptDict+data)
         	self.parent.main.reactor.callLater(0,self.parent.removeEvent,int(self.ID))
 
-	def reject(self):
+	def reject(self,data=[]):
 		if abstractEvent.reject(self):
 			if self.rejectHandler:
-				self.rejectHandler(*self.rejectDict)
+				self.rejectHandler(*self.rejectDict+data)
 			self.parent.main.reactor.callLater(0,self.parent.removeEvent,int(self.ID))
 
 class FTDownloadEvent(abstractEvent):
@@ -197,10 +198,14 @@ class events:
 		self.filetransfersLayout.setContentsMargins(2,2,2,2)
 		self.authorizationsLayout=QtGui.QVBoxLayout(self.main.ui.authorizations)
 		self.authorizationsLayout.setContentsMargins(2,2,2,2)
+		self.otherLayout=QtGui.QVBoxLayout(self.main.ui.other)
+		self.otherLayout.setContentsMargins(2,2,2,2)
+
 
 		self.main.ui.authorizations.hide()
 		self.main.ui.fileTransfers.hide()
 		self.main.ui.messages.hide()
+		self.main.ui.other.hide()
 
 		colors=QtGui.QTreeWidget()
 		self.main.ui.scrollAreaWidgetContents.palette().setColor(QtGui.QPalette.Window,QtGui.QColor(colors.palette().color(QtGui.QPalette.Base)))
@@ -300,6 +305,13 @@ class events:
 			del widget
 			if self.authorizationsLayout.count()==0:
 				self.main.ui.authorizations.hide()
+		elif category=="other":
+			self.otherLayout.removeWidget(widget)
+			widget.setParent(None)
+			widget.deleteLater()
+			del widget
+			if self.otherLayout.count()==0:
+				self.main.ui.other.hide()
 		if hasattr(self.events[ID],"SID"):
 			if self.ftEvents.has_key(self.events[ID].SID):
 				del self.ftEvents[self.events[ID].SID]
@@ -327,18 +339,20 @@ class events:
 			self.authorizationsLayout.addWidget(widget)
 			self.main.ui.authorizations.show()
 			return widget
+		elif group=="other":
+			widget.setParent(self.main.ui.other)
+			self.otherLayout.addWidget(widget)
+			self.main.ui.other.show()
+			return widget
 
-	def addLineEditEvent(self,trueCall=None,trueDict=None,falseCall=None,falseDict=None,maintext="",header="",text="",name="",typ="",icon=None,action=None,actionDict=None,height=40,value=u"",trueText=None,falseText=None):
-		if icon==None:
-			icon2=QtGui.QIcon("images/16x16/categories/event.png")
-		else:
-			icon2=QtGui.QIcon(unicode(icon).replace("xxxxx","16x16"))
-		item=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
-		item.setSizeHint(QtCore.QSize(100,height))
-		item.widget=lineEditWidget(header,text,maintext,item,self.main,icon=icon2,falseCall=falseCall,falseDict=falseDict,trueCall=trueCall,trueDict=trueDict,action=action,actionDict=actionDict,parent=self.main.ui.eventsListWidget,height=height,value=value,trueText=trueText,falseText=falseText)
-		self.main.ui.eventsListWidget.setItemWidget(item,item.widget)
-		self.addEvent(unicode(name),unicode(typ),icon,item.widget)
-
+	def addLineEditEvent(self,typ="invitation",category="other"):
+		event=booleanEvent(self)
+		event.setType(typ)
+		event.setCategory(category)
+		widget=lineeditWidget(event)
+		widget=self.addWidget(widget,category)
+		event.addWidget(widget)
+		return self.addEvent(event)
 
 	def addBooleanEvent(self,typ="message",category="messages"):
 		event=booleanEvent(self)
@@ -428,14 +442,6 @@ class events:
 		for name in files:
 			if files.index(name)!=0:
 				filesQueue[name]=fileClass(name,descriptions[name])
-			#	text+="<b>"+basename(name)+'</b><br/>'
-			#else:
-			#	text+="<font size=\"-1\">"+basename(name)+"</font><br/>"
-		# get event height (based on font size)
-		#metrics=QtGui.QApplication.fontMetrics()
-		#rect=metrics.boundingRect(0, 0,self.main.width(), self.main.height(), QtCore.Qt.TextWordWrap, text)
-		#height=metrics.height()+rect.height()+metrics.height()+10
-
 		if jid.find("/") == -1:
 			res = self.main.client.roster['users'][jid].getHighestResource()
 		else:
@@ -472,30 +478,9 @@ class events:
 		mainWindow.tray.showMessage(unicode(mainWindow.tr("Sending file "))+basename(file)+mainWindow.tr(" to ")+unicode(jid), mainWindow.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
 
 		if tab:
-			#tab.chat.filetransfer[sid]=chatwidget.FTWidget(text,None,self.main,sid,tab.chat.ui.ftwidget)
-			#tab.chat.ui.ftwidget.layout().addWidget(tab.chat.filetransfer[sid])
 			tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Sending file"))+" "+basename(file),self.main.now()))
 			tab.chat.lastMessageFrom=""
-##		self.filetransferQueue[sid]=filesQueue
-##		#self.main.filetransferDescriptions[sid]=descriptions
-##		self.filetransferWidget[sid]=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
-##		self.filetransferWidget[sid].setSizeHint(QtCore.QSize(100,height))
-##		self.filetransferWidget[sid].queueId=sid
-##		self.filetransferWidget[sid].file=file
-##		self.filetransferWidget[sid].jid=jid+'/'+res
-##		self.filetransferWidget[sid].sent=1
-##		self.filetransferWidget[sid].broken=[]
-##		self.filetransferWidget[sid].errors=[]
-##		self.filetransferWidget[sid].all=fileCount
-##		self.filetransferWidget[sid].download=False
-##		self.filetransferWidget[sid].typ='normal'
-##		self.filetransferWidget[sid].widget=FTWidget(text,self.filetransferWidget[sid],self.main,sid,self.main.ui.eventsListWidget)
-##		self.filetransferWidget[sid].widget.setMinimumHeight(height)
-##		if tab:
-##			QtCore.QObject.connect(self.filetransferWidget[sid].widget.progressBar,QtCore.SIGNAL("valueChanged(int)"),tab.chat.filetransfer[sid].progressBar.setValue)
-##		self.main.ui.eventsListWidget.setItemWidget(self.filetransferWidget[sid],self.filetransferWidget[sid].widget)
-		#self.filetransfer[sid]=self.filetransferWidget[sid]
-##		self.filetransfer[sid]={'queueId':sid}
+
 
 	def addFTDownloadEvent(self,jid,file,description,sid,size):
 		# descriptions['soubor']='popis'
@@ -512,36 +497,14 @@ class events:
 		event.setFileSize(int(size))
 		event.SID=sid
 		# get event height (based on font size)
-##		metrics=QtGui.QApplication.fontMetrics()
-##		rect=metrics.boundingRect(0, 0,self.main.width(), self.main.height(), QtCore.Qt.TextWordWrap, text)
-##		height=metrics.height()+rect.height()+metrics.height()+10
 		tab,index=self.main.chat.findTab(unicode(jid),typ=['chat'])
 		mainWindow=self.main
 		if tab:
-##			tab.chat.filetransfer[sid]=chatwidget.FTWidget(text,None,self.main,sid,tab.chat.ui.ftwidget)
-##			tab.chat.ui.ftwidget.layout().addWidget(tab.chat.filetransfer[sid])
 			tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Receiving file"))+" "+unicode(basename(file)),self.main.now()))
 			tab.chat.lastMessageFrom=""
 
 		self.ftEvents[sid]=event
 		self.addEvent(event)
-##		self.filetransferWidget[sid]=QtGui.QListWidgetItem(self.main.ui.eventsListWidget)
-##		self.filetransferWidget[sid].download=True
-##		self.filetransferWidget[sid].setSizeHint(QtCore.QSize(100,height))
-##		self.filetransferWidget[sid].queueId=sid
-##		self.filetransferWidget[sid].file=file
-##		self.filetransferWidget[sid].jid=jid
-##		self.filetransferWidget[sid].sent=1
-##		self.filetransferWidget[sid].broken=[]
-##		self.filetransferWidget[sid].all=1
-##		self.filetransferWidget[sid].errors=[]
-##		self.filetransferWidget[sid].typ='normal'
-##		self.filetransferWidget[sid].widget=FTWidget(text,self.filetransferWidget[sid],self.main,sid,self.main.ui.eventsListWidget,download=True)
-##		self.filetransferWidget[sid].widget.setMinimumHeight(height)
-##		if tab:
-##			QtCore.QObject.connect(self.filetransferWidget[sid].widget.progressBar,QtCore.SIGNAL("valueChanged(int)"),tab.chat.filetransfer[sid].progressBar.setValue)
-##		self.main.ui.eventsListWidget.setItemWidget(self.filetransferWidget[sid],self.filetransferWidget[sid].widget)
-##		self.filetransfer[sid]={'queueId':sid}
 
 	def nextFTUploadEvent(self,sid):
 		event=self.ftEvents[sid]
@@ -575,15 +538,6 @@ class events:
 			preview.save(buf, "PNG")
 			preview=base64.encodestring(str(bytes))
 
-		#text="<b>"+basename(unicode(file))+'</b>'
-##		for f in self.filetransferQueue[queueId].keys():
-##			if f!=file:
-##				text+="<font size=\"-1\">"+basename(f)+"</font><br/>"
-		# get event height (based on font size)
-##		metrics=QtGui.QApplication.fontMetrics()
-##		rect=metrics.boundingRect(0, 0,self.main.width(), self.main.height(), QtCore.Qt.TextWordWrap, text)
-##		height=metrics.height()+rect.height()+metrics.height()+10
-
 		widget=event.getWidgets()[0]
 		#widget.setText(text)
 		event.setCurrentFile(file)
@@ -600,32 +554,5 @@ class events:
 
 		tab,index=self.main.chat.findTab(jid,typ=['chat'])
 		if tab:
-##			if tab.chat.filetransfer.has_key(queueId):
-##				tab.chat.filetransfer[queueId].reinit(text,None,self.main,sid2,self.main.ui.eventsListWidget,"("+str(self.filetransferWidget[queueId].sent)+"/"+str(self.filetransferWidget[queueId].all)+")")#=FTWidget(text,item,self.main,sid2,self.main.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")
-##				tab.chat.filetransfer[queueId].setMinimumHeight(height)
 			tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Sending file"))+" "+unicode(basename(file)),self.main.now()))
 			tab.chat.lastMessageFrom=""
-##		self.filetransferWidget[queueId].setSizeHint(QtCore.QSize(100,height))
-##		self.filetransferWidget[queueId].file=file
-##		self.filetransferWidget[queueId].jid=jid
-##		self.filetransferWidget[queueId].queueId=queueId
-##		self.filetransferWidget[queueId].download=False
-##		self.filetransferWidget[queueId].sent=self.filetransferWidget[queueId].sent+1
-##		#if self.ftError[sid]==None:
-##			#item.broken=self.filetransfer[sid].broken
-##		#else:
-##			#item.broken=self.filetransfer[sid].broken.append(self.filetransfer[sid].file)
-##		self.filetransferWidget[queueId].all=self.filetransferWidget[queueId].all
-##		self.filetransferWidget[queueId].typ='normal'
-##		#log.msg("SENDING "+str(item.sent)+"/"+str(item.all))
-##		self.filetransferWidget[queueId].widget.reinit(text,self.filetransferWidget[queueId],self.main,sid2,self.main.ui.eventsListWidget,"("+str(self.filetransferWidget[queueId].sent)+"/"+str(self.filetransferWidget[queueId].all)+")")#=FTWidget(text,item,self.main,sid2,self.main.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")
-##		self.filetransferWidget[queueId].widget.setMinimumHeight(height)
-##		self.filetransferWidget[queueId].widget.setMaximumHeight(height)
-##		#item.widget.reinit(text,item,self.main,sid2,self.main.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")#=FTWidget(text,item,self.main,sid2,self.main.ui.eventsListWidget,"("+str(item.sent)+"/"+str(item.all)+")")
-##		#item.widget.setMinimumHeight(height)
-##		#self.main.ui.eventsListWidget.setItemWidget(self.filetransferWidget[queueId],self.filetransferWidget[queueId].widget)
-##		self.filetransfer[sid2]={'queueId':queueId}
-##		#self.main.filetransferTimer.start(500)
-		#if self.main.ftError[sid]==None:
-			#self.main.ui.eventsListWidget.takeItem(self.main.ui.eventsListWidget.row(self.filetransfer[sid]))
-

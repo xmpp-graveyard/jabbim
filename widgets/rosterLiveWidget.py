@@ -1817,7 +1817,7 @@ class rosterWidget(QtGui.QWidget):
 			submenu = contactMenu.addMenu(QtGui.QIcon("images/16x16/categories/muc.png"),self.tr("Invite to conference"))
 			for gc in self.main.client.groupchats.keys():
 				action = submenu.addAction(gc)
-				action.setData(QtCore.QVariant([jid.full(), gc]))
+				action.setData(QtCore.QVariant(QtCore.QStringList([jid.full(), gc])))
 				action.setObjectName("invite_gc")
 
 
@@ -1829,7 +1829,7 @@ class rosterWidget(QtGui.QWidget):
 		for status in ["online", "chat", "away", "xa", "dnd", "offline"]:
 			action=submenu.addAction(self.main.getIcon(status=status,size="32x32"),self.main.status[status])
 			action.setObjectName("custom_status")
-			action.setData(QtCore.QVariant([unicode(status), unicode(jid.userhost())]))
+			action.setData(QtCore.QVariant(QtCore.QStringList([unicode(status), unicode(jid.userhost())])))
 
 		# separator
 		contactMenu.addSeparator()
@@ -1992,7 +1992,7 @@ class rosterWidget(QtGui.QWidget):
 			if oneres:
 				for gc in self.main.client.groupchats.keys():
 					action = submenu.addAction(gc)
-					action.setData(QtCore.QVariant([jid, gc]))
+					action.setData(QtCore.QVariant(QtCore.QStringList([jid, gc])))
 					action.setObjectName("invite_gc")
 			else:
 				for gc in self.main.client.groupchats.keys():
@@ -2000,7 +2000,7 @@ class rosterWidget(QtGui.QWidget):
 					for res in contact.resources.keys():
 						if res != None:
 							action = submenu2.addAction(res)
-							action.setData(QtCore.QVariant(["%s/%s" % (jid, res), gc]))
+							action.setData(QtCore.QVariant(QtCore.QStringList(["%s/%s" % (jid, res), gc])))
 							action.setObjectName("invite_gc")
 		# one2one -> muc
 		lst = []
@@ -2014,7 +2014,7 @@ class rosterWidget(QtGui.QWidget):
 				for name in lst:
 					action = submenu.addAction(self.getNameByJID(name))
 					action.setObjectName("invite_chat")
-					action.setData(QtCore.QVariant([unicode(name), jid]))
+					action.setData(QtCore.QVariant(QtCore.QStringList([unicode(name), jid])))
 			else:
 				for name in lst:
 					submenu2 = submenu.addMenu(self.getNameByJID(name))
@@ -2022,7 +2022,7 @@ class rosterWidget(QtGui.QWidget):
 						if res != None:
 							action = submenu2.addAction(res)
 							action.setObjectName("invite_chat")
-							action.setData(QtCore.QVariant([unicode(name),"%s/%s" % (jid, res) ])) # kam pozyvame, koho
+							action.setData(QtCore.QVariant(QtCore.QStringList([unicode(name),"%s/%s" % (jid, res) ]))) # kam pozyvame, koho
 					
 		# custom status
 		submenu=contactMenu.addMenu(self.tr("Custom status"))
@@ -2030,7 +2030,7 @@ class rosterWidget(QtGui.QWidget):
 		for status in ["online", "chat", "away", "xa", "dnd", "offline"]:
 			action=submenu.addAction(self.main.getIcon(status=status,size="32x32"),self.main.status[status])
 			action.setObjectName("custom_status")
-			action.setData(QtCore.QVariant([unicode(status), unicode(jid)]))
+			action.setData(QtCore.QVariant(QtCore.QStringList([unicode(status), unicode(jid)])))
 
 		# separator
 		contactMenu.addSeparator()
@@ -2093,7 +2093,7 @@ class rosterWidget(QtGui.QWidget):
 		# delete from group
 		if group!=None and len(self.main.client.roster['users'][jid].groups)>1:
 			action=contactMenu.addAction(self.tr("Delete from group"))
-			action.setData(QtCore.QVariant([unicode(jid),u"-"+group]))
+			action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"-"+group])))
 			action.setObjectName("check_group")
 		# delete from roster
 		action=contactMenu.addAction(self.tr("Delete from roster"))
@@ -2140,11 +2140,11 @@ class rosterWidget(QtGui.QWidget):
 			#else:
 				if k in self.main.client.roster['users'][jid].groups:
 					action.setChecked(True)
-					action.setData(QtCore.QVariant([unicode(jid),u"-"+unicode(k)]))
+					action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"-"+unicode(k)])))
 					if len(self.main.client.roster['users'][jid].groups)<=1:
 						action.setEnabled(False)
 				else:
-					action.setData(QtCore.QVariant([unicode(jid),u"+"+unicode(k)]))
+					action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"+"+unicode(k)])))
 				
 		if self.main.client.privacy:
 			if self.main.client.privacy.active:
@@ -2220,7 +2220,7 @@ class rosterWidget(QtGui.QWidget):
 		for status in ["online", "chat", "away", "xa", "dnd", "offline"]:
 			action=submenu.addAction(self.main.getIcon(status=status,size="32x32"),self.main.status[status])
 			action.setObjectName("custom_status")
-			action.setData(QtCore.QVariant([unicode(status), unicode(name)]))
+			action.setData(QtCore.QVariant(QtCore.QStringList([unicode(status), unicode(name)])))
 		
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.groupMenuTriggered)
