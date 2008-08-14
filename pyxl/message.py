@@ -6,6 +6,88 @@ import jid
 from twisted.words.xish import domish
 from twisted.words.xish.domish import Element
 
+class Message:
+	def __init__(self, to,  frm = None, body = None,  typ = 'chat',  subject = None,  lang = 'en',  evil = False):
+		self.to = jid.JID(to)
+		if frm != None:
+			self.frm = jid.JID(frm)
+		else:
+			self.frm = frm
+		self.body = body
+		self.typ = typ
+		self.subject = subject
+		self.composing = None
+		self.xhtml = None
+		self.muc = False
+		self.evil = False
+		self.lang = lang
+		self.receiptId = None
+		
+	
+	def toXml(self): 
+		message = Element((None,'message'))
+		message['xml:lang'] = self.lang
+		message['to'] = self.to.full()
+		if self.frm != None:
+			message['from'] = self.frm.full()
+		if self.body != None and body.strip() != '':
+			message.addElement('body', content = self.body)
+		message['type'] = self.typ
+
+#		if self.groupchats.has_key(JID.userhost()):
+#			message['from'] = JID.userhost() + '/' + self.groupchats[JID.userhost()].nick
+		if (self.typ=='groupchat' or self.typ == 'normal') and self.subject:
+			message.addElement('subject', content = self.subject)
+		if self.xhtml != None:
+#			if self.roster['users'].has_key(JID.userhost()):
+#				if self.roster['users'][JID.userhost()].resources.has_key(JID.resource):
+#					if self.roster['users'][JID.userhost()].resources[JID.resource].hasFeature('http://jabber.org/protocol/xhtml-im'):
+#						html = message.addElement('html','http://jabber.org/protocol/xhtml-im')
+#						body = html.addElement('body', 'http://www.w3.org/1999/xhtml')
+#						body.addRawXml(xhtml)
+#			elif muc:
+
+			html = message.addElement('html','http://jabber.org/protocol/xhtml-im')
+			body = html.addElement('body', 'http://www.w3.org/1999/xhtml')
+			body.addRawXml(xhtml)
+
+		if self.composing:
+			message.addElement(self.composing, 'http://jabber.org/protocol/chatstates' )
+
+		if self.subject != None:
+			message.addElement('subject',  content = self.subject)
+
+		if len(message.children) == 0:
+			return None
+#		self.on_xml(message.toXml())
+		if self.evil and body != None and body.strip() != '' :
+			message.addElement('evil', 'http://jabber.org/protocol/evil')
+		
+		if self.receiptId and body != None  and body != '' and typ!='groupchat':
+			message['id'] = self.receiptId
+			message.addElement('request', 'urn:xmpp:receipts')
+			self.messageReceipts[message['id']] = args
+		print message.toXml()
+		return message
+	
+	def setBody(self,  body):
+		self.body = body
+		
+	def setError(self,  error):
+		self.error = error
+	
+	def setSubject(self,  subject):
+		self.subject = subject
+	
+	def setXHTML(self,  xhtml):
+		self.xhtml = xhtml
+	
+	def setComposing(self,  composing):
+		self.composing = composing
+	
+	def setDelay(self,  delay):
+		self.delay = delay
+		
 class MessageInit:
 	def __init__(self,  client):
 		self.client = client
@@ -25,6 +107,9 @@ class MessageInit:
 			frm=unicode(frmjid.userhost()).lower()+"/"+frmjid.resource
 		else:
 			frm=unicode(frm).lower()
+		
+		msg = Message(self.client.jid.full(), el['from'],  typ = typ)
+		
 		body = subject =xhtml = chatstate = delay = error = attention = receipts = pep = event = None
 		for child in el.elements():
 			if child.name == "request":
@@ -40,19 +125,23 @@ class MessageInit:
 					self.send(message)
 			if child.name == "body":
 				body = unicode(child)
+				msg.setBody(body)
 			if child.name == 'error':
 				error = 'error'
 				for x in child.elements():
 					if x.name != 'text':
 						error = x.name
+				msg.setError(error)
 			if child.name == "subject":
 				subject = unicode(child)
+				msg.setSubject(subject)
 			if child.name == 'html':
 				xbody = child.firstChildElement()
 				xbody.attributes = {}
 				del(xbody.defaultUri)
 				del(xbody.uri)
 				xhtml = xbody.toXml().replace('<body>','').replace('</body>', '')
+				msg.setXHTML(xhtml)
 			if child.name in ['active',  'inactive',  'composing',  'paused',  'gone']:
 				chatstate = child.name
 				try:
@@ -60,6 +149,8 @@ class MessageInit:
 						self.client.roster['users'][frmjid.userhost()].resources[frmjid.resource].features.append('http://jabber.org/protocol/chatstates')
 				except:
 					pass #proste user neni v rosteru, nebo je to muc, nebo cojavim ;)
+				
+				msg.setComposing(chatstate)
 			if child.name == 'delay':
 				# xep-0203:
 				#  The format MUST adhere to the dateTime format specified in XEP-0082
@@ -68,6 +159,7 @@ class MessageInit:
 				m = re.match(r'(\d\d\d\d)-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)(\.\d+)?Z', stamp)
 				if m:
 					delay = timegm( map(int, m.groups()[0:6]) + [0,0,0] )
+					msg.setDelay(delay)
 			if child.name == 'x':
 				if child.defaultUri == 'jabber:x:delay' :
 					# xep-0091:
@@ -78,10 +170,12 @@ class MessageInit:
 					m = re.match(r'(\d\d\d\d)(\d\d)(\d\d)T(\d\d):(\d\d):(\d\d)', stamp)
 					if m:
 						delay = timegm( map(int, m.groups()[0:6]) + [0,0,0] )
+						msg.setDelay(delay)
 				if child.defaultUri == 'jabber:x:event':
 					elm = child.firstChildElement()
 					if elm:
 						chatstate = elm.name
+						msg.setComposing(chatstate)
 				if child.defaultUri == 'http://jabber.org/protocol/muc#user': # invitation
 					return
 				if child.defaultUri == 'http://jabber.org/protocol/rosterx':

@@ -323,6 +323,18 @@ class Client(derived):
 					d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
 			else:
 				d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
+				import urllib
+				proxies = urllib.getproxies()
+				if proxies.has_key('http'):
+					from urlparse import urlparse
+					parts = urlparse(proxies['http'])[1].split(':')
+					if len(parts) == 1:
+						p = '80'
+					else:
+						p = parts[1]
+					h = parts[0]
+					self.proxy = {'host':h,  'port': p}
+
 
 #			d.addCallback(self._dnsLookup)
 #			d.addErrback(self._dnsLookupErr)
