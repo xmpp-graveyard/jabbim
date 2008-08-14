@@ -1132,28 +1132,11 @@ class abstractChatWidget(QtGui.QWidget):
 		if len(self.lastMessages)>10:
 			del self.lastMessages[0]
 
-	def appendXhtml(self,xhtml):
-		message=xhtml.replace("&quot;",'"')
-		file=self.main().homeDir+'/avatars/'+unicode(self.main().client.jid.userhost())
-		if not os.path.isfile(file):
-			file="images/32x32/apps/jabbim.png"
-		message=self.main().skin["my_message"].replace("[time]",self.main().now()).replace("[user]",unicode(self.main().client.jid.user)).replace("[message]",message).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
-		self.textEditWrite(message)
+	def appendXhtml(self,text):
+		self.ui.webkit.messageObject.messageCache.insert(0,[0,text])
+		if len(self.ui.webkit.messageObject.messageCache)==1 and self.ui.webkit.webkitLoaded:
+			self.ui.webkit.messageObjectReady()
 
-	def appendPlainText(self,text):
-		text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
-		text=utils.replace_url(text)
-		text=text.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
-		file=self.main().homeDir+'/avatars/'+unicode(self.main().client.jid.userhost())
-		if not os.path.isfile(file):
-			file="images/32x32/apps/jabbim.png"
-		if unicode(text).startswith("/me"):
-			message=self.main().skin["my_me_message"].replace("[time]",self.main().now()).replace("[user]",unicode(self.main().client.jid.user)).replace("[message]",text[3:]).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
-		else:
-			message=self.main().skin["my_message"].replace("[time]",self.main().now()).replace("[user]",unicode(self.main().client.jid.user)).replace("[message]",text).replace("[avatar]","<img src=\""+file+"\" width=\"32\" height=\""+str(self.selfHeight)+"\" />")
-		self.textEditWrite(message)
-
-	
 	def webkitWrite(self,text,insert=False):
 		# look for longest-string first; e.g. for styles where both ':)' and ':)]' smileys are defined
 		for k in sorted(self.main().emoticonsWidget.smileys.iterkeys(), key=len, reverse=True):

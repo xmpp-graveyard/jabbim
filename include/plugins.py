@@ -330,7 +330,7 @@ class PluginBase:
 		"""
 		pass
 
-	def on_messageSend(self,jid,text="",xhtml="",composite=""):
+	def on_messageSend(self,message):
 		"""
 		Called when user wants to send normal (chat) message. If this function returns True, message will be send by Jabbim.
 		If it returns False, message will not be send and it's on plugin what to do.
@@ -346,7 +346,7 @@ class PluginBase:
 		@return: True - message will be processed by Jabbim too, False - message will be processed only by plugin
 		@see: L{on_groupchatMessageSend}
 		"""
-		return True
+		return message
 
 	def on_groupchatMessageSend(self,jid,text="",xhtml="",composite=""):
 		"""
