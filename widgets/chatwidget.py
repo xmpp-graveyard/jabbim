@@ -28,6 +28,7 @@ from twisted.web.microdom import *
 from twisted.web.domhelpers import gatherTextNodes
 import filetransfer
 from pyxl import jid as jidT
+from pyxl.message import Message
 import time
 from include import utils
 from abstractchatwidget import abstractChatWidget,abstractTextView
@@ -557,7 +558,7 @@ class chatWidget(abstractChatWidget):
 			# get plain text message
 			text=unicode(self.ui.line.toPlainText())
 			text=unescape(text)
-			ret=[]
+			ret=False
 			if self.xhtml:
 				xhtml=self.ui.line.toHtml()
 				xhtml,same=self.qtHtmlToXhtml(xhtml,text)
@@ -566,18 +567,18 @@ class chatWidget(abstractChatWidget):
 				#xhtml=self.ui.line.toHtml()
 				#xhtml,same=self.qtHtmlToXhtml(xhtml,text)
 				# send message
-				if same:
-					for key,value in self.main().plugins.iteritems():
-						if value['module']:
-							ret.append(self.main().runPluginCommand(value['module'].on_messageSend,[unicode(self.jid),text,'',"active"]))
-					if not False in ret:
-						self.main().client.sendMessage(unicode(self.jid),text,composing="active")
-				else:
-					for key,value in self.main().plugins.iteritems():
-						if value['module']:
-							ret.append(self.main().runPluginCommand(value['module'].on_messageSend,[unicode(self.jid),text,xhtml,"active"]))
-					if not False in ret:
-						self.main().client.sendMessage(unicode(self.jid),text,xhtml=xhtml,composing="active")
+				m=Message(unicode(self.jid))
+				m.setBody(text)
+				m.setXHTML(xhtml)
+				m.setComposing("active")
+				for key,value in self.main().plugins.iteritems():
+					if value['module']:
+						ret=self.main().runPluginCommand(value['module'].on_messageSend,[m])
+						if ret:
+							m=ret
+						else:
+							return
+				self.main().client.xmlstream.send(m.toXml())
 				
 				# prepare message for showing in GUI
 				message=xhtml.replace("&quot;",'"')
@@ -595,11 +596,17 @@ class chatWidget(abstractChatWidget):
 			else:
 				# send message
 				#text=unescape(text)
+				m=Message(unicode(self.jid))
+				m.setBody(text)
+				m.setComposing("active")
 				for key,value in self.main().plugins.iteritems():
 					if value['module']:
-						ret.append(self.main().runPluginCommand(value['module'].on_messageSend,[unicode(self.jid),text,'',"active"]))
-				if not False in ret:
-					self.main().client.sendMessage(unicode(self.jid),text,composing="active")
+						ret=self.main().runPluginCommand(value['module'].on_messageSend,[m])
+						if ret:
+							m=ret
+						else:
+							return
+				self.main().client.xmlstream.send(m.toXml())
 				
 				# prepare message for showing in GUI
 				text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
@@ -631,8 +638,7 @@ class chatWidget(abstractChatWidget):
 					
 			self.lastMessageFrom=unicode(self.main().client.jid.user)
 			# show message
-			if not False in ret:
-				self.textEditWrite(message,insert)
+			self.textEditWrite(message,insert)
 			# add message to 'sent messages history'
 			self.sent.append(text)
 			self.hindex = len(self.sent)
