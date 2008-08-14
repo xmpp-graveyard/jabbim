@@ -193,68 +193,9 @@ class derived:
 			presence.addElement('evil', 'http://jabber.org/protocol/evil')
 		self.xmlstream.send(presence)
 
-	def sendMessage(self, to, body=None, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
-		# Posle zpravu na jid
-		self.dispatcher.publishEvent('on_message_send', to, body, typ, subject,composing, xhtml,  muc)
 	
-	def _sendMessage(self, to, body=None, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
-		#hack kvuli moznosti zpracovat odchozi zpravu
-		args = locals()
-		del args['self']
-		message = Element((None,'message'))
-		message['xml:lang'] = self.xmlLang
-		message['to'] = to
-		if body != None and body.strip() != '':
-			message.addElement('body', content = body)
-		message['type'] = typ
-		JID = jid.JID(to)
-#		if self.groupchats.has_key(JID.userhost()):
-#			message['from'] = JID.userhost() + '/' + self.groupchats[JID.userhost()].nick
-		if (typ=='groupchat' or typ == 'normal') and subject:
-			message.addElement('subject', content = subject)
-		if xhtml != None:
-#			if self.roster['users'].has_key(JID.userhost()):
-#				if self.roster['users'][JID.userhost()].resources.has_key(JID.resource):
-#					if self.roster['users'][JID.userhost()].resources[JID.resource].hasFeature('http://jabber.org/protocol/xhtml-im'):
-#						html = message.addElement('html','http://jabber.org/protocol/xhtml-im')
-#						body = html.addElement('body', 'http://www.w3.org/1999/xhtml')
-#						body.addRawXml(xhtml)
-#			elif muc:
-			if self.hasFeature(to, 'http://jabber.org/protocol/xhtml-im') or typ == 'groupchat':
-				html = message.addElement('html','http://jabber.org/protocol/xhtml-im')
-				body = html.addElement('body', 'http://www.w3.org/1999/xhtml')
-				body.addRawXml(xhtml)
-
-		if composing:
-			try:
-				allowComposing = self.main.config['allowChatstate']
-			except:
-				allowComposing = 'True'
-			
-			if self.roster['users'].has_key(JID.userhost()) and allowComposing == 'True':
-				if self.roster['users'][JID.userhost()].resources.has_key(JID.resource):
-					#log.msg(unicode(self.roster['users'][JID.userhost()].resources[JID.resource].features))
-					if self.roster['users'][JID.userhost()].resources[JID.resource].hasFeature('http://jabber.org/protocol/chatstates'):
-						message.addElement(composing, 'http://jabber.org/protocol/chatstates' )
-				else:
-					if len(self.roster['users'][JID.userhost()].resources)>0:
-						if self.roster['users'][JID.userhost()].resources[self.roster['users'][JID.userhost()].getHighestResource()].hasFeature('http://jabber.org/protocol/chatstates'):
-							message.addElement(composing, 'http://jabber.org/protocol/chatstates' )
-		if subject != None:
-			s = message.addElement('subject')
-			s.addContent(subject)
-		if len(message.children) == 0:
-			return
-#		self.on_xml(message.toXml())
-		if self.evil and body != None and body.strip() != '' :
-			message.addElement('evil', 'http://jabber.org/protocol/evil')
-		
-		if self.hasFeature(to, 'urn:xmpp:receipts') and body != None  and body != '' and typ!='groupchat':
-			message.addUniqueId()
-			message.addElement('request', 'urn:xmpp:receipts')
-			self.messageReceipts[message['id']] = args
-		
-		self.xmlstream.send(message)
+	
+	
 
 
 	def sendInvitation(self, jid, room, reason = None, cont = False):

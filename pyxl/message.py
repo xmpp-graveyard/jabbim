@@ -18,7 +18,6 @@ class Message:
 		self.subject = subject
 		self.composing = None
 		self.xhtml = None
-		self.muc = False
 		self.evil = False
 		self.lang = lang
 		self.receiptId = None
@@ -34,7 +33,7 @@ class Message:
 		message['to'] = self.to.full()
 		if self.frm != None:
 			message['from'] = self.frm.full()
-		if self.body != None and body.strip() != '':
+		if self.body != None and self.body.strip() != '':
 			message.addElement('body', content = self.body)
 		message['type'] = self.typ
 
@@ -43,14 +42,6 @@ class Message:
 		if (self.typ=='groupchat' or self.typ == 'normal') and self.subject:
 			message.addElement('subject', content = self.subject)
 		if self.xhtml != None:
-#			if self.roster['users'].has_key(JID.userhost()):
-#				if self.roster['users'][JID.userhost()].resources.has_key(JID.resource):
-#					if self.roster['users'][JID.userhost()].resources[JID.resource].hasFeature('http://jabber.org/protocol/xhtml-im'):
-#						html = message.addElement('html','http://jabber.org/protocol/xhtml-im')
-#						body = html.addElement('body', 'http://www.w3.org/1999/xhtml')
-#						body.addRawXml(xhtml)
-#			elif muc:
-
 			html = message.addElement('html','http://jabber.org/protocol/xhtml-im')
 			body = html.addElement('body', 'http://www.w3.org/1999/xhtml')
 			body.addRawXml(xhtml)
@@ -64,13 +55,13 @@ class Message:
 		if len(message.children) == 0:
 			return None
 #		self.on_xml(message.toXml())
-		if self.evil and body != None and body.strip() != '' :
+		if self.evil and self.body != None and self.body.strip() != '' :
 			message.addElement('evil', 'http://jabber.org/protocol/evil')
 		
-		if self.receiptId and body != None  and body != '' and typ!='groupchat':
+		if self.receiptId and self.body != None  and self.body != '' and typ!='groupchat':
 			message['id'] = self.receiptId
 			message.addElement('request', 'urn:xmpp:receipts')
-			self.messageReceipts[message['id']] = args
+
 		print message.toXml()
 		return message
 	
@@ -101,14 +92,61 @@ class Message:
 	def setFrom(self,  frm):
 		self.frm = jid.JID(frm)
 	
+
+	
+	
+	def setReceiptId(self,  id):
+		self.receiptId = id
+	
 	def legacyUnpack(self):
 		return (self.frm.full(), self.typ, self.body, self.subject ,  self.xhtml, self.composing ,  self.delay, self.error)
 	
+	def legacyUnpackSend(self):
+		return (self.to.full(), self.body, self.typ, self.subject,self.composing, self.xhtml,  False)
+		
+
+
 class MessageInit:
 	def __init__(self,  client):
 		self.client = client
 		self.dispatcher = self.client.dispatcher
+		self.client.sendMessage = self.sendMessage
+
+		self.dispatcher.registerHandler('on_message_send', self._sendMessage, 'on_message_send')
+	def _sendMessage(self, msg):
+		
+		if not (self.client.hasFeature(msg.to.full(), 'http://jabber.org/protocol/xhtml-im') or msg.typ == 'groupchat'):
+			msg.setXHTML(None)
+
+		if msg.composing != None:
+			try:
+				allowComposing = self.main.config['allowChatstate']
+			except:
+				allowComposing = 'True'
+			feature = self.client.hasFeature(msg.to.full(), 'http://jabber.org/protocol/chatstates')
+			if not (feature and allowComposing) or msg.typ == 'groupchat':
+				msg.setComposing(None)
+
+#		self.on_xml(message.toXml())
+		if self.client.evil :
+			msg.evil = True
+		
+		if self.client.hasFeature(msg.to.full(), 'urn:xmpp:receipts') and msg.body != None  and msg.body != '' and msg.typ!='groupchat':
+			id = "H_%d" % Element._idCounter
+			Element._idCounter = Element._idCounter + 1
+			msg.setReceiptId(id)
+			self.client.messageReceipts[id] = msg
+		xml = msg.toXml()
+		if xml != None:
+			self.client.xmlstream.send(xml)
 	
+	def sendMessage(self, to, body=None, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
+		# Posle zpravu na jid
+		msg = Message(to,  body = body,  typ = typ,  subject = subject,  lang = self.client.xmlLang)
+		msg.setComposing(composing)
+		msg.setXHTML(xhtml)
+		self.dispatcher.publishEvent('on_message_send', msg)
+
 	def send(self,  xml):
 		self.client.xmlstream.send(xml)
 	

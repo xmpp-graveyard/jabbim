@@ -657,7 +657,8 @@ class Plugin(plugins.PluginBase):
 			return
 		self.backend.saveMessage(jid, body, "chat", subject, xhtml, "from")
 
-	def on_message_send (self, to, body, typ, subject,composing, xhtml,  muc):
+	def on_message_send (self, msg):
+		to, body, typ, subject,composing, xhtml,  muc = msg.legacyUnpackSend()
 		if not muc and body != None and len(body)!=0:
 			self.backend.saveMessage(self.main.getJid(to), body, typ, subject, xhtml, "to")
 
