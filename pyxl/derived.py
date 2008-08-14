@@ -82,9 +82,9 @@ class derived:
 	def on_unavailable(self,frm):
 		pass
 	
-	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
+	def on_message(self, msg):
 		pass
-	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
+	def on_GCmessage(self, msg):
 		pass
 	
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = [], reason = '', actor = None,n=None):

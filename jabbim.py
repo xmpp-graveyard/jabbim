@@ -1268,14 +1268,15 @@ class clientClass(pyxl.client.Client):
 		self.sendPresence(frm,None,status,None,'subscribed')
 
 
-	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
+	def on_GCmessage(self, msg):
 		"""
 		Handles messages from groupchat.
 		"""
+		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack()
 		# get user (resource) and MUC jid (saved in frm)
 		start=time.time()
 		if typ=="chat":
-			return self.on_message(frm, typ, body, subject, xhtml,chatstate,delay,error)
+			return self.on_message(msg)
 		frm=jidT.JID(frm)
 		mainWindow=self.main
 		if frm.resource:
@@ -1343,10 +1344,11 @@ class clientClass(pyxl.client.Client):
 				return
 
 
-	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None, error = None):
+	def on_message(self, msg):
 		"""
 		Handles normal 'chat' messages.
 		"""
+		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack()
 		# get user icon or name, if we have him in roster. Or use default icon and jid as name
 		if typ=="groupchat":
 			return

@@ -7,7 +7,7 @@ from twisted.words.xish import domish
 from twisted.words.xish.domish import Element
 
 class Message:
-	def __init__(self, to,  frm = None, body = None,  typ = 'chat',  subject = None,  lang = 'en',  evil = False):
+	def __init__(self, to,  frm = None, body = None,  typ = 'chat',  subject = None,  lang = 'en'):
 		self.to = jid.JID(to)
 		if frm != None:
 			self.frm = jid.JID(frm)
@@ -22,6 +22,10 @@ class Message:
 		self.evil = False
 		self.lang = lang
 		self.receiptId = None
+		self.attention = False
+		self.pep = {}
+		self.delay = 0
+		self.error = None
 		
 	
 	def toXml(self): 
@@ -87,7 +91,19 @@ class Message:
 	
 	def setDelay(self,  delay):
 		self.delay = delay
-		
+	
+	def setAttention(self,  attention):
+		self.attention = attention
+	
+	def setPEP(self, typ, payload):
+		self.pep[typ] = payload
+	
+	def setFrom(self,  frm):
+		self.frm = jid.JID(frm)
+	
+	def legacyUnpack(self):
+		return (self.frm.full(), self.typ, self.body, self.subject ,  self.xhtml, self.composing ,  self.delay, self.error)
+	
 class MessageInit:
 	def __init__(self,  client):
 		self.client = client
@@ -212,9 +228,8 @@ class MessageInit:
 #					for at in payload.elements():
 #						event[at.name] = unicode(at)
 				else:
-					
 					payload = None
-				print el.toXml()
+				msg.setPEP(pep, payload)
 				c = self.client.getContactByJid(frm)
 				if c != None:
 					c.setPEP(pep, payload) #zapisem si to do kontaktu
@@ -229,7 +244,9 @@ class MessageInit:
 								body=u"→→→ %s" % body 
 							else:
 								body=u"→ %s → %s" % (frmjid.full(),body)
-							self.dispatcher.publishEvent('on_message', ofrom,typ,body,subject, xhtml,  chatstate,  delay, error)
+							msg.setFrom(ofrom)
+							msg.setBody(body)
+							self.dispatcher.publishEvent('on_message', msg)
 							return
 		
 		if error == None and el.getAttribute('type') == 'error':
@@ -241,11 +258,11 @@ class MessageInit:
 
 		if self.client.groupchats.has_key(jid.JID(frm).userhost()):
 #			self.on_GCmessage(frm,typ,body,subject, xhtml,  chatstate,  delay)
-			self.dispatcher.publishEvent('on_GCmessage', frm,typ,body,subject, xhtml,  chatstate,  delay, error)
+			self.dispatcher.publishEvent('on_GCmessage', msg)
 		else:
 # 			self.on_message(frm,typ,body,subject, xhtml,  chatstate,  delay)
 			if typ!="groupchat":
-				self.dispatcher.publishEvent('on_message', frm,typ,body,subject, xhtml,  chatstate,  delay, error)
+				self.dispatcher.publishEvent('on_message', msg)
 
 	def onInvite(self, el):
 		if el['type'] =='error':

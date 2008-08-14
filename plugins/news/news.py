@@ -55,7 +55,8 @@ class Plugin(plugins.PluginBase):
 	def showSlot(self):
 		self.window.show()
 	
-	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
+	def on_message(self, msg):
+		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack()
 		if typ != 'headline':
 			return True
 		frm = frm.split('/')[0]

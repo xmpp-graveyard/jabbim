@@ -569,7 +569,8 @@ class Plugin(plugins.PluginBase):
 			self.dialog=legacyforms.legacyFormsDialog(self.main,legacy,jid,"disco",self.window)
 			self.dialog.show()
 	
-	def on_message(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None,error=None):
+	def on_message(self,msg):
+		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack()
 		if self.typ=="public":
 			text="public@disk.jabbim.cz"
 		elif self.typ=="private":
