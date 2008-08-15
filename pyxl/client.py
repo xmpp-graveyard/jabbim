@@ -217,7 +217,6 @@ class Client(derived):
 
 	def _cacheCaps(self, result):
 		for line in result:
-			print line
 			if line != None:
 				caps = self.caps_cache.get(line[0], ['',[]])
 				if line[1] not in caps[1]:
