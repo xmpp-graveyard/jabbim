@@ -110,6 +110,7 @@ from twisted.web.client import downloadPage
 import shutil #xmlrpc
 from twisted.python.filepath import FilePath
 from widgets.extra import extraDialog
+from widgets import bookmarks
 from locale import strcoll
 import weakref
 
@@ -643,19 +644,6 @@ class clientClass(pyxl.client.Client):
 			elif newName and jid == self.jid.userhost():
 				self.main.ui.selfName.setText('<h3>'+newName+'</h3>') #we need to set name in roster
 				self.main.selfName=newName
-
-	def on_discoItemsBookmarksReceived(self, jid):
-		"""
-		Called when disco#items of bookmarked groupchat arrived.
-		"""
-		item=self.main.ui.bookmarks.findItems(jid,QtCore.Qt.MatchExactly,1)[0] # find item
-		for i in range(item.childCount()):
-			item.takeChild(0)
-		for name in self.disco[jid][None]['items'].keys():
-			user=QtGui.QTreeWidgetItem(item)
-			user.setText(0,unicode(jidT.JID(name).resource))
-			user.setText(1,unicode(name))
-			user.setIcon(0,self.main.getIcon(size="16x16"))
 
 	def on_rosterArrived(self):
 		"""
@@ -1268,15 +1256,14 @@ class clientClass(pyxl.client.Client):
 		self.sendPresence(frm,None,status,None,'subscribed')
 
 
-	def on_GCmessage(self, msg):
+	def on_GCmessage(self, frm, typ, body, subject = None, xhtml = None,  chatstate = None,  delay = None, error = None):
 		"""
 		Handles messages from groupchat.
 		"""
-		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack()
 		# get user (resource) and MUC jid (saved in frm)
 		start=time.time()
 		if typ=="chat":
-			return self.on_message(msg)
+			return self.on_message(frm, typ, body, subject, xhtml,chatstate,delay,error)
 		frm=jidT.JID(frm)
 		mainWindow=self.main
 		if frm.resource:
@@ -1344,11 +1331,10 @@ class clientClass(pyxl.client.Client):
 				return
 
 
-	def on_message(self, msg):
+	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None, error = None):
 		"""
 		Handles normal 'chat' messages.
 		"""
-		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack()
 		# get user icon or name, if we have him in roster. Or use default icon and jid as name
 		if typ=="groupchat":
 			return
@@ -1892,6 +1878,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.setMinimumWidth(200)
 		self.ui.statusLine.hide()
 
+		#self.ui.bookmarks.setIndentation(0)
+
 		# filetransfer
 		#self.filetransferTimer=QtCore.QTimer()
 		#QtCore.QObject.connect(self.filetransferTimer, QtCore.SIGNAL("timeout()"),self.refreshFT)
@@ -1902,6 +1890,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.allowedSids=[]
 		self.allowedJids={} # {jid:path_to_download_files}
 
+		self.bookmarks=bookmarks.bookmarksClass(self.ui.bookmarks,self)
 
 		# preparing chat window
 		if self.config['oneWindow']=="True":
@@ -2136,19 +2125,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.actionIdentity, QtCore.SIGNAL("triggered ( bool )"),self.identityEditor)
 		QtCore.QObject.connect(self.ui.actionStart_Chat, QtCore.SIGNAL("triggered ( bool )"), self.startChatDialog)
 
-		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
-		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.bookmarksCurrentChanged)
-		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemActivated ( QTreeWidgetItem *, int )"),self.bookmarksClicked)
-		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
-		QtCore.QObject.connect(self.ui.bookmarks, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.bookmarksItemClicked)
-
-		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Delete), self.ui.bookmarks,self.deleteCurrentBookmark)
 		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Escape), self.ui.statusLine,self.statusLineCanceled)
-
-		# set up bookmarks treeWidget
-		self.ui.bookmarks.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-		self.ui.bookmarks.header().hide()
-		self.ui.bookmarks.hideColumn(1)
 
 		# set up stacked widget (0==login,1==roster, 2==events and etc..)
 		self.ui.rosterStackedWidget.setCurrentIndex(0)
@@ -4018,32 +3995,12 @@ class mainWindow(QtGui.QMainWindow):
 				self.addcontactdialog=widgets.addcontact.addContactDialog(self,self,jid=jid)
 				self.addcontactdialog.show()
 
-	def bookmarksClicked(self,item,i):
-		"""
-		Joins MUC when user clicked on bookmark in Bookmarks tab.
-		"""
-		data=item.data(0,32)
-		lst=data.toList()
-		jid=unicode(lst[0].toString()) # get jid
-		nickname=unicode(lst[1].toString()) # get nickname
-		password = unicode(lst[2].toString()) # get password
-		# send jabber command
-		if self.chat.addGroupChatTab(jid,nickname):
-			#self.main.groupchat[room+"@"+server]=[nickname,[]]
-			self.client.joinGC(jid, nickname, password,self.config['sendRooms']=="True")
-
-	def buildBookmarks(self):
+	def buildBookmarks(self,data=False):
 		"""
 		Adds bookmarks items to self.ui.bookmarks (QTreeWidget)
 		"""
-		self.ui.bookmarks.clear()
-		for k,v in self.client.bookmarks['conference'].iteritems():
-			# add bookmark to the bookmarks list
-			item=QtGui.QTreeWidgetItem(self.ui.bookmarks)
-			item.setText(0,unicode(v.name))
-			item.setText(1,unicode(v.jid.full()))
-			item.setData(0,32,QtCore.QVariant(QtCore.QStringList([unicode(v.jid.full()),unicode(v.nick),unicode(v.password)])))
-			item.setIcon(0,QtGui.QIcon("images/16x16/categories/muc.png"))
+		self.bookmarks.buildBookmarks()
+
 
 	def autoJoinGroupchat(self):
 		"""
@@ -4054,7 +4011,6 @@ class mainWindow(QtGui.QMainWindow):
 				jid=unicode(v.jid.full())
 				nickname=v.nick
 				if self.chat.addGroupChatTab(jid,nickname):
-
 					self.client.joinGC(jid, nickname, v.password,self.config['sendRooms']=="True")
 
 	def joinGroupchat(self,bool):
@@ -4067,111 +4023,6 @@ class mainWindow(QtGui.QMainWindow):
 			#self.joingroupchatwizard.show()
 		self.joingroupchatwizard=widgets.joingroupchat.joinGroupChatWindow(self,parent=self)
 		self.joingroupchatwizard.show()
-
-
-	def deleteCurrentBookmark(self):
-		"""
-		Deletes currently selected bookmark.
-		"""
-		item=self.ui.bookmarks.currentItem()
-		if item:
-			del self.client.bookmarks['conference'][unicode(item.text(0))]
-			self.client.setBookmarks()
-			self.buildBookmarks()
-
-	def bookmarksContextMenu(self,pos):
-		"""
-		Makes bookmarks context menu. Called when user right-click on bookmark.
-		"""
-		# make groupchat bookmarks menu
-		item=self.ui.bookmarks.itemFromIndex(self.ui.bookmarks.indexAt(pos)) # get selected item
-		jid=unicode(item.text(1)) # get item jid
-		menu=QtGui.QMenu(self.ui.bookmarks) # make menu
-		if item.parent()==None:
-			# Join bookmarked groupchat
-			action=menu.addAction(self.tr("Join"))
-			action.setData(item.data(0,32))
-			action.setObjectName("join_bookmark")
-			action=menu.addAction(self.tr("User list"))
-			action.setData(item.data(0,32))
-			action.setObjectName("show_users")
-			# separator
-			menu.addSeparator()
-			# Edit bookmark
-			action=menu.addAction(self.tr("Edit bookmark"))
-			action.setData(item.data(0,32))
-			action.setObjectName("edit_bookmark")
-			# Delete bookmark
-			action=menu.addAction(self.tr("Delete bookmark"))
-			action.setData(item.data(0,32))
-			action.setObjectName("delete_bookmark")
-
-		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.groupchatContextMenuTriggered)
-		menu.popup(self.ui.bookmarks.mapToGlobal(pos))
-
-	def groupchatContextMenuTriggered(self,action):
-		"""
-		Executes command according to action.objectName(). Called when user choose one of QAction from bookmarks menu.
-		@type action: QAction
-		@param action: QAction from bookmarks menu
-		"""
-		cmd=action.objectName()
-		if cmd=="join_bookmark":
-			# join bookmarked groupchat
-			data=action.data()
-			lst=data.toList()
-			jid=unicode(lst[0].toString()) # get jid
-			nickname=unicode(lst[1].toString()) # get nickname
-			password=unicode(lst[2].toString()) # get password
-			if len(password)==0:
-				password=None
-			# send jabber command
-			if self.chat.addGroupChatTab(jid,nickname):
-				self.client.joinGC(jid, nickname,password,self.config['sendRooms']=="True")
-				#self.client.joinGC(jid, nickname, v.password)
-		elif cmd=="edit_bookmark":
-			item=self.ui.bookmarks.currentItem()
-			data=action.data()
-			lst=data.toList()
-			jid=unicode(lst[0].toString()) # get jid
-			if len(jid.split("@"))!=1:
-				room=jid.split("@")[0]
-				server=jid.split("@")[1]
-			else:
-				room=jid
-			name=unicode(item.text(0))
-			nickname=unicode(lst[1].toString()) # get nickname
-			password=unicode(lst[2].toString()) # get password
-			autojoin=self.client.bookmarks['conference'][jid].autojoin
-			if password=="None" or not password:
-				password=""
-			edit=widgets.preferences.editBookmark(self,room,server,name,nickname,password,autojoin,self)
-			edit.exec_()
-		elif cmd=="delete_bookmark":
-			item=self.ui.bookmarks.currentItem()
-			#self.ui.bookmarks.takeTopLevelItem(self.ui.bookmarks.indexOfTopLevelItem(item))
-			del self.client.bookmarks['conference'][unicode(item.text(1))]
-			self.client.setBookmarks()
-			self.buildBookmarks()
-		elif cmd=="show_users":
-			item=self.ui.bookmarks.currentItem()
-			if int(item.childCount())!=0:
-				# delete all users in groupchat
-				for i in range(item.childCount()):
-					item.takeChild(0)
-			# set item expanded
-			self.ui.bookmarks.setItemExpanded(item,True)
-			self.client.getDiscoItems(unicode(item.text(1)),callback=self.client.on_discoItemsBookmarksReceived,callback_par=unicode(item.text(1)))
-
-	def bookmarksItemClicked(self,item,i):
-		if item.isExpanded():
-			self.ui.bookmarks.collapseItem(item)
-		else:
-			self.ui.bookmarks.expandItem(item)
-
-	def bookmarksCurrentChanged(self,item,old):
-		if item != None and item.parent()==None:
-			self.client.getDiscoItems(unicode(item.text(1)),callback=self.client.on_discoItemsBookmarksReceived,callback_par=unicode(item.text(1)))
 
 	def profilesClicked(self,bool):
 		if not self.profilesWindow:

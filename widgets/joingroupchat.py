@@ -56,19 +56,23 @@ class joinGroupChatWindow(QtGui.QDialog):
 				if self.main.client.hasIdentity(jid, 'conference', 'text') and jid.startswith('c'):
 					self.ui.serverName.setCurrentIndex(len(mucjid)-1)
 				
-		for server in self.main.config['groupchatServerHistory']:
-			if server not in mucjid:
+		for s in self.main.config['groupchatServerHistory']:
+			if s not in mucjid:
 				if len(mucjid) == self.ui.serverName.count():
 					self.ui.serverName.insertSeparator(len(mucjid))
-				self.ui.serverName.addItem(server)
+				self.ui.serverName.addItem(s)
 				
 		
 		QtCore.QObject.connect(self.ui.roomName,QtCore.SIGNAL(" textChanged ( const QString &)"),self.ui.bookmarkName.setText)
 		QtCore.QObject.connect(self.ui.roomName,QtCore.SIGNAL(" textChanged ( const QString &)"),self.NameChanged)
 		QtCore.QObject.connect(self.ui.serverName,QtCore.SIGNAL(" textChanged ( const QString &)"),self.NameChanged)
 		QtCore.QObject.connect(self.ui.browser,QtCore.SIGNAL("clicked()"),self.mucBrowser)
-
-		self.ui.roomName.setFocus(QtCore.Qt.MouseFocusReason)
+		if len(room)!=0:
+			self.ui.roomName.setText(room)
+		else:
+			self.ui.roomName.setFocus(QtCore.Qt.MouseFocusReason)
+		if len(server)!=0:
+			self.ui.serverName.insertItem(0,server)
 
 	def mucBrowser(self):
 		self.d=MUCBrowserDialog(self.main,unicode(self.ui.serverName.currentText()),self,self)

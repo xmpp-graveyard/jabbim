@@ -9,12 +9,14 @@ import pyxl
 from twisted.internet import threads
 
 class delegate(QtGui.QItemDelegate):
-	def __init__(self,parent=None):
+	def __init__(self,column,parent=None,space=0):
 		QtGui.QItemDelegate.__init__(self,parent)
+		self.column=column
+		self.space=space
 	
 	def paint(self,painter,option,index):
 		# selected item
-		if option.state & QtGui.QStyle.State_Selected and index.column()==2:
+		if option.state & QtGui.QStyle.State_Selected and index.column()==self.column:
 			#option.rect.setHeight(50)
 			option.displayAlignment=QtCore.Qt.AlignTop
 			text=unicode(index.data(32).toString())
@@ -31,18 +33,18 @@ class delegate(QtGui.QItemDelegate):
 			doc.setDefaultFont(option.font)
 			doc.setPageSize(QtCore.QSizeF(option.rect.width(),option.rect.height()-option.fontMetrics.height()))
 			doc.setHtml("<font color=\"%s\">"%option.palette.highlightedText().color().name()+text+"</font>")
-			painter.translate(option.rect.x()+1,option.rect.y()+option.fontMetrics.height())
+			painter.translate(option.rect.x()+1+self.space,option.rect.y()+option.fontMetrics.height())
 			doc.drawContents(painter, QtCore.QRectF(0,0,option.rect.width(),option.rect.height()))
 			painter.restore()
 			return
 
 		QtGui.QItemDelegate.paint(self,painter,option,index)
 	
-	def sizeHint(self,option,index):
+#	def sizeHint(self,option,index):
 		# selected item
-		if option.state & QtGui.QStyle.State_Selected:
-			return QtCore.QSize(100,50)
-		return QtGui.QItemDelegate.sizeHint(self,option,index)
+	#	if option.state & QtGui.QStyle.State_Selected:
+		#	return QtCore.QSize(100,50)
+		#return QtGui.QItemDelegate.sizeHint(self,option,index)
 
 class MUCBrowserDialog(QtGui.QDialog):
 	def __init__(self,main,server,joinDialog,parent=None):
@@ -52,7 +54,7 @@ class MUCBrowserDialog(QtGui.QDialog):
 		self.ui.setupUi(self)
 		self.main=main
 		self.joinDialog=joinDialog
-		self.ui.groupchats.setItemDelegate(delegate(self.ui.groupchats))
+		self.ui.groupchats.setItemDelegate(delegate(2,self.ui.groupchats))
 		QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.selectionChanged)
 		QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.CE)
 		QtCore.QObject.connect(self.ui.groupchats, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem *, int)"),self.accept)
