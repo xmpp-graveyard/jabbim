@@ -43,7 +43,7 @@ class Plugin(plugins.PluginBase):
 		for k in sorted(self.main.emoticonsWidget.smileys.iterkeys(), key=len, reverse=True):
 			v = self.main.emoticonsWidget.smileys[k]
 			fp = open(v, 'rb')
-			self.current[k] = sha1(fp.read()).hexdigest()
+			self.current[k] = sha1(fp.read()).hexdigest()+'@sha1'
 			self.main.client.bobDef[self.current[k]] = v
 			self.main.client.bobDef.write()
 			fp.close()
@@ -86,7 +86,7 @@ class Plugin(plugins.PluginBase):
 										fp = open(v, 'rb')
 										hash = sha1(fp.read()).hexdigest()
 										fp.close()
-										self.main.client.bobDef[hash] = v
+										self.main.client.bobDef[hash+'@sha1'] = v
 									except:
 										continue
 
@@ -108,7 +108,7 @@ class Plugin(plugins.PluginBase):
 										fp = open(v, 'rb')
 										hash = sha1(fp.read()).hexdigest()
 										fp.close()
-										self.main.client.bobDef[hash] = v
+										self.main.client.bobDef[hash+'@sha1'] = v
 									except:
 										continue
 			self.main.client.bobDef.write()

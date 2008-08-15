@@ -1224,6 +1224,7 @@ class Client(derived):
 			print 'data received!'
 			frm = jid.JID(el['from'])
 			data = b64decode(unicode(el.data))
+			#TODO detect hash type
 			if sha1(data).hexdigest() == cid.split('@')[0]:
 				fp = open(self.bobCacheDir+cid,  'wb')
 				fp.write(data)
