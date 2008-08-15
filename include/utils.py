@@ -255,6 +255,8 @@ def loadConfig(main,status):
 	main.config["groupchatSplitSizes3"]=map(int, main.config["groupchatSplitSizes3"])
 	if not os.path.isdir(main.homeDir+'/avatars'):
 		os.mkdir(main.homeDir+'/avatars')
+	if not os.path.isdir(main.homeDir+'/bobCache'):
+		os.mkdir(main.homeDir+'/bobCache')	
 	if not os.path.isdir(main.homeDir+'/plugins'):
 		os.mkdir(main.homeDir+'/plugins')
 

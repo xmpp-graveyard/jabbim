@@ -1332,7 +1332,7 @@ class clientClass(pyxl.client.Client):
 				return
 
 
-	def on_message(self, frm, typ, body, subject = None, xhtml = None,chatstate = None,  delay = None, error = None):
+	def on_message(self, msg):
 		"""
 		Handles normal 'chat' messages.
 		"""

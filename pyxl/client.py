@@ -138,6 +138,7 @@ class Client(derived):
 		self.registerFeature('urn:xmpp:tmp:jingle')
 		self.registerFeature('urn:xmpp:tmp:jingle:apps:file-transfer')
 		self.registerFeature('urn:xmpp:tmp:jingle:transports:bytestreams')
+		self.registerFeature('urn:xmpp:tmp:bob')
 		self.identity = 'client/pc'
 		
 		self.caps_cache = {} # 'ext': (identity,[feature1, feature2])
@@ -156,6 +157,9 @@ class Client(derived):
 		self.avatars = {}
 		self.avatarDef = ConfigObj(self.main.realHomeDir+'/avatars/avatars.def',encoding='UTF8')
 		self.avatarImg = {} #hash:QPixmap
+		self.bobDef = ConfigObj(self.main.realHomeDir+'/bobCache/bob.def',encoding='UTF8')
+		self.bobCacheDir =self.main.realHomeDir+'/bobCache/'
+#		self.bobMine = ConfigObj(self.main.realHomeDir+'/bobCache/mine.def',encoding='UTF8')
 		
 		path = self.main.realHomeDir+'/avatars/'
 
@@ -574,6 +578,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='session-accept']", self.jingle.onJingleAccept, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='session-terminate']", self.jingle.onJingleTerminate, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='content-replace']", self.jingle.onJingleContentReplace, 1)
+		self.xmlstream.addObserver("/iq[@type='get'][@id]/data[@xmlns='urn:xmpp:tmp:bob']", self.onBOBData, 1)
 
 		self.xping.start(100, False)		
 		self.getPrivacy().addCallback(self.getMetacontacts).addErrback(self.getMetacontacts)
@@ -1192,6 +1197,54 @@ class Client(derived):
 				error.addElement("forbidden", "urn:ietf:params:xml:ns:xmpp-stanzas")
 				iq.send()
 				
+
+	def onBOBData(self,  el):
+		self.disp(el['id'])
+		data = el.data
+		cid = el.data['cid']
+		if self.bobDef.has_key(cid):
+			fp = open(self.bobDef[cid],  'rb')
+			dt = fp.read()
+			fp.close()
+			el.data.addContent(b64encode(dt))
+			el.swapAttributeValues('to',  'from')
+			el['type'] = 'result'
+		else:
+			el.swapAttributeValues('to',  'from')
+			el['type'] = 'error'
+			el.addElement('error')
+			el.error.addElement('not-found')
+		self.xmlstream.send(el)
+	
+	def getBOBData(self,  to,  cid):
+		def _loadBOBLink(cid):
+			return self.bobDef[cid]
+		
+		def _writeBOBData(el,  cid):
+			print 'data received!'
+			frm = jid.JID(el['from'])
+			data = b64decode(unicode(el.data))
+			if sha1(data).hexdigest() == cid.split('@')[0]:
+				fp = open(self.bobCacheDir+cid,  'wb')
+				fp.write(data)
+				fp.close()
+			else:
+				print 'cid is not hash!?'
+			return self.bobCacheDir+cid
+		
+		to = jid.JID(to)
+		if self.bobDef.has_key(cid):
+			return threads.deferToThread(_loadBOBLink, cid)
+		else:
+			self.bobDef[to.userhost()] = {}
+			
+		self.bobDef[cid] = self.bobCacheDir+cid
+		iq = IQ(self.xmlstream, 'get')
+		self.disp(iq['id'])
+		iq['to'] = to.full()
+		iq.addElement('data',  'urn:xmpp:tmp:bob')
+		iq.data['cid'] = cid
+		return iq.send().addCallback(_writeBOBData,  cid)
 
 	def onLast(self, el):
 		log.msg('received last request')
