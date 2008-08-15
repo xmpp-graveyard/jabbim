@@ -83,6 +83,7 @@ class PresenceInit:
 			elif child.name == 'c':
 				caps_node = child.getAttribute('node')
 				ext = child.getAttribute('ext')
+				print frm.full(),  ext
 				if self.client.caps_cache.has_key(ext) and ext != None:
 					features = self.client.caps_cache[ext][1]
 					identity = self.client.caps_cache[ext][0]
@@ -95,11 +96,11 @@ class PresenceInit:
 							print 'konference nebo gateway'
 							features = ['-']
 						else:
-#							self.client.getFeatures(frm, ext)
+							self.client.getFeatures(frm, ext)
 							pass
 				else:
 					features = 'asked'
-#					self.client.getFeatures(frm, ext)
+					self.client.getFeatures(frm, ext)
 			if child.name == 'x' and child.defaultUri == 'http://jabber.org/protocol/muc#user':
 				for item in child.elements():
 					if item.name == 'item':
