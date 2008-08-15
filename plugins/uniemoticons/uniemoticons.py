@@ -128,8 +128,12 @@ class Plugin(plugins.PluginBase):
 							for v in config['emoticons'].itervalues():
 								v = self.main.realHomeDir+"/emoticons/"+pack+'/'+v
 								if not v in self.main.client.bobDef.values():
-									fp = open(v, 'rb')
-									hash = sha1(fp.read()).hexdigest()
-									fp.close()
-									self.main.client.bobDef[hash] = v
-		self.main.client.bobDef.write()
+									try:
+										fp = open(v, 'rb')
+										hash = sha1(fp.read()).hexdigest()
+										fp.close()
+										self.main.client.bobDef[hash] = v
+									except:
+										continue
+			self.main.client.bobDef.write()
+		
