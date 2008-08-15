@@ -73,7 +73,7 @@ class bookmarksClass:
 			parent=QtGui.QTreeWidgetItem(self.bookmarks)
 			parent.setText(0,mainWindow.tr("Bookmarked Rooms"))
 			parent.setIcon(0,QtGui.QIcon("images/16x16/categories/bookmarks.png"))
-			parent.setTextAlignment(0,QtCore.Qt.AlignCenter)
+			#parent.setTextAlignment(0,QtCore.Qt.AlignCenter)
 			parent.setBackground(0,QtGui.QBrush(self.bookmarks.palette().color(QtGui.QPalette.AlternateBase)))
 			parent.setExpanded(True)
 			for k,v in self.main.client.bookmarks['conference'].iteritems():
@@ -91,7 +91,7 @@ class bookmarksClass:
 				rooms=data[category]
 				parent=QtGui.QTreeWidgetItem(self.bookmarks)
 				parent.setText(0,unicode(category))
-				parent.setTextAlignment(0,QtCore.Qt.AlignCenter)
+				#parent.setTextAlignment(0,QtCore.Qt.AlignCenter)
 				parent.setBackground(0,QtGui.QBrush(self.bookmarks.palette().color(QtGui.QPalette.AlternateBase)))
 				parent.setExpanded(True)
 				for room in rooms:
