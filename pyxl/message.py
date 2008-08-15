@@ -23,7 +23,7 @@ class Message:
 		self.receiptId = None
 		self.attention = False
 		self.pep = {}
-		self.delay = 0
+		self.delay = None
 		self.error = None
 		
 	
@@ -44,7 +44,7 @@ class Message:
 		if self.xhtml != None:
 			html = message.addElement('html','http://jabber.org/protocol/xhtml-im')
 			body = html.addElement('body', 'http://www.w3.org/1999/xhtml')
-			body.addRawXml(xhtml)
+			body.addRawXml(self.xhtml)
 
 		if self.composing:
 			message.addElement(self.composing, 'http://jabber.org/protocol/chatstates' )
