@@ -1260,8 +1260,11 @@ class clientClass(pyxl.client.Client):
 		"""
 		Handles messages from groupchat.
 		"""
-		# get user (resource) and MUC jid (saved in frm)
+		#check for BoB images
+		msg = self.main.getBOBImages(msg)
+		#unpack legacy vars
 		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack() 
+		# get user (resource) and MUC jid (saved in frm)
 		start=time.time()
 		if typ=="chat":
 			return self.on_message(msg)
@@ -1336,8 +1339,11 @@ class clientClass(pyxl.client.Client):
 		"""
 		Handles normal 'chat' messages.
 		"""
-		# get user icon or name, if we have him in roster. Or use default icon and jid as name
+		#check for BoB images
+		msg = self.main.getBOBImages(msg)
+		#unpack legacy vars
 		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack() 
+		# get user icon or name, if we have him in roster. Or use default icon and jid as name
 		if typ=="groupchat":
 			return
 		frm=jidT.JID(frm)
@@ -2283,6 +2289,32 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		d=threads.deferToThread(self._getImage,file,size)
 		return d
+	
+	def getBOBImages(self,  msg):
+		"""
+		Replaces src of images with cid: link
+		@type msg: Message instance
+		@param msg: incoming message
+		"""
+		if msg.xhtml != None:
+			dom = parseString(unicode('<p>'+msg.xhtml+'</p>'))
+			#seznam = {}
+			changed = False
+			
+			for el in dom.getElementsByTagName('img'):
+				src = el.getAttribute('src')
+				if src != None and src.startswith('cid:'):
+					print src
+					cid = src.split(':')[1]
+					link = self.client.bobCacheDir+cid
+					el.setAttribute('src', link)
+					changed = True
+					self.client.getBOBData(msg.frm.full(),  cid)
+					changed = True
+			if changed:
+				print unicode(dom.toxml())
+				msg.setXHTML(unicode(dom.toxml()))
+		return msg
 
 	def getToolTip(self,jid, name = None):
 		"""

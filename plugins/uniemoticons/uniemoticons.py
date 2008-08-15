@@ -35,8 +35,6 @@ class Plugin(plugins.PluginBase):
 		self.current = {}	
 		if main:
 			self.loadConfig()
-			self.registerHandler('on_message', self.on_message,  priority = 1)
-			self.registerHandler('on_GCmessage', self.on_GCmessage,  priority = 1)
 			threads.deferToThread(self.loadCurrentEmoticons)
 		else:
 			self.loadConfig(homedir)
@@ -68,29 +66,7 @@ class Plugin(plugins.PluginBase):
 					msg.xhtml = xhtm
 		return msg
 	
-	def on_message(self,  msg,  typ = 'on_message'):
-		changed = False
-		if msg.xhtml != None:
-			dom = parseString(unicode('<p>'+msg.xhtml+'</p>'))
-			#seznam = {}
-			
-			for el in dom.getElementsByTagName('img'):
-				src = el.getAttribute('src')
-				if src != None and src.startswith('cid:'):
-					print src
-					cid = src.split(':')[1]
-					link = self.main.client.bobCacheDir+cid
-					el.setAttribute('src', link)
-					changed = True
-					self.main.client.getBOBData(msg.frm.full(),  cid)
-			msg.setXHTML(unicode(dom.toxml()))
-		if changed:
-			reactor.callLater(0.5, self.main.client.dispatcher.publishEvent,typ,  msg)
-			return False
-	
-	def on_GCmessage(self,  msg,  typ = 'on_GCmessage'):
-		self.on_message(msg,  typ)
-		
+
 	def loadAllEmoticons(self):
 		# emoticons from Jabbim root directory
 		packs=os.listdir("emoticons/")
@@ -104,7 +80,7 @@ class Plugin(plugins.PluginBase):
 						loaded,config=self.main.loadJabbimExtraConfig("emoticons/"+emo,'emoticons/default/smileys.cfg')
 						if loaded:
 							for v in config['emoticons'].itervalues():
-								v ="emoticons/"+pack+'/'+v
+								v =os.getcwd()+"/emoticons/"+pack+'/'+v
 								if not v in self.main.client.bobDef.values():
 									try:
 										fp = open(v, 'rb')
