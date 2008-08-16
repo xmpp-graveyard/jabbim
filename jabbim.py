@@ -2305,11 +2305,13 @@ class mainWindow(QtGui.QMainWindow):
 				src = el.getAttribute('src')
 				if src != None and src.startswith('cid:'):
 					print src
+					
 					cid = src.split(':')[1]
-					link = self.client.bobCacheDir+cid
+					self.client.getBOBData(msg.frm.full(),  cid)
+					link = self.client.bobDef[cid]
 					el.setAttribute('src', link)
 					changed = True
-					self.client.getBOBData(msg.frm.full(),  cid)
+					
 					changed = True
 			if changed:
 				print unicode(dom.toxml())

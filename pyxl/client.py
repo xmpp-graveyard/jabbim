@@ -1218,6 +1218,7 @@ class Client(derived):
 	
 	def getBOBData(self,  to,  cid):
 		def _loadBOBLink(cid):
+			print 'cache hit'
 			return self.bobDef[cid]
 		
 		def _writeBOBData(el,  cid):
@@ -1231,13 +1232,16 @@ class Client(derived):
 				fp.close()
 			else:
 				print 'cid is not hash!?'
+			self.bobDef.write()	
 			return self.bobCacheDir+cid
 		
 		to = jid.JID(to)
 		if self.bobDef.has_key(cid):
 			return threads.deferToThread(_loadBOBLink, cid)
-		else:
-			self.bobDef[to.userhost()] = {}
+		
+		print self.bobDef
+		print dir(self.bobDef)
+		print cid
 			
 		self.bobDef[cid] = self.bobCacheDir+cid
 		iq = IQ(self.xmlstream, 'get')
