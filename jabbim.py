@@ -2321,13 +2321,13 @@ class mainWindow(QtGui.QMainWindow):
 					
 					el.setAttribute('id',i)
 					changed = True
-
-##					if self.client.groupchats.has_key(frm.userhost()):
-##						tab,tabIndex=self.chat.findTab(frm.full(),True)
-##					else:
-##						tab,tabIndex=self.chat.findTab(frm.full())
-##					if tab:
-##						tab.chat.ui.webkit.messageObject.addHandler(i)
+					frm=msg.frm
+					if self.client.groupchats.has_key(frm.userhost()):
+						tab,tabIndex=self.chat.findTab(frm.full(),True)
+					else:
+						tab,tabIndex=self.chat.findTab(frm.full())
+					if tab:
+						tab.chat.ui.webkit.messageObject.addHandler(i,tab.chat.ui.webkit.reloadImage,[i,link])
 					print "RETURN",d
 					self.imageId+=1
 

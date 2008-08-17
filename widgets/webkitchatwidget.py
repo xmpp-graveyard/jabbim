@@ -77,6 +77,14 @@ class message(QtCore.QObject):
 		self.scr=1
 		self.src={}
 		self.setObjectName("messageObject")
+		self.handlers={}
+
+	def addHandler(self,name,fc,data=[]):
+		self.handlers[name]=[fc,data]
+
+	@QtCore.pyqtSignature("",result="QStringList")
+	def getHandlers(self):
+		return QtCore.QStringList(self.handlers.keys())
 
 	@QtCore.pyqtSignature("",result="QString")
 	def getName(self):
@@ -91,6 +99,12 @@ class message(QtCore.QObject):
 		r=unicode(self.src[unicode(sid)])
 		#r=r"file:///c:\users\hanzz\desktop\svn/emoticons/default/smile16.png"
 		return r
+
+
+	@QtCore.pyqtSignature("QString")
+	def handlerReady(self,name):
+		self.handlers[name][0](*self.handlers[name][1])
+		del self.handlers[name]
 
 	@QtCore.pyqtSignature("QString")
 	def reloaded(self,sid):
@@ -340,9 +354,11 @@ function addNextMessage() {
 var b = messageObject.messageDirection();
 if (b==1) {addMessage(-1);messageObject.log("new message appended");}
 if (b==0) {insertMessage(-1);messageObject.log("new message appended");}
-
-var name = messageObject.getName();
-if (name!="") reloadImage(name);
+var handlers = messageObject.getHandlers();
+for(i=0;i<handlers.length;i++){
+    h = document.getElementById(handlers[i]);
+    if (h){messageObject.handlerReady(handlers[i]);}
+}
 b = messageObject.messageDirection();
 if (b!=-1) addNextMessage();
 }
