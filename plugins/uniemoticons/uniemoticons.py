@@ -53,17 +53,26 @@ class Plugin(plugins.PluginBase):
 	def on_messageSend(self,msg):
 		if  self.main.client.hasFeature(msg.to.full(), 'urn:xmpp:tmp:bob') or msg.typ == 'groupchat':
 			if msg.xhtml != None:
-				for k,  cid in self.current.iteritems():
-					msg.xhtml = msg.xhtml.replace(k, '<img src="cid:%s" alt="%s" />'%(cid, k))
-					print msg.xhtml
+				text = msg.xhtml
+				for k in sorted(self.current.iterkeys(), key=len, reverse=True):
+					v = self.current[k]
+					text=text.replace(k,'<img alt="orig'+v+'" src="cid:'+v+'"/>')
+				
+				for k, v in self.current.iteritems():
+					text.replace('orig'+v, k)
+				msg.xhtml = text
 			elif msg.body != None:
-				xhtm = msg.body
-				for k,  cid in self.current.iteritems():
-					xhtm = xhtm.replace(k, '<img src="cid:%s" alt="%s" />'%(cid, k))
-					print xhtm
-			
-				if xhtm != msg.body:
-					msg.xhtml = xhtm
+				text = msg.body
+				for k in sorted(self.current.iterkeys(), key=len, reverse=True):
+					v = self.current[k]
+					text=text.replace(k,'<img alt="orig'+v+'" src="cid:'+v+'"/>')
+				
+				for k, v in self.current.iteritems():
+					text.replace('orig'+v, k)
+				
+				print text
+				if text != msg.body:
+					msg.xhtml = text
 		return msg
 	
 ##<<<<<<< .mine
