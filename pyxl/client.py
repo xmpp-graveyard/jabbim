@@ -1218,8 +1218,11 @@ class Client(derived):
 	
 	def getBOBData(self,  to,  cid):
 		def _loadBOBLink(cid):
-			print 'cache hit'
-			return self.bobDef[cid]
+			if cid != None:
+				print 'cache hit'
+				return self.bobDef[cid]
+			else:
+				return cid
 		
 		def _writeBOBData(el,  cid):
 			print 'data received!'
@@ -1238,12 +1241,10 @@ class Client(derived):
 		to = jid.JID(to)
 		if self.bobDef.has_key(cid):
 			return threads.deferToThread(_loadBOBLink, cid)
-		
-		print self.bobDef
-		print dir(self.bobDef)
-		print cid
 			
 		self.bobDef[cid] = self.bobCacheDir+cid
+		if not self.hasFeature(to.full(), 'urn:xmpp:tmp:bob'):
+			return threads.deferToThread(_loadBOBLink, None)
 		iq = IQ(self.xmlstream, 'get')
 		self.disp(iq['id'])
 		iq['to'] = to.full()
