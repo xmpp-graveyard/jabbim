@@ -32,7 +32,7 @@ class Plugin(plugins.PluginBase):
 		self.version = '0.01'
 		self.category = ['fun']
 		self.url = 'http://dev.jabbim.cz/jabbim'
-		self.current = {}	
+		self.current = {}
 		if main:
 			self.loadConfig()
 			threads.deferToThread(self.loadCurrentEmoticons)
@@ -66,7 +66,48 @@ class Plugin(plugins.PluginBase):
 					msg.xhtml = xhtm
 		return msg
 	
-
+##<<<<<<< .mine
+##	def on_message(self,  msg,  typ = 'on_message'):
+##		changed = False
+##		print "RET!!",msg.xhtml
+##		if msg.xhtml != None:
+##			dom = parseString(unicode('<p>'+msg.xhtml+'</p>'))
+##			#seznam = {}
+##
+##			for el in dom.getElementsByTagName('img'):
+##				src = el.getAttribute('src')
+##				if src != None and src.startswith('cid:'):
+##					print src
+##					cid = src.split(':')[1]
+##					link = "file:///"+self.main.client.bobCacheDir+cid
+##					el.setAttribute('src', link)
+##					el.setAttribute('name',"bob"+str(self.imageId))
+##					changed = True
+##					d=self.main.client.getBOBData(msg.frm.full(),  cid)
+##					d.addCallback(self.refreshImage,"bob"+str(self.imageId),msg.frm)
+##					print "RETURN",d
+##					self.imageId+=1
+##			msg.setXHTML(unicode(dom.toxml()))
+##		if changed:
+##			reactor.callLater(0.5, self.main.client.dispatcher.publishEvent,typ,  msg)
+##			return False
+##
+##	def refreshImage(self,data,name,frm):
+##		print "refreshing image after bob:",data,name
+##		if self.main.client.groupchats.has_key(frm.userhost()):
+##			tab,tabIndex=self.main.chat.findTab(frm.full(),True)
+##		else:
+##			tab,tabIndex=self.main.chat.findTab(frm.full())
+##		if tab:
+##			tab.chat.reloadImage(name,data)
+##
+##
+##	def on_GCmessage(self,  msg,  typ = 'on_GCmessage'):
+##		self.on_message(msg,  typ)
+##
+##=======
+##
+##>>>>>>> .r3335
 	def loadAllEmoticons(self):
 		# emoticons from Jabbim root directory
 		packs=os.listdir("emoticons/")

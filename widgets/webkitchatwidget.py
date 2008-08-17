@@ -75,7 +75,26 @@ class message(QtCore.QObject):
 		self.historyMessages=[]
 		self.ft={}
 		self.scr=1
+		self.src={}
 		self.setObjectName("messageObject")
+
+	@QtCore.pyqtSignature("",result="QString")
+	def getName(self):
+		if len(self.src.keys())!=0:
+			r=unicode(self.src.keys()[0])
+			return r
+		else:
+			return ""
+
+	@QtCore.pyqtSignature("QString",result="QString")
+	def getSrc(self,sid):
+		r=unicode(self.src[unicode(sid)])
+		#r=r"file:///c:\users\hanzz\desktop\svn/emoticons/default/smile16.png"
+		return r
+
+	@QtCore.pyqtSignature("QString")
+	def reloaded(self,sid):
+		del self.src[unicode(sid)]
 
 	@QtCore.pyqtSignature("QString")
 	def acceptFT(self,sid):
@@ -205,6 +224,13 @@ class webkitChatWidget(QtWebKit.QWebView):
 		if len(text)!=0:
 			QtGui.QApplication.clipboard().setText(unicode(text))
 
+	def reloadImage(self,name,data,x=None):
+##		if x:
+		self.messageObject.src[name]=data
+		self.page().mainFrame().evaluateJavaScript("reloadImage('%s');"%name)
+#		else:
+	#		self.chatwidget().main().reactor.callLater(1,self.reloadImage,name,data,True)
+
 	def messageObjectReady(self):
 		#print "messageObjectReady",self.messageObject.messageCache
 		if len(self.messageObject.messageCache)!=0:
@@ -293,6 +319,15 @@ class webkitChatWidget(QtWebKit.QWebView):
 <style type="text/css"><!-- %s --></style>
 <script>
 
+function reloadImage(name) {
+	messageObject.log("test")
+	i = document.getElementById(name);
+	if (i){
+		i.src = messageObject.getSrc(name);
+		messageObject.reloaded(name);
+	}
+}
+
 function addHistoryMessages() {
 var b = messageObject.historyMessageDirection();
 if (b==1) addHistory(-1);
@@ -303,8 +338,11 @@ if (b!=-1) addHistoryMessages();
 
 function addNextMessage() {
 var b = messageObject.messageDirection();
-if (b==1) addMessage(-1);
-if (b==0) insertMessage(-1);
+if (b==1) {addMessage(-1);messageObject.log("new message appended");}
+if (b==0) {insertMessage(-1);messageObject.log("new message appended");}
+
+var name = messageObject.getName();
+if (name!="") reloadImage(name);
 b = messageObject.messageDirection();
 if (b!=-1) addNextMessage();
 }
@@ -352,7 +390,7 @@ shouldScroll = nearBottom();
 //Remove any existing insertion point
 insert = document.getElementById("insert");
 if(insert) insert.parentNode.removeChild(insert);
-messageObject.ready();
+
 var ni = document.getElementById('myDiv');
 var numi = document.getElementById('theValue');
 var num = (document.getElementById('theValue').value -1)+ 2;
@@ -363,12 +401,13 @@ newdiv.setAttribute("id",divIdName);
 if (index==-1) newdiv.innerHTML = messageObject.msg();
 else newdiv.innerHTML = messageObject.msg_(index);
 ni.appendChild(newdiv);
+messageObject.ready();
 if (shouldScroll) setTimeout("scrollToBottom()", 100);
 
 }
 function insertMessage(index) {
 shouldScroll = nearBottom();
-messageObject.ready();
+
                         //Locate the insertion point
                         var insert = document.getElementById("insert");
 
@@ -380,6 +419,7 @@ messageObject.ready();
 
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);
+messageObject.ready();
 if (shouldScroll) setTimeout("scrollToBottom()", 100);
 
 }

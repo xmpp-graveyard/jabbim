@@ -133,6 +133,7 @@ class clientClass(pyxl.client.Client):
 		self.xmlCount=[]
 		# load plugins
 		self.loadPlugins()
+		
 
 	def on_pep(self, frm, ns, payload):
 		"""
@@ -1339,6 +1340,10 @@ class clientClass(pyxl.client.Client):
 		"""
 		Handles normal 'chat' messages.
 		"""
+		if hasattr(msg,"ID"):
+			ID=unicode(msg.ID)
+		else:
+			ID=""
 		#check for BoB images
 		msg = self.main.getBOBImages(msg)
 		#unpack legacy vars
@@ -1480,7 +1485,7 @@ class clientClass(pyxl.client.Client):
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(self.main.chat.ui.chatTab.currentIndex(),color)
 					self.dispatcher.publishEvent('chatMessageEvent', frm,user,body,subject, xhtml, chatstate, delay,None)
 				tab.chat.ui.chatstate.setText("")
-				tab.chat.textEditWrite(message,insert)
+				tab.chat.textEditWrite(message,insert,ID)
 				if tab.chat.first==True:
 					tab.chat.first=False
 				elif tab.chat.first==None:
@@ -1539,7 +1544,7 @@ class clientClass(pyxl.client.Client):
 						message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 					message=self.main.webkitThemeFactory.genIncomingContent(unicode(user),message,self.main.now(),tab.chat.file)
 					#message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+unicode(tab.chat.avatarHeight)+"\" />")
-					tab.chat.textEditWrite(message)
+					tab.chat.textEditWrite(message,ID=ID)
 					self.main.chat.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon("images/16x16/actions/message.png"))
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
 					self.main.chat.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)
@@ -1821,7 +1826,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.autoAdd={}
 		self.version = '0.5 SVN' + utils.getSvnVersion() #: version string
 		#self.setWindowOpacity (0.5)
-
+		self.imageId=0
 
 		QtCore.QObject.connect(app, QtCore.SIGNAL("sleep()"),self.systemSleep)
 		QtCore.QObject.connect(app, QtCore.SIGNAL("wakeUp()"),self.systemWakeUp)
@@ -2307,16 +2312,39 @@ class mainWindow(QtGui.QMainWindow):
 					print src
 					
 					cid = src.split(':')[1]
-					self.client.getBOBData(msg.frm.full(),  cid)
+					i="bob"+str(self.imageId)+str(random.randint(0,100))
+					d=self.client.getBOBData(msg.frm.full(),  cid)
+					d.addCallback(self.refreshImage,i,msg.frm)
 					link = self.client.bobDef[cid]
+					print "SRC IS",link
 					el.setAttribute('src', link)
-					changed = True
 					
+					el.setAttribute('id',i)
+					changed = True
+
+##					if self.client.groupchats.has_key(frm.userhost()):
+##						tab,tabIndex=self.chat.findTab(frm.full(),True)
+##					else:
+##						tab,tabIndex=self.chat.findTab(frm.full())
+##					if tab:
+##						tab.chat.ui.webkit.messageObject.addHandler(i)
+					print "RETURN",d
+					self.imageId+=1
+
 					changed = True
 			if changed:
 				print unicode(dom.toxml())
 				msg.setXHTML(unicode(dom.toxml()))
 		return msg
+
+	def refreshImage(self,data,name,frm):
+		print "refreshing image after bob:",data,name
+		if self.client.groupchats.has_key(frm.userhost()):
+			tab,tabIndex=self.chat.findTab(frm.full(),True)
+		else:
+			tab,tabIndex=self.chat.findTab(frm.full())
+		if tab:
+			tab.chat.reloadImage(name,"file:///"+data)
 
 	def getToolTip(self,jid, name = None):
 		"""

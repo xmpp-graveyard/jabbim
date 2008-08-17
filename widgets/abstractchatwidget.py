@@ -141,7 +141,7 @@ class abstractTextView(QtGui.QTextEdit):
 			event.acceptProposedAction()
 		else:
 			event.ignore()
-		
+
 	def mouseMoveEvent(self,event):
 		"""
 		Changes mouse pointer if it is above link.
@@ -798,7 +798,9 @@ class abstractChatWidget(QtGui.QWidget):
 			#self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+self.main().webkitThemeFactory.groupchatPath()))
 		#else:
 			#self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+self.main().webkitThemeFactory.chatPath()))
-		
+
+	def reloadImage(self,name,data):
+		self.ui.webkit.reloadImage(name,data)
 
 	def registerFeatureForWidget(self,feature,widget):
 		widget=weakref.ref(widget)
@@ -1137,7 +1139,7 @@ class abstractChatWidget(QtGui.QWidget):
 		if len(self.ui.webkit.messageObject.messageCache)==1 and self.ui.webkit.webkitLoaded:
 			self.ui.webkit.messageObjectReady()
 
-	def webkitWrite(self,text,insert=False):
+	def webkitWrite(self,text,insert=False,ID=""):
 		# look for longest-string first; e.g. for styles where both ':)' and ':)]' smileys are defined
 		for k in sorted(self.main().emoticonsWidget.smileys.iterkeys(), key=len, reverse=True):
 			v = self.main().emoticonsWidget.smileys[k]
@@ -1156,13 +1158,13 @@ class abstractChatWidget(QtGui.QWidget):
 		#else:
 			#self.messageObject.message.insert(0,unicode(text))
 		if not insert:
-			self.ui.webkit.messageObject.messageCache.insert(0,[1,text])
+			self.ui.webkit.messageObject.messageCache.insert(0,[1,text,ID])
 		else:
-			self.ui.webkit.messageObject.messageCache.insert(0,[0,text])
+			self.ui.webkit.messageObject.messageCache.insert(0,[0,text,ID])
 		if len(self.ui.webkit.messageObject.messageCache)==1 and self.ui.webkit.webkitLoaded:
 			self.ui.webkit.messageObjectReady()
 
-	def textEditWrite(self,text,insert=False):
+	def textEditWrite(self,text,insert=False,ID=""):
 		"""
 		Appends formated message to the chat view (self.ui.textEdit).
 		@type text: unicode
