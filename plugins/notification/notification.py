@@ -8,7 +8,6 @@ sys.path.append('.')
 from include import plugins, utils
 import time
 from twisted.words.protocols.jabber import jid as jidT
-from widgets.events import event as _eventClass
 
 class osd(QtGui.QWidget):
 	def __init__(self,main,parent=None):
@@ -102,7 +101,8 @@ class osd(QtGui.QWidget):
 				event.accept()
 		else:
 			if event.button() != QtCore.Qt.LeftButton:
-				self.event.acceptParent()
+				if self.event():
+					self.event().accept()
 			self.hide()
 			event.accept()
 	
@@ -278,12 +278,15 @@ class Plugin(plugins.PluginBase):
 		self.url = 'http://dev.jabbim.cz/jabbim'
 
 		if sys.platform == 'win32':
+			print "loading snarl support"
 			self.snarl=self.loadModule(plugindir+"/PySnarl.py")
-			if not self.snarl.snGetVersion() != False:
+			if self.snarl.snGetVersion() == False:
+				print "can't connect to snarl app"
 				self.snarl=None
+			else:
+				print "snarl version:",self.snarl.snGetVersion()
 		else:
 			self.snarl=None
-		self.snarl=None
 		self.configDialog=config(self)
 		if self.snarl:
 			self.configDialog.config['osd_transparent']['disabled']=True
@@ -439,27 +442,26 @@ class Plugin(plugins.PluginBase):
 			self.main.chat.addChatTab(jid.full(),jid.full(),self.main.getIcon(jid.userhost(),"offline",size="16x16"))
 		self.main.chat.activate()
 
-	def on_firstChatMessageEvent(self, jid,user,body,subject, xhtml, chatstate, delay, eventID=None):
-		if body == None:
+	def on_firstChatMessageEvent(self, msg,event=None):
+		if msg.body == None:
 			return
+		jid=msg.frm
+		user=msg.user
 		# cut message if it's too long
-		if len(body)>40:
-				traytext=body[:40]+" ..."
+		if len(msg.body)>40:
+				traytext=msg.body[:40]+" ..."
 		else:
-				traytext=body
+				traytext=msg.body
 		if self.config['osd_first_message']=="True" and not self.main.chat.isActiveWindow():
 			if self.snarl:
 				file=self.main.getAvatarSrc(jid.userhost())
 				s = self.snarl.SnarlMessage(unicode(self.tr("New message from "))+unicode(user),unicode(traytext))
 				s.timeout=int(self.config['osd_time'])
 				s.show(icon=file,replyWindow=int(self.main.winId()),replyMsg=1025)
-				self.main.snarlMessages[int(s.getID())]=[self.main.events.getEventByID(eventID)['widget'].submitClicked,[]]
+				self.main.snarlMessages[int(s.getID())]=[event().accept,[]]
 			else:
 				# get avatar for OSD
 				pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
-				# add child event
-				event=_eventClass()
-				self.main.events.addChildEvent(eventID,event)
 				# inform user about newly opened tab
 				self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),event)
 		if self.config['sound_first_message']=="True":
@@ -467,13 +469,15 @@ class Plugin(plugins.PluginBase):
 		if self.config['tray_first_message']=='True':
 			self.main.tray.showMessage(self.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
 
-	def on_chatMessageEvent(self,jid,user,body,subject, xhtml,  chatstate,  delay,eventID=None):
-		if body == None:
+	def on_chatMessageEvent(self,msg,event=None):
+		if msg.body == None:
 			return
+		jid=msg.frm
+		user=msg.user
 		# inform user about new message
 		if self.config['osd_on_message']=="True" and not self.main.chat.isActiveWindow():
-			if len(body)>40:
-				traytext=body[:40]+" ..."
+			if len(msg.body)>40:
+				traytext=msg.body[:40]+" ..."
 			else:
 				traytext=body
 			if self.snarl:
@@ -481,13 +485,10 @@ class Plugin(plugins.PluginBase):
 				s = self.snarl.SnarlMessage(unicode(self.tr("New message from "))+unicode(user),unicode(traytext))
 				s.timeout=int(self.config['osd_time'])
 				s.show(icon=file,replyWindow=int(self.main.winId()),replyMsg=1025)
-				self.main.snarlMessages[int(s.getID())]=[self.main.events.getEventByID(eventID)['widget'].submitClicked,[]]
+				self.main.snarlMessages[int(s.getID())]=[event().accept,[]]
 			else:
 				# get avatar for OSD
 				pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
-				# add child event
-				event=_eventClass()
-				self.main.events.addChildEvent(eventID,event)
 				# inform user about newly opened tab
 				self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),event)
 		if self.config['sound_message']=="True":

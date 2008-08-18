@@ -47,6 +47,7 @@ class EventDispatcher:
 						return False
 				except Exception, ex:
 					log.msg('Plugin error: ' +unicode(ex))
+					log.msg('In function:'+unicode(cb['method']))
 					message = traceback.format_exc()
 					log.msg(message)
 		return True

@@ -1371,7 +1371,7 @@ class clientClass(pyxl.client.Client):
 			user=frm.resource
 		else:
 			tab,tabIndex=self.main.chat.findTab(frm.full())
-
+		msg.user=user
 		# handle errors
 		if error=="remote-server-not-found":
 			if tab!=None:
@@ -1452,7 +1452,7 @@ class clientClass(pyxl.client.Client):
 					widget.setAcceptText(unicode(mainWindow.tr("Read")))
 					widget.setRejectText(unicode(mainWindow.tr("Ignore")))
 
-					self.dispatcher.publishEvent('chatMessageEvent', frm,user,body,subject, xhtml, chatstate, delay,self.main.events.ID-1)
+					self.dispatcher.publishEvent('chatMessageEvent', msg,weakref.ref(tab.chat.unreadEvent))
 					tab.chat.unread+=1
 					if not self.main.chat.isActiveWindow():
 						#if current:
@@ -1473,7 +1473,7 @@ class clientClass(pyxl.client.Client):
 					widget.setAcceptText(unicode(mainWindow.tr("Read")))
 					widget.setRejectText(unicode(mainWindow.tr("Ignore")))
 
-					self.dispatcher.publishEvent('chatMessageEvent', frm,user,body,subject, xhtml, chatstate, delay,self.main.events.ID-1)
+					self.dispatcher.publishEvent('chatMessageEvent',msg, weakref.ref(tab.chat.unreadEvent))
 					#if int(self.main.chat.ui.chatTab.currentIndex())==tabIndex:
 					#if current:
 						#self.main.chat.setWindowTitle("("+str(int(self.main.chat.getUnreadMessages())+1)+") "+current.tabName.replace("&",""))
@@ -1483,7 +1483,7 @@ class clientClass(pyxl.client.Client):
 					color=self.main.chat.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
 					self.main.chat.ui.chatTab.setTabText(tabIndex,tab.tabName)
 					self.main.chat.ui.chatTab.tabBar().setTabTextColor(self.main.chat.ui.chatTab.currentIndex(),color)
-					self.dispatcher.publishEvent('chatMessageEvent', frm,user,body,subject, xhtml, chatstate, delay,None)
+					self.dispatcher.publishEvent('chatMessageEvent',msg,None)
 				tab.chat.ui.chatstate.setText("")
 				tab.chat.textEditWrite(message,insert,ID)
 				if tab.chat.first==True:
@@ -1550,7 +1550,7 @@ class clientClass(pyxl.client.Client):
 					self.main.chat.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)
 					tab.chat.appendLastMessage(['in',user,message,timeText,tab.chat.file])
 					tab.chat.unread+=1
-				self.dispatcher.publishEvent('firstChatMessageEvent', frm,user,body,subject, xhtml, chatstate,  delay, self.main.events.ID-1)
+				self.dispatcher.publishEvent('firstChatMessageEvent', msg, weakref.ref(tab.chat.unreadEvent))
 
 		if tab!=None:
 			# handle checkstate messages:
@@ -2645,6 +2645,7 @@ class mainWindow(QtGui.QMainWindow):
 			return ret
 		except Exception, ex:
 			log.msg('Plugin error: ' +unicode(ex))
+			log.msg('In function:'+unicode(command))
 			message = unicode(traceback.format_exc())
 			log.msg(message)
 
