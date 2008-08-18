@@ -421,8 +421,8 @@ p, li { white-space: pre-wrap; }
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>421</width>
-            <height>403</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <attribute name="title" >
@@ -501,8 +501,8 @@ p, li { white-space: pre-wrap; }
          <widget class="QWidget" name="tab" >
           <property name="geometry" >
            <rect>
-            <x>4</x>
-            <y>23</y>
+            <x>8</x>
+            <y>46</y>
             <width>438</width>
             <height>403</height>
            </rect>
@@ -545,8 +545,8 @@ p, li { white-space: pre-wrap; }
          <widget class="QWidget" name="tab_4" >
           <property name="geometry" >
            <rect>
-            <x>4</x>
-            <y>23</y>
+            <x>8</x>
+            <y>46</y>
             <width>438</width>
             <height>403</height>
            </rect>
@@ -647,8 +647,8 @@ p, li { white-space: pre-wrap; }
          <widget class="QWidget" name="tab_2" >
           <property name="geometry" >
            <rect>
-            <x>4</x>
-            <y>23</y>
+            <x>8</x>
+            <y>46</y>
             <width>438</width>
             <height>403</height>
            </rect>
@@ -749,8 +749,8 @@ p, li { white-space: pre-wrap; }
          <widget class="QWidget" name="tab_3" >
           <property name="geometry" >
            <rect>
-            <x>4</x>
-            <y>23</y>
+            <x>8</x>
+            <y>46</y>
             <width>438</width>
             <height>403</height>
            </rect>
@@ -826,13 +826,75 @@ p, li { white-space: pre-wrap; }
         <height>480</height>
        </rect>
       </property>
-      <layout class="QGridLayout" >
-       <property name="margin" >
-        <number>9</number>
-       </property>
-       <property name="spacing" >
-        <number>6</number>
-       </property>
+      <layout class="QGridLayout" name="gridLayout_2" >
+       <item row="0" column="0" colspan="3" >
+        <widget class="QLabel" name="label_8" >
+         <property name="text" >
+          <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Sans Serif';">&lt;span style=" font-size:12pt; font-weight:600;">Plugins&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="3" >
+        <widget class="Line" name="line_7" >
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="3" >
+        <layout class="QHBoxLayout" name="horizontalLayout" >
+         <item>
+          <widget class="QTreeWidget" name="plugins" >
+           <property name="maximumSize" >
+            <size>
+             <width>170</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="contextMenuPolicy" >
+            <enum>Qt::CustomContextMenu</enum>
+           </property>
+           <property name="toolTip" >
+            <string>Tick plugins you want to use, right click to change settings.</string>
+           </property>
+           <property name="alternatingRowColors" >
+            <bool>true</bool>
+           </property>
+           <column>
+            <property name="text" >
+             <string/>
+            </property>
+           </column>
+           <column>
+            <property name="text" >
+             <string>Name</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" native="1" name="widget" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_3" >
+            <property name="margin" >
+             <number>0</number>
+            </property>
+            <item row="0" column="0" >
+             <widget class="QTextBrowser" name="pluginDescription" />
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
        <item row="3" column="0" >
         <spacer>
          <property name="orientation" >
@@ -858,51 +920,6 @@ p, li { white-space: pre-wrap; }
          <property name="text" >
           <string>Plugin configuration</string>
          </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="3" >
-        <widget class="Line" name="line_7" >
-         <property name="orientation" >
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="3" >
-        <widget class="QLabel" name="label_8" >
-         <property name="text" >
-          <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
-p, li { white-space: pre-wrap; }
-&lt;/style>&lt;/head>&lt;body style=" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;">
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Sans Serif';">&lt;span style=" font-size:12pt; font-weight:600;">Plugins&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0" colspan="3" >
-        <widget class="QTreeWidget" name="plugins" >
-         <property name="contextMenuPolicy" >
-          <enum>Qt::CustomContextMenu</enum>
-         </property>
-         <property name="toolTip" >
-          <string>Tick plugins you want to use, right click to change settings.</string>
-         </property>
-         <property name="alternatingRowColors" >
-          <bool>true</bool>
-         </property>
-         <column>
-          <property name="text" >
-           <string/>
-          </property>
-         </column>
-         <column>
-          <property name="text" >
-           <string>Name</string>
-          </property>
-         </column>
-         <column>
-          <property name="text" >
-           <string>Description</string>
-          </property>
-         </column>
         </widget>
        </item>
       </layout>

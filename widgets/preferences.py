@@ -421,7 +421,7 @@ class preferencesWindow(QtGui.QDialog):
 				item.setCheckState(0,QtCore.Qt.Unchecked)
 			#self.ui.plugins.setItemWidget(item,0,widget)
 			item.setText(1,plug.name)
-			item.setText(2,plug.description)
+			item.setData(32,1,QtCore.QVariant(unicode(plug.description)))
 			item.setData(32,0,QtCore.QVariant(unicode(plugin)))
 			
 			
@@ -483,6 +483,7 @@ class preferencesWindow(QtGui.QDialog):
 			self.ui.pluginConfiguration.setEnabled(False)
 			return
 		data=item.data(32,0)
+		self.ui.pluginDescription.setText(unicode(item.data(32,1).toString()))
 		name=unicode(data.toString())
 		plugin=self.plugins[name]
 		if plugin.configDialog:
