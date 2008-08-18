@@ -58,7 +58,7 @@ class Message:
 		if self.evil and self.body != None and self.body.strip() != '' :
 			message.addElement('evil', 'http://jabber.org/protocol/evil')
 		
-		if self.receiptId and self.body != None  and self.body != '' and typ!='groupchat':
+		if self.receiptId and self.body != None  and self.body != '' and self.typ!='groupchat':
 			message['id'] = self.receiptId
 			message.addElement('request', 'urn:xmpp:receipts')
 
