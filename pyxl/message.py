@@ -140,11 +140,13 @@ class MessageInit:
 		if xml != None:
 			self.client.xmlstream.send(xml)
 	
-	def sendMessage(self, to, body=None, typ='chat', subject = None, composing = None, xhtml = None,  muc = False):
+	def sendMessage(self, to, body=None, typ='chat', subject = None, composing = None, xhtml = None,  muc = False,  msg = None):
 		# Posle zpravu na jid
-		msg = Message(to,  body = body,  typ = typ,  subject = subject,  lang = self.client.xmlLang)
-		msg.setComposing(composing)
-		msg.setXHTML(xhtml)
+		if msg == None:
+			msg = Message(to,  body = body,  typ = typ,  subject = subject,  lang = self.client.xmlLang)
+			msg.setComposing(composing)
+			msg.setXHTML(xhtml)
+			
 		self.dispatcher.publishEvent('on_message_send', msg)
 
 	def send(self,  xml):
