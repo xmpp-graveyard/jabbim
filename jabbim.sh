@@ -5,4 +5,6 @@ if [ -L $dir_name ]; then
 fi
 dir_name=`dirname $dir_name`
 cd $dir_name
+
 python -OO jabbim.py $@
+
