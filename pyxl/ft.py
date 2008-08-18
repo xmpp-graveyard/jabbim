@@ -646,7 +646,7 @@ class FT:
 	
 	def getLimit(self,  typ = 'upload'):
 		if typ == 'upload':
-			return self.uplimit/2
+			return self.uplimit
 		else:
 			return self.downlimit
 		

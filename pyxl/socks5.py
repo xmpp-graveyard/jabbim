@@ -695,7 +695,7 @@ class Send(protocol.Protocol):
 		ted = time.time()
 		doba = ted - self.last
 		try:
-			limit = self.ft.getLimit('upload')
+			limit = self.ft.getLimit('upload')/2
 		
 		except:
 			limit = 0
