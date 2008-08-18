@@ -2318,7 +2318,6 @@ class mainWindow(QtGui.QMainWindow):
 					link = self.client.bobDef[cid]
 					print "SRC IS",link
 					el.setAttribute('src', link)
-					
 					el.setAttribute('id',i)
 					changed = True
 					frm=msg.frm

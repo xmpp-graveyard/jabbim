@@ -16,22 +16,10 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" >
-   <property name="leftMargin" >
+   <property name="margin" >
     <number>0</number>
    </property>
-   <property name="topMargin" >
-    <number>0</number>
-   </property>
-   <property name="rightMargin" >
-    <number>0</number>
-   </property>
-   <property name="bottomMargin" >
-    <number>0</number>
-   </property>
-   <property name="horizontalSpacing" >
-    <number>0</number>
-   </property>
-   <property name="verticalSpacing" >
+   <property name="spacing" >
     <number>0</number>
    </property>
    <item row="0" column="0" >
@@ -56,16 +44,7 @@
         <property name="spacing" >
          <number>6</number>
         </property>
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
+        <property name="margin" >
          <number>0</number>
         </property>
         <item>
@@ -73,16 +52,7 @@
           <property name="spacing" >
            <number>6</number>
           </property>
-          <property name="leftMargin" >
-           <number>0</number>
-          </property>
-          <property name="topMargin" >
-           <number>0</number>
-          </property>
-          <property name="rightMargin" >
-           <number>0</number>
-          </property>
-          <property name="bottomMargin" >
+          <property name="margin" >
            <number>0</number>
           </property>
           <item>
@@ -115,16 +85,7 @@
           <property name="spacing" >
            <number>6</number>
           </property>
-          <property name="leftMargin" >
-           <number>0</number>
-          </property>
-          <property name="topMargin" >
-           <number>0</number>
-          </property>
-          <property name="rightMargin" >
-           <number>0</number>
-          </property>
-          <property name="bottomMargin" >
+          <property name="margin" >
            <number>0</number>
           </property>
           <item>
@@ -132,7 +93,7 @@
             <property name="orientation" >
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0" >
              <size>
               <width>111</width>
               <height>29</height>
@@ -146,7 +107,8 @@
              <string>Anchor</string>
             </property>
             <property name="icon" >
-             <iconset>images/16x16/actions/anchor.png</iconset>
+             <iconset>
+              <normaloff>images/16x16/actions/anchor.png</normaloff>images/16x16/actions/anchor.png</iconset>
             </property>
             <property name="popupMode" >
              <enum>QToolButton::InstantPopup</enum>
@@ -168,7 +130,8 @@
              <string>Bold</string>
             </property>
             <property name="icon" >
-             <iconset>images/16x16/actions/format-text-bold.png</iconset>
+             <iconset>
+              <normaloff>images/16x16/actions/format-text-bold.png</normaloff>images/16x16/actions/format-text-bold.png</iconset>
             </property>
             <property name="checkable" >
              <bool>true</bool>
@@ -190,7 +153,8 @@
              <string>Italic</string>
             </property>
             <property name="icon" >
-             <iconset>images/16x16/actions/format-text-italic.png</iconset>
+             <iconset>
+              <normaloff>images/16x16/actions/format-text-italic.png</normaloff>images/16x16/actions/format-text-italic.png</iconset>
             </property>
             <property name="checkable" >
              <bool>true</bool>
@@ -212,7 +176,8 @@
              <string>Underline</string>
             </property>
             <property name="icon" >
-             <iconset>images/16x16/actions/format-text-underline.png</iconset>
+             <iconset>
+              <normaloff>images/16x16/actions/format-text-underline.png</normaloff>images/16x16/actions/format-text-underline.png</iconset>
             </property>
             <property name="checkable" >
              <bool>true</bool>
@@ -271,7 +236,8 @@
              <string>...</string>
             </property>
             <property name="icon" >
-             <iconset>images/16x16/emotes/biggrin.png</iconset>
+             <iconset>
+              <normaloff>images/16x16/emotes/biggrin.png</normaloff>images/16x16/emotes/biggrin.png</iconset>
             </property>
             <property name="checkable" >
              <bool>true</bool>
@@ -290,7 +256,8 @@
              <string>&amp;Send</string>
             </property>
             <property name="icon" >
-             <iconset>images/16x16/actions/send.png</iconset>
+             <iconset>
+              <normaloff>images/16x16/actions/send.png</normaloff>images/16x16/actions/send.png</iconset>
             </property>
            </widget>
           </item>
@@ -304,16 +271,7 @@
        <property name="spacing" >
         <number>2</number>
        </property>
-       <property name="leftMargin" >
-        <number>0</number>
-       </property>
-       <property name="topMargin" >
-        <number>0</number>
-       </property>
-       <property name="rightMargin" >
-        <number>0</number>
-       </property>
-       <property name="bottomMargin" >
+       <property name="margin" >
         <number>0</number>
        </property>
        <item>
@@ -412,7 +370,7 @@
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>20</width>
            <height>281</height>

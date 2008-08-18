@@ -44,35 +44,63 @@
       <property name="text" >
        <string>Jabbim</string>
       </property>
+      <property name="icon" >
+       <iconset>
+        <normaloff>images/32x32/apps/jabbim.png</normaloff>images/32x32/apps/jabbim.png</iconset>
+      </property>
      </item>
      <item>
       <property name="text" >
        <string>Connection</string>
+      </property>
+      <property name="icon" >
+       <iconset>
+        <normaloff>images/32x32/categories/applications-internet.png</normaloff>images/32x32/categories/applications-internet.png</iconset>
       </property>
      </item>
      <item>
       <property name="text" >
        <string>Chat</string>
       </property>
+      <property name="icon" >
+       <iconset>
+        <normaloff>images/32x32/categories/conferences.png</normaloff>images/32x32/categories/conferences.png</iconset>
+      </property>
      </item>
      <item>
       <property name="text" >
        <string>Roster</string>
+      </property>
+      <property name="icon" >
+       <iconset>
+        <normaloff>images/32x32/categories/system-users.png</normaloff>images/32x32/categories/system-users.png</iconset>
       </property>
      </item>
      <item>
       <property name="text" >
        <string>Privacy</string>
       </property>
+      <property name="icon" >
+       <iconset>
+        <normaloff>images/32x32/categories/v-card-32.png</normaloff>images/32x32/categories/v-card-32.png</iconset>
+      </property>
      </item>
      <item>
       <property name="text" >
        <string>Appearance</string>
       </property>
+      <property name="icon" >
+       <iconset>
+        <normaloff>images/32x32/categories/applications-graphics.png</normaloff>images/32x32/categories/applications-graphics.png</iconset>
+      </property>
      </item>
      <item>
       <property name="text" >
        <string>Plugins</string>
+      </property>
+      <property name="icon" >
+       <iconset>
+        <normaloff>images/32x32/categories/applications-accessories.png</normaloff>images/32x32/categories/applications-accessories.png</iconset>
       </property>
      </item>
     </widget>
@@ -93,7 +121,7 @@
    <item row="1" column="1" colspan="2" >
     <widget class="QStackedWidget" name="stackedWidget" >
      <property name="currentIndex" >
-      <number>5</number>
+      <number>6</number>
      </property>
      <widget class="QWidget" name="page_4" >
       <property name="geometry" >
@@ -355,8 +383,8 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>462</width>
-        <height>483</height>
+        <width>443</width>
+        <height>480</height>
        </rect>
       </property>
       <layout class="QGridLayout" >
@@ -389,6 +417,14 @@ p, li { white-space: pre-wrap; }
           <number>0</number>
          </property>
          <widget class="QWidget" name="tab_5" >
+          <property name="geometry" >
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>421</width>
+            <height>403</height>
+           </rect>
+          </property>
           <attribute name="title" >
            <string>Roster</string>
           </attribute>
@@ -465,8 +501,8 @@ p, li { white-space: pre-wrap; }
          <widget class="QWidget" name="tab" >
           <property name="geometry" >
            <rect>
-            <x>0</x>
-            <y>0</y>
+            <x>4</x>
+            <y>23</y>
             <width>438</width>
             <height>403</height>
            </rect>
@@ -509,8 +545,8 @@ p, li { white-space: pre-wrap; }
          <widget class="QWidget" name="tab_4" >
           <property name="geometry" >
            <rect>
-            <x>0</x>
-            <y>0</y>
+            <x>4</x>
+            <y>23</y>
             <width>438</width>
             <height>403</height>
            </rect>
@@ -584,7 +620,7 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item row="2" column="0" colspan="2" >
-            <widget class="QWebView" name="groupchatskinPreview" />
+            <widget class="QWebView" native="1" name="groupchatskinPreview" />
            </item>
            <item row="3" column="0" >
             <spacer>
@@ -611,8 +647,8 @@ p, li { white-space: pre-wrap; }
          <widget class="QWidget" name="tab_2" >
           <property name="geometry" >
            <rect>
-            <x>0</x>
-            <y>0</y>
+            <x>4</x>
+            <y>23</y>
             <width>438</width>
             <height>403</height>
            </rect>
@@ -686,7 +722,7 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item row="2" column="0" colspan="2" >
-            <widget class="QWebView" name="chatskinPreview" />
+            <widget class="QWebView" native="1" name="chatskinPreview" />
            </item>
            <item row="3" column="0" >
             <spacer>
@@ -713,8 +749,8 @@ p, li { white-space: pre-wrap; }
          <widget class="QWidget" name="tab_3" >
           <property name="geometry" >
            <rect>
-            <x>0</x>
-            <y>0</y>
+            <x>4</x>
+            <y>23</y>
             <width>438</width>
             <height>403</height>
            </rect>
@@ -786,8 +822,8 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>100</width>
-        <height>30</height>
+        <width>443</width>
+        <height>480</height>
        </rect>
       </property>
       <layout class="QGridLayout" >
