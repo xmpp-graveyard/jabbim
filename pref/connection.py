@@ -11,8 +11,10 @@ class preferences:
 		self.config['specifyHost']={'type':'boolean','label':preferencesWindow.tr("Specify host for connection"),'value':'False','groupbox':preferencesWindow.tr('Advanced'), 'enable': ['connectHost', 'connectPort'], 'column':'right', 'tooltip':preferencesWindow.tr("Enable only if your server has broken DNS SRV record or if you REALLY know what are you doing.")}
 		self.config['connectHost']={'type':'text-single','label':preferencesWindow.tr("Host:"),'value':'','groupbox':preferencesWindow.tr('Advanced')}
 		self.config['connectPort']={'type':'text-single','label':preferencesWindow.tr("Port:"),'value':'5222','groupbox':preferencesWindow.tr('Advanced')}
+		self.config['proxyHost']={'type':'text-single','label':preferencesWindow.tr("Host:"),'value':'','groupbox':preferencesWindow.tr('Proxy settings')}
+		self.config['proxyPort']={'type':'text-single','label':preferencesWindow.tr("Port:"),'value':'','groupbox':preferencesWindow.tr('Proxy settings')}
 		#self.config['autoPriority']={'type':'boolean','label':preferencesWindow.tr("Change priority automatically due to status."),'value':'True','groupbox':preferencesWindow.tr('Advanced'),'column':'right'}
-		self.config['__sort__'] = ['jid', 'passwd','resource', 'autoJoin', 'autoJoinMUC',  'connectHost', 'connectPort', 'specifyHost']
+		self.config['__sort__'] = ['jid', 'passwd','resource', 'autoJoin', 'autoJoinMUC',  'connectHost', 'connectPort', 'specifyHost', 'proxyHost',  'proxyPort' ]
 
 	def getHelp(self,key):
 		if help.help.has_key(key):

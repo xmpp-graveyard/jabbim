@@ -128,6 +128,13 @@ class clientClass(pyxl.client.Client):
 			self.client_os = utils.get_os_info()
 		else:
 			self.client_os = ''
+		if self.main.config['proxyHost'] != '':
+			if self.main.config['proxyPort'] =="":
+				port = '80'
+			else:
+				port = self.main.config['proxyPort']
+			self.proxy = {'host':self.main.config['proxyHost'],  'port':port}
+			
 		self.version=self.main.version
 		self.bookmarksEnabled=True #: True if bookmarks is enabled by server
 		self.xmlCount=[]

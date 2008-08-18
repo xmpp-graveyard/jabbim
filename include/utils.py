@@ -186,6 +186,8 @@ def loadConfig(main,status):
 			"sendActivity": "True",
 			"sendRooms": "True",
 			"boshURL": '',
+			"proxyHost":"", 
+			"proxyPort":"", 
 			"autoJoinMUC": 'True',
 			"autochangenickMUC": 'True',
 			"FTHost": '',
