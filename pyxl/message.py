@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- 
+﻿# -*- coding: utf-8 -*- 
 import sys,  re
 from calendar import timegm
 from twisted.python import log
@@ -140,7 +140,7 @@ class MessageInit:
 		if xml != None:
 			self.client.xmlstream.send(xml)
 	
-	def sendMessage(self, to, body=None, typ='chat', subject = None, composing = None, xhtml = None,  muc = False,  msg = None):
+	def sendMessage(self, to=None, body=None, typ='chat', subject = None, composing = None, xhtml = None,  muc = False,  msg = None):
 		# Posle zpravu na jid
 		if msg == None:
 			msg = Message(to,  body = body,  typ = typ,  subject = subject,  lang = self.client.xmlLang)

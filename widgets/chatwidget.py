@@ -578,7 +578,7 @@ class chatWidget(abstractChatWidget):
 							m=ret
 						else:
 							return
-				self.main().client.xmlstream.send(m.toXml())
+				self.main().client.message.sendMessage(msg=m)
 				
 				# prepare message for showing in GUI
 				message=xhtml.replace("&quot;",'"')
@@ -606,7 +606,7 @@ class chatWidget(abstractChatWidget):
 							m=ret
 						else:
 							return
-				self.main().client.xmlstream.send(m.toXml())
+				self.main().client.message.sendMessage(msg=m)
 				
 				# prepare message for showing in GUI
 				text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
