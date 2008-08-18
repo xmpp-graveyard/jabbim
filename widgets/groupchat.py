@@ -165,7 +165,7 @@ class groupChatWidget(abstractChatWidget):
 		log.msg("REQUESTING ROOM INFO")
 		self._getInfo()
 
-		known_commands = [
+		self.known_commands = [
 			# command,  handler, need_param?
 			('/google', self.commandGoogle, False),
 			('/nick',   self.commandNick,   True ),
@@ -173,9 +173,10 @@ class groupChatWidget(abstractChatWidget):
 			('/leave',  self.commandLeave,  False),
 			('/say',    self.commandSay,    True ),
 			('/me',     self.commandMe,     False),
+			('/help',  self.commandHelp,  False)
 		]
 		self.commands_regexps = []
-		for cmd in known_commands:
+		for cmd in self.known_commands:
 			self.commands_regexps.append( (re.compile(cmd[0]+r'(\s+(?P<param>\S.*)?)?$'), cmd[1], cmd[2]) )
 
 	def addToBookmark(self):
@@ -799,6 +800,17 @@ class groupChatWidget(abstractChatWidget):
 			time=unicode(button.text())
 			self.cache['actual']=self.ui.textEdit.toHtml()
 			self.ui.textEdit.setHtml(self.cache[time])
+	
+	def commandHelp(self,  dummy):
+		text = unicode(self.tr('Available commands: '))
+		for command in self.known_commands:
+			text = text + command[0] + '  '
+		self.ui.line.clear()
+		self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
+		message=self.main().webkitThemeFactory.genChatStatus(text,self.main().now())
+		self.textEditWrite(message)
+		self.lastMessageFrom=""
+		return False
 
 	def commandGoogle(self, query):
 		if query:
