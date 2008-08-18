@@ -4441,6 +4441,8 @@ class mainWindow(QtGui.QMainWindow):
 				self.ui.login_jid.setText(jid + '@')
 			return
 		if len(unicode(self.ui.login_password.text())) == 0:
+			self.ui.login_password.setFocus(QtCore.Qt.OtherFocusReason)
+			reactor.callLater(0,self.passError)
 			return
 		if not self.getJid(jid):
 			reactor.callLater(0,self.jidError)
@@ -4454,7 +4456,10 @@ class mainWindow(QtGui.QMainWindow):
 
 	def jidError(self):
 		QtGui.QMessageBox.critical(self, self.tr("Bad JID"),self.tr("You have an error in your Jabber ID."))
-
+	
+	def passError(self):
+		QtGui.QMessageBox.critical(self, self.tr("Empty password"),self.tr("Your password is empty."))
+		
 	def connect__(self):
 		start=time.time()
 		# get variables
