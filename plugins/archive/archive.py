@@ -647,15 +647,15 @@ class Plugin(plugins.PluginBase):
 		jid.resource=user
 		self.backend.saveMessage(jid, body, "groupchat", subject, xhtml, "from")
 
-	def on_firstChatMessageEvent(self, jid,user,body,subject, xhtml, chatstate, delay, eventID=None):
-		if body == None:
+	def on_firstChatMessageEvent(self, msg,event=None):
+		if msg.body == None:
 			return
-		self.backend.saveMessage(jid, body, "chat", subject, xhtml, "from")
+		self.backend.saveMessage(msg.frm, msg.body, "chat", msg.subject, msg.xhtml, "from")
 
-	def on_chatMessageEvent(self,jid,user,body,subject, xhtml,  chatstate,  delay,eventID=None):
-		if body == None:
+	def on_chatMessageEvent(self,msg,event=None):
+		if msg.body == None:
 			return
-		self.backend.saveMessage(jid, body, "chat", subject, xhtml, "from")
+		self.backend.saveMessage(msg.frm, msg.body, "chat", msg.subject, msg.xhtml, "from")
 
 	def on_message_send (self, msg):
 		to, body, typ, subject,composing, xhtml,  muc = msg.legacyUnpackSend()

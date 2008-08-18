@@ -137,16 +137,25 @@ class preferencesWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.moreGroupchatSkins, QtCore.SIGNAL("clicked()"),self.getMoreChatskins)
 	
 	def getMoreChatskins(self):
-		d=extraDialog("chatskins",self.main,self.main)
-		d.exec_()
+		if self.main.client:
+			d=extraDialog("chatskins",self.main,self.main)
+			d.exec_()
+		else:
+			QtGui.QMessageBox.information(self, self.tr("Informations"),self.tr("You have to be connected to download new chatskins."))
 	
 	def getMoreEmoticons(self):
-		d=extraDialog("emoticons",self.main,self.main)
-		d.exec_()
+		if self.main.client:
+			d=extraDialog("emoticons",self.main,self.main)
+			d.exec_()
+		else:
+			QtGui.QMessageBox.information(self, self.tr("Informations"),self.tr("You have to be connected to download new emoticons."))
 
 	def getMorePlugins(self):
-		d=extraDialog("plugins",self.main,self.main)
-		d.exec_()
+		if self.main.client:
+			d=extraDialog("plugins",self.main,self.main)
+			d.exec_()
+		else:
+			QtGui.QMessageBox.information(self, self.tr("Informations"),self.tr("You have to be connected to download new plugins."))
 
 	def currentItemChanged(self,item,previous):
 		"""

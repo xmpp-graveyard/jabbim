@@ -101,18 +101,18 @@ class extraDialog(QtGui.QDialog):
 
 	def accept(self):
 		if self.download:
-			b=QtGui.QPushButton()
-			self.progress=QtGui.QProgressDialog(self.tr('Downloading file:')+" "+self.download,"", 0, 100, self.main.preferencesWindow)
-			self.progress.setCancelButton(b)
-			b.hide()
+##			b=QtGui.QPushButton()
+##			self.progress=QtGui.QProgressDialog(self.tr('Downloading file:')+" "+self.download,"", 0, 100, self.main.preferencesWindow)
+##			self.progress.setCancelButton(b)
+##			b.hide()
 			self.main.client.callRemote('rpc@jabbim.cz/service','getFile',(self.download+'.zip',)).addCallback(self._getFile)
 
 		else:
 			name=unicode(self.ui.listWidget.currentItem().text())
-			b=QtGui.QPushButton()
-			self.progress=QtGui.QProgressDialog(self.tr('Downloading pack:')+" "+name,"", 0, 100, self.main.preferencesWindow)
-			self.progress.setCancelButton(b)
-			b.hide()
+##			b=QtGui.QPushButton()
+##			self.progress=QtGui.QProgressDialog(self.tr('Downloading pack:')+" "+name,"", 0, 100, self.main.preferencesWindow)
+##			self.progress.setCancelButton(b)
+##			b.hide()
 			self.main.client.callRemote('rpc@jabbim.cz/service','getFile',(self.directory+name+'.zip',)).addCallback(self._getFile)
 		#self.done(1)
 
