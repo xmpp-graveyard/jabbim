@@ -1662,7 +1662,7 @@ class clientClass(pyxl.client.Client):
 				event.setRejectHandler(self._declineFT,[sid,id])
 				widget=event.getWidgets()[0]
 				user=self.main.ui.roster.getNameByJID(self.ft[sid].fromjid.userhost())
-				widget.setText(unicode(user)+" "+unicode(mainWindow.tr("is sending you file"))+" "+unicode(self.ft[sid].fileprops['name']))
+				widget.setText(unicode(user)+" "+unicode(mainWindow.tr("is sending you file"))+" "+unicode(self.ft[sid].fileprops['name'])+" ("+str(self.toNormalSize(int(self.ft[sid].fileprops['size'])))+")")
 				widget.setAcceptText(unicode(mainWindow.tr("Accept")))
 				widget.setRejectText(unicode(mainWindow.tr("Reject")))
 
@@ -1679,6 +1679,17 @@ class clientClass(pyxl.client.Client):
 					tab.chat.ui.webkit.messageObject.ft[unicode(sid)]=event
 					tab.chat.textEditWrite('<div id="ft'+unicode(sid)+'">'+self.main.webkitThemeFactory.genChatStatus(unicode(message),self.main.now())+"</div>")
 					tab.chat.lastMessageFrom=""
+
+	def toNormalSize(self,size):
+		original=int(size)
+		new=int(size/1000) # kB
+		if new==0:
+			return str(round(original,2.0))+" B" # B
+		size=new
+		new=int(size/1000) # MB
+		if new==0:
+			return str(round(original/1000.0,2))+" kB" # kB
+		return str(round(original/1000000.0,2))+" MB" # MB
 
 	def _declineFT(self,sid,  id):
 		print "_declineFT"
