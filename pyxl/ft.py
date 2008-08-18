@@ -635,6 +635,21 @@ class FT:
 		self.ibbSeq = 0
 		self.ibbCache = {}
 		self.protocol = None
+		self.uplimit = 0
+		self.downlimit = 0
+	
+	def setLimit(self,  limit = 0, typ = 'upload'):
+		if typ =='upload':
+			self.uplimit = limit
+		elif typ == 'download':
+			self.downlimit = limit
+	
+	def getLimit(self,  typ = 'upload'):
+		if typ == 'upload':
+			return self.uplimit/2
+		else:
+			return self.downlimit
+		
 	
 	def setFilePath(self,  filepath,  mode = 'rb'):
 		self.filepath = filepath

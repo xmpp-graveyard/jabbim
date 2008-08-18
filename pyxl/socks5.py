@@ -677,9 +677,11 @@ class Send(protocol.Protocol):
 	implements(interfaces.IConsumer)
 	
 	def __init__(self):
+		self.last = time.time()
 		pass
 	
 	def registerProducer(self, producer, streaming):
+		self. producer = producer
 		return self.transport.registerProducer(producer, streaming)
 	
 	def unregisterProducer(self):
@@ -688,7 +690,24 @@ class Send(protocol.Protocol):
 
 	def write(self, data):
 #		print 'prenasim: ', len(data)
-		self.transport.write(data)
+		cekej = 0
+		kolik = float(len(data))
+		ted = time.time()
+		doba = ted - self.last
+		try:
+			limit = self.ft.getLimit('upload')
+		
+		except:
+			limit = 0
+			
+		if kolik/doba >limit and limit >0:
+			print unicode(kolik/doba)
+			cekej = (kolik/limit)
+			print unicode(cekej)
+			if cekej <0:
+				cekej = 0
+		reactor.callLater(cekej,  self.transport.write, data)
+		self.last = ted
 		try:
 			self.ft.connector.factory.delayed_timeout_call.cancel()
 		except:
