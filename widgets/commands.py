@@ -147,7 +147,8 @@ class Commands:
 		for command in commands:
 			action=self.submenu.addAction(command["name"])
 			action.setObjectName("ad_hoc_command")
-			action.setData(QtCore.QVariant([command['node'], command['name']]))
+			action.setData(QtCore.QVariant(QtCore.QStringList([command['node'], command['name']])))
+
 			button = QtGui.QPushButton(self.dialog)
 			button.setText(unicode(command["name"]))
 			#button.setObjectName(unicode(command["node"])) # ? + jid
