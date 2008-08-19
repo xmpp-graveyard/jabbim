@@ -190,6 +190,73 @@ class webkitChatWidget(QtWebKit.QWebView):
 		#self.palette().setColor(QtGui.QPalette.Inactive, QtGui.QPalette.HighlightedText,self.palette().highlightedText().color())
 
 		self.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding))
+		self.setAcceptDrops(True)
+
+	def dragEnterEvent(self, event):
+		if event.mimeData().hasText():
+			if self.chatwidget().main().getJid(unicode(event.mimeData().text())):
+				event.acceptProposedAction()
+			else:
+				event.ignore()
+		elif event.mimeData().hasFormat("text/uri-list"):
+			event.acceptProposedAction()
+		else:
+			event.ignore()
+
+	def dragMoveEvent(self, event):
+		event.acceptProposedAction()
+
+	def dropEvent(self, event):
+		"""
+		Called when something is dropped to this widget.
+		If there is JID dropped, new MUC is created and the jid is invited to the room.
+		"""
+		if event.mimeData().hasText():
+			# test if it is JID
+			jid2=self.chatwidget().main().getJid(unicode(event.mimeData().text()))
+			if not jid2:
+				event.ignore()
+				return
+
+			room=str(int(time.time())) # define room name
+			# find server when we can host the room
+			mucjid = None
+			for jid, node in self.chatwidget().main().client.disco.iteritems():
+				if not node[None].has_key('identities'):
+					continue
+				for id in node[None]['identities'].itervalues():
+					#print jid, id
+					if id.get('category') == 'conference' and id.get('type') == 'text' and jid.startswith('c'):
+						mucjid = jid
+						break
+				if mucjid:
+					break
+			room+="@"+mucjid # room jabber id
+
+			name=self.chatwidget().parent.tabName # get name of tab where is this widget showed
+			rmIndex=int(self.chatwidget().main().chat.ui.chatTab.currentIndex()) # get index of this tab
+			# join to the room and send invitation
+			if self.chatwidget().main().chat.addGroupChatTab(room,self.chatwidget().main().client.jid.user,name=name):
+				tab,index=self.chatwidget().main().chat.findTab(room)
+				tab.chat.invitation=[unicode(jid2.full()),unicode(self.chatwidget().parent.jid)]
+				self.main.client.joinGC(room, self.chatwidget().main().client.jid.user,sendRooms=self.chatwidget().main().config['sendRooms']=="True")
+			# remove old user2user conversation tab
+			self.chatwidget().main().chat.removeTab(rmIndex)
+			event.acceptProposedAction()
+		elif (event.mimeData().hasUrls()):
+			urlList=event.mimeData().urls()
+			if len(urlList)>0:
+				new=[]
+				for url in urlList:
+					f=unicode(url.toLocalFile())
+					if len(f)!=0:
+						new.append(f)
+				file=new
+				print file
+				self.chatwidget().main().showFiletransferDialog(file,self.chatwidget().jid)
+			event.acceptProposedAction()
+		else:
+			event.ignore()
 
 	def event(self,event):
 		# tooltip request:
