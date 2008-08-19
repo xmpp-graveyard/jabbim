@@ -97,20 +97,56 @@ class JingleInit:
 		for el in xml.elements():
 			if el.name == 'description':
 				props = {}
-				profile = el.firstChildElement().defaultUri
-				e = el.firstChildElement().firstChildElement()
-				props.update(e.attributes)
-				props['type'] = e.name
-				for elm in e.elements():
-					if elm.name == 'preview':
-						props['preview'] = unicode(elm)
-						props['previewType'] = elm.getAttribute('type', 'image/jpeg')
-					elif elm.name == 'desc':
-						props['desc'] = unicode(elm)
+				profile = el.defaultUri
+				if profile == 'urn:xmpp:tmp:jingle:apps:file-transfer':
+					e = el.firstChildElement().firstChildElement()
+					props.update(e.attributes)
+					props['type'] = e.name
+					for elm in e.elements():
+						if elm.name == 'preview':
+							props['preview'] = unicode(elm)
+							props['previewType'] = elm.getAttribute('type', 'image/jpeg')
+						elif elm.name == 'desc':
+							props['desc'] = unicode(elm)
 			elif el.name == 'transport':
-				transport = el.defaultUri
+				transport = self.getTransport(el)
 		return Content(creator,  name, profile ,  transport,  props)
+	
+	def getTransport(self,  el):
+		if el.defaultUri == 'urn:xmpp:tmp:jingle:transports:raw-udp':
+			return UDPTransport(el)
+		elif el.defaultUri == 'urn:xmpp:tmp:jingle:transports:bytestreams' or el.defaultUri == 'urn:xmpp:tmp:jingle:transports:ibb':
+			return FTTransport().fromXml(el)
+			
+	
+class Transport:
+	def getType(self):
+		return self.typ
+	def toXml(self):
+		return Element((self.typ,  'transport'))
 
+class FTTransport(Transport):
+	def fromXml(self,  el):
+		self.typ = el.defaultUri
+		return self
+	
+	def fromString(self,  typ):
+		self.typ = typ
+		return self
+
+class UDPTransport(Transport):
+	def __init__(self,  el):
+		self.typ = el.defaultUri
+		self.candidates = []
+		for e in el.elements():
+			self.candidates.append(e.attributes)
+	
+	def toXml(self):
+		el = Element((self.typ,  'transport'))
+		for candidate in self.candidates:
+			c = el.addElement('candidate')
+			c.attributes.update(candidate)
+		return el
 
 class Content:
 	def __init__(self,  creator,  name,  description,  transport,  props={}):
@@ -125,7 +161,7 @@ class Content:
 		return self.toXml().toXml()
 	
 	def __repr__(self):
-		return '%s: %s %s'%(self.description.split(':')[-1],  self.transport.split(':')[-1],  unicode(self.fileprops))
+		return '%s: %s %s'%(self.description.split(':')[-1],  self.transport.getType().split(':')[-1],  unicode(self.fileprops))
 	
 	def toXml(self):
 		content = Element((None, 'content'))
@@ -151,7 +187,7 @@ class Content:
 				else:
 					file[k] = unicode(v)
 				
-		content.addElement('transport', self.transport)
+		content.addChild(self.transport.toXml())
 		return content
 
 
@@ -170,7 +206,9 @@ class JingleSession:
 			print 'create FT!'
 			print self.contents
 			props['type'] = 'offer'
-			content = Content('initiator',  'file offer',  'urn:xmpp:tmp:jingle:apps:file-transfer',  transport,  props)
+			trans = FTTransport()
+			trans.fromString(transport)
+			content = Content('initiator',  'file offer',  'urn:xmpp:tmp:jingle:apps:file-transfer', trans ,  props)
 			self.contents=[content]
 			print content.__str__()
 			print unicode(content)
@@ -193,9 +231,9 @@ class JingleSession:
 		
 		def _initAck(self,  res):
 			print 'ack received'
-			if self.contents[0].transport == 'urn:xmpp:tmp:jingle:transports:bytestreams':
+			if self.contents[0].transport.getType() == 'urn:xmpp:tmp:jingle:transports:bytestreams':
 				self.init.client.FT.socksSend(self.sid)
-			elif self.contents[0].transport == 'urn:xmpp:tmp:jingle:transports:ibb':
+			elif self.contents[0].transport.getType() == 'urn:xmpp:tmp:jingle:transports:ibb':
 				self.init.client.FT.ibbSend(self.sid)
 				
 		
@@ -231,17 +269,17 @@ class JingleSession:
 		def onAcceptSession(self, contents):
 			# muze se content zmenit v session-accept? musi se to predat?
 			print self.contents, contents
-			if self.contents[0].transport == 'urn:xmpp:tmp:jingle:transports:bytestreams':
+			if self.contents[0].transport.getType() == 'urn:xmpp:tmp:jingle:transports:bytestreams':
 				self.init.client.ft[self.sid].sessionObj.humanReady = True
-			elif self.contents[0].transport == 'urn:xmpp:tmp:jingle:transports:ibb':
+			elif self.contents[0].transport.getType() == 'urn:xmpp:tmp:jingle:transports:ibb':
 				self.init.client.ft[self.sid].sessionObj.humanReady = True
 				
 		
 		def onTerminateSession(self,  reason):
 			self.state = 'ENDED'
-			if self.contents[0].transport == 'urn:xmpp:tmp:jingle:transports:bytestreams':
+			if self.contents[0].transport.getType() == 'urn:xmpp:tmp:jingle:transports:bytestreams':
 				self.init.client.FT.on_ftEnd(self.sid,  reason)
-			elif self.contents[0].transport == 'urn:xmpp:tmp:jingle:transports:ibb':
+			elif self.contents[0].transport.getType() == 'urn:xmpp:tmp:jingle:transports:ibb':
 				self.init.client.FT.on_ftEnd(self.sid,  reason)	
 		
 		def contentReplace(self,  content):
@@ -259,7 +297,7 @@ class JingleSession:
 		
 		def onContentReplace(self,  contents):
 			self.contents = contents
-			if self.contents[0].transport == 'urn:xmpp:tmp:jingle:transports:ibb':
+			if self.contents[0].transport.getType() == 'urn:xmpp:tmp:jingle:transports:ibb':
 				self.init.client.FT.ibbSend(self.sid)
 				
 		def ack(self,  id):

@@ -694,6 +694,8 @@ class Send(protocol.Protocol):
 		kolik = float(len(data))
 		ted = time.time()
 		doba = ted - self.last
+		if doba == 0:
+			doba = 0.001 #dostatecne male cislo?
 		try:
 			limit = self.ft.getLimit('upload')/2
 		
