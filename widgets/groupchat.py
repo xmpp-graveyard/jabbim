@@ -280,23 +280,48 @@ class groupChatWidget(abstractChatWidget):
 					role=self.main().client.groupchats[self.jid].users[name].role
 			# temp array to set priority of affiliations
 			affiliations={'none':0,'member':1,'admin':2,'owner':3}
+
+			# add "add user to roster" action if we know true JID
+			# vcard action
+			action=menu.addAction(self.tr("vCard"))
+			action.setData(QtCore.QVariant(jid))
+			action.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
+			action.setObjectName("vcard")
+			# send file action
+			action=menu.addAction(self.tr("Send file"))
+			action.setData(QtCore.QVariant(jid))
+			action.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
+			action.setObjectName("send_file")
+			if user != None:
+				if user.truejid != None:
+					tjid = jidT.JID(user.truejid).userhost()
+					action=menu.addAction(self.tr("Add to roster"))
+					action.setData(QtCore.QVariant([tjid, name]))
+					action.setIcon(QtGui.QIcon("images/16x16/actions/add-user.png"))
+					action.setObjectName("add-user")
+			separator=False
 			# make kick, ban action and separator
 			separator=False
 			if (self.role=="moderator" or self.affiliation=="owner") and affiliations[self.affiliation]>affiliations[affiliation]:
+				if not separator:
+					menu.addSeparator()
+					separator=True
 				action=menu.addAction(self.tr("Kick"))
 				action.setData(QtCore.QVariant(name))
 				action.setObjectName("kick")
-				separator=True
 			if (self.affiliation=="admin" or self.affiliation=="owner") and affiliations[self.affiliation]>affiliations[affiliation]:
+				if not separator:
+					menu.addSeparator()
+					separator=True
 				action=menu.addAction(self.tr("Ban"))
 				action.setData(QtCore.QVariant(name))
 				action.setObjectName("ban")
-				separator=True
-			if separator:
-				menu.addSeparator()
-			separator=False
+			
 			# make other actions
 			if self.affiliation=="owner":
+				if not separator:
+					menu.addSeparator()
+					separator=True
 				if affiliation=='owner':
 					action=menu.addAction(self.tr("Revoke ownership"))
 					action.setData(QtCore.QVariant(name))
@@ -320,6 +345,9 @@ class groupChatWidget(abstractChatWidget):
 					separator=True
 			if affiliations[self.affiliation]>affiliations[affiliation]:
 				if self.affiliation=="admin" or self.affiliation=="owner":
+					if not separator:
+						menu.addSeparator()
+						separator=True
 					if (affiliation=='member' or affiliation=='none') and role=='moderator':
 						action=menu.addAction(self.tr("Revoke moderator"))
 						action.setData(QtCore.QVariant(name))
@@ -343,6 +371,9 @@ class groupChatWidget(abstractChatWidget):
 						separator=True
 				if self.role=='moderator':
 					if "muc_moderated" in self.disco_features:
+						if not separator:
+							menu.addSeparator()
+							separator=True
 						if affiliation=='participant':
 							action=menu.addAction(self.tr("Revoke voice"))
 							action.setData(QtCore.QVariant(name))
@@ -353,26 +384,9 @@ class groupChatWidget(abstractChatWidget):
 							action.setData(QtCore.QVariant(name))
 							action.setObjectName("grant_voice")
 							separator=True
-			if separator:
-				menu.addSeparator()
-			# add "add user to roster" action if we know true JID
-			if user != None:
-				if user.truejid != None:
-					tjid = jidT.JID(user.truejid).userhost()
-					action=menu.addAction(self.tr("Add to roster"))
-					action.setData(QtCore.QVariant([tjid, name]))
-					action.setIcon(QtGui.QIcon("images/16x16/actions/add-user.png"))
-					action.setObjectName("add-user")
-			# vcard action
-			action=menu.addAction(self.tr("vCard"))
-			action.setData(QtCore.QVariant(jid))
-			action.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
-			action.setObjectName("vcard")
-			# send file action
-			action=menu.addAction(self.tr("Send file"))
-			action.setData(QtCore.QVariant(jid))
-			action.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
-			action.setObjectName("send_file")
+##			if separator:
+##				menu.addSeparator()
+
 			# add other actions from plugins
 			for key,value in self.main().plugins.iteritems():
 				if value['module']:

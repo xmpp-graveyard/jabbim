@@ -340,7 +340,7 @@ class clientClass(pyxl.client.Client):
 		if not end:
 			event.setFileTransfered(int(self.ft[sid].transfered))
 		else:
-			print "ft.finished"
+			print "ft.finished",self.main.ftError[sid]
 			if event.typ=="ftUpload":
 				if len(event.queue)!=0:
 					self.main.events.nextFTUploadEvent(sid)
