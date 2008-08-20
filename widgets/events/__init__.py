@@ -242,7 +242,10 @@ class events:
 		categories=[]
 		for event in self.events.values():
 			if not event.category in categories:
-				categories.append(event.category)
+				if event.typ=="fileDownload":
+					categories.append("_")
+				else:
+					categories.append(event.category)
 		if len(categories)==0 or (len(categories)==1 and categories==["filetransfers"]):
 			self.timer.stop()
 			if self.jabbimIcon!=None:
