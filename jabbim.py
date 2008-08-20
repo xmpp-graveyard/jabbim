@@ -1845,6 +1845,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.version = '0.5 SVN' + utils.getSvnVersion() #: version string
 		#self.setWindowOpacity (0.5)
 		self.imageId=0
+		self.isJabbimUser=False
 
 		QtCore.QObject.connect(app, QtCore.SIGNAL("sleep()"),self.systemSleep)
 		QtCore.QObject.connect(app, QtCore.SIGNAL("wakeUp()"),self.systemWakeUp)
@@ -4069,13 +4070,22 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Shows Add Contact Dialog.
 		"""
-		if not self.addcontactdialog:
-			self.addcontactdialog=widgets.addcontact.addContactDialog(self,self,jid=jid)
-			self.addcontactdialog.show()
+		if self.isJabbimUser:
+			if not self.addcontactdialog:
+				self.addcontactdialog=widgets.addcontactng.addContactDialog(self,self,jid=jid)
+				self.addcontactdialog.show()
+			else:
+				if self.addcontactdialog.isHidden()==True:
+					self.addcontactdialog=widgets.addcontactng.addContactDialog(self,self,jid=jid)
+					self.addcontactdialog.show()
 		else:
-			if self.addcontactdialog.isHidden()==True:
+			if not self.addcontactdialog:
 				self.addcontactdialog=widgets.addcontact.addContactDialog(self,self,jid=jid)
 				self.addcontactdialog.show()
+			else:
+				if self.addcontactdialog.isHidden()==True:
+					self.addcontactdialog=widgets.addcontact.addContactDialog(self,self,jid=jid)
+					self.addcontactdialog.show()
 
 	def buildBookmarks(self,data=False):
 		"""
@@ -4563,6 +4573,8 @@ class mainWindow(QtGui.QMainWindow):
 			self.client.connect(boshURL = self.config['boshURL'],JID=unicode(jid).lower()+"/"+resource,password=password,server=jid.split("@")[1])
 		else:
 			self.client.connect(JID=unicode(jid).lower()+"/"+resource,password=password,server=jid.split("@")[1])
+
+		self.isJabbimUser=jid.split("@")[1] in ['jabbim.cz','jabbim.pl','njs.netlab.cz','jabbim.com','jabber.cz']
 
 	#def _loadAvatar(self,file, hash, jid):
 		#if os.path.isfile(unicode(file)):
