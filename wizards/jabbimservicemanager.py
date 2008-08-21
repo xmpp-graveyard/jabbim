@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- 
+ï»¿# -*- coding: utf-8 -*- 
 try:
 	from PyQt4 import QtCore, QtGui
 except:
@@ -152,45 +152,45 @@ class jabbimServiceManager(QtGui.QDialog):
 		self.ui.stackedWidget.setCurrentIndex(3)
 		self.ui.back.show()
 		d={}
-		d['cze2eng@dict.jabbim.cz']=None # Z ceštiny do anglictiny.  
-		d['cze2fre@dict.jabbim.cz']=None #Z ceštiny do francouzštiny.  
-		d['cze2ger@dict.jabbim.cz']=None # Z ceštiny do nemciny.  
-		d['cze2ita@dict.jabbim.cz']=None # Z ceštiny do italštiny.  
-		d['cze2lat@dict.jabbim.cz']=None # Z ceštiny do latiny.  
-		d['cze2rus@dict.jabbim.cz']=None # Z ceštiny do ruštiny.  
-		d['cze2spa@dict.jabbim.cz']=None # Z ceštiny do španelštiny.  
-		d['eng2cze@dict.jabbim.cz']=None # Z anglictiny do ceštiny.  
-		d['eng2epo@dict.jabbim.cz']=None # Z anglictiny do esperanta.  
-		d['eng2fre@dict.jabbim.cz']=None # Z anglictiny do francouzštiny.  
-		d['eng2ger@dict.jabbim.cz']=None # Z anglictiny do nemciny.  
-		d['eng2ita@dict.jabbim.cz']=None # Z anglictiny do italštiny.  
-		d['eng2lat@dict.jabbim.cz']=None # Z anglictiny do latiny.  
-		d['eng2por@dict.jabbim.cz']=None # Z anglictiny do portugalštiny.  
-		d['eng2spa@dict.jabbim.cz']=None # Z anglictiny do španelštiny.  
-		d['epo2eng@dict.jabbim.cz']=None # Z esperanta do anglictiny.  
-		d['fre2cze@dict.jabbim.cz']=None # Z francouzštiny do cestiny.  
-		d['fre2eng@dict.jabbim.cz']=None # Z francouzštiny do anglictiny.  
-		d['fre2ger@dict.jabbim.cz']=None # Z francouzštiny do nemciny.  
-		d['fre2ita@dict.jabbim.cz']=None # Z francouzštiny do italštiny.  
-		d['fre2spa@dict.jabbim.cz']=None # Z francouzštiny do španelštiny.  
-		d['ger2cze@dict.jabbim.cz']=None # Z nemciny do ceštiny.  
-		d['ger2eng@dict.jabbim.cz']=None # Z nemciny do anglictiny.  
-		d['ger2fre@dict.jabbim.cz']=None # Z nemciny do francouzštiny.  
-		d['ger2spa@dict.jabbim.cz']=None # Z nemciny do španelštiny.  
-		d['ita2cze@dict.jabbim.cz']=None # Z italštiny do ceštiny.  
-		d['ita2eng@dict.jabbim.cz']=None # Z italštiny do anglictiny.  
-		d['ita2fre@dict.jabbim.cz']=None # Z italštiny do francouzštiny.  
-		d['lat2cze@dict.jabbim.cz']=None # Z latiny do ceštiny.  
-		d['lat2eng@dict.jabbim.cz']=None # Z latiny do anglictiny.  
-		d['por2eng@dict.jabbim.cz']=None # Z portugalštiny do anglictiny.  
-		d['por2spa@dict.jabbim.cz']=None # Z portugalštiny do španelštiny.  
-		d['rus2cze@dict.jabbim.cz']=None # Z ruštiny do ceštiny.  
-		d['spa2cze@dict.jabbim.cz']=None # Ze španelštiny do ceštiny.  
-		d['spa2eng@dict.jabbim.cz']=None # Ze španelštiny do anglictiny.  
-		d['spa2fre@dict.jabbim.cz']=None # Ze španelštiny do francouzštiny.  
-		d['spa2ger@dict.jabbim.cz']=None # Ze španelštiny do nemciny.  
-		d['spa2por@dict.jabbim.cz']=None # Ze španelštiny do portugalštiny.  
-		d['ciz2cze@dict.jabbim.cz']=None # Slovník cizích slov.  
+		d['cze2eng@dict.jabbim.cz']= self.tr("Czech to English")
+		d['cze2fre@dict.jabbim.cz']= self.tr("Czech to French")
+		d['cze2ger@dict.jabbim.cz']= self.tr("Czech to German")
+		d['cze2ita@dict.jabbim.cz']= self.tr("Czech to Italian")
+		d['cze2lat@dict.jabbim.cz']= self.tr("Czech to Latin")
+		d['cze2rus@dict.jabbim.cz']= self.tr("Czech to Russian")
+		d['cze2spa@dict.jabbim.cz']= self.tr("Czech to Spanish")
+		d['eng2cze@dict.jabbim.cz']= self.tr("English to Czech")
+		d['eng2epo@dict.jabbim.cz']= self.tr("English to Esperanto")
+		d['eng2fre@dict.jabbim.cz']= self.tr("English to French")
+		d['eng2ger@dict.jabbim.cz']= self.tr("English to German")
+		d['eng2ita@dict.jabbim.cz']= self.tr("English to Italian")
+		d['eng2lat@dict.jabbim.cz']= self.tr("English to Latin")
+		d['eng2por@dict.jabbim.cz']= self.tr("English to Portugese")
+		d['eng2spa@dict.jabbim.cz']= self.tr("English to Spanish")
+		d['epo2eng@dict.jabbim.cz']= self.tr("Esperanto to English")
+		d['fre2cze@dict.jabbim.cz']= self.tr("French to Czech")
+		d['fre2eng@dict.jabbim.cz']= self.tr("French to English")
+		d['fre2ger@dict.jabbim.cz']= self.tr("French to German")
+		d['fre2ita@dict.jabbim.cz']= self.tr("French to Italian")
+		d['fre2spa@dict.jabbim.cz']= self.tr("French to Spanish")
+		d['ger2cze@dict.jabbim.cz']= self.tr("German to Czech")
+		d['ger2eng@dict.jabbim.cz']= self.tr("German to English")
+		d['ger2fre@dict.jabbim.cz']= self.tr("German to French")
+		d['ger2spa@dict.jabbim.cz']= self.tr("German to Spanish")
+		d['ita2cze@dict.jabbim.cz']= self.tr("Italian to Czech")
+		d['ita2eng@dict.jabbim.cz']= self.tr("Italian to English")
+		d['ita2fre@dict.jabbim.cz']= self.tr("Italian to French")
+		d['lat2cze@dict.jabbim.cz']= self.tr("Latin to Czech")
+		d['lat2eng@dict.jabbim.cz']= self.tr("Latin to English")
+		d['por2eng@dict.jabbim.cz']= self.tr("Portugese to English")
+		d['por2spa@dict.jabbim.cz']= self.tr("Portugese to Spanish")
+		d['rus2cze@dict.jabbim.cz']= self.tr("Russian to Czech")
+		d['spa2cze@dict.jabbim.cz']= self.tr("Spanish to Czech")
+		d['spa2eng@dict.jabbim.cz']= self.tr("Spanish to English")
+		d['spa2fre@dict.jabbim.cz']= self.tr("Spanish to French")
+		d['spa2ger@dict.jabbim.cz']= self.tr("Spanish to German")
+		d['spa2por@dict.jabbim.cz']= self.tr("Spanish to Portugese")
+		d['ciz2cze@dict.jabbim.cz']= self.tr("Foreign words to Czech")
 
 		self.ui.dictionaries.clear()
 		for jid,name in d.iteritems():

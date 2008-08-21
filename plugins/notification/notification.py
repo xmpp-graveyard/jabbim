@@ -479,7 +479,7 @@ class Plugin(plugins.PluginBase):
 			if len(msg.body)>40:
 				traytext=msg.body[:40]+" ..."
 			else:
-				traytext=body
+				traytext=msg.body
 			if self.snarl:
 				file=self.main.getAvatarSrc(jid.userhost())
 				s = self.snarl.SnarlMessage(unicode(self.tr("New message from "))+unicode(user),unicode(traytext))
