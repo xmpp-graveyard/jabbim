@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'preferences.ui'
 #
-# Created: Mon Aug 18 10:20:00 2008
+# Created: Sat Aug 23 18:06:11 2008
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -184,7 +184,7 @@ class Ui_preferences(object):
         self.tabWidget = QtGui.QTabWidget(self.page_3)
         self.tabWidget.setObjectName("tabWidget")
         self.tab_5 = QtGui.QWidget()
-        self.tab_5.setGeometry(QtCore.QRect(0, 0, 100, 30))
+        self.tab_5.setGeometry(QtCore.QRect(4, 23, 104, 30))
         self.tab_5.setObjectName("tab_5")
         self.gridLayout = QtGui.QGridLayout(self.tab_5)
         self.gridLayout.setObjectName("gridLayout")
@@ -225,7 +225,7 @@ class Ui_preferences(object):
         self.gridLayout.addItem(spacerItem5, 1, 0, 1, 1)
         self.tabWidget.addTab(self.tab_5, "")
         self.tab = QtGui.QWidget()
-        self.tab.setGeometry(QtCore.QRect(8, 46, 438, 403))
+        self.tab.setGeometry(QtCore.QRect(12, 69, 438, 403))
         self.tab.setObjectName("tab")
         self.gridlayout7 = QtGui.QGridLayout(self.tab)
         self.gridlayout7.setMargin(9)
@@ -241,7 +241,7 @@ class Ui_preferences(object):
         self.gridlayout7.addWidget(self.themes, 1, 0, 1, 1)
         self.tabWidget.addTab(self.tab, "")
         self.tab_4 = QtGui.QWidget()
-        self.tab_4.setGeometry(QtCore.QRect(8, 46, 438, 403))
+        self.tab_4.setGeometry(QtCore.QRect(12, 69, 438, 403))
         self.tab_4.setObjectName("tab_4")
         self.gridlayout8 = QtGui.QGridLayout(self.tab_4)
         self.gridlayout8.setObjectName("gridlayout8")
@@ -292,7 +292,7 @@ class Ui_preferences(object):
         self.gridlayout8.addWidget(self.moreGroupchatSkins, 3, 1, 1, 1)
         self.tabWidget.addTab(self.tab_4, "")
         self.tab_2 = QtGui.QWidget()
-        self.tab_2.setGeometry(QtCore.QRect(8, 46, 438, 403))
+        self.tab_2.setGeometry(QtCore.QRect(12, 69, 438, 403))
         self.tab_2.setObjectName("tab_2")
         self.gridlayout9 = QtGui.QGridLayout(self.tab_2)
         self.gridlayout9.setObjectName("gridlayout9")
@@ -343,7 +343,7 @@ class Ui_preferences(object):
         self.gridlayout9.addWidget(self.moreChatSkins, 3, 1, 1, 1)
         self.tabWidget.addTab(self.tab_2, "")
         self.tab_3 = QtGui.QWidget()
-        self.tab_3.setGeometry(QtCore.QRect(8, 46, 438, 403))
+        self.tab_3.setGeometry(QtCore.QRect(12, 69, 438, 403))
         self.tab_3.setObjectName("tab_3")
         self.gridlayout10 = QtGui.QGridLayout(self.tab_3)
         self.gridlayout10.setMargin(9)
@@ -386,7 +386,6 @@ class Ui_preferences(object):
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.plugins = QtGui.QTreeWidget(self.page_5)
-        self.plugins.setMaximumSize(QtCore.QSize(170, 16777215))
         self.plugins.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.plugins.setAlternatingRowColors(True)
         self.plugins.setObjectName("plugins")
@@ -402,6 +401,7 @@ class Ui_preferences(object):
         self.gridLayout_3.setMargin(0)
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.pluginDescription = QtGui.QTextBrowser(self.widget)
+        self.pluginDescription.setMaximumSize(QtCore.QSize(200, 16777215))
         self.pluginDescription.setObjectName("pluginDescription")
         self.gridLayout_3.addWidget(self.pluginDescription, 0, 0, 1, 1)
         self.horizontalLayout.addWidget(self.widget)
