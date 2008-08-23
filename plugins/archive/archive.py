@@ -567,11 +567,20 @@ class Plugin(plugins.PluginBase):
 		dates=self.backend.getDates(jid)
 		print "got dates"
 		all=[]
+		last=None
 		for date in list(dates):
 			d=unicode(date).split('-')
 			qdate=QtCore.QDate(int(d[0]),int(d[1]),int(d[2]))
 			if not qdate in all:
-				all.append(qdate)
+				if not last:
+					last=qdate
+				elif qdate>last:
+					all.append(last)
+					last=qdate
+				else:
+					all.append(qdate)
+		if last:
+			all.append(last)
 		self.window.ui.calendar.setDates(all)
 		item=self.window.ui.seznam.currentItem()
 		jid = unicode(item.data(0,32).toString())
