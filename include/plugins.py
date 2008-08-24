@@ -222,11 +222,11 @@ class PluginBase:
 			trans=self._translator.translate(cl,text)
 		else:
 			trans=self._translator.translate("Plugin",text)
+		if len(trans)==0:
+			trans=self._translator.translate("self.main",text)
 			if len(trans)==0:
-				trans=self._translator.translate("self.main",text)
-				if len(trans)==0:
-					#print "cant translate'",text,"'"
-					return text
+				#print "cant translate'",text,"'"
+				return text
 		return trans
 
 	def on_configChanged(self):
