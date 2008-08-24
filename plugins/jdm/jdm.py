@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+﻿# -*- coding: utf-8 -*-
 import sys,os,time
 sys.path.append('.')
 from include import plugins
@@ -617,12 +617,12 @@ class Plugin(plugins.PluginBase):
 			size=int(data[0].toString())
 			if size==-1:
 				self.window.ui.label_size.setText(self.tr("Folder"))
-				self.window.ui.buttonDelete.setEnabled(self.jid==self.main.client.jid.userhost())
-				self.window.ui.buttonDownload.setEnabled(True)
-			else:
-				self.window.ui.label_size.setText(self.toNormalSize(size))
 				self.window.ui.buttonDelete.setEnabled(False)
 				self.window.ui.buttonDownload.setEnabled(False)
+			else:
+				self.window.ui.label_size.setText(self.toNormalSize(size))
+				self.window.ui.buttonDelete.setEnabled(self.jid==self.main.client.jid.userhost())
+				self.window.ui.buttonDownload.setEnabled(True)
 		else:
 			self.window.ui.buttonDelete.setEnabled(False)
 			self.window.ui.buttonDownload.setEnabled(False)
