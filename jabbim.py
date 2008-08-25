@@ -737,8 +737,8 @@ class clientClass(pyxl.client.Client):
 		#self.main.tray.setToolTip(mainWindow.tr('Your status:')+" "+self.main.status[show])
 		self.main.ui.selfAvatar.refreshToolTip()
 		self.main.sendPresence(None,show,status)
-		self.main.ui.statusButton.setText(unicode(""))
-		self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
+		#self.main.ui.statusButton.setText(unicode(""))
+		#self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
 		self.main.ui.login_cancel.hide()
 		print "loading users for userRating"
 		for jid,user in self.roster['users'].iteritems():
@@ -1601,7 +1601,7 @@ class clientClass(pyxl.client.Client):
 		# self avatar
 		print "update avatar for",[jid]
 		if unicode(self.jid.userhost())==unicode(jid):
-			avatar=self.main.getAvatar(pixmap,size="64x64",frame=True)
+			avatar=self.main.getAvatar(pixmap,size="32x32",frame=True)
 			self.main.selfAvatar=pixmap
 			self.main.ui.selfAvatar.setPixmap(avatar)
 			self.main.ui.selfAvatar.setMinimumWidth(avatar.width()+3)
@@ -1645,7 +1645,7 @@ class clientClass(pyxl.client.Client):
 			filename = self.main.config['autoDownloadPath']+'/'+self.ft[sid].fileprops['name']
 			autoDownload=True
 		if autoDownload:
-			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid.full()),basename(self.ft[sid].fileprops['name']),"",sid)
+			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid.full()),basename(self.ft[sid].fileprops['name']),"",sid,self.ft[sid].fileprops['size'])
 			self.receiveFile(sid, id,  filename)
 		else:
 			if unicode(self.ft[sid].fromjid).find("rpc@jabbim.cz")==-1:
@@ -1715,7 +1715,7 @@ class clientClass(pyxl.client.Client):
 			log.msg('receiving file: ' + sid)
 
 			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
-			self.ft[sid].file = filename
+			self.ft[sid].filepath = filename
 			self.receiveFile(sid, id, filename)
 
 
@@ -1820,8 +1820,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.reator=reactor
 		self.setObjectName("Jabbim class")
 		#self.setWindowFlags(QtCore.Qt.Tool)#|QtCore.Qt.FramelessWindowHint)
-		self.ui.toggleInvisible.hide()
-		self.ui.statusButton.hide()
+		#self.ui.toggleInvisible.hide()
+		#self.ui.statusButton.hide()
 		self.qtStyles=map(unicode,list(QtGui.QStyleFactory.keys()))
 		self.qtStylesDefault=app.style()
 		app.main=self
@@ -1885,6 +1885,7 @@ class mainWindow(QtGui.QMainWindow):
 
 
 		self.ui.tabWidgetButton=QtGui.QToolButton(self.ui.tabWidget)
+		self.ui.tabWidgetButton.setObjectName("jabbimButton")
 		self.ui.tabWidgetButton.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 		self.ui.tabWidgetButton.setPopupMode(QtGui.QToolButton.InstantPopup)
 		self.ui.tabWidgetButton.setArrowType(QtCore.Qt.NoArrow)
@@ -2127,8 +2128,8 @@ class mainWindow(QtGui.QMainWindow):
 
 		self.offline=False
 		self.xmlConsole=XMLConsole(self)
-		self.ui.showOffline.hide()
-		self.ui.offlineButton.hide()
+		#self.ui.showOffline.hide()
+		#self.ui.offlineButton.hide()
 
 		# signals
 		QtCore.QObject.connect(self.ui.login_connect, QtCore.SIGNAL("clicked()"),self.connect)
@@ -2137,10 +2138,10 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.login_cancel, QtCore.SIGNAL("clicked ()"),self.connectCancel)
 		QtCore.QObject.connect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
 		QtCore.QObject.connect(self.ui.mucBrowserButton, QtCore.SIGNAL("clicked ()"),self.mucBrowser)
-		QtCore.QObject.connect(self.ui.statusMessage, QtCore.SIGNAL("clicked (bool)"),self.statusMessageClicked)
+		#QtCore.QObject.connect(self.ui.statusMessage, QtCore.SIGNAL("clicked (bool)"),self.statusMessageClicked)
 		#QtCore.QObject.connect(self.ui.statusLine, QtCore.SIGNAL("returnPressed ()"),self.statusLineFinished)
 		QtCore.QObject.connect(self.ui.statusLine, QtCore.SIGNAL("editingFinished () "),self.statusLineFinished)
-		QtCore.QObject.connect(self.ui.offlineButton, QtCore.SIGNAL("clicked ( bool)"),self.hideOffline)
+		#QtCore.QObject.connect(self.ui.offlineButton, QtCore.SIGNAL("clicked ( bool)"),self.hideOffline)
 
 		QtCore.QObject.connect(self.ui.actionAbout, QtCore.SIGNAL("triggered ( bool )"),self.about)
 		QtCore.QObject.connect(self.ui.actionSupport, QtCore.SIGNAL("triggered ( bool )"),self.support)
@@ -2612,12 +2613,12 @@ class mainWindow(QtGui.QMainWindow):
 
 				# update statusWidget
 				if len(message)>20:
-					self.ui.statusMessage.setText(unicode(message)[:20]+"...")
+					self.ui.statusWidget.setText(unicode(message)[:20]+"...")
 				elif len(message)==0:
-					self.ui.statusMessage.setText(unicode(self.status[show]))
+					self.ui.statusWidget.setText(unicode(self.status[show]))
 				else:
-					self.ui.statusMessage.setText(unicode(message))
-				self.ui.statusMessage.setIcon(self.getIcon(status=show,size="16x16"))
+					self.ui.statusWidget.setText(unicode(message))
+				self.ui.statusWidget.setIcon(self.getIcon(status=show,size="16x16"))
 
 		else:
 			if self.transports[jid]!=None:
@@ -2949,11 +2950,11 @@ class mainWindow(QtGui.QMainWindow):
 		self.offlineMenu.addSeparator()
 
 		# show offline contacts action
-		self.showOfflineAction=self.offlineMenu.addAction(self.tr("Show Offline"))
-		self.showOfflineAction.setCheckable(True)
-		self.showOfflineAction.setObjectName('show_offline')
-		self.showOfflineAction.setChecked(self.offline)
-		QtCore.QObject.connect(self.showOfflineAction,QtCore.SIGNAL("toggled ( bool )"),self.hideOffline)
+		#self.showOfflineAction=self.offlineMenu.addAction(self.tr("Show Offline"))
+		#self.showOfflineAction.setCheckable(True)
+		#self.showOfflineAction.setObjectName('show_offline')
+		#self.showOfflineAction.setChecked(self.offline)
+		#QtCore.QObject.connect(self.showOfflineAction,QtCore.SIGNAL("toggled ( bool )"),self.hideOffline)
 
 		# show transports action
 		action=self.offlineMenu.addAction(self.tr("Show transports"))
@@ -3201,6 +3202,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		if self.client != None and self.client.pep :
 			self.ui.moodButton.show()
+			#self.ui.moodButton.hide()
 			# User Mood hack
 			#self.moodMenu = self.statusWidgetMenu.addMenu(self.tr('Mood'))
 			self.moodMenu = QtGui.QMenu(self.tr('Mood'))
@@ -3263,8 +3265,9 @@ class mainWindow(QtGui.QMainWindow):
 
 		# make menu for transports
 		if len(self.transports)!=0:
-			self.ui.line1.show()
+			#self.ui.line1.show()
 			for transport in list(self.transports.keys()):
+				break
 				# make transports QMenu and use icon according to transports type and show
 				show=self.client.roster['users'][transport].status
 				if len(show)==0:
@@ -3349,7 +3352,8 @@ class mainWindow(QtGui.QMainWindow):
 				#self.statusWidgetMenu.addMenu(menu)
 			#self.statusWidgetMenu.addSeparator()
 		else:
-			self.ui.line1.hide()
+			#self.ui.line1.hide()
+			pass
 
 		# other actions
 		action=self.statusWidgetMenu.addAction(self.getIcon(status="online",size="16x16"),self.tr("Add message"))
@@ -4292,8 +4296,8 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		#self.events.addAddUserEvent('hanzz@njs.netlab.cz','offline users are shown, False offline users are hidden')
 		self.config['showOffline']=unicode(bool)
-		self.showOfflineAction.setChecked(bool)
-		self.ui.offlineButton.setChecked(bool)
+		#self.showOfflineAction.setChecked(bool)
+		#self.ui.offlineButton.setChecked(bool)
 		self.offline=bool
 		self.ui.roster.showOffline=bool
 		self.ui.roster.reshow=True
@@ -4347,14 +4351,15 @@ class mainWindow(QtGui.QMainWindow):
 		except:
 			pass
 		self.ui.selfName.setText("<h3>"+unicode(self.client.jid.userhost()).split("@")[0]+"</h3>")
+		self.ui.selfName.hide()
 		self.selfName=unicode(self.client.jid.userhost()).split("@")[0]
 		self.client.getVCard(unicode(self.client.jid.userhost()))
-		self.ui.showOffline.hide()
+		#self.ui.showOffline.hide()
 #		self.tray.showMessage(self.tr("Jabbim"),self.tr("Jabbim is ready! You are connected! :) "))
 		self.tray.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 		pixmap=self.getAvatar(self.client.jid.userhost(),frame=False,status=None)
 		if pixmap:
-			avatar=self.getAvatar(pixmap,size="64x64",frame=True)
+			avatar=self.getAvatar(pixmap,size="32x32",frame=True)
 			self.selfAvatar=pixmap
 			self.ui.selfAvatar.setPixmap(avatar)
 			self.ui.selfAvatar.setMinimumWidth(avatar.width()+3)
@@ -4696,7 +4701,7 @@ class mainWindow(QtGui.QMainWindow):
 			return
 		self.config.write()
 		MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
-		MainWindow.ui.showOffline.hide()
+		#MainWindow.ui.showOffline.hide()
 		MainWindow.ui.actionAdd_Contact.setEnabled(False)
 		MainWindow.ui.actionJoin_groupchat.setEnabled(False)
 		MainWindow.ui.actionService_Discovery.setEnabled(False)
