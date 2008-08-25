@@ -330,12 +330,12 @@ class Plugin(plugins.PluginBase):
 			print addr
 			if addr in self.config['dirs']:
 				if (fr in self.config[addr+'-sharejids']) or frm == self.main.client.jid.userhost():
-					fajly[fajly[os.path.basename(f.replace(addr, self.config[addr+'-sharepath']))]]=f.replace(addr, self.config[addr+'-sharepath'])
-					desc[fajly[os.path.basename(f.replace(addr, self.config[addr+'-sharepath']))]] = '%s >> %s'%('EasyShare',fr)
+					fajly[os.path.basename(f.replace(addr, self.config[addr+'-sharepath']))]=f.replace(addr, self.config[addr+'-sharepath'])
+					desc[os.path.basename(f.replace(addr, self.config[addr+'-sharepath']))] = '%s >> %s'%('EasyShare',fr)
 		print fajly
 		print desc
 		if len(fajly)>0:
-			self.main.events.addFTUploadEvent(frm, fajly, desc)
+			self.main.events.addFTUploadEvent(frm, fajly, desc,forceTree=True)
 			return (True, )
 		else:
 			return

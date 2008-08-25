@@ -429,7 +429,7 @@ class events:
 				d.addCallback(self._addFTUploadEvent,jid,files,descriptions)
 			else:
 				print "starting ft upload"
-				self._addFTUploadEvent(None,jid,files,descriptions,None,forceTree)
+				self._addFTUploadEvent(None,jid,files,descriptions,None)
 		else:
 			typ=self.isImage(files[0])
 			j=self.main.getJid(jid)
@@ -444,7 +444,7 @@ class events:
 				d.addCallback(self._addFTUploadEvent,jid,files,descriptions,'image/png')
 			else:
 				print "starting ft upload"
-				self._addFTUploadEvent(None,jid,files,descriptions,None,forceTree)
+				self._addFTUploadEvent(None,jid,files,descriptions,None)
 
 	def _addFTUploadEvent(self,data,jid,files,descriptions,previewType=None):
 		#print jid,previewType,preview
@@ -464,7 +464,7 @@ class events:
 					if files.index(name)!=0:
 						filesQueue[name]=fileClass(name,value[0],descriptions[name])
 						filesQueue[name].sid=value[1]
-		if len(filesQeue)==0:
+		if len(filesQueue)==0:
 			for name,value in files.iteritems():
 				if files.index(name)!=0:
 					filesQueue[name]=fileClass(name,value[0],descriptions[name])
