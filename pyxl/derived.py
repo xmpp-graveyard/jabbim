@@ -151,7 +151,7 @@ class derived:
 	def on_pep(self, frm, ns, payload):
 		pass	
 	
-	def on_receiveFiles(self, id,  frm,  files, size):
+	def on_receivedFiles(self, id,  frm,  files, size):
 		pass
 		########################################################################################################################
 	
