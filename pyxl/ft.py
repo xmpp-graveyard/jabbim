@@ -596,7 +596,9 @@ class Jingle:
 		if error == 'activate error' or error == 'connect failed' :
 			props = self.fileprops
 			props['type'] = 'request'
-			content = jingle.Content('responder',  'file offer',  'urn:xmpp:tmp:jingle:apps:file-transfer',  'urn:xmpp:tmp:jingle:transports:ibb',  props)
+			trans = jingle.FTTransport('urn:xmpp:tmp:jingle:transports:ibb')
+			trans.fromString(transport)
+			content = Content('initiator',  'file offer',  'urn:xmpp:tmp:jingle:apps:file-transfer', trans ,  props)
 			self.jingleSession.contentReplace(content)
 			self.transportReady = True
 			return True
