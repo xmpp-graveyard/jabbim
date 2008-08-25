@@ -48,7 +48,7 @@ import traceback
 from configobj import ConfigObj
 import locale
 import rpc
-import presence,  message,  ft,  jingle,  archive
+import presence,  message,  ft,  jingle
 #import bosh_wokkel
 try:
 	from hashlib import sha1
