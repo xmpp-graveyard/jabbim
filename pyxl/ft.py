@@ -38,9 +38,54 @@ class FTInit:
 		self.chyba = self.client.chyba
 		self.getIPAddr = self.client.getIPAddr
 		self.client.ftStart = self.ftStart
+		self.client.sendFiles = self.sendFiles
 	
 	def send(self,  xml):
 		self.client.xmlstream.send(xml)
+	
+	def sendFiles(self, tojid,  files): #files = {name:abs. path, ..}
+		def _received(el,  outfiles):
+			print el,  outfiles
+			return el,  outfiles
+		iq = IQ(self.client.xmlstream, 'set')
+		self.client.disp(iq['id'])
+		iq.addElement('tree',  'http://dev.jabbim.cz/jabbim/treeft')
+		outfiles = {}#{name:(abs. path, SID),  ..}
+		for k, v in files.iteritems():
+			sid = 'tree'+ str(random.randint(1000, sys.maxint))
+			item =iq.tree.addElement('item',  content = k)
+			item['sid'] = sid
+			item['size'] = unicode(os.stat(v).st_size)
+			outfiles[k] = (v, sid)
+		print iq.toXml()
+		d = iq.send().addCallback(_received,  outfiles)
+		return d
+	
+	def onReceiveFiles(self,  el):
+		self.client.disp(el['id'])
+		log.msg('multiple files offer')
+		outfiles = {}#{name:SID,  ..}
+		size = 0
+		for item in el.tree.elements():
+			outfiles[item['sid']] = unicode(item1)
+			size += int(item['size'])
+		self.dispatcher.publishEvent('on_receivedFiles', el['id'], el['from'], outfiles,  size)
+	
+	def receiveFiles(self,  id,  frm):
+		iq = Element((None,'iq'))
+		iq['to'] = frm
+#		iq['from'] = self.ft[sid].tojid.full()
+		iq['id'] = id
+		iq['type'] = 'result'
+		self.send(iq)
+	
+	def declineFiles(self,  id,  frm):
+		iq = Element((None,'iq'))
+		iq['to'] = frm
+#		iq['from'] = self.ft[sid].tojid.full()
+		iq['id'] = id
+		iq['type'] = 'error' #este to chce typ chyby asi
+		self.send(iq)
 	
 	def sendFile(self, outjid, filename, fp, desc = None, preview = None, previewType = 'image/jpeg', typ = None,  sid = None): #typ = None/ibb/socks5
 #		(self,  tojid,  fromjid,  init,  fileprops,  filepath=None, sid = None, typ='ft'):

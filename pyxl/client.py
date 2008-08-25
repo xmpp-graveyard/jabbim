@@ -48,7 +48,7 @@ import traceback
 from configobj import ConfigObj
 import locale
 import rpc
-import presence,  message,  ft,  jingle
+import presence,  message,  ft,  jingle,  archive
 #import bosh_wokkel
 try:
 	from hashlib import sha1
@@ -122,7 +122,7 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/commands','http://jabber.org/protocol/commands')
 		self.registerFeature('http://jabber.org/protocol/si/profile/file-transfer')
 		self.registerFeature('http://jabber.org/protocol/si')
-		self.registerFeature("urn:xmpp:receipts")
+#		self.registerFeature("urn:xmpp:receipts")
 		self.registerFeature('http://www.xmpp.org/extensions/xep-0224.html#ns')
 		self.registerFeature('http://jabber.org/protocol/rosterx')
 		self.registerFeature('http://jabber.org/protocol/muc')
@@ -139,6 +139,7 @@ class Client(derived):
 		self.registerFeature('urn:xmpp:tmp:jingle:apps:file-transfer')
 		self.registerFeature('urn:xmpp:tmp:jingle:transports:bytestreams')
 		self.registerFeature('urn:xmpp:tmp:bob')
+		self.registerFeature('http://dev.jabbim.cz/jabbim/treeft')
 		self.identity = 'client/pc'
 		
 		self.caps_cache = {} # 'ext': (identity,[feature1, feature2])
@@ -191,6 +192,7 @@ class Client(derived):
 		self.message = message.MessageInit(self)
 		self.FT = ft.FTInit(self)
 		self.jingle = jingle.JingleInit(self)
+		self.archive = archive.ArchiveInit(self)
 		
 		self.proxy = None
 	
@@ -579,6 +581,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='session-terminate']", self.jingle.onJingleTerminate, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='content-replace']", self.jingle.onJingleContentReplace, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/data[@xmlns='urn:xmpp:tmp:bob']", self.onBOBData, 1)
+		self.xmlstream.addObserver("/iq[@type='set'][@id]/tree[@xmlns='http://dev.jabbim.cz/jabbim/treeft']", self.FT.onReceiveFiles, 1)
 
 		self.xping.start(100, False)		
 		self.getPrivacy().addCallback(self.getMetacontacts).addErrback(self.getMetacontacts)
