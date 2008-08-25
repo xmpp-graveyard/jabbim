@@ -39,6 +39,8 @@ class FTInit:
 		self.getIPAddr = self.client.getIPAddr
 		self.client.ftStart = self.ftStart
 		self.client.sendFiles = self.sendFiles
+		self.client.receiveFiles = self.receiveFiles
+		self.client.declineFiles = self.declineFiles
 	
 	def send(self,  xml):
 		self.client.xmlstream.send(xml)
