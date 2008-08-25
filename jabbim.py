@@ -491,19 +491,20 @@ class clientClass(pyxl.client.Client):
 		print "ftEnd"
 		self.main.ftError[sid]=error
 		# self.main.allowedSids contains SIDs which are used for transfering Jabbim Extra
-		if sid in self.main.allowedSids:
-			# continuing with jabbim extra
-			print "Part of jabbim extra has been downloaded"
-			file=self.ft[sid].file
-			print "extracting",file,'to',dirname(file)
-			try:
-				root=utils.extractZip(file,dirname(file))
-			except:
-				message = unicode(traceback.format_exc(), 'utf-8')
-				print message
-			self.main.allowedSids.remove(sid)
-			self.main.preferencesWindow.reloadView(file,root)
-			self.main.preferencesWindow.reloadPlugins_()
+		if sid in self.main.allowedSids.keys():
+			if unicode(self.ft[sid].fromjid.full()).find("rpc@jabbim.cz")!=-1:
+				# continuing with jabbim extra
+				print "Part of jabbim extra has been downloaded"
+				file=self.ft[sid].file
+				print "extracting",file,'to',dirname(file)
+				try:
+					root=utils.extractZip(file,dirname(file))
+				except:
+					message = unicode(traceback.format_exc(), 'utf-8')
+					print message
+				self.main.preferencesWindow.reloadView(file,root)
+				self.main.preferencesWindow.reloadPlugins_()
+			del self.main.allowedSids[sid]
 		self.dispatcher.publishEvent('FTFinishedEvent', sid, error)
 		#del self.ft[sid]
 		self.on_ftTransfered(sid, 0,True) # we have to delete filetransfer and etc
@@ -1629,12 +1630,63 @@ class clientClass(pyxl.client.Client):
 					item.setToolTip(0,w.chat.getGroupchatTooltip(jid.full(),item))
 					#w.chat.setTooltip(item,jid.full())
 
+	def on_receivedFiles(self, id,  frm,  files, size):
+		jid=self.main.getJid(frm)
+		event=self.main.events.addBooleanEvent('fileDownload','filetransfers')
+		event.setAcceptHandler(self._acceptFTTree,[id,frm,files])
+		event.setRejectHandler(self._declineFTTree,[id,frm])
+		widget=event.getWidgets()[0]
+		user=self.main.ui.roster.getNameByJID(self.ft[sid].fromjid.userhost())
+		widget.setText(unicode(user)+" "+unicode(mainWindow.tr("is sending you "))+str(len(files))+" "+unicode(mainWindow.tr("files"))+" ("+str(self.toNormalSize(int(size)))+")")
+		widget.setAcceptText(unicode(mainWindow.tr("Accept")))
+		widget.setRejectText(unicode(mainWindow.tr("Reject")))
+
+		tab,index=self.main.chat.findTab(unicode(jid.userhost()),typ=['chat'])
+##		if tab:
+##			mainWindow=self.main
+##			message=mainWindow.tr("User is sending you file")+" "+unicode(self.ft[sid].fileprops['name'])+". <a href=\"javascript:messageObject.acceptFT('"+unicode(sid)+"');\">["+mainWindow.tr("Accept")+"]</a> <a href=\"javascript:messageObject.rejectFT('"+unicode(sid)+"');\">["+mainWindow.tr("Decline")+"]</a>"
+##			tab.chat.ui.webkit.messageObject.ft[unicode(sid)]=event
+##			tab.chat.textEditWrite('<div id="ft'+unicode(sid)+'">'+self.main.webkitThemeFactory.genChatStatus(unicode(message),self.main.now())+"</div>")
+##			tab.chat.lastMessageFrom=""
+
+	def _declineFTTree(self,id,frm):
+		print "_declineFTTree"
+##		tab,index=self.main.chat.findTab(unicode(self.ft[sid].fromjid),typ=['chat'])
+##		if tab:
+##			tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById('ft"+unicode(sid)+"');")
+##			del tab.chat.ui.webkit.messageObject.ft[unicode(sid)]
+		return self.declineFiles(id,frm)
+
+	def _acceptFTTree(self,id,frm,files):
+		#q = QtGui.QMessageBox.question(self.main,self.main.tr("File transfer"), unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+		#if q == QtGui.QMessageBox.Yes:
+		mainWindow=self.main
+		path = QtGui.QFileDialog.getExistingDirectory(self.main,mainWindow.tr("Save Files"))
+		if path and len(path)!=0:
+			path=unicode(path)
+			for sid,file in files.iteritems():
+				self.main.allowedSids[unicode(sid)]=path+"/"+file
+
+##		tab,index=self.main.chat.findTab(unicode(self.ft[sid].fromjid),typ=['chat'])
+##		if tab:
+##			tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById('ft"+unicode(sid)+"');")
+##			del tab.chat.ui.webkit.messageObject.ft[unicode(sid)]
+##		if filename and len(filename)!=0:
+##			filename=unicode(filename)
+##			log.msg(unicode(filename))
+##			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].fromjid),basename(self.ft[sid].fileprops['name']),"",sid,self.ft[sid].fileprops['size'])
+##			log.msg('receiving file: ' + sid)
+##
+##			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
+##			self.ft[sid].filepath = filename
+			self.receiveFiles(id,frm)
+
 	def on_fileReceived(self, sid, id):
 		mainWindow=self.main
 		autoDownload=False
-		if unicode(sid) in self.main.allowedSids:
-			if unicode(self.ft[sid].fromjid).find("rpc@jabbim.cz")!=-1 and not unicode(sid) in self.main.allowedSids:
-				return
+		if unicode(sid) in self.main.allowedSids.keys():
+			if unicode(self.ft[sid].fromjid).find("rpc@jabbim.cz")!=-1:
+				filename = self.main.allowedSids[unicode(sid)]
 			else:
 				filename = self.main.realHomeDir+'/'+self.ft[sid].fileprops['name']
 			autoDownload=True
@@ -1920,7 +1972,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ftError={}
 		self.filetransfer={}
 		self.filetransferQueue={}
-		self.allowedSids=[]
+		self.allowedSids={}
 		self.allowedJids={} # {jid:path_to_download_files}
 
 		self.bookmarks=bookmarks.bookmarksClass(self.ui.bookmarks,self)

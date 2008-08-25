@@ -319,20 +319,19 @@ class Plugin(plugins.PluginBase):
 		print out
 		return (out,)
 	
-	
 	def getFiles(self, frm, par):
 		print frm, par
 		fr = jidT.JID(frm).userhost()
 		files = par[0]
-		fajly = []
+		fajly = {}
 		desc = {}
 		for f in files:
 			addr = f.split('/')[0]
 			print addr
 			if addr in self.config['dirs']:
 				if (fr in self.config[addr+'-sharejids']) or frm == self.main.client.jid.userhost():
-					fajly.append(f.replace(addr, self.config[addr+'-sharepath']))
-					desc[fajly[-1]] = '%s >> %s'%('EasyShare',fr)
+					fajly[fajly[os.path.basename(f.replace(addr, self.config[addr+'-sharepath']))]]=f.replace(addr, self.config[addr+'-sharepath'])
+					desc[fajly[os.path.basename(f.replace(addr, self.config[addr+'-sharepath']))]] = '%s >> %s'%('EasyShare',fr)
 		print fajly
 		print desc
 		if len(fajly)>0:

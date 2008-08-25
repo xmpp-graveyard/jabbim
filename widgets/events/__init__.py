@@ -170,9 +170,11 @@ class FTUploadEvent(abstractEvent):
 			self.parent.main.reactor.callLater(0,self.parent.removeEvent,int(self.ID))
 
 class fileClass:
-	def __init__(self,name,description):
+	def __init__(self,name,path,description):
 		self.name=name
+		self.path=path
 		self.description=description
+		self.sid=None
 
 class events:
 	def __init__(self,main):
@@ -412,43 +414,67 @@ class events:
 		image=img.scaled(128,128,QtCore.Qt.KeepAspectRatio)#,QtCore.Qt.SmoothTransformation)
 		return image
 
-	def addFTUploadEvent(self,jid,files,descriptions):
+	def addFTUploadEvent(self,jid,files,descriptions,forceTree=False):
 		print "addFTUploadEvent"
-		typ=self.isImage(files[0])
-		j=self.main.getJid(jid)
-		feature=False
-		if self.main.client.roster['users'].has_key(j.userhost()):
-			#print self.main.client.roster['users'][j.userhost()].resources,j.resource
-			if self.main.client.roster['users'][j.userhost()].resources.has_key(j.resource):
-				#print 'blabla',self.main.client.roster['users'][j.userhost()].resources[j.resource].features
-				feature=self.main.client.roster['users'][j.userhost()].resources[j.resource].hasFeature('http://kopete.kde.org/protocol/file-preview')
-		print 'feature',feature
-		if typ!=False and feature:
-			print 'generating file preview'
-			d=threads.deferToThread(self.makeFTPreview,files[0])
-			d.addCallback(self._addFTUploadEvent,jid,files,descriptions,'image/png')
+		if isinstance(files,dict):
+			if not forceTree:
+				feature=False
+				if self.main.client.roster.has_key(jid):
+					if self.main.client.roster[jid].resources.has_key(res):
+						feature=self.main.client.roster[jid].resources[res].hasFeature('http://dev.jabbim.cz/jabbim/treeft')
+			else:
+				feature=True
+			if feature:
+				d=self.main.client.sendFiles(jid, files) #files = {name:abs. path, ..}
+				d.addCallback(self._addFTUploadEvent,jid,files,descriptions)
+			else:
+				print "starting ft upload"
+				self._addFTUploadEvent(None,jid,files,descriptions,None,forceTree)
 		else:
-			print "starting ft upload"
-			self._addFTUploadEvent(None,jid,files,descriptions,None)
+			typ=self.isImage(files[0])
+			j=self.main.getJid(jid)
+			feature=False
+			if self.main.client.roster['users'].has_key(j.userhost()):
+				if self.main.client.roster['users'][j.userhost()].resources.has_key(j.resource):
+					feature=self.main.client.roster['users'][j.userhost()].resources[j.resource].hasFeature('http://kopete.kde.org/protocol/file-preview')
+			print 'feature',feature
+			if typ!=False and feature:
+				print 'generating file preview'
+				d=threads.deferToThread(self.makeFTPreview,files[0])
+				d.addCallback(self._addFTUploadEvent,jid,files,descriptions,'image/png')
+			else:
+				print "starting ft upload"
+				self._addFTUploadEvent(None,jid,files,descriptions,None,forceTree)
 
-	def _addFTUploadEvent(self,preview,jid,files,descriptions,previewType=None):
+	def _addFTUploadEvent(self,data,jid,files,descriptions,previewType=None):
 		#print jid,previewType,preview
 		print "_addFTUploadEvent"
-		if preview:
-			bytes=QtCore.QByteArray()
-			buf=QtCore.QBuffer(bytes)
-			buf.open(QtCore.QIODevice.WriteOnly)
-			preview.save(buf, "PNG")
-			preview=base64.encodestring(str(bytes))
 		filesQueue={}
-		text=""
-		for name in files:
-			if files.index(name)!=0:
-				filesQueue[name]=fileClass(name,descriptions[name])
+		if data:
+			if isinstance(data,QtGui.QImage):
+				bytes=QtCore.QByteArray()
+				buf=QtCore.QBuffer(bytes)
+				buf.open(QtCore.QIODevice.WriteOnly)
+				data.save(buf, "PNG")
+				preview=base64.encodestring(str(bytes))
+			else:
+				files=data
+				text=""
+				for name,value in files.iteritems():
+					if files.index(name)!=0:
+						filesQueue[name]=fileClass(name,value[0],descriptions[name])
+						filesQueue[name].sid=value[1]
+		if len(filesQeue)==0:
+			for name,value in files.iteritems():
+				if files.index(name)!=0:
+					filesQueue[name]=fileClass(name,value[0],descriptions[name])
+
 		if jid.find("/") == -1:
 			res = self.main.client.roster['users'][jid].getHighestResource()
 		else:
 			jid, res = jid.split("/", 1)
+
+
 
 		event=FTUploadEvent(self)
 		event.setType("ftUpload")
@@ -459,19 +485,24 @@ class events:
 		widget=self.addWidget(widget,"filetransfers")
 		event.addWidget(widget)
 
+		k=filesQueue.keys()[0]
+		file=filesQueue[k]
 
-		file=files
-		fileCount=len(file)
-		file=file[0]
-		file=unicode(file)
-
-		event.setCurrentFile(file)
+		event.setCurrentFile(file.name)
 
 		if res==None:
-			sid=self.main.client.sendFile(jid, basename(file), file,descriptions[file],preview=preview,previewType='image/png')
+			if file.sid:
+				sid=file.sid
+				self.main.client.sendFile(jid+'/'+res, file.name, file.path,descriptions[file.name],preview=preview,previewType='image/png',sid=sid)
+			else:
+				sid=self.main.client.sendFile(jid, file.name, file.path,descriptions[file.name],preview=preview,previewType='image/png')
 			tab,index=self.main.chat.findTab(jid,typ=['chat'])
 		else:
-			sid=self.main.client.sendFile(jid+'/'+res, basename(file), file,descriptions[file],preview=preview,previewType='image/png')
+			if file.sid:
+				sid=file.sid
+				self.main.client.sendFile(jid+'/'+res, file.name, file.path,descriptions[file.name],preview=preview,previewType='image/png',sid=sid)
+			else:
+				sid=self.main.client.sendFile(jid+'/'+res,file.name, file.path,descriptions[file.name],preview=preview,previewType='image/png')
 			tab,index=self.main.chat.findTab(jid+'/'+res,typ=['chat'])
 		event.SID=sid
 		event.setFileSize(int(self.main.client.ft[sid].size))
@@ -481,7 +512,7 @@ class events:
 		mainWindow.tray.showMessage(unicode(mainWindow.tr("Sending file "))+basename(file)+mainWindow.tr(" to ")+unicode(jid), mainWindow.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
 
 		if tab:
-			tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Sending file"))+" "+basename(file),self.main.now()))
+			tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Sending file"))+" "+basename(file.name),self.main.now()))
 			tab.chat.lastMessageFrom=""
 
 
@@ -512,26 +543,30 @@ class events:
 	def nextFTUploadEvent(self,sid):
 		event=self.ftEvents[sid]
 		jid=event.jid
-		file=event.queue[event.queue.keys()[0]].name
-		typ=self.isImage(file)
-		j=self.main.getJid(jid)
-		feature=False
-		if self.main.client.roster.has_key(j.userhost()):
-			if self.main.client.roster[j.userhost()].resources.has_key(j.resource):
-				feature=self.main.client.roster[j.userhost()].resources[j.resource].hasFeature('http://kopete.kde.org/protocol/file-preview')
-		if typ!=False and feature:
-			print 'generating file preview'
-			d=threads.deferToThread(self.makeFTPreview,files[0])
-			d.addCallback(self._nextFTUploadEvent,sid,'image/png')
-		else:
+		
+		if event.queue[event.queue.keys()[0]].sid:
 			self._nextFTUploadEvent(None,sid,None)
+		else:
+			file=event.queue[event.queue.keys()[0]].name
+			typ=self.isImage(file)
+			j=self.main.getJid(jid)
+			feature=False
+			if self.main.client.roster.has_key(j.userhost()):
+				if self.main.client.roster[j.userhost()].resources.has_key(j.resource):
+					feature=self.main.client.roster[j.userhost()].resources[j.resource].hasFeature('http://kopete.kde.org/protocol/file-preview')
+			if typ!=False and feature:
+				print 'generating file preview'
+				d=threads.deferToThread(self.makeFTPreview,files[0])
+				d.addCallback(self._nextFTUploadEvent,sid,'image/png')
+			else:
+				self._nextFTUploadEvent(None,sid,None)
 
 	def _nextFTUploadEvent(self,preview,sid,previewType=False):
 		event=self.ftEvents[sid]
 		jid=event.jid
-		file=event.queue[event.queue.keys()[0]].name
-		description=event.queue[event.queue.keys()[0]].description
-		del event.queue[event.queue.keys()[0]]
+		file=event.queue[event.queue.keys()[0]]
+		description=event.queue[file.name].description
+		del event.queue[file.name]
 
 
 		if preview:
@@ -543,11 +578,15 @@ class events:
 
 		widget=event.getWidgets()[0]
 		#widget.setText(text)
-		event.setCurrentFile(file)
+		event.setCurrentFile(file.name)
 		event.setQueue(event.queue)
 		mainWindow=self.main
 		file=unicode(file)
-		sid2=self.main.client.sendFile(jid, basename(file), file, description,preview=preview,previewType=previewType)
+		if file.sid:
+			sid2=file.sid
+			self.main.client.sendFile(jid, file.name, file.path, description,preview=preview,previewType=previewType,sid=sid2)
+		else:
+			sid2=self.main.client.sendFile(jid, file.name, file.path, description,preview=preview,previewType=previewType)
 		event.setFileSize(int(self.main.client.ft[sid2].size))
 		event.SID=sid2
 		self.ftEvents[sid2]=event
@@ -557,5 +596,5 @@ class events:
 
 		tab,index=self.main.chat.findTab(jid,typ=['chat'])
 		if tab:
-			tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Sending file"))+" "+unicode(basename(file)),self.main.now()))
+			tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Sending file"))+" "+unicode(basename(file.name)),self.main.now()))
 			tab.chat.lastMessageFrom=""
