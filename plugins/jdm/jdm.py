@@ -592,8 +592,8 @@ class Plugin(plugins.PluginBase):
 				text="private@disk.jabbim.cz"
 			elif self.typ=="album":
 				text="album@disk.jabbim.cz"
-			filename=unicode(self.main.client.ft[sid].file)
-			if error == None and self.main.client.ft[sid].tojid.find(text)!=-1 and not filename in self.filesToOpen:
+			filename=unicode(self.main.client.ft[sid].filepath)
+			if error == None and self.main.client.ft[sid].tojid.full().find(text)!=-1 and not filename in self.filesToOpen:
 				self.update=True
 				self.call(typ=self.typ)
 			if filename in self.filesToOpen:
@@ -608,6 +608,8 @@ class Plugin(plugins.PluginBase):
 					else:
 						print "open linux",[filename]
 						os.system(u"xdg-open \"%s\"" % filename.encode('utf8'))
+					if self.main.events.ftEvents.has_key(sid):
+						self.main.events.ftEvents[sid].reject()
 			
 
 	def clicked(self,item,old):
