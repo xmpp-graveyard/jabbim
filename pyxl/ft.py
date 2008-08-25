@@ -51,6 +51,7 @@ class FTInit:
 			return el,  outfiles
 		iq = IQ(self.client.xmlstream, 'set')
 		self.client.disp(iq['id'])
+		iq['to'] = tojid
 		iq.addElement('tree',  'http://dev.jabbim.cz/jabbim/treeft')
 		outfiles = {}#{name:(abs. path, SID),  ..}
 		for k, v in files.iteritems():
