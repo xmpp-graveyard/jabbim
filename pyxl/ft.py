@@ -598,7 +598,7 @@ class Jingle:
 			props['type'] = 'request'
 			trans = jingle.FTTransport()
 			trans.fromString('urn:xmpp:tmp:jingle:transports:ibb')
-			content = Content('initiator',  'file offer',  'urn:xmpp:tmp:jingle:apps:file-transfer', trans ,  props)
+			content = jingle.Content('initiator',  'file offer',  'urn:xmpp:tmp:jingle:apps:file-transfer', trans ,  props)
 			self.jingleSession.contentReplace(content)
 			self.transportReady = True
 			return True
