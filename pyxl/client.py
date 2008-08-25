@@ -192,7 +192,7 @@ class Client(derived):
 		self.message = message.MessageInit(self)
 		self.FT = ft.FTInit(self)
 		self.jingle = jingle.JingleInit(self)
-		self.archive = archive.ArchiveInit(self)
+#		self.archive = archive.ArchiveInit(self)
 		
 		self.proxy = None
 	
