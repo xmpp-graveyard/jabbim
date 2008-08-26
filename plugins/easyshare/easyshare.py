@@ -330,7 +330,7 @@ class Plugin(plugins.PluginBase):
 			print addr
 			if addr in self.config['dirs']:
 				if (fr in self.config[addr+'-sharejids']) or frm == self.main.client.jid.userhost():
-					fajly[os.path.basename(f.replace(addr, self.config[addr+'-sharepath']))]=f.replace(addr, self.config[addr+'-sharepath'])
+					fajly[os.path.basename(f.replace(addr, self.config[addr+'-sharepath']))]=f.replace(addr, self.config[addr+'-sharepath']) # strip first /
 					desc[os.path.basename(f.replace(addr, self.config[addr+'-sharepath']))] = '%s >> %s'%('EasyShare',fr)
 		print fajly
 		print desc

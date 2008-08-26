@@ -450,7 +450,9 @@ class events:
 		#print jid,previewType,preview
 		print "_addFTUploadEvent"
 		filesQueue={}
+		preview=None
 		if data:
+			print "got data",data,type(data)
 			if isinstance(data,QtGui.QImage):
 				bytes=QtCore.QByteArray()
 				buf=QtCore.QBuffer(bytes)
@@ -458,16 +460,14 @@ class events:
 				data.save(buf, "PNG")
 				preview=base64.encodestring(str(bytes))
 			else:
-				files=data
+				files=data[1]
 				text=""
 				for name,value in files.iteritems():
-					if files.index(name)!=0:
-						filesQueue[name]=fileClass(name,value[0],descriptions[name])
-						filesQueue[name].sid=value[1]
+					filesQueue[name]=fileClass(name,value[0],descriptions[name])
+					filesQueue[name].sid=value[1]
 		if len(filesQueue)==0:
 			for name,value in files.iteritems():
-				if files.index(name)!=0:
-					filesQueue[name]=fileClass(name,value[0],descriptions[name])
+				filesQueue[name]=fileClass(name,value[0],descriptions[name])
 
 		if jid.find("/") == -1:
 			res = self.main.client.roster['users'][jid].getHighestResource()
@@ -487,7 +487,7 @@ class events:
 
 		k=filesQueue.keys()[0]
 		file=filesQueue[k]
-
+		del event.queue[file.name]
 		event.setCurrentFile(file.name)
 
 		if res==None:
@@ -509,7 +509,7 @@ class events:
 		self.ftEvents[sid]=event
 		self.addEvent(event)
 		mainWindow=self.main
-		mainWindow.tray.showMessage(unicode(mainWindow.tr("Sending file "))+basename(file)+mainWindow.tr(" to ")+unicode(jid), mainWindow.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
+		mainWindow.tray.showMessage(unicode(mainWindow.tr("Sending file "))+basename(file.name)+mainWindow.tr(" to ")+unicode(jid), mainWindow.tr("You can see progress of sending in Events tab in main window."), QtGui.QSystemTrayIcon.Information, 4000)
 
 		if tab:
 			tab.chat.textEditWrite(self.main.webkitThemeFactory.genChatStatus(unicode(mainWindow.tr("Sending file"))+" "+basename(file.name),self.main.now()))
@@ -581,7 +581,6 @@ class events:
 		event.setCurrentFile(file.name)
 		event.setQueue(event.queue)
 		mainWindow=self.main
-		file=unicode(file)
 		if file.sid:
 			sid2=file.sid
 			self.main.client.sendFile(jid, file.name, file.path, description,preview=preview,previewType=previewType,sid=sid2)

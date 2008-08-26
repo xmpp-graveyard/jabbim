@@ -70,7 +70,7 @@ class FTInit:
 		outfiles = {}#{name:SID,  ..}
 		size = 0
 		for item in el.tree.elements():
-			outfiles[item['sid']] = unicode(item1)
+			outfiles[item['sid']] = unicode(item)
 			size += int(item['size'])
 		self.dispatcher.publishEvent('on_receivedFiles', el['id'], el['from'], outfiles,  size)
 	

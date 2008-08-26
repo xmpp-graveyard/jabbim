@@ -1631,12 +1631,13 @@ class clientClass(pyxl.client.Client):
 					#w.chat.setTooltip(item,jid.full())
 
 	def on_receivedFiles(self, id,  frm,  files, size):
+		mainWindow=self.main
 		jid=self.main.getJid(frm)
 		event=self.main.events.addBooleanEvent('fileDownload','filetransfers')
 		event.setAcceptHandler(self._acceptFTTree,[id,frm,files])
 		event.setRejectHandler(self._declineFTTree,[id,frm])
 		widget=event.getWidgets()[0]
-		user=self.main.ui.roster.getNameByJID(self.ft[sid].fromjid.userhost())
+		user=self.main.ui.roster.getNameByJID(jid.userhost())
 		widget.setText(unicode(user)+" "+unicode(mainWindow.tr("is sending you "))+str(len(files))+" "+unicode(mainWindow.tr("files"))+" ("+str(self.toNormalSize(int(size)))+")")
 		widget.setAcceptText(unicode(mainWindow.tr("Accept")))
 		widget.setRejectText(unicode(mainWindow.tr("Reject")))
@@ -1666,7 +1667,7 @@ class clientClass(pyxl.client.Client):
 			path=unicode(path)
 			for sid,file in files.iteritems():
 				self.main.allowedSids[unicode(sid)]=path+"/"+file
-
+			print "received files",self.main.allowedSids
 ##		tab,index=self.main.chat.findTab(unicode(self.ft[sid].fromjid),typ=['chat'])
 ##		if tab:
 ##			tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById('ft"+unicode(sid)+"');")
