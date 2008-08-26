@@ -333,12 +333,25 @@ class Plugin(plugins.PluginBase):
 					fajly[os.path.basename(f.replace(addr, self.config[addr+'-sharepath']))]=f.replace(addr, self.config[addr+'-sharepath']) # strip first /
 					desc[os.path.basename(f.replace(addr, self.config[addr+'-sharepath']))] = '%s >> %s'%('EasyShare',fr)
 		print fajly
+		fajly2 = {}
+		for rel,  abs in fajly.iteritems():
+			if os.path.isdir(abs):
+				del desc[rel]
+				for root, dirs, files in os.walk(abs):
+#					print root, dirs, files
+					dir = root.replace(abs, rel)
+					for file in files:
+						fajly2[dir+'/'+file] =root+'/'+file
+						desc[dir+'/'+file] = '%s >> %s'%('EasyShare',fr)
+			else:
+				fajly2[rel] = abs
 		print desc
-		if len(fajly)>0:
-			self.main.events.addFTUploadEvent(frm, fajly, desc,forceTree=True)
+		print fajly2
+		if len(fajly2)>0:
+			self.main.events.addFTUploadEvent(frm, fajly2, desc,forceTree=True)
 			return (True, )
 		else:
-			return
+			return(False, )
 		
 	def on_configChanged(self):
 		for addr in self.config['dirs']:
