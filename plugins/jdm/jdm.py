@@ -592,6 +592,8 @@ class Plugin(plugins.PluginBase):
 				text="private@disk.jabbim.cz"
 			elif self.typ=="album":
 				text="album@disk.jabbim.cz"
+			else:
+				return
 			filename=unicode(self.main.client.ft[sid].filepath)
 			if error == None and self.main.client.ft[sid].tojid.full().find(text)!=-1 and not filename in self.filesToOpen:
 				self.update=True
