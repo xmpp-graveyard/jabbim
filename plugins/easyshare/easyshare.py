@@ -361,7 +361,7 @@ class Plugin(plugins.PluginBase):
 		self.menu.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
 		for addr in self.config['dirs']:
 			action = self.menu.addAction(addr)
-			action.setData(QtCore.QVariant([unicode(contact.jid), unicode(addr)]))
+			action.setData(QtCore.QVariant(QtCore.QStringList([unicode(contact.jid), unicode(addr)])))
 			action.setObjectName(addr+"share")
 			action.setCheckable(True)
 			if unicode(contact.jid) in self.config[addr+'-sharejids']:

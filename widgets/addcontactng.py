@@ -34,12 +34,28 @@ class addContactDialog(QtGui.QDialog):
 		d.addCallback(self._gotSearchForm)
 		self.ui.treeWidget.hide()
 		QtCore.QObject.connect(self.ui.search,QtCore.SIGNAL("clicked()"),self.search)
+		QtCore.QObject.connect(self.ui.add,QtCore.SIGNAL("clicked()"),self.add)
 		self.group=QtGui.QButtonGroup(self)
 		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
+		QtCore.QObject.connect(self.ui.lineEdit,QtCore.SIGNAL("textEdited ( const QString & )"),self.textChanged)
 
 		self.ui.treeWidget.setDragEnabled(True)
 		self.ui.treeWidget.startDrag=self.startDrag
 		self.ui.empty.hide()
+		self.ui.add.hide()
+
+	def add(self):
+		jid=unicode(self.ui.lineEdit.text())
+   		dialog=addcontact.addContactDialog(self.main(),self,jid=jid,group="",name=jid.split('@')[0])
+		if dialog.exec_()==1:
+			self.done(1)
+
+	def textChanged(self,text):
+		t=unicode(text)
+		if self.main().getJid(t):
+			self.ui.add.show()
+		else:
+			self.ui.add.hide()
 
 	def startDrag(self,actions):
 		# start dragging selected contact
