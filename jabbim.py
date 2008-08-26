@@ -1664,8 +1664,13 @@ class clientClass(pyxl.client.Client):
 		mainWindow=self.main
 		path = QtGui.QFileDialog.getExistingDirectory(self.main,mainWindow.tr("Save Files"))
 		if path and len(path)!=0:
+			paths=[]
 			path=unicode(path)
 			for sid,file in files.iteritems():
+				if not path+"/"+dirname(file) in paths:
+					paths.append(path+"/"+dirname(file))
+					if not os.path.isdir(path+"/"+dirname(file)):
+						os.makedirs(path+"/"+dirname(file))
 				self.main.allowedSids[unicode(sid)]=path+"/"+file
 			print "received files",self.main.allowedSids
 ##		tab,index=self.main.chat.findTab(unicode(self.ft[sid].fromjid),typ=['chat'])

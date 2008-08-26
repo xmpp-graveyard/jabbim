@@ -353,6 +353,7 @@ class Client(derived):
 		print 'DNS'
 		self.connections = []
 		resp = results[0][1]
+		print results
 		print resp
 		if len(resp[0]) ==0:
 			self._dnsLookupErr(resp)
@@ -362,12 +363,11 @@ class Client(derived):
 			print (unicode(r.payload.target), int(r.payload.port))
 		
 		txt =results[1][1]
-
 		for r in txt[0]:
 			parts= r.payload.data[0].split('=')
 			if parts[0] == '_xmpp-client-xbosh':
 				self.connections.append((parts[1], ))
-		
+
 		self.doConnect()
 #		self._connect(unicode(r[4][0]), int(r[4][1]))
 	
