@@ -205,14 +205,19 @@ class FTInit:
 	def socksSend(self,  sid):
 			frm = self.client.ft[sid].tojid.full()
 			if self.socks5Srv == None:
-				try:
-					factory = socks5.SOCKSv5Factory(self)
-					self.socks5Srv = self.client.reactor.listenTCP(int(self.socks5Port), factory)
-					self.socks5IP = []
-					self.socks5IP.append(('127.0.0.1', '33333'))
-	
-				except:
-					print 'unable to connect to port'
+				port = int(self.socks5Port)
+				connected = False
+				while not connected:
+					try:
+						factory = socks5.SOCKSv5Factory(self)
+						self.socks5Srv = self.client.reactor.listenTCP(port, factory)
+						self.socks5IP = []
+						self.socks5IP.append(('127.0.0.1', str(port)))
+						connected = True
+					except:
+						print 'unable to connect to port:',  port
+						port +=1
+				self.socks5Port = str(port)
 			d = self._checkProxies()
 			def _doSend(self, client):
 				iq = IQ(client.client.xmlstream, 'set')

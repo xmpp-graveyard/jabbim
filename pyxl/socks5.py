@@ -655,7 +655,7 @@ class ClientFactory (protocol.ClientFactory):
 				self.otherFactory.clientConnectionFailed (connector, rmap)
 				self.stopFactory()
 				self.xmpp.ft[self.xmpp_sid].connectFailure()
-				self.xmpp.ft[self.xmpp_sid].error = "Can't connect."
+#				self.xmpp.ft[self.xmpp_sid].error = "Can't connect."
 			else:
 				self.otherFactory.clientConnectionFailed (connector, rmap)
 		except:
