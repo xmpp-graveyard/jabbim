@@ -25,6 +25,52 @@ from twisted.python import log
 from widgets.configlib import jidListWidget
 import os.path
 from twisted.python.filepath import FilePath
+from twisted.enterprise import adbapi, util as dbutil
+from twisted.internet import  reactor
+from twisted.enterprise import util
+s = util.safe
+
+def walk(top, topdown=True, onerror=None):
+	from os.path import join, isdir, islink
+	from os import listdir, error
+	# We may not have read permission for top, in which case we can't
+	# get a list of the files the directory contains.  os.path.walk
+	# always suppressed the exception then, rather than blow up for a
+	# minor reason when (say) a thousand readable directories are still
+	# left to visit.  That logic is copied here.
+	try:
+		# Note that listdir and error are globals in this module due
+		# to earlier import-*.
+		names = listdir(top)
+	except error, err:
+		if onerror is not None:
+			onerror(err)
+		return
+
+	dirs, nondirs = [], []
+	for name in names:
+		try:
+			if isdir(join(top, name)):
+				dirs.append(name)
+			else:
+				nondirs.append(name)
+		except:
+			continue
+
+	if topdown:
+		yield top, dirs, nondirs
+	for name in dirs:
+		try:
+			path = join(top, name)
+		except:
+			continue
+			
+		if not islink(path):
+			for x in walk(path, topdown, onerror):
+				yield x
+	if not topdown:
+		yield top, dirs, nondirs
+
 
 class ResendFile(Stage):
 	def exec_(self):
@@ -246,20 +292,63 @@ class Plugin(plugins.PluginBase):
 		self.description = self.tr('Easy filesharing')
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = self.tr('EasyShare')
-		self.version = '0.02'
+		self.version = '0.029'
 		self.category = ['utils']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.plugindir = plugindir
 		self.configDialog=config(self)
+		self.searches = []
+		
 
 		if main:
 			self.loadConfig()
 			self.registerHandler('on_authd',self.on_authd)
 			if self.main.client.xmlstream:
 				self.on_authd()
+			self.db = adbapi.ConnectionPool('sqlite3', homedir+'/search.db', cp_min=1, cp_max=1)
+			self.initDb()
 		else:
 			self.loadConfig(homedir)
 		
+	
+	def initDb(self):
+		def _table_created(res):
+			print 'search table created'
+		self.db.runQuery('create table files (path text, share text, hash text);').addCallback(_table_created)
+	
+	def indexShares(self): #manual use only
+		for addr in self.config['dirs']:
+			reactor.callInThread(self.indexDir, self.config[addr+'-sharepath'],  addr)
+		
+	
+	def getHash(self,  path):
+		try:
+			fp = open(path, 'rb')
+		except:
+			return None
+		size = 1024*1024
+		sh = sha1('')
+		rd = fp.read(size)
+		while len(rd)>0:
+			sh.update(rd)
+			rd = fp.read(size)
+		fp.close()
+		return sh.hexdigest()
+	
+	def indexDir(self,  directory,  share):
+		def _chyba(error):
+			print 'CHYBA!'
+#			print error
+			print error.filename
+
+		for root, dirs, fajly in walk(directory,  onerror = _chyba):
+			for file in fajly:
+				hash = self.getHash(root+'/'+file)
+				dir = root.replace(directory, share+'/')
+				if hash == None:
+					continue
+				self.db.runOperation('insert into files (path,share,hash) values("%s","%s","%s")'%(s(dir+'/'+file), s(share), hash))
+
 	
 	def addDir(self, dir):
 		self.config['dirs'].append(dir)
@@ -275,8 +364,9 @@ class Plugin(plugins.PluginBase):
 		self.main.client.rpc.registerHandler('getShares', self.getShares)
 		self.main.client.rpc.registerHandler('listShare', self.listShare)
 		self.main.client.rpc.registerHandler('getFiles', self.getFiles)
+		self.main.client.rpc.registerHandler('searchFiles', self.searchFiles)
 
-	def getShares(self, frm, par):
+	def getShares(self, frm, par = None):
 		print jidT
 		print sys.modules
 		frm = jidT.JID(frm).userhost()
@@ -352,6 +442,32 @@ class Plugin(plugins.PluginBase):
 			return (True, )
 		else:
 			return(False, )
+	
+	def searchFiles(self,  frm,  par):
+		def _results(results):
+			res = [] # [(jid, path, hash), ..]
+			for result in results:
+				if result[0] == True:
+					res.append(self.main.client.jid.full(), result[1][0],  result[1][1])
+			print 'search results>> ',  res
+			if len (res)>0:
+				return (res,  )
+			else:
+				return (False, )
+
+		shares = self.getShares(frm)[0]
+		sid = par[1]
+		string = par[0]
+		if len(shares=0) or sid in self.searches:
+			return (False, )
+		else:
+			dl = []
+			self.searches.append(sid)
+			for share in shares:
+				d = self.db.runQuery('select path, hash from files where share="%s" and path like "%%%s%%"'%(s(share),  s(string)))
+				dl.append(d)
+			return defer.deferredList(dl).addCallback(_results)
+			
 		
 	def on_configChanged(self):
 		for addr in self.config['dirs']:
@@ -367,6 +483,7 @@ class Plugin(plugins.PluginBase):
 		self.main.client.rpc.unregisterHandler('getShares')
 		self.main.client.rpc.unregisterHandler('listShare')
 		self.main.client.rpc.unregisterHandler('getFiles')
+		self.main.client.rpc.unregisterHandler('searchFiles')
 
 	
 	def buildContactMenu(self, menu, contact):
