@@ -465,6 +465,11 @@ class events:
 				for name,value in files.iteritems():
 					filesQueue[name]=fileClass(name,value[0],descriptions[name])
 					filesQueue[name].sid=value[1]
+		if isinstance(files,list):
+			f={}
+			for file in files:
+				f[file]=[file]
+			files=f
 		if len(filesQueue)==0:
 			for name,value in files.iteritems():
 				filesQueue[name]=fileClass(name,value[0],descriptions[name])
@@ -479,7 +484,7 @@ class events:
 		event=FTUploadEvent(self)
 		event.setType("ftUpload")
 		event.setCategory("filetransfers")
-		event.setQueue(filesQueue)
+		
 		event.jid=jid+"/"+res
 		widget=FTUploadWidget(event)
 		widget=self.addWidget(widget,"filetransfers")
@@ -487,8 +492,10 @@ class events:
 
 		k=filesQueue.keys()[0]
 		file=filesQueue[k]
-		del event.queue[file.name]
 		event.setCurrentFile(file.name)
+		event.setQueue(filesQueue)
+		del event.queue[file.name]
+		
 
 		if res==None:
 			if file.sid:

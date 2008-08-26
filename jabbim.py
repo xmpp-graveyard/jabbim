@@ -1704,7 +1704,7 @@ class clientClass(pyxl.client.Client):
 			filename = self.main.config['autoDownloadPath']+'/'+self.ft[sid].fileprops['name']
 			autoDownload=True
 		if autoDownload:
-			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid.full()),basename(self.ft[sid].fileprops['name']),"",sid,self.ft[sid].fileprops['size'])
+			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid.full()),filename,"",sid,self.ft[sid].fileprops['size'])
 			self.receiveFile(sid, id,  filename)
 		else:
 			if unicode(self.ft[sid].fromjid).find("rpc@jabbim.cz")==-1:

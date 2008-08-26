@@ -102,6 +102,7 @@ class FTUploadWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.reject,QtCore.SIGNAL("clicked()"),self.reject)
 		#self.ui.accept.hide()
 		self.setQueue(self.event.queue)
+		self.uploaded=0
 
 		#self.transfered=0
 
@@ -127,13 +128,16 @@ class FTUploadWidget(QtGui.QWidget):
 		self.ui.filename.setText(self.metrics.elidedText(text,QtCore.Qt.ElideMiddle, self.width()-10-self.ui.toolButton.width()))
 
 	def setQueue(self,queue):
+		if len(self.queue)==0:
+			self.queue=queue
+			text=""
+			for file in self.queue.keys():
+				text+=unicode(self.metrics.elidedText(basename(file),QtCore.Qt.ElideMiddle, self.width()-10))+'<br/>'
+			self.ui.more.setText(text)
 		self.queue=queue
-		text=""
-		for file in self.queue.keys():
-			text+=unicode(self.metrics.elidedText(basename(file),QtCore.Qt.ElideMiddle, self.width()-10))+'<br/>'
-		self.ui.more.setText(text)
 
 	def setCurrentFile(self,file):
+		self.uploaded+=1
 		self.setText(basename(file))
 
 	def setFileSize(self,size):
