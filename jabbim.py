@@ -1686,10 +1686,11 @@ class clientClass(pyxl.client.Client):
 		mainWindow=self.main
 		autoDownload=False
 		if unicode(sid) in self.main.allowedSids.keys():
-			if unicode(self.ft[sid].fromjid).find("rpc@jabbim.cz")!=-1:
+			if unicode(self.ft[sid].fromjid).find("rpc@jabbim.cz")==-1:
 				filename = self.main.allowedSids[unicode(sid)]
 			else:
-				filename = self.main.realHomeDir+'/'+self.ft[sid].fileprops['name']
+				return
+				#filename = self.main.realHomeDir+'/'+self.ft[sid].fileprops['name']
 			autoDownload=True
 		elif self.main.allowedJids.has_key(self.ft[sid].fromjid.userhost()+"/"+self.ft[sid].fileprops['name']):
 			filename=self.main.allowedJids[self.main.getJid(unicode(self.ft[sid].fromjid)).userhost()+"/"+self.ft[sid].fileprops['name']]+"/"+self.ft[sid].fileprops['name']
