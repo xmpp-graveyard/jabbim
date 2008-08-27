@@ -509,7 +509,7 @@ class events:
 				sid=file.sid
 				self.main.client.sendFile(jid+'/'+res, file.name, file.path,descriptions[file.name],preview=preview,previewType='image/png',sid=sid)
 			else:
-				sid=self.main.client.sendFile(jid+'/'+res,file.name, basename(file.path),descriptions[file.name],preview=preview,previewType='image/png')
+				sid=self.main.client.sendFile(jid+'/'+res,basename(file.name), file.path,descriptions[file.name],preview=preview,previewType='image/png')
 			tab,index=self.main.chat.findTab(jid+'/'+res,typ=['chat'])
 		event.SID=sid
 		event.setFileSize(int(self.main.client.ft[sid].size))
@@ -592,7 +592,7 @@ class events:
 			sid2=file.sid
 			self.main.client.sendFile(jid, file.name, file.path, description,preview=preview,previewType=previewType,sid=sid2)
 		else:
-			sid2=self.main.client.sendFile(jid, file.name, basename(file.path), description,preview=preview,previewType=previewType)
+			sid2=self.main.client.sendFile(jid, basename(file.name), file.path, description,preview=preview,previewType=previewType)
 		event.setFileSize(int(self.main.client.ft[sid2].size))
 		event.SID=sid2
 		self.ftEvents[sid2]=event

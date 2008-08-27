@@ -13,6 +13,8 @@ try:
 except:
 	log.msg('Please upgrade to python2.5')
 	from md5 import new as md5
+if sys.platform=="win32":
+	import _winreg
 
 class config:
 	def __init__(self,main):
@@ -36,13 +38,13 @@ class Plugin(plugins.PluginBase):
 			self.loadConfig()
 			self.window = self.loadWindow("%s/jdm_ui.py" % self.pluginDir,self.main)
 			self.window.setWindowIcon(self.main.windowIcon())
-			self.window.ui.list.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-			self.window.ui.list.startDrag=self.startDrag
-			self.window.ui.list.setAcceptDrops(True)
-			self.window.ui.list.dropEvent = self.dropEvent
-			self.window.ui.list.dragMoveEvent = self.dragMoveEvent
-			self.window.ui.list.dragEnterEvent = self.dragEnterEvent
-			self.window.ui.line_jid.setText(self.main.client.jid.userhost())
+##			self.window.ui.list.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+##			self.window.ui.list.startDrag=self.startDrag
+##			self.window.ui.list.setAcceptDrops(True)
+##			self.window.ui.list.dropEvent = self.dropEvent
+##			self.window.ui.list.dragMoveEvent = self.dragMoveEvent
+##			self.window.ui.list.dragEnterEvent = self.dragEnterEvent
+##			self.window.ui.line_jid.setText(self.main.client.jid.userhost())
 			self.jid = self.main.client.jid.userhost()
 			self.typ = "public"
 			self.esPath=""
@@ -52,28 +54,40 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.buttonHome.setIcon(QtGui.QIcon("%s/home.png" % self.pluginDir))
 			self.window.ui.publicButton.setIcon(QtGui.QIcon("%s/jdisk-public-24.png" % self.pluginDir))
 			self.window.ui.privateButton.setIcon(QtGui.QIcon("%s/jdisk-private-24.png" % self.pluginDir))
-			self.window.ui.albumButton.setIcon(QtGui.QIcon("%s/jalbum-32.png" % self.pluginDir))
-			self.window.ui.easyshareButton.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
+			self.window.ui.album.setIcon(QtGui.QIcon("%s/jalbum-32.png" % self.pluginDir))
+			self.window.ui.easyshare.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
 			self.window.ui.showMiniRoster.setIcon(self.main.ui.tabWidget.tabIcon(0))
 			self.group=QtGui.QButtonGroup(self.window)
 			self.update=False
 
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
-			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call)
-			QtCore.QObject.connect(self.window.ui.esUp,QtCore.SIGNAL("clicked()"),self.esUp)
-			QtCore.QObject.connect(self.window.ui.esPath,QtCore.SIGNAL("returnPressed()"),self.esPathFinished)
-			QtCore.QObject.connect(self.window.ui.list, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.clicked)
-			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.fileMenu)
+##			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call)
+##			QtCore.QObject.connect(self.window.ui.esUp,QtCore.SIGNAL("clicked()"),self.esUp)
+##			QtCore.QObject.connect(self.window.ui.esPath,QtCore.SIGNAL("returnPressed()"),self.esPathFinished)
+##			QtCore.QObject.connect(self.window.ui.list, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.clicked)
+##			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.fileMenu)
 			QtCore.QObject.connect(self.window.ui.buttonDownload,QtCore.SIGNAL("clicked()"),self.downloadCurrentFile)
 			QtCore.QObject.connect(self.window.ui.buttonDelete,QtCore.SIGNAL("clicked()"),self.removeCurrentFile)
 			QtCore.QObject.connect(self.window.ui.buttonUpload,QtCore.SIGNAL("clicked()"),self.sendFile)
 			QtCore.QObject.connect(self.window.ui.buttonHome,QtCore.SIGNAL("clicked()"),self.home)
 			QtCore.QObject.connect(self.window.ui.publicButton,QtCore.SIGNAL("clicked()"),self.public)
 			QtCore.QObject.connect(self.window.ui.privateButton,QtCore.SIGNAL("clicked()"),self.private)
-			QtCore.QObject.connect(self.window.ui.albumButton,QtCore.SIGNAL("clicked()"),self.album)
-			QtCore.QObject.connect(self.window.ui.easyshareButton,QtCore.SIGNAL("clicked()"),self.easyshare)
+			QtCore.QObject.connect(self.window.ui.album,QtCore.SIGNAL("clicked()"),self.album)
+			QtCore.QObject.connect(self.window.ui.easyshare,QtCore.SIGNAL("clicked()"),self.easyshare)
 			QtCore.QObject.connect(self.window.ui.showMiniRoster,QtCore.SIGNAL("clicked()"),self.showMiniRoster)
-			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("itemDoubleClicked ( QListWidgetItem * )"),self.doubleClicked)
+			QtCore.QObject.connect(self.window.ui.desktop,QtCore.SIGNAL("clicked()"),self.leftDesktop)
+			QtCore.QObject.connect(self.window.ui.computer,QtCore.SIGNAL("clicked()"),self.leftComputer)
+##			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("itemDoubleClicked ( QListWidgetItem * )"),self.doubleClicked)
+
+			self.model=QtGui.QDirModel()
+			self.window.ui.left.setModel(self.model)
+			self.window.ui.left.setDragEnabled(True)
+			self.window.ui.left.startDrag=self.leftStartDrag
+			
+			self.window.ui.right.dropMimeData=self.rightDropMimeData
+			self.window.ui.right.mimeTypes=self.mimeTypes
+			self.window.ui.right.setDragEnabled(True)
+			self.window.ui.right.setAcceptDrops(True)
 
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
@@ -88,10 +102,65 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.progress=QtGui.QProgressBar(self.window.ui.statusbar)
 			self.window.ui.statusbar.addWidget(self.window.ui.progress,1)
 			self.window.ui.progress.hide()
+			self.leftDesktop()
 			self.stopDownload=False
 		else:
 			self.loadConfig(homedir)
-	
+
+	def mimeTypes(self):
+		# set mimetypes, which we accept
+		return QtCore.QStringList(["text/plain","text/uri-list"])
+
+	def rightDropMimeData(self,parent,index,data,action):
+		new=[]
+		if (data.hasUrls()):
+			urlList=data.urls()
+			if len(urlList)>0:
+				for url in urlList:
+					f=unicode(url.toLocalFile())
+					if len(f)!=0:
+						new.append(f)
+		else:
+			new=[unicode(data.text())]
+		file=new
+		if self.typ=="public":
+			self.main.showFiletransferDialog(file, 'public@disk.jabbim.cz')
+		elif self.typ=="private":
+			self.main.showFiletransferDialog(file, 'private@disk.jabbim.cz')
+		elif self.typ=="album":
+			self.main.showFiletransferDialog(file, 'album@disk.jabbim.cz')
+		return True
+
+	def leftStartDrag(self,actions):
+		# start dragging selected contact
+		path=unicode(self.model.fileInfo(self.window.ui.left.currentIndex()).absoluteFilePath())
+		print "drag",path
+		if os.path.isdir(path):
+			#TODO easyshare
+			return
+		else:
+			self.window.ui.left.drag=QtGui.QDrag(self.window.ui.left)
+			mimeData=QtCore.QMimeData()
+			mimeData.setText(path)
+			self.window.ui.left.drag.setMimeData(mimeData)
+			self.window.ui.left.action=self.window.ui.left.drag.start(QtCore.Qt.CopyAction)
+
+	def leftDesktop(self):
+##		HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders\Desktop
+		folder=None
+		if sys.platform=="win32":
+			hkcu = _winreg.ConnectRegistry(None, _winreg.HKEY_CURRENT_USER)
+			folders=_winreg.OpenKey(hkcu, r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders')
+			try:
+				(folder, typ) = _winreg.QueryValueEx(folders, "Desktop")
+			except WindowsError:
+				folder=None
+		if folder:
+			self.window.ui.left.setRootIndex(self.model.index(unicode(folder)))
+
+	def leftComputer(self):
+		self.window.ui.left.setRootIndex(self.model.index("/"))
+
 	def esPathFinished(self):
 		self.esPath=unicode(self.window.ui.esPath.text())
 		if not self.esPath.endswith("/") and self.esPath!="":
@@ -123,7 +192,7 @@ class Plugin(plugins.PluginBase):
 			self.typ='easyshare'
 			self.esPath=""
 			#self.window.ui.esPath.setText(self.esPath)
-			self.window.ui.esWidget.show()
+##			self.window.ui.esWidget.show()
 	
 	def esGotShares(self,data):
 		data=data[0][0]
@@ -176,15 +245,15 @@ class Plugin(plugins.PluginBase):
 		self.config.write()
 
 	def public(self):
-		self.window.ui.esWidget.hide()
+##		self.window.ui.esWidget.hide()
 		self.call(typ='public')
 
 	def private(self):
-		self.window.ui.esWidget.hide()
+##		self.window.ui.esWidget.hide()
 		self.call(typ='private')
 
 	def album(self):
-		self.window.ui.esWidget.hide()
+##		self.window.ui.esWidget.hide()
 		self.call(typ='album')
 
 	def home(self):
@@ -398,47 +467,50 @@ class Plugin(plugins.PluginBase):
 		return str(round(original/1000000.0,2))+" MB" # MB
 
 	def updateView(self, data):
+		print "updateView",data,self.update
 		if not self.update:
-			self.window.ui.list.clear()
-		self.window.ui.esPath.setText(self.esPath)
+			self.window.ui.right.clear()
+##		self.window.ui.esPath.setText(self.esPath)
 		data=data[0][0]
 		self.thumbs={}
 		for file in data:
 			if self.update:
-				items=self.window.ui.list.findItems(file[0],QtCore.Qt.MatchExactly)
+				items=self.window.ui.right.findItems(file[0],QtCore.Qt.MatchExactly)
 				if len(items)!=0:
 					continue
 			name=file[0]
 			size=file[1]
-			item=QtGui.QListWidgetItem(unicode(name))
-			item.setData(32,QtCore.QVariant(QtCore.QStringList([unicode(size)])))
+			item=QtGui.QTreeWidgetItem(self.window.ui.right)
+			print unicode(name)
+			item.setText(0,unicode(name))
+			item.setData(0,32,QtCore.QVariant(QtCore.QStringList([unicode(size)])))
 			if int(size)==-1:
-				item.setIcon(QtGui.QIcon(self.pluginDir+"/folder.png"))
+				item.setIcon(0,QtGui.QIcon(self.pluginDir+"/folder.png"))
 			else:
 				ext=name.split('.')[-1]
 				if ext in ["exe","run","sh","bin"]: 
-					item.setIcon(QtGui.QIcon(self.pluginDir+"/application-x-executable.png"))
+					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/application-x-executable.png"))
 				elif ext in ["svg","jpg","png","gif","tif","tiff","bmp","ico","xcf"]: 
-					item.setIcon(QtGui.QIcon(self.pluginDir+"/image-x-generic.png"))
+					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/image-x-generic.png"))
 				elif ext in ["wav","mp3","ogg","mp4","flac"]:
-					item.setIcon(QtGui.QIcon(self.pluginDir+"/audio-x-generic.png"))
+					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/audio-x-generic.png"))
 				elif ext in ["rar","zip","gz","bz","tgz","deb","rpm","tar","pkg","7z","ace"]:
-					item.setIcon(QtGui.QIcon(self.pluginDir+"/package-x-generic.png"))
+					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/package-x-generic.png"))
 				elif ext in ["htm","html","xml"]:
-					item.setIcon(QtGui.QIcon(self.pluginDir+"/text-html.png"))
+					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/text-html.png"))
 				elif ext in ["txt","c","py","log"]:
-					item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic.png"))
+					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/text-x-generic.png"))
 				elif ext in ["mov","avi","mpg","swf","dv"]:
-					item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic.png"))
+					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/text-x-generic.png"))
 				elif ext in ["odt","doc","pdf","docx"]:
-					item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-document.png"))
+					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/x-office-document.png"))
 				elif ext in ["ods","xls","cvs"]:
-					item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-spreadsheet.png"))
+					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/x-office-spreadsheet.png"))
 				elif ext in ["pts","ppt","odp"]:
-					item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-presentation.png"))
+					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/x-office-presentation.png"))
 				else:
-					item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic-template.png"));  #preventivne pokud se netrefime
-			self.window.ui.list.addItem(item)
+					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/text-x-generic-template.png"));  #preventivne pokud se netrefime
+			#self.window.ui.right.addItem(item)
 			if self.typ=="album":
 				self.thumbs[name]=item
 		data=self.thumbs.keys()
@@ -458,14 +530,14 @@ class Plugin(plugins.PluginBase):
 			image=base64.decodestring(str(thumb[0]))
 			pixmap=QtGui.QPixmap()
 			pixmap.loadFromData(image)
-			self.thumbs[data[0]].setIcon(QtGui.QIcon(pixmap))
+			self.thumbs[data[0]].setIcon(0,QtGui.QIcon(pixmap))
 			f=open(cacheFile,"wb")
 			f.write(image)
 			f.close()
 			self.cacheList[cacheFile] = md5(image).hexdigest()
 			self.cacheList.write()
 		else:
-			self.thumbs[data[0]].setIcon(QtGui.QIcon(cacheFile))
+			self.thumbs[data[0]].setIcon(0,QtGui.QIcon(cacheFile))
 		self.window.ui.progress.setValue(self.window.ui.progress.value()+1)
 		del data[0]
 		if len(data)==0:
@@ -509,8 +581,8 @@ class Plugin(plugins.PluginBase):
 	
 	def call(self,jid=None,typ=None):
 		self.stopDownload=True
-		self.window.ui.label_size.setText("")
-		self.window.ui.label_name.setText("")
+##		self.window.ui.label_size.setText("")
+##		self.window.ui.label_name.setText("")
 		if typ:
 			self.typ=typ
 		if jid:
@@ -521,20 +593,20 @@ class Plugin(plugins.PluginBase):
 		print "call",self.jid,self.typ
 		if self.typ=="public":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.jid,)).addCallback(self.updateView)
-			self.window.ui.list.setIconSize(QtCore.QSize(32,32))
-			self.window.ui.list.setGridSize(QtCore.QSize(128,96))
-			self.window.ui.esWidget.hide()
+##			self.window.ui.list.setIconSize(QtCore.QSize(32,32))
+##			self.window.ui.list.setGridSize(QtCore.QSize(128,96))
+##			self.window.ui.esWidget.hide()
 		elif self.typ=="private":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPrivate', (self.jid,)).addCallback(self.updateView)
-			self.window.ui.list.setIconSize(QtCore.QSize(32,32))
-			self.window.ui.list.setGridSize(QtCore.QSize(128,96))
-			self.window.ui.esWidget.hide()
+##			self.window.ui.list.setIconSize(QtCore.QSize(32,32))
+##			self.window.ui.list.setGridSize(QtCore.QSize(128,96))
+##			self.window.ui.esWidget.hide()
 		elif self.typ=="album":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listAlbum', (self.jid,)).addCallback(self.updateView)
-			#if self.config['iconMode']=="True":
-			self.window.ui.list.setIconSize(QtCore.QSize(128,128))
-			self.window.ui.list.setGridSize(QtCore.QSize(160,160))
-			self.window.ui.esWidget.hide()
+##			#if self.config['iconMode']=="True":
+##			self.window.ui.list.setIconSize(QtCore.QSize(128,128))
+##			self.window.ui.list.setGridSize(QtCore.QSize(160,160))
+##			self.window.ui.esWidget.hide()
 
 		if self.jid != self.main.client.jid.userhost():
 			self.window.ui.buttonDelete.setEnabled(False)
@@ -545,13 +617,13 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.buttonUpload.setEnabled(True)
 			self.window.ui.privateButton.setEnabled(True)
 	
-	
+
 	def showSlot(self,jid=None,typ='public'):
 		self.window.show()
-		if self.main.client.isVip:
-			self.window.ui.vipInfo.hide()
-		else:
-			self.window.ui.vipInfo.show()
+##		if self.main.client.isVip:
+##			self.window.ui.vipInfo.hide()
+##		else:
+##			self.window.ui.vipInfo.show()
 		if (not self.main.client.roster['users'].has_key("public@disk.jabbim.cz") or not self.main.client.roster['users'].has_key("private@disk.jabbim.cz")) or not self.main.client.roster['users'].has_key("album@disk.jabbim.cz"):
 			d=self.main.client.getRegisterForm("disk.jabbim.cz")
 			d.addCallback(self._onRegister)
