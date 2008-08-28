@@ -80,11 +80,24 @@ class Plugin(plugins.PluginBase):
 ##			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("itemDoubleClicked ( QListWidgetItem * )"),self.doubleClicked)
 
 			self.model=QtGui.QDirModel()
+			self.model.supportedDropActions=self.supportedDropActions
+			self.model.flags=self.flags
+			self.model.setReadOnly(False)
 			self.window.ui.left.setModel(self.model)
 			self.window.ui.left.setDragEnabled(True)
+			self.window.ui.left.setAcceptDrops(True)
 			self.window.ui.left.startDrag=self.leftStartDrag
+			self.window.ui.left.dropMimeData=self.leftDropMimeData
+			self.window.ui.left.mimetypes=self.mimeTypes
+			self.window.ui.left.setDropIndicatorShown(True)
+			self.window.ui.left.setDragDropMode(QtGui.QAbstractItemView.DragDrop)
+			self.window.ui.left.dragEnterEvent=self.dragEnterEvent
+			self.window.ui.left.dragMoveEvent = self.dragMoveEvent
+			self.window.ui.left.dropEvent = self.dropEvent
+			
 			
 			self.window.ui.right.dropMimeData=self.rightDropMimeData
+			self.window.ui.right.startDrag=self.rightStartDrag
 			self.window.ui.right.mimeTypes=self.mimeTypes
 			self.window.ui.right.setDragEnabled(True)
 			self.window.ui.right.setAcceptDrops(True)
@@ -107,9 +120,28 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.loadConfig(homedir)
 
+	def dragEnterEvent(self, event):
+		print "left drag enter"
+		if event.mimeData().hasText() or event.mimeData().hasFormat("text/uri-list"):
+			event.acceptProposedAction()
+		else:
+			event.ignore()
+
+	def flags(self,index):
+		defaultFlags = QtGui.QDirModel.flags(self.model,index)
+		return QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsDropEnabled | defaultFlags
+
+	def supportedDropActions(self):
+		return QtCore.Qt.CopyAction | QtCore.Qt.MoveAction
+
 	def mimeTypes(self):
 		# set mimetypes, which we accept
 		return QtCore.QStringList(["text/plain","text/uri-list"])
+
+	def leftDropMimeData(self,parent,index,data,action):
+		path=unicode(self.model.fileInfo(index).absoluteFilePath())
+		print "left drop",path
+		return True
 
 	def rightDropMimeData(self,parent,index,data,action):
 		new=[]
@@ -131,10 +163,20 @@ class Plugin(plugins.PluginBase):
 			self.main.showFiletransferDialog(file, 'album@disk.jabbim.cz')
 		return True
 
+	def rightStartDrag(self,actions):
+		# start dragging selected contact
+		path=unicode(self.window.ui.right.currentItem().text(0))
+		print "right drag",path
+		self.window.ui.right.drag=QtGui.QDrag(self.window.ui.right)
+		mimeData=QtCore.QMimeData()
+		mimeData.setText(path)
+		self.window.ui.right.drag.setMimeData(mimeData)
+		self.window.ui.right.action=self.window.ui.right.drag.start(QtCore.Qt.CopyAction)
+
 	def leftStartDrag(self,actions):
 		# start dragging selected contact
 		path=unicode(self.model.fileInfo(self.window.ui.left.currentIndex()).absoluteFilePath())
-		print "drag",path
+		print "left drag",path
 		if os.path.isdir(path):
 			#TODO easyshare
 			return
@@ -196,14 +238,16 @@ class Plugin(plugins.PluginBase):
 	
 	def esGotShares(self,data):
 		data=data[0][0]
-		self.window.ui.esPath.setText(self.esPath)
-		self.window.ui.list.clear()
+		
+		#self.window.ui.esPath.setText(self.esPath)
+		#self.window.ui.list.clear()
+		self.window.ui.right.clear()
 		icon=QtGui.QIcon(self.pluginDir+"/folder.png")
 		for d in data:
-			item=QtGui.QListWidgetItem(self.window.ui.list)
-			item.setData(32,QtCore.QVariant(QtCore.QStringList([u"-1"])))
-			item.setText(unicode(d))
-			item.setIcon(icon)
+			item=QtGui.QTreeWidgetItem(self.window.ui.right)
+			item.setData(0,32,QtCore.QVariant(QtCore.QStringList([u"-1"])))
+			item.setText(0,unicode(d))
+			item.setIcon(0,icon)
 	
 	def buildContactMenu(self,menu,contact):
 		"""
@@ -330,57 +374,57 @@ class Plugin(plugins.PluginBase):
 		elif self.typ=="album":
 			self.main.sendFiles('album@disk.jabbim.cz')
 
-	def startDrag(self,actions):
-		# start dragging selected contact
-		item=self.window.ui.list.currentItem()
-
-		self.drag=QtGui.QDrag(self.window.ui.list)
-		mimeData=QtCore.QMimeData()
-		mimeData.setText("http://disk.jabbim.cz/"+self.main.client.jid.userhost()+"/"+item.text())
-		mimeData.setUrls([QtCore.QUrl("http://disk.jabbim.cz/"+self.main.client.jid.userhost()+"/"+item.text())])
-		self.dnd=item
-		self.drag.setMimeData(mimeData)
-		self.action=self.drag.start(QtCore.Qt.CopyAction)
-	
+##	def startDrag(self,actions):
+##		# start dragging selected contact
+##		item=self.window.ui.list.currentItem()
+##
+##		self.drag=QtGui.QDrag(self.window.ui.list)
+##		mimeData=QtCore.QMimeData()
+##		mimeData.setText("http://disk.jabbim.cz/"+self.main.client.jid.userhost()+"/"+item.text())
+##		mimeData.setUrls([QtCore.QUrl("http://disk.jabbim.cz/"+self.main.client.jid.userhost()+"/"+item.text())])
+##		self.dnd=item
+##		self.drag.setMimeData(mimeData)
+##		self.action=self.drag.start(QtCore.Qt.CopyAction)
+##
 	def dropEvent(self, event):
-		if (event.mimeData().hasUrls()):
-			urlList=event.mimeData().urls()
-			if len(urlList)>0:
-				new=[]
-				for url in urlList:
-					f=unicode(url.toLocalFile())
-					if len(f)!=0:
-						new.append(f)
-				file=new
-				if self.typ=="public":
-					self.main.showFiletransferDialog(file, 'public@disk.jabbim.cz')
-				elif self.typ=="private":
-					self.main.showFiletransferDialog(file, 'private@disk.jabbim.cz')
-				elif self.typ=="album":
-					self.main.showFiletransferDialog(file, 'album@disk.jabbim.cz')
-			event.acceptProposedAction()
-		elif event.mimeData().hasText():
-			# test if it is JID
-			jid2=self.main.getJid(unicode(event.mimeData().text()))
-			if not jid2:
-				event.ignore()
-				return
-			else:
-				self.window.ui.line_jid.setText(unicode(jid2.userhost()))
-				event.acceptProposedAction()
+		print "left drop event"
+		if event.mimeData().hasText():
+			f=unicode(event.mimeData().text())
+			index=self.window.ui.left.indexAt(event.pos())
+			path=unicode(self.model.fileInfo(index).absoluteFilePath())
+			if not os.path.isdir(path):
+				path=os.path.dirname(path)
+			print "left drop",path
+			if self.typ=="public":
+				self.main.allowedJids["public@disk.jabbim.cz/"+unicode(f)]=path
+				self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(f))
+				#self.filesToOpen.append(self.cache+"/"+unicode(item.text()))
+			elif self.typ=="private":
+				self.main.allowedJids["private@disk.jabbim.cz/"+unicode(f)]=path
+				self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(f))
+				#self.filesToOpen.append(self.cache+"/"+unicode(item.text()))
+			elif self.typ=="album":
+				self.main.allowedJids["album@disk.jabbim.cz/"+unicode(f)]=path
+				self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(f))
+				#self.filesToOpen.append(self.cache+"/"+unicode(item.text()))
 
-	def dragMoveEvent(self, event):
-		event.acceptProposedAction()
-	def dragEnterEvent(self, event):
-		if event.mimeData().hasText() or event.mimeData().hasFormat("text/uri-list"):
 			event.acceptProposedAction()
-		elif event.mimeData().hasText():
-			if self.main.getJid(unicode(event.mimeData().text())):
-				event.acceptProposedAction()
-			else:
-				event.ignore()
-		else:
-			event.ignore()	
+##
+	def dragMoveEvent(self, event):
+		index=self.window.ui.left.indexAt(event.pos())
+		if index:
+			self.window.ui.left.setCurrentIndex(index)
+		event.acceptProposedAction()
+##	def dragEnterEvent(self, event):
+##		if event.mimeData().hasText() or event.mimeData().hasFormat("text/uri-list"):
+##			event.acceptProposedAction()
+##		elif event.mimeData().hasText():
+##			if self.main.getJid(unicode(event.mimeData().text())):
+##				event.acceptProposedAction()
+##			else:
+##				event.ignore()
+##		else:
+##			event.ignore()
 			
 	def fileMenu(self,pos):
 		items=self.window.ui.list.selectedItems()
