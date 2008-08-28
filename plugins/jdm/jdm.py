@@ -77,7 +77,7 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.showMiniRoster,QtCore.SIGNAL("clicked()"),self.showMiniRoster)
 			QtCore.QObject.connect(self.window.ui.desktop,QtCore.SIGNAL("clicked()"),self.leftDesktop)
 			QtCore.QObject.connect(self.window.ui.computer,QtCore.SIGNAL("clicked()"),self.leftComputer)
-##			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("itemDoubleClicked ( QListWidgetItem * )"),self.doubleClicked)
+			QtCore.QObject.connect(self.window.ui.right,QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem *,int )"),self.doubleClicked)
 
 			self.model=QtGui.QDirModel()
 			self.model.supportedDropActions=self.supportedDropActions
@@ -248,7 +248,7 @@ class Plugin(plugins.PluginBase):
 			item.setData(0,32,QtCore.QVariant(QtCore.QStringList([u"-1"])))
 			item.setText(0,unicode(d))
 			item.setIcon(0,icon)
-	
+
 	def buildContactMenu(self,menu,contact):
 		"""
 		Adds QAction to the menu above contact 
@@ -510,10 +510,12 @@ class Plugin(plugins.PluginBase):
 			return str(round(original/1000.0,2))+" kB" # kB
 		return str(round(original/1000000.0,2))+" MB" # MB
 
-	def updateView(self, data):
+	def updateView(self, data,parent=None):
 		print "updateView",data,self.update
-		if not self.update:
+		if not self.update and not parent:
 			self.window.ui.right.clear()
+		if parent:
+			self.window.ui.right.expandItem(parent)
 ##		self.window.ui.esPath.setText(self.esPath)
 		data=data[0][0]
 		self.thumbs={}
@@ -524,7 +526,10 @@ class Plugin(plugins.PluginBase):
 					continue
 			name=file[0]
 			size=file[1]
-			item=QtGui.QTreeWidgetItem(self.window.ui.right)
+			if parent:
+				item=QtGui.QTreeWidgetItem(parent)
+			else:
+				item=QtGui.QTreeWidgetItem(self.window.ui.right)
 			print unicode(name)
 			item.setText(0,unicode(name))
 			item.setData(0,32,QtCore.QVariant(QtCore.QStringList([unicode(size)])))
@@ -749,24 +754,36 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.label_size.setText("")
 			self.window.ui.label_name.setText("")
 
-	def doubleClicked(self,item):
+	def getPath(self,item):
+		path=""
+		parents=[item]
+		parent=item.parent()
+		while parent:
+			parents.append(parent)
+			parent=parent.parent()
+		parents.reverse()
+		for parent in parents:
+			path+=unicode(parent.text(0))+"/"
+		return path[:-1]
+
+	def doubleClicked(self,item,col=None):
 		if self.typ=="public":
-			self.main.allowedJids["public@disk.jabbim.cz/"+unicode(item.text())]=self.cache
-			self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
-			self.filesToOpen.append(self.cache+"/"+unicode(item.text()))
+			self.main.allowedJids["public@disk.jabbim.cz/"+unicode(item.text(0))]=self.cache
+			self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text(0)))
+			self.filesToOpen.append(self.cache+"/"+unicode(item.text(0)))
 		elif self.typ=="private":
-			self.main.allowedJids["private@disk.jabbim.cz/"+unicode(item.text())]=self.cache
-			self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
-			self.filesToOpen.append(self.cache+"/"+unicode(item.text()))
+			self.main.allowedJids["private@disk.jabbim.cz/"+unicode(item.text(0))]=self.cache
+			self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text(0)))
+			self.filesToOpen.append(self.cache+"/"+unicode(item.text(0)))
 		elif self.typ=="album":
-			self.main.allowedJids["album@disk.jabbim.cz/"+unicode(item.text())]=self.cache
-			self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
-			self.filesToOpen.append(self.cache+"/"+unicode(item.text()))
+			self.main.allowedJids["album@disk.jabbim.cz/"+unicode(item.text(0))]=self.cache
+			self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text(0)))
+			self.filesToOpen.append(self.cache+"/"+unicode(item.text(0)))
 		elif self.typ=="easyshare":
 			contact = self.main.client.getContactByJid(self.jid)
 			if contact:
 				jid=self.jid+"/"+contact.getHighestResource()
-				self.esPath+=unicode(item.text())+"/"
-				self.main.client.callRemote(jid, 'listShare',(unicode(self.esPath),)).addCallback(self.updateView)
+				#self.esPath+=unicode(item.text())+"/"
+				self.main.client.callRemote(jid, 'listShare',(self.getPath(item),)).addCallback(self.updateView,item)
 
 		
