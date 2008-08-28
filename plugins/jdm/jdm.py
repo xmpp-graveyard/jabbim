@@ -407,6 +407,16 @@ class Plugin(plugins.PluginBase):
 				self.main.allowedJids["album@disk.jabbim.cz/"+unicode(f)]=path
 				self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(f))
 				#self.filesToOpen.append(self.cache+"/"+unicode(item.text()))
+			elif self.typ=="easyshare":
+				contact = self.main.client.getContactByJid(self.jid)
+				if contact:
+					jid=self.jid+"/"+contact.getHighestResource()
+					data=[]
+					items=self.window.ui.right.selectedItems()
+					for item in items:
+						data.append(self.getPath(item))
+					self.main.client.callRemote(jid, 'getFiles',(data,))
+
 
 			event.acceptProposedAction()
 ##
@@ -783,7 +793,6 @@ class Plugin(plugins.PluginBase):
 			contact = self.main.client.getContactByJid(self.jid)
 			if contact:
 				jid=self.jid+"/"+contact.getHighestResource()
-				#self.esPath+=unicode(item.text())+"/"
 				self.main.client.callRemote(jid, 'listShare',(self.getPath(item),)).addCallback(self.updateView,item)
 
 		
