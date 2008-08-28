@@ -319,7 +319,17 @@ class Plugin(plugins.PluginBase):
 	def indexShares(self): #manual use only
 		for addr in self.config['dirs']:
 			reactor.callInThread(self.indexDir, self.config[addr+'-sharepath'],  addr)
-		
+
+	def getPermission(self,  path,  jid):
+		try:
+			addr = path.split('/')[0]
+			if jid in self.config[addr+'-sharejids'] or jid== self.main.client.jid.userhost():
+				return True
+			else:
+				return False
+		except:
+			log.err('error while getting sharing permissions')
+			return False
 	
 	def getHash(self,  path):
 		try:
@@ -367,13 +377,11 @@ class Plugin(plugins.PluginBase):
 		self.main.client.rpc.registerHandler('searchFiles', self.searchFiles)
 
 	def getShares(self, frm, par = None):
-		print jidT
-		print sys.modules
 		frm = jidT.JID(frm).userhost()
 		available = []
 		try:
 			for addr in self.config['dirs']:
-				if frm in self.config[addr+'-sharejids'] or frm == self.main.client.jid.userhost():
+				if self.getPermission(addr, frm):
 					available.append(addr)
 			return (available,)
 		except:
@@ -386,7 +394,7 @@ class Plugin(plugins.PluginBase):
 		share = par[0]
 		addr = share.split('/')[0]
 		if addr in self.config['dirs']:
-			if frm in self.config[addr+'-sharejids'] or frm == self.main.client.jid.userhost():
+			if self.getPermission(addr,  frm):
 				return threads.deferToThread(self.listdir, par[0].replace(addr, self.config[addr+'-sharepath']))
 #				return self.listdir(par[0].replace(addr, self.config[addr+'-sharepath']))
 		return
@@ -419,7 +427,7 @@ class Plugin(plugins.PluginBase):
 			addr = f.split('/')[0]
 			print addr
 			if addr in self.config['dirs']:
-				if (fr in self.config[addr+'-sharejids']) or frm == self.main.client.jid.userhost():
+				if self.getPermission(addr,  fr):
 					fajly[os.path.basename(f.replace(addr, self.config[addr+'-sharepath']))]=f.replace(addr, self.config[addr+'-sharepath']) # strip first /
 					desc[os.path.basename(f.replace(addr, self.config[addr+'-sharepath']))] = '%s >> %s'%('EasyShare',fr)
 		print fajly
