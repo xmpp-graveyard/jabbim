@@ -40,6 +40,12 @@ class paintArea(QtGui.QWidget):
 	def mousePressEvent(self,event):
 		if self.tool!="pen":
 			self.mousePress=[int(event.x()),int(event.y())]
+		elif self.tool == 'pen':
+			p=QtGui.QPainter(self.image)
+			p.setPen(self.pen)
+			p.setBrush(self.brush)
+			p.drawEllipse(event.x(),event.y(),self.penSize,self.penSize)
+			self.repaint()
 
 	def mouseReleaseEvent(self,event):
 		if self.tool=="square":
@@ -87,7 +93,7 @@ class paintWindow(QtGui.QMainWindow):
 	
 	def clear(self):
 		self.paintArea.newImage(400,400)
-		
+		self.paintArea.repaint()
 
 #app=QtGui.QApplication([])
 #

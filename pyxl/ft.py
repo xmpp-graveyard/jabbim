@@ -95,6 +95,8 @@ class FTInit:
 		fileprops = {}
 		fileprops['name'] = filename
 		fileprops['desc'] = unicode(desc)
+		print outjid
+		jd = jid.JID(outjid)
 		if preview != None:
 			fileprops['preview'] = preview
 			fileprops['previewType'] = previewType
@@ -104,7 +106,10 @@ class FTInit:
 		elif self.client.hasFeature(outjid,  'http://jabber.org/protocol/si/profile/file-transfer'):
 			typ = 'ft'
 		else:
-			return False # should be checked somewhere
+			if self.client.groupchats.has_key(jd.userhost()):
+				typ='jingle'
+			else:
+				return False # should be checked somewhere
 			
 		print typ
 		
