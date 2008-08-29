@@ -583,6 +583,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='content-replace']", self.jingle.onJingleContentReplace, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/data[@xmlns='urn:xmpp:tmp:bob']", self.onBOBData, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/tree[@xmlns='http://dev.jabbim.cz/jabbim/treeft']", self.FT.onReceiveFiles, 1)
+		self.xmlstream.addObserver("/iq[@type='get'][@id]/start[@xmlns='http://jabber.org/protocol/sipub']", self.FT.onSIPUB, 1)
 
 		self.xping.start(100, False)		
 		self.getPrivacy().addCallback(self.getMetacontacts).addErrback(self.getMetacontacts)

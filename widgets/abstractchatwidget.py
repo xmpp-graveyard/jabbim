@@ -830,8 +830,10 @@ class abstractChatWidget(QtGui.QWidget):
 		fp.write(str(bytes))
 		fp.close()
 		self.main().client.bobDef[hash] = path
-
-		img ='<img src="cid:%s" alt="%s"/>'%(hash, alt)
+		if len(bytes)<=(8*1024):
+			img ='<img src="cid:%s" alt="%s"/>'%(hash, alt)
+		else:
+			img ='<img src="xmpp:%s?recvfile;sid=%s" alt="%s"/>'%(self.main().client.jid.full(), hash, alt)
 		m=Message(unicode(self.jid))
 		m.setBody(alt)
 		m.setXHTML(img)

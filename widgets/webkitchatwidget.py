@@ -297,7 +297,8 @@ class webkitChatWidget(QtWebKit.QWebView):
 		if not (hit.pixmap().isNull()):
 			action=menu.addAction(self.tr('Edit Image'))
 			action.setObjectName("edit_image")
-			action.setData(QtCore.QVariant(hit.imageUrl().path()))
+#			action.setData(QtCore.QVariant(hit.pixmap().toImage()))
+			action.image = hit.pixmap().toImage()
 			menu.addAction(action)
 
 		
@@ -318,7 +319,7 @@ class webkitChatWidget(QtWebKit.QWebView):
 		elif cmd == 'edit_image':
 			print action.data()
 			print unicode(action.data().toString())
-			self.chatwidget().getPaintWindow().open(unicode(action.data().toString()))
+			self.chatwidget().getPaintWindow().open(image = action.image)
 			self.chatwidget().getPaintWindow().show()
 			
 	def copySelectedText(self):

@@ -95,12 +95,15 @@ class paintWindow(QtGui.QMainWindow):
 		self.paintArea.newImage(400,400)
 		self.paintArea.repaint()
 	
-	def open(self,  path):
-		img = QtGui.QImage(path)
-		if not img.isNull():
-			self.paintArea.image = img
+	def open(self,  path = None,  image = None):
+		if image == None:
+			img = QtGui.QImage(path)
+			if not img.isNull():
+				self.paintArea.image = img
+			else:
+				self.paintArea.newImage(400,400)
 		else:
-			self.paintArea.newImage(400,400)
+			self.paintArea.image = image
 		self.paintArea.repaint()
 
 #app=QtGui.QApplication([])

@@ -41,6 +41,8 @@ class FTInit:
 		self.client.sendFiles = self.sendFiles
 		self.client.receiveFiles = self.receiveFiles
 		self.client.declineFiles = self.declineFiles
+		self.client.getSIPUBFile = self.getSIPUBFile
+		self.ftEndQueue = {}
 	
 	def send(self,  xml):
 		self.client.xmlstream.send(xml)
@@ -117,6 +119,42 @@ class FTInit:
 		self.ft[ftObj.sid] = ftObj
 		ftObj.send()
 		return ftObj.sid
+		
+	def getSIPUBFile(self,  jid,  id,  path):
+		def _gotSid(el,  path,  id):
+			sid = el.starting['sid']
+			if path != None:
+				self.client.main.allowedSids[sid] = path
+				d = defer.Deferred()
+				self.ftEndQueue[sid] = (d,  path)
+				return d
+		iq = IQ(self.client.xmlstream, 'get')
+		self.client.disp(iq['id'])
+		iq['to'] = jid
+		iq.addElement('start',  'http://jabber.org/protocol/sipub')
+		iq.start['id'] = id
+		if path != None:
+			self.client.bobDef[id] = path
+		return iq.send().addCallback(_gotSid,  path,  id)
+	
+	def onSIPUB(self,  el):
+		self.client.disp(el['id'])
+		id = el.start['id']
+		if self.client.bobDef.has_key(id): #propably not the best thing to do, but it fit's our usecase now
+			path = self.client.bobDef[id]
+			sid = 'sipub' + str(random.randint(1000, sys.maxint))
+			iq = Element((None,'iq'))
+			iq['type'] = 'result'
+			iq['to'] = el['from']
+			iq['id'] = el['id']
+			iq.addElement('starting', 'http://jabber.org/protocol/sipub')
+			iq.starting['sid'] = sid
+			self.send(iq)
+			self.sendFile(el['from'],  id, path, sid = sid)
+		else:
+			el.swapAttributeValues('to',  'from')
+			el['type'] = 'error'
+			self.send(el)
 
 	
 	def _onIPAddr(self, addr):
@@ -330,6 +368,9 @@ class FTInit:
 		self.client.dispatcher.publishEvent('on_ftEnd', sid, error)
 		if self.ft.has_key(sid):
 			self.ft[sid].delete(error)
+		if error == None and self.ftEndQueue.has_key(sid):
+			self.ftEndQueue[sid][0].callback(self.ftEndQueue[sid][1])
+			del self.ftEndQueue[sid]
 	
 	def declineFT(self, sid,  id):
 		if not self.ft.has_key(sid):

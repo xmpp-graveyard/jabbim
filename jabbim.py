@@ -2389,7 +2389,6 @@ class mainWindow(QtGui.QMainWindow):
 				src = el.getAttribute('src')
 				if src != None and src.startswith('cid:'):
 					print src
-					
 					cid = src.split(':')[1]
 					i="bob"+str(self.imageId)+str(random.randint(0,100))
 					d=self.client.getBOBData(msg.frm.full(),  cid)
@@ -2408,8 +2407,29 @@ class mainWindow(QtGui.QMainWindow):
 						tab.chat.ui.webkit.messageObject.addHandler(i,tab.chat.ui.webkit.reloadImage,[i,link])
 					print "RETURN",d
 					self.imageId+=1
-
 					changed = True
+				elif src != None and src.startswith('xmpp:') and src.find('?recvfile;')>0:
+					url = QtCore.QUrl(src)
+					res = self.xmppUri(url, self.client.bobCacheDir)
+					if len(res)>1:
+						id = res[0]
+						d = res[1]
+						i="bob"+str(self.imageId)+str(random.randint(0,100))
+						d.addCallback(self.refreshImage,i,msg.frm)
+						link = self.client.bobDef[id]
+						el.setAttribute('src', link)
+						el.setAttribute('id',i)
+						changed = True
+						frm=msg.frm
+						if self.client.groupchats.has_key(frm.userhost()):
+							tab,tabIndex=self.chat.findTab(frm.full(),True)
+						else:
+							tab,tabIndex=self.chat.findTab(frm.full())
+						if tab:
+							tab.chat.ui.webkit.messageObject.addHandler(i,tab.chat.ui.webkit.reloadImage,[i,link])
+						print "RETURN",d
+						self.imageId+=1
+						changed = True						
 			if changed:
 				print unicode(dom.toxml())
 				msg.setXHTML(unicode(dom.toxml()))
@@ -4499,7 +4519,9 @@ class mainWindow(QtGui.QMainWindow):
 				# update viewport to refresh image
 				w.chat.ui.textEdit.viewport().update()
 	
-	def xmppUri(self,  url):
+	def xmppUri(self,  url,  path = None):
+		# path is used to save auto-accepted files
+		#if path == None: no auto-accept
 		url.setQueryDelimiters('=',';')
 		q = url.queryItems()
 		query ={}
@@ -4519,7 +4541,9 @@ class mainWindow(QtGui.QMainWindow):
 			return True
 		elif query['type'] == 'recvfile':
 			id = query.get('sid')
-			
+			if path != None:
+				path = path + '/'+id
+			return (id, self.client.getSIPUBFile(jid.full(),  id,  path))
 			pass
 
 	def connect(self,delay=None):
