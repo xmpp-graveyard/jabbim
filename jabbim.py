@@ -4517,6 +4517,9 @@ class mainWindow(QtGui.QMainWindow):
 			self.chat.addChatTab(jid.full(),self.ui.roster.getNameByJID(jid.userhost()),self.getIcon(jid.full(),status = status,size="16x16")) 
 			self.chat.activate()
 			return True
+		elif query['type'] == 'recvfile':
+			id = query.get('sid')
+			
 			pass
 
 	def connect(self,delay=None):

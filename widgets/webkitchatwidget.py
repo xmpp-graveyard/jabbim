@@ -294,6 +294,13 @@ class webkitChatWidget(QtWebKit.QWebView):
 			action=self.pageAction(QtWebKit.QWebPage.Copy)
 			action.setText(self.tr("Copy text"))
 			menu.addAction(action)
+		if not (hit.pixmap().isNull()):
+			action=menu.addAction(self.tr('Edit Image'))
+			action.setObjectName("edit_image")
+			action.setData(QtCore.QVariant(hit.imageUrl().path()))
+			menu.addAction(action)
+
+		
 		menu.addSeparator()
 		action=menu.addAction(self.tr("Search"))
 		action.setObjectName("search")
@@ -308,7 +315,12 @@ class webkitChatWidget(QtWebKit.QWebView):
 		    self.chatwidget().ui.searchWidget.showMe()
 		elif cmd=="copy_to_clipboard":
 			QtGui.QApplication.clipboard().setText(action.data().toUrl().toString())
-
+		elif cmd == 'edit_image':
+			print action.data()
+			print unicode(action.data().toString())
+			self.chatwidget().getPaintWindow().open(unicode(action.data().toString()))
+			self.chatwidget().getPaintWindow().show()
+			
 	def copySelectedText(self):
 		text=self.selectedText()
 		if len(text)!=0:

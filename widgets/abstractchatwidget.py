@@ -809,12 +809,13 @@ class abstractChatWidget(QtGui.QWidget):
 		#else:
 			#self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+self.main().webkitThemeFactory.chatPath()))
 
-	def paint(self):
+	def getPaintWindow(self):
 		if self.paintWindow == None:
 			self.paintWindow = paint.paintWindow(self,  self)
-			self.paintWindow.show()
-		else:
-			self.paintWindow.show()
+		return self.paintWindow
+
+	def paint(self):
+		self.getPaintWindow().show()
 	
 	def sendPaint(self,  image,  alt = 'Image'):
 		data = []
