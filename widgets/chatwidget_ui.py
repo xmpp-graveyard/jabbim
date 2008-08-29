@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'chatwidget.ui'
 #
-# Created: Mon Aug 18 06:24:54 2008
+# Created: Fri Aug 29 12:22:31 2008
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -56,6 +56,9 @@ class Ui_chatwidget(object):
         self.hboxlayout1.setObjectName("hboxlayout1")
         spacerItem = QtGui.QSpacerItem(111, 29, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.hboxlayout1.addItem(spacerItem)
+        self.paintButton = QtGui.QToolButton(self.layoutWidget)
+        self.paintButton.setObjectName("paintButton")
+        self.hboxlayout1.addWidget(self.paintButton)
         self.linkButton = QtGui.QToolButton(self.layoutWidget)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("images/16x16/actions/anchor.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -186,6 +189,7 @@ class Ui_chatwidget(object):
 
     def retranslateUi(self, chatwidget):
         chatwidget.setWindowTitle(QtGui.QApplication.translate("chatwidget", "Form", None, QtGui.QApplication.UnicodeUTF8))
+        self.paintButton.setText(QtGui.QApplication.translate("chatwidget", "Paint", None, QtGui.QApplication.UnicodeUTF8))
         self.linkButton.setToolTip(QtGui.QApplication.translate("chatwidget", "Anchor", None, QtGui.QApplication.UnicodeUTF8))
         self.boldButton.setToolTip(QtGui.QApplication.translate("chatwidget", "Bold", None, QtGui.QApplication.UnicodeUTF8))
         self.boldButton.setText(QtGui.QApplication.translate("chatwidget", "Bold", None, QtGui.QApplication.UnicodeUTF8))

@@ -8,11 +8,13 @@ from twisted.python import log
 from include import utils
 import base64
 from widgets import dataforms,legacyforms
+from widgets.events.ftwidget import FTDownloadWidget
 try:
 	from hashlib import md5
 except:
 	log.msg('Please upgrade to python2.5')
 	from md5 import new as md5
+
 if sys.platform=="win32":
 	import _winreg
 
@@ -21,7 +23,6 @@ class config:
 		self.main=main
 		self.config={}
 		self.config['iconMode']={'type':'boolean','label':self.main.tr("Show files as icons"),'value':'True'}
-
 class Plugin(plugins.PluginBase):
 	def __init__(self,main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
@@ -105,6 +106,7 @@ class Plugin(plugins.PluginBase):
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
 			self.registerHandler('on_ftEnd', self.on_ftEnd, priority = 4)
+			self.registerHandler('FTDownloadEvent', self.FTDownloadEvent)
 			self.obsah=[]
 			self.dnd={}
 			if not os.path.exists(self.main.realHomeDir+"/jdmcache"):
@@ -119,6 +121,26 @@ class Plugin(plugins.PluginBase):
 			self.stopDownload=False
 		else:
 			self.loadConfig(homedir)
+
+	def FTDownloadEvent(self,event):
+		if not event() or self.window.isHidden():
+			return
+		self.w=QtGui.QDialog(self.window)
+		l=QtGui.QHBoxLayout(self.w)
+		self.w.progress=FTDownloadWidget(event())
+		self.w.progress.setParent(self.w)
+		l.addWidget(self.w.progress)
+		self.w.show()
+		self.w.progress.eventAccepted=self.eventAccepted
+		self.w.progress.eventRejected=self.eventAccepted
+		event().addWidget(self.w.progress)
+
+	def eventAccepted(self):
+		self.w.hide()
+		self.w.setParent(None)
+		self.w.deleteLater()
+		del self.w
+		
 
 	def dragEnterEvent(self, event):
 		print "left drag enter"

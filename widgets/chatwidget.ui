@@ -102,6 +102,13 @@
            </spacer>
           </item>
           <item>
+           <widget class="QToolButton" name="paintButton" >
+            <property name="text" >
+             <string>Paint</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QToolButton" name="linkButton" >
             <property name="toolTip" >
              <string>Anchor</string>

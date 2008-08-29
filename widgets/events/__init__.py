@@ -109,8 +109,12 @@ class FTDownloadEvent(abstractEvent):
 	def __init__(self,parent):
 		abstractEvent.__init__(self,parent)
 		self.SID=None
+		self.currentFile=""
+		self.fileSize=1
+		self.fileTransfered=0
 
 	def setFileTransfered(self,transfered):
+		self.fileTransfered=transfered
 		for widget in self.widgets:
 			widget().setFileTransfered(transfered)
 
@@ -119,10 +123,12 @@ class FTDownloadEvent(abstractEvent):
 			widget().transferFinished()
 
 	def setFileSize(self,size):
+		self.fileSize=size
 		for widget in self.widgets:
 			widget().setFileSize(size)
 
 	def setCurrentFile(self,file):
+		self.currentFile=file
 		for widget in self.widgets:
 			widget().setCurrentFile(file)
 
@@ -546,6 +552,7 @@ class events:
 
 		self.ftEvents[sid]=event
 		self.addEvent(event)
+  		self.main.client.dispatcher.publishEvent('FTDownloadEvent', weakref.ref(event))
 
 	def nextFTUploadEvent(self,sid):
 		event=self.ftEvents[sid]

@@ -27,6 +27,9 @@ class FTDownloadWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.reject,QtCore.SIGNAL("clicked()"),self.reject)
 		self.file=""
 		#self.transfered=0
+		self.setCurrentFile(self.event.currentFile)
+		self.setFileSize(self.event.fileSize)
+		self.setFileTransfered(self.event.fileTransfered)
 
 	def resizeEvent(self,event):
 		print "WIDTH",self.width()

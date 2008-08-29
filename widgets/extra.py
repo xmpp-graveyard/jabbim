@@ -24,6 +24,7 @@ from extra_ui import *
 
 from twisted.python import log
 import base64
+
 class extraDialog(QtGui.QDialog):
 	"""
 	Jabbim Extra Dialog
