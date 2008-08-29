@@ -4498,6 +4498,26 @@ class mainWindow(QtGui.QMainWindow):
 			if unicode(w.jid) == frm:
 				# update viewport to refresh image
 				w.chat.ui.textEdit.viewport().update()
+	
+	def xmppUri(self,  url):
+		url.setQueryDelimiters('=',';')
+		q = url.queryItems()
+		query ={}
+		jid = jidT.JID(unicode(url.path()))
+		try:
+			query['type'] = q.pop(0)[0]
+		except IndexError:
+			query['type'] = 'message'
+		for i in q:
+			query[unicode(i[0])] = unicode(i[1])
+		print jid,  query
+		if query['type'] == 'message':
+			#open tab here
+			status = 'offline' # HACK! doplnit aktualni stav kvuli ikonky
+			self.chat.addChatTab(jid.full(),self.ui.roster.getNameByJID(jid.userhost()),self.getIcon(jid.full(),status = status,size="16x16")) 
+			self.chat.activate()
+			return True
+			pass
 
 	def connect(self,delay=None):
 		# Connect to the server

@@ -56,7 +56,7 @@ class Plugin(plugins.PluginBase):
 				text = msg.xhtml
 				for k in sorted(self.current.iterkeys(), key=len, reverse=True):
 					v = self.current[k]
-					text=text.replace(k,'<img alt="orig'+v+'" src="cid:'+v+'"/>')
+					text=text.replace(' '+k,'<img alt="orig'+v+'" src="cid:'+v+'"/>')
 				
 				for k, v in self.current.iteritems():
 					text.replace('orig'+v, k)
@@ -65,7 +65,7 @@ class Plugin(plugins.PluginBase):
 				text = msg.body
 				for k in sorted(self.current.iterkeys(), key=len, reverse=True):
 					v = self.current[k]
-					text=text.replace(k,'<img alt="orig'+v+'" src="cid:'+v+'"/>')
+					text=text.replace(' '+k,'<img alt="orig'+v+'" src="cid:'+v+'"/>')
 				
 				for k, v in self.current.iteritems():
 					text.replace('orig'+v, k)

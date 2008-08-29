@@ -463,9 +463,15 @@ class Plugin(plugins.PluginBase):
 			else:
 				return (False, )
 
-		shares = self.getShares(frm)[0]
+		
 		sid = par[1]
 		string = par[0]
+		try:
+			typ = par[2]
+		except:
+			#to znamena ze tam neni tento parametr a tedy hleda primo jid ze ktereho to prislo
+			typ = frm
+		shares = self.getShares(typ)[0]
 		if len(shares=0) or sid in self.searches:
 			return (False, )
 		else:

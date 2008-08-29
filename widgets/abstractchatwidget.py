@@ -17,7 +17,14 @@ from emoticonswidget import *
 from linkeditor import linkEditorDialog
 import weakref
 from webkitchatwidget import webkitChatWidget,searchWidget
-
+import paint
+from pyxl.message import Message
+try:
+	from hashlib import sha1
+except:
+	log.msg('Please upgrade to python2.5')
+	from sha import new as sha1
+	
 #class message(QtCore.QObject):
 	#def __init__(self,message):
 		#QtCore.QObject.__init__(self)
@@ -418,6 +425,7 @@ class abstractChatWidget(QtGui.QWidget):
 		self.parent=parent
 		self.xhtml=xhtml
 		self.lastMessages=[]
+		self.paintWindow = None
 		
 		# chat view widget (self.ui.textEdit)
 		l=QtGui.QVBoxLayout(self.ui.viewWidget)
@@ -465,6 +473,8 @@ class abstractChatWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.italicButton, QtCore.SIGNAL("clicked (bool)"),self.italic)
 		QtCore.QObject.connect(self.ui.underlineButton, QtCore.SIGNAL("clicked (bool)"),self.underline)
 		QtCore.QObject.connect(self.ui.linkButton, QtCore.SIGNAL("clicked (bool)"),self.link)
+		if self.typ=="chat": 
+			QtCore.QObject.connect(self.ui.paintButton,QtCore.SIGNAL("clicked()"),self.paint)
 		#QtCore.QObject.connect(self.ui.fontSize,QtCore.SIGNAL("activated(const QString &)"),self.fontSize)
 		
 		self.ui.textEdit.setAcceptRichText(False)
@@ -798,6 +808,44 @@ class abstractChatWidget(QtGui.QWidget):
 			#self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+self.main().webkitThemeFactory.groupchatPath()))
 		#else:
 			#self.ui.webkit.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+self.main().webkitThemeFactory.chatPath()))
+
+	def paint(self):
+		if self.paintWindow == None:
+			self.paintWindow = paint.paintWindow(self,  self)
+			self.paintWindow.show()
+		else:
+			self.paintWindow.show()
+	
+	def sendPaint(self,  image,  alt = 'Image'):
+		data = []
+		bytes=QtCore.QByteArray()
+		buf=QtCore.QBuffer(bytes)
+		buf.open(QtCore.QIODevice.WriteOnly)
+		image.save(buf,  'PNG')
+		hash = sha1(str(bytes)).hexdigest()+'@sha1'
+		print 'IMAGE', len(str(bytes))
+		path = self.main().client.bobCacheDir+'/'+hash
+		fp = open(path,  'wb')
+		fp.write(str(bytes))
+		fp.close()
+		self.main().client.bobDef[hash] = path
+
+		img ='<img src="cid:%s" alt="%s"/>'%(hash, alt)
+		m=Message(unicode(self.jid))
+		m.setBody(alt)
+		m.setXHTML(img)
+		m.setComposing("active")
+		self.main().client.sendMessage(msg = m)
+		img = '<img src="%s" alt="%s"/>'%(path, alt)
+		if self.lastMessageFrom==unicode(self.main().client.jid.user):
+			message=self.main().webkitThemeFactory.genOutgoingNextContent(self.main().client.jid.user,img,self.main().now(),self.selfFile)
+			insert=True
+		else:
+			message=self.main().webkitThemeFactory.genOutgoingContent(self.main().client.jid.user,img,self.main().now(),self.selfFile)
+			insert=False
+
+		self.textEditWrite(message,insert)
+		self.paintWindow.close()
 
 	def reloadImage(self,name,data):
 		self.ui.webkit.reloadImage(name,data)

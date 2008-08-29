@@ -103,6 +103,7 @@ class message(QtCore.QObject):
 
 	@QtCore.pyqtSignature("QString")
 	def handlerReady(self,name):
+		name = unicode(name)
 		self.handlers[name][0](*self.handlers[name][1])
 		del self.handlers[name]
 
@@ -185,13 +186,21 @@ class webkitChatWidget(QtWebKit.QWebView):
 		QtCore.QObject.connect(self.messageObject,QtCore.SIGNAL("ready()"),self.messageObjectReady)
 		QtCore.QObject.connect(self,QtCore.SIGNAL("loadFinished ( bool)"),self.webkitLoaded_)
 		QtCore.QObject.connect(self.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.webkitCleared)
-		QtCore.QObject.connect(self,QtCore.SIGNAL("linkClicked ( const QUrl &)"),QtGui.QDesktopServices.openUrl)
+#		QtCore.QObject.connect(self,QtCore.SIGNAL("linkClicked ( const QUrl &)"),QtGui.QDesktopServices.openUrl)
+		QtCore.QObject.connect(self,QtCore.SIGNAL("linkClicked ( const QUrl &)"),self.openUrl)
 		self.palette().setColor(QtGui.QPalette.Inactive, QtGui.QPalette.Highlight,QtGui.QColor(self.palette().color(QtGui.QPalette.Active, QtGui.QPalette.Highlight)))
 		#self.palette().setColor(QtGui.QPalette.Inactive, QtGui.QPalette.HighlightedText,self.palette().highlightedText().color())
 
 		self.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding))
 		self.setAcceptDrops(True)
 
+	def openUrl(self,  url):
+		if url.scheme() == 'xmpp':
+			print "it's our!"
+			self.chatwidget().main().xmppUri(url)
+		else:
+			QtGui.QDesktopServices.openUrl(url)
+		
 	def dragEnterEvent(self, event):
 		if event.mimeData().hasText():
 			if self.chatwidget().main().getJid(unicode(event.mimeData().text())):
