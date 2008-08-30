@@ -12,12 +12,25 @@ class paintArea(QtGui.QWidget):
 ##		gradient.setColorAt(0.0, QtGui.QColor(128,128,128,63))
 ##		gradient.setColorAt(1.0, QtGui.QColor(255,255,0, 191))
 ##		self.pen.setBrush(gradient)
+		self.color=QtGui.QColor(0,0,0)
 		self.brush=QtGui.QBrush(QtGui.QColor(0,0,0))
 		self.newImage(400,400)
 		self.penSize=5
 		self.tool="pen"
 		self.mousePress=[-1,-1]
 		self.mouseActual=[-1,-1]
+
+	def getPenPreviewImage(self):
+		i=QtGui.QPixmap(38,38)
+		i.fill(QtGui.QColor(255,255,255))
+		p=QtGui.QPainter(i)
+		self.setupPainter(p)
+		p.drawLine(19,19,19,19)
+		return i
+		
+
+	def colorChanged(self,color):
+		self.pen.setColor(color)
 
 	def penSizeChanged(self,value):
 		self.penSize=int(value)
@@ -39,7 +52,7 @@ class paintArea(QtGui.QWidget):
 		QtGui.QWidget.paintEvent(self,event)
 		p=QtGui.QPainter(self)
 		p.drawImage(0,0,self.image)
-		if self.mousePress[0]!=-1:
+		if self.mousePress[0]!=-1 and self.mouseActual[0]!=-1:
 			p.drawRect(self.mousePress[0],self.mousePress[1],self.mouseActual[0]-self.mousePress[0],self.mouseActual[1]-self.mousePress[1])
 
 	def mousePressEvent(self,event):
@@ -84,13 +97,45 @@ class paintWindow(QtGui.QMainWindow):
 		self.paintArea=paintArea(self.ui.container)
 		l.addWidget(self.paintArea)
 		self.chat = chatwidget
-		
-		QtCore.QObject.connect(self.ui.penSize,QtCore.SIGNAL("valueChanged ( int  )"),self.paintArea.penSizeChanged)
+
+		self.ui.mainColor.setAutoFillBackground(True)
+		self.ui.mainColor.mousePressEvent=self.chooseColor
+		self.colorWidgets=[self.ui.color1,self.ui.color2,self.ui.color3,self.ui.color4,self.ui.color5,self.ui.color6,self.ui.color7,self.ui.color8,self.ui.color9,self.ui.color10,self.ui.color11,self.ui.color12,self.ui.color13,self.ui.color14,self.ui.color15,self.ui.color16]
+		self.ui.mainColor.palette().setColor(QtGui.QPalette.Window,QtGui.QColor("#000000"))
+		defaultColors=["#000000","#000080","#0000FF","#008000","#008080","#00FF00","#800000","#800080","#808000","#808080","#C0C0C0","#FF0000","#FF0000","#FF00FF","#FFFF00","#FFFFFF"]
+		for i in range(len(self.colorWidgets)):
+			self.colorWidgets[i].setAutoFillBackground(True)
+			self.colorWidgets[i].setToolTip(defaultColors[i])
+			self.colorWidgets[i].palette().setColor(QtGui.QPalette.Window,QtGui.QColor(defaultColors[i]))
+			self.colorWidgets[i].mousePressEvent=self._mousePressEvent
+		self.updatePenPreview()
+		QtCore.QObject.connect(self.ui.penSize,QtCore.SIGNAL("valueChanged ( int  )"),self.penSizeChanged)
 		QtCore.QObject.connect(self.ui.pen,QtCore.SIGNAL("clicked()"),self.pen)
 		QtCore.QObject.connect(self.ui.square,QtCore.SIGNAL("clicked()"),self.square)
 		QtCore.QObject.connect(self.ui.sendButton,QtCore.SIGNAL("clicked()"),self.send)
 		QtCore.QObject.connect(self.ui.clearButton,QtCore.SIGNAL("clicked()"),self.clear)
-		
+
+	def penSizeChanged(self,value):
+		size=int(value)
+		self.paintArea.penSizeChanged(size)
+		self.updatePenPreview()
+
+	def _mousePressEvent(self,event):
+		colorWidget=self.childAt(self.mapFromGlobal(event.globalPos()))
+		self.ui.mainColor.setPalette(colorWidget.palette())
+		self.paintArea.colorChanged(colorWidget.palette().window().color())
+		self.updatePenPreview()
+
+	def chooseColor(self,event=None):
+		c=QtGui.QColorDialog.getColor(self.ui.mainColor.palette().window().color())
+		if c.isValid():
+			self.ui.mainColor.palette().setColor(QtGui.QPalette.Window,c)
+			self.paintArea.colorChanged(c)
+			self.updatePenPreview()
+
+	def updatePenPreview(self):
+		self.ui.preview.setPixmap(self.paintArea.getPenPreviewImage())
+
 	def pen(self):
 		self.paintArea.toolChanged("pen")
 
@@ -103,7 +148,7 @@ class paintWindow(QtGui.QMainWindow):
 	def clear(self):
 		self.paintArea.newImage(400,400)
 		self.paintArea.repaint()
-	
+
 	def open(self,  path = None,  image = None):
 		if image == None:
 			img = QtGui.QImage(path)
