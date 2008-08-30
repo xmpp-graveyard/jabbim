@@ -840,15 +840,16 @@ class abstractChatWidget(QtGui.QWidget):
 		
 		m.setComposing("active")
 		self.main().client.sendMessage(msg = m)
-		img = '<img src="%s" alt="%s"/>'%(path, alt)
-		if self.lastMessageFrom==unicode(self.main().client.jid.user):
-			message=self.main().webkitThemeFactory.genOutgoingNextContent(self.main().client.jid.user,img,self.main().now(),self.selfFile)
-			insert=True
-		else:
-			message=self.main().webkitThemeFactory.genOutgoingContent(self.main().client.jid.user,img,self.main().now(),self.selfFile)
-			insert=False
+		if self.typ == 'chat':
+			img = '<img src="%s" alt="%s"/>'%(path, alt)
+			if self.lastMessageFrom==unicode(self.main().client.jid.user):
+				message=self.main().webkitThemeFactory.genOutgoingNextContent(self.main().client.jid.user,img,self.main().now(),self.selfFile)
+				insert=True
+			else:
+				message=self.main().webkitThemeFactory.genOutgoingContent(self.main().client.jid.user,img,self.main().now(),self.selfFile)
+				insert=False
 
-		self.textEditWrite(message,insert)
+			self.textEditWrite(message,insert)
 		self.paintWindow.close()
 
 	def reloadImage(self,name,data):
