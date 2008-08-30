@@ -626,6 +626,8 @@ class ClientFactory (protocol.ClientFactory):
 		try:
 			if self.xmpp.ft[self.xmpp_sid].size > 	self.xmpp.ft[self.xmpp_sid].transfered:
 				self.xmpp.ft[self.xmpp_sid].error = "Connection lost"
+			else:
+				self.xmpp.ft[self.xmpp_sid].connectFailure()
 		except:
 			print 'sid doesn\'t exist?'
 			
@@ -638,6 +640,7 @@ class ClientFactory (protocol.ClientFactory):
 
 			else:
 				self.otherFactory.clientConnectionLost (connector, rmap)
+			
 
 		except:
 			ei = sys.exc_info()

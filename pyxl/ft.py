@@ -255,7 +255,7 @@ class FTInit:
 						factory = socks5.SOCKSv5Factory(self)
 						self.socks5Srv = self.client.reactor.listenTCP(port, factory)
 						self.socks5IP = []
-						self.socks5IP.append(('127.0.0.1', str(port)))
+#						self.socks5IP.append(('127.0.0.1', str(port)))
 						connected = True
 					except:
 						print 'unable to connect to port:',  port
