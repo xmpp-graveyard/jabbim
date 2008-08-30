@@ -6,17 +6,22 @@ from paint_ui import *
 class paintArea(QtGui.QWidget):
 	def __init__(self,parent=None):
 		QtGui.QWidget.__init__(self,parent)
-		self.pen=QtGui.QPen()
+		self.pen=QtGui.QPen(QtGui.QColor(0,0,0),5,QtCore.Qt.SolidLine, QtCore.Qt.RoundCap,QtCore.Qt.RoundJoin)
 		self.pen.setWidth(5)
+##		gradient=QtGui.QLinearGradient(10,10,20,20)
+##		gradient.setColorAt(0.0, QtGui.QColor(128,128,128,63))
+##		gradient.setColorAt(1.0, QtGui.QColor(255,255,0, 191))
+##		self.pen.setBrush(gradient)
 		self.brush=QtGui.QBrush(QtGui.QColor(0,0,0))
 		self.newImage(400,400)
 		self.penSize=5
 		self.tool="pen"
 		self.mousePress=[-1,-1]
-		self.mouseActual=[0,0]
+		self.mouseActual=[-1,-1]
 
 	def penSizeChanged(self,value):
 		self.penSize=int(value)
+		self.pen.setWidth(self.penSize)
 
 	def toolChanged(self,tool):
 		self.tool=unicode(tool)
@@ -36,35 +41,39 @@ class paintArea(QtGui.QWidget):
 		p.drawImage(0,0,self.image)
 		if self.mousePress[0]!=-1:
 			p.drawRect(self.mousePress[0],self.mousePress[1],self.mouseActual[0]-self.mousePress[0],self.mouseActual[1]-self.mousePress[1])
-	
+
 	def mousePressEvent(self,event):
 		if self.tool!="pen":
 			self.mousePress=[int(event.x()),int(event.y())]
 		elif self.tool == 'pen':
 			p=QtGui.QPainter(self.image)
-			p.setPen(self.pen)
-			p.setBrush(self.brush)
-			p.drawEllipse(event.x(),event.y(),self.penSize,self.penSize)
+			self.setupPainter(p)
+			p.drawLine(event.x(),event.y(),event.x(),event.y())
 			self.repaint()
 
 	def mouseReleaseEvent(self,event):
 		if self.tool=="square":
 			p=QtGui.QPainter(self.image)
-			p.setPen(self.pen)
-			p.setBrush(self.brush)
-			p.drawRect(self.mousePress[0],self.mousePress[1],event.x()-self.mousePress[0],event.y()-self.mousePress[1])
+			self.setupPainter(p)
+			r=QtCore.QRect(self.mousePress[0],self.mousePress[1],event.x()-self.mousePress[0],event.y()-self.mousePress[1])
+			p.drawRect(r)
 			self.repaint()
 		self.mousePress=[-1,-1]
+		self.mouseActual=[-1,-1]
 
 	def mouseMoveEvent(self,event):
-		if self.tool=="pen":
-			p=QtGui.QPainter(self.image)
-			p.setPen(self.pen)
-			p.setBrush(self.brush)
-			p.drawEllipse(event.x(),event.y(),self.penSize,self.penSize)
-		else:
-			self.mouseActual=[int(event.x()),int(event.y())]
+		if self.mouseActual[0]!=-1:
+			if self.tool=="pen":
+				p=QtGui.QPainter(self.image)
+				self.setupPainter(p)
+				p.drawLine(self.mouseActual[0],self.mouseActual[1],event.x(),event.y())
 		self.repaint()
+		self.mouseActual=[int(event.x()),int(event.y())]
+
+	def setupPainter(self,p):
+		p.setRenderHint(QtGui.QPainter.Antialiasing, True)
+		p.setPen(self.pen)
+		p.setBrush(self.brush)
 
 class paintWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None,  chatwidget = None):
@@ -106,9 +115,10 @@ class paintWindow(QtGui.QMainWindow):
 			self.paintArea.image = image
 		self.paintArea.repaint()
 
-#app=QtGui.QApplication([])
-#
-#w=paintWindow()
-#w.show()
-#
-#app.exec_()
+if __name__ == "__main__":
+	app=QtGui.QApplication([])
+
+	w=paintWindow()
+	w.show()
+
+	app.exec_()

@@ -17,14 +17,6 @@
     <normaloff>images/16x16/apps/jabbim.png</normaloff>images/16x16/apps/jabbim.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>19</y>
-     <width>335</width>
-     <height>663</height>
-    </rect>
-   </property>
    <layout class="QGridLayout" >
     <property name="margin" >
      <number>0</number>
@@ -42,14 +34,6 @@
         <number>1</number>
        </property>
        <widget class="QWidget" name="login" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>243</width>
-          <height>663</height>
-         </rect>
-        </property>
         <layout class="QGridLayout" >
          <property name="leftMargin" >
           <number>0</number>
@@ -403,14 +387,6 @@ p, li { white-space: pre-wrap; }
         </layout>
        </widget>
        <widget class="QWidget" name="roster" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>243</width>
-          <height>663</height>
-         </rect>
-        </property>
         <layout class="QGridLayout" >
          <property name="margin" >
           <number>0</number>
@@ -536,7 +512,7 @@ p, li { white-space: pre-wrap; }
           </widget>
          </item>
          <item row="1" column="0" >
-          <widget class="QTabWidget" name="tabWidget" >
+          <widget class="QTabWidget" name="mainTabWidget" >
            <property name="toolTip" >
             <string/>
            </property>
@@ -547,14 +523,6 @@ p, li { white-space: pre-wrap; }
             <number>0</number>
            </property>
            <widget class="QWidget" name="rosterTab" >
-            <property name="geometry" >
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>239</width>
-              <height>589</height>
-             </rect>
-            </property>
             <attribute name="title" >
              <string> r</string>
             </attribute>
@@ -621,14 +589,6 @@ p, li { white-space: pre-wrap; }
             </layout>
            </widget>
            <widget class="QWidget" name="bookmarksTab" >
-            <property name="geometry" >
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>239</width>
-              <height>567</height>
-             </rect>
-            </property>
             <attribute name="title" >
              <string>b</string>
             </attribute>
@@ -702,14 +662,6 @@ p, li { white-space: pre-wrap; }
             </layout>
            </widget>
            <widget class="QWidget" name="eventsTab" >
-            <property name="geometry" >
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>239</width>
-              <height>567</height>
-             </rect>
-            </property>
             <attribute name="title" >
              <string>Events</string>
             </attribute>
@@ -746,8 +698,8 @@ p, li { white-space: pre-wrap; }
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>235</width>
-                  <height>537</height>
+                  <width>96</width>
+                  <height>148</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gridLayout" >
@@ -843,14 +795,6 @@ p, li { white-space: pre-wrap; }
         </layout>
        </widget>
        <widget class="QWidget" name="splash" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>243</width>
-          <height>663</height>
-         </rect>
-        </property>
         <layout class="QVBoxLayout" >
          <property name="spacing" >
           <number>6</number>

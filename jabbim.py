@@ -226,7 +226,7 @@ class clientClass(pyxl.client.Client):
 		"""
 		Called if bookmarks are not supported by server.
 		"""
-		self.main.ui.tabWidget.setTabEnabled(1,False)
+		self.main.ui.mainTabWidget.setTabEnabled(1,False)
 		self.bookmarksEnabled=False
 		mainWindow=self.main
 		self.main.tray.showMessage(MainWindow.tr("Error"),mainWindow.tr("Your server doesn't support Private XML Storage. Some functions will be disabled."))
@@ -1943,20 +1943,20 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.rosterSearchClose, QtCore.SIGNAL("clicked()"),self.ui.roster.search)
 
 
-		self.ui.tabWidgetButton=QtGui.QToolButton(self.ui.tabWidget)
+		self.ui.tabWidgetButton=QtGui.QToolButton(self.ui.mainTabWidget)
 		self.ui.tabWidgetButton.setObjectName("jabbimButton")
 		self.ui.tabWidgetButton.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
 		self.ui.tabWidgetButton.setPopupMode(QtGui.QToolButton.InstantPopup)
 		self.ui.tabWidgetButton.setArrowType(QtCore.Qt.NoArrow)
-		self.ui.tabWidget.setCornerWidget(self.ui.tabWidgetButton)
+		self.ui.mainTabWidget.setCornerWidget(self.ui.tabWidgetButton)
 
 		# look & feel :)
 		self.ui.gridlayout.setMargin(1)
 		self.ui.gridlayout.setSpacing(1)
-		self.ui.tabWidget.setTabText(0,"")
-		self.ui.tabWidget.setTabText(1,"")
-		self.ui.tabWidget.setTabText(2,"")
-		self.ui.tabWidget.setTabText(3,"")
+		self.ui.mainTabWidget.setTabText(0,"")
+		self.ui.mainTabWidget.setTabText(1,"")
+		self.ui.mainTabWidget.setTabText(2,"")
+		self.ui.mainTabWidget.setTabText(3,"")
 		self.ui.actionAdd_Contact.setEnabled(False)
 		self.ui.actionJoin_groupchat.setEnabled(False)
 		self.ui.actionService_Discovery.setEnabled(False)
@@ -2439,8 +2439,11 @@ class mainWindow(QtGui.QMainWindow):
 		print "refreshing image after bob:",data,name
 		if self.client.groupchats.has_key(frm.userhost()):
 			tab,tabIndex=self.chat.findTab(frm.full(),True)
+			if not tab:
+				tab,tabIndex=self.chat.findTab(frm.full())
 		else:
 			tab,tabIndex=self.chat.findTab(frm.full())
+		print 'frmtab',tab,frm.full(),self.client.groupchats.has_key(frm.userhost())
 		if tab:
 			tab.chat.reloadImage(name,"file:///"+data)
 
@@ -4077,7 +4080,7 @@ class mainWindow(QtGui.QMainWindow):
 					else:
 						self.hide()
 		elif reason==QtGui.QSystemTrayIcon.MiddleClick:
-			self.ui.tabWidget.setCurrentIndex(2)
+			self.ui.mainTabWidget.setCurrentIndex(2)
 			if self.isHidden():
 				self.show()
 				self.raise_()
