@@ -834,9 +834,10 @@ class abstractChatWidget(QtGui.QWidget):
 			img ='<img src="cid:%s" alt="%s"/>'%(hash, alt)
 		else:
 			img ='<img src="xmpp:%s?recvfile;sid=%s" alt="%s"/>'%(self.main().client.jid.full(), hash, alt)
-		m=Message(unicode(self.jid))
+		m=Message(unicode(self.jid),  typ = self.typ)
 		m.setBody(alt)
 		m.setXHTML(img)
+		
 		m.setComposing("active")
 		self.main().client.sendMessage(msg = m)
 		img = '<img src="%s" alt="%s"/>'%(path, alt)

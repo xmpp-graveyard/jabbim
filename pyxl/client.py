@@ -1248,8 +1248,8 @@ class Client(derived):
 			return threads.deferToThread(_loadBOBLink, cid)
 			
 		self.bobDef[cid] = self.bobCacheDir+cid
-		if not self.hasFeature(to.full(), 'urn:xmpp:tmp:bob'):
-			return threads.deferToThread(_loadBOBLink, None)
+#		if not self.hasFeature(to.full(), 'urn:xmpp:tmp:bob'):
+#			return threads.deferToThread(_loadBOBLink, None)
 		iq = IQ(self.xmlstream, 'get')
 		self.disp(iq['id'])
 		iq['to'] = to.full()
