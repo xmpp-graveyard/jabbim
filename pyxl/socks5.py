@@ -599,7 +599,8 @@ class ClientFactory (protocol.ClientFactory):
 			pass
 		if not self.status == 'unconnected':
 			try:
-				self.xmpp.ft[self.xmpp_sid].finish()
+				print 'stopFactory::finish'
+				self.xmpp.ft[self.xmpp_sid].connectFailure()
 			except:
 				print 'no sid'
 		protocol.ClientFactory.stopFactory (self)
@@ -625,7 +626,8 @@ class ClientFactory (protocol.ClientFactory):
 		rmap = {"reason": reason, "socks": self.status}
 		try:
 			if self.xmpp.ft[self.xmpp_sid].size > 	self.xmpp.ft[self.xmpp_sid].transfered:
-				self.xmpp.ft[self.xmpp_sid].error = "Connection lost"
+				pass
+#				self.xmpp.ft[self.xmpp_sid].error = "Connection lost"
 			else:
 				self.xmpp.ft[self.xmpp_sid].connectFailure()
 		except:

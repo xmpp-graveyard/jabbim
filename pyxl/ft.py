@@ -134,6 +134,11 @@ class FTInit:
 		iq.addElement('start',  'http://jabber.org/protocol/sipub')
 		iq.start['id'] = id
 		if path != None:
+			if self.client.bobDef.has_key(id):
+				print 'cache hit!!'
+				d = defer.Deferred()
+				d.callback(self.client.bobDef[id])
+				return d
 			self.client.bobDef[id] = path
 		return iq.send().addCallback(_gotSid,  path,  id)
 	
@@ -691,8 +696,9 @@ class Jingle:
 		
 	
 	def delete(self,  error):
-		self.br = True
-		if error == 'activate error' or error == 'connect failed' :
+
+
+		if error == 'activate error' or error == 'connect failed' or error == "Connection lost":
 			props = self.fileprops
 			props['type'] = 'request'
 			trans = jingle.FTTransport()
@@ -701,6 +707,7 @@ class Jingle:
 			self.jingleSession.contentReplace(content)
 			self.transportReady = True
 			return True
+		self.br = True
 		if error != 'decline':
 			error = None
 		if self.jingleSession.state != 'ENDED':
