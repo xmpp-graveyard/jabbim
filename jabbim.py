@@ -4875,7 +4875,8 @@ class mainWindow(QtGui.QMainWindow):
 			if msg != None and len(msg)>0:
 				MainWindow.delayedMessages = msg
  			reactor.callLater(5, MainWindow.connect)
-		#else:
+		else:
+			self.client=None
 			 #= None
 		self.buildTrayMenu()
 		print "disconnected....."
