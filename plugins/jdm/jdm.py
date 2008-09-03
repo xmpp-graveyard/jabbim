@@ -57,7 +57,7 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.privateButton.setIcon(QtGui.QIcon("%s/jdisk-private-24.png" % self.pluginDir))
 			self.window.ui.album.setIcon(QtGui.QIcon("%s/jalbum-32.png" % self.pluginDir))
 			self.window.ui.easyshare.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
-			self.window.ui.showMiniRoster.setIcon(self.main.ui.tabWidget.tabIcon(0))
+			self.window.ui.showMiniRoster.setIcon(self.main.ui.mainTabWidget.tabIcon(0))
 			self.group=QtGui.QButtonGroup(self.window)
 			self.update=False
 

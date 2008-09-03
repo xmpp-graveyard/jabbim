@@ -17,6 +17,14 @@
     <normaloff>images/16x16/apps/jabbim.png</normaloff>images/16x16/apps/jabbim.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>19</y>
+     <width>335</width>
+     <height>663</height>
+    </rect>
+   </property>
    <layout class="QGridLayout" >
     <property name="margin" >
      <number>0</number>
@@ -34,6 +42,14 @@
         <number>1</number>
        </property>
        <widget class="QWidget" name="login" >
+        <property name="geometry" >
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>100</width>
+          <height>30</height>
+         </rect>
+        </property>
         <layout class="QGridLayout" >
          <property name="leftMargin" >
           <number>0</number>
@@ -387,6 +403,14 @@ p, li { white-space: pre-wrap; }
         </layout>
        </widget>
        <widget class="QWidget" name="roster" >
+        <property name="geometry" >
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>243</width>
+          <height>663</height>
+         </rect>
+        </property>
         <layout class="QGridLayout" >
          <property name="margin" >
           <number>0</number>
@@ -447,7 +471,7 @@ p, li { white-space: pre-wrap; }
                    <normaloff>images/16x16/status/jabber-not_in_roster.png</normaloff>images/16x16/status/jabber-not_in_roster.png</iconset>
                  </property>
                  <property name="popupMode" >
-                  <enum>QToolButton::InstantPopup</enum>
+                  <enum>QToolButton::MenuButtonPopup</enum>
                  </property>
                  <property name="toolButtonStyle" >
                   <enum>Qt::ToolButtonTextBesideIcon</enum>
@@ -523,6 +547,14 @@ p, li { white-space: pre-wrap; }
             <number>0</number>
            </property>
            <widget class="QWidget" name="rosterTab" >
+            <property name="geometry" >
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>239</width>
+              <height>589</height>
+             </rect>
+            </property>
             <attribute name="title" >
              <string> r</string>
             </attribute>
@@ -589,6 +621,14 @@ p, li { white-space: pre-wrap; }
             </layout>
            </widget>
            <widget class="QWidget" name="bookmarksTab" >
+            <property name="geometry" >
+             <rect>
+              <x>180</x>
+              <y>199</y>
+              <width>952</width>
+              <height>683</height>
+             </rect>
+            </property>
             <attribute name="title" >
              <string>b</string>
             </attribute>
@@ -662,6 +702,14 @@ p, li { white-space: pre-wrap; }
             </layout>
            </widget>
            <widget class="QWidget" name="eventsTab" >
+            <property name="geometry" >
+             <rect>
+              <x>202</x>
+              <y>221</y>
+              <width>952</width>
+              <height>683</height>
+             </rect>
+            </property>
             <attribute name="title" >
              <string>Events</string>
             </attribute>
@@ -795,6 +843,14 @@ p, li { white-space: pre-wrap; }
         </layout>
        </widget>
        <widget class="QWidget" name="splash" >
+        <property name="geometry" >
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>100</width>
+          <height>30</height>
+         </rect>
+        </property>
         <layout class="QVBoxLayout" >
          <property name="spacing" >
           <number>6</number>

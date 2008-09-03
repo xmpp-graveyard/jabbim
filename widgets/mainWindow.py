@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created: Fri Aug 29 18:35:50 2008
+# Created: Mon Sep 01 14:10:13 2008
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,6 +17,7 @@ class Ui_MainWindow(object):
         icon.addPixmap(QtGui.QPixmap("images/16x16/apps/jabbim.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(MainWindow)
+        self.centralwidget.setGeometry(QtCore.QRect(0, 19, 335, 663))
         self.centralwidget.setObjectName("centralwidget")
         self.gridlayout = QtGui.QGridLayout(self.centralwidget)
         self.gridlayout.setMargin(0)
@@ -28,6 +29,7 @@ class Ui_MainWindow(object):
         self.rosterStackedWidget = QtGui.QStackedWidget(self.splitter)
         self.rosterStackedWidget.setObjectName("rosterStackedWidget")
         self.login = QtGui.QWidget()
+        self.login.setGeometry(QtCore.QRect(0, 0, 100, 30))
         self.login.setObjectName("login")
         self.gridlayout1 = QtGui.QGridLayout(self.login)
         self.gridlayout1.setSpacing(6)
@@ -141,6 +143,7 @@ class Ui_MainWindow(object):
         self.gridlayout1.addWidget(self.profilesList, 7, 0, 1, 1)
         self.rosterStackedWidget.addWidget(self.login)
         self.roster = QtGui.QWidget()
+        self.roster.setGeometry(QtCore.QRect(0, 0, 243, 663))
         self.roster.setObjectName("roster")
         self.gridlayout3 = QtGui.QGridLayout(self.roster)
         self.gridlayout3.setMargin(0)
@@ -178,7 +181,7 @@ class Ui_MainWindow(object):
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("images/16x16/status/jabber-not_in_roster.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.statusWidget.setIcon(icon1)
-        self.statusWidget.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.statusWidget.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
         self.statusWidget.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.statusWidget.setAutoRaise(False)
         self.statusWidget.setArrowType(QtCore.Qt.NoArrow)
@@ -209,6 +212,7 @@ class Ui_MainWindow(object):
         self.mainTabWidget.setAutoFillBackground(True)
         self.mainTabWidget.setObjectName("mainTabWidget")
         self.rosterTab = QtGui.QWidget()
+        self.rosterTab.setGeometry(QtCore.QRect(0, 0, 239, 589))
         self.rosterTab.setObjectName("rosterTab")
         self.gridlayout5 = QtGui.QGridLayout(self.rosterTab)
         self.gridlayout5.setMargin(0)
@@ -248,6 +252,7 @@ class Ui_MainWindow(object):
         icon3.addPixmap(QtGui.QPixmap("images/16x16/categories/system-users.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mainTabWidget.addTab(self.rosterTab, icon3, "")
         self.bookmarksTab = QtGui.QWidget()
+        self.bookmarksTab.setGeometry(QtCore.QRect(180, 199, 952, 683))
         self.bookmarksTab.setObjectName("bookmarksTab")
         self.gridlayout6 = QtGui.QGridLayout(self.bookmarksTab)
         self.gridlayout6.setMargin(9)
@@ -271,6 +276,7 @@ class Ui_MainWindow(object):
         icon4.addPixmap(QtGui.QPixmap("images/16x16/categories/bookmarks.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mainTabWidget.addTab(self.bookmarksTab, icon4, "")
         self.eventsTab = QtGui.QWidget()
+        self.eventsTab.setGeometry(QtCore.QRect(202, 221, 952, 683))
         self.eventsTab.setObjectName("eventsTab")
         self.gridlayout7 = QtGui.QGridLayout(self.eventsTab)
         self.gridlayout7.setMargin(0)
@@ -317,6 +323,7 @@ class Ui_MainWindow(object):
         self.gridlayout3.addWidget(self.mainTabWidget, 1, 0, 1, 1)
         self.rosterStackedWidget.addWidget(self.roster)
         self.splash = QtGui.QWidget()
+        self.splash.setGeometry(QtCore.QRect(0, 0, 100, 30))
         self.splash.setObjectName("splash")
         self.vboxlayout2 = QtGui.QVBoxLayout(self.splash)
         self.vboxlayout2.setSpacing(6)
