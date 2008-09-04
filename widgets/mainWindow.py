@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created: Mon Sep 01 14:10:13 2008
+# Created: Thu Sep 04 08:30:32 2008
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -236,23 +236,27 @@ class Ui_MainWindow(object):
         self.rosterSearchClose.setObjectName("rosterSearchClose")
         self.hboxlayout4.addWidget(self.rosterSearchClose)
         self.gridlayout5.addLayout(self.hboxlayout4, 3, 0, 1, 1)
+        self.transportsWidget = QtGui.QWidget(self.rosterTab)
+        self.transportsWidget.setMaximumSize(QtCore.QSize(16777215, 40))
+        self.transportsWidget.setObjectName("transportsWidget")
+        self.gridlayout5.addWidget(self.transportsWidget, 0, 0, 1, 1)
         self.selectedItemStyle = QtGui.QWidget(self.rosterTab)
         self.selectedItemStyle.setObjectName("selectedItemStyle")
-        self.gridlayout5.addWidget(self.selectedItemStyle, 0, 0, 1, 1)
+        self.gridlayout5.addWidget(self.selectedItemStyle, 1, 0, 1, 1)
         self.rosterWidget = QtGui.QWidget(self.rosterTab)
         self.rosterWidget.setObjectName("rosterWidget")
-        self.gridlayout5.addWidget(self.rosterWidget, 4, 0, 1, 1)
+        self.gridlayout5.addWidget(self.rosterWidget, 5, 0, 1, 1)
         self.groupStyleWidget = QtGui.QWidget(self.rosterTab)
         self.groupStyleWidget.setObjectName("groupStyleWidget")
-        self.gridlayout5.addWidget(self.groupStyleWidget, 1, 0, 1, 1)
+        self.gridlayout5.addWidget(self.groupStyleWidget, 2, 0, 1, 1)
         self.userStyleWidget = QtGui.QWidget(self.rosterTab)
         self.userStyleWidget.setObjectName("userStyleWidget")
-        self.gridlayout5.addWidget(self.userStyleWidget, 2, 0, 1, 1)
+        self.gridlayout5.addWidget(self.userStyleWidget, 3, 0, 1, 1)
         icon3 = QtGui.QIcon()
         icon3.addPixmap(QtGui.QPixmap("images/16x16/categories/system-users.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mainTabWidget.addTab(self.rosterTab, icon3, "")
         self.bookmarksTab = QtGui.QWidget()
-        self.bookmarksTab.setGeometry(QtCore.QRect(180, 199, 952, 683))
+        self.bookmarksTab.setGeometry(QtCore.QRect(0, 0, 239, 589))
         self.bookmarksTab.setObjectName("bookmarksTab")
         self.gridlayout6 = QtGui.QGridLayout(self.bookmarksTab)
         self.gridlayout6.setMargin(9)
@@ -276,7 +280,7 @@ class Ui_MainWindow(object):
         icon4.addPixmap(QtGui.QPixmap("images/16x16/categories/bookmarks.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mainTabWidget.addTab(self.bookmarksTab, icon4, "")
         self.eventsTab = QtGui.QWidget()
-        self.eventsTab.setGeometry(QtCore.QRect(202, 221, 952, 683))
+        self.eventsTab.setGeometry(QtCore.QRect(0, 0, 239, 589))
         self.eventsTab.setObjectName("eventsTab")
         self.gridlayout7 = QtGui.QGridLayout(self.eventsTab)
         self.gridlayout7.setMargin(0)
@@ -288,7 +292,7 @@ class Ui_MainWindow(object):
         self.Form.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.Form.setObjectName("Form")
         self.scrollAreaWidgetContents = QtGui.QWidget(self.Form)
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 96, 148))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 235, 559))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.gridLayout = QtGui.QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout.setMargin(2)

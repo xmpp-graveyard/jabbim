@@ -1969,6 +1969,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.selectedItemStyle.hide()
 		self.setMinimumWidth(200)
 		self.ui.statusLine.hide()
+		self.ui.transportsWidget.l=QtGui.QHBoxLayout(self.ui.transportsWidget)
+		self.ui.transportsWidget.l.setContentsMargins(0,0,0,0)
+		self.ui.transportsWidget.l.addStretch()
 
 		#self.ui.bookmarks.setIndentation(0)
 
@@ -3351,8 +3354,8 @@ class mainWindow(QtGui.QMainWindow):
 		# make menu for transports
 		if len(self.transports)!=0:
 			#self.ui.line1.show()
+			self.ui.transportsWidget.show()
 			for transport in list(self.transports.keys()):
-				break
 				# make transports QMenu and use icon according to transports type and show
 				show=self.client.roster['users'][transport].status
 				if len(show)==0:
@@ -3372,8 +3375,10 @@ class mainWindow(QtGui.QMainWindow):
 				else:
 					ic=self.getIcon("1@"+transport,status=show,size="16x16")
 
-				self.transports[transport]=QtGui.QToolButton(self.ui.offlineButton.parent())
-				self.transports[transport].setMaximumSize(QtCore.QSize(16777215,20))
+				self.transports[transport]=QtGui.QToolButton(self.ui.transportsWidget)
+				#self.transports[transport].setMaximumSize(QtCore.QSize(16777215,20))
+				#self.transports[transport].setMinimumSize(QtCore.QSize(32,32))
+				self.transports[transport].setIconSize(QtCore.QSize(16,16))
 				self.transports[transport].setIcon(ic)
 
 				text='<table><tr>'
@@ -3433,11 +3438,12 @@ class mainWindow(QtGui.QMainWindow):
 				self.transports[transport].setArrowType(QtCore.Qt.NoArrow)
 				app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusWidgetChanged)
 				self.transports[transport].setMenu(menu)
-				self.ui.hboxlayout4.addWidget(self.transports[transport])
+				self.ui.transportsWidget.layout().insertWidget(0,self.transports[transport])
 				#self.statusWidgetMenu.addMenu(menu)
 			#self.statusWidgetMenu.addSeparator()
 		else:
 			#self.ui.line1.hide()
+			self.ui.transportsWidget.hide()
 			pass
 
 		# other actions
@@ -4845,7 +4851,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		for transport in self.transports.keys():
 			if self.transports[transport]:
-				self.ui.hboxlayout4.removeWidget(self.transports[transport])
+				self.ui.transportsWidget.layout().removeWidget(self.transports[transport])
 				self.transports[transport].setParent(None)
 				self.transports[transport].deleteLater()
 		self.transports={}

@@ -607,15 +607,25 @@ p, li { white-space: pre-wrap; }
               </layout>
              </item>
              <item row="0" column="0" >
-              <widget class="QWidget" native="1" name="selectedItemStyle" />
-             </item>
-             <item row="4" column="0" >
-              <widget class="QWidget" native="1" name="rosterWidget" />
+              <widget class="QWidget" native="1" name="transportsWidget" >
+               <property name="maximumSize" >
+                <size>
+                 <width>16777215</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </widget>
              </item>
              <item row="1" column="0" >
-              <widget class="QWidget" native="1" name="groupStyleWidget" />
+              <widget class="QWidget" native="1" name="selectedItemStyle" />
+             </item>
+             <item row="5" column="0" >
+              <widget class="QWidget" native="1" name="rosterWidget" />
              </item>
              <item row="2" column="0" >
+              <widget class="QWidget" native="1" name="groupStyleWidget" />
+             </item>
+             <item row="3" column="0" >
               <widget class="QWidget" native="1" name="userStyleWidget" />
              </item>
             </layout>
@@ -623,10 +633,10 @@ p, li { white-space: pre-wrap; }
            <widget class="QWidget" name="bookmarksTab" >
             <property name="geometry" >
              <rect>
-              <x>180</x>
-              <y>199</y>
-              <width>952</width>
-              <height>683</height>
+              <x>0</x>
+              <y>0</y>
+              <width>239</width>
+              <height>589</height>
              </rect>
             </property>
             <attribute name="title" >
@@ -704,10 +714,10 @@ p, li { white-space: pre-wrap; }
            <widget class="QWidget" name="eventsTab" >
             <property name="geometry" >
              <rect>
-              <x>202</x>
-              <y>221</y>
-              <width>952</width>
-              <height>683</height>
+              <x>0</x>
+              <y>0</y>
+              <width>239</width>
+              <height>589</height>
              </rect>
             </property>
             <attribute name="title" >
@@ -746,8 +756,8 @@ p, li { white-space: pre-wrap; }
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>96</width>
-                  <height>148</height>
+                  <width>235</width>
+                  <height>559</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gridLayout" >
