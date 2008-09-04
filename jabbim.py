@@ -2197,7 +2197,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.login_cancel, QtCore.SIGNAL("clicked ()"),self.connectCancel)
 		QtCore.QObject.connect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
 		QtCore.QObject.connect(self.ui.mucBrowserButton, QtCore.SIGNAL("clicked ()"),self.mucBrowser)
-		#QtCore.QObject.connect(self.ui.statusMessage, QtCore.SIGNAL("clicked (bool)"),self.statusMessageClicked)
+		QtCore.QObject.connect(self.ui.statusWidget, QtCore.SIGNAL("clicked (bool)"),self.statusMessageClicked)
 		#QtCore.QObject.connect(self.ui.statusLine, QtCore.SIGNAL("returnPressed ()"),self.statusLineFinished)
 		QtCore.QObject.connect(self.ui.statusLine, QtCore.SIGNAL("editingFinished () "),self.statusLineFinished)
 		#QtCore.QObject.connect(self.ui.offlineButton, QtCore.SIGNAL("clicked ( bool)"),self.hideOffline)
@@ -2986,7 +2986,8 @@ class mainWindow(QtGui.QMainWindow):
 		Called when user cancels to change topic by statusLine
 		"""
 		self.ui.statusLine.hide()
-		self.ui.statusMessage.show()
+		self.ui.statusWidget.show()
+		self.ui.moodButton.show()
 
 	def statusLineFinished(self):
 		"""
@@ -3001,13 +3002,15 @@ class mainWindow(QtGui.QMainWindow):
 		if contact.resources[self.client.jid.resource].status!=status:
 			self.sendPresence(None,self.selfStatus,status)
 		self.ui.statusLine.hide()
-		self.ui.statusMessage.show()
+		self.ui.statusWidget.show()
+		self.ui.moodButton.show()
 
-	def statusMessageClicked(self,b):
+	def statusMessageClicked(self,b=None):
 		"""
 		Called when user click on statusMessage.
 		"""
-		self.ui.statusMessage.hide()
+		self.ui.statusWidget.hide()
+		self.ui.moodButton.hide()
 		contact = self.client.roster['users'][self.client.jid.userhost()]
 		if contact.resources[self.client.jid.resource].status:
 			self.ui.statusLine.setText(unicode(contact.resources[self.client.jid.resource].status))
