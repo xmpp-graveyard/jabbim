@@ -1064,17 +1064,25 @@ class clientClass(pyxl.client.Client):
 		if self.main.xmlConsole.ui.enable.isChecked():
 			text=unicode(xml)
 			self.main.xmlConsole.ui.xml.append(text+"\n\n")
-		if self.lastxml<10:
-			self.lastxml+=1
-			f=open(self.main.homeDir+'/lastxml','ab')
+		if self.lastxml < 50:
+			self.lastxml += 1
 		else:
-			self.lastxml=0
-			f=open(self.main.homeDir+'/lastxml','wb')
-		try:
-			f.write(unicode(xml).encode('utf-8','replace'))
-		except:
-			log.err('Chyba zapisu lastxml')
-		f.close()
+			# rotate the lastxml log file
+			try:
+				self.lastxml = 0
+				if self.lastxml_fd:
+					self.lastxml_fd.close()
+					self.lastxml_fd = None
+					os.rename(self.main.homeDir+'/lastxml', self.main.homeDir+'/lastxml.1')
+			except:
+				log.err('Error rotating lastxml')
+		if not self.lastxml_fd:
+			try:
+				self.lastxml_fd = open(self.main.homeDir+'/lastxml','wb')
+			except:
+				log.err('Error opening lastxml')
+		self.lastxml_fd.write(xml.encode('utf-8') + "\n\n")
+		self.lastxml_fd.flush()
 
 	def on_UpdateContact(self,jid):
 		"""

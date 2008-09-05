@@ -80,7 +80,8 @@ class Client(derived):
 		self.main=main # mainWindow
 		self.xmlstream = None
 		self.ssl = SSL
-		self.lastxml=10
+		self.lastxml = 50
+		self.lastxml_fd = None
 		self.roster = {'users':{},'groups':{}}
 		self.roster_meta = {} # jid: {'tag':tag,  'order': 1}
 		self.first_presence = []
