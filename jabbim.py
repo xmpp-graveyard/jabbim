@@ -1953,10 +1953,14 @@ class mainWindow(QtGui.QMainWindow):
 
 		self.ui.tabWidgetButton=QtGui.QToolButton(self.ui.mainTabWidget)
 		self.ui.tabWidgetButton.setObjectName("jabbimButton")
-		self.ui.tabWidgetButton.setIcon(QtGui.QIcon("images/16x16/apps/jabbim.png"))
-		self.ui.tabWidgetButton.setPopupMode(QtGui.QToolButton.InstantPopup)
-		self.ui.tabWidgetButton.setArrowType(QtCore.Qt.NoArrow)
+		self.ui.tabWidgetButton.setIcon(QtGui.QIcon("images/16x16/categories/transports.png"))
+		self.ui.tabWidgetButton.setCheckable(True)
+		#self.ui.tabWidgetButton.setMinimumSize(QtCore.QSize(29,29))
+		QtCore.QObject.connect(self.ui.tabWidgetButton,QtCore.SIGNAL("toggled(bool)"),self.showTransports)
+		#self.ui.tabWidgetButton.setPopupMode(QtGui.QToolButton.InstantPopup)
+		#self.ui.tabWidgetButton.setArrowType(QtCore.Qt.NoArrow)
 		self.ui.mainTabWidget.setCornerWidget(self.ui.tabWidgetButton)
+		self.ui.tabWidgetButton.hide()
 
 		# look & feel :)
 		self.ui.gridlayout.setMargin(1)
@@ -2311,6 +2315,13 @@ class mainWindow(QtGui.QMainWindow):
 		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.connect()
+
+	def showTransports(self,bool):
+		print "showTransports",bool
+		if bool:
+			self.ui.transportsWidget.show()
+		else:
+			self.ui.transportsWidget.hide()
 
 	def systemSleep(self):
 		print "sleep emitted, disconnecting"
@@ -3085,7 +3096,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		# refresh selfAvatar tooltip, because some resource could be added
 		self.ui.selfAvatar.refreshToolTip()
-		self.ui.tabWidgetButton.setMenu(self.offlineMenu)
+		#self.ui.tabWidgetButton.setMenu(self.offlineMenu)
 
 	def offlineMenuHovered(self, action):
 		"""
@@ -3362,7 +3373,9 @@ class mainWindow(QtGui.QMainWindow):
 		# make menu for transports
 		if len(self.transports)!=0:
 			#self.ui.line1.show()
-			self.ui.transportsWidget.show()
+			#self.ui.transportsWidget.show()
+			self.ui.tabWidgetButton.setChecked(True)
+			self.ui.tabWidgetButton.show()
 			for transport in list(self.transports.keys()):
 				# make transports QMenu and use icon according to transports type and show
 				show=self.client.roster['users'][transport].status
@@ -3452,6 +3465,8 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			#self.ui.line1.hide()
 			self.ui.transportsWidget.hide()
+			self.ui.tabWidgetButton.hide()
+			self.ui.tabWidgetButton.setChecked(False)
 			pass
 
 		# other actions

@@ -502,7 +502,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="popupMode" >
-               <enum>QToolButton::InstantPopup</enum>
+               <enum>QToolButton::MenuButtonPopup</enum>
               </property>
               <property name="toolButtonStyle" >
                <enum>Qt::ToolButtonTextBesideIcon</enum>
@@ -1133,6 +1133,22 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel" >
      <x>171</x>
      <y>332</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moodButton</sender>
+   <signal>clicked()</signal>
+   <receiver>moodButton</receiver>
+   <slot>showMenu()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>222</x>
+     <y>48</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>209</x>
+     <y>49</y>
     </hint>
    </hints>
   </connection>

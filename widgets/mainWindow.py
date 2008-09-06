@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created: Thu Sep 04 08:30:32 2008
+# Created: Sat Sep 06 19:48:52 2008
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -190,7 +190,7 @@ class Ui_MainWindow(object):
         self.gridlayout4.addWidget(self.statusWidget2, 1, 1, 1, 1)
         self.moodButton = QtGui.QToolButton(self.frame)
         self.moodButton.setMinimumSize(QtCore.QSize(50, 0))
-        self.moodButton.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.moodButton.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
         self.moodButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.moodButton.setAutoRaise(False)
         self.moodButton.setArrowType(QtCore.Qt.NoArrow)
@@ -449,6 +449,7 @@ class Ui_MainWindow(object):
         QtCore.QObject.connect(self.login_password, QtCore.SIGNAL("returnPressed()"), self.login_connect.click)
         QtCore.QObject.connect(self.login_jid, QtCore.SIGNAL("returnPressed()"), self.login_connect.click)
         QtCore.QObject.connect(self.login_savePassword, QtCore.SIGNAL("clicked(bool)"), self.login_autoconnect.setEnabled)
+        QtCore.QObject.connect(self.moodButton, QtCore.SIGNAL("clicked()"), self.moodButton.showMenu)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
