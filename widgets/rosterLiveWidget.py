@@ -43,14 +43,14 @@ class emptyRosterWidget(QtGui.QWidget):
 		self.label=QtGui.QLabel(self)
 		self.label.setWordWrap(True)
 		layout.addWidget(self.label)
-		
+
 		self.add=QtGui.QPushButton(self.tr("Add contact"),self)
 		layout.addWidget(self.add)
-		
+
 		layout.addStretch()
-		
+
 		QtCore.QObject.connect(self.add,QtCore.SIGNAL("clicked()"),parent.main.addContactMainWindow)
-	
+
 	def emptyRoster(self):
 		text="<b>"+self.tr("Welcome to Jabbim!")+"</b><br/>"
 		text+=self.tr("Your contact list is empty. You can add or find your friends by clicking on button below or by Add contact from menu Actions.")
@@ -148,7 +148,7 @@ class userItem:
 		"""
 		self.icon=icon
 		self.main.repaint()
-	
+
 	def setAvatar(self,icon):
 		"""
 		Sets userItem's avatar. Frame is painted automaticaly by this function.
@@ -157,7 +157,7 @@ class userItem:
 		self.avatar=icon
 		self.frameAvatar=QtGui.QIcon(self.main.main.getAvatar(self.avatar.pixmap(30,30),size="32x32",frame=True))
 		self.selectedFrameAvatar=QtGui.QIcon(self.main.main.getAvatar(self.avatar.pixmap(60,58),size="64x64",frame=True))
-	
+
 	def setHidden(self,hidden):
 		"""
 		Hide or show userItem
@@ -237,17 +237,17 @@ class rosterWidget(QtGui.QWidget):
 		self.main.ui.rosterSearch.hide()
 		self.main.ui.rosterSearchLabel.hide()
 		self.main.ui.rosterSearchClose.hide()
-		
+
 		self.emptyRosterWidget=emptyRosterWidget(self)
 
 		#self.setRosterStyle(defaultrosterstyle.rosterStyle)
-		
+
 		#self.groups[self.specialName].height=self.rosterStyle.heightForItem(self.groups[self.specialName])
 		self.lastMove=[0,0,None]
-		
+
 		#QtCore.QObject.connect(self.main.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.sliderChanged)
-		
-		
+
+
 	def sliderChanged(self,i):
 		if self.main.config['rosterScrollBar']=='False':
 			self.repaint()
@@ -264,8 +264,8 @@ class rosterWidget(QtGui.QWidget):
 		for item in self.groups.iteritems():
 			item[1].height=self.rosterStyle.heightForItem(item[1])
 		self.repaint()
-		
-		
+
+
 
 	def addGroup(self,name):
 		"""
@@ -586,7 +586,7 @@ class rosterWidget(QtGui.QWidget):
 						y-=useritem.height
 							#if useritem==self.item:
 								#y+=self.selectedHeight-28
-	
+
 						#if useritem==self.item:
 							#y-=32
 					y+=item.height
@@ -665,7 +665,7 @@ class rosterWidget(QtGui.QWidget):
 		return ret
 
 	#}
-	
+
 	#{ Private functions
 
 	def getMetaParents(self,jid):
@@ -729,7 +729,7 @@ class rosterWidget(QtGui.QWidget):
 			self.colors.setObjectName("rosterView2")
 
 		self.palet=self.colors.palette()
-		
+
 		self.palette().setColor(QtGui.QPalette.Window,self.palet.color(QtGui.QPalette.Base))
 		self.repaint()
 
@@ -824,14 +824,14 @@ class rosterWidget(QtGui.QWidget):
 					self.data[mimeData]=item[0] # we have to find the item if user drop it
 					self.drag = QtGui.QDrag(self)
 					self.drag.setMimeData(mimeData)
-					
+
 					f=QtGui.QApplication.font()
 					f.setPixelSize(11)
 					f.setBold(True)
 
 					metrics=QtGui.QFontMetrics(f)
 					width=int(metrics.width(item[0].name))
-					
+
 					avatar=self.main.getAvatar(item[0].jid,size="64x64")
 					if not avatar:
 						avatar=QtGui.QPixmap("images/32x32/apps/jabbim.png")
@@ -851,15 +851,15 @@ class rosterWidget(QtGui.QWidget):
 			elif len(self.data)!=0:
 				self.data={}
 				self.lastMove=[0,0,None]
-				
+
 		return QtGui.QWidget.mouseMoveEvent(self,event)
 
 	def dtc(self,widget):
 		if widget!=self and self.selected:
 			self.selected=None
 			self.repaint()
-			
-		
+
+
 	#def dndmessage(self,text):
 		#if self.main.client.roster['users'].has_key(text):
 			#return "presunout kontakt/vytvorit metakontakt"
@@ -902,7 +902,7 @@ class rosterWidget(QtGui.QWidget):
 		for item in self.groups.iteritems():
 			item[1].height=self.rosterStyle.heightForItem(item[1])
 
-		
+
 	def paintGroupItem(self,painter,item,x,y):
 		"""
 		paints group item in normal roster
@@ -1103,7 +1103,7 @@ class rosterWidget(QtGui.QWidget):
 						self.selectItem(item)
 					else:
 						self.selectItem(item)
-		
+
 					if item.typ=='group' and item.main!='special':
 						if item.expanded:
 							item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png")
@@ -1128,7 +1128,7 @@ class rosterWidget(QtGui.QWidget):
 				return
 			else:
 				item=self.oldItem
-		
+
 		if item==None:
 			return QtGui.QWidget.mouseReleaseEvent(self,event)
 		if item.typ=='group' and item.main!='special':
@@ -1160,14 +1160,14 @@ class rosterWidget(QtGui.QWidget):
 				if item.main=="special":
 					x,y=self.itemCoordinates(item)
 					item=self.itemAt(x,y+item.height+5)
-	
+
 				self.selectItem(item)
 			#self.timer.start(40)
 			event.accept()
 		elif key==QtCore.Qt.Key_Up:
 			if self.item:
 				x,y=self.itemCoordinates(self.item)
-	
+
 				item=self.itemAt(x,y-3)
 				if item.main=="special":
 					x,y=self.itemCoordinates(item)
@@ -1254,7 +1254,7 @@ class rosterWidget(QtGui.QWidget):
 			#self.main.ui.rosterSearch.setFocus(QtCore.Qt.MouseFocusReason)
 			self.main.ui.rosterSearch.event(event)
 		event.ignore()
-			
+
 
 	def dragEnterEvent(self, event):
 		#log.msg('DRAG ENTER')
@@ -1280,10 +1280,10 @@ class rosterWidget(QtGui.QWidget):
 		if pos.y()-self.main.scroll.verticalScrollBar().value()<32:
 			self.scrollUp=True
 			self.timer.start(50)
-		
+
 		#if not pos.y()>self.main.scroll.height()-16 and not pos.y()-self.main.scroll.verticalScrollBar().value():
 			#self.timer.stop()
-		
+
 		if item:
 			event.acceptProposedAction()
 			if self.selected!=item:
@@ -1348,10 +1348,10 @@ class rosterWidget(QtGui.QWidget):
 					elif contact != None and ijid != False:
 						self.main.client.sendContact(self.main.client.getHighestJid(ijid), contact) #roster item exchange
 				#else:
-					
+
 				event.ignore()
 				return
-			
+
 			oldItem=self.data[event.mimeData()]
 			if item==oldItem:
 				event.ignore()
@@ -1363,15 +1363,15 @@ class rosterWidget(QtGui.QWidget):
 				#newLabel = DragLabel(piece, self)
 				#newLabel.move(position)
 				#newLabel.show()
-	
+
 				#position += QtCore.QPoint(newLabel.width(), 0)
-	
+
 			#if event.source() in self.children():
 				#event.setDropAction(QtCore.Qt.MoveAction)
 				#event.accept()
 			#else:
 			event.acceptProposedAction()
-			
+
 			# normal user > group
 			if oldItem.typ=="user" and item.typ=="group":
 				#items=QtCore.QStringList()
@@ -1379,7 +1379,7 @@ class rosterWidget(QtGui.QWidget):
 				#items.append(self.tr("Copy"))
 				#q,b=QtGui.QInputDialog.getItem(self,self.tr("Action"),self.tr("Select action."), items,0,False)
 				#q=unicode(q)
-				
+
 				contactMenu=QtGui.QMenu(self)
 				if item.name!=self.specialName:
 					action=contactMenu.addAction(self.tr("Move to group"))
@@ -1387,7 +1387,7 @@ class rosterWidget(QtGui.QWidget):
 					action.oldItem=oldItem
 					action.item=item
 					action.setObjectName("move_to_group_ng")
-					
+
 					action=contactMenu.addAction(self.tr("Copy to group"))
 					action.jid=jid
 					action.item=item
@@ -1457,7 +1457,7 @@ class rosterWidget(QtGui.QWidget):
 							for it in self.getUserItems(contact.jid):
 								it.metajid=""
 							self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription,[gr])
-						
+
 						self.main.client.setMetacontacts()
 						self.main.client.makeTempMeta()
 						name=unicode(self.main.client.roster['users'][jid].name)
@@ -1468,7 +1468,7 @@ class rosterWidget(QtGui.QWidget):
 						#self.statusLabel.hide()
 						self.sortItems()
 						self.repaint()
-						
+
 
 			# normal user > normal/meta user
 			elif oldItem.typ=="user" and item.typ=="user":
@@ -1486,7 +1486,7 @@ class rosterWidget(QtGui.QWidget):
 					action.oldItem=oldItem
 					action.item=item
 					action.setObjectName("move_to_group_nn")
-				
+
 				action=contactMenu.addAction(self.tr("Make metacontact"))
 				action.item=item
 				action.oldItem=oldItem
@@ -1496,7 +1496,7 @@ class rosterWidget(QtGui.QWidget):
 					action.jid=oldItem.jid
 					action.item=item
 					action.setObjectName("send_contact")
-				
+
 				if self.specialName!=item.group:
 					action=contactMenu.addAction(self.tr("Copy to group"))
 					action.jid=jid
@@ -1538,7 +1538,7 @@ class rosterWidget(QtGui.QWidget):
 						#self.setHighest(item.metajid)
 						#self.main.client.roster_meta[oldItem.jid]={'tag':item.tag,'order':1}
 						#self.main.client.setMetacontacts()
-						
+
 						#self.sortItems()
 						#if self.item!=item:
 							#self.selectItem(item)
@@ -1591,13 +1591,13 @@ class rosterWidget(QtGui.QWidget):
 			self.main.client.roster_meta[oldItem.jid]={'tag':item.tag,'order':1}
 			self.main.client.setMetacontacts()
 			self.main.client.makeTempMeta()
-			
+
 			self.sortItems()
 			if self.item!=item:
 				self.selectItem(item)
 			#self.reshow=True
 			self.repaint()
-		
+
 		elif cmd == 'send_contact':
 			jid = unicode(action.jid)
 			self.main.client.sendContact(self.main.client.getHighestJid(action.item.jid), self.main.client.getContactByJid(jid))
@@ -1656,9 +1656,10 @@ class rosterWidget(QtGui.QWidget):
 						user.hiddenBySearch=False
 					else:
 						user.hiddenBySearch=True
-			
+
 		else:
 			self.main.ui.rosterSearch.hide()
+			self.main.ui.rosterSearch.setText("")
 			self.main.ui.rosterSearchLabel.hide()
 			self.main.ui.rosterSearchClose.hide()
 			self.searchMode=False
@@ -1738,7 +1739,7 @@ class rosterWidget(QtGui.QWidget):
 					item[0].hidden=True
 				except:
 					print 'BUG!!! ',  item[0]
-			
+
 			if highest:
 				if len(item)!=0:
 					item=item[0]
@@ -1807,12 +1808,12 @@ class rosterWidget(QtGui.QWidget):
 		# build contact menu
 		contactMenu=QtGui.QMenu(self)
 		jid=self.main.getJid(jid)
-		
+
 
 		action=contactMenu.addAction(QtGui.QIcon("images/16x16/actions/add-user.png"),self.tr("Add to roster"))
 		action.setData(QtCore.QVariant(jid.userhost()))
 		action.setObjectName("add_contact")
-				
+
 		if self.main.client.groupchats != {}:	# Mozna zobrazit i kdyz v mucu nejsme aby to bylo vic videt :)
 			submenu = contactMenu.addMenu(QtGui.QIcon("images/16x16/categories/muc.png"),self.tr("Invite to conference"))
 			for gc in self.main.client.groupchats.keys():
@@ -1851,7 +1852,7 @@ class rosterWidget(QtGui.QWidget):
 				#self.main.runPluginCommand(value['module'].buildContactMenu,[contactMenu,contact])
 		# separator
 		contactMenu.addSeparator()
-		
+
 		## break up metacontact
 		#if self.main.client.roster_meta.has_key(jid):
 			#action=contactMenu.addAction(self.tr("Break up metacontact"))
@@ -1877,7 +1878,7 @@ class rosterWidget(QtGui.QWidget):
 			#action.setData(QtCore.QVariant(jid))
 			#action.setObjectName("a_authorize")
 		#if value in ["from", "both",'ask']:
-			#action = contactMenu.addAction(self.tr("Remove authorization"))	
+			#action = contactMenu.addAction(self.tr("Remove authorization"))
 			#action.setData(QtCore.QVariant(jid))
 			#action.setObjectName("a_unauthorize")
 		#if value in ["none", "from"]:
@@ -1916,7 +1917,7 @@ class rosterWidget(QtGui.QWidget):
 						#action.setEnabled(False)
 				#else:
 					#action.setData(QtCore.QVariant([unicode(jid),u"+"+unicode(k)]))
-				
+
 		if self.main.client.privacy:
 			if self.main.client.privacy.active:
 				submenu = contactMenu.addMenu(self.tr("Privacy"))
@@ -1928,7 +1929,7 @@ class rosterWidget(QtGui.QWidget):
 					action = submenu.addAction(self.tr("Unblock contact"))
 					action.setData(QtCore.QVariant(jid.userhost()))
 					action.setObjectName("privacy_unblock")
-				
+
 				# Sekci nemazat
 				#if not self.main.client.privacy.active.isAllowedJID(jid):
 				#	action = submenu.addAction(self.tr("Allow contact to see my status when I am invisible"))
@@ -1938,7 +1939,7 @@ class rosterWidget(QtGui.QWidget):
 				#	action = submenu.addAction(self.tr("Disallow contact to see my status when I am invisible"))
 				#	action.setData(QtCore.QVariant(jid))
 				#	action.setObjectName("privacy_disallow")
-				
+
 				if not self.main.client.privacy.active.isHiddenJID(jid.userhost()):
 					action = submenu.addAction(self.tr("Always hide my status to contact"))
 					action.setData(QtCore.QVariant(jid.userhost()))
@@ -1961,9 +1962,9 @@ class rosterWidget(QtGui.QWidget):
 							#action=submenu.addAction(res)
 							#action.setData(QtCore.QVariant("%s/%s" %(jid,res)))
 							#action.setObjectName("ad_hoc")
-				
+
 				submenu.connect(submenu, QtCore.SIGNAL("hovered ( QAction * )"),self.contactMenuHovered)
-		
+
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("hovered ( QAction * )"),self.contactMenuHovered)
@@ -2023,7 +2024,7 @@ class rosterWidget(QtGui.QWidget):
 							action = submenu2.addAction(res)
 							action.setObjectName("invite_chat")
 							action.setData(QtCore.QVariant(QtCore.QStringList([unicode(name),"%s/%s" % (jid, res) ]))) # kam pozyvame, koho
-					
+
 		# custom status
 		submenu=contactMenu.addMenu(self.tr("Custom status"))
 
@@ -2080,7 +2081,7 @@ class rosterWidget(QtGui.QWidget):
 				self.main.runPluginCommand(value['module'].buildContactMenu,[contactMenu,contact])
 		# separator
 		contactMenu.addSeparator()
-		
+
 		# break up metacontact
 		if self.main.client.roster_meta.has_key(jid):
 			action=contactMenu.addAction(self.tr("Break up metacontact"))
@@ -2106,7 +2107,7 @@ class rosterWidget(QtGui.QWidget):
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("a_authorize")
 		if value in ["from", "both",'ask']:
-			action = contactMenu.addAction(self.tr("Remove authorization"))	
+			action = contactMenu.addAction(self.tr("Remove authorization"))
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("a_unauthorize")
 		if value in ["none", "from"]:
@@ -2145,7 +2146,7 @@ class rosterWidget(QtGui.QWidget):
 						action.setEnabled(False)
 				else:
 					action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"+"+unicode(k)])))
-				
+
 		if self.main.client.privacy:
 			if self.main.client.privacy.active:
 				submenu = contactMenu.addMenu(self.tr("Privacy"))
@@ -2157,7 +2158,7 @@ class rosterWidget(QtGui.QWidget):
 					action = submenu.addAction(self.tr("Unblock contact"))
 					action.setData(QtCore.QVariant(jid))
 					action.setObjectName("privacy_unblock")
-				
+
 				# Sekci nemazat
 				#if not self.main.client.privacy.active.isAllowedJID(jid):
 				#	action = submenu.addAction(self.tr("Allow contact to see my status when I am invisible"))
@@ -2167,7 +2168,7 @@ class rosterWidget(QtGui.QWidget):
 				#	action = submenu.addAction(self.tr("Disallow contact to see my status when I am invisible"))
 				#	action.setData(QtCore.QVariant(jid))
 				#	action.setObjectName("privacy_disallow")
-				
+
 				if not self.main.client.privacy.active.isHiddenJID(jid):
 					action = submenu.addAction(self.tr("Always hide my status to contact"))
 					action.setData(QtCore.QVariant(jid))
@@ -2190,9 +2191,9 @@ class rosterWidget(QtGui.QWidget):
 							action=submenu.addAction(res)
 							action.setData(QtCore.QVariant("%s/%s" %(jid,res)))
 							action.setObjectName("ad_hoc")
-				
+
 				submenu.connect(submenu, QtCore.SIGNAL("hovered ( QAction * )"),self.contactMenuHovered)
-		
+
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("hovered ( QAction * )"),self.contactMenuHovered)
@@ -2208,24 +2209,24 @@ class rosterWidget(QtGui.QWidget):
 		action=contactMenu.addAction(self.tr("Rename by vCard"))
 		action.setData(QtCore.QVariant(name))
 		action.setObjectName("rename_by_vcard")
-		
+
 		contactMenu.addSeparator()
 
 		action=contactMenu.addAction(self.tr("Remove group"))
 		action.setData(QtCore.QVariant(name))
 		action.setObjectName("remove_group")
-		
+
 		submenu=contactMenu.addMenu(self.tr("Custom status"))
 
 		for status in ["online", "chat", "away", "xa", "dnd", "offline"]:
 			action=submenu.addAction(self.main.getIcon(status=status,size="32x32"),self.main.status[status])
 			action.setObjectName("custom_status")
 			action.setData(QtCore.QVariant(QtCore.QStringList([unicode(status), unicode(name)])))
-		
+
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.groupMenuTriggered)
 		return contactMenu
-	
+
 	def groupMenuTriggered(self,action):
 		cmd=action.objectName()
 		if cmd=="rename":
@@ -2280,7 +2281,7 @@ class rosterWidget(QtGui.QWidget):
 								pass
 							self.main.client.sendRosterUpdate(contact.jid, contact.name, contact.subscription,g)
 
-								
+
 
 					self.main.client.sendRosterUpdate(contact.jid, contact.name, contact.subscription,g)
 
@@ -2315,8 +2316,8 @@ class rosterWidget(QtGui.QWidget):
 							for jd in self.main.client.roster['users'].iterkeys():
 								if jd.find(j.host) != -1:
 									self.main.client.delContact(jd)
-				
-			
+
+
 
 		elif cmd=='add_contact':
 			jid=action.data()
@@ -2387,7 +2388,7 @@ class rosterWidget(QtGui.QWidget):
 				#jid_r, res = jid.split("/", 1)
 				#item=self.getUserItems(jid_r)[0]
 				#self.main.chat.addChatTab(jid,"%s/%s" % (item.name, res),self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
-			
+
 			jid=jidT.JID(jid)
 			if not jid.resource:
 				item=self.getUserItems(jid.userhost())[0]
@@ -2404,10 +2405,10 @@ class rosterWidget(QtGui.QWidget):
 			user_jid, room_jid = [unicode(val.toString()) for val in action.data().toList()]
 			reason = self.tr("Hi! I'd love to see you in multichat at ") + room_jid
 			self.main.client.sendInvitation(user_jid, room_jid, reason)
-		
+
 		elif cmd == "invite_chat":
 			kam, koho = [unicode(val.toString()) for val in action.data().toList()]
-			
+
 			room=str(int(time.time())) # define room name
 			# find server when we can host the room
 			mucjid = None
@@ -2422,7 +2423,7 @@ class rosterWidget(QtGui.QWidget):
 				if mucjid:
 					break
 			room+="@"+mucjid # room jabber id
-			
+
 			name = self.getNameByJID(kam) # get name of tab where is this widget showed
 			tab, index = self.main.chat.findTab(kam)
 			rmIndex=int(index) # get index of this tab
@@ -2518,7 +2519,7 @@ class rosterWidget(QtGui.QWidget):
 #			self.cmds = commands.Commands(self.main, jid)
 #			self.cmds.dialog.show()
 		log.msg("END CONTACT")
-	
+
 	def contactMenuHovered(self,action): #Work In Progress
 		print 'hover!'
 		cmd=action.objectName()
@@ -2532,7 +2533,7 @@ class rosterWidget(QtGui.QWidget):
 		#self.dialog.show()
 		#self.ve=vcardeditor.vcardEditorDialog(self.main,data,self,False)
 		#self.ve.show()
-		
+
 
 	def changeGroup(self,jid,action,group):
 		# change group of users
