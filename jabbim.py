@@ -134,13 +134,13 @@ class clientClass(pyxl.client.Client):
 			else:
 				port = self.main.config['proxyPort']
 			self.proxy = {'host':self.main.config['proxyHost'],  'port':port}
-			
+
 		self.version=self.main.version
 		self.bookmarksEnabled=True #: True if bookmarks is enabled by server
 		self.xmlCount=[]
 		# load plugins
 		self.loadPlugins()
-		
+
 
 	def on_pep(self, frm, ns, payload):
 		"""
@@ -1280,7 +1280,7 @@ class clientClass(pyxl.client.Client):
 		#check for BoB images
 		msg = self.main.getBOBImages(msg)
 		#unpack legacy vars
-		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack() 
+		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack()
 		# get user (resource) and MUC jid (saved in frm)
 		start=time.time()
 		if typ=="chat":
@@ -1363,7 +1363,7 @@ class clientClass(pyxl.client.Client):
 		#check for BoB images
 		msg = self.main.getBOBImages(msg)
 		#unpack legacy vars
-		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack() 
+		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack()
 		# get user icon or name, if we have him in roster. Or use default icon and jid as name
 		if typ=="groupchat":
 			return
@@ -1985,6 +1985,10 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.transportsWidget.l.setContentsMargins(0,0,0,0)
 		self.ui.transportsWidget.l.addStretch()
 
+		self.ui.mainTabWidget.tabBar().mousePressEvent=self.tabMousePressEvent
+		#print "TABBAR:",self.ui.mainTabWidget.tabBar().mousePressEvent
+		#self.ui.mainTabWidget.setTabBar(self.ui.tBar)
+
 		#self.ui.bookmarks.setIndentation(0)
 
 		# filetransfer
@@ -2316,6 +2320,20 @@ class mainWindow(QtGui.QMainWindow):
 		if self.config['autoJoin']=='True':
 			self.connect()
 
+	def tabMousePressEvent(self,event):
+		#i=self.ui.mainTabWidget.tabBar().tabAt(self.ui.mainTabWidget.tabBar().mapFromGlobal(self.ui.mainTabWidget.mapToGlobal(event.pos())))
+		i=self.ui.mainTabWidget.tabBar().tabAt(event.pos())
+		print "tabMousePressEnvent",i,self.ui.mainTabWidget.tabBar().currentIndex()
+		if i==0 and self.ui.mainTabWidget.tabBar().currentIndex()==0:
+			self.ui.roster.favouriteMode=not self.ui.roster.favouriteMode
+			if not self.ui.roster.favouriteMode:
+				self.ui.mainTabWidget.setTabIcon(0,QtGui.QIcon("images/16x16/categories/system-users.png"))
+			else:
+				self.ui.mainTabWidget.setTabIcon(0,QtGui.QIcon("images/16x16/categories/srdce-cele.png"))
+
+			self.ui.roster.repaint()
+		return QtGui.QTabBar.mousePressEvent(self.ui.mainTabWidget.tabBar(),event)
+
 	def showTransports(self,bool):
 		print "showTransports",bool
 		if bool:
@@ -2395,7 +2413,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		d=threads.deferToThread(self._getImage,file,size)
 		return d
-	
+
 	def getBOBImages(self,  msg):
 		"""
 		Replaces src of images with cid: link
@@ -2406,7 +2424,7 @@ class mainWindow(QtGui.QMainWindow):
 			dom = parseString(unicode('<p>'+msg.xhtml+'</p>'))
 			#seznam = {}
 			changed = False
-			
+
 			for el in dom.getElementsByTagName('img'):
 				src = el.getAttribute('src')
 				if src != None and src.startswith('cid:'):
@@ -2451,7 +2469,7 @@ class mainWindow(QtGui.QMainWindow):
 							tab.chat.ui.webkit.messageObject.addHandler(i,tab.chat.ui.webkit.reloadImage,[i,link])
 						print "RETURN",d
 						self.imageId+=1
-						changed = True						
+						changed = True
 			if changed:
 				print unicode(dom.toxml())
 				msg.setXHTML(unicode(dom.toxml()))
@@ -4553,7 +4571,7 @@ class mainWindow(QtGui.QMainWindow):
 			if unicode(w.jid) == frm:
 				# update viewport to refresh image
 				w.chat.ui.textEdit.viewport().update()
-	
+
 	def xmppUri(self,  url,  path = None):
 		# path is used to save auto-accepted files
 		#if path == None: no auto-accept
@@ -4571,7 +4589,7 @@ class mainWindow(QtGui.QMainWindow):
 		if query['type'] == 'message':
 			#open tab here
 			status = 'offline' # HACK! doplnit aktualni stav kvuli ikonky
-			self.chat.addChatTab(jid.full(),self.ui.roster.getNameByJID(jid.userhost()),self.getIcon(jid.full(),status = status,size="16x16")) 
+			self.chat.addChatTab(jid.full(),self.ui.roster.getNameByJID(jid.userhost()),self.getIcon(jid.full(),status = status,size="16x16"))
 			self.chat.activate()
 			return True
 		elif query['type'] == 'recvfile':
@@ -4612,10 +4630,10 @@ class mainWindow(QtGui.QMainWindow):
 
 	def jidError(self):
 		QtGui.QMessageBox.critical(self, self.tr("Bad JID"),self.tr("You have an error in your Jabber ID."))
-	
+
 	def passError(self):
 		QtGui.QMessageBox.critical(self, self.tr("Empty password"),self.tr("Your password is empty."))
-		
+
 	def connect__(self):
 		start=time.time()
 		# get variables

@@ -8,6 +8,10 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
+class tabWidget(QtGui.QTabBar):
+	def __init__(self,parent,main):
+		QtGui.QTabBar.__init__(self,parent)
+		self.main=main
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -211,6 +215,8 @@ class Ui_MainWindow(object):
         self.mainTabWidget = QtGui.QTabWidget(self.roster)
         self.mainTabWidget.setAutoFillBackground(True)
         self.mainTabWidget.setObjectName("mainTabWidget")
+        self.tabWidget=tabWidget(MainWindow,self.mainTabWidget)
+        self.mainTabWidget.setTabBar(self.tabWidget)
         self.rosterTab = QtGui.QWidget()
         self.rosterTab.setGeometry(QtCore.QRect(0, 0, 239, 589))
         self.rosterTab.setObjectName("rosterTab")
