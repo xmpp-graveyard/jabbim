@@ -16,8 +16,12 @@ from twisted.words.protocols.jabber.client import *
 
 from twisted.words.protocols.jabber.client import *
 from twisted.internet import reactor
-import bosh.xmlstream
-from bosh import client as bclient
+try:
+	import bosh.xmlstream
+	from bosh import client as bclient
+except:
+	print "web2 is not installed"
+
 
 def basicClientFactory(jid, secret):
     a = RegisteringAuthenticator(jid, secret)

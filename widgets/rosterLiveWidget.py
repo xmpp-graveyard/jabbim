@@ -486,6 +486,8 @@ class rosterWidget(QtGui.QWidget):
 							#y-=useritem.height
 			else:
 				users = sorted(self.main.userRating.users.values(), key=operator.attrgetter('rating'), reverse=True)
+				if len(users)>10:
+					users=users[:10]
 				jids = [u.jid for u in users ]
 				items={}
 				u=[]
@@ -990,22 +992,25 @@ class rosterWidget(QtGui.QWidget):
 								y+=useritem.height
 						y+=item.height#+self.rosterStyle.spaceBetweenGroups
 			else:
-				users = sorted(self.main.userRating.users.values(), key=operator.attrgetter('rating'), reverse=True)
-				jids = [u.jid for u in users ]
-				items={}
-				u=[]
-				for v in self.metaItems.itervalues():
-					for user in v:
-						u.append(user)
-				for user in self.users+u:
-					if user.jid in jids:
-						items[user.jid]=user
-				for jid in jids:
-					if items.has_key(jid):
-						if y+items[jid].height<self.parent().height()-20:
-							y+=items[jid].height
-						else:
-							break
+				y=self.parent().height()-20
+				#users = sorted(self.main.userRating.users.values(), key=operator.attrgetter('rating'), reverse=True)
+				#if len(users)>10:
+					#users=users[:10]
+				#jids = [u.jid for u in users ]
+				#items={}
+				#u=[]
+				#for v in self.metaItems.itervalues():
+					#for user in v:
+						#u.append(user)
+				#for user in self.users+u:
+					#if user.jid in jids:
+						#items[user.jid]=user
+				#for jid in jids:
+					#if items.has_key(jid):
+						#if y+items[jid].height<self.parent().height()-20:
+							#y+=items[jid].height
+						#else:
+							#break
 		else:
 			for item in self.users:
 				if item.hiddenBySearch==False:

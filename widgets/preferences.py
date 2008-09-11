@@ -572,10 +572,11 @@ class preferencesWindow(QtGui.QDialog):
 			self.main.loadTheme(text,file)
 
 	def themeChanged(self,item,old):
-		data=item.data(32)
-		if data:
-			file=unicode(data.toString())
-			self.reskin(file)
+		if item:
+			data=item.data(32)
+			if data:
+				file=unicode(data.toString())
+				self.reskin(file)
 
 	def chatskinVariantChanged(self,index):
 		path=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())

@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -4097,10 +4097,11 @@ class mainWindow(QtGui.QMainWindow):
 			if str(self.config['saveExpandedGroups'])=='True':
 				expanded=[]
 				if self.client!=None:
-					for name,item in self.client.roster['groups'].iteritems():
-						if item.expanded==True:
-							expanded.append(name)
-					self.config['expandedGroups']=expanded
+					if len(self.client.roster['groups'])!=0:
+						for name,item in self.client.roster['groups'].iteritems():
+							if item.expanded==True:
+								expanded.append(name)
+						self.config['expandedGroups']=expanded
 					#self.config.write()
 			self.config.write()
 		# save config to the ~/.jabbim/
