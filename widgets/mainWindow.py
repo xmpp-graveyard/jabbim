@@ -1,17 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainWindow.ui'
+# Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Sat Sep 06 19:48:52 2008
-#      by: PyQt4 UI code generator 4.4.3
+# Created: Fri Sep 12 21:29:57 2008
+#      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-class tabWidget(QtGui.QTabBar):
-	def __init__(self,parent,main):
-		QtGui.QTabBar.__init__(self,parent)
-		self.main=main
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -215,8 +211,6 @@ class Ui_MainWindow(object):
         self.mainTabWidget = QtGui.QTabWidget(self.roster)
         self.mainTabWidget.setAutoFillBackground(True)
         self.mainTabWidget.setObjectName("mainTabWidget")
-        self.tabWidget=tabWidget(MainWindow,self.mainTabWidget)
-        self.mainTabWidget.setTabBar(self.tabWidget)
         self.rosterTab = QtGui.QWidget()
         self.rosterTab.setGeometry(QtCore.QRect(0, 0, 239, 589))
         self.rosterTab.setObjectName("rosterTab")
@@ -321,7 +315,6 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.messages, 3, 0, 1, 1)
         spacerItem9 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridLayout.addItem(spacerItem9, 4, 0, 1, 1)
-        self.Form.setWidget(self.scrollAreaWidgetContents)
         self.gridlayout7.addWidget(self.Form, 1, 0, 1, 1)
         self.eventsLabel = QtGui.QLabel(self.eventsTab)
         self.eventsLabel.setAlignment(QtCore.Qt.AlignCenter)
@@ -374,6 +367,8 @@ class Ui_MainWindow(object):
         self.menubar.setObjectName("menubar")
         self.menuPlugins = QtGui.QMenu(self.menubar)
         self.menuPlugins.setObjectName("menuPlugins")
+        self.menuView = QtGui.QMenu(self.menubar)
+        self.menuView.setObjectName("menuView")
         self.menuHelp = QtGui.QMenu(self.menubar)
         self.menuHelp.setObjectName("menuHelp")
         self.menuAkce = QtGui.QMenu(self.menubar)
@@ -441,12 +436,14 @@ class Ui_MainWindow(object):
         self.menuAkce.addAction(self.actionPrivacy_list_editor)
         self.menuAkce.addAction(self.actionIdentity)
         self.menuAkce.addSeparator()
+        self.menuAkce.addAction(self.menuPlugins.menuAction())
+        self.menuAkce.addSeparator()
         self.menuAkce.addAction(self.actionPreferences)
         self.menuAkce.addAction(self.actionProfiles)
         self.menuAkce.addSeparator()
         self.menuAkce.addAction(self.actionQuit)
         self.menubar.addAction(self.menuAkce.menuAction())
-        self.menubar.addAction(self.menuPlugins.menuAction())
+        self.menubar.addAction(self.menuView.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -510,6 +507,7 @@ class Ui_MainWindow(object):
         self.mainTabWidget.setTabToolTip(self.mainTabWidget.indexOf(self.eventsTab), QtGui.QApplication.translate("MainWindow", "Events", None, QtGui.QApplication.UnicodeUTF8))
         self.login_cancel.setText(QtGui.QApplication.translate("MainWindow", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPlugins.setTitle(QtGui.QApplication.translate("MainWindow", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuView.setTitle(QtGui.QApplication.translate("MainWindow", "View", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAkce.setTitle(QtGui.QApplication.translate("MainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
         self.actionShow_XML.setText(QtGui.QApplication.translate("MainWindow", "Show XML", None, QtGui.QApplication.UnicodeUTF8))

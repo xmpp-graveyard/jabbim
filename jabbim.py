@@ -1985,6 +1985,18 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.transportsWidget.l.setContentsMargins(0,0,0,0)
 		self.ui.transportsWidget.l.addStretch()
 
+		# menuView QActions
+		self.showOfflineAction=self.ui.menuView.addAction(self.tr("Show Offline"))
+		self.showOfflineAction.setCheckable(True)
+		self.showOfflineAction.setObjectName('show_offline')
+		self.showOfflineAction.setChecked(False)
+		QtCore.QObject.connect(self.showOfflineAction,QtCore.SIGNAL("toggled ( bool )"),self.hideOffline)
+		self.showFavouriteAction=self.ui.menuView.addAction(self.tr("Show Favourite"))
+		self.showFavouriteAction.setCheckable(True)
+		self.showFavouriteAction.setObjectName('show_favourite')
+		self.showFavouriteAction.setChecked(False)
+		QtCore.QObject.connect(self.showFavouriteAction,QtCore.SIGNAL("triggered ( bool )"),self.showFavourite)
+
 		self.ui.mainTabWidget.tabBar().mousePressEvent=self.tabMousePressEvent
 		#print "TABBAR:",self.ui.mainTabWidget.tabBar().mousePressEvent
 		#self.ui.mainTabWidget.setTabBar(self.ui.tBar)
@@ -2320,18 +2332,21 @@ class mainWindow(QtGui.QMainWindow):
 		if self.config['autoJoin']=='True':
 			self.connect()
 
+	def showFavourite(self,b=None):
+		self.ui.roster.favouriteMode=not self.ui.roster.favouriteMode
+		if not self.ui.roster.favouriteMode:
+			self.ui.mainTabWidget.setTabIcon(0,QtGui.QIcon("images/16x16/categories/system-users.png"))
+		else:
+			self.ui.mainTabWidget.setTabIcon(0,QtGui.QIcon("images/16x16/categories/srdce-cele.png"))
+		self.ui.roster.repaint()
+		self.showFavouriteAction.setChecked(self.ui.roster.favouriteMode)
+
 	def tabMousePressEvent(self,event):
 		#i=self.ui.mainTabWidget.tabBar().tabAt(self.ui.mainTabWidget.tabBar().mapFromGlobal(self.ui.mainTabWidget.mapToGlobal(event.pos())))
 		i=self.ui.mainTabWidget.tabBar().tabAt(event.pos())
 		print "tabMousePressEnvent",i,self.ui.mainTabWidget.tabBar().currentIndex()
 		if i==0 and self.ui.mainTabWidget.tabBar().currentIndex()==0:
-			self.ui.roster.favouriteMode=not self.ui.roster.favouriteMode
-			if not self.ui.roster.favouriteMode:
-				self.ui.mainTabWidget.setTabIcon(0,QtGui.QIcon("images/16x16/categories/system-users.png"))
-			else:
-				self.ui.mainTabWidget.setTabIcon(0,QtGui.QIcon("images/16x16/categories/srdce-cele.png"))
-
-			self.ui.roster.repaint()
+			self.showFavourite()
 		return QtGui.QTabBar.mousePressEvent(self.ui.mainTabWidget.tabBar(),event)
 
 	def showTransports(self,bool):
@@ -4429,7 +4444,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		#self.events.addAddUserEvent('hanzz@njs.netlab.cz','offline users are shown, False offline users are hidden')
 		self.config['showOffline']=unicode(bool)
-		#self.showOfflineAction.setChecked(bool)
+		self.showOfflineAction.setChecked(bool)
 		#self.ui.offlineButton.setChecked(bool)
 		self.offline=bool
 		self.ui.roster.showOffline=bool

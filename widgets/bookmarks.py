@@ -9,15 +9,15 @@ class bookmarksClass:
 	def __init__(self,bookmarks,main):
 		self.bookmarks=bookmarks
 		self.main=main
-		self.bookmarks.setItemDelegate(mucbrowser.delegate(0,self.bookmarks,22))
+		#self.bookmarks.setItemDelegate(mucbrowser.delegate(0,self.bookmarks,22))
 		self.bookmarks.setAlternatingRowColors(False)
 		
 
 		QtCore.QObject.connect(self.bookmarks, QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.bookmarksContextMenu)
-		QtCore.QObject.connect(self.bookmarks, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.bookmarksCurrentChanged)
+		#QtCore.QObject.connect(self.bookmarks, QtCore.SIGNAL("currentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )"),self.bookmarksCurrentChanged)
 		#QtCore.QObject.connect(self.bookmarks, QtCore.SIGNAL("itemActivated ( QTreeWidgetItem *, int )"),self.bookmarksClicked)
 		QtCore.QObject.connect(self.bookmarks, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.bookmarksClicked)
-		QtCore.QObject.connect(self.bookmarks, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.bookmarksItemClicked)
+		#QtCore.QObject.connect(self.bookmarks, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.bookmarksItemClicked)
 
 		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Delete), self.bookmarks,self.deleteCurrentBookmark)
 		
@@ -26,25 +26,25 @@ class bookmarksClass:
 		self.bookmarks.header().hide()
 		self.bookmarks.hideColumn(1)
 		
-	def on_discoItemsBookmarksReceived(self, par):
-		"""
-		Called when disco#items of bookmarked groupchat arrived.
-		"""
-		item = par[1]
-		mainWindow=self.main
-		if len(self.main.client.disco[unicode(par[0])][None]['items'])!=0:
-			users="<b>"+unicode(mainWindow.tr("Users:"))+"</b> "
-			for usr in self.main.client.disco[unicode(par[0])][None]['items'].itervalues():
-				users+=usr['name']+", "
-		else:
-			users=unicode(mainWindow.tr("There is no user"))
-		if item in self.bookmarks.selectedItems():
-			item.setData(0,32,QtCore.QVariant(users))
-			metrics=QtGui.QApplication.fontMetrics()
-			rect=metrics.boundingRect(0, 0,self.main.ui.bookmarks.columnWidth(0), self.main.height(), QtCore.Qt.TextWordWrap, "Users: "+unicode(item.data(0,32).toString()))
-			print 'aa',metrics.height(),rect.height()
-			item.setSizeHint(0,QtCore.QSize(100,metrics.height()*2+rect.height()))
-			self.main.ui.bookmarks.repaint()
+	#def on_discoItemsBookmarksReceived(self, par):
+		#"""
+		#Called when disco#items of bookmarked groupchat arrived.
+		#"""
+		#item = par[1]
+		#mainWindow=self.main
+		#if len(self.main.client.disco[unicode(par[0])][None]['items'])!=0:
+			#users="<b>"+unicode(mainWindow.tr("Users:"))+"</b> "
+			#for usr in self.main.client.disco[unicode(par[0])][None]['items'].itervalues():
+				#users+=usr['name']+", "
+		#else:
+			#users=unicode(mainWindow.tr("There is no user"))
+		#if item in self.bookmarks.selectedItems():
+			#item.setData(0,32,QtCore.QVariant(users))
+			#metrics=QtGui.QApplication.fontMetrics()
+			#rect=metrics.boundingRect(0, 0,self.main.ui.bookmarks.columnWidth(0), self.main.height(), QtCore.Qt.TextWordWrap, "Users: "+unicode(item.data(0,32).toString()))
+			#print 'aa',metrics.height(),rect.height()
+			#item.setSizeHint(0,QtCore.QSize(100,metrics.height()*2+rect.height()))
+			#self.main.ui.bookmarks.repaint()
 
 	def bookmarksClicked(self,item,i):
 		"""
@@ -194,20 +194,20 @@ class bookmarksClass:
 			self.main.client.setBookmarks()
 			self.buildBookmarks()
 
-	def bookmarksItemClicked(self,item,i):
-		return
-		if item.isExpanded():
-			self.bookmarks.collapseItem(item)
-		else:
-			self.bookmarks.expandItem(item)
+	#def bookmarksItemClicked(self,item,i):
+		#return
+		#if item.isExpanded():
+			#self.bookmarks.collapseItem(item)
+		#else:
+			#self.bookmarks.expandItem(item)
 
-	def bookmarksCurrentChanged(self,item,old):
-		if item and old and item.parent() and old.parent():
-			item.setSizeHint(0,old.sizeHint(0))
+	#def bookmarksCurrentChanged(self,item,old):
+		#if item and old and item.parent() and old.parent():
+			#item.setSizeHint(0,old.sizeHint(0))
 
-		if old and old.parent():
-			old.setData(0,QtCore.Qt.SizeHintRole,QtCore.QVariant())
+		#if old and old.parent():
+			#old.setData(0,QtCore.Qt.SizeHintRole,QtCore.QVariant())
 
-		if item != None and item.parent():
-			#self.bookmarks.setCurrentItem(item)
-			self.main.client.getDiscoItems(unicode(item.text(1)),callback=self.on_discoItemsBookmarksReceived,callback_par=(unicode(item.text(1)), item))
+		#if item != None and item.parent():
+			##self.bookmarks.setCurrentItem(item)
+			#self.main.client.getDiscoItems(unicode(item.text(1)),callback=self.on_discoItemsBookmarksReceived,callback_par=(unicode(item.text(1)), item))
