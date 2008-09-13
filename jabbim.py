@@ -1979,7 +1979,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.groupStyleWidget.hide()
 		self.ui.userStyleWidget.hide()
 		self.ui.selectedItemStyle.hide()
-		self.setMinimumWidth(200)
+		#self.setMinimumWidth(200)
 		self.ui.statusLine.hide()
 		self.ui.transportsWidget.l=QtGui.QHBoxLayout(self.ui.transportsWidget)
 		self.ui.transportsWidget.l.setContentsMargins(0,0,0,0)
