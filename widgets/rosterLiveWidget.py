@@ -486,17 +486,29 @@ class rosterWidget(QtGui.QWidget):
 							#y-=useritem.height
 			else:
 				users = sorted(self.main.userRating.users.values(), key=operator.attrgetter('rating'), reverse=True)
-				if len(users)>10:
-					users=users[:10]
 				jids = [u.jid for u in users ]
 				items={}
 				u=[]
+				transport=self.main.config['showTransports']
 				for v in self.metaItems.itervalues():
 					for user in v:
 						u.append(user)
+				h=0
 				for user in self.users+u:
+					if h>self.height():
+						break
 					if user.jid in jids:
-						items[user.jid]=user
+						if transport=='True' and user.transport==True and user.jid in self.main.client.roster['users'].keys():
+							items[user.jid]=user
+							h+=user.height
+						elif not user.transport:
+							if self.showOffline==True and not user.hiddenBySearch:
+								items[user.jid]=user
+								h+=user.height
+							else:
+								if not user.hidden and not user.hiddenBySearch and user.jid in self.main.client.roster['users'].keys():
+									items[user.jid]=user
+									h+=user.height
 				for jid in jids:
 					if  items.has_key(jid):
 						item=items[jid]
