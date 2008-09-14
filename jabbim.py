@@ -3647,6 +3647,7 @@ class mainWindow(QtGui.QMainWindow):
   		self.userRating.last_reward=float(self.config['ratingLastReward'])
 		self.fillLoginForm()
 		self.loadTheme()
+		self.loadSkin()
 		self.ui.roster.reskin()
 		#if self.config['rosterMode'] == "compact":
 		#	self.ui.roster.setRosterStyle(widgets.compactrosterstyle.rosterStyle)
