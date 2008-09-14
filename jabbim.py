@@ -3214,7 +3214,7 @@ class mainWindow(QtGui.QMainWindow):
 			for user in self.userRating.users.values():
 				if user.jid in data.keys():
 					self.userRating.users[user.jid].messages=int(data[user.jid]['messages'])
-					self.userRating.users[user.jid].rating=float(data[user.jid]['reward'])
+					self.userRating.users[user.jid].rating=float(data[user.jid]['val'])
 		return
 		if not data:
 			d=self.cache.get_rating()
