@@ -486,7 +486,7 @@ class rosterWidget(QtGui.QWidget):
 							#y-=useritem.height
 			else:
 				users = sorted(self.main.userRating.users.values(), key=operator.attrgetter('rating'), reverse=True)
-				jids = [u.jid for u in users ]
+				jids = [u.jid for u in users if u.rating!=0.0]
 				items={}
 				u=[]
 				transport=self.main.config['showTransports']
