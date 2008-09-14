@@ -2345,6 +2345,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.mainTabWidget.setTabIcon(0,QtGui.QIcon("images/16x16/categories/system-users.png"))
 		else:
 			self.ui.mainTabWidget.setTabIcon(0,QtGui.QIcon("images/16x16/categories/srdce-cele.png"))
+		self.ui.roster.setSize()
 		self.ui.roster.repaint()
 		self.showFavouriteAction.setChecked(self.ui.roster.favouriteMode)
 
