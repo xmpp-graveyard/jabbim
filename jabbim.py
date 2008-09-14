@@ -1789,7 +1789,14 @@ class clientClass(pyxl.client.Client):
 	def on_verify(self, id, thread, props, frm, typ): #xep0070
 # 		self.replyVerify(id, thread, props, frm, typ, False)
 		mainWindow=self.main
-		self.main.events.addBooleanEvent(self.replyVerify,[id, thread, props, frm, typ, True], self.replyVerify,[id, thread, props, frm, typ, False],header=mainWindow.tr('Auth request'),text=mainWindow.tr('URL:')+" "+unicode(props['url']) + '<br/>' +mainWindow.tr('ID:') + unicode(props['id']), height = 60,name=frm,typ="xep70")
+		#self.main.events.addBooleanEvent(self.replyVerify,[id, thread, props, frm, typ, True], self.replyVerify,[id, thread, props, frm, typ, False],header=mainWindow.tr('Auth request'),text=mainWindow.tr('URL:')+" "+unicode(props['url']) + '<br/>' +mainWindow.tr('ID:') + unicode(props['id']), height = 60,name=frm,typ="xep70")
+		event=self.main.events.addBooleanEvent("verify","authorizations")
+		event.setAcceptHandler(self.replyVerify,[id, thread, props, frm, typ, True])
+		event.setRejectHandler(self.replyVerify,[id, thread, props, frm, typ, False])
+		widget=event.getWidgets()[0]
+		widget.setText(mainWindow.tr('URL:')+" "+unicode(props['url']) + ' <br/> ' +unicode(mainWindow.tr('ID:'))+" " + unicode(props['id']))
+		widget.setAcceptText(mainWindow.tr("Yes"))
+		widget.setRejectText(mainWindow.tr("No"))
 
 	def on_connect(self):
 		mainWindow=self.main
