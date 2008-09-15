@@ -905,10 +905,11 @@ class clientClass(pyxl.client.Client):
 				message=message.replace("[jid]","")
 			message=message.replace("[show]",unicode(self.main.status[show])).replace('[nick]', nick)
 			#message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace('[message]',message)
-			message=self.main.webkitThemeFactory.genGroupchatStatus(message,self.main.now())
+			message2=self.main.webkitThemeFactory.genGroupchatStatus(message,self.main.now())
 			if len(message)!=0:
-				tab.chat.textEditWrite(message)
+				tab.chat.textEditWrite(message2)
 			if tabFull:
+				message=self.main.webkitThemeFactory.genChatStatus(message,self.main.now())
 				tabFull.chat.textEditWrite(message)
 				tabFull.chat.lastMessageFrom=""
 		# refresh lastMessageFrom
