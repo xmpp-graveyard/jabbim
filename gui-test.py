@@ -74,7 +74,7 @@ class mainWindow(QtGui.QMainWindow):
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
 		item.setText(4,unicode(jid))
-		item.setData(32,0,QtCore.QVariant([unicode(jid),unicode("contact")]))
+		item.setData(32,0,QtCore.QVariant(QtCore.QStringList([unicode(jid),unicode("contact")])))
 		item.setIcon(0,self.getIcon(size=str(self.config['rosterIconSize']),status=self.icons["9"]))
 		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)
 		# item design

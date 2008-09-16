@@ -296,7 +296,7 @@ class groupChatWidget(abstractChatWidget):
 				if user.truejid != None:
 					tjid = jidT.JID(user.truejid).userhost()
 					action=menu.addAction(self.tr("Add to roster"))
-					action.setData(QtCore.QVariant([tjid, name]))
+					action.setData(QtCore.QVariant(QtCore.QStringList([tjid, name])))
 					action.setIcon(QtGui.QIcon("images/16x16/actions/add-user.png"))
 					action.setObjectName("add-user")
 			separator=False

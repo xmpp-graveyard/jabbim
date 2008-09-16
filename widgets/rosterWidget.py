@@ -220,7 +220,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item=QtGui.QTreeWidgetItem(parent)
 		item.setText(1,"9")
 		# add new resource called 'name', JID 'jid' with QTreeWidgetItem 'user'
-		item.setData(32,0,QtCore.QVariant([unicode(tag),unicode("metaparent")]))
+		item.setData(32,0,QtCore.QVariant(QtCore.QStringList([unicode(tag),unicode("metaparent")])))
 		item.setData(32,1,QtCore.QVariant(unicode(tag)))
 		if offline!=False:
 			self.setItemHidden(item, True)
@@ -241,7 +241,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
 		item.setText(4,unicode(jid))
-		item.setData(32,0,QtCore.QVariant([unicode(jid),unicode("meta")]))
+		item.setData(32,0,QtCore.QVariant(QtCore.QStringList([unicode(jid),unicode("meta")])))
 		if offline!=False:
 			self.setItemHidden(item, True)
 		self.sortItems(1,QtCore.Qt.AscendingOrder)
@@ -258,7 +258,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(0,unicode(name))
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
-		item.setData(32,0,QtCore.QVariant([unicode(jid),unicode("resource")]))
+		item.setData(32,0,QtCore.QVariant(QtCore.QStringList([unicode(jid),unicode("resource")])))
 		self.sortItems(1,QtCore.Qt.AscendingOrder)
 		return item
 
@@ -324,7 +324,7 @@ class rosterWidget(QtGui.QTreeWidget):
 ###				print "not contact"
 				#return False
 			#i=self.getUserItems(jid)[0].clone() # clone contact item
-			#i.setData(32,0,QtCore.QVariant([unicode(jid),unicode("meta")]))
+			#i.setData(32,0,QtCore.QVariant(QtCore.QStringList([unicode(jid),unicode("meta")])))
 			#for contact in self.getUserItems(jid):
 				#it=contact.data(32,0)
 				#it=it.toList()
@@ -342,9 +342,9 @@ class rosterWidget(QtGui.QTreeWidget):
 		## Vytvoreni noveho metakontaktu sloucenim dvou kontaktu
 		#elif newParentTyp=="contact" and typ=="contact":
 			#i=self.getUserItems(jid)[0].clone() # clone contact item
-			#i.setData(32,0,QtCore.QVariant([unicode(jid),unicode("meta")]))
+			#i.setData(32,0,QtCore.QVariant(QtCore.QStringList([unicode(jid),unicode("meta")])))
 			#i2=self.getUserItems(newParentJid)[0].clone() # clone contact item
-			#i2.setData(32,0,QtCore.QVariant([unicode(newParentJid),unicode("meta")]))
+			#i2.setData(32,0,QtCore.QVariant(QtCore.QStringList([unicode(newParentJid),unicode("meta")])))
 
 			#self.main.client.metaParents[newParentJid]=self.addMetaParent(newParentJid,newParent.parent())
 			#self.main.client.metaParents[newParentJid].addChild(i)
@@ -379,7 +379,7 @@ class rosterWidget(QtGui.QTreeWidget):
 ###				print "not contact"
 				#return False
 			#i=self.getUserItems(jid,"meta")[0].clone() # clone contact item
-			#i.setData(32,0,QtCore.QVariant([unicode(jid),unicode("contact")]))
+			#i.setData(32,0,QtCore.QVariant(QtCore.QStringList([unicode(jid),unicode("contact")])))
 			
 			#oldParent.takeChild(oldParent.indexOfChild(item))
 	
@@ -403,13 +403,13 @@ class rosterWidget(QtGui.QTreeWidget):
 				#if len(groups)==0:
 					## add user item to Unknown group
 					#i=self.getUserItems(jid)[0].clone() # clone contact item
-					#i.setData(32,0,QtCore.QVariant([unicode(jid),unicode("contact")]))
+					#i.setData(32,0,QtCore.QVariant(QtCore.QStringList([unicode(jid),unicode("contact")])))
 					#self.main.client.roster['groups']['Unknown'].addChild(i)
 				#else:
 					#for group in groups:
 						## add user item to the group
 						#i=self.getUserItems(jid)[0].clone() # clone contact item
-						#i.setData(32,0,QtCore.QVariant([unicode(jid),unicode("contact")]))
+						#i.setData(32,0,QtCore.QVariant(QtCore.QStringList([unicode(jid),unicode("contact")])))
 						#self.main.client.roster['groups'][group].addChild(i)
 				#oldParent.takeChild(0)
 			#if int(oldParent.childCount())<=1:
@@ -576,7 +576,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		parent.setText(2,item.text(2))
 		parent.setText(4,item.text(4))
 		parent.setIcon(0,item.icon(0))
-		parent.setData(32,0,QtCore.QVariant([unicode(jid),unicode("metaparent")]))
+		parent.setData(32,0,QtCore.QVariant(QtCore.QStringList([unicode(jid),unicode("metaparent")])))
 		#parent.setData(32,0,item.data(32,0))
 		parent.setData(32,4,item.data(32,4))
 
@@ -619,7 +619,7 @@ class rosterWidget(QtGui.QTreeWidget):
 			item.setText(0,name)
 		item.setText(1,"11111"+unicode(name).lower())
 		item.setText(2,name)
-		item.setData(32,0,QtCore.QVariant([unicode(""),unicode("group")]))
+		item.setData(32,0,QtCore.QVariant(QtCore.QStringList([unicode(""),unicode("group")])))
 		item.setIcon(0,QtGui.QIcon("images/"+self.main.config['rosterIconSize']+"/icons/group-closed.png"))
 		color=self.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Window)
 		item.setBackgroundColor(0,color)
@@ -646,7 +646,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		item.setText(1,"9"+unicode(name).lower())
 		item.setText(2,unicode(name))
 		item.setText(4,unicode(jid))
-		item.setData(32,0,QtCore.QVariant([unicode(jid),unicode("contact")]))
+		item.setData(32,0,QtCore.QVariant(QtCore.QStringList([unicode(jid),unicode("contact")])))
 		item.setIcon(0,self.main.getIcon(size=str(self.main.config['rosterIconSize']),status=self.main.icons["9"]))
 		item.setFlags(item.flags()|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled)
 		color=self.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Window)
@@ -700,7 +700,7 @@ class rosterWidget(QtGui.QTreeWidget):
 		# delete from group
 		if group!=None and len(self.main.client.roster['users'][jid].groups)>1:
 			action=contactMenu.addAction(self.tr("Delete from group"))
-			action.setData(QtCore.QVariant([unicode(jid),u"-"+group.text(2)]))
+			action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"-"+group.text(2)])))
 			action.setObjectName("check_group")
 		# delete from roster
 		action=contactMenu.addAction(self.tr("Delete from roster"))
@@ -726,17 +726,17 @@ class rosterWidget(QtGui.QTreeWidget):
 			#if len(self.main.client.roster['users'][jid].groups)==0:
 				#if k=="Unknown":
 					#action.setChecked(True)
-					#action.setData(QtCore.QVariant([unicode(jid),u"-"+unicode(k)]))
+					#action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"-"+unicode(k)])))
 				#else:
-					#action.setData(QtCore.QVariant([unicode(jid),u"+"+unicode(k)]))
+					#action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"+"+unicode(k)])))
 			#else:
 				if k in self.main.client.roster['users'][jid].groups:
 					action.setChecked(True)
-					action.setData(QtCore.QVariant([unicode(jid),u"-"+unicode(k)]))
+					action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"-"+unicode(k)])))
 					if len(self.main.client.roster['users'][jid].groups)<=1:
 						action.setEnabled(False)
 				else:
-					action.setData(QtCore.QVariant([unicode(jid),u"+"+unicode(k)]))
+					action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"+"+unicode(k)])))
 				
 		# signal
 		contactMenu.connect(contactMenu, QtCore.SIGNAL("triggered ( QAction * )"),self.contactMenuTriggered)

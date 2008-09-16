@@ -1884,7 +1884,7 @@ class rosterWidget(QtGui.QWidget):
 		## delete from group
 		#if group!=None and len(self.main.client.roster['users'][jid].groups)>1:
 			#action=contactMenu.addAction(self.tr("Delete from group"))
-			#action.setData(QtCore.QVariant([unicode(jid),u"-"+group]))
+			#action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"-"+group])))
 			#action.setObjectName("check_group")
 		## delete from roster
 		#action=contactMenu.addAction(self.tr("Delete from roster"))
@@ -1925,17 +1925,17 @@ class rosterWidget(QtGui.QWidget):
 			##if len(self.main.client.roster['users'][jid].groups)==0:
 				##if k=="Unknown":
 					##action.setChecked(True)
-					##action.setData(QtCore.QVariant([unicode(jid),u"-"+unicode(k)]))
+					##action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"-"+unicode(k)])))
 				##else:
-					##action.setData(QtCore.QVariant([unicode(jid),u"+"+unicode(k)]))
+					##action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"+"+unicode(k)])))
 			##else:
 				#if k in self.main.client.roster['users'][jid].groups:
 					#action.setChecked(True)
-					#action.setData(QtCore.QVariant([unicode(jid),u"-"+unicode(k)]))
+					#action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"-"+unicode(k)])))
 					#if len(self.main.client.roster['users'][jid].groups)<=1:
 						#action.setEnabled(False)
 				#else:
-					#action.setData(QtCore.QVariant([unicode(jid),u"+"+unicode(k)]))
+					#action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"+"+unicode(k)])))
 
 		if self.main.client.privacy:
 			if self.main.client.privacy.active:
@@ -2154,9 +2154,9 @@ class rosterWidget(QtGui.QWidget):
 			#if len(self.main.client.roster['users'][jid].groups)==0:
 				#if k=="Unknown":
 					#action.setChecked(True)
-					#action.setData(QtCore.QVariant([unicode(jid),u"-"+unicode(k)]))
+					#action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"-"+unicode(k)])))
 				#else:
-					#action.setData(QtCore.QVariant([unicode(jid),u"+"+unicode(k)]))
+					#action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"+"+unicode(k)])))
 			#else:
 				if k in self.main.client.roster['users'][jid].groups:
 					action.setChecked(True)
