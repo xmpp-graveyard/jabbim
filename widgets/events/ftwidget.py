@@ -76,6 +76,8 @@ class FTDownloadWidget(QtGui.QWidget):
 		self.ui.transferInfo.setText(self.tr("Finished"))
 
 	def setFileTransfered(self,transfered):
+		if transfered==0:
+			return
 		self.ui.progressBar.setValue(int((float(transfered)/float(self.size))*100))
 		newTimestamp=time.time()
 		d=newTimestamp-self.timestamp
@@ -155,6 +157,8 @@ class FTUploadWidget(QtGui.QWidget):
 		self.ui.transferInfo.setText(self.tr("Finished"))
 
 	def setFileTransfered(self,transfered):
+		if transfered==0:
+			return
 		self.ui.progressBar.setValue(int((float(transfered)/float(self.size))*100))
 		newTimestamp=time.time()
 		d=newTimestamp-self.timestamp
