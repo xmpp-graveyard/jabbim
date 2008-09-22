@@ -699,9 +699,9 @@ class Plugin(plugins.PluginBase):
 		if jid:
 			self.jid=jid
 			self.window.ui.line_jid.setText(self.jid)
-		else:
+		#else:
 			#self.jid=unicode(self.window.ui.line_jid.text())
-			self.jid=unicode(self.main.client.jid.userhost())
+			#self.jid=unicode(self.main.client.jid.userhost())
 		print "call",self.jid,self.typ
 		if self.typ=="public":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.jid,)).addCallback(self.updateView)
@@ -745,11 +745,18 @@ class Plugin(plugins.PluginBase):
 		if (not self.main.client.roster['users'].has_key("public@disk.jabbim.cz") or not self.main.client.roster['users'].has_key("private@disk.jabbim.cz")) or not self.main.client.roster['users'].has_key("album@disk.jabbim.cz"):
 			d=self.main.client.getRegisterForm("disk.jabbim.cz")
 			d.addCallback(self._onRegister)
+		if jid:
+			self.jid=jid
+			self.window.ui.line_jid.setText(self.jid)
+		else:
+			#self.jid=unicode(self.window.ui.line_jid.text())
+			self.jid=unicode(self.main.client.jid.userhost())
 		if typ:
 			self.call(jid,typ)
 			self.window.ui.buttonDownload.setEnabled(False)
 			self.wizard.ui.back.show()
 		else:
+			self.wizard.ui.stackedWidget.setCurrentIndex(0)
 			self.wizard.ui.back.hide()
 
 	def _onRegister(self,data):
