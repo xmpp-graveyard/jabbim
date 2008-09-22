@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'plugins/jdm/jdw.ui'
 #
-# Created: Mon Sep 22 11:23:40 2008
+# Created: Mon Sep 22 13:13:26 2008
 #      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
 #
 # WARNING! All changes made in this file will be lost!
@@ -111,6 +111,7 @@ class Ui_JDW(object):
         self.gridlayout3.setObjectName("gridlayout3")
         self.tree = QtGui.QTreeWidget(self.page)
         self.tree.setSizeIncrement(QtCore.QSize(50, 0))
+        self.tree.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.tree.setObjectName("tree")
         self.gridlayout3.addWidget(self.tree, 0, 0, 2, 1)
         spacerItem5 = QtGui.QSpacerItem(20, 31, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
@@ -159,6 +160,15 @@ class Ui_JDW(object):
         self.stackedWidget.addWidget(self.page)
         self.page_2 = QtGui.QWidget()
         self.page_2.setObjectName("page_2")
+        self.gridlayout4 = QtGui.QGridLayout(self.page_2)
+        self.gridlayout4.setMargin(9)
+        self.gridlayout4.setSpacing(6)
+        self.gridlayout4.setObjectName("gridlayout4")
+        self.prog = QtGui.QWidget(self.page_2)
+        self.prog.setObjectName("prog")
+        self.gridlayout4.addWidget(self.prog, 0, 0, 1, 1)
+        spacerItem6 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.gridlayout4.addItem(spacerItem6, 1, 0, 1, 1)
         self.stackedWidget.addWidget(self.page_2)
         self.gridlayout.addWidget(self.stackedWidget, 2, 0, 1, 3)
 

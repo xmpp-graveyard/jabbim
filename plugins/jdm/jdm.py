@@ -58,6 +58,10 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.privateButton.setIcon(QtGui.QIcon("%s/jdisk-private-24.png" % self.pluginDir))
 			self.window.ui.album.setIcon(QtGui.QIcon("%s/jalbum-32.png" % self.pluginDir))
 			self.window.ui.easyshare.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
+			self.wizard.ui.public.setIcon(QtGui.QIcon("%s/jdisk-public-24.png" % self.pluginDir))
+			self.wizard.ui.private.setIcon(QtGui.QIcon("%s/jdisk-private-24.png" % self.pluginDir))
+			self.wizard.ui.album.setIcon(QtGui.QIcon("%s/jalbum-32.png" % self.pluginDir))
+			self.wizard.ui.es.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
 			self.window.ui.showMiniRoster.setIcon(self.main.ui.mainTabWidget.tabIcon(0))
 			self.group=QtGui.QButtonGroup(self.window)
 			self.update=False
@@ -76,10 +80,19 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.privateButton,QtCore.SIGNAL("clicked()"),self.private)
 			QtCore.QObject.connect(self.window.ui.album,QtCore.SIGNAL("clicked()"),self.album)
 			QtCore.QObject.connect(self.window.ui.easyshare,QtCore.SIGNAL("clicked()"),self.easyshare)
+			QtCore.QObject.connect(self.wizard.ui.public,QtCore.SIGNAL("clicked()"),self.public)
+			QtCore.QObject.connect(self.wizard.ui.private,QtCore.SIGNAL("clicked()"),self.private)
+			QtCore.QObject.connect(self.wizard.ui.album,QtCore.SIGNAL("clicked()"),self.album)
+			QtCore.QObject.connect(self.wizard.ui.es,QtCore.SIGNAL("clicked()"),self.easyshare)
+			QtCore.QObject.connect(self.wizard.ui.back,QtCore.SIGNAL("clicked()"),self.wBack)
+			QtCore.QObject.connect(self.wizard.ui.download,QtCore.SIGNAL("clicked()"),self.downloadCurrentFile)
+			QtCore.QObject.connect(self.wizard.ui.remove,QtCore.SIGNAL("clicked()"),self.removeCurrentFile)
+			QtCore.QObject.connect(self.wizard.ui.upload,QtCore.SIGNAL("clicked()"),self.sendFile)
 			QtCore.QObject.connect(self.window.ui.showMiniRoster,QtCore.SIGNAL("clicked()"),self.showMiniRoster)
 			QtCore.QObject.connect(self.window.ui.desktop,QtCore.SIGNAL("clicked()"),self.leftDesktop)
 			QtCore.QObject.connect(self.window.ui.computer,QtCore.SIGNAL("clicked()"),self.leftComputer)
 			QtCore.QObject.connect(self.window.ui.right,QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem *,int )"),self.doubleClicked)
+			QtCore.QObject.connect(self.wizard.ui.tree,QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem *,int )"),self.doubleClicked)
 
 			self.model=QtGui.QDirModel()
 			self.model.supportedDropActions=self.supportedDropActions
@@ -96,6 +109,8 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.left.dragEnterEvent=self.dragEnterEvent
 			self.window.ui.left.dragMoveEvent = self.dragMoveEvent
 			self.window.ui.left.dropEvent = self.dropEvent
+			
+			self.wizard.ui.l=QtGui.QVBoxLayout(self.wizard.ui.prog)
 			
 			
 			self.window.ui.right.dropMimeData=self.rightDropMimeData
@@ -123,18 +138,23 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.loadConfig(homedir)
 
+	def wBack(self):
+		self.wizard.ui.back.hide()
+		self.wizard.ui.stackedWidget.setCurrentIndex(0)
+
 	def FTDownloadEvent(self,event):
-		if not event() or self.window.isHidden():
+		if not event() or (self.window.isHidden() and self.wizard.isHidden()):
 			return
-		self.w=QtGui.QDialog(self.window)
-		l=QtGui.QHBoxLayout(self.w)
-		self.w.progress=FTDownloadWidget(event())
-		self.w.progress.setParent(self.w)
-		l.addWidget(self.w.progress)
-		self.w.show()
-		self.w.progress.eventAccepted=self.eventAccepted
-		self.w.progress.eventRejected=self.eventAccepted
-		event().addWidget(self.w.progress)
+		#self.w=QtGui.QDialog(self.window)
+		
+		self.wizard.progress=FTDownloadWidget(event())
+		self.wizard.progress.setParent(self.wizard.ui.prog)
+		self.wizard.ui.l.addWidget(self.wizard.progress)
+		self.wizard.progress.eventAccepted=self.eventAccepted
+		self.wizard.progress.eventRejected=self.eventAccepted
+		self.wizard.ui.stackedWidget.setCurrentIndex(2)
+		self.wizard.progress.show()
+		event().addWidget(self.wizard.progress)
 
 	def eventAccepted(self):
 		self.w.hide()
@@ -264,10 +284,12 @@ class Plugin(plugins.PluginBase):
 		
 		#self.window.ui.esPath.setText(self.esPath)
 		#self.window.ui.list.clear()
-		self.window.ui.right.clear()
+		#self.window.ui.right.clear()
+		self.wizard.ui.tree.clear()
 		icon=QtGui.QIcon(self.pluginDir+"/folder.png")
 		for d in data:
-			item=QtGui.QTreeWidgetItem(self.window.ui.right)
+			#item=QtGui.QTreeWidgetItem(self.window.ui.right)
+			item=QtGui.QTreeWidgetItem(self.wizard.ui.tree)
 			item.setData(0,32,QtCore.QVariant(QtCore.QStringList([u"-1"])))
 			item.setText(0,unicode(d))
 			item.setIcon(0,icon)
@@ -460,7 +482,7 @@ class Plugin(plugins.PluginBase):
 ##			event.ignore()
 			
 	def fileMenu(self,pos):
-		items=self.window.ui.list.selectedItems()
+		items=self.wizard.ui.tree.selectedItems()
 		self.menu=QtGui.QMenu()
 		#action=self.menu.addAction(self.tr("Show files as icons"))
 		#action.setCheckable(True)
@@ -482,22 +504,23 @@ class Plugin(plugins.PluginBase):
 					self.menu.addAction(self.tr("Remove file"),self.removeCurrentFile)
 				if self.typ!="private":
 					self.menu.addAction(self.tr("Copy link to clipboard"),self.copyToClipboard)
-			self.menu.popup(self.window.ui.list.mapToGlobal(pos))
+			self.menu.popup(self.wizard.ui.tree.mapToGlobal(pos))
 
 	def copyToClipboard(self):
-		items=self.window.ui.list.selectedItems()
+		items=self.wizard.ui.tree.selectedItems()
 		if len(items)==0:
 			return
 		text=""
 		for item in items:
 			if self.typ=="public":
-				text+="http://disk.jabbim.cz/"+self.jid+"/"+unicode(item.text().replace(" ", "%20"))+"\n"
+				text+="http://disk.jabbim.cz/"+self.jid+"/"+unicode(item.text(0).replace(" ", "%20"))+"\n"
 			elif self.typ=="album":
-				text+="http://album.jabbim.cz/"+self.jid+"/"+unicode(item.text().replace(" ", "%20"))+"\n"
-		QtGui.QApplication.clipboard().setText(text[:-1])
+				text+="http://album.jabbim.cz/"+self.jid+"/"+unicode(item.text(0).replace(" ", "%20"))+"\n"
+			QtGui.QApplication.clipboard().setText(text[:-1])
 
 	def downloadCurrentFile(self):
-		items=self.window.ui.list.selectedItems()
+		#items=self.window.ui.list.selectedItems()
+		items=self.wizard.ui.tree.selectedItems()
 		if len(items)==0:
 			return
 		if self.typ=="easyshare":
@@ -506,30 +529,30 @@ class Plugin(plugins.PluginBase):
 				jid=self.jid+"/"+contact.getHighestResource()
 				data=[]
 				for item in items:
-					data.append(self.esPath+unicode(item.text()))
+					data.append(self.esPath+unicode(item.text(0)))
 				self.main.client.callRemote(jid, 'getFiles',(data,))
 		else:
 			for item in items:
 				if self.typ=="public":
-					self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+					self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text(0)))
 				elif self.typ=="private":
-					self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+					self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text(0)))
 				elif self.typ=="album":
-					self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+					self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text(0)))
 
 	def removeCurrentFile(self):
-		items=self.window.ui.list.selectedItems()
+		items=self.wizard.ui.tree.selectedItems()
 		if len(items)==0:
 			return
 		for item in items:
 			if self.typ=="public":
-				self.main.client.sendMessage("public@disk.jabbim.cz", u"rm "+unicode(item.text()))
+				self.main.client.sendMessage("public@disk.jabbim.cz", u"rm "+unicode(item.text(0)))
 			elif self.typ=="private":
-				self.main.client.sendMessage("private@disk.jabbim.cz", u"rm "+unicode(item.text()))
+				self.main.client.sendMessage("private@disk.jabbim.cz", u"rm "+unicode(item.text(0)))
 			elif self.typ=="album":
-				self.main.client.sendMessage("album@disk.jabbim.cz", u"rm "+unicode(item.text()))
+				self.main.client.sendMessage("album@disk.jabbim.cz", u"rm "+unicode(item.text(0)))
 		for i in range(len(items)):
-			self.window.ui.list.takeItem(self.window.ui.list.row(items[0]))
+			self.wizard.ui.tree.takeTopLevelItem(self.wizard.ui.tree.indexOfTopLevelItem(items[0]))
 			del items[0]
 
 	def toNormalSize(self,size):
@@ -546,15 +569,18 @@ class Plugin(plugins.PluginBase):
 	def updateView(self, data,parent=None):
 		print "updateView",data,self.update
 		if not self.update and not parent:
-			self.window.ui.right.clear()
+			#self.window.ui.right.clear()
+			self.wizard.ui.tree.clear()
 		if parent:
-			self.window.ui.right.expandItem(parent)
+			#self.window.ui.right.expandItem(parent)
+			self.wizard.ui.tree.expandItem(parent)
 ##		self.window.ui.esPath.setText(self.esPath)
 		data=data[0][0]
 		self.thumbs={}
 		for file in data:
 			if self.update:
-				items=self.window.ui.right.findItems(file[0],QtCore.Qt.MatchExactly)
+				#items=self.window.ui.right.findItems(file[0],QtCore.Qt.MatchExactly)
+				items=self.wizard.ui.tree.findItems(file[0],QtCore.Qt.MatchExactly)
 				if len(items)!=0:
 					continue
 			name=file[0]
@@ -562,7 +588,8 @@ class Plugin(plugins.PluginBase):
 			if parent:
 				item=QtGui.QTreeWidgetItem(parent)
 			else:
-				item=QtGui.QTreeWidgetItem(self.window.ui.right)
+				#item=QtGui.QTreeWidgetItem(self.window.ui.right)
+				item=QtGui.QTreeWidgetItem(self.wizard.ui.tree)
 			print unicode(name)
 			item.setText(0,unicode(name))
 			item.setData(0,32,QtCore.QVariant(QtCore.QStringList([unicode(size)])))
@@ -663,6 +690,8 @@ class Plugin(plugins.PluginBase):
 	
 	def call(self,jid=None,typ=None):
 		self.stopDownload=True
+		self.wizard.ui.stackedWidget.setCurrentIndex(1)
+		self.wizard.ui.back.show()
 ##		self.window.ui.label_size.setText("")
 ##		self.window.ui.label_name.setText("")
 		if typ:
@@ -671,7 +700,8 @@ class Plugin(plugins.PluginBase):
 			self.jid=jid
 			self.window.ui.line_jid.setText(self.jid)
 		else:
-			self.jid=unicode(self.window.ui.line_jid.text())
+			#self.jid=unicode(self.window.ui.line_jid.text())
+			self.jid=unicode(self.main.client.jid.userhost())
 		print "call",self.jid,self.typ
 		if self.typ=="public":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.jid,)).addCallback(self.updateView)
@@ -694,14 +724,20 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.buttonDelete.setEnabled(False)
 			self.window.ui.buttonUpload.setEnabled(False)
 			self.window.ui.privateButton.setEnabled(False)
+			self.wizard.ui.remove.setEnabled(False)
+			self.wizard.ui.upload.setEnabled(False)
+			self.wizard.ui.private.setEnabled(False)
 		else:
 			self.window.ui.buttonDelete.setEnabled(True)
 			self.window.ui.buttonUpload.setEnabled(True)
 			self.window.ui.privateButton.setEnabled(True)
+			self.wizard.ui.remove.setEnabled(True)
+			self.wizard.ui.upload.setEnabled(True)
+			self.wizard.ui.private.setEnabled(True)
 	
 
-	def showSlot(self,jid=None,typ='public'):
-		self.window.show()
+	def showSlot(self,jid=None,typ=None):
+		self.wizard.show()
 ##		if self.main.client.isVip:
 ##			self.window.ui.vipInfo.hide()
 ##		else:
@@ -709,8 +745,12 @@ class Plugin(plugins.PluginBase):
 		if (not self.main.client.roster['users'].has_key("public@disk.jabbim.cz") or not self.main.client.roster['users'].has_key("private@disk.jabbim.cz")) or not self.main.client.roster['users'].has_key("album@disk.jabbim.cz"):
 			d=self.main.client.getRegisterForm("disk.jabbim.cz")
 			d.addCallback(self._onRegister)
-		self.call(jid,typ)
-		self.window.ui.buttonDownload.setEnabled(False)
+		if typ:
+			self.call(jid,typ)
+			self.window.ui.buttonDownload.setEnabled(False)
+			self.wizard.ui.back.show()
+		else:
+			self.wizard.ui.back.hide()
 
 	def _onRegister(self,data):
 		if not data:
@@ -734,12 +774,12 @@ class Plugin(plugins.PluginBase):
 		else:
 			return True
 		if unicode(frm).find(text)!=-1:
-			if not self.window.isHidden():
+			if not self.window.isHidden() or not self.wizard.isHidden():
 				return False
 		return True
 
 	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
-		if not self.window.isHidden():
+		if not self.window.isHidden() or not self.wizard.isHidden():
 			if self.typ=="public":
 				text="public@disk.jabbim.cz"
 			elif self.typ=="private":

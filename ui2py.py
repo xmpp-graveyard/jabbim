@@ -4,7 +4,7 @@ print "# USE IT ONLY FOR PLUGINS #"
 print "###########################"
 try:
 	if os.path.exists(sys.argv[1]) and sys.argv[2]:
-		os.system('pyuic4 '+sys.argv[1]+' -o '+sys.argv[2])
+		os.system('/usr/bin/pyuic4 '+sys.argv[1]+' -o '+sys.argv[2])
 	else:
 		print 'usage:',sys.argv[0]," file.ui file.py"
 		exit()
