@@ -93,7 +93,7 @@ class PluginBase:
 	def loadModule(self,file):
 		f=open(utils.path(file))
 		u=None
-		u=load_source(self.fname, utils.path(file), f)
+		u=load_source(basename(file).replace('.','_'), utils.path(file), f)
 		f.close()
 		return u
 
@@ -105,7 +105,7 @@ class PluginBase:
 		# load python class
 		ui = None
 		f=open(utils.path(file))
-		ui=load_source(self.fname, utils.path(file), f)
+		ui=load_source(basename(file).replace('.','_'), utils.path(file), f)
 		f.close()
 		# find Ui_ function and setup widget
 		for func in dir(ui):

@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import sys,os,time
 sys.path.append('.')
 from include import plugins
@@ -38,6 +38,7 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.loadConfig()
 			self.window = self.loadWindow("%s/jdm_ui.py" % self.pluginDir,self.main)
+			self.wizard = self.loadDialog("%s/jdw_ui.py" % self.pluginDir,self.main)
 			self.window.setWindowIcon(self.main.windowIcon())
 ##			self.window.ui.list.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 ##			self.window.ui.list.startDrag=self.startDrag

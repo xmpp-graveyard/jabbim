@@ -20,6 +20,7 @@ class addUserWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.reject,QtCore.SIGNAL("clicked()"),self.reject)
 		QtCore.QObject.connect(self.ui.text,QtCore.SIGNAL("linkActivated ( const QString & )"),self.showUserMenu)
 		self.jid=""
+		print "addUserWidget"
 
 	def getSafeText(self,text,width):
 		ret=""
@@ -28,6 +29,7 @@ class addUserWidget(QtGui.QWidget):
 		return ret[:-1]
 
 	def showUserMenu(self,link):
+		print "usermenu"
 		menu=QtGui.QMenu(self)
 		menu.addAction(self.tr("Show VCard"),self.showVCard)
 		menu.addAction(self.tr("Chat"),self.openChat)
