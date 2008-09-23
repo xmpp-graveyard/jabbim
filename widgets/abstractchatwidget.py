@@ -480,8 +480,8 @@ class abstractChatWidget(QtGui.QWidget):
 		self.ui.textEdit.setAcceptRichText(False)
 		# save init part from self.main().skin to the textEdit
 		self.init=""
-		if self.main().skin.has_key("on_init"):
-			self.init=self.main().skin["on_init"]
+		#if self.main().skin.has_key("on_init"):
+#			self.init=self.main().skin["on_init"]
 		self.ui.textEdit.setHtml("<br/>"+self.init)
 		
 		self.unread=0 #: number of unread messages

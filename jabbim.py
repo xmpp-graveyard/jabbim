@@ -4436,10 +4436,10 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Loads chat skin. Skin is loaded to self.skin.
 		"""
-		loaded,self.skin=self.loadJabbimExtraConfig("chatskins/"+self.config['chatSkin'],"chatskins/cool/cool.cfg")
-		self.skin=self.skin['chatskin']
-		if not self.skin.has_key("spaces_between_lines"):
-			self.skin["spaces_between_lines"]='0'
+		#loaded,self.skin=self.loadJabbimExtraConfig("chatskins/"+self.config['chatSkin'],"chatskins/cool/cool.cfg")
+		self.skin={}
+		#if not self.skin.has_key("spaces_between_lines"):
+		#	self.skin["spaces_between_lines"]='0'
 		self.webkitThemeFactory=widgets.webkitthemes.webkitThemeFactory(self.config['chatTheme'],self.config['groupchatTheme'],self.realHomeDir)
 		for i in range(self.chat.ui.chatTab.count()):
 			w=self.chat.ui.chatTab.widget(i)
