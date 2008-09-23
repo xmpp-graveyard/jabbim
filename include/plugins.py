@@ -90,6 +90,12 @@ class PluginBase:
 		menu=self.main.ui.menuPlugins.addMenu(unicode(self.name))
 		return menu
 
+	def mainWindowToolBarButton(self):
+		button=QtGui.QToolButton(self.main.ui.transportsWidget)
+		self.main.ui.transportsWidget.layout().addWidget(button)
+		self.registerWidget(button)
+		return button
+
 	def loadModule(self,file):
 		f=open(utils.path(file))
 		u=None
@@ -241,6 +247,9 @@ class PluginBase:
 		@return: loaded config as configObj class
 		"""
 		return ConfigObj(config,encoding='UTF8')
+
+	def buildMainWindowToolBar(self):
+		pass
 
 	def buildMainWindowMenu(self):
 		"""

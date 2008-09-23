@@ -3509,9 +3509,8 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			#self.ui.line1.hide()
 			self.ui.transportsWidget.hide()
-			self.ui.tabWidgetButton.hide()
+			self.ui.tabWidgetButton.show()
 			self.ui.tabWidgetButton.setChecked(False)
-			pass
 
 		# other actions
 		action=self.statusWidgetMenu.addAction(self.getIcon(status="online",size="16x16"),self.tr("Add message"))
@@ -3999,6 +3998,7 @@ class mainWindow(QtGui.QMainWindow):
 				f.close()
 				self.plugins[plugin]['module']=module.Plugin(self, self.homeDir, dir)
 				self.runPluginCommand(self.plugins[plugin]['module'].buildMainWindowMenu,[]) # build menu for plugin
+				self.runPluginCommand(self.plugins[plugin]['module'].buildMainWindowToolBar,[])
 			else:
 				print "plugin already loaded"
 				f.close()

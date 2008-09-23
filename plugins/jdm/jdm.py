@@ -736,6 +736,12 @@ class Plugin(plugins.PluginBase):
 			self.wizard.ui.private.setEnabled(True)
 	
 
+	def buildMainWindowToolBar(self):
+		b=self.mainWindowToolBarButton()
+		b.setIconSize(QtCore.QSize(16,16))
+		b.setIcon(QtGui.QIcon("%s/jdisk-public-24.png" % self.pluginDir))
+		b.connect(b,QtCore.SIGNAL("clicked()"),self.showSlot)
+
 	def showSlot(self,jid=None,typ=None):
 		self.wizard.show()
 ##		if self.main.client.isVip:
