@@ -2237,7 +2237,6 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
 		QtCore.QObject.connect(self.ui.mucBrowserButton, QtCore.SIGNAL("clicked ()"),self.mucBrowser)
 		QtCore.QObject.connect(self.ui.statusWidget, QtCore.SIGNAL("clicked (bool)"),self.statusMessageClicked)
-		self.ui.statusWidget.setSizeAdjustPolicy(QtGui.QComboBox.AdjustToContentsOnFirstShow)
 		#QtCore.QObject.connect(self.ui.statusLine, QtCore.SIGNAL("returnPressed ()"),self.statusLineFinished)
 		QtCore.QObject.connect(self.ui.statusLine, QtCore.SIGNAL("editingFinished () "),self.statusLineFinished)
 		#QtCore.QObject.connect(self.ui.offlineButton, QtCore.SIGNAL("clicked ( bool)"),self.hideOffline)
@@ -2761,12 +2760,11 @@ class mainWindow(QtGui.QMainWindow):
 					#self.client.sendPresence(show = unicode(show), status = unicode(message), to = transport)
 
 				# update statusWidget
-				if len(message)>20:
-					self.ui.statusWidget.setText(unicode(message)[:20]+"...")
-				elif len(message)==0:
+				if len(message)==0:
 					self.ui.statusWidget.setText(unicode(self.status[show]))
 				else:
-					self.ui.statusWidget.setText(unicode(message))
+					m=QtGui.QFontMetrics(self.ui.statusWidget.font())
+					self.ui.statusWidget.setText(unicode(m.elidedText(unicode(message),QtCore.Qt.ElideMiddle, self.ui.statusWidget.width()-30)))
 				self.ui.statusWidget.setIcon(self.getIcon(status=show,size="16x16"))
 
 		else:
