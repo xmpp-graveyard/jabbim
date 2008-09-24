@@ -891,7 +891,7 @@ class clientClass(pyxl.client.Client):
 				tab.chat.textEditWrite(message)
 
 
-			if self.main.config['showMucStatus'] == 'False' and  (not 'PART' in codes) and (not 'JOIN' in codes):
+			if (self.main.config['showMucStatus'] == 'False' and  (not 'PART' in codes) and (not 'JOIN' in codes)) or self.main.config['showMucJoinPart']=="False":
 				return
 			message="[nick] [jid]"+unicode(mainWindow.tr('is now'))+" [show] [[message]]"
 			if status == None:
