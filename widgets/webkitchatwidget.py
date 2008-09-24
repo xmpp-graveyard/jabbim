@@ -297,17 +297,46 @@ class webkitChatWidget(QtWebKit.QWebView):
 		if not (hit.pixmap().isNull()):
 			action=menu.addAction(self.tr('Edit Image'))
 			action.setObjectName("edit_image")
-#			action.setData(QtCore.QVariant(hit.pixmap().toImage()))
 			action.image = hit.pixmap().toImage()
 			menu.addAction(action)
 
-		
 		menu.addSeparator()
 		action=menu.addAction(self.tr("Search"))
 		action.setObjectName("search")
+
+		try:
+			typ=self.chatwidget().typ
+		except:
+			typ="chat"
+		if typ=="groupchat":
+			menu.addSeparator()
+			pref=QtGui.QMenu(self.tr("Preferences"),menu)
+			
+			action=pref.addAction(self.tr('Show join/part messages'))
+			action.setCheckable(True)
+			if self.chatwidget().main().config['showMucJoinPart']=="True":
+				action.setChecked(True)
+			action.setObjectName("gc_toggle_join_part_messages")
+			pref.addAction(action)
+
+			action=pref.addAction(self.tr('Show status change messages'))
+			action.setCheckable(True)
+			if self.chatwidget().main().config['showMucStatus']=="True":
+				action.setChecked(True)
+			action.setObjectName("gc_toggle_status_messages")
+			pref.addAction(action)
+			
+			pref.addSeparator()
+
+			action=pref.addAction(self.tr('Change groupchat theme'))
+			action.setObjectName("gc_theme")
+			pref.addAction(action)
+
+			menu.addMenu(pref)
+
 		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.contextMenuTriggered)
 		menu.popup(event.globalPos())
-
+		
 	def contextMenuTriggered(self,action):
 		cmd=action.objectName()
 		if cmd=="open":
@@ -321,7 +350,21 @@ class webkitChatWidget(QtWebKit.QWebView):
 			print unicode(action.data().toString())
 			self.chatwidget().getPaintWindow().open(image = action.image)
 			self.chatwidget().getPaintWindow().show()
-			
+		elif cmd == 'gc_toggle_join_part_messages':
+			if self.chatwidget().main().config['showMucJoinPart']=="True":
+				self.chatwidget().main().config['showMucJoinPart']="False"
+			else:
+				self.chatwidget().main().config['showMucJoinPart']="True"
+			self.chatwidget().main().config.save()
+		elif cmd == 'gc_toggle_status_messages':
+			if self.chatwidget().main().config['showMucStatus']=="True":
+				self.chatwidget().main().config['showMucStatus']="False"
+			else:
+				self.chatwidget().main().config['showMucStatus']="True"
+			self.chatwidget().main().config.save()
+		elif cmd == 'gc_theme':
+			pass
+
 	def copySelectedText(self):
 		text=self.selectedText()
 		if len(text)!=0:
