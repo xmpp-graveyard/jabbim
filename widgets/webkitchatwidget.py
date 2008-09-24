@@ -363,7 +363,7 @@ class webkitChatWidget(QtWebKit.QWebView):
 				self.chatwidget().main().config['showMucStatus']="True"
 			self.chatwidget().main().config.save()
 		elif cmd == 'gc_theme':
-			pass
+			self.chatwidget().main().preferencesClicked(page=5,viewTab=2)
 
 	def copySelectedText(self):
 		text=self.selectedText()

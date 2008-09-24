@@ -4288,10 +4288,14 @@ class mainWindow(QtGui.QMainWindow):
 				self.profilesWindow=widgets.profiles.profilesWindow(self,self)
 				self.profilesWindow.show()
 
-	def preferencesClicked(self,bool):
+	def preferencesClicked(self,bool=False,page=None,viewTab=None):
 		if self.preferencesWindow.isHidden()==True:
 			self.preferencesWindow.show()
 			self.preferencesWindow.reloadPreferences()
+		if page:
+			self.preferencesWindow.ui.listWidget.setCurrentRow(page)
+		if viewTab:
+			self.preferencesWindow.ui.tabWidget.setCurrentIndex(viewTab)
 
 	def isValidExtraPart(self,config):
 		if not config.has_key('header'):
