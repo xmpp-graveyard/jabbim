@@ -2034,7 +2034,7 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.ui.mdiWidget.hide()
 			self.ui.mdiWidget.setParent(None)
-			self.setMaximumWidth(250)
+			#self.setMaximumWidth(250)
 			self.chat=widgets.chatwindow.chatWindow(self,self) #: chat window
 
 		# variables
