@@ -2237,6 +2237,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.profilesList, QtCore.SIGNAL("currentIndexChanged ( const QString & )"),self.profileChanged)
 		QtCore.QObject.connect(self.ui.mucBrowserButton, QtCore.SIGNAL("clicked ()"),self.mucBrowser)
 		QtCore.QObject.connect(self.ui.statusWidget, QtCore.SIGNAL("clicked (bool)"),self.statusMessageClicked)
+		self.ui.statusWidget.setSizeAdjustPolicy(QtGui.QComboBox.AdjustToContentsOnFirstShow)
 		#QtCore.QObject.connect(self.ui.statusLine, QtCore.SIGNAL("returnPressed ()"),self.statusLineFinished)
 		QtCore.QObject.connect(self.ui.statusLine, QtCore.SIGNAL("editingFinished () "),self.statusLineFinished)
 		#QtCore.QObject.connect(self.ui.offlineButton, QtCore.SIGNAL("clicked ( bool)"),self.hideOffline)
