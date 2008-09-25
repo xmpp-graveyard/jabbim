@@ -406,7 +406,7 @@ class Plugin(plugins.PluginBase):
 		self.osd.view(pixmap,self.tr('WARNING!'),unicode('Evil '+typ+' from '+jid.userhost()),self.addChatTab,[it,jid])
 		
 	def on_presence(self,jid,user,show,status,first):
-		if first:
+		if first or not self.isNotificationEnabled():
 			return
 		if self.config['osd_on_presence']=="True":
 			if not status:
@@ -443,7 +443,7 @@ class Plugin(plugins.PluginBase):
 		self.main.chat.activate()
 
 	def on_firstChatMessageEvent(self, msg,event=None):
-		if msg.body == None:
+		if msg.body == None or not self.isNotificationEnabled():
 			return
 		jid=msg.frm
 		user=msg.user
@@ -470,7 +470,7 @@ class Plugin(plugins.PluginBase):
 			self.main.tray.showMessage(self.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
 
 	def on_chatMessageEvent(self,msg,event=None):
-		if msg.body == None:
+		if msg.body == None or not self.isNotificationEnabled():
 			return
 		jid=msg.frm
 		user=msg.user
@@ -495,6 +495,8 @@ class Plugin(plugins.PluginBase):
 			self.main.playsound('message')
 
 	def on_groupchatMessageForMeEvent(self,frm,user,body,subject, xhtml):
+		if not self.isNotificationEnabled():
+			return
 		if self.config['tray_muc_highlight']=="True" and not self.main.chat.isActiveWindow():
 			if len(body)>40:
 				text=body[:40]+" ..."

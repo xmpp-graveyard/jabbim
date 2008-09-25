@@ -80,6 +80,11 @@ class PluginBase:
 			return True
 		return False
 
+	def isNotificationEnabled(self):
+		if self.main.selfStatus=="dnd" and self.main.config["notifyOnDND"]=="False":
+			return False
+		return True
+
 	def mainWindowMenu(self):
 		"""
 		Makes submenu in MainWindow menu and returns it

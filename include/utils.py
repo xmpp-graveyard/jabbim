@@ -161,6 +161,7 @@ def loadConfig(main,status):
 			"rosterStyle":"",
 			"chatMode":"normal",
 			"statusMessages":list(status),
+			"notifyOnDND":"True",
 			"showChatStatusChanges":"True",
 			"showMucStatus":"True",
 			"showMucJoinPart":"True",
