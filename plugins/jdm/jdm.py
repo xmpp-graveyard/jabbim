@@ -293,6 +293,8 @@ class Plugin(plugins.PluginBase):
 			item.setData(0,32,QtCore.QVariant(QtCore.QStringList([u"-1"])))
 			item.setText(0,unicode(d))
 			item.setIcon(0,icon)
+		self.wizard.ui.stackedWidget.setCurrentIndex(1)
+		self.wizard.ui.back.show()
 
 	def buildContactMenu(self,menu,contact):
 		"""
@@ -528,8 +530,9 @@ class Plugin(plugins.PluginBase):
 			if contact:
 				jid=self.jid+"/"+contact.getHighestResource()
 				data=[]
+				items=self.wizard.ui.tree.selectedItems()
 				for item in items:
-					data.append(self.esPath+unicode(item.text(0)))
+					data.append(self.getPath(item))
 				self.main.client.callRemote(jid, 'getFiles',(data,))
 		else:
 			for item in items:
@@ -748,6 +751,7 @@ class Plugin(plugins.PluginBase):
 ##			self.window.ui.vipInfo.hide()
 ##		else:
 ##			self.window.ui.vipInfo.show()
+		self.wizard.ui.tree.clear()
 		if (not self.main.client.roster['users'].has_key("public@disk.jabbim.cz") or not self.main.client.roster['users'].has_key("private@disk.jabbim.cz")) or not self.main.client.roster['users'].has_key("album@disk.jabbim.cz"):
 			d=self.main.client.getRegisterForm("disk.jabbim.cz")
 			d.addCallback(self._onRegister)
