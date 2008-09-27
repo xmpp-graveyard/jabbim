@@ -143,6 +143,7 @@ class Plugin(plugins.PluginBase):
 
 	def esConfiguration(self):
 		self.showPluginConfigDialog("easyshare",self.wizard)
+		self.easyshare()
 
 	def wBack(self):
 		self.wizard.ui.back.hide()
