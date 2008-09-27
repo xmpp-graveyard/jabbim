@@ -88,12 +88,15 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.wizard.ui.download,QtCore.SIGNAL("clicked()"),self.downloadCurrentFile)
 			QtCore.QObject.connect(self.wizard.ui.remove,QtCore.SIGNAL("clicked()"),self.removeCurrentFile)
 			QtCore.QObject.connect(self.wizard.ui.upload,QtCore.SIGNAL("clicked()"),self.sendFile)
+			QtCore.QObject.connect(self.wizard.ui.configuration,QtCore.SIGNAL("clicked()"),self.esConfiguration)
 			QtCore.QObject.connect(self.window.ui.showMiniRoster,QtCore.SIGNAL("clicked()"),self.showMiniRoster)
 			QtCore.QObject.connect(self.window.ui.desktop,QtCore.SIGNAL("clicked()"),self.leftDesktop)
 			QtCore.QObject.connect(self.window.ui.computer,QtCore.SIGNAL("clicked()"),self.leftComputer)
 			QtCore.QObject.connect(self.window.ui.right,QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem *,int )"),self.doubleClicked)
 			QtCore.QObject.connect(self.wizard.ui.tree,QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem *,int )"),self.doubleClicked)
 
+			self.wizard.ui.configuration.hide()
+			
 			self.model=QtGui.QDirModel()
 			self.model.supportedDropActions=self.supportedDropActions
 			self.model.flags=self.flags
@@ -137,6 +140,9 @@ class Plugin(plugins.PluginBase):
 			self.stopDownload=False
 		else:
 			self.loadConfig(homedir)
+
+	def esConfiguration(self):
+		self.showPluginConfigDialog("easyshare",self.wizard)
 
 	def wBack(self):
 		self.wizard.ui.back.hide()
@@ -295,6 +301,9 @@ class Plugin(plugins.PluginBase):
 			item.setIcon(0,icon)
 		self.wizard.ui.stackedWidget.setCurrentIndex(1)
 		self.wizard.ui.back.show()
+		self.wizard.ui.remove.hide()
+		self.wizard.ui.upload.hide()
+		self.wizard.ui.configuration.show()
 
 	def buildContactMenu(self,menu,contact):
 		"""
@@ -708,20 +717,33 @@ class Plugin(plugins.PluginBase):
 		print "call",self.jid,self.typ
 		if self.typ=="public":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (self.jid,)).addCallback(self.updateView)
+			self.wizard.ui.remove.show()
+			self.wizard.ui.upload.show()
+			self.wizard.ui.configuration.hide()
 ##			self.window.ui.list.setIconSize(QtCore.QSize(32,32))
 ##			self.window.ui.list.setGridSize(QtCore.QSize(128,96))
 ##			self.window.ui.esWidget.hide()
 		elif self.typ=="private":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listPrivate', (self.jid,)).addCallback(self.updateView)
+			self.wizard.ui.remove.show()
+			self.wizard.ui.upload.show()
+			self.wizard.ui.configuration.hide()
 ##			self.window.ui.list.setIconSize(QtCore.QSize(32,32))
 ##			self.window.ui.list.setGridSize(QtCore.QSize(128,96))
 ##			self.window.ui.esWidget.hide()
 		elif self.typ=="album":
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'listAlbum', (self.jid,)).addCallback(self.updateView)
+			self.wizard.ui.remove.show()
+			self.wizard.ui.upload.show()
+			self.wizard.ui.configuration.hide()
 ##			#if self.config['iconMode']=="True":
 ##			self.window.ui.list.setIconSize(QtCore.QSize(128,128))
 ##			self.window.ui.list.setGridSize(QtCore.QSize(160,160))
 ##			self.window.ui.esWidget.hide()
+		else:
+			self.wizard.ui.remove.hide()
+			self.wizard.ui.upload.hide()
+			self.wizard.ui.configuration.show()
 
 		if self.jid != self.main.client.jid.userhost():
 			self.window.ui.buttonDelete.setEnabled(False)

@@ -26,6 +26,8 @@ except:
 	print "PyQt4 is not installed."
 import utils
 from os.path import basename
+from widgets.configlib import pluginConfiguration
+
 
 class PluginBase:
 	def __init__(self, main, homedir, plugindir):
@@ -79,6 +81,15 @@ class PluginBase:
 			self._registeredFeatures.remove(feature)
 			return True
 		return False
+
+	def showPluginConfigDialog(self,name,parent=None):
+		if self.main.plugins.has_key(name) and self.main.plugins[name]['module']:
+			dialog=pluginConfiguration(self.main.plugins[name]['module'],parent)
+			dialog.exec_()
+			if self.main.plugins.has_key(name):
+				if self.main.plugins[name]['module']:
+					#self.main.plugins[name]['module'].config=self.plugins[name].config
+					self.main.plugins[name]['module'].on_configChanged()
 
 	def isNotificationEnabled(self):
 		if self.main.selfStatus=="dnd" and self.main.config["notifyOnDND"]=="False":

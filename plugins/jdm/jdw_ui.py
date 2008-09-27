@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'plugins/jdm/jdw.ui'
 #
-# Created: Mon Sep 22 13:13:26 2008
+# Created: Sat Sep 27 12:56:00 2008
 #      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
 #
 # WARNING! All changes made in this file will be lost!
@@ -156,6 +156,18 @@ class Ui_JDW(object):
         self.remove.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.remove.setObjectName("remove")
         self.vboxlayout.addWidget(self.remove)
+        self.configuration = QtGui.QToolButton(self.page)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(5), QtGui.QSizePolicy.Policy(5))
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.configuration.sizePolicy().hasHeightForWidth())
+        self.configuration.setSizePolicy(sizePolicy)
+        self.configuration.setSizeIncrement(QtCore.QSize(2, 0))
+        self.configuration.setIcon(icon)
+        self.configuration.setIconSize(QtCore.QSize(24, 24))
+        self.configuration.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
+        self.configuration.setObjectName("configuration")
+        self.vboxlayout.addWidget(self.configuration)
         self.gridlayout3.addLayout(self.vboxlayout, 0, 1, 1, 1)
         self.stackedWidget.addWidget(self.page)
         self.page_2 = QtGui.QWidget()
@@ -173,7 +185,7 @@ class Ui_JDW(object):
         self.gridlayout.addWidget(self.stackedWidget, 2, 0, 1, 3)
 
         self.retranslateUi(JDW)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("clicked()"), JDW.reject)
         QtCore.QMetaObject.connectSlotsByName(JDW)
         JDW.setTabOrder(self.download, self.upload)
@@ -191,4 +203,5 @@ class Ui_JDW(object):
         self.download.setText(JDW.translate("JDW", "Download File", None, QtGui.QApplication.UnicodeUTF8))
         self.upload.setText(JDW.translate("JDW", "Upload File", None, QtGui.QApplication.UnicodeUTF8))
         self.remove.setText(JDW.translate("JDW", "Remove File", None, QtGui.QApplication.UnicodeUTF8))
+        self.configuration.setText(JDW.translate("JDW", "Configuration", None, QtGui.QApplication.UnicodeUTF8))
 
