@@ -142,9 +142,9 @@ class bookmarksClass:
 				action=menu.addAction(mainWindow.tr("Join"))
 				action.setData(QtCore.QVariant(jid))
 				action.setObjectName("join")
-				#action=menu.addAction(mainWindow.tr("Bookmark"))
-				#action.setData(item.data(1,32))
-				#action.setObjectName("bookmark")
+				action=menu.addAction(mainWindow.tr("Bookmark"))
+				action.setData(item.data(1,32))
+				action.setObjectName("bookmark")
 		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.bookmarksContextMenuTriggered)
 		menu.popup(self.bookmarks.mapToGlobal(pos))
 
@@ -193,6 +193,22 @@ class bookmarksClass:
 			del self.main.client.bookmarks['conference'][unicode(item.text(1))]
 			self.main.client.setBookmarks()
 			self.buildBookmarks()
+		elif cmd=="bookmark":
+			
+			data=action.data()
+			lst=data.toList()
+			jid=unicode(lst[0].toString()) # get jid
+			if len(jid.split("@"))!=1:
+				room=jid.split("@")[0]
+				server=jid.split("@")[1]
+			else:
+				return
+			name=room
+			nickname=unicode(self.main.client.jid.user) # get nickname
+			password=unicode("") # get password
+			autojoin=False
+			edit=preferences.editBookmark(self.main,room,server,name,nickname,password,autojoin,self.main)
+			edit.exec_()
 
 	#def bookmarksItemClicked(self,item,i):
 		#return
