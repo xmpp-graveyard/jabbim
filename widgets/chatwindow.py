@@ -403,7 +403,8 @@ class chatWindow(QtGui.QMainWindow):
 			w=self.ui.chatTab.widget(i)
 			if unicode(w.typ)=="groupchat":
 				w.chat.ui.line.setEnabled(True)
-				message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.tr("You are now online."))
+				#message=self.main.skin["status_message"].replace("[time]",self.main.now()).replace("[message]",self.tr("You are now online."))
+				message=self.main.webkitThemeFactory.genGroupchatStatus(unicode(self.tr("You are now online.")),self.main.now())
 				w.chat.textEditWrite(message)
 				self.main.client.joinGC(w.jid, w.chat.nick,sendRooms=self.main.config['sendRooms']=="True")
 
