@@ -2764,7 +2764,7 @@ class mainWindow(QtGui.QMainWindow):
 					self.ui.statusWidget.setText(unicode(self.status[show]))
 				else:
 					m=QtGui.QFontMetrics(self.ui.statusWidget.font())
-					self.ui.statusWidget.setText(unicode(m.elidedText(unicode(message),QtCore.Qt.ElideMiddle, self.ui.statusWidget.width()-30)))
+					self.ui.statusWidget.setText(unicode(m.elidedText(unicode(message),QtCore.Qt.ElideMiddle, self.ui.statusWidget.width()-50)))
 				self.ui.statusWidget.setIcon(self.getIcon(status=show,size="16x16"))
 
 		else:
