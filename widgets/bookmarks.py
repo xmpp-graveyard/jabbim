@@ -143,7 +143,7 @@ class bookmarksClass:
 				action.setData(QtCore.QVariant(jid))
 				action.setObjectName("join")
 				action=menu.addAction(mainWindow.tr("Bookmark"))
-				action.setData(item.data(1,32))
+				action.setData(QtCore.QVariant(jid))
 				action.setObjectName("bookmark")
 		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.bookmarksContextMenuTriggered)
 		menu.popup(self.bookmarks.mapToGlobal(pos))
@@ -196,12 +196,12 @@ class bookmarksClass:
 		elif cmd=="bookmark":
 			
 			data=action.data()
-			lst=data.toList()
-			jid=unicode(lst[0].toString()) # get jid
+			jid=unicode(data.toString()) # get jid
 			if len(jid.split("@"))!=1:
 				room=jid.split("@")[0]
 				server=jid.split("@")[1]
 			else:
+				print "bad jid"
 				return
 			name=room
 			nickname=unicode(self.main.client.jid.user) # get nickname
