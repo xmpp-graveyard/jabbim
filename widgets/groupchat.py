@@ -141,7 +141,7 @@ class groupChatWidget(abstractChatWidget):
 		self.ui.configButton.setArrowType(QtCore.Qt.NoArrow)
 		self.flowLayout.addWidget(self.ui.configButton)
 
-		self.ui.admin.setEnabled(False)
+		#self.ui.admin.setEnabled(False)
 		self.flowLayout.addStretch()
 		self.ui.pluginWidget.setLayout(self.flowLayout)
 		self.on_owner=None
@@ -557,7 +557,7 @@ class groupChatWidget(abstractChatWidget):
 		elif self.main().client.groupchats[self.jid].users[nick].affiliation=="admin":
 			self.dialog=groupchatAdminDialog(self.main(),self.jid,None,self,subject=unicode(self.ui.info.toPlainText()), admin = True)
 			self.dialog.show()
-		elif self.role=='moderator':
+		else:
 			self.dialog=groupchatAdminDialog(self.main(),self.jid,None,self,subject=unicode(self.ui.info.toPlainText()))
 			self.dialog.show()
 
