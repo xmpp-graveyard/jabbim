@@ -630,6 +630,26 @@ p, li { white-space: pre-wrap; }
              </item>
             </layout>
            </widget>
+		   <widget class="QWidget" name="favTab" >
+			   <property name="geometry" >
+				   <rect>
+					   <x>0</x>
+					   <y>0</y>
+					   <width>239</width>
+					   <height>589</height>
+				   </rect>
+			   </property>
+			   <attribute name="title" >
+				   <string> r</string>
+			   </attribute>
+			   <attribute name="icon" >
+				   <iconset>
+					   <normaloff>images/16x16/categories/srdce-cele.png</normaloff>images/16x16/categories/srdce-cele.png</iconset>
+			   </attribute>
+			   <attribute name="toolTip" >
+				   <string>Favourite</string>
+			   </attribute>
+		</widget>
            <widget class="QWidget" name="bookmarksTab" >
             <property name="geometry" >
              <rect>

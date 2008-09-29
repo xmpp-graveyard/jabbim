@@ -2,12 +2,38 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Fri Sep 12 21:29:57 2008
+# Created: Mon Sep 29 14:47:21 2008
 #      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
+class tabWidget(QtGui.QTabBar): 
+	def __init__(self,main,parent):
+		QtGui.QTabBar.__init__(self,parent)
+		self.main=main
+	
+	def mousePressEvent(self,event):
+		i=self.tabAt(event.pos())
+		if i==0:
+			self.main.ui.roster.favouriteMode=False
+			self.main.ui.roster.setSize()
+			self.main.ui.roster.repaint()
+			self.main.showFavouriteAction.setChecked(self.main.ui.roster.favouriteMode)
+			return QtGui.QTabBar.mousePressEvent(self,event)
+		elif i==1:
+			self.setCurrentIndex(0)
+			self.blockSignals(True)
+			r=QtGui.QTabBar.mousePressEvent(self,event)
+			self.blockSignals(False)
+			self.main.ui.roster.favouriteMode=True
+			self.main.ui.roster.setSize()
+			self.main.ui.roster.repaint()
+			self.main.showFavouriteAction.setChecked(self.main.ui.roster.favouriteMode)
+			return r
+		else:
+			return QtGui.QTabBar.mousePressEvent(self,event)
+			
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -211,6 +237,8 @@ class Ui_MainWindow(object):
         self.mainTabWidget = QtGui.QTabWidget(self.roster)
         self.mainTabWidget.setAutoFillBackground(True)
         self.mainTabWidget.setObjectName("mainTabWidget")
+        self.tabWidget=tabWidget(MainWindow,self.mainTabWidget)
+        self.mainTabWidget.setTabBar(self.tabWidget)
         self.rosterTab = QtGui.QWidget()
         self.rosterTab.setGeometry(QtCore.QRect(0, 0, 239, 589))
         self.rosterTab.setObjectName("rosterTab")
@@ -255,6 +283,12 @@ class Ui_MainWindow(object):
         icon3 = QtGui.QIcon()
         icon3.addPixmap(QtGui.QPixmap("images/16x16/categories/system-users.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mainTabWidget.addTab(self.rosterTab, icon3, "")
+        self.favTab = QtGui.QWidget()
+        self.favTab.setGeometry(QtCore.QRect(0, 0, 239, 589))
+        self.favTab.setObjectName("favTab")
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap("images/16x16/categories/srdce-cele.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.mainTabWidget.addTab(self.favTab, icon4, "")
         self.bookmarksTab = QtGui.QWidget()
         self.bookmarksTab.setGeometry(QtCore.QRect(0, 0, 239, 589))
         self.bookmarksTab.setObjectName("bookmarksTab")
@@ -276,9 +310,9 @@ class Ui_MainWindow(object):
         self.bookmarks_headerLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.bookmarks_headerLabel.setObjectName("bookmarks_headerLabel")
         self.gridlayout6.addWidget(self.bookmarks_headerLabel, 0, 0, 1, 2)
-        icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("images/16x16/categories/bookmarks.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.mainTabWidget.addTab(self.bookmarksTab, icon4, "")
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap("images/16x16/categories/bookmarks.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.mainTabWidget.addTab(self.bookmarksTab, icon5, "")
         self.eventsTab = QtGui.QWidget()
         self.eventsTab.setGeometry(QtCore.QRect(0, 0, 239, 589))
         self.eventsTab.setObjectName("eventsTab")
@@ -320,9 +354,9 @@ class Ui_MainWindow(object):
         self.eventsLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.eventsLabel.setObjectName("eventsLabel")
         self.gridlayout7.addWidget(self.eventsLabel, 0, 0, 1, 1)
-        icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap("images/16x16/categories/event.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.mainTabWidget.addTab(self.eventsTab, icon5, "")
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap("images/16x16/categories/event.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.mainTabWidget.addTab(self.eventsTab, icon6, "")
         self.gridlayout3.addWidget(self.mainTabWidget, 1, 0, 1, 1)
         self.rosterStackedWidget.addWidget(self.roster)
         self.splash = QtGui.QWidget()
@@ -375,43 +409,43 @@ class Ui_MainWindow(object):
         self.menuAkce.setObjectName("menuAkce")
         MainWindow.setMenuBar(self.menubar)
         self.actionShow_XML = QtGui.QAction(MainWindow)
-        icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap("images/16x16/actions/xml-konzole.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionShow_XML.setIcon(icon6)
+        icon7 = QtGui.QIcon()
+        icon7.addPixmap(QtGui.QPixmap("images/16x16/actions/xml-konzole.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionShow_XML.setIcon(icon7)
         self.actionShow_XML.setObjectName("actionShow_XML")
         self.actionPreferences = QtGui.QAction(MainWindow)
-        icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap("images/16x16/categories/gtk-preferences.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionPreferences.setIcon(icon7)
+        icon8 = QtGui.QIcon()
+        icon8.addPixmap(QtGui.QPixmap("images/16x16/categories/gtk-preferences.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionPreferences.setIcon(icon8)
         self.actionPreferences.setObjectName("actionPreferences")
         self.actionQuit = QtGui.QAction(MainWindow)
-        icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap("images/16x16/actions/gtk-quit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionQuit.setIcon(icon8)
+        icon9 = QtGui.QIcon()
+        icon9.addPixmap(QtGui.QPixmap("images/16x16/actions/gtk-quit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionQuit.setIcon(icon9)
         self.actionQuit.setObjectName("actionQuit")
         self.actionAdd_Contact = QtGui.QAction(MainWindow)
-        icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap("images/16x16/actions/gtk-add.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionAdd_Contact.setIcon(icon9)
+        icon10 = QtGui.QIcon()
+        icon10.addPixmap(QtGui.QPixmap("images/16x16/actions/gtk-add.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionAdd_Contact.setIcon(icon10)
         self.actionAdd_Contact.setObjectName("actionAdd_Contact")
         self.actionAbout = QtGui.QAction(MainWindow)
-        icon10 = QtGui.QIcon()
-        icon10.addPixmap(QtGui.QPixmap("images/16x16/actions/about.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionAbout.setIcon(icon10)
+        icon11 = QtGui.QIcon()
+        icon11.addPixmap(QtGui.QPixmap("images/16x16/actions/about.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionAbout.setIcon(icon11)
         self.actionAbout.setObjectName("actionAbout")
         self.actionService_Discovery = QtGui.QAction(MainWindow)
-        icon11 = QtGui.QIcon()
-        icon11.addPixmap(QtGui.QPixmap("images/16x16/actions/service-discovery.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionService_Discovery.setIcon(icon11)
+        icon12 = QtGui.QIcon()
+        icon12.addPixmap(QtGui.QPixmap("images/16x16/actions/service-discovery.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionService_Discovery.setIcon(icon12)
         self.actionService_Discovery.setObjectName("actionService_Discovery")
         self.actionMUC_Browser = QtGui.QAction(MainWindow)
         self.actionMUC_Browser.setObjectName("actionMUC_Browser")
         self.actionPrivacy_list_editor = QtGui.QAction(MainWindow)
         self.actionPrivacy_list_editor.setObjectName("actionPrivacy_list_editor")
         self.actionIdentity = QtGui.QAction(MainWindow)
-        icon12 = QtGui.QIcon()
-        icon12.addPixmap(QtGui.QPixmap("images/16x16/categories/v-card.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionIdentity.setIcon(icon12)
+        icon13 = QtGui.QIcon()
+        icon13.addPixmap(QtGui.QPixmap("images/16x16/categories/v-card.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionIdentity.setIcon(icon13)
         self.actionIdentity.setObjectName("actionIdentity")
         self.actionProfiles = QtGui.QAction(MainWindow)
         self.actionProfiles.setObjectName("actionProfiles")
@@ -485,6 +519,8 @@ class Ui_MainWindow(object):
         self.rosterSearchLabel.setText(QtGui.QApplication.translate("MainWindow", "User search:", None, QtGui.QApplication.UnicodeUTF8))
         self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.rosterTab), QtGui.QApplication.translate("MainWindow", " r", None, QtGui.QApplication.UnicodeUTF8))
         self.mainTabWidget.setTabToolTip(self.mainTabWidget.indexOf(self.rosterTab), QtGui.QApplication.translate("MainWindow", "Roster", None, QtGui.QApplication.UnicodeUTF8))
+        self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.favTab), QtGui.QApplication.translate("MainWindow", " r", None, QtGui.QApplication.UnicodeUTF8))
+        self.mainTabWidget.setTabToolTip(self.mainTabWidget.indexOf(self.favTab), QtGui.QApplication.translate("MainWindow", "Favourite", None, QtGui.QApplication.UnicodeUTF8))
         self.bookmarks.headerItem().setText(0, QtGui.QApplication.translate("MainWindow", "Name", None, QtGui.QApplication.UnicodeUTF8))
         self.bookmarks.headerItem().setText(1, QtGui.QApplication.translate("MainWindow", "Jid", None, QtGui.QApplication.UnicodeUTF8))
         self.mucBrowserButton.setText(QtGui.QApplication.translate("MainWindow", "MUC Browser", None, QtGui.QApplication.UnicodeUTF8))

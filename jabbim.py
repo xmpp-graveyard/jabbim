@@ -1959,6 +1959,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.rosterSearchClose, QtCore.SIGNAL("clicked()"),self.ui.roster.search)
 
 
+		#self.ui.mainTabWidget.showTab=self.t
 		self.ui.tabWidgetButton=QtGui.QToolButton(self.ui.mainTabWidget)
 		self.ui.tabWidgetButton.setObjectName("jabbimButton")
 		self.ui.tabWidgetButton.setIcon(QtGui.QIcon("images/16x16/categories/transports.png"))
@@ -2005,7 +2006,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.showFavouriteAction.setChecked(False)
 		QtCore.QObject.connect(self.showFavouriteAction,QtCore.SIGNAL("triggered ( bool )"),self.showFavourite)
 
-		self.ui.mainTabWidget.tabBar().mousePressEvent=self.tabMousePressEvent
+		#self.ui.mainTabWidget.tabBar().mousePressEvent=self.tabMousePressEvent
 		#print "TABBAR:",self.ui.mainTabWidget.tabBar().mousePressEvent
 		#self.ui.mainTabWidget.setTabBar(self.ui.tBar)
 
@@ -2339,6 +2340,9 @@ class mainWindow(QtGui.QMainWindow):
 		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.connect()
+
+#	def t(self,i):
+#		print "showTab",i
 
 	def showFavourite(self,b=None):
 		self.ui.roster.favouriteMode=not self.ui.roster.favouriteMode
