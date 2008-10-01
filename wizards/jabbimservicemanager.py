@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*- 
 try:
 	from PyQt4 import QtCore, QtGui
 except:
@@ -207,6 +207,7 @@ class jabbimServiceManager(QtGui.QDialog):
 			else:
 				item.setCheckState(0,QtCore.Qt.Unchecked)
 				item.registered=QtCore.Qt.Unchecked
+		self.ui.dictionaries.sortItems(0,QtCore.Qt.AscendingOrder)
 	
 	def _registerDict(self):
 		for i in range(0,int(self.ui.dictionaries.topLevelItemCount())):
@@ -299,4 +300,4 @@ class jabbimServiceManager(QtGui.QDialog):
 			self.main.autoAdd['album@disk.jabbim.cz']={"name":self.tr("Album"),"group":"Disk"}
 			self.main.client.setRegisterForm("disk.jabbim.cz",legacy={})
 			self.home()
-			self.main.client.reactor.callLater(1,self.loadServices)
+			self.main.client.reactor.callLater(2,self.loadServices)
