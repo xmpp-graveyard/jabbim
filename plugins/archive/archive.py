@@ -326,7 +326,7 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.searchText.hide()
 			self.group=QtGui.QButtonGroup(self.window)
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
-			self.skin=self.getConfig("chatskins/gajim/gajim.cfg")
+			self.skin=self.getConfig("%s/gajim.cfg" % self.pluginDir)
 			self.skin=self.skin['chatskin']
 			self.window.ui.seznam.header().hide()
 			self.jidList=self.backend.getJidList()
