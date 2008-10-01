@@ -6,6 +6,7 @@ except:
 
 import jabbimservicemanager_ui
 import weakref
+from widgets import servicediscovery
 #445223432
 #class JabberDiskService:
 #	def __init__(self):
@@ -47,7 +48,13 @@ class jabbimServiceManager(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.registerIcq,QtCore.SIGNAL("clicked()"),self._registerICQ)
 		QtCore.QObject.connect(self.ui.registerDictionaries,QtCore.SIGNAL("clicked()"),self._registerDict)
 		QtCore.QObject.connect(self.ui.back,QtCore.SIGNAL("clicked()"),self.home)
+		QtCore.QObject.connect(self.ui.advanced,QtCore.SIGNAL("clicked()"),self.advanced)
 		self.home()
+	
+	def advanced(self):
+		self.discovery=servicediscovery.serviceDiscoveryDialog(self.main,self)
+		self.discovery.show()
+		self.hide()
 	
 	def home(self):
 		self.ui.stackedWidget.setCurrentIndex(0)

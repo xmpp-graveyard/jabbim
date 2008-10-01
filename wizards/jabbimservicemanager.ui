@@ -12,69 +12,37 @@
   <property name="windowTitle" >
    <string>Dialog</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout" >
-   <item row="0" column="0" colspan="4" >
-    <widget class="QLabel" name="label" >
+  <layout class="QGridLayout" >
+   <property name="margin" >
+    <number>9</number>
+   </property>
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <item row="5" column="0" >
+    <widget class="QPushButton" name="advanced" >
      <property name="text" >
-      <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
-&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
-p, li { white-space: pre-wrap; }
-&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
-&lt;p style=" margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt; font-weight:600;">&lt;span style=" font-size:x-large;">Jabbim Services Manager&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+      <string>Advanced</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="4" >
-    <layout class="QHBoxLayout" name="horizontalLayout" >
-     <item>
-      <widget class="QLabel" name="label_3" >
-       <property name="maximumSize" >
-        <size>
-         <width>48</width>
-         <height>1677</height>
-        </size>
-       </property>
-       <property name="pixmap" >
-        <pixmap>images/48x48/apps/jabbim.png</pixmap>
-       </property>
-       <property name="alignment" >
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_2" >
-       <property name="text" >
-        <string>Welcome to Jabbim Services Manager which will help you to setup services available on your Jabbim server.</string>
-       </property>
-       <property name="wordWrap" >
-        <bool>true</bool>
-       </property>
-       <property name="openExternalLinks" >
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
+   <item row="5" column="1" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>191</width>
+       <height>33</height>
+      </size>
+     </property>
+    </spacer>
    </item>
    <item row="5" column="2" >
-    <widget class="QPushButton" name="pushButton_2" >
+    <widget class="QPushButton" name="back" >
      <property name="text" >
-      <string>Close</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0" colspan="3" >
-    <widget class="Line" name="line" >
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="3" >
-    <widget class="Line" name="line_2" >
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
+      <string>Back</string>
      </property>
     </widget>
    </item>
@@ -84,21 +52,19 @@ p, li { white-space: pre-wrap; }
       <number>0</number>
      </property>
      <widget class="QWidget" name="page" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>484</width>
-        <height>385</height>
-       </rect>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_2" >
+      <layout class="QGridLayout" >
+       <property name="margin" >
+        <number>9</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
        <item row="2" column="0" >
-        <spacer name="verticalSpacer" >
+        <spacer>
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" >
           <size>
            <width>463</width>
            <height>177</height>
@@ -126,21 +92,25 @@ p, li { white-space: pre-wrap; }
       </layout>
      </widget>
      <widget class="QWidget" name="page_2" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>484</width>
-        <height>385</height>
-       </rect>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_3" >
+      <layout class="QGridLayout" >
+       <property name="margin" >
+        <number>9</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
        <item row="0" column="0" >
         <widget class="QGroupBox" name="groupBox" >
          <property name="title" >
           <string>Register Jabber Disk</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_4" >
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
           <item row="0" column="0" colspan="3" >
            <widget class="QLabel" name="label_4" >
             <property name="text" >
@@ -155,11 +125,11 @@ p, li { white-space: pre-wrap; }
            </widget>
           </item>
           <item row="1" column="0" >
-           <spacer name="horizontalSpacer_2" >
+           <spacer>
             <property name="orientation" >
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="sizeHint" stdset="0" >
+            <property name="sizeHint" >
              <size>
               <width>149</width>
               <height>20</height>
@@ -175,11 +145,11 @@ p, li { white-space: pre-wrap; }
            </widget>
           </item>
           <item row="1" column="2" >
-           <spacer name="horizontalSpacer_3" >
+           <spacer>
             <property name="orientation" >
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="sizeHint" stdset="0" >
+            <property name="sizeHint" >
              <size>
               <width>148</width>
               <height>20</height>
@@ -188,11 +158,11 @@ p, li { white-space: pre-wrap; }
            </spacer>
           </item>
           <item row="2" column="1" >
-           <spacer name="verticalSpacer_2" >
+           <spacer>
             <property name="orientation" >
              <enum>Qt::Vertical</enum>
             </property>
-            <property name="sizeHint" stdset="0" >
+            <property name="sizeHint" >
              <size>
               <width>20</width>
               <height>265</height>
@@ -206,13 +176,25 @@ p, li { white-space: pre-wrap; }
       </layout>
      </widget>
      <widget class="QWidget" name="page_3" >
-      <layout class="QGridLayout" name="gridLayout_6" >
+      <layout class="QGridLayout" >
+       <property name="margin" >
+        <number>9</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
        <item row="0" column="0" >
         <widget class="QGroupBox" name="groupBox_2" >
          <property name="title" >
           <string>Register ICQ Transport</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_5" >
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
           <item row="0" column="0" colspan="3" >
            <widget class="QLabel" name="label_5" >
             <property name="text" >
@@ -227,9 +209,21 @@ p, li { white-space: pre-wrap; }
            </widget>
           </item>
           <item row="1" column="0" colspan="3" >
-           <layout class="QHBoxLayout" name="horizontalLayout_2" >
+           <layout class="QHBoxLayout" >
+            <property name="margin" >
+             <number>0</number>
+            </property>
+            <property name="spacing" >
+             <number>6</number>
+            </property>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout" >
+             <layout class="QVBoxLayout" >
+              <property name="margin" >
+               <number>0</number>
+              </property>
+              <property name="spacing" >
+               <number>6</number>
+              </property>
               <item>
                <widget class="QLabel" name="label_6" >
                 <property name="text" >
@@ -247,7 +241,13 @@ p, li { white-space: pre-wrap; }
              </layout>
             </item>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_2" >
+             <layout class="QVBoxLayout" >
+              <property name="margin" >
+               <number>0</number>
+              </property>
+              <property name="spacing" >
+               <number>6</number>
+              </property>
               <item>
                <widget class="QLineEdit" name="icqNumber" />
               </item>
@@ -263,11 +263,11 @@ p, li { white-space: pre-wrap; }
            </layout>
           </item>
           <item row="2" column="0" >
-           <spacer name="horizontalSpacer_2" >
+           <spacer>
             <property name="orientation" >
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="sizeHint" stdset="0" >
+            <property name="sizeHint" >
              <size>
               <width>149</width>
               <height>20</height>
@@ -283,11 +283,11 @@ p, li { white-space: pre-wrap; }
            </widget>
           </item>
           <item row="2" column="2" >
-           <spacer name="horizontalSpacer_3" >
+           <spacer>
             <property name="orientation" >
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="sizeHint" stdset="0" >
+            <property name="sizeHint" >
              <size>
               <width>148</width>
               <height>20</height>
@@ -296,11 +296,11 @@ p, li { white-space: pre-wrap; }
            </spacer>
           </item>
           <item row="3" column="1" >
-           <spacer name="verticalSpacer_2" >
+           <spacer>
             <property name="orientation" >
              <enum>Qt::Vertical</enum>
             </property>
-            <property name="sizeHint" stdset="0" >
+            <property name="sizeHint" >
              <size>
               <width>20</width>
               <height>258</height>
@@ -312,16 +312,27 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
       </layout>
-      <zorder>groupBox_2</zorder>
      </widget>
      <widget class="QWidget" name="page_4" >
-      <layout class="QGridLayout" name="gridLayout_7" >
+      <layout class="QGridLayout" >
+       <property name="margin" >
+        <number>9</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
        <item row="0" column="0" >
         <widget class="QGroupBox" name="groupBox_3" >
          <property name="title" >
           <string>Dictionaries registration</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_8" >
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
           <item row="0" column="0" colspan="3" >
            <widget class="QLabel" name="label_8" >
             <property name="text" >
@@ -345,11 +356,11 @@ p, li { white-space: pre-wrap; }
            </widget>
           </item>
           <item row="2" column="0" >
-           <spacer name="horizontalSpacer_5" >
+           <spacer>
             <property name="orientation" >
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="sizeHint" stdset="0" >
+            <property name="sizeHint" >
              <size>
               <width>146</width>
               <height>20</height>
@@ -365,11 +376,11 @@ p, li { white-space: pre-wrap; }
            </widget>
           </item>
           <item row="2" column="2" >
-           <spacer name="horizontalSpacer_4" >
+           <spacer>
             <property name="orientation" >
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="sizeHint" stdset="0" >
+            <property name="sizeHint" >
              <size>
               <width>145</width>
               <height>20</height>
@@ -381,29 +392,79 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
       </layout>
-      <zorder>groupBox_3</zorder>
      </widget>
     </widget>
    </item>
-   <item row="5" column="1" >
-    <widget class="QPushButton" name="back" >
-     <property name="text" >
-      <string>Back</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0" >
-    <spacer name="horizontalSpacer" >
+   <item row="2" column="0" colspan="4" >
+    <widget class="Line" name="line_2" >
      <property name="orientation" >
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="sizeHint" stdset="0" >
-      <size>
-       <width>309</width>
-       <height>22</height>
-      </size>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="4" >
+    <widget class="Line" name="line" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
      </property>
-    </spacer>
+    </widget>
+   </item>
+   <item row="5" column="3" >
+    <widget class="QPushButton" name="pushButton_2" >
+     <property name="text" >
+      <string>Close</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="4" >
+    <layout class="QHBoxLayout" >
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_3" >
+       <property name="maximumSize" >
+        <size>
+         <width>48</width>
+         <height>1677</height>
+        </size>
+       </property>
+       <property name="pixmap" >
+        <pixmap/>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2" >
+       <property name="text" >
+        <string>Welcome to Jabbim Services Manager which will help you to setup services available on your Jabbim server.</string>
+       </property>
+       <property name="wordWrap" >
+        <bool>true</bool>
+       </property>
+       <property name="openExternalLinks" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="0" colspan="4" >
+    <widget class="QLabel" name="label" >
+     <property name="text" >
+      <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt; font-weight:600;">&lt;span style=" font-size:x-large;">Jabbim Services Manager&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

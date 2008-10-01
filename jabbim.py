@@ -3795,12 +3795,12 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Shows Service Discovery Dialog. Called by QAction from main menu.
 		"""
-		self.discovery=widgets.servicediscovery.serviceDiscoveryDialog(self,self)
-		self.discovery.show()
 		if USE_WIZARDS and self.client.jid.host in ['jabbim.cz','jabber.cz','njs.netlab.cz','jabbim.com','jabbim.pl']:
 			self.discovery2=wizards.jabbimservicemanager.jabbimServiceManager(self,self)
 			self.discovery2.show()
-
+		else:
+			self.discovery=widgets.servicediscovery.serviceDiscoveryDialog(self,self)
+			self.discovery.show()
 
 	def event(self,ev):
 		# depracted
