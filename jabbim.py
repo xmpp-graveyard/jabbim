@@ -1652,7 +1652,8 @@ class clientClass(pyxl.client.Client):
 		widget.setText(unicode(user)+" "+unicode(mainWindow.tr("is sending you "))+str(len(files))+" "+unicode(mainWindow.tr("files"))+" ("+str(self.toNormalSize(int(size)))+")")
 		widget.setAcceptText(unicode(mainWindow.tr("Accept")))
 		widget.setRejectText(unicode(mainWindow.tr("Reject")))
-
+		self.dispatcher.publishEvent('FTFileReceivedEvent', weakref.ref(event))
+		
 		tab,index=self.main.chat.findTab(unicode(jid.userhost()),typ=['chat'])
 ##		if tab:
 ##			mainWindow=self.main
@@ -1669,7 +1670,10 @@ class clientClass(pyxl.client.Client):
 ##			del tab.chat.ui.webkit.messageObject.ft[unicode(sid)]
 		return self.declineFiles(id,frm)
 
-	def _acceptFTTree(self,id,frm,files):
+	def _acceptFTTree(self,id,frm,files,later=True):
+		if later:
+			reactor.callLater(0,self._acceptFTTree,id,frm,files,False)
+			return
 		#q = QtGui.QMessageBox.question(self.main,self.main.tr("File transfer"), unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
 		#if q == QtGui.QMessageBox.Yes:
 		mainWindow=self.main

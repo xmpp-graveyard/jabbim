@@ -161,7 +161,11 @@ class Plugin(plugins.PluginBase):
 		if not event() or (self.window.isHidden() and self.wizard.isHidden()):
 			return
 		#self.w=QtGui.QDialog(self.window)
-		
+		try:
+			self.wizard.progress.ui
+			self.wizard.progress.reject()
+		except:
+			pass
 		self.wizard.progress=FTDownloadWidget(event())
 		self.wizard.progress.setParent(self.wizard.ui.prog)
 		self.wizard.ui.l.addWidget(self.wizard.progress)
@@ -586,7 +590,7 @@ class Plugin(plugins.PluginBase):
 
 	def toNormalSize(self,size):
 		if size<0:
-			return str(size)
+			return ""
 		original=int(size)
 		new=int(size/1000) # kB
 		if new==0:
