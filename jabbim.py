@@ -495,7 +495,7 @@ class clientClass(pyxl.client.Client):
 			if unicode(self.ft[sid].fromjid.full()).find("rpc@jabbim.cz")!=-1:
 				# continuing with jabbim extra
 				print "Part of jabbim extra has been downloaded"
-				file=self.ft[sid].file
+				file=self.ft[sid].filepath
 				print "extracting",file,'to',dirname(file)
 				try:
 					root=utils.extractZip(file,dirname(file))
@@ -1700,10 +1700,11 @@ class clientClass(pyxl.client.Client):
 		mainWindow=self.main
 		autoDownload=False
 		if unicode(sid) in self.main.allowedSids.keys():
-			if unicode(self.ft[sid].fromjid).find("rpc@jabbim.cz")==-1:
-				filename = self.main.allowedSids[unicode(sid)]
-			else:
-				return
+			#if unicode(self.ft[sid].fromjid).find("rpc@jabbim.cz")==-1:
+				#filename = self.main.allowedSids[unicode(sid)]
+			#else:
+				#return
+			filename = self.main.allowedSids[unicode(sid)]
 				#filename = self.main.realHomeDir+'/'+self.ft[sid].fileprops['name']
 			autoDownload=True
 		elif self.main.allowedJids.has_key(self.ft[sid].fromjid.userhost()+"/"+self.ft[sid].fileprops['name']):

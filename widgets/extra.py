@@ -84,7 +84,7 @@ class extraDialog(QtGui.QDialog):
 	def _getFile(self,data):
 		print "DATA:",unicode(data)
 		sid=unicode(data[0][0])
-		self.main.allowedSids[sid]=self.main.realHomeDir+'/'+self.main.client.ft[sid].fileprops['name']
+		self.main.allowedSids[sid]=self.main.realHomeDir+'/'+unicode(self.downloading)
 		print "GOT SID",sid
 		print "KEYS ARE",self.main.client.ft.keys()
 #		if self.main.client.ft.has_key(sid):
@@ -114,6 +114,7 @@ class extraDialog(QtGui.QDialog):
 ##			self.progress=QtGui.QProgressDialog(self.tr('Downloading pack:')+" "+name,"", 0, 100, self.main.preferencesWindow)
 ##			self.progress.setCancelButton(b)
 ##			b.hide()
+			self.downloading=self.directory+name+'.zip'
 			self.main.client.callRemote('rpc@jabbim.cz/service','getFile',(self.directory+name+'.zip',)).addCallback(self._getFile)
 		#self.done(1)
 
