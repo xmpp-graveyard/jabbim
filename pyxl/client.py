@@ -362,13 +362,13 @@ class Client(derived):
 		for r in resp[0]:
 			self.connections.append((unicode(r.payload.target), int(r.payload.port)))
 			print (unicode(r.payload.target), int(r.payload.port))
-		
-		txt =results[1][1]
-		for r in txt[0]:
-			parts= r.payload.data[0].split('=')
-			if parts[0] == '_xmpp-client-xbosh':
-				self.connections.append((parts[1], ))
-
+		if results[1][0]:
+			txt =results[1][1]
+			for r in txt[0]:
+				parts= r.payload.data[0].split('=')
+				if parts[0] == '_xmpp-client-xbosh':
+					self.connections.append((parts[1], ))
+		print '_doConnect'
 		self.doConnect()
 #		self._connect(unicode(r[4][0]), int(r[4][1]))
 	
