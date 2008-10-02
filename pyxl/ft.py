@@ -732,6 +732,7 @@ class FT:
 		if filepath != None:
 			self.setFilePath(filepath)
 		self.transfered = 0
+		self.size = 0
 		if not self.fileprops.has_key('size'):
 			self.fileprops['size'] = self.size
 		self.sessionObj = None

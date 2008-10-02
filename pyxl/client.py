@@ -123,7 +123,7 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/commands','http://jabber.org/protocol/commands')
 		self.registerFeature('http://jabber.org/protocol/si/profile/file-transfer')
 		self.registerFeature('http://jabber.org/protocol/si')
-#		self.registerFeature("urn:xmpp:receipts")
+		self.registerFeature("urn:xmpp:receipts")
 		self.registerFeature('http://www.xmpp.org/extensions/xep-0224.html#ns')
 		self.registerFeature('http://jabber.org/protocol/rosterx')
 		self.registerFeature('http://jabber.org/protocol/muc')
@@ -139,7 +139,7 @@ class Client(derived):
 		self.registerFeature('urn:xmpp:tmp:jingle')
 		self.registerFeature('urn:xmpp:tmp:jingle:apps:file-transfer')
 		self.registerFeature('urn:xmpp:tmp:jingle:transports:bytestreams')
-		self.registerFeature('urn:xmpp:tmp:bob')
+		self.registerFeature('urn:xmpp:bob')
 		self.registerFeature('http://dev.jabbim.cz/jabbim/treeft')
 		self.identity = 'client/pc'
 		
@@ -582,7 +582,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='session-accept']", self.jingle.onJingleAccept, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='session-terminate']", self.jingle.onJingleTerminate, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/jingle[@action='content-replace']", self.jingle.onJingleContentReplace, 1)
-		self.xmlstream.addObserver("/iq[@type='get'][@id]/data[@xmlns='urn:xmpp:tmp:bob']", self.onBOBData, 1)
+		self.xmlstream.addObserver("/iq[@type='get'][@id]/data[@xmlns='urn:xmpp:bob']", self.onBOBData, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/tree[@xmlns='http://dev.jabbim.cz/jabbim/treeft']", self.FT.onReceiveFiles, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/start[@xmlns='http://jabber.org/protocol/sipub']", self.FT.onSIPUB, 1)
 
@@ -1235,7 +1235,7 @@ class Client(derived):
 			frm = jid.JID(el['from'])
 			data = b64decode(unicode(el.data))
 			#TODO detect hash type
-			if sha1(data).hexdigest() == cid.split('@')[0]:
+			if sha1(data).hexdigest() == cid[5:]:
 				fp = open(self.bobCacheDir+cid,  'wb')
 				fp.write(data)
 				fp.close()
@@ -1254,7 +1254,7 @@ class Client(derived):
 		iq = IQ(self.xmlstream, 'get')
 		self.disp(iq['id'])
 		iq['to'] = to.full()
-		iq.addElement('data',  'urn:xmpp:tmp:bob')
+		iq.addElement('data',  'urn:xmpp:bob')
 		iq.data['cid'] = cid
 		return iq.send().addCallback(_writeBOBData,  cid)
 

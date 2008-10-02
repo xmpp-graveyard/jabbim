@@ -598,10 +598,12 @@ class ClientFactory (protocol.ClientFactory):
 		except:
 			pass
 		if not self.status == 'unconnected':
-			try:
+			if self.xmpp.ft.has_key(self.xmpp_sid):
+				if self.xmpp.ft[self.xmpp_sid].transfered >= int(self.xmpp.ft[self.xmpp_sid].size):
+					self.xmpp.ft[self.xmpp_sid].finish()
 				print 'stopFactory::finish'
 				self.xmpp.ft[self.xmpp_sid].connectFailure()
-			except:
+			else:
 				print 'no sid'
 		protocol.ClientFactory.stopFactory (self)
 
@@ -660,7 +662,7 @@ class ClientFactory (protocol.ClientFactory):
 				self.otherFactory.clientConnectionFailed (connector, rmap)
 				self.stopFactory()
 				self.xmpp.ft[self.xmpp_sid].connectFailure()
-#				self.xmpp.ft[self.xmpp_sid].error = "Can't connect."
+				self.xmpp.ft[self.xmpp_sid].error = "Can't connect."
 			else:
 				self.otherFactory.clientConnectionFailed (connector, rmap)
 		except:

@@ -51,7 +51,7 @@ class Plugin(plugins.PluginBase):
 		self.loadAllEmoticons()
 
 	def on_messageSend(self,msg):
-		if  self.main.client.hasFeature(msg.to.full(), 'urn:xmpp:tmp:bob') or msg.typ == 'groupchat':
+		if  self.main.client.hasFeature(msg.to.full(), 'urn:xmpp:bob') or msg.typ == 'groupchat':
 			if msg.xhtml != None:
 				text = msg.xhtml
 				for k in sorted(self.current.iterkeys(), key=len, reverse=True):
