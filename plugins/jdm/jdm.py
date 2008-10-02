@@ -126,6 +126,7 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('on_message', self.on_message, priority=4)
 			self.registerHandler('on_ftEnd', self.on_ftEnd, priority = 4)
 			self.registerHandler('FTDownloadEvent', self.FTDownloadEvent)
+			self.registerHandler('FTFileReceivedEvent', self.FTFileReceivedEvent)
 			self.obsah=[]
 			self.dnd={}
 			if not os.path.exists(self.main.realHomeDir+"/jdmcache"):
@@ -149,6 +150,11 @@ class Plugin(plugins.PluginBase):
 		self.wizard.ui.back.hide()
 		self.wizard.ui.stackedWidget.setCurrentIndex(0)
 
+	def FTFileReceivedEvent(self,event):
+		if not event() or (self.window.isHidden() and self.wizard.isHidden()):
+			return
+		event().accept()
+
 	def FTDownloadEvent(self,event):
 		if not event() or (self.window.isHidden() and self.wizard.isHidden()):
 			return
@@ -164,10 +170,11 @@ class Plugin(plugins.PluginBase):
 		event().addWidget(self.wizard.progress)
 
 	def eventAccepted(self):
-		self.w.hide()
-		self.w.setParent(None)
-		self.w.deleteLater()
-		del self.w
+		self.wizard.progress.hide()
+		self.wizard.ui.l.removeWidget(self.wizard.ui.progress)
+		self.wizard.progress.setParent(None)
+		self.wizard.progress.deleteLater()
+		del self.wizard.progress
 		
 
 	def dragEnterEvent(self, event):

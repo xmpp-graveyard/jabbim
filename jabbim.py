@@ -1736,7 +1736,7 @@ class clientClass(pyxl.client.Client):
 				widget.setText(unicode(user)+" "+unicode(mainWindow.tr("is sending you file"))+" "+unicode(self.ft[sid].fileprops['name'])+" ("+str(self.toNormalSize(int(self.ft[sid].fileprops['size'])))+")")
 				widget.setAcceptText(unicode(mainWindow.tr("Accept")))
 				widget.setRejectText(unicode(mainWindow.tr("Reject")))
-
+				self.dispatcher.publishEvent('FTFileReceivedEvent', weakref.ref(event))
 				tab,index=self.main.chat.findTab(unicode(self.ft[sid].fromjid.userhost()),typ=['chat'])
 				if tab:
 					mainWindow=self.main
