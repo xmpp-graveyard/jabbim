@@ -601,8 +601,9 @@ class ClientFactory (protocol.ClientFactory):
 			if self.xmpp.ft.has_key(self.xmpp_sid):
 				if self.xmpp.ft[self.xmpp_sid].transfered >= int(self.xmpp.ft[self.xmpp_sid].size):
 					self.xmpp.ft[self.xmpp_sid].finish()
-				print 'stopFactory::finish'
-				self.xmpp.ft[self.xmpp_sid].connectFailure()
+#				print 'stopFactory::finish'
+				else:
+					self.xmpp.ft[self.xmpp_sid].connectFailure()
 			else:
 				print 'no sid'
 		protocol.ClientFactory.stopFactory (self)
