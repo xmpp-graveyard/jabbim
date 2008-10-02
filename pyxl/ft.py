@@ -869,8 +869,9 @@ class FT:
 			self.activeStreamhost = None
 			self.connectStreamHost()
 		else:
-			log.msg('nemuzu se spojit')
-			self.delete('connect failed')
+			if self.transfered == 0:
+				log.msg('nemuzu se spojit')
+				self.delete('connect failed')
 	
 	def activateReceive(self):
 		print 'activate!'
