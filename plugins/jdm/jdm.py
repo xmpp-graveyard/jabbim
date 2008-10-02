@@ -283,7 +283,7 @@ class Plugin(plugins.PluginBase):
 			contact = self.main.client.getContactByJid(self.jid)
 			jid=self.jid+"/"+contact.getHighestResource()
 			#self.window.ui.esPath.setText(self.esPath)
-			self.main.client.callRemote(jid, 'listShare',(unicode(self.esPath),)).addCallback(self.updateView)	
+			self.main.client.callRemote(jid, 'listShare',(unicode(self.esPath),)).addCallback(self.updateView)
 
 	def esUp(self):
 		d=self.esPath.split("/")
@@ -658,6 +658,7 @@ class Plugin(plugins.PluginBase):
 			#self.window.ui.right.addItem(item)
 			if self.typ=="album":
 				self.thumbs[name]=item
+		self.wizard.ui.tree.resizeColumnToContents(0)
 		data=self.thumbs.keys()
 		if self.typ=="album" and len(data)!=0:
 			self.stopDownload=False
@@ -918,7 +919,7 @@ class Plugin(plugins.PluginBase):
 			self.filesToOpen.append(self.cache+"/"+unicode(item.text(0)))
 		elif self.typ=="easyshare":
 			contact = self.main.client.getContactByJid(self.jid)
-			if contact:
+			if contact and item.childCount()==0:
 				jid=self.jid+"/"+contact.getHighestResource()
 				self.main.client.callRemote(jid, 'listShare',(self.getPath(item),)).addCallback(self.updateView,item)
 
