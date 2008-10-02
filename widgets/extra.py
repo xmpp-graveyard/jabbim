@@ -84,7 +84,7 @@ class extraDialog(QtGui.QDialog):
 	def _getFile(self,data):
 		print "DATA:",unicode(data)
 		sid=unicode(data[0][0])
-		self.main.allowedSids.append(sid)
+		self.main.allowedSids[sid]=self.main.realHomeDir+'/'+self.main.client.ft[sid].fileprops['name']
 		print "GOT SID",sid
 		print "KEYS ARE",self.main.client.ft.keys()
 #		if self.main.client.ft.has_key(sid):
