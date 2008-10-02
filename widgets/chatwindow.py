@@ -349,6 +349,7 @@ class chatWindow(QtGui.QMainWindow):
 			self.setWindowTitle("("+str(unread)+") "+unicode(self.ui.chatTab.tabText(index)).replace("&",""))
 		else:
 			self.setWindowTitle(unicode(self.ui.chatTab.tabText(index)).replace("&",""))
+		self.setWindowIcon(self.ui.chatTab.tabIcon(index))
 
 		if widget.typ=="chat":
 			self.main.client.sendMessage(unicode(widget.jid),"",composing="active")
@@ -682,6 +683,7 @@ class chatWindow(QtGui.QMainWindow):
 		else:
 			self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
 			self.setWindowTitle(unicode(name))
+			self.setWindowIcon(icon)
 			tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 		tab.chat.name=name
 		tab.chat.refreshLabel()
