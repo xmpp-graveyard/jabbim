@@ -148,6 +148,8 @@ class Plugin(plugins.PluginBase):
 
 	def wBack(self):
 		self.wizard.ui.back.hide()
+		if self.wizard.ui.stackedWidget.currentIndex()==2:
+			self.wizard.progress.reject()
 		self.wizard.ui.stackedWidget.setCurrentIndex(0)
 
 	def FTFileReceivedEvent(self,event):
@@ -163,15 +165,22 @@ class Plugin(plugins.PluginBase):
 		self.wizard.progress=FTDownloadWidget(event())
 		self.wizard.progress.setParent(self.wizard.ui.prog)
 		self.wizard.ui.l.addWidget(self.wizard.progress)
-		self.wizard.progress.eventAccepted=self.eventAccepted
-		self.wizard.progress.eventRejected=self.eventAccepted
+		#self.wizard.progress.eventAccepted=self.eventAccepted
+		self.wizard.progress.eventRejected=self.eventRejected
+		self.wizard.progress.transferFinished=self.tFinished
 		self.wizard.ui.stackedWidget.setCurrentIndex(2)
 		self.wizard.progress.show()
 		event().addWidget(self.wizard.progress)
 
-	def eventAccepted(self):
+	def tFinished(self):
+		self.wizard.progress.ui.progressBar.hide()
+		self.wizard.progress.ui.accept.show()
+		self.wizard.progress.ui.transferInfo.setText(self.tr("Finished"))
+		self.wizard.progress.ui.reject.hide()
+		
+	def eventRejected(self):
 		self.wizard.progress.hide()
-		self.wizard.ui.l.removeWidget(self.wizard.ui.progress)
+		self.wizard.ui.l.removeWidget(self.wizard.progress)
 		self.wizard.progress.setParent(None)
 		self.wizard.progress.deleteLater()
 		del self.wizard.progress
