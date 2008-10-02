@@ -193,6 +193,9 @@ class preferencesWindow(QtGui.QDialog):
 		self.ui.groupchatskinStyle.clear()
 		self.ui.rosterStyle.clear()
 		self.ui.themes.clear()
+		currentEmoticons=self.main.config["emoticons"]
+		currentChatskin=self.main.config["chatTheme"]
+		currentGroupchatskin=self.main.config["groupchatTheme"]
 		if extraPart.find("emoticons/")!=-1:
 			pack=os.listdir(self.main.realHomeDir+'/emoticons/'+extraRoot)
 			for emoticon in pack:
@@ -200,9 +203,15 @@ class preferencesWindow(QtGui.QDialog):
 					currentEmoticons=unicode(extraRoot+'/'+emoticon).replace("//",'/')
 					print "USING DONWLOADED EMOTICONS:",currentEmoticons
 					break
-			self.ui.tabWidget.setCurrentIndex(2)
-		else:
-			currentEmoticons=self.main.config["emoticons"]
+			#self.ui.tabWidget.setCurrentIndex(2)
+		elif extraPart.find("chatskins/")!=-1:
+			# chat skins from Jabbim home directory
+			packs=os.listdir(self.main.realHomeDir+"/chatskins/")
+			if self.ui.tabWidget.currentIndex()==2:
+				currentGroupchatskin=unicode(extraRoot+"/").replace("//",'/')
+			elif self.ui.tabWidget.currentIndex()==3:
+				currentChatskin=unicode(extraRoot+"/").replace("//",'/')
+
 
 
 		# emoticons from Jabbim root directory
@@ -275,11 +284,11 @@ class preferencesWindow(QtGui.QDialog):
 				#skins=os.listdir('chatskins/'+pack+"/")
 				#for skin in skins:
 				path=pack
-				if path==self.main.config["chatTheme"].split("/")[0]:
+				if path==currentChatskin.split("/")[0]:
 					self.ui.chatSkin_list.insertItem(0,path,QtCore.QVariant(path))
 				else:
 					self.ui.chatSkin_list.addItem(path,QtCore.QVariant(path))
-				if path==self.main.config["groupchatTheme"].split("/")[0]:
+				if path==currentGroupchatskin.split("/")[0]:
 					self.ui.groupchatskinStyle.insertItem(0,path,QtCore.QVariant(path))
 				else:
 					self.ui.groupchatskinStyle.addItem(path,QtCore.QVariant(path))
@@ -289,19 +298,19 @@ class preferencesWindow(QtGui.QDialog):
 		for pack in packs:
 			if os.path.isdir(self.main.realHomeDir+'/chatskins/'+pack) and os.path.isdir(self.main.realHomeDir+'/chatskins/'+pack+'/Incoming'):
 				path=pack
-				if path==self.main.config["chatTheme"].split("/")[0]:
+				if path==currentChatskin.split("/")[0]:
 					self.ui.chatSkin_list.insertItem(0,path,QtCore.QVariant(path))
 				else:
 					self.ui.chatSkin_list.addItem(path,QtCore.QVariant(path))
-				if path==self.main.config["groupchatTheme"].split("/")[0]:
+				if path==currentGroupchatskin.split("/")[0]:
 					self.ui.groupchatskinStyle.insertItem(0,path,QtCore.QVariant(path))
 				else:
 					self.ui.groupchatskinStyle.addItem(path,QtCore.QVariant(path))
 
-		self.chatSkin_listChanged(0)
-		self.groupchatskinStyleChanged(0)
 		self.ui.chatSkin_list.setCurrentIndex(0)
 		self.ui.groupchatskinStyle.setCurrentIndex(0)
+		self.groupchatskinStyleChanged(0)
+		self.chatSkin_listChanged(0)
 		self.ui.rosterStyle.setCurrentIndex(0)
 
 		# Themes
@@ -726,18 +735,22 @@ function makePreview(){
 </body>
 </html>
 		"""
-		
-		self.messages=[]
-		self.messages.append(factory.genIncomingContent(unicode(self.tr("User")),unicode(self.tr("Message for me")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
-		self.messages.append(factory.genIncomingNextContent(unicode(self.tr("User")),unicode(self.tr("Second message for me")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
-		self.messages.append(factory.genChatStatus(unicode(self.tr("User is now away")),self.main.now()))
-		self.messages.append(factory.genOutgoingContent(unicode(self.tr("Me")),unicode(self.tr("Message for user")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
-		self.messages.append(factory.genOutgoingNextContent(unicode(self.tr("Me")),unicode(self.tr("Second message for user")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
 
-		
 		if typ=="chat":
+			self.messages=[]
+			self.messages.append(factory.genIncomingContent(unicode(self.tr("User")),unicode(self.tr("Message for me")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
+			self.messages.append(factory.genIncomingNextContent(unicode(self.tr("User")),unicode(self.tr("Second message for me")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
+			self.messages.append(factory.genChatStatus(unicode(self.tr("User is now away")),self.main.now()))
+			self.messages.append(factory.genOutgoingContent(unicode(self.tr("Me")),unicode(self.tr("Message for user")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
+			self.messages.append(factory.genOutgoingNextContent(unicode(self.tr("Me")),unicode(self.tr("Second message for user")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
 			self.ui.chatskinPreview.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+factory.chatPath()))
 		else:
+			self.messages2=[]
+			self.messages2.append(factory.genIncomingContent(unicode(self.tr("User")),unicode(self.tr("Message for me")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
+			self.messages2.append(factory.genIncomingNextContent(unicode(self.tr("User")),unicode(self.tr("Second message for me")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
+			self.messages2.append(factory.genChatStatus(unicode(self.tr("User is now away")),self.main.now()))
+			self.messages2.append(factory.genOutgoingContent(unicode(self.tr("Me")),unicode(self.tr("Message for user")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
+			self.messages2.append(factory.genOutgoingNextContent(unicode(self.tr("Me")),unicode(self.tr("Second message for user")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
 			self.ui.groupchatskinPreview.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+factory.chatPath()))
 
 	def chatskinPreviewCleared(self):
@@ -752,7 +765,7 @@ function makePreview(){
 		self.ui.chatskinPreview.page().mainFrame().evaluateJavaScript("makePreview();")
 
 	def groupchatskinPreviewFinished(self,ok,later=False):
-		self.groupchatMessageObject.messages=list(self.messages)
+		self.groupchatMessageObject.messages=list(self.messages2)
 		self.ui.groupchatskinPreview.page().mainFrame().evaluateJavaScript("makePreview();")
 
 	def save(self):

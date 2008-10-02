@@ -24,6 +24,7 @@ from extra_ui import *
 
 from twisted.python import log
 import base64
+from widgets.events.ftwidget import FTDownloadWidget
 
 class extraDialog(QtGui.QDialog):
 	"""
@@ -35,6 +36,8 @@ class extraDialog(QtGui.QDialog):
 		self.ui=Ui_Extra()
 		self.ui.setupUi(self)
 		self.main=main
+		self.ui.l=QtGui.QVBoxLayout(self.ui.prog)
+		self.ui.stackedWidget.setCurrentIndex(0)
 		if not download:
 			if typ=="emoticons":
 				self.ui.label.setText("<h3>"+self.tr("Emoticons")+"</h3>")
@@ -81,7 +84,23 @@ class extraDialog(QtGui.QDialog):
 	def _emoticonsListError(self,data):
 		print data
 
+	def showDownload(self,event):
+		if not event():
+			return
+		#self.w=QtGui.QDialog(self.window)
+		
+		self.progress=FTDownloadWidget(event())
+		self.progress.setParent(self.ui.prog)
+		self.ui.l.addWidget(self.progress)
+		#self.progress.eventAccepted=self.eventAccepted
+		self.progress.eventRejected=self.reject
+		self.ui.stackedWidget.setCurrentIndex(1)
+		self.progress.show()
+		event().addWidget(self.progress)
+		self.main.client.dispatcher.unregisterHandler("FTDownloadEvent", self.showDownload)
+
 	def _getFile(self,data):
+		self.main.client.dispatcher.registerHandler("FTDownloadEvent", self.showDownload, "FTDonwloadEvent")
 		print "DATA:",unicode(data)
 		sid=unicode(data[0][0])
 		self.main.allowedSids[sid]=self.main.realHomeDir+'/'+unicode(self.downloading)
@@ -98,7 +117,7 @@ class extraDialog(QtGui.QDialog):
 				#self.main.allowedSids.remove(sid)
 		#else:
 			#self.main.allowedSids.remove(sid)
-		self.done(1)
+		#self.done(1)
 
 	def accept(self):
 		if self.download:
