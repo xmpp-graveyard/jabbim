@@ -732,9 +732,11 @@ class FT:
 		if filepath != None:
 			self.setFilePath(filepath)
 		self.transfered = 0
-		self.size = 0
+#		self.size = 0
 		if not self.fileprops.has_key('size'):
 			self.fileprops['size'] = self.size
+#		else:
+#			self.size = int(self.fileprops['size'])
 		self.sessionObj = None
 		self.typ = typ
 		self.client = init.client

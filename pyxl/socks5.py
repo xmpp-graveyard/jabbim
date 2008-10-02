@@ -606,7 +606,7 @@ class ClientFactory (protocol.ClientFactory):
 					self.xmpp.ft[self.xmpp_sid].connectFailure()
 			else:
 				print 'no sid'
-		protocol.ClientFactory.stopFactory (self)
+#		protocol.ClientFactory.stopFactory (self)
 
 	def buildProtocol (self, a):
 		""" Connection is successful, create protocol and let it talk to peer.
@@ -661,7 +661,7 @@ class ClientFactory (protocol.ClientFactory):
 			if self.status != "established":
 				log.msg ("Connection FAILED before SOCKS established %s" % self)
 				self.otherFactory.clientConnectionFailed (connector, rmap)
-				self.stopFactory()
+#				self.stopFactory()
 				self.xmpp.ft[self.xmpp_sid].connectFailure()
 				self.xmpp.ft[self.xmpp_sid].error = "Can't connect."
 			else:
