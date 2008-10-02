@@ -585,6 +585,8 @@ class Plugin(plugins.PluginBase):
 			del items[0]
 
 	def toNormalSize(self,size):
+		if size<0:
+			return str(size)
 		original=int(size)
 		new=int(size/1000) # kB
 		if new==0:
@@ -613,7 +615,7 @@ class Plugin(plugins.PluginBase):
 				if len(items)!=0:
 					continue
 			name=file[0]
-			size=file[1]
+			size=int(file[1])
 			if parent:
 				item=QtGui.QTreeWidgetItem(parent)
 			else:
@@ -621,6 +623,7 @@ class Plugin(plugins.PluginBase):
 				item=QtGui.QTreeWidgetItem(self.wizard.ui.tree)
 			print unicode(name)
 			item.setText(0,unicode(name))
+			item.setText(1,unicode(self.toNormalSize(size)))
 			item.setData(0,32,QtCore.QVariant(QtCore.QStringList([unicode(size)])))
 			if int(size)==-1:
 				item.setIcon(0,QtGui.QIcon(self.pluginDir+"/folder.png"))

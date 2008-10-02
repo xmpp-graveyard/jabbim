@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>369</width>
-    <height>330</height>
+    <width>643</width>
+    <height>414</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -270,6 +270,25 @@
          <property name="contextMenuPolicy" >
           <enum>Qt::CustomContextMenu</enum>
          </property>
+         <property name="uniformRowHeights" >
+          <bool>true</bool>
+         </property>
+         <property name="sortingEnabled" >
+          <bool>true</bool>
+         </property>
+         <property name="allColumnsShowFocus" >
+          <bool>true</bool>
+         </property>
+         <column>
+          <property name="text" >
+           <string>File</string>
+          </property>
+         </column>
+         <column>
+          <property name="text" >
+           <string>Size</string>
+          </property>
+         </column>
         </widget>
        </item>
        <item row="1" column="1" >

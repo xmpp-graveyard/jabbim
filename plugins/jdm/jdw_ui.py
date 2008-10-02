@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'plugins/jdm/jdw.ui'
 #
-# Created: Sat Sep 27 12:56:00 2008
+# Created: Thu Oct  2 21:16:43 2008
 #      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_JDW(object):
     def setupUi(self, JDW):
         JDW.setObjectName("JDW")
-        JDW.resize(369, 330)
+        JDW.resize(643, 414)
         self.gridlayout = QtGui.QGridLayout(JDW)
         self.gridlayout.setMargin(9)
         self.gridlayout.setSpacing(6)
@@ -112,6 +112,8 @@ class Ui_JDW(object):
         self.tree = QtGui.QTreeWidget(self.page)
         self.tree.setSizeIncrement(QtCore.QSize(50, 0))
         self.tree.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.tree.setUniformRowHeights(True)
+        self.tree.setAllColumnsShowFocus(True)
         self.tree.setObjectName("tree")
         self.gridlayout3.addWidget(self.tree, 0, 0, 2, 1)
         spacerItem5 = QtGui.QSpacerItem(20, 31, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
@@ -192,16 +194,19 @@ class Ui_JDW(object):
         JDW.setTabOrder(self.upload, self.pushButton)
 
     def retranslateUi(self, JDW):
-        JDW.setWindowTitle(JDW.translate("JDW", "Jabbim Disk Wizard", None, QtGui.QApplication.UnicodeUTF8))
-        self.back.setText(JDW.translate("JDW", "Back", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setText(JDW.translate("JDW", "Welcome to Jabbim Disk Wizard which will help you to use your Jabbim Disk account.", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton.setText(JDW.translate("JDW", "Close", None, QtGui.QApplication.UnicodeUTF8))
-        self.public.setText(JDW.translate("JDW", "Public", None, QtGui.QApplication.UnicodeUTF8))
-        self.private.setText(JDW.translate("JDW", "Private", None, QtGui.QApplication.UnicodeUTF8))
-        self.es.setText(JDW.translate("JDW", "Easyshare", None, QtGui.QApplication.UnicodeUTF8))
-        self.album.setText(JDW.translate("JDW", "Album", None, QtGui.QApplication.UnicodeUTF8))
-        self.download.setText(JDW.translate("JDW", "Download File", None, QtGui.QApplication.UnicodeUTF8))
-        self.upload.setText(JDW.translate("JDW", "Upload File", None, QtGui.QApplication.UnicodeUTF8))
-        self.remove.setText(JDW.translate("JDW", "Remove File", None, QtGui.QApplication.UnicodeUTF8))
-        self.configuration.setText(JDW.translate("JDW", "Configuration", None, QtGui.QApplication.UnicodeUTF8))
+        JDW.setWindowTitle(QtGui.QApplication.translate("JDW", "Jabbim Disk Wizard", None, QtGui.QApplication.UnicodeUTF8))
+        self.back.setText(QtGui.QApplication.translate("JDW", "Back", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("JDW", "Welcome to Jabbim Disk Wizard which will help you to use your Jabbim Disk account.", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton.setText(QtGui.QApplication.translate("JDW", "Close", None, QtGui.QApplication.UnicodeUTF8))
+        self.public.setText(QtGui.QApplication.translate("JDW", "Public", None, QtGui.QApplication.UnicodeUTF8))
+        self.private.setText(QtGui.QApplication.translate("JDW", "Private", None, QtGui.QApplication.UnicodeUTF8))
+        self.es.setText(QtGui.QApplication.translate("JDW", "Easyshare", None, QtGui.QApplication.UnicodeUTF8))
+        self.album.setText(QtGui.QApplication.translate("JDW", "Album", None, QtGui.QApplication.UnicodeUTF8))
+        self.tree.setSortingEnabled(True)
+        self.tree.headerItem().setText(0, QtGui.QApplication.translate("JDW", "File", None, QtGui.QApplication.UnicodeUTF8))
+        self.tree.headerItem().setText(1, QtGui.QApplication.translate("JDW", "Size", None, QtGui.QApplication.UnicodeUTF8))
+        self.download.setText(QtGui.QApplication.translate("JDW", "Download File", None, QtGui.QApplication.UnicodeUTF8))
+        self.upload.setText(QtGui.QApplication.translate("JDW", "Upload File", None, QtGui.QApplication.UnicodeUTF8))
+        self.remove.setText(QtGui.QApplication.translate("JDW", "Remove File", None, QtGui.QApplication.UnicodeUTF8))
+        self.configuration.setText(QtGui.QApplication.translate("JDW", "Configuration", None, QtGui.QApplication.UnicodeUTF8))
 
