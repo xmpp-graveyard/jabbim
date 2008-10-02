@@ -487,6 +487,7 @@ class rosterWidget(QtGui.QWidget):
 			else:
 				users = sorted(self.main.userRating.users.values(), key=operator.attrgetter('rating'), reverse=True)
 				jids = [u.jid for u in users if u.rating!=0.0]
+				jids=list(self.main.config['favUsers'])+jids
 				items={}
 				u=[]
 				transport=self.main.config['showTransports']
@@ -2120,6 +2121,13 @@ class rosterWidget(QtGui.QWidget):
 		action.setData(QtCore.QVariant(jid))
 		action.setObjectName("delete_action")
 
+		action = contactMenu.addAction(self.tr("Favourite contact"))
+		action.setData(QtCore.QVariant(jid))
+		action.setObjectName("fav")
+		action.setCheckable(True)
+		action.setChecked(unicode(jid) in self.main.config['favUsers'])
+
+
 		value = contact.subscription
 		if value in ["ask"]:
 			action = contactMenu.addAction(self.tr("Authorize"))
@@ -2336,7 +2344,13 @@ class rosterWidget(QtGui.QWidget):
 								if jd.find(j.host) != -1:
 									self.main.client.delContact(jd)
 
-
+		elif cmd=="fav":
+			jid=action.data()
+			jid=unicode(jid.toString())
+			if unicode(jid) in self.main.config['favUsers']:
+				self.main.config['favUsers'].remove(unicode(jid))
+			else:
+				self.main.config['favUsers'].append(unicode(jid))
 
 		elif cmd=='add_contact':
 			jid=action.data()

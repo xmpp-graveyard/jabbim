@@ -150,6 +150,7 @@ def loadConfig(main,status):
 			"groupchatServerHistory": [],
 			"chatDialogHistory": [],
 			"sendPep":"True",
+			"favUsers":[],
 			"saveGeometry":"True",
 			"saveExpandedGroups":"True",
 			"ratingLastReward":"0.0",
