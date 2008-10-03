@@ -809,6 +809,7 @@ class Plugin(plugins.PluginBase):
 		else:
 			#self.jid=unicode(self.window.ui.line_jid.text())
 			self.jid=unicode(self.main.client.jid.userhost())
+		self.wizard.setWindowTitle(unicode(self.jid))
 		self.wizard.ui.private.setEnabled(self.jid==self.main.client.jid.userhost())
 		if typ:
 			self.call(jid,typ)
