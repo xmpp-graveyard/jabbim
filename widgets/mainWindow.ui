@@ -650,6 +650,26 @@ p, li { white-space: pre-wrap; }
 				   <string>Favourite</string>
 			   </attribute>
 		</widget>
+		<widget class="QWidget" name="contentTab" >
+			<property name="geometry" >
+				<rect>
+					<x>0</x>
+					<y>0</y>
+					<width>239</width>
+					<height>589</height>
+				</rect>
+			</property>
+			<attribute name="title" >
+				<string> r</string>
+			</attribute>
+			<attribute name="icon" >
+				<iconset>
+					<normaloff>images/16x16/actions/anchor.png</normaloff>images/16x16/actions/anchor.png</iconset>
+			</attribute>
+			<attribute name="toolTip" >
+				<string>Jabbim Content</string>
+			</attribute>
+		</widget>
            <widget class="QWidget" name="bookmarksTab" >
             <property name="geometry" >
              <rect>

@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import gc
 import sys,os
 sys.path.append('.')
-try: from PyQt4 import QtCore, QtGui
+try: from PyQt4 import QtCore, QtGui,QtWebKit
 except: print "PyQt4 is not installed."
 
 #if sys.argv[1]=="remote":
@@ -226,7 +226,7 @@ class clientClass(pyxl.client.Client):
 		"""
 		Called if bookmarks are not supported by server.
 		"""
-		self.main.ui.mainTabWidget.setTabEnabled(1,False)
+		self.main.ui.mainTabWidget.setTabEnabled(3,False)
 		self.bookmarksEnabled=False
 		mainWindow=self.main
 		self.main.tray.showMessage(MainWindow.tr("Error"),mainWindow.tr("Your server doesn't support Private XML Storage. Some functions will be disabled."))
@@ -827,6 +827,9 @@ class clientClass(pyxl.client.Client):
 				self.sendMessage(**msg)
 			self.main.delayedMessages = None
 			self.messageReceipts = {}
+		lang=unicode(QtCore.QLocale.system().name())[:2]
+		jid=self.jid.userhost()
+		self.main.ui.contentView.load(QtCore.QUrl("http://content.jabbim.com/?jid=%s&lang=%s"%(jid,lang)))
 
 	def on_invite(self,jid, room, reason, cont = False):
 		print "invite",cont
@@ -1985,6 +1988,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.mainTabWidget.setTabText(1,"")
 		self.ui.mainTabWidget.setTabText(2,"")
 		self.ui.mainTabWidget.setTabText(3,"")
+		self.ui.mainTabWidget.setTabText(4,"")
 		self.ui.actionAdd_Contact.setEnabled(False)
 		self.ui.actionJoin_groupchat.setEnabled(False)
 		self.ui.actionService_Discovery.setEnabled(False)
@@ -2344,6 +2348,14 @@ class mainWindow(QtGui.QMainWindow):
 
 		#self.loadRosterStyle() # load roster style
 		self.userRating=userrating.RatingAssigner(self)
+		
+		# Jabbim Content
+		self.ui.contentView=QtWebKit.QWebView(self.ui.contentTab)
+		l=QtGui.QVBoxLayout(self.ui.contentTab)
+		l.addWidget(self.ui.contentView)
+		l.setMargin(0)
+		l.setSpacing(0)
+		self.ui.contentView.show()
 		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.connect()
@@ -4168,7 +4180,7 @@ class mainWindow(QtGui.QMainWindow):
 					else:
 						self.hide()
 		elif reason==QtGui.QSystemTrayIcon.MiddleClick:
-			self.ui.mainTabWidget.setCurrentIndex(2)
+			self.ui.mainTabWidget.setCurrentIndex(4)
 			if self.isHidden():
 				self.show()
 				self.raise_()
