@@ -72,6 +72,7 @@ class Plugin(plugins.PluginBase):
 ##			QtCore.QObject.connect(self.window.ui.esPath,QtCore.SIGNAL("returnPressed()"),self.esPathFinished)
 ##			QtCore.QObject.connect(self.window.ui.list, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.clicked)
 ##			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.fileMenu)
+			QtCore.QObject.connect(self.wizard.ui.tree,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.fileMenu)
 			QtCore.QObject.connect(self.window.ui.buttonDownload,QtCore.SIGNAL("clicked()"),self.downloadCurrentFile)
 			QtCore.QObject.connect(self.window.ui.buttonDelete,QtCore.SIGNAL("clicked()"),self.removeCurrentFile)
 			QtCore.QObject.connect(self.window.ui.buttonUpload,QtCore.SIGNAL("clicked()"),self.sendFile)
