@@ -325,7 +325,10 @@ class Plugin(plugins.PluginBase):
 		self.wizard.ui.back.show()
 		self.wizard.ui.remove.hide()
 		self.wizard.ui.upload.hide()
-		self.wizard.ui.configuration.show()
+		if self.jid==self.main.client.jid.userhost():
+			self.wizard.ui.configuration.show()
+		else:
+			self.wizard.ui.configuration.hide()
 
 	def buildContactMenu(self,menu,contact):
 		"""
