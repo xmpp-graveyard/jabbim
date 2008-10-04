@@ -16,25 +16,26 @@ class tabWidget(QtGui.QTabBar):
 		self.main=main
 	
 	def mousePressEvent(self,event):
-		i=self.tabAt(event.pos())
-		if i==0:
-			self.main.ui.roster.favouriteMode=False
-			self.main.ui.roster.setSize()
-			self.main.ui.roster.repaint()
-			self.main.showFavouriteAction.setChecked(self.main.ui.roster.favouriteMode)
-			return QtGui.QTabBar.mousePressEvent(self,event)
-		elif i==1:
-			self.setCurrentIndex(0)
-			self.blockSignals(True)
-			r=QtGui.QTabBar.mousePressEvent(self,event)
-			self.blockSignals(False)
-			self.main.ui.roster.favouriteMode=True
-			self.main.ui.roster.setSize()
-			self.main.ui.roster.repaint()
-			self.main.showFavouriteAction.setChecked(self.main.ui.roster.favouriteMode)
-			return r
-		else:
-			return QtGui.QTabBar.mousePressEvent(self,event)
+		if event.button()==QtCore.Qt.LeftButton:
+			i=self.tabAt(event.pos())
+			if i==0:
+				self.main.ui.roster.favouriteMode=False
+				self.main.ui.roster.setSize()
+				self.main.ui.roster.repaint()
+				self.main.showFavouriteAction.setChecked(self.main.ui.roster.favouriteMode)
+				return QtGui.QTabBar.mousePressEvent(self,event)
+			elif i==1:
+				self.setCurrentIndex(0)
+				self.blockSignals(True)
+				r=QtGui.QTabBar.mousePressEvent(self,event)
+				self.blockSignals(False)
+				self.main.ui.roster.favouriteMode=True
+				self.main.ui.roster.setSize()
+				self.main.ui.roster.repaint()
+				self.main.showFavouriteAction.setChecked(self.main.ui.roster.favouriteMode)
+				return r
+			else:
+				return QtGui.QTabBar.mousePressEvent(self,event)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
