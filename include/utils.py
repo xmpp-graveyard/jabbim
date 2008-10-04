@@ -151,7 +151,7 @@ def loadConfig(main,status):
 			"chatDialogHistory": [],
 			"sendPep":"True",
 			"favUsers":[],
-			"textSizeMultiplier":"1.6",
+			"textSizeMultiplier":"1.0",
 			"saveGeometry":"True",
 			"saveExpandedGroups":"True",
 			"ratingLastReward":"0.0",
