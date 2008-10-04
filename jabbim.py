@@ -4207,7 +4207,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		if self.config['theme']=="None" and not text:
 			# theme isn't used
-			text=""
+			text="QTabBar::tab {min-width: 16px;max-width: 16px;}"
 			self.ui.roster.theme=False
 			app.setStyle(self.qtStylesDefault)
 		else:
