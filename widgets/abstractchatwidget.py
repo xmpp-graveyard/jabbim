@@ -823,7 +823,7 @@ class abstractChatWidget(QtGui.QWidget):
 		buf=QtCore.QBuffer(bytes)
 		buf.open(QtCore.QIODevice.WriteOnly)
 		image.save(buf,  'PNG')
-		hash = sha1(str(bytes)).hexdigest()+'@sha1'
+		hash = 'sha1+'+sha1(str(bytes)).hexdigest()
 		print 'IMAGE', len(str(bytes))
 		path = self.main().client.bobCacheDir+'/'+hash
 		fp = open(path,  'wb')

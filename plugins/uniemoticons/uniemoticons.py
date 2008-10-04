@@ -43,7 +43,7 @@ class Plugin(plugins.PluginBase):
 		for k in sorted(self.main.emoticonsWidget.smileys.iterkeys(), key=len, reverse=True):
 			v = self.main.emoticonsWidget.smileys[k]
 			fp = open(v, 'rb')
-			self.current[k] = sha1(fp.read()).hexdigest()+'@sha1'
+			self.current[k] = 'sha1+'+sha1(fp.read()).hexdigest()
 			self.main.client.bobDef[self.current[k]] = v
 			self.main.client.bobDef.write()
 			fp.close()
@@ -56,7 +56,7 @@ class Plugin(plugins.PluginBase):
 				text = msg.xhtml
 				for k in sorted(self.current.iterkeys(), key=len, reverse=True):
 					v = self.current[k]
-					text=text.replace(' '+k,'<img alt="orig'+v+'" src="cid:'+v+'"/>')
+					text=text.replace(' '+k,'<img alt="'+k+'" src="cid:'+v+'"/>')
 				
 				for k, v in self.current.iteritems():
 					text.replace('orig'+v, k)
@@ -65,7 +65,7 @@ class Plugin(plugins.PluginBase):
 				text = msg.body
 				for k in sorted(self.current.iterkeys(), key=len, reverse=True):
 					v = self.current[k]
-					text=text.replace(' '+k,'<img alt="orig'+v+'" src="cid:'+v+'"/>')
+					text=text.replace(' '+k,'<img alt="'+k+'" src="cid:'+v+'"/>')
 				
 				for k, v in self.current.iteritems():
 					text.replace('orig'+v, k)
@@ -136,7 +136,7 @@ class Plugin(plugins.PluginBase):
 										fp = open(v, 'rb')
 										hash = sha1(fp.read()).hexdigest()
 										fp.close()
-										self.main.client.bobDef[hash+'@sha1'] = v
+										self.main.client.bobDef['sha1+'+hash] = v
 									except:
 										continue
 
@@ -158,7 +158,7 @@ class Plugin(plugins.PluginBase):
 										fp = open(v, 'rb')
 										hash = sha1(fp.read()).hexdigest()
 										fp.close()
-										self.main.client.bobDef[hash+'@sha1'] = v
+										self.main.client.bobDef['sha1+'+hash] = v
 									except:
 										continue
 			self.main.client.bobDef.write()
