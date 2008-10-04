@@ -4566,7 +4566,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/preferences_ui.py" line="407"/>
         <source>Groupchat skin</source>
-        <translation>Vzheld konference</translation>
+        <translation type="unfinished">Vzhled konference</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="411"/>

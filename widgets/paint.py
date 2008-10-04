@@ -190,9 +190,12 @@ class paintWindow(QtGui.QMainWindow):
 		if file and len(file)!=0:
 			img=QtGui.QImage(file)
 			if not img.isNull():
-				if img.width()>640 or img.height()>480:
-					img=img.scaled(640,480,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
-				self.open(image=img)
+				maxx = self.chat.ui.webkit.width()
+				maxy = self.chat.ui.webkit.height()
+				print maxx, maxy
+				if img.width()>maxx or img.height()>maxy:
+					img=img.scaled(maxx*0.9,maxy*0.9,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
+			self.open(image=img)
 			
 	def insertImage(self):
 		file=QtGui.QFileDialog.getOpenFileName(self,"Choose image") # get filenames
