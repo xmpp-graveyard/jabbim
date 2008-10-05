@@ -303,6 +303,11 @@ class chatWidget(abstractChatWidget):
 		
 		self.refreshToolTip()
 
+	def setName(self, name):
+		self.name = name
+		self.refreshToolTip()
+		self.refreshLabel()
+
 	def _gotMessagesCount(self,result):
 		if result and len(result)!=0:
 			self.textEditWrite(self.main().webkitThemeFactory.genChatStatus(self.tr("Do you know that you've sent ")+str(result[0][0])+self.tr(" messages to this contact?"),self.main().now()))

@@ -2380,6 +2380,13 @@ class rosterWidget(QtGui.QWidget):
 				# change name
 				contact=self.main.client.roster['users'][jid]
 				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription, self.main.client.roster['users'][jid].groups)
+				#notify chattab about nickname change
+				tab, index = self.main.chat.findTab(jid)
+				print tab, index
+				if tab != None:
+					tab.chat.setName(name)
+					
+				
 		elif cmd=="new_group":
 			# add contact to the new group
 			# get contact jid
