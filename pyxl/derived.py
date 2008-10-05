@@ -418,7 +418,7 @@ class derived:
 		iq['to'] = jid
 		iq.addElement('vCard', 'vcard-temp')
 		self.disp(iq['id'])
-		iq.timeout = 60
+		iq.timeout = 300
 		log.msg("Sending VCARD IQ")
 		d = iq.send()
 		log.msg("XML LOG")

@@ -534,13 +534,62 @@ class Plugin(plugins.PluginBase):
 					self.menu.addAction(self.tr("Remove files"),self.removeCurrentFile)
 				if self.typ!="private":
 					self.menu.addAction(self.tr("Copy links to clipboard"),self.copyToClipboard)
+			
 			else:
 				self.menu.addAction(self.tr("Download file"),self.downloadCurrentFile)
 				if self.jid==self.main.client.jid.userhost():
 					self.menu.addAction(self.tr("Remove file"),self.removeCurrentFile)
 				if self.typ!="private":
 					self.menu.addAction(self.tr("Copy link to clipboard"),self.copyToClipboard)
+				if self.typ != 'easyshare':
+					self.menu.addAction(self.tr('Rename'), self.renameFile)
+			if self.typ != 'easyshare':
+					submenu = self.menu.addMenu(self.tr('Move to'))
+					if self.typ == 'public':
+						submenu.addAction('private', self.moveToPrivate)
+						submenu.addAction('album', self.moveToAlbum)
+					elif self.typ == 'private':
+						submenu.addAction('public', self.moveToPublic)
+						submenu.addAction('album', self.moveToAlbum)
+					elif self.typ == 'album':
+						submenu.addAction('public', self.moveToPublic)
+						submenu.addAction('private', self.moveToPrivate)
+				
 			self.menu.popup(self.wizard.ui.tree.mapToGlobal(pos))
+	
+	def moveToAlbum(self):
+		self.moveFiles(self.typ, 'album')
+	
+	def moveToPublic(self):
+		self.moveFiles(self.typ, 'public')
+	
+	def moveToPrivate(self):
+		self.moveFiles(self.typ, 'private')
+	
+	def moveFiles(self, odkud, kam):
+		items=self.wizard.ui.tree.selectedItems()
+		if len(items)==0:
+			return		
+		for item in items:
+			self.main.client.sendMessage(odkud+"@disk.jabbim.cz", u"move "+unicode(item.text(0))+" "+kam)
+		self.call(typ=self.typ)
+		
+	def renameFile(self):
+		items=self.wizard.ui.tree.selectedItems()
+		item = items[0]
+		name,b=QtGui.QInputDialog.getText(self.main,self.tr("Rename"),self.tr("Enter new name:"), QtGui.QLineEdit.Normal, item.text(0))
+		name=unicode(name)
+		# if user set new name
+		if b==True and len(name)!=0:
+				if self.typ=="public":
+					self.main.client.sendMessage("public@disk.jabbim.cz", u"ren "+unicode(item.text(0))+" "+name)
+					self.public()
+				elif self.typ=="private":
+					self.main.client.sendMessage("private@disk.jabbim.cz", u"ren "+unicode(item.text(0))+" "+name)
+					self.private()
+				elif self.typ=="album":
+					self.main.client.sendMessage("album@disk.jabbim.cz", u"ren "+unicode(item.text(0))+" "+name)
+					self.album()
 
 	def copyToClipboard(self):
 		items=self.wizard.ui.tree.selectedItems()
