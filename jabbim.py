@@ -652,6 +652,11 @@ class clientClass(pyxl.client.Client):
 			if newName and jid != self.jid.userhost():
 				contact=self.roster['users'][jid]
 				self.sendRosterUpdate(contact.jid, newName, contact.subscription, self.roster['users'][jid].groups)
+				#rename chat tab
+				tab, index = self.main.chat.findTab(jid)
+				print tab, index
+				if tab != None:
+					tab.chat.setName(name)
 			elif newName and jid == self.jid.userhost():
 				self.main.ui.selfName.setText('<h3>'+newName+'</h3>') #we need to set name in roster
 				self.main.selfName=newName

@@ -307,6 +307,10 @@ class chatWidget(abstractChatWidget):
 		self.name = name
 		self.refreshToolTip()
 		self.refreshLabel()
+		self.parent.tabName = name
+		currentIndex=self.main().chat.ui.chatTab.currentIndex()
+		self.main().chat.ui.chatTab.setTabText(currentIndex,self.parent.tabName)
+		
 
 	def _gotMessagesCount(self,result):
 		if result and len(result)!=0:
