@@ -250,7 +250,7 @@ class MessageInit:
 				print self.client.messageReceipts
 				return
 			
-			if child.name == 'event' and child.defaultUri == 'http://jabber.org/protocol/pubsub#event':
+			if child.name == 'event' and child.defaultUri == 'http://jabber.org/protocol/pubsub#event' and typ != 'error':
 				items = child.firstChildElement()
 				itm = items.firstChildElement()
 				pep = items.getAttribute('node')
