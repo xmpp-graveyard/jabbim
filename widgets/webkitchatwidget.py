@@ -193,7 +193,7 @@ class webkitChatWidget(QtWebKit.QWebView):
 
 		self.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding))
 		self.setAcceptDrops(True)
-		self.page().mainFrame().setTextSizeMultiplier(float(self.chatwidget().main().config['textSizeMultiplier']))
+		#self.page().mainFrame().setTextSizeMultiplier(float(self.chatwidget().main().config['textSizeMultiplier']))
 
 	def openUrl(self,  url):
 		if url.scheme() == 'xmpp':
