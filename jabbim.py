@@ -2368,6 +2368,8 @@ class mainWindow(QtGui.QMainWindow):
 		
 		# Jabbim Content
 		self.ui.contentView=QtWebKit.QWebView(self.ui.contentTab)
+		self.ui.contentView.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
+		QtCore.QObject.connect(self.ui.contentView,QtCore.SIGNAL("linkClicked ( const QUrl &)"),QtGui.QDesktopServices.openUrl)
 		l=QtGui.QVBoxLayout(self.ui.contentTab)
 		l.addWidget(self.ui.contentView)
 		l.setMargin(0)
