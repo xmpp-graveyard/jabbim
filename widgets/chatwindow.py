@@ -473,9 +473,11 @@ class chatWindow(QtGui.QMainWindow):
 				w.chat.appendLastMessage(["out",user,body,self.main.now(),file])
 			else:
 				w.chat.appendLastMessage(["in",user,body,self.main.now(),file])
+				print 'groupchatMessageEvent'
 				self.main.client.dispatcher.publishEvent('groupchatMessageEvent', self.main.getJid(w.jid),user,oldbody,subject, xhtml)
 				# it's message for us
-				if utils.need_highlight(unicode(w.chat.nick), unicode(oldbody)) and not unicode(body).startswith("/me"):
+				if utils.need_highlight(unicode(w.chat.nick), unicode(oldbody)):
+					print 'groupchatMessageForMeEvent'
 					self.main.client.dispatcher.publishEvent('groupchatMessageForMeEvent', self.main.getJid(w.jid),user,oldbody,subject, xhtml)
 					if int(self.ui.chatTab.currentIndex())!=i:
 						if self.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():

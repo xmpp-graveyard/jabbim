@@ -258,6 +258,7 @@ class config:
 		self.config['osd_time']={'type':'number-spin','label':self.main.tr("Display time (seconds):"),'value':'2','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_first_message']={'type':'boolean','label':self.main.tr("Use OSD for first message"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_on_message']={'type':'boolean','label':self.main.tr("Use OSD for other messages"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
+		self.config['osd_on_gcmessage']={'type':'boolean','label':self.main.tr("Use OSD for conference messages"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_on_presence']={'type':'boolean','label':self.main.tr("Use OSD for presences"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_x']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_y']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
@@ -309,6 +310,7 @@ class Plugin(plugins.PluginBase):
 			#self.registerHandler('on_message', self.on_message)
 			self.registerHandler('firstChatMessageEvent',self.on_firstChatMessageEvent)
 			self.registerHandler('chatMessageEvent',self.on_chatMessageEvent)
+			self.registerHandler('groupchatMessageEvent',self.on_groupchatMessageEvent)
 			self.registerHandler('groupchatMessageForMeEvent',self.on_groupchatMessageForMeEvent)
 			self.registerHandler('presenceEvent',self.on_presence)
 			self.registerHandler('on_evil',self.on_evil)
@@ -447,6 +449,8 @@ class Plugin(plugins.PluginBase):
 			return
 		jid=msg.frm
 		user=msg.user
+		if msg.body.startswith('/me '):
+			msg.body = msg.body.replace('/me', '*'+user)
 		# cut message if it's too long
 		if len(msg.body)>40:
 				traytext=msg.body[:40]+" ..."
@@ -474,6 +478,8 @@ class Plugin(plugins.PluginBase):
 			return
 		jid=msg.frm
 		user=msg.user
+		if msg.body.startswith('/me '):
+			msg.body = msg.body.replace('/me', '*'+user)
 		# inform user about new message
 		if self.config['osd_on_message']=="True" and not self.main.chat.isActiveWindow():
 			if len(msg.body)>40:
@@ -493,10 +499,40 @@ class Plugin(plugins.PluginBase):
 				self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),event)
 		if self.config['sound_message']=="True":
 			self.main.playsound('message')
-
+	
+	def on_groupchatMessageEvent(self,frm,user,body,subject, xhtml):
+		if body == None or not self.isNotificationEnabled():
+			return
+		jid=frm
+		user=user
+		if body.startswith('/me '):
+			body = body.replace('/me', '*'+user)
+		# inform user about new message
+		if self.config['osd_on_gcmessage']=="True" and not self.main.chat.isActiveWindow():
+			if len(body)>40:
+				traytext=body[:40]+" ..."
+			else:
+				traytext=body
+			if self.snarl:
+				file=self.main.getAvatarSrc(jid.userhost())
+				s = self.snarl.SnarlMessage(unicode(self.tr("New message from "))+unicode(user),unicode(traytext))
+				s.timeout=int(self.config['osd_time'])
+				s.show(icon=file,replyWindow=int(self.main.winId()),replyMsg=1025)
+#				self.main.snarlMessages[int(s.getID())]=[event().accept,[]]
+			else:
+				# get avatar for OSD
+				pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
+				# inform user about newly opened tab
+				self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext), None)
+		if self.config['sound_message']=="True":
+			self.main.playsound('message')
+	
 	def on_groupchatMessageForMeEvent(self,frm,user,body,subject, xhtml):
 		if not self.isNotificationEnabled():
 			return
+
+		if body.startswith('/me '):
+			body = body.replace('/me', '*'+user)
 		if self.config['tray_muc_highlight']=="True" and not self.main.chat.isActiveWindow():
 			if len(body)>40:
 				text=body[:40]+" ..."
@@ -510,7 +546,8 @@ class Plugin(plugins.PluginBase):
 				s.show(icon=file,replyWindow=int(self.main.winId()),replyMsg=1025)
 				#self.main.snarlMessages[int(s.getID())]=[self.main.events.getEventByID(eventID).accept,[]]
 			else:
-				self.main.tray.showMessage(self.tr("New groupchat message for you"), traytext, QtGui.QSystemTrayIcon.Information, 4000)
+#				self.main.tray.showMessage(self.tr("New groupchat message for you"), traytext, QtGui.QSystemTrayIcon.Information, 4000)
+				self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext), None)
 
 		if self.config['sound_gc_message']=="True":
 			self.main.playsound('message')
