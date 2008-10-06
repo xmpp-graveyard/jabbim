@@ -37,6 +37,7 @@ from locale import strcoll
 import operator
 from rostertooltip_ui import *
 import weakref
+from include.utils import replace_url
 
 class rosterToolTip(QtGui.QFrame):
 	def __init__(self,roster):
@@ -863,10 +864,30 @@ class rosterWidget(QtGui.QWidget):
 					self.tool.ui.label.hide()
 				self.tool.ui.nickname.setText("<b>"+unicode(item.escapedName)+"</b>")
 				self.tool.ui.jid.setText(unicode(item.jid))
+				
+				contact = self.main.client.getContactByJid(jid)
+
+				if contact != None:
+					status = contact.status
+					if not status[1]:
+						status = ""
+					else:
+						status=status[1]
+					#text+='<img src="images/16x16/status/jabber-%s.png">' % contact.show
+					#text+='<b>%s</b> '%unicode(self.status.get(contact.show, ''))
+					if len(status) != 0:
+						self.tool.ui.status.setHtml(replace_url(status.replace('\n', '<br />')))
+						self.tool.ui.status.show()
+					else:
+						self.tool.ui.status.hide()
+				else:
+					self.tool.ui.status.hide()
+
+
 				g=self.mapToGlobal(QtCore.QPoint(event.x(),event.y()))
 				self.tool.show()
 				hint=self.tool.sizeHint()
-				
+
 				if w.availableGeometry().y()+w.availableGeometry().height()<g.y()+10+hint.height():
 					if g.x()-hint.width()-10>0:
 						self.tool.setGeometry(g.x()-hint.width()-10,g.y()-10-hint.height(),hint.width(),hint.height())
@@ -877,7 +898,7 @@ class rosterWidget(QtGui.QWidget):
 						self.tool.setGeometry(g.x()-hint.width()-10,g.y()+10,hint.width(),hint.height())
 					else:
 						self.tool.setGeometry(g.x()+10,g.y()+10,hint.width(),hint.height())
-				
+
 		return QtGui.QWidget.event(self,event)
 
 	def _mouseLeaveEvent(self,event):

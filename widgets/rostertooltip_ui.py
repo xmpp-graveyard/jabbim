@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/rostertooltip.ui'
 #
-# Created: Mon Oct  6 17:20:30 2008
+# Created: Mon Oct  6 18:34:28 2008
 #      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_RosterToolTip(object):
     def setupUi(self, RosterToolTip):
         RosterToolTip.setObjectName("RosterToolTip")
-        RosterToolTip.resize(330, 128)
+        RosterToolTip.resize(332, 126)
         self.gridlayout = QtGui.QGridLayout(RosterToolTip)
         self.gridlayout.setMargin(9)
         self.gridlayout.setSpacing(6)
@@ -32,6 +32,19 @@ class Ui_RosterToolTip(object):
         self.jid.setSizePolicy(sizePolicy)
         self.jid.setObjectName("jid")
         self.vboxlayout.addWidget(self.jid)
+        self.status = QtGui.QTextBrowser(RosterToolTip)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(1), QtGui.QSizePolicy.Policy(1))
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.status.sizePolicy().hasHeightForWidth())
+        self.status.setSizePolicy(sizePolicy)
+        self.status.setMaximumSize(QtCore.QSize(16777215, 50))
+        self.status.setFrameShape(QtGui.QFrame.NoFrame)
+        self.status.setFrameShadow(QtGui.QFrame.Plain)
+        self.status.setLineWidth(0)
+        self.status.setOpenExternalLinks(True)
+        self.status.setObjectName("status")
+        self.vboxlayout.addWidget(self.status)
         spacerItem = QtGui.QSpacerItem(20, 1, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.vboxlayout.addItem(spacerItem)
         self.gridlayout.addLayout(self.vboxlayout, 0, 1, 2, 1)
