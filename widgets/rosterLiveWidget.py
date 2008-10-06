@@ -868,9 +868,15 @@ class rosterWidget(QtGui.QWidget):
 				hint=self.tool.sizeHint()
 				
 				if w.availableGeometry().y()+w.availableGeometry().height()<g.y()+10+hint.height():
-					self.tool.setGeometry(g.x()-hint.width()-10,g.y()-10-hint.height(),hint.width(),hint.height())
+					if g.x()-hint.width()-10>0:
+						self.tool.setGeometry(g.x()-hint.width()-10,g.y()-10-hint.height(),hint.width(),hint.height())
+					else:
+						self.tool.setGeometry(g.x()+10,g.y()-10-hint.height(),hint.width(),hint.height())
 				else:
-					self.tool.setGeometry(g.x()-hint.width()-10,g.y()+10,hint.width(),hint.height())
+					if g.x()-hint.width()-10>0:
+						self.tool.setGeometry(g.x()-hint.width()-10,g.y()+10,hint.width(),hint.height())
+					else:
+						self.tool.setGeometry(g.x()+10,g.y()+10,hint.width(),hint.height())
 				
 		return QtGui.QWidget.event(self,event)
 
