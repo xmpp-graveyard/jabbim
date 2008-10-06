@@ -4102,10 +4102,10 @@ class mainWindow(QtGui.QMainWindow):
 
 
 		# close windows, hide tray :)
-##		try:
-##			self.cache.close()
-##		except:
-##			pass
+		try:
+			self.cache.close()
+		except:
+			pass
 		app.shutdown=True
 		app.closeAllWindows()
 		self.tray.hide()
