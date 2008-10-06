@@ -16,7 +16,7 @@ class User:
 # the sorting order is - and that's what's important.
 class RatingAssigner:
 	# For aging of the ratings. Must be: 0 < q < 1. Usually close to 1.
-	QUOTIENT = 0.99
+	QUOTIENT = 0.999
 
 	# To prevent unlimited exponential growth of rating values, they must
 	# be all scaled back (renormalized) into reasonable magnitudes once in
