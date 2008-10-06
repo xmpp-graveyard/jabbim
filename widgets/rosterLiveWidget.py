@@ -46,6 +46,10 @@ class rosterToolTip(QtGui.QFrame):
 		self.ui=Ui_RosterToolTip()
 		self.ui.setupUi(self)
 		self.setMouseTracking(True)
+		self.ui.status.setAutoFillBackground(True)
+		p=QtGui.QPalette()
+		p.setColor(QtGui.QPalette.Base,QtGui.QColor(self.palette().window().color()))
+		self.ui.status.setPalette(p)
 		self.roster=weakref.ref(roster)
 
 class emptyRosterWidget(QtGui.QWidget):
