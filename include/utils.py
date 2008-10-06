@@ -620,6 +620,27 @@ def getSvnVersion():
 		f.close()
 		return ' - rev. ' + file[3].strip()
 	except:
+		commit = None
+		svn_rev = None
+		try:
+			re_commit = re.compile(r'^\s*commit\s*(([a-zA-Z0-9])+)')
+			re_svnrev = re.compile(r'^\s*git-svn-id: svn://dev\.jabbim\.cz/jabbim/trunk@(\d+)')
+			for line in os.popen('git show'):
+				if commit == None:
+					m = re_commit.match(line)
+					if m:
+						commit = m.group(1)
+				elif svn_rev == None:
+					m = re_svnrev.match(line)
+					if m:
+						svn_rev = m.group(1)
+						break
+		except:
+			pass
+		if commit != None and svn_rev != None:
+			return ' - rev. %s (git-svn %s)' % (svn_rev, commit[:7])
+		if commit != None:
+			return ' - git %s' % commit[:7]
 		return ''
 
 def getNormalSize(byte, kmg = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB'], index = 0): 
