@@ -1312,7 +1312,11 @@ class clientClass(pyxl.client.Client):
 			#xhtml = self.main.getImages(xhtml,frm)
 		if not body:
 			body=""
-
+		#replace /me
+		if body.startswith('/me'):
+			body = body.replace('/me', '*'+user)
+			if xhtml != None:
+				xhtml = xhtml.replace('/me', '*'+user,1)
 		# find MUC tab
 		for i in range(self.main.chat.ui.chatTab.count()):
 			w=self.main.chat.ui.chatTab.widget(i)
@@ -1385,6 +1389,14 @@ class clientClass(pyxl.client.Client):
 		# get user name
 		user=self.main.ui.roster.getNameByJID(frm.full())
 		icon=self.main.ui.roster.getIconByJID(frm.full())
+		
+		#replace /me
+		if body != None and body.startswith('/me'):
+			print 'replacing'
+			body = body.replace('/me', '*'+user)
+			if xhtml != None:
+				xhtml = xhtml.replace('/me', '*'+user,1)
+		
 
 		# test if xhtml contains dangerous tags
 		if xhtml:
