@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/rostertooltip.ui'
 #
-# Created: Mon Oct  6 14:43:00 2008
+# Created: Mon Oct  6 17:20:30 2008
 #      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_RosterToolTip(object):
     def setupUi(self, RosterToolTip):
         RosterToolTip.setObjectName("RosterToolTip")
-        RosterToolTip.resize(330, 70)
+        RosterToolTip.resize(330, 128)
         self.gridlayout = QtGui.QGridLayout(RosterToolTip)
         self.gridlayout.setMargin(9)
         self.gridlayout.setSpacing(6)
@@ -32,14 +32,14 @@ class Ui_RosterToolTip(object):
         self.jid.setSizePolicy(sizePolicy)
         self.jid.setObjectName("jid")
         self.vboxlayout.addWidget(self.jid)
-        spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        spacerItem = QtGui.QSpacerItem(20, 1, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.vboxlayout.addItem(spacerItem)
         self.gridlayout.addLayout(self.vboxlayout, 0, 1, 2, 1)
         self.label = QtGui.QLabel(RosterToolTip)
         self.label.setMaximumSize(QtCore.QSize(16777215, 64))
         self.label.setObjectName("label")
         self.gridlayout.addWidget(self.label, 0, 0, 1, 1)
-        spacerItem1 = QtGui.QSpacerItem(20, 41, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        spacerItem1 = QtGui.QSpacerItem(20, 1, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridlayout.addItem(spacerItem1, 1, 0, 1, 1)
 
         self.retranslateUi(RosterToolTip)

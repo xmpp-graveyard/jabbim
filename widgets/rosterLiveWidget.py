@@ -864,10 +864,14 @@ class rosterWidget(QtGui.QWidget):
 				self.tool.ui.nickname.setText("<b>"+unicode(item.escapedName)+"</b>")
 				self.tool.ui.jid.setText(unicode(item.jid))
 				g=self.mapToGlobal(QtCore.QPoint(event.x(),event.y()))
-				hint=self.tool.sizeHint()
-				self.tool.setGeometry(g.x()-hint.width()-10,g.y()+10,hint.width(),40)
-				
 				self.tool.show()
+				hint=self.tool.sizeHint()
+				
+				if w.availableGeometry().y()+w.availableGeometry().height()<g.y()+10+hint.height():
+					self.tool.setGeometry(g.x()-hint.width()-10,g.y()-10-hint.height(),hint.width(),hint.height())
+				else:
+					self.tool.setGeometry(g.x()-hint.width()-10,g.y()+10,hint.width(),hint.height())
+				
 		return QtGui.QWidget.event(self,event)
 
 	def _mouseLeaveEvent(self,event):
