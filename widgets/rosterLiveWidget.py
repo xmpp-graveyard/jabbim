@@ -35,6 +35,17 @@ from include import rot13
 import miniroster
 from locale import strcoll
 import operator
+from rostertooltip_ui import *
+import weakref
+
+class rosterToolTip(QtGui.QFrame):
+	def __init__(self,roster):
+		QtGui.QFrame.__init__(self,None,QtCore.Qt.ToolTip | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint | QtCore.Qt.CustomizeWindowHint)
+		self.setFrameStyle(QtGui.QFrame.Plain|QtGui.QFrame.Box)
+		self.ui=Ui_RosterToolTip()
+		self.ui.setupUi(self)
+		self.setMouseTracking(True)
+		self.roster=weakref.ref(roster)
 
 class emptyRosterWidget(QtGui.QWidget):
 	def __init__(self,parent=None):
@@ -231,6 +242,7 @@ class rosterWidget(QtGui.QWidget):
 		self.colors=QtGui.QTreeWidget(self.main)
 		self.colors.hide()
 		self.colors.setObjectName("rosterView")
+		self.tool=None
 
 		self.reskin()
 		self.blinkJids=[]
@@ -815,12 +827,53 @@ class rosterWidget(QtGui.QWidget):
 		# tooltip request:
 		if int(event.type())==110:
 			item=self.itemAt(int(event.x()),int(event.y())) # get item in coordinates
-			self.setToolTip("")
+			#self.setToolTip("")
 			if item:
-				if item!=None and item.typ=="user": # tooltips are only for contacts (not for groups)
-					text = self.main.getToolTip(item.jid, item.escapedName)
-					self.setToolTip(text)
+				#if item!=None and item.typ=="user": # tooltips are only for contacts (not for groups)
+					#text = self.main.getToolTip(item.jid, item.escapedName)
+					#self.setToolTip(text)
+				w=QtGui.QDesktopWidget()
+				if not self.tool:
+					#self._mouseLeaveEvent(None)
+					self.tool=rosterToolTip(self)
+					self.tool.leaveEvent=self._mouseLeaveEvent
+				jid=item.jid
+				avatar=None
+				if self.main.client.avatarDef.get(jid, False):
+					if self.main.client.avatarImg.has_key(self.main.client.avatarDef[jid]):
+						if self.main.client.avatarImg[self.main.client.avatarDef[jid]] and self.main.client.avatarDef[jid]!="None":
+							avatar=QtGui.QPixmap(self.main.realHomeDir+'/avatars/'+unicode(self.main.client.avatarDef[jid]))
+				else:
+					#if there is no avatar for given JID, then try to use avatar from any metacontact
+					meta = self.main.ui.roster.getMetaItems(jid)
+					print meta
+					for itm in meta:
+						j = itm[1]
+						print j
+						if self.main.client.avatarDef.get(j, False):
+							if self.main.client.avatarImg.has_key(self.main.client.avatarDef[j]):
+								if self.main.client.avatarImg[self.main.client.avatarDef[j]] and self.main.client.avatarDef[j]!="None":
+									avatar=QtGui.QPixmap(self.main.realHomeDir+'/avatars/'+unicode(self.main.client.avatarDef[j]))
+									break
+				if avatar:
+					avatar=avatar.scaled(64,64,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
+					self.tool.ui.label.setPixmap(avatar)
+					self.tool.ui.label.show()
+				else:
+					self.tool.ui.label.hide()
+				self.tool.ui.nickname.setText("<b>"+unicode(item.escapedName)+"</b>")
+				self.tool.ui.jid.setText(unicode(item.jid))
+				g=self.mapToGlobal(QtCore.QPoint(event.x(),event.y()))
+				hint=self.tool.sizeHint()
+				self.tool.setGeometry(g.x()-hint.width()-10,g.y()+10,hint.width(),40)
+				
+				self.tool.show()
 		return QtGui.QWidget.event(self,event)
+
+	def _mouseLeaveEvent(self,event):
+		self.tool.hide()
+		self.tool.deleteLater()
+		self.tool=None
 
 	def mouseMoveEvent(self,event):
 		"""
@@ -2380,13 +2433,6 @@ class rosterWidget(QtGui.QWidget):
 				# change name
 				contact=self.main.client.roster['users'][jid]
 				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription, self.main.client.roster['users'][jid].groups)
-				#notify chattab about nickname change
-				tab, index = self.main.chat.findTab(jid)
-				print tab, index
-				if tab != None:
-					tab.chat.setName(name)
-					
-				
 		elif cmd=="new_group":
 			# add contact to the new group
 			# get contact jid
