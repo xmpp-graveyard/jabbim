@@ -37,6 +37,9 @@ class lineeditWidget(QtGui.QWidget):
 	def setRejectText(self,text):
 		self.ui.reject.setText(text)
 
+	def setLineEditText(self,text):
+		self.ui.lineEdit.setText(text)
+
 	def eventRejected(self):
 		pass
 	
