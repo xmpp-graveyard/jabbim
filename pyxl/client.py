@@ -718,6 +718,9 @@ class Client(derived):
 		iq['type'] = 'result'
 #		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
+		
+		self.dispatcher.publishEvent('on_rosterUpdate', el) #not usefull for now, doing this for plugins in future [sic!]
+
 
 
 		
