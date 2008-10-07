@@ -51,6 +51,11 @@ class rosterToolTip(QtGui.QFrame):
 		p.setColor(QtGui.QPalette.Base,QtGui.QColor(self.palette().window().color()))
 		self.ui.status.setPalette(p)
 		self.roster=weakref.ref(roster)
+		self.focus=False
+
+	def enterEvent(self,event):
+		self.focus=True
+		
 
 class emptyRosterWidget(QtGui.QWidget):
 	def __init__(self,parent=None):
@@ -841,7 +846,8 @@ class rosterWidget(QtGui.QWidget):
 				if not self.tool:
 					#self._mouseLeaveEvent(None)
 					self.tool=rosterToolTip(self)
-					self.tool.leaveEvent=self._mouseLeaveEvent
+					self.tool.leaveEvent=self._leaveEvent
+					self.tool.focus=False
 				jid=item.jid
 				avatar=None
 				if self.main.client.avatarDef.get(jid, False):
@@ -905,10 +911,20 @@ class rosterWidget(QtGui.QWidget):
 
 		return QtGui.QWidget.event(self,event)
 
-	def _mouseLeaveEvent(self,event):
-		self.tool.hide()
-		self.tool.deleteLater()
-		self.tool=None
+	def leaveEvent(self,event):
+		self.main.reactor.callLater(0.2,self._leaveEvent)
+
+	def _leaveEvent(self,event=None):
+		if event:
+			if self.tool:
+				self.tool.hide()
+				self.tool.deleteLater()
+				self.tool=None
+		else:
+			if self.tool and self.tool.focus==False:
+				self.tool.hide()
+				self.tool.deleteLater()
+				self.tool=None
 
 	def mouseMoveEvent(self,event):
 		"""
