@@ -487,7 +487,7 @@ class abstractChatWidget(QtGui.QWidget):
 		self.unread=0 #: number of unread messages
 		self.unreadEvent=None
 
-		if not self.xhtml:
+		if not self.xhtml or self.main().config['useXHTML'] == 'False':
 			self.ui.boldButton.hide()
 			self.ui.italicButton.hide()
 			self.ui.underlineButton.hide()
@@ -495,6 +495,8 @@ class abstractChatWidget(QtGui.QWidget):
 			self.ui.fontSize.hide()
 			self.ui.backgroundButton.hide()
 			self.ui.linkButton.hide()
+			if self.typ == 'chat':
+				self.ui.paintButton.hide()
 		else:
 			self.ui.fontSize.hide()
 			#db=QtGui.QFontDatabase()

@@ -138,6 +138,9 @@ class clientClass(pyxl.client.Client):
 		self.version=self.main.version
 		self.bookmarksEnabled=True #: True if bookmarks is enabled by server
 		self.xmlCount=[]
+		if self.main.config['useXHTML'] == 'False':
+			self.unregisterFeature('http://jabber.org/protocol/xhtml-im')
+			self.rebuildCaps()
 		# load plugins
 		self.loadPlugins()
 
@@ -1292,6 +1295,9 @@ class clientClass(pyxl.client.Client):
 		msg = self.main.getBOBImages(msg)
 		#unpack legacy vars
 		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack()
+		#delete xhtml formatting if config says so
+		if self.main.config['useXHTML'] == 'False':
+			xhtml = None
 		# get user (resource) and MUC jid (saved in frm)
 		start=time.time()
 		if typ=="chat":
