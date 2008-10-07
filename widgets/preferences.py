@@ -259,6 +259,7 @@ class preferencesWindow(QtGui.QDialog):
 				path=pack
 				if not path in loaded:
 					loaded.append(path)
+					print path,self.main.config["rosterStyle"].split("/")[0]
 					if path==self.main.config["rosterStyle"].split("/")[0]:
 						self.ui.rosterStyle.insertItem(0,path,QtCore.QVariant(path))
 					else:
@@ -312,6 +313,7 @@ class preferencesWindow(QtGui.QDialog):
 		self.groupchatskinStyleChanged(0)
 		self.chatSkin_listChanged(0)
 		self.ui.rosterStyle.setCurrentIndex(0)
+		self.rosterStyleChanged(0)
 
 		# Themes
 		skins=os.listdir("themes/")
