@@ -444,14 +444,14 @@ class Plugin(plugins.PluginBase):
 
 			jid=unicode(jid.userhost())
 			# call getLastMessages in thread
-			d=threads.deferToThread(self.getLastMessages,jid,int(self.config['messagesNumber']),me,user,unicode(self.main.skin["my_message_history"]),unicode(self.main.skin["message_history"]),self.main.skin['color1'],avatar,selfavatar,self.config['messagesTime'])
+			d=threads.deferToThread(self.getLastMessages,jid,int(self.config['messagesNumber']),self.config['messagesTime'])
 			d.addCallback(self.gotLastMessages,widget,me,user,selfavatar,avatar)
 
-	def getLastMessages(self,jid,count,me,user,my_message,message,color,avatar,selfavatar,maxTime):
+	def getLastMessages(self,jid,count,maxTime):
 		"""
 		Returns last X xhtml formated messages from contact. Called in thread by buildChatWidget.
 		"""
-		action=["",jid,count,me,user,my_message,message,color,avatar]
+		#action=["",jid,count,me,user,my_message,message,color,avatar]
 		# get last messages
 		messages=self.backend.getLastMessages(jid,count,maxTime)
 		if not messages:
