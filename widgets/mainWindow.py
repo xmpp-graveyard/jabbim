@@ -1,13 +1,41 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainWindow.ui'
+# Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Tue Oct  7 08:08:46 2008
-#      by: PyQt4 UI code generator 4.4.3
+# Created: Fri Oct  3 19:01:27 2008
+#      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
+
+from PyQt4 import QtCore, QtGui
+class tabWidget(QtGui.QTabBar): 
+	def __init__(self,main,parent):
+		QtGui.QTabBar.__init__(self,parent)
+		self.main=main
+	
+	def mousePressEvent(self,event):
+		if event.button()==QtCore.Qt.LeftButton:
+			i=self.tabAt(event.pos())
+			if i==0:
+				self.main.ui.roster.favouriteMode=False
+				self.main.ui.roster.setSize()
+				self.main.ui.roster.repaint()
+				self.main.showFavouriteAction.setChecked(self.main.ui.roster.favouriteMode)
+				return QtGui.QTabBar.mousePressEvent(self,event)
+			elif i==1:
+				self.setCurrentIndex(0)
+				self.blockSignals(True)
+				r=QtGui.QTabBar.mousePressEvent(self,event)
+				self.blockSignals(False)
+				self.main.ui.roster.favouriteMode=True
+				self.main.ui.roster.setSize()
+				self.main.ui.roster.repaint()
+				self.main.showFavouriteAction.setChecked(self.main.ui.roster.favouriteMode)
+				return r
+			else:
+				return QtGui.QTabBar.mousePressEvent(self,event)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -17,6 +45,7 @@ class Ui_MainWindow(object):
         icon.addPixmap(QtGui.QPixmap("images/16x16/apps/jabbim.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(MainWindow)
+        self.centralwidget.setGeometry(QtCore.QRect(0, 19, 335, 663))
         self.centralwidget.setObjectName("centralwidget")
         self.gridlayout = QtGui.QGridLayout(self.centralwidget)
         self.gridlayout.setMargin(0)
@@ -28,6 +57,7 @@ class Ui_MainWindow(object):
         self.rosterStackedWidget = QtGui.QStackedWidget(self.splitter)
         self.rosterStackedWidget.setObjectName("rosterStackedWidget")
         self.login = QtGui.QWidget()
+        self.login.setGeometry(QtCore.QRect(0, 0, 100, 30))
         self.login.setObjectName("login")
         self.gridlayout1 = QtGui.QGridLayout(self.login)
         self.gridlayout1.setSpacing(6)
@@ -141,6 +171,7 @@ class Ui_MainWindow(object):
         self.gridlayout1.addWidget(self.profilesList, 7, 0, 1, 1)
         self.rosterStackedWidget.addWidget(self.login)
         self.roster = QtGui.QWidget()
+        self.roster.setGeometry(QtCore.QRect(0, 0, 243, 663))
         self.roster.setObjectName("roster")
         self.gridlayout3 = QtGui.QGridLayout(self.roster)
         self.gridlayout3.setMargin(0)
@@ -208,7 +239,10 @@ class Ui_MainWindow(object):
         self.mainTabWidget = QtGui.QTabWidget(self.roster)
         self.mainTabWidget.setAutoFillBackground(True)
         self.mainTabWidget.setObjectName("mainTabWidget")
+        self.tabWidget=tabWidget(MainWindow,self.mainTabWidget)
+        self.mainTabWidget.setTabBar(self.tabWidget)
         self.rosterTab = QtGui.QWidget()
+        self.rosterTab.setGeometry(QtCore.QRect(0, 0, 239, 589))
         self.rosterTab.setObjectName("rosterTab")
         self.gridlayout5 = QtGui.QGridLayout(self.rosterTab)
         self.gridlayout5.setMargin(0)
@@ -252,16 +286,19 @@ class Ui_MainWindow(object):
         icon3.addPixmap(QtGui.QPixmap("images/16x16/categories/system-users.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mainTabWidget.addTab(self.rosterTab, icon3, "")
         self.favTab = QtGui.QWidget()
+        self.favTab.setGeometry(QtCore.QRect(0, 0, 239, 589))
         self.favTab.setObjectName("favTab")
         icon4 = QtGui.QIcon()
         icon4.addPixmap(QtGui.QPixmap("images/16x16/categories/srdce-cele.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mainTabWidget.addTab(self.favTab, icon4, "")
         self.contentTab = QtGui.QWidget()
+        self.contentTab.setGeometry(QtCore.QRect(0, 0, 239, 589))
         self.contentTab.setObjectName("contentTab")
         icon5 = QtGui.QIcon()
         icon5.addPixmap(QtGui.QPixmap("images/16x16/actions/anchor.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mainTabWidget.addTab(self.contentTab, icon5, "")
         self.bookmarksTab = QtGui.QWidget()
+        self.bookmarksTab.setGeometry(QtCore.QRect(0, 0, 239, 589))
         self.bookmarksTab.setObjectName("bookmarksTab")
         self.gridlayout6 = QtGui.QGridLayout(self.bookmarksTab)
         self.gridlayout6.setMargin(9)
@@ -285,6 +322,7 @@ class Ui_MainWindow(object):
         icon6.addPixmap(QtGui.QPixmap("images/16x16/categories/bookmarks.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mainTabWidget.addTab(self.bookmarksTab, icon6, "")
         self.eventsTab = QtGui.QWidget()
+        self.eventsTab.setGeometry(QtCore.QRect(0, 0, 239, 589))
         self.eventsTab.setObjectName("eventsTab")
         self.gridlayout7 = QtGui.QGridLayout(self.eventsTab)
         self.gridlayout7.setMargin(0)
@@ -296,7 +334,7 @@ class Ui_MainWindow(object):
         self.Form.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.Form.setObjectName("Form")
         self.scrollAreaWidgetContents = QtGui.QWidget(self.Form)
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 232, 528))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 235, 559))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.gridLayout = QtGui.QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout.setMargin(2)
@@ -319,7 +357,6 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.messages, 3, 0, 1, 1)
         spacerItem9 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridLayout.addItem(spacerItem9, 4, 0, 1, 1)
-        self.Form.setWidget(self.scrollAreaWidgetContents)
         self.gridlayout7.addWidget(self.Form, 1, 0, 1, 1)
         self.eventsLabel = QtGui.QLabel(self.eventsTab)
         self.eventsLabel.setAlignment(QtCore.Qt.AlignCenter)
@@ -331,6 +368,7 @@ class Ui_MainWindow(object):
         self.gridlayout3.addWidget(self.mainTabWidget, 1, 0, 1, 1)
         self.rosterStackedWidget.addWidget(self.roster)
         self.splash = QtGui.QWidget()
+        self.splash.setGeometry(QtCore.QRect(0, 0, 100, 30))
         self.splash.setObjectName("splash")
         self.vboxlayout2 = QtGui.QVBoxLayout(self.splash)
         self.vboxlayout2.setSpacing(6)
@@ -367,8 +405,10 @@ class Ui_MainWindow(object):
         self.gridlayout.addWidget(self.splitter, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 335, 27))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 335, 19))
         self.menubar.setObjectName("menubar")
+        self.menuPlugins = QtGui.QMenu(self.menubar)
+        self.menuPlugins.setObjectName("menuPlugins")
         self.menuView = QtGui.QMenu(self.menubar)
         self.menuView.setObjectName("menuView")
         self.menuHelp = QtGui.QMenu(self.menubar)
@@ -424,7 +464,6 @@ class Ui_MainWindow(object):
         self.actionSupport = QtGui.QAction(MainWindow)
         self.actionSupport.setObjectName("actionSupport")
         self.actionSendJabbimLog = QtGui.QAction(MainWindow)
-        self.actionSendJabbimLog.setVisible(False)
         self.actionSendJabbimLog.setObjectName("actionSendJabbimLog")
         self.actionStart_Chat = QtGui.QAction(MainWindow)
         self.actionStart_Chat.setObjectName("actionStart_Chat")
@@ -439,6 +478,7 @@ class Ui_MainWindow(object):
         self.menuAkce.addAction(self.actionPrivacy_list_editor)
         self.menuAkce.addAction(self.actionIdentity)
         self.menuAkce.addSeparator()
+        self.menuAkce.addAction(self.menuPlugins.menuAction())
         self.menuAkce.addSeparator()
         self.menuAkce.addAction(self.actionPreferences)
         self.menuAkce.addAction(self.actionProfiles)
@@ -485,11 +525,11 @@ class Ui_MainWindow(object):
         self.statusWidget.setText(QtGui.QApplication.translate("MainWindow", "Online", None, QtGui.QApplication.UnicodeUTF8))
         self.moodButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Here you can change your status", None, QtGui.QApplication.UnicodeUTF8))
         self.rosterSearchLabel.setText(QtGui.QApplication.translate("MainWindow", "User search:", None, QtGui.QApplication.UnicodeUTF8))
-        self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.rosterTab), QtGui.QApplication.translate("MainWindow", " r", None, QtGui.QApplication.UnicodeUTF8))
+        self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.rosterTab), QtGui.QApplication.translate("MainWindow", "", None, QtGui.QApplication.UnicodeUTF8))
         self.mainTabWidget.setTabToolTip(self.mainTabWidget.indexOf(self.rosterTab), QtGui.QApplication.translate("MainWindow", "Roster", None, QtGui.QApplication.UnicodeUTF8))
-        self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.favTab), QtGui.QApplication.translate("MainWindow", " r", None, QtGui.QApplication.UnicodeUTF8))
+        self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.favTab), QtGui.QApplication.translate("MainWindow", "", None, QtGui.QApplication.UnicodeUTF8))
         self.mainTabWidget.setTabToolTip(self.mainTabWidget.indexOf(self.favTab), QtGui.QApplication.translate("MainWindow", "Favourite", None, QtGui.QApplication.UnicodeUTF8))
-        self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.contentTab), QtGui.QApplication.translate("MainWindow", " r", None, QtGui.QApplication.UnicodeUTF8))
+        self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.contentTab), QtGui.QApplication.translate("MainWindow", "", None, QtGui.QApplication.UnicodeUTF8))
         self.mainTabWidget.setTabToolTip(self.mainTabWidget.indexOf(self.contentTab), QtGui.QApplication.translate("MainWindow", "Jabbim Content", None, QtGui.QApplication.UnicodeUTF8))
         self.bookmarks.headerItem().setText(0, QtGui.QApplication.translate("MainWindow", "Name", None, QtGui.QApplication.UnicodeUTF8))
         self.bookmarks.headerItem().setText(1, QtGui.QApplication.translate("MainWindow", "Jid", None, QtGui.QApplication.UnicodeUTF8))
@@ -509,9 +549,9 @@ class Ui_MainWindow(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:8pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt;\"><span style=\" font-size:12pt; font-weight:600;\">Events</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.eventsTab), QtGui.QApplication.translate("MainWindow", "Events", None, QtGui.QApplication.UnicodeUTF8))
         self.mainTabWidget.setTabToolTip(self.mainTabWidget.indexOf(self.eventsTab), QtGui.QApplication.translate("MainWindow", "Events", None, QtGui.QApplication.UnicodeUTF8))
         self.login_cancel.setText(QtGui.QApplication.translate("MainWindow", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuPlugins.setTitle(QtGui.QApplication.translate("MainWindow", "Plugins", None, QtGui.QApplication.UnicodeUTF8))
         self.menuView.setTitle(QtGui.QApplication.translate("MainWindow", "View", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAkce.setTitle(QtGui.QApplication.translate("MainWindow", "Actions", None, QtGui.QApplication.UnicodeUTF8))
