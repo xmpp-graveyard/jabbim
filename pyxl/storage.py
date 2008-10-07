@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 
-from twisted.enterprise import adbapi, util as dbutil
+from twisted.enterprise import adbapi
 from twisted.python import log
 from twisted.internet.defer import DeferredList
 
@@ -58,7 +58,7 @@ class Cache:
 		return { 'created': False, 'table_name': table }
 	
 	def get_avatar(self, jid, handler):
-		self.db.runQuery('select file, hash, jid from avatars where jid = "%s"'%(dbutil.safe(jid),)).addCallback(self.got_avatar, handler)
+		self.db.runQuery('select file, hash, jid from avatars where jid = "%s"'%(adbapi.safe(jid),)).addCallback(self.got_avatar, handler)
 
 	
 	def got_avatar(self, result, handler):
@@ -67,14 +67,14 @@ class Cache:
 
 	def set_avatar(self, jid, avatar): #avatar = (file,hash)
 		log.msg('ukladam ' + jid)
-		self.db.runQuery('select jid from avatars where jid = "%s"'%(dbutil.safe(jid),)).addCallback(self._has_avatar, jid, avatar)
+		self.db.runQuery('select jid from avatars where jid = "%s"'%(adbapi.safe(jid),)).addCallback(self._has_avatar, jid, avatar)
 
 	
 	def _has_avatar(self, result, jid, avatar):
 		if len(result)==0:
-			self.db.runOperation('insert into avatars (jid, file, hash) values("%s","%s","%s")'%(dbutil.safe(jid), dbutil.safe(avatar[0]), avatar[1]))
+			self.db.runOperation('insert into avatars (jid, file, hash) values("%s","%s","%s")'%(adbapi.safe(jid), adbapi.safe(avatar[0]), avatar[1]))
 		else:
-			self.db.runOperation('update avatars set file="%s", hash="%s" where jid="%s"'%(dbutil.safe(avatar[0]), avatar[1], dbutil.safe(jid)))
+			self.db.runOperation('update avatars set file="%s", hash="%s" where jid="%s"'%(adbapi.safe(avatar[0]), avatar[1], adbapi.safe(jid)))
 	
 	def set_caps(self, node, features, identity):
 		for feature in features:
@@ -103,13 +103,13 @@ class Cache:
 		return self.db.runQuery('select jid,messages,rating from rating order by messages desc')
 		
 	def get_rating_by_jid(self, jid):
-		return self.db.runQuery('select messages from rating where jid = "%s";'%dbutil.safe(jid))
+		return self.db.runQuery('select messages from rating where jid = "%s";'%adbapi.safe(jid))
 
 	def set_rating(self, jid, messages,rating): #avatar = (file,hash)
-		return self.db.runOperation('update rating set messages=%s,rating=%s where jid="%s"'%(str(messages),str(rating), dbutil.safe(jid)))
+		return self.db.runOperation('update rating set messages=%s,rating=%s where jid="%s"'%(str(messages),str(rating), adbapi.safe(jid)))
 
 	def insert_rating(self,jid, messages,rating):
-		self.db.runOperation('insert into rating (jid, messages, rating) values("%s",%s,%s)'%(dbutil.safe(jid), str(messages), str(rating)))
+		self.db.runOperation('insert into rating (jid, messages, rating) values("%s",%s,%s)'%(adbapi.safe(jid), str(messages), str(rating)))
 	
 	def close(self):
 		self.db.close()

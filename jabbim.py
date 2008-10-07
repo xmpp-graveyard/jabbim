@@ -3435,13 +3435,9 @@ class mainWindow(QtGui.QMainWindow):
 			app.connect(self.moodMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.moodChanged)
 			moodButtonRoot=QtGui.QMenu(self.ui.moodButton)
 			moodButtonRoot.addMenu(self.moodMenu)
-			if self.config['sendMood'] != 'True':
-				self.moodMenu.setEnabled(False)
 			activity =  QtGui.QMenu(self.tr('Activity'),moodButtonRoot)
 			#activity =  self.statusWidgetMenu.addMenu(self.tr('Activity'))
 			app.connect(activity, QtCore.SIGNAL("triggered ( QAction *)"),self.activityChanged)
-			if self.config['sendActivity'] != 'True':
-				activity.setEnabled(False)
 			t = self.activities['none']
 			action = activity.addAction(t)
 			action.setObjectName('activity')
