@@ -282,6 +282,10 @@ class groupChatWidget(abstractChatWidget):
 			affiliations={'none':0,'member':1,'admin':2,'owner':3}
 
 			# add "add user to roster" action if we know true JID
+			# open PM
+			action = menu.addAction(self.tr('Private message'))
+			action.setData(QtCore.QVariant(QtCore.QStringList([jid, name, item.text(1)])))
+			action.setObjectName("pm")
 			# vcard action
 			action=menu.addAction(self.tr("vCard"))
 			action.setData(QtCore.QVariant(jid))
@@ -460,6 +464,13 @@ class groupChatWidget(abstractChatWidget):
 			jid=unicode(jid.toString())
 			self.ve=vcardeditor.vcardEditorDialog(self.main(),jid,self,False)
 			self.ve.show()
+		elif cmd == "pm":
+			jid=action.data()
+			jid, nick, ic=[unicode(val.toString()) for val in action.data().toList()]
+			icon=self.main().getIcon(status=self.main().icons[unicode(ic)[0]],size="16x16")
+			tab=self.main().chat.addChatTab(jid,nick,icon,full=True)
+			self.main().chat.activate()
+		
 		elif cmd == "send_file":
 			jid=unicode(action.data().toString())
 			self.main().sendFiles(jid)
@@ -489,8 +500,13 @@ class groupChatWidget(abstractChatWidget):
 			if item.parent()==None:
 				return
 			text = unicode(self.ui.line.toPlainText())
-			if len(text) == 0 or text.strip()[:-1] in self.main().client.groupchats[self.jid].users.keys():
+			if len(text) == 0 or (text.strip()[:-1] in self.main().client.groupchats[self.jid].users.keys() and text.strip()[:-1] != unicode(item.text(0))):
 				self.ui.line.setText(unicode(item.text(0))+': ')
+			elif text.endswith(unicode(item.text(0))+': '):
+				self.ui.line.setText(text.replace(unicode(item.text(0))+': ', ''))
+			
+			elif text.endswith(unicode(item.text(0))+' '):
+				self.ui.line.setText(text[:-(len(unicode(item.text(0)))+1)])								
 			else:
 				cur=self.ui.line.textCursor()
 				if text[-1]==" ":
