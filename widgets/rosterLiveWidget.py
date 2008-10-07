@@ -888,10 +888,12 @@ class rosterWidget(QtGui.QWidget):
 									break
 				if avatar:
 					avatar=avatar.scaled(64,64,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
-					self.tool.ui.label.setPixmap(avatar)
-					self.tool.ui.label.show()
 				else:
-					self.tool.ui.label.hide()
+					avatar=QtGui.QPixmap(self.main.getAvatarSrc("default"))
+				self.tool.ui.label.setPixmap(avatar)
+					#self.tool.ui.label.show()
+				#else:
+					#self.tool.ui.label.hide()
 				self.tool.ui.nickname.setText("<b>"+unicode(item.escapedName)+"</b>")
 				self.tool.ui.jid.setText(unicode(item.jid))
 				self.tool.jid=unicode(item.jid)
