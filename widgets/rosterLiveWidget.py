@@ -52,6 +52,26 @@ class rosterToolTip(QtGui.QFrame):
 		self.ui.status.setPalette(p)
 		self.roster=weakref.ref(roster)
 		self.focus=False
+		self.ui.mood.setMouseTracking(True)
+		self.ui.mood.enterEvent=self.moodEnterEvent
+		self.ui.mood.leaveEvent=self.moodLeaveEvent
+		self.ui.tune.setMouseTracking(True)
+		self.ui.tune.enterEvent=self.tuneEnterEvent
+		self.ui.tune.leaveEvent=self.tuneLeaveEvent
+		self.status=""
+		self.mood=""
+
+	def tuneEnterEvent(self,event):
+		self.ui.jid.setText(self.tune)
+		
+	def tuneLeaveEvent(self,event):
+		self.ui.jid.setText(self.jid)
+
+	def moodEnterEvent(self,event):
+		self.ui.jid.setText(self.mood)
+		
+	def moodLeaveEvent(self,event):
+		self.ui.jid.setText(self.jid)
 
 	def enterEvent(self,event):
 		self.focus=True
@@ -874,6 +894,7 @@ class rosterWidget(QtGui.QWidget):
 					self.tool.ui.label.hide()
 				self.tool.ui.nickname.setText("<b>"+unicode(item.escapedName)+"</b>")
 				self.tool.ui.jid.setText(unicode(item.jid))
+				self.tool.jid=unicode(item.jid)
 				
 				contact = self.main.client.getContactByJid(jid)
 
@@ -892,6 +913,62 @@ class rosterWidget(QtGui.QWidget):
 						self.tool.ui.status.hide()
 				else:
 					self.tool.ui.status.hide()
+
+				tune = contact.getPEP('http://jabber.org/protocol/tune')
+				if type(tune) == list:
+					for x in tune:
+						print x
+					self.tool.ui.tune.hide()
+				elif tune!=None:
+					artist = title = ''
+					for el in tune.elements():
+						if el.name == 'artist':
+							artist = unicode(el)
+						elif el.name == 'title':
+							title = unicode(el)
+					t = '%s: %s'%(artist, title)
+					if len(t.strip())>1:
+						self.tool.ui.tune.setPixmap(QtGui.QPixmap("images/22x22/icons/headphones.png"))
+						self.tool.tune=t
+					else:
+						self.tool.ui.tune.hide()
+				else:
+					self.tool.ui.tune.hide()
+		
+				mood = contact.getPEP('http://jabber.org/protocol/mood')
+				if mood != None:
+						if isinstance(mood,list):
+							print "mood is list",mood
+							if len(mood)!=0:
+								mood=mood[0]
+							else:
+								mood=None
+						if mood:
+							t = ''
+							m = txt = icon = ''
+							for el in mood.elements():
+								if el.name == 'text':
+									txt = unicode(el)
+								else:
+									m = self.main.moods.get(el.name)
+									if self.main.moodIcons.has_key(el.name):
+										self.tool.ui.mood.setPixmap(QtGui.QPixmap(self.main.moodIcons[el.name].src))
+										self.tool.ui.mood.show()
+									else:
+										self.tool.ui.mood.hide()
+							if txt != '':
+								self.tool.mood = m+ ' - %s'%txt
+							else:
+								self.tool.mood = m
+						else:
+							self.tool.ui.mood.hide()
+				else:
+					self.tool.ui.mood.hide()
+							#if txt != '':
+								#t = m+ ' - %s'%txt
+							#else:
+								#t = m
+							#text+='<br />%s<font size="-1">%s</font>' % (icon,t)
 
 
 				g=self.mapToGlobal(QtCore.QPoint(event.x(),event.y()))
