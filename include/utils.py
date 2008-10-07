@@ -570,7 +570,11 @@ def replace_url(text,widget=None):
 		if word.find("://")!=-1:
 			if word[-3:].lower() in ["png","jpg","gif","bmp","peg","iff"] and widget:
 				widget.imageId+=1
-				text+='<div id="image%s"><a href="%s" title="%s">%s</a>'%(str(widget.imageId),word,word, word)+" "
+				link = word
+				if word.startswith('http://album.jabbim.cz'):
+					jid, img = word.split('/')[-2:]
+					link = 'http://album.jabbim.cz/embed/%s/%s'%(jid, img)
+				text+='<div id="image%s"><a href="%s" title="%s">%s</a>'%(str(widget.imageId),link,word, word)+" "
 				text+='<a href="javascript:;" title="%s" onclick="showImage(\'image%s\',\'%s\');")>[Show Image]</a></div>'%(word,str(widget.imageId),word)+" "
 			else:
 				text+='<a href="%s" title="%s">%s</a>'%(word, word, word)+" "
