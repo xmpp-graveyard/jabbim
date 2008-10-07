@@ -258,7 +258,7 @@ class config:
 		self.config['osd_time']={'type':'number-spin','label':self.main.tr("Display time (seconds):"),'value':'2','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_first_message']={'type':'boolean','label':self.main.tr("Use OSD for first message"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_on_message']={'type':'boolean','label':self.main.tr("Use OSD for other messages"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
-		self.config['osd_on_gcmessage']={'type':'boolean','label':self.main.tr("Use OSD for conference messages"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
+		self.config['osd_on_gcmessage']={'type':'boolean','label':self.main.tr("Use OSD for conference messages"),'value':'False','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_on_presence']={'type':'boolean','label':self.main.tr("Use OSD for presences"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_x']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
 		self.config['osd_y']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}

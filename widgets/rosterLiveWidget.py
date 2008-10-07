@@ -895,7 +895,7 @@ class rosterWidget(QtGui.QWidget):
 
 
 				g=self.mapToGlobal(QtCore.QPoint(event.x(),event.y()))
-				self.tool.show()
+				
 				hint=self.tool.sizeHint()
 
 				if w.availableGeometry().y()+w.availableGeometry().height()<g.y()+10+hint.height():
@@ -908,6 +908,7 @@ class rosterWidget(QtGui.QWidget):
 						self.tool.setGeometry(g.x()-hint.width()-10,g.y()+10,hint.width(),hint.height())
 					else:
 						self.tool.setGeometry(g.x()+10,g.y()+10,hint.width(),hint.height())
+				self.tool.show()
 
 		return QtGui.QWidget.event(self,event)
 
