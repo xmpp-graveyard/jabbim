@@ -15,6 +15,9 @@ class lineeditWidget(QtGui.QWidget):
 		self.metrics=QtGui.QFontMetrics(self.ui.text.font())
 		QtCore.QObject.connect(self.ui.accept,QtCore.SIGNAL("clicked()"),self.accept)
 		QtCore.QObject.connect(self.ui.reject,QtCore.SIGNAL("clicked()"),self.reject)
+		self.ui.text.setTextFormat(QtCore.Qt.RichText)
+		self.ui.label.setTextFormat(QtCore.Qt.RichText)
+
 
 	def getSafeText(self,text,width):
 		ret=""

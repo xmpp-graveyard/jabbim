@@ -12,6 +12,7 @@ class booleanWidget(QtGui.QWidget):
 		self.event=weakref.proxy(event)
 		self.ui=Ui_Form()
 		self.ui.setupUi(self)
+		self.ui.text.setTextFormat(QtCore.Qt.RichText)
 		self.metrics=QtGui.QFontMetrics(self.ui.text.font())
 		QtCore.QObject.connect(self.ui.accept,QtCore.SIGNAL("clicked()"),self.accept)
 		QtCore.QObject.connect(self.ui.reject,QtCore.SIGNAL("clicked()"),self.reject)
