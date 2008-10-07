@@ -925,7 +925,8 @@ class Plugin(plugins.PluginBase):
 						os.system(u"xdg-open \"%s\"" % filename.encode('utf8'))
 					if self.main.events.ftEvents.has_key(sid):
 						self.main.events.ftEvents[sid].reject()
-			
+						self.wizard.ui.back.hide()
+						self.wizard.ui.stackedWidget.setCurrentIndex(0)
 
 	def clicked(self,item,old):
 		if item:
