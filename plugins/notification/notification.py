@@ -245,7 +245,7 @@ class config:
 		self.main=main
 		self.config={}
 		self.config['tray_first_message']={'type':'boolean','label':self.main.tr("Notify on first message from user"),'value':'True','groupbox':self.main.tr('Tray icon'),'tab':self.main.tr("Tray Icon")}
-		self.config['tray_muc_highlight']={'type':'boolean','label':self.main.tr("Notify if groupchat message contains your nickname"),'value':'True','groupbox':self.main.tr('Tray icon'),'tab':self.main.tr("Tray Icon")}
+		self.config['tray_muc_highlight']={'type':'boolean','label':self.main.tr("Notify if groupchat message contains your nickname"),'value':'True','groupbox':self.main.tr('Groupchat'),'tab':self.main.tr("OSD")}
 		
 		self.config['sound_login']={'type':'boolean','label':self.main.tr("Play sound on login"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
 		self.config['sound_first_message']={'type':'boolean','label':self.main.tr("Play sound on first message from user"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
@@ -254,16 +254,16 @@ class config:
 		self.config['sound_presence']={'type':'boolean','label':self.main.tr("Play sound on new presence"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
 		self.config['sound_ft']={'type':'boolean','label':self.main.tr("Play sound on file transfer"),'value':'True','groupbox':self.main.tr('Sounds'),'tab':self.main.tr("Sounds")}
 
-		self.config['osd_transparent']={'type':'boolean','label':self.main.tr("Use transparent background"),'value':'False','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
-		self.config['osd_time']={'type':'number-spin','label':self.main.tr("Display time (seconds):"),'value':'2','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
-		self.config['osd_first_message']={'type':'boolean','label':self.main.tr("Use OSD for first message"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
-		self.config['osd_on_message']={'type':'boolean','label':self.main.tr("Use OSD for other messages"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
-		self.config['osd_on_gcmessage']={'type':'boolean','label':self.main.tr("Use OSD for conference messages"),'value':'False','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
-		self.config['osd_on_presence']={'type':'boolean','label':self.main.tr("Use OSD for presences"),'value':'True','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
-		self.config['osd_x']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
-		self.config['osd_y']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
-		self.config['osd_bigfont']={'type':'number-spin','label':self.main.tr("Headline font size"),'value':'20','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
-		self.config['osd_smallfont']={'type':'number-spin','label':self.main.tr("Text font size"),'value':'11','groupbox':self.main.tr('OSD'),'tab':self.main.tr("OSD")}
+		self.config['osd_transparent']={'type':'boolean','label':self.main.tr("Use transparent background"),'value':'False','groupbox':self.main.tr('Global'),'tab':self.main.tr("OSD")}
+		self.config['osd_time']={'type':'number-spin','label':self.main.tr("Display time (seconds):"),'value':'2','groupbox':self.main.tr('Global'),'tab':self.main.tr("OSD")}
+		self.config['osd_first_message']={'type':'boolean','label':self.main.tr("Use OSD for first message"),'value':'True','groupbox':self.main.tr('Chat'),'tab':self.main.tr("OSD")}
+		self.config['osd_on_message']={'type':'boolean','label':self.main.tr("Use OSD for other messages"),'value':'True','groupbox':self.main.tr('Chat'),'tab':self.main.tr("OSD")}
+		self.config['osd_on_gcmessage']={'type':'boolean','label':self.main.tr("Use OSD for all conference messages"),'value':'False','groupbox':self.main.tr('Groupchat'),'tab':self.main.tr("OSD")}
+		self.config['osd_x']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('Global'),'tab':self.main.tr("OSD")}
+		self.config['osd_y']={'type':'hidden','label':self.main.tr("Use OSD for presences"),'value':'10','groupbox':self.main.tr('Global'),'tab':self.main.tr("OSD")}
+		self.config['osd_bigfont']={'type':'number-spin','label':self.main.tr("Headline font size"),'value':'20','groupbox':self.main.tr('Global'),'tab':self.main.tr("OSD")}
+		self.config['osd_smallfont']={'type':'number-spin','label':self.main.tr("Text font size"),'value':'11','groupbox':self.main.tr('Global'),'tab':self.main.tr("OSD")}
+		self.config['osd_on_presence']={'type':'boolean','label':self.main.tr("Use OSD for presences"),'value':'True','groupbox':self.main.tr('Global'),'tab':self.main.tr("OSD")}
 
 
 class Plugin(plugins.PluginBase):
