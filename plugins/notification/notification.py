@@ -530,7 +530,6 @@ class Plugin(plugins.PluginBase):
 	def on_groupchatMessageForMeEvent(self,frm,user,body,subject, xhtml):
 		if not self.isNotificationEnabled():
 			return
-
 		if body.startswith('/me '):
 			body = body.replace('/me', '*'+user)
 		if self.config['tray_muc_highlight']=="True" and not self.main.chat.isActiveWindow():
@@ -547,6 +546,7 @@ class Plugin(plugins.PluginBase):
 				#self.main.snarlMessages[int(s.getID())]=[self.main.events.getEventByID(eventID).accept,[]]
 			else:
 #				self.main.tray.showMessage(self.tr("New groupchat message for you"), traytext, QtGui.QSystemTrayIcon.Information, 4000)
+				pixmap=self.main.getAvatar(frm.userhost()+"/"+user,frame=False,size="64x64")
 				self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext), None)
 
 		if self.config['sound_gc_message']=="True":
