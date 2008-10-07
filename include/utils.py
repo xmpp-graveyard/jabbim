@@ -122,7 +122,7 @@ def loadConfig(main,status):
 			"savePasswd":"",
 			"autoJoin":"False",
 			"autoDownload":"False",
-			"autoDownloadPath": main.homeDir,
+			"autoDownloadPath": getDesktopPath(main.homedir),
 			"rosterIconSize":"16x16",
 			"chat_skin":"cool.conf",
 			"chatSkin":"cool/cool.cfg",
@@ -274,6 +274,23 @@ def getProfiles(homedir):
 			if file.endswith("-profile"):
 				profiles.append(file)
 	return profiles
+
+def getDesktopPath(default = './'):
+	folder=None 
+	if sys.platform=="win32": 
+		import _winreg
+		hkcu = _winreg.ConnectRegistry(None, _winreg.HKEY_CURRENT_USER) 
+		folders=_winreg.OpenKey(hkcu, r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders') 
+		try: 
+			(folder, typ) = _winreg.QueryValueEx(folders, "Desktop") 
+		except WindowsError: 
+			folder=None
+	else:
+		folder = '~/Desktop'
+	if folder:
+		return folder
+	else:
+		return default
 
 def getHomeDir():
 	# gets homedir on win32 or linux
