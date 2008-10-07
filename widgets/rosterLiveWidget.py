@@ -902,15 +902,18 @@ class rosterWidget(QtGui.QWidget):
 
 				if contact != None:
 					status = contact.status
-					if not status[1]:
-						status = ""
-					else:
-						status=status[1]
 					#text+='<img src="images/16x16/status/jabber-%s.png">' % contact.show
 					#text+='<b>%s</b> '%unicode(self.status.get(contact.show, ''))
 					if len(status) != 0:
-						self.tool.ui.status.setHtml(replace_url(status.replace('\n', '<br />')))
-						self.tool.ui.status.show()
+						if not status[1]:
+							status = ""
+						else:
+							status=status[1]
+						if len(status)==0:
+							self.tool.ui.status.hide()
+						else:
+							self.tool.ui.status.setHtml(replace_url(status.replace('\n', '<br />')))
+							self.tool.ui.status.show()
 					else:
 						self.tool.ui.status.hide()
 				else:

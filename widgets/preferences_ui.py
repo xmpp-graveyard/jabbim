@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'preferences.ui'
+# Form implementation generated from reading ui file 'widgets/preferences.ui'
 #
-# Created: Sat Sep 06 16:24:17 2008
-#      by: PyQt4 UI code generator 4.4.3
+# Created: Tue Oct  7 11:47:16 2008
+#      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -59,7 +59,7 @@ class Ui_preferences(object):
         self.profile.setAlignment(QtCore.Qt.AlignCenter)
         self.profile.setObjectName("profile")
         self.gridlayout.addWidget(self.profile, 0, 1, 1, 2)
-        spacerItem = QtGui.QSpacerItem(141, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        spacerItem = QtGui.QSpacerItem(141, 1, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.gridlayout.addItem(spacerItem, 2, 1, 1, 1)
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setSpacing(6)
@@ -95,7 +95,7 @@ class Ui_preferences(object):
         self.jabbimWidget = QtGui.QWidget(self.page_4)
         self.jabbimWidget.setObjectName("jabbimWidget")
         self.gridlayout1.addWidget(self.jabbimWidget, 3, 0, 1, 1)
-        spacerItem1 = QtGui.QSpacerItem(20, 261, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        spacerItem1 = QtGui.QSpacerItem(20, 1, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridlayout1.addItem(spacerItem1, 4, 0, 1, 1)
         self.stackedWidget.addWidget(self.page_4)
         self.userPreferences = QtGui.QWidget()
@@ -134,7 +134,7 @@ class Ui_preferences(object):
         self.line_3.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_3.setObjectName("line_3")
         self.gridlayout3.addWidget(self.line_3, 1, 0, 1, 1)
-        spacerItem3 = QtGui.QSpacerItem(20, 171, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        spacerItem3 = QtGui.QSpacerItem(20, 1, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridlayout3.addItem(spacerItem3, 6, 0, 1, 1)
         self.chatWidget = QtGui.QWidget(self.page_2)
         self.chatWidget.setObjectName("chatWidget")
@@ -155,7 +155,7 @@ class Ui_preferences(object):
         self.rosterWidget = QtGui.QWidget(self.page)
         self.rosterWidget.setObjectName("rosterWidget")
         self.gridlayout4.addWidget(self.rosterWidget, 2, 0, 1, 3)
-        spacerItem4 = QtGui.QSpacerItem(20, 221, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        spacerItem4 = QtGui.QSpacerItem(20, 1, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridlayout4.addItem(spacerItem4, 4, 0, 1, 1)
         self.label_6 = QtGui.QLabel(self.page)
         self.label_6.setObjectName("label_6")
@@ -171,7 +171,7 @@ class Ui_preferences(object):
         self.privacyWidget = QtGui.QWidget(self.page_6)
         self.privacyWidget.setObjectName("privacyWidget")
         self.gridlayout5.addWidget(self.privacyWidget, 2, 0, 1, 1)
-        spacerItem5 = QtGui.QSpacerItem(20, 241, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        spacerItem5 = QtGui.QSpacerItem(20, 1, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridlayout5.addItem(spacerItem5, 3, 0, 1, 1)
         self.label_9 = QtGui.QLabel(self.page_6)
         self.label_9.setObjectName("label_9")
@@ -237,7 +237,7 @@ class Ui_preferences(object):
         self._4.addWidget(self.rosterVariant)
         self._2.addLayout(self._4)
         self.gridLayout.addLayout(self._2, 0, 0, 1, 1)
-        spacerItem6 = QtGui.QSpacerItem(20, 326, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        spacerItem6 = QtGui.QSpacerItem(20, 1, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridLayout.addItem(spacerItem6, 1, 0, 1, 1)
         self.tabWidget.addTab(self.tab_5, "")
         self.tab = QtGui.QWidget()
