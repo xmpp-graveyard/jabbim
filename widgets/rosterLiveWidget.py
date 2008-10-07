@@ -60,6 +60,7 @@ class rosterToolTip(QtGui.QFrame):
 		self.ui.tune.leaveEvent=self.tuneLeaveEvent
 		self.status=""
 		self.mood=""
+		self.ui.status.setMaximumHeight(QtGui.QFontMetrics(self.ui.status.font()).height()*4)
 
 	def tuneEnterEvent(self,event):
 		self.ui.jid.setText(self.tune)
