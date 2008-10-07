@@ -22,4 +22,5 @@ class linkEditorDialog(QtGui.QDialog):
 
 	def accept(self):
 		self.widget.ui.line.textCursor().insertHtml("<a href=\"%s\">%s</a>"%(unicode(self.ui.url.text()),unicode(self.ui.linkText.text())))
+		print "inserting link ","<a href=\"%s\">%s</a>"%(unicode(self.ui.url.text()),unicode(self.ui.linkText.text()))
 		self.done(1)

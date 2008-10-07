@@ -1112,12 +1112,14 @@ class abstractChatWidget(QtGui.QWidget):
 			same=True
 		links=[]
 		#print unicode(xhtml)
-		#print alinks
-		temp=unicode(xhtml).replace(">","<")
+		print alinks
+		temp=unicode(unescape(xhtml)).replace(">","<")
 		for word in temp.split("<"):
 			for w in word.split(' '):
 				alink=False
+				print "---------------"
 				for l in alinks:
+					print "---",[w],[l]
 					if w.find(l)!=-1:
 						alink=True
 						break
@@ -1127,7 +1129,7 @@ class abstractChatWidget(QtGui.QWidget):
 						links.append(w.strip())
 					elif w.startswith("www."):
 						links.append(w.strip())
-		#print links
+		print links
 		for link in links:
 			xhtml=xhtml.replace(link,'<a href="'+link+'">'+link+'</a>')
 		#print xhtml
