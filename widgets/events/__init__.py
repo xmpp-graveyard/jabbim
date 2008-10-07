@@ -365,6 +365,7 @@ class events:
 		event.addWidget(widget)
 		return self.addEvent(event)
 
+
 	def addBooleanEvent(self,typ="message",category="messages"):
 		event=booleanEvent(self)
 		event.setType(typ)

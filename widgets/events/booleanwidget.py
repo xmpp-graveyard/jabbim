@@ -15,6 +15,8 @@ class booleanWidget(QtGui.QWidget):
 		self.metrics=QtGui.QFontMetrics(self.ui.text.font())
 		QtCore.QObject.connect(self.ui.accept,QtCore.SIGNAL("clicked()"),self.accept)
 		QtCore.QObject.connect(self.ui.reject,QtCore.SIGNAL("clicked()"),self.reject)
+		self.ui.accept.hide()
+		self.ui.reject.hide()
 
 	def getSafeText(self,text,width):
 		ret=""
@@ -27,9 +29,11 @@ class booleanWidget(QtGui.QWidget):
 
 	def setAcceptText(self,text):
 		self.ui.accept.setText(text)
+		self.ui.accept.show()
 
 	def setRejectText(self,text):
 		self.ui.reject.setText(text)
+		self.ui.reject.show()
 
 	def eventRejected(self):
 		pass
