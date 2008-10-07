@@ -587,7 +587,7 @@ function removeById(index) {
 
 }
 
-function showImage(imageId,link) {
+function showImage(imageId,imgUrl,link) {
 shouldScroll = nearBottom();
 
                         //Locate the insertion point
@@ -595,7 +595,7 @@ shouldScroll = nearBottom();
                         //make new node
                         range = document.createRange();
                         range.selectNode(insert.parentNode);
-                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+link+'\\');")>[Hide Image]</a></div><div id="loaded'+imageId+'"><a href="'+link+'"><img src="'+link+'" /></a></div>');
+                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+imgUrl+'\\',\\''+link+'\\');")>[Hide Image]</a></div><div id="loaded'+imageId+'"><a href="'+link+'"><img src="'+imgUrl+'" /></a></div>');
 
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);
@@ -603,7 +603,7 @@ if (shouldScroll) setTimeout("scrollToBottom()", 100);
 
 }
 
-function reshowImage(imageId,link) {
+function reshowImage(imageId,imgUrl,link) {
 shouldScroll = nearBottom();
 document.getElementById('loaded'+imageId).style.display = 'inline';
                         //Locate the insertion point
@@ -611,7 +611,7 @@ document.getElementById('loaded'+imageId).style.display = 'inline';
                         //make new node
                         range = document.createRange();
                         range.selectNode(insert.parentNode);
-                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+link+'\\');")>[Hide Image]</a></div>');
+                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+imgUrl+'\\',\\''+link+'\\');")>[Hide Image]</a></div>');
 
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);
@@ -619,7 +619,7 @@ if (shouldScroll) setTimeout("scrollToBottom()", 100);
 
 }
 
-function hideImage(imageId,link){
+function hideImage(imageId,imgUrl,link){
    document.getElementById('loaded'+imageId).style.display = 'none';
                         //Locate the insertion point
                         var insert = document.getElementById(imageId);
@@ -627,7 +627,7 @@ function hideImage(imageId,link){
                         //make new node
                         range = document.createRange();
                         range.selectNode(insert.parentNode);
-                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="reshowImage(\\''+imageId+'\\',\\''+link+'\\');")>[Show Image]</a></div>');
+                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="reshowImage(\\''+imageId+'\\',\\''+imgUrl+'\\',\\''+link+'\\');")>[Show Image]</a></div>');
 
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);
