@@ -122,7 +122,7 @@ def loadConfig(main,status):
 			"savePasswd":"",
 			"autoJoin":"False",
 			"autoDownload":"False",
-			"autoDownloadPath": getDesktopPath(main.homedir),
+			"autoDownloadPath": getDesktopPath(main.homeDir),
 			"rosterIconSize":"16x16",
 			"chat_skin":"cool.conf",
 			"chatSkin":"cool/cool.cfg",
