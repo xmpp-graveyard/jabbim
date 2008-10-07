@@ -233,6 +233,7 @@ class jabbimServiceManager(QtGui.QDialog):
 		self.ui.back.show()
 	
 	def loadICQService(self,data=None):
+		print "icq",data
 		if not data:
 			d=self.main.client.getRegisterForm("icq.jabber.cz")
 			d.addCallback(self.loadICQService)
@@ -253,7 +254,7 @@ class jabbimServiceManager(QtGui.QDialog):
 				<h3>Jabber ICQ Transport Informations</h3>
 				"""
 				button=serviceButton(self,self.tr("ICQ Transport"),QtGui.QIcon("images/32x32/status/icq-online.png"),info,self.ui.registerService)
-				self.registerLayout.insetWidget(0,button)
+				self.registerLayout.insertWidget(0,button)
 				QtCore.QObject.connect(button,QtCore.SIGNAL("clicked()"),self.registerICQ)
 	
 	def _unregisterICQ(self,data=None):
