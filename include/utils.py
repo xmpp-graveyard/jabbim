@@ -572,10 +572,12 @@ def replace_url(text,widget=None):
 				widget.imageId+=1
 				link = word
 				if word.startswith('http://album.jabbim.cz'):
+					print word
 					jid, img = word.split('/')[-2:]
 					link = 'http://album.jabbim.cz/embed/%s/%s'%(jid, img)
-				text+='<div id="image%s"><a href="%s" title="%s">%s</a>'%(str(widget.imageId),link,word, word)+" "
-				text+='<a href="javascript:;" title="%s" onclick="showImage(\'image%s\',\'%s\');")>[Show Image]</a></div>'%(word,str(widget.imageId),word)+" "
+					print link
+				text+='<div id="image%s"><a href="%s" title="%s">%s</a>'%(str(widget.imageId),word,word, word)+" "
+				text+='<a href="javascript:;" title="%s" onclick="showImage(\'image%s\',\'%s\');")>[Show Image]</a></div>'%(word,str(widget.imageId),link)+" "
 			else:
 				text+='<a href="%s" title="%s">%s</a>'%(word, word, word)+" "
 		elif word.startswith("www."):
