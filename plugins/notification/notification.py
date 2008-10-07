@@ -524,7 +524,7 @@ class Plugin(plugins.PluginBase):
 				pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
 				# inform user about newly opened tab
 				self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext), None)
-		if self.config['sound_message']=="True":
+		if self.config['sound_gc_message']=="True":
 			self.main.playsound('message')
 	
 	def on_groupchatMessageForMeEvent(self,frm,user,body,subject, xhtml):
