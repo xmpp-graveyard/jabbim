@@ -554,11 +554,14 @@ class clientClass(pyxl.client.Client):
 				print "extracting",file,'to',dirname(file)
 				try:
 					root=utils.extractZip(file,dirname(file))
+					done=True
 				except:
 					message = unicode(traceback.format_exc(), 'utf-8')
 					print message
-				self.main.preferencesWindow.reloadView(file,root)
-				self.main.preferencesWindow.reloadPlugins_()
+					done=False
+				if done:
+					self.main.preferencesWindow.reloadView(file,root)
+					self.main.preferencesWindow.reloadPlugins_()
 			del self.main.allowedSids[sid]
 		self.dispatcher.publishEvent('FTFinishedEvent', sid, error)
 		#del self.ft[sid]
