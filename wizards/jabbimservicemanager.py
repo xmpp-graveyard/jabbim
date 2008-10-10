@@ -33,13 +33,13 @@ class serviceButton(QtGui.QToolButton):
 			self.manager.currentInfo=self.title
 			self.manager.ui.info.setHtml(self.info)
 		return QtGui.QToolButton.mouseMoveEvent(self,event)
-	
+
 class jabbimServiceManager(QtGui.QDialog):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.ui=jabbimservicemanager_ui.Ui_jabbimServiceManager()
 		self.ui.setupUi(self)
-		self.main=weakref.proxy(main)
+		self.main=weakref.ref(main)
 		self.registerLayout=QtGui.QHBoxLayout(self.ui.registerService)
 		self.registeredLayout=QtGui.QHBoxLayout(self.ui.registeredServices)
 		self.currentInfo=""
@@ -76,7 +76,7 @@ class jabbimServiceManager(QtGui.QDialog):
 
 		dict=False
 		weather=False
-		for jd in self.main.client.roster['users'].keys():
+		for jd in self.main().client.roster['users'].keys():
 			if jd.find("dict.jabbim.cz")!=-1:
 				dict=True
 			if jd.find("weather.netlab.cz"):
@@ -86,7 +86,7 @@ class jabbimServiceManager(QtGui.QDialog):
 		info="""
 		<h3>Jabber Disk informations</h3>
 		"""
-		if (not self.main.client.roster['users'].has_key("public@disk.jabbim.cz") or not self.main.client.roster['users'].has_key("private@disk.jabbim.cz")) or not self.main.client.roster['users'].has_key("album@disk.jabbim.cz"):
+		if (not self.main().client.roster['users'].has_key("public@disk.jabbim.cz") or not self.main().client.roster['users'].has_key("private@disk.jabbim.cz")) or not self.main().client.roster['users'].has_key("album@disk.jabbim.cz"):
 
 			button=serviceButton(self,self.tr("Jabber Disk"),QtGui.QIcon("images/32x32/status/disk-online.png"),info,self.ui.registerService)
 			self.registerLayout.addWidget(button)
@@ -148,12 +148,12 @@ class jabbimServiceManager(QtGui.QDialog):
 		
 	def _unregisterDict(self):
 		jid="dict.jabbim.cz"
-		j = self.main.getJid(jid)
-		for jd in self.main.client.roster['users'].iterkeys():
+		j = self.main().getJid(jid)
+		for jd in self.main().client.roster['users'].iterkeys():
 			if jd.find(j.host) != -1:
-				self.main.client.delContact(jd)
+				self.main().client.delContact(jd)
 		self.home()
-		self.main.client.reactor.callLater(1,self.loadServices)
+		self.main().client.reactor.callLater(1,self.loadServices)
 		
 	def registerDict(self):
 		self.ui.stackedWidget.setCurrentIndex(3)
@@ -207,7 +207,7 @@ class jabbimServiceManager(QtGui.QDialog):
 			else:
 				item.setText(0,name)
 			item.jid=jid
-			registered=self.main.client.roster['users'].has_key(jid)
+			registered=self.main().client.roster['users'].has_key(jid)
 			if registered:
 				item.registered=QtCore.Qt.Checked
 				item.setCheckState(0,QtCore.Qt.Checked)
@@ -221,12 +221,12 @@ class jabbimServiceManager(QtGui.QDialog):
 			item=self.ui.dictionaries.topLevelItem(i)
 			if item.checkState(0)!=item.registered:
 				if item.checkState(0)==QtCore.Qt.Checked:
-					self.main.autoAdd[unicode(item.jid)]={}
-					self.main.client.addContact(unicode(item.jid),"",unicode(item.text(0)),[unicode(self.tr("Dictionaries"))])
+					self.main().autoAdd[unicode(item.jid)]={}
+					self.main().client.addContact(unicode(item.jid),"",unicode(item.text(0)),[unicode(self.tr("Dictionaries"))])
 				else:
-					self.main.client.delContact(unicode(item.jid))
+					self.main().client.delContact(unicode(item.jid))
 		self.home()
-		self.main.client.reactor.callLater(1,self.loadServices)
+		self.main().client.reactor.callLater(1,self.loadServices)
 
 	def registerICQ(self):
 		self.ui.stackedWidget.setCurrentIndex(2)
@@ -235,7 +235,7 @@ class jabbimServiceManager(QtGui.QDialog):
 	def loadICQService(self,data=None):
 		print "icq",data
 		if not data:
-			d=self.main.client.getRegisterForm("icq.jabber.cz")
+			d=self.main().client.getRegisterForm("icq.jabber.cz")
 			d.addCallback(self.loadICQService)
 		else:
 			jid,legacy,form=data
@@ -259,19 +259,19 @@ class jabbimServiceManager(QtGui.QDialog):
 	
 	def _unregisterICQ(self,data=None):
 		if not data:
-			d=self.main.client.setRegisterForm("icq.jabber.cz",remove=True)
+			d=self.main().client.setRegisterForm("icq.jabber.cz",remove=True)
 			d.addCallback(self._unregisterICQ)
 		else:
 			jid="icq.jabber.cz"
-			self.main.client.delContact(jid)
-			j = self.main.getJid(jid)
-			for jd in self.main.client.roster['users'].iterkeys():
+			self.main().client.delContact(jid)
+			j = self.main().getJid(jid)
+			for jd in self.main().client.roster['users'].iterkeys():
 				if jd.find(j.host) != -1:
-					self.main.client.delContact(jd)
+					self.main().client.delContact(jd)
 
 	def _registerICQ(self,data=None):
 		if not data:
-			d=self.main.client.getRegisterForm("icq.jabber.cz")
+			d=self.main().client.getRegisterForm("icq.jabber.cz")
 			d.addCallback(self._registerICQ)
 		else:
 			jid,legacy,form=data
@@ -280,32 +280,32 @@ class jabbimServiceManager(QtGui.QDialog):
 			if legacy.has_key('key'):
 				ret['key']=unicode(legacy['key'])
 			ret['username']=unicode(self.ui.icqNumber.text())
-			self.main.autoAdd["icq.jabber.cz"]={"group":"ICQ"}
-			self.main.client.setRegisterForm("icq.jabber.cz",legacy=ret)
+			self.main().autoAdd["icq.jabber.cz"]={"group":"ICQ"}
+			self.main().client.setRegisterForm("icq.jabber.cz",legacy=ret)
 			self.home()
-			self.main.client.reactor.callLater(1,self.loadServices)
+			self.main().client.reactor.callLater(1,self.loadServices)
 
 	def registerJabberDisk(self):
 		self.ui.stackedWidget.setCurrentIndex(1)
 		self.ui.back.show()
 
 	def _unregisterJabberDisk(self):
-		if self.main.client.roster['users'].has_key("public@disk.jabbim.cz"):
-			self.main.client.delContact("public@disk.jabbim.cz")
-		if self.main.client.roster['users'].has_key("private@disk.jabbim.cz"):
-			self.main.client.delContact("private@disk.jabbim.cz")
-		if self.main.client.roster['users'].has_key("album@disk.jabbim.cz"):
-			self.main.client.delContact("album@disk.jabbim.cz")
-		self.main.client.reactor.callLater(1,self.loadServices)
+		if self.main().client.roster['users'].has_key("public@disk.jabbim.cz"):
+			self.main().client.delContact("public@disk.jabbim.cz")
+		if self.main().client.roster['users'].has_key("private@disk.jabbim.cz"):
+			self.main().client.delContact("private@disk.jabbim.cz")
+		if self.main().client.roster['users'].has_key("album@disk.jabbim.cz"):
+			self.main().client.delContact("album@disk.jabbim.cz")
+		self.main().client.reactor.callLater(1,self.loadServices)
 	
 	def _registerJabberDisk(self,data=None):
 		if not data:
-			d=self.main.client.getRegisterForm("disk.jabbim.cz")
+			d=self.main().client.getRegisterForm("disk.jabbim.cz")
 			d.addCallback(self._registerJabberDisk)
 		else:
-			self.main.autoAdd['public@disk.jabbim.cz']={"name":self.tr("Public"),"group":"Disk"}
-			self.main.autoAdd['private@disk.jabbim.cz']={"name":self.tr("Private"),"group":"Disk"}
-			self.main.autoAdd['album@disk.jabbim.cz']={"name":self.tr("Album"),"group":"Disk"}
-			self.main.client.setRegisterForm("disk.jabbim.cz",legacy={})
+			self.main().autoAdd['public@disk.jabbim.cz']={"name":self.tr("Public"),"group":"Disk"}
+			self.main().autoAdd['private@disk.jabbim.cz']={"name":self.tr("Private"),"group":"Disk"}
+			self.main().autoAdd['album@disk.jabbim.cz']={"name":self.tr("Album"),"group":"Disk"}
+			self.main().client.setRegisterForm("disk.jabbim.cz",legacy={})
 			self.home()
-			self.main.client.reactor.callLater(2,self.loadServices)
+			self.main().client.reactor.callLater(2,self.loadServices)

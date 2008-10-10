@@ -5,9 +5,13 @@ from twisted.words.protocols.jabber.xmlstream import IQ
 from twisted.python import log
 import dataforms
 from commands_ui import Ui_Dialog
+import weakref
 
 class CommandsDialog(QtGui.QMainWindow):
 	def __init__(self, cmds, parent = None):
+		if isinstance(parent,weakref.ref):
+			parent=parent()
+			
 		QtGui.QMainWindow.__init__(self, parent)
 		#self.setModal(False)
 		self.cmds = cmds
@@ -99,7 +103,10 @@ class CommandsDialog(QtGui.QMainWindow):
 
 class Commands:
 	def __init__(self, main, jid, action = None):
-		self.main	= main
+		if isinstance(main,weakref.ref):
+			self.main	= main
+		else:
+			self.main	= weakref.ref(main)
 		self.jid	= unicode(jid)
 		self.dialog	= CommandsDialog(self,self.main)
 		self.sessionid	= None
@@ -112,14 +119,14 @@ class Commands:
 		self.requestCommandsList()
 
 	def requestCommandsList(self):
-		iq		= IQ(self.main.client.xmlstream, "get")
-		iq["xml:lang"] = self.main.client.xmlLang
+		iq		= IQ(self.main().client.xmlstream, "get")
+		iq["xml:lang"] = self.main().client.xmlLang
 		iq["to"]	= self.jid
 		query		= iq.addElement("query", "http://jabber.org/protocol/disco#items")
 		query.attributes["node"] = "http://jabber.org/protocol/commands"
 		d		= iq.send()
 		d.addCallback(self._commandsListRecieved).addErrback(self._errorRecieved)
-		self.main.client.disp(iq["id"])
+		self.main().client.disp(iq["id"])
 		log.msg("Sending request for Ad-Hoc Commands list")
 
 	def _commandsListRecieved(self, el):
@@ -135,8 +142,8 @@ class Commands:
 
 		c = 0
 		self.submenu = QtGui.QMenu()
-		mainWindow=self.main
-		if unicode(self.jid) in self.main.config['commandsInTray']:
+		mainWindow=self.main()
+		if unicode(self.jid) in self.main().config['commandsInTray']:
 			action=self.submenu.addAction(mainWindow.tr("Remove this menu from Tray"))
 			action.setObjectName("remove_from_tray")
 		else:
@@ -164,14 +171,14 @@ class Commands:
 		if len(commands) == 0 :
 			if self.action:
 				self.action.setEnabled(False)
-			self.dialog.ui.label.setText(self.main.tr("Sorry. No extra actions available."))
+			self.dialog.ui.label.setText(self.main().tr("Sorry. No extra actions available."))
 			self.dialog.ui.close.show()
 			self.dialog.ui.line.hide()
 		else:
 			if self.action:
 				self.action.setMenu(self.submenu)
 			self.submenu.connect(self.submenu, QtCore.SIGNAL("triggered ( QAction * )"),self.execute)
-			self.dialog.ui.label.setText(self.main.tr("Choose action to execute."))
+			self.dialog.ui.label.setText(self.main().tr("Choose action to execute."))
 
 	def execute(self, action):
 		cmd = action.objectName()
@@ -180,11 +187,11 @@ class Commands:
 			data = action.data().toList()
 			self.execCommand(data[0].toString(), data[1].toString())
 		elif cmd == "add_to_tray":
-			self.main.config['commandsInTray'].append(unicode(self.jid))
-			self.main.buildTrayMenu()
+			self.main().config['commandsInTray'].append(unicode(self.jid))
+			self.main().buildTrayMenu()
 		elif cmd == "remove_from_tray":
-			self.main.config['commandsInTray'].remove(unicode(self.jid))
-			self.main.buildTrayMenu()
+			self.main().config['commandsInTray'].remove(unicode(self.jid))
+			self.main().buildTrayMenu()
 
 	def execCommand(self, node, name, jid = None):
 		if jid == None:
@@ -192,18 +199,18 @@ class Commands:
 		self.jid = jid
 		self.node = node
 		self.name = name
-		iq = IQ(self.main.client.xmlstream, "set")
-		iq["xml:lang"] = self.main.client.xmlLang
+		iq = IQ(self.main().client.xmlstream, "set")
+		iq["xml:lang"] = self.main().client.xmlLang
 		iq["to"] = jid
 		command = iq.addElement("command")
 		command.attributes = {"node":node, "xmlns": "http://jabber.org/protocol/commands", "action":"execute"}
 		d=iq.send()
 		d.addCallback(self._formRecieved).addErrback(self._errorRecieved)
-		self.main.client.disp(iq["id"])
+		self.main().client.disp(iq["id"])
 		log.msg("Executing command %s." % node)
 	
 	def _errorRecieved(self, err):
-		mainWindow=self.main
+		mainWindow=self.main()
 		el=err.value.getElement()
 		code=None
 		if el.hasAttribute('code'):
@@ -228,10 +235,10 @@ class Commands:
 		actions =[]
 		title = unicode(self.dialog.windowTitle()) + " - " + self.name
 		if command["status"] == "completed":
-			self.dialog.ui.label.setText(self.main.tr("Completed!"))
+			self.dialog.ui.label.setText(self.main().tr("Completed!"))
 			log.msg("Completed command with sessionid %s." % self.sessionid)
 		elif command["status"] == "executing":
-#			self.dialog.ui.label.setText(self.main.tr("In progress."))
+#			self.dialog.ui.label.setText(self.main().tr("In progress."))
 			log.msg("Executing command with sessionid %s." % self.sessionid)
 		elif command["status"] == "canceled":
 #			self.dialog.ui.label.setText("Canceled.")
@@ -273,11 +280,11 @@ class Commands:
 							)
 			if element.name == "note":
 				if element["type"] == "error":
-					s = self.main.tr("Error")
+					s = self.main().tr("Error")
 				elif element["type"] == "warn":
-					s = self.main.tr("Warning")
+					s = self.main().tr("Warning")
 				else:
-					s = self.main.tr("Info")
+					s = self.main().tr("Info")
 				self.dialog.ui.label_2.show()
 				self.dialog.ui.label_2.setText("<b>%s</b>: " % s +unicode(element))
 				self.dialog.ui.close.show()
@@ -296,16 +303,16 @@ class Commands:
 
 
 	def submit(self,action):
-		iq=IQ(self.main.client.xmlstream, "set")
-		iq["xml:lang"] = self.main.client.xmlLang
+		iq=IQ(self.main().client.xmlstream, "set")
+		iq["xml:lang"] = self.main().client.xmlLang
 		iq["to"] = self.jid
 		command=iq.addElement("command")
 		command.attributes = {"node":self.node, "xmlns": "http://jabber.org/protocol/commands", "sessionid":self.sessionid,"action":action}
 		if action != "cancel":
-			form = dataforms.sendDataForm(self.main, self.jid, self.form, self.var, None)
+			form = dataforms.sendDataForm(self.main(), self.jid, self.form, self.var, None)
 			command.addChild(form)
 		else:
 			self.dialog.reject()
 		d=iq.send()
 		d.addCallback(self._formRecieved).addErrback(self._errorRecieved)
-		self.main.client.disp(iq["id"])
+		self.main().client.disp(iq["id"])
