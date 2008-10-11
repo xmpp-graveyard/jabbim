@@ -428,6 +428,42 @@ class derived:
 		log.msg("END: getVCard")
 		return d
 	
+	def getTransportForm(self, jid):
+		iq = IQ(self.xmlstream, 'get')
+		iq['to'] = jid
+		iq.addElement('query', 'jabber:iq:gateway')
+		self.disp(iq['id'])
+		#iq.timeout = 60
+		log.msg("Gateway interaction IQ")
+		d = iq.send()
+		d.addCallback(self._gotTransportForm)
+		return d
+	
+	def _gotTransportForm(self, el):
+		q= el.firstChildElement()
+		r = {'prompt':'', 'desc':''}
+		for i in q.elements():
+			if i.name == 'prompt':
+				r['prompt'] = unicode(i)
+			elif i.name =='desc':
+				r['desc'] = unicode(i)
+		return r
+	
+	def getTransportJid(self, jid, prompt):
+		iq = IQ(self.xmlstream, 'set')
+		iq['to'] = jid
+		q = iq.addElement('query', 'jabber:iq:gateway')
+		q.addElement('prompt', content = prompt)
+		self.disp(iq['id'])
+		#iq.timeout = 60
+		log.msg("Gateway interaction IQ")
+		d = iq.send()
+		d.addCallback(self._gotTransportJid)
+		return d
+	
+	def _gotTransportJid(self, el):
+		return unicode(el.firstChildElement().firstChildElement())
+	
 	def getLast(self, jid):
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid
