@@ -433,7 +433,7 @@ class derived:
 		iq['to'] = jid
 		iq.addElement('query', 'jabber:iq:gateway')
 		self.disp(iq['id'])
-		#iq.timeout = 60
+		iq.timeout = 2
 		log.msg("Gateway interaction IQ")
 		d = iq.send()
 		d.addCallback(self._gotTransportForm)
