@@ -52,7 +52,7 @@ class addContactDialog(QtGui.QDialog):
 
 	def textChanged(self,text):
 		t=unicode(text)
-		if self.main().getJid(t):
+		if self.main().getJid(t) and t.find("@")!=-1:
 			self.ui.add.show()
 		else:
 			self.ui.add.hide()
