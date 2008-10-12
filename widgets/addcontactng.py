@@ -60,7 +60,8 @@ class addContactDialog(QtGui.QDialog):
 														self.ui.service.addItem(self.main().getIcon(size="16x16",usertype=typ),values['name'],QtCore.QVariant(unicode(key)))
 			elif self.main().client.disco[key][None].has_key("err"):
 				print key,"error"
-
+		self.ui.service.insertItem(0,self.main().getIcon(size="16x16",usertype="jabber"),"Jabber",QtCore.QVariant(unicode(self.main().client.jid.host)))
+		self.ui.service.setCurrentIndex(0)
 
 
 ##		self.tabBar=tabBar(self.ui._tabBar)
@@ -85,6 +86,7 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.treeWidget.startDrag=self.startDrag
 		self.ui.empty.hide()
 		self.ui.add.hide()
+		self.gateway=False
 
 #def getTransportForm(self, jid): 
 #def getTransportJid(self, jid, prompt):
@@ -96,10 +98,30 @@ class addContactDialog(QtGui.QDialog):
 		return False
 
 	def serviceChanged(self,index):
+		if index==0:
+			return
 		jid=unicode(self.ui.service.itemData(index).toString())
+		print list(self.main().client.disco[jid][None]['features'])
 		if not self.isServiceRegistered(jid):
 			d=self.main().client.getRegisterForm(jid)
 			d.addCallback(self._onRegister)
+		else:
+			#if "jabber:iq:gateway" in list(self.main().client.disco[jid][None]['features']):
+			d=self.main().client.getTransportForm(jid)
+			d.addCallback(self._transportForm)
+			d.addErrback(self._transportFormError)
+
+	def _transportForm(self,data):
+		print data
+		self.ui.searchLabel.setText(unicode(data['prompt']))
+		self.ui.search.hide()
+		self.ui.add.show()
+		self.gateway=True
+	
+	def _transportFormError(self,data=None):
+		self.ui.searchLabel.setText(self.tr("User:"))
+		self.ui.search.show()
+		self.gateway=False
 
 	def _onRegister(self,data):
 		if not data:
@@ -112,18 +134,30 @@ class addContactDialog(QtGui.QDialog):
 			self.dialog=legacyforms.legacyFormsDialog(self.main(),legacy,jid,"disco",self)
 			self.dialog.show()
 
-	def add(self):
-		jid=unicode(self.ui.lineEdit.text())
-   		dialog=addcontact.addContactDialog(self.main(),self,jid=jid,group="",name=jid.split('@')[0])
+	def add(self,data=None):
+		if self.gateway:
+			if data:
+				jid=unicode(data)
+			else:
+				d=self.main().client.getTransportJid(unicode(self.ui.service.itemData(self.ui.service.currentIndex()).toString()),unicode(self.ui.lineEdit.text()))
+				d.addCallback(self._add)
+				return
+		else:
+			jid=unicode(self.ui.lineEdit.text())
+		dialog=addcontact.addContactDialog(self.main(),self,jid=jid,group="",name=jid.split('@')[0])
 		if dialog.exec_()==1:
 			self.done(1)
 
+	def _add(self,data=None):
+		self.main().reactor.callLater(0,self.add,data)
+
 	def textChanged(self,text):
-		t=unicode(text)
-		if self.main().getJid(t) and t.find("@")!=-1:
-			self.ui.add.show()
-		else:
-			self.ui.add.hide()
+		if self.ui.service.currentIndex()==0:
+			t=unicode(text)
+			if self.main().getJid(t) and t.find("@")!=-1:
+				self.ui.add.show()
+			else:
+				self.ui.add.hide()
 
 	def startDrag(self,actions):
 		# start dragging selected contact

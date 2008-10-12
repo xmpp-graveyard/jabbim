@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/addcontactng.ui'
 #
-# Created: Sat Oct 11 07:35:16 2008
+# Created: Sun Oct 12 11:30:29 2008
 #      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
 #
 # WARNING! All changes made in this file will be lost!
@@ -28,6 +28,9 @@ class Ui_addContact(object):
         self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(6)
         self.hboxlayout.setObjectName("hboxlayout")
+        self.searchLabel = QtGui.QLabel(addContact)
+        self.searchLabel.setObjectName("searchLabel")
+        self.hboxlayout.addWidget(self.searchLabel)
         self.lineEdit = QtGui.QLineEdit(addContact)
         self.lineEdit.setObjectName("lineEdit")
         self.hboxlayout.addWidget(self.lineEdit)
@@ -88,6 +91,7 @@ class Ui_addContact(object):
     def retranslateUi(self, addContact):
         addContact.setWindowTitle(QtGui.QApplication.translate("addContact", "Find user", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("addContact", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
+        self.searchLabel.setText(QtGui.QApplication.translate("addContact", "User:", None, QtGui.QApplication.UnicodeUTF8))
         self.search.setText(QtGui.QApplication.translate("addContact", "Search", None, QtGui.QApplication.UnicodeUTF8))
         self.add.setText(QtGui.QApplication.translate("addContact", "Add", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("addContact", "Service:", None, QtGui.QApplication.UnicodeUTF8))
