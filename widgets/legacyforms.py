@@ -21,14 +21,19 @@ try:
 except:
 	print "PyQt4 is not installed."
 import pyxl
-
+import weakref
 from twisted.python import log
 
 class legacyFormsDialog(QtGui.QDialog):
 	def __init__(self,main,form,jid,typ,parent=None):
+		if isinstance(main,weakref.ref):
+			parent=parent()
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.setModal(True)
-		self.main=main
+		if isinstance(main,weakref.ref):
+			self.main	= main
+		else:
+			self.main	= weakref.ref(main)
 		self.typ=typ
 		self.jid=jid
 		self.form=form
@@ -89,7 +94,7 @@ class legacyFormsDialog(QtGui.QDialog):
 		layout.addWidget(self.cancel,row+1,1)
 
 	def unregisterClicked(self):
-		self.main.client.setRegisterForm(self.jid,remove=True)
+		self.main().client.setRegisterForm(self.jid,remove=True)
 
 		self.reject()
 	def accept(self):
@@ -100,7 +105,7 @@ class legacyFormsDialog(QtGui.QDialog):
 					form[key]=widget
 				else:
 					form[key]=unicode(widget.text())
-			self.main.client.setRegisterForm(self.jid,legacy=form)
+			self.main().client.setRegisterForm(self.jid,legacy=form)
 			#print form
 		self.done(1)
 

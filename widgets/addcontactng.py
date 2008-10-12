@@ -10,6 +10,7 @@ import pyxl
 import weakref
 import vcardeditor
 import addcontact
+import dataforms,legacyforms
 
 class tabBar(QtGui.QTabBar):
 	def __init__(self,parent=None):
@@ -78,6 +79,8 @@ class addContactDialog(QtGui.QDialog):
 		QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 		QtCore.QObject.connect(self.ui.lineEdit,QtCore.SIGNAL("textEdited ( const QString & )"),self.textChanged)
 
+		QtCore.QObject.connect(self.ui.service,QtCore.SIGNAL("currentIndexChanged ( int )"),self.serviceChanged)
+
 		self.ui.treeWidget.setDragEnabled(True)
 		self.ui.treeWidget.startDrag=self.startDrag
 		self.ui.empty.hide()
@@ -85,6 +88,29 @@ class addContactDialog(QtGui.QDialog):
 
 #def getTransportForm(self, jid): 
 #def getTransportJid(self, jid, prompt):
+	
+	def isServiceRegistered(self,key):
+		for jd in self.main().client.roster['users'].keys():
+			if jd.find(key)!=-1:
+				return True
+		return False
+
+	def serviceChanged(self,index):
+		jid=unicode(self.ui.service.itemData(index).toString())
+		if not self.isServiceRegistered(jid):
+			d=self.main().client.getRegisterForm(jid)
+			d.addCallback(self._onRegister)
+
+	def _onRegister(self,data):
+		if not data:
+			return
+		jid,legacy,form=data
+		if form!=None:
+			self.dialog=dataforms.dataFormsDialog(self.main(),form,jid,"register",self)
+			self.dialog.show()
+		else:
+			self.dialog=legacyforms.legacyFormsDialog(self.main(),legacy,jid,"disco",self)
+			self.dialog.show()
 
 	def add(self):
 		jid=unicode(self.ui.lineEdit.text())
