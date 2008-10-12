@@ -31,6 +31,7 @@ class addContactDialog(QtGui.QDialog):
 			self.jabbimUser=False
 			# TODO - get user search jid from disco
 			self.jid=""
+		self.ui.description.hide()
 		self.ui.service.insertSeparator(0)
 		srv = unicode(self.main().client.jid.host)
 		if srv in self.main().client.disco.keys():
@@ -106,6 +107,7 @@ class addContactDialog(QtGui.QDialog):
 			self.ui.add.hide()
 			self.ui.search.show()
 			self.ui.searchLabel.setText(self.tr("User:"))
+			self.ui.description.hide()
 			return
 		jid=unicode(self.ui.service.itemData(index).toString())
 		print list(self.main().client.disco[jid][None]['features'])
@@ -133,16 +135,18 @@ class addContactDialog(QtGui.QDialog):
 				d.addErrback(self._transportFormError)
 
 	def _transportForm(self,data):
-		print data
+		self.ui.description.setText(unicode(data['desc']))
 		self.ui.searchLabel.setText(unicode(data['prompt']))
 		self.ui.search.hide()
 		self.ui.add.show()
+		self.ui.description.show()
 		self.gateway=True
 	
 	def _transportFormError(self,data=None):
 		self.ui.searchLabel.setText(self.tr("User:"))
 		self.ui.search.show()
 		self.gateway=False
+		self.ui.description.hide()
 
 	def _onRegister(self,data):
 		if not data:
