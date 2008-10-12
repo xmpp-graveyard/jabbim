@@ -22,7 +22,46 @@ class addContactDialog(QtGui.QDialog):
 		self.ui=Ui_addContact()
 		self.ui.setupUi(self)
 		self.main=weakref.ref(main)
-		self.jid="test1.pyco.cz"
+		if self.main().client.jid.host in ['jabbim.cz','jabber.cz','njs.netlab.cz','jabbim.com','jabbim.pl']:
+			self.jid="test1.pyco.cz"
+		else:
+			# TODO - get user search jid from disco
+			self.jid=""
+		self.ui.service.insertSeparator(0)
+		srv = unicode(self.main().client.jid.host)
+		if srv in self.main().client.disco.keys():
+			print self.main().client.disco[srv]
+			if self.main().client.disco[srv][None].has_key("identities"):
+				if self.main().client.disco[srv][None].has_key("items"):
+					for item,d in self.main().client.disco[srv][None]['items'].iteritems():
+						key=d['jid']
+						if key in self.main().client.disco.keys():
+							if self.main().client.disco[key][None].has_key("identities"):
+								for identity,values in self.main().client.disco[key][None]["identities"].iteritems():
+									if values.has_key('category'):
+										if values.has_key('name'):
+											#[u'conference', u'service', u'headline', u'component', u'server', u'services', u'proxy', u'directory', u'gateway', u'store', u'pubsub']
+											if values['category'] in ['service','headline','services','store','directory','component','gateway']:
+												if values.has_key("type"):
+													typ=values['type']
+													if typ=="pep" or typ=="im":
+														typ="jabber"
+													elif typ=="file":
+														typ="disk"
+													registered=False
+													for jd in self.main().client.roster['users'].keys():
+														if jd.find(key)!=-1:
+															registered=True
+															break
+													if registered:
+														self.ui.service.insertItem(0,self.main().getIcon(size="16x16",usertype=typ),values['name'],QtCore.QVariant(unicode(key)))
+													else:
+														self.ui.service.addItem(self.main().getIcon(size="16x16",usertype=typ),values['name'],QtCore.QVariant(unicode(key)))
+			elif self.main().client.disco[key][None].has_key("err"):
+				print key,"error"
+
+
+
 ##		self.tabBar=tabBar(self.ui._tabBar)
 ##		self.tabBar.addTab(self.tr("Jabber ID"))
 ##		self.tabBar.addTab(self.tr("Name"))
@@ -43,6 +82,9 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.treeWidget.startDrag=self.startDrag
 		self.ui.empty.hide()
 		self.ui.add.hide()
+
+#def getTransportForm(self, jid): 
+#def getTransportJid(self, jid, prompt):
 
 	def add(self):
 		jid=unicode(self.ui.lineEdit.text())

@@ -4476,7 +4476,7 @@ class mainWindow(QtGui.QMainWindow):
 			for mood in self.moodIcons.keys():
 				path=unicode(src+self.moodIcons[mood])
 				self.moodIcons[mood]=QtGui.QIcon(path)
-				self.moodIcons[mood].src=os.getcwd()+"/"+unicode(path)
+				self.moodIcons[mood].src=unicode(os.getcwd())+"/"+unicode(path)
 			self.moodIcons["none"]=QtGui.QIcon(self.moodIcons[mood].pixmap(16,16,QtGui.QIcon.Disabled))
 
 	def loadSounds(self):
