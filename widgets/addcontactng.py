@@ -11,6 +11,7 @@ import weakref
 import vcardeditor
 import addcontact
 import dataforms,legacyforms
+import wizards
 
 class tabBar(QtGui.QTabBar):
 	def __init__(self,parent=None):
@@ -24,8 +25,10 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.setupUi(self)
 		self.main=weakref.ref(main)
 		if self.main().client.jid.host in ['jabbim.cz','jabber.cz','njs.netlab.cz','jabbim.com','jabbim.pl']:
+			self.jabbimUser=True
 			self.jid="test1.pyco.cz"
 		else:
+			self.jabbimUser=False
 			# TODO - get user search jid from disco
 			self.jid=""
 		self.ui.service.insertSeparator(0)
@@ -103,13 +106,27 @@ class addContactDialog(QtGui.QDialog):
 		jid=unicode(self.ui.service.itemData(index).toString())
 		print list(self.main().client.disco[jid][None]['features'])
 		if not self.isServiceRegistered(jid):
-			d=self.main().client.getRegisterForm(jid)
-			d.addCallback(self._onRegister)
+			if jid=="icq.jabber.cz":
+				self.discovery2=wizards.jabbimservicemanager.jabbimServiceManager(self.main(),self.main())
+				self.discovery2.registerICQ()
+				self.discovery2.show()
+			elif jid=="dict.jabbim.cz":
+				self.discovery2=wizards.jabbimservicemanager.jabbimServiceManager(self.main(),self.main())
+				self.discovery2.registerDict()
+				self.discovery2.show()
+			else:
+				d=self.main().client.getRegisterForm(jid)
+				d.addCallback(self._onRegister)
 		else:
 			#if "jabber:iq:gateway" in list(self.main().client.disco[jid][None]['features']):
-			d=self.main().client.getTransportForm(jid)
-			d.addCallback(self._transportForm)
-			d.addErrback(self._transportFormError)
+			if jid=="dict.jabbim.cz":
+				self.discovery2=wizards.jabbimservicemanager.jabbimServiceManager(self.main(),self.main())
+				self.discovery2.registerDict()
+				self.discovery2.show()
+			else:
+				d=self.main().client.getTransportForm(jid)
+				d.addCallback(self._transportForm)
+				d.addErrback(self._transportFormError)
 
 	def _transportForm(self,data):
 		print data
