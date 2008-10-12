@@ -102,6 +102,10 @@ class addContactDialog(QtGui.QDialog):
 
 	def serviceChanged(self,index):
 		if index==0:
+			self.gateway=False
+			self.ui.add.hide()
+			self.ui.search.show()
+			self.ui.searchLabel.setText(self.tr("User:"))
 			return
 		jid=unicode(self.ui.service.itemData(index).toString())
 		print list(self.main().client.disco[jid][None]['features'])
