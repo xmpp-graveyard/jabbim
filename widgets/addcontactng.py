@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*- 
+
 import os
 try:
 	from PyQt4 import QtCore, QtGui
@@ -110,6 +112,7 @@ class addContactDialog(QtGui.QDialog):
 			self.ui.description.hide()
 			return
 		jid=unicode(self.ui.service.itemData(index).toString())
+		print jid
 		print list(self.main().client.disco[jid][None]['features'])
 		if not self.isServiceRegistered(jid):
 			if jid=="icq.jabber.cz":
@@ -120,6 +123,8 @@ class addContactDialog(QtGui.QDialog):
 				self.discovery2=wizards.jabbimservicemanager.jabbimServiceManager(self.main(),self.main())
 				self.discovery2.registerDict()
 				self.discovery2.show()
+			elif jid=="weather.netlab.cz":
+				self.showWeather()
 			else:
 				d=self.main().client.getRegisterForm(jid)
 				d.addCallback(self._onRegister)
@@ -129,6 +134,8 @@ class addContactDialog(QtGui.QDialog):
 				self.discovery2=wizards.jabbimservicemanager.jabbimServiceManager(self.main(),self.main())
 				self.discovery2.registerDict()
 				self.discovery2.show()
+			elif jid=="weather.netlab.cz":
+				self.showWeather()
 			else:
 				d=self.main().client.getTransportForm(jid)
 				d.addCallback(self._transportForm)
@@ -148,6 +155,46 @@ class addContactDialog(QtGui.QDialog):
 		self.gateway=False
 		self.ui.description.hide()
 
+	def showWeather(self):
+		l=unicode(QtCore.QLocale.system().name())[:2]
+		if l=="cs":
+			jids={'beroun@weather.netlab.cz':"Opava",
+			'brno@weather.netlab.cz':u'Brno',
+			'cesky_tesin@weather.netlab.cz':u'Český Těšín',
+			'frydek@weather.netlab.cz':u'Frýdek Místek',
+			'karvina@weather.netlab.cz':u'Karviná',
+			'kladno@weather.netlab.cz':u'Kladno',
+			'kolin@weather.netlab.cz':u'Kolín',
+			'opava@weather.netlab.cz':u'Opava',
+			'ostrava@weather.netlab.cz':u'Ostrava',
+			'pilsen@weather.netlab.cz':u'Plzeň',
+			'pisek@weather.netlab.cz':u'Písek',
+			'prague@weather.netlab.cz':u'Praha',
+			'rosice@weather.netlab.cz':u'Rošice',
+			'slavkov_u_brna@weather.netlab.cz':u'Slavkov u Brna',
+			'tabor@weather.netlab.cz':u'Tábor',
+			'usti_nad_labem@weather.netlab.cz':u'Ústí nad Labem',
+			'cheb@weather.netlab.cz':u'Cheb',
+			'primda@weather.netlab.cz':u'Přimda',
+			'churanov@weather.netlab.cz':u'Churáňov',
+			'milesovka@weather.netlab.cz':u'Milešovka',
+			'kocelovice@weather.netlab.cz':u'Kocelovice',
+			'praha@weather.netlab.cz':u'Praha',
+			'liberec@weather.netlab.cz':u'Liberec',
+			'kostelni_myslova@weather.netlab.cz':u'Kostelní Myslová',
+			'pribyslav@weather.netlab.cz':u'Přibyslav',
+			'usti_nad_orlici@weather.netlab.cz':u'Ústí nad Labem',
+			'cervena@weather.netlab.cz':u'Červená',
+			'holesov@weather.netlab.cz':u'Holešov',
+			'lysa_hora@weather.netlab.cz':u'Lysá Hora',
+			'ceskebudejovice@weather.netlab.cz':u'České Budějovice'}
+			self.ui.treeWidget.clear()
+			self.ui.treeWidget.headerItem().setText(0,self.tr("Locality"))
+			for jid,name in jids.iteritems():
+				item=QtGui.QTreeWidgetItem(self.ui.treeWidget)
+				item.setText(0,unicode(name))
+				item.jid=unicode(jid)
+			self.ui.treeWidget.show()
 	def _onRegister(self,data):
 		if not data:
 			return
@@ -187,7 +234,7 @@ class addContactDialog(QtGui.QDialog):
 	def startDrag(self,actions):
 		# start dragging selected contact
 		item=self.ui.treeWidget.currentItem()
-		jid=unicode(item.text(self.ui.treeWidget.jidIndex))
+		jid=unicode(item.jid)
 		self.ui.treeWidget.drag=QtGui.QDrag(self.ui.treeWidget)
 		mimeData=QtCore.QMimeData()
 		mimeData.setText(jid)
@@ -272,8 +319,9 @@ class addContactDialog(QtGui.QDialog):
 							fields[field['var']]['empty'] = False;
 						if field['var']=='jid':
 							register.jid=unicode(text)
-							if not self.ui.treeWidget.jidIndex:
-								self.ui.treeWidget.jidIndex=fields[field['var']]['index']
+							item.jid=unicode(text)
+							#if not self.ui.treeWidget.jidIndex:
+							#	self.ui.treeWidget.jidIndex=fields[field['var']]['index']
 		# set all columns' visibility before resizing any of them
 		for f in fields.itervalues():
 			self.ui.treeWidget.setColumnHidden(f['index'], f['empty'])
@@ -296,7 +344,7 @@ class addContactDialog(QtGui.QDialog):
 	def accept(self):
 		item=self.ui.treeWidget.currentItem()
 		if item:
-			jid=unicode(item.text(self.ui.treeWidget.jidIndex))
+			jid=item.jid
    			dialog=addcontact.addContactDialog(self.main(),self,jid=jid,group="",name=jid.split('@')[0])
 			if dialog.exec_()==1:
 				self.done(1)
