@@ -33,6 +33,7 @@ class addContactDialog(QtGui.QDialog):
 			self.jabbimUser=False
 			# TODO - get user search jid from disco
 			self.jid=""
+		self.addFunction=None
 		self.ui.description.hide()
 		self.ui.service.insertSeparator(0)
 		srv = unicode(self.main().client.jid.host)
@@ -117,30 +118,105 @@ class addContactDialog(QtGui.QDialog):
 		print list(self.main().client.disco[jid][None]['features'])
 		if not self.isServiceRegistered(jid):
 			if jid=="icq.jabber.cz":
+				self.addFunction=None
 				self.discovery2=wizards.jabbimservicemanager.jabbimServiceManager(self.main(),self.main())
 				self.discovery2.registerICQ()
 				self.discovery2.show()
-			elif jid=="dict.jabbim.cz":
-				self.discovery2=wizards.jabbimservicemanager.jabbimServiceManager(self.main(),self.main())
-				self.discovery2.registerDict()
-				self.discovery2.show()
 			elif jid=="weather.netlab.cz":
 				self.showWeather()
+				self.addFunction=None
+			elif jid=="dict.jabbim.cz":
+				self.showDict()
+				self.addFunction=self._addDict
 			else:
+				self.addFunction=None
 				d=self.main().client.getRegisterForm(jid)
 				d.addCallback(self._onRegister)
 		else:
 			#if "jabber:iq:gateway" in list(self.main().client.disco[jid][None]['features']):
-			if jid=="dict.jabbim.cz":
-				self.discovery2=wizards.jabbimservicemanager.jabbimServiceManager(self.main(),self.main())
-				self.discovery2.registerDict()
-				self.discovery2.show()
-			elif jid=="weather.netlab.cz":
+			if jid=="weather.netlab.cz":
 				self.showWeather()
+				self.addFunction=None
+			elif jid=="dict.jabbim.cz":
+				self.showDict()
+				self.addFunction=self._addDict
 			else:
+				self.addFunction=None
 				d=self.main().client.getTransportForm(jid)
 				d.addCallback(self._transportForm)
 				d.addErrback(self._transportFormError)
+
+	def showDict(self):
+		d={}
+		d['cze2eng@dict.jabbim.cz']= self.tr("Czech to English")
+		d['cze2fre@dict.jabbim.cz']= self.tr("Czech to French")
+		d['cze2ger@dict.jabbim.cz']= self.tr("Czech to German")
+		d['cze2ita@dict.jabbim.cz']= self.tr("Czech to Italian")
+		d['cze2lat@dict.jabbim.cz']= self.tr("Czech to Latin")
+		d['cze2rus@dict.jabbim.cz']= self.tr("Czech to Russian")
+		d['cze2spa@dict.jabbim.cz']= self.tr("Czech to Spanish")
+		d['eng2cze@dict.jabbim.cz']= self.tr("English to Czech")
+		d['eng2epo@dict.jabbim.cz']= self.tr("English to Esperanto")
+		d['eng2fre@dict.jabbim.cz']= self.tr("English to French")
+		d['eng2ger@dict.jabbim.cz']= self.tr("English to German")
+		d['eng2ita@dict.jabbim.cz']= self.tr("English to Italian")
+		d['eng2lat@dict.jabbim.cz']= self.tr("English to Latin")
+		d['eng2por@dict.jabbim.cz']= self.tr("English to Portugese")
+		d['eng2spa@dict.jabbim.cz']= self.tr("English to Spanish")
+		d['epo2eng@dict.jabbim.cz']= self.tr("Esperanto to English")
+		d['fre2cze@dict.jabbim.cz']= self.tr("French to Czech")
+		d['fre2eng@dict.jabbim.cz']= self.tr("French to English")
+		d['fre2ger@dict.jabbim.cz']= self.tr("French to German")
+		d['fre2ita@dict.jabbim.cz']= self.tr("French to Italian")
+		d['fre2spa@dict.jabbim.cz']= self.tr("French to Spanish")
+		d['ger2cze@dict.jabbim.cz']= self.tr("German to Czech")
+		d['ger2eng@dict.jabbim.cz']= self.tr("German to English")
+		d['ger2fre@dict.jabbim.cz']= self.tr("German to French")
+		d['ger2spa@dict.jabbim.cz']= self.tr("German to Spanish")
+		d['ita2cze@dict.jabbim.cz']= self.tr("Italian to Czech")
+		d['ita2eng@dict.jabbim.cz']= self.tr("Italian to English")
+		d['ita2fre@dict.jabbim.cz']= self.tr("Italian to French")
+		d['lat2cze@dict.jabbim.cz']= self.tr("Latin to Czech")
+		d['lat2eng@dict.jabbim.cz']= self.tr("Latin to English")
+		d['por2eng@dict.jabbim.cz']= self.tr("Portugese to English")
+		d['por2spa@dict.jabbim.cz']= self.tr("Portugese to Spanish")
+		d['rus2cze@dict.jabbim.cz']= self.tr("Russian to Czech")
+		d['spa2cze@dict.jabbim.cz']= self.tr("Spanish to Czech")
+		d['spa2eng@dict.jabbim.cz']= self.tr("Spanish to English")
+		d['spa2fre@dict.jabbim.cz']= self.tr("Spanish to French")
+		d['spa2ger@dict.jabbim.cz']= self.tr("Spanish to German")
+		d['spa2por@dict.jabbim.cz']= self.tr("Spanish to Portugese")
+		d['ciz2cze@dict.jabbim.cz']= self.tr("Foreign words to Czech")
+
+		self.ui.treeWidget.clear()
+		for jid,name in d.iteritems():
+			item=QtGui.QTreeWidgetItem(self.ui.treeWidget)
+			if not name:
+				item.setText(0,jid)
+			else:
+				item.setText(0,name)
+			item.jid=jid
+			registered=self.main().client.roster['users'].has_key(jid)
+			if registered:
+				item.registered=QtCore.Qt.Checked
+				item.setCheckState(0,QtCore.Qt.Checked)
+			else:
+				item.setCheckState(0,QtCore.Qt.Unchecked)
+				item.registered=QtCore.Qt.Unchecked
+		self.ui.treeWidget.sortItems(0,QtCore.Qt.AscendingOrder)
+		self.ui.treeWidget.show()
+		self.ui.addToRoster.show()
+
+	def _addDict(self):
+		for i in range(0,int(self.ui.treeWidget.topLevelItemCount())):
+			item=self.ui.treeWidget.topLevelItem(i)
+			if item.checkState(0)!=item.registered:
+				item.registered=not item.registered
+				if item.checkState(0)==QtCore.Qt.Checked:
+					self.main().autoAdd[unicode(item.jid)]={}
+					self.main().client.addContact(unicode(item.jid),"",unicode(item.text(0)),[unicode(self.tr("Dictionaries"))])
+				else:
+					self.main().client.delContact(unicode(item.jid))
 
 	def _transportForm(self,data):
 		self.ui.description.setText(unicode(data['desc']))
@@ -197,6 +273,7 @@ class addContactDialog(QtGui.QDialog):
 				item.jid=unicode(jid)
 			self.ui.treeWidget.show()
 			self.ui.addToRoster.show()
+
 	def _onRegister(self,data):
 		if not data:
 			return
@@ -218,9 +295,12 @@ class addContactDialog(QtGui.QDialog):
 				return
 		else:
 			jid=unicode(self.ui.lineEdit.text())
-		dialog=addcontact.addContactDialog(self.main(),self,jid=jid,group="",name=jid.split('@')[0])
-		if dialog.exec_()==1:
-			self.done(1)
+		if not self.addFunction:
+			dialog=addcontact.addContactDialog(self.main(),self,jid=jid,group="",name=jid.split('@')[0])
+			if dialog.exec_()==1:
+				self.done(1)
+		else:
+			self.addFunction()
 
 	def _add(self,data=None):
 		self.main().reactor.callLater(0,self.add,data)
@@ -348,6 +428,9 @@ class addContactDialog(QtGui.QDialog):
 		item=self.ui.treeWidget.currentItem()
 		if item:
 			jid=item.jid
-   			dialog=addcontact.addContactDialog(self.main(),self,jid=jid,group="",name=jid.split('@')[0])
+		if not self.addFunction:
+			dialog=addcontact.addContactDialog(self.main(),self,jid=jid,group="",name=jid.split('@')[0])
 			if dialog.exec_()==1:
 				self.done(1)
+		else:
+			self.addFunction()

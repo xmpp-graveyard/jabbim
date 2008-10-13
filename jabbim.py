@@ -1295,6 +1295,7 @@ class clientClass(pyxl.client.Client):
 		for i in self.main.ui.roster.getUserItems(jid):
 			#if self.main.ui.roster.item==i:
 				#self.main.ui.roster.statusLabel.hide()
+			print "removing",i,i.jid
 			self.main.ui.roster.users.remove(i)
 		# update roster
 		self.main.ui.roster.sortItems()
