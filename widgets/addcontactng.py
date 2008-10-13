@@ -80,6 +80,7 @@ class addContactDialog(QtGui.QDialog):
 		d=self.main().client.getSearchForm(self.jid)
 		d.addCallback(self._gotSearchForm)
 		self.ui.treeWidget.hide()
+		self.ui.addToRoster.hide()
 		QtCore.QObject.connect(self.ui.search,QtCore.SIGNAL("clicked()"),self.search)
 		QtCore.QObject.connect(self.ui.add,QtCore.SIGNAL("clicked()"),self.add)
 		self.group=QtGui.QButtonGroup(self)
@@ -195,6 +196,7 @@ class addContactDialog(QtGui.QDialog):
 				item.setText(0,unicode(name))
 				item.jid=unicode(jid)
 			self.ui.treeWidget.show()
+			self.ui.addToRoster.show()
 	def _onRegister(self,data):
 		if not data:
 			return
@@ -331,6 +333,7 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.treeWidget.setColumnWidth (0,18)
 		self.ui.treeWidget.header().show()
 		self.ui.treeWidget.show()
+		self.ui.addToRoster.show()
 
 
 	def _gotSearchForm(self,data):

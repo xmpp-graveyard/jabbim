@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/addcontactng.ui'
 #
-# Created: Sun Oct 12 13:28:53 2008
+# Created: Mon Oct 13 16:09:56 2008
 #      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
 #
 # WARNING! All changes made in this file will be lost!
@@ -58,10 +58,10 @@ class Ui_addContact(object):
         self.gridlayout.addWidget(self.label, 0, 0, 1, 3)
         spacerItem = QtGui.QSpacerItem(218, 21, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.gridlayout.addItem(spacerItem, 8, 0, 1, 1)
-        self.pushButton_2 = QtGui.QPushButton(addContact)
-        self.pushButton_2.setAutoDefault(False)
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.gridlayout.addWidget(self.pushButton_2, 8, 1, 1, 1)
+        self.addToRoster = QtGui.QPushButton(addContact)
+        self.addToRoster.setAutoDefault(False)
+        self.addToRoster.setObjectName("addToRoster")
+        self.gridlayout.addWidget(self.addToRoster, 8, 1, 1, 1)
         self.pushButton = QtGui.QPushButton(addContact)
         self.pushButton.setAutoDefault(False)
         self.pushButton.setObjectName("pushButton")
@@ -88,7 +88,7 @@ class Ui_addContact(object):
 
         self.retranslateUi(addContact)
         QtCore.QObject.connect(self.lineEdit, QtCore.SIGNAL("returnPressed()"), self.search.click)
-        QtCore.QObject.connect(self.pushButton_2, QtCore.SIGNAL("clicked()"), addContact.accept)
+        QtCore.QObject.connect(self.addToRoster, QtCore.SIGNAL("clicked()"), addContact.accept)
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("clicked()"), addContact.reject)
         QtCore.QMetaObject.connectSlotsByName(addContact)
 
@@ -101,7 +101,7 @@ class Ui_addContact(object):
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><h2>Find user</h2></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_2.setText(QtGui.QApplication.translate("addContact", "Add to roster", None, QtGui.QApplication.UnicodeUTF8))
+        self.addToRoster.setText(QtGui.QApplication.translate("addContact", "Add to roster", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("addContact", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.searchLabel.setText(QtGui.QApplication.translate("addContact", "User:", None, QtGui.QApplication.UnicodeUTF8))
         self.search.setText(QtGui.QApplication.translate("addContact", "Search", None, QtGui.QApplication.UnicodeUTF8))
