@@ -132,6 +132,7 @@ class addContactDialog(QtGui.QDialog):
 				self.addFunction=None
 				d=self.main().client.getRegisterForm(jid)
 				d.addCallback(self._onRegister)
+				self.ui.treeWidget.hide()
 		else:
 			#if "jabber:iq:gateway" in list(self.main().client.disco[jid][None]['features']):
 			if jid=="weather.netlab.cz":
@@ -145,6 +146,7 @@ class addContactDialog(QtGui.QDialog):
 				d=self.main().client.getTransportForm(jid)
 				d.addCallback(self._transportForm)
 				d.addErrback(self._transportFormError)
+				self.ui.treeWidget.hide()
 
 	def showDict(self):
 		d={}
