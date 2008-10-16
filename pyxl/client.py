@@ -364,10 +364,22 @@ class Client(derived):
 			print (unicode(r.payload.target), int(r.payload.port))
 		if results[1][0]:
 			txt =results[1][1]
+			bind = None
+			conn = None
 			for r in txt[0]:
 				parts= r.payload.data[0].split('=')
 				if parts[0] == '_xmpp-client-xbosh':
-					self.connections.append((parts[1], ))
+					bind = (parts[1], )
+				if parts[0] == '_xmpp-client-alternative-port':
+					host,port = parts[1].split(':')
+					
+					conn = (unicode(host), int(port))
+			
+			if conn != None:
+				self.connections.append(conn)
+			if bind != None:
+				self.connections.append(bind)
+			
 		print '_doConnect'
 		self.doConnect()
 #		self._connect(unicode(r[4][0]), int(r[4][1]))
