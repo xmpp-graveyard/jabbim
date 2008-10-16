@@ -124,7 +124,7 @@ class addContactDialog(QtGui.QDialog):
 				self.discovery2.show()
 			elif jid=="weather.netlab.cz":
 				self.showWeather()
-				self.addFunction=None
+				self.addFunction=self._addWeather
 			elif jid=="dict.jabbim.cz":
 				self.showDict()
 				self.addFunction=self._addDict
@@ -137,7 +137,7 @@ class addContactDialog(QtGui.QDialog):
 			#if "jabber:iq:gateway" in list(self.main().client.disco[jid][None]['features']):
 			if jid=="weather.netlab.cz":
 				self.showWeather()
-				self.addFunction=None
+				self.addFunction=self._addWeather
 			elif jid=="dict.jabbim.cz":
 				self.showDict()
 				self.addFunction=self._addDict
@@ -220,6 +220,17 @@ class addContactDialog(QtGui.QDialog):
 				else:
 					self.main().client.delContact(unicode(item.jid))
 
+	def _addWeather(self):
+		for i in range(0,int(self.ui.treeWidget.topLevelItemCount())):
+			item=self.ui.treeWidget.topLevelItem(i)
+			if item.checkState(0)!=item.registered:
+				item.registered=not item.registered
+				if item.checkState(0)==QtCore.Qt.Checked:
+					self.main().autoAdd[unicode(item.jid)]={}
+					self.main().client.addContact(unicode(item.jid),"",unicode(item.text(0)),[unicode(self.tr("Weather"))])
+				else:
+					self.main().client.delContact(unicode(item.jid))
+
 	def _transportForm(self,data):
 		self.ui.description.setText(unicode(data['desc']))
 		self.ui.searchLabel.setText(unicode(data['prompt']))
@@ -273,6 +284,14 @@ class addContactDialog(QtGui.QDialog):
 				item=QtGui.QTreeWidgetItem(self.ui.treeWidget)
 				item.setText(0,unicode(name))
 				item.jid=unicode(jid)
+				registered=self.main().client.roster['users'].has_key(jid)
+				if registered:
+					item.registered=QtCore.Qt.Checked
+					item.setCheckState(0,QtCore.Qt.Checked)
+				else:
+					item.setCheckState(0,QtCore.Qt.Unchecked)
+					item.registered=QtCore.Qt.Unchecked
+			self.ui.treeWidget.sortItems(0,QtCore.Qt.AscendingOrder)
 			self.ui.treeWidget.show()
 			self.ui.addToRoster.show()
 
