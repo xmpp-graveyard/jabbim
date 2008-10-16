@@ -32,8 +32,8 @@ class spellThread(QtCore.QThread):
 			mutex.unlock()
 			while word:
 				if not stopped:
-					
-					aspell.stdin.write(word+"\n")
+					#msg.decode("utf-8").encode("latin-1")
+					aspell.stdin.write(word.decode("utf-8").encode("latin-1")+"\n")
 					line=""
 					i=0
 					while not line:
