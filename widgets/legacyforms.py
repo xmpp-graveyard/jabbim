@@ -26,7 +26,7 @@ from twisted.python import log
 
 class legacyFormsDialog(QtGui.QDialog):
 	def __init__(self,main,form,jid,typ,parent=None):
-		if isinstance(main,weakref.ref):
+		if isinstance(parent,weakref.ref):
 			parent=parent()
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.setModal(True)
