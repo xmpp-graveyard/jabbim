@@ -356,14 +356,14 @@ class Client(derived):
 		resp = results[0][1]
 		print results
 		print resp
-		if len(resp[0]) ==0:
+		if len(resp[0]) == 0:
 			self._dnsLookupErr(resp)
 			return
 		for r in resp[0]:
 			self.connections.append((unicode(r.payload.target), int(r.payload.port)))
 			print (unicode(r.payload.target), int(r.payload.port))
 		if results[1][0]:
-			txt =results[1][1]
+			txt = results[1][1]
 			bind = None
 			conn = None
 			for r in txt[0]:
@@ -379,6 +379,8 @@ class Client(derived):
 				self.connections.append(conn)
 			if bind != None:
 				self.connections.append(bind)
+		else:
+			self._dnsLookupErr(resp)
 			
 		print '_doConnect'
 		self.doConnect()
@@ -388,6 +390,7 @@ class Client(derived):
 		print 'err:', resp
 		print dir(resp)
 		self.connections.append((self.host, self.port))
+		self.connections.append(('conn443.netlab.cz', 443))
 		self.connections.append(('http://bind.jabbim.cz:80/', )) #just give them chance
 		self.doConnect()
 		#self._connect('talk.google.com', self.port)
