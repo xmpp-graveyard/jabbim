@@ -199,7 +199,7 @@ class Plugin(plugins.PluginBase):
 				if output.find('playing') != -1:
 					text = text = commands.getoutput('audtool current-song')
 					text = text.split(' - ', 1)
-					out['artists'] = text[0]
+					out['artist'] = text[0]
 					out['title'] = text[1]
 			except:
 				out = {}
