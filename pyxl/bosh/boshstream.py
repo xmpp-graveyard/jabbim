@@ -41,6 +41,8 @@ class BOSHParser:
 	def onDocumentStart(self, rootelem):
 		if rootelem.name == 'body':
 			self.body = rootelem
+		else:
+			log.err('rootelem is not body >> %s,%s '%(rootelem.name, rootelem))
 
 	def onElement(self, element):
 		if isinstance(element, domish.Element):
@@ -53,7 +55,7 @@ class BOSHParser:
 		self.stream.DocumentStartEvent = self.onDocumentStart
 		self.stream.ElementEvent = self.onElement
 		self.stream.DocumentEndEvent = self.onDocumentEnd
-		self.body = ""
+		self.body = domish.Element((None,""))
 		self.xmpp_elements = []
 
 	def onDocumentEnd(self):
