@@ -814,19 +814,31 @@ class clientClass(pyxl.client.Client):
 		mainWindow = self.main
 		if len(items)==1:
 			item = items[0]
-			self.main.events.addBooleanEvent(self.rosterx,[frm, items, id],None,[],mainWindow.tr("Receive contact?"),frm+mainWindow.tr(" is sending you a contact  ") + item['jid'],height=100,name=frm,typ="",icon=None)
+			#self.main.events.addBooleanEvent(self.rosterx,[frm, items, id],None,[],mainWindow.tr("Receive contact?"),frm+mainWindow.tr(" is sending you a contact  ") + item['jid'],height=100,name=frm,typ="",icon=None)
+			event=self.main.events.addBooleanEvent("subscribe","authorizations")
+			event.setAcceptHandler(self.rosterx,[frm, items, id])
+			widget=event.getWidgets()[0]
+			widget.setText(frm+unicode(mainWindow.tr(" is sending you contact. Do you want to receive them?"))+unicode(item.jid))
+			widget.setAcceptText(mainWindow.tr("Yes"))
+			widget.setRejectText(mainWindow.tr("No"))
 		else:
 			names = ''
 			for item in items:
-				names += item['jid']+'\n'
+				names += " <br/> " + item['jid']
 			print names
-			self.main.events.addBooleanEvent(self.rosterx,[frm, items, id],None,[],mainWindow.tr("Receive contacts?"),frm+mainWindow.tr(" is sending you a contacts  ") + names,height=60*len(items),name=frm,typ="",icon=None)
+			#self.main.events.addBooleanEvent(self.rosterx,[frm, items, id],None,[],mainWindow.tr("Receive contacts?"),frm+mainWindow.tr(" is sending you a contacts  ") + names,height=60*len(items),name=frm,typ="",icon=None)
+			event=self.main.events.addBooleanEvent("subscribe","authorizations")
+			event.setAcceptHandler(self.rosterx,[frm, items, id])
+			widget=event.getWidgets()[0]
+			widget.setText(frm+unicode(mainWindow.tr(" is sending you contacts. Do you want to receive them?"))+unicode(names))
+			widget.setAcceptText(mainWindow.tr("Yes"))
+			widget.setRejectText(mainWindow.tr("No"))
+
 		pass
 
 	def rosterx(self, frm, items, id):
 		mainWindow = self.main
-		msg = mainWindow.tr("Hi! I am adding you to my roster using the jabber client Jabbim! Please authorize me to see you when you are available. Thanks!") #from _ui file
-		print msg
+		msg = unicode(mainWindow.tr("Hi! I am adding you to my roster using the jabber client Jabbim! Please authorize me to see you when you are available. Thanks!"))
 		for item in items:
 			jid, name, group = item['jid'], item.get('name', None), item.get('group', None),
 			if name == None:
