@@ -818,7 +818,7 @@ class clientClass(pyxl.client.Client):
 				event=self.main.events.addBooleanEvent("subscribe","authorizations")
 				event.setAcceptHandler(self.rosterx,[frm, items, id,typ])
 				widget=event.getWidgets()[0]
-				widget.setText(frm+unicode(mainWindow.tr(" is sending you contact. Do you want to receive them?"))+unicode(item.jid))
+				widget.setText(frm+unicode(mainWindow.tr(" is sending you contact. Do you want to receive them?"))+unicode(item["jid"]))
 				widget.setAcceptText(mainWindow.tr("Yes"))
 				widget.setRejectText(mainWindow.tr("No"))
 			else:
@@ -1355,7 +1355,7 @@ class clientClass(pyxl.client.Client):
 					widget=event.getWidgets()[0]
 					widget.jids.append(frm)
 				event.setAcceptHandler(self._onSubscribe,[list(widget.jids),status,False])
-				event.setAcceptHandler(self._onSubscribeReject,[list(widget.jids),status,False])
+				event.setRejectHandler(self._onSubscribeReject,[list(widget.jids),status,False])
 
 				test=""
 				for j in widget.jids:
