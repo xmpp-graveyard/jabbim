@@ -274,8 +274,8 @@ class events:
 
 	def getEvents(self,name,typ):
 		ret=[]
-		for event in self.events:
-			if event['type']==typ and event['name']==name:
+		for key,event in self.events.iteritems():
+			if event.typ==name and event.category==typ:
 				ret.append(event)
 		return ret
 
@@ -385,15 +385,24 @@ class events:
 		@type status: unicode
 		@param status: senders status message
 		"""
-		event=booleanEvent(self)
-		event.setType("addUser")
-		event.setCategory("authorizations")
-		widget=addUserWidget(event)
-		widget.setData(jid,status)
-		widget=self.addWidget(widget,"authorizations")
-		event.addWidget(widget)
-		event.setAcceptHandler(self.main.client._onSubscribe,[jid,'online',False])
-		event.setRejectHandler(self.main.client.sendPresence,[jid,None,'online',None,'unsubscribed'])
+		events = self.main.events.getEvents("subscribe","authorizations")
+		if len(events)==0:
+			event=booleanEvent(self)
+			event.setType("addUser")
+			event.setCategory("authorizations")
+			widget=addUserWidget(event)
+			widget=self.addWidget(widget,"authorizations")
+			widget.jids=[jid]
+			event.addWidget(widget)
+			widget.setData(jid,status)
+		else:
+			widget.jids.append(jid)
+			event=events[0]
+			widget.setData(widget.jids,status)
+		
+		
+		event.setAcceptHandler(self.main.client._onSubscribe,[list(widget.jids),'online',False])
+		event.setRejectHandler(self.main.client._onSubscribeReject,[list(widget.jids),'online',False])
 		return self.addEvent(event)
 
 	def addSubscribeEvent(self,jid,status):

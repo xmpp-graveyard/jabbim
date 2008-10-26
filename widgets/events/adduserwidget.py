@@ -44,12 +44,17 @@ class addUserWidget(QtGui.QWidget):
 		self.event.parent.main.chat.activate()
 
 	def setData(self,jid,message=None):
-		self.jid=unicode(jid)
-		text=unicode(self.tr("Do you want to add user"))
-		text+=" <a href=\"http://jid\">"+self.getSafeText(self.jid,self.width()-10)+"</a> "
-		text+=unicode(self.tr("to you roster?"))
-		if message:
-			text+="<br/><i>"+self.getSafeText(unicode(message),self.width()-10)+"</i>"
+		if isinstance(jid,unicode):
+			self.jid=unicode(jid)
+			text=unicode(self.tr("Do you want to add user"))
+			text+=" <a href=\"http://jid\">"+self.getSafeText(self.jid,self.width()-10)+"</a> "
+			text+=unicode(self.tr("to you roster?"))
+			if message:
+				text+="<br/><i>"+self.getSafeText(unicode(message),self.width()-10)+"</i>"
+		else:
+			text=unicode(self.tr("Do you want to add this users?"))
+			for j in jid:
+				text+="<br/>"+self.getSafeText(unicode(j),self.width()-10)
 		self.ui.text.setText(text)
 
 	def setAcceptText(self,text):

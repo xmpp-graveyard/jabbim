@@ -1345,13 +1345,24 @@ class clientClass(pyxl.client.Client):
 				del self.main.autoAdd[frm.userhost()]
 			else:
 				frm=frm.userhost()
-##				self.main.events.addBooleanEvent(self.sendPresence,[frm,None,status,None,'subscribed'],self.sendPresence,[frm,None,status,None,'unsubscribed'],header=mainWindow.tr('Authorize contact?'),text=mainWindow.tr('user ')+" "+unicode(frm)+' '+mainWindow.tr("wants to see your status."),name=frm,typ="subscribe",height=80)
-				event=self.main.events.addBooleanEvent("subscribe","authorizations")
-				event.setAcceptHandler(self.sendPresence,[frm,None,status,None,'subscribed'])
-				event.setRejectHandler(self.sendPresence,[frm,None,status,None,'unsubscribed'])
-				widget=event.getWidgets()[0]
-				user=self.main.ui.roster.getNameByJID(frm)
-				widget.setText(mainWindow.tr('User ')+" "+unicode(user)+' '+mainWindow.tr("wants to see your status. Do you want to authorize this user?"))
+				events=self.main.events.getEvents("subscribe","authorizations")
+				if len(events)==0:
+					event=self.main.events.addBooleanEvent("subscribe","authorizations")
+					widget=event.getWidgets()[0]
+					widget.jids=[frm]
+				else:
+					event=events[0]
+					widget=event.getWidgets()[0]
+					widget.jids.append(frm)
+				event.setAcceptHandler(self._onSubscribe,[list(widget.jids),status,False])
+				event.setAcceptHandler(self._onSubscribeReject,[list(widget.jids),status,False])
+
+				test=""
+				for j in widget.jids:
+					user=self.main.ui.roster.getNameByJID(j)
+					test+=" <br/> "+user
+
+				widget.setText(mainWindow.tr('Users ')+" "+unicode(test)+' '+mainWindow.tr("want to see your status. Do you want to authorize these users?"))
 				widget.setAcceptText(mainWindow.tr("Yes"))
 				widget.setRejectText(mainWindow.tr("No"))
 		else:
@@ -1368,13 +1379,19 @@ class clientClass(pyxl.client.Client):
 			else:
 				self.main.events.addAddUserEvent(frm.userhost(),status)
 
-	def _onSubscribe(self,frm,status,add=False):
+	def _onSubscribe(self,frms,status,add=False):
 		#def __init__(self,main,parent=None,jid="",group=None,name="",add=True):
-		dialog=widgets.addcontact.addContactDialog(self.main,self.main,jid=frm,group="",name=frm.split('@')[0],add=add)
-		dialog.exec_()
-		self.sendPresence(frm,None,status,None,'subscribe')
-		self.sendPresence(frm,None,status,None,'subscribed')
+		for frm in frms:
+			if not self.roster['users'].has_key(frm):
+				dialog=widgets.addcontact.addContactDialog(self.main,self.main,jid=frm,group="",name=frm.split('@')[0],add=add)
+				dialog.exec_()
+			self.sendPresence(frm,None,status,None,'subscribe')
+			self.sendPresence(frm,None,status,None,'subscribed')
 
+	def _onSubscribeReject(self,frms,status,add=False):
+		#def __init__(self,main,parent=None,jid="",group=None,name="",add=True):
+		for frm in frms:
+			self.sendPresence(frm,None,status,None,'unsubscribed')
 
 	def on_GCmessage(self, msg):
 		"""
