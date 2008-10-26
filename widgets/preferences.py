@@ -384,7 +384,7 @@ class preferencesWindow(QtGui.QDialog):
 		else:
 			self.ui.profile.setText("<b>"+self.tr("Profile:")+"</b> "+unicode(self.main.config['jid']))
 			self.ui.profile.show()
-		for cfg in self.var:
+		for cfg in self.var:		
 			updateVarData(cfg,self.main.config)
 
 		self.reloadPlugins_()
@@ -782,6 +782,7 @@ function makePreview(){
 				self.savePluginConfiguration(name,var)
 
 		for cfg in self.var:
+		
 			for key,value in getVarData(cfg).iteritems():
 				if key=='passwd':
 					self.main.config[key]=rot13.scramble(unicode(value))

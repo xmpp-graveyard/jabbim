@@ -810,44 +810,67 @@ class clientClass(pyxl.client.Client):
 		print "users for userRating loaded:",self.main.userRating.users
 		self.main.loadUserRating()
 
-	def on_rosterx(self, frm, items, id):
+	def on_rosterx(self, frm, items, id, typ):
 		mainWindow = self.main
-		if len(items)==1:
-			item = items[0]
-			#self.main.events.addBooleanEvent(self.rosterx,[frm, items, id],None,[],mainWindow.tr("Receive contact?"),frm+mainWindow.tr(" is sending you a contact  ") + item['jid'],height=100,name=frm,typ="",icon=None)
-			event=self.main.events.addBooleanEvent("subscribe","authorizations")
-			event.setAcceptHandler(self.rosterx,[frm, items, id])
-			widget=event.getWidgets()[0]
-			widget.setText(frm+unicode(mainWindow.tr(" is sending you contact. Do you want to receive them?"))+unicode(item.jid))
-			widget.setAcceptText(mainWindow.tr("Yes"))
-			widget.setRejectText(mainWindow.tr("No"))
-		else:
-			names = ''
-			for item in items:
-				names += " <br/> " + item['jid']
-			print names
-			#self.main.events.addBooleanEvent(self.rosterx,[frm, items, id],None,[],mainWindow.tr("Receive contacts?"),frm+mainWindow.tr(" is sending you a contacts  ") + names,height=60*len(items),name=frm,typ="",icon=None)
-			event=self.main.events.addBooleanEvent("subscribe","authorizations")
-			event.setAcceptHandler(self.rosterx,[frm, items, id])
-			widget=event.getWidgets()[0]
-			widget.setText(frm+unicode(mainWindow.tr(" is sending you contacts. Do you want to receive them?"))+unicode(names))
-			widget.setAcceptText(mainWindow.tr("Yes"))
-			widget.setRejectText(mainWindow.tr("No"))
-
+		if typ == 'add':
+			if len(items)==1:
+				item = items[0]
+				event=self.main.events.addBooleanEvent("subscribe","authorizations")
+				event.setAcceptHandler(self.rosterx,[frm, items, id,typ])
+				widget=event.getWidgets()[0]
+				widget.setText(frm+unicode(mainWindow.tr(" is sending you contact. Do you want to receive them?"))+unicode(item.jid))
+				widget.setAcceptText(mainWindow.tr("Yes"))
+				widget.setRejectText(mainWindow.tr("No"))
+			else:
+				names = ''
+				for item in items:
+					names += " <br/> " + item['jid']
+				print names
+				event=self.main.events.addBooleanEvent("subscribe","authorizations")
+				event.setAcceptHandler(self.rosterx,[frm, items, id, typ])
+				widget=event.getWidgets()[0]
+				widget.setText(frm+unicode(mainWindow.tr(" is sending you contacts. Do you want to receive them?"))+unicode(names))
+				widget.setAcceptText(mainWindow.tr("Yes"))
+				widget.setRejectText(mainWindow.tr("No"))
+		elif typ == 'delete':
+			if len(items)==1:
+				item = items[0]
+				event=self.main.events.addBooleanEvent("unsubscribe","authorizations")
+				event.setAcceptHandler(self.rosterx,[frm, items, id,typ])
+				widget=event.getWidgets()[0]
+				widget.setText(frm+unicode(mainWindow.tr(" is requesting removal of a contact. Do you want to proceed?"))+unicode(item.jid))
+				widget.setAcceptText(mainWindow.tr("Yes"))
+				widget.setRejectText(mainWindow.tr("No"))
+			else:
+				names = ''
+				for item in items:
+					names += " <br/> " + item['jid']
+				print names
+				event=self.main.events.addBooleanEvent("unsubscribe","authorizations")
+				event.setAcceptHandler(self.rosterx,[frm, items, id, typ])
+				widget=event.getWidgets()[0]
+				widget.setText(frm+unicode(mainWindow.tr(" is requesting removal of a contacts. Do you want to proceed?"))+unicode(names))
+				widget.setAcceptText(mainWindow.tr("Yes"))
+				widget.setRejectText(mainWindow.tr("No"))
 		pass
 
-	def rosterx(self, frm, items, id):
+	def rosterx(self, frm, items, id, typ):
 		mainWindow = self.main
 		msg = unicode(mainWindow.tr("Hi! I am adding you to my roster using the jabber client Jabbim! Please authorize me to see you when you are available. Thanks!"))
-		for item in items:
-			jid, name, group = item['jid'], item.get('name', None), item.get('group', None),
-			if name == None:
-				name = ''
-			if group == None:
-				groups = []
-			else:
-				groups = [group]
-			self.addContact(jid, unicode(msg), name, groups)
+		if typ == 'add':
+			for item in items:
+				jid, name, group = item['jid'], item.get('name', None), item.get('group', None),
+				if name == None:
+					name = ''
+				if group == None:
+					groups = []
+				else:
+					groups = [group]
+				self.addContact(jid, unicode(msg), name, groups)
+		elif typ == 'delete':
+			for item in items:
+				jid = item['jid']
+				self.delContact(jid)
 
 		if id != None:
 			self._rosterxResult(frm, id, True)

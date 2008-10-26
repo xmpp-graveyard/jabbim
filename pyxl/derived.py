@@ -145,7 +145,7 @@ class derived:
 	def on_avatarUpdate(self, jid):
 		pass
 
-	def on_rosterx(self,frm, out, id):
+	def on_rosterx(self,frm, out, id, typ):
 		pass
 	
 	def on_pep(self, frm, ns, payload):

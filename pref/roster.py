@@ -5,5 +5,5 @@ class preferences:
 		self.config['rosterMode']['options']={'normal':preferencesWindow.tr('Normal'),'compact':preferencesWindow.tr('Compact')}
 		self.config['showTransports']={'type':'boolean','label':preferencesWindow.tr('Show transports'),'value':'False'}
 		#self.config['bigOnClick']={'type':'boolean','label':preferencesWindow.tr('Display user info on click'),'value':'True'}
-		self.config['rosterScrollBar']={'type':'boolean','label':preferencesWindow.tr('Display scroll bar'),'value':'True'}
+		self.config['rosterScrollBar']={'type':'boolean','label':preferencesWindow.tr('Display scroll bar'),'value':'True',"category":"advanced"}
 		self.config['__sort__']=['rosterMode','showTransports','rosterScrollBar']

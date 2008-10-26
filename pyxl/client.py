@@ -1706,9 +1706,12 @@ class Client(derived):
 	def _processRosterX(self, frm, x, id = None):
 		# for now only additions are processed
 		out = []
+		typ = 'add'
 		for item in x.elements():
 			action = item.getAttribute('action', 'add')
 			if action == 'add':
+				typ == 'add'
+				print 'jid>>', item['jid']
 				if self.getContactByJid(item['jid']) == None:
 					groups = []
 					for gr in item.elements():
@@ -1717,8 +1720,13 @@ class Client(derived):
 					if len(groups)>0:
 						itm['group'] = groups[0]
 					out.append(itm)
+			elif action == 'delete':
+				if self.getContactByJid(item['jid']) != None:
+					typ == 'delete'
+					out.append(item.attributes)
+				
 		if len(out)>0:
-			self.on_rosterx(frm, out, id)
+			self.on_rosterx(frm, out, id, typ)
 	
 	def _rosterxResult(self, frm, id, ok = False):
 		if ok:

@@ -120,6 +120,7 @@ def loadConfig(main,status):
 	configs={"jid":"",
 			"passwd":"",
 			"savePasswd":"",
+			"advancedPrefs":"False",
 			"autoJoin":"False",
 			"autoDownload":"False",
 			"autoDownloadPath": getDesktopPath(main.homeDir),
