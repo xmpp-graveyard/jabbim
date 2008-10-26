@@ -1710,7 +1710,7 @@ class Client(derived):
 		for item in x.elements():
 			action = item.getAttribute('action', 'add')
 			if action == 'add':
-				typ == 'add'
+				typ = 'add'
 				print 'jid>>', item['jid']
 				if self.getContactByJid(item['jid']) == None:
 					groups = []
@@ -1722,7 +1722,7 @@ class Client(derived):
 					out.append(itm)
 			elif action == 'delete':
 				if self.getContactByJid(item['jid']) != None:
-					typ == 'delete'
+					typ = 'delete'
 					out.append(item.attributes)
 				
 		if len(out)>0:
