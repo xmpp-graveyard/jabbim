@@ -150,7 +150,7 @@ class groupChatWidget(abstractChatWidget):
 		self.unread=0 #: number of unread message
 
 		# label showed until first presence arrive
-		self.connecting=QtGui.QLabel(self.tr("Connecting to MUC. This can take a few seconds."),self.ui.textEdit)
+		self.connecting=QtGui.QLabel(self.tr("Connecting to MUC. This can take a few seconds."),self.ui.webkit)
 		self.connecting.adjustSize()
 
 		if self.main().selfAvatar:
@@ -243,10 +243,10 @@ class groupChatWidget(abstractChatWidget):
 		"""
 		Shows 'connecting...' QLabel in conversations QTextEdit.
 		"""
-		pos=self.ui.textEdit.mapToGlobal(QtCore.QPoint(0,0))
+		pos=self.ui.webkit.mapToGlobal(QtCore.QPoint(0,0))
 		x=pos.x()
 		y=pos.y()
-		self.connecting.setGeometry(self.ui.textEdit.width()/2-self.connecting.width()/2,self.ui.textEdit.height()/2-self.connecting.height()/2, self.connecting.width(), self.connecting.height())
+		self.connecting.setGeometry(self.ui.webkit.width()/2-self.connecting.width()/2,self.ui.webkit.height()/2-self.connecting.height()/2, self.connecting.width(), self.connecting.height())
 		self.connecting.show()
 		
 	def addRoles(self):
