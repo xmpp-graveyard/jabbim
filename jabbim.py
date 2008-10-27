@@ -381,7 +381,7 @@ class clientClass(pyxl.client.Client):
 		pass
 	
 	def on_receipt(self, frm, id):
-		self.main.refreshImage(os.getcwd()+'/images/22x22/actions/ok.png',id,frm)
+		self.main.refreshImage(os.getcwd()+'/images/16x16/actions/ok.png',id,frm)
 		
 
 	def on_ftTransfered(self, sid, bytes,end=False):

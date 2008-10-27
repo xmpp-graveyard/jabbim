@@ -592,7 +592,7 @@ class chatWidget(abstractChatWidget):
 				# prepare message for showing in GUI
 				message=xhtml.replace("&quot;",'"')
 				if m.receiptId != None:
-				   message = '<img id="'+m.receiptId+'" src="%s/images/32x32/actions/message.png" />'%os.getcwd() + message
+				   message = '<img id="'+m.receiptId+'" src="%s/images/16x16/actions/message.png" />'%os.getcwd() + message
 				#file=self.main().homeDir+'/avatars/'+unicode(self.main().client.jid.userhost())
 				#if not os.path.isfile(file):
 					#file="images/32x32/apps/jabbim.png"
@@ -624,7 +624,7 @@ class chatWidget(abstractChatWidget):
 				text=utils.replace_url(text,self)
 				text=text.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 				if m.receiptId != None:
-				   text = '<img id="'+m.receiptId+'" src="%s/images/32x32/actions/message.png" />'%os.getcwd()+ text
+				   text = '<img id="'+m.receiptId+'" src="%s/images/16x16/actions/message.png" />'%os.getcwd()+ text
 
 				#file=self.main().homeDir+'/avatars/'+unicode(self.main().client.jid.userhost())
 				#if not os.path.isfile(file):
