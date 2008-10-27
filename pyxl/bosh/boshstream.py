@@ -3,7 +3,7 @@ from twisted.web2.client.interfaces import IHTTPClientManager
 from twisted.internet import reactor, protocol, defer
 from twisted.words.xish import domish, utility, xmlstream
 from twisted.web2 import http_headers
-
+from twisted.python import log
 from zope.interface import implements
 import urlparse
 import random
