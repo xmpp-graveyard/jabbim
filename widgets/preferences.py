@@ -83,25 +83,46 @@ class preferencesWindow(QtGui.QDialog):
 		self.globalCategories['other']=self.tr('Other')
 
 		self.preferencesCount=6
+		self.preferencesConfig=[]
 		# Jabbim
 		layout=QtGui.QGridLayout(self.ui.jabbimWidget)
 		self.var.append(makePreferences(self.main.config,self.ui.jabbimWidget,layout,jabbim.preferences(self).config)[0])
+		self.preferencesConfig.append(jabbim.preferences(self).config)
 
 		# Chat
 		layout=QtGui.QGridLayout(self.ui.chatWidget)
 		self.var.append(makePreferences(self.main.config,self.ui.chatWidget,layout,chat.preferences(self).config)[0])
+		self.preferencesConfig.append(chat.preferences(self).config)
 
 		# Roster
 		layout=QtGui.QGridLayout(self.ui.rosterWidget)
 		self.var.append(makePreferences(self.main.config,self.ui.rosterWidget,layout,roster.preferences(self).config)[0])
+		self.preferencesConfig.append(roster.preferences(self).config)
 
 		# connection
 		layout=QtGui.QGridLayout(self.ui.connectionWidget)
 		self.var.append(makePreferences(self.main.config,self.ui.connectionWidget,layout,connection.preferences(self).config)[0])
+		self.preferencesConfig.append(connection.preferences(self).config)
 
 		# privacy
 		layout=QtGui.QGridLayout(self.ui.privacyWidget)
 		self.var.append(makePreferences(self.main.config,self.ui.privacyWidget,layout,privacy.preferences(self).config)[0])
+		self.preferencesConfig.append(privacy.preferences(self).config)
+
+		for cfg in self.var:
+			for key,value in getVarData(cfg).iteritems():
+				if self.main.config['preferencesAdvanced']=="True":
+					if self.preferencesConfig[self.var.index(cfg)][key].has_key("category"):
+						cfg[key]['widget'].show()
+						if cfg[key].has_key("widgets"):
+							for widget in cfg[key]["widgets"]:
+								widget.show()
+				else:
+					if self.preferencesConfig[self.var.index(cfg)][key].has_key("category"):
+						cfg[key]['widget'].hide()
+						if cfg[key].has_key("widgets"):
+							for widget in cfg[key]["widgets"]:
+								widget.hide()
 
 		QtCore.QObject.connect(self.ui.emoticonsList,QtCore.SIGNAL('activated ( int )'),self.emoticonsListChanged)
 		QtCore.QObject.connect(self.ui.chatskinVariant,QtCore.SIGNAL('activated ( int )'),self.chatskinVariantChanged)
@@ -384,7 +405,7 @@ class preferencesWindow(QtGui.QDialog):
 		else:
 			self.ui.profile.setText("<b>"+self.tr("Profile:")+"</b> "+unicode(self.main.config['jid']))
 			self.ui.profile.show()
-		for cfg in self.var:		
+		for cfg in self.var:
 			updateVarData(cfg,self.main.config)
 
 		self.reloadPlugins_()
@@ -782,12 +803,24 @@ function makePreview(){
 				self.savePluginConfiguration(name,var)
 
 		for cfg in self.var:
-		
 			for key,value in getVarData(cfg).iteritems():
 				if key=='passwd':
 					self.main.config[key]=rot13.scramble(unicode(value))
 				else:
 					self.main.config[key]=value
+					if self.main.config['preferencesAdvanced']=="True":
+						if self.preferencesConfig[self.var.index(cfg)][key].has_key("category"):
+							cfg[key]['widget'].show()
+							if cfg[key].has_key("widgets"):
+								for widget in cfg[key]["widgets"]:
+									widget.show()
+					else:
+						if self.preferencesConfig[self.var.index(cfg)][key].has_key("category"):
+							cfg[key]['widget'].hide()
+							if cfg[key].has_key("widgets"):
+								for widget in cfg[key]["widgets"]:
+									widget.hide()
+					
 					print key,"=",unicode(value)
 		if not self.justShowed:
 			self.main.config['chatSkin']=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())

@@ -258,7 +258,7 @@ def makePreferences(main,parent,layout,form,row=1):
 			widget=QtGui.QLineEdit(par)
 			widget.setText(unicode(val))
 			lay.addWidget(widget,row,1)
-			var[key]={'widget':widget,'type':x['type']}
+			var[key]={'widget':widget,'type':x['type'],"widgets":[label]}
 			row+=1
 		elif x['type']=="custom":
 			try:
@@ -280,7 +280,7 @@ def makePreferences(main,parent,layout,form,row=1):
 				lay.addWidget(widget,row,0,1,2)
 			else:
 				lay.addWidget(widget,row,1)
-			var[key]={'widget':widget,'type':x['type']}
+			var[key]={'widget':widget,'type':x['type'],"widgets":[label]}
 			row+=1
 		elif x['type']=="directory":
 			try:
@@ -303,7 +303,7 @@ def makePreferences(main,parent,layout,form,row=1):
 			l_.addWidget(widget)
 			l_.addWidget(chooser)
 			lay.addLayout(l_,row,1)
-			var[key]={'widget':widget,'type':x['type'],'widgets':[chooser]}
+			var[key]={'widget':widget,'type':x['type'],'widgets':[chooser,label]}
 			row+=1
 		elif x['type']=="jid-list":
 			try:
@@ -323,7 +323,7 @@ def makePreferences(main,parent,layout,form,row=1):
 				for jid in val:
 					QtGui.QListWidgetItem(unicode(jid),widget.jids)
 			lay.addWidget(widget,row,1)
-			var[key]={'widget':widget,'type':x['type']}
+			var[key]={'widget':widget,'type':x['type'],"widgets":[label]}
 			row+=1
 		elif x['type']=="time-interval":
 			try:
@@ -343,7 +343,7 @@ def makePreferences(main,parent,layout,form,row=1):
 			t=QtCore.QTime(int(d[0]),int(d[1]),int(d[2]))
 			widget.setTime(t)
 			lay.addWidget(widget,row,1)
-			var[key]={'widget':widget,'type':x['type']}
+			var[key]={'widget':widget,'type':x['type'],"widgets":[label]}
 			row+=1
 		elif x['type']=="number-spin":
 			try:
@@ -365,7 +365,7 @@ def makePreferences(main,parent,layout,form,row=1):
 				widget.setMaximum(int(x['max']))
 			widget.setValue(int(val))
 			lay.addWidget(widget,row,1)
-			var[key]={'widget':widget,'type':x['type']}
+			var[key]={'widget':widget,'type':x['type'],"widgets":[label]}
 			row+=1
 		elif x['type']=="fixed":
 			label=QtGui.QLabel(par)
@@ -402,7 +402,7 @@ def makePreferences(main,parent,layout,form,row=1):
 					#text+=unicode(child)+"\n"
 			widget.setText(unicode(val))
 			lay.addWidget(widget,row,1)
-			var[key]={'widget':widget,'type':x['type']}
+			var[key]={'widget':widget,'type':x['type'],"widgets":[label]}
 			#for d in x.elements():
 				#if d.name == "desc":
 					#widget.setToolTip(unicode(d))
@@ -469,7 +469,7 @@ def makePreferences(main,parent,layout,form,row=1):
 				#if child.name == 'value':
 			widget.setText(unicode(val))
 			lay.addWidget(widget,row,1)
-			var[key]={'widget':widget,'type':x['type']}
+			var[key]={'widget':widget,'type':x['type'],"widgets":[label]}
 			#for d in x.elements():
 				#if d.name == "desc":
 					#widget.setToolTip(unicode(d))
@@ -493,7 +493,7 @@ def makePreferences(main,parent,layout,form,row=1):
 			if widget.findData(QtCore.QVariant(unicode(val)))!=None:
 				widget.setCurrentIndex(widget.findData(QtCore.QVariant(unicode(val))))
 			lay.addWidget(widget,row,1)
-			var[key]={'widget':widget,'type':x['type']}
+			var[key]={'widget':widget,'type':x['type'],"widgets":[label]}
 			row+=1
 			# TODO
 			##<field var='userlist' type='list-single' label='Userlist on GG server'><value>get</value><option label='ignore'><value>ignore</value></option><option label='retrieve'><value>get</value></option></field>
