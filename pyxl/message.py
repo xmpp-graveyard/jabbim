@@ -247,7 +247,9 @@ class MessageInit:
 					del self.client.messageReceipts[el['id']]
 				except:
 					log.err('Couldn\'t remove nonexisten message id')
+					return
 				print self.client.messageReceipts
+				self.client.on_receipt(frmjid, el['id'])
 				return
 			
 			if child.name == 'event' and child.defaultUri == 'http://jabber.org/protocol/pubsub#event' and typ != 'error':

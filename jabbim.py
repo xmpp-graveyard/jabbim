@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -379,6 +379,10 @@ class clientClass(pyxl.client.Client):
 
 	def on_affiliationErr(self,  muc,  err,  nick):
 		pass
+	
+	def on_receipt(self, frm, id):
+		self.main.refreshImage(os.getcwd()+'/images/22x22/actions/ok.png',id,frm)
+		
 
 	def on_ftTransfered(self, sid, bytes,end=False):
 		"""
