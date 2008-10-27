@@ -221,7 +221,8 @@ def loadConfig(main,status):
  			"moveRight" : "Ctrl+Right",
  			"moveLeft" : "Ctrl+Left",
 			'activeShortcuts':['nextTab','previousTab','removeTab','tabOne','tabTwo','tabThree','tabFour','tabFive','tabSix','tabSeven','tabEight','tabNine','moveRight','moveLeft'],
-			'useXHTML': 'True'
+			'useXHTML': 'True',
+			'showReceipts':'True'
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:
