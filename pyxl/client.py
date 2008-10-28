@@ -348,7 +348,7 @@ class Client(derived):
 #			d.addErrback(self._dnsLookupErr)
 #			dns.getHostByName('localhost').addCallback(self.tst)
 			txt = dns.lookupText('_xmppconnect.'+self.jid.host, timeout = [2,10])
-			defer.DeferredList([d, txt]).addCallback(self._dnsLookup).addErrback(self._dnsLookupErr)
+			defer.DeferredList([d, txt]).addCallback(self._dnsLookup)#.addErrback(self._dnsLookupErr)
 
 	def _dnsLookup(self, results):
 		print 'DNS'
@@ -356,7 +356,7 @@ class Client(derived):
 		resp = results[0][1]
 		print results
 		print resp
-		if len(resp[0]) == 0:
+		if not results[0][0] or len(resp[0]) == 0:
 			self._dnsLookupErr(resp)
 			return
 		for r in resp[0]:
@@ -381,6 +381,7 @@ class Client(derived):
 				self.connections.append(bind)
 		else:
 			self._dnsLookupErr(resp)
+			return
 			
 		print '_doConnect'
 		self.doConnect()
