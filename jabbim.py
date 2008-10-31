@@ -2604,7 +2604,7 @@ class mainWindow(QtGui.QMainWindow):
 		@param msg: incoming message
 		"""
 		if msg.xhtml != None:
-			dom = parseString('<p>'+msg.xhtml+'</p>')
+			dom = parseString('<p>'+msg.xhtml.encode('utf8')+'</p>')
 			#seznam = {}
 			changed = False
 
