@@ -25,10 +25,9 @@ from twisted.python import log
 from widgets.configlib import jidListWidget
 import os.path
 from twisted.python.filepath import FilePath
-from twisted.enterprise import adbapi, util as dbutil
+from twisted.enterprise import adbapi
 from twisted.internet import  reactor
-from twisted.enterprise import util
-s = util.safe
+s = adbapi.safe
 
 def walk(top, topdown=True, onerror=None):
 	from os.path import join, isdir, islink
