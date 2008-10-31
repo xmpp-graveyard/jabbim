@@ -2604,7 +2604,7 @@ class mainWindow(QtGui.QMainWindow):
 		@param msg: incoming message
 		"""
 		if msg.xhtml != None:
-			dom = parseString(unicode('<p>'+msg.xhtml+'</p>'))
+			dom = parseString('<p>'+msg.xhtml+'</p>')
 			#seznam = {}
 			changed = False
 
@@ -2654,7 +2654,7 @@ class mainWindow(QtGui.QMainWindow):
 						self.imageId+=1
 						changed = True
 			if changed:
-				print unicode(dom.toxml())
+#				print unicode(dom.toxml())
 				msg.setXHTML(unicode(dom.toxml()))
 		return msg
 
