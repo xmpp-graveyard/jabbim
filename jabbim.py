@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -77,7 +77,7 @@ class jabbimApplication(QtGui.QApplication):
 
 app = jabbimApplication(sys.argv)
 app.setQuitOnLastWindowClosed(False)
-qt4reactor.install(app)
+qt4reactor.install()
 from twisted.internet import reactor, threads
 from twisted.internet.defer import DeferredList
 from twisted.python import log
@@ -4237,7 +4237,8 @@ class mainWindow(QtGui.QMainWindow):
 		app.closeAllWindows()
 		self.tray.hide()
 		# stop reactor
-		reactor.stop2()
+		reactor.stop()
+		app.exit()
 
 	def saveConfigBeforeQuit(self):
 		if os.path.isfile(self.config.filename):
@@ -4689,7 +4690,8 @@ class mainWindow(QtGui.QMainWindow):
 		Stops reactor
 		"""
 		#if self.client!=None:
-		reactor.stop2()
+		reactor.stop()
+		#pass
 
 	def newProfile(self,jid,password,savePassword):
 		self.homeDir=self.realHomeDir+"/"+jid+"-profile"
