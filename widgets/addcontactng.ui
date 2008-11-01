@@ -19,16 +19,6 @@
    <property name="spacing" >
     <number>6</number>
    </property>
-   <item row="3" column="0" colspan="3" >
-    <widget class="QTextBrowser" name="description" >
-     <property name="maximumSize" >
-      <size>
-       <width>16777215</width>
-       <height>70</height>
-      </size>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="0" colspan="3" >
     <layout class="QHBoxLayout" >
      <property name="margin" >
@@ -61,73 +51,10 @@
    <item row="1" column="0" colspan="3" >
     <widget class="QWidget" native="1" name="_tabBar" />
    </item>
-   <item row="6" column="0" colspan="3" >
-    <widget class="QTreeWidget" name="treeWidget" >
-     <property name="sizePolicy" >
-      <sizepolicy>
-       <hsizetype>7</hsizetype>
-       <vsizetype>7</vsizetype>
-       <horstretch>0</horstretch>
-       <verstretch>100</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="rootIsDecorated" >
-      <bool>false</bool>
-     </property>
-     <column>
-      <property name="text" >
-       <string>1</string>
-      </property>
-     </column>
-    </widget>
-   </item>
-   <item row="5" column="0" colspan="3" >
-    <widget class="QLabel" name="empty" >
-     <property name="text" >
-      <string>No contact matching your criteria was found</string>
-     </property>
-     <property name="alignment" >
-      <set>Qt::AlignHCenter|Qt::AlignTop</set>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="3" >
-    <widget class="QLabel" name="label" >
-     <property name="text" >
-      <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
-&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
-p, li { white-space: pre-wrap; }
-&lt;/style>&lt;/head>&lt;h2>Find user&lt;/h2>&lt;/body>&lt;/html></string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0" >
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" >
-      <size>
-       <width>218</width>
-       <height>21</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="8" column="1" >
+   <item row="9" column="1" >
     <widget class="QPushButton" name="addToRoster" >
      <property name="text" >
       <string>Add to roster</string>
-     </property>
-     <property name="autoDefault" >
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="2" >
-    <widget class="QPushButton" name="pushButton" >
-     <property name="text" >
-      <string>Cancel</string>
      </property>
      <property name="autoDefault" >
       <bool>false</bool>
@@ -168,7 +95,7 @@ p, li { white-space: pre-wrap; }
      </item>
     </layout>
    </item>
-   <item row="7" column="0" >
+   <item row="8" column="0" >
     <spacer>
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
@@ -180,6 +107,82 @@ p, li { white-space: pre-wrap; }
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="0" column="0" colspan="3" >
+    <widget class="QLabel" name="label" >
+     <property name="text" >
+      <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;h2>Find user&lt;/h2>&lt;/body>&lt;/html></string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0" colspan="3" >
+    <widget class="QTreeWidget" name="treeWidget" >
+     <property name="sizePolicy" >
+      <sizepolicy>
+       <hsizetype>7</hsizetype>
+       <vsizetype>7</vsizetype>
+       <horstretch>0</horstretch>
+       <verstretch>100</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="rootIsDecorated" >
+      <bool>false</bool>
+     </property>
+     <column>
+      <property name="text" >
+       <string>1</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="3" >
+    <widget class="QTextBrowser" name="description" >
+     <property name="maximumSize" >
+      <size>
+       <width>16777215</width>
+       <height>70</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0" colspan="3" >
+    <widget class="QLabel" name="empty" >
+     <property name="text" >
+      <string>No contact matching your criteria was found</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignHCenter|Qt::AlignTop</set>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="2" >
+    <widget class="QPushButton" name="pushButton" >
+     <property name="text" >
+      <string>Cancel</string>
+     </property>
+     <property name="autoDefault" >
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>218</width>
+       <height>21</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="5" column="0" colspan="3" >
+    <widget class="QLabel" name="picture" />
    </item>
   </layout>
  </widget>

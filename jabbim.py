@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -4241,7 +4241,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.closeAllWindows()
 		self.tray.hide()
 		# stop reactor
-		#reactor.stop()
+		reactor.stop()
 		app.exit()
 
 	def saveConfigBeforeQuit(self):
