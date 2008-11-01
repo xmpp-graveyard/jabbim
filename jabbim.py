@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -105,7 +105,7 @@ from os.path import basename,dirname, isfile
 from twisted.words.protocols.jabber.xmlstream import IQ
 from pyxl import jid as jidT
 import ctypes
-from twisted.web.microdom import parseString,Element
+from twisted.web.microdom import parseString,Element, escape
 from twisted.web.client import downloadPage
 import shutil #xmlrpc
 from twisted.python.filepath import FilePath
@@ -2616,8 +2616,11 @@ class mainWindow(QtGui.QMainWindow):
 					i="bob"+str(self.imageId)+str(random.randint(0,100))
 					d=self.client.getBOBData(msg.frm.full(),  cid)
 					d.addCallback(self.refreshImage,i,msg.frm)
-					link = self.client.bobDef[cid]
-					print "SRC IS",link.encode('utf8')
+					print self.client.bobDef[cid]
+					print cid
+					link = self.client.bobDef[cid].encode('utf8')
+					print "SRC IS", 'test'
+
 					el.setAttribute('src', link)
 					el.setAttribute('id',i)
 					changed = True
@@ -2639,7 +2642,7 @@ class mainWindow(QtGui.QMainWindow):
 						d = res[1]
 						i="bob"+str(self.imageId)+str(random.randint(0,100))
 						d.addCallback(self.refreshImage,i,msg.frm)
-						link = self.client.bobDef[id]
+						link = self.client.bobDef[id].encode('utf8')
 						el.setAttribute('src', link)
 						el.setAttribute('id',i)
 						changed = True
@@ -2654,8 +2657,9 @@ class mainWindow(QtGui.QMainWindow):
 						self.imageId+=1
 						changed = True
 			if changed:
+				print 'changed',type(link)
 #				print unicode(dom.toxml())
-				msg.setXHTML(unicode(dom.toxml()))
+				msg.setXHTML(unicode(dom.toxml(), 'utf8'))
 		return msg
 
 	def refreshImage(self,data,name,frm):
