@@ -2617,7 +2617,7 @@ class mainWindow(QtGui.QMainWindow):
 					d=self.client.getBOBData(msg.frm.full(),  cid)
 					d.addCallback(self.refreshImage,i,msg.frm)
 					link = self.client.bobDef[cid]
-					print "SRC IS",link
+					print "SRC IS",link.encode('utf8')
 					el.setAttribute('src', link)
 					el.setAttribute('id',i)
 					changed = True
