@@ -4241,7 +4241,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.closeAllWindows()
 		self.tray.hide()
 		# stop reactor
-		reactor.stop()
+		#reactor.stop()
 		app.exit()
 
 	def saveConfigBeforeQuit(self):
