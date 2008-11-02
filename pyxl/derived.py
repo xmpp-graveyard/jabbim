@@ -591,17 +591,17 @@ class derived:
 			self.setMetacontacts()
 
 	def getFeatures(self, outjid, ext = None):
-		jid = jid.JID(outjid)
-		log.msg('requesting features '+ unicode(jid.full()))
+		outjid = jid.JID(outjid)
+		log.msg('requesting features '+ unicode(outjid.full()))
 		iq = IQ(self.xmlstream, 'get')
 		iq['xml:lang'] = self.xmlLang
-		iq['to'] = jid.full()
+		iq['to'] = outjid.full()
 		iq['from'] = self.jid.full()
 		q = iq.addElement('query', 'http://jabber.org/protocol/disco#info')
 #		self.on_xml(iq.toXml())
 		d = iq.send()
 		self.disp(iq['id'])
-		d.addCallback(self._featuresReceived, ext, jid).addErrback(self.chyba)
+		d.addCallback(self._featuresReceived, ext, outjid).addErrback(self.chyba)
 
 	def getVersion(self, jid):
 		#if callback==None:
