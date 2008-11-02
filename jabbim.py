@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -155,6 +155,8 @@ class clientClass(pyxl.client.Client):
 		# change information in chat tab if we have opened it
 		tab,index=self.main.chat.findTab(frm,typ=['chat'])
 		change=[]
+		if payload == None:
+			return # this is propably not that good idea
 		# user mood
 		if isinstance(payload,list):
 			print "mood list"
