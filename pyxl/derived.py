@@ -590,7 +590,8 @@ class derived:
 			del self.roster_meta[jid]
 			self.setMetacontacts()
 
-	def getFeatures(self, jid, ext = None):
+	def getFeatures(self, outjid, ext = None):
+		jid = jid.JID(outjid)
 		log.msg('requesting features '+ unicode(jid.full()))
 		iq = IQ(self.xmlstream, 'get')
 		iq['xml:lang'] = self.xmlLang
