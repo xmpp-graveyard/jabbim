@@ -4243,8 +4243,9 @@ class mainWindow(QtGui.QMainWindow):
 		app.closeAllWindows()
 		self.tray.hide()
 		# stop reactor
+		
+		#app.exit()
 		reactor.stop()
-		app.exit()
 
 	def saveConfigBeforeQuit(self):
 		if os.path.isfile(self.config.filename):
