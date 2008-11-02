@@ -4,7 +4,7 @@ InvalidFormat = jid.InvalidFormat
 
 def JID(jidstring):
 	if isinstance(jidstring, jid.JID):
-		return jidstring
+		jidstring = jidstring.full()
 	if jidstring.startswith('@'):
 		raise InvalidFormat
 		return
