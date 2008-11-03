@@ -21,6 +21,7 @@ import traceback
 import StringIO
 
 
+
 class EventDispatcher:
 	def __init__(self, prefix="event_"):
 		self.prefix = prefix
@@ -32,7 +33,7 @@ class EventDispatcher:
 		seznam = self.callbacks[name].itervalues()
 		serazeno = sorted(seznam, key = self.k)
 		self.sorted[name] = serazeno
-	
+
 	def unregisterHandler(self, name, hname):
 		try:
 			del self.callbacks[name][hname]

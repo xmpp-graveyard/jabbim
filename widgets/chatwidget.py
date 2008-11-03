@@ -592,7 +592,7 @@ class chatWidget(abstractChatWidget):
 				# prepare message for showing in GUI
 				message=xhtml.replace("&quot;",'"')
 				if m.receiptId != None and self.main().config['showReceipts']=='True':
-				   message = '<img id="'+m.receiptId+'" src="%s/images/16x16/actions/message.png" />'%os.getcwd() + message
+				   message = '<img id="'+m.receiptId+'" src="%s/images/16x16/actions/message.png?receipt%s" />'%(os.getcwd(), m.receiptId)   + message
 				#file=self.main().homeDir+'/avatars/'+unicode(self.main().client.jid.userhost())
 				#if not os.path.isfile(file):
 					#file="images/32x32/apps/jabbim.png"

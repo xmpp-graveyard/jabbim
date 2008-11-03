@@ -300,6 +300,13 @@ class webkitChatWidget(QtWebKit.QWebView):
 			action.setObjectName("edit_image")
 			action.image = hit.pixmap().toImage()
 			menu.addAction(action)
+		if unicode(hit.imageUrl().toString()).split('?')[-1].startswith('receipt'):
+			receiptId = unicode(hit.imageUrl().toString()).split('?')[-1][7:]
+			print receiptId
+			action=menu.addAction(self.tr('Resend message'))
+			action.setObjectName("resend_message")
+			action.setData(QtCore.QVariant(receiptId))
+			menu.addAction(action)
 
 		menu.addSeparator()
 		action=menu.addAction(self.tr("Search"))
@@ -351,6 +358,11 @@ class webkitChatWidget(QtWebKit.QWebView):
 			print unicode(action.data().toString())
 			self.chatwidget().getPaintWindow().open(image = action.image)
 			self.chatwidget().getPaintWindow().show()
+		elif cmd == 'resend_message':
+			receiptId = action.data().toString()
+			if self.main.client.messageReceipts.has_key(receiptId):
+				self.main.client.sendMessage(self.main.client.messageReceipts[receiptId])
+
 		elif cmd == 'gc_toggle_join_part_messages':
 			if self.chatwidget().main().config['showMucJoinPart']=="True":
 				self.chatwidget().main().config['showMucJoinPart']="False"
