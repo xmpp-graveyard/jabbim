@@ -25,22 +25,26 @@ class EventDispatcher:
 	def __init__(self, prefix="event_"):
 		self.prefix = prefix
 		self.callbacks = {}
-
+		self.sorted = {}
 
 	def registerHandler(self, name, meth, hname = 'nic', priority = 5):
 		self.callbacks.setdefault(name, {})[hname] = {'method':meth, 'prio':priority}
+		seznam = self.callbacks[name].itervalues()
+		serazeno = sorted(seznam, key = self.k)
+		self.sorted[name] = serazeno
 	
 	def unregisterHandler(self, name, hname):
 		try:
 			del self.callbacks[name][hname]
 		except:
 			pass
-
+		seznam = self.callbacks[name].itervalues()
+		serazeno = sorted(seznam, key = self.k)
+		self.sorted[name] = serazeno
+	
 	def publishEvent(self, name, *args, **kwargs):
-		if self.callbacks.has_key(name):
-			seznam = self.callbacks[name].itervalues()
-			serazeno = sorted(seznam, key = self.k)
-			for cb in serazeno:
+		if self.callbacks.has_key(name) and self.sorted.has_key(name):
+			for cb in self.sorted[name]:
 				try:
 					vysl = cb['method'](*args, **kwargs)
 					if vysl == False:
@@ -50,6 +54,8 @@ class EventDispatcher:
 					log.msg('In function:'+unicode(cb['method']))
 					message = traceback.format_exc()
 					log.msg(message)
+		else:
+			log.msg('no handler for %s'%name)
 		return True
 
 	def k(self, key):
