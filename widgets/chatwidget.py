@@ -624,7 +624,7 @@ class chatWidget(abstractChatWidget):
 				text=utils.replace_url(text,self)
 				text=text.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 				if m.receiptId != None and self.main().config['showReceipts']=='True':
-				   text = '<img id="'+m.receiptId+'" src="%s/images/16x16/actions/message.png" />'%os.getcwd()+ text
+				   text = '<img id="'+m.receiptId+'" src="%s/images/16x16/actions/message.png?receipt%s" />'%(os.getcwd(), m.receiptId)+ text
 
 				#file=self.main().homeDir+'/avatars/'+unicode(self.main().client.jid.userhost())
 				#if not os.path.isfile(file):

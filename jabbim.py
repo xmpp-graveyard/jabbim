@@ -35,6 +35,18 @@ import qt4reactor
 #if sys.platform=="win32":
 	#import win32gui
 
+try:
+	import psyco
+	#psyco.log()
+	#psyco.profile()
+	#psyco.full(memory=1000)
+	#psyco.profile(0.05, memory=5000)
+	#psyco.profile(0.15, memory = 5000)
+	psyco.background()
+
+except ImportError:
+	pass
+
 
 class jabbimApplication(QtGui.QApplication):
 	"""
