@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -5228,6 +5228,8 @@ class scrollBar(QtGui.QScrollArea):
 		self.setObjectName("scroll")
 
 if __name__ == "__main__":
+	import psyco
+	psyco.full()
 	translator=QtCore.QTranslator()
 	translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
 	print "trying to load locales:","locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm"
