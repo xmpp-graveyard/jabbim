@@ -431,8 +431,8 @@ class abstractChatWidget(QtGui.QWidget):
 		l=QtGui.QVBoxLayout(self.ui.viewWidget)
 		l.setMargin(0)
 		l.setSpacing(0)
-		self.ui.textEdit=textEditClass(self,self.ui.viewWidget)
-		self.ui.textEdit.hide()
+		#self.ui.textEdit=textEditClass(self,self.ui.viewWidget)
+		#self.ui.textEdit.hide()
 		#self.ui.webkit=QtWebKit.QWebView(self)
 		self.ui.webkit=webkitChatWidget(self,self)
 		#self.ui.webkit.settings().setAttribute(QtWebKit.QWebSettings.JavascriptEnabled,True)
@@ -477,12 +477,12 @@ class abstractChatWidget(QtGui.QWidget):
 			QtCore.QObject.connect(self.ui.paintButton,QtCore.SIGNAL("clicked()"),self.paint)
 		#QtCore.QObject.connect(self.ui.fontSize,QtCore.SIGNAL("activated(const QString &)"),self.fontSize)
 		
-		self.ui.textEdit.setAcceptRichText(False)
+		#self.ui.textEdit.setAcceptRichText(False)
 		# save init part from self.main().skin to the textEdit
 		self.init=""
 		#if self.main().skin.has_key("on_init"):
 #			self.init=self.main().skin["on_init"]
-		self.ui.textEdit.setHtml("<br/>"+self.init)
+		#self.ui.textEdit.setHtml("<br/>"+self.init)
 		
 		self.unread=0 #: number of unread messages
 		self.unreadEvent=None
