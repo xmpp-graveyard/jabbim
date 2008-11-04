@@ -360,8 +360,8 @@ class webkitChatWidget(QtWebKit.QWebView):
 			self.chatwidget().getPaintWindow().show()
 		elif cmd == 'resend_message':
 			receiptId = action.data().toString()
-			if self.main.client.messageReceipts.has_key(receiptId):
-				self.main.client.sendMessage(self.main.client.messageReceipts[receiptId])
+			if self.chatwidget().main().client.messageReceipts.has_key(receiptId):
+				self.chatwidget().main().client.sendMessage(self.main.client.messageReceipts[receiptId])
 
 		elif cmd == 'gc_toggle_join_part_messages':
 			if self.chatwidget().main().config['showMucJoinPart']=="True":
