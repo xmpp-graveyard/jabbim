@@ -21,7 +21,7 @@ class config:
 			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'Winamp':'winamp', 'Foobar 2000':'fb2k' }, 'value':'winamp'}
 			
 		else:
-			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Amarok':'amarok','Exaile':'exaile','Banshee':'banshee','Rhythmbox':'rhythmbox', 'Audacious':'audacious' }, 'value':'amarok'}
+			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Amarok':'amarok', 'Amarok 2':'amarok2', 'Exaile':'exaile', 'Banshee':'banshee', 'Rhythmbox':'rhythmbox', 'Audacious':'audacious'}, 'value':'amarok'}
 
 class AmarokProcessProtocol(ProcessProtocol):
 	def __init__(self, plugin, out, field):
@@ -159,6 +159,17 @@ class Plugin(plugins.PluginBase):
 				out['artist'] = currentTrackInfo['artist']
 			except:
 				text = ''
+				out = {}
+
+		elif self.config['player'] == 'amarok2':
+			try:
+				import dbus
+				bus = dbus.SessionBus()
+				amarok_player = bus.get_object("org.kde.amarok", "/Player")
+				song_info = amarok_player.GetMetadata()
+				out['title'] = song_info['title']
+				out['artist'] = song_info['artist']
+			except:
 				out = {}
 
 		elif self.config['player'] == 'amarok':
