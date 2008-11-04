@@ -33,6 +33,7 @@ from twisted.internet import  threads
 import socket 
 from xdata import *
 
+
 MUCLISTTYPES = {
 'voice': ('http://jabber.org/protocol/muc#admin', 'participant', 'role'),
 'ban': 	('http://jabber.org/protocol/muc#admin', 'outcast', 'affiliation'),
