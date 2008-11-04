@@ -40,8 +40,8 @@ try:
 	#psyco.log()
 	#psyco.profile()
 	#psyco.full(memory=1000)
-	#psyco.profile(0.05, memory=5000)
-	#psyco.profile(0.15, memory = 5000)
+	psyco.profile(0.05, memory=2000)
+	psyco.profile(0.15, memory = 5000)
 	psyco.background()
 
 except ImportError:
