@@ -4832,18 +4832,6 @@ class mainWindow(QtGui.QMainWindow):
 		QtGui.QMessageBox.critical(self, self.tr("Empty password"),self.tr("Your password is empty."))
 
 	def connect__(self):
-		try:
-			import psyco
-			psyco.log()
-			#psyco.profile()
-			#psyco.full(memory=1000)
-			psyco.profile(0.05, time = 20)
-			#psyco.profile(0.15, memory = 5000)
-			#psyco.background()
-			#psyco.full(time = 15)
-			psyco.runonly()
-		except ImportError:
-			pass
 		start=time.time()
 		# get variables
 		jid=unicode(self.ui.login_jid.text()).strip()
