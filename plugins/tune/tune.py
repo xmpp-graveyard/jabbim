@@ -202,40 +202,6 @@ class Rhythmbox(Player):
 			out = {}
 		self.plugin.sendPEP(out)
 
-#class AudaciousProtocol(ProcessProtocol):
-#	def __init__(self, plugin, info, field):
-#		self.plugin = plugin
-#		self.info = info
-#		self.field = field
-#		self.info[field] = ''
-#	def outReceived(self, data):
-#		self.info[self.field] += data
-#	def processEnded(self, reason):
-#		if not isinstance(reason.value, ProcessDone):
-#			self.info = {}
-#		if len(self.info) == 3:
-#			out = {}
-#			if self.info['status'].strip() == 'playing':
-#				out['artist'] = self.info['artist'].strip()
-#				out['title'] = self.info['title'].strip()
-#			self.plugin.sendPEP(out)
-#		elif self.info == {}:
-#			self.plugin.sendPEP({})
-#
-#class Audacious(Player):
-#	def __init__(self, plugin):
-#		Player.__init__(self, plugin)
-#	def check(self):
-#		info = {}
-#		for query in [
-#				['status', ['audtool', 'playback-status']],
-#				['artist', ['audtool', 'current-song-tuple-data','artist']],
-#				['title',  ['audtool', 'current-song-tuple-data','title' ]]]:
-#			reactor.spawnProcess(
-#				AudaciousProtocol(self.plugin, info, query[0]),
-#				'audtool', query[1],
-#				env=os.environ)
-
 class Audacious(Player):
 	def __init__(self, plugin):
 		Player.__init__(self, plugin)
