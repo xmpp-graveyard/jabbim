@@ -92,7 +92,7 @@ class MPD(Player):
 		Player.__init__(self, plugin)
 	def check(self):
 		reactor.spawnProcess(
-			MPDProcessProtocol(self.plugin),
+			MPDProtocol(self.plugin),
 			'mcp', ['mcp', 'status'],
 			env=os.environ)
 
