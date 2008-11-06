@@ -189,18 +189,48 @@ class Banshee(Player):
 class Rhythmbox(Player):
 	def __init__(self, plugin):
 		Player.__init__(self, plugin)
+		self.sig_receivers = []
+		self.playing = False
+		self.song_info = {}
+	def send(self):
+		if self.playing:
+			out = self.song_info.copy()
+		else:
+			out = {}
+		self.plugin.sendPEP(out)
 	def check(self):
-		out = {}
 		try:
 			bus = self.main.session_dbus
 			rhythmboxplayer = bus.get_object("org.gnome.Rhythmbox", "/org/gnome/Rhythmbox/Player")
-			rhythmboxshell = bus.get_object("org.gnome.Rhythmbox", "/org/gnome/Rhythmbox/Shell")
-			currentTrackInfo = rhythmboxshell.getSongProperties(rhythmboxplayer.getPlayingUri())
-			out['title'] = currentTrackInfo['title']
-			out['artist'] = currentTrackInfo['artist']
+			rhythmboxplayer.getPlaying(reply_handler=self.on_playing_changed, error_handler=self.clear_PEP)
+			rhythmboxplayer.getPlayingUri(reply_handler=self.on_playing_uri_changed, error_handler=self.clear_PEP)
 		except:
-			out = {}
-		self.plugin.sendPEP(out)
+			self.clear_PEP()
+	def on_playing_changed(self, playing):
+		self.playing = bool(playing)
+		self.send()
+	def on_playing_uri_changed(self, uri):
+		try:
+			bus = self.main.session_dbus
+			rhythmboxshell = bus.get_object("org.gnome.Rhythmbox", "/org/gnome/Rhythmbox/Shell")
+			rhythmboxshell.getSongProperties(uri, reply_handler=self.on_song_properties, error_handler=self.clear_PEP)
+		except:
+			self.song_info = {}
+			self.send()
+	def on_song_properties(self, song_info):
+		self.song_info['title']  = song_info['title']
+		self.song_info['artist'] = song_info['artist']
+		self.send()
+	def start_listening(self):
+		bus = self.main.session_dbus
+		self.sig_receivers.append(bus.add_signal_receiver(self.on_playing_changed,
+			'playingChanged', "org.gnome.Rhythmbox.Player", "org.gnome.Rhythmbox", "/org/gnome/Rhythmbox/Player"))
+		self.sig_receivers.append(bus.add_signal_receiver(self.on_playing_uri_changed,
+			'playingUriChanged', "org.gnome.Rhythmbox.Player", "org.gnome.Rhythmbox", "/org/gnome/Rhythmbox/Player"))
+	def stop_listening(self):
+		for receiver in self.sig_receivers:
+			receiver.remove()
+		self.sig_receivers = []
 
 class Audacious(Player):
 	def __init__(self, plugin):
