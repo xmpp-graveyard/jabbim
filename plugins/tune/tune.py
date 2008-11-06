@@ -205,22 +205,42 @@ class Rhythmbox(Player):
 class Audacious(Player):
 	def __init__(self, plugin):
 		Player.__init__(self, plugin)
+		self.sig_receivers = []
+		self.song_info = {}
+		self.status = 2
+	def send(self):
+		if self.status == 0:
+			out = self.song_info.copy()
+		else:
+			out = {}
+		self.plugin.sendPEP(out)
 	def check(self):
-		out = {}
 		try:
 			bus = self.main.session_dbus
 			audacious_player = bus.get_object("org.mpris.audacious", "/Player")
-			status = audacious_player.GetStatus()
-			# Audacious's GetStatus() does not comply with MPRIS spec, it returns a single Int32
-			if int(status) == 0:  # playing
-				song_info = audacious_player.GetMetadata()
-				out['title'] = song_info['title']
-				out['artist'] = song_info['artist']
-			else:
-				out = {}
+			audacious_player.GetStatus(reply_handler=self.on_status_changed, error_handler=self.clear_PEP)
+			audacious_player.GetMetadata(reply_handler=self.on_track_changed, error_handler=self.clear_PEP)
 		except:
-			out = {}
-		self.plugin.sendPEP(out)
+			self.clear_PEP()
+	def on_track_changed(self, info):
+		self.song_info['title'] = unicode(info['title'])
+		self.song_info['artist'] = unicode(info['artist'])
+		self.send()
+	def on_status_changed(self, status):
+		# Audacious's GetStatus() does not comply exactly with
+		# MPRIS spec, it returns a single Int32
+		self.status = int(status)
+		self.send()
+	def start_listening(self):
+		bus = self.main.session_dbus
+		self.sig_receivers.append(bus.add_signal_receiver(self.on_track_changed,
+			'TrackChange',  "org.freedesktop.MediaPlayer", "org.mpris.audacious", "/Player"))
+		self.sig_receivers.append(bus.add_signal_receiver(self.on_status_changed,
+			'StatusChange', "org.freedesktop.MediaPlayer", "org.mpris.audacious", "/Player"))
+	def stop_listening(self):
+		for receiver in self.sig_receivers:
+			receiver.remove()
+		self.sig_receivers = []
 
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
