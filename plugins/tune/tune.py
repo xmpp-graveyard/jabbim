@@ -93,7 +93,7 @@ class MPD(Player):
 	def check(self):
 		reactor.spawnProcess(
 			MPDProtocol(self.plugin),
-			'mcp', ['mcp', 'status'],
+			'mpc', ['mpc', 'status'],
 			env=os.environ)
 
 class AmarokProtocol(ProcessProtocol):
