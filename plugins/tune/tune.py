@@ -96,10 +96,9 @@ class Plugin(plugins.PluginBase):
 					out['lenght'] = output.split('\n')[1].split('/')[-1].split('(')[0].strip()
 
 		elif self.config['player'] == 'exaile':
-			
 			try:
 				import dbus
-				bus = dbus.SessionBus()
+				bus = self.main.session_dbus
 				obj = bus.get_object("org.exaile.DBusInterface","/DBusInterfaceObject")
 				exa = dbus.Interface(obj,"org.exaile.DBusInterface")
 				out['artist'] = exa.get_artist()
@@ -108,20 +107,16 @@ class Plugin(plugins.PluginBase):
 				else:	
 					out = {}
 			except:
-				text = ''
 				out = {}
-				
-		
+
 		elif self.config['player'] == 'banshee':
 			try:
-				import dbus
-				bus = dbus.SessionBus()
+				bus = self.main.session_dbus
 				banshee = bus.get_object("org.bansheeproject.Banshee", "/org/bansheeproject/Banshee/PlayerEngine")
 				currentTrack = banshee.GetCurrentTrack()
 				out['artist'] = currentTrack['artist']
 				out['title'] = currentTrack['name']
 			except:
-				text = ''
 				out = {}
 
 		elif self.config['player'] == 'winamp':
@@ -147,24 +142,20 @@ class Plugin(plugins.PluginBase):
 				if text.find('[Stopped]')!= -1:
 					out = {}
 
-
 		elif self.config['player'] == 'rhythmbox':
 			try:
-				import dbus
-				bus = dbus.SessionBus()
+				bus = self.main.session_dbus
 				rhythmboxplayer = bus.get_object("org.gnome.Rhythmbox", "/org/gnome/Rhythmbox/Player")
 				rhythmboxshell = bus.get_object("org.gnome.Rhythmbox", "/org/gnome/Rhythmbox/Shell")
 				currentTrackInfo = rhythmboxshell.getSongProperties(rhythmboxplayer.getPlayingUri())
 				out['title'] = currentTrackInfo['title']
 				out['artist'] = currentTrackInfo['artist']
 			except:
-				text = ''
 				out = {}
 
 		elif self.config['player'] == 'amarok2':
 			try:
-				import dbus
-				bus = dbus.SessionBus()
+				bus = self.main.session_dbus
 				amarok_player = bus.get_object("org.kde.amarok", "/Player")
 				song_info = amarok_player.GetMetadata()
 				out['title'] = song_info['title']
@@ -216,6 +207,3 @@ class Plugin(plugins.PluginBase):
 				out = {}
 
 		self.sendPEP(out)
-
-
-# EOF

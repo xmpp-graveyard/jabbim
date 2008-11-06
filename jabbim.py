@@ -2496,6 +2496,18 @@ class mainWindow(QtGui.QMainWindow):
 		l.setMargin(0)
 		l.setSpacing(0)
 		self.ui.contentView.show()
+		# Connect to session dbus if possible.
+		# Code must not assume DBus is available and must limit
+		# functionality gracefully if session_dbus==None.
+		try:
+			import dbus
+			from dbus.mainloop.qt import DBusQtMainLoop
+			DBusQtMainLoop(set_as_default=True)
+			self.session_dbus = dbus.SessionBus()
+			print "Connected to session DBus"
+		except:
+			print "Session DBus not available"
+			self.session_dbus = None
 		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.connect()
