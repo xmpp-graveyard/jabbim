@@ -95,6 +95,9 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.empty.hide()
 		self.ui.add.hide()
 		self.gateway=False
+		self.ui.picture.setPixmap(QtGui.QPixmap("images/logo.png"))
+		self.ui.picture.setAlignment(QtCore.Qt.AlignCenter)
+		self.ui.picture.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
 
 #def getTransportForm(self, jid): 
 #def getTransportJid(self, jid, prompt):
@@ -108,14 +111,21 @@ class addContactDialog(QtGui.QDialog):
 	def serviceChanged(self,index):
 		if index==0:
 			self.gateway=False
+			self.addFunction=None
 			self.ui.add.hide()
 			self.ui.search.show()
 			self.ui.searchLabel.setText(self.tr("User:"))
-			self.ui.description.hide()
+			self.ui.description.setText(self.tr("Enter informations about contact or whole Jabber ID."))
+			self.ui.description.show()
+			self.ui.treeWidget.hide()
+			self.ui.picture.show()
+			self.ui.lineEdit.show()
 			return
 		jid=unicode(self.ui.service.itemData(index).toString())
 		print jid
 		print list(self.main().client.disco[jid][None]['features'])
+		self.ui.lineEdit.show()
+		self.ui.search.show()
 		if not self.isServiceRegistered(jid):
 			if jid=="icq.jabber.cz":
 				self.addFunction=None
@@ -123,29 +133,57 @@ class addContactDialog(QtGui.QDialog):
 				self.discovery2.registerICQ()
 				self.discovery2.show()
 			elif jid=="weather.netlab.cz":
+				self.ui.picture.hide()
+				self.ui.search.hide()
+				self.ui.add.hide()
+				self.ui.description.hide()
+				self.ui.lineEdit.hide()
+				self.ui.searchLabel.hide()
 				self.showWeather()
 				self.addFunction=self._addWeather
 			elif jid=="dict.jabbim.cz":
+				self.ui.picture.hide()
+				self.ui.search.hide()
+				self.ui.add.hide()
+				self.ui.description.hide()
+				self.ui.lineEdit.hide()
+				self.ui.searchLabel.hide()
 				self.showDict()
 				self.addFunction=self._addDict
 			else:
+				self.ui.picture.show()
 				self.addFunction=None
+				self._nowAskingFor=jid
 				d=self.main().client.getRegisterForm(jid)
 				d.addCallback(self._onRegister)
 				self.ui.treeWidget.hide()
 		else:
 			#if "jabber:iq:gateway" in list(self.main().client.disco[jid][None]['features']):
 			if jid=="weather.netlab.cz":
+				self.ui.picture.hide()
+				self.ui.search.hide()
+				self.ui.add.hide()
+				self.ui.description.hide()
+				self.ui.lineEdit.hide()
+				self.ui.searchLabel.hide()
 				self.showWeather()
 				self.addFunction=self._addWeather
 			elif jid=="dict.jabbim.cz":
+				self.ui.picture.hide()
+				self.ui.search.hide()
+				self.ui.add.hide()
+				self.ui.description.hide()
+				self.ui.lineEdit.hide()
+				self.ui.searchLabel.hide()
 				self.showDict()
 				self.addFunction=self._addDict
 			else:
 				self.addFunction=None
+				self.ui.picture.show()
 				d=self.main().client.getTransportForm(jid)
-				d.addCallback(self._transportForm)
-				d.addErrback(self._transportFormError)
+				self._nowAskingFor=jid
+				d.addCallback(self._transportForm,jid)
+				d.addErrback(self._transportFormError,jid)
 				self.ui.treeWidget.hide()
 
 	def showDict(self):
@@ -205,7 +243,12 @@ class addContactDialog(QtGui.QDialog):
 			else:
 				item.setCheckState(0,QtCore.Qt.Unchecked)
 				item.registered=QtCore.Qt.Unchecked
+
+		for i in range(self.ui.treeWidget.columnCount())[1:]:
+			self.ui.treeWidget.setColumnHidden(i,True)
+
 		self.ui.treeWidget.sortItems(0,QtCore.Qt.AscendingOrder)
+		self.ui.treeWidget.resizeColumnToContents(0)
 		self.ui.treeWidget.show()
 		self.ui.addToRoster.show()
 
@@ -231,7 +274,7 @@ class addContactDialog(QtGui.QDialog):
 				else:
 					self.main().client.delContact(unicode(item.jid))
 
-	def _transportForm(self,data):
+	def _transportForm(self,data,jid):
 		self.ui.description.setText(unicode(data['desc']))
 		self.ui.searchLabel.setText(unicode(data['prompt']))
 		self.ui.search.hide()
@@ -239,11 +282,12 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.description.show()
 		self.gateway=True
 	
-	def _transportFormError(self,data=None):
-		self.ui.searchLabel.setText(self.tr("User:"))
-		self.ui.search.show()
-		self.gateway=False
-		self.ui.description.hide()
+	def _transportFormError(self,data,jid):
+		if _nowAskingFor==jid:
+			self.ui.searchLabel.setText(self.tr("User:"))
+			self.ui.search.show()
+			self.gateway=False
+			self.ui.description.hide()
 
 	def showWeather(self):
 		l=unicode(QtCore.QLocale.system().name())[:2]
@@ -291,7 +335,10 @@ class addContactDialog(QtGui.QDialog):
 				else:
 					item.setCheckState(0,QtCore.Qt.Unchecked)
 					item.registered=QtCore.Qt.Unchecked
+			for i in range(self.ui.treeWidget.columnCount())[1:]:
+				self.ui.treeWidget.setColumnHidden(i,True)
 			self.ui.treeWidget.sortItems(0,QtCore.Qt.AscendingOrder)
+			self.ui.treeWidget.resizeColumnToContents(0)
 			self.ui.treeWidget.show()
 			self.ui.addToRoster.show()
 
@@ -385,6 +432,7 @@ class addContactDialog(QtGui.QDialog):
 		d.addCallback(self._gotResults)
 
 	def _gotResults(self,data):
+		self.ui.picture.hide()
 		self.ui.treeWidget.clear()
 		fields={}
 		jid,legacy,form=data
