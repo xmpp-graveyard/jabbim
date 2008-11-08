@@ -490,7 +490,7 @@ class Client(derived):
 			
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		
-		if self.IBBonly:
+		if self.IBBonly and self.connection != None:
 			self.connection.connect()
 #			self.connection.factory.bosh_client.manager.restart()
 
