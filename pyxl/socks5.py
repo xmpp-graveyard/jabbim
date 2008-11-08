@@ -686,15 +686,19 @@ class Send(protocol.Protocol):
 	
 	def __init__(self):
 		self.last = time.time()
+		print 'send >> init'
 		pass
 	
 	def registerProducer(self, producer, streaming):
+		print 'send >> registerProducer'
 		self. producer = producer
 		return self.transport.registerProducer(producer, streaming)
 	
 	def unregisterProducer(self):
+		print 'send >>unregisterProducer'
 		self.transport.unregisterProducer()
 		self.transport.loseConnection()
+		print 'end'
 
 	def write(self, data):
 #		print 'prenasim: ', len(data)
@@ -716,8 +720,12 @@ class Send(protocol.Protocol):
 			print unicode(cekej)
 			if cekej <0:
 				cekej = 0
-		reactor.callLater(cekej,  self.transport.write, data)
+		print 'send >> write >>', cekej
+		reactor.callLater(cekej,  self.doWriteToTransport, data)
 		self.last = ted
+		
+	def doWriteToTransport(self, data):
+		self.transport.write(data)
 		try:
 			self.ft.connector.factory.delayed_timeout_call.cancel()
 		except:
