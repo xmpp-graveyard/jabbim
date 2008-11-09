@@ -124,7 +124,7 @@ def set_xmpp_handler():
 	if sys.platform == 'win32' :
 		print os.getcwd()
 		if sys.argv[0].find('jabbim.py') != -1:
-			cesta = 'c:\Python25\python.exe "' + os.getcwd() + '\\jabbim.py" --uri=%1'
+			cesta = 'c:\Python25\python.exe "' + os.getcwd() + '\\jabbim.py" --uri=%1' #hack!
 		else:
 			cesta = '"' + os.getcwd() + '\\jabbim.exe" --uri=%1'
 		import _winreg
@@ -151,7 +151,7 @@ def set_xmpp_handler():
 
 	def set_jabbim_as_xmpp_handler(is_checked=None):
 
-			command = 'jabbim_remote.py --u %s'
+			command = 'jabbim.sh --uri=%s'
 
 			# setting for GNOME/Gconf
 			client.set_bool('/desktop/gnome/url-handlers/xmpp/enabled', True)
