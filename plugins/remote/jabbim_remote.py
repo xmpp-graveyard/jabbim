@@ -57,7 +57,7 @@ def scanports(): #
 
 
 
-def handleuri(argv):
+def handleuri(argv, porty, server):
 	print 'handle uri!'
 	print argv
 	argv = argv[1]
