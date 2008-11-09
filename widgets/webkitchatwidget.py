@@ -82,6 +82,11 @@ class message(QtCore.QObject):
 	def addHandler(self,name,fc,data=[]):
 		self.handlers[name]=[fc,data]
 
+	@QtCore.pyqtSignature("QString")
+	def removeHandler(self,name):
+		if self.handlers.has_key(name):
+			del self.handlers[name]
+
 	@QtCore.pyqtSignature("",result="QStringList")
 	def getHandlers(self):
 		return QtCore.QStringList(self.handlers.keys())
@@ -385,7 +390,9 @@ class webkitChatWidget(QtWebKit.QWebView):
 
 	def reloadImage(self,name,data,x=None):
 ##		if x:
-		self.messageObject.src[name]=data
+		if not self.messageObject.handlers.has_key(name):
+			self.messageObject.src[name]=data
+			self.messageObject.addHandler(name,self.reloadImage,[name,data,x])
 		self.page().mainFrame().evaluateJavaScript("reloadImage('%s');"%name)
 #		else:
 	#		self.chatwidget().main().reactor.callLater(1,self.reloadImage,name,data,True)
@@ -484,6 +491,7 @@ function reloadImage(name) {
 	if (i){
 		i.src = messageObject.getSrc(name);
 		messageObject.reloaded(name);
+		messageObject.removeHandler(name);
 	}
 }
 

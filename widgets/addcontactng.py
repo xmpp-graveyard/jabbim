@@ -95,7 +95,7 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.empty.hide()
 		self.ui.add.hide()
 		self.gateway=False
-		self.ui.picture.setPixmap(QtGui.QPixmap("images/logo.png"))
+		self.ui.picture.setPixmap(QtGui.QPixmap("images/lupa-smile.png"))
 		self.ui.picture.setAlignment(QtCore.Qt.AlignCenter)
 		self.ui.picture.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
 
