@@ -10,6 +10,7 @@ from twisted.web import xmlrpc, server
 from PyQt4 import QtCore, QtGui
 from twisted.python import log
 from time import time
+
 try:
 	from hashlib import sha1
 except:
@@ -120,8 +121,28 @@ class Remote(xmlrpc.XMLRPC):
 
 
 def set_xmpp_handler():
-	'''registers (by default only the first time) xmmp: to Jabbim.'''
-	path_to_dot_kde = os.path.expanduser('~/.kde')
+	if sys.platform == 'win32' :
+		print os.getcwd()
+		if sys.argv[0].find('jabbim.py') != -1:
+			cesta = 'c:\Python25\python.exe "' + os.getcwd() + '\\jabbim.py" --uri=%1'
+		else:
+			cesta = '"' + os.getcwd() + '\\jabbim.exe" --uri=%1'
+		import _winreg
+		reg = _winreg.ConnectRegistry(None, _winreg.HKEY_CLASSES_ROOT)
+		xmpp = _winreg.CreateKey(reg, 'xmpp')
+		_winreg.CloseKey(xmpp)
+  		xmpp = _winreg.OpenKey(reg, 'xmpp', 0, _winreg.KEY_WRITE)
+		_winreg.SetValueEx(xmpp,'EditFlags', 0, _winreg.REG_DWORD, 2)
+		_winreg.SetValueEx(xmpp,'', 0, _winreg.REG_SZ, 'URL:XMPP Protocol')
+		_winreg.SetValueEx(xmpp,'URL Protocol', 0, _winreg.REG_SZ, '')
+		_winreg.CloseKey(xmpp)
+		comm = _winreg.CreateKey(reg, 'xmpp\\shell\\open\\command')
+		_winreg.CloseKey(comm)
+		comm = _winreg.OpenKey(reg, 'xmpp\\shell\\open\\command', 0, _winreg.KEY_WRITE)
+		_winreg.SetValueEx(comm,'', 0, _winreg.REG_SZ, cesta)
+		_winreg.CloseKey(comm)
+
+ 	path_to_dot_kde = os.path.expanduser('~/.kde')
 	if os.path.exists(path_to_dot_kde):
 		path_to_kde_file = os.path.join(path_to_dot_kde, 
 			'share/services/xmpp.protocol')

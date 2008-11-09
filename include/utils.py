@@ -707,3 +707,41 @@ def getStampFromFormat(datetime, format): # format e.g. "%d.%m.%Y %H:%M"
 		seconds="0%s" % seconds
 	return  "%s-%s-%sT%s:%s:%sZ" % (year, month, day, hour, minut, seconds)
 
+def readpfile(pfile):
+	ports = {}
+	for line in open(pfile).read().splitlines():
+		timestamp, port, cookie = line.split(":",2)
+		ports[timestamp] = (port, cookie)
+	return ports
+
+def scanports(): #
+	hd = getHomeDir()
+	print hd
+	profiledirs = filter(lambda s: "@" in s, os.listdir(hd))
+	profs = []
+	for dir in profiledirs:
+		try:
+			profs.append(readpfile(os.path.join(hd,dir,"xmlrpcports")))
+		except IOError:
+			pass
+	p = {}
+	for d in profs:
+		p.update(d)
+	print p
+
+	return p[p.keys()[0]]
+
+def handleuri(argv, porty, server):
+	print 'handle uri!'
+	print argv
+	if not argv.startswith('xmpp:'):
+		return 'wrong uri'
+	uri = argv[5:]
+	parts = uri.split('?', 1)
+	if len (parts) == 1:
+		print 'message'
+		print porty
+		return server.startChat(parts[0].replace('%40', '@'), porty[1])
+	elif parts[1] == 'join':
+		print 'muc'
+		return server.joinMUC(parts[0].replace('%40', '@'), porty[1])

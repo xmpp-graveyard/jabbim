@@ -18,8 +18,26 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 import gc
-import sys,os
+import sys,os, getopt, xmlrpclib
 sys.path.append('.')
+from include import utils
+try:
+	OPTIONS,arg = getopt.getopt(sys.argv[1:],'h:u:', ['home=', 'uri='])
+except getopt.GetoptError, err:
+	print str(err)
+	sys.exit(2)
+
+for opt, arg in OPTIONS:
+	if opt == '-u' or '--uri':
+		try:
+			porty = utils.scanports()
+		except:
+			print 'no ports'
+			sys.exit(2)
+		server = xmlrpclib.Server('http://localhost:%s/'%porty[0])
+		utils.handleuri(arg, porty, server)
+		sys.exit()
+
 try: from PyQt4 import QtCore, QtGui,QtWebKit
 except: print "PyQt4 is not installed."
 
@@ -34,7 +52,6 @@ except:
 import qt4reactor
 #if sys.platform=="win32":
 	#import win32gui
-
 
 
 
@@ -2036,6 +2053,7 @@ class avatarLoader(QtCore.QThread):
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
+		
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
 		self.ui.Form.setWidget(self.ui.scrollAreaWidgetContents)
@@ -2630,8 +2648,7 @@ class mainWindow(QtGui.QMainWindow):
 					print src
 					cid = src.split(':')[1]
 					i="bob"+str(self.imageId)+str(random.randint(0,100))
-					d=self.client.getBOBData(msg.frm.full(),  cid)
-					d.addCallback(self.refreshImage,i,msg.frm)
+
 					print self.client.bobDef[cid]
 					print cid
 					link = self.client.bobDef[cid].encode('utf8')
@@ -2650,6 +2667,8 @@ class mainWindow(QtGui.QMainWindow):
 					print "RETURN",d
 					self.imageId+=1
 					changed = True
+					d=self.client.getBOBData(msg.frm.full(),  cid)
+					d.addCallback(self.refreshImage,i,msg.frm)
 				elif src != None and src.startswith('xmpp:') and src.find('?recvfile;')>0:
 					url = QtCore.QUrl(src)
 					res = self.xmppUri(url, self.client.bobCacheDir)
@@ -2657,7 +2676,7 @@ class mainWindow(QtGui.QMainWindow):
 						id = res[0]
 						d = res[1]
 						i="bob"+str(self.imageId)+str(random.randint(0,100))
-						d.addCallback(self.refreshImage,i,msg.frm)
+						
 						link = self.client.bobDef[id].encode('utf8')
 						el.setAttribute('src', link)
 						el.setAttribute('id',i)
@@ -2672,6 +2691,7 @@ class mainWindow(QtGui.QMainWindow):
 						print "RETURN",d
 						self.imageId+=1
 						changed = True
+						d.addCallback(self.refreshImage,i,msg.frm)
 			if changed:
 				print 'changed',type(link)
 #				print unicode(dom.toxml())
