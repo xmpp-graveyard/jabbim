@@ -314,7 +314,14 @@ class webkitChatWidget(QtWebKit.QWebView):
 			menu.addAction(action)
 		if unicode(hit.linkUrl().scheme()) == 'xmpp':
 			jd = unicode(hit.linkUrl().path())
-			submenu = self.chatwidget().main().ui.roster.buildJidMenu(jd)
+	   		items=self.chatwidget().main().ui.roster.getUserItems(jd)
+			if len(items)==0:
+				submenu=self.chatwidget().main().ui.roster.buildJidMenu(jd)
+			else:
+				item=items[0]
+				group=item.group
+				jid=item.jid
+				submenu=self.chatwidget().main().ui.roster.buildContactMenu(unicode(jid),group)
 			submenu.setTitle(jd)
 			menu.addMenu(submenu)
 
