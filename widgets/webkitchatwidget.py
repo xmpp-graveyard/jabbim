@@ -312,6 +312,11 @@ class webkitChatWidget(QtWebKit.QWebView):
 			action.setObjectName("resend_message")
 			action.setData(QtCore.QVariant(receiptId))
 			menu.addAction(action)
+		if unicode(hit.linkUrl().scheme()) == 'xmpp':
+			jd = unicode(hit.linkUrl().path())
+			submenu = self.chatwidget().main().ui.roster.buildJidMenu(jd)
+			submenu.setTitle(jd)
+			menu.addMenu(submenu)
 
 		menu.addSeparator()
 		action=menu.addAction(self.tr("Search"))
