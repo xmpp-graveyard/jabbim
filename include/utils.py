@@ -588,11 +588,17 @@ def replace_url(text,widget=None):
 			text+='<a href="http://%s" title="%s">%s</a>'%(word, word, word)+" "
 		elif word.find('@') != -1:
 			wellKnown = ['jabbim.cz', 'njs.netlab.cz', 'pyco.cz', 'jabbim.sk', 'jabbim.pl', 'jabber.cz', 'jabbim.com', 'gmail.com', 'jabber.org', 'jabster.pl', 'jabber.ru']
-			print widget
-			if (widget != None and widget.main().client.hasIdentity(word.split('@')[1], 'server', 'im')) or word.split('@')[1] in wellKnown :
-				text+='<a href="xmpp:%s" title="%s">%s</a>'%(word, word, word)
+			user, server = word.split('@',1)
+			if word.count('@')>1:
+				text += word+" "
+				continue
+			if ':' in user:
+				text+='<a href="%s" title="%s">%s</a>'%(word, word, user.split(':')[1]+'@'+server)
 			else:
-				text+='<a href="mailto:%s" title="%s">%s</a>'%(word, word, word)
+				if (widget != None and widget.main().client.hasIdentity(server, 'server', 'im')) or server in wellKnown :
+					text+='<a href="xmpp:%s" title="%s">%s</a>'%(word, word, word)
+				else:
+					text+='<a href="mailto:%s" title="%s">%s</a>'%(word, word, word)
 		else:
 			text+=word+" "
 	return text[:-1]
