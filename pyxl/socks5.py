@@ -734,7 +734,7 @@ class Send(protocol.Protocol):
 		if self.ft:
 			self.ft.transfered = self.ft.transfered + len(data)
 			self.ft.client.dispatcher.publishEvent('on_ftTransfered', self.ft.sid, len(data))
-			if self.ft.transfered == self.ft.size:
+			if self.ft.transfered => self.ft.size:
 				self.ft.finish()
 
 
