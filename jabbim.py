@@ -1038,6 +1038,7 @@ class clientClass(pyxl.client.Client):
 			if status == None:
 				message = message.replace("[[message]]",'')
 			else:
+				status = utils.replace_url(unicode(status),tab.chat)
 				message = message.replace("[message]",unicode(status))
 
 			if self.main.client.groupchats[muc].users[nick].truejid!="" and self.main.client.groupchats[muc].users[nick].truejid!=None:
