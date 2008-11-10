@@ -1063,6 +1063,7 @@ class clientClass(pyxl.client.Client):
 
 		# show info about status change in conversation textEdit
 		if str(self.main.config["showChatStatusChanges"])=="True" and tabFull:
+
 			# get senders username
 			user=self.main.ui.roster.getNameByJID(jid.userhost())
 			# append message to textEdit
@@ -1072,6 +1073,8 @@ class clientClass(pyxl.client.Client):
 				if contact.resources.has_key(jid.resource):
 					s = contact.resources[jid.resource].status
 			if s:
+				#process status message
+				s = utils.replace_url(unicode(s),tabFull.chat)
 				message=message.replace("[message]",unicode(s))
 			else:
 				message=message.replace("[[message]]","")

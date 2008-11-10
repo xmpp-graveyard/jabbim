@@ -159,7 +159,7 @@ def loadConfig(main,status):
 			"chatTheme":"candy/Blue vs Green.css",
 			"groupchatTheme":"candy/Blue vs Green.css",
 			"expandedGroups":[],
-			"plugins":['notification', 'archive', 'autoaway', 'autoupdate', 'jdm', 'tune'],
+			"plugins":['notification', 'archive', 'autoaway', 'autoupdate', 'jdm', 'tune', 'remote'],
 			"rosterMode":"normal",
 			"rosterStyle":"",
 			"chatMode":"normal",
