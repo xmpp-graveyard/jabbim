@@ -432,6 +432,19 @@ def makePreferences(main,parent,layout,form,row=1):
 					#widget.setToolTip(unicode(d))
 			row+=1
 		elif x['type']=="boolean-radio":
+			try:
+				label=QtGui.QLabel(x['label'],par)
+				label.setOpenExternalLinks(True)
+				label.setWordWrap(True)
+				label.setTextFormat(QtCore.Qt.RichText)
+				policy=label.sizePolicy()
+				policy.setHeightForWidth(True)
+				policy.setVerticalPolicy(QtGui.QSizePolicy.Minimum)
+				label.setSizePolicy(policy)
+			except KeyError:
+				label=None
+			lay.addWidget(label,row,0,1,2)
+			row+=1
 			group=QtGui.QButtonGroup()
 			for data,lab in x['options'].iteritems():
 				widget=QtGui.QRadioButton(lab,par)
