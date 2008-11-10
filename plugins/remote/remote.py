@@ -24,9 +24,10 @@ class Plugin(plugins.PluginBase):
 		self.description = 'XMLRPC Remote Control'
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'XMLRPC Remote'
-		self.version = '0.01'
+		self.version = '0.02'
 		self.category = ['utils']
 		self.url = 'http://dev.jabbim.cz/jabbim'
+		self.functions = {}
 
 		if main:
 			self.pfilename = os.path.join(homedir,"xmlrpcports")
@@ -57,6 +58,24 @@ class Plugin(plugins.PluginBase):
 
 		self.conn.stopListening()
 		os.remove(self.pfilename)
+
+	def registerPluginFunc(self, name, func):
+		self.functions[name] = func
+
+	def unregisterPluginFunc(self, name):
+		try:
+			del self.functions[name]
+		except:
+			pass
+
+	def runPluginFunc(self, name, arg):
+		print 'run it >> ', name
+		print  arg
+		print self.functions
+		if self.functions.has_key(name):
+			self.functions[name](arg)
+	    	return True
+
 			
 def generateCookie():
 	magic = unicode(globals())+unicode(time())
@@ -77,6 +96,14 @@ class Remote(xmlrpc.XMLRPC):
 	def __init__(self, main, plugin):
 		self.main = main
 		self.cookie = plugin.cookie
+		self.plugin = plugin
+		
+	def xmlrpc_runPluginFunc(self, name, arg, cookie):
+		if not checkCookie(cookie, self.cookie):
+			print 'bad cookie'
+			return False
+		print 'runPluginFunc'
+		return self.plugin.runPluginFunc(name, arg)
 		
 	def xmlrpc_setStatus(self, show, status):
 		self.main.sendPresence(None, show, status)

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 import sys,os,time
 sys.path.append('.')
 from include import plugins
@@ -9,6 +9,7 @@ from include import utils
 import base64
 from widgets import dataforms,legacyforms
 from widgets.events.ftwidget import FTDownloadWidget
+from twisted.internet import reactor
 try:
 	from hashlib import md5
 except:
@@ -140,9 +141,38 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.progress.hide()
 			self.leftDesktop()
 			self.stopDownload=False
+
+			#desktop integration
+			reactor.callLater(5, self.registerRemote)
+			
 		else:
 			self.loadConfig(homedir)
 
+	def registerRemote(self):
+		remote = self.main.getPlugin('remote')
+		print remote
+		if remote != False:
+			remote.registerPluginFunc('jdm_public', self.remotePublic)
+			utils.regWindowsMenu('Send to JDM Public', 'jdm_public')
+			remote.registerPluginFunc('jdm_private', self.remotePrivate)
+			utils.regWindowsMenu('Send to JDM Private', 'jdm_private')
+
+	def unregisterRemote(self):
+		remote = self.main.getPlugin('remote')
+		if remote != False:
+			remote.unregisterPluginFunc('jdm_public')
+			utils.unregWindowsMenu('Send to JDM Public')
+			remote.unregisterPluginFunc('jdm_private')
+			utils.unregWindowsMenu('Send to JDM Private')
+        	
+	def remotePublic(self, arg):
+		self.main.showFiletransferDialog([arg], 'public@disk.jabbim.cz')
+	def remotePrivate(self, arg):
+		self.main.showFiletransferDialog([arg], 'private@disk.jabbim.cz')
+
+	def on_remove(self):
+		self.unregisterRemote()
+		
 	def esConfiguration(self):
 		self.showPluginConfigDialog("easyshare",self.wizard)
 		self.easyshare()

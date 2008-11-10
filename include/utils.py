@@ -750,3 +750,28 @@ def handleuri(argv, porty, server):
 		return server.startChat(parts[0].replace('%40', '@'), porty[1])
 	elif parts[1] == 'join':
 		return server.joinMUC(parts[0].replace('%40', '@'), porty[1])
+
+def regWindowsMenu(name, comm):
+	if sys.platform == 'win32' :
+		print os.getcwd()
+		if sys.argv[0].find('jabbim.py') != -1:
+			cesta = 'c:\Python25\python.exe "' + os.getcwd() + '\\jabbim.py" --plugin="'+comm+' %1"' #hack!
+		else:
+			cesta = '"' + os.getcwd() + '\\jabbim.exe" --plugin="'+comm+' %1"'
+		import _winreg
+		reg = _winreg.ConnectRegistry(None, _winreg.HKEY_CLASSES_ROOT)
+		command = _winreg.CreateKey(reg, 'AllFilesystemObjects\\shell\\%s\\command'%name)
+		_winreg.CloseKey(command)
+  		command = _winreg.OpenKey(reg, 'AllFilesystemObjects\\shell\\%s\\command'%name, 0, _winreg.KEY_WRITE)
+		_winreg.SetValueEx(command,'', 0, _winreg.REG_SZ, cesta )
+		_winreg.CloseKey(command)
+
+def unregWindowsMenu(name):
+	if sys.platform == 'win32' :
+		import _winreg
+		reg = _winreg.ConnectRegistry(None, _winreg.HKEY_CLASSES_ROOT)
+  		command = _winreg.OpenKey(reg, 'AllFilesystemObjects\\shell', 0, _winreg.KEY_WRITE)
+		_winreg.DeleteKey(command, name + '\\command')
+		_winreg.DeleteKey(command, name)
+		_winreg.CloseKey(command)
+

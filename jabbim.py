@@ -18,17 +18,17 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 import gc
-import sys,os, getopt, xmlrpclib
+import sys,os, getopt, xmlrpclib, time
 sys.path.append('.')
 from include import utils
 try:
-	OPTIONS,arg = getopt.getopt(sys.argv[1:],'h:u:', ['home=', 'uri='])
+	OPTIONS,arg = getopt.getopt(sys.argv[1:],'h:u:p:', ['home=', 'uri=', 'plugin='])
 except getopt.GetoptError, err:
 	print str(err)
 	sys.exit(2)
 
 for opt, arg in OPTIONS:
-	if opt == '-u' or '--uri':
+	if opt == '-u' or opt == '--uri':
 		try:
 			porty = utils.scanports()
 		except:
@@ -36,6 +36,20 @@ for opt, arg in OPTIONS:
 			sys.exit(2)
 		server = xmlrpclib.Server('http://localhost:%s/'%porty[0])
 		utils.handleuri(arg, porty, server)
+		sys.exit()
+	elif opt == '-p' or opt == '--plugin':
+		#format: --plugin="pluginName_func args"
+		try:
+			porty = utils.scanports()
+		except:
+			print 'no ports'
+			sys.exit(2)
+		name, args = arg.split(' ',1)
+		print args
+		server = xmlrpclib.Server('http://localhost:%s/'%porty[0])
+
+		server.runPluginFunc(name, args, porty[1])
+		
 		sys.exit()
 
 try: from PyQt4 import QtCore, QtGui,QtWebKit
@@ -2084,6 +2098,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.config=None #: config dict (loaded by configObj)
 		self.cache=None
 		self.connectStarted=0
+		self.senddialog = None
 		self.snarlMessages={}
 		self.autoAdd={}
 		self.version = '0.5 SVN' + utils.getSvnVersion() #: version string
@@ -2616,10 +2631,13 @@ class mainWindow(QtGui.QMainWindow):
 		@type jid: unicode
 		@param jid: JID
 		"""
-		#if jid=="album@disk.jabbim.cz":
-		self.senddialog=widgets.albumfiletransfer.albumFiletransferDialog(self,files,jid)
-		#else:
-			#self.senddialog=widgets.filetransfer.filetransferDialog(self,files,jid)
+		if self.senddialog == None:
+			self.senddialog=widgets.albumfiletransfer.albumFiletransferDialog(self,files,jid)
+			print 'None!'
+		else:
+			self.senddialog._addFiles(files)
+			print 'recycled'
+			
 		self.senddialog.show()
 
 
@@ -4161,6 +4179,12 @@ class mainWindow(QtGui.QMainWindow):
 		d=extraDialog("",self,self,file)
 		d.exec_()
 
+	def getPlugin(self, plugin):
+		if self.plugins.has_key(plugin):
+			return self.plugins[plugin]['module']
+		else:
+			return False
+		
 	def loadPlugins(self):
 		"""
 		Loads plugins according to config file (self.config['plugins'])

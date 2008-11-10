@@ -41,8 +41,9 @@ class RegisteringAuthenticator(BasicAuthenticator):
 			self.xmlstream.dispatch(iq, self.REGISTER_FAILED_EVENT)
 	
 	def streamStarted(self, rootElement):
-		BasicAuthenticator.streamStarted(self, rootElement)
 		self.rootElement = rootElement
+		BasicAuthenticator.streamStarted(self, rootElement)
+		
 
 
 

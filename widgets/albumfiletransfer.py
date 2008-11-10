@@ -22,7 +22,7 @@ except:
 	print "PyQt4 is not installed."
 from albumfiletransfer_ui import *
 from os.path import basename,isfile
-from twisted.internet import threads
+from twisted.internet import threads, reactor
 from include import utils
 
 class albumFiletransferDialog(QtGui.QDialog):
@@ -57,9 +57,12 @@ class albumFiletransferDialog(QtGui.QDialog):
 			if isfile(unicode(f)):
 				new.append(unicode(f))
 		file=new # path to files
-		if len(file)!=0:
-			self.files+=file
-			for f in file:
+		self._addFiles(file)
+		
+	def _addFiles(self, files):
+		if len(files)!=0:
+			self.files+=files
+			for f in files:
 				item=QtGui.QListWidgetItem(self.ui.files)
 				item.setText(basename(unicode(f)))
 				item.setData(32,QtCore.QVariant(unicode(f)))
@@ -107,6 +110,16 @@ class albumFiletransferDialog(QtGui.QDialog):
 			self.ui.description.setText("")
 		self.currentFile=file
 
+	def reject(self):
+		print 'cancel'
+		reactor.callLater(0, self.removeDialog)
+		self.done(1)
+		
+		
+	def removeDialog(self):
+		#tohle asi nedelam dobre
+		self.main.senddialog = None
+
 	def accept(self):
 		print 'accept'
 		if self.currentFile:
@@ -127,4 +140,6 @@ class albumFiletransferDialog(QtGui.QDialog):
 		file=self.files
 
 		self.main.events.addFTUploadEvent(jid,file,descriptions)
+		reactor.callLater(0, self.removeDialog)
 		self.done(1)
+		
