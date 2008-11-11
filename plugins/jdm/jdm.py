@@ -143,7 +143,7 @@ class Plugin(plugins.PluginBase):
 			self.stopDownload=False
 
 			#desktop integration
-			reactor.callLater(5, self.registerRemote)
+			self.registerHandler('on_pluginsLoaded', self.registerRemote)
 			
 		else:
 			self.loadConfig(homedir)

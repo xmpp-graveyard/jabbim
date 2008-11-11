@@ -176,6 +176,7 @@ class clientClass(pyxl.client.Client):
 			self.rebuildCaps()
 		# load plugins
 		self.loadPlugins()
+		
 
 
 	def on_pep(self, frm, ns, payload):
@@ -4196,6 +4197,7 @@ class mainWindow(QtGui.QMainWindow):
 					self.loadPlugin(plugin_name)
 				except Exception, ex:
 					log.msg(plugin_name+': '+unicode(ex))
+		self.client.dispatcher.publishEvent('on_pluginsLoaded')
 		#log.msg("PLUGINS:"+unicode(self.plugins))
 
 	def loadPlugin(self,plugin):
