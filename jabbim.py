@@ -2912,7 +2912,7 @@ class mainWindow(QtGui.QMainWindow):
 		@type pri: integer
 		@param pri: Priority
 		"""
-		log.msg("sending presence "+jid +' '+show)
+		log.msg("sending presence "+unicode(jid)+' '+unicode(show))
 		if not jid:
 			# global presence => presence will be send to server
 			if show=="offline":
