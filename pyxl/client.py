@@ -326,11 +326,14 @@ class Client(derived):
 				if len(dnssrv) > 0:
 					r = dns.Resolver(servers=dnssrv)
 					d = r.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
+					txt = r.lookupText('_xmppconnect.'+self.jid.host, timeout = [2,5])
 				else:
 					log.msg('using root resolver')
 					d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
+					txt = dns.lookupText('_xmppconnect.'+self.jid.host, timeout = [2,5])
 			else:
 				d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
+				txt = dns.lookupText('_xmppconnect.'+self.jid.host, timeout = [2,5])
 				import urllib
 				proxies = urllib.getproxies()
 				if proxies.has_key('http'):
@@ -344,11 +347,9 @@ class Client(derived):
 					self.proxy = {'host':h,  'port': p}
 
 
-#			d.addCallback(self._dnsLookup)
-#			d.addErrback(self._dnsLookupErr)
-#			dns.getHostByName('localhost').addCallback(self.tst)
-			txt = dns.lookupText('_xmppconnect.'+self.jid.host, timeout = [2,10])
-			defer.DeferredList([d, txt]).addCallback(self._dnsLookup)#.addErrback(self._dnsLookupErr)
+			dl = defer.DeferredList([d, txt])
+			dl.addCallback(self._dnsLookup)#.addErrback(self._dnsLookupErr)
+
 
 	def _dnsLookup(self, results):
 		print 'DNS'
@@ -372,9 +373,9 @@ class Client(derived):
 					bind = (parts[1], )
 				if parts[0] == '_xmpp-client-alternative-port':
 					host,port = parts[1].split(':')
-					
+
 					conn = (unicode(host), int(port))
-			
+
 			if conn != None:
 				self.connections.append(conn)
 			if bind != None:
