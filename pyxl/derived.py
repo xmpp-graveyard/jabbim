@@ -185,9 +185,8 @@ class derived:
 		if caps:
 			c = presence.addElement('c', 'http://jabber.org/protocol/caps')
 			c['node'] = self.caps_node
-			c['ver'] = self.version
 			if self.caps_ext != None:
-				c['ext'] = self.caps_ext
+				c['ver'] = self.caps_ext
 		
 		x = presence.addElement('x', 'vcard-temp:x:update')
 		if self.avatarDef.has_key(self.jid.userhost()) and self.avatarDef[self.jid.userhost()] != 'None':
