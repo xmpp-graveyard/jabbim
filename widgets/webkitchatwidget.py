@@ -314,16 +314,24 @@ class webkitChatWidget(QtWebKit.QWebView):
 			menu.addAction(action)
 		if unicode(hit.linkUrl().scheme()) == 'xmpp':
 			jd = unicode(hit.linkUrl().path())
-	   		items=self.chatwidget().main().ui.roster.getUserItems(jd)
-			if len(items)==0:
-				submenu=self.chatwidget().main().ui.roster.buildJidMenu(jd)
+			server = jd.split('@')[1]
+			wellKnownMuc = ['conf.netlab.cz', 'conference.jabber.org', 'chat.chrome.pl', 'conference.jabber.ru']
+			if self.chatwidget().main().client.hasIdentity(server, 'conference', 'text') or server in wellKnownMuc:
+				action = menu.addAction(self.tr('Join room'))
+				action.setObjectName("join_muc")
+				action.setData(QtCore.QVariant(jd))
+				menu.addAction(action)
 			else:
-				item=items[0]
-				group=item.group
-				jid=item.jid
-				submenu=self.chatwidget().main().ui.roster.buildContactMenu(unicode(jid),group)
-			submenu.setTitle(jd)
-			menu.addMenu(submenu)
+		   		items=self.chatwidget().main().ui.roster.getUserItems(jd)
+				if len(items)==0:
+					submenu=self.chatwidget().main().ui.roster.buildJidMenu(jd)
+				else:
+					item=items[0]
+					group=item.group
+					jid=item.jid
+					submenu=self.chatwidget().main().ui.roster.buildContactMenu(unicode(jid),group)
+				submenu.setTitle(jd)
+				menu.addMenu(submenu)
 
 		menu.addSeparator()
 		action=menu.addAction(self.tr("Search"))
@@ -394,6 +402,12 @@ class webkitChatWidget(QtWebKit.QWebView):
 			self.chatwidget().main().config.save()
 		elif cmd == 'gc_theme':
 			self.chatwidget().main().preferencesClicked(page=5,viewTab=2)
+		elif cmd == 'join_muc':
+			jd  = unicode(action.data().toString())
+			nickname = self.chatwidget().main().selfName
+			if self.chatwidget().main().chat.addGroupChatTab(jd,nickname):
+				self.chatwidget().main().client.joinGC(jd, nickname, None,self.chatwidget().main().config['sendRooms']=="True")
+			
 
 	def copySelectedText(self):
 		text=self.selectedText()

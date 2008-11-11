@@ -588,7 +588,10 @@ def replace_url(text,widget=None):
 			text+='<a href="http://%s" title="%s">%s</a>'%(word, word, word)+" "
 		elif word.find('@') != -1:
 			wellKnown = ['jabbim.cz', 'njs.netlab.cz', 'pyco.cz', 'jabbim.sk', 'jabbim.pl', 'jabber.cz', 'jabbim.com', 'gmail.com', 'jabber.org', 'jabster.pl', 'jabber.ru']
+			wellKnownMuc = ['conf.netlab.cz', 'conference.jabber.org', 'chat.chrome.pl', 'conference.jabber.ru']
 			user, server = word.split('@',1)
+			server = server.split('/')[0]
+			path = os.getcwd()
 			if word.count('@')>1:
 				text += word+" "
 				continue
@@ -596,9 +599,11 @@ def replace_url(text,widget=None):
 				text+='<a href="%s" title="%s">%s</a>'%(word, word, user.split(':')[1]+'@'+server)
 			else:
 				if (widget != None and widget.main().client.hasIdentity(server, 'server', 'im')) or server in wellKnown :
-					text+='<a href="xmpp:%s" title="%s">%s</a>'%(word, word, word)
+					text+='<a href="xmpp:%s" title="%s"><img src="%s/images/16x16/apps/jabbim.png" />%s</a>'%(word, word, path, word)
+				elif (widget != None and widget.main().client.hasIdentity(server, 'conference', 'text')) or server in wellKnownMuc:
+					text+='<a href="xmpp:%s?join" title="%s"><img src="%s/images/16x16/categories/muc.png" />%s</a>'%(word, word, path, word)
 				else:
-					text+='<a href="mailto:%s" title="%s">%s</a>'%(word, word, word)
+					text+='<a href="mailto:%s" title="%s"><img src="%s/images/16x16/actions/message.png" />%s</a>'%(word, word, path, word)
 		else:
 			text+=word+" "
 	return text[:-1]
