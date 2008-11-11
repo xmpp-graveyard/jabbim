@@ -13,7 +13,8 @@
    <string>XML Console</string>
   </property>
   <property name="windowIcon" >
-   <iconset>images/16x16/apps/jabbim.png</iconset>
+   <iconset>
+    <normaloff>images/16x16/apps/jabbim.png</normaloff>images/16x16/apps/jabbim.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget" >
    <layout class="QGridLayout" >
@@ -29,7 +30,7 @@
        <enum>Qt::Vertical</enum>
       </property>
       <widget class="QTextBrowser" name="xml" />
-      <widget class="QWidget" name="" >
+      <widget class="QWidget" name="layoutWidget" >
        <layout class="QGridLayout" >
         <property name="margin" >
          <number>0</number>
@@ -38,7 +39,11 @@
          <number>6</number>
         </property>
         <item row="1" column="0" colspan="6" >
-         <widget class="QTextEdit" name="textEdit" />
+         <widget class="QTextEdit" name="textEdit" >
+          <property name="acceptRichText" >
+           <bool>false</bool>
+          </property>
+         </widget>
         </item>
         <item row="0" column="1" >
          <widget class="QPushButton" name="clear" >
@@ -76,7 +81,7 @@
           <property name="orientation" >
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeHint" >
+          <property name="sizeHint" stdset="0" >
            <size>
             <width>81</width>
             <height>20</height>
@@ -97,18 +102,18 @@
     </item>
     <item row="1" column="0" >
      <layout class="QHBoxLayout" >
-      <property name="margin" >
-       <number>0</number>
-      </property>
       <property name="spacing" >
        <number>6</number>
+      </property>
+      <property name="margin" >
+       <number>0</number>
       </property>
       <item>
        <spacer>
         <property name="orientation" >
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="sizeHint" >
+        <property name="sizeHint" stdset="0" >
          <size>
           <width>441</width>
           <height>21</height>
