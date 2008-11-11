@@ -82,8 +82,8 @@ class PresenceInit:
 					log.msg( el.toXml())
 			elif child.name == 'c':
 				caps_node = child.getAttribute('node')
-				ext = child.getAttribute('ext')
-				print frm.full(),  ext
+				ext = child.getAttribute('ver')
+				
 				if self.client.caps_cache.has_key(ext) and ext != None:
 					features = self.client.caps_cache[ext][1]
 					identity = self.client.caps_cache[ext][0]
