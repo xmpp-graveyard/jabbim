@@ -49,22 +49,23 @@ class addContactDialog(QtGui.QDialog):
 									if values.has_key('category'):
 										if values.has_key('name'):
 											#[u'conference', u'service', u'headline', u'component', u'server', u'services', u'proxy', u'directory', u'gateway', u'store', u'pubsub']
-											if values['category'] in ['service','headline','services','store','directory','component','gateway']:
+											if values['category'] in ['service','services','store','directory','component','gateway']:
 												if values.has_key("type"):
-													typ=values['type']
-													if typ=="pep" or typ=="im":
-														typ="jabber"
-													elif typ=="file":
-														typ="disk"
-													registered=False
-													for jd in self.main().client.roster['users'].keys():
-														if jd.find(key)!=-1:
-															registered=True
-															break
-													if registered:
-														self.ui.service.insertItem(0,self.main().getIcon(size="16x16",usertype=typ),values['name'],QtCore.QVariant(unicode(key)))
-													else:
-														self.ui.service.addItem(self.main().getIcon(size="16x16",usertype=typ),values['name'],QtCore.QVariant(unicode(key)))
+													if not key in ["brebex.jabbim.cz","tv.jabbim.cz","smtp.jabbim.cz"]:
+														typ=values['type']
+														if typ=="pep" or typ=="im":
+															typ="jabber"
+														elif typ=="file":
+															typ="disk"
+														registered=False
+														for jd in self.main().client.roster['users'].keys():
+															if jd.find(key)!=-1:
+																registered=True
+																break
+														if registered:
+															self.ui.service.insertItem(0,self.main().getIcon(size="16x16",usertype=typ),values['name'],QtCore.QVariant(unicode(key)))
+														else:
+															self.ui.service.addItem(self.main().getIcon(size="16x16",usertype=typ),values['name'],QtCore.QVariant(unicode(key)))
 			elif self.main().client.disco[key][None].has_key("err"):
 				print key,"error"
 		self.ui.service.insertItem(0,self.main().getIcon(size="16x16",usertype="jabber"),"Jabber",QtCore.QVariant(unicode(self.main().client.jid.host)))
