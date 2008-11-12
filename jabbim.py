@@ -1025,6 +1025,7 @@ class clientClass(pyxl.client.Client):
 				#new room created
 				message=self.main.webkitThemeFactory.genGroupchatAction(unicode(mainWindow.tr("You have created this room.")),self.main.now())
 				tab.chat.textEditWrite(message)
+				#tab.chat.roomConfigClicked()
 				self.getMUCConfig(muc).addCallback(self._mucConfig, tab)
 			if u'170' in codes:
 				message=self.main.webkitThemeFactory.genGroupchatAction(unicode(mainWindow.tr("This room is logged")),self.main.now())

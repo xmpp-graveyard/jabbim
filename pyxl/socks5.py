@@ -207,7 +207,7 @@ class SOCKSv5(protocol.Protocol):
 
 
    def connectRequested(self, addr, port):
-       lgo.msg('on connect')
+       log.msg('on connect')
        
        if self.factory.sessions.has_key(addr):
 	       self.transport.stopReading()
