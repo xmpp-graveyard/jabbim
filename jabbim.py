@@ -143,7 +143,7 @@ from twisted.web.client import downloadPage
 import shutil #xmlrpc
 from twisted.python.filepath import FilePath
 from widgets.extra import extraDialog
-from widgets import bookmarks
+from widgets import bookmarks, dataforms
 from locale import strcoll
 import weakref
 
@@ -1025,6 +1025,7 @@ class clientClass(pyxl.client.Client):
 				#new room created
 				message=self.main.webkitThemeFactory.genGroupchatAction(unicode(mainWindow.tr("You have created this room.")),self.main.now())
 				tab.chat.textEditWrite(message)
+				self.getMUCConfig(muc).addCallback(self._mucConfig, tab)
 			if u'170' in codes:
 				message=self.main.webkitThemeFactory.genGroupchatAction(unicode(mainWindow.tr("This room is logged")),self.main.now())
 				tab.chat.textEditWrite(message)
@@ -1057,6 +1058,14 @@ class clientClass(pyxl.client.Client):
 				tabFull.chat.lastMessageFrom=""
 		# refresh lastMessageFrom
 		tab.chat.lastMessageFrom=""
+	def _mucConfig(self, data, tab):
+		if not data:
+			return
+
+		jid,form=data
+
+		tab.chat.dialog=dataforms.dataFormsDialog(self.main,form,jid,"register",tab.chat)
+		tab.chat.dialog.show()
 
 	def on_presence(self,jid,show,error=None,first=False):
 		"""
