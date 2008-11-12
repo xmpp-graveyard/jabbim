@@ -187,6 +187,7 @@ class derived:
 			c['node'] = self.caps_node
 			if self.caps_ext != None:
 				c['ver'] = self.caps_ext
+				c['hash'] = 'sha-1'
 		
 		x = presence.addElement('x', 'vcard-temp:x:update')
 		if self.avatarDef.has_key(self.jid.userhost()) and self.avatarDef[self.jid.userhost()] != 'None':

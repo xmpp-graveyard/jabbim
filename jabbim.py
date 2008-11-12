@@ -1954,7 +1954,9 @@ class clientClass(pyxl.client.Client):
 		#q = QtGui.QMessageBox.question(self.main,self.main.tr("File transfer"), unicode(" %s is sending you file."%unicode(self.ft[sid].tojid)),QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
 		#if q == QtGui.QMessageBox.Yes:
 		mainWindow=self.main
-		filename = QtGui.QFileDialog.getSaveFileName(self.main, mainWindow.tr("Save File"),self.ft[sid].fileprops['name'],mainWindow.tr("*.*"))
+		directory = mainWindow.config['lastDownloadDir']
+		filename = QtGui.QFileDialog.getSaveFileName(self.main, mainWindow.tr("Save File"),self.ft[sid].fileprops['name'],mainWindow.tr("*.*"), dir = directory)
+		mainWindow.config['lastDownloadDir'] = os.path.dirname(unicode(filename))
 		tab,index=self.main.chat.findTab(unicode(self.ft[sid].fromjid),typ=['chat'])
 		if tab:
 			tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById('ft"+unicode(sid)+"');")
@@ -2610,8 +2612,12 @@ class mainWindow(QtGui.QMainWindow):
 		# get files
 		dialog = QtGui.QFileDialog()
 		dialog.setResolveSymlinks(True)
+		dialog.setDirectory(self.config['lastUploadDir'])
 		file=dialog.getOpenFileNames(self,self.tr("Choose files"))
 		file=list(file)
+		#get last dir from result
+		if len(file)>0:
+			self.config['lastUploadDir'] = os.path.dirname(unicode(file[0]))
 
 		new=[] # temp variable
 		for f in file:

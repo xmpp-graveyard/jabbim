@@ -223,7 +223,9 @@ def loadConfig(main,status):
 			'activeShortcuts':['nextTab','previousTab','removeTab','tabOne','tabTwo','tabThree','tabFour','tabFive','tabSix','tabSeven','tabEight','tabNine','moveRight','moveLeft'],
 			'useXHTML': 'True',
 			'showReceipts':'True',
-			'usePsyco': 'False'
+			'usePsyco': 'False',
+			'lastUploadDir': getDesktopPath(),
+			'lastDownloadDir': getDesktopPath()
 			}
 	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 	if len(main.config)==0:
