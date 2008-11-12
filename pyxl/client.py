@@ -265,7 +265,7 @@ class Client(derived):
 				try:
 					self.connection.loseConnection()
 				except:
-					print 'chyba v loseConnection(nejsme pripojeni?)'
+					log.err('chyba v loseConnection(nejsme pripojeni?)')
 				self.connectionLost(self.connection)
 			else:
 				log.msg('heartbeat fails count: '+ unicode(self.hbFails))
@@ -282,10 +282,10 @@ class Client(derived):
 		self.discoitems = {None:[],"http://jabber.org/protocol/commands":[]}
 		self.isVip=False
 		self.reactor.callFromThread(self.on_init)
-		print 'XXXX ', JID,  self.jid.full(),  self.oldstatus
+		
 		if JID != self.jid.full():
 			self.oldstatus = None
-			print 'deleted'
+			
 		self.jid = jid.JID(JID)
 		self.password  = password
 		self.host = self.jid.host
@@ -298,12 +298,12 @@ class Client(derived):
 				bhost = parts[0]
 				bport = parts[1]
 			except:
-				print 'bosh parse failure'
+				log.err('bosh parse failure')
 				boshURL = ''
 		if host != None:
 			self._connect(host, int(port))
 		elif boshURL != '':
-			print 'going bosh: ', bhost, int(bport), boshURL
+			log.msg('going bosh: '+ bhost + str(bport) + boshURL)
 			self._connect(bhost, int(bport), boshURL)
 		else:
 			log.msg('dns - ' + unicode(time.time()) + '_xmpp-client._tcp.'+self.jid.host)
@@ -352,17 +352,16 @@ class Client(derived):
 
 
 	def _dnsLookup(self, results):
-		print 'DNS'
+		
 		self.connections = []
 		resp = results[0][1]
-		print results
-		print resp
+		
 		if not results[0][0] or len(resp[0]) == 0:
 			self._dnsLookupErr(resp)
 			return
 		for r in resp[0]:
 			self.connections.append((unicode(r.payload.target), int(r.payload.port)))
-			print (unicode(r.payload.target), int(r.payload.port))
+			
 		if results[1][0]:
 			txt = results[1][1]
 			bind = None
@@ -384,13 +383,13 @@ class Client(derived):
 			self._dnsLookupErr(resp)
 			return
 			
-		print '_doConnect'
+		
 		self.doConnect()
 #		self._connect(unicode(r[4][0]), int(r[4][1]))
 	
 	def _dnsLookupErr(self, resp):
-		print 'err:', resp
-		print dir(resp)
+		log.err('DNS err: '+ unicode(resp))
+		
 		self.connections.append((self.host, self.port))
 		self.connections.append(('conn443.netlab.cz', 443))
 		self.connections.append(('http://bind.jabbim.cz:80/', )) #just give them chance
@@ -399,7 +398,7 @@ class Client(derived):
 
 	def doConnect(self):
 		#pops first connection from list and tries to connect to it
-		print 'do connect ',  self.connections
+		log.msg('do connect '+ unicode(self.connections))
 		if len(self.connections) == 0:
 			self.main._disconnect(error = 'failed')
 			self.reactor.callFromThread(self.on_disconnect)
@@ -420,7 +419,7 @@ class Client(derived):
 				else:
 					bport = parts[1]
 			except:
-				print 'bosh parse failure'
+				log.err('bosh parse failure')
 				self.doConnect()
 			self._connect(bhost, int(bport), boshURL)
 
@@ -428,12 +427,12 @@ class Client(derived):
 	def _connect(self, host, port, boshURL = ''): 
 
 		if boshURL != '':
-			print '.'+boshURL+'.'
+			log.msg('.'+boshURL+'.')
 			from bosh import client as bclient
 
 			self.factory = bclient.BOSHClientFactory(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang},  proxy  = self.proxy)
 #			self.factory = bosh_wokkel.BOSHClient(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang})
-			print self.factory
+			
 			self.IBBonly = True
 		else:
 			self.factory = client.XMPPClientFactory(self.jid,self.password)
@@ -450,38 +449,16 @@ class Client(derived):
 		
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
-		print '-'+host+'?', port
+		
 		#self.connection = reactor.connectTCP(host,port, self.factory)
 
 		if self.proxy != None and self.IBBonly:
 			self.connection = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory)
-			print self.proxy
+			
 		else:
 			self.connection = reactor.connectTCP(host,port, self.factory)
 		self.reactor.callFromThread(self.on_connect)
-		print dir(self.factory)
-		print dir(self.connection)
-		print self.factory.protocol
-#		self.connection.buildProtocol()
-#		self.factory.buildProtocol()
-#		self.factory.protocol.factory = self.factory
-#		self.factory.protocol.host = host
-#		self.factory.protocol.port = port
-#		self.factory.protocol.connect(self.factory.protocol)
-		
 
-#		p = self.factory.buildProtocol('tcp:localhost:8080')
-#		print dir(p)
-#		self.connection = self.reactor.connectTCP('conn443.netlab.cz',443,self.factory)
-#		def stf(prt):
-#			print 'conn: ', prt
-#			
-#		sfact = socks.SOCKSv4Factory('./socks.log')
-#		sfact.startedConnecting = stf
-#		sck = self.reactor.connectTCP('localhost', 1080, sfact )
-#		print dir(sck)
-#		
-#		self.connection = sfact.buildProtocol('f').connectClass(host, port, client.XMPPClientFactory, self.jid,self.password)
 		log.msg('started - ' + unicode(time.time()))
 		
 		
@@ -508,7 +485,7 @@ class Client(derived):
 		else:
 			self.connection = None
 		self.factory = None
-		print 'receipts ' + unicode(self.messageReceipts)
+		log.msg('receipts' + unicode(self.messageReceipts))
 		try:
 			self.main.delayedMessages = self.messageReceipts
 		except:
@@ -519,7 +496,7 @@ class Client(derived):
 	
 	def connectionFailed(self, connector, reason=protocol.connectionDone):
 		log.msg('connection failed!')
-		print self.connections
+		log.msg( self.connections)
 		if len(self.connections)>0:
 			self.doConnect()
 		else:
@@ -527,7 +504,7 @@ class Client(derived):
 			self.reactor.callFromThread(self.on_disconnect)
 
 	def _streamEnd(self, el):
-		print 'stream end'
+		log.msg('stream end')
 		try:
 			self.xping.stop()
 		except:
@@ -545,7 +522,7 @@ class Client(derived):
 		
 	def disconnect(self):
 		
-		print self.oldstatus
+		
 		try:
 			self.xping.stop()
 		except:
@@ -613,7 +590,7 @@ class Client(derived):
 		self.roster['users'][self.jid.userhost()] = Contact(self, self.jid.userhost(), '', 'both', [], []) #add selfcontact to our representation of roster
 		self.reactor.callLater(0,self.main._connected)
 		#self.main._connected()
-		print 'pre commands'
+		
 		self.commands = Commands(self.main)
 		try:
 			public = self.main.config['adhocAllow']
@@ -628,7 +605,7 @@ class Client(derived):
 #		def pis(co):
 #			print co
 		self.callRemote('rpc@jabbim.cz/service', 'isVIP', (self.jid.userhost(),)).addCallback(self._isVip)
-		print "calling on_authd"
+		
 		self.dispatcher.publishEvent('on_authd')
 
 	def _isVip(self,data):
@@ -638,7 +615,7 @@ class Client(derived):
 	def _gotServices(self, res):
 		for jid in self.disco[self.jid.host][None]['items'].iterkeys():
 			self.getDiscoInfo(jid)
-			print jid
+			
 		
 	def _pepSupport(self, res):
 		log.msg('pep support arrived')
@@ -676,7 +653,6 @@ class Client(derived):
 		self.disp(el['id'])
 		#log.msg(el.toXml())
 		if el == None:
-			print 'wtf?', el
 			return
 		for child in el.elements():
 			if child.name == "query":
@@ -749,7 +725,7 @@ class Client(derived):
 
 
 	def _noVcard(self, err, jid): 
-		print jid, 'no vcard available' 
+		log.err(jid + ' no vcard available')
 		log.msg('chci ulozit ' + jid )
 #		self.reactor.callFromThread(self.main.cache.set_avatar,jid, ['nic', 'nic'])
 #		self.avatars[jid] = None
@@ -808,7 +784,7 @@ class Client(derived):
 		log.msg('bookmarks set sucessfully')
 
 	def _bookmarksErrReceived(self, err):
-		print err
+		log.err(unicode( err))
 		self.reactor.callFromThread(self.on_bookmarksFail)
 		pass #no tak neprisly no
 	def _bookmarksReceived(self, el):
@@ -875,14 +851,13 @@ class Client(derived):
 		self.sendRosterUpdate(jid, name, 'none', groups, self._contactAdded, params = {'msg':msg, 'jid':jid})
 	
 	def _contactAdded(self, params):
-		print params
+		
 		self.sendPresence(to = params['jid'], status = params['msg'], typ = 'subscribe')
 
 
 
 	def onXML(self, el):
 		if not el.hasAttribute('from'):
-			print el.toXml()
 			return
 		if el.hasAttribute('id') and el.name == 'iq':
 			if not el['id'] in self.idlist and (el['type'] != 'result' or el['type'] != 'error'):
@@ -994,8 +969,8 @@ class Client(derived):
 
 	def _authfailed(self,xmlstream):
 		log.msg( "auth_failed")
-		print 'init failed!'
-		print unicode(xmlstream)
+		log.err('init failed!')
+		
 		self.main._disconnect(error = 'auth')
 		self.disconnect()
 		self.on_authFailed(xmlstream)
@@ -1026,7 +1001,7 @@ class Client(derived):
 	def calcCapsExt(self, identity = ['client/pc'], features = []):
 		identity.sort()
 		features.sort()
-		print identity, features
+		
 		out = '<'.join(identity) + '<' + '<'.join(features)
 		out = b64encode(sha1(out).digest())
 		return out
@@ -1110,7 +1085,7 @@ class Client(derived):
 			lang = el["xml:lang"]
 		except:
 			lang = None
-			print el.toXml()
+			
 			try:
 				lang = el[(u'http://www.w3.org/XML/1998/namespace', u'lang')]
 			except:
@@ -1174,7 +1149,7 @@ class Client(derived):
 		else:
 			allowed = (ji in public) or (ji == self.jid.userhost())
 			
-		print public, allowed, ji
+		
 		try:
 			lang = el["xml:lang"]
 		except:
@@ -1199,7 +1174,7 @@ class Client(derived):
 				return
 			if not allowed:
 				raise RuntimeError("forbidden")
-			print 'fire it up!'
+			
 			self.commands.sessions[sid].execStage(
 					self.commands.sessions[sid].nextstages[action],
 					el["id"],
@@ -1245,13 +1220,13 @@ class Client(derived):
 	def getBOBData(self,  to,  cid):
 		def _loadBOBLink(cid):
 			if cid != None:
-				print 'cache hit'
+				
 				return self.bobDef[cid]
 			else:
 				return cid
 		
 		def _writeBOBData(el,  cid):
-			print 'data received!'
+			log.msg('data received!')
 			frm = jid.JID(el['from'])
 			data = b64decode(unicode(el.data))
 			#TODO detect hash type
@@ -1260,7 +1235,7 @@ class Client(derived):
 				fp.write(data)
 				fp.close()
 			else:
-				print 'cid is not hash!?'
+				log.err('cid is not hash!?')
 			self.bobDef.write()	
 			return self.bobCacheDir+cid
 		
@@ -1631,7 +1606,7 @@ class Client(derived):
 				forms = child
 			else:
 				legacy[child.name] = unicode(child)
-		print forms
+		
 		if callback != None:
 			callback(jid, legacy, forms)
 		return (jid, legacy, forms)
@@ -1713,7 +1688,7 @@ class Client(derived):
 			action = item.getAttribute('action', 'add')
 			if action == 'add':
 				typ = 'add'
-				print 'jid>>', item['jid']
+				log.msg('jid>>'+ item['jid'])
 				if self.getContactByJid(item['jid']) == None:
 					groups = []
 					for gr in item.elements():
