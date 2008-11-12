@@ -46,9 +46,9 @@ class PresenceInit:
 			frm = jid.JID(el['from'])
 		except:
 			try:
-				print "onPresence, jid mallformed",[el['from']]
+				log.err("onPresence, jid mallformed" + unicode([el['from']]))
 			except:
-				print "onPresence, jid mallformed"
+				log.err("onPresence, jid mallformed")
 			return
 		fromjid = frm.userhost()
 		resource = frm.resource
@@ -91,10 +91,9 @@ class PresenceInit:
 				elif ext == None:	
 					if typ !='unavailable' and not self.client.hasFeature(frm.full(), 'http://jabber.org/protocol/disco#info'):
 						features = 'asked'
-						print 'nocaps ' + unicode(self.client.getIdentity(frm.host))
-						print self.client.hasIdentity(frm.host, 'conference'), self.client.hasIdentity(frm.host, 'gateway')
+						log.msg('nocaps ' + unicode(self.client.getIdentity(frm.host)))
+						
 						if  self.client.hasIdentity(frm.host, 'conference') or self.client.hasIdentity(frm.host, 'gateway'):
-							print 'konference nebo gateway'
 							features = ['-']
 						elif len(features)>0:
 							log.msg(unicode(features))
@@ -118,18 +117,12 @@ class PresenceInit:
 								reason = unicode(itm)
 							elif itm.name == 'actor':
 								actor = itm.getAttribute('jid')
-						print reason, actor
+						
 					if item.name == 'status' :
 						codes.append(item['code'])
 			elif child.name == 'x' and child.defaultUri == 'vcard-temp:x:update':
 				hash = unicode(child.firstChildElement())
-				print fromjid, hash
-		
-	
-
 				
-	
-	
 		if show == None and not el.hasAttribute('type'):
 			show = 'online'
 		elif el.hasAttribute('type'):
@@ -139,7 +132,6 @@ class PresenceInit:
 				return
 		if features == None or len(features) == 0:
 			if  self.client.hasIdentity(frm.host, 'conference') or self.client.hasIdentity(frm.host, 'gateway'):
-				print 'konference nebo gateway'
 				features = ['-']
 			else:
 				self.client.getFeatures(frm, None)
@@ -179,8 +171,6 @@ class PresenceInit:
 	
 		if self.client.groupchats.has_key(fromjid):
 			if show=="offline":
-
-				print 'PART!'
 				codes.append('PART')
 				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor, nick)
 			
@@ -189,7 +179,6 @@ class PresenceInit:
 				self.client.groupchats[fromjid].setStatus(resource,  show,  status)
 
 			else:
-				print 'JOIN!'
 				codes.append('JOIN')
 				self.client.groupchats[fromjid].setStatus(resource,  show,  status)
 				self.client.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid, features)
@@ -208,11 +197,7 @@ class PresenceInit:
 				self.client.first_presence.append((frm,show, error))
 			else:
 				self.dispatcher.publishEvent('on_presence',frm,show, error)
-	
-		else:
-	##			print 'contact not in roster'
-			pass
-	
+
 	def onPresenceError(self,  el):
 		#zatim jenom GC errory .. ani nevim jestli ma smysl zachytavat i jine ..
 	#		self.on_xml(el.toXml())
@@ -220,15 +205,15 @@ class PresenceInit:
 			frm = jid.JID(el['from'])
 		except:
 			try:
-				print "onPresenceError, jid mallformed",[el['from']]
+				log.err("onPresenceError, jid mallformed "+ unicode([el['from']]))
 			except:
-				print "onPresenceError, jid mallformed"
+				log.err("onPresenceError, jid mallformed")
 			return
 			
 		fromjid = frm.userhost()
 		resource = jid.JID(el['from']).resource
 		if self.client.groupchats.has_key(fromjid):
-			print 'GCPRESENCEERROR'
+			
 			del self.client.groupchats[fromjid]
 			for child in  el.elements():
 				if child.name == 'error':

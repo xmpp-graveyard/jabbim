@@ -222,7 +222,7 @@ class Plugin(plugins.PluginBase):
 		
 
 	def dragEnterEvent(self, event):
-		print "left drag enter"
+		log.msg("left drag enter")
 		if event.mimeData().hasText() or event.mimeData().hasFormat("text/uri-list"):
 			event.acceptProposedAction()
 		else:
@@ -241,7 +241,7 @@ class Plugin(plugins.PluginBase):
 
 	def leftDropMimeData(self,parent,index,data,action):
 		path=unicode(self.model.fileInfo(index).absoluteFilePath())
-		print "left drop",path
+		log.msg("left drop" + path)
 		return True
 
 	def rightDropMimeData(self,parent,index,data,action):

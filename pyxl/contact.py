@@ -85,7 +85,6 @@ class Contact:
 		except:
 			highest = None
 		for res,val in self.resources.iteritems():
-##			print val
 				if val.priority>prio:
 					highest = res
 					prio = val.priority
