@@ -1955,7 +1955,7 @@ class clientClass(pyxl.client.Client):
 		#if q == QtGui.QMessageBox.Yes:
 		mainWindow=self.main
 		directory = mainWindow.config['lastDownloadDir']
-		filename = QtGui.QFileDialog.getSaveFileName(self.main, mainWindow.tr("Save File"),self.ft[sid].fileprops['name'],mainWindow.tr("*.*"), dir = directory)
+		filename = QtGui.QFileDialog.getSaveFileName(self.main, mainWindow.tr("Save File"), directory + self.ft[sid].fileprops['name'],mainWindow.tr("*.*"))
 		mainWindow.config['lastDownloadDir'] = os.path.dirname(unicode(filename))
 		tab,index=self.main.chat.findTab(unicode(self.ft[sid].fromjid),typ=['chat'])
 		if tab:
@@ -2613,7 +2613,7 @@ class mainWindow(QtGui.QMainWindow):
 		dialog = QtGui.QFileDialog()
 		dialog.setResolveSymlinks(True)
 		dialog.setDirectory(self.config['lastUploadDir'])
-		file=dialog.getOpenFileNames(self,self.tr("Choose files"))
+		file=dialog.getOpenFileNames(self,self.tr("Choose files"), self.config['lastUploadDir'])
 		file=list(file)
 		#get last dir from result
 		if len(file)>0:

@@ -85,8 +85,7 @@ class SOCKSv5Factory(protocol.Factory):
 		
 		
 	def buildProtocol(self, addr):
-		print dir(self)
-		print addr
+		
 		p = SOCKSv5('neco')
 		p.factory = self
 		return p
@@ -102,9 +101,7 @@ class SOCKSv5(protocol.Protocol):
        self.addressType = 0
        self.requestType = 0
        self.tr = tr
-       print self.transport
-       print dir(self.transport)
-       print locals()
+       
        
 
    def _parseNegotiation(self):
@@ -210,16 +207,15 @@ class SOCKSv5(protocol.Protocol):
 
 
    def connectRequested(self, addr, port):
-       print 'on connect'
-       print self.transport
-       print dir(self)
+       lgo.msg('on connect')
+       
        if self.factory.sessions.has_key(addr):
 	       self.transport.stopReading()
 	       self.state = STATE_CONNECT_PENDING
 	#       protocol.ClientCreator(reactor, SOCKSv5Outgoing, self).connectTCP(addr, port)
 
-	       print self.factory.sessions
-	       print addr
+	       
+	       
 	       sid = self.factory.sessions[addr]
 	       self.factory.client.ft[sid].protocol = Send()
 	       self.factory.client.ft[sid].protocol.transport = self.transport
@@ -243,7 +239,7 @@ class SOCKSv5(protocol.Protocol):
        pass
    
    def authenticateUserPass(self, user, passwd):
-       print "User/pass: ", user, passwd
+       log.msg("User/pass: " + unicode(user) + unicode(passwd))
        return True
 
 
@@ -325,7 +321,7 @@ class ClientProtocol (protocol.Protocol):
 		# prepare connection string with available authentication methods
 		#
 	
-		print ("SOCKS5.connectionMade")
+		log.msg("SOCKS5.connectionMade")
 		methods = "\x00"
 		if not self.login is None: methods += "\x02"
 	
@@ -335,7 +331,7 @@ class ClientProtocol (protocol.Protocol):
 		self.state = "gotHelloReply"
 
 	def dataReceived (self, data):
-		print ("SOCKS state=" + self.state)
+		log.msg("SOCKS state=" + self.state)
 		method = getattr(self, 'socks_%s' % (self.state), 
 			self.socks_thisMustNeverHappen)
 		method (data)
@@ -362,7 +358,7 @@ self)))
 		if data == "\x05\xFF":
 			# No acceptable methods. We MUST close
 			#
-			print("No acceptable methods, closing connection")
+			log.msg("No acceptable methods, closing connection")
 			self.transport.loseConnection()
 			return
 
@@ -414,7 +410,7 @@ self)))
 	def socks_method_CONNECT (self):
 		# Check if we have ip address or domain name
 		#
-		print("socks_method_CONNECT host = " + self.host)
+		log.msg("socks_method_CONNECT host = " + self.host)
 
 	# The FaceTime SOCKS5 proxy treats IP addr the same way as hostname
 	   # if _ip_regex.match (self.host):
@@ -605,7 +601,7 @@ class ClientFactory (protocol.ClientFactory):
 				else:
 					self.xmpp.ft[self.xmpp_sid].connectFailure()
 			else:
-				print 'no sid'
+				log.err('no sid')
 #		protocol.ClientFactory.stopFactory (self)
 
 	def buildProtocol (self, a):
@@ -634,7 +630,7 @@ class ClientFactory (protocol.ClientFactory):
 			else:
 				self.xmpp.ft[self.xmpp_sid].connectFailure()
 		except:
-			print 'sid doesn\'t exist?'
+			log.err('sid doesn\'t exist?')
 			
 		try:
 			if self.status != "established":
@@ -686,19 +682,19 @@ class Send(protocol.Protocol):
 	
 	def __init__(self):
 		self.last = time.time()
-		print 'send >> init'
+		log.msg('send >> init')
 		pass
 	
 	def registerProducer(self, producer, streaming):
-		print 'send >> registerProducer'
+		log.msg('send >> registerProducer')
 		self. producer = producer
 		return self.transport.registerProducer(producer, streaming)
 	
 	def unregisterProducer(self):
-		print 'send >>unregisterProducer'
+		log.msg('send >>unregisterProducer')
 		self.transport.unregisterProducer()
 		self.transport.loseConnection()
-		print 'end'
+		
 
 	def write(self, data):
 #		print 'prenasim: ', len(data)
@@ -715,12 +711,12 @@ class Send(protocol.Protocol):
 			limit = 0
 			
 		if kolik/doba >limit and limit >0:
-			print unicode(kolik/doba)
+			
 			cekej = (kolik/limit)
-			print unicode(cekej)
+			
 			if cekej <0:
 				cekej = 0
-		print 'send >> write >>', cekej
+		
 		reactor.callLater(cekej,  self.doWriteToTransport, data)
 		self.last = ted
 		
@@ -746,7 +742,7 @@ class Receive(protocol.Protocol):
 		self.transport.loseConnection()
 
 	def dataReceived(self, data):
-		print len(data)
+		
 		if self.ft.fp != None:
 			self.ft.fp.write(data)
 			self.ft.transfered = self.ft.transfered + len(data)
@@ -806,8 +802,7 @@ class FTSend:
 		self.client.on_ftEnd(self.sid, 'activate error')
 		
 	def _activated(self, el = None):
-		print '_'
-		print self.protocol
+		
 		FileSender().beginFileTransfer(self.fp, self.protocol)#. addCallback(self._finished)
 	
 	def _finished(self, last):
@@ -825,8 +820,8 @@ class FTSend:
 			if len(self.client.socks5Srv.factory.sessions)==0:
 				self.client.socks5Srv.loseConnection()
 		except:
-			print 'unable to finish socks5'
-			print self.client.socks5Srv.factory.sessions
+			log.err('unable to finish socks5')
+			log.err(unicode(self.client.socks5Srv.factory.sessions))
 			pass
 
 		self.client.on_ftEnd(self.sid, self.error)
@@ -858,7 +853,7 @@ class FTReceive:
 		self.answerId=answerId
 	
 	def connectStreamHost(self):
-		print self.streamhosts
+		log.msg(self.streamhosts)
 		streamhost = self.streamhosts.pop(0)
 		self.activeStreamhost = streamhost
 		f = protocol.ClientFactory()
@@ -878,7 +873,7 @@ class FTReceive:
 			log.msg('nemuzu se spojit')
 	
 	def activate(self):
-		print 'activate!'
+		log.msg('activate!')
 		iq = Element((None,'iq'))
 		iq['to'] = self.tojid
 		iq['from'] = self.frmjid
@@ -887,7 +882,7 @@ class FTReceive:
 		query = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
 		used = query.addElement('streamhost-used')
 		used['jid'] = self.activeStreamhost['jid']
-		print iq.toXml()
+		
 		self.streamhosts = []
 		self.error = None
 		self.fp = open(self.file, 'wb')
@@ -897,7 +892,7 @@ class FTReceive:
 		c = True
 		while c:
 			if self.ibbCache.has_key(self.ibbSeq):
-				print self.ibbSeq
+				
 				data = b64decode(self.ibbCache[self.ibbSeq])
 				self.transfered = self.transfered + len(data)
 				self.client.on_ftTransfered(self.sid, len(data))
@@ -909,7 +904,7 @@ class FTReceive:
 		
 	
 	def finish(self):
-		print self.streamhosts
+		
 		if len(self.streamhosts) == 0:
 			log.msg("konec prenosu")
 			if self.fp != None:
