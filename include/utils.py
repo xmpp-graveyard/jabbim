@@ -594,10 +594,10 @@ def replace_url(text,widget=None):
 			user, server = word.split('@',1)
 			server = server.split('/')[0]
 			path = os.getcwd()
-			if word.count('@')>1:
+			if word.count('@')>1 or not ('.' in server) or (widget != None and widget.main().getJid(word) == None ):
 				text += word+" "
 				continue
-			if ':' in user:
+			if user.startswith('xmpp:') or user.startswith('mailto:'):
 				text+='<a href="%s" title="%s">%s</a>'%(word, word, user.split(':')[1]+'@'+server)
 			else:
 				if (widget != None and widget.main().client.hasIdentity(server, 'server', 'im')) or server in wellKnown :

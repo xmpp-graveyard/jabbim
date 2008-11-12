@@ -1022,6 +1022,7 @@ class clientClass(pyxl.client.Client):
 			
 			mainWindow=self.main
 			if u'201' in codes:
+				#new room created
 				message=self.main.webkitThemeFactory.genGroupchatAction(unicode(mainWindow.tr("You have created this room.")),self.main.now())
 				tab.chat.textEditWrite(message)
 			if u'170' in codes:
