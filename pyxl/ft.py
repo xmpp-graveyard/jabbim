@@ -49,7 +49,7 @@ class FTInit:
 	
 	def sendFiles(self, tojid,  files): #files = {name:abs. path, ..}
 		def _received(el,  outfiles):
-			print el,  outfiles
+			
 			return el,  outfiles
 		iq = IQ(self.client.xmlstream, 'set')
 		self.client.disp(iq['id'])
@@ -62,7 +62,7 @@ class FTInit:
 			item['sid'] = sid
 			item['size'] = unicode(os.stat(v).st_size)
 			outfiles[k] = (v, sid)
-		print iq.toXml()
+		
 		d = iq.send().addCallback(_received,  outfiles)
 		return d
 	
@@ -97,7 +97,7 @@ class FTInit:
 		fileprops = {}
 		fileprops['name'] = filename
 		fileprops['desc'] = unicode(desc)
-		print outjid
+		
 		jd = jid.JID(outjid)
 		if preview != None:
 			fileprops['preview'] = preview
@@ -113,7 +113,7 @@ class FTInit:
 			else:
 				return False # should be checked somewhere
 			
-		print typ
+		
 		
 		ftObj = FT(outjid,  self.client.jid.full(),  self, fileprops,  fp, sid,  typ = typ)
 		self.ft[ftObj.sid] = ftObj
@@ -135,7 +135,7 @@ class FTInit:
 		iq.start['id'] = id
 		if path != None:
 			if self.client.bobDef.has_key(id):
-				print 'cache hit!!'
+				log.msg('cache hit!!')
 				d = defer.Deferred()
 				d.callback(self.client.bobDef[id])
 				return d
@@ -172,7 +172,7 @@ class FTInit:
 			else:
 				if not (self.main.config['FTHost'],self.socks5Port ) in self.socks5IP:
 					self.socks5IP.append((self.main.config['FTHost'], self.socks5Port))
-		print self.socks5IP
+		
 		
 #		try:
 #			from nattraverso.portmapper import get_port_mapper
@@ -183,18 +183,18 @@ class FTInit:
 #		return get_port_mapper().addCallbacks(self.got_port_mapper, self.error_occured)
 
 	def got_port_mapper(self, mapper):
-		print "\tGot port mapper:", mapper
-		print "Retreiving existing mappings"
+		log.msg("\tGot port mapper:" + unicode(mapper))
+		log.msg("Retreiving existing mappings")
 		return mapper.get_port_mappings().addCallback(self.got_mappings).addErrback(self.error_occured)
 	
 	def error_occured(self, err):
-		print "\tError occured:", err
+		log.err("\tError occured:" + unicode( err))
 	
 	def got_mappings(self, mappings):
-		print '\tExisting mappings:\n\t', mappings
+		log.msg('\tExisting mappings:\n\t' + unicode(mappings))
 		
 	def _checkProxies(self):
-		print 'checking list of proxies', self.ft_proxies
+		log.msg('checking list of proxies ' + unicode(self.ft_proxies))
 		dlist = []
 		for proxy, data in self.ft_proxies.iteritems():
 			if len(data) != 2:
@@ -205,7 +205,7 @@ class FTInit:
 		return None
 	
 	def _updatedProxyInfo(self, results):
-		print self.ft_proxies
+		log.msg('proxy list updated ' +unicode( self.ft_proxies))
 	
 	def getProxyInfo(self, proxy):
 		iq = IQ(self.client.xmlstream, 'get')
@@ -225,11 +225,11 @@ class FTInit:
 		self.ft_proxies[el['from']] = [info.getAttribute('host'), info.getAttribute('port')]
 	
 	def _ftFailed(self, err, sid):
-		print err
+		log.err(unicode( err))
 		self.on_ftEnd(sid, 'Canceled')
 	
 	def _ftstreamhostquery(self, el):
-		print 'proxy rika: ', el.toXml()
+		log.msg('proxy rika: '+ el.toXml())
 	
 	def _ftreplyReceived(self, el, sid):
 		typ = None
@@ -263,7 +263,7 @@ class FTInit:
 #						self.socks5IP.append(('127.0.0.1', str(port)))
 						connected = True
 					except:
-						print 'unable to connect to port:',  port
+						log.err('unable to connect to port:'+ unicode(port))
 						port +=1
 				self.socks5Port = str(port)
 			d = self._checkProxies()
@@ -302,7 +302,7 @@ class FTInit:
 
 	
 	def _ftreplyhostReceived(self, el, sid):
-		print el.toXml()
+		
 		q = el.firstChildElement()
 		streamhost = q.firstChildElement()
 		host = streamhost['jid']
@@ -321,12 +321,12 @@ class FTInit:
 			factory = socks5.ClientFactory(self.ft_proxies[host][0], int(self.ft_proxies[host][1]),addr, 0,  f, xmpp = self.client, xmpp_sid = sid) 
 			self.ft[sid].connector = self.client.reactor.connectTCP(self.ft_proxies[host][0], int(self.ft_proxies[host][1]), factory)
 		else:
-			print 'tady se to usmazi'
+			
 			self.ft[sid].activate(True)
 		
 
 	def _ftreplyhostErrReceived(self, err, sid):
-		print 'replyhost', err
+		log.err('replyhost err ' + unicode(err))
 #		self.on_ftEnd(sid, 'replyhost error')
 	
 	def ftStart(self, sid, protocol):
@@ -340,7 +340,7 @@ class FTInit:
 				self.ft[sid].activateReceive()
 
 	def onFileReceive(self, el):
-		print el.toXml()
+		
 		self.disp(el['id'])
 		file = {}
 		methods = []
@@ -365,7 +365,7 @@ class FTInit:
 		sid = si['id']
 		self.ft[sid] = FT( self.client.jid.full(), el['from'] , self,  file,  filepath=None, sid =sid, typ='ft')
 		self.ft[sid].sessionObj = SI(self.ft[sid] ,  methods)
-		print self.ft[sid].tojid
+		
 		self.client.on_fileReceived(sid, el['id'])
 		self.dispatcher.publishEvent('FTStartedEvent', sid, el['id'])
 	
@@ -390,7 +390,7 @@ class FTInit:
 		
 	
 	def onStreamhosts(self, el):
-		print 'streamhosts received!'
+		log.msg('streamhosts received!')
 		self.disp(el['id'])
 		query = el.firstChildElement()
 		sid = query['sid']
@@ -415,19 +415,19 @@ class FTInit:
 		d.addErrback(self._ftIBBError, sid)
 	
 	def _ftIBBError(self, err, sid):
-		print err
+		log.err('IBB error: '+ unicode(err))
 		self.ft[sid].error = 'IBB error.'
 		self.ft[sid].finish()
 	
 	def _ftIBBStart(self,el, sid):
 		obj =self.ft[sid]
 		ready = obj.sessionObj.ready()
-		print 'waiting for  IBB start'
+		log.msg('waiting for  IBB start')
 		if obj.typ == 'jingle':
 			if obj.sessionObj.br:
 				return
 		if ready:
-			print 'ready'
+			
 			iq = IQ(self.client.xmlstream, 'set')
 			iq['to'] = self.ft[sid].tojid.full()
 			iq['from'] = self.ft[sid].fromjid.full()
@@ -462,7 +462,7 @@ class FTInit:
 		dt = ''
 		dt = self.ft[sid].fp.read(4096)
 		if not dt:
-			print 'konec!', data['seq']
+			
 			iq = IQ(self.client.xmlstream, 'set')
 			iq['to'] = self.ft[sid].tojid.full()
 			iq['from'] = self.ft[sid].fromjid.full()
@@ -599,7 +599,7 @@ class SI:
 			self.ft.init.socksSend(sid)
 
 	def _ftFailed(self, err, sid):
-		print err
+		log.err('ftFailed: '+ unicode(err))
 		self.state = 'declined'
 		self.ft.init.on_ftEnd(sid, 'Canceled')
 
@@ -672,12 +672,12 @@ class Jingle:
 		self.jingleSession = jingleSession
 		jingleSession.createFTContent('urn:xmpp:tmp:jingle:transports:bytestreams',  fileprops)
 #		jingleSession.createFTContent('urn:xmpp:tmp:jingle:transports:ibb',  fileprops)
-		print jingleSession.contents
+		
 		jingleSession.initSession()
 		self.ft.init.client.jingle.sessions[self.ft.sid] = jingleSession
 	
 	def receive(self,  id,  rang = False):
-		print 'doing jingle receive '+self.ft.sid
+		log.msg('doing jingle receive '+self.ft.sid)
 		self.humanReady = True
 		if self.transportReady:
 			self.jingleSession.acceptSession()
@@ -723,7 +723,7 @@ class FT:
 			self.sid = sid
 		else:
 			self.sid = typ + str(random.randint(1000, sys.maxint))
-		print self.sid
+		
 		self.init = init
 		self.tojid = jid.JID(tojid)
 		self.fromjid = jid.JID(fromjid)
@@ -769,7 +769,7 @@ class FT:
 	
 	def send(self):
 		self.mode = 'send'
-		print self.fileprops
+		
 		if self.typ == 'ft':
 			self.sessionObj = SI(self)
 			self.sessionObj.send(self.fileprops)
@@ -789,16 +789,16 @@ class FT:
 	
 	
 	def activate(self,  activated = False):
-		print 'doing activate for '+self.sid
+		log.msg('doing activate for '+self.sid)
 		ready = self.sessionObj.ready()
-		print ready
+		
 		if self.typ == 'jingle':
 			if self.sessionObj.br:
 				return
 		if ready == True:
 			if activated:
 				FileSender().beginFileTransfer(self.fp, self.protocol)#. addCallback(self._finished)
-				print 'sending ..'
+				
 			else:
 				iq = IQ(self.init.client.xmlstream, 'set')
 				iq['to'] = self.streamhost
@@ -816,7 +816,7 @@ class FT:
 		self.init.on_ftEnd(self.sid, 'activate error')
 		
 	def _activated(self, el = None):
-		print self.protocol
+		
 		FileSender().beginFileTransfer(self.fp, self.protocol)#. addCallback(self._finished)
 	
 	def _finished(self, last):
@@ -834,7 +834,7 @@ class FT:
 			if len(self.init.client.socks5Srv.factory.sessions)==0:
 				self.init.client.socks5Srv.loseConnection()
 		except:
-			print 'unable to finish socks5'
+			log.err('unable to finish socks5')
 #			print self.init.client.socks5Srv.factory.sessions
 			pass
 
@@ -852,7 +852,7 @@ class FT:
 		self.sessionObj.decline(id)
 	
 	def connectStreamHost(self):
-		print self.streamhosts
+		
 		streamhost = self.streamhosts.pop(0)
 		self.activeStreamhost = streamhost
 		f = ClientFactory()
@@ -874,7 +874,7 @@ class FT:
 				self.delete('connect failed')
 	
 	def activateReceive(self):
-		print 'activate!'
+		
 		iq = Element((None,'iq'))
 		iq['to'] = self.fromjid.full()
 		iq['from'] = self.tojid.full()
@@ -883,7 +883,7 @@ class FT:
 		query = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')
 		used = query.addElement('streamhost-used')
 		used['jid'] = self.activeStreamhost['jid']
-		print iq.toXml()
+		
 		self.streamhosts = []
 		self.error = None
 		self.client.xmlstream.send(iq)
@@ -893,9 +893,9 @@ class FT:
 		c = True
 		while c:
 			if self.ibbCache.has_key(self.ibbSeq):
-				print self.ibbSeq
+				
 				data = b64decode(self.ibbCache[self.ibbSeq])
-				print len(data)
+				
 				self.transfered = self.transfered + len(data)
 				self.client.on_ftTransfered(self.sid, len(data))
 				self.fp.write(data)

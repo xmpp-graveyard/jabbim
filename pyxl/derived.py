@@ -52,7 +52,7 @@ class derived:
 		pass
 	def on_firstpresence(self,  bulk):
 		for pres in bulk:
-			print pres[0], pres[1]
+
 			self.on_presence(pres[0], pres[1])
 		pass
 	def on_privacyFail(self):
@@ -103,7 +103,7 @@ class derived:
 		pass
 	
 	def on_privacyReceived(self):
-		print self.privacy_lists
+
 		pass
 
 	def on_time202Received(self, jid, utc, tzo):
@@ -240,7 +240,7 @@ class derived:
 		pb = iq.addElement('pubsub', 'http://jabber.org/protocol/pubsub' ).addElement('publish')
 		pb['node'] = ns
 		p = pb.addElement('item')
-		print payload
+		log.msg('pep payload:' + unicode(payload))
 		if type(payload) == list:
 			for itm in payload:
 				p.addChild(itm)
@@ -262,8 +262,8 @@ class derived:
 		d = iq.send()
 #		self.on_xml(iq.toXml())
 		d.addCallback(self._onRosterArrive).addErrback(self.chyba)
-		print 'poslana zadost o roster'
-		print d
+		log.msg('poslana zadost o roster')
+		
 	
 	def getMUCConfig(self, jid, callback = None):
 		""" Posle zadost o registracni formular na dany jid """
@@ -558,7 +558,7 @@ class derived:
 
 	def getMetacontacts(self, exprivacy = None):
 		log.msg('get meta contacts')
-		print exprivacy
+		
 		iq = IQ(self.xmlstream, 'get')
 		iq['xml:lang'] = self.xmlLang
 		q = iq.addElement('query', 'jabber:iq:private')
@@ -789,7 +789,7 @@ class derived:
 				f = contact.hasFeature(feature)
 			except:
 				f = False
-		print injid, feature, f
+		
 		return f
 	
 	def getFeaturesByJid(self, injid):
@@ -845,7 +845,7 @@ class derived:
 	def getipaddr(self, hostname='default'):
 		if hostname == 'default' or hostname == None:
 			hostname = socket.gethostname()
-		print hostname
+		
 		ips = socket.gethostbyname_ex(hostname)[2]
 		ips = [i for i in ips if i.split('.')[0] != '127']
 		if len(ips) != 0:
@@ -860,17 +860,17 @@ class derived:
 			try:
 				s = socket.socket()
 				s.connect(('google.com', 80))
-				print ('___ connecting to internet to determine local ip')
+				log.msg ('___ connecting to internet to determine local ip')
 				ip = s.getsockname()[0]
 				del s
 			except:
-				print ('*** cannot connect to internet in order to \
+				log.msg ('*** cannot connect to internet in order to \
 				determine outside IP address')
 				raise Exception
 		if len(ip) != 0:
 			return ip
 		else:
-			print ('*** unable to determine outside IP address')
+			log.msg ('*** unable to determine outside IP address')
 			raise Exception
 			
 	def getMoodPayload(self, mood=None, text = None):
@@ -968,7 +968,7 @@ class derived:
 		
 	def getUserRating(self,  users = None):
 		def _gotRatings(el):
-			print 'we got it!'
+			log.msg( 'we got it!')
 			ratings = {}
 			items = el.firstChildElement().firstChildElement()
 			lastReward=None
@@ -978,7 +978,7 @@ class derived:
 					lastReward=rating['reward']
 				ratings[rating['jid']] = rating.attributes
 			ratings['lastReward']=lastReward
-			print ratings
+			
 			return ratings
 		iq = IQ(self.main.client.xmlstream, "get")
 		pubsub = iq.addElement('pubsub',  'http://jabber.org/protocol/pubsub')

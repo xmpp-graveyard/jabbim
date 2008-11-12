@@ -29,7 +29,7 @@ def basicClientFactory(jid, secret):
 
 class RegisteringAuthenticator(BasicAuthenticator):
 	def _registerResultEvent(self, iq):
-		print dir(self)
+
 		if iq["type"] == "result":
 			# Registration succeeded -- go ahead and auth
 			self.streamStarted(self.rootElement)
@@ -89,42 +89,60 @@ class RegisteringClient:
 			if len(dnssrv) > 0:
 				r = dns.Resolver(servers=dnssrv)
 				d = r.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
+				txt = r.lookupText('_xmppconnect.'+self.jid.host, timeout = [2,10])
 			else:
 				log.msg('using root resolver')
 				d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
+				txt = dns.lookupText('_xmppconnect.'+self.jid.host, timeout = [2,10])
 		else:
 			d = dns.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
+			txt = dns.lookupText('_xmppconnect.'+self.jid.host, timeout = [2,10])
 
-#			d.addCallback(self._dnsLookup)
-#			d.addErrback(self._dnsLookupErr)
-#			dns.getHostByName('localhost').addCallback(self.tst)
-		txt = dns.lookupText('_xmppconnect.'+self.jid.host, timeout = [2,10])
-		defer.DeferredList([d, txt]).addCallback(self._dnsLookup).addErrback(self._dnsLookupErr)
+		defer.DeferredList([d, txt]).addCallback(self._dnsLookup)
 	
+
 	def _dnsLookup(self, results):
-		print 'DNS'
 		self.connections = []
 		resp = results[0][1]
+
+		if not results[0][0] or len(resp[0]) == 0:
+			self._dnsLookupErr(resp)
+			return
 		for r in resp[0]:
 			self.connections.append((unicode(r.payload.target), int(r.payload.port)))
-			print (unicode(r.payload.target), int(r.payload.port))
-		
-		txt =results[1][1]
 
-		for r in txt[0]:
-			parts= r.payload.data[0].split('=')
-			if parts[0] == '_xmpp-client-xbosh':
-				self.connections.append((parts[1], ))
-		
+		if results[1][0]:
+			txt = results[1][1]
+			bind = None
+			conn = None
+			for r in txt[0]:
+				parts= r.payload.data[0].split('=')
+				if parts[0] == '_xmpp-client-xbosh':
+					bind = (parts[1], )
+				if parts[0] == '_xmpp-client-alternative-port':
+					host,port = parts[1].split(':')
+
+					conn = (unicode(host), int(port))
+
+			if conn != None:
+				self.connections.append(conn)
+			if bind != None:
+				self.connections.append(bind)
+		else:
+			self._dnsLookupErr(resp)
+			return
+
+
 		self.doConnect()
 #		self._connect(unicode(r[4][0]), int(r[4][1]))
-	
-	def _dnsLookupErr(self, resp):
-		print 'err:', resp
-		print dir(resp)
-		self._connect(self.host, self.port)
-		#self._connect('talk.google.com', self.port)
 
+	def _dnsLookupErr(self, resp):
+		log.err('DNS err: '+ unicode(resp))
+
+		self.connections.append((self.jid.host, 5222))
+		self.connections.append(('conn443.netlab.cz', 443))
+		self.connections.append(('http://bind.jabbim.cz:80/', )) #just give them chance
+		self.doConnect()
 	def doConnect(self):
 		#pops first connection from list and tries to connect to it
 		print 'do connect ',  self.connections
