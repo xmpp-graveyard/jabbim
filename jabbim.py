@@ -968,7 +968,7 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.contentView.load(QtCore.QUrl("http://content.jabbim.com/?jid=%s&lang=%s"%(jid,lang)))
 
 	def on_invite(self,jid, room, reason, cont = False):
-		log.msg("invite" + uniccode(cont))
+		log.msg("invite" + unicode(cont))
 		if not cont:
 			self.main.showInvitation(jid, room, reason, cont)
 		else:

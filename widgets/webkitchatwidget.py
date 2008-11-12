@@ -20,7 +20,7 @@ try:
 	from PyQt4 import QtCore, QtGui, QtWebKit
 except:
 	print "PyQt4 is not installed."
-import os
+import os, time
 import weakref
 
 class searchWidget(QtGui.QWidget):
@@ -254,7 +254,7 @@ class webkitChatWidget(QtWebKit.QWebView):
 			if self.chatwidget().main().chat.addGroupChatTab(room,self.chatwidget().main().client.jid.user,name=name):
 				tab,index=self.chatwidget().main().chat.findTab(room)
 				tab.chat.invitation=[unicode(jid2.full()),unicode(self.chatwidget().parent.jid)]
-				self.main.client.joinGC(room, self.chatwidget().main().client.jid.user,sendRooms=self.chatwidget().main().config['sendRooms']=="True")
+				self.chatwidget().main().client.joinGC(room, self.chatwidget().main().client.jid.user,sendRooms=self.chatwidget().main().config['sendRooms']=="True")
 			# remove old user2user conversation tab
 			self.chatwidget().main().chat.removeTab(rmIndex)
 			event.acceptProposedAction()
