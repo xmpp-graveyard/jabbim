@@ -288,7 +288,7 @@ class clientClass(pyxl.client.Client):
 			tab,index=self.main.chat.findTab(fromjid)
 			if tab:
 				if str(self.main.config["autochangenickMUC"])=="True":
-					tab.chat.nick=resource+"_"
+					tab.chat.nick=self.main.selfName+"_"
 					self.joinGC(fromjid, resource+"_",sendRooms=self.main.config['sendRooms']==True)
 				else:
 					self.main.chat.ui.chatTab.removeTab(index)
