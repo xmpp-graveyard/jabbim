@@ -812,8 +812,9 @@ class derived:
 		return f
 	
 	def getIdentity(self, injid):
-		jd = jid.JID(injid)
+		
 		try:
+			jd = jid.JID(injid)
 			if self.disco[jd.host][None].has_key("identities"):
 				return self.disco[jd.host][None]["identities"]
 			else:
