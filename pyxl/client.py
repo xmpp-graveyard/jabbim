@@ -443,7 +443,7 @@ class Client(derived):
 ##		self.factory.addBootstrap("//event/client/basicauth/authfailed", self._authfailed)
 		self.factory.addBootstrap("//event/xmpp/initfailed", self._authfailed)
 		self.factory.addBootstrap('/iq[@type="result"]/bind', self._bind)
-		self.factory.addBootstrap('//event/stream/error', self._streamEnd)
+		self.factory.addBootstrap('//event/stream/error', self._streamError)
 		self.factory.addBootstrap('//event/stream/end', self._streamEnd)
 		self.factory.addBootstrap('/*', self.bootLog)
 		
@@ -503,8 +503,17 @@ class Client(derived):
 			self.main._disconnect(error = 'failed')
 			self.reactor.callFromThread(self.on_disconnect)
 
+	def _streamError(self,  xs):
+		log.err('stream error')
+		el=xs.value.getElement()
+		if el.firstChildElement().name == 'conflict':
+			self.main.reconnect = False
+			log.msg('stream error with conflict')
+
 	def _streamEnd(self, el):
+		
 		log.msg('stream end')
+		log.msg(dir(el))
 		try:
 			self.xping.stop()
 		except:
