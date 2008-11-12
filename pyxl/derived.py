@@ -812,9 +812,11 @@ class derived:
 		return f
 	
 	def getIdentity(self, injid):
-		
 		try:
 			jd = jid.JID(injid)
+		except:
+			return None
+		try:
 			if self.disco[jd.host][None].has_key("identities"):
 				return self.disco[jd.host][None]["identities"]
 			else:
@@ -826,7 +828,7 @@ class derived:
 
 		id = self.getIdentity(injid)
 
-		f = None
+		f = False
 		if id != None:
 			f=False
 			for identity in id.itervalues():
