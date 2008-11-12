@@ -792,6 +792,25 @@ class derived:
 		print injid, feature, f
 		return f
 	
+	def getFeaturesByJid(self, injid):
+  		jd = jid.JID(injid)
+		contact = self.getContactByJid(injid)
+		f = []
+		if contact != None:
+			try:
+				if jd.resource == None:
+					jd = jid.JID(self.getHighestJid(injid))
+				f = contact.resources[jd.resource].getFeatures()
+			except:
+				f = []
+		else:
+			contact = self.getMucContactByJid(injid)
+			try:
+				f = contact.getFeatures()
+			except:
+				f = []
+		return f
+	
 	def getIdentity(self, injid):
 		jd = jid.JID(injid)
 		try:

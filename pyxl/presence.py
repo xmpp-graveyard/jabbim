@@ -64,7 +64,7 @@ class PresenceInit:
 		if typ == 'error':
 			error = 'error'
 		
-		features = []
+		features = self.client.getFeaturesByJid(frm)
 		for child in el.elements():
 			if child.name == 'error':
 				error = 'error'
@@ -84,6 +84,7 @@ class PresenceInit:
 				caps_node = child.getAttribute('node')
 				ext = child.getAttribute('ver')
 				
+				
 				if self.client.caps_cache.has_key(ext) and ext != None:
 					features = self.client.caps_cache[ext][1]
 					identity = self.client.caps_cache[ext][0]
@@ -95,6 +96,8 @@ class PresenceInit:
 						if  self.client.hasIdentity(frm.host, 'conference') or self.client.hasIdentity(frm.host, 'gateway'):
 							print 'konference nebo gateway'
 							features = ['-']
+						elif len(features)>0:
+							log.msg(unicode(features))
 						else:
 							self.client.getFeatures(frm, ext)
 							pass

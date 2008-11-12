@@ -150,3 +150,5 @@ class MUCContact:
 		self.role = role
 		self.truejid = jid
 		self.features = features
+	def getFeatures(self):
+		return self.features

@@ -114,3 +114,5 @@ class Resource:
 			return True
 		else:
 			return False
+	def getFeatures(self):
+		return self.features
