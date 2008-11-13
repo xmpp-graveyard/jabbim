@@ -61,48 +61,20 @@ class Plugin(plugins.PluginBase):
 		#Ctrl+Shift+Up inserts previous command from history to the top of current shell
 			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Up | QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier),self.window)
 			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellAppendPrevious)
-		#preset save
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_0 | QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellSavePreset0)	
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_1 | QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellSavePreset1)
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_2 | QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellSavePreset2)	
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_3 | QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellSavePreset3)
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_4 | QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellSavePreset4)	
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_5 | QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellSavePreset5)
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_6 | QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellSavePreset6)	
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_7 | QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellSavePreset7)
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_8 | QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellSavePreset8)	
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_9 | QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellSavePreset9)	
-		#preset load
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_0 | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellLoadPreset0)	
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_1 | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellLoadPreset1)
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_2 | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellLoadPreset2)	
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_3 | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellLoadPreset3)
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_4 | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellLoadPreset4)	
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_5 | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellLoadPreset5)
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_6 | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellLoadPreset6)	
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_7 | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellLoadPreset7)
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_8 | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellLoadPreset8)	
-			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_9 | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellLoadPreset9)
+		#preset save & load
+			def gen_preset(n, load):
+				if load:
+					def call_it(): self.shellLoadPreset(n)
+				else:
+					def call_it(): self.shellSavePreset(n)
+				return call_it
+			keys = [QtCore.Qt.Key_0, QtCore.Qt.Key_1, QtCore.Qt.Key_2, QtCore.Qt.Key_3, QtCore.Qt.Key_4,
+				QtCore.Qt.Key_5, QtCore.Qt.Key_6, QtCore.Qt.Key_7, QtCore.Qt.Key_8, QtCore.Qt.Key_9]
+			for i in range(len(keys)):
+				short=QtGui.QShortcut(QtGui.QKeySequence(keys[i] | QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier),self.window)
+				QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"), gen_preset(i, False))
+				short=QtGui.QShortcut(QtGui.QKeySequence(keys[i] | QtCore.Qt.ControlModifier),self.window)
+				QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"), gen_preset(i, True))
 		else:
 			self.loadConfig(homedir)
 	
@@ -196,46 +168,3 @@ class Plugin(plugins.PluginBase):
 
 	def shellLoadPreset(self,order):
 		self.window.ui.input.setText(base64.b64decode(self.config['presetData'][order]))
-
-	def shellSavePreset0(self):
-		self.shellSavePreset(0);
-	def shellSavePreset1(self):
-		self.shellSavePreset(1);
-	def shellSavePreset2(self):
-		self.shellSavePreset(2);
-	def shellSavePreset3(self):
-		self.shellSavePreset(3);
-	def shellSavePreset4(self):
-		self.shellSavePreset(4);
-	def shellSavePreset5(self):
-		self.shellSavePreset(5);
-	def shellSavePreset6(self):
-		self.shellSavePreset(6);
-	def shellSavePreset7(self):
-		self.shellSavePreset(7);
-	def shellSavePreset8(self):
-		self.shellSavePreset(8);
-	def shellSavePreset9(self):
-		self.shellSavePreset(9);
-	
-	def shellLoadPreset0(self):
-		self.shellLoadPreset(0);
-	def shellLoadPreset1(self):
-		self.shellLoadPreset(1);
-	def shellLoadPreset2(self):
-		self.shellLoadPreset(2);
-	def shellLoadPreset3(self):
-		self.shellLoadPreset(3);
-	def shellLoadPreset4(self):
-		self.shellLoadPreset(4);
-	def shellLoadPreset5(self):
-		self.shellLoadPreset(5);
-	def shellLoadPreset6(self):
-		self.shellLoadPreset(6);
-	def shellLoadPreset7(self):
-		self.shellLoadPreset(7);
-	def shellLoadPreset8(self):
-		self.shellLoadPreset(8);
-	def shellLoadPreset9(self):
-		self.shellLoadPreset(9);
-
