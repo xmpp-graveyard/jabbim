@@ -598,14 +598,14 @@ def replace_url(text,widget=None):
 				text += word+" "
 				continue
 			if user.startswith('xmpp:') or user.startswith('mailto:'):
-				text+='<a href="%s" title="%s">%s</a>'%(word, word, user.split(':')[1]+'@'+server)
+				text+='<a href="%s" title="%s">%s</a> '%(word, word, user.split(':')[1]+'@'+server)
 			else:
 				if (widget != None and widget.main().client.hasIdentity(server, 'server', 'im')) or server in wellKnown :
-					text+='<a href="xmpp:%s" title="%s"><img src="%s/images/16x16/apps/jabbim.png" />%s</a>'%(user+'@'+server, word, path, word)
+					text+='<a href="xmpp:%s" title="%s"><img src="%s/images/16x16/apps/jabbim.png" />%s</a> '%(user+'@'+server, word, path, word)
 				elif (widget != None and widget.main().client.hasIdentity(server, 'conference', 'text')) or server in wellKnownMuc:
-					text+='<a href="xmpp:%s?join" title="%s"><img src="%s/images/16x16/categories/muc.png" />%s</a>'%(user+'@'+server, word, path, word)
+					text+='<a href="xmpp:%s?join" title="%s"><img src="%s/images/16x16/categories/muc.png" />%s</a> '%(user+'@'+server, word, path, word)
 				else:
-					text+='<a href="mailto:%s" title="%s"><img src="%s/images/16x16/actions/message.png" />%s</a>'%(word, word, path, word)
+					text+='<a href="mailto:%s" title="%s"><img src="%s/images/16x16/actions/message.png" />%s</a> '%(word, word, path, word)
 		else:
 			text+=word+" "
 	return text[:-1]
