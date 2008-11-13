@@ -594,7 +594,7 @@ def replace_url(text,widget=None):
 			user, server = word.split('@',1)
 			server = server.split('/')[0]
 			path = os.getcwd()
-			if word.count('@')>1 or not ('.' in server) or (widget != None and widget.main().getJid(word) == None ):
+			if word.count('@')>1 or not ('.' in server) or (widget != None and widget.main().getJid(word) is None ):
 				text += word+" "
 				continue
 			if user.startswith('xmpp:') or user.startswith('mailto:'):
