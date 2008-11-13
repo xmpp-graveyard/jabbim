@@ -150,8 +150,7 @@ class Plugin(plugins.PluginBase):
 
 	def registerRemote(self):
 		remote = self.main.getPlugin('remote')
-		print remote
-		if remote != False or remote!= None:
+		if remote != False and remote != None:
 			remote.registerPluginFunc('jdm_public', self.remotePublic)
 			utils.regWindowsMenu('Send to JDM Public', 'jdm_public')
 			remote.registerPluginFunc('jdm_private', self.remotePrivate)
@@ -159,7 +158,7 @@ class Plugin(plugins.PluginBase):
 
 	def unregisterRemote(self):
 		remote = self.main.getPlugin('remote')
-		if remote != False or remote!= None:
+		if remote != False and remote != None:
 			remote.unregisterPluginFunc('jdm_public')
 			utils.unregWindowsMenu('Send to JDM Public')
 			remote.unregisterPluginFunc('jdm_private')
