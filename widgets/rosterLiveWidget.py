@@ -859,7 +859,7 @@ class rosterWidget(QtGui.QWidget):
 		if int(event.type())==110:
 			item=self.itemAt(int(event.x()),int(event.y())) # get item in coordinates
 			#self.setToolTip("")
-			if item:
+			if item and isinstance(item, userItem):
 				#if item!=None and item.typ=="user": # tooltips are only for contacts (not for groups)
 					#text = self.main.getToolTip(item.jid, item.escapedName)
 					#self.setToolTip(text)
