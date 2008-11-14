@@ -221,6 +221,7 @@ class QTReactor(PosixReactorBase):
                 self._blockApp=self.qApp
             else:
                 self._blockApp = fakeApplication()
+            self.addSystemEventTrigger('after', 'shutdown', self._blockApp.quit)
             self.runReturn(installSignalHandlers)
             self._blockApp.exec_()
         finally:
@@ -230,13 +231,10 @@ class QTReactor(PosixReactorBase):
         self._timer.setInterval(0)
         
     def reactorInvokePrivate(self):
-        if not self.running:
-            self._blockApp.quit()
         self._doSomethingCount += 1
         self.runUntilCurrent()
         t = self.timeout()
-        if t is None: t=0.1
-        else: t = min(t,0.1)
+        if t is None: t = 3600  # practically infinity
         self._timer.setInterval(t*1010)
         self.qApp.processEvents() # could change interval
         self._timer.start()
