@@ -5,6 +5,7 @@ sys.path.append('.')
 if sys.platform == 'win32':
 	import win32gui
 from include import plugins
+from twisted.python import log
 from twisted.internet.task import LoopingCall
 from twisted.internet.protocol import ProcessProtocol
 from twisted.internet.error import ProcessDone
@@ -346,7 +347,7 @@ class Plugin(plugins.PluginBase):
 
 	def sendPEP(self, out):
 		if self.main.client.xmlstream == None:
-			print "tune: Can't sendPEP yet, no xmlstream!"
+			log.err("tune: Can't sendPEP yet, no xmlstream!")
 			return
 		if out != self.last:
 			self.main.client.sendPEP('http://jabber.org/protocol/tune', self.main.client.getTunePayload(out))
