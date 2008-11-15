@@ -183,6 +183,7 @@ class Exaile(Player):
 class Banshee(Player):
 	def __init__(self, plugin):
 		Player.__init__(self, plugin)
+		self.sig_receivers = []
 	def got_metadata(self, song_info):
 		out = {}
 		try:
@@ -195,9 +196,36 @@ class Banshee(Player):
 		try:
 			bus = self.main.session_dbus
 			banshee = bus.get_object("org.bansheeproject.Banshee", "/org/bansheeproject/Banshee/PlayerEngine")
+			banshee.GetLastState(reply_handler=self.on_state_changed, error_handler=self.clear_PEP)
+		except:
+			self.clear_PEP()
+	def recheck(self):
+		try:
+			bus = self.main.session_dbus
+			banshee = bus.get_object("org.bansheeproject.Banshee", "/org/bansheeproject/Banshee/PlayerEngine")
 			banshee.GetCurrentTrack(reply_handler=self.got_metadata, error_handler=self.clear_PEP)
 		except:
 			self.clear_PEP()
+#	def on_event_changed(self, *args, **kwargs):
+#		log.msg("MMM: on_event_changed, args=%s kwargs=%s" % (args, kwargs))
+	def on_state_changed(self, state):
+#		log.msg("MMM: on_state_changed, new state=%s" % state)
+		if state == 'playing':
+			self.recheck()
+		else:
+			self.clear_PEP()
+	def start_listening(self):
+		bus = self.main.session_dbus
+#		self.sig_receivers.append(bus.add_signal_receiver(self.on_event_changed,
+#			'EventChanged', "org.bansheeproject.Banshee.PlayerEngine",
+#			"org.bansheeproject.Banshee", "/org/bansheeproject/Banshee/PlayerEngine"))
+		self.sig_receivers.append(bus.add_signal_receiver(self.on_state_changed,
+			'StateChanged', "org.bansheeproject.Banshee.PlayerEngine",
+			"org.bansheeproject.Banshee", "/org/bansheeproject/Banshee/PlayerEngine"))
+	def stop_listening(self):
+		for receiver in self.sig_receivers:
+			receiver.remove()
+		self.sig_receivers = []
 
 class Rhythmbox(Player):
 	def __init__(self, plugin):
