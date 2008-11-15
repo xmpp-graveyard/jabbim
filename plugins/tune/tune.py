@@ -156,16 +156,28 @@ class Amarok2(Player):
 class Exaile(Player):
 	def __init__(self, plugin):
 		Player.__init__(self, plugin)
+		self.song_info = {}
+	def maybe_send(self):
+		if len(self.song_info) == 2:
+			out = self.song_info.copy()
+			self.plugin.sendPEP(out)
+	# the possible race when the song changes right between the two dbus
+	# messages is hardly worth fixing
+	def got_artist(self, artist):
+		self.song_info['artist'] = artist
+		self.maybe_send()
+	def got_title(self, title):
+		self.song_info['title'] = title
+		self.maybe_send()
 	def check(self):
-		out = {}
+		self.song_info = {}
 		try:
 			bus = self.main.session_dbus
 			exa = bus.get_object("org.exaile.DBusInterface","/DBusInterfaceObject")
-			out['artist'] = exa.get_artist()
-			out['title'] = exa.get_title()
+			exa.get_artist(reply_handler=self.got_artist, error_handler=self.clear_PEP)
+			exa.get_title (reply_handler=self.got_title , error_handler=self.clear_PEP)
 		except:
-			out = {}
-		self.plugin.sendPEP(out)
+			self.clear_PEP()
 
 class Banshee(Player):
 	def __init__(self, plugin):
