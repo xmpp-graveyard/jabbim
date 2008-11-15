@@ -100,6 +100,10 @@ class jabbimApplication(QtGui.QApplication):
 			return (True,1)
 		return (False,1)
 
+	def x11EventFilter(self,e):
+		print e,type(e),dir(e)
+		return False
+
 	def commitData(self,manager):
 		"""
 		Called when application is closed by Window manager
