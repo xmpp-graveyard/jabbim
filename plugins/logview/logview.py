@@ -110,7 +110,10 @@ class Plugin(plugins.PluginBase):
 			self.log = False
 			log.removeObserver(self.observer)
 	
-	def observer(self, msg):
+	def observer(self, msg, fromThread=False):
+		if not fromThread:
+			self.main.reactor.callFromThread(self.observer,msg,True)
+			return
 		self.window.ui.logView.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
 		if msg['isError'] and self.config['notify'] == 'True':
 			self.main.tray.showMessage(self.main.tr("Log"),unicode(' '.join(msg['message'])), QtGui.QSystemTrayIcon.Warning, 2000)
