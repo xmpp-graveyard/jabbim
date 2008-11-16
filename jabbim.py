@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -4871,6 +4871,12 @@ class mainWindow(QtGui.QMainWindow):
 				path = path + '/'+id
 			return (id, self.client.getSIPUBFile(jid.full(),  id,  path))
 			pass
+		elif query['type'] == 'join':
+			jd  = unicode(jid)
+			nickname = self.selfName
+			if self.chat.addGroupChatTab(jd,nickname):
+				self.client.joinGC(jd, nickname, None,self.config['sendRooms']=="True")
+
 
 	def connect(self,delay=None):
 		# Connect to the server

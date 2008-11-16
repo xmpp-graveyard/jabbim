@@ -313,10 +313,12 @@ class webkitChatWidget(QtWebKit.QWebView):
 			action.setData(QtCore.QVariant(receiptId))
 			menu.addAction(action)
 		if unicode(hit.linkUrl().scheme()) == 'xmpp':
+			raw = unicode(hit.linkUrl().toString())
 			jd = unicode(hit.linkUrl().path())
 			server = jd.split('@')[1]
 			wellKnownMuc = ['conf.netlab.cz', 'conference.jabber.org', 'chat.chrome.pl', 'conference.jabber.ru']
-			if self.chatwidget().main().client.hasIdentity(server, 'conference', 'text') or server in wellKnownMuc:
+
+			if self.chatwidget().main().client.hasIdentity(server, 'conference', 'text') or server in wellKnownMuc or raw.endswith('?join'):
 				action = menu.addAction(self.tr('Join room'))
 				action.setObjectName("join_muc")
 				action.setData(QtCore.QVariant(jd))

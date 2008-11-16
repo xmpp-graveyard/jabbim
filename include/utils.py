@@ -599,6 +599,8 @@ def replace_url(text,widget=None):
 				continue
 
 			if user.startswith('xmpp:') or user.startswith('mailto:'):
+				if server.endswith('?join'):
+					server = server[:-5]
 				text+='<a href="%s" title="%s">%s</a> '%(word, word, user.split(':')[1]+'@'+server)
 			else:
 				if (widget != None and widget.main().client.hasIdentity(server, 'server', 'im')) or server in wellKnown :
