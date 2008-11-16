@@ -1084,6 +1084,9 @@ class clientClass(pyxl.client.Client):
 		status=None
 		contact = self.getContactByJid(jid.userhost())
 
+		if self.main.ui.roster.isSameStatus(jid.userhost(),show):
+			return
+
 		# get tab for this contact
 		tabFull,indexFull=self.main.chat.findTab(jid.full(),True,typ=['chat']) # tab with resource
 		tab,index=self.main.chat.findTab(jid.full(),False,typ=['chat']) # tab without resource
@@ -2196,6 +2199,11 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.transportsWidget.l=QtGui.QHBoxLayout(self.ui.transportsWidget)
 		self.ui.transportsWidget.l.setContentsMargins(0,0,0,0)
 		self.ui.transportsWidget.l.addStretch()
+		self.ui.transportsWidget.button=QtGui.QToolButton(self.ui.transportsWidget)
+		self.ui.transportsWidget.button.setPopupMode(QtGui.QToolButton.InstantPopup)
+		self.ui.transportsWidget.button.setArrowType(QtCore.Qt.DownArrow)
+		self.ui.transportsWidget.button.setMenu(self.ui.menuPlugins)
+		self.ui.transportsWidget.layout().addWidget(self.ui.transportsWidget.button)
 
 		# menuView QActions
 		self.showOfflineAction=self.ui.menuView.addAction(self.tr("Show Offline"))

@@ -1891,6 +1891,24 @@ class rosterWidget(QtGui.QWidget):
 	def refreshStats(self):
 		pass
 
+	def isSameStatus(self,jid,show):
+		if not self.main.client.roster['users'].has_key(jid):
+			return True
+		res = self.main.client.roster['users'][jid].getHighestResource()
+		if res!=None:
+			res=self.main.client.roster['users'][jid].resources[res]
+			show=res.show
+			status=res.status
+		else:
+			return True
+		users = self.getUserItems(jid)
+		if len(users)==0:
+			return True
+		user=users[0]
+		if user.statusMessage==status and user.status==self.main.shows[unicode(show)] and user.height==self.rosterStyle.heightForItem(user):
+			return True
+		return False
+
 	def setStatus(self,jid,show,i=None,status=None,first=False):
 		if not self.main.client.roster['users'].has_key(jid):
 			return

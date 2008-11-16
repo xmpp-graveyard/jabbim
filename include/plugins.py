@@ -108,7 +108,7 @@ class PluginBase:
 
 	def mainWindowToolBarButton(self):
 		button=QtGui.QToolButton(self.main.ui.transportsWidget)
-		self.main.ui.transportsWidget.layout().addWidget(button)
+		self.main.ui.transportsWidget.layout().insertWidget(self.main.ui.transportsWidget.layout().count()-1,button)
 		self.registerWidget(button)
 		return button
 
