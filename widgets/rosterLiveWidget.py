@@ -1121,13 +1121,16 @@ class rosterWidget(QtGui.QWidget):
 		self.rosterStyle.paintUserItem(painter,useritem,x,y,last)
 
 	def paintEvent(self,event):
+		#start=time.time()
 		QtGui.QWidget.paintEvent(self,event)
 		painter=QtGui.QPainter(self)
 		painter.setClipping(True)
 		#painter.setRenderHint(painter.Antialiasing)
 		painter.setClipRegion(event.region())
 		for rect in event.region().rects():
+			s=time.time()
 			items,x,y=self.itemAt(1,rect.y(),rect.height())
+			print "itemAt lasts",time.time()-s
 			for i in range(len(items)):
 				item=items[i]
 				last=False
@@ -1174,7 +1177,7 @@ class rosterWidget(QtGui.QWidget):
 					painter.drawPoint(x-1,y+1)
 					painter.drawPoint(x-2,y+2)
 					painter.restore()
-
+		#print "paintEvent last",time.time()-start
 		#if self.reshow:
 			#self.statusLabel.hide()
 
@@ -1248,6 +1251,10 @@ class rosterWidget(QtGui.QWidget):
 		#self.repaint()
 		#self.setSize()
 
+	def repaintItem(self,item):
+		x,y=self.itemCoordinates(self.item)
+		self.repaint(0,y-10,self.width(),item.height+20)
+
 	def selectItem(self,item):
 		"""
 		Select item
@@ -1255,18 +1262,28 @@ class rosterWidget(QtGui.QWidget):
 		"""
 		if self.item!=item and item!=None and item.main!='special':
 			#self.selected=item
+			if self.item:
+				y=self.itemCoordinates(self.item)[1]
+				height=self.item.height
+			else:
+				y=-1
 			self.item=item
+			self.repaintItem(self.item)
+			if y>0:
+				self.repaint(0,y-10,self.width(),height+20)
 			#self.reshow=True
-			self.repaint()
 			self.setSize()
 			#self.main.client.reactor.callLater(0.2,self.sel)
 
 		elif self.item == item and self.item != None and item.main!='special':
+			y=self.itemCoordinates(self.item)[1]
+			height=self.item.height
 			self.item = None
 			#self.selected = None
 			#self.statusLabel.hide()
 			#self.reshow=True
-			self.repaint()
+			
+			self.repaint(0,y-10,self.width(),height+20)
 			self.setSize()
 		#if item!=None:
 			#if item.typ=='group' and item.main!='special':
@@ -1929,6 +1946,7 @@ class rosterWidget(QtGui.QWidget):
 			user.statusMessage=status
 			user.status=self.main.shows[unicode(show)]
 			user.height=self.rosterStyle.heightForItem(user)
+			#self.repaintItem(user)
 
 		for couple in self.getMetaItems(jid):
 			user=couple[0]
@@ -1984,13 +2002,14 @@ class rosterWidget(QtGui.QWidget):
 						else:
 							item.hidden=True
 						item.height=self.rosterStyle.heightForItem(item)
+						#self.repaintItem(item)
 		if not first:
 			#self.statusLabel.hide()
 			#self.changePos=True
 			self.sortItems()
+			self.repaint()
 		#for user in self.getUserItems(jid):
 			#log.msg("hidden:"+unicode(user.hidden))
-		self.repaint()
 
 	def setHighest(self,mainjid):
 		highest=None

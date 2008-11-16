@@ -101,7 +101,7 @@ class jabbimApplication(QtGui.QApplication):
 		return (False,1)
 
 	def x11EventFilter(self,e):
-		print e,type(e),dir(e)
+		#print e,type(e),dir(e)
 		return False
 
 	def commitData(self,manager):
