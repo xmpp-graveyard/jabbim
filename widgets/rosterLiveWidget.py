@@ -1121,16 +1121,14 @@ class rosterWidget(QtGui.QWidget):
 		self.rosterStyle.paintUserItem(painter,useritem,x,y,last)
 
 	def paintEvent(self,event):
-		#start=time.time()
+		start=time.time()
 		QtGui.QWidget.paintEvent(self,event)
 		painter=QtGui.QPainter(self)
 		painter.setClipping(True)
 		#painter.setRenderHint(painter.Antialiasing)
 		painter.setClipRegion(event.region())
 		for rect in event.region().rects():
-			s=time.time()
 			items,x,y=self.itemAt(1,rect.y(),rect.height())
-			print "itemAt lasts",time.time()-s
 			for i in range(len(items)):
 				item=items[i]
 				last=False
@@ -1177,7 +1175,7 @@ class rosterWidget(QtGui.QWidget):
 					painter.drawPoint(x-1,y+1)
 					painter.drawPoint(x-2,y+2)
 					painter.restore()
-		#print "paintEvent last",time.time()-start
+		print "paintEvent last",time.time()-start
 		#if self.reshow:
 			#self.statusLabel.hide()
 
@@ -1935,8 +1933,10 @@ class rosterWidget(QtGui.QWidget):
 			show=res.show
 			status=res.status
 
+		rect=QtCore.QRect()
 		for user in self.getUserItems(jid):
 			user.icon=self.main.getIcon(jid,size="32x32",status=self.main.icons[self.main.shows[unicode(show)]])
+			x,y=self.itemCoordinates(user)
 			if self.main.shows[unicode(show)]!="9":
 				user.hidden=False
 			elif len(self.main.client.roster['users'][jid].resources)==0:
@@ -1946,6 +1946,21 @@ class rosterWidget(QtGui.QWidget):
 			user.statusMessage=status
 			user.status=self.main.shows[unicode(show)]
 			user.height=self.rosterStyle.heightForItem(user)
+			# user was visible
+			self.sortItems()
+			x1,y1=self.itemCoordinates(user)
+			if y!=None:
+				# user is visible
+				if y1!=None:
+					if y1>y:
+						self.repaint(0,y-10,self.width(),y1-y+user.height+20)
+					else:
+						self.repaint(0,y1-10,self.width(),y-y1+user.height+20)
+				else:
+					self.repaint(0,y-10,self.width(),self.height()-y+10)
+			else:
+				self.repaint(0,y1-10,self.width(),self.height()-y1+10)
+
 			#self.repaintItem(user)
 
 		for couple in self.getMetaItems(jid):
@@ -2007,7 +2022,7 @@ class rosterWidget(QtGui.QWidget):
 			#self.statusLabel.hide()
 			#self.changePos=True
 			self.sortItems()
-			self.repaint()
+			#self.repaint()
 		#for user in self.getUserItems(jid):
 			#log.msg("hidden:"+unicode(user.hidden))
 
