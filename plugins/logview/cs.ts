@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs_CZ">
+<defaultcodec></defaultcodec>
 <context>
     <name>MainWindow</name>
     <message>
@@ -43,7 +44,7 @@
     <message>
         <location filename="logview.py" line="149"/>
         <source>print &apos;history ends here&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>vypisovat &quot;historie končí zde&quot;</translation>
     </message>
 </context>
 <context>
@@ -51,22 +52,22 @@
     <message>
         <location filename="logview.py" line="14"/>
         <source>History saving type</source>
-        <translation type="unfinished"></translation>
+        <translation>Typ ukládání historie</translation>
     </message>
     <message>
         <location filename="logview.py" line="14"/>
         <source>always after command input</source>
-        <translation type="unfinished"></translation>
+        <translation>vždy po vložení příkazu</translation>
     </message>
     <message>
         <location filename="logview.py" line="14"/>
         <source>on jabbim close</source>
-        <translation type="unfinished"></translation>
+        <translation>při ukončení Jabbim</translation>
     </message>
     <message>
         <location filename="logview.py" line="15"/>
         <source>never</source>
-        <translation type="unfinished"></translation>
+        <translation>nikdy</translation>
     </message>
 </context>
 <context>
@@ -84,7 +85,7 @@
     <message>
         <location filename="logview.py" line="13"/>
         <source>Max history entries</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximální počet záznamů v historii</translation>
     </message>
 </context>
 </TS>
