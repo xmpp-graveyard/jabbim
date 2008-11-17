@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs_CZ">
+<defaultcodec></defaultcodec>
 <context>
     <name>MainWindow</name>
     <message>
@@ -53,7 +54,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="jdm_ui.py" line="151"/>
         <source>Upload</source>
-        <translation>Nahrát</translation>
+        <translation>Poslat</translation>
     </message>
     <message>
         <location filename="jdm_ui.py" line="152"/>
@@ -73,42 +74,42 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="jdm_ui.py" line="142"/>
         <source>MainWindow</source>
-        <translation type="unfinished"></translation>
+        <translation>Hlavní okno</translation>
     </message>
     <message>
         <location filename="jdm_ui.py" line="144"/>
         <source>Desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>Pracovní plocha</translation>
     </message>
     <message>
         <location filename="jdm_ui.py" line="145"/>
         <source>Computer</source>
-        <translation type="unfinished"></translation>
+        <translation>Počítač</translation>
     </message>
     <message>
         <location filename="jdm_ui.py" line="146"/>
         <source>Public</source>
-        <translation type="unfinished"></translation>
+        <translation>Veřejný</translation>
     </message>
     <message>
         <location filename="jdm_ui.py" line="147"/>
         <source>Private</source>
-        <translation type="unfinished"></translation>
+        <translation>Privátní</translation>
     </message>
     <message>
         <location filename="jdm_ui.py" line="148"/>
         <source>Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Album</translation>
     </message>
     <message>
         <location filename="jdm_ui.py" line="149"/>
         <source>Easyshare</source>
-        <translation type="unfinished"></translation>
+        <translation>Sdílení souborů</translation>
     </message>
     <message>
         <location filename="jdm_ui.py" line="150"/>
         <source>Files</source>
-        <translation type="unfinished"></translation>
+        <translation>Soubory</translation>
     </message>
 </context>
 <context>
@@ -121,42 +122,42 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="jdm.py" line="455"/>
         <source>Show my Jdisk in JDM</source>
-        <translation>Zobrazit můj Jdisk v JDM</translation>
+        <translation type="unfinished">Zobrazit vlastní disk</translation>
     </message>
     <message>
         <location filename="jdm.py" line="457"/>
         <source>Show my Album in JDM</source>
-        <translation>Zobrazit moje Album v JDM</translation>
+        <translation type="unfinished">Zobrazit vlastní album</translation>
     </message>
     <message>
         <location filename="jdm.py" line="459"/>
         <source>Show my Jdisk in browser</source>
-        <translation>Zobrazit můj Jdisk v prohlížeči</translation>
+        <translation type="unfinished">Zobrazit vlastní disk na webu</translation>
     </message>
     <message>
         <location filename="jdm.py" line="461"/>
         <source>Show my Album in browser</source>
-        <translation>Zobrazit moje Album v prohlížeči</translation>
+        <translation type="unfinished">Zobrazit vlastní album na webu</translation>
     </message>
     <message>
         <location filename="jdm.py" line="465"/>
         <source>Show users Jdisk in JDM</source>
-        <translation>Zobrazit uživatelův Jdisk v JDM</translation>
+        <translation type="unfinished">Zobrazit disk uživatele</translation>
     </message>
     <message>
         <location filename="jdm.py" line="467"/>
         <source>Show users Album in JDM</source>
-        <translation>Zobrazit uživatelovo Album v JDM</translation>
+        <translation>Zobrazit album uživatele</translation>
     </message>
     <message>
         <location filename="jdm.py" line="469"/>
         <source>Show users Jdisk in browser</source>
-        <translation>Zobrazit uživatelův Jdisk v prohlížeči</translation>
+        <translation type="unfinished">Zobrazit disk uživatele na webu</translation>
     </message>
     <message>
         <location filename="jdm.py" line="471"/>
         <source>Show users Album in browser</source>
-        <translation>Zobrazit uživatelovo Album v prohlížeči</translation>
+        <translation type="unfinished">Zobrazit album uživatele na webu</translation>
     </message>
     <message>
         <location filename="jdm.py" line="252"/>
@@ -201,32 +202,32 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="jdm.py" line="35"/>
         <source>JDM Plugin</source>
-        <translation>Jabbim Disk Manažer</translation>
+        <translation>Správce Jabber Disku</translation>
     </message>
     <message>
         <location filename="jdm.py" line="212"/>
         <source>Finished</source>
-        <translation type="unfinished"></translation>
+        <translation>Dokončeno</translation>
     </message>
     <message>
         <location filename="jdm.py" line="609"/>
         <source>Rename</source>
-        <translation type="unfinished"></translation>
+        <translation>Přejmenovat</translation>
     </message>
     <message>
         <location filename="jdm.py" line="576"/>
         <source>Move to</source>
-        <translation type="unfinished"></translation>
+        <translation>Přesunout do</translation>
     </message>
     <message>
         <location filename="jdm.py" line="609"/>
         <source>Enter new name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Vložit nový název:</translation>
     </message>
     <message>
         <location filename="jdm.py" line="966"/>
         <source>Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresář</translation>
     </message>
 </context>
 <context>
