@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs_CZ">
+<defaultcodec></defaultcodec>
 <context>
     <name>Plugin</name>
     <message>
@@ -18,37 +19,37 @@
     <message>
         <location filename="easyshare.py" line="262"/>
         <source>Add folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat adresář</translation>
     </message>
     <message>
         <location filename="easyshare.py" line="194"/>
         <source>Remove folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Odstranit adresář</translation>
     </message>
     <message>
         <location filename="easyshare.py" line="197"/>
         <source>Folder info</source>
-        <translation type="unfinished"></translation>
+        <translation>Informace o adresáři</translation>
     </message>
     <message>
         <location filename="easyshare.py" line="203"/>
         <source>Path:</source>
-        <translation type="unfinished"></translation>
+        <translation>Cesta:</translation>
     </message>
     <message>
         <location filename="easyshare.py" line="247"/>
         <source>Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresář</translation>
     </message>
     <message>
         <location filename="easyshare.py" line="247"/>
         <source>info</source>
-        <translation type="unfinished"></translation>
+        <translation>informace</translation>
     </message>
     <message>
         <location filename="easyshare.py" line="262"/>
         <source>Choose folder name</source>
-        <translation type="unfinished"></translation>
+        <translation>Vybrat jméno adresáře</translation>
     </message>
 </context>
 <context>
@@ -56,7 +57,7 @@
     <message>
         <location filename="easyshare.py" line="162"/>
         <source>Choose directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Vybrat adresář</translation>
     </message>
 </context>
 <context>
@@ -69,7 +70,7 @@
     <message>
         <location filename="easyshare.py" line="156"/>
         <source>Choose file or directory: </source>
-        <translation>Vyberte soubor nebo adresář:</translation>
+        <translation>Vybrat soubor nebo adresář:</translation>
     </message>
     <message>
         <location filename="easyshare.py" line="158"/>
