@@ -1336,9 +1336,10 @@ class rosterWidget(QtGui.QWidget):
 							item.expanded=True
 						self.setSize()
 						#self.statusLabel.hide()
-						self.repaint()
+						x,y=self.itemCoordinates(item)
+						self.repaint(0,y-10,self.width(),self.height()-y+10)
 			self.timestamp=float(timestamp)
-		QtGui.QWidget.mouseReleaseEvent(self,event)
+		QtGui.QWidget.mousePressEvent(self,event)
 
 	def mouseDoubleClickEvent(self,event):
 		x=event.x()
@@ -1362,7 +1363,8 @@ class rosterWidget(QtGui.QWidget):
 				item.icon=QtGui.QIcon("images/"+self.iconSize+"/icons/group-open.png")
 				item.expanded=True
 			self.setSize()
-			self.repaint()
+			x,y=self.itemCoordinates(item)
+			self.repaint(0,y-10,self.width(),self.height()-y+10)
 		else:
 			self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
 			self.main.chat.activate()
