@@ -254,7 +254,7 @@ class MessageInit:
 			
 			if child.name == 'event' and child.defaultUri == 'http://jabber.org/protocol/pubsub#event' and typ != 'error':
 				log.msg('RAW PUBSUB EVENT')
-				log.msg(unicode(el.toXml()))
+				log.msg(unicode(el.toXml()).encode('utf8'))
 				items = child.firstChildElement()
 				itm = items.firstChildElement()
 				pep = items.getAttribute('node')
