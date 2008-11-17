@@ -933,6 +933,7 @@ class clientClass(pyxl.client.Client):
 		Process all first presences at once.
 		"""
 		start=time.time()
+		print "first presence srated"
 		for presence in bulk:
 			jid=presence[0]
 			show=presence[1]

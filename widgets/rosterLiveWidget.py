@@ -622,34 +622,88 @@ class rosterWidget(QtGui.QWidget):
 		x=0
 		y=0
 		if self.searchMode==False:
-			for key in self.sortedGroups:
-				item=self.groups[key]
-				items=self.getGroupSortedUsers(item.name)
-				if len(items)!=0:
-					if item==i:
-						return x,y
-					if item.expanded and len(items)!=0:
-						previous=None
-						_items=[]
-						for useritem in items:
-							if useritem.expanded:
-								if self.metaItems.has_key(useritem.metajid):
-									for contact in self.metaItems[useritem.metajid]:
-										if contact.jid!=useritem.jid:
-											_items+=[contact]
-						items+=_items
-						y+=items[0].height
-						for useritem in items:
-							if useritem==i:
-								return x,y
-							y+=useritem.height
-						y-=useritem.height
+			if self.favouriteMode==False:
+				for key in self.sortedGroups:
+					item=self.groups[key]
+					items=self.getGroupSortedUsers(item.name)
+					if len(items)!=0:
+						if item==i:
+							return x,y
+						if item.expanded and len(items)!=0:
+							previous=None
+							_items=[]
+							for useritem in items:
+								if useritem.expanded:
+									if self.metaItems.has_key(useritem.metajid):
+										for contact in self.metaItems[useritem.metajid]:
+											if contact.jid!=useritem.jid:
+												_items+=[contact]
+							items+=_items
+							y+=items[0].height
+							for useritem in items:
+								if useritem==i:
+									return x,y
+								y+=useritem.height
+							y-=useritem.height
+								#if useritem==self.item:
+									#y+=self.selectedHeight-28
+	
 							#if useritem==self.item:
-								#y+=self.selectedHeight-28
+								#y-=32
+						y+=item.height
+			else:
+				users = sorted(self.main.userRating.users.values(), key=operator.attrgetter('rating'), reverse=True)
+				jids = [u.jid for u in users if u.rating!=0.0]
+				jids=list(self.main.config['favUsers'])+jids
+				items={}
+				u=[]
+				transport=self.main.config['showTransports']
+				for v in self.metaItems.itervalues():
+					for user in v:
+						u.append(user)
+				h=0
+				for jid in jids:
+					if h>self.height():
+						break
+					for user in self.users+u:
+						if user.jid==jid:
+							if transport=='True' and user.transport==True and user.jid in self.main.client.roster['users'].keys():
+								items[user.jid]=user
+								if user==i:
+									return 0,h
+								h+=user.height
+							elif not user.transport:
+								if self.showOffline==True and not user.hiddenBySearch:
+									items[user.jid]=user
+									if user==i:
+										return 0,h
+									h+=user.height
+								else:
+									if not user.hidden and not user.hiddenBySearch and user.jid in self.main.client.roster['users'].keys():
+										items[user.jid]=user
+										if user==i:
+											return 0,h
+										h+=user.height
+							break
+				#for jid in jids:
+					#if items.has_key(jid):
+						#item=items[jid]
+						#if item.hiddenBySearch==False:
+							#useritem=item
+							#if got!=0 and not useritem in ret:
+								#ret.append(useritem)
+								#got+=1
 
-						#if useritem==self.item:
-							#y-=32
-					y+=item.height
+							#if y1>=y and y1<=y+item.height:
+								#if count and not useritem in ret:
+									#ret.append(useritem)
+									#got+=1
+									#goty=y
+								#if not count:
+									#return useritem
+							#if got==count:
+								#return ret,0,goty
+							#y+=item.height
 		else:
 
 			users=[]
