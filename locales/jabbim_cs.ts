@@ -1312,7 +1312,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/addcontact.py" line="22"/>
         <source>Search User</source>
-        <translation>Hledej uživatele</translation>
+        <translation>Hledat uživatele</translation>
     </message>
     <message>
         <location filename="widgets/addcontact.py" line="20"/>
@@ -1360,7 +1360,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/albumfiletransfer.py" line="50"/>
         <source>Choose files</source>
-        <translation>Vyberte soubory</translation>
+        <translation>Vybrat soubory</translation>
     </message>
     <message>
         <location filename="widgets/albumfiletransfer_ui.py" line="80"/>
@@ -1863,7 +1863,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="wizards/firststart.py" line="203"/>
         <source>Your avatar was too big. He had to be resized to smaller size.</source>
-        <translation>Váš avatar byl příliš velký a proto musel být zmenšen.</translation>
+        <translation>Avatar byl příliš velký a proto musel být zmenšen.</translation>
     </message>
     <message>
         <location filename="wizards/firststart.py" line="223"/>
@@ -1906,7 +1906,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/groupchat.py" line="418"/>
         <source>Enter reason:</source>
-        <translation>Vložte důvod:</translation>
+        <translation>Vložit důvod:</translation>
     </message>
     <message>
         <location filename="widgets/groupchat.py" line="119"/>
@@ -4420,17 +4420,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/profiles.py" line="40"/>
         <source>Enter your new password:</source>
-        <translation>Vámi požadované heslo:</translation>
+        <translation>Vložit heslo:</translation>
     </message>
     <message>
         <location filename="widgets/profiles.py" line="41"/>
         <source>Confirm password:</source>
-        <translation>Potvrďtě:</translation>
+        <translation>Potvrzení hesla:</translation>
     </message>
     <message>
         <location filename="widgets/profiles.py" line="70"/>
         <source>Passwords vary.</source>
-        <translation>Hesla se liší.</translation>
+        <translation>Hesla nejsou stejná.</translation>
     </message>
     <message>
         <location filename="widgets/profiles.py" line="67"/>
@@ -5550,7 +5550,7 @@ Version: %3</source>
     <message>
         <location filename="wizards/registration.py" line="102"/>
         <source>Registration in progress, please wait.</source>
-        <translation>Registruji Jabber ID, prosím čekejte.</translation>
+        <translation>Registrace Jabber ID, prosím čekejte.</translation>
     </message>
     <message>
         <location filename="wizards/registration.py" line="158"/>
@@ -6577,7 +6577,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/tooltip_ui.py" line="64"/>
         <source>Presence</source>
-        <translation>Přítomnost</translation>
+        <translation>Stav</translation>
     </message>
     <message>
         <location filename="widgets/tooltip_ui.py" line="65"/>
