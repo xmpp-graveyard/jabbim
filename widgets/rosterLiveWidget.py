@@ -2029,7 +2029,8 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					self.repaint(0,y-10,self.width(),self.height()-y+10)
 			else:
-				self.repaint(0,y1-10,self.width(),self.height()-y1+10)
+				if y1!=None:
+					self.repaint(0,y1-10,self.width(),self.height()-y1+10)
 
 			#self.repaintItem(user)
 
