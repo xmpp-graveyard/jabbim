@@ -2198,6 +2198,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.selectedItemStyle.hide()
 		#self.setMinimumWidth(200)
 		self.ui.statusLine.hide()
+		self.ui.statusLine.paintEvent=self.statusLinePaintEvent
+		self.ui.statusLine.typ="statusChange"
+		self.ui.statusLine.defaultText=unicode(self.tr("Enter status message"))
 		self.ui.transportsWidget.l=QtGui.QHBoxLayout(self.ui.transportsWidget)
 		self.ui.transportsWidget.l.setContentsMargins(0,0,0,0)
 		self.ui.transportsWidget.l.addStretch()
@@ -2578,6 +2581,22 @@ class mainWindow(QtGui.QMainWindow):
 
 #	def t(self,i):
 #		print "showTab",i
+
+	def statusLinePaintEvent(self,event):
+		if len(unicode(self.ui.statusLine.text()))==0:
+			QtGui.QLineEdit.paintEvent(self.ui.statusLine,event)
+			panel=QtGui.QStyleOptionFrameV2()
+			self.ui.statusLine.initStyleOption(panel)
+			textRect = self.ui.statusLine.style().subElementRect(QtGui.QStyle.SE_LineEditContents,panel,self.ui.statusLine)
+			#if QT_VERSION >= 0x040500
+			#left = self.ui.statusLine.textMargin(QtGui.LineEdit.LeftSide)
+			#right = self.ui.statusLine.textMargin(QtGui.LineEdit.RightSide)
+			#textRect.adjust(left, 0, -right, 0)
+			p=QtGui.QPainter(self.ui.statusLine)
+			p.setPen(self.ui.statusLine.palette().brush(QtGui.QPalette.Disabled, QtGui.QPalette.Text).color())
+			p.drawText(textRect, QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter, self.ui.statusLine.defaultText+" ");
+		else:
+			QtGui.QLineEdit.paintEvent(self.ui.statusLine,event)
 
 	def showFavourite(self,b=None):
 		self.ui.roster.favouriteMode=not self.ui.roster.favouriteMode
@@ -3294,34 +3313,53 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusLine.hide()
 		self.ui.statusWidget.show()
 		self.ui.moodButton.show()
+		self.ui.statusLine.defaultText=unicode(self.tr("Enter status message"))
+		self.ui.statusLine.typ="statusChange"
 
-	def statusLineFinished(self):
+	def statusLineFinished(self,show=None,oldStatus="",calledByTimer=False):
 		"""
 		Called when user finish with changing status message by statusLine
 		"""
 		status=unicode(self.ui.statusLine.text())
+		if oldStatus!=status and calledByTimer:
+			return
 		contact = self.client.roster['users'][self.client.jid.userhost()]
 		#print [status,contact.resources[self.client.jid.resource].status]
 		if len(status)==0 and not contact.resources[self.client.jid.resource].status:
-			status=None
+			status=""
 
-		if contact.resources[self.client.jid.resource].status!=status:
-			self.sendPresence(None,self.selfStatus,status)
+		if (self.ui.statusLine.typ=="presence" and (self.ui.statusLine.data!=self.selfStatus or contact.resources[self.client.jid.resource].status!=status)) or (contact.resources[self.client.jid.resource].status!=status and self.ui.statusLine.typ=="statusChange"):
+			if self.ui.statusLine.typ=="presence":
+				self.sendPresence(None,self.ui.statusLine.data,status)
+			elif self.ui.statusLine.typ=="statusChange":
+				self.sendPresence(None,self.selfStatus,status)
+		if self.ui.statusLine.typ=="mood":
+			if self.ui.statusLine.data=="none":
+				self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(None,status))
+			else:
+				self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(self.ui.statusLine.data,status))
+		elif self.ui.statusLine.typ=="activity":
+			self.client.sendPEP('http://jabber.org/protocol/activity', self.client.getActivityPayload(self.ui.statusLine.data[0], self.ui.statusLine.data[1],status))
 		self.ui.statusLine.hide()
 		self.ui.statusWidget.show()
 		self.ui.moodButton.show()
+		self.ui.statusLine.defaultText=unicode(self.tr("Enter status message"))
+		self.ui.statusLine.typ="statusChange"
 
-	def statusMessageClicked(self,b=None):
+	def statusMessageClicked(self,b=None,text=None):
 		"""
 		Called when user click on statusMessage.
 		"""
 		self.ui.statusWidget.hide()
 		self.ui.moodButton.hide()
-		contact = self.client.roster['users'][self.client.jid.userhost()]
-		if contact.resources[self.client.jid.resource].status:
-			self.ui.statusLine.setText(unicode(contact.resources[self.client.jid.resource].status))
+		if text!=None:
+			self.ui.statusLine.setText(text)
 		else:
-			self.ui.statusLine.setText("")
+			contact = self.client.roster['users'][self.client.jid.userhost()]
+			if contact.resources[self.client.jid.resource].status:
+				self.ui.statusLine.setText(unicode(contact.resources[self.client.jid.resource].status))
+			else:
+				self.ui.statusLine.setText("")
 		self.ui.statusLine.show()
 		self.ui.statusLine.setFocus(QtCore.Qt.MouseFocusReason)
 
@@ -3773,10 +3811,15 @@ class mainWindow(QtGui.QMainWindow):
 		if cmd == 'mood':
 			m = unicode(data.toString())
 			log.msg('setting mood to '+m)
-			if m=="none":
-				self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(None))
-			else:
-				self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(m))
+			#if m=="none":
+				#self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(None))
+			#else:
+				#self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(m))
+			self.ui.statusLine.defaultText=unicode(self.tr("Enter mood message"))
+			self.ui.statusLine.typ="mood"
+			self.ui.statusLine.data=m
+			self.statusMessageClicked(text="")
+			self.reactor.callLater(4,self.statusLineFinished,m,"",True)
 			if self.moodIcons.has_key(m):
 				self.ui.moodButton.setIcon(self.moodIcons[m])
 			if self.moodMenu.currentAction:
@@ -3805,7 +3848,12 @@ class mainWindow(QtGui.QMainWindow):
 			else:
 				a = unicode(data[1].toString())
 			log.msg('setting activity to %s/%s'%(group, a))
-			self.client.sendPEP('http://jabber.org/protocol/activity', self.client.getActivityPayload(group, a))
+			#self.client.sendPEP('http://jabber.org/protocol/activity', self.client.getActivityPayload(group, a))
+			self.ui.statusLine.defaultText=unicode(self.tr("Enter activity message"))
+			self.ui.statusLine.typ="activity"
+			self.ui.statusLine.data=[group,a]
+			self.statusMessageClicked(text="")
+			self.reactor.callLater(4,self.statusLineFinished,a,"",True)
 
 	def statusWidgetChanged(self,action):
 		"""
@@ -3850,8 +3898,13 @@ class mainWindow(QtGui.QMainWindow):
 			elif len(data)==1:
 				show=data[0]
 				message=""
-			# send presence
-			self.sendPresence(jid,show,message)
+				self.ui.statusLine.defaultText=unicode(self.tr("Enter status message"))
+				self.ui.statusLine.data=show
+				self.ui.statusLine.typ="presence"
+				self.statusMessageClicked(text="")
+				self.reactor.callLater(4,self.statusLineFinished,show,"",True)
+			## send presence
+			#self.sendPresence(jid,show,message)
 
 	def _gotStatus(self,result,jid):
 		"""
