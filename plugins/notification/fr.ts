@@ -1,55 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="fr">
-<defaultcodec></defaultcodec>
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="notification.py" line="320"/>
+        <location filename="notification.py" line="351"/>
         <source>Notification test - can drag</source>
         <translation>Test de notification - peut être déplacé</translation>
     </message>
     <message>
-        <location filename="notification.py" line="350"/>
+        <location filename="notification.py" line="388"/>
         <source>Notification test</source>
         <translation>Test de notification</translation>
     </message>
     <message>
-        <location filename="notification.py" line="348"/>
+        <location filename="notification.py" line="380"/>
         <source>Notification </source>
         <translation>Notification </translation>
     </message>
     <message>
-        <location filename="notification.py" line="348"/>
+        <location filename="notification.py" line="380"/>
         <source>Notification plugin test :)</source>
         <translation>Test du plugin de notification :)</translation>
     </message>
     <message>
-        <location filename="notification.py" line="370"/>
+        <location filename="notification.py" line="408"/>
         <source>WARNING!</source>
         <translation>ATTENTION!</translation>
     </message>
     <message>
-        <location filename="notification.py" line="379"/>
+        <location filename="notification.py" line="426"/>
         <source> is now </source>
         <translation> est maintenant </translation>
     </message>
     <message>
-        <location filename="notification.py" line="435"/>
+        <location filename="notification.py" line="550"/>
         <source>New message from </source>
         <translation>Nouveau message de </translation>
     </message>
     <message>
-        <location filename="notification.py" line="446"/>
+        <location filename="notification.py" line="543"/>
         <source>New groupchat message for you</source>
         <translation>Nouveau message de groupe de discution pour vous</translation>
     </message>
     <message>
-        <location filename="notification.py" line="274"/>
+        <location filename="notification.py" line="275"/>
         <source>System tray and sound notification</source>
         <translation>Barre système et notification du son</translation>
     </message>
     <message>
-        <location filename="notification.py" line="276"/>
+        <location filename="notification.py" line="277"/>
         <source>Notification Plugin</source>
         <translation>Plugin de notification</translation>
     </message>
@@ -62,7 +61,7 @@
         <translation>Notifier le premier message de l&apos;utilisateur</translation>
     </message>
     <message>
-        <location filename="notification.py" line="248"/>
+        <location filename="notification.py" line="247"/>
         <source>Tray icon</source>
         <translation>Icone dans la barre système</translation>
     </message>
@@ -97,7 +96,7 @@
         <translation>Utiliser un arrière plan transparent</translation>
     </message>
     <message>
-        <location filename="notification.py" line="268"/>
+        <location filename="notification.py" line="269"/>
         <source>OSD</source>
         <translation>OSD</translation>
     </message>
@@ -107,7 +106,7 @@
         <translation>Durée d&apos;affichage (secondes):</translation>
     </message>
     <message>
-        <location filename="notification.py" line="263"/>
+        <location filename="notification.py" line="266"/>
         <source>Use OSD for presences</source>
         <translation>Utiliser l&apos;OSD pour les présences</translation>
     </message>
@@ -117,7 +116,7 @@
         <translation type="obsolete">Utiliser l&apos;OSD pour les messages</translation>
     </message>
     <message>
-        <location filename="notification.py" line="250"/>
+        <location filename="notification.py" line="248"/>
         <source>Tray Icon</source>
         <translation>Icone dans la barre système</translation>
     </message>
@@ -155,6 +154,26 @@
         <location filename="notification.py" line="265"/>
         <source>Text font size</source>
         <translation>Taille de la police du texte</translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="261"/>
+        <source>Groupchat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="266"/>
+        <source>Global</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="260"/>
+        <source>Chat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="261"/>
+        <source>Use OSD for all conference messages</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

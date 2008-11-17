@@ -26,17 +26,17 @@
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="archive.py" line="523"/>
+        <location filename="archive.py" line="527"/>
         <source>Contacts in roster</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="archive.py" line="525"/>
+        <location filename="archive.py" line="529"/>
         <source>Others</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="archive.py" line="401"/>
+        <location filename="archive.py" line="431"/>
         <source>History</source>
         <translation type="unfinished"></translation>
     </message>

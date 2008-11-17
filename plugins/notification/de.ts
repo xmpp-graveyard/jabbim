@@ -3,52 +3,52 @@
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="notification.py" line="320"/>
+        <location filename="notification.py" line="351"/>
         <source>Notification test - can drag</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="notification.py" line="350"/>
+        <location filename="notification.py" line="388"/>
         <source>Notification test</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="notification.py" line="348"/>
+        <location filename="notification.py" line="380"/>
         <source>Notification </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="notification.py" line="348"/>
+        <location filename="notification.py" line="380"/>
         <source>Notification plugin test :)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="notification.py" line="370"/>
+        <location filename="notification.py" line="408"/>
         <source>WARNING!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="notification.py" line="379"/>
+        <location filename="notification.py" line="426"/>
         <source> is now </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="notification.py" line="435"/>
+        <location filename="notification.py" line="550"/>
         <source>New message from </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="notification.py" line="446"/>
+        <location filename="notification.py" line="543"/>
         <source>New groupchat message for you</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="notification.py" line="274"/>
+        <location filename="notification.py" line="275"/>
         <source>System tray and sound notification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="notification.py" line="276"/>
+        <location filename="notification.py" line="277"/>
         <source>Notification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -61,12 +61,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="notification.py" line="248"/>
+        <location filename="notification.py" line="247"/>
         <source>Tray icon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="notification.py" line="250"/>
+        <location filename="notification.py" line="248"/>
         <source>Tray Icon</source>
         <translation type="unfinished"></translation>
     </message>
@@ -116,7 +116,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="notification.py" line="268"/>
+        <location filename="notification.py" line="269"/>
         <source>OSD</source>
         <translation type="unfinished"></translation>
     </message>
@@ -136,7 +136,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="notification.py" line="263"/>
+        <location filename="notification.py" line="266"/>
         <source>Use OSD for presences</source>
         <translation type="unfinished"></translation>
     </message>
@@ -148,6 +148,26 @@
     <message>
         <location filename="notification.py" line="265"/>
         <source>Text font size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="261"/>
+        <source>Groupchat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="266"/>
+        <source>Global</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="260"/>
+        <source>Chat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="notification.py" line="261"/>
+        <source>Use OSD for all conference messages</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

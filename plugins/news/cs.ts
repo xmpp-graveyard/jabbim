@@ -8,12 +8,12 @@
         <translation type="obsolete">Zobrazit novinky</translation>
     </message>
     <message>
-        <location filename="news.py" line="76"/>
+        <location filename="news.py" line="77"/>
         <source>News: </source>
         <translation>Novinky: </translation>
     </message>
     <message>
-        <location filename="news.py" line="76"/>
+        <location filename="news.py" line="77"/>
         <source>From: </source>
         <translation>Zdroj: </translation>
     </message>

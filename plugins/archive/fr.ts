@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="fr_FR">
-<defaultcodec></defaultcodec>
 <context>
     <name>MainWindow</name>
     <message>
@@ -27,17 +26,17 @@
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="archive.py" line="401"/>
+        <location filename="archive.py" line="431"/>
         <source>History</source>
         <translation>Historique</translation>
     </message>
     <message>
-        <location filename="archive.py" line="523"/>
+        <location filename="archive.py" line="527"/>
         <source>Contacts in roster</source>
         <translation>Liste des contacts</translation>
     </message>
     <message>
-        <location filename="archive.py" line="525"/>
+        <location filename="archive.py" line="529"/>
         <source>Others</source>
         <translation>Autres</translation>
     </message>
