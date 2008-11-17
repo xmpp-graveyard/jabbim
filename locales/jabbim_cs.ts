@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs">
+<defaultcodec></defaultcodec>
 <context>
     <name>@default</name>
     <message>
         <location filename="widgets/commands.py" line="174"/>
         <source>Sorry. No extra actions available.</source>
-        <translation type="unfinished">Omlouváme se, ale žádné akce nejsou dostupné.</translation>
+        <translation>Omlouváme se, ale žádné akce nejsou dostupné.</translation>
     </message>
     <message>
         <location filename="widgets/commands.py" line="181"/>
         <source>Choose action to execute.</source>
-        <translation type="unfinished">Vyberte akci, kterou chcete provést.</translation>
+        <translation>Vyberte akci, kterou chcete provést.</translation>
     </message>
     <message>
         <location filename="widgets/commands.py" line="238"/>
         <source>Completed!</source>
-        <translation type="unfinished">Dokončeno!</translation>
+        <translation>Dokončeno!</translation>
     </message>
     <message>
         <location filename="widgets/commands.py" line="284"/>
         <source>Error</source>
-        <translation type="unfinished">Chyba</translation>
+        <translation>Chyba</translation>
     </message>
     <message>
         <location filename="widgets/commands.py" line="286"/>
         <source>Warning</source>
-        <translation type="unfinished">Varování</translation>
+        <translation>Varování</translation>
     </message>
     <message>
         <location filename="widgets/commands.py" line="288"/>
         <source>Info</source>
-        <translation type="unfinished">Informace</translation>
+        <translation>Informace</translation>
     </message>
 </context>
 <context>
@@ -587,12 +588,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/mainWindow.py" line="568"/>
         <source>Join groupchat</source>
-        <translation>Připojit ke konferenci</translation>
+        <translation>Připojit do místnosti</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="569"/>
         <source>Browse rooms</source>
-        <translation>Procházet konference</translation>
+        <translation>Procházet seznam místností</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="570"/>
@@ -657,42 +658,42 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/mainWindow.py" line="531"/>
         <source>Favourite</source>
-        <translation type="unfinished"></translation>
+        <translation>Oblíbení</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="533"/>
         <source>Jabbim Content</source>
-        <translation type="unfinished"></translation>
+        <translation>Jabbim Obsah</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="543"/>
         <source>Form</source>
-        <translation type="unfinished">Formulář</translation>
+        <translation>Formulář</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="544"/>
         <source>File Transfers</source>
-        <translation type="unfinished"></translation>
+        <translation>Přenosy souborů</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="545"/>
         <source>Authorizations</source>
-        <translation type="unfinished"></translation>
+        <translation>Autorizace</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="546"/>
         <source>Other</source>
-        <translation type="unfinished">Jiné</translation>
+        <translation>Jiné</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="547"/>
         <source>Messages</source>
-        <translation type="unfinished"></translation>
+        <translation>Zprávy</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="555"/>
         <source>View</source>
-        <translation type="unfinished">Vzhled</translation>
+        <translation>Zobrazení</translation>
     </message>
 </context>
 <context>
@@ -981,7 +982,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/about.py" line="137"/>
         <source>Conference: jabbim@conf.netlab.cz</source>
-        <translation>Konference: jabbim@conf.netlab.cz</translation>
+        <translation>Místnost: jabbim@conf.netlab.cz</translation>
     </message>
     <message>
         <location filename="widgets/about.py" line="138"/>
@@ -1359,12 +1360,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/albumfiletransfer.py" line="50"/>
         <source>Choose files</source>
-        <translation type="unfinished">Vyberte soubory</translation>
+        <translation>Vyberte soubory</translation>
     </message>
     <message>
         <location filename="widgets/albumfiletransfer_ui.py" line="80"/>
         <source>Add more files</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat další soubory</translation>
     </message>
 </context>
 <context>
@@ -1392,12 +1393,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/chatwidget.py" line="317"/>
         <source>Do you know that you&apos;ve sent </source>
-        <translation type="unfinished"></translation>
+        <translation>Víte, co posíláte</translation>
     </message>
     <message>
         <location filename="widgets/chatwidget.py" line="317"/>
         <source> messages to this contact?</source>
-        <translation type="unfinished"></translation>
+        <translation>zprávy tomuto kontaktu?</translation>
     </message>
 </context>
 <context>
@@ -1518,7 +1519,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/chatwidget_ui.py" line="192"/>
         <source>Paint</source>
-        <translation type="unfinished"></translation>
+        <translation>Malování</translation>
     </message>
 </context>
 <context>
@@ -2165,12 +2166,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/groupchat.py" line="286"/>
         <source>Private message</source>
-        <translation type="unfinished"></translation>
+        <translation>Soukromá zpráva</translation>
     </message>
     <message>
         <location filename="widgets/groupchat.py" line="835"/>
         <source>Available commands: </source>
-        <translation type="unfinished"></translation>
+        <translation>Dostupné příkazy:</translation>
     </message>
 </context>
 <context>
@@ -2349,7 +2350,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/groupchatwidget_ui.py" line="180"/>
         <source>Every multi-user chat can have topic of its discussion</source>
-        <translation>Každá konference může mít dáno téma diskuze</translation>
+        <translation>Každá místnost může mít své téma</translation>
     </message>
     <message>
         <location filename="widgets/groupchatwidget_ui.py" line="181"/>
@@ -2415,7 +2416,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/joingroupchat.py" line="44"/>
         <source>Browse chat rooms</source>
-        <translation>Procházet konference</translation>
+        <translation>Procházet seznam místností</translation>
     </message>
 </context>
 <context>
@@ -2503,17 +2504,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="159"/>
         <source>Join Chat Room</source>
-        <translation>Připojit ke konferenci</translation>
+        <translation>Připojit do místnosti</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="160"/>
         <source>Chat rooms allow you to chat with more users in one window.</source>
-        <translation>Konference vám umožní vést rozhovor s více lidmi v jednom okně.</translation>
+        <translation>Místnosti vám umožní vést rozhovor s více lidmi v jednom okně.</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="161"/>
         <source>Join the chat room</source>
-        <translation>Připojit se ke konferenci</translation>
+        <translation>Připojit do místnosti</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="162"/>
@@ -2548,7 +2549,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="169"/>
         <source>Join this chat room automaticaly at login</source>
-        <translation>Připojit se ke konferenci po přihlášení</translation>
+        <translation>Připojit se do místnosti po přihlášení</translation>
     </message>
 </context>
 <context>
@@ -2696,7 +2697,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="417"/>
         <source>Close</source>
-        <translation type="unfinished">Zavřít</translation>
+        <translation>Zavřít</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="545"/>
@@ -3146,7 +3147,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="414"/>
         <source>Groupchat Error</source>
-        <translation>Chyba konference</translation>
+        <translation>Chyba místnosti</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="228"/>
@@ -3991,7 +3992,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="2941"/>
         <source>User is chatting in:</source>
-        <translation>Uživatel se účastní konferencí:</translation>
+        <translation>Uživatel je přítomen v místnostech:</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="3546"/>
@@ -4016,197 +4017,197 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="304"/>
         <source>This nickname is used by someone else. Please choose another. </source>
-        <translation type="unfinished"></translation>
+        <translation>Tato přezdívka je používána jiným uživatel. Vyberte si jinou.</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="4218"/>
         <source>Nickname:</source>
-        <translation type="unfinished">Přezdívka:</translation>
+        <translation>Přezdívka:</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="312"/>
         <source>Cancel</source>
-        <translation type="unfinished">Zrušit</translation>
+        <translation>Zrušit</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="322"/>
         <source>Room is password protected</source>
-        <translation type="unfinished"></translation>
+        <translation>Místnost je chráněna heslem</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="335"/>
         <source>Room is only for members</source>
-        <translation type="unfinished"></translation>
+        <translation>Místnost je pouze pro členy</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="348"/>
         <source>You are banned from entering this room.</source>
-        <translation type="unfinished"></translation>
+        <translation>Do této místnosti máte zakázán přístup.</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="361"/>
         <source>Room occupant limit has been reached</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximální počet uživatelů místnosti byl překročen</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="374"/>
         <source>Room is creating try it again</source>
-        <translation type="unfinished"></translation>
+        <translation>Místnost se vytváří, zkuste to znovu</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="387"/>
         <source>Not allowed create room</source>
-        <translation type="unfinished"></translation>
+        <translation>Není povoleno vytvořit místnost</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="400"/>
         <source>Not allowed change nickname</source>
-        <translation type="unfinished"></translation>
+        <translation>Není povoleno měnit přezdívku</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="868"/>
         <source> is sending you contact. Do you want to receive them?</source>
-        <translation type="unfinished"></translation>
+        <translation>vám chce přidat kontakt do seznamu kontaktů. Chcete je přijmout?</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2004"/>
         <source>Yes</source>
-        <translation type="unfinished">Ano</translation>
+        <translation>Ano</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2005"/>
         <source>No</source>
-        <translation type="unfinished">Ne</translation>
+        <translation>Ne</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="879"/>
         <source> is sending you contacts. Do you want to receive them?</source>
-        <translation type="unfinished"></translation>
+        <translation>vám chce přidat kontakty do seznamu kontaktů. Chcete je přijmout?</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="888"/>
         <source> is requesting removal of a contact. Do you want to proceed?</source>
-        <translation type="unfinished"></translation>
+        <translation>vás žádá o povolení odebrat kontakt. Chcete to povolit?</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="899"/>
         <source> is requesting removal of a contacts. Do you want to proceed?</source>
-        <translation type="unfinished"></translation>
+        <translation>vás žádá o povolení odebrat kontakty. Chcete to povolit?</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1032"/>
         <source>You have created this room.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vytvořil jste tuto místnost.</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1037"/>
         <source>This room is logged</source>
-        <translation type="unfinished"></translation>
+        <translation>Historie této místnosti je uchovávána</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1040"/>
         <source>Room is not anonymous</source>
-        <translation type="unfinished"></translation>
+        <translation>Tato místnost není anonymní</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1429"/>
         <source>Users </source>
-        <translation type="unfinished"></translation>
+        <translation>Uživatelé</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1429"/>
         <source>want to see your status. Do you want to authorize these users?</source>
-        <translation type="unfinished"></translation>
+        <translation>chce vidět váš stav. Chcete autorizovat tyto uživatele?</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1536"/>
         <source>has set the subject to:</source>
-        <translation type="unfinished"></translation>
+        <translation>nastavil téma místnosti na:</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1748"/>
         <source>New message from:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nová zpráva od:</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1687"/>
         <source>New messages</source>
-        <translation type="unfinished"></translation>
+        <translation>Nové zprávy</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1687"/>
         <source>from:</source>
-        <translation type="unfinished"></translation>
+        <translation>od:</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1749"/>
         <source>Read</source>
-        <translation type="unfinished"></translation>
+        <translation>Číst</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1750"/>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignorovat</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1848"/>
         <source>is sending you </source>
-        <translation type="unfinished"></translation>
+        <translation>vám posílá</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1848"/>
         <source>files</source>
-        <translation type="unfinished"></translation>
+        <translation>soubory</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1938"/>
         <source>Reject</source>
-        <translation type="unfinished"></translation>
+        <translation>Odmítnout</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1876"/>
         <source>Save Files</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit soubory</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1936"/>
         <source>is sending you file</source>
-        <translation type="unfinished"></translation>
+        <translation>vám posílá soubor</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="3901"/>
         <source>Enter status message</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavit zprávu o stavu</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2219"/>
         <source>Show Favourite</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit oblíbené</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="3818"/>
         <source>Enter mood message</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavit zprávu o náladě</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="3852"/>
         <source>Enter activity message</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavit zprávu o činnosti</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="4968"/>
         <source>Empty password</source>
-        <translation type="unfinished"></translation>
+        <translation>Prázdné heslo</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="4968"/>
         <source>Your password is empty.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vaše heslo je prázdné.</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="5189"/>
         <source>Connection to server failed. Check your Jabberd ID and try it again.</source>
-        <translation type="unfinished"></translation>
+        <translation>Připojení k serveru selhalo. Zkontrolujte vaše Jabber ID a zkuste to znovu.</translation>
     </message>
 </context>
 <context>
@@ -4863,12 +4864,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/preferences_ui.py" line="501"/>
         <source>Get more groupchat skins</source>
-        <translation>Získat více vzhledů konferencí</translation>
+        <translation>Získat více vzhledů místností</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="502"/>
         <source>Groupchat skin</source>
-        <translation type="unfinished">Vzhled konference</translation>
+        <translation>Vzhled místnosti</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="506"/>
@@ -5188,7 +5189,7 @@ Version: %3</source>
     <message>
         <location filename="pref/connection.py" line="8"/>
         <source>Join groupchats at startup.</source>
-        <translation>Připojit se ke konferenci po přihlášení.</translation>
+        <translation>Připojit se do místnosti po přihlášení.</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="7"/>
@@ -5203,7 +5204,7 @@ Version: %3</source>
     <message>
         <location filename="pref/chat.py" line="12"/>
         <source>Auto change nick if there&apos;s a conflict when joining the room</source>
-        <translation>Automaticky změnit přezdívku při konfliktu v konferenci</translation>
+        <translation>Automaticky změnit přezdívku při shodě v místnosti</translation>
     </message>
     <message>
         <location filename="pref/jabbim.py" line="5"/>
@@ -5253,77 +5254,77 @@ Version: %3</source>
     <message>
         <location filename="widgets/preferences.py" line="179"/>
         <source>Informations</source>
-        <translation type="unfinished"></translation>
+        <translation>Informace</translation>
     </message>
     <message>
         <location filename="widgets/preferences.py" line="165"/>
         <source>You have to be connected to download new chatskins.</source>
-        <translation type="unfinished"></translation>
+        <translation>Budete spojen  pro stažení nových vzhledů.</translation>
     </message>
     <message>
         <location filename="widgets/preferences.py" line="172"/>
         <source>You have to be connected to download new emoticons.</source>
-        <translation type="unfinished"></translation>
+        <translation>Budete spojen pro stažení nových emotikonů.</translation>
     </message>
     <message>
         <location filename="widgets/preferences.py" line="179"/>
         <source>You have to be connected to download new plugins.</source>
-        <translation type="unfinished"></translation>
+        <translation>Budete spojen pro stažení nových pluginů.</translation>
     </message>
     <message>
         <location filename="pref/connection.py" line="15"/>
         <source>Proxy settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení proxy serveru</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="5"/>
         <source>Use text formatting.</source>
-        <translation type="unfinished"></translation>
+        <translation>Použivat formátování textu.</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="9"/>
         <source>Show message receipts notifications.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazovat doručenky vašich zpráv</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="13"/>
         <source>Show status changes in groupchat</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazovat změny stavů v místnostech</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="14"/>
         <source>Show messages about join or part from room</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazovat informaci o příchodu a odchodu z místnosti</translation>
     </message>
     <message>
         <location filename="pref/jabbim.py" line="4"/>
         <source>Show advanced options</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit pokročilé volby</translation>
     </message>
     <message>
         <location filename="pref/jabbim.py" line="9"/>
         <source>General</source>
-        <translation type="unfinished">Obecné</translation>
+        <translation>Obecné</translation>
     </message>
     <message>
         <location filename="pref/jabbim.py" line="6"/>
         <source>Show advanced preferences.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit pokročilé možnosti nastavení.</translation>
     </message>
     <message>
         <location filename="pref/jabbim.py" line="7"/>
         <source>Notify when DND status is active</source>
-        <translation type="unfinished"></translation>
+        <translation>Upozorňovat, pokud vás stav je Nerušit</translation>
     </message>
     <message>
         <location filename="pref/jabbim.py" line="11"/>
         <source>File receiving</source>
-        <translation type="unfinished"></translation>
+        <translation>Příjem souborů</translation>
     </message>
     <message>
         <location filename="pref/privacy.py" line="10"/>
         <source>Send rooms.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazovat seznam vašich aktivních místností.</translation>
     </message>
 </context>
 <context>
@@ -5930,7 +5931,7 @@ Version: %3</source>
     <message>
         <location filename="widgets/rosterLiveWidget.py" line="2435"/>
         <source>Favourite contact</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat do oblíbených</translation>
     </message>
 </context>
 <context>
@@ -6357,7 +6358,7 @@ Version: %3</source>
     <message>
         <location filename="widgets/servicediscovery.py" line="26"/>
         <source>node</source>
-        <translation type="unfinished"></translation>
+        <translation>uzel</translation>
     </message>
 </context>
 <context>
