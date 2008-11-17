@@ -3448,9 +3448,10 @@ class mainWindow(QtGui.QMainWindow):
 
 	def loadUserRating(self,data=None):
 		if not data:
+			print "asking for userrating"
 			self.client.getUserRating().addCallback(self.loadUserRating).addErrback(self.loadUserRatingFailed)
 		else:
-			
+			print "userrating arrived",data
 			self.userRating.last_reward=float(data['lastReward'])
 			del data['lastReward']
 			for user in self.userRating.users.values():
