@@ -768,6 +768,7 @@ class rosterWidget(QtGui.QWidget):
 		self.timerBlink.start(1000)
 
 	def blink(self):
+		return
 		self.bl=not self.bl
 		if len(self.main.events.events)>0:
 			#log.msg("blink")
@@ -1251,7 +1252,8 @@ class rosterWidget(QtGui.QWidget):
 
 	def repaintItem(self,item):
 		x,y=self.itemCoordinates(self.item)
-		self.repaint(0,y-10,self.width(),item.height+20)
+		if x!=None:
+			self.repaint(0,y-10,self.width(),item.height+20)
 
 	def selectItem(self,item):
 		"""

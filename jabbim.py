@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -218,10 +218,11 @@ class clientClass(pyxl.client.Client):
 			if self.main.moodIcons.has_key(m):
 				for item in self.main.ui.roster.getUserItems(frm):
 					item.mood=self.main.moodIcons[m].pixmap(16,16)
+					self.main.ui.roster.repaintItem(item)
 			else:
 				for item in self.main.ui.roster.getUserItems(frm):
 					item.mood=None
-			self.main.ui.roster.repaint()
+					self.main.ui.roster.repaintItem(item)
 			if frm == self.jid.userhost() : #our own mood
 				if m == '':
 					m = 'none'
@@ -262,7 +263,7 @@ class clientClass(pyxl.client.Client):
 				item.tune=listening
 				item.song=song
 				item.height=self.main.ui.roster.rosterStyle.heightForItem(item)
-			self.main.ui.roster.repaint()
+				self.main.ui.roster.repaintItem(item)
 		if tab:
 			tab.chat.refreshLabel(change)
 			tab.chat.refreshToolTip()
