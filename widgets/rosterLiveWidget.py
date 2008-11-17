@@ -1912,16 +1912,24 @@ class rosterWidget(QtGui.QWidget):
 
 	def isSameStatus(self,jid,show):
 		if not self.main.client.roster['users'].has_key(jid):
+			print "compare: jid is not in roster"
 			return True
 		res = self.main.client.roster['users'][jid].getHighestResource()
 		if res!=None:
+			print "compare: no resource"
 			res=self.main.client.roster['users'][jid].resources[res]
 			show=res.show
 			status=res.status
 		else:
-			return True
+			status=self.main.client.roster['users'][jid].status[1]
+			if status!=None:
+				status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
+			else:
+				status=""
+
 		users = self.getUserItems(jid)
 		if len(users)==0:
+			print "compare: no user item"
 			return True
 		user=users[0]
 		if user.statusMessage==status and user.status==self.main.shows[unicode(show)] and user.height==self.rosterStyle.heightForItem(user):
