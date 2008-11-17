@@ -1287,7 +1287,7 @@ class rosterWidget(QtGui.QWidget):
 			#if item.typ=='group' and item.main!='special':
 				#self.statusLabel.hide()
 
-	def mouseReleaseEvent(self,event):
+	def mousePressEvent(self,event):
 		x=event.x()
 		y=event.y()
 		item=self.itemAt(x,y)
