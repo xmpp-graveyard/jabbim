@@ -1975,7 +1975,11 @@ class rosterWidget(QtGui.QWidget):
 			show=res.show
 			status=res.status
 		else:
-			status=self.main.client.roster['users'][jid].status[1]
+			status=self.main.client.roster['users'][jid].status
+			if len(status)==1:
+				status=""
+			else:
+				status=status[1]
 			if status!=None:
 				status=status.replace("\n"," ").replace("<","&lt;").replace(">","&gt;")
 			else:
