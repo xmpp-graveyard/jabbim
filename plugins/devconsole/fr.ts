@@ -31,7 +31,7 @@
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="devconsole.py" line="54"/>
+        <location filename="devconsole.py" line="56"/>
         <source>Extra debug window</source>
         <translation>Fenêtre de déboguage</translation>
     </message>
@@ -41,17 +41,17 @@
         <translation type="obsolete">LogView Plugin</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="56"/>
+        <location filename="devconsole.py" line="58"/>
         <source>DevConsoles Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="246"/>
+        <location filename="devconsole.py" line="251"/>
         <source>print &apos;History END&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="253"/>
+        <location filename="devconsole.py" line="258"/>
         <source>&lt;message&gt;------HISTORY-END------&lt;/message&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -115,24 +115,6 @@
     </message>
 </context>
 <context>
-    <name>main</name>
-    <message>
-        <location filename="devconsole.py" line="14"/>
-        <source>always after command input</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="devconsole.py" line="14"/>
-        <source>on jabbim close</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="devconsole.py" line="15"/>
-        <source>never</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>self.main</name>
     <message>
         <location filename="devconsole.py" line="12"/>
@@ -140,18 +122,43 @@
         <translation>Notifier une erreur?</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="169"/>
+        <location filename="devconsole.py" line="174"/>
         <source>Log</source>
         <translation>Log</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="13"/>
+        <location filename="devconsole.py" line="15"/>
         <source>Max history entries</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="14"/>
+        <location filename="devconsole.py" line="16"/>
         <source>History saving type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="devconsole.py" line="13"/>
+        <source>Enabled consoles on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="devconsole.py" line="14"/>
+        <source>Add timestamps to xml stanzas</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="devconsole.py" line="16"/>
+        <source>always after command input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="devconsole.py" line="16"/>
+        <source>on jabbim close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="devconsole.py" line="17"/>
+        <source>never</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -10,8 +10,10 @@ class config:
 		self.main=main
 		self.config={}
 		self.config['notify']={'type':'boolean','label':self.main.tr("Notify on error?"),'value':'False'}
+		self.config['onOnLoad']={'type':'boolean','label':self.main.tr("Enabled consoles on startup"),'value':'False'}
+		self.config['XMLaddTimestamps']={'type':'boolean','label':self.main.tr("Add timestamps to xml stanzas"),'value':'False'}
 		self.config['historyMaxCount']={'type':'number-spin','label':self.main.tr("Max history entries"),'value':'50'}
-		self.config['historySave']={'type':'boolean-radio','label':self.main.tr('History saving type'),'value':'one','options':{'one':main.tr('always after command input'),'close':main.tr('on jabbim close'),'never':main.tr('never')}}
+		self.config['historySave']={'type':'boolean-radio','label':self.main.tr('History saving type'),'value':'one','options':{'one':self.main.tr('always after command input'),'close':self.main.tr('on jabbim close'),'never':self.main.tr('never')}}
 		self.config['historyDataPy']={'type':'hidden','value':''}
 		self.config['historyDataXML']={'type':'hidden','value':''}
 		pyPreset=['#0. volna pozice, novy preset ulozite pomoci Ctrl+Shift+0\n',
@@ -43,7 +45,7 @@ class config:
 			tempPreset.append(base64.b64encode(xmlPreset[i]));			
 
 		self.config['presetDataXML']={'type':'hidden','value':tempPreset}		
-		self.config['__sort__']=['notify','historyMaxCount','historySave','historyData']
+		self.config['__sort__']=['notify','onOnLoad','XMLaddTimestamps','historyMaxCount','historySave','historyDataXML','historyDataPy']
 		
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
@@ -53,7 +55,7 @@ class Plugin(plugins.PluginBase):
 		self.description = self.tr('Extra debug window')
 		self.author = "Jiri 'Sef' Gabrys, Ondra 'triak' Kunc"
 		self.name = self.tr('DevConsoles Plugin')
-		self.version = '0.060'
+		self.version = '0.065'
 		self.category = ['log', 'misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.historyPy = []
@@ -77,7 +79,7 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.ctrlEnter)
 			#Ctrl-E toggles enable/disable log output
 			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_E | QtCore.Qt.ControlModifier),self.window)
-			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.toggleEnabled)
+			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.togglePythonEnabled)
 			
 			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_S | QtCore.Qt.AltModifier),self.window)
 			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.setTabShell)
@@ -95,16 +97,16 @@ class Plugin(plugins.PluginBase):
 			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Down | QtCore.Qt.ControlModifier),self.window)
 			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.historyForward)
 		#xml console
-			QtCore.QObject.connect(self.window.ui.send,QtCore.SIGNAL("clicked()"),self.send)
-			QtCore.QObject.connect(self.window.ui.message,QtCore.SIGNAL("clicked()"),self.message)
-			QtCore.QObject.connect(self.window.ui.presence,QtCore.SIGNAL("clicked()"),self.presence)
-			QtCore.QObject.connect(self.window.ui.iq,QtCore.SIGNAL("clicked()"),self.iq)
-			QtCore.QObject.connect(self.window.ui.clear,QtCore.SIGNAL("clicked()"),self.clearLog)
+			QtCore.QObject.connect(self.window.ui.xmlSendButton,QtCore.SIGNAL("clicked()"),self.send)
+			QtCore.QObject.connect(self.window.ui.xmlMessagePreset,QtCore.SIGNAL("clicked()"),self.message)
+			QtCore.QObject.connect(self.window.ui.xmlPresencePreset,QtCore.SIGNAL("clicked()"),self.presence)
+			QtCore.QObject.connect(self.window.ui.xmlIqPreset,QtCore.SIGNAL("clicked()"),self.iq)
+			QtCore.QObject.connect(self.window.ui.xmlClearButton,QtCore.SIGNAL("clicked()"),self.clearLog)
 			
 		#python console
-			QtCore.QObject.connect(self.window.ui.enableBox, QtCore.SIGNAL("stateChanged(int)"),self.enableToggled)
-			QtCore.QObject.connect(self.window.ui.clearButton, QtCore.SIGNAL("clicked()"),self.clearLog)
-			QtCore.QObject.connect(self.window.ui.execute, QtCore.SIGNAL("clicked()"),self.execute)
+			QtCore.QObject.connect(self.window.ui.pythonEnableBox, QtCore.SIGNAL("stateChanged(int)"),self.pythonEnableToggled)
+			QtCore.QObject.connect(self.window.ui.pythonClearButton, QtCore.SIGNAL("clicked()"),self.clearLog)
+			QtCore.QObject.connect(self.window.ui.pythonExecuteButton, QtCore.SIGNAL("clicked()"),self.execute)
 			#Ctrl+Shift+Up inserts previous command from history to the top of current shell
 			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Up | QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier),self.window)
 			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellAppendPrevious)
@@ -122,6 +124,9 @@ class Plugin(plugins.PluginBase):
 				QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"), gen_preset(i, False))
 				short=QtGui.QShortcut(QtGui.QKeySequence(keys[i] | QtCore.Qt.ControlModifier),self.window)
 				QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"), gen_preset(i, True))
+			if self.config['onOnLoad']=='True':
+				self.window.ui.xmlEnableBox.setChecked(True);
+				self.window.ui.pythonEnableBox.setChecked(True);
 		else:
 			self.loadConfig(homedir)
 	
@@ -145,17 +150,17 @@ class Plugin(plugins.PluginBase):
 	
 	def showSlot(self):
 		self.window.show()
-	def toggleEnabled(self):
+	def togglePythonEnabled(self):
 		if self.window.ui.tabWidget.currentIndex()==1:
-			self.window.ui.enableBox.setChecked(not self.window.ui.enableBox.isChecked())
+			self.window.ui.pythonEnableBox.setChecked(not self.window.ui.pythonEnableBox.isChecked())
 		else:
-			self.window.ui.enable.setChecked(not self.window.ui.enable.isChecked())
+			self.window.ui.xmlEnableBox.setChecked(not self.window.ui.xmlEnableBox.isChecked())
 		
-	def enableToggled(self, state):
-		if (not self.log) and self.window.ui.enableBox.isChecked():
+	def pythonEnableToggled(self, state):
+		if (not self.log) and self.window.ui.pythonEnableBox.isChecked():
 			self.log = True
 			log.addObserver(self.observer)
-			self.window.ui.logView.append('Log started')
+			self.window.ui.pythonOutput.append('Log started')
 		else:
 			self.log = False
 			log.removeObserver(self.observer)
@@ -164,15 +169,15 @@ class Plugin(plugins.PluginBase):
 		if not fromThread:
 			self.main.reactor.callFromThread(self.observer,msg,True)
 			return
-		self.window.ui.logView.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
+		self.window.ui.pythonOutput.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
 		if msg['isError'] and self.config['notify'] == 'True':
 			self.main.tray.showMessage(self.main.tr("Log"),unicode(' '.join(msg['message'])), QtGui.QSystemTrayIcon.Warning, 2000)
 	
 	def clearLog(self):
 		if self.window.ui.tabWidget.currentIndex()==1:
-			self.window.ui.logView.setText('');
+			self.window.ui.pythonOutput.setText('');
 		else:
-			self.window.ui.xml.setText('');
+			self.window.ui.xmlOutput.setText('');
 	def ctrlEnter(self):
 		if self.window.ui.tabWidget.currentIndex()==1:
 			self.execute()
@@ -180,14 +185,14 @@ class Plugin(plugins.PluginBase):
 			self.send()
 	
 	def execute(self):
-		code = unicode(self.window.ui.input.toPlainText ())
-		self.window.ui.logView.append(self.window.ui.input.toPlainText ())
+		code = unicode(self.window.ui.pythonInput.toPlainText ())
+		self.window.ui.pythonOutput.append(self.window.ui.pythonInput.toPlainText ())
 		self.historyPy.insert(0,code)
 		self.historyPy=self.historyPy[0:long(self.config['historyMaxCount'])]
 		self.historyPyPosition=-1;
 		if self.config['historySave']=='one':
 			self.saveHistory()
-		self.window.ui.input.setText('')
+		self.window.ui.pythonInput.setText('')
 		exec(code)
 	def saveHistory(self):
 		tmpHistory=[];
@@ -213,16 +218,16 @@ class Plugin(plugins.PluginBase):
 			self.historyPyPosition-=1;
 			if self.historyPyPosition<0:
 				self.historyPyPosition=-1;
-				self.window.ui.input.setText('')
+				self.window.ui.pythonInput.setText('')
 			else:
-				self.window.ui.input.setText(self.historyPy[self.historyPyPosition])
+				self.window.ui.pythonInput.setText(self.historyPy[self.historyPyPosition])
 		else:
 			self.historyXMLPosition-=1;
 			if self.historyXMLPosition<0:
 				self.historyXMLPosition=-1;
-				self.window.ui.textEdit.setText('')
+				self.window.ui.xmlInput.setText('')
 			else:
-				self.window.ui.textEdit.setText(self.historyXML[self.historyXMLPosition])
+				self.window.ui.xmlInput.setText(self.historyXML[self.historyXMLPosition])
 			
 	def shellAppendPrevious(self):
 		if self.window.ui.tabWidget.currentIndex()==1:
@@ -230,54 +235,54 @@ class Plugin(plugins.PluginBase):
 			if self.historyPyPosition>(len(self.historyPy)-1):
 				self.historyPyPosition=len(self.historyPy)-1;
 			else:
-				self.window.ui.input.setText("%s\n%s" % (self.historyPy[self.historyPyPosition],self.window.ui.input.toPlainText()))
+				self.window.ui.pythonInput.setText("%s\n%s" % (self.historyPy[self.historyPyPosition],self.window.ui.pythonInput.toPlainText()))
 		else:
 			self.historyXMLPosition+=1;
 			if self.historyXMLPosition>(len(self.historyXML)-1):
 				self.historyXMLPosition=len(self.historyXML)-1;
 			else:
-				self.window.ui.textEdit.setText("%s\n%s" % (self.historyXML[self.historyXMLPosition],self.window.ui.textEdit.toPlainText()))	
+				self.window.ui.xmlInput.setText("%s\n%s" % (self.historyXML[self.historyXMLPosition],self.window.ui.xmlInput.toPlainText()))	
 
 	def historyBackward(self):
 		if self.window.ui.tabWidget.currentIndex()==1:
 			self.historyPyPosition+=1;
 			if self.historyPyPosition>=len(self.historyPy):
-				self.historyPyPosition=len(self.historyPy);
-				self.window.ui.input.setText(self.tr('print \'History END\''))
+				self.historyPyPosiition=len(self.historyPy);
+				self.window.ui.pythonInput.setText(self.tr('print \'History END\''))
 			else:
-				self.window.ui.input.setText(self.historyPy[self.historyPyPosition])
+				self.window.ui.pythonInput.setText(self.historyPy[self.historyPyPosition])
 		else:
 			self.historyXMLPosition+=1;
 			if self.historyXMLPosition>=len(self.historyXML):
 				self.historyXMLPosition=len(self.historyXML);
-				self.window.ui.textEdit.setText(self.tr("<message>------HISTORY-END------</message>"))
+				self.window.ui.xmlInput.setText(self.tr("<message>------HISTORY-END------</message>"))
 			else:
-				self.window.ui.textEdit.setText(self.historyXML[self.historyXMLPosition])
+				self.window.ui.xmlInput.setText(self.historyXML[self.historyXMLPosition])
 	def savePreset(self,order):
 		if self.window.ui.tabWidget.currentIndex()==1:
-			self.config['presetDataPy'][order]=base64.b64encode(unicode(self.window.ui.input.toPlainText ()))
+			self.config['presetDataPy'][order]=base64.b64encode(unicode(self.window.ui.pythonInput.toPlainText ()))
 			self.config.write();
 		else:
-			self.config['presetDataXML'][order]=base64.b64encode(unicode(self.window.ui.textEdit.toPlainText ()))
+			self.config['presetDataXML'][order]=base64.b64encode(unicode(self.window.ui.xmlInput.toPlainText ()))
 			self.config.write();
 
 	def loadPreset(self,order):
 		if self.window.ui.tabWidget.currentIndex()==1:
-			self.window.ui.input.setText(base64.b64decode(self.config['presetDataPy'][order]))
+			self.window.ui.pythonInput.setText(base64.b64decode(self.config['presetDataPy'][order]))
 		else:
-			self.window.ui.textEdit.setText(base64.b64decode(self.config['presetDataXML'][order]))
+			self.window.ui.xmlInput.setText(base64.b64decode(self.config['presetDataXML'][order]))
 		
 	def iq(self):
-		self.window.ui.textEdit.setText("<iq to='USER@DOMAIN' from='"+self.main.client.jid.full()+"'>\n<query xmlns=''>\n</iq>")
+		self.window.ui.xmlInput.setText("<iq to='USER@DOMAIN' from='"+self.main.client.jid.full()+"'>\n<query xmlns=''>\n</iq>")
 
 	def message(self):
-		self.window.ui.textEdit.setText("<message to='USER@DOMAIN' from='"+self.main.client.jid.full()+"'>\n<body>Body text</body>\n</message>")
+		self.window.ui.xmlInput.setText("<message to='USER@DOMAIN' from='"+self.main.client.jid.full()+"'>\n<body>Body text</body>\n</message>")
 
 	def presence(self):
-		self.window.ui.textEdit.setText("<presence from='"+self.main.client.jid.full()+"'>\n<show>???</show>\n<status>???</status>\n</presence>")
+		self.window.ui.xmlInput.setText("<presence from='"+self.main.client.jid.full()+"'>\n<show>???</show>\n<status>???</status>\n</presence>")
 
 	def send(self):
-		text=unicode(self.window.ui.textEdit.toPlainText())
+		text=unicode(self.window.ui.xmlInput.toPlainText())
 		self.historyXML.insert(0,text)
 		self.historyXML=self.historyXML[0:long(self.config['historyMaxCount'])]
 		self.historyXMLPosition=-1;
@@ -285,13 +290,17 @@ class Plugin(plugins.PluginBase):
 			self.main.client.xmlstream.send(text)
 		except:
 			log.err("can't send")
-		self.window.ui.textEdit.setText("")
+		self.window.ui.xmlInput.setText("")
 		if self.config['historySave']=='one':
 			self.saveHistory()
 	def onXml(self,xml):
-		if self.window.ui.enable.isChecked():
-			text=unicode(xml);
-			self.window.ui.xml.append(text+"\n\n");
+		if self.window.ui.xmlEnableBox.isChecked():
+			if self.config['XMLaddTimestamps']=='True':
+				text=time.strftime("[%H:%M:%S]")+' ';
+			else:
+				text='';
+			text=text+unicode(xml);
+			self.window.ui.xmlOutput.append(text+"\n\n");
 	def setTabXML(self):
 		self.window.ui.tabWidget.setCurrentIndex(0);
 	

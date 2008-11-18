@@ -64,7 +64,7 @@
             <property name="orientation" >
              <enum>Qt::Vertical</enum>
             </property>
-            <widget class="QTextBrowser" name="xml" />
+            <widget class="QTextBrowser" name="xmlOutput" />
             <widget class="QWidget" name="layoutWidget_2" >
              <layout class="QGridLayout" name="_3" >
               <property name="margin" >
@@ -74,21 +74,21 @@
                <number>6</number>
               </property>
               <item row="1" column="0" colspan="6" >
-               <widget class="QTextEdit" name="textEdit" >
+               <widget class="QTextEdit" name="xmlInput" >
                 <property name="acceptRichText" >
                  <bool>false</bool>
                 </property>
                </widget>
               </item>
               <item row="0" column="3" >
-               <widget class="QPushButton" name="presence" >
+               <widget class="QPushButton" name="xmlPresencePreset" >
                 <property name="text" >
                  <string>presence</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="4" >
-               <widget class="QPushButton" name="iq" >
+               <widget class="QPushButton" name="xmlIqPreset" >
                 <property name="text" >
                  <string>iq</string>
                 </property>
@@ -108,7 +108,7 @@
                </spacer>
               </item>
               <item row="0" column="5" >
-               <widget class="QPushButton" name="message" >
+               <widget class="QPushButton" name="xmlMessagePreset" >
                 <property name="text" >
                  <string>message</string>
                 </property>
@@ -127,7 +127,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QCheckBox" name="enable" >
+             <widget class="QCheckBox" name="xmlEnableBox" >
               <property name="text" >
                <string>&amp;Enable</string>
               </property>
@@ -150,14 +150,14 @@
              </spacer>
             </item>
             <item>
-             <widget class="QPushButton" name="clear" >
+             <widget class="QPushButton" name="xmlClearButton" >
               <property name="text" >
                <string>Clea&amp;r</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="send" >
+             <widget class="QPushButton" name="xmlSendButton" >
               <property name="toolTip" >
                <string>Ctrl+Enter</string>
               </property>
@@ -178,10 +178,10 @@
           <item>
            <layout class="QVBoxLayout" name="_4" >
             <item>
-             <widget class="QTextBrowser" name="logView" />
+             <widget class="QTextBrowser" name="pythonOutput" />
             </item>
             <item>
-             <widget class="QTextEdit" name="input" >
+             <widget class="QTextEdit" name="pythonInput" >
               <property name="sizePolicy" >
                <sizepolicy vsizetype="Minimum" hsizetype="Expanding" >
                 <horstretch>0</horstretch>
@@ -193,7 +193,7 @@
             <item>
              <layout class="QHBoxLayout" name="_5" >
               <item>
-               <widget class="QCheckBox" name="enableBox" >
+               <widget class="QCheckBox" name="pythonEnableBox" >
                 <property name="text" >
                  <string>&amp;Enable</string>
                 </property>
@@ -213,7 +213,7 @@
                </spacer>
               </item>
               <item>
-               <widget class="QPushButton" name="clearButton" >
+               <widget class="QPushButton" name="pythonClearButton" >
                 <property name="text" >
                  <string>Clea&amp;r</string>
                 </property>
@@ -223,7 +223,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="execute" >
+               <widget class="QPushButton" name="pythonExecuteButton" >
                 <property name="toolTip" >
                  <string>Ctrl+Enter</string>
                 </property>

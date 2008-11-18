@@ -1,4 +1,5 @@
-SOURCES         = devconsole.py devconsole.ui.py
+SOURCES         = devconsole.py \
+		devconsole.ui.py
 TRANSLATIONS    = cs.ts \
 		en.ts\
 		pl.ts\

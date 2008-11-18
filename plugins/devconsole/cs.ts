@@ -32,7 +32,7 @@
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="devconsole.py" line="54"/>
+        <location filename="devconsole.py" line="56"/>
         <source>Extra debug window</source>
         <translation>Speciální okno pro zobrazení logu Jabbimu</translation>
     </message>
@@ -42,17 +42,17 @@
         <translation type="obsolete">Zobrazení logu</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="56"/>
+        <location filename="devconsole.py" line="58"/>
         <source>DevConsoles Plugin</source>
         <translation>Konzole pro vývojáře</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="246"/>
+        <location filename="devconsole.py" line="251"/>
         <source>print &apos;History END&apos;</source>
         <translation>print &apos;V historii jiz nejsou dalsi data&apos;</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="253"/>
+        <location filename="devconsole.py" line="258"/>
         <source>&lt;message&gt;------HISTORY-END------&lt;/message&gt;</source>
         <translation>&lt;message&gt;------V historii nejsou dalsi data------&lt;/message&gt;</translation>
     </message>
@@ -123,19 +123,19 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="devconsole.py" line="14"/>
+        <location filename="devconsole.py" line="16"/>
         <source>always after command input</source>
-        <translation>po každém spuštěném příkazu</translation>
+        <translation type="obsolete">po každém spuštěném příkazu</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="14"/>
+        <location filename="devconsole.py" line="16"/>
         <source>on jabbim close</source>
-        <translation>při zavření jabbimu</translation>
+        <translation type="obsolete">při zavření jabbimu</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="15"/>
+        <location filename="devconsole.py" line="17"/>
         <source>never</source>
-        <translation>neukládat</translation>
+        <translation type="obsolete">neukládat</translation>
     </message>
 </context>
 <context>
@@ -146,19 +146,44 @@
         <translation>Upozornit při chybě?</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="169"/>
+        <location filename="devconsole.py" line="174"/>
         <source>Log</source>
         <translation>Log</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="13"/>
+        <location filename="devconsole.py" line="15"/>
         <source>Max history entries</source>
         <translation>Nejvyšší počet uložených položek v  historii</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="14"/>
+        <location filename="devconsole.py" line="16"/>
         <source>History saving type</source>
         <translation>Způsob ukládání historie</translation>
+    </message>
+    <message>
+        <location filename="devconsole.py" line="13"/>
+        <source>Enabled consoles on startup</source>
+        <translation>Konzole aktivní už od startu Jabbimu</translation>
+    </message>
+    <message>
+        <location filename="devconsole.py" line="14"/>
+        <source>Add timestamps to xml stanzas</source>
+        <translation>Přidávat časovou značku k xml stanzám</translation>
+    </message>
+    <message>
+        <location filename="devconsole.py" line="16"/>
+        <source>always after command input</source>
+        <translation>po každém spuštěném příkazu</translation>
+    </message>
+    <message>
+        <location filename="devconsole.py" line="16"/>
+        <source>on jabbim close</source>
+        <translation>při zavření jabbimu</translation>
+    </message>
+    <message>
+        <location filename="devconsole.py" line="17"/>
+        <source>never</source>
+        <translation>neukládat</translation>
     </message>
 </context>
 </TS>
