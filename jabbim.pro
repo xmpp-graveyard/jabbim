@@ -1,17 +1,20 @@
 SOURCES         = jabbim.py \
-widgets/about.py \
+widgets/about.py
 widgets/abstractchatwidget.py \
+widgets/addcontactng.py \
+widgets/addcontactng_ui.py \
 widgets/addcontact.py \
 widgets/addcontact_ui.py \
 widgets/albumfiletransfer.py \
 widgets/albumfiletransfer_ui.py \
+widgets/bookmarks.py \
 widgets/commands.py \
 widgets/commands_ui.py \
 widgets/compactrosterstyle.py \
+widgets/compatrosterstyle.py \
 widgets/dataforms.py \
 widgets/defaultrosterstyle.py \
 widgets/emoticonswidget.py \
-widgets/events.py \
 widgets/extra.py \
 widgets/extra_ui.py \
 widgets/filetransfer.py \
@@ -24,6 +27,7 @@ widgets/chat.py \
 widgets/chatwidget.py \
 widgets/chatwidget_ui.py \
 widgets/chatwindow.py \
+widgets/__init__.py \
 widgets/joingroupchat.py \
 widgets/joingroupchat_ui.py \
 widgets/leaveroom_ui.py \
@@ -35,6 +39,8 @@ widgets/miniroster.py \
 widgets/miniroster_ui.py \
 widgets/mucbrowser.py \
 widgets/mucbrowser_ui.py \
+widgets/paint.py \
+widgets/paint_ui.py \
 widgets/preferences_bookmarks_ui.py \
 widgets/preferences.py \
 widgets/preferences_ui.py \
@@ -43,6 +49,7 @@ widgets/privacy_ui.py \
 widgets/profiles.py \
 widgets/profiles_ui.py \
 widgets/rosterLiveWidget.py \
+widgets/rostertooltip_ui.py \
 widgets/search.py \
 widgets/servicediscovery.py \
 widgets/servicediscovery_ui.py \
@@ -60,15 +67,34 @@ widgets/vcardeditor_ui.py \
 widgets/vcardview.py \
 widgets/vcardview_ui.py \
 widgets/waitdialog.py \
+widgets/webkitchatwidget.py \
+widgets/webkitthemes.py \
 widgets/xmlConsole.py \
-wizards/firststart.py \
-wizards/registration.py \
-wizards/newprofile_ui.py \
+widgets/events/adduserwidget.py \
+widgets/events/booleanwidget.py \
+widgets/events/booleanwidget_ui.py \
+widgets/events/ftuploadwidget_ui.py \
+widgets/events/ftwidget.py \
+widgets/events/ftwidget_ui.py \
+widgets/events/infowidget.py \
+widgets/events/infowidget_ui.py \
+widgets/events/__init__.py \
+widgets/events/lineeditwidget.py \
+widgets/events/lineeditwidget_ui.py \
+widgets/configlib/__init__.py \
 pref/connection.py \
 pref/chat.py \
 pref/jabbim.py \
 pref/roster.py \
 pref/privacy.py
+wizards/addcontact.py
+wizards/firststart.py
+wizards/__init__.py
+wizards/jabbimservicemanager.py
+wizards/jabbimservicemanager_ui.py
+wizards/joingroupchat.py
+wizards/newprofile_ui.py
+wizards/registration.py
 
 TRANSLATIONS    = locales/jabbim_cs.ts \
 				locales/jabbim_en.ts \
