@@ -1976,7 +1976,7 @@ class rosterWidget(QtGui.QWidget):
 			status=res.status
 		else:
 			status=self.main.client.roster['users'][jid].status
-			if len(status)==1:
+			if len(status)<=1:
 				status=""
 			else:
 				status=status[1]
