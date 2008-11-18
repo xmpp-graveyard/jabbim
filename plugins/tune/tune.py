@@ -121,19 +121,25 @@ class Amarok(Player):
 				'dcop', ['dcop', 'amarok', 'player', field],
 				env=os.environ)
 
+import traceback
+
 class Amarok2(Player):
 	def __init__(self, plugin):
 		Player.__init__(self, plugin)
 		self.sig_receivers = []
 	def got_metadata(self, song_info):
+		log.msg("Amarok2 got_metadata")
 		out = {}
 		try:
 			out['artist'] = unicode(song_info['artist'])
 			out['title'] = unicode(song_info['title'])
 		except:
+			log.msg("Amarok2 got_metadata exception %s" % traceback.format_exc())
 			out = {}
 		self.plugin.sendPEP(out)
+		log.msg("Amarok2 got_metadata done")
 	def check(self, dummy=None):
+		log.msg("Amarok2 check")
 		# I ignore the data supplied in DBus signals {Track,Status}Change,
 		# because I couldn't make it work reliably. Instead I just always ask
 		# Amarok again what the current song is. It's slower, but works.
@@ -142,13 +148,17 @@ class Amarok2(Player):
 			amarok_player = bus.get_object("org.mpris.amarok", "/Player")
 			amarok_player.GetMetadata(reply_handler=self.got_metadata, error_handler=self.clear_PEP)
 		except:
+			log.msg("Amarok2 check exception %s" % traceback.format_exc())
 			self.clear_PEP()
+		log.msg("Amarok2 check done")
 	def start_listening(self):
+		log.msg("Amarok2 start_listening")
 		bus = self.main.session_dbus
 		self.sig_receivers.append(bus.add_signal_receiver(self.check,
 			'TrackChange',  "org.freedesktop.MediaPlayer", "org.mpris.amarok", "/Player"))
 		self.sig_receivers.append(bus.add_signal_receiver(self.check,
 			'StatusChange', "org.freedesktop.MediaPlayer", "org.mpris.amarok", "/Player"))
+		log.msg("Amarok2 start_listening done")
 	def stop_listening(self):
 		for receiver in self.sig_receivers:
 			receiver.remove()
