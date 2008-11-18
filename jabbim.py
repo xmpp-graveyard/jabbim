@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -1226,10 +1226,6 @@ class clientClass(pyxl.client.Client):
 		self.dispatcher.publishEvent('presenceEvent', jid, self.main.ui.roster.getNameByJID(jid.full()), show, status_, first)
 
 	def on_xml(self,xml):
-		# append xml to the xml console, if it's enabled...
-		if self.main.xmlConsole.ui.enable.isChecked():
-			text=unicode(xml)
-			self.main.xmlConsole.ui.xml.append(text+"\n\n")
 		if self.lastxml < 50:
 			self.lastxml += 1
 		else:
@@ -1249,6 +1245,7 @@ class clientClass(pyxl.client.Client):
 				log.err('Error opening lastxml')
 		self.lastxml_fd.write(xml.encode('utf-8') + "\n\n")
 		self.lastxml_fd.flush()
+		self.dispatcher.publishEvent('onXmlEvent', xml)
 
 	def on_UpdateContact(self,jid):
 		"""
@@ -2442,7 +2439,6 @@ class mainWindow(QtGui.QMainWindow):
 					"working":[self.tr("working"),"coding","in_a_meeting","studying","writing"]}
 
 		self.offline=False
-		self.xmlConsole=XMLConsole(self)
 		#self.ui.showOffline.hide()
 		#self.ui.offlineButton.hide()
 
@@ -2461,7 +2457,6 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.actionAbout, QtCore.SIGNAL("triggered ( bool )"),self.about)
 		QtCore.QObject.connect(self.ui.actionSupport, QtCore.SIGNAL("triggered ( bool )"),self.support)
 		QtCore.QObject.connect(self.ui.actionSendJabbimLog, QtCore.SIGNAL("triggered ( bool )"),self.sendLog)
-		QtCore.QObject.connect(self.ui.actionShow_XML, QtCore.SIGNAL("triggered ( bool )"),self.showXml)
 		QtCore.QObject.connect(self.ui.actionPrivacy_list_editor, QtCore.SIGNAL("triggered ( bool )"),self.privacyListEditor)
 		QtCore.QObject.connect(self.ui.actionAdd_Contact, QtCore.SIGNAL("triggered ( bool )"),self.addContactMainWindow)
 		QtCore.QObject.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
@@ -2718,6 +2713,7 @@ class mainWindow(QtGui.QMainWindow):
 					i="bob"+str(self.imageId)+str(random.randint(0,100))
 
 					link = self.client.bobDef[cid].encode('utf8')
+					#link = os.getcwd()+'/images/32x32/actions/ajax-animation.gif'
 					el.setAttribute('src', link)
 					el.setAttribute('id',i)
 					changed = True
@@ -2742,6 +2738,7 @@ class mainWindow(QtGui.QMainWindow):
 						i="bob"+str(self.imageId)+str(random.randint(0,100))
 						
 						link = self.client.bobDef[id].encode('utf8')
+						#link = os.getcwd()+'/images/32x32/actions/ajax-animation.gif'
 						el.setAttribute('src', link)
 						el.setAttribute('id',i)
 						changed = True
@@ -4503,7 +4500,6 @@ class mainWindow(QtGui.QMainWindow):
 			theme=open("themes/"+self.config['theme']+"/style.css")
 			text=theme.read()
 			self.setStyleSheet(text)
-			self.xmlConsole.setStyleSheet(text)
 			self.chat.setStyleSheet(text)
 			theme.close()
 		else:
@@ -4520,7 +4516,6 @@ class mainWindow(QtGui.QMainWindow):
 					
 					app.setStyle(self.qtStylesDefault)
 			self.setStyleSheet(text)
-			self.xmlConsole.setStyleSheet(text)
 			self.chat.setStyleSheet(text)
 			if text:
 				if len(text)==0:
@@ -4746,9 +4741,6 @@ class mainWindow(QtGui.QMainWindow):
 		for i in range(self.chat.ui.chatTab.count()):
 			w=self.chat.ui.chatTab.widget(i)
 			w.chat.loadWebkit()
-
-	def showXml(self,bool):
-		self.xmlConsole.show()
 
 	def hideOffline(self,bool):
 		"""
@@ -5276,38 +5268,6 @@ class mainWindow(QtGui.QMainWindow):
 			self.client=None
 			 #= None
 		self.buildTrayMenu()
-		
-
-
-class XMLConsole(QtGui.QMainWindow):
-	def __init__(self,data,parent=None):
-		apply(QtGui.QDialog.__init__,(self,parent))
-		self.ui=widgets.xmlConsole.Ui_xmlConsole()
-		self.ui.setupUi(self)
-		QtCore.QObject.connect(self.ui.send,QtCore.SIGNAL("clicked()"),self.send)
-		QtCore.QObject.connect(self.ui.message,QtCore.SIGNAL("clicked()"),self.message)
-		QtCore.QObject.connect(self.ui.presence,QtCore.SIGNAL("clicked()"),self.presence)
-		QtCore.QObject.connect(self.ui.iq,QtCore.SIGNAL("clicked()"),self.iq)
-
-	def iq(self):
-		self.ui.textEdit.setText("<iq to='USER@DOMAIN' from='"+MainWindow.client.jid.full()+"'>\n<query xmlns=''>\n</iq>")
-
-	def message(self):
-		self.ui.textEdit.setText("<message to='USER@DOMAIN' from='"+MainWindow.client.jid.full()+"'>\n<body>Body text</body>\n</message>")
-
-	def presence(self):
-		self.ui.textEdit.setText("<presence from='"+MainWindow.client.jid.full()+"'>\n<show>???</show>\n<status>???</status>\n</presence>")
-
-	def send(self):
-		text=unicode(self.ui.textEdit.toPlainText())
-		try:
-			MainWindow.client.xmlstream.send(text)
-		except:
-			log.err("can't send")
-		self.ui.textEdit.setText("")
-
-
-
 
 class customStatusWindow(QtGui.QDialog):
 	def __init__(self,jid,show=None,parent=None):
