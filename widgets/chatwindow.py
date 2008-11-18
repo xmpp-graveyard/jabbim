@@ -414,7 +414,7 @@ class chatWindow(QtGui.QMainWindow):
 		if xhtml:
 			body=xhtml
 			body=body.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
-		body=body.replace(' '+unicode(w.chat.nick)+' ',"<b>"+unicode(w.chat.nick)+"</b>")
+		body=body.replace(' '+unicode(w.chat.nick)+' '," <b>"+unicode(w.chat.nick)+"</b> ")
 		countMessage=False
 		if int(self.ui.chatTab.currentIndex())!=i:
 			if self.ui.chatTab.tabBar().tabTextColor(i).name()!=QtGui.QColor(255,0,0).name():
