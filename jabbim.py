@@ -2566,9 +2566,12 @@ class mainWindow(QtGui.QMainWindow):
 			from dbus.mainloop.qt import DBusQtMainLoop
 			DBusQtMainLoop(set_as_default=True)
 			self.session_dbus = dbus.SessionBus()
-			log.msg( "Connected to session DBus")
+			log.msg("Connected to session DBus")
+		except ImportError:
+			log.err("This PyQt4 does not support DBus. Perhaps install python-qt4-dbus.")
+			self.session_dbus = None
 		except:
-			log.err("Session DBus not available")
+			log.err("Could not connect to session DBus")
 			self.session_dbus = None
 		# join if we can :)
 		if self.config['autoJoin']=='True':
