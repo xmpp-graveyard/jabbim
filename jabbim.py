@@ -3071,7 +3071,8 @@ class mainWindow(QtGui.QMainWindow):
 			ret=command(*args)
 			return ret
 		except Exception, ex:
-			log.msg('Plugin error: ' +unicode(ex))
+#	temporary bugfix by triak
+#			log.msg('Plugin error: ' +unicode(ex))
 			log.msg('In function:'+unicode(command))
 			message = unicode(traceback.format_exc())
 			log.msg(message)
