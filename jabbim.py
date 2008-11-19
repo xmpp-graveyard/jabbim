@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -3330,7 +3330,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		if (self.ui.statusLine.typ=="presence" and (self.ui.statusLine.data!=self.selfStatus or contact.resources[self.client.jid.resource].status!=status)) or (contact.resources[self.client.jid.resource].status!=status and self.ui.statusLine.typ=="statusChange"):
 			if self.ui.statusLine.typ=="presence":
-				self.sendPresence(None,self.ui.statusLine.data,status)
+				self.sendPresence(self.ui.statusLine.data[0],self.ui.statusLine.data[1],status)
 			elif self.ui.statusLine.typ=="statusChange":
 				self.sendPresence(None,self.selfStatus,status)
 		if self.ui.statusLine.typ=="mood":
@@ -3899,7 +3899,7 @@ class mainWindow(QtGui.QMainWindow):
 				show=data[0]
 				message=""
 				self.ui.statusLine.defaultText=unicode(self.tr("Enter status message"))
-				self.ui.statusLine.data=show
+				self.ui.statusLine.data=[jid,show]
 				self.ui.statusLine.typ="presence"
 				self.statusMessageClicked(text="")
 				self.reactor.callLater(4,self.statusLineFinished,show,"",True)
