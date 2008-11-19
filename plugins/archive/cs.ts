@@ -1,42 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs_CZ">
+<defaultcodec></defaultcodec>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="historyBrowser.ui.py" line="82"/>
+        <location filename="historyBrowser.ui.py" line="63"/>
         <source>Archive browser</source>
         <translation>Prohlížeč archivu</translation>
     </message>
     <message>
-        <location filename="historyBrowser.ui.py" line="83"/>
+        <location filename="historyBrowser.ui.py" line="66"/>
         <source>Search</source>
         <translation>Hledat</translation>
     </message>
     <message>
-        <location filename="historyBrowser.ui.py" line="84"/>
+        <location filename="historyBrowser.ui.py" line="67"/>
         <source>Date</source>
         <translation>Datum</translation>
     </message>
     <message>
-        <location filename="historyBrowser.ui.py" line="85"/>
+        <location filename="historyBrowser.ui.py" line="68"/>
         <source>Message</source>
         <translation>Zpráva</translation>
+    </message>
+    <message>
+        <location filename="historyBrowser.ui.py" line="64"/>
+        <source>1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="historyBrowser.ui.py" line="65"/>
+        <source>Today</source>
+        <translation>Dnes</translation>
     </message>
 </context>
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="archive.py" line="527"/>
+        <location filename="archive.py" line="531"/>
         <source>Contacts in roster</source>
         <translation>Kontakty v seznamu kontaktů</translation>
     </message>
     <message>
-        <location filename="archive.py" line="529"/>
+        <location filename="archive.py" line="533"/>
         <source>Others</source>
         <translation>Ostatní</translation>
     </message>
     <message>
-        <location filename="archive.py" line="431"/>
+        <location filename="archive.py" line="435"/>
         <source>History</source>
         <translation>Historie</translation>
     </message>

@@ -291,7 +291,7 @@ class Plugin(plugins.PluginBase):
 		self.description = self.tr('Message Archiving')
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = self.tr('Archive Plugin')
-		self.version = '0.190'
+		self.version = '0.195'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 
@@ -321,6 +321,7 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.calendar, QtCore.SIGNAL("selectionChanged()"),self.calChanged)
 			QtCore.QObject.connect(self.window.ui.search, QtCore.SIGNAL("clicked()"),self.searchClicked)
 			QtCore.QObject.connect(self.window.ui.searchText, QtCore.SIGNAL("returnPressed ()"),self.searchClicked)
+			QtCore.QObject.connect(self.window.ui.today, QtCore.SIGNAL("clicked()"),self.todayClicked)
 			self.window.ui.searchList.hide()
 			self.window.ui.search.hide()
 			self.window.ui.searchText.hide()
@@ -347,6 +348,9 @@ class Plugin(plugins.PluginBase):
 
 		d=threads.deferToThread(self.searchText,jid,text,self.window.palette().color(QtGui.QPalette.HighlightedText).name(),self.window.palette().color(QtGui.QPalette.Highlight).name())
 		d.addCallback(self.gotSearchedText,jid)
+	
+	def todayClicked(self):
+		self.window.ui.calendar.setSelectedDate(QtCore.QDate.currentDate());
 
 	def searchText(self,jid,text,fg,bg):
 		data=self.backend.findText(jid,text)

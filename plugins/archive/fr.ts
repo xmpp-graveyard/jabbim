@@ -3,40 +3,50 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="historyBrowser.ui.py" line="82"/>
+        <location filename="historyBrowser.ui.py" line="63"/>
         <source>Archive browser</source>
         <translation>Navigateur d&apos; archives</translation>
     </message>
     <message>
-        <location filename="historyBrowser.ui.py" line="83"/>
+        <location filename="historyBrowser.ui.py" line="66"/>
         <source>Search</source>
         <translation>Rechercher</translation>
     </message>
     <message>
-        <location filename="historyBrowser.ui.py" line="84"/>
+        <location filename="historyBrowser.ui.py" line="67"/>
         <source>Date</source>
         <translation>Date</translation>
     </message>
     <message>
-        <location filename="historyBrowser.ui.py" line="85"/>
+        <location filename="historyBrowser.ui.py" line="68"/>
         <source>Message</source>
         <translation>Message</translation>
+    </message>
+    <message>
+        <location filename="historyBrowser.ui.py" line="64"/>
+        <source>1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="historyBrowser.ui.py" line="65"/>
+        <source>Today</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="archive.py" line="431"/>
+        <location filename="archive.py" line="435"/>
         <source>History</source>
         <translation>Historique</translation>
     </message>
     <message>
-        <location filename="archive.py" line="527"/>
+        <location filename="archive.py" line="531"/>
         <source>Contacts in roster</source>
         <translation>Liste des contacts</translation>
     </message>
     <message>
-        <location filename="archive.py" line="529"/>
+        <location filename="archive.py" line="533"/>
         <source>Others</source>
         <translation>Autres</translation>
     </message>
