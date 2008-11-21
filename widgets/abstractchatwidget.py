@@ -1105,7 +1105,6 @@ class abstractChatWidget(QtGui.QWidget):
 					t+=br[i]+"<br/>"
 				else:
 					t+=br[i]
-			xhtml=t[:-5]
 		# replace url by <a href="url"></url>
 		same=False
 		#print xhtml.replace("<br/>",'\n').replace("<br />",'\n')
