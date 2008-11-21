@@ -186,7 +186,7 @@ class Plugin(plugins.PluginBase):
 	
 	def execute(self):
 		code = unicode(self.window.ui.pythonInput.toPlainText ())
-		self.window.ui.pythonOutput.append(self.window.ui.pythonInput.toPlainText ())
+		self.window.ui.pythonOutput.append('>>> '+self.window.ui.pythonInput.toPlainText ())
 		self.historyPy.insert(0,code)
 		self.historyPy=self.historyPy[0:long(self.config['historyMaxCount'])]
 		self.historyPyPosition=-1;
