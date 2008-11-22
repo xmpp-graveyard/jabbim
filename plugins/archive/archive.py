@@ -302,9 +302,6 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.loadConfig(homedir)
 
-			self.jid = unicode(self.main.client.jid.userhost())
-			self.backend=FileBackend(self)
-
 			self.registerHandler('firstChatMessageEvent',self.on_firstChatMessageEvent)
 			self.registerHandler('chatMessageEvent',self.on_chatMessageEvent)
 			self.registerHandler('groupchatMessageEvent',self.on_groupchatMessageEvent)
@@ -330,10 +327,15 @@ class Plugin(plugins.PluginBase):
 			self.skin=self.getConfig("%s/gajim.cfg" % self.pluginDir)
 			self.skin=self.skin['chatskin']
 			self.window.ui.seznam.header().hide()
-			self.jidList=self.backend.getJidList()
+
 		else:
 			self.loadConfig(homedir)
 
+	def userChanged(self,jid):
+		plugins.PluginBase.userChanged(self,jid)
+		self.jid = unicode(jid)
+		self.backend=FileBackend(self)
+		self.jidList=self.backend.getJidList()
 
 	def searchClicked(self):
 		text=unicode(self.window.ui.searchText.text())

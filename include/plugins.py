@@ -29,7 +29,7 @@ from os.path import basename
 from widgets.configlib import pluginConfiguration
 
 
-class PluginBase:
+class PluginBase(object):
 	def __init__(self, main, homedir, plugindir):
 		self.main = main #: mainWindow
 		self.config = None #: configuration loaded by configObj
@@ -46,6 +46,7 @@ class PluginBase:
 		self.showInPreferences=False #: True - plugin configuration will be showed in main list in preferences
 		self.preferencesIcon=QtGui.QIcon() #: icon for plugin configuration in preferences
 		self._handlers = [] #: contains functions which are connected to pyxl
+		self._handlersCache = []
 		self._translator=None #: QTranslator
 		self._loadedWidgets=[] #: widgets loaded by this plugin
 		self._registeredFeatures=[] #: features for Caps registered by this plugin
@@ -407,7 +408,16 @@ class PluginBase:
 				if not self.config.has_key(k) and not k.startswith("__"):
 					self.config[k] = v['value']
 					self.config.write()
-	
+
+	def userChanged(self,jid):
+		# load new config
+		if self.configDialog:
+			self.loadConfig()
+
+	def clientCreated(self):
+		for handler in self._handlersCache:
+			self.registerHandler(*handler)
+
 	def writeConfig(self):
 		"""
 		Saves default config.
@@ -425,8 +435,11 @@ class PluginBase:
 		@type method: function
 		@param method: function which will be called if the event is generated
 		"""
-		self.main.client.dispatcher.registerHandler(name, method, self.name, priority = priority)
-		self._handlers.append(name)
+		if self.main.client:
+			self.main.client.dispatcher.registerHandler(name, method, self.name, priority = priority)
+			self._handlers.append(name)
+		else:
+			self._handlersCache.append([name,method,priority])
 	
 	def on_remove(self):
 		"""

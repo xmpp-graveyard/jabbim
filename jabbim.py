@@ -178,10 +178,6 @@ class clientClass(pyxl.client.Client):
 		if self.main.config['useXHTML'] == 'False':
 			self.unregisterFeature('http://jabber.org/protocol/xhtml-im')
 			self.rebuildCaps()
-		# load plugins
-		self.loadPlugins()
-		
-
 
 	def on_pep(self, frm, ns, payload):
 		"""
@@ -954,7 +950,11 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.splashProgress.setValue(100)
 		self.main.ui.loginInfo.setText(mainWindow.tr("Jabbim is ready."))
 		self.main.ui.rosterStackedWidget.setCurrentIndex(1)
-		# load plugins, autoconnect
+		self.main.ui.menuPlugins.clear() # clear plugins menu
+		for plug in self.main.plugins.itervalues():
+			if plug['module']:
+				self.main.runPluginCommand(plug['module'].buildMainWindowMenu,[])
+		# autoconnect
 		self.reactor.callLater(2,self.autoJoin)
 
 	def loadPlugins(self):
@@ -4070,6 +4070,19 @@ class mainWindow(QtGui.QMainWindow):
 			self.offline=False
 			#self.buildOfflineMenu()
 			self.hideOffline(True)
+		# unload plugins of old plugins
+		for i in self.plugins.keys():
+			self.unloadPlugin(i)
+		# load plugins of this user
+		self.findPlugins()
+		self.loadPlugins()
+
+		for plug in self.plugins.itervalues():
+			if plug['module']:
+				self.runPluginCommand(plug['module'].userChanged,[self.config["jid"]])
+	
+	def isConnected(self):
+		return self.client and self.client.connection
 
 	def registerButtonClicked(self):
 		# depracted
@@ -4269,8 +4282,10 @@ class mainWindow(QtGui.QMainWindow):
 				try:
 					self.loadPlugin(plugin_name)
 				except Exception, ex:
+					print "1"
 					log.msg(plugin_name+': '+unicode(ex))
-		self.client.dispatcher.publishEvent('on_pluginsLoaded')
+		if self.client:
+			self.client.dispatcher.publishEvent('on_pluginsLoaded')
 		#log.msg("PLUGINS:"+unicode(self.plugins))
 
 	def loadPlugin(self,plugin):
@@ -5042,6 +5057,11 @@ class mainWindow(QtGui.QMainWindow):
 			resource='jabbim'
 		if self.client==None:
 			self.client = clientClass(unicode(jid).lower()+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
+			for plug in self.plugins.itervalues():
+				if plug['module']:
+					self.runPluginCommand(plug['module'].clientCreated,[])
+
+			
 		path = self.realHomeDir+'/avatars/'
 		if self.client.avatarDef.has_key(self.client.jid.userhost()):
 			self.client.avatarImg[self.client.avatarDef[self.client.jid.userhost()]] = self.loadAvatar(self.client.avatarDef[self.client.jid.userhost()])

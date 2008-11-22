@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import sys,os,time
 sys.path.append('.')
 from include import plugins
@@ -48,7 +48,6 @@ class Plugin(plugins.PluginBase):
 ##			self.window.ui.list.dragMoveEvent = self.dragMoveEvent
 ##			self.window.ui.list.dragEnterEvent = self.dragEnterEvent
 ##			self.window.ui.line_jid.setText(self.main.client.jid.userhost())
-			self.jid = self.main.client.jid.userhost()
 			self.typ = "public"
 			self.esPath=""
 			self.window.ui.buttonDownload.setIcon(QtGui.QIcon("%s/document-save.png" % self.pluginDir))
@@ -147,6 +146,10 @@ class Plugin(plugins.PluginBase):
 			
 		else:
 			self.loadConfig(homedir)
+
+	def clientCreated(self):
+		self.jid = self.main.client.jid.userhost()
+		plugins.PluginBase.clientCreated(self)
 
 	def registerRemote(self):
 		remote = self.main.getPlugin('remote')
@@ -804,8 +807,9 @@ class Plugin(plugins.PluginBase):
 		
 
 	def buildMainWindowMenu(self):
-		menu=self.mainWindowMenu()
-		menu.addAction("Jabbim disk manager",self.showSlot)
+		if self.main.isConnected():
+			menu=self.mainWindowMenu()
+			menu.addAction("Jabbim disk manager",self.showSlot)
 	
 	def call(self,jid=None,typ=None):
 		self.stopDownload=True
