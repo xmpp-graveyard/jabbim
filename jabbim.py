@@ -4075,8 +4075,12 @@ class mainWindow(QtGui.QMainWindow):
 			self.unloadPlugin(i)
 		# load plugins of this user
 		self.findPlugins()
-		self.loadPlugins()
+		self.reactor.callLater(2,self._reloadPlugins)
 
+
+	
+	def _reloadPlugins(self):
+		self.loadPlugins()
 		for plug in self.plugins.itervalues():
 			if plug['module']:
 				self.runPluginCommand(plug['module'].userChanged,[self.config["jid"]])
@@ -5252,6 +5256,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.events.removeAll()
 		for i in MainWindow.plugins.keys():
 			MainWindow.unloadPlugin(i)
+		self.reactor.callLater(2,self._reloadPlugins)
 
 		for transport in self.transports.keys():
 			if self.transports[transport]:

@@ -329,7 +329,7 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.loadConfig()
 			self.registerHandler('on_authd', self.on_authd)
-			if self.main.client.xmlstream:
+			if self.main.isConnected() and self.main.client.xmlstream:
 				self.on_authd()
 		else:
 			self.loadConfig(homedir)
