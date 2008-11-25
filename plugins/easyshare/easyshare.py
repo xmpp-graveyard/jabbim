@@ -302,7 +302,7 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.loadConfig()
 			self.registerHandler('on_authd',self.on_authd)
-			if self.main.client.xmlstream:
+			if self.main.isConnected() self.main.client.xmlstream:
 				self.on_authd()
 			self.db = adbapi.ConnectionPool('sqlite3', homedir+'/search.db', cp_min=1, cp_max=1)
 			self.initDb()
