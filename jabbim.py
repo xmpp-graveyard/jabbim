@@ -3703,7 +3703,7 @@ class mainWindow(QtGui.QMainWindow):
 					show='offline'
 				else:
 					show=show[0]
-
+				debug=unicode(self.transports)
 				# We have to use status icon from previous instance of QMenu,
 				# because transport doesn't need to have the same show in roster as we send him before
 				# So FE we sent away, but in roster we have still online...
@@ -3715,7 +3715,7 @@ class mainWindow(QtGui.QMainWindow):
 					#self.transports[transport].deleteLater()
 				else:
 					ic=self.getIcon("1@"+transport,status=show,size="16x16")
-
+				self.tray.showMessage("debug "+self.now(),"adding transport "+unicode(transport))
 				self.transports[transport]=QtGui.QToolButton(self.ui.transportsWidget)
 				#self.transports[transport].setMaximumSize(QtCore.QSize(16777215,20))
 				#self.transports[transport].setMinimumSize(QtCore.QSize(32,32))
@@ -3735,7 +3735,7 @@ class mainWindow(QtGui.QMainWindow):
 				else:
 					text+='<img src="images/16x16/status/jabber-offline.png">'
 				#text+='<font size="-1">%s</font>' % (status)
-				text+="</td></tr></table>"
+				text+="</td><td>"+debug+"</td></tr></table>"
 				self.transports[transport].setToolTip(text)
 
 				menu=QtGui.QMenu(transport,self.transports[transport])
