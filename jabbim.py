@@ -3074,8 +3074,16 @@ class mainWindow(QtGui.QMainWindow):
 #	temporary bugfix by triak
 #			log.msg('Plugin error: ' +unicode(ex))
 			log.msg('In function:'+unicode(command))
-			message = unicode(traceback.format_exc())
-			log.msg(message)
+			try:
+				message = unicode(traceback.format_exc())
+				log.msg(message)
+			except:
+				try:
+					message = unicode(traceback.format_exc(),"utf-8")
+					log.msg(message)
+				except:
+					log.msg("can't decode traceback")
+
 
 	def getAvatarSrc(self,jid):
 		hash=""
