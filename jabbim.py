@@ -3946,7 +3946,6 @@ class mainWindow(QtGui.QMainWindow):
 				log.startLoggingWithObserver(self.log.emit, setStdout=0)
 		# change GUI according to new config
   		self.userRating.last_reward=float(self.config['ratingLastReward'])
-		self.fillLoginForm()
 		self.loadTheme()
 		self.loadSkin()
 		self.ui.roster.reskin()
@@ -3971,6 +3970,8 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.cache = storage.Cache(db=(unicode(self.homeDir)+u'/cache.db').encode('utf8')) #hack!
 		self.cache.create_tables().addCallback(self.tables_created)
+		self.fillLoginForm()
+
 
 	def fillLoginForm(self):
 		"""
@@ -4083,7 +4084,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.unloadPlugin(i)
 		# load plugins of this user
 		self.findPlugins()
-		self.reactor.callLater(2,self._reloadPlugins)
+		self._reloadPlugins()
 
 
 	
@@ -4289,6 +4290,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Loads plugins according to config file (self.config['plugins'])
 		"""
+		print "loadplugins"
 		for plugin_name in self.plugins.keys():
 			if plugin_name in self.config['plugins']:
 				try:
@@ -4352,6 +4354,7 @@ class mainWindow(QtGui.QMainWindow):
 			#del self.plugins[plugin]['module']
 			self.plugins[plugin]['module']=None
 			#del self.plugins[plugin]
+			gc.collect()
 			del gc.garbage[:] # delete plugin from python
 			# rebuild plugins menu
 			for plug in self.plugins.itervalues():
@@ -4809,14 +4812,14 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Loads roster widget.
 		"""
-		layout=QtGui.QHBoxLayout(self.ui.rosterWidget)
+		layout=QtGui.QVBoxLayout(self.ui.rosterWidget)
 		layout.setMargin(0)
 		layout.setSpacing(0)
 		self.scroll=scrollBar(self.ui.rosterWidget)
 		self.scroll.setWidgetResizable (True)
+		layout.addWidget(self.scroll)
 		self.ui.roster=widgets.rosterLiveWidget.rosterWidget(self,self)
 		self.scroll.setWidget(self.ui.roster)
-		layout.addWidget(self.scroll)
 
 	def _connected(self):
 		"""
@@ -4962,7 +4965,7 @@ class mainWindow(QtGui.QMainWindow):
 		if delay:
 			reactor.callLater(delay,self.connect)
 			return
-
+		self.ui.roster.emptyRosterWidget.hide()
 		self.connectStarted=int(time.time())
 		jid=unicode(self.ui.login_jid.text()).strip()
 		if not re.match(r'.+@.+', jid):
@@ -5264,7 +5267,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.events.removeAll()
 		for i in MainWindow.plugins.keys():
 			MainWindow.unloadPlugin(i)
-		self.reactor.callLater(2,self._reloadPlugins)
+		self._reloadPlugins()
 
 		for transport in self.transports.keys():
 			if self.transports[transport]:

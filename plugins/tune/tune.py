@@ -367,7 +367,8 @@ class Plugin(plugins.PluginBase):
 				self.loop.stop()
 			else:
 				self.player.stop_listening()
-		self.sendPEP({})
+		if self.main.isConnected()
+			self.sendPEP({})
 
 	def on_configChanged(self):
 		self.on_remove()

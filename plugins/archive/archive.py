@@ -295,7 +295,6 @@ class Plugin(plugins.PluginBase):
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 
-		self.installTranslator()
 		self.configDialog=config(self)
 
 
@@ -311,6 +310,7 @@ class Plugin(plugins.PluginBase):
 			self.window.setWindowIcon(self.main.windowIcon())
 			layout=QtGui.QHBoxLayout(self.window.ui.calendarWidget)
 			self.window.ui.calendar=calendar(self.window.ui.calendarWidget)
+			self.registerWidget(self.window.ui.calendar)
 			layout.addWidget(self.window.ui.calendar)
 			#log.msg(unicode(dir(self.window)))
 			QtCore.QObject.connect(self.window.ui.seznam, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int ) "),self.itemClicked)

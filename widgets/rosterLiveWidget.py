@@ -79,23 +79,25 @@ class rosterToolTip(QtGui.QFrame):
 		
 
 class emptyRosterWidget(QtGui.QWidget):
-	def __init__(self,parent=None):
+	def __init__(self,main,parent=None):
 		QtGui.QWidget.__init__(self,parent)
 		layout=QtGui.QVBoxLayout(self)
 		self.label=QtGui.QLabel(self)
 		self.label.setWordWrap(True)
+		#self.label.setMinimumHeight(200)
 		layout.addWidget(self.label)
 
 		self.add=QtGui.QPushButton(self.tr("Add contact"),self)
 		layout.addWidget(self.add)
 
-		layout.addStretch()
+		#layout.addStretch()
 
-		QtCore.QObject.connect(self.add,QtCore.SIGNAL("clicked()"),parent.main.addContactMainWindow)
+		QtCore.QObject.connect(self.add,QtCore.SIGNAL("clicked()"),main.addContactMainWindow)
 
 	def emptyRoster(self):
-		text="<b>"+self.tr("Welcome to Jabbim!")+"</b><br/>"
-		text+=self.tr("Your contact list is empty. You can add or find your friends by clicking on button below or by Add contact from menu Actions.")
+		print "empty roster..."
+		text="<b>"+unicode(self.tr("Welcome to Jabbim!"))+"</b><br/>"
+		text+=unicode(self.tr("Your contact list is empty. You can add or find your friends by clicking on button below or by Add contact from menu Actions."))
 		self.label.setText(text)
 		self.label.show()
 		self.add.show()
@@ -281,7 +283,8 @@ class rosterWidget(QtGui.QWidget):
 		self.main.ui.rosterSearchLabel.hide()
 		self.main.ui.rosterSearchClose.hide()
 
-		self.emptyRosterWidget=emptyRosterWidget(self)
+		self.emptyRosterWidget=emptyRosterWidget(self.main,self.main.ui.rosterWidget)
+		self.main.ui.rosterWidget.layout().insertWidget(0,self.emptyRosterWidget)
 
 		#self.setRosterStyle(defaultrosterstyle.rosterStyle)
 
@@ -884,12 +887,12 @@ class rosterWidget(QtGui.QWidget):
 			#doc.setHtml(self.tr("You haven't any contacts in your contact list. You can add them with Add contact from menu Actions."))
 			if len(self.users)==0:
 				if self.emptyRosterWidget.isHidden():
-					self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
+					#self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
 					self.emptyRosterWidget.emptyRoster()
 					self.emptyRosterWidget.show()
 			else:
 				if self.emptyRosterWidget.isHidden():
-					self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
+					#self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
 					self.emptyRosterWidget.noOnline()
 					self.emptyRosterWidget.show()
 		else:
@@ -1149,8 +1152,8 @@ class rosterWidget(QtGui.QWidget):
 		"""
 		#if self.statusLabel:
 			#self.statusLabel.resize(self.width()-46,self.selectedHeight-32)
-		if not self.emptyRosterWidget.isHidden():
-			self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
+		#if not self.emptyRosterWidget.isHidden():
+			#self.emptyRosterWidget.setGeometry(0,0,self.width(),self.height())
 		self.refreshSizes()
 		if hasattr(self.rosterStyle,"resizeEvent"):
 			self.rosterStyle.resizeEvent()
