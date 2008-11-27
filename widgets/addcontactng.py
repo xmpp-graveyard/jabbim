@@ -34,6 +34,7 @@ class addContactDialog(QtGui.QDialog):
 			# TODO - get user search jid from disco
 			self.jid=""
 		self.addFunction=None
+		self.movie=QtGui.QMovie("images/animation_search.mng")
 		self.ui.description.hide()
 		self.ui.service.insertSeparator(0)
 		srv = unicode(self.main().client.jid.host)
@@ -401,6 +402,8 @@ class addContactDialog(QtGui.QDialog):
 	def search(self):
 		self.ui.treeWidget.jidIndex=None
 		print "search"
+		self.ui.picture.setMovie(self.movie)
+		self.movie.start()
 		form=self.form
 		for x in form.elements():
 			if unicode(x.name)=="field":
@@ -484,6 +487,9 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.treeWidget.header().show()
 		self.ui.treeWidget.show()
 		self.ui.addToRoster.show()
+		self.movie.stop()
+		self.ui.picture.setPixmap(QtGui.QPixmap("images/lupa-smile.png"))
+		
 
 
 	def _gotSearchForm(self,data):
