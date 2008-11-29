@@ -4,141 +4,131 @@ try:
 except:
 	print "PyQt4 is not installed."
 
-import jabbimservicemanager_ui
+import jsm_ui
 import weakref
-from widgets import servicediscovery
-#445223432
-#class JabberDiskService:
-#	def __init__(self):
-		#self.info="""
-			#<h3>Jabber Disk informations</h3>
-#			"""
-		#self.title="Jabber Disk"
-#		self.icon=QtGui.QIcon("images/32x32/status/disk-online.png")
-
-class serviceButton(QtGui.QToolButton):
-	def __init__(self,manager,title,icon,info,parent):
-		QtGui.QToolButton.__init__(self,parent)
-		self.manager=weakref.proxy(manager)
-		self.title=title
-		self.info=info
-		self.setText(title)
-		self.setIcon(icon)
-		self.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
-		self.setIconSize(QtCore.QSize(32,32))
-		self.setMouseTracking(True)
-	
-	def mouseMoveEvent(self,event):
-		if self.manager.currentInfo!=self.title:
-			self.manager.currentInfo=self.title
-			self.manager.ui.info.setHtml(self.info)
-		return QtGui.QToolButton.mouseMoveEvent(self,event)
+from widgets import servicediscovery, dataforms, legacyforms
+from widgets.addcontactng import showDict, addDict, showWeather, addWeather
 
 class jabbimServiceManager(QtGui.QDialog):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
-		self.ui=jabbimservicemanager_ui.Ui_jabbimServiceManager()
+		self.ui=jsm_ui.Ui_Dialog()
 		self.ui.setupUi(self)
 		self.main=weakref.ref(main)
-		self.registerLayout=QtGui.QHBoxLayout(self.ui.registerService)
-		self.registeredLayout=QtGui.QHBoxLayout(self.ui.registeredServices)
-		self.currentInfo=""
+		self.ui.treeWidget.hideColumn(2)
+		self.ui.jids.hide()
+		self.ui.add.hide()
+		self.addFunc=None
+		QtCore.QObject.connect(self.ui.treeWidget,QtCore.SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"),self.itemChanged)
+		QtCore.QObject.connect(self.ui.configure,QtCore.SIGNAL("clicked()"),self.configure)
+		QtCore.QObject.connect(self.ui.add,QtCore.SIGNAL("clicked()"),self.add)
+		QtCore.QObject.connect(self.ui.reg,QtCore.SIGNAL("clicked()"),self.register)
 		self.loadServices()
-		QtCore.QObject.connect(self.ui.registerJabberDisk,QtCore.SIGNAL("clicked()"),self._registerJabberDisk)
-		QtCore.QObject.connect(self.ui.registerIcq,QtCore.SIGNAL("clicked()"),self._registerICQ)
-		QtCore.QObject.connect(self.ui.registerDictionaries,QtCore.SIGNAL("clicked()"),self._registerDict)
-		QtCore.QObject.connect(self.ui.back,QtCore.SIGNAL("clicked()"),self.home)
-		QtCore.QObject.connect(self.ui.advanced,QtCore.SIGNAL("clicked()"),self.advanced)
-		self.home()
+
+	def _onRegister(self,data):
+		if not data:
+			return
+		jid,legacy,form=data
+		if form!=None:
+			self.dialog=dataforms.dataFormsDialog(self.main(),form,jid,"register",self)
+			self.dialog.show()
+		else:
+			self.dialog=legacyforms.legacyFormsDialog(self.main(),legacy,jid,"disco",self)
+			self.dialog.show()
+
+	def register(self):
+		item = self.ui.treeWidget.currentItem()
+		if not item:
+			return
+		d=self.main().client.getRegisterForm(unicode(item.data(0,32).toString()))
+		d.addCallback(self._onRegister)
+
+	def add(self):
+		if self.addFunc:
+			self.addFunc(self.main(),self.ui.jids)
+		self.itemChanged(self.ui.treeWidget.currentItem(),None)
+
+	def configure(self):
+		item = self.ui.treeWidget.currentItem()
+		if not item:
+			return
+		if unicode(item.data(0,32).toString())=="dict.jabbim.cz":
+			showDict(self,self.main(),self.ui.jids)
+			self.ui.reg.hide()
+			self.ui.configure.hide()
+			self.ui.add.show()
+			self.ui.textBrowser.hide()
+			self.ui.jids.show()
+			self.addFunc=addDict
+		elif unicode(item.data(0,32).toString())=="weather.netlab.cz":
+			showWeather(self.main(),self.ui.jids)
+			self.ui.reg.hide()
+			self.ui.configure.hide()
+			self.ui.add.show()
+			self.ui.textBrowser.hide()
+			self.ui.jids.show()
+			self.addFunc=addWeather
 	
-	def advanced(self):
-		self.discovery=servicediscovery.serviceDiscoveryDialog(self.main,self)
-		self.discovery.show()
-		self.hide()
-	
-	def home(self):
-		self.ui.stackedWidget.setCurrentIndex(0)
-		self.ui.back.hide()
+	def itemChanged(self,item,old):
+		if item:
+			self.ui.add.hide()
+			if unicode(item.text(2))[0]=="0":
+				self.ui.reg.hide()
+				self.ui.configure.show()
+			else:
+				self.ui.configure.hide()
+				self.ui.reg.show()
+			self.ui.jids.hide()
+			self.ui.textBrowser.setHtml(item.data(1,32).toString())
+			self.ui.textBrowser.show()
 	
 	def loadServices(self):
-		for i in range(self.registerLayout.count()):
-			item=self.registerLayout.itemAt(0)
-			if item.widget():
-				item.widget().setParent(None)
-			else:
-				self.registerLayout.removeItem(item)
-		for i in range(self.registeredLayout.count()):
-			item=self.registeredLayout.itemAt(0)
-			if item.widget():
-				item.widget().setParent(None)
-			else:
-				self.registeredLayout.removeItem(item)
-
-		dict=False
-		weather=False
-		for jd in self.main().client.roster['users'].keys():
-			if jd.find("dict.jabbim.cz")!=-1:
-				dict=True
-			if jd.find("weather.netlab.cz"):
-				weather=True
-
-		# Jabber disk
-		info="""
-		<h3>Jabber Disk informations</h3>
-		"""
-		if (not self.main().client.roster['users'].has_key("public@disk.jabbim.cz") or not self.main().client.roster['users'].has_key("private@disk.jabbim.cz")) or not self.main().client.roster['users'].has_key("album@disk.jabbim.cz"):
-
-			button=serviceButton(self,self.tr("Jabber Disk"),QtGui.QIcon("images/32x32/status/disk-online.png"),info,self.ui.registerService)
-			self.registerLayout.addWidget(button)
-			QtCore.QObject.connect(button,QtCore.SIGNAL("clicked()"),self.registerJabberDisk)
-		else:
-			button=serviceButton(self,self.tr("Jabber Disk"),QtGui.QIcon("images/32x32/status/disk-online.png"),info,self.ui.registeredServices)
-			button.setPopupMode(QtGui.QToolButton.InstantPopup)
-			self.registeredLayout.addWidget(button)
-			menu=QtGui.QMenu(button)
-			menu.addAction(self.tr("Unregister"),self._unregisterJabberDisk)
-			button.setMenu(menu)
-
-		# Weather
-		info="""
-		<h3>Jabber Weather Informations</h3>
-		"""
-		if weather:
-			button=serviceButton(self,self.tr("Weather"),QtGui.QIcon("images/32x32/status/weather-online.png"),info,self.ui.registerService)
-			self.registerLayout.addWidget(button)
-			QtCore.QObject.connect(button,QtCore.SIGNAL("clicked()"),self.registerWeather)
-		else:
-			button=serviceButton(self,self.tr("Weather"),QtGui.QIcon("images/32x32/status/weather-online.png"),info,self.ui.registeredServices)
-			button.setPopupMode(QtGui.QToolButton.InstantPopup)
-			self.registeredLayout.addWidget(button)
-			menu=QtGui.QMenu(button)
-			menu.addAction(self.tr("Unregister"),self._unregisterWeather)
-			button.setMenu(menu)
-			
-		#ICQ JIT
-		self.loadICQService()
-		#DICT
-		if dict:
-			info="""
-			<h3>Jabber Dictionaries Informations</h3>
-			"""
-			button=serviceButton(self,self.tr("Dictionaries"),QtGui.QIcon("images/32x32/apps/jabbim.png"),info,self.ui.registeredServices)
-			button.setPopupMode(QtGui.QToolButton.InstantPopup)
-			self.registeredLayout.addWidget(button)
-			menu=QtGui.QMenu(button)
-			menu.addAction(self.tr("Change registered dictionaries"),self.registerDict)
-			menu.addAction(self.tr("Unregister"),self._unregisterDict)
-			button.setMenu(menu)
-		else:
-			info="""
-			<h3>Jabber Dictionaries Informations</h3>
-			"""
-			button=serviceButton(self,self.tr("Dictionaries"),QtGui.QIcon("images/32x32/apps/jabbim.png"),info,self.ui.registerService)
-			self.registerLayout.addWidget(button)
-			QtCore.QObject.connect(button,QtCore.SIGNAL("clicked()"),self.registerDict)
+		trans=['icq.netlab.cz','icq.jabber.cz','icq.jabbim.cz']
+		servs=['dict.jabbim.cz','weather.netlab.cz']
+		transports={}
+		services={}
+		for transport in trans:
+			transports[transport]=False
+		for service in servs:
+			services[service]=False
 		
-		self.registerLayout.addStretch()
-		self.registeredLayout.addStretch()
+		for jd in self.main().client.roster['users'].keys():
+			for transport in services:
+				if jd.find(transport)!=-1:
+					transports[transport]=True
+					break
+			for transport in transports:
+				if jd==transport:
+					transports[transport]=True
+					break
+
+
+		self.addService(self.tr("Dictionaries"),"dict.jabbim.cz",self.tr("<b>Dictionaries</b><br/>Dictionaries service allows you to translate words between languages from your Jabbim client."),transports["dict.jabbim.cz"])
+		self.addService(self.tr("Weather"),"weather.jabbim.cz",self.tr("<b>Weather</b><br/>Weather service allows you to see actual weather in big cities.<br/>"),transports["weather.netlab.cz"])
+		if transports["icq.netlab.cz"]:
+			self.addService(self.tr("ICQ"),"icq.netlab.cz",self.tr("<b>ICQ</b><br/>ICQ transport allows you to chat with your friends who use ICQ."),transports["icq.netlab.cz"])
+		elif transports["icq.jabbim.cz"]:
+			self.addService(self.tr("ICQ"),"icq.jabbim.cz",self.tr("<b>ICQ</b><br/>ICQ transport allows you to chat with your friends who use ICQ."),transports["icq.jabbim.cz"])
+		else:
+			self.addService(self.tr("ICQ"),"icq.jabber.cz",self.tr("<b>ICQ</b><br/>ICQ transport allows you to chat with your friends who use ICQ."),transports["icq.jabber.cz"])
+		#self.addService(self.tr("Weather"),"weather.jabbim.cz",self.tr("<b>Weather</b><br/>Weather service allows you to see actual weather in big cities.<br/>"),transports["weather.netlab.cz"])
+		self.ui.treeWidget.resizeColumnToContents(0)
+		self.ui.treeWidget.setMaximumWidth(150)
+		self.ui.treeWidget.sortItems(2,QtCore.Qt.AscendingOrder)
+	
+	def addService(self,name,jid,description,registered=False):
+		item=QtGui.QTreeWidgetItem(self.ui.treeWidget)
+		item.setText(1,name)
+		item.setIcon(0,self.main().getIcon("1@"+jid,status="online",size="16x16"))
+		item.setData(0,32,QtCore.QVariant(unicode(jid)))
+		item.setData(1,32,QtCore.QVariant(unicode(description)))
+		if registered:
+			item.setIcon(0,QtGui.QIcon("images/16x16/actions/ok.png"))
+			item.setText(2,"0"+unicode(jid))
+		else:
+			item.setIcon(0,QtGui.QIcon())
+			item.setText(2,"1"+unicode(jid))
+		
 
 	def registerWeather(self):
 		pass
@@ -243,7 +233,7 @@ class jabbimServiceManager(QtGui.QDialog):
 				info="""
 				<h3>Jabber ICQ Transport Informations</h3>
 				"""
-				button=serviceButton(self,self.tr("ICQ Transport"),QtGui.QIcon("images/32x32/status/icq-online.png"),info,self.ui.registerService)
+				button=serviceButton(self,self.tr("ICQ Transport"),QtGui.QIcon("images/32x32/status/icq-online.png"),info,self.ui.regService)
 				button.setPopupMode(QtGui.QToolButton.InstantPopup)
 				self.registeredLayout.insertWidget(0,button)
 				menu=QtGui.QMenu(button)
@@ -253,7 +243,7 @@ class jabbimServiceManager(QtGui.QDialog):
 				info="""
 				<h3>Jabber ICQ Transport Informations</h3>
 				"""
-				button=serviceButton(self,self.tr("ICQ Transport"),QtGui.QIcon("images/32x32/status/icq-online.png"),info,self.ui.registerService)
+				button=serviceButton(self,self.tr("ICQ Transport"),QtGui.QIcon("images/32x32/status/icq-online.png"),info,self.ui.regService)
 				self.registerLayout.insertWidget(0,button)
 				QtCore.QObject.connect(button,QtCore.SIGNAL("clicked()"),self.registerICQ)
 	

@@ -15,6 +15,146 @@ import addcontact
 import dataforms,legacyforms
 import wizards
 
+def addWeather(mainWindow,treeWidget):
+	for i in range(0,int(treeWidget.topLevelItemCount())):
+		item=treeWidget.topLevelItem(i)
+		if item.checkState(0)!=item.registered:
+			item.registered=not item.registered
+			if item.checkState(0)==QtCore.Qt.Checked:
+				mainWindow.autoAdd[unicode(item.jid)]={}
+				mainWindow.client.addContact(unicode(item.jid),"",unicode(item.text(0)),[unicode(mainWindow.tr("Weather"))])
+			else:
+				mainWindow.client.delContact(unicode(item.jid))
+
+
+def showWeather(mainWindow,treeWidget):
+	l=unicode(QtCore.QLocale.system().name())[:2]
+	if l=="cs":
+		jids={'beroun@weather.netlab.cz':"Opava",
+		'brno@weather.netlab.cz':u'Brno',
+		'cesky_tesin@weather.netlab.cz':u'Český Těšín',
+		'frydek@weather.netlab.cz':u'Frýdek Místek',
+		'karvina@weather.netlab.cz':u'Karviná',
+		'kladno@weather.netlab.cz':u'Kladno',
+		'kolin@weather.netlab.cz':u'Kolín',
+		'opava@weather.netlab.cz':u'Opava',
+		'ostrava@weather.netlab.cz':u'Ostrava',
+		'pilsen@weather.netlab.cz':u'Plzeň',
+		'pisek@weather.netlab.cz':u'Písek',
+		'prague@weather.netlab.cz':u'Praha',
+		'rosice@weather.netlab.cz':u'Rošice',
+		'slavkov_u_brna@weather.netlab.cz':u'Slavkov u Brna',
+		'tabor@weather.netlab.cz':u'Tábor',
+		'usti_nad_labem@weather.netlab.cz':u'Ústí nad Labem',
+		'cheb@weather.netlab.cz':u'Cheb',
+		'primda@weather.netlab.cz':u'Přimda',
+		'churanov@weather.netlab.cz':u'Churáňov',
+		'milesovka@weather.netlab.cz':u'Milešovka',
+		'kocelovice@weather.netlab.cz':u'Kocelovice',
+		'praha@weather.netlab.cz':u'Praha',
+		'liberec@weather.netlab.cz':u'Liberec',
+		'kostelni_myslova@weather.netlab.cz':u'Kostelní Myslová',
+		'pribyslav@weather.netlab.cz':u'Přibyslav',
+		'usti_nad_orlici@weather.netlab.cz':u'Ústí nad Labem',
+		'cervena@weather.netlab.cz':u'Červená',
+		'holesov@weather.netlab.cz':u'Holešov',
+		'lysa_hora@weather.netlab.cz':u'Lysá Hora',
+		'ceskebudejovice@weather.netlab.cz':u'České Budějovice'}
+		treeWidget.clear()
+		treeWidget.headerItem().setText(0,mainWindow.tr("Locality"))
+		for jid,name in jids.iteritems():
+			item=QtGui.QTreeWidgetItem(treeWidget)
+			item.setText(0,unicode(name))
+			item.jid=unicode(jid)
+			registered=mainWindow.client.roster['users'].has_key(jid)
+			if registered:
+				item.registered=QtCore.Qt.Checked
+				item.setCheckState(0,QtCore.Qt.Checked)
+			else:
+				item.setCheckState(0,QtCore.Qt.Unchecked)
+				item.registered=QtCore.Qt.Unchecked
+		for i in range(treeWidget.columnCount())[1:]:
+			treeWidget.setColumnHidden(i,True)
+		treeWidget.sortItems(0,QtCore.Qt.AscendingOrder)
+		treeWidget.resizeColumnToContents(0)
+
+def addDict(mainWindow,treeWidget):
+	for i in range(0,int(treeWidget.topLevelItemCount())):
+		item=treeWidget.topLevelItem(i)
+		if item.checkState(0)!=item.registered:
+			item.registered=not item.registered
+			if item.checkState(0)==QtCore.Qt.Checked:
+				mainWindow.autoAdd[unicode(item.jid)]={}
+				mainWindow.client.addContact(unicode(item.jid),"",unicode(item.text(0)),[unicode(mainWindow.tr("Dictionaries"))])
+			else:
+				mainWindow.client.delContact(unicode(item.jid))
+
+def showDict(addContactDialog,main,treeWidget):
+	mainWindow=main
+	d={}
+	d['cze2eng@dict.jabbim.cz']= mainWindow.tr("Czech to English")
+	d['cze2fre@dict.jabbim.cz']= mainWindow.tr("Czech to French")
+	d['cze2ger@dict.jabbim.cz']= mainWindow.tr("Czech to German")
+	d['cze2ita@dict.jabbim.cz']= mainWindow.tr("Czech to Italian")
+	d['cze2lat@dict.jabbim.cz']= mainWindow.tr("Czech to Latin")
+	d['cze2rus@dict.jabbim.cz']= mainWindow.tr("Czech to Russian")
+	d['cze2spa@dict.jabbim.cz']= mainWindow.tr("Czech to Spanish")
+	d['eng2cze@dict.jabbim.cz']= mainWindow.tr("English to Czech")
+	d['eng2epo@dict.jabbim.cz']= mainWindow.tr("English to Esperanto")
+	d['eng2fre@dict.jabbim.cz']= mainWindow.tr("English to French")
+	d['eng2ger@dict.jabbim.cz']= mainWindow.tr("English to German")
+	d['eng2ita@dict.jabbim.cz']= mainWindow.tr("English to Italian")
+	d['eng2lat@dict.jabbim.cz']= mainWindow.tr("English to Latin")
+	d['eng2por@dict.jabbim.cz']= mainWindow.tr("English to Portugese")
+	d['eng2spa@dict.jabbim.cz']= mainWindow.tr("English to Spanish")
+	d['epo2eng@dict.jabbim.cz']= mainWindow.tr("Esperanto to English")
+	d['fre2cze@dict.jabbim.cz']= mainWindow.tr("French to Czech")
+	d['fre2eng@dict.jabbim.cz']= mainWindow.tr("French to English")
+	d['fre2ger@dict.jabbim.cz']= mainWindow.tr("French to German")
+	d['fre2ita@dict.jabbim.cz']= mainWindow.tr("French to Italian")
+	d['fre2spa@dict.jabbim.cz']= mainWindow.tr("French to Spanish")
+	d['ger2cze@dict.jabbim.cz']= mainWindow.tr("German to Czech")
+	d['ger2eng@dict.jabbim.cz']= mainWindow.tr("German to English")
+	d['ger2fre@dict.jabbim.cz']= mainWindow.tr("German to French")
+	d['ger2spa@dict.jabbim.cz']= mainWindow.tr("German to Spanish")
+	d['ita2cze@dict.jabbim.cz']= mainWindow.tr("Italian to Czech")
+	d['ita2eng@dict.jabbim.cz']= mainWindow.tr("Italian to English")
+	d['ita2fre@dict.jabbim.cz']= mainWindow.tr("Italian to French")
+	d['lat2cze@dict.jabbim.cz']= mainWindow.tr("Latin to Czech")
+	d['lat2eng@dict.jabbim.cz']= mainWindow.tr("Latin to English")
+	d['por2eng@dict.jabbim.cz']= mainWindow.tr("Portugese to English")
+	d['por2spa@dict.jabbim.cz']= mainWindow.tr("Portugese to Spanish")
+	d['rus2cze@dict.jabbim.cz']= mainWindow.tr("Russian to Czech")
+	d['spa2cze@dict.jabbim.cz']= mainWindow.tr("Spanish to Czech")
+	d['spa2eng@dict.jabbim.cz']= mainWindow.tr("Spanish to English")
+	d['spa2fre@dict.jabbim.cz']= mainWindow.tr("Spanish to French")
+	d['spa2ger@dict.jabbim.cz']= mainWindow.tr("Spanish to German")
+	d['spa2por@dict.jabbim.cz']= mainWindow.tr("Spanish to Portugese")
+	d['ciz2cze@dict.jabbim.cz']= mainWindow.tr("Foreign words to Czech")
+
+	treeWidget.clear()
+	for jid,name in d.iteritems():
+		item=QtGui.QTreeWidgetItem(treeWidget)
+		if not name:
+			item.setText(0,jid)
+		else:
+			item.setText(0,name)
+		item.jid=jid
+		registered=main.client.roster['users'].has_key(jid)
+		if registered:
+			item.registered=QtCore.Qt.Checked
+			item.setCheckState(0,QtCore.Qt.Checked)
+		else:
+			item.setCheckState(0,QtCore.Qt.Unchecked)
+			item.registered=QtCore.Qt.Unchecked
+
+	for i in range(treeWidget.columnCount())[1:]:
+		treeWidget.setColumnHidden(i,True)
+
+	treeWidget.sortItems(0,QtCore.Qt.AscendingOrder)
+	treeWidget.resizeColumnToContents(0)
+
+
 class tabBar(QtGui.QTabBar):
 	def __init__(self,parent=None):
 		QtGui.QTabBar.__init__(self,parent)
@@ -129,12 +269,12 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.lineEdit.show()
 		self.ui.search.show()
 		if not self.isServiceRegistered(jid):
-			if jid=="icq.jabber.cz":
-				self.addFunction=None
-				self.discovery2=wizards.jabbimservicemanager.jabbimServiceManager(self.main(),self.main())
-				self.discovery2.registerICQ()
-				self.discovery2.show()
-			elif jid=="weather.netlab.cz":
+			#if jid=="icq.jabber.cz":
+				#self.addFunction=None
+				#self.discovery2=wizards.jabbimservicemanager.jabbimServiceManager(self.main(),self.main())
+				#self.discovery2.registerICQ()
+				#self.discovery2.show()
+			if jid=="weather.netlab.cz":
 				self.ui.picture.hide()
 				self.ui.search.hide()
 				self.ui.add.hide()
@@ -189,92 +329,15 @@ class addContactDialog(QtGui.QDialog):
 				self.ui.treeWidget.hide()
 
 	def showDict(self):
-		d={}
-		d['cze2eng@dict.jabbim.cz']= self.tr("Czech to English")
-		d['cze2fre@dict.jabbim.cz']= self.tr("Czech to French")
-		d['cze2ger@dict.jabbim.cz']= self.tr("Czech to German")
-		d['cze2ita@dict.jabbim.cz']= self.tr("Czech to Italian")
-		d['cze2lat@dict.jabbim.cz']= self.tr("Czech to Latin")
-		d['cze2rus@dict.jabbim.cz']= self.tr("Czech to Russian")
-		d['cze2spa@dict.jabbim.cz']= self.tr("Czech to Spanish")
-		d['eng2cze@dict.jabbim.cz']= self.tr("English to Czech")
-		d['eng2epo@dict.jabbim.cz']= self.tr("English to Esperanto")
-		d['eng2fre@dict.jabbim.cz']= self.tr("English to French")
-		d['eng2ger@dict.jabbim.cz']= self.tr("English to German")
-		d['eng2ita@dict.jabbim.cz']= self.tr("English to Italian")
-		d['eng2lat@dict.jabbim.cz']= self.tr("English to Latin")
-		d['eng2por@dict.jabbim.cz']= self.tr("English to Portugese")
-		d['eng2spa@dict.jabbim.cz']= self.tr("English to Spanish")
-		d['epo2eng@dict.jabbim.cz']= self.tr("Esperanto to English")
-		d['fre2cze@dict.jabbim.cz']= self.tr("French to Czech")
-		d['fre2eng@dict.jabbim.cz']= self.tr("French to English")
-		d['fre2ger@dict.jabbim.cz']= self.tr("French to German")
-		d['fre2ita@dict.jabbim.cz']= self.tr("French to Italian")
-		d['fre2spa@dict.jabbim.cz']= self.tr("French to Spanish")
-		d['ger2cze@dict.jabbim.cz']= self.tr("German to Czech")
-		d['ger2eng@dict.jabbim.cz']= self.tr("German to English")
-		d['ger2fre@dict.jabbim.cz']= self.tr("German to French")
-		d['ger2spa@dict.jabbim.cz']= self.tr("German to Spanish")
-		d['ita2cze@dict.jabbim.cz']= self.tr("Italian to Czech")
-		d['ita2eng@dict.jabbim.cz']= self.tr("Italian to English")
-		d['ita2fre@dict.jabbim.cz']= self.tr("Italian to French")
-		d['lat2cze@dict.jabbim.cz']= self.tr("Latin to Czech")
-		d['lat2eng@dict.jabbim.cz']= self.tr("Latin to English")
-		d['por2eng@dict.jabbim.cz']= self.tr("Portugese to English")
-		d['por2spa@dict.jabbim.cz']= self.tr("Portugese to Spanish")
-		d['rus2cze@dict.jabbim.cz']= self.tr("Russian to Czech")
-		d['spa2cze@dict.jabbim.cz']= self.tr("Spanish to Czech")
-		d['spa2eng@dict.jabbim.cz']= self.tr("Spanish to English")
-		d['spa2fre@dict.jabbim.cz']= self.tr("Spanish to French")
-		d['spa2ger@dict.jabbim.cz']= self.tr("Spanish to German")
-		d['spa2por@dict.jabbim.cz']= self.tr("Spanish to Portugese")
-		d['ciz2cze@dict.jabbim.cz']= self.tr("Foreign words to Czech")
-
-		self.ui.treeWidget.clear()
-		for jid,name in d.iteritems():
-			item=QtGui.QTreeWidgetItem(self.ui.treeWidget)
-			if not name:
-				item.setText(0,jid)
-			else:
-				item.setText(0,name)
-			item.jid=jid
-			registered=self.main().client.roster['users'].has_key(jid)
-			if registered:
-				item.registered=QtCore.Qt.Checked
-				item.setCheckState(0,QtCore.Qt.Checked)
-			else:
-				item.setCheckState(0,QtCore.Qt.Unchecked)
-				item.registered=QtCore.Qt.Unchecked
-
-		for i in range(self.ui.treeWidget.columnCount())[1:]:
-			self.ui.treeWidget.setColumnHidden(i,True)
-
-		self.ui.treeWidget.sortItems(0,QtCore.Qt.AscendingOrder)
-		self.ui.treeWidget.resizeColumnToContents(0)
+		showDict(self,self.main(),self.ui.treeWidget)
 		self.ui.treeWidget.show()
 		self.ui.addToRoster.show()
 
 	def _addDict(self):
-		for i in range(0,int(self.ui.treeWidget.topLevelItemCount())):
-			item=self.ui.treeWidget.topLevelItem(i)
-			if item.checkState(0)!=item.registered:
-				item.registered=not item.registered
-				if item.checkState(0)==QtCore.Qt.Checked:
-					self.main().autoAdd[unicode(item.jid)]={}
-					self.main().client.addContact(unicode(item.jid),"",unicode(item.text(0)),[unicode(self.tr("Dictionaries"))])
-				else:
-					self.main().client.delContact(unicode(item.jid))
+		addDict(self.main(),self.ui.treeWidget)
 
 	def _addWeather(self):
-		for i in range(0,int(self.ui.treeWidget.topLevelItemCount())):
-			item=self.ui.treeWidget.topLevelItem(i)
-			if item.checkState(0)!=item.registered:
-				item.registered=not item.registered
-				if item.checkState(0)==QtCore.Qt.Checked:
-					self.main().autoAdd[unicode(item.jid)]={}
-					self.main().client.addContact(unicode(item.jid),"",unicode(item.text(0)),[unicode(self.tr("Weather"))])
-				else:
-					self.main().client.delContact(unicode(item.jid))
+		addWeather(self.main(),self.ui.treeWidget)
 
 	def _transportForm(self,data,jid):
 		self.ui.description.setText(unicode(data['desc']))
@@ -294,53 +357,7 @@ class addContactDialog(QtGui.QDialog):
 	def showWeather(self):
 		l=unicode(QtCore.QLocale.system().name())[:2]
 		if l=="cs":
-			jids={'beroun@weather.netlab.cz':"Opava",
-			'brno@weather.netlab.cz':u'Brno',
-			'cesky_tesin@weather.netlab.cz':u'Český Těšín',
-			'frydek@weather.netlab.cz':u'Frýdek Místek',
-			'karvina@weather.netlab.cz':u'Karviná',
-			'kladno@weather.netlab.cz':u'Kladno',
-			'kolin@weather.netlab.cz':u'Kolín',
-			'opava@weather.netlab.cz':u'Opava',
-			'ostrava@weather.netlab.cz':u'Ostrava',
-			'pilsen@weather.netlab.cz':u'Plzeň',
-			'pisek@weather.netlab.cz':u'Písek',
-			'prague@weather.netlab.cz':u'Praha',
-			'rosice@weather.netlab.cz':u'Rošice',
-			'slavkov_u_brna@weather.netlab.cz':u'Slavkov u Brna',
-			'tabor@weather.netlab.cz':u'Tábor',
-			'usti_nad_labem@weather.netlab.cz':u'Ústí nad Labem',
-			'cheb@weather.netlab.cz':u'Cheb',
-			'primda@weather.netlab.cz':u'Přimda',
-			'churanov@weather.netlab.cz':u'Churáňov',
-			'milesovka@weather.netlab.cz':u'Milešovka',
-			'kocelovice@weather.netlab.cz':u'Kocelovice',
-			'praha@weather.netlab.cz':u'Praha',
-			'liberec@weather.netlab.cz':u'Liberec',
-			'kostelni_myslova@weather.netlab.cz':u'Kostelní Myslová',
-			'pribyslav@weather.netlab.cz':u'Přibyslav',
-			'usti_nad_orlici@weather.netlab.cz':u'Ústí nad Labem',
-			'cervena@weather.netlab.cz':u'Červená',
-			'holesov@weather.netlab.cz':u'Holešov',
-			'lysa_hora@weather.netlab.cz':u'Lysá Hora',
-			'ceskebudejovice@weather.netlab.cz':u'České Budějovice'}
-			self.ui.treeWidget.clear()
-			self.ui.treeWidget.headerItem().setText(0,self.tr("Locality"))
-			for jid,name in jids.iteritems():
-				item=QtGui.QTreeWidgetItem(self.ui.treeWidget)
-				item.setText(0,unicode(name))
-				item.jid=unicode(jid)
-				registered=self.main().client.roster['users'].has_key(jid)
-				if registered:
-					item.registered=QtCore.Qt.Checked
-					item.setCheckState(0,QtCore.Qt.Checked)
-				else:
-					item.setCheckState(0,QtCore.Qt.Unchecked)
-					item.registered=QtCore.Qt.Unchecked
-			for i in range(self.ui.treeWidget.columnCount())[1:]:
-				self.ui.treeWidget.setColumnHidden(i,True)
-			self.ui.treeWidget.sortItems(0,QtCore.Qt.AscendingOrder)
-			self.ui.treeWidget.resizeColumnToContents(0)
+			showWeather(self.main(),self.ui.treeWidget)
 			self.ui.treeWidget.show()
 			self.ui.addToRoster.show()
 
