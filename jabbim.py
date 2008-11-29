@@ -2714,7 +2714,9 @@ class mainWindow(QtGui.QMainWindow):
 					
 					cid = src.split(':')[1]
 					i="bob"+str(self.imageId)+str(random.randint(0,100))
-
+					if not self.client.bobDef.has_key(cid):
+						log.msg("getBobImages error: no value for key")
+						continue
 					link = self.client.bobDef[cid].encode('utf8')
 					#link = os.getcwd()+'/images/32x32/actions/ajax-animation.gif'
 					el.setAttribute('src', link)
