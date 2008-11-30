@@ -375,6 +375,8 @@ class Plugin(plugins.PluginBase):
 		self.on_authd()
 
 	def sendPEP(self, out):
+		if not self.main.isConnected():
+			return
 		if self.main.client.xmlstream == None:
 			log.err("tune: Can't sendPEP yet, no xmlstream!")
 			return
