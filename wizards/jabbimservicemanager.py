@@ -23,7 +23,13 @@ class jabbimServiceManager(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.configure,QtCore.SIGNAL("clicked()"),self.configure)
 		QtCore.QObject.connect(self.ui.add,QtCore.SIGNAL("clicked()"),self.add)
 		QtCore.QObject.connect(self.ui.reg,QtCore.SIGNAL("clicked()"),self.register)
+		QtCore.QObject.connect(self.ui.advanced,QtCore.SIGNAL("clicked()"),self.advanced)
 		self.loadServices()
+
+	def advanced(self):
+		self.discovery=servicediscovery.serviceDiscoveryDialog(self.main,self)
+		self.discovery.show()
+		self.hide()
 
 	def _onRegister(self,data):
 		if not data:
@@ -154,6 +160,7 @@ class jabbimServiceManager(QtGui.QDialog):
 		#self.addService(self.tr("Weather"),"weather.jabbim.cz",self.tr("<b>Weather</b><br/>Weather service allows you to see actual weather in big cities.<br/>"),transports["weather.netlab.cz"])
 		self.ui.treeWidget.resizeColumnToContents(0)
 		self.ui.treeWidget.setMaximumWidth(150)
+		self.ui.treeWidget.setMinimumWidth(150)
 		self.ui.treeWidget.sortItems(2,QtCore.Qt.AscendingOrder)
 	
 	def addService(self,name,jid,description,registered=False):

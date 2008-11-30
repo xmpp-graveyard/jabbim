@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'wizards/jsm.ui'
 #
-# Created: Sat Nov 29 20:40:23 2008
+# Created: Sun Nov 30 10:45:45 2008
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,7 +17,7 @@ class Ui_Dialog(object):
         self.gridLayout.setObjectName("gridLayout")
         self.label = QtGui.QLabel(Dialog)
         self.label.setObjectName("label")
-        self.gridLayout.addWidget(self.label, 0, 0, 1, 3)
+        self.gridLayout.addWidget(self.label, 0, 0, 1, 2)
         self.label_2 = QtGui.QLabel(Dialog)
         self.label_2.setObjectName("label_2")
         self.gridLayout.addWidget(self.label_2, 1, 0, 1, 2)
@@ -29,12 +29,12 @@ class Ui_Dialog(object):
         self.gridLayout.addWidget(self.treeWidget, 2, 0, 3, 1)
         self.textBrowser = QtGui.QTextBrowser(Dialog)
         self.textBrowser.setObjectName("textBrowser")
-        self.gridLayout.addWidget(self.textBrowser, 2, 1, 1, 2)
+        self.gridLayout.addWidget(self.textBrowser, 2, 1, 1, 1)
         self.jids = QtGui.QTreeWidget(Dialog)
         self.jids.setRootIsDecorated(False)
         self.jids.setHeaderHidden(True)
         self.jids.setObjectName("jids")
-        self.gridLayout.addWidget(self.jids, 3, 1, 1, 2)
+        self.gridLayout.addWidget(self.jids, 3, 1, 1, 1)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         spacerItem = QtGui.QSpacerItem(13, 23, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
@@ -48,12 +48,18 @@ class Ui_Dialog(object):
         self.configure = QtGui.QPushButton(Dialog)
         self.configure.setObjectName("configure")
         self.horizontalLayout.addWidget(self.configure)
-        self.gridLayout.addLayout(self.horizontalLayout, 4, 1, 1, 2)
+        self.gridLayout.addLayout(self.horizontalLayout, 4, 1, 1, 1)
+        self.horizontalLayout_2 = QtGui.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.advanced = QtGui.QPushButton(Dialog)
+        self.advanced.setObjectName("advanced")
+        self.horizontalLayout_2.addWidget(self.advanced)
         spacerItem1 = QtGui.QSpacerItem(349, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem1, 5, 0, 1, 2)
+        self.horizontalLayout_2.addItem(spacerItem1)
         self.pushButton = QtGui.QPushButton(Dialog)
         self.pushButton.setObjectName("pushButton")
-        self.gridLayout.addWidget(self.pushButton, 5, 2, 1, 1)
+        self.horizontalLayout_2.addWidget(self.pushButton)
+        self.gridLayout.addLayout(self.horizontalLayout_2, 5, 0, 1, 2)
 
         self.retranslateUi(Dialog)
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("clicked()"), Dialog.reject)
@@ -74,5 +80,6 @@ class Ui_Dialog(object):
         self.add.setText(QtGui.QApplication.translate("Dialog", "Add", None, QtGui.QApplication.UnicodeUTF8))
         self.reg.setText(QtGui.QApplication.translate("Dialog", "Register", None, QtGui.QApplication.UnicodeUTF8))
         self.configure.setText(QtGui.QApplication.translate("Dialog", "Configure", None, QtGui.QApplication.UnicodeUTF8))
+        self.advanced.setText(QtGui.QApplication.translate("Dialog", "Advanced", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("Dialog", "Close", None, QtGui.QApplication.UnicodeUTF8))
 

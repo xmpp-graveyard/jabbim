@@ -13,7 +13,7 @@
    <string>Jabbim Service Manager</string>
   </property>
   <layout class="QGridLayout" name="gridLayout" >
-   <item row="0" column="0" colspan="3" >
+   <item row="0" column="0" colspan="2" >
     <widget class="QLabel" name="label" >
      <property name="text" >
       <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
@@ -59,10 +59,10 @@ p, li { white-space: pre-wrap; }
      </column>
     </widget>
    </item>
-   <item row="2" column="1" colspan="2" >
+   <item row="2" column="1" >
     <widget class="QTextBrowser" name="textBrowser" />
    </item>
-   <item row="3" column="1" colspan="2" >
+   <item row="3" column="1" >
     <widget class="QTreeWidget" name="jids" >
      <property name="rootIsDecorated" >
       <bool>false</bool>
@@ -77,7 +77,7 @@ p, li { white-space: pre-wrap; }
      </column>
     </widget>
    </item>
-   <item row="4" column="1" colspan="2" >
+   <item row="4" column="1" >
     <layout class="QHBoxLayout" name="horizontalLayout" >
      <item>
       <spacer name="horizontalSpacer_2" >
@@ -116,39 +116,37 @@ p, li { white-space: pre-wrap; }
     </layout>
    </item>
    <item row="5" column="0" colspan="2" >
-    <spacer name="horizontalSpacer" >
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0" >
-      <size>
-       <width>349</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="5" column="2" >
-    <widget class="QPushButton" name="pushButton" >
-     <property name="text" >
-      <string>Close</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout_2" >
+     <item>
+      <widget class="QPushButton" name="advanced" >
+       <property name="text" >
+        <string>Advanced</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer" >
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>349</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton" >
+       <property name="text" >
+        <string>Close</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
-  <zorder>label</zorder>
-  <zorder>label_2</zorder>
-  <zorder>treeWidget</zorder>
-  <zorder>pushButton</zorder>
-  <zorder>scrollArea</zorder>
-  <zorder>textBrowser</zorder>
-  <zorder>label_3</zorder>
-  <zorder>reg</zorder>
-  <zorder>configure</zorder>
-  <zorder>horizontalSpacer_2</zorder>
-  <zorder>jids</zorder>
-  <zorder>add</zorder>
-  <zorder>horizontalSpacer</zorder>
  </widget>
  <resources/>
  <connections>
