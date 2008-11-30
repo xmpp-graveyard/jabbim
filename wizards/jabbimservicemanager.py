@@ -108,7 +108,7 @@ class jabbimServiceManager(QtGui.QDialog):
 			self.ui.jids.show()
 			self.addFunc=addWeather
 		else:
-			d=self.main().client.getRegisterForm(jid)
+			d=self.main().client.getRegisterForm(unicode(item.data(0,32).toString()))
 			d.addCallback(self._onRegister)
 
 	def itemChanged(self,item,old):
@@ -128,7 +128,7 @@ class jabbimServiceManager(QtGui.QDialog):
 	
 	def loadServices(self):
 		self.ui.treeWidget.clear()
-		trans=['icq.netlab.cz','icq.jabber.cz','icq.jabbim.cz']
+		trans=['icq.netlab.cz','icq.jabber.cz','icq.jabbim.cz','sms.netlab.cz','sms.jabbim.cz']
 		servs=['dict.jabbim.cz','weather.netlab.cz','disk.jabbim.cz']
 		transports={}
 		services={}
@@ -143,7 +143,7 @@ class jabbimServiceManager(QtGui.QDialog):
 					services[transport]=True
 					break
 			for transport in transports:
-				if jd==transport:
+				if self.main().getJid(jd).userhost()==transport:
 					transports[transport]=True
 					break
 
@@ -151,6 +151,7 @@ class jabbimServiceManager(QtGui.QDialog):
 		self.addService(self.tr("Dictionaries"),"dict.jabbim.cz",self.tr("<b>Dictionaries</b><br/>Dictionaries service allows you to translate words between languages from your Jabbim client."),services["dict.jabbim.cz"])
 		self.addService(self.tr("Weather"),"weather.netlab.cz",self.tr("<b>Weather</b><br/>Weather service allows you to see actual weather in big cities."),services["weather.netlab.cz"])
 		self.addService(self.tr("Jabber Disk"),"disk.jabbim.cz",self.tr("<b>Jabber Disk</b><br/>Jabber Disk allows you to upload files to Jabbim server where they can be downloaded by your friends."),services["disk.jabbim.cz"])
+		self.addService(self.tr("SMS Vodafone/O2"),"sms.netlab.cz",self.tr("<b>SMS Vodafone/O2</b><br/>SMS Vodafone/O2 allows you to send SMS messages straight from your Jabbim Client."),transports["sms.netlab.cz"])
 		if transports["icq.netlab.cz"]:
 			self.addService(self.tr("ICQ"),"icq.netlab.cz",self.tr("<b>ICQ</b><br/>ICQ transport allows you to chat with your friends who use ICQ."),transports["icq.netlab.cz"])
 		elif transports["icq.jabbim.cz"]:
