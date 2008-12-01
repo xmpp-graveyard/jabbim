@@ -97,11 +97,11 @@ class Client(derived):
 		self.caps_node = 'http://dev.jabbim.cz/jabbim/caps'
 
 		self.isVip=False
-		
+
 		self.discofeatures = {} # node: [feature1, feature2]
 		self.discoitems = {None:[],"http://jabber.org/protocol/commands":[]}
 		self.ft_proxies = {
-		'proxy.jabbim.cz':[] 
+		'proxy.jabbim.cz':[]
 		}
 		self.ft = {}
 		self.last = 0
@@ -142,7 +142,7 @@ class Client(derived):
 		self.registerFeature('urn:xmpp:bob')
 		self.registerFeature('http://dev.jabbim.cz/jabbim/treeft')
 		self.identity = 'client/pc'
-		
+
 		self.caps_cache = {} # 'ext': (identity,[feature1, feature2])
 		self.rebuildCaps()
 		self.evil = False
@@ -162,7 +162,7 @@ class Client(derived):
 		self.bobDef = ConfigObj(self.main.realHomeDir+'/bobCache/bob.def',encoding='UTF8')
 		self.bobCacheDir =self.main.realHomeDir+'/bobCache/'
 #		self.bobMine = ConfigObj(self.main.realHomeDir+'/bobCache/mine.def',encoding='UTF8')
-		
+
 		path = self.main.realHomeDir+'/avatars/'
 
 		self.main.cache.get_caps().addCallback(self._cacheCaps)
@@ -172,7 +172,7 @@ class Client(derived):
 		self.dispatcher.registerHandler('on_GCpresenceError', self.on_GCpresenceError, 'on_GCpresenceError')
 		self.dispatcher.registerHandler('on_GCmessage', self.on_GCmessage, 'on_GCmessage')
 		self.dispatcher.registerHandler('on_authd', self.on_authd, 'on_authd')
-		
+
 		self.dispatcher.registerHandler('on_ftEnd', self.on_ftEnd, 'on_ftEnd')
 		self.dispatcher.registerHandler('on_ftTransfered', self.on_ftTransfered, 'on_ftTransfered')
 		self.dispatcher.registerHandler('on_receivedFiles', self.on_receivedFiles, 'on_receivedFiles')
@@ -195,14 +195,14 @@ class Client(derived):
 		self.FT = ft.FTInit(self)
 		self.jingle = jingle.JingleInit(self)
 #		self.archive = archive.ArchiveInit(self)
-		
+
 		self.proxy = None
-	
+
 
 	def chyba(self, err):
 #		print err
 		err.printBriefTraceback()
-	
+
 	def getAvatarImg(self, jd):
 		#vrati QPixmap nebo None
 		if not jd or jd=="None":
@@ -214,7 +214,7 @@ class Client(derived):
 			jid = jd.userhost()
 		if self.avatarDef.has_key(jid):
 			return self.avatarImg.get(self.avatarDef[jid], None)
-	
+
 	def cacheCaps(self, ext, features, identity):
 		self.caps_cache[ext] = [identity,features]
 		self.main.cache.set_caps(ext, features, identity)
@@ -228,14 +228,14 @@ class Client(derived):
 				if caps[0] == '':
 					caps[0] = line[2]
 				self.caps_cache[line[0]] = caps
-				
+
 	def rebuildCaps(self):
 		features = []
 		for f in self.discofeatures[None]:
 			features.append(f[0])
 		self.caps_ext = self.calcCapsExt(features = features, identity = [self.identity])
 		self.cacheCaps(self.caps_ext, features, self.identity)
-			
+
 
 	def heartbeat(self):
 		log.msg('heartbeat')
@@ -249,11 +249,11 @@ class Client(derived):
 			d.addCallback(self._heartbeat)
 			d.addErrback(self._heartbeatErr)
 			return d
-	
+
 	def _heartbeat(self, el):
 		log.msg('heartbeat ok')
 		self.hbFails = 0
-	
+
 	def _heartbeatErr(self, err):
 		if err.type == TimeoutError:
 			log.msg('heartbeat failed')
@@ -282,15 +282,15 @@ class Client(derived):
 		self.discoitems = {None:[],"http://jabber.org/protocol/commands":[]}
 		self.isVip=False
 		self.reactor.callFromThread(self.on_init)
-		
+
 		if JID != self.jid.full():
 			self.oldstatus = None
-			
+
 		self.jid = jid.JID(JID)
 		self.password  = password
 		self.host = self.jid.host
 		self.port = int(port)
-		
+
 		if boshURL != '':
 			try:
 				from urlparse import urlparse
@@ -352,16 +352,16 @@ class Client(derived):
 
 
 	def _dnsLookup(self, results):
-		
+
 		self.connections = []
 		resp = results[0][1]
-		
+
 		if not results[0][0] or len(resp[0]) == 0:
 			self._dnsLookupErr(resp)
 			return
 		for r in resp[0]:
 			self.connections.append((unicode(r.payload.target), int(r.payload.port)))
-			
+
 		if results[1][0]:
 			txt = results[1][1]
 			bind = None
@@ -382,14 +382,14 @@ class Client(derived):
 		else:
 			self._dnsLookupErr(resp)
 			return
-			
-		
+
+
 		self.doConnect()
 #		self._connect(unicode(r[4][0]), int(r[4][1]))
-	
+
 	def _dnsLookupErr(self, resp):
 		log.err('DNS err: '+ unicode(resp))
-		
+
 		self.connections.append((self.host, self.port))
 		self.connections.append(('conn443.netlab.cz', 443))
 		self.connections.append(('http://bind.jabbim.cz:80/', )) #just give them chance
@@ -423,8 +423,8 @@ class Client(derived):
 				self.doConnect()
 			self._connect(bhost, int(bport), boshURL)
 
-				
-	def _connect(self, host, port, boshURL = ''): 
+
+	def _connect(self, host, port, boshURL = ''):
 
 		if boshURL != '':
 			log.msg('.'+boshURL+'.')
@@ -432,7 +432,7 @@ class Client(derived):
 
 			self.factory = bclient.BOSHClientFactory(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang},  proxy  = self.proxy)
 #			self.factory = bosh_wokkel.BOSHClient(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang})
-			
+
 			self.IBBonly = True
 		else:
 			self.factory = client.XMPPClientFactory(self.jid,self.password)
@@ -446,28 +446,28 @@ class Client(derived):
 		self.factory.addBootstrap('//event/stream/error', self._streamError)
 		self.factory.addBootstrap('//event/stream/end', self._streamEnd)
 		self.factory.addBootstrap('/*', self.bootLog)
-		
+
 		self.factory.clientConnectionLost = self.connectionLost
 		self.factory.clientConnectionFailed = self.connectionFailed
-		
+
 		#self.connection = reactor.connectTCP(host,port, self.factory)
 
 		if self.proxy != None and self.IBBonly:
 			self.connection = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory)
-			
+
 		else:
 			self.connection = reactor.connectTCP(host,port, self.factory)
 		self.reactor.callFromThread(self.on_connect)
 
 		log.msg('started - ' + unicode(time.time()))
-		
-		
+
+
 	def bootLog(self, el):
 		if self.log:
 			self.reactor.callFromThread(self.on_xml,u'BOOT: ' + el.toXml())
-			
+
 	def connectionLost(self, connector, reason=protocol.connectionDone):
-		
+
 		if self.IBBonly and self.connection != None:
 			self.connection.connect()
 #			self.connection.factory.bosh_client.manager.restart()
@@ -493,7 +493,7 @@ class Client(derived):
 		self.reactor.callFromThread(self.main._disconnect,'lost')
 
 		self.reactor.callFromThread(self.on_disconnect)
-	
+
 	def connectionFailed(self, connector, reason=protocol.connectionDone):
 		log.msg('connection failed!')
 		log.msg( self.connections)
@@ -506,12 +506,13 @@ class Client(derived):
 	def _streamError(self,  xs):
 		log.err('stream error')
 		el=xs.value.getElement()
+		log.msg(el.toXml())
 		if el.firstChildElement().name == 'conflict':
 			self.main.reconnect = False
 			log.msg('stream error with conflict')
 
 	def _streamEnd(self, el):
-		
+
 		log.msg('stream end')
 		log.msg(dir(el))
 		try:
@@ -521,17 +522,17 @@ class Client(derived):
 		if self.factory:
 			self.factory.stopTrying()
 		pass
-		
+
 	def _bind(self, el):
 		#experimental
 		log.msg('bind')
 		bind = el.firstChildElement()
 		jd = bind.firstChildElement().__str__()
 		self.jid = jid.JID(jd)
-		
+
 	def disconnect(self):
-		
-		
+
+
 		try:
 			self.xping.stop()
 		except:
@@ -562,7 +563,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/presence[@type='error']", self.presence.onPresenceError, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:version']", self.onVersion, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#info']", self.onDiscoInfo, 1)
-		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#items']", self.onDiscoItems, 1) 
+		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='http://jabber.org/protocol/disco#items']", self.onDiscoItems, 1)
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/command[@xmlns='http://jabber.org/protocol/commands'][@node]", self.onCommand, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/query[@xmlns='jabber:iq:last']", self.onLast, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/time[@xmlns='urn:xmpp:time']", self.onTime202, 1)
@@ -589,7 +590,7 @@ class Client(derived):
 		self.xmlstream.addObserver("/iq[@type='set'][@id]/tree[@xmlns='http://dev.jabbim.cz/jabbim/treeft']", self.FT.onReceiveFiles, 1)
 		self.xmlstream.addObserver("/iq[@type='get'][@id]/start[@xmlns='http://jabber.org/protocol/sipub']", self.FT.onSIPUB, 1)
 
-		self.xping.start(100, False)		
+		self.xping.start(100, False)
 		self.getPrivacy().addCallback(self.getMetacontacts).addErrback(self.getMetacontacts)
 #		self.getMetacontacts()
 		self.getBookmarks()
@@ -599,13 +600,13 @@ class Client(derived):
 		self.roster['users'][self.jid.userhost()] = Contact(self, self.jid.userhost(), '', 'both', [], []) #add selfcontact to our representation of roster
 		self.reactor.callLater(0,self.main._connected)
 		#self.main._connected()
-		
+
 		self.commands = Commands(self.main)
 		try:
 			public = self.main.config['adhocAllow']
 		except:
 			public = False
-			
+
 		self.commands.registerNode("http://jabber.org/protocol/rc#set-status", "Change status", rc.fSetStatus, public = public)
 		self.commands.registerNode("http://jabber.org/protocol/rc#leave-groupchats", "Leave groupchats", rc.fLeaveGC, public = public)
 		self.commands.registerNode("http://dev.jabbim.cz/jabbim/rc#resend-file", "Resend file", rc.ResendFile, public = public)
@@ -614,7 +615,7 @@ class Client(derived):
 #		def pis(co):
 #			print co
 		self.callRemote('rpc@jabbim.cz/service', 'isVIP', (self.jid.userhost(),)).addCallback(self._isVip)
-		
+
 		self.dispatcher.publishEvent('on_authd')
 
 	def _isVip(self,data):
@@ -624,8 +625,8 @@ class Client(derived):
 	def _gotServices(self, res):
 		for jid in self.disco[self.jid.host][None]['items'].iterkeys():
 			self.getDiscoInfo(jid)
-			
-		
+
+
 	def _pepSupport(self, res):
 		log.msg('pep support arrived')
 		for key,  val in self.disco[self.jid.host][None]['identities'].iteritems():
@@ -634,17 +635,17 @@ class Client(derived):
 				log.msg( 'we got a PEP support')
 				self.pep = True
 #				self.sendPEP('tune', {})
-	
+
 	def _pepReceived(self,  el):
 		log.msg(el.toXml())
-	
+
 	def registerFeature(self, feature, node = None, identity = None):#{"category":None,"type":None,"name":None}):
 		if self.discofeatures.has_key(node):
 			self.discofeatures[node].append((feature,))
 		else:
 			self.discofeatures[node] = []
 			self.discofeatures[node].append((feature, identity))
-	
+
 	def unregisterFeature(self, feature, node = None):
 		if self.discofeatures.has_key(node):
 			if (feature,) in self.discofeatures[node]:
@@ -706,7 +707,7 @@ class Client(derived):
 							#self.on_rosterAddUser(contact)
 							# add user item to the group
 							#rosterItems.append(self.main._addUser(itemjid,name,self.roster['groups'][group]))
-						
+
 					elif subscription != 'remove'  and self.roster['users'].has_key(itemjid):
 						contact = self.roster['users'][itemjid]
 						contact.name = name
@@ -720,12 +721,12 @@ class Client(derived):
 		iq['type'] = 'result'
 #		self.on_xml(iq.toXml())
 		self.xmlstream.send(iq)
-		
+
 		self.dispatcher.publishEvent('on_rosterUpdate', el) #not usefull for now, doing this for plugins in future [sic!]
 
 
 
-		
+
 	def _rosterUpdateDone(self, el, callback, params):
 		if callback != None:
 			self.reactor.callFromThread(callback, params)
@@ -733,7 +734,7 @@ class Client(derived):
 
 
 
-	def _noVcard(self, err, jid): 
+	def _noVcard(self, err, jid):
 		log.err(jid + ' no vcard available')
 		log.msg('chci ulozit ' + jid )
 #		self.reactor.callFromThread(self.main.cache.set_avatar,jid, ['nic', 'nic'])
@@ -741,13 +742,13 @@ class Client(derived):
 		self.avatarDef[jid] = 'None'
 		self.avatarDef.write()
 		self.reactor.callFromThread(self.on_avatarUpdate,jid)
-		
+
 		return err
 
 	def _vcardReceived(self, el):
 		log.msg('vcard received')
 		vcard = el.firstChildElement()
-		card = {} 
+		card = {}
 		if vcard == None :
 			return
 		for x in vcard.elements():
@@ -834,12 +835,12 @@ class Client(derived):
 			log.msg(message)
 
 
-	
+
 	def _metacontactsErrReceived(self,  err):
 		log.msg('meta error')
 		self.getRoster()
 		self.reactor.callFromThread(self.on_metaFail,err)
-		
+
 	def _metacontactsReceived(self,  el):
 		log.msg( 'metacontacts received')
 		q = el.firstChildElement()
@@ -858,9 +859,9 @@ class Client(derived):
 	def addContact(self, jid, msg, name='', groups=[]):
 		log.msg( 'add contact')
 		self.sendRosterUpdate(jid, name, 'none', groups, self._contactAdded, params = {'msg':msg, 'jid':jid})
-	
+
 	def _contactAdded(self, params):
-		
+
 		self.sendPresence(to = params['jid'], status = params['msg'], typ = 'subscribe')
 
 
@@ -892,7 +893,7 @@ class Client(derived):
 			err.addElement('bad-request')
 #			self.on_xml(el.toXml())
 			self.xmlstream.send(el)
-	
+
 #	def logIt(self, el):
 #		if self.log:
 #			self.on_xml(el.toXml())
@@ -902,19 +903,19 @@ class Client(derived):
 				self.reactor.callFromThread(self.on_xml,u'IN: ' + unicode(buf, 'utf8', 'replace'))
 			except:
 				self.reactor.callFromThread(self.on_xml,u'IN: ' + buf)
-	
+
 	def rawDataOut(self, buf):
 		if self.log:
 			try:
 				self.reactor.callFromThread(self.on_xml,u'OUT: ' + unicode(buf, 'utf8', 'replace'))
 			except:
 				self.reactor.callFromThread(self.on_xml,u'OUT: ' + buf)
-			
+
 	def _onRosterArrive(self, el):
 		log.msg( 'roster arrived')
 		ln = 0
 		hosts = [] #for disco info
-		
+
 		for child in el.elements():
 			if child.name == "query":
 				allGroups=['Unknown']
@@ -959,9 +960,9 @@ class Client(derived):
 		for host in hosts:
 			if self.getIdentity(host) == None:
 				self.getDiscoInfo(host)
-				
-		
-		
+
+
+
 		log.msg( 'roster arrived')
 #		print self.oldstatus
 #		if self.oldstatus != None:
@@ -979,7 +980,7 @@ class Client(derived):
 	def _authfailed(self,xmlstream):
 		log.msg( "auth_failed")
 		log.err('init failed!')
-		
+
 		self.main._disconnect(error = 'auth')
 		self.disconnect()
 		self.on_authFailed(xmlstream)
@@ -1006,15 +1007,15 @@ class Client(derived):
 		resource = frm.resource
 		if self.roster['users'].has_key(frm.userhost()):
 			self.roster['users'][frm.userhost()].setFeatures(resource, features, identity)
-	
+
 	def calcCapsExt(self, identity = ['client/pc'], features = []):
 		identity.sort()
 		features.sort()
-		
+
 		out = '<'.join(identity) + '<' + '<'.join(features)
 		out = b64encode(sha1(out).digest())
 		return out
-		
+
 
 	def onVersion(self, el):
 		log.msg('sending version info')
@@ -1032,7 +1033,7 @@ class Client(derived):
 		self.xmlstream.send(iq)
 
 
-		
+
 	def _versionReceived(self, el):
 		log.msg('version info received')
 		name = version = os = None
@@ -1094,7 +1095,7 @@ class Client(derived):
 			lang = el["xml:lang"]
 		except:
 			lang = None
-			
+
 			try:
 				lang = el[(u'http://www.w3.org/XML/1998/namespace', u'lang')]
 			except:
@@ -1126,7 +1127,7 @@ class Client(derived):
 						allowed = (ji in public) or (ji == self.jid.userhost())
 				else:
 					allowed = True
-					
+
 				if allowed:
 					i = q.addElement("item")
 					i["jid"] = item["jid"]
@@ -1157,8 +1158,8 @@ class Client(derived):
 			allowed = public
 		else:
 			allowed = (ji in public) or (ji == self.jid.userhost())
-			
-		
+
+
 		try:
 			lang = el["xml:lang"]
 		except:
@@ -1183,7 +1184,7 @@ class Client(derived):
 				return
 			if not allowed:
 				raise RuntimeError("forbidden")
-			
+
 			self.commands.sessions[sid].execStage(
 					self.commands.sessions[sid].nextstages[action],
 					el["id"],
@@ -1206,7 +1207,7 @@ class Client(derived):
 				error["type"] = "cancel"
 				error.addElement("forbidden", "urn:ietf:params:xml:ns:xmpp-stanzas")
 				iq.send()
-				
+
 
 	def onBOBData(self,  el):
 		self.disp(el['id'])
@@ -1225,15 +1226,14 @@ class Client(derived):
 			el.addElement('error')
 			el.error.addElement('not-found')
 		self.xmlstream.send(el)
-	
+
 	def getBOBData(self,  to,  cid):
 		def _loadBOBLink(cid):
 			if cid != None:
-				
 				return self.bobDef[cid]
 			else:
 				return cid
-		
+
 		def _writeBOBData(el,  cid):
 			log.msg('data received!')
 			frm = jid.JID(el['from'])
@@ -1245,14 +1245,16 @@ class Client(derived):
 				fp.close()
 			else:
 				log.err('cid is not hash!?')
-			self.bobDef.write()	
+
 			return self.bobCacheDir+cid
-		
+
 		to = jid.JID(to)
 		if self.bobDef.has_key(cid):
 			return threads.deferToThread(_loadBOBLink, cid)
-			
+
 		self.bobDef[cid] = self.bobCacheDir+cid
+		self.bobDef.write()
+
 #		if not self.hasFeature(to.full(), 'urn:xmpp:tmp:bob'):
 #			return threads.deferToThread(_loadBOBLink, None)
 		iq = IQ(self.xmlstream, 'get')
@@ -1416,7 +1418,7 @@ class Client(derived):
 		self.disp(iq["id"])
 		d.addCallback(self._activeRecieved, False).addErrback(self.chyba)
 
-	def getPrivacy(self):	
+	def getPrivacy(self):
 		log.msg('requesting priacy lists')
 		iq = IQ(self.xmlstream, 'get')
 		q = iq.addElement('query', 'jabber:iq:privacy')
@@ -1424,7 +1426,7 @@ class Client(derived):
 		self.disp(iq['id'])
 		d.addCallback(self._privacyReceived).addErrback(self._noPrivacy).addErrback(self.chyba)
 		return d
-		
+
 	def _noPrivacy(self, err):
 		log.msg('jabber:iq:privacy is unsupported here .. damned gtalk')
 		self.privacy = False
@@ -1443,7 +1445,7 @@ class Client(derived):
 			if child.name == "active":
 				active = child.attributes["name"]
 		log.msg("lists: %s; active: %s" % (", ".join(lists), active))
-		
+
 		def getActive(el,name):
 			log.msg("Requesting active privacy list: %s." % name)
 			iq	= IQ(self.xmlstream, "get")
@@ -1569,13 +1571,13 @@ class Client(derived):
 		if el.name == 'iq':
 			self.disp(el['id'])
 		self.on_verify(id, thread, props, sender, typ)
-	
+
 	def replyVerify(self, id, thread, props, frm, typ, result = False):
 		if typ=='iq' and result:
 			el = Element((None,'iq'))
 			el['type'] = 'result'
 			el['id'] = id
-		
+
 		elif typ=='iq' and not result:
 			el = Element((None,'iq'))
 			el['type'] = 'error'
@@ -1615,11 +1617,11 @@ class Client(derived):
 				forms = child
 			else:
 				legacy[child.name] = unicode(child)
-		
+
 		if callback != None:
 			callback(jid, legacy, forms)
 		return (jid, legacy, forms)
-	
+
 	def _onSearchGet(self, el, jid):
 		legacy = {}
 		forms = None
@@ -1630,7 +1632,7 @@ class Client(derived):
 			else:
 				legacy[child.name] = unicode(child)
 		return (jid, legacy, forms)
-	
+
 	def _onSearchResult(self, el, jid):
 		legacy = {}
 		forms = None
@@ -1641,7 +1643,7 @@ class Client(derived):
 			else:
 				legacy[child.name] = unicode(child)
 		return (jid, legacy, forms)
-				
+
 	def _onMUCConfigReceived(self, el, callback, jid):
 		forms = None
 		query = el.firstChildElement()
@@ -1651,7 +1653,7 @@ class Client(derived):
 		if callback != None:
 			callback(jid, forms)
 		return (jid,  forms)
-	
+
 	def _onMUCListGet(self, el, jid):
 		query = el.firstChildElement()
 		items = {}
@@ -1659,9 +1661,9 @@ class Client(derived):
 			items[child['jid']] = child.attributes
 			items[child['jid']]['reason'] = unicode(child)
 		return jid, items
-	
+
 	def _onMUCLists(self, results, jid, types):
-		
+
 		seznamy = {}
 		for x in range(0, len(types)):
 			seznamy[types[x]] = results[x][1]
@@ -1679,16 +1681,16 @@ class Client(derived):
 
 	def onEvil(self, el):
 		log.msg('we are tainted by evil')
-		frm = el['from'] 
+		frm = el['from']
 		typ = el.name
 		self.dispatcher.publishEvent('on_evil', frm, typ)
-	
+
 	def onRosterX(self, el):
 		self.disp(el['id'])
 		frm = el['from']
 		x = el.firstChildElement()
 		self._processRosterX(frm, x, el['id'])
-	
+
 	def _processRosterX(self, frm, x, id = None):
 		# for now only additions are processed
 		out = []
@@ -1710,10 +1712,10 @@ class Client(derived):
 				if self.getContactByJid(item['jid']) != None:
 					typ = 'delete'
 					out.append(item.attributes)
-				
+
 		if len(out)>0:
 			self.on_rosterx(frm, out, id, typ)
-	
+
 	def _rosterxResult(self, frm, id, ok = False):
 		if ok:
 			iq = Element((None,'iq'))
@@ -1730,7 +1732,7 @@ class Client(derived):
 			error['code'] = '501'
 			error.addElement('not-authorized')
 		self.xmlstream.send(iq)
-		
+
 	def disp(self, id):
 		self.idlist.append(id)
 

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -186,6 +186,9 @@ class clientClass(pyxl.client.Client):
 		log.msg('on_pep')
 		# it's our own pep
 		if frm == self.jid.userhost():
+			log.msg('received my own PEP payload')
+			log.msg(payload)
+			log.msg(ns)
 			self.main.ui.selfAvatar.refreshToolTip()
 		# change information in chat tab if we have opened it
 		tab,index=self.main.chat.findTab(frm,typ=['chat'])
@@ -4286,7 +4289,7 @@ class mainWindow(QtGui.QMainWindow):
 		if self.plugins.has_key(plugin):
 			return self.plugins[plugin]['module']
 		else:
-			return False
+			return None
 		
 	def loadPlugins(self):
 		"""

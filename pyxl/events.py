@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 from twisted.python import log
-import traceback
+import traceback, time
 import StringIO
 
 
@@ -45,9 +45,12 @@ class EventDispatcher:
 	
 	def publishEvent(self, name, *args, **kwargs):
 		if self.callbacks.has_key(name) and self.sorted.has_key(name):
+			t1 = time.time()
 			for cb in self.sorted[name]:
 				try:
+					t2 = time.time()
 					vysl = cb['method'](*args, **kwargs)
+					log.msg('handler %s executed in %i'%(unicode(cb), time.time()-t2))
 					if vysl == False:
 						return False
 				except Exception, ex:
@@ -55,6 +58,7 @@ class EventDispatcher:
 					log.msg('In function:'+unicode(cb['method']))
 					message = traceback.format_exc()
 					log.msg(message)
+			log.msg('%s event executed in %i s'%(name, time.time()-t1))
 		else:
 			log.msg('no handler for %s'%name)
 		return True
