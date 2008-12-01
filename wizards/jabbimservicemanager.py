@@ -160,14 +160,14 @@ class jabbimServiceManager(QtGui.QDialog):
 			self.addService(self.tr("ICQ"),"icq.jabber.cz",self.tr("<b>ICQ</b><br/>ICQ transport allows you to chat with your friends who use ICQ."),transports["icq.jabber.cz"])
 		#self.addService(self.tr("Weather"),"weather.jabbim.cz",self.tr("<b>Weather</b><br/>Weather service allows you to see actual weather in big cities.<br/>"),transports["weather.netlab.cz"])
 		self.ui.treeWidget.resizeColumnToContents(0)
-		self.ui.treeWidget.setMaximumWidth(150)
-		self.ui.treeWidget.setMinimumWidth(150)
+		self.ui.treeWidget.setMaximumWidth(180)
+		self.ui.treeWidget.setMinimumWidth(180)
 		self.ui.treeWidget.sortItems(2,QtCore.Qt.AscendingOrder)
 	
 	def addService(self,name,jid,description,registered=False):
 		item=QtGui.QTreeWidgetItem(self.ui.treeWidget)
 		item.setText(1,name)
-		item.setIcon(0,self.main().getIcon("1@"+jid,status="online",size="16x16"))
+		item.setIcon(1,self.main().getIcon("1@"+jid,status="online",size="16x16"))
 		item.setData(0,32,QtCore.QVariant(unicode(jid)))
 		item.setData(1,32,QtCore.QVariant(unicode(description)))
 		if registered:

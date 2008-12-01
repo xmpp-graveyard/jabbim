@@ -35,10 +35,15 @@ class Plugin(plugins.PluginBase):
 		self.current = {}
 		if main:
 			self.loadConfig()
-			threads.deferToThread(self.loadCurrentEmoticons)
+			self.registerHandler('on_authd', self.on_authd)
+			if self.main.isConnected() and self.main.client.xmlstream:
+				self.on_authd()
 		else:
 			self.loadConfig(homedir)
-		
+	
+	def on_authd(self):
+		threads.deferToThread(self.loadCurrentEmoticons)
+	
 	def loadCurrentEmoticons(self):
 		for k in sorted(self.main.emoticonsWidget.smileys.iterkeys(), key=len, reverse=True):
 			v = self.main.emoticonsWidget.smileys[k]
