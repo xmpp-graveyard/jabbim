@@ -2203,11 +2203,15 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusLine.defaultText=unicode(self.tr("Enter status message"))
 		self.ui.transportsWidget.l=QtGui.QHBoxLayout(self.ui.transportsWidget)
 		self.ui.transportsWidget.l.setContentsMargins(0,0,0,0)
+		self.ui.transportsToolbar=QtGui.QToolBar(self.ui.transportsWidget)
+		self.ui.transportsWidget.layout().addWidget(self.ui.transportsToolbar)
 		self.ui.transportsWidget.l.addStretch()
 		self.ui.transportsWidget.button=QtGui.QToolButton(self.ui.transportsWidget)
 		self.ui.transportsWidget.button.setPopupMode(QtGui.QToolButton.InstantPopup)
 		self.ui.transportsWidget.button.setArrowType(QtCore.Qt.DownArrow)
 		self.ui.transportsWidget.button.setMenu(self.ui.menuPlugins)
+		self.ui.pluginsToolbar=QtGui.QToolBar(self.ui.transportsWidget)
+		self.ui.transportsWidget.layout().addWidget(self.ui.pluginsToolbar)
 		self.ui.transportsWidget.layout().addWidget(self.ui.transportsWidget.button)
 
 		# menuView QActions
@@ -3729,11 +3733,11 @@ class mainWindow(QtGui.QMainWindow):
 				else:
 					ic=self.getIcon("1@"+transport,status=show,size="16x16")
 				self.tray.showMessage("debug "+self.now(),"adding transport "+unicode(transport))
-				self.transports[transport]=QtGui.QToolButton(self.ui.transportsWidget)
+				
 				#self.transports[transport].setMaximumSize(QtCore.QSize(16777215,20))
 				#self.transports[transport].setMinimumSize(QtCore.QSize(32,32))
-				self.transports[transport].setIconSize(QtCore.QSize(16,16))
-				self.transports[transport].setIcon(ic)
+				#self.transports[transport].setIconSize(QtCore.QSize(16,16))
+				#self.transports[transport].setIcon(ic)
 
 				text='<table><tr>'
 				if os.path.isfile(self.homeDir+'/avatars/'+unicode(self.config['jid'])):
@@ -3749,9 +3753,8 @@ class mainWindow(QtGui.QMainWindow):
 					text+='<img src="images/16x16/status/jabber-offline.png">'
 				#text+='<font size="-1">%s</font>' % (status)
 				text+="</td><td>"+debug+"</td></tr></table>"
-				self.transports[transport].setToolTip(text)
 
-				menu=QtGui.QMenu(transport,self.transports[transport])
+				menu=QtGui.QMenu(transport,self.ui.transportsToolbar)
 				menu.setIcon(self.getIcon(status=show,size="16x16"))
 				# add custom messages and shows QActions to the transports QMenu
 				# it's the same code (principle) as above, but it uses different QAction.data(),
@@ -3788,11 +3791,15 @@ class mainWindow(QtGui.QMainWindow):
 				#self.transports[transport]=menu
 
 
-				self.transports[transport].setPopupMode(QtGui.QToolButton.InstantPopup)
-				self.transports[transport].setArrowType(QtCore.Qt.NoArrow)
+				#self.transports[transport].setPopupMode(QtGui.QToolButton.InstantPopup)
+				#self.transports[transport].setArrowType(QtCore.Qt.NoArrow)
 				app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusWidgetChanged)
+				def call_it(): self.showTransportMenu(self.transports[transport])
+				self.transports[transport]=self.ui.transportsToolbar.addAction(ic,"",call_it)#QtGui.QToolButton(self.ui.transportsWidget)
+				#QtCore.QObject.connect(self.transports[transport],QtCore.SIGNAL("triggered()"),self.transports[transport].toggle)
+				self.transports[transport].setToolTip(text)
 				self.transports[transport].setMenu(menu)
-				self.ui.transportsWidget.layout().insertWidget(0,self.transports[transport])
+				#self.ui.transportsWidget.layout().insertWidget(0,self.transports[transport])
 				#self.statusWidgetMenu.addMenu(menu)
 			#self.statusWidgetMenu.addSeparator()
 		else:
@@ -3812,6 +3819,9 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.statusWidget.setMenu(self.statusWidgetMenu)
 		app.connect(self.statusWidgetMenu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusWidgetChanged)
 		self.buildTrayMenu()
+
+	def showTransportMenu(self,action):
+		action.menu().popup(QtGui.QCursor.pos())
 
 	def moodChanged(self,action):
 		"""
@@ -5274,11 +5284,12 @@ class mainWindow(QtGui.QMainWindow):
 			MainWindow.unloadPlugin(i)
 		self._reloadPlugins()
 
-		for transport in self.transports.keys():
-			if self.transports[transport]:
-				self.ui.transportsWidget.layout().removeWidget(self.transports[transport])
-				self.transports[transport].setParent(None)
-				self.transports[transport].deleteLater()
+		self.ui.transportsToolbar.clear()
+		#for transport in self.transports.keys():
+			#if self.transports[transport]:
+				#self.ui.transportsWidget.layout().removeWidget(self.transports[transport])
+				#self.transports[transport].setParent(None)
+				#self.transports[transport].deleteLater()
 		self.transports={}
 
 		if self.client:

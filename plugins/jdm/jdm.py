@@ -873,10 +873,7 @@ class Plugin(plugins.PluginBase):
 	
 
 	def buildMainWindowToolBar(self):
-		b=self.mainWindowToolBarButton()
-		b.setIconSize(QtCore.QSize(16,16))
-		b.setIcon(QtGui.QIcon("%s/jdisk-public-24.png" % self.pluginDir))
-		b.connect(b,QtCore.SIGNAL("clicked()"),self.showSlot)
+		self.toolBarButton = self.mainWindowToolBarAction(QtGui.QIcon("%s/jdisk-public-24.png" % self.pluginDir),"",self.showSlot)
 
 	def showSlot(self,jid=None,typ=None):
 		self.wizard.show()

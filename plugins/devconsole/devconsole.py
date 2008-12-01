@@ -135,10 +135,7 @@ class Plugin(plugins.PluginBase):
 		menu.addAction("Show console",self.showSlot)
 	
 	def buildMainWindowToolBar(self):
-                self.toolBarButton = self.mainWindowToolBarButton()
-                self.toolBarButton.setIconSize(QtCore.QSize(16,16))
-		self.toolBarButton.setIcon(QtGui.QIcon("%s/icon.png" % self.pluginDir))
-                QtCore.QObject.connect(self.toolBarButton, QtCore.SIGNAL("clicked()"), self.showSlot)
+		self.toolBarButton = self.mainWindowToolBarAction(QtGui.QIcon("%s/icon.png" % self.pluginDir),"",self.showSlot)
 	
 	def on_remove(self):
 		if self.config['historySave']=='close':

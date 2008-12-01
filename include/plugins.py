@@ -50,6 +50,7 @@ class PluginBase(object):
 		self._translator=None #: QTranslator
 		self._loadedWidgets=[] #: widgets loaded by this plugin
 		self._registeredFeatures=[] #: features for Caps registered by this plugin
+		self._mainWindowActions=[]
 
 	def registerFeature(self,feature):
 		"""
@@ -107,11 +108,13 @@ class PluginBase(object):
 		menu=self.main.ui.menuPlugins.addMenu(unicode(self.name))
 		return menu
 
-	def mainWindowToolBarButton(self):
-		button=QtGui.QToolButton(self.main.ui.transportsWidget)
-		self.main.ui.transportsWidget.layout().insertWidget(self.main.ui.transportsWidget.layout().count()-1,button)
-		self.registerWidget(button)
-		return button
+	def mainWindowToolBarAction(self,icon,text,callback):
+		#button=QtGui.QToolButton(self.main.ui.transportsWidget)
+		#self.main.ui.transportsWidget.layout().insertWidget(self.main.ui.transportsWidget.layout().count()-1,button)
+		#self.registerWidget(button)
+		action = self.main.ui.pluginsToolbar.addAction(icon,text,callback)
+		self._mainWindowActions.append(action)
+		return action
 
 	def loadModule(self,file):
 		f=open(utils.path(file))
@@ -458,6 +461,9 @@ class PluginBase(object):
 		for i in range(int(len(self._loadedWidgets))):
 			self.unregisterWidget(self._loadedWidgets[0])
 			#del self._loadedWidgets[0]
+		for i in range(int(len(self._mainWindowActions))):
+			self.main.ui.transportsToolbar.removeAction(self._mainWindowActions[0])
+			del self._mainWindowActions[0]
 		# save config
 		self.writeConfig()
 		# unregister pyxl handlers
