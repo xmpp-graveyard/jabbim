@@ -157,6 +157,12 @@ class preferencesWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.moreChatSkins, QtCore.SIGNAL("clicked()"),self.getMoreChatskins)
 		QtCore.QObject.connect(self.ui.moreGroupchatSkins, QtCore.SIGNAL("clicked()"),self.getMoreChatskins)
 	
+	def show(self):
+		screen = QtGui.QDesktopWidget().screenGeometry()
+		size=self.main.preferencesWindow.geometry()
+		QtGui.QDialog.show(self)
+		self.move((screen.width()-size.width())/2,(screen.height()-size.height())/2)
+	
 	def getMoreChatskins(self):
 		if self.main.client:
 			d=extraDialog("chatskins",self.main,self.main)
