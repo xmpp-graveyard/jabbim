@@ -2527,7 +2527,6 @@ class mainWindow(QtGui.QMainWindow):
 
 		self.reconnect = True # :# True = Jabbim will reconnect after disconnect
 		self.active=True
-
 		# fill login form
 		self.fillLoginForm()
 		# load cache and create tables
@@ -5316,7 +5315,7 @@ class mainWindow(QtGui.QMainWindow):
 				log.err('can\'t stop xping')
  			# connection lost, let's wait for a while and then reconnect
 			MainWindow.tray.showMessage(self.tr("Connection lost! "),self.tr("Trying to reconnect ..  ") , QtGui.QSystemTrayIcon.Warning, 5000)
- 			MainWindow.plugins={}
+ 			#MainWindow.plugins={}
 # 			MainWindow.client = None
 			log.err('Connection Lost')
 			if msg != None and len(msg)>0:
