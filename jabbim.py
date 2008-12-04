@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -2204,6 +2204,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.transportsWidget.l=QtGui.QHBoxLayout(self.ui.transportsWidget)
 		self.ui.transportsWidget.l.setContentsMargins(0,0,0,0)
 		self.ui.transportsToolbar=QtGui.QToolBar(self.ui.transportsWidget)
+		self.ui.transportsToolbar.setIconSize(QtCore.QSize(16,16))
 		self.ui.transportsWidget.layout().addWidget(self.ui.transportsToolbar)
 		self.ui.transportsWidget.l.addStretch()
 		self.ui.transportsWidget.button=QtGui.QToolButton(self.ui.transportsWidget)
@@ -2211,6 +2212,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.transportsWidget.button.setArrowType(QtCore.Qt.DownArrow)
 		self.ui.transportsWidget.button.setMenu(self.ui.menuPlugins)
 		self.ui.pluginsToolbar=QtGui.QToolBar(self.ui.transportsWidget)
+		self.ui.pluginsToolbar.setIconSize(QtCore.QSize(16,16))
 		self.ui.transportsWidget.layout().addWidget(self.ui.pluginsToolbar)
 		self.ui.transportsWidget.layout().addWidget(self.ui.transportsWidget.button)
 
