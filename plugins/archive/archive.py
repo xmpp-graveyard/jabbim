@@ -591,7 +591,7 @@ class Plugin(plugins.PluginBase):
 		item=self.window.ui.seznam.currentItem()
 		jid = unicode(item.data(0,32).toString())
 		
-		self.window.ui.text.setText('')
+		self.window.ui.text.setHtml('')
 		datum=self.window.ui.calendar.selectedDate()
 		me=unicode(self.main.client.jid.user)
 
@@ -644,7 +644,7 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.search.show()
 			self.window.ui.searchText.setFocus(QtCore.Qt.MouseFocusReason)
 		else:
-			self.window.ui.text.setText('')
+			self.window.ui.text.setHtml('')
 			datum=self.window.ui.calendar.selectedDate()
 			me=unicode(self.main.client.jid.user)
 	

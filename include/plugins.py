@@ -462,7 +462,7 @@ class PluginBase(object):
 			self.unregisterWidget(self._loadedWidgets[0])
 			#del self._loadedWidgets[0]
 		for i in range(int(len(self._mainWindowActions))):
-			self.main.ui.transportsToolbar.removeAction(self._mainWindowActions[0])
+			self.main.ui.pluginsToolbar.removeAction(self._mainWindowActions[0])
 			del self._mainWindowActions[0]
 		# save config
 		self.writeConfig()
