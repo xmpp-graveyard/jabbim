@@ -3515,24 +3515,6 @@ class mainWindow(QtGui.QMainWindow):
 				if user.jid in data.keys():
 					self.userRating.users[user.jid].messages=int(data[user.jid]['messages'])
 					self.userRating.users[user.jid].rating=float(data[user.jid]['val'])
-		return
-		if not data:
-			d=self.cache.get_rating()
-			d.addCallback(self.loadUserRating)
-			d.addErrback(self._error)
-		else:
-			
-			users={}
-			for user in data:
-				users[user[0]]=[user[1],user[2]]
-			for user in self.userRating.users.values():
-				if user.jid in users.keys():
-					self.userRating.users[user.jid].message=users[user.jid][0]
-					self.userRating.users[user.jid].rating=users[user.jid][1]
-				else:
-					self.cache.insert_rating(user.jid, user.messages,user.rating)
-
-
 
 	def status_table_updated(self, data=None):
 		"""
@@ -3961,7 +3943,6 @@ class mainWindow(QtGui.QMainWindow):
 			if start:
 				log.startLoggingWithObserver(self.log.emit, setStdout=0)
 		# change GUI according to new config
-  		self.userRating.last_reward=float(self.config['ratingLastReward'])
 		self.loadTheme()
 		self.loadSkin()
 		self.ui.roster.reskin()
@@ -4407,15 +4388,6 @@ class mainWindow(QtGui.QMainWindow):
 		for i in MainWindow.plugins.keys():
 			MainWindow.unloadPlugin(i)
 		self.saveConfigBeforeQuit()
-		tmp=[]
-		#for user in self.userRating.users.values():
-		#	if user.changed:
-			#	print "saving",user.jid,"to rating table"
-				#tmp.append(self.cache.set_rating(user.jid, user.messages,user.rating))
-		#print tmp
-#		d = DeferredList(tmp, consumeErrors = True)
-	#	d.addCallback(self._trayQuit).addErrback(self._trayQuit)
-
 
 		# close windows, hide tray :)
 		try:
@@ -4432,7 +4404,6 @@ class mainWindow(QtGui.QMainWindow):
 
 	def saveConfigBeforeQuit(self):
 		if os.path.isfile(self.config.filename):
-			self.config['ratingLastReward']=str(self.userRating.last_reward)
 			# save windows geometry and sizes of splitters in chat window
 			if str(self.config["saveGeometry"])=="True":
 				rect=self.geometry()

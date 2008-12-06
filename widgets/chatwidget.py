@@ -260,9 +260,6 @@ class chatWidget(abstractChatWidget):
 		QtCore.QObject.connect(self.ui.avatar,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.contactMenu)
 		self.noColor=True
 		self.lastMessageFrom=""
-		#self.main().cache.get_rating_by_jid(unicode(jidt.userhost())).addCallback(self._gotMessagesCount).addErrback(self.main()._error)
-
-
 
 		# plugins buttons
 		self.flowLayout = QtGui.QVBoxLayout()
@@ -310,11 +307,6 @@ class chatWidget(abstractChatWidget):
 		self.parent.tabName = name
 		currentIndex=self.main().chat.ui.chatTab.currentIndex()
 		self.main().chat.ui.chatTab.setTabText(currentIndex,self.parent.tabName)
-		
-
-	def _gotMessagesCount(self,result):
-		if result and len(result)!=0:
-			self.textEditWrite(self.main().webkitThemeFactory.genChatStatus(self.tr("Do you know that you've sent ")+str(result[0][0])+self.tr(" messages to this contact?"),self.main().now()))
 		
 	def loadAvatars(self):
 		# avatar of user who is chatting with us
