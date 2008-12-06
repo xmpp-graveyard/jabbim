@@ -161,7 +161,8 @@ class chatWindow(QtGui.QMainWindow):
 		"""
 		handler=QtGui.QMainWindow.event(self,ev)
 		# activated
-		if int(ev.type())==24 or int(ev.type())==17:
+		t=ev.type()
+		if t==24 or t==17:
 			if self.isActiveWindow():
 				widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
 				if widget:
@@ -175,7 +176,7 @@ class chatWindow(QtGui.QMainWindow):
 
 				self.timer.stop()
 		# inactive
-		elif int(ev.type())==25:
+		elif t==25:
 			if self.active:
 				self.active=False
 				self.timer.start(30000)

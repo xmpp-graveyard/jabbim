@@ -5382,14 +5382,25 @@ class scrollBar(QtGui.QScrollArea):
 		self.verticalScrollBar().setSingleStep(32)
 		self.setObjectName("scroll")
 
-if __name__ == "__main__":
+MainWindow=None
+
+def main():
 	translator=QtCore.QTranslator()
 	translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
 	#print "trying to load locales:","locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm"
 	app.installTranslator(translator)
+	global MainWindow
 	MainWindow = mainWindow()
 	if MainWindow.config['startInTray']=="True":
 		MainWindow.close()
 	else:
 		MainWindow.show()
 	reactor.run()
+
+
+if __name__ == "__main__":
+	#import hotshot
+	#prof = hotshot.Profile("hotshot_edi_stats")
+	#prof.runcall(main)
+	#prof.close()
+	main()

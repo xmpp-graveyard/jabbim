@@ -851,6 +851,27 @@ class rosterWidget(QtGui.QWidget):
 		self.palette().setColor(QtGui.QPalette.Window,self.palet.color(QtGui.QPalette.Base))
 		self.repaint()
 
+	def sortGroup(self,group):
+		temp=[]
+		for user in self.getGroupUsers(group):
+			temp.append([unicode(user.status)+user.name,user])
+		temp.sort(cmp=lambda a,b: strcoll(a[0],b[0]))
+		self.sorted[group]=temp
+
+		all=0
+		online=0
+		for user in self.users:
+			if user.group==group:
+				all+=1
+				if unicode(user.status)!="9":
+					online+=1
+					#if not somebodyOnline:
+						#somebodyOnline=True
+		self.groups[group].online=online
+		self.groups[group].all=all
+		
+		self.setSize()
+
 	def sortItems(self,column=None,typ=None):
 		"""
 		Sort groups and users in groups and count online/offline users
@@ -2020,7 +2041,7 @@ class rosterWidget(QtGui.QWidget):
 			user.status=self.main.shows[unicode(show)]
 			user.height=self.rosterStyle.heightForItem(user)
 			# user was visible
-			self.sortItems()
+			self.sortGroup(user.group)
 			x1,y1=self.itemCoordinates(user)
 			if y!=None:
 				# user is visible
