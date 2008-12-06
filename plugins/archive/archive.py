@@ -69,6 +69,9 @@ class calendar(QtGui.QCalendarWidget):
 class FileBackend:
 	def __init__(self,archive):
 		#self.archive=archive
+		pass
+		
+	def userChanged(self,archive):
 		self.homeDir=unicode(archive.main.homeDir)
 		self.jid=archive.jid
 
@@ -343,6 +346,7 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 			self.skin=self.getConfig("%s/gajim.cfg" % self.pluginDir)
 			self.skin=self.skin['chatskin']
+			self.backend=FileBackend(self)
 			#self.window.ui.seznam.header().hide()
 			
 			self.window.ui.dateEdit.enterEvent=self.dateEditEnterEvent
@@ -369,7 +373,7 @@ class Plugin(plugins.PluginBase):
 	def userChanged(self,jid):
 		plugins.PluginBase.userChanged(self,jid)
 		self.jid = unicode(jid)
-		self.backend=FileBackend(self)
+		self.backend.userChanged(self)
 		self.jidList=self.backend.getJidList()
 
 	def searchClicked(self):
