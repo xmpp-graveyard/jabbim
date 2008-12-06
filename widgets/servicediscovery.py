@@ -190,7 +190,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 			return
 		jid,legacy,form=data
 		if form!=None:
-			self.dialog=dataforms.dataFormsDialog(self.main,form,jid,"register",self)
+			self.dialog=dataforms.dataFormsDialog(self.main(),form,jid,"register",self)
 			self.dialog.show()
 		else:
 			self.dialog=legacyforms.legacyFormsDialog(self.main,legacy,jid,"disco",self)
