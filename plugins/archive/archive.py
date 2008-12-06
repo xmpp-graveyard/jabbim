@@ -1,13 +1,14 @@
 import sys,os,time
 sys.path.append('.')
 from include import plugins
-from PyQt4 import QtCore, QtGui
+from PyQt4 import QtCore, QtGui, QtWebKit
 from urllib import quote, unquote
 from twisted.python import log
 from configobj import ConfigObj
 from twisted.internet import threads
 from pyxl import jid as jidT
 import traceback
+from twisted.internet import reactor
 
 class calendar(QtGui.QCalendarWidget):
 	def __init__(self,parent):
@@ -21,6 +22,17 @@ class calendar(QtGui.QCalendarWidget):
 			self.setSelectedDate(self.dates[-1].addMonths(1))
 			self.setSelectedDate(self.dates[-1])
 		#self.repaint()
+
+	def _hide(self):
+		if not self.focused:
+			self.hide()
+
+	def enterEvent(self,event):
+		self.focused=True
+
+	def leaveEvent(self,event):
+		self.focused=False
+		reactor.callLater(1,self._hide)
 
 	def paintCell(self,painter,rect,date):
 		#painter.save()
@@ -308,28 +320,51 @@ class Plugin(plugins.PluginBase):
 			self.loadConfig()
 			self.window = self.loadWindow("%s/historyBrowser.ui.py" % self.pluginDir, self.main)
 			self.window.setWindowIcon(self.main.windowIcon())
-			layout=QtGui.QHBoxLayout(self.window.ui.calendarWidget)
-			self.window.ui.calendar=calendar(self.window.ui.calendarWidget)
+			self.window.ui.text.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
+			#layout=QtGui.QHBoxLayout(self.window.ui.calendarWidget)
+			self.window.ui.calendar=calendar(self.window)
+			self.window.ui.calendar.hide()
 			self.registerWidget(self.window.ui.calendar)
-			layout.addWidget(self.window.ui.calendar)
+			#layout.addWidget(self.window.ui.calendar)
 			#log.msg(unicode(dir(self.window)))
-			QtCore.QObject.connect(self.window.ui.seznam, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int ) "),self.itemClicked)
-			QtCore.QObject.connect(self.window.ui.searchList, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int ) "),self.searchListClicked)
+			#QtCore.QObject.connect(self.window.ui.seznam, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int ) "),self.itemClicked)
+			QtCore.QObject.connect(self.window.ui.seznam, QtCore.SIGNAL("activated ( int) "),self.itemClicked)
+			#QtCore.QObject.connect(self.window.ui.searchList, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem * , int ) "),self.searchListClicked)
 			QtCore.QObject.connect(self.window.ui.calendar, QtCore.SIGNAL("selectionChanged()"),self.calChanged)
 			QtCore.QObject.connect(self.window.ui.search, QtCore.SIGNAL("clicked()"),self.searchClicked)
 			QtCore.QObject.connect(self.window.ui.searchText, QtCore.SIGNAL("returnPressed ()"),self.searchClicked)
 			QtCore.QObject.connect(self.window.ui.today, QtCore.SIGNAL("clicked()"),self.todayClicked)
-			self.window.ui.searchList.hide()
-			self.window.ui.search.hide()
-			self.window.ui.searchText.hide()
+			QtCore.QObject.connect(self.window.ui.dateEdit,QtCore.SIGNAL("dateChanged ( const QDate & )"),self.dateChanged)
+			QtCore.QObject.connect(self.window.ui.text,QtCore.SIGNAL("linkClicked ( const QUrl &)"),self.webkitLinkClicked)
+			#self.window.ui.searchList.hide()
+			#self.window.ui.search.hide()
+			#self.window.ui.searchText.hide()
 			self.group=QtGui.QButtonGroup(self.window)
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
 			self.skin=self.getConfig("%s/gajim.cfg" % self.pluginDir)
 			self.skin=self.skin['chatskin']
-			self.window.ui.seznam.header().hide()
+			#self.window.ui.seznam.header().hide()
+			
+			self.window.ui.dateEdit.enterEvent=self.dateEditEnterEvent
 
 		else:
 			self.loadConfig(homedir)
+
+	def webkitLinkClicked(self,url):
+		# url = http://jid/date
+		u = unicode(url.toString())
+		print u
+		jid = unicode(u.split('/')[2])
+		date = unicode(u.split('/')[3]).split('-')
+		self.window.ui.dateEdit.setDate(QtCore.QDate(int(date[0]),int(date[1]),int(date[2])))
+		#self.window.ui.calendar.setSelectedDate(QtCore.QDate(int(date[0]),int(date[1]),int(date[2])))
+		self.itemClicked(self.window.ui.seznam.currentIndex(),setDate=False,highlight=unicode(self.window.ui.searchText.text()))
+
+	def dateEditEnterEvent(self,event):
+		point=self.window.ui.dateEdit.mapTo(self.window,QtCore.QPoint(0,self.window.ui.dateEdit.height()))
+		self.window.ui.calendar.setGeometry(point.x(),point.y(),200,120)
+		self.window.ui.calendar.show()
+		self.window.ui.calendar.leaveEvent(None)
 
 	def userChanged(self,jid):
 		plugins.PluginBase.userChanged(self,jid)
@@ -341,51 +376,59 @@ class Plugin(plugins.PluginBase):
 		text=unicode(self.window.ui.searchText.text())
 		if len(text)==0:
 			return
-		item=self.window.ui.seznam.currentItem()
-		if not item:
+		item=self.window.ui.seznam.currentIndex()
+		if item==-1:
 			return
-		if not item.parent():
-			return
-		jid = unicode(item.data(0,32).toString())
+		jid = unicode(self.window.ui.seznam.itemData(item).toString())
 
 		d=threads.deferToThread(self.searchText,jid,text,self.window.palette().color(QtGui.QPalette.HighlightedText).name(),self.window.palette().color(QtGui.QPalette.Highlight).name())
 		d.addCallback(self.gotSearchedText,jid)
 	
 	def todayClicked(self):
-		self.window.ui.calendar.setSelectedDate(QtCore.QDate.currentDate());
+		self.window.ui.dateEdit.setDate(QtCore.QDate.currentDate())
 
 	def searchText(self,jid,text,fg,bg):
-		data=self.backend.findText(jid,text)
+		data=self.backend.findText(jid,text) #{date:[[timestamp,direction,from,message],]}
+		print data
+		html="<table>"
 		for date in data.keys():
 			for i in range(len(data[date])):
-				index=data[date][i][3].find(text)
-				if index!=-1:
-					start=index-20
-					sText="..."
-					if start<0:
-						start=0
-						sText=""
-					end=index+20
-					eText="..."
-					if end>len(data[date][i][3]):
-						end=len(data[date][i][3])
-						eText=""
-					data[date][i][3]=sText+data[date][i][3][start:end].replace("\n","; ")+eText
-		return data
+				#index=data[date][i][3].find(text)
+				#if index!=-1:
+					#start=index-20
+					#sText="..."
+					#if start<0:
+						#start=0
+						#sText=""
+					#end=index+20
+					#eText="..."
+					#if end>len(data[date][i][3]):
+						#end=len(data[date][i][3])
+						#eText=""
+					#data[date][i][3]=sText+data[date][i][3][start:end]+eText
+					#text=sText+data[date][i][3][start:end]+eText
+				text=data[date][i][3]
+				_tmp=date.split("-")
+				d=unicode(QtCore.QDate(int(_tmp[0]),int(_tmp[1]),int(_tmp[2])).toString("dd.MM.yyyy"))
+				html+='<tr><td><a style="margin-right:20px;" href="http://%s/%s">%s</a></td><td>%s</td></tr>' % (jid,date,d,text)
+		html+="</table>"
+		return html
 
 	def gotSearchedText(self,data,jid):
 		#print jid,data
-		self.window.ui.searchList.clear()
-		for date,items in data.iteritems():
-			for item in items:
-				i=QtGui.QTreeWidgetItem(self.window.ui.searchList)
-				i.setText(0,date)
-				i.setText(1,item[3])
-				i.jid=jid
-				i.highlight=unicode(self.window.ui.searchText.text())
-		self.window.ui.searchList.sortItems(0,QtCore.Qt.AscendingOrder)
-		self.window.ui.searchList.show()
-		self.window.ui.searchText.setText("")
+		#self.window.ui.searchList.clear()
+		#for date,items in data.iteritems():
+			#for item in items:
+				
+				#i=QtGui.QTreeWidgetItem(self.window.ui.searchList)
+				#i.setText(0,date)
+				#i.setText(1,item[3])
+				#i.jid=jid
+				#i.highlight=unicode(self.window.ui.searchText.text())
+		#self.window.ui.searchList.sortItems(0,QtCore.Qt.AscendingOrder)
+		#self.window.ui.searchList.show()
+		self.window.ui.text.setHtml(data)
+		#self.window.ui.searchText.setText("")
 
 	def searchListClicked(self,item,index):
 		date=unicode(item.text(0)).split("-")
@@ -529,45 +572,52 @@ class Plugin(plugins.PluginBase):
 		self.window.ui.calendar.setDates([])
 		self.window.ui.text.setHtml('')
 		# add top level items to the JID list
-		contact=QtGui.QTreeWidgetItem(self.window.ui.seznam)
-		contact.setText(0,self.tr("Contacts in roster"))
-		others=QtGui.QTreeWidgetItem(self.window.ui.seznam)
-		others.setText(0,self.tr("Others"))
+		#contact=QtGui.QTreeWidgetItem(self.window.ui.seznam)
+		#contact.setText(0,self.tr("Contacts in roster"))
+		#others=QtGui.QTreeWidgetItem(self.window.ui.seznam)
+		#others.setText(0,self.tr("Others"))
 		# expand them
-		self.window.ui.seznam.expandItem(contact)
-		self.window.ui.seznam.expandItem(others)
+		#self.window.ui.seznam.expandItem(contact)
+		#self.window.ui.seznam.expandItem(others)
 		# change background 
-		contact.setBackground(0,QtGui.QBrush(self.window.ui.seznam.palette().color(QtGui.QPalette.AlternateBase)))
-		others.setBackground(0,QtGui.QBrush(self.window.ui.seznam.palette().color(QtGui.QPalette.AlternateBase)))
+		#contact.setBackground(0,QtGui.QBrush(self.window.ui.seznam.palette().color(QtGui.QPalette.AlternateBase)))
+		#others.setBackground(0,QtGui.QBrush(self.window.ui.seznam.palette().color(QtGui.QPalette.AlternateBase)))
 		# get list of JIDs
 		seznam = self.backend.getJidList()
-		choosedItem=None
-		for jid in seznam:
-			# we have this JID in roster
-			if self.main.client.roster['users'].has_key(unicode(jid)):
-				item=QtGui.QTreeWidgetItem(contact)
-				name=self.main.client.roster['users'][unicode(jid)].name
-				if not name or len(name)==0:
-					item.setText(0,unicode(jid))
+		if self.main.isConnected():
+			self.window.ui.seznam.insertSeparator(0)
+			for jid in seznam:
+				# we have this JID in roster
+				if self.main.client.roster['users'].has_key(unicode(jid)):
+					#item=QtGui.QTreeWidgetItem(contact)
+					name=self.main.client.roster['users'][unicode(jid)].name
+					if not name or len(name)==0:
+						#item.setText(0,unicode(jid))
+						self.window.ui.seznam.insertItem(0,unicode(jid),QtCore.QVariant(unicode(jid)))
+					else:
+						self.window.ui.seznam.insertItem(0,name,QtCore.QVariant(unicode(jid)))
+						#item.setText(0,name)
+				# this contact is unkown, so we will use Others group
 				else:
-					item.setText(0,name)
-			# this contact is unkown, so we will use Others group
-			else:
-				item=QtGui.QTreeWidgetItem(others)
-				item.setText(0,unicode(jid))
-			item.setData(0,32,QtCore.QVariant(unicode(jid)))
-			# if user wants to see this contact just now, we save its item
-			if unicode(jid)==unicode(j):
-				choosedItem=item
-		# we've got item which user wants to see
-		if choosedItem:
-			self.window.ui.seznam.setCurrentItem(choosedItem)
-			self.itemClicked(choosedItem)
+					#item=QtGui.QTreeWidgetItem(others)
+					self.window.ui.seznam.insertItem(-1,unicode(jid),QtCore.QVariant(unicode(jid)))
+				#item.setData(0,32,QtCore.QVariant(unicode(jid)))
+				# if user wants to see this contact just now, we save its item
+			# we've got item which user wants to see
+			if j:
+				choosedItem=self.window.ui.seznam.findData(QtCore.QVariant(unicode(j)))
+				if choosedItem!=-1:
+					self.window.ui.seznam.setCurrentIndex(choosedItem)
+					self.itemClicked(choosedItem)
 		# show main window
 		self.window.show()
 	
-	def calChanged(self):	
-		self.itemClicked(self.window.ui.seznam.currentItem(),setDate=False)
+	def calChanged(self):
+		self.window.ui.dateEdit.setDate(self.window.ui.calendar.selectedDate())
+
+	def dateChanged(self,date=None):
+		self.itemClicked(self.window.ui.seznam.currentIndex(),setDate=False)
+		self.window.ui.calendar.setSelectedDate(date)
 	
 	def getDates(self,jid):
 		dates=self.backend.getDates(jid)
@@ -588,14 +638,14 @@ class Plugin(plugins.PluginBase):
 		if last:
 			all.append(last)
 		self.window.ui.calendar.setDates(all)
-		item=self.window.ui.seznam.currentItem()
-		jid = unicode(item.data(0,32).toString())
+		#item=self.window.ui.seznam.currentItem()
+		jid = unicode(self.window.ui.seznam.itemData(self.window.ui.seznam.currentIndex()).toString())
 		
 		self.window.ui.text.setHtml('')
-		datum=self.window.ui.calendar.selectedDate()
+		datum=self.window.ui.dateEdit.date()
 		me=unicode(self.main.client.jid.user)
 
-		user=self.main.ui.roster.getUserItems(unicode(item.data(0,32).toString()))
+		user=self.main.ui.roster.getUserItems(unicode(jid))
 		if len(user)!=0:
 			user=user[0].name
 		else:
@@ -636,19 +686,19 @@ class Plugin(plugins.PluginBase):
 		self.window.ui.text.setHtml(html)
 
 	def itemClicked(self, item,column=0,setDate=True,highlight=None):
-		jid = unicode(item.data(0,32).toString())
+		jid = unicode(self.window.ui.seznam.itemData(item).toString())
 		if setDate:
 			self.getDates(jid)
-			self.window.ui.searchList.hide()
-			self.window.ui.searchText.show()
-			self.window.ui.search.show()
+			#self.window.ui.searchList.hide()
+			#self.window.ui.searchText.show()
+			#self.window.ui.search.show()
 			self.window.ui.searchText.setFocus(QtCore.Qt.MouseFocusReason)
 		else:
 			self.window.ui.text.setHtml('')
-			datum=self.window.ui.calendar.selectedDate()
+			datum=self.window.ui.dateEdit.date()
 			me=unicode(self.main.client.jid.user)
 	
-			user=self.main.ui.roster.getUserItems(unicode(item.data(0,32).toString()))
+			user=self.main.ui.roster.getUserItems(unicode(jid))
 			if len(user)!=0:
 				user=user[0].name
 			else:
