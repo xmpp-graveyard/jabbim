@@ -4643,10 +4643,10 @@ class mainWindow(QtGui.QMainWindow):
 
 	def isValidExtraPart(self,config):
 		if not config.has_key('header'):
-			log.err("error, config doesn't have 'header' section")
+			#log.err("error, config doesn't have 'header' section")
 			return False
 		if not config['header'].has_key('type'):
-			log.err("error, config doesn't have 'type' key in 'header' section")
+			#log.err("error, config doesn't have 'type' key in 'header' section")
 			##############################################################
 			# We're tolerant for RPC emoticons, so I have to enable them #
 			##############################################################
@@ -4658,7 +4658,7 @@ class mainWindow(QtGui.QMainWindow):
 		if typ=="moodIcons":
 			keys.append('frontImage')
 			if not config.has_key('moods'):
-				log.err("error, config doesn't have 'moods' section")
+				#log.err("error, config doesn't have 'moods' section")
 				return False
 		elif typ=="emoticons":
 			keys.append('frontImage')
@@ -4667,20 +4667,20 @@ class mainWindow(QtGui.QMainWindow):
 			##############################################################
 			keys=[] # will be commented
 			if not config.has_key('emoticons'):
-				log.err("error, config doesn't have 'emoticons' section")
+				#log.err("error, config doesn't have 'emoticons' section")
 				return False
 		elif typ=='chatskin':
 			if not config.has_key('chatskin'):
-				log.err("error, config doesn't have 'chatskin' section")
+				#log.err("error, config doesn't have 'chatskin' section")
 				return False
 		for key in keys:
 			if not config['header'].has_key(key):
-				log.err("error, config doesn't have '"+key+"' key in 'header' section")
+				#log.err("error, config doesn't have '"+key+"' key in 'header' section")
 				return False
 		return True
 
 	def loadJabbimExtraConfig(self,config,fallback):
-		log.err('loading JabbimExtra config '+ unicode(config))
+		#log.err('loading JabbimExtra config '+ unicode(config))
 		# try to load config
 		try:
 			config=ConfigObj(config,encoding='UTF8')
