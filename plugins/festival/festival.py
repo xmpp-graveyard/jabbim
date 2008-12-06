@@ -98,16 +98,17 @@ class Plugin(plugins.PluginBase):
 			self.loadConfig(homedir)
 
 	def buildMainWindowToolBar(self):
-		self.button = self.mainWindowToolBarButton()
-		self.button.setIconSize(QtCore.QSize(16,16))
-		self.button.setCheckable(True);
+		#self.button = self.mainWindowToolBarButton()
+		#self.button.setIconSize(QtCore.QSize(16,16))
+		self.button = self.mainWindowToolBarAction("",self.clicked)
+		self.button.setCheckable(True)
 		start_state = (self.config['stateAfterstart'] == 'on' or
 			self.config['stateAfterstart'] == 'last' and self.config['state'] == 'True')
 		if self.config['state'] != unicode(start_state):
 			self.config['state'] = unicode(start_state)
 			self.config.write()
 		self.set_icon_state(start_state)
-		QtCore.QObject.connect(self.button, QtCore.SIGNAL("clicked(bool)"), self.clicked)
+		#QtCore.QObject.connect(self.button, QtCore.SIGNAL("clicked(bool)"), self.clicked)
 
 	def on_chatMessageEvent(self, msg, event=None):
 		if (self.config['state'] != 'True' or
@@ -137,7 +138,9 @@ class Plugin(plugins.PluginBase):
 	def say(self, message):
 		self.reader.say(message)
 
-	def clicked(self, state):
+	def clicked(self, state=None):
+		if not state:
+			state = self.button.isChecked()
 		self.set_icon_state(state)
 		self.config['state'] = unicode(state)
 		self.config.write()
