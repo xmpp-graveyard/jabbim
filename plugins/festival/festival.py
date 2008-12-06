@@ -100,7 +100,7 @@ class Plugin(plugins.PluginBase):
 	def buildMainWindowToolBar(self):
 		#self.button = self.mainWindowToolBarButton()
 		#self.button.setIconSize(QtCore.QSize(16,16))
-		self.button = self.mainWindowToolBarAction("",self.clicked)
+		self.button = self.mainWindowToolBarAction(QtGui.QIcon(),"",self.clicked)
 		self.button.setCheckable(True)
 		start_state = (self.config['stateAfterstart'] == 'on' or
 			self.config['stateAfterstart'] == 'last' and self.config['state'] == 'True')
