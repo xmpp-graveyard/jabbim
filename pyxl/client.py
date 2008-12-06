@@ -135,7 +135,7 @@ class Client(derived):
 		self.registerFeature('http://jabber.org/protocol/activity+notify')
 		self.registerFeature('http://www.xmpp.org/extensions/xep-0194.html#ns')
 		self.registerFeature('http://www.xmpp.org/extensions/xep-0194.html#ns+notify')
-		self.registerFeature('http://dev.jabbim.cz/jabbim#favroster')
+#		self.registerFeature('http://dev.jabbim.cz/jabbim#favroster')
 		self.registerFeature('urn:xmpp:tmp:jingle')
 		self.registerFeature('urn:xmpp:tmp:jingle:apps:file-transfer')
 		self.registerFeature('urn:xmpp:tmp:jingle:transports:bytestreams')
