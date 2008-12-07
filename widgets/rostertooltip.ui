@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>332</width>
-    <height>128</height>
+    <height>132</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -21,19 +21,19 @@
    </property>
    <item rowspan="2" row="0" column="1" >
     <layout class="QVBoxLayout" >
-     <property name="margin" >
-      <number>0</number>
-     </property>
      <property name="spacing" >
       <number>6</number>
      </property>
+     <property name="margin" >
+      <number>0</number>
+     </property>
      <item>
       <layout class="QHBoxLayout" >
-       <property name="margin" >
-        <number>0</number>
-       </property>
        <property name="spacing" >
         <number>6</number>
+       </property>
+       <property name="margin" >
+        <number>0</number>
        </property>
        <item>
         <widget class="QLabel" name="nickname" >
@@ -46,6 +46,19 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item>
+        <widget class="QLabel" name="vcard" >
+         <property name="maximumSize" >
+          <size>
+           <width>16</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="cursor" >
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="mood" >
          <property name="maximumSize" >
           <size>
@@ -54,7 +67,7 @@ p, li { white-space: pre-wrap; }
           </size>
          </property>
          <property name="text" >
-          <string> </string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -76,9 +89,7 @@ p, li { white-space: pre-wrap; }
      <item>
       <widget class="QLabel" name="jid" >
        <property name="sizePolicy" >
-        <sizepolicy>
-         <hsizetype>7</hsizetype>
-         <vsizetype>5</vsizetype>
+        <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -100,9 +111,7 @@ p, li { white-space: pre-wrap; }
      <item>
       <widget class="QTextBrowser" name="status" >
        <property name="sizePolicy" >
-        <sizepolicy>
-         <hsizetype>1</hsizetype>
-         <vsizetype>1</vsizetype>
+        <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -132,7 +141,7 @@ p, li { white-space: pre-wrap; }
        <property name="orientation" >
         <enum>Qt::Vertical</enum>
        </property>
-       <property name="sizeHint" >
+       <property name="sizeHint" stdset="0" >
         <size>
          <width>256</width>
          <height>1</height>
@@ -160,7 +169,7 @@ p, li { white-space: pre-wrap; }
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0" >
       <size>
        <width>20</width>
        <height>1</height>

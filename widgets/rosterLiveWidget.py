@@ -60,7 +60,19 @@ class rosterToolTip(QtGui.QFrame):
 		self.ui.tune.leaveEvent=self.tuneLeaveEvent
 		self.status=""
 		self.mood=""
+		self.ui.vcard.setPixmap(QtGui.QPixmap("images/16x16/categories/v-card.png"))
+		self.ui.vcard.leaveEvent=self.tuneLeaveEvent
+		self.ui.vcard.enterEvent=self.vcardEnterEvent
+		self.ui.vcard.mousePressEvent=self.vcardMousePressEvent
 		self.ui.status.setMaximumHeight(QtGui.QFontMetrics(self.ui.status.font()).height()*4)
+
+	def vcardMousePressEvent(self,event):
+		self.roster().ve=vcardeditor.vcardEditorDialog(self.roster().main,self.jid,self.roster().main,False)
+		self.roster().ve.show()
+		self.hide()
+
+	def vcardEnterEvent(self,event):
+		self.ui.jid.setText(self.tr("Show VCard"))
 
 	def tuneEnterEvent(self,event):
 		self.ui.jid.setText(self.tune)

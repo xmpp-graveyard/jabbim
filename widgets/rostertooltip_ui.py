@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/rostertooltip.ui'
 #
-# Created: Tue Oct  7 10:48:28 2008
-#      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
+# Created: Sun Dec  7 11:08:52 2008
+#      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,22 +12,27 @@ from PyQt4 import QtCore, QtGui
 class Ui_RosterToolTip(object):
     def setupUi(self, RosterToolTip):
         RosterToolTip.setObjectName("RosterToolTip")
-        RosterToolTip.resize(332, 128)
+        RosterToolTip.resize(332, 132)
         self.gridlayout = QtGui.QGridLayout(RosterToolTip)
         self.gridlayout.setMargin(9)
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
         self.vboxlayout = QtGui.QVBoxLayout()
-        self.vboxlayout.setMargin(0)
         self.vboxlayout.setSpacing(6)
+        self.vboxlayout.setMargin(0)
         self.vboxlayout.setObjectName("vboxlayout")
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(6)
+        self.hboxlayout.setMargin(0)
         self.hboxlayout.setObjectName("hboxlayout")
         self.nickname = QtGui.QLabel(RosterToolTip)
         self.nickname.setObjectName("nickname")
         self.hboxlayout.addWidget(self.nickname)
+        self.vcard = QtGui.QLabel(RosterToolTip)
+        self.vcard.setMaximumSize(QtCore.QSize(16, 16777215))
+        self.vcard.setCursor(QtCore.Qt.PointingHandCursor)
+        self.vcard.setObjectName("vcard")
+        self.hboxlayout.addWidget(self.vcard)
         self.mood = QtGui.QLabel(RosterToolTip)
         self.mood.setMaximumSize(QtCore.QSize(18, 18))
         self.mood.setObjectName("mood")
@@ -38,7 +43,7 @@ class Ui_RosterToolTip(object):
         self.hboxlayout.addWidget(self.tune)
         self.vboxlayout.addLayout(self.hboxlayout)
         self.jid = QtGui.QLabel(RosterToolTip)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7), QtGui.QSizePolicy.Policy(5))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.jid.sizePolicy().hasHeightForWidth())
@@ -48,7 +53,7 @@ class Ui_RosterToolTip(object):
         self.jid.setObjectName("jid")
         self.vboxlayout.addWidget(self.jid)
         self.status = QtGui.QTextBrowser(RosterToolTip)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(1), QtGui.QSizePolicy.Policy(1))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.status.sizePolicy().hasHeightForWidth())
@@ -79,7 +84,6 @@ class Ui_RosterToolTip(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:12pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">HanzZ</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.mood.setText(QtGui.QApplication.translate("RosterToolTip", " ", None, QtGui.QApplication.UnicodeUTF8))
         self.jid.setText(QtGui.QApplication.translate("RosterToolTip", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:12pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
