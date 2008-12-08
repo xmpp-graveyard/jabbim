@@ -40,6 +40,7 @@ class Plugin(plugins.PluginBase):
 			self.loadConfig()
 			self.window = self.loadWindow("%s/jdm_ui.py" % self.pluginDir,self.main)
 			self.wizard = self.loadDialog("%s/jdw_ui.py" % self.pluginDir,self.main)
+			self.downloadQueue=[]
 			self.window.setWindowIcon(self.main.windowIcon())
 ##			self.window.ui.list.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 ##			self.window.ui.list.startDrag=self.startDrag
@@ -70,7 +71,7 @@ class Plugin(plugins.PluginBase):
 ##			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call)
 ##			QtCore.QObject.connect(self.window.ui.esUp,QtCore.SIGNAL("clicked()"),self.esUp)
 ##			QtCore.QObject.connect(self.window.ui.esPath,QtCore.SIGNAL("returnPressed()"),self.esPathFinished)
-			QtCore.QObject.connect(self.wizard.ui.tree, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.clicked)
+			QtCore.QObject.connect(self.wizard.ui.tree, QtCore.SIGNAL("itemSelectionChanged ( )"),self.selectionChanged)
 ##			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.fileMenu)
 			QtCore.QObject.connect(self.wizard.ui.tree,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.fileMenu)
 			QtCore.QObject.connect(self.window.ui.buttonDownload,QtCore.SIGNAL("clicked()"),self.downloadCurrentFile)
@@ -651,12 +652,14 @@ class Plugin(plugins.PluginBase):
 				self.main.client.callRemote(jid, 'getFiles',(data,))
 		else:
 			for item in items:
-				if self.typ=="public":
-					self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
-				elif self.typ=="private":
-					self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
-				elif self.typ=="album":
-					self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
+				self.downloadQueue.append(unicode(item.text()))
+			f=self.downloadQueue.pop()
+			if self.typ=="public":
+				self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+f)
+			elif self.typ=="private":
+				self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+f)
+			elif self.typ=="album":
+				self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+f)
 
 	def removeCurrentFile(self):
 		items=self.wizard.ui.tree.selectedItems()
@@ -960,21 +963,44 @@ class Plugin(plugins.PluginBase):
 						self.main.events.ftEvents[sid].reject()
 						self.wizard.ui.back.hide()
 						self.wizard.ui.stackedWidget.setCurrentIndex(0)
+			try:
+				f=self.downloadQueue.pop()
+			except:
+				f=None
+			if f:
+				if self.typ=="public":
+					self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+f)
+				elif self.typ=="private":
+					self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+f)
+				elif self.typ=="album":
+					self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+f)
 
-	def clicked(self,item,old):
-		if item:
-			self.wizard.ui.filename.setText(item.text())
-			data=item.data(32).toList()
-			size=int(data[0].toString())
-			if size==-1:
-				self.wizard.ui.filename.setText(self.tr("Folder"))
-				self.wizard.ui.remove.setEnabled(False)
-				self.wizard.ui.download.setEnabled(False)
+	def selectionChanged(self):
+		items=self.wizard.ui.tree.selectedItems()
+		if len(items)!=0:
+			if len(items)==1:
+				item=items[0]
+				self.wizard.ui.filename.setText(item.text())
+				data=item.data(32).toList()
+				size=int(data[0].toString())
+				if size==-1:
+					self.wizard.ui.filename.setText(self.tr("Folder"))
+					self.wizard.ui.remove.setEnabled(False)
+					self.wizard.ui.download.setEnabled(False)
+				else:
+					self.wizard.ui.filesize.setText(self.toNormalSize(size))
+					self.wizard.ui.remove.setEnabled(self.jid==self.main.client.jid.userhost())
+					self.wizard.ui.download.setEnabled(True)
+				self.wizard.ui.image.setPixmap(item.icon().pixmap(128,128))
 			else:
+				self.wizard.ui.filename.setText(unicode(len(items))+self.tr(" files"))
+				size=0
+				for it in items:
+					data=it.data(32).toList()
+					size+=int(data[0].toString())
 				self.wizard.ui.filesize.setText(self.toNormalSize(size))
-				self.wizard.ui.remove.setEnabled(self.jid==self.main.client.jid.userhost())
-				self.wizard.ui.download.setEnabled(True)
-			self.wizard.ui.image.setPixmap(item.icon().pixmap(128,128))
+				
+				
 		else:
 			self.wizard.ui.remove.setEnabled(False)
 			self.wizard.ui.download.setEnabled(False)

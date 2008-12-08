@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'plugins/jdm/jdw.ui'
 #
-# Created: Mon Dec  8 14:50:48 2008
+# Created: Mon Dec  8 15:47:00 2008
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -126,6 +126,7 @@ class Ui_JDW(object):
         self.gridLayout.addWidget(self.tree, 0, 0, 6, 1)
         self.image = QtGui.QLabel(self.page)
         self.image.setMinimumSize(QtCore.QSize(128, 0))
+        self.image.setAlignment(QtCore.Qt.AlignCenter)
         self.image.setObjectName("image")
         self.gridLayout.addWidget(self.image, 0, 1, 1, 3)
         self.filename = QtGui.QLabel(self.page)
