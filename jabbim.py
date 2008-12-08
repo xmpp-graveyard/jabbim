@@ -3339,6 +3339,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Called when user finish with changing status message by statusLine
 		"""
+		log.msg("statusLineFinished")
 		status=unicode(self.ui.statusLine.text())
 		if oldStatus!=status and calledByTimer:
 			return
@@ -3899,6 +3900,7 @@ class mainWindow(QtGui.QMainWindow):
 				# get statusMessage according to ID and call self._gotStatus when we have it
 				show=data[0]
 				messageIndex=data[1]
+				log.msg("get status by id")
 				d=self.cache.get_status_by_id(str(messageIndex))
 				d.addCallback(self._gotStatus,jid)
 				return
@@ -3909,6 +3911,7 @@ class mainWindow(QtGui.QMainWindow):
 				self.ui.statusLine.data=[jid,show]
 				self.ui.statusLine.typ="presence"
 				self.statusMessageClicked(text="")
+				log.msg("setup timeout for statusLineFinished")
 				self.reactor.callLater(4,self.statusLineFinished,show,"",True)
 			## send presence
 			#self.sendPresence(jid,show,message)
@@ -3921,6 +3924,7 @@ class mainWindow(QtGui.QMainWindow):
 			return
 		if len(result)==0:
 			return
+		log.msg("got status... calling sendPresence")
 		self.sendPresence(jid,result[0][0],result[0][1])
 
 	def profileChanged(self,jid):

@@ -50,9 +50,9 @@ class Plugin(plugins.PluginBase):
 ##			self.window.ui.line_jid.setText(self.main.client.jid.userhost())
 			self.typ = "public"
 			self.esPath=""
-			self.window.ui.buttonDownload.setIcon(QtGui.QIcon("%s/document-save.png" % self.pluginDir))
-			self.window.ui.buttonUpload.setIcon(QtGui.QIcon("%s/upload.png" % self.pluginDir))
-			self.window.ui.buttonDelete.setIcon(QtGui.QIcon("%s/edit-delete.png" % self.pluginDir))
+			self.wizard.ui.download.setIcon(QtGui.QIcon("%s/document-save.png" % self.pluginDir))
+			self.wizard.ui.upload.setIcon(QtGui.QIcon("%s/upload.png" % self.pluginDir))
+			self.wizard.ui.remove.setIcon(QtGui.QIcon("%s/edit-delete.png" % self.pluginDir))
 			self.window.ui.buttonHome.setIcon(QtGui.QIcon("%s/home.png" % self.pluginDir))
 			self.window.ui.publicButton.setIcon(QtGui.QIcon("%s/jdisk-public-24.png" % self.pluginDir))
 			self.window.ui.privateButton.setIcon(QtGui.QIcon("%s/jdisk-private-24.png" % self.pluginDir))
@@ -70,7 +70,7 @@ class Plugin(plugins.PluginBase):
 ##			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call)
 ##			QtCore.QObject.connect(self.window.ui.esUp,QtCore.SIGNAL("clicked()"),self.esUp)
 ##			QtCore.QObject.connect(self.window.ui.esPath,QtCore.SIGNAL("returnPressed()"),self.esPathFinished)
-##			QtCore.QObject.connect(self.window.ui.list, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.clicked)
+			QtCore.QObject.connect(self.wizard.ui.tree, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.clicked)
 ##			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.fileMenu)
 			QtCore.QObject.connect(self.wizard.ui.tree,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.fileMenu)
 			QtCore.QObject.connect(self.window.ui.buttonDownload,QtCore.SIGNAL("clicked()"),self.downloadCurrentFile)
@@ -94,7 +94,7 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.desktop,QtCore.SIGNAL("clicked()"),self.leftDesktop)
 			QtCore.QObject.connect(self.window.ui.computer,QtCore.SIGNAL("clicked()"),self.leftComputer)
 			QtCore.QObject.connect(self.window.ui.right,QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem *,int )"),self.doubleClicked)
-			QtCore.QObject.connect(self.wizard.ui.tree,QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem *,int )"),self.doubleClicked)
+			QtCore.QObject.connect(self.wizard.ui.tree,QtCore.SIGNAL("itemDoubleClicked ( QListWidgetItem *)"),self.doubleClicked)
 
 			self.wizard.ui.configuration.hide()
 			
@@ -349,10 +349,10 @@ class Plugin(plugins.PluginBase):
 		icon=QtGui.QIcon(self.pluginDir+"/folder.png")
 		for d in data:
 			#item=QtGui.QTreeWidgetItem(self.window.ui.right)
-			item=QtGui.QTreeWidgetItem(self.wizard.ui.tree)
-			item.setData(0,32,QtCore.QVariant(QtCore.QStringList([u"-1"])))
-			item.setText(0,unicode(d))
-			item.setIcon(0,icon)
+			item=QtGui.QListWidgetItem(self.wizard.ui.tree)
+			item.setData(32,QtCore.QVariant(QtCore.QStringList([u"-1"])))
+			item.setText(unicode(d))
+			item.setIcon(icon)
 		self.wizard.ui.stackedWidget.setCurrentIndex(1)
 		self.wizard.ui.back.show()
 		self.wizard.ui.remove.hide()
@@ -652,11 +652,11 @@ class Plugin(plugins.PluginBase):
 		else:
 			for item in items:
 				if self.typ=="public":
-					self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text(0)))
+					self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
 				elif self.typ=="private":
-					self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text(0)))
+					self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
 				elif self.typ=="album":
-					self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text(0)))
+					self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text()))
 
 	def removeCurrentFile(self):
 		items=self.wizard.ui.tree.selectedItems()
@@ -664,13 +664,14 @@ class Plugin(plugins.PluginBase):
 			return
 		for item in items:
 			if self.typ=="public":
-				self.main.client.sendMessage("public@disk.jabbim.cz", u"rm "+unicode(item.text(0)))
+				self.main.client.sendMessage("public@disk.jabbim.cz", u"rm "+unicode(item.text()))
 			elif self.typ=="private":
-				self.main.client.sendMessage("private@disk.jabbim.cz", u"rm "+unicode(item.text(0)))
+				self.main.client.sendMessage("private@disk.jabbim.cz", u"rm "+unicode(item.text()))
 			elif self.typ=="album":
-				self.main.client.sendMessage("album@disk.jabbim.cz", u"rm "+unicode(item.text(0)))
+				self.main.client.sendMessage("album@disk.jabbim.cz", u"rm "+unicode(item.text()))
 		for i in range(len(items)):
-			self.wizard.ui.tree.takeTopLevelItem(self.wizard.ui.tree.indexOfTopLevelItem(items[0]))
+			#self.wizard.ui.tree.takeTopLevelItem(self.wizard.ui.tree.indexOfTopLevelItem(items[0]))
+			self.wizard.ui.tree.takeItem(self.wizard.ui.tree.row(items[0]))
 			del items[0]
 
 	def toNormalSize(self,size):
@@ -693,7 +694,8 @@ class Plugin(plugins.PluginBase):
 			self.wizard.ui.tree.clear()
 		if parent:
 			#self.window.ui.right.expandItem(parent)
-			self.wizard.ui.tree.expandItem(parent)
+			#self.wizard.ui.tree.expandItem(parent)
+			pass
 ##		self.window.ui.esPath.setText(self.esPath)
 		data=data[0][0]
 		self.thumbs={}
@@ -706,44 +708,45 @@ class Plugin(plugins.PluginBase):
 			name=file[0]
 			size=int(file[1])
 			if parent:
-				item=QtGui.QTreeWidgetItem(parent)
+				#item=QtGui.QListWidgetItem(parent)
+				pass
 			else:
 				#item=QtGui.QTreeWidgetItem(self.window.ui.right)
-				item=QtGui.QTreeWidgetItem(self.wizard.ui.tree)
+				item=QtGui.QListWidgetItem(self.wizard.ui.tree)
 			print unicode(name)
-			item.setText(0,unicode(name))
-			item.setText(1,unicode(self.toNormalSize(size)))
-			item.setData(0,32,QtCore.QVariant(QtCore.QStringList([unicode(size)])))
+			item.setText(unicode(name))
+			#item.setText(1,unicode(self.toNormalSize(size)))
+			item.setData(32,QtCore.QVariant(QtCore.QStringList([unicode(size)])))
 			if int(size)==-1:
-				item.setIcon(0,QtGui.QIcon(self.pluginDir+"/folder.png"))
+				item.setIcon(QtGui.QIcon(self.pluginDir+"/folder.png"))
 			else:
 				ext=name.split('.')[-1]
 				if ext in ["exe","run","sh","bin"]: 
-					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/application-x-executable.png"))
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/application-x-executable.png"))
 				elif ext in ["svg","jpg","png","gif","tif","tiff","bmp","ico","xcf"]: 
-					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/image-x-generic.png"))
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/image-x-generic.png"))
 				elif ext in ["wav","mp3","ogg","mp4","flac"]:
-					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/audio-x-generic.png"))
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/audio-x-generic.png"))
 				elif ext in ["rar","zip","gz","bz","tgz","deb","rpm","tar","pkg","7z","ace"]:
-					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/package-x-generic.png"))
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/package-x-generic.png"))
 				elif ext in ["htm","html","xml"]:
-					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/text-html.png"))
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/text-html.png"))
 				elif ext in ["txt","c","py","log"]:
-					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/text-x-generic.png"))
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic.png"))
 				elif ext in ["mov","avi","mpg","swf","dv"]:
-					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/text-x-generic.png"))
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic.png"))
 				elif ext in ["odt","doc","pdf","docx"]:
-					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/x-office-document.png"))
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-document.png"))
 				elif ext in ["ods","xls","cvs"]:
-					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/x-office-spreadsheet.png"))
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-spreadsheet.png"))
 				elif ext in ["pts","ppt","odp"]:
-					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/x-office-presentation.png"))
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-presentation.png"))
 				else:
-					item.setIcon(0,QtGui.QIcon(self.pluginDir+"/text-x-generic-template.png"));  #preventivne pokud se netrefime
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic-template.png"));  #preventivne pokud se netrefime
 			#self.window.ui.right.addItem(item)
 			if self.typ=="album":
 				self.thumbs[name]=item
-		self.wizard.ui.tree.resizeColumnToContents(0)
+		#self.wizard.ui.tree.resizeColumnToContents(0)
 		data=self.thumbs.keys()
 		if self.typ=="album" and len(data)!=0:
 			self.stopDownload=False
@@ -761,14 +764,14 @@ class Plugin(plugins.PluginBase):
 			image=base64.decodestring(str(thumb[0]))
 			pixmap=QtGui.QPixmap()
 			pixmap.loadFromData(image)
-			self.thumbs[data[0]].setIcon(0,QtGui.QIcon(pixmap))
+			self.thumbs[data[0]].setIcon(QtGui.QIcon(pixmap))
 			f=open(cacheFile,"wb")
 			f.write(image)
 			f.close()
 			self.cacheList[cacheFile] = md5(image).hexdigest()
 			self.cacheList.write()
 		else:
-			self.thumbs[data[0]].setIcon(0,QtGui.QIcon(cacheFile))
+			self.thumbs[data[0]].setIcon(QtGui.QIcon(cacheFile))
 		self.window.ui.progress.setValue(self.window.ui.progress.value()+1)
 		del data[0]
 		if len(data)==0:
@@ -960,22 +963,23 @@ class Plugin(plugins.PluginBase):
 
 	def clicked(self,item,old):
 		if item:
-			self.window.ui.label_name.setText(item.text())
+			self.wizard.ui.filename.setText(item.text())
 			data=item.data(32).toList()
 			size=int(data[0].toString())
 			if size==-1:
-				self.window.ui.label_size.setText(self.tr("Folder"))
-				self.window.ui.buttonDelete.setEnabled(False)
-				self.window.ui.buttonDownload.setEnabled(False)
+				self.wizard.ui.filename.setText(self.tr("Folder"))
+				self.wizard.ui.remove.setEnabled(False)
+				self.wizard.ui.download.setEnabled(False)
 			else:
-				self.window.ui.label_size.setText(self.toNormalSize(size))
-				self.window.ui.buttonDelete.setEnabled(self.jid==self.main.client.jid.userhost())
-				self.window.ui.buttonDownload.setEnabled(True)
+				self.wizard.ui.filesize.setText(self.toNormalSize(size))
+				self.wizard.ui.remove.setEnabled(self.jid==self.main.client.jid.userhost())
+				self.wizard.ui.download.setEnabled(True)
+			self.wizard.ui.image.setPixmap(item.icon().pixmap(128,128))
 		else:
-			self.window.ui.buttonDelete.setEnabled(False)
-			self.window.ui.buttonDownload.setEnabled(False)
-			self.window.ui.label_size.setText("")
-			self.window.ui.label_name.setText("")
+			self.wizard.ui.remove.setEnabled(False)
+			self.wizard.ui.download.setEnabled(False)
+			self.wizard.ui.filename.setText("")
+			self.wizard.ui.filesize.setText("")
 
 	def getPath(self,item):
 		path=""

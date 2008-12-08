@@ -19,25 +19,25 @@
    <property name="spacing" >
     <number>6</number>
    </property>
-   <item row="3" column="1" >
-    <widget class="QPushButton" name="back" >
-     <property name="text" >
-      <string>Back</string>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="0" >
     <spacer>
      <property name="orientation" >
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0" >
       <size>
        <width>171</width>
        <height>33</height>
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="3" column="1" >
+    <widget class="QPushButton" name="back" >
+     <property name="text" >
+      <string>Back</string>
+     </property>
+    </widget>
    </item>
    <item row="1" column="0" colspan="3" >
     <widget class="Line" name="line_2" >
@@ -84,7 +84,7 @@
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>20</width>
            <height>20</height>
@@ -97,7 +97,7 @@
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>20</width>
            <height>20</height>
@@ -116,9 +116,7 @@
          <item row="0" column="0" >
           <widget class="QToolButton" name="public" >
            <property name="sizePolicy" >
-            <sizepolicy>
-             <hsizetype>3</hsizetype>
-             <vsizetype>5</vsizetype>
+            <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -127,7 +125,8 @@
             <string>Public</string>
            </property>
            <property name="icon" >
-            <iconset>jdisk-public.png</iconset>
+            <iconset>
+             <normaloff>jdisk-public.png</normaloff>jdisk-public.png</iconset>
            </property>
            <property name="iconSize" >
             <size>
@@ -143,9 +142,7 @@
          <item row="0" column="1" >
           <widget class="QToolButton" name="private" >
            <property name="sizePolicy" >
-            <sizepolicy>
-             <hsizetype>3</hsizetype>
-             <vsizetype>5</vsizetype>
+            <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -154,7 +151,8 @@
             <string>Private</string>
            </property>
            <property name="icon" >
-            <iconset>jdisk-private.png</iconset>
+            <iconset>
+             <normaloff>jdisk-private.png</normaloff>jdisk-private.png</iconset>
            </property>
            <property name="iconSize" >
             <size>
@@ -170,9 +168,7 @@
          <item row="1" column="1" >
           <widget class="QToolButton" name="es" >
            <property name="sizePolicy" >
-            <sizepolicy>
-             <hsizetype>3</hsizetype>
-             <vsizetype>5</vsizetype>
+            <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -181,7 +177,8 @@
             <string>Easyshare</string>
            </property>
            <property name="icon" >
-            <iconset>easy_share32.png</iconset>
+            <iconset>
+             <normaloff>easy_share32.png</normaloff>easy_share32.png</iconset>
            </property>
            <property name="iconSize" >
             <size>
@@ -197,9 +194,7 @@
          <item row="1" column="0" >
           <widget class="QToolButton" name="album" >
            <property name="sizePolicy" >
-            <sizepolicy>
-             <hsizetype>3</hsizetype>
-             <vsizetype>5</vsizetype>
+            <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -208,7 +203,8 @@
             <string>Album</string>
            </property>
            <property name="icon" >
-            <iconset>jalbum-32.png</iconset>
+            <iconset>
+             <normaloff>jalbum-32.png</normaloff>jalbum-32.png</iconset>
            </property>
            <property name="iconSize" >
             <size>
@@ -228,7 +224,7 @@
          <property name="orientation" >
           <enum>Qt::Horizontal</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>40</width>
            <height>20</height>
@@ -241,7 +237,7 @@
          <property name="orientation" >
           <enum>Qt::Horizontal</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>40</width>
            <height>20</height>
@@ -252,51 +248,191 @@
       </layout>
      </widget>
      <widget class="QWidget" name="page" >
-      <layout class="QGridLayout" >
-       <property name="margin" >
-        <number>9</number>
-       </property>
-       <property name="spacing" >
-        <number>6</number>
-       </property>
-       <item rowspan="2" row="0" column="0" >
-        <widget class="QTreeWidget" name="tree" >
-         <property name="sizeIncrement" >
+      <layout class="QGridLayout" name="gridLayout" >
+       <item rowspan="6" row="0" column="0" >
+        <widget class="QListWidget" name="tree" >
+         <property name="selectionMode" >
+          <enum>QAbstractItemView::ExtendedSelection</enum>
+         </property>
+         <property name="iconSize" >
           <size>
-           <width>50</width>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="movement" >
+          <enum>QListView::Static</enum>
+         </property>
+         <property name="gridSize" >
+          <size>
+           <width>96</width>
+           <height>48</height>
+          </size>
+         </property>
+         <property name="viewMode" >
+          <enum>QListView::IconMode</enum>
+         </property>
+         <item>
+          <property name="text" >
+           <string>New Item</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>New Item</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>New Item</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="0" column="1" colspan="3" >
+        <widget class="QLabel" name="image" >
+         <property name="minimumSize" >
+          <size>
+           <width>128</width>
            <height>0</height>
           </size>
          </property>
-         <property name="contextMenuPolicy" >
-          <enum>Qt::CustomContextMenu</enum>
+         <property name="text" >
+          <string/>
          </property>
-         <property name="uniformRowHeights" >
-          <bool>true</bool>
+         <property name="alignment" >
+          <set>Qt::AlignCenter</set>
          </property>
-         <property name="sortingEnabled" >
-          <bool>true</bool>
-         </property>
-         <property name="allColumnsShowFocus" >
-          <bool>true</bool>
-         </property>
-         <column>
-          <property name="text" >
-           <string>File</string>
-          </property>
-         </column>
-         <column>
-          <property name="text" >
-           <string>Size</string>
-          </property>
-         </column>
         </widget>
        </item>
-       <item row="1" column="1" >
+       <item row="1" column="1" colspan="3" >
+        <widget class="QLabel" name="filename" >
+         <property name="maximumSize" >
+          <size>
+           <width>128</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text" >
+          <string>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.mp3</string>
+         </property>
+         <property name="alignment" >
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1" colspan="3" >
+        <widget class="QLabel" name="filesize" >
+         <property name="text" >
+          <string>aaa.mp3</string>
+         </property>
+         <property name="alignment" >
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1" >
+        <widget class="QToolButton" name="download" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="sizeIncrement" >
+          <size>
+           <width>2</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text" >
+          <string/>
+         </property>
+         <property name="icon" >
+          <iconset>
+           <normaloff>document-save.png</normaloff>document-save.png</iconset>
+         </property>
+         <property name="iconSize" >
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+         <property name="toolButtonStyle" >
+          <enum>Qt::ToolButtonTextUnderIcon</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="2" >
+        <widget class="QToolButton" name="upload" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="sizeIncrement" >
+          <size>
+           <width>2</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text" >
+          <string/>
+         </property>
+         <property name="icon" >
+          <iconset>
+           <normaloff>upload.png</normaloff>upload.png</iconset>
+         </property>
+         <property name="iconSize" >
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+         <property name="toolButtonStyle" >
+          <enum>Qt::ToolButtonTextUnderIcon</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="3" >
+        <widget class="QToolButton" name="remove" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="sizeIncrement" >
+          <size>
+           <width>2</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text" >
+          <string/>
+         </property>
+         <property name="icon" >
+          <iconset>
+           <normaloff>edit-delete.png</normaloff>edit-delete.png</iconset>
+         </property>
+         <property name="iconSize" >
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+         <property name="toolButtonStyle" >
+          <enum>Qt::ToolButtonTextUnderIcon</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1" colspan="3" >
         <spacer>
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>20</width>
            <height>31</height>
@@ -304,147 +440,37 @@
          </property>
         </spacer>
        </item>
-       <item row="0" column="1" >
-        <layout class="QVBoxLayout" >
-         <property name="margin" >
-          <number>0</number>
+       <item row="5" column="1" colspan="3" >
+        <widget class="QToolButton" name="configuration" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
-         <property name="spacing" >
-          <number>0</number>
+         <property name="sizeIncrement" >
+          <size>
+           <width>2</width>
+           <height>0</height>
+          </size>
          </property>
-         <item>
-          <widget class="QToolButton" name="download" >
-           <property name="sizePolicy" >
-            <sizepolicy>
-             <hsizetype>5</hsizetype>
-             <vsizetype>5</vsizetype>
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="sizeIncrement" >
-            <size>
-             <width>2</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text" >
-            <string>Download File</string>
-           </property>
-           <property name="icon" >
-            <iconset>document-save.png</iconset>
-           </property>
-           <property name="iconSize" >
-            <size>
-             <width>24</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="toolButtonStyle" >
-            <enum>Qt::ToolButtonTextUnderIcon</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="upload" >
-           <property name="sizePolicy" >
-            <sizepolicy>
-             <hsizetype>5</hsizetype>
-             <vsizetype>5</vsizetype>
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="sizeIncrement" >
-            <size>
-             <width>2</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text" >
-            <string>Upload File</string>
-           </property>
-           <property name="icon" >
-            <iconset>upload.png</iconset>
-           </property>
-           <property name="iconSize" >
-            <size>
-             <width>24</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="toolButtonStyle" >
-            <enum>Qt::ToolButtonTextUnderIcon</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="remove" >
-           <property name="sizePolicy" >
-            <sizepolicy>
-             <hsizetype>5</hsizetype>
-             <vsizetype>5</vsizetype>
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="sizeIncrement" >
-            <size>
-             <width>2</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text" >
-            <string>Remove File</string>
-           </property>
-           <property name="icon" >
-            <iconset>edit-delete.png</iconset>
-           </property>
-           <property name="iconSize" >
-            <size>
-             <width>24</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="toolButtonStyle" >
-            <enum>Qt::ToolButtonTextUnderIcon</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="configuration" >
-           <property name="sizePolicy" >
-            <sizepolicy>
-             <hsizetype>5</hsizetype>
-             <vsizetype>5</vsizetype>
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="sizeIncrement" >
-            <size>
-             <width>2</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text" >
-            <string>Configuration</string>
-           </property>
-           <property name="icon" >
-            <iconset>easy_share32.png</iconset>
-           </property>
-           <property name="iconSize" >
-            <size>
-             <width>24</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="toolButtonStyle" >
-            <enum>Qt::ToolButtonTextUnderIcon</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
+         <property name="text" >
+          <string>Configuration</string>
+         </property>
+         <property name="icon" >
+          <iconset>
+           <normaloff>easy_share32.png</normaloff>easy_share32.png</iconset>
+         </property>
+         <property name="iconSize" >
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+         <property name="toolButtonStyle" >
+          <enum>Qt::ToolButtonTextUnderIcon</enum>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -464,7 +490,7 @@
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>20</width>
            <height>40</height>
