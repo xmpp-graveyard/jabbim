@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 import sys,os,time
 sys.path.append('.')
 from include import plugins
@@ -166,7 +166,8 @@ class Plugin(plugins.PluginBase):
 		if (not self.log) and self.window.ui.pythonEnableBox.isChecked():
 			self.log = True
 			log.addObserver(self.observer)
-			self.window.ui.pythonOutput.append('Log started')
+			#self.window.ui.pythonOutput.append('Log started')
+			self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('appendMessage("Log started.");')
 		else:
 			self.log = False
 			log.removeObserver(self.observer)
@@ -193,7 +194,8 @@ class Plugin(plugins.PluginBase):
 	
 	def execute(self):
 		code = unicode(self.window.ui.pythonInput.toPlainText ())
-		self.window.ui.pythonOutput.append('>>> '+self.window.ui.pythonInput.toPlainText ())
+		#self.window.ui.pythonOutput.append('>>> '+self.window.ui.pythonInput.toPlainText ())
+		self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s");'%('>>> '+self.window.ui.pythonInput.toPlainText()))
 		self.historyPy.insert(0,code)
 		self.historyPy=self.historyPy[0:long(self.config['historyMaxCount'])]
 		self.historyPyPosition=-1;
