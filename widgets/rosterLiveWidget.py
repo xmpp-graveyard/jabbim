@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 import sys,os
 
-try: from PyQt4 import QtCore, QtGui, QtWebKit
+try: from PyQt4 import QtCore, QtGui
 except: print "PyQt4 is not installed."
 from os.path import basename
 from twisted.python import log
@@ -89,29 +89,6 @@ class rosterToolTip(QtGui.QFrame):
 	def enterEvent(self,event):
 		self.focus=True
 		
-
-class rosterObject(QtCore.QObject):
-	def __init__(self,roster):
-		QtCore.QObject.__init__(self)
-		self.roster=roster
-		
-	@QtCore.pyqtSignature("QString",result="QString")
-	def userGroup(self,name):
-		for user in self.roster.users:
-			if user.name+unicode(user.group)==name:
-				return QtCore.QString(user.group)
-
-	@QtCore.pyqtSignature("QString",result="QString")
-	def userName(self,name):
-		for user in self.roster.users:
-			if user.name+unicode(user.group)==name:
-				return QtCore.QString(user.escapedName)
-
-	@QtCore.pyqtSignature("QString",result="QString")
-	def userShow(self,name):
-		for user in self.roster.users:
-			if user.name+unicode(user.group)==name:
-				return QtCore.QString(str(user.status))
 
 class emptyRosterWidget(QtGui.QWidget):
 	def __init__(self,main,parent=None):
@@ -256,12 +233,12 @@ class special:
 		self.name="zzzzzzzzzzzzzzzzzzzzzz%%%$@#@^&"
 		self.expanded=True
 
-class rosterWidget(QtWebKit.QWebView):
+class rosterWidget(QtGui.QWidget):
 	"""
 	RosterLiveWidget class.
 	"""
 	def __init__(self,parent=None,main=None):
-		QtWebKit.QWebView.__init__(self,parent)
+		QtGui.QWidget.__init__(self,parent)
 		self.main=main
 		self.groups={}
 		self.specialName="zzzzzzzzzzzzzzzzzzzzzz%%%$@#@^&"
@@ -312,12 +289,7 @@ class rosterWidget(QtWebKit.QWebView):
 		self.colors.setObjectName("rosterView")
 		self.tool=None
 
-		self.rosterObject=rosterObject(self)
-		QtCore.QObject.connect(self.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.webkitCleared)
-  		file="file:///"+os.getcwd()+"/template.html"
-  		self.load(QtCore.QUrl(file))
-
-		#self.reskin()
+		self.reskin()
 		self.blinkJids=[]
 		self.main.ui.rosterSearch.hide()
 		self.main.ui.rosterSearchLabel.hide()
@@ -331,11 +303,8 @@ class rosterWidget(QtWebKit.QWebView):
 		#self.groups[self.specialName].height=self.rosterStyle.heightForItem(self.groups[self.specialName])
 		self.lastMove=[0,0,None]
 
-
 		#QtCore.QObject.connect(self.main.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.sliderChanged)
 
-	def webkitCleared(self):
-		self.page().mainFrame().addToJavaScriptWindowObject("rosterObject",self.rosterObject)
 
 	def sliderChanged(self,i):
 		if self.main.config['rosterScrollBar']=='False':
@@ -365,12 +334,10 @@ class rosterWidget(QtWebKit.QWebView):
 		@return: created groupItem
 		@see: L{AddUser}, L{getGroupUsers}, L{getAllGroupUsers}, L{getGroupSortedUsers}
 		"""
-		#return
 		item=groupItem(name,QtGui.QIcon("images/"+self.iconSize+"/icons/group-closed.png"),self)
 		item.height=self.rosterStyle.heightForItem(item)
 		self.groups[name]=item
-		#self.repaint()
-		self.page().mainFrame().evaluateJavaScript("addGroup('%s');"%name)
+		self.repaint()
 		return item
 
 	def addUser(self,jid,name,group):
@@ -384,7 +351,6 @@ class rosterWidget(QtWebKit.QWebView):
 		@param group: group name or None for user without group
 		@see: L{addGroup}, L{getGroupUsers}, L{getAllGroupUsers}, L{getGroupSortedUsers}
 		"""
-		#return
 		if len(name)==0:
 			name=jid
 		if not group:
@@ -395,7 +361,6 @@ class rosterWidget(QtWebKit.QWebView):
 		item.hidden=True
 		#item.setAvatar(QtGui.QIcon("images/48x48/apps/jabbim.png"))
 		self.users.append(item)
-		self.page().mainFrame().evaluateJavaScript("addUser('%s');"%(name+unicode(group)))
 		return item
 
 	def getGroupUsers(self,group):
@@ -1214,7 +1179,7 @@ class rosterWidget(QtWebKit.QWebView):
 			else:
 				self.main.scroll.verticalScrollBar().setValue(self.main.scroll.verticalScrollBar().value()-10)
 
-	def _resizeEvent(self,event):
+	def resizeEvent(self,event):
 		"""
 		resizes activeWidget if roster is resized
 		"""
@@ -1246,64 +1211,64 @@ class rosterWidget(QtWebKit.QWebView):
 		"""
 		self.rosterStyle.paintUserItem(painter,useritem,x,y,last)
 
-	#def paintEvent(self,event):
-		#start=time.time()
-		#QtGui.QWidget.paintEvent(self,event)
-		#painter=QtGui.QPainter(self)
-		#painter.setClipping(True)
-		##painter.setRenderHint(painter.Antialiasing)
-		#painter.setClipRegion(event.region())
-		#for rect in event.region().rects():
-			#items,x,y=self.itemAt(1,rect.y(),rect.height())
-			#for i in range(len(items)):
-				#item=items[i]
-				#last=False
-				#if i+1!=len(items):
-					#if items[i+1].typ=="group":
-						#last=True
-				#else:
-					#last=True
-				#if item.typ=="group":
-					##y+=self.rosterStyle.spaceBetweenGroups
-					#self.paintGroupItem(painter,item,0,y)
-				#else:
-					#self.paintUserItem(painter,item,0,y,last)
-				#y+=item.height
-		#if self.main.config['rosterScrollBar']=='False':
-			#if self.height()>self.main.scroll.height():
-				#if self.main.scroll.verticalScrollBar().value()>0:
-					#painter.save()
-					#x=self.width()-8
-					#y=self.main.scroll.verticalScrollBar().value()+8
-					#painter.setPen(QtGui.QPen(QtCore.Qt.black))
-					#painter.drawPoint(x-4,y+2)# 00000
-					#painter.drawPoint(x-3,y+2)#  000
-					#painter.drawPoint(x-2,y+2)#   0
-					#painter.drawPoint(x-1,y+2)
-					#painter.drawPoint(x,y+2)
-					#painter.drawPoint(x-3,y+1)
-					#painter.drawPoint(x-2,y+1)
-					#painter.drawPoint(x-1,y+1)
-					#painter.drawPoint(x-2,y)
-					#painter.restore()
-				#if self.main.scroll.verticalScrollBar().value()!=self.main.scroll.verticalScrollBar().maximum():
-					#painter.save()
-					#x=self.width()-8
-					#y=self.main.scroll.verticalScrollBar().value()+self.main.scroll.height()-8
-					#painter.setPen(QtGui.QPen(QtCore.Qt.black))
-					#painter.drawPoint(x-4,y)# 00000
-					#painter.drawPoint(x-3,y)#  000
-					#painter.drawPoint(x-2,y)#   0
-					#painter.drawPoint(x-1,y)
-					#painter.drawPoint(x,y)
-					#painter.drawPoint(x-3,y+1)
-					#painter.drawPoint(x-2,y+1)
-					#painter.drawPoint(x-1,y+1)
-					#painter.drawPoint(x-2,y+2)
-					#painter.restore()
-		#print "paintEvent last",time.time()-start
-		##if self.reshow:
-			##self.statusLabel.hide()
+	def paintEvent(self,event):
+		start=time.time()
+		QtGui.QWidget.paintEvent(self,event)
+		painter=QtGui.QPainter(self)
+		painter.setClipping(True)
+		#painter.setRenderHint(painter.Antialiasing)
+		painter.setClipRegion(event.region())
+		for rect in event.region().rects():
+			items,x,y=self.itemAt(1,rect.y(),rect.height())
+			for i in range(len(items)):
+				item=items[i]
+				last=False
+				if i+1!=len(items):
+					if items[i+1].typ=="group":
+						last=True
+				else:
+					last=True
+				if item.typ=="group":
+					#y+=self.rosterStyle.spaceBetweenGroups
+					self.paintGroupItem(painter,item,0,y)
+				else:
+					self.paintUserItem(painter,item,0,y,last)
+				y+=item.height
+		if self.main.config['rosterScrollBar']=='False':
+			if self.height()>self.main.scroll.height():
+				if self.main.scroll.verticalScrollBar().value()>0:
+					painter.save()
+					x=self.width()-8
+					y=self.main.scroll.verticalScrollBar().value()+8
+					painter.setPen(QtGui.QPen(QtCore.Qt.black))
+					painter.drawPoint(x-4,y+2)# 00000
+					painter.drawPoint(x-3,y+2)#  000
+					painter.drawPoint(x-2,y+2)#   0
+					painter.drawPoint(x-1,y+2)
+					painter.drawPoint(x,y+2)
+					painter.drawPoint(x-3,y+1)
+					painter.drawPoint(x-2,y+1)
+					painter.drawPoint(x-1,y+1)
+					painter.drawPoint(x-2,y)
+					painter.restore()
+				if self.main.scroll.verticalScrollBar().value()!=self.main.scroll.verticalScrollBar().maximum():
+					painter.save()
+					x=self.width()-8
+					y=self.main.scroll.verticalScrollBar().value()+self.main.scroll.height()-8
+					painter.setPen(QtGui.QPen(QtCore.Qt.black))
+					painter.drawPoint(x-4,y)# 00000
+					painter.drawPoint(x-3,y)#  000
+					painter.drawPoint(x-2,y)#   0
+					painter.drawPoint(x-1,y)
+					painter.drawPoint(x,y)
+					painter.drawPoint(x-3,y+1)
+					painter.drawPoint(x-2,y+1)
+					painter.drawPoint(x-1,y+1)
+					painter.drawPoint(x-2,y+2)
+					painter.restore()
+		print "paintEvent last",time.time()-start
+		#if self.reshow:
+			#self.statusLabel.hide()
 
 	def setSize(self):
 		"""
@@ -1357,7 +1322,7 @@ class rosterWidget(QtWebKit.QWebView):
 		#if y+self.selectedHeight-28>0 and self.selectedHeight!=0 and not self.statusLabel.isHidden():
 			#self.setMinimumHeight(size)
 		#else:
-		#self.setMinimumHeight(size)
+		self.setMinimumHeight(size)
 		#self.setMinimumHeight(1500)
 
 
@@ -2088,54 +2053,20 @@ class rosterWidget(QtWebKit.QWebView):
 			user.status=self.main.shows[unicode(show)]
 			user.height=self.rosterStyle.heightForItem(user)
 			# user was visible
-			self.page().mainFrame().evaluateJavaScript("updateUser('%s');"%(user.name+unicode(user.group)))
-			#print self.sortedGroupe
-			try:
-				old=self.getGroupSortedUsers(user.group).index(user)
-			except:
-				old=-1
 			self.sortGroup(user.group)
-			try:
-				new2 = self.getGroupSortedUsers(user.group).index(user)
-			except:
-				new2 = None
-			print "STATUS",new2,old
-			if new2!=None:
-				if old!=new2:
-					new = self.getGroupSortedUsers(user.group)
-					try:
-						new3 = new[new2+1].name+unicode(new[new2+1].group)
-					except:
-						new3=None
-					print new3
-					if new3:
-						#new = self.sorted[user.group][new].name+unicode(self.sorted[user.group][new].group)
-						self.page().mainFrame().evaluateJavaScript("prependUserTo('%s','%s');"%(user.name+unicode(user.group),new3))
+			x1,y1=self.itemCoordinates(user)
+			if y!=None:
+				# user is visible
+				if y1!=None:
+					if y1>y:
+						self.repaint(0,y-10,self.width(),y1-y+user.height+20)
 					else:
-						try:
-							new3 = new[new2-1].name+unicode(new[new2-1].group)
-						except:
-							new3 = None
-						if new3:
-							self.page().mainFrame().evaluateJavaScript("appendUserTo('%s','%s');"%(user.name+unicode(user.group),new3))
-						self.page().mainFrame().evaluateJavaScript("showUser('%s');"%(user.name+unicode(user.group)))
+						self.repaint(0,y1-10,self.width(),y-y1+user.height+20)
 				else:
-					self.page().mainFrame().evaluateJavaScript("showUser('%s');"%(user.name+unicode(user.group)))
-			
-			
-			#x1,y1=self.itemCoordinates(user)
-			#if y!=None:
-				## user is visible
-				#if y1!=None:
-					#if y1>y:
-						#self.repaint(0,y-10,self.width(),y1-y+user.height+20)
-					#else:
-						#self.repaint(0,y1-10,self.width(),y-y1+user.height+20)
-				#else:
-					#self.repaint(0,y-10,self.width(),self.height()-y+10)
-			#else:
-				#if y1!=None:
-					#self.repaint(0,y1-10,self.width(),self.height()-y1+10)
+					self.repaint(0,y-10,self.width(),self.height()-y+10)
+			else:
+				if y1!=None:
+					self.repaint(0,y1-10,self.width(),self.height()-y1+10)
 
 			#self.repaintItem(user)
 
