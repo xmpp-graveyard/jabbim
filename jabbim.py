@@ -2722,6 +2722,9 @@ class mainWindow(QtGui.QMainWindow):
 					
 					cid = src.split(':')[1]
 					i="bob"+str(self.imageId)+str(random.randint(0,100))
+					log.msg("GET BOB DATA")
+					d=self.client.getBOBData(msg.frm.full(),  cid)
+					d.addCallback(self.refreshImage,i,msg.frm)
 					if not self.client.bobDef.has_key(cid):
 						log.msg("getBobImages error: no value for key")
 						continue
@@ -2740,8 +2743,6 @@ class mainWindow(QtGui.QMainWindow):
 					
 					self.imageId+=1
 					changed = True
-					d=self.client.getBOBData(msg.frm.full(),  cid)
-					d.addCallback(self.refreshImage,i,msg.frm)
 				elif src != None and src.startswith('xmpp:') and src.find('?recvfile;')>0:
 					url = QtCore.QUrl(src)
 					res = self.xmppUri(url, self.client.bobCacheDir)
