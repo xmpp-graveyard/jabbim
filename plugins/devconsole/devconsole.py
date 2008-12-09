@@ -1,10 +1,11 @@
 ﻿# -*- coding: utf-8 -*-
-import sys,os,time
+import sys,os,time, weakref
 sys.path.append('.')
 from include import plugins
 from PyQt4 import QtCore, QtGui, QtWebKit
 from twisted.python import log
 import base64
+#from widgets.webkitchatwidget import searchWidget
 
 
 template = u"<html><head><script>function appendMessage(text) {var hl = document.getElementById('hlavni');var message = document.createElement('div');message.innerHTML = text;hl.appendChild(message);};</script></head><body><div id='hlavni'></div></body></html>"
@@ -80,6 +81,8 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.xmlOutput.setHtml(template)
 			self.window.ui.pythonOutput.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
 			self.window.ui.pythonOutput.setHtml(template)
+##			self.window.ui.pythonSearchWidget=searchWidget(self.window.ui.pythonOutput,self.window)
+##			self.window._5.addWidget(self.ui.pythonSearchWidget)
 
 		#both tabs
 			#Ctrl+Enter(Return) executes command list
