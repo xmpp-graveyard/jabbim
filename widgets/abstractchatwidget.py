@@ -359,7 +359,8 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		if self.text==unicode(self.toPlainText()):
 			# text from previous loop is the same as currently typed text => user stops typing
 			if len(self.text)!=0:
-				self.main().main().client.sendMessage(self.main().jid, "",composing="paused")
+				if self.main().typ!="groupchat":
+					self.main().main().client.sendMessage(self.main().jid, "",composing="paused")
 			self.composing=False
 		else:
 			# text from previous loop is diffrent from currently typed text => user is typing
@@ -377,7 +378,8 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			return
 		if not self.composing:
 			# user starts typing
-			self.main().main().client.sendMessage(self.main().jid, "",composing="composing")
+			if self.main().typ!="groupchat":
+				self.main().main().client.sendMessage(self.main().jid, "",composing="composing")
 		key=event.key()
 		if key!=QtCore.Qt.Key_Tab:
 			self.main().tabWord=None
