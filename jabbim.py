@@ -2547,12 +2547,12 @@ class mainWindow(QtGui.QMainWindow):
 		#	self.ui.roster.setRosterStyle(widgets.compactrosterstyle.rosterStyle)
 		#else:
 #			self.ui.roster.setRosterStyle(widgets.defaultrosterstyle.rosterStyle)
-		#if self.config['rosterScrollBar']=="True":
-			#self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
-			#QtCore.QObject.disconnect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
-		#else:
-			#self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-			#QtCore.QObject.connect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
+		if self.config['rosterScrollBar']=="True":
+			self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+			QtCore.QObject.disconnect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
+		else:
+			self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+			QtCore.QObject.connect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
 
 		#self.loadRosterStyle() # load roster style
 		self.userRating=userrating.RatingAssigner(self)
@@ -4806,13 +4806,11 @@ class mainWindow(QtGui.QMainWindow):
 		layout=QtGui.QVBoxLayout(self.ui.rosterWidget)
 		layout.setMargin(0)
 		layout.setSpacing(0)
-		#self.scroll=scrollBar(self.ui.rosterWidget)
-		#self.scroll.setWidgetResizable (True)
-		#layout.addWidget(self.scroll)
+		self.scroll=scrollBar(self.ui.rosterWidget)
+		self.scroll.setWidgetResizable (True)
+		layout.addWidget(self.scroll)
 		self.ui.roster=widgets.rosterLiveWidget.rosterWidget(self,self)
-		self.ui.roster.setParent(self.ui.rosterWidget)
-		layout.addWidget(self.ui.roster)
-		#self.scroll.setWidget(self.ui.roster)
+		self.scroll.setWidget(self.ui.roster)
 
 	def _connected(self):
 		"""
