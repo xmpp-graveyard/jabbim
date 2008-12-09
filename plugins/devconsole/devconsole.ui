@@ -64,7 +64,7 @@
             <property name="orientation" >
              <enum>Qt::Vertical</enum>
             </property>
-            <widget class="QTextBrowser" name="xmlOutput" />
+            <widget class="QWebView" name="xmlOutput" />
             <widget class="QWidget" name="layoutWidget_2" >
              <layout class="QGridLayout" name="_3" >
               <property name="margin" >
@@ -178,7 +178,7 @@
           <item>
            <layout class="QVBoxLayout" name="_4" >
             <item>
-             <widget class="QTextBrowser" name="pythonOutput" />
+             <widget class="QWebView" name="pythonOutput" />
             </item>
             <item>
              <widget class="QTextEdit" name="pythonInput" >

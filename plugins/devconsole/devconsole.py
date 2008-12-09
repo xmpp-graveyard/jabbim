@@ -1,9 +1,13 @@
+# -*- coding: utf-8 -*-
 import sys,os,time
 sys.path.append('.')
 from include import plugins
-from PyQt4 import QtCore, QtGui
+from PyQt4 import QtCore, QtGui, QtWebKit
 from twisted.python import log
 import base64
+
+
+template = u"<html><head><script>function appendMessage(text) {var hl = document.getElementById('hlavni');var message = document.createElement('div');message.innerHTML = text;hl.appendChild(message);};</script></head><body><div id='hlavni'></div></body></html>"
 
 class config:
 	def __init__(self,main):
@@ -72,6 +76,10 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.tabWidget.setTabIcon(1,QtGui.QIcon("%s/python.png" % self.pluginDir))
 			self.log = False
 			self.registerHandler('onXmlEvent',self.onXml)
+			self.window.ui.xmlOutput.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
+			self.window.ui.xmlOutput.setHtml(template)
+			self.window.ui.pythonOutput.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
+			self.window.ui.pythonOutput.setHtml(template)
 
 		#both tabs
 			#Ctrl+Enter(Return) executes command list
@@ -102,6 +110,7 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.xmlPresencePreset,QtCore.SIGNAL("clicked()"),self.presence)
 			QtCore.QObject.connect(self.window.ui.xmlIqPreset,QtCore.SIGNAL("clicked()"),self.iq)
 			QtCore.QObject.connect(self.window.ui.xmlClearButton,QtCore.SIGNAL("clicked()"),self.clearLog)
+			QtCore.QObject.connect(self.window.ui.xmlOutput,QtCore.SIGNAL("linkClicked ( const QUrl &)"),self.webkitLinkClicked)
 			
 		#python console
 			QtCore.QObject.connect(self.window.ui.pythonEnableBox, QtCore.SIGNAL("stateChanged(int)"),self.pythonEnableToggled)
@@ -166,15 +175,16 @@ class Plugin(plugins.PluginBase):
 		if not fromThread:
 			self.main.reactor.callFromThread(self.observer,msg,True)
 			return
-		self.window.ui.pythonOutput.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
+		#self.window.ui.pythonOutput.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
+		self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s");'%('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;")))))
 		if msg['isError'] and self.config['notify'] == 'True':
 			self.main.tray.showMessage(self.main.tr("Log"),unicode(' '.join(msg['message'])), QtGui.QSystemTrayIcon.Warning, 2000)
 	
 	def clearLog(self):
 		if self.window.ui.tabWidget.currentIndex()==1:
-			self.window.ui.pythonOutput.setText('');
+			self.window.ui.pythonOutput.setHtml(template)
 		else:
-			self.window.ui.xmlOutput.setText('');
+			self.window.ui.xmlOutput.setHtml(template)
 	def ctrlEnter(self):
 		if self.window.ui.tabWidget.currentIndex()==1:
 			self.execute()
@@ -290,14 +300,21 @@ class Plugin(plugins.PluginBase):
 		self.window.ui.xmlInput.setText("")
 		if self.config['historySave']=='one':
 			self.saveHistory()
+	
+	def webkitLinkClicked():
+		log.msg('link clicked')
+	
 	def onXml(self,xml):
 		if self.window.ui.xmlEnableBox.isChecked():
 			if self.config['XMLaddTimestamps']=='True':
 				text=time.strftime("[%H:%M:%S]")+' ';
 			else:
 				text='';
-			text=text+unicode(xml);
-			self.window.ui.xmlOutput.append(text+"\n\n");
+			text=text+unicode(xml)
+			text = text.replace('<','&lt;').replace('>','&gt;')
+			
+			self.window.ui.xmlOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s");'%(text))
+			
 	def setTabXML(self):
 		self.window.ui.tabWidget.setCurrentIndex(0);
 	
