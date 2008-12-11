@@ -435,6 +435,8 @@ class clientClass(pyxl.client.Client):
 		@param bytes: count of transfered bytes
 		"""
 		mainWindow=self.main
+		if not self.main.events.ftEvents.has_key(sid):
+			return #prenos neni v eventech?
 		event=self.main.events.ftEvents[sid]
 		if not end:
 			event.setFileTransfered(int(self.ft[sid].transfered))

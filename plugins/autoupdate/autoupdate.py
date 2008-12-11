@@ -57,7 +57,7 @@ class Plugin(plugins.PluginBase):
 			self.loadConfig(homedir)
 
 	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
-		if error == None and self.main.client.ft[sid].tojid.find("rpc")!=-1:
+		if error == None and self.main.client.ft[sid].fromjid.user.find("rpc")!=-1:
 			if self.main.client.ft[sid].file.find("plugins/")!=-1:
 				QtGui.QMessageBox.information(self.main,self.tr("Plugin updated"), self.tr("Please restart Jabbim to apply changes."))
 			

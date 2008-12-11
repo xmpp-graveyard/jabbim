@@ -92,7 +92,7 @@ class FTInit:
 		iq['type'] = 'error' #este to chce typ chyby asi
 		self.send(iq)
 	
-	def sendFile(self, outjid, filename, fp, desc = None, preview = None, previewType = 'image/jpeg', typ = None,  sid = None): #typ = None/ibb/socks5
+	def sendFile(self, outjid, filename, fp, desc = None, preview = None, previewType = 'image/jpeg', typ = None,  sid = None, transport = 'socks'): #typ = None/ft/jingle, transport = socks5/ibb
 #		(self,  tojid,  fromjid,  init,  fileprops,  filepath=None, sid = None, typ='ft'):
 		fileprops = {}
 		fileprops['name'] = filename
@@ -102,21 +102,23 @@ class FTInit:
 		if preview != None:
 			fileprops['preview'] = preview
 			fileprops['previewType'] = previewType
-		typ = 'ft'
-		if self.client.hasFeature(outjid,  'urn:xmpp:tmp:jingle:apps:file-transfer'):
-			typ = 'jingle'
-		elif self.client.hasFeature(outjid,  'http://jabber.org/protocol/si/profile/file-transfer'):
+		if typ == None:
 			typ = 'ft'
-		else:
-			if self.client.groupchats.has_key(jd.userhost()):
-				typ='jingle'
+			if self.client.hasFeature(outjid,  'urn:xmpp:tmp:jingle:apps:file-transfer'):
+				typ = 'jingle'
+			elif self.client.hasFeature(outjid,  'http://jabber.org/protocol/si/profile/file-transfer'):
+				typ = 'ft'
 			else:
-				return False # should be checked somewhere
+				if self.client.groupchats.has_key(jd.userhost()):
+					typ='jingle'
+				else:
+					return False # should be checked somewhere
 			
 		
 		
 		ftObj = FT(outjid,  self.client.jid.full(),  self, fileprops,  fp, sid,  typ = typ)
 		self.ft[ftObj.sid] = ftObj
+		ftObj.setTransport(transport)
 		ftObj.send()
 		return ftObj.sid
 		
@@ -155,7 +157,7 @@ class FTInit:
 			iq.addElement('starting', 'http://jabber.org/protocol/sipub')
 			iq.starting['sid'] = sid
 			self.send(iq)
-			self.sendFile(el['from'],  id, path, sid = sid)
+			self.sendFile(el['from'],  id, path, sid = sid, typ = 'ft', transport = 'ibb')
 		else:
 			el.swapAttributeValues('to',  'from')
 			el['type'] = 'error'
@@ -567,7 +569,7 @@ class SI:
 		field = x.addElement('field')
 		field['var'] = 'stream-method'
 		field['type'] = 'list-single'
-		if not self.ft.init.client.IBBonly:
+		if not self.ft.init.client.IBBonly and self.ft.getTransport() == 'socks':
 			field.addRawXml('<option><value>http://jabber.org/protocol/bytestreams</value></option>')
 			field.addRawXml('<option><value>http://jabber.org/protocol/ibb</value></option>')
 		else:
@@ -670,8 +672,12 @@ class Jingle:
 		
 		jingleSession = jingle.JingleSession(self.ft.init.client.jingle,self.ft.tojid,  self.ft.fromjid, self.ft.sid)
 		self.jingleSession = jingleSession
-		jingleSession.createFTContent('urn:xmpp:tmp:jingle:transports:bytestreams',  fileprops)
-#		jingleSession.createFTContent('urn:xmpp:tmp:jingle:transports:ibb',  fileprops)
+		if self.ft.getTransport() == 'socks':
+			jingleSession.createFTContent('urn:xmpp:tmp:jingle:transports:bytestreams',  fileprops)
+		elif self.ft.getTransport() == 'ibb':
+			jingleSession.createFTContent('urn:xmpp:tmp:jingle:transports:ibb',  fileprops)
+		else:
+			raise TypeError
 		
 		jingleSession.initSession()
 		self.ft.init.client.jingle.sessions[self.ft.sid] = jingleSession
@@ -748,6 +754,16 @@ class FT:
 		self.protocol = None
 		self.uplimit = 0
 		self.downlimit = 0
+		self.transport = 'socks' # socks or ibb, used for forcing type of underlying transport method
+	
+	def setTransport(self, transport):
+		if transport == 'socks' or transport == 'ibb':
+			self.transport = transport
+		else:
+			raise TypeError
+	
+	def getTransport(self):
+		return self.transport
 	
 	def setLimit(self,  limit = 0, typ = 'upload'):
 		if typ =='upload':
