@@ -366,7 +366,7 @@ class Plugin(plugins.PluginBase):
 				tagy +='from '
 			
 			self.window.ui.xmlOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s", "%s");'%(text, tagy))
-			print self.window.ui.xmlOutput.page().mainFrame().toHtml()
+			#print self.window.ui.xmlOutput.page().mainFrame().toHtml()
 			
 	def setTabXML(self):
 		self.window.ui.tabWidget.setCurrentIndex(0);

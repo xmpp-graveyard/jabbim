@@ -50,7 +50,7 @@ class EventDispatcher:
 				try:
 					t2 = time.time()
 					vysl = cb['method'](*args, **kwargs)
-					log.msg('handler %s executed in %i'%(unicode(cb), time.time()-t2))
+					#log.msg('handler %s executed in %i'%(unicode(cb), time.time()-t2))
 					if vysl == False:
 						return False
 				except Exception, ex:
@@ -58,7 +58,7 @@ class EventDispatcher:
 					log.msg('In function:'+unicode(cb['method']))
 					message = traceback.format_exc()
 					log.msg(message)
-			log.msg('%s event executed in %i s'%(name, time.time()-t1))
+			#log.msg('%s event executed in %i s'%(name, time.time()-t1))
 		else:
 			log.msg('no handler for %s'%name)
 		return True
