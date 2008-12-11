@@ -1,476 +1,477 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs">
+<defaultcodec></defaultcodec>
 <context>
     <name></name>
     <message>
         <location filename="../jabbim.py" line="301"/>
         <source>Nickname conflict</source>
-        <translation type="unfinished"></translation>
+        <translation>Přezdívka obsazena</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="301"/>
         <source>New name:</source>
-        <translation type="unfinished">Nová přezdívka:</translation>
+        <translation>Nová přezdívka:</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="4250"/>
         <source>Join</source>
-        <translation type="unfinished"></translation>
+        <translation>Vstoupit</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="4251"/>
         <source>Decline</source>
-        <translation type="unfinished">Odmítnout</translation>
+        <translation>Odmítnout</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="303"/>
         <source>This nickname is used by someone else. Please choose another. </source>
-        <translation type="unfinished">Tato přezdívka je používána jiným uživatel. Vyberte si jinou.</translation>
+        <translation>Tato přezdívka je používána jiným uživatel. Vyberte si jinou.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="4249"/>
         <source>Nickname:</source>
-        <translation type="unfinished">Přezdívka:</translation>
+        <translation>Přezdívka:</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="311"/>
         <source>Cancel</source>
-        <translation type="unfinished">Zrušit</translation>
+        <translation>Zrušit</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="319"/>
         <source>Wrong password</source>
-        <translation type="unfinished"></translation>
+        <translation>Špatné heslo</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="321"/>
         <source>Room is password protected</source>
-        <translation type="unfinished">Místnost je chráněna heslem</translation>
+        <translation>Místnost je chráněna heslem</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="416"/>
         <source>Close</source>
-        <translation type="unfinished">Zavřít</translation>
+        <translation>Zavřít</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="332"/>
         <source>Member only</source>
-        <translation type="unfinished"></translation>
+        <translation>Pouze pro členy</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="334"/>
         <source>Room is only for members</source>
-        <translation type="unfinished">Místnost je pouze pro členy</translation>
+        <translation>Místnost je pouze pro členy</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="345"/>
         <source>Banned</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokován</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="347"/>
         <source>You are banned from entering this room.</source>
-        <translation type="unfinished">Do této místnosti máte zakázán přístup.</translation>
+        <translation>Do této místnosti máte zakázán přístup.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="358"/>
         <source>Max Users</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximální počet uživatelů</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="360"/>
         <source>Room occupant limit has been reached</source>
-        <translation type="unfinished">Maximální počet uživatelů místnosti byl překročen</translation>
+        <translation>Maximální počet uživatelů místnosti byl překročen</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="371"/>
         <source>Room not exist</source>
-        <translation type="unfinished"></translation>
+        <translation>Místnost neexistuje</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="373"/>
         <source>Room is creating try it again</source>
-        <translation type="unfinished">Místnost se vytváří, zkuste to znovu</translation>
+        <translation>Místnost se vytváří, zkuste to znovu</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="384"/>
         <source>Room reserved</source>
-        <translation type="unfinished"></translation>
+        <translation>Místnost rezervována</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="386"/>
         <source>Not allowed create room</source>
-        <translation type="unfinished">Není povoleno vytvořit místnost</translation>
+        <translation>Není povoleno vytvořit místnost</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="397"/>
         <source>Locked Nicknames</source>
-        <translation type="unfinished"></translation>
+        <translation>Zamknuté přezdívky</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="399"/>
         <source>Not allowed change nickname</source>
-        <translation type="unfinished">Není povoleno měnit přezdívku</translation>
+        <translation>Není povoleno měnit přezdívku</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="413"/>
         <source>Groupchat Error</source>
-        <translation type="unfinished">Chyba místnosti</translation>
+        <translation>Chyba místnosti</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="546"/>
         <source>Complete</source>
-        <translation type="unfinished"></translation>
+        <translation>Hotovo</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="566"/>
         <source>File </source>
-        <translation type="unfinished">Soubor </translation>
+        <translation>Soubor </translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="495"/>
         <source>File declined</source>
-        <translation type="unfinished">Soubor odmítnut</translation>
+        <translation>Soubor odmítnut</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="499"/>
         <source>User declined to receive file</source>
-        <translation type="unfinished">Uživatel odmítnul soubor</translation>
+        <translation>Uživatel odmítnul soubor</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="561"/>
         <source>Error</source>
-        <translation type="unfinished">Chyba</translation>
+        <translation>Chyba</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="505"/>
         <source> can&apos;t be sent </source>
-        <translation type="unfinished"> nemohl být zaslán </translation>
+        <translation> nemohl být zaslán </translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="525"/>
         <source>All files for</source>
-        <translation type="unfinished">Všechny soubory pro</translation>
+        <translation>Všechny soubory pro</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="525"/>
         <source>have been sent</source>
-        <translation type="unfinished">byly zaslány</translation>
+        <translation>byly zaslány</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="527"/>
         <source>Some files for</source>
-        <translation type="unfinished">Některé ze souborů pro</translation>
+        <translation>Některé ze souborů pro</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="527"/>
         <source>haven&apos;t been sent</source>
-        <translation type="unfinished">nemohly být zaslány</translation>
+        <translation>nemohly být zaslány</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="531"/>
         <source>All files have been sent</source>
-        <translation type="unfinished">Všechny soubory zaslány</translation>
+        <translation>Všechny soubory zaslány</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="534"/>
         <source>Some files can&apos;t be sent</source>
-        <translation type="unfinished">Některé soubory nemohly být zaslány</translation>
+        <translation>Některé soubory nemohly být zaslány</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="547"/>
         <source> has been downloaded</source>
-        <translation type="unfinished"> byl stažen</translation>
+        <translation> byl stažen</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="562"/>
         <source> can&apos;t be downloaded </source>
-        <translation type="unfinished"> nemohl být stažen</translation>
+        <translation> nemohl být stažen</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1037"/>
         <source>You have created this room.</source>
-        <translation type="unfinished">Vytvořil jste tuto místnost.</translation>
+        <translation>Vytvořil jste tuto místnost.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1042"/>
         <source>This room is logged</source>
-        <translation type="unfinished">Historie této místnosti je uchovávána</translation>
+        <translation>Historie této místnosti je uchovávána</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1045"/>
         <source>Room is not anonymous</source>
-        <translation type="unfinished">Tato místnost není anonymní</translation>
+        <translation>Tato místnost není anonymní</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1385"/>
         <source> removed your authorization. You won&apos;t see his status. Do you want to remove him/her from your contact list?</source>
-        <translation type="unfinished"> odebral Vaši autorizaci k sledovaní jeho stavu. Chcete ho smazat z Vašeho seznamu kontaktů?</translation>
+        <translation> odebral Vaši autorizaci k sledovaní jeho stavu. Chcete ho smazat z Vašeho seznamu kontaktů?</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="2006"/>
         <source>Yes</source>
-        <translation type="unfinished">Ano</translation>
+        <translation>Ano</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="2007"/>
         <source>No</source>
-        <translation type="unfinished">Ne</translation>
+        <translation>Ne</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1431"/>
         <source>want to see your status. Do you want to authorize these users?</source>
-        <translation type="unfinished">chce vidět váš stav. Chcete autorizovat tyto uživatele?</translation>
+        <translation>chce vidět váš stav. Chcete autorizovat tyto uživatele?</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1595"/>
         <source>Your message can&apos;t be sent. Remote server not found.</source>
-        <translation type="unfinished">Vaše zpráva nemohla být zaslána, protože server nebyl nalezen.</translation>
+        <translation>Vaše zpráva nemohla být zaslána, protože server nebyl nalezen.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1601"/>
         <source>Your message can&apos;t be sent.</source>
-        <translation type="unfinished">Vaše zpráva nemohla být zaslána.</translation>
+        <translation>Vaše zpráva nemohla být zaslána.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1538"/>
         <source>has set the subject to:</source>
-        <translation type="unfinished">nastavil téma místnosti na:</translation>
+        <translation>nastavil téma místnosti na:</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1777"/>
         <source>is typing...</source>
-        <translation type="unfinished">píše ...</translation>
+        <translation>píše ...</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1779"/>
         <source>gives attention to chat.</source>
-        <translation type="unfinished"></translation>
+        <translation>vás upozorňuje na rozhovor.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1781"/>
         <source>stops typing.</source>
-        <translation type="unfinished">přestal/a psát.</translation>
+        <translation>přestal/a psát.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1783"/>
         <source>doesn&apos;t give attention to chat.</source>
-        <translation type="unfinished"></translation>
+        <translation>nedává upozornění na rozhovor.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1785"/>
         <source>closed the chat window.</source>
-        <translation type="unfinished">zavřel/a okno rozhovoru.</translation>
+        <translation>zavřel/a okno rozhovoru.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1850"/>
         <source>is sending you </source>
-        <translation type="unfinished">vám posílá</translation>
+        <translation>vám posílá</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1850"/>
         <source>files</source>
-        <translation type="unfinished">soubory</translation>
+        <translation>soubory</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1951"/>
         <source>Accept</source>
-        <translation type="unfinished">Přijmout</translation>
+        <translation>Přijmout</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1940"/>
         <source>Reject</source>
-        <translation type="unfinished">Odmítnout</translation>
+        <translation>Odmítnout</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1951"/>
         <source>User is sending you file</source>
-        <translation type="unfinished">Uživatel vám posílá soubor</translation>
+        <translation>Uživatel vám posílá soubor</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1976"/>
         <source>File transfer</source>
-        <translation type="unfinished">Přenos souborů</translation>
+        <translation>Přenos souborů</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1878"/>
         <source>Save Files</source>
-        <translation type="unfinished">Uložit soubory</translation>
+        <translation>Uložit soubory</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1938"/>
         <source>is sending you file</source>
-        <translation type="unfinished">vám posílá soubor</translation>
+        <translation>vám posílá soubor</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1980"/>
         <source>Save File</source>
-        <translation type="unfinished">Uložit soubor</translation>
+        <translation>Uložit soubor</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1980"/>
         <source>*.*</source>
-        <translation type="unfinished">*.*</translation>
+        <translation>*.*</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="2011"/>
         <source>Jabbim is connecting to the server.</source>
-        <translation type="unfinished">Jabbim se připojuje.</translation>
+        <translation>Jabbim se připojuje.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="2017"/>
         <source>Jabbim is logged in.</source>
-        <translation type="unfinished">Jabbim je připojen.</translation>
+        <translation>Jabbim je připojen.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="2445"/>
         <source>having_appointment</source>
-        <translation type="unfinished">Mám schůzku</translation>
+        <translation>Mám schůzku</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="2446"/>
         <source>inactive</source>
-        <translation type="unfinished">Nereaguji</translation>
+        <translation>Nereaguji</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="2447"/>
         <source>relaxing</source>
-        <translation type="unfinished">Relaxuji</translation>
+        <translation>Relaxuji</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="2448"/>
         <source>talking</source>
-        <translation type="unfinished">Povídám si</translation>
+        <translation>Povídám si</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="2449"/>
         <source>traveling</source>
-        <translation type="unfinished">Cestuji</translation>
+        <translation>Cestuji</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="2450"/>
         <source>working</source>
-        <translation type="unfinished">Pracuji</translation>
+        <translation>Pracuji</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3913"/>
         <source>Enter status message</source>
-        <translation type="unfinished">Nastavit zprávu o stavu</translation>
+        <translation>Nastavit zprávu o stavu</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3397"/>
         <source>Change profile photo</source>
-        <translation type="unfinished">Změnit foto profilu</translation>
+        <translation>Změnit foto profilu</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3405"/>
         <source>Show Offline</source>
-        <translation type="unfinished">Zobrazit odpojené kontaty</translation>
+        <translation>Zobrazit odpojené kontaty</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3412"/>
         <source>Show transports</source>
-        <translation type="unfinished">Zobrazovat transporty</translation>
+        <translation>Zobrazovat transporty</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3483"/>
         <source>Become invisible</source>
-        <translation type="unfinished">Stát se neviditelným</translation>
+        <translation>Stát se neviditelným</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3427"/>
         <source>Commands</source>
-        <translation type="unfinished">Příkazy</translation>
+        <translation>Příkazy</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3431"/>
         <source>Send file</source>
-        <translation type="unfinished">Poslat soubor</translation>
+        <translation>Poslat soubor</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3480"/>
         <source>Become visible</source>
-        <translation type="unfinished">Zviditelnit se</translation>
+        <translation>Zviditelnit se</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3496"/>
         <source>I&apos;m here</source>
-        <translation type="unfinished">Jsem tu</translation>
+        <translation>Jsem tu</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3497"/>
         <source>Doing something important. Message me later.</source>
-        <translation type="unfinished">Pracuji na něčem důležitém, zkuste to později.</translation>
+        <translation>Pracuji na něčem důležitém, zkuste to později.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3498"/>
         <source>Chat with me!</source>
-        <translation type="unfinished">Nudím se!</translation>
+        <translation>Nudím se!</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3499"/>
         <source>Leave a message. Beep</source>
-        <translation type="unfinished">Po zaznění signálu zanechte zprávu. Píp</translation>
+        <translation>Po zaznění signálu zanechte zprávu. Píp</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3500"/>
         <source>Doing something else for a moment.</source>
-        <translation type="unfinished">Právě nemám čas.</translation>
+        <translation>Právě nemám čas.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3551"/>
         <source>Connect</source>
-        <translation type="unfinished">Připojit</translation>
+        <translation>Připojit</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3559"/>
         <source>Hide / Show</source>
-        <translation type="unfinished">Skrýt / Zobrazit</translation>
+        <translation>Skrýt / Zobrazit</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3560"/>
         <source>Quit</source>
-        <translation type="unfinished">Ukončit</translation>
+        <translation>Ukončit</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3608"/>
         <source>Status</source>
-        <translation type="unfinished">Stav</translation>
+        <translation>Stav</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3803"/>
         <source>Log out</source>
-        <translation type="unfinished">Odpojit</translation>
+        <translation>Odpojit</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3799"/>
         <source>Add message</source>
-        <translation type="unfinished">Přidat zprávu</translation>
+        <translation>Přidat zprávu</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3801"/>
         <source>Manage messages</source>
-        <translation type="unfinished">Spravovat zprávy</translation>
+        <translation>Spravovat zprávy</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3829"/>
         <source>Enter mood message</source>
-        <translation type="unfinished">Nastavit zprávu o náladě</translation>
+        <translation>Nastavit zprávu o náladě</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3863"/>
         <source>Enter activity message</source>
-        <translation type="unfinished">Nastavit zprávu o činnosti</translation>
+        <translation>Nastavit zprávu o činnosti</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="4241"/>
         <source> invites you to conference </source>
-        <translation type="unfinished"> vás zve do místnosti </translation>
+        <translation> vás zve do místnosti </translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="4243"/>
         <source>Reason: </source>
-        <translation type="unfinished">Důvod: </translation>
+        <translation>Důvod: </translation>
     </message>
 </context>
 <context>
