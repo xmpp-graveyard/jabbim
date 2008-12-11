@@ -523,11 +523,12 @@ class FTInit:
 		log.msg('IBB end')
 		sid = close['sid']
 		self.ft[sid].ibbProcess()
+		id = iq['id']
 		
 		iq = Element((None,'iq'))
 		iq['to'] = self.ft[sid].fromjid.full()
 		iq['from'] = self.ft[sid].tojid.full()
-		iq['id'] = el['id']
+		iq['id'] = id
 		iq['type'] = 'result'
 		self.send(iq)
 		self.ft[sid].finish()
