@@ -659,7 +659,9 @@ class SI:
 		if self.state == 'accepted':
 			if self.ft.protocol:
 				self.ft.protocol.unregisterProducer()
-			self.ft.finish()
+				self.state = 'finished'
+				self.ft.finish()
+				
 		return False
 	
 
