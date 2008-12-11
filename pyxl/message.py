@@ -67,6 +67,9 @@ class Message:
 	
 	def setBody(self,  body):
 		self.body = body
+	
+	def getBody(self):
+		return self.body
 		
 	def setError(self,  error):
 		self.error = error

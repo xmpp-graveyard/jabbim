@@ -646,7 +646,7 @@ class chatWidget(abstractChatWidget):
 			# show message
 			self.textEditWrite(message,insert)
 			# add message to 'sent messages history'
-			self.sent.append(text)
+			self.sent.append(m.getBody())
 			self.hindex = len(self.sent)
 			
 			#self.ui.line.clear()
