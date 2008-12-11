@@ -659,7 +659,6 @@ class SI:
 		if self.state == 'accepted':
 			if self.ft.protocol:
 				self.ft.protocol.unregisterProducer()
-		else:
 			self.ft.finish()
 		return False
 	
