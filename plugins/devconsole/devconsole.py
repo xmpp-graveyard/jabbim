@@ -8,7 +8,49 @@ import base64
 #from widgets.webkitchatwidget import searchWidget
 
 
-template = u"<html><head><script>function appendMessage(text) {var hl = document.getElementById('hlavni');var message = document.createElement('div');message.innerHTML = text;hl.appendChild(message);};</script></head><body><div id='hlavni'></div></body></html>"
+template = u"""<html><head><script>
+function appendMessage(text, tagy) {
+var hl = document.getElementById('hlavni');
+var message = document.createElement('div');
+var tags = document.createElement('div');
+tags.innerHTML = tagy;
+tags.setAttribute('id','tags');
+var msg = document.createElement('div');
+msg.innerHTML = text;
+message.appendChild(tags);
+message.appendChild(msg);
+hl.appendChild(message);};
+
+function filterMessages(tags){
+var tag = tags.split(' ');
+var hl = document.getElementById('hlavni');
+var seznam = hl.getElementsByName('div');
+for (var i=0;i<seznam.length;i++) {
+var tagy = seznam[i].getElementById('tags');
+var rozdelene = tagy.innerHTML.split(' ');
+var ok = 0;
+for (var x=0;x<tag.lenght;x++){
+	for (var y=0;y<rozdelene.lenght;y++){
+		if (tag[x] == rozdelene[y]){
+			ok=1;
+			break;
+			}
+		}
+	if (ok == 1){break;}
+	}
+
+if (ok == 1){
+seznam[i].style.visibility = 'visible'; 
+}
+else {
+seznam[i].style.visibility = 'hidden';
+}
+
+}
+}
+</script>
+</head>
+<body><div id='hlavni'></div></body></html>"""
 
 class config:
 	def __init__(self,main):
@@ -180,7 +222,7 @@ class Plugin(plugins.PluginBase):
 			self.main.reactor.callFromThread(self.observer,msg,True)
 			return
 		#self.window.ui.pythonOutput.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
-		self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s");'%('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;")))))
+		self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s", "");'%('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;")))))
 		if msg['isError'] and self.config['notify'] == 'True':
 			self.main.tray.showMessage(self.main.tr("Log"),unicode(' '.join(msg['message'])), QtGui.QSystemTrayIcon.Warning, 2000)
 	
@@ -198,7 +240,7 @@ class Plugin(plugins.PluginBase):
 	def execute(self):
 		code = unicode(self.window.ui.pythonInput.toPlainText ())
 		#self.window.ui.pythonOutput.append('>>> '+self.window.ui.pythonInput.toPlainText ())
-		self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s");'%('>>> '+self.window.ui.pythonInput.toPlainText()))
+		self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s", "");'%('>>> '+self.window.ui.pythonInput.toPlainText()))
 		self.historyPy.insert(0,code)
 		self.historyPy=self.historyPy[0:long(self.config['historyMaxCount'])]
 		self.historyPyPosition=-1;
@@ -317,8 +359,14 @@ class Plugin(plugins.PluginBase):
 				text='';
 			text=text+unicode(xml)
 			text = text.replace('<','&lt;').replace('>','&gt;')
+			tagy = ''
+			if xml.startswith('IN'):
+				tagy += 'to '
+			elif xml.startswith('OUT'):
+				tagy +='from '
 			
-			self.window.ui.xmlOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s");'%(text))
+			self.window.ui.xmlOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s", "%s");'%(text, tagy))
+			print self.window.ui.xmlOutput.page().mainFrame().toHtml()
 			
 	def setTabXML(self):
 		self.window.ui.tabWidget.setCurrentIndex(0);
