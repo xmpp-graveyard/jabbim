@@ -26,7 +26,7 @@
     <message>
         <location filename="../jabbim.py" line="303"/>
         <source>This nickname is used by someone else. Please choose another. </source>
-        <translation>Tato přezdívka je používána jiným uživatel. Vyberte si jinou.</translation>
+        <translation>Tuto přezdívku zabral jiný uživatel. Zvolte si jinou.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="4249"/>
@@ -146,7 +146,7 @@
     <message>
         <location filename="../jabbim.py" line="505"/>
         <source> can&apos;t be sent </source>
-        <translation> nemohl být zaslán </translation>
+        <translation> nemohl být odeslán</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="525"/>
@@ -156,7 +156,7 @@
     <message>
         <location filename="../jabbim.py" line="525"/>
         <source>have been sent</source>
-        <translation>byly zaslány</translation>
+        <translation>byly odeslány</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="527"/>
@@ -166,17 +166,17 @@
     <message>
         <location filename="../jabbim.py" line="527"/>
         <source>haven&apos;t been sent</source>
-        <translation>nemohly být zaslány</translation>
+        <translation>nemohly být odeslány</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="531"/>
         <source>All files have been sent</source>
-        <translation>Všechny soubory zaslány</translation>
+        <translation>Všechny soubory odeslány</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="534"/>
         <source>Some files can&apos;t be sent</source>
-        <translation>Některé soubory nemohly být zaslány</translation>
+        <translation>Některé soubory nemohly být odeslány</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="547"/>
@@ -206,7 +206,7 @@
     <message>
         <location filename="../jabbim.py" line="1385"/>
         <source> removed your authorization. You won&apos;t see his status. Do you want to remove him/her from your contact list?</source>
-        <translation> odebral Vaši autorizaci k sledovaní jeho stavu. Chcete ho smazat z Vašeho seznamu kontaktů?</translation>
+        <translation> odebral autorizaci k sledovaní jeho stavu. Chcete ho smazat ze seznamu kontaktů?</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="2006"/>
@@ -221,7 +221,7 @@
     <message>
         <location filename="../jabbim.py" line="1431"/>
         <source>want to see your status. Do you want to authorize these users?</source>
-        <translation>chce vidět váš stav. Chcete autorizovat tyto uživatele?</translation>
+        <translation>chtějí vidět váš stav. Chcete autorizovat tyto uživatele?</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1595"/>
@@ -241,22 +241,22 @@
     <message>
         <location filename="../jabbim.py" line="1777"/>
         <source>is typing...</source>
-        <translation>píše ...</translation>
+        <translation>píše…</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1779"/>
         <source>gives attention to chat.</source>
-        <translation>vás upozorňuje na rozhovor.</translation>
+        <translation>sleduje rozhovor.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1781"/>
         <source>stops typing.</source>
-        <translation>přestal/a psát.</translation>
+        <translation>přestal(a) psát.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1783"/>
         <source>doesn&apos;t give attention to chat.</source>
-        <translation>nedává upozornění na rozhovor.</translation>
+        <translation>nedává pozor.</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1785"/>
@@ -266,7 +266,7 @@
     <message>
         <location filename="../jabbim.py" line="1850"/>
         <source>is sending you </source>
-        <translation>vám posílá</translation>
+        <translation>vám posílá </translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="1850"/>
@@ -356,12 +356,12 @@
     <message>
         <location filename="../jabbim.py" line="3913"/>
         <source>Enter status message</source>
-        <translation>Nastavit zprávu o stavu</translation>
+        <translation>Nastavit popis stavu</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3397"/>
         <source>Change profile photo</source>
-        <translation>Změnit foto profilu</translation>
+        <translation>Změnit fotku</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3405"/>
@@ -456,7 +456,7 @@
     <message>
         <location filename="../jabbim.py" line="3829"/>
         <source>Enter mood message</source>
-        <translation>Nastavit zprávu o náladě</translation>
+        <translation>Nastavit popis nálady</translation>
     </message>
     <message>
         <location filename="../jabbim.py" line="3863"/>
