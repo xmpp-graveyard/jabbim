@@ -1,8 +1,8 @@
 class preferences:
 	def __init__(self,preferencesWindow):
 		self.config={}
-		self.config['sendByCtrl']={'type':'boolean','label':preferencesWindow.tr("Sends messages with ctrl+enter."),'value':'False'}
-		self.config["useXHTML"]={'type':'boolean','label':preferencesWindow.tr("Use text formatting."),'value':'True'}
+		self.config['sendByCtrl']={'type':'boolean','label':preferencesWindow.tr("Sends messages with ctrl+enter."),'value':'False', 'groupbox':preferencesWindow.tr('General')}
+		self.config["useXHTML"]={'type':'boolean','label':preferencesWindow.tr("Use text formatting."),'value':'True', 'groupbox':preferencesWindow.tr('General')}
 		self.config['showChatStatusChanges']={'type':'boolean','label':preferencesWindow.tr("Show status message."),'value':'True','groupbox':preferencesWindow.tr('Normal chat')}
 		self.config["showMoodChanges"]={'type':'boolean','label':preferencesWindow.tr("Show messages about users mood."),'value':'True','groupbox':preferencesWindow.tr('Normal chat')}
 		self.config["showTuneChanges"]={'type':'boolean','label':preferencesWindow.tr("Show messages about user tune."),'value':'True','groupbox':preferencesWindow.tr('Normal chat')}
