@@ -1,5 +1,5 @@
 SOURCES         = jabbim.py \
-widgets/about.py
+widgets/about.py \
 widgets/abstractchatwidget.py \
 widgets/addcontactng.py \
 widgets/addcontactng_ui.py \
@@ -86,14 +86,14 @@ pref/connection.py \
 pref/chat.py \
 pref/jabbim.py \
 pref/roster.py \
-pref/privacy.py
-wizards/addcontact.py
-wizards/firststart.py
-wizards/__init__.py
-wizards/jabbimservicemanager.py
-wizards/jabbimservicemanager_ui.py
-wizards/joingroupchat.py
-wizards/newprofile_ui.py
+pref/privacy.py \
+wizards/addcontact.py \
+wizards/firststart.py \
+wizards/__init__.py \
+wizards/jabbimservicemanager.py \
+wizards/jabbimservicemanager_ui.py \
+wizards/joingroupchat.py \
+wizards/newprofile_ui.py \
 wizards/registration.py
 
 TRANSLATIONS    = locales/jabbim_cs.ts \
