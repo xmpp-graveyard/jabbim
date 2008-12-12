@@ -5,17 +5,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>162</width>
-    <height>92</height>
+    <width>168</width>
+    <height>114</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout" >
-   <property name="margin" >
-    <number>0</number>
-   </property>
    <item row="0" column="0" colspan="3" >
     <widget class="QLabel" name="filename" >
      <property name="text" >
@@ -23,7 +20,20 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="3" >
+   <item row="0" column="3" >
+    <widget class="QPushButton" name="closeButton" >
+     <property name="maximumSize" >
+      <size>
+       <width>20</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text" >
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="4" >
     <widget class="QLabel" name="transferInfo" >
      <property name="text" >
       <string>Zbyva: 30 s (255 kB/s)</string>
@@ -33,24 +43,10 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0" colspan="3" >
+   <item row="2" column="0" colspan="4" >
     <widget class="QProgressBar" name="progressBar" >
      <property name="value" >
       <number>0</number>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1" >
-    <widget class="QPushButton" name="reject" >
-     <property name="text" >
-      <string>Close</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="2" >
-    <widget class="QPushButton" name="accept" >
-     <property name="text" >
-      <string>Open</string>
      </property>
     </widget>
    </item>
@@ -66,6 +62,20 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="3" column="1" >
+    <widget class="QPushButton" name="reject" >
+     <property name="text" >
+      <string>Close</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2" colspan="2" >
+    <widget class="QPushButton" name="accept" >
+     <property name="text" >
+      <string>Open</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

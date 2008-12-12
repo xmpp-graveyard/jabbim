@@ -30,10 +30,15 @@ class FTDownloadWidget(QtGui.QWidget):
 		self.setCurrentFile(self.event.currentFile)
 		self.setFileSize(self.event.fileSize)
 		self.setFileTransfered(self.event.fileTransfered)
+		self.ui.closeButton.setIcon(QtGui.QIcon("images/icons/close.png"))
+		QtCore.QObject.connect(self.ui.closeButton,QtCore.SIGNAL("clicked()"),self.closeFT)
+
+	def closeFT(self):
+		self.event.reject()
 
 	def resizeEvent(self,event):
 		print "WIDTH",self.width()
-		self.ui.filename.setText(unicode(self.metrics.elidedText(basename(self.file),QtCore.Qt.ElideMiddle, self.width()-10)))
+		self.ui.filename.setText(unicode(self.metrics.elidedText(basename(self.file),QtCore.Qt.ElideMiddle, self.width()-10--self.ui.closeButton.width())))
 		return QtGui.QWidget.resizeEvent(self,event)
 
 	def eventAccepted(self):
@@ -66,13 +71,13 @@ class FTDownloadWidget(QtGui.QWidget):
 	def setCurrentFile(self,file):
 		self.file=file
 		print "WIDTH",self.width()
-		self.ui.filename.setText(unicode(self.metrics.elidedText(basename(self.file),QtCore.Qt.ElideMiddle, self.width()-10)))
+		self.ui.filename.setText(unicode(self.metrics.elidedText(basename(self.file),QtCore.Qt.ElideMiddle, self.width()-10-self.ui.closeButton.width())))
 		
 
 	def transferFinished(self):
 		self.ui.progressBar.hide()
 		self.ui.accept.show()
-		self.ui.reject.show()
+		#self.ui.reject.show()
 		self.ui.transferInfo.setText(self.tr("Finished"))
 
 	def setFileTransfered(self,transfered):
@@ -108,11 +113,16 @@ class FTUploadWidget(QtGui.QWidget):
 		#self.ui.accept.hide()
 		self.setQueue(self.event.queue)
 		self.uploaded=0
+		self.ui.closeButton.setIcon(QtGui.QIcon("images/icons/close.png"))
+		QtCore.QObject.connect(self.ui.closeButton,QtCore.SIGNAL("clicked()"),self.closeFT)
 
 		#self.transfered=0
 
+	def closeFT(self):
+		self.event.reject()
+
 	def resizeEvent(self,event):
-		self.ui.filename.setText(self.metrics.elidedText(self.text,QtCore.Qt.ElideMiddle, self.width()-10-self.ui.toolButton.width()))
+		self.ui.filename.setText(self.metrics.elidedText(self.text,QtCore.Qt.ElideMiddle, self.width()-10-self.ui.toolButton.width()-self.ui.closeButton.width()))
 		text=""
 		for file in self.queue.keys():
 			text+=unicode(self.metrics.elidedText(basename(file),QtCore.Qt.ElideMiddle, self.width()-10))+'<br/>'
@@ -130,7 +140,7 @@ class FTUploadWidget(QtGui.QWidget):
 
 	def setText(self,text):
 		self.text=unicode(text)
-		self.ui.filename.setText(self.metrics.elidedText(text,QtCore.Qt.ElideMiddle, self.width()-10-self.ui.toolButton.width()))
+		self.ui.filename.setText(self.metrics.elidedText(text,QtCore.Qt.ElideMiddle, self.width()-10-self.ui.toolButton.width()-self.ui.closeButton.width()))
 
 	def setQueue(self,queue):
 		if len(self.queue)==0:
@@ -153,7 +163,7 @@ class FTUploadWidget(QtGui.QWidget):
 		self.ui.more.hide()
 		self.ui.toolButton.hide()
 		#self.ui.accept.show()
-		self.ui.reject.show()
+		#self.ui.reject.show()
 		self.ui.transferInfo.setText(self.tr("Finished"))
 
 	def setFileTransfered(self,transfered):

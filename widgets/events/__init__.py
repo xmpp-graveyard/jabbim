@@ -137,6 +137,8 @@ class FTDownloadEvent(abstractEvent):
 		 	self.parent.main.reactor.callLater(0,self.parent.removeEvent,int(self.ID))
 
 	def reject(self):
+		if self.parent.main.client.ft.has_key(self.SID):
+			self.parent.main.client.ft[self.SID].finish()
 		if abstractEvent.reject(self):
 			self.parent.main.reactor.callLater(0,self.parent.removeEvent,int(self.ID))
 
@@ -172,6 +174,8 @@ class FTUploadEvent(abstractEvent):
 		 	self.parent.main.reactor.callLater(0,self.parent.removeEvent,int(self.ID))
 
 	def reject(self):
+		if self.parent.main.client.ft.has_key(self.SID):
+			self.parent.main.client.ft[self.SID].finish()
 		if abstractEvent.reject(self):
 			self.parent.main.reactor.callLater(0,self.parent.removeEvent,int(self.ID))
 
