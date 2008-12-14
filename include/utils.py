@@ -582,7 +582,7 @@ def replace_url(text,mainWindow,widget=None):
 					link = 'http://album.jabbim.cz/embed/%s/%s'%(jid, img)
 					print link
 				text+='<div id="image%s"><a href="%s" title="%s">%s</a>'%(str(widget.imageId),word,word, word)+" "
-				text+='<a href="javascript:;" title="%s" onclick="showImage(\'image%s\',\'%s\',\'%s\');")>['+unicode(mainWindow.tr("Show Image"))+']</a></div>'%(word,str(widget.imageId),link,word)+" "
+				text+='<a href="javascript:;" title="%s" onclick="showImage(\'image%s\',\'%s\',\'%s\');")>['%(word,str(widget.imageId),link,word)+unicode(mainWindow.tr("Show Image"))+']</a></div>'+" "
 			else:
 				text+='<a href="%s" title="%s">%s</a>'%(word, word, word)+" "
 		elif word.startswith("www."):
