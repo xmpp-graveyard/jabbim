@@ -62,7 +62,7 @@ class Plugin(plugins.PluginBase):
 		frm = frm.split('/')[0]
 		font = QtGui.QFont()
 		font.setBold(True)
-		body = utils.replace_url(body)
+		body = utils.replace_url(body,self.main)
 		index = 0
 		if self.kontakty.has_key(frm):
 			index = self.kontakty[frm].addHeadline(subject, body)

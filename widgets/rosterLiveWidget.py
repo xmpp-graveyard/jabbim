@@ -1004,7 +1004,7 @@ class rosterWidget(QtGui.QWidget):
 						if len(status)==0:
 							self.tool.ui.status.hide()
 						else:
-							self.tool.ui.status.setHtml(replace_url(status.replace('\n', '<br />')))
+							self.tool.ui.status.setHtml(replace_url(status.replace('\n', '<br />'),self.main))
 							self.tool.ui.status.show()
 					else:
 						self.tool.ui.status.hide()

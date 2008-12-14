@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs">
-<defaultcodec></defaultcodec>
 <context>
     <name></name>
     <message>
@@ -570,6 +569,21 @@
         <source>Menu</source>
         <translation>Menu</translation>
     </message>
+    <message>
+        <location filename="wizards/jsm_ui.py" line="79"/>
+        <source>1</source>
+        <translation type="obsolete">1</translation>
+    </message>
+    <message>
+        <location filename="wizards/jsm_ui.py" line="80"/>
+        <source>Add</source>
+        <translation type="obsolete">Přidat</translation>
+    </message>
+    <message>
+        <location filename="wizards/jsm_ui.py" line="83"/>
+        <source>Advanced</source>
+        <translation type="obsolete">Pokročilé nastavení</translation>
+    </message>
 </context>
 <context>
     <name>Extra</name>
@@ -756,6 +770,73 @@ p, li { white-space: pre-wrap; }
         <location filename="widgets/events.py" line="397"/>
         <source>reason</source>
         <translation type="obsolete">zdůvodnění</translation>
+    </message>
+</context>
+<context>
+    <name>JabbimServiceManager</name>
+    <message>
+        <location filename="wizards/jsm_ui.py" line="69"/>
+        <source>Jabbim Service Manager</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/jsm_ui.py" line="74"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;DejaVu Sans&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;h2&gt;Jabbim Service Manager&lt;/h2&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/jsm_ui.py" line="75"/>
+        <source>Available Services:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/jsm_ui.py" line="76"/>
+        <source>Registered</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/jsm_ui.py" line="77"/>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/jsm_ui.py" line="78"/>
+        <source>Sort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/jsm_ui.py" line="79"/>
+        <source>1</source>
+        <translation type="unfinished">1</translation>
+    </message>
+    <message>
+        <location filename="wizards/jsm_ui.py" line="80"/>
+        <source>Add</source>
+        <translation type="unfinished">Přidat</translation>
+    </message>
+    <message>
+        <location filename="wizards/jsm_ui.py" line="81"/>
+        <source>Register</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/jsm_ui.py" line="82"/>
+        <source>Configure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wizards/jsm_ui.py" line="83"/>
+        <source>Advanced</source>
+        <translation type="unfinished">Pokročilé nastavení</translation>
+    </message>
+    <message>
+        <location filename="wizards/jsm_ui.py" line="84"/>
+        <source>Close</source>
+        <translation type="unfinished">Zavřít</translation>
     </message>
 </context>
 <context>
@@ -5406,6 +5487,11 @@ Opravdu chcete odejít?</translation>
         <location filename="widgets/bookmarks.py" line="145"/>
         <source>Bookmark</source>
         <translation>Záložka</translation>
+    </message>
+    <message>
+        <location filename="include/utils.py" line="585"/>
+        <source>Show Image</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

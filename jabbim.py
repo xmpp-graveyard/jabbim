@@ -1052,7 +1052,7 @@ class clientClass(pyxl.client.Client):
 			if status == None:
 				message = message.replace("[[message]]",'')
 			else:
-				status = utils.replace_url(unicode(status),tab.chat)
+				status = utils.replace_url(unicode(status),self.main,tab.chat)
 				message = message.replace("[message]",unicode(status))
 
 			if self.main.client.groupchats[muc].users[nick].truejid!="" and self.main.client.groupchats[muc].users[nick].truejid!=None:
@@ -1114,7 +1114,7 @@ class clientClass(pyxl.client.Client):
 					s = contact.resources[jid.resource].status
 			if s:
 				#process status message
-				s = utils.replace_url(unicode(s),tabFull.chat)
+				s = utils.replace_url(unicode(s),self.main,tabFull.chat)
 				message=message.replace("[message]",unicode(s))
 			else:
 				message=message.replace("[[message]]","")
@@ -1516,7 +1516,7 @@ class clientClass(pyxl.client.Client):
 				if len(body)!=0 and subject==None:
 					if xhtml==None:
 						body=unicode(body).replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
-						body = utils.replace_url(body,w.chat)
+						body = utils.replace_url(body,self.main,w.chat)
 						body=body.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 					else:
 						xhtml=xhtml.replace("&quot;",'"')
@@ -1531,7 +1531,7 @@ class clientClass(pyxl.client.Client):
 						message = unicode(body)
 
 					message=message.replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
-					message=utils.replace_url(message,w.chat)
+					message=utils.replace_url(message,self.main,w.chat)
 					message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 
 					if user != frm:
@@ -1615,7 +1615,7 @@ class clientClass(pyxl.client.Client):
 			if tab:
 				if xhtml==None:
 					message=unicode(body).replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
-					message = utils.replace_url(message,tab.chat)
+					message = utils.replace_url(message,self.main,tab.chat)
 					message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 				else:
 					message=xhtml.replace("&quot;",'"')
@@ -1754,7 +1754,7 @@ class clientClass(pyxl.client.Client):
 					tab.chat.lastMessageFrom=unicode(user)
 					if xhtml==None:
 						message=unicode(body).replace('&','&amp;').replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
-						message = utils.replace_url(message,tab.chat)
+						message = utils.replace_url(message,self.main,tab.chat)
 						message=message.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 					else:
 						message=xhtml.replace("&quot;",'"')

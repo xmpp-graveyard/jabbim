@@ -12,7 +12,7 @@ from widgets.addcontactng import showDict, addDict, showWeather, addWeather
 class jabbimServiceManager(QtGui.QDialog):
 	def __init__(self,main,parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
-		self.ui=jsm_ui.Ui_Dialog()
+		self.ui=jsm_ui.Ui_JabbimServiceManager()
 		self.ui.setupUi(self)
 		self.main=weakref.ref(main)
 		self.ui.treeWidget.hideColumn(2)

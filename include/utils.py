@@ -562,7 +562,7 @@ def temp_failure_retry(func, *args, **kwargs):
 			else:
 				raise
 
-def replace_url(text,widget=None):
+def replace_url(text,mainWindow,widget=None):
 	#exp = re.compile("([A-Za-z][A-Za-z0-9+.-]{1,120}:[A-Za-z0-9/](([A-Za-z0-9$_.+!*,;/?:@&~=-])|%[A-Fa-f0-9]{2}){1,333}(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*,;/?:@&~=%-]{0,1000}))?)")
 	#exp=re.compile(unicode(r"((http|ftp)://)?(((([\d]+\.)+){3}[\d]+(/[\w./]+)?)|([a-z]\w*((\.\w+)+){2,})([/][\w.~]*)*)"))
 	#for link in exp.findall(text):
@@ -582,7 +582,7 @@ def replace_url(text,widget=None):
 					link = 'http://album.jabbim.cz/embed/%s/%s'%(jid, img)
 					print link
 				text+='<div id="image%s"><a href="%s" title="%s">%s</a>'%(str(widget.imageId),word,word, word)+" "
-				text+='<a href="javascript:;" title="%s" onclick="showImage(\'image%s\',\'%s\',\'%s\');")>[Show Image]</a></div>'%(word,str(widget.imageId),link,word)+" "
+				text+='<a href="javascript:;" title="%s" onclick="showImage(\'image%s\',\'%s\',\'%s\');")>['+unicode(mainWindow.tr("Show Image"))+']</a></div>'%(word,str(widget.imageId),link,word)+" "
 			else:
 				text+='<a href="%s" title="%s">%s</a>'%(word, word, word)+" "
 		elif word.startswith("www."):

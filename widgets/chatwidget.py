@@ -613,7 +613,7 @@ class chatWidget(abstractChatWidget):
 				
 				# prepare message for showing in GUI
 				text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
-				text=utils.replace_url(text,self)
+				text=utils.replace_url(text,self.main(),self)
 				text=text.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 				if m.receiptId != None and self.main().config['showReceipts']=='True':
 				   text = '<img id="'+m.receiptId+'" src="%s/images/16x16/actions/message.png?receipt%s" />'%(os.getcwd(), m.receiptId)+ text

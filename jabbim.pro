@@ -94,7 +94,9 @@ wizards/jabbimservicemanager.py \
 wizards/jabbimservicemanager_ui.py \
 wizards/joingroupchat.py \
 wizards/newprofile_ui.py \
-wizards/registration.py
+wizards/registration.py \
+wizards/jsm_ui.py \
+include/utils.py
 
 TRANSLATIONS    = locales/jabbim_cs.ts \
 				locales/jabbim_en.ts \
