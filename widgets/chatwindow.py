@@ -367,10 +367,14 @@ class chatWindow(QtGui.QMainWindow):
 					if w.typ=="chat":
 						self.main.client.sendMessage(unicode(w.jid),"",composing="inactive")
 					w.active=False
-				if w.active and w.chat.lastMessageFrom!="lineSeparator":
-					w.chat.ui.webkit.removeElementById("separateLine")
-					w.chat.textEditWrite("<hr id=\"separateLine\"/>")
-					w.chat.lastMessageFrom="lineSeparator"
+				if not w.active and w.chat.lastMessageFrom!="lineSeparator":
+					if not w.chat.separator:
+						w.chat.ui.webkit.removeElementById("separateLine")
+						w.chat.textEditWrite("<hr id=\"separateLine\"/>")
+						w.chat.lastMessageFrom="lineSeparator"
+					w.chat.separator=True
+				else:
+					w.chat.separator=False
 		#except:
 			#pass
 

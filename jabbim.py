@@ -3108,7 +3108,7 @@ class mainWindow(QtGui.QMainWindow):
 			file=self.realHomeDir+'/avatars/'+unicode(hash)
 		return file
 
-	def getAvatar(self,pixmap,size="auto",frame=False,status=None):
+	def getAvatar(self,pixmap,size="auto",frame=False,status=None,compare=""):
 		"""
 		Returns avatar of contact.
 		@type pixmap: unicode or QtGui.QIcon or QtGui.QPixmap
@@ -3142,12 +3142,16 @@ class mainWindow(QtGui.QMainWindow):
 				file=self.realHomeDir+'/avatars/'+unicode(pixmap)
 			else:
 				file=self.realHomeDir+'/avatars/'+unicode(hash)
+			if file==compare:
+				return True
 			if not os.path.isfile(file):
 				return None
 			icon=QtGui.QIcon(file)
 		elif isinstance(pixmap,QtGui.QPixmap):
+			file=pixmap
 			icon=QtGui.QIcon(pixmap)
 		else:
+			file=""
 			icon=pixmap
 		if size!="auto":
 			x=int(size.split('x')[0])
@@ -3202,7 +3206,7 @@ class mainWindow(QtGui.QMainWindow):
 			painter.end()
 		elif size=="auto" and not frame:
 			result=QtGui.QPixmap(file)
-
+		result.file=file
 		return result
 
 	def getCurrentTrayIcon(self):

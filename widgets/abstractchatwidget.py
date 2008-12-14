@@ -428,6 +428,7 @@ class abstractChatWidget(QtGui.QWidget):
 		self.xhtml=xhtml
 		self.lastMessages=[]
 		self.paintWindow = None
+		self.separator=None
 		
 		# chat view widget (self.ui.textEdit)
 		l=QtGui.QVBoxLayout(self.ui.viewWidget)
