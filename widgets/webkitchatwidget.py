@@ -425,6 +425,12 @@ class webkitChatWidget(QtWebKit.QWebView):
 #		else:
 	#		self.chatwidget().main().reactor.callLater(1,self.reloadImage,name,data,True)
 
+	def removeElementById(self,i):
+		self.page().mainFrame().evaluateJavaScript("removeById('%s');"%i)
+
+	def replaceElementById(self,i,html):
+		self.page().mainFrame().evaluateJavaScript("replaceById('%s','%s');"%(i,html))
+
 	def messageObjectReady(self):
 		#print "messageObjectReady",self.messageObject.messageCache
 		if len(self.messageObject.messageCache)!=0:
@@ -629,6 +635,20 @@ function removeById(index) {
                         range = document.createRange();
                         range.selectNode(insert.parentNode);
                         newNode = range.createContextualFragment('');
+
+                        //swap
+                        insert.parentNode.replaceChild(newNode,insert);
+
+}
+
+function replaceById(index,text) {
+
+                        //Locate the insertion point
+                        var insert = document.getElementById(index);
+                        //make new node
+                        range = document.createRange();
+                        range.selectNode(insert.parentNode);
+                        newNode = range.createContextualFragment(text);
 
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);

@@ -200,7 +200,7 @@ class groupChatWidget(abstractChatWidget):
 		@type topic: unicode
 		@param topic: new topic
 		"""
-		subject=utils.replace_url(topic)
+		subject=utils.replace_url(topic,self.main())
 		self.ui.info.setHtml(unicode(subject))
 
 	def _infoReceived(self, *a):

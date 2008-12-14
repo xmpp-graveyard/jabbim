@@ -153,6 +153,10 @@ class chatWindow(QtGui.QMainWindow):
 				if w.typ=="chat":
 					w.active=False
 					self.main.client.sendMessage(unicode(w.jid),"",composing="inactive")
+				if w.chat.lastMessageFrom!="lineSeparator":
+					w.chat.ui.webkit.removeElementById("separateLine")
+					w.chat.textEditWrite("<hr id=\"separateLine\"/>")
+					w.chat.lastMessageFrom="lineSeparator"
 			self.active=None
 
 	def event(self,ev):
@@ -363,6 +367,10 @@ class chatWindow(QtGui.QMainWindow):
 					if w.active==True and w!=widget:
 						self.main.client.sendMessage(unicode(w.jid),"",composing="inactive")
 						w.active=False
+				if w.chat.lastMessageFrom!="lineSeparator":
+					w.chat.ui.webkit.removeElementById("separateLine")
+					w.chat.textEditWrite("<hr id=\"separateLine\"/>")
+					w.chat.lastMessageFrom="lineSeparator"
 		#except:
 			#pass
 
