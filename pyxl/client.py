@@ -206,14 +206,14 @@ class Client(derived):
 	def getAvatarImg(self, jd):
 		#vrati QPixmap nebo None
 		if not jd or jd=="None":
-			return self.avatarImg.get(None, None)
+			return self.avatarImg.get(None, None)+[None]
 		jd = self.main.getJid(jd)
 		if self.groupchats.has_key(jd.userhost()):
 			jid = jd.full()
 		else:
 			jid = jd.userhost()
 		if self.avatarDef.has_key(jid):
-			return self.avatarImg.get(self.avatarDef[jid], None)
+			return self.avatarImg.get(self.avatarDef[jid], None)+[self.avatarDef[jid]]
 
 	def cacheCaps(self, ext, features, identity):
 		self.caps_cache[ext] = [identity,features]

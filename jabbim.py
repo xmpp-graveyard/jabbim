@@ -5078,8 +5078,11 @@ class mainWindow(QtGui.QMainWindow):
 		path = self.realHomeDir+'/avatars/'
 		if self.client.avatarDef.has_key(self.client.jid.userhost()):
 			self.client.avatarImg[self.client.avatarDef[self.client.jid.userhost()]] = self.loadAvatar(self.client.avatarDef[self.client.jid.userhost()])
-		self.client.avatarImg[None]=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
-		self.client.avatarImg[u'None']=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
+		img=self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"))
+		img.file=None
+		self.client.avatarImg[None]=[img,32,32]
+		img.file="None"
+		self.client.avatarImg[u'None']=[img,32,32]
 		#d=threads.deferToThread(self.loadAvatars,unicode(path),dict(self.client.avatarDef))
 		#d.addCallback(self.gotAvatars)
 
@@ -5132,7 +5135,9 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Called by avatarLoader when image with hash 'key' is loaded.
 		"""
-		self.client.avatarImg[unicode(key)]=[QtGui.QPixmap.fromImage(image),int(width),int(height)]
+		img = QtGui.QPixmap.fromImage(image)
+		img.file=key
+		self.client.avatarImg[unicode(key)]=[img,int(width),int(height)]
 
 	#def loadAvatars(self,path,avatarDef):
 		#avatarImg={}
@@ -5187,7 +5192,9 @@ class mainWindow(QtGui.QMainWindow):
 		painter.drawImage((32-avatar.width())/2,(32-avatar.height())/2,avatar)
 		painter.drawImage(0,0,frame)
 		painter.end()
-		return [QtGui.QPixmap.fromImage(result),width,height]
+		img = QtGui.QPixmap.fromImage(result)
+		img.file=hash
+		return [img,width,height]
 
 	#def gotAvatars(self,avatarImg):
 		#self.client.avatarImg=avatarImg

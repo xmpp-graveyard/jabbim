@@ -246,27 +246,33 @@ class rosterStyle:
 
 			s1=time.time()
 			if self.avatarCache.has_key(useritem.jid):
-				avatar=self.roster.main.client.getAvatarImg(useritem.jid,compare=self.avatarCache[useritem.jid].file)
-				if avatar==True:
+				avatar=self.roster.main.client.getAvatarImg(useritem.jid)
+				if avatar[3]==self.avatarCache[useritem.jid].file:
 					avatar=self.avatarCache[useritem.jid]
 				else:
 					if avatar:
+						f=unicode(avatar[3])
 						avatar=avatar[0]
 					else:
 						avatar=self.roster.main.client.getAvatarImg(None)
+						f=unicode(avatar[3])
 						if avatar:
 							avatar=avatar[0]
 					avatar=avatar.scaled(22,22,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
+					avatar.file=f
 					self.avatarCache[useritem.jid]=avatar
 			else:
 				avatar=self.roster.main.client.getAvatarImg(useritem.jid)
 				if avatar:
+					f=unicode(avatar[3])
 					avatar=avatar[0]
 				else:
 					avatar=self.roster.main.client.getAvatarImg(None)
+					f=unicode(avatar[3])
 					if avatar:
 						avatar=avatar[0]
 				avatar=avatar.scaled(22,22,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
+				avatar.file=f
 				self.avatarCache[useritem.jid]=avatar
 
 			#if useritem.avatar:
