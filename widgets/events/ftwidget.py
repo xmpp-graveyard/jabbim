@@ -38,7 +38,7 @@ class FTDownloadWidget(QtGui.QWidget):
 
 	def resizeEvent(self,event):
 		print "WIDTH",self.width()
-		self.ui.filename.setText(unicode(self.metrics.elidedText(basename(self.file),QtCore.Qt.ElideMiddle, self.width()-10--self.ui.closeButton.width())))
+		self.ui.filename.setText(unicode(self.metrics.elidedText(basename(self.file),QtCore.Qt.ElideMiddle, self.width()-10-self.ui.closeButton.width())))
 		return QtGui.QWidget.resizeEvent(self,event)
 
 	def eventAccepted(self):
@@ -122,7 +122,7 @@ class FTUploadWidget(QtGui.QWidget):
 		self.event.reject()
 
 	def resizeEvent(self,event):
-		self.ui.filename.setText(self.metrics.elidedText(self.text,QtCore.Qt.ElideMiddle, self.width()-10-self.ui.toolButton.width()-self.ui.closeButton.width()))
+		self.ui.filename.setText(self.metrics.elidedText(self.text,QtCore.Qt.ElideMiddle, self.width()-20-self.ui.toolButton.width()-self.ui.closeButton.width()))
 		text=""
 		for file in self.queue.keys():
 			text+=unicode(self.metrics.elidedText(basename(file),QtCore.Qt.ElideMiddle, self.width()-10))+'<br/>'
@@ -140,7 +140,7 @@ class FTUploadWidget(QtGui.QWidget):
 
 	def setText(self,text):
 		self.text=unicode(text)
-		self.ui.filename.setText(self.metrics.elidedText(text,QtCore.Qt.ElideMiddle, self.width()-10-self.ui.toolButton.width()-self.ui.closeButton.width()))
+		self.ui.filename.setText(self.metrics.elidedText(text,QtCore.Qt.ElideMiddle, self.width()-20-self.ui.toolButton.width()-self.ui.closeButton.width()))
 
 	def setQueue(self,queue):
 		if len(self.queue)==0:
