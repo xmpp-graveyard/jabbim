@@ -1,4 +1,3 @@
-import os,time
 try:
 	from PyQt4 import QtCore, QtGui
 except:
@@ -209,8 +208,6 @@ class rosterStyle:
 			if useritem.mood:
 				painter.drawPixmap(self.roster.width()-4-35,y+3,useritem.mood)
 		else:
-			s2=time.time()
-			s1=time.time()
 			painter.save()
 			painter.translate(x,y)
 			if self.roster.theme:
@@ -224,7 +221,6 @@ class rosterStyle:
 				background=self.secondColor
 			painter.restore()
 
-			s1=time.time()
 			if useritem in self.roster.events:
 				if self.roster.bl:
 					painter.drawPixmap(x+7,y,useritem.icon.pixmap(22,22))
@@ -244,7 +240,6 @@ class rosterStyle:
 			#font.setWeight(18)
 			#doc.setDefaultFont(font)
 
-			s1=time.time()
 			if self.avatarCache.has_key(useritem.jid):
 				avatar=self.roster.main.client.getAvatarImg(useritem.jid)
 				if avatar:
@@ -280,15 +275,11 @@ class rosterStyle:
 
 			#if useritem.avatar:
 				#pixmap=useritem.avatar.pixmap(22,22)
-			s1=time.time()
-			s3=time.time()
 			res=""
 			if len(self.roster.main.client.roster['users'][useritem.jid].resources)>1:
 				res=" ("+str(len(self.roster.main.client.roster['users'][useritem.jid].resources))+")"
-			s3=time.time()
 			#self.roster.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()
 			doc.setHtml("<font color=\""+"#000000"+"\">"+useritem.escapedName+res+"</font>")
-			s3=time.time()
 			painter.save()
 			painter.translate(x+41,y+(22-fontHeight)/2)
 			if useritem.avatar:
@@ -296,7 +287,6 @@ class rosterStyle:
 			else:
 				doc.drawContents(painter, QtCore.QRectF(0,0,self.roster.width()-38,y+14))
 			painter.restore()
-			s1=time.time()
 			if self.roster.metaItems.has_key(useritem.metajid) and background:
 				if not useritem in self.roster.metaItems[useritem.metajid]:
 					print "painting"
