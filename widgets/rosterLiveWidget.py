@@ -1385,7 +1385,7 @@ class rosterWidget(QtGui.QWidget):
 		item=self.itemAt(x,y)
 		if item==None:
 			return QtGui.QWidget.mouseReleaseEvent(self,event)
-		if x<12:
+		if x<0:
 			# sets item properties according to metaItem, which is represented by button
 			if self.metaItems.has_key(item.metajid):
 				#index=0
@@ -1439,7 +1439,7 @@ class rosterWidget(QtGui.QWidget):
 		item=self.itemAt(x,y)
 		if self.item!=item:
 			if self.main.config['bigOnClick']=="False":
-				if x>12:
+				if x>0:
 					return self.mouseReleaseEvent(event)
 				return
 			else:
