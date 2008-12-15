@@ -594,8 +594,6 @@ class clientClass(pyxl.client.Client):
 		# self.main.allowedSids contains SIDs which are used for transfering Jabbim Extra
 		if sid in self.main.allowedSids.keys():
 			if unicode(self.ft[sid].fromjid.full()).find("rpc@jabbim.cz")!=-1:
-				event=self.main.events.ftEvents[sid]
-				event.reject()
 				# continuing with jabbim extra
 				log.msg("Part of jabbim extra has been downloaded")
 				file=self.ft[sid].filepath
@@ -610,6 +608,8 @@ class clientClass(pyxl.client.Client):
 				if done:
 					self.main.preferencesWindow.reloadView(file,root)
 					self.main.preferencesWindow.reloadPlugins_()
+				event=self.main.events.ftEvents[sid]
+				event.reject()
 			del self.main.allowedSids[sid]
 		self.dispatcher.publishEvent('FTFinishedEvent', sid, error)
 		#del self.ft[sid]
