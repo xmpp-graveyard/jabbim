@@ -213,7 +213,10 @@ class Client(derived):
 		else:
 			jid = jd.userhost()
 		if self.avatarDef.has_key(jid):
-			return self.avatarImg.get(self.avatarDef[jid], None)+[self.avatarDef[jid]]
+			ret = self.avatarImg.get(self.avatarDef[jid], None)
+			if ret:
+				ret+=[self.avatarDef[jid]]
+			return ret
 
 	def cacheCaps(self, ext, features, identity):
 		self.caps_cache[ext] = [identity,features]
