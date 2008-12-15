@@ -98,9 +98,10 @@ wizards/registration.py \
 wizards/jsm_ui.py \
 include/utils.py
 
-TRANSLATIONS    = locales/jabbim_cs.ts \
-				locales/jabbim_en.ts \
+TRANSLATIONS = locales/jabbim_cs.ts \
+	locales/jabbim_en.ts \
         locales/jabbim_sk.ts \
 	locales/jabbim_pl.ts \
 	locales/jabbim_fr.ts \
-	locales/jabbim_de.ts
+	locales/jabbim_de.ts \
+	locales/jabbim_ru.ts
