@@ -8,42 +8,62 @@ import base64
 #from widgets.webkitchatwidget import searchWidget
 
 
-template = u"""<html><head><script>
-function appendMessage(text, tagy) {
+template = u"""<html><head>
+<style>
+div {
+color: green;
+background:black;
+margin:  5px;
+}
+</style>
+<script>
+function appendMessage(text, tagy, id) {
 var hl = document.getElementById('hlavni');
 var message = document.createElement('div');
-var tags = document.createElement('div');
+var tags = document.createElement('tags');
 tags.innerHTML = tagy;
-tags.setAttribute('id','tags');
+tags.setAttribute('name','tags');
+tags.setAttribute('msgId', id)
+tags.style.display = 'none';
 var msg = document.createElement('div');
+msg.setAttribute('id', id)
 msg.innerHTML = text;
 message.appendChild(tags);
 message.appendChild(msg);
 hl.appendChild(message);};
 
-function filterMessages(tags){
-var tag = tags.split(' ');
-var hl = document.getElementById('hlavni');
-var seznam = hl.getElementsByName('div');
-for (var i=0;i<seznam.length;i++) {
-var tagy = seznam[i].getElementById('tags');
-var rozdelene = tagy.innerHTML.split(' ');
+function compareTags(tags1, tags2){
 var ok = 0;
-for (var x=0;x<tag.lenght;x++){
-	for (var y=0;y<rozdelene.lenght;y++){
-		if (tag[x] == rozdelene[y]){
+var l1 = tags1.length;
+var l2 = tags2.length;
+for (var x=0;x<tags1.length;x++){
+	for (var y=0;y<tags2.length;y++){
+		if (tags1[x] == tags2[y]){
 			ok=1;
 			break;
 			}
 		}
 	if (ok == 1){break;}
 	}
+return ok;
+}
 
+function filterMessages(tags){
+var tag = tags.split(' ');
+var seznam = document.getElementsByName('tags');
+var rozdelene;
+for (var i=0;i<seznam.length;i++) {
+//var tagy = seznam[i];
+rozdelene = seznam[i].innerHTML.split(' ');
+var ok = compareTags(tag, rozdelene);
+
+var id = seznam[i].getAttribute('msgId');
+var msg = document.getElementById(id);
 if (ok == 1){
-seznam[i].style.visibility = 'visible'; 
+msg.style.display = 'block';
 }
 else {
-seznam[i].style.visibility = 'hidden';
+msg.style.display = 'none';
 }
 
 }
@@ -110,6 +130,7 @@ class Plugin(plugins.PluginBase):
 		self.historyPyPosition=-1;
 		self.historyXMLPosition=-1;
 		self.configDialog=config(self)
+		self.id = 1
 		if main:
 			self.loadConfig()
 			self.loadHistory()
@@ -156,7 +177,7 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.xmlIqPreset,QtCore.SIGNAL("clicked()"),self.iq)
 			QtCore.QObject.connect(self.window.ui.xmlClearButton,QtCore.SIGNAL("clicked()"),self.clearLog)
 			QtCore.QObject.connect(self.window.ui.xmlOutput,QtCore.SIGNAL("linkClicked ( const QUrl &)"),self.webkitLinkClicked)
-			
+			QtCore.QObject.connect(self.window.ui.xmlFilter,QtCore.SIGNAL("textChanged ( const QString)"),self.xmlFilterChanged)
 		#python console
 			QtCore.QObject.connect(self.window.ui.pythonEnableBox, QtCore.SIGNAL("stateChanged(int)"),self.pythonEnableToggled)
 			QtCore.QObject.connect(self.window.ui.pythonClearButton, QtCore.SIGNAL("clicked()"),self.clearLog)
@@ -212,7 +233,7 @@ class Plugin(plugins.PluginBase):
 			self.log = True
 			log.addObserver(self.observer)
 			#self.window.ui.pythonOutput.append('Log started')
-			self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('appendMessage("Log started.");')
+			#self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('appendMessage("Log started.");')
 		else:
 			self.log = False
 			log.removeObserver(self.observer)
@@ -222,7 +243,7 @@ class Plugin(plugins.PluginBase):
 			self.main.reactor.callFromThread(self.observer,msg,True)
 			return
 		#self.window.ui.pythonOutput.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
-		self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s", "");'%('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;")))))
+		self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s", "", "");'%('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;")))))
 		if msg['isError'] and self.config['notify'] == 'True':
 			self.main.tray.showMessage(self.main.tr("Log"),unicode(' '.join(msg['message'])), QtGui.QSystemTrayIcon.Warning, 2000)
 	
@@ -240,7 +261,7 @@ class Plugin(plugins.PluginBase):
 	def execute(self):
 		code = unicode(self.window.ui.pythonInput.toPlainText ())
 		#self.window.ui.pythonOutput.append('>>> '+self.window.ui.pythonInput.toPlainText ())
-		self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s", "");'%('>>> '+self.window.ui.pythonInput.toPlainText()))
+		self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s", "", "");'%('>>> '+self.window.ui.pythonInput.toPlainText()))
 		self.historyPy.insert(0,code)
 		self.historyPy=self.historyPy[0:long(self.config['historyMaxCount'])]
 		self.historyPyPosition=-1;
@@ -364,13 +385,23 @@ class Plugin(plugins.PluginBase):
 				tagy += 'to '
 			elif xml.startswith('OUT'):
 				tagy +='from '
+
+			self.window.ui.xmlOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s", "%s", "%s");'%(text, tagy, self.addNextId()))
+	def writeOut(self):
+			fp = open('devtest.html', 'w')
+			fp.write(unicode(self.window.ui.xmlOutput.page().mainFrame().toHtml(), 'utf8'))
+			fp.close()
+
+	def xmlFilterChanged(self, text):
+		log.msg('trying to filter %s'%(unicode(self.window.ui.xmlFilter.text())))
+		self.window.ui.xmlOutput.page().mainFrame().evaluateJavaScript('filterMessages("%s")'%(unicode(self.window.ui.xmlFilter.text())))
 			
-			self.window.ui.xmlOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s", "%s");'%(text, tagy))
-			#print self.window.ui.xmlOutput.page().mainFrame().toHtml()
 			
 	def setTabXML(self):
 		self.window.ui.tabWidget.setCurrentIndex(0);
 	
 	def setTabShell(self):
 		self.window.ui.tabWidget.setCurrentIndex(1);
-
+	def addNextId(self):
+		self.id += 1
+		return str(self.id)
