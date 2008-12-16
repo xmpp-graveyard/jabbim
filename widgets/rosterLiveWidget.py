@@ -2342,6 +2342,8 @@ class rosterWidget(QtGui.QWidget):
 		contactMenu=QtGui.QMenu(self)
 		contact = self.main.client.roster['users'][jid]
 		oneres = len(contact.resources.keys()) < 2
+		myJid = jid == self.main.client.jid.userhost()
+			
 		# chat
 		if oneres:
 			action=contactMenu.addAction(self.tr("Chat"))
@@ -2355,7 +2357,7 @@ class rosterWidget(QtGui.QWidget):
 					action=submenu.addAction(unicode(res))
 					action.setData(QtCore.QVariant("%s/%s" % (jid, res)))
 					action.setObjectName("chat")
-		if self.main.client.groupchats != {}:	# Mozna zobrazit i kdyz v mucu nejsme aby to bylo vic videt :)
+		if self.main.client.groupchats != {} and not myJid:	# Mozna zobrazit i kdyz v mucu nejsme aby to bylo vic videt :)
 			submenu = contactMenu.addMenu(QtGui.QIcon("images/16x16/categories/muc.png"),self.tr("Invite to conference"))
 			if oneres:
 				for gc in self.main.client.groupchats.keys():
@@ -2376,7 +2378,7 @@ class rosterWidget(QtGui.QWidget):
 			w=self.main.chat.ui.chatTab.widget(i)
 			if w.typ=='chat' and w.jid != contact.jid:
 				lst.append(w.jid)
-		if len(lst)>0:
+		if len(lst)>0 and not myJid:
 			submenu = contactMenu.addMenu(self.tr("Invite to chat"))
 			if oneres:
 				for name in lst:
@@ -2455,73 +2457,76 @@ class rosterWidget(QtGui.QWidget):
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("break_up_meta")
 		# rename
-		action=contactMenu.addAction(self.tr("Rename"))
-		action.setData(QtCore.QVariant(jid))
-		action.setObjectName("rename")
+		if not myJid:
+			action=contactMenu.addAction(self.tr("Rename"))
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("rename")
 		# delete from group
-		if group!=None and len(self.main.client.roster['users'][jid].groups)>1:
+		if group!=None and len(self.main.client.roster['users'][jid].groups)>1 and not myJid:
 			action=contactMenu.addAction(self.tr("Delete from group"))
 			action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"-"+group])))
 			action.setObjectName("check_group")
 		# delete from roster
-		action=contactMenu.addAction(self.tr("Delete from roster"))
-		action.setData(QtCore.QVariant(jid))
-		action.setObjectName("delete_action")
-
-		action = contactMenu.addAction(self.tr("Favourite contact"))
-		action.setData(QtCore.QVariant(jid))
-		action.setObjectName("fav")
-		action.setCheckable(True)
-		action.setChecked(unicode(jid) in self.main.config['favUsers'])
-
-
-		value = contact.subscription
-		if value in ["ask"]:
-			action = contactMenu.addAction(self.tr("Authorize"))
+		if not myJid:
+			action=contactMenu.addAction(self.tr("Delete from roster"))
 			action.setData(QtCore.QVariant(jid))
-			action.setObjectName("a_authorize")
-		if value in ["from", "both",'ask']:
-			action = contactMenu.addAction(self.tr("Remove authorization"))
+			action.setObjectName("delete_action")
+		if not myJid:
+			action = contactMenu.addAction(self.tr("Favourite contact"))
 			action.setData(QtCore.QVariant(jid))
-			action.setObjectName("a_unauthorize")
-		if value in ["none", "from"]:
-			action = contactMenu.addAction(self.tr("Request authorization"))
-			action.setData(QtCore.QVariant(jid))
-			action.setObjectName("a_ask")
+			action.setObjectName("fav")
+			action.setCheckable(True)
+			action.setChecked(unicode(jid) in self.main.config['favUsers'])
 
-		# separator
-		contactMenu.addSeparator()
-		# groups . submenu
-		group=contactMenu.addMenu (self.tr("Groups"))
-		# groups . new group
-		action=group.addAction(self.tr("New Group"))
-		action.setData(QtCore.QVariant(jid))
-		action.setObjectName("new_group")
-		# groups . separator
-		group.addSeparator()
-		# groups . groups list
-		#g=self.getGroups(str(jid))
-		for k,v in self.groups.iteritems():
-			if k!="Unknown" and k!=self.specialName and len(k)!=0:
-				action=group.addAction(unicode(k))
-				action.setObjectName("check_group")
-				action.setCheckable(True)
-			#if len(self.main.client.roster['users'][jid].groups)==0:
-				#if k=="Unknown":
-					#action.setChecked(True)
-					#action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"-"+unicode(k)])))
+		if not myJid:
+			value = contact.subscription
+			if value in ["ask"]:
+				action = contactMenu.addAction(self.tr("Authorize"))
+				action.setData(QtCore.QVariant(jid))
+				action.setObjectName("a_authorize")
+			if value in ["from", "both",'ask']:
+				action = contactMenu.addAction(self.tr("Remove authorization"))
+				action.setData(QtCore.QVariant(jid))
+				action.setObjectName("a_unauthorize")
+			if value in ["none", "from"]:
+				action = contactMenu.addAction(self.tr("Request authorization"))
+				action.setData(QtCore.QVariant(jid))
+				action.setObjectName("a_ask")
+
+		if not myJid:
+			# separator
+			contactMenu.addSeparator()
+			# groups . submenu
+			group=contactMenu.addMenu (self.tr("Groups"))
+			# groups . new group
+			action=group.addAction(self.tr("New Group"))
+			action.setData(QtCore.QVariant(jid))
+			action.setObjectName("new_group")
+			# groups . separator
+			group.addSeparator()
+			# groups . groups list
+			#g=self.getGroups(str(jid))
+			for k,v in self.groups.iteritems():
+				if k!="Unknown" and k!=self.specialName and len(k)!=0:
+					action=group.addAction(unicode(k))
+					action.setObjectName("check_group")
+					action.setCheckable(True)
+				#if len(self.main.client.roster['users'][jid].groups)==0:
+					#if k=="Unknown":
+						#action.setChecked(True)
+						#action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"-"+unicode(k)])))
+					#else:
+						#action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"+"+unicode(k)])))
 				#else:
-					#action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"+"+unicode(k)])))
-			#else:
-				if k in self.main.client.roster['users'][jid].groups:
-					action.setChecked(True)
-					action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"-"+unicode(k)])))
-					if len(self.main.client.roster['users'][jid].groups)<=1:
-						action.setEnabled(False)
-				else:
-					action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"+"+unicode(k)])))
+					if k in self.main.client.roster['users'][jid].groups:
+						action.setChecked(True)
+						action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"-"+unicode(k)])))
+						if len(self.main.client.roster['users'][jid].groups)<=1:
+							action.setEnabled(False)
+					else:
+						action.setData(QtCore.QVariant(QtCore.QStringList([unicode(jid),u"+"+unicode(k)])))
 
-		if self.main.client.privacy:
+		if self.main.client.privacy and not myJid:
 			if self.main.client.privacy.active:
 				submenu = contactMenu.addMenu(self.tr("Privacy"))
 				if not self.main.client.privacy.active.isBlockedJID(jid):

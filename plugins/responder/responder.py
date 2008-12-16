@@ -36,7 +36,8 @@ class Plugin(plugins.PluginBase):
 		menu.addAction("Show count",self.showSlot)
 	def on_message(self,msg):
 		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack()
-		if frm.find('icq')!=-1 and not frm in self.config['exclude']:
+		jid = self.main.getJid(frm)
+		if jid.host.startswith('icq') and not frm in self.config['exclude']:
 			self.main.client.sendMessage(frm, self.config['message'].replace('[JID]', self.main.client.jid.userhost()))
 			self.count = self.count +1
 			return False

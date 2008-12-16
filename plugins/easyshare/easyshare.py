@@ -502,15 +502,21 @@ class Plugin(plugins.PluginBase):
 	def buildContactMenu(self, menu, contact):
 		self.menu=menu.addMenu(self.tr("EasyShare"))
 		self.menu.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
+		myJid = contact.jid == self.main.client.jid.userhost()
+			
 		for addr in self.config['dirs']:
 			action = self.menu.addAction(addr)
 			action.setData(QtCore.QVariant(QtCore.QStringList([unicode(contact.jid), unicode(addr)])))
 			action.setObjectName(addr+"share")
 			action.setCheckable(True)
-			if unicode(contact.jid) in self.config[addr+'-sharejids']:
+			if myJid:
 				action.setChecked(True)
+				action.setEnabled(False)
 			else:
-				action.setChecked(False)
+				if unicode(contact.jid) in self.config[addr+'-sharejids']:
+					action.setChecked(True)
+				else:
+					action.setChecked(False)
 		QtCore.QObject.connect(self.menu,QtCore.SIGNAL("triggered ( QAction * )"),self.toggled)
 		
 	def toggled(self, b):

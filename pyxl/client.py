@@ -471,7 +471,7 @@ class Client(derived):
 
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 
-		if self.IBBonly and self.connection != None:
+		if self.IBBonly and self.connection != None and int(self.port) != 443:
 			self.connection.connect()
 #			self.connection.factory.bosh_client.manager.restart()
 
@@ -517,13 +517,15 @@ class Client(derived):
 	def _streamEnd(self, el):
 
 		log.msg('stream end')
-		log.msg(dir(el))
+		log.msg(unicode(dir(el)))
+		print el.features
 		try:
 			self.xping.stop()
 		except:
 			pass
 		if self.factory:
 			self.factory.stopTrying()
+		#self.disconnect()
 		pass
 
 	def _bind(self, el):

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -3395,8 +3395,10 @@ class mainWindow(QtGui.QMainWindow):
 		Builds menu with 'show offline', 'show away' etc. There are selfResources (if user is connected from more than one client) too.
 		"""
 		# make Show offline QAction
-		self.offlineMenu=QtGui.QMenu()
-
+		if self.client is not None:
+			self.offlineMenu= self.ui.roster.buildContactMenu(unicode(self.client.jid.userhost()),None)
+		else:
+			self.offlineMenu = QtGui.QMenu()
 		# change vcard action
 		self.showChangeAvatar=self.offlineMenu.addAction(self.tr("Change profile photo"))
 		self.showChangeAvatar.setCheckable(False)
@@ -4519,21 +4521,27 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.roster.theme=True
 		if text==None:
 			# open theme according to self.config
-			conf=ConfigObj("themes/"+self.config['theme']+"/theme.ini",encoding='UTF8')
-			style=False
-			if conf!=None and len(conf)!=0:
-				if conf.has_key('style'):
-					if conf['style'] in self.qtStyles:
-						app.setStyle(QtGui.QStyleFactory.create(conf['style']))
-						style=True
-			if not style:
-				
+			try:
+				conf=ConfigObj("themes/"+self.config['theme']+"/theme.ini",encoding='UTF8')
+				style=False
+				if conf!=None and len(conf)!=0:
+					if conf.has_key('style'):
+						if conf['style'] in self.qtStyles:
+							app.setStyle(QtGui.QStyleFactory.create(conf['style']))
+							style=True
+				if not style:
+
+					app.setStyle(self.qtStylesDefault)
+				theme=open("themes/"+self.config['theme']+"/style.css")
+				text=theme.read()
+				self.setStyleSheet(text)
+				self.chat.setStyleSheet(text)
+				theme.close()
+			except IOError:
+				# theme isn't used
+				text=""
+				self.ui.roster.theme=False
 				app.setStyle(self.qtStylesDefault)
-			theme=open("themes/"+self.config['theme']+"/style.css")
-			text=theme.read()
-			self.setStyleSheet(text)
-			self.chat.setStyleSheet(text)
-			theme.close()
 		else:
 			# use text for stylesheet css
 			if file:
