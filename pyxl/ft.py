@@ -542,6 +542,12 @@ class SI:
 		self.fileprops = {}
 		self.state = 'init'
 		self.methods = methods
+
+	def getState(self):
+		return self.state
+
+	def setState(self, state):
+		self.state = state
 	
 	def send(self,  fileprops):
 		self.fileprops = fileprops
@@ -621,6 +627,11 @@ class SI:
 			method = 'http://jabber.org/protocol/ibb'
 		else:
 			method = self.methods[0]
+		if method == 'http://jabber.org/protocol/ibb':
+			self.ft.setTransport('ibb')
+		elif method == 'http://jabber.org/protocol/bytestreams':
+			self.ft.setTransport('socks')
+
 		iq = Element((None,'iq'))
 		iq['to'] = self.fromjid.full()
 		iq['from'] = self.tojid.full()
@@ -656,12 +667,14 @@ class SI:
 		return True
 	
 	def delete(self,  error):
+		print 'on delete ',self.ft.getTransport(), self.state
+		if self.ft.getTransport() != 'socks':
+			self.state = 'finished'
 		if self.state == 'accepted':
 			if self.ft.protocol:
 				self.ft.protocol.unregisterProducer()
 				self.state = 'finished'
 				self.ft.finish()
-				
 		return False
 	
 
@@ -678,6 +691,11 @@ class Jingle:
 		except:
 			pass
 
+	def getState(self):
+		return self.state
+
+	def setState(self, state):
+		self.state = state
 	
 	def send(self, fileprops):
 		
@@ -713,7 +731,6 @@ class Jingle:
 		
 	
 	def delete(self,  error):
-
 
 		if error == 'activate error' or error == 'connect failed' or error == "Connection lost":
 			props = self.fileprops
@@ -851,6 +868,13 @@ class FT:
 		log.msg('times: %i - %i - %i - %i'%(self.start, self.medium, self.ftstart, time.time())) 
 	
 	def finish(self):
+		if self.sessionObj == None:
+			return
+		if self.sessionObj.getState() == 'finished':
+			log.msg('ft already finished')
+			return
+		else:
+			self.sessionObj.setState('finished')
 		log.msg("konec prenosu")
 		if self.fp != None:
 			self.fp.close()
@@ -862,6 +886,7 @@ class FT:
 				self.init.client.socks5Srv.loseConnection()
 		except:
 			log.err('unable to finish socks5')
+			#self.delete(None)
 #			print self.init.client.socks5Srv.factory.sessions
 			pass
 
