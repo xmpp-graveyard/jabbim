@@ -1794,7 +1794,7 @@ class clientClass(pyxl.client.Client):
 			return
 		# Rename contact if he havent got nickname
 		contact=self.roster['users'][jid]
-		if (contact.name=="" or contact.name==contact.jid) or not contact.name:
+		if (contact.name=="" or contact.name==contact.jid) or (not contact.name or contact.name==contact.jid.split('@')[0]):
 			log.msg('trying to rename '+jid)
 			self.renameByVcard(card,jid)
 
