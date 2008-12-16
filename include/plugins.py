@@ -454,7 +454,11 @@ class PluginBase(object):
 		"""
 		Prepares plugin for unload. Deletes opened windows, unregister features etc...
 		"""
-		self.on_remove()
+		try:
+			self.on_remove()
+		except:
+			print "chyba v on_remove!!!!"
+			pass
 		# delete windows
 		#for window in self._loadedWidgets:
 			#window.close()

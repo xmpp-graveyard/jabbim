@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -3084,15 +3084,13 @@ class mainWindow(QtGui.QMainWindow):
 			ret=command(*args)
 			return ret
 		except Exception, ex:
-#	temporary bugfix by triak
-#			log.msg('Plugin error: ' +unicode(ex))
 			log.msg('In function:'+unicode(command))
 			try:
-				message = unicode(traceback.format_exc())
+				message = unicode(traceback.format_exc(),"utf-8")
 				log.msg(message)
 			except:
 				try:
-					message = unicode(traceback.format_exc(),"utf-8")
+					message = unicode(traceback.format_exc())
 					log.msg(message)
 				except:
 					log.msg("can't decode traceback")
