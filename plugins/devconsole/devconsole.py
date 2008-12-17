@@ -10,6 +10,7 @@ import base64
 
 template = u"""<html><head>
 <style>
+body {backround: black;}
 div {
 color: green;
 background:black;
@@ -17,35 +18,54 @@ margin:  5px;
 }
 </style>
 <script>
-function appendMessage(text, tagy, id) {
+
+//Auto-scroll to bottom.  Use nearBottom to determine if a scrollToBottom is desired.
+function nearBottom() {
+		return ( (document.body.scrollTop+100) >= ( document.body.offsetHeight - ( window.innerHeight * 1.2 ) ) );
+}
+function scrollToBottom() {
+		document.body.scrollTop = document.body.offsetHeight;
+}
+
+function appendMessage(text, tagy, id, timestamp, hidden) {
+shouldScroll = nearBottom();
 var hl = document.getElementById('hlavni');
 var message = document.createElement('div');
+
 var tags = document.createElement('tags');
 tags.innerHTML = tagy;
 tags.setAttribute('name','tags');
 tags.setAttribute('msgId', id)
 tags.style.display = 'none';
+
 var msg = document.createElement('div');
 msg.setAttribute('id', id)
 msg.innerHTML = text;
+if (hidden == 1){msg.style.display = 'none';}
+
+var stamp = document.createElement('timestamp');
+stamp.setAttribute('name','timestamp');
+stamp.innerHTML = timestamp;
+stamp.style.display = 'none';
+
 message.appendChild(tags);
 message.appendChild(msg);
-hl.appendChild(message);};
+message.appendChild(stamp);
+hl.appendChild(message);
+
+if (shouldScroll) setTimeout("scrollToBottom()", 100);
+};
 
 function compareTags(tags1, tags2){
-var ok = 0;
 var l1 = tags1.length;
 var l2 = tags2.length;
 for (var x=0;x<tags1.length;x++){
 	for (var y=0;y<tags2.length;y++){
 		if (tags1[x] == tags2[y]){
-			ok=1;
-			break;
+			return 1
 			}
 		}
-	if (ok == 1){break;}
 	}
-return ok;
 }
 
 function filterMessages(tags){
@@ -243,7 +263,8 @@ class Plugin(plugins.PluginBase):
 			self.main.reactor.callFromThread(self.observer,msg,True)
 			return
 		#self.window.ui.pythonOutput.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
-		self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s", "", "");'%('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;")))))
+
+		self.addMessage('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
 		if msg['isError'] and self.config['notify'] == 'True':
 			self.main.tray.showMessage(self.main.tr("Log"),unicode(' '.join(msg['message'])), QtGui.QSystemTrayIcon.Warning, 2000)
 	
@@ -261,7 +282,8 @@ class Plugin(plugins.PluginBase):
 	def execute(self):
 		code = unicode(self.window.ui.pythonInput.toPlainText ())
 		#self.window.ui.pythonOutput.append('>>> '+self.window.ui.pythonInput.toPlainText ())
-		self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s", "", "");'%('>>> '+self.window.ui.pythonInput.toPlainText()))
+		self.addMessage('>>> '+self.window.ui.pythonInput.toPlainText())
+		self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('scrollToBottom()')
 		self.historyPy.insert(0,code)
 		self.historyPy=self.historyPy[0:long(self.config['historyMaxCount'])]
 		self.historyPyPosition=-1;
@@ -386,7 +408,7 @@ class Plugin(plugins.PluginBase):
 			elif xml.startswith('OUT'):
 				tagy +='from '
 
-			self.window.ui.xmlOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s", "%s", "%s");'%(text, tagy, self.addNextId()))
+			self.addMessage(text, tagy, 'xml')
 	def writeOut(self):
 			fp = open('devtest.html', 'w')
 			fp.write(unicode(self.window.ui.xmlOutput.page().mainFrame().toHtml(), 'utf8'))
@@ -395,13 +417,41 @@ class Plugin(plugins.PluginBase):
 	def xmlFilterChanged(self, text):
 		log.msg('trying to filter %s'%(unicode(self.window.ui.xmlFilter.text())))
 		self.window.ui.xmlOutput.page().mainFrame().evaluateJavaScript('filterMessages("%s")'%(unicode(self.window.ui.xmlFilter.text())))
+		
+	def compareTags(self, tags1, tags2):
+		t1 = tags1.split(' ')
+		t2 = tags2.split(' ')
+		if len(t1) == 0 or len(t2) == 0:
+			return False
+		for tag in t1:
+			if tag in t2:
+				return True
+		return False
+		
+
+	def addMessage(self, text, tagy='', typ='log'):
+		stamp = unicode(time.time())
+		if self.compareTags(tagy, unicode(self.window.ui.xmlFilter.text())):
+			hidden = '0'
+		else:
+			hidden = '1'
 			
-			
+		if typ == 'xml':
+			self.window.ui.xmlOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s", "%s", "%s", "%s", %s);'%(text, tagy, self.addNextId(), stamp, hidden))
+		elif typ == 'log':
+			self.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s", "", "", "%s", %s);'%(text, stamp, hidden))
+		else:
+			raise TypeError
+
+##		if unicode(self.window.ui.xmlFilter.text()) != '':
+##			self.xmlFilterChanged("")
+
 	def setTabXML(self):
 		self.window.ui.tabWidget.setCurrentIndex(0);
 	
 	def setTabShell(self):
 		self.window.ui.tabWidget.setCurrentIndex(1);
+		
 	def addNextId(self):
 		self.id += 1
 		return str(self.id)
