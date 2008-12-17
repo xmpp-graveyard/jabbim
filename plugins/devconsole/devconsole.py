@@ -77,7 +77,7 @@ for (var x=0;x<seznam.length;x++)
 	if ((delta == -1) || (curDelta<delta)){ delta = curDelta; vybrane = seznam[x];}
 	}
 //scrollToElement(vybrane);
-vybrane.scrollTop = document.getElementById('hlavni').offsetTop;
+document.body.scrollTop = vybrane.offsetTop;
 }
 
 function scrollToElement(theElement){
@@ -473,10 +473,16 @@ class Plugin(plugins.PluginBase):
 			tagy = 'boot '
 			self.addMessage(text, tagy, 'xml')
 			
-	def writeOut(self):
+	def writeOut(self, typ = 'xml'):
+		if typ == 'xml':
 			fp = open('devtest.html', 'w')
 			fp.write(unicode(self.window.ui.xmlOutput.page().mainFrame().toHtml()).encode('utf8'))
 			fp.close()
+		elif typ=='log':
+			fp = open('devtest.html', 'w')
+			fp.write(unicode(self.window.ui.pythonOutput.page().mainFrame().toHtml()).encode('utf8'))
+			fp.close()
+
 
 	def xmlFilterChanged(self):
 		log.msg('trying to filter %s'%(unicode(self.window.ui.xmlFilter.text())))
@@ -517,7 +523,7 @@ class Plugin(plugins.PluginBase):
 				tagy += 'from '
 				tagy += el['from']+' '
 			if el.hasAttribute('to'):
-				tagy += el['to']
+				tagy += el['to'] + ' '
 			else:
 				tagy += self.main.client.jid.host
 			tagy += el.name + ' '
