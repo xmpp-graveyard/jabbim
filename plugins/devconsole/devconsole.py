@@ -42,12 +42,15 @@ tags.style.display = 'none';
 var msg = document.createElement('div');
 msg.setAttribute('id', id)
 msg.innerHTML = text;
+msg.setAttribute('onClick','changeTab('+timestamp+')');
 if (hidden == 1){msg.style.display = 'none';}
 
-var stamp = document.createElement('timestamp');
+var stamp = document.createElement('span');
 stamp.setAttribute('name','timestamp');
-stamp.innerHTML = timestamp;
-stamp.style.display = 'none';
+stamp.setAttribute('t',timestamp);
+//stamp.setAttribute('onClick','changeTab('+timestamp+')');
+//stamp.innerHTML = '*';
+//stamp.style.display = 'none';
 
 message.appendChild(tags);
 message.appendChild(msg);
@@ -56,6 +59,39 @@ hl.appendChild(message);
 
 if (shouldScroll) setTimeout("scrollToBottom()", 100);
 };
+
+function changeTab(timestamp){
+consoleObject.changeTab();
+consoleObject.scroll(timestamp);
+}
+
+function scrollToTimestamp(timestamp){
+var seznam = document.getElementsByName('timestamp');
+var cislo = parseInt(timestamp);
+var vybrane = null;
+var delta = -1;
+for (var x=0;x<seznam.length;x++)
+{
+	var cur = parseInt(seznam[x].attributes.getNamedItem("t").value);
+	var curDelta = Math.abs(cislo-cur);
+	if ((delta == -1) || (curDelta<delta)){ delta = curDelta; vybrane = seznam[x];}
+	}
+//scrollToElement(vybrane);
+vybrane.scrollTop = document.getElementById('hlavni').offsetTop;
+}
+
+function scrollToElement(theElement){
+
+  var selectedPosX = 0;
+  var selectedPosY = 0;
+
+  while(theElement != null){
+    selectedPosX += theElement.offsetLeft;
+    selectedPosY += theElement.offsetTop;
+    theElement = theElement.offsetParent;
+  }
+  }
+
 
 function compareTags(tags1, tags2){
 var l1 = tags1.length;
@@ -134,6 +170,30 @@ class config:
 
 		self.config['presetDataXML']={'type':'hidden','value':tempPreset}		
 		self.config['__sort__']=['notify','onOnLoad','XMLaddTimestamps','historyMaxCount','historySave','historyDataXML','historyDataPy']
+
+
+class Console(QtCore.QObject):
+	def __init__(self,plugin, mytab):
+		QtCore.QObject.__init__(self)
+		self.plugin = plugin
+		self.mytab = mytab
+
+	@QtCore.pyqtSignature("")
+	def changeTab(self):
+		if self.mytab == 'xml':
+			self.plugin.setTabShell()
+		elif self.mytab == 'log':
+			self.plugin.setTabXML()
+			
+	@QtCore.pyqtSignature("QString")
+	def scroll(self, timestamp):
+		if self.mytab == 'xml':
+			self.plugin.window.ui.pythonOutput.page().mainFrame().evaluateJavaScript('scrollToTimestamp("%s")'%timestamp)
+		elif self.mytab == 'log':
+		    self.plugin.window.ui.xmlOutput.page().mainFrame().evaluateJavaScript('scrollToTimestamp("%s")'%timestamp)
+			
+		
+
 		
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
@@ -168,6 +228,8 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.pythonOutput.setHtml(template)
 ##			self.window.ui.pythonSearchWidget=searchWidget(self.window.ui.pythonOutput,self.window)
 ##			self.window._5.addWidget(self.ui.pythonSearchWidget)
+			self.xmlConsoleObject = Console(self, 'xml')
+			self.pythonConsoleObject = Console(self, 'log')
 
 		#both tabs
 			#Ctrl+Enter(Return) executes command list
@@ -200,10 +262,12 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.xmlClearButton,QtCore.SIGNAL("clicked()"),self.clearLog)
 			QtCore.QObject.connect(self.window.ui.xmlOutput,QtCore.SIGNAL("linkClicked ( const QUrl &)"),self.webkitLinkClicked)
 			QtCore.QObject.connect(self.window.ui.xmlFilter,QtCore.SIGNAL("returnPressed()"),self.xmlFilterChanged)
+			QtCore.QObject.connect(self.window.ui.xmlOutput.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.xmlCleared)
 		#python console
 			QtCore.QObject.connect(self.window.ui.pythonEnableBox, QtCore.SIGNAL("stateChanged(int)"),self.pythonEnableToggled)
 			QtCore.QObject.connect(self.window.ui.pythonClearButton, QtCore.SIGNAL("clicked()"),self.clearLog)
 			QtCore.QObject.connect(self.window.ui.pythonExecuteButton, QtCore.SIGNAL("clicked()"),self.execute)
+			QtCore.QObject.connect(self.window.ui.pythonOutput.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.pythonCleared)
 			#Ctrl+Shift+Up inserts previous command from history to the top of current shell
 			short=QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Up | QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier),self.window)
 			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.shellAppendPrevious)
@@ -265,8 +329,7 @@ class Plugin(plugins.PluginBase):
 			self.main.reactor.callFromThread(self.observer,msg,True)
 			return
 		#self.window.ui.pythonOutput.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
-
-		self.addMessage('[%s] %s' %(time.strftime('%X'), unicode(' '.join(unicode(msg['message'])).replace("<","&lt;").replace(">","&gt;"))))
+		self.addMessage('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
 		if msg['isError'] and self.config['notify'] == 'True':
 			self.main.tray.showMessage(self.main.tr("Log"),unicode(' '.join(msg['message'])), QtGui.QSystemTrayIcon.Warning, 2000)
 	
@@ -469,3 +532,9 @@ class Plugin(plugins.PluginBase):
 	def addNextId(self):
 		self.id += 1
 		return str(self.id)
+	
+	def xmlCleared(self):
+		self.window.ui.xmlOutput.page().mainFrame().addToJavaScriptWindowObject("consoleObject",self.xmlConsoleObject)
+
+	def pythonCleared(self):
+		self.window.ui.pythonOutput.page().mainFrame().addToJavaScriptWindowObject("consoleObject",self.pythonConsoleObject)
