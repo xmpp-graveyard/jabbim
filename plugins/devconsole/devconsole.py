@@ -5,6 +5,7 @@ from include import plugins
 from PyQt4 import QtCore, QtGui, QtWebKit
 from twisted.python import log
 import base64
+
 from pyxl import jid
 #from widgets.webkitchatwidget import searchWidget
 
@@ -515,18 +516,38 @@ class Plugin(plugins.PluginBase):
 
 	def on_element(self, el):
 		if self.window.ui.xmlEnableBox.isChecked():
+			
+			typ = ''
 			tagy = ''
 			if not el.hasAttribute('from'):
-				el['from'] == self.main.client.jid.full()
-
-			if el['from'] == self.main.client.jid.full() or jid.JID(el['from']).userhost() in self.main.client.groupchats.keys():
-				tagy += 'from '
-				tagy += el['from']+' '
-			if el.hasAttribute('to'):
-				tagy += el['to'] + ' '
+				frm = self.main.client.jid
 			else:
-				tagy += self.main.client.jid.host
+				frm = jid.JID(el['from'])
+			if not el.hasAttribute('to'):
+				to = jid.JID(self.main.client.jid.host)
+			else:
+				to = jid.JID(el['to'])
+
+
+			if frm.full() == self.main.client.jid.full() or frm.userhost() in self.main.client.groupchats.keys():
+				tagy += 'from '
+				typ = 'from'
+			else:
+				tagy += 'to '
+				typ = 'to'
+			tagy += frm.userhost() + ' '
+			tagy += to.userhost() + ' '
+			tagy += unicode(frm.user) + ' '
+			tagy += unicode(to.user) + ' '
+
 			tagy += el.name + ' '
+			if el.name == 'iq' and el['type']!= 'result' :
+				try:
+					tagy += el.firstChildElement().defaultUri + ' '
+				except:
+					log.msg('unknown iq')
+					log.msg(el.toXml())
+					
 			self.addMessage(el.toXml().replace('<','&lt;').replace('>','&gt;'), tagy, 'xml')
 
 	def setTabXML(self):

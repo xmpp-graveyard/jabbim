@@ -431,7 +431,11 @@ class Client(derived):
 
 		if boshURL != '':
 			log.msg('.'+boshURL+'.')
-			from bosh import client as bclient
+			try:
+				from bosh import client as bclient
+			except ImportError:
+				log.err('Unable to load bosh support.')
+				self.connectionFailed(None)
 
 			self.factory = bclient.BOSHClientFactory(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang},  proxy  = self.proxy)
 #			self.factory = bosh_wokkel.BOSHClient(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang})
@@ -549,11 +553,16 @@ class Client(derived):
 		self.connection = None
 		self.factory = None
 		self.reactor.callFromThread(self.on_disconnect)
+	def send(self, el):
+		self.dispatcher.publishEvent('on_element', el)
+		return self.xmlstream._send(el)
 
 	def _authd(self, xmlstream):
 		log.msg('authed')
 ##		self.dispatcher.publishEvent('authed')
 		self.xmlstream = xmlstream
+		self.xmlstream._send = xmlstream.send
+		self.xmlstream.send = self.send
 		self.xmlstream.removeObserver('/*', self.bootLog)
 		self.xmlstream.rawDataInFn = self.rawDataIn
 		self.xmlstream.rawDataOutFn = self.rawDataOut
@@ -800,6 +809,7 @@ class Client(derived):
 
 	def _bookmarksErrReceived(self, err):
 		log.err(unicode( err))
+		log.msg('bookmark err')
 		self.reactor.callFromThread(self.on_bookmarksFail)
 		pass #no tak neprisly no
 	def _bookmarksReceived(self, el):
