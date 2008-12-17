@@ -443,11 +443,17 @@ class PluginBase(object):
 			self._handlers.append(name)
 		else:
 			self._handlersCache.append([name,method,priority])
+
+	def unregisterHandler(self, name):
+		if self.main.client:
+			self.main.client.dispatcher.unregisterHandler(name, self.name)
 	
 	def on_remove(self):
 		"""
 		Called before this plugin unload.
 		"""
+		for name in self._handlers:
+			self.unregisterHandler(name)
 		pass
 	
 	def _remove(self):

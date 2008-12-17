@@ -5,6 +5,7 @@ from include import plugins
 from PyQt4 import QtCore, QtGui, QtWebKit
 from twisted.python import log
 import base64
+from pyxl import jid
 #from widgets.webkitchatwidget import searchWidget
 
 
@@ -160,6 +161,7 @@ class Plugin(plugins.PluginBase):
 			self.window.ui.tabWidget.setTabIcon(1,QtGui.QIcon("%s/python.png" % self.pluginDir))
 			self.log = False
 			self.registerHandler('onXmlEvent',self.onXml)
+			self.registerHandler('on_element', self.on_element)
 			self.window.ui.xmlOutput.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
 			self.window.ui.xmlOutput.setHtml(template)
 			self.window.ui.pythonOutput.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
@@ -197,7 +199,7 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.xmlIqPreset,QtCore.SIGNAL("clicked()"),self.iq)
 			QtCore.QObject.connect(self.window.ui.xmlClearButton,QtCore.SIGNAL("clicked()"),self.clearLog)
 			QtCore.QObject.connect(self.window.ui.xmlOutput,QtCore.SIGNAL("linkClicked ( const QUrl &)"),self.webkitLinkClicked)
-			QtCore.QObject.connect(self.window.ui.xmlFilter,QtCore.SIGNAL("textChanged ( const QString)"),self.xmlFilterChanged)
+			QtCore.QObject.connect(self.window.ui.xmlFilter,QtCore.SIGNAL("returnPressed()"),self.xmlFilterChanged)
 		#python console
 			QtCore.QObject.connect(self.window.ui.pythonEnableBox, QtCore.SIGNAL("stateChanged(int)"),self.pythonEnableToggled)
 			QtCore.QObject.connect(self.window.ui.pythonClearButton, QtCore.SIGNAL("clicked()"),self.clearLog)
@@ -264,7 +266,7 @@ class Plugin(plugins.PluginBase):
 			return
 		#self.window.ui.pythonOutput.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
 
-		self.addMessage('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
+		self.addMessage('[%s] %s' %(time.strftime('%X'), unicode(' '.join(unicode(msg['message'])).replace("<","&lt;").replace(">","&gt;"))))
 		if msg['isError'] and self.config['notify'] == 'True':
 			self.main.tray.showMessage(self.main.tr("Log"),unicode(' '.join(msg['message'])), QtGui.QSystemTrayIcon.Warning, 2000)
 	
@@ -403,18 +405,17 @@ class Plugin(plugins.PluginBase):
 			text=text+unicode(xml)
 			text = text.replace('<','&lt;').replace('>','&gt;')
 			tagy = ''
-			if xml.startswith('IN'):
-				tagy += 'to '
-			elif xml.startswith('OUT'):
-				tagy +='from '
-
+			if not xml.startswith('BOOT'):
+				return
+			tagy = 'boot '
 			self.addMessage(text, tagy, 'xml')
+			
 	def writeOut(self):
 			fp = open('devtest.html', 'w')
-			fp.write(unicode(self.window.ui.xmlOutput.page().mainFrame().toHtml(), 'utf8'))
+			fp.write(unicode(self.window.ui.xmlOutput.page().mainFrame().toHtml()).encode('utf8'))
 			fp.close()
 
-	def xmlFilterChanged(self, text):
+	def xmlFilterChanged(self):
 		log.msg('trying to filter %s'%(unicode(self.window.ui.xmlFilter.text())))
 		self.window.ui.xmlOutput.page().mainFrame().evaluateJavaScript('filterMessages("%s")'%(unicode(self.window.ui.xmlFilter.text())))
 		
@@ -443,8 +444,21 @@ class Plugin(plugins.PluginBase):
 		else:
 			raise TypeError
 
-##		if unicode(self.window.ui.xmlFilter.text()) != '':
-##			self.xmlFilterChanged("")
+	def on_element(self, el):
+		if self.window.ui.xmlEnableBox.isChecked():
+			tagy = ''
+			if not el.hasAttribute('from'):
+				el['from'] == self.main.client.jid.full()
+
+			if el['from'] == self.main.client.jid.full() or jid.JID(el['from']).userhost() in self.main.client.groupchats.keys():
+				tagy += 'from '
+				tagy += el['from']+' '
+			if el.hasAttribute('to'):
+				tagy += el['to']
+			else:
+				tagy += self.main.client.jid.host
+			tagy += el.name + ' '
+			self.addMessage(el.toXml().replace('<','&lt;').replace('>','&gt;'), tagy, 'xml')
 
 	def setTabXML(self):
 		self.window.ui.tabWidget.setCurrentIndex(0);

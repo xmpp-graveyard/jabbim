@@ -52,7 +52,9 @@ class EventDispatcher:
 					vysl = cb['method'](*args, **kwargs)
 					#log.msg('handler %s executed in %i'%(unicode(cb), time.time()-t2))
 					if vysl == False:
+						log.msg('event %s consumed by %s'%(name, unicode(cb['method'])))
 						return False
+						
 				except Exception, ex:
 					log.msg('Plugin error: ' +unicode(ex))
 					log.msg('In function:'+unicode(cb['method']))

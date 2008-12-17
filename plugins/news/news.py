@@ -1,5 +1,4 @@
-# -*- coding: utf8 -*-
-import sys,os,time
+﻿import sys,os,time
 sys.path.append('.')
 from include import plugins
 from PyQt4 import QtCore, QtGui
@@ -24,7 +23,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Headlines window'
 		self.author = u"Jiří 'Sef' Gabryš"
 		self.name = 'News Plugin'
-		self.version = '0.061'
+		self.version = '0.062'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.kontakty = {} # jid:contact
@@ -54,9 +53,11 @@ class Plugin(plugins.PluginBase):
 	
 	def showSlot(self):
 		self.window.show()
-	
+
+
 	def on_message(self, msg):
 		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack()
+		print 'received headline!'
 		if typ != 'headline':
 			return True
 		frm = frm.split('/')[0]
@@ -74,15 +75,10 @@ class Plugin(plugins.PluginBase):
 		self.kontakty[frm].item.setFont(font)
 		if self.config['notify_tray']=='True':
 			self.main.tray.showMessage("News",subject, QtGui.QSystemTrayIcon.Information, 3000)
- 			self.main.events.addInfoEvent(header=self.tr("News: ")+subject,text=self.tr("From: ")+frm,typ='newHeadline',icon="images/32x32/status/rss-online.png", action = self.eventActivated, actionDict = [frm, index], trueCall = self.eventActivated, trueDict = [frm, index], name = '%s-%d'%(frm, index))
+ 			#self.main.events.addInfoEvent(header=self.tr("News: ")+subject,text=self.tr("From: ")+frm,typ='newHeadline',icon="images/32x32/status/rss-online.png", action = self.eventActivated, actionDict = [frm, index], trueCall = self.eventActivated, trueDict = [frm, index], name = '%s-%d'%(frm, index))
 		if self.config['notify_show']=='True':
 			self.window.show()
-# 		itm = None
-# 		itm = self.window.ui.roster.currentItem()
-# 		if itm!= None:
-# 			if unicode(itm.text())==frm:
-# 				self.updateZpravy(frm)
-			
+		print 'returning false'
 		return False
 	
 	def eventActivated(self, frm, index):

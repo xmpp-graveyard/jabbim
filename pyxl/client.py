@@ -872,6 +872,7 @@ class Client(derived):
 
 
 	def onXML(self, el):
+		self.dispatcher.publishEvent('on_element', el)
 		if not el.hasAttribute('from'):
 			return
 		if el.hasAttribute('id') and el.name == 'iq':
@@ -899,9 +900,7 @@ class Client(derived):
 #			self.on_xml(el.toXml())
 			self.xmlstream.send(el)
 
-#	def logIt(self, el):
-#		if self.log:
-#			self.on_xml(el.toXml())
+
 	def rawDataIn(self, buf):
 		if self.log:
 			try:
