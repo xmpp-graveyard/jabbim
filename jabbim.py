@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -1794,7 +1794,7 @@ class clientClass(pyxl.client.Client):
 			return
 		# Rename contact if he havent got nickname
 		contact=self.roster['users'][jid]
-		if (contact.name=="" or contact.name==contact.jid) or (not contact.name or contact.name==contact.jid.split('@')[0]):
+		if (contact.name=="" or contact.name==contact.jid) or not contact.name:
 			log.msg('trying to rename '+jid)
 			self.renameByVcard(card,jid)
 
@@ -3084,13 +3084,15 @@ class mainWindow(QtGui.QMainWindow):
 			ret=command(*args)
 			return ret
 		except Exception, ex:
+#	temporary bugfix by triak
+#			log.msg('Plugin error: ' +unicode(ex))
 			log.msg('In function:'+unicode(command))
 			try:
-				message = unicode(traceback.format_exc(),"utf-8")
+				message = unicode(traceback.format_exc())
 				log.msg(message)
 			except:
 				try:
-					message = unicode(traceback.format_exc())
+					message = unicode(traceback.format_exc(),"utf-8")
 					log.msg(message)
 				except:
 					log.msg("can't decode traceback")
@@ -4034,6 +4036,10 @@ class mainWindow(QtGui.QMainWindow):
 		# fill login form
 		self.ui.login_password.setText(rot13.scramble(self.config['passwd']))
 		self.ui.login_jid.setText(self.config['jid'])
+		if len(unicode(self.config['passwd']))== 0:
+			self.ui.login_password.setFocus(QtCore.Qt.MouseFocusReason)
+		else:
+			self.ui.login_connect.setFocus()
 		if self.config['autoJoin']=="True":
 			self.ui.login_autoconnect.setChecked(True)
 		else:
