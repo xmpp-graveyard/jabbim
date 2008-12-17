@@ -20,7 +20,7 @@ try:
 	from PyQt4 import QtCore, QtGui
 except:
 	print "PyQt4 is not installed."
-import os,time
+import sys, os, time
 from twisted.internet import threads
 
 class webkitThemeFactory:
@@ -86,14 +86,12 @@ class webkitThemeFactory:
 		print "loading chatTheme",self.chatTheme,self.chatStyle
 		print "loading groupchatTheme",self.groupchatTheme,self.groupchatStyle
 
-		if os.path.exists(cwd+"/chatskins/%s/Incoming/Content.html"%self.chatTheme):
-			self.cPath=os.getcwd()+"/chatskins/%s/" % self.chatTheme
-		else:
-			self.cPath=self.realHomeDir+"/chatskins/%s/" % self.chatTheme
-		if os.path.exists(cwd+"/chatskins/%s/Incoming/Content.html"%self.groupchatTheme):
-			self.gPath=os.getcwd()+"/chatskins/%s/" % self.groupchatTheme
-		else:
-			self.gPath=self.realHomeDir+"/chatskins/%s/" % self.groupchatTheme
+		self.cPath = cwd + "/chatskins/%s/" % self.chatTheme.encode(sys.getfilesystemencoding())
+		if not os.path.exists(self.cPath + "Incoming/Content.html"):
+			self.cPath = self.realHomeDir + "/chatskins/%s/" % self.chatTheme.encode(sys.getfilesystemencoding())
+		self.gPath = cwd + "/chatskins/%s/" % self.groupchatTheme.encode(sys.getfilesystemencoding())
+		if not os.path.exists(self.gPath + "Incoming/Content.html"):
+			self.gPath = self.realHomeDir + "/chatskins/%s/" % self.groupchatTheme.encode(sys.getfilesystemencoding())
 
 		self.incomingContent=None
 		if os.path.exists(self.cPath+"Incoming/Content.html"):
