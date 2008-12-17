@@ -1794,7 +1794,7 @@ class clientClass(pyxl.client.Client):
 			return
 		# Rename contact if he havent got nickname
 		contact=self.roster['users'][jid]
-		if (contact.name=="" or contact.name==contact.jid) or not contact.name:
+		if (contact.name=="" or contact.name==contact.jid) or (not contact.name or contact.name==contact.jid.split('@')[0]):
 			log.msg('trying to rename '+jid)
 			self.renameByVcard(card,jid)
 
@@ -3088,7 +3088,7 @@ class mainWindow(QtGui.QMainWindow):
 #			log.msg('Plugin error: ' +unicode(ex))
 			log.msg('In function:'+unicode(command))
 			try:
-				message = unicode(traceback.format_exc())
+				message = unicode(traceback.format_exc(), "utf-8")
 				log.msg(message)
 			except:
 				try:
