@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -2665,6 +2665,9 @@ class mainWindow(QtGui.QMainWindow):
 		dialog = QtGui.QFileDialog()
 		dialog.setResolveSymlinks(True)
 		dialog.setDirectory(self.config['lastUploadDir'])
+		#dialog.setFileMode(QtGui.QFileDialog.ExistingFiles|QtGui.QFileDialog.Directory)
+		#dialog.exec_()
+		#file=dialog.selectedFiles()
 		file=dialog.getOpenFileNames(self,self.tr("Choose files"), self.config['lastUploadDir'])
 		file=list(file)
 		#get last dir from result
@@ -2689,11 +2692,37 @@ class mainWindow(QtGui.QMainWindow):
 		@type jid: unicode
 		@param jid: JID
 		"""
-		if self.senddialog == None:
-			self.senddialog=widgets.albumfiletransfer.albumFiletransferDialog(self,files,jid)
+		if len(files)!=0 and os.path.isdir(files[0]):
+			fr = jidT.JID(jid).userhost()
+			fajly = {}
+			desc = {}
+			for f in files:
+				#addr = f.split('/')[0]
+				fajly[os.path.basename(f)] = f
+				desc[os.path.basename(f)] = '%s >> %s'%('Jabbim',fr)
+			print fajly
+			fajly2 = {}
+			for rel,  abs in fajly.iteritems():
+				if os.path.isdir(abs):
+					del desc[rel]
+					for root, dirs, files in os.walk(abs):
+	#					print root, dirs, files
+						dir = root.replace(abs, rel)
+						for file in files:
+							fajly2[dir+'/'+file] =root+'/'+file
+							desc[dir+'/'+file] = '%s >> %s'%('Jabbim',fr)
+				else:
+					fajly2[rel] = abs
+			print desc
+			print fajly2
+			if len(fajly2)>0:
+				self.events.addFTUploadEvent(jid, fajly2, desc)
 		else:
-			self.senddialog._addFiles(files)
-		self.senddialog.show()
+			if self.senddialog == None:
+				self.senddialog=widgets.albumfiletransfer.albumFiletransferDialog(self,files,jid)
+			else:
+				self.senddialog._addFiles(files)
+			self.senddialog.show()
 
 
 	def getImage(self,file,size=None):

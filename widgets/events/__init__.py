@@ -436,12 +436,19 @@ class events:
 
 	def addFTUploadEvent(self,jid,files,descriptions,forceTree=False):
 		print "addFTUploadEvent"
+		if jid.find("/") == -1:
+			res = self.main.client.roster['users'][jid].getHighestResource()
+			jid+="/"+res
 		if isinstance(files,dict):
 			if not forceTree:
+				j=self.main.getJid(jid)
 				feature=False
-				if self.main.client.roster.has_key(jid):
-					if self.main.client.roster[jid].resources.has_key(res):
-						feature=self.main.client.roster[jid].resources[res].hasFeature('http://dev.jabbim.cz/jabbim/treeft')
+				print jid
+				if self.main.client.roster['users'].has_key(j.userhost()):
+					print '1'
+					if self.main.client.roster['users'][j.userhost()].resources.has_key(j.resource):
+						print '2'
+						feature=self.main.client.roster['users'][j.userhost()].resources[j.resource].hasFeature('http://dev.jabbim.cz/jabbim/treeft')
 			else:
 				feature=True
 			if feature:
