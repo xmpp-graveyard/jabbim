@@ -71,6 +71,7 @@ class groupChatWidget(abstractChatWidget):
 		self.name_id=-1 # for tabPressed
 		self.ui.disco_info.hide()
 		self.lastMessageFrom=""
+		self.ui.users.main=self.main()
 
 		# signals
 		QtCore.QObject.connect(self.ui.users, QtCore.SIGNAL("itemDoubleClicked ( QTreeWidgetItem * , int )"),self.userClicked)
@@ -225,7 +226,7 @@ class groupChatWidget(abstractChatWidget):
 				w=QtGui.QDesktopWidget()
 				if not self.tool:
 					#self._mouseLeaveEvent(None)
-					self.tool=rosterToolTip(self.ui.users)
+					self.tool=rosterToolTip(self.ui.users,self.main)
 					self.tool.leaveEvent=self.tooltipLeaveEvent
 					self.tool.focus=False
 				jid=self.jid+"/"+unicode(item.text(0))
