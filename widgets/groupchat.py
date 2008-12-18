@@ -226,7 +226,7 @@ class groupChatWidget(abstractChatWidget):
 				w=QtGui.QDesktopWidget()
 				if not self.tool:
 					#self._mouseLeaveEvent(None)
-					self.tool=rosterToolTip(self.ui.users,self.main)
+					self.tool=rosterToolTip(self.ui.users)
 					self.tool.leaveEvent=self.tooltipLeaveEvent
 					self.tool.focus=False
 				jid=self.jid+"/"+unicode(item.text(0))
