@@ -93,96 +93,110 @@ class webkitThemeFactory:
 		if not os.path.exists(self.gPath + "Incoming/Content.html"):
 			self.gPath = self.realHomeDir + "/chatskins/%s/" % self.groupchatTheme.encode(sys.getfilesystemencoding())
 
-		self.incomingContent=None
-		if os.path.exists(self.cPath+"Incoming/Content.html"):
+		try:
 			f=open(self.cPath+"Incoming/Content.html","r")
 			self.incomingContent=f.read()
 			f.close()
+		except:
+			self.incomingContent=None
 
-		self.incomingNextContent=None
-		if os.path.exists(self.cPath+"Incoming/NextContent.html"):
+		try:
 			f=open(self.cPath+"Incoming/NextContent.html","r")
 			self.incomingNextContent=f.read()
 			f.close()
+		except:
+			self.incomingNextContent=None
 
-		self.outgoingContent=None
-		if os.path.exists(self.cPath+"Outgoing/Content.html"):
+		try:
 			f=open(self.cPath+"Outgoing/Content.html","r")
 			self.outgoingContent=f.read()
 			f.close()
+		except:
+			self.outgoingContent=None
 
-		self.outgoingNextContent=None
-		if os.path.exists(self.cPath+"Outgoing/NextContent.html"):
+		try:
 			f=open(self.cPath+"Outgoing/NextContent.html","r")
 			self.outgoingNextContent=f.read()
 			f.close()
+		except:
+			self.outgoingNextContent=None
 
-
-		self.incomingGroupchatContent=None
-		if os.path.exists(self.gPath+"Incoming/Content.html"):
+		try:
 			f=open(self.gPath+"Incoming/Content.html","r")
 			self.incomingGroupchatContent=f.read()
 			f.close()
+		except:
+			self.incomingGroupchatContent=None
 
-		self.incomingGroupchatNextContent=None
-		if os.path.exists(self.gPath+"Incoming/NextContent.html"):
+		try:
 			f=open(self.gPath+"Incoming/NextContent.html","r")
 			self.incomingGroupchatNextContent=f.read()
 			f.close()
+		except:
+			self.incomingGroupchatNextContent=None
 
-		self.outgoingGroupchatContent=None
-		if os.path.exists(self.gPath+"Outgoing/Content.html"):
+		try:
 			f=open(self.gPath+"Outgoing/Content.html","r")
 			self.outgoingGroupchatContent=f.read()
 			f.close()
+		except:
+			self.outgoingGroupchatContent=None
 
-		self.outgoingGroupchatNextContent=None
-		if os.path.exists(self.gPath+"Outgoing/NextContent.html"):
+		try:
 			f=open(self.gPath+"Outgoing/NextContent.html","r")
 			self.outgoingGroupchatNextContent=f.read()
 			f.close()
+		except:
+			self.outgoingGroupchatNextContent=None
 		
-		self.groupchatStatus=None
-		if os.path.exists(self.gPath+"Status.html"):
+		try:
 			f=open(self.gPath+"Status.html","r")
 			self.groupchatStatus=f.read()
 			f.close()
+		except:
+			self.groupchatStatus=None
 
-		self.chatStatus=None
-		if os.path.exists(self.cPath+"Status.html"):
+		try:
 			f=open(self.cPath+"Status.html","r")
 			self.chatStatus=f.read()
 			f.close()
+		except:
+			self.chatStatus=None
 
-		self.chatFooter=None
-		if os.path.exists(self.cPath+"Footer.html"):
+		try:
 			f=open(self.cPath+"Footer.html","r")
 			self.chatFooter=f.read()
 			f.close()
+		except:
+			self.chatFooter=None
 
-		self.groupchatFooter=None
-		if os.path.exists(self.gPath+"Footer.html"):
+		try:
 			f=open(self.gPath+"Footer.html","r")
 			self.groupchatFooter=f.read()
 			f.close()
+		except:
+			self.groupchatFooter=None
 
-		self.chatHeader=None
-		if os.path.exists(self.cPath+"Header.html"):
+		try:
 			f=open(self.cPath+"Header.html","r")
 			self.chatHeader=f.read()
 			f.close()
+		except:
+			self.chatHeader=None
 
-		self.groupchatHeader=None
-		if os.path.exists(self.gPath+"Header.html"):
+		try:
 			f=open(self.gPath+"Header.html","r")
 			self.groupchatHeader=f.read()
 			f.close()
+		except:
+			self.groupchatHeader=None
 
-		self.groupchatSenderColors=["#a34526","#c000ff","#045723","#7c7c7c","#ff8a00","#94452d"]
-		if os.path.exists(self.gPath+"Incoming/SenderColors.txt"):
+		try:
 			f=open(self.gPath+"Incoming/SenderColors.txt","r")
 			self.groupchatSenderColors=f.read().replace("\n","").split(":")
 			f.close()
+		except:
+			self.groupchatSenderColors=["#a34526","#c000ff","#045723","#7c7c7c","#ff8a00","#94452d"]
 
 	def getGroupchatSenderColor(self,i):
 		if not i:
