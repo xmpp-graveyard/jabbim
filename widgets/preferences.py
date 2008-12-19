@@ -765,21 +765,22 @@ function makePreview(){
 </html>
 		"""
 
+		jabbim_icon = unicode(os.getcwd(), sys.getfilesystemencoding()) + "/images/32x32/apps/jabbim.png"
 		if typ=="chat":
 			self.messages=[]
-			self.messages.append(factory.genIncomingContent(unicode(self.tr("User")),unicode(self.tr("Message for me")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
-			self.messages.append(factory.genIncomingNextContent(unicode(self.tr("User")),unicode(self.tr("Second message for me")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
+			self.messages.append(factory.genIncomingContent(unicode(self.tr("User")),unicode(self.tr("Message for me")),self.main.now(),jabbim_icon))
+			self.messages.append(factory.genIncomingNextContent(unicode(self.tr("User")),unicode(self.tr("Second message for me")),self.main.now(),jabbim_icon))
 			self.messages.append(factory.genChatStatus(unicode(self.tr("User is now away")),self.main.now()))
-			self.messages.append(factory.genOutgoingContent(unicode(self.tr("Me")),unicode(self.tr("Message for user")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
-			self.messages.append(factory.genOutgoingNextContent(unicode(self.tr("Me")),unicode(self.tr("Second message for user")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
+			self.messages.append(factory.genOutgoingContent(unicode(self.tr("Me")),unicode(self.tr("Message for user")),self.main.now(),jabbim_icon))
+			self.messages.append(factory.genOutgoingNextContent(unicode(self.tr("Me")),unicode(self.tr("Second message for user")),self.main.now(),jabbim_icon))
 			self.ui.chatskinPreview.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+factory.chatPath()))
 		else:
 			self.messages2=[]
-			self.messages2.append(factory.genIncomingContent(unicode(self.tr("User")),unicode(self.tr("Message for me")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
-			self.messages2.append(factory.genIncomingNextContent(unicode(self.tr("User")),unicode(self.tr("Second message for me")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
+			self.messages2.append(factory.genIncomingContent(unicode(self.tr("User")),unicode(self.tr("Message for me")),self.main.now(),jabbim_icon))
+			self.messages2.append(factory.genIncomingNextContent(unicode(self.tr("User")),unicode(self.tr("Second message for me")),self.main.now(),jabbim_icon))
 			self.messages2.append(factory.genChatStatus(unicode(self.tr("User is now away")),self.main.now()))
-			self.messages2.append(factory.genOutgoingContent(unicode(self.tr("Me")),unicode(self.tr("Message for user")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
-			self.messages2.append(factory.genOutgoingNextContent(unicode(self.tr("Me")),unicode(self.tr("Second message for user")),self.main.now(),os.getcwd()+"/images/32x32/apps/jabbim.png"))
+			self.messages2.append(factory.genOutgoingContent(unicode(self.tr("Me")),unicode(self.tr("Message for user")),self.main.now(),jabbim_icon))
+			self.messages2.append(factory.genOutgoingNextContent(unicode(self.tr("Me")),unicode(self.tr("Second message for user")),self.main.now(),jabbim_icon))
 			self.ui.groupchatskinPreview.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+factory.chatPath()))
 
 	def chatskinPreviewCleared(self):
