@@ -32,10 +32,10 @@ class webkitThemeFactory:
 
 	def genChatHtml(self,messages,me,user,myAvatar,userAvatar,widget):
 		templates={}
-		templates['incomingContent']=unicode(self.incomingContent).replace("%sender%",user).replace("%userIconPath%",userAvatar).replace("%highlight%","").replace('id="insert"','id="insert2"')
-		templates['incomingNextContent']=unicode(self.incomingNextContent).replace("%sender%",user).replace("%userIconPath%",userAvatar).replace("%highlight%","").replace('id="insert"','id="insert2"')
-		templates['outgoingContent']=unicode(self.outgoingContent).replace("%sender%",me).replace("%userIconPath%",myAvatar).replace("%highlight%","").replace('id="insert"','id="insert2"')
-		templates['outgoingNextContent']=unicode(self.outgoingNextContent).replace("%sender%",me).replace("%userIconPath%",myAvatar).replace("%highlight%","").replace('id="insert"','id="insert2"')
+		templates['incomingContent'] = self.incomingContent.replace("%sender%",user).replace("%userIconPath%",userAvatar).replace("%highlight%","").replace('id="insert"','id="insert2"')
+		templates['incomingNextContent'] = self.incomingNextContent.replace("%sender%",user).replace("%userIconPath%",userAvatar).replace("%highlight%","").replace('id="insert"','id="insert2"')
+		templates['outgoingContent'] = self.outgoingContent.replace("%sender%",me).replace("%userIconPath%",myAvatar).replace("%highlight%","").replace('id="insert"','id="insert2"')
+		templates['outgoingNextContent'] = self.outgoingNextContent.replace("%sender%",me).replace("%userIconPath%",myAvatar).replace("%highlight%","").replace('id="insert"','id="insert2"')
 		# call getLastMessages in thread
 		#d=threads.deferToThread(self._genChatHtml,messages,templates)
 		#return d
@@ -80,113 +80,113 @@ class webkitThemeFactory:
 		return text[:-1]
 
 	def load(self):
-		cwd=os.getcwd()
+		cwd = unicode(os.getcwd(), sys.getfilesystemencoding())
 		self.chatTheme,self.chatStyle=self.fullChatTheme.split("/")
 		self.groupchatTheme,self.groupchatStyle=self.fullGroupchatTheme.split("/")
 		print "loading chatTheme",self.chatTheme,self.chatStyle
 		print "loading groupchatTheme",self.groupchatTheme,self.groupchatStyle
 
-		self.cPath = cwd + "/chatskins/%s/" % self.chatTheme.encode(sys.getfilesystemencoding())
+		self.cPath = cwd + "/chatskins/%s/" % self.chatTheme
 		if not os.path.exists(self.cPath + "Incoming/Content.html"):
-			self.cPath = self.realHomeDir + "/chatskins/%s/" % self.chatTheme.encode(sys.getfilesystemencoding())
-		self.gPath = cwd + "/chatskins/%s/" % self.groupchatTheme.encode(sys.getfilesystemencoding())
+			self.cPath = self.realHomeDir + "/chatskins/%s/" % self.chatTheme
+		self.gPath = cwd + "/chatskins/%s/" % self.groupchatTheme
 		if not os.path.exists(self.gPath + "Incoming/Content.html"):
-			self.gPath = self.realHomeDir + "/chatskins/%s/" % self.groupchatTheme.encode(sys.getfilesystemencoding())
+			self.gPath = self.realHomeDir + "/chatskins/%s/" % self.groupchatTheme
 
 		try:
 			f=open(self.cPath+"Incoming/Content.html","r")
-			self.incomingContent=f.read()
+			self.incomingContent = unicode(f.read(), 'utf-8')
 			f.close()
 		except:
 			self.incomingContent=None
 
 		try:
 			f=open(self.cPath+"Incoming/NextContent.html","r")
-			self.incomingNextContent=f.read()
+			self.incomingNextContent = unicode(f.read(), 'utf-8')
 			f.close()
 		except:
 			self.incomingNextContent=None
 
 		try:
 			f=open(self.cPath+"Outgoing/Content.html","r")
-			self.outgoingContent=f.read()
+			self.outgoingContent = unicode(f.read(), 'utf-8')
 			f.close()
 		except:
 			self.outgoingContent=None
 
 		try:
 			f=open(self.cPath+"Outgoing/NextContent.html","r")
-			self.outgoingNextContent=f.read()
+			self.outgoingNextContent = unicode(f.read(), 'utf-8')
 			f.close()
 		except:
 			self.outgoingNextContent=None
 
 		try:
 			f=open(self.gPath+"Incoming/Content.html","r")
-			self.incomingGroupchatContent=f.read()
+			self.incomingGroupchatContent = unicode(f.read(), 'utf-8')
 			f.close()
 		except:
 			self.incomingGroupchatContent=None
 
 		try:
 			f=open(self.gPath+"Incoming/NextContent.html","r")
-			self.incomingGroupchatNextContent=f.read()
+			self.incomingGroupchatNextContent = unicode(f.read(), 'utf-8')
 			f.close()
 		except:
 			self.incomingGroupchatNextContent=None
 
 		try:
 			f=open(self.gPath+"Outgoing/Content.html","r")
-			self.outgoingGroupchatContent=f.read()
+			self.outgoingGroupchatContent = unicode(f.read(), 'utf-8')
 			f.close()
 		except:
 			self.outgoingGroupchatContent=None
 
 		try:
 			f=open(self.gPath+"Outgoing/NextContent.html","r")
-			self.outgoingGroupchatNextContent=f.read()
+			self.outgoingGroupchatNextContent = unicode(f.read(), 'utf-8')
 			f.close()
 		except:
 			self.outgoingGroupchatNextContent=None
 		
 		try:
 			f=open(self.gPath+"Status.html","r")
-			self.groupchatStatus=f.read()
+			self.groupchatStatus = unicode(f.read(), 'utf-8')
 			f.close()
 		except:
 			self.groupchatStatus=None
 
 		try:
 			f=open(self.cPath+"Status.html","r")
-			self.chatStatus=f.read()
+			self.chatStatus = unicode(f.read(), 'utf-8')
 			f.close()
 		except:
 			self.chatStatus=None
 
 		try:
 			f=open(self.cPath+"Footer.html","r")
-			self.chatFooter=f.read()
+			self.chatFooter = unicode(f.read(), 'utf-8')
 			f.close()
 		except:
 			self.chatFooter=None
 
 		try:
 			f=open(self.gPath+"Footer.html","r")
-			self.groupchatFooter=f.read()
+			self.groupchatFooter = unicode(f.read(), 'utf-8')
 			f.close()
 		except:
 			self.groupchatFooter=None
 
 		try:
 			f=open(self.cPath+"Header.html","r")
-			self.chatHeader=f.read()
+			self.chatHeader = unicode(f.read(), 'utf-8')
 			f.close()
 		except:
 			self.chatHeader=None
 
 		try:
 			f=open(self.gPath+"Header.html","r")
-			self.groupchatHeader=f.read()
+			self.groupchatHeader = unicode(f.read(), 'utf-8')
 			f.close()
 		except:
 			self.groupchatHeader=None
@@ -212,12 +212,12 @@ class webkitThemeFactory:
 	def genChatHeader(self,name="",avatar=""):
 		if not self.chatHeader:
 			return ""
-		return unicode(self.chatHeader).replace("%chatName%",name).replace("%incomingIconPath%",avatar)
+		return self.chatHeader.replace("%chatName%",name).replace("%incomingIconPath%",avatar)
 
 	def genGroupchatHeader(self,name=""):
 		if not self.groupchatHeader:
 			return ""
-		return unicode(self.groupchatHeader).replace("%chatName%",name)
+		return self.groupchatHeader.replace("%chatName%",name)
 
 	def genChatFooter(self):
 		if not self.chatFooter:
@@ -238,17 +238,17 @@ class webkitThemeFactory:
 	def genChatStatus(self,message,time):
 		if not self.chatStatus:
 			return ""
-		return unicode(self.chatStatus).replace("%status%","online").replace("%time%",time).replace("%message%",message)
+		return self.chatStatus.replace("%status%","online").replace("%time%",time).replace("%message%",message)
 
 	def genGroupchatStatus(self,message,time):
 		if not self.groupchatStatus:
 			return ""
-		return unicode(self.groupchatStatus).replace("%status%","online").replace("%time%",time).replace("%message%",message)
+		return self.groupchatStatus.replace("%status%","online").replace("%time%",time).replace("%message%",message)
 
 	def genGroupchatAction(self,message,time):
 		if not self.groupchatStatus:
 			return ""
-		return unicode(self.groupchatStatus).replace("%status%","").replace("%time%",time).replace("%message%",message)
+		return self.groupchatStatus.replace("%status%","").replace("%time%",time).replace("%message%",message)
 
 	def genChatStyleSheet(self):
 		return '@import url( "Variants/%s" );' % self.chatStyle
@@ -259,27 +259,26 @@ class webkitThemeFactory:
 	# Groupchat format
 
 	def genGroupchatIncomingContent(self,user,message,time,avatar="",color=None,highlight=""):
-		return unicode(self.incomingGroupchatContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%highlight%",highlight)
+		return self.incomingGroupchatContent.replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%highlight%",highlight)
 
 	def genGroupchatIncomingNextContent(self,user,message,time,avatar="",color=None,highlight=""):
-		return unicode(self.incomingGroupchatNextContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color))
+		return self.incomingGroupchatNextContent.replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color))
 
 	def genGroupchatOutgoingNextContent(self,user,message,time,avatar="",color=None):
-		return unicode(self.outgoingGroupchatNextContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%highlight%","")
+		return self.outgoingGroupchatNextContent.replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%highlight%","")
 	
 	def genGroupchatOutgoingContent(self,user,message,time,avatar="",color=None):
-		return unicode(self.outgoingGroupchatContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%highlight%","")
+		return self.outgoingGroupchatContent.replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%highlight%","")
 
 	# Chat format
 
 	def genIncomingContent(self,user,message,time,avatar=""):
-		return unicode(self.incomingContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%highlight%","")
-
+		return self.incomingContent.replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%highlight%","")
 	def genIncomingNextContent(self,user,message,time,avatar=""):
-		return unicode(self.incomingNextContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%highlight%","")
+		return self.incomingNextContent.replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%highlight%","")
 
 	def genOutgoingNextContent(self,user,message,time,avatar=""):
-		return unicode(self.outgoingNextContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%highlight%","")
+		return self.outgoingNextContent.replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%highlight%","")
 	
 	def genOutgoingContent(self,user,message,time,avatar=""):
-		return unicode(self.outgoingContent).replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%highlight%","")
+		return self.outgoingContent.replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%highlight%","")
