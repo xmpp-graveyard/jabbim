@@ -1343,7 +1343,7 @@ class Client(derived):
 		try:
 			el = err.value.getElement()
 		except:
-			log.err( unicode(err)+unicode( info))
+			log.err(str(err) + str(info))
 			return
 		if self.disco.has_key(jid):
 			if self.disco[jid].has_key(node_name):
