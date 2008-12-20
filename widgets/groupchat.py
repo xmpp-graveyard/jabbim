@@ -834,6 +834,8 @@ class groupChatWidget(abstractChatWidget):
 
 	def removeUser(self,nick,codes=[],reason="",actor=None,n=None):
 		nick=unicode(nick)
+		if not reason:
+			reason=""
 		if self.main().client.groupchats[self.jid].nick==nick:
 			if u'307' in codes:
 				self.ui.line.setEnabled(False)
