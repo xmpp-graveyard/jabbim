@@ -461,12 +461,13 @@ class chatWindow(QtGui.QMainWindow):
 			#self.getVCard(frm+'/'+user) #tohle asi neni potreba
 			pass
 
+		cwd = unicode(os.getcwd(), sys.getfilesystemencoding())
 		if not os.path.isfile(unicode(file)):
 			print truejid, w.jid, user
-			#sef@njs.netlab.cz/Doma jabber@conf.netlab.cz Sef 
-			file=os.getcwd()+"/images/32x32/apps/jabbim.png"
+			#sef@njs.netlab.cz/Doma jabber@conf.netlab.cz Sef
+			file = cwd + u"/images/32x32/apps/jabbim.png"
 		if unicode(user)==unicode(w.jid):
-			file = os.getcwd()+"images/32x32/categories/conferences.png"
+			file = cwd + u"images/32x32/categories/conferences.png"
 		cIndex=None
 		if len(w.chat.getUserItems(user))!=0:
 			item=w.chat.getUserItems(user)[0]
