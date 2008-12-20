@@ -592,7 +592,7 @@ def replace_url(text,mainWindow,widget=None):
 			wellKnownMuc = ['conf.netlab.cz', 'conference.jabber.org', 'chat.chrome.pl', 'conference.jabber.ru']
 			user, server = word.split('@',1)
 			server = server.split('/')[0]
-			path = os.getcwd()
+			path = unicode(os.getcwd(), sys.getfilesystemencoding())
 			if word.count('@')>1 or not ('.' in server) or (widget != None and widget.main().getJid(word) is None and not(user.startswith('xmpp:') or user.startswith('mailto:'))):
 				text += word+" "
 				continue
