@@ -105,4 +105,5 @@ TRANSLATIONS = locales/jabbim_cs.ts \
 	locales/jabbim_fr.ts \
 	locales/jabbim_de.ts \
 	locales/jabbim_ru.ts \
-	locales/jabbim_es.ts
+	locales/jabbim_es.ts \
+	locales/jabbim_uk.ts

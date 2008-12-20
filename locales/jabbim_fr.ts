@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="fr">
-<defaultcodec></defaultcodec>
 <context>
     <name></name>
     <message>
@@ -1472,42 +1471,42 @@ and many translators and patchers</source>
 <context>
     <name>abstractChatWidget</name>
     <message>
-        <location filename="widgets/abstractchatwidget.py" line="521"/>
+        <location filename="widgets/abstractchatwidget.py" line="522"/>
         <source>White</source>
         <translation type="unfinished">Blanc</translation>
     </message>
     <message>
-        <location filename="widgets/abstractchatwidget.py" line="527"/>
+        <location filename="widgets/abstractchatwidget.py" line="528"/>
         <source>Black</source>
         <translation type="unfinished">Noir</translation>
     </message>
     <message>
-        <location filename="widgets/abstractchatwidget.py" line="533"/>
+        <location filename="widgets/abstractchatwidget.py" line="534"/>
         <source>Red</source>
         <translation type="unfinished">Rouge</translation>
     </message>
     <message>
-        <location filename="widgets/abstractchatwidget.py" line="539"/>
+        <location filename="widgets/abstractchatwidget.py" line="540"/>
         <source>Green</source>
         <translation type="unfinished">Vert</translation>
     </message>
     <message>
-        <location filename="widgets/abstractchatwidget.py" line="545"/>
+        <location filename="widgets/abstractchatwidget.py" line="546"/>
         <source>Blue</source>
         <translation type="unfinished">Bleu</translation>
     </message>
     <message>
-        <location filename="widgets/abstractchatwidget.py" line="551"/>
+        <location filename="widgets/abstractchatwidget.py" line="552"/>
         <source>Pink</source>
         <translation type="unfinished">Rose</translation>
     </message>
     <message>
-        <location filename="widgets/abstractchatwidget.py" line="557"/>
+        <location filename="widgets/abstractchatwidget.py" line="558"/>
         <source>Yellow</source>
         <translation type="unfinished">Jaune</translation>
     </message>
     <message>
-        <location filename="widgets/abstractchatwidget.py" line="564"/>
+        <location filename="widgets/abstractchatwidget.py" line="565"/>
         <source>No color</source>
         <translation type="unfinished">Sans couleurs</translation>
     </message>
@@ -1816,7 +1815,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Onglet 1</translation>
     </message>
     <message>
-        <location filename="widgets/chatwindow.py" line="409"/>
+        <location filename="widgets/chatwindow.py" line="421"/>
         <source>You are now online.</source>
         <translation type="unfinished">Vous êtes maintenant en ligne.</translation>
     </message>
@@ -1917,12 +1916,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>customStatusWindow</name>
     <message>
-        <location filename="jabbim.py" line="5331"/>
+        <location filename="jabbim.py" line="5383"/>
         <source>Window will be closed in </source>
         <translation type="unfinished">La fenêtre sera fermée dans </translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5331"/>
+        <location filename="jabbim.py" line="5383"/>
         <source> seconds.</source>
         <translation type="unfinished"> secondes.</translation>
     </message>
@@ -2266,297 +2265,297 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>groupChatWidget</name>
     <message>
-        <location filename="widgets/groupchat.py" line="256"/>
+        <location filename="widgets/groupchat.py" line="440"/>
         <source>Participants</source>
         <translation type="unfinished">Membres</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="257"/>
+        <location filename="widgets/groupchat.py" line="441"/>
         <source>Moderators</source>
         <translation type="unfinished">Modérateurs</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="258"/>
+        <location filename="widgets/groupchat.py" line="442"/>
         <source>Visitors</source>
         <translation type="unfinished">Visiteurs</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="313"/>
+        <location filename="widgets/groupchat.py" line="497"/>
         <source>Kick</source>
         <translation type="unfinished">Ejecter</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="418"/>
+        <location filename="widgets/groupchat.py" line="602"/>
         <source>Reason</source>
         <translation type="unfinished">Raison</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="418"/>
+        <location filename="widgets/groupchat.py" line="602"/>
         <source>Enter reason:</source>
         <translation type="unfinished">Entrez la raison:</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="119"/>
+        <location filename="widgets/groupchat.py" line="121"/>
         <source>Room administration</source>
         <translation type="unfinished">Administration de la salle</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="120"/>
+        <location filename="widgets/groupchat.py" line="122"/>
         <source>Clear chat</source>
         <translation type="unfinished">Effacer la fenêtre de discussion</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="153"/>
+        <location filename="widgets/groupchat.py" line="157"/>
         <source>Connecting to MUC. This can take a few seconds.</source>
         <translation type="unfinished">Connection à la MUC. Cela peut prendre quelques secondes.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="791"/>
+        <location filename="widgets/groupchat.py" line="978"/>
         <source>Name:</source>
         <translation type="unfinished">Nom:</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="795"/>
+        <location filename="widgets/groupchat.py" line="982"/>
         <source>JID:</source>
         <translation type="unfinished">JID:</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="216"/>
+        <location filename="widgets/groupchat.py" line="400"/>
         <source>Hidden</source>
         <translation type="unfinished">Cachée</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="217"/>
+        <location filename="widgets/groupchat.py" line="401"/>
         <source>Members only</source>
         <translation type="unfinished">Membres seulement</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="218"/>
+        <location filename="widgets/groupchat.py" line="402"/>
         <source>Moderated</source>
         <translation type="unfinished">Modérée</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="219"/>
+        <location filename="widgets/groupchat.py" line="403"/>
         <source>Non anonymous</source>
         <translation type="unfinished">Non anonyme</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="220"/>
+        <location filename="widgets/groupchat.py" line="404"/>
         <source>Open</source>
         <translation type="unfinished">Ouvrir</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="221"/>
+        <location filename="widgets/groupchat.py" line="405"/>
         <source>Password protected</source>
         <translation type="unfinished">Protégée par mot de passe</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="222"/>
+        <location filename="widgets/groupchat.py" line="406"/>
         <source>Persistent</source>
         <translation type="unfinished">Persistante</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="223"/>
+        <location filename="widgets/groupchat.py" line="407"/>
         <source>Public</source>
         <translation type="unfinished">Publique</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="225"/>
+        <location filename="widgets/groupchat.py" line="409"/>
         <source>Semi-anonymous</source>
         <translation type="unfinished">Semi-anonyme</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="226"/>
+        <location filename="widgets/groupchat.py" line="410"/>
         <source>Temporary</source>
         <translation type="unfinished">Temporaire</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="227"/>
+        <location filename="widgets/groupchat.py" line="411"/>
         <source>Unmoderated</source>
         <translation type="unfinished">Non modérée</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="230"/>
+        <location filename="widgets/groupchat.py" line="414"/>
         <source>Unsecured</source>
         <translation type="unfinished">Non protégée</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="290"/>
+        <location filename="widgets/groupchat.py" line="474"/>
         <source>vCard</source>
         <translation type="unfinished">Information utilisateur</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="660"/>
+        <location filename="widgets/groupchat.py" line="846"/>
         <source>You have been kicked from the room by %s. Reason: %s.</source>
         <translation type="unfinished">Vous vous êtes fait éjecter de cette salle par %s. Raison: %s.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="663"/>
+        <location filename="widgets/groupchat.py" line="849"/>
         <source>You have been kicked from the room by %s.</source>
         <translation type="unfinished">Vous vous êtes fait éjecter de cette salle par %s.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="665"/>
+        <location filename="widgets/groupchat.py" line="851"/>
         <source>You have been kicked from the room. Reason: %s.</source>
         <translation type="unfinished">Vous vous êtes fait éjecter de cette salle. Raison: %s.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="667"/>
+        <location filename="widgets/groupchat.py" line="853"/>
         <source>You have been kicked from the room.</source>
         <translation type="unfinished">Vous vous êtes fait éjecter de cette salle.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="675"/>
+        <location filename="widgets/groupchat.py" line="861"/>
         <source>You have been banned for the room.</source>
         <translation type="unfinished">Vous avez été bannis de cette salle.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="680"/>
+        <location filename="widgets/groupchat.py" line="866"/>
         <source> has been kicked from this room.</source>
         <translation type="unfinished"> s&apos;est fait éjecter de cette salle.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="684"/>
+        <location filename="widgets/groupchat.py" line="870"/>
         <source> has been banned for this room.</source>
         <translation type="unfinished"> a été bannis de cette salle.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="546"/>
+        <location filename="widgets/groupchat.py" line="730"/>
         <source>Show room info</source>
         <translation type="unfinished">Montrer les informations sur cette salle</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="320"/>
+        <location filename="widgets/groupchat.py" line="504"/>
         <source>Ban</source>
         <translation type="unfinished">Bannir</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="330"/>
+        <location filename="widgets/groupchat.py" line="514"/>
         <source>Revoke ownership</source>
         <translation type="unfinished">Révoquer l&apos;appartenance</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="335"/>
+        <location filename="widgets/groupchat.py" line="519"/>
         <source>Grant ownership</source>
         <translation type="unfinished">Accorder l&apos;appartenance</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="341"/>
+        <location filename="widgets/groupchat.py" line="525"/>
         <source>Revoke admin</source>
         <translation type="unfinished">Révoquer les droits administrateur</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="346"/>
+        <location filename="widgets/groupchat.py" line="530"/>
         <source>Grant admin</source>
         <translation type="unfinished">Accorder les droits administrateur</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="356"/>
+        <location filename="widgets/groupchat.py" line="540"/>
         <source>Revoke moderator</source>
         <translation type="unfinished">Révoquer les droits modérateur</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="361"/>
+        <location filename="widgets/groupchat.py" line="545"/>
         <source>Grant moderator</source>
         <translation type="unfinished">Accorder les droits modérateur</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="367"/>
+        <location filename="widgets/groupchat.py" line="551"/>
         <source>Revoke membership</source>
         <translation type="unfinished">Révoquer l&apos;adhésion</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="372"/>
+        <location filename="widgets/groupchat.py" line="556"/>
         <source>Grant membership</source>
         <translation type="unfinished">Accorder l&apos;adhésion</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="382"/>
+        <location filename="widgets/groupchat.py" line="566"/>
         <source>Revoke voice</source>
         <translation type="unfinished">Révoquer le droit de parler</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="387"/>
+        <location filename="widgets/groupchat.py" line="571"/>
         <source>Grant voice</source>
         <translation type="unfinished">Accorder le droit de parler</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="543"/>
+        <location filename="widgets/groupchat.py" line="727"/>
         <source>Hide room info</source>
         <translation type="unfinished">Masquer les informations sur cette salle</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="701"/>
+        <location filename="widgets/groupchat.py" line="887"/>
         <source>Hi! I&apos;d love to see you in multichat at </source>
         <translation type="unfinished">Salut! J&apos;aimerais te rejoindre dans la salle de discution à </translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="295"/>
+        <location filename="widgets/groupchat.py" line="479"/>
         <source>Send file</source>
         <translation type="unfinished">Envoyer un fichier</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="861"/>
+        <location filename="widgets/groupchat.py" line="1048"/>
         <source>Nickname is used by somebody else.</source>
         <translation type="unfinished">Ce pseudo est utilisé par quelqu&apos;un d&apos;autre.</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="688"/>
+        <location filename="widgets/groupchat.py" line="874"/>
         <source> has been renamed to </source>
         <translation type="unfinished"> a été renommé en </translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="121"/>
+        <location filename="widgets/groupchat.py" line="123"/>
         <source>Change nickname</source>
         <translation type="unfinished">Changer de pseudo</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="552"/>
+        <location filename="widgets/groupchat.py" line="736"/>
         <source>Change nick</source>
         <translation type="unfinished">Changer de pseudo</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="552"/>
+        <location filename="widgets/groupchat.py" line="736"/>
         <source>Enter new nickname:</source>
         <translation type="unfinished">Entrez un nouveau pseudo:</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="302"/>
+        <location filename="widgets/groupchat.py" line="486"/>
         <source>Add to roster</source>
         <translation type="unfinished">Ajouter à la liste des contacts</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="118"/>
+        <location filename="widgets/groupchat.py" line="120"/>
         <source>Room configuration</source>
         <translation type="unfinished">Configuration du salon</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="129"/>
+        <location filename="widgets/groupchat.py" line="131"/>
         <source>Add to bookmark</source>
         <translation type="unfinished">Ajoutez aux signets</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="136"/>
+        <location filename="widgets/groupchat.py" line="138"/>
         <source>Configuration</source>
         <translation type="unfinished">Configuration</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="527"/>
+        <location filename="widgets/groupchat.py" line="711"/>
         <source>Clear chat?</source>
         <translation type="unfinished">Effacez la discussion?</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="527"/>
+        <location filename="widgets/groupchat.py" line="711"/>
         <source>Do you want to clear this conversation? </source>
         <translation type="unfinished">Voulez-vous effacer cette discussion?</translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="286"/>
+        <location filename="widgets/groupchat.py" line="470"/>
         <source>Private message</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/groupchat.py" line="835"/>
+        <location filename="widgets/groupchat.py" line="1022"/>
         <source>Available commands: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -3262,7 +3261,7 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="unfinished">Hors ligne</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3608"/>
+        <location filename="jabbim.py" line="3643"/>
         <source>Status</source>
         <translation type="unfinished">Statut</translation>
     </message>
@@ -3302,22 +3301,22 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="obsolete">Jabbim est prêt! Vous êtes connecté! :) </translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5018"/>
+        <location filename="jabbim.py" line="5063"/>
         <source>Login information</source>
         <translation type="unfinished">Informations d&apos;identification</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5018"/>
+        <location filename="jabbim.py" line="5063"/>
         <source>Save current login information?</source>
         <translation type="unfinished">Enregistrer vos informations d&apos;identification actuelles?</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3559"/>
+        <location filename="jabbim.py" line="3594"/>
         <source>Hide / Show</source>
         <translation type="unfinished">Masquer / Montrer</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3560"/>
+        <location filename="jabbim.py" line="3595"/>
         <source>Quit</source>
         <translation type="unfinished">Quitter</translation>
     </message>
@@ -3327,22 +3326,22 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="unfinished">Erreur</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5209"/>
+        <location filename="jabbim.py" line="5261"/>
         <source>Bad Jabber ID or password.</source>
         <translation type="unfinished">Mauvais ID Jabber ou mot de passe.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5212"/>
+        <location filename="jabbim.py" line="5264"/>
         <source>Server is not found.</source>
         <translation type="unfinished">Impossible de trouver le serveur.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5282"/>
+        <location filename="jabbim.py" line="5334"/>
         <source>You are now offline.</source>
         <translation type="unfinished">Vous êtes maintenant hors ligne.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4241"/>
+        <location filename="jabbim.py" line="4280"/>
         <source> invites you to conference </source>
         <translation type="unfinished"> vous invite dans la salle de discussion </translation>
     </message>
@@ -3352,7 +3351,7 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="unfinished">Invisible</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4243"/>
+        <location filename="jabbim.py" line="4282"/>
         <source>Reason: </source>
         <translation type="unfinished">Raison: </translation>
     </message>
@@ -3367,57 +3366,57 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="unfinished">Votre statut:</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4981"/>
+        <location filename="jabbim.py" line="5026"/>
         <source>Connecting to the server...</source>
         <translation type="unfinished">Connexion au serveur...</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3496"/>
+        <location filename="jabbim.py" line="3531"/>
         <source>I&apos;m here</source>
         <translation type="unfinished">Je suis là</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3497"/>
+        <location filename="jabbim.py" line="3532"/>
         <source>Doing something important. Message me later.</source>
         <translation type="unfinished">Je fais quelque chose d&apos;important. Envoyez-moi un message plus tard.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3498"/>
+        <location filename="jabbim.py" line="3533"/>
         <source>Chat with me!</source>
         <translation type="unfinished">Discutez avec moi!</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3499"/>
+        <location filename="jabbim.py" line="3534"/>
         <source>Leave a message. Beep</source>
         <translation type="unfinished">Laissez un message. Bip</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3500"/>
+        <location filename="jabbim.py" line="3535"/>
         <source>Doing something else for a moment.</source>
         <translation type="unfinished">Je suis occupé à autre chose pour l&apos;instant.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3799"/>
+        <location filename="jabbim.py" line="3834"/>
         <source>Add message</source>
         <translation type="unfinished">Ajouter un message</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3801"/>
+        <location filename="jabbim.py" line="3836"/>
         <source>Manage messages</source>
         <translation type="unfinished">Gérer les messages</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3803"/>
+        <location filename="jabbim.py" line="3838"/>
         <source>Log out</source>
         <translation type="unfinished">Se déloguer</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5295"/>
+        <location filename="jabbim.py" line="5347"/>
         <source>Connection lost! </source>
         <translation type="unfinished">Connexion perdue! </translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5295"/>
+        <location filename="jabbim.py" line="5347"/>
         <source>Trying to reconnect ..  </source>
         <translation type="unfinished">Tentative de reconnexion ..  </translation>
     </message>
@@ -3472,7 +3471,7 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="obsolete">Autoriser le contact?</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3734"/>
+        <location filename="jabbim.py" line="3769"/>
         <source>JID:</source>
         <translation type="unfinished">JID:</translation>
     </message>
@@ -3587,17 +3586,17 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="unfinished">Afficher les hors ligne</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3412"/>
+        <location filename="jabbim.py" line="3447"/>
         <source>Show transports</source>
         <translation type="unfinished">Afficher les transports</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3427"/>
+        <location filename="jabbim.py" line="3462"/>
         <source>Commands</source>
         <translation type="unfinished">Commandes</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3431"/>
+        <location filename="jabbim.py" line="3466"/>
         <source>Send file</source>
         <translation type="unfinished">Envoyer un fichier</translation>
     </message>
@@ -3617,7 +3616,7 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="obsolete"> ne peut être envoyé/téléchargé </translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2668"/>
+        <location filename="jabbim.py" line="2671"/>
         <source>Choose files</source>
         <translation type="unfinished">Choisissez les fichiers</translation>
     </message>
@@ -3632,17 +3631,17 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="unfinished">De:</translation>
     </message>
     <message>
-        <location filename="widgets/events/__init__.py" line="539"/>
+        <location filename="widgets/events/__init__.py" line="546"/>
         <source>Sending file </source>
         <translation type="unfinished">Envoi du fichier </translation>
     </message>
     <message>
-        <location filename="widgets/events/__init__.py" line="539"/>
+        <location filename="widgets/events/__init__.py" line="546"/>
         <source> to </source>
         <translation type="unfinished"> à </translation>
     </message>
     <message>
-        <location filename="widgets/events/__init__.py" line="539"/>
+        <location filename="widgets/events/__init__.py" line="546"/>
         <source>You can see progress of sending in Events tab in main window.</source>
         <translation type="unfinished">Vous pouvez suivre la progression de l&apos;envoi dans l&apos;onglet Evénements de la fenêtre principale.</translation>
     </message>
@@ -3677,12 +3676,12 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="obsolete">veut voir votre statut.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3483"/>
+        <location filename="jabbim.py" line="3518"/>
         <source>Become invisible</source>
         <translation type="unfinished">Devenir invisible</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3480"/>
+        <location filename="jabbim.py" line="3515"/>
         <source>Become visible</source>
         <translation type="unfinished">Devenir visible</translation>
     </message>
@@ -3692,12 +3691,12 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="obsolete">Message:</translation>
     </message>
     <message>
-        <location filename="widgets/events/__init__.py" line="626"/>
+        <location filename="widgets/events/__init__.py" line="633"/>
         <source>Sending file</source>
         <translation type="unfinished">Envoi du fichier</translation>
     </message>
     <message>
-        <location filename="widgets/events/__init__.py" line="564"/>
+        <location filename="widgets/events/__init__.py" line="571"/>
         <source>Receiving file</source>
         <translation type="unfinished">Reception du fichier</translation>
     </message>
@@ -3712,7 +3711,7 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="obsolete">Nouveau nom:</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4251"/>
+        <location filename="jabbim.py" line="4290"/>
         <source>Decline</source>
         <translation type="unfinished">Decliner</translation>
     </message>
@@ -4452,62 +4451,62 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="unfinished">travaille</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2826"/>
+        <location filename="jabbim.py" line="2855"/>
         <source>Name:</source>
         <translation type="unfinished">Nom:</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2849"/>
+        <location filename="jabbim.py" line="2878"/>
         <source>Subscription:</source>
         <translation type="unfinished">Abonnement:</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2845"/>
+        <location filename="jabbim.py" line="2874"/>
         <source> from</source>
         <translation type="unfinished"> de</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2847"/>
+        <location filename="jabbim.py" line="2876"/>
         <source> to</source>
         <translation type="unfinished"> à</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2849"/>
+        <location filename="jabbim.py" line="2878"/>
         <source> none</source>
         <translation type="unfinished"> aucun</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2860"/>
+        <location filename="jabbim.py" line="2889"/>
         <source>Priority</source>
         <translation type="unfinished">Priorité</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3397"/>
+        <location filename="jabbim.py" line="3432"/>
         <source>Change profile photo</source>
         <translation type="unfinished">Changer la photo du profile</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3643"/>
+        <location filename="jabbim.py" line="3678"/>
         <source>Mood</source>
         <translation type="unfinished">Humeur</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3675"/>
+        <location filename="jabbim.py" line="3710"/>
         <source>Activity</source>
         <translation type="unfinished">Activité</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4156"/>
+        <location filename="jabbim.py" line="4195"/>
         <source>Chat with new user</source>
         <translation type="unfinished">Discuter avec un nouvel utilisateur</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4156"/>
+        <location filename="jabbim.py" line="4195"/>
         <source>Enter Jabber ID:</source>
         <translation type="unfinished">Entrez l&apos; identifiant Jabber:</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4164"/>
+        <location filename="jabbim.py" line="4203"/>
         <source>is not valid Jabber ID</source>
         <translation type="unfinished">n&apos; est pas un identifiant Janner valide</translation>
     </message>
@@ -4527,12 +4526,12 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="unfinished">Vous n&apos; avez pas l&apos; authorisation d&apos; exécuter cette commande.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4985"/>
+        <location filename="jabbim.py" line="5030"/>
         <source>Bad JID</source>
         <translation type="unfinished">Mauvais identifiant</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4985"/>
+        <location filename="jabbim.py" line="5030"/>
         <source>You have an error in your Jabber ID.</source>
         <translation type="unfinished">Vous avez une erreur dans votre identifiant Jabber</translation>
     </message>
@@ -4542,12 +4541,12 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="unfinished">Aucun</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2954"/>
+        <location filename="jabbim.py" line="2983"/>
         <source>User is chatting in:</source>
         <translation type="unfinished">L&apos; utilisateur discute dans les salons:</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3551"/>
+        <location filename="jabbim.py" line="3586"/>
         <source>Connect</source>
         <translation type="unfinished">Se connecter</translation>
     </message>
@@ -4577,7 +4576,7 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4249"/>
+        <location filename="jabbim.py" line="4288"/>
         <source>Nickname:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4727,7 +4726,7 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3913"/>
+        <location filename="jabbim.py" line="3948"/>
         <source>Enter status message</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4742,27 +4741,27 @@ Voulez-vous réellement quitter cette salle?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3829"/>
+        <location filename="jabbim.py" line="3864"/>
         <source>Enter mood message</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3863"/>
+        <location filename="jabbim.py" line="3898"/>
         <source>Enter activity message</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4988"/>
+        <location filename="jabbim.py" line="5033"/>
         <source>Empty password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4988"/>
+        <location filename="jabbim.py" line="5033"/>
         <source>Your password is empty.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5214"/>
+        <location filename="jabbim.py" line="5266"/>
         <source>Connection to server failed. Check your Jabberd ID and try it again.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5457,7 +5456,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Configuration de l&apos;extension</translation>
     </message>
     <message>
-        <location filename="widgets/preferences.py" line="779"/>
+        <location filename="widgets/preferences.py" line="780"/>
         <source>User</source>
         <translation type="unfinished">utilisateur</translation>
     </message>
@@ -5467,7 +5466,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Ceci est un message de test précédemment envoyé.</translation>
     </message>
     <message>
-        <location filename="widgets/preferences.py" line="782"/>
+        <location filename="widgets/preferences.py" line="783"/>
         <source>Me</source>
         <translation type="unfinished">Moi</translation>
     </message>
@@ -5613,17 +5612,17 @@ Version: %3</translation>
     <message>
         <location filename="pref/roster.py" line="5"/>
         <source>Roster style</source>
-        <translation type="unfinished">Style de la fenêtre de contacts</translation>
+        <translation type="obsolete">Style de la fenêtre de contacts</translation>
     </message>
     <message>
         <location filename="pref/roster.py" line="5"/>
         <source>Normal</source>
-        <translation type="unfinished">Normal</translation>
+        <translation type="obsolete">Normal</translation>
     </message>
     <message>
         <location filename="pref/roster.py" line="6"/>
         <source>Compact</source>
-        <translation type="unfinished">Compact</translation>
+        <translation type="obsolete">Compact</translation>
     </message>
     <message>
         <location filename="pref/roster.py" line="6"/>
@@ -5820,27 +5819,27 @@ Version: %3</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences.py" line="778"/>
+        <location filename="widgets/preferences.py" line="779"/>
         <source>Message for me</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences.py" line="779"/>
+        <location filename="widgets/preferences.py" line="780"/>
         <source>Second message for me</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences.py" line="780"/>
+        <location filename="widgets/preferences.py" line="781"/>
         <source>User is now away</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences.py" line="781"/>
+        <location filename="widgets/preferences.py" line="782"/>
         <source>Message for user</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences.py" line="782"/>
+        <location filename="widgets/preferences.py" line="783"/>
         <source>Second message for user</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6195,62 +6194,62 @@ Version: %3</translation>
         <translation type="obsolete">Copier ou déplacer?</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2352"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2354"/>
         <source>Chat</source>
         <translation type="unfinished">Chat</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2421"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2423"/>
         <source>vCard</source>
         <translation type="unfinished">Information utilisateur</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2436"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2438"/>
         <source>Send file</source>
         <translation type="unfinished">Envoyer un fichier</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2463"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2466"/>
         <source>Delete from group</source>
         <translation type="unfinished">Supprimer du groupe</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2467"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2471"/>
         <source>Delete from roster</source>
         <translation type="unfinished">Supprimer de la liste de contacts</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2495"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2500"/>
         <source>Groups</source>
         <translation type="unfinished">Groupes</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2497"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2502"/>
         <source>New Group</source>
         <translation type="unfinished">Nouveau groupe</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2736"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2741"/>
         <source>New group</source>
         <translation type="unfinished">Nouveau groupe</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2736"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2741"/>
         <source>Add user to new group</source>
         <translation type="unfinished">Ajouter un utilisateur au nouveau groupe</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2723"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2728"/>
         <source>Rename</source>
         <translation type="unfinished">Renommer</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2609"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2614"/>
         <source>Rename group</source>
         <translation type="unfinished">Renommer le groupe</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2609"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2614"/>
         <source>Enter new group name</source>
         <translation type="unfinished">Entrez le nouveau nom de groupe</translation>
     </message>
@@ -6265,7 +6264,7 @@ Version: %3</translation>
         <translation type="obsolete">JID:</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2723"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2728"/>
         <source>Enter new name:</source>
         <translation type="unfinished">Entrez le nouveau nom:</translation>
     </message>
@@ -6295,12 +6294,12 @@ Version: %3</translation>
         <translation type="unfinished">Copier vers le groupe</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2359"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2361"/>
         <source>Invite to conference</source>
         <translation type="unfinished">Inviter à la conférence</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2593"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2598"/>
         <source>Custom status</source>
         <translation type="unfinished">Statut personnalisé</translation>
     </message>
@@ -6310,7 +6309,7 @@ Version: %3</translation>
         <translation type="obsolete">Toutes les ressources</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2454"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2456"/>
         <source>Break up metacontact</source>
         <translation type="unfinished">Casser le meta-contact</translation>
     </message>
@@ -6335,42 +6334,42 @@ Version: %3</translation>
         <translation type="obsolete">Demander l&apos;autorisation au contact</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2526"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2531"/>
         <source>Privacy</source>
         <translation type="unfinished">Confidentialité</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2528"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2533"/>
         <source>Block contact</source>
         <translation type="unfinished">Blocker le contact</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2532"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2537"/>
         <source>Unblock contact</source>
         <translation type="unfinished">Débloquer le contact</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2547"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2552"/>
         <source>Always hide my status to contact</source>
         <translation type="unfinished">Toujours cacher mon statut au contact</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2551"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2556"/>
         <source>Don&apos;t hide my status to contact</source>
         <translation type="unfinished">Ne pas cacher mon statut au contact</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2786"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2791"/>
         <source>Hi! I&apos;d love to see you in multichat at </source>
         <translation type="unfinished">Salut! J&apos;aimerais te rejoindre dans la salle de discution à </translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2561"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2566"/>
         <source>Extra actions</source>
         <translation type="unfinished">Actions supplémentaires</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2589"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2594"/>
         <source>Remove group</source>
         <translation type="unfinished">Supprimer le groupe</translation>
     </message>
@@ -6395,27 +6394,27 @@ Version: %3</translation>
         <translation type="obsolete">Priorité</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2637"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2642"/>
         <source>Remove group?</source>
         <translation type="unfinished">Supprimer le groupe?</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2637"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2642"/>
         <source>Do you want to remove group </source>
         <translation type="unfinished">Voulez-vous supprimer le groupe </translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2637"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2642"/>
         <source> from your roster?</source>
         <translation type="unfinished"> de votre liste de contact?</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2682"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2687"/>
         <source>Delete contact?</source>
         <translation type="unfinished">Supprimer le contact?</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2682"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2687"/>
         <source>Do you want to delete this contact from your roster?</source>
         <translation type="unfinished">Voulez-vous supprimer ce contact de votre liste de contacts?</translation>
     </message>
@@ -6450,42 +6449,42 @@ Version: %3</translation>
         <translation type="unfinished">Ajouter à la liste de contacts</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2380"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2382"/>
         <source>Invite to chat</source>
         <translation type="unfinished">Inviter a discuter</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2480"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2484"/>
         <source>Authorize</source>
         <translation type="unfinished">Autoriser</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2484"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2488"/>
         <source>Remove authorization</source>
         <translation type="unfinished">Supprimer l&apos; autorisation</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2488"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2492"/>
         <source>Request authorization</source>
         <translation type="unfinished">Demander l&apos; autorisation</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2583"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2588"/>
         <source>Rename by vCard</source>
         <translation type="unfinished">Renommer depuis la vCard</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2688"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2693"/>
         <source>Delete gateway?</source>
         <translation type="unfinished">Supprimer la passerelle</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2688"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2693"/>
         <source>Do you want to delete associated contacts from your roster?</source>
         <translation type="unfinished">Voulez-vous supprimer les contacts?</translation>
     </message>
     <message>
-        <location filename="widgets/rosterLiveWidget.py" line="2471"/>
+        <location filename="widgets/rosterLiveWidget.py" line="2475"/>
         <source>Favourite contact</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7115,7 +7114,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>textView</name>
     <message>
-        <location filename="widgets/groupchat.py" line="50"/>
+        <location filename="widgets/groupchat.py" line="51"/>
         <source>Hi! I&apos;d love to see you in multichat at </source>
         <translation type="unfinished">Salut! J&apos;aimerais te rejoindre dans la salle de discution à </translation>
     </message>
