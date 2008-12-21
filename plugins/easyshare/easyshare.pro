@@ -1,6 +1,10 @@
 SOURCES         = easyshare.py
 TRANSLATIONS    = cs.ts \
-		en.ts\
-		pl.ts\
-		fr.ts\
-		de.ts
+		en.ts \
+		sk.ts \
+		pl.ts \
+		fr.ts \
+		de.ts \
+		ru.ts \
+		es.ts \
+		uk.ts
