@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'paint.ui'
 #
-# Created: Thu Aug 28 23:21:19 2008
+# Created: Sun Dec 21 15:23:13 2008
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,6 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtGui.QWidget(MainWindow)
-        self.centralwidget.setGeometry(QtCore.QRect(0, 19, 800, 562))
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout_2 = QtGui.QGridLayout(self.centralwidget)
         self.gridLayout_2.setObjectName("gridLayout_2")
@@ -57,7 +56,17 @@ class Ui_MainWindow(object):
         self.square.setObjectName("square")
         self.gridLayout.addWidget(self.square, 2, 0, 1, 1)
         spacerItem = QtGui.QSpacerItem(20, 431, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.gridLayout.addItem(spacerItem, 3, 0, 1, 1)
+        self.gridLayout.addItem(spacerItem, 4, 0, 1, 1)
+        self.floodfill = QtGui.QToolButton(self.widget)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.floodfill.sizePolicy().hasHeightForWidth())
+        self.floodfill.setSizePolicy(sizePolicy)
+        self.floodfill.setCheckable(True)
+        self.floodfill.setAutoExclusive(True)
+        self.floodfill.setObjectName("floodfill")
+        self.gridLayout.addWidget(self.floodfill, 3, 0, 1, 1)
         self.gridLayout_2.addWidget(self.widget, 0, 0, 1, 1)
         self.container = QtGui.QWidget(self.centralwidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
@@ -69,11 +78,10 @@ class Ui_MainWindow(object):
         self.gridLayout_2.addWidget(self.container, 0, 1, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 19))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 25))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)
-        self.statusbar.setGeometry(QtCore.QRect(0, 581, 800, 19))
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
@@ -86,4 +94,5 @@ class Ui_MainWindow(object):
         self.pen.setText(QtGui.QApplication.translate("MainWindow", "Pen", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("MainWindow", "Size:", None, QtGui.QApplication.UnicodeUTF8))
         self.square.setText(QtGui.QApplication.translate("MainWindow", "Square", None, QtGui.QApplication.UnicodeUTF8))
+        self.floodfill.setText(QtGui.QApplication.translate("MainWindow", "FloodFill", None, QtGui.QApplication.UnicodeUTF8))
 
