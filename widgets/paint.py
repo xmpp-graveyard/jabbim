@@ -51,6 +51,7 @@ class paintArea(QtGui.QWidget):
 			return self.getPenPreviewImage()
 		elif self.tool=='square':
 			return self.getSquarePreviewImage()
+		return QtGui.QPixmap()
 
 	def colorChanged(self,color):
 		self.pen.setColor(color)
@@ -68,6 +69,56 @@ class paintArea(QtGui.QWidget):
 			self.keepAspectRatio=float(self.insert.width())/float(self.insert.height())
 		else:
 			self.keepAspectRatio=False
+
+
+	def floodFill(self, x, y):
+		painter = QtGui.QPainter(self.image)
+		p=QtGui.QPen()
+		p.setColor(self.pen.color())
+		painter.setPen(p)
+		queue = []
+		queue.append((x, y))
+		# local variable access is faster in Python
+		get_pixel = self.image.pixel
+		target_color = get_pixel(x, y)
+		if QtGui.QColor(target_color)==self.pen.color():
+			return
+		lines_drawn = 0
+		img_width = self.image.width()
+		img_height = self.image.height()
+		while len(queue) != 0:
+			(x, y) = queue.pop(0)
+			if get_pixel(x, y) == target_color:
+				w = e = x
+				while w > 0 and get_pixel(w-1, y) == target_color:
+					w -= 1
+				while e+1 < img_width and get_pixel(e+1, y) == target_color:
+					e += 1
+				painter.drawLine(w, y, e, y)
+
+				# complete floodfill can take a while, so repaint once in a while
+				# to have visible progress
+				lines_drawn += 1
+				if lines_drawn == 100:
+					self.repaint()
+					lines_drawn = 0
+
+				if y > 0:
+					was_target = False
+					for x in xrange(w, e+1):
+						is_target = (get_pixel(x, y-1) == target_color)
+						if is_target and not was_target:
+							queue.append((x, y-1))
+						was_target = is_target
+
+				if y + 1 < img_height:
+					was_target = False
+					for x in xrange(w, e+1):
+						is_target = (get_pixel(x, y+1) == target_color)
+						if is_target and not was_target:
+							queue.append((x, y+1))
+						was_target = is_target
+		self.repaint()
 
 	def newImage(self,w,h):
 		self.image=QtGui.QImage(w,h,QtGui.QImage.Format_RGB32)
@@ -103,7 +154,9 @@ class paintArea(QtGui.QWidget):
 			p.drawPoint(x,y)
 
 	def mousePressEvent(self,event):
-		if self.tool!="pen":
+		if self.tool == 'fill':
+			self.floodFill(event.x(),event.y())
+		elif self.tool!="pen":
 			self.mousePress=[int(event.x()),int(event.y())]
 		elif self.tool == 'pen':
 			pass
@@ -202,7 +255,7 @@ class paintArea(QtGui.QWidget):
 		
 
 	def setupPainter(self,p):
-		p.setRenderHint(QtGui.QPainter.Antialiasing, True)
+		#p.setRenderHint(QtGui.QPainter.Antialiasing, True)
 		p.setPen(self.pen)
 		p.setBrush(self.brush)
 
@@ -233,6 +286,7 @@ class paintWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.pen,QtCore.SIGNAL("clicked()"),self.pen)
 		QtCore.QObject.connect(self.ui.square,QtCore.SIGNAL("clicked()"),self.square)
 		QtCore.QObject.connect(self.ui.line,QtCore.SIGNAL("clicked()"),self.line)
+		QtCore.QObject.connect(self.ui.fill,QtCore.SIGNAL("clicked()"),self.floodFill)
 		QtCore.QObject.connect(self.ui.sendButton,QtCore.SIGNAL("clicked()"),self.send)
 		QtCore.QObject.connect(self.ui.clearButton,QtCore.SIGNAL("clicked()"),self.clear)
 		QtCore.QObject.connect(self.ui.insertImage,QtCore.SIGNAL("clicked()"),self.insertImage)
@@ -287,6 +341,9 @@ class paintWindow(QtGui.QMainWindow):
 			self.ui.backgroundColor.palette().setColor(QtGui.QPalette.Window,c)
 			self.paintArea.brushColorChanged(c)
 			self.updatePreview()
+
+	def floodFill(self):
+		self.paintArea.toolChanged("fill")
 
 	def updatePreview(self):
 		self.ui.preview.setPixmap(self.paintArea.getPreviewImage())

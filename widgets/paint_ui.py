@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'paint.ui'
 #
-# Created: Sun Dec 21 14:04:39 2008
+# Created: Sun Dec 21 17:53:42 2008
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -44,26 +44,31 @@ class Ui_MainWindow(object):
         self.square.setObjectName("square")
         self.gridLayout.addWidget(self.square, 2, 0, 1, 1)
         spacerItem = QtGui.QSpacerItem(20, 431, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.gridLayout.addItem(spacerItem, 7, 0, 1, 1)
+        self.gridLayout.addItem(spacerItem, 8, 0, 1, 1)
         self.sendButton = QtGui.QPushButton(self.widget)
         self.sendButton.setObjectName("sendButton")
-        self.gridLayout.addWidget(self.sendButton, 6, 0, 1, 1)
+        self.gridLayout.addWidget(self.sendButton, 7, 0, 1, 1)
         self.clearButton = QtGui.QPushButton(self.widget)
         self.clearButton.setObjectName("clearButton")
-        self.gridLayout.addWidget(self.clearButton, 5, 0, 1, 1)
+        self.gridLayout.addWidget(self.clearButton, 6, 0, 1, 1)
         self.insertImage = QtGui.QPushButton(self.widget)
         self.insertImage.setCheckable(True)
         self.insertImage.setAutoExclusive(True)
         self.insertImage.setObjectName("insertImage")
-        self.gridLayout.addWidget(self.insertImage, 3, 0, 1, 1)
+        self.gridLayout.addWidget(self.insertImage, 4, 0, 1, 1)
         self.openImage = QtGui.QPushButton(self.widget)
         self.openImage.setObjectName("openImage")
-        self.gridLayout.addWidget(self.openImage, 4, 0, 1, 1)
+        self.gridLayout.addWidget(self.openImage, 5, 0, 1, 1)
         self.line = QtGui.QPushButton(self.widget)
         self.line.setCheckable(True)
         self.line.setAutoExclusive(True)
         self.line.setObjectName("line")
         self.gridLayout.addWidget(self.line, 1, 0, 1, 1)
+        self.fill = QtGui.QPushButton(self.widget)
+        self.fill.setCheckable(True)
+        self.fill.setAutoExclusive(True)
+        self.fill.setObjectName("fill")
+        self.gridLayout.addWidget(self.fill, 3, 0, 1, 1)
         self.gridLayout_4.addWidget(self.widget, 0, 0, 2, 1)
         self.gridLayout_3 = QtGui.QGridLayout()
         self.gridLayout_3.setObjectName("gridLayout_3")
@@ -550,6 +555,7 @@ class Ui_MainWindow(object):
         self.insertImage.setText(QtGui.QApplication.translate("MainWindow", "Insert image", None, QtGui.QApplication.UnicodeUTF8))
         self.openImage.setText(QtGui.QApplication.translate("MainWindow", "Open image", None, QtGui.QApplication.UnicodeUTF8))
         self.line.setText(QtGui.QApplication.translate("MainWindow", "Line", None, QtGui.QApplication.UnicodeUTF8))
+        self.fill.setText(QtGui.QApplication.translate("MainWindow", "Fill", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("MainWindow", "Pen Size", None, QtGui.QApplication.UnicodeUTF8))
         self.preview.setText(QtGui.QApplication.translate("MainWindow", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
 
