@@ -80,8 +80,7 @@ class paintArea(QtGui.QWidget):
 					w -= 1
 				while e+1 < img_width and get_pixel(e+1, y) == target_color:
 					e += 1
-				line = QtCore.QLine(w, y, e, y)
-				painter.drawLine(line)
+				painter.drawLine(w, y, e, y)
 
 				# complete floodfill can take a while, so repaint once in a while
 				# to have visible progress
