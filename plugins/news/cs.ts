@@ -10,28 +10,28 @@
     <message>
         <location filename="news.py" line="77"/>
         <source>News: </source>
-        <translation>Novinky: </translation>
+        <translation type="obsolete">Novinky: </translation>
     </message>
     <message>
         <location filename="news.py" line="77"/>
         <source>From: </source>
-        <translation>Zdroj: </translation>
+        <translation type="obsolete">Zdroj: </translation>
     </message>
 </context>
 <context>
     <name>self.main</name>
     <message>
-        <location filename="news.py" line="16"/>
+        <location filename="news.py" line="15"/>
         <source>Notify in tray</source>
         <translation>Upozoňovat v systémové oblasti</translation>
     </message>
     <message>
-        <location filename="news.py" line="17"/>
+        <location filename="news.py" line="16"/>
         <source>Show window on new</source>
         <translation>Zobrazit okno při nové zprávě</translation>
     </message>
     <message>
-        <location filename="news.py" line="53"/>
+        <location filename="news.py" line="52"/>
         <source>Show news</source>
         <translation>Zobrazit novinky</translation>
     </message>

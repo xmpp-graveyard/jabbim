@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs_CZ">
-<defaultcodec></defaultcodec>
 <context>
     <name>MainWindow</name>
     <message>
@@ -115,47 +114,47 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="jdm.py" line="366"/>
+        <location filename="jdm.py" line="370"/>
         <source>Jabber Disk</source>
         <translation>Jabber Disk</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="455"/>
+        <location filename="jdm.py" line="459"/>
         <source>Show my Jdisk in JDM</source>
         <translation type="unfinished">Zobrazit vlastní disk</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="457"/>
+        <location filename="jdm.py" line="461"/>
         <source>Show my Album in JDM</source>
         <translation type="unfinished">Zobrazit vlastní album</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="459"/>
+        <location filename="jdm.py" line="463"/>
         <source>Show my Jdisk in browser</source>
         <translation type="unfinished">Zobrazit vlastní disk na webu</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="461"/>
+        <location filename="jdm.py" line="465"/>
         <source>Show my Album in browser</source>
         <translation type="unfinished">Zobrazit vlastní album na webu</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="465"/>
+        <location filename="jdm.py" line="469"/>
         <source>Show users Jdisk in JDM</source>
         <translation type="unfinished">Zobrazit disk uživatele</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="467"/>
+        <location filename="jdm.py" line="471"/>
         <source>Show users Album in JDM</source>
         <translation>Zobrazit album uživatele</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="469"/>
+        <location filename="jdm.py" line="473"/>
         <source>Show users Jdisk in browser</source>
         <translation type="unfinished">Zobrazit disk uživatele na webu</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="471"/>
+        <location filename="jdm.py" line="475"/>
         <source>Show users Album in browser</source>
         <translation type="unfinished">Zobrazit album uživatele na webu</translation>
     </message>
@@ -165,32 +164,32 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Zobrazi soubory jako ikony</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="561"/>
+        <location filename="jdm.py" line="565"/>
         <source>Download files</source>
         <translation>Stáhnout soubory</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="563"/>
+        <location filename="jdm.py" line="567"/>
         <source>Remove files</source>
         <translation>Odstranit soubory</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="565"/>
+        <location filename="jdm.py" line="569"/>
         <source>Copy links to clipboard</source>
         <translation>Kopírovat odkazy do schránky</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="568"/>
+        <location filename="jdm.py" line="572"/>
         <source>Download file</source>
         <translation>Stáhnout soubor</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="570"/>
+        <location filename="jdm.py" line="574"/>
         <source>Remove file</source>
         <translation>Odstranit soubor</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="572"/>
+        <location filename="jdm.py" line="576"/>
         <source>Copy link to clipboard</source>
         <translation>Kopírovat odkaz do schránky</translation>
     </message>
@@ -205,29 +204,34 @@ p, li { white-space: pre-wrap; }
         <translation>Správce Jabber Disku</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="212"/>
+        <location filename="jdm.py" line="216"/>
         <source>Finished</source>
         <translation>Dokončeno</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="609"/>
+        <location filename="jdm.py" line="613"/>
         <source>Rename</source>
         <translation>Přejmenovat</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="576"/>
+        <location filename="jdm.py" line="580"/>
         <source>Move to</source>
         <translation>Přesunout do</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="609"/>
+        <location filename="jdm.py" line="613"/>
         <source>Enter new name:</source>
         <translation>Vložit nový název:</translation>
     </message>
     <message>
-        <location filename="jdm.py" line="966"/>
+        <location filename="jdm.py" line="987"/>
         <source>Folder</source>
         <translation>Adresář</translation>
+    </message>
+    <message>
+        <location filename="jdm.py" line="996"/>
+        <source> files</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs_CZ">
-<defaultcodec></defaultcodec>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="historyBrowser.ui.py" line="63"/>
+        <location filename="historyBrowser.ui.py" line="74"/>
         <source>Archive browser</source>
         <translation>Prohlížeč archivu</translation>
     </message>
     <message>
-        <location filename="historyBrowser.ui.py" line="66"/>
+        <location filename="historyBrowser.ui.py" line="76"/>
         <source>Search</source>
         <translation>Hledat</translation>
     </message>
     <message>
         <location filename="historyBrowser.ui.py" line="67"/>
         <source>Date</source>
-        <translation>Datum</translation>
+        <translation type="obsolete">Datum</translation>
     </message>
     <message>
         <location filename="historyBrowser.ui.py" line="68"/>
         <source>Message</source>
-        <translation>Zpráva</translation>
+        <translation type="obsolete">Zpráva</translation>
     </message>
     <message>
-        <location filename="historyBrowser.ui.py" line="64"/>
-        <source>1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="historyBrowser.ui.py" line="65"/>
+        <location filename="historyBrowser.ui.py" line="75"/>
         <source>Today</source>
         <translation>Dnes</translation>
+    </message>
+    <message>
+        <location filename="historyBrowser.ui.py" line="77"/>
+        <source>Close</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -39,25 +38,25 @@
     <message>
         <location filename="archive.py" line="531"/>
         <source>Contacts in roster</source>
-        <translation>Kontakty v seznamu kontaktů</translation>
+        <translation type="obsolete">Kontakty v seznamu kontaktů</translation>
     </message>
     <message>
         <location filename="archive.py" line="533"/>
         <source>Others</source>
-        <translation>Ostatní</translation>
+        <translation type="obsolete">Ostatní</translation>
     </message>
     <message>
-        <location filename="archive.py" line="435"/>
+        <location filename="archive.py" line="484"/>
         <source>History</source>
         <translation>Historie</translation>
     </message>
     <message>
-        <location filename="archive.py" line="292"/>
+        <location filename="archive.py" line="307"/>
         <source>Message Archiving</source>
         <translation>Plugin umožňující ukládání zpráv do historie</translation>
     </message>
     <message>
-        <location filename="archive.py" line="294"/>
+        <location filename="archive.py" line="309"/>
         <source>Archive Plugin</source>
         <translation>Historie zpráv</translation>
     </message>
@@ -70,12 +69,12 @@
         <translation type="obsolete">Počet zpráv z archivu, které jsou načteny do rozhovoru:</translation>
     </message>
     <message>
-        <location filename="archive.py" line="283"/>
+        <location filename="archive.py" line="298"/>
         <source>Number of last messages shown:</source>
         <translation>Počet zpráv z archivu, které jsou načteny do rozhovoru:</translation>
     </message>
     <message>
-        <location filename="archive.py" line="284"/>
+        <location filename="archive.py" line="299"/>
         <source>Don&apos;t show messages older than:</source>
         <translation>Nezobrazovat v rozhovoru zprávy starší než:</translation>
     </message>

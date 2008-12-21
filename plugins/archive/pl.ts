@@ -3,60 +3,40 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="historyBrowser.ui.py" line="63"/>
+        <location filename="historyBrowser.ui.py" line="74"/>
         <source>Archive browser</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="historyBrowser.ui.py" line="66"/>
+        <location filename="historyBrowser.ui.py" line="76"/>
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="historyBrowser.ui.py" line="67"/>
-        <source>Date</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="historyBrowser.ui.py" line="68"/>
-        <source>Message</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="historyBrowser.ui.py" line="64"/>
-        <source>1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="historyBrowser.ui.py" line="65"/>
+        <location filename="historyBrowser.ui.py" line="75"/>
         <source>Today</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="historyBrowser.ui.py" line="77"/>
+        <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="archive.py" line="435"/>
+        <location filename="archive.py" line="484"/>
         <source>History</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="archive.py" line="531"/>
-        <source>Contacts in roster</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="archive.py" line="533"/>
-        <source>Others</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="archive.py" line="292"/>
+        <location filename="archive.py" line="307"/>
         <source>Message Archiving</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="archive.py" line="294"/>
+        <location filename="archive.py" line="309"/>
         <source>Archive Plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -64,12 +44,12 @@
 <context>
     <name>self.main</name>
     <message>
-        <location filename="archive.py" line="283"/>
+        <location filename="archive.py" line="298"/>
         <source>Number of last messages shown:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="archive.py" line="284"/>
+        <location filename="archive.py" line="299"/>
         <source>Don&apos;t show messages older than:</source>
         <translation type="unfinished"></translation>
     </message>
