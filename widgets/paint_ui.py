@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'paint.ui'
 #
-# Created: Sat Aug 30 19:22:34 2008
+# Created: Sun Dec 21 14:04:39 2008
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,6 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtGui.QWidget(MainWindow)
-        self.centralwidget.setGeometry(QtCore.QRect(0, 19, 800, 562))
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout_4 = QtGui.QGridLayout(self.centralwidget)
         self.gridLayout_4.setObjectName("gridLayout_4")
@@ -43,23 +42,28 @@ class Ui_MainWindow(object):
         self.square.setCheckable(True)
         self.square.setAutoExclusive(True)
         self.square.setObjectName("square")
-        self.gridLayout.addWidget(self.square, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.square, 2, 0, 1, 1)
         spacerItem = QtGui.QSpacerItem(20, 431, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.gridLayout.addItem(spacerItem, 6, 0, 1, 1)
+        self.gridLayout.addItem(spacerItem, 7, 0, 1, 1)
         self.sendButton = QtGui.QPushButton(self.widget)
         self.sendButton.setObjectName("sendButton")
-        self.gridLayout.addWidget(self.sendButton, 5, 0, 1, 1)
+        self.gridLayout.addWidget(self.sendButton, 6, 0, 1, 1)
         self.clearButton = QtGui.QPushButton(self.widget)
         self.clearButton.setObjectName("clearButton")
-        self.gridLayout.addWidget(self.clearButton, 4, 0, 1, 1)
+        self.gridLayout.addWidget(self.clearButton, 5, 0, 1, 1)
         self.insertImage = QtGui.QPushButton(self.widget)
         self.insertImage.setCheckable(True)
         self.insertImage.setAutoExclusive(True)
         self.insertImage.setObjectName("insertImage")
-        self.gridLayout.addWidget(self.insertImage, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.insertImage, 3, 0, 1, 1)
         self.openImage = QtGui.QPushButton(self.widget)
         self.openImage.setObjectName("openImage")
-        self.gridLayout.addWidget(self.openImage, 3, 0, 1, 1)
+        self.gridLayout.addWidget(self.openImage, 4, 0, 1, 1)
+        self.line = QtGui.QPushButton(self.widget)
+        self.line.setCheckable(True)
+        self.line.setAutoExclusive(True)
+        self.line.setObjectName("line")
+        self.gridLayout.addWidget(self.line, 1, 0, 1, 1)
         self.gridLayout_4.addWidget(self.widget, 0, 0, 2, 1)
         self.gridLayout_3 = QtGui.QGridLayout()
         self.gridLayout_3.setObjectName("gridLayout_3")
@@ -527,11 +531,10 @@ class Ui_MainWindow(object):
         self.gridLayout_4.addLayout(self.horizontalLayout_2, 0, 1, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 19))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 25))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)
-        self.statusbar.setGeometry(QtCore.QRect(0, 581, 800, 19))
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
@@ -546,6 +549,7 @@ class Ui_MainWindow(object):
         self.clearButton.setText(QtGui.QApplication.translate("MainWindow", "Clear", None, QtGui.QApplication.UnicodeUTF8))
         self.insertImage.setText(QtGui.QApplication.translate("MainWindow", "Insert image", None, QtGui.QApplication.UnicodeUTF8))
         self.openImage.setText(QtGui.QApplication.translate("MainWindow", "Open image", None, QtGui.QApplication.UnicodeUTF8))
+        self.line.setText(QtGui.QApplication.translate("MainWindow", "Line", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("MainWindow", "Pen Size", None, QtGui.QApplication.UnicodeUTF8))
         self.preview.setText(QtGui.QApplication.translate("MainWindow", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
 

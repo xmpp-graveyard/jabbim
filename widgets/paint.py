@@ -21,6 +21,10 @@ class paintArea(QtGui.QWidget):
 		self.mouseActual=[-1,-1]
 		self.insert=None
 		self.keepAspectRatio=False
+		self.changeSize=False
+		self.lastPoint=[0,0]
+		self.setMouseTracking(True)
+		self.cursor=None
 
 	def insertImage(self,image):
 		self.insert=image
@@ -30,7 +34,7 @@ class paintArea(QtGui.QWidget):
 		i.fill(QtGui.QColor(255,255,255))
 		p=QtGui.QPainter(i)
 		self.setupPainter(p)
-		p.drawLine(19,19,19,19)
+		p.drawPoint(19,19)
 		return i
 
 	def getSquarePreviewImage(self):
@@ -43,7 +47,7 @@ class paintArea(QtGui.QWidget):
 		return i
 
 	def getPreviewImage(self):
-		if self.tool=="pen":
+		if self.tool=="pen" or self.tool=="line":
 			return self.getPenPreviewImage()
 		elif self.tool=='square':
 			return self.getSquarePreviewImage()
@@ -83,21 +87,26 @@ class paintArea(QtGui.QWidget):
 		QtGui.QWidget.paintEvent(self,event)
 		p=QtGui.QPainter(self)
 		p.drawImage(0,0,self.image)
+		x=self.mapFromGlobal(QtGui.QCursor.pos()).x()
+		y=self.mapFromGlobal(QtGui.QCursor.pos()).y()
 		if self.mousePress[0]!=-1 and self.mouseActual[0]!=-1:
 			if self.tool=="square":
 				self.setupPainter(p)
 				p.drawRect(self.mousePress[0],self.mousePress[1],int(self.mouseActual[0]-self.mousePress[0]),int(self.mouseActual[1]-self.mousePress[1]))
+			elif self.tool=='line':
+				self.setupPainter(p)
+				p.drawLine(self.mousePress[0],self.mousePress[1],int(self.mouseActual[0]),int(self.mouseActual[1]))
 			else:
 				p.drawRect(self.mousePress[0],self.mousePress[1],int(self.mouseActual[0]-self.mousePress[0]),int(self.mouseActual[1]-self.mousePress[1]))
+		else:
+			self.setupPainter(p)
+			p.drawPoint(x,y)
 
 	def mousePressEvent(self,event):
 		if self.tool!="pen":
 			self.mousePress=[int(event.x()),int(event.y())]
 		elif self.tool == 'pen':
-			p=QtGui.QPainter(self.image)
-			self.setupPainter(p)
-			p.drawLine(event.x(),event.y(),event.x(),event.y())
-			self.repaint()
+			pass
 
 	def mouseReleaseEvent(self,event):
 		if self.tool=="square":
@@ -105,6 +114,15 @@ class paintArea(QtGui.QWidget):
 			self.setupPainter(p)
 			r=QtCore.QRect(self.mousePress[0],self.mousePress[1],event.x()-self.mousePress[0],event.y()-self.mousePress[1])
 			p.drawRect(r)
+		elif self.tool=='line':
+			p=QtGui.QPainter(self.image)
+			self.setupPainter(p)
+			p.drawLine(self.mousePress[0],self.mousePress[1],event.x(),event.y())
+		elif self.tool=="pen":
+			p=QtGui.QPainter(self.image)
+			self.setupPainter(p)
+			p.drawLine(event.x(),event.y(),event.x(),event.y())
+			#self.repaint()
 		elif self.tool=="insertImage":
 			p=QtGui.QPainter(self.image)
 			img=self.insert.scaled(abs(self.mouseActual[0]-self.mousePress[0]),abs(self.mouseActual[1]-self.mousePress[1]),QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
@@ -122,32 +140,66 @@ class paintArea(QtGui.QWidget):
 		self.repaint()
 
 	def mouseMoveEvent(self,event):
-		if self.mouseActual[0]!=-1:
-			if self.tool=="pen":
-				p=QtGui.QPainter(self.image)
-				self.setupPainter(p)
-				p.drawLine(self.mouseActual[0],self.mouseActual[1],event.x(),event.y())
-		self.repaint()
-		if self.keepAspectRatio:
-##			if event.x()>self.mousePress[0]:
-			left=self.mousePress[0]
-##			right=event.x()
-##			else:
-##				left=event.x()
-##				right=self.mousePress[0]
-##			if event.y()>self.mousePress[1]:
-			top=self.mousePress[1]
-##				bottom=event.y()
-##			else:
-##				top=event.y()
-##				bottom=self.mousePress[1]
-			
-			if abs(event.x()-self.mousePress[0])<abs(event.y()-self.mousePress[1]):
-				self.mouseActual=[int(event.x()),top+int(float((event.x()-self.mousePress[0]))/self.keepAspectRatio)]
+		if event.buttons()|QtCore.Qt.NoButton:
+			if self.mouseActual[0]!=-1:
+				if self.changeSize and event.x()>10 and event.y()>10:
+					if self.mouseActual[0]<event.x() or self.mouseActual[1]<event.y():
+						w=event.x()
+						h=event.y()
+						image=QtGui.QImage(w,h,QtGui.QImage.Format_RGB32)
+						image.fill(QtGui.QColor(255,255,255).rgb())
+						self.setMaximumSize(QtCore.QSize(w,h))
+						self.setMinimumSize(QtCore.QSize(w,h))
+						p=QtGui.QPainter(image)
+						p.drawImage(0,0,self.image)
+						#image=newImage(event.x(),event.y())
+						self.loadImage(image)
+					else:
+						self.loadImage(self.image.copy(0,0,event.x(),event.y()))
+				else:
+					if self.tool=="pen":
+						p=QtGui.QPainter(self.image)
+						self.setupPainter(p)
+						p.drawLine(self.mouseActual[0],self.mouseActual[1],event.x(),event.y())
+						self.update(QtCore.QRect(QtCore.QPoint(self.mouseActual[0],self.mouseActual[1]),QtCore.QPoint(event.x(),event.y())).normalized().adjusted(-self.penSize,-self.penSize,self.penSize,self.penSize))
+					elif self.tool=="line":
+						self.update(QtCore.QRect(QtCore.QPoint(self.mousePress[0],self.mousePress[1]),QtCore.QPoint(event.x(),event.y())).normalized().adjusted(-self.penSize,-self.penSize,self.penSize,self.penSize).united(QtCore.QRect(QtCore.QPoint(self.mousePress[0],self.mousePress[1]),QtCore.QPoint(self.mouseActual[0],self.mouseActual[1])).normalized().adjusted(-self.penSize,-self.penSize,self.penSize,self.penSize)))
+					elif self.tool=="square":
+						self.update(QtCore.QRect(QtCore.QPoint(self.mousePress[0],self.mousePress[1]),QtCore.QPoint(event.x(),event.y())).normalized().adjusted(-self.penSize,-self.penSize,self.penSize,self.penSize).united(QtCore.QRect(QtCore.QPoint(self.mousePress[0],self.mousePress[1]),QtCore.QPoint(self.mouseActual[0],self.mouseActual[1])).normalized().adjusted(-self.penSize,-self.penSize,self.penSize,self.penSize)))
+			if self.keepAspectRatio:
+	##			if event.x()>self.mousePress[0]:
+				left=self.mousePress[0]
+	##			right=event.x()
+	##			else:
+	##				left=event.x()
+	##				right=self.mousePress[0]
+	##			if event.y()>self.mousePress[1]:
+				top=self.mousePress[1]
+	##				bottom=event.y()
+	##			else:
+	##				top=event.y()
+	##				bottom=self.mousePress[1]
+				
+				if abs(event.x()-self.mousePress[0])<abs(event.y()-self.mousePress[1]):
+					self.mouseActual=[int(event.x()),top+int(float((event.x()-self.mousePress[0]))/self.keepAspectRatio)]
+				else:
+					self.mouseActual=[left+int(float((event.y()-self.mousePress[1]))*self.keepAspectRatio),int(event.y())]
 			else:
-				self.mouseActual=[left+int(float((event.y()-self.mousePress[1]))*self.keepAspectRatio),int(event.y())]
+				self.mouseActual=[int(event.x()),int(event.y())]
 		else:
-			self.mouseActual=[int(event.x()),int(event.y())]
+			# bottom right corner
+			if event.x()>self.width()-10 and event.y()>self.height()-10:
+				self.changeSize=True
+				self.setCursor(QtCore.Qt.SizeFDiagCursor)
+			else:
+				self.changeSize=False
+				if self.tool=='pen':
+					self.setCursor(QtCore.Qt.BlankCursor)
+					self.update(QtCore.QRect(QtCore.QPoint(self.lastPoint[0],self.lastPoint[1]),QtCore.QPoint(event.x(),event.y())).normalized().adjusted(-self.penSize,-self.penSize,self.penSize,self.penSize))
+					self.lastPoint=[event.x(),event.y()]
+				else:
+					self.setCursor(QtCore.Qt.ArrowCursor)
+		
 
 	def setupPainter(self,p):
 		p.setRenderHint(QtGui.QPainter.Antialiasing, True)
@@ -180,6 +232,7 @@ class paintWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.penSize,QtCore.SIGNAL("valueChanged ( int  )"),self.penSizeChanged)
 		QtCore.QObject.connect(self.ui.pen,QtCore.SIGNAL("clicked()"),self.pen)
 		QtCore.QObject.connect(self.ui.square,QtCore.SIGNAL("clicked()"),self.square)
+		QtCore.QObject.connect(self.ui.line,QtCore.SIGNAL("clicked()"),self.line)
 		QtCore.QObject.connect(self.ui.sendButton,QtCore.SIGNAL("clicked()"),self.send)
 		QtCore.QObject.connect(self.ui.clearButton,QtCore.SIGNAL("clicked()"),self.clear)
 		QtCore.QObject.connect(self.ui.insertImage,QtCore.SIGNAL("clicked()"),self.insertImage)
@@ -245,7 +298,11 @@ class paintWindow(QtGui.QMainWindow):
 	def square(self):
 		self.paintArea.toolChanged("square")
 		self.updatePreview()
-	
+		
+	def line(self):
+		self.paintArea.toolChanged("line")
+		self.updatePreview()	
+		
 	def send(self):
 		self.chat.sendPaint(self.paintArea.image)
 	

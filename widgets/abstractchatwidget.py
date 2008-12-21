@@ -827,7 +827,10 @@ class abstractChatWidget(QtGui.QWidget):
 		bytes=QtCore.QByteArray()
 		buf=QtCore.QBuffer(bytes)
 		buf.open(QtCore.QIODevice.WriteOnly)
-		image.save(buf,  'JPG')
+		if image.width()>200 or image.height()>200:
+			image.save(buf,  'JPG')
+		else:
+			image.save(buf,  'PNG')
 		hash = 'sha1+'+sha1(str(bytes)).hexdigest()
 		print 'IMAGE', len(str(bytes))
 		path = self.main().client.bobCacheDir+'/'+hash
