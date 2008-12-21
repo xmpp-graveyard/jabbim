@@ -187,7 +187,7 @@ class Client(derived):
 		self.socks5IP = [] #
 		self.pep = False
 		self.IBBonly = False #use only IBB in SI transfers if this is True [we are in restricted enviroment]
-		#self.reactor.callFromThread(self.on_init)
+		self.on_init()
 
 		self.rpc = rpc.rpc(self)
 		self.presence = presence.PresenceInit(self)
@@ -459,7 +459,7 @@ class Client(derived):
 
 		#self.connection = reactor.connectTCP(host,port, self.factory)
 
-		if self.proxy != None and self.IBBonly:
+		if self.proxy != None and self.IBBonly and boshURL != '':
 			self.connection = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory)
 
 		else:
