@@ -423,7 +423,8 @@ class clientClass(pyxl.client.Client):
 	
 	def on_receipt(self, frm, id):
 		if self.main.config['showReceipts'] == 'True':
-		   self.main.refreshImage(os.getcwd()+'/images/16x16/actions/ok.png',id,frm)
+			cwd = unicode(os.getcwd(), sys.getfilesystemencoding())
+			self.main.refreshImage(cwd + '/images/16x16/actions/ok.png', id, frm)
 		
 
 	def on_ftTransfered(self, sid, bytes,end=False):

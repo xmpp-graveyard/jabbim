@@ -563,6 +563,7 @@ class chatWidget(abstractChatWidget):
 			if self.xhtml:
 				xhtml=self.ui.line.toHtml()
 				xhtml,same=self.qtHtmlToXhtml(xhtml,text)
+			cwd = unicode(os.getcwd(), sys.getfilesystemencoding())
 			if self.xhtml and not same:
 				# get message in Qt html format
 				#xhtml=self.ui.line.toHtml()
@@ -584,7 +585,7 @@ class chatWidget(abstractChatWidget):
 				# prepare message for showing in GUI
 				message=xhtml.replace("&quot;",'"')
 				if m.receiptId != None and self.main().config['showReceipts']=='True':
-				   message = '<img id="'+m.receiptId+'" src="%s/images/16x16/actions/message.png?receipt%s" />'%(os.getcwd(), m.receiptId)   + message
+					message = '<img id="' + m.receiptId + '" src="%s/images/16x16/actions/message.png?receipt%s" />' % (cwd, m.receiptId) + message
 				#file=self.main().homeDir+'/avatars/'+unicode(self.main().client.jid.userhost())
 				#if not os.path.isfile(file):
 					#file="images/32x32/apps/jabbim.png"
@@ -616,7 +617,7 @@ class chatWidget(abstractChatWidget):
 				text=utils.replace_url(text,self.main(),self)
 				text=text.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 				if m.receiptId != None and self.main().config['showReceipts']=='True':
-				   text = '<img id="'+m.receiptId+'" src="%s/images/16x16/actions/message.png?receipt%s" />'%(os.getcwd(), m.receiptId)+ text
+					text = '<img id="' + m.receiptId + '" src="%s/images/16x16/actions/message.png?receipt%s" />' % (cwd, m.receiptId) + text
 
 				#file=self.main().homeDir+'/avatars/'+unicode(self.main().client.jid.userhost())
 				#if not os.path.isfile(file):
