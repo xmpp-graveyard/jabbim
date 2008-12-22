@@ -160,24 +160,6 @@ class osd(QtGui.QWidget):
 		self.setGeometry(self.osdX,self.osdY,width+20,height+height2+10)
 		self.show()
 
-	def test(self,text="Notification test"):
-		self.text=text
-		metrics=QtGui.QFontMetrics(self.f)
-		height=int(metrics.height())
-		width=int(metrics.width(text))
-		self.smallTextHeight=int(self.main.config['osd_smallfont'])
-		if self.main.config['osd_transparent']=="True":
-			self.desktop=QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId())
-		else:
-			self.desktop=QtGui.QPixmap()
-		self.leftPixmap=None
-		self.smallText=""
-		if height<54:
-			height=54
-		self.setGeometry(int(self.main.config['osd_x']),int(self.main.config['osd_y']),width+20,height+10)
-		self.show()
-		self.timer.start(int(self.main.config['osd_time'])*1000)
-
 	def view(self,leftPixmap,headline,text,event,neco=None):
 		if not self.isHidden():
 			return
@@ -372,21 +354,6 @@ class Plugin(plugins.PluginBase):
 				self.osd.hide()
 				self.osd.setFontSize()
 
-	def buildMainWindowMenu(self):
-		menu=self.mainWindowMenu()
-		menu.addAction(self.tr("Notification test"),self.testSlot)
-
-	def testSlot(self):
-		self.main.tray.showMessage(self.tr("Notification "),self.tr("Notification plugin test :)"), QtGui.QSystemTrayIcon.Information, 2000)
-		self.main.playsound('new_message')
-		if self.snarl:
-			file=self.main.getAvatarSrc("jabbimicon")
-			s = self.snarl.SnarlMessage(unicode(self.tr("Notification test")),unicode(self.tr("Notification test")))
-			s.timeout=int(self.config['osd_time'])
-			s.show(icon=file,replyWindow=int(self.main.winId()),replyMsg=1025)
-		else:
-			self.osd.test(self.tr("Notification test"))
-	
 	def on_evil(self, frm, typ):
 		jid = jidT.JID(frm)
 		user=self.main.ui.roster.getUserItems(unicode(jid.userhost()))
