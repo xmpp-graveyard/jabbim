@@ -25,6 +25,8 @@ class paintArea(QtGui.QWidget):
 		self.lastPoint=[0,0]
 		self.setMouseTracking(True)
 		self.cursor=None
+		self.history=[]
+		self.historyIndex=0
 
 	def insertImage(self,image):
 		self.insert=image
@@ -94,8 +96,10 @@ class paintArea(QtGui.QWidget):
 					w -= 1
 				while e+1 < img_width and get_pixel(e+1, y) == target_color:
 					e += 1
-				painter.drawLine(w, y, e, y)
-
+				if e != w:
+					painter.drawLine(w, y, e, y)
+				else:
+					painter.drawPoint(w, y)
 				# complete floodfill can take a while, so repaint once in a while
 				# to have visible progress
 				lines_drawn += 1
@@ -121,12 +125,14 @@ class paintArea(QtGui.QWidget):
 		self.repaint()
 
 	def newImage(self,w,h):
+		self.history=[]
 		self.image=QtGui.QImage(w,h,QtGui.QImage.Format_RGB32)
 		self.image.fill(QtGui.QColor(255,255,255).rgb())
 		self.setMaximumSize(QtCore.QSize(w,h))
 		self.setMinimumSize(QtCore.QSize(w,h))
 
 	def loadImage(self,image):
+		#self.history=[None,None,None,None,None]
 		self.image=image
 		self.setMaximumSize(QtCore.QSize(image.width(),image.height()))
 		self.setMinimumSize(QtCore.QSize(image.width(),image.height()))
@@ -150,8 +156,9 @@ class paintArea(QtGui.QWidget):
 			else:
 				p.drawRect(self.mousePress[0],self.mousePress[1],int(self.mouseActual[0]-self.mousePress[0]),int(self.mouseActual[1]-self.mousePress[1]))
 		else:
-			self.setupPainter(p)
-			p.drawPoint(x,y)
+			if self.tool=="pen":
+				self.setupPainter(p)
+				p.drawPoint(x,y)
 
 	def mousePressEvent(self,event):
 		if self.tool == 'fill':
@@ -188,9 +195,21 @@ class paintArea(QtGui.QWidget):
 			else:
 				top=self.mouseActual[1]
 			p.drawImage(left,top,img)
+		if len(self.history)-1!=self.historyIndex:
+			del self.history[:self.historyIndex]
+		self.history.append(QtGui.QImage(self.image))
+		if len(self.history)>5:
+			del self.history[0]
+		self.historyIndex=len(self.history)-1
 		self.mousePress=[-1,-1]
 		self.mouseActual=[-1,-1]
 		self.repaint()
+
+	def back(self):
+		self.loadImage(self.history[self.historyIndex])
+		self.repaint()
+		if self.historyIndex-1>=0:
+			self.historyIndex-=1
 
 	def mouseMoveEvent(self,event):
 		if event.buttons()|QtCore.Qt.NoButton:
@@ -284,6 +303,7 @@ class paintWindow(QtGui.QMainWindow):
 		self.updatePreview()
 		QtCore.QObject.connect(self.ui.penSize,QtCore.SIGNAL("valueChanged ( int  )"),self.penSizeChanged)
 		QtCore.QObject.connect(self.ui.pen,QtCore.SIGNAL("clicked()"),self.pen)
+		QtCore.QObject.connect(self.ui.back,QtCore.SIGNAL("clicked()"),self.back)
 		QtCore.QObject.connect(self.ui.square,QtCore.SIGNAL("clicked()"),self.square)
 		QtCore.QObject.connect(self.ui.line,QtCore.SIGNAL("clicked()"),self.line)
 		QtCore.QObject.connect(self.ui.fill,QtCore.SIGNAL("clicked()"),self.floodFill)
@@ -291,6 +311,9 @@ class paintWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.clearButton,QtCore.SIGNAL("clicked()"),self.clear)
 		QtCore.QObject.connect(self.ui.insertImage,QtCore.SIGNAL("clicked()"),self.insertImage)
 		QtCore.QObject.connect(self.ui.openImage,QtCore.SIGNAL("clicked()"),self.openImage)
+
+	def back(self):
+		self.paintArea.back()
 
 	def openImage(self):
 		file=QtGui.QFileDialog.getOpenFileName(self,"Choose image") # get filenames

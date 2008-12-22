@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'paint.ui'
 #
-# Created: Sun Dec 21 17:53:42 2008
+# Created: Sun Dec 21 19:51:57 2008
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -44,13 +44,13 @@ class Ui_MainWindow(object):
         self.square.setObjectName("square")
         self.gridLayout.addWidget(self.square, 2, 0, 1, 1)
         spacerItem = QtGui.QSpacerItem(20, 431, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.gridLayout.addItem(spacerItem, 8, 0, 1, 1)
+        self.gridLayout.addItem(spacerItem, 9, 0, 1, 1)
         self.sendButton = QtGui.QPushButton(self.widget)
         self.sendButton.setObjectName("sendButton")
-        self.gridLayout.addWidget(self.sendButton, 7, 0, 1, 1)
+        self.gridLayout.addWidget(self.sendButton, 8, 0, 1, 1)
         self.clearButton = QtGui.QPushButton(self.widget)
         self.clearButton.setObjectName("clearButton")
-        self.gridLayout.addWidget(self.clearButton, 6, 0, 1, 1)
+        self.gridLayout.addWidget(self.clearButton, 7, 0, 1, 1)
         self.insertImage = QtGui.QPushButton(self.widget)
         self.insertImage.setCheckable(True)
         self.insertImage.setAutoExclusive(True)
@@ -69,6 +69,9 @@ class Ui_MainWindow(object):
         self.fill.setAutoExclusive(True)
         self.fill.setObjectName("fill")
         self.gridLayout.addWidget(self.fill, 3, 0, 1, 1)
+        self.back = QtGui.QPushButton(self.widget)
+        self.back.setObjectName("back")
+        self.gridLayout.addWidget(self.back, 6, 0, 1, 1)
         self.gridLayout_4.addWidget(self.widget, 0, 0, 2, 1)
         self.gridLayout_3 = QtGui.QGridLayout()
         self.gridLayout_3.setObjectName("gridLayout_3")
@@ -556,6 +559,7 @@ class Ui_MainWindow(object):
         self.openImage.setText(QtGui.QApplication.translate("MainWindow", "Open image", None, QtGui.QApplication.UnicodeUTF8))
         self.line.setText(QtGui.QApplication.translate("MainWindow", "Line", None, QtGui.QApplication.UnicodeUTF8))
         self.fill.setText(QtGui.QApplication.translate("MainWindow", "Fill", None, QtGui.QApplication.UnicodeUTF8))
+        self.back.setText(QtGui.QApplication.translate("MainWindow", "Back", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("MainWindow", "Pen Size", None, QtGui.QApplication.UnicodeUTF8))
         self.preview.setText(QtGui.QApplication.translate("MainWindow", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
 
