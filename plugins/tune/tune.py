@@ -294,8 +294,17 @@ class Audacious(Player):
 		except:
 			self.clear_PEP()
 	def on_track_changed(self, info):
-		self.song_info['title'] = unicode(info['title'])
-		self.song_info['artist'] = unicode(info['artist'])
+		# Audacious sends author/title only if it knows them from
+		# the music file metadata
+		title  = unicode(info.get('title',  ""))
+		artist = unicode(info.get('artist', ""))
+		if title == u"" and artist == u"":
+			# non-tagged music file, fallback to base filename
+			title = info.get('URI', "")
+			last_slash_pos = title.rfind('/')
+			title = title[last_slash_pos + 1 : ]
+		self.song_info['title'] = title
+		self.song_info['artist'] = artist
 		self.send()
 	def on_status_changed(self, status):
 		# Audacious's GetStatus() does not comply exactly with
