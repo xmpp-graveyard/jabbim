@@ -22,6 +22,7 @@ try: from PyQt4 import QtCore, QtGui
 except: print "PyQt4 is not installed."
 from os.path import basename
 from twisted.python import log
+import dataforms,legacyforms
 from pyxl import jid as jidT
 import time
 import filetransfer
@@ -96,15 +97,36 @@ class emptyRosterWidget(QtGui.QWidget):
 		layout=QtGui.QVBoxLayout(self)
 		self.label=QtGui.QLabel(self)
 		self.label.setWordWrap(True)
+		self.main=weakref.ref(main)
 		#self.label.setMinimumHeight(200)
 		layout.addWidget(self.label)
 
 		self.add=QtGui.QPushButton(self.tr("Add contact"),self)
 		layout.addWidget(self.add)
 
+		if unicode(QtCore.QLocale.system().name())[:2] in ['cs','sk']:
+			self.icq=QtGui.QPushButton(self.tr("Show all my ICQ friends"),self)
+			layout.addWidget(self.icq)
+			QtCore.QObject.connect(self.icq,QtCore.SIGNAL("clicked()"),self.registerICQ)
+
 		#layout.addStretch()
 
 		QtCore.QObject.connect(self.add,QtCore.SIGNAL("clicked()"),main.addContactMainWindow)
+
+	def registerICQ(self):
+		d=self.main().client.getRegisterForm("icq.jabber.cz")
+		d.addCallback(self._onRegister)
+
+	def _onRegister(self,data):
+		if not data:
+			return
+		jid,legacy,form=data
+		if form!=None:
+			self.dialog=dataforms.dataFormsDialog(self.main(),form,jid,"register",self)
+			self.dialog.show()
+		else:
+			self.dialog=legacyforms.legacyFormsDialog(self.main(),legacy,jid,"disco",self)
+			self.dialog.show()
 
 	def emptyRoster(self):
 		print "empty roster..."
