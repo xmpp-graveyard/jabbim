@@ -275,11 +275,11 @@ class clientClass(pyxl.client.Client):
 		mainWindow=self.main
 		self.main.tray.showMessage(MainWindow.tr("Error"),mainWindow.tr("Your server doesn't support Private XML Storage. Some functions will be disabled."))
 
-	def on_privacyFail(self):
-		"""
-		Called if privacy lists are not supported by server.
-		"""
-		self.main.ui.actionPrivacy_list_editor.setEnabled(False)
+#	def on_privacyFail(self):
+#		"""
+#		Called if privacy lists are not supported by server.
+#		"""
+#		self.main.ui.actionPrivacy_list_editor.setEnabled(False)
 
 	def on_GCpresenceError(self, fromjid, code, typ, name, text, resource = ""):
 		"""
@@ -2193,7 +2193,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.actionJoin_groupchat.setEnabled(False)
 		self.ui.actionService_Discovery.setEnabled(False)
 		self.ui.actionStart_Chat.setEnabled(False)
-		self.ui.actionPrivacy_list_editor.setEnabled(False)
+#		self.ui.actionPrivacy_list_editor.setEnabled(False)
+		self.ui.actionPrivacy_list_editor.setVisible(False)
 		self.ui.actionIdentity.setEnabled(False)
 		self.ui.registerButton.hide()
 		self.ui.groupStyleWidget.hide()
@@ -2460,7 +2461,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.actionAbout, QtCore.SIGNAL("triggered ( bool )"),self.about)
 		QtCore.QObject.connect(self.ui.actionSupport, QtCore.SIGNAL("triggered ( bool )"),self.support)
 		QtCore.QObject.connect(self.ui.actionSendJabbimLog, QtCore.SIGNAL("triggered ( bool )"),self.sendLog)
-		QtCore.QObject.connect(self.ui.actionPrivacy_list_editor, QtCore.SIGNAL("triggered ( bool )"),self.privacyListEditor)
+#		QtCore.QObject.connect(self.ui.actionPrivacy_list_editor, QtCore.SIGNAL("triggered ( bool )"),self.privacyListEditor)
 		QtCore.QObject.connect(self.ui.actionAdd_Contact, QtCore.SIGNAL("triggered ( bool )"),self.addContactMainWindow)
 		QtCore.QObject.connect(self.ui.actionPreferences, QtCore.SIGNAL("triggered ( bool )"),self.preferencesClicked)
 		QtCore.QObject.connect(self.ui.actionProfiles, QtCore.SIGNAL("triggered ( bool )"),self.profilesClicked)
@@ -4150,12 +4151,12 @@ class mainWindow(QtGui.QMainWindow):
 				self.chat.timer.start(30000)
 		return QtGui.QMainWindow.event(self,ev)
 
-	def privacyListEditor(self,bool=False):
-		"""
-		Shows Privacy List Editor. Called by QAction from main menu.
-		"""
-		self.ple=widgets.privacy.PrivacyListEditorDialog(self,self)
-		self.ple.show()
+#	def privacyListEditor(self,bool=False):
+#		"""
+#		Shows Privacy List Editor. Called by QAction from main menu.
+#		"""
+#		self.ple=widgets.privacy.PrivacyListEditorDialog(self,self)
+#		self.ple.show()
 
 	def startChatDialog(self, b=False):
 		message=jid=""
@@ -4842,7 +4843,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.actionJoin_groupchat.setEnabled(True)
 		self.ui.actionService_Discovery.setEnabled(True)
 		self.ui.actionStart_Chat.setEnabled(True)
-		self.ui.actionPrivacy_list_editor.setEnabled(True)
+#		self.ui.actionPrivacy_list_editor.setEnabled(True)
 		self.ui.actionIdentity.setEnabled(True)
 		self.buildStatusWidgetMenu()
 		try:
@@ -5261,7 +5262,7 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.actionJoin_groupchat.setEnabled(False)
 		MainWindow.ui.actionService_Discovery.setEnabled(False)
 		MainWindow.ui.actionStart_Chat.setEnabled(False)
-		MainWindow.ui.actionPrivacy_list_editor.setEnabled(False)
+#		MainWindow.ui.actionPrivacy_list_editor.setEnabled(False)
 		MainWindow.ui.actionIdentity.setEnabled(False)
 #		self.client=None
 		self.selfResources=[]
