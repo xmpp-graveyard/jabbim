@@ -4239,10 +4239,8 @@ class mainWindow(QtGui.QMainWindow):
 		about.exec_()
 
 	def support(self, bool):
-		
 		if self.client:
-			if self.chat.addGroupChatTab("jabbim@conf.netlab.cz",self.client.jid.user):
-				self.client.joinGC("jabbim@conf.netlab.cz",self.client.jid.user,self.config['sendRooms']=="True")
+			self.joinGC("jabbim@conf.netlab.cz", self.client.jid.user)
 		else:
 			anchor="http://live.jabbim.cz/muckl/muckl.html?conf_room=jabbim&nick="
 			QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
