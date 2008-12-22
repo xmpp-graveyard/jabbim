@@ -275,30 +275,25 @@ class Rhythmbox(Player):
 
 class Audacious(Player):
 	def __init__(self, plugin):
-		print "MMM: audacious __init__"
 		Player.__init__(self, plugin)
 		self.sig_receivers = []
 		self.song_info = {}
 		self.status = 2
 	def send(self):
-		print "MMM: audacious send(). song_info=", self.song_info
 		if self.status == 0:
 			out = self.song_info.copy()
 		else:
 			out = {}
 		self.plugin.sendPEP(out)
 	def check(self):
-		print "MMM: audacious check()"
 		try:
 			bus = self.main.session_dbus
 			audacious_player = bus.get_object("org.mpris.audacious", "/Player")
 			audacious_player.GetStatus(reply_handler=self.on_status_changed, error_handler=self.clear_PEP)
 			audacious_player.GetMetadata(reply_handler=self.on_track_changed, error_handler=self.clear_PEP)
 		except:
-			print "MMM: check() got exception"
 			self.clear_PEP()
 	def on_track_changed(self, info):
-		print "MMM: on_track_changed: ", info
 		# Audacious sends author/title only if it knows them from
 		# the music file metadata
 		title  = unicode(info.get('title',  ""))
@@ -312,21 +307,17 @@ class Audacious(Player):
 		self.song_info['artist'] = artist
 		self.send()
 	def on_status_changed(self, status):
-		print "MMM: on_status_changed: ", status
 		# Audacious's GetStatus() does not comply exactly with
 		# MPRIS spec, it returns a single Int32
 		self.status = int(status)
 		self.send()
 	def start_listening(self):
-		print "MMM: start_listening()"
 		bus = self.main.session_dbus
 		self.sig_receivers.append(bus.add_signal_receiver(self.on_track_changed,
 			'TrackChange',  "org.freedesktop.MediaPlayer", "org.mpris.audacious", "/Player"))
 		self.sig_receivers.append(bus.add_signal_receiver(self.on_status_changed,
 			'StatusChange', "org.freedesktop.MediaPlayer", "org.mpris.audacious", "/Player"))
-		print "MMM: listening started"
 	def stop_listening(self):
-		print "MMM: stop_listening()"
 		for receiver in self.sig_receivers:
 			receiver.remove()
 		self.sig_receivers = []
