@@ -22,7 +22,6 @@ class tabWidget(QtGui.QTabBar):
 				self.main.ui.roster.favouriteMode=False
 				self.main.ui.roster.setSize()
 				self.main.ui.roster.repaint()
-				self.main.showFavouriteAction.setChecked(self.main.ui.roster.favouriteMode)
 				return QtGui.QTabBar.mousePressEvent(self,event)
 			elif i==1:
 				self.setCurrentIndex(0)
@@ -32,7 +31,6 @@ class tabWidget(QtGui.QTabBar):
 				self.main.ui.roster.favouriteMode=True
 				self.main.ui.roster.setSize()
 				self.main.ui.roster.repaint()
-				self.main.showFavouriteAction.setChecked(self.main.ui.roster.favouriteMode)
 				return r
 			else:
 				return QtGui.QTabBar.mousePressEvent(self,event)

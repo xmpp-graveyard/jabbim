@@ -2225,15 +2225,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.showOfflineAction.setObjectName('show_offline')
 		self.showOfflineAction.setChecked(False)
 		QtCore.QObject.connect(self.showOfflineAction,QtCore.SIGNAL("toggled ( bool )"),self.hideOffline)
-		self.showFavouriteAction=self.ui.menuView.addAction(self.tr("Show Favourite"))
-		self.showFavouriteAction.setCheckable(True)
-		self.showFavouriteAction.setObjectName('show_favourite')
-		self.showFavouriteAction.setChecked(False)
-		QtCore.QObject.connect(self.showFavouriteAction,QtCore.SIGNAL("triggered ( bool )"),self.showFavourite)
-
-		#self.ui.mainTabWidget.tabBar().mousePressEvent=self.tabMousePressEvent
-		#print "TABBAR:",self.ui.mainTabWidget.tabBar().mousePressEvent
-		#self.ui.mainTabWidget.setTabBar(self.ui.tBar)
 
 		#self.ui.bookmarks.setIndentation(0)
 
@@ -2606,24 +2597,6 @@ class mainWindow(QtGui.QMainWindow):
 			p.drawText(textRect, QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter, self.ui.statusLine.defaultText+" ");
 		else:
 			QtGui.QLineEdit.paintEvent(self.ui.statusLine,event)
-
-	def showFavourite(self,b=None):
-		self.ui.roster.favouriteMode=not self.ui.roster.favouriteMode
-		if not self.ui.roster.favouriteMode:
-			self.ui.mainTabWidget.setTabIcon(0,QtGui.QIcon("images/16x16/categories/system-users.png"))
-		else:
-			self.ui.mainTabWidget.setTabIcon(0,QtGui.QIcon("images/16x16/categories/srdce-cele.png"))
-		self.ui.roster.setSize()
-		self.ui.roster.repaint()
-		self.showFavouriteAction.setChecked(self.ui.roster.favouriteMode)
-
-	def tabMousePressEvent(self,event):
-		#i=self.ui.mainTabWidget.tabBar().tabAt(self.ui.mainTabWidget.tabBar().mapFromGlobal(self.ui.mainTabWidget.mapToGlobal(event.pos())))
-		i=self.ui.mainTabWidget.tabBar().tabAt(event.pos())
-		#print "tabMousePressEnvent",i,self.ui.mainTabWidget.tabBar().currentIndex()
-		if i==0 and self.ui.mainTabWidget.tabBar().currentIndex()==0:
-			self.showFavourite()
-		return QtGui.QTabBar.mousePressEvent(self.ui.mainTabWidget.tabBar(),event)
 
 	def showTransports(self,bool):
 		if bool:
