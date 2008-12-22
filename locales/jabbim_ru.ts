@@ -496,7 +496,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/mainWindow.py" line="539"/>
         <source>Authorizations</source>
-        <translation>Авторизации</translation>
+        <translation>Запрос авторизации</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="540"/>
@@ -1596,7 +1596,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="wizards/firststart.py" line="188"/>
         <source>Create</source>
-        <translation>Создать</translation>
+        <translation>Создать профиль</translation>
     </message>
     <message>
         <location filename="wizards/firststart.py" line="192"/>
@@ -2171,17 +2171,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="wizards/jabbimservicemanager_ui.py" line="203"/>
         <source>Register service</source>
-        <translation>Зарегистрировать сервис</translation>
+        <translation>Зарегистрироваться в службе</translation>
     </message>
     <message>
         <location filename="wizards/jabbimservicemanager_ui.py" line="204"/>
         <source>Registered services</source>
-        <translation>Зарегистрированные сервисы</translation>
+        <translation>Службы, в которых вы зарегистрированы</translation>
     </message>
     <message>
         <location filename="wizards/jabbimservicemanager_ui.py" line="205"/>
         <source>Register Jabber Disk</source>
-        <translation>Зарегистрировать жаббер диск</translation>
+        <translation>Зарегистрироваться в жаббер диске</translation>
     </message>
     <message>
         <location filename="wizards/jabbimservicemanager_ui.py" line="206"/>
@@ -2191,12 +2191,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="wizards/jabbimservicemanager_ui.py" line="207"/>
         <source>Register Jabber Disk now</source>
-        <translation>Зарегистрировать жаббер диск</translation>
+        <translation>Зарегистрироваться в жаббер диске</translation>
     </message>
     <message>
         <location filename="wizards/jabbimservicemanager_ui.py" line="208"/>
         <source>Register ICQ Transport</source>
-        <translation>Зарегистрировать ICQ транспорт</translation>
+        <translation>Зарегистрироваться в ICQ транспорте</translation>
     </message>
     <message>
         <location filename="wizards/jabbimservicemanager_ui.py" line="209"/>
@@ -2216,12 +2216,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="wizards/jabbimservicemanager_ui.py" line="212"/>
         <source>Register ICQ Transport now</source>
-        <translation>Зарегистрировать транспорт ICQ</translation>
+        <translation>Зарегистрироваться в транспорте ICQ</translation>
     </message>
     <message>
         <location filename="wizards/jabbimservicemanager_ui.py" line="213"/>
         <source>Dictionaries registration</source>
-        <translation>Регистрация словарей</translation>
+        <translation>Регистрация в службе словарей</translation>
     </message>
     <message>
         <location filename="wizards/jabbimservicemanager_ui.py" line="214"/>
@@ -2231,7 +2231,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="wizards/jabbimservicemanager_ui.py" line="216"/>
         <source>Register these dictionaries</source>
-        <translation>Зарегистрировать данные словари</translation>
+        <translation>Зарегистрировать доступ к этим словарям</translation>
     </message>
     <message>
         <location filename="wizards/jabbimservicemanager_ui.py" line="217"/>
@@ -2408,7 +2408,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/chatwindow.py" line="41"/>
         <source>You are trying to leave room </source>
-        <translation>Вы покидаете конференцию</translation>
+        <translation>Вы покидаете конференцию </translation>
     </message>
     <message>
         <location filename="widgets/chatwindow.py" line="41"/>
@@ -2456,7 +2456,7 @@ Do you realy want to leave this room?</source>
     <message>
         <location filename="widgets/legacyforms.py" line="78"/>
         <source>Service has been already registered.</source>
-        <translation>Сервис уже был зарегестрирован.</translation>
+        <translation>Вы уже зарегистрированы в службе.</translation>
     </message>
     <message>
         <location filename="widgets/legacyforms.py" line="82"/>
@@ -2727,17 +2727,17 @@ Do you realy want to leave this room?</source>
     <message>
         <location filename="jabbim.py" line="1385"/>
         <source> removed your authorization. You won&apos;t see his status. Do you want to remove him/her from your contact list?</source>
-        <translation>удалил вас из своего ростера (или просто снял авторизацию). Вы не сможете видеть его статус. Удалить контакт из вашего ростера?</translation>
+        <translation> удалил вас из своего ростера (или просто снял авторизацию). Вы не сможете видеть его статус. Удалить контакт из вашего ростера?</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1431"/>
         <source>Users </source>
-        <translation>Пользователи</translation>
+        <translation>Пользователь </translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1431"/>
         <source>want to see your status. Do you want to authorize these users?</source>
-        <translation>желают видеть ваш статус. Вы желаете авторизовать этих пользователей?</translation>
+        <translation> хочет видеть ваш статус. Авторизовать его?</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="1595"/>
@@ -3542,7 +3542,7 @@ Do you realy want to leave this room?</source>
     <message>
         <location filename="jabbim.py" line="2440"/>
         <source>doing_chores</source>
-        <translation>рутина</translation>
+        <translation type="unfinished">Рутина</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2441"/>
@@ -4200,7 +4200,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="wizards/newprofile_ui.py" line="276"/>
         <source>Register new Jabber Account</source>
-        <translation>Зарегестрировать новый Jabber аккаунт</translation>
+        <translation>Зарегистрировать новый Jabber аккаунт</translation>
     </message>
     <message>
         <location filename="wizards/newprofile_ui.py" line="277"/>
@@ -4731,7 +4731,7 @@ Version: %3</source>
     <message>
         <location filename="pref/connection.py" line="11"/>
         <source>Specify host for connection</source>
-        <translation>Указать хост для соединения</translation>
+        <translation>Указать сервер для соединения вручную</translation>
     </message>
     <message>
         <location filename="pref/connection.py" line="11"/>
@@ -4741,7 +4741,7 @@ Version: %3</source>
     <message>
         <location filename="pref/connection.py" line="14"/>
         <source>Host:</source>
-        <translation>Хост:</translation>
+        <translation>Сервер:</translation>
     </message>
     <message>
         <location filename="pref/connection.py" line="15"/>
@@ -4796,7 +4796,7 @@ Version: %3</source>
     <message>
         <location filename="pref/chat.py" line="10"/>
         <source>Use names for tabs.</source>
-        <translation>Использовать имена конференций для название закладов (иначе будет использован JID).</translation>
+        <translation>Использовать названия конференций для названий закладок (иначе будет использован JID).</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="14"/>
@@ -5052,7 +5052,7 @@ Version: %3</source>
     <message>
         <location filename="wizards/registration.py" line="85"/>
         <source>Choose server, where you want to register.</source>
-        <translation>Выберите сервер, на котором вы желаете зарегестрироваться.</translation>
+        <translation>Выберите сервер, на котором вы хотите зарегистрироваться.</translation>
     </message>
     <message>
         <location filename="wizards/registration.py" line="102"/>
@@ -5463,7 +5463,7 @@ Version: %3</source>
     <message>
         <location filename="widgets/servicediscovery.py" line="376"/>
         <source>Register service</source>
-        <translation>Зарегестрировать службу</translation>
+        <translation>Зарегистрироваться в службе</translation>
     </message>
     <message>
         <location filename="widgets/servicediscovery.py" line="389"/>
