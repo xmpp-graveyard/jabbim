@@ -761,7 +761,7 @@ class clientClass(pyxl.client.Client):
 				tab, index = self.main.chat.findTab(jid)
 				
 				if tab != None:
-					tab.chat.setName(name)
+					tab.chat.setName(newName)
 			elif newName and jid == self.jid.userhost():
 				self.main.ui.selfName.setText('<h3>'+newName+'</h3>') #we need to set name in roster
 				self.main.selfName=newName
@@ -1795,7 +1795,7 @@ class clientClass(pyxl.client.Client):
 			return
 		# Rename contact if he havent got nickname
 		contact=self.roster['users'][jid]
-		if (contact.name=="" or contact.name==contact.jid) or (not contact.name or contact.name==contact.jid.split('@')[0]):
+		if (contact.name=="" or contact.name==contact.jid) or (not contact.name or (contact.name==contact.jid.split('@')[0] and len(contact.jid.split('@')[0])==6 and contact.jid.split('@')[0].isdigit())):
 			log.msg('trying to rename '+jid)
 			self.renameByVcard(card,jid)
 
