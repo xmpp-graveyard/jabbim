@@ -395,7 +395,7 @@ class addContactDialog(QtGui.QDialog):
 	def textChanged(self,text):
 		if self.ui.service.currentIndex()==0:
 			t=unicode(text)
-			if self.main().getJid(t) and t.find("@")!=-1:
+			if self.main().getJid(t) and t.find("@")!=-1 and t[-1]!='@':
 				self.ui.add.show()
 			else:
 				self.ui.add.hide()
