@@ -2790,7 +2790,7 @@ class mainWindow(QtGui.QMainWindow):
 		if tab:
 			tab.chat.reloadImage(name,"file:///"+data)
 	
-	def removeChatElement(name,frm)
+	def removeChatElement(name,frm):
 		if self.client.groupchats.has_key(frm.userhost()):
 			tab,tabIndex=self.chat.findTab(frm.full(),True)
 			if not tab:
