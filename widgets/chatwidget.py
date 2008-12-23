@@ -293,6 +293,9 @@ class chatWidget(abstractChatWidget):
 			if main.client.roster['users'].has_key(jidt.userhost()):
 				self.buildResourceMenu()
 				self.buildMetaMenu()
+			else:
+				self.ui.resourceButton.hide()
+				self.ui.resourceLabel.hide()
 
 		self.ui.pluginWidget.setLayout(self.flowLayout)
 		self.ui.ftwidget.setLayout(QtGui.QVBoxLayout())
