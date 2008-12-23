@@ -235,7 +235,7 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.treeWidget.setDragEnabled(True)
 		self.ui.treeWidget.startDrag=self.startDrag
 		self.ui.empty.hide()
-		self.ui.add.hide()
+		self.ui.add.setEnabled(False)
 		self.gateway=False
 		self.ui.picture.setPixmap(QtGui.QPixmap("images/lupa-smile.png"))
 		self.ui.picture.setAlignment(QtCore.Qt.AlignCenter)
@@ -254,7 +254,7 @@ class addContactDialog(QtGui.QDialog):
 		if index==0:
 			self.gateway=False
 			self.addFunction=None
-			self.ui.add.hide()
+			self.ui.add.setEnabled(True)
 			self.ui.search.show()
 			self.ui.searchLabel.setText(self.tr("User:"))
 			self.ui.description.setText(self.tr("Enter informations about contact or whole Jabber ID."))
@@ -398,9 +398,9 @@ class addContactDialog(QtGui.QDialog):
 		if self.ui.service.currentIndex()==0:
 			t=unicode(text)
 			if self.main().getJid(t) and t.find("@")!=-1 and t[-1]!='@':
-				self.ui.add.show()
+				self.ui.add.setEnabled(True)
 			else:
-				self.ui.add.hide()
+				self.ui.add.setEnabled(False)
 
 	def startDrag(self,actions):
 		# start dragging selected contact
