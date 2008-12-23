@@ -1459,13 +1459,13 @@ class rosterWidget(QtGui.QWidget):
 		x=event.x()
 		y=event.y()
 		item=self.itemAt(x,y)
-		if self.item!=item:
-			if self.main.config['bigOnClick']=="False":
-				if x>0:
-					return self.mouseReleaseEvent(event)
-				return
-			else:
-				item=self.oldItem
+		#if self.item!=item:
+			#if self.main.config['bigOnClick']=="False":
+				#if x>0:
+					#return self.mouseReleaseEvent(event)
+				#return
+			#else:
+				#item=self.oldItem
 
 		if item==None:
 			return QtGui.QWidget.mouseReleaseEvent(self,event)
