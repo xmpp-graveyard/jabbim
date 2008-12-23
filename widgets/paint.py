@@ -83,44 +83,52 @@ class paintArea(QtGui.QWidget):
 		p.setColor(self.pen.color())
 		painter.setPen(p)
 		queue = []
-		queue.append((x, y))
+		# tuples in the queue will describe horizontal lines: (west_x, east_x, y)
+		# we must be careful to only ever enqueue lines that will cover pixels of target_color
+		# the initial line is just 1 pixel wide:
+		queue.append((x, x, y))
 		lines_drawn = 0
 		img_width = self.image.width()
 		img_height = self.image.height()
 		while len(queue) != 0:
-			(x, y) = queue.pop(0)
-			if get_pixel(x, y) == target_color:
-				w = e = x
-				while w > 0 and get_pixel(w-1, y) == target_color:
-					w -= 1
-				while e+1 < img_width and get_pixel(e+1, y) == target_color:
-					e += 1
-				if e != w:
-					painter.drawLine(w, y, e, y)
-				else:
-					painter.drawPoint(w, y)
-				# complete floodfill can take a while, so repaint once in a while
-				# to have visible progress
-				lines_drawn += 1
-				if lines_drawn == 100:
-					self.repaint()
-					lines_drawn = 0
+			(w, e, y) = queue.pop(0)
+			while w > 0 and get_pixel(w-1, y) == target_color:
+				w -= 1
+			while e+1 < img_width and get_pixel(e+1, y) == target_color:
+				e += 1
+			if e != w:
+				painter.drawLine(w, y, e, y)
+			else:
+				painter.drawPoint(w, y)
+			# complete floodfill can take a while, so repaint once in a while
+			# to have visible progress
+			lines_drawn += 1
+			if lines_drawn == 100:
+				self.repaint()
+				lines_drawn = 0
 
-				if y > 0:
-					was_target = False
-					for x in xrange(w, e+1):
-						is_target = (get_pixel(x, y-1) == target_color)
-						if is_target and not was_target:
-							queue.append((x, y-1))
-						was_target = is_target
-
-				if y + 1 < img_height:
-					was_target = False
-					for x in xrange(w, e+1):
-						is_target = (get_pixel(x, y+1) == target_color)
-						if is_target and not was_target:
-							queue.append((x, y+1))
-						was_target = is_target
+			if y > 0:
+				was_target = False
+				for x in xrange(w, e+1):
+					is_target = (get_pixel(x, y-1) == target_color)
+					if is_target and not was_target:
+						line_west = x
+					elif not is_target and was_target:
+						queue.append((line_west, x-1, y-1))
+					was_target = is_target
+				if was_target:
+					queue.append((line_west, e, y-1))
+			if y + 1 < img_height:
+				was_target = False
+				for x in xrange(w, e+1):
+					is_target = (get_pixel(x, y+1) == target_color)
+					if is_target and not was_target:
+						line_west = x
+					elif not is_target and was_target:
+						queue.append((line_west, x-1, y+1))
+					was_target = is_target
+				if was_target:
+					queue.append((line_west, e, y+1))
 		self.repaint()
 
 	def newImage(self,w,h):
