@@ -423,8 +423,9 @@ class clientClass(pyxl.client.Client):
 	
 	def on_receipt(self, frm, id):
 		if self.main.config['showReceipts'] == 'True':
-			cwd = unicode(os.getcwd(), sys.getfilesystemencoding())
-			self.main.refreshImage(cwd + '/images/16x16/actions/ok.png', id, frm)
+			#cwd = unicode(os.getcwd(), sys.getfilesystemencoding())
+			#self.main.refreshImage(cwd + '/images/16x16/actions/ok.png', id, frm)
+			self.main.removeChatElement(id,frm)
 		
 
 	def on_ftTransfered(self, sid, bytes,end=False):
@@ -2788,6 +2789,16 @@ class mainWindow(QtGui.QMainWindow):
 		#print 'frmtab',tab,frm.full(),self.client.groupchats.has_key(frm.userhost())
 		if tab:
 			tab.chat.reloadImage(name,"file:///"+data)
+	
+	def removeChatElement(name,frm)
+		if self.client.groupchats.has_key(frm.userhost()):
+			tab,tabIndex=self.chat.findTab(frm.full(),True)
+			if not tab:
+				tab,tabIndex=self.chat.findTab(frm.full())
+		else:
+			tab,tabIndex=self.chat.findTab(frm.full())
+		if tab:
+			tab.chat.ui.webkit.removeElementById(name)
 
 	def getToolTip(self,jid, name = None):
 		"""
