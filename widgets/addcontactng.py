@@ -192,7 +192,7 @@ class addContactDialog(QtGui.QDialog):
 											#[u'conference', u'service', u'headline', u'component', u'server', u'services', u'proxy', u'directory', u'gateway', u'store', u'pubsub']
 											if values['category'] in ['service','services','store','directory','component','gateway']:
 												if values.has_key("type"):
-													if not key in ["brebex.jabbim.cz","tv.jabbim.cz","smtp.jabbim.cz"]:
+													if not key in ['disk.jabbim.cz',"brebex.jabbim.cz","tv.jabbim.cz","smtp.jabbim.cz"]:
 														typ=values['type']
 														if typ=="pep" or typ=="im":
 															typ="jabber"
