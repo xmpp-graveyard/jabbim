@@ -87,7 +87,7 @@ class paintArea(QtGui.QWidget):
 		# we must be careful to only ever enqueue lines that will cover pixels of target_color
 		# the initial line is just 1 pixel wide:
 		queue.append((x, x, y))
-		lines_drawn = 0
+		pixels_filled = 0
 		img_width = self.image.width()
 		img_height = self.image.height()
 		while len(queue) != 0:
@@ -102,10 +102,10 @@ class paintArea(QtGui.QWidget):
 				painter.drawPoint(w, y)
 			# complete floodfill can take a while, so repaint once in a while
 			# to have visible progress
-			lines_drawn += 1
-			if lines_drawn == 100:
+			pixels_filled += e - w + 1
+			if pixels_filled >= 40000:
 				self.repaint()
-				lines_drawn = 0
+				pixels_filled = 0
 
 			if y > 0:
 				was_target = False
