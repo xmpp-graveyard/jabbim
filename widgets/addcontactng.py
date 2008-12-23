@@ -255,6 +255,7 @@ class addContactDialog(QtGui.QDialog):
 			self.gateway=False
 			self.addFunction=None
 			self.ui.add.show()
+			self.textChanged(self.ui.lineEdit.text())
 			self.ui.addToRoster.hide()
 			self.ui.search.show()
 			self.ui.searchLabel.setText(self.tr("User:"))
@@ -347,6 +348,7 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.searchLabel.setText(unicode(data['prompt']))
 		self.ui.search.hide()
 		self.ui.add.show()
+		self.ui.add.setEnabled(True)
 		self.ui.description.show()
 		self.gateway=True
 	
@@ -420,6 +422,9 @@ class addContactDialog(QtGui.QDialog):
 
 
 	def search(self):
+		if self.gateway:
+			self.add()
+			return
 		self.ui.treeWidget.jidIndex=None
 		print "search"
 		self.ui.picture.setMovie(self.movie)
