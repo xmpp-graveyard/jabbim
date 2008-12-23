@@ -74,17 +74,16 @@ class paintArea(QtGui.QWidget):
 
 
 	def floodFill(self, x, y):
+		get_pixel = self.image.pixel # local variable access is faster in Python
+		target_color = get_pixel(x, y)
+		if QtGui.QColor(target_color)==self.pen.color():
+			return
 		painter = QtGui.QPainter(self.image)
 		p=QtGui.QPen()
 		p.setColor(self.pen.color())
 		painter.setPen(p)
 		queue = []
 		queue.append((x, y))
-		# local variable access is faster in Python
-		get_pixel = self.image.pixel
-		target_color = get_pixel(x, y)
-		if QtGui.QColor(target_color)==self.pen.color():
-			return
 		lines_drawn = 0
 		img_width = self.image.width()
 		img_height = self.image.height()
