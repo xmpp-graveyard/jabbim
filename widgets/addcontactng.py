@@ -254,7 +254,8 @@ class addContactDialog(QtGui.QDialog):
 		if index==0:
 			self.gateway=False
 			self.addFunction=None
-			self.ui.add.setEnabled(True)
+			self.ui.add.show()
+			self.ui.addToRoster.hide()
 			self.ui.search.show()
 			self.ui.searchLabel.setText(self.tr("User:"))
 			self.ui.description.setText(self.tr("Enter informations about contact or whole Jabber ID."))
