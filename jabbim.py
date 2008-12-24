@@ -3363,7 +3363,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		log.msg("statusLineFinished")
 		status=unicode(self.ui.statusLine.text())
-		if oldStatus!=status and calledByTimer and not self.ui.statusLine.isVisible():
+		if (oldStatus!=status and calledByTimer) or not self.ui.statusLine.isVisible():
 			return
 		contact = self.client.roster['users'][self.client.jid.userhost()]
 		#print [status,contact.resources[self.client.jid.resource].status]
