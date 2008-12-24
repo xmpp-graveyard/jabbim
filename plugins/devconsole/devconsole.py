@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import sys,os,time, weakref
 sys.path.append('.')
 from include import plugins
@@ -462,6 +462,7 @@ class Plugin(plugins.PluginBase):
 	
 	def onXml(self,xml):
 		if self.window.ui.xmlEnableBox.isChecked():
+			print 'xml'
 			if self.config['XMLaddTimestamps']=='True':
 				text=time.strftime("[%H:%M:%S]")+' ';
 			else:
