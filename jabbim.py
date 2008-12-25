@@ -5094,9 +5094,12 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			resource='jabbim'
 		if self.client==None:
+			print "creating client class"
 			self.client = clientClass(unicode(jid).lower()+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
+			print self.plugins
 			for plug in self.plugins.itervalues():
 				if plug['module']:
+					print "calling client created"
 					self.runPluginCommand(plug['module'].clientCreated,[])
 
 			
@@ -5295,10 +5298,6 @@ class mainWindow(QtGui.QMainWindow):
 		MainWindow.ui.login_connect.setEnabled(True)
 		#self.ui.eventsListWidget.clear()
 		self.events.removeAll()
-		for i in MainWindow.plugins.keys():
-			MainWindow.unloadPlugin(i)
-		self._reloadPlugins()
-
 		self.ui.transportsToolbar.clear()
 		#for transport in self.transports.keys():
 			#if self.transports[transport]:
@@ -5338,6 +5337,9 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.client=None
 			 #= None
+			for i in MainWindow.plugins.keys():
+				MainWindow.unloadPlugin(i)
+			self._reloadPlugins()
 		self.buildTrayMenu()
 
 class customStatusWindow(QtGui.QDialog):
