@@ -5094,12 +5094,12 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			resource='jabbim'
 		if self.client==None:
-			print "creating client class"
+			#print "creating client class"
 			self.client = clientClass(unicode(jid).lower()+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
 			print self.plugins
 			for plug in self.plugins.itervalues():
 				if plug['module']:
-					print "calling client created"
+					#print "calling client created"
 					self.runPluginCommand(plug['module'].clientCreated,[])
 
 			

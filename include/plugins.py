@@ -439,7 +439,7 @@ class PluginBase(object):
 		@type method: function
 		@param method: function which will be called if the event is generated
 		"""
-		print "registerHandler",self.main.client
+		#print "registerHandler",self.main.client
 		if self.main.client:
 			self.main.client.dispatcher.registerHandler(name, method, self.name, priority = priority)
 			self._handlers.append(name)
