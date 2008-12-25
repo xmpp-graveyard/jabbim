@@ -13,48 +13,41 @@
    <string>News</string>
   </property>
   <widget class="QWidget" name="centralwidget" >
-   <widget class="QWidget" name="" >
-    <property name="geometry" >
-     <rect>
-      <x>9</x>
-      <y>9</y>
-      <width>1008</width>
-      <height>602</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_2" >
-     <item>
-      <widget class="QTreeWidget" name="treeWidget" >
-       <property name="minimumSize" >
-        <size>
-         <width>150</width>
-         <height>0</height>
-        </size>
+   <layout class="QGridLayout" name="gridLayout" >
+    <item row="0" column="0" >
+     <widget class="QTreeWidget" name="treeWidget" >
+      <property name="minimumSize" >
+       <size>
+        <width>150</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize" >
+       <size>
+        <width>200</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="headerHidden" >
+       <bool>true</bool>
+      </property>
+      <column>
+       <property name="text" >
+        <string>1</string>
        </property>
-       <property name="maximumSize" >
-        <size>
-         <width>200</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <column>
-        <property name="text" >
-         <string>1</string>
-        </property>
-       </column>
-      </widget>
-     </item>
-     <item>
-      <widget class="QWebView" name="webView" >
-       <property name="url" >
-        <url>
-         <string>about:blank</string>
-        </url>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
+      </column>
+     </widget>
+    </item>
+    <item row="0" column="1" >
+     <widget class="QWebView" name="webView" >
+      <property name="url" >
+       <url>
+        <string>about:blank</string>
+       </url>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <customwidgets>
