@@ -2495,10 +2495,10 @@ class mainWindow(QtGui.QMainWindow):
 
 		# show tray icon
 		self.tray=QtGui.QSystemTrayIcon(QtGui.QIcon(QtGui.QIcon("images/16x16/apps/jabbim.png").pixmap(16,16,QtGui.QIcon.Disabled)))
-		def _event(ev):
-			print ev.type()
-			return QtGui.QSystemTrayIcon.event(self.tray,ev)
-		self.tray.event=_event
+		#def _event(ev):
+			#print ev.type()
+			#return QtGui.QSystemTrayIcon.event(self.tray,ev)
+		#self.tray.event=_event
 
 		app.connect(self.tray,QtCore.SIGNAL("activated (QSystemTrayIcon::ActivationReason)"),self.trayActivated)
 		self.tray.show()
