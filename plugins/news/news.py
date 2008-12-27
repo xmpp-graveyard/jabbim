@@ -22,14 +22,18 @@ class config:
 class NewsTab(QtGui.QWidget):
 	def __init__(self):
 		QtGui.QWidget.__init__(self)
+		l=QtGui.QHBoxLayout(self)
+		
 		self.horizontalLayoutWidget = QtGui.QWidget(self)
 		self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
+		l.addWidget(self.horizontalLayoutWidget)
 		self.horizontalLayout = QtGui.QHBoxLayout(self.horizontalLayoutWidget)
 		self.horizontalLayout.setObjectName("horizontalLayout")
 		self.treeWidget = QtGui.QTreeWidget(self.horizontalLayoutWidget)
 		self.treeWidget.setRootIsDecorated(True)
 		self.treeWidget.setHeaderHidden(True)
 		self.treeWidget.setObjectName("treeWidget")
+		self.treeWidget.setMaximumWidth(200)
 		self.horizontalLayout.addWidget(self.treeWidget)
 		self.webView = QtWebKit.QWebView(self.horizontalLayoutWidget)
 		self.webView.setUrl(QtCore.QUrl("http://jabbim.cz"))
@@ -66,9 +70,6 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.loadConfig()
 			#self.installTranslator()
-			self.window = self.loadWindow("%s/news.ui.py" % self.pluginDir)
-			self.window.setWindowIcon(self.main.windowIcon())
-			self.widget = self.loadModule("%s/news.ui.py" % self.pluginDir)
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
 
@@ -94,10 +95,12 @@ class Plugin(plugins.PluginBase):
 		#self.window.show()
 		tab, pozice = self.main.chat.findTab('news@plugin', typ = ['news'])
 		if not tab:
-			tab = self.main.chat.addCustomTab('news@plugin', 'nick', 'News', NewsTab, [], typ='news')
+			tab = self.main.chat.addCustomTab('news@plugin', 'nick', 'News', NewsTab, [], typ='news', icon = QtGui.QIcon("images/32x32/status/rss-online.png"))
 			for kontakt in self.kontakty.itervalues():
 				for zprava in kontakt.zpravy:
 					self.addHeadline(tab, kontakt.jid, zprava.subject, zprava.body)
+			tab, pozice = self.main.chat.findTab('news@plugin', typ = ['news'])
+			self.main.chat.changeTab(pozice)
 		else:
 			self.main.chat.changeTab(pozice)
 
@@ -142,13 +145,11 @@ class Plugin(plugins.PluginBase):
 		if tab:
 			self.addHeadline(tab, frm.userhost(), subject, body)
 		
-
-
 		if self.config['notify_tray']=='True':
 			self.main.tray.showMessage("News",subject, QtGui.QSystemTrayIcon.Information, 3000)
  			#self.main.events.addInfoEvent(header=self.tr("News: ")+subject,text=self.tr("From: ")+frm,typ='newHeadline',icon="images/32x32/status/rss-online.png", action = self.eventActivated, actionDict = [frm, index], trueCall = self.eventActivated, trueDict = [frm, index], name = '%s-%d'%(frm, index))
 		if self.config['notify_show']=='True':
-			self.window.show()
+			self.showSlot()
 		print 'returning false'
 		return False
 
