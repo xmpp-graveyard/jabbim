@@ -187,7 +187,7 @@ class Client(derived):
 		self.socks5IP = [] #
 		self.pep = False
 		self.IBBonly = False #use only IBB in SI transfers if this is True [we are in restricted enviroment]
-		self.on_init()
+		
 
 		self.rpc = rpc.rpc(self)
 		self.presence = presence.PresenceInit(self)
@@ -197,7 +197,7 @@ class Client(derived):
 #		self.archive = archive.ArchiveInit(self)
 
 		self.proxy = None
-
+		self.on_init()
 
 	def chyba(self, err):
 #		print err
@@ -284,7 +284,7 @@ class Client(derived):
 		self.hbFails = 0
 		self.discoitems = {None:[],"http://jabber.org/protocol/commands":[]}
 		self.isVip=False
-		self.reactor.callFromThread(self.on_init)
+		#self.reactor.callFromThread(self.on_init)
 
 		if JID != self.jid.full():
 			self.oldstatus = None
@@ -436,7 +436,7 @@ class Client(derived):
 			except ImportError:
 				log.err('Unable to load bosh support.')
 				self.connectionFailed(None)
-
+			#print 'PROXY', self.proxy
 			self.factory = bclient.BOSHClientFactory(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang},  proxy  = self.proxy)
 #			self.factory = bosh_wokkel.BOSHClient(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang})
 
