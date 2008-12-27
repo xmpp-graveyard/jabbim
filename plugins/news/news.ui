@@ -5,49 +5,39 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>452</width>
+    <height>343</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Form</string>
   </property>
-  <widget class="QWidget" name="horizontalLayoutWidget" >
-   <property name="geometry" >
-    <rect>
-     <x>-1</x>
-     <y>-1</y>
-     <width>411</width>
-     <height>311</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout" >
-    <item>
-     <widget class="QTreeWidget" name="treeWidget" >
-      <property name="rootIsDecorated" >
-       <bool>false</bool>
+  <layout class="QGridLayout" name="gridLayout" >
+   <item row="0" column="0" >
+    <widget class="QTreeWidget" name="treeWidget" >
+     <property name="rootIsDecorated" >
+      <bool>false</bool>
+     </property>
+     <property name="headerHidden" >
+      <bool>true</bool>
+     </property>
+     <column>
+      <property name="text" >
+       <string>1</string>
       </property>
-      <property name="headerHidden" >
-       <bool>true</bool>
-      </property>
-      <column>
-       <property name="text" >
-        <string>1</string>
-       </property>
-      </column>
-     </widget>
-    </item>
-    <item>
-     <widget class="QWebView" name="webView" >
-      <property name="url" >
-       <url>
-        <string>about:blank</string>
-       </url>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
+     </column>
+    </widget>
+   </item>
+   <item row="0" column="1" >
+    <widget class="QWebView" name="webView" >
+     <property name="url" >
+      <url>
+       <string>about:blank</string>
+      </url>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <customwidgets>
   <customwidget>

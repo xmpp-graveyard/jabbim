@@ -263,10 +263,11 @@ class chatWindow(QtGui.QMainWindow):
 		count=0
 		for i in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(i)
-			#try:
-			count+=int(w.chat.unread)
-			#except:
-				#pass
+			if w.typ in ['chat','groupchat']:
+				#try:
+				count+=int(w.chat.unread)
+				#except:
+					#pass
 		return count
 
 	def findTab(self,jid=None,full=None,typ=['chat','groupchat']):
@@ -333,12 +334,13 @@ class chatWindow(QtGui.QMainWindow):
 		widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
 		if not widget:
 			return
-		widget.chat.unread=0
-		self.ui.chatTab.setTabText(index,widget.tabName)
+		if typ in ['chat','groupchat']:
+			widget.chat.unread=0
+			self.ui.chatTab.setTabText(index,widget.tabName)
 
-		if widget.chat.unreadEvent:
-			widget.chat.unreadEvent.reject()
-			widget.chat.unreadEvent=None
+			if widget.chat.unreadEvent:
+				widget.chat.unreadEvent.reject()
+				widget.chat.unreadEvent=None
 
 ##		ev=list(self.main.events.events)
 ##		for event in ev:
@@ -367,14 +369,15 @@ class chatWindow(QtGui.QMainWindow):
 					if w.typ=="chat":
 						self.main.client.sendMessage(unicode(w.jid),"",composing="inactive")
 					w.active=False
-				if not w.active and w.chat.lastMessageFrom!="lineSeparator":
-					if not w.chat.separator:
-						w.chat.ui.webkit.removeElementById("separateLine")
-						w.chat.textEditWrite("<hr id=\"separateLine\"/>")
-						w.chat.lastMessageFrom="lineSeparator"
-					w.chat.separator=True
-				else:
-					w.chat.separator=False
+				if w.typ in ['chat','groupchat']:
+					if not w.active and w.chat.lastMessageFrom!="lineSeparator":
+						if not w.chat.separator:
+							w.chat.ui.webkit.removeElementById("separateLine")
+							w.chat.textEditWrite("<hr id=\"separateLine\"/>")
+							w.chat.lastMessageFrom="lineSeparator"
+						w.chat.separator=True
+					else:
+						w.chat.separator=False
 		#except:
 			#pass
 
