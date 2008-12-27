@@ -1,4 +1,6 @@
-﻿import sys,os,time
+# -*- coding: utf-8 -*-
+
+import sys,os,time
 sys.path.append('.')
 from include import plugins
 from PyQt4 import QtCore, QtGui
@@ -22,22 +24,24 @@ class config:
 class NewsTab(QtGui.QWidget):
 	def __init__(self):
 		QtGui.QWidget.__init__(self)
-		l=QtGui.QHBoxLayout(self)
+		#l=QtGui.QHBoxLayout(self)
 		
-		self.horizontalLayoutWidget = QtGui.QWidget(self)
-		self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
-		l.addWidget(self.horizontalLayoutWidget)
-		self.horizontalLayout = QtGui.QHBoxLayout(self.horizontalLayoutWidget)
+		#self.horizontalLayoutWidget = QtGui.QWidget(self)
+		#self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
+		#l.addWidget(self.horizontalLayoutWidget)
+		self.horizontalLayout = QtGui.QHBoxLayout(self)
 		self.horizontalLayout.setObjectName("horizontalLayout")
-		self.treeWidget = QtGui.QTreeWidget(self.horizontalLayoutWidget)
+		self.treeWidget = QtGui.QTreeWidget(self)
 		self.treeWidget.setRootIsDecorated(True)
 		self.treeWidget.setHeaderHidden(True)
 		self.treeWidget.setObjectName("treeWidget")
 		self.treeWidget.setMaximumWidth(200)
 		self.horizontalLayout.addWidget(self.treeWidget)
-		self.webView = QtWebKit.QWebView(self.horizontalLayoutWidget)
+		self.webView = QtWebKit.QWebView(self)
 		self.webView.setUrl(QtCore.QUrl("http://jabbim.cz"))
 		self.webView.setObjectName("webView")
+		self.webView.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding))
+		#self.webView.set
 		self.horizontalLayout.addWidget(self.webView)
 		self.unreadEvent = None
 		self.unread = 0
@@ -99,9 +103,12 @@ class Plugin(plugins.PluginBase):
 			for kontakt in self.kontakty.itervalues():
 				for zprava in kontakt.zpravy:
 					self.addHeadline(tab, kontakt.jid, zprava.subject, zprava.body)
+			
 			tab, pozice = self.main.chat.findTab('news@plugin', typ = ['news'])
+			self.main.chat.activate()
 			self.main.chat.changeTab(pozice)
 		else:
+			self.main.chat.activate()
 			self.main.chat.changeTab(pozice)
 
 
