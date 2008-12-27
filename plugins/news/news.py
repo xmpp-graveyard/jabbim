@@ -6,6 +6,7 @@ from urllib import quote, unquote
 from twisted.python import log
 from include import utils
 from pyxl import jid
+from PyQt4 import QtWebKit
 #exp = re.compile(" (((https?://)|(ftp://)|(www\.))[^\ ]+)|(([^\ ]*\.){2,}[0-9a-z-A-Z]{2,4}(/[^\ ]*)?)")
 #exp.search('http://jabbim.cz/').group()
 
@@ -16,6 +17,36 @@ class config:
 		self.config['notify_tray']={'type':'boolean','label':self.main.tr("Notify in tray"),'value':'True'}
 		self.config['notify_show']={'type':'boolean','label':self.main.tr("Show window on new"),'value':'True'}
 		self.config['__sort__']=['notify_tray','notify_show']
+
+
+class NewsTab(QtGui.QWidget):
+	def __init__(self):
+		QtGui.QWidget.__init__(self)
+		self.horizontalLayoutWidget = QtGui.QWidget(self)
+		self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
+		self.horizontalLayout = QtGui.QHBoxLayout(self.horizontalLayoutWidget)
+		self.horizontalLayout.setObjectName("horizontalLayout")
+		self.treeWidget = QtGui.QTreeWidget(self.horizontalLayoutWidget)
+		self.treeWidget.setRootIsDecorated(True)
+		self.treeWidget.setHeaderHidden(True)
+		self.treeWidget.setObjectName("treeWidget")
+		self.horizontalLayout.addWidget(self.treeWidget)
+		self.webView = QtWebKit.QWebView(self.horizontalLayoutWidget)
+		self.webView.setUrl(QtCore.QUrl("http://jabbim.cz"))
+		self.webView.setObjectName("webView")
+		self.horizontalLayout.addWidget(self.webView)
+		self.unreadEvent = None
+		self.unread = 0
+		self.lastMessageFrom = ''
+		QtCore.QObject.connect(self.treeWidget, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.itemClicked)
+		
+	def itemClicked(self, item, col):
+		print 'item clicked'
+		self.webView.load(QtCore.QUrl((item.data(1,0).toString())))
+	
+	def on_remove(self):
+		print "removing tab"
+
 
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
@@ -37,13 +68,14 @@ class Plugin(plugins.PluginBase):
 			#self.installTranslator()
 			self.window = self.loadWindow("%s/news.ui.py" % self.pluginDir)
 			self.window.setWindowIcon(self.main.windowIcon())
+			self.widget = self.loadModule("%s/news.ui.py" % self.pluginDir)
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
 
 ##			self.window.ui.treeWidget.addTopLevelItem(QtGui.QTreeWidgetItem(['test', 'http://www.jabbim.cz']))
 ##			items = self.window.ui.treeWidget.findItems('test', QtCore.Qt.MatchExactly,0)
 ##			itemClicked ( QTreeWidgetItem * item, int column )
-			QtCore.QObject.connect(self.window.ui.treeWidget, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.itemClicked)
+			
 
 
 		else:
@@ -52,12 +84,24 @@ class Plugin(plugins.PluginBase):
 	def buildMainWindowMenu(self):
 		menu=self.mainWindowMenu()
 		menu.addAction(self.main.tr("Show news"),self.showSlot)
+	
+	def on_remove(self):
+		tab, pozice = self.main.chat.findTab('news@plugin', typ = ['news'])
+		if tab:
+			self.main.chat.removeTab(pozice)
 
 	def showSlot(self):
-		self.window.show()
+		#self.window.show()
+		tab, pozice = self.main.chat.findTab('news@plugin', typ = ['news'])
+		if not tab:
+			tab = self.main.chat.addCustomTab('news@plugin', 'nick', 'News', NewsTab, [], typ='news')
+			for kontakt in self.kontakty.itervalues():
+				for zprava in kontakt.zpravy:
+					self.addHeadline(tab, kontakt.jid, zprava.subject, zprava.body)
+		else:
+			self.main.chat.changeTab(pozice)
 
-	def itemClicked(self, item, col):
-		self.window.ui.webView.load(QtCore.QUrl((item.data(1,0).toString())))
+
 
 	def findUrl(self,body):
 		url = ""
@@ -69,26 +113,36 @@ class Plugin(plugins.PluginBase):
 				url = 'http://' + slovo
 		print 'url: ', url
 		return url
+	
+	def addHeadline(self, tab, jid, subject, body):
+		items = tab.chat.treeWidget.findItems(jid, QtCore.Qt.MatchExactly,0)
+		if len(items) == 0:
+			item = QtGui.QTreeWidgetItem([jid])
+			tab.chat.treeWidget.addTopLevelItem(item)
+		else:
+			item  = items[0]
+		url = self.findUrl(body)
+		headline = QtGui.QTreeWidgetItem([subject, url])
+		headline.setToolTip(0,body)
+		item.addChild(headline)
+		log.msg('headline added')
 
 	def on_message(self, msg):
 		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack()
-		print 'received headline!'
 		if typ != 'headline':
 			return True
 		frm = jid.JID(frm)
 ##		body = utils.replace_url(body,self.main)
-		items = self.window.ui.treeWidget.findItems(frm.userhost(), QtCore.Qt.MatchExactly,0)
-		if len(items) == 0:
-			item = QtGui.QTreeWidgetItem([frm.userhost()])
-			self.window.ui.treeWidget.addTopLevelItem(item)
-		else:
-			item  = items[0]
-		url = self.findUrl(body)
-		print 'url'
-		print url
-		headline = QtGui.QTreeWidgetItem([subject, url])
-		headline.setToolTip(0,body)
-		item.addChild(headline)
+		kontakt = self.kontakty.get(frm.userhost())
+		if not kontakt:
+			kontakt = Contact(frm.userhost())
+			self.kontakty[frm.userhost()] = kontakt
+		kontakt.addHeadline(subject, body)
+		tab, pozice = self.main.chat.findTab('news@plugin', typ = ['news'])
+		if tab:
+			self.addHeadline(tab, frm.userhost(), subject, body)
+		
+
 
 		if self.config['notify_tray']=='True':
 			self.main.tray.showMessage("News",subject, QtGui.QSystemTrayIcon.Information, 3000)
@@ -181,10 +235,8 @@ class Plugin(plugins.PluginBase):
 
 
 class Contact:
-	def __init__(self, jid, item, plugin):
+	def __init__(self, jid,):
 		self.jid = jid
-		self.item = item
-		self.plugin = plugin
 		self.zpravy = []
 
 	def addHeadline(self, subject, body):

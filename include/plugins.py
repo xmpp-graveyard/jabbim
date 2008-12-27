@@ -454,8 +454,6 @@ class PluginBase(object):
 		"""
 		Called before this plugin unload.
 		"""
-		for name in self._handlers:
-			self.unregisterHandler(name)
 		pass
 	
 	def _remove(self):
