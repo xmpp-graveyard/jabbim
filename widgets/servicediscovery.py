@@ -125,6 +125,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.reload,QtCore.SIGNAL("clicked()"),self.discoReload)
 #		self.ui.server.setText(self.main().client.jid.host)
 		self.server = self.main().client.jid.host
+		self.ui.server.setFocus(QtCore.Qt.MouseFocusReason)
 
 #d=self.main().client.getRegisterForm(jid)
 		#self.load()
@@ -140,7 +141,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 			#elif self.main().client.disco[key][None].has_key("err"):
 				#print key,"error"
 	def _discoErr(self, err):
-		print 'disco error'
+		print 'disco error ', err
 		self.ui.reload.setEnabled(True)
 		
 	def discoReload(self):
