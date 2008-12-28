@@ -239,6 +239,7 @@ class BOSHStream(utility.EventDispatcher):
 			# of the message we send it (but in this case I'm not sure that
 			#got_data is called)
 			print "dispatch error"
+			print resp.code
 #			self.dispatch(self, STREAM_ERROR_EVENT)
 #			self.transport.loseConnection()
 

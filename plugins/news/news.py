@@ -22,7 +22,7 @@ class config:
 
 
 class NewsTab(QtGui.QWidget):
-	def __init__(self):
+	def __init__(self, plugin):
 		QtGui.QWidget.__init__(self)
 		#l=QtGui.QHBoxLayout(self)
 		
@@ -38,7 +38,10 @@ class NewsTab(QtGui.QWidget):
 		self.treeWidget.setMaximumWidth(200)
 		self.horizontalLayout.addWidget(self.treeWidget)
 		self.webView = QtWebKit.QWebView(self)
-		self.webView.setUrl(QtCore.QUrl("http://jabbim.cz"))
+		jid = plugin.main.client.jid.userhost()
+		lang=unicode(QtCore.QLocale.system().name())[:2]
+		
+		self.webView.setUrl(QtCore.QUrl("http://content.jabbim.com/?jid=%s&lang=%s"%(jid,lang)))
 		self.webView.setObjectName("webView")
 		self.webView.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding))
 		#self.webView.set
@@ -47,9 +50,9 @@ class NewsTab(QtGui.QWidget):
 		self.unread = 0
 		self.lastMessageFrom = ''
 		QtCore.QObject.connect(self.treeWidget, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int )"),self.itemClicked)
+		self.plugin = plugin
 		
 	def itemClicked(self, item, col):
-		print 'item clicked'
 		self.webView.load(QtCore.QUrl((item.data(1,0).toString())))
 	
 	def on_remove(self):
@@ -63,7 +66,7 @@ class Plugin(plugins.PluginBase):
 		self.description = 'Headlines window'
 		self.author = u"Jiří 'Sef' Gabryš"
 		self.name = 'News Plugin'
-		self.version = '0.062'
+		self.version = '0.07'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.kontakty = {} # jid:contact
@@ -72,10 +75,23 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.loadConfig()
 			#self.installTranslator()
+			if self.main.isConnected() and self.main.client.xmlstream:
+				self.on_authd()
+			else:
+				self.registerHandler('on_authd',self.on_authd)
 			self.log = False
 			self.registerHandler('on_message', self.on_message, priority=4)
 		else:
 			self.loadConfig(homedir)
+	
+	def on_authd(self):
+			jid = self.main.client.jid.userhost()
+			lang=unicode(QtCore.QLocale.system().name())[:2]
+		
+			url = "http://content.jabbim.com/?jid=%s&lang=%s"%(jid,lang)
+			kontakt = Contact('News')
+			kontakt.addHeadline('Jabbim Content', '', url)
+			self.kontakty['news'] = kontakt
 
 	def buildMainWindowMenu(self):
 		menu=self.mainWindowMenu()
@@ -93,10 +109,10 @@ class Plugin(plugins.PluginBase):
 		#self.window.show()
 		tab, pozice = self.main.chat.findTab('news@plugin', typ = ['news'])
 		if not tab:
-			tab = self.main.chat.addCustomTab('news@plugin', 'nick', 'News', NewsTab, [], typ='news', icon = QtGui.QIcon("images/32x32/status/rss-online.png"))
+			tab = self.main.chat.addCustomTab('news@plugin', 'nick', 'News', NewsTab, [self], typ='news', icon = QtGui.QIcon("images/32x32/status/rss-online.png"))
 			for kontakt in self.kontakty.itervalues():
 				for zprava in kontakt.zpravy:
-					self.addHeadline(tab, kontakt.jid, zprava.subject, zprava.body)
+					self.addHeadline(tab, kontakt.jid, zprava.subject, zprava.body, zprava.url)
 			
 			tab, pozice = self.main.chat.findTab('news@plugin', typ = ['news'])
 			self.main.chat.activate()
@@ -116,14 +132,15 @@ class Plugin(plugins.PluginBase):
 				url = 'http://' + slovo
 		return url
 	
-	def addHeadline(self, tab, jid, subject, body):
+	def addHeadline(self, tab, jid, subject, body, url = None):
 		items = tab.chat.treeWidget.findItems(jid, QtCore.Qt.MatchExactly,0)
 		if len(items) == 0:
 			item = QtGui.QTreeWidgetItem([jid])
 			tab.chat.treeWidget.addTopLevelItem(item)
 		else:
 			item  = items[0]
-		url = self.findUrl(body)
+		if url == None:
+			url = self.findUrl(body)
 		headline = QtGui.QTreeWidgetItem([subject, url])
 		headline.setToolTip(0,body)
 		item.addChild(headline)
@@ -156,8 +173,8 @@ class Contact:
 		self.jid = jid
 		self.zpravy = []
 
-	def addHeadline(self, subject, body):
-		self.zpravy.append(Zprava(subject, body))
+	def addHeadline(self, subject, body, url = None):
+		self.zpravy.append(Zprava(subject, body, url))
 		return len(self.zpravy)-1
 
 	def neprectene(self):
@@ -168,8 +185,9 @@ class Contact:
 		return n
 
 class Zprava:
-	def __init__(self, subject, body):
+	def __init__(self, subject, body, url):
 		self.subject = subject
 		self.body = body
 		self.time = time.time()
 		self.unread = True
+		self.url = url
