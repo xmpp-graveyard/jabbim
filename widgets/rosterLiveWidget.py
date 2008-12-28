@@ -66,6 +66,59 @@ class rosterToolTip(QtGui.QFrame):
 		self.ui.vcard.enterEvent=self.vcardEnterEvent
 		self.ui.vcard.mousePressEvent=self.vcardMousePressEvent
 		self.ui.status.setMaximumHeight(QtGui.QFontMetrics(self.ui.status.font()).height()*4)
+		self.ui.metaWidget.hide()
+		self.mlayout=QtGui.QHBoxLayout(self.ui.metaWidget)
+		self.mlayout.setMargin(0)
+		self.mlayout.setSpacing(0)
+
+	def hideMetaContacts(self):
+		for i in range(self.mlayout.count()):
+			item=self.mlayout.itemAt(0)
+			if item.widget():
+				item.widget().setParent(None)
+			else:
+				self.mlayout.removeItem(item)
+			#item.widget().deleteLater()
+			#w=item.widget()
+			#del w
+			#item.deleteLater()
+			#del item
+		self.ui.metaWidget.hide()
+
+	def showMetaContacts(self,meta):
+		self.mlayout.addStretch()
+		for item in meta:
+			widget=QtGui.QLabel(self.ui.metaWidget)
+			widget.setMouseTracking(True)
+			widget.setCursor(QtCore.Qt.PointingHandCursor)
+			widget.setPixmap(self.roster().main.getIcon(item,status=unicode('online'),size="16x16").pixmap(16,16))
+			widget.leaveEvent=self.tuneLeaveEvent
+			def gen_enterEvent(item):
+				def enterEvent(event):
+					self.ui.jid.setText(item)
+				return enterEvent
+			def gen_mousePressEvent(item):
+				def mousePressEvent(event):
+					if event.button()==QtCore.Qt.RightButton:
+						it=self.roster().getUserItems(item)
+						if len(it)==0:
+							it=self.roster().getMetaItems(item)
+							it=it[0][0]
+						else:
+							it=it[0]
+						group=it.group
+						jid=it.jid
+						#if self.main.client.roster['users'].has_key(jid):
+						contactMenu=self.roster().buildContactMenu(unicode(jid),group)
+						#contactMenu.move(event.globalX(),event.globalY())
+						contactMenu.popup(QtCore.QPoint(event.globalX(),event.globalY()))
+					else:
+						self.roster().openChat(item)
+				return mousePressEvent
+			widget.enterEvent=gen_enterEvent(item)
+			widget.mousePressEvent=gen_mousePressEvent(item)
+			self.mlayout.addWidget(widget)
+		self.ui.metaWidget.show()
 
 	def vcardMousePressEvent(self,event):
 		self.roster().ve=vcardeditor.vcardEditorDialog(self.roster().main,self.jid,self.roster().main,False)
@@ -1000,6 +1053,18 @@ class rosterWidget(QtGui.QWidget):
 								if self.main.client.avatarImg[self.main.client.avatarDef[j]] and self.main.client.avatarDef[j]!="None":
 									avatar=QtGui.QPixmap(self.main.realHomeDir+'/avatars/'+unicode(self.main.client.avatarDef[j]))
 									break
+				if self.main.client.roster['users'][jid].tag!=None:
+					tag=self.main.client.roster['users'][jid].tag
+					meta=[]
+					for j,user in self.main.client.roster['users'].iteritems():
+						if user.tag==tag:
+							meta.append(j)
+					for mJid in meta:
+						print 'meta',mJid
+					self.tool.hideMetaContacts()
+					self.tool.showMetaContacts(meta)
+				else:
+					self.tool.hideMetaContacts()
 				if avatar:
 					avatar=avatar.scaled(64,64,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
 				else:
@@ -1454,6 +1519,25 @@ class rosterWidget(QtGui.QWidget):
 						self.repaint(0,y-10,self.width(),self.height()-y+10)
 			self.timestamp=float(timestamp)
 		QtGui.QWidget.mousePressEvent(self,event)
+
+	def openChat(self,j):
+		jid = jidT.JID(j)
+		jid_r = jid.userhost()
+		item=self.getUserItems(j)
+		if len(item)==0:
+			item=self.getMetaItems(j)
+			item=item[0][0]
+		else:
+			item=item[0]
+		if jid.resource:
+			res=jid.resource
+		else:
+			res = self.main.client.roster['users'][jid_r].getHighestResource()
+		if res==None:
+			self.main.chat.addChatTab(item.jid,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+		else:
+			self.main.chat.addChatTab(item.jid+"/"+res,item.name,self.main.getIcon(item.jid,self.main.icons[str(item.status)],size="16x16"))
+		self.main.chat.activate()
 
 	def mouseDoubleClickEvent(self,event):
 		x=event.x()

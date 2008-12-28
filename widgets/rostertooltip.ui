@@ -46,6 +46,9 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item>
+        <widget class="QWidget" native="1" name="metaWidget" />
+       </item>
+       <item>
         <widget class="QLabel" name="vcard" >
          <property name="maximumSize" >
           <size>
