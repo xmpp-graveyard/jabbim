@@ -4751,7 +4751,7 @@ class mainWindow(QtGui.QMainWindow):
 	def playsound(self,sound):
 		if self.sounds.has_key(sound):
 			if sys.platform == 'linux2': # linux sounds are produced using aplay
-				os.system('aplay -q '+self.sounds[sound].strip('\n')+' &')
+				os.system('aplay -q "'+self.sounds[sound].strip('\n')+'" &')
 			else:
 				QtGui.QSound.play(self.sounds[sound].strip('\n'))
 			return True
