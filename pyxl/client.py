@@ -436,6 +436,7 @@ class Client(derived):
 			except ImportError:
 				log.err('Unable to load bosh support.')
 				self.connectionFailed(None)
+				return
 			#print 'PROXY', self.proxy
 			self.factory = bclient.BOSHClientFactory(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang},  proxy  = self.proxy)
 #			self.factory = bosh_wokkel.BOSHClient(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang})
@@ -458,7 +459,7 @@ class Client(derived):
 		self.factory.clientConnectionFailed = self.connectionFailed
 
 		#self.connection = reactor.connectTCP(host,port, self.factory)
-
+		log.msg(unicode(self.factory))
 		if self.proxy != None and self.IBBonly and boshURL != '':
 			self.connection = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory)
 
