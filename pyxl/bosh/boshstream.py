@@ -294,6 +294,7 @@ class BOSHStream(utility.EventDispatcher):
 		reactor.callLater(0, self._try_to_send)
 
 	def connect_failed(self, fault):
+		log.msg('connect faled in boshstream')
 		reactor.callLater(self.reconnect_interval, self.connect)
 		if self.reconnect_interval < self.MAX_RECONNECT_INTERVAL:
 			self.reconnect_interval += 1

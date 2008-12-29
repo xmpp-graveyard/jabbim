@@ -196,6 +196,7 @@ class Client(derived):
 		self.jingle = jingle.JingleInit(self)
 #		self.archive = archive.ArchiveInit(self)
 
+		self.state = 'init'
 		self.proxy = None
 		self.on_init()
 
@@ -498,11 +499,15 @@ class Client(derived):
 			self.main.delayedMessages = self.messageReceipts
 		except:
 			pass
+		self.state = 'disconnected'
 		self.reactor.callFromThread(self.main._disconnect,'lost')
 
 		self.reactor.callFromThread(self.on_disconnect)
 
 	def connectionFailed(self, connector, reason=protocol.connectionDone):
+		#HACK!
+		if self.state != 'init':
+			self.connectionLost(connector, reason)
 		log.msg('connection failed!')
 		log.msg( self.connections)
 		if len(self.connections)>0:
@@ -541,8 +546,7 @@ class Client(derived):
 		self.jid = jid.JID(jd)
 
 	def disconnect(self):
-
-
+		self.state = 'disconnected'
 		try:
 			self.xping.stop()
 		except:
@@ -561,6 +565,7 @@ class Client(derived):
 	def _authd(self, xmlstream):
 		log.msg('authed')
 ##		self.dispatcher.publishEvent('authed')
+		self.state = 'connected'
 		self.xmlstream = xmlstream
 		self.xmlstream._send = xmlstream.send
 		self.xmlstream.send = self.send
