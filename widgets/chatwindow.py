@@ -338,9 +338,9 @@ class chatWindow(QtGui.QMainWindow):
 			widget.chat.unread=0
 			self.ui.chatTab.setTabText(index,widget.tabName)
 
-			if widget.chat.unreadEvent:
-				widget.chat.unreadEvent.reject()
-				widget.chat.unreadEvent=None
+			if widget.chat.unreadEvent and widget.chat.unreadEvent():
+				widget.chat.unreadEvent().reject()
+			widget.chat.unreadEvent=None
 
 ##		ev=list(self.main.events.events)
 ##		for event in ev:

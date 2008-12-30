@@ -1659,10 +1659,10 @@ class clientClass(pyxl.client.Client):
 
 					# MESSAGE EVENT
 					if not tab.chat.unreadEvent:
-						tab.chat.unreadEvent=self.main.events.addBooleanEvent()
-					tab.chat.unreadEvent.setAcceptHandler(self.main.chat.activate,[frm.full()])
+						tab.chat.unreadEvent=weakref.ref(self.main.events.addBooleanEvent())
+					tab.chat.unreadEvent().setAcceptHandler(self.main.chat.activate,[frm.full()])
 					#tab.chat.unreadEvent.setRejectHandler(self.main.events.removeEvent,[int(tab.chat.unreadEvent.ID)])
-					widget=tab.chat.unreadEvent.getWidgets()[0]
+					widget=tab.chat.unreadEvent().getWidgets()[0]
 					c=str(tab.chat.unread+1)
 					if c=="1":
 						widget.setText(unicode(mainWindow.tr("New message from:"))+" "+unicode(user))
@@ -1671,7 +1671,7 @@ class clientClass(pyxl.client.Client):
 					widget.setAcceptText(unicode(mainWindow.tr("Read")))
 					widget.setRejectText(unicode(mainWindow.tr("Ignore")))
 
-					self.dispatcher.publishEvent('chatMessageEvent', msg,weakref.ref(tab.chat.unreadEvent))
+					self.dispatcher.publishEvent('chatMessageEvent', msg,tab.chat.unreadEvent)
 					tab.chat.unread+=1
 					if not self.main.chat.isActiveWindow():
 						#if current:
@@ -1680,10 +1680,10 @@ class clientClass(pyxl.client.Client):
 				elif not self.main.chat.isActiveWindow():
 					# MESSAGE EVENT
 					if not tab.chat.unreadEvent:
-						tab.chat.unreadEvent=self.main.events.addBooleanEvent()
-					tab.chat.unreadEvent.setAcceptHandler(self.main.chat.activate,[frm.full()])
+						tab.chat.unreadEvent=weakref.ref(self.main.events.addBooleanEvent())
+					tab.chat.unreadEvent().setAcceptHandler(self.main.chat.activate,[frm.full()])
 					#tab.chat.unreadEvent.setRejectHandler(self.main.events.removeEvent,[int(tab.chat.unreadEvent.ID)])
-					widget=tab.chat.unreadEvent.getWidgets()[0]
+					widget=tab.chat.unreadEvent().getWidgets()[0]
 					c=str(tab.chat.unread+1)
 					if c=="1":
 						widget.setText(unicode(mainWindow.tr("New message from:"))+" "+unicode(user))
@@ -1692,7 +1692,7 @@ class clientClass(pyxl.client.Client):
 					widget.setAcceptText(unicode(mainWindow.tr("Read")))
 					widget.setRejectText(unicode(mainWindow.tr("Ignore")))
 
-					self.dispatcher.publishEvent('chatMessageEvent',msg, weakref.ref(tab.chat.unreadEvent))
+					self.dispatcher.publishEvent('chatMessageEvent',msg, tab.chat.unreadEvent)
 					#if int(self.main.chat.ui.chatTab.currentIndex())==tabIndex:
 					#if current:
 						#self.main.chat.setWindowTitle("("+str(int(self.main.chat.getUnreadMessages())+1)+") "+current.tabName.replace("&",""))
@@ -1745,10 +1745,10 @@ class clientClass(pyxl.client.Client):
 
 				if tab:
 					# MESSAGE EVENT
-					tab.chat.unreadEvent=self.main.events.addBooleanEvent()
-					tab.chat.unreadEvent.setAcceptHandler(self.main.chat.activate,[frm.full()])
+					tab.chat.unreadEvent=weakref.ref(self.main.events.addBooleanEvent())
+					tab.chat.unreadEvent().setAcceptHandler(self.main.chat.activate,[frm.full()])
 					#tab.chat.unreadEvent.setRejectHandler(self.main.events.removeEvent,[int(tab.chat.unreadEvent.ID)])
-					widget=tab.chat.unreadEvent.getWidgets()[0]
+					widget=tab.chat.unreadEvent().getWidgets()[0]
 					widget.setText(unicode(mainWindow.tr("New message from:"))+" "+unicode(user))
 					widget.setAcceptText(unicode(mainWindow.tr("Read")))
 					widget.setRejectText(unicode(mainWindow.tr("Ignore")))
@@ -1769,7 +1769,7 @@ class clientClass(pyxl.client.Client):
 					self.main.chat.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)
 					tab.chat.appendLastMessage(['in',user,message,timeText,tab.chat.file])
 					tab.chat.unread+=1
-				self.dispatcher.publishEvent('firstChatMessageEvent', msg, weakref.ref(tab.chat.unreadEvent))
+				self.dispatcher.publishEvent('firstChatMessageEvent', msg, tab.chat.unreadEvent)
 
 		if tab!=None:
 			# handle checkstate messages:
