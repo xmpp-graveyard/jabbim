@@ -4141,7 +4141,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Shows Service Discovery Dialog. Called by QAction from main menu.
 		"""
-		if USE_WIZARDS and self.client.jid.host in ['jabbim.cz','jabber.cz','njs.netlab.cz','jabbim.com','jabbim.pl']:
+		if USE_WIZARDS and self.isJabbimUser:
 			self.discovery2=wizards.jabbimservicemanager.jabbimServiceManager(self,self)
 			self.discovery2.show()
 		else:
@@ -5149,7 +5149,7 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.client.connect(JID=unicode(jid).lower()+"/"+resource,password=password,server=jid.split("@")[1])
 
-		self.isJabbimUser=jid.split("@")[1] in ['jabbim.cz','jabbim.pl','njs.netlab.cz','jabbim.com','jabber.cz']
+		self.isJabbimUser=jid.split("@")[1] in ['jabbim.cz','jabbim.pl','njs.netlab.cz','jabbim.com','jabber.cz','jabbim.sk']
 
 	#def _loadAvatar(self,file, hash, jid):
 		#if os.path.isfile(unicode(file)):
