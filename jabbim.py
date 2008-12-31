@@ -2132,6 +2132,7 @@ class mainWindow(QtGui.QMainWindow):
 		#self.setWindowOpacity (0.5)
 		self.imageId=0
 		self.isJabbimUser=False
+		self.jabbimServers = ['jabbim.cz','jabbim.sk','jabbim.pl','jabbim.com','jabber.cz','njs.netlab.cz']
 
 		QtCore.QObject.connect(app, QtCore.SIGNAL("sleep()"),self.systemSleep)
 		QtCore.QObject.connect(app, QtCore.SIGNAL("wakeUp()"),self.systemWakeUp)
@@ -5149,7 +5150,7 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			self.client.connect(JID=unicode(jid).lower()+"/"+resource,password=password,server=jid.split("@")[1])
 
-		self.isJabbimUser=jid.split("@")[1] in ['jabbim.cz','jabbim.pl','njs.netlab.cz','jabbim.com','jabber.cz','jabbim.sk']
+		self.isJabbimUser = jid.split("@")[1] in self.jabbimServers
 
 	#def _loadAvatar(self,file, hash, jid):
 		#if os.path.isfile(unicode(file)):
