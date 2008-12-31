@@ -15,8 +15,6 @@ from twisted.words.xish.domish import Element
 from twisted.words.protocols.jabber.xmlstream import IQ
 import base64
 
-servers=["jabbim.cz","jabbim.sk","jabbim.pl","jabbim.com","jabber.cz","njs.netlab.cz"]
-
 class firstPage(QtGui.QWizardPage):
 	def __init__(self,registrationWizard):
 		QtGui.QWizardPage.__init__(self)
@@ -56,7 +54,7 @@ class firstPage(QtGui.QWizardPage):
 		
 		serverLabel=QtGui.QLabel(registrationWizard.tr("Server:"))
 		registrationWizard.serverComboBox=QtGui.QComboBox()
-		registrationWizard.serverComboBox.addItems(QtCore.QStringList([registrationWizard.tr("Choose server")]+servers))
+		registrationWizard.serverComboBox.addItems(QtCore.QStringList([registrationWizard.tr("Choose server")] + registrationWizard.main.jabbimServers))
 		registrationWizard.serverComboBox.setEditable(True)
 		QtCore.QObject.connect(registrationWizard.serverComboBox,QtCore.SIGNAL("activated ( const QString & )"),registrationWizard.serverComboBoxActivated)
 		QtCore.QObject.connect(registrationWizard.serverComboBox,QtCore.SIGNAL("editTextChanged ( const QString & )"),registrationWizard.serverComboBoxActivated)
