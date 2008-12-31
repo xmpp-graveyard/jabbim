@@ -12,12 +12,12 @@ from include import plugins, utils
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
-		self.fname = 'iBuddy' # name of plugin directory
+		self.fname       = 'iBuddy'
 		self.description = 'get your iBuddy working with Jabbim'
-		self.author = "Leandro Vázquez Cervantes"
-		self.name = 'iBuddy plugin'
-		self.version = '0.1' # version of plugins, must be float number
-		self.category = ['other'] # category of plugin
+		self.author      = "Leandro Vazquez Cervantes"
+		self.name        = 'iBuddy plugin'
+		self.version     = '0.1' 
+		self.category    = ['other'] 
 
 
 		self.host = "localhost"
@@ -35,7 +35,6 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('presenceEvent',self.on_presenceEvent)
 
 	def on_firstChatMessageEvent(self, msg,event=None):
-		print "debug: DEMO"
 		self.UDPSock.sendto("DEMO",self.addr)
 
 	def on_chatMessageEvent(self, msg, event=None):
@@ -52,7 +51,6 @@ class Plugin(plugins.PluginBase):
 
 	def on_presenceEvent(self,jid,name,show,statusMessage,first=False):
 		if show=="online":
-			print "debug: online"
 			self.UDPSock.sendto("MACRO_HEART",self.addr)
 
 	def on_remove(self):
