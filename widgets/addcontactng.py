@@ -166,11 +166,9 @@ class addContactDialog(QtGui.QDialog):
 		self.ui=Ui_addContact()
 		self.ui.setupUi(self)
 		self.main=weakref.ref(main)
-		if self.main().client.jid.host in ['jabbim.cz','jabber.cz','njs.netlab.cz','jabbim.com','jabbim.pl']:
-			self.jabbimUser=True
+		if self.main().isJabbimUser:
 			self.jid="test1.pyco.cz"
 		else:
-			self.jabbimUser=False
 			# TODO - get user search jid from disco
 			self.jid=""
 		self.addFunction=None
