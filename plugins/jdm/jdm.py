@@ -354,6 +354,7 @@ class Plugin(plugins.PluginBase):
 			item.setData(32,QtCore.QVariant(QtCore.QStringList([u"-1"])))
 			item.setText(unicode(d))
 			item.setIcon(icon)
+			item.path=unicode(d)+"/"
 		self.wizard.ui.stackedWidget.setCurrentIndex(1)
 		self.wizard.ui.back.show()
 		self.wizard.ui.remove.hide()
@@ -692,13 +693,13 @@ class Plugin(plugins.PluginBase):
 
 	def updateView(self, data,parent=None):
 		print "updateView",data,self.update
-		if not self.update and not parent:
+		#if not self.update and not parent:
 			#self.window.ui.right.clear()
-			self.wizard.ui.tree.clear()
-		if parent:
+		self.wizard.ui.tree.clear()
+		#if parent:
 			#self.window.ui.right.expandItem(parent)
 			#self.wizard.ui.tree.expandItem(parent)
-			pass
+			#pass
 ##		self.window.ui.esPath.setText(self.esPath)
 		data=data[0][0]
 		self.thumbs={}
@@ -710,19 +711,24 @@ class Plugin(plugins.PluginBase):
 					continue
 			name=file[0]
 			size=int(file[1])
-			if parent:
+			#if parent:
 				#item=QtGui.QListWidgetItem(parent)
-				pass
-			else:
+				#pass
+			#else:
 				#item=QtGui.QTreeWidgetItem(self.window.ui.right)
-				item=QtGui.QListWidgetItem(self.wizard.ui.tree)
+			item=QtGui.QListWidgetItem(self.wizard.ui.tree)
+
 			print unicode(name)
 			item.setText(unicode(name))
 			#item.setText(1,unicode(self.toNormalSize(size)))
 			item.setData(32,QtCore.QVariant(QtCore.QStringList([unicode(size)])))
 			if int(size)==-1:
 				item.setIcon(QtGui.QIcon(self.pluginDir+"/folder.png"))
+				if parent:
+					item.path=unicode(parent.path)+name+"/"
 			else:
+				if parent:
+					item.path=unicode(parent.path)+name
 				ext=name.split('.')[-1]
 				if ext in ["exe","run","sh","bin"]: 
 					item.setIcon(QtGui.QIcon(self.pluginDir+"/application-x-executable.png"))
@@ -1008,16 +1014,17 @@ class Plugin(plugins.PluginBase):
 			self.wizard.ui.filesize.setText("")
 
 	def getPath(self,item):
-		path=""
-		parents=[item]
-		parent=item.parent()
-		while parent:
-			parents.append(parent)
-			parent=parent.parent()
-		parents.reverse()
-		for parent in parents:
-			path+=unicode(parent.text(0))+"/"
-		return path[:-1]
+		#path=""
+		#parents=[item]
+		#parent=item.parent()
+		#while parent:
+			#parents.append(parent)
+			#parent=parent.parent()
+		#parents.reverse()
+		#for parent in parents:
+			#path+=unicode(parent.text(0))+"/"
+		return unicode(item.path)
+		#return path[:-1]
 
 	def doubleClicked(self,item,col=None):
 		if self.typ=="public":
@@ -1034,8 +1041,9 @@ class Plugin(plugins.PluginBase):
 			self.filesToOpen.append(self.cache+"/"+unicode(item.text(0)))
 		elif self.typ=="easyshare":
 			contact = self.main.client.getContactByJid(self.jid)
-			if contact and item.childCount()==0:
+			if contact:
 				jid=self.jid+"/"+contact.getHighestResource()
+				print self.getPath(item)
 				self.main.client.callRemote(jid, 'listShare',(self.getPath(item),)).addCallback(self.updateView,item)
 
 		
