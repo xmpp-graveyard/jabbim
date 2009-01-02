@@ -190,7 +190,7 @@ class BOSHStream(utility.EventDispatcher):
 		thead.addRawHeader("Host", self.host.encode("utf-8"))
 #		thead.addRawHeader("Proxy-Connection", "Keep-Alive")
 #		thead.addRawHeader("Connection", "Keep-Alive")
-		print body.toXml().encode("ascii")
+		#print body.toXml().encode("ascii")
 		#print dump(buffer(body.toXml().encode("ascii"),0))
 		
 		req = ClientRequest(
