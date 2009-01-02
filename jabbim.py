@@ -1988,7 +1988,7 @@ class clientClass(pyxl.client.Client):
 		if filename and len(filename)!=0:
 			filename=unicode(filename)
 			log.msg(unicode(filename))
-			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].fromjid.full()),basename(self.ft[sid].fileprops['name']),"",sid,self.ft[sid].fileprops['size'])
+			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].fromjid.full()),self.ft[sid].fileprops['name'],"",sid,self.ft[sid].fileprops['size'])
 			log.msg('receiving file: ' + sid)
 
 			self.ft[sid].method = 'http://jabber.org/protocol/bytestreams'
