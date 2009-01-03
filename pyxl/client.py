@@ -462,10 +462,17 @@ class Client(derived):
 		#self.connection = reactor.connectTCP(host,port, self.factory)
 		log.msg(unicode(self.factory))
 		if self.proxy != None and self.IBBonly and boshURL != '':
-			self.connection = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory)
-
+			if boshURL!="":
+				self.connection = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory)
+				self.connection2 = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory)
+			else:
+				self.connection = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory)
 		else:
-			self.connection = reactor.connectTCP(host,port, self.factory)
+			if boshURL!="":
+				self.connection = reactor.connectTCP(host,port, self.factory)
+				self.connection2 = reactor.connectTCP(host,port, self.factory)
+			else:
+				self.connection = reactor.connectTCP(host,port, self.factory)
 		self.reactor.callFromThread(self.on_connect)
 
 		log.msg('started - ' + unicode(time.time()))

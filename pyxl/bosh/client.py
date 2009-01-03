@@ -3,8 +3,8 @@ from twisted.internet import reactor
 import xmlstream
 
 _default_bosh_attrs = {
-	"wait": "3",
-	"hold": "1",
+	"wait": "20",
+	"hold": "2",
 	#    "inactivity": "60",
 	"content": "text/xml; charset=utf-8",
 	"xml:lang": "en",
