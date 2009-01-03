@@ -424,7 +424,7 @@ class BOSHTTPClient(HTTPClientProtocol):
 		self.manager._connectionLost(self)
 
 
-class BOSHStreamFactory(XmlStreamFactoryMixin, protocol.ClientFactory):
+class BOSHStreamFactory(XmlStreamFactoryMixin, protocol.ReconnectingClientFactory):
 	bosh_client = None
 	xs=None
 	def buildProtocol(self, addr):
