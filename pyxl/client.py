@@ -187,7 +187,7 @@ class Client(derived):
 		self.socks5IP = [] #
 		self.pep = False
 		self.IBBonly = False #use only IBB in SI transfers if this is True [we are in restricted enviroment]
-		
+
 
 		self.rpc = rpc.rpc(self)
 		self.presence = presence.PresenceInit(self)
@@ -508,6 +508,7 @@ class Client(derived):
 		#HACK!
 		if self.state != 'init':
 			self.connectionLost(connector, reason)
+			return
 		log.msg('connection failed!')
 		log.msg( self.connections)
 		if len(self.connections)>0:

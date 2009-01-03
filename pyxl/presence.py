@@ -84,7 +84,6 @@ class PresenceInit:
 				caps_node = child.getAttribute('node')
 				ext = child.getAttribute('ver')
 				
-				
 				if self.client.caps_cache.has_key(ext) and ext != None:
 					features = self.client.caps_cache[ext][1]
 					identity = self.client.caps_cache[ext][0]

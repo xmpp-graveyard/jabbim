@@ -826,7 +826,7 @@ class abstractChatWidget(QtGui.QWidget):
 			image.save(buf,  'JPG')
 		else:
 			image.save(buf,  'PNG')
-		hash = 'sha1+'+sha1(str(bytes)).hexdigest()
+		hash = 'sha1+'+sha1(str(bytes)).hexdigest()+ "@bob.xmpp.org"
 		print 'IMAGE', len(str(bytes))
 		path = self.main().client.bobCacheDir+'/'+hash
 		fp = open(path,  'wb')
