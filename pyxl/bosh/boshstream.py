@@ -74,6 +74,7 @@ class BOSHStream(utility.EventDispatcher):
 
 	def __init__(self):
 		utility.EventDispatcher.__init__(self)
+		self.connected=False
 		self.parser = BOSHParser()
 		self.rawDataOutFn = None
 		self.rawDataInFn = None
@@ -90,6 +91,7 @@ class BOSHStream(utility.EventDispatcher):
 		self.timestamp=time.time()
 		self.ready=False
 		self.proto=None
+		self.empty=False
 
 
 	def _build_first_request(self):
@@ -167,10 +169,10 @@ class BOSHStream(utility.EventDispatcher):
 		print 'to send2'
 		self.ready=False
 		self.timestamp=time.time()
-		force_proto=False
+		#force_proto=False
 		if self.resend_queue:
 			body = self.resend_queue.pop(0)
-			force_proto=True
+			#force_proto=True
 		else:
 			# ok, we can send a request
 			body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
@@ -179,7 +181,10 @@ class BOSHStream(utility.EventDispatcher):
 			body["rid"] = `self.rid`
 			self.rid += 1
 			if len(self.send_queue)==0:
-				force_proto=True
+				#force_proto=True
+				if self.empty:
+					return
+				self.empty=True
 				print "EMPTY BODY WILL BE SENT"
 			while self.send_queue:
 				obj = self.send_queue.pop(0)
@@ -206,11 +211,11 @@ class BOSHStream(utility.EventDispatcher):
 			unicode(body.toXml()).encode("utf-8")
 		)
 		print "QUEUE DUMP",self.out_queue2,self.out_queue
-		if len(self.out_queue2)<1 and not force_proto:
+		if len(self.out_queue2)<1 and self.proto2:
 			self.proto2.submitRequest(req, False).addCallback(self.got_response,False).addErrback(self.got_error)
 			self.out_queue2.append(body)
 			print 'send2'
-		elif len(self.out_queue)<1:
+		elif len(self.out_queue)<1 and self.proto:
 			self.proto.submitRequest(req, False).addCallback(self.got_response,True).addErrback(self.got_error)
 			self.out_queue.append(body)
 			print 'send1'
@@ -252,6 +257,8 @@ class BOSHStream(utility.EventDispatcher):
 				self.out_queue.pop(0)
 			else:
 				self.out_queue2.pop(0)
+			if len(self.out_queue2)==0 and len(self.out_queue)==0:
+				self.empty=False
 		except domish.ParserError:
 			# i'm unsure about this because if we receive only part
 			# of the message we send it (but in this case I'm not sure that
@@ -298,7 +305,7 @@ class BOSHStream(utility.EventDispatcher):
 		#d.addCallback(self.connect_done)
 		#d.addErrback(self.connect_failed)
 		reactor.connectTCP(self.host, self.port, self.factory)
-		reactor.connectTCP(self.host, self.port, self.factory)
+		#reactor.connectTCP(self.host, self.port, self.factory)
 		#HTTPClientProtocol(manager = self
 		#d1 = protocol.ClientCreator(D
 			#reactor, HTTPClientProtocol, manager = self
@@ -311,19 +318,40 @@ class BOSHStream(utility.EventDispatcher):
 		print "connection DONE"
 		#if not self.initialized:
 			#self._build_first_request()
-		if not self.proto:
-			self.proto = proto
+		if not self.connected:
+			if not self.proto:
+				self.proto = proto
+			else:
+				self.proto2 = proto
+				self._build_first_request()
+				reactor.callLater(0, self._try_to_send)
+				
+				self.connected=True
+				if not self.initialized:
+					self.dispatch(self, STREAM_CONNECTED_EVENT)
+				# XXX I don't like this: we should find some more elegant way
+				#if hasattr(self, "connectionMade"):
+				#    self.connectionMade()
 		else:
-			self.proto2 = proto
-			self._build_first_request()
+			if not self.proto:
+				self.proto = proto
+			else:
+				self.proto2 = proto
 			reactor.callLater(0, self._try_to_send)
-		
-			if not self.initialized:
-				self.dispatch(self, STREAM_CONNECTED_EVENT)
-			# XXX I don't like this: we should find some more elegant way
-			#if hasattr(self, "connectionMade"):
-			#    self.connectionMade()
 		self.reconnect_interval = 0
+
+	def _connectionLost(self,proto):
+		if proto == self.proto:
+			print "proto1 closed"
+			self.proto=None
+		elif proto == self.proto2:
+			self.proto2=None
+			print "proto2 closed"
+		if self.proto or self.proto2:
+			#reactor.connectTCP(self.host, self.port, self.factory)
+			reactor.callLater(self.reconnect_interval+1, self.connect)
+			if self.reconnect_interval < self.MAX_RECONNECT_INTERVAL:
+				self.reconnect_interval += 1
 
 
 	def connect_failed(self, fault):
@@ -391,6 +419,9 @@ class BOSHTTPClient(HTTPClientProtocol):
 		print "connectionMade"
 		self.manager.connect_done(self)
 		print "connectionMade end"
+	
+	def connectionLost(self,reason):
+		self.manager._connectionLost(self)
 
 
 class BOSHStreamFactory(XmlStreamFactoryMixin, protocol.ClientFactory):

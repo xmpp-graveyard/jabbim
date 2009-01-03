@@ -440,6 +440,7 @@ class Client(derived):
 				return
 			#print 'PROXY', self.proxy
 			self.factory = bclient.BOSHClientFactory(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang},  proxy  = self.proxy)
+			self.factory.client=self
 #			self.factory = bosh_wokkel.BOSHClient(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang})
 
 			self.IBBonly = True
