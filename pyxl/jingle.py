@@ -4,11 +4,6 @@ from twisted.python import log
 import jid
 from twisted.words.xish import domish
 from twisted.words.xish.domish import Element
-try:
-	from hashlib import sha1
-except:
-	log.msg('Please upgrade to python2.5')
-	from sha import new as sha1
 from base64 import b64encode, b64decode
 from twisted.protocols import socks
 from twisted.words.protocols.jabber.xmlstream import IQ, TimeoutError
