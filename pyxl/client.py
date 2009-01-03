@@ -486,10 +486,11 @@ class Client(derived):
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 
 		if self.IBBonly and self.connection != None and int(self.port) != 443:
-			self.connection.connect()
+			return
+			#self.connection.connect()
 #			self.connection.factory.bosh_client.manager.restart()
 
-			return
+			#return
 		log.msg('connection lost!')
 		try:
 			self.xping.stop()

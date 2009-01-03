@@ -86,6 +86,7 @@ class BOSHStream(utility.EventDispatcher):
 		self.resend_queue = [] # bodies that must be resent
 		self.initialized = False
 		self.reconnect_interval = 0
+		self.firstSent=False
 		self.seed=random.randint(1000, 1000000)
 		self.n=random.randint(0, 1000000)
 		self.timestamp=time.time()
@@ -124,7 +125,7 @@ class BOSHStream(utility.EventDispatcher):
 		for k,v in self.factory.bosh_attrs.items():
 			body[k.encode('utf-8')] = v.encode("utf-8")
 		body['route']="xmpp:"+body['to']+":5222"
-		body['wait']="20"
+		body['wait']="40"
 		body['hold']="2"
 		self.resend_queue.append(body)
 		print 'first request'
@@ -150,15 +151,15 @@ class BOSHStream(utility.EventDispatcher):
 		"""
 		"""
 		# check if there are too many packets out
-		if time.time()-self.timestamp<0.5:
+		if time.time()-self.timestamp<2:
 			if not self.ready:
 				self.ready=True
-				reactor.callLater(0.5,self._try_to_send)
+				reactor.callLater(2,self._try_to_send)
 			return
 		
 
 		print 'to send'
-		if len(self.out_queue) >= 1 and len(self.out_queue2) >= 1:
+		if not (len(self.out_queue2)<1 and self.proto2) and not (len(self.out_queue)<1 and self.proto):
 			for b in self.out_queue + self.out_queue2:
 				print [b.toXml().encode("utf-8")]
 			return
@@ -185,13 +186,19 @@ class BOSHStream(utility.EventDispatcher):
 				if self.empty:
 					return
 				self.empty=True
-				print "EMPTY BODY WILL BE SENT"
-			while self.send_queue:
-				obj = self.send_queue.pop(0)
-				if domish.IElement.providedBy(obj):
-					body.addChild(obj)
-				else:
-					body.addRawXml(obj)
+				self.firstSent=True
+				print "EMPTY BODY WILL BE SENT1"
+			if not self.empty and self.firstSent:
+				self.empty=True
+				reactor.callLater(0.5,self._try_to_send)
+				print "EMPTY BODY WILL BE SENT2",self.send_queue
+			else:
+				while self.send_queue:
+					obj = self.send_queue.pop(0)
+					if domish.IElement.providedBy(obj):
+						body.addChild(obj)
+					else:
+						body.addRawXml(obj)
 	
 		if self.rawDataOutFn:
 			self.rawDataOutFn(body.toXml())
@@ -219,6 +226,7 @@ class BOSHStream(utility.EventDispatcher):
 			self.proto.submitRequest(req, False).addCallback(self.got_response,True).addErrback(self.got_error)
 			self.out_queue.append(body)
 			print 'send1'
+		print "QUEUE DUMP AFTER",self.out_queue2,self.out_queue
 
 	def got_response(self, resp, first):
 		print 'read the body'
@@ -257,6 +265,7 @@ class BOSHStream(utility.EventDispatcher):
 				self.out_queue.pop(0)
 			else:
 				self.out_queue2.pop(0)
+			reactor.callLater(0.5,self._try_to_send)
 			if len(self.out_queue2)==0 and len(self.out_queue)==0:
 				self.empty=False
 		except domish.ParserError:
@@ -341,11 +350,28 @@ class BOSHStream(utility.EventDispatcher):
 		self.reconnect_interval = 0
 
 	def _connectionLost(self,proto):
-		if proto == self.proto:
+		if proto == self.proto or self.proto==None:
 			print "proto1 closed"
 			self.proto=None
-		elif proto == self.proto2:
+			self.out_queue=[]
+			reactor.callLater(2,self.factory.connectors[1].connect)
+			body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
+		
+			if self.sid: body["sid"] = self.sid
+			body["rid"] = `self.rid`
+			self.rid += 1
+			self.resend_queue.append(body)
+			reactor.callLater(2,self.factory.connectors[0].connect)
+		elif proto == self.proto2 or self.proto2==None:
 			self.proto2=None
+			self.out_queue2=[]
+			reactor.callLater(2,self.factory.connectors[1].connect)
+			body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
+		
+			if self.sid: body["sid"] = self.sid
+			body["rid"] = `self.rid`
+			self.rid += 1
+			self.resend_queue.append(body)
 			print "proto2 closed"
 		#if self.proto or self.proto2:
 			#reactor.connectTCP(self.host, self.port, self.factory)
@@ -424,9 +450,10 @@ class BOSHTTPClient(HTTPClientProtocol):
 		self.manager._connectionLost(self)
 
 
-class BOSHStreamFactory(XmlStreamFactoryMixin, protocol.ReconnectingClientFactory):
+class BOSHStreamFactory(XmlStreamFactoryMixin, protocol.ClientFactory):
 	bosh_client = None
 	xs=None
+	connectors=[]
 	def buildProtocol(self, addr):
 		print "buildProtocol",addr
 		#if self.bosh_client != None:
@@ -438,4 +465,8 @@ class BOSHStreamFactory(XmlStreamFactoryMixin, protocol.ReconnectingClientFactor
 		#self.bosh_client = bosh_client
 		
 		return bosh_client
+
+	def startedConnecting(self, connector):
+		if not connector in self.connectors:
+			self.connectors.append(connector)
 
