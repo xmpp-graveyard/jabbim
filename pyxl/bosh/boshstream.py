@@ -382,7 +382,7 @@ class BOSHStream(utility.EventDispatcher):
 				body["rid"] = `self.rid`
 				self.rid += 1
 				self.resend_queue.append(body)
-			reactor.callLater(0,self.factory.connectors[0].connect)
+			reactor.callLater(0,self._connect,self.factory.connectors[0])
 		elif proto == self.proto2:
 			self.proto2=None
 			self.out_queue2=[]
@@ -394,12 +394,21 @@ class BOSHStream(utility.EventDispatcher):
 				self.rid += 1
 				self.resend_queue.append(body)
 			print "proto2 closed"
-			reactor.callLater(0,self.factory.connectors[1].connect)
+			reactor.callLater(0,self._connect,self.factory.connectors[1])
 		#if self.proto or self.proto2:
 			#reactor.connectTCP(self.host, self.port, self.factory)
 			#reactor.callLater(self.reconnect_interval+1, self.connect)
 			#if self.reconnect_interval < self.MAX_RECONNECT_INTERVAL:
 				#self.reconnect_interval += 1
+
+	def _connect(self,connector,t=0):
+		if connector.state=="disconnected":
+			connector.connect()
+		elif t<6:
+			print "trying to reconnect...."
+			reactor.callLater(1,self._connect,connector,t+1)
+		else:
+			print "was trying 5 times... that's enough"
 
 
 	def connect_failed(self, fault):
