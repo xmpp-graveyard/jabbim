@@ -347,11 +347,11 @@ class BOSHStream(utility.EventDispatcher):
 		elif proto == self.proto2:
 			self.proto2=None
 			print "proto2 closed"
-		if self.proto or self.proto2:
+		#if self.proto or self.proto2:
 			#reactor.connectTCP(self.host, self.port, self.factory)
-			reactor.callLater(self.reconnect_interval+1, self.connect)
-			if self.reconnect_interval < self.MAX_RECONNECT_INTERVAL:
-				self.reconnect_interval += 1
+			#reactor.callLater(self.reconnect_interval+1, self.connect)
+			#if self.reconnect_interval < self.MAX_RECONNECT_INTERVAL:
+				#self.reconnect_interval += 1
 
 
 	def connect_failed(self, fault):
