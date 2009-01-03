@@ -18,8 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 import sys,os
 
-try: from PyQt4 import QtCore, QtGui
-except: print "PyQt4 is not installed."
+from PyQt4 import QtCore, QtGui
 from os.path import basename
 from twisted.python import log
 import dataforms,legacyforms

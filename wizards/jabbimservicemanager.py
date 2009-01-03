@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*- 
-try:
-	from PyQt4 import QtCore, QtGui
-except:
-	print "PyQt4 is not installed."
-
+from PyQt4 import QtCore, QtGui
 import jsm_ui
 import weakref
 from widgets import servicediscovery, dataforms, legacyforms

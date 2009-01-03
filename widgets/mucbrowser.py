@@ -1,9 +1,5 @@
 import os
-try:
-	from PyQt4 import QtCore, QtGui
-except:
-	print "PyQt4 is not installed."
-
+from PyQt4 import QtCore, QtGui
 from mucbrowser_ui import *
 import pyxl
 from twisted.internet import threads

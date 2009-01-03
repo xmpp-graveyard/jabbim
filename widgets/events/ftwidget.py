@@ -1,9 +1,5 @@
 import os,sys
-try:
-	from PyQt4 import QtCore, QtGui
-except:
-	print "PyQt4 is not installed."
-
+from PyQt4 import QtCore, QtGui
 from ftwidget_ui import *
 from ftuploadwidget_ui import *
 import time

@@ -1,9 +1,5 @@
 import os
-try:
-	from PyQt4 import QtCore, QtGui
-except:
-	print "PyQt4 is not installed."
-
+from PyQt4 import QtCore, QtGui
 from vcardeditor_ui import *
 import base64
 from twisted.words.xish.domish import Element

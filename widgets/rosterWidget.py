@@ -17,11 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 import os
-try:
-	from PyQt4 import QtCore, QtGui
-except:
-	print "PyQt4 is not installed."
-
+from PyQt4 import QtCore, QtGui
 from tooltip_ui import *
 #from eventsFTWidget_ui import *
 from os.path import basename

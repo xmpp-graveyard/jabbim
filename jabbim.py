@@ -52,8 +52,7 @@ for opt, arg in OPTIONS:
 		
 		sys.exit()
 
-try: from PyQt4 import QtCore, QtGui,QtWebKit
-except: print "PyQt4 is not installed."
+from PyQt4 import QtCore, QtGui, QtWebKit
 
 #if sys.argv[1]=="remote":
 #	app=QtCore.QCoreApplication([])

@@ -1,6 +1,5 @@
 import sys,os
-try: from PyQt4 import QtCore, QtGui
-except: print "PyQt4 is not installed."
+from PyQt4 import QtCore, QtGui
 import widgets
 from configobj import ConfigObj
 from include import utils

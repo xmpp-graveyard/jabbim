@@ -1,8 +1,5 @@
 import os,weakref
-try:
-	from PyQt4 import QtCore, QtGui
-except:
-	print "PyQt4 is not installed."
+from PyQt4 import QtCore, QtGui
 from miniroster_ui import *
 from twisted.internet import threads
 

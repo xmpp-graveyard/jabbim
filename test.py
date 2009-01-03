@@ -1,5 +1,4 @@
-try: from PyQt4 import QtCore, QtGui
-except: print "PyQt4 is not installed."
+from PyQt4 import QtCore, QtGui
 
 class TitleBar(QtGui.QWidget):
 	def __init__(self,parent=None):

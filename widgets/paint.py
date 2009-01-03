@@ -1,6 +1,4 @@
-try: from PyQt4 import QtCore, QtGui
-except: print "PyQt4 is not installed."
-
+from PyQt4 import QtCore, QtGui
 from paint_ui import *
 
 class paintArea(QtGui.QWidget):

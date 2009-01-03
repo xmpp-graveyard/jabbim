@@ -28,10 +28,7 @@ from configobj import ConfigObj
 import zipfile, socket
 from cStringIO import StringIO
 
-try:
-	from PyQt4 import QtCore, QtGui
-except:
-	print "PyQt4 is not installed."
+from PyQt4 import QtCore, QtGui
 	
 def extractZip( filename, dir ):
 	zf = zipfile.ZipFile( filename )

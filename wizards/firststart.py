@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*- 
-try:
-	from PyQt4 import QtCore, QtGui
-except:
-	print "PyQt4 is not installed."
-
+from PyQt4 import QtCore, QtGui
 import newprofile_ui
 from twisted.internet import reactor
 from twisted.python import log

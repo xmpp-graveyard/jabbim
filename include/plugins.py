@@ -20,14 +20,10 @@ import sys
 from configobj import ConfigObj
 from twisted.python import log
 from imp import load_source
-try:
-	from PyQt4 import QtCore, QtGui
-except:
-	print "PyQt4 is not installed."
+from PyQt4 import QtCore, QtGui
 import utils
 from os.path import basename
 from widgets.configlib import pluginConfiguration
-
 
 class PluginBase(object):
 	def __init__(self, main, homedir, plugindir):

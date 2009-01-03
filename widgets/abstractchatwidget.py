@@ -1,9 +1,4 @@
-try:
-	from PyQt4 import QtCore, QtGui,QtWebKit
-except:
-	print "PyQt4 is not installed."
-
-
+from PyQt4 import QtCore, QtGui, QtWebKit
 from configobj import ConfigObj
 #from palette import *
 import urllib,re,os

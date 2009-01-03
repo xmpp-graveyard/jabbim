@@ -1,7 +1,4 @@
-try:
-	from PyQt4 import QtCore, QtGui
-except:
-	print "PyQt4 is not installed."
+from PyQt4 import QtCore, QtGui
 import sys; sys.path.append('..')
 import os
 from pyxl import jid as jidT

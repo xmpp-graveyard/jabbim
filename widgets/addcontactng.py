@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*- 
 
 import os
-try:
-	from PyQt4 import QtCore, QtGui
-except:
-	print "PyQt4 is not installed."
-
+from PyQt4 import QtCore, QtGui
 from addcontactng_ui import *
 from search import *
 import pyxl
