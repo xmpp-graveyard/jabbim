@@ -12,11 +12,6 @@ from time import time
 from twisted.internet import threads
 from twisted.words.xish.domish import escapeToXml
 import time
-try:
-	from hashlib import sha1
-except:
-	log.msg('Please upgrade to python2.5')
-	from sha import new as sha1
 from imp import load_source
 from include import utils
 
