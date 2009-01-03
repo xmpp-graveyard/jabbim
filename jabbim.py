@@ -57,11 +57,6 @@ from PyQt4 import QtCore, QtGui, QtWebKit
 #if sys.argv[1]=="remote":
 #	app=QtCore.QCoreApplication([])
 
-try:
-	QtGui.QWizard
-	USE_WIZARDS=True
-except:
-	USE_WIZARDS=False
 import qt4reactor
 #if sys.platform=="win32":
 	#import win32gui
@@ -125,8 +120,7 @@ except:
 	from sha import new as sha1
 
 import widgets
-if USE_WIZARDS:
-	import wizards
+import wizards
 import pyxl
 from pyxl import storage
 import traceback
@@ -2118,7 +2112,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.app=app
 		self.selfAvatar=None #: current avatar (QPixmap or None)
 		self.selfStatus="" #: current show (string according to self.shows)
-		self.QT43=USE_WIZARDS #: True if Qt version == 4.3
 		self.log=None
 		self.plugins = {}
 		self.config=None #: config dict (loaded by configObj)
@@ -2146,9 +2139,8 @@ class mainWindow(QtGui.QMainWindow):
 		# check if there is existing profile
 		profiles=utils.getProfiles(self.realHomeDir)
 		if len(profiles)==0:
-			if USE_WIZARDS:
-				self.startwiz=wizards.firststart.firstStartWizard(self,self)
-				self.startwiz.show()
+			self.startwiz=wizards.firststart.firstStartWizard(self,self)
+			self.startwiz.show()
 
 		self.reactor=reactor
 		# load last profile according to ~/config
@@ -4132,16 +4124,14 @@ class mainWindow(QtGui.QMainWindow):
 
 	def registerButtonClicked(self):
 		# depracted
-		if USE_WIZARDS:
-			self.regwiz=wizards.registration.registrationWizard(self,self)
-			self.regwiz.show()
-		return
+		self.regwiz=wizards.registration.registrationWizard(self,self)
+		self.regwiz.show()
 
 	def serviceDiscovery(self,b):
 		"""
 		Shows Service Discovery Dialog. Called by QAction from main menu.
 		"""
-		if USE_WIZARDS and self.isJabbimUser:
+		if self.isJabbimUser:
 			self.discovery2=wizards.jabbimservicemanager.jabbimServiceManager(self,self)
 			self.discovery2.show()
 		else:
@@ -4628,9 +4618,6 @@ class mainWindow(QtGui.QMainWindow):
 		Called when user activate Join Groupchat QAction from main menu.
 		"""
 		#self.mucBrowser(bool)
-		#if USE_WIZARDS:
-			#self.joingroupchatwizard=wizards.joingroupchat.joinGroupchatWizard(self,self)
-			#self.joingroupchatwizard.show()
 		self.joingroupchatwizard=widgets.joingroupchat.joinGroupChatWindow(self,parent=self)
 		self.joingroupchatwizard.show()
 

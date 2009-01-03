@@ -120,10 +120,9 @@ class profilesWindow(QtGui.QMainWindow):
 		return profiles
 
 	def newProfile(self):
-		if self.main.QT43:
-			fs=firststart.firstStartWizard(self.main,self.main)
-			fs.exec_()
-			self.loadProfiles()
+		fs=firststart.firstStartWizard(self.main,self.main)
+		fs.exec_()
+		self.loadProfiles()
 
 	def removeProfile(self):
 		item=self.ui.profilesList.currentItem()

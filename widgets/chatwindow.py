@@ -71,25 +71,22 @@ class tabWidget(QtGui.QTabBar):
 		self.main=main
 	
 	def mouseReleaseEvent(self,event):
-		if self.main.main.QT43:
-			if event.button()==QtCore.Qt.MidButton:
-				pos=event.pos()
-				index=self.tabAt(pos)
-				if index!=-1:
-					self.main.removeTab(index)
-				event.ignore()
-				return
+		if event.button()==QtCore.Qt.MidButton:
+			pos=event.pos()
+			index=self.tabAt(pos)
+			if index!=-1:
+				self.main.removeTab(index)
+			event.ignore()
+			return
 		return QtGui.QTabBar.mouseReleaseEvent(self,event)
 
 	def wheelEvent(self,event):
-		if self.main.main.QT43:
-			if event.delta() <= 0:
-				self.main.next()
-			else:
-				self.main.previous()
-			event.accept()
-			return
-		return QtGui.QTabBar.wheelEvent(self,event)
+		if event.delta() <= 0:
+			self.main.next()
+		else:
+			self.main.previous()
+		event.accept()
+		#return QtGui.QTabBar.wheelEvent(self,event)
 
 class chatWindow(QtGui.QMainWindow):
 	"""
