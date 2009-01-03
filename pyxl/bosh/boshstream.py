@@ -93,6 +93,7 @@ class BOSHStream(utility.EventDispatcher):
 		self.ready=False
 		self.proto=None
 		self.empty=False
+		self.emptysck=0
 
 
 	def _build_first_request(self):
@@ -162,17 +163,27 @@ class BOSHStream(utility.EventDispatcher):
 		if not (len(self.out_queue2)<1 and self.proto2) and not (len(self.out_queue)<1 and self.proto):
 			for b in self.out_queue + self.out_queue2:
 				print [b.toXml().encode("utf-8")]
+			reactor.callLater(2,self._try_to_send)
 			return
+		
+			
 		print 'to send1'
 		if not self.resend_queue and len(self.send_queue) == 0 and len(self.out_queue)!=0 and len(self.out_queue2)!=0:
 			return
 
 		print 'to send2'
+
+		for b in self.send_queue:
+			print "send_queue",[b.toXml().encode("utf-8")]
+
 		self.ready=False
 		self.timestamp=time.time()
+		isBody=False
 		#force_proto=False
 		if self.resend_queue:
 			body = self.resend_queue.pop(0)
+			if self.firstSent:
+				isBody=True
 			#force_proto=True
 		else:
 			# ok, we can send a request
@@ -185,11 +196,12 @@ class BOSHStream(utility.EventDispatcher):
 				#force_proto=True
 				if self.empty:
 					return
-				self.empty=True
+				isBody=True
 				self.firstSent=True
+				reactor.callLater(0.5,self._try_to_send)
 				print "EMPTY BODY WILL BE SENT1"
 			if not self.empty and self.firstSent:
-				self.empty=True
+				isBody=True
 				reactor.callLater(0.5,self._try_to_send)
 				print "EMPTY BODY WILL BE SENT2",self.send_queue
 			else:
@@ -218,15 +230,23 @@ class BOSHStream(utility.EventDispatcher):
 			unicode(body.toXml()).encode("utf-8")
 		)
 		print "QUEUE DUMP",self.out_queue2,self.out_queue
-		if len(self.out_queue2)<1 and self.proto2:
-			self.proto2.submitRequest(req, False).addCallback(self.got_response,False).addErrback(self.got_error)
-			self.out_queue2.append(body)
-			print 'send2'
-		elif len(self.out_queue)<1 and self.proto:
+		if len(self.out_queue)<1 and self.proto and isBody:
 			self.proto.submitRequest(req, False).addCallback(self.got_response,True).addErrback(self.got_error)
 			self.out_queue.append(body)
+			print [body.toXml().encode("utf-8")]
 			print 'send1'
+			if isBody:
+				self.empty=1
+		elif len(self.out_queue2)<1 and self.proto2 and not isBody:
+			self.proto2.submitRequest(req, False).addCallback(self.got_response,False).addErrback(self.got_error)
+			self.out_queue2.append(body)
+			print [body.toXml().encode("utf-8")]
+			print 'send2'
+			if isBody:
+				self.empty=2
 		print "QUEUE DUMP AFTER",self.out_queue2,self.out_queue
+		if len(self.send_queue)!=0:
+			reactor.callLater(2,self._try_to_send)
 
 	def got_response(self, resp, first):
 		print 'read the body'
@@ -258,6 +278,7 @@ class BOSHStream(utility.EventDispatcher):
 			if not self.initialized:
 				self.session_created(body)
 			for el in xmpp_elements:
+				print  "received:",[el.toXml().encode("utf-8")]
 				if domish.IElement.providedBy(el):
 					self.dispatch(el)    
 			# this is an ack for the outgoing packets
@@ -350,29 +371,30 @@ class BOSHStream(utility.EventDispatcher):
 		self.reconnect_interval = 0
 
 	def _connectionLost(self,proto):
-		if proto == self.proto or self.proto==None:
+		if proto == self.proto:
 			print "proto1 closed"
 			self.proto=None
 			self.out_queue=[]
-			reactor.callLater(2,self.factory.connectors[1].connect)
-			body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
-		
-			if self.sid: body["sid"] = self.sid
-			body["rid"] = `self.rid`
-			self.rid += 1
-			self.resend_queue.append(body)
-			reactor.callLater(2,self.factory.connectors[0].connect)
-		elif proto == self.proto2 or self.proto2==None:
+			if self.firstSent and (not self.empty or self.empty==1):
+				body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
+			
+				if self.sid: body["sid"] = self.sid
+				body["rid"] = `self.rid`
+				self.rid += 1
+				self.resend_queue.append(body)
+			reactor.callLater(0,self.factory.connectors[0].connect)
+		elif proto == self.proto2:
 			self.proto2=None
 			self.out_queue2=[]
-			reactor.callLater(2,self.factory.connectors[1].connect)
-			body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
-		
-			if self.sid: body["sid"] = self.sid
-			body["rid"] = `self.rid`
-			self.rid += 1
-			self.resend_queue.append(body)
+			if self.firstSent and (not self.empty or self.empty==2):
+				body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
+			
+				if self.sid: body["sid"] = self.sid
+				body["rid"] = `self.rid`
+				self.rid += 1
+				self.resend_queue.append(body)
 			print "proto2 closed"
+			reactor.callLater(0,self.factory.connectors[1].connect)
 		#if self.proto or self.proto2:
 			#reactor.connectTCP(self.host, self.port, self.factory)
 			#reactor.callLater(self.reconnect_interval+1, self.connect)
