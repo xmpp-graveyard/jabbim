@@ -119,10 +119,10 @@ class BOSHStream(utility.EventDispatcher):
 		print self.host , 	self.port , self.path
 		# now queue the first body for initializing the session
 		body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
-		body["rid"] = `self.rid`
+		#body["rid"] = `self.rid`
 		#body['newkey'] = str(sha1(str(self.seed)).hexdigest())
 		
-		self.rid += 1
+		#self.rid += 1
 		for k,v in self.factory.bosh_attrs.items():
 			body[k.encode('utf-8')] = v.encode("utf-8")
 		body['route']="xmpp:"+body['to']+":5222"
@@ -183,6 +183,7 @@ class BOSHStream(utility.EventDispatcher):
 		if self.resend_queue:
 			body = self.resend_queue.pop(0)
 			if self.firstSent:
+				print "EMPTY BODY WILL BE SENT0"
 				isBody=True
 			#force_proto=True
 		else:
@@ -190,8 +191,8 @@ class BOSHStream(utility.EventDispatcher):
 			body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
 		
 			if self.sid: body["sid"] = self.sid
-			body["rid"] = `self.rid`
-			self.rid += 1
+			#body["rid"] = `self.rid`
+			#self.rid += 1
 			if len(self.send_queue)==0:
 				#force_proto=True
 				if self.empty:
@@ -223,14 +224,17 @@ class BOSHStream(utility.EventDispatcher):
 		#print body.toXml().encode("ascii")
 		#print dump(buffer(body.toXml().encode("ascii"),0))
 		
-		req = ClientRequest(
-			"POST", 
-			self.path, 
-			thead,
-			unicode(body.toXml()).encode("utf-8")
-		)
+
 		print "QUEUE DUMP",self.out_queue2,self.out_queue
 		if len(self.out_queue)<1 and self.proto and isBody:
+			body["rid"] = `self.rid`
+			self.rid += 1
+			req = ClientRequest(
+				"POST", 
+				self.path, 
+				thead,
+				unicode(body.toXml()).encode("utf-8")
+			)
 			self.proto.submitRequest(req, False).addCallback(self.got_response,True).addErrback(self.got_error)
 			self.out_queue.append(body)
 			print [body.toXml().encode("utf-8")]
@@ -238,6 +242,14 @@ class BOSHStream(utility.EventDispatcher):
 			if isBody:
 				self.empty=1
 		elif len(self.out_queue2)<1 and self.proto2 and not isBody:
+			body["rid"] = `self.rid`
+			self.rid += 1
+			req = ClientRequest(
+				"POST", 
+				self.path, 
+				thead,
+				unicode(body.toXml()).encode("utf-8")
+			)
 			self.proto2.submitRequest(req, False).addCallback(self.got_response,False).addErrback(self.got_error)
 			self.out_queue2.append(body)
 			print [body.toXml().encode("utf-8")]
@@ -274,6 +286,7 @@ class BOSHStream(utility.EventDispatcher):
 	
 		try:
 			if self.rawDataInFn: self.rawDataInFn(data)
+			print [data]
 			body, xmpp_elements = self.parser.parse(data)
 			if not self.initialized:
 				self.session_created(body)
@@ -375,25 +388,32 @@ class BOSHStream(utility.EventDispatcher):
 			print "proto1 closed"
 			self.proto=None
 			self.out_queue=[]
-			if self.firstSent and (not self.empty or self.empty==1):
+			if self.firstSent:
 				body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
 			
 				if self.sid: body["sid"] = self.sid
-				body["rid"] = `self.rid`
-				self.rid += 1
+				#body["rid"] = `self.rid`
+				#self.rid += 1
 				self.resend_queue.append(body)
+			self.factory.connectors[0].disconnect()
 			reactor.callLater(0,self._connect,self.factory.connectors[0])
 		elif proto == self.proto2:
 			self.proto2=None
-			self.out_queue2=[]
-			if self.firstSent and (not self.empty or self.empty==2):
-				body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
+			if self.out_queue2!=[]:
+				body=self.out_queue2[0]
+				#body["rid"] = `self.rid`
+				#self.rid += 1
+				self.send_queue.insert(0,body)
+				self.out_queue2=[]
+			#if self.firstSent and (not self.empty or self.empty==2):
+				#body = domish.Element(("http://jabber.org/protocol/httpbind", "body"))
 			
-				if self.sid: body["sid"] = self.sid
-				body["rid"] = `self.rid`
-				self.rid += 1
-				self.resend_queue.append(body)
+				#if self.sid: body["sid"] = self.sid
+				#body["rid"] = `self.rid`
+				#self.rid += 1
+				#self.resend_queue.append(body)
 			print "proto2 closed"
+			self.factory.connectors[1].disconnect()
 			reactor.callLater(0,self._connect,self.factory.connectors[1])
 		#if self.proto or self.proto2:
 			#reactor.connectTCP(self.host, self.port, self.factory)
@@ -402,6 +422,7 @@ class BOSHStream(utility.EventDispatcher):
 				#self.reconnect_interval += 1
 
 	def _connect(self,connector,t=0):
+		print connector.state
 		if connector.state=="disconnected":
 			connector.connect()
 		elif t<6:
@@ -423,8 +444,8 @@ class BOSHStream(utility.EventDispatcher):
 		body["xmlns:xmpp"] = "urn:xmpp:xbosh"
 		body["xmpp:restart"] = "true"
 		body["sid"] = self.sid
-		body["rid"] = `self.rid`
-		self.rid += 1
+		#body["rid"] = `self.rid`
+		#self.rid += 1
 		self.resend_queue.append(body)
 		self._try_to_send()
  
@@ -500,4 +521,5 @@ class BOSHStreamFactory(XmlStreamFactoryMixin, protocol.ClientFactory):
 	def startedConnecting(self, connector):
 		if not connector in self.connectors:
 			self.connectors.append(connector)
+
 
