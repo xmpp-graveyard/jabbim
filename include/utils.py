@@ -24,7 +24,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 import os,sys, re,platform,time
-from configobj import ConfigObj
+from configobj import ConfigObj, ConfigObjError
 import zipfile, socket
 from cStringIO import StringIO
 
@@ -223,7 +223,16 @@ def loadConfig(main,status):
 			'lastUploadDir': getDesktopPath(),
 			'lastDownloadDir': getDesktopPath()
 			}
-	main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
+
+	rewrite = False
+	try:
+		main.config = ConfigObj(main.homeDir+'/config', encoding='UTF8')
+	except ConfigObjError, e:
+		# damaged config file. parts of it may be alright
+		# => salvage lines that are syntactically correct
+		main.config = e.config
+		rewrite = True
+
 	if len(main.config)==0:
 		makeHomeDir(main.homeDir)
 		#if not os.path.isdir(main.homeDir):
@@ -232,8 +241,7 @@ def loadConfig(main,status):
 		main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
 		for k,v in configs.iteritems():
 			main.config[k]=v
-		main.config.write()
-	rewrite=False
+		rewrite = True
 	for k,v in configs.iteritems():
 		try:
 			main.config[k]
@@ -252,8 +260,7 @@ def loadConfig(main,status):
 		main.config['chatSkin']="cool/cool.cfg"
 		rewrite=True
 
-	
-	if rewrite==True:
+	if rewrite:
 		main.config.write()
 	main.config["chatSplitterSizes"]=map(int, main.config["chatSplitterSizes"])
 	main.config["chatSplitter2Sizes"]=map(int, main.config["chatSplitter2Sizes"])
