@@ -159,7 +159,7 @@ class BOSHStream(utility.EventDispatcher):
 			return
 		
 
-		print 'to send'
+		print 'to send',self.proto,self.proto2,len(self.out_queue),len(self.out_queue2)
 		if not (len(self.out_queue2)<1 and self.proto2) and not (len(self.out_queue)<1 and self.proto):
 			for b in self.out_queue + self.out_queue2:
 				print [b.toXml().encode("utf-8")]
