@@ -501,6 +501,9 @@ class BOSHTTPClient(HTTPClientProtocol):
 	def connectionLost(self,reason):
 		self.manager._connectionLost(self)
 
+	def connectionFailed(self,reason):
+		print "CONNECTION FAILED"
+		self.manager._connectionLost(self)
 
 class BOSHStreamFactory(XmlStreamFactoryMixin, protocol.ClientFactory):
 	bosh_client = None
