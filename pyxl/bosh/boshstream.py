@@ -206,13 +206,18 @@ class BOSHStream(utility.EventDispatcher):
 				reactor.callLater(0.5,self._try_to_send)
 				print "EMPTY BODY WILL BE SENT2",self.send_queue
 			else:
-				while self.send_queue:
-					obj = self.send_queue.pop(0)
-					if domish.IElement.providedBy(obj):
-						body.addChild(obj)
-					else:
-						body.addRawXml(obj)
-	
+				if len(self.out_queue2)<1 and self.proto2 and not isBody:
+					while self.send_queue:
+						obj = self.send_queue.pop(0)
+						if domish.IElement.providedBy(obj):
+							body.addChild(obj)
+						else:
+							body.addRawXml(obj)
+				else:
+					print "can't send this body, because there is something in queue",self.out_queue2
+					reactor.callLater(2,self._try_to_send)
+					return
+					
 		if self.rawDataOutFn:
 			self.rawDataOutFn(body.toXml())
 		thead = http_headers.Headers()
