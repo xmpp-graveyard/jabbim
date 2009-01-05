@@ -464,14 +464,14 @@ class Client(derived):
 		log.msg(unicode(self.factory))
 		if self.proxy != None and self.IBBonly and boshURL != '':
 			if boshURL!="":
-				self.connection = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory)
-				self.connection2 = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory)
+				self.connection = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory,2)
+				self.connection2 = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory,2)
 			else:
 				self.connection = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory)
 		else:
 			if boshURL!="":
-				self.connection = reactor.connectTCP(host,port, self.factory)
-				self.connection2 = reactor.connectTCP(host,port, self.factory)
+				self.connection = reactor.connectTCP(host,port, self.factory,2)
+				self.connection2 = reactor.connectTCP(host,port, self.factory,2)
 			else:
 				self.connection = reactor.connectTCP(host,port, self.factory)
 		self.reactor.callFromThread(self.on_connect)
