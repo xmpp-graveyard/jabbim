@@ -522,7 +522,11 @@ class BOSHStreamFactory(XmlStreamFactoryMixin, protocol.ClientFactory):
 		return bosh_client
 
 	def startedConnecting(self, connector):
+		print "startedConnecting"
 		if not connector in self.connectors:
 			self.connectors.append(connector)
-
+	
+	def connectionFailed(self,connector,reason):
+		print "CONNECTION FAILED",reason
+		self.xs._connectionLost(connector)
 
