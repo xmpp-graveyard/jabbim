@@ -2542,11 +2542,11 @@ Do you realy want to leave this room?</source>
     </message>
     <message>
         <source>Away</source>
-        <translation>Por ahí</translation>
+        <translation>Ausente</translation>
     </message>
     <message>
         <source>Extended away</source>
-        <translation>Por ahí hace rato</translation>
+        <translation>Ausente hace rato</translation>
     </message>
     <message>
         <source>DND</source>
@@ -4526,7 +4526,7 @@ Versión: %3</translation>
     </message>
     <message>
         <source>User is now away</source>
-        <translation>El usuario ahora está lejos</translation>
+        <translation>El usuario ahora está ausente</translation>
     </message>
     <message>
         <source>Message for user</source>
@@ -4610,11 +4610,11 @@ Versión: %3</translation>
     </message>
     <message>
         <source>Away:</source>
-        <translation>Lejos:</translation>
+        <translation>Ausente:</translation>
     </message>
     <message>
         <source>Extended away:</source>
-        <translation>Lejos hace rato:</translation>
+        <translation>Ausente hace rato:</translation>
     </message>
     <message>
         <source>DND:</source>
