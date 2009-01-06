@@ -2806,8 +2806,8 @@ class mainWindow(QtGui.QMainWindow):
 		jid = jidT.JID(jid).userhost()
 
 		text='<table><tr>'
-		if self.userRating.users.has_key(jid):
-			text+="<td>rating: "+str(self.userRating.users[jid].rating)+"</td>"
+#		if self.userRating.users.has_key(jid):
+#			text+="<td>rating: "+str(self.userRating.users[jid].rating)+"</td>"
 		if self.client.avatarDef.get(jid, False):
 			if self.client.avatarImg.has_key(self.client.avatarDef[jid]):
 				if self.client.avatarImg[self.client.avatarDef[jid]] and self.client.avatarDef[jid]!="None":
