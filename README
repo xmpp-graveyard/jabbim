@@ -17,7 +17,9 @@ First make sure you have all the dependencies. You need at least:
   - Twisted (a.k.a. python-twisted; at least -names, -web, -words)
   - pysqlite 2.x (a.k.a. python-sqlite2)
   - pyOpenSSL
-
+Optional:
+  - Twisted-Web2 (a.k.a. python-twisted-web2) for connecting over HTTP (BOSH).
+  - DBus support in PyQt (python-qt4-dbus in Debian) for the 'tune' plugin in Linux.
 
 How to run Jabbim
 -----------------
