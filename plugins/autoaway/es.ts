@@ -1,34 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1">
+<!DOCTYPE TS><TS>
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="autoaway.py" line="121"/>
         <source>Auto away</source>
-        <translation type="unfinished"></translation>
+        <translation>Ausencia por inactividad</translation>
     </message>
     <message>
-        <location filename="autoaway.py" line="123"/>
         <source>Autoaway Plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>Plugin de ausencia por inactividad</translation>
     </message>
 </context>
 <context>
     <name>self.main</name>
     <message>
-        <location filename="autoaway.py" line="111"/>
         <source>Away time (minutes):</source>
-        <translation type="unfinished"></translation>
+        <translation>Tiempo ausente (minutos):</translation>
     </message>
     <message>
-        <location filename="autoaway.py" line="112"/>
         <source>Away text</source>
-        <translation type="unfinished"></translation>
+        <translation>Texto de ausencia</translation>
     </message>
     <message>
-        <location filename="autoaway.py" line="113"/>
         <source>I&apos;m not here since [last].</source>
-        <translation type="unfinished"></translation>
+        <translation>No estoy aquí desde [last].</translation>
     </message>
 </context>
 </TS>
