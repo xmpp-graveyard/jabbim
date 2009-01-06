@@ -1,174 +1,140 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1">
+<!DOCTYPE TS><TS>
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="notification.py" line="275"/>
         <source>System tray and sound notification</source>
-        <translation type="unfinished"></translation>
+        <translation>Bandeja de sistema y notificación de sonido</translation>
     </message>
     <message>
-        <location filename="notification.py" line="277"/>
         <source>Notification Plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>Plugin de notificación</translation>
     </message>
     <message>
-        <location filename="notification.py" line="351"/>
         <source>Notification test - can drag</source>
-        <translation type="unfinished"></translation>
+        <translation>Notificación de prueba - se puede arrastrar</translation>
     </message>
     <message>
-        <location filename="notification.py" line="388"/>
         <source>Notification test</source>
-        <translation type="unfinished"></translation>
+        <translation>Notificación de prueba</translation>
     </message>
     <message>
-        <location filename="notification.py" line="380"/>
         <source>Notification </source>
-        <translation type="unfinished"></translation>
+        <translation>Notificación</translation>
     </message>
     <message>
-        <location filename="notification.py" line="380"/>
         <source>Notification plugin test :)</source>
-        <translation type="unfinished"></translation>
+        <translation>Prueba del plugin de notificación :)</translation>
     </message>
     <message>
-        <location filename="notification.py" line="408"/>
         <source>WARNING!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡ATENCIÓN!</translation>
     </message>
     <message>
-        <location filename="notification.py" line="426"/>
         <source> is now </source>
-        <translation type="unfinished"></translation>
+        <translation> está ahora </translation>
     </message>
     <message>
-        <location filename="notification.py" line="550"/>
         <source>New message from </source>
-        <translation type="unfinished"></translation>
+        <translation>Nuevo mensaje de </translation>
     </message>
     <message>
-        <location filename="notification.py" line="543"/>
         <source>New groupchat message for you</source>
-        <translation type="unfinished"></translation>
+        <translation>Nuevo mensaje en la sala para ti</translation>
     </message>
 </context>
 <context>
     <name>self.main</name>
     <message>
-        <location filename="notification.py" line="247"/>
         <source>Notify on first message from user</source>
-        <translation type="unfinished"></translation>
+        <translation>Notificar el primer mensaje del usuario</translation>
     </message>
     <message>
-        <location filename="notification.py" line="247"/>
         <source>Tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Icono en la bandeja de sistema</translation>
     </message>
     <message>
-        <location filename="notification.py" line="248"/>
         <source>Tray Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Icono en la bandeja de sistema</translation>
     </message>
     <message>
-        <location filename="notification.py" line="248"/>
         <source>Notify if groupchat message contains your nickname</source>
-        <translation type="unfinished"></translation>
+        <translation>Notificar si el mensaje de sala contiene tu apodo</translation>
     </message>
     <message>
-        <location filename="notification.py" line="261"/>
         <source>Groupchat</source>
-        <translation type="unfinished"></translation>
+        <translation>Sala</translation>
     </message>
     <message>
-        <location filename="notification.py" line="269"/>
         <source>OSD</source>
-        <translation type="unfinished"></translation>
+        <translation>Información en pantalla</translation>
     </message>
     <message>
-        <location filename="notification.py" line="250"/>
         <source>Play sound on login</source>
-        <translation type="unfinished"></translation>
+        <translation>Tocar sonido al hacer login</translation>
     </message>
     <message>
-        <location filename="notification.py" line="257"/>
         <source>Sounds</source>
-        <translation type="unfinished"></translation>
+        <translation>Sonidos</translation>
     </message>
     <message>
-        <location filename="notification.py" line="251"/>
         <source>Play sound on first message from user</source>
-        <translation type="unfinished"></translation>
+        <translation>Tocar sonido al primer mensaje del usuario</translation>
     </message>
     <message>
-        <location filename="notification.py" line="252"/>
         <source>Play sound on other messages from user</source>
-        <translation type="unfinished"></translation>
+        <translation>Tocar sonido en cualquier mensaje para el usuario</translation>
     </message>
     <message>
-        <location filename="notification.py" line="253"/>
         <source>Play sound if groupchat message contains your nickname</source>
-        <translation type="unfinished"></translation>
+        <translation>Tocar sonido si la sala contiene tu apodo</translation>
     </message>
     <message>
-        <location filename="notification.py" line="254"/>
         <source>Play sound on new presence</source>
-        <translation type="unfinished"></translation>
+        <translation>Tocar sonido cuando haya una presencia nueva</translation>
     </message>
     <message>
-        <location filename="notification.py" line="255"/>
         <source>Play sound on file transfer</source>
-        <translation type="unfinished"></translation>
+        <translation>Tocar sonido al iniciar transferencia de ficheros</translation>
     </message>
     <message>
-        <location filename="notification.py" line="257"/>
         <source>Use transparent background</source>
-        <translation type="unfinished"></translation>
+        <translation>Usar fondo transparente</translation>
     </message>
     <message>
-        <location filename="notification.py" line="266"/>
         <source>Global</source>
-        <translation type="unfinished"></translation>
+        <translation>Global</translation>
     </message>
     <message>
-        <location filename="notification.py" line="258"/>
         <source>Display time (seconds):</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar tiempo (segundos):</translation>
     </message>
     <message>
-        <location filename="notification.py" line="259"/>
         <source>Use OSD for first message</source>
-        <translation type="unfinished"></translation>
+        <translation>Informar en pantalla al primer mensaje</translation>
     </message>
     <message>
-        <location filename="notification.py" line="260"/>
         <source>Chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Chat</translation>
     </message>
     <message>
-        <location filename="notification.py" line="260"/>
         <source>Use OSD for other messages</source>
-        <translation type="unfinished"></translation>
+        <translation>Informar en pantalla de otros mensajes</translation>
     </message>
     <message>
-        <location filename="notification.py" line="261"/>
         <source>Use OSD for all conference messages</source>
-        <translation type="unfinished"></translation>
+        <translation>Informar en pantalla todos los mensajes de las salas</translation>
     </message>
     <message>
-        <location filename="notification.py" line="266"/>
         <source>Use OSD for presences</source>
-        <translation type="unfinished"></translation>
+        <translation>Informar en pantalla sobre las presencias</translation>
     </message>
     <message>
-        <location filename="notification.py" line="264"/>
         <source>Headline font size</source>
-        <translation type="unfinished"></translation>
+        <translation>Tamaño de la fuente del titular</translation>
     </message>
     <message>
-        <location filename="notification.py" line="265"/>
         <source>Text font size</source>
-        <translation type="unfinished"></translation>
+        <translation>Tamaño de la fuente del texto</translation>
     </message>
 </context>
 </TS>
