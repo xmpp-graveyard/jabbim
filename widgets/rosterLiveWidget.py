@@ -2128,8 +2128,12 @@ class rosterWidget(QtGui.QWidget):
 
 		users = self.getUserItems(jid)
 		if len(users)==0:
-			print "compare: no user item"
-			return True
+			users=self.getMetaItems(jid)
+			if len(users)!=0:
+				users=users[0]
+			else:
+				print "compare: no user item"
+				return True
 		user=users[0]
 		if user.statusMessage==status and user.status==self.main.shows[unicode(show)] and user.height==self.rosterStyle.heightForItem(user):
 			return True
