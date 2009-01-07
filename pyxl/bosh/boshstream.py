@@ -533,8 +533,11 @@ class BOSHStreamFactory(XmlStreamFactoryMixin, protocol.ClientFactory):
 	
 	def clientConnectionFailed(self,connector,reason):
 		print "CONNECTION FAILED",reason
-		if self.connectors.index(connector)==0:
-			self.xs._connectionLost(self.xs.proto)
+		if self.xs.connected:
+			if self.connectors.index(connector)==0:
+				self.xs._connectionLost(self.xs.proto)
+			else:
+				self.xs._connectionLost(self.xs.proto2)
 		else:
-			self.xs._connectionLost(self.xs.proto2)
+			reactor.callLater(0.5,conector.connect)
 
