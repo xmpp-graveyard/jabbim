@@ -21,6 +21,10 @@ paint(\.py|\.ui|_ui\.py)
 # qm files suffice for end use:
 locales/[^/]+\.ts
 plugins/[^/]+/[^/]+\.ts
+# Do not install internal copies of standard modules,
+# packagers must declare the right dependencies.
+# python-configobj:
+(.*/)?configobj.py
 # This only contains useful information about installing:
 README
 # These are supposed to be handled specially by packagers:
