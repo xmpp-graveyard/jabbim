@@ -456,9 +456,9 @@ class Client(derived):
 		self.factory.addBootstrap('//event/stream/error', self._streamError)
 		self.factory.addBootstrap('//event/stream/end', self._streamEnd)
 		self.factory.addBootstrap('/*', self.bootLog)
-
-		#self.factory.clientConnectionLost = self.connectionLost
-		#self.factory.clientConnectionFailed = self.connectionFailed
+		if boshURL=="":
+			self.factory.clientConnectionLost = self.connectionLost
+			self.factory.clientConnectionFailed = self.connectionFailed
 
 		#self.connection = reactor.connectTCP(host,port, self.factory)
 		log.msg(unicode(self.factory))
