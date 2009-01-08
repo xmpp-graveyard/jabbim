@@ -268,7 +268,13 @@ class groupChatWidget(abstractChatWidget):
 					#else:
 						#self.tool.ui.status.hide()
 				#else:
-				self.tool.ui.status.hide()
+				status=unicode(self.main().client.groupchats[self.jid].users[nick].status).replace("None","")
+				if status!="":
+					status=utils.replace_url(status,self.main())
+					self.tool.ui.status.setHtml(status)
+					self.tool.ui.status.show()
+				else:
+					self.tool.ui.status.hide()
 
 				#tune = contact.getPEP('http://jabber.org/protocol/tune')
 				#if type(tune) == list:
