@@ -4,6 +4,7 @@ from twisted import names
 from twisted.python import log
 from twisted.internet import protocol, error
 from twisted.names import client as dns
+from twisted.names.dns import Record_TXT
 
 from twisted.words.protocols import jabber
 from twisted.words.protocols.jabber import client,jid
@@ -39,11 +40,11 @@ class RegisteringAuthenticator(BasicAuthenticator):
 				reactor.callLater(5,  self.registerAccount,  self.jid.user,  self.password)
 				print 'wait error, trying in 5 seconds'
 			self.xmlstream.dispatch(iq, self.REGISTER_FAILED_EVENT)
-	
+
 	def streamStarted(self, rootElement):
 		self.rootElement = rootElement
 		BasicAuthenticator.streamStarted(self, rootElement)
-		
+
 
 
 
@@ -76,7 +77,7 @@ class RegisteringClient:
 		self.IBBonly = False
 		self.xmlLang = 'cs'
 		pass
-	
+
 	def connect(self):
 		log.msg('dns - ' + unicode(time.time()) + '_xmpp-client._tcp.'+self.jid.host)
 		if sys.platform == 'win32':
@@ -99,7 +100,7 @@ class RegisteringClient:
 			txt = dns.lookupText('_xmppconnect.'+self.jid.host, timeout = [2,10])
 
 		defer.DeferredList([d, txt]).addCallback(self._dnsLookup)
-	
+
 
 	def _dnsLookup(self, results):
 		self.connections = []
@@ -116,6 +117,8 @@ class RegisteringClient:
 			bind = None
 			conn = None
 			for r in txt[0]:
+				if not is_instance(r.payload, Record_TXT):
+					continue
 				parts= r.payload.data[0].split('=')
 				if parts[0] == '_xmpp-client-xbosh':
 					bind = (parts[1], )
@@ -172,7 +175,7 @@ class RegisteringClient:
 
 
 
-	def _connect(self, host, port,  boshURL = None): 
+	def _connect(self, host, port,  boshURL = None):
 		if boshURL == None:
 			self.factory = basicClientFactory(self.jid,self.password)
 			self.IBBonly = False
@@ -194,16 +197,16 @@ class RegisteringClient:
 		self.factory.clientConnectionFailed = self.connectionFailed
 		self.connection = self.reactor.connectTCP(host,port,self.factory)
 		log.msg('started - ' + unicode(time.time()))
-	
+
 	def _streamstart(self, xml):
 		self.xmlstream = xml
 		self.xmlstream.rawDataInFn = self.xml
 		self.xmlstream.rawDataOutFn = self.xml
-	
+
 	def xml(self, buf):
 #		log.msg(u'XML: ' + unicode(buf, 'utf8', 'replace'))
 		pass
-	
+
 	def connectionLost(self, connector, reason=protocol.connectionDone):
 		log.msg('connection lost!')
 		if self.IBBonly:
@@ -212,9 +215,9 @@ class RegisteringClient:
 		self.tryNum+=1
 		if self.tryNum<2:
 			self.connect()
-		
 
-	
+
+
 	def connectionFailed(self, connector, reason=protocol.connectionDone):
 		log.msg('connection failed!')
 		if len(self.connections)>0:
@@ -223,24 +226,24 @@ class RegisteringClient:
 
 	def _streamEnd(self, el):
 		pass
-		
+
 	def _bind(self, el):
 		#experimental
 		log.msg('bind')
 		bind = el.firstChildElement()
 		jd = bind.firstChildElement().__str__()
 		self.jid = jid.JID(jd)
-		
+
 	def disconnect(self):
 		self.connection.disconnect()
 		self.factory.stopTrying()
 		self.connection = None
 		self.factory = None
-	
+
 	def _regfailed(self, el):
 		log.msg('reg failed')
 		print el.toXml()
-	
+
 	#def _authd(self, el):
 
 		log.msg('we are lucky, indeed')
@@ -251,7 +254,7 @@ class RegisteringClient:
 		print dir(self)
 		self.factory.authenticator.registerAccount(self.jid.user, self.password)
 		print 'trying to register'
-	
+
 	def _invaliduser(self, el):
 		log.msg('invalid user')
 		self.factory.authenticator.registerAccount(self.jid.user, self.password)

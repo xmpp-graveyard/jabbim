@@ -42,7 +42,7 @@ class EventDispatcher:
 		seznam = self.callbacks[name].itervalues()
 		serazeno = sorted(seznam, key = self.k)
 		self.sorted[name] = serazeno
-	
+
 	def publishEvent(self, name, *args, **kwargs):
 		if self.callbacks.has_key(name) and self.sorted.has_key(name):
 			t1 = time.time()
@@ -54,10 +54,10 @@ class EventDispatcher:
 					if vysl == False:
 						log.msg('event %s consumed by %s'%(name, unicode(cb['method'])))
 						return False
-						
+
 				except Exception, ex:
-					log.msg('Plugin error: ' +unicode(ex))
-					log.msg('In function:'+unicode(cb['method']))
+					log.msg('Plugin error: ' +unicode(ex, 'utf8'))
+					log.msg('In function:'+unicode(cb['method'], 'utf8'))
 					message = traceback.format_exc()
 					log.msg(message)
 			#log.msg('%s event executed in %i s'%(name, time.time()-t1))

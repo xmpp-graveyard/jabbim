@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import sys, time, random, os, re
 import socks5, events, base64
 from twisted import names
+from twisted.names.dns import Record_TXT
 from twisted.python import log
 from twisted.internet import protocol, error
 from twisted.names import client as dns
@@ -372,6 +373,8 @@ class Client(derived):
 			bind = None
 			conn = None
 			for r in txt[0]:
+				if not is_instance(r.payload, Record_TXT):
+					continue
 				parts= r.payload.data[0].split('=')
 				if parts[0] == '_xmpp-client-xbosh':
 					bind = (parts[1], )
