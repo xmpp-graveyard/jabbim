@@ -514,6 +514,7 @@ class BOSHStreamFactory(XmlStreamFactoryMixin, protocol.ClientFactory):
 	bosh_client = None
 	xs=None
 	connectors=[]
+	connectionFailedCount=0
 	def buildProtocol(self, addr):
 		print "buildProtocol",addr
 		#if self.bosh_client != None:
@@ -522,6 +523,7 @@ class BOSHStreamFactory(XmlStreamFactoryMixin, protocol.ClientFactory):
 			self.xs = XmlStreamFactoryMixin.buildProtocol(self, addr)
 		bosh_client = BOSHTTPClient(manager = self.xs)
 		bosh_client.factory = self
+		self.connectionFailedCount=0
 		#self.bosh_client = bosh_client
 		
 		return bosh_client
@@ -530,14 +532,4 @@ class BOSHStreamFactory(XmlStreamFactoryMixin, protocol.ClientFactory):
 		print "startedConnecting"
 		if not connector in self.connectors:
 			self.connectors.append(connector)
-	
-	def clientConnectionFailed(self,connector,reason):
-		print "CONNECTION FAILED",reason
-		if self.xs.connected:
-			if self.connectors.index(connector)==0:
-				self.xs._connectionLost(self.xs.proto)
-			else:
-				self.xs._connectionLost(self.xs.proto2)
-		else:
-			reactor.callLater(0.5,conector.connect)
 

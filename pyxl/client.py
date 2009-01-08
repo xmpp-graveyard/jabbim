@@ -197,6 +197,7 @@ class Client(derived):
 #		self.archive = archive.ArchiveInit(self)
 
 		self.state = 'init'
+		
 		self.proxy = None
 		self.on_init()
 
@@ -440,7 +441,7 @@ class Client(derived):
 				return
 			#print 'PROXY', self.proxy
 			self.factory = bclient.BOSHClientFactory(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang},  proxy  = self.proxy)
-			self.factory.client=self
+			#self.factory.client=self
 #			self.factory = bosh_wokkel.BOSHClient(self.jid, self.password, unicode(boshURL), bosh_attrs = {"wait": "10", 'xml:lang':self.xmlLang})
 
 			self.IBBonly = True
@@ -456,9 +457,8 @@ class Client(derived):
 		self.factory.addBootstrap('//event/stream/error', self._streamError)
 		self.factory.addBootstrap('//event/stream/end', self._streamEnd)
 		self.factory.addBootstrap('/*', self.bootLog)
-		if boshURL=="":
-			self.factory.clientConnectionLost = self.connectionLost
-			self.factory.clientConnectionFailed = self.connectionFailed
+		self.factory.clientConnectionLost = self.connectionLost
+		self.factory.clientConnectionFailed = self.connectionFailed
 
 		#self.connection = reactor.connectTCP(host,port, self.factory)
 		log.msg(unicode(self.factory))
@@ -514,6 +514,20 @@ class Client(derived):
 		self.reactor.callFromThread(self.on_disconnect)
 
 	def connectionFailed(self, connector, reason=protocol.connectionDone):
+		# this must be executed only for BOSH		
+		if self.IBBonly and self.connection != None and int(self.port) != 443:
+			print "CONNECTION FAILED",reason
+			if self.factory.connectionFailedCount<4:
+				if self.factory.xs and self.factory.xs.connected:
+					if self.factory.connectors.index(connector)==0:
+						self.factory.xs._connectionLost(self.xs.proto)
+					else:
+						self.factory.xs._connectionLost(self.xs.proto2)
+				else:
+					reactor.callLater(0.5,connector.connect)
+				self.factory.connectionFailedCount+=1
+				return
+
 		#HACK!
 		if self.state != 'init':
 			self.connectionLost(connector, reason)
