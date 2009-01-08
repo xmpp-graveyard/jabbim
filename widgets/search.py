@@ -55,11 +55,11 @@ class searchDialog(QtGui.QDialog):
 
 		layout=QtGui.QGridLayout(self.widget)
 		self.var,row=dataforms.makeDataForm(self.widget,layout,self.form)
-		
+
 		self.ok=QtGui.QPushButton(self.tr("Search"),self.widget)
 		self.add=QtGui.QPushButton(self.tr("Add to roster"),self.widget)
 		self.cancel=QtGui.QPushButton(self.tr("Cancel"),self.widget)
-		
+
 		QtCore.QObject.connect(self.ok,QtCore.SIGNAL("clicked()"),self.search)
 		QtCore.QObject.connect(self.add,QtCore.SIGNAL("clicked()"),self.accept)
 		QtCore.QObject.connect(self.cancel,QtCore.SIGNAL("clicked()"),self.reject)
@@ -67,7 +67,7 @@ class searchDialog(QtGui.QDialog):
 		self.table=table(self.splitter)
 		self.table.header().hide()
 		#self.table.hide()
-		
+
 		hlayout=QtGui.QHBoxLayout()
 		hlayout.addStretch()
 		hlayout.addWidget(self.ok)
@@ -96,7 +96,7 @@ class searchDialog(QtGui.QDialog):
 		#<x xmlns='jabber:x:data' type='result'><title>Search Results for users.netlab.cz</title><reported><field var='jid' label='Jabber ID'/><field var='fn' label='Full Name'/><field var='given' label='Name'/><field var='middle' label='Middle Name'/><field var='family' label='Family Name'/><field var='nickname' label='Nickname'/><field var='bday' label='Birthday'/><field var='ctry' label='Country'/><field var='locality' label='City'/><field var='email' label='Email'/><field var='orgname' label='Organization Name'/><field var='orgunit' label='Organization Unit'/></reported>
 		#<item><field var='jid'><value>hanzz@jabbim.pl</value></field><field var='fn'><value/></field><field var='family'><value/></field><field var='given'><value/></field><field var='middle'><value/></field><field var='nickname'><value/></field><field var='bday'><value/></field><field var='ctry'><value/></field><field var='locality'><value/></field><field var='email'><value/></field><field var='orgname'><value/></field><field var='orgunit'><value/></field></item></x>
 		fields={}
-		
+
 		i=0
 		for x in form.elements():
 			if x.name=="reported":
@@ -130,9 +130,9 @@ class searchDialog(QtGui.QDialog):
 	def search(self):
 		self.table.jidIndex=None
 		form=dataforms.sendDataForm(self.main,self.jid,self.form,self.var,"only get form")
-		d=self.main.client.setSearchForm(self.jid,forms=form)
+		d=self.main().client.setSearchForm(self.jid,forms=form)
 		d.addCallback(self._gotResults)
-		
+
 
 		#dataforms.sendDataForm(self.main,self.jid,self.form,self.var,"muc")
 		#self.done(1)
