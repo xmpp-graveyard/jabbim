@@ -1,9 +1,11 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui
 import jsm_ui
 import weakref
 from widgets import servicediscovery, dataforms, legacyforms
 from widgets.addcontactng import showDict, addDict, showWeather, addWeather
+from twisted.internet import defer
+from pyxl import jid
 
 class jabbimServiceManager(QtGui.QDialog):
 	def __init__(self,main,parent=None):
@@ -51,6 +53,10 @@ class jabbimServiceManager(QtGui.QDialog):
 				self.setItemRegistered(item,True)
 			elif jid in ["weather.netlab.cz","dict.jabbim.cz"]:
 				self.configure()
+			elif jid == 'news.jabbim.cz':
+				self.main().client.setRegisterForm('news.jabbim.cz', legacy = {})
+				self.setItemRegistered(item,True)
+				self.configure()
 			else:
 				d=self.main().client.getRegisterForm(jid)
 				d.addCallback(self._onRegister)
@@ -63,6 +69,10 @@ class jabbimServiceManager(QtGui.QDialog):
 				self.setItemRegistered(item,False)
 			elif jid=="weather.netlab.cz":
 				self.removeServiceContacts("weather.netlab.cz")
+				self.setItemRegistered(item,False)
+			elif jid == 'news.jabbim.cz':
+				self.removeServiceContacts("news.jabbim.cz")
+				self.main().client.setRegisterForm('news.jabbim.cz', remove = True, legacy = {})
 				self.setItemRegistered(item,False)
 
 	def setItemRegistered(self,item,registered):
@@ -87,6 +97,7 @@ class jabbimServiceManager(QtGui.QDialog):
 		item = self.ui.treeWidget.currentItem()
 		if not item:
 			return
+
 		if unicode(item.data(0,32).toString())=="dict.jabbim.cz":
 			showDict(self,self.main(),self.ui.jids)
 			self.ui.reg.hide()
@@ -95,6 +106,11 @@ class jabbimServiceManager(QtGui.QDialog):
 			self.ui.textBrowser.hide()
 			self.ui.jids.show()
 			self.addFunc=addDict
+
+		elif unicode(item.data(0,32).toString())=='news.jabbim.cz':
+			d = self.discoverNewsItems()
+			d.addCallback(self.showNewsItems)
+
 		elif unicode(item.data(0,32).toString())=="weather.netlab.cz":
 			showWeather(self.main(),self.ui.jids)
 			self.ui.reg.hide()
@@ -121,18 +137,18 @@ class jabbimServiceManager(QtGui.QDialog):
 			self.ui.jids.hide()
 			self.ui.textBrowser.setHtml(item.data(1,32).toString())
 			self.ui.textBrowser.show()
-	
+
 	def loadServices(self):
 		self.ui.treeWidget.clear()
 		trans=['icq.netlab.cz','icq.jabber.cz','icq.jabbim.cz','sms.netlab.cz','sms.jabbim.cz']
-		servs=['dict.jabbim.cz','weather.netlab.cz','disk.jabbim.cz']
+		servs=['dict.jabbim.cz','weather.netlab.cz','disk.jabbim.cz', 'news.jabbim.cz']
 		transports={}
 		services={}
 		for transport in trans:
 			transports[transport]=False
 		for service in servs:
 			services[service]=False
-		
+
 		for jd in self.main().client.roster['users'].keys():
 			for transport in services:
 				if jd.find(transport)!=-1:
@@ -147,6 +163,7 @@ class jabbimServiceManager(QtGui.QDialog):
 		self.addService(self.tr("Dictionaries"),"dict.jabbim.cz",self.tr("<b>Dictionaries</b><br/>Dictionaries service allows you to translate words between languages from your Jabbim client."),services["dict.jabbim.cz"])
 		self.addService(self.tr("Weather"),"weather.netlab.cz",self.tr("<b>Weather</b><br/>Weather service allows you to see actual weather in big cities."),services["weather.netlab.cz"])
 		self.addService(self.tr("Jabber Disk"),"disk.jabbim.cz",self.tr("<b>Jabber Disk</b><br/>Jabber Disk allows you to upload files to Jabbim server where they can be downloaded by your friends."),services["disk.jabbim.cz"])
+		self.addService(self.tr('Jabbim News'), 'news.jabbim.cz', self.tr('<b>Jabbim News</b><br/>RSS service with custom RSS feeds for Jabbim VIP users'), services['news.jabbim.cz'])
 		self.addService(self.tr("SMS Vodafone/O2"),"sms.netlab.cz",self.tr("<b>SMS Vodafone/O2</b><br/>SMS Vodafone/O2 allows you to send SMS messages straight from your Jabbim Client."),transports["sms.netlab.cz"])
 		if transports["icq.netlab.cz"]:
 			self.addService(self.tr("ICQ"),"icq.netlab.cz",self.tr("<b>ICQ</b><br/>ICQ transport allows you to chat with your friends who use ICQ."),transports["icq.netlab.cz"])
@@ -159,7 +176,7 @@ class jabbimServiceManager(QtGui.QDialog):
 		self.ui.treeWidget.setMaximumWidth(180)
 		self.ui.treeWidget.setMinimumWidth(180)
 		self.ui.treeWidget.sortItems(2,QtCore.Qt.AscendingOrder)
-	
+
 	def addService(self,name,jid,description,registered=False):
 		item=QtGui.QTreeWidgetItem(self.ui.treeWidget)
 		item.setText(1,name)
@@ -172,10 +189,10 @@ class jabbimServiceManager(QtGui.QDialog):
 		else:
 			item.setIcon(0,QtGui.QIcon())
 			item.setText(2,"1"+unicode(jid))
-		
+
 	def _unregisterICQ(self,data=None):
 		if not data:
-			d=self.main().client.setRegisterForm("icq.jabber.cz",remove=True)
+			d=self.main().client.setRegisterForm("icq.jabber.cz",legacy = {}, remove=True)
 			d.addCallback(self._unregisterICQ)
 		else:
 			jid="icq.jabber.cz"
@@ -200,7 +217,7 @@ class jabbimServiceManager(QtGui.QDialog):
 		if self.main().client.roster['users'].has_key("album@disk.jabbim.cz"):
 			self.main().client.delContact("album@disk.jabbim.cz")
 		#self.main().client.reactor.callLater(1,self.loadServices)
-	
+
 	def registerJabberDisk(self,data=None):
 		if not data:
 			d=self.main().client.getRegisterForm("disk.jabbim.cz")
@@ -211,3 +228,90 @@ class jabbimServiceManager(QtGui.QDialog):
 			self.main().autoAdd['album@disk.jabbim.cz']={"name":self.tr("Album"),"group":"Disk"}
 			self.main().client.setRegisterForm("disk.jabbim.cz",legacy={})
 			#self.main().client.reactor.callLater(2,self.loadServices)
+
+	def discoverNewsItems(self):
+		categories = {}
+		def _gotCategories(cat):
+			#print cat
+			categories = cat
+			dl = []
+			for key in cat.iterkeys():
+				dl.append(self.main().client.getDiscoItems(key))
+				categories[key] = {'name':cat[key]['name'], 'feeds':{}}
+			return defer.DeferredList(dl).addCallback(_gotFeeds, categories)
+		def _gotFeeds(feeds, categories):
+			#print feeds
+			for data in feeds:
+
+				if data[0]:
+					jd = None
+					for feed in data[1].itervalues():
+						print feed
+						if jd == None:
+							jd = jid.JID(feed['jid']).userhost()
+						categories[jd]['feeds'][feed['jid']]=feed
+						categories[jd]['feeds'][feed['jid']]['registered'] = False
+			return self.main().client.getRegisterForm('news.jabbim.cz').addCallback(_gotReg,categories)
+
+		def _gotReg( data, categories):
+			print data
+			text = data[1]['instructions']
+			radky = text.split('\n')[1:]
+			kat = None
+			for radek in radky:
+				if radek.endswith(':'):
+					kat = radek.replace(':','').strip()
+				else:
+					if kat != None:
+						feed = radek.strip()
+						feed = feed[1:]
+						if feed != '':
+							categories[kat+'@news.jabbim.cz']['feeds'][kat+'@news.jabbim.cz/'+feed]['registered'] = True
+			return categories
+
+
+		d = self.main().client.getDiscoItems('news.jabbim.cz').addCallback(_gotCategories)
+		return d
+
+	def showNewsItems(self, categories):
+		def _registerFeeds(mainWindow, treeWidget):
+			for i in range(0,int(treeWidget.topLevelItemCount())):
+				kategorie=treeWidget.topLevelItem(i)
+
+				for x in range(0,kategorie.childCount()):
+					item = kategorie.child(x)
+
+					if item.checkState(0)!=item.registered:
+						item.registered=not item.registered
+						if item.checkState(0)==QtCore.Qt.Checked:
+							print unicode(item.jid)
+							mainWindow.client.setRegisterForm(unicode(item.jid), legacy = {})
+
+						else:
+							mainWindow.client.setRegisterForm(unicode(item.jid), legacy = {}, remove = True)
+
+
+		self.ui.jids.clear()
+		for kat, val in categories.iteritems():
+			kategorie = QtGui.QTreeWidgetItem([val['name']])
+			kategorie.jid = kat
+			self.ui.jids.addTopLevelItem(kategorie)
+
+			for feed, data in val['feeds'].iteritems():
+				feedItem =QtGui.QTreeWidgetItem([data['name']])
+				feedItem.jid = feed
+				if data['registered']:
+					feedItem.registered=QtCore.Qt.Checked
+					feedItem.setCheckState(0,QtCore.Qt.Checked)
+				else:
+					feedItem.setCheckState(0,QtCore.Qt.Unchecked)
+					feedItem.registered=QtCore.Qt.Unchecked
+				kategorie.addChild(feedItem)
+		self.ui.reg.hide()
+		self.ui.configure.hide()
+		self.ui.add.show()
+		self.ui.textBrowser.hide()
+		self.ui.jids.show()
+		self.addFunc = _registerFeeds
+		pass
+
