@@ -117,7 +117,7 @@ class RegisteringClient:
 			bind = None
 			conn = None
 			for r in txt[0]:
-				if not is_instance(r.payload, Record_TXT):
+				if not isinstance(r.payload, Record_TXT):
 					continue
 				parts= r.payload.data[0].split('=')
 				if parts[0] == '_xmpp-client-xbosh':
