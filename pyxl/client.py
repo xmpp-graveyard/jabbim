@@ -197,7 +197,7 @@ class Client(derived):
 #		self.archive = archive.ArchiveInit(self)
 
 		self.state = 'init'
-		
+
 		self.proxy = None
 		self.on_init()
 
@@ -514,7 +514,7 @@ class Client(derived):
 		self.reactor.callFromThread(self.on_disconnect)
 
 	def connectionFailed(self, connector, reason=protocol.connectionDone):
-		# this must be executed only for BOSH		
+		# this must be executed only for BOSH
 		if self.IBBonly and self.connection != None and int(self.port) != 443:
 			print "CONNECTION FAILED",reason
 			if self.factory.connectionFailedCount<4:
@@ -1425,6 +1425,8 @@ class Client(derived):
 		self.reactor.callFromThread(self.on_discoItemsReceived, frm, node_name)
 		if callback:
 			callback(callback_par)
+		else:
+			return node['items']
 
 	def _discoItemsErrReceived(self, err, info):
 		log.msg( 'disco#items error received')
