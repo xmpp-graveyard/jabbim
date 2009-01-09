@@ -5,6 +5,7 @@ QMainWindow,QDialog {
 	color:#f1d09a;
 }
 
+
 /* QRadioButton -------------------------------------------------------------------*/
 QRadioButton {
 	color:#f1d09a;
@@ -435,7 +436,7 @@ QToolButton#moodButton::menu-arrow {
 
 /* QSplitter ----------------------------------------------------------------------*/
 QSplitter::handle {
-	background-color: #EFF8FF;
+	background-color: #312321;
 }
 
 /* QHeaderView --------------------------------------------------------------------*/
