@@ -197,6 +197,7 @@ def loadConfig(main,status):
 			'startInTray':"False",
 			'commandsInTray':[],
 			'moods':'default/default.cfg',
+			'activities':'default/default.cfg',
 			'rosterScrollBar':"True",
 			'preferencesAdvanced':'False',
  			##shortcuts

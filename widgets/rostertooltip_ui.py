@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/rostertooltip.ui'
 #
-# Created: Sun Dec 28 10:59:21 2008
+# Created: Fri Jan  9 18:09:17 2009
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -36,6 +36,10 @@ class Ui_RosterToolTip(object):
         self.vcard.setCursor(QtCore.Qt.PointingHandCursor)
         self.vcard.setObjectName("vcard")
         self.hboxlayout.addWidget(self.vcard)
+        self.activity = QtGui.QLabel(RosterToolTip)
+        self.activity.setMaximumSize(QtCore.QSize(18, 18))
+        self.activity.setObjectName("activity")
+        self.hboxlayout.addWidget(self.activity)
         self.mood = QtGui.QLabel(RosterToolTip)
         self.mood.setMaximumSize(QtCore.QSize(18, 18))
         self.mood.setObjectName("mood")

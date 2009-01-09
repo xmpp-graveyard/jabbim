@@ -2474,6 +2474,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.loadSounds() # load chat skin
 		self.loadTheme() # load theme
 		self.loadMoods() # load user moods icon
+		self.loadActivities() # load user moods icon
 		self.ui.roster.reskin() # reskin roster
 		self.selfResources=[] #: Resources which are connected from the same JID as user
 		self.buildOfflineMenu() # build menu with 'show offline', 'show away'
@@ -3699,11 +3700,15 @@ class mainWindow(QtGui.QMainWindow):
 			activity.addSeparator()
 			for group, txt in self.activityGroups.iteritems():
 				menu = activity.addMenu(txt[0])
+				if self.activityIcons.has_key(group):
+					menu.setIcon(self.activityIcons[group])
 				#keys = self.activities.keys()
 				#keys.sort()
 				for a in txt[1:]:
 					t = self.activities[a]
 					action = menu.addAction(t)
+					if self.activityIcons.has_key(a):
+						action.setIcon(self.activityIcons[a])
 					action.setObjectName('activity')
 					action.setData(QtCore.QVariant(QtCore.QStringList([group, a])))
 			moodButtonRoot.addMenu(activity)
@@ -4723,6 +4728,26 @@ class mainWindow(QtGui.QMainWindow):
 				self.moodIcons[mood]=QtGui.QIcon(path)
 				self.moodIcons[mood].src=unicode(os.getcwd(), sys.getfilesystemencoding())+"/"+path
 			self.moodIcons["none"]=QtGui.QIcon(self.moodIcons[mood].pixmap(16,16,QtGui.QIcon.Disabled))
+
+	def loadActivities(self):
+		"""
+		Loads user mood icons
+		"""
+		loaded,config=self.loadJabbimExtraConfig('activities/'+self.config['activities'],'activities/default/default.cfg')
+		print "ACTIVITIES",loaded,config
+		if loaded!=None:
+			if loaded:
+				src=dirname("activities/"+self.config["activities"])+"/"
+			else:
+				src=dirname("activities/default/")
+			#self.ui.moodButton.setIcon(QtGui.QIcon(src+config['header']['frontImage']))
+			self.activityIcons=config['activities']
+			for mood in self.activityIcons.keys():
+				path=unicode(src+self.activityIcons[mood])
+				self.activityIcons[mood]=QtGui.QIcon(path)
+				self.activityIcons[mood].src=unicode(os.getcwd(), sys.getfilesystemencoding())+"/"+path
+			self.activityIcons["none"]=QtGui.QIcon(self.activityIcons[mood].pixmap(16,16,QtGui.QIcon.Disabled))
+		print "ACTIVITIES",self.activityIcons
 
 	def loadSounds(self):
 		src=dirname("sounds/"+self.config["soundPack"])
