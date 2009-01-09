@@ -4734,7 +4734,7 @@ class mainWindow(QtGui.QMainWindow):
 		Loads user mood icons
 		"""
 		loaded,config=self.loadJabbimExtraConfig('activities/'+self.config['activities'],'activities/default/default.cfg')
-		print "ACTIVITIES",loaded,config
+		#print "ACTIVITIES",loaded,config
 		if loaded!=None:
 			if loaded:
 				src=dirname("activities/"+self.config["activities"])+"/"
@@ -4747,7 +4747,7 @@ class mainWindow(QtGui.QMainWindow):
 				self.activityIcons[mood]=QtGui.QIcon(path)
 				self.activityIcons[mood].src=unicode(os.getcwd(), sys.getfilesystemencoding())+"/"+path
 			self.activityIcons["none"]=QtGui.QIcon(self.activityIcons[mood].pixmap(16,16,QtGui.QIcon.Disabled))
-		print "ACTIVITIES",self.activityIcons
+		#print "ACTIVITIES",self.activityIcons
 
 	def loadSounds(self):
 		src=dirname("sounds/"+self.config["soundPack"])

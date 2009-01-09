@@ -55,11 +55,15 @@ class rosterToolTip(QtGui.QFrame):
 		self.ui.mood.setMouseTracking(True)
 		self.ui.mood.enterEvent=self.moodEnterEvent
 		self.ui.mood.leaveEvent=self.moodLeaveEvent
+		self.ui.activity.setMouseTracking(True)
+		self.ui.activity.enterEvent=self.activityEnterEvent
+		self.ui.activity.leaveEvent=self.moodLeaveEvent
 		self.ui.tune.setMouseTracking(True)
 		self.ui.tune.enterEvent=self.tuneEnterEvent
 		self.ui.tune.leaveEvent=self.tuneLeaveEvent
 		self.status=""
 		self.mood=""
+		self.activity=""
 		self.ui.vcard.setPixmap(QtGui.QPixmap("images/16x16/categories/v-card.png"))
 		self.ui.vcard.leaveEvent=self.tuneLeaveEvent
 		self.ui.vcard.enterEvent=self.vcardEnterEvent
@@ -132,6 +136,9 @@ class rosterToolTip(QtGui.QFrame):
 		
 	def tuneLeaveEvent(self,event):
 		self.ui.jid.setText(self.jid)
+
+	def activityEnterEvent(self,event):
+		self.ui.jid.setText(self.activity)
 
 	def moodEnterEvent(self,event):
 		self.ui.jid.setText(self.mood)
@@ -1147,11 +1154,36 @@ class rosterWidget(QtGui.QWidget):
 							self.tool.ui.mood.hide()
 				else:
 					self.tool.ui.mood.hide()
-							#if txt != '':
-								#t = m+ ' - %s'%txt
-							#else:
-								#t = m
-							#text+='<br />%s<font size="-1">%s</font>' % (icon,t)
+
+				activity = contact.getPEP('http://jabber.org/protocol/activity')
+				if activity != None:
+					txt = ''
+					general = ''
+					spec = ''
+					for el in activity.elements():
+						if el.name == 'text':
+							txt = unicode(el)
+						else :
+							general = el.name
+							#if self.main.activityGroups.has_key(general):
+								#general=self.main.activityGroups[general][0]
+							spec = el.firstChildElement()
+							if spec:
+								spec=spec.name
+							#if self.main.activities.has_key(spec):
+								#spec=self.main.activities[spec]
+							if self.main.activityIcons.has_key(spec):
+								self.tool.ui.activity.setPixmap(QtGui.QPixmap(self.main.activityIcons[spec].src))
+								self.tool.ui.activity.show()
+							elif self.main.activityIcons.has_key(general):
+								self.tool.ui.activity.setPixmap(QtGui.QPixmap(self.main.activityIcons[general].src))
+								self.tool.ui.activity.show()
+							else:
+								self.tool.ui.activity.hide()
+
+					#text+='<br /><font size="-1"><b>%s</b> %s %s</font>' % (general, spec, txt)
+				else:
+					self.tool.ui.activity.hide()
 
 
 				g=self.mapToGlobal(QtCore.QPoint(event.x(),event.y()))
