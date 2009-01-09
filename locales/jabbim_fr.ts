@@ -3814,7 +3814,7 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="2316"/>
         <source>annoyed</source>
-        <translation>est ennuyé(e)</translation>
+        <translation>est contrarié(e)</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2317"/>
@@ -3824,7 +3824,7 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="2318"/>
         <source>aroused</source>
-        <translation>est excité(e)</translation>
+        <translation>est éveillé(e)</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2319"/>
@@ -3864,7 +3864,7 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="2326"/>
         <source>cranky</source>
-        <translation>est grincheux(se)</translation>
+        <translation>est irritable</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2327"/>
@@ -4029,7 +4029,7 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="2359"/>
         <source>proud</source>
-        <translation>est fier(e)</translation>
+        <translation>est fier/fière</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2360"/>
@@ -4129,7 +4129,7 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="2383"/>
         <source>doing_the_laundry</source>
-        <translation>lave la linge</translation>
+        <translation>lave le linge</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2384"/>
@@ -4139,7 +4139,7 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="2385"/>
         <source>running_an_errand</source>
-        <translation>fait une course</translation>
+        <translation>parti(e) faire une course</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2386"/>
@@ -4149,27 +4149,27 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="2387"/>
         <source>having_a_beer</source>
-        <translation>prend une bière</translation>
+        <translation>une bière</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2388"/>
         <source>having_coffee</source>
-        <translation>prend un café</translation>
+        <translation>un café</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2389"/>
         <source>having_tea</source>
-        <translation>prend un thé</translation>
+        <translation>un thé</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2390"/>
         <source>having_a_snack</source>
-        <translation>mange au snack</translation>
+        <translation>au snack</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2391"/>
         <source>having_breakfast</source>
-        <translation>prend le petit déjeuner</translation>
+        <translation>le petit déjeuner</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2392"/>
@@ -4184,22 +4184,22 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="2427"/>
         <source>cycling</source>
-        <translation>fait du vélo</translation>
+        <translation>du vélo</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2395"/>
         <source>hiking</source>
-        <translation>fait de la randonnée</translation>
+        <translation>de la randonnée</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2396"/>
         <source>jogging</source>
-        <translation>fait un jogging</translation>
+        <translation>un jogging</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2397"/>
         <source>playing_sports</source>
-        <translation>fait du sport</translation>
+        <translation>du sport</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2398"/>
@@ -4269,7 +4269,7 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="2411"/>
         <source>scheduled_holiday</source>
-        <translation>est en vavances organisées</translation>
+        <translation>est en vacances organisées</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2412"/>
@@ -4404,7 +4404,7 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="2440"/>
         <source>doing_chores</source>
-        <translation>fait les corvées</translation>
+        <translation>est de corvées</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2441"/>
@@ -4424,7 +4424,7 @@ Voulez-vous réellement quitter cette salle?</translation>
     <message>
         <location filename="jabbim.py" line="2444"/>
         <source>grooming</source>
-        <translation>fait sa toilette</translation>
+        <translation>s&apos;occupe de soi</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2446"/>
@@ -5538,7 +5538,7 @@ Version: %3</translation>
     <message>
         <location filename="pref/connection.py" line="7"/>
         <source>Automatically join at startup.</source>
-        <translation>Rejoindre automatiquement au démarrage.</translation>
+        <translation>Se connecter automatiquement au démarrage.</translation>
     </message>
     <message>
         <location filename="pref/connection.py" line="7"/>
@@ -5757,7 +5757,7 @@ Version: %3</translation>
     <message>
         <location filename="pref/connection.py" line="8"/>
         <source>Join groupchats at startup.</source>
-        <translation>Rejoindre le groupe de discussion au démarrage.</translation>
+        <translation>Rejoindre les salles de discussion au démarrage.</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="7"/>
