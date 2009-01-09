@@ -523,9 +523,9 @@ class Client(derived):
 			if self.factory.connectionFailedCount<4:
 				if self.factory.xs and self.factory.xs.connected:
 					if self.factory.connectors.index(connector)==0:
-						self.factory.xs._connectionLost(self.xs.proto)
+						self.factory.xs._connectionLost(self.factory.xs.proto)
 					else:
-						self.factory.xs._connectionLost(self.xs.proto2)
+						self.factory.xs._connectionLost(self.factory.xs.proto2)
 				else:
 					reactor.callLater(0.5,connector.connect)
 				self.factory.connectionFailedCount+=1
