@@ -16,7 +16,13 @@ class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'responder'
-		self.description = 'ICQ auto responder'
+		self.installTranslator()
+		self.description = self.tr('CAREFUL!\n' +
+			'Do not enable this plugin unless you intend to cut down a little on your ICQ usage.\n\n' +
+			'ICQ auto responder is meant for the ICQ transport users who want to quit ICQ for good.\n' +
+			'If you enable this plugin, contacts trying to write to you over ICQ will receive an automatic reply ' +
+			'telling them how to reach you properly. You will NOT see their messages. ' +
+			'The exact text of the automatic reply is customizable.')
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = 'ICQ Responder'
 		self.version = '0.033'
