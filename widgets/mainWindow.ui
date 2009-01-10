@@ -942,7 +942,6 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionAdd_Contact" />
     <addaction name="actionStart_Chat" />
     <addaction name="actionService_Discovery" />
-    <addaction name="actionShow_XML" />
     <addaction name="actionPrivacy_list_editor" />
     <addaction name="actionIdentity" />
     <addaction name="separator" />
@@ -957,15 +956,6 @@ p, li { white-space: pre-wrap; }
    <addaction name="menuView" />
    <addaction name="menuHelp" />
   </widget>
-  <action name="actionShow_XML" >
-   <property name="icon" >
-    <iconset>
-     <normaloff>images/16x16/actions/xml-konzole.png</normaloff>images/16x16/actions/xml-konzole.png</iconset>
-   </property>
-   <property name="text" >
-    <string>Show XML</string>
-   </property>
-  </action>
   <action name="actionPreferences" >
    <property name="icon" >
     <iconset>
