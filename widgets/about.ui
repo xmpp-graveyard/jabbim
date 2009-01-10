@@ -140,12 +140,15 @@ and many translators and patchers</string>
           </widget>
          </item>
          <item row="10" column="0" >
-          <widget class="QLabel" name="label_11" >
+          <widget class="QLabel" name="mucLink" >
            <property name="text" >
-            <string>Conference: jabbim@conf.netlab.cz</string>
+            <string>Conference: &lt;a href='xmpp:jabbim@conf.netlab.cz?join'>jabbim@conf.netlab.cz&lt;/a></string>
            </property>
            <property name="alignment" >
             <set>Qt::AlignCenter</set>
+           </property>
+           <property name="openExternalLinks" >
+            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -265,8 +268,8 @@ and many translators and patchers</string>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>54</x>
-     <y>571</y>
+     <x>63</x>
+     <y>664</y>
     </hint>
     <hint type="destinationlabel" >
      <x>177</x>

@@ -5402,6 +5402,7 @@ class aboutDialog(QtGui.QDialog):
 		self.ui.version.setText(parent.version + "<br/>" +
 			"PyQt: " + unicode(QtCore.PYQT_VERSION_STR) + "<br/>" +
 			"Qt: "   + unicode(QtCore.QT_VERSION_STR))
+		QtCore.QObject.connect(self.ui.mucLink, QtCore.SIGNAL("linkActivated(QString)"), parent.support)
 
 class scrollBar(QtGui.QScrollArea):
 	def __init__(self,parent=None):

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/about.ui'
 #
-# Created: Sat Jan 10 11:53:08 2009
+# Created: Sat Jan 10 12:21:08 2009
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -60,10 +60,11 @@ class Ui_about_window(object):
         self.label_9.setAlignment(QtCore.Qt.AlignCenter)
         self.label_9.setObjectName("label_9")
         self.gridlayout2.addWidget(self.label_9, 9, 0, 1, 1)
-        self.label_11 = QtGui.QLabel(self.widget_2)
-        self.label_11.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_11.setObjectName("label_11")
-        self.gridlayout2.addWidget(self.label_11, 10, 0, 1, 1)
+        self.mucLink = QtGui.QLabel(self.widget_2)
+        self.mucLink.setAlignment(QtCore.Qt.AlignCenter)
+        self.mucLink.setOpenExternalLinks(False)
+        self.mucLink.setObjectName("mucLink")
+        self.gridlayout2.addWidget(self.mucLink, 10, 0, 1, 1)
         self.label_12 = QtGui.QLabel(self.widget_2)
         self.label_12.setAlignment(QtCore.Qt.AlignCenter)
         self.label_12.setOpenExternalLinks(True)
@@ -133,7 +134,7 @@ class Ui_about_window(object):
 "     p, li { white-space: pre-wrap; }\n"
 "     </style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
 "     <p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Where you find us:</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_11.setText(QtGui.QApplication.translate("about_window", "Conference: jabbim@conf.netlab.cz", None, QtGui.QApplication.UnicodeUTF8))
+        self.mucLink.setText(QtGui.QApplication.translate("about_window", "Conference: <a href=\'xmpp:jabbim@conf.netlab.cz?join\'>jabbim@conf.netlab.cz</a>", None, QtGui.QApplication.UnicodeUTF8))
         self.label_12.setText(QtGui.QApplication.translate("about_window", "Web <a href=\"http://dev.jabbim.cz/jabbim\">http://dev.jabbim.cz/jabbim</a>", None, QtGui.QApplication.UnicodeUTF8))
         self.version.setText(QtGui.QApplication.translate("about_window", "$VERSION", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("about_window", "Jan \'HanzZ\' Kaluža\n"
