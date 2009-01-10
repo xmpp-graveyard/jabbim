@@ -1173,11 +1173,20 @@ class rosterWidget(QtGui.QWidget):
 								#spec=self.main.activities[spec]
 							if self.main.activityIcons.has_key(spec):
 								self.tool.ui.activity.setPixmap(QtGui.QPixmap(self.main.activityIcons[spec].src))
+								if self.main.activities.has_key(spec):
+									self.tool.activity=self.main.activities[spec]
+								else:
+									self.tool.activity=spec
 								self.tool.ui.activity.show()
 							elif self.main.activityIcons.has_key(general):
 								self.tool.ui.activity.setPixmap(QtGui.QPixmap(self.main.activityIcons[general].src))
+								if self.main.activities.has_key(general):
+									self.tool.activity=self.main.activities[general]
+								else:
+									self.tool.activity=general
 								self.tool.ui.activity.show()
 							else:
+								self.tool.activity=""
 								self.tool.ui.activity.hide()
 
 					#text+='<br /><font size="-1"><b>%s</b> %s %s</font>' % (general, spec, txt)
