@@ -11,7 +11,6 @@ widgets/bookmarks.py \
 widgets/commands.py \
 widgets/commands_ui.py \
 widgets/compactrosterstyle.py \
-widgets/compatrosterstyle.py \
 widgets/dataforms.py \
 widgets/defaultrosterstyle.py \
 widgets/emoticonswidget.py \
@@ -57,7 +56,6 @@ widgets/show.py \
 widgets/startchat_ui.py \
 widgets/statuseditor.py \
 widgets/statuseditor_ui.py \
-widgets/statuseditor.ui.py \
 widgets/status.py \
 widgets/statuswidget_ui.py \
 widgets/subscription.py \
@@ -85,9 +83,7 @@ widgets/configlib/__init__.py \
 pref/connection.py \
 pref/chat.py \
 pref/jabbim.py \
-pref/roster.py \
 pref/privacy.py \
-wizards/addcontact.py \
 wizards/firststart.py \
 wizards/__init__.py \
 wizards/jabbimservicemanager.py \
