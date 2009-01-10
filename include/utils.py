@@ -198,7 +198,6 @@ def loadConfig(main,status):
 			'commandsInTray':[],
 			'moods':'default/default.cfg',
 			'activities':'default/default.cfg',
-			'rosterScrollBar':"True",
 			'preferencesAdvanced':'False',
  			##shortcuts
  			"nextTab" : "Alt+Right",

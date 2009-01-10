@@ -861,12 +861,8 @@ function makePreview(){
 		#elif self.main.config['rosterMode']=='normal':
 		#	import defaultrosterstyle
 		#	self.main.ui.roster.setRosterStyle(defaultrosterstyle.rosterStyle)
-		if self.main.config['rosterScrollBar']=="True":
-			self.main.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
-			QtCore.QObject.disconnect(self.main.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.main.ui.roster.sliderChanged)
-		else:
-			self.main.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-			QtCore.QObject.connect(self.main.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.main.ui.roster.sliderChanged)
+		self.main.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+		QtCore.QObject.disconnect(self.main.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.main.ui.roster.sliderChanged)
 		self.main.ui.roster.setSize()
 		self.main.ui.roster.repaint()
 		load=False

@@ -388,8 +388,7 @@ class rosterWidget(QtGui.QWidget):
 
 
 	def sliderChanged(self,i):
-		if self.main.config['rosterScrollBar']=='False':
-			self.repaint()
+		pass
 	#{ Public functions
 
 	def showMiniRoster(self,call):
@@ -1352,38 +1351,6 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					self.paintUserItem(painter,item,0,y,last)
 				y+=item.height
-		if self.main.config['rosterScrollBar']=='False':
-			if self.height()>self.main.scroll.height():
-				if self.main.scroll.verticalScrollBar().value()>0:
-					painter.save()
-					x=self.width()-8
-					y=self.main.scroll.verticalScrollBar().value()+8
-					painter.setPen(QtGui.QPen(QtCore.Qt.black))
-					painter.drawPoint(x-4,y+2)# 00000
-					painter.drawPoint(x-3,y+2)#  000
-					painter.drawPoint(x-2,y+2)#   0
-					painter.drawPoint(x-1,y+2)
-					painter.drawPoint(x,y+2)
-					painter.drawPoint(x-3,y+1)
-					painter.drawPoint(x-2,y+1)
-					painter.drawPoint(x-1,y+1)
-					painter.drawPoint(x-2,y)
-					painter.restore()
-				if self.main.scroll.verticalScrollBar().value()!=self.main.scroll.verticalScrollBar().maximum():
-					painter.save()
-					x=self.width()-8
-					y=self.main.scroll.verticalScrollBar().value()+self.main.scroll.height()-8
-					painter.setPen(QtGui.QPen(QtCore.Qt.black))
-					painter.drawPoint(x-4,y)# 00000
-					painter.drawPoint(x-3,y)#  000
-					painter.drawPoint(x-2,y)#   0
-					painter.drawPoint(x-1,y)
-					painter.drawPoint(x,y)
-					painter.drawPoint(x-3,y+1)
-					painter.drawPoint(x-2,y+1)
-					painter.drawPoint(x-1,y+1)
-					painter.drawPoint(x-2,y+2)
-					painter.restore()
 		print "paintEvent last",time.time()-start
 		#if self.reshow:
 			#self.statusLabel.hide()
