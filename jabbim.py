@@ -2167,7 +2167,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.tabWidgetButton.setIcon(QtGui.QIcon("images/16x16/categories/transports.png"))
 		self.ui.tabWidgetButton.setCheckable(True)
 		#self.ui.tabWidgetButton.setMinimumSize(QtCore.QSize(29,29))
-		QtCore.QObject.connect(self.ui.tabWidgetButton,QtCore.SIGNAL("toggled(bool)"),self.showTransports)
+		QtCore.QObject.connect(self.ui.tabWidgetButton, QtCore.SIGNAL("toggled(bool)"), self.showTransportsWidget)
 		#self.ui.tabWidgetButton.setPopupMode(QtGui.QToolButton.InstantPopup)
 		#self.ui.tabWidgetButton.setArrowType(QtCore.Qt.NoArrow)
 		self.ui.mainTabWidget.setCornerWidget(self.ui.tabWidgetButton)
@@ -2590,8 +2590,8 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			QtGui.QLineEdit.paintEvent(self.ui.statusLine,event)
 
-	def showTransports(self,bool):
-		if bool:
+	def showTransportsWidget(self, show):
+		if show:
 			self.ui.transportsWidget.show()
 		else:
 			self.ui.transportsWidget.hide()
