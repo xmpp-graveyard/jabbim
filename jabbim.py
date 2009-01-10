@@ -5395,9 +5395,11 @@ class aboutDialog(QtGui.QDialog):
 		QtGui.QDialog.__init__(self,parent)
 		self.setModal(True)
 		self.ui=widgets.about.Ui_about_window()
-		self.ui.setupUi(self,parent.version)
+		self.ui.setupUi(self)
 		self.ui.version.setTextFormat(QtCore.Qt.RichText)
-		self.ui.version.setText(self.ui.version.text()+"<br/>"+"PyQt: "+unicode(QtCore.PYQT_VERSION_STR)+"<br/>Qt: "+unicode(QtCore.QT_VERSION_STR))
+		self.ui.version.setText(parent.version + "<br/>" +
+			"PyQt: " + unicode(QtCore.PYQT_VERSION_STR) + "<br/>" +
+			"Qt: "   + unicode(QtCore.QT_VERSION_STR))
 
 class scrollBar(QtGui.QScrollArea):
 	def __init__(self,parent=None):

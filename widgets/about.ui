@@ -165,7 +165,7 @@ and many translators and patchers</string>
          <item row="2" column="0" >
           <widget class="QLabel" name="version" >
            <property name="text" >
-            <string>0.5 SVN</string>
+            <string>$VERSION</string>
            </property>
            <property name="alignment" >
             <set>Qt::AlignCenter</set>
