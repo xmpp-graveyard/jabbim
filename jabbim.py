@@ -4859,6 +4859,7 @@ class mainWindow(QtGui.QMainWindow):
 		layout.addWidget(self.scroll)
 		self.ui.roster=widgets.rosterLiveWidget.rosterWidget(self,self)
 		self.scroll.setWidget(self.ui.roster)
+		self.ui.mainTabWidget.tabbar.roster = self.ui.roster
 
 	def _connected(self):
 		"""

@@ -512,7 +512,7 @@ p, li { white-space: pre-wrap; }
           </widget>
          </item>
          <item row="1" column="0" >
-          <widget class="QTabWidget" name="mainTabWidget" >
+          <widget class="FakeTabWidget" name="mainTabWidget" >
            <property name="toolTip" >
             <string/>
            </property>
@@ -732,8 +732,8 @@ p, li { white-space: pre-wrap; }
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>118</width>
-                  <height>148</height>
+                  <width>235</width>
+                  <height>536</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gridLayout" >
@@ -1051,6 +1051,14 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>FakeTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>fakeTabWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
