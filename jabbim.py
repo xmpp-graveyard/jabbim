@@ -1653,6 +1653,8 @@ class clientClass(pyxl.client.Client):
 					# MESSAGE EVENT
 					if not tab.chat.unreadEvent:
 						tab.chat.unreadEvent=weakref.ref(self.main.events.addBooleanEvent())
+					if not tab.chat.unreadEvent():
+						tab.chat.unreadEvent=weakref.ref(self.main.events.addBooleanEvent())
 					tab.chat.unreadEvent().setAcceptHandler(self.main.chat.activate,[frm.full()])
 					#tab.chat.unreadEvent.setRejectHandler(self.main.events.removeEvent,[int(tab.chat.unreadEvent.ID)])
 					widget=tab.chat.unreadEvent().getWidgets()[0]
@@ -1673,6 +1675,8 @@ class clientClass(pyxl.client.Client):
 				elif not self.main.chat.isActiveWindow():
 					# MESSAGE EVENT
 					if not tab.chat.unreadEvent:
+						tab.chat.unreadEvent=weakref.ref(self.main.events.addBooleanEvent())
+					if not tab.chat.unreadEvent():
 						tab.chat.unreadEvent=weakref.ref(self.main.events.addBooleanEvent())
 					tab.chat.unreadEvent().setAcceptHandler(self.main.chat.activate,[frm.full()])
 					#tab.chat.unreadEvent.setRejectHandler(self.main.events.removeEvent,[int(tab.chat.unreadEvent.ID)])
