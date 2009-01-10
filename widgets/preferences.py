@@ -21,7 +21,7 @@ import sys; sys.path.append('..')
 from preferences_ui import *
 from include import rot13
 from include import plugins as pluginTemplate
-from pref import jabbim,connection,chat,roster,privacy
+from pref import jabbim,connection,chat,privacy
 from preferences_bookmarks_ui import *
 from configobj import ConfigObj
 import os
@@ -79,7 +79,7 @@ class preferencesWindow(QtGui.QDialog):
 		self.globalCategories['fun']=self.tr('Fun')
 		self.globalCategories['other']=self.tr('Other')
 
-		self.preferencesCount=6
+		self.preferencesCount=5
 		self.preferencesConfig=[]
 		# Jabbim
 		layout=QtGui.QGridLayout(self.ui.jabbimWidget)
@@ -90,11 +90,6 @@ class preferencesWindow(QtGui.QDialog):
 		layout=QtGui.QGridLayout(self.ui.chatWidget)
 		self.var.append(makePreferences(self.main.config,self.ui.chatWidget,layout,chat.preferences(self).config)[0])
 		self.preferencesConfig.append(chat.preferences(self).config)
-
-		# Roster
-		layout=QtGui.QGridLayout(self.ui.rosterWidget)
-		self.var.append(makePreferences(self.main.config,self.ui.rosterWidget,layout,roster.preferences(self).config)[0])
-		self.preferencesConfig.append(roster.preferences(self).config)
 
 		# connection
 		layout=QtGui.QGridLayout(self.ui.connectionWidget)
