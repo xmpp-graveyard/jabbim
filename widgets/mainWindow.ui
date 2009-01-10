@@ -17,14 +17,6 @@
     <normaloff>images/16x16/apps/jabbim.png</normaloff>images/16x16/apps/jabbim.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>19</y>
-     <width>335</width>
-     <height>663</height>
-    </rect>
-   </property>
    <layout class="QGridLayout" >
     <property name="margin" >
      <number>0</number>
@@ -42,14 +34,6 @@
         <number>1</number>
        </property>
        <widget class="QWidget" name="login" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>100</width>
-          <height>30</height>
-         </rect>
-        </property>
         <layout class="QGridLayout" >
          <property name="leftMargin" >
           <number>0</number>
@@ -403,14 +387,6 @@ p, li { white-space: pre-wrap; }
         </layout>
        </widget>
        <widget class="QWidget" name="roster" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>243</width>
-          <height>663</height>
-         </rect>
-        </property>
         <layout class="QGridLayout" >
          <property name="margin" >
           <number>0</number>
@@ -547,14 +523,6 @@ p, li { white-space: pre-wrap; }
             <number>0</number>
            </property>
            <widget class="QWidget" name="rosterTab" >
-            <property name="geometry" >
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>239</width>
-              <height>589</height>
-             </rect>
-            </property>
             <attribute name="title" >
              <string> r</string>
             </attribute>
@@ -630,55 +598,31 @@ p, li { white-space: pre-wrap; }
              </item>
             </layout>
            </widget>
-		   <widget class="QWidget" name="favTab" >
-			   <property name="geometry" >
-				   <rect>
-					   <x>0</x>
-					   <y>0</y>
-					   <width>239</width>
-					   <height>589</height>
-				   </rect>
-			   </property>
-			   <attribute name="title" >
-				   <string> r</string>
-			   </attribute>
-			   <attribute name="icon" >
-				   <iconset>
-					   <normaloff>images/16x16/categories/srdce-cele.png</normaloff>images/16x16/categories/srdce-cele.png</iconset>
-			   </attribute>
-			   <attribute name="toolTip" >
-				   <string>Favourite</string>
-			   </attribute>
-		</widget>
-		<widget class="QWidget" name="contentTab" >
-			<property name="geometry" >
-				<rect>
-					<x>0</x>
-					<y>0</y>
-					<width>239</width>
-					<height>589</height>
-				</rect>
-			</property>
-			<attribute name="title" >
-				<string> r</string>
-			</attribute>
-			<attribute name="icon" >
-				<iconset>
-					<normaloff>images/16x16/actions/anchor.png</normaloff>images/16x16/actions/anchor.png</iconset>
-			</attribute>
-			<attribute name="toolTip" >
-				<string>Jabbim Content</string>
-			</attribute>
-		</widget>
+           <widget class="QWidget" name="favTab" >
+            <attribute name="title" >
+             <string> r</string>
+            </attribute>
+            <attribute name="icon" >
+             <iconset>
+              <normaloff>images/16x16/categories/srdce-cele.png</normaloff>images/16x16/categories/srdce-cele.png</iconset>
+            </attribute>
+            <attribute name="toolTip" >
+             <string>Favourite</string>
+            </attribute>
+           </widget>
+           <widget class="QWidget" name="contentTab" >
+            <attribute name="title" >
+             <string> r</string>
+            </attribute>
+            <attribute name="icon" >
+             <iconset>
+              <normaloff>images/16x16/actions/anchor.png</normaloff>images/16x16/actions/anchor.png</iconset>
+            </attribute>
+            <attribute name="toolTip" >
+             <string>Jabbim Content</string>
+            </attribute>
+           </widget>
            <widget class="QWidget" name="bookmarksTab" >
-            <property name="geometry" >
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>239</width>
-              <height>589</height>
-             </rect>
-            </property>
             <attribute name="title" >
              <string>b</string>
             </attribute>
@@ -752,14 +696,6 @@ p, li { white-space: pre-wrap; }
             </layout>
            </widget>
            <widget class="QWidget" name="eventsTab" >
-            <property name="geometry" >
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>239</width>
-              <height>589</height>
-             </rect>
-            </property>
             <attribute name="title" >
              <string>Events</string>
             </attribute>
@@ -796,8 +732,8 @@ p, li { white-space: pre-wrap; }
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>235</width>
-                  <height>559</height>
+                  <width>118</width>
+                  <height>148</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gridLayout" >
@@ -893,14 +829,6 @@ p, li { white-space: pre-wrap; }
         </layout>
        </widget>
        <widget class="QWidget" name="splash" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>100</width>
-          <height>30</height>
-         </rect>
-        </property>
         <layout class="QVBoxLayout" >
          <property name="spacing" >
           <number>6</number>
@@ -985,7 +913,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>335</width>
-     <height>19</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuView" >
