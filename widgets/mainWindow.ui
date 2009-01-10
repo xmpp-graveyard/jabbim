@@ -988,15 +988,10 @@ p, li { white-space: pre-wrap; }
      <height>19</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuPlugins" >
-    <property name="title" >
-     <string>Plugins</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menuView" >
-	   <property name="title" >
-		   <string>View</string>
-	   </property>
+    <property name="title" >
+     <string>View</string>
+    </property>
    </widget>
    <widget class="QMenu" name="menuHelp" >
     <property name="title" >
@@ -1010,6 +1005,11 @@ p, li { white-space: pre-wrap; }
     <property name="title" >
      <string>Actions</string>
     </property>
+    <widget class="QMenu" name="menuPlugins" >
+     <property name="title" >
+      <string>Plugins</string>
+     </property>
+    </widget>
     <addaction name="actionJoin_groupchat" />
     <addaction name="actionAdd_Contact" />
     <addaction name="actionStart_Chat" />
@@ -1017,8 +1017,8 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionShow_XML" />
     <addaction name="actionPrivacy_list_editor" />
     <addaction name="actionIdentity" />
-	<addaction name="separator" />
-	<addaction name="menuPlugins" />
+    <addaction name="separator" />
+    <addaction name="menuPlugins" />
     <addaction name="separator" />
     <addaction name="actionPreferences" />
     <addaction name="actionProfiles" />
