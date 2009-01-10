@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Fri Jan  9 00:09:37 2009
+# Created: Fri Jan  9 00:13:45 2009
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -296,7 +296,7 @@ class Ui_MainWindow(object):
         self.Form.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.Form.setObjectName("Form")
         self.scrollAreaWidgetContents = QtGui.QWidget(self.Form)
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 235, 536))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 118, 148))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.gridLayout = QtGui.QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout.setMargin(2)
@@ -424,6 +424,10 @@ class Ui_MainWindow(object):
         self.actionSendJabbimLog.setObjectName("actionSendJabbimLog")
         self.actionStart_Chat = QtGui.QAction(MainWindow)
         self.actionStart_Chat.setObjectName("actionStart_Chat")
+        self.actionShow_offline = QtGui.QAction(MainWindow)
+        self.actionShow_offline.setCheckable(True)
+        self.actionShow_offline.setObjectName("actionShow_offline")
+        self.menuView.addAction(self.actionShow_offline)
         self.menuHelp.addAction(self.actionAbout)
         self.menuHelp.addAction(self.actionSupport)
         self.menuHelp.addAction(self.actionSendJabbimLog)
@@ -526,5 +530,6 @@ class Ui_MainWindow(object):
         self.actionSupport.setText(QtGui.QApplication.translate("MainWindow", "Support", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSendJabbimLog.setText(QtGui.QApplication.translate("MainWindow", "Send Jabbim Log", None, QtGui.QApplication.UnicodeUTF8))
         self.actionStart_Chat.setText(QtGui.QApplication.translate("MainWindow", "Start Chat", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionShow_offline.setText(QtGui.QApplication.translate("MainWindow", "Show offline contacts", None, QtGui.QApplication.UnicodeUTF8))
 
 from fakeTabWidget import FakeTabWidget

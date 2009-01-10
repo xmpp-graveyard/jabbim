@@ -2212,13 +2212,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.transportsWidget.layout().addWidget(self.ui.pluginsToolbar)
 		self.ui.transportsWidget.layout().addWidget(self.ui.transportsWidget.button)
 
-		# menuView QActions
-		self.showOfflineAction=self.ui.menuView.addAction(self.tr("Show Offline"))
-		self.showOfflineAction.setCheckable(True)
-		self.showOfflineAction.setObjectName('show_offline')
-		self.showOfflineAction.setChecked(False)
-		QtCore.QObject.connect(self.showOfflineAction,QtCore.SIGNAL("toggled ( bool )"),self.hideOffline)
-
 		#self.ui.bookmarks.setIndentation(0)
 
 		# filetransfer
@@ -2463,6 +2456,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.actionService_Discovery, QtCore.SIGNAL("triggered ( bool )"),self.serviceDiscovery)
 		QtCore.QObject.connect(self.ui.actionIdentity, QtCore.SIGNAL("triggered ( bool )"),self.identityEditor)
 		QtCore.QObject.connect(self.ui.actionStart_Chat, QtCore.SIGNAL("triggered ( bool )"), self.startChatDialog)
+		QtCore.QObject.connect(self.ui.actionShow_offline,QtCore.SIGNAL("toggled ( bool )"), self.hideOffline)
 		self.ui.actionSendJabbimLog.setVisible(False)
 		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Escape), self.ui.statusLine,self.statusLineCanceled)
 
@@ -4822,7 +4816,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		#self.events.addAddUserEvent('hanzz@njs.netlab.cz','offline users are shown, False offline users are hidden')
 		self.config['showOffline']=unicode(bool)
-		self.showOfflineAction.setChecked(bool)
+		self.ui.actionShow_offline.setChecked(bool)
 		#self.ui.offlineButton.setChecked(bool)
 		self.offline=bool
 		self.ui.roster.showOffline=bool
