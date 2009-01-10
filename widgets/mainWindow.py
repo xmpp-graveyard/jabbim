@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Fri Jan  9 00:13:45 2009
+# Created: Fri Jan  9 22:28:55 2009
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -427,7 +427,11 @@ class Ui_MainWindow(object):
         self.actionShow_offline = QtGui.QAction(MainWindow)
         self.actionShow_offline.setCheckable(True)
         self.actionShow_offline.setObjectName("actionShow_offline")
+        self.actionShow_transports = QtGui.QAction(MainWindow)
+        self.actionShow_transports.setCheckable(True)
+        self.actionShow_transports.setObjectName("actionShow_transports")
         self.menuView.addAction(self.actionShow_offline)
+        self.menuView.addAction(self.actionShow_transports)
         self.menuHelp.addAction(self.actionAbout)
         self.menuHelp.addAction(self.actionSupport)
         self.menuHelp.addAction(self.actionSendJabbimLog)
@@ -531,5 +535,6 @@ class Ui_MainWindow(object):
         self.actionSendJabbimLog.setText(QtGui.QApplication.translate("MainWindow", "Send Jabbim Log", None, QtGui.QApplication.UnicodeUTF8))
         self.actionStart_Chat.setText(QtGui.QApplication.translate("MainWindow", "Start Chat", None, QtGui.QApplication.UnicodeUTF8))
         self.actionShow_offline.setText(QtGui.QApplication.translate("MainWindow", "Show offline contacts", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionShow_transports.setText(QtGui.QApplication.translate("MainWindow", "Show transports", None, QtGui.QApplication.UnicodeUTF8))
 
 from fakeTabWidget import FakeTabWidget

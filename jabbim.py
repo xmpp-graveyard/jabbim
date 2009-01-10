@@ -2457,6 +2457,7 @@ class mainWindow(QtGui.QMainWindow):
 		QtCore.QObject.connect(self.ui.actionIdentity, QtCore.SIGNAL("triggered ( bool )"),self.identityEditor)
 		QtCore.QObject.connect(self.ui.actionStart_Chat, QtCore.SIGNAL("triggered ( bool )"), self.startChatDialog)
 		QtCore.QObject.connect(self.ui.actionShow_offline,QtCore.SIGNAL("toggled ( bool )"), self.hideOffline)
+		QtCore.QObject.connect(self.ui.actionShow_transports,QtCore.SIGNAL("toggled ( bool )"), self.showTransports)
 		self.ui.actionSendJabbimLog.setVisible(False)
 		QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Escape), self.ui.statusLine,self.statusLineCanceled)
 
@@ -3420,11 +3421,11 @@ class mainWindow(QtGui.QMainWindow):
 		#QtCore.QObject.connect(self.showOfflineAction,QtCore.SIGNAL("toggled ( bool )"),self.hideOffline)
 
 		# show transports action
-		action=self.offlineMenu.addAction(self.tr("Show transports"))
-		action.setCheckable(True)
-		action.setObjectName('show_transports')
-		if self.config['showTransports']=='True':
-			action.setChecked(True)
+		#action=self.offlineMenu.addAction(self.tr("Show transports"))
+		#action.setCheckable(True)
+		#action.setObjectName('show_transports')
+		#if self.config['showTransports']=='True':
+		#	action.setChecked(True)
 		# make Toggle Invisibility QAction
 		#self.toggleInv=self.offlineMenu.addAction(self.tr("Become invisible"))
 		#self.toggleInv.setObjectName("toggle_invisible")
@@ -3463,6 +3464,12 @@ class mainWindow(QtGui.QMainWindow):
 			# show adhoc menu
 			self.cmds = widgets.commands.Commands(self, unicode(self.client.jid.userhost())+"/"+unicode(action.data().toString()), action)
 
+	def showTransports(self, show):
+		self.config['showTransports'] = unicode(show)
+		self.ui.actionShow_transports.setChecked(show)
+		self.ui.roster.setSize()
+		self.ui.roster.repaint()
+
 	def offlineMenuChanged(self,action):
 		"""
 		Executes command according to action.objectName(). Called when user choose one of QAction from self.offlineMenu, which si created by self.buildOfflineMenu().
@@ -3482,10 +3489,8 @@ class mainWindow(QtGui.QMainWindow):
 				# show filetransfer dialog, which sends files
 				self.dialog=widgets.filetransfer.filetransferDialog(self,file,jid)
 				self.dialog.show()
-		elif cmd=="show_transports":
-			self.config['showTransports']=unicode(action.isChecked())
-			self.ui.roster.setSize()
-			self.ui.roster.repaint()
+		#elif cmd=="show_transports":
+		#	self.showTransports(action.isChecked())
 		elif cmd=="toggle_invisible":
 			if self.toggleInv.text() == self.tr("Become invisible"):
 				self.toggleInv.setText(self.tr("Become visible"))
@@ -4102,6 +4107,8 @@ class mainWindow(QtGui.QMainWindow):
 			self.offline=False
 			#self.buildOfflineMenu()
 			self.hideOffline(True)
+		if self.config['showTransports']=='True':
+			self.showTransports(True)
 		# unload plugins of old plugins
 		for i in self.plugins.keys():
 			self.unloadPlugin(i)
