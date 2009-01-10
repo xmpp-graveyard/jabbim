@@ -9,31 +9,9 @@
 
 from PyQt4 import QtCore, QtGui
 
-from PyQt4 import QtCore, QtGui
-class tabWidget(QtGui.QTabBar): 
-	def __init__(self,main,parent):
-		QtGui.QTabBar.__init__(self,parent)
-		self.main=main
-	
-	def mousePressEvent(self,event):
-		if event.button()==QtCore.Qt.LeftButton:
-			i=self.tabAt(event.pos())
-			if i==0:
-				self.main.ui.roster.favouriteMode=False
-				self.main.ui.roster.setSize()
-				self.main.ui.roster.repaint()
-				return QtGui.QTabBar.mousePressEvent(self,event)
-			elif i==1:
-				self.setCurrentIndex(0)
-				self.blockSignals(True)
-				r=QtGui.QTabBar.mousePressEvent(self,event)
-				self.blockSignals(False)
-				self.main.ui.roster.favouriteMode=True
-				self.main.ui.roster.setSize()
-				self.main.ui.roster.repaint()
-				return r
-			else:
-				return QtGui.QTabBar.mousePressEvent(self,event)
+# <manually>
+from fakeTabWidget import tabWidget
+# </manually>
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -237,8 +215,11 @@ class Ui_MainWindow(object):
         self.mainTabWidget = QtGui.QTabWidget(self.roster)
         self.mainTabWidget.setAutoFillBackground(True)
         self.mainTabWidget.setObjectName("mainTabWidget")
+# <manually>
+# This is not easy to move elsewhere, because setTabBar must be called before any tabs are added.
         self.tabWidget=tabWidget(MainWindow,self.mainTabWidget)
         self.mainTabWidget.setTabBar(self.tabWidget)
+# </manually>
         self.rosterTab = QtGui.QWidget()
         self.rosterTab.setGeometry(QtCore.QRect(0, 0, 239, 589))
         self.rosterTab.setObjectName("rosterTab")
