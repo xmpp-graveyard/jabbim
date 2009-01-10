@@ -9,9 +9,11 @@ datadir = $(PREFIX)/share
 jabbimdata = $(datadir)/jabbim
 
 # Builds generated files
+build: qm jabbim .configured-prefix
+
 ts_files := $(shell find . -name '*.ts')
 qm_files := $(ts_files:.ts=.qm)
-build: $(qm_files) jabbim .configured-prefix
+qm: $(qm_files)
 
 .configured-prefix: jabbim
 	echo $(PREFIX) > .configured-prefix
