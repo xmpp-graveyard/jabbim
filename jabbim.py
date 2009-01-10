@@ -2095,7 +2095,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.setupUi(self)
 #		self.ui.Form.setWidget(self.ui.scrollAreaWidgetContents)
 #		self.ui.Form.setWidgetResizable(True)
-		self.reator=reactor
 		self.setObjectName("Jabbim class")
 		#self.setWindowFlags(QtCore.Qt.Tool)#|QtCore.Qt.FramelessWindowHint)
 		#self.ui.toggleInvisible.hide()
