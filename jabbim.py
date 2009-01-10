@@ -2246,6 +2246,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.client=None #: Pyxl client instance
 		self.events=widgets.events.events(self) #: events class
 		self.preferencesWindow=widgets.preferences.preferencesWindow(self,self)
+		self.aboutDialog = None  # will be created lazily
 		self.styleSheetText=""
 		self.profilesWindow=None
 		self.mucbrowser=None
@@ -4211,8 +4212,9 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Shows About Jabbim dialog.
 		"""
-		about=aboutDialog(self)
-		about.exec_()
+		if not self.aboutDialog:
+			self.aboutDialog = aboutDialog(self)
+		self.aboutDialog.show()
 
 	def support(self, bool):
 		if self.client:
@@ -5393,7 +5395,7 @@ class customStatusWindow(QtGui.QDialog):
 class aboutDialog(QtGui.QDialog):
 	def __init__(self,parent):
 		QtGui.QDialog.__init__(self,parent)
-		self.setModal(True)
+		self.setModal(False)
 		self.ui=widgets.about.Ui_about_window()
 		self.ui.setupUi(self)
 		self.ui.version.setTextFormat(QtCore.Qt.RichText)
