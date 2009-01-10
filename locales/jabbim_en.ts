@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="en">
+<defaultcodec></defaultcodec>
 <context>
     <name></name>
     <message>
@@ -546,17 +547,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/mucbrowser_ui.py" line="61"/>
         <source>MUC Browser</source>
-        <translation type="unfinished">MUC Browser</translation>
+        <translation>Chat Room Browser</translation>
     </message>
     <message>
         <location filename="widgets/mucbrowser_ui.py" line="63"/>
         <source>JID</source>
-        <translation type="unfinished">JID</translation>
+        <translation>Jabber ID</translation>
     </message>
     <message>
         <location filename="widgets/mucbrowser_ui.py" line="64"/>
         <source>Room name</source>
-        <translation type="unfinished">Room name</translation>
+        <translation>Name</translation>
     </message>
     <message>
         <location filename="widgets/mucbrowser_ui.py" line="65"/>
@@ -644,7 +645,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/mainWindow.py" line="495"/>
         <source>Jabbim</source>
-        <translation type="unfinished">Jabbim</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="563"/>
@@ -670,7 +671,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/mainWindow.py" line="511"/>
         <source>Save Password</source>
-        <translation type="unfinished">Save Password</translation>
+        <translation>Save password</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="498"/>
@@ -791,12 +792,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/mainWindow.py" line="557"/>
         <source>MUC Browser</source>
-        <translation type="unfinished">MUC Browser</translation>
+        <translation type="unfinished">Chat Room Browser</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="508"/>
         <source>Auto connect</source>
-        <translation type="unfinished">Auto connect</translation>
+        <translation>Automatically connect</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="503"/>
@@ -816,7 +817,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/mainWindow.py" line="558"/>
         <source>Privacy list editor</source>
-        <translation type="unfinished">Privacy list editor</translation>
+        <translation>Privacy List Editor</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="559"/>
@@ -948,7 +949,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/mainWindow.py" line="561"/>
         <source>Join groupchat</source>
-        <translation type="unfinished"></translation>
+        <translation>Join Chat Room…</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="562"/>
@@ -1102,7 +1103,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/vcardeditor_ui.py" line="179"/>
         <source>Avatar:</source>
-        <translation type="unfinished">Avatar:</translation>
+        <translation>Avatar:</translation>
     </message>
     <message>
         <location filename="widgets/vcardeditor_ui.py" line="176"/>
@@ -1177,7 +1178,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/vcardeditor_ui.py" line="192"/>
         <source>Downloading vCard...</source>
-        <translation type="unfinished">Downloading User Info...</translation>
+        <translation>Downloading User Info…</translation>
     </message>
     <message>
         <location filename="widgets/vcardeditor_ui.py" line="178"/>
@@ -1483,7 +1484,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/addcontact_ui.py" line="94"/>
         <source>Choose existing group or enter name for the new group</source>
-        <translation type="unfinished">Choose existing group or enter name for the new group</translation>
+        <translation>Choose existing group or enter name of a new group</translation>
     </message>
     <message>
         <location filename="widgets/addcontact_ui.py" line="117"/>
@@ -1567,7 +1568,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/addcontactng.py" line="260"/>
         <source>Enter informations about contact or whole Jabber ID.</source>
-        <translation type="unfinished"></translation>
+        <translation>Enter information about contact or whole Jabber ID.</translation>
     </message>
     <message>
         <location filename="widgets/addcontact.py" line="22"/>
@@ -1595,7 +1596,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/events/adduserwidget.py" line="34"/>
         <source>Show VCard</source>
-        <translation type="unfinished"></translation>
+        <translation>Show User Info</translation>
     </message>
     <message>
         <location filename="widgets/events/adduserwidget.py" line="35"/>
@@ -1615,7 +1616,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/events/adduserwidget.py" line="55"/>
         <source>Do you want to add this users?</source>
-        <translation type="unfinished"></translation>
+        <translation>Do you want to add this user?</translation>
     </message>
 </context>
 <context>
@@ -1717,7 +1718,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/chatwidget_ui.py" line="204"/>
         <source>...</source>
-        <translation type="unfinished">...</translation>
+        <translation>…</translation>
     </message>
     <message>
         <location filename="widgets/chatwidget_ui.py" line="206"/>
@@ -2154,7 +2155,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/groupchat.py" line="157"/>
         <source>Connecting to MUC. This can take a few seconds.</source>
-        <translation type="unfinished">Connecting to MUC. This can take a few seconds.</translation>
+        <translation>Joining chat room. This can take a few seconds.</translation>
     </message>
     <message>
         <location filename="widgets/groupchat.py" line="978"/>
@@ -2799,7 +2800,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="wizards/joingroupchat.py" line="102"/>
         <source>Join Groupchat</source>
-        <translation type="unfinished">Join Groupchat</translation>
+        <translation>Join Chat Room…</translation>
     </message>
     <message>
         <location filename="wizards/joingroupchat.py" line="47"/>
@@ -2927,7 +2928,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="160"/>
         <source>Chat rooms allow you to chat with more users in one window.</source>
-        <translation type="unfinished"></translation>
+        <translation>Chat rooms enable you to chat with many people at a time.</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="161"/>
@@ -2947,7 +2948,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="164"/>
         <source>Room server:</source>
-        <translation type="unfinished"></translation>
+        <translation>Chat server:</translation>
     </message>
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="166"/>
@@ -2967,7 +2968,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/joingroupchat_ui.py" line="169"/>
         <source>Join this chat room automaticaly at login</source>
-        <translation type="unfinished"></translation>
+        <translation>Join this chat room automatically on startup</translation>
     </message>
 </context>
 <context>
@@ -3100,7 +3101,7 @@ Do you realy want to leave this room?</translation>
     <message>
         <location filename="jabbim.py" line="2305"/>
         <source>DND</source>
-        <translation type="unfinished">DND</translation>
+        <translation type="unfinished">Do Not Disturb</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2307"/>
@@ -3265,7 +3266,7 @@ Do you realy want to leave this room?</translation>
     <message>
         <location filename="jabbim.py" line="5347"/>
         <source>Trying to reconnect ..  </source>
-        <translation type="unfinished">Trying to reconnect ..  </translation>
+        <translation>Trying to reconnect…</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="237"/>
@@ -4869,7 +4870,7 @@ Do you realy want to leave this room?</translation>
     <message>
         <location filename="wizards/newprofile_ui.py" line="293"/>
         <source>Email:</source>
-        <translation type="unfinished">Email:</translation>
+        <translation>E-mail:</translation>
     </message>
     <message>
         <location filename="wizards/newprofile_ui.py" line="294"/>
@@ -4898,7 +4899,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="wizards/newprofile_ui.py" line="273"/>
         <source>Welcome to the open world of Jabber. This wizzard will help you with creating your account, so you can chat with your friends in no time.</source>
-        <translation type="unfinished"></translation>
+        <translation>Welcome to the open world of Jabber. This wizard will help you create your account, so you can chat with your friends in no time.</translation>
     </message>
     <message>
         <location filename="wizards/newprofile_ui.py" line="276"/>
@@ -5107,7 +5108,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/preferences_ui.py" line="496"/>
         <source>Choose whe theme of Jabbim, then restart the client</source>
-        <translation type="unfinished">Choose whe theme of Jabbim, then restart the client</translation>
+        <translation>Choose a theme, then restart the application</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="515"/>
@@ -5207,12 +5208,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/preferences_ui.py" line="501"/>
         <source>Get more groupchat skins</source>
-        <translation type="unfinished"></translation>
+        <translation>Get more chat room skins</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="502"/>
         <source>Groupchat skin</source>
-        <translation type="unfinished"></translation>
+        <translation>Chat room skin</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="506"/>
@@ -5329,7 +5330,7 @@ Version: %3</translation>
     <message>
         <location filename="pref/connection.py" line="7"/>
         <source>Automatically join at startup.</source>
-        <translation type="unfinished">Automatically join at startup.</translation>
+        <translation>Automatically connect on startup</translation>
     </message>
     <message>
         <location filename="pref/connection.py" line="7"/>
@@ -5354,32 +5355,32 @@ Version: %3</translation>
     <message>
         <location filename="pref/chat.py" line="4"/>
         <source>Sends messages with ctrl+enter.</source>
-        <translation type="unfinished">Sends messages with ctrl+enter.</translation>
+        <translation>Send messages with Ctrl+Enter</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="6"/>
         <source>Show status message.</source>
-        <translation type="unfinished">Show status message.</translation>
+        <translation>Show status messages</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="10"/>
         <source>Normal chat</source>
-        <translation type="unfinished">Normal chat</translation>
+        <translation>Normal chat</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="10"/>
         <source>Use names for tabs.</source>
-        <translation type="unfinished">Use names for tabs.</translation>
+        <translation>Use bookmarked chat room names for tabs</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="14"/>
         <source>Groupchat</source>
-        <translation type="unfinished">Groupchat</translation>
+        <translation>Chat Rooms</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="11"/>
         <source>Ask before quit room.</source>
-        <translation type="unfinished">Ask before quit room.</translation>
+        <translation type="unfinished">Ask before leaving chat rooms</translation>
     </message>
     <message>
         <location filename="pref/jabbim.py" line="4"/>
@@ -5389,7 +5390,7 @@ Version: %3</translation>
     <message>
         <location filename="pref/jabbim.py" line="9"/>
         <source>Download incomming files automatically</source>
-        <translation type="unfinished">Download incomming files automatically</translation>
+        <translation>Automatically accept incoming files</translation>
     </message>
     <message>
         <location filename="pref/jabbim.py" line="10"/>
@@ -5399,7 +5400,7 @@ Version: %3</translation>
     <message>
         <location filename="pref/jabbim.py" line="10"/>
         <source>Path for automatic download:</source>
-        <translation type="unfinished">Path for automatic download:</translation>
+        <translation>Save files to:</translation>
     </message>
     <message>
         <location filename="pref/roster.py" line="5"/>
@@ -5429,12 +5430,12 @@ Version: %3</translation>
     <message>
         <location filename="pref/connection.py" line="11"/>
         <source>Specify host for connection</source>
-        <translation type="unfinished">Specify host for connection</translation>
+        <translation type="unfinished">Override connection host/port</translation>
     </message>
     <message>
         <location filename="pref/connection.py" line="11"/>
         <source>Enable only if your server has broken DNS SRV record or if you REALLY know what are you doing.</source>
-        <translation type="unfinished">Enable only if your server has broken DNS SRV record or if you REALLY know what are you doing.</translation>
+        <translation>Enable only if your server has broken DNS SRV record or if you REALLY know what you are doing.</translation>
     </message>
     <message>
         <location filename="pref/connection.py" line="14"/>
@@ -5554,12 +5555,12 @@ Version: %3</translation>
     <message>
         <location filename="pref/connection.py" line="8"/>
         <source>Join groupchats at startup.</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatically join chat rooms on startup</translation>
     </message>
     <message>
         <location filename="pref/connection.py" line="9"/>
         <source>Resource :</source>
-        <translation type="unfinished"></translation>
+        <translation>Resource:</translation>
     </message>
     <message>
         <location filename="pref/connection.py" line="15"/>
@@ -5569,37 +5570,37 @@ Version: %3</translation>
     <message>
         <location filename="pref/chat.py" line="5"/>
         <source>Use text formatting.</source>
-        <translation type="unfinished"></translation>
+        <translation>Use text formatting</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="7"/>
         <source>Show messages about users mood.</source>
-        <translation type="unfinished"></translation>
+        <translation>Show user mood messages</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="8"/>
         <source>Show messages about user tune.</source>
-        <translation type="unfinished"></translation>
+        <translation>Show user tune messages</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="9"/>
         <source>Show message receipts notifications.</source>
-        <translation type="unfinished"></translation>
+        <translation>Show message receipts</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="12"/>
         <source>Auto change nick if there&apos;s a conflict when joining the room</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatically change conflicting nickname when joining chat rooms</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="13"/>
         <source>Show status changes in groupchat</source>
-        <translation type="unfinished"></translation>
+        <translation>Show status changes in chat rooms</translation>
     </message>
     <message>
         <location filename="pref/chat.py" line="14"/>
         <source>Show messages about join or part from room</source>
-        <translation type="unfinished"></translation>
+        <translation>Show join/part messages in chat rooms</translation>
     </message>
     <message>
         <location filename="pref/jabbim.py" line="4"/>
@@ -5614,12 +5615,12 @@ Version: %3</translation>
     <message>
         <location filename="pref/jabbim.py" line="6"/>
         <source>Show advanced preferences.</source>
-        <translation type="unfinished"></translation>
+        <translation>Show advanced options</translation>
     </message>
     <message>
         <location filename="pref/jabbim.py" line="7"/>
         <source>Notify when DND status is active</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Enable notifications with Do Not Disturb status</translation>
     </message>
     <message>
         <location filename="pref/jabbim.py" line="11"/>
@@ -5629,12 +5630,12 @@ Version: %3</translation>
     <message>
         <location filename="pref/jabbim.py" line="11"/>
         <source>Set priority according to status</source>
-        <translation type="unfinished"></translation>
+        <translation>Change priority with status</translation>
     </message>
     <message>
         <location filename="pref/jabbim.py" line="13"/>
         <source>Chat:</source>
-        <translation type="unfinished"></translation>
+        <translation>Chatty</translation>
     </message>
     <message>
         <location filename="pref/jabbim.py" line="14"/>
@@ -5654,7 +5655,7 @@ Version: %3</translation>
     <message>
         <location filename="pref/jabbim.py" line="17"/>
         <source>DND:</source>
-        <translation type="unfinished"></translation>
+        <translation>Do Not Disturb</translation>
     </message>
     <message>
         <location filename="pref/roster.py" line="8"/>
@@ -5664,17 +5665,17 @@ Version: %3</translation>
     <message>
         <location filename="pref/privacy.py" line="5"/>
         <source>Send chatstate notifications.</source>
-        <translation type="unfinished"></translation>
+        <translation>Send chatstate notifications</translation>
     </message>
     <message>
         <location filename="pref/privacy.py" line="6"/>
         <source>Send OS info.</source>
-        <translation type="unfinished"></translation>
+        <translation>Send operating system name and version</translation>
     </message>
     <message>
         <location filename="pref/privacy.py" line="10"/>
         <source>Send rooms.</source>
-        <translation type="unfinished"></translation>
+        <translation>Publish chat rooms you are visiting</translation>
     </message>
 </context>
 <context>
@@ -5951,7 +5952,7 @@ Version: %3</translation>
     <message>
         <location filename="widgets/rosterLiveWidget.py" line="75"/>
         <source>Show VCard</source>
-        <translation type="unfinished"></translation>
+        <translation>Show User Info</translation>
     </message>
 </context>
 <context>
@@ -6912,7 +6913,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/vcardeditor.py" line="298"/>
         <source>Avatar</source>
-        <translation type="unfinished">Avatar</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="widgets/vcardeditor.py" line="298"/>
@@ -6922,7 +6923,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/vcardeditor.py" line="22"/>
         <source>vCard</source>
-        <translation type="unfinished">User Info</translation>
+        <translation>User Info</translation>
     </message>
     <message>
         <location filename="widgets/vcardeditor.py" line="24"/>
@@ -7111,12 +7112,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/webkitchatwidget.py" line="357"/>
         <source>Show status change messages</source>
-        <translation type="unfinished"></translation>
+        <translation>Show status changes</translation>
     </message>
     <message>
         <location filename="widgets/webkitchatwidget.py" line="366"/>
         <source>Change groupchat theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Change chat room theme</translation>
     </message>
 </context>
 <context>
