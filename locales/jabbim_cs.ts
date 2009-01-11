@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs">
+<defaultcodec></defaultcodec>
 <context>
     <name></name>
     <message>
@@ -1307,7 +1308,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/mainWindow.py" line="537"/>
         <source>Show offline contacts</source>
-        <translation type="unfinished">Zobrazit odpojené kontakty</translation>
+        <translation>Zobrazovat odpojené kontakty</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="575"/>
@@ -1412,7 +1413,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/mainWindow.py" line="538"/>
         <source>Show transports</source>
-        <translation type="unfinished">Zobrazovat transporty</translation>
+        <translation>Zobrazovat transporty</translation>
     </message>
     <message>
         <location filename="widgets/paint_ui.py" line="560"/>
@@ -1915,7 +1916,7 @@ and spousta překladatelů a testerů</translation>
     <message>
         <location filename="widgets/about.py" line="137"/>
         <source>Conference: &lt;a href=&apos;xmpp:jabbim@conf.netlab.cz?join&apos;&gt;jabbim@conf.netlab.cz&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Místnost: &lt;a href=&apos;xmpp:jabbim@conf.netlab.cz?join&apos;&gt;jabbim@conf.netlab.cz&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="widgets/about.py" line="139"/>
