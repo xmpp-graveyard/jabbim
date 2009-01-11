@@ -9,7 +9,7 @@ class config:
 	def __init__(self,main):
 		self.main=main
 		self.config={}
-		self.config['message']={'type':'text-multi','label':self.main.tr("Auto reply"),'value':'Toto je automaticka odpoved. Toto ICQ cislo je mimo provoz, jeho uzivatel nyni pouziva pouze Jabber. Muzes ho kontaktovat na jeho JabberID [JID]. Pokud nevis jak na to, navstiv  http://www.jabbim.cz/services-start.html \n Preji pekny den.'}
+		self.config['message']={'type':'text-multi','label':self.main.tr("Auto reply"),'value':self.main.tr('This is an automatic reply. This ICQ number has been discontinued by its owner, who now uses Jabber exclusively. You can contact him/her on the JabberID [JID]. If you do not know how, visit http://www.jabbim.com/services-start.html\nHave a nice day.')}
 		self.config['exclude']={'type':'jid-list','label':self.main.tr("Allow JIDs"),'value':[]}
 
 class Plugin(plugins.PluginBase):
@@ -24,7 +24,7 @@ class Plugin(plugins.PluginBase):
 			'telling them how to reach you properly. You will NOT see their messages. ' +
 			'The exact text of the automatic reply is customizable.')
 		self.author = "Jiri 'Sef' Gabrys"
-		self.name = 'ICQ Responder'
+		self.name = self.tr('ICQ Responder')
 		self.version = '0.033'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
@@ -39,7 +39,7 @@ class Plugin(plugins.PluginBase):
 
 	def buildMainWindowMenu(self):
 		menu=self.mainWindowMenu()
-		menu.addAction("Show count",self.showSlot)
+		menu.addAction(self.tr("Show statistics"), self.showSlot)
 	def on_message(self,msg):
 		frm, typ, body, subject ,  xhtml,chatstate ,  delay, error = msg.legacyUnpack()
 		jid = self.main.getJid(frm)
@@ -49,4 +49,4 @@ class Plugin(plugins.PluginBase):
 			return False
 			
 	def showSlot(self):
-		self.main.tray.showMessage('Responder','Messages sent: '+unicode(self.count), QtGui.QSystemTrayIcon.Information, 3000)
+		self.main.tray.showMessage(self.tr('ICQ Responder'), self.tr('Messages sent: ') + unicode(self.count), QtGui.QSystemTrayIcon.Information, 3000)
