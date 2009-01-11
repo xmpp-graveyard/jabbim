@@ -56,10 +56,10 @@ class EventDispatcher:
 						return False
 
 				except Exception, ex:
-					log.msg('Plugin error: ' +unicode(ex, 'utf8'))
-					log.msg('In function:'+unicode(cb['method'], 'utf8'))
+					#log.msg('Plugin error: ' +unicode(ex, 'utf8'))
+					log.err('In function:'+unicode(name, 'utf8'))
 					message = traceback.format_exc()
-					log.msg(message)
+					log.err(message)
 			#log.msg('%s event executed in %i s'%(name, time.time()-t1))
 		else:
 			log.msg('no handler for %s'%name)
