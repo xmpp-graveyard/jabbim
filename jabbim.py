@@ -588,6 +588,7 @@ class clientClass(pyxl.client.Client):
 		self.main.ftError[sid]=error
 		# self.main.allowedSids contains SIDs which are used for transfering Jabbim Extra
 		if sid in self.main.allowedSids.keys():
+			print "EVENT REJECT"
 			if unicode(self.ft[sid].fromjid.full()).find("rpc@jabbim.cz")!=-1:
 				# continuing with jabbim extra
 				log.msg("Part of jabbim extra has been downloaded")
@@ -603,9 +604,9 @@ class clientClass(pyxl.client.Client):
 				if done:
 					self.main.preferencesWindow.reloadView(file,root)
 					self.main.preferencesWindow.reloadPlugins_()
-				event=self.main.events.ftEvents[sid]
-				event.reject()
-			del self.main.allowedSids[sid]
+			event=self.main.events.ftEvents[sid]
+			event.reject()
+			
 		self.dispatcher.publishEvent('FTFinishedEvent', sid, error)
 		#del self.ft[sid]
 		self.on_ftTransfered(sid, 0,True) # we have to delete filetransfer and etc
@@ -2112,6 +2113,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.selfAvatar=AvatarLabel(self,self.ui.selfAvatarWidget)
 		layout.addWidget(self.ui.selfAvatar)
 		self.setAttribute(QtCore.Qt.WA_AlwaysShowToolTips,True)
+		self.utils=utils
 		self.app=app
 		self.selfAvatar=None #: current avatar (QPixmap or None)
 		self.selfStatus="" #: current show (string according to self.shows)
