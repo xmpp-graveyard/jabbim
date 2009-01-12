@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1">
+<!DOCTYPE TS><TS version="1.1" language="pl_PL">
+<defaultcodec></defaultcodec>
 <context>
     <name>Plugin</name>
     <message>
         <location filename="tune.py" line="322"/>
         <source>Plugin for User Tune</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">UserTune</translation>
     </message>
     <message>
         <location filename="tune.py" line="324"/>
         <source>tune</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">tune</translation>
     </message>
 </context>
 <context>
@@ -18,7 +19,7 @@
     <message>
         <location filename="tune.py" line="21"/>
         <source>Player</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Odtwarzacz</translation>
     </message>
 </context>
 </TS>

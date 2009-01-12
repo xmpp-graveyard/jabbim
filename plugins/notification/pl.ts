@@ -1,56 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1">
+<!DOCTYPE TS><TS version="1.1" language="pl_PL">
+<defaultcodec></defaultcodec>
 <context>
     <name>Plugin</name>
     <message>
         <location filename="notification.py" line="351"/>
         <source>Notification test - can drag</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Test powiadomień - przeciąganie</translation>
     </message>
     <message>
         <location filename="notification.py" line="388"/>
         <source>Notification test</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Test powiadomień</translation>
     </message>
     <message>
         <location filename="notification.py" line="380"/>
         <source>Notification </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Powiadomienie</translation>
     </message>
     <message>
         <location filename="notification.py" line="380"/>
         <source>Notification plugin test :)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Testy powiadomień :)</translation>
     </message>
     <message>
         <location filename="notification.py" line="408"/>
         <source>WARNING!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">UWAGA!</translation>
     </message>
     <message>
         <location filename="notification.py" line="426"/>
         <source> is now </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">jest teraz</translation>
     </message>
     <message>
         <location filename="notification.py" line="550"/>
         <source>New message from </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nowa wiadomość od</translation>
     </message>
     <message>
         <location filename="notification.py" line="543"/>
         <source>New groupchat message for you</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nowa wiadomość czatowa do Ciebie</translation>
     </message>
     <message>
         <location filename="notification.py" line="275"/>
         <source>System tray and sound notification</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pasek systemowy i powiadomoenia dźwiękowe</translation>
     </message>
     <message>
         <location filename="notification.py" line="277"/>
         <source>Notification Plugin</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Powiadomienia</translation>
     </message>
 </context>
 <context>
@@ -58,117 +59,117 @@
     <message>
         <location filename="notification.py" line="247"/>
         <source>Notify on first message from user</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Powiadamiaj o pierwszej wiadomości od użytkownika</translation>
     </message>
     <message>
         <location filename="notification.py" line="247"/>
         <source>Tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ikona w pasku sytemowym</translation>
     </message>
     <message>
         <location filename="notification.py" line="248"/>
         <source>Notify if groupchat message contains your nickname</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Powiadamiaj jeśli wiadomość czatowa zawiera Twój nick</translation>
     </message>
     <message>
         <location filename="notification.py" line="251"/>
         <source>Play sound on first message from user</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Odtwarzaj dźwięk przy pierwszej wiadomości od użytkownika</translation>
     </message>
     <message>
         <location filename="notification.py" line="257"/>
         <source>Sounds</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dźwięki</translation>
     </message>
     <message>
         <location filename="notification.py" line="253"/>
         <source>Play sound if groupchat message contains your nickname</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Odtwarzaj dźwięk jeśli wiadomość czatowa zawiera Twój nick</translation>
     </message>
     <message>
         <location filename="notification.py" line="250"/>
         <source>Play sound on login</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Odtwarzaj dźwięk przy logowaniu</translation>
     </message>
     <message>
         <location filename="notification.py" line="257"/>
         <source>Use transparent background</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Użyj przeżroczystego tła</translation>
     </message>
     <message>
         <location filename="notification.py" line="269"/>
         <source>OSD</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">OSD</translation>
     </message>
     <message>
         <location filename="notification.py" line="258"/>
         <source>Display time (seconds):</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Czas wyświetlania (w sekundach):</translation>
     </message>
     <message>
         <location filename="notification.py" line="266"/>
         <source>Use OSD for presences</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Użyj OSD dla obecności</translation>
     </message>
     <message>
         <location filename="notification.py" line="248"/>
         <source>Tray Icon</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pasek systemowy</translation>
     </message>
     <message>
         <location filename="notification.py" line="252"/>
         <source>Play sound on other messages from user</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Odtwarzaj dźwięk dla innych wiadomości dla użytkownika</translation>
     </message>
     <message>
         <location filename="notification.py" line="254"/>
         <source>Play sound on new presence</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Odtwarzaj dźwięk przy nowych obecnościach</translation>
     </message>
     <message>
         <location filename="notification.py" line="255"/>
         <source>Play sound on file transfer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Odtwarzaj dźwięk przy transferze plików</translation>
     </message>
     <message>
         <location filename="notification.py" line="259"/>
         <source>Use OSD for first message</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Używaj OSD dla pierwszej wiadomości</translation>
     </message>
     <message>
         <location filename="notification.py" line="260"/>
         <source>Use OSD for other messages</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Używaj OSD dla innych wiadomości</translation>
     </message>
     <message>
         <location filename="notification.py" line="264"/>
         <source>Headline font size</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Rozmiar czcionki nagłówka</translation>
     </message>
     <message>
         <location filename="notification.py" line="265"/>
         <source>Text font size</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Rozmiar czcionki tekstu</translation>
     </message>
     <message>
         <location filename="notification.py" line="261"/>
         <source>Groupchat</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Czaty</translation>
     </message>
     <message>
         <location filename="notification.py" line="266"/>
         <source>Global</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Globalne</translation>
     </message>
     <message>
         <location filename="notification.py" line="260"/>
         <source>Chat</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zwykłe wiadomości</translation>
     </message>
     <message>
         <location filename="notification.py" line="261"/>
         <source>Use OSD for all conference messages</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Używaj OSD dla wszystkich wiadomości czatowych</translation>
     </message>
 </context>
 </TS>
