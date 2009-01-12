@@ -80,7 +80,7 @@ class Plugin(plugins.PluginBase):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'festival'
 		self.installTranslator()
-		self.description = self.tr('Reads messages with synthesized voice via Festival');
+		self.description = self.tr('Reads messages with synthesized voice via Festival\n\nFor this plugin to work, you need to have Festival installed and found in $PATH. To verify that Festival works for you, run the command:\necho Hello | festival --tts');
 		self.author = "Ondra Kunc triak@jabber.cz, Michal 'michich' Schmidt"
 		self.name = self.tr('Festival voice synthesizer')
 		self.version = '0.001'

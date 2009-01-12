@@ -3,11 +3,6 @@
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="festival.py" line="84"/>
-        <source>Reads messages with synthesized voice via Festival</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="festival.py" line="86"/>
         <source>Festival voice synthesizer</source>
         <translation type="unfinished"></translation>
@@ -15,6 +10,14 @@
     <message>
         <location filename="festival.py" line="136"/>
         <source>%s writes: %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="festival.py" line="84"/>
+        <source>Reads messages with synthesized voice via Festival
+
+For this plugin to work, you need to have Festival installed and found in $PATH. To verify that Festival works for you, run the command:
+echo Hello | festival --tts</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
