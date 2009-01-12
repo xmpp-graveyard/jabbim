@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs_CZ">
+<defaultcodec></defaultcodec>
 <context>
     <name>Plugin</name>
     <message>
@@ -45,7 +46,7 @@
     <message>
         <location filename="notification.py" line="275"/>
         <source>System tray and sound notification</source>
-        <translation type="unfinished"></translation>
+        <translation>Upozorňování v liště a zvuky</translation>
     </message>
     <message>
         <location filename="notification.py" line="277"/>
@@ -81,7 +82,7 @@
     <message>
         <location filename="notification.py" line="248"/>
         <source>Notify if groupchat message contains your nickname</source>
-        <translation>Upozorni mě pokud zpráva z místnosti obsahuje moji přezdívku</translation>
+        <translation>Upozorni mě, pokud zpráva z místnosti obsahuje moji přezdívku</translation>
     </message>
     <message>
         <location filename="notification.py" line="251"/>
@@ -96,7 +97,7 @@
     <message>
         <location filename="notification.py" line="253"/>
         <source>Play sound if groupchat message contains your nickname</source>
-        <translation>Přehraj zvuk pokud zpráva z místnosti obsahuje moji přezdívku</translation>
+        <translation>Přehraj zvuk, pokud zpráva z místnosti obsahuje moji přezdívku</translation>
     </message>
     <message>
         <location filename="notification.py" line="250"/>
@@ -116,7 +117,7 @@
     <message>
         <location filename="notification.py" line="258"/>
         <source>Display time (seconds):</source>
-        <translation>Zobrazovat po (vteřin):</translation>
+        <translation>Zobrazovat po (v sekundách):</translation>
     </message>
     <message>
         <location filename="notification.py" line="266"/>
@@ -141,7 +142,7 @@
     <message>
         <location filename="notification.py" line="248"/>
         <source>Tray Icon</source>
-        <translation>Tray ikona</translation>
+        <translation>Ikona v liště</translation>
     </message>
     <message>
         <location filename="notification.py" line="252"/>
@@ -181,22 +182,22 @@
     <message>
         <location filename="notification.py" line="261"/>
         <source>Groupchat</source>
-        <translation type="unfinished"></translation>
+        <translation>Místnosti</translation>
     </message>
     <message>
         <location filename="notification.py" line="266"/>
         <source>Global</source>
-        <translation type="unfinished"></translation>
+        <translation>Globální</translation>
     </message>
     <message>
         <location filename="notification.py" line="260"/>
         <source>Chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Rozhovor</translation>
     </message>
     <message>
         <location filename="notification.py" line="261"/>
         <source>Use OSD for all conference messages</source>
-        <translation type="unfinished"></translation>
+        <translation>Používat OSD pro všechny zprávy z místností</translation>
     </message>
 </context>
 </TS>
