@@ -222,10 +222,7 @@ class PluginBase(object):
 		File name must be in format xx.qm . For example cs.qm or en.qm .
 		@see: L{tr}
 		"""
-		self._translator=QtCore.QTranslator()
-		directory=unicode(self.pluginDir)
-		self._translator.load(utils.path(directory+"/"+unicode(QtCore.QLocale.system().name()[:2])+u".qm"))
-		log.msg("trying to load localization file "+ directory+"/"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
+		self._translator = utils.loadTranslator(self.pluginDir + '/')
 
 	def tr(self,text,cl=None):
 		"""

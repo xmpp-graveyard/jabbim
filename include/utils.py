@@ -788,3 +788,25 @@ def unregWindowsMenu(name):
 		_winreg.DeleteKey(command, name)
 		_winreg.CloseKey(command)
 
+def loadTranslator(path_prefix):
+	native_lang = QtCore.QLocale.system().name()[:2]
+	translator = QtCore.QTranslator()
+	if native_lang == 'C':
+		# if LANG=C was set, we must not attempt to load locales
+		preferred_langs = []
+	elif native_lang == 'sk':
+		# in case Slovak translation is not available,
+		# most Slovak people prefer reading Czech, not English
+		preferred_langs = ['sk', 'cs', 'en']
+	elif native_lang == 'en':
+		preferred_langs = ['en']
+	else:
+		# 'en' is still better than the source pseudo-english,
+		preferred_langs = [native_lang, 'en']
+	for lang in preferred_langs:
+		filename = path_prefix + lang + ".qm"
+		if translator.load(filename):
+			print "loaded locales from", filename
+			break
+		print "failed to load locales from ", filename
+	return translator

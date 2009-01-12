@@ -5419,9 +5419,7 @@ class scrollBar(QtGui.QScrollArea):
 MainWindow=None
 
 def main():
-	translator=QtCore.QTranslator()
-	translator.load("locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm")
-	#print "trying to load locales:","locales/jabbim_"+unicode(QtCore.QLocale.system().name())[:2]+".qm"
+	translator = utils.loadTranslator('locales/jabbim_')
 	app.installTranslator(translator)
 	global MainWindow
 	MainWindow = mainWindow()
@@ -5430,7 +5428,6 @@ def main():
 	else:
 		MainWindow.show()
 	reactor.run()
-
 
 if __name__ == "__main__":
 	#import hotshot
