@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1">
+<!DOCTYPE TS><TS version="1.1" language="pl_PL">
+<defaultcodec></defaultcodec>
 <context>
     <name>MainWindow</name>
     <message>
         <location filename="historyBrowser.ui.py" line="74"/>
         <source>Archive browser</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Przeglądarka archiwum</translation>
     </message>
     <message>
         <location filename="historyBrowser.ui.py" line="76"/>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Szukaj</translation>
     </message>
     <message>
         <location filename="historyBrowser.ui.py" line="75"/>
         <source>Today</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dziś</translation>
     </message>
     <message>
         <location filename="historyBrowser.ui.py" line="77"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zamknij</translation>
     </message>
 </context>
 <context>
@@ -28,17 +29,17 @@
     <message>
         <location filename="archive.py" line="484"/>
         <source>History</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Historia</translation>
     </message>
     <message>
         <location filename="archive.py" line="307"/>
         <source>Message Archiving</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Archiwizacja wiadomości</translation>
     </message>
     <message>
         <location filename="archive.py" line="309"/>
         <source>Archive Plugin</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Archiwum</translation>
     </message>
 </context>
 <context>
@@ -46,12 +47,12 @@
     <message>
         <location filename="archive.py" line="298"/>
         <source>Number of last messages shown:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Liczba wyświetlanych ostatnich wiadomości:</translation>
     </message>
     <message>
         <location filename="archive.py" line="299"/>
         <source>Don&apos;t show messages older than:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nie pokazuj wiadomości starszych niż:</translation>
     </message>
 </context>
 </TS>
