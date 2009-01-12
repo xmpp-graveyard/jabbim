@@ -9,10 +9,11 @@ from include import plugins, utils
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
+		self.installTranslator()
 		self.fname       = 'iBuddy'
-		self.description = 'get your iBuddy working with Jabbim'
+		self.description = self.tr("Get your iBuddy working with Jabbim\n\niBuddy is a little figure-shaped USB-connected toy which reacts to chat events by changing color (see http://www.i-buddy.com/).\n\nYou need to have the \'pybuddy\' daemon installed and running before loading this plugin. You can get pybuddy from http://code.google.com/p/pybuddy/")
 		self.author      = "Leandro Vazquez Cervantes"
-		self.name        = 'iBuddy plugin'
+		self.name        = self.tr('iBuddy')
 		self.version     = '0.1' 
 		self.category    = ['other'] 
 
