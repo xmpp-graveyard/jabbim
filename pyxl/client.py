@@ -1281,12 +1281,22 @@ class Client(derived):
 			else:
 				return cid
 
+		def _parseBOBHash(hash):
+
+			casti = hash.split('+')
+			typ = casti[0]
+			zbytek = casti[1].split('@')
+			host = zbytek[1]
+			hash = zbytek[0]
+			return (typ, hash, host)
+
 		def _writeBOBData(el,  cid):
 			log.msg('data received!')
 			frm = jid.JID(el['from'])
 			data = b64decode(unicode(el.data))
 			#TODO detect hash type
-			if sha1(data).hexdigest() == cid[5:]:
+			parsedHash = _parseBOBHash(cid)
+			if sha1(data).hexdigest() == parsedHash[1]:
 				fp = open(self.bobCacheDir+cid,  'wb')
 				fp.write(data)
 				fp.close()
