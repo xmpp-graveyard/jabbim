@@ -119,7 +119,7 @@
     <message>
         <location filename="notification.py" line="252"/>
         <source>Play sound on other messages from user</source>
-        <translation type="unfinished">Odtwarzaj dźwięk dla innych wiadomości dla użytkownika</translation>
+        <translation type="unfinished">Odtwarzaj dźwięk dla wiadomości od użytkowników</translation>
     </message>
     <message>
         <location filename="notification.py" line="254"/>
@@ -139,7 +139,7 @@
     <message>
         <location filename="notification.py" line="260"/>
         <source>Use OSD for other messages</source>
-        <translation type="unfinished">Używaj OSD dla innych wiadomości</translation>
+        <translation type="unfinished">Używaj OSD dla pozostałych wiadomości</translation>
     </message>
     <message>
         <location filename="notification.py" line="264"/>
