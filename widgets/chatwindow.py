@@ -680,9 +680,9 @@ class chatWindow(QtGui.QMainWindow):
 				##painter.drawPixmap(0,0,frame)
 				##painter.end()
 				#tab.chat.ui.avatar.setPixmap(result)
-		result=self.main.getAvatar(self.main.getJid(unicode(jid)).userhost(),size="128x128",frame=True)
+		result=self.main.getAvatar(self.main.getJid(unicode(jid)).userhost(),size="64x64",frame=True)
 		if not result:
-			result=self.main.getAvatar(self.main.getJid(unicode(jid)).full(),size="128x128",frame=True)
+			result=self.main.getAvatar(self.main.getJid(unicode(jid)).full(),size="64x64",frame=True)
 			if not result:
 				result=self.main.getAvatar(QtGui.QPixmap("images/48x48/apps/jabbim.png"),size="64x64",frame=True)
 		tab.chat.ui.avatar.setPixmap(result)
@@ -827,7 +827,7 @@ class chatWindow(QtGui.QMainWindow):
 		if w.typ=="chat":
 			print w.chat.ui.splitter.sizes()
 			self.main.config['chatSplitterSizes']=list(w.chat.ui.splitter.sizes())
-			self.main.config['chatSplitter2Sizes']=list(w.chat.ui.splitter_2.sizes())
+			#self.main.config['chatSplitter2Sizes']=list(w.chat.ui.splitter_2.sizes())
 			self.main.client.sendMessage(unicode(w.jid),"",composing="gone")
 		
 

@@ -181,9 +181,13 @@ class webkitChatWidget(QtWebKit.QWebView):
 		self.chatwidget=weakref.ref(chatwidget)
 		# webkit configuration
 		self.settings().setAttribute(QtWebKit.QWebSettings.JavascriptEnabled,True)
+		self.p=QtWebKit.QWebPage(self)
+		self.p.javaScriptConsoleMessage=self.javaScriptConsoleMessage
+		self.setPage(self.p)
 		self.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
 		# messageObject
 		self.messageObject=message("")
+		self.messageObject.w=self
 		# signals
 		QtCore.QObject.connect(self.messageObject,QtCore.SIGNAL("ready()"),self.messageObjectReady)
 		QtCore.QObject.connect(self,QtCore.SIGNAL("loadFinished ( bool)"),self.webkitLoaded_)
@@ -196,6 +200,9 @@ class webkitChatWidget(QtWebKit.QWebView):
 		self.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding))
 		self.setAcceptDrops(True)
 		self.page().mainFrame().setTextSizeMultiplier(float(self.chatwidget().main().config['textSizeMultiplier']))
+
+	def javaScriptConsoleMessage(self,message,linNumber, source):
+		print "JAVASCRIPT CONSOLE MESSAGE",[unicode(message)],linNumber,[unicode(source)]
 
 	def openUrl(self,  url):
 		if url.scheme() == 'xmpp':

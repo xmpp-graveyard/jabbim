@@ -4279,7 +4279,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		if len(self.plugins) != 0:
 			return  # we've done this already
-		plugin_paths = ['plugins/', self.realHomeDir + '/plugins/']
+		plugin_paths = [unicode(os.getcwd(), sys.getfilesystemencoding())+'/plugins/', self.realHomeDir + '/plugins/']
 		for plugin_path in plugin_paths:
 			for plugin_name in os.listdir(plugin_path):
 				dir = '%s/%s' % (plugin_path, plugin_name)
@@ -4451,7 +4451,7 @@ class mainWindow(QtGui.QMainWindow):
 					w=self.chat.ui.chatTab.widget(i)
 					if w.typ=="chat":
 						self.config['chatSplitterSizes']=list(w.chat.ui.splitter.sizes())
-						self.config['chatSplitter2Sizes']=list(w.chat.ui.splitter_2.sizes())
+						#self.config['chatSplitter2Sizes']=list(w.chat.ui.splitter_2.sizes())
 						break
 				for i in range(self.chat.ui.chatTab.count()):
 					w=self.chat.ui.chatTab.widget(i)

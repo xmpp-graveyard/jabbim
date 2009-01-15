@@ -240,6 +240,9 @@ class chatWidget(abstractChatWidget):
 		self.typ="chat"
 		abstractChatWidget.__init__(self,Ui_chatwidget,abstractTextView,main,jid,xhtml,parent)
 		
+		self.coolWidgets=[]
+		self.coolLayout=QtGui.QHBoxLayout(self.ui.cool)
+		
 		self.loadAvatars()
 		self.loadWebkit()
 		
@@ -247,22 +250,23 @@ class chatWidget(abstractChatWidget):
 		# set splitters sizes
 		#self.ui.splitter.setSizes(list(self.main().config['chatSplitterSizes']))
 		self.ui.splitter.setSizes([800,64])
-		self.ui.splitter_2.setSizes(list(self.main().config['chatSplitter2Sizes']))
-		widget=self.ui.splitter_2.widget(1)
-		widget.setMaximumWidth(128)
+		#self.ui.splitter_2.setSizes(list(self.main().config['chatSplitter2Sizes']))
+		#widget=self.ui.splitter_2.widget(1)
+		#widget.setMaximumWidth(128)
 		
 		# Maximum width of avatar Widget
-		self.ui.avatar.setMaximumWidth(128)
+		self.ui.avatar.setMaximumWidth(64)
 		self.ui.avatar.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 		QtCore.QObject.connect(self.ui.avatar,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.contactMenu)
 		self.noColor=True
 		self.lastMessageFrom=""
 
 		# plugins buttons
-		self.flowLayout = QtGui.QVBoxLayout()
+		self.flowLayout = QtGui.QHBoxLayout()
 		for key,value in self.main().plugins.iteritems():
 			if value['module']:
 				self.main().runPluginCommand(value['module'].buildChatWidget,[unicode(self.jid),self.flowLayout,self])
+		self.flowLayout.addStretch()
 		hasFeature=False
 		self.ui.metaLabel.hide()
 		self.ui.metaButton.hide()
@@ -299,6 +303,13 @@ class chatWidget(abstractChatWidget):
 		self.filetransfer={}
 		
 		self.refreshToolTip()
+
+	def addCoolWidget(self,widget):
+		self.coolWidgets.append(widget)
+		self.coolLayout.addWidget(widget)
+	
+	def removeCoolWidget(self,widget):
+		self.coolWidgets.remove(widget)
 
 	def setName(self, name):
 		self.name = name

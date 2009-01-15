@@ -6,6 +6,30 @@ import time
 import weakref
 from os.path import basename
 
+#class ElidedLabel : public QLabel {
+#public:
+    #ElidedLabel(QWidget *parent, Qt::TextElideMode elide) : QLabel(parent) {this->elide = elide;}
+    #QSize sizeHint() const {return QSize(1, QLabel::sizeHint().height());}
+    #QSize minimumSizeHint() const {return sizeHint();}
+#protected:
+    #Qt::TextElideMode elide;
+    #void paintEvent(QPaintEvent *e) {
+        #if (contentsRect().width() < fontMetrics().width(text())) {
+            #QString newText = fontMetrics().elidedText(text(), elide, contentsRect().width());
+            #QString fullText = text();
+            #setText(newText);
+            #QLabel::paintEvent(e);
+            #setText(fullText);
+            #setToolTip(fullText);
+        #} else {
+            #QLabel::paintEvent(e);
+            #setToolTip(QString());
+        #}
+    #}
+#};
+
+
+
 
 class FTDownloadWidget(QtGui.QWidget):
 	def __init__(self,event):

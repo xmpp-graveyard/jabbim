@@ -50,6 +50,8 @@ class Plugin(plugins.PluginBase):
 ##			self.window.ui.list.dragEnterEvent = self.dragEnterEvent
 ##			self.window.ui.line_jid.setText(self.main.client.jid.userhost())
 			self.typ = "public"
+			self.callTab=None
+			self.thumbIndex=0
 			self.esPath=""
 			self.wizard.ui.download.setIcon(QtGui.QIcon("%s/document-save.png" % self.pluginDir))
 			self.wizard.ui.upload.setIcon(QtGui.QIcon("%s/upload.png" % self.pluginDir))
@@ -65,6 +67,7 @@ class Plugin(plugins.PluginBase):
 			self.wizard.ui.es.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
 			self.window.ui.showMiniRoster.setIcon(self.main.ui.mainTabWidget.tabIcon(0))
 			self.group=QtGui.QButtonGroup(self.window)
+			self.group.setExclusive(False)
 			self.update=False
 
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
@@ -419,13 +422,41 @@ class Plugin(plugins.PluginBase):
 		self.call(self.main.client.jid.userhost())
 
 	def buttonClicked(self,button):
-		pass
+		if button.typ=="album":
+			if button.isChecked():
+				tab,i=self.main.chat.findTab(unicode(button.jid))
+				if tab:
+					tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript('var group = document.createElement(\'div\'); group.innerHTML="<div id=\\"light\\" style=\\"position: fixed;top: 10%;right:10%;left: 10%;width: 80%;height: 70%;padding: 16px;background-color: white;z-index:1002;border: 1px solid black;overflow: auto;\\"></div>";document.body.appendChild(group);')
+					self.callTab=tab
+					self.call(unicode(button.jid),"album")
+			else:
+				tab,i=self.main.chat.findTab(unicode(button.jid))
+				if tab:
+					tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById(\'light\');")
+		else:
+			if button.isChecked():
+				tab,i=self.main.chat.findTab(unicode(button.jid))
+				if tab:
+					tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript('var group = document.createElement(\'div\'); group.innerHTML="<div id=\\"light\\" style=\\"position: fixed;top: 10%;right:10%;left: 10%;width: 80%;height: 70%;padding: 16px;background-color: white;z-index:1002;border: 1px solid black;overflow: auto;\\"></div>";document.body.appendChild(group);')
+					self.callTab=tab
+					self.call(unicode(button.jid),"public")
+			else:
+				tab,i=self.main.chat.findTab(unicode(button.jid))
+				if tab:
+					tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById(\'light\');")
+			
 
 	def chatMenuItemTriggered(self,action):
 		cmd=unicode(action.objectName())
 		if cmd=="show_my_disk":
-			anchor="http://disk.jabbim.cz/%s/"%(unicode(self.main.client.jid.userhost()))
-			QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
+			tab,i=self.main.chat.findTab(unicode(action.parent().parent().jid))
+			print tab,i
+			if tab:
+				tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript('var group = document.createElement(\'div\'); group.innerHTML="<div id=\\"light\\" style=\\"position: fixed;top: 10%;right:10%;left: 10%;width: 80%;height: 70%;padding: 16px;background-color: white;z-index:1002;border: 1px solid black;overflow: auto;\\"><a href = \\"javascript:void(0)\\" onclick = \\"removeById(\'light\');\\">Close</a></div>";document.body.appendChild(group);')
+				self.callTab=tab
+				self.call(unicode(action.parent().parent().jid),"album")
+			#anchor="http://disk.jabbim.cz/%s/"%(unicode(self.main.client.jid.userhost()))
+			#QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
 		elif cmd=="show_users_disk":
 			anchor="http://disk.jabbim.cz/%s/"%(unicode(action.parent().parent().jid))
 			QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
@@ -447,37 +478,117 @@ class Plugin(plugins.PluginBase):
 	def buildChatWidget(self,jid,layout,widget):
 		jid=self.main.getJid(jid)
 		# create Archive button
-		button=QtGui.QToolButton()
-		button.setPopupMode(QtGui.QToolButton.InstantPopup)
-		button.setArrowType(QtCore.Qt.NoArrow)
+		button=QtGui.QPushButton()
+		button.setCheckable(True)
 		button.setIconSize(QtCore.QSize(16,16))
 		button.setIcon(QtGui.QIcon("%s/jdisk-public.png" % self.pluginDir))
 		button.jid=unicode(jid.userhost())
-		button.setToolTip("Jabbim Album")
+		button.typ="album"
+		button.setToolTip("Show Photos")
+		button.setText(self.tr("Show Photos"))
 		# add button to buttonGroup
-		menu=QtGui.QMenu(button)
-		# my
-		action=menu.addAction(self.tr("Show my Jdisk in JDM"))
-		action.setObjectName("show_my_disk_jdm")
-		action=menu.addAction(self.tr("Show my Album in JDM"))
-		action.setObjectName("show_my_album_jdm")
-		action=menu.addAction(self.tr("Show my Jdisk in browser"))
-		action.setObjectName("show_my_disk")
-		action=menu.addAction(self.tr("Show my Album in browser"))
-		action.setObjectName("show_my_album")
-		menu.addSeparator()
-		# users
-		action=menu.addAction(self.tr("Show users Jdisk in JDM"))
-		action.setObjectName("show_users_disk_jdm")
-		action=menu.addAction(self.tr("Show users Album in JDM"))
-		action.setObjectName("show_users_album_jdm")
-		action=menu.addAction(self.tr("Show users Jdisk in browser"))
-		action.setObjectName("show_users_disk")
-		action=menu.addAction(self.tr("Show users Album in browser"))
-		action.setObjectName("show_users_album")
-		QtCore.QObject.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.chatMenuItemTriggered)
-		button.setMenu(menu)
+		self.group.addButton(button)
 		layout.addWidget(button)
+
+		button=QtGui.QPushButton()
+		button.setCheckable(True)
+		button.setIconSize(QtCore.QSize(16,16))
+		button.setIcon(QtGui.QIcon("%s/jdisk-public.png" % self.pluginDir))
+		button.jid=unicode(jid.userhost())
+		button.typ="public"
+		button.setToolTip("Show Jdisk")
+		button.setText(self.tr("Show Jdisk"))
+		# add button to buttonGroup
+		self.group.addButton(button)
+		layout.addWidget(button)
+
+		w=QtGui.QWidget()
+		l=QtGui.QHBoxLayout(w)
+		w.label1=QtGui.QLabel(w)
+		l.addWidget(w.label1)
+		w.label2=QtGui.QLabel(w)
+		l.addWidget(w.label2)
+		w.label3=QtGui.QLabel(w)
+		l.addWidget(w.label3)
+
+		widget.addCoolWidget(w)
+
+		self.main.client.callRemote('rpc@jabbim.cz/service', 'listAlbum', (jid.userhost(),)).addCallback(self.setStats,widget,w)
+
+	def setStats(self,data,widget,w):
+		data=data[0][0]
+		print data
+		if len(data)>0:
+			self.main.client.callRemote('rpc@jabbim.cz/service', 'getThumb', (self.main.getJid(widget.jid).userhost(),data[0][0])).addCallback(self.statsThumbArrived,data,w,widget)
+
+	def statsThumbArrived(self,thumb,data,w,widget):
+		cacheFile="%s/%s.jpg" % (self.cache,self.main.getJid(widget.jid).userhost()+data[0][0])
+		if thumb:
+			print "saving",data[0]
+			image=base64.decodestring(str(thumb[0]))
+			pixmap=QtGui.QPixmap()
+			pixmap.loadFromData(image)
+			#self.thumbs[data[0]].setIcon(QtGui.QIcon(pixmap))
+			f=open(cacheFile,"wb")
+			f.write(image)
+			f.close()
+			self.cacheList[cacheFile] = md5(image).hexdigest()
+			self.cacheList.write()
+		else:
+			pixmap=QtGui.QPixmap(cacheFile)
+
+		pixmap=pixmap.scaled(64,64,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
+		if not w.label1.pixmap():
+			w.label1.setPixmap(pixmap)
+		elif not w.label2.pixmap():
+			w.label2.setPixmap(pixmap)
+		elif not w.label3.pixmap():
+			w.label3.setPixmap(pixmap)
+			return
+		else:
+			return
+
+		del data[0]
+		if len(data)!=0:
+			if not self.stopDownload:
+				cacheFile="%s/%s.jpg" % (self.cache,self.main.getJid(widget.jid).userhost()+data[0][0])
+				if os.path.isfile(cacheFile):
+					self.main.client.reactor.callLater(0,self.statsThumbArrived,None,data,w,widget)
+				else:
+					self.main.client.callRemote('rpc@jabbim.cz/service', 'getThumb', (self.main.getJid(widget.jid).userhost(),data[0][0])).addCallback(self.statsThumbArrived,data,w,widget)
+
+
+		#button=QtGui.QToolButton()
+		#button.setPopupMode(QtGui.QToolButton.InstantPopup)
+		#button.setArrowType(QtCore.Qt.NoArrow)
+		#button.setIconSize(QtCore.QSize(16,16))
+		#button.setIcon(QtGui.QIcon("%s/jdisk-public.png" % self.pluginDir))
+		#button.jid=unicode(jid.userhost())
+		#button.setToolTip("Jabbim Album")
+		## add button to buttonGroup
+		#menu=QtGui.QMenu(button)
+		## my
+		#action=menu.addAction(self.tr("Show my Jdisk in JDM"))
+		#action.setObjectName("show_my_disk_jdm")
+		#action=menu.addAction(self.tr("Show my Album in JDM"))
+		#action.setObjectName("show_my_album_jdm")
+		#action=menu.addAction(self.tr("Show my Jdisk in browser"))
+		#action.setObjectName("show_my_disk")
+		#action=menu.addAction(self.tr("Show my Album in browser"))
+		#action.setObjectName("show_my_album")
+		#menu.addSeparator()
+		## users
+		#action=menu.addAction(self.tr("Show users Jdisk in JDM"))
+		#action.setObjectName("show_users_disk_jdm")
+		#action=menu.addAction(self.tr("Show users Album in JDM"))
+		#action.setObjectName("show_users_album_jdm")
+		#action=menu.addAction(self.tr("Show users Jdisk in browser"))
+		#action.setObjectName("show_users_disk")
+		#action=menu.addAction(self.tr("Show users Album in browser"))
+		#action.setObjectName("show_users_album")
+		#QtCore.QObject.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.chatMenuItemTriggered)
+		#button.setMenu(menu)
+		#layout.addWidget(button)
 
 
 
@@ -703,6 +814,7 @@ class Plugin(plugins.PluginBase):
 ##		self.window.ui.esPath.setText(self.esPath)
 		data=data[0][0]
 		self.thumbs={}
+		html=""
 		for file in data:
 			if self.update:
 				#items=self.window.ui.right.findItems(file[0],QtCore.Qt.MatchExactly)
@@ -732,29 +844,44 @@ class Plugin(plugins.PluginBase):
 				ext=name.split('.')[-1]
 				if ext in ["exe","run","sh","bin"]: 
 					item.setIcon(QtGui.QIcon(self.pluginDir+"/application-x-executable.png"))
+					ic=self.pluginDir+"/application-x-executable.png"
 				elif ext in ["svg","jpg","png","gif","tif","tiff","bmp","ico","xcf"]: 
 					item.setIcon(QtGui.QIcon(self.pluginDir+"/image-x-generic.png"))
+					ic=self.pluginDir+"/image-x-generic.png"
 				elif ext in ["wav","mp3","ogg","mp4","flac"]:
 					item.setIcon(QtGui.QIcon(self.pluginDir+"/audio-x-generic.png"))
+					ic=self.pluginDir+"/audio-x-generic.png"
 				elif ext in ["rar","zip","gz","bz","tgz","deb","rpm","tar","pkg","7z","ace"]:
 					item.setIcon(QtGui.QIcon(self.pluginDir+"/package-x-generic.png"))
+					ic=self.pluginDir+"/package-x-generic.png"
 				elif ext in ["htm","html","xml"]:
 					item.setIcon(QtGui.QIcon(self.pluginDir+"/text-html.png"))
+					ic=self.pluginDir+"/text-html.png"
 				elif ext in ["txt","c","py","log"]:
 					item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic.png"))
+					ic=self.pluginDir+"/text-x-generic.png"
 				elif ext in ["mov","avi","mpg","swf","dv"]:
 					item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic.png"))
+					ic=self.pluginDir+"/text-x-generic.png"
 				elif ext in ["odt","doc","pdf","docx"]:
 					item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-document.png"))
+					ic=self.pluginDir+"/x-office-document.png"
 				elif ext in ["ods","xls","cvs"]:
 					item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-spreadsheet.png"))
+					ic=self.pluginDir+"/x-office-spreadsheet.png"
 				elif ext in ["pts","ppt","odp"]:
 					item.setIcon(QtGui.QIcon(self.pluginDir+"/x-office-presentation.png"))
+					ic=self.pluginDir+"/x-office-presentation.png"
 				else:
 					item.setIcon(QtGui.QIcon(self.pluginDir+"/text-x-generic-template.png"));  #preventivne pokud se netrefime
+					ic=self.pluginDir+"/text-x-generic-template.png"
+				html+='<div style=\\"float: left;width: 129px;height:150px;padding: 10px;text-align:center;\\"><a href=\\"http://disk.jabbim.cz/'+self.jid+'/'+unicode(name.replace(" ", "%20"))+'\\"><img src=\\"file:///'+ic.replace("//","/")+'\\"/><p>'+unicode(name)+'</p></a></div>'
 			#self.window.ui.right.addItem(item)
 			if self.typ=="album":
 				self.thumbs[name]=item
+		print html
+		if self.callTab and self.typ=="public":
+			self.callTab.chat.ui.webkit.page().mainFrame().evaluateJavaScript('var group = document.createElement(\'div\'); group.innerHTML="'+html+'";document.getElementById("light").appendChild(group);')
 		#self.wizard.ui.tree.resizeColumnToContents(0)
 		data=self.thumbs.keys()
 		if self.typ=="album" and len(data)!=0:
@@ -781,6 +908,12 @@ class Plugin(plugins.PluginBase):
 			self.cacheList.write()
 		else:
 			self.thumbs[data[0]].setIcon(QtGui.QIcon(cacheFile))
+		if self.callTab:
+			#if self.thumbIndex<10:
+			self.callTab.chat.ui.webkit.page().mainFrame().evaluateJavaScript('var group = document.createElement(\'div\'); group.setAttribute("id","image'+str(self.thumbIndex)+'"); group.innerHTML="<div style=\\"float: left;width: 129px;height:150px;padding: 10px;text-align:center;\\"><a href=\\"http://album.jabbim.cz/'+self.jid+'/'+unicode(self.thumbs[data[0]].text().replace(" ", "%20"))+'\\"><img src=\\"file://'+cacheFile+'\\"/><p>'+unicode(self.thumbs[data[0]].text())+'</p></a></div>";document.getElementById("light").appendChild(group);')
+			#else:
+				#self.callTab.chat.ui.webkit.page().mainFrame().evaluateJavaScript('var group = document.createElement(\'div\'); group.setAttribute("id","image'+str(self.thumbIndex)+'"); group.innerHTML="<div style=\\"float: left;width: 129px;padding: 10px;text-align:center;display:none;\\"><img src=\\"file://'+cacheFile+'\\"/></div>";document.getElementById("light").appendChild(group);')
+			self.thumbIndex+=1
 		self.window.ui.progress.setValue(self.window.ui.progress.value()+1)
 		del data[0]
 		if len(data)==0:
@@ -824,6 +957,7 @@ class Plugin(plugins.PluginBase):
 			menu.addAction("Jabbim disk manager",self.showSlot)
 	
 	def call(self,jid=None,typ=None):
+		self.thumbIndex=0
 		self.stopDownload=True
 		self.wizard.ui.stackedWidget.setCurrentIndex(1)
 		self.wizard.ui.back.show()
