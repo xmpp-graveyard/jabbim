@@ -1087,7 +1087,7 @@ class clientClass(pyxl.client.Client):
 		status=None
 		contact = self.getContactByJid(jid.userhost())
 
-		if self.main.ui.roster.isSameStatus(jid.userhost(),show):
+		if self.main.ui.roster.isSameStatus(jid.userhost(),show) and not jid.userhost()==self.jid.userhost():
 			return
 
 		# get tab for this contact
