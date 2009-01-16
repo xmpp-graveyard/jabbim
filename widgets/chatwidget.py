@@ -231,6 +231,75 @@ class flowLayout(QtGui.QLayout):
 
 		return y + lineHeight - rect.y()
 
+class FaderWidget(QtGui.QWidget):
+	def __init__(self,parent=None):
+		QtGui.QWidget.__init__(self,parent)
+		if parent:
+			self.startColor = parent.palette().window().color()
+		else:
+			self.startColor = QtCore.Qt.white
+		self._hide=True
+
+		self.currentAlpha = 0
+		self.duration = 333
+
+		self.timer = QtCore.QTimer(self)
+		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"), self.update)
+
+		self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+		self.resize(parent.size())
+
+	def start(self):
+		if self._hide:
+			self.currentAlpha = 1
+		else:
+			self.currentAlpha = 255
+		self.timer.start(33)
+		self.resize(self.parent().size())
+		self.show()
+
+	def paintEvent(self,event):
+		painter=QtGui.QPainter(self)
+		semiTransparentColor = QtGui.QColor(self.startColor)
+		semiTransparentColor.setAlpha(self.currentAlpha)
+		painter.fillRect(self.rect(), semiTransparentColor)
+
+		if self._hide:
+			self.currentAlpha += 255 * self.timer.interval() / self.duration
+		else:
+			self.currentAlpha -= 255 * self.timer.interval() / self.duration
+		if self.currentAlpha <= 0:
+			self.timer.stop()
+			self.close()
+		elif self.currentAlpha >= 255:
+			self.currentAlpha=255
+			self.timer.stop()
+			self._hide=False
+			self.emit(QtCore.SIGNAL("hidden()"))
+
+#class ElidedLabel(QtGui.QLabel):
+	#def __init__(self,parent=None):
+#public:
+    #ElidedLabel(QWidget *parent, Qt::TextElideMode elide) : QLabel(parent) {this->elide = elide;}
+    #QSize sizeHint() const {return QSize(1, QLabel::sizeHint().height());}
+    #QSize minimumSizeHint() const {return sizeHint();}
+#protected:
+    #Qt::TextElideMode elide;
+    #void paintEvent(QPaintEvent *e) {
+        #if (contentsRect().width() < fontMetrics().width(text())) {
+            #QString newText = fontMetrics().elidedText(text(), elide, contentsRect().width());
+            #QString fullText = text();
+            #setText(newText);
+            #QLabel::paintEvent(e);
+            #setText(fullText);
+            #setToolTip(fullText);
+        #} else {
+            #QLabel::paintEvent(e);
+            #setToolTip(QString());
+        #}
+    #}
+#};
+
 class chatWidget(abstractChatWidget):
 	def __init__(self,main,jid,parent=None,name=""):
 		jidt=jidT.JID(jid)
@@ -242,6 +311,7 @@ class chatWidget(abstractChatWidget):
 		
 		self.coolWidgets=[]
 		self.coolLayout=QtGui.QHBoxLayout(self.ui.cool)
+		self.faderWidget=None
 		
 		self.loadAvatars()
 		self.loadWebkit()
@@ -303,6 +373,40 @@ class chatWidget(abstractChatWidget):
 		self.filetransfer={}
 		
 		self.refreshToolTip()
+		self.infoText=[]
+		self.main().reactor.callLater(5,self.infoLabelShowNext)
+
+	def addInfoText(self,text):
+		self.infoText.append(unicode(text))
+	
+	def removeInfoText(self,text):
+		self.infoText.remove(text)
+
+	def infoLabelShowNext(self):
+		if len(self.infoText)!=0:
+			c=unicode(self.ui.infoLabel.text())
+			if c in self.infoText:
+				i=self.infoText.index(c)
+				if i+1<=len(self.infoText)-1:
+					i+=1
+				else:
+					i=0
+			else:
+				i=0
+			self.setInfoText(self.infoText[i])
+		self.main().reactor.callLater(5,self.infoLabelShowNext)
+
+	def setInfoText(self,text):
+		#if self.faderWidget:
+			#self.faderWidget.close()
+		self.faderWidget=FaderWidget(self.ui.infoLabel)
+		self.faderWidget.text=unicode(text)
+		QtCore.QObject.connect(self.faderWidget,QtCore.SIGNAL("hidden()"),self.infoTextHidden)
+		self.faderWidget.start()
+
+	def infoTextHidden(self):
+		self.ui.infoLabel.setText(self.faderWidget.text)
+		self.main().reactor.callLater(0,self.faderWidget.start)
 
 	def addCoolWidget(self,widget):
 		self.coolWidgets.append(widget)
@@ -376,6 +480,7 @@ class chatWidget(abstractChatWidget):
 				user=unicode(self.main().ui.roster.getNameByJID(self.jid))
 				message=icon+"&nbsp;"+user+" "+unicode(self.tr("is now"))+" "+ t
 				self.textEditWrite(self.main().webkitThemeFactory.genChatStatus(unicode(message),self.main().now()))
+			self.addInfoText('%s&nbsp; %s' % (icon.replace("file:///",""),t))
 		tune = contact.getPEP('http://jabber.org/protocol/tune')
 		if type(tune) == list:
 			for x in tune:

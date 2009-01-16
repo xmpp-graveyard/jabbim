@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/chatwidget.ui'
 #
-# Created: Thu Jan 15 22:21:08 2009
+# Created: Fri Jan 16 14:02:43 2009
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -38,6 +38,9 @@ class Ui_chatwidget(object):
         self.gridLayout.addLayout(self.horizontalLayout, 0, 1, 1, 1)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.infoLabel = QtGui.QLabel(chatwidget)
+        self.infoLabel.setObjectName("infoLabel")
+        self.horizontalLayout_2.addWidget(self.infoLabel)
         self.metaLabel = QtGui.QLabel(chatwidget)
         self.metaLabel.setObjectName("metaLabel")
         self.horizontalLayout_2.addWidget(self.metaLabel)
@@ -66,6 +69,8 @@ class Ui_chatwidget(object):
         self.resourceButton.setArrowType(QtCore.Qt.NoArrow)
         self.resourceButton.setObjectName("resourceButton")
         self.horizontalLayout_2.addWidget(self.resourceButton)
+        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem1)
         self.ftwidget = QtGui.QWidget(chatwidget)
         self.ftwidget.setObjectName("ftwidget")
         self.horizontalLayout_2.addWidget(self.ftwidget)
@@ -110,8 +115,8 @@ class Ui_chatwidget(object):
         self.hboxlayout1.setSpacing(6)
         self.hboxlayout1.setMargin(0)
         self.hboxlayout1.setObjectName("hboxlayout1")
-        spacerItem1 = QtGui.QSpacerItem(111, 29, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.hboxlayout1.addItem(spacerItem1)
+        spacerItem2 = QtGui.QSpacerItem(111, 29, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.hboxlayout1.addItem(spacerItem2)
         self.paintButton = QtGui.QToolButton(self.layoutWidget)
         self.paintButton.setObjectName("paintButton")
         self.hboxlayout1.addWidget(self.paintButton)

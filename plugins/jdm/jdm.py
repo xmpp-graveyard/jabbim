@@ -513,12 +513,18 @@ class Plugin(plugins.PluginBase):
 
 		widget.addCoolWidget(w)
 
+		self.main.client.callRemote('rpc@jabbim.cz/service', 'listPublic', (jid.userhost(),)).addCallback(self.setStatsPublic,widget)
 		self.main.client.callRemote('rpc@jabbim.cz/service', 'listAlbum', (jid.userhost(),)).addCallback(self.setStats,widget,w)
+
+	def setStatsPublic(self,data,widget):
+		data=data[0][0]
+		if len(data)>0:
+			widget.addInfoText(widget.name+" "+unicode(self.tr("has %s files in his Public Disc." % str(len(data)))))
 
 	def setStats(self,data,widget,w):
 		data=data[0][0]
-		print data
 		if len(data)>0:
+			widget.addInfoText(widget.name+" "+unicode(self.tr("has %s photos in his album." % str(len(data)))))
 			self.main.client.callRemote('rpc@jabbim.cz/service', 'getThumb', (self.main.getJid(widget.jid).userhost(),data[0][0])).addCallback(self.statsThumbArrived,data,w,widget)
 
 	def statsThumbArrived(self,thumb,data,w,widget):
