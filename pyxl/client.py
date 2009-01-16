@@ -329,7 +329,6 @@ class Client(derived):
 				for server in srv:
 					if len(server.strip())>0 and server.strip() != '0.0.0.0':
 						dnssrv.append((server, 53))
-				print "dns srv",dnssrv
 				if len(dnssrv) > 0:
 					r = dns.Resolver(servers=dnssrv)
 					d = r.lookupService('_xmpp-client._tcp.'+self.jid.host, timeout = [2,10])
