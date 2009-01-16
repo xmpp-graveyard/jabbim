@@ -485,7 +485,7 @@ class Plugin(plugins.PluginBase):
 		button.jid=unicode(jid.userhost())
 		button.typ="album"
 		button.setToolTip("Show Photos")
-		button.setText(self.tr("Show Photos"))
+		#button.setText(self.tr("Show Photos"))
 		# add button to buttonGroup
 		self.group.addButton(button)
 		layout.addWidget(button)
@@ -497,7 +497,7 @@ class Plugin(plugins.PluginBase):
 		button.jid=unicode(jid.userhost())
 		button.typ="public"
 		button.setToolTip("Show Jdisk")
-		button.setText(self.tr("Show Jdisk"))
+		#button.setText(self.tr("Show Jdisk"))
 		# add button to buttonGroup
 		self.group.addButton(button)
 		layout.addWidget(button)

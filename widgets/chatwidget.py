@@ -332,11 +332,11 @@ class chatWidget(abstractChatWidget):
 		self.lastMessageFrom=""
 
 		# plugins buttons
-		self.flowLayout = QtGui.QHBoxLayout()
+		#self.flowLayout = QtGui.QHBoxLayout()
 		for key,value in self.main().plugins.iteritems():
 			if value['module']:
-				self.main().runPluginCommand(value['module'].buildChatWidget,[unicode(self.jid),self.flowLayout,self])
-		self.flowLayout.addStretch()
+				self.main().runPluginCommand(value['module'].buildChatWidget,[unicode(self.jid),self.ui.verticalLayout,self])
+		#self.flowLayout.addStretch()
 		hasFeature=False
 		self.ui.metaLabel.hide()
 		self.ui.metaButton.hide()
@@ -350,7 +350,9 @@ class chatWidget(abstractChatWidget):
 		#self.ui.sendFile.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 		self.ui.sendFile.hide()
 		self.registerFeatureForWidget('http://jabber.org/protocol/si/profile/file-transfer',self.ui.sendFile)		
-		self.flowLayout.addWidget(self.ui.sendFile)
+		self.ui.verticalLayout.addWidget(self.ui.sendFile)
+		self.ui.verticalLayout.addStretch()
+		
 		QtCore.QObject.connect(self.ui.sendFile, QtCore.SIGNAL("clicked ()"),self.sendFiles)
 
 		if self.main().client.groupchats.has_key(jidt.userhost()):
@@ -368,7 +370,7 @@ class chatWidget(abstractChatWidget):
 				self.ui.resourceButton.hide()
 				self.ui.resourceLabel.hide()
 
-		self.ui.pluginWidget.setLayout(self.flowLayout)
+		#self.ui.pluginWidget.setLayout(self.flowLayout)
 		self.ui.ftwidget.setLayout(QtGui.QVBoxLayout())
 		self.filetransfer={}
 		
