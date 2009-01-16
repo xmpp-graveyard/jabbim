@@ -277,28 +277,98 @@ class FaderWidget(QtGui.QWidget):
 			self._hide=False
 			self.emit(QtCore.SIGNAL("hidden()"))
 
-#class ElidedLabel(QtGui.QLabel):
-	#def __init__(self,parent=None):
-#public:
-    #ElidedLabel(QWidget *parent, Qt::TextElideMode elide) : QLabel(parent) {this->elide = elide;}
-    #QSize sizeHint() const {return QSize(1, QLabel::sizeHint().height());}
-    #QSize minimumSizeHint() const {return sizeHint();}
-#protected:
-    #Qt::TextElideMode elide;
-    #void paintEvent(QPaintEvent *e) {
-        #if (contentsRect().width() < fontMetrics().width(text())) {
-            #QString newText = fontMetrics().elidedText(text(), elide, contentsRect().width());
-            #QString fullText = text();
-            #setText(newText);
-            #QLabel::paintEvent(e);
-            #setText(fullText);
-            #setToolTip(fullText);
-        #} else {
-            #QLabel::paintEvent(e);
-            #setToolTip(QString());
-        #}
+class ElidedLabel(QtGui.QLabel):
+	def __init__(self,elide,parent=None):
+		QtGui.QLabel.__init__(self,parent)
+		self.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed ))
+		self.fullText = ""
+		self.elideMode = elide
+		self.squeezeTextToLabel()
+
+	def resizeEvent(self,e):
+		self.squeezeTextToLabel()
+
+	def minimumSizeHint(self):
+		sh=QtGui.QLabel.minimumSizeHint(self)
+		sh.setWidth(-1)
+		return sh
+
+	#def sizeHint(self):
+		#QFontMetrics fm(fontMetrics());
+		#int textWidth = fm.width(d->fullText);
+		#return QSize(textWidth, QLabel::sizeHint().height());
+
+	def setText(self,text):
+		self.fullText = text
+		self.squeezeTextToLabel()
+
+	def clear(self):
+		self.fulltext=""
+		QtGui.QLabel.clear(self)
+
+	def squeezeTextToLabel(self):
+		fm=self.fontMetrics()
+		labelWidth = self.size().width()
+		squeezed = False
+		line=unicode(self.fullText)
+		lineWidth = fm.width(line)
+		if lineWidth > labelWidth:
+			squeezed = True
+			line=fm.elidedText(line, self.elideMode, labelWidth)
+
+		if squeezed:
+			QtGui.QLabel.setText(self,line)
+			self.setToolTip(self.fullText)
+		else:
+			QtGui.QLabel.setText(self,line)
+			self.setToolTip(QtCore.QString())
+
+#void KSqueezedTextLabel::setAlignment( Qt::Alignment alignment )
+#{
+  #// save fullText and restore it
+  #QString tmpFull(d->fullText);
+  #QLabel::setAlignment(alignment);
+  #d->fullText = tmpFull;
+#}
+
+#Qt::TextElideMode KSqueezedTextLabel::textElideMode() const
+#{
+  #return d->elideMode;
+#}
+
+#void KSqueezedTextLabel::setTextElideMode(Qt::TextElideMode mode)
+#{
+  #d->elideMode = mode;
+  #squeezeTextToLabel();
+#}
+
+#void KSqueezedTextLabel::contextMenuEvent(QContextMenuEvent* ev)
+#{
+    #// We want to reimplement "Copy" to include the elided text.
+    #// But this means reimplementing the full popup menu, so no more
+    #// copy-link-address or copy-selection support anymore, since we
+    #// have no access to the QTextDocument.
+    #// Maybe we should have a boolean flag in KSqueezedTextLabel itself for
+    #// whether to show the "Copy Full Text" custom popup?
+    #// For now I chose to show it when the text is squeezed; when it's not, the
+    #// standard popup menu can do the job (select all, copy).
+
+    #const bool squeezed = text() != d->fullText;
+    #const bool showCustomPopup = squeezed;
+    #if (showCustomPopup) {
+        #QMenu menu(this);
+
+        #KAction* act = new KAction(i18n("&Copy Full Text"), this);
+        #connect(act, SIGNAL(triggered()), this, SLOT(_k_copyFullText()));
+        #menu.addAction(act);
+
+        #ev->accept();
+        #menu.exec(ev->globalPos());
+    #} else {
+        #QLabel::contextMenuEvent(ev);
     #}
-#};
+#}
+
 
 class chatWidget(abstractChatWidget):
 	def __init__(self,main,jid,parent=None,name=""):
@@ -312,6 +382,26 @@ class chatWidget(abstractChatWidget):
 		self.coolWidgets=[]
 		self.coolLayout=QtGui.QHBoxLayout(self.ui.cool)
 		self.faderWidget=None
+		
+		self.ui.label=ElidedLabel(QtCore.Qt.ElideRight,self.ui.widget)
+		self.ui.horizontalLayout.insertWidget(0,self.ui.label)
+		
+		self.ui.infoWidget=QtGui.QWidget(self.ui.widget) # because of fade effect
+		l=QtGui.QHBoxLayout(self.ui.infoWidget)
+		l.setMargin(0)
+		
+		self.ui.infoLabel = ElidedLabel(QtCore.Qt.ElideRight,self.ui.infoWidget)
+		sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Preferred)
+		sizePolicy.setHorizontalStretch(100)
+		sizePolicy.setVerticalStretch(0)
+		sizePolicy.setHeightForWidth(self.ui.infoWidget.sizePolicy().hasHeightForWidth())
+		self.ui.infoWidget.setSizePolicy(sizePolicy)
+		self.ui.infoLabel.setObjectName("infoLabel")
+		self.ui.infoPixmap=QtGui.QLabel(self.ui.infoWidget)
+		self.ui.infoPixmap.setMaximumWidth(32)
+		l.addWidget(self.ui.infoPixmap)
+		l.addWidget(self.ui.infoLabel)
+		self.ui.horizontalLayout_2.insertWidget(0,self.ui.infoWidget)
 		
 		self.loadAvatars()
 		self.loadWebkit()
@@ -345,15 +435,23 @@ class chatWidget(abstractChatWidget):
 		self.ui.sendFile=QtGui.QPushButton()
 		self.ui.sendFile.setIconSize(QtCore.QSize(16,16))
 		self.ui.sendFile.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
-		self.ui.sendFile.setText(self.tr("Send file"))
 		self.ui.sendFile.setToolTip(self.tr("Send file"))
-		#self.ui.sendFile.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 		self.ui.sendFile.hide()
 		self.registerFeatureForWidget('http://jabber.org/protocol/si/profile/file-transfer',self.ui.sendFile)		
 		self.ui.verticalLayout.addWidget(self.ui.sendFile)
+		QtCore.QObject.connect(self.ui.sendFile, QtCore.SIGNAL("clicked ()"),self.sendFiles)
+
+		self.ui.paintButton=QtGui.QPushButton()
+		self.ui.paintButton.setIconSize(QtCore.QSize(16,16))
+		self.ui.paintButton.setIcon(QtGui.QIcon("images/22x22/actions/draw-brush.png"))
+		self.ui.paintButton.setToolTip(self.tr("Paint"))
+		self.ui.paintButton.hide()
+		self.registerFeatureForWidget('urn:xmpp:bob',self.ui.paintButton)
+		self.ui.verticalLayout.addWidget(self.ui.paintButton)
+		QtCore.QObject.connect(self.ui.paintButton,QtCore.SIGNAL("clicked()"),self.paint)
 		self.ui.verticalLayout.addStretch()
 		
-		QtCore.QObject.connect(self.ui.sendFile, QtCore.SIGNAL("clicked ()"),self.sendFiles)
+		
 
 		if self.main().client.groupchats.has_key(jidt.userhost()):
 			#print "features:",self.main().client.groupchats[jidt.userhost()].users[jidt.resource].features
@@ -378,10 +476,10 @@ class chatWidget(abstractChatWidget):
 		self.infoText={}
 		self.infoKeys=[]
 		self.currentInfoIndex=0
-		self.main().reactor.callLater(5,self.infoLabelShowNext)
+		self.main().reactor.callLater(2,self.infoLabelShowNext)
 
-	def addInfoText(self,key,text):
-		self.infoText[key]=unicode(text)
+	def addInfoText(self,key,text,icon=None):
+		self.infoText[key]=[unicode(text),icon]
 		self.infoKeys=list(self.infoText.keys())
 		self.infoKeys.sort()
 	
@@ -395,19 +493,24 @@ class chatWidget(abstractChatWidget):
 				self.currentInfoIndex+=1
 			else:
 				self.currentInfoIndex=0
-			self.setInfoText(self.infoText[self.infoKeys[self.currentInfoIndex]])
-		self.main().reactor.callLater(5,self.infoLabelShowNext)
+			self.setInfoText(self.infoText[self.infoKeys[self.currentInfoIndex]][0],self.infoText[self.infoKeys[self.currentInfoIndex]][1])
+		self.main().reactor.callLater(10,self.infoLabelShowNext)
 
-	def setInfoText(self,text):
+	def setInfoText(self,text,icon=None):
 		#if self.faderWidget:
 			#self.faderWidget.close()
-		self.faderWidget=FaderWidget(self.ui.infoLabel)
+		self.faderWidget=FaderWidget(self.ui.infoWidget)
 		self.faderWidget.text=unicode(text)
+		self.faderWidget.icon=icon
 		QtCore.QObject.connect(self.faderWidget,QtCore.SIGNAL("hidden()"),self.infoTextHidden)
 		self.faderWidget.start()
 
 	def infoTextHidden(self):
 		self.ui.infoLabel.setText(self.faderWidget.text)
+		if self.faderWidget.icon:
+			self.ui.infoPixmap.setPixmap(self.faderWidget.icon)
+		else:
+			self.ui.infoPixmap.setPixmap(QtGui.QPixmap())
 		self.main().reactor.callLater(0,self.faderWidget.start)
 
 	def addCoolWidget(self,widget):
@@ -455,15 +558,39 @@ class chatWidget(abstractChatWidget):
 			self.ui.lineWidget.setMinimumSize(100,64)
 
 	def refreshLabel(self,change=[]):
-		text="<font size=\"3\"><b>"+self.name+"</b></font>"
+		text=""
 		contact=self.main().client.getContactByJid(self.jid)
 		if not contact:
+			text=unicode(self.status.get("offline", ''))
 			self.ui.label.setText(text)
 			return
+		s=None
+		show=None
+		jid=self.main().getJid(self.jid)
+		if contact != None:
+			if jid.resource:
+				if contact.resources.has_key(jid.resource):
+					s = contact.resources[jid.resource].status
+					show = contact.resources[jid.resource].show
+			else:
+				res=self.main().client.roster['users'][jid.userhost()].getHighestResource()
+				if contact.resources.has_key(res):
+					s = contact.resources[res].status
+					show = contact.resources[res].show
+		if not s:
+			s=""
+		else:
+			s=" - "+s
+		if show:
+			#process status message
+			text+=show+s
+			
+		
 		mood = contact.getPEP('http://jabber.org/protocol/mood')
 		if mood != None:
 			t = ''
 			m = txt = icon = ''
+			ic=QtGui.QPixmap()
 			for el in mood.elements():
 				if el.name == 'text':
 					txt = unicode(el)
@@ -471,6 +598,7 @@ class chatWidget(abstractChatWidget):
 					m = self.main().moods.get(el.name)
 					if self.main().moodIcons.has_key(el.name):
 						icon="<img src=\"file:///%s\" />" % self.main().moodIcons[el.name].src
+						ic=QtGui.QPixmap(self.main().moodIcons[el.name].src)
 					else:
 						icon=""
 			if txt != '':
@@ -482,7 +610,7 @@ class chatWidget(abstractChatWidget):
 				user=unicode(self.main().ui.roster.getNameByJID(self.jid))
 				message=icon+"&nbsp;"+user+" "+unicode(self.tr("is now"))+" "+ t
 				self.textEditWrite(self.main().webkitThemeFactory.genChatStatus(unicode(message),self.main().now()))
-			self.addInfoText("mood",'%s&nbsp; %s' % (icon.replace("file:///",""),t))
+			self.addInfoText("mood",'%s' % (t),ic)
 		tune = contact.getPEP('http://jabber.org/protocol/tune')
 		if type(tune) == list:
 			for x in tune:
@@ -501,7 +629,42 @@ class chatWidget(abstractChatWidget):
 					user=unicode(self.main().ui.roster.getNameByJID(self.jid))
 					message='<img src="file:///'+os.getcwd()+'/images/22x22/icons/headphones.png" />&nbsp;'+user+" "+unicode(self.tr("is now listening:"))+" "+ t
 					self.textEditWrite(self.main().webkitThemeFactory.genChatStatus(unicode(message),self.main().now()))
-				self.addInfoText("mood",'<img src="images/22x22/icons/headphones.png" />&nbsp; %s' % (t))
+				self.addInfoText("tune",'%s' % (t),QtGui.QPixmap('images/22x22/icons/headphones.png'))
+
+		activity = contact.getPEP('http://jabber.org/protocol/activity')
+		if activity != None:
+			txt = ''
+			general = ''
+			spec = ''
+			ic=QtGui.QPixmap()
+			for el in activity.elements():
+				if el.name == 'text':
+					txt = unicode(el)
+				else :
+					general = el.name
+					if self.main().activityGroups.has_key(general):
+						general=self.main().activityGroups[general][0]
+						if self.main().activityIcons.has_key(general):
+							ic=QtGui.QPixmap(self.main().activityIcons[general].src)
+					spec = el.firstChildElement()
+					if spec:
+						spec=spec.name
+						if self.main().activityIcons.has_key(spec):
+							ic=QtGui.QPixmap(self.main().activityIcons[spec].src)
+					if self.main().activities.has_key(spec):
+						spec=self.main().activities[spec]
+
+				#if self.main().activityIcons.has_key(spec):
+					#ic=QtGui.QPixmap(self.main().activityIcons[spec].src)
+				#if self.main().activityIcons.has_key(general):
+					#ic=QtGui.QPixmap(self.main().activityIcons[general].src)
+				#else:
+					#ic=QtGui.QPixmap()
+
+			self.addInfoText("activity",'%s %s %s' % (general, spec, txt),ic)
+			#text+='<br /><font size="-1"><b>%s</b> %s %s</font>' % (general, spec, txt)
+			
+
 		self.ui.label.setText(text)
 
 	def contactMenu(self,pos):

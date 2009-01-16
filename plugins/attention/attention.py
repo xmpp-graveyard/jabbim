@@ -54,8 +54,8 @@ class Plugin(plugins.PluginBase):
 
 
 	def buildChatWidget(self,jid,layout,widget):
-		button=QtGui.QToolButton()
-		button.setText(self.tr('Attention'))
+		button=QtGui.QPushButton()
+		#button.setText(self.tr('Attention'))
 		button.setIconSize(QtCore.QSize(16,16))
 		button.setIcon(QtGui.QIcon("%s/attention.png" % self.pluginDir))
 		button.jid=unicode(jid)

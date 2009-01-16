@@ -471,8 +471,8 @@ class abstractChatWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.italicButton, QtCore.SIGNAL("clicked (bool)"),self.italic)
 		QtCore.QObject.connect(self.ui.underlineButton, QtCore.SIGNAL("clicked (bool)"),self.underline)
 		QtCore.QObject.connect(self.ui.linkButton, QtCore.SIGNAL("clicked (bool)"),self.link)
-		if self.typ=="chat": 
-			QtCore.QObject.connect(self.ui.paintButton,QtCore.SIGNAL("clicked()"),self.paint)
+		#if self.typ=="chat": 
+			#QtCore.QObject.connect(self.ui.paintButton,QtCore.SIGNAL("clicked()"),self.paint)
 		#QtCore.QObject.connect(self.ui.fontSize,QtCore.SIGNAL("activated(const QString &)"),self.fontSize)
 		
 		#self.ui.textEdit.setAcceptRichText(False)
@@ -493,8 +493,8 @@ class abstractChatWidget(QtGui.QWidget):
 			self.ui.fontSize.hide()
 			self.ui.backgroundButton.hide()
 			self.ui.linkButton.hide()
-			if self.typ == 'chat':
-				self.ui.paintButton.hide()
+			#if self.typ == 'chat':
+				#self.ui.paintButton.hide()
 		else:
 			self.ui.fontSize.hide()
 			#db=QtGui.QFontDatabase()

@@ -481,7 +481,7 @@ class Plugin(plugins.PluginBase):
 		button.setIcon(QtGui.QIcon("%s/history.png" % self.pluginDir))
 		button.jid=unicode(jid.userhost())
 		button.setToolTip("History")
-		button.setText(self.tr("History"))
+		#button.setText(self.tr("History"))
 		# add button to buttonGroup
 		self.group.addButton(button)
 		layout.addWidget(button)
