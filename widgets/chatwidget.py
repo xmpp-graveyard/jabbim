@@ -499,7 +499,7 @@ class chatWidget(abstractChatWidget):
 					user=unicode(self.main().ui.roster.getNameByJID(self.jid))
 					message='<img src="file:///'+os.getcwd()+'/images/22x22/icons/headphones.png" />&nbsp;'+user+" "+unicode(self.tr("is now listening:"))+" "+ t
 					self.textEditWrite(self.main().webkitThemeFactory.genChatStatus(unicode(message),self.main().now()))
-			self.addInfoText("mood",'<img src="images/22x22/icons/headphones.png" />&nbsp; %s' % (t))
+				self.addInfoText("mood",'<img src="images/22x22/icons/headphones.png" />&nbsp; %s' % (t))
 		self.ui.label.setText(text)
 
 	def contactMenu(self,pos):
