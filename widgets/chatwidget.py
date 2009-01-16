@@ -475,7 +475,7 @@ class chatWidget(abstractChatWidget):
 				t = m+ ' - %s'%txt
 			else:
 				t = m
-			text+='<br />%s <font size="-1">&nbsp; %s</font>' % (icon.replace("file:///",""),t)
+			#text+='<br />%s <font size="-1">&nbsp; %s</font>' % (icon.replace("file:///",""),t)
 			if self.main().config['showMoodChanges']=='True' and "mood" in change:
 				user=unicode(self.main().ui.roster.getNameByJID(self.jid))
 				message=icon+"&nbsp;"+user+" "+unicode(self.tr("is now"))+" "+ t
@@ -494,12 +494,12 @@ class chatWidget(abstractChatWidget):
 					title = unicode(el)
 			t = '%s: %s'%(artist, title)
 			if len(t.strip())>1:
-				text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">&nbsp; %s</font>' % (t) #ikonka se este muze menit ;)
+				#text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">&nbsp; %s</font>' % (t) #ikonka se este muze menit ;)
 				if self.main().config['showTuneChanges']=='True' and "tune" in change:
 					user=unicode(self.main().ui.roster.getNameByJID(self.jid))
 					message='<img src="file:///'+os.getcwd()+'/images/22x22/icons/headphones.png" />&nbsp;'+user+" "+unicode(self.tr("is now listening:"))+" "+ t
 					self.textEditWrite(self.main().webkitThemeFactory.genChatStatus(unicode(message),self.main().now()))
-
+			self.addInfoText("mood",'<img src="images/22x22/icons/headphones.png" />&nbsp; %s' % (t))
 		self.ui.label.setText(text)
 
 	def contactMenu(self,pos):
