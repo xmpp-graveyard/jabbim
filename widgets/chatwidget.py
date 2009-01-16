@@ -373,27 +373,27 @@ class chatWidget(abstractChatWidget):
 		self.filetransfer={}
 		
 		self.refreshToolTip()
-		self.infoText=[]
+		self.infoText={}
+		self.infoKeys=[]
+		self.currentInfoIndex=0
 		self.main().reactor.callLater(5,self.infoLabelShowNext)
 
-	def addInfoText(self,text):
-		self.infoText.append(unicode(text))
+	def addInfoText(self,key,text):
+		self.infoText[key]=unicode(text)
+		self.infoKeys=list(self.infoText.keys())
+		self.infoKeys.sort()
 	
-	def removeInfoText(self,text):
-		self.infoText.remove(text)
+	def removeInfoText(self,key):
+		del self.infoText[key]
+		self.infoKeys.remove(key)
 
 	def infoLabelShowNext(self):
-		if len(self.infoText)!=0:
-			c=unicode(self.ui.infoLabel.text())
-			if c in self.infoText:
-				i=self.infoText.index(c)
-				if i+1<=len(self.infoText)-1:
-					i+=1
-				else:
-					i=0
+		if len(self.infoKeys)!=0:
+			if self.currentInfoIndex+1<=len(self.infoKeys)-1:
+				self.currentInfoIndex+=1
 			else:
-				i=0
-			self.setInfoText(self.infoText[i])
+				self.currentInfoIndex=0
+			self.setInfoText(self.infoText[self.infoKeys[self.currentInfoIndex]])
 		self.main().reactor.callLater(5,self.infoLabelShowNext)
 
 	def setInfoText(self,text):
@@ -480,7 +480,7 @@ class chatWidget(abstractChatWidget):
 				user=unicode(self.main().ui.roster.getNameByJID(self.jid))
 				message=icon+"&nbsp;"+user+" "+unicode(self.tr("is now"))+" "+ t
 				self.textEditWrite(self.main().webkitThemeFactory.genChatStatus(unicode(message),self.main().now()))
-			self.addInfoText('%s&nbsp; %s' % (icon.replace("file:///",""),t))
+			self.addInfoText("mood",'%s&nbsp; %s' % (icon.replace("file:///",""),t))
 		tune = contact.getPEP('http://jabber.org/protocol/tune')
 		if type(tune) == list:
 			for x in tune:
