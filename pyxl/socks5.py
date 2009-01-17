@@ -23,7 +23,7 @@ from twisted.internet           import  tcp
 ##from twisted.internet           import  reactor
 from twisted.internet           import protocol, defer
 from twisted.python             import log, failure
-import struct, re, socket, sys, sha
+import struct, re, socket, sys
 from zope.interface import implements
 from sockserror import *
 from twisted.internet import interfaces
@@ -858,7 +858,7 @@ class FTReceive:
 		self.activeStreamhost = streamhost
 		f = protocol.ClientFactory()
 		f.protocol = Receive
-		addr = sha.new("%s%s%s" % (self.sid,  self.tojid, self.frmjid)).hexdigest()
+		addr = sha1("%s%s%s" % (self.sid,  self.tojid, self.frmjid)).hexdigest()
 		factory = ClientFactory(streamhost['host'], int(streamhost['port']),addr, 0,  f, xmpp = self.client, xmpp_sid = self.sid) 
 		self.connector = self.client.reactor.connectTCP(streamhost['host'], int(streamhost['port']), factory)
 	
