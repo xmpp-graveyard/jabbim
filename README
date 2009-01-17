@@ -15,7 +15,6 @@ First make sure you have all the dependencies. You need at least:
   - Python 2.5
   - PyQt 4.4 (with QtWebKit support)
   - Twisted (a.k.a. python-twisted; at least -names, -web, -words)
-  - pysqlite 2.x (a.k.a. python-sqlite2)
   - pyOpenSSL
   - python-configobj (only needed for running Jabbim installations done with
     'make install')
