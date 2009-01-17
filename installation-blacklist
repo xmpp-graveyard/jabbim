@@ -11,6 +11,7 @@ install-files\.py
 jabbim
 jabbim\.(in|sh)
 ui2py\.py
+images/32x32/status/rsvg2png.sh
 Makefile
 # playground, not parts of Jabbim:
 (gui-)?test.py
@@ -31,3 +32,7 @@ README
 AUTHORS
 COPYING
 jabbim\.desktop
+# not sure if this file is currently needed at all (jabbim.py itself
+# understands the --uri parameter), but it surely is of no use to install it
+# under /usr/share/jabbim:
+plugins/remote/jabbim_remote.py
