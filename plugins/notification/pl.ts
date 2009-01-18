@@ -16,7 +16,7 @@
     <message>
         <location filename="notification.py" line="380"/>
         <source>Notification </source>
-        <translation type="unfinished">Powiadomienie</translation>
+        <translation type="unfinished">Powiadomienie </translation>
     </message>
     <message>
         <location filename="notification.py" line="380"/>
@@ -31,12 +31,12 @@
     <message>
         <location filename="notification.py" line="426"/>
         <source> is now </source>
-        <translation type="unfinished">jest teraz</translation>
+        <translation type="unfinished"> jest teraz </translation>
     </message>
     <message>
         <location filename="notification.py" line="550"/>
         <source>New message from </source>
-        <translation type="unfinished">Nowa wiadomość od</translation>
+        <translation type="unfinished">Nowa wiadomość od </translation>
     </message>
     <message>
         <location filename="notification.py" line="543"/>
