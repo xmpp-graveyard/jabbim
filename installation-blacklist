@@ -38,3 +38,5 @@ jabbim\.desktop
 plugins/remote/jabbim_remote.py
 # Jabbim never uses SVGs directly, it uses PNG generated from them.
 .*\.svg
+# *.ui are just sources for generated *.py files
+.*\.ui
