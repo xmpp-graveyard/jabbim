@@ -36,3 +36,5 @@ jabbim\.desktop
 # understands the --uri parameter), but it surely is of no use to install it
 # under /usr/share/jabbim:
 plugins/remote/jabbim_remote.py
+# Jabbim never uses SVGs directly, it uses PNG generated from them.
+.*\.svg
