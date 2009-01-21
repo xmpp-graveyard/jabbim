@@ -1,137 +1,111 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1">
+<!DOCTYPE TS><TS>
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="devconsole.py" line="205"/>
         <source>Extra debug window</source>
-        <translation type="unfinished"></translation>
+        <translation>Ventana de depurado extra</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="207"/>
         <source>DevConsoles Plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>Plugin de DevConsoles</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="414"/>
         <source>print &apos;History END&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>pintar &quot;History END&quot;</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="421"/>
         <source>&lt;message&gt;------HISTORY-END------&lt;/message&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;message&gt;------HISTORY-END------&lt;/message&gt;</translation>
     </message>
 </context>
 <context>
     <name>devconsole</name>
     <message>
-        <location filename="devconsole.ui.py" line="136"/>
         <source>Developer console</source>
-        <translation type="unfinished"></translation>
+        <translation>Consola del desarrollador</translation>
     </message>
     <message>
-        <location filename="devconsole.ui.py" line="137"/>
         <source>presence</source>
-        <translation type="unfinished"></translation>
+        <translation>presencia</translation>
     </message>
     <message>
-        <location filename="devconsole.ui.py" line="138"/>
         <source>iq</source>
-        <translation type="unfinished"></translation>
+        <translation>iq</translation>
     </message>
     <message>
-        <location filename="devconsole.ui.py" line="139"/>
         <source>message</source>
-        <translation type="unfinished"></translation>
+        <translation>mensaje</translation>
     </message>
     <message>
-        <location filename="devconsole.ui.py" line="140"/>
         <source>Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtro</translation>
     </message>
     <message>
-        <location filename="devconsole.ui.py" line="146"/>
         <source>&amp;Enable</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Enable</translation>
     </message>
     <message>
-        <location filename="devconsole.ui.py" line="147"/>
         <source>Clea&amp;r</source>
-        <translation type="unfinished"></translation>
+        <translation>Clea&amp;r</translation>
     </message>
     <message>
-        <location filename="devconsole.ui.py" line="148"/>
         <source>Ctrl+Enter</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Enter</translation>
     </message>
     <message>
-        <location filename="devconsole.ui.py" line="144"/>
         <source>Send</source>
-        <translation type="unfinished"></translation>
+        <translation>Enviar</translation>
     </message>
     <message>
-        <location filename="devconsole.ui.py" line="145"/>
         <source>&amp;XML</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;XML</translation>
     </message>
     <message>
-        <location filename="devconsole.ui.py" line="149"/>
         <source>Execute</source>
-        <translation type="unfinished"></translation>
+        <translation>Ejecutar</translation>
     </message>
     <message>
-        <location filename="devconsole.ui.py" line="150"/>
         <source>Python &amp;Shell</source>
-        <translation type="unfinished"></translation>
+        <translation>Python &amp;Shell</translation>
     </message>
 </context>
 <context>
     <name>self.main</name>
     <message>
-        <location filename="devconsole.py" line="137"/>
         <source>Notify on error?</source>
-        <translation type="unfinished"></translation>
+        <translation>¿Notificar si hay error?</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="138"/>
         <source>Enabled consoles on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Consolas habilitadas en el inicio</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="139"/>
         <source>Add timestamps to xml stanzas</source>
-        <translation type="unfinished"></translation>
+        <translation>Añadir marca de tiempo a las stanzas xml</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="140"/>
         <source>Max history entries</source>
-        <translation type="unfinished"></translation>
+        <translation>Máximo de entradas en la historia</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="141"/>
         <source>History saving type</source>
-        <translation type="unfinished"></translation>
+        <translation>Tipo de guardado de Historia</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="141"/>
         <source>always after command input</source>
-        <translation type="unfinished"></translation>
+        <translation>siempre después de introducir comando</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="141"/>
         <source>on jabbim close</source>
-        <translation type="unfinished"></translation>
+        <translation>al cerrar Jabbim</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="142"/>
         <source>never</source>
-        <translation type="unfinished"></translation>
+        <translation>nunca</translation>
     </message>
     <message>
-        <location filename="devconsole.py" line="335"/>
         <source>Log</source>
-        <translation type="unfinished"></translation>
+        <translation>Log</translation>
     </message>
 </context>
 </TS>
