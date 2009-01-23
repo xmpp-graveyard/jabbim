@@ -49,7 +49,7 @@ for opt, arg in OPTIONS:
 		server = xmlrpclib.Server('http://localhost:%s/'%porty[0])
 
 		server.runPluginFunc(name, args, porty[1])
-		
+
 		sys.exit()
 
 from PyQt4 import QtCore, QtGui, QtWebKit
@@ -193,7 +193,7 @@ class clientClass(pyxl.client.Client):
 		# user mood
 		if isinstance(payload,list):
 			log.msg( "mood list")
-			
+
 			if len(payload)!=0:
 				payload=payload[0]
 			else:
@@ -415,13 +415,13 @@ class clientClass(pyxl.client.Client):
 
 	def on_affiliationErr(self,  muc,  err,  nick):
 		pass
-	
+
 	def on_receipt(self, frm, id):
 		if self.main.config['showReceipts'] == 'True':
 			#cwd = unicode(os.getcwd(), sys.getfilesystemencoding())
 			#self.main.refreshImage(cwd + '/images/16x16/actions/ok.png', id, frm)
 			self.main.removeChatElement(id,frm)
-		
+
 
 	def on_ftTransfered(self, sid, bytes,end=False):
 		"""
@@ -608,7 +608,7 @@ class clientClass(pyxl.client.Client):
 					self.main.preferencesWindow.reloadPlugins_()
 			event=self.main.events.ftEvents[sid]
 			event.reject()
-			
+
 		self.dispatcher.publishEvent('FTFinishedEvent', sid, error)
 		#del self.ft[sid]
 		self.on_ftTransfered(sid, 0,True) # we have to delete filetransfer and etc
@@ -636,7 +636,7 @@ class clientClass(pyxl.client.Client):
 			show=unicode(item.status)
 			item.icon=self.main.getIcon("jid@"+jid,size=self.main.ui.roster.iconSize,status=self.main.icons[show])
 		if jidT.JID(jid).userhost()==self.jid.userhost():
-			
+
 			self.main.buildOfflineMenu()
 
 	def getHostType(self,host,jid):
@@ -756,7 +756,7 @@ class clientClass(pyxl.client.Client):
 				self.sendRosterUpdate(contact.jid, newName, contact.subscription, self.roster['users'][jid].groups)
 				#rename chat tab
 				tab, index = self.main.chat.findTab(jid)
-				
+
 				if tab != None:
 					tab.chat.setName(newName)
 			elif newName and jid == self.jid.userhost():
@@ -871,7 +871,7 @@ class clientClass(pyxl.client.Client):
 				names = ''
 				for item in items:
 					names += " <br/> " + item['jid']
-				
+
 				event=self.main.events.addBooleanEvent("subscribe","authorizations")
 				event.setAcceptHandler(self.rosterx,[frm, items, id, typ])
 				widget=event.getWidgets()[0]
@@ -891,7 +891,7 @@ class clientClass(pyxl.client.Client):
 				names = ''
 				for item in items:
 					names += " <br/> " + item['jid']
-				
+
 				event=self.main.events.addBooleanEvent("unsubscribe","authorizations")
 				event.setAcceptHandler(self.rosterx,[frm, items, id, typ])
 				widget=event.getWidgets()[0]
@@ -1028,7 +1028,7 @@ class clientClass(pyxl.client.Client):
 
 		# show status message in conversation textEdit
 		if not u'303' in codes:
-			
+
 			mainWindow=self.main
 			if u'201' in codes:
 				#new room created
@@ -1565,14 +1565,14 @@ class clientClass(pyxl.client.Client):
 		# get user name
 		user=self.main.ui.roster.getNameByJID(frm.full())
 		icon=self.main.ui.roster.getIconByJID(frm.full())
-		
+
 		#replace /me
 		if body != None and body.startswith('/me'):
-			
+
 			body = body.replace('/me', '*'+user)
 			if xhtml != None:
 				xhtml = xhtml.replace('/me', '*'+user,1)
-		
+
 
 		# test if xhtml contains dangerous tags
 		if xhtml:
@@ -1828,9 +1828,9 @@ class clientClass(pyxl.client.Client):
 		jid = jidT.JID(jid)
 		log.msg("avatar look for " +jid.userhost())
 		w,i=self.main.chat.findTab(jid.userhost(),False,['groupchat'])
-		
+
 		if w:
-			
+
 			for item in w.chat.getUserItems(jid.resource):
 				text=unicode(item.text(1))
 				if len(text)!=0:
@@ -1853,7 +1853,7 @@ class clientClass(pyxl.client.Client):
 		widget.setAcceptText(unicode(mainWindow.tr("Accept")))
 		widget.setRejectText(unicode(mainWindow.tr("Reject")))
 		self.dispatcher.publishEvent('FTFileReceivedEvent', weakref.ref(event))
-		
+
 		tab,index=self.main.chat.findTab(unicode(jid.userhost()),typ=['chat'])
 ##		if tab:
 ##			mainWindow=self.main
@@ -1887,7 +1887,7 @@ class clientClass(pyxl.client.Client):
 					if not os.path.isdir(path+"/"+dirname(file)):
 						os.makedirs(path+"/"+dirname(file))
 				self.main.allowedSids[unicode(sid)]=path+"/"+file
-			
+
 ##		tab,index=self.main.chat.findTab(unicode(self.ft[sid].fromjid),typ=['chat'])
 ##		if tab:
 ##			tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById('ft"+unicode(sid)+"');")
@@ -2014,11 +2014,11 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.splashProgress.setValue(20)
 
 	def on_authd(self):
-		
+
 		mainWindow=self.main
 		self.main.ui.loginInfo.setText(mainWindow.tr("Jabbim is logged in."))
 		self.main.ui.splashProgress.setValue(40)
-		
+
 
 class AvatarLabel(QtGui.QLabel):
 	def __init__(self,main,parent):
@@ -2097,7 +2097,7 @@ class avatarLoader(QtCore.QThread):
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None):
 		apply(QtGui.QMainWindow.__init__,(self,parent))
-		
+
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
 #		self.ui.Form.setWidget(self.ui.scrollAreaWidgetContents)
@@ -2548,7 +2548,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		#self.loadRosterStyle() # load roster style
 		self.userRating=userrating.RatingAssigner(self)
-		
+
 		# Jabbim Content
 		self.ui.contentView=QtWebKit.QWebView(self.ui.contentTab)
 		self.ui.contentView.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
@@ -2632,7 +2632,7 @@ class mainWindow(QtGui.QMainWindow):
 		@type jid: unicode
 		@param jid: JID
 		"""
-		
+
 		# get files
 		dialog = QtGui.QFileDialog()
 		dialog.setResolveSymlinks(True)
@@ -2722,7 +2722,7 @@ class mainWindow(QtGui.QMainWindow):
 			for el in dom.getElementsByTagName('img'):
 				src = el.getAttribute('src')
 				if src != None and src.startswith('cid:'):
-					
+
 					cid = src.split(':')[1]
 					i="bob"+str(self.imageId)+str(random.randint(0,100))
 					log.msg("GET BOB DATA")
@@ -2743,7 +2743,7 @@ class mainWindow(QtGui.QMainWindow):
 						tab,tabIndex=self.chat.findTab(frm.full())
 					if tab:
 						tab.chat.ui.webkit.messageObject.addHandler(i,tab.chat.ui.webkit.reloadImage,[i,link])
-					
+
 					self.imageId+=1
 					changed = True
 				elif src != None and src.startswith('xmpp:') and src.find('?recvfile;')>0:
@@ -2753,7 +2753,7 @@ class mainWindow(QtGui.QMainWindow):
 						id = res[0]
 						d = res[1]
 						i="bob"+str(self.imageId)+str(random.randint(0,100))
-						
+
 						link = self.client.bobDef[id].encode('utf8')
 						#link = os.getcwd()+'/images/32x32/actions/ajax-animation.gif'
 						el.setAttribute('src', link)
@@ -2766,7 +2766,7 @@ class mainWindow(QtGui.QMainWindow):
 							tab,tabIndex=self.chat.findTab(frm.full())
 						if tab:
 							tab.chat.ui.webkit.messageObject.addHandler(i,tab.chat.ui.webkit.reloadImage,[i,link])
-						
+
 						self.imageId+=1
 						changed = True
 						d.addCallback(self.refreshImage,i,msg.frm)
@@ -2785,7 +2785,7 @@ class mainWindow(QtGui.QMainWindow):
 		#print 'frmtab',tab,frm.full(),self.client.groupchats.has_key(frm.userhost())
 		if tab:
 			tab.chat.reloadImage(name,"file:///"+data)
-	
+
 	def removeChatElement(self, name, frm):
 		if self.client.groupchats.has_key(frm.userhost()):
 			tab,tabIndex=self.chat.findTab(frm.full(),True)
@@ -2819,10 +2819,10 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			#if there is no avatar for given JID, then try to use avatar from any metacontact
 			meta = self.ui.roster.getMetaItems(jid)
-			
+
 			for itm in meta:
 				j = itm[1]
-				
+
 				if self.client.avatarDef.get(j, False):
 					if self.client.avatarImg.has_key(self.client.avatarDef[j]):
 						if self.client.avatarImg[self.client.avatarDef[j]] and self.client.avatarDef[j]!="None":
@@ -2959,7 +2959,7 @@ class mainWindow(QtGui.QMainWindow):
 							name = unicode(el)
 					text+= '<br /><font size="-1">%s %s</font>'%(name, uri)
 			else:
-				
+
 				uri = name = ''
 				if len(chat.children)>0:
 					text+='<br /><b>'+self.tr('User is chatting in:')+'</b>'
@@ -3545,7 +3545,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Called when status table is modified. Calls self.buildStatusWidgetMenu().
 		"""
-		
+
 		self.buildStatusWidgetMenu()
 
 	def _error(self,result):
@@ -3553,7 +3553,7 @@ class mainWindow(QtGui.QMainWindow):
 		Called if there was some error with using DB.
 		"""
 		log.err( 'CHYBA V DATABAZI?!!! ')
-		
+
 
 	def _getImage(self,file,size):
 		image=QtGui.QImage(file)
@@ -3745,7 +3745,7 @@ class mainWindow(QtGui.QMainWindow):
 				else:
 					ic=self.getIcon("1@"+transport,status=show,size="16x16")
 				#self.tray.showMessage("debug "+self.now(),"adding transport "+unicode(transport))
-				
+
 				#self.transports[transport].setMaximumSize(QtCore.QSize(16777215,20))
 				#self.transports[transport].setMinimumSize(QtCore.QSize(32,32))
 				#self.transports[transport].setIconSize(QtCore.QSize(16,16))
@@ -3903,7 +3903,7 @@ class mainWindow(QtGui.QMainWindow):
 			return
 		if cmd == 'activity':
 			return
-		
+
 		if len(data.toList())==0:
 			# We are sending presence to the server
 			data=unicode(data.toString())
@@ -3913,7 +3913,7 @@ class mainWindow(QtGui.QMainWindow):
 			data=data.toList()
 			jid=unicode(data[1].toString())
 			data=unicode(data[0].toString())
-			
+
 		if data=='custom_message':
 			# show 'add custom message' dialog
 			cs = widgets.statuseditor.statusWidgetWindow(None,self,self)
@@ -4118,13 +4118,13 @@ class mainWindow(QtGui.QMainWindow):
 		self._reloadPlugins()
 
 
-	
+
 	def _reloadPlugins(self):
 		self.loadPlugins()
 		for plug in self.plugins.itervalues():
 			if plug['module']:
 				self.runPluginCommand(plug['module'].userChanged,[self.config["jid"]])
-	
+
 	def isConnected(self):
 		return self.client and self.client.connection
 
@@ -4152,12 +4152,12 @@ class mainWindow(QtGui.QMainWindow):
 				self.active=True
 				if self.client:
 					self.client.dispatcher.publishEvent('onActivity')
-				
+
 			self.ui.roster.setFocus(QtCore.Qt.MouseFocusReason)
 			#self.timer.stop()
 		elif int(ev.type())==25:
 			if self.active:
-				
+
 				self.active=False
 				self.chat.timer.start(30000)
 		return QtGui.QMainWindow.event(self,ev)
@@ -4313,7 +4313,7 @@ class mainWindow(QtGui.QMainWindow):
 			return self.plugins[plugin]['module']
 		else:
 			return None
-		
+
 	def loadPlugins(self):
 		"""
 		Loads plugins according to config file (self.config['plugins'])
@@ -4429,7 +4429,7 @@ class mainWindow(QtGui.QMainWindow):
 		app.closeAllWindows()
 		self.tray.hide()
 		# stop reactor
-		
+
 		#app.exit()
 		reactor.stop()
 
@@ -4571,7 +4571,7 @@ class mainWindow(QtGui.QMainWindow):
 							app.setStyle(QtGui.QStyleFactory.create(conf['style']))
 							style=True
 				if not style:
-					
+
 					app.setStyle(self.qtStylesDefault)
 			self.setStyleSheet(text)
 			self.chat.setStyleSheet(text)
@@ -4867,7 +4867,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Shows roster, changes tray icon, enable menu items etc... Called by Pyxl when we are connected.
 		"""
-		
+
 		self.ui.roster.reskin()
 		self.ui.actionAdd_Contact.setEnabled(True)
 		self.ui.actionJoin_groupchat.setEnabled(True)
@@ -4894,7 +4894,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.selfAvatar.setPixmap(avatar)
 			self.ui.selfAvatar.setMinimumWidth(avatar.width()+3)
 
-		
+
 
 	def disconnect(self):
 		"""
@@ -4922,7 +4922,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.config.write()
 
 	def connectCancel(self):
-		
+
 		if self.client:
 			if self.client.factory:
 				self.client.factory.stopTrying()
@@ -4960,7 +4960,7 @@ class mainWindow(QtGui.QMainWindow):
 		return ret
 
 	def _imageReceived(self,neco,fp,file,frm):
-		
+
 		fp.close()
 		os.rename(file+"_copy",file)
 		for i in range(self.chat.ui.chatTab.count()):
@@ -4982,7 +4982,7 @@ class mainWindow(QtGui.QMainWindow):
 			query['type'] = 'message'
 		for i in q:
 			query[unicode(i[0])] = unicode(i[1])
-		
+
 		if query['type'] == 'message':
 			#open tab here
 			status = 'offline' # HACK! doplnit aktualni stav kvuli ikonky
@@ -5121,7 +5121,7 @@ class mainWindow(QtGui.QMainWindow):
 					#print "calling client created"
 					self.runPluginCommand(plug['module'].clientCreated,[])
 
-			
+
 		path = self.realHomeDir+'/avatars/'
 		if self.client.avatarDef.has_key(self.client.jid.userhost()):
 			self.client.avatarImg[self.client.avatarDef[self.client.jid.userhost()]] = self.loadAvatar(self.client.avatarDef[self.client.jid.userhost()])
@@ -5425,12 +5425,10 @@ MainWindow=None
 def main():
 	translator = utils.loadTranslator('locales/jabbim_')
 	app.installTranslator(translator)
-	from guppy import hpy
-	hp = hpy()
 
 	global MainWindow
 	MainWindow = mainWindow()
-	MainWindow.hp = hp
+
 	if MainWindow.config['startInTray']=="True":
 		MainWindow.close()
 	else:
