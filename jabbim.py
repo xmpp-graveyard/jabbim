@@ -74,8 +74,9 @@ class jabbimApplication(QtGui.QApplication):
 		self.setApplicationName("Jabbim")
 
 	def winEventFilter(self,msg):
+		message = msg.message
 		# WM_POWERBROADCAST
-		if msg.message==536:
+		if message==536:
 			# PBT_APMSUSPEND
 			if msg.wParam==4 and not self.sleep:
 				log.msg( "emit sleep()")
@@ -87,16 +88,17 @@ class jabbimApplication(QtGui.QApplication):
 				self.sleep=False
 			return (True,1)
 		# Snarl clicked (notification.py hook)
-		elif msg.message==1025 and msg.wParam==34:
-			if self.main.snarlMessages.has_key(int(msg.lParam)):
-				self.main.snarlMessages[int(msg.lParam)][0](*self.main.snarlMessages[int(msg.lParam)][1])
-				del self.main.snarlMessages[int(msg.lParam)]
-			return (True,1)
+		elif message==1025:
+			if msg.wParam==34:
+				if self.main.snarlMessages.has_key(int(msg.lParam)):
+					self.main.snarlMessages[int(msg.lParam)][0](*self.main.snarlMessages[int(msg.lParam)][1])
+					del self.main.snarlMessages[int(msg.lParam)]
+				return (True,1)
 		return (False,1)
 
-	def x11EventFilter(self,e):
-		#print e,type(e),dir(e)
-		return False
+#	def x11EventFilter(self,e):
+#		#print e,type(e),dir(e)
+#		return False
 
 	def commitData(self,manager):
 		"""
@@ -5423,8 +5425,12 @@ MainWindow=None
 def main():
 	translator = utils.loadTranslator('locales/jabbim_')
 	app.installTranslator(translator)
+	from guppy import hpy
+	hp = hpy()
+
 	global MainWindow
 	MainWindow = mainWindow()
+	MainWindow.hp = hp
 	if MainWindow.config['startInTray']=="True":
 		MainWindow.close()
 	else:

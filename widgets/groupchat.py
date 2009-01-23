@@ -56,7 +56,7 @@ class groupChatWidget(abstractChatWidget):
 		self.typ="groupchat"
 		self.main=weakref.ref(main)
 		abstractChatWidget.__init__(self,ui,textView,main,jid,True,parent)
-		self.loadWebkit()
+		
 		self.nick = nickname #: MUC Jabber ID
 		self.affiliation="" #: user affiliation
 		self.role="" #: user role
@@ -180,6 +180,8 @@ class groupChatWidget(abstractChatWidget):
 		self.commands_regexps = []
 		for cmd in self.known_commands:
 			self.commands_regexps.append( (re.compile(cmd[0]+r'(\s+(?P<param>\S.*)?)?$'), cmd[1], cmd[2]) )
+		
+		self.loadWebkit()
 
 		#nick=self.main().getJid(jid).resource
 		#status=self.main().icons[unicode(item.text(1))[0]]

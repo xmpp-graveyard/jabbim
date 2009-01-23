@@ -49,11 +49,13 @@ class Plugin(plugins.PluginBase):
 			v = self.main.emoticonsWidget.smileys[k]
 			fp = open(v, 'rb')
 			self.current[k] = 'sha1+'+sha1(fp.read()).hexdigest()
-			self.main.client.bobDef[self.current[k]] = v
-			self.main.client.bobDef.write()
 			fp.close()
-		self.main.client.bobDef.write()
-		self.loadAllEmoticons()
+			self.main.client.bobDef[self.current[k]] = v
+		try:
+			self.main.client.bobDef.write()
+		except:
+			print 'emoticons caching failed!'
+		#self.loadAllEmoticons()
 
 	def on_messageSend(self,msg):
 		print 'msg'
