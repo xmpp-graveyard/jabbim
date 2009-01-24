@@ -1,90 +1,74 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1">
+<!DOCTYPE TS><TS>
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="easyshare.py" line="292"/>
         <source>Easy filesharing</source>
-        <translation type="unfinished"></translation>
+        <translation>Compartición de archivos fácil</translation>
     </message>
     <message>
-        <location filename="easyshare.py" line="503"/>
         <source>EasyShare</source>
-        <translation type="unfinished"></translation>
+        <translation>EasyShare</translation>
     </message>
 </context>
 <context>
     <name>customConfigWidget</name>
     <message>
-        <location filename="easyshare.py" line="262"/>
         <source>Add folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Añadir carpeta</translation>
     </message>
     <message>
-        <location filename="easyshare.py" line="194"/>
         <source>Remove folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Eliminar carpeta</translation>
     </message>
     <message>
-        <location filename="easyshare.py" line="197"/>
         <source>Folder info</source>
-        <translation type="unfinished"></translation>
+        <translation>Información de carpeta</translation>
     </message>
     <message>
-        <location filename="easyshare.py" line="203"/>
         <source>Path:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ruta:</translation>
     </message>
     <message>
-        <location filename="easyshare.py" line="247"/>
         <source>Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Carpeta</translation>
     </message>
     <message>
-        <location filename="easyshare.py" line="247"/>
         <source>info</source>
-        <translation type="unfinished"></translation>
+        <translation>información</translation>
     </message>
     <message>
-        <location filename="easyshare.py" line="262"/>
         <source>Choose folder name</source>
-        <translation type="unfinished"></translation>
+        <translation>Elije nombre de carpeta</translation>
     </message>
 </context>
 <context>
     <name>directoryWidget</name>
     <message>
-        <location filename="easyshare.py" line="162"/>
         <source>Choose directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Elije directorio</translation>
     </message>
 </context>
 <context>
     <name>self.main</name>
     <message>
-        <location filename="easyshare.py" line="153"/>
         <source>One directory up</source>
-        <translation type="unfinished"></translation>
+        <translation>Un directorio más arriba</translation>
     </message>
     <message>
-        <location filename="easyshare.py" line="156"/>
         <source>Choose file or directory: </source>
-        <translation type="unfinished"></translation>
+        <translation>Elije archivo o directorio: </translation>
     </message>
     <message>
-        <location filename="easyshare.py" line="158"/>
         <source>Resend file</source>
-        <translation type="unfinished"></translation>
+        <translation>Reenviar archivo</translation>
     </message>
     <message>
-        <location filename="easyshare.py" line="158"/>
         <source>Choose file you want to resend from remote system or directory you want to browse.</source>
-        <translation type="unfinished"></translation>
+        <translation>Elije un fichero que quieras reenviar desde un sistema remoto o directorio que quieras navegar.</translation>
     </message>
     <message>
-        <location filename="easyshare.py" line="173"/>
         <source>Allow JIDs</source>
-        <translation type="unfinished"></translation>
+        <translation>Permitir JIDs</translation>
     </message>
 </context>
 </TS>
