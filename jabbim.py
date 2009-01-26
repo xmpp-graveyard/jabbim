@@ -3552,7 +3552,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Called if there was some error with using DB.
 		"""
-		log.err( 'CHYBA V DATABAZI?!!! ')
+		log.err( 'CHYBA V DATABAZI?!!!: %s' % result)
 
 
 	def _getImage(self,file,size):
