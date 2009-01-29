@@ -13,6 +13,7 @@ from twisted.words.xish import domish
 from twisted.words.xish.domish import Element
 from twisted.words.protocols.jabber.xmlstream import IQ
 import weakref
+servers=["jabbim.cz","jabbim.sk","jabbim.pl","jabbim.com","jabber.cz","njs.netlab.cz"]
 
 class registrationClass(register.RegisteringClient):
 	def __init__(self,main, username, server, resource,password, port, reactor):
@@ -98,7 +99,7 @@ class firstStartWizard(QtGui.QDialog):
 		self.jid=""
 		self.state="pre"
 		
-		self.ui.servers.addItems(QtCore.QStringList([self.tr("Choose server")] + main.jabbimServers))
+		self.ui.servers.addItems(QtCore.QStringList([self.tr("Choose server")]+servers))
 		self.ui.nickname.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp("^([!#$%(-.0-9;=?a-zA-Z]+)$"),self.ui.nickname))
 		self.ui.registerButton.setEnabled(False)
 		
