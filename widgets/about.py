@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/about.ui'
 #
-# Created: Thu Jan 29 14:51:17 2009
-#      by: PyQt4 UI code generator 4.4.4
+# Created: Sat Jan 10 12:21:08 2009
+#      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -37,7 +37,7 @@ class Ui_about_window(object):
         self.label_10.setObjectName("label_10")
         self.gridlayout2.addWidget(self.label_10, 12, 0, 1, 1)
         spacerItem = QtGui.QSpacerItem(243, 186, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.gridlayout2.addItem(spacerItem, 15, 0, 1, 1)
+        self.gridlayout2.addItem(spacerItem, 14, 0, 1, 1)
         self.label_2 = QtGui.QLabel(self.widget_2)
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
@@ -93,10 +93,6 @@ class Ui_about_window(object):
         self.label_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_3.setObjectName("label_3")
         self.gridlayout2.addWidget(self.label_3, 5, 0, 1, 1)
-        self.label_7 = QtGui.QLabel(self.widget_2)
-        self.label_7.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_7.setObjectName("label_7")
-        self.gridlayout2.addWidget(self.label_7, 14, 0, 1, 1)
         self.gridlayout1.addWidget(self.widget_2, 0, 0, 1, 1)
         self.gridlayout.addWidget(self.widget, 0, 0, 1, 1)
         self.pushButton = QtGui.QPushButton(about_window)
@@ -152,6 +148,5 @@ class Ui_about_window(object):
 "     p, li { white-space: pre-wrap; }\n"
 "     </style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
 "     <p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Main developers:</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_7.setText(QtGui.QApplication.translate("about_window", "PRO PETRU", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("about_window", "OK", None, QtGui.QApplication.UnicodeUTF8))
 
