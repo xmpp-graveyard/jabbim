@@ -43,7 +43,7 @@ class FTAskWidget(QtGui.QWidget):
 		self.gridlayout.setMargin(0)
 		self.gridlayout.setSpacing(0)
 		self.gridlayout.setObjectName("gridlayout")
-		
+
 		self.label=QtGui.QLabel(" <b>"+file+"</b> "+self.tr("Receive this file?"),self)
 		self.label.setWordWrap(True)
 		self.preview=QtGui.QLabel(self)
@@ -54,7 +54,7 @@ class FTAskWidget(QtGui.QWidget):
 		self.gridlayout.addWidget(self.preview,1,0,1,2)
 		self.gridlayout.addWidget(self.yes,2,0,1,1)
 		self.gridlayout.addWidget(self.no,2,1,1,1)
-		
+
 		QtCore.QObject.connect(self.yes,QtCore.SIGNAL("clicked()"),self.accept)
 		QtCore.QObject.connect(self.no,QtCore.SIGNAL("clicked()"),self.reject)
 
@@ -87,7 +87,7 @@ class FTWidget(QtGui.QWidget):
 		self.gridlayout.setMargin(0)
 		self.gridlayout.setSpacing(0)
 		self.gridlayout.setObjectName("gridlayout")
-	
+
 		self.gridlayout1 = QtGui.QGridLayout()
 		self.gridlayout1.setMargin(0)
 		self.gridlayout1.setSpacing(6)
@@ -101,7 +101,7 @@ class FTWidget(QtGui.QWidget):
 
 		spacerItem = QtGui.QSpacerItem(16,18,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
 		#self.hboxlayout.addStretch()
-		
+
 		#self.closeButton = QtGui.QPushButton(self)
 		#self.closeButton.setMaximumSize(16,16)
 		#self.closeButton.setObjectName("closeButton")
@@ -112,11 +112,11 @@ class FTWidget(QtGui.QWidget):
 		#QtCore.QObject.connect(self.closeButton,QtCore.SIGNAL("clicked()"),self.closeClicked)
 
 		#self.gridlayout1.addLayout(self.hboxlayout,0,0,1,1)
-	
+
 		self.stats = QtGui.QLabel(stats,self)
 
 		self.progressBar = QtGui.QProgressBar(self)
-	
+
 		sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7),QtGui.QSizePolicy.Policy(1))
 		sizePolicy.setHorizontalStretch(0)
 		sizePolicy.setVerticalStretch(0)
@@ -378,18 +378,18 @@ class chatWidget(abstractChatWidget):
 		xhtml=main.client.hasFeature(jid,'http://jabber.org/protocol/xhtml-im')
 		self.typ="chat"
 		abstractChatWidget.__init__(self,Ui_chatwidget,abstractTextView,main,jid,xhtml,parent)
-		
+
 		self.coolWidgets=[]
 		self.coolLayout=QtGui.QHBoxLayout(self.ui.cool)
 		self.faderWidget=None
-		
+
 		self.ui.label=ElidedLabel(QtCore.Qt.ElideRight,self.ui.widget)
 		self.ui.horizontalLayout.insertWidget(0,self.ui.label)
-		
+
 		self.ui.infoWidget=QtGui.QWidget(self.ui.widget) # because of fade effect
 		l=QtGui.QHBoxLayout(self.ui.infoWidget)
 		l.setMargin(0)
-		
+
 		self.ui.infoLabel = ElidedLabel(QtCore.Qt.ElideRight,self.ui.infoWidget)
 		sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Preferred)
 		sizePolicy.setHorizontalStretch(100)
@@ -402,10 +402,10 @@ class chatWidget(abstractChatWidget):
 		l.addWidget(self.ui.infoPixmap)
 		l.addWidget(self.ui.infoLabel)
 		self.ui.horizontalLayout_2.insertWidget(0,self.ui.infoWidget)
-		
+
 		self.loadAvatars()
 		self.loadWebkit()
-		
+
 		self.metaJids=[]
 		# set splitters sizes
 		#self.ui.splitter.setSizes(list(self.main().config['chatSplitterSizes']))
@@ -413,7 +413,7 @@ class chatWidget(abstractChatWidget):
 		#self.ui.splitter_2.setSizes(list(self.main().config['chatSplitter2Sizes']))
 		#widget=self.ui.splitter_2.widget(1)
 		#widget.setMaximumWidth(128)
-		
+
 		# Maximum width of avatar Widget
 		self.ui.avatar.setMaximumWidth(64)
 		self.ui.avatar.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
@@ -430,14 +430,14 @@ class chatWidget(abstractChatWidget):
 		hasFeature=False
 		self.ui.metaLabel.hide()
 		self.ui.metaButton.hide()
-		
+
 		# sendFile buttons
 		self.ui.sendFile=QtGui.QPushButton()
 		self.ui.sendFile.setIconSize(QtCore.QSize(16,16))
 		self.ui.sendFile.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
 		self.ui.sendFile.setToolTip(self.tr("Send file"))
 		self.ui.sendFile.hide()
-		self.registerFeatureForWidget('http://jabber.org/protocol/si/profile/file-transfer',self.ui.sendFile)		
+		self.registerFeatureForWidget('http://jabber.org/protocol/si/profile/file-transfer',self.ui.sendFile)
 		self.ui.verticalLayout.addWidget(self.ui.sendFile)
 		QtCore.QObject.connect(self.ui.sendFile, QtCore.SIGNAL("clicked ()"),self.sendFiles)
 
@@ -450,8 +450,8 @@ class chatWidget(abstractChatWidget):
 		self.ui.verticalLayout.addWidget(self.ui.paintButton)
 		QtCore.QObject.connect(self.ui.paintButton,QtCore.SIGNAL("clicked()"),self.paint)
 		self.ui.verticalLayout.addStretch()
-		
-		
+
+
 
 		if self.main().client.groupchats.has_key(jidt.userhost()):
 			#print "features:",self.main().client.groupchats[jidt.userhost()].users[jidt.resource].features
@@ -471,7 +471,7 @@ class chatWidget(abstractChatWidget):
 		#self.ui.pluginWidget.setLayout(self.flowLayout)
 		self.ui.ftwidget.setLayout(QtGui.QVBoxLayout())
 		self.filetransfer={}
-		
+
 		self.refreshToolTip()
 		self.infoText={}
 		self.infoKeys=[]
@@ -482,7 +482,7 @@ class chatWidget(abstractChatWidget):
 		self.infoText[key]=[unicode(text),icon]
 		self.infoKeys=list(self.infoText.keys())
 		self.infoKeys.sort()
-	
+
 	def removeInfoText(self,key):
 		del self.infoText[key]
 		self.infoKeys.remove(key)
@@ -516,7 +516,7 @@ class chatWidget(abstractChatWidget):
 	def addCoolWidget(self,widget):
 		self.coolWidgets.append(widget)
 		self.coolLayout.addWidget(widget)
-	
+
 	def removeCoolWidget(self,widget):
 		self.coolWidgets.remove(widget)
 
@@ -527,7 +527,7 @@ class chatWidget(abstractChatWidget):
 		self.parent.tabName = name
 		currentIndex=self.main().chat.ui.chatTab.currentIndex()
 		self.main().chat.ui.chatTab.setTabText(currentIndex,self.parent.tabName)
-		
+
 	def loadAvatars(self):
 		# avatar of user who is chatting with us
 		self.file=""
@@ -561,7 +561,7 @@ class chatWidget(abstractChatWidget):
 		text=""
 		contact=self.main().client.getContactByJid(self.jid)
 		if not contact:
-			text=unicode(self.status.get("offline", ''))
+			text=unicode(self.main().status.get("offline", ''))
 			self.ui.label.setText(text)
 			return
 		s=None
@@ -584,8 +584,8 @@ class chatWidget(abstractChatWidget):
 		if show:
 			#process status message
 			text+=show+s
-			
-		
+
+
 		mood = contact.getPEP('http://jabber.org/protocol/mood')
 		if mood != None:
 			t = ''
@@ -663,7 +663,7 @@ class chatWidget(abstractChatWidget):
 
 			self.addInfoText("activity",'%s %s %s' % (general, spec, txt),ic)
 			#text+='<br /><font size="-1"><b>%s</b> %s %s</font>' % (general, spec, txt)
-			
+
 
 		self.ui.label.setText(text)
 
@@ -694,7 +694,7 @@ class chatWidget(abstractChatWidget):
 					meta.append(jid)
 			self.metaJids=meta
 			for mJid in meta:
-				
+
 				name=self.main().ui.roster.getNameByJID(mJid)
 				icon=self.main().ui.roster.getIconByJID(mJid)
 				action=self.metaMenu.addAction(icon,name)
@@ -775,7 +775,7 @@ class chatWidget(abstractChatWidget):
 			jid.resource=unicode(action.text())
 		self.jid=jid.full()
 		self.parent.jid=self.jid
-	
+
 	def refreshToolTip(self):
 		if self.main().client:
 			text = self.main().getToolTip(self.jid)
@@ -796,7 +796,7 @@ class chatWidget(abstractChatWidget):
 			## show filetransfer dialog and send files
 			#self.dialog=filetransfer.filetransferDialog(self.main(),file,self.jid)
 			#self.dialog.show()
-	
+
 	def sendButtonClicked(self):
 		"""
 		Sends message writed in self.ui.line or call command if message starts with "/".
@@ -815,7 +815,7 @@ class chatWidget(abstractChatWidget):
 				self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 				self.ui.line.composing=False
 				return
-				
+
 			elif services.startswith("/"):
 				try:
 					cmd, args = services.split(" ", 1)
@@ -862,7 +862,7 @@ class chatWidget(abstractChatWidget):
 						else:
 							return
 				self.main().client.message.sendMessage(msg=m)
-				
+
 				# prepare message for showing in GUI
 				message=xhtml.replace("&quot;",'"')
 				if m.receiptId != None and self.main().config['showReceipts']=='True':
@@ -892,7 +892,7 @@ class chatWidget(abstractChatWidget):
 						else:
 							return
 				self.main().client.message.sendMessage(msg=m)
-				
+
 				# prepare message for showing in GUI
 				text=unicode(text).replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")
 				text=utils.replace_url(text,self.main(),self)
@@ -923,14 +923,14 @@ class chatWidget(abstractChatWidget):
 					message=self.main().webkitThemeFactory.genOutgoingContent(self.main().client.jid.user,text,self.main().now(),self.selfFile)
 					insert=False
 
-					
+
 			self.lastMessageFrom=unicode(self.main().client.jid.user)
 			# show message
 			self.textEditWrite(message,insert)
 			# add message to 'sent messages history'
 			self.sent.append(m.getBody())
 			self.hindex = len(self.sent)
-			
+
 			#self.ui.line.clear()
 			#self.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 			self.clearLine()
