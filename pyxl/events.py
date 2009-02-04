@@ -62,7 +62,8 @@ class EventDispatcher:
 					log.err(message)
 			#log.msg('%s event executed in %i s'%(name, time.time()-t1))
 		else:
-			log.msg('no handler for %s'%name)
+			#log.msg('no handler for %s'%name)
+			pass
 		return True
 
 	def k(self, key):

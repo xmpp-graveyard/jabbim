@@ -8,7 +8,7 @@ class PresenceInit:
 	def __init__(self,  client):
 		self.client = client
 		self.dispatcher = self.client.dispatcher
-	
+
 	def send(self,  xml):
 		self.client.xmlstream.send(xml)
 
@@ -19,27 +19,27 @@ class PresenceInit:
 			if child.name == 'status':
 				status = unicode(child)
 		self.client.on_subscribe(el['from'], status)
-	
+
 	def onSubscribed(self, el):
 		log.msg( 'on subscribed')
 		self.client.on_subscribed(el['from'])
-	
+
 	def onUnSubscribe(self, el):
 		log.msg('on unsubscribe')
 		self.client.on_unsubscribe(el['from'])
-	
+
 	def onUnSubscribed(self, el):
 		log.msg( 'on unsubscribed')
 	##		self.sendRosterUpdate(jid, '', 'remove', [])
-		self.client.on_unsubscribed(el['from'])	
-	
-	
+		self.client.on_unsubscribed(el['from'])
+
+
 	def onFirstPresence(self):
 		log.msg( 'first presences')
 		self.client.first_wait = False
 		self.client.reactor.callFromThread(self.client.on_firstpresence, self.client.first_presence)
 		self.dispatcher.publishEvent('first presence')
-	
+
 	def onPresence(self, el):
 		#log.msg('presence > ')
 		try:
@@ -63,7 +63,7 @@ class PresenceInit:
 			typ = el['type']
 		if typ == 'error':
 			error = 'error'
-		
+
 		features = self.client.getFeaturesByJid(frm)
 		for child in el.elements():
 			if child.name == 'error':
@@ -83,15 +83,15 @@ class PresenceInit:
 			elif child.name == 'c':
 				caps_node = child.getAttribute('node')
 				ext = child.getAttribute('ver')
-				
+
 				if self.client.caps_cache.has_key(ext) and ext != None:
 					features = self.client.caps_cache[ext][1]
 					identity = self.client.caps_cache[ext][0]
-				elif ext == None:	
+				elif ext == None:
 					if typ !='unavailable' and not self.client.hasFeature(frm.full(), 'http://jabber.org/protocol/disco#info'):
 						features = 'asked'
 						log.msg('nocaps ' + unicode(self.client.getIdentity(frm.host)))
-						
+
 						if  self.client.hasIdentity(frm.host, 'conference') or self.client.hasIdentity(frm.host, 'gateway'):
 							features = ['-']
 						elif len(features)>0:
@@ -116,12 +116,12 @@ class PresenceInit:
 								reason = unicode(itm)
 							elif itm.name == 'actor':
 								actor = itm.getAttribute('jid')
-						
+
 					if item.name == 'status' :
 						codes.append(item['code'])
 			elif child.name == 'x' and child.defaultUri == 'vcard-temp:x:update':
 				hash = unicode(child.firstChildElement())
-				
+
 		if show == None and not el.hasAttribute('type'):
 			show = 'online'
 		elif el.hasAttribute('type'):
@@ -129,12 +129,16 @@ class PresenceInit:
 				show = 'offline'
 			else:
 				return
+
+		#hack
+		del el
+
 		if features == None or len(features) == 0:
 			if  self.client.hasIdentity(frm.host, 'conference') or self.client.hasIdentity(frm.host, 'gateway'):
 				features = ['-']
 			else:
 				self.client.getFeatures(frm, None)
-		
+
 		if features == 'asked':
 			features = []
 
@@ -150,7 +154,7 @@ class PresenceInit:
 							for identity,values in self.client.disco[frm.host][None]["identities"].iteritems():
 								if values['type']=='irc':
 									wantAvatar=False
-		
+
 		if wantAvatar:
 			if self.client.avatarDef.has_key(fromjid):
 				if self.client.avatarDef[fromjid] == hash:
@@ -167,12 +171,12 @@ class PresenceInit:
 					self.client.getVCard(frm.full())
 				else:
 					self.client.getVCard(fromjid)
-	
+
 		if self.client.groupchats.has_key(fromjid):
 			if show=="offline":
 				codes.append('PART')
 				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor, nick)
-			
+
 			if self.client.groupchats[fromjid].users.has_key(resource):
 				self.client.groupchats[fromjid].setInfo(resource,  affiliation,  role,  truejid, features)
 				self.client.groupchats[fromjid].setStatus(resource,  show,  status)
@@ -184,13 +188,13 @@ class PresenceInit:
 			if show!="offline":
 				self.dispatcher.publishEvent('on_GCpresence',fromjid, resource,  show,  status,  codes, reason, actor, nick)
 			return
-	
+
 		elif self.client.roster['users'].has_key(fromjid):
 			first = self.client.roster['users'][unicode(fromjid)].setStatus(resource, show,status)
 			if self.client.roster['users'][fromjid].resources.has_key(resource):
 				self.client.roster['users'][fromjid].setPriority(resource, priority)
 				self.client.roster['users'][fromjid].setFeatures(resource, features, identity)
-	
+
 
 			if first and self.client.first_wait:
 				self.client.first_presence.append((frm,show, error))
@@ -208,20 +212,20 @@ class PresenceInit:
 			except:
 				log.err("onPresenceError, jid mallformed")
 			return
-			
+
 		fromjid = frm.userhost()
 		resource = jid.JID(el['from']).resource
 		if self.client.groupchats.has_key(fromjid):
-			
+
 			del self.client.groupchats[fromjid]
 			for child in  el.elements():
 				if child.name == 'error':
 					text = name = ""
 					for elm in child.elements():
-	
+
 						if elm.name == 'text':
 							text = unicode(elm)
 						else:
 							text = unicode(elm.name)
 					self.dispatcher.publishEvent('on_GCpresenceError',fromjid,child.getAttribute('code'),  child.getAttribute('type'),  name , text, resource)
-			
+

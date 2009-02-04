@@ -2089,9 +2089,12 @@ class avatarLoader(QtCore.QThread):
 				painter.drawImage(0,0,frame)
 				painter.end()
 				self.emit(QtCore.SIGNAL("imageLoaded(QString,QImage,int,int)"),QtCore.QString(hash),QtGui.QImage(result),int(width),int(height))
+				del painter
+				del result
 			except:
 				message = unicode(traceback.format_exc(), 'utf-8')
 				log.err(message)
+			time.sleep(0.2)
 
 
 class mainWindow(QtGui.QMainWindow):
@@ -5184,7 +5187,9 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		img = QtGui.QPixmap.fromImage(image)
 		img.file=key
-		self.client.avatarImg[unicode(key)]=[img,int(width),int(height)]
+		if self.client != None:
+			self.client.avatarImg[unicode(key)]=[img,int(width),int(height)]
+		del img
 
 	#def loadAvatars(self,path,avatarDef):
 		#avatarImg={}

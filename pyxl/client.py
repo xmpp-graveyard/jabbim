@@ -308,9 +308,11 @@ class Client(derived):
 				boshURL = ''
 		if host != None:
 			self._connect(host, int(port))
+			return
 		elif boshURL != '':
 			log.msg('going bosh: '+ bhost + str(bport) + boshURL)
 			self._connect(bhost, int(bport), boshURL)
+			return
 		else:
 			log.msg('dns - ' + unicode(time.time()) + '_xmpp-client._tcp.'+self.jid.host)
 			if sys.platform == 'win32':
@@ -353,8 +355,10 @@ class Client(derived):
 					self.proxy = {'host':h,  'port': p}
 
 
-			dl = defer.DeferredList([d, txt])
-			dl.addCallback(self._dnsLookup)#.addErrback(self._dnsLookupErr)
+			dl = defer.DeferredList([d, txt], consumeErrors = True)
+			dl.setTimeout(15)
+			dl.addCallback(self._dnsLookup).addErrback(self._dnsLookupErr)
+
 
 
 	def _dnsLookup(self, results):
@@ -787,7 +791,7 @@ class Client(derived):
 #		self.reactor.callFromThread(self.main.cache.set_avatar,jid, ['nic', 'nic'])
 #		self.avatars[jid] = None
 		self.avatarDef[jid] = 'None'
-		self.avatarDef.write()
+		#self.avatarDef.write()
 		self.reactor.callFromThread(self.on_avatarUpdate,jid)
 
 		return err
@@ -820,7 +824,7 @@ class Client(derived):
 			f.close()
 
 			self.avatarDef[el['from']] = hash
-			self.avatarDef.write()
+			#self.avatarDef.write() # uncomment only if you really know what are you doing
 			#try:
 			self.avatarImg[hash] = self.main.loadAvatar(hash)#self.main.getAvatar(hash,size="32x32",frame=True)
 			#except:
@@ -831,7 +835,7 @@ class Client(derived):
 				#print 'chyba v updatu avatara'
 		else:
 			self.avatarDef[el['from']] = None
-			self.avatarDef.write()
+			#self.avatarDef.write()
 		self.reactor.callFromThread(self.on_vcardReceived,el['from'],el)
 		return vcard
 

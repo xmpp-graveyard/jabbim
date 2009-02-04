@@ -64,6 +64,7 @@ class rosterToolTip(QtGui.QFrame):
 		self.status=""
 		self.mood=""
 		self.activity=""
+		self.tune = ""
 		self.ui.vcard.setPixmap(QtGui.QPixmap("images/16x16/categories/v-card.png"))
 		self.ui.vcard.leaveEvent=self.tuneLeaveEvent
 		self.ui.vcard.enterEvent=self.vcardEnterEvent
@@ -133,7 +134,7 @@ class rosterToolTip(QtGui.QFrame):
 
 	def tuneEnterEvent(self,event):
 		self.ui.jid.setText(self.tune)
-		
+
 	def tuneLeaveEvent(self,event):
 		self.ui.jid.setText(self.jid)
 
@@ -142,13 +143,13 @@ class rosterToolTip(QtGui.QFrame):
 
 	def moodEnterEvent(self,event):
 		self.ui.jid.setText(self.mood)
-		
+
 	def moodLeaveEvent(self,event):
 		self.ui.jid.setText(self.jid)
 
 	def enterEvent(self,event):
 		self.focus=True
-		
+
 
 class emptyRosterWidget(QtGui.QWidget):
 	def __init__(self,main,parent=None):
@@ -742,7 +743,7 @@ class rosterWidget(QtGui.QWidget):
 							y-=useritem.height
 								#if useritem==self.item:
 									#y+=self.selectedHeight-28
-	
+
 							#if useritem==self.item:
 								#y-=32
 						y+=item.height
@@ -961,7 +962,7 @@ class rosterWidget(QtGui.QWidget):
 						#somebodyOnline=True
 		self.groups[group].online=online
 		self.groups[group].all=all
-		
+
 		self.setSize()
 
 	def sortItems(self,column=None,typ=None):
@@ -1081,7 +1082,7 @@ class rosterWidget(QtGui.QWidget):
 				self.tool.ui.nickname.setText("<b>"+unicode(item.escapedName)+"</b>")
 				self.tool.ui.jid.setText(unicode(item.jid))
 				self.tool.jid=unicode(item.jid)
-				
+
 				contact = self.main.client.getContactByJid(jid)
 
 				if contact != None:
@@ -1123,7 +1124,7 @@ class rosterWidget(QtGui.QWidget):
 						self.tool.ui.tune.hide()
 				else:
 					self.tool.ui.tune.hide()
-		
+
 				mood = contact.getPEP('http://jabber.org/protocol/mood')
 				if mood != None:
 						if isinstance(mood,list):
@@ -1195,7 +1196,7 @@ class rosterWidget(QtGui.QWidget):
 
 
 				g=self.mapToGlobal(QtCore.QPoint(event.x(),event.y()))
-				
+
 				hint=self.tool.sizeHint()
 
 				if w.availableGeometry().y()+w.availableGeometry().height()<g.y()+10+hint.height():
@@ -1466,7 +1467,7 @@ class rosterWidget(QtGui.QWidget):
 			#self.selected = None
 			#self.statusLabel.hide()
 			#self.reshow=True
-			
+
 			self.repaint(0,y-10,self.width(),height+20)
 			self.setSize()
 		#if item!=None:
@@ -2460,7 +2461,7 @@ class rosterWidget(QtGui.QWidget):
 		contact = self.main.client.roster['users'][jid]
 		oneres = len(contact.resources.keys()) < 2
 		myJid = jid == self.main.client.jid.userhost()
-			
+
 		# chat
 		if oneres:
 			action=contactMenu.addAction(self.tr("Chat"))

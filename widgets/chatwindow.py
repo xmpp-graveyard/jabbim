@@ -69,7 +69,7 @@ class tabWidget(QtGui.QTabBar):
 	def __init__(self,parent,main):
 		QtGui.QTabBar.__init__(self,parent)
 		self.main=main
-	
+
 	def mouseReleaseEvent(self,event):
 		if event.button()==QtCore.Qt.MidButton:
 			pos=event.pos()
@@ -140,7 +140,7 @@ class chatWindow(QtGui.QMainWindow):
 		"""
 		Sends incative composing message when chat window is inactive
 		"""
-		if self.active==False:
+		if self.active==False and self.main.client != None:
 			print "sending inactive chatstate to all tabs"
 			for i in range(self.ui.chatTab.count()):
 				w=self.ui.chatTab.widget(i)
@@ -235,7 +235,7 @@ class chatWindow(QtGui.QMainWindow):
 			tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 
 
-	
+
 	def next(self):
 		i=int(self.ui.chatTab.currentIndex())+1
 		if i<self.ui.chatTab.count():
@@ -249,7 +249,7 @@ class chatWindow(QtGui.QMainWindow):
 			self.ui.chatTab.setCurrentIndex(i)
 		if i < 0 and self.main.config['tabCycling'] == 'True':
 			self.ui.chatTab.setCurrentIndex(self.ui.chatTab.count()-1)
-	
+
 
 	#{ Public Functions
 
@@ -309,7 +309,7 @@ class chatWindow(QtGui.QMainWindow):
 			resource=unicode(jid).rsplit("/")[1]
 			jid=unicode(jid).rsplit("/")[0]
 			#res=self.main.ui.roster.getResourceItems(jid)
-			
+
 			#show=self.main.icons[unicode(res[resource].text(1))[0]]
 			#icon=self.main.getIcon(jid,show,size="16x16")
 		#else:
@@ -318,12 +318,12 @@ class chatWindow(QtGui.QMainWindow):
 			self.ui.chatTab.setTabIcon(index,self.ui.chatTab.widget(index).ic)
 		elif typ == 'groupchat':
 			self.ui.chatTab.setTabIcon(index,QtGui.QIcon("images/16x16/categories/muc.png"))
-			
+
 		color=self.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
 		self.ui.chatTab.tabBar().setTabTextColor(index,color)
-		
-		
-		
+
+
+
 
 		widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
 		if not widget:
@@ -355,7 +355,7 @@ class chatWindow(QtGui.QMainWindow):
 		if widget.typ=="chat":
 			self.main.client.sendMessage(unicode(widget.jid),"",composing="active")
 		widget.active=True
-		
+
 		for i in range(self.ui.chatTab.count()):
 			w=self.ui.chatTab.widget(i)
 			if w:
@@ -380,7 +380,7 @@ class chatWindow(QtGui.QMainWindow):
 			return self.isVisible() and not self.windowState() & QtCore.Qt.WindowMinimized and QtGui.QApplication.activeWindow()==self
 		else:
 			return QtGui.QMainWindow.isActiveWindow(self)
-			
+
 	def activate(self,jid=None):
 		print "activate"
 		self.show()
@@ -521,7 +521,7 @@ class chatWindow(QtGui.QMainWindow):
 						#message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
 						#if len(colors)==3:
 							#message=message.replace("[additive]",colors[2])
-		
+
 			# write message
 			if countMessage:
 				w.chat.unread+=1
@@ -570,7 +570,7 @@ class chatWindow(QtGui.QMainWindow):
 			#if colors!=None:
 				#message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
 			w.chat.lastMessageFrom=unicode(user)
-			
+
 			w.chat.textEditWrite(message,insert)
 
 	def openNewChatTab(self,jid,name,icon=None,new=None):
@@ -675,7 +675,7 @@ class chatWindow(QtGui.QMainWindow):
 				##frame=QtGui.QPixmap("images/"+unicode(size)+"x"+unicode(size)+"/frame.png")
 				##painter=QtGui.QPainter(result)
 				###painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
-				
+
 				##painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
 				##painter.drawPixmap(0,0,frame)
 				##painter.end()
@@ -687,7 +687,7 @@ class chatWindow(QtGui.QMainWindow):
 				result=self.main.getAvatar(QtGui.QPixmap("images/48x48/apps/jabbim.png"),size="64x64",frame=True)
 		tab.chat.ui.avatar.setPixmap(result)
 
-				
+
 		layout.addWidget(tab.chat)
 		print "adding new tab...", icon
 		tab.tabName=unicode("&"+unicode(name))
@@ -702,7 +702,7 @@ class chatWindow(QtGui.QMainWindow):
 			tab.chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 		tab.chat.name=name
 		tab.chat.refreshLabel()
-		
+
 		#tab.chat.ui.label.setText("<font size=\"3\"><b>"+name+"</b></font>")
 		#if message!=None:
 			#message=self.main.webkitThemeFactory.genIncomingContent(name,message,self.main.now(),tab.chat.file)
@@ -758,7 +758,7 @@ class chatWindow(QtGui.QMainWindow):
 		self.ui.chatTab.addTab(tab,QtGui.QIcon("images/16x16/categories/muc.png"), jmeno)
 		self.setWindowTitle(unicode(jmeno))
 		self.ui.chatTab.setCurrentIndex(self.ui.chatTab.indexOf(tab))
-		
+
 		self.show()
 		self.raise_()
 		self.activateWindow()
@@ -806,7 +806,7 @@ class chatWindow(QtGui.QMainWindow):
 			if unicode(w.typ)=='groupchat':
 				ask=True
 				break
-		
+
 		if ask and self.main.config["askBeforeQuitMUC"]=="True" and self.main.app.shutdown==False:
 			d=leaveAllMucDialog(self.main,self)
 			if d.exec_()==1:
@@ -829,7 +829,7 @@ class chatWindow(QtGui.QMainWindow):
 			self.main.config['chatSplitterSizes']=list(w.chat.ui.splitter.sizes())
 			#self.main.config['chatSplitter2Sizes']=list(w.chat.ui.splitter_2.sizes())
 			self.main.client.sendMessage(unicode(w.jid),"",composing="gone")
-		
+
 
 		if w.typ=="groupchat":
 			try:

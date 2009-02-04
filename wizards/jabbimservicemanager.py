@@ -180,7 +180,7 @@ class jabbimServiceManager(QtGui.QDialog):
 	def addService(self,name,jid,description,registered=False):
 		item=QtGui.QTreeWidgetItem(self.ui.treeWidget)
 		item.setText(1,name)
-		item.setIcon(1,self.main().getIcon("1@"+jid,status="online",size="16x16"))
+		item.setIcon(1,self.main().getIcon(jid,status="online",size="16x16"))
 		item.setData(0,32,QtCore.QVariant(unicode(jid)))
 		item.setData(1,32,QtCore.QVariant(unicode(description)))
 		if registered:
@@ -237,7 +237,7 @@ class jabbimServiceManager(QtGui.QDialog):
 			dl = []
 			for key in cat.iterkeys():
 				dl.append(self.main().client.getDiscoItems(key))
-				categories[key] = {'name':cat[key]['name'], 'feeds':{}}
+				categories[key] = {'name':cat[key].get('name', key.split('@')[0]), 'feeds':{}}
 			return defer.DeferredList(dl).addCallback(_gotFeeds, categories)
 		def _gotFeeds(feeds, categories):
 			#print feeds
@@ -307,6 +307,7 @@ class jabbimServiceManager(QtGui.QDialog):
 					feedItem.setCheckState(0,QtCore.Qt.Unchecked)
 					feedItem.registered=QtCore.Qt.Unchecked
 				kategorie.addChild(feedItem)
+		QtCore.QObject.connect(self.ui.jids,QtCore.SIGNAL("itemDoubleClicked(QTreeWidgetItem * , int)"),self.itemDoubleClicked)
 		self.ui.reg.hide()
 		self.ui.configure.hide()
 		self.ui.add.show()
@@ -315,3 +316,7 @@ class jabbimServiceManager(QtGui.QDialog):
 		self.addFunc = _registerFeeds
 		pass
 
+	def itemDoubleClicked(self, item, col):
+		if unicode(item.jid) == 'private@news.jabbim.cz':
+			d=self.main().client.getRegisterForm(unicode(item.jid))
+			d.addCallback(self._onRegister)

@@ -30,7 +30,7 @@ from contact import *
 from groupchat import  *
 from xmlrpclib import loads, dumps
 from twisted.internet import  threads
-import socket 
+import socket
 from xdata import *
 
 
@@ -71,7 +71,7 @@ class derived:
 		pass
 	def on_DeleteContact(self,jid):
 		pass
-	
+
 	def on_subscribe(self,kdo, msg):
 		pass
 	def on_unsubscribe(self, kdo):
@@ -82,59 +82,59 @@ class derived:
 		pass
 	def on_unavailable(self,frm):
 		pass
-	
+
 	def on_message(self, msg):
 		pass
 	def on_GCmessage(self, msg):
 		pass
-	
+
 	def on_GCpresence(self,  muc, nick,  show,  status,  codes = [], reason = '', actor = None,n=None):
 		pass
-	
+
 	def on_versionreceive(self, jid, version):
 		#version = (name, version, os)
 		pass
-	
+
 	def on_discoInfoReceived(self, jid, node):
 		# v self.disco[jid][node] jsou info data nebo error
 		pass
 	def on_discoItemsReceived(self, jid, node):
 		# v self.disco[jid][node] jsou info data nebo error
 		pass
-	
+
 	def on_privacyReceived(self):
 
 		pass
 
 	def on_time202Received(self, jid, utc, tzo):
 		pass
-	
+
 	def on_rosterAddUser(self, contact):
 		pass
-	
+
 	def on_rosterArrived(self):
 		pass
-	
+
 	def on_roleErr(self,  muc,  err,  nick):
 		pass
-	
+
 	def on_affiliationErr(self,  muc,  err,  nick):
 		pass
 	def on_vcardReceived(self,  jid, card):
 		pass
-	
+
 	def on_fileReceived(self, jid, file, methods, id):
 		pass
-	
+
 	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
 		del self.ft[sid]
-	
+
 	def on_ftTransfered(self, sid, bytes): #pocet prenesenych bajtu pro prenos se SID
 		pass
-		
+
 	def on_disconnect(self):
 		pass
-	
+
 	def on_verify(self, id, thread, props, frm, typ): #xep0070
 		self.replyVerify(id, thread, props, frm, typ, False)
 		pass
@@ -142,23 +142,23 @@ class derived:
 		pass
 	def on_invite(self, jid, room, reason = None, cont = False):
 		pass
-	
+
 	def on_avatarUpdate(self, jid):
 		pass
 
 	def on_rosterx(self,frm, out, id, typ):
 		pass
-	
+
 	def on_pep(self, frm, ns, payload):
-		pass	
-	
+		pass
+
 	def on_receivedFiles(self, id,  frm,  files, size):
 		pass
-	
+
 	def on_receipt(self, frm, id):
 		pass
 		########################################################################################################################
-	
+
 	########################################################################################################################
 	def sendPresence(self, to = None, show = None, status = None, priority = None, typ = None, caps = True):
 		"""Posle presenci na zvoleny jid"""
@@ -188,7 +188,7 @@ class derived:
 			if self.caps_ext != None:
 				c['ver'] = self.caps_ext
 				c['hash'] = 'sha-1'
-		
+
 		x = presence.addElement('x', 'vcard-temp:x:update')
 		if self.avatarDef.has_key(self.jid.userhost()) and self.avatarDef[self.jid.userhost()] != 'None':
 			x.addElement('photo', content = self.avatarDef[self.jid.userhost()])
@@ -201,9 +201,9 @@ class derived:
 			presence.addElement('evil', 'http://jabber.org/protocol/evil')
 		self.xmlstream.send(presence)
 
-	
-	
-	
+
+
+
 
 
 	def sendInvitation(self, jid, room, reason = None, cont = False):
@@ -211,7 +211,7 @@ class derived:
 		message['xml:lang'] = self.xmlLang
 		message['to'] = room
 		x = message.addElement('x','http://jabber.org/protocol/muc#user')
-		invite =  x.addElement('invite') 
+		invite =  x.addElement('invite')
 		invite['to'] = unicode(jid)
 		if reason != None:
 			invite.addElement("reason", content = unicode(reason))
@@ -227,7 +227,7 @@ class derived:
 		message['xml:lang'] = self.xmlLang
 		message['to'] = room
 		x = message.addElement('x','http://jabber.org/protocol/muc#user')
-		decline =  x.addElement('decline') 
+		decline =  x.addElement('decline')
 		decline['to'] = unicode(jid)
 		if reason != None:
 			decline.addElement("reason", content = unicode(reason))
@@ -263,8 +263,8 @@ class derived:
 #		self.on_xml(iq.toXml())
 		d.addCallback(self._onRosterArrive).addErrback(self.chyba)
 		log.msg('poslana zadost o roster')
-		
-	
+
+
 	def getMUCConfig(self, jid, callback = None):
 		""" Posle zadost o registracni formular na dany jid """
 		log.msg('get muc config')
@@ -279,7 +279,7 @@ class derived:
 #		self.on_xml(iq.toXml())
 		d.addCallback(self._onMUCConfigReceived, callback, jid).addErrback(self.chyba)
 		return d
-		
+
 	def setMUCConfig(self, jid, forms):
 		""" Posle zadost o registracni formular na dany jid """
 		log.msg('set muc config')
@@ -295,7 +295,7 @@ class derived:
 		d = iq.send()
 #		self.on_xml(iq.toXml())
 		return d
-	
+
 	def getRegisterForm(self, jid, callback = None):
 		""" Posle zadost o registracni formular na dany jid """
 		log.msg('get reg form')
@@ -310,7 +310,7 @@ class derived:
 #		self.on_xml(iq.toXml())
 		d.addCallback(self._onRegisterGet, callback, jid).addErrback(self.chyba)
 		return d
-	
+
 	def setRegisterForm(self, jid, legacy=None, forms = None, remove = False):
 		log.msg('set reg form')
 		iq = IQ(self.xmlstream, 'set')
@@ -336,7 +336,7 @@ class derived:
 		d = iq.send()
 #		self.on_xml(iq.toXml())
 		return d
-	
+
 	def sendContact(self, komu, contact):
 		if not self.hasFeature(komu, 'http://jabber.org/protocol/rosterx'):
 			return
@@ -355,7 +355,7 @@ class derived:
 		d = iq.send()
 #		self.on_xml(iq.toXml())
 		return d
-		
+
 
 	def getSearchForm(self, jid):
 		""" Posle zadost o formular pro hledani na dany jid """
@@ -371,7 +371,7 @@ class derived:
 #		self.on_xml(iq.toXml())
 		d.addCallback(self._onSearchGet, jid).addErrback(self.chyba)
 		return d
-	
+
 	def setSearchForm(self, jid, legacy=None, forms = None):
 		log.msg('set search form')
 		iq = IQ(self.xmlstream, 'set')
@@ -392,8 +392,8 @@ class derived:
 		self.disp(iq['id'])
 		d = iq.send()
 #		self.on_xml(iq.toXml())
-		return d.addCallback(self._onSearchResult, jid)	
-		
+		return d.addCallback(self._onSearchResult, jid)
+
 	def sendRosterUpdate(self, jid, name, subscription, groups, callback=None, params=None):
 		""" Zmeni zaznam v rosteru o zadanem JIDu """
 		#print jid, name, subscription, groups
@@ -413,7 +413,7 @@ class derived:
 		d = iq.send()
 #		self.on_xml(iq.toXml())
 		d.addCallback(self._rosterUpdateDone, callback, params).addErrback(self.chyba)
-	
+
 	def getVCard(self, jid):
 		""" Posle zadost o vcard """
 		#log.msg( 'requesting vcard for ' + unicode(jid))
@@ -431,7 +431,7 @@ class derived:
 		d.addCallback(self._vcardReceived).addErrback(self._noVcard, jid)
 		log.msg("END: getVCard")
 		return d
-	
+
 	def getTransportForm(self, jid):
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid
@@ -442,7 +442,7 @@ class derived:
 		d = iq.send()
 		d.addCallback(self._gotTransportForm)
 		return d
-	
+
 	def _gotTransportForm(self, el):
 		q= el.firstChildElement()
 		r = {'prompt':'', 'desc':''}
@@ -452,7 +452,7 @@ class derived:
 			elif i.name =='desc':
 				r['desc'] = unicode(i)
 		return r
-	
+
 	def getTransportJid(self, jid, prompt):
 		iq = IQ(self.xmlstream, 'set')
 		iq['to'] = jid
@@ -464,10 +464,10 @@ class derived:
 		d = iq.send()
 		d.addCallback(self._gotTransportJid)
 		return d
-	
+
 	def _gotTransportJid(self, el):
 		return unicode(el.firstChildElement().firstChildElement())
-	
+
 	def getLast(self, jid):
 		iq = IQ(self.xmlstream, 'get')
 		iq['to'] = jid
@@ -477,7 +477,7 @@ class derived:
 		log.msg("Sending LastActivity IQ")
 		d = iq.send()
 		return d
-	
+
 	def setVCard(self,card):
 		""" Posle vlastni vcard """
 #		log.msg( 'requesting vcard for ' + unicode(jid))
@@ -499,8 +499,8 @@ class derived:
 #					el.addElement(s[1], content = v)
 #			else:
 #				el = vcard.addElement(k, content = v)
-#				
-#					
+#
+#
 		iq.addChild(card)
 		self.disp(iq['id'])
 #		iq.timeout = 60
@@ -508,7 +508,7 @@ class derived:
 		d = iq.send()
 		log.msg("END: setVCard")
 		return d
-		
+
 	def getBookmarks(self):
 		log.msg('get bookmarks')
 		iq = IQ(self.xmlstream, 'get')
@@ -545,7 +545,7 @@ class derived:
 #		self.on_xml(iq.toXml())
 		d = iq.send()
 		d.addCallback(self._bookmarksSet).addErrback(self.chyba)
-		
+
 	def sendAttention(self, to, body):
 		message = Element((None,'message'))
 		message['xml:lang'] = self.xmlLang
@@ -558,7 +558,7 @@ class derived:
 
 	def getMetacontacts(self, exprivacy = None):
 		log.msg('get meta contacts')
-		
+
 		iq = IQ(self.xmlstream, 'get')
 		iq['xml:lang'] = self.xmlLang
 		q = iq.addElement('query', 'jabber:iq:private')
@@ -584,7 +584,7 @@ class derived:
 #		self.on_xml(iq.toXml())
 		d = iq.send()
 		d.addCallback(self._metacontactsSet).addErrback(self.chyba)
-	
+
 	def delContact(self, jid):
 		self.sendRosterUpdate(jid, '', 'remove', [])
 		if self.roster_meta.has_key(jid):
@@ -622,7 +622,7 @@ class derived:
 
 	def getDiscoInfo(self, injid, node = None,  callback = None, callback_par = None):
 		#log.msg( 'requesting disco#info: '+jid)
-		jd = jid.JID(injid).host
+		jd = jid.JID(injid).full()
 		iq = IQ(self.xmlstream, 'get')
 		iq['xml:lang'] = self.xmlLang
 		iq['to'] = jd
@@ -636,7 +636,7 @@ class derived:
 		d.addCallback(self._discoInfoReceived, node,  callback, callback_par)
 		d.addErrback(self._discoInfoErrReceived, (node, jd))
 		return d
-		
+
 	def getDiscoItems(self, jid, node = None, callback = None, callback_par = None):
 		log.msg('requesting disco#items ')
 		iq = IQ(self.xmlstream, 'get')
@@ -652,7 +652,7 @@ class derived:
 		d.addCallback(self._discoItemsReceived, node, callback, callback_par)
 		d.addErrback(self._discoItemsErrReceived, (node, jid))
 		return d
-		
+
 	def getTime202(self, jid):
 		log.msg( 'requesting time202 info')
 		iq = IQ(self.xmlstream, 'get')
@@ -663,7 +663,7 @@ class derived:
 		d = iq.send()
 		self.disp(iq['id'])
 		d.addCallback(self._time202Received).addErrback(self.chyba)
-		
+
 	def joinGC(self,  jid, nick, password = None,sendRooms=True):
 		gc = Groupchat(self,  jid, nick, password = password)
 		self.groupchats[jid] = gc
@@ -672,7 +672,7 @@ class derived:
 			self.sendPEP('http://www.xmpp.org/extensions/xep-0194.html#ns', self.getChattingPayload())
 		else:
 		    self.sendPEP('http://www.xmpp.org/extensions/xep-0194.html#ns', Element(('http://www.xmpp.org/extensions/xep-0194.html#ns', 'room')))
-		
+
 
 
 	def leaveGC(self,  jid,sendRooms=True):
@@ -681,7 +681,7 @@ class derived:
 		log.msg( 'left MUC: '+ jid)
 		if sendRooms:
 			self.sendPEP('http://www.xmpp.org/extensions/xep-0194.html#ns', self.getChattingPayload())
-		
+
 ############## MUC admin ##################
 	def getMUCList(self, jid, typ = 'voice'):
 		log.msg('get muc list')
@@ -699,7 +699,7 @@ class derived:
 #		self.on_xml(iq.toXml())
 		d.addCallback(self._onMUCListGet, jid).addErrback(self.chyba)
 		return d
-	
+
 	def setMUCList(self, jid, items, typ, remove = False):
 
 		iq = IQ(self.xmlstream, 'get')
@@ -718,13 +718,13 @@ class derived:
 		d = iq.send()
 #		self.on_xml(iq.toXml())
 		return d
-	
+
 	def getMUCLists(self, jid, types = ['ban', 'member', 'admin', 'owner']):
 		seznam = []
 		for typ in types:
 			seznam.append(self.getMUCList(jid, typ))
-		
-		
+
+
 		dl = defer.DeferredList(seznam).addCallback(self._onMUCLists, jid, types)
 		return dl
 ################# RPC ####################3
@@ -739,12 +739,12 @@ class derived:
 		self.disp(iq['id'])
 		d = iq.send().addCallback(self._onCallResult)
 		return d
-	
+
 	def _onCallResult(self, el):
 		query = el.firstChildElement()
 		call = loads(query.firstChildElement().toXml().encode('utf8'))
 		return call
-		
+
 
 ################# Utility ####################
 
@@ -755,7 +755,7 @@ class derived:
 		except:
 			contact = None
 		return contact
-	
+
 	def getMucContactByJid(self, injid):
 		jd = jid.JID(injid)
 		try:
@@ -763,7 +763,7 @@ class derived:
 		except:
 			contact = None
 		return contact
-	
+
 	def getHighestJid(self, jd):
 		contact = self.getContactByJid(jd)
 		if contact != None:
@@ -771,7 +771,7 @@ class derived:
 			if res != None:
 				return contact.jid + '/' + res
 		return jd
-	
+
 	def hasFeature(self, injid, feature):
 		jd = jid.JID(injid)
 		contact = self.getContactByJid(injid)
@@ -789,9 +789,9 @@ class derived:
 				f = contact.hasFeature(feature)
 			except:
 				f = False
-		
+
 		return f
-	
+
 	def getFeaturesByJid(self, injid):
   		jd = jid.JID(injid)
 		contact = self.getContactByJid(injid)
@@ -810,7 +810,7 @@ class derived:
 			except:
 				f = []
 		return f
-	
+
 	def getIdentity(self, injid):
 		try:
 			jd = jid.JID(injid)
@@ -823,7 +823,7 @@ class derived:
 				return None
 		except KeyError:
 			return None
-	
+
 	def hasIdentity(self, injid, category, typ = None):
 
 		id = self.getIdentity(injid)
@@ -848,7 +848,7 @@ class derived:
 	def getipaddr(self, hostname='default'):
 		if hostname == 'default' or hostname == None:
 			hostname = socket.gethostname()
-		
+
 		ips = socket.gethostbyname_ex(hostname)[2]
 		ips = [i for i in ips if i.split('.')[0] != '127']
 		if len(ips) != 0:
@@ -856,8 +856,8 @@ class derived:
 			ip = ips[0]
 		elif len(ips) == 0 and hostname == socket.gethostname():
 			# when we want to determine local IP and did not have succes
-			# with gethostbyname_ex then we would like to connect to say... 
-			
+			# with gethostbyname_ex then we would like to connect to say...
+
 			# google.com and determine the local ip address bound to the
 			# local socket.
 			try:
@@ -875,7 +875,7 @@ class derived:
 		else:
 			log.msg ('*** unable to determine outside IP address')
 			raise Exception
-			
+
 	def getMoodPayload(self, mood=None, text = None):
 		m = Element(('http://jabber.org/protocol/mood', 'mood'))
 		if mood:
@@ -883,7 +883,7 @@ class derived:
 		if text != None and len(text) > 0 :
 			m.addElement('text', content = text)
 		return m
-	
+
 	def getActivityPayload(self, group, spec = None, text = None):
 		a = Element(('http://jabber.org/protocol/activity', 'activity'))
 		if group:
@@ -893,13 +893,13 @@ class derived:
 			if text != None and len(text) > 0 :
 				a.addElement('text', content = text)
 		return a
-	
+
 	def getTunePayload(self, args):
 		t = Element(('http://jabber.org/protocol/tune', 'tune'))
 		for k,v in args.iteritems():
 			t.addElement(k, content = v)
 		return t
-	
+
 	def getChattingPayload(self):
 		p = []
 		for room in self.groupchats.iterkeys():
@@ -920,7 +920,7 @@ class derived:
 			subscription =subscriptions.addElement('subscription')
 			subscription['jid'] = self.jid.userhost()
 			subscription['subscription'] = 'subscribed'
-			
+
 			self.disp(iq['id'])
 			return iq.send()
 		iq = IQ(self.main.client.xmlstream, "set")
@@ -939,7 +939,7 @@ class derived:
 		d = iq.send()
 		d.addCallback(_subscribe)
 		return d
-		
+
 	def deleteRatingList(self):
 		iq = IQ(self.main.client.xmlstream, "set")
 		pubsub = iq.addElement('pubsub',  'http://jabber.org/protocol/pubsub#owner')
@@ -947,7 +947,7 @@ class derived:
 		delete['node'] = 'http://dev.jabbim.cz/jabbim#favroster'
 		self.disp(iq['id'])
 		d = iq.send()
-	
+
 	def sendUserRating(self,  jid=None):
 		iq = IQ(self.main.client.xmlstream, "set")
 		pubsub = iq.addElement('pubsub',  'http://jabber.org/protocol/pubsub')
@@ -968,7 +968,7 @@ class derived:
 		self.disp(iq['id'])
 		d = iq.send()
 		return d
-		
+
 	def getUserRating(self,  users = None):
 		def _gotRatings(el):
 			log.msg( 'we got it!')
@@ -981,7 +981,7 @@ class derived:
 					lastReward=rating['reward']
 				ratings[rating['jid']] = rating.attributes
 			ratings['lastReward']=lastReward
-			
+
 			return ratings
 		iq = IQ(self.main.client.xmlstream, "get")
 		pubsub = iq.addElement('pubsub',  'http://jabber.org/protocol/pubsub')
@@ -994,6 +994,6 @@ class derived:
 		self.disp(iq['id'])
 		d = iq.send().addCallback(_gotRatings)
 		return d
-	
-	
-		
+
+
+
