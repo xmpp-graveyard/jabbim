@@ -343,6 +343,10 @@ class webkitChatWidget(QtWebKit.QWebView):
 		action=menu.addAction(self.tr("Search"))
 		action.setObjectName("search")
 
+		self.paction=self.pageAction(QtWebKit.QWebPage.InspectElement) 
+		self.paction.setText(self.tr("Web Inspector...")) 
+		menu.addAction(self.paction)
+
 		try:
 			typ=self.chatwidget().typ
 		except:

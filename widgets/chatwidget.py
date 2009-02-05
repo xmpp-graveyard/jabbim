@@ -476,42 +476,46 @@ class chatWidget(abstractChatWidget):
 		self.infoText={}
 		self.infoKeys=[]
 		self.currentInfoIndex=0
-		self.main().reactor.callLater(2,self.infoLabelShowNext)
+		#self.main().reactor.callLater(2,self.infoLabelShowNext)
 
 	def addInfoText(self,key,text,icon=None):
-		self.infoText[key]=[unicode(text),icon]
-		self.infoKeys=list(self.infoText.keys())
-		self.infoKeys.sort()
+		#self.infoText[key]=[unicode(text),icon]
+		#self.infoKeys=list(self.infoText.keys())
+		#self.infoKeys.sort()
+		pass
 
 	def removeInfoText(self,key):
-		del self.infoText[key]
-		self.infoKeys.remove(key)
+		#del self.infodText[key]
+		#self.infoKeys.remove(key)
+		pass
 
 	def infoLabelShowNext(self):
-		if len(self.infoKeys)!=0:
-			if self.currentInfoIndex+1<=len(self.infoKeys)-1:
-				self.currentInfoIndex+=1
-			else:
-				self.currentInfoIndex=0
-			self.setInfoText(self.infoText[self.infoKeys[self.currentInfoIndex]][0],self.infoText[self.infoKeys[self.currentInfoIndex]][1])
-		self.main().reactor.callLater(10,self.infoLabelShowNext)
+		#if len(self.infoKeys)!=0:
+			#if self.currentInfoIndex+1<=len(self.infoKeys)-1:
+				#self.currentInfoIndex+=1
+			#else:
+				#self.currentInfoIndex=0
+			#self.setInfoText(self.infoText[self.infoKeys[self.currentInfoIndex]][0],self.infoText[self.infoKeys[self.currentInfoIndex]][1])
+		#self.main().reactor.callLater(10,self.infoLabelShowNext)
+		pass
 
 	def setInfoText(self,text,icon=None):
 		#if self.faderWidget:
 			#self.faderWidget.close()
-		self.faderWidget=FaderWidget(self.ui.infoWidget)
-		self.faderWidget.text=unicode(text)
-		self.faderWidget.icon=icon
-		QtCore.QObject.connect(self.faderWidget,QtCore.SIGNAL("hidden()"),self.infoTextHidden)
-		self.faderWidget.start()
+		#self.faderWidget=FaderWidget(self.ui.infoWidget)
+		#self.faderWidget.text=unicode(text)
+		#self.faderWidget.icon=icon
+		#QtCore.QObject.connect(self.faderWidget,QtCore.SIGNAL("hidden()"),self.infoTextHidden)
+		#self.faderWidget.start()
+		pass
 
-	def infoTextHidden(self):
-		self.ui.infoLabel.setText(self.faderWidget.text)
-		if self.faderWidget.icon:
-			self.ui.infoPixmap.setPixmap(self.faderWidget.icon)
-		else:
-			self.ui.infoPixmap.setPixmap(QtGui.QPixmap())
-		self.main().reactor.callLater(0,self.faderWidget.start)
+	#def infoTextHidden(self):
+		#self.ui.infoLabel.setText(self.faderWidget.text)
+		#if self.faderWidget.icon:
+			#self.ui.infoPixmap.setPixmap(self.faderWidget.icon)
+		#else:
+			#self.ui.infoPixmap.setPixmap(QtGui.QPixmap())
+		#self.main().reactor.callLater(0,self.faderWidget.start)
 
 	def addCoolWidget(self,widget):
 		self.coolWidgets.append(widget)
@@ -610,7 +614,9 @@ class chatWidget(abstractChatWidget):
 				user=unicode(self.main().ui.roster.getNameByJID(self.jid))
 				message=icon+"&nbsp;"+user+" "+unicode(self.tr("is now"))+" "+ t
 				self.textEditWrite(self.main().webkitThemeFactory.genChatStatus(unicode(message),self.main().now()))
-			self.addInfoText("mood",'%s' % (t),ic)
+			#self.addInfoText("mood",'%s' % (t),ic)
+			self.ui.infoLabel.setText(t)
+			self.ui.infoPixmap.setPixmap(ic)
 		tune = contact.getPEP('http://jabber.org/protocol/tune')
 		if type(tune) == list:
 			for x in tune:
