@@ -989,7 +989,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/mainWindow.py" line="496"/>
         <source> r</source>
-        <translation type="unfinished">r</translation>
+        <translation>r</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="493"/>
@@ -1105,7 +1105,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/mainWindow.py" line="522"/>
         <source>Plugins</source>
-        <translation>Pluginy</translation>
+        <translation>Rozšíření</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="524"/>
@@ -1308,7 +1308,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/mainWindow.py" line="537"/>
         <source>Show offline contacts</source>
-        <translation>Zobrazovat odpojené kontakty</translation>
+        <translation>Odpojení uživatelé</translation>
     </message>
     <message>
         <location filename="widgets/mainWindow.py" line="575"/>
@@ -1413,22 +1413,22 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/mainWindow.py" line="538"/>
         <source>Show transports</source>
-        <translation>Zobrazovat transporty</translation>
+        <translation>Kontakty služeb</translation>
     </message>
     <message>
         <location filename="widgets/paint_ui.py" line="560"/>
         <source>Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Čára</translation>
     </message>
     <message>
         <location filename="widgets/paint_ui.py" line="561"/>
         <source>Fill</source>
-        <translation type="unfinished"></translation>
+        <translation>Vyplnit</translation>
     </message>
     <message>
         <location filename="widgets/paint_ui.py" line="562"/>
         <source>Back</source>
-        <translation type="unfinished">Zpět</translation>
+        <translation>Zpět</translation>
     </message>
 </context>
 <context>
@@ -1921,7 +1921,7 @@ and spousta překladatelů a testerů</translation>
     <message>
         <location filename="widgets/about.py" line="139"/>
         <source>$VERSION</source>
-        <translation type="unfinished"></translation>
+        <translation>$VERSION</translation>
     </message>
 </context>
 <context>
@@ -2539,7 +2539,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/rosterLiveWidget.py" line="167"/>
         <source>Show all my ICQ friends</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukázat moje ICQ přátele</translation>
     </message>
 </context>
 <context>
@@ -2552,7 +2552,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/extra.py" line="44"/>
         <source>Plugins</source>
-        <translation>Doplňky</translation>
+        <translation>Rozšíření</translation>
     </message>
     <message>
         <location filename="widgets/extra.py" line="118"/>
@@ -3432,12 +3432,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="wizards/jabbimservicemanager.py" line="166"/>
         <source>Jabbim News</source>
-        <translation type="unfinished"></translation>
+        <translation>Jabbim Zprávy</translation>
     </message>
     <message>
         <location filename="wizards/jabbimservicemanager.py" line="166"/>
         <source>&lt;b&gt;Jabbim News&lt;/b&gt;&lt;br/&gt;RSS service with custom RSS feeds for Jabbim VIP users</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Jabbim Zprávy&lt;/b&gt;&lt;br/&gt;Služba pro stahování RSS zdrojů pro uživatele Jabbim VIP</translation>
     </message>
 </context>
 <context>
@@ -5037,7 +5037,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="3406"/>
         <source>Change profile photo</source>
-        <translation>Změnit foto profilu</translation>
+        <translation>Změnit můj obrázek</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="3656"/>
@@ -5813,7 +5813,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/preferences_ui.py" line="428"/>
         <source>Plugins</source>
-        <translation>Přídavné moduly</translation>
+        <translation>Rozšíření</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="434"/>
@@ -5894,7 +5894,7 @@ p, li { white-space: pre-wrap; }
         <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;DejaVu Sans&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Sans Serif&apos;;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Přídavné moduly&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Sans Serif&apos;;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Rozšíření&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="475"/>
@@ -6050,8 +6050,8 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/preferences_ui.py" line="474"/>
         <source>Tick plugins you want to use, right click to change settings.</source>
-        <translation>Zaškrtněte pluginy, které chcete použít. Pravým klinknutím&lt;br&gt;
-můžete pluginy nastavit.</translation>
+        <translation>Zaškrtněte rozšíření, která chcete použít. Pravým klinknutím&lt;br&gt;
+můžete rozšíření nastavit.</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="450"/>
@@ -6077,7 +6077,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/preferences_ui.py" line="477"/>
         <source>Plugin configuration</source>
-        <translation>Nastavit modul</translation>
+        <translation>Nastavit rozšíření</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="417"/>
@@ -6174,7 +6174,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/preferences_ui.py" line="476"/>
         <source>Get more plugins</source>
-        <translation>Více doplňků</translation>
+        <translation>Stáhnout více rozšíření</translation>
     </message>
     <message>
         <location filename="widgets/preferences_ui.py" line="426"/>
@@ -6217,7 +6217,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/preferences.py" line="544"/>
         <source>Plugin Configuration</source>
-        <translation>Nastavení zásuvného modulu</translation>
+        <translation>Nastavení rozšíření</translation>
     </message>
     <message>
         <location filename="widgets/preferences.py" line="772"/>
@@ -6599,7 +6599,7 @@ Version: %3</source>
     <message>
         <location filename="widgets/preferences.py" line="177"/>
         <source>You have to be connected to download new plugins.</source>
-        <translation>Budete spojen pro stažení nových pluginů.</translation>
+        <translation>Budete spojen pro stažení nových rozšíření.</translation>
     </message>
     <message>
         <location filename="pref/connection.py" line="15"/>
@@ -7277,7 +7277,7 @@ Version: %3</source>
     <message>
         <location filename="widgets/search.py" line="59"/>
         <source>Search</source>
-        <translation>Hledej</translation>
+        <translation>Hledat</translation>
     </message>
     <message>
         <location filename="widgets/search.py" line="61"/>
@@ -8120,7 +8120,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/webkitchatwidget.py" line="319"/>
         <source>Join room</source>
-        <translation>Vstoup do místnosti</translation>
+        <translation>Vstoupit do místnosti</translation>
     </message>
     <message>
         <location filename="widgets/webkitchatwidget.py" line="336"/>
