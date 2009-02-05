@@ -1074,7 +1074,7 @@ class clientClass(pyxl.client.Client):
 
 		jid,form=data
 
-		tab.chat.dialog=dataforms.dataFormsDialog(self.main,form,jid,"register",tab.chat)
+		tab.chat.dialog=dataforms.dataFormsDialog(self.main,form,jid,"muc",tab.chat)
 		tab.chat.dialog.show()
 
 	def on_presence(self,jid,show,error=None,first=False):
