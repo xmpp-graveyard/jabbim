@@ -1535,7 +1535,7 @@ class clientClass(pyxl.client.Client):
 					if user != frm:
 						message = "%s %s %s" % (user, unicode(mainWindow.tr("has set the subject to:")), message)
 
-					message = self.main.webkitThemeFactory.genChatStatus(message,self.main.now())
+					message = self.main.webkitThemeFactory.genGroupchatStatus(message,self.main.now())
 
 					w.chat.textEditWrite(message)
 					w.chat.lastMessageFrom=""
