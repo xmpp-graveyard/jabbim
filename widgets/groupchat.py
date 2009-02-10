@@ -715,11 +715,8 @@ class groupChatWidget(abstractChatWidget):
 		"""
 		ret=QtGui.QMessageBox.question(self,self.tr("Clear chat?"), self.tr("Do you want to clear this conversation? "),QtGui.QMessageBox.Yes|QtGui.QMessageBox.No, QtGui.QMessageBox.Yes)
 		if ret==QtGui.QMessageBox.Yes:
-			self.ui.textEdit.clear()
-			self.init=""
-			if self.main().skin.has_key("on_init"):
-				self.init=self.main().skin["on_init"]
-			self.ui.textEdit.setHtml("<br/>"+self.init)
+			self.lastMessages = []
+			self.loadWebkit()
 
 	def toggleInfo(self, b):
 		"""
