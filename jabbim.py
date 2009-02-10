@@ -126,7 +126,7 @@ import wizards
 import pyxl
 from pyxl import storage
 import traceback
-from configobj import ConfigObj
+from configobj import ConfigObj, ConfigObjError
 from include import utils, userrating
 from include import rot13
 import urllib, random, xmlrpclib
@@ -4006,7 +4006,12 @@ class mainWindow(QtGui.QMainWindow):
 		Fill login form according to config file and existing profiles
 		"""
 		profiles=utils.getProfiles(self.realHomeDir)
-		avatarDef = ConfigObj(self.realHomeDir+'/avatars/avatars.def',encoding='UTF8')
+		try:
+			avatarDef = ConfigObj(self.realHomeDir+'/avatars/avatars.def',encoding='UTF8')
+		except ConfigObjError, e:
+			avatarDef = e.config
+			avatarDef.write()
+
 		# show profiles only if their count is more than 1
 		if len(profiles)<=1:
 			self.ui.profilesList.hide()
