@@ -848,14 +848,14 @@ class groupChatWidget(abstractChatWidget):
 				self.addRoles()
 				if actor and len(reason)!=0:
 					name=self.getUserName(actor)
-					message=self.main().webkitThemeFactory.genChatStatus(unicode(self.tr("You have been kicked from the room by %s. Reason: %s.")) % (unicode(name),unicode(reason)),self.main().now())
+					message=self.main().webkitThemeFactory.genGroupchatStatus(unicode(self.tr("You have been kicked from the room by %s. Reason: %s.")) % (unicode(name),unicode(reason)),self.main().now())
 				elif actor:
 					name=self.getUserName(actor)
-					message=self.main().webkitThemeFactory.genChatStatus(unicode(self.tr("You have been kicked from the room by %s.")) % unicode(name),self.main().now())
+					message=self.main().webkitThemeFactory.genGroupchatStatus(unicode(self.tr("You have been kicked from the room by %s.")) % unicode(name),self.main().now())
 				elif len(reason)!=0:
-					message=self.main().webkitThemeFactory.genChatStatus(unicode(self.tr("You have been kicked from the room. Reason: %s.")) % unicode(reason),self.main().now())
+					message=self.main().webkitThemeFactory.genGroupchatStatus(unicode(self.tr("You have been kicked from the room. Reason: %s.")) % unicode(reason),self.main().now())
 				else:
-					message=self.main().webkitThemeFactory.genChatStatus(unicode(self.tr("You have been kicked from the room.")),self.main().now())
+					message=self.main().webkitThemeFactory.genGroupchatStatus(unicode(self.tr("You have been kicked from the room.")),self.main().now())
 				self.textEditWrite(message)
 				self.lastMessageFrom=""
 				return
@@ -863,20 +863,20 @@ class groupChatWidget(abstractChatWidget):
 				self.ui.line.setEnabled(False)
 				self.ui.users.clear()
 				self.addRoles()
-				message=self.main().webkitThemeFactory.genChatStatus(unicode(self.tr("You have been banned for the room.")),self.main().now())
+				message=self.main().webkitThemeFactory.genGroupchatStatus(unicode(self.tr("You have been banned for the room.")),self.main().now())
 				self.textEditWrite(message)
 				self.lastMessageFrom=""
 				return
 		if u'307' in codes:
-			message=self.main().webkitThemeFactory.genChatStatus(nick+unicode(self.tr(" has been kicked from this room.")),self.main().now())
+			message=self.main().webkitThemeFactory.genGroupchatStatus(nick+unicode(self.tr(" has been kicked from this room.")),self.main().now())
 			self.textEditWrite(message)
 			self.lastMessageFrom=""
 		elif u'301' in codes:
-			message=self.main().webkitThemeFactory.genChatStatus(nick+unicode(self.tr(" has been banned for this room.")),self.main().now())
+			message=self.main().webkitThemeFactory.genGroupchatStatus(nick+unicode(self.tr(" has been banned for this room.")),self.main().now())
 			self.textEditWrite(message)
 			self.lastMessageFrom=""
 		elif u'303' in codes:
-			message=self.main().webkitThemeFactory.genChatStatus(nick+unicode(self.tr(" has been renamed to "))+unicode(n)+".",self.main().now())
+			message=self.main().webkitThemeFactory.genGroupchatStatus(nick+unicode(self.tr(" has been renamed to "))+unicode(n)+".",self.main().now())
 			self.textEditWrite(message)
 			self.lastMessageFrom=""
 		item=self.getUserItems(nick)[0]
@@ -1050,7 +1050,7 @@ class groupChatWidget(abstractChatWidget):
 			self.main().client.groupchats[self.jid].nick = nick
 			self.nick = nick
 		else:
-			message=self.main().webkitThemeFactory.genChatStatus(unicode(self.tr("Nickname is used by somebody else.")),self.main().now())
+			message=self.main().webkitThemeFactory.genGroupchatStatus(unicode(self.tr("Nickname is used by somebody else.")),self.main().now())
 			self.textEditWrite(message)
 			self.lastMessageFrom=""
 		self.ui.line.clear()
