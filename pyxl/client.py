@@ -356,8 +356,8 @@ class Client(derived):
 
 
 			dl = defer.DeferredList([d, txt], consumeErrors = True)
-			dl.setTimeout(15)
-			dl.addCallback(self._dnsLookup).addErrback(self._dnsLookupErr)
+			#dl.setTimeout(15)
+			dl.addCallback(self._dnsLookup)#.addErrback(self._dnsLookupErr)
 
 
 
