@@ -576,7 +576,7 @@ class chatWidget(abstractChatWidget):
 				if contact.resources.has_key(jid.resource):
 					s = contact.resources[jid.resource].status
 					show = contact.resources[jid.resource].show
-					show = unicode(self.main().status.get(contact.resources[res].show, ''))
+					show = unicode(self.main().status.get(contact.resources[jid.resource].show, ''))
 			else:
 				res=self.main().client.roster['users'][jid.userhost()].getHighestResource()
 				if contact.resources.has_key(res):
