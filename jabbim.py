@@ -44,13 +44,32 @@ for opt, arg in OPTIONS:
 		except:
 			print 'no ports'
 			sys.exit(2)
-		name, args = arg.split(' ',1)
-		print args
+		print arg;
+		try:
+			name, args = arg.split(' ',1)
+		except ValueError:
+			name=arg;
+		args='';
 		server = xmlrpclib.Server('http://localhost:%s/'%porty[0])
-
 		server.runPluginFunc(name, args, porty[1])
 
 		sys.exit()
+"""this function prevents(not 100%) jabbim not to run twice in same profile :-)"""
+def singleRun():
+	try:
+		porty = utils.scanports()
+	except:
+		return False
+	try:
+		server = xmlrpclib.Server('http://localhost:%s/'%porty[0])
+		rv=server.runPluginFunc('showRoster', '', porty[1])
+	except:
+		rv=False;
+	return rv
+if singleRun():
+	"""roster shown, so I can exit now ! """
+	sys.exit(0);
+	
 
 from PyQt4 import QtCore, QtGui, QtWebKit
 
@@ -2141,9 +2160,6 @@ class mainWindow(QtGui.QMainWindow):
 
 		# get homedir
 		self.homeDir=utils.getHomeDir() #: Jabbim home directory + profile directory
-		for x in range(0,len(sys.argv)):
-			if sys.argv[x] == '--home':
-				self.homeDir= sys.argv[x+1]
 		self.realHomeDir=unicode(self.homeDir) #: Jabbim home directory
 
 		# check if there is existing profile

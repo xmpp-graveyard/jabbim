@@ -45,14 +45,14 @@ class Plugin(plugins.PluginBase):
 				except:
 					port += 1
 			
-			pfile = open(self.pfilename, "a")
+			pfile = open(self.pfilename, "w")
 			pfile.write("%s:%s:%s\n" % (time(), port, self.cookie)) # timstamp (float): port (int) : cookie (str)
+			self.registerPluginFunc("showRoster",self.showRoster)
 			pfile.close()
 			set_xmpp_handler()
-
 		else:
 			self.loadConfig(homedir)
-	
+
 	def on_remove(self):
 		#remove factory and listening port here
 
@@ -69,14 +69,24 @@ class Plugin(plugins.PluginBase):
 			pass
 
 	def runPluginFunc(self, name, arg):
-		print 'run it >> ', name
+		print 'XMLRPC RUN: ', name
 		print  arg
 		print self.functions
 		if self.functions.has_key(name):
+			print 'XMLRPC OK: function '+name+' started'
 			self.functions[name](arg)
-	    	return True
+			return True
+		else:
+			print 'XMLRPC ERROR:function not in ',[self.functions];
+		    	return False
 
-			
+	def showRoster(self,arg):
+		self.main.show()
+		self.main.raise_()
+		self.main.activateWindow()
+		self.main.ui.roster.setFocus(QtCore.Qt.MouseFocusReason)
+		return True
+
 def generateCookie():
 	magic = unicode(globals())+unicode(time())
 	return sha1(magic).hexdigest()
@@ -145,7 +155,6 @@ class Remote(xmlrpc.XMLRPC):
 			return True
 		else:
 			return False
-
 
 def set_xmpp_handler():
 	if sys.platform == 'win32' :

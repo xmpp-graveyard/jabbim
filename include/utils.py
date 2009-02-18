@@ -303,6 +303,11 @@ def getDesktopPath(default = './'):
 		return default
 
 def getHomeDir():
+	# return homedir from cmdline if present
+	for x in range(0,len(sys.argv)):
+		if sys.argv[x] == '--home':
+			return(sys.argv[x+1]);
+
 	# gets homedir on win32 or linux
  	if sys.platform != 'win32' :
  		return unicode(os.path.expanduser( '~' )+'/.jabbim')
