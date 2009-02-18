@@ -44,7 +44,9 @@ class Plugin(plugins.PluginBase):
 					break
 				except:
 					port += 1
-			
+					if port>65535:
+						break
+					#not very probably situation ..., but ;)
 			pfile = open(self.pfilename, "w")
 			pfile.write("%s:%s:%s\n" % (time(), port, self.cookie)) # timstamp (float): port (int) : cookie (str)
 			self.registerPluginFunc("showRoster",self.showRoster)
