@@ -54,7 +54,7 @@ for opt, arg in OPTIONS:
 		server.runPluginFunc(name, args, porty[1])
 
 		sys.exit()
-"""this function prevents(not 100%) jabbim not to run twice in same profile :-)"""
+#this function prevents(not 100%) jabbim not to run twice in same profile :-)
 def singleRun():
 	try:
 		porty = utils.scanports()
@@ -67,7 +67,7 @@ def singleRun():
 		rv=False;
 	return rv
 if singleRun():
-	"""roster shown, so I can exit now ! """
+	#roster shown, so I can exit now !
 	sys.exit(0);
 	
 

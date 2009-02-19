@@ -76,18 +76,21 @@ class Plugin(plugins.PluginBase):
 		print self.functions
 		if self.functions.has_key(name):
 			print 'XMLRPC OK: function '+name+' started'
-			self.functions[name](arg)
-			return True
+			return self.functions[name](arg)
 		else:
 			print 'XMLRPC ERROR:function not in ',[self.functions];
 		    	return False
 
 	def showRoster(self,arg):
-		self.main.show()
-		self.main.raise_()
-		self.main.activateWindow()
-		self.main.ui.roster.setFocus(QtCore.Qt.MouseFocusReason)
-		return True
+		print [self.main.config['autoJoin']]
+		if self.main.config['autoJoin']=='True':
+			self.main.show()
+			self.main.raise_()
+			self.main.activateWindow()
+			self.main.ui.roster.setFocus(QtCore.Qt.MouseFocusReason)
+			return True
+		else:
+			return False
 
 def generateCookie():
 	magic = unicode(globals())+unicode(time())
