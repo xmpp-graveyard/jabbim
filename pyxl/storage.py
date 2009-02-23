@@ -40,7 +40,7 @@ class Cache:
 		return self.db.runQuery('select typeof(identity) from caps').addErrback(self.drop_caps)
 
 	def _create_tables(self, res):
-		t1 = self.db.runQuery('create table caps (node text, feature text, identity text);').addCallback(self.table_created, 'caps').addErrback(self.table_present, 'caps')
+		t1 = self.db.runQuery('create table caps2 (node text primary key, feature text, identity text);').addCallback(self.table_created, 'caps').addErrback(self.table_present, 'caps')
 		t2 = self.db.runQuery('create table status (show text, desc text, id integer primary key);').addCallback(self.table_created, 'status').addErrback(self.table_present, 'status')
 		t3 = self.db.runQuery('create table avatars (file text, hash text, jid text);').addCallback(self.table_created, 'avatars').addErrback(self.table_present, 'avatars')
 		return DeferredList([t1,t2,t3], consumeErrors = False)
@@ -76,11 +76,23 @@ class Cache:
 			self.db.runOperation('update avatars set file="%s", hash="%s" where jid="%s"'%(adbapi.safe(avatar[0]), avatar[1], adbapi.safe(jid)))
 	
 	def set_caps(self, node, features, identity):
+		fstr = ''
 		for feature in features:
-			self.db.runOperation('insert into caps (node, feature, identity) values ("%s", "%s", "%s" )'%(node, feature, identity))
+			fstr += feature+'\n'
+		self.db.runOperation('insert into caps2 (node, feature, identity) values ("%s", "%s", "%s" )'%(node, fstr, identity))
 	
 	def get_caps(self):
-		return self.db.runQuery('select * from caps;')
+		return self.db.runQuery('select * from caps2;').addCallback(self._getCaps)
+	
+	def _getCaps(self, result):
+		out = []
+		for radek in result:
+			h = radek[0]
+			i = radek[2]
+			f = radek[1].split()
+			for feature in f:
+				out.append((h,feature, i))
+		return out
 	
 	def get_status(self):
 		return self.db.runQuery('select * from status;')

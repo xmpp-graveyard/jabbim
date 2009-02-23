@@ -1053,6 +1053,7 @@ class Client(derived):
 			if child.name == 'identity':
 				identity = '%s/%s'%(child['category'], child['type'])
 		if ext != None:
+			print 'caching caps!'
 			self.cacheCaps(ext, features, identity)
 		frm = jid.JID(el['from'])
 		resource = frm.resource
