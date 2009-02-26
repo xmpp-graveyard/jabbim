@@ -38,6 +38,7 @@ from os.path import basename
 from pyxl import jid as jidT
 import webkitthemes
 from configlib import *
+import privacy as privacyMod
 
 class message(QtCore.QObject):
 	def __init__(self,message):
@@ -100,6 +101,10 @@ class preferencesWindow(QtGui.QDialog):
 		layout=QtGui.QGridLayout(self.ui.privacyWidget)
 		self.var.append(makePreferences(self.main.config,self.ui.privacyWidget,layout,privacy.preferences(self).config)[0])
 		self.preferencesConfig.append(privacy.preferences(self).config)
+		self.privacyButton=QtGui.QPushButton(self)
+		self.privacyButton.setText(self.tr("Privacy editor"))
+		QtCore.QObject.connect(self.privacyButton,QtCore.SIGNAL("clicked()"),self.showPrivacyEditor)
+		layout.addWidget(self.privacyButton,  0, 0)
 
 		for cfg in self.var:
 			for key,value in getVarData(cfg).iteritems():
@@ -154,6 +159,14 @@ class preferencesWindow(QtGui.QDialog):
 		size=self.main.preferencesWindow.geometry()
 		QtGui.QDialog.show(self)
 		self.move((screen.width()-size.width())/2,(screen.height()-size.height())/2)
+		if self.main.client:
+			self.privacyButton.setEnabled(True)
+		else:
+			self.privacyButton.setEnabled(False)
+	
+	def showPrivacyEditor(self):
+		self.ple=privacyMod.PrivacyListEditorDialog(self,self) 
+		self.ple.show()
 	
 	def getMoreChatskins(self):
 		if self.main.client:

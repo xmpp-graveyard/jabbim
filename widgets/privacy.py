@@ -27,7 +27,7 @@ class PrivacyListEditorDialog(QtGui.QDialog):
 		self.setModal(True)
 		self.ui=Ui_PrivacyListEditor()
 		self.ui.setupUi(self)
-		self.main=main
+		self.main=main.main
 		self.changes={}
 
 		for useritem in self.main.ui.roster.users:
