@@ -225,10 +225,10 @@ class events:
 	def timeout(self):
 		if self.jabbimIcon:
 			self.main.tray.setIcon(self.trayIcon)
-			self.main.ui.mainTabWidget.setTabIcon(4,self.trayIcon)
+			self.main.ui.mainTabWidget.setTabIcon(self.main.ui.mainTabWidget.indexOf(self.main.ui.eventsTab),self.trayIcon)
 		else:
 			self.main.tray.setIcon(self.main.getCurrentTrayIcon())
-			self.main.ui.mainTabWidget.setTabIcon(4,QtGui.QIcon(self.blankIcon))
+			self.main.ui.mainTabWidget.setTabIcon(self.main.ui.mainTabWidget.indexOf(self.main.ui.eventsTab),QtGui.QIcon(self.blankIcon))
 		self.jabbimIcon=not self.jabbimIcon
 
 	def trayClicked(self):
@@ -259,8 +259,8 @@ class events:
 			self.timer.stop()
 			if self.jabbimIcon!=None:
 				mainWindow.tray.setIcon(self.main.getCurrentTrayIcon())
-				self.main.ui.mainTabWidget.setTabIcon(4,QtGui.QIcon("images/16x16/categories/event.png"))
-				if self.main.ui.mainTabWidget.currentIndex()==4:
+				self.main.ui.mainTabWidget.setTabIcon(self.main.ui.mainTabWidget.indexOf(self.main.ui.eventsTab),QtGui.QIcon("images/16x16/categories/event.png"))
+				if self.main.ui.mainTabWidget.currentIndex()==self.main.ui.mainTabWidget.indexOf(self.main.ui.eventsTab):
 					self.main.ui.mainTabWidget.setCurrentIndex(0)
 				self.jabbimIcon=None
 		elif categories==["messages"]:
