@@ -1,8 +1,8 @@
 #-*-coding:UTF-8-*-
-
-from twisted.words.protocols.jabber.xmlstream import IQ
-from twisted.words.xish.domish import Element
 from twisted.python import log
+from twisted.words.protocols.jabber.xmlstream import IQ
+
+
 #from xdata import *
 #test
 

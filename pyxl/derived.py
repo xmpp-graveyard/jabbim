@@ -16,22 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
-
-from twisted.python import log
-from twisted.words.protocols import jabber
-from twisted.words.protocols.jabber import client
-import jid
-from twisted.words.xish import domish
-from twisted.words.xish.domish import Element
-from twisted.words.protocols.jabber.xmlstream import IQ
-from twisted.internet.protocol import Protocol, ClientFactory
-from twisted.internet import defer
-from contact import *
-from groupchat import  *
-from xmlrpclib import loads, dumps
-from twisted.internet import  threads
 import socket
-from xdata import *
+from xmlrpclib import loads, dumps
+
+from twisted.internet import defer, threads
+from twisted.python import log
+from twisted.words.protocols.jabber.xmlstream import IQ
+from twisted.words.xish.domish import Element
+
+import jid
+from groupchat import Groupchat
+from xdata import Field, Xform
 
 
 MUCLISTTYPES = {

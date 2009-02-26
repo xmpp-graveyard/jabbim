@@ -17,46 +17,40 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
-import sys, time, random, os, re
-import socks5, events, base64
-from twisted import names
+import locale
+import sys, time
+import traceback
+from base64 import b64encode, b64decode
+
+from configobj import ConfigObj
+from twisted.internet import protocol, threads, defer, reactor
+from twisted.internet.task import LoopingCall
+from twisted.names import client as dns
 from twisted.names.dns import Record_TXT
 from twisted.python import log
-from twisted.internet import protocol, error
-from twisted.names import client as dns
-from socket import getaddrinfo
-import socket
-from twisted.internet import threads, defer, reactor
-from twisted.words.protocols import jabber
 from twisted.words.protocols.jabber import client
-import jid
-from twisted.words.xish import domish
-from twisted.words.xish.domish import Element
-##from twisted.internet import reactor, address
 from twisted.words.protocols.jabber.xmlstream import IQ, TimeoutError
-from twisted.internet.protocol import Protocol, ClientFactory, Factory
+from twisted.words.xish.domish import Element
 
-from twisted.internet.task import LoopingCall
-from calendar import timegm
-from derived import derived
-from contact import *
-from groupchat import  *
-from base64 import b64encode, b64decode
-from privacy import *
-from adhoc import *
-import rc
-import traceback
-from configobj import ConfigObj
-import locale
-import rpc
+import events, base64
+import jid
 import presence,  message,  ft,  jingle
+import rc
+import rpc
+from adhoc import x2dict, Commands
+from contact import Contact
+from derived import derived
+from privacy import PrivacyListItem, PrivacyList, Privacy
+
+
+##from twisted.internet import reactor, address
+
 #import bosh_wokkel
 try:
 	from hashlib import sha1
 except:
 	log.msg('Please upgrade to python2.5')
 	from sha import new as sha1
-from PyQt4 import QtGui,QtCore
 
 class Bookmark:
 	def __init__(self, name, typ, JID = None, autojoin = False, nick = None, password = None, url = None):

@@ -869,11 +869,13 @@ class clientClass(pyxl.client.Client):
 		#self.main.ui.statusButton.setText(unicode(""))
 		#self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
 		self.main.ui.login_cancel.hide()
-		log.msg( "loading users for userRating")
-		for jid,user in self.roster['users'].iteritems():
-			self.main.userRating.users[jid]=userrating.User(jid)
-		log.msg("users for userRating loaded: "+ unicode(self.main.userRating.users))
-		self.main.loadUserRating()
+		
+#		#userRating - disabled
+#		log.msg( "loading users for userRating")
+#		for jid,user in self.roster['users'].iteritems():
+#			self.main.userRating.users[jid]=userrating.User(jid)
+#		log.msg("users for userRating loaded: "+ unicode(self.main.userRating.users))
+#		self.main.loadUserRating()
 
 	def on_rosterx(self, frm, items, id, typ):
 		mainWindow = self.main
@@ -993,7 +995,8 @@ class clientClass(pyxl.client.Client):
 			self.messageReceipts = {}
 		lang=unicode(QtCore.QLocale.system().name())[:2]
 		jid=self.jid.userhost()
-		self.main.ui.contentView.load(QtCore.QUrl("http://content.jabbim.com/?jid=%s&lang=%s"%(jid,lang)))
+#		#jabbim content -- disabled`
+#		self.main.ui.contentView.load(QtCore.QUrl("http://content.jabbim.com/?jid=%s&lang=%s"%(jid,lang)))
 
 	def on_invite(self,jid, room, reason, cont = False):
 		log.msg("invite" + unicode(cont))
@@ -2567,16 +2570,19 @@ class mainWindow(QtGui.QMainWindow):
 
 		#self.loadRosterStyle() # load roster style
 		self.userRating=userrating.RatingAssigner(self)
+		#disabling fav and content tabs
+		self.ui.mainTabWidget.removeTab(self.ui.mainTabWidget.indexOf(self.ui.favTab))
+		self.ui.mainTabWidget.removeTab(self.ui.mainTabWidget.indexOf(self.ui.contentTab))
 
 		# Jabbim Content
-		self.ui.contentView=QtWebKit.QWebView(self.ui.contentTab)
-		self.ui.contentView.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
-		QtCore.QObject.connect(self.ui.contentView,QtCore.SIGNAL("linkClicked ( const QUrl &)"),QtGui.QDesktopServices.openUrl)
-		l=QtGui.QVBoxLayout(self.ui.contentTab)
-		l.addWidget(self.ui.contentView)
-		l.setMargin(0)
-		l.setSpacing(0)
-		self.ui.contentView.show()
+#		self.ui.contentView=QtWebKit.QWebView(self.ui.contentTab)
+#		self.ui.contentView.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
+#		QtCore.QObject.connect(self.ui.contentView,QtCore.SIGNAL("linkClicked ( const QUrl &)"),QtGui.QDesktopServices.openUrl)
+#		l=QtGui.QVBoxLayout(self.ui.contentTab)
+#		l.addWidget(self.ui.contentView)
+#		l.setMargin(0)
+#		l.setSpacing(0)
+#		self.ui.contentView.show()
 		# Connect to session dbus if possible.
 		# Code must not assume DBus is available and must limit
 		# functionality gracefully if session_dbus==None.
