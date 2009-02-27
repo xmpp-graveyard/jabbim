@@ -407,7 +407,7 @@ class FTInit:
 	def ibbSend(self, sid):
 		iq = IQ(self.client.xmlstream, 'set')
 		iq['to'] = self.ft[sid].tojid.full()
-		iq['from'] = self.ft[sid].fromjid.full()
+		#iq['from'] = self.ft[sid].fromjid.full()
 		opn = iq.addElement('open', 'http://jabber.org/protocol/ibb')
 		opn['sid'] = sid
 		opn['block-size'] = '4096'
@@ -432,7 +432,7 @@ class FTInit:
 			
 			iq = IQ(self.client.xmlstream, 'set')
 			iq['to'] = self.ft[sid].tojid.full()
-			iq['from'] = self.ft[sid].fromjid.full()
+#			iq['from'] = self.ft[sid].fromjid.full()
 			data = iq.addElement('data', 'http://jabber.org/protocol/ibb')
 			data['sid'] = sid
 			data['seq'] = unicode(self.ft[sid].ibbSeq)
@@ -457,7 +457,7 @@ class FTInit:
 	def _ftIBBContinue(self,el, sid):
 		iq = IQ(self.client.xmlstream, 'set')
 		iq['to'] = self.ft[sid].tojid.full()
-		iq['from'] = self.ft[sid].fromjid.full()
+#		iq['from'] = self.ft[sid].fromjid.full()
 		data = iq.addElement('data', 'http://jabber.org/protocol/ibb')
 		data['sid'] = sid
 		data['seq'] = unicode(self.ft[sid].ibbSeq)
@@ -467,7 +467,7 @@ class FTInit:
 			
 			iq = IQ(self.client.xmlstream, 'set')
 			iq['to'] = self.ft[sid].tojid.full()
-			iq['from'] = self.ft[sid].fromjid.full()
+#			iq['from'] = self.ft[sid].fromjid.full()
 			opn = iq.addElement('close', 'http://jabber.org/protocol/ibb')
 			opn['sid'] = sid
 #			self.on_xml(iq.toXml())
@@ -494,7 +494,7 @@ class FTInit:
 		sid = opn['sid']
 		iq = Element((None,'iq'))
 		iq['to'] = self.ft[sid].fromjid.full()
-		iq['from'] = self.ft[sid].tojid.full()
+#		iq['from'] = self.ft[sid].tojid.full()
 		iq['id'] = el['id']
 		iq['type'] = 'result'
 		self.send(iq)
@@ -511,7 +511,7 @@ class FTInit:
 			self.disp(el['id'])
 			iq = Element((None,'iq'))
 			iq['to'] = self.ft[sid].fromjid.full()
-			iq['from'] = self.ft[sid].tojid.full()
+#			iq['from'] = self.ft[sid].tojid.full()
 			iq['id'] = el['id']
 			iq['type'] = 'result'
 			self.send(iq)
@@ -527,7 +527,7 @@ class FTInit:
 		
 		iq = Element((None,'iq'))
 		iq['to'] = self.ft[sid].fromjid.full()
-		iq['from'] = self.ft[sid].tojid.full()
+#		iq['from'] = self.ft[sid].tojid.full()
 		iq['id'] = id
 		iq['type'] = 'result'
 		self.send(iq)
@@ -556,7 +556,7 @@ class SI:
 		if self.ft.init.groupchats.has_key(outjd.userhost()):
 			if self.ft.init.groupchats[outjd.userhost()].users[outjd.resource].truejid == None:
 				frmjid = outjd.userhost() + '/' + self.ft.init.groupchats[outjd.userhost()].nick
-				iq['from'] = self.fromjid.full()
+#				iq['from'] = self.fromjid.full()
 				typ = 'ibb'
 			else:
 				outjd = self.ft.init.groupchats[outjd.userhost()].users[outjd.resource].truejid
@@ -634,7 +634,7 @@ class SI:
 
 		iq = Element((None,'iq'))
 		iq['to'] = self.fromjid.full()
-		iq['from'] = self.tojid.full()
+#		iq['from'] = self.tojid.full()
 		iq['id'] = id
 		iq['type'] = 'result'
 		si = iq.addElement('si', 'http://jabber.org/protocol/si')
@@ -929,7 +929,7 @@ class FT:
 		
 		iq = Element((None,'iq'))
 		iq['to'] = self.fromjid.full()
-		iq['from'] = self.tojid.full()
+#		iq['from'] = self.tojid.full()
 		iq['id'] = self.streamhostsID
 		iq['type'] = 'result'
 		query = iq.addElement('query', 'http://jabber.org/protocol/bytestreams')

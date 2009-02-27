@@ -213,7 +213,7 @@ class JingleSession:
 			self.role = 'initiator'
 			iq = IQ(self.init.client.xmlstream, 'set')
 			iq['to'] = self.tojid.full()
-			iq['from'] = self.fromjid.full()
+			#iq['from'] = self.fromjid.full()
 			jingle = iq.addElement('jingle', 'urn:xmpp:tmp:jingle' )
 			jingle['action'] = 'session-initiate'
 			jingle['initiator'] = self.fromjid.full()
@@ -235,7 +235,7 @@ class JingleSession:
 		def acceptSession(self):
 			iq = IQ(self.init.client.xmlstream, 'set')
 			iq['to'] = self.fromjid.full()
-			iq['from'] = self.tojid.full()
+			#iq['from'] = self.tojid.full()
 			jingle = iq.addElement('jingle', 'urn:xmpp:tmp:jingle' )
 			jingle['action'] = 'session-accept'
 			jingle['initiator'] = self.fromjid.full()
@@ -251,9 +251,9 @@ class JingleSession:
 			iq = IQ(self.init.client.xmlstream, 'set')
 			if self.fromjid != self.init.client.jid:
 				iq['to'] = self.fromjid.full()
-				iq['from'] = self.tojid.full()
+				#iq['from'] = self.tojid.full()
 			else:
-				iq['from'] = self.fromjid.full()
+				#iq['from'] = self.fromjid.full()
 				iq['to'] = self.tojid.full()
 			jingle = iq.addElement('jingle', 'urn:xmpp:tmp:jingle' )
 			jingle['action'] = 'session-terminate'
@@ -285,9 +285,9 @@ class JingleSession:
 			iq = IQ(self.init.client.xmlstream, 'set')
 			if self.fromjid != self.init.client.jid:
 				iq['to'] = self.fromjid.full()
-				iq['from'] = self.tojid.full()
+				#iq['from'] = self.tojid.full()
 			else:
-				iq['from'] = self.fromjid.full()
+				#iq['from'] = self.fromjid.full()
 				iq['to'] = self.tojid.full()
 			jingle = iq.addElement('jingle', 'urn:xmpp:tmp:jingle' )
 			jingle['action'] = 'content-replace'
@@ -307,7 +307,7 @@ class JingleSession:
 			print 'ack'
 			iq = Element((None,'iq'))
 			iq['to'] = to
-			iq['from'] = frm
+			#iq['from'] = frm
 			iq['id'] = id
 			iq['type'] = 'result'
 			self.init.send(iq)
