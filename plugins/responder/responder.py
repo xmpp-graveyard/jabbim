@@ -43,7 +43,7 @@ class Plugin(plugins.PluginBase):
 	def on_message(self,msg):
 		frm, typ, body, subject, xhtml, chatstate, delay, error = msg.legacyUnpack()
 		jid = self.main.getJid(frm)
-		if jid.host.startswith('icq') and not jid.userhost() in self.config['exclude']:
+		if jid.host.startswith('icq') and not jid.userhost() in self.config['exclude'] and chatstate == None:
 			# XXX Debug what sometimes makes us send spurious messages:
 			print "responder on_message going to reply to: frm=%s type=%s. toXml is:" % (frm, typ)
 			print "%s" % msg.toXml()
