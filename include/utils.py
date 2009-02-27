@@ -27,6 +27,7 @@ import os,sys, re,platform,time
 from configobj import ConfigObj, ConfigObjError
 import zipfile, socket
 from cStringIO import StringIO
+from urllib import urlopen
 
 from PyQt4 import QtCore, QtGui
 	
@@ -592,6 +593,14 @@ def replace_url(text,mainWindow,widget=None):
 					print link
 				text+='<div id="image%s"><a href="%s" title="%s">%s</a>'%(str(widget.imageId),word,word, word)+" "
 				text+='<a href="javascript:;" title="%s" onclick="showImage(\'image%s\',\'%s\',\'%s\');")>['%(word,str(widget.imageId),link,word)+unicode(mainWindow.tr("Show Image"))+']</a></div>'+" "
+			elif word.find("youtube.com/watch?")!=-1: #nahradi adresu z youtube za nazev videa
+				url=word
+				stranka=urlopen(url).read(350)
+				title=re.findall('<title>(.*)</title>',stranka)
+				if title==[]:
+					text+='<a href="'+url+'">'+url+'</a>'
+				else:
+					text+='<a href="'+url+'">'+title[0].decode('utf-8')+'</a>'				
 			else:
 				text+='<a href="%s" title="%s">%s</a>'%(word, word, word)+" "
 		elif word.startswith("www."):
