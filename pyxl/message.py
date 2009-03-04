@@ -117,9 +117,9 @@ class MessageInit:
 
 		self.dispatcher.registerHandler('on_message_send', self._sendMessage, 'on_message_send')
 	def _sendMessage(self, msg):
-		if not (self.client.hasFeature(msg.to.full(), 'http://jabber.org/protocol/xhtml-im')) or msg.typ == 'groupchat':
+		if not (self.client.hasFeature(msg.to.full(), 'http://jabber.org/protocol/xhtml-im') or msg.typ == 'groupchat'):
 			msg.setXHTML(None)
-			log.err('XHTML-IM filtered while sending message to: '+ msg.to)
+			log.err('XHTML-IM filtered while sending message to: '+ msg.to.full())
 
  		if msg.composing != None:
 			try:
@@ -129,7 +129,7 @@ class MessageInit:
 			feature = self.client.hasFeature(msg.to.full(), 'http://jabber.org/protocol/chatstates')
 			if not (feature and allowComposing == 'True') or msg.typ == 'groupchat':
 				msg.setComposing(None)
-				log.err('Composing event filtered while sending message to: '+ msg.to)
+				log.err('Composing event filtered while sending message to: '+ msg.to.full())
 
 		xml = msg.toXml()
 		if xml != None:
