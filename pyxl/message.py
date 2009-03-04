@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*- 
+﻿# -*- coding: utf-8 -*-
 import sys,  re
 from calendar import timegm
 from twisted.python import log
@@ -25,9 +25,9 @@ class Message:
 		self.pep = {}
 		self.delay = None
 		self.error = None
-		
-	
-	def toXml(self): 
+
+
+	def toXml(self):
 		message = Element((None,'message'))
 		message['xml:lang'] = self.lang
 		message['to'] = self.to.full()
@@ -57,56 +57,56 @@ class Message:
 #		self.on_xml(message.toXml())
 		if self.evil and self.body != None and self.body.strip() != '' :
 			message.addElement('evil', 'http://jabber.org/protocol/evil')
-		
+
 		if self.receiptId and self.body != None  and self.body != '' and self.typ!='groupchat':
 			message['id'] = self.receiptId
 			message.addElement('request', 'urn:xmpp:receipts')
 
 		print message.toXml()
 		return message
-	
+
 	def setBody(self,  body):
 		self.body = body
-	
+
 	def getBody(self):
 		return self.body
-		
+
 	def setError(self,  error):
 		self.error = error
-	
+
 	def setSubject(self,  subject):
 		self.subject = subject
-	
+
 	def setXHTML(self,  xhtml):
 		self.xhtml = xhtml
-	
+
 	def setComposing(self,  composing):
 		self.composing = composing
-	
+
 	def setDelay(self,  delay):
 		self.delay = delay
-	
+
 	def setAttention(self,  attention):
 		self.attention = attention
-	
+
 	def setPEP(self, typ, payload):
 		self.pep[typ] = payload
-	
+
 	def setFrom(self,  frm):
 		self.frm = jid.JID(frm)
-	
 
-	
-	
+
+
+
 	def setReceiptId(self,  id):
 		self.receiptId = id
-	
+
 	def legacyUnpack(self):
 		return (self.frm.full(), self.typ, self.body, self.subject ,  self.xhtml, self.composing ,  self.delay, self.error)
-	
+
 	def legacyUnpackSend(self):
 		return (self.to.full(), self.body, self.typ, self.subject,self.composing, self.xhtml,  False)
-		
+
 
 
 class MessageInit:
@@ -117,44 +117,45 @@ class MessageInit:
 
 		self.dispatcher.registerHandler('on_message_send', self._sendMessage, 'on_message_send')
 	def _sendMessage(self, msg):
-		
-		if not (self.client.hasFeature(msg.to.full(), 'http://jabber.org/protocol/xhtml-im') or msg.typ == 'groupchat'):
+		if not (self.client.hasFeature(msg.to.full(), 'http://jabber.org/protocol/xhtml-im')) or msg.typ == 'groupchat':
 			msg.setXHTML(None)
+			log.err('XHTML-IM filtered while sending message to: '+ msg.to)
 
-		if msg.composing != None:
+ 		if msg.composing != None:
 			try:
 				allowComposing = self.main.config['allowChatstate']
 			except:
 				allowComposing = 'True'
 			feature = self.client.hasFeature(msg.to.full(), 'http://jabber.org/protocol/chatstates')
-			if not (feature and allowComposing) or msg.typ == 'groupchat':
+			if not (feature and allowComposing == 'True') or msg.typ == 'groupchat':
 				msg.setComposing(None)
+				log.err('Composing event filtered while sending message to: '+ msg.to)
 
-#		self.on_xml(message.toXml())
-		if self.client.evil :
-			msg.evil = True
-		
-		if self.client.hasFeature(msg.to.full(), 'urn:xmpp:receipts') and msg.body != None  and msg.body != '' and msg.typ!='groupchat':
-			id = "H_%d" % Element._idCounter
-			Element._idCounter = Element._idCounter + 1
-			msg.setReceiptId(id)
-			self.client.messageReceipts[id] = msg
 		xml = msg.toXml()
 		if xml != None:
 			self.client.xmlstream.send(xml)
-	
+
 	def sendMessage(self, to=None, body=None, typ='chat', subject = None, composing = None, xhtml = None,  muc = False,  msg = None):
 		# Posle zpravu na jid
 		if msg == None:
 			msg = Message(to,  body = body,  typ = typ,  subject = subject,  lang = self.client.xmlLang)
 			msg.setComposing(composing)
 			msg.setXHTML(xhtml)
-			
+
+#		self.on_xml(message.toXml())
+		if self.client.evil :
+			msg.evil = True
+
+		if self.client.hasFeature(msg.to.full(), 'urn:xmpp:receipts') and msg.body != None  and msg.body != '' and msg.typ!='groupchat':
+			id = "H_%d" % Element._idCounter
+			Element._idCounter = Element._idCounter + 1
+			msg.setReceiptId(id)
+			self.client.messageReceipts[id] = msg
 		self.dispatcher.publishEvent('on_message_send', msg)
 
 	def send(self,  xml):
 		self.client.xmlstream.send(xml)
-	
+
 	def onMessage(self, el):
 		try:
 			typ = el['type']
@@ -166,9 +167,9 @@ class MessageInit:
 			frm=unicode(frmjid.userhost()).lower()+"/"+frmjid.resource
 		else:
 			frm=unicode(frm).lower()
-		
+
 		msg = Message(self.client.jid.full(), el['from'],  typ = typ)
-		
+
 		body = subject =xhtml = chatstate = delay = error = attention = receipts = pep = event = None
 		for child in el.elements():
 			if child.name == "request":
@@ -208,7 +209,7 @@ class MessageInit:
 						self.client.roster['users'][frmjid.userhost()].resources[frmjid.resource].features.append('http://jabber.org/protocol/chatstates')
 				except:
 					pass #proste user neni v rosteru, nebo je to muc, nebo cojavim ;)
-				
+
 				msg.setComposing(chatstate)
 			if child.name == 'delay':
 				# xep-0203:
@@ -242,7 +243,7 @@ class MessageInit:
 
 			if child.name == 'confirm': # xep0070 - processed elsewhere
 				return
-			
+
 			if child.name == 'attention':
 				attention = True
 			if child.name == 'received':
@@ -254,14 +255,14 @@ class MessageInit:
 				print self.client.messageReceipts
 				self.client.on_receipt(frmjid, el['id'])
 				return
-			
+
 			if child.name == 'event' and child.defaultUri == 'http://jabber.org/protocol/pubsub#event' and typ != 'error':
 				log.msg('RAW PUBSUB EVENT')
 				log.msg(unicode(el.toXml()).encode('utf8'))
 				items = child.firstChildElement()
 				itm = items.firstChildElement()
 				pep = items.getAttribute('node')
-				
+
 				if itm != None:
 					children = []
 					for elm in itm.elements():
@@ -270,7 +271,7 @@ class MessageInit:
 						payload = children[0]
 					else:
 						payload = children
-					
+
 					event = {}
 #					for at in payload.elements():
 #						event[at.name] = unicode(at)
@@ -281,24 +282,24 @@ class MessageInit:
 				if c != None:
 					c.setPEP(pep, payload) #zapisem si to do kontaktu
 				self.dispatcher.publishEvent('on_pep', frm, pep, payload)
-				
+
 			if child.name == 'addresses' and error==None: #xep-0033 - only for remote control (xep-0146) 'ofrom'
 				for ads in child.elements():
 					if ads.hasAttribute('type') and ads.hasAttribute('jid'):
 						if ads.getAttribute('type') == 'ofrom':
 							ofrom=ads.getAttribute('jid')
 							if frmjid.userhost()==self.client.jid.userhost():#from own jid
-								body=u"→→→ %s" % body 
+								body=u"→→→ %s" % body
 							else:
 								body=u"→ %s → %s" % (frmjid.full(),body)
 							msg.setFrom(ofrom)
 							msg.setBody(body)
 							self.dispatcher.publishEvent('on_message', msg)
 							return
-		
+
 		if error == None and el.getAttribute('type') == 'error':
 			error = 'Unknown Error'
-		
+
 		if attention == True and delay == None and typ == 'headline':
 			self.dispatcher.publishEvent('on_attention', frm, body, subject, xhtml, error)
 			return
@@ -319,7 +320,7 @@ class MessageInit:
 					if x.name != 'text':
 						error = x.name
 			self.dispatcher.publishEvent('on_GCmessage', el['from'],'error','',None, None,  None, None, error)
-			return 
+			return
 		room = el["from"]
 		for child in el.children:
 			if child.name == "x":
