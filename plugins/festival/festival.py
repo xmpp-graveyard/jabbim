@@ -116,9 +116,9 @@ class Plugin(plugins.PluginBase):
 				msg.body == None):
 			return
 		jid = msg.frm
-		message = msg.body
-		user = msg.user
-		self.say(self.tr("%s writes: %s") % (user, message))
+		message = unicode(msg.body)
+		user = unicode(msg.user)
+		self.say(unicode(self.tr("%s writes: %s")) % (user, message))
 
 	def on_groupchatMessageEvent(self, jid, user, oldbody, subject, xhtml):
 		if (self.config['state'] != 'True' or
