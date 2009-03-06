@@ -25,8 +25,9 @@ class Message:
 		self.pep = {}
 		self.delay = None
 		self.error = None
-
-
+		self.gpg_encrypted_body = None
+		
+	
 	def toXml(self):
 		message = Element((None,'message'))
 		message['xml:lang'] = self.lang
@@ -34,7 +35,13 @@ class Message:
 		if self.frm != None:
 			message['from'] = self.frm.full()
 		if self.body != None and self.body.strip() != '':
-			message.addElement('body', content = self.body)
+			if self.gpg_encrypted_body != None:
+				message.addElement('body', content = 'This message is encrypted.')
+				encrypted_message = Element(('jabber:x:encrypted','x'))
+				encrypted_message.addContent(self.gpg_encrypted_body)
+				message.addChild(encrypted_message)
+			else:
+				message.addElement('body', content = self.body)
 		message['type'] = self.typ
 
 #		if self.groupchats.has_key(JID.userhost()):
@@ -95,7 +102,11 @@ class Message:
 	def setFrom(self,  frm):
 		self.frm = jid.JID(frm)
 
+	def setGpgEncryptedBody(self,  body):
+		self.gpg_encrypted_body = body
 
+	def getGpgEncryptedBody(self):
+		return self.gpg_encrypted_body
 
 
 	def setReceiptId(self,  id):
@@ -240,6 +251,9 @@ class MessageInit:
 					return
 				if child.defaultUri == 'http://jabber.org/protocol/rosterx':
 					self.client._processRosterX(frm, child)
+				if child.defaultUri == 'jabber:x:encrypted':
+					gpg_encrypted_body = unicode(child)
+					msg.setGpgEncryptedBody(gpg_encrypted_body)
 
 			if child.name == 'confirm': # xep0070 - processed elsewhere
 				return
