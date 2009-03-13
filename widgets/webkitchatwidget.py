@@ -671,7 +671,7 @@ shouldScroll = nearBottom();
                         //make new node
                         range = document.createRange();
                         range.selectNode(insert.parentNode);
-                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+imgUrl+'\\',\\''+link+'\\');")>[Hide Image]</a></div><div id="loaded'+imageId+'"><a href="'+link+'"><img src="'+imgUrl+'" /></a></div>');
+                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+imgUrl+'\\',\\''+link+'\\');")>[%s]</a></div><div id="loaded'+imageId+'"><a href="'+link+'"><img src="'+imgUrl+'" /></a></div>');
 
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);
@@ -687,7 +687,7 @@ document.getElementById('loaded'+imageId).style.display = 'inline';
                         //make new node
                         range = document.createRange();
                         range.selectNode(insert.parentNode);
-                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+imgUrl+'\\',\\''+link+'\\');")>[Hide Image]</a></div>');
+                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="hideImage(\\''+imageId+'\\',\\''+imgUrl+'\\',\\''+link+'\\');")>[%s]</a></div>');
 
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);
@@ -703,7 +703,7 @@ function hideImage(imageId,imgUrl,link){
                         //make new node
                         range = document.createRange();
                         range.selectNode(insert.parentNode);
-                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="reshowImage(\\''+imageId+'\\',\\''+imgUrl+'\\',\\''+link+'\\');")>[Show Image]</a></div>');
+                        newNode = range.createContextualFragment('<div id="'+imageId+'"><a href="'+link+'" title="'+link+'">'+link+'</a> <a href="javascript:;" onclick="reshowImage(\\''+imageId+'\\',\\''+imgUrl+'\\',\\''+link+'\\');")>[%s]</a></div>');
 
                         //swap
                         insert.parentNode.replaceChild(newNode,insert);
@@ -734,7 +734,7 @@ function showLastMessages(){
 <a name='bottom'></a>
 </body>
 </html>
-		""" % (stylesheet,style,code,header,footer)
+		""" % (stylesheet,style,self.tr('Hide image'),self.tr('Hide image'),self.tr('Show image'),code,header,footer)
 
 		self.chatwidget().imageId=0
 
