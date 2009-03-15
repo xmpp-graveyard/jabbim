@@ -2543,6 +2543,22 @@ class mainWindow(QtGui.QMainWindow):
 		#self.setGeometry(rect.width()-250,rect.y(),250,rect.y()+rect.height())
 #		self.setWindowOpacity(0.5)
 
+		# Connect to session dbus if possible.
+		# Code must not assume DBus is available and must limit
+		# functionality gracefully if session_dbus==None.
+		try:
+			import dbus
+			from dbus.mainloop.qt import DBusQtMainLoop
+			DBusQtMainLoop(set_as_default=True)
+			self.session_dbus = dbus.SessionBus()
+			log.msg("Connected to session DBus")
+		except ImportError:
+			log.err("This PyQt4 does not support DBus. Perhaps install python-qt4-dbus.")
+			self.session_dbus = None
+		except:
+			log.err("Could not connect to session DBus")
+			self.session_dbus = None
+
 		self.reconnect = True # :# True = Jabbim will reconnect after disconnect
 		self.active=True
 		# fill login form
@@ -2583,21 +2599,6 @@ class mainWindow(QtGui.QMainWindow):
 #		l.setMargin(0)
 #		l.setSpacing(0)
 #		self.ui.contentView.show()
-		# Connect to session dbus if possible.
-		# Code must not assume DBus is available and must limit
-		# functionality gracefully if session_dbus==None.
-		try:
-			import dbus
-			from dbus.mainloop.qt import DBusQtMainLoop
-			DBusQtMainLoop(set_as_default=True)
-			self.session_dbus = dbus.SessionBus()
-			log.msg("Connected to session DBus")
-		except ImportError:
-			log.err("This PyQt4 does not support DBus. Perhaps install python-qt4-dbus.")
-			self.session_dbus = None
-		except:
-			log.err("Could not connect to session DBus")
-			self.session_dbus = None
 		# join if we can :)
 		if self.config['autoJoin']=='True':
 			self.connect()
