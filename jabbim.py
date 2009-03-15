@@ -5396,6 +5396,13 @@ class mainWindow(QtGui.QMainWindow):
 			self._reloadPlugins()
 		self.buildTrayMenu()
 
+	def on_network_state_up(self):
+		# XXX
+		log.msg("on_network_state_up")
+	def on_network_state_down(self):
+		# XXX
+		log.msg("on_network_state_down")
+
 class customStatusWindow(QtGui.QDialog):
 	def __init__(self,jid,show=None,parent=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
