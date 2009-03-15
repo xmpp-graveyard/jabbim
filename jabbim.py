@@ -2543,21 +2543,23 @@ class mainWindow(QtGui.QMainWindow):
 		#self.setGeometry(rect.width()-250,rect.y(),250,rect.y()+rect.height())
 #		self.setWindowOpacity(0.5)
 
-		# Connect to session dbus if possible.
+		# Connect to session and system DBus if possible.
 		# Code must not assume DBus is available and must limit
-		# functionality gracefully if session_dbus==None.
+		# functionality gracefully if *_dbus==None.
+		self.session_dbus = None
+		self.system_dbus = None
 		try:
 			import dbus
 			from dbus.mainloop.qt import DBusQtMainLoop
 			DBusQtMainLoop(set_as_default=True)
 			self.session_dbus = dbus.SessionBus()
 			log.msg("Connected to session DBus")
+			self.system_dbus = dbus.SystemBus()
+			log.msg("Connected to system DBus")
 		except ImportError:
 			log.err("This PyQt4 does not support DBus. Perhaps install python-qt4-dbus.")
-			self.session_dbus = None
 		except:
-			log.err("Could not connect to session DBus")
-			self.session_dbus = None
+			log.err("Could not connect to session or system DBus")
 
 		self.reconnect = True # :# True = Jabbim will reconnect after disconnect
 		self.active=True
