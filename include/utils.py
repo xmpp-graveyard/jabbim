@@ -225,6 +225,7 @@ def loadConfig(main,status):
 			'lastDownloadDir': getDesktopPath()
 			}
 
+	# Start with optimism and hope a valid config is there.
 	rewrite = False
 	try:
 		main.config = ConfigObj(main.homeDir+'/config', encoding='UTF8')
@@ -234,21 +235,20 @@ def loadConfig(main,status):
 		main.config = e.config
 		rewrite = True
 
-	if len(main.config)==0:
+	# If no line at all was parsed, a reasonable explanation is that the
+	# homeDir does not even exist yet, so try to create it. If it in fact
+	# existed, this causes no harm. There's no need to redo the creation of
+	# the ConfigObj instance, the one we already have will work.
+	if len(main.config) == 0:
 		makeHomeDir(main.homeDir)
-		#if not os.path.isdir(main.homeDir):
-			#os.mkdir(main.homeDir)
-			#os.chmod(main.homeDir, 0700)
-		main.config=ConfigObj(main.homeDir+'/config',encoding='UTF8')
-		for k,v in configs.iteritems():
-			main.config[k]=v
 		rewrite = True
+	# Fill any missing keys with default values.
 	for k,v in configs.iteritems():
 		try:
 			main.config[k]
 		except:
-			main.config[k]=v
-			rewrite=True
+			main.config[k] = v
+			rewrite = True
 	# emoticon test
 	loaded,cf=main.loadJabbimExtraConfig("emoticons/"+main.config['emoticons'],main.realHomeDir+"/emoticons/"+main.config['emoticons'])
 	if loaded==None and not cf:
