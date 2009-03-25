@@ -2116,7 +2116,6 @@ class avatarLoader(QtCore.QThread):
 			except:
 				message = unicode(traceback.format_exc(), 'utf-8')
 				log.err(message)
-			time.sleep(0.2)
 
 
 class mainWindow(QtGui.QMainWindow):
