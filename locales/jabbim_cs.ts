@@ -6664,7 +6664,7 @@ Version: %3</source>
     <message>
         <location filename="widgets/preferences.py" line="105"/>
         <source>Privacy editor</source>
-        <translation type="unfinished">Editor práv</translation>
+        <translation>Editor práv</translation>
     </message>
 </context>
 <context>
