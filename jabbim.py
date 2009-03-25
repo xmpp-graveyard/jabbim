@@ -5400,6 +5400,7 @@ class mainWindow(QtGui.QMainWindow):
 		log.msg("on_network_state_up")
 	def on_network_state_down(self):
 		# XXX
+		self.connectCancel()
 		log.msg("on_network_state_down")
 
 class customStatusWindow(QtGui.QDialog):
