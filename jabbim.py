@@ -5176,7 +5176,7 @@ class mainWindow(QtGui.QMainWindow):
 		# load avatars
 		self.imageLoader=avatarLoader(self,unicode(path),dict(self.client.avatarDef))
 		QtCore.QObject.connect(self.imageLoader,QtCore.SIGNAL("imageLoaded(QString,QImage,int,int)"),self.avatarLoaded,QtCore.Qt.QueuedConnection)
-		self.imageLoader.start()
+		self.imageLoader.start(QtCore.QThread.LowestPriority)
 
 		#self.gotAvatars(self.loadAvatars(unicode(path),dict(self.client.avatarDef)))
 		try:
