@@ -295,10 +295,13 @@ class Client(derived):
 			try:
 				from urlparse import urlparse
 				parts = urlparse(boshURL)[1].split(':')
+				if len(parts) == 1:
+					bport = '80'
+				else:
+					bport = parts[1]
 				bhost = parts[0]
-				bport = parts[1]
 			except:
-				log.err('bosh parse failure')
+				log.err('bosh parse failure! %s', boshURL)
 				boshURL = ''
 		if host != None:
 			self._connect(host, int(port))
@@ -413,6 +416,8 @@ class Client(derived):
 		if len(pop) ==2:
 			host = pop[0]
 			port = pop[1]
+			self.host = host
+			self.port = port
 			self._connect(host,port)
 		elif len(pop) == 1:
 			boshURL = pop[0]
@@ -427,6 +432,8 @@ class Client(derived):
 			except:
 				log.err('bosh parse failure')
 				self.doConnect()
+			self.host = bhost
+			self.port = bport
 			self._connect(bhost, int(bport), boshURL)
 
 
