@@ -20,7 +20,7 @@ class osd(QtGui.QWidget):
 		self.desktop=QtGui.QPixmap()
 		self.leftPixmap=None
 		self.started=int(time.time())
-		self.dropTime=10
+		self.dropTime=int(self.main.config['osd_drop_time'])
 		self.changingPos=False
 		self.osdX=int(self.main.config['osd_x'])
 		self.osdY=int(self.main.config['osd_y'])
@@ -235,6 +235,8 @@ class config:
 
 		self.config['osd_transparent']={'type':'boolean','label':self.main.tr("Use transparent background"),'value':'False','groupbox':self.main.tr('Global'),'tab':self.main.tr("OSD")}
 		self.config['osd_time']={'type':'number-spin','label':self.main.tr("Display time (seconds):"),'value':'2','groupbox':self.main.tr('Global'),'tab':self.main.tr("OSD")}
+		self.config['osd_drop_time']={'type':'number-spin','label':self.main.tr("OSD drop time at Jabbim start:"),'value':'20','groupbox':self.main.tr('Global'),'tab':self.main.tr("OSD")}
+
 		self.config['osd_first_message']={'type':'boolean','label':self.main.tr("Use OSD for first message"),'value':'True','groupbox':self.main.tr('Chat'),'tab':self.main.tr("OSD")}
 		self.config['osd_on_message']={'type':'boolean','label':self.main.tr("Use OSD for other messages"),'value':'True','groupbox':self.main.tr('Chat'),'tab':self.main.tr("OSD")}
 		self.config['osd_on_gcmessage']={'type':'boolean','label':self.main.tr("Use OSD for all conference messages"),'value':'False','groupbox':self.main.tr('Groupchat'),'tab':self.main.tr("OSD")}
