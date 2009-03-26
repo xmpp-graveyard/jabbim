@@ -22,7 +22,7 @@ import sys,os, getopt, xmlrpclib, time
 sys.path.append('.')
 from include import utils
 try:
-	OPTIONS,arg = getopt.getopt(sys.argv[1:],'h:u:p:', ['home=', 'uri=', 'plugin='])
+	OPTIONS,params = getopt.getopt(sys.argv[1:],'h:u:p:', ['home=', 'uri=', 'plugin='])
 except getopt.GetoptError, err:
 	print str(err)
 	sys.exit(2)
@@ -44,14 +44,13 @@ for opt, arg in OPTIONS:
 		except:
 			print 'no ports'
 			sys.exit(2)
-		print arg;
+		args=''
 		try:
 			name, args = arg.split(' ',1)
 		except ValueError:
 			name=arg;
-		args='';
 		server = xmlrpclib.Server('http://localhost:%s/'%porty[0])
-		server.runPluginFunc(name, args, porty[1])
+		server.runPluginFunc(name, params, porty[1])
 
 		sys.exit()
 #this function prevents(not 100%) jabbim not to run twice in same profile :-)

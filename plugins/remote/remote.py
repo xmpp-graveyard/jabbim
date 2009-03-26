@@ -50,6 +50,7 @@ class Plugin(plugins.PluginBase):
 			pfile = open(self.pfilename, "w")
 			pfile.write("%s:%s:%s\n" % (time(), port, self.cookie)) # timstamp (float): port (int) : cookie (str)
 			self.registerPluginFunc("showRoster",self.showRoster)
+			self.registerPluginFunc("sendFileDialog",r.xmlrpc_sendFile)
 			pfile.close()
 			set_xmpp_handler()
 		else:
@@ -157,6 +158,14 @@ class Remote(xmlrpc.XMLRPC):
 		jid = self.main.getJid(jid)
 		if jid:
 			self.main.addContactMainWindow(jid)
+			return True
+		else:
+			return False
+	
+	def xmlrpc_sendFile(self,params):
+		jid,file = params
+		if jid and file:
+			self.main.showFiletransferDialog([file],jid);
 			return True
 		else:
 			return False
