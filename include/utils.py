@@ -162,6 +162,8 @@ def loadConfig(main,status):
 			"chatMode":"normal",
 			"statusMessages":list(status),
 			"notifyOnDND":"True",
+			"keepStatus":"False",
+			"keepedStatus":'',
 			"showChatStatusChanges":"True",
 			"showMucStatus":"True",
 			"showMucJoinPart":"True",

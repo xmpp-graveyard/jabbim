@@ -864,7 +864,14 @@ class clientClass(pyxl.client.Client):
 		self.main.selfStatus=show
 		#self.main.tray.setToolTip(mainWindow.tr('Your status:')+" "+self.main.status[show])
 		self.main.ui.selfAvatar.refreshToolTip()
-		self.main.sendPresence(None,show,status)
+		print "grom status: config['keepStatus']: "+MainWindow.config['keepStatus']+", config['keepedStatus']: "+MainWindow.config['keepedStatus']
+		if MainWindow.config['keepStatus'] == "True" and MainWindow.config['keepedStatus'] != '':
+			print "grom status: yeah true"
+			self.main.sendPresence(None,show,MainWindow.config['keepedStatus'])
+		else:
+			print "grom status: noes fail"
+			self.main.sendPresence(None,show,status)
+		print "Sending firse presence to server..."
 		#self.main.ui.statusButton.setText(unicode(""))
 		#self.main.ui.statusButton.setIcon(self.main.getIcon(status=show,size="16x16"))
 		self.main.ui.login_cancel.hide()
@@ -3057,6 +3064,10 @@ class mainWindow(QtGui.QMainWindow):
 				self.tray.setIcon(self.getCurrentTrayIcon())
 				# update avatar tooltip and tray tooltip
 				self.ui.selfAvatar.refreshToolTip()
+
+				# keep status in config file
+				MainWindow.config['keepedStatus'] = unicode(message)
+				print "grom status: presence status keeped: "+MainWindow.config['keepedStatus']
 
 				# send presence to the server
 				self.client.sendPresence(show = unicode(show), status = unicode(message),priority=pri)
