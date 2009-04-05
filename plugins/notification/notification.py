@@ -20,7 +20,7 @@ class osd(QtGui.QWidget):
 		self.desktop=QtGui.QPixmap()
 		self.leftPixmap=None
 		self.started=int(time.time())
-		self.dropTime=int(self.main.config['osd_drop_time'])
+		self.lastPresence=self.started;
 		self.changingPos=False
 		self.osdX=int(self.main.config['osd_x'])
 		self.osdY=int(self.main.config['osd_y'])
@@ -164,8 +164,6 @@ class osd(QtGui.QWidget):
 		self.event=event
 		if neco:
 			self.event=None
-		if t<self.started+self.dropTime:
-			return
 		self.text=headline
 		
 		metrics=QtGui.QFontMetrics(self.f)
@@ -235,8 +233,6 @@ class config:
 
 		self.config['osd_transparent']={'type':'boolean','label':self.main.tr("Use transparent background"),'value':'False','groupbox':self.main.tr('Global'),'tab':self.main.tr("OSD")}
 		self.config['osd_time']={'type':'number-spin','label':self.main.tr("Display time (seconds):"),'value':'2','groupbox':self.main.tr('Global'),'tab':self.main.tr("OSD")}
-		self.config['osd_drop_time']={'type':'number-spin','label':self.main.tr("OSD drop time at Jabbim start:"),'value':'20','groupbox':self.main.tr('Global'),'tab':self.main.tr("OSD")}
-
 		self.config['osd_first_message']={'type':'boolean','label':self.main.tr("Use OSD for first message"),'value':'True','groupbox':self.main.tr('Chat'),'tab':self.main.tr("OSD")}
 		self.config['osd_on_message']={'type':'boolean','label':self.main.tr("Use OSD for other messages"),'value':'True','groupbox':self.main.tr('Chat'),'tab':self.main.tr("OSD")}
 		self.config['osd_on_gcmessage']={'type':'boolean','label':self.main.tr("Use OSD for all conference messages"),'value':'False','groupbox':self.main.tr('Groupchat'),'tab':self.main.tr("OSD")}
@@ -246,7 +242,6 @@ class config:
 		self.config['osd_smallfont']={'type':'number-spin','label':self.main.tr("Text font size"),'value':'11','groupbox':self.main.tr('Global'),'tab':self.main.tr("OSD")}
 		self.config['osd_on_presence']={'type':'boolean','label':self.main.tr("Use OSD for presences"),'value':'False','groupbox':self.main.tr('Global'),'tab':self.main.tr("OSD")}
 
-
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
@@ -255,7 +250,7 @@ class Plugin(plugins.PluginBase):
 		self.description = self.tr('System tray and sound notification')
 		self.author = "Jan 'HanzZ' Kaluza & Josef 'PepeQ' Halicek"
 		self.name = self.tr('Notification Plugin')
-		self.version = '0.666'
+		self.version = '0.690'
 		self.category = ['notification']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 
@@ -306,6 +301,8 @@ class Plugin(plugins.PluginBase):
 			self.osd.osdy=int(self.config['osd_y'])
 			if self.config['osd_transparent']!="True":
 				self.osd.transparent=False
+			self.lastPresence=None;
+			self.afterFirstPresenceTimeout=False;
 		else:
 			self.loadConfig(homedir)
 
@@ -376,17 +373,19 @@ class Plugin(plugins.PluginBase):
 	def on_presence(self,jid,user,show,status,first):
 		if first or not self.isNotificationEnabled():
 			return
+		if not self.lastPresence and not self.afterFirstPresenceTimeout and (time.time()>10+self.firstPresenceTimeout):
+			self.lastPresence=time.time();
+			return
+		self.afterFirstPresenceTimeout=True;
 		if self.config['osd_on_presence']=="True":
 			if not status:
 				status=""
 			if self.snarl:
-				t=int(time.time())
-				if t>self.started+20:
-					file=self.main.getAvatarSrc(jid.userhost())
-					s = self.snarl.SnarlMessage(unicode(user)+unicode(self.tr(" is now "))+unicode(self.main.status[unicode(show)]),unicode(status))
-					s.timeout=int(self.config['osd_time'])
-					s.show(icon=file,replyWindow=int(self.main.winId()),replyMsg=1025)
-					self.main.snarlMessages[int(s.getID())]=[self.addChatTab,[jid]]
+				file=self.main.getAvatarSrc(jid.userhost())
+				s = self.snarl.SnarlMessage(unicode(user)+unicode(self.tr(" is now "))+unicode(self.main.status[unicode(show)]),unicode(status))
+				s.timeout=int(self.config['osd_time'])
+				s.show(icon=file,replyWindow=int(self.main.winId()),replyMsg=1025)
+				self.main.snarlMessages[int(s.getID())]=[self.addChatTab,[jid]]
 			else:
 				pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
 				self.osd.view(pixmap,user+self.tr(" is now ")+self.main.status[unicode(show)],unicode(status),self.addChatTab,[jid])
