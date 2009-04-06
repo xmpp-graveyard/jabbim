@@ -48,7 +48,7 @@ class Plugin(plugins.PluginBase):
 		for k in sorted(self.main.emoticonsWidget.smileys.iterkeys(), key=len, reverse=True):
 			v = self.main.emoticonsWidget.smileys[k]
 			fp = open(v, 'rb')
-			self.current[k] = 'sha1+'+sha1(fp.read()).hexdigest()
+			self.current[k] = 'sha1+'+sha1(fp.read()).hexdigest()+'@bob.xmpp.org'
 			fp.close()
 			self.main.client.bobDef[self.current[k]] = v
 		try:

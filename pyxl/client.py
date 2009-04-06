@@ -1288,12 +1288,16 @@ class Client(derived):
 				return cid
 
 		def _parseBOBHash(hash):
-
 			casti = hash.split('+')
+			log.msg(unicode(casti))
 			typ = casti[0]
 			zbytek = casti[1].split('@')
-			host = zbytek[1]
-			hash = zbytek[0]
+			if len(zbytek) > 1:
+				host = zbytek[1]
+				hash = zbytek[0]
+			else:	
+				host = 'bob.xmpp.org'
+				hash = zbytek[0]
 			return (typ, hash, host)
 
 		def _writeBOBData(el,  cid):
