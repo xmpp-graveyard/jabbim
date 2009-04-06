@@ -373,8 +373,8 @@ class Plugin(plugins.PluginBase):
 	def on_presence(self,jid,user,show,status,first):
 		if first or not self.isNotificationEnabled():
 			return
-		if not self.lastPresence and not self.afterFirstPresenceTimeout and (time.time()>10+self.firstPresenceTimeout):
-			self.lastPresence=time.time();
+		self.lastPresence=time.time();
+		if not self.afterFirstPresenceTimeout and (time.time()>10+self.lastPresence):
 			return
 		self.afterFirstPresenceTimeout=True;
 		if self.config['osd_on_presence']=="True":
