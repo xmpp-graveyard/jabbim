@@ -6,6 +6,7 @@ from widgets import servicediscovery, dataforms, legacyforms
 from widgets.addcontactng import showDict, addDict, showWeather, addWeather
 from twisted.internet import defer
 from pyxl import jid
+import random
 
 class jabbimServiceManager(QtGui.QDialog):
 	def __init__(self,main,parent=None):
@@ -60,6 +61,8 @@ class jabbimServiceManager(QtGui.QDialog):
 			else:
 				d=self.main().client.getRegisterForm(jid)
 				d.addCallback(self._onRegister)
+				self.main().autoAdd[jid]={"name":jid,"group":""}
+				
 		else:
 			if jid=="disk.jabbim.cz":
 				self.unregisterJabberDisk()
@@ -169,8 +172,14 @@ class jabbimServiceManager(QtGui.QDialog):
 			self.addService(self.tr("ICQ"),"icq.netlab.cz",self.tr("<b>ICQ</b><br/>ICQ transport allows you to chat with your friends who use ICQ."),transports["icq.netlab.cz"])
 		elif transports["icq.jabbim.cz"]:
 			self.addService(self.tr("ICQ"),"icq.jabbim.cz",self.tr("<b>ICQ</b><br/>ICQ transport allows you to chat with your friends who use ICQ."),transports["icq.jabbim.cz"])
-		else:
+		elif transports['icq.jabber.cz']:
 			self.addService(self.tr("ICQ"),"icq.jabber.cz",self.tr("<b>ICQ</b><br/>ICQ transport allows you to chat with your friends who use ICQ."),transports["icq.jabber.cz"])
+		else:
+			if self.main().client.isVip:
+				self.addService(self.tr("ICQ"),"icq.jabbim.cz",self.tr("<b>ICQ</b><br/>ICQ transport allows you to chat with your friends who use ICQ."),transports["icq.jabbim.cz"])
+			else:
+				icq = random.choice(['icq.jabber.cz', 'icq.netlab.cz'])
+				self.addService(self.tr("ICQ"),icq,self.tr("<b>ICQ</b><br/>ICQ transport allows you to chat with your friends who use ICQ."),transports[icq])
 		#self.addService(self.tr("Weather"),"weather.jabbim.cz",self.tr("<b>Weather</b><br/>Weather service allows you to see actual weather in big cities.<br/>"),transports["weather.netlab.cz"])
 		self.ui.treeWidget.resizeColumnToContents(0)
 		self.ui.treeWidget.setMaximumWidth(180)
