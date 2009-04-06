@@ -400,6 +400,15 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		elif key==QtCore.Qt.Key_Tab:
 			self.main().tabPressed()
 			return
+		
+		elif key == QtCore.Qt.Key_B and  (event.modifiers() & QtCore.Qt.ControlModifier):
+			self.main().ui.boldButton.click()
+		
+		elif key == QtCore.Qt.Key_I and  (event.modifiers() & QtCore.Qt.ControlModifier):
+			self.main().ui.italicButton.click()
+		
+		elif key == QtCore.Qt.Key_U and  (event.modifiers() & QtCore.Qt.ControlModifier):
+			self.main().ui.underlineButton.click()
 		else:
 			QtGui.QTextEdit.keyPressEvent(self,event)
 
