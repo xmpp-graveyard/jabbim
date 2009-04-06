@@ -145,12 +145,10 @@ import pyxl
 from pyxl import storage
 import traceback
 from configobj import ConfigObj, ConfigObjError
-from include import utils, userrating
-from include import rot13
+from include import userrating, rot13, plugins, safelog
 import urllib, random, xmlrpclib
 from imp import load_source
 from urllib import quote, unquote
-from include import plugins
 from os.path import basename,dirname, isfile
 from twisted.words.protocols.jabber.xmlstream import IQ
 from pyxl import jid as jidT
@@ -2511,8 +2509,8 @@ class mainWindow(QtGui.QMainWindow):
 
 		# open log file
 		if self.config['log'] == 'true':
-			self.logfile = open(self.homeDir+'/'+self.config['logfile'], 'w')
-			self.log=log.FileLogObserver(self.logfile)
+			logfile = open(self.homeDir + '/' + self.config['logfile'], 'w')
+			self.log = safelog.SafeFileLogObserver(logfile)
 			self.log.timeFormat = '%Y-%m-%d %H:%M:%S'
 			log.startLoggingWithObserver(self.log.emit)
 
@@ -4007,7 +4005,7 @@ class mainWindow(QtGui.QMainWindow):
 			if self.log:
 				start=False
 				log.removeObserver(self.log.emit)
-			self.log=log.FileLogObserver(logfile)
+			self.log = safelog.SafeFileLogObserver(logfile)
 			log.addObserver(self.log.emit)
 			if start:
 				log.startLoggingWithObserver(self.log.emit, setStdout=0)
