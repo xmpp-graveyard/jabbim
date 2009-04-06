@@ -156,7 +156,7 @@
    <item row="1" column="1" colspan="2" >
     <widget class="QStackedWidget" name="stackedWidget" >
      <property name="currentIndex" >
-      <number>5</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="page_4" >
       <layout class="QGridLayout" >
@@ -358,7 +358,7 @@ p, li { white-space: pre-wrap; }
        <item row="2" column="0" >
         <widget class="QTabWidget" name="tabWidget" >
          <property name="currentIndex" >
-          <number>0</number>
+          <number>4</number>
          </property>
          <widget class="QWidget" name="tab_5" >
           <attribute name="title" >
@@ -690,15 +690,12 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item row="2" column="0" colspan="2" >
-            <widget class="QTextEdit" name="emoticonsPreview" >
-             <property name="undoRedoEnabled" >
+            <widget class="QWebView" name="emoticonsPreview" >
+             <property name="undoRedoEnabled" stdset="0" >
               <bool>false</bool>
              </property>
-             <property name="readOnly" >
+             <property name="readOnly" stdset="0" >
               <bool>true</bool>
-             </property>
-             <property name="textInteractionFlags" >
-              <set>Qt::NoTextInteraction</set>
              </property>
             </widget>
            </item>

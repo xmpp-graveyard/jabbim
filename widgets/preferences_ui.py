@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/preferences.ui'
+# Form implementation generated from reading ui file 'preferences.ui'
 #
-# Created: Sat Jan 10 01:09:22 2009
-#      by: PyQt4 UI code generator 4.4.3
+# Created: Mon Apr  6 16:11:18 2009
+#      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -335,10 +335,9 @@ class Ui_preferences(object):
         self.moreEmoticons = QtGui.QPushButton(self.tab_3)
         self.moreEmoticons.setObjectName("moreEmoticons")
         self.gridlayout9.addWidget(self.moreEmoticons, 3, 1, 1, 1)
-        self.emoticonsPreview = QtGui.QTextEdit(self.tab_3)
-        self.emoticonsPreview.setUndoRedoEnabled(False)
-        self.emoticonsPreview.setReadOnly(True)
-        self.emoticonsPreview.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
+        self.emoticonsPreview = QtWebKit.QWebView(self.tab_3)
+        self.emoticonsPreview.setProperty("undoRedoEnabled", QtCore.QVariant(False))
+        self.emoticonsPreview.setProperty("readOnly", QtCore.QVariant(True))
         self.emoticonsPreview.setObjectName("emoticonsPreview")
         self.gridlayout9.addWidget(self.emoticonsPreview, 2, 0, 1, 2)
         self.emoticonsList = QtGui.QComboBox(self.tab_3)
@@ -405,8 +404,8 @@ class Ui_preferences(object):
         self.gridlayout.addWidget(self.stackedWidget, 1, 1, 1, 2)
 
         self.retranslateUi(preferences)
-        self.stackedWidget.setCurrentIndex(5)
-        self.tabWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(4)
+        self.tabWidget.setCurrentIndex(4)
         QtCore.QObject.connect(self.cancelButton, QtCore.SIGNAL("clicked()"), preferences.reject)
         QtCore.QObject.connect(self.saveButton, QtCore.SIGNAL("clicked()"), preferences.accept)
         QtCore.QObject.connect(self.listWidget, QtCore.SIGNAL("currentRowChanged(int)"), self.stackedWidget.setCurrentIndex)

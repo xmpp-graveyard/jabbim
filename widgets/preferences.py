@@ -503,13 +503,14 @@ class preferencesWindow(QtGui.QDialog):
 			loaded,config=self.main.loadJabbimExtraConfig(self.main.realHomeDir+"/emoticons/"+path,'emoticons/default/smileys.cfg')
 			if not loaded:
 				return
-		html=""
+		html="<html><body>"
 		values=[]
 		for k,v in config['emoticons'].iteritems():
 			#self.smileys[k.replace("<","&lt;").replace(">","&gt;")]=v
 			if not v in values:
-				html+='<img src="'+src+os.path.dirname(path)+'/'+v+'" />'
+				html+='<img src="file://'+src+os.path.dirname(path)+'/'+v+'" />'
 				values.append(v)
+		html += "</body></html>"
 		self.ui.emoticonsPreview.setHtml(html)
 		html=""
 		html+=self.tr("Name: ")+unicode(config['header']['name'])+"<br/>"
