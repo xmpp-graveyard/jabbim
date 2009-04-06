@@ -4336,9 +4336,8 @@ class mainWindow(QtGui.QMainWindow):
 					plug = module.Plugin(False, self.homeDir, dir)
 					version = float(plug.version)
 				except Exception, ex:
-					log.msg(path+': BAD PLUGIN!')
-					message = unicode(traceback.format_exc(), 'utf-8')
-					log.msg(message)
+					log.msg(path + ': BAD PLUGIN!')
+					log.msg(traceback.format_exc())
 					continue
 
 				if not self.plugins.has_key(plugin_name) or version > self.plugins[plugin_name]['version']:
