@@ -1131,9 +1131,7 @@ class abstractChatWidget(QtGui.QWidget):
 		for word in temp.split("<"):
 			for w in word.split(' '):
 				alink=False
-				print "---------------"
 				for l in alinks:
-					print "---",[w],[l]
 					if w.find(l)!=-1:
 						alink=True
 						break
