@@ -962,6 +962,7 @@ class FT:
 				self.transfered = self.transfered + len(data)
 				self.client.on_ftTransfered(self.sid, len(data))
 				self.fp.write(data)
+				del ibbCache[self.ibbSeq]
 				self.ibbSeq = self.ibbSeq + 1
 			else:
 				c = False
