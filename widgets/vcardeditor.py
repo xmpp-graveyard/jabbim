@@ -6,6 +6,12 @@ from twisted.words.xish.domish import Element
 from twisted.internet.defer import DeferredList 
 from include import utils
 
+try:
+	from hashlib import sha1
+except:
+	log.msg('Please upgrade to python2.5')
+	from sha import new as sha1
+
 class vcardEditorDialog(QtGui.QDialog):
 	def __init__(self,main,jid,parent=None,editable=True):
 		apply(QtGui.QDialog.__init__,(self,parent))
@@ -13,6 +19,7 @@ class vcardEditorDialog(QtGui.QDialog):
 		self.ui=Ui_VCardEdit()
 		self.ui.setupUi(self)
 		self.main=main
+		self.photo = None
 		#print self.main.styleSheetText
 		if jid not in [self.main.client.jid.full(), self.main.client.jid.userhost()]:
 			self.setWindowTitle(jid+" - "+self.tr("vCard"))
@@ -389,7 +396,7 @@ class vcardEditorDialog(QtGui.QDialog):
 								buf=QtCore.QBuffer(bytes)
 								buf.open(QtCore.QIODevice.WriteOnly)
 								avatar.save(buf, "PNG")
-							
+								self.photo = str(bytes)
 								y.children.append(base64.encodestring(str(bytes)))
 							avatar=None
 			if name2!=None:
@@ -440,6 +447,7 @@ class vcardEditorDialog(QtGui.QDialog):
 					avatar.save(buf, "PNG")
 					if not photo:
 						photo=self.data.addElement('PHOTO')
+					self.photo = str(bytes)
 					photo.addElement('BINVAL', content = base64.encodestring(str(bytes)))
 			if nickname!=None:
 				if len(nickname)!=0:
@@ -464,6 +472,19 @@ class vcardEditorDialog(QtGui.QDialog):
 	
 	def vcard_set(self,data=None):
 		self.main.client.getVCard(self.main.client.jid.userhost())
+		contact = self.main.client.getContactByJid(self.main.client.jid.userhost())
+		#print contact
+		show = contact.resources[self.main.client.jid.resource].show
+		status=contact.resources[self.main.client.jid.resource].status
+		if status == None:
+			status = ''
+		#print 'vcard set ',status, show
+		#print self.photo
+		if self.photo != None:
+			hash = sha1(self.photo).hexdigest()
+		self.main.client.avatarDef[self.main.client.jid.userhost()] = hash
+		self.main.sendPresence(None, show = show, message = status)
+		
 		self.done(1)
 
 	def vcard_set_error(self,data=None):

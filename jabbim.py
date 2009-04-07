@@ -1843,6 +1843,11 @@ class clientClass(pyxl.client.Client):
 			self.main.selfAvatar=pixmap
 			self.main.ui.selfAvatar.setPixmap(avatar)
 			self.main.ui.selfAvatar.setMinimumWidth(avatar.width()+3)
+			for i in range(self.main.chat.ui.chatTab.count()):
+				w=self.main.chat.ui.chatTab.widget(i)
+				if w.typ == 'chat' or w.typ == 'groupchat':
+					w.chat.loadSelfAvatar()
+			
 
 		# set avatar for userItems in roster
 		#for item in self.main.ui.roster.getUserItems(jid):
@@ -1866,6 +1871,7 @@ class clientClass(pyxl.client.Client):
 					item.setIcon(0,QtGui.QIcon(result))
 					item.setToolTip(0,w.chat.getGroupchatTooltip(jid.full(),item))
 					#w.chat.setTooltip(item,jid.full())
+			
 
 	def on_receivedFiles(self, id,  frm,  files, size):
 		mainWindow=self.main

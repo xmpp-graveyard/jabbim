@@ -154,13 +154,7 @@ class groupChatWidget(abstractChatWidget):
 		self.connecting=QtGui.QLabel(self.tr("Connecting to MUC. This can take a few seconds."),self.ui.webkit)
 		self.connecting.adjustSize()
 
-		if self.main().selfAvatar:
-			result=self.main().getAvatar(self.main().selfAvatar,size="64x64",frame=True)
-			self.ui.selfAvatar.setPixmap(result)
-			self.ui.selfAvatar.setMaximumWidth(64)
-		else:
-			self.ui.selfAvatar.hide()
-			self.ui.lineWidget.setMinimumSize(100,64)
+		self.loadSelfAvatar()
 
 		self.disco_features = [] #: list of room features
 		log.msg("REQUESTING ROOM INFO")
@@ -209,6 +203,14 @@ class groupChatWidget(abstractChatWidget):
 		#text+='<font size="-1">%s</font><br>' % unicode(self.main().client.groupchats[self.jid].users[nick].status).replace("None","")
 		#text+="</td></tr></table>"
 
+	def loadSelfAvatar(self):
+		if self.main().selfAvatar:
+			result=self.main().getAvatar(self.main().selfAvatar,size="64x64",frame=True)
+			self.ui.selfAvatar.setPixmap(result)
+			self.ui.selfAvatar.setMaximumWidth(64)
+		else:
+			self.ui.selfAvatar.hide()
+			self.ui.lineWidget.setMinimumSize(100,64)
 
 	def usersEvent(self,event):
 		# tooltip request:

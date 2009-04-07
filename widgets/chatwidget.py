@@ -552,6 +552,9 @@ class chatWidget(abstractChatWidget):
 		else:
 			self.selfFile=f
 
+		self.loadSelfAvatar()	
+	
+	def loadSelfAvatar(self):
 		# set our avatar label
 		result=self.main().getAvatar(self.main().client.jid.userhost(),size="64x64",frame=True)
 		if result:
