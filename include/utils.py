@@ -156,7 +156,7 @@ def loadConfig(main,status):
 			"chatTheme":"minimal-mod/Blue vs Grey.css",
 			"groupchatTheme":"minimal-mod/Blue vs Grey.css",
 			"expandedGroups":[],
-			"plugins":['notification', 'archive', 'autoaway', 'autoupdate', 'jdm', 'tune', 'remote'],
+			"plugins":['notification', 'archive', 'autoaway', 'autoupdate', 'jdm', 'tune', 'remote',  'uniemoticons'],
 			"rosterMode":"normal",
 			"rosterStyle":"compact",
 			"chatMode":"normal",
