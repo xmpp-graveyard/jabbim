@@ -437,16 +437,17 @@ class Plugin(plugins.PluginBase):
 #				if tab:
 #					tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById(\'light\');")
 		else:
-			if button.isChecked():
-				tab,i=self.main.chat.findTab(unicode(button.jid))
-				if tab:
-					tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript('var group = document.createElement(\'div\'); group.innerHTML="<div id=\\"light\\" style=\\"position: fixed;top: 10%;right:10%;left: 10%;width: 80%;height: 70%;padding: 16px;background-color: white;z-index:1002;border: 1px solid black;overflow: auto;\\"></div>";document.body.appendChild(group);')
-					self.callTab=tab
-					self.call(unicode(button.jid),"public")
-			else:
-				tab,i=self.main.chat.findTab(unicode(button.jid))
-				if tab:
-					tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById(\'light\');")
+			self.showSlot(unicode(button.jid), typ="public")
+#			if button.isChecked():
+#				tab,i=self.main.chat.findTab(unicode(button.jid))
+#				if tab:
+#					tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript('var group = document.createElement(\'div\'); group.innerHTML="<div id=\\"light\\" style=\\"position: fixed;top: 10%;right:10%;left: 10%;width: 80%;height: 70%;padding: 16px;background-color: white;z-index:1002;border: 1px solid black;overflow: auto;\\"></div>";document.body.appendChild(group);')
+#					self.callTab=tab
+#					self.call(unicode(button.jid),"public")
+#			else:
+#				tab,i=self.main.chat.findTab(unicode(button.jid))
+#				if tab:
+#					tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById(\'light\');")
 			
 
 	def chatMenuItemTriggered(self,action):
@@ -482,9 +483,9 @@ class Plugin(plugins.PluginBase):
 		jid=self.main.getJid(jid)
 		# create Archive button
 		button=QtGui.QPushButton()
-		button.setCheckable(True)
+		button.setCheckable(False)
 		button.setIconSize(QtCore.QSize(16,16))
-		button.setIcon(QtGui.QIcon("%s/jdisk-public.png" % self.pluginDir))
+		button.setIcon(QtGui.QIcon("%s/jalbum-32.png" % self.pluginDir))
 		button.jid=unicode(jid.userhost())
 		button.typ="album"
 		button.setToolTip("Show Photos")
@@ -494,7 +495,7 @@ class Plugin(plugins.PluginBase):
 		layout.addWidget(button)
 
 		button=QtGui.QPushButton()
-		button.setCheckable(True)
+		button.setCheckable(False)
 		button.setIconSize(QtCore.QSize(16,16))
 		button.setIcon(QtGui.QIcon("%s/jdisk-public.png" % self.pluginDir))
 		button.jid=unicode(jid.userhost())
