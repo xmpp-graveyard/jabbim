@@ -494,7 +494,7 @@ class preferencesWindow(QtGui.QDialog):
 
 	def emoticonsListChanged(self,index):
 		path=unicode(self.ui.emoticonsList.itemData(index).toString())
-		src='emoticons/'
+		src=unicode(os.getcwd(), sys.getfilesystemencoding())+'/emoticons/'
 		#config=ConfigObj("emoticons/"+path,encoding='UTF8')
 		loaded,config=self.main.loadJabbimExtraConfig("emoticons/"+path,'emoticons/default/smileys.cfg')
 		if len(config)==0 or not loaded:
