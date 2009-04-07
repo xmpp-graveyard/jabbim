@@ -733,6 +733,12 @@ class Jingle:
 	def delete(self,  error):
 
 		if error == 'activate error' or error == 'connect failed' or error == "Connection lost":
+			if self.ft.fp == None:
+				if self.jingleSession.role == 'initiator':
+					mode = 'rb'
+				else:
+					mode = 'wb'
+				self.ft.setFilePath(self.ft.filepath, mode)
 			props = self.fileprops
 			props['type'] = 'request'
 			trans = jingle.FTTransport()
@@ -812,6 +818,7 @@ class FT:
 		self.filepath = filepath
 		self.fp = open(filepath, mode)
 		self.size = os.path.getsize(filepath)
+		log.msg('filepath set')
 	
 	def send(self):
 		self.mode = 'send'
@@ -824,6 +831,7 @@ class FT:
 			self.sessionObj.send(self.fileprops)
 	
 	def delete(self,  error):
+		print self.fp
 		if self.sessionObj != None:
 			ret = self.sessionObj.delete(error)
 			if not ret:
