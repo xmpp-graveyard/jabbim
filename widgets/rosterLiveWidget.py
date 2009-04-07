@@ -2589,12 +2589,12 @@ class rosterWidget(QtGui.QWidget):
 			action=contactMenu.addAction(self.tr("Delete from roster"))
 			action.setData(QtCore.QVariant(jid))
 			action.setObjectName("delete_action")
-		if not myJid:
-			action = contactMenu.addAction(self.tr("Favourite contact"))
-			action.setData(QtCore.QVariant(jid))
-			action.setObjectName("fav")
-			action.setCheckable(True)
-			action.setChecked(unicode(jid) in self.main.config['favUsers'])
+#		if not myJid:  #removed menuentry for fav
+#			action = contactMenu.addAction(self.tr("Favourite contact"))
+#			action.setData(QtCore.QVariant(jid))
+#			action.setObjectName("fav")
+#			action.setCheckable(True)
+#			action.setChecked(unicode(jid) in self.main.config['favUsers'])
 
 		if not myJid:
 			value = contact.subscription
