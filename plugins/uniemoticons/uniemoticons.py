@@ -45,16 +45,17 @@ class Plugin(plugins.PluginBase):
 		threads.deferToThread(self.loadCurrentEmoticons)
 	
 	def loadCurrentEmoticons(self):
-		if not self.config.has_key('emoticons') or not self.config['emoticons'] == self.main.config['emoticons']:
 			log.msg('loading new emoticons')
 			for k in sorted(self.main.emoticonsWidget.smileys.iterkeys(), key=len, reverse=True):
 				v = self.main.emoticonsWidget.smileys[k]
 				fp = open(v, 'rb')
 				self.current[k] = 'sha1+'+sha1(fp.read()).hexdigest()+'@bob.xmpp.org'
 				fp.close()
-				self.main.client.bobDef[self.current[k]] = v
+				if not self.config.has_key('emoticons') or not self.config['emoticons'] == self.main.config['emoticons']:
+					self.main.client.bobDef[self.current[k]] = v
 			try:
-				self.main.client.bobDef.write()
+				if not self.config.has_key('emoticons') or not self.config['emoticons'] == self.main.config['emoticons']:
+					self.main.client.bobDef.write()
 			except:
 				print 'emoticons caching failed!'
 			self.config['emoticons'] = self.main.config['emoticons']
