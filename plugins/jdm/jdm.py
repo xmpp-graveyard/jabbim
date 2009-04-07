@@ -425,16 +425,17 @@ class Plugin(plugins.PluginBase):
 
 	def buttonClicked(self,button):
 		if button.typ=="album":
-			if button.isChecked():
-				tab,i=self.main.chat.findTab(unicode(button.jid))
-				if tab:
-					tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript('var group = document.createElement(\'div\'); group.innerHTML="<div id=\\"light\\" style=\\"position: fixed;top: 10%;right:10%;left: 10%;width: 80%;height: 70%;padding: 16px;background-color: white;z-index:1002;border: 1px solid black;overflow: auto;\\"></div>";document.body.appendChild(group);')
-					self.callTab=tab
-					self.call(unicode(button.jid),"album")
-			else:
-				tab,i=self.main.chat.findTab(unicode(button.jid))
-				if tab:
-					tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById(\'light\');")
+			self.showSlot(unicode(button.jid), typ="album")
+	#		if button.isChecked():
+	#			tab,i=self.main.chat.findTab(unicode(button.jid))
+#				if tab:
+#					tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript('var group = document.createElement(\'div\'); group.innerHTML="<div id=\\"light\\" style=\\"position: fixed;top: 10%;right:10%;left: 10%;width: 80%;height: 70%;padding: 16px;background-color: white;z-index:1002;border: 1px solid black;overflow: auto;\\"></div>";document.body.appendChild(group);')
+#					self.callTab=tab
+#					self.call(unicode(button.jid),"album")
+#			else:
+#				tab,i=self.main.chat.findTab(unicode(button.jid))
+#				if tab:
+#					tab.chat.ui.webkit.page().mainFrame().evaluateJavaScript("removeById(\'light\');")
 		else:
 			if button.isChecked():
 				tab,i=self.main.chat.findTab(unicode(button.jid))
