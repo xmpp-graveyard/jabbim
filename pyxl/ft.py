@@ -745,7 +745,8 @@ class Jingle:
 		if error != 'decline':
 			error = None
 		if self.jingleSession.state != 'ENDED':
-			self.jingleSession.terminateSession(error)
+			if self.jingleSession.role != 'initiator':
+				self.jingleSession.terminateSession(error)
 		#HACK!
 		if self.ft.protocol:
 			self.ft.protocol.unregisterProducer()
@@ -782,6 +783,7 @@ class FT:
 		self.protocol = None
 		self.uplimit = 0
 		self.downlimit = 0
+		self.fp = None
 		self.transport = 'socks' # socks or ibb, used for forcing type of underlying transport method
 	
 	def setTransport(self, transport):
