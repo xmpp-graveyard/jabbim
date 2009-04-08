@@ -771,6 +771,7 @@ class FT:
 		self.fromjid = jid.JID(fromjid)
 		self.fileprops = fileprops
 		self.filepath = filepath
+		self.fp = None
 		if filepath != None:
 			self.setFilePath(filepath)
 		self.transfered = 0
@@ -790,7 +791,7 @@ class FT:
 		self.protocol = None
 		self.uplimit = 0
 		self.downlimit = 0
-		self.fp = None
+		
 		self.transport = 'socks' # socks or ibb, used for forcing type of underlying transport method
 	
 	def setTransport(self, transport):
@@ -871,6 +872,7 @@ class FT:
 		self.init.on_ftEnd(self.sid, 'activate error')
 		
 	def _activated(self, el = None):
+		print self.fp, 'activated'
 		
 		FileSender().beginFileTransfer(self.fp, self.protocol)#. addCallback(self._finished)
 	

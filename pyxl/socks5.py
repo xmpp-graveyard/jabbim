@@ -802,7 +802,7 @@ class FTSend:
 		self.client.on_ftEnd(self.sid, 'activate error')
 		
 	def _activated(self, el = None):
-		
+		print self.fp
 		FileSender().beginFileTransfer(self.fp, self.protocol)#. addCallback(self._finished)
 	
 	def _finished(self, last):

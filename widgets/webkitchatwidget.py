@@ -537,7 +537,9 @@ function reloadImage(name) {
 	messageObject.log("test "+name)
 	i = document.getElementById(name);
 	if (i){
-		i.src = messageObject.getSrc(name);
+		i.src = 'refreshme';
+		i.src = messageObject.getSrc(name)+'?'+Math.random();
+		i.title = i.src;
 		messageObject.reloaded(name);
 		messageObject.removeHandler(name);
 	}
