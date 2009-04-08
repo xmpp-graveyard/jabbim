@@ -2770,7 +2770,7 @@ class mainWindow(QtGui.QMainWindow):
 						continue
 					link = self.client.bobDef[cid].encode('utf8')
 					#link = os.getcwd()+'/images/32x32/actions/ajax-animation.gif'
-					el.setAttribute('src', link)
+					el.setAttribute('src', 'link')
 					el.setAttribute('id',i)
 					changed = True
 					frm=msg.frm
@@ -2779,6 +2779,7 @@ class mainWindow(QtGui.QMainWindow):
 					else:
 						tab,tabIndex=self.chat.findTab(frm.full())
 					if tab:
+						tab.chat.ui.webkit.messageObject.src[i] = link
 						tab.chat.ui.webkit.messageObject.addHandler(i,tab.chat.ui.webkit.reloadImage,[i,link])
 
 					self.imageId+=1
@@ -2802,6 +2803,7 @@ class mainWindow(QtGui.QMainWindow):
 						else:
 							tab,tabIndex=self.chat.findTab(frm.full())
 						if tab:
+							tab.chat.ui.webkit.messageObject.src[i] = link
 							tab.chat.ui.webkit.messageObject.addHandler(i,tab.chat.ui.webkit.reloadImage,[i,link])
 
 						self.imageId+=1
@@ -2809,6 +2811,7 @@ class mainWindow(QtGui.QMainWindow):
 						d.addCallback(self.refreshImage,i,msg.frm)
 			if changed:
 				msg.setXHTML(unicode(dom.toxml(), 'utf8'))
+				print unicode(dom.toxml(), 'utf8')
 		return msg
 
 	def refreshImage(self,data,name,frm):

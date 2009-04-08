@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 from PyQt4 import QtCore, QtGui, QtWebKit
 import os, time
 import weakref
+from twisted.python import log
 
 class searchWidget(QtGui.QWidget):
 	def __init__(self,webkit,parent=None):
@@ -98,7 +99,11 @@ class message(QtCore.QObject):
 
 	@QtCore.pyqtSignature("QString",result="QString")
 	def getSrc(self,sid):
-		r=unicode(self.src[unicode(sid)])
+		try:
+			r=unicode(self.src[unicode(sid)])
+		except:
+			log.err('can\'t find src for '+sid)
+			return ''
 		#r=r"file:///c:\users\hanzz\desktop\svn/emoticons/default/smile16.png"
 		return r
 
@@ -426,10 +431,11 @@ class webkitChatWidget(QtWebKit.QWebView):
 
 	def reloadImage(self,name,data,x=None):
 ##		if x:
+		self.messageObject.src[name]=data
 		if not self.messageObject.handlers.has_key(name):
-			self.messageObject.src[name]=data
 			self.messageObject.addHandler(name,self.reloadImage,[name,data,x])
 		self.page().mainFrame().evaluateJavaScript("reloadImage('%s');"%name)
+		log.msg("reloadImage('%s');"%name)
 #		else:
 	#		self.chatwidget().main().reactor.callLater(1,self.reloadImage,name,data,True)
 
@@ -528,13 +534,14 @@ class webkitChatWidget(QtWebKit.QWebView):
 <script>
 
 function reloadImage(name) {
-	messageObject.log("test")
+	messageObject.log("test "+name)
 	i = document.getElementById(name);
 	if (i){
 		i.src = messageObject.getSrc(name);
 		messageObject.reloaded(name);
 		messageObject.removeHandler(name);
 	}
+	else { messageObject.log("no element found");}
 }
 
 function addHistoryMessages() {

@@ -18,7 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 import locale
-import sys, time
+import sys, time, os
 import traceback
 from base64 import b64encode, b64decode
 
@@ -1303,6 +1303,9 @@ class Client(derived):
 		def _writeBOBData(el,  cid):
 			log.msg('data received!')
 			frm = jid.JID(el['from'])
+			if os.path.isfile(self.bobCacheDir+cid):
+				log.msg('not writing bob data, data already there')
+				return self.bobDef[cid]
 			data = b64decode(unicode(el.data))
 			#TODO detect hash type
 			parsedHash = _parseBOBHash(cid)
