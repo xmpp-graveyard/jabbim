@@ -1672,8 +1672,7 @@ class rosterWidget(QtGui.QWidget):
 				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription, self.main.client.roster['users'][jid].groups)
 			pass
 		elif key==QtCore.Qt.Key_F and event.modifiers() & QtCore.Qt.ControlModifier:
-			self.search('', True)
-			pass
+			self.search('', True) #show searching in roster with empty fieldl
 		elif key==QtCore.Qt.Key_O and event.modifiers() & QtCore.Qt.ControlModifier:
 			check=not self.main.offline
 			#self.main.ui.showOffline.setChecked(check)
