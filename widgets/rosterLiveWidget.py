@@ -31,7 +31,6 @@ import vcardeditor
 import commands
 import defaultrosterstyle
 import compactrosterstyle
-from include import rot13
 import miniroster
 from locale import strcoll
 import operator
@@ -1673,7 +1672,8 @@ class rosterWidget(QtGui.QWidget):
 				self.main.client.sendRosterUpdate(contact.jid, name, contact.subscription, self.main.client.roster['users'][jid].groups)
 			pass
 		elif key==QtCore.Qt.Key_F and event.modifiers() & QtCore.Qt.ControlModifier:
-			QtGui.QMessageBox.warning(self,':)',unicode(rot13.scramble("Frs fnzbmerwzr ifrpuab ivqv n wra gnx gb ararpun :C")),0,1)
+			self.search('', True)
+			pass
 		elif key==QtCore.Qt.Key_O and event.modifiers() & QtCore.Qt.ControlModifier:
 			check=not self.main.offline
 			#self.main.ui.showOffline.setChecked(check)
@@ -2068,10 +2068,10 @@ class rosterWidget(QtGui.QWidget):
 
 
 
-	def search(self,text=""):
+	def search(self,text="", forceEmpty = False):
 		text=unicode(text).lower()
 		first=None
-		if len(text)!=0:
+		if len(text)!=0 or forceEmpty:
 			self.main.ui.rosterSearch.show()
 			self.main.ui.rosterSearchLabel.show()
 			self.main.ui.rosterSearchClose.show()
