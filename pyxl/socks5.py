@@ -732,6 +732,8 @@ class Send(protocol.Protocol):
 			self.ft.client.dispatcher.publishEvent('on_ftTransfered', self.ft.sid, len(data))
 			if self.ft.transfered >= self.ft.size:
 				self.ft.finish()
+				log.msg('sending finished')
+				self.unregisterProducer()
 
 
 	
