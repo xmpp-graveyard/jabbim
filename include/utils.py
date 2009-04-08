@@ -484,16 +484,16 @@ def get_os_info():
 		executable = 'lsb_release'
 		params = ' --id --codename --release --short'
 		full_path_to_executable = is_in_path(executable, return_abs_path = True)
-#		if full_path_to_executable:
-#			command = executable + params
-#			child_stdin, child_stdout = os.popen2(command)
-#			output = temp_failure_retry(child_stdout.readline).strip()
-#			child_stdout.close()
-#			child_stdin.close()
-#			os.wait()
-#			# some distros put n/a in places, so remove those
-#			output = output.replace('n/a', '').replace('N/A', '')
-#			return output
+		if full_path_to_executable:
+			command = executable + params
+			child_stdin, child_stdout = os.popen2(command)
+			output = temp_failure_retry(child_stdout.readline).strip()
+			child_stdout.close()
+			child_stdin.close()
+			os.wait()
+			# some distros put n/a in places, so remove those
+			output = output.replace('n/a', '').replace('N/A', '')
+			return output
 
 		# lsb_release executable not available, so parse files
 		for distro_name in distro_info:
