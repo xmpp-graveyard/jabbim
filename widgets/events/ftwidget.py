@@ -90,10 +90,9 @@ class FTDownloadWidget(QtGui.QWidget):
 
 	def setCurrentFile(self,file):
 		self.file=file
-		print "WIDTH",self.width()
 		self.ui.filename.setText(unicode(self.metrics.elidedText(basename(self.file),QtCore.Qt.ElideMiddle, self.width()-10-self.ui.closeButton.width())))
-		
 
+	
 	def transferFinished(self):
 		self.ui.progressBar.hide()
 		self.ui.accept.show()

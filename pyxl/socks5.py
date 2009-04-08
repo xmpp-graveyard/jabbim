@@ -331,7 +331,7 @@ class ClientProtocol (protocol.Protocol):
 		self.state = "gotHelloReply"
 
 	def dataReceived (self, data):
-		log.msg("SOCKS state=" + self.state)
+		#log.msg("SOCKS state=" + self.state)
 		method = getattr(self, 'socks_%s' % (self.state), 
 			self.socks_thisMustNeverHappen)
 		method (data)
