@@ -123,7 +123,11 @@ class preferencesWindow(QtGui.QDialog):
 								widget.hide()
 								
 		QtCore.QObject.connect(self.ui.themePackage.page(), QtCore.SIGNAL("frameCreated ( QWebFrame *)"), self.themePackageFrameCreated)
-		
+
+		self.webkitObject=view.webkitObject(self)
+		QtCore.QObject.connect(self.ui.themePackage,QtCore.SIGNAL("loadFinished ( bool)"),self.themePackageFinished)
+		QtCore.QObject.connect(self.ui.themePackage.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.themePackageCleared)
+
 		
 
 		QtCore.QObject.connect(self.ui.emoticonsList,QtCore.SIGNAL('activated ( int )'),self.emoticonsListChanged)
@@ -177,7 +181,7 @@ class preferencesWindow(QtGui.QDialog):
 					if themePackage.has_key("header"):
 						if len(themePackage["header"]["name"])!=0:
 							self.ui.themePackages.insertItem(0,themePackage["header"]["name"],QtCore.QVariant(unicode(theme)))
-		html, self.chatThemeHtml, self.groupchatThemeHtml = view.generateThemePackagePreview(self.main,self.main.config)
+		html, self.chatThemeHtml, self.groupchatThemeHtml, self.emoticonsHtml = view.generateThemePackagePreview(self.main,self.main.config)
 		self.ui.themePackage.setHtml(html)
 
 	def themePackageFrameCreated(self, frame, timeout = None):
@@ -186,6 +190,8 @@ class preferencesWindow(QtGui.QDialog):
 				frame.setHtml(self.chatThemeHtml[0],QtCore.QUrl("file:///"+self.chatThemeHtml[1]))
 			elif unicode(frame.frameName()) == "groupchatThemeFrame" and self.groupchatThemeHtml[0]:
 				frame.setHtml(self.groupchatThemeHtml[0],QtCore.QUrl("file:///"+self.chatThemeHtml[1]))
+			elif unicode(frame.frameName()) == "emoticonsFrame" and self.emoticonsHtml:
+				frame.setHtml(self.emoticonsHtml)
 		else:
 			self.main.reactor.callLater(1, self.themePackageFrameCreated, frame, True)
 
@@ -832,6 +838,13 @@ function makePreview(){
 			self.messages2.append(factory.genOutgoingContent(unicode(self.tr("Me")),unicode(self.tr("Message for user")),self.main.now(),jabbim_icon))
 			self.messages2.append(factory.genOutgoingNextContent(unicode(self.tr("Me")),unicode(self.tr("Second message for user")),self.main.now(),jabbim_icon))
 			self.ui.groupchatskinPreview.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+factory.chatPath()))
+
+	def themePackageCleared(self):
+		self.ui.themePackage.page().mainFrame().addToJavaScriptWindowObject("webkitObject",self.webkitObject)
+
+	def themePackageFinished(self,ok):
+		pass
+		#self.ui.themePackage.page().mainFrame().evaluateJavaScript("makePreview();")
 
 	def chatskinPreviewCleared(self):
 		print "cleared"

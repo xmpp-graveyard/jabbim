@@ -18,27 +18,89 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 import os, sys
 from widgets import webkitthemes
+from PyQt4 import QtCore
+import weakref
+
+class webkitObject(QtCore.QObject):
+	def __init__(self,preferences):
+		QtCore.QObject.__init__(self)
+
+		self.preferences = weakref.ref(preferences)
+		self.setObjectName("webkitObject")
+
+	@QtCore.pyqtSignature("QString, QString")
+	def selectChanged(self, typ, value):
+		print "select changed", typ, value
+		if typ == "emoticons":
+			frames = self.preferences().ui.themePackage.page().mainFrame().childFrames()
+			for frame in frames:
+				if frame.frameName() == "emoticonsFrame":
+					frame.setHtml(generateEmoticonsPreview(self.preferences().main,unicode(value)))
+
+def populateEmoticonsList(MainWindow):
+#<form name="form1" title="Inaccessible form Example">
+    #<label>Go to best practice topic
+    #<select name="select1" size="1" onchange="gotourl(this)">
+      #<option value="../standards/">Standards</option>
+      #<option value="../nav/">Navigation</option>
+      #<option value="../text/">Text Descriptions</option>
+      #<option value="../auto/">Automation</option>
+      #<option value="../styling/">Styling</option>
+    #</select>
+    #</label>
+  #</form> 
+	ret = '<form name="emoticonsForm"><label>' + unicode(MainWindow.tr("Name: ")) + '<select name="emoticons" size="1" onchange="webkitObject.selectChanged(\'emoticons\',this.options[this.selectedIndex].value);">'
+	# emoticons from Jabbim root directory
+	packs=os.listdir("emoticons/")
+	for pack in packs:
+		if os.path.isdir('emoticons/'+pack):
+			emoticons=os.listdir('emoticons/'+pack+"/")
+			for emoticon in emoticons:
+				if emoticon.endswith('.cfg'):
+					emo=pack+"/"+emoticon
+					#config=ConfigObj("emoticons/"+emo,encoding='UTF8')
+					loaded,config=MainWindow.loadJabbimExtraConfig("emoticons/"+emo,'emoticons/default/smileys.cfg')
+					if loaded:
+						ret += '<option value="' + emo + '">' + unicode(config['header']['name']) + "</option>"
+						#if emo==currentEmoticons:
+							#item=self.ui.emoticonsList.insertItem(0,QtGui.QIcon('emoticons/'+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
+						#else:
+							#item=self.ui.emoticonsList.addItem(QtGui.QIcon('emoticons/'+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
+	
+	# emoticons from users home directory
+	packs=os.listdir(MainWindow.realHomeDir+"/emoticons")
+	for pack in packs:
+		if os.path.isdir(MainWindow.realHomeDir+"/emoticons/"+pack):
+			emoticons=os.listdir(MainWindow.realHomeDir+"/emoticons/"+pack+"/")
+			for emoticon in emoticons:
+				if emoticon.endswith('.cfg'):
+					emo=pack+"/"+emoticon
+					#config=ConfigObj(MainWindow.realHomeDir+"/emoticons/"+emo,encoding='UTF8')
+					loaded,config=MainWindow.loadJabbimExtraConfig(MainWindow.realHomeDir+"/emoticons/"+emo,'emoticons/default/smileys.cfg')
+					if loaded:
+						ret += '<option value="' + emo + '">' + unicode(config['header']['name']) + "</option>"
+
+	ret += "</select></label></form>"
+	return ret
 
 def generateEmoticonsPreview(MainWindow,pack):
 	src=unicode(os.getcwd(), sys.getfilesystemencoding())+'/emoticons/'
 	#config=ConfigObj("emoticons/"+path,encoding='UTF8')
 	loaded,config=MainWindow.loadJabbimExtraConfig("emoticons/"+pack,'emoticons/default/smileys.cfg')
 	if len(config)==0 or not loaded:
-		src=MainWindow.realHomeDir+'/emoticons/'
 		#config=ConfigObj(MainWindow.mainWindow.realHomeDir+"/emoticons/"+path,encoding='UTF8')
+		src=MainWindow.realHomeDir+'/emoticons/'
 		loaded,config=MainWindow.loadJabbimExtraConfig(MainWindow.realHomeDir+"/emoticons/"+pack,'emoticons/default/smileys.cfg')
 		if not loaded:
 			return None
-	html=""
-	html+=MainWindow.tr("Name: ")+unicode(config['header']['name'])+"<br/>"
-	if config['header'].has_key('license'):
-		html+=MainWindow.tr("License: ")+unicode(config['header']['license'])+"<br/><br/>"
+	html="<html><head></head><body>"
 	values=[]
 	for k,v in config['emoticons'].iteritems():
 		#MainWindow.smileys[k.replace("<","&lt;").replace(">","&gt;")]=v
 		if not v in values:
 			html+='<img src="file://'+src+os.path.dirname(pack)+'/'+v+'" />'
 			values.append(v)
+	html += "</body></html>"
 	return html
 
 def generateChatThemePreview(MainWindow,pack):
@@ -73,10 +135,11 @@ def generateChatThemePreview(MainWindow,pack):
 def generateThemePackagePreview(MainWindow,config):
 	ret = "<html><head></head><body>"
 
-	html = generateEmoticonsPreview(MainWindow,config["emoticons"])
-	if html:
+	emoticons = generateEmoticonsPreview(MainWindow,config["emoticons"])
+	if emoticons:
 		ret += "<h3>" + unicode(MainWindow.tr("Emoticons")) +"</h3>"
-		ret += html
+		ret += populateEmoticonsList(MainWindow)+"<br/>"
+		ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="emoticonsFrame"></iframe>'
 	else:
 		ret += "<h3>" + unicode(MainWindow.tr("Emoticons")) +"</h3>"
 		ret += "<b>" + MainWindow.tr("Emoticons package %1 is not installed").arg(config["emoticons"]) + "</b><br/>"
@@ -102,7 +165,7 @@ def generateThemePackagePreview(MainWindow,config):
 		ret += "<b>" + MainWindow.tr("Groupchat theme %1 is not installed").arg(config["groupchatTheme"]) + "</b><br/>"
 
 	ret += "</body></html>"
-	return ret, (chatTheme, cPath), (groupchatTheme, gPath)
+	return ret, (chatTheme, cPath), (groupchatTheme, gPath), emoticons
 	
 	
 	
