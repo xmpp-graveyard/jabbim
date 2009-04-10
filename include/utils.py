@@ -111,6 +111,8 @@ def makeHomeDir(homeDir):
 		os.mkdir(homeDir+"/rosterstyles")
 	if not os.path.isdir(homeDir+"/rosterstyles/ng"):
 		os.mkdir(homeDir+"/rosterstyles/ng")
+	if not os.path.isdir(homeDir+"/themepackages"):
+		os.mkdir(homeDir+"/themepackages")
 		
 def loadConfig(main,status):
 	# loads config and repairs config file
@@ -159,6 +161,7 @@ def loadConfig(main,status):
 			"plugins":['notification', 'archive', 'autoaway', 'autoupdate', 'jdm', 'tune', 'remote',  'uniemoticons'],
 			"rosterMode":"normal",
 			"rosterStyle":"compact",
+			"themePackage":"default/default.cfg",
 			"chatMode":"normal",
 			"statusMessages":list(status),
 			"notifyOnDND":"True",

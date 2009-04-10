@@ -2194,6 +2194,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.homeDir=self.realHomeDir+"/"+self.config['jid']+"-profile"
 			utils.loadConfig(self,[])
 
+		self.loadThemePackage()
 		self.loadRoster() # load roster widget
 		self.loadRosterStyle()
 		QtCore.QObject.connect(self.ui.rosterSearch, QtCore.SIGNAL(" textEdited ( const QString & )"),self.ui.roster.search)
@@ -4818,6 +4819,27 @@ class mainWindow(QtGui.QMainWindow):
 				QtGui.QSound.play(self.sounds[sound].strip('\n'))
 			return True
 		return False
+
+	def loadThemePackage(self):
+		self.themePackage = None
+		if len(self.config['themePackage'])==0:
+			self.config['themePackage']="default/default.cfg"
+			self.config.write()
+		theme = "themepackages/" + unicode(self.config['themePackage'])
+		if not isfile(theme):
+			theme = self.realHomeDir + "/themepackages/" + unicode(self.config['themePackage'])
+			if not isfile(theme):
+				theme="themepackages/default/default.cfg"
+		
+		self.themePackage = ConfigObj(theme,encoding='UTF8')
+		if len(self.themePackage)!=0:
+			for key in ["chatTheme","groupchatTheme","soundPack","mood","emoticons","activities","rosterStyle","theme"]:
+				if self.themePackage.has_key(key):
+					if len(self.themePackage[key]["value"])!=0:
+						if len(self.config[key])==0:
+							self.config[key] = self.themePackage[key]["value"]
+		
+		
 
 	def loadRosterStyle(self):
 		self.rosterStyle=None

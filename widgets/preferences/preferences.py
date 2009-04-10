@@ -18,27 +18,28 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 from PyQt4 import QtCore, QtGui
 import sys; sys.path.append('..')
-from preferences_ui import *
+from widgets.preferences_ui import *
 from include import rot13
 from include import plugins as pluginTemplate
 from pref import jabbim,connection,chat,privacy
-from preferences_bookmarks_ui import *
+from widgets.preferences_bookmarks_ui import *
 from configobj import ConfigObj
 import os
 import pyxl
 from imp import load_source
 import shutil
 from twisted.python import log
-import dataforms
+import widgets.dataforms as dataforms
 from twisted.words.xish import domish
 #from twisted.web.microdom import *
 import traceback
-from extra import extraDialog
+from widgets.extra import extraDialog
 from os.path import basename
 from pyxl import jid as jidT
-import webkitthemes
-from configlib import *
-import privacy as privacyMod
+import widgets.webkitthemes as webkitthemes
+from widgets.configlib import *
+import widgets.privacy as privacyMod
+import view
 
 class message(QtCore.QObject):
 	def __init__(self,message):
@@ -120,12 +121,18 @@ class preferencesWindow(QtGui.QDialog):
 						if cfg[key].has_key("widgets"):
 							for widget in cfg[key]["widgets"]:
 								widget.hide()
+								
+		QtCore.QObject.connect(self.ui.themePackage.page(), QtCore.SIGNAL("frameCreated ( QWebFrame *)"), self.themePackageFrameCreated)
+		
+		
 
 		QtCore.QObject.connect(self.ui.emoticonsList,QtCore.SIGNAL('activated ( int )'),self.emoticonsListChanged)
 		QtCore.QObject.connect(self.ui.chatskinVariant,QtCore.SIGNAL('activated ( int )'),self.chatskinVariantChanged)
 		QtCore.QObject.connect(self.ui.groupchatskinVariant,QtCore.SIGNAL('activated ( int )'),self.groupchatskinVariantChanged)
 		QtCore.QObject.connect(self.ui.groupchatskinStyle,QtCore.SIGNAL('activated ( int )'),self.groupchatskinStyleChanged)
 		QtCore.QObject.connect(self.ui.chatSkin_list, QtCore.SIGNAL("activated ( int )"),self.chatSkin_listChanged)
+		QtCore.QObject.connect(self.ui.advancedView, QtCore.SIGNAL("clicked()"),self.showAdvancedView)
+		QtCore.QObject.connect(self.ui.normalView, QtCore.SIGNAL("clicked()"),self.showNormalView)
 
 		QtCore.QObject.connect(self.ui.rosterStyle,QtCore.SIGNAL('activated ( int )'),self.rosterStyleChanged)
 		
@@ -154,6 +161,43 @@ class preferencesWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.moreChatSkins, QtCore.SIGNAL("clicked()"),self.getMoreChatskins)
 		QtCore.QObject.connect(self.ui.moreGroupchatSkins, QtCore.SIGNAL("clicked()"),self.getMoreChatskins)
 	
+	def loadThemePackages(self):
+		self.ui.themePackages.clear()
+		packs=os.listdir("themepackages/") + os.listdir(self.main.realHomeDir + "/themepackages/")
+		for pack in packs:
+			if os.path.isdir('themepackages/'+pack):
+				theme = "themepackages/" + pack + "/package.cfg"
+				if not os.path.isfile(theme):
+					theme = self.main.realHomeDir + "/themepackages/" + pack + "/package.cfg"
+					if not os.path.isfile(theme):
+						continue
+				
+				themePackage = ConfigObj(theme,encoding='UTF8')
+				if len(themePackage)!=0:
+					if themePackage.has_key("header"):
+						if len(themePackage["header"]["name"])!=0:
+							self.ui.themePackages.insertItem(0,themePackage["header"]["name"],QtCore.QVariant(unicode(theme)))
+		html, self.chatThemeHtml, self.groupchatThemeHtml = view.generateThemePackagePreview(self.main,self.main.config)
+		self.ui.themePackage.setHtml(html)
+
+	def themePackageFrameCreated(self, frame, timeout = None):
+		if timeout:
+			if unicode(frame.frameName()) == "chatThemeFrame" and self.chatThemeHtml[0]:
+				frame.setHtml(self.chatThemeHtml[0],QtCore.QUrl("file:///"+self.chatThemeHtml[1]))
+			elif unicode(frame.frameName()) == "groupchatThemeFrame" and self.groupchatThemeHtml[0]:
+				frame.setHtml(self.groupchatThemeHtml[0],QtCore.QUrl("file:///"+self.chatThemeHtml[1]))
+		else:
+			self.main.reactor.callLater(1, self.themePackageFrameCreated, frame, True)
+
+	def showAdvancedView(self):
+		if self.justShowed:
+			self.reloadView()
+			self.justShowed=False
+		self.ui.viewStackedWidget.setCurrentIndex(0)
+	
+	def showNormalView(self):
+		self.ui.viewStackedWidget.setCurrentIndex(1)
+	
 	def show(self):
 		screen = QtGui.QDesktopWidget().screenGeometry()
 		size=self.main.preferencesWindow.geometry()
@@ -163,6 +207,7 @@ class preferencesWindow(QtGui.QDialog):
 			self.privacyButton.setEnabled(True)
 		else:
 			self.privacyButton.setEnabled(False)
+		self.showNormalView()
 	
 	def showPrivacyEditor(self):
 		self.ple=privacyMod.PrivacyListEditorDialog(self,self) 
@@ -194,11 +239,10 @@ class preferencesWindow(QtGui.QDialog):
 		Called when current preferences item is changed
 		"""
 		row=self.ui.listWidget.row(item)
-		if self.justShowed:
-			if row==self.preferencesCount-1:
-				self.reloadView()
-				self.justShowed=False
-				return
+		if row==self.preferencesCount-1:
+			self.loadThemePackages()
+			self.showNormalView()
+
 		if previous:
 			name=unicode(previous.data(32).toString())
 			if self.showedPlugins.has_key(name):
