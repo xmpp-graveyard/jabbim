@@ -21,6 +21,7 @@ from widgets import webkitthemes
 from widgets.extra import extraDialog
 from PyQt4 import QtCore, QtGui
 import weakref
+from configobj import ConfigObj
 
 class webkitObject(QtCore.QObject):
 	def __init__(self,preferences):
@@ -31,6 +32,7 @@ class webkitObject(QtCore.QObject):
 		self.emoticons = None
 		self.chatTheme = None
 		self.groupchatTheme = None
+		self.theme = None
 		self.html = ""
 
 	def setConfig(self,config):
@@ -38,6 +40,7 @@ class webkitObject(QtCore.QObject):
 		self.chatTheme = unicode(config["chatTheme"])
 		self.groupchatTheme = unicode(config["groupchatTheme"])
 		self.rosterstyles = unicode(config["rosterStyle"])
+		self.theme = unicode(config["theme"])
 
 	@QtCore.pyqtSignature("",result = "QString")
 	def getHtml(self):
@@ -108,8 +111,46 @@ class webkitObject(QtCore.QObject):
 
 		elif typ == "rosterStylesVariant":
 			self.rosterstyles = self.rosterstyles.split("/")[0]  + "/" + unicode(value)
+			
+		elif typ == "jabbimstyles":
+			self.theme = unicode(value)
+			self.html = generateJabbimStylePreview(self.preferences().main, self.theme)
+			self.preferences().ui.themePackage.page().mainFrame().evaluateJavaScript('document.getElementById("jabbimStyleDiv").innerHTML = webkitObject.getHtml();')
 
-def populateRosterStylesList(MainWindow,config):
+def populateJabbimStylesList(MainWindow, config):
+	ret = '<form name="jabbimStyleForm"><label>' + unicode(MainWindow.tr("Name: ")) + '<select name="jabbimstyles" size="1" onchange="webkitObject.selectChanged(\'jabbimstyles\',this.options[this.selectedIndex].value);">'
+	if config == "None":
+		ret += '<option selected value="None">' + unicode(MainWindow.tr("Don't use themes")) + "</option>"
+	else:
+		ret += '<option value="None">' + unicode(MainWindow.tr("Don't use themes")) + "</option>"
+	skins=os.listdir("themes/")
+	for skin in skins:
+		if os.path.isdir("themes/"+skin) and os.path.exists("themes/"+skin+"/style.css"):
+			#preview=QtGui.QIcon('themes/'+skin+"/preview.png")
+			conf=ConfigObj("themes/"+skin+"/theme.ini",encoding='UTF8')
+			if conf!=None and len(conf)!=0:
+				#text="<b>"+self.tr("Name: ")+"</b> "+conf['name']+'<br/>'
+				#text+="<b>"+self.tr("Author: ")+"</b> "+conf['author']+'<br/>'
+				#text+="<b>"+self.tr("Version: ")+"</b> "+conf['version']
+				#text="<b>"+self.tr("Name: ")+"</b> "+conf['name']+'<br/>'
+				#text+="<b>"+self.tr("Author: ")+"</b> "+conf['author']+'<br/>'
+				#text+="<b>"+self.tr("Version: ")+"</b> "+conf['version']
+				try:
+					text = conf['name']
+				except:
+					text = skin
+			else:
+				text = skin
+
+			if skin==config:
+				ret += '<option selected value="' + skin + '" >' + text + "</option>"
+			else:
+				ret += '<option value="' + skin + '">' + text + "</option>"
+	ret += "</select></label></form>"
+	return ret
+
+
+def populateRosterStylesList(MainWindow, config):
 	ret = '<form name="rosterStyleForm"><label>' + unicode(MainWindow.tr("Name: ")) + '<select name="rosterstyles" size="1" onchange="webkitObject.selectChanged(\'rosterstyles\',this.options[this.selectedIndex].value);">'
 	packs=os.listdir("rosterstyles/")
 	loaded=[]
@@ -253,6 +294,14 @@ def populateChatThemeStyleList(MainWindow,chatTheme):
 	ret += "</select></label></form>"
 	return ret,v
 
+def generateJabbimStylePreview(MainWindow,skin):
+	if os.path.isdir("themes/"+skin) and os.path.exists("themes/"+skin+"/style.css"):
+		preview = unicode(os.getcwd(), sys.getfilesystemencoding())+'/themes/'+skin+"/preview.png"
+		if os.path.isfile(preview):
+			return '<img width="128" height="128" src="file://%s" />' % preview
+	return ''
+
+
 def generateEmoticonsPreview(MainWindow,pack):
 	src=unicode(os.getcwd(), sys.getfilesystemencoding())+'/emoticons/'
 	#config=ConfigObj("emoticons/"+path,encoding='UTF8')
@@ -327,6 +376,10 @@ def generateThemePackagePreview(MainWindow,config):
 	ret += populateRosterStylesList(MainWindow,config["rosterStyle"])
 	ret += "<div id=\"rosterStyleDiv\">" + populateRosterStylesVariantList(MainWindow,config["rosterStyle"])[0] + "</div>"
 	#ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="rosterStyleFrame"></iframe>'
+	
+	ret += "<h3>" + unicode(MainWindow.tr("Jabbim theme")) +"</h3>"
+	ret += populateJabbimStylesList(MainWindow,config["theme"])
+	ret += "<div id=\"jabbimStyleDiv\">" + generateJabbimStylePreview(MainWindow,config["theme"]) + "</div>"
 
 
 	ret += "</body></html>"
