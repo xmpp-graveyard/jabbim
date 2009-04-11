@@ -899,10 +899,11 @@ function makePreview(){
 				self.main.config['rosterStyle']=unicode(self.ui.rosterStyle.itemData(self.ui.rosterStyle.currentIndex()).toString())+"/"+unicode(self.ui.rosterVariant.itemData(self.ui.rosterVariant.currentIndex()).toString())
 				self.main.loadRosterStyle()
 		if self.main.config['chatTheme']!=self.webkitObject.chatTheme or self.main.config['chatTheme']!=self.webkitObject.groupchatTheme:
-			self.main.config['chatTheme']=self.webkitObject.chatTheme
-			self.main.config['groupchatTheme']=self.webkitObject.groupchatTheme
-			self.main.loadSkin()
-		if self.main.config['emoticons']!=self.webkitObject.emoticons:
+			if self.webkitObject.chatTheme and self.webkitObject.groupchatTheme:
+				self.main.config['chatTheme']=self.webkitObject.chatTheme
+				self.main.config['groupchatTheme']=self.webkitObject.groupchatTheme
+				self.main.loadSkin()
+		if self.main.config['emoticons']!=self.webkitObject.emoticons and self.webkitObject.emoticons:
 			self.main.config['emoticons']=self.webkitObject.emoticons
 			self.main.emoticonsWidget.reinit()
 			#for i in range(self.main.chat.ui.chatTab.count()):

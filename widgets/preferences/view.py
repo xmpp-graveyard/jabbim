@@ -30,11 +30,16 @@ class webkitObject(QtCore.QObject):
 		self.emoticons = None
 		self.chatTheme = None
 		self.groupchatTheme = None
+		self.html = ""
 
 	def setConfig(self,config):
 		self.emoticons = unicode(config["emoticons"])
 		self.chatTheme = unicode(config["chatTheme"])
 		self.groupchatTheme = unicode(config["groupchatTheme"])
+
+	@QtCore.pyqtSignature("",result = "QString")
+	def getHtml(self):
+		return self.html
 
 	@QtCore.pyqtSignature("QString, QString")
 	def selectChanged(self, typ, value):
@@ -45,31 +50,47 @@ class webkitObject(QtCore.QObject):
 			for frame in frames:
 				if frame.frameName() == "emoticonsFrame":
 					frame.setHtml(generateEmoticonsPreview(self.preferences().main,unicode(value)))
+
 		elif typ == "chatTheme":
-			self.chatTheme = unicode(value)
+			self.chatTheme = unicode(value) + "/" + self.chatTheme.split("/")[1]
+			self.html, style = populateChatThemeStyleList(self.preferences().main,self.chatTheme)
+			self.chatTheme = self.chatTheme.split("/")[0] + "/" + style
+			self.preferences().ui.themePackage.page().mainFrame().evaluateJavaScript('document.getElementById("chatThemeStyleDiv").innerHTML = webkitObject.getHtml();')
 			frames = self.preferences().ui.themePackage.page().mainFrame().childFrames()
 			for frame in frames:
 				if frame.frameName() == "chatThemeFrame":
-					frame.setHtml(generateChatThemePreview(self.preferences().main,unicode(value)))
+					html, path = generateChatThemePreview(self.preferences().main,self.chatTheme)
+					frame.setHtml(html, QtCore.QUrl("file:///" + path))
+
 		elif typ == "groupchatTheme":
-			self.groupchatTheme = unicode(value)
+			self.groupchatTheme = unicode(value) + "/" + self.groupchatTheme.split("/")[1]
+			self.html, style = populateChatThemeStyleList(self.preferences().main,self.groupchatTheme)
+			self.html = self.html.replace("\"chatTheme","\"groupchatTheme").replace("'chatTheme","'groupchatTheme")
+			self.groupchatTheme = self.groupchatTheme.split("/")[0] + "/" + style
+			self.preferences().ui.themePackage.page().mainFrame().evaluateJavaScript('document.getElementById("groupchatThemeStyleDiv").innerHTML = webkitObject.getHtml();')
 			frames = self.preferences().ui.themePackage.page().mainFrame().childFrames()
 			for frame in frames:
 				if frame.frameName() == "groupchatThemeFrame":
-					frame.setHtml(generateChatThemePreview(self.preferences().main,unicode(value)))
+					html, path = generateChatThemePreview(self.preferences().main,self.groupchatTheme)
+					frame.setHtml(html, QtCore.QUrl("file:///" + path))
+
+		elif typ == "chatThemeVariant":
+			self.chatTheme = self.chatTheme.split("/")[0]  + "/" + unicode(value)
+			frames = self.preferences().ui.themePackage.page().mainFrame().childFrames()
+			for frame in frames:
+				if frame.frameName() == "chatThemeFrame":
+					html, path = generateChatThemePreview(self.preferences().main,self.chatTheme)
+					frame.setHtml(html, QtCore.QUrl("file:///" + path))
+
+		elif typ == "groupchatThemeVariant":
+			self.groupchatTheme = self.groupchatTheme.split("/")[0]  + "/" + unicode(value)
+			frames = self.preferences().ui.themePackage.page().mainFrame().childFrames()
+			for frame in frames:
+				if frame.frameName() == "groupchatThemeFrame":
+					html, path = generateChatThemePreview(self.preferences().main,self.groupchatTheme)
+					frame.setHtml(html, QtCore.QUrl("file:///" + path))
 
 def populateEmoticonsList(MainWindow,em):
-#<form name="form1" title="Inaccessible form Example">
-    #<label>Go to best practice topic
-    #<select name="select1" size="1" onchange="gotourl(this)">
-      #<option value="../standards/">Standards</option>
-      #<option value="../nav/">Navigation</option>
-      #<option value="../text/">Text Descriptions</option>
-      #<option value="../auto/">Automation</option>
-      #<option value="../styling/">Styling</option>
-    #</select>
-    #</label>
-  #</form> 
 	ret = '<form name="emoticonsForm"><label>' + unicode(MainWindow.tr("Name: ")) + '<select name="emoticons" size="1" onchange="webkitObject.selectChanged(\'emoticons\',this.options[this.selectedIndex].value);">'
 	# emoticons from Jabbim root directory
 	packs=os.listdir("emoticons/")
@@ -109,6 +130,52 @@ def populateEmoticonsList(MainWindow,em):
 
 	ret += "</select></label></form>"
 	return ret
+
+def populateChatThemeList(MainWindow,default):
+	ret = '<form name="chatThemeForm"><label>' + unicode(MainWindow.tr("Name: ")) + '<select name="chatTheme" size="1" onchange="webkitObject.selectChanged(\'chatTheme\',this.options[this.selectedIndex].value);">'
+	# chat skins from Jabbim root directory
+	packs=os.listdir("chatskins/")
+	for pack in packs:
+		if os.path.isdir('chatskins/'+pack) and os.path.isdir('chatskins/'+pack+"/Incoming"):
+			if pack == default.split("/")[0]:
+				ret += '<option selected value="' + pack + '" >' + pack + "</option>"
+			else:
+				ret += '<option value="' + pack + '">' + pack + "</option>"
+
+	# chat skins from Jabbim home directory
+	packs=os.listdir(MainWindow.realHomeDir+"/chatskins/")
+	for pack in packs:
+		if os.path.isdir(MainWindow.realHomeDir+'/chatskins/'+pack) and os.path.isdir(MainWindow.realHomeDir+'/chatskins/'+pack+'/Incoming'):
+			if pack == default.split("/")[0]:
+				ret += '<option selected value="' + pack + '" >' + pack + "</option>"
+			else:
+				ret += '<option value="' + pack + '">' + pack + "</option>"
+
+	ret += "</select></label></form>"
+	return ret
+
+def populateChatThemeStyleList(MainWindow,chatTheme):
+	ret = '<form name="chatThemeVariantForm"><label>' + unicode(MainWindow.tr("Variant: ")) + '<select name="chatThemeVariant" size="1" onchange="webkitObject.selectChanged(\'chatThemeVariant\',this.options[this.selectedIndex].value);">'
+	path = chatTheme.split("/")[0]
+	if os.path.exists("chatskins/"+path+"/Variants"):
+		variants=os.listdir("chatskins/"+path+"/Variants")
+	else:
+		variants=os.listdir(MainWindow.realHomeDir+"/chatskins/"+path+"/Variants")
+	v=None
+	default=""
+	for variant in variants:
+		if variant.endswith(".css"):
+			default=unicode(variant)
+			if variant==chatTheme.split("/")[1]:
+				ret += '<option selected value="' + variant + '" >' + variant + "</option>"
+				v=unicode(variant)
+			else:
+				ret += '<option value="' + variant + '">' + variant + "</option>"
+				if not v:
+					v = unicode(variant)
+
+	ret += "</select></label></form>"
+	return ret,v
 
 def generateEmoticonsPreview(MainWindow,pack):
 	src=unicode(os.getcwd(), sys.getfilesystemencoding())+'/emoticons/'
@@ -172,24 +239,16 @@ def generateThemePackagePreview(MainWindow,config):
 		ret += "<b>" + MainWindow.tr("Emoticons package %1 is not installed").arg(config["emoticons"]) + "</b><br/>"
 
 	chatTheme, cPath = generateChatThemePreview(MainWindow,config["chatTheme"])
-	if chatTheme:
-		ret += "<h3>" + unicode(MainWindow.tr("Chat theme")) +"</h3>"
-		ret += unicode(MainWindow.tr("Name: ")) + config["chatTheme"].split("/")[0] + "<br/>"
-		ret += unicode(MainWindow.tr("Style: ")) + config["chatTheme"].split("/")[1] + "<br/><br/>"
-		ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="chatThemeFrame"></iframe>'
-	else:
-		ret += "<h3>" + unicode(MainWindow.tr("Chat theme")) +"</h3>"
-		ret += "<b>" + MainWindow.tr("Chat theme %1 is not installed").arg(config["chatTheme"]) + "</b><br/>"
+	ret += "<h3>" + unicode(MainWindow.tr("Chat theme")) +"</h3>"
+	ret += populateChatThemeList(MainWindow,config["chatTheme"])
+	ret += "<div id=\"chatThemeStyleDiv\">" + populateChatThemeStyleList(MainWindow,config["chatTheme"])[0] + "</div>"
+	ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="chatThemeFrame"></iframe>'
 
 	groupchatTheme, gPath = generateChatThemePreview(MainWindow,config["groupchatTheme"])
-	if groupchatTheme:
-		ret += "<h3>" + unicode(MainWindow.tr("Groupchat theme")) +"</h3>"
-		ret += unicode(MainWindow.tr("Name: ")) + config["groupchatTheme"].split("/")[0] + "<br/>"
-		ret += unicode(MainWindow.tr("Style: ")) + config["groupchatTheme"].split("/")[1] + "<br/><br/>"
-		ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="groupchatThemeFrame"></iframe>'
-	else:
-		ret += "<h3>" + unicode(MainWindow.tr("Groupchat theme")) +"</h3>"
-		ret += "<b>" + MainWindow.tr("Groupchat theme %1 is not installed").arg(config["groupchatTheme"]) + "</b><br/>"
+	ret += "<h3>" + unicode(MainWindow.tr("Groupchat theme")) +"</h3>"
+	ret += populateChatThemeList(MainWindow,config["groupchatTheme"]).replace("\"chatTheme","\"groupchatTheme").replace("'chatTheme","'groupchatTheme")
+	ret += "<div id=\"groupchatThemeStyleDiv\">" + populateChatThemeStyleList(MainWindow,config["groupchatTheme"])[0].replace("\"chatTheme","\"groupchatTheme").replace("'chatTheme","'groupchatTheme") + "</div>"
+	ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="groupchatThemeFrame"></iframe>'
 
 	ret += "</body></html>"
 	return ret, (chatTheme, cPath), (groupchatTheme, gPath), emoticons
