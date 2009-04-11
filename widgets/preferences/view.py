@@ -18,7 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 import os, sys
 from widgets import webkitthemes
-from PyQt4 import QtCore
+from widgets.extra import extraDialog
+from PyQt4 import QtCore, QtGui
 import weakref
 
 class webkitObject(QtCore.QObject):
@@ -42,9 +43,17 @@ class webkitObject(QtCore.QObject):
 	def getHtml(self):
 		return self.html
 
+	@QtCore.pyqtSignature("QString")
+	def getMore(self, typ):
+		if self.preferences().main.client:
+			d=extraDialog(unicode(typ),self.preferences().main,self.preferences().main)
+			d.exec_()
+		else:
+			MainWindow = self.preferences().main
+			QtGui.QMessageBox.information(self.preferences(), MainWindow.tr("Informations"), MainWindow.tr("You have to be connected to download new addons."))
+
 	@QtCore.pyqtSignature("QString, QString")
 	def selectChanged(self, typ, value):
-		print "select changed", typ, value
 		if typ == "emoticons":
 			self.emoticons = unicode(value)
 			frames = self.preferences().ui.themePackage.page().mainFrame().childFrames()
@@ -297,18 +306,18 @@ def generateThemePackagePreview(MainWindow,config):
 	ret = "<html><head></head><body>"
 
 	emoticons = generateEmoticonsPreview(MainWindow,config["emoticons"])
-	ret += "<h3>" + unicode(MainWindow.tr("Emoticons")) +"</h3>"
+	ret += "<h3>" + unicode(MainWindow.tr("Emoticons")) + "<span style=\"float: right;text-align:right;\"><a href=\"#\" onclick=\"webkitObject.getMore('emoticons')\">" + unicode(MainWindow.tr("Get more!")) + "</a></span></h3>"
 	ret += populateEmoticonsList(MainWindow,config["emoticons"])
 	ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="emoticonsFrame"></iframe>'
 
 	chatTheme, cPath = generateChatThemePreview(MainWindow,config["chatTheme"])
-	ret += "<h3>" + unicode(MainWindow.tr("Chat theme")) +"</h3>"
+	ret += "<h3>" + unicode(MainWindow.tr("Chat theme")) + "<span style=\"float: right;text-align:right;\"><a href=\"#\" onclick=\"webkitObject.getMore('chatskins')\">" + unicode(MainWindow.tr("Get more!")) + "</a></span></h3>"
 	ret += populateChatThemeList(MainWindow,config["chatTheme"])
 	ret += "<div id=\"chatThemeStyleDiv\">" + populateChatThemeStyleList(MainWindow,config["chatTheme"])[0] + "</div>"
 	ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="chatThemeFrame"></iframe>'
 
 	groupchatTheme, gPath = generateChatThemePreview(MainWindow,config["groupchatTheme"])
-	ret += "<h3>" + unicode(MainWindow.tr("Groupchat theme")) +"</h3>"
+	ret += "<h3>" + unicode(MainWindow.tr("Groupchat theme")) + "<span style=\"float: right;text-align:right;\"><a href=\"#\" onclick=\"webkitObject.getMore('chatskins')\">" + unicode(MainWindow.tr("Get more!")) + "</a></span></h3>"
 	ret += populateChatThemeList(MainWindow,config["groupchatTheme"]).replace("\"chatTheme","\"groupchatTheme").replace("'chatTheme","'groupchatTheme")
 	ret += "<div id=\"groupchatThemeStyleDiv\">" + populateChatThemeStyleList(MainWindow,config["groupchatTheme"])[0].replace("\"chatTheme","\"groupchatTheme").replace("'chatTheme","'groupchatTheme") + "</div>"
 	ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="groupchatThemeFrame"></iframe>'

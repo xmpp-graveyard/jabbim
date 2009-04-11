@@ -194,7 +194,7 @@ class preferencesWindow(QtGui.QDialog):
 			elif unicode(frame.frameName()) == "emoticonsFrame" and self.emoticonsHtml:
 				frame.setHtml(self.emoticonsHtml)
 		else:
-			self.main.reactor.callLater(1, self.themePackageFrameCreated, frame, True)
+			self.main.reactor.callLater(0, self.themePackageFrameCreated, frame, True)
 
 	def showAdvancedView(self):
 		if self.justShowed:
