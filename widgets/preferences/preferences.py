@@ -895,9 +895,9 @@ function makePreview(){
 					print key,"=",unicode(value)
 		if not self.justShowed:
 			self.main.config['chatSkin']=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())
-			if self.main.config['rosterStyle']!=unicode(self.ui.rosterStyle.itemData(self.ui.rosterStyle.currentIndex()).toString())+"/"+unicode(self.ui.rosterVariant.itemData(self.ui.rosterVariant.currentIndex()).toString()):
-				self.main.config['rosterStyle']=unicode(self.ui.rosterStyle.itemData(self.ui.rosterStyle.currentIndex()).toString())+"/"+unicode(self.ui.rosterVariant.itemData(self.ui.rosterVariant.currentIndex()).toString())
-				self.main.loadRosterStyle()
+		if self.main.config['rosterStyle']!=self.webkitObject.rosterstyles:
+			self.main.config['rosterStyle']=self.webkitObject.rosterstyles
+			self.main.loadRosterStyle()
 		if self.main.config['chatTheme']!=self.webkitObject.chatTheme or self.main.config['chatTheme']!=self.webkitObject.groupchatTheme:
 			if self.webkitObject.chatTheme and self.webkitObject.groupchatTheme:
 				self.main.config['chatTheme']=self.webkitObject.chatTheme

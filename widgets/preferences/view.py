@@ -36,6 +36,7 @@ class webkitObject(QtCore.QObject):
 		self.emoticons = unicode(config["emoticons"])
 		self.chatTheme = unicode(config["chatTheme"])
 		self.groupchatTheme = unicode(config["groupchatTheme"])
+		self.rosterstyles = unicode(config["rosterStyle"])
 
 	@QtCore.pyqtSignature("",result = "QString")
 	def getHtml(self):
@@ -89,6 +90,72 @@ class webkitObject(QtCore.QObject):
 				if frame.frameName() == "groupchatThemeFrame":
 					html, path = generateChatThemePreview(self.preferences().main,self.groupchatTheme)
 					frame.setHtml(html, QtCore.QUrl("file:///" + path))
+					
+		elif typ == "rosterstyles":
+			self.rosterstyles = unicode(value) + "/" + self.rosterstyles.split("/")[1]
+			self.html, style = populateRosterStylesVariantList(self.preferences().main,self.rosterstyles)
+			self.rosterstyles = self.rosterstyles.split("/")[0] + "/" + style
+			self.preferences().ui.themePackage.page().mainFrame().evaluateJavaScript('document.getElementById("rosterStyleDiv").innerHTML = webkitObject.getHtml();')
+
+		elif typ == "rosterStylesVariant":
+			self.rosterstyles = self.rosterstyles.split("/")[0]  + "/" + unicode(value)
+
+def populateRosterStylesList(MainWindow,config):
+	ret = '<form name="rosterStyleForm"><label>' + unicode(MainWindow.tr("Name: ")) + '<select name="rosterstyles" size="1" onchange="webkitObject.selectChanged(\'rosterstyles\',this.options[this.selectedIndex].value);">'
+	packs=os.listdir("rosterstyles/")
+	loaded=[]
+	for pack in packs:
+		if os.path.isdir('rosterstyles/'+pack):
+			#skins=os.listdir('chatskins/'+pack+"/")
+			#for skin in skins:
+			path=pack
+			if not path in loaded:
+				loaded.append(path)
+				if path==config.split("/")[0]:
+					ret += '<option selected value="' + path + '" >' + path + "</option>"
+				else:
+					ret += '<option value="' + path + '">' + path + "</option>"
+
+	packs=os.listdir(MainWindow.realHomeDir+'/rosterstyles/')
+	for pack in packs:
+		if os.path.isdir(MainWindow.realHomeDir+'/rosterstyles/'+pack):
+			#skins=os.listdir('chatskins/'+pack+"/")
+			#for skin in skins:
+			path=pack
+			if not path in loaded:
+				loaded.append(path)
+				if path==config.split("/")[0]:
+					ret += '<option selected value="' + path + '" >' + path + "</option>"
+				else:
+					ret += '<option value="' + path + '">' + path + "</option>"
+
+	ret += "</select></label></form>"
+	return ret
+
+def populateRosterStylesVariantList(MainWindow,config):
+	ret = '<form name="chatThemeVariantForm"><label>' + unicode(MainWindow.tr("Variant: ")) + '<select name="rosterstylesVariant" size="1" onchange="webkitObject.selectChanged(\'rosterstylesVariant\',this.options[this.selectedIndex].value);">'
+	path = config.split("/")[0]
+	
+	variants=[]
+	if os.path.isdir("rosterstyles/"+path):
+		variants+=os.listdir("rosterstyles/"+path)
+	if os.path.isdir(MainWindow.realHomeDir+"/rosterstyles/"+path):
+		variants+=os.listdir(MainWindow.realHomeDir+"/rosterstyles/"+path)
+	v=""
+	default=""
+	for variant in variants:
+		if variant.endswith(".cfg"):
+			default=unicode(variant)
+			if variant==config.split("/")[1]:
+				ret += '<option selected value="' + variant + '" >' + variant + "</option>"
+				v=unicode(variant)
+			else:
+				ret += '<option value="' + variant + '">' + variant + "</option>"
+				if not v:
+					v=unicode(variant)
+
+	ret += "</select></label></form>"
+	return ret,v
 
 def populateEmoticonsList(MainWindow,em):
 	ret = '<form name="emoticonsForm"><label>' + unicode(MainWindow.tr("Name: ")) + '<select name="emoticons" size="1" onchange="webkitObject.selectChanged(\'emoticons\',this.options[this.selectedIndex].value);">'
@@ -230,13 +297,9 @@ def generateThemePackagePreview(MainWindow,config):
 	ret = "<html><head></head><body>"
 
 	emoticons = generateEmoticonsPreview(MainWindow,config["emoticons"])
-	if emoticons:
-		ret += "<h3>" + unicode(MainWindow.tr("Emoticons")) +"</h3>"
-		ret += populateEmoticonsList(MainWindow,config["emoticons"])
-		ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="emoticonsFrame"></iframe>'
-	else:
-		ret += "<h3>" + unicode(MainWindow.tr("Emoticons")) +"</h3>"
-		ret += "<b>" + MainWindow.tr("Emoticons package %1 is not installed").arg(config["emoticons"]) + "</b><br/>"
+	ret += "<h3>" + unicode(MainWindow.tr("Emoticons")) +"</h3>"
+	ret += populateEmoticonsList(MainWindow,config["emoticons"])
+	ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="emoticonsFrame"></iframe>'
 
 	chatTheme, cPath = generateChatThemePreview(MainWindow,config["chatTheme"])
 	ret += "<h3>" + unicode(MainWindow.tr("Chat theme")) +"</h3>"
@@ -249,6 +312,13 @@ def generateThemePackagePreview(MainWindow,config):
 	ret += populateChatThemeList(MainWindow,config["groupchatTheme"]).replace("\"chatTheme","\"groupchatTheme").replace("'chatTheme","'groupchatTheme")
 	ret += "<div id=\"groupchatThemeStyleDiv\">" + populateChatThemeStyleList(MainWindow,config["groupchatTheme"])[0].replace("\"chatTheme","\"groupchatTheme").replace("'chatTheme","'groupchatTheme") + "</div>"
 	ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="groupchatThemeFrame"></iframe>'
+	
+	#rosterstyles = generateRosterStylesPreview(MainWindow,config["rosterStyle"])
+	ret += "<h3>" + unicode(MainWindow.tr("Roster style")) +"</h3>"
+	ret += populateRosterStylesList(MainWindow,config["rosterStyle"])
+	ret += "<div id=\"rosterStyleDiv\">" + populateRosterStylesVariantList(MainWindow,config["rosterStyle"])[0] + "</div>"
+	#ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="rosterStyleFrame"></iframe>'
+
 
 	ret += "</body></html>"
 	return ret, (chatTheme, cPath), (groupchatTheme, gPath), emoticons
