@@ -182,6 +182,7 @@ class preferencesWindow(QtGui.QDialog):
 						if len(themePackage["header"]["name"])!=0:
 							self.ui.themePackages.insertItem(0,themePackage["header"]["name"],QtCore.QVariant(unicode(theme)))
 		html, self.chatThemeHtml, self.groupchatThemeHtml, self.emoticonsHtml = view.generateThemePackagePreview(self.main,self.main.config)
+		self.webkitObject.setConfig(self.main.config)
 		self.ui.themePackage.setHtml(html)
 
 	def themePackageFrameCreated(self, frame, timeout = None):
@@ -897,13 +898,13 @@ function makePreview(){
 			if self.main.config['rosterStyle']!=unicode(self.ui.rosterStyle.itemData(self.ui.rosterStyle.currentIndex()).toString())+"/"+unicode(self.ui.rosterVariant.itemData(self.ui.rosterVariant.currentIndex()).toString()):
 				self.main.config['rosterStyle']=unicode(self.ui.rosterStyle.itemData(self.ui.rosterStyle.currentIndex()).toString())+"/"+unicode(self.ui.rosterVariant.itemData(self.ui.rosterVariant.currentIndex()).toString())
 				self.main.loadRosterStyle()
-			if self.main.config['chatTheme']!=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())+"/"+unicode(self.ui.chatskinVariant.itemData(self.ui.chatskinVariant.currentIndex()).toString()) or self.main.config['groupchatTheme']!=unicode(self.ui.groupchatskinStyle.itemData(self.ui.groupchatskinStyle.currentIndex()).toString())+"/"+unicode(self.ui.groupchatskinVariant.itemData(self.ui.groupchatskinVariant.currentIndex()).toString()):
-				self.main.config['chatTheme']=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())+"/"+unicode(self.ui.chatskinVariant.itemData(self.ui.chatskinVariant.currentIndex()).toString())
-				self.main.config['groupchatTheme']=unicode(self.ui.groupchatskinStyle.itemData(self.ui.groupchatskinStyle.currentIndex()).toString())+"/"+unicode(self.ui.groupchatskinVariant.itemData(self.ui.groupchatskinVariant.currentIndex()).toString())
-				self.main.loadSkin()
-			if self.main.config['emoticons']!=unicode(self.ui.emoticonsList.itemData(self.ui.emoticonsList.currentIndex()).toString()):
-				self.main.config['emoticons']=unicode(self.ui.emoticonsList.itemData(self.ui.emoticonsList.currentIndex()).toString())
-				self.main.emoticonsWidget.reinit()
+		if self.main.config['chatTheme']!=self.webkitObject.chatTheme or self.main.config['chatTheme']!=self.webkitObject.groupchatTheme:
+			self.main.config['chatTheme']=self.webkitObject.chatTheme
+			self.main.config['groupchatTheme']=self.webkitObject.groupchatTheme
+			self.main.loadSkin()
+		if self.main.config['emoticons']!=self.webkitObject.emoticons:
+			self.main.config['emoticons']=self.webkitObject.emoticons
+			self.main.emoticonsWidget.reinit()
 			#for i in range(self.main.chat.ui.chatTab.count()):
 				#w=self.main.chat.ui.chatTab.widget(i)
 				#w.chat.loadSmileys()

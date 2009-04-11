@@ -27,17 +27,38 @@ class webkitObject(QtCore.QObject):
 
 		self.preferences = weakref.ref(preferences)
 		self.setObjectName("webkitObject")
+		self.emoticons = None
+		self.chatTheme = None
+		self.groupchatTheme = None
+
+	def setConfig(self,config):
+		self.emoticons = unicode(config["emoticons"])
+		self.chatTheme = unicode(config["chatTheme"])
+		self.groupchatTheme = unicode(config["groupchatTheme"])
 
 	@QtCore.pyqtSignature("QString, QString")
 	def selectChanged(self, typ, value):
 		print "select changed", typ, value
 		if typ == "emoticons":
+			self.emoticons = unicode(value)
 			frames = self.preferences().ui.themePackage.page().mainFrame().childFrames()
 			for frame in frames:
 				if frame.frameName() == "emoticonsFrame":
 					frame.setHtml(generateEmoticonsPreview(self.preferences().main,unicode(value)))
+		elif typ == "chatTheme":
+			self.chatTheme = unicode(value)
+			frames = self.preferences().ui.themePackage.page().mainFrame().childFrames()
+			for frame in frames:
+				if frame.frameName() == "chatThemeFrame":
+					frame.setHtml(generateChatThemePreview(self.preferences().main,unicode(value)))
+		elif typ == "groupchatTheme":
+			self.groupchatTheme = unicode(value)
+			frames = self.preferences().ui.themePackage.page().mainFrame().childFrames()
+			for frame in frames:
+				if frame.frameName() == "groupchatThemeFrame":
+					frame.setHtml(generateChatThemePreview(self.preferences().main,unicode(value)))
 
-def populateEmoticonsList(MainWindow):
+def populateEmoticonsList(MainWindow,em):
 #<form name="form1" title="Inaccessible form Example">
     #<label>Go to best practice topic
     #<select name="select1" size="1" onchange="gotourl(this)">
@@ -61,7 +82,10 @@ def populateEmoticonsList(MainWindow):
 					#config=ConfigObj("emoticons/"+emo,encoding='UTF8')
 					loaded,config=MainWindow.loadJabbimExtraConfig("emoticons/"+emo,'emoticons/default/smileys.cfg')
 					if loaded:
-						ret += '<option value="' + emo + '">' + unicode(config['header']['name']) + "</option>"
+						if emo == em:
+							ret += '<option selected value="' + emo + '" >' + unicode(config['header']['name']) + "</option>"
+						else:
+							ret += '<option value="' + emo + '">' + unicode(config['header']['name']) + "</option>"
 						#if emo==currentEmoticons:
 							#item=self.ui.emoticonsList.insertItem(0,QtGui.QIcon('emoticons/'+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
 						#else:
@@ -78,7 +102,10 @@ def populateEmoticonsList(MainWindow):
 					#config=ConfigObj(MainWindow.realHomeDir+"/emoticons/"+emo,encoding='UTF8')
 					loaded,config=MainWindow.loadJabbimExtraConfig(MainWindow.realHomeDir+"/emoticons/"+emo,'emoticons/default/smileys.cfg')
 					if loaded:
-						ret += '<option value="' + emo + '">' + unicode(config['header']['name']) + "</option>"
+						if emo == em:
+							ret += '<option selected value="' + emo + '" >' + unicode(config['header']['name']) + "</option>"
+						else:
+							ret += '<option value="' + emo + '">' + unicode(config['header']['name']) + "</option>"
 
 	ret += "</select></label></form>"
 	return ret
@@ -138,7 +165,7 @@ def generateThemePackagePreview(MainWindow,config):
 	emoticons = generateEmoticonsPreview(MainWindow,config["emoticons"])
 	if emoticons:
 		ret += "<h3>" + unicode(MainWindow.tr("Emoticons")) +"</h3>"
-		ret += populateEmoticonsList(MainWindow)+"<br/>"
+		ret += populateEmoticonsList(MainWindow,config["emoticons"])
 		ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="emoticonsFrame"></iframe>'
 	else:
 		ret += "<h3>" + unicode(MainWindow.tr("Emoticons")) +"</h3>"
