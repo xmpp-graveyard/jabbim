@@ -42,6 +42,9 @@ class webkitObject(QtCore.QObject):
 		self.groupchatTheme = unicode(config["groupchatTheme"])
 		self.rosterstyles = unicode(config["rosterStyle"])
 		self.theme = unicode(config["theme"])
+		
+		if self.rosterstyles.find("/") == -1:
+			self.rosterstyles += "/"
 
 	@QtCore.pyqtSignature("",result = "QString")
 	def getHtml(self):
