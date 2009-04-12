@@ -331,7 +331,7 @@ p, li { white-space: pre-wrap; }
       </layout>
      </widget>
      <widget class="QWidget" name="page_3" >
-      <layout class="QGridLayout" name="gridLayout_5" >
+      <layout class="QGridLayout" name="gridLayout" >
        <item row="0" column="0" >
         <widget class="QLabel" name="label_7" >
          <property name="text" >
@@ -350,461 +350,42 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="2" column="0" >
-        <widget class="QStackedWidget" name="viewStackedWidget" >
-         <property name="currentIndex" >
-          <number>1</number>
+        <layout class="QHBoxLayout" name="horizontalLayout" >
+         <item>
+          <widget class="QLabel" name="label_6" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text" >
+            <string>Style:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="themePackages" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="3" column="0" >
+        <widget class="QWebView" name="themePackage" >
+         <property name="url" >
+          <url>
+           <string>about:blank</string>
+          </url>
          </property>
-         <widget class="QWidget" name="page" >
-          <layout class="QGridLayout" name="gridLayout_4" >
-           <item row="0" column="0" colspan="2" >
-            <widget class="QTabWidget" name="tabWidget" >
-             <property name="currentIndex" >
-              <number>0</number>
-             </property>
-             <widget class="QWidget" name="tab_5" >
-              <attribute name="title" >
-               <string>Roster</string>
-              </attribute>
-              <layout class="QGridLayout" name="gridLayout" >
-               <item row="0" column="0" >
-                <layout class="QHBoxLayout" name="_2" >
-                 <item>
-                  <layout class="QVBoxLayout" name="_3" >
-                   <item>
-                    <widget class="QLabel" name="label_12" >
-                     <property name="enabled" >
-                      <bool>true</bool>
-                     </property>
-                     <property name="sizePolicy" >
-                      <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text" >
-                      <string>Style:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="label_13" >
-                     <property name="text" >
-                      <string>Variant:</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <layout class="QVBoxLayout" name="_4" >
-                   <item>
-                    <widget class="QComboBox" name="rosterStyle" >
-                     <property name="sizePolicy" >
-                      <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize" >
-                      <size>
-                       <width>130</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QComboBox" name="rosterVariant" />
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
-               </item>
-               <item row="1" column="0" >
-                <spacer name="verticalSpacer" >
-                 <property name="orientation" >
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0" >
-                  <size>
-                   <width>20</width>
-                   <height>1</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tab" >
-              <attribute name="title" >
-               <string>Themes</string>
-              </attribute>
-              <layout class="QGridLayout" >
-               <property name="margin" >
-                <number>9</number>
-               </property>
-               <property name="spacing" >
-                <number>6</number>
-               </property>
-               <item row="0" column="0" >
-                <widget class="QCheckBox" name="useThemes" >
-                 <property name="text" >
-                  <string>Use themes</string>
-                 </property>
-                 <property name="checked" >
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0" >
-                <widget class="QListWidget" name="themes" >
-                 <property name="toolTip" >
-                  <string>Choose whe theme of Jabbim, then restart the client</string>
-                 </property>
-                 <property name="iconSize" >
-                  <size>
-                   <width>128</width>
-                   <height>128</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tab_4" >
-              <attribute name="title" >
-               <string>Groupchat skin</string>
-              </attribute>
-              <layout class="QGridLayout" >
-               <item row="0" column="0" colspan="2" >
-                <layout class="QHBoxLayout" >
-                 <item>
-                  <layout class="QVBoxLayout" >
-                   <item>
-                    <widget class="QLabel" name="label_10" >
-                     <property name="enabled" >
-                      <bool>true</bool>
-                     </property>
-                     <property name="sizePolicy" >
-                      <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text" >
-                      <string>Style:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="label_11" >
-                     <property name="text" >
-                      <string>Variant:</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <layout class="QVBoxLayout" >
-                   <item>
-                    <widget class="QComboBox" name="groupchatskinStyle" >
-                     <property name="sizePolicy" >
-                      <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize" >
-                      <size>
-                       <width>130</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QComboBox" name="groupchatskinVariant" />
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
-               </item>
-               <item row="1" column="0" colspan="2" >
-                <widget class="QLabel" name="groupchatskinInfo" >
-                 <property name="text" >
-                  <string>info</string>
-                 </property>
-                 <property name="textFormat" >
-                  <enum>Qt::RichText</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0" colspan="2" >
-                <widget class="QWebView" name="groupchatskinPreview" />
-               </item>
-               <item row="3" column="0" >
-                <spacer>
-                 <property name="orientation" >
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0" >
-                  <size>
-                   <width>201</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="3" column="1" >
-                <widget class="QPushButton" name="moreGroupchatSkins" >
-                 <property name="text" >
-                  <string>Get more groupchat skins</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tab_2" >
-              <attribute name="title" >
-               <string>Chat skin</string>
-              </attribute>
-              <layout class="QGridLayout" >
-               <item row="0" column="0" colspan="2" >
-                <layout class="QHBoxLayout" >
-                 <item>
-                  <layout class="QVBoxLayout" >
-                   <item>
-                    <widget class="QLabel" name="label_2" >
-                     <property name="enabled" >
-                      <bool>true</bool>
-                     </property>
-                     <property name="sizePolicy" >
-                      <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text" >
-                      <string>Style:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="label_3" >
-                     <property name="text" >
-                      <string>Variant:</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <layout class="QVBoxLayout" >
-                   <item>
-                    <widget class="QComboBox" name="chatSkin_list" >
-                     <property name="sizePolicy" >
-                      <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize" >
-                      <size>
-                       <width>130</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QComboBox" name="chatskinVariant" />
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
-               </item>
-               <item row="1" column="0" colspan="2" >
-                <widget class="QLabel" name="chatSkinInfo" >
-                 <property name="text" >
-                  <string>info</string>
-                 </property>
-                 <property name="textFormat" >
-                  <enum>Qt::RichText</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0" colspan="2" >
-                <widget class="QWebView" name="chatskinPreview" />
-               </item>
-               <item row="3" column="0" >
-                <spacer>
-                 <property name="orientation" >
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0" >
-                  <size>
-                   <width>201</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="3" column="1" >
-                <widget class="QPushButton" name="moreChatSkins" >
-                 <property name="text" >
-                  <string>Get more chat skins</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tab_3" >
-              <attribute name="title" >
-               <string>Emoticons</string>
-              </attribute>
-              <layout class="QGridLayout" >
-               <property name="margin" >
-                <number>9</number>
-               </property>
-               <property name="spacing" >
-                <number>6</number>
-               </property>
-               <item row="0" column="0" colspan="2" >
-                <widget class="QComboBox" name="emoticonsList" />
-               </item>
-               <item row="1" column="0" colspan="2" >
-                <widget class="QLabel" name="emoticonsInfo" >
-                 <property name="text" >
-                  <string>info</string>
-                 </property>
-                 <property name="textFormat" >
-                  <enum>Qt::RichText</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0" colspan="2" >
-                <widget class="QWebView" name="emoticonsPreview" >
-                 <property name="undoRedoEnabled" stdset="0" >
-                  <bool>false</bool>
-                 </property>
-                 <property name="readOnly" stdset="0" >
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0" >
-                <spacer>
-                 <property name="orientation" >
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0" >
-                  <size>
-                   <width>271</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="3" column="1" >
-                <widget class="QPushButton" name="moreEmoticons" >
-                 <property name="text" >
-                  <string>Get more emoticons</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </widget>
-           </item>
-           <item row="1" column="0" >
-            <spacer name="horizontalSpacer" >
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0" >
-              <size>
-               <width>378</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="1" column="1" >
-            <widget class="QPushButton" name="normalView" >
-             <property name="text" >
-              <string>Back</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="page_7" >
-          <layout class="QGridLayout" name="gridLayout_6" >
-           <item row="0" column="0" colspan="2" >
-            <layout class="QHBoxLayout" name="horizontalLayout" >
-             <item>
-              <widget class="QLabel" name="label_6" >
-               <property name="sizePolicy" >
-                <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text" >
-                <string>Style:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="themePackages" >
-               <property name="sizePolicy" >
-                <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="1" column="0" colspan="2" >
-            <widget class="QWebView" name="themePackage" >
-             <property name="url" >
-              <url>
-               <string>about:blank</string>
-              </url>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0" >
-            <spacer name="horizontalSpacer_2" >
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0" >
-              <size>
-               <width>347</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="2" column="1" >
-            <widget class="QPushButton" name="advancedView" >
-             <property name="text" >
-              <string>Advanced</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
         </widget>
        </item>
       </layout>
-      <zorder>label_7</zorder>
-      <zorder>line_6</zorder>
-      <zorder>viewStackedWidget</zorder>
      </widget>
      <widget class="QWidget" name="page_5" >
       <layout class="QGridLayout" name="gridLayout_2" >
@@ -972,22 +553,6 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel" >
      <x>358</x>
      <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>useThemes</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>themes</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>283</x>
-     <y>102</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>290</x>
-     <y>162</y>
     </hint>
    </hints>
   </connection>

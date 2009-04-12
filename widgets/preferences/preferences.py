@@ -41,21 +41,6 @@ from widgets.configlib import *
 import widgets.privacy as privacyMod
 import view
 
-class message(QtCore.QObject):
-	def __init__(self,message):
-		QtCore.QObject.__init__(self)
-		self.messages=message
-		self.scr=1
-		self.setObjectName("messageObject")
-
-	@QtCore.pyqtSignature("int",result="QString")
-	def msg(self,i):
-		return self.messages[i]
-
-	@QtCore.pyqtSignature("",result="int")
-	def scroll(self):
-		return self.scr
-
 class preferencesWindow(QtGui.QDialog):
 	def __init__(self,main,parent=None,page=0):
 		apply(QtGui.QDialog.__init__,(self,parent))
@@ -128,31 +113,6 @@ class preferencesWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.themePackage,QtCore.SIGNAL("loadFinished ( bool)"),self.themePackageFinished)
 		QtCore.QObject.connect(self.ui.themePackage.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.themePackageCleared)
 
-		
-
-		QtCore.QObject.connect(self.ui.emoticonsList,QtCore.SIGNAL('activated ( int )'),self.emoticonsListChanged)
-		QtCore.QObject.connect(self.ui.chatskinVariant,QtCore.SIGNAL('activated ( int )'),self.chatskinVariantChanged)
-		QtCore.QObject.connect(self.ui.groupchatskinVariant,QtCore.SIGNAL('activated ( int )'),self.groupchatskinVariantChanged)
-		QtCore.QObject.connect(self.ui.groupchatskinStyle,QtCore.SIGNAL('activated ( int )'),self.groupchatskinStyleChanged)
-		QtCore.QObject.connect(self.ui.chatSkin_list, QtCore.SIGNAL("activated ( int )"),self.chatSkin_listChanged)
-		QtCore.QObject.connect(self.ui.advancedView, QtCore.SIGNAL("clicked()"),self.showAdvancedView)
-		QtCore.QObject.connect(self.ui.normalView, QtCore.SIGNAL("clicked()"),self.showNormalView)
-
-		QtCore.QObject.connect(self.ui.rosterStyle,QtCore.SIGNAL('activated ( int )'),self.rosterStyleChanged)
-		
-		QtCore.QObject.connect(self.ui.useThemes,QtCore.SIGNAL("stateChanged ( int )"),self.useThemesChanged)
-		QtCore.QObject.connect(self.ui.themes, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.themeChanged)
-
-		self.chatMessageObject=message("")
-		QtCore.QObject.connect(self.ui.chatskinPreview,QtCore.SIGNAL("loadFinished ( bool)"),self.chatskinPreviewFinished)
-		QtCore.QObject.connect(self.ui.chatskinPreview.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.chatskinPreviewCleared)
-		
-
-		self.groupchatMessageObject=message("")
-		QtCore.QObject.connect(self.ui.groupchatskinPreview,QtCore.SIGNAL("loadFinished ( bool)"),self.groupchatskinPreviewFinished)
-		QtCore.QObject.connect(self.ui.groupchatskinPreview.page().mainFrame(),QtCore.SIGNAL("javaScriptWindowObjectCleared ()"),self.groupchatskinPreviewCleared)
-
-
 		# Plugins
 		QtCore.QObject.connect(self.ui.applyButton, QtCore.SIGNAL("clicked()"),self.save)
 		QtCore.QObject.connect(self.ui.pluginConfiguration, QtCore.SIGNAL("clicked()"),self.pluginConfigurationClicked)
@@ -160,10 +120,7 @@ class preferencesWindow(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.plugins, QtCore.SIGNAL("itemClicked ( QTreeWidgetItem *, int)"),self.pluginSelected)
 		QtCore.QObject.connect(self.ui.listWidget, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"),self.currentItemChanged)
 		
-		QtCore.QObject.connect(self.ui.moreEmoticons, QtCore.SIGNAL("clicked()"),self.getMoreEmoticons)
 		QtCore.QObject.connect(self.ui.morePlugins, QtCore.SIGNAL("clicked()"),self.getMorePlugins)
-		QtCore.QObject.connect(self.ui.moreChatSkins, QtCore.SIGNAL("clicked()"),self.getMoreChatskins)
-		QtCore.QObject.connect(self.ui.moreGroupchatSkins, QtCore.SIGNAL("clicked()"),self.getMoreChatskins)
 	
 	def loadThemePackages(self):
 		self.ui.themePackages.clear()
@@ -195,15 +152,6 @@ class preferencesWindow(QtGui.QDialog):
 				frame.setHtml(self.emoticonsHtml)
 		else:
 			self.main.reactor.callLater(0, self.themePackageFrameCreated, frame, True)
-
-	def showAdvancedView(self):
-		if self.justShowed:
-			self.reloadView()
-			self.justShowed=False
-		self.ui.viewStackedWidget.setCurrentIndex(0)
-	
-	def showNormalView(self):
-		self.ui.viewStackedWidget.setCurrentIndex(1)
 	
 	def show(self):
 		screen = QtGui.QDesktopWidget().screenGeometry()
@@ -214,25 +162,11 @@ class preferencesWindow(QtGui.QDialog):
 			self.privacyButton.setEnabled(True)
 		else:
 			self.privacyButton.setEnabled(False)
-		self.showNormalView()
+		#self.showNormalView()
 	
 	def showPrivacyEditor(self):
 		self.ple=privacyMod.PrivacyListEditorDialog(self,self) 
 		self.ple.show()
-	
-	def getMoreChatskins(self):
-		if self.main.client:
-			d=extraDialog("chatskins",self.main,self.main)
-			d.exec_()
-		else:
-			QtGui.QMessageBox.information(self, self.tr("Informations"),self.tr("You have to be connected to download new chatskins."))
-	
-	def getMoreEmoticons(self):
-		if self.main.client:
-			d=extraDialog("emoticons",self.main,self.main)
-			d.exec_()
-		else:
-			QtGui.QMessageBox.information(self, self.tr("Informations"),self.tr("You have to be connected to download new emoticons."))
 
 	def getMorePlugins(self):
 		if self.main.client:
@@ -248,7 +182,7 @@ class preferencesWindow(QtGui.QDialog):
 		row=self.ui.listWidget.row(item)
 		if row==self.preferencesCount-1:
 			self.loadThemePackages()
-			self.showNormalView()
+			#self.showNormalView()
 
 		if previous:
 			name=unicode(previous.data(32).toString())
@@ -266,179 +200,6 @@ class preferencesWindow(QtGui.QDialog):
 				layout.addItem(spacerItem,row+1,0)
 				self.showedPlugins[name]=var
 			self.plugins[name].on_showPreferences(self.ui.stackedWidget.widget(row))
-
-	def reloadView(self,extraPart='',extraRoot=''):
-		"""
-		Reload view preferences
-		"""
-		self.ui.emoticonsList.clear()
-		self.ui.chatSkin_list.clear()
-		self.ui.groupchatskinStyle.clear()
-		self.ui.rosterStyle.clear()
-		self.ui.themes.clear()
-		currentEmoticons=self.main.config["emoticons"]
-		currentChatskin=self.main.config["chatTheme"]
-		currentGroupchatskin=self.main.config["groupchatTheme"]
-		if extraPart.find("emoticons/")!=-1:
-			pack=os.listdir(self.main.realHomeDir+'/emoticons/'+extraRoot)
-			for emoticon in pack:
-				if emoticon.endswith('.cfg'):
-					currentEmoticons=unicode(extraRoot+'/'+emoticon).replace("//",'/')
-					print "USING DONWLOADED EMOTICONS:",currentEmoticons
-					break
-			#self.ui.tabWidget.setCurrentIndex(2)
-		elif extraPart.find("chatskins/")!=-1:
-			# chat skins from Jabbim home directory
-			packs=os.listdir(self.main.realHomeDir+"/chatskins/")
-			if self.ui.tabWidget.currentIndex()==2:
-				currentGroupchatskin=unicode(extraRoot+"/").replace("//",'/')
-			elif self.ui.tabWidget.currentIndex()==3:
-				currentChatskin=unicode(extraRoot+"/").replace("//",'/')
-
-
-
-		# emoticons from Jabbim root directory
-		packs=os.listdir("emoticons/")
-		for pack in packs:
-			if os.path.isdir('emoticons/'+pack):
-				emoticons=os.listdir('emoticons/'+pack+"/")
-				for emoticon in emoticons:
-					if emoticon.endswith('.cfg'):
-						emo=pack+"/"+emoticon
-						#config=ConfigObj("emoticons/"+emo,encoding='UTF8')
-						loaded,config=self.main.loadJabbimExtraConfig("emoticons/"+emo,'emoticons/default/smileys.cfg')
-						if loaded:
-							if emo==currentEmoticons:
-								item=self.ui.emoticonsList.insertItem(0,QtGui.QIcon('emoticons/'+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
-							else:
-								item=self.ui.emoticonsList.addItem(QtGui.QIcon('emoticons/'+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
-		
-		# emoticons from users home directory
-		packs=os.listdir(self.main.realHomeDir+"/emoticons")
-		for pack in packs:
-			if os.path.isdir(self.main.realHomeDir+"/emoticons/"+pack):
-				emoticons=os.listdir(self.main.realHomeDir+"/emoticons/"+pack+"/")
-				for emoticon in emoticons:
-					if emoticon.endswith('.cfg'):
-						emo=pack+"/"+emoticon
-						#config=ConfigObj(self.main.realHomeDir+"/emoticons/"+emo,encoding='UTF8')
-						loaded,config=self.main.loadJabbimExtraConfig(self.main.realHomeDir+"/emoticons/"+emo,'emoticons/default/smileys.cfg')
-						if loaded:
-							if emo==currentEmoticons:
-								item=self.ui.emoticonsList.insertItem(0,QtGui.QIcon(self.main.realHomeDir+"/emoticons/"+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
-							else:
-								item=self.ui.emoticonsList.addItem(QtGui.QIcon(self.main.realHomeDir+"/emoticons/"+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
-
-		self.emoticonsListChanged(0)
-		self.ui.emoticonsList.setCurrentIndex(0)
-
-
-		packs=os.listdir("rosterstyles/")
-		loaded=[]
-		for pack in packs:
-			if os.path.isdir('rosterstyles/'+pack):
-				#skins=os.listdir('chatskins/'+pack+"/")
-				#for skin in skins:
-				path=pack
-				if not path in loaded:
-					loaded.append(path)
-					print path,self.main.config["rosterStyle"].split("/")[0]
-					if path==self.main.config["rosterStyle"].split("/")[0]:
-						self.ui.rosterStyle.insertItem(0,path,QtCore.QVariant(path))
-					else:
-						self.ui.rosterStyle.addItem(path,QtCore.QVariant(path))
-
-		packs=os.listdir(self.main.realHomeDir+'/rosterstyles/')
-		for pack in packs:
-			if os.path.isdir(self.main.realHomeDir+'/rosterstyles/'+pack):
-				#skins=os.listdir('chatskins/'+pack+"/")
-				#for skin in skins:
-				path=pack
-				if not path in loaded:
-					loaded.append(path)
-					if path==self.main.config["rosterStyle"].split("/")[0]:
-						self.ui.rosterStyle.insertItem(0,path,QtCore.QVariant(path))
-					else:
-						self.ui.rosterStyle.addItem(path,QtCore.QVariant(path))
-						
-		# chat skins from Jabbim root directory
-		packs=os.listdir("chatskins/")
-		for pack in packs:
-			if os.path.isdir('chatskins/'+pack) and os.path.isdir('chatskins/'+pack+"/Incoming"):
-				#skins=os.listdir('chatskins/'+pack+"/")
-				#for skin in skins:
-				path=pack
-				if path==currentChatskin.split("/")[0]:
-					self.ui.chatSkin_list.insertItem(0,path,QtCore.QVariant(path))
-				else:
-					self.ui.chatSkin_list.addItem(path,QtCore.QVariant(path))
-				if path==currentGroupchatskin.split("/")[0]:
-					self.ui.groupchatskinStyle.insertItem(0,path,QtCore.QVariant(path))
-				else:
-					self.ui.groupchatskinStyle.addItem(path,QtCore.QVariant(path))
-
-		# chat skins from Jabbim home directory
-		packs=os.listdir(self.main.realHomeDir+"/chatskins/")
-		for pack in packs:
-			if os.path.isdir(self.main.realHomeDir+'/chatskins/'+pack) and os.path.isdir(self.main.realHomeDir+'/chatskins/'+pack+'/Incoming'):
-				path=pack
-				if path==currentChatskin.split("/")[0]:
-					self.ui.chatSkin_list.insertItem(0,path,QtCore.QVariant(path))
-				else:
-					self.ui.chatSkin_list.addItem(path,QtCore.QVariant(path))
-				if path==currentGroupchatskin.split("/")[0]:
-					self.ui.groupchatskinStyle.insertItem(0,path,QtCore.QVariant(path))
-				else:
-					self.ui.groupchatskinStyle.addItem(path,QtCore.QVariant(path))
-
-		self.ui.chatSkin_list.setCurrentIndex(0)
-		self.ui.groupchatskinStyle.setCurrentIndex(0)
-		self.groupchatskinStyleChanged(0)
-		self.chatSkin_listChanged(0)
-		self.ui.rosterStyle.setCurrentIndex(0)
-		self.rosterStyleChanged(0)
-
-		# Themes
-		skins=os.listdir("themes/")
-		QtCore.QObject.disconnect(self.ui.themes, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.themeChanged)
-
-		for skin in skins:
-
-			if os.path.isdir("themes/"+skin) and os.path.exists("themes/"+skin+"/style.css"):
-				preview=QtGui.QIcon('themes/'+skin+"/preview.png")
-				log.msg('SKIN:'+skin)
-
-				item=QtGui.QListWidgetItem(self.ui.themes)
-				item.setIcon(preview)
-				item.setSizeHint(QtCore.QSize(100,128))
-				conf=ConfigObj("themes/"+skin+"/theme.ini",encoding='UTF8')
-				if conf!=None and len(conf)!=0:
-					#text="<b>"+self.tr("Name: ")+"</b> "+conf['name']+'<br/>'
-					#text+="<b>"+self.tr("Author: ")+"</b> "+conf['author']+'<br/>'
-					#text+="<b>"+self.tr("Version: ")+"</b> "+conf['version']
-					#text="<b>"+self.tr("Name: ")+"</b> "+conf['name']+'<br/>'
-					#text+="<b>"+self.tr("Author: ")+"</b> "+conf['author']+'<br/>'
-					#text+="<b>"+self.tr("Version: ")+"</b> "+conf['version']
-					try:
-						text = self.tr("Name: %1\nAuthor: %2\nVersion: %3") \
-											.arg(conf['name']) \
-											.arg(conf['author']) \
-											.arg(conf['version'])
-					except:
-						text = self.tr("Name: ") + skin
-				else:
-					text = self.tr("Name: ") + skin
-
-				#widget=QtGui.QLabel(text,self.ui.themes)
-				#widget.setTextFormat (QtCore.Qt.RichText)
-				#widget.setMinimumHeight(128)
-				item.setText(text)
-				#widget.setText("test<br/>test")
-				#self.ui.themes.setItemWidget(item,widget)
-				item.setData(32,QtCore.QVariant(skin))
-				if skin==self.main.config["theme"]:
-					self.ui.themes.setCurrentItem(item)
-		QtCore.QObject.connect(self.ui.themes, QtCore.SIGNAL("currentItemChanged ( QListWidgetItem *, QListWidgetItem *)"),self.themeChanged)
 
 	def reloadPlugins(self):
 		for i in range(self.preferencesCount+1,int(self.ui.listWidget.count())):
@@ -458,9 +219,7 @@ class preferencesWindow(QtGui.QDialog):
 	def reloadPreferences(self):
 		self.ui.stackedWidget.setCurrentIndex(0)
 		self.ui.listWidget.setCurrentRow(0)
-		if self.main.config['theme']=="None":
-			self.ui.useThemes.setChecked(False)
-		self.currentTheme=self.main.config['theme']
+		#self.currentTheme=self.main.config['theme']
 		self.justShowed=True
 		if self.main.client:
 			self.ui.profile.hide()
@@ -543,45 +302,6 @@ class preferencesWindow(QtGui.QDialog):
 			if item.childCount()==0:
 				self.ui.plugins.setItemHidden(item, True)
 
-	def emoticonsListChanged(self,index):
-		path=unicode(self.ui.emoticonsList.itemData(index).toString())
-		src=unicode(os.getcwd(), sys.getfilesystemencoding())+'/emoticons/'
-		#config=ConfigObj("emoticons/"+path,encoding='UTF8')
-		loaded,config=self.main.loadJabbimExtraConfig("emoticons/"+path,'emoticons/default/smileys.cfg')
-		if len(config)==0 or not loaded:
-			src=self.main.realHomeDir+'/emoticons/'
-			#config=ConfigObj(self.main.realHomeDir+"/emoticons/"+path,encoding='UTF8')
-			loaded,config=self.main.loadJabbimExtraConfig(self.main.realHomeDir+"/emoticons/"+path,'emoticons/default/smileys.cfg')
-			if not loaded:
-				return
-		html="<html><body>"
-		values=[]
-		for k,v in config['emoticons'].iteritems():
-			#self.smileys[k.replace("<","&lt;").replace(">","&gt;")]=v
-			if not v in values:
-				html+='<img src="file://'+src+os.path.dirname(path)+'/'+v+'" />'
-				values.append(v)
-		html += "</body></html>"
-		self.ui.emoticonsPreview.setHtml(html)
-		html=""
-		html+=self.tr("Name: ")+unicode(config['header']['name'])+"<br/>"
-		if config['header'].has_key('license'):
-			html+=self.tr("License: ")+unicode(config['header']['license'])+"<br/>"
-		self.ui.emoticonsInfo.setText(html)
-
-	def useThemesChanged(self,state):
-		if not self.ui.useThemes.isChecked():
-			self.main.config['theme']='None'
-			self.main.loadTheme()
-			self.setStyleSheet("")
-		else:
-			item=list(self.ui.themes.selectedItems())
-			if len(item)!=0:
-				item=item[0]
-				data=item.data(32)
-				file=unicode(data.toString())
-				self.reskin(file)
-
 	def pluginSelected(self,item,i):
 		if item.parent()==None:
 			self.ui.pluginConfiguration.setEnabled(False)
@@ -651,216 +371,12 @@ class preferencesWindow(QtGui.QDialog):
 				self.main.plugins[name]['module'].config=self.plugins[name].config
 				self.main.plugins[name]['module'].on_configChanged()
 
-
-
-	def reskin(self,file=None):
-		if file==None:
-			file=self.main.config['theme']
-			style=open("themes/"+file+"/style.css")
-			self.setStyleSheet(style.read())
-			style.close()
-		else:
-			style=open("themes/"+file+"/style.css")
-			text=style.read()
-			self.setStyleSheet(text)
-			style.close()
-			self.main.loadTheme(text,file)
-
-	def themeChanged(self,item,old):
-		if item:
-			data=item.data(32)
-			if data:
-				file=unicode(data.toString())
-				self.reskin(file)
-
-	def chatskinVariantChanged(self,index):
-		path=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())
-		v=unicode(self.ui.chatskinVariant.itemData(index).toString())
-		self.generateChatskinPreview(path+"/"+v)
-
-	def groupchatskinStyleChanged(self,index):
-		self.chatSkin_listChanged(index,"groupchat")
-		
-	def groupchatskinVariantChanged(self,index):
-		path=unicode(self.ui.groupchatskinStyle.itemData(self.ui.groupchatskinStyle.currentIndex()).toString())
-		v=unicode(self.ui.groupchatskinVariant.itemData(index).toString())
-		self.generateChatskinPreview(path+"/"+v,'groupchat')
-	
-	def rosterStyleChanged(self,index):
-		path=unicode(self.ui.rosterStyle.itemData(index).toString())
-		self.ui.rosterVariant.clear()
-		variants=[]
-		if os.path.isdir("rosterstyles/"+path):
-			variants+=os.listdir("rosterstyles/"+path)
-		if os.path.isdir(self.main.realHomeDir+"/rosterstyles/"+path):
-			variants+=os.listdir(self.main.realHomeDir+"/rosterstyles/"+path)
-		v=""
-		default=""
-		for variant in variants:
-			if variant.endswith(".cfg"):
-				default=unicode(variant)
-				if variant==self.main.config["rosterStyle"].split("/")[1]:
-					self.ui.rosterVariant.insertItem(0,variant[:-4],QtCore.QVariant(variant))
-					v=unicode(variant)
-				else:
-					self.ui.rosterVariant.addItem(variant[:-4],QtCore.QVariant(variant))
-		if len(v)==0:
-			v=default
-		self.ui.rosterVariant.setCurrentIndex(0)
-	
-	def chatSkin_listChanged(self,index,typ='chat'):
-		if typ=="chat":
-			path=unicode(self.ui.chatSkin_list.itemData(index).toString())
-			self.ui.chatskinVariant.clear()
-		else:
-			path=unicode(self.ui.groupchatskinStyle.itemData(index).toString())
-			self.ui.groupchatskinVariant.clear()
-		if os.path.exists("chatskins/"+path+"/Variants"):
-			variants=os.listdir("chatskins/"+path+"/Variants")
-		else:
-			variants=os.listdir(self.main.realHomeDir+"/chatskins/"+path+"/Variants")
-		v=""
-		default=""
-		for variant in variants:
-			if variant.endswith(".css"):
-				default=unicode(variant)
-				if typ=="chat":
-					if variant==self.main.config["chatTheme"].split("/")[1]:
-						self.ui.chatskinVariant.insertItem(0,variant[:-4],QtCore.QVariant(variant))
-						v=unicode(variant)
-					else:
-						self.ui.chatskinVariant.addItem(variant[:-4],QtCore.QVariant(variant))
-				else:
-					if variant==self.main.config["groupchatTheme"].split("/")[1]:
-						self.ui.groupchatskinVariant.insertItem(0,variant[:-4],QtCore.QVariant(variant))
-						v=unicode(variant)
-					else:
-						self.ui.groupchatskinVariant.addItem(variant[:-4],QtCore.QVariant(variant))
-		if len(v)==0:
-			v=default
-		if typ=="chat":
-			self.ui.chatskinVariant.setCurrentIndex(0)
-		else:
-			self.ui.groupchatskinVariant.setCurrentIndex(0)
-		self.generateChatskinPreview(path+"/"+v,typ)
-
-	def generateChatskinPreview(self,skin,typ="chat"):
-		factory=webkitthemes.webkitThemeFactory(skin,skin,self.main.realHomeDir)
-		stylesheet=factory.genChatStyleSheet()
-		html="""
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<style type="text/css" media="screen,print"> @import url( "main.css" ); </style>
-<style id="mainStyle" type="text/css" media="screen,print"> %s </style>
-<script>
-function addMessage(index) {
-shouldScroll = nearBottom();
-//Remove any existing insertion point
-insert = document.getElementById("insert");
-if(insert) insert.parentNode.removeChild(insert);
-
-var ni = document.getElementById('myDiv');
-var numi = document.getElementById('theValue');
-var num = (document.getElementById('theValue').value -1)+ 2;
-numi.value = num;
-var divIdName = "my"+num+"Div";
-var newdiv = document.createElement('div');
-newdiv.setAttribute("id",divIdName);
-newdiv.innerHTML = messageObject.msg(index);
-ni.appendChild(newdiv);
-if (shouldScroll) scrollToBottom();
-
-}
-function insertMessage(index) {
-shouldScroll = nearBottom();
-
-                        //Locate the insertion point
-                        var insert = document.getElementById("insert");
-
-                        //make new node
-                        range = document.createRange();
-                        range.selectNode(insert.parentNode);
-                        newNode = range.createContextualFragment(messageObject.msg(index));
-
-                        //swap
-                        insert.parentNode.replaceChild(newNode,insert);
-
-if (shouldScroll) scrollToBottom();
-
-}
-//Auto-scroll to bottom.  Use nearBottom to determine if a scrollToBottom is desired.
-function nearBottom() {
-		return ( document.body.scrollTop >= ( document.body.offsetHeight - ( window.innerHeight * 1.2 ) ) );
-}
-function scrollToBottom() {
-		document.body.scrollTop = document.body.offsetHeight;
-}
-
-function makePreview(){
-	addMessage(0);
-	insertMessage(1);
-	addMessage(2);
-	addMessage(3);
-	insertMessage(4);
-}
-
-</script>
-</head>
-<body>
-<div id="Chat">
-<input type="hidden" value="0" id="theValue" />
-<div id="myDiv"> </div>
-		""" % stylesheet
-		
-
-		html+="""
-</div>
-<a name='bottom'></a>
-</body>
-</html>
-		"""
-
-		jabbim_icon = unicode(os.getcwd(), sys.getfilesystemencoding()) + "/images/32x32/apps/jabbim.png"
-		if typ=="chat":
-			self.messages=[]
-			self.messages.append(factory.genIncomingContent(unicode(self.tr("User")),unicode(self.tr("Message for me")),self.main.now(),jabbim_icon))
-			self.messages.append(factory.genIncomingNextContent(unicode(self.tr("User")),unicode(self.tr("Second message for me")),self.main.now(),jabbim_icon))
-			self.messages.append(factory.genChatStatus(unicode(self.tr("User is now away")),self.main.now()))
-			self.messages.append(factory.genOutgoingContent(unicode(self.tr("Me")),unicode(self.tr("Message for user")),self.main.now(),jabbim_icon))
-			self.messages.append(factory.genOutgoingNextContent(unicode(self.tr("Me")),unicode(self.tr("Second message for user")),self.main.now(),jabbim_icon))
-			self.ui.chatskinPreview.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+factory.chatPath()))
-		else:
-			self.messages2=[]
-			self.messages2.append(factory.genIncomingContent(unicode(self.tr("User")),unicode(self.tr("Message for me")),self.main.now(),jabbim_icon))
-			self.messages2.append(factory.genIncomingNextContent(unicode(self.tr("User")),unicode(self.tr("Second message for me")),self.main.now(),jabbim_icon))
-			self.messages2.append(factory.genChatStatus(unicode(self.tr("User is now away")),self.main.now()))
-			self.messages2.append(factory.genOutgoingContent(unicode(self.tr("Me")),unicode(self.tr("Message for user")),self.main.now(),jabbim_icon))
-			self.messages2.append(factory.genOutgoingNextContent(unicode(self.tr("Me")),unicode(self.tr("Second message for user")),self.main.now(),jabbim_icon))
-			self.ui.groupchatskinPreview.page().mainFrame().setHtml(html,QtCore.QUrl("file:///"+factory.chatPath()))
-
 	def themePackageCleared(self):
 		self.ui.themePackage.page().mainFrame().addToJavaScriptWindowObject("webkitObject",self.webkitObject)
 
 	def themePackageFinished(self,ok):
 		pass
 		#self.ui.themePackage.page().mainFrame().evaluateJavaScript("makePreview();")
-
-	def chatskinPreviewCleared(self):
-		print "cleared"
-		self.ui.chatskinPreview.page().mainFrame().addToJavaScriptWindowObject("messageObject",self.chatMessageObject)
-
-	def groupchatskinPreviewCleared(self):
-		self.ui.groupchatskinPreview.page().mainFrame().addToJavaScriptWindowObject("messageObject",self.groupchatMessageObject)
-
-	def chatskinPreviewFinished(self,ok,later=False):
-		self.chatMessageObject.messages=list(self.messages)
-		self.ui.chatskinPreview.page().mainFrame().evaluateJavaScript("makePreview();")
-
-	def groupchatskinPreviewFinished(self,ok,later=False):
-		self.groupchatMessageObject.messages=list(self.messages2)
-		self.ui.groupchatskinPreview.page().mainFrame().evaluateJavaScript("makePreview();")
 
 	def save(self):
 		#if not self.justShowed:
@@ -893,8 +409,8 @@ function makePreview(){
 									widget.hide()
 					
 					print key,"=",unicode(value)
-		if not self.justShowed:
-			self.main.config['chatSkin']=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())
+		#if not self.justShowed:
+			#self.main.config['chatSkin']=unicode(self.ui.chatSkin_list.itemData(self.ui.chatSkin_list.currentIndex()).toString())
 		if self.main.config['rosterStyle']!=self.webkitObject.rosterstyles:
 			self.main.config['rosterStyle']=self.webkitObject.rosterstyles
 			self.main.loadRosterStyle()
@@ -917,12 +433,10 @@ function makePreview(){
 		#self.main.config['jid']=jid
 		#self.main.config['resource']=''+resource+''
 		#self.main.config['priority']=self.ui.connection_priority.text()
-		if not self.justShowed:
-			if not self.ui.useThemes.isChecked():
-				self.main.config['theme']="None"
-				self.main.loadTheme()
-			else:
-				self.main.config['theme']=unicode(self.ui.themes.currentItem().data(32).toString())
+		if self.main.config['theme'] != self.webkitObject.theme and self.webkitObject.theme:
+			self.main.config['theme'] = unicode(self.webkitObject.theme)
+			self.main.loadTheme()
+			
 		#if self.main.config['rosterMode']=="compact":
 		#	import compactrosterstyle
 		#	self.main.ui.roster.setRosterStyle(compactrosterstyle.rosterStyle)
@@ -960,12 +474,12 @@ function makePreview(){
 		self.done(1)
 
 	def reject(self):
-		if self.main.config['theme']!=self.currentTheme:
-			self.main.config['theme']=self.currentTheme
-			if self.currentTheme!="None":
-				self.reskin(self.currentTheme)
-			else:
-				self.main.loadTheme()
+		#if self.main.config['theme']!=self.currentTheme:
+			#self.main.config['theme']=self.currentTheme
+			#if self.currentTheme!="None":
+				#self.reskin(self.currentTheme)
+			#else:
+				#self.main.loadTheme()
 		item=self.ui.listWidget.currentItem()
 		print item
 		if item:
