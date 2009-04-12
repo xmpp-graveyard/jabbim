@@ -382,6 +382,20 @@ class webkitChatWidget(QtWebKit.QWebView):
 
 			menu.addMenu(pref)
 
+		menu.addSeparator()
+		zoom = QtGui.QMenu(self.tr("Zoom"),menu)
+		
+		action = zoom.addAction(self.tr("Zoom In"))
+		action.setObjectName("zoom_in")
+		
+		action = zoom.addAction(self.tr("Zoom out"))
+		action.setObjectName("zoom_out")
+		
+		action = zoom.addAction(self.tr("Reset"))
+		action.setObjectName("zoom_reset")
+		
+		menu.addMenu(zoom)
+
 		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.contextMenuTriggered)
 		menu.popup(event.globalPos())
 		
@@ -418,11 +432,22 @@ class webkitChatWidget(QtWebKit.QWebView):
 		elif cmd == 'gc_theme':
 			self.chatwidget().main().preferencesClicked(page=5,viewTab=2)
 		elif cmd == 'join_muc':
-			jd  = unicode(action.data().toString())
+			jd = unicode(action.data().toString())
 			nickname = self.chatwidget().main().selfName
 			if self.chatwidget().main().chat.addGroupChatTab(jd,nickname):
 				self.chatwidget().main().client.joinGC(jd, nickname, None,self.chatwidget().main().config['sendRooms']=="True")
-			
+		elif cmd == "zoom_in":
+			self.chatwidget().main().config['textSizeMultiplier']=float(self.chatwidget().main().config['textSizeMultiplier'])+0.1
+			self.chatwidget().main().config.write()
+			self.page().mainFrame().setTextSizeMultiplier(float(self.chatwidget().main().config['textSizeMultiplier']))
+		elif cmd == "zoom_out":
+			self.chatwidget().main().config['textSizeMultiplier']=float(self.chatwidget().main().config['textSizeMultiplier'])-0.1
+			self.chatwidget().main().config.write()
+			self.page().mainFrame().setTextSizeMultiplier(float(self.chatwidget().main().config['textSizeMultiplier']))
+		elif cmd == "zoom_reset":
+			self.chatwidget().main().config['textSizeMultiplier']=1.0
+			self.chatwidget().main().config.write()
+			self.page().mainFrame().setTextSizeMultiplier(float(self.chatwidget().main().config['textSizeMultiplier']))
 
 	def copySelectedText(self):
 		text=self.selectedText()
