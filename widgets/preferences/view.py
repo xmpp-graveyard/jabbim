@@ -32,6 +32,7 @@ class webkitObject(QtCore.QObject):
 		self.emoticons = None
 		self.chatTheme = None
 		self.groupchatTheme = None
+		self.rosterstyles = None
 		self.theme = None
 		self.html = ""
 
