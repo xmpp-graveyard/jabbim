@@ -620,7 +620,7 @@ class clientClass(pyxl.client.Client):
 					log.err( message)
 					done=False
 				if done:
-					self.main.preferencesWindow.reloadView(file,root)
+					self.main.preferencesWidget.loadThemePackages()
 					self.main.preferencesWindow.reloadPlugins_()
 			event=self.main.events.ftEvents[sid]
 			event.reject()
