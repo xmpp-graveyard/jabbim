@@ -77,6 +77,7 @@ class Plugin(plugins.PluginBase):
 ##			QtCore.QObject.connect(self.window.ui.esUp,QtCore.SIGNAL("clicked()"),self.esUp)
 ##			QtCore.QObject.connect(self.window.ui.esPath,QtCore.SIGNAL("returnPressed()"),self.esPathFinished)
 			QtCore.QObject.connect(self.wizard.ui.tree, QtCore.SIGNAL("itemSelectionChanged ( )"),self.selectionChanged)
+			QtCore.QObject.connect(self.wizard.ui.path, QtCore.SIGNAL("returnPressed ( )"),self.pathChanged)
 ##			QtCore.QObject.connect(self.window.ui.list,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.fileMenu)
 			QtCore.QObject.connect(self.wizard.ui.tree,QtCore.SIGNAL("customContextMenuRequested ( const QPoint & )"),self.fileMenu)
 			QtCore.QObject.connect(self.window.ui.buttonDownload,QtCore.SIGNAL("clicked()"),self.downloadCurrentFile)
@@ -153,6 +154,21 @@ class Plugin(plugins.PluginBase):
 		else:
 			self.loadConfig(homedir)
 
+	def pathChanged(self):
+		path = unicode(self.wizard.ui.path.text())
+		if path.endswith("/"):
+			path=path[:-1]
+		path = path.split("/")
+		if len(path)>=2:
+			if path[1]=="easyshare" and len(path)>2:
+				self.showSlot(path[0],path[1],"/".join(path[2:])+"/")
+			else:
+				self.showSlot(path[0],path[1])
+		elif len(path)==1:
+			self.showSlot(path[0])
+		elif len(path)==0:
+			self.showSlot()
+			
 	def clientCreated(self):
 		self.jid = self.main.client.jid.userhost()
 		plugins.PluginBase.clientCreated(self)
@@ -187,9 +203,9 @@ class Plugin(plugins.PluginBase):
 
 	def wBack(self):
 		self.wizard.ui.back.hide()
-		if self.wizard.ui.stackedWidget.currentIndex()==2:
-			self.wizard.progress.reject()
-		self.wizard.ui.stackedWidget.setCurrentIndex(0)
+		#if self.wizard.ui.stackedWidget.currentIndex()==2:
+			#self.wizard.progress.reject()
+		#self.wizard.ui.stackedWidget.setCurrentIndex(0)
 
 	def FTFileReceivedEvent(self,event):
 		if not event() or (self.window.isHidden() and self.wizard.isHidden()):
@@ -231,7 +247,7 @@ class Plugin(plugins.PluginBase):
 
 	def dragEnterEvent(self, event):
 		log.msg("left drag enter")
-		if event.mimeData().hasText() or event.mimeData().hasFormat("text/uri-list"):
+		if event.mimeData().hasText() or event.mimeData().ormat("text/uri-list"):
 			event.acceptProposedAction()
 		else:
 			event.ignore()
@@ -1031,8 +1047,9 @@ class Plugin(plugins.PluginBase):
 	def buildMainWindowToolBar(self):
 		self.toolBarButton = self.mainWindowToolBarAction(QtGui.QIcon("%s/jdisk-public-24.png" % self.pluginDir),"",self.showSlot)
 
-	def showSlot(self,jid=None,typ=None):
+	def showSlot(self,jid=None,typ=None,path = None):
 		self.wizard.show()
+		self.wizard.ui.stackedWidget.setCurrentIndex(1)
 ##		if self.main.client.isVip:
 ##			self.window.ui.vipInfo.hide()
 ##		else:
@@ -1045,17 +1062,68 @@ class Plugin(plugins.PluginBase):
 			self.jid=jid
 			self.window.ui.line_jid.setText(self.jid)
 		else:
+			self.jid = None
 			#self.jid=unicode(self.window.ui.line_jid.text())
-			self.jid=unicode(self.main.client.jid.userhost())
+			#self.jid=unicode(self.main.client.jid.userhost())
 		self.wizard.setWindowTitle(unicode(self.jid))
 		self.wizard.ui.private.setEnabled(self.jid==self.main.client.jid.userhost())
 		if typ:
-			self.call(jid,typ)
+			self.wizard.ui.path.setText(jid + "/" + typ + "/")
+			if typ == "easyshare":
+				if path:
+					contact = self.main.client.getContactByJid(self.jid)
+					if contact:
+						jid=self.jid+"/"+contact.getHighestResource()
+						self.wizard.ui.path.setText(self.jid + "/" + self.typ + "/" + path)
+						item = QtGui.QListWidgetItem()
+						item.path = path
+						self.main.client.callRemote(jid, 'listShare',(path,)).addCallback(self.updateView,item)
+				else:
+					self.easyshare()
+			else:
+				self.call(jid,typ)
 			self.window.ui.buttonDownload.setEnabled(False)
 			self.wizard.ui.back.show()
+		elif jid:
+			self.wizard.ui.path.setText(jid + "/")
+			self.wizard.ui.tree.clear()
+			item=QtGui.QListWidgetItem(self.wizard.ui.tree)
+			item.setText(self.tr("Public disk"))
+			item.setIcon(QtGui.QIcon("%s/jdisk-public-24.png" % self.pluginDir))
+			item.setData(32,QtCore.QVariant(QtCore.QStringList([unicode('-3'),"public"])))
+			
+			item=QtGui.QListWidgetItem(self.wizard.ui.tree)
+			item.setIcon(QtGui.QIcon("%s/jdisk-private-24.png" % self.pluginDir))
+			item.setText(self.tr("Private disk"))
+			item.setData(32,QtCore.QVariant(QtCore.QStringList([unicode('-3'),"private"])))
+			
+			item=QtGui.QListWidgetItem(self.wizard.ui.tree)
+			item.setIcon(QtGui.QIcon("%s/jalbum-32.png" % self.pluginDir))
+			item.setText(self.tr("Album"))
+			item.setData(32,QtCore.QVariant(QtCore.QStringList([unicode('-3'),"album"])))
+			
+			item=QtGui.QListWidgetItem(self.wizard.ui.tree)
+			item.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
+			item.setText(self.tr("Shared folders"))
+			item.setData(32,QtCore.QVariant(QtCore.QStringList([unicode('-3'),"easyshare"])))
 		else:
-			self.wizard.ui.stackedWidget.setCurrentIndex(0)
 			self.wizard.ui.back.hide()
+			self.wizard.ui.path.setText("")
+			
+			self.wizard.ui.tree.clear()
+			for jid in self.main.client.roster['users'].keys():
+				if self.main.client.hasFeature(jid,"http://dev.jabbim.cz/jabbim/easyshare"):
+					item=QtGui.QListWidgetItem(self.wizard.ui.tree)
+					if unicode(self.main.client.jid.userhost()) == jid:
+						item.setText(unicode(self.tr("Me")))
+					elif len(self.main.client.roster['users'][jid].name)!=0:
+						item.setText(unicode(self.main.client.roster['users'][jid].name))
+					else:
+						item.setText(jid)
+					item.setIcon(QtGui.QIcon(self.pluginDir+"/folder.png"))
+					#item.setText(1,unicode(self.toNormalSize(size)))
+					item.setData(32,QtCore.QVariant(QtCore.QStringList([unicode('-2'),unicode(jid)])))
+			
 
 	def _onRegister(self,data):
 		if not data:
@@ -1112,7 +1180,7 @@ class Plugin(plugins.PluginBase):
 					if self.main.events.ftEvents.has_key(sid):
 						self.main.events.ftEvents[sid].reject()
 						self.wizard.ui.back.hide()
-						self.wizard.ui.stackedWidget.setCurrentIndex(0)
+						self.wizard.ui.stackedWidget.setCurrentIndex(1)
 			try:
 				f=self.downloadQueue.pop()
 			except:
@@ -1171,23 +1239,31 @@ class Plugin(plugins.PluginBase):
 		#return path[:-1]
 
 	def doubleClicked(self,item,col=None):
-		if self.typ=="public":
-			self.main.allowedJids["public@disk.jabbim.cz/"+unicode(item.text(0))]=self.cache
-			self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text(0)))
-			self.filesToOpen.append(self.cache+"/"+unicode(item.text(0)))
-		elif self.typ=="private":
-			self.main.allowedJids["private@disk.jabbim.cz/"+unicode(item.text(0))]=self.cache
-			self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text(0)))
-			self.filesToOpen.append(self.cache+"/"+unicode(item.text(0)))
-		elif self.typ=="album":
-			self.main.allowedJids["album@disk.jabbim.cz/"+unicode(item.text(0))]=self.cache
-			self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text(0)))
-			self.filesToOpen.append(self.cache+"/"+unicode(item.text(0)))
-		elif self.typ=="easyshare":
-			contact = self.main.client.getContactByJid(self.jid)
-			if contact:
-				jid=self.jid+"/"+contact.getHighestResource()
-				print self.getPath(item)
-				self.main.client.callRemote(jid, 'listShare',(self.getPath(item),)).addCallback(self.updateView,item)
+		data=item.data(32).toList()
+		size=int(data[0].toString())
+		if size == -2:
+			self.jid = unicode(data[1].toString())
+			self.showSlot(self.jid)
+		elif size == -3:
+			self.showSlot(self.jid,unicode(data[1].toString()))
+		else:
+			if self.typ=="public":
+				self.main.allowedJids["public@disk.jabbim.cz/"+unicode(item.text(0))]=self.cache
+				self.main.client.sendMessage("public@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text(0)))
+				self.filesToOpen.append(self.cache+"/"+unicode(item.text(0)))
+			elif self.typ=="private":
+				self.main.allowedJids["private@disk.jabbim.cz/"+unicode(item.text(0))]=self.cache
+				self.main.client.sendMessage("private@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text(0)))
+				self.filesToOpen.append(self.cache+"/"+unicode(item.text(0)))
+			elif self.typ=="album":
+				self.main.allowedJids["album@disk.jabbim.cz/"+unicode(item.text(0))]=self.cache
+				self.main.client.sendMessage("album@disk.jabbim.cz", u"get "+self.jid+" "+unicode(item.text(0)))
+				self.filesToOpen.append(self.cache+"/"+unicode(item.text(0)))
+			elif self.typ=="easyshare":
+				contact = self.main.client.getContactByJid(self.jid)
+				if contact:
+					jid=self.jid+"/"+contact.getHighestResource()
+					self.wizard.ui.path.setText(self.jid + "/" + self.typ + "/" + self.getPath(item))
+					self.main.client.callRemote(jid, 'listShare',(self.getPath(item),)).addCallback(self.updateView,item)
 
 		
