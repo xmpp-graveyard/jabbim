@@ -301,6 +301,16 @@ class Plugin(plugins.PluginBase):
 
 		if main:
 			self.loadConfig()
+			
+			path = unicode(QtGui.QDesktopServices.storageLocation(QtGui.QDesktopServices.DocumentsLocation)) + "/Jabbim shared folder"
+			print "storage location", path
+			if not os.path.isdir(path):
+				os.mkdir(path)
+				self.config["Documents-sharepath"]=path
+				self.config["Documents-sharejids"]=[]
+				self.config['dirs'].append("Documents")
+				self.writeConfig()
+			
 			self.registerHandler('on_authd',self.on_authd)
 			if self.main.isConnected() and self.main.client.xmlstream:
 				self.on_authd()

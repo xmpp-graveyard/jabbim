@@ -72,7 +72,10 @@ class Plugin(plugins.PluginBase):
 			self.group.setExclusive(False)
 			self.update=False
 
+			self.wizard.ui.tree.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+			
 			QtCore.QObject.connect(self.group,QtCore.SIGNAL("buttonClicked ( QAbstractButton * )"),self.buttonClicked)
+			QtCore.QObject.connect(self.wizard.ui.up,QtCore.SIGNAL("clicked()"),self.up)
 ##			QtCore.QObject.connect(self.window.ui.reload,QtCore.SIGNAL("clicked()"),self.call)
 ##			QtCore.QObject.connect(self.window.ui.esUp,QtCore.SIGNAL("clicked()"),self.esUp)
 ##			QtCore.QObject.connect(self.window.ui.esPath,QtCore.SIGNAL("returnPressed()"),self.esPathFinished)
@@ -153,7 +156,18 @@ class Plugin(plugins.PluginBase):
 			
 		else:
 			self.loadConfig(homedir)
-
+	
+	def up(self):
+		path = unicode(self.wizard.ui.path.text())
+		if path.endswith("/"):
+			path=path[:-1]
+		path = path.split("/")
+		if len(path)==0:
+			self.showSlot()
+		else:
+			self.wizard.ui.path.setText("/".join(path[:-1])+"/")
+			self.pathChanged()
+		
 	def pathChanged(self):
 		path = unicode(self.wizard.ui.path.text())
 		if path.endswith("/"):
@@ -1205,25 +1219,45 @@ class Plugin(plugins.PluginBase):
 					self.wizard.ui.filename.setText(self.tr("Folder"))
 					self.wizard.ui.remove.setEnabled(False)
 					self.wizard.ui.download.setEnabled(False)
+					self.wizard.ui.description.setText("")
+				if size == -2:
+					self.wizard.ui.filename.setText(self.tr("User"))
+					self.wizard.ui.remove.setEnabled(False)
+					self.wizard.ui.download.setEnabled(False)
+					self.wizard.ui.description.setText(self.tr("This folder contains all files shared by user."))
+				elif size == -3:
+					self.wizard.ui.filename.setText(item.text())
+					self.wizard.ui.remove.setEnabled(False)
+					self.wizard.ui.download.setEnabled(False)
+					typ = unicode(data[1].toString())
+					if typ == "album":
+						self.wizard.ui.description.setText(self.tr("This folder contains photos shared through Jabbim Album Service."))
+					elif typ == "public":
+						self.wizard.ui.description.setText(self.tr("This folder contains files shared through Jabbim Disk Service."))
+					elif typ == "private":
+						self.wizard.ui.description.setText(self.tr("This folder contains files shared you private files."))
+					elif typ == "easyshare":
+						self.wizard.ui.description.setText(self.tr("This folder contains shared folders."))
 				else:
 					self.wizard.ui.filesize.setText(self.toNormalSize(size))
 					self.wizard.ui.remove.setEnabled(self.jid==self.main.client.jid.userhost())
 					self.wizard.ui.download.setEnabled(True)
+					self.wizard.ui.description.setText("")
 				self.wizard.ui.image.setPixmap(item.icon().pixmap(128,128))
 			else:
+				self.wizard.ui.description.setText("")
 				self.wizard.ui.filename.setText(unicode(len(items))+self.tr(" files"))
 				size=0
 				for it in items:
 					data=it.data(32).toList()
 					size+=int(data[0].toString())
 				self.wizard.ui.filesize.setText(self.toNormalSize(size))
-				
-				
 		else:
 			self.wizard.ui.remove.setEnabled(False)
 			self.wizard.ui.download.setEnabled(False)
 			self.wizard.ui.filename.setText("")
 			self.wizard.ui.filesize.setText("")
+			self.wizard.ui.description.setText("")
 
 	def getPath(self,item):
 		#path=""
