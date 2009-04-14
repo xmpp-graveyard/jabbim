@@ -22,7 +22,7 @@ import sys,os, getopt, xmlrpclib, time
 sys.path.append('.')
 from include import utils
 try:
-	OPTIONS,params = getopt.getopt(sys.argv[1:],'h:u:p:', ['home=', 'uri=', 'plugin='])
+	OPTIONS,params = getopt.getopt(sys.argv[1:],'h:u:p:', ['home=', 'uri=', 'plugin=','usage','help'])
 except getopt.GetoptError, err:
 	print str(err)
 	sys.exit(2)
@@ -53,6 +53,14 @@ for opt, arg in OPTIONS:
 		server.runPluginFunc(name, params, porty[1])
 
 		sys.exit()
+	elif opt == '--usage' or opt == '--help':
+		print "Jabbim XMPP client commandline options\n\n\
+	-h --home\n		- set directory to save profiles and settings(default ~/.jabbim)\n\n\
+	-p --plugin=<remotefunction> <arguments>\n		-invoke xmlrpc remote function\n\n\
+	-u --uri\n		- handle xmpp uri\n\
+	--help --usage\n		- show this help message and exit\n\n\
+more info on http://dev.jabbim.cz/jabbim"
+		sys.exit(0);
 #this function prevents(not 100%) jabbim not to run twice in same profile :-)
 def singleRun():
 	try:
