@@ -5,7 +5,8 @@ from include import plugins
 from PyQt4 import QtCore, QtGui, QtWebKit
 from twisted.python import log
 import base64
-
+import xml.dom.minidom
+from twisted.words.xish.domish import Element
 from pyxl import jid
 #from widgets.webkitchatwidget import searchWidget
 
@@ -330,7 +331,7 @@ class Plugin(plugins.PluginBase):
 			self.main.reactor.callFromThread(self.observer,msg,True)
 			return
 		#self.window.ui.pythonOutput.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
-		self.addMessage('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
+		self.addMessage('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']))))
 		if msg['isError'] and self.config['notify'] == 'True':
 			self.main.tray.showMessage(self.main.tr("Log"),unicode(' '.join(msg['message'])), QtGui.QSystemTrayIcon.Warning, 2000)
 	
@@ -449,10 +450,22 @@ class Plugin(plugins.PluginBase):
 		self.historyXML.insert(0,text)
 		self.historyXML=self.historyXML[0:long(self.config['historyMaxCount'])]
 		self.historyXMLPosition=-1;
-		try:
-			self.main.client.xmlstream.send(text)
-		except:
-			log.err("can't send")
+#		try:
+		xmlObj=xml.dom.minidom.parseString(text)
+		iqelems=xmlObj.getElementsByTagName('iq')
+		if iqelems:
+			id=iqelems[0].getAttribute('id');
+			if not id:
+				id = "H_%d" % Element._idCounter
+				Element._idCounter = Element._idCounter + 1
+			iqelems[0].setAttribute('id',id)
+			self.main.client.disp(id)
+#		text=xmlObj.toxml()
+#		text=text.replace('<?xml version="1.0" ?>\n','');
+		for i in xmlObj.childNodes:
+			self.main.client.xmlstream.send(i.toxml());
+#		except Exception,e:
+#			traceback.print_exc();
 		self.window.ui.xmlInput.setText("")
 		if self.config['historySave']=='one':
 			self.saveHistory()
@@ -462,7 +475,6 @@ class Plugin(plugins.PluginBase):
 	
 	def onXml(self,xml):
 		if self.window.ui.xmlEnableBox.isChecked():
-			print 'xml'
 			if self.config['XMLaddTimestamps']=='True':
 				text=time.strftime("[%H:%M:%S]")+' ';
 			else:
@@ -503,11 +515,16 @@ class Plugin(plugins.PluginBase):
 
 	def addMessage(self, text, tagy='', typ='log'):
 		stamp = unicode(time.time())
-		if self.compareTags(tagy, unicode(self.window.ui.xmlFilter.text())):
+		if len(unicode(self.window.ui.xmlFilter.text())) == 0:
+			hidden = '0'
+		elif self.compareTags(tagy, unicode(self.window.ui.xmlFilter.text())):
 			hidden = '0'
 		else:
 			hidden = '1'
-			
+		
+
+		text = text.replace('"', '&apos;').replace("'", '&apos;').replace('<','&lt;').replace('>','&gt;').replace('\n', '</br>')
+
 		if typ == 'xml':
 			self.window.ui.xmlOutput.page().mainFrame().evaluateJavaScript('appendMessage("%s", "%s", "%s", "%s", %s);'%(text, tagy, self.addNextId(), stamp, hidden))
 		elif typ == 'log':
@@ -517,6 +534,12 @@ class Plugin(plugins.PluginBase):
 
 	def on_element(self, el):
 		if self.window.ui.xmlEnableBox.isChecked():
+			if type(el) == unicode:
+				#we received input from xml console
+				#just display it without parsing
+				log.msg('got unicode element')
+				self.addMessage(el, typ='xml')
+				return
 			
 			typ = ''
 			tagy = ''
@@ -549,7 +572,7 @@ class Plugin(plugins.PluginBase):
 					log.msg('unknown iq')
 					log.msg(el.toXml())
 					
-			self.addMessage(el.toXml().replace('<','&lt;').replace('>','&gt;'), tagy, 'xml')
+			self.addMessage(el.toXml(), tagy, 'xml')
 
 	def setTabXML(self):
 		self.window.ui.tabWidget.setCurrentIndex(0);
