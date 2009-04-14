@@ -165,7 +165,13 @@ class Plugin(plugins.PluginBase):
 		if len(path)==0:
 			self.showSlot()
 		else:
-			self.wizard.ui.path.setText("/".join(path[:-1])+"/")
+			p = "/".join(path[:-1])+"/"
+			if p.endswith("easyshare/"):
+				self.wizard.ui.path.setText(p.replace("/easyshare/",""))
+			elif p.endswith("easyshare"):
+				self.wizard.ui.path.setText(p.replace("/easyshare",""))
+			else:
+				self.wizard.ui.path.setText(p)
 			self.pathChanged()
 		
 	def pathChanged(self):
@@ -213,7 +219,7 @@ class Plugin(plugins.PluginBase):
 		
 	def esConfiguration(self):
 		self.showPluginConfigDialog("easyshare",self.wizard)
-		self.easyshare()
+		#self.easyshare()
 
 	def wBack(self):
 		self.wizard.ui.back.hide()
@@ -381,7 +387,7 @@ class Plugin(plugins.PluginBase):
 		#self.window.ui.esPath.setText(self.esPath)
 		#self.window.ui.list.clear()
 		#self.window.ui.right.clear()
-		self.wizard.ui.tree.clear()
+		#self.wizard.ui.tree.clear()
 		icon=QtGui.QIcon(self.pluginDir+"/folder.png")
 		for d in data:
 			#item=QtGui.QTreeWidgetItem(self.window.ui.right)
@@ -1083,7 +1089,7 @@ class Plugin(plugins.PluginBase):
 		self.wizard.ui.private.setEnabled(self.jid==self.main.client.jid.userhost())
 		if typ:
 			self.wizard.ui.path.setText(jid + "/" + typ + "/")
-			if typ == "easyshare":
+			if typ != "public" and typ != "private" and typ != "album":
 				if path:
 					contact = self.main.client.getContactByJid(self.jid)
 					if contact:
@@ -1116,10 +1122,12 @@ class Plugin(plugins.PluginBase):
 			item.setText(self.tr("Album"))
 			item.setData(32,QtCore.QVariant(QtCore.QStringList([unicode('-3'),"album"])))
 			
-			item=QtGui.QListWidgetItem(self.wizard.ui.tree)
-			item.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
-			item.setText(self.tr("Shared folders"))
-			item.setData(32,QtCore.QVariant(QtCore.QStringList([unicode('-3'),"easyshare"])))
+			self.easyshare()
+			
+			#item=QtGui.QListWidgetItem(self.wizard.ui.tree)
+			#item.setIcon(QtGui.QIcon("%s/easy_share32.png" % self.pluginDir))
+			#item.setText(self.tr("Shared folders"))
+			#item.setData(32,QtCore.QVariant(QtCore.QStringList([unicode('-3'),"easyshare"])))
 		else:
 			self.wizard.ui.back.hide()
 			self.wizard.ui.path.setText("")
