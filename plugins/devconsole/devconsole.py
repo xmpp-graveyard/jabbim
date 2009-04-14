@@ -8,6 +8,7 @@ import base64
 import xml.dom.minidom
 from twisted.words.xish.domish import Element
 from pyxl import jid
+import traceback
 #from widgets.webkitchatwidget import searchWidget
 
 
@@ -357,7 +358,11 @@ class Plugin(plugins.PluginBase):
 		if self.config['historySave']=='one':
 			self.saveHistory()
 		self.window.ui.pythonInput.setText('')
-		exec(code)
+		try:
+			exec(code)
+		except:
+			print traceback.format_exc()
+
 	def saveHistory(self):
 		tmpHistory=[];
 		for historyItem in self.historyPy:
