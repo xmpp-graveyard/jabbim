@@ -818,7 +818,13 @@ class FT:
 	
 	def setFilePath(self,  filepath,  mode = 'rb'):
 		self.filepath = filepath
-		self.fp = open(filepath, mode)
+		try:
+			self.fp = open(filepath, mode)
+		except:
+			self.fp = None
+			self.error = 'Wrong path'
+			self.finish()
+			return
 		self.size = os.path.getsize(filepath)
 		log.msg('filepath set')
 	

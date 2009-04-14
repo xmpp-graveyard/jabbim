@@ -87,8 +87,9 @@ class Client(derived):
 		self.groupchats = {} # jid:Groupchat
 		self.privacy = Privacy(self.main)
 		self.client_name = 'Jabbim'
-		self.version = '0.4SVN' # tohle asi neni nejlepsi zpusob
+		self.version = '0.5SVN' # tohle asi neni nejlepsi zpusob
 		self.client_os = ''
+		self.state = 'init'
 		self.caps_node = 'http://dev.jabbim.cz/jabbim/caps'
 
 		self.isVip=False
@@ -191,7 +192,7 @@ class Client(derived):
 		self.jingle = jingle.JingleInit(self)
 #		self.archive = archive.ArchiveInit(self)
 
-		self.state = 'init'
+		
 
 		self.proxy = None
 		self.on_init()
@@ -235,7 +236,17 @@ class Client(derived):
 			features.append(f[0])
 		self.caps_ext = self.calcCapsExt(features = features, identity = [self.identity])
 		self.cacheCaps(self.caps_ext, features, self.identity)
-
+		if self.state == 'connected':
+			try:
+				contact = self.getContactByJid(self.jid.userhost()) 
+				show = contact.resources[self.jid.resource].show
+				status = contact.resources[self.jid.resource].status
+				if status == None: 
+					status = ''
+			except KeyError:
+				log.msg('can\'t send presence with new caps')
+				return
+			self.sendPresence(show = show, status = status)
 
 	def heartbeat(self):
 		log.msg('heartbeat')
