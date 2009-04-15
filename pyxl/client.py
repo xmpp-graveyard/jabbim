@@ -486,13 +486,13 @@ class Client(derived):
 				self.connection = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory,2)
 				self.connection2 = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory,2)
 			else:
-				self.connection = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory)
+				self.connection = reactor.connectTCP(self.proxy['host'],int(self.proxy['port']), self.factory, timeout = 10)
 		else:
 			if boshURL!="":
 				self.connection = reactor.connectTCP(host,port, self.factory,2)
 				self.connection2 = reactor.connectTCP(host,port, self.factory,2)
 			else:
-				self.connection = reactor.connectTCP(host,port, self.factory)
+				self.connection = reactor.connectTCP(host,port, self.factory, timeout = 10)
 		self.reactor.callFromThread(self.on_connect)
 
 		log.msg('started - ' + unicode(time.time()))
