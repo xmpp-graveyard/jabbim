@@ -339,6 +339,8 @@ class Plugin(plugins.PluginBase):
 			QtCore.QObject.connect(self.window.ui.today, QtCore.SIGNAL("clicked()"),self.todayClicked)
 			QtCore.QObject.connect(self.window.ui.dateEdit,QtCore.SIGNAL("dateChanged ( const QDate & )"),self.dateChanged)
 			QtCore.QObject.connect(self.window.ui.text,QtCore.SIGNAL("linkClicked ( const QUrl &)"),self.webkitLinkClicked)
+			short=QtGui.QShortcut("ctrl+c",self.window.ui.text)
+			QtCore.QObject.connect(short, QtCore.SIGNAL("activated ()"),self.copySelectedText)  # adapted from webkitchatwidget.py
 			#self.window.ui.searchList.hide()
 			#self.window.ui.search.hide()
 			#self.window.ui.searchText.hide()
@@ -353,6 +355,11 @@ class Plugin(plugins.PluginBase):
 
 		else:
 			self.loadConfig(homedir)
+
+	def copySelectedText(self):
+		text=self.window.ui.text.selectedText()
+		if len(text)!=0:
+			QtGui.QApplication.clipboard().setText(unicode(text))
 
 	def webkitLinkClicked(self,url):
 		# url = http://jid/date
