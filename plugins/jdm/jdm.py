@@ -1112,10 +1112,11 @@ class Plugin(plugins.PluginBase):
 			item.setIcon(QtGui.QIcon("%s/jdisk-public-24.png" % self.pluginDir))
 			item.setData(32,QtCore.QVariant(QtCore.QStringList([unicode('-3'),"public"])))
 			
-			item=QtGui.QListWidgetItem(self.wizard.ui.tree)
-			item.setIcon(QtGui.QIcon("%s/jdisk-private-24.png" % self.pluginDir))
-			item.setText(self.tr("Private disk"))
-			item.setData(32,QtCore.QVariant(QtCore.QStringList([unicode('-3'),"private"])))
+			if self.jid==self.main.client.jid.userhost():
+				item=QtGui.QListWidgetItem(self.wizard.ui.tree)
+				item.setIcon(QtGui.QIcon("%s/jdisk-private-24.png" % self.pluginDir))
+				item.setText(self.tr("Private disk"))
+				item.setData(32,QtCore.QVariant(QtCore.QStringList([unicode('-3'),"private"])))
 			
 			item=QtGui.QListWidgetItem(self.wizard.ui.tree)
 			item.setIcon(QtGui.QIcon("%s/jalbum-32.png" % self.pluginDir))
