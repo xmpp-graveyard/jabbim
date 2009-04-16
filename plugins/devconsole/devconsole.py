@@ -332,9 +332,9 @@ class Plugin(plugins.PluginBase):
 			self.main.reactor.callFromThread(self.observer,msg,True)
 			return
 		#self.window.ui.pythonOutput.append('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']).replace("<","&lt;").replace(">","&gt;"))))
-		self.addMessage('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']))))
+		self.addMessage('[%s] %s' %(time.strftime('%X'), unicode(' '.join(msg['message']), 'utf8')))
 		if msg['isError'] and self.config['notify'] == 'True':
-			self.main.tray.showMessage(self.main.tr("Log"),unicode(' '.join(msg['message'])), QtGui.QSystemTrayIcon.Warning, 2000)
+			self.main.tray.showMessage(self.main.tr("Log"),unicode(' '.join(msg['message']), 'utf8'), QtGui.QSystemTrayIcon.Warning, 2000)
 	
 	def clearLog(self):
 		if self.window.ui.tabWidget.currentIndex()==1:
