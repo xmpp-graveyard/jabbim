@@ -1433,6 +1433,10 @@ class clientClass(pyxl.client.Client):
 		# update roster
 		self.main.ui.roster.sortItems()
 		self.main.ui.roster.repaint()
+		#remove transport button
+		if self.main.transports.has_key(jid):
+			self.main.ui.transportsToolbar.removeAction(self.main.transports[jid])
+			
 
 	def on_subscribe(self, frm,status):
 		mainWindow=self.main
@@ -1479,12 +1483,25 @@ class clientClass(pyxl.client.Client):
 
 	def _onSubscribe(self,frms,status,add=False):
 		#def __init__(self,main,parent=None,jid="",group=None,name="",add=True):
+		def _onTransportFeatures(frm):
+			log.msg('transport features received')
+			if self.hasIdentity(frm, 'gateway'):
+				self.main.transports[frm] = None   # we have to add new transport to menu and send him status [needed by hicq]
+				self.main.buildStatusWidgetMenu()
+				self.sendPresence(frm)
 		for frm in frms:
 			if not self.roster['users'].has_key(frm):
 				dialog=widgets.addcontact.addContactDialog(self.main,self.main,jid=frm,group="",name=frm.split('@')[0],add=add)
 				dialog.exec_()
 			self.sendPresence(frm,None,status,None,'subscribe')
 			self.sendPresence(frm,None,status,None,'subscribed')
+			
+			
+			jd = self.main.getJid(frm)
+			if jd.user == None and self.main.transports.has_key(frm):
+				self.getFeatures(frm).addCallback(_onTransportFeatures, frm)
+				
+				
 
 	def _onSubscribeReject(self,frms,status,add=False):
 		#def __init__(self,main,parent=None,jid="",group=None,name="",add=True):

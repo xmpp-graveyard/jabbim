@@ -77,6 +77,10 @@ class jabbimServiceManager(QtGui.QDialog):
 				self.removeServiceContacts("news.jabbim.cz")
 				self.main().client.setRegisterForm('news.jabbim.cz', remove = True, legacy = {})
 				self.setItemRegistered(item,False)
+			else:
+				self.removeServiceContacts(jid)
+				self.main().client.setRegisterForm(jid, remove = True, legacy = {})
+				self.setItemRegistered(item,False)
 
 	def setItemRegistered(self,item,registered):
 		if registered:
