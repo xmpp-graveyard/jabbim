@@ -79,13 +79,17 @@ class MPDProtocol(ProcessProtocol):
 		out = {}
 		if isinstance(reason.value, ProcessDone) and self.output.find('\n[playing]') != -1:
 			text = self.output.split('\n')[0]
-			text = text.split(' - ', 1)
+			print text
+			text = text.split(' - ', 2)
 			if len(text)>1:
 				out['artist'] = text[0]
 				out['title'] = text[1]
+				if len(text)>2:
+					out['source'] = text[2]
 			else:
 				out['title'] = self.output.split('\n')[0].split('/')[-1]
 			out['length'] = self.output.split('\n')[1].split('/')[-1].split('(')[0].strip()
+			print out
 		self.plugin.sendPEP(out)
 
 class MPD(Player):
@@ -94,7 +98,7 @@ class MPD(Player):
 	def check(self):
 		reactor.spawnProcess(
 			MPDProtocol(self.plugin),
-			'mpc', ['mpc', 'status'],
+			'mpc', ['mpc', 'status','--format', '%artist% - %title% - %album%'],
 			env=os.environ)
 
 class AmarokProtocol(ProcessProtocol):
