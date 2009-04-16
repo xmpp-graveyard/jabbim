@@ -125,7 +125,7 @@ class Plugin(plugins.PluginBase):
 				self.config['exportMuc'] != 'True' or
 				oldbody == None):
 			return
-		self.say(self.tr("%s writes: %s") % (user, oldbody))
+		self.say(unicode(self.tr("%s writes: %s")) % (user, oldbody))
 
 	def on_groupchatMessageForMeEvent(self,jid,user,oldbody,subject,xhtml):
 		if (self.config['state'] != 'True' or
@@ -133,7 +133,7 @@ class Plugin(plugins.PluginBase):
 				self.config['exportMucMe'] != 'True' or
 				oldbody == None):
 			return
-		self.say(self.tr("%s writes: %s") % (user, oldbody))
+		self.say(unicode(self.tr("%s writes: %s")) % (user, oldbody))
 
 	def say(self, message):
 		self.reader.say(message)
