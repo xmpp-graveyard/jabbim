@@ -2512,12 +2512,13 @@ class rosterWidget(QtGui.QWidget):
 							action.setData(QtCore.QVariant(QtCore.QStringList([unicode(name),"%s/%s" % (jid, res) ]))) # kam pozyvame, koho
 
 		# custom status
-		submenu=contactMenu.addMenu(self.tr("Custom status"))
+		if not myJid:
+			submenu=contactMenu.addMenu(self.tr("Custom status"))
 
-		for status in ["online", "chat", "away", "xa", "dnd", "offline"]:
-			action=submenu.addAction(self.main.getIcon(status=status,size="32x32"),self.main.status[status])
-			action.setObjectName("custom_status")
-			action.setData(QtCore.QVariant(QtCore.QStringList([unicode(status), unicode(jid)])))
+			for status in ["online", "chat", "away", "xa", "dnd", "offline"]:
+				action=submenu.addAction(self.main.getIcon(status=status,size="32x32"),self.main.status[status])
+				action.setObjectName("custom_status")
+				action.setData(QtCore.QVariant(QtCore.QStringList([unicode(status), unicode(jid)])))
 
 		# separator
 		contactMenu.addSeparator()
@@ -2541,7 +2542,7 @@ class rosterWidget(QtGui.QWidget):
 		action.setData(QtCore.QVariant(jid))
 		action.setObjectName("vcard")
 		# filetransfer
-		if oneres:
+		if oneres and not myJid:
 			resource=contact.resources.keys()
 			if len(resource)!=0:
 				print contact.resources.keys()
@@ -2552,11 +2553,13 @@ class rosterWidget(QtGui.QWidget):
 					action.setObjectName("send_file")
 					action.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
 		else:
-			submenu = contactMenu.addMenu(self.tr("Send file"))
+			submenu = None
 			for resource in contact.resources.keys():
 				if resource != None:
-					if len(resource)!=0:
+					if len(resource)!=0 and (jid+'/'+resource) != self.main.client.jid.full():
 						if self.main.client.roster['users'][jid].resources[resource].hasFeature('http://jabber.org/protocol/si/profile/file-transfer'):
+							if submenu == None:
+								submenu = contactMenu.addMenu(self.tr("Send file"))
 							action = submenu.addAction(resource)
 							action.setIcon(QtGui.QIcon("images/32x32/actions/upload.png"))
 							action.setData(QtCore.QVariant("%s/%s" % (jid, resource)))
@@ -2673,7 +2676,7 @@ class rosterWidget(QtGui.QWidget):
 					action = submenu.addAction(self.tr("Don't hide my status to contact"))
 					action.setData(QtCore.QVariant(jid))
 					action.setObjectName("privacy_unhide")
-		if len(contact.resources)!=0:
+		if len(contact.resources)!=0 and not myJid:
 			if oneres:
 				if self.main.client.roster['users'][jid].resources[resource[0]].hasFeature('http://jabber.org/protocol/commands'):
 					action=contactMenu.addAction(QtGui.QIcon("images/16x16/actions/exec.png"),self.tr("Extra actions"))
