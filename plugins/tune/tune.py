@@ -105,13 +105,15 @@ class AmarokProtocol(ProcessProtocol):
 	def __init__(self, plugin, out, field):
 		self.plugin = plugin
 		self.out = out
+		if field == 'album':
+			field = 'source'
 		self.field = field
 	def outReceived(self, data):
 		self.out[self.field] = unicode(data, "utf-8").strip()
 	def processEnded(self, reason):
 		if not isinstance(reason.value, ProcessDone):
 			self.out = {}
-		if len(self.out) == 2 or self.out == {}:
+		if len(self.out) == 3 or self.out == {}:
 			self.plugin.sendPEP(self.out)
 
 class Amarok(Player):
@@ -119,7 +121,7 @@ class Amarok(Player):
 		Player.__init__(self, plugin)
 	def check(self):
 		out = {}
-		for field in ['artist', 'title']:
+		for field in ['artist', 'title', 'album']:
 			reactor.spawnProcess(
 				AmarokProtocol(self.plugin, out, field),
 				'dcop', ['dcop', 'amarok', 'player', field],
