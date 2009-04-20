@@ -686,35 +686,65 @@ def elapsed_time(seconds, suffixes=['y','w','d','h','m','s'], add_s=False, separ
  
 	return separator.join(tim)
 
-def getSvnVersion():
+def getRevisionFromSvn():
 	try:
-		f=open('.svn/entries')
-		file=f.readlines()
+		f = open('.svn/entries')
+		lines = f.readlines()
 		f.close()
-		return ' - rev. ' + file[3].strip()
+		return ' - rev. ' + lines[3].strip()
 	except:
-		commit = None
-		svn_rev = None
-		try:
-			re_commit = re.compile(r'^\s*commit\s*(([a-zA-Z0-9])+)')
-			re_svnrev = re.compile(r'^\s*git-svn-id: svn://dev\.jabbim\.cz/jabbim/trunk@(\d+)')
-			for line in os.popen('git show'):
-				if commit == None:
-					m = re_commit.match(line)
-					if m:
-						commit = m.group(1)
-				elif svn_rev == None:
-					m = re_svnrev.match(line)
-					if m:
-						svn_rev = m.group(1)
-						break
-		except:
-			pass
-		if commit != None and svn_rev != None:
-			return ' - rev. %s (git-svn %s)' % (svn_rev, commit[:7])
-		if commit != None:
-			return ' - git %s' % commit[:7]
-		return ''
+		return None
+
+def getRevisionFromGit():
+	commit = None
+	svn_rev = None
+	try:
+		re_commit = re.compile(r'^\s*commit\s*(([a-zA-Z0-9])+)')
+		re_svnrev = re.compile(r'^\s*git-svn-id: svn://dev\.jabbim\.cz/jabbim/trunk@(\d+)')
+		for line in os.popen('git show'):
+			if commit == None:
+				m = re_commit.match(line)
+				if m:
+					commit = m.group(1)
+			elif svn_rev == None:
+				m = re_svnrev.match(line)
+				if m:
+					svn_rev = m.group(1)
+					break
+	except:
+		pass
+	if commit != None and svn_rev != None:
+		return ' - rev. %s (git-svn %s)' % (svn_rev, commit[:7])
+	if commit != None:
+		return ' - git %s' % commit[:7]
+	return None
+
+def getRevisionFromIniFile():
+	rev = None
+	try:
+		re_version = re.compile(r'^version\s*=\s*(\d+)')
+		f = open('svn-version.ini')
+		for line in f:
+			m = re_version.match(line)
+			if m:
+				rev = ' - rev. ' + m.group(1)
+				break
+		f.close()
+	except:
+		pass
+	return rev
+
+def getSvnVersion():
+	rev = getRevisionFromIniFile()
+	if rev:
+		return rev
+	rev = getRevisionFromSvn()
+	if rev:
+		return rev
+	rev = getRevisionFromGit()
+	if rev:
+		return rev
+	return ''
 
 def getNormalSize(byte, kmg = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB'], index = 0): 
 	"""Convert Bytes to human readable form"""
