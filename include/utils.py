@@ -599,6 +599,7 @@ def replace_url(text,mainWindow,widget=None):
 				text+='<div id="image%s"><a href="%s" title="%s">%s</a>'%(str(widget.imageId),word,word, word)+" "
 				text+='<a href="javascript:;" title="%s" onclick="showImage(\'image%s\',\'%s\',\'%s\');")>['%(word,str(widget.imageId),link,word)+unicode(mainWindow.tr("Show Image"))+']</a></div>'+" "
 			elif word.find("youtube.com/watch?")!=-1: #nahradi adresu z youtube za nazev videa
+				print 'processing youtube link: '+word
 				url=word
 				stranka=urlopen(url).read(350)
 				title=re.findall('<title>(.*)</title>',stranka)
