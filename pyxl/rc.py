@@ -87,7 +87,7 @@ class ResendFile(Stage):
 		if self.data == None:
 			pwd = self.main.homeDir  #pwd = os.environ["PWD"]
 			jid=self.session.jid
-		elif os.path.isdir(os.path.join(self.data["pwd"][0], self.data["dir"][0]))!=False and self.data["dir"][0]!='':
+		elif os.path.isdir(os.path.join(self.data["pwd"][0], self.data["dir"][0]))!=False and len(self.data["files"])==0 and len(self.data["dir"]) != 0:
 			if self.data["dir"][0] == os.path.pardir:
 				pwd = os.path.split(self.data["pwd"][0])[0]
 			else:
@@ -112,7 +112,6 @@ class ResendFile(Stage):
 		files.sort()
 		dirs.sort()
 		dirs.insert(0, ["%s%s (%s)" % (os.path.pardir, os.path.sep, self.main.tr("One directory up")), os.path.pardir])
-		dirs.insert(0, [self.main.tr("No change directory"), ''])
 		#dirs.extend(files)
 
 		field_jid = Field("jid", "text-single", self.main.tr("Send file to (full) JID: "), required=False, values=[jid])
