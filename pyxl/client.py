@@ -255,6 +255,11 @@ class Client(derived):
 		q = iq.addElement('ping', 'urn:xmpp:ping')
 		self.disp(iq['id'])
 		iq.timeout = 90
+
+#TEMPORARY - debug kvuli mnozeni threadu v jabbimu
+		import threading;
+		print "THREADY %i %s" % (threading.activeCount(),threading.enumerate())
+
 		if self.connection != None:
 			d = iq.send()
 			d.addCallback(self._heartbeat)
