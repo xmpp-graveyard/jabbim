@@ -448,7 +448,7 @@ class FTInit:
 			self.disp(iq['id'])
 			self.ft[sid].ibbSeq = self.ft[sid].ibbSeq +1
 			self.ft[sid].transfered = self.ft[sid].transfered + len(dt)
-			self.client.on_ftTransfered(sid, len(dt))
+			self.client.dispatcher.publishEvent('on_ftTransfered',sid, len(dt))
 			d.addCallback(self._ftIBBContinue, sid)
 			d.addErrback(self._ftIBBError, sid)
 		else:
@@ -482,7 +482,7 @@ class FTInit:
 		self.disp(iq['id'])
 		self.ft[sid].ibbSeq = self.ft[sid].ibbSeq +1
 		self.ft[sid].transfered = self.ft[sid].transfered + len(dt)
-		self.client.on_ftTransfered(sid, len(dt))
+		self.client.dispatcher.publishEvent('on_ftTransfered',sid, len(dt))
 		d.addCallback(self._ftIBBContinue, sid)
 		d.addErrback(self._ftIBBError, sid)
 		
@@ -968,7 +968,7 @@ class FT:
 				data = b64decode(self.ibbCache[self.ibbSeq])
 				
 				self.transfered = self.transfered + len(data)
-				self.client.on_ftTransfered(self.sid, len(data))
+				self.client.dispatcher.publishEvent('on_ftTransfered',self.sid, len(data))
 				self.fp.write(data)
 				del self.ibbCache[self.ibbSeq]
 				self.ibbSeq = self.ibbSeq + 1
