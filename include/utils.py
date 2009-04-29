@@ -603,7 +603,7 @@ def replace_url(text,mainWindow,widget=None):
 				url=word
 				stranka=urlopen(url).read(350)
 				title=re.findall('<title>(.*)</title>',stranka)
-				if title==[]:
+				if title==[] or title[0].strip()=="": # pokud jsme nenasli zadny <title> tag, nebo byl prazdny
 					text+='<a href="'+url+'">'+url+'</a>'
 				else:
 					text+='<a href="'+url+'">'+title[0].decode('utf-8')+'</a>'				
