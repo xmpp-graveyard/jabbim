@@ -27,7 +27,7 @@ class Cache:
 			try:
 				self.db = adbapi.ConnectionPool(DB_DRIVER, db, cp_min=1, cp_max=1)
 			except ImportError:
-				self.db = adbapi.ConnectionPool('pysqlite2.dbapi2', db)
+				self.db = adbapi.ConnectionPool('pysqlite2.dbapi2', db, cp_min=1, cp_max=1)
 			except:
 				log.msg('Unknown DB error')
 

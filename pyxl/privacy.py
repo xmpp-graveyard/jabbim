@@ -57,16 +57,17 @@ class PrivacyList:
 			self._reviseOrders()
 
 		self.invisible	= None
-		lastitem = self.getItem(self._getOrders()[-1])
-		if lastitem.action == "deny" and (lastitem.stanzas == [] or "presence-out" in lastitem.stanzas) and lastitem.typ == None:
-			self.invisible = lastitem
+		if len(items)>0:
+			lastitem = self.getItem(self._getOrders()[-1])
+			if lastitem.action == "deny" and (lastitem.stanzas == [] or "presence-out" in lastitem.stanzas) and lastitem.typ == None:
+				self.invisible = lastitem
 
-		for item in self.items:
-			if item.value and item.typ == "jid":
-				for useritem in self.main.ui.roster.getUserItems(item.value):
-					useritem.privacy["block"] = self.isBlockedJID(item.value)
-					useritem.privacy["allow"] = self.isAllowedJID(item.value)
-					useritem.privacy["hide"] = self.isHiddenJID(item.value)
+			for item in self.items:
+				if item.value and item.typ == "jid":
+					for useritem in self.main.ui.roster.getUserItems(item.value):
+						useritem.privacy["block"] = self.isBlockedJID(item.value)
+						useritem.privacy["allow"] = self.isAllowedJID(item.value)
+						useritem.privacy["hide"] = self.isHiddenJID(item.value)
 				
 
 	def _getOrders(self):
