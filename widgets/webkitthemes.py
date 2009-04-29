@@ -256,26 +256,26 @@ class webkitThemeFactory:
 	# Groupchat format
 
 	def genGroupchatIncomingContent(self,user,message,time,avatar="",color=None,highlight=""):
-		return self.incomingGroupchatContent.replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%highlight%",highlight)
+		return self.incomingGroupchatContent.replace("%sender%",user).replace("%time%",time).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%highlight%",highlight).replace("%message%",message)
 
 	def genGroupchatIncomingNextContent(self,user,message,time,avatar="",color=None,highlight=""):
-		return self.incomingGroupchatNextContent.replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color))
+		return self.incomingGroupchatNextContent.replace("%sender%",user).replace("%time%",time).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%message%",message)
 
 	def genGroupchatOutgoingNextContent(self,user,message,time,avatar="",color=None):
-		return self.outgoingGroupchatNextContent.replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%highlight%","")
+		return self.outgoingGroupchatNextContent.replace("%sender%",user).replace("%time%",time).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%highlight%","").replace("%message%",message)
 	
 	def genGroupchatOutgoingContent(self,user,message,time,avatar="",color=None):
-		return self.outgoingGroupchatContent.replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%highlight%","")
+		return self.outgoingGroupchatContent.replace("%sender%",user).replace("%time%",time).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%highlight%","").replace("%message%",message)
 
 	# Chat format
 
 	def genIncomingContent(self,user,message,time,avatar=""):
-		return self.incomingContent.replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%highlight%","")
+		return self.incomingContent.replace("%sender%",user).replace("%time%",time).replace("%userIconPath%",avatar).replace("%highlight%","").replace("%message%",message)
 	def genIncomingNextContent(self,user,message,time,avatar=""):
-		return self.incomingNextContent.replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%highlight%","")
+		return self.incomingNextContent.replace("%sender%",user).replace("%time%",time).replace("%userIconPath%",avatar).replace("%highlight%","").replace("%message%",message)
 
 	def genOutgoingNextContent(self,user,message,time,avatar=""):
-		return self.outgoingNextContent.replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%highlight%","")
+		return self.outgoingNextContent.replace("%sender%",user).replace("%time%",time).replace("%userIconPath%",avatar).replace("%highlight%","").replace("%message%",message)
 	
 	def genOutgoingContent(self,user,message,time,avatar=""):
-		return self.outgoingContent.replace("%sender%",user).replace("%time%",time).replace("%message%",message).replace("%userIconPath%",avatar).replace("%highlight%","")
+		return self.outgoingContent.replace("%sender%",user).replace("%time%",time).replace("%userIconPath%",avatar).replace("%highlight%","").replace("%message%",message)
