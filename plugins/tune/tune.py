@@ -79,7 +79,7 @@ class MPDProtocol(ProcessProtocol):
 		out = {}
 		if isinstance(reason.value, ProcessDone) and self.output.find('\n[playing]') != -1:
 			text = self.output.split('\n')[0]
-			print text
+			text = unicode(text, 'utf8')
 			text = text.split(' - ', 2)
 			if len(text)>1:
 				out['artist'] = text[0]
@@ -89,7 +89,6 @@ class MPDProtocol(ProcessProtocol):
 			else:
 				out['title'] = self.output.split('\n')[0].split('/')[-1]
 			out['length'] = self.output.split('\n')[1].split('/')[-1].split('(')[0].strip()
-			print out
 		self.plugin.sendPEP(out)
 
 class MPD(Player):
