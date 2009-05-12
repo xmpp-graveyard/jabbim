@@ -137,10 +137,10 @@ class ForwardMsg(Stage):
 		msg_null={}
 		
 		if self.main.plugins.get('archive')==None:
-			self.xform = Xform("form", fields=[], title=self.main.tr("Froward unread messages"),instructions=[self.main.tr("You must enable archive plugin for forward unread messages")]).buildElement()
+			self.xform = Xform("form", fields=[], title=self.main.tr("Forward unread messages"),instructions=[self.main.tr("You must enable archive plugin for forward unread messages")]).buildElement()
 			return
 		elif self.main.plugins['archive'].get('module')==None:
-			self.xform = Xform("form", fields=[], title=self.main.tr("Froward unread messages"),instructions=[self.main.tr("You must enable archive plugin for forward unread messages")]).buildElement()
+			self.xform = Xform("form", fields=[], title=self.main.tr("Forward unread messages"),instructions=[self.main.tr("You must enable archive plugin for forward unread messages")]).buildElement()
 			return
 			
 		for i in range(self.main.chat.ui.chatTab.count()):
@@ -192,7 +192,7 @@ class ForwardMsg(Stage):
 						msg_arch[jid].append(self.main.plugins['archive']['module'].backend.getLastMessages(jid,coutmsg,"0:0:0"))
 		
 		if count==0:
-			self.xform = Xform("form", fields=[], title=self.main.tr("Froward unread messages"),instructions=[self.main.tr("You have no unread messages")]).buildElement()
+			self.xform = Xform("form", fields=[], title=self.main.tr("Forward unread messages"),instructions=[self.main.tr("You have no unread messages")]).buildElement()
 			return
 		
 		if self.data==None:
@@ -201,14 +201,14 @@ class ForwardMsg(Stage):
 					opt.append([unicode(x)+" - "+self.main.tr("%s message" % str(message_from[x])), unicode(x)])
 			field_all = Field("fw_all", "boolean", self.main.tr("Forward all %s unread messages: " % count), required=False, values=[0])
 			field_chats = Field("who", "list-multi", self.main.tr("Choose unread messages: "), required=False, options=opt)
-			self.xform = Xform("form", fields=[field_all, field_chats], title=self.main.tr("Froward unread messages"),instructions=[self.main.tr("%s" % self.main.chat.ui.chatTab.count())]).buildElement()
+			self.xform = Xform("form", fields=[field_all, field_chats], title=self.main.tr("Forward unread messages"),instructions=[self.main.tr("%s" % self.main.chat.ui.chatTab.count())]).buildElement()
 		elif (self.data.get('who')==[] and self.data.get('fw_all')==['0']) or self.data.get('e')==['0']:
 			for x in message_from:
 				if message_from[x]>0:
 					opt.append([unicode(x)+" - "+self.main.tr("%s message" % str(message_from[x])), unicode(x)])
 			field_all = Field("fw_all", "boolean", self.main.tr("Forward all %s unread messages: " % count), required=False, values=[0])
 			field_chats = Field("who", "list-multi", self.main.tr("Choose unread messages: "), required=False, options=opt)
-			self.xform = Xform("form", fields=[field_all, field_chats], title=self.main.tr("Froward unread messages"),instructions=[self.main.tr("%s" % self.main.chat.ui.chatTab.count())]).buildElement()
+			self.xform = Xform("form", fields=[field_all, field_chats], title=self.main.tr("Forward unread messages"),instructions=[self.main.tr("%s" % self.main.chat.ui.chatTab.count())]).buildElement()
 		else:
 			for x in msg_arch:
 				if (self.data.get('fw_all',[''])[0]=='1' or self.data.get('fw_all',[''])[0]=='true') or (x in self.data.get('who',[])):
@@ -230,7 +230,7 @@ class ForwardMsg(Stage):
 						#print "sending:", message.toXml()
 					if msg_null[x].chat.unread>0:
 						#'['+self.main.now()+']')+
-						m=unicode(self.main.tr("Last %s messages was forwarded to " % msg_null[x].chat.unread) + self.session.jid)
+						m=unicode(self.main.tr("Last %s messages were forwarded to " % msg_null[x].chat.unread) + self.session.jid)
 						write_message=self.main.webkitThemeFactory.genGroupchatAction(unicode(m),self.main.now())
 						msg_null[x].chat.textEditWrite(write_message)
 						msg_null[x].chat.unread=0
@@ -238,8 +238,8 @@ class ForwardMsg(Stage):
 			try:
 				message
 				field = Field("e", "hidden", values='0')
-				self.xform = Xform("form", fields=[field], title=self.main.tr("Froward unread messages"),instructions=[self.main.tr("Selected unread messages were sent.")]).buildElement()
+				self.xform = Xform("form", fields=[field], title=self.main.tr("Forward unread messages"),instructions=[self.main.tr("Selected unread messages were sent.")]).buildElement()
 			except:
 				field = Field("e", "hidden", values='0')
-				self.xform = Xform("form", fields=[field], title=self.main.tr("Froward unread messages"),instructions=[self.main.tr("No selected messages")]).buildElement()
+				self.xform = Xform("form", fields=[field], title=self.main.tr("Forward unread messages"),instructions=[self.main.tr("No selected messages")]).buildElement()
 			
