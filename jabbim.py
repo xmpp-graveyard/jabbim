@@ -4342,6 +4342,7 @@ class mainWindow(QtGui.QMainWindow):
 		event.setRejectHandler(self.client.declineInvitation,[jid, room])
 		widget=event.getWidgets()[0]
 		widget.setText(maintext)
+		widget.setLineEditText(self.client.jid.user)
 		widget.setLabel(self.tr("Nickname:"))
 		widget.setAcceptText(self.tr("Join"))
 		widget.setRejectText(self.tr("Decline"))
