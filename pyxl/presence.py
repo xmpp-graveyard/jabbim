@@ -92,7 +92,7 @@ class PresenceInit:
 						features = 'asked'
 						log.msg('nocaps ' + unicode(self.client.getIdentity(frm.host)))
 
-						if  self.client.hasIdentity(frm.host, 'conference') or self.client.hasIdentity(frm.host, 'gateway'):
+						if  self.client.hasIdentity(frm.host, 'conference'):
 							features = ['-']
 						elif len(features)>0:
 							log.msg(unicode(features))

@@ -2547,7 +2547,7 @@ class rosterWidget(QtGui.QWidget):
 			if len(resource)!=0:
 				print contact.resources.keys()
 				print self.main.client.roster['users'][jid].resources[resource[0]].features
-				if self.main.client.roster['users'][jid].resources[resource[0]].hasFeature('http://jabber.org/protocol/si/profile/file-transfer'):
+				if contact.resources[resource[0]].hasFeature('http://jabber.org/protocol/si/profile/file-transfer'):
 					action=contactMenu.addAction(self.tr("Send file"))
 					action.setData(QtCore.QVariant(jid))
 					action.setObjectName("send_file")
@@ -2557,7 +2557,7 @@ class rosterWidget(QtGui.QWidget):
 			for resource in contact.resources.keys():
 				if resource != None:
 					if len(resource)!=0 and (jid+'/'+resource) != self.main.client.jid.full():
-						if self.main.client.roster['users'][jid].resources[resource].hasFeature('http://jabber.org/protocol/si/profile/file-transfer'):
+						if contact.resources[resource].hasFeature('http://jabber.org/protocol/si/profile/file-transfer'):
 							if submenu == None:
 								submenu = contactMenu.addMenu(self.tr("Send file"))
 							action = submenu.addAction(resource)
