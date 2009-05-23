@@ -566,7 +566,12 @@ class Client(derived):
 
 	def _streamError(self,  xs):
 		log.err('stream error')
-		el=xs.value.getElement()
+		try:
+			el=xs.value.getElement()
+		except:
+			log.err('HTTP binding error!')
+			log.err(el.toXml())
+			return
 		log.msg(el.toXml())
 		if el.firstChildElement().name == 'conflict':
 			self.main.reconnect = False
