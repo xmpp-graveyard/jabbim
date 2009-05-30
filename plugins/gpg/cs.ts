@@ -43,5 +43,10 @@ Tato verze NENÍ řádně zabezpečena, fráze k vašemu gpg klíčí je uložen
         <source>GPG is enabled for:</source>
         <translation>Komu zasílat šifrovaně:</translation>
     </message>
+    <message>
+        <location filename="gpg.py" line="66"/>
+        <source>Can not decrypt, passphrase is missing</source>
+        <translation>Nelze rozšifrovat zprávu, chybí fráze</translation>
+    </message>
 </context>
 </TS>
