@@ -231,8 +231,13 @@ class vcardEditorDialog(QtGui.QDialog):
 			labelLast=QtGui.QLabel(self.tr('Last Active:'),box)
 			lineLast=QtGui.QLineEdit(box)
 			lineLast.setReadOnly(True)
+			labelLastStatus=QtGui.QLabel(self.tr('Last Status:'),box)
+			lineLastStatus=QtGui.QLineEdit(box)
+			lineLastStatus.setReadOnly(True)
 			l.addWidget(labelLast,0,0)
 			l.addWidget(lineLast,0,1)
+			l.addWidget(labelLastStatus,1,0)
+			l.addWidget(lineLastStatus,1,1)
 		#else:
 			#box=QtGui.QGroupBox(res,self.widget)
 			#l=QtGui.QGridLayout(box)
@@ -242,7 +247,7 @@ class vcardEditorDialog(QtGui.QDialog):
 			#l.addWidget(labelLast,3,0)
 			#l.addWidget(lineLast,3,1)
 		self.widget.layout().addWidget(box)
-		return lineLast
+		return lineLast,lineLastStatus
 	
 	def versionReceived(self, el,res):
 		lineName,lineOs,lineVersion=self.makeVersionWidget(res)
@@ -263,10 +268,11 @@ class vcardEditorDialog(QtGui.QDialog):
 		self.ui.tabWidget.setEnabled(True)
 	
 	def lastReceived(self, el,res):
-		lineLast=self.makeLastWidget(res)
-		#lineName,lineOs,lineVersion=self.makeVersionWidget(res)
+		lineLast,lineLastStatus=self.makeLastWidget(res)
 		query = el.firstChildElement()
 		lineLast.setText(unicode(utils.elapsed_time(int(query['seconds']),[self.tr('year'),self.tr('week'),self.tr('day'),self.tr('hour'),self.tr('minute'),self.tr(' second')],separator=', ')))
+		lineLastStatus.setText(unicode(query))
+		print "KOKSO!!!!!!",unicode(query)
 		self.ui.download.hide()
 		self.ui.tabWidget.setEnabled(True)
 
@@ -279,7 +285,7 @@ class vcardEditorDialog(QtGui.QDialog):
 	
 	def lastErrReceived(self, err,res):
 		print err
-		lineLast=self.makeLastWidget(res)
+		lineLast,lineLastStatus=self.makeLastWidget(res)
 		lineLast.setText(self.tr("Unable to retrieve."))
 		
 	def clearAvatar(self):
