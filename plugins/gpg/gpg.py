@@ -25,11 +25,11 @@ class Plugin(plugins.PluginBase):
 			'This plugin requires gpg and all used keys imported.\n' +
 			'If you enable this plugin, you can receive gpg encrypted messages ' +
 			'set gpg key ids for jids and select to which people you send encrypted messages.\n\n' +
-			'This version is very UNSECURE, it stores your passphrase in plaintext and everytime you ' +
+			'This version could be UNSECURE, it (optionally) stores your passphrase in plaintext and everytime you ' +
 			'decrypt a message, passphrase could be probably seen in /proc.')
 		self.author = "Marek Hulan"
 		self.name = self.tr('GPG plugin')
-		self.version = '0.005'
+		self.version = '0.006'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 		self.passphrase = None
@@ -79,8 +79,8 @@ class Plugin(plugins.PluginBase):
 			else:
 				passphrase = self.passphrase or self.config['passphrase']
 
-			lines = os.popen('echo "' + passphrase + "\n-----BEGIN PGP MESSAGE-----\n\n" +
-				msg.getGpgEncryptedBody() + "\n" + '-----END PGP MESSAGE-----"' +
+			lines = os.popen('echo "' + passphrase.encode('unicode-escape')  + "\n-----BEGIN PGP MESSAGE-----\n\n" +
+				msg.getGpgEncryptedBody().encode('unicode-escape').replace('\\n',"\n") + "\n" + '-----END PGP MESSAGE-----"' +
 				' | gpg --charset utf8 --yes --passphrase-fd 0 --decrypt --quiet').readlines()
 			message = string.join(lines, '')
 			if not message:
@@ -96,7 +96,7 @@ class Plugin(plugins.PluginBase):
 	def on_messageSend(self,msg):
 		for jid_with_resource in self.config['gpg_enabled_list']:
 			if (jid_with_resource == msg.to.userhost() or jid_with_resource == msg.to.full()) and self.config.has_key(msg.to.userhost()) and len(self.config[msg.to.userhost()]['long_key_id']) == 16:
-				lines = os.popen('echo "' + msg.getBody() +
+				lines = os.popen('echo "' + msg.getBody().encode('unicode-escape')  +
 					'"| gpg --charset utf8 --batch --yes --armor --no-version  --quiet --recipient ' +
 					self.config[msg.to.userhost()]['long_key_id'] + ' --trusted-key="' +
 					self.config[msg.to.userhost()]['long_key_id'] + '" --encrypt').readlines()
