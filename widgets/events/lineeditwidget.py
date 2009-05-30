@@ -37,6 +37,9 @@ class lineeditWidget(QtGui.QWidget):
 	def setLineEditText(self,text):
 		self.ui.lineEdit.setText(text)
 
+	def setEchoMode(self,mode=0):
+		self.ui.lineEdit.setEchoMode(mode)
+
 	def eventRejected(self):
 		pass
 	

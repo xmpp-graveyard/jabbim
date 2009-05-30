@@ -13,6 +13,7 @@ class config:
 		self.config['self_gpg_id']={'type':'text-single','label':self.main.tr("Your long GPG id"),'value':self.main.tr('AABBCCDDEEFF0011')}
 		self.config['passphrase']={'type':'text-private','label':self.main.tr("Passphrase"),'value':''}
 		self.config['gpg_enabled_list']={'type':'jid-list','label':self.main.tr("GPG is enabled for:"),'value':''}
+		self.config['remember_passphrase']={'type':'boolean','label':self.main.tr("Remember passphrase"),'value':''}
 
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
@@ -28,28 +29,53 @@ class Plugin(plugins.PluginBase):
 			'decrypt a message, passphrase could be probably seen in /proc.')
 		self.author = "Marek Hulan"
 		self.name = self.tr('GPG plugin')
-		self.version = '0.003'
+		self.version = '0.004'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
+		self.passphrase = None
 		self.configDialog=config(self)
 		if main:
 			self.registerHandler('on_message', self.on_message, priority = 4)
 
 			self.loadConfig()
 			self.key_dialog=self.loadDialog("%s/gpg_dialog.py" % self.pluginDir,self.main)
+
+			if self.config['remember_passphrase'] == 'False':
+				event=self.main.events.addLineEditEvent()
+				event.setAcceptHandler(self.set_passphrase)
+				event.setRejectHandler(self.unset_passphrase)
+				widget=event.getWidgets()[0]
+				widget.setText('Type a passphrase for your GPG key')
+				widget.setEchoMode(2)
+				widget.setLabel('Passphrase:')
+				widget.setAcceptText(self.main.tr("OK"))
+				widget.setRejectText(self.main.tr("Cancel"))
 		else:
 			self.loadConfig(homedir)
 
+	def set_passphrase(self, phrase):
+		self.passphrase = phrase
+
+	def unset_passphrase(self):
+		self.passphrase = None
+
 	def on_message(self,msg):
+		if self.config['remember_passphrase'] == 'False' and self.passphrase is None:
+			# neni zadna passphrase
+			# mela by vyskocit bublina, idealne spis pockat nez se pass zada
+			return True
+		else:
+			passphrase = self.passphrase or self.config['passphrase']
+
 		if not msg.getGpgEncryptedBody() is None:
-			lines = os.popen('echo "' + self.config['passphrase'] + "\n-----BEGIN PGP MESSAGE-----\n\n" + 
+			lines = os.popen('echo "' + passphrase + "\n-----BEGIN PGP MESSAGE-----\n\n" +
 				msg.getGpgEncryptedBody() + '\n-----END PGP MESSAGE-----"' +
 				' | gpg --charset utf8 --yes --passphrase-fd 0 --decrypt').readlines()
 			message = string.join(lines, '')
 			msg.setBody(message.rstrip("\n\x00"))
 		return True
 
-   	def on_messageSend(self,msg):
+	def on_messageSend(self,msg):
 		for jid_with_resource in self.config['gpg_enabled_list']:
 			if (jid_with_resource == msg.to.userhost() or jid_with_resource == msg.to.full()) and self.config.has_key(msg.to.userhost()) and len(self.config[msg.to.userhost()]['long_key_id']) == 16:
 				lines = os.popen('echo "' + msg.getBody() +
