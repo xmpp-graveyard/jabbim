@@ -684,13 +684,13 @@ class Plugin(plugins.PluginBase):
 				message_=message_.replace(highlight,"<font color=\""+fg+"\" style=\"background-color:"+bg+";\">"+highlight+"</font>")
 			if msg[1]=='to':
 				who=me
-				html+=action[5].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message_).replace("<br/><br/>","<br/>")
+				html+=action[5].replace("[time]",self.formatTime(d[3],d[4],d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message_).replace("<br/><br/>","<br/>")
 			else:
 				if user:
 					who=user
 				else:
 					who=msg[2]
-				html+=action[6].replace("[time]",str(d[3])+":"+str(d[4])+":"+str(d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message_).replace("[foreground]",action[7][0]).replace("[background]",action[7][1]).replace("<br/><br/>","<br/>")
+				html+=action[6].replace("[time]",self.formatTime(d[3],d[4],d[5])).replace("[user]",who.replace("<","&lt;").replace(">","&gt;").replace("\n","<br/> ")).replace("[message]",message_).replace("[foreground]",action[7][0]).replace("[background]",action[7][1]).replace("<br/><br/>","<br/>")
 		return html
 
 	def gotMessages(self,html):
