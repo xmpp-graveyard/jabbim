@@ -3788,6 +3788,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		# make menu for transports
 		if len(self.transports)!=0:
+			function_dict = {}
 			#self.ui.line1.show()
 			#self.ui.transportsWidget.show()
 			self.ui.tabWidgetButton.setChecked(True)
@@ -3873,8 +3874,11 @@ class mainWindow(QtGui.QMainWindow):
 				#self.transports[transport].setPopupMode(QtGui.QToolButton.InstantPopup)
 				#self.transports[transport].setArrowType(QtCore.Qt.NoArrow)
 				app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusWidgetChanged)
-				def call_it(): self.showTransportMenu(self.transports[transport])
-				self.transports[transport]=self.ui.transportsToolbar.addAction(ic,"",call_it)#QtGui.QToolButton(self.ui.transportsWidget)
+				def tempfunc(tt=transport):
+					self.showTransportMenu(self.transports[tt])
+				function_dict[transport] = tempfunc
+				del tempfunc
+				self.transports[transport]=self.ui.transportsToolbar.addAction(ic,"",function_dict[transport])#QtGui.QToolButton(self.ui.transportsWidget)
 				#QtCore.QObject.connect(self.transports[transport],QtCore.SIGNAL("triggered()"),self.transports[transport].toggle)
 				self.transports[transport].setToolTip(text)
 				self.transports[transport].setMenu(menu)

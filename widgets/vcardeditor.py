@@ -272,7 +272,6 @@ class vcardEditorDialog(QtGui.QDialog):
 		query = el.firstChildElement()
 		lineLast.setText(unicode(utils.elapsed_time(int(query['seconds']),[self.tr('year'),self.tr('week'),self.tr('day'),self.tr('hour'),self.tr('minute'),self.tr(' second')],separator=', ')))
 		lineLastStatus.setText(unicode(query))
-		print "KOKSO!!!!!!",unicode(query)
 		self.ui.download.hide()
 		self.ui.tabWidget.setEnabled(True)
 
